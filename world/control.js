@@ -376,8 +376,7 @@ export function createControlSystem() {
       orbitPresentationVelocity,
       mode: presentationMode,
       observationMode,
-      zoomCurrent,
-      zoomTarget
+      zoomCurrent
     });
   }
 
@@ -413,6 +412,12 @@ export function createControlSystem() {
   function restoreMotionState(input = {}) {
     const next = normalizeObject(input);
 
+    if (typeof next.mode === "string") {
+      setPresentationMode(next.mode);
+    } else {
+      updatePresentationDerivedState();
+    }
+
     if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
     if (isFiniteNumber(next.pitch)) pitch = clamp(next.pitch, WORLD_KERNEL.constants.minPitch, WORLD_KERNEL.constants.maxPitch);
     if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
@@ -420,12 +425,6 @@ export function createControlSystem() {
     if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
     if (isFiniteNumber(next.orbitAngularVelocity)) orbitAngularVelocity = next.orbitAngularVelocity;
     if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = next.zoomCurrent;
-    if (isFiniteNumber(next.zoomTarget)) zoomTarget = next.zoomTarget;
-    if (typeof next.mode === "string") {
-      setPresentationMode(next.mode);
-    } else {
-      updatePresentationDerivedState();
-    }
 
     clampPitch();
     recomputeOrbitalVelocity();

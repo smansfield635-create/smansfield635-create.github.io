@@ -1,13 +1,16 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — GATE + NOW FIELD
+     PRODUCTS AUTHORITY — GEM LATTICE REWRITE
      STATUS:
        - full authority rewrite
-       - canon state carry added
-       - GATE state + NOW state preserved
-       - FUTURE routes to /explore/
+       - canon state carry preserved
+       - gate + now field preserved
+       - future routes to /explore/
        - no inline onclick
        - no modals / no overlays
+       - gem lattice diamonds replace box shells
+       - animation restored on page
+       - nutrition line integrated
        - uses ui.css + branch.css only
 -->
 
@@ -37,16 +40,19 @@
       --stroke:rgba(255,255,255,.14);
       --stroke2:rgba(255,255,255,.09);
 
-      --gold:rgba(212,175,55,.52);
+      --gold:rgba(212,175,55,.56);
       --goldSoft:rgba(212,175,55,.18);
+      --goldGlow:rgba(212,175,55,.22);
 
-      --crimson:rgba(120,0,22,.28);
-      --festival:rgba(255,43,43,.14);
-      --opalV:rgba(90,40,120,.12);
+      --crimson:rgba(120,0,22,.30);
+      --festival:rgba(255,43,43,.16);
+      --opalV:rgba(90,40,120,.14);
+      --ice:rgba(120,180,255,.16);
 
       --shadowA:0 34px 120px rgba(0,0,0,.58);
       --shadowB:0 20px 70px rgba(0,0,0,.62);
       --shadowC:0 18px 60px rgba(0,0,0,.55);
+      --shadowD:0 28px 90px rgba(0,0,0,.72);
     }
 
     #app-shell{
@@ -55,7 +61,7 @@
       overflow:hidden;
       isolation:isolate;
       background:
-        radial-gradient(circle at 50% 20%, rgba(120,180,255,.10), transparent 28%),
+        radial-gradient(circle at 50% 18%, rgba(120,180,255,.10), transparent 28%),
         radial-gradient(circle at 50% 72%, rgba(120,180,255,.06), transparent 36%),
         linear-gradient(180deg, #030712 0%, #071225 52%, #08101f 100%);
     }
@@ -97,6 +103,18 @@
         radial-gradient(circle at 50% 56%, rgba(255,255,255,.08), transparent 70%);
       animation:mist 6s ease-in-out infinite alternate;
       opacity:.7;
+    }
+
+    .veil{
+      position:absolute;
+      inset:-10%;
+      background:
+        radial-gradient(circle at 25% 35%, rgba(255,255,255,.04), transparent 30%),
+        radial-gradient(circle at 72% 52%, rgba(212,175,55,.04), transparent 34%),
+        radial-gradient(circle at 46% 74%, rgba(120,180,255,.05), transparent 28%);
+      filter:blur(18px);
+      opacity:.68;
+      animation:veilShift 18s ease-in-out infinite alternate;
     }
 
     /* =========================
@@ -152,7 +170,7 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-width:72px;
+      min-width:88px;
     }
 
     /* =========================
@@ -160,7 +178,7 @@
     ========================= */
     .hero{
       position:absolute;
-      top:10%;
+      top:9.5%;
       left:50%;
       transform:translateX(-50%);
       width:min(94vw, 980px);
@@ -196,6 +214,161 @@
     }
 
     /* =========================
+       GEM LATTICE SYSTEM
+    ========================= */
+    .gem-btn{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border:0;
+      padding:0;
+      margin:0;
+      background:transparent;
+      color:inherit;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+
+    .gem{
+      position:absolute;
+      inset:0;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 44%),
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,.18), transparent 26%),
+        radial-gradient(circle at 78% 24%, var(--festival), transparent 42%),
+        radial-gradient(circle at 72% 82%, var(--opalV), transparent 48%),
+        radial-gradient(circle at 32% 82%, var(--ice), transparent 40%),
+        linear-gradient(145deg, rgba(10,14,22,.78), rgba(5,8,12,.94));
+      box-shadow:
+        var(--shadowD),
+        0 0 24px rgba(212,175,55,.08),
+        inset 0 2px 0 rgba(255,255,255,.10),
+        inset 0 -30px 44px rgba(0,0,0,.52);
+      overflow:hidden;
+      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+
+    .gem::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(45deg,
+          transparent 0 18%,
+          rgba(255,255,255,.08) 18% 18.8%,
+          transparent 18.8% 31%,
+          rgba(212,175,55,.12) 31% 31.8%,
+          transparent 31.8% 50%,
+          rgba(255,255,255,.06) 50% 50.8%,
+          transparent 50.8% 68%,
+          rgba(212,175,55,.10) 68% 68.8%,
+          transparent 68.8% 100%
+        ),
+        linear-gradient(-45deg,
+          transparent 0 19%,
+          rgba(255,255,255,.06) 19% 19.8%,
+          transparent 19.8% 36%,
+          rgba(212,175,55,.10) 36% 36.8%,
+          transparent 36.8% 58%,
+          rgba(255,255,255,.06) 58% 58.8%,
+          transparent 58.8% 77%,
+          rgba(212,175,55,.08) 77% 77.8%,
+          transparent 77.8% 100%
+        );
+      mix-blend-mode:screen;
+      opacity:.78;
+      animation:latticeShift 11s linear infinite;
+    }
+
+    .gem::after{
+      content:"";
+      position:absolute;
+      inset:8%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(212,175,55,.34);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.05),
+        0 0 26px rgba(212,175,55,.12);
+      animation:innerPulse 4.8s ease-in-out infinite;
+    }
+
+    .gem-ring{
+      position:absolute;
+      inset:-10%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:
+        0 0 42px rgba(212,175,55,.10),
+        0 0 90px rgba(212,175,55,.06);
+      opacity:.85;
+      pointer-events:none;
+      animation:ringSpin 24s linear infinite;
+    }
+
+    .gem-core{
+      position:absolute;
+      inset:18%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), transparent 56%),
+        linear-gradient(145deg, rgba(255,255,255,.04), rgba(0,0,0,.12));
+      box-shadow:inset 0 0 18px rgba(255,255,255,.06);
+      opacity:.82;
+      pointer-events:none;
+      animation:coreDrift 8s ease-in-out infinite alternate;
+    }
+
+    .gem-btn:hover .gem{
+      box-shadow:
+        var(--shadowD),
+        0 0 20px rgba(212,175,55,.18),
+        0 0 40px rgba(212,175,55,.10),
+        inset 0 2px 0 rgba(255,255,255,.14),
+        inset 0 -30px 44px rgba(0,0,0,.54);
+      filter:saturate(1.06);
+    }
+
+    .gem-btn:hover .gem-ring{
+      box-shadow:
+        0 0 56px rgba(212,175,55,.16),
+        0 0 110px rgba(212,175,55,.08);
+    }
+
+    .gem-label{
+      position:relative;
+      z-index:3;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:18px;
+      text-shadow:0 8px 26px rgba(0,0,0,.55);
+      pointer-events:none;
+    }
+
+    .gem-title{
+      display:block;
+      font-weight:950;
+      letter-spacing:.12em;
+      line-height:1.06;
+    }
+
+    .gem-sub{
+      display:block;
+      margin-top:8px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.74);
+      line-height:1.18;
+    }
+
+    /* =========================
        GATE MODE
     ========================= */
     .gate{
@@ -208,84 +381,13 @@
       padding:0 20px;
     }
 
-    .diamond-card{
-      position:relative;
-      width:clamp(150px, 19vw, 230px);
-      height:clamp(150px, 19vw, 230px);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:transparent;
-      border:0;
-      padding:0;
-      cursor:pointer;
-      color:inherit;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
+    .gate-card{
+      width:clamp(168px, 20vw, 248px);
+      height:clamp(168px, 20vw, 248px);
     }
 
-    .diamond-shell{
-      position:absolute;
-      inset:0;
-      border:2px solid rgba(255,255,255,.28);
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 26%),
-        linear-gradient(145deg, rgba(10,14,22,.42), rgba(5,8,12,.24));
-      box-shadow:
-        0 18px 48px rgba(0,0,0,.38),
-        inset 0 0 20px rgba(255,255,255,.04);
-      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
-    }
-
-    .diamond-shell::after{
-      content:"";
-      position:absolute;
-      inset:20%;
-      border:1px solid rgba(201,162,74,.50);
-    }
-
-    .diamond-shell--now{
-      transform:rotate(0deg);
-    }
-
-    .diamond-shell--future{
-      transform:rotate(45deg);
-    }
-
-    .diamond-label{
-      position:relative;
-      z-index:2;
-      font-weight:950;
-      font-size:clamp(22px, 2.6vw, 32px);
-      letter-spacing:.12em;
-      text-align:center;
-      pointer-events:none;
-      text-shadow:0 8px 26px rgba(0,0,0,.55);
-    }
-
-    .diamond-sub{
-      position:absolute;
-      left:50%;
-      bottom:-44px;
-      transform:translateX(-50%);
-      min-width:164px;
-      text-align:center;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.06em;
-      color:rgba(255,255,255,.74);
-      text-transform:uppercase;
-      pointer-events:none;
-      white-space:nowrap;
-    }
-
-    .diamond-card:hover .diamond-shell{
-      border-color:rgba(255,255,255,.42);
-      box-shadow:
-        0 22px 56px rgba(0,0,0,.46),
-        0 0 18px rgba(212,175,55,.16),
-        inset 0 0 24px rgba(255,255,255,.05);
-      filter:saturate(1.04);
+    .gate-card .gem-title{
+      font-size:clamp(22px, 2.7vw, 34px);
     }
 
     /* =========================
@@ -304,82 +406,50 @@
     .field-core{
       position:absolute;
       left:50%;
-      top:56%;
+      top:57%;
       transform:translate(-50%,-50%);
-      width:min(760px, 86vw);
-      height:min(520px, 54vh);
+      width:min(860px, 90vw);
+      height:min(620px, 58vh);
       pointer-events:none;
     }
 
     .product-node{
       position:absolute;
-      width:144px;
-      height:144px;
-      border:0;
-      background:transparent;
-      color:inherit;
-      padding:0;
-      cursor:pointer;
-      -webkit-tap-highlight-color:transparent;
-      touch-action:manipulation;
+      width:148px;
+      height:148px;
       animation:float 8s ease-in-out infinite alternate;
     }
 
     .product-node:nth-child(2){animation-duration:9s}
     .product-node:nth-child(3){animation-duration:10s}
     .product-node:nth-child(4){animation-duration:11s}
+    .product-node:nth-child(5){animation-duration:9.5s}
 
-    .product-node-shell{
-      position:absolute;
-      inset:0;
-      transform:rotate(45deg);
-      border:2px solid rgba(255,255,255,.24);
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,.10), transparent 24%),
-        linear-gradient(145deg, rgba(10,14,22,.70), rgba(5,8,12,.84));
-      box-shadow:
-        0 18px 44px rgba(0,0,0,.38),
-        inset 0 0 18px rgba(255,255,255,.04);
-      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
-    }
-
-    .product-node-shell::after{
-      content:"";
-      position:absolute;
-      inset:22%;
-      border:1px solid rgba(201,162,74,.38);
-    }
-
-    .product-node-label{
-      position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:18px;
+    .product-node .gem-title{
       font-size:13px;
-      font-weight:950;
-      letter-spacing:.08em;
-      line-height:1.18;
-      pointer-events:none;
-      text-shadow:0 8px 22px rgba(0,0,0,.55);
     }
 
-    .product-node:hover .product-node-shell{
-      border-color:rgba(255,255,255,.40);
-      box-shadow:
-        0 22px 52px rgba(0,0,0,.46),
-        0 0 16px rgba(212,175,55,.14),
-        inset 0 0 18px rgba(255,255,255,.06);
-      filter:saturate(1.04);
+    .product-node .gem-sub{
+      font-size:10px;
+      margin-top:6px;
+    }
+
+    .product-node.is-core{
+      width:170px;
+      height:170px;
+      z-index:2;
+    }
+
+    .product-node.is-core .gem-title{
+      font-size:15px;
     }
 
     /* field positions */
-    .node-sideai{left:8%; top:8%}
-    .node-energy{right:8%; top:12%}
-    .node-education{right:22%; bottom:10%}
-    .node-governance{left:26%; bottom:2%}
+    .node-sideai{left:4%; top:8%}
+    .node-energy{right:6%; top:10%}
+    .node-education{right:18%; bottom:6%}
+    .node-governance{left:18%; bottom:2%}
+    .node-nutrition{left:50%; top:50%; transform:translate(-50%,-50%)}
 
     /* =========================
        ANIMATION
@@ -394,9 +464,34 @@
       to{opacity:.7}
     }
 
+    @keyframes veilShift{
+      from{transform:translate3d(-2%, -1%, 0) scale(1)}
+      to{transform:translate3d(2%, 1%, 0) scale(1.04)}
+    }
+
     @keyframes float{
       from{transform:translateY(-10px)}
       to{transform:translateY(10px)}
+    }
+
+    @keyframes latticeShift{
+      from{transform:translate3d(-2%,0,0)}
+      to{transform:translate3d(2%,0,0)}
+    }
+
+    @keyframes innerPulse{
+      0%,100%{opacity:.82}
+      50%{opacity:1}
+    }
+
+    @keyframes ringSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes coreDrift{
+      from{transform:translateY(-2px)}
+      to{transform:translateY(2px)}
     }
 
     /* =========================
@@ -412,32 +507,34 @@
         gap:40px;
       }
 
-      .diamond-sub{
-        bottom:-38px;
-        min-width:132px;
-        font-size:11px;
-      }
-
       .field-core{
-        width:min(92vw, 560px);
-        height:min(540px, 52vh);
-        top:58%;
+        width:min(92vw, 620px);
+        height:min(560px, 54vh);
+        top:59%;
       }
 
       .product-node{
-        width:120px;
-        height:120px;
+        width:124px;
+        height:124px;
       }
 
-      .product-node-label{
+      .product-node.is-core{
+        width:146px;
+        height:146px;
+      }
+
+      .product-node .gem-title{
         font-size:11px;
-        padding:14px;
       }
 
-      .node-sideai{left:4%; top:8%}
-      .node-energy{right:4%; top:12%}
-      .node-education{right:16%; bottom:8%}
-      .node-governance{left:18%; bottom:0%}
+      .product-node.is-core .gem-title{
+        font-size:13px;
+      }
+
+      .node-sideai{left:2%; top:10%}
+      .node-energy{right:2%; top:14%}
+      .node-education{right:12%; bottom:10%}
+      .node-governance{left:12%; bottom:4%}
     }
 
     @media (max-width:560px){
@@ -471,21 +568,31 @@
         justify-content:center;
       }
 
+      .gate-card{
+        width:172px;
+        height:172px;
+      }
+
       .field-core{
         width:min(94vw, 360px);
-        height:420px;
-        top:60%;
+        height:430px;
+        top:61%;
       }
 
       .product-node{
-        width:112px;
-        height:112px;
+        width:108px;
+        height:108px;
       }
 
-      .node-sideai{left:2%; top:0%}
-      .node-energy{right:2%; top:10%}
-      .node-education{right:8%; bottom:14%}
-      .node-governance{left:10%; bottom:4%}
+      .product-node.is-core{
+        width:124px;
+        height:124px;
+      }
+
+      .node-sideai{left:0%; top:4%}
+      .node-energy{right:0%; top:14%}
+      .node-education{right:4%; bottom:16%}
+      .node-governance{left:4%; bottom:8%}
     }
   </style>
 </head>
@@ -495,6 +602,7 @@
     <div class="env" aria-hidden="true">
       <div class="waterfall"></div>
       <div class="mist"></div>
+      <div class="veil"></div>
     </div>
 
     <nav class="top-nav" aria-label="Primary">
@@ -513,39 +621,77 @@
 
     <section class="stage" aria-label="Products authority">
       <div class="gate" id="gate" aria-label="Gateway choices">
-        <button class="diamond-card" id="enterNow" type="button" aria-label="Enter available products">
-          <div class="diamond-shell diamond-shell--now"></div>
-          <div class="diamond-label" id="nowLabel">NOW</div>
-          <div class="diamond-sub" id="nowSub">AVAILABLE SURFACE</div>
+        <button class="gem-btn gate-card" id="enterNow" type="button" aria-label="Enter available products">
+          <div class="gem-ring"></div>
+          <div class="gem"></div>
+          <div class="gem-core"></div>
+          <div class="gem-label">
+            <span class="gem-title" id="nowLabel">NOW</span>
+            <span class="gem-sub" id="nowSub">AVAILABLE SURFACE</span>
+          </div>
         </button>
 
-        <button class="diamond-card" id="enterFuture" type="button" aria-label="Enter future products">
-          <div class="diamond-shell diamond-shell--future"></div>
-          <div class="diamond-label" id="futureLabel">FUTURE</div>
-          <div class="diamond-sub" id="futureSub">EXPANSION PATH</div>
+        <button class="gem-btn gate-card" id="enterFuture" type="button" aria-label="Enter future products">
+          <div class="gem-ring"></div>
+          <div class="gem"></div>
+          <div class="gem-core"></div>
+          <div class="gem-label">
+            <span class="gem-title" id="futureLabel">FUTURE</span>
+            <span class="gem-sub" id="futureSub">EXPANSION PATH</span>
+          </div>
         </button>
       </div>
 
       <section class="product-field" id="field" aria-label="Product field">
         <div class="field-core">
-          <button class="product-node node-sideai" data-route="/products/on-your-side-ai/" type="button" aria-label="On Your Side AI">
-            <div class="product-node-shell"></div>
-            <div class="product-node-label" id="labelSide">ON YOUR SIDE AI</div>
+          <button class="gem-btn product-node node-sideai" data-route="/products/on-your-side-ai/" type="button" aria-label="On Your Side AI">
+            <div class="gem-ring"></div>
+            <div class="gem"></div>
+            <div class="gem-core"></div>
+            <div class="gem-label">
+              <span class="gem-title" id="labelSide">ON YOUR SIDE AI</span>
+              <span class="gem-sub" id="subSide">RELATIONAL INTELLIGENCE</span>
+            </div>
           </button>
 
-          <button class="product-node node-energy" data-route="/products/energy/" type="button" aria-label="Energy">
-            <div class="product-node-shell"></div>
-            <div class="product-node-label" id="labelEnergy">ENERGY</div>
+          <button class="gem-btn product-node node-energy" data-route="/products/energy/" type="button" aria-label="Energy">
+            <div class="gem-ring"></div>
+            <div class="gem"></div>
+            <div class="gem-core"></div>
+            <div class="gem-label">
+              <span class="gem-title" id="labelEnergy">ENERGY</span>
+              <span class="gem-sub" id="subEnergy">SYSTEM OUTPUT</span>
+            </div>
           </button>
 
-          <button class="product-node node-education" data-route="/products/education/" type="button" aria-label="Education">
-            <div class="product-node-shell"></div>
-            <div class="product-node-label" id="labelEducation">EDUCATION</div>
+          <button class="gem-btn product-node node-education" data-route="/products/education/" type="button" aria-label="Education">
+            <div class="gem-ring"></div>
+            <div class="gem"></div>
+            <div class="gem-core"></div>
+            <div class="gem-label">
+              <span class="gem-title" id="labelEducation">EDUCATION</span>
+              <span class="gem-sub" id="subEducation">LANGUAGE SYSTEMS</span>
+            </div>
           </button>
 
-          <button class="product-node node-governance" data-route="/products/governance/" type="button" aria-label="Governance">
-            <div class="product-node-shell"></div>
-            <div class="product-node-label" id="labelGovernance">GOVERNANCE</div>
+          <button class="gem-btn product-node node-governance" data-route="/products/governance/" type="button" aria-label="Governance">
+            <div class="gem-ring"></div>
+            <div class="gem"></div>
+            <div class="gem-core"></div>
+            <div class="gem-label">
+              <span class="gem-title" id="labelGovernance">GOVERNANCE</span>
+              <span class="gem-sub" id="subGovernance">SCALING RULES</span>
+            </div>
+          </button>
+
+          <button class="gem-btn product-node is-core node-nutrition" data-route="/products/nutrition/" type="button" aria-label="Nutrition">
+            <div class="gem-ring"></div>
+            <div class="gem"></div>
+            <div class="gem-core"></div>
+            <div class="gem-label">
+              <span class="gem-title" id="labelNutrition">NUTRITION</span>
+              <span class="gem-sub" id="subNutrition">BASELINE SYSTEM</span>
+            </div>
           </button>
         </div>
       </section>
@@ -640,15 +786,27 @@
         navProducts: P("PRODUCTS","产品","PRODUCTOS"),
         navExplore: P("EXPLORE","探索","EXPLORAR"),
         navGauges: P("GAUGES","量规","MEDIDORES"),
+
         gate: P("GATE","闸门","PUERTA"),
         now: P("NOW","现在","AHORA"),
         future: P("FUTURE","未来","FUTURO"),
         nowSub: P("AVAILABLE SURFACE","可用界面","SUPERFICIE DISPONIBLE"),
         futureSub: P("EXPANSION PATH","扩展路径","RUTA DE EXPANSIÓN"),
+
         side: P("ON YOUR SIDE AI","站你这边 AI","ON YOUR SIDE AI"),
+        sideSub: P("RELATIONAL INTELLIGENCE","关系智能","INTELIGENCIA RELACIONAL"),
+
         energy: P("ENERGY","能源","ENERGÍA"),
+        energySub: P("SYSTEM OUTPUT","系统输出","SALIDA DEL SISTEMA"),
+
         education: P("EDUCATION","教育","EDUCACIÓN"),
-        governance: P("GOVERNANCE","治理","GOBERNANZA")
+        educationSub: P("LANGUAGE SYSTEMS","语言系统","SISTEMAS DE LENGUAJE"),
+
+        governance: P("GOVERNANCE","治理","GOBERNANZA"),
+        governanceSub: P("SCALING RULES","扩展规则","REGLAS DE ESCALA"),
+
+        nutrition: P("NUTRITION","营养","NUTRICIÓN"),
+        nutritionSub: P("BASELINE SYSTEM","基线系统","SISTEMA BASELINE")
       };
 
       document.getElementById("heroTitle").textContent = pick(COPY.heroTitle);
@@ -665,9 +823,19 @@
       document.getElementById("futureSub").textContent = pick(COPY.futureSub);
 
       document.getElementById("labelSide").textContent = pick(COPY.side);
+      document.getElementById("subSide").textContent = pick(COPY.sideSub);
+
       document.getElementById("labelEnergy").textContent = pick(COPY.energy);
+      document.getElementById("subEnergy").textContent = pick(COPY.energySub);
+
       document.getElementById("labelEducation").textContent = pick(COPY.education);
+      document.getElementById("subEducation").textContent = pick(COPY.educationSub);
+
       document.getElementById("labelGovernance").textContent = pick(COPY.governance);
+      document.getElementById("subGovernance").textContent = pick(COPY.governanceSub);
+
+      document.getElementById("labelNutrition").textContent = pick(COPY.nutrition);
+      document.getElementById("subNutrition").textContent = pick(COPY.nutritionSub);
 
       wireRoutes();
 

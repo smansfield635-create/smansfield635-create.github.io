@@ -64,6 +64,9 @@ export function createInstruments() {
       normalized === "true" ||
       normalized === "control.js" ||
       normalized === "render.js" ||
+      normalized === "completion_engine.js" ||
+      normalized === "transition_engine.js" ||
+      normalized === "round" ||
       normalized === "ROUND"
     ) {
       return "ok";
@@ -110,7 +113,7 @@ export function createInstruments() {
       "W", "WNW", "NW", "NNW"
     ];
 
-    const fallback = currentSample?.subRegion === "GENEROSITY_REGION" ? "N" : "S";
+    const fallback = currentSample?.subRegion === "GENEROSITY_CONTINENT" ? "N" : "S";
 
     if (!currentSample || !isFiniteNumber(currentSample.latDeg) || !isFiniteNumber(currentSample.lonDeg)) {
       return fallback;
@@ -181,7 +184,7 @@ export function createInstruments() {
       clamp(sample.basinStrength ?? 0, 0, 1) >= 0.18 ? 1 : 0,
       sample.riverCandidate === true ? 1 : 0,
       sample.lakeCandidate === true ? 1 : 0,
-      sample.subRegion === "GENEROSITY_REGION" ? 1 : 0
+      sample.subRegion === "GENEROSITY_CONTINENT" ? 1 : 0
     ];
 
     let stateIndex = 0;
@@ -294,6 +297,43 @@ export function createInstruments() {
     });
   }
 
+  function buildCompletionReceipt(input = {}) {
+    const source = normalizeObject(input);
+    const progress = normalizeObject(source.progress);
+    const unlocks = normalizeObject(source.unlocks);
+
+    return Object.freeze({
+      summitCompletion: isFiniteNumber(progress.summitCompletion) ? progress.summitCompletion : null,
+      confusionLoad: isFiniteNumber(progress.confusionLoad) ? progress.confusionLoad : null,
+      completenessRatio: isFiniteNumber(progress.completenessRatio) ? progress.completenessRatio : null,
+      renderReadinessRatio: isFiniteNumber(progress.renderReadinessRatio) ? progress.renderReadinessRatio : null,
+      masteryPass: progress.masteryPass === true ? "true" : progress.masteryPass === false ? "false" : EMPTY,
+      underground: unlocks.underground === true ? "true" : unlocks.underground === false ? "false" : EMPTY,
+      continents: unlocks.continents === true ? "true" : unlocks.continents === false ? "false" : EMPTY,
+      seasons: unlocks.seasons === true ? "true" : unlocks.seasons === false ? "false" : EMPTY,
+      climates: unlocks.climates === true ? "true" : unlocks.climates === false ? "false" : EMPTY
+    });
+  }
+
+  function buildRenderReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      sampleCount: isFiniteNumber(source.sampleCount) ? source.sampleCount : null,
+      waterFamilyCount: isFiniteNumber(source.waterFamilyCount) ? source.waterFamilyCount : null,
+      landFamilyCount: isFiniteNumber(source.landFamilyCount) ? source.landFamilyCount : null,
+      cryosphereCount: isFiniteNumber(source.cryosphereCount) ? source.cryosphereCount : null,
+      shorelineCount: isFiniteNumber(source.shorelineCount) ? source.shorelineCount : null
+    });
+  }
+
+  function buildOrbitalReceipt(input = {}) {
+    const source = normalizeObject(input);
+    return Object.freeze({
+      count: isFiniteNumber(source.count) ? source.count : null,
+      frontVisibleCount: isFiniteNumber(source.frontVisibleCount) ? source.frontVisibleCount : null
+    });
+  }
+
   function buildInstrumentReceipt({
     currentSample,
     previousSample = null,
@@ -359,6 +399,8 @@ export function createInstruments() {
     const summary = normalizeObject(runtime.planetField?.summary);
     const motion = normalizeObject(instrument.motion);
     const authority = normalizeObject(instrument.authority);
+    const progress = normalizeObject(runtime.progress);
+    const renderAudit = normalizeObject(runtime.renderAudit);
 
     return `
       <div class="diagnostic-bar__group">
@@ -379,6 +421,10 @@ export function createInstruments() {
           <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(instrument.coherence, 2))}</span>
         </span>
         <span class="diagnostic-pill">
+          <span class="diagnostic-pill__label">Complete</span>
+          <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(progress.summitCompletion, 2))}</span>
+        </span>
+        <span class="diagnostic-pill">
           <span class="diagnostic-pill__label">Orbit</span>
           <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(motion.orbitVelocity, 4))}</span>
         </span>
@@ -390,6 +436,10 @@ export function createInstruments() {
           <span class="diagnostic-pill__label">Land</span>
           <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(summary.landCount))}</span>
         </span>
+        <span class="diagnostic-pill">
+          <span class="diagnostic-pill__label">Render</span>
+          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(renderAudit.sampleCount))}</span>
+        </span>
       </div>
     `.trim();
   }
@@ -397,6 +447,8 @@ export function createInstruments() {
   function renderPanelHTML(runtime = {}) {
     const instrument = normalizeObject(runtime.instrument);
     const projection = normalizeObject(runtime.control?.projectionSummary);
+    const motionState = normalizeObject(runtime.control?.motionState);
+    const orbitalState = normalizeObject(runtime.control?.orbitalState);
     const summary = normalizeObject(runtime.planetField?.summary);
     const verification = normalizeObject(runtime.verification);
     const failure = normalizeObject(runtime.failure);
@@ -405,6 +457,12 @@ export function createInstruments() {
     const motion = normalizeObject(instrument.motion);
     const authority = normalizeObject(instrument.authority);
     const transition = normalizeObject(instrument.transition);
+    const completion = buildCompletionReceipt({
+      progress: runtime.progress,
+      unlocks: runtime.unlocks
+    });
+    const renderReceipt = buildRenderReceipt(runtime.renderAudit);
+    const orbitalReceipt = buildOrbitalReceipt(runtime.orbitalAudit);
 
     const sections = [
       renderKeyValueSection("Runtime", Object.freeze({
@@ -421,6 +479,21 @@ export function createInstruments() {
         gate: normalizePrimitive(instrument.gate),
         trajectoryClass: normalizePrimitive(instrument.trajectoryClass)
       })),
+      renderKeyValueSection("World", Object.freeze({
+        lobeId: normalizePrimitive(instrument.world?.lobeId),
+        phase: normalizePrimitive(instrument.world?.phase),
+        terrainClass: normalizePrimitive(instrument.world?.terrainClass),
+        stabilityClass: normalizePrimitive(instrument.world?.stabilityClass),
+        cellId: normalizePrimitive(projection.cellId),
+        sampleX: normalizePrimitive(projection.sampleX),
+        sampleY: normalizePrimitive(projection.sampleY),
+        mode: normalizePrimitive(projection.mode ?? motionState.mode)
+      })),
+      renderKeyValueSection("Vector", Object.freeze({
+        dx: toFixedSafe(instrument.vector?.dx, 2),
+        dy: toFixedSafe(instrument.vector?.dy, 2),
+        magnitude: toFixedSafe(instrument.vector?.magnitude, 2)
+      })),
       renderKeyValueSection("Value", Object.freeze({
         valuation: toFixedSafe(value.V, 2),
         aim: toFixedSafe(value.A, 2),
@@ -435,20 +508,18 @@ export function createInstruments() {
         pressure: normalizePrimitive(psychology.pressure),
         outputClass: normalizePrimitive(psychology.outputClass)
       })),
-      renderKeyValueSection("Vector", Object.freeze({
-        dx: toFixedSafe(instrument.vector?.dx, 2),
-        dy: toFixedSafe(instrument.vector?.dy, 2),
-        magnitude: toFixedSafe(instrument.vector?.magnitude, 2)
-      })),
       renderKeyValueSection("Motion", Object.freeze({
         motionRunning: normalizePrimitive(motion.motionRunning),
         rafActive: normalizePrimitive(motion.rafActive),
         pageVisible: normalizePrimitive(motion.pageVisible),
         pageRestored: normalizePrimitive(motion.pageRestored),
+        yaw: toFixedSafe(motionState.yaw, 4),
+        pitch: toFixedSafe(motionState.pitch, 4),
         yawVelocity: toFixedSafe(motion.yawVelocity, 4),
         pitchVelocity: toFixedSafe(motion.pitchVelocity, 4),
         orbitVelocity: toFixedSafe(motion.orbitVelocity, 4),
         orbitPhase: toFixedSafe(motion.orbitPhase, 3),
+        orbitPresentationVelocity: toFixedSafe(orbitalState.orbitPresentationVelocity, 4),
         blockedDragOnStarCount: normalizePrimitive(motion.blockedDragOnStarCount),
         starTapCount: normalizePrimitive(motion.starTapCount)
       })),
@@ -466,14 +537,25 @@ export function createInstruments() {
         blockedReason: normalizePrimitive(transition.blockedReason),
         family: normalizePrimitive(transition.family)
       })),
-      renderKeyValueSection("World", Object.freeze({
-        lobeId: normalizePrimitive(instrument.world?.lobeId),
-        phase: normalizePrimitive(instrument.world?.phase),
-        terrainClass: normalizePrimitive(instrument.world?.terrainClass),
-        stabilityClass: normalizePrimitive(instrument.world?.stabilityClass),
-        cellId: normalizePrimitive(projection.cellId),
-        sampleX: normalizePrimitive(projection.sampleX),
-        sampleY: normalizePrimitive(projection.sampleY)
+      renderKeyValueSection("Completion", Object.freeze({
+        summitCompletion: toFixedSafe(completion.summitCompletion, 2),
+        confusionLoad: normalizePrimitive(completion.confusionLoad),
+        completenessRatio: toFixedSafe(completion.completenessRatio, 2),
+        renderReadinessRatio: toFixedSafe(completion.renderReadinessRatio, 2),
+        masteryPass: normalizePrimitive(completion.masteryPass),
+        underground: normalizePrimitive(completion.underground),
+        continents: normalizePrimitive(completion.continents),
+        seasons: normalizePrimitive(completion.seasons),
+        climates: normalizePrimitive(completion.climates)
+      })),
+      renderKeyValueSection("Render", Object.freeze({
+        sampleCount: normalizePrimitive(renderReceipt.sampleCount),
+        waterFamilyCount: normalizePrimitive(renderReceipt.waterFamilyCount),
+        landFamilyCount: normalizePrimitive(renderReceipt.landFamilyCount),
+        cryosphereCount: normalizePrimitive(renderReceipt.cryosphereCount),
+        shorelineCount: normalizePrimitive(renderReceipt.shorelineCount),
+        orbitalCount: normalizePrimitive(orbitalReceipt.count),
+        frontVisibleCount: normalizePrimitive(orbitalReceipt.frontVisibleCount)
       })),
       renderKeyValueSection("Field", Object.freeze({
         sampleCount: normalizePrimitive(summary.sampleCount),
@@ -482,7 +564,11 @@ export function createInstruments() {
         shorelineCount: normalizePrimitive(summary.shorelineCount),
         mountainCount: normalizePrimitive(summary.mountainCount),
         basinCount: normalizePrimitive(summary.basinCount),
-        canyonCount: normalizePrimitive(summary.canyonCount)
+        canyonCount: normalizePrimitive(summary.canyonCount),
+        continentCount: normalizePrimitive(summary.continentCount),
+        topologyVariance: toFixedSafe(summary.topologyVariance, 2),
+        seasonalTemperatureAverage: toFixedSafe(summary.seasonalTemperatureAverage, 2),
+        seasonalMoistureAverage: toFixedSafe(summary.seasonalMoistureAverage, 2)
       })),
       renderKeyValueSection("Verification", Object.freeze({
         pass: normalizePrimitive(verification.pass),

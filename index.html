@@ -962,14 +962,9 @@ function buildViewState() {
       ? control.getCameraState()
       : {};
 
-  const observeZoomScale = isObserveMode() ? 1.24 : 1;
-
   return Object.freeze({
     ...cameraState,
     observeMode: isObserveMode(),
-    radius: Number.isFinite(cameraState?.radius)
-      ? cameraState.radius * observeZoomScale
-      : undefined,
     starfieldSuppressed: isObserveMode()
   });
 }
@@ -1150,6 +1145,8 @@ function bindEvents() {
   }, { passive: true });
 
   window.addEventListener("pageshow", () => {
+    control.setPresentationMode(mode);
+
     if (isRoundVisualMode()) {
       restoreMotionState();
     }
@@ -1164,6 +1161,7 @@ function bindEvents() {
 function start() {
   resizeWorld();
   buildPlanetFieldOnce();
+  control.setPresentationMode(mode);
 
   if (isRoundVisualMode()) {
     restoreMotionState();

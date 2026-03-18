@@ -1,51 +1,50 @@
 <!doctype html>
+<!-- TNT — /door/index.html
+     DOOR · AUTHORITY REWRITE
+     PURPOSE:
+       - Door is selection, not simulation
+       - No canvas / no renderer / no inertia / no orbital hit logic
+       - Clean state carry: gd_lang / gd_style / gd_time / gd_depth only
+       - lane=platform|engineering remains URL-only
+       - EN / 中文 / ES
+       - Mode choice routes into INDEX with mode query
+       - Uses /assets/ui.css + /assets/branch.css only
+-->
+
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Nine Summits — Door</title>
+
 <link rel="stylesheet" href="/assets/ui.css"/>
 <link rel="stylesheet" href="/assets/branch.css"/>
+
 <style>
 a{color:inherit;text-decoration:none}
 body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
   --ink:rgba(255,255,255,.95);
   --mut:rgba(255,255,255,.82);
-  --dockH:118px;
+  --soft:rgba(255,255,255,.70);
+  --stroke:rgba(255,255,255,.12);
   --shadowA:0 34px 120px rgba(0,0,0,.58);
   --shadowB:0 20px 70px rgba(0,0,0,.62);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
   --glow:rgba(212,175,55,.26);
   --glowStrong:rgba(212,175,55,.34);
-}
-
-html,body{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  background:#030712;
+  --dockH:116px;
 }
 
 #root{
   position:relative;
   z-index:10;
+  min-height:100vh;
 }
 
-#world-canvas{
-  position:fixed;
-  inset:0;
-  width:100%;
-  height:100%;
-  display:block;
-  z-index:1;
-  touch-action:none;
-}
-
+/* TOP */
 .top{
   position:fixed;
   top:16px;
@@ -58,9 +57,7 @@ html,body{
   z-index:240;
   pointer-events:none;
 }
-
-.top .left,
-.top .right{
+.top .left,.top .right{
   display:flex;
   gap:10px;
   white-space:nowrap;
@@ -69,6 +66,7 @@ html,body{
   align-items:center;
 }
 
+/* BUTTONS */
 .btn{
   display:inline-flex;
   align-items:center;
@@ -96,10 +94,9 @@ html,body{
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -26px 46px rgba(0,0,0,.55);
   transform:none!important;
-  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease, opacity .16s ease;
+  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
   cursor:pointer;
 }
-
 .btn::before{
   content:"";
   position:absolute;
@@ -118,7 +115,6 @@ html,body{
     linear-gradient(#000,#000);
   opacity:.32;
 }
-
 .btn::after{
   content:"";
   position:absolute;
@@ -132,7 +128,6 @@ html,body{
   pointer-events:none;
   opacity:.90;
 }
-
 .btn:hover{
   border-color:rgba(212,175,55,.55);
   box-shadow:
@@ -142,7 +137,6 @@ html,body{
     inset 0 -30px 54px rgba(0,0,0,.60);
   filter:saturate(1.05);
 }
-
 .btn:active{
   border-color:rgba(212,175,55,.62);
   box-shadow:
@@ -152,7 +146,6 @@ html,body{
     inset 0 2px 0 rgba(255,255,255,.12),
     inset 0 -30px 54px rgba(0,0,0,.62);
 }
-
 .btn.primary{
   border-color:rgba(255,43,43,.22);
   box-shadow:
@@ -161,7 +154,6 @@ html,body{
     inset 0 2px 0 rgba(255,255,255,.10),
     inset 0 -26px 46px rgba(0,0,0,.55);
 }
-
 .btn.is-active{
   border-color:rgba(212,175,55,.62);
   box-shadow:
@@ -172,44 +164,42 @@ html,body{
     inset 0 -30px 54px rgba(0,0,0,.62);
 }
 
+/* PAGE */
 .page{
   width:min(1160px,94vw);
+  min-height:100vh;
   margin:0 auto;
-  padding:86px 0 calc(var(--dockH) + 18px);
+  padding:92px 0 calc(var(--dockH) + 20px);
   display:flex;
   flex-direction:column;
-  gap:16px;
+  justify-content:center;
+  gap:22px;
   position:relative;
-  z-index:3;
 }
 
+/* HERO */
 .hero{
-  position:relative;
   width:min(980px,92vw);
   margin:0 auto;
   text-align:center;
-  pointer-events:none;
 }
-
 .k{
-  margin:0 0 8px;
+  margin:0 0 10px;
   font-size:12px;
   letter-spacing:4px;
   text-transform:uppercase;
   opacity:.80;
   color:var(--mut);
 }
-
 .h1{
   margin:0;
   font-weight:980;
-  font-size:clamp(38px,6vw,82px);
+  font-size:clamp(40px,6vw,84px);
   letter-spacing:1px;
   line-height:1.02;
   color:var(--ink);
   text-shadow:0 10px 38px rgba(0,0,0,.62);
 }
-
 .h2{
   margin:12px 0 0;
   font-weight:900;
@@ -218,7 +208,6 @@ html,body{
   color:rgba(255,255,255,.92);
   text-shadow:0 8px 26px rgba(0,0,0,.48);
 }
-
 .tag{
   margin:12px auto 0;
   max-width:940px;
@@ -226,7 +215,6 @@ html,body{
   line-height:1.6;
   color:rgba(255,255,255,.86);
 }
-
 .micro{
   margin:10px auto 0;
   max-width:900px;
@@ -236,61 +224,65 @@ html,body{
   letter-spacing:.02em;
 }
 
-.bottom-panel{
-  position:fixed;
-  left:50%;
-  bottom:max(14px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(1120px,94vw);
-  z-index:220;
+/* MODE PANEL */
+.mode-shell{
+  width:min(1040px,94vw);
+  margin:0 auto;
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:12px;
-  padding:12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
+  gap:16px;
 }
 
-.choice{
+.mode-card{
+  position:relative;
   border:1px solid rgba(255,255,255,.12);
-  border-radius:20px;
-  padding:16px 16px 14px;
+  border-radius:28px;
+  padding:22px 20px 20px;
   background:
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 36%),
+    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 62%),
+    radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:var(--shadowB);
+  overflow:hidden;
 }
-
-.choice h3{
-  margin:0 0 8px;
-  font-size:16px;
+.mode-card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  opacity:.55;
+}
+.mode-card h3{
+  margin:0 0 10px;
+  font-size:18px;
   line-height:1.2;
-  letter-spacing:.04em;
+  letter-spacing:.05em;
+  color:var(--ink);
 }
-
-.choice p{
+.mode-card p{
   margin:0;
-  font-size:13.5px;
-  line-height:1.6;
-  color:rgba(255,255,255,.78);
+  font-size:14px;
+  line-height:1.65;
+  color:rgba(255,255,255,.80);
 }
-
-.choice .actions{
-  margin-top:12px;
+.mode-actions{
+  margin-top:16px;
   display:flex;
   justify-content:flex-end;
 }
+.mode-actions .btn{
+  min-width:148px;
+  border-radius:999px;
+}
 
+/* STATE PILL */
 .runtime-pill{
   position:fixed;
   left:16px;
-  bottom:calc(var(--dockH) + 22px);
+  bottom:calc(var(--dockH) + 18px);
   z-index:230;
   padding:8px 12px;
   border-radius:999px;
@@ -303,33 +295,64 @@ html,body{
   backdrop-filter:blur(8px);
 }
 
+/* DOCK */
+.dock{
+  position:fixed;
+  left:50%;
+  bottom:max(10px, env(safe-area-inset-bottom));
+  transform:translateX(-50%);
+  width:min(980px,94vw);
+  z-index:220;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  padding:12px;
+  border-radius:22px;
+  border:1px solid rgba(255,255,255,.12);
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  backdrop-filter:blur(10px);
+  box-shadow:0 18px 60px rgba(0,0,0,.55);
+}
+.dock .btn{
+  width:100%;
+  padding:12px;
+  border-radius:999px;
+}
+
 @media (max-width:760px){
-  .bottom-panel{
+  .mode-shell{
     grid-template-columns:1fr;
   }
   :root{
-    --dockH:196px;
+    --dockH:160px;
   }
 }
-
 @media (max-width:520px){
+  .page{
+    padding-top:86px;
+  }
   .micro{
     font-size:12px;
+  }
+  :root{
+    --dockH:166px;
   }
 }
 </style>
 </head>
-<body>
-<canvas id="world-canvas" aria-label="Door planetary field"></canvas>
 
+<body>
 <div id="root">
+
   <div class="top" aria-label="Top controls">
     <div class="left">
+      <a class="btn" id="btnIndex" href="/index.html" data-route="/index.html">INDEX</a>
       <a class="btn primary" id="btnCompass" href="/index.html" data-route="/index.html">COMPASS</a>
     </div>
-    <div class="right" aria-label="Language and mode">
-      <button class="btn" id="btnFlatTop" type="button">FLAT</button>
-      <button class="btn" id="btnRoundTop" type="button">ROUND</button>
+    <div class="right" aria-label="Language">
       <button class="btn" id="btnEN" type="button">EN</button>
       <button class="btn" id="btnZH" type="button">中文</button>
       <button class="btn" id="btnES" type="button">ES</button>
@@ -344,57 +367,60 @@ html,body{
       <p class="tag" id="tag0">Enter simply. Discover power. Choose depth.</p>
       <p class="micro" id="micro0">An exclusive frontier system with a unique digital sign language shaped through directional selection, measurable structure, and immersive depth.</p>
     </section>
+
+    <section class="mode-shell" aria-label="Mode selection">
+      <div class="mode-card">
+        <h3 id="flatTitle">WORLD IS FLAT</h3>
+        <p id="flatBody">Static, simplified, direct. No gesture depth. No orbital complexity. Clear structure, fast entry, low friction.</p>
+        <div class="mode-actions">
+          <button class="btn" id="btnFlat" type="button">ENTER FLAT</button>
+        </div>
+      </div>
+
+      <div class="mode-card">
+        <h3 id="roundTitle">WORLD IS ROUND</h3>
+        <p id="roundBody">Immersive, dynamic, gesture-driven. Planet as origin. Stars as options. Full-depth navigation through motion, relation, and convergence.</p>
+        <div class="mode-actions">
+          <button class="btn" id="btnRound" type="button">ENTER ROUND</button>
+        </div>
+      </div>
+    </section>
   </div>
 
-  <div class="runtime-pill" id="runtimePill">ROUND</div>
+  <div class="runtime-pill" id="runtimePill">ENTRY</div>
 
-  <section class="bottom-panel" aria-label="Mode explanation">
-    <div class="choice">
-      <h3 id="flatTitle">WORLD IS FLAT</h3>
-      <p id="flatBody">Static, simplified, direct. No gesture depth. No orbital complexity. Clear structure, fast entry, low friction.</p>
-      <div class="actions">
-        <button class="btn" id="btnFlatBottom" type="button">ENTER FLAT</button>
-      </div>
-    </div>
-    <div class="choice">
-      <h3 id="roundTitle">WORLD IS ROUND</h3>
-      <p id="roundBody">Immersive, dynamic, gesture-driven. Planet as origin. Stars as options. Full-depth navigation through motion, relation, and convergence.</p>
-      <div class="actions">
-        <button class="btn" id="btnRoundBottom" type="button">ENTER ROUND</button>
-      </div>
-    </div>
-  </section>
+  <nav class="dock" aria-label="Bottom navigation">
+    <a class="btn" id="dockPrelude" href="/prelude/" data-route="/prelude/">PRELUDE</a>
+    <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
+    <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+  </nav>
+
 </div>
 
-<script type="module">
-import { createPlanetEngine } from "/world/planet_engine.js";
-import { createRenderer } from "/world/render.js";
-import { createControlSystem } from "/world/control.js";
-
+<script>
 (function(){
   "use strict";
 
-  const qs = new URLSearchParams(location.search);
-  const LS = window.localStorage;
+  var qs = new URLSearchParams(location.search);
+  var LS = window.localStorage;
 
-  let lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  let style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  let lane  = qs.get("lane")  || "";
-  let mode  = qs.get("mode") === "flat" ? "flat" : "round";
+  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
+  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
+  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
+  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
+  var lane  = qs.get("lane")  || "";
 
   if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
   if(style!=="informal" && style!=="formal") style="informal";
   if(time!=="origin" && time!=="now" && time!=="post") time="now";
 
-  let d = parseInt(depth,10);
-  if(!isFinite(d)) d = 1;
-  if(d < 1) d = 1;
-  if(d > 9) d = 9;
+  var d = parseInt(depth,10);
+  if(!isFinite(d)) d=1;
+  if(d<1) d=1;
+  if(d>9) d=9;
   depth = String(d);
 
-  if(lane!=="platform" && lane!=="engineering") lane = "";
+  if(lane!=="platform" && lane!=="engineering") lane="";
 
   try{
     LS.setItem("gd_lang", lang);
@@ -406,61 +432,46 @@ import { createControlSystem } from "/world/control.js";
   document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
 
   function buildQuery(extra){
-    const p = new URLSearchParams();
-    p.set("lang", (extra && extra.lang) ? extra.lang : lang);
-    p.set("style", (extra && extra.style) ? extra.style : style);
-    p.set("time", (extra && extra.time) ? extra.time : time);
-    p.set("depth", (extra && extra.depth) ? String(extra.depth) : depth);
-    p.set("mode", (extra && extra.mode) ? extra.mode : mode);
-
-    const resolvedLane = (extra && extra.lane) ? extra.lane : lane;
-    if(resolvedLane === "platform" || resolvedLane === "engineering"){
-      p.set("lane", resolvedLane);
+    var p = new URLSearchParams();
+    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
+    p.set("style", (extra&&extra.style)?extra.style:style);
+    p.set("time", (extra&&extra.time)?extra.time:time);
+    p.set("depth", (extra&&extra.depth)?String(extra.depth):depth);
+    if(extra && extra.mode){
+      p.set("mode", extra.mode);
     }
-
+    var L = (extra&&extra.lane)?extra.lane:lane;
+    if(L==="platform"||L==="engineering") p.set("lane", L);
     return "?" + p.toString();
   }
 
-  function withModeQuery(route, nextMode){
-    const glue = route.includes("?") ? "&" : "?";
-    return route + glue + buildQuery({ mode: nextMode || mode }).slice(1);
+  function route(path, extra){
+    location.href = path + buildQuery(extra);
   }
 
   function wireRoutes(){
-    const nodes = document.querySelectorAll("[data-route]");
-    for(let i = 0; i < nodes.length; i += 1){
-      const el = nodes[i];
-      const route = el.getAttribute("data-route") || "";
-      if(!route) continue;
+    var nodes = document.querySelectorAll("[data-route]");
+    for(var i=0;i<nodes.length;i++){
+      var el = nodes[i];
+      var routePath = el.getAttribute("data-route") || "";
+      if(!routePath) continue;
       if(el.tagName === "A"){
-        el.setAttribute("href", route + buildQuery());
+        el.setAttribute("href", routePath + buildQuery());
       }
     }
   }
 
   function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next = "en";
+    if(next!=="en" && next!=="zh" && next!=="es") next="en";
     lang = next;
-    try{
-      LS.setItem("gd_lang", lang);
-    }catch(e){}
-    location.href = location.pathname + buildQuery({ lang: lang });
+    try{ LS.setItem("gd_lang", lang); }catch(e){}
+    location.href = location.pathname + buildQuery({lang:lang});
   }
 
-  function setMode(next){
-    mode = next === "flat" ? "flat" : "round";
-    location.href = location.pathname + buildQuery({ mode: mode });
-  }
+  function P(en,zh,es){ return {en:en,zh:zh,es:es}; }
+  function pick(o){ return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en); }
 
-  function P(en, zh, es){
-    return { en, zh, es };
-  }
-
-  function pick(o){
-    return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en);
-  }
-
-  const COPY = {
+  var COPY = {
     k: P("DOOR","门","PUERTA"),
     h0: P("NINE SUMMITS","九峰","NUEVE CUMBRES"),
     h1: P("Learn to live, to love.","学会去活，去爱。","Aprende a vivir, a amar."),
@@ -488,9 +499,12 @@ import { createControlSystem } from "/world/control.js";
       "Inmersivo, dinámico y guiado por gestos. El planeta es el origen. Las estrellas son las opciones. Navegación de profundidad total por movimiento, relación y convergencia."
     ),
     roundBtn: P("ENTER ROUND","进入球面","ENTRAR REDONDO"),
+    index: P("INDEX","索引","ÍNDICE"),
     compass: P("COMPASS","指南针","BRÚJULA"),
-    runtimeFlat: P("FLAT","平面","PLANO"),
-    runtimeRound: P("ROUND","球面","REDONDO")
+    prelude: P("PRELUDE","前奏","PRELUDIO"),
+    products: P("PRODUCTS","产品","PRODUCTOS"),
+    explore: P("EXPLORE","探索","EXPLORAR"),
+    runtime: P("ENTRY","入口","ENTRADA")
   };
 
   document.getElementById("k0").textContent = pick(COPY.k);
@@ -498,336 +512,37 @@ import { createControlSystem } from "/world/control.js";
   document.getElementById("h1").textContent = pick(COPY.h1);
   document.getElementById("tag0").textContent = pick(COPY.tag0);
   document.getElementById("micro0").textContent = pick(COPY.micro0);
+
   document.getElementById("flatTitle").textContent = pick(COPY.flatTitle);
   document.getElementById("flatBody").textContent = pick(COPY.flatBody);
-  document.getElementById("btnFlatBottom").textContent = pick(COPY.flatBtn);
+  document.getElementById("btnFlat").textContent = pick(COPY.flatBtn);
+
   document.getElementById("roundTitle").textContent = pick(COPY.roundTitle);
   document.getElementById("roundBody").textContent = pick(COPY.roundBody);
-  document.getElementById("btnRoundBottom").textContent = pick(COPY.roundBtn);
+  document.getElementById("btnRound").textContent = pick(COPY.roundBtn);
+
+  document.getElementById("btnIndex").textContent = pick(COPY.index);
   document.getElementById("btnCompass").textContent = pick(COPY.compass);
+  document.getElementById("dockPrelude").textContent = pick(COPY.prelude);
+  document.getElementById("dockProducts").textContent = pick(COPY.products);
+  document.getElementById("dockExplore").textContent = pick(COPY.explore);
+  document.getElementById("runtimePill").textContent = pick(COPY.runtime);
 
   wireRoutes();
 
-  const canvas = document.getElementById("world-canvas");
-  const ctx = canvas.getContext("2d", { alpha: true });
+  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
+  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
+  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
 
-  const btnEN = document.getElementById("btnEN");
-  const btnZH = document.getElementById("btnZH");
-  const btnES = document.getElementById("btnES");
-  const btnFlatTop = document.getElementById("btnFlatTop");
-  const btnRoundTop = document.getElementById("btnRoundTop");
-  const btnFlatBottom = document.getElementById("btnFlatBottom");
-  const btnRoundBottom = document.getElementById("btnRoundBottom");
-  const runtimePill = document.getElementById("runtimePill");
+  document.getElementById("btnFlat").addEventListener("click", function(){
+    route("/index.html", { mode:"flat" });
+  }, {passive:true});
 
-  btnEN.addEventListener("click", function(){ setLang("en"); }, { passive:true });
-  btnZH.addEventListener("click", function(){ setLang("zh"); }, { passive:true });
-  btnES.addEventListener("click", function(){ setLang("es"); }, { passive:true });
-  btnFlatTop.addEventListener("click", function(){ setMode("flat"); }, { passive:true });
-  btnRoundTop.addEventListener("click", function(){ setMode("round"); }, { passive:true });
-  btnFlatBottom.addEventListener("click", function(){ setMode("flat"); }, { passive:true });
-  btnRoundBottom.addEventListener("click", function(){ setMode("round"); }, { passive:true });
-
-  function syncModeButtons(){
-    btnFlatTop.classList.toggle("is-active", mode === "flat");
-    btnRoundTop.classList.toggle("is-active", mode === "round");
-    runtimePill.textContent = mode === "flat" ? pick(COPY.runtimeFlat) : pick(COPY.runtimeRound);
-    canvas.style.filter = mode === "flat" ? "blur(8px) brightness(.62)" : "none";
-  }
-
-  syncModeButtons();
-
-  const planetEngine = createPlanetEngine();
-  const renderer = createRenderer();
-  const control = createControlSystem();
-
-  const MOTION_STORAGE_KEY = "ns_door_motion_v4";
-
-  let planetField = null;
-  let rafId = 0;
-  let lastFrameAt = performance.now();
-  let lastRenderReceipt = Object.freeze({ orbitalHits: Object.freeze([]) });
-  let isDragging = false;
-  let pendingStar = null;
-  let pendingPointerDown = null;
-  let lastX = 0;
-  let lastY = 0;
-  let transition = Object.freeze({
-    active: false,
-    starId: null,
-    route: null,
-    startAt: 0,
-    progress: 0
-  });
-
-  const orbitalSystem = Object.freeze({
-    objects: Object.freeze([
-      Object.freeze({
-        id: "north-explore",
-        label: "EXPLORE",
-        route: "/explore/",
-        baseLatDeg: 0,
-        baseLonDeg: 0,
-        bearingOffsetDeg: -90,
-        spinOffsetRad: 0.15,
-        spinMultiplier: 0.15,
-        sizePx: 72
-      }),
-      Object.freeze({
-        id: "south-products",
-        label: "PRODUCTS",
-        route: "/products/",
-        baseLatDeg: 0,
-        baseLonDeg: 0,
-        bearingOffsetDeg: 90,
-        spinOffsetRad: 0.45,
-        spinMultiplier: 0.14,
-        sizePx: 60
-      }),
-      Object.freeze({
-        id: "east-gauges",
-        label: "GAUGES",
-        route: "/gauges/",
-        baseLatDeg: 0,
-        baseLonDeg: 0,
-        bearingOffsetDeg: 0,
-        spinOffsetRad: 0.8,
-        spinMultiplier: 0.12,
-        sizePx: 50
-      }),
-      Object.freeze({
-        id: "west-laws",
-        label: "LAWS",
-        route: "/laws/",
-        baseLatDeg: 0,
-        baseLonDeg: 0,
-        bearingOffsetDeg: 180,
-        spinOffsetRad: 1.15,
-        spinMultiplier: 0.12,
-        sizePx: 50
-      })
-    ])
-  });
-
-  function resizeWorld(){
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
-    control.resize(width, height);
-  }
-
-  function buildPlanetFieldOnce(){
-    if(!planetField){
-      planetField = planetEngine.buildPlanetField({});
-    }
-  }
-
-  function restoreMotionState(){
-    if(mode !== "round") return;
-    try{
-      const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
-      if(!raw) return;
-      control.restoreMotionState(JSON.parse(raw));
-    }catch(e){}
-  }
-
-  function persistMotionState(){
-    if(mode !== "round") return;
-    try{
-      sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
-    }catch(e){}
-  }
-
-  function buildRenderOrbitalSystem(){
-    const orbitalState = control.getOrbitalState();
-    return Object.freeze({
-      phase: orbitalState.orbitPhase,
-      objects: orbitalSystem.objects,
-      altitudeFactor: 0.40,
-      transition: transition
-    });
-  }
-
-  function renderSurface(){
-    if(!planetField) return;
-    lastRenderReceipt = renderer.renderPlanet({
-      ctx,
-      planetField,
-      projectPoint: function(latDeg, lonDeg, radiusOffsetPx){
-        return control.projectSphere(latDeg, lonDeg, radiusOffsetPx || 0);
-      },
-      viewState: control.getCameraState(),
-      orbitalSystem: mode === "round" ? buildRenderOrbitalSystem() : null
-    });
-  }
-
-  function hitTestOrbitalTargets(screenX, screenY){
-    const targets = Array.isArray(lastRenderReceipt?.orbitalHits) ? lastRenderReceipt.orbitalHits : [];
-    for(let i = targets.length - 1; i >= 0; i -= 1){
-      const hit = targets[i];
-      const dx = screenX - hit.x;
-      const dy = screenY - hit.y;
-      const distance = Math.sqrt((dx * dx) + (dy * dy));
-      if(distance <= hit.radius) return hit;
-    }
-    return null;
-  }
-
-  function beginTransition(hit){
-    if(!hit || transition.active) return;
-    transition = Object.freeze({
-      active: true,
-      starId: hit.id,
-      route: hit.route,
-      startAt: performance.now(),
-      progress: 0
-    });
-  }
-
-  function stepTransition(now){
-    if(!transition.active) return;
-    const durationMs = 520;
-    const t = Math.max(0, Math.min(1, (now - transition.startAt) / durationMs));
-    transition = Object.freeze({
-      active: true,
-      starId: transition.starId,
-      route: transition.route,
-      startAt: transition.startAt,
-      progress: t
-    });
-    if(t >= 1){
-      location.href = withModeQuery(transition.route, mode);
-    }
-  }
-
-  function frame(now){
-    const dtMs = now - lastFrameAt;
-    lastFrameAt = now;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    if(mode === "round"){
-      if(!transition.active){
-        control.stepInertia(dtMs);
-      }else{
-        control.stepInertia(Math.min(dtMs, 8));
-        stepTransition(now);
-      }
-    }
-
-    renderSurface();
-    rafId = requestAnimationFrame(frame);
-  }
-
-  function bindEvents(){
-    if(mode === "round"){
-      canvas.addEventListener("pointerdown", function(event){
-        if(transition.active) return;
-
-        const starHit = hitTestOrbitalTargets(event.clientX, event.clientY);
-        pendingPointerDown = Object.freeze({ x:event.clientX, y:event.clientY });
-
-        if(starHit){
-          pendingStar = starHit;
-          isDragging = false;
-          return;
-        }
-
-        pendingStar = null;
-        isDragging = true;
-        lastX = event.clientX;
-        lastY = event.clientY;
-      }, { passive:true });
-
-      window.addEventListener("pointermove", function(event){
-        if(transition.active) return;
-        if(pendingStar) return;
-        if(!isDragging) return;
-
-        const dx = event.clientX - lastX;
-        const dy = event.clientY - lastY;
-        lastX = event.clientX;
-        lastY = event.clientY;
-        control.applyDrag(dx, dy);
-      }, { passive:true });
-
-      window.addEventListener("pointerup", function(event){
-        if(transition.active){
-          pendingStar = null;
-          pendingPointerDown = null;
-          isDragging = false;
-          return;
-        }
-
-        if(pendingStar){
-          const moved = pendingPointerDown
-            ? Math.sqrt(
-                Math.pow(event.clientX - pendingPointerDown.x, 2) +
-                Math.pow(event.clientY - pendingPointerDown.y, 2)
-              )
-            : 0;
-
-          const hit = hitTestOrbitalTargets(event.clientX, event.clientY);
-          if(moved <= 12 && hit && hit.id === pendingStar.id){
-            beginTransition(hit);
-          }
-        }
-
-        pendingStar = null;
-        pendingPointerDown = null;
-        isDragging = false;
-      }, { passive:true });
-
-      window.addEventListener("pointercancel", function(){
-        pendingStar = null;
-        pendingPointerDown = null;
-        isDragging = false;
-      }, { passive:true });
-    }
-
-    window.addEventListener("resize", function(){
-      resizeWorld();
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      renderSurface();
-    }, { passive:true });
-
-    window.addEventListener("pagehide", function(){
-      persistMotionState();
-      if(rafId){
-        cancelAnimationFrame(rafId);
-        rafId = 0;
-      }
-    }, { passive:true });
-
-    window.addEventListener("pageshow", function(){
-      if(mode === "round"){
-        restoreMotionState();
-      }
-      if(!rafId){
-        lastFrameAt = performance.now();
-        rafId = requestAnimationFrame(frame);
-      }
-    }, { passive:true });
-  }
-
-  function start(){
-    resizeWorld();
-    buildPlanetFieldOnce();
-    if(mode === "round"){
-      restoreMotionState();
-    }
-    bindEvents();
-    renderSurface();
-
-    if(!rafId){
-      lastFrameAt = performance.now();
-      rafId = requestAnimationFrame(frame);
-    }
-  }
-
-  start();
+  document.getElementById("btnRound").addEventListener("click", function(){
+    route("/index.html", { mode:"round" });
+  }, {passive:true});
 })();
 </script>
+
 </body>
 </html>

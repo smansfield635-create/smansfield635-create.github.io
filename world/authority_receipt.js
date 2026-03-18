@@ -1,29 +1,93 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 
 const NUMERIC_MODE = "A_INT32_BIGINT";
-const ENUM_VERSION = WORLD_KERNEL?.state?.registry?.version || 1;
+const CHANNEL_SET_VERSION = 1;
 
-/* ================================
-   CANONICAL CHANNEL SET
-================================ */
+/*
+  Canonical enum version source.
+  This prefers a future singular enum surface on WORLD_KERNEL,
+  but remains stable at v1 until that helper exists.
+*/
+const ENUM_REGISTRY_VERSION =
+  Number.isInteger(WORLD_KERNEL?.enums?.version)
+    ? WORLD_KERNEL.enums.version
+    : 1;
+
 export const STATE_HASH_CHANNEL_SET_V1 = Object.freeze([
-  "stateCode",
-  "stateAge",
+  "stateBuffer.stateCode",
+  "stateBuffer.stateAge",
   "tickIndex",
   "enumRegistryVersion",
   "numericModeCode",
-  "activeRuleFamilies",
-  "transitionCounts",
+  "activeRuleFamilies.sortedCodes",
+  "transitionCounts.fixedOrder",
   "blockedTransitionCount",
   "admissibleCount"
 ]);
 
-/* ================================
-   NUMERIC MODE REGISTRY
-================================ */
 const NUMERIC_MODE_CODES = Object.freeze({
   A_INT32_BIGINT: 1
 });
+
+const RULE_FAMILY_CODES = Object.freeze({
+  FREEZE_MELT: 1,
+  WATER_RETENTION_SPREAD: 2,
+  WETTING_DRYING: 3
+});
+
+const REQUIRED_RECEIPT_KEYS = Object.freeze([
+  "RUN_ID",
+  "SEED",
+  "SCALE_FACTOR",
+  "PROJECTION",
+  "TICK",
+  "STATE_HASH",
+  "PREV_HASH",
+  "ENUM_REGISTRY_VERSION",
+  "NUMERIC_MODE",
+  "CHANNEL_SET_VERSION",
+  "CHANNEL_SET",
+  "ACTIVE_RULE_FAMILIES",
+  "TRANSITION_COUNTS",
+  "BLOCKED_TRANSITION_COUNT",
+  "ADMISSIBLE_COUNT",
+  "MIN_STATE",
+  "MAX_STATE",
+  "FAIL_FLAGS",
+  "PERFORMANCE"
+]);
+
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function isPlainObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function requireInt32(value, fieldName) {
+  if (!Number.isInteger(value)) {
+    throw new Error(`RECEIPT_INVALID_INT32:${fieldName}`);
+  }
+  if (value < -2147483648 || value > 2147483647) {
+    throw new Error(`RECEIPT_INT32_OUT_OF_RANGE:${fieldName}`);
+  }
+  return value;
+}
+
+function normalizeInt32(value, fallback, fieldName) {
+  if (value === undefined || value === null) {
+    return requireInt32(fallback, `${fieldName}:fallback`);
+  }
+  return requireInt32(value, fieldName);
+}
+
+function requireString(value, fieldName) {
+  if (typeof value !== "string" || value.length === 0) {
+    throw new Error(`RECEIPT_INVALID_STRING:${fieldName}`);
+  }
+  return value;
+}
 
 function getNumericModeCode(mode) {
   const code = NUMERIC_MODE_CODES[mode];
@@ -33,87 +97,118 @@ function getNumericModeCode(mode) {
   return code;
 }
 
-/* ================================
-   BIGINT SAFE CORE
-================================ */
-function toBigInt(value) {
-  return BigInt(Number.isInteger(value) ? value : 0);
+function getRuleFamilyCode(ruleFamily) {
+  const code = RULE_FAMILY_CODES[ruleFamily];
+  if (!Number.isInteger(code)) {
+    throw new Error(`RULE_FAMILY_INVALID:${String(ruleFamily)}`);
+  }
+  return code;
 }
 
-function fnv1a64(intArray) {
-  let hash = 0xcbf29ce484222325n;
-  const prime = 0x100000001b3n;
-
-  for (let i = 0; i < intArray.length; i += 1) {
-    const value = BigInt((intArray[i] ?? 0) >>> 0);
-    hash ^= value;
-    hash = (hash * prime) & 0xffffffffffffffffn;
+function normalizeActiveRuleFamilies(activeRuleFamilies) {
+  if (!Array.isArray(activeRuleFamilies)) {
+    throw new Error("RECEIPT_INVALID_ACTIVE_RULE_FAMILIES");
   }
 
-  return hash.toString(16).padStart(16, "0");
-}
+  const codes = activeRuleFamilies.map((family, index) => {
+    if (typeof family !== "string") {
+      throw new Error(`RECEIPT_INVALID_RULE_FAMILY:${index}`);
+    }
+    return getRuleFamilyCode(family);
+  });
 
-/* ================================
-   CANONICAL NORMALIZATION
-================================ */
-function normalizeArray(value) {
-  return Array.isArray(value) ? value : [];
-}
+  codes.sort((a, b) => a - b);
 
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
-}
-
-function normalizeInt(value, fallback = 0) {
-  return Number.isInteger(value) ? value | 0 : fallback | 0;
-}
-
-function stableFamilyCode(ruleFamily) {
-  const normalized = typeof ruleFamily === "string" ? ruleFamily.trim().toUpperCase() : "";
-
-  if (normalized === "FREEZE_MELT") return 1;
-  if (normalized === "WATER_RETENTION_SPREAD") return 2;
-  if (normalized === "WETTING_DRYING") return 3;
-
-  return 0;
-}
-
-function sortRuleFamilyCodes(activeRuleFamilies) {
-  return normalizeArray(activeRuleFamilies)
-    .map((family) => stableFamilyCode(family))
-    .filter((code) => code > 0)
-    .sort((a, b) => a - b);
+  return Object.freeze(codes);
 }
 
 function normalizeTransitionCounts(transitionCounts) {
-  const source = normalizeObject(transitionCounts);
+  if (!isPlainObject(transitionCounts)) {
+    throw new Error("RECEIPT_INVALID_TRANSITION_COUNTS");
+  }
 
   return Object.freeze({
-    FREEZE_MELT: normalizeInt(source.FREEZE_MELT, 0),
-    WATER_RETENTION_SPREAD: normalizeInt(source.WATER_RETENTION_SPREAD, 0),
-    WETTING_DRYING: normalizeInt(source.WETTING_DRYING, 0)
+    FREEZE_MELT: normalizeInt32(
+      transitionCounts.FREEZE_MELT,
+      0,
+      "transitionCounts.FREEZE_MELT"
+    ),
+    WATER_RETENTION_SPREAD: normalizeInt32(
+      transitionCounts.WATER_RETENTION_SPREAD,
+      0,
+      "transitionCounts.WATER_RETENTION_SPREAD"
+    ),
+    WETTING_DRYING: normalizeInt32(
+      transitionCounts.WETTING_DRYING,
+      0,
+      "transitionCounts.WETTING_DRYING"
+    )
   });
 }
 
-/* ================================
-   CHANNEL SERIALIZATION
-================================ */
-function serializeStateCells(stateBuffer) {
-  const out = [];
+function validateStateBuffer(stateBuffer) {
+  if (!Array.isArray(stateBuffer) || stateBuffer.length === 0) {
+    throw new Error("STATE_BUFFER_INVALID:root");
+  }
+
+  const width = Array.isArray(stateBuffer[0]) ? stateBuffer[0].length : 0;
+  if (width === 0) {
+    throw new Error("STATE_BUFFER_INVALID:first_row");
+  }
 
   for (let y = 0; y < stateBuffer.length; y += 1) {
     const row = stateBuffer[y];
+    if (!Array.isArray(row) || row.length !== width) {
+      throw new Error(`STATE_BUFFER_SHAPE_MISMATCH:row_${y}`);
+    }
+
     for (let x = 0; x < row.length; x += 1) {
       const cell = row[x];
-      out.push(normalizeInt(cell?.stateCode, 0));
-      out.push(normalizeInt(cell?.stateAge, 0));
+      if (!isPlainObject(cell)) {
+        throw new Error(`STATE_BUFFER_CELL_INVALID:${x},${y}`);
+      }
+
+      requireInt32(cell.stateCode, `stateBuffer[${y}][${x}].stateCode`);
+      requireInt32(cell.stateAge, `stateBuffer[${y}][${x}].stateAge`);
     }
   }
 
-  return out;
+  return stateBuffer;
 }
 
-function serializeCanonicalChannels({
+function summarizeStateExtrema(stateBuffer) {
+  let minState = 2147483647;
+  let maxState = -2147483648;
+
+  for (let y = 0; y < stateBuffer.length; y += 1) {
+    for (let x = 0; x < stateBuffer[y].length; x += 1) {
+      const code = stateBuffer[y][x].stateCode;
+      if (code < minState) minState = code;
+      if (code > maxState) maxState = code;
+    }
+  }
+
+  return Object.freeze({
+    minState: minState === 2147483647 ? 0 : minState,
+    maxState: maxState === -2147483648 ? 0 : maxState
+  });
+}
+
+/*
+  Signed canonical serialization.
+  Each Int32 is serialized as 4 bytes in little-endian two's-complement form.
+*/
+function pushInt32BytesLE(outBytes, value, fieldName) {
+  const int32 = requireInt32(value, fieldName);
+  const asUint32 = BigInt.asUintN(32, BigInt(int32));
+
+  outBytes.push(Number(asUint32 & 0xffn));
+  outBytes.push(Number((asUint32 >> 8n) & 0xffn));
+  outBytes.push(Number((asUint32 >> 16n) & 0xffn));
+  outBytes.push(Number((asUint32 >> 24n) & 0xffn));
+}
+
+function serializeCanonicalBytes({
   stateBuffer,
   tickIndex,
   enumRegistryVersion,
@@ -123,87 +218,150 @@ function serializeCanonicalChannels({
   blockedTransitionCount,
   admissibleCount
 }) {
+  validateStateBuffer(stateBuffer);
+
   const numericModeCode = getNumericModeCode(numericMode);
-  const ruleFamilyCodes = sortRuleFamilyCodes(activeRuleFamilies);
-  const counts = normalizeTransitionCounts(transitionCounts);
+  const activeRuleFamilyCodes = normalizeActiveRuleFamilies(activeRuleFamilies);
+  const normalizedTransitionCounts = normalizeTransitionCounts(transitionCounts);
 
-  const out = [];
-
-  /* channel 1-2: state cells */
-  out.push(...serializeStateCells(stateBuffer));
-
-  /* channel 3-5: tick + enum version + numeric mode */
-  out.push(normalizeInt(tickIndex, 0));
-  out.push(normalizeInt(enumRegistryVersion, 0));
-  out.push(normalizeInt(numericModeCode, 0));
-
-  /* channel 6: active rule families */
-  out.push(normalizeInt(ruleFamilyCodes.length, 0));
-  out.push(...ruleFamilyCodes);
-
-  /* channel 7: transition counts (fixed order) */
-  out.push(counts.FREEZE_MELT);
-  out.push(counts.WATER_RETENTION_SPREAD);
-  out.push(counts.WETTING_DRYING);
-
-  /* channel 8-9: blocked + admissible */
-  out.push(normalizeInt(blockedTransitionCount, 0));
-  out.push(normalizeInt(admissibleCount, 0));
-
-  return out;
-}
-
-/* ================================
-   METRIC EXTRACTION
-================================ */
-function summarizeStateExtrema(stateBuffer) {
-  let minState = 2147483647;
-  let maxState = -2147483648;
+  const bytes = [];
 
   for (let y = 0; y < stateBuffer.length; y += 1) {
-    const row = stateBuffer[y];
-    for (let x = 0; x < row.length; x += 1) {
-      const code = normalizeInt(row[x]?.stateCode, 0);
-      if (code < minState) minState = code;
-      if (code > maxState) maxState = code;
+    for (let x = 0; x < stateBuffer[y].length; x += 1) {
+      const cell = stateBuffer[y][x];
+      pushInt32BytesLE(bytes, cell.stateCode, `stateBuffer[${y}][${x}].stateCode`);
+      pushInt32BytesLE(bytes, cell.stateAge, `stateBuffer[${y}][${x}].stateAge`);
     }
   }
 
-  if (minState === 2147483647) minState = 0;
-  if (maxState === -2147483648) maxState = 0;
+  pushInt32BytesLE(bytes, tickIndex, "tickIndex");
+  pushInt32BytesLE(bytes, enumRegistryVersion, "enumRegistryVersion");
+  pushInt32BytesLE(bytes, numericModeCode, "numericModeCode");
 
-  return Object.freeze({
-    minState: minState | 0,
-    maxState: maxState | 0
-  });
+  pushInt32BytesLE(bytes, activeRuleFamilyCodes.length, "activeRuleFamilies.length");
+  for (let i = 0; i < activeRuleFamilyCodes.length; i += 1) {
+    pushInt32BytesLE(bytes, activeRuleFamilyCodes[i], `activeRuleFamilies[${i}]`);
+  }
+
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.FREEZE_MELT, "transitionCounts.FREEZE_MELT");
+  pushInt32BytesLE(
+    bytes,
+    normalizedTransitionCounts.WATER_RETENTION_SPREAD,
+    "transitionCounts.WATER_RETENTION_SPREAD"
+  );
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.WETTING_DRYING, "transitionCounts.WETTING_DRYING");
+
+  pushInt32BytesLE(bytes, blockedTransitionCount, "blockedTransitionCount");
+  pushInt32BytesLE(bytes, admissibleCount, "admissibleCount");
+
+  return Object.freeze(bytes);
 }
 
-/* ================================
-   RECEIPT ENGINE
-================================ */
+function fnv1a64FromBytes(bytes) {
+  let hash = 0xcbf29ce484222325n;
+  const prime = 0x100000001b3n;
+  const modMask = 0xffffffffffffffffn;
+
+  for (let i = 0; i < bytes.length; i += 1) {
+    const byte = bytes[i];
+    if (!Number.isInteger(byte) || byte < 0 || byte > 255) {
+      throw new Error(`HASH_BYTE_INVALID:${i}`);
+    }
+
+    hash ^= BigInt(byte);
+    hash = (hash * prime) & modMask;
+  }
+
+  return hash.toString(16).padStart(16, "0");
+}
+
+function validateReceiptShape(receipt, indexLabel = "receipt") {
+  if (!isPlainObject(receipt)) {
+    throw new Error(`RECEIPT_SHAPE_INVALID:${indexLabel}`);
+  }
+
+  for (let i = 0; i < REQUIRED_RECEIPT_KEYS.length; i += 1) {
+    const key = REQUIRED_RECEIPT_KEYS[i];
+    if (!(key in receipt)) {
+      throw new Error(`RECEIPT_MISSING_KEY:${indexLabel}:${key}`);
+    }
+  }
+
+  requireString(receipt.RUN_ID, `${indexLabel}.RUN_ID`);
+  requireInt32(receipt.SEED, `${indexLabel}.SEED`);
+  requireInt32(receipt.SCALE_FACTOR, `${indexLabel}.SCALE_FACTOR`);
+  requireString(receipt.PROJECTION, `${indexLabel}.PROJECTION`);
+  requireInt32(receipt.TICK, `${indexLabel}.TICK`);
+  requireString(receipt.STATE_HASH, `${indexLabel}.STATE_HASH`);
+  requireString(receipt.PREV_HASH, `${indexLabel}.PREV_HASH`);
+  requireInt32(receipt.ENUM_REGISTRY_VERSION, `${indexLabel}.ENUM_REGISTRY_VERSION`);
+  requireString(receipt.NUMERIC_MODE, `${indexLabel}.NUMERIC_MODE`);
+  requireInt32(receipt.CHANNEL_SET_VERSION, `${indexLabel}.CHANNEL_SET_VERSION`);
+
+  if (!Array.isArray(receipt.CHANNEL_SET)) {
+    throw new Error(`RECEIPT_INVALID_CHANNEL_SET:${indexLabel}`);
+  }
+
+  if (!Array.isArray(receipt.ACTIVE_RULE_FAMILIES)) {
+    throw new Error(`RECEIPT_INVALID_ACTIVE_RULE_FAMILIES:${indexLabel}`);
+  }
+
+  normalizeTransitionCounts(receipt.TRANSITION_COUNTS);
+  requireInt32(receipt.BLOCKED_TRANSITION_COUNT, `${indexLabel}.BLOCKED_TRANSITION_COUNT`);
+  requireInt32(receipt.ADMISSIBLE_COUNT, `${indexLabel}.ADMISSIBLE_COUNT`);
+  requireInt32(receipt.MIN_STATE, `${indexLabel}.MIN_STATE`);
+  requireInt32(receipt.MAX_STATE, `${indexLabel}.MAX_STATE`);
+
+  if (!Array.isArray(receipt.FAIL_FLAGS)) {
+    throw new Error(`RECEIPT_INVALID_FAIL_FLAGS:${indexLabel}`);
+  }
+
+  if (!isPlainObject(receipt.PERFORMANCE)) {
+    throw new Error(`RECEIPT_INVALID_PERFORMANCE:${indexLabel}`);
+  }
+
+  if (!isFiniteNumber(receipt.PERFORMANCE.tickMs) || receipt.PERFORMANCE.tickMs < 0) {
+    throw new Error(`RECEIPT_INVALID_PERFORMANCE_TICK_MS:${indexLabel}`);
+  }
+
+  if (!isFiniteNumber(receipt.PERFORMANCE.frameMs) || receipt.PERFORMANCE.frameMs < 0) {
+    throw new Error(`RECEIPT_INVALID_PERFORMANCE_FRAME_MS:${indexLabel}`);
+  }
+
+  return receipt;
+}
+
 export function createAuthorityReceiptEngine() {
   function computeStateHash({
     stateBuffer,
     tickIndex = 0,
-    enumRegistryVersion = ENUM_VERSION,
+    enumRegistryVersion = ENUM_REGISTRY_VERSION,
     numericMode = NUMERIC_MODE,
     activeRuleFamilies = [],
     transitionCounts = {},
     blockedTransitionCount = 0,
     admissibleCount = 0
   }) {
-    const serialized = serializeCanonicalChannels({
+    const bytes = serializeCanonicalBytes({
       stateBuffer,
-      tickIndex,
-      enumRegistryVersion,
+      tickIndex: normalizeInt32(tickIndex, 0, "tickIndex"),
+      enumRegistryVersion: normalizeInt32(
+        enumRegistryVersion,
+        ENUM_REGISTRY_VERSION,
+        "enumRegistryVersion"
+      ),
       numericMode,
       activeRuleFamilies,
       transitionCounts,
-      blockedTransitionCount,
-      admissibleCount
+      blockedTransitionCount: normalizeInt32(
+        blockedTransitionCount,
+        0,
+        "blockedTransitionCount"
+      ),
+      admissibleCount: normalizeInt32(admissibleCount, 0, "admissibleCount")
     });
 
-    return fnv1a64(serialized);
+    return fnv1a64FromBytes(bytes);
   }
 
   function buildReceipt({
@@ -216,74 +374,188 @@ export function createAuthorityReceiptEngine() {
     transitionSummary = {},
     metrics = {}
   }) {
-    const activeRuleFamilies = normalizeArray(transitionSummary.activeRuleFamilies);
-    const transitionCounts = normalizeTransitionCounts(transitionSummary.transitionCounts);
-    const blockedTransitionCount = normalizeInt(transitionSummary.blockedTransitionCount, 0);
-    const admissibleCount = normalizeInt(transitionSummary.admissibleCount, 0);
+    validateStateBuffer(stateBuffer);
+
+    const normalizedTransitionCounts = normalizeTransitionCounts(
+      isPlainObject(transitionSummary.transitionCounts)
+        ? transitionSummary.transitionCounts
+        : {}
+    );
+
+    const activeRuleFamilies = Array.isArray(transitionSummary.activeRuleFamilies)
+      ? Object.freeze([...transitionSummary.activeRuleFamilies])
+      : Object.freeze([]);
+
+    const blockedTransitionCount = normalizeInt32(
+      transitionSummary.blockedTransitionCount,
+      0,
+      "transitionSummary.blockedTransitionCount"
+    );
+
+    const admissibleCount = normalizeInt32(
+      transitionSummary.admissibleCount,
+      0,
+      "transitionSummary.admissibleCount"
+    );
 
     const stateHash = computeStateHash({
       stateBuffer,
       tickIndex,
-      enumRegistryVersion: ENUM_VERSION,
+      enumRegistryVersion: ENUM_REGISTRY_VERSION,
       numericMode: NUMERIC_MODE,
       activeRuleFamilies,
-      transitionCounts,
+      transitionCounts: normalizedTransitionCounts,
       blockedTransitionCount,
       admissibleCount
     });
 
     const extrema = summarizeStateExtrema(stateBuffer);
 
-    return Object.freeze({
-      RUN_ID: `${seed}_${scale}_${projection}`,
-      SEED: normalizeInt(seed, 0),
-      SCALE_FACTOR: normalizeInt(scale, 1),
-      PROJECTION: typeof projection === "string" ? projection : "flat",
+    const receipt = Object.freeze({
+      RUN_ID: `${normalizeInt32(seed, 0, "seed")}_${normalizeInt32(scale, 1, "scale")}_${requireString(projection, "projection")}`,
+      SEED: normalizeInt32(seed, 0, "seed"),
+      SCALE_FACTOR: normalizeInt32(scale, 1, "scale"),
+      PROJECTION: requireString(projection, "projection"),
 
-      TICK: normalizeInt(tickIndex, 0),
+      TICK: normalizeInt32(tickIndex, 0, "tickIndex"),
 
       STATE_HASH: stateHash,
-      PREV_HASH: String(prevHash),
+      PREV_HASH: requireString(String(prevHash), "prevHash"),
 
-      ENUM_REGISTRY_VERSION: ENUM_VERSION,
+      ENUM_REGISTRY_VERSION: ENUM_REGISTRY_VERSION,
       NUMERIC_MODE: NUMERIC_MODE,
 
-      CHANNEL_SET_VERSION: 1,
+      CHANNEL_SET_VERSION: CHANNEL_SET_VERSION,
       CHANNEL_SET: STATE_HASH_CHANNEL_SET_V1,
 
-      ACTIVE_RULE_FAMILIES: Object.freeze([...activeRuleFamilies]),
-      TRANSITION_COUNTS: transitionCounts,
+      ACTIVE_RULE_FAMILIES: activeRuleFamilies,
+      TRANSITION_COUNTS: normalizedTransitionCounts,
       BLOCKED_TRANSITION_COUNT: blockedTransitionCount,
       ADMISSIBLE_COUNT: admissibleCount,
 
-      MIN_STATE: normalizeInt(metrics.minState, extrema.minState),
-      MAX_STATE: normalizeInt(metrics.maxState, extrema.maxState),
+      MIN_STATE: normalizeInt32(metrics.minState, extrema.minState, "metrics.minState"),
+      MAX_STATE: normalizeInt32(metrics.maxState, extrema.maxState, "metrics.maxState"),
 
-      FAIL_FLAGS: Object.freeze(normalizeArray(metrics.failFlags)),
+      FAIL_FLAGS: Object.freeze(Array.isArray(metrics.failFlags) ? [...metrics.failFlags] : []),
+
+      /*
+        Performance is diagnostic only.
+        It is intentionally excluded from the authoritative hash.
+      */
       PERFORMANCE: Object.freeze({
-        tickMs: Number.isFinite(metrics.tickMs) ? metrics.tickMs : 0,
-        frameMs: Number.isFinite(metrics.frameMs) ? metrics.frameMs : 0
+        tickMs: isFiniteNumber(metrics.tickMs) ? metrics.tickMs : 0,
+        frameMs: isFiniteNumber(metrics.frameMs) ? metrics.frameMs : 0
       })
     });
+
+    validateReceiptShape(receipt, "buildReceipt.output");
+    return receipt;
   }
 
   return Object.freeze({
     computeStateHash,
-    buildReceipt
+    buildReceipt,
+    validateReceiptShape
   });
 }
 
-/* ================================
-   REPLAY VERIFIER
-================================ */
 export function createAuthorityReplayVerifier() {
+  function verifySingleRunChain(receipts, runLabel) {
+    if (!Array.isArray(receipts)) {
+      return Object.freeze({
+        pass: false,
+        reason: "INVALID_INPUT",
+        run: runLabel
+      });
+    }
+
+    for (let i = 0; i < receipts.length; i += 1) {
+      const receipt = validateReceiptShape(receipts[i], `${runLabel}[${i}]`);
+
+      if (receipt.ENUM_REGISTRY_VERSION !== ENUM_REGISTRY_VERSION) {
+        return Object.freeze({
+          pass: false,
+          reason: "ENUM_VERSION_MISMATCH",
+          run: runLabel,
+          tick: i
+        });
+      }
+
+      if (receipt.NUMERIC_MODE !== NUMERIC_MODE) {
+        return Object.freeze({
+          pass: false,
+          reason: "NUMERIC_MODE_MISMATCH",
+          run: runLabel,
+          tick: i
+        });
+      }
+
+      if (receipt.CHANNEL_SET_VERSION !== CHANNEL_SET_VERSION) {
+        return Object.freeze({
+          pass: false,
+          reason: "CHANNEL_SET_VERSION_MISMATCH",
+          run: runLabel,
+          tick: i
+        });
+      }
+
+      const receiptChannelSet = receipt.CHANNEL_SET.join("|");
+      const canonicalChannelSet = STATE_HASH_CHANNEL_SET_V1.join("|");
+
+      if (receiptChannelSet !== canonicalChannelSet) {
+        return Object.freeze({
+          pass: false,
+          reason: "CHANNEL_SET_MISMATCH",
+          run: runLabel,
+          tick: i
+        });
+      }
+
+      if (i === 0) {
+        if (receipt.PREV_HASH !== "0") {
+          return Object.freeze({
+            pass: false,
+            reason: "CHAIN_ROOT_INVALID",
+            run: runLabel,
+            tick: i
+          });
+        }
+      } else {
+        const prior = receipts[i - 1];
+        if (receipt.PREV_HASH !== prior.STATE_HASH) {
+          return Object.freeze({
+            pass: false,
+            reason: "CHAIN_BREAK",
+            run: runLabel,
+            tick: i,
+            expectedPrevHash: prior.STATE_HASH,
+            actualPrevHash: receipt.PREV_HASH
+          });
+        }
+      }
+    }
+
+    return Object.freeze({ pass: true });
+  }
+
   function verifyRun(receiptsA, receiptsB) {
+    const chainA = verifySingleRunChain(receiptsA, "runA");
+    if (!chainA.pass) return chainA;
+
+    const chainB = verifySingleRunChain(receiptsB, "runB");
+    if (!chainB.pass) return chainB;
+
     if (!Array.isArray(receiptsA) || !Array.isArray(receiptsB)) {
       return Object.freeze({ pass: false, reason: "INVALID_INPUT" });
     }
 
     if (receiptsA.length !== receiptsB.length) {
-      return Object.freeze({ pass: false, reason: "LENGTH_MISMATCH" });
+      return Object.freeze({
+        pass: false,
+        reason: "LENGTH_MISMATCH",
+        totalTicksA: receiptsA.length,
+        totalTicksB: receiptsB.length
+      });
     }
 
     for (let i = 0; i < receiptsA.length; i += 1) {
@@ -294,50 +566,37 @@ export function createAuthorityReplayVerifier() {
         return Object.freeze({
           pass: false,
           reason: "HASH_MISMATCH",
-          tick: i
+          tick: i,
+          expectedHash: a.STATE_HASH,
+          actualHash: b.STATE_HASH,
+          totalTicks: receiptsA.length
         });
       }
 
-      if (a.ENUM_REGISTRY_VERSION !== b.ENUM_REGISTRY_VERSION) {
+      if (a.PREV_HASH !== b.PREV_HASH) {
         return Object.freeze({
           pass: false,
-          reason: "ENUM_VERSION_MISMATCH",
-          tick: i
-        });
-      }
-
-      if (a.NUMERIC_MODE !== b.NUMERIC_MODE) {
-        return Object.freeze({
-          pass: false,
-          reason: "NUMERIC_MODE_MISMATCH",
-          tick: i
-        });
-      }
-
-      if (a.CHANNEL_SET_VERSION !== b.CHANNEL_SET_VERSION) {
-        return Object.freeze({
-          pass: false,
-          reason: "CHANNEL_SET_VERSION_MISMATCH",
-          tick: i
-        });
-      }
-
-      const aChannels = Array.isArray(a.CHANNEL_SET) ? a.CHANNEL_SET.join("|") : "";
-      const bChannels = Array.isArray(b.CHANNEL_SET) ? b.CHANNEL_SET.join("|") : "";
-
-      if (aChannels !== bChannels) {
-        return Object.freeze({
-          pass: false,
-          reason: "CHANNEL_SET_MISMATCH",
-          tick: i
+          reason: "PREV_HASH_MISMATCH",
+          tick: i,
+          expectedPrevHash: a.PREV_HASH,
+          actualPrevHash: b.PREV_HASH,
+          totalTicks: receiptsA.length
         });
       }
     }
 
-    return Object.freeze({ pass: true });
+    return Object.freeze({
+      pass: true,
+      failureTick: null,
+      failureType: null,
+      expectedHash: receiptsA.length ? receiptsA[receiptsA.length - 1].STATE_HASH : "",
+      actualHash: receiptsB.length ? receiptsB[receiptsB.length - 1].STATE_HASH : "",
+      totalTicks: receiptsA.length
+    });
   }
 
   return Object.freeze({
-    verifyRun
+    verifyRun,
+    verifySingleRunChain
   });
 }

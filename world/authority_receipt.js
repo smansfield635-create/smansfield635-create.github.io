@@ -1,23 +1,24 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 
 const NUMERIC_MODE = "A_INT32_BIGINT";
-const CHANNEL_SET_VERSION = 1;
+const CHANNEL_SET_VERSION = 2;
 
-/*
-  Canonical enum version source.
-  This prefers a future singular enum surface on WORLD_KERNEL,
-  but remains stable at v1 until that helper exists.
-*/
 const ENUM_REGISTRY_VERSION =
   Number.isInteger(WORLD_KERNEL?.enums?.version)
     ? WORLD_KERNEL.enums.version
     : 1;
 
-export const STATE_HASH_CHANNEL_SET_V1 = Object.freeze([
+const WORLD_CONTRACT_VERSION =
+  Number.isInteger(WORLD_KERNEL?.constants?.contractVersion)
+    ? WORLD_KERNEL.constants.contractVersion
+    : 1;
+
+export const STATE_HASH_CHANNEL_SET_V2 = Object.freeze([
   "stateBuffer.stateCode",
   "stateBuffer.stateAge",
   "tickIndex",
   "enumRegistryVersion",
+  "worldContractVersion",
   "numericModeCode",
   "activeRuleFamilies.sortedCodes",
   "transitionCounts.fixedOrder",
@@ -32,7 +33,11 @@ const NUMERIC_MODE_CODES = Object.freeze({
 const RULE_FAMILY_CODES = Object.freeze({
   FREEZE_MELT: 1,
   WATER_RETENTION_SPREAD: 2,
-  WETTING_DRYING: 3
+  WETTING_DRYING: 3,
+  COASTLINE_EROSION: 4,
+  TECTONIC_MEMORY: 5,
+  HABITABILITY_ATTENUATION: 6,
+  CONTINENT_TIER: 7
 });
 
 const REQUIRED_RECEIPT_KEYS = Object.freeze([
@@ -44,6 +49,7 @@ const REQUIRED_RECEIPT_KEYS = Object.freeze([
   "STATE_HASH",
   "PREV_HASH",
   "ENUM_REGISTRY_VERSION",
+  "WORLD_CONTRACT_VERSION",
   "NUMERIC_MODE",
   "CHANNEL_SET_VERSION",
   "CHANNEL_SET",
@@ -118,7 +124,6 @@ function normalizeActiveRuleFamilies(activeRuleFamilies) {
   });
 
   codes.sort((a, b) => a - b);
-
   return Object.freeze(codes);
 }
 
@@ -142,6 +147,26 @@ function normalizeTransitionCounts(transitionCounts) {
       transitionCounts.WETTING_DRYING,
       0,
       "transitionCounts.WETTING_DRYING"
+    ),
+    COASTLINE_EROSION: normalizeInt32(
+      transitionCounts.COASTLINE_EROSION,
+      0,
+      "transitionCounts.COASTLINE_EROSION"
+    ),
+    TECTONIC_MEMORY: normalizeInt32(
+      transitionCounts.TECTONIC_MEMORY,
+      0,
+      "transitionCounts.TECTONIC_MEMORY"
+    ),
+    HABITABILITY_ATTENUATION: normalizeInt32(
+      transitionCounts.HABITABILITY_ATTENUATION,
+      0,
+      "transitionCounts.HABITABILITY_ATTENUATION"
+    ),
+    CONTINENT_TIER: normalizeInt32(
+      transitionCounts.CONTINENT_TIER,
+      0,
+      "transitionCounts.CONTINENT_TIER"
     )
   });
 }
@@ -194,10 +219,6 @@ function summarizeStateExtrema(stateBuffer) {
   });
 }
 
-/*
-  Signed canonical serialization.
-  Each Int32 is serialized as 4 bytes in little-endian two's-complement form.
-*/
 function pushInt32BytesLE(outBytes, value, fieldName) {
   const int32 = requireInt32(value, fieldName);
   const asUint32 = BigInt.asUintN(32, BigInt(int32));
@@ -212,6 +233,7 @@ function serializeCanonicalBytes({
   stateBuffer,
   tickIndex,
   enumRegistryVersion,
+  worldContractVersion,
   numericMode,
   activeRuleFamilies,
   transitionCounts,
@@ -236,6 +258,7 @@ function serializeCanonicalBytes({
 
   pushInt32BytesLE(bytes, tickIndex, "tickIndex");
   pushInt32BytesLE(bytes, enumRegistryVersion, "enumRegistryVersion");
+  pushInt32BytesLE(bytes, worldContractVersion, "worldContractVersion");
   pushInt32BytesLE(bytes, numericModeCode, "numericModeCode");
 
   pushInt32BytesLE(bytes, activeRuleFamilyCodes.length, "activeRuleFamilies.length");
@@ -244,12 +267,12 @@ function serializeCanonicalBytes({
   }
 
   pushInt32BytesLE(bytes, normalizedTransitionCounts.FREEZE_MELT, "transitionCounts.FREEZE_MELT");
-  pushInt32BytesLE(
-    bytes,
-    normalizedTransitionCounts.WATER_RETENTION_SPREAD,
-    "transitionCounts.WATER_RETENTION_SPREAD"
-  );
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.WATER_RETENTION_SPREAD, "transitionCounts.WATER_RETENTION_SPREAD");
   pushInt32BytesLE(bytes, normalizedTransitionCounts.WETTING_DRYING, "transitionCounts.WETTING_DRYING");
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.COASTLINE_EROSION, "transitionCounts.COASTLINE_EROSION");
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.TECTONIC_MEMORY, "transitionCounts.TECTONIC_MEMORY");
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.HABITABILITY_ATTENUATION, "transitionCounts.HABITABILITY_ATTENUATION");
+  pushInt32BytesLE(bytes, normalizedTransitionCounts.CONTINENT_TIER, "transitionCounts.CONTINENT_TIER");
 
   pushInt32BytesLE(bytes, blockedTransitionCount, "blockedTransitionCount");
   pushInt32BytesLE(bytes, admissibleCount, "admissibleCount");
@@ -295,6 +318,7 @@ function validateReceiptShape(receipt, indexLabel = "receipt") {
   requireString(receipt.STATE_HASH, `${indexLabel}.STATE_HASH`);
   requireString(receipt.PREV_HASH, `${indexLabel}.PREV_HASH`);
   requireInt32(receipt.ENUM_REGISTRY_VERSION, `${indexLabel}.ENUM_REGISTRY_VERSION`);
+  requireInt32(receipt.WORLD_CONTRACT_VERSION, `${indexLabel}.WORLD_CONTRACT_VERSION`);
   requireString(receipt.NUMERIC_MODE, `${indexLabel}.NUMERIC_MODE`);
   requireInt32(receipt.CHANNEL_SET_VERSION, `${indexLabel}.CHANNEL_SET_VERSION`);
 
@@ -336,6 +360,7 @@ export function createAuthorityReceiptEngine() {
     stateBuffer,
     tickIndex = 0,
     enumRegistryVersion = ENUM_REGISTRY_VERSION,
+    worldContractVersion = WORLD_CONTRACT_VERSION,
     numericMode = NUMERIC_MODE,
     activeRuleFamilies = [],
     transitionCounts = {},
@@ -349,6 +374,11 @@ export function createAuthorityReceiptEngine() {
         enumRegistryVersion,
         ENUM_REGISTRY_VERSION,
         "enumRegistryVersion"
+      ),
+      worldContractVersion: normalizeInt32(
+        worldContractVersion,
+        WORLD_CONTRACT_VERSION,
+        "worldContractVersion"
       ),
       numericMode,
       activeRuleFamilies,
@@ -402,6 +432,7 @@ export function createAuthorityReceiptEngine() {
       stateBuffer,
       tickIndex,
       enumRegistryVersion: ENUM_REGISTRY_VERSION,
+      worldContractVersion: WORLD_CONTRACT_VERSION,
       numericMode: NUMERIC_MODE,
       activeRuleFamilies,
       transitionCounts: normalizedTransitionCounts,
@@ -423,10 +454,11 @@ export function createAuthorityReceiptEngine() {
       PREV_HASH: requireString(String(prevHash), "prevHash"),
 
       ENUM_REGISTRY_VERSION: ENUM_REGISTRY_VERSION,
+      WORLD_CONTRACT_VERSION: WORLD_CONTRACT_VERSION,
       NUMERIC_MODE: NUMERIC_MODE,
 
       CHANNEL_SET_VERSION: CHANNEL_SET_VERSION,
-      CHANNEL_SET: STATE_HASH_CHANNEL_SET_V1,
+      CHANNEL_SET: STATE_HASH_CHANNEL_SET_V2,
 
       ACTIVE_RULE_FAMILIES: activeRuleFamilies,
       TRANSITION_COUNTS: normalizedTransitionCounts,
@@ -438,10 +470,6 @@ export function createAuthorityReceiptEngine() {
 
       FAIL_FLAGS: Object.freeze(Array.isArray(metrics.failFlags) ? [...metrics.failFlags] : []),
 
-      /*
-        Performance is diagnostic only.
-        It is intentionally excluded from the authoritative hash.
-      */
       PERFORMANCE: Object.freeze({
         tickMs: isFiniteNumber(metrics.tickMs) ? metrics.tickMs : 0,
         frameMs: isFiniteNumber(metrics.frameMs) ? metrics.frameMs : 0
@@ -481,6 +509,15 @@ export function createAuthorityReplayVerifier() {
         });
       }
 
+      if (receipt.WORLD_CONTRACT_VERSION !== WORLD_CONTRACT_VERSION) {
+        return Object.freeze({
+          pass: false,
+          reason: "WORLD_CONTRACT_VERSION_MISMATCH",
+          run: runLabel,
+          tick: i
+        });
+      }
+
       if (receipt.NUMERIC_MODE !== NUMERIC_MODE) {
         return Object.freeze({
           pass: false,
@@ -500,7 +537,7 @@ export function createAuthorityReplayVerifier() {
       }
 
       const receiptChannelSet = receipt.CHANNEL_SET.join("|");
-      const canonicalChannelSet = STATE_HASH_CHANNEL_SET_V1.join("|");
+      const canonicalChannelSet = STATE_HASH_CHANNEL_SET_V2.join("|");
 
       if (receiptChannelSet !== canonicalChannelSet) {
         return Object.freeze({

@@ -448,6 +448,31 @@ function interpolateTopology(t00, t10, t01, t11, fx, fy) {
   });
 }
 
+function quadProjectedSpan(p00, p10, p11, p01) {
+  const d1 = Math.hypot(p10.x - p00.x, p10.y - p00.y);
+  const d2 = Math.hypot(p11.x - p01.x, p11.y - p01.y);
+  const d3 = Math.hypot(p01.x - p00.x, p01.y - p00.y);
+  const d4 = Math.hypot(p11.x - p10.x, p11.y - p10.y);
+  return Math.max(d1, d2, d3, d4);
+}
+
+function resolveAdaptiveSubdiv(p00, p10, p11, p01) {
+  const minZ = Math.min(
+    p00?.z ?? -1,
+    p10?.z ?? -1,
+    p11?.z ?? -1,
+    p01?.z ?? -1
+  );
+
+  if (minZ < 0.12) return 1;
+
+  const span = quadProjectedSpan(p00, p10, p11, p01);
+
+  if (span >= 28 && minZ > 0.62) return 3;
+  if (span >= 14 && minZ > 0.28) return 2;
+  return 1;
+}
+
 function drawPlanetRim(ctx, projectionState) {
   ctx.save();
 
@@ -529,8 +554,6 @@ function drawPlanetBase(ctx, projectionState) {
 function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
   if (!grid.length || !grid[0].length) return;
 
-  const SUBDIV = 2;
-
   for (let y = 0; y < grid.length - 1; y += 1) {
     const row = grid[y];
     const nextRow = grid[y + 1];
@@ -548,12 +571,21 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
       const t01 = getTopologySample(topologyGrid, x, y + 1);
       const t11 = getTopologySample(topologyGrid, nextX, y + 1);
 
-      for (let sy = 0; sy < SUBDIV; sy += 1) {
-        for (let sx = 0; sx < SUBDIV; sx += 1) {
-          const fx0 = sx / SUBDIV;
-          const fy0 = sy / SUBDIV;
-          const fx1 = (sx + 1) / SUBDIV;
-          const fy1 = (sy + 1) / SUBDIV;
+      const c00 = pointFromSample(s00, projectPoint, t00);
+      const c10 = pointFromSample(s10, projectPoint, t10);
+      const c01 = pointFromSample(s01, projectPoint, t01);
+      const c11 = pointFromSample(s11, projectPoint, t11);
+
+      if (!shouldDrawQuad([c00, c10, c11, c01])) continue;
+
+      const subdiv = resolveAdaptiveSubdiv(c00, c10, c11, c01);
+
+      for (let sy = 0; sy < subdiv; sy += 1) {
+        for (let sx = 0; sx < subdiv; sx += 1) {
+          const fx0 = sx / subdiv;
+          const fy0 = sy / subdiv;
+          const fx1 = (sx + 1) / subdiv;
+          const fy1 = (sy + 1) / subdiv;
 
           const sm00 = interpolateSample(s00, s10, s01, s11, fx0, fy0);
           const sm10 = interpolateSample(s00, s10, s01, s11, fx1, fy0);

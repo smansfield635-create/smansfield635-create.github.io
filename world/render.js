@@ -549,9 +549,29 @@ function normalizeOrbitalHit(point, object, edgeVisibility) {
     x: point.x,
     y: point.y,
     radius: sizePx * scale * 0.72,
+    opacity,
     frontFacing: point.z >= 0,
-    opacity
+    edgeVisibility,
+    z: point.z
   });
+}
+
+function isAdmissibleOrbitalHit(hit) {
+  return (
+    typeof hit.id === "string" &&
+    hit.id.length > 0 &&
+    isFiniteNumber(hit.x) &&
+    isFiniteNumber(hit.y) &&
+    isFiniteNumber(hit.radius) &&
+    hit.radius > 0 &&
+    hit.frontFacing === true &&
+    isFiniteNumber(hit.opacity) &&
+    hit.opacity >= 0.62 &&
+    isFiniteNumber(hit.edgeVisibility) &&
+    hit.edgeVisibility >= 0.34 &&
+    isFiniteNumber(hit.z) &&
+    hit.z >= 0.08
+  );
 }
 
 function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
@@ -561,7 +581,10 @@ function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
       orbitalHits: Object.freeze([]),
       orbitalAudit: Object.freeze({
         count: 0,
-        frontVisibleCount: 0
+        frontVisibleCount: 0,
+        emittedCount: 0,
+        rejectedBackfaceCount: 0,
+        rejectedWeakVisibilityCount: 0
       })
     });
   }
@@ -571,6 +594,8 @@ function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
 
   const hits = [];
   let frontVisibleCount = 0;
+  let rejectedBackfaceCount = 0;
+  let rejectedWeakVisibilityCount = 0;
 
   for (const object of objects) {
     const baseLatDeg = isFiniteNumber(object?.baseLatDeg) ? object.baseLatDeg : 0;
@@ -585,20 +610,35 @@ function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
       (((phase * spinMultiplier) + spinOffsetRad) * 180) / Math.PI;
 
     const point = projectPoint(baseLatDeg, lonDeg, altitudePx);
-    const edgeVisibility = clamp((point.z + 1) * 0.5, 0.18, 1);
+    const edgeVisibility = clamp((point.z + 1) * 0.5, 0, 1);
 
     if (point.z >= 0) {
       frontVisibleCount += 1;
     }
 
-    hits.push(normalizeOrbitalHit(point, object, edgeVisibility));
+    if (point.z < 0.08) {
+      rejectedBackfaceCount += 1;
+      continue;
+    }
+
+    const hit = normalizeOrbitalHit(point, object, edgeVisibility);
+
+    if (!isAdmissibleOrbitalHit(hit)) {
+      rejectedWeakVisibilityCount += 1;
+      continue;
+    }
+
+    hits.push(hit);
   }
 
   return Object.freeze({
     orbitalHits: Object.freeze(hits),
     orbitalAudit: Object.freeze({
       count: objects.length,
-      frontVisibleCount
+      frontVisibleCount,
+      emittedCount: hits.length,
+      rejectedBackfaceCount,
+      rejectedWeakVisibilityCount
     })
   });
 }

@@ -457,12 +457,87 @@ function buildRenderAudit(planetField) {
   });
 }
 
+function resolveOrbitalAltitudePx(orbitalSystem, projectionState) {
+  const factor = isFiniteNumber(orbitalSystem?.altitudeFactor)
+    ? orbitalSystem.altitudeFactor
+    : 0.42;
+  return projectionState.radius * factor;
+}
+
+function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
+  const objects = Array.isArray(orbitalSystem?.objects) ? orbitalSystem.objects : [];
+  if (!objects.length) {
+    return Object.freeze({
+      orbitalHits: Object.freeze([]),
+      orbitalAudit: Object.freeze({
+        count: 0,
+        frontVisibleCount: 0
+      })
+    });
+  }
+
+  const phase = isFiniteNumber(orbitalSystem?.phase) ? orbitalSystem.phase : 0;
+  const altitudePx = resolveOrbitalAltitudePx(orbitalSystem, projectionState);
+
+  const hits = [];
+  let frontVisibleCount = 0;
+
+  for (const object of objects) {
+    const baseLatDeg = isFiniteNumber(object?.baseLatDeg) ? object.baseLatDeg : 0;
+    const baseLonDeg = isFiniteNumber(object?.baseLonDeg) ? object.baseLonDeg : 0;
+    const bearingOffsetDeg = isFiniteNumber(object?.bearingOffsetDeg) ? object.bearingOffsetDeg : 0;
+    const spinOffsetRad = isFiniteNumber(object?.spinOffsetRad) ? object.spinOffsetRad : 0;
+    const spinMultiplier = isFiniteNumber(object?.spinMultiplier) ? object.spinMultiplier : 1;
+    const sizePx = isFiniteNumber(object?.sizePx) ? object.sizePx : 20;
+
+    const lonDeg =
+      baseLonDeg +
+      bearingOffsetDeg +
+      (((phase * spinMultiplier) + spinOffsetRad) * 180) / Math.PI;
+
+    const point = projectPoint(baseLatDeg, lonDeg, altitudePx);
+    const edgeVisibility = clamp((point.z + 0.08) / 0.30, 0, 1);
+    const frontFacing = point.z >= 0;
+    const opacity = frontFacing
+      ? 0.42 + edgeVisibility * 0.58
+      : edgeVisibility * 0.34;
+
+    if (!frontFacing || opacity <= 0.22) {
+      continue;
+    }
+
+    frontVisibleCount += 1;
+
+    hits.push(
+      Object.freeze({
+        id: typeof object?.id === "string" ? object.id : "",
+        label: typeof object?.label === "string" ? object.label : "",
+        route: typeof object?.route === "string" ? object.route : "",
+        x: point.x,
+        y: point.y,
+        radius: sizePx * (0.82 + edgeVisibility * 0.34) * 0.72,
+        frontFacing: true,
+        opacity
+      })
+    );
+  }
+
+  return Object.freeze({
+    orbitalHits: Object.freeze(hits),
+    orbitalAudit: Object.freeze({
+      count: objects.length,
+      frontVisibleCount
+    })
+  });
+}
+
 export function createRenderer() {
   function renderPlanet({
     ctx,
     planetField,
     projectPoint,
-    viewState = {}
+    viewState = {},
+    orbitalSystem = null
   }) {
     if (!ctx || !planetField) {
       throw new Error("renderPlanet requires ctx and planetField.");
@@ -483,8 +558,12 @@ export function createRenderer() {
       drawPolarGlow(ctx, grid, projector, projectionState);
     });
 
+    const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);
+
     return Object.freeze({
       projectionState,
+      orbitalHits: orbitalReceipt.orbitalHits,
+      orbitalAudit: orbitalReceipt.orbitalAudit,
       audit: buildRenderAudit(planetField)
     });
   }

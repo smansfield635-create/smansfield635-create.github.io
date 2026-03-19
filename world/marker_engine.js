@@ -1,62 +1,51 @@
-export function createMarkerEngine(config = {}) {
-  const MARKER_PADDING =
-    Number.isFinite(config.markerPadding) ? config.markerPadding : 18;
-  const MARKER_PASSES =
-    Number.isFinite(config.markerPasses) ? config.markerPasses : 3;
-  const MARKER_OUTWARD_NUDGE =
-    Number.isFinite(config.markerOutwardNudge) ? config.markerOutwardNudge : 8;
-  const DEFAULT_RADIUS =
-    Number.isFinite(config.defaultRadius) ? config.defaultRadius : 42;
-  const VIEWPORT_MARGIN =
-    Number.isFinite(config.viewportMargin) ? config.viewportMargin : 4;
+export function createMarkerEngine() {
+  const MARKER_PADDING = 18;
+  const MARKER_PASSES = 3;
+  const MARKER_OUTWARD_NUDGE = 8;
 
   function isFiniteNumber(value) {
     return typeof value === "number" && Number.isFinite(value);
   }
 
-  function normalizeAngle(value) {
-    const twoPi = Math.PI * 2;
-    let angle = value;
-
-    while (angle <= -Math.PI) angle += twoPi;
-    while (angle > Math.PI) angle -= twoPi;
-
-    return angle;
+  function normalizeArray(value) {
+    return Array.isArray(value) ? value : [];
   }
 
-  function getViewportCenter(viewport) {
-    const width = isFiniteNumber(viewport?.width) ? viewport.width : 0;
-    const height = isFiniteNumber(viewport?.height) ? viewport.height : 0;
-
+  function getViewportCenter() {
     return Object.freeze({
-      x: width * 0.5,
-      y: height * 0.5
+      x: window.innerWidth * 0.5,
+      y: window.innerHeight * 0.5
     });
   }
 
   function cloneHit(hit, center) {
-    const radius = isFiniteNumber(hit?.radius) ? hit.radius : DEFAULT_RADIUS;
-    const x = isFiniteNumber(hit?.x) ? hit.x : center.x;
-    const y = isFiniteNumber(hit?.y) ? hit.y : center.y;
-    const dx = x - center.x;
-    const dy = y - center.y;
+    const radius = isFiniteNumber(hit?.radius) ? hit.radius : 42;
+    const dx = hit.x - center.x;
+    const dy = hit.y - center.y;
 
     return {
-      id: typeof hit?.id === "string" ? hit.id : "",
-      label: typeof hit?.label === "string" ? hit.label : "",
-      route: typeof hit?.route === "string" ? hit.route : "",
-      x,
-      y,
+      id: hit.id,
+      label: hit.label,
+      route: hit.route,
+      x: hit.x,
+      y: hit.y,
       radius,
-      angle: Math.atan2(dy, dx),
-      radialDistance: Math.sqrt((dx * dx) + (dy * dy))
+      angle: Math.atan2(dy, dx)
     };
   }
 
-  function computeMarkerVector(hit, center) {
+  function normalizeAngle(value) {
+    const twoPi = Math.PI * 2;
+    let angle = value;
+    while (angle <= -Math.PI) angle += twoPi;
+    while (angle > Math.PI) angle -= twoPi;
+    return angle;
+  }
+
+  function computeVector(hit, center) {
     const dx = hit.x - center.x;
     const dy = hit.y - center.y;
-    const length = Math.sqrt((dx * dx) + (dy * dy));
+    const length = Math.sqrt(dx * dx + dy * dy);
 
     if (length > 0.0001) {
       return Object.freeze({
@@ -71,19 +60,17 @@ export function createMarkerEngine(config = {}) {
     });
   }
 
-  function applyOutwardSeparation(a, b, center) {
+  function applySeparation(a, b, center) {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
-    const distance = Math.sqrt((dx * dx) + (dy * dy));
+    const distance = Math.sqrt(dx * dx + dy * dy);
     const minDistance = a.radius + b.radius + MARKER_PADDING;
 
-    if (distance >= minDistance) {
-      return false;
-    }
+    if (distance >= minDistance) return false;
 
     const overlap = minDistance - Math.max(distance, 0.0001);
-    const va = computeMarkerVector(a, center);
-    const vb = computeMarkerVector(b, center);
+    const va = computeVector(a, center);
+    const vb = computeVector(b, center);
 
     a.x -= va.ux * (overlap * 0.5);
     a.y -= va.uy * (overlap * 0.5);
@@ -93,10 +80,10 @@ export function createMarkerEngine(config = {}) {
     return true;
   }
 
-  function minimalViewportClamp(hit, viewport) {
-    const width = isFiniteNumber(viewport?.width) ? viewport.width : 0;
-    const height = isFiniteNumber(viewport?.height) ? viewport.height : 0;
-    const margin = hit.radius + VIEWPORT_MARGIN;
+  function clampToViewport(hit) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    const margin = hit.radius + 4;
 
     hit.x = Math.max(margin, Math.min(width - margin, hit.x));
     hit.y = Math.max(margin, Math.min(height - margin, hit.y));
@@ -105,16 +92,14 @@ export function createMarkerEngine(config = {}) {
   function countCollisions(hits) {
     let count = 0;
 
-    for (let i = 0; i < hits.length; i += 1) {
-      for (let j = i + 1; j < hits.length; j += 1) {
-        const a = hits[i];
-        const b = hits[j];
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const minDistance = a.radius + b.radius + MARKER_PADDING;
+    for (let i = 0; i < hits.length; i++) {
+      for (let j = i + 1; j < hits.length; j++) {
+        const dx = hits[j].x - hits[i].x;
+        const dy = hits[j].y - hits[i].y;
+        const minDistance = hits[i].radius + hits[j].radius + MARKER_PADDING;
 
         if ((dx * dx) + (dy * dy) < minDistance * minDistance) {
-          count += 1;
+          count++;
         }
       }
     }
@@ -122,9 +107,9 @@ export function createMarkerEngine(config = {}) {
     return count;
   }
 
-  function validateMarkersInViewport(hits, viewport) {
-    const width = isFiniteNumber(viewport?.width) ? viewport.width : 0;
-    const height = isFiniteNumber(viewport?.height) ? viewport.height : 0;
+  function validateViewport(hits) {
+    const width = window.innerWidth;
+    const height = window.innerHeight;
 
     for (const hit of hits) {
       if (hit.x - hit.radius < 0) return false;
@@ -136,112 +121,113 @@ export function createMarkerEngine(config = {}) {
     return true;
   }
 
-  function solvePlacement(rawHits = [], options = {}) {
-    const required = options.required === true;
-    const viewport = Object.freeze({
-      width: isFiniteNumber(options?.viewport?.width) ? options.viewport.width : 0,
-      height: isFiniteNumber(options?.viewport?.height) ? options.viewport.height : 0
-    });
+  function stage(rawHits, gateAllowed) {
+    const received = normalizeArray(rawHits);
 
-    if (!required) {
-      return Object.freeze({
-        resolvedHits: Object.freeze([]),
-        markerRequired: false,
-        markerPlacementAdmissible: true,
-        markerCollisionCount: 0,
-        markerRepositionedCount: 0
-      });
-    }
-
-    const center = getViewportCenter(viewport);
-
-    const frontHits = Array.isArray(rawHits)
-      ? rawHits
-          .filter((hit) => isFiniteNumber(hit?.x) && isFiniteNumber(hit?.y))
-          .map((hit) => cloneHit(hit, center))
-          .sort((a, b) => a.angle - b.angle)
+    const staged = gateAllowed
+      ? received
+          .filter(h => h && isFiniteNumber(h.x) && isFiniteNumber(h.y))
+          .filter(h => h.frontFacing === true)
+          .map(h => Object.freeze({
+            id: h.id,
+            label: h.label,
+            route: h.route,
+            x: h.x,
+            y: h.y,
+            radius: isFiniteNumber(h.radius) ? h.radius : 42
+          }))
       : [];
 
-    if (!frontHits.length) {
+    return Object.freeze({
+      intakeReceived: received.length,
+      intakeStaged: staged.length,
+      intakeDiscarded: Math.max(0, received.length - staged.length),
+      intakePass: received.length > 0 ? staged.length > 0 : !gateAllowed,
+      stagedHits: Object.freeze(staged)
+    });
+  }
+
+  function solve(stagedHits) {
+    const center = getViewportCenter();
+
+    const hits = stagedHits
+      .map(h => cloneHit(h, center))
+      .sort((a, b) => a.angle - b.angle);
+
+    if (!hits.length) {
       return Object.freeze({
-        resolvedHits: Object.freeze([]),
-        markerRequired: true,
-        markerPlacementAdmissible: false,
-        markerCollisionCount: 0,
-        markerRepositionedCount: 0
+        placementPass: false,
+        resolvedHits: Object.freeze([])
       });
     }
 
-    let repositionedCount = 0;
+    let repositioned = 0;
 
-    for (let pass = 0; pass < MARKER_PASSES; pass += 1) {
+    for (let pass = 0; pass < MARKER_PASSES; pass++) {
       let moved = false;
 
-      for (let i = 0; i < frontHits.length; i += 1) {
-        const a = frontHits[i];
-        const b = frontHits[(i + 1) % frontHits.length];
+      for (let i = 0; i < hits.length; i++) {
+        const a = hits[i];
+        const b = hits[(i + 1) % hits.length];
 
-        if (frontHits.length > 2) {
+        if (hits.length > 2) {
           const delta = normalizeAngle(b.angle - a.angle);
           if (delta <= 0) continue;
         }
 
-        const changed = applyOutwardSeparation(a, b, center);
-
-        if (changed) {
+        if (applySeparation(a, b, center)) {
           moved = true;
-          repositionedCount += 2;
+          repositioned += 2;
         }
       }
 
       if (!moved) break;
     }
 
-    for (const hit of frontHits) {
-      minimalViewportClamp(hit, viewport);
+    for (const hit of hits) {
+      clampToViewport(hit);
     }
 
-    const stillColliding = countCollisions(frontHits);
-
-    if (stillColliding > 0) {
-      for (const hit of frontHits) {
-        const vector = computeMarkerVector(hit, center);
-        hit.x += vector.ux * MARKER_OUTWARD_NUDGE;
-        hit.y += vector.uy * MARKER_OUTWARD_NUDGE;
-        minimalViewportClamp(hit, viewport);
+    if (countCollisions(hits) > 0) {
+      for (const hit of hits) {
+        const v = computeVector(hit, center);
+        hit.x += v.ux * MARKER_OUTWARD_NUDGE;
+        hit.y += v.uy * MARKER_OUTWARD_NUDGE;
+        clampToViewport(hit);
       }
     }
 
-    const finalCollisionCount = countCollisions(frontHits);
-    const inViewport = validateMarkersInViewport(frontHits, viewport);
+    const collisionCount = countCollisions(hits);
+    const viewportPass = validateViewport(hits);
+
+    const resolved = hits.map(h => Object.freeze({
+      id: h.id,
+      label: h.label,
+      route: h.route,
+      x: h.x,
+      y: h.y,
+      radius: h.radius
+    }));
 
     return Object.freeze({
-      resolvedHits: Object.freeze(
-        frontHits.map((hit) =>
-          Object.freeze({
-            id: hit.id,
-            label: hit.label,
-            route: hit.route,
-            x: hit.x,
-            y: hit.y,
-            radius: hit.radius
-          })
-        )
-      ),
-      markerRequired: true,
-      markerPlacementAdmissible: finalCollisionCount === 0 && inViewport,
-      markerCollisionCount: finalCollisionCount,
-      markerRepositionedCount: repositionedCount
+      placementPass: collisionCount === 0 && viewportPass,
+      markerCollisionCount: collisionCount,
+      markerRepositionedCount: repositioned,
+      resolvedHits: Object.freeze(resolved)
+    });
+  }
+
+  function process({ rawHits, gateAllowed }) {
+    const intake = stage(rawHits, gateAllowed);
+    const placement = solve(intake.stagedHits);
+
+    return Object.freeze({
+      intake,
+      placement
     });
   }
 
   return Object.freeze({
-    solvePlacement
+    process
   });
-}
-
-const DEFAULT_MARKER_ENGINE = createMarkerEngine();
-
-export function solveMarkerPlacement(rawHits = [], options = {}) {
-  return DEFAULT_MARKER_ENGINE.solvePlacement(rawHits, options);
 }

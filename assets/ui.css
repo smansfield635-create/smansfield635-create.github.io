@@ -1,3 +1,5 @@
+/* DESTINATION FILE: /assets/ui.css */
+
 :root {
   --bg-0: #05070d;
   --bg-1: #0a0f1a;
@@ -28,6 +30,7 @@
   --panel-line-height: 1.35;
 
   --canvas-z: 1;
+  --runtime-root-z: 2;
   --hud-z: 10;
   --overlay-z: 20;
   --toggle-z: 30;
@@ -38,7 +41,6 @@
   --diagnostic-panel-width: min(420px, calc(100vw - 24px));
   --diagnostic-panel-max-height: min(58vh, 560px);
 
-  /* normalized shared surface */
   --shell-surface: rgba(10, 16, 28, 0.84);
   --shell-surface-hover: rgba(18, 28, 46, 0.92);
   --shell-border: rgba(145, 175, 255, 0.22);
@@ -66,7 +68,6 @@ body {
   position: relative;
 }
 
-/* world-mode only lock */
 body[data-mode="world"] {
   height: 100%;
   overflow: hidden;
@@ -106,6 +107,19 @@ body[data-mode="world"] #app-shell {
   display: block;
   z-index: var(--canvas-z);
   opacity: 0.92;
+}
+
+#runtime-root,
+.runtime-root {
+  position: absolute;
+  inset: 0;
+  z-index: var(--runtime-root-z);
+  pointer-events: none;
+}
+
+#runtime-root > *,
+.runtime-root > * {
+  pointer-events: auto;
 }
 
 #hud,

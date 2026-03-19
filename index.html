@@ -488,8 +488,8 @@ body::before,body::after{pointer-events:none!important}
   position:absolute;
   left:16px;
   bottom:94px;
-  width:min(380px, calc(100vw - 32px));
-  max-height:min(48vh, 420px);
+  width:min(420px, calc(100vw - 32px));
+  max-height:min(56vh, 520px);
   overflow:auto;
   display:grid;
   gap:10px;
@@ -507,6 +507,36 @@ body::before,body::after{pointer-events:none!important}
   border-radius:14px;
   padding:12px;
 }
+.debug-panel .panel-title{
+  margin:0 0 10px 0;
+  font-size:13px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.94);
+}
+.debug-panel .panel-row{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  padding:5px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.debug-panel .panel-row:last-child{border-bottom:0}
+.debug-panel .panel-key{
+  color:rgba(255,255,255,.72);
+  font-size:12px;
+}
+.debug-panel .panel-value{
+  color:rgba(255,255,255,.92);
+  font-size:12px;
+  font-weight:800;
+  text-align:right;
+}
+.debug-panel .panel-value--ok{color:rgba(132,255,170,.96)}
+.debug-panel .panel-value--danger{color:rgba(255,132,132,.96)}
+.debug-panel .panel-value--muted{color:rgba(255,255,255,.44)}
+
 body[data-diagnostics="full"] .debug-panel{
   opacity:1;
   pointer-events:auto;
@@ -749,14 +779,14 @@ const atmosphereLayer = document.getElementById("atmosphere-layer");
 const heroLayer = document.getElementById("hero-layer");
 const heroPanel = document.getElementById("hero-panel");
 const orbitalOverlay = document.getElementById("orbital-overlay");
-const homePill = document.getElementById("home-pill");
-const modeCluster = document.getElementById("mode-cluster");
 const diagnosticsShell = document.getElementById("diagnostics-shell");
 const diagnosticsSummary = document.getElementById("diagnostics-summary");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const debugPanel = document.getElementById("debug-panel");
 const bootStatus = document.getElementById("boot-status");
 const bootStatusCopy = document.getElementById("boot-status-copy");
+const modeCluster = document.getElementById("mode-cluster");
+const homePill = document.getElementById("home-pill");
 
 const btnFlat = document.getElementById("btn-flat");
 const btnRound = document.getElementById("btn-round");
@@ -770,17 +800,12 @@ const overlayMap = Object.freeze({
 });
 
 const MOTION_STORAGE_KEY = "ns_home_round_motion_v13";
-const RUNTIME_STORAGE_KEY = "cte_runtime_v1";
-
+const RUNTIME_STORAGE_KEY = "cte_runtime_v2";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
-const MARKER_OUTWARD_NUDGE = 10;
-const SAFE_EDGE_MARGIN = 18;
-const HERO_SAFE_PADDING = 22;
-const UI_SAFE_PADDING = 16;
-const DIAGNOSTIC_SAFE_PADDING = 12;
-const SHELL_MIN_OPACITY = 0.62;
-const SHELL_MIN_EDGE_VISIBILITY = 0.34;
+const MARKER_OUTWARD_NUDGE = 8;
+const ORBIT_SPEED_ROUND = 0.00018;
+const ORBIT_SPEED_OBSERVE = 0.00010;
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -852,17 +877,36 @@ let isDragging = false;
 let lastX = 0;
 let lastY = 0;
 let runtimeReady = false;
+let runtimeErrorMessage = "";
 
 let lastRenderReceipt = Object.freeze({
   orbitalHits: Object.freeze([]),
-  orbitalAudit: Object.freeze({
-    count: 0,
-    frontVisibleCount: 0,
-    emittedCount: 0,
-    rejectedBackfaceCount: 0,
-    rejectedWeakVisibilityCount: 0
-  }),
+  orbitalAudit: Object.freeze({ count: 0, frontVisibleCount: 0 }),
   audit: Object.freeze({})
+});
+
+let lastProgressionReceipt = Object.freeze({
+  dtMs: 0,
+  orbitStepAuthorized: false,
+  orbitStepApplied: false,
+  orbitStepValue: 0,
+  progressionPass: false
+});
+
+let lastEmissionReceipt = Object.freeze({
+  orbitalCount: 0,
+  frontVisibleCount: 0,
+  emittedCandidateCount: 0,
+  suppressedCandidateCount: 0,
+  emissionPass: false
+});
+
+let lastIntakeReceipt = Object.freeze({
+  receivedCandidateCount: 0,
+  stagedCandidateCount: 0,
+  discardedCandidateCount: 0,
+  intakePass: false,
+  stagedHits: Object.freeze([])
 });
 
 let lastPlacementReceipt = Object.freeze({
@@ -870,12 +914,28 @@ let lastPlacementReceipt = Object.freeze({
   markerPlacementAdmissible: true,
   markerCollisionCount: 0,
   markerRepositionedCount: 0,
-  stagedCandidateCount: 0,
-  suppressedCount: 0,
-  reservedZoneRejectCount: 0
+  placeableCandidateCount: 0,
+  placedCandidateCount: 0,
+  reservedZoneRejectCount: 0,
+  viewportRejectCount: 0,
+  placementPass: true,
+  resolvedHits: Object.freeze([])
 });
 
-let runtimeErrorMessage = "";
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function orbitSpeedForMode() {
+  if (currentMode === "observe") return ORBIT_SPEED_OBSERVE;
+  if (currentMode === "round") return ORBIT_SPEED_ROUND;
+  return 0;
+}
 
 function emitRuntimeReceipt(patch = {}) {
   const base = {
@@ -888,10 +948,32 @@ function emitRuntimeReceipt(patch = {}) {
     diagnosticsMode,
     timestamp: new Date().toISOString(),
     error: runtimeErrorMessage,
+    progressionReceipt: lastProgressionReceipt,
+    emissionReceipt: lastEmissionReceipt,
+    intakeReceipt: {
+      receivedCandidateCount: lastIntakeReceipt.receivedCandidateCount,
+      stagedCandidateCount: lastIntakeReceipt.stagedCandidateCount,
+      discardedCandidateCount: lastIntakeReceipt.discardedCandidateCount,
+      intakePass: lastIntakeReceipt.intakePass
+    },
+    placementReceipt: {
+      markerRequired: lastPlacementReceipt.markerRequired,
+      markerPlacementAdmissible: lastPlacementReceipt.markerPlacementAdmissible,
+      markerCollisionCount: lastPlacementReceipt.markerCollisionCount,
+      markerRepositionedCount: lastPlacementReceipt.markerRepositionedCount,
+      placeableCandidateCount: lastPlacementReceipt.placeableCandidateCount,
+      placedCandidateCount: lastPlacementReceipt.placedCandidateCount,
+      reservedZoneRejectCount: lastPlacementReceipt.reservedZoneRejectCount,
+      viewportRejectCount: lastPlacementReceipt.viewportRejectCount,
+      placementPass: lastPlacementReceipt.placementPass
+    },
     renderAudit: lastRenderReceipt?.audit || {},
     orbitalAudit: {
       ...(lastRenderReceipt?.orbitalAudit || {}),
-      ...(lastPlacementReceipt || {})
+      markerRequired: lastPlacementReceipt.markerRequired,
+      markerPlacementAdmissible: lastPlacementReceipt.markerPlacementAdmissible,
+      markerCollisionCount: lastPlacementReceipt.markerCollisionCount,
+      markerRepositionedCount: lastPlacementReceipt.markerRepositionedCount
     }
   };
 
@@ -998,7 +1080,9 @@ function safeMotionReceipt(dtMs) {
     pageRestored: true,
     yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
     pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-    orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity) ? orbitalState.orbitAngularVelocity : null,
+    orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity)
+      ? orbitalState.orbitAngularVelocity
+      : (lastProgressionReceipt.orbitStepApplied ? lastProgressionReceipt.orbitStepValue : null),
     orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
     blockedDragOnStarCount: 0,
     starTapCount: 0,
@@ -1121,7 +1205,10 @@ function buildRuntimePacket(dtMs) {
     renderAudit: lastRenderReceipt?.audit || {},
     orbitalAudit: {
       ...(lastRenderReceipt?.orbitalAudit || {}),
-      ...(lastPlacementReceipt || {})
+      markerRequired: lastPlacementReceipt.markerRequired,
+      markerPlacementAdmissible: lastPlacementReceipt.markerPlacementAdmissible,
+      markerCollisionCount: lastPlacementReceipt.markerCollisionCount,
+      markerRepositionedCount: lastPlacementReceipt.markerRepositionedCount
     },
     progress: {},
     unlocks: {},
@@ -1134,6 +1221,42 @@ function buildRuntimePacket(dtMs) {
       message: runtimeErrorMessage
     }
   });
+}
+
+function buildOrbitalHandshakePanelHTML() {
+  const rows = [
+    ["Progression dtMs", lastProgressionReceipt.dtMs.toFixed(2)],
+    ["Progression authorized", lastProgressionReceipt.orbitStepAuthorized ? "true" : "false"],
+    ["Progression applied", lastProgressionReceipt.orbitStepApplied ? "true" : "false"],
+    ["Progression step", lastProgressionReceipt.orbitStepValue.toFixed(5)],
+    ["Progression pass", lastProgressionReceipt.progressionPass ? "true" : "false"],
+    ["Emission orbitalCount", String(lastEmissionReceipt.orbitalCount)],
+    ["Emission frontVisible", String(lastEmissionReceipt.frontVisibleCount)],
+    ["Emission emitted", String(lastEmissionReceipt.emittedCandidateCount)],
+    ["Emission suppressed", String(lastEmissionReceipt.suppressedCandidateCount)],
+    ["Emission pass", lastEmissionReceipt.emissionPass ? "true" : "false"],
+    ["Intake received", String(lastIntakeReceipt.receivedCandidateCount)],
+    ["Intake staged", String(lastIntakeReceipt.stagedCandidateCount)],
+    ["Intake discarded", String(lastIntakeReceipt.discardedCandidateCount)],
+    ["Intake pass", lastIntakeReceipt.intakePass ? "true" : "false"],
+    ["Placement placeable", String(lastPlacementReceipt.placeableCandidateCount)],
+    ["Placement placed", String(lastPlacementReceipt.placedCandidateCount)],
+    ["Placement reservedReject", String(lastPlacementReceipt.reservedZoneRejectCount)],
+    ["Placement viewportReject", String(lastPlacementReceipt.viewportRejectCount)],
+    ["Placement pass", lastPlacementReceipt.placementPass ? "true" : "false"]
+  ];
+
+  const htmlRows = rows.map(([key, value]) => {
+    const lower = String(value).toLowerCase();
+    const tone =
+      lower === "true" ? "panel-value panel-value--ok" :
+      lower === "false" ? "panel-value panel-value--danger" :
+      "panel-value";
+
+    return `<div class="panel-row"><span class="panel-key">${escapeHTML(key)}</span><span class="${tone}">${escapeHTML(value)}</span></div>`;
+  }).join("");
+
+  return `<section class="panel-section"><h3 class="panel-title">Orbital Handshake</h3>${htmlRows}</section>`;
 }
 
 function updateDiagnostics(dtMs) {
@@ -1157,7 +1280,7 @@ function updateDiagnostics(dtMs) {
 
   const runtime = buildRuntimePacket(dtMs);
   diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
-  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
+  debugPanel.innerHTML = instruments.renderPanelHTML(runtime) + buildOrbitalHandshakePanelHTML();
 }
 
 function hideAllMarkers() {
@@ -1239,7 +1362,7 @@ function applyOutwardSeparation(a, b, center) {
 function minimalViewportClamp(hit) {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  const margin = hit.radius + SAFE_EDGE_MARGIN;
+  const margin = hit.radius + 4;
 
   hit.x = Math.max(margin, Math.min(width - margin, hit.x));
   hit.y = Math.max(margin, Math.min(height - margin, hit.y));
@@ -1260,136 +1383,174 @@ function countCollisions(hits) {
   return count;
 }
 
-function validateMarkersInViewport(hits) {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-
-  for (const hit of hits) {
-    if (hit.x - hit.radius < SAFE_EDGE_MARGIN) return false;
-    if (hit.x + hit.radius > width - SAFE_EDGE_MARGIN) return false;
-    if (hit.y - hit.radius < SAFE_EDGE_MARGIN) return false;
-    if (hit.y + hit.radius > height - SAFE_EDGE_MARGIN) return false;
-  }
-
-  return true;
-}
-
-function expandRect(rect, padding) {
-  return {
-    left: rect.left - padding,
-    right: rect.right + padding,
-    top: rect.top - padding,
-    bottom: rect.bottom + padding
-  };
-}
-
-function getRectOrNull(node, padding = 0) {
-  if (!node) return null;
-  const rect = node.getBoundingClientRect();
-  if (!(rect.width > 0 && rect.height > 0)) return null;
-  return expandRect(rect, padding);
+function circleIntersectsRect(hit, rect) {
+  const nearestX = Math.max(rect.left, Math.min(hit.x, rect.right));
+  const nearestY = Math.max(rect.top, Math.min(hit.y, rect.bottom));
+  const dx = hit.x - nearestX;
+  const dy = hit.y - nearestY;
+  return (dx * dx) + (dy * dy) <= (hit.radius * hit.radius);
 }
 
 function getReservedRects() {
   const rects = [];
 
-  const heroRect = getRectOrNull(heroPanel, HERO_SAFE_PADDING);
-  const homeRect = getRectOrNull(homePill, UI_SAFE_PADDING);
-  const modeRect = getRectOrNull(modeCluster, UI_SAFE_PADDING);
-  const diagnosticsRect = diagnosticsMode === "full"
-    ? getRectOrNull(debugPanel, DIAGNOSTIC_SAFE_PADDING)
-    : getRectOrNull(diagnosticsShell, DIAGNOSTIC_SAFE_PADDING);
+  const heroRect = heroPanel?.getBoundingClientRect();
+  if (heroRect && heroRect.width > 0 && heroRect.height > 0) {
+    rects.push({
+      left: heroRect.left - 12,
+      top: heroRect.top - 8,
+      right: heroRect.right + 12,
+      bottom: heroRect.bottom + 8
+    });
+  }
 
-  if (heroRect) rects.push(heroRect);
-  if (homeRect) rects.push(homeRect);
-  if (modeRect) rects.push(modeRect);
-  if (diagnosticsRect) rects.push(diagnosticsRect);
+  const modeRect = modeCluster?.getBoundingClientRect();
+  if (modeRect && modeRect.width > 0 && modeRect.height > 0) {
+    rects.push({
+      left: modeRect.left - 10,
+      top: modeRect.top - 10,
+      right: modeRect.right + 10,
+      bottom: modeRect.bottom + 10
+    });
+  }
+
+  const homeRect = homePill?.getBoundingClientRect();
+  if (homeRect && homeRect.width > 0 && homeRect.height > 0) {
+    rects.push({
+      left: homeRect.left - 10,
+      top: homeRect.top - 10,
+      right: homeRect.right + 10,
+      bottom: homeRect.bottom + 10
+    });
+  }
+
+  const diagnosticsRect = diagnosticsShell?.getBoundingClientRect();
+  if (diagnosticsRect && diagnosticsRect.width > 0 && diagnosticsRect.height > 0) {
+    rects.push({
+      left: diagnosticsRect.left - 10,
+      top: diagnosticsRect.top - 10,
+      right: diagnosticsRect.right + 10,
+      bottom: diagnosticsRect.bottom + 10
+    });
+  }
 
   return rects;
 }
 
-function circleIntersectsRect(hit, rect) {
-  const closestX = Math.max(rect.left, Math.min(hit.x, rect.right));
-  const closestY = Math.max(rect.top, Math.min(hit.y, rect.bottom));
-  const dx = hit.x - closestX;
-  const dy = hit.y - closestY;
-  return ((dx * dx) + (dy * dy)) < (hit.radius * hit.radius);
-}
+function validateMarkersInViewport(hits) {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
 
-function isReservedZoneConflict(hit, rects) {
-  for (const rect of rects) {
-    if (circleIntersectsRect(hit, rect)) return true;
-  }
-  return false;
-}
-
-function isShellAdmissibleHit(hit) {
-  return (
-    typeof hit?.id === "string" &&
-    hit.id.length > 0 &&
-    Number.isFinite(hit?.x) &&
-    Number.isFinite(hit?.y) &&
-    Number.isFinite(hit?.radius) &&
-    hit.radius > 0 &&
-    hit.frontFacing === true &&
-    Number.isFinite(hit?.opacity) &&
-    hit.opacity >= SHELL_MIN_OPACITY &&
-    Number.isFinite(hit?.edgeVisibility) &&
-    hit.edgeVisibility >= SHELL_MIN_EDGE_VISIBILITY
-  );
-}
-
-function pushOutOfReservedZones(hit, center, reservedRects) {
-  let moved = false;
-
-  for (let step = 0; step < 10; step += 1) {
-    if (!isReservedZoneConflict(hit, reservedRects)) break;
-
-    const vector = computeMarkerVector(hit, center);
-    hit.x += vector.ux * MARKER_OUTWARD_NUDGE;
-    hit.y += vector.uy * MARKER_OUTWARD_NUDGE;
-    minimalViewportClamp(hit);
-    moved = true;
+  for (const hit of hits) {
+    if (hit.x - hit.radius < 0) return false;
+    if (hit.x + hit.radius > width) return false;
+    if (hit.y - hit.radius < 0) return false;
+    if (hit.y + hit.radius > height) return false;
   }
 
-  return moved;
+  return true;
 }
 
-function solveMarkerPlacement(rawHits) {
+function buildProgressionReceipt(dtMs) {
+  const stepAuthorized = runtimeReady && isRoundVisualMode();
+  const stepValue = stepAuthorized ? orbitSpeedForMode() : 0;
+  const stepApplied = stepAuthorized && stepValue > 0 && typeof control.advanceOrbit === "function";
+
+  if (stepApplied) {
+    control.advanceOrbit(dtMs, stepValue);
+  }
+
+  lastProgressionReceipt = Object.freeze({
+    dtMs: Number.isFinite(dtMs) ? dtMs : 0,
+    orbitStepAuthorized: stepAuthorized,
+    orbitStepApplied: stepApplied,
+    orbitStepValue: stepValue,
+    progressionPass: stepAuthorized ? stepApplied : true
+  });
+}
+
+function buildEmissionReceipt(rawHits, orbitalAudit) {
+  const orbitalCount = Number.isFinite(orbitalAudit?.count) ? orbitalAudit.count : 0;
+  const frontVisibleCount = Number.isFinite(orbitalAudit?.frontVisibleCount) ? orbitalAudit.frontVisibleCount : 0;
+  const emittedCandidateCount = Array.isArray(rawHits)
+    ? rawHits.filter((hit) => hit?.frontFacing === true).length
+    : 0;
+
+  lastEmissionReceipt = Object.freeze({
+    orbitalCount,
+    frontVisibleCount,
+    emittedCandidateCount,
+    suppressedCandidateCount: Math.max(0, orbitalCount - emittedCandidateCount),
+    emissionPass: orbitalCount > 0 && frontVisibleCount > 0 && emittedCandidateCount > 0
+  });
+}
+
+function stageOrbitalCandidates(rawHits) {
+  const received = Array.isArray(rawHits) ? rawHits : [];
+
+  const staged = received
+    .filter((hit) => hit && Number.isFinite(hit.x) && Number.isFinite(hit.y))
+    .filter((hit) => hit.frontFacing === true)
+    .filter((hit) => Number.isFinite(hit.opacity) ? hit.opacity > 0.22 : true)
+    .map((hit) => Object.freeze({
+      id: hit.id,
+      label: hit.label,
+      route: hit.route,
+      x: hit.x,
+      y: hit.y,
+      radius: Number.isFinite(hit.radius) ? hit.radius : 42
+    }));
+
+  lastIntakeReceipt = Object.freeze({
+    receivedCandidateCount: received.length,
+    stagedCandidateCount: staged.length,
+    discardedCandidateCount: Math.max(0, received.length - staged.length),
+    intakePass: received.length === 0 ? false : staged.length > 0,
+    stagedHits: Object.freeze(staged)
+  });
+}
+
+function solveMarkerPlacement(stagedHits) {
   const required = markerModeRequired();
 
   if (!required) {
-    return Object.freeze({
-      resolvedHits: Object.freeze([]),
+    lastPlacementReceipt = Object.freeze({
       markerRequired: false,
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
       markerRepositionedCount: 0,
-      stagedCandidateCount: 0,
-      suppressedCount: 0,
-      reservedZoneRejectCount: 0
+      placeableCandidateCount: 0,
+      placedCandidateCount: 0,
+      reservedZoneRejectCount: 0,
+      viewportRejectCount: 0,
+      placementPass: true,
+      resolvedHits: Object.freeze([])
     });
+    return;
   }
 
   const center = getViewportCenter();
   const reservedRects = getReservedRects();
 
-  const stagedHits = rawHits
-    .filter(isShellAdmissibleHit)
+  const frontHits = stagedHits
+    .filter((hit) => Number.isFinite(hit?.x) && Number.isFinite(hit?.y))
     .map((hit) => cloneHit(hit, center))
     .sort((a, b) => a.angle - b.angle);
 
-  if (!stagedHits.length) {
-    return Object.freeze({
-      resolvedHits: Object.freeze([]),
+  if (!frontHits.length) {
+    lastPlacementReceipt = Object.freeze({
       markerRequired: true,
       markerPlacementAdmissible: false,
       markerCollisionCount: 0,
       markerRepositionedCount: 0,
-      stagedCandidateCount: 0,
-      suppressedCount: 0,
-      reservedZoneRejectCount: 0
+      placeableCandidateCount: 0,
+      placedCandidateCount: 0,
+      reservedZoneRejectCount: 0,
+      viewportRejectCount: 0,
+      placementPass: false,
+      resolvedHits: Object.freeze([])
     });
+    return;
   }
 
   let repositionedCount = 0;
@@ -1397,11 +1558,11 @@ function solveMarkerPlacement(rawHits) {
   for (let pass = 0; pass < MARKER_PASSES; pass += 1) {
     let moved = false;
 
-    for (let i = 0; i < stagedHits.length; i += 1) {
-      const a = stagedHits[i];
-      const b = stagedHits[(i + 1) % stagedHits.length];
+    for (let i = 0; i < frontHits.length; i += 1) {
+      const a = frontHits[i];
+      const b = frontHits[(i + 1) % frontHits.length];
 
-      if (stagedHits.length > 2) {
+      if (frontHits.length > 2) {
         const delta = normalizeAngle(b.angle - a.angle);
         if (delta <= 0) continue;
       }
@@ -1416,73 +1577,80 @@ function solveMarkerPlacement(rawHits) {
     if (!moved) break;
   }
 
-  for (const hit of stagedHits) {
+  for (const hit of frontHits) {
     minimalViewportClamp(hit);
   }
 
-  let stillColliding = countCollisions(stagedHits);
+  const finalCollisionCount = countCollisions(frontHits);
 
-  if (stillColliding > 0) {
-    for (const hit of stagedHits) {
-      const vector = computeMarkerVector(hit, center);
-      hit.x += vector.ux * MARKER_OUTWARD_NUDGE;
-      hit.y += vector.uy * MARKER_OUTWARD_NUDGE;
-      minimalViewportClamp(hit);
-    }
-    stillColliding = countCollisions(stagedHits);
-  }
-
-  const resolved = [];
-  let suppressedCount = 0;
   let reservedZoneRejectCount = 0;
+  let viewportRejectCount = 0;
 
-  for (const hit of stagedHits) {
-    const working = { ...hit };
+  const placeable = frontHits.filter((hit) => {
+    const inViewport =
+      hit.x - hit.radius >= 0 &&
+      hit.x + hit.radius <= window.innerWidth &&
+      hit.y - hit.radius >= 0 &&
+      hit.y + hit.radius <= window.innerHeight;
 
-    const moved = pushOutOfReservedZones(working, center, reservedRects);
-    if (moved) repositionedCount += 1;
-
-    if (isReservedZoneConflict(working, reservedRects)) {
-      suppressedCount += 1;
-      reservedZoneRejectCount += 1;
-      continue;
+    if (!inViewport) {
+      viewportRejectCount += 1;
+      return false;
     }
 
-    resolved.push(Object.freeze({
-      id: working.id,
-      label: working.label,
-      route: working.route,
-      x: working.x,
-      y: working.y,
-      radius: working.radius
-    }));
-  }
+    const overlapsReserved = reservedRects.some((rect) => circleIntersectsRect(hit, rect));
+    if (overlapsReserved) {
+      reservedZoneRejectCount += 1;
+      return false;
+    }
 
-  const finalCollisionCount = countCollisions(resolved);
-  const inViewport = validateMarkersInViewport(resolved);
+    return true;
+  });
 
-  return Object.freeze({
-    resolvedHits: Object.freeze(resolved),
+  const viewportPass = validateMarkersInViewport(placeable);
+  const placementPass = placeable.length > 0 && finalCollisionCount === 0 && viewportPass;
+
+  lastPlacementReceipt = Object.freeze({
     markerRequired: true,
-    markerPlacementAdmissible: finalCollisionCount === 0 && inViewport,
+    markerPlacementAdmissible: placementPass,
     markerCollisionCount: finalCollisionCount,
     markerRepositionedCount: repositionedCount,
-    stagedCandidateCount: stagedHits.length,
-    suppressedCount,
-    reservedZoneRejectCount
+    placeableCandidateCount: frontHits.length,
+    placedCandidateCount: placeable.length,
+    reservedZoneRejectCount,
+    viewportRejectCount,
+    placementPass,
+    resolvedHits: Object.freeze(placeable.map((hit) => Object.freeze({
+      id: hit.id,
+      label: hit.label,
+      route: hit.route,
+      x: hit.x,
+      y: hit.y,
+      radius: hit.radius
+    })))
   });
 }
 
 function syncOverlayMarkers() {
   if (!isRoundVisualMode() || isObserveMode()) {
+    lastIntakeReceipt = Object.freeze({
+      receivedCandidateCount: 0,
+      stagedCandidateCount: 0,
+      discardedCandidateCount: 0,
+      intakePass: false,
+      stagedHits: Object.freeze([])
+    });
     lastPlacementReceipt = Object.freeze({
       markerRequired: false,
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
       markerRepositionedCount: 0,
-      stagedCandidateCount: 0,
-      suppressedCount: 0,
-      reservedZoneRejectCount: 0
+      placeableCandidateCount: 0,
+      placedCandidateCount: 0,
+      reservedZoneRejectCount: 0,
+      viewportRejectCount: 0,
+      placementPass: true,
+      resolvedHits: Object.freeze([])
     });
     hideAllMarkers();
     return;
@@ -1492,12 +1660,12 @@ function syncOverlayMarkers() {
     ? lastRenderReceipt.orbitalHits
     : [];
 
+  stageOrbitalCandidates(rawHits);
+  solveMarkerPlacement(lastIntakeReceipt.stagedHits);
+
   hideAllMarkers();
 
-  const placement = solveMarkerPlacement(rawHits);
-  lastPlacementReceipt = placement;
-
-  for (const hit of placement.resolvedHits) {
+  for (const hit of lastPlacementReceipt.resolvedHits) {
     const marker = overlayMap[hit.id];
     if (!marker) continue;
     marker.hidden = false;
@@ -1546,6 +1714,7 @@ function renderSurface(dtMs) {
     orbitalSystem: buildOrbitalConfig()
   });
 
+  buildEmissionReceipt(lastRenderReceipt.orbitalHits, lastRenderReceipt.orbitalAudit);
   syncOverlayMarkers();
   updateDiagnostics(dtMs);
   emitRuntimeReceipt({
@@ -1565,6 +1734,7 @@ function frame(now) {
     control.stepInertia(dtMs);
   }
 
+  buildProgressionReceipt(dtMs);
   renderSurface(dtMs);
   rafId = requestAnimationFrame(frame);
 }
@@ -1633,6 +1803,7 @@ function bindEvents() {
   diagnosticsToggle.addEventListener("click", () => {
     setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
     syncOverlayMarkers();
+    updateDiagnostics(16.7);
   });
 
   btnFlat.addEventListener("click", () => {
@@ -1689,6 +1860,7 @@ function bindEvents() {
   window.addEventListener("resize", () => {
     resizeWorld();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    syncOverlayMarkers();
     renderSurface(16.7);
   }, { passive: true });
 
@@ -1736,6 +1908,7 @@ function start() {
     runtimeErrorMessage = "";
     clearBootStatus();
 
+    buildProgressionReceipt(16.7);
     renderSurface(16.7);
 
     if (isRoundVisualMode() && !rafId) {

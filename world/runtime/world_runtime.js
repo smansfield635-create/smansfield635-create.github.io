@@ -1,5 +1,3 @@
-// DESTINATION FILE: /world/runtime/world_runtime.js
-
 import { createPlanetEngine } from "../planet_engine.js";
 import { createRenderer } from "../render.js";
 import { createControlSystem } from "../control.js";
@@ -1072,8 +1070,8 @@ export function createWorldRuntime() {
   function bindEvents() {
     if (state.diagnosticsToggle) {
       state.diagnosticsToggle.addEventListener("click", () => {
-        setDiagnosticsMode(state.diagnosticsMode === "full" ? "peek" : "full");
-        renderSurface(16.7);
+        persistMotionState();
+        window.location.href = withModeQuery("/gauges/", state.currentMode);
       });
     }
 

@@ -210,19 +210,19 @@ function resolveElevationOffsetPx(sample, topology = null) {
   const landBoost = isLandSample(sample) ? 1 : 0;
 
   const reliefLift =
-    detail.relief * 7.8 +
-    detail.ridge * 4.8 +
-    detail.summit * 8.5 -
-    detail.basin * 2.8 -
-    detail.canyon * 1.6 +
-    detail.macro * 2.4 +
-    detail.micro * 1.2;
+    detail.relief * 4.2 +
+    detail.ridge * 2.6 +
+    detail.summit * 4.8 -
+    detail.basin * 1.6 -
+    detail.canyon * 1.0 +
+    detail.macro * 1.4 +
+    detail.micro * 0.6;
 
   const offset =
-    clamp(amplifiedElevation, -1, 1) * 22 +
+    clamp(amplifiedElevation, -1, 1) * 12 +
     landBoost * reliefLift;
 
-  return clamp(offset, -18, 34);
+  return clamp(offset, -10, 20);
 }
 
 function pointFromSample(sample, projectPoint, topology = null) {
@@ -341,7 +341,7 @@ function applyTopologyBreakup(color, topology = null, sample = null) {
     }
 
     if (detail.squareMask > 0.05) {
-      out = mixRgb(out, rgb(118, 122, 108), detail.squareMask * 0.05);
+      out = mixRgb(out, rgb(118, 122, 108), detail.squareMask * 0.03);
     }
 
     if (detail.relief > 0.05) {

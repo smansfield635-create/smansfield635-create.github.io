@@ -1,3 +1,5 @@
+// DESTINATION FILE: /assets/instruments.js
+
 import { WORLD_KERNEL } from "../world/world_kernel.js";
 
 export function createInstruments() {
@@ -5,6 +7,25 @@ export function createInstruments() {
   const GATE_THRESHOLD = Number.isFinite(WORLD_KERNEL?.constants?.gateThreshold)
     ? WORLD_KERNEL.constants.gateThreshold
     : 0.61;
+
+  const CANONICAL_SOURCES = Object.freeze([
+    "/index.html",
+    "/world/world_kernel.js",
+    "/world/planet_engine.js",
+    "/world/runtime/world_runtime.js",
+    "/world/planet_surface_projector.js",
+    "/world/render.js",
+    "/world/control.js",
+    "/assets/instruments.js"
+  ]);
+
+  const INVALIDATED_SOURCES = Object.freeze([
+    "/app/index.html",
+    "/app/variant/world/scene_runtime.js",
+    "/variant/environment_renderer.js",
+    "/variant/ground_renderer.js",
+    "/variant/navigation_overlay_renderer.js"
+  ]);
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
@@ -50,8 +71,24 @@ export function createInstruments() {
       .replace(/^./, (s) => s.toUpperCase());
   }
 
+  function isCanonicalSource(value) {
+    return typeof value === "string" && CANONICAL_SOURCES.includes(value.trim());
+  }
+
+  function isInvalidatedSource(value) {
+    return typeof value === "string" && INVALIDATED_SOURCES.includes(value.trim());
+  }
+
   function classifyValueTone(value) {
     const normalized = normalizePrimitive(value);
+
+    if (isCanonicalSource(normalized)) {
+      return "ok";
+    }
+
+    if (isInvalidatedSource(normalized)) {
+      return "danger";
+    }
 
     if (
       normalized === "PASS" ||
@@ -63,12 +100,8 @@ export function createInstruments() {
       normalized === "EMITTED" ||
       normalized === "PLACED" ||
       normalized === "RUNNING" ||
+      normalized === "READY" ||
       normalized === "true" ||
-      normalized === "control.js" ||
-      normalized === "render.js" ||
-      normalized === "completion_engine.js" ||
-      normalized === "transition_engine.js" ||
-      normalized === "validator_engine.js" ||
       normalized === "round" ||
       normalized === "ROUND" ||
       normalized === "HOME_MODE" ||
@@ -91,7 +124,9 @@ export function createInstruments() {
       normalized === "REJECT_PACKET" ||
       normalized === "QUARANTINE_OUTPUT" ||
       normalized === "FREEZE_HANDOFF" ||
-      normalized === "SYSTEM_HALT"
+      normalized === "SYSTEM_HALT" ||
+      normalized === "INVALID" ||
+      normalized === "NON_CANONICAL"
     ) {
       return "danger";
     }
@@ -274,15 +309,20 @@ export function createInstruments() {
 
   function buildAuthorityReceipt(input = {}) {
     const source = normalizeObject(input);
+
     return Object.freeze({
-      motionOwner: normalizeString(source.motionOwner, "UNSET"),
-      projectionOwner: normalizeString(source.projectionOwner, "UNSET"),
-      inputOwner: normalizeString(source.inputOwner, "UNSET"),
-      renderSource: normalizeString(source.renderSource, "UNSET"),
-      orbitSource: normalizeString(source.orbitSource, "UNSET"),
+      shellSource: normalizeString(source.shellSource, EMPTY),
+      runtimeSource: normalizeString(source.runtimeSource, EMPTY),
+      truthSource: normalizeString(source.truthSource, EMPTY),
+      structureSource: normalizeString(source.structureSource, EMPTY),
+      projectionOwner: normalizeString(source.projectionOwner, EMPTY),
+      renderSource: normalizeString(source.renderSource, EMPTY),
+      controlSource: normalizeString(source.controlSource, EMPTY),
+      inputOwner: normalizeString(source.inputOwner, EMPTY),
+      orbitSource: normalizeString(source.orbitSource, EMPTY),
+      instrumentSource: normalizeString(source.instrumentSource, "/assets/instruments.js"),
       transitionSource: normalizeString(source.transitionSource, EMPTY),
-      completionSource: normalizeString(source.completionSource, EMPTY),
-      validatorSource: normalizeString(source.validatorSource, EMPTY)
+      receiptWriter: normalizeString(source.receiptWriter, EMPTY)
     });
   }
 
@@ -508,8 +548,8 @@ export function createInstruments() {
           <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(validator.verdict))}</span>
         </span>
         <span class="diagnostic-pill">
-          <span class="diagnostic-pill__label">Owner</span>
-          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(authority.motionOwner))}</span>
+          <span class="diagnostic-pill__label">Runtime</span>
+          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(authority.runtimeSource))}</span>
         </span>
         <span class="diagnostic-pill">
           <span class="diagnostic-pill__label">Land</span>
@@ -603,14 +643,18 @@ export function createInstruments() {
         starTapCount: normalizePrimitive(motion.starTapCount)
       })),
       renderKeyValueSection("Authority", Object.freeze({
-        motionOwner: normalizePrimitive(authority.motionOwner),
+        shellSource: normalizePrimitive(authority.shellSource),
+        runtimeSource: normalizePrimitive(authority.runtimeSource),
+        truthSource: normalizePrimitive(authority.truthSource),
+        structureSource: normalizePrimitive(authority.structureSource),
         projectionOwner: normalizePrimitive(authority.projectionOwner),
-        inputOwner: normalizePrimitive(authority.inputOwner),
         renderSource: normalizePrimitive(authority.renderSource),
+        controlSource: normalizePrimitive(authority.controlSource),
+        inputOwner: normalizePrimitive(authority.inputOwner),
         orbitSource: normalizePrimitive(authority.orbitSource),
+        instrumentSource: normalizePrimitive(authority.instrumentSource),
         transitionSource: normalizePrimitive(authority.transitionSource),
-        completionSource: normalizePrimitive(authority.completionSource),
-        validatorSource: normalizePrimitive(authority.validatorSource)
+        receiptWriter: normalizePrimitive(authority.receiptWriter)
       })),
       renderKeyValueSection("Transition", Object.freeze({
         proposed: normalizePrimitive(transition.proposed),

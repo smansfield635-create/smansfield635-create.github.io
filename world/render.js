@@ -1,4 +1,7 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
+import { createStarfieldEngine } from "./starfield_engine.js";
+import { createAtmosphereEngine } from "./atmosphere_engine.js";
+import { createReliefEngine } from "./relief_engine.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -113,6 +116,14 @@ function mixRgb(a, b, t) {
   };
 }
 
+function addRgb(a, dr, dg, db) {
+  return {
+    r: a.r + dr,
+    g: a.g + dg,
+    b: a.b + db
+  };
+}
+
 function terrainClass(sample) {
   return typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
 }
@@ -141,13 +152,16 @@ function isShoreline(sample) {
   return tc === "SHORELINE" || tc === "BEACH" || sample?.shoreline === true || sample?.shorelineBand === true;
 }
 
-function resolveElevationOffsetPx(sample) {
-  const elevation = isFiniteNumber(sample?.elevation) ? sample.elevation : 0;
-  return clamp(elevation, -1, 1) * 10;
+function resolveElevationOffsetPx(sample, topology = null) {
+  const rawElevation = isFiniteNumber(sample?.elevation) ? sample.elevation : 0;
+  const amplifiedElevation = isFiniteNumber(topology?.elevationAmplified)
+    ? topology.elevationAmplified
+    : rawElevation;
+  return clamp(amplifiedElevation, -1, 1) * 12;
 }
 
-function pointFromSample(sample, projectPoint) {
-  return projectPoint(sample.latDeg, sample.lonDeg, resolveElevationOffsetPx(sample));
+function pointFromSample(sample, projectPoint, topology = null) {
+  return projectPoint(sample.latDeg, sample.lonDeg, resolveElevationOffsetPx(sample, topology));
 }
 
 function resolveBaseWaterColor(sample) {
@@ -206,27 +220,100 @@ function resolveBaseLandColor(sample) {
   return color;
 }
 
-function applyFacing(color, point) {
-  const factor = clamp(0.72 + point.z * 0.24, 0.56, 1.06);
+function applyFacing(color, point, topology = null) {
+  const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
+  const ridge = clamp(topology?.ridgeAmplified ?? 0, 0, 1);
+  const basin = clamp(topology?.basinAmplified ?? 0, 0, 1);
+  const summit = clamp(topology?.summitAmplified ?? 0, 0, 1);
+
+  const factor = clamp(
+    0.68 +
+      point.z * 0.26 +
+      relief * 0.10 +
+      ridge * 0.08 +
+      summit * 0.08 -
+      basin * 0.06,
+    0.50,
+    1.22
+  );
+
   return rgb(color.r * factor, color.g * factor, color.b * factor);
 }
 
-function resolveFillColor(sample, point) {
+function applyTopologyBreakup(color, topology = null, sample = null) {
+  if (!topology || !isLandSample(sample)) return color;
+
+  const relief = clamp(topology.reliefComposite ?? 0, 0, 1);
+  const ridge = clamp(topology.ridgeAmplified ?? 0, 0, 1);
+  const basin = clamp(topology.basinAmplified ?? 0, 0, 1);
+  const summit = clamp(topology.summitAmplified ?? 0, 0, 1);
+  const canyon = clamp(topology.canyonAmplified ?? 0, 0, 1);
+  const coast = clamp(topology.coastAmplified ?? 0, 0, 1);
+  const squareMask = clamp(topology.squareMaskStrength ?? 0, 0, 1);
+
+  let out = color;
+
+  if (ridge > 0.04 || summit > 0.04) {
+    out = addRgb(
+      out,
+      (ridge * 12) + (summit * 18),
+      (ridge * 10) + (summit * 14),
+      (ridge * 8) + (summit * 12)
+    );
+  }
+
+  if (basin > 0.04 || canyon > 0.04) {
+    out = addRgb(
+      out,
+      -((basin * 18) + (canyon * 10)),
+      -((basin * 14) + (canyon * 8)),
+      -((basin * 10) + (canyon * 6))
+    );
+  }
+
+  if (coast > 0.04) {
+    out = mixRgb(out, rgb(196, 186, 146), coast * 0.16);
+  }
+
+  if (squareMask > 0.05) {
+    out = mixRgb(out, rgb(126, 128, 116), squareMask * 0.08);
+  }
+
+  if (relief > 0.05) {
+    out = mixRgb(out, rgb(150, 146, 136), relief * 0.06);
+  }
+
+  return out;
+}
+
+function resolveFillColor(sample, point, topology = null) {
   const base = isLandSample(sample)
     ? resolveBaseLandColor(sample)
     : resolveBaseWaterColor(sample);
 
-  return applyFacing(base, point);
+  const broken = applyTopologyBreakup(base, topology, sample);
+  return applyFacing(broken, point, topology);
 }
 
-function resolveFillAlpha(sample) {
+function resolveFillAlpha(sample, topology = null) {
   const tc = terrainClass(sample);
+  const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
+  const squareMask = clamp(topology?.squareMaskStrength ?? 0, 0, 1);
 
   if (!isLandSample(sample)) return tc === "SHELF" ? 0.70 : 0.64;
-  if (tc === "SUMMIT" || tc === "MOUNTAIN" || tc === "GLACIAL_HIGHLAND") return 0.88;
-  if (tc === "RIDGE" || tc === "CANYON" || tc === "BASIN") return 0.84;
-  if (tc === "BEACH" || tc === "SHORELINE") return 0.78;
-  return 0.74;
+  if (tc === "SUMMIT" || tc === "MOUNTAIN" || tc === "GLACIAL_HIGHLAND") return clamp(0.86 + relief * 0.08, 0.86, 0.96);
+  if (tc === "RIDGE" || tc === "CANYON" || tc === "BASIN") return clamp(0.82 + relief * 0.08, 0.82, 0.92);
+  if (tc === "BEACH" || tc === "SHORELINE") return clamp(0.76 + squareMask * 0.06, 0.76, 0.86);
+  return clamp(0.72 + relief * 0.08 + squareMask * 0.04, 0.72, 0.88);
+}
+
+function getTopologyGrid(topologyField) {
+  const rows = Array.isArray(topologyField?.samples) ? topologyField.samples : [];
+  return Array.isArray(rows[0]) ? rows : [];
+}
+
+function getTopologySample(topologyGrid, x, y) {
+  return topologyGrid?.[y]?.[x] || null;
 }
 
 function drawPlanetBase(ctx, projectionState) {
@@ -258,7 +345,7 @@ function drawPlanetBase(ctx, projectionState) {
   });
 }
 
-function drawSurfaceMesh(ctx, grid, projectPoint) {
+function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
   if (!grid.length || !grid[0].length) return;
 
   for (let y = 0; y < grid.length - 1; y += 1) {
@@ -273,15 +360,20 @@ function drawSurfaceMesh(ctx, grid, projectPoint) {
       const s01 = nextRow[x];
       const s11 = nextRow[nextX];
 
-      const p00 = pointFromSample(s00, projectPoint);
-      const p10 = pointFromSample(s10, projectPoint);
-      const p01 = pointFromSample(s01, projectPoint);
-      const p11 = pointFromSample(s11, projectPoint);
+      const t00 = getTopologySample(topologyGrid, x, y);
+      const t10 = getTopologySample(topologyGrid, nextX, y);
+      const t01 = getTopologySample(topologyGrid, x, y + 1);
+      const t11 = getTopologySample(topologyGrid, nextX, y + 1);
+
+      const p00 = pointFromSample(s00, projectPoint, t00);
+      const p10 = pointFromSample(s10, projectPoint, t10);
+      const p01 = pointFromSample(s01, projectPoint, t01);
+      const p11 = pointFromSample(s11, projectPoint, t11);
 
       if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
 
-      const color = rgbString(resolveFillColor(s00, p00));
-      const alpha = resolveFillAlpha(s00);
+      const color = rgbString(resolveFillColor(s00, p00, t00));
+      const alpha = resolveFillAlpha(s00, t00);
 
       drawQuad(ctx, p00, p10, p11, p01, color, alpha);
     }
@@ -373,50 +465,7 @@ function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
   ctx.restore();
 }
 
-function drawPlanetRim(ctx, projectionState) {
-  ctx.save();
-
-  const outerRadius = projectionState.radius * 1.018;
-  const rim = ctx.createRadialGradient(
-    projectionState.centerX,
-    projectionState.centerY,
-    projectionState.radius * 0.965,
-    projectionState.centerX,
-    projectionState.centerY,
-    outerRadius
-  );
-
-  if (projectionState.observeMode) {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.04)");
-    rim.addColorStop(1, "rgba(170,220,255,0.08)");
-  } else {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.06)");
-    rim.addColorStop(1, "rgba(170,220,255,0.12)");
-  }
-
-  ctx.beginPath();
-  ctx.arc(projectionState.centerX, projectionState.centerY, outerRadius, 0, Math.PI * 2);
-  ctx.fillStyle = rim;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(
-    projectionState.centerX,
-    projectionState.centerY,
-    projectionState.radius,
-    0,
-    Math.PI * 2
-  );
-  ctx.strokeStyle = projectionState.observeMode
-    ? "rgba(188,220,255,0.10)"
-    : "rgba(188,220,255,0.14)";
-  ctx.lineWidth = projectionState.observeMode ? 0.75 : 0.85;
-  ctx.stroke();
-
-  ctx.restore();
-}
-
-function buildRenderAudit(planetField) {
+function buildRenderAudit(planetField, topologyField = null) {
   const grid = sampleGrid(planetField);
 
   let waterFamilyCount = 0;
@@ -453,7 +502,8 @@ function buildRenderAudit(planetField) {
     cryosphereCount,
     shorelineCount,
     continentCoverage: Object.freeze(continentCoverage),
-    summary: normalizeObject(planetField?.summary)
+    summary: normalizeObject(planetField?.summary),
+    topologySummary: normalizeObject(topologyField?.summary)
   });
 }
 
@@ -462,6 +512,23 @@ function resolveOrbitalAltitudePx(orbitalSystem, projectionState) {
     ? orbitalSystem.altitudeFactor
     : 0.42;
   return projectionState.radius * factor;
+}
+
+function normalizeOrbitalHit(point, object, edgeVisibility) {
+  const sizePx = isFiniteNumber(object?.sizePx) ? object.sizePx : 20;
+  const scale = 0.88 + edgeVisibility * 0.28;
+  const opacity = 0.52 + edgeVisibility * 0.44;
+
+  return Object.freeze({
+    id: typeof object?.id === "string" ? object.id : "",
+    label: typeof object?.label === "string" ? object.label : "",
+    route: typeof object?.route === "string" ? object.route : "",
+    x: point.x,
+    y: point.y,
+    radius: sizePx * scale * 0.72,
+    frontFacing: point.z >= 0,
+    opacity
+  });
 }
 
 function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
@@ -488,7 +555,6 @@ function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
     const bearingOffsetDeg = isFiniteNumber(object?.bearingOffsetDeg) ? object.bearingOffsetDeg : 0;
     const spinOffsetRad = isFiniteNumber(object?.spinOffsetRad) ? object.spinOffsetRad : 0;
     const spinMultiplier = isFiniteNumber(object?.spinMultiplier) ? object.spinMultiplier : 1;
-    const sizePx = isFiniteNumber(object?.sizePx) ? object.sizePx : 20;
 
     const lonDeg =
       baseLonDeg +
@@ -496,30 +562,13 @@ function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
       (((phase * spinMultiplier) + spinOffsetRad) * 180) / Math.PI;
 
     const point = projectPoint(baseLatDeg, lonDeg, altitudePx);
-    const edgeVisibility = clamp((point.z + 0.08) / 0.30, 0, 1);
-    const frontFacing = point.z >= 0;
-    const opacity = frontFacing
-      ? 0.42 + edgeVisibility * 0.58
-      : edgeVisibility * 0.34;
+    const edgeVisibility = clamp((point.z + 1) * 0.5, 0.18, 1);
 
-    if (!frontFacing || opacity <= 0.22) {
-      continue;
+    if (point.z >= 0) {
+      frontVisibleCount += 1;
     }
 
-    frontVisibleCount += 1;
-
-    hits.push(
-      Object.freeze({
-        id: typeof object?.id === "string" ? object.id : "",
-        label: typeof object?.label === "string" ? object.label : "",
-        route: typeof object?.route === "string" ? object.route : "",
-        x: point.x,
-        y: point.y,
-        radius: sizePx * (0.82 + edgeVisibility * 0.34) * 0.72,
-        frontFacing: true,
-        opacity
-      })
-    );
+    hits.push(normalizeOrbitalHit(point, object, edgeVisibility));
   }
 
   return Object.freeze({
@@ -535,6 +584,7 @@ export function createRenderer() {
   function renderPlanet({
     ctx,
     planetField,
+    topologyField = null,
     projectPoint,
     viewState = {},
     orbitalSystem = null
@@ -544,6 +594,7 @@ export function createRenderer() {
     }
 
     const grid = sampleGrid(planetField);
+    const topologyGrid = getTopologyGrid(topologyField);
     const projectionState = getProjectionState(viewState, ctx);
     const projector = resolveProjectPoint(projectPoint, projectionState);
 
@@ -553,7 +604,7 @@ export function createRenderer() {
     drawPlanetBase(ctx, projectionState);
 
     withPlanetClip(ctx, projectionState, () => {
-      drawSurfaceMesh(ctx, grid, projector);
+      drawSurfaceMesh(ctx, grid, topologyGrid, projector);
       drawCloudLayer(ctx, grid, projector, projectionState);
       drawPolarGlow(ctx, grid, projector, projectionState);
     });
@@ -564,7 +615,7 @@ export function createRenderer() {
       projectionState,
       orbitalHits: orbitalReceipt.orbitalHits,
       orbitalAudit: orbitalReceipt.orbitalAudit,
-      audit: buildRenderAudit(planetField)
+      audit: buildRenderAudit(planetField, topologyField)
     });
   }
 

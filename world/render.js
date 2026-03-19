@@ -1,7 +1,4 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
-import { createStarfieldEngine } from "./starfield_engine.js";
-import { createAtmosphereEngine } from "./atmosphere_engine.js";
-import { createReliefEngine } from "./relief_engine.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -17,6 +14,11 @@ function normalizeObject(value) {
 
 function sampleGrid(planetField) {
   const rows = Array.isArray(planetField?.samples) ? planetField.samples : [];
+  return Array.isArray(rows[0]) ? rows : [];
+}
+
+function getTopologyGrid(topologyField) {
+  const rows = Array.isArray(topologyField?.samples) ? topologyField.samples : [];
   return Array.isArray(rows[0]) ? rows : [];
 }
 
@@ -152,12 +154,70 @@ function isShoreline(sample) {
   return tc === "SHORELINE" || tc === "BEACH" || sample?.shoreline === true || sample?.shorelineBand === true;
 }
 
+function hashNoise(a, b, c = 0) {
+  const v = Math.sin((a * 127.1) + (b * 311.7) + (c * 74.7)) * 43758.5453123;
+  return v - Math.floor(v);
+}
+
+function signedNoise(a, b, c = 0) {
+  return (hashNoise(a, b, c) * 2) - 1;
+}
+
+function reliefDetail(sample, topology = null) {
+  const lat = isFiniteNumber(sample?.latDeg) ? sample.latDeg : 0;
+  const lon = isFiniteNumber(sample?.lonDeg) ? sample.lonDeg : 0;
+
+  const n1 = signedNoise(lat / 7.5, lon / 9.5, 1);
+  const n2 = signedNoise(lat / 15.0, lon / 19.0, 2);
+  const n3 = signedNoise(lat / 3.25, lon / 4.10, 3);
+
+  const ridge = clamp(topology?.ridgeAmplified ?? 0, 0, 1);
+  const basin = clamp(topology?.basinAmplified ?? 0, 0, 1);
+  const summit = clamp(topology?.summitAmplified ?? 0, 0, 1);
+  const canyon = clamp(topology?.canyonAmplified ?? 0, 0, 1);
+  const coast = clamp(topology?.coastAmplified ?? 0, 0, 1);
+  const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
+  const squareMask = clamp(topology?.squareMaskStrength ?? 0, 0, 1);
+
+  const macro = (n1 * 0.50) + (n2 * 0.34);
+  const micro = n3 * 0.16;
+
+  return Object.freeze({
+    macro,
+    micro,
+    ridge,
+    basin,
+    summit,
+    canyon,
+    coast,
+    relief,
+    squareMask
+  });
+}
+
 function resolveElevationOffsetPx(sample, topology = null) {
   const rawElevation = isFiniteNumber(sample?.elevation) ? sample.elevation : 0;
   const amplifiedElevation = isFiniteNumber(topology?.elevationAmplified)
     ? topology.elevationAmplified
     : rawElevation;
-  return clamp(amplifiedElevation, -1, 1) * 12;
+
+  const detail = reliefDetail(sample, topology);
+  const landBoost = isLandSample(sample) ? 1 : 0;
+
+  const reliefLift =
+    detail.relief * 7.8 +
+    detail.ridge * 4.8 +
+    detail.summit * 8.5 -
+    detail.basin * 2.8 -
+    detail.canyon * 1.6 +
+    detail.macro * 2.4 +
+    detail.micro * 1.2;
+
+  const offset =
+    clamp(amplifiedElevation, -1, 1) * 22 +
+    landBoost * reliefLift;
+
+  return clamp(offset, -18, 34);
 }
 
 function pointFromSample(sample, projectPoint, topology = null) {
@@ -220,67 +280,75 @@ function resolveBaseLandColor(sample) {
   return color;
 }
 
-function applyFacing(color, point, topology = null) {
-  const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
-  const ridge = clamp(topology?.ridgeAmplified ?? 0, 0, 1);
-  const basin = clamp(topology?.basinAmplified ?? 0, 0, 1);
-  const summit = clamp(topology?.summitAmplified ?? 0, 0, 1);
+function applyFacing(color, point, topology = null, sample = null) {
+  const detail = reliefDetail(sample, topology);
 
   const factor = clamp(
-    0.68 +
-      point.z * 0.26 +
-      relief * 0.10 +
-      ridge * 0.08 +
-      summit * 0.08 -
-      basin * 0.06,
-    0.50,
-    1.22
+    0.62 +
+      point.z * 0.30 +
+      detail.relief * 0.16 +
+      detail.ridge * 0.12 +
+      detail.summit * 0.14 -
+      detail.basin * 0.09 -
+      detail.canyon * 0.05 +
+      detail.macro * 0.07,
+    0.44,
+    1.34
   );
 
   return rgb(color.r * factor, color.g * factor, color.b * factor);
 }
 
 function applyTopologyBreakup(color, topology = null, sample = null) {
-  if (!topology || !isLandSample(sample)) return color;
+  if (!sample) return color;
 
-  const relief = clamp(topology.reliefComposite ?? 0, 0, 1);
-  const ridge = clamp(topology.ridgeAmplified ?? 0, 0, 1);
-  const basin = clamp(topology.basinAmplified ?? 0, 0, 1);
-  const summit = clamp(topology.summitAmplified ?? 0, 0, 1);
-  const canyon = clamp(topology.canyonAmplified ?? 0, 0, 1);
-  const coast = clamp(topology.coastAmplified ?? 0, 0, 1);
-  const squareMask = clamp(topology.squareMaskStrength ?? 0, 0, 1);
-
+  const detail = reliefDetail(sample, topology);
   let out = color;
 
-  if (ridge > 0.04 || summit > 0.04) {
+  if (isLandSample(sample)) {
     out = addRgb(
       out,
-      (ridge * 12) + (summit * 18),
-      (ridge * 10) + (summit * 14),
-      (ridge * 8) + (summit * 12)
+      detail.macro * 10 + detail.micro * 6,
+      detail.macro * 8 + detail.micro * 4,
+      detail.macro * 6 + detail.micro * 3
     );
-  }
 
-  if (basin > 0.04 || canyon > 0.04) {
+    if (detail.ridge > 0.04 || detail.summit > 0.04) {
+      out = addRgb(
+        out,
+        (detail.ridge * 18) + (detail.summit * 26),
+        (detail.ridge * 15) + (detail.summit * 20),
+        (detail.ridge * 12) + (detail.summit * 16)
+      );
+    }
+
+    if (detail.basin > 0.04 || detail.canyon > 0.04) {
+      out = addRgb(
+        out,
+        -((detail.basin * 26) + (detail.canyon * 16)),
+        -((detail.basin * 20) + (detail.canyon * 12)),
+        -((detail.basin * 14) + (detail.canyon * 8))
+      );
+    }
+
+    if (detail.coast > 0.04) {
+      out = mixRgb(out, rgb(198, 188, 148), detail.coast * 0.22);
+    }
+
+    if (detail.squareMask > 0.05) {
+      out = mixRgb(out, rgb(118, 122, 108), detail.squareMask * 0.12);
+    }
+
+    if (detail.relief > 0.05) {
+      out = mixRgb(out, rgb(154, 148, 138), detail.relief * 0.12);
+    }
+  } else {
     out = addRgb(
       out,
-      -((basin * 18) + (canyon * 10)),
-      -((basin * 14) + (canyon * 8)),
-      -((basin * 10) + (canyon * 6))
+      detail.macro * 5,
+      detail.macro * 7,
+      detail.macro * 11
     );
-  }
-
-  if (coast > 0.04) {
-    out = mixRgb(out, rgb(196, 186, 146), coast * 0.16);
-  }
-
-  if (squareMask > 0.05) {
-    out = mixRgb(out, rgb(126, 128, 116), squareMask * 0.08);
-  }
-
-  if (relief > 0.05) {
-    out = mixRgb(out, rgb(150, 146, 136), relief * 0.06);
   }
 
   return out;
@@ -292,24 +360,18 @@ function resolveFillColor(sample, point, topology = null) {
     : resolveBaseWaterColor(sample);
 
   const broken = applyTopologyBreakup(base, topology, sample);
-  return applyFacing(broken, point, topology);
+  return applyFacing(broken, point, topology, sample);
 }
 
 function resolveFillAlpha(sample, topology = null) {
   const tc = terrainClass(sample);
-  const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
-  const squareMask = clamp(topology?.squareMaskStrength ?? 0, 0, 1);
+  const detail = reliefDetail(sample, topology);
 
-  if (!isLandSample(sample)) return tc === "SHELF" ? 0.70 : 0.64;
-  if (tc === "SUMMIT" || tc === "MOUNTAIN" || tc === "GLACIAL_HIGHLAND") return clamp(0.86 + relief * 0.08, 0.86, 0.96);
-  if (tc === "RIDGE" || tc === "CANYON" || tc === "BASIN") return clamp(0.82 + relief * 0.08, 0.82, 0.92);
-  if (tc === "BEACH" || tc === "SHORELINE") return clamp(0.76 + squareMask * 0.06, 0.76, 0.86);
-  return clamp(0.72 + relief * 0.08 + squareMask * 0.04, 0.72, 0.88);
-}
-
-function getTopologyGrid(topologyField) {
-  const rows = Array.isArray(topologyField?.samples) ? topologyField.samples : [];
-  return Array.isArray(rows[0]) ? rows : [];
+  if (!isLandSample(sample)) return tc === "SHELF" ? 0.72 : 0.66;
+  if (tc === "SUMMIT" || tc === "MOUNTAIN" || tc === "GLACIAL_HIGHLAND") return clamp(0.88 + detail.relief * 0.08, 0.88, 0.98);
+  if (tc === "RIDGE" || tc === "CANYON" || tc === "BASIN") return clamp(0.84 + detail.relief * 0.08, 0.84, 0.94);
+  if (tc === "BEACH" || tc === "SHORELINE") return clamp(0.78 + detail.squareMask * 0.08, 0.78, 0.88);
+  return clamp(0.74 + detail.relief * 0.10 + detail.squareMask * 0.06, 0.74, 0.92);
 }
 
 function getTopologySample(topologyGrid, x, y) {
@@ -387,32 +449,32 @@ function drawCloudLayer(ctx, grid, projectPoint, projectionState) {
     for (let x = 0; x < grid[y].length; x += 4) {
       const sample = grid[y][x];
       const cloudiness = clamp(
-        (sample?.rainfall ?? 0) * 0.50 +
-        (sample?.evaporationPressure ?? 0) * 0.16 +
+        (sample?.rainfall ?? 0) * 0.52 +
+        (sample?.evaporationPressure ?? 0) * 0.18 +
         (sample?.maritimeInfluence ?? 0) * 0.14,
         0,
         1
       );
 
-      if (cloudiness < 0.60) continue;
+      if (cloudiness < 0.58) continue;
 
-      const point = projectPoint(sample.latDeg, sample.lonDeg, 10);
+      const point = projectPoint(sample.latDeg, sample.lonDeg, 12);
       if (!point.visible) continue;
 
-      const radius = 0.85 + cloudiness * (projectionState.observeMode ? 2.4 : 2.8);
+      const radius = 1.2 + cloudiness * (projectionState.observeMode ? 2.8 : 3.2);
       const alpha = projectionState.observeMode
-        ? 0.010 + cloudiness * 0.028
-        : 0.014 + cloudiness * 0.040;
+        ? 0.014 + cloudiness * 0.030
+        : 0.020 + cloudiness * 0.046;
 
       const grad = ctx.createRadialGradient(
         point.x - radius * 0.2,
         point.y - radius * 0.25,
-        radius * 0.15,
+        radius * 0.10,
         point.x,
         point.y,
         radius
       );
-      grad.addColorStop(0, `rgba(255,255,255,${(alpha * 1.2).toFixed(3)})`);
+      grad.addColorStop(0, `rgba(255,255,255,${(alpha * 1.3).toFixed(3)})`);
       grad.addColorStop(0.55, `rgba(248,250,255,${alpha.toFixed(3)})`);
       grad.addColorStop(1, "rgba(255,255,255,0)");
 
@@ -433,26 +495,26 @@ function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
     for (let x = 0; x < grid[y].length; x += 5) {
       const sample = grid[y][x];
       const aurora = clamp(sample?.auroralPotential ?? 0, 0, 1);
-      if (aurora < 0.56) continue;
+      if (aurora < 0.54) continue;
 
-      const point = projectPoint(sample.latDeg, sample.lonDeg, 12);
+      const point = projectPoint(sample.latDeg, sample.lonDeg, 14);
       if (!point.visible) continue;
 
-      const radius = 0.95 + aurora * (projectionState.observeMode ? 2.0 : 2.4);
+      const radius = 1.2 + aurora * (projectionState.observeMode ? 2.2 : 2.8);
       const alpha = projectionState.observeMode
-        ? 0.008 + aurora * 0.024
-        : 0.010 + aurora * 0.032;
+        ? 0.010 + aurora * 0.026
+        : 0.014 + aurora * 0.036;
 
       const grad = ctx.createRadialGradient(
         point.x,
         point.y,
-        radius * 0.12,
+        radius * 0.10,
         point.x,
         point.y,
         radius
       );
-      grad.addColorStop(0, `rgba(136,255,186,${(alpha * 1.08).toFixed(3)})`);
-      grad.addColorStop(0.55, `rgba(96,220,255,${(alpha * 0.88).toFixed(3)})`);
+      grad.addColorStop(0, `rgba(136,255,186,${(alpha * 1.12).toFixed(3)})`);
+      grad.addColorStop(0.55, `rgba(96,220,255,${(alpha * 0.94).toFixed(3)})`);
       grad.addColorStop(1, "rgba(96,220,255,0)");
 
       ctx.fillStyle = grad;
@@ -461,6 +523,49 @@ function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
       ctx.fill();
     }
   }
+
+  ctx.restore();
+}
+
+function drawPlanetRim(ctx, projectionState) {
+  ctx.save();
+
+  const outerRadius = projectionState.radius * 1.024;
+  const rim = ctx.createRadialGradient(
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius * 0.955,
+    projectionState.centerX,
+    projectionState.centerY,
+    outerRadius
+  );
+
+  if (projectionState.observeMode) {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.06)");
+    rim.addColorStop(1, "rgba(170,220,255,0.10)");
+  } else {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.08)");
+    rim.addColorStop(1, "rgba(170,220,255,0.16)");
+  }
+
+  ctx.beginPath();
+  ctx.arc(projectionState.centerX, projectionState.centerY, outerRadius, 0, Math.PI * 2);
+  ctx.fillStyle = rim;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius,
+    0,
+    Math.PI * 2
+  );
+  ctx.strokeStyle = projectionState.observeMode
+    ? "rgba(188,220,255,0.12)"
+    : "rgba(188,220,255,0.18)";
+  ctx.lineWidth = projectionState.observeMode ? 0.9 : 1.1;
+  ctx.stroke();
 
   ctx.restore();
 }

@@ -1,13 +1,740 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Nine Summits — Index</title>
+<link rel="stylesheet" href="/assets/ui.css"/>
+<style>
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#030712;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+body::before,body::after{pointer-events:none!important}
+
+:root{
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.84);
+  --mut2:rgba(255,255,255,.68);
+  --stroke:rgba(255,255,255,.12);
+  --shadowA:0 18px 52px rgba(0,0,0,.30);
+  --shadowB:0 24px 90px rgba(0,0,0,.42);
+  --gold:rgba(226,191,92,.92);
+  --panel:rgba(8,12,20,.38);
+  --heroDim:1;
+  --uiAlpha:1;
+  --shellAtmosAlpha:.82;
+  --starAlpha:1;
+}
+
+#app-shell{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  isolation:isolate;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(44,92,164,.08), transparent 34%),
+    linear-gradient(180deg, #030712 0%, #071225 52%, #08101f 100%);
+}
+
+#world-canvas{
+  position:fixed;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  z-index:1;
+  touch-action:none;
+}
+
+#universe-layer,
+#atmosphere-layer,
+#hero-layer,
+#flat-layer,
+#orbital-overlay{
+  position:fixed;
+  inset:0;
+}
+
+#universe-layer{
+  z-index:2;
+  pointer-events:none;
+  overflow:hidden;
+  transition:opacity 220ms ease, filter 220ms ease;
+  opacity:var(--starAlpha);
+}
+.star-band{
+  position:absolute;
+  inset:-10%;
+  opacity:.34;
+  mix-blend-mode:screen;
+  animation:starDrift 44s linear infinite;
+}
+.star-band.near{
+  opacity:.48;
+  animation-duration:26s;
+}
+.star-band.far{
+  opacity:.16;
+  animation-duration:70s;
+}
+.star-band::before,
+.star-band::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-repeat:repeat;
+  background-size:320px 320px;
+  filter:blur(.15px);
+}
+.star-band::before{
+  background-image:
+    radial-gradient(circle at 20px 24px, rgba(255,255,255,.96) 0 .9px, transparent 1.6px),
+    radial-gradient(circle at 118px 78px, rgba(255,255,255,.60) 0 .8px, transparent 1.5px),
+    radial-gradient(circle at 242px 194px, rgba(255,255,255,.82) 0 1px, transparent 1.7px),
+    radial-gradient(circle at 286px 42px, rgba(255,255,255,.42) 0 .7px, transparent 1.3px),
+    radial-gradient(circle at 68px 214px, rgba(255,255,255,.68) 0 .8px, transparent 1.4px),
+    radial-gradient(circle at 168px 262px, rgba(255,255,255,.50) 0 .7px, transparent 1.4px);
+}
+.star-band::after{
+  background-image:
+    radial-gradient(circle at 78px 48px, rgba(120,180,255,.18) 0 1px, transparent 2px),
+    radial-gradient(circle at 204px 158px, rgba(255,215,120,.16) 0 1.1px, transparent 2px),
+    radial-gradient(circle at 300px 258px, rgba(180,140,255,.12) 0 1px, transparent 1.8px);
+  filter:blur(.55px);
+}
+
+#atmosphere-layer{
+  z-index:3;
+  pointer-events:none;
+  overflow:hidden;
+  transition:opacity 220ms ease;
+  opacity:var(--shellAtmosAlpha);
+}
+.atmo-glow{
+  position:absolute;
+  left:50%;
+  top:58%;
+  width:min(92vw,1040px);
+  height:min(92vw,1040px);
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(108,162,236,.10), transparent 34%),
+    radial-gradient(circle at 50% 56%, rgba(255,255,255,.03), transparent 56%),
+    radial-gradient(circle at 50% 50%, rgba(30,90,170,.07), transparent 70%);
+  filter:blur(12px);
+  animation:glowPulse 8s ease-in-out infinite;
+}
+.mist-veil{
+  position:absolute;
+  left:0;
+  right:0;
+  bottom:-4%;
+  height:40%;
+  background:
+    linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(130,190,255,.04) 18%,
+      rgba(170,220,255,.07) 54%,
+      rgba(255,255,255,.02) 100%
+    );
+  mask-image:linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.25) 18%, rgba(0,0,0,.95) 84%, transparent 100%);
+  -webkit-mask-image:linear-gradient(to bottom, transparent 0%, rgba(0,0,0,.25) 18%, rgba(0,0,0,.95) 84%, transparent 100%);
+  opacity:.18;
+  transform:translateY(8%);
+  animation:veilDrift 9s ease-in-out infinite;
+}
+
+#hero-layer{
+  z-index:8;
+  pointer-events:none;
+  transition:opacity 180ms ease, transform 180ms ease;
+  opacity:var(--heroDim);
+}
+.hero-panel{
+  position:absolute;
+  left:50%;
+  top:12.8vh;
+  transform:translateX(-50%);
+  width:min(92vw,980px);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  text-align:center;
+}
+.hero-title{
+  margin:0;
+  font-size:clamp(42px,7vw,96px);
+  font-weight:950;
+  letter-spacing:.05em;
+  line-height:.9;
+  text-shadow:0 10px 30px rgba(0,0,0,.54);
+}
+.hero-sub{
+  margin:0;
+  font-size:clamp(18px,2.2vw,26px);
+  color:rgba(255,255,255,.90);
+}
+.hero-tag{
+  margin:0;
+  font-size:clamp(13px,1.5vw,16px);
+  color:rgba(255,255,255,.64);
+  letter-spacing:.02em;
+}
+
+#flat-layer{
+  z-index:9;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+}
+.flat-menu{
+  width:min(92vw,720px);
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;
+  pointer-events:auto;
+}
+.flat-card{
+  position:relative;
+  min-height:132px;
+  border-radius:28px;
+  border:1px solid rgba(255,255,255,.16);
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 22%),
+    linear-gradient(145deg, rgba(10,14,22,.88), rgba(5,8,12,.96));
+  box-shadow:
+    0 18px 48px rgba(0,0,0,.32),
+    inset 0 0 18px rgba(255,255,255,.03);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-weight:900;
+  font-size:clamp(18px,2.2vw,24px);
+  letter-spacing:.06em;
+  cursor:pointer;
+  overflow:hidden;
+  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+}
+.flat-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.24);
+}
+.flat-card::before{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:86px;
+  height:86px;
+  margin:-43px 0 0 -43px;
+  transform:rotate(45deg);
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.10);
+  box-shadow:inset 0 0 12px rgba(255,255,255,.05);
+}
+
+.top-ui{
+  position:absolute;
+  inset:0 0 auto 0;
+  z-index:16;
+  pointer-events:none;
+  opacity:var(--uiAlpha);
+}
+.top-ui-row{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  pointer-events:none;
+}
+.top-ui-row--home{
+  position:absolute;
+  top:12px;
+  left:0;
+  right:0;
+}
+.top-ui-row--modes{
+  position:absolute;
+  top:12px;
+  right:12px;
+  left:auto;
+  width:auto;
+}
+
+.home-pill{
+  min-width:132px;
+  padding:7px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(0,0,0,.18);
+  box-shadow:0 12px 28px rgba(0,0,0,.18);
+  backdrop-filter:blur(8px);
+  color:rgba(255,255,255,.92);
+  font-size:11px;
+  font-weight:900;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  text-align:center;
+  pointer-events:none;
+}
+
+.mode-cluster{
+  display:flex;
+  gap:8px;
+  pointer-events:auto;
+}
+.mode-btn{
+  min-height:42px;
+  padding:0 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(10,12,20,.32);
+  box-shadow:0 14px 34px rgba(0,0,0,.24);
+  backdrop-filter:blur(8px);
+  color:rgba(255,255,255,.92);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.mode-btn:active{transform:translateY(1px)}
+.mode-btn.is-active{
+  border-color:rgba(226,191,92,.50);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.24),
+    0 0 0 1px rgba(226,191,92,.10),
+    0 0 16px rgba(226,191,92,.10);
+  color:#fff5cf;
+}
+
+#orbital-overlay{
+  z-index:12;
+  pointer-events:none;
+  transition:opacity 180ms ease;
+}
+.orbital-marker{
+  position:absolute;
+  left:0;
+  top:0;
+  width:132px;
+  height:132px;
+  transform:translate(-50%,-50%);
+  border:0;
+  background:transparent;
+  padding:0;
+  pointer-events:auto;
+  cursor:pointer;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.orbital-marker[hidden]{display:none}
+
+.orbital-core{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:88px;
+  height:88px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,.06) 0 14%, rgba(255,255,255,0) 54%),
+    radial-gradient(circle at 50% 50%, rgba(226,191,92,.18), rgba(226,191,92,.08) 28%, rgba(226,191,92,0) 58%);
+  opacity:.94;
+}
+.orbital-core::before,
+.orbital-core::after{
+  content:"";
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  background:linear-gradient(180deg, rgba(255,247,208,.88), rgba(255,228,142,.84), rgba(255,214,98,.22));
+  box-shadow:
+    0 0 16px rgba(255,225,140,.28),
+    0 0 28px rgba(255,219,126,.14);
+}
+.orbital-core::before{
+  width:10px;
+  height:78px;
+}
+.orbital-core::after{
+  width:78px;
+  height:10px;
+}
+.orbital-diag-a,
+.orbital-diag-b{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:70px;
+  height:2px;
+  transform-origin:center;
+  background:linear-gradient(90deg, rgba(255,227,132,0), rgba(255,233,160,.76), rgba(255,227,132,0));
+  opacity:.54;
+}
+.orbital-diag-a{transform:translate(-50%,-50%) rotate(45deg)}
+.orbital-diag-b{transform:translate(-50%,-50%) rotate(-45deg)}
+.orbital-glow{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:118px;
+  height:118px;
+  transform:translate(-50%,-50%);
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,227,132,.10), rgba(255,227,132,.05) 26%, rgba(255,227,132,0) 68%);
+  filter:blur(8px);
+  opacity:.84;
+}
+.orbital-code{
+  position:absolute;
+  left:50%;
+  top:22px;
+  transform:translateX(-50%);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.26em;
+  color:rgba(255,246,214,.82);
+  text-transform:uppercase;
+  text-shadow:0 0 10px rgba(0,0,0,.50);
+  white-space:nowrap;
+}
+.orbital-name{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  min-width:84px;
+  padding:3px 10px;
+  border-radius:999px;
+  background:rgba(6,10,18,.18);
+  color:rgba(255,255,255,.92);
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  text-align:center;
+  text-shadow:0 0 10px rgba(0,0,0,.56);
+  box-shadow:0 6px 20px rgba(0,0,0,.14);
+  backdrop-filter:blur(6px);
+}
+
+.diagnostics-shell{
+  position:absolute;
+  left:16px;
+  right:16px;
+  bottom:16px;
+  z-index:14;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  pointer-events:none;
+  opacity:var(--uiAlpha);
+  transition:opacity 180ms ease;
+}
+.diagnostics-bar{
+  width:min(980px,100%);
+  min-height:62px;
+  padding:10px 12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.09);
+  background:rgba(7,10,18,.34);
+  box-shadow:0 14px 38px rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:10px;
+  pointer-events:auto;
+}
+.diagnostics-summary{
+  min-width:0;
+  opacity:.70;
+}
+.diagnostics-summary .diagnostic-pill{
+  border-color:rgba(255,255,255,.07);
+  background:rgba(255,255,255,.02);
+}
+.diagnostics-toggle{
+  min-width:110px;
+  min-height:38px;
+  padding:0 14px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.11);
+  background:rgba(10,12,20,.28);
+  color:rgba(255,255,255,.92);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  cursor:pointer;
+}
+.diagnostics-toggle:active{transform:translateY(1px)}
+.debug-panel{
+  position:absolute;
+  left:16px;
+  bottom:94px;
+  width:min(380px, calc(100vw - 32px));
+  max-height:min(48vh, 420px);
+  overflow:auto;
+  display:grid;
+  gap:10px;
+  opacity:0;
+  pointer-events:none;
+  transform:translateY(10px);
+  transition:opacity 160ms ease, transform 160ms ease;
+  z-index:15;
+}
+.debug-panel .panel-section{
+  background:rgba(8,14,24,.74);
+  border:1px solid rgba(145,175,255,.14);
+  box-shadow:0 14px 40px rgba(0,0,0,.26);
+  backdrop-filter:blur(10px);
+  border-radius:14px;
+  padding:12px;
+}
+body[data-diagnostics="full"] .debug-panel{
+  opacity:1;
+  pointer-events:auto;
+  transform:translateY(0);
+}
+
+.boot-status{
+  position:fixed;
+  left:50%;
+  top:88px;
+  transform:translateX(-50%);
+  width:min(760px,92vw);
+  z-index:40;
+  display:none;
+  padding:14px 16px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(14,18,28,.86);
+  box-shadow:0 20px 60px rgba(0,0,0,.44);
+  backdrop-filter:blur(10px);
+  white-space:pre-wrap;
+  line-height:1.45;
+  font-size:13px;
+  color:rgba(255,255,255,.90);
+}
+.boot-status.is-visible{display:block}
+
+body[data-mode="round"]{
+  --heroDim:1;
+  --uiAlpha:1;
+  --shellAtmosAlpha:.82;
+  --starAlpha:1;
+}
+body[data-mode="flat"]{
+  --heroDim:.86;
+  --uiAlpha:1;
+  --shellAtmosAlpha:.54;
+  --starAlpha:.72;
+}
+body[data-mode="observe"]{
+  --heroDim:.78;
+  --uiAlpha:.88;
+  --shellAtmosAlpha:.58;
+  --starAlpha:.12;
+}
+body[data-mode="observe"] #orbital-overlay{
+  opacity:0;
+}
+body[data-mode="observe"] .diagnostics-summary{
+  opacity:.68;
+}
+
+@keyframes starDrift{
+  from{transform:translate3d(-1.5%,-1%,0)}
+  to{transform:translate3d(1.5%,1%,0)}
+}
+@keyframes glowPulse{
+  0%,100%{opacity:.82;transform:translate(-50%,-50%) scale(1)}
+  50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
+}
+@keyframes veilDrift{
+  0%,100%{transform:translateY(8%);opacity:.18}
+  50%{transform:translateY(2%);opacity:.28}
+}
+
+@media (max-width:700px){
+  .top-ui-row--home{top:10px}
+  .top-ui-row--modes{
+    top:58px;
+    left:0;
+    right:0;
+    width:100%;
+    justify-content:center;
+  }
+  .mode-cluster{gap:6px}
+  .mode-btn{
+    min-height:38px;
+    padding:0 12px;
+    font-size:11px;
+  }
+  .home-pill{
+    min-width:108px;
+    padding:6px 12px;
+    font-size:10px;
+    letter-spacing:.10em;
+  }
+  .hero-panel{
+    top:19.5vh;
+    gap:12px;
+  }
+  .flat-menu{
+    grid-template-columns:1fr;
+    width:min(92vw,420px);
+    gap:12px;
+  }
+  .flat-card{min-height:98px}
+  .diagnostics-bar{
+    grid-template-columns:1fr;
+    min-height:54px;
+    padding:8px 10px;
+  }
+  .diagnostics-toggle{
+    min-height:34px;
+    min-width:98px;
+    justify-self:end;
+    font-size:11px;
+  }
+  .debug-panel{bottom:84px}
+}
+
+@media (max-width:420px){
+  .hero-panel{top:21vh}
+  .hero-title{font-size:clamp(34px,11vw,54px)}
+  .hero-sub{font-size:clamp(16px,5.8vw,22px)}
+  .hero-tag{font-size:clamp(12px,4vw,14px)}
+  .mode-btn{
+    padding:0 10px;
+    min-height:36px;
+    letter-spacing:.04em;
+  }
+}
+</style>
+</head>
+<body data-mode="round" data-diagnostics="peek">
+<div id="app-shell">
+  <canvas id="world-canvas" aria-label="Home world canvas"></canvas>
+
+  <div id="universe-layer" aria-hidden="true">
+    <div class="star-band far"></div>
+    <div class="star-band"></div>
+    <div class="star-band near"></div>
+  </div>
+
+  <div id="atmosphere-layer" aria-hidden="true">
+    <div class="atmo-glow"></div>
+    <div class="mist-veil"></div>
+  </div>
+
+  <div id="hero-layer">
+    <div class="hero-panel" id="hero-panel">
+      <h1 class="hero-title">NINE SUMMITS</h1>
+      <p class="hero-sub">Learn to live, to love.</p>
+      <p class="hero-tag">Enter simply. Discover power. Choose depth.</p>
+    </div>
+  </div>
+
+  <div id="flat-layer">
+    <div class="flat-menu">
+      <button class="flat-card" data-route="/explore/" type="button">EXPLORE</button>
+      <button class="flat-card" data-route="/products/" type="button">PRODUCTS</button>
+      <button class="flat-card" data-route="/laws/" type="button">LAWS</button>
+      <button class="flat-card" data-route="/gauges/" type="button">GAUGES</button>
+    </div>
+  </div>
+
+  <div id="orbital-overlay" aria-label="Index markers">
+    <button class="orbital-marker" id="marker-north" type="button" hidden>
+      <div class="orbital-glow"></div>
+      <div class="orbital-core"></div>
+      <div class="orbital-diag-a"></div>
+      <div class="orbital-diag-b"></div>
+      <div class="orbital-code">N</div>
+      <div class="orbital-name">PRODUCTS</div>
+    </button>
+
+    <button class="orbital-marker" id="marker-east" type="button" hidden>
+      <div class="orbital-glow"></div>
+      <div class="orbital-core"></div>
+      <div class="orbital-diag-a"></div>
+      <div class="orbital-diag-b"></div>
+      <div class="orbital-code">E</div>
+      <div class="orbital-name">GAUGES</div>
+    </button>
+
+    <button class="orbital-marker" id="marker-south" type="button" hidden>
+      <div class="orbital-glow"></div>
+      <div class="orbital-core"></div>
+      <div class="orbital-diag-a"></div>
+      <div class="orbital-diag-b"></div>
+      <div class="orbital-code">S</div>
+      <div class="orbital-name">LAWS</div>
+    </button>
+
+    <button class="orbital-marker" id="marker-west" type="button" hidden>
+      <div class="orbital-glow"></div>
+      <div class="orbital-core"></div>
+      <div class="orbital-diag-a"></div>
+      <div class="orbital-diag-b"></div>
+      <div class="orbital-code">W</div>
+      <div class="orbital-name">EXPLORE</div>
+    </button>
+  </div>
+
+  <div class="top-ui">
+    <div class="top-ui-row top-ui-row--home">
+      <div class="home-pill" id="home-pill">HOME</div>
+    </div>
+    <div class="top-ui-row top-ui-row--modes">
+      <div class="mode-cluster" id="mode-cluster">
+        <button id="btn-flat" class="mode-btn" type="button">FLAT</button>
+        <button id="btn-round" class="mode-btn" type="button">ROUND</button>
+        <button id="btn-observe" class="mode-btn" type="button">OBSERVE</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="diagnostics-shell" id="diagnostics-shell">
+    <div class="diagnostics-bar">
+      <div id="diagnostics-summary" class="diagnostics-summary"></div>
+      <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">DIAGNOSTICS</button>
+    </div>
+  </div>
+
+  <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
+
+  <div id="boot-status" class="boot-status" aria-live="polite">
+    <div id="boot-status-copy"></div>
+  </div>
+</div>
+
 <script type="module">
 import { createPlanetEngine } from "/world/planet_engine.js";
 import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
-import { createCompletionEngine } from "/world/completion_engine.js";
-import { createTransitionEngine } from "/world/transition_engine.js";
 import { createInstruments } from "/assets/instruments.js";
 
 const params = new URLSearchParams(location.search);
-let currentMode =
+const currentMode =
   params.get("mode") === "flat" || params.get("mode") === "observe"
     ? params.get("mode")
     : "round";
@@ -29,8 +756,6 @@ const bootStatusCopy = document.getElementById("boot-status-copy");
 const btnFlat = document.getElementById("btn-flat");
 const btnRound = document.getElementById("btn-round");
 const btnObserve = document.getElementById("btn-observe");
-const btnZoomIn = document.getElementById("btn-zoom-in");
-const btnZoomOut = document.getElementById("btn-zoom-out");
 
 const overlayMap = Object.freeze({
   "north-products": document.getElementById("marker-north"),
@@ -39,52 +764,11 @@ const overlayMap = Object.freeze({
   "west-explore": document.getElementById("marker-west")
 });
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v11";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v12";
+const RUNTIME_STORAGE_KEY = "cte_runtime_v1";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const MARKER_OUTWARD_NUDGE = 8;
-const activePointers = new Map();
-
-let planetEngine = null;
-let renderer = null;
-let control = null;
-let completionEngine = null;
-let transitionEngine = null;
-let instruments = null;
-
-let planetField = null;
-let rafId = 0;
-let lastFrameAt = performance.now();
-let diagnosticsMode = "peek";
-let dragPointerId = null;
-let lastX = 0;
-let lastY = 0;
-let pinchStartDistance = 0;
-let pinchStartZoom = 1;
-let runtimeReady = false;
-
-let runtimeState = {
-  phase: "HOME",
-  progress: {},
-  unlocks: {},
-  completion: {},
-  transition: {},
-  validator: {},
-  validatedReceipts: {},
-  authorityReceipt: { pass: true }
-};
-
-let lastRenderReceipt = Object.freeze({
-  audit: Object.freeze({})
-});
-
-let lastPlacementReceipt = Object.freeze({
-  resolvedHits: Object.freeze([]),
-  markerRequired: false,
-  markerPlacementAdmissible: true,
-  markerCollisionCount: 0,
-  markerRepositionedCount: 0
-});
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -97,6 +781,8 @@ const orbitalSystem = Object.freeze({
       baseLatDeg: 0,
       baseLonDeg: 0,
       bearingOffsetDeg: -90,
+      spinOffsetRad: 0.20,
+      spinMultiplier: 1.35,
       sizePx: 20
     }),
     Object.freeze({
@@ -108,6 +794,8 @@ const orbitalSystem = Object.freeze({
       baseLatDeg: 0,
       baseLonDeg: 0,
       bearingOffsetDeg: 90,
+      spinOffsetRad: 0.80,
+      spinMultiplier: 1.25,
       sizePx: 20
     }),
     Object.freeze({
@@ -119,6 +807,8 @@ const orbitalSystem = Object.freeze({
       baseLatDeg: 0,
       baseLonDeg: 0,
       bearingOffsetDeg: 0,
+      spinOffsetRad: 1.10,
+      spinMultiplier: 1.45,
       sizePx: 20
     }),
     Object.freeze({
@@ -130,13 +820,65 @@ const orbitalSystem = Object.freeze({
       baseLatDeg: 0,
       baseLonDeg: 0,
       bearingOffsetDeg: 180,
+      spinOffsetRad: 1.70,
+      spinMultiplier: 1.30,
       sizePx: 20
     })
   ])
 });
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+const planetEngine = createPlanetEngine();
+const renderer = createRenderer();
+const control = createControlSystem();
+const instruments = createInstruments();
+
+let planetField = null;
+let rafId = 0;
+let lastFrameAt = performance.now();
+let diagnosticsMode = "peek";
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
+let runtimeReady = false;
+
+let lastRenderReceipt = Object.freeze({
+  orbitalHits: Object.freeze([]),
+  orbitalAudit: Object.freeze({ count: 0, frontVisibleCount: 0 }),
+  audit: Object.freeze({})
+});
+
+let lastPlacementReceipt = Object.freeze({
+  markerRequired: false,
+  markerPlacementAdmissible: true,
+  markerCollisionCount: 0,
+  markerRepositionedCount: 0
+});
+
+let runtimeErrorMessage = "";
+
+function emitRuntimeReceipt(patch = {}) {
+  const base = {
+    page: "/index.html",
+    phase: runtimeReady ? "RUNNING" : "BOOT",
+    mode: currentMode,
+    bootPass: runtimeReady,
+    renderPass: runtimeReady && !!planetField,
+    markerPass: !!lastPlacementReceipt.markerPlacementAdmissible,
+    diagnosticsMode,
+    timestamp: new Date().toISOString(),
+    error: runtimeErrorMessage,
+    renderAudit: lastRenderReceipt?.audit || {},
+    orbitalAudit: {
+      ...(lastRenderReceipt?.orbitalAudit || {}),
+      ...(lastPlacementReceipt || {})
+    }
+  };
+
+  try {
+    localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify({ ...base, ...patch }));
+  } catch {
+    return;
+  }
 }
 
 function showBootStatus(message) {
@@ -165,36 +907,6 @@ function markerModeRequired() {
   return currentMode === "round";
 }
 
-function orbitVelocityForMode() {
-  if (currentMode === "observe") return 0.00010;
-  if (currentMode === "round") return 0.00018;
-  return 0;
-}
-
-function zoomPolicyForMode() {
-  if (currentMode === "observe") {
-    return Object.freeze({
-      min: 1.04,
-      max: 1.34,
-      initial: 1.24
-    });
-  }
-
-  if (currentMode === "round") {
-    return Object.freeze({
-      min: 0.86,
-      max: 1.52,
-      initial: 1
-    });
-  }
-
-  return Object.freeze({
-    min: 1,
-    max: 1,
-    initial: 1
-  });
-}
-
 function buildModeHref(nextMode) {
   const q = new URLSearchParams(location.search);
   q.set("mode", nextMode);
@@ -206,21 +918,22 @@ function withModeQuery(route) {
   return `${route}${glue}mode=${currentMode}`;
 }
 
-function navigateToMode(nextMode) {
-  location.href = buildModeHref(nextMode);
+function resizeWorld() {
+  const width = window.innerWidth;
+  const height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+  control.resize(width, height);
 }
 
-function persistMotionState() {
-  if (!runtimeReady || !control || !isRoundVisualMode()) return;
-  try {
-    sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
-  } catch {
-    return;
+function buildPlanetFieldOnce() {
+  if (!planetField) {
+    planetField = planetEngine.buildPlanetField({});
   }
 }
 
 function restoreMotionState() {
-  if (!runtimeReady || !control || !isRoundVisualMode()) return;
+  if (!isRoundVisualMode()) return;
   try {
     const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
     if (!raw) return;
@@ -230,177 +943,134 @@ function restoreMotionState() {
   }
 }
 
-function resizeWorld() {
-  const width = window.innerWidth;
-  const height = window.innerHeight;
-  canvas.width = width;
-  canvas.height = height;
-  if (runtimeReady && control && typeof control.resize === "function") {
-    control.resize(width, height);
+function persistMotionState() {
+  if (!isRoundVisualMode()) return;
+  try {
+    sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(control.getMotionState()));
+  } catch {
+    return;
   }
 }
 
-function syncModeButtons() {
-  btnFlat.classList.toggle("is-active", currentMode === "flat");
-  btnRound.classList.toggle("is-active", currentMode === "round");
-  btnObserve.classList.toggle("is-active", currentMode === "observe");
+function safeProjectionSummary() {
+  if (typeof control.getProjectionSummary === "function") {
+    const summary = control.getProjectionSummary();
+    return summary && typeof summary === "object" ? summary : {};
+  }
+  return {};
+}
+
+function safeMotionReceipt(dtMs) {
+  const motionState =
+    typeof control.getMotionState === "function"
+      ? control.getMotionState()
+      : {};
+  const orbitalState =
+    typeof control.getOrbitalState === "function"
+      ? control.getOrbitalState()
+      : {};
+
+  return {
+    motionRunning: isRoundVisualMode(),
+    rafActive: rafId !== 0,
+    pageVisible: document.visibilityState === "visible",
+    pageRestored: true,
+    yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
+    pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
+    orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity) ? orbitalState.orbitAngularVelocity : null,
+    orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
+    blockedDragOnStarCount: 0,
+    starTapCount: 0,
+    dtMs
+  };
+}
+
+function buildRuntimePacket(dtMs) {
+  const projectionSummary = safeProjectionSummary();
+  const sample =
+    planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] ||
+    planetField?.samples?.[0]?.[0] ||
+    null;
+
+  const instrument = instruments.buildInstrumentReceipt({
+    currentSample: sample,
+    previousSample: sample,
+    tickIndex: 0,
+    motionState: safeMotionReceipt(dtMs),
+    authorityState: {
+      motionOwner: "control.js",
+      projectionOwner: "control.js",
+      inputOwner: "index.html",
+      renderSource: "render.js",
+      orbitSource: "render.js"
+    },
+    transitionState: {
+      proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
+      admissible: true,
+      accepted: true,
+      blockedReason: "",
+      family: "HOME_MODE"
+    }
+  });
+
+  return Object.freeze({
+    phase: "HOME",
+    fps: dtMs > 0 ? 1000 / dtMs : 0,
+    dtMs,
+    elapsedMs: performance.now(),
+    instrument,
+    control: {
+      projectionSummary,
+      motionState: typeof control.getMotionState === "function" ? control.getMotionState() : {},
+      orbitalState: typeof control.getOrbitalState === "function" ? control.getOrbitalState() : {}
+    },
+    planetField,
+    renderAudit: lastRenderReceipt?.audit || {},
+    orbitalAudit: {
+      ...(lastRenderReceipt?.orbitalAudit || {}),
+      ...(lastPlacementReceipt || {})
+    },
+    progress: {},
+    unlocks: {},
+    verification: {
+      pass: runtimeReady && !!planetField && (runtimeErrorMessage === ""),
+      reasons: runtimeErrorMessage ? [runtimeErrorMessage] : []
+    },
+    failure: {
+      phase: runtimeErrorMessage ? "BOOT" : "",
+      message: runtimeErrorMessage
+    }
+  });
+}
+
+function updateDiagnostics(dtMs) {
+  if (!runtimeReady) {
+    diagnosticsSummary.innerHTML = `
+      <div class="diagnostic-bar__group">
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">Phase</span><span class="diagnostic-pill__value">BOOT</span></span>
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">Mode</span><span class="diagnostic-pill__value">${currentMode.toUpperCase()}</span></span>
+        <span class="diagnostic-pill"><span class="diagnostic-pill__label">Runtime</span><span class="diagnostic-pill__value">WAIT</span></span>
+      </div>
+    `.trim();
+
+    debugPanel.innerHTML = `
+      <section class="panel-section">
+        <h3 class="panel-title">Runtime</h3>
+        Compass shell active. World runtime has not completed boot.
+      </section>
+    `;
+    return;
+  }
+
+  const runtime = buildRuntimePacket(dtMs);
+  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
+  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
 }
 
 function hideAllMarkers() {
   for (const key of Object.keys(overlayMap)) {
     const node = overlayMap[key];
     if (node) node.hidden = true;
-  }
-}
-
-function setDiagnosticsMode(nextMode) {
-  diagnosticsMode = nextMode === "full" ? "full" : "peek";
-  body.setAttribute("data-diagnostics", diagnosticsMode);
-  diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
-}
-
-function setModePresentation() {
-  body.setAttribute("data-mode", currentMode);
-  syncModeButtons();
-
-  if (isFlatMode()) {
-    flatLayer.style.display = "flex";
-    canvas.style.filter = "blur(8px) brightness(.64)";
-    universeLayer.style.filter = "none";
-    atmosphereLayer.style.filter = "none";
-    heroLayer.style.transform = "none";
-    hideAllMarkers();
-  } else if (isObserveMode()) {
-    flatLayer.style.display = "none";
-    canvas.style.filter = "none";
-    universeLayer.style.filter = "blur(.25px)";
-    atmosphereLayer.style.filter = "none";
-    heroLayer.style.transform = "translateY(-4px)";
-    hideAllMarkers();
-  } else {
-    flatLayer.style.display = "none";
-    canvas.style.filter = "none";
-    universeLayer.style.filter = "none";
-    atmosphereLayer.style.filter = "none";
-    heroLayer.style.transform = "none";
-  }
-}
-
-function renderFallbackDiagnostics() {
-  diagnosticsSummary.innerHTML = `
-    <span class="diagnostic-pill">PHASE HOME</span>
-    <span class="diagnostic-pill">MODE ${currentMode.toUpperCase()}</span>
-    <span class="diagnostic-pill">BOOT FALLBACK</span>
-  `;
-  debugPanel.innerHTML = `
-    <div class="panel-section">
-      <strong>Runtime status</strong><br/>
-      Compass shell is live, but world boot did not complete. Navigation remains available.
-    </div>
-  `;
-}
-
-function bindStaticRoutes() {
-  btnFlat.addEventListener("click", () => {
-    if (currentMode === "flat") return;
-    navigateToMode("flat");
-  });
-
-  btnRound.addEventListener("click", () => {
-    if (currentMode === "round") return;
-    navigateToMode("round");
-  });
-
-  btnObserve.addEventListener("click", () => {
-    if (currentMode === "observe") return;
-    navigateToMode("observe");
-  });
-
-  btnZoomIn.addEventListener("click", () => {
-    if (!runtimeReady || !control || !isRoundVisualMode()) return;
-    control.adjustZoomBy(0.10);
-  }, { passive: true });
-
-  btnZoomOut.addEventListener("click", () => {
-    if (!runtimeReady || !control || !isRoundVisualMode()) return;
-    control.adjustZoomBy(-0.10);
-  }, { passive: true });
-
-  diagnosticsToggle.addEventListener("click", () => {
-    setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
-    if (runtimeReady) {
-      syncOverlayMarkers();
-      updateDiagnostics(16.7);
-    }
-  });
-
-  document.querySelectorAll(".flat-card").forEach((card) => {
-    card.addEventListener("click", () => {
-      const route = card.dataset.route || "/home/";
-      persistMotionState();
-      location.href = withModeQuery(route);
-    });
-  });
-
-  orbitalSystem.objects.forEach((obj) => {
-    const marker = overlayMap[obj.id];
-    if (!marker) return;
-    marker.addEventListener("click", () => {
-      persistMotionState();
-      location.href = withModeQuery(obj.route);
-    });
-  });
-
-  window.addEventListener("resize", () => {
-    resizeWorld();
-    if (runtimeReady) renderSurface(16.7);
-  }, { passive: true });
-
-  window.addEventListener("pagehide", () => {
-    persistMotionState();
-    if (rafId) {
-      cancelAnimationFrame(rafId);
-      rafId = 0;
-    }
-  }, { passive: true });
-
-  window.addEventListener("pageshow", () => {
-    if (!runtimeReady) return;
-    applyModePolicy();
-    if (isRoundVisualMode()) {
-      restoreMotionState();
-      applyModePolicy();
-    }
-    if (!rafId && isRoundVisualMode()) {
-      lastFrameAt = performance.now();
-      rafId = requestAnimationFrame(frame);
-    }
-  }, { passive: true });
-}
-
-function applyModePolicy() {
-  if (!runtimeReady || !control) return;
-
-  control.setPresentationMode(currentMode);
-
-  const zoom = zoomPolicyForMode();
-  control.setZoomBounds(zoom.min, zoom.max);
-
-  if (currentMode === "flat") {
-    control.setZoomAbsolute(1);
-    control.setOrientation({
-      zoomCurrent: 1,
-      zoomTarget: 1
-    });
-  } else {
-    const motion = control.getMotionState();
-    if (!Number.isFinite(motion.zoomCurrent) || motion.zoomCurrent < zoom.min || motion.zoomCurrent > zoom.max) {
-      control.setZoomAbsolute(zoom.initial);
-      control.setOrientation({
-        zoomCurrent: zoom.initial,
-        zoomTarget: zoom.initial
-      });
-    }
   }
 }
 
@@ -422,7 +1092,8 @@ function cloneHit(hit, center) {
     x: hit.x,
     y: hit.y,
     radius,
-    angle: Math.atan2(dy, dx)
+    angle: Math.atan2(dy, dx),
+    radialDistance: Math.sqrt((dx * dx) + (dy * dy))
   };
 }
 
@@ -458,9 +1129,7 @@ function applyOutwardSeparation(a, b, center) {
   const distance = Math.sqrt((dx * dx) + (dy * dy));
   const minDistance = a.radius + b.radius + MARKER_PADDING;
 
-  if (distance >= minDistance) {
-    return false;
-  }
+  if (distance >= minDistance) return false;
 
   const overlap = minDistance - Math.max(distance, 0.0001);
   const va = computeMarkerVector(a, center);
@@ -492,9 +1161,7 @@ function countCollisions(hits) {
       const dx = b.x - a.x;
       const dy = b.y - a.y;
       const minDistance = a.radius + b.radius + MARKER_PADDING;
-      if ((dx * dx) + (dy * dy) < minDistance * minDistance) {
-        count += 1;
-      }
+      if ((dx * dx) + (dy * dy) < minDistance * minDistance) count += 1;
     }
   }
   return count;
@@ -512,36 +1179,6 @@ function validateMarkersInViewport(hits) {
   }
 
   return true;
-}
-
-function getRawOrbitalHits() {
-  if (!runtimeReady || !control || !markerModeRequired()) return [];
-
-  const orbitalState = control.getOrbitalState();
-  const phase = Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : 0;
-  const altitudePx = control.getCameraState().radius * 0.42;
-
-  return orbitalSystem.objects.map((object) => {
-    const lonDeg = object.baseLonDeg + object.bearingOffsetDeg + ((phase * 180) / Math.PI);
-    const point = control.projectSphere(object.baseLatDeg, lonDeg, altitudePx);
-    const edgeVisibility = Math.max(0, Math.min(1, (point.z + 0.08) / 0.30));
-    const frontFacing = point.z >= 0;
-    const scale = 0.82 + edgeVisibility * 0.34;
-    const opacity = frontFacing
-      ? 0.42 + edgeVisibility * 0.58
-      : edgeVisibility * 0.34;
-
-    return Object.freeze({
-      id: object.id,
-      label: object.label,
-      route: object.route,
-      x: point.x,
-      y: point.y,
-      radius: object.sizePx * scale * 0.72,
-      frontFacing,
-      opacity
-    });
-  }).filter((hit) => hit.frontFacing && hit.opacity > 0.22);
 }
 
 function solveMarkerPlacement(rawHits) {
@@ -632,9 +1269,8 @@ function solveMarkerPlacement(rawHits) {
 }
 
 function syncOverlayMarkers() {
-  if (!runtimeReady || !control || !isRoundVisualMode() || isObserveMode()) {
+  if (!isRoundVisualMode() || isObserveMode()) {
     lastPlacementReceipt = Object.freeze({
-      resolvedHits: Object.freeze([]),
       markerRequired: false,
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
@@ -644,15 +1280,18 @@ function syncOverlayMarkers() {
     return;
   }
 
-  const placement = solveMarkerPlacement(getRawOrbitalHits());
-  lastPlacementReceipt = placement;
+  const rawHits = Array.isArray(lastRenderReceipt?.orbitalHits)
+    ? lastRenderReceipt.orbitalHits
+    : [];
 
   hideAllMarkers();
+
+  const placement = solveMarkerPlacement(rawHits);
+  lastPlacementReceipt = placement;
 
   for (const hit of placement.resolvedHits) {
     const marker = overlayMap[hit.id];
     if (!marker) continue;
-
     marker.hidden = false;
     marker.style.left = `${hit.x}px`;
     marker.style.top = `${hit.y}px`;
@@ -660,12 +1299,6 @@ function syncOverlayMarkers() {
 }
 
 function buildViewState() {
-  if (!runtimeReady || !control) {
-    return Object.freeze({
-      observeMode: isObserveMode()
-    });
-  }
-
   const cameraState =
     typeof control.getCameraState === "function"
       ? control.getCameraState()
@@ -673,417 +1306,252 @@ function buildViewState() {
 
   return Object.freeze({
     ...cameraState,
-    observeMode: isObserveMode()
+    observeMode: isObserveMode(),
+    starfieldSuppressed: isObserveMode()
   });
 }
 
-function safeProjectionSummary() {
-  if (runtimeReady && control && typeof control.getProjectionSummary === "function") {
-    const summary = control.getProjectionSummary();
-    return summary && typeof summary === "object" ? summary : {};
-  }
-  return {};
-}
+function buildOrbitalConfig() {
+  if (!isRoundVisualMode() || isObserveMode()) return null;
 
-function safeMotionReceipt(dtMs) {
-  const motionState =
-    runtimeReady && control && typeof control.getMotionState === "function"
-      ? control.getMotionState()
-      : {};
   const orbitalState =
-    runtimeReady && control && typeof control.getOrbitalState === "function"
+    typeof control.getOrbitalState === "function"
       ? control.getOrbitalState()
       : {};
 
-  return {
-    motionRunning: runtimeReady && isRoundVisualMode(),
-    rafActive: rafId !== 0,
-    pageVisible: document.visibilityState === "visible",
-    pageRestored: true,
-    yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
-    pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-    orbitVelocity: orbitVelocityForMode(),
-    orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
-    blockedDragOnStarCount: 0,
-    starTapCount: 0,
-    dtMs
-  };
-}
-
-function buildPlanetValidatorPacket() {
-  if (!planetField?.summary) return {};
-
-  const summary = planetField.summary;
-  const completeness = planetField.completeness || {};
-  const completenessValues = Object.values(completeness);
-  const completenessRatio = completenessValues.length
-    ? completenessValues.filter((value) => value === true).length / completenessValues.length
-    : 1;
-
   return Object.freeze({
-    engineId: "planet",
-    lobeId: 0,
-    stateIndexDepth: 128,
-    bufferClass: 65536,
-    hash: [
-      "planet",
-      summary.sampleCount ?? 0,
-      summary.landCount ?? 0,
-      summary.waterCount ?? 0,
-      summary.continentCount ?? 0
-    ].join(":"),
-    stale: false,
-    dependencies: {},
-    completeness: completenessRatio
+    phase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : 0,
+    objects: orbitalSystem.objects,
+    altitudeFactor: 0.42
   });
-}
-
-function updateRuntimeTransitions() {
-  if (!runtimeReady || !transitionEngine) return;
-
-  runtimeState = transitionEngine.update(runtimeState, {
-    proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
-    family: "HOME_MODE",
-    fromRoute: location.pathname,
-    toRoute: location.pathname,
-    fromMode: currentMode,
-    toMode: currentMode,
-    explicitUserAction: true,
-    reason: "runtime_tick",
-    packet: buildPlanetValidatorPacket()
-  });
-}
-
-function buildRuntimePacket(dtMs) {
-  const projectionSummary = safeProjectionSummary();
-  const sample =
-    planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] ||
-    planetField?.samples?.[0]?.[0] ||
-    null;
-
-  if (!runtimeReady || !instruments) {
-    return Object.freeze({
-      phase: "HOME",
-      fps: 0,
-      dtMs,
-      elapsedMs: performance.now(),
-      instrument: {},
-      control: {
-        projectionSummary,
-        motionState: {},
-        orbitalState: {}
-      },
-      planetField,
-      renderAudit: lastRenderReceipt?.audit || {},
-      orbitalAudit: {
-        count: orbitalSystem.objects.length,
-        frontVisibleCount: 0,
-        ...(lastPlacementReceipt || {})
-      },
-      progress: {},
-      unlocks: {},
-      completion: {},
-      transition: {},
-      validator: {},
-      validatedReceipts: {},
-      verification: {
-        pass: false,
-        reasons: ["WORLD_BOOT_INCOMPLETE"]
-      },
-      failure: {
-        phase: "BOOT",
-        message: "Compass shell active; world runtime unavailable."
-      }
-    });
-  }
-
-  const instrument = instruments.buildInstrumentReceipt({
-    currentSample: sample,
-    previousSample: sample,
-    tickIndex: 0,
-    motionState: safeMotionReceipt(dtMs),
-    authorityState: {
-      motionOwner: "control.js",
-      projectionOwner: "control.js",
-      inputOwner: "index.html",
-      renderSource: "render.js",
-      orbitSource: "index.html",
-      transitionSource: "transition_engine.js",
-      completionSource: "completion_engine.js"
-    },
-    transitionState: runtimeState.transition || {
-      proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
-      admissible: true,
-      accepted: true,
-      blockedReason: "",
-      family: "HOME_MODE"
-    }
-  });
-
-  const runtime = {
-    phase: "HOME",
-    fps: dtMs > 0 ? 1000 / dtMs : 0,
-    dtMs,
-    elapsedMs: performance.now(),
-    instrument,
-    control: {
-      projectionSummary,
-      motionState: typeof control.getMotionState === "function" ? control.getMotionState() : {},
-      orbitalState: typeof control.getOrbitalState === "function" ? control.getOrbitalState() : {}
-    },
-    planetField,
-    renderAudit: lastRenderReceipt?.audit || {},
-    orbitalAudit: {
-      count: orbitalSystem.objects.length,
-      frontVisibleCount: Array.isArray(lastPlacementReceipt?.resolvedHits)
-        ? lastPlacementReceipt.resolvedHits.length
-        : 0,
-      ...(lastPlacementReceipt || {})
-    },
-    progress: runtimeState.progress || {},
-    unlocks: runtimeState.unlocks || {},
-    completion: runtimeState.completion || {},
-    transition: runtimeState.transition || {},
-    validator: runtimeState.validator || {},
-    validatedReceipts: runtimeState.validatedReceipts || {},
-    authorityReceipt: runtimeState.authorityReceipt || { pass: true },
-    verification: {
-      pass: true,
-      reasons: []
-    },
-    failure: {
-      phase: "",
-      message: ""
-    }
-  };
-
-  if (completionEngine) {
-    completionEngine.update(runtime);
-  }
-
-  runtimeState.progress = runtime.progress || {};
-  runtimeState.unlocks = runtime.unlocks || {};
-  runtimeState.completion = runtime.completion || {};
-
-  return Object.freeze(runtime);
-}
-
-function updateDiagnostics(dtMs) {
-  if (!runtimeReady || !instruments) {
-    renderFallbackDiagnostics();
-    return;
-  }
-
-  const runtime = buildRuntimePacket(dtMs);
-  diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
-  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
 }
 
 function renderSurface(dtMs) {
-  if (!runtimeReady || !planetField || !renderer || !control) return;
+  if (!planetField) return;
 
   lastRenderReceipt = renderer.renderPlanet({
     ctx,
     planetField,
     projectPoint: (latDeg, lonDeg, radiusOffsetPx = 0) =>
       control.projectSphere(latDeg, lonDeg, radiusOffsetPx),
-    viewState: buildViewState()
+    viewState: buildViewState(),
+    orbitalSystem: buildOrbitalConfig()
   });
 
-  updateRuntimeTransitions();
   syncOverlayMarkers();
   updateDiagnostics(dtMs);
+  emitRuntimeReceipt({
+    phase: "RUNNING",
+    renderPass: true,
+    markerPass: !!lastPlacementReceipt.markerPlacementAdmissible
+  });
 }
 
 function frame(now) {
   const dtMs = now - lastFrameAt;
   lastFrameAt = now;
 
-  if (runtimeReady && isRoundVisualMode()) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  if (isRoundVisualMode()) {
     control.stepInertia(dtMs);
-    control.advanceOrbit(dtMs, orbitVelocityForMode());
   }
 
-  if (runtimeReady) {
-    renderSurface(dtMs);
-    rafId = requestAnimationFrame(frame);
+  renderSurface(dtMs);
+  rafId = requestAnimationFrame(frame);
+}
+
+function syncModeButtons() {
+  btnFlat.classList.toggle("is-active", currentMode === "flat");
+  btnRound.classList.toggle("is-active", currentMode === "round");
+  btnObserve.classList.toggle("is-active", currentMode === "observe");
+}
+
+function setModePresentation() {
+  body.setAttribute("data-mode", currentMode);
+  syncModeButtons();
+
+  if (isFlatMode()) {
+    flatLayer.style.display = "flex";
+    canvas.style.filter = "blur(8px) brightness(.64)";
+    orbitalOverlay.style.opacity = "0";
+    universeLayer.style.filter = "none";
+    atmosphereLayer.style.filter = "none";
+    heroLayer.style.transform = "none";
+    hideAllMarkers();
+  } else if (isObserveMode()) {
+    flatLayer.style.display = "none";
+    canvas.style.filter = "none";
+    orbitalOverlay.style.opacity = "0";
+    universeLayer.style.filter = "blur(.25px)";
+    atmosphereLayer.style.filter = "none";
+    heroLayer.style.transform = "translateY(-4px)";
+    hideAllMarkers();
+  } else {
+    flatLayer.style.display = "none";
+    canvas.style.filter = "none";
+    orbitalOverlay.style.opacity = "1";
+    universeLayer.style.filter = "none";
+    atmosphereLayer.style.filter = "none";
+    heroLayer.style.transform = "none";
   }
 }
 
-function pointerDistance(a, b) {
-  const dx = b.x - a.x;
-  const dy = b.y - a.y;
-  return Math.sqrt((dx * dx) + (dy * dy));
+function setDiagnosticsMode(nextMode) {
+  diagnosticsMode = nextMode === "full" ? "full" : "peek";
+  body.setAttribute("data-diagnostics", diagnosticsMode);
+  diagnosticsToggle.textContent = diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
+  emitRuntimeReceipt();
 }
 
-function resetPinchState() {
-  if (!runtimeReady || !control) {
-    pinchStartDistance = 0;
-    pinchStartZoom = 1;
-    return;
-  }
-  pinchStartDistance = 0;
-  pinchStartZoom = control.getMotionState().zoomCurrent;
+function navigateToMode(nextMode) {
+  persistMotionState();
+  location.href = buildModeHref(nextMode);
 }
 
-function bindCanvasInteractions() {
-  canvas.addEventListener("wheel", (event) => {
-    if (!runtimeReady || !control || !isRoundVisualMode() || isFlatMode()) return;
-    event.preventDefault();
-    const delta = -event.deltaY * 0.0015;
-    control.adjustZoomBy(delta);
-  }, { passive: false });
+function bindOverlayRoutes() {
+  orbitalSystem.objects.forEach((obj) => {
+    const marker = overlayMap[obj.id];
+    if (!marker) return;
 
-  canvas.addEventListener("pointerdown", (event) => {
-    if (!runtimeReady || !control || !isRoundVisualMode()) return;
-
-    activePointers.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY
+    marker.addEventListener("click", () => {
+      persistMotionState();
+      location.href = withModeQuery(obj.route);
     });
+  });
+}
 
-    if (activePointers.size === 1) {
-      dragPointerId = event.pointerId;
+function bindEvents() {
+  diagnosticsToggle.addEventListener("click", () => {
+    setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
+    syncOverlayMarkers();
+  });
+
+  btnFlat.addEventListener("click", () => {
+    if (currentMode === "flat") return;
+    navigateToMode("flat");
+  });
+
+  btnRound.addEventListener("click", () => {
+    if (currentMode === "round") return;
+    navigateToMode("round");
+  });
+
+  btnObserve.addEventListener("click", () => {
+    if (currentMode === "observe") return;
+    navigateToMode("observe");
+  });
+
+  if (isRoundVisualMode()) {
+    canvas.addEventListener("pointerdown", (event) => {
+      isDragging = true;
       lastX = event.clientX;
       lastY = event.clientY;
-    }
+    }, { passive: true });
 
-    if (activePointers.size === 2) {
-      dragPointerId = null;
-      const points = Array.from(activePointers.values());
-      pinchStartDistance = pointerDistance(points[0], points[1]);
-      pinchStartZoom = control.getMotionState().zoomCurrent;
-    }
-  }, { passive: true });
+    window.addEventListener("pointermove", (event) => {
+      if (!isDragging) return;
 
-  window.addEventListener("pointermove", (event) => {
-    if (!runtimeReady || !control || !activePointers.has(event.pointerId)) return;
+      const dx = event.clientX - lastX;
+      const dy = event.clientY - lastY;
 
-    activePointers.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY
-    });
+      lastX = event.clientX;
+      lastY = event.clientY;
 
-    if (activePointers.size === 2) {
-      const points = Array.from(activePointers.values());
-      const currentDistance = pointerDistance(points[0], points[1]);
+      control.applyDrag(dx, dy);
+    }, { passive: true });
 
-      if (pinchStartDistance > 0.0001) {
-        const factor = currentDistance / pinchStartDistance;
-        control.setZoomAbsolute(pinchStartZoom * factor);
-      }
-      return;
-    }
+    window.addEventListener("pointerup", () => {
+      isDragging = false;
+    }, { passive: true });
 
-    if (dragPointerId !== event.pointerId) return;
-
-    const dx = event.clientX - lastX;
-    const dy = event.clientY - lastY;
-
-    lastX = event.clientX;
-    lastY = event.clientY;
-
-    control.applyDrag(dx, dy);
-  }, { passive: true });
-
-  function endPointer(pointerId) {
-    activePointers.delete(pointerId);
-
-    if (activePointers.size < 2) {
-      resetPinchState();
-    }
-
-    if (dragPointerId === pointerId) {
-      dragPointerId = null;
-    }
-
-    if (activePointers.size === 1) {
-      const [id, point] = Array.from(activePointers.entries())[0];
-      dragPointerId = id;
-      lastX = point.x;
-      lastY = point.y;
-    }
+    window.addEventListener("pointercancel", () => {
+      isDragging = false;
+    }, { passive: true });
   }
 
-  window.addEventListener("pointerup", (event) => {
-    endPointer(event.pointerId);
-  }, { passive: true });
+  document.querySelectorAll(".flat-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const route = card.dataset.route || "/home/";
+      persistMotionState();
+      location.href = withModeQuery(route);
+    });
+  });
 
-  window.addEventListener("pointercancel", (event) => {
-    endPointer(event.pointerId);
-  }, { passive: true });
-}
-
-async function bootRuntime() {
-  try {
-    const [
-      planetEngineModule,
-      renderModule,
-      controlModule,
-      completionModule,
-      transitionModule,
-      instrumentsModule
-    ] = await Promise.all([
-      import("/world/planet_engine.js"),
-      import("/world/render.js"),
-      import("/world/control.js"),
-      import("/world/completion_engine.js"),
-      import("/world/transition_engine.js"),
-      import("/assets/instruments.js")
-    ]);
-
-    planetEngine = planetEngineModule.createPlanetEngine();
-    renderer = renderModule.createRenderer();
-    control = controlModule.createControlSystem();
-    completionEngine = completionModule.createCompletionEngine();
-    transitionEngine = transitionModule.createTransitionEngine();
-    instruments = instrumentsModule.createInstruments();
-
+  window.addEventListener("resize", () => {
     resizeWorld();
-    planetField = planetEngine.buildPlanetField({});
-    runtimeReady = true;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    renderSurface(16.7);
+  }, { passive: true });
 
-    applyModePolicy();
+  window.addEventListener("pagehide", () => {
+    persistMotionState();
+
+    if (rafId) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+  }, { passive: true });
+
+  window.addEventListener("pageshow", () => {
+    control.setPresentationMode(currentMode);
 
     if (isRoundVisualMode()) {
       restoreMotionState();
-      applyModePolicy();
     }
 
-    clearBootStatus();
+    if (!rafId && isRoundVisualMode()) {
+      lastFrameAt = performance.now();
+      rafId = requestAnimationFrame(frame);
+    }
+  }, { passive: true });
+}
+
+function start() {
+  try {
+    emitRuntimeReceipt({ phase: "BOOT_START", bootPass: false, renderPass: false, markerPass: false });
+
+    resizeWorld();
+    buildPlanetFieldOnce();
+    control.setPresentationMode(currentMode);
+
+    if (isRoundVisualMode()) {
+      restoreMotionState();
+    }
+
+    bindOverlayRoutes();
     setModePresentation();
-    updateRuntimeTransitions();
-    updateDiagnostics(16.7);
+    setDiagnosticsMode("peek");
+    bindEvents();
+
+    runtimeReady = true;
+    runtimeErrorMessage = "";
+    clearBootStatus();
+
     renderSurface(16.7);
 
     if (isRoundVisualMode() && !rafId) {
       lastFrameAt = performance.now();
       rafId = requestAnimationFrame(frame);
     }
+
+    emitRuntimeReceipt({ phase: "BOOT_OK", bootPass: true, renderPass: true, markerPass: true });
   } catch (error) {
     runtimeReady = false;
-    hideAllMarkers();
-    renderFallbackDiagnostics();
-
-    const message = error instanceof Error
-      ? `${error.name}: ${error.message}`
-      : String(error);
-
-    showBootStatus(
-      `World runtime failed to boot.\n\n${message}\n\nStatic navigation remains active.`
-    );
+    runtimeErrorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+    showBootStatus(`World runtime failed to boot.\n\n${runtimeErrorMessage}\n\nStatic navigation remains active.`);
+    updateDiagnostics(0);
+    emitRuntimeReceipt({
+      phase: "BOOT_FAIL",
+      bootPass: false,
+      renderPass: false,
+      markerPass: false,
+      error: runtimeErrorMessage
+    });
   }
-}
-
-function start() {
-  resizeWorld();
-  bindStaticRoutes();
-  bindCanvasInteractions();
-  setModePresentation();
-  setDiagnosticsMode("peek");
-  renderFallbackDiagnostics();
-  bootRuntime();
 }
 
 start();
 </script>
+</body>
+</html>

@@ -1,126 +1,150 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 
-function clamp(v, min, max){return Math.max(min,Math.min(max,v));}
-function wrapAngle(v){return Math.atan2(Math.sin(v),Math.cos(v));}
-function isNum(v){return typeof v==="number"&&Number.isFinite(v);}
+function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+function wrap(a){ return Math.atan2(Math.sin(a), Math.cos(a)); }
+function isNum(v){ return typeof v==="number" && Number.isFinite(v); }
+function obj(v){ return v && typeof v==="object" && !Array.isArray(v) ? v : {}; }
+
+function K(){
+  const c = obj(WORLD_KERNEL?.constants);
+  return Object.freeze({
+    worldRadiusFactor: isNum(c.worldRadiusFactor)?c.worldRadiusFactor:0.36,
+    minPitch: isNum(c.minPitch)?c.minPitch:-(Math.PI/2.2),
+    maxPitch: isNum(c.maxPitch)?c.maxPitch:(Math.PI/2.2),
+    initialYaw: isNum(c.initialYaw)?c.initialYaw:0,
+    initialPitch: isNum(c.initialPitch)?c.initialPitch:0,
+    dragSensitivity: isNum(c.dragSensitivity)?c.dragSensitivity:0.0025,
+    inertiaDecay: isNum(c.inertiaDecay)?c.inertiaDecay:0.92
+  });
+}
 
 export function createControlSystem(){
+  const k = K();
 
-  const K = WORLD_KERNEL?.constants || {};
+  let yaw = k.initialYaw;
+  let pitch = k.initialPitch;
+  let yawV = 0;
+  let pitchV = 0;
 
-  // ===== STATE AUTHORITY =====
-  let yaw = 0;
-  let pitch = 0;
-  let yawVel = 0;
-  let pitchVel = 0;
   let orbitPhase = 0;
 
-  let zoomCurrent = 1;
-  let zoomTarget = 1;
+  let zoom = 1;
+  let zoomT = 1;
+  let zoomMin = 1;
+  let zoomMax = 1;
 
-  let width = 0;
-  let height = 0;
-  let centerX = 0;
-  let centerY = 0;
-  let baseRadius = 0;
+  let mode = "round";
 
-  const DRAG = 0.0025;
-  const DECAY = 0.92;
-  const MIN_PITCH = -(Math.PI/2.2);
-  const MAX_PITCH = (Math.PI/2.2);
+  const cam = { w:0,h:0,cx:0,cy:0,r:0 };
+
+  function clampPitch(){ pitch = clamp(pitch,k.minPitch,k.maxPitch); }
+  function r(){ return Math.max(1, cam.r * zoom); }
 
   function resize(w,h){
-    width = w;
-    height = h;
-    centerX = w*0.5;
-    centerY = h*0.5;
-    baseRadius = Math.min(w,h)*(K.worldRadiusFactor||0.36);
+    cam.w=w; cam.h=h;
+    cam.cx=w*0.5; cam.cy=h*0.5;
+    cam.r=Math.min(w,h)*k.worldRadiusFactor;
   }
 
-  function getRadius(){
-    return Math.max(1, baseRadius*zoomCurrent);
+  function setPresentationMode(m){
+    mode = (m==="flat"||m==="observe")?m:"round";
   }
 
-  // ===== MOTION =====
+  function setZoomBounds(min,max){
+    if(!isNum(min)||!isNum(max)) return;
+    zoomMin=Math.min(min,max);
+    zoomMax=Math.max(min,max);
+    zoom=clamp(zoom,zoomMin,zoomMax);
+    zoomT=clamp(zoomT,zoomMin,zoomMax);
+  }
+
+  function setZoomAbsolute(v){
+    if(!isNum(v)) return;
+    zoomT=clamp(v,zoomMin,zoomMax);
+  }
+
+  function adjustZoomBy(d){
+    if(!isNum(d)) return;
+    setZoomAbsolute(zoomT+d);
+  }
+
   function applyDrag(dx,dy){
-    yaw = wrapAngle(yaw + dx*DRAG);
-    pitch += dy*DRAG;
+    yaw = wrap(yaw + dx*k.dragSensitivity);
+    pitch += dy*k.dragSensitivity;
 
-    yawVel = dx*DRAG*0.45;
-    pitchVel = dy*DRAG*0.45;
+    yawV = dx*k.dragSensitivity*0.45;
+    pitchV = dy*k.dragSensitivity*0.45;
 
-    pitch = clamp(pitch,MIN_PITCH,MAX_PITCH);
+    clampPitch();
   }
 
-  function stepInertia(dt=16.7){
-    const s = clamp(dt/16.7,0.25,4);
-
-    yaw = wrapAngle(yaw + yawVel*s);
-    pitch += pitchVel*s;
-
-    const decay = Math.pow(DECAY,s);
-    yawVel *= decay;
-    pitchVel *= decay;
-
-    pitch = clamp(pitch,MIN_PITCH,MAX_PITCH);
-
-    zoomCurrent += (zoomTarget - zoomCurrent)*0.12;
+  function stepZoom(){
+    zoom += (zoomT-zoom)*0.12;
+    if(Math.abs(zoomT-zoom)<0.0005) zoom=zoomT;
   }
 
-  function advanceOrbit(dt=16.7, vel=0){
-    orbitPhase = wrapAngle(orbitPhase + vel*dt);
+  function stepInertia(dt=16.6){
+    const s = clamp(dt/16.6,0.25,4);
+
+    yaw = wrap(yaw + yawV*s);
+    pitch += pitchV*s;
+
+    const d = Math.pow(k.inertiaDecay,s);
+    yawV*=d;
+    pitchV*=d;
+
+    clampPitch();
+    stepZoom();
   }
 
-  // ===== PROJECTION (CORE) =====
+  function advanceOrbit(dt=16.6, vel=0){
+    if(!isNum(vel)) vel=0;
+    orbitPhase = wrap(orbitPhase + vel*dt);
+  }
+
   function projectSphere(latDeg,lonDeg,offset=0){
-
     const lat = latDeg*Math.PI/180;
     const lon = lonDeg*Math.PI/180;
 
-    const cosLat = Math.cos(lat);
-    const sinLat = Math.sin(lat);
+    const cosLat=Math.cos(lat);
+    const sinLat=Math.sin(lat);
+    const cosLon=Math.cos(lon+yaw);
+    const sinLon=Math.sin(lon+yaw);
 
-    const cosLon = Math.cos(lon + yaw);
-    const sinLon = Math.sin(lon + yaw);
-
-    const cosPitch = Math.cos(pitch);
-    const sinPitch = Math.sin(pitch);
+    const cp=Math.cos(pitch);
+    const sp=Math.sin(pitch);
 
     const x = cosLat*sinLon;
     const y0 = sinLat;
     const z0 = cosLat*cosLon;
 
-    const y = y0*cosPitch - z0*sinPitch;
-    const z = y0*sinPitch + z0*cosPitch;
+    const y = y0*cp - z0*sp;
+    const z = y0*sp + z0*cp;
 
-    const r = getRadius()+offset;
+    const rr = Math.max(1, r()+offset);
 
     return Object.freeze({
-      x: centerX + x*r,
-      y: centerY - y*r,
+      x: cam.cx + x*rr,
+      y: cam.cy - y*rr,
       z,
       visible: z>=0,
-      resolvedRadius:r
+      resolvedRadius: rr
     });
   }
 
-  // ===== READ API =====
   function getCameraState(){
     return Object.freeze({
-      width,height,centerX,centerY,
-      radius:getRadius(),
-      yaw,pitch
-    });
-  }
-
-  function getOrbitalState(){
-    return Object.freeze({orbitPhase});
-  }
-
-  function getMotionState(){
-    return Object.freeze({
-      yaw,pitch,yawVelocity:yawVel,pitchVelocity:pitchVel,
-      orbitPhase,zoomCurrent,zoomTarget
+      width:cam.w,
+      height:cam.h,
+      centerX:cam.cx,
+      centerY:cam.cy,
+      radius:r(),
+      yaw,pitch,
+      yawVelocity:yawV,
+      pitchVelocity:pitchV,
+      zoomCurrent:zoom,
+      zoomTarget:zoomT,
+      mode
     });
   }
 
@@ -129,30 +153,53 @@ export function createControlSystem(){
       latDeg:0,
       lonDeg:0,
       sampleX:0,
-      sampleY:0
+      sampleY:0,
+      mode
     });
   }
 
-  // ===== MODE =====
-  function setPresentationMode(){}
+  function getOrbitalState(){
+    return Object.freeze({ orbitPhase });
+  }
 
-  function restoreMotionState(s={}){
-    if(isNum(s.yaw)) yaw=s.yaw;
-    if(isNum(s.pitch)) pitch=s.pitch;
-    if(isNum(s.orbitPhase)) orbitPhase=s.orbitPhase;
+  function getMotionState(){
+    return Object.freeze({
+      yaw,pitch,
+      yawVelocity:yawV,
+      pitchVelocity:pitchV,
+      orbitPhase,
+      zoomCurrent:zoom,
+      zoomTarget:zoomT,
+      mode
+    });
+  }
+
+  function restoreMotionState(input={}){
+    const n=obj(input);
+
+    if(isNum(n.yaw)) yaw=wrap(n.yaw);
+    if(isNum(n.pitch)){ pitch=n.pitch; clampPitch(); }
+    if(isNum(n.yawVelocity)) yawV=n.yawVelocity;
+    if(isNum(n.pitchVelocity)) pitchV=n.pitchVelocity;
+    if(isNum(n.orbitPhase)) orbitPhase=wrap(n.orbitPhase);
+    if(isNum(n.zoomCurrent)) zoom=clamp(n.zoomCurrent,zoomMin,zoomMax);
+    if(isNum(n.zoomTarget)) zoomT=clamp(n.zoomTarget,zoomMin,zoomMax);
   }
 
   return Object.freeze({
     resize,
+    setPresentationMode,
+    setZoomBounds,
+    setZoomAbsolute,
+    adjustZoomBy,
     applyDrag,
     stepInertia,
     advanceOrbit,
+    restoreMotionState,
     projectSphere,
     getCameraState,
-    getMotionState,
-    getOrbitalState,
     getProjectionSummary,
-    setPresentationMode,
-    restoreMotionState
+    getOrbitalState,
+    getMotionState
   });
 }

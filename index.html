@@ -799,8 +799,8 @@ const overlayMap = Object.freeze({
   "west-explore": document.getElementById("marker-west")
 });
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v13";
-const RUNTIME_STORAGE_KEY = "cte_runtime_v2";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v14";
+const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const MARKER_OUTWARD_NUDGE = 8;
@@ -879,32 +879,40 @@ let lastY = 0;
 let runtimeReady = false;
 let runtimeErrorMessage = "";
 
+let lastCurrentSample = null;
+
 let lastRenderReceipt = Object.freeze({
   orbitalHits: Object.freeze([]),
-  orbitalAudit: Object.freeze({ count: 0, frontVisibleCount: 0 }),
+  orbitalAudit: Object.freeze({
+    count: 0,
+    frontVisibleCount: 0,
+    emittedCount: 0,
+    rejectedBackfaceCount: 0,
+    rejectedWeakVisibilityCount: 0
+  }),
   audit: Object.freeze({})
 });
 
 let lastProgressionReceipt = Object.freeze({
-  dtMs: 0,
-  orbitStepAuthorized: false,
-  orbitStepApplied: false,
-  orbitStepValue: 0,
+  progressionDtMs: 0,
+  progressionAuthorized: false,
+  progressionApplied: false,
+  progressionStep: 0,
   progressionPass: false
 });
 
 let lastEmissionReceipt = Object.freeze({
-  orbitalCount: 0,
-  frontVisibleCount: 0,
-  emittedCandidateCount: 0,
-  suppressedCandidateCount: 0,
+  emissionOrbitalCount: 0,
+  emissionFrontVisible: 0,
+  emissionEmitted: 0,
+  emissionSuppressed: 0,
   emissionPass: false
 });
 
 let lastIntakeReceipt = Object.freeze({
-  receivedCandidateCount: 0,
-  stagedCandidateCount: 0,
-  discardedCandidateCount: 0,
+  intakeReceived: 0,
+  intakeStaged: 0,
+  intakeDiscarded: 0,
   intakePass: false,
   stagedHits: Object.freeze([])
 });
@@ -914,22 +922,13 @@ let lastPlacementReceipt = Object.freeze({
   markerPlacementAdmissible: true,
   markerCollisionCount: 0,
   markerRepositionedCount: 0,
-  placeableCandidateCount: 0,
-  placedCandidateCount: 0,
-  reservedZoneRejectCount: 0,
-  viewportRejectCount: 0,
+  placementPlaceable: 0,
+  placementPlaced: 0,
+  placementReservedReject: 0,
+  placementViewportReject: 0,
   placementPass: true,
   resolvedHits: Object.freeze([])
 });
-
-function escapeHTML(value) {
-  return String(value)
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-}
 
 function orbitSpeedForMode() {
   if (currentMode === "observe") return ORBIT_SPEED_OBSERVE;
@@ -951,9 +950,9 @@ function emitRuntimeReceipt(patch = {}) {
     progressionReceipt: lastProgressionReceipt,
     emissionReceipt: lastEmissionReceipt,
     intakeReceipt: {
-      receivedCandidateCount: lastIntakeReceipt.receivedCandidateCount,
-      stagedCandidateCount: lastIntakeReceipt.stagedCandidateCount,
-      discardedCandidateCount: lastIntakeReceipt.discardedCandidateCount,
+      intakeReceived: lastIntakeReceipt.intakeReceived,
+      intakeStaged: lastIntakeReceipt.intakeStaged,
+      intakeDiscarded: lastIntakeReceipt.intakeDiscarded,
       intakePass: lastIntakeReceipt.intakePass
     },
     placementReceipt: {
@@ -961,10 +960,10 @@ function emitRuntimeReceipt(patch = {}) {
       markerPlacementAdmissible: lastPlacementReceipt.markerPlacementAdmissible,
       markerCollisionCount: lastPlacementReceipt.markerCollisionCount,
       markerRepositionedCount: lastPlacementReceipt.markerRepositionedCount,
-      placeableCandidateCount: lastPlacementReceipt.placeableCandidateCount,
-      placedCandidateCount: lastPlacementReceipt.placedCandidateCount,
-      reservedZoneRejectCount: lastPlacementReceipt.reservedZoneRejectCount,
-      viewportRejectCount: lastPlacementReceipt.viewportRejectCount,
+      placementPlaceable: lastPlacementReceipt.placementPlaceable,
+      placementPlaced: lastPlacementReceipt.placementPlaced,
+      placementReservedReject: lastPlacementReceipt.placementReservedReject,
+      placementViewportReject: lastPlacementReceipt.placementViewportReject,
       placementPass: lastPlacementReceipt.placementPass
     },
     renderAudit: lastRenderReceipt?.audit || {},
@@ -1080,9 +1079,7 @@ function safeMotionReceipt(dtMs) {
     pageRestored: true,
     yawVelocity: Number.isFinite(motionState?.yawVelocity) ? motionState.yawVelocity : null,
     pitchVelocity: Number.isFinite(motionState?.pitchVelocity) ? motionState.pitchVelocity : null,
-    orbitVelocity: Number.isFinite(orbitalState?.orbitAngularVelocity)
-      ? orbitalState.orbitAngularVelocity
-      : (lastProgressionReceipt.orbitStepApplied ? lastProgressionReceipt.orbitStepValue : null),
+    orbitVelocity: lastProgressionReceipt.progressionApplied ? lastProgressionReceipt.progressionStep : null,
     orbitPhase: Number.isFinite(orbitalState?.orbitPhase) ? orbitalState.orbitPhase : null,
     blockedDragOnStarCount: 0,
     starTapCount: 0,
@@ -1118,7 +1115,6 @@ function getDeterministicFallbackSample(field) {
       for (let x = minX; x <= maxX; x += 1) {
         const onRing = y === minY || y === maxY || x === minX || x === maxX;
         if (!onRing) continue;
-
         const candidate = field.samples[y][x];
         if (isAdmissibleSample(candidate)) return candidate;
       }
@@ -1155,7 +1151,6 @@ function getAdmissibleSample(field, projectionSummary) {
       for (let nx = minX; nx <= maxX; nx += 1) {
         const onRing = ny === minY || ny === maxY || nx === minX || nx === maxX;
         if (!onRing) continue;
-
         const candidate = field.samples[ny][nx];
         if (isAdmissibleSample(candidate)) return candidate;
       }
@@ -1165,13 +1160,67 @@ function getAdmissibleSample(field, projectionSummary) {
   return getDeterministicFallbackSample(field);
 }
 
+function buildProgressionReceipt(dtMs) {
+  const progressionAuthorized = runtimeReady && isRoundVisualMode();
+  const progressionStep = progressionAuthorized ? orbitSpeedForMode() : 0;
+  const progressionApplied =
+    progressionAuthorized &&
+    progressionStep > 0 &&
+    typeof control.advanceOrbit === "function";
+
+  if (progressionApplied) {
+    control.advanceOrbit(dtMs, progressionStep);
+  }
+
+  lastProgressionReceipt = Object.freeze({
+    progressionDtMs: Number.isFinite(dtMs) ? dtMs : 0,
+    progressionAuthorized,
+    progressionApplied,
+    progressionStep,
+    progressionPass: progressionAuthorized ? progressionApplied : true
+  });
+}
+
+function buildEmissionReceipt(rawHits, orbitalAudit) {
+  const emissionOrbitalCount = Number.isFinite(orbitalAudit?.count) ? orbitalAudit.count : 0;
+  const emissionFrontVisible = Number.isFinite(orbitalAudit?.frontVisibleCount) ? orbitalAudit.frontVisibleCount : 0;
+  const emissionEmitted = Number.isFinite(orbitalAudit?.emittedCount)
+    ? orbitalAudit.emittedCount
+    : (Array.isArray(rawHits) ? rawHits.length : 0);
+
+  lastEmissionReceipt = Object.freeze({
+    emissionOrbitalCount,
+    emissionFrontVisible,
+    emissionEmitted,
+    emissionSuppressed: Math.max(0, emissionOrbitalCount - emissionEmitted),
+    emissionPass: emissionOrbitalCount > 0 && emissionEmitted > 0
+  });
+}
+
+function buildOrbitalHandshake() {
+  return Object.freeze({
+    ...lastProgressionReceipt,
+    ...lastEmissionReceipt,
+    intakeReceived: lastIntakeReceipt.intakeReceived,
+    intakeStaged: lastIntakeReceipt.intakeStaged,
+    intakeDiscarded: lastIntakeReceipt.intakeDiscarded,
+    intakePass: lastIntakeReceipt.intakePass,
+    placementPlaceable: lastPlacementReceipt.placementPlaceable,
+    placementPlaced: lastPlacementReceipt.placementPlaced,
+    placementReservedReject: lastPlacementReceipt.placementReservedReject,
+    placementViewportReject: lastPlacementReceipt.placementViewportReject,
+    placementPass: lastPlacementReceipt.placementPass
+  });
+}
+
 function buildRuntimePacket(dtMs) {
   const projectionSummary = safeProjectionSummary();
-  const sample = getAdmissibleSample(planetField, projectionSummary);
+  const currentSample = getAdmissibleSample(planetField, projectionSummary);
+  const previousSample = lastCurrentSample || currentSample;
 
   const instrument = instruments.buildInstrumentReceipt({
-    currentSample: sample,
-    previousSample: sample,
+    currentSample,
+    previousSample,
     tickIndex: 0,
     motionState: safeMotionReceipt(dtMs),
     authorityState: {
@@ -1179,7 +1228,7 @@ function buildRuntimePacket(dtMs) {
       projectionOwner: "control.js",
       inputOwner: "index.html",
       renderSource: "render.js",
-      orbitSource: "render.js"
+      orbitSource: "index.html"
     },
     transitionState: {
       proposed: isFlatMode() ? "FLAT_HOME" : isObserveMode() ? "OBSERVE_HOME" : "ROUND_HOME",
@@ -1190,7 +1239,7 @@ function buildRuntimePacket(dtMs) {
     }
   });
 
-  return Object.freeze({
+  const runtime = Object.freeze({
     phase: "HOME",
     fps: dtMs > 0 ? 1000 / dtMs : 0,
     dtMs,
@@ -1210,6 +1259,7 @@ function buildRuntimePacket(dtMs) {
       markerCollisionCount: lastPlacementReceipt.markerCollisionCount,
       markerRepositionedCount: lastPlacementReceipt.markerRepositionedCount
     },
+    orbitalHandshake: buildOrbitalHandshake(),
     progress: {},
     unlocks: {},
     verification: {
@@ -1221,46 +1271,13 @@ function buildRuntimePacket(dtMs) {
       message: runtimeErrorMessage
     }
   });
+
+  lastCurrentSample = currentSample;
+  return runtime;
 }
 
-function buildOrbitalHandshakePanelHTML() {
-  const rows = [
-    ["Progression dtMs", lastProgressionReceipt.dtMs.toFixed(2)],
-    ["Progression authorized", lastProgressionReceipt.orbitStepAuthorized ? "true" : "false"],
-    ["Progression applied", lastProgressionReceipt.orbitStepApplied ? "true" : "false"],
-    ["Progression step", lastProgressionReceipt.orbitStepValue.toFixed(5)],
-    ["Progression pass", lastProgressionReceipt.progressionPass ? "true" : "false"],
-    ["Emission orbitalCount", String(lastEmissionReceipt.orbitalCount)],
-    ["Emission frontVisible", String(lastEmissionReceipt.frontVisibleCount)],
-    ["Emission emitted", String(lastEmissionReceipt.emittedCandidateCount)],
-    ["Emission suppressed", String(lastEmissionReceipt.suppressedCandidateCount)],
-    ["Emission pass", lastEmissionReceipt.emissionPass ? "true" : "false"],
-    ["Intake received", String(lastIntakeReceipt.receivedCandidateCount)],
-    ["Intake staged", String(lastIntakeReceipt.stagedCandidateCount)],
-    ["Intake discarded", String(lastIntakeReceipt.discardedCandidateCount)],
-    ["Intake pass", lastIntakeReceipt.intakePass ? "true" : "false"],
-    ["Placement placeable", String(lastPlacementReceipt.placeableCandidateCount)],
-    ["Placement placed", String(lastPlacementReceipt.placedCandidateCount)],
-    ["Placement reservedReject", String(lastPlacementReceipt.reservedZoneRejectCount)],
-    ["Placement viewportReject", String(lastPlacementReceipt.viewportRejectCount)],
-    ["Placement pass", lastPlacementReceipt.placementPass ? "true" : "false"]
-  ];
-
-  const htmlRows = rows.map(([key, value]) => {
-    const lower = String(value).toLowerCase();
-    const tone =
-      lower === "true" ? "panel-value panel-value--ok" :
-      lower === "false" ? "panel-value panel-value--danger" :
-      "panel-value";
-
-    return `<div class="panel-row"><span class="panel-key">${escapeHTML(key)}</span><span class="${tone}">${escapeHTML(value)}</span></div>`;
-  }).join("");
-
-  return `<section class="panel-section"><h3 class="panel-title">Orbital Handshake</h3>${htmlRows}</section>`;
-}
-
-function updateDiagnostics(dtMs) {
-  if (!runtimeReady) {
+function updateDiagnostics(runtime) {
+  if (!runtimeReady || !runtime) {
     diagnosticsSummary.innerHTML = `
       <div class="diagnostic-bar__group">
         <span class="diagnostic-pill"><span class="diagnostic-pill__label">Phase</span><span class="diagnostic-pill__value">BOOT</span></span>
@@ -1278,9 +1295,8 @@ function updateDiagnostics(dtMs) {
     return;
   }
 
-  const runtime = buildRuntimePacket(dtMs);
   diagnosticsSummary.innerHTML = instruments.renderCompactBarHTML(runtime);
-  debugPanel.innerHTML = instruments.renderPanelHTML(runtime) + buildOrbitalHandshakePanelHTML();
+  debugPanel.innerHTML = instruments.renderPanelHTML(runtime);
 }
 
 function hideAllMarkers() {
@@ -1308,8 +1324,7 @@ function cloneHit(hit, center) {
     x: hit.x,
     y: hit.y,
     radius,
-    angle: Math.atan2(dy, dx),
-    radialDistance: Math.sqrt((dx * dx) + (dy * dy))
+    angle: Math.atan2(dy, dx)
   };
 }
 
@@ -1451,61 +1466,28 @@ function validateMarkersInViewport(hits) {
   return true;
 }
 
-function buildProgressionReceipt(dtMs) {
-  const stepAuthorized = runtimeReady && isRoundVisualMode();
-  const stepValue = stepAuthorized ? orbitSpeedForMode() : 0;
-  const stepApplied = stepAuthorized && stepValue > 0 && typeof control.advanceOrbit === "function";
-
-  if (stepApplied) {
-    control.advanceOrbit(dtMs, stepValue);
-  }
-
-  lastProgressionReceipt = Object.freeze({
-    dtMs: Number.isFinite(dtMs) ? dtMs : 0,
-    orbitStepAuthorized: stepAuthorized,
-    orbitStepApplied: stepApplied,
-    orbitStepValue: stepValue,
-    progressionPass: stepAuthorized ? stepApplied : true
-  });
-}
-
-function buildEmissionReceipt(rawHits, orbitalAudit) {
-  const orbitalCount = Number.isFinite(orbitalAudit?.count) ? orbitalAudit.count : 0;
-  const frontVisibleCount = Number.isFinite(orbitalAudit?.frontVisibleCount) ? orbitalAudit.frontVisibleCount : 0;
-  const emittedCandidateCount = Array.isArray(rawHits)
-    ? rawHits.filter((hit) => hit?.frontFacing === true).length
-    : 0;
-
-  lastEmissionReceipt = Object.freeze({
-    orbitalCount,
-    frontVisibleCount,
-    emittedCandidateCount,
-    suppressedCandidateCount: Math.max(0, orbitalCount - emittedCandidateCount),
-    emissionPass: orbitalCount > 0 && frontVisibleCount > 0 && emittedCandidateCount > 0
-  });
-}
-
-function stageOrbitalCandidates(rawHits) {
+function stageOrbitalCandidates(rawHits, gateAllowed) {
   const received = Array.isArray(rawHits) ? rawHits : [];
 
-  const staged = received
-    .filter((hit) => hit && Number.isFinite(hit.x) && Number.isFinite(hit.y))
-    .filter((hit) => hit.frontFacing === true)
-    .filter((hit) => Number.isFinite(hit.opacity) ? hit.opacity > 0.22 : true)
-    .map((hit) => Object.freeze({
-      id: hit.id,
-      label: hit.label,
-      route: hit.route,
-      x: hit.x,
-      y: hit.y,
-      radius: Number.isFinite(hit.radius) ? hit.radius : 42
-    }));
+  const staged = gateAllowed
+    ? received
+        .filter((hit) => hit && Number.isFinite(hit.x) && Number.isFinite(hit.y))
+        .filter((hit) => hit.frontFacing === true)
+        .map((hit) => Object.freeze({
+          id: hit.id,
+          label: hit.label,
+          route: hit.route,
+          x: hit.x,
+          y: hit.y,
+          radius: Number.isFinite(hit.radius) ? hit.radius : 42
+        }))
+    : [];
 
   lastIntakeReceipt = Object.freeze({
-    receivedCandidateCount: received.length,
-    stagedCandidateCount: staged.length,
-    discardedCandidateCount: Math.max(0, received.length - staged.length),
-    intakePass: received.length === 0 ? false : staged.length > 0,
+    intakeReceived: received.length,
+    intakeStaged: staged.length,
+    intakeDiscarded: Math.max(0, received.length - staged.length),
+    intakePass: received.length > 0 ? staged.length > 0 : !gateAllowed,
     stagedHits: Object.freeze(staged)
   });
 }
@@ -1519,10 +1501,10 @@ function solveMarkerPlacement(stagedHits) {
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
       markerRepositionedCount: 0,
-      placeableCandidateCount: 0,
-      placedCandidateCount: 0,
-      reservedZoneRejectCount: 0,
-      viewportRejectCount: 0,
+      placementPlaceable: 0,
+      placementPlaced: 0,
+      placementReservedReject: 0,
+      placementViewportReject: 0,
       placementPass: true,
       resolvedHits: Object.freeze([])
     });
@@ -1543,10 +1525,10 @@ function solveMarkerPlacement(stagedHits) {
       markerPlacementAdmissible: false,
       markerCollisionCount: 0,
       markerRepositionedCount: 0,
-      placeableCandidateCount: 0,
-      placedCandidateCount: 0,
-      reservedZoneRejectCount: 0,
-      viewportRejectCount: 0,
+      placementPlaceable: 0,
+      placementPlaced: 0,
+      placementReservedReject: 0,
+      placementViewportReject: 0,
       placementPass: false,
       resolvedHits: Object.freeze([])
     });
@@ -1583,8 +1565,8 @@ function solveMarkerPlacement(stagedHits) {
 
   const finalCollisionCount = countCollisions(frontHits);
 
-  let reservedZoneRejectCount = 0;
-  let viewportRejectCount = 0;
+  let placementReservedReject = 0;
+  let placementViewportReject = 0;
 
   const placeable = frontHits.filter((hit) => {
     const inViewport =
@@ -1594,13 +1576,13 @@ function solveMarkerPlacement(stagedHits) {
       hit.y + hit.radius <= window.innerHeight;
 
     if (!inViewport) {
-      viewportRejectCount += 1;
+      placementViewportReject += 1;
       return false;
     }
 
     const overlapsReserved = reservedRects.some((rect) => circleIntersectsRect(hit, rect));
     if (overlapsReserved) {
-      reservedZoneRejectCount += 1;
+      placementReservedReject += 1;
       return false;
     }
 
@@ -1615,10 +1597,10 @@ function solveMarkerPlacement(stagedHits) {
     markerPlacementAdmissible: placementPass,
     markerCollisionCount: finalCollisionCount,
     markerRepositionedCount: repositionedCount,
-    placeableCandidateCount: frontHits.length,
-    placedCandidateCount: placeable.length,
-    reservedZoneRejectCount,
-    viewportRejectCount,
+    placementPlaceable: frontHits.length,
+    placementPlaced: placeable.length,
+    placementReservedReject,
+    placementViewportReject,
     placementPass,
     resolvedHits: Object.freeze(placeable.map((hit) => Object.freeze({
       id: hit.id,
@@ -1631,12 +1613,12 @@ function solveMarkerPlacement(stagedHits) {
   });
 }
 
-function syncOverlayMarkers() {
+function syncOverlayMarkers(runtime) {
   if (!isRoundVisualMode() || isObserveMode()) {
     lastIntakeReceipt = Object.freeze({
-      receivedCandidateCount: 0,
-      stagedCandidateCount: 0,
-      discardedCandidateCount: 0,
+      intakeReceived: 0,
+      intakeStaged: 0,
+      intakeDiscarded: 0,
       intakePass: false,
       stagedHits: Object.freeze([])
     });
@@ -1645,10 +1627,10 @@ function syncOverlayMarkers() {
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
       markerRepositionedCount: 0,
-      placeableCandidateCount: 0,
-      placedCandidateCount: 0,
-      reservedZoneRejectCount: 0,
-      viewportRejectCount: 0,
+      placementPlaceable: 0,
+      placementPlaced: 0,
+      placementReservedReject: 0,
+      placementViewportReject: 0,
       placementPass: true,
       resolvedHits: Object.freeze([])
     });
@@ -1660,7 +1642,11 @@ function syncOverlayMarkers() {
     ? lastRenderReceipt.orbitalHits
     : [];
 
-  stageOrbitalCandidates(rawHits);
+  const gateAllowed =
+    runtime?.instrument?.gate === "PASS" &&
+    runtime?.instrument?.world?.stabilityClass !== "COLLAPSE";
+
+  stageOrbitalCandidates(rawHits, gateAllowed);
   solveMarkerPlacement(lastIntakeReceipt.stagedHits);
 
   hideAllMarkers();
@@ -1715,8 +1701,12 @@ function renderSurface(dtMs) {
   });
 
   buildEmissionReceipt(lastRenderReceipt.orbitalHits, lastRenderReceipt.orbitalAudit);
-  syncOverlayMarkers();
-  updateDiagnostics(dtMs);
+
+  let runtime = buildRuntimePacket(dtMs);
+  syncOverlayMarkers(runtime);
+  runtime = buildRuntimePacket(dtMs);
+
+  updateDiagnostics(runtime);
   emitRuntimeReceipt({
     phase: "RUNNING",
     renderPass: true,
@@ -1802,8 +1792,7 @@ function bindOverlayRoutes() {
 function bindEvents() {
   diagnosticsToggle.addEventListener("click", () => {
     setDiagnosticsMode(diagnosticsMode === "full" ? "peek" : "full");
-    syncOverlayMarkers();
-    updateDiagnostics(16.7);
+    renderSurface(16.7);
   });
 
   btnFlat.addEventListener("click", () => {
@@ -1860,7 +1849,6 @@ function bindEvents() {
   window.addEventListener("resize", () => {
     resizeWorld();
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    syncOverlayMarkers();
     renderSurface(16.7);
   }, { passive: true });
 
@@ -1921,7 +1909,7 @@ function start() {
     runtimeReady = false;
     runtimeErrorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
     showBootStatus(`World runtime failed to boot.\n\n${runtimeErrorMessage}\n\nStatic navigation remains active.`);
-    updateDiagnostics(0);
+    updateDiagnostics(null);
     emitRuntimeReceipt({
       phase: "BOOT_FAIL",
       bootPass: false,

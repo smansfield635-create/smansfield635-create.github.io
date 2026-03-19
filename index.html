@@ -7,21 +7,50 @@
 <title>Nine Summits — Index</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
 </head>
+
 <body data-mode="round" data-diagnostics="peek">
-  <div id="app-shell">
-    <canvas id="world-canvas" aria-label="Home world canvas"></canvas>
-    <div id="runtime-root" aria-live="off"></div>
-    <div id="diagnostics-dock" class="diagnostics-dock">
-      <div id="diagnostics-bar" class="diagnostics-bar">
-        <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
-        <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">DIAGNOSTICS</button>
-      </div>
+
+<div id="app-shell">
+
+  <!-- CANVAS -->
+  <canvas id="world-canvas" aria-label="Home world canvas"></canvas>
+
+  <!-- UI ROOT (WORLD RUNTIME OWNS UI HERE) -->
+  <div id="runtime-root"></div>
+
+  <!-- DIAGNOSTICS BAR (NAV → GAUGES) -->
+  <div id="diagnostics-dock" class="diagnostics-dock">
+    <div id="diagnostics-bar" class="diagnostics-bar">
+      <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
+
+      <!-- IMPORTANT: NO TOGGLE → NAVIGATION -->
+      <button
+        id="diagnostics-toggle"
+        class="diagnostics-toggle"
+        type="button"
+      >
+        DIAGNOSTICS
+      </button>
     </div>
-    <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
   </div>
 
-  <script type="module">
-    import "/world/runtime/world_runtime.js";
-  </script>
+  <!-- DEBUG PANEL (OPTIONAL LOCAL MIRROR) -->
+  <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
+
+</div>
+
+<script type="module">
+import "/world/runtime/world_runtime.js";
+
+/* ===== FORCE DIAGNOSTICS → GAUGES ===== */
+const btn = document.getElementById("diagnostics-toggle");
+
+if (btn) {
+  btn.addEventListener("click", () => {
+    window.location.href = "/gauges/";
+  });
+}
+</script>
+
 </body>
 </html>

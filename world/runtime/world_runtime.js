@@ -4,6 +4,7 @@ import { createPlanetEngine } from "../planet_engine.js";
 import { createRenderer } from "../render.js";
 import { createControlSystem } from "../control.js";
 import { createInstruments } from "/assets/instruments.js";
+import { createWorldUI } from "/assets/world_ui.js";
 
 const MOTION_STORAGE_KEY = "ns_home_round_motion_v14";
 const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
@@ -11,7 +12,6 @@ const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const ORBIT_SPEED_ROUND = 0.00018;
 const ORBIT_SPEED_OBSERVE = 0.00010;
-const INLINE_STYLE_ID = "world-runtime-inline-ui";
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -74,10 +74,6 @@ function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
 
-function safeObject(value) {
-  return value && typeof value === "object" ? value : {};
-}
-
 function getModeFromLocation() {
   const params = new URLSearchParams(window.location.search);
   const mode = params.get("mode");
@@ -103,520 +99,19 @@ function getRequiredNode(id) {
   return node;
 }
 
-function ensureInlineRuntimeStyle() {
-  if (document.getElementById(INLINE_STYLE_ID)) return;
-
-  const style = document.createElement("style");
-  style.id = INLINE_STYLE_ID;
-  style.textContent = `
-    .wrt-ui-root{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
-    }
-
-    .wrt-hero{
-      position:absolute;
-      left:50%;
-      top:12vh;
-      transform:translateX(-50%);
-      width:min(92vw,980px);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:12px;
-      text-align:center;
-      pointer-events:none;
-    }
-
-    .wrt-hero-title{
-      margin:0;
-      font-size:clamp(42px,7vw,96px);
-      font-weight:950;
-      letter-spacing:.05em;
-      line-height:.9;
-      text-shadow:0 10px 30px rgba(0,0,0,.54);
-    }
-
-    .wrt-hero-sub{
-      margin:0;
-      font-size:clamp(18px,2.2vw,26px);
-      color:rgba(255,255,255,.90);
-    }
-
-    .wrt-hero-tag{
-      margin:0;
-      font-size:clamp(13px,1.5vw,16px);
-      color:rgba(255,255,255,.64);
-      letter-spacing:.02em;
-    }
-
-    .wrt-flat-layer{
-      position:absolute;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      pointer-events:none;
-    }
-
-    .wrt-flat-menu{
-      width:min(92vw,720px);
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:18px;
-      pointer-events:auto;
-    }
-
-    .wrt-flat-card{
-      position:relative;
-      min-height:132px;
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 22%),
-        linear-gradient(145deg, rgba(10,14,22,.88), rgba(5,8,12,.96));
-      box-shadow:
-        0 18px 48px rgba(0,0,0,.32),
-        inset 0 0 18px rgba(255,255,255,.03);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      font-weight:900;
-      font-size:clamp(18px,2.2vw,24px);
-      letter-spacing:.06em;
-      cursor:pointer;
-      overflow:hidden;
-      transition:transform .18s ease, border-color .18s ease, background .18s ease;
-      color:#fff;
-      pointer-events:auto;
-    }
-
-    .wrt-flat-card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(255,255,255,.24);
-    }
-
-    .wrt-flat-card::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:86px;
-      height:86px;
-      margin:-43px 0 0 -43px;
-      transform:rotate(45deg);
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:inset 0 0 12px rgba(255,255,255,.05);
-    }
-
-    .wrt-top-ui{
-      position:absolute;
-      inset:0 0 auto 0;
-      z-index:16;
-      pointer-events:none;
-    }
-
-    .wrt-top-row{
-      width:100%;
-      display:flex;
-      justify-content:center;
-      pointer-events:none;
-    }
-
-    .wrt-top-row--home{
-      position:absolute;
-      top:12px;
-      left:0;
-      right:0;
-    }
-
-    .wrt-top-row--modes{
-      position:absolute;
-      top:12px;
-      right:12px;
-      left:auto;
-      width:auto;
-    }
-
-    .wrt-home-pill{
-      min-width:132px;
-      padding:7px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.09);
-      background:rgba(0,0,0,.18);
-      box-shadow:0 12px 28px rgba(0,0,0,.18);
-      backdrop-filter:blur(8px);
-      color:rgba(255,255,255,.92);
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      text-align:center;
-      pointer-events:none;
-    }
-
-    .wrt-mode-cluster{
-      display:flex;
-      gap:8px;
-      pointer-events:auto;
-    }
-
-    .wrt-mode-btn{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(10,12,20,.32);
-      box-shadow:0 14px 34px rgba(0,0,0,.24);
-      backdrop-filter:blur(8px);
-      color:rgba(255,255,255,.92);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      cursor:pointer;
-      pointer-events:auto;
-    }
-
-    .wrt-mode-btn.is-active{
-      border-color:rgba(226,191,92,.50);
-      box-shadow:
-        0 14px 34px rgba(0,0,0,.24),
-        0 0 0 1px rgba(226,191,92,.10),
-        0 0 16px rgba(226,191,92,.10);
-      color:#fff5cf;
-    }
-
-    .wrt-orbital-overlay{
-      position:absolute;
-      inset:0;
-      z-index:12;
-      pointer-events:none;
-      transition:opacity 180ms ease;
-    }
-
-    .wrt-orbital-marker{
-      position:absolute;
-      left:0;
-      top:0;
-      width:132px;
-      height:132px;
-      transform:translate(-50%,-50%);
-      border:0;
-      background:transparent;
-      padding:0;
-      pointer-events:auto;
-      cursor:pointer;
-      touch-action:manipulation;
-      -webkit-tap-highlight-color:transparent;
-    }
-
-    .wrt-orbital-marker[hidden]{display:none}
-
-    .wrt-orbital-glow{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:118px;
-      height:118px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,227,132,.10), rgba(255,227,132,.05) 26%, rgba(255,227,132,0) 68%);
-      filter:blur(8px);
-      opacity:.84;
-    }
-
-    .wrt-orbital-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:88px;
-      height:88px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.06) 0 14%, rgba(255,255,255,0) 54%),
-        radial-gradient(circle at 50% 50%, rgba(226,191,92,.18), rgba(226,191,92,.08) 28%, rgba(226,191,92,0) 58%);
-      opacity:.94;
-    }
-
-    .wrt-orbital-core::before,
-    .wrt-orbital-core::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,247,208,.88), rgba(255,228,142,.84), rgba(255,214,98,.22));
-      box-shadow:
-        0 0 16px rgba(255,225,140,.28),
-        0 0 28px rgba(255,219,126,.14);
-    }
-
-    .wrt-orbital-core::before{ width:10px; height:78px; }
-    .wrt-orbital-core::after{ width:78px; height:10px; }
-
-    .wrt-orbital-diag-a,
-    .wrt-orbital-diag-b{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:70px;
-      height:2px;
-      transform-origin:center;
-      background:linear-gradient(90deg, rgba(255,227,132,0), rgba(255,233,160,.76), rgba(255,227,132,0));
-      opacity:.54;
-    }
-
-    .wrt-orbital-diag-a{ transform:translate(-50%,-50%) rotate(45deg); }
-    .wrt-orbital-diag-b{ transform:translate(-50%,-50%) rotate(-45deg); }
-
-    .wrt-orbital-code{
-      position:absolute;
-      left:50%;
-      top:22px;
-      transform:translateX(-50%);
-      font-size:11px;
-      font-weight:950;
-      letter-spacing:.26em;
-      color:rgba(255,246,214,.82);
-      text-transform:uppercase;
-      text-shadow:0 0 10px rgba(0,0,0,.50);
-      white-space:nowrap;
-    }
-
-    .wrt-orbital-name{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      min-width:84px;
-      padding:3px 10px;
-      border-radius:999px;
-      background:rgba(6,10,18,.18);
-      color:rgba(255,255,255,.92);
-      font-size:11px;
-      font-weight:950;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      text-align:center;
-      text-shadow:0 0 10px rgba(0,0,0,.56);
-      box-shadow:0 6px 20px rgba(0,0,0,.14);
-      backdrop-filter:blur(6px);
-    }
-
-    .wrt-boot-status{
-      position:fixed;
-      left:50%;
-      top:88px;
-      transform:translateX(-50%);
-      width:min(760px,92vw);
-      z-index:40;
-      display:none;
-      padding:14px 16px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(14,18,28,.86);
-      box-shadow:0 20px 60px rgba(0,0,0,.44);
-      backdrop-filter:blur(10px);
-      white-space:pre-wrap;
-      line-height:1.45;
-      font-size:13px;
-      color:rgba(255,255,255,.90);
-      pointer-events:none;
-    }
-
-    .wrt-boot-status.is-visible{ display:block; }
-
-    @media (max-width:700px){
-      .wrt-top-row--home{ top:10px; }
-      .wrt-top-row--modes{
-        top:58px;
-        left:0;
-        right:0;
-        width:100%;
-        justify-content:center;
-      }
-      .wrt-mode-cluster{ gap:6px; }
-      .wrt-mode-btn{
-        min-height:38px;
-        padding:0 12px;
-        font-size:11px;
-      }
-      .wrt-home-pill{
-        min-width:108px;
-        padding:6px 12px;
-        font-size:10px;
-        letter-spacing:.10em;
-      }
-      .wrt-hero{
-        top:19.5vh;
-        gap:12px;
-      }
-      .wrt-flat-menu{
-        grid-template-columns:1fr;
-        width:min(92vw,420px);
-        gap:12px;
-      }
-      .wrt-flat-card{ min-height:98px; }
-    }
-
-    @media (max-width:420px){
-      .wrt-hero{ top:21vh; }
-      .wrt-hero-title{ font-size:clamp(34px,11vw,54px); }
-      .wrt-hero-sub{ font-size:clamp(16px,5.8vw,22px); }
-      .wrt-hero-tag{ font-size:clamp(12px,4vw,14px); }
-      .wrt-mode-btn{
-        padding:0 10px;
-        min-height:36px;
-        letter-spacing:.04em;
-      }
-    }
-  `;
-  document.head.appendChild(style);
-}
-
-function createMarkerNode(code, label) {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "wrt-orbital-marker";
-  button.hidden = true;
-  button.innerHTML = `
-    <div class="wrt-orbital-glow"></div>
-    <div class="wrt-orbital-core"></div>
-    <div class="wrt-orbital-diag-a"></div>
-    <div class="wrt-orbital-diag-b"></div>
-    <div class="wrt-orbital-code">${code}</div>
-    <div class="wrt-orbital-name">${label}</div>
-  `;
-  return button;
-}
-
-function ensureRuntimeUI(runtimeRoot) {
-  ensureInlineRuntimeStyle();
-
-  runtimeRoot.innerHTML = "";
-
-  const uiRoot = document.createElement("div");
-  uiRoot.className = "wrt-ui-root";
-
-  const heroLayer = document.createElement("div");
-  heroLayer.className = "wrt-hero";
-  heroLayer.id = "wrt-hero-panel";
-  heroLayer.innerHTML = `
-    <h1 class="wrt-hero-title">NINE SUMMITS</h1>
-    <p class="wrt-hero-sub">Learn to live, to love.</p>
-    <p class="wrt-hero-tag">Enter simply. Discover power. Choose depth.</p>
-  `;
-
-  const flatLayer = document.createElement("div");
-  flatLayer.className = "wrt-flat-layer";
-  flatLayer.innerHTML = `
-    <div class="wrt-flat-menu">
-      <button class="wrt-flat-card" data-route="/explore/" type="button">EXPLORE</button>
-      <button class="wrt-flat-card" data-route="/products/" type="button">PRODUCTS</button>
-      <button class="wrt-flat-card" data-route="/laws/" type="button">LAWS</button>
-      <button class="wrt-flat-card" data-route="/gauges/" type="button">GAUGES</button>
-    </div>
-  `;
-
-  const orbitalOverlay = document.createElement("div");
-  orbitalOverlay.className = "wrt-orbital-overlay";
-  orbitalOverlay.appendChild(createMarkerNode("N", "PRODUCTS"));
-  orbitalOverlay.appendChild(createMarkerNode("E", "GAUGES"));
-  orbitalOverlay.appendChild(createMarkerNode("S", "LAWS"));
-  orbitalOverlay.appendChild(createMarkerNode("W", "EXPLORE"));
-
-  const topUi = document.createElement("div");
-  topUi.className = "wrt-top-ui";
-  topUi.innerHTML = `
-    <div class="wrt-top-row wrt-top-row--home">
-      <div class="wrt-home-pill" id="wrt-home-pill">HOME</div>
-    </div>
-    <div class="wrt-top-row wrt-top-row--modes">
-      <div class="wrt-mode-cluster" id="wrt-mode-cluster">
-        <button id="wrt-btn-flat" class="wrt-mode-btn" type="button">FLAT</button>
-        <button id="wrt-btn-round" class="wrt-mode-btn" type="button">ROUND</button>
-        <button id="wrt-btn-observe" class="wrt-mode-btn" type="button">OBSERVE</button>
-      </div>
-    </div>
-  `;
-
-  const diagnosticsDock = document.createElement("div");
-  diagnosticsDock.id = "diagnostics-dock";
-  diagnosticsDock.className = "diagnostics-dock";
-  diagnosticsDock.innerHTML = `
-    <div id="diagnostics-bar" class="diagnostics-bar">
-      <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
-      <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">DIAGNOSTICS</button>
-    </div>
-  `;
-
-  const debugPanel = document.createElement("div");
-  debugPanel.id = "debug-panel";
-  debugPanel.className = "debug-panel";
-  debugPanel.setAttribute("aria-live", "polite");
-
-  const bootStatus = document.createElement("div");
-  bootStatus.id = "boot-status";
-  bootStatus.className = "wrt-boot-status";
-  bootStatus.setAttribute("aria-live", "polite");
-  bootStatus.innerHTML = `<div id="boot-status-copy"></div>`;
-
-  uiRoot.appendChild(heroLayer);
-  uiRoot.appendChild(flatLayer);
-  uiRoot.appendChild(orbitalOverlay);
-  uiRoot.appendChild(topUi);
-  uiRoot.appendChild(diagnosticsDock);
-  uiRoot.appendChild(debugPanel);
-  uiRoot.appendChild(bootStatus);
-
-  runtimeRoot.appendChild(uiRoot);
-
-  const markers = orbitalOverlay.querySelectorAll(".wrt-orbital-marker");
-
-  return Object.freeze({
-    heroPanel: heroLayer,
-    flatLayer,
-    orbitalOverlay,
-    diagnosticsShell: diagnosticsDock,
-    diagnosticsSummary: diagnosticsDock.querySelector("#diagnostics-summary"),
-    diagnosticsToggle: diagnosticsDock.querySelector("#diagnostics-toggle"),
-    debugPanel,
-    bootStatus,
-    bootStatusCopy: bootStatus.querySelector("#boot-status-copy"),
-    modeCluster: topUi.querySelector("#wrt-mode-cluster"),
-    homePill: topUi.querySelector("#wrt-home-pill"),
-    btnFlat: topUi.querySelector("#wrt-btn-flat"),
-    btnRound: topUi.querySelector("#wrt-btn-round"),
-    btnObserve: topUi.querySelector("#wrt-btn-observe"),
-    overlayMap: Object.freeze({
-      "north-products": markers[0],
-      "east-gauges": markers[1],
-      "south-laws": markers[2],
-      "west-explore": markers[3]
-    })
-  });
-}
-
 function createAuthorityReceiptWriter() {
   const receipt = {
     shellSource: "/index.html",
     runtimeSource: "/world/runtime/world_runtime.js",
     truthSource: "/world/world_kernel.js",
     structureSource: "/world/planet_engine.js",
-    projectionOwner: "/world/planet_surface_projector.js",
+    projectionOwner: "/world/control.js",
     renderSource: "/world/render.js",
     controlSource: "/world/control.js",
     inputOwner: "/world/control.js",
-    orbitSource: "/world/planet_surface_projector.js",
+    orbitSource: "/world/control.js",
     instrumentSource: "/assets/instruments.js",
+    worldUiSource: "/assets/world_ui.js",
     transitionSource: "—",
     receiptWriter: "/world/runtime/world_runtime.js",
     duplicateRuntime: false,
@@ -918,9 +413,9 @@ export function createWorldRuntime() {
     const primary = field.samples[y]?.[x] || null;
     if (isAdmissibleSample(primary)) return primary;
 
-    const MAX_RADIUS = 6;
+    const maxRadius = 6;
 
-    for (let r = 1; r <= MAX_RADIUS; r += 1) {
+    for (let r = 1; r <= maxRadius; r += 1) {
       const minY = Math.max(0, y - r);
       const maxY = Math.min(height - 1, y + r);
       const minX = Math.max(0, x - r);
@@ -1007,12 +502,13 @@ export function createWorldRuntime() {
         runtimeSource: "/world/runtime/world_runtime.js",
         truthSource: "/world/world_kernel.js",
         structureSource: "/world/planet_engine.js",
-        projectionOwner: "/world/planet_surface_projector.js",
+        projectionOwner: "/world/control.js",
         renderSource: "/world/render.js",
         controlSource: "/world/control.js",
         inputOwner: "/world/control.js",
-        orbitSource: "/world/planet_surface_projector.js",
+        orbitSource: "/world/control.js",
         instrumentSource: "/assets/instruments.js",
+        worldUiSource: "/assets/world_ui.js",
         receiptWriter: "/world/runtime/world_runtime.js"
       },
       transitionState: {
@@ -1631,7 +1127,7 @@ export function createWorldRuntime() {
     }
 
     if (state.flatLayer) {
-      state.flatLayer.querySelectorAll(".wrt-flat-card").forEach((card) => {
+      state.flatLayer.querySelectorAll(".flat-card").forEach((card) => {
         card.addEventListener("click", () => {
           const route = card.dataset.route || "/home/";
           persistMotionState();
@@ -1677,7 +1173,7 @@ export function createWorldRuntime() {
     state.canvas = getRequiredNode("world-canvas");
     state.runtimeRoot = getRequiredNode("runtime-root");
 
-    const ui = ensureRuntimeUI(state.runtimeRoot);
+    const ui = createWorldUI(state.runtimeRoot);
 
     state.heroPanel = ui.heroPanel;
     state.flatLayer = ui.flatLayer;

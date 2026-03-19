@@ -171,10 +171,15 @@ function signedNoise(a, b, c = 0) {
 function reliefDetail(sample, topology = null) {
   const lat = isFiniteNumber(sample?.latDeg) ? sample.latDeg : 0;
   const lon = isFiniteNumber(sample?.lonDeg) ? sample.lonDeg : 0;
+  const land = isLandSample(sample);
 
-  const n1 = quantize(signedNoise(lat / 7.5, lon / 9.5, 1), 64);
-  const n2 = quantize(signedNoise(lat / 15.0, lon / 19.0, 2), 64);
-  const n3 = quantize(signedNoise(lat / 3.25, lon / 4.10, 3), 64);
+  const rawN1 = signedNoise(lat / 7.5, lon / 9.5, 1);
+  const rawN2 = signedNoise(lat / 15.0, lon / 19.0, 2);
+  const rawN3 = signedNoise(lat / 3.25, lon / 4.10, 3);
+
+  const n1 = land ? quantize(rawN1, 64) : rawN1;
+  const n2 = land ? quantize(rawN2, 64) : rawN2;
+  const n3 = land ? quantize(rawN3, 64) : rawN3;
 
   const ridge = clamp(topology?.ridgeAmplified ?? 0, 0, 1);
   const basin = clamp(topology?.basinAmplified ?? 0, 0, 1);
@@ -184,8 +189,11 @@ function reliefDetail(sample, topology = null) {
   const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
   const squareMask = clamp(topology?.squareMaskStrength ?? 0, 0, 1);
 
-  const macro = quantize((n1 * 0.50) + (n2 * 0.34), 64);
-  const micro = quantize(n3 * 0.16, 64);
+  const macroRaw = (n1 * 0.50) + (n2 * 0.34);
+  const microRaw = n3 * 0.16;
+
+  const macro = land ? quantize(macroRaw, 64) : macroRaw;
+  const micro = land ? quantize(microRaw, 64) : microRaw;
 
   return Object.freeze({
     macro,
@@ -383,7 +391,16 @@ function getTopologySample(topologyGrid, x, y) {
   return topologyGrid?.[y]?.[x] || null;
 }
 
-function interpolateSample(s00, s10, s01, s11, fx, fy) {
+function interpolateSample(s00, s10, s01, s11, fx, fy, crossesSeam = false) {
+  if (crossesSeam) {
+    const sx = fx < 0.5 ? 0 : 1;
+    const sy = fy < 0.5 ? 0 : 1;
+    if (sx === 0 && sy === 0) return Object.freeze({ ...s00 });
+    if (sx === 1 && sy === 0) return Object.freeze({ ...s10 });
+    if (sx === 0 && sy === 1) return Object.freeze({ ...s01 });
+    return Object.freeze({ ...s11 });
+  }
+
   const oneMinusFx = 1 - fx;
   const oneMinusFy = 1 - fy;
 
@@ -423,7 +440,16 @@ function interpolateSample(s00, s10, s01, s11, fx, fy) {
   });
 }
 
-function interpolateTopology(t00, t10, t01, t11, fx, fy) {
+function interpolateTopology(t00, t10, t01, t11, fx, fy, crossesSeam = false) {
+  if (crossesSeam) {
+    const sx = fx < 0.5 ? 0 : 1;
+    const sy = fy < 0.5 ? 0 : 1;
+    if (sx === 0 && sy === 0) return Object.freeze({ ...(t00 || {}) });
+    if (sx === 1 && sy === 0) return Object.freeze({ ...(t10 || {}) });
+    if (sx === 0 && sy === 1) return Object.freeze({ ...(t01 || {}) });
+    return Object.freeze({ ...(t11 || {}) });
+  }
+
   const a = t00 || t10 || t01 || t11 || {};
   const b = t10 || t00 || t11 || t01 || a;
   const c = t01 || t11 || t00 || t10 || a;
@@ -461,8 +487,7 @@ function resolveStableSubdiv(c00, c10, c11, c01) {
     c01?.z ?? -1
   );
 
-  if (minZ > 0.72) return 3;
-  if (minZ > 0.36) return 2;
+  if (minZ > 0.42) return 2;
   return 1;
 }
 
@@ -553,6 +578,7 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
     for (let x = 0; x < row.length; x += 1) {
       const nextX = (x + 1) % row.length;
+      const crossesSeam = x === row.length - 1;
 
       const s00 = row[x];
       const s10 = row[nextX];
@@ -571,7 +597,7 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
       if (!shouldDrawQuad([c00, c10, c11, c01])) continue;
 
-      const subdiv = resolveStableSubdiv(c00, c10, c11, c01);
+      const subdiv = crossesSeam ? 1 : resolveStableSubdiv(c00, c10, c11, c01);
 
       for (let sy = 0; sy < subdiv; sy += 1) {
         for (let sx = 0; sx < subdiv; sx += 1) {
@@ -580,15 +606,15 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
           const fx1 = (sx + 1) / subdiv;
           const fy1 = (sy + 1) / subdiv;
 
-          const sm00 = interpolateSample(s00, s10, s01, s11, fx0, fy0);
-          const sm10 = interpolateSample(s00, s10, s01, s11, fx1, fy0);
-          const sm01 = interpolateSample(s00, s10, s01, s11, fx0, fy1);
-          const sm11 = interpolateSample(s00, s10, s01, s11, fx1, fy1);
+          const sm00 = interpolateSample(s00, s10, s01, s11, fx0, fy0, crossesSeam);
+          const sm10 = interpolateSample(s00, s10, s01, s11, fx1, fy0, crossesSeam);
+          const sm01 = interpolateSample(s00, s10, s01, s11, fx0, fy1, crossesSeam);
+          const sm11 = interpolateSample(s00, s10, s01, s11, fx1, fy1, crossesSeam);
 
-          const tm00 = interpolateTopology(t00, t10, t01, t11, fx0, fy0);
-          const tm10 = interpolateTopology(t00, t10, t01, t11, fx1, fy0);
-          const tm01 = interpolateTopology(t00, t10, t01, t11, fx0, fy1);
-          const tm11 = interpolateTopology(t00, t10, t01, t11, fx1, fy1);
+          const tm00 = interpolateTopology(t00, t10, t01, t11, fx0, fy0, crossesSeam);
+          const tm10 = interpolateTopology(t00, t10, t01, t11, fx1, fy0, crossesSeam);
+          const tm01 = interpolateTopology(t00, t10, t01, t11, fx0, fy1, crossesSeam);
+          const tm11 = interpolateTopology(t00, t10, t01, t11, fx1, fy1, crossesSeam);
 
           const p00 = pointFromSample(sm00, projectPoint, tm00);
           const p10 = pointFromSample(sm10, projectPoint, tm10);

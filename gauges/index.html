@@ -1,1309 +1,882 @@
 <!doctype html>
-<!-- TNT — /gauges/index.html
-     GAUGES · METAVERSE STABILIZATION AUTHORITY
-     ROLE:
-       - Two-sided authority page
-       - CHECKLIST side = progression / admissibility truth
-       - DIAGNOSTIC side = live runtime / stabilization truth
-       - Compass-first scope
-     RULES:
-       - No modals / no overlays
-       - Canon state carry only: gd_lang / gd_style / gd_time / gd_depth
-       - No new gd_* keys
-       - lane remains URL-only
-       - Toggle does not reload page
-       - Language / lane toggle does not reload page
-       - Uses /assets/ui.css + /assets/branch.css only
--->
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Nine Summits — Gauges</title>
-
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-
 <style>
+html,body{
+  margin:0;
+  min-height:100%;
+  background:
+    radial-gradient(circle at 50% 18%, rgba(44,92,164,.10), transparent 34%),
+    linear-gradient(180deg,#030712 0%,#071225 52%,#08101f 100%);
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*{box-sizing:border-box}
 a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
 body::before,body::after{pointer-events:none!important}
 
 :root{
-  --dockH:132px;
+  --ink:rgba(255,255,255,.96);
+  --mut:rgba(255,255,255,.82);
+  --mut2:rgba(255,255,255,.66);
   --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-  --ink:rgba(255,255,255,.95);
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.80);
-  --ok:rgba(131,230,168,1);
-  --warn:rgba(255,211,123,1);
-  --bad:rgba(255,142,142,1);
-  --shadowA:0 24px 90px rgba(0,0,0,.58);
-  --shadowB:0 16px 56px rgba(0,0,0,.62);
-  --shadowC:0 18px 60px rgba(0,0,0,.55);
+  --panel:rgba(8,12,20,.54);
+  --panel-strong:rgba(10,14,24,.78);
+  --ok:rgba(132,255,170,.96);
+  --warn:rgba(255,211,123,.96);
+  --bad:rgba(255,132,132,.96);
+  --gold:rgba(226,191,92,.92);
+  --shadowA:0 18px 52px rgba(0,0,0,.30);
+  --shadowB:0 24px 90px rgba(0,0,0,.42);
 }
 
-/* ===== Top ===== */
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;flex-wrap:wrap;white-space:nowrap;align-items:center;
-  pointer-events:auto;
-}
-
-/* ===== Button ===== */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowC);
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC),0 0 18px rgba(255,43,43,.12);}
-
-/* ===== Segmented controls ===== */
-.seg{
-  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  box-shadow:var(--shadowC);
-}
-.seg button{
-  appearance:none;border:0;background:transparent;color:var(--mut);
-  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
-  letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.seg button[aria-pressed="true"]{
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
-}
-
-/* ===== Page ===== */
 .page{
   width:min(1120px,94vw);
   margin:0 auto;
-  padding:104px 0 calc(var(--dockH) + 18px);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:10;
+  padding:20px 0 48px;
+  display:grid;
+  gap:14px;
 }
 
-/* ===== Background context ===== */
-.backdrop{
-  position:absolute;
-  left:50%;
-  top:68px;
-  transform:translateX(-50%);
-  width:min(1180px,96vw);
-  height:calc(100% - 108px);
-  border-radius:34px;
-  pointer-events:none;
-  z-index:0;
-  overflow:hidden;
-}
-.backdrop::before{
-  content:"";
-  position:absolute;inset:0;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:34px;
-  background:
-    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
-    radial-gradient(circle at 78% 22%, rgba(90,40,120,.12), transparent 62%),
-    radial-gradient(circle at 60% 90%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
-  box-shadow:
-    0 70px 220px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.06),
-    inset 0 -70px 140px rgba(0,0,0,.55);
-  opacity:.92;
-}
-.backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
-  background:
-    radial-gradient(circle at 28% 30%, rgba(201,162,74,.12), transparent 46%),
-    radial-gradient(circle at 72% 28%, rgba(90,40,120,.14), transparent 48%),
-    radial-gradient(circle at 50% 78%, rgba(255,43,43,.10), transparent 52%),
-    conic-gradient(from 20deg at 52% 40%,
-      rgba(201,162,74,.12), transparent 14%,
-      rgba(90,40,120,.12), transparent 30%,
-      rgba(255,43,43,.10), transparent 44%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter:blur(1px);
-  opacity:.72;
-}
-
-/* ===== Header ===== */
-.header{
-  position:relative;
-  z-index:2;
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(120,0,22,.30), transparent 72%),
-    radial-gradient(circle at 82% 34%, rgba(90,40,120,.10), transparent 74%),
-    radial-gradient(circle at 70% 92%, rgba(255,43,43,.14), transparent 62%),
-    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadowA);
-  padding:16px 16px 14px;
-  overflow:hidden;
-}
-.header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.26;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-}
-.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:rgba(255,255,255,.78)}
-.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
-.s{margin:12px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
-.rule{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
-    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
-  font-size:13.5px;
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
-}
-.modeRow{
-  margin-top:12px;
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:40;
   display:flex;
   justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 0;
+  backdrop-filter:blur(10px);
+}
+
+.topbar-left,.topbar-right{
+  display:flex;
   gap:10px;
   flex-wrap:wrap;
   align-items:center;
 }
-.statePill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
+
+.btn,
+.seg button{
+  min-height:42px;
+  padding:0 14px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  background:rgba(10,12,20,.32);
+  box-shadow:0 14px 34px rgba(0,0,0,.24);
+  backdrop-filter:blur(8px);
+  color:rgba(255,255,255,.92);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.06em;
+  text-transform:uppercase;
+  cursor:pointer;
 }
 
-/* ===== Band ===== */
-.band{
-  position:relative;
-  z-index:2;
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
+.btn:active,
+.seg button:active{transform:translateY(1px)}
+
+.seg{
+  display:flex;
+  gap:8px;
 }
 
-/* ===== List ===== */
-.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+.seg button[aria-pressed="true"]{
+  border-color:rgba(226,191,92,.50);
+  box-shadow:
+    0 14px 34px rgba(0,0,0,.24),
+    0 0 0 1px rgba(226,191,92,.10),
+    0 0 16px rgba(226,191,92,.10);
+  color:#fff5cf;
+}
+
+.hero{
+  border:1px solid var(--stroke);
+  border-radius:24px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
+    radial-gradient(circle at 18% 22%, rgba(201,162,74,.14), transparent 58%),
+    radial-gradient(circle at 82% 34%, rgba(90,40,120,.10), transparent 62%),
+    radial-gradient(circle at 70% 92%, rgba(255,43,43,.12), transparent 60%),
+    linear-gradient(160deg, rgba(0,0,0,.24), rgba(0,0,0,.12));
   box-shadow:var(--shadowB);
-  overflow:hidden;
-  position:relative;
+  padding:18px 18px 16px;
 }
-.row::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
-  opacity:.60;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;
-  padding:16px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.dmark{
-  width:10px;height:10px;border-radius:3px;
-  transform:rotate(45deg);
-  background:var(--c, rgba(201,162,74,.45));
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;
-}
-.titleBlock{min-width:0}
-.q{
-  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.sub{
-  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
-  color:rgba(255,255,255,.86);max-width:92ch;
-}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
+
+.k{
+  margin:0 0 8px;
+  font-size:12px;
+  letter-spacing:4px;
+  text-transform:uppercase;
   color:rgba(255,255,255,.78);
-  font-weight:950;
-  position:relative;overflow:hidden;
-  flex:0 0 auto;margin-top:2px;
 }
-.chev::after{
-  content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
-  opacity:.62;pointer-events:none;
+.t{
+  margin:0;
+  font-size:clamp(28px,4.4vw,42px);
+  line-height:1.04;
+  font-weight:980;
+  letter-spacing:.03em;
 }
-.body{
-  display:none;
-  padding:16px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+.s{
+  margin:12px 0 0;
+  max-width:920px;
+  color:var(--mut);
+  line-height:1.55;
+  font-size:15px;
 }
-.row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB),0 0 18px rgba(255,43,43,.10);}
 
-.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
-.pdesc + .pdesc{margin-top:10px}
+.state-row{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
 
-.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.bubble{
+.state-pill{
+  min-height:38px;
+  padding:0 12px;
+  border-radius:999px;
   border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
+  background:rgba(0,0,0,.16);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.86);
+  font-size:12px;
+  font-weight:900;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1.08fr .92fr;
+  gap:14px;
+}
+
+.card{
+  border:1px solid var(--stroke);
+  border-radius:22px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  padding:14px 14px 12px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,.04), transparent 42%),
+    linear-gradient(145deg, rgba(10,14,22,.78), rgba(5,8,12,.92));
+  box-shadow:var(--shadowA);
   overflow:hidden;
 }
-.bubble::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
-}
-.bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
-.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px;white-space:pre-wrap}
-.bubble.open p{display:block}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-.pill{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:28px;padding:4px 10px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  font-size:11px;font-weight:950;letter-spacing:.25px;
-}
-.pill.pass{color:var(--ok)}
-.pill.warn{color:var(--warn)}
-.pill.fail{color:var(--bad)}
 
-/* ===== Dock ===== */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
+.card-head{
+  padding:14px 16px;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:12px;
+}
+
+.card-title{
+  margin:0;
+  font-size:18px;
+  font-weight:950;
+  letter-spacing:.02em;
+}
+.card-sub{
+  margin:6px 0 0;
+  color:var(--mut2);
+  font-size:13px;
+  line-height:1.4;
+}
+
+.card-body{
+  padding:14px 16px 16px;
+}
+
+.status-badge{
+  min-height:30px;
+  padding:0 10px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  font-size:11px;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  white-space:nowrap;
+}
+.status-badge.pass{color:var(--ok)}
+.status-badge.warn{color:var(--warn)}
+.status-badge.fail{color:var(--bad)}
+
+.receipt-meta{
   display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:12px;
+}
+
+.meta-box{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  background:rgba(255,255,255,.03);
+  padding:10px 12px;
+}
+.meta-key{
+  color:var(--mut2);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.meta-val{
+  margin-top:6px;
+  color:var(--ink);
+  font-size:14px;
+  font-weight:900;
+  line-height:1.35;
+  word-break:break-word;
+}
+.meta-val.pass{color:var(--ok)}
+.meta-val.warn{color:var(--warn)}
+.meta-val.fail{color:var(--bad)}
+
+.section{
+  margin-top:12px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  overflow:hidden;
+  background:rgba(255,255,255,.02);
+}
+.section-head{
+  padding:10px 12px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  color:var(--ink);
+  font-size:12px;
+  font-weight:950;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.rows{
+  display:grid;
+}
+.row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:12px;
+  align-items:start;
+  padding:9px 12px;
+  border-top:1px solid rgba(255,255,255,.05);
+}
+.row:first-child{border-top:0}
+.row-key{
+  color:var(--mut);
+  font-size:13px;
+  line-height:1.35;
+}
+.row-val{
+  color:var(--ink);
+  font-size:13px;
+  font-weight:900;
+  text-align:right;
+  line-height:1.35;
+  word-break:break-word;
+}
+.row-val.pass{color:var(--ok)}
+.row-val.warn{color:var(--warn)}
+.row-val.fail{color:var(--bad)}
+.row-val.muted{color:var(--mut2)}
+
+.checklist{
+  display:grid;
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:132px}
-  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+.item{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:rgba(255,255,255,.03);
+  overflow:hidden;
+}
+.item-head{
+  padding:12px 12px 10px;
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  align-items:flex-start;
+}
+.item-title{
+  margin:0;
+  font-size:15px;
+  font-weight:950;
+  letter-spacing:.02em;
+}
+.item-copy{
+  margin:6px 0 0;
+  color:var(--mut2);
+  font-size:13px;
+  line-height:1.45;
+}
+.item-body{
+  padding:0 12px 12px;
+}
+.item-rule{
+  color:var(--mut);
+  font-size:13px;
+  line-height:1.5;
+}
+
+.footer-note{
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  background:rgba(255,255,255,.03);
+  padding:12px 14px;
+  color:var(--mut);
+  font-size:13px;
+  line-height:1.5;
+}
+
+@media (max-width:900px){
+  .grid{
+    grid-template-columns:1fr;
+  }
+}
+
+@media (max-width:640px){
+  .receipt-meta{
+    grid-template-columns:1fr;
+  }
+  .topbar{
+    align-items:flex-start;
+  }
 }
 </style>
 </head>
-
 <body>
-
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
-    <a class="btn" id="btnIndex" data-route="/index.html" href="/index.html">INDEX</a>
-    <a class="btn" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  </div>
-  <div class="right" aria-label="Controls">
-    <div class="seg" role="group" aria-label="Language">
-      <button type="button" id="langEN" aria-pressed="true">EN</button>
-      <button type="button" id="langZH" aria-pressed="false">中文</button>
-      <button type="button" id="langES" aria-pressed="false">ES</button>
-    </div>
-    <div class="seg" role="group" aria-label="Lane">
-      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-    </div>
-  </div>
-</div>
-
 <div class="page">
-  <div class="backdrop" aria-hidden="true"></div>
-
-  <div class="header" aria-label="Header">
-    <p class="k" id="hk">GAUGES</p>
-    <h1 class="t" id="ht">METAVERSE STABILIZATION AUTHORITY</h1>
-    <p class="s" id="hs"></p>
-    <div class="rule" id="rule"></div>
-
-    <div class="modeRow" aria-label="Mode + state">
-      <div class="seg" role="group" aria-label="Mode">
-        <button type="button" id="modeChecklist" aria-pressed="true">CHECKLIST</button>
-        <button type="button" id="modeDiagnostic" aria-pressed="false">DIAGNOSTIC</button>
+  <div class="topbar">
+    <div class="topbar-left">
+      <a class="btn" id="btn-index" href="/index.html">INDEX</a>
+      <a class="btn" id="btn-door" href="/door/">DOOR</a>
+      <a class="btn" id="btn-laws" href="/laws/">LAWS</a>
+    </div>
+    <div class="topbar-right">
+      <div class="seg" role="group" aria-label="Gauges mode">
+        <button type="button" id="btn-checklist" aria-pressed="true">CHECKLIST</button>
+        <button type="button" id="btn-diagnostics" aria-pressed="false">DIAGNOSTICS</button>
       </div>
-      <div class="statePill" id="modeState">—</div>
-      <div class="statePill" id="laneState">—</div>
-      <div class="statePill" id="langState">—</div>
+      <button class="btn" id="btn-refresh" type="button">REFRESH</button>
     </div>
   </div>
 
-  <div class="band" id="band">STABILIZATION LAYERS</div>
-  <div class="list" id="list"></div>
-</div>
+  <section class="hero">
+    <p class="k">GAUGES</p>
+    <h1 class="t">LIVE DIAGNOSTICS + METAVERSE CHECKLIST</h1>
+    <p class="s">
+      Checklist defines what must be true. Diagnostics reads what is actually true from the live index runtime receipt.
+    </p>
+    <div class="state-row">
+      <div class="state-pill" id="mode-pill">MODE: CHECKLIST</div>
+      <div class="state-pill" id="receipt-pill">RECEIPT: WAIT</div>
+      <div class="state-pill" id="timestamp-pill">TIMESTAMP: —</div>
+    </div>
+  </section>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
-  <a class="btn" id="dockIndex" data-route="/index.html" href="/index.html">INDEX</a>
-  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-</nav>
+  <div class="grid">
+    <section class="card" id="diagnostics-card" hidden>
+      <div class="card-head">
+        <div>
+          <h2 class="card-title">Live Runtime Diagnostics</h2>
+          <p class="card-sub">Reads only the emitted runtime receipt from the home/index execution path.</p>
+        </div>
+        <div class="status-badge fail" id="overall-status">NO RECEIPT</div>
+      </div>
+      <div class="card-body">
+        <div class="receipt-meta">
+          <div class="meta-box">
+            <div class="meta-key">Phase</div>
+            <div class="meta-val" id="meta-phase">—</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-key">Mode</div>
+            <div class="meta-val" id="meta-mode">—</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-key">Boot</div>
+            <div class="meta-val" id="meta-boot">—</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-key">Render</div>
+            <div class="meta-val" id="meta-render">—</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-key">Markers</div>
+            <div class="meta-val" id="meta-marker">—</div>
+          </div>
+          <div class="meta-box">
+            <div class="meta-key">Updated</div>
+            <div class="meta-val" id="meta-updated">—</div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Runtime Receipt</div>
+          <div class="rows" id="runtime-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Progression Receipt</div>
+          <div class="rows" id="progression-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Emission Receipt</div>
+          <div class="rows" id="emission-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Intake Receipt</div>
+          <div class="rows" id="intake-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Placement Receipt</div>
+          <div class="rows" id="placement-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Render Audit</div>
+          <div class="rows" id="render-audit-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Orbital Audit</div>
+          <div class="rows" id="orbital-audit-rows"></div>
+        </div>
+
+        <div class="section">
+          <div class="section-head">Authority Receipt</div>
+          <div class="rows" id="authority-rows"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="checklist-card">
+      <div class="card-head">
+        <div>
+          <h2 class="card-title">Metaverse Checklist</h2>
+          <p class="card-sub">Policy side. This does not fake runtime truth.</p>
+        </div>
+        <div class="status-badge warn" id="checklist-status">GATED</div>
+      </div>
+      <div class="card-body">
+        <div class="checklist" id="checklist-list"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="footer-note">
+    Index runs the world. World runtime emits the receipt. Gauges reads the receipt. Checklist remains governance only.
+  </div>
+</div>
 
 <script type="module">
-(function(){
-  "use strict";
+const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
 
-  const qs=new URLSearchParams(location.search);
-  const LS=window.localStorage;
+const btnChecklist = document.getElementById("btn-checklist");
+const btnDiagnostics = document.getElementById("btn-diagnostics");
+const btnRefresh = document.getElementById("btn-refresh");
 
-  let lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  let style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  let lane  = qs.get("lane")  || "platform";
+const diagnosticsCard = document.getElementById("diagnostics-card");
+const checklistCard = document.getElementById("checklist-card");
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+const modePill = document.getElementById("mode-pill");
+const receiptPill = document.getElementById("receipt-pill");
+const timestampPill = document.getElementById("timestamp-pill");
 
-  let d=parseInt(depth,10);
-  if(!Number.isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
+const overallStatus = document.getElementById("overall-status");
+const checklistStatus = document.getElementById("checklist-status");
 
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
+const metaPhase = document.getElementById("meta-phase");
+const metaMode = document.getElementById("meta-mode");
+const metaBoot = document.getElementById("meta-boot");
+const metaRender = document.getElementById("meta-render");
+const metaMarker = document.getElementById("meta-marker");
+const metaUpdated = document.getElementById("meta-updated");
 
+const runtimeRows = document.getElementById("runtime-rows");
+const progressionRows = document.getElementById("progression-rows");
+const emissionRows = document.getElementById("emission-rows");
+const intakeRows = document.getElementById("intake-rows");
+const placementRows = document.getElementById("placement-rows");
+const renderAuditRows = document.getElementById("render-audit-rows");
+const orbitalAuditRows = document.getElementById("orbital-audit-rows");
+const authorityRows = document.getElementById("authority-rows");
+const checklistList = document.getElementById("checklist-list");
+
+let activeMode = "checklist";
+let lastReceipt = null;
+
+function safeObject(value){
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function safeBool(value){
+  return value === true;
+}
+
+function readReceipt(){
   try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    const p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
-    p.set("style",(over&&over.style)?over.style:style);
-    p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth",(over&&over.depth)?String(over.depth):depth);
-    const L=(over&&over.lane)?over.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane",L);
-    return "?"+p.toString();
+    const raw = localStorage.getItem(RUNTIME_STORAGE_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  }catch{
+    return null;
   }
+}
 
-  function setPressed(ids,activeId){
-    for(let i=0;i<ids.length;i++){
-      const el=document.getElementById(ids[i]);
-      if(!el) continue;
-      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+function readAuthorityReceipt(){
+  const authority = window.__AUTHORITY_RECEIPT__;
+  return safeObject(authority);
+}
+
+function textValue(value){
+  if(value === null || value === undefined || value === "") return "—";
+  if(typeof value === "boolean") return value ? "true" : "false";
+  if(typeof value === "number") return Number.isFinite(value) ? String(value) : "—";
+  if(typeof value === "string") return value;
+  return JSON.stringify(value);
+}
+
+function toneForValue(value){
+  const v = textValue(value);
+  if(v === "true" || v === "PASS" || v === "RUNNING" || v === "BOOT_OK") return "pass";
+  if(v === "false" || v === "FAIL" || v === "BOOT_FAIL") return "fail";
+  if(v === "—") return "muted";
+  return "";
+}
+
+function makeRow(key, value){
+  const row = document.createElement("div");
+  row.className = "row";
+
+  const k = document.createElement("div");
+  k.className = "row-key";
+  k.textContent = key;
+
+  const v = document.createElement("div");
+  const tone = toneForValue(value);
+  v.className = `row-val${tone ? " " + tone : ""}`;
+  v.textContent = textValue(value);
+
+  row.appendChild(k);
+  row.appendChild(v);
+  return row;
+}
+
+function fillRows(container, entries){
+  container.innerHTML = "";
+  entries.forEach(([key,value]) => {
+    container.appendChild(makeRow(key, value));
+  });
+}
+
+function setBadge(el, text, cls){
+  el.className = `status-badge ${cls}`;
+  el.textContent = text;
+}
+
+function setMeta(el, value){
+  const tone = toneForValue(value);
+  el.className = `meta-val${tone ? " " + tone : ""}`;
+  el.textContent = textValue(value);
+}
+
+function computeChecklist(receipt){
+  const authority = readAuthorityReceipt();
+  const shellSource = authority.shellSource || "/index.html";
+  const runtimeSource = authority.runtimeSource || "/world/runtime/world_runtime.js";
+  const instrumentSource = authority.instrumentSource || "/assets/instruments.js";
+
+  return [
+    {
+      title: "Shell only in index",
+      copy: "Index should remain shell + orchestration, not runtime logic + not diagnostic UI logic.",
+      pass: shellSource === "/index.html",
+      rule: `Current shell source: ${textValue(shellSource)}`
+    },
+    {
+      title: "Runtime emits receipt",
+      copy: "World runtime must emit live receipt data into shared storage.",
+      pass: !!receipt,
+      rule: receipt ? `Receipt key present: ${RUNTIME_STORAGE_KEY}` : "Receipt missing from localStorage."
+    },
+    {
+      title: "Boot passes",
+      copy: "Runtime boot must succeed before trusting anything visual.",
+      pass: safeBool(receipt?.bootPass),
+      rule: `bootPass = ${textValue(receipt?.bootPass)}`
+    },
+    {
+      title: "Render passes",
+      copy: "Render truth must be present before expanding scene complexity.",
+      pass: safeBool(receipt?.renderPass),
+      rule: `renderPass = ${textValue(receipt?.renderPass)}`
+    },
+    {
+      title: "Marker placement passes",
+      copy: "Marker system should be admissible before trusting home navigation overlays.",
+      pass: safeBool(receipt?.markerPass),
+      rule: `markerPass = ${textValue(receipt?.markerPass)}`
+    },
+    {
+      title: "Runtime ownership is canonical",
+      copy: "Runtime authority should resolve to the canonical world runtime path.",
+      pass: runtimeSource === "/world/runtime/world_runtime.js",
+      rule: `runtimeSource = ${textValue(runtimeSource)}`
+    },
+    {
+      title: "Instrumentation remains isolated",
+      copy: "Receipt formatting belongs in instruments, not mixed into runtime ownership.",
+      pass: instrumentSource === "/assets/instruments.js",
+      rule: `instrumentSource = ${textValue(instrumentSource)}`
+    },
+    {
+      title: "No live runtime error",
+      copy: "If runtime exposes an error, the system remains blocked even if visuals partially move.",
+      pass: !textValue(receipt?.error || "").trim() || textValue(receipt?.error) === "—",
+      rule: `error = ${textValue(receipt?.error)}`
     }
+  ];
+}
+
+function renderChecklist(receipt){
+  const items = computeChecklist(receipt);
+  checklistList.innerHTML = "";
+
+  const passed = items.filter(item => item.pass).length;
+  const total = items.length;
+
+  if(receipt && passed === total){
+    setBadge(checklistStatus, "PASS", "pass");
+  }else if(receipt && passed > 0){
+    setBadge(checklistStatus, "PARTIAL", "warn");
+  }else{
+    setBadge(checklistStatus, "GATED", "fail");
   }
 
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-  function labStatus(){ return (lang==="zh")?"状态":(lang==="es")?"Estado":"Status"; }
-  function labMeaning(){ return (lang==="zh")?"含义":(lang==="es")?"Sentido":"Meaning"; }
-  function labNext(){ return (lang==="zh")?"下一步":(lang==="es")?"Siguiente":"Next"; }
+  items.forEach(item => {
+    const wrap = document.createElement("div");
+    wrap.className = "item";
 
-  function laneLabel(){
-    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+    const head = document.createElement("div");
+    head.className = "item-head";
+
+    const left = document.createElement("div");
+    const title = document.createElement("h3");
+    title.className = "item-title";
+    title.textContent = item.title;
+
+    const copy = document.createElement("p");
+    copy.className = "item-copy";
+    copy.textContent = item.copy;
+
+    left.appendChild(title);
+    left.appendChild(copy);
+
+    const badge = document.createElement("div");
+    badge.className = `status-badge ${item.pass ? "pass" : "fail"}`;
+    badge.textContent = item.pass ? "PASS" : "BLOCKED";
+
+    head.appendChild(left);
+    head.appendChild(badge);
+
+    const body = document.createElement("div");
+    body.className = "item-body";
+
+    const rule = document.createElement("div");
+    rule.className = "item-rule";
+    rule.textContent = item.rule;
+
+    body.appendChild(rule);
+    wrap.appendChild(head);
+    wrap.appendChild(body);
+    checklistList.appendChild(wrap);
+  });
+}
+
+function renderDiagnostics(receipt){
+  const authority = readAuthorityReceipt();
+
+  if(!receipt){
+    setBadge(overallStatus, "NO RECEIPT", "fail");
+    receiptPill.textContent = "RECEIPT: MISSING";
+    timestampPill.textContent = "TIMESTAMP: —";
+
+    setMeta(metaPhase, "—");
+    setMeta(metaMode, "—");
+    setMeta(metaBoot, "false");
+    setMeta(metaRender, "false");
+    setMeta(metaMarker, "false");
+    setMeta(metaUpdated, "—");
+
+    fillRows(runtimeRows, [["status","Receipt missing"],["key",RUNTIME_STORAGE_KEY]]);
+    fillRows(progressionRows, [["progression","—"]]);
+    fillRows(emissionRows, [["emission","—"]]);
+    fillRows(intakeRows, [["intake","—"]]);
+    fillRows(placementRows, [["placement","—"]]);
+    fillRows(renderAuditRows, [["renderAudit","—"]]);
+    fillRows(orbitalAuditRows, [["orbitalAudit","—"]]);
+    fillRows(authorityRows, [
+      ["shellSource", authority.shellSource || "—"],
+      ["runtimeSource", authority.runtimeSource || "—"],
+      ["instrumentSource", authority.instrumentSource || "—"]
+    ]);
+    return;
   }
 
-  function wireAll(){
-    const nodes=document.querySelectorAll("[data-route]");
-    for(let i=0;i<nodes.length;i++){
-      const el=nodes[i];
-      const route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
+  const progression = safeObject(receipt.progressionReceipt);
+  const emission = safeObject(receipt.emissionReceipt);
+  const intake = safeObject(receipt.intakeReceipt);
+  const placement = safeObject(receipt.placementReceipt);
+  const renderAudit = safeObject(receipt.renderAudit);
+  const orbitalAudit = safeObject(receipt.orbitalAudit);
+
+  const allPass = safeBool(receipt.bootPass) && safeBool(receipt.renderPass) && safeBool(receipt.markerPass) && (!receipt.error || receipt.error === "");
+  if(allPass){
+    setBadge(overallStatus, "PASS", "pass");
+    receiptPill.textContent = "RECEIPT: PASS";
+  }else if(safeBool(receipt.bootPass) || safeBool(receipt.renderPass) || safeBool(receipt.markerPass)){
+    setBadge(overallStatus, "PARTIAL", "warn");
+    receiptPill.textContent = "RECEIPT: PARTIAL";
+  }else{
+    setBadge(overallStatus, "FAIL", "fail");
+    receiptPill.textContent = "RECEIPT: FAIL";
   }
 
-  let mode="checklist";
-  const openIndexByMode={ checklist:0, diagnostic:0 };
+  timestampPill.textContent = `TIMESTAMP: ${textValue(receipt.timestamp)}`;
 
-  async function collectRuntime(){
-    const out={
-      kernel:{pass:false,warn:false,width:null,height:null,total:null,seaLevel:null,reason:""},
-      engine:{pass:false,warn:false,width:null,height:null,sampleCount:null,summary:false,completeness:false,reason:""},
-      control:{pass:false,warn:false,mode:null,yaw:null,pitch:null,zoom:null,orbitPhase:null,reason:""},
-      runtime:{pass:false,warn:false,canvas:false,storage:false,visibility:false,dataMode:null,diagnosticsQuery:null,reason:""},
-      routing:{pass:false,warn:false,pathname:location.pathname,modeQuery:qs.get("mode")||null,lane:lane,reason:""},
-      overall:{pass:false,warn:false,reason:""}
-    };
+  setMeta(metaPhase, receipt.phase);
+  setMeta(metaMode, receipt.mode);
+  setMeta(metaBoot, receipt.bootPass);
+  setMeta(metaRender, receipt.renderPass);
+  setMeta(metaMarker, receipt.markerPass);
+  setMeta(metaUpdated, receipt.timestamp);
 
-    let kernel=null;
-    let engine=null;
-    let control=null;
-    let field=null;
-    let camera=null;
-    let motion=null;
-    let orbital=null;
+  fillRows(runtimeRows, [
+    ["page", receipt.page],
+    ["phase", receipt.phase],
+    ["mode", receipt.mode],
+    ["bootPass", receipt.bootPass],
+    ["renderPass", receipt.renderPass],
+    ["markerPass", receipt.markerPass],
+    ["diagnosticsMode", receipt.diagnosticsMode],
+    ["timestamp", receipt.timestamp],
+    ["error", receipt.error]
+  ]);
 
-    try{
-      const km=await import("/world/world_kernel.js");
-      kernel=km&&km.WORLD_KERNEL?km.WORLD_KERNEL:null;
-    }catch(e){
-      kernel=null;
-    }
+  fillRows(progressionRows, [
+    ["progressionDtMs", progression.progressionDtMs],
+    ["progressionAuthorized", progression.progressionAuthorized],
+    ["progressionApplied", progression.progressionApplied],
+    ["progressionStep", progression.progressionStep],
+    ["progressionPass", progression.progressionPass]
+  ]);
 
-    try{
-      const em=await import("/world/planet_engine.js");
-      engine=em&&typeof em.createPlanetEngine==="function"?em.createPlanetEngine():null;
-    }catch(e){
-      engine=null;
-    }
+  fillRows(emissionRows, [
+    ["emissionOrbitalCount", emission.emissionOrbitalCount],
+    ["emissionFrontVisible", emission.emissionFrontVisible],
+    ["emissionEmitted", emission.emissionEmitted],
+    ["emissionSuppressed", emission.emissionSuppressed],
+    ["emissionPass", emission.emissionPass]
+  ]);
 
-    try{
-      const cm=await import("/world/control.js");
-      control=cm&&typeof cm.createControlSystem==="function"?cm.createControlSystem():null;
-    }catch(e){
-      control=null;
-    }
+  fillRows(intakeRows, [
+    ["intakeReceived", intake.intakeReceived],
+    ["intakeStaged", intake.intakeStaged],
+    ["intakeDiscarded", intake.intakeDiscarded],
+    ["intakePass", intake.intakePass]
+  ]);
 
-    const lonSteps=kernel?.constants?.lonSteps;
-    const latSteps=kernel?.constants?.latSteps;
-    const width=Number.isInteger(kernel?.planetField?.width)?kernel.planetField.width:(Number.isInteger(lonSteps)?lonSteps:null);
-    const height=Number.isInteger(kernel?.planetField?.height)?kernel.planetField.height:(Number.isInteger(latSteps)?latSteps:null);
-    const total=(Number.isInteger(width)&&Number.isInteger(height))?(width*height):null;
-    const seaLevel=(typeof kernel?.constants?.seaLevel==="number")?kernel.constants.seaLevel:null;
+  fillRows(placementRows, [
+    ["markerRequired", placement.markerRequired],
+    ["markerPlacementAdmissible", placement.markerPlacementAdmissible],
+    ["markerCollisionCount", placement.markerCollisionCount],
+    ["markerRepositionedCount", placement.markerRepositionedCount],
+    ["placementPlaceable", placement.placementPlaceable],
+    ["placementPlaced", placement.placementPlaced],
+    ["placementReservedReject", placement.placementReservedReject],
+    ["placementViewportReject", placement.placementViewportReject],
+    ["placementPass", placement.placementPass]
+  ]);
 
-    out.kernel.width=width;
-    out.kernel.height=height;
-    out.kernel.total=total;
-    out.kernel.seaLevel=seaLevel;
-    out.kernel.pass=!!kernel && width===216 && height===108 && total===23328 && seaLevel!==null;
-    out.kernel.warn=!out.kernel.pass && !!kernel;
-    out.kernel.reason = out.kernel.pass
-      ? "Kernel contract is aligned."
-      : (!kernel ? "Kernel import failed." : "Kernel is present but contract does not fully align.");
+  fillRows(renderAuditRows, Object.entries(renderAudit).length ? Object.entries(renderAudit) : [["renderAudit","—"]]);
+  fillRows(orbitalAuditRows, Object.entries(orbitalAudit).length ? Object.entries(orbitalAudit) : [["orbitalAudit","—"]]);
 
-    try{
-      if(engine&&typeof engine.buildPlanetField==="function"){
-        field=engine.buildPlanetField({});
-      }
-    }catch(e){
-      field=null;
-    }
+  fillRows(authorityRows, [
+    ["shellSource", authority.shellSource || "—"],
+    ["runtimeSource", authority.runtimeSource || "—"],
+    ["truthSource", authority.truthSource || "—"],
+    ["structureSource", authority.structureSource || "—"],
+    ["projectionOwner", authority.projectionOwner || "—"],
+    ["renderSource", authority.renderSource || "—"],
+    ["controlSource", authority.controlSource || "—"],
+    ["inputOwner", authority.inputOwner || "—"],
+    ["orbitSource", authority.orbitSource || "—"],
+    ["instrumentSource", authority.instrumentSource || "—"],
+    ["transitionSource", authority.transitionSource || "—"],
+    ["receiptWriter", authority.receiptWriter || "—"],
+    ["duplicateRuntime", authority.duplicateRuntime],
+    ["duplicateRender", authority.duplicateRender],
+    ["duplicateInput", authority.duplicateInput],
+    ["duplicateProjection", authority.duplicateProjection]
+  ]);
+}
 
-    const sampleCount=Array.isArray(field?.samples)
-      ? field.samples.reduce((a,row)=>a+(Array.isArray(row)?row.length:0),0)
-      : 0;
+function setMode(mode){
+  activeMode = mode;
+  const diagnostics = mode === "diagnostics";
 
-    out.engine.width=field?.width??null;
-    out.engine.height=field?.height??null;
-    out.engine.sampleCount=sampleCount;
-    out.engine.summary=!!field?.summary;
-    out.engine.completeness=!!field?.completeness;
-    out.engine.pass=!!field && field.width===216 && field.height===108 && sampleCount===23328 && !!field.summary && !!field.completeness;
-    out.engine.warn=!out.engine.pass && !!field;
-    out.engine.reason = out.engine.pass
-      ? "Planet engine builds a lawful field."
-      : (!field ? "Planet engine build failed." : "Planet engine returned a partial or misaligned field.");
+  btnChecklist.setAttribute("aria-pressed", diagnostics ? "false" : "true");
+  btnDiagnostics.setAttribute("aria-pressed", diagnostics ? "true" : "false");
 
-    try{
-      if(control&&typeof control.resize==="function"){
-        control.resize(window.innerWidth,window.innerHeight);
-      }
-      if(control&&typeof control.getCameraState==="function"){
-        camera=control.getCameraState();
-      }
-      if(control&&typeof control.getMotionState==="function"){
-        motion=control.getMotionState();
-      }
-      if(control&&typeof control.getOrbitalState==="function"){
-        orbital=control.getOrbitalState();
-      }
-    }catch(e){
-      camera=null; motion=null; orbital=null;
-    }
+  checklistCard.hidden = diagnostics ? true : false;
+  diagnosticsCard.hidden = diagnostics ? false : true;
 
-    out.control.mode=motion?.mode??null;
-    out.control.yaw=motion?.yaw??null;
-    out.control.pitch=motion?.pitch??null;
-    out.control.zoom=motion?.zoomCurrent??null;
-    out.control.orbitPhase=orbital?.orbitPhase??null;
-    out.control.pass=!!control && !!camera && !!motion && !!orbital && typeof motion.mode==="string" && Number.isFinite(motion.yaw) && Number.isFinite(motion.pitch);
-    out.control.warn=!out.control.pass && !!control;
-    out.control.reason = out.control.pass
-      ? "Control state is readable and live."
-      : (!control ? "Control import failed." : "Control exists but runtime motion state is incomplete.");
+  modePill.textContent = `MODE: ${diagnostics ? "DIAGNOSTICS" : "CHECKLIST"}`;
+}
 
-    let storageAvailable=false;
-    try{
-      localStorage.setItem("__cte_diag_test__","1");
-      localStorage.removeItem("__cte_diag_test__");
-      storageAvailable=true;
-    }catch(e){
-      storageAvailable=false;
-    }
+function refresh(){
+  lastReceipt = readReceipt();
+  renderChecklist(lastReceipt);
+  renderDiagnostics(lastReceipt);
+}
 
-    const canvasExists = !!document.getElementById("world-canvas");
-    out.runtime.canvas=canvasExists;
-    out.runtime.storage=storageAvailable;
-    out.runtime.visibility=(document.visibilityState==="visible");
-    out.runtime.dataMode=document.body ? (document.body.getAttribute("data-mode")||null) : null;
-    out.runtime.diagnosticsQuery=qs.get("diagnostics")||null;
-    out.runtime.pass=storageAvailable && document.visibilityState==="visible";
-    out.runtime.warn=!out.runtime.pass && (storageAvailable || document.visibilityState==="visible");
-    out.runtime.reason = out.runtime.pass
-      ? "Observer page is healthy, but this does not prove index render execution."
-      : "Observer runtime is degraded.";
+btnChecklist.addEventListener("click", () => setMode("checklist"));
+btnDiagnostics.addEventListener("click", () => {
+  refresh();
+  setMode("diagnostics");
+});
+btnRefresh.addEventListener("click", refresh);
 
-    out.routing.pass=true;
-    out.routing.reason="Routing state is readable on this page.";
+window.addEventListener("focus", refresh, { passive:true });
+document.addEventListener("visibilitychange", () => {
+  if(document.visibilityState === "visible") refresh();
+}, { passive:true });
 
-    if(!out.kernel.pass){
-      out.overall.pass=false;
-      out.overall.warn=false;
-      out.overall.reason="Break class: kernel / contract truth.";
-    }else if(!out.engine.pass){
-      out.overall.pass=false;
-      out.overall.warn=false;
-      out.overall.reason="Break class: planet engine build.";
-    }else if(!out.control.pass){
-      out.overall.pass=false;
-      out.overall.warn=true;
-      out.overall.reason="Break class: control / projection state.";
-    }else{
-      out.overall.pass=true;
-      out.overall.warn=false;
-      out.overall.reason="Upstream modules pass here. White compass would then indicate index-side execution or render orchestration, not upstream contract truth.";
-    }
-
-    return out;
+window.addEventListener("storage", (event) => {
+  if(event.key === RUNTIME_STORAGE_KEY){
+    refresh();
   }
-
-  let runtimeSnapshot=null;
-
-  function statusKind(pass,warn){
-    return pass ? "pass" : warn ? "warn" : "fail";
-  }
-
-  function statusLabel(kind){
-    return kind==="pass"
-      ? pick3("PASS","通过","PASS")
-      : kind==="warn"
-        ? pick3("WARN","警告","WARN")
-        : pick3("FAIL","失败","FAIL");
-  }
-
-  function n(v,d){
-    return (typeof v==="number" && Number.isFinite(v)) ? v.toFixed(d||0) : "—";
-  }
-
-  function yn(v){
-    return v ? pick3("YES","是","SÍ") : pick3("NO","否","NO");
-  }
-
-  function checklistDomains(){
-    return [
-      {
-        c:"#c9a24a",
-        t:{en:"1. Contract Stability",zh:"1. 契约稳定",es:"1. Estabilidad del Contrato"},
-        s:{en:"Kernel dimensions and sea-level truth must align before anything else.",zh:"内核维度与海平面真值必须先对齐。",es:"Las dimensiones del kernel y el nivel del mar deben alinearse antes de todo."},
-        getPack:function(){
-          const k=runtimeSnapshot?.kernel;
-          const kind=statusKind(!!k?.pass, !!k?.warn);
-          return {
-            kind:kind,
-            intro:{
-              en:"This layer determines whether the world contract is lawful enough for every downstream system.",
-              zh:"这一层决定世界契约是否足够合法，从而支撑所有下游系统。",
-              es:"Esta capa determina si el contrato del mundo es lo bastante legal para sostener todo lo demás."
-            },
-            meaning:{
-              en:"Current read: width="+(k?.width??"—")+", height="+(k?.height??"—")+", total="+(k?.total??"—")+", seaLevel="+(k?.seaLevel??"—")+".",
-              zh:"当前读数：宽="+(k?.width??"—")+"，高="+(k?.height??"—")+"，总数="+(k?.total??"—")+"，海平面="+(k?.seaLevel??"—")+"。",
-              es:"Lectura actual: ancho="+(k?.width??"—")+", alto="+(k?.height??"—")+", total="+(k?.total??"—")+", seaLevel="+(k?.seaLevel??"—")+"."
-            },
-            next:{
-              en:k?.pass ? "Admissible next: keep contract frozen while testing execution." : "Blocked next: fix kernel contract before trusting any green downstream.",
-              zh:k?.pass ? "下一步可采信：冻结契约，然后测试执行。" : "下一步阻塞：先修复内核契约，再相信任何下游绿色。",
-              es:k?.pass ? "Siguiente admisible: congelar el contrato mientras se prueba la ejecución." : "Siguiente bloqueado: arreglar el contrato kernel antes de creer cualquier verde abajo."
-            }
-          };
-        }
-      },
-      {
-        c:"#34d399",
-        t:{en:"2. Planet Generation Stability",zh:"2. 星球生成稳定",es:"2. Estabilidad de Generación Planetaria"},
-        s:{en:"The engine must produce a lawful field before render can mean anything.",zh:"引擎必须先生成合法场，渲染才有意义。",es:"El motor debe producir un campo legal antes de que el render signifique algo."},
-        getPack:function(){
-          const e=runtimeSnapshot?.engine;
-          const kind=statusKind(!!e?.pass, !!e?.warn);
-          return {
-            kind:kind,
-            intro:{
-              en:"This layer decides whether the world exists as an actual sample field instead of an idea.",
-              zh:"这一层决定世界是否作为真实样本场存在，而不只是一个想法。",
-              es:"Esta capa decide si el mundo existe como campo de muestras real y no solo como idea."
-            },
-            meaning:{
-              en:"Current read: build="+yn(!!e?.width)+", width="+(e?.width??"—")+", height="+(e?.height??"—")+", samples="+(e?.sampleCount??"—")+".",
-              zh:"当前读数：构建="+yn(!!e?.width)+"，宽="+(e?.width??"—")+"，高="+(e?.height??"—")+"，样本="+(e?.sampleCount??"—")+"。",
-              es:"Lectura actual: build="+yn(!!e?.width)+", ancho="+(e?.width??"—")+", alto="+(e?.height??"—")+", muestras="+(e?.sampleCount??"—")+"."
-            },
-            next:{
-              en:e?.pass ? "Admissible next: render-side execution isolation." : "Blocked next: engine build must return lawful field shape first.",
-              zh:e?.pass ? "下一步可采信：进入渲染侧执行隔离。" : "下一步阻塞：引擎必须先返回合法字段形状。",
-              es:e?.pass ? "Siguiente admisible: aislar ejecución del lado render." : "Siguiente bloqueado: el motor debe devolver primero una forma de campo legal."
-            }
-          };
-        }
-      },
-      {
-        c:"#93c5fd",
-        t:{en:"3. Control / Projection Stability",zh:"3. 控制 / 投影稳定",es:"3. Estabilidad de Control / Proyección"},
-        s:{en:"Camera, motion, and orbital state must be readable before interaction depth is trustworthy.",zh:"在交互深度可信之前，必须先读到相机、运动和轨道状态。",es:"Cámara, movimiento y estado orbital deben ser legibles antes de confiar en la interacción."},
-        getPack:function(){
-          const c=runtimeSnapshot?.control;
-          const kind=statusKind(!!c?.pass, !!c?.warn);
-          return {
-            kind:kind,
-            intro:{
-              en:"This layer is the motion spine. If this drifts, render truth becomes ambiguous.",
-              zh:"这一层是运动脊柱。如果它漂移，渲染真值就会变得模糊。",
-              es:"Esta capa es la columna del movimiento. Si deriva, la verdad del render se vuelve ambigua."
-            },
-            meaning:{
-              en:"Current read: mode="+(c?.mode??"—")+", yaw="+n(c?.yaw,4)+", pitch="+n(c?.pitch,4)+", zoom="+n(c?.zoom,4)+".",
-              zh:"当前读数：模式="+(c?.mode??"—")+"，yaw="+n(c?.yaw,4)+"，pitch="+n(c?.pitch,4)+"，缩放="+n(c?.zoom,4)+"。",
-              es:"Lectura actual: modo="+(c?.mode??"—")+", yaw="+n(c?.yaw,4)+", pitch="+n(c?.pitch,4)+", zoom="+n(c?.zoom,4)+"."
-            },
-            next:{
-              en:c?.pass ? "Admissible next: bind observer to true index execution receipts." : "Blocked next: stabilize control before blaming render.",
-              zh:c?.pass ? "下一步可采信：把观察器绑定到真实 index 执行收据。" : "下一步阻塞：先稳定 control，再判断 render。",
-              es:c?.pass ? "Siguiente admisible: enlazar el observador a recibos reales de ejecución del index." : "Siguiente bloqueado: estabilizar control antes de culpar al render."
-            }
-          };
-        }
-      },
-      {
-        c:"#f59e0b",
-        t:{en:"4. Render / Frame Stability",zh:"4. 渲染 / 帧稳定",es:"4. Estabilidad de Render / Frame"},
-        s:{en:"This is currently blocked because the observer page is not yet reading live index execution receipts.",zh:"这一层当前阻塞，因为观察页还没有读取 live index 执行收据。",es:"Esta capa está bloqueada porque la página observadora todavía no lee recibos vivos de ejecución del index."},
-        getPack:function(){
-          return {
-            kind:"warn",
-            intro:{
-              en:"This is the missing bridge. White compass cannot be isolated truthfully until index writes execution receipts.",
-              zh:"这是缺失的桥。除非 index 写入执行收据，否则白色 compass 无法被真实隔离。",
-              es:"Este es el puente faltante. El compass blanco no puede aislarse con verdad hasta que index escriba recibos de ejecución."
-            },
-            meaning:{
-              en:"Current read: gauges can prove upstream readiness, but cannot yet prove index draw, frame loop, or render receipt.",
-              zh:"当前读数：gauges 只能证明上游就绪，还不能证明 index 绘制、帧循环或渲染收据。",
-              es:"Lectura actual: gauges puede probar preparación upstream, pero aún no puede probar draw del index, frame loop o recibo de render."
-            },
-            next:{
-              en:"Next required: wire compass runtime receipts into a shared observer source, then grade render truth here.",
-              zh:"下一步要求：把 compass 运行时收据接入共享观察源，然后在这里评估 render 真值。",
-              es:"Siguiente requerido: cablear recibos runtime del compass a una fuente observadora compartida, y luego calificar aquí la verdad del render."
-            }
-          };
-        }
-      },
-      {
-        c:"#ff2b2b",
-        t:{en:"5. Scene / Layer Stability",zh:"5. 场景 / 图层稳定",es:"5. Estabilidad de Escena / Capas"},
-        s:{en:"Plants, buildings, and NPCs are not admissible until world and render stabilization are truthful.",zh:"在世界与渲染稳定性真实之前，植物、建筑和 NPC 都不可采信。",es:"Plantas, edificios y NPCs no son admisibles hasta que la estabilización de mundo y render sea verdadera."},
-        getPack:function(){
-          return {
-            kind:"fail",
-            intro:{
-              en:"This layer is intentionally blocked. Adding visible content on top of a white compass only multiplies blindness.",
-              zh:"这一层被有意阻塞。在白色 compass 上继续加可见内容，只会放大盲区。",
-              es:"Esta capa está bloqueada a propósito. Añadir contenido visible sobre un compass blanco solo multiplica la ceguera."
-            },
-            meaning:{
-              en:"Current state: stabilization preconditions are incomplete, so scene-layer growth would be incoherent.",
-              zh:"当前状态：稳定性前提尚未完成，因此场景层继续增长会失去一致性。",
-              es:"Estado actual: las precondiciones de estabilización están incompletas, así que crecer la escena sería incoherente."
-            },
-            next:{
-              en:"Next lawful order: contract → engine → control → render → scene → vegetation → structures → NPCs.",
-              zh:"下一步合法顺序：契约 → 引擎 → 控制 → 渲染 → 场景 → 植被 → 结构 → NPC。",
-              es:"Orden legal siguiente: contrato → motor → control → render → escena → vegetación → estructuras → NPCs."
-            }
-          };
-        }
-      }
-    ];
-  }
-
-  function diagnosticDomains(){
-    const k=runtimeSnapshot?.kernel;
-    const e=runtimeSnapshot?.engine;
-    const c=runtimeSnapshot?.control;
-    const r=runtimeSnapshot?.runtime;
-    const rt=runtimeSnapshot?.routing;
-    const o=runtimeSnapshot?.overall;
-
-    return [
-      {
-        c:"#c9a24a",
-        t:{en:"Kernel Contract",zh:"内核契约",es:"Contrato Kernel"},
-        s:{en:"Source-of-truth dimensions and sea-level alignment.",zh:"真值维度与海平面对齐。",es:"Dimensiones de verdad y alineación del nivel del mar."},
-        getPack:function(){
-          return {
-            kind:statusKind(!!k?.pass, !!k?.warn),
-            intro:{
-              en:"Observer result: upstream kernel truth is measured here before all downstream claims.",
-              zh:"观察结果：所有下游主张之前，这里先测上游内核真值。",
-              es:"Resultado observador: aquí se mide la verdad upstream del kernel antes de cualquier reclamo downstream."
-            },
-            meaning:{
-              en:"width="+(k?.width??"—")+"\nheight="+(k?.height??"—")+"\ntotal="+(k?.total??"—")+"\nseaLevel="+(k?.seaLevel??"—"),
-              zh:"宽="+(k?.width??"—")+"\n高="+(k?.height??"—")+"\n总数="+(k?.total??"—")+"\n海平面="+(k?.seaLevel??"—"),
-              es:"ancho="+(k?.width??"—")+"\nalto="+(k?.height??"—")+"\ntotal="+(k?.total??"—")+"\nseaLevel="+(k?.seaLevel??"—")
-            },
-            next:{
-              en:k?.reason||"",
-              zh:k?.reason||"",
-              es:k?.reason||""
-            }
-          };
-        }
-      },
-      {
-        c:"#34d399",
-        t:{en:"Planet Engine",zh:"星球引擎",es:"Motor Planetario"},
-        s:{en:"Field build and structure receipts.",zh:"字段构建与结构收据。",es:"Build de campo y recibos de estructura."},
-        getPack:function(){
-          return {
-            kind:statusKind(!!e?.pass, !!e?.warn),
-            intro:{
-              en:"Observer result: this verifies whether the world can be instantiated as a lawful sample field.",
-              zh:"观察结果：这验证世界能否被实例化为合法样本场。",
-              es:"Resultado observador: esto verifica si el mundo puede instanciarse como campo de muestras legal."
-            },
-            meaning:{
-              en:"width="+(e?.width??"—")+"\nheight="+(e?.height??"—")+"\nsampleCount="+(e?.sampleCount??"—")+"\nsummary="+yn(!!e?.summary)+"\ncompleteness="+yn(!!e?.completeness),
-              zh:"宽="+(e?.width??"—")+"\n高="+(e?.height??"—")+"\n样本数="+(e?.sampleCount??"—")+"\n摘要="+yn(!!e?.summary)+"\n完整性="+yn(!!e?.completeness),
-              es:"ancho="+(e?.width??"—")+"\nalto="+(e?.height??"—")+"\nsampleCount="+(e?.sampleCount??"—")+"\nsummary="+yn(!!e?.summary)+"\ncompleteness="+yn(!!e?.completeness)
-            },
-            next:{
-              en:e?.reason||"",
-              zh:e?.reason||"",
-              es:e?.reason||""
-            }
-          };
-        }
-      },
-      {
-        c:"#93c5fd",
-        t:{en:"Control State",zh:"控制状态",es:"Estado de Control"},
-        s:{en:"Motion, camera, and orbital readability.",zh:"运动、相机与轨道可读性。",es:"Legibilidad de movimiento, cámara y órbita."},
-        getPack:function(){
-          return {
-            kind:statusKind(!!c?.pass, !!c?.warn),
-            intro:{
-              en:"Observer result: this measures whether motion authority is alive enough to be trusted.",
-              zh:"观察结果：这测量运动权威是否足够活跃并值得信任。",
-              es:"Resultado observador: esto mide si la autoridad de movimiento está lo bastante viva para confiar en ella."
-            },
-            meaning:{
-              en:"mode="+(c?.mode??"—")+"\nyaw="+n(c?.yaw,4)+"\npitch="+n(c?.pitch,4)+"\nzoom="+n(c?.zoom,4)+"\norbitPhase="+n(c?.orbitPhase,4),
-              zh:"模式="+(c?.mode??"—")+"\nyaw="+n(c?.yaw,4)+"\npitch="+n(c?.pitch,4)+"\n缩放="+n(c?.zoom,4)+"\n轨道相位="+n(c?.orbitPhase,4),
-              es:"modo="+(c?.mode??"—")+"\nyaw="+n(c?.yaw,4)+"\npitch="+n(c?.pitch,4)+"\nzoom="+n(c?.zoom,4)+"\norbitPhase="+n(c?.orbitPhase,4)
-            },
-            next:{
-              en:c?.reason||"",
-              zh:c?.reason||"",
-              es:c?.reason||""
-            }
-          };
-        }
-      },
-      {
-        c:"#f59e0b",
-        t:{en:"Observer Runtime",zh:"观察器运行时",es:"Runtime Observador"},
-        s:{en:"This page’s own runtime health.",zh:"本页自身运行时健康。",es:"La salud runtime de esta página."},
-        getPack:function(){
-          return {
-            kind:statusKind(!!r?.pass, !!r?.warn),
-            intro:{
-              en:"Observer result: this only proves the gauges page is alive. It does not yet prove index draw health.",
-              zh:"观察结果：这只证明 gauges 页面活着，还不能证明 index 绘制健康。",
-              es:"Resultado observador: esto solo prueba que la página gauges está viva. Todavía no prueba la salud del draw del index."
-            },
-            meaning:{
-              en:"canvasOnThisPage="+yn(!!r?.canvas)+"\nstorage="+yn(!!r?.storage)+"\nvisible="+yn(!!r?.visibility)+"\ndata-mode="+(r?.dataMode??"—")+"\ndiagnosticsQuery="+(r?.diagnosticsQuery??"—"),
-              zh:"本页canvas="+yn(!!r?.canvas)+"\n存储="+yn(!!r?.storage)+"\n可见="+yn(!!r?.visibility)+"\ndata-mode="+(r?.dataMode??"—")+"\n诊断查询="+(r?.diagnosticsQuery??"—"),
-              es:"canvasEnEstaPágina="+yn(!!r?.canvas)+"\nstorage="+yn(!!r?.storage)+"\nvisible="+yn(!!r?.visibility)+"\ndata-mode="+(r?.dataMode??"—")+"\ndiagnosticsQuery="+(r?.diagnosticsQuery??"—")
-            },
-            next:{
-              en:r?.reason||"",
-              zh:r?.reason||"",
-              es:r?.reason||""
-            }
-          };
-        }
-      },
-      {
-        c:"#a3a3a3",
-        t:{en:"Routing State",zh:"路由状态",es:"Estado de Ruta"},
-        s:{en:"Path, query, and observer position.",zh:"路径、查询与观察器位置。",es:"Ruta, query y posición del observador."},
-        getPack:function(){
-          return {
-            kind:statusKind(!!rt?.pass, !!rt?.warn),
-            intro:{
-              en:"Observer result: routing on this page is stable and readable.",
-              zh:"观察结果：本页路由稳定且可读。",
-              es:"Resultado observador: el ruteo de esta página es estable y legible."
-            },
-            meaning:{
-              en:"pathname="+(rt?.pathname??"—")+"\nmodeQuery="+(rt?.modeQuery??"—")+"\nlane="+(rt?.lane??"—")+"\nlang="+lang+"\nstyle="+style+"\ntime="+time+"\ndepth="+depth,
-              zh:"路径="+(rt?.pathname??"—")+"\n模式查询="+(rt?.modeQuery??"—")+"\n通道="+(rt?.lane??"—")+"\n语言="+lang+"\n风格="+style+"\n时间="+time+"\n深度="+depth,
-              es:"ruta="+(rt?.pathname??"—")+"\nmodeQuery="+(rt?.modeQuery??"—")+"\nlane="+(rt?.lane??"—")+"\nlang="+lang+"\nstyle="+style+"\ntime="+time+"\ndepth="+depth
-            },
-            next:{
-              en:rt?.reason||"",
-              zh:rt?.reason||"",
-              es:rt?.reason||""
-            }
-          };
-        }
-      },
-      {
-        c:"#ff2b2b",
-        t:{en:"Layer Verdict",zh:"分层结论",es:"Veredicto por Capas"},
-        s:{en:"Where the real break class lives right now.",zh:"当前真实问题类所在层。",es:"Dónde vive ahora la clase real de la falla."},
-        getPack:function(){
-          return {
-            kind:statusKind(!!o?.pass, !!o?.warn),
-            intro:{
-              en:"This is the current compression. It tells you which layer to trust next.",
-              zh:"这是当前压缩结论。它告诉你下一步该信哪一层。",
-              es:"Esta es la compresión actual. Te dice en qué capa confiar después."
-            },
-            meaning:{
-              en:o?.reason||"—",
-              zh:o?.reason||"—",
-              es:o?.reason||"—"
-            },
-            next:{
-              en:o?.pass
-                ? "Next required: wire index execution receipts into this observer so render truth can be graded instead of inferred."
-                : "Next required: repair the failing upstream layer before expanding scene complexity.",
-              zh:o?.pass
-                ? "下一步要求：把 index 执行收据接入本观察器，这样 render 真值就能被评估，而不是靠推断。"
-                : "下一步要求：先修复失败的上游层，再扩展场景复杂度。",
-              es:o?.pass
-                ? "Siguiente requerido: cablear recibos de ejecución del index a este observador para calificar la verdad del render en vez de inferirla."
-                : "Siguiente requerido: reparar primero la capa upstream que falla antes de expandir complejidad de escena."
-            }
-          };
-        }
-      }
-    ];
-  }
-
-  function getActiveDomains(){
-    return mode==="diagnostic" ? diagnosticDomains() : checklistDomains();
-  }
-
-  const list=document.getElementById("list");
-  let rowRefs=[];
-
-  function closeAllRows(){
-    for(let i=0;i<rowRefs.length;i++){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-    }
-  }
-
-  function toggleRow(i){
-    const isOpen=rowRefs[i].row.classList.contains("open");
-    if(isOpen){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-      return;
-    }
-    closeAllRows();
-    openIndexByMode[mode]=i;
-    rowRefs[i].row.classList.add("open");
-    rowRefs[i].chev.textContent="▾";
-  }
-
-  function makeSubBubble(label){
-    const b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
-
-    const h=document.createElement("h4");
-    h.textContent=label;
-
-    const p=document.createElement("p");
-    p.textContent="";
-
-    b.appendChild(h);
-    b.appendChild(p);
-
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
-    return {wrap:b,p:p};
-  }
-
-  function buildRow(item,idx){
-    const row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", item.c);
-
-    const head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    const hL=document.createElement("div");
-    hL.className="hL";
-
-    const mark=document.createElement("div");
-    mark.className="dmark";
-    mark.style.background=item.c;
-
-    const tb=document.createElement("div");
-    tb.className="titleBlock";
-
-    const title=document.createElement("div");
-    title.className="q";
-
-    const sub=document.createElement("div");
-    sub.className="sub";
-
-    tb.appendChild(title);
-    tb.appendChild(sub);
-    hL.appendChild(mark);
-    hL.appendChild(tb);
-
-    const chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(hL);
-    head.appendChild(chev);
-
-    const body=document.createElement("div");
-    body.className="body";
-
-    const statusPill=document.createElement("div");
-    statusPill.className="pill";
-    body.appendChild(statusPill);
-
-    const intro=document.createElement("p");
-    intro.className="pdesc";
-    body.appendChild(intro);
-
-    const bubbles=document.createElement("div");
-    bubbles.className="subBubbles";
-
-    const b1=makeSubBubble(labStatus());
-    const b2=makeSubBubble(labMeaning());
-    const b3=makeSubBubble(labNext());
-
-    bubbles.appendChild(b1.wrap);
-    bubbles.appendChild(b2.wrap);
-    bubbles.appendChild(b3.wrap);
-    body.appendChild(bubbles);
-
-    const actions=document.createElement("div");
-    actions.className="actions";
-
-    const a1=document.createElement("a"); a1.className="btn"; a1.setAttribute("data-route","/index.html"); actions.appendChild(a1);
-    const a2=document.createElement("a"); a2.className="btn"; a2.setAttribute("data-route","/door/"); actions.appendChild(a2);
-    const a3=document.createElement("a"); a3.className="btn red"; a3.setAttribute("data-route","/laws/"); actions.appendChild(a3);
-
-    body.appendChild(actions);
-
-    function onToggle(){ toggleRow(idx); wireAll(); }
-    head.addEventListener("click", onToggle, {passive:true});
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
-
-    row.appendChild(head);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    rowRefs.push({
-      row:row,
-      chev:row.querySelector(".chevTxt"),
-      title:title,
-      sub:sub,
-      statusPill:statusPill,
-      intro:intro,
-      b1p:b1.p,b2p:b2.p,b3p:b3.p,
-      a1:a1,a2:a2,a3:a3
-    });
-  }
-
-  function renderList(){
-    const DOMS=getActiveDomains();
-    let keep=openIndexByMode[mode]||0;
-    if(keep<0) keep=0;
-    if(keep>=DOMS.length) keep=0;
-
-    list.innerHTML="";
-    rowRefs=[];
-    for(let i=0;i<DOMS.length;i++){
-      buildRow(DOMS[i],i);
-    }
-    toggleRow(keep);
-  }
-
-  function applyHeader(){
-    document.getElementById("hk").textContent =
-      mode==="checklist"
-        ? pick3("GAUGES · CHECKLIST","GAUGES · 清单","GAUGES · CHECKLIST")
-        : pick3("GAUGES · DIAGNOSTIC","GAUGES · 诊断","GAUGES · DIAGNÓSTICO");
-
-    document.getElementById("ht").textContent =
-      mode==="checklist"
-        ? pick3("METAVERSE STABILIZATION CHECKLIST","元宇宙稳定清单","CHECKLIST DE ESTABILIZACIÓN DEL METAVERSO")
-        : pick3("LIVE STABILIZATION DIAGNOSTIC","实时稳定诊断","DIAGNÓSTICO VIVO DE ESTABILIZACIÓN");
-
-    document.getElementById("hs").textContent =
-      mode==="checklist"
-        ? pick3(
-            "This side answers what must be true before the next layer is lawful. It is progression truth, not guesswork.",
-            "这一面回答：在下一层合法之前，哪些条件必须为真。它是进度真值，不是猜测。",
-            "Este lado responde qué debe ser verdadero antes de que la siguiente capa sea legal. Es verdad de progresión, no adivinanza."
-          )
-        : pick3(
-            "This side answers what is passing now, what is failing now, and where the break class actually lives.",
-            "这一面回答：现在什么通过，什么失败，以及问题类真正位于哪一层。",
-            "Este lado responde qué pasa ahora, qué falla ahora y dónde vive realmente la clase de la falla."
-          );
-
-    document.getElementById("rule").textContent =
-      mode==="checklist"
-        ? pick3(
-            "Rule: do not add plants, buildings, or NPCs until stabilization layers become admissible in order.",
-            "规则：在稳定层按顺序变得可采信之前，不要添加植物、建筑或 NPC。",
-            "Regla: no añadir plantas, edificios o NPCs hasta que las capas de estabilización sean admisibles en orden."
-          )
-        : pick3(
-            "Rule: this observer may reveal truth, but it must not pretend to validate index render execution until live compass receipts are wired in.",
-            "规则：此观察器可以揭示真值，但在 live compass 收据接入前，它不能假装验证 index 渲染执行。",
-            "Regla: este observador puede revelar verdad, pero no debe fingir validar la ejecución render del index hasta que se conecten recibos vivos del compass."
-          );
-
-    document.getElementById("band").textContent =
-      mode==="checklist"
-        ? pick3("STABILIZATION LAYERS","稳定层","CAPAS DE ESTABILIZACIÓN")
-        : pick3("LIVE OBSERVER READOUT","实时观察读数","LECTURA DEL OBSERVADOR VIVO");
-
-    document.getElementById("btnDoor").textContent=pick3("DOOR","门","PUERTA");
-    document.getElementById("btnIndex").textContent=pick3("INDEX","索引","ÍNDICE");
-    document.getElementById("btnProducts").textContent=pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockDoor").textContent=pick3("DOOR","门","PUERTA");
-    document.getElementById("dockIndex").textContent=pick3("INDEX","索引","ÍNDICE");
-    document.getElementById("dockExplore").textContent=pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("dockLaws").textContent=pick3("LAWS","法则","LEYES");
-
-    document.getElementById("modeChecklist").textContent=pick3("CHECKLIST","清单","CHECKLIST");
-    document.getElementById("modeDiagnostic").textContent=pick3("DIAGNOSTIC","诊断","DIAGNÓSTICO");
-    document.getElementById("lanePlatform").textContent=pick3("PLATFORM","平台","PLATAFORMA");
-    document.getElementById("laneEngineering").textContent=pick3("ENGINEERING","工程","INGENIERÍA");
-
-    document.getElementById("modeState").textContent =
-      (lang==="zh")
-        ? ("模式："+(mode==="checklist"?"清单":"诊断"))
-        : (lang==="es")
-          ? ("Modo: "+(mode==="checklist"?"CHECKLIST":"DIAGNÓSTICO"))
-          : ("Mode: "+(mode==="checklist"?"CHECKLIST":"DIAGNOSTIC"));
-
-    document.getElementById("laneState").textContent =
-      (lang==="zh")
-        ? ("当前透镜："+laneLabel())
-        : (lang==="es")
-          ? ("Lente actual: "+laneLabel())
-          : ("Current lens: "+laneLabel());
-
-    document.getElementById("langState").textContent =
-      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
-
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    setPressed(["modeChecklist","modeDiagnostic"], mode==="checklist"?"modeChecklist":"modeDiagnostic");
-  }
-
-  function updateRows(){
-    const DOMS=getActiveDomains();
-    let keep=openIndexByMode[mode]||0;
-    if(keep<0) keep=0;
-    if(keep>=DOMS.length) keep=0;
-
-    for(let i=0;i<DOMS.length;i++){
-      const item=DOMS[i];
-      const pack=item.getPack();
-      const r=rowRefs[i];
-      if(!r) continue;
-
-      r.title.textContent=(lang==="zh")?item.t.zh:(lang==="es"?item.t.es:item.t.en);
-      r.sub.textContent=(lang==="zh")?item.s.zh:(lang==="es"?item.s.es:item.s.en);
-
-      r.statusPill.className="pill "+pack.kind;
-      r.statusPill.textContent=statusLabel(pack.kind);
-
-      r.intro.textContent=(lang==="zh")?pack.intro.zh:(lang==="es"?pack.intro.es:pack.intro.en);
-      r.b1p.textContent=statusLabel(pack.kind);
-      r.b2p.textContent=(lang==="zh")?pack.meaning.zh:(lang==="es"?pack.meaning.es:pack.meaning.en);
-      r.b3p.textContent=(lang==="zh")?pack.next.zh:(lang==="es"?pack.next.es:pack.next.en);
-
-      r.a1.textContent=openLabel()+": "+pick3("INDEX","索引","ÍNDICE");
-      r.a2.textContent=openLabel()+": "+pick3("DOOR","门","PUERTA");
-      r.a3.textContent=openLabel()+": "+pick3("LAWS","法则","LEYES");
-    }
-
-    closeAllRows();
-    toggleRow(keep);
-    wireAll();
-  }
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    applyHeader();
-    updateRows();
-  }
-
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    applyHeader();
-    updateRows();
-  }
-
-  function setMode(next){
-    if(next!=="checklist" && next!=="diagnostic") next="checklist";
-    mode=next;
-    applyHeader();
-    renderList();
-    updateRows();
-  }
-
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  document.getElementById("modeChecklist").addEventListener("click", function(){ setMode("checklist"); }, {passive:true});
-  document.getElementById("modeDiagnostic").addEventListener("click", async function(){
-    mode="diagnostic";
-    runtimeSnapshot=await collectRuntime();
-    applyHeader();
-    renderList();
-    updateRows();
-  }, {passive:true});
-
-  async function init(){
-    runtimeSnapshot=await collectRuntime();
-    renderList();
-    applyHeader();
-    updateRows();
-    wireAll();
-  }
-
-  init();
-})();
+});
+
+refresh();
+setMode("checklist");
+setInterval(refresh, 1500);
 </script>
-
 </body>
 </html>

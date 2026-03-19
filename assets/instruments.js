@@ -16,7 +16,8 @@ export function createInstruments() {
     "/world/planet_surface_projector.js",
     "/world/render.js",
     "/world/control.js",
-    "/assets/instruments.js"
+    "/assets/instruments.js",
+    "/assets/world_ui.js"
   ]);
 
   const INVALIDATED_SOURCES = Object.freeze([
@@ -321,6 +322,7 @@ export function createInstruments() {
       inputOwner: normalizeString(source.inputOwner, EMPTY),
       orbitSource: normalizeString(source.orbitSource, EMPTY),
       instrumentSource: normalizeString(source.instrumentSource, "/assets/instruments.js"),
+      worldUiSource: normalizeString(source.worldUiSource, EMPTY),
       transitionSource: normalizeString(source.transitionSource, EMPTY),
       receiptWriter: normalizeString(source.receiptWriter, EMPTY)
     });
@@ -653,6 +655,7 @@ export function createInstruments() {
         inputOwner: normalizePrimitive(authority.inputOwner),
         orbitSource: normalizePrimitive(authority.orbitSource),
         instrumentSource: normalizePrimitive(authority.instrumentSource),
+        worldUiSource: normalizePrimitive(authority.worldUiSource),
         transitionSource: normalizePrimitive(authority.transitionSource),
         receiptWriter: normalizePrimitive(authority.receiptWriter)
       })),

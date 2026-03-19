@@ -747,7 +747,11 @@ const flatLayer = document.getElementById("flat-layer");
 const universeLayer = document.getElementById("universe-layer");
 const atmosphereLayer = document.getElementById("atmosphere-layer");
 const heroLayer = document.getElementById("hero-layer");
+const heroPanel = document.getElementById("hero-panel");
 const orbitalOverlay = document.getElementById("orbital-overlay");
+const homePill = document.getElementById("home-pill");
+const modeCluster = document.getElementById("mode-cluster");
+const diagnosticsShell = document.getElementById("diagnostics-shell");
 const diagnosticsSummary = document.getElementById("diagnostics-summary");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const debugPanel = document.getElementById("debug-panel");
@@ -765,11 +769,18 @@ const overlayMap = Object.freeze({
   "west-explore": document.getElementById("marker-west")
 });
 
-const MOTION_STORAGE_KEY = "ns_home_round_motion_v12";
+const MOTION_STORAGE_KEY = "ns_home_round_motion_v13";
 const RUNTIME_STORAGE_KEY = "cte_runtime_v1";
+
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
-const MARKER_OUTWARD_NUDGE = 8;
+const MARKER_OUTWARD_NUDGE = 10;
+const SAFE_EDGE_MARGIN = 18;
+const HERO_SAFE_PADDING = 22;
+const UI_SAFE_PADDING = 16;
+const DIAGNOSTIC_SAFE_PADDING = 12;
+const SHELL_MIN_OPACITY = 0.62;
+const SHELL_MIN_EDGE_VISIBILITY = 0.34;
 
 const orbitalSystem = Object.freeze({
   objects: Object.freeze([
@@ -844,7 +855,13 @@ let runtimeReady = false;
 
 let lastRenderReceipt = Object.freeze({
   orbitalHits: Object.freeze([]),
-  orbitalAudit: Object.freeze({ count: 0, frontVisibleCount: 0 }),
+  orbitalAudit: Object.freeze({
+    count: 0,
+    frontVisibleCount: 0,
+    emittedCount: 0,
+    rejectedBackfaceCount: 0,
+    rejectedWeakVisibilityCount: 0
+  }),
   audit: Object.freeze({})
 });
 
@@ -852,7 +869,10 @@ let lastPlacementReceipt = Object.freeze({
   markerRequired: false,
   markerPlacementAdmissible: true,
   markerCollisionCount: 0,
-  markerRepositionedCount: 0
+  markerRepositionedCount: 0,
+  stagedCandidateCount: 0,
+  suppressedCount: 0,
+  reservedZoneRejectCount: 0
 });
 
 let runtimeErrorMessage = "";
@@ -1219,7 +1239,7 @@ function applyOutwardSeparation(a, b, center) {
 function minimalViewportClamp(hit) {
   const width = window.innerWidth;
   const height = window.innerHeight;
-  const margin = hit.radius + 4;
+  const margin = hit.radius + SAFE_EDGE_MARGIN;
 
   hit.x = Math.max(margin, Math.min(width - margin, hit.x));
   hit.y = Math.max(margin, Math.min(height - margin, hit.y));
@@ -1245,13 +1265,94 @@ function validateMarkersInViewport(hits) {
   const height = window.innerHeight;
 
   for (const hit of hits) {
-    if (hit.x - hit.radius < 0) return false;
-    if (hit.x + hit.radius > width) return false;
-    if (hit.y - hit.radius < 0) return false;
-    if (hit.y + hit.radius > height) return false;
+    if (hit.x - hit.radius < SAFE_EDGE_MARGIN) return false;
+    if (hit.x + hit.radius > width - SAFE_EDGE_MARGIN) return false;
+    if (hit.y - hit.radius < SAFE_EDGE_MARGIN) return false;
+    if (hit.y + hit.radius > height - SAFE_EDGE_MARGIN) return false;
   }
 
   return true;
+}
+
+function expandRect(rect, padding) {
+  return {
+    left: rect.left - padding,
+    right: rect.right + padding,
+    top: rect.top - padding,
+    bottom: rect.bottom + padding
+  };
+}
+
+function getRectOrNull(node, padding = 0) {
+  if (!node) return null;
+  const rect = node.getBoundingClientRect();
+  if (!(rect.width > 0 && rect.height > 0)) return null;
+  return expandRect(rect, padding);
+}
+
+function getReservedRects() {
+  const rects = [];
+
+  const heroRect = getRectOrNull(heroPanel, HERO_SAFE_PADDING);
+  const homeRect = getRectOrNull(homePill, UI_SAFE_PADDING);
+  const modeRect = getRectOrNull(modeCluster, UI_SAFE_PADDING);
+  const diagnosticsRect = diagnosticsMode === "full"
+    ? getRectOrNull(debugPanel, DIAGNOSTIC_SAFE_PADDING)
+    : getRectOrNull(diagnosticsShell, DIAGNOSTIC_SAFE_PADDING);
+
+  if (heroRect) rects.push(heroRect);
+  if (homeRect) rects.push(homeRect);
+  if (modeRect) rects.push(modeRect);
+  if (diagnosticsRect) rects.push(diagnosticsRect);
+
+  return rects;
+}
+
+function circleIntersectsRect(hit, rect) {
+  const closestX = Math.max(rect.left, Math.min(hit.x, rect.right));
+  const closestY = Math.max(rect.top, Math.min(hit.y, rect.bottom));
+  const dx = hit.x - closestX;
+  const dy = hit.y - closestY;
+  return ((dx * dx) + (dy * dy)) < (hit.radius * hit.radius);
+}
+
+function isReservedZoneConflict(hit, rects) {
+  for (const rect of rects) {
+    if (circleIntersectsRect(hit, rect)) return true;
+  }
+  return false;
+}
+
+function isShellAdmissibleHit(hit) {
+  return (
+    typeof hit?.id === "string" &&
+    hit.id.length > 0 &&
+    Number.isFinite(hit?.x) &&
+    Number.isFinite(hit?.y) &&
+    Number.isFinite(hit?.radius) &&
+    hit.radius > 0 &&
+    hit.frontFacing === true &&
+    Number.isFinite(hit?.opacity) &&
+    hit.opacity >= SHELL_MIN_OPACITY &&
+    Number.isFinite(hit?.edgeVisibility) &&
+    hit.edgeVisibility >= SHELL_MIN_EDGE_VISIBILITY
+  );
+}
+
+function pushOutOfReservedZones(hit, center, reservedRects) {
+  let moved = false;
+
+  for (let step = 0; step < 10; step += 1) {
+    if (!isReservedZoneConflict(hit, reservedRects)) break;
+
+    const vector = computeMarkerVector(hit, center);
+    hit.x += vector.ux * MARKER_OUTWARD_NUDGE;
+    hit.y += vector.uy * MARKER_OUTWARD_NUDGE;
+    minimalViewportClamp(hit);
+    moved = true;
+  }
+
+  return moved;
 }
 
 function solveMarkerPlacement(rawHits) {
@@ -1263,23 +1364,31 @@ function solveMarkerPlacement(rawHits) {
       markerRequired: false,
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
-      markerRepositionedCount: 0
+      markerRepositionedCount: 0,
+      stagedCandidateCount: 0,
+      suppressedCount: 0,
+      reservedZoneRejectCount: 0
     });
   }
 
   const center = getViewportCenter();
-  const frontHits = rawHits
-    .filter((hit) => Number.isFinite(hit?.x) && Number.isFinite(hit?.y))
+  const reservedRects = getReservedRects();
+
+  const stagedHits = rawHits
+    .filter(isShellAdmissibleHit)
     .map((hit) => cloneHit(hit, center))
     .sort((a, b) => a.angle - b.angle);
 
-  if (!frontHits.length) {
+  if (!stagedHits.length) {
     return Object.freeze({
       resolvedHits: Object.freeze([]),
       markerRequired: true,
       markerPlacementAdmissible: false,
       markerCollisionCount: 0,
-      markerRepositionedCount: 0
+      markerRepositionedCount: 0,
+      stagedCandidateCount: 0,
+      suppressedCount: 0,
+      reservedZoneRejectCount: 0
     });
   }
 
@@ -1288,11 +1397,11 @@ function solveMarkerPlacement(rawHits) {
   for (let pass = 0; pass < MARKER_PASSES; pass += 1) {
     let moved = false;
 
-    for (let i = 0; i < frontHits.length; i += 1) {
-      const a = frontHits[i];
-      const b = frontHits[(i + 1) % frontHits.length];
+    for (let i = 0; i < stagedHits.length; i += 1) {
+      const a = stagedHits[i];
+      const b = stagedHits[(i + 1) % stagedHits.length];
 
-      if (frontHits.length > 2) {
+      if (stagedHits.length > 2) {
         const delta = normalizeAngle(b.angle - a.angle);
         if (delta <= 0) continue;
       }
@@ -1307,37 +1416,60 @@ function solveMarkerPlacement(rawHits) {
     if (!moved) break;
   }
 
-  for (const hit of frontHits) {
+  for (const hit of stagedHits) {
     minimalViewportClamp(hit);
   }
 
-  const stillColliding = countCollisions(frontHits);
+  let stillColliding = countCollisions(stagedHits);
 
   if (stillColliding > 0) {
-    for (const hit of frontHits) {
+    for (const hit of stagedHits) {
       const vector = computeMarkerVector(hit, center);
       hit.x += vector.ux * MARKER_OUTWARD_NUDGE;
       hit.y += vector.uy * MARKER_OUTWARD_NUDGE;
       minimalViewportClamp(hit);
     }
+    stillColliding = countCollisions(stagedHits);
   }
 
-  const finalCollisionCount = countCollisions(frontHits);
-  const inViewport = validateMarkersInViewport(frontHits);
+  const resolved = [];
+  let suppressedCount = 0;
+  let reservedZoneRejectCount = 0;
+
+  for (const hit of stagedHits) {
+    const working = { ...hit };
+
+    const moved = pushOutOfReservedZones(working, center, reservedRects);
+    if (moved) repositionedCount += 1;
+
+    if (isReservedZoneConflict(working, reservedRects)) {
+      suppressedCount += 1;
+      reservedZoneRejectCount += 1;
+      continue;
+    }
+
+    resolved.push(Object.freeze({
+      id: working.id,
+      label: working.label,
+      route: working.route,
+      x: working.x,
+      y: working.y,
+      radius: working.radius
+    }));
+  }
+
+  const finalCollisionCount = countCollisions(resolved);
+  const inViewport = validateMarkersInViewport(resolved);
 
   return Object.freeze({
-    resolvedHits: Object.freeze(frontHits.map((hit) => Object.freeze({
-      id: hit.id,
-      label: hit.label,
-      route: hit.route,
-      x: hit.x,
-      y: hit.y,
-      radius: hit.radius
-    }))),
+    resolvedHits: Object.freeze(resolved),
     markerRequired: true,
     markerPlacementAdmissible: finalCollisionCount === 0 && inViewport,
     markerCollisionCount: finalCollisionCount,
-    markerRepositionedCount: repositionedCount
+    markerRepositionedCount: repositionedCount,
+    stagedCandidateCount: stagedHits.length,
+    suppressedCount,
+    reservedZoneRejectCount
   });
 }
 
@@ -1347,7 +1479,10 @@ function syncOverlayMarkers() {
       markerRequired: false,
       markerPlacementAdmissible: true,
       markerCollisionCount: 0,
-      markerRepositionedCount: 0
+      markerRepositionedCount: 0,
+      stagedCandidateCount: 0,
+      suppressedCount: 0,
+      reservedZoneRejectCount: 0
     });
     hideAllMarkers();
     return;

@@ -1,12 +1,9 @@
-<!-- DESTINATION FILE: /gauges/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Gauges — Live Diagnostic</title>
-
-<link rel="stylesheet" href="/assets/ui.css"/>
 
 <style>
 body{
@@ -16,77 +13,63 @@ body{
   font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-/* ===== Layout ===== */
 .page{
-  padding:20px;
+  padding:16px;
   display:flex;
   flex-direction:column;
   gap:14px;
 }
 
-/* ===== Card ===== */
 .card{
   border:1px solid rgba(255,255,255,.08);
-  border-radius:16px;
-  padding:14px;
+  border-radius:14px;
+  padding:12px;
   background:rgba(0,0,0,.25);
 }
 
-/* ===== Diamond ===== */
+.title{
+  font-weight:900;
+  margin-bottom:8px;
+  letter-spacing:.08em;
+}
+
 .row{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  padding:10px 0;
+  padding:8px 0;
   border-bottom:1px solid rgba(255,255,255,.06);
 }
 .row:last-child{border-bottom:0}
 
 .left{
   display:flex;
-  align-items:center;
   gap:10px;
+  align-items:center;
 }
 
 .diamond{
   width:10px;
   height:10px;
   transform:rotate(45deg);
-  border-radius:2px;
 }
 
-/* ===== Status colors ===== */
+/* STATUS COLORS */
 .pass{ background:#22c55e }
 .warn{ background:#facc15 }
 .fail{ background:#ef4444 }
 .idle{ background:#6b7280 }
-
-.title{
-  font-weight:900;
-  letter-spacing:.04em;
-}
 
 .value{
   opacity:.85;
   font-weight:700;
 }
 
-/* ===== Header ===== */
-.header{
-  font-size:22px;
-  font-weight:900;
-  letter-spacing:.08em;
-}
-
-/* ===== Sticky status ===== */
 .statusBar{
   position:sticky;
   top:0;
   background:#020617;
   padding:10px 0;
-  z-index:10;
   font-weight:900;
-  letter-spacing:.08em;
 }
 </style>
 </head>
@@ -95,105 +78,89 @@ body{
 
 <div class="page">
 
-  <div class="statusBar" id="statusBar">
-    STATE: —
-  </div>
+<div class="statusBar" id="statusBar">STATE: —</div>
 
-  <div class="header">
-    LIVE DIAGNOSTIC
-  </div>
+<div class="card">
+<div class="title">RUNTIME</div>
+<div id="runtime"></div>
+</div>
 
-  <!-- RUNTIME -->
-  <div class="card">
-    <div class="title">RUNTIME</div>
-    <div id="runtimeBlock"></div>
-  </div>
+<div class="card">
+<div class="title">MOTION</div>
+<div id="motion"></div>
+</div>
 
-  <!-- MOTION -->
-  <div class="card">
-    <div class="title">MOTION</div>
-    <div id="motionBlock"></div>
-  </div>
+<div class="card">
+<div class="title">INSTRUMENT</div>
+<div id="instrument"></div>
+</div>
 
-  <!-- INSTRUMENT -->
-  <div class="card">
-    <div class="title">INSTRUMENT</div>
-    <div id="instrumentBlock"></div>
-  </div>
+<div class="card">
+<div class="title">WORLD</div>
+<div id="world"></div>
+</div>
 
-  <!-- WORLD -->
-  <div class="card">
-    <div class="title">WORLD</div>
-    <div id="worldBlock"></div>
-  </div>
+<div class="card">
+<div class="title">EMISSION</div>
+<div id="emission"></div>
+</div>
 
-  <!-- EMISSION -->
-  <div class="card">
-    <div class="title">EMISSION</div>
-    <div id="emissionBlock"></div>
-  </div>
+<div class="card">
+<div class="title">PLACEMENT</div>
+<div id="placement"></div>
+</div>
 
-  <!-- PLACEMENT -->
-  <div class="card">
-    <div class="title">PLACEMENT</div>
-    <div id="placementBlock"></div>
-  </div>
-
-  <!-- FAILURE -->
-  <div class="card">
-    <div class="title">FAILURE</div>
-    <div id="failureBlock"></div>
-  </div>
+<div class="card">
+<div class="title">FAILURE</div>
+<div id="failure"></div>
+</div>
 
 </div>
 
 <script>
 const KEY = "cte_runtime_v3";
 
-function getStatusClass(value){
-  if(value === true) return "pass";
-  if(value === false) return "fail";
-  if(value === null || value === undefined) return "idle";
+function cls(v){
+  if(v === true) return "pass";
+  if(v === false) return "fail";
+  if(v === null || v === undefined) return "idle";
   return "warn";
 }
 
-function row(label, value){
-  const cls = getStatusClass(value);
-
+function row(k,v){
   return `
     <div class="row">
       <div class="left">
-        <div class="diamond ${cls}"></div>
-        <div>${label}</div>
+        <div class="diamond ${cls(v)}"></div>
+        <div>${k}</div>
       </div>
-      <div class="value">${value}</div>
+      <div class="value">${v ?? "—"}</div>
     </div>
   `;
 }
 
-function render(data){
-  if(!data){
-    document.getElementById("statusBar").textContent = "STATE: NO DATA";
+function render(d){
+  if(!d){
+    document.getElementById("statusBar").textContent="STATE: NO DATA";
     return;
   }
 
-  const stale = Date.now() - new Date(data.timestamp).getTime() > 2000;
+  const stale = Date.now() - new Date(d.timestamp).getTime() > 2000;
 
   document.getElementById("statusBar").textContent =
-    "STATE: " + (stale ? "STALE" : "LIVE") + " • " + data.phase;
+    `STATE: ${stale?"STALE":"LIVE"} • ${d.phase}`;
 
   // ===== RUNTIME =====
-  document.getElementById("runtimeBlock").innerHTML = `
-    ${row("phase", data.phase)}
-    ${row("mode", data.mode)}
-    ${row("fps", Math.round(data.fps))}
-    ${row("dtMs", Math.round(data.dtMs))}
-    ${row("timestamp", data.timestamp)}
+  document.getElementById("runtime").innerHTML = `
+    ${row("phase", d.phase)}
+    ${row("mode", d.mode)}
+    ${row("fps", Math.round(d.fps))}
+    ${row("dtMs", Math.round(d.dtMs))}
   `;
 
   // ===== MOTION =====
-  const m = data.control?.motionState || {};
-  document.getElementById("motionBlock").innerHTML = `
+  const m = d.control?.motionState || {};
+  document.getElementById("motion").innerHTML = `
     ${row("yaw", m.yaw)}
     ${row("pitch", m.pitch)}
     ${row("yawVelocity", m.yawVelocity)}
@@ -202,55 +169,52 @@ function render(data){
   `;
 
   // ===== INSTRUMENT =====
-  const inst = data.instrument || {};
-  document.getElementById("instrumentBlock").innerHTML = `
-    ${row("gate", inst.gate)}
-    ${row("trajectory", inst.trajectoryClass)}
-    ${row("coherence", inst.coherence)}
+  const i = d.instrument || {};
+  document.getElementById("instrument").innerHTML = `
+    ${row("gate", i.gate)}
+    ${row("trajectory", i.trajectoryClass)}
+    ${row("coherence", i.coherence)}
   `;
 
   // ===== WORLD =====
-  const w = inst.world || {};
-  document.getElementById("worldBlock").innerHTML = `
+  const w = i.world || {};
+  document.getElementById("world").innerHTML = `
     ${row("phase", w.phase)}
     ${row("stability", w.stabilityClass)}
   `;
 
   // ===== EMISSION =====
-  const e = data.emissionReceipt || {};
-  document.getElementById("emissionBlock").innerHTML = `
+  const e = d.emissionReceipt || {};
+  document.getElementById("emission").innerHTML = `
     ${row("emitted", e.emissionEmitted)}
     ${row("frontVisible", e.emissionFrontVisible)}
     ${row("pass", e.emissionPass)}
   `;
 
   // ===== PLACEMENT =====
-  const p = data.placementReceipt || {};
-  document.getElementById("placementBlock").innerHTML = `
+  const p = d.placementReceipt || {};
+  document.getElementById("placement").innerHTML = `
     ${row("placed", p.placementPlaced)}
     ${row("collisions", p.markerCollisionCount)}
     ${row("pass", p.placementPass)}
   `;
 
   // ===== FAILURE =====
-  const f = data.failure || {};
-  document.getElementById("failureBlock").innerHTML = `
+  const f = d.failure || {};
+  document.getElementById("failure").innerHTML = `
     ${row("error", f.message || "none")}
-    ${row("pass", data.verification?.pass)}
+    ${row("pass", d.verification?.pass)}
   `;
 }
 
 function tick(){
   try{
     const raw = localStorage.getItem(KEY);
-    const data = raw ? JSON.parse(raw) : null;
-    render(data);
-  }catch(e){
-    console.error(e);
-  }
+    render(raw ? JSON.parse(raw) : null);
+  }catch(e){}
 }
 
-setInterval(tick, 500);
+setInterval(tick, 250);
 tick();
 </script>
 

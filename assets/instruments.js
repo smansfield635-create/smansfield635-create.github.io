@@ -18,10 +18,6 @@ export function createInstruments() {
     return value && typeof value === "object" && !Array.isArray(value) ? value : {};
   }
 
-  function normalizeArray(value) {
-    return Array.isArray(value) ? value : [];
-  }
-
   function normalizeString(value, fallback = EMPTY) {
     return typeof value === "string" && value.trim() ? value.trim() : fallback;
   }
@@ -62,6 +58,11 @@ export function createInstruments() {
       normalized === "STABLE" ||
       normalized === "ASCENT" ||
       normalized === "ADMISSIBLE" ||
+      normalized === "AUTHORIZED" ||
+      normalized === "APPLIED" ||
+      normalized === "EMITTED" ||
+      normalized === "PLACED" ||
+      normalized === "RUNNING" ||
       normalized === "true" ||
       normalized === "control.js" ||
       normalized === "render.js" ||
@@ -81,6 +82,9 @@ export function createInstruments() {
       normalized === "COLLAPSE" ||
       normalized === "DESCENT" ||
       normalized === "INADMISSIBLE" ||
+      normalized === "BLOCKED" ||
+      normalized === "REJECTED" ||
+      normalized === "SUPPRESSED" ||
       normalized === "false" ||
       normalized === "blocked" ||
       normalized === "denied" ||
@@ -375,6 +379,35 @@ export function createInstruments() {
     });
   }
 
+  function buildOrbitalHandshakeReceipt(input = {}) {
+    const source = normalizeObject(input);
+
+    return Object.freeze({
+      progressionDtMs: isFiniteNumber(source.progressionDtMs) ? source.progressionDtMs : null,
+      progressionAuthorized: source.progressionAuthorized === true ? "true" : source.progressionAuthorized === false ? "false" : EMPTY,
+      progressionApplied: source.progressionApplied === true ? "true" : source.progressionApplied === false ? "false" : EMPTY,
+      progressionStep: isFiniteNumber(source.progressionStep) ? source.progressionStep : null,
+      progressionPass: source.progressionPass === true ? "true" : source.progressionPass === false ? "false" : EMPTY,
+
+      emissionOrbitalCount: isFiniteNumber(source.emissionOrbitalCount) ? source.emissionOrbitalCount : null,
+      emissionFrontVisible: isFiniteNumber(source.emissionFrontVisible) ? source.emissionFrontVisible : null,
+      emissionEmitted: isFiniteNumber(source.emissionEmitted) ? source.emissionEmitted : null,
+      emissionSuppressed: isFiniteNumber(source.emissionSuppressed) ? source.emissionSuppressed : null,
+      emissionPass: source.emissionPass === true ? "true" : source.emissionPass === false ? "false" : EMPTY,
+
+      intakeReceived: isFiniteNumber(source.intakeReceived) ? source.intakeReceived : null,
+      intakeStaged: isFiniteNumber(source.intakeStaged) ? source.intakeStaged : null,
+      intakeDiscarded: isFiniteNumber(source.intakeDiscarded) ? source.intakeDiscarded : null,
+      intakePass: source.intakePass === true ? "true" : source.intakePass === false ? "false" : EMPTY,
+
+      placementPlaceable: isFiniteNumber(source.placementPlaceable) ? source.placementPlaceable : null,
+      placementPlaced: isFiniteNumber(source.placementPlaced) ? source.placementPlaced : null,
+      placementReservedReject: isFiniteNumber(source.placementReservedReject) ? source.placementReservedReject : null,
+      placementViewportReject: isFiniteNumber(source.placementViewportReject) ? source.placementViewportReject : null,
+      placementPass: source.placementPass === true ? "true" : source.placementPass === false ? "false" : EMPTY
+    });
+  }
+
   function buildInstrumentReceipt({
     currentSample,
     previousSample = null,
@@ -494,7 +527,6 @@ export function createInstruments() {
     const instrument = normalizeObject(runtime.instrument);
     const projection = normalizeObject(runtime.control?.projectionSummary);
     const motionState = normalizeObject(runtime.control?.motionState);
-    const orbitalState = normalizeObject(runtime.control?.orbitalState);
     const summary = normalizeObject(runtime.planetField?.summary);
     const verification = normalizeObject(runtime.verification);
     const failure = normalizeObject(runtime.failure);
@@ -510,6 +542,7 @@ export function createInstruments() {
     });
     const renderReceipt = buildRenderReceipt(runtime.renderAudit);
     const orbitalReceipt = buildOrbitalReceipt(runtime.orbitalAudit);
+    const orbitalHandshake = buildOrbitalHandshakeReceipt(runtime.orbitalHandshake);
 
     const sections = [
       renderKeyValueSection("Runtime", Object.freeze({
@@ -630,6 +663,27 @@ export function createInstruments() {
         markerPlacementAdmissible: normalizePrimitive(orbitalReceipt.markerPlacementAdmissible),
         markerCollisionCount: normalizePrimitive(orbitalReceipt.markerCollisionCount),
         markerRepositionedCount: normalizePrimitive(orbitalReceipt.markerRepositionedCount)
+      })),
+      renderKeyValueSection("Orbital Handshake", Object.freeze({
+        progressionDtMs: toFixedSafe(orbitalHandshake.progressionDtMs, 2),
+        progressionAuthorized: normalizePrimitive(orbitalHandshake.progressionAuthorized),
+        progressionApplied: normalizePrimitive(orbitalHandshake.progressionApplied),
+        progressionStep: toFixedSafe(orbitalHandshake.progressionStep, 5),
+        progressionPass: normalizePrimitive(orbitalHandshake.progressionPass),
+        emissionOrbitalCount: normalizePrimitive(orbitalHandshake.emissionOrbitalCount),
+        emissionFrontVisible: normalizePrimitive(orbitalHandshake.emissionFrontVisible),
+        emissionEmitted: normalizePrimitive(orbitalHandshake.emissionEmitted),
+        emissionSuppressed: normalizePrimitive(orbitalHandshake.emissionSuppressed),
+        emissionPass: normalizePrimitive(orbitalHandshake.emissionPass),
+        intakeReceived: normalizePrimitive(orbitalHandshake.intakeReceived),
+        intakeStaged: normalizePrimitive(orbitalHandshake.intakeStaged),
+        intakeDiscarded: normalizePrimitive(orbitalHandshake.intakeDiscarded),
+        intakePass: normalizePrimitive(orbitalHandshake.intakePass),
+        placementPlaceable: normalizePrimitive(orbitalHandshake.placementPlaceable),
+        placementPlaced: normalizePrimitive(orbitalHandshake.placementPlaced),
+        placementReservedReject: normalizePrimitive(orbitalHandshake.placementReservedReject),
+        placementViewportReject: normalizePrimitive(orbitalHandshake.placementViewportReject),
+        placementPass: normalizePrimitive(orbitalHandshake.placementPass)
       })),
       renderKeyValueSection("Field", Object.freeze({
         sampleCount: normalizePrimitive(summary.sampleCount),

@@ -1,13 +1,24 @@
 // DESTINATION FILE: /assets/world_ui.js
 
-const WORLD_UI_STYLE_ID = "world-ui-style";
+const INLINE_STYLE_ID = "world-ui-inline-style-v1";
 
-function ensureWorldUIStyles() {
-  if (document.getElementById(WORLD_UI_STYLE_ID)) return;
+function ensureInlineWorldUiStyle() {
+  if (document.getElementById(INLINE_STYLE_ID)) return;
 
   const style = document.createElement("style");
-  style.id = WORLD_UI_STYLE_ID;
+  style.id = INLINE_STYLE_ID;
   style.textContent = `
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  background:#030712;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+body::before,body::after{pointer-events:none!important}
+
 :root{
   --ink:rgba(255,255,255,.96);
   --mut:rgba(255,255,255,.84);
@@ -22,8 +33,6 @@ function ensureWorldUIStyles() {
   --shellAtmosAlpha:.82;
   --starAlpha:1;
 }
-
-body::before,body::after{pointer-events:none!important}
 
 #app-shell{
   position:fixed;
@@ -49,10 +58,6 @@ body::before,body::after{pointer-events:none!important}
   position:fixed;
   inset:0;
   z-index:2;
-  pointer-events:none;
-}
-
-#runtime-root > *{
   pointer-events:none;
 }
 
@@ -229,7 +234,6 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   overflow:hidden;
   transition:transform .18s ease, border-color .18s ease, background .18s ease;
-  color:#fff;
 }
 .flat-card:hover{
   transform:translateY(-2px);
@@ -312,7 +316,6 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.06em;
   text-transform:uppercase;
   cursor:pointer;
-  pointer-events:auto;
 }
 .mode-btn:active{transform:translateY(1px)}
 .mode-btn.is-active{
@@ -439,117 +442,6 @@ body::before,body::after{pointer-events:none!important}
   backdrop-filter:blur(6px);
 }
 
-.diagnostics-shell{
-  position:absolute;
-  left:16px;
-  right:16px;
-  bottom:16px;
-  z-index:14;
-  display:flex;
-  align-items:flex-end;
-  justify-content:center;
-  pointer-events:none;
-  opacity:var(--uiAlpha);
-  transition:opacity 180ms ease;
-}
-.diagnostics-bar{
-  width:min(980px,100%);
-  min-height:62px;
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(7,10,18,.34);
-  box-shadow:0 14px 38px rgba(0,0,0,.22);
-  backdrop-filter:blur(10px);
-  display:grid;
-  grid-template-columns:1fr auto;
-  align-items:center;
-  gap:10px;
-  pointer-events:auto;
-}
-.diagnostics-summary{
-  min-width:0;
-  opacity:.70;
-}
-.diagnostics-summary .diagnostic-pill{
-  border-color:rgba(255,255,255,.07);
-  background:rgba(255,255,255,.02);
-}
-.diagnostics-toggle{
-  min-width:110px;
-  min-height:38px;
-  padding:0 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.11);
-  background:rgba(10,12,20,.28);
-  color:rgba(255,255,255,.92);
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.04em;
-  text-transform:uppercase;
-  cursor:pointer;
-  pointer-events:auto;
-}
-.diagnostics-toggle:active{transform:translateY(1px)}
-.debug-panel{
-  position:absolute;
-  left:16px;
-  bottom:94px;
-  width:min(420px, calc(100vw - 32px));
-  max-height:min(56vh, 520px);
-  overflow:auto;
-  display:grid;
-  gap:10px;
-  opacity:0;
-  pointer-events:none;
-  transform:translateY(10px);
-  transition:opacity 160ms ease, transform 160ms ease;
-  z-index:15;
-}
-.debug-panel .panel-section{
-  background:rgba(8,14,24,.74);
-  border:1px solid rgba(145,175,255,.14);
-  box-shadow:0 14px 40px rgba(0,0,0,.26);
-  backdrop-filter:blur(10px);
-  border-radius:14px;
-  padding:12px;
-}
-.debug-panel .panel-title{
-  margin:0 0 10px 0;
-  font-size:13px;
-  font-weight:900;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  color:rgba(255,255,255,.94);
-}
-.debug-panel .panel-row{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  padding:5px 0;
-  border-bottom:1px solid rgba(255,255,255,.06);
-}
-.debug-panel .panel-row:last-child{border-bottom:0}
-.debug-panel .panel-key{
-  color:rgba(255,255,255,.72);
-  font-size:12px;
-}
-.debug-panel .panel-value{
-  color:rgba(255,255,255,.92);
-  font-size:12px;
-  font-weight:800;
-  text-align:right;
-}
-.debug-panel .panel-value--ok{color:rgba(132,255,170,.96)}
-.debug-panel .panel-value--danger{color:rgba(255,132,132,.96)}
-.debug-panel .panel-value--muted{color:rgba(255,255,255,.44)}
-
-body[data-diagnostics="full"] .debug-panel{
-  opacity:1;
-  pointer-events:auto;
-  transform:translateY(0);
-}
-
 .boot-status{
   position:fixed;
   left:50%;
@@ -591,9 +483,6 @@ body[data-mode="observe"]{
 }
 body[data-mode="observe"] #orbital-overlay{
   opacity:0;
-}
-body[data-mode="observe"] .diagnostics-summary{
-  opacity:.68;
 }
 
 @keyframes starDrift{
@@ -640,18 +529,6 @@ body[data-mode="observe"] .diagnostics-summary{
     gap:12px;
   }
   .flat-card{min-height:98px}
-  .diagnostics-bar{
-    grid-template-columns:1fr;
-    min-height:54px;
-    padding:8px 10px;
-  }
-  .diagnostics-toggle{
-    min-height:34px;
-    min-width:98px;
-    justify-self:end;
-    font-size:11px;
-  }
-  .debug-panel{bottom:84px}
 }
 
 @media (max-width:420px){
@@ -665,17 +542,29 @@ body[data-mode="observe"] .diagnostics-summary{
     letter-spacing:.04em;
   }
 }
-`;
-
+  `;
   document.head.appendChild(style);
 }
 
-export function createWorldUI(runtimeRoot) {
-  if (!runtimeRoot) {
-    throw new Error("createWorldUI requires a runtimeRoot node");
-  }
+function createMarkerNode(id, code, label) {
+  const button = document.createElement("button");
+  button.className = "orbital-marker";
+  button.id = id;
+  button.type = "button";
+  button.hidden = true;
+  button.innerHTML = `
+    <div class="orbital-glow"></div>
+    <div class="orbital-core"></div>
+    <div class="orbital-diag-a"></div>
+    <div class="orbital-diag-b"></div>
+    <div class="orbital-code">${code}</div>
+    <div class="orbital-name">${label}</div>
+  `;
+  return button;
+}
 
-  ensureWorldUIStyles();
+export function createWorldUI(runtimeRoot) {
+  ensureInlineWorldUiStyle();
 
   runtimeRoot.innerHTML = `
     <div id="universe-layer" aria-hidden="true">
@@ -706,43 +595,7 @@ export function createWorldUI(runtimeRoot) {
       </div>
     </div>
 
-    <div id="orbital-overlay" aria-label="Index markers">
-      <button class="orbital-marker" id="marker-north" type="button" hidden>
-        <div class="orbital-glow"></div>
-        <div class="orbital-core"></div>
-        <div class="orbital-diag-a"></div>
-        <div class="orbital-diag-b"></div>
-        <div class="orbital-code">N</div>
-        <div class="orbital-name">PRODUCTS</div>
-      </button>
-
-      <button class="orbital-marker" id="marker-east" type="button" hidden>
-        <div class="orbital-glow"></div>
-        <div class="orbital-core"></div>
-        <div class="orbital-diag-a"></div>
-        <div class="orbital-diag-b"></div>
-        <div class="orbital-code">E</div>
-        <div class="orbital-name">GAUGES</div>
-      </button>
-
-      <button class="orbital-marker" id="marker-south" type="button" hidden>
-        <div class="orbital-glow"></div>
-        <div class="orbital-core"></div>
-        <div class="orbital-diag-a"></div>
-        <div class="orbital-diag-b"></div>
-        <div class="orbital-code">S</div>
-        <div class="orbital-name">LAWS</div>
-      </button>
-
-      <button class="orbital-marker" id="marker-west" type="button" hidden>
-        <div class="orbital-glow"></div>
-        <div class="orbital-core"></div>
-        <div class="orbital-diag-a"></div>
-        <div class="orbital-diag-b"></div>
-        <div class="orbital-code">W</div>
-        <div class="orbital-name">EXPLORE</div>
-      </button>
-    </div>
+    <div id="orbital-overlay" aria-label="Index markers"></div>
 
     <div class="top-ui">
       <div class="top-ui-row top-ui-row--home">
@@ -757,19 +610,16 @@ export function createWorldUI(runtimeRoot) {
       </div>
     </div>
 
-    <div class="diagnostics-shell" id="diagnostics-shell">
-      <div class="diagnostics-bar">
-        <div id="diagnostics-summary" class="diagnostics-summary"></div>
-        <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">DIAGNOSTICS</button>
-      </div>
-    </div>
-
-    <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
-
     <div id="boot-status" class="boot-status" aria-live="polite">
       <div id="boot-status-copy"></div>
     </div>
   `;
+
+  const orbitalOverlay = runtimeRoot.querySelector("#orbital-overlay");
+  orbitalOverlay.appendChild(createMarkerNode("marker-north", "N", "PRODUCTS"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-east", "E", "GAUGES"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-south", "S", "LAWS"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-west", "W", "EXPLORE"));
 
   return Object.freeze({
     universeLayer: runtimeRoot.querySelector("#universe-layer"),
@@ -777,18 +627,14 @@ export function createWorldUI(runtimeRoot) {
     heroLayer: runtimeRoot.querySelector("#hero-layer"),
     heroPanel: runtimeRoot.querySelector("#hero-panel"),
     flatLayer: runtimeRoot.querySelector("#flat-layer"),
-    orbitalOverlay: runtimeRoot.querySelector("#orbital-overlay"),
-    diagnosticsShell: runtimeRoot.querySelector("#diagnostics-shell"),
-    diagnosticsSummary: runtimeRoot.querySelector("#diagnostics-summary"),
-    diagnosticsToggle: runtimeRoot.querySelector("#diagnostics-toggle"),
-    debugPanel: runtimeRoot.querySelector("#debug-panel"),
-    bootStatus: runtimeRoot.querySelector("#boot-status"),
-    bootStatusCopy: runtimeRoot.querySelector("#boot-status-copy"),
+    orbitalOverlay,
     modeCluster: runtimeRoot.querySelector("#mode-cluster"),
     homePill: runtimeRoot.querySelector("#home-pill"),
     btnFlat: runtimeRoot.querySelector("#btn-flat"),
     btnRound: runtimeRoot.querySelector("#btn-round"),
     btnObserve: runtimeRoot.querySelector("#btn-observe"),
+    bootStatus: runtimeRoot.querySelector("#boot-status"),
+    bootStatusCopy: runtimeRoot.querySelector("#boot-status-copy"),
     overlayMap: Object.freeze({
       "north-products": runtimeRoot.querySelector("#marker-north"),
       "east-gauges": runtimeRoot.querySelector("#marker-east"),

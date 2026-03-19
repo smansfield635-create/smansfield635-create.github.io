@@ -1,1186 +1,258 @@
+<!-- DESTINATION FILE: /gauges/index.html -->
 <!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Nine Summits — Gauges</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Gauges — Live Diagnostic</title>
+
 <link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+
 <style>
-a{color:inherit;text-decoration:none}
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;min-height:100%;background:#030712;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
-body::before,body::after{pointer-events:none!important}
-
-:root{
-  --dockH:132px;
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-  --ink:rgba(255,255,255,.95);
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.80);
-  --mut2:rgba(255,255,255,.62);
-  --ok:rgba(131,230,168,1);
-  --warn:rgba(255,211,123,1);
-  --bad:rgba(255,142,142,1);
-  --shadowA:0 24px 90px rgba(0,0,0,.58);
-  --shadowB:0 16px 56px rgba(0,0,0,.62);
-  --shadowC:0 18px 60px rgba(0,0,0,.55);
+body{
+  margin:0;
+  background:#020617;
+  color:#fff;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
 }
 
-.top{
-  position:fixed;top:16px;left:0;right:0;
-  padding:0 16px;
-  display:flex;justify-content:space-between;align-items:center;
-  gap:12px;z-index:240;pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;gap:10px;flex-wrap:wrap;white-space:nowrap;align-items:center;
-  pointer-events:auto;
-}
-
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowC);
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-.btn.red{border-color:rgba(255,43,43,.22);box-shadow:var(--shadowC),0 0 18px rgba(255,43,43,.12)}
-
-.seg{
-  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  box-shadow:var(--shadowC);
-}
-.seg button{
-  appearance:none;border:0;background:transparent;color:var(--mut);
-  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
-  letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.seg button[aria-pressed="true"]{
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow:inset 0 -10px 22px rgba(201,162,74,.16);
-}
-
+/* ===== Layout ===== */
 .page{
-  width:min(1120px,94vw);
-  margin:0 auto;
-  padding:104px 0 calc(var(--dockH) + 18px);
+  padding:20px;
   display:flex;
   flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:10;
+  gap:14px;
 }
 
-.backdrop{
-  position:absolute;
-  left:50%;
-  top:68px;
-  transform:translateX(-50%);
-  width:min(1180px,96vw);
-  height:calc(100% - 108px);
-  border-radius:34px;
-  pointer-events:none;
-  z-index:0;
-  overflow:hidden;
-}
-.backdrop::before{
-  content:"";
-  position:absolute;inset:0;
+/* ===== Card ===== */
+.card{
   border:1px solid rgba(255,255,255,.08);
-  border-radius:34px;
-  background:
-    radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
-    radial-gradient(circle at 78% 22%, rgba(90,40,120,.12), transparent 62%),
-    radial-gradient(circle at 60% 90%, rgba(255,43,43,.10), transparent 64%),
-    linear-gradient(160deg, rgba(0,0,0,.18), rgba(0,0,0,.08));
-  box-shadow:
-    0 70px 220px rgba(0,0,0,.62),
-    inset 0 2px 0 rgba(255,255,255,.06),
-    inset 0 -70px 140px rgba(0,0,0,.55);
-  opacity:.92;
-}
-.backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
-  background:
-    radial-gradient(circle at 28% 30%, rgba(201,162,74,.12), transparent 46%),
-    radial-gradient(circle at 72% 28%, rgba(90,40,120,.14), transparent 48%),
-    radial-gradient(circle at 50% 78%, rgba(255,43,43,.10), transparent 52%),
-    conic-gradient(from 20deg at 52% 40%,
-      rgba(201,162,74,.12), transparent 14%,
-      rgba(90,40,120,.12), transparent 30%,
-      rgba(255,43,43,.10), transparent 44%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter:blur(1px);
-  opacity:.72;
+  border-radius:16px;
+  padding:14px;
+  background:rgba(0,0,0,.25);
 }
 
-.header{
-  position:relative;
-  z-index:2;
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 18% 22%, rgba(120,0,22,.30), transparent 72%),
-    radial-gradient(circle at 82% 34%, rgba(90,40,120,.10), transparent 74%),
-    radial-gradient(circle at 70% 92%, rgba(255,43,43,.14), transparent 62%),
-    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadowA);
-  padding:16px 16px 14px;
-  overflow:hidden;
-}
-.header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow:inset 0 0 0 1px rgba(201,162,74,.16);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.26;
-}
-.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.80;color:rgba(255,255,255,.78)}
-.t{margin:0;font-weight:980;font-size:30px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
-.s{margin:12px 0 0;font-size:16px;opacity:.92;line-height:1.55;max-width:980px;color:var(--txt)}
-.rule{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
-    linear-gradient(160deg, rgba(10,12,16,.55), rgba(6,8,10,.72));
-  font-size:13.5px;
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
-}
-.modeRow{
-  margin-top:12px;
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.statePill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
-}
-
-.band{
-  position:relative;
-  z-index:2;
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
-}
-
-.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
+/* ===== Diamond ===== */
 .row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 62%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowB);
-  overflow:hidden;
-  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,.06);
 }
-.row::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow:inset 0 0 0 1px rgba(201,162,74,.12);
-  opacity:.60;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px 16px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
-}
-.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.dmark{
-  width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
-  background:var(--c, rgba(201,162,74,.45));
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;
-}
-.titleBlock{min-width:0}
-.q{
-  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.sub{
-  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
-  color:rgba(255,255,255,.86);max-width:92ch;
-}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.78);
-  font-weight:950;position:relative;overflow:hidden;
-  flex:0 0 auto;margin-top:2px;
-}
-.chev::after{
-  content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.30), transparent 70%);
-  opacity:.62;pointer-events:none;
-}
-.body{
-  display:none;
-  padding:16px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
-}
-.row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22);box-shadow:var(--shadowB),0 0 18px rgba(255,43,43,.10)}
+.row:last-child{border-bottom:0}
 
-.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:15px}
-.pdesc + .pdesc{margin-top:10px}
-
-.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.bubble{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  padding:14px 14px 12px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
-}
-.bubble::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background:radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
-}
-.bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
-.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.5px;white-space:pre-wrap}
-.bubble.open p{display:block}
-.actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-.pill{
-  display:inline-flex;align-items:center;justify-content:center;
-  min-height:28px;padding:4px 10px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  font-size:11px;font-weight:950;letter-spacing:.25px;
-}
-.pill.pass{color:var(--ok)}
-.pill.warn{color:var(--warn)}
-.pill.fail{color:var(--bad)}
-
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
+.left{
+  display:flex;
+  align-items:center;
   gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
 
-@media (max-width:520px){
-  :root{--dockH:132px}
-  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
+.diamond{
+  width:10px;
+  height:10px;
+  transform:rotate(45deg);
+  border-radius:2px;
+}
+
+/* ===== Status colors ===== */
+.pass{ background:#22c55e }
+.warn{ background:#facc15 }
+.fail{ background:#ef4444 }
+.idle{ background:#6b7280 }
+
+.title{
+  font-weight:900;
+  letter-spacing:.04em;
+}
+
+.value{
+  opacity:.85;
+  font-weight:700;
+}
+
+/* ===== Header ===== */
+.header{
+  font-size:22px;
+  font-weight:900;
+  letter-spacing:.08em;
+}
+
+/* ===== Sticky status ===== */
+.statusBar{
+  position:sticky;
+  top:0;
+  background:#020617;
+  padding:10px 0;
+  z-index:10;
+  font-weight:900;
+  letter-spacing:.08em;
 }
 </style>
 </head>
+
 <body>
-<div class="top" aria-label="Top controls">
-  <div class="left">
-    <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
-    <a class="btn" id="btnIndex" data-route="/index.html" href="/index.html">INDEX</a>
-    <a class="btn" id="btnProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  </div>
-  <div class="right" aria-label="Controls">
-    <div class="seg" role="group" aria-label="Language">
-      <button type="button" id="langEN" aria-pressed="true">EN</button>
-      <button type="button" id="langZH" aria-pressed="false">中文</button>
-      <button type="button" id="langES" aria-pressed="false">ES</button>
-    </div>
-    <div class="seg" role="group" aria-label="Lane">
-      <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-      <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-    </div>
-  </div>
-</div>
 
 <div class="page">
-  <div class="backdrop" aria-hidden="true"></div>
 
-  <div class="header" aria-label="Header">
-    <p class="k" id="hk">GAUGES</p>
-    <h1 class="t" id="ht">LIVE RUNTIME DIAGNOSTICS</h1>
-    <p class="s" id="hs"></p>
-    <div class="rule" id="rule"></div>
-
-    <div class="modeRow" aria-label="Mode + state">
-      <div class="seg" role="group" aria-label="Mode">
-        <button type="button" id="modeChecklist" aria-pressed="false">CHECKLIST</button>
-        <button type="button" id="modeDiagnostic" aria-pressed="true">DIAGNOSTIC</button>
-      </div>
-      <div class="statePill" id="modeState">—</div>
-      <div class="statePill" id="laneState">—</div>
-      <div class="statePill" id="langState">—</div>
-    </div>
+  <div class="statusBar" id="statusBar">
+    STATE: —
   </div>
 
-  <div class="band" id="band">LIVE RUNTIME READOUT</div>
-  <div class="list" id="list"></div>
+  <div class="header">
+    LIVE DIAGNOSTIC
+  </div>
+
+  <!-- RUNTIME -->
+  <div class="card">
+    <div class="title">RUNTIME</div>
+    <div id="runtimeBlock"></div>
+  </div>
+
+  <!-- MOTION -->
+  <div class="card">
+    <div class="title">MOTION</div>
+    <div id="motionBlock"></div>
+  </div>
+
+  <!-- INSTRUMENT -->
+  <div class="card">
+    <div class="title">INSTRUMENT</div>
+    <div id="instrumentBlock"></div>
+  </div>
+
+  <!-- WORLD -->
+  <div class="card">
+    <div class="title">WORLD</div>
+    <div id="worldBlock"></div>
+  </div>
+
+  <!-- EMISSION -->
+  <div class="card">
+    <div class="title">EMISSION</div>
+    <div id="emissionBlock"></div>
+  </div>
+
+  <!-- PLACEMENT -->
+  <div class="card">
+    <div class="title">PLACEMENT</div>
+    <div id="placementBlock"></div>
+  </div>
+
+  <!-- FAILURE -->
+  <div class="card">
+    <div class="title">FAILURE</div>
+    <div id="failureBlock"></div>
+  </div>
+
 </div>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
-  <a class="btn" id="dockIndex" data-route="/index.html" href="/index.html">INDEX</a>
-  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-</nav>
+<script>
+const KEY = "cte_runtime_v3";
 
-<script type="module">
-(function(){
-  "use strict";
+function getStatusClass(value){
+  if(value === true) return "pass";
+  if(value === false) return "fail";
+  if(value === null || value === undefined) return "idle";
+  return "warn";
+}
 
-  const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
-  const POLL_MS = 400;
+function row(label, value){
+  const cls = getStatusClass(value);
 
-  const qs=new URLSearchParams(location.search);
-  const LS=window.localStorage;
+  return `
+    <div class="row">
+      <div class="left">
+        <div class="diamond ${cls}"></div>
+        <div>${label}</div>
+      </div>
+      <div class="value">${value}</div>
+    </div>
+  `;
+}
 
-  let lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  let style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  let time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  let depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  let lane  = qs.get("lane")  || "platform";
+function render(data){
+  if(!data){
+    document.getElementById("statusBar").textContent = "STATE: NO DATA";
+    return;
+  }
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
+  const stale = Date.now() - new Date(data.timestamp).getTime() > 2000;
 
-  let d=parseInt(depth,10);
-  if(!Number.isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
+  document.getElementById("statusBar").textContent =
+    "STATE: " + (stale ? "STALE" : "LIVE") + " • " + data.phase;
 
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
+  // ===== RUNTIME =====
+  document.getElementById("runtimeBlock").innerHTML = `
+    ${row("phase", data.phase)}
+    ${row("mode", data.mode)}
+    ${row("fps", Math.round(data.fps))}
+    ${row("dtMs", Math.round(data.dtMs))}
+    ${row("timestamp", data.timestamp)}
+  `;
 
+  // ===== MOTION =====
+  const m = data.control?.motionState || {};
+  document.getElementById("motionBlock").innerHTML = `
+    ${row("yaw", m.yaw)}
+    ${row("pitch", m.pitch)}
+    ${row("yawVelocity", m.yawVelocity)}
+    ${row("pitchVelocity", m.pitchVelocity)}
+    ${row("orbitPhase", m.orbitPhase)}
+  `;
+
+  // ===== INSTRUMENT =====
+  const inst = data.instrument || {};
+  document.getElementById("instrumentBlock").innerHTML = `
+    ${row("gate", inst.gate)}
+    ${row("trajectory", inst.trajectoryClass)}
+    ${row("coherence", inst.coherence)}
+  `;
+
+  // ===== WORLD =====
+  const w = inst.world || {};
+  document.getElementById("worldBlock").innerHTML = `
+    ${row("phase", w.phase)}
+    ${row("stability", w.stabilityClass)}
+  `;
+
+  // ===== EMISSION =====
+  const e = data.emissionReceipt || {};
+  document.getElementById("emissionBlock").innerHTML = `
+    ${row("emitted", e.emissionEmitted)}
+    ${row("frontVisible", e.emissionFrontVisible)}
+    ${row("pass", e.emissionPass)}
+  `;
+
+  // ===== PLACEMENT =====
+  const p = data.placementReceipt || {};
+  document.getElementById("placementBlock").innerHTML = `
+    ${row("placed", p.placementPlaced)}
+    ${row("collisions", p.markerCollisionCount)}
+    ${row("pass", p.placementPass)}
+  `;
+
+  // ===== FAILURE =====
+  const f = data.failure || {};
+  document.getElementById("failureBlock").innerHTML = `
+    ${row("error", f.message || "none")}
+    ${row("pass", data.verification?.pass)}
+  `;
+}
+
+function tick(){
   try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    const p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
-    p.set("style",(over&&over.style)?over.style:style);
-    p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth",(over&&over.depth)?String(over.depth):depth);
-    const L=(over&&over.lane)?over.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane",L);
-    return "?"+p.toString();
+    const raw = localStorage.getItem(KEY);
+    const data = raw ? JSON.parse(raw) : null;
+    render(data);
+  }catch(e){
+    console.error(e);
   }
+}
 
-  function setPressed(ids,activeId){
-    for(let i=0;i<ids.length;i++){
-      const el=document.getElementById(ids[i]);
-      if(!el) continue;
-      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
-    }
-  }
-
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
-  function labStatus(){ return (lang==="zh")?"状态":(lang==="es")?"Estado":"Status"; }
-  function labMeaning(){ return (lang==="zh")?"含义":(lang==="es")?"Sentido":"Meaning"; }
-  function labNext(){ return (lang==="zh")?"下一步":(lang==="es")?"Siguiente":"Next"; }
-  function laneLabel(){
-    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
-  }
-
-  function wireAll(){
-    const nodes=document.querySelectorAll("[data-route]");
-    for(let i=0;i<nodes.length;i++){
-      const el=nodes[i];
-      const route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-      el.setAttribute("href", route + q());
-    }
-  }
-
-  let mode="diagnostic";
-  const openIndexByMode={ checklist:0, diagnostic:0 };
-  let runtimeSnapshot=null;
-  let lastSignature="";
-
-  function normalizeObject(v){
-    return v && typeof v==="object" && !Array.isArray(v) ? v : {};
-  }
-
-  function tryParseJSON(raw){
-    try{
-      return JSON.parse(raw);
-    }catch(e){
-      return null;
-    }
-  }
-
-  function safeGetRuntimeFromStorage(){
-    try{
-      const raw=localStorage.getItem(RUNTIME_STORAGE_KEY);
-      if(!raw) return null;
-      return tryParseJSON(raw);
-    }catch(e){
-      return null;
-    }
-  }
-
-  function asNum(v){
-    return typeof v==="number" && Number.isFinite(v) ? v : null;
-  }
-
-  function asBool(v){
-    return v===true;
-  }
-
-  function yn(v){
-    return v ? pick3("YES","是","SÍ") : pick3("NO","否","NO");
-  }
-
-  function n(v,d){
-    return (typeof v==="number" && Number.isFinite(v)) ? v.toFixed(d||0) : "—";
-  }
-
-  function statusKind(pass,warn){
-    return pass ? "pass" : warn ? "warn" : "fail";
-  }
-
-  function statusLabel(kind){
-    return kind==="pass"
-      ? pick3("PASS","通过","PASS")
-      : kind==="warn"
-        ? pick3("WARN","警告","WARN")
-        : pick3("FAIL","失败","FAIL");
-  }
-
-  function collectChecklistFromRuntime(runtime){
-    const rt = normalizeObject(runtime);
-    const progression = normalizeObject(rt.progressionReceipt);
-    const emission = normalizeObject(rt.emissionReceipt);
-    const intake = normalizeObject(rt.intakeReceipt);
-    const placement = normalizeObject(rt.placementReceipt);
-    const orbital = normalizeObject(rt.orbitalAudit);
-    const renderAudit = normalizeObject(rt.renderAudit);
-
-    const runtimePass = asBool(rt.bootPass) && asBool(rt.renderPass);
-    const markerPass = placement.markerRequired === true ? asBool(placement.placementPass) : true;
-    const progressionPass = progression.progressionAuthorized === true ? asBool(progression.progressionPass) : true;
-    const emissionPass = emission.emissionOrbitalCount > 0 ? asBool(emission.emissionPass) : true;
-    const intakePass = intake.intakeReceived > 0 ? asBool(intake.intakePass) : true;
-    const renderAuditPresent = Object.keys(renderAudit).length > 0;
-
-    return [
-      {
-        c:"#34d399",
-        t:{en:"1. Boot Admissibility",zh:"1. 启动可采信",es:"1. Admisibilidad de Arranque"},
-        s:{en:"Runtime must boot and render before any deeper checklist item matters.",zh:"运行时必须先启动并渲染，后续清单项才有意义。",es:"El runtime debe arrancar y renderizar antes de que el resto importe."},
-        pack:{
-          kind:statusKind(runtimePass, !!rt.phase),
-          intro:{
-            en:"This checks whether the canonical runtime has crossed from boot into real execution.",
-            zh:"这检查规范运行时是否已经从启动进入真实执行。",
-            es:"Esto verifica si el runtime canónico ya cruzó de arranque a ejecución real."
-          },
-          meaning:{
-            en:`phase=${rt.phase ?? "—"}\nbootPass=${rt.bootPass ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nmode=${rt.mode ?? "—"}\nerror=${rt.error ?? "—"}`,
-            zh:`phase=${rt.phase ?? "—"}\nbootPass=${rt.bootPass ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nmode=${rt.mode ?? "—"}\nerror=${rt.error ?? "—"}`,
-            es:`phase=${rt.phase ?? "—"}\nbootPass=${rt.bootPass ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nmode=${rt.mode ?? "—"}\nerror=${rt.error ?? "—"}`
-          },
-          next:{
-            en:runtimePass ? "Boot is admissible. Continue reading motion, emission, and placement truth." : "Boot is not admissible. Fix runtime boot before trusting deeper layers.",
-            zh:runtimePass ? "启动已可采信。继续读取运动、发射和放置真值。" : "启动不可采信。先修复运行时启动，再信任更深层。",
-            es:runtimePass ? "El arranque es admisible. Continúa con movimiento, emisión y colocación." : "El arranque no es admisible. Arregla el boot antes de confiar en capas más profundas."
-          }
-        }
-      },
-      {
-        c:"#93c5fd",
-        t:{en:"2. Motion / Progression",zh:"2. 运动 / 推进",es:"2. Movimiento / Progresión"},
-        s:{en:"Orbit progression must be authorized and applied when round visuals are active.",zh:"当圆形视觉激活时，轨道推进必须被授权并实际应用。",es:"La progresión orbital debe estar autorizada y aplicada cuando el modo redondo está activo."},
-        pack:{
-          kind:statusKind(progressionPass, progression.progressionAuthorized === true || progression.progressionApplied === true),
-          intro:{
-            en:"This checks whether the runtime is actually advancing motion instead of only existing statically.",
-            zh:"这检查运行时是否真的在推进运动，而不是只静态存在。",
-            es:"Esto verifica si el runtime realmente avanza el movimiento y no solo existe de forma estática."
-          },
-          meaning:{
-            en:`progressionAuthorized=${progression.progressionAuthorized ?? "—"}\nprogressionApplied=${progression.progressionApplied ?? "—"}\nprogressionStep=${progression.progressionStep ?? "—"}\nprogressionDtMs=${progression.progressionDtMs ?? "—"}`,
-            zh:`progressionAuthorized=${progression.progressionAuthorized ?? "—"}\nprogressionApplied=${progression.progressionApplied ?? "—"}\nprogressionStep=${progression.progressionStep ?? "—"}\nprogressionDtMs=${progression.progressionDtMs ?? "—"}`,
-            es:`progressionAuthorized=${progression.progressionAuthorized ?? "—"}\nprogressionApplied=${progression.progressionApplied ?? "—"}\nprogressionStep=${progression.progressionStep ?? "—"}\nprogressionDtMs=${progression.progressionDtMs ?? "—"}`
-          },
-          next:{
-            en:progressionPass ? "Progression passes. Continue to orbital emission." : "Progression is degraded. Fix runtime motion/orbit before blaming routing or UI.",
-            zh:progressionPass ? "推进通过。继续检查轨道发射。" : "推进退化。先修复运行时运动/轨道，再判断路由或 UI。",
-            es:progressionPass ? "La progresión pasa. Continúa a emisión orbital." : "La progresión está degradada. Arregla movimiento/órbita antes de culpar al UI."
-          }
-        }
-      },
-      {
-        c:"#c9a24a",
-        t:{en:"3. Orbital Emission",zh:"3. 轨道发射",es:"3. Emisión Orbital"},
-        s:{en:"Objects must be emitted from render truth, not merely defined in theory.",zh:"对象必须从渲染真值中被发射，而不只是理论上定义。",es:"Los objetos deben emitirse desde la verdad del render, no solo estar definidos en teoría."},
-        pack:{
-          kind:statusKind(emissionPass, emission.emissionOrbitalCount > 0 || orbital.count > 0),
-          intro:{
-            en:"This checks whether orbital markers are being produced by the live runtime render pass.",
-            zh:"这检查轨道标记是否由实时运行时渲染流程产生。",
-            es:"Esto verifica si los marcadores orbitales son producidos por el render vivo del runtime."
-          },
-          meaning:{
-            en:`emissionOrbitalCount=${emission.emissionOrbitalCount ?? "—"}\nemissionFrontVisible=${emission.emissionFrontVisible ?? "—"}\nemissionEmitted=${emission.emissionEmitted ?? "—"}\nemissionSuppressed=${emission.emissionSuppressed ?? "—"}\nrenderOrbitalCount=${orbital.count ?? "—"}`,
-            zh:`emissionOrbitalCount=${emission.emissionOrbitalCount ?? "—"}\nemissionFrontVisible=${emission.emissionFrontVisible ?? "—"}\nemissionEmitted=${emission.emissionEmitted ?? "—"}\nemissionSuppressed=${emission.emissionSuppressed ?? "—"}\nrenderOrbitalCount=${orbital.count ?? "—"}`,
-            es:`emissionOrbitalCount=${emission.emissionOrbitalCount ?? "—"}\nemissionFrontVisible=${emission.emissionFrontVisible ?? "—"}\nemissionEmitted=${emission.emissionEmitted ?? "—"}\nemissionSuppressed=${emission.emissionSuppressed ?? "—"}\nrenderOrbitalCount=${orbital.count ?? "—"}`
-          },
-          next:{
-            en:emissionPass ? "Emission passes. Continue to intake and placement." : "Emission is failing or suppressed. Fix render/orbital generation before UI assumptions.",
-            zh:emissionPass ? "发射通过。继续检查 intake 和 placement。" : "发射失败或被抑制。先修复 render/轨道生成，再判断 UI。",
-            es:emissionPass ? "La emisión pasa. Continúa a intake y placement." : "La emisión falla o está suprimida. Arregla render/generación orbital primero."
-          }
-        }
-      },
-      {
-        c:"#f59e0b",
-        t:{en:"4. Intake / Placement",zh:"4. Intake / Placement",es:"4. Intake / Placement"},
-        s:{en:"Visible hits must survive staging and placement without collision failure.",zh:"可见命中必须通过暂存和放置，不能在碰撞阶段失败。",es:"Los hits visibles deben sobrevivir staging y placement sin fallar por colisión."},
-        pack:{
-          kind:statusKind(intakePass && markerPass, intake.intakeReceived > 0 || placement.markerRequired === true),
-          intro:{
-            en:"This checks whether emitted hits survive the UI gate and become placeable markers.",
-            zh:"这检查发射出的命中是否通过 UI 门控并变成可放置标记。",
-            es:"Esto verifica si los hits emitidos sobreviven la compuerta UI y se convierten en marcadores colocables."
-          },
-          meaning:{
-            en:`intakeReceived=${intake.intakeReceived ?? "—"}\nintakeStaged=${intake.intakeStaged ?? "—"}\nintakeDiscarded=${intake.intakeDiscarded ?? "—"}\nplacementPlaced=${placement.placementPlaced ?? "—"}\nmarkerCollisionCount=${placement.markerCollisionCount ?? "—"}\nplacementPass=${placement.placementPass ?? "—"}`,
-            zh:`intakeReceived=${intake.intakeReceived ?? "—"}\nintakeStaged=${intake.intakeStaged ?? "—"}\nintakeDiscarded=${intake.intakeDiscarded ?? "—"}\nplacementPlaced=${placement.placementPlaced ?? "—"}\nmarkerCollisionCount=${placement.markerCollisionCount ?? "—"}\nplacementPass=${placement.placementPass ?? "—"}`,
-            es:`intakeReceived=${intake.intakeReceived ?? "—"}\nintakeStaged=${intake.intakeStaged ?? "—"}\nintakeDiscarded=${intake.intakeDiscarded ?? "—"}\nplacementPlaced=${placement.placementPlaced ?? "—"}\nmarkerCollisionCount=${placement.markerCollisionCount ?? "—"}\nplacementPass=${placement.placementPass ?? "—"}`
-          },
-          next:{
-            en:(intakePass && markerPass) ? "Placement passes. UI may express markers lawfully." : "Placement is degraded. Fix staging or collision logic before blaming navigation.",
-            zh:(intakePass && markerPass) ? "放置通过。UI 可以合法表达标记。" : "放置退化。先修复 staging 或碰撞逻辑，再判断导航。",
-            es:(intakePass && markerPass) ? "Placement pasa. El UI puede expresar marcadores legalmente." : "Placement está degradado. Arregla staging o colisión antes de culpar navegación."
-          }
-        }
-      },
-      {
-        c:"#ff2b2b",
-        t:{en:"5. Render Audit Integrity",zh:"5. 渲染审计完整性",es:"5. Integridad de Auditoría Render"},
-        s:{en:"Audit payload must exist so diagnostics can reflect real runtime output.",zh:"必须存在审计载荷，这样诊断才能反映真实运行时输出。",es:"El payload de auditoría debe existir para que el diagnóstico refleje el output real del runtime."},
-        pack:{
-          kind:statusKind(renderAuditPresent, !!rt.phase || !!rt.mode),
-          intro:{
-            en:"This checks whether render-side receipts are actually being written into the live runtime snapshot.",
-            zh:"这检查渲染侧收据是否真的被写入实时运行时快照。",
-            es:"Esto verifica si los recibos del lado render realmente se escriben en el snapshot runtime vivo."
-          },
-          meaning:{
-            en:`renderAuditKeys=${Object.keys(renderAudit).length}\nphase=${rt.phase ?? "—"}\nmode=${rt.mode ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nerror=${rt.error ?? "—"}`,
-            zh:`renderAuditKeys=${Object.keys(renderAudit).length}\nphase=${rt.phase ?? "—"}\nmode=${rt.mode ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nerror=${rt.error ?? "—"}`,
-            es:`renderAuditKeys=${Object.keys(renderAudit).length}\nphase=${rt.phase ?? "—"}\nmode=${rt.mode ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nerror=${rt.error ?? "—"}`
-          },
-          next:{
-            en:renderAuditPresent ? "Audit payload exists. Diagnostics are reading runtime truth." : "Audit payload is thin or missing. Enrich runtime emission, not this page.",
-            zh:renderAuditPresent ? "审计载荷存在。诊断正在读取运行时真值。" : "审计载荷过薄或缺失。应增强运行时发射，而不是修改本页。",
-            es:renderAuditPresent ? "El payload de auditoría existe. El diagnóstico está leyendo verdad runtime." : "El payload de auditoría es débil o falta. Enriquece la emisión runtime, no esta página."
-          }
-        }
-      }
-    ];
-  }
-
-  function collectDiagnosticFromRuntime(runtime){
-    const rt = normalizeObject(runtime);
-    const progression = normalizeObject(rt.progressionReceipt);
-    const emission = normalizeObject(rt.emissionReceipt);
-    const intake = normalizeObject(rt.intakeReceipt);
-    const placement = normalizeObject(rt.placementReceipt);
-    const orbital = normalizeObject(rt.orbitalAudit);
-    const renderAudit = normalizeObject(rt.renderAudit);
-
-    const freshnessMs = rt.timestamp ? Math.max(0, Date.now() - new Date(rt.timestamp).getTime()) : null;
-    const stale = typeof freshnessMs === "number" ? freshnessMs > 2500 : true;
-
-    const overallPass = asBool(rt.bootPass) && asBool(rt.renderPass) && (placement.markerRequired === true ? asBool(placement.placementPass) : true);
-
-    return [
-      {
-        c:"#34d399",
-        t:{en:"Runtime Snapshot",zh:"运行时快照",es:"Snapshot Runtime"},
-        s:{en:"Immediate read of the last runtime emission.",zh:"对最近一次运行时发射的即时读取。",es:"Lectura inmediata de la última emisión runtime."},
-        pack:{
-          kind:statusKind(overallPass && !stale, !!rt.phase || !!rt.mode),
-          intro:{
-            en:"This page is reading live runtime output from shared storage, not rebuilding the system.",
-            zh:"本页正在从共享存储读取实时运行时输出，而不是重建系统。",
-            es:"Esta página está leyendo output runtime vivo desde storage compartido, no reconstruyendo el sistema."
-          },
-          meaning:{
-            en:`page=${rt.page ?? "—"}\nphase=${rt.phase ?? "—"}\nmode=${rt.mode ?? "—"}\ntimestamp=${rt.timestamp ?? "—"}\nfreshnessMs=${freshnessMs ?? "—"}\nstale=${stale}`,
-            zh:`page=${rt.page ?? "—"}\nphase=${rt.phase ?? "—"}\nmode=${rt.mode ?? "—"}\ntimestamp=${rt.timestamp ?? "—"}\nfreshnessMs=${freshnessMs ?? "—"}\nstale=${stale}`,
-            es:`page=${rt.page ?? "—"}\nphase=${rt.phase ?? "—"}\nmode=${rt.mode ?? "—"}\ntimestamp=${rt.timestamp ?? "—"}\nfreshnessMs=${freshnessMs ?? "—"}\nstale=${stale}`
-          },
-          next:{
-            en:stale ? "Snapshot is stale. Keep index active or increase runtime emission cadence." : "Snapshot is fresh. Continue reading deep receipts below.",
-            zh:stale ? "快照已陈旧。保持 index 活跃或提高运行时发射频率。" : "快照新鲜。继续读取下方深层收据。",
-            es:stale ? "El snapshot está viejo. Mantén index activo o aumenta la cadencia de emisión." : "El snapshot está fresco. Continúa leyendo recibos profundos abajo."
-          }
-        }
-      },
-      {
-        c:"#93c5fd",
-        t:{en:"Progression Receipt",zh:"推进收据",es:"Recibo de Progresión"},
-        s:{en:"Orbit and motion progression emitted by runtime.",zh:"由运行时发出的轨道与运动推进。",es:"Órbita y progresión de movimiento emitida por runtime."},
-        pack:{
-          kind:statusKind(progression.progressionPass === true || progression.progressionAuthorized !== true, progression.progressionAuthorized === true || progression.progressionApplied === true),
-          intro:{
-            en:"This tells you whether the runtime is legally advancing motion.",
-            zh:"这告诉你运行时是否在合法推进运动。",
-            es:"Esto te dice si el runtime está avanzando movimiento legalmente."
-          },
-          meaning:{
-            en:`progressionAuthorized=${progression.progressionAuthorized ?? "—"}\nprogressionApplied=${progression.progressionApplied ?? "—"}\nprogressionStep=${progression.progressionStep ?? "—"}\nprogressionDtMs=${progression.progressionDtMs ?? "—"}\nprogressionPass=${progression.progressionPass ?? "—"}`,
-            zh:`progressionAuthorized=${progression.progressionAuthorized ?? "—"}\nprogressionApplied=${progression.progressionApplied ?? "—"}\nprogressionStep=${progression.progressionStep ?? "—"}\nprogressionDtMs=${progression.progressionDtMs ?? "—"}\nprogressionPass=${progression.progressionPass ?? "—"}`,
-            es:`progressionAuthorized=${progression.progressionAuthorized ?? "—"}\nprogressionApplied=${progression.progressionApplied ?? "—"}\nprogressionStep=${progression.progressionStep ?? "—"}\nprogressionDtMs=${progression.progressionDtMs ?? "—"}\nprogressionPass=${progression.progressionPass ?? "—"}`
-          },
-          next:{
-            en:(progression.progressionPass === true || progression.progressionAuthorized !== true) ? "Progression is admissible." : "Progression is failing. Fix runtime motion/orbit.",
-            zh:(progression.progressionPass === true || progression.progressionAuthorized !== true) ? "推进可采信。" : "推进失败。修复运行时运动/轨道。",
-            es:(progression.progressionPass === true || progression.progressionAuthorized !== true) ? "La progresión es admisible." : "La progresión falla. Arregla movimiento/órbita."
-          }
-        }
-      },
-      {
-        c:"#c9a24a",
-        t:{en:"Emission Receipt",zh:"发射收据",es:"Recibo de Emisión"},
-        s:{en:"Orbital emission produced by render.",zh:"由渲染产生的轨道发射。",es:"Emisión orbital producida por render."},
-        pack:{
-          kind:statusKind(emission.emissionPass === true || emission.emissionOrbitalCount <= 0, emission.emissionOrbitalCount > 0 || orbital.count > 0),
-          intro:{
-            en:"This tells you whether render is actually generating visible orbital outputs.",
-            zh:"这告诉你渲染是否真的在生成可见轨道输出。",
-            es:"Esto te dice si render realmente genera salidas orbitales visibles."
-          },
-          meaning:{
-            en:`emissionOrbitalCount=${emission.emissionOrbitalCount ?? "—"}\nemissionFrontVisible=${emission.emissionFrontVisible ?? "—"}\nemissionEmitted=${emission.emissionEmitted ?? "—"}\nemissionSuppressed=${emission.emissionSuppressed ?? "—"}\nemissionPass=${emission.emissionPass ?? "—"}`,
-            zh:`emissionOrbitalCount=${emission.emissionOrbitalCount ?? "—"}\nemissionFrontVisible=${emission.emissionFrontVisible ?? "—"}\nemissionEmitted=${emission.emissionEmitted ?? "—"}\nemissionSuppressed=${emission.emissionSuppressed ?? "—"}\nemissionPass=${emission.emissionPass ?? "—"}`,
-            es:`emissionOrbitalCount=${emission.emissionOrbitalCount ?? "—"}\nemissionFrontVisible=${emission.emissionFrontVisible ?? "—"}\nemissionEmitted=${emission.emissionEmitted ?? "—"}\nemissionSuppressed=${emission.emissionSuppressed ?? "—"}\nemissionPass=${emission.emissionPass ?? "—"}`
-          },
-          next:{
-            en:(emission.emissionPass === true || emission.emissionOrbitalCount <= 0) ? "Emission layer is coherent." : "Emission layer is degraded. Investigate render/orbital generation.",
-            zh:(emission.emissionPass === true || emission.emissionOrbitalCount <= 0) ? "发射层一致。" : "发射层退化。检查 render/轨道生成。",
-            es:(emission.emissionPass === true || emission.emissionOrbitalCount <= 0) ? "La capa de emisión es coherente." : "La capa de emisión está degradada. Investiga render/generación orbital."
-          }
-        }
-      },
-      {
-        c:"#f59e0b",
-        t:{en:"Intake / Placement Receipt",zh:"Intake / Placement 收据",es:"Recibo Intake / Placement"},
-        s:{en:"Marker intake and placement outcome.",zh:"标记 intake 与 placement 结果。",es:"Resultado de intake y placement de marcadores."},
-        pack:{
-          kind:statusKind((intake.intakePass === true || intake.intakeReceived <= 0) && (placement.placementPass === true || placement.markerRequired !== true), intake.intakeReceived > 0 || placement.markerRequired === true),
-          intro:{
-            en:"This tells you whether emitted hits become actual placeable UI markers.",
-            zh:"这告诉你发射出的命中是否变成真正可放置的 UI 标记。",
-            es:"Esto te dice si los hits emitidos se convierten en marcadores UI colocables."
-          },
-          meaning:{
-            en:`intakeReceived=${intake.intakeReceived ?? "—"}\nintakeStaged=${intake.intakeStaged ?? "—"}\nintakeDiscarded=${intake.intakeDiscarded ?? "—"}\nplacementPlaceable=${placement.placementPlaceable ?? "—"}\nplacementPlaced=${placement.placementPlaced ?? "—"}\nplacementPass=${placement.placementPass ?? "—"}`,
-            zh:`intakeReceived=${intake.intakeReceived ?? "—"}\nintakeStaged=${intake.intakeStaged ?? "—"}\nintakeDiscarded=${intake.intakeDiscarded ?? "—"}\nplacementPlaceable=${placement.placementPlaceable ?? "—"}\nplacementPlaced=${placement.placementPlaced ?? "—"}\nplacementPass=${placement.placementPass ?? "—"}`,
-            es:`intakeReceived=${intake.intakeReceived ?? "—"}\nintakeStaged=${intake.intakeStaged ?? "—"}\nintakeDiscarded=${intake.intakeDiscarded ?? "—"}\nplacementPlaceable=${placement.placementPlaceable ?? "—"}\nplacementPlaced=${placement.placementPlaced ?? "—"}\nplacementPass=${placement.placementPass ?? "—"}`
-          },
-          next:{
-            en:((intake.intakePass === true || intake.intakeReceived <= 0) && (placement.placementPass === true || placement.markerRequired !== true)) ? "Placement layer is coherent." : "Placement layer is failing. Inspect marker gate, collision, or reserved rects.",
-            zh:((intake.intakePass === true || intake.intakeReceived <= 0) && (placement.placementPass === true || placement.markerRequired !== true)) ? "放置层一致。" : "放置层失败。检查 marker gate、碰撞或 reserved rects。",
-            es:((intake.intakePass === true || intake.intakeReceived <= 0) && (placement.placementPass === true || placement.markerRequired !== true)) ? "La capa de placement es coherente." : "La capa de placement falla. Revisa gate, colisión o reserved rects."
-          }
-        }
-      },
-      {
-        c:"#ff2b2b",
-        t:{en:"Failure / Error Channel",zh:"失败 / 错误通道",es:"Canal de Falla / Error"},
-        s:{en:"Explicit runtime failure surface.",zh:"显式运行时失败表面。",es:"Superficie explícita de falla runtime."},
-        pack:{
-          kind:statusKind(!rt.error, !!rt.phase || !!rt.mode),
-          intro:{
-            en:"This is the direct failure channel emitted by runtime itself.",
-            zh:"这是由运行时自身发出的直接失败通道。",
-            es:"Este es el canal directo de falla emitido por el runtime mismo."
-          },
-          meaning:{
-            en:`error=${rt.error ?? "—"}\nbootPass=${rt.bootPass ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nmarkerPass=${rt.markerPass ?? "—"}\nrenderAuditKeys=${Object.keys(renderAudit).length}`,
-            zh:`error=${rt.error ?? "—"}\nbootPass=${rt.bootPass ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nmarkerPass=${rt.markerPass ?? "—"}\nrenderAuditKeys=${Object.keys(renderAudit).length}`,
-            es:`error=${rt.error ?? "—"}\nbootPass=${rt.bootPass ?? "—"}\nrenderPass=${rt.renderPass ?? "—"}\nmarkerPass=${rt.markerPass ?? "—"}\nrenderAuditKeys=${Object.keys(renderAudit).length}`
-          },
-          next:{
-            en:!rt.error ? "No explicit runtime error is being emitted." : "Runtime is emitting an explicit error. Fix that source, not this observer.",
-            zh:!rt.error ? "当前没有显式运行时错误被发射。" : "运行时正在发射显式错误。修复源头，而不是本观察器。",
-            es:!rt.error ? "No se está emitiendo error runtime explícito." : "El runtime emite un error explícito. Arregla esa fuente, no este observador."
-          }
-        }
-      }
-    ];
-  }
-
-  function readLiveDiagnostics(){
-    const runtime = safeGetRuntimeFromStorage();
-    const present = !!runtime;
-    const lastUpdatedAt = runtime?.timestamp || null;
-    const freshnessMs = lastUpdatedAt ? Math.max(0, Date.now() - new Date(lastUpdatedAt).getTime()) : null;
-    const stale = typeof freshnessMs === "number" ? freshnessMs > 2500 : true;
-
-    return {
-      present,
-      stale,
-      lastUpdatedAt,
-      freshnessMs,
-      runtime,
-      checklistDomains: collectChecklistFromRuntime(runtime),
-      diagnosticDomains: collectDiagnosticFromRuntime(runtime)
-    };
-  }
-
-  function getActiveDomains(){
-    if(!runtimeSnapshot){
-      return [];
-    }
-    return mode==="checklist" ? runtimeSnapshot.checklistDomains : runtimeSnapshot.diagnosticDomains;
-  }
-
-  const list=document.getElementById("list");
-  let rowRefs=[];
-
-  function closeAllRows(){
-    for(let i=0;i<rowRefs.length;i++){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-    }
-  }
-
-  function toggleRow(i){
-    const isOpen=rowRefs[i].row.classList.contains("open");
-    if(isOpen){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-      return;
-    }
-    closeAllRows();
-    openIndexByMode[mode]=i;
-    rowRefs[i].row.classList.add("open");
-    rowRefs[i].chev.textContent="▾";
-  }
-
-  function makeSubBubble(label){
-    const b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
-
-    const h=document.createElement("h4");
-    h.textContent=label;
-
-    const p=document.createElement("p");
-    p.textContent="";
-
-    b.appendChild(h);
-    b.appendChild(p);
-
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
-    return {wrap:b,p:p};
-  }
-
-  function buildRow(item,idx){
-    const row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", item.c);
-
-    const head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    const hL=document.createElement("div");
-    hL.className="hL";
-
-    const mark=document.createElement("div");
-    mark.className="dmark";
-    mark.style.background=item.c;
-
-    const tb=document.createElement("div");
-    tb.className="titleBlock";
-
-    const title=document.createElement("div");
-    title.className="q";
-
-    const sub=document.createElement("div");
-    sub.className="sub";
-
-    tb.appendChild(title);
-    tb.appendChild(sub);
-    hL.appendChild(mark);
-    hL.appendChild(tb);
-
-    const chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(hL);
-    head.appendChild(chev);
-
-    const body=document.createElement("div");
-    body.className="body";
-
-    const statusPill=document.createElement("div");
-    statusPill.className="pill";
-    body.appendChild(statusPill);
-
-    const intro=document.createElement("p");
-    intro.className="pdesc";
-    body.appendChild(intro);
-
-    const bubbles=document.createElement("div");
-    bubbles.className="subBubbles";
-
-    const b1=makeSubBubble(labStatus());
-    const b2=makeSubBubble(labMeaning());
-    const b3=makeSubBubble(labNext());
-
-    bubbles.appendChild(b1.wrap);
-    bubbles.appendChild(b2.wrap);
-    bubbles.appendChild(b3.wrap);
-    body.appendChild(bubbles);
-
-    const actions=document.createElement("div");
-    actions.className="actions";
-
-    const a1=document.createElement("a"); a1.className="btn"; a1.setAttribute("data-route","/index.html"); actions.appendChild(a1);
-    const a2=document.createElement("a"); a2.className="btn"; a2.setAttribute("data-route","/door/"); actions.appendChild(a2);
-    const a3=document.createElement("a"); a3.className="btn red"; a3.setAttribute("data-route","/laws/"); actions.appendChild(a3);
-
-    body.appendChild(actions);
-
-    function onToggle(){ toggleRow(idx); wireAll(); }
-    head.addEventListener("click", onToggle, {passive:true});
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
-
-    row.appendChild(head);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    rowRefs.push({
-      row:row,
-      chev:row.querySelector(".chevTxt"),
-      title:title,
-      sub:sub,
-      statusPill:statusPill,
-      intro:intro,
-      b1p:b1.p,b2p:b2.p,b3p:b3.p,
-      a1:a1,a2:a2,a3:a3
-    });
-  }
-
-  function renderList(){
-    const DOMS=getActiveDomains();
-    let keep=openIndexByMode[mode]||0;
-    if(keep<0) keep=0;
-    if(keep>=DOMS.length) keep=0;
-
-    list.innerHTML="";
-    rowRefs=[];
-    for(let i=0;i<DOMS.length;i++){
-      buildRow(DOMS[i],i);
-    }
-    if(rowRefs.length){
-      toggleRow(keep);
-    }
-  }
-
-  function applyHeader(){
-    const rt = runtimeSnapshot?.runtime || null;
-    const present = runtimeSnapshot?.present === true;
-    const stale = runtimeSnapshot?.stale === true;
-    const freshnessMs = runtimeSnapshot?.freshnessMs;
-
-    document.getElementById("hk").textContent =
-      mode==="checklist"
-        ? pick3("GAUGES · CHECKLIST","GAUGES · 清单","GAUGES · CHECKLIST")
-        : pick3("GAUGES · DIAGNOSTIC","GAUGES · 诊断","GAUGES · DIAGNÓSTICO");
-
-    document.getElementById("ht").textContent =
-      mode==="checklist"
-        ? pick3("METAVERSE CHECKLIST","元宇宙清单","CHECKLIST DEL METAVERSO")
-        : pick3("LIVE RUNTIME DIAGNOSTICS","实时运行时诊断","DIAGNÓSTICO RUNTIME VIVO");
-
-    document.getElementById("hs").textContent =
-      mode==="checklist"
-        ? pick3(
-            "This side compresses the runtime into a lawful checklist: boot, motion, emission, placement, and audit integrity.",
-            "这一面把运行时压缩为合法清单：启动、运动、发射、放置与审计完整性。",
-            "Este lado comprime el runtime en una checklist legal: boot, movimiento, emisión, placement e integridad de auditoría."
-          )
-        : pick3(
-            "This page reads live runtime output from shared storage immediately. It does not rebuild the system.",
-            "本页会立即从共享存储读取实时运行时输出。它不会重建系统。",
-            "Esta página lee output runtime vivo desde storage compartido inmediatamente. No reconstruye el sistema."
-          );
-
-    document.getElementById("rule").textContent =
-      mode==="checklist"
-        ? pick3(
-            "Rule: do not add complexity on top of runtime drift. Read the emitted truth first, then act.",
-            "规则：不要在运行时漂移之上增加复杂度。先读取发射出的真值，再行动。",
-            "Regla: no añadas complejidad encima de drift runtime. Lee primero la verdad emitida y luego actúa."
-          )
-        : pick3(
-            "Rule: this observer reads only emitted runtime truth from shared storage key cte_runtime_v3.",
-            "规则：本观察器只读取共享存储键 cte_runtime_v3 中发射出的运行时真值。",
-            "Regla: este observador lee solo la verdad runtime emitida desde la clave compartida cte_runtime_v3."
-          );
-
-    document.getElementById("band").textContent =
-      mode==="checklist"
-        ? pick3("RUNTIME CHECKLIST","运行时清单","CHECKLIST RUNTIME")
-        : pick3("LIVE RUNTIME READOUT","实时运行时读数","LECTURA RUNTIME VIVA");
-
-    document.getElementById("btnDoor").textContent=pick3("DOOR","门","PUERTA");
-    document.getElementById("btnIndex").textContent=pick3("INDEX","索引","ÍNDICE");
-    document.getElementById("btnProducts").textContent=pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockDoor").textContent=pick3("DOOR","门","PUERTA");
-    document.getElementById("dockIndex").textContent=pick3("INDEX","索引","ÍNDICE");
-    document.getElementById("dockExplore").textContent=pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("dockLaws").textContent=pick3("LAWS","法则","LEYES");
-
-    document.getElementById("modeChecklist").textContent=pick3("CHECKLIST","清单","CHECKLIST");
-    document.getElementById("modeDiagnostic").textContent=pick3("DIAGNOSTIC","诊断","DIAGNÓSTICO");
-    document.getElementById("lanePlatform").textContent=pick3("PLATFORM","平台","PLATAFORMA");
-    document.getElementById("laneEngineering").textContent=pick3("ENGINEERING","工程","INGENIERÍA");
-
-    document.getElementById("modeState").textContent =
-      (lang==="zh")
-        ? ("模式："+(mode==="checklist"?"清单":"诊断"))
-        : (lang==="es")
-          ? ("Modo: "+(mode==="checklist"?"CHECKLIST":"DIAGNÓSTICO"))
-          : ("Mode: "+(mode==="checklist"?"CHECKLIST":"DIAGNOSTIC"));
-
-    document.getElementById("laneState").textContent =
-      (lang==="zh")
-        ? ("当前透镜："+laneLabel())
-        : (lang==="es")
-          ? ("Lente actual: "+laneLabel())
-          : ("Current lens: "+laneLabel());
-
-    document.getElementById("langState").textContent =
-      !present
-        ? ((lang==="zh") ? "状态：等待运行时" : (lang==="es") ? "Estado: esperando runtime" : "State: waiting runtime")
-        : ((lang==="zh")
-            ? ("状态："+(stale ? "陈旧" : "实时")+" · "+(rt?.phase ?? "—"))
-            : (lang==="es")
-              ? ("Estado: "+(stale ? "RANCIO" : "VIVO")+" · "+(rt?.phase ?? "—"))
-              : ("State: "+(stale ? "STALE" : "LIVE")+" · "+(rt?.phase ?? "—")));
-
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    setPressed(["modeChecklist","modeDiagnostic"], mode==="checklist"?"modeChecklist":"modeDiagnostic");
-  }
-
-  function updateRows(){
-    const DOMS=getActiveDomains();
-    let keep=openIndexByMode[mode]||0;
-    if(keep<0) keep=0;
-    if(keep>=DOMS.length) keep=0;
-
-    for(let i=0;i<DOMS.length;i++){
-      const item=DOMS[i];
-      const pack=item.pack;
-      const r=rowRefs[i];
-      if(!r) continue;
-
-      r.title.textContent=(lang==="zh")?item.t.zh:(lang==="es"?item.t.es:item.t.en);
-      r.sub.textContent=(lang==="zh")?item.s.zh:(lang==="es"?item.s.es:item.s.en);
-
-      r.statusPill.className="pill "+pack.kind;
-      r.statusPill.textContent=statusLabel(pack.kind);
-
-      r.intro.textContent=(lang==="zh")?pack.intro.zh:(lang==="es"?pack.intro.es:pack.intro.en);
-      r.b1p.textContent=statusLabel(pack.kind);
-      r.b2p.textContent=(lang==="zh")?pack.meaning.zh:(lang==="es"?pack.meaning.es:pack.meaning.en);
-      r.b3p.textContent=(lang==="zh")?pack.next.zh:(lang==="es"?pack.next.es:pack.next.en);
-
-      r.a1.textContent=openLabel()+": "+pick3("INDEX","索引","ÍNDICE");
-      r.a2.textContent=openLabel()+": "+pick3("DOOR","门","PUERTA");
-      r.a3.textContent=openLabel()+": "+pick3("LAWS","法则","LEYES");
-    }
-
-    closeAllRows();
-    if(rowRefs.length){
-      toggleRow(keep);
-    }
-    wireAll();
-  }
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    applyHeader();
-    updateRows();
-  }
-
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    applyHeader();
-    updateRows();
-  }
-
-  function setMode(next){
-    if(next!=="checklist" && next!=="diagnostic") next="diagnostic";
-    mode=next;
-    applyHeader();
-    renderList();
-    updateRows();
-  }
-
-  function buildSignature(snapshot){
-    if(!snapshot) return "";
-    const rt = snapshot.runtime || null;
-    return JSON.stringify({
-      present:snapshot.present,
-      stale:snapshot.stale,
-      phase:rt?.phase ?? null,
-      mode:rt?.mode ?? null,
-      timestamp:rt?.timestamp ?? null,
-      error:rt?.error ?? null,
-      bootPass:rt?.bootPass ?? null,
-      renderPass:rt?.renderPass ?? null,
-      markerPass:rt?.markerPass ?? null,
-      progression:rt?.progressionReceipt ?? null,
-      emission:rt?.emissionReceipt ?? null,
-      intake:rt?.intakeReceipt ?? null,
-      placement:rt?.placementReceipt ?? null
-    });
-  }
-
-  function refreshLiveView(force){
-    const next = readLiveDiagnostics();
-    const signature = buildSignature(next);
-
-    if(!force && signature === lastSignature){
-      return;
-    }
-
-    runtimeSnapshot = next;
-    lastSignature = signature;
-    applyHeader();
-    renderList();
-    updateRows();
-  }
-
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
-
-  document.getElementById("modeChecklist").addEventListener("click", function(){ setMode("checklist"); }, {passive:true});
-  document.getElementById("modeDiagnostic").addEventListener("click", function(){ setMode("diagnostic"); }, {passive:true});
-
-  window.addEventListener("storage", function(event){
-    if(event.key === RUNTIME_STORAGE_KEY){
-      refreshLiveView(false);
-    }
-  });
-
-  document.addEventListener("visibilitychange", function(){
-    if(document.visibilityState === "visible"){
-      refreshLiveView(false);
-    }
-  });
-
-  setInterval(function(){
-    refreshLiveView(false);
-  }, POLL_MS);
-
-  refreshLiveView(true);
-  wireAll();
-})();
+setInterval(tick, 500);
+tick();
 </script>
+
 </body>
 </html>

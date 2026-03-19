@@ -126,6 +126,11 @@ function addRgb(a, dr, dg, db) {
   };
 }
 
+function quantize(value, steps = 64) {
+  if (!isFiniteNumber(value) || steps <= 0) return 0;
+  return Math.round(value * steps) / steps;
+}
+
 function terrainClass(sample) {
   return typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
 }
@@ -167,9 +172,9 @@ function reliefDetail(sample, topology = null) {
   const lat = isFiniteNumber(sample?.latDeg) ? sample.latDeg : 0;
   const lon = isFiniteNumber(sample?.lonDeg) ? sample.lonDeg : 0;
 
-  const n1 = signedNoise(lat / 7.5, lon / 9.5, 1);
-  const n2 = signedNoise(lat / 15.0, lon / 19.0, 2);
-  const n3 = signedNoise(lat / 3.25, lon / 4.10, 3);
+  const n1 = quantize(signedNoise(lat / 7.5, lon / 9.5, 1), 64);
+  const n2 = quantize(signedNoise(lat / 15.0, lon / 19.0, 2), 64);
+  const n3 = quantize(signedNoise(lat / 3.25, lon / 4.10, 3), 64);
 
   const ridge = clamp(topology?.ridgeAmplified ?? 0, 0, 1);
   const basin = clamp(topology?.basinAmplified ?? 0, 0, 1);
@@ -179,8 +184,8 @@ function reliefDetail(sample, topology = null) {
   const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
   const squareMask = clamp(topology?.squareMaskStrength ?? 0, 0, 1);
 
-  const macro = (n1 * 0.50) + (n2 * 0.34);
-  const micro = n3 * 0.16;
+  const macro = quantize((n1 * 0.50) + (n2 * 0.34), 64);
+  const micro = quantize(n3 * 0.16, 64);
 
   return Object.freeze({
     macro,
@@ -336,7 +341,7 @@ function applyTopologyBreakup(color, topology = null, sample = null) {
     }
 
     if (detail.squareMask > 0.05) {
-      out = mixRgb(out, rgb(118, 122, 108), detail.squareMask * 0.12);
+      out = mixRgb(out, rgb(118, 122, 108), detail.squareMask * 0.05);
     }
 
     if (detail.relief > 0.05) {
@@ -448,28 +453,16 @@ function interpolateTopology(t00, t10, t01, t11, fx, fy) {
   });
 }
 
-function quadProjectedSpan(p00, p10, p11, p01) {
-  const d1 = Math.hypot(p10.x - p00.x, p10.y - p00.y);
-  const d2 = Math.hypot(p11.x - p01.x, p11.y - p01.y);
-  const d3 = Math.hypot(p01.x - p00.x, p01.y - p00.y);
-  const d4 = Math.hypot(p11.x - p10.x, p11.y - p10.y);
-  return Math.max(d1, d2, d3, d4);
-}
-
-function resolveAdaptiveSubdiv(p00, p10, p11, p01) {
+function resolveStableSubdiv(c00, c10, c11, c01) {
   const minZ = Math.min(
-    p00?.z ?? -1,
-    p10?.z ?? -1,
-    p11?.z ?? -1,
-    p01?.z ?? -1
+    c00?.z ?? -1,
+    c10?.z ?? -1,
+    c11?.z ?? -1,
+    c01?.z ?? -1
   );
 
-  if (minZ < 0.12) return 1;
-
-  const span = quadProjectedSpan(p00, p10, p11, p01);
-
-  if (span >= 28 && minZ > 0.62) return 3;
-  if (span >= 14 && minZ > 0.28) return 2;
+  if (minZ > 0.72) return 3;
+  if (minZ > 0.36) return 2;
   return 1;
 }
 
@@ -578,7 +571,7 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
       if (!shouldDrawQuad([c00, c10, c11, c01])) continue;
 
-      const subdiv = resolveAdaptiveSubdiv(c00, c10, c11, c01);
+      const subdiv = resolveStableSubdiv(c00, c10, c11, c01);
 
       for (let sy = 0; sy < subdiv; sy += 1) {
         for (let sx = 0; sx < subdiv; sx += 1) {
@@ -604,7 +597,10 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
           if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
 
-          const color = rgbString(resolveFillColor(sm00, p00, tm00));
+          const colorA = resolveFillColor(sm00, p00, tm00);
+          const colorB = resolveFillColor(sm11, p11, tm11);
+          const blendedColor = mixRgb(colorA, colorB, 0.08);
+          const color = rgbString(blendedColor);
           const alpha = resolveFillAlpha(sm00, tm00);
 
           drawQuad(ctx, p00, p10, p11, p01, color, alpha);

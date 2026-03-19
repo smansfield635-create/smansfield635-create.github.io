@@ -986,12 +986,84 @@ function safeMotionReceipt(dtMs) {
   };
 }
 
+function isAdmissibleSample(sample) {
+  return !!(
+    sample &&
+    sample.landMask === 1 &&
+    typeof sample.subRegion === "string" &&
+    sample.subRegion !== "NONE"
+  );
+}
+
+function getDeterministicFallbackSample(field) {
+  if (!field?.samples?.length || !field.samples[0]?.length) return null;
+
+  const height = field.samples.length;
+  const width = field.samples[0].length;
+  const centerY = Math.floor(height * 0.5);
+  const centerX = Math.floor(width * 0.5);
+  const maxRadius = Math.max(width, height);
+
+  for (let r = 0; r <= maxRadius; r += 1) {
+    const minY = Math.max(0, centerY - r);
+    const maxY = Math.min(height - 1, centerY + r);
+    const minX = Math.max(0, centerX - r);
+    const maxX = Math.min(width - 1, centerX + r);
+
+    for (let y = minY; y <= maxY; y += 1) {
+      for (let x = minX; x <= maxX; x += 1) {
+        const onRing = y === minY || y === maxY || x === minX || x === maxX;
+        if (!onRing) continue;
+
+        const candidate = field.samples[y][x];
+        if (isAdmissibleSample(candidate)) return candidate;
+      }
+    }
+  }
+
+  return field.samples[centerY]?.[centerX] || field.samples[0]?.[0] || null;
+}
+
+function getAdmissibleSample(field, projectionSummary) {
+  if (!field?.samples?.length || !field.samples[0]?.length) return null;
+
+  const height = field.samples.length;
+  const width = field.samples[0].length;
+
+  const rawX = Number.isInteger(projectionSummary?.sampleX) ? projectionSummary.sampleX : 0;
+  const rawY = Number.isInteger(projectionSummary?.sampleY) ? projectionSummary.sampleY : 0;
+
+  const x = Math.max(0, Math.min(width - 1, rawX));
+  const y = Math.max(0, Math.min(height - 1, rawY));
+
+  const primary = field.samples[y]?.[x] || null;
+  if (isAdmissibleSample(primary)) return primary;
+
+  const MAX_RADIUS = 6;
+
+  for (let r = 1; r <= MAX_RADIUS; r += 1) {
+    const minY = Math.max(0, y - r);
+    const maxY = Math.min(height - 1, y + r);
+    const minX = Math.max(0, x - r);
+    const maxX = Math.min(width - 1, x + r);
+
+    for (let ny = minY; ny <= maxY; ny += 1) {
+      for (let nx = minX; nx <= maxX; nx += 1) {
+        const onRing = ny === minY || ny === maxY || nx === minX || nx === maxX;
+        if (!onRing) continue;
+
+        const candidate = field.samples[ny][nx];
+        if (isAdmissibleSample(candidate)) return candidate;
+      }
+    }
+  }
+
+  return getDeterministicFallbackSample(field);
+}
+
 function buildRuntimePacket(dtMs) {
   const projectionSummary = safeProjectionSummary();
-  const sample =
-    planetField?.samples?.[projectionSummary.sampleY]?.[projectionSummary.sampleX] ||
-    planetField?.samples?.[0]?.[0] ||
-    null;
+  const sample = getAdmissibleSample(planetField, projectionSummary);
 
   const instrument = instruments.buildInstrumentReceipt({
     currentSample: sample,

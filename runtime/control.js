@@ -1,4 +1,6 @@
-import { WORLD_KERNEL } from "../kernel/world_kernel.js";
+// DESTINATION FILE: /world/control.js
+
+import { WORLD_KERNEL } from "./world_kernel.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -339,27 +341,6 @@ export function createControlSystem() {
     });
   }
 
-  function getCardinals() {
-    const normalizedYaw = wrapAngle(yaw);
-    const north = Math.max(0, Math.cos(pitch));
-    const south = Math.max(0, -Math.sin(pitch));
-    const east = Math.max(0, Math.sin(normalizedYaw));
-    const west = Math.max(0, -Math.sin(normalizedYaw));
-
-    let heading = "N";
-    if (east > west && east > north && east > south) heading = "E";
-    else if (west > east && west > north && west > south) heading = "W";
-    else if (south > north && south > east && south > west) heading = "S";
-
-    return Object.freeze({
-      heading,
-      north,
-      south,
-      east,
-      west
-    });
-  }
-
   function getOrbitalState() {
     return Object.freeze({
       orbitPhase
@@ -379,21 +360,6 @@ export function createControlSystem() {
       zoomMax,
       mode: presentationMode
     });
-  }
-
-  function setOrientation(input = {}) {
-    const next = normalizeObject(input);
-
-    if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
-    if (isFiniteNumber(next.pitch)) {
-      pitch = next.pitch;
-      clampPitch();
-    }
-    if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
-    if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
-    if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = clampZoomValue(next.zoomCurrent);
-    if (isFiniteNumber(next.zoomTarget)) zoomTarget = clampZoomValue(next.zoomTarget);
-    if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
   }
 
   function restoreMotionState(input = {}) {
@@ -423,25 +389,13 @@ export function createControlSystem() {
     applyDrag,
     stepInertia,
     advanceOrbit,
-    setOrientation,
     restoreMotionState,
     projectSphere,
     inverseProjection,
     updateSelection,
     getCameraState,
     getProjectionSummary,
-    getCardinals,
     getOrbitalState,
     getMotionState
   });
-}
-
-const DEFAULT_CONTROL_SYSTEM = createControlSystem();
-
-export function projectSphere(latDeg, lonDeg, radiusOffsetPx = 0) {
-  return DEFAULT_CONTROL_SYSTEM.projectSphere(latDeg, lonDeg, radiusOffsetPx);
-}
-
-export function inverseProjection(screenX, screenY) {
-  return DEFAULT_CONTROL_SYSTEM.inverseProjection(screenX, screenY);
 }

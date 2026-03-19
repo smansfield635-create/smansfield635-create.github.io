@@ -378,6 +378,55 @@ function getTopologySample(topologyGrid, x, y) {
   return topologyGrid?.[y]?.[x] || null;
 }
 
+function drawPlanetRim(ctx, projectionState) {
+  ctx.save();
+
+  const outerRadius = projectionState.radius * 1.024;
+  const rim = ctx.createRadialGradient(
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius * 0.955,
+    projectionState.centerX,
+    projectionState.centerY,
+    outerRadius
+  );
+
+  if (projectionState.observeMode) {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.06)");
+    rim.addColorStop(1, "rgba(170,220,255,0.10)");
+  } else {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.08)");
+    rim.addColorStop(1, "rgba(170,220,255,0.16)");
+  }
+
+  ctx.beginPath();
+  ctx.arc(
+    projectionState.centerX,
+    projectionState.centerY,
+    outerRadius,
+    0,
+    Math.PI * 2
+  );
+  ctx.fillStyle = rim;
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius,
+    0,
+    Math.PI * 2
+  );
+  ctx.strokeStyle = projectionState.observeMode
+    ? "rgba(188,220,255,0.12)"
+    : "rgba(188,220,255,0.18)";
+  ctx.lineWidth = projectionState.observeMode ? 0.9 : 1.1;
+  ctx.stroke();
+
+  ctx.restore();
+}
+
 function drawPlanetBase(ctx, projectionState) {
   withPlanetClip(ctx, projectionState, () => {
     const oceanGradient = ctx.createRadialGradient(
@@ -523,49 +572,6 @@ function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
       ctx.fill();
     }
   }
-
-  ctx.restore();
-}
-
-function drawPlanetRim(ctx, projectionState) {
-  ctx.save();
-
-  const outerRadius = projectionState.radius * 1.024;
-  const rim = ctx.createRadialGradient(
-    projectionState.centerX,
-    projectionState.centerY,
-    projectionState.radius * 0.955,
-    projectionState.centerX,
-    projectionState.centerY,
-    outerRadius
-  );
-
-  if (projectionState.observeMode) {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.06)");
-    rim.addColorStop(1, "rgba(170,220,255,0.10)");
-  } else {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.08)");
-    rim.addColorStop(1, "rgba(170,220,255,0.16)");
-  }
-
-  ctx.beginPath();
-  ctx.arc(projectionState.centerX, projectionState.centerY, outerRadius, 0, Math.PI * 2);
-  ctx.fillStyle = rim;
-  ctx.fill();
-
-  ctx.beginPath();
-  ctx.arc(
-    projectionState.centerX,
-    projectionState.centerY,
-    projectionState.radius,
-    0,
-    Math.PI * 2
-  );
-  ctx.strokeStyle = projectionState.observeMode
-    ? "rgba(188,220,255,0.12)"
-    : "rgba(188,220,255,0.18)";
-  ctx.lineWidth = projectionState.observeMode ? 0.9 : 1.1;
-  ctx.stroke();
 
   ctx.restore();
 }

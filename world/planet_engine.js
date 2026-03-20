@@ -193,6 +193,37 @@ function buildAuthoredConstants(contract) {
       AUTUMN: "AUTUMN"
     }),
 
+    groupedRegionGrowing: Object.freeze({
+      RANGE_SEED: 0.52,
+      RANGE_JOIN: 0.34,
+      BACKBONE_MIN: 0.40,
+
+      VALLEY_BASIN_MIN: 0.40,
+      VALLEY_SLOPE_MAX: 0.16,
+      VALLEY_JOIN_SLOPE_MAX: 0.22,
+      CANYON_OVERRIDE: 0.42,
+
+      CANYON_SEED: 0.34,
+      CANYON_JOIN: 0.22,
+      CANYON_SLOPE_MIN: 0.16,
+
+      CREVICE_SEED: 0.58,
+      CREVICE_JOIN: 0.42,
+      CREVICE_SLOPE_MIN: 0.32,
+      CREVICE_WIDTH_MAX: 2,
+
+      BASIN_SEED: 0.10,
+      BASIN_STRENGTH_SEED: 0.26,
+      BASIN_JOIN: 0.18,
+
+      PLATEAU_SEED: 0.56,
+      PLATEAU_JOIN: 0.40,
+      PLATEAU_SLOPE_MAX: 0.10,
+      PLATEAU_JOIN_SLOPE_MAX: 0.16,
+      PLATEAU_RELIEF_RADIUS: 3,
+      PLATEAU_RELIEF_MIN: 0.26
+    }),
+
     anchors: Object.freeze([
       Object.freeze({
         id: "HARBOR_CONTINENT",
@@ -518,6 +549,19 @@ function createBaseSample(x, y, latDeg, lonDeg) {
     plateauStrength: 0,
     canyonStrength: 0,
     cavePotential: 0,
+
+    continentClass: "OCEAN",
+    macroWaterClass: "OCEAN",
+    rangeId: null,
+    backboneStrength: 0,
+    valleyId: null,
+    canyonId: null,
+    creviceId: null,
+    basinId: null,
+    plateauId: null,
+    plateauRole: "NONE",
+    flowClass: "NONE",
+    flowDirection: "NONE",
 
     temperature: 0,
     thermalGradient: 0,
@@ -871,6 +915,28 @@ function getElevation(grid, x, y) {
   return grid[y]?.[x]?.elevation ?? 0;
 }
 
+function getWrappedX(x, width) {
+  if (x < 0) return width - 1;
+  if (x >= width) return 0;
+  return x;
+}
+
+function getGridCell(grid, x, y) {
+  const height = grid.length;
+  const width = grid[0]?.length ?? 0;
+  if (y < 0 || y >= height || width <= 0) return null;
+  return grid[y]?.[getWrappedX(x, width)] ?? null;
+}
+
+function getNeighborCoords4(x, y, width, height) {
+  const coords = [];
+  if (y - 1 >= 0) coords.push([x, y - 1]);                 // NORTH
+  coords.push([getWrappedX(x + 1, width), y]);             // EAST
+  if (y + 1 < height) coords.push([x, y + 1]);             // SOUTH
+  coords.push([getWrappedX(x - 1, width), y]);             // WEST
+  return coords;
+}
+
 function computeDistanceFields(grid) {
   const height = grid.length;
   const width = grid[0]?.length ?? 0;
@@ -878,7 +944,6 @@ function computeDistanceFields(grid) {
   const distanceToLand = Array.from({ length: height }, () => Array.from({ length: width }, () => Infinity));
   const waterQueue = [];
   const landQueue = [];
-  const offsets = [[1, 0], [-1, 0], [0, 1], [0, -1]];
 
   for (let y = 0; y < height; y += 1) {
     for (let x = 0; x < width; x += 1) {
@@ -899,10 +964,11 @@ function computeDistanceFields(grid) {
       const [x, y] = queue[head];
       head += 1;
       const current = dist[y][x];
-      for (const [dx, dy] of offsets) {
-        const nx = x + dx;
-        const ny = y + dy;
-        if (nx < 0 || ny < 0 || nx >= width || ny >= height) continue;
+
+      const nextCoords = getNeighborCoords4(x, y, width, height);
+      for (let i = 0; i < nextCoords.length; i += 1) {
+        const nx = nextCoords[i][0];
+        const ny = nextCoords[i][1];
         if (dist[ny][nx] <= current + 1) continue;
         dist[ny][nx] = current + 1;
         queue.push([nx, ny]);
@@ -920,8 +986,8 @@ function stageTopologyFields(grid, constants) {
   const distanceFields = computeDistanceFields(grid);
 
   return grid.map((row, y) => row.map((sample, x) => {
-    const left = getElevation(grid, Math.max(0, x - 1), y);
-    const right = getElevation(grid, Math.min(grid[0].length - 1, x + 1), y);
+    const left = getElevation(grid, getWrappedX(x - 1, grid[0].length), y);
+    const right = getElevation(grid, getWrappedX(x + 1, grid[0].length), y);
     const up = getElevation(grid, x, Math.max(0, y - 1));
     const down = getElevation(grid, x, Math.min(grid.length - 1, y + 1));
 
@@ -972,6 +1038,576 @@ function stageTopologyFields(grid, constants) {
       distanceToLand: Number.isFinite(distLand) ? distLand : -1
     };
   }));
+}
+
+function mapContinentClass(continentMass) {
+  switch (continentMass) {
+    case "HARBOR_CONTINENT":
+    case "GRATITUDE_CONTINENT":
+    case "GENEROSITY_CONTINENT":
+      return "C1";
+    case "DEPENDABILITY_CONTINENT":
+    case "ACCOUNTABILITY_CONTINENT":
+    case "PURITY_CONTINENT":
+      return "C2";
+    case "HUMILITY_CONTINENT":
+    case "FORGIVENESS_CONTINENT":
+    case "SELF_CONTROL_CONTINENT":
+      return "C3";
+    default:
+      return "OCEAN";
+  }
+}
+
+function dominantDirectionFromGradient(dx, dy) {
+  if (Math.abs(dx) < 1e-6 && Math.abs(dy) < 1e-6) return "NONE";
+  const ax = Math.abs(dx);
+  const ay = Math.abs(dy);
+
+  if (ax > ay * 1.5) return dx > 0 ? "E" : "W";
+  if (ay > ax * 1.5) return dy > 0 ? "S" : "N";
+
+  if (dx > 0 && dy > 0) return "SE";
+  if (dx > 0 && dy < 0) return "NE";
+  if (dx < 0 && dy > 0) return "SW";
+  if (dx < 0 && dy < 0) return "NW";
+  return "NONE";
+}
+
+function localGradient(grid, x, y) {
+  const c = getGridCell(grid, x, y);
+  const w = getGridCell(grid, x - 1, y);
+  const e = getGridCell(grid, x + 1, y);
+  const n = getGridCell(grid, x, y - 1);
+  const s = getGridCell(grid, x, y + 1);
+
+  const cx = c ? c.elevation : 0;
+  const dx = ((e ? e.elevation : cx) - (w ? w.elevation : cx)) * 0.5;
+  const dy = ((s ? s.elevation : cx) - (n ? n.elevation : cx)) * 0.5;
+
+  return { dx, dy, magnitude: Math.sqrt((dx * dx) + (dy * dy)) };
+}
+
+function localWidthProxy(grid, x, y, predicate) {
+  const width = grid[0]?.length ?? 0;
+  const height = grid.length;
+  let count = 0;
+  const neighbors = getNeighborCoords4(x, y, width, height);
+  for (let i = 0; i < neighbors.length; i += 1) {
+    const nx = neighbors[i][0];
+    const ny = neighbors[i][1];
+    const sample = grid[ny][nx];
+    if (predicate(sample, nx, ny)) count += 1;
+  }
+  return count;
+}
+
+function hasNearbyStrongerRelief(grid, x, y, radius, minRelief) {
+  const center = getGridCell(grid, x, y);
+  if (!center) return false;
+
+  for (let dy = -radius; dy <= radius; dy += 1) {
+    const ny = y + dy;
+    if (ny < 0 || ny >= grid.length) continue;
+
+    for (let dx = -radius; dx <= radius; dx += 1) {
+      if (dx === 0 && dy === 0) continue;
+      const nx = getWrappedX(x + dx, grid[0].length);
+      const candidate = grid[ny][nx];
+      if (!candidate || candidate.landMask !== 1) continue;
+
+      const relief =
+        Math.max(
+          candidate.ridgeStrength,
+          candidate.canyonStrength,
+          candidate.slope,
+          Math.max(candidate.elevation - center.elevation, 0)
+        );
+
+      if (relief >= minRelief) return true;
+    }
+  }
+
+  return false;
+}
+
+function cloneGridForTopologyCoordination(grid) {
+  return grid.map((row) => row.map((sample) => ({
+    ...sample,
+    continentClass: sample.waterMask === 1 ? "OCEAN" : mapContinentClass(sample.continentMass),
+    macroWaterClass: sample.waterMask === 1
+      ? (sample.distanceToLand >= 7 ? "OCEAN" : "SEA")
+      : "LAND",
+    rangeId: null,
+    backboneStrength: 0,
+    valleyId: null,
+    canyonId: null,
+    creviceId: null,
+    basinId: null,
+    plateauId: null,
+    plateauRole: "NONE",
+    flowClass: "NONE",
+    flowDirection: "NONE"
+  })));
+}
+
+function createRegionDiagnostics() {
+  return {
+    seedCount: 0,
+    groupedRegionCount: 0,
+    largestRegionSize: 0,
+    isolatedFallbackCount: 0,
+    seamMergeCount: 0
+  };
+}
+
+function growGroupedRegions(grid, options) {
+  const height = grid.length;
+  const width = grid[0]?.length ?? 0;
+  const assigned = Array.from({ length: height }, () => Array.from({ length: width }, () => false));
+  const diagnostics = createRegionDiagnostics();
+  let nextId = 1;
+
+  function regionKey(x, y) {
+    return `${x}:${y}`;
+  }
+
+  function countSeamEdges(cells) {
+    let seamEdges = 0;
+    const set = new Set(cells.map(([x, y]) => regionKey(x, y)));
+    for (let i = 0; i < cells.length; i += 1) {
+      const x = cells[i][0];
+      const y = cells[i][1];
+      if (set.has(regionKey(getWrappedX(x + 1, width), y)) && x === width - 1) seamEdges += 1;
+      if (set.has(regionKey(getWrappedX(x - 1, width), y)) && x === 0) seamEdges += 1;
+    }
+    return seamEdges;
+  }
+
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      if (assigned[y][x]) continue;
+
+      const seedSample = grid[y][x];
+      if (!options.seedPredicate(seedSample, x, y, grid)) continue;
+
+      diagnostics.seedCount += 1;
+
+      const queue = [[x, y]];
+      const region = [];
+      assigned[y][x] = true;
+
+      while (queue.length) {
+        const [cx, cy] = queue.shift();
+        region.push([cx, cy]);
+
+        const neighbors = getNeighborCoords4(cx, cy, width, height);
+        for (let i = 0; i < neighbors.length; i += 1) {
+          const nx = neighbors[i][0];
+          const ny = neighbors[i][1];
+          if (assigned[ny][nx]) continue;
+
+          const candidate = grid[ny][nx];
+          if (!options.joinPredicate(candidate, nx, ny, grid, seedSample, cx, cy)) continue;
+
+          assigned[ny][nx] = true;
+          queue.push([nx, ny]);
+        }
+      }
+
+      if (region.length < 2) {
+        const only = region[0];
+        const onlySample = grid[only[1]][only[0]];
+        if (options.allowSingleFallback && options.allowSingleFallback(onlySample, only[0], only[1], grid)) {
+          const fallbackId = nextId++;
+          diagnostics.groupedRegionCount += 1;
+          diagnostics.isolatedFallbackCount += 1;
+          diagnostics.largestRegionSize = Math.max(diagnostics.largestRegionSize, 1);
+          options.assignRegion([[only[0], only[1]]], fallbackId, grid);
+        } else {
+          assigned[only[1]][only[0]] = false;
+        }
+        continue;
+      }
+
+      const regionId = nextId++;
+      diagnostics.groupedRegionCount += 1;
+      diagnostics.largestRegionSize = Math.max(diagnostics.largestRegionSize, region.length);
+      diagnostics.seamMergeCount += countSeamEdges(region);
+      options.assignRegion(region, regionId, grid);
+    }
+  }
+
+  return diagnostics;
+}
+
+function stageLandTopologyCoordination(grid, constants) {
+  const G = constants.groupedRegionGrowing;
+  const working = cloneGridForTopologyCoordination(grid);
+  const height = working.length;
+  const width = working[0]?.length ?? 0;
+
+  // continentClass / macroWaterClass already assigned by clone; normalize oceans
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const sample = working[y][x];
+      if (sample.waterMask === 1) {
+        sample.continentClass = "OCEAN";
+      }
+    }
+  }
+
+  // strengthen backbone coherence before grouping
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const sample = working[y][x];
+      if (sample.landMask !== 1) continue;
+
+      const summitBoost = clamp(sample.strongestSummitScore * 0.60, 0, 0.28);
+      const elevationBoost = clamp(Math.max(sample.elevation - 0.24, 0) * 0.22, 0, 0.18);
+      sample.backboneStrength = clamp(sample.ridgeStrength + summitBoost + elevationBoost, 0, 1);
+    }
+  }
+
+  const diagnostics = {
+    range: createRegionDiagnostics(),
+    valley: createRegionDiagnostics(),
+    canyon: createRegionDiagnostics(),
+    crevice: createRegionDiagnostics(),
+    basin: createRegionDiagnostics(),
+    plateau: createRegionDiagnostics()
+  };
+
+  // range grouping
+  diagnostics.range = growGroupedRegions(working, {
+    seedPredicate(sample) {
+      return (
+        sample.landMask === 1 &&
+        sample.ridgeStrength >= G.RANGE_SEED &&
+        sample.backboneStrength >= G.BACKBONE_MIN
+      );
+    },
+    joinPredicate(candidate, nx, ny, gridRef, seedSample) {
+      if (candidate.landMask !== 1) return false;
+      if (candidate.ridgeStrength < G.RANGE_JOIN) return false;
+      if (candidate.backboneStrength < G.RANGE_JOIN) return false;
+      if (candidate.continentClass !== seedSample.continentClass) return false;
+      const elevationDelta = Math.abs(candidate.elevation - seedSample.elevation);
+      return elevationDelta <= 0.28;
+    },
+    allowSingleFallback(sample) {
+      return sample.backboneStrength >= 0.82 && sample.ridgeStrength >= 0.72;
+    },
+    assignRegion(region, regionId, gridRef) {
+      const regionSize = region.length;
+      const sizeBoost = clamp(regionSize / 48, 0, 0.16);
+      for (let i = 0; i < region.length; i += 1) {
+        const x = region[i][0];
+        const y = region[i][1];
+        const sample = gridRef[y][x];
+        sample.rangeId = regionId;
+        sample.backboneStrength = clamp(sample.backboneStrength + sizeBoost, 0, 1);
+        sample.ridgeStrength = clamp(sample.ridgeStrength + sizeBoost * 0.45, 0, 1);
+      }
+    }
+  });
+
+  // basin grouping (prefers strongestBasinId family)
+  diagnostics.basin = growGroupedRegions(working, {
+    seedPredicate(sample) {
+      return (
+        sample.landMask === 1 &&
+        (
+          sample.strongestBasinScore >= G.BASIN_SEED ||
+          sample.basinStrength >= G.BASIN_STRENGTH_SEED
+        )
+      );
+    },
+    joinPredicate(candidate, nx, ny, gridRef, seedSample) {
+      if (candidate.landMask !== 1) return false;
+      if (candidate.continentClass !== seedSample.continentClass) return false;
+
+      const sameFamily =
+        seedSample.strongestBasinId !== "NONE" &&
+        candidate.strongestBasinId === seedSample.strongestBasinId;
+
+      if (sameFamily) return true;
+      if (candidate.basinStrength < G.BASIN_JOIN) return false;
+      if (candidate.elevation > seedSample.elevation + 0.18) return false;
+      return candidate.slope <= 0.24;
+    },
+    allowSingleFallback(sample) {
+      return sample.strongestBasinScore >= 0.22 || sample.basinStrength >= 0.44;
+    },
+    assignRegion(region, regionId, gridRef) {
+      const regionSize = region.length;
+      const sizeBoost = clamp(regionSize / 56, 0, 0.14);
+      for (let i = 0; i < region.length; i += 1) {
+        const x = region[i][0];
+        const y = region[i][1];
+        const sample = gridRef[y][x];
+        sample.basinId = regionId;
+        sample.basinStrength = clamp(sample.basinStrength + sizeBoost * 0.50, 0, 1);
+      }
+    }
+  });
+
+  // crevice grouping (strongest cut)
+  diagnostics.crevice = growGroupedRegions(working, {
+    seedPredicate(sample, x, y, gridRef) {
+      const widthProxy = localWidthProxy(gridRef, x, y, (s) => s && s.landMask === 1 && s.canyonStrength >= G.CREVICE_JOIN);
+      return (
+        sample.landMask === 1 &&
+        sample.canyonStrength >= G.CREVICE_SEED &&
+        sample.slope >= G.CREVICE_SLOPE_MIN &&
+        widthProxy <= G.CREVICE_WIDTH_MAX
+      );
+    },
+    joinPredicate(candidate, nx, ny, gridRef, seedSample) {
+      if (candidate.landMask !== 1) return false;
+      if (candidate.canyonStrength < G.CREVICE_JOIN) return false;
+      if (candidate.slope < G.CREVICE_SLOPE_MIN * 0.85) return false;
+      const widthProxy = localWidthProxy(gridRef, nx, ny, (s) => s && s.landMask === 1 && s.canyonStrength >= G.CREVICE_JOIN);
+      if (widthProxy > G.CREVICE_WIDTH_MAX) return false;
+      const gradient = localGradient(gridRef, nx, ny);
+      const direction = dominantDirectionFromGradient(-gradient.dx, -gradient.dy);
+      const seedGradient = localGradient(gridRef, seedSample.x, seedSample.y);
+      const seedDirection = dominantDirectionFromGradient(-seedGradient.dx, -seedGradient.dy);
+      return direction === seedDirection || direction === "NONE" || seedDirection === "NONE";
+    },
+    allowSingleFallback(sample, x, y, gridRef) {
+      const widthProxy = localWidthProxy(gridRef, x, y, (s) => s && s.landMask === 1 && s.canyonStrength >= G.CREVICE_JOIN);
+      return (
+        sample.canyonStrength >= 0.78 &&
+        sample.slope >= 0.44 &&
+        widthProxy <= 1
+      );
+    },
+    assignRegion(region, regionId, gridRef) {
+      const sizeBoost = clamp(region.length / 40, 0, 0.16);
+      for (let i = 0; i < region.length; i += 1) {
+        const x = region[i][0];
+        const y = region[i][1];
+        const sample = gridRef[y][x];
+        sample.creviceId = regionId;
+        sample.canyonStrength = clamp(sample.canyonStrength + 0.18 + sizeBoost, 0, 1);
+      }
+    }
+  });
+
+  // canyon grouping (cannot overwrite crevice)
+  diagnostics.canyon = growGroupedRegions(working, {
+    seedPredicate(sample) {
+      return (
+        sample.landMask === 1 &&
+        sample.creviceId == null &&
+        sample.canyonStrength >= G.CANYON_SEED &&
+        sample.slope >= G.CANYON_SLOPE_MIN
+      );
+    },
+    joinPredicate(candidate, nx, ny, gridRef, seedSample) {
+      if (candidate.landMask !== 1) return false;
+      if (candidate.creviceId != null) return false;
+      if (candidate.canyonStrength < G.CANYON_JOIN) return false;
+      if (candidate.slope < G.CANYON_SLOPE_MIN * 0.85) return false;
+      const candidateGradient = localGradient(gridRef, nx, ny);
+      const seedGradient = localGradient(gridRef, seedSample.x, seedSample.y);
+      const candidateDir = dominantDirectionFromGradient(-candidateGradient.dx, -candidateGradient.dy);
+      const seedDir = dominantDirectionFromGradient(-seedGradient.dx, -seedGradient.dy);
+      return candidateDir === seedDir || candidateDir === "NONE" || seedDir === "NONE";
+    },
+    allowSingleFallback(sample) {
+      return sample.canyonStrength >= 0.70 && sample.slope >= 0.34;
+    },
+    assignRegion(region, regionId, gridRef) {
+      const sizeBoost = clamp(region.length / 48, 0, 0.12);
+      for (let i = 0; i < region.length; i += 1) {
+        const x = region[i][0];
+        const y = region[i][1];
+        const sample = gridRef[y][x];
+        sample.canyonId = regionId;
+        sample.canyonStrength = clamp(sample.canyonStrength + 0.10 + sizeBoost, 0, 1);
+      }
+    }
+  });
+
+  // valley grouping (cannot overwrite stronger cuts)
+  diagnostics.valley = growGroupedRegions(working, {
+    seedPredicate(sample) {
+      return (
+        sample.landMask === 1 &&
+        sample.creviceId == null &&
+        sample.canyonId == null &&
+        sample.basinStrength >= G.VALLEY_BASIN_MIN &&
+        sample.slope <= G.VALLEY_SLOPE_MAX &&
+        sample.canyonStrength < G.CANYON_OVERRIDE
+      );
+    },
+    joinPredicate(candidate, nx, ny, gridRef, seedSample, cx, cy) {
+      if (candidate.landMask !== 1) return false;
+      if (candidate.creviceId != null || candidate.canyonId != null) return false;
+      if (candidate.slope > G.VALLEY_JOIN_SLOPE_MAX) return false;
+      if (candidate.basinStrength < G.BASIN_JOIN && candidate.distanceToWater > 5) return false;
+
+      const current = gridRef[cy][cx];
+      const basinLinked =
+        current.basinId != null &&
+        candidate.basinId != null &&
+        current.basinId === candidate.basinId;
+
+      const gradient = localGradient(gridRef, nx, ny);
+      const downhillDir = dominantDirectionFromGradient(-gradient.dx, -gradient.dy);
+      const flowLinked = downhillDir !== "NONE";
+
+      return basinLinked || flowLinked;
+    },
+    allowSingleFallback(sample) {
+      return sample.basinStrength >= 0.66 && sample.slope <= 0.08;
+    },
+    assignRegion(region, regionId, gridRef) {
+      const sizeBoost = clamp(region.length / 60, 0, 0.10);
+      for (let i = 0; i < region.length; i += 1) {
+        const x = region[i][0];
+        const y = region[i][1];
+        const sample = gridRef[y][x];
+        sample.valleyId = regionId;
+        sample.basinStrength = clamp(sample.basinStrength + 0.08 + sizeBoost, 0, 1);
+      }
+    }
+  });
+
+  // plateau grouping
+  diagnostics.plateau = growGroupedRegions(working, {
+    seedPredicate(sample, x, y, gridRef) {
+      return (
+        sample.landMask === 1 &&
+        sample.plateauStrength >= G.PLATEAU_SEED &&
+        sample.slope <= G.PLATEAU_SLOPE_MAX &&
+        sample.creviceId == null &&
+        sample.canyonId == null &&
+        hasNearbyStrongerRelief(gridRef, x, y, G.PLATEAU_RELIEF_RADIUS, G.PLATEAU_RELIEF_MIN)
+      );
+    },
+    joinPredicate(candidate, nx, ny, gridRef, seedSample) {
+      if (candidate.landMask !== 1) return false;
+      if (candidate.creviceId != null || candidate.canyonId != null) return false;
+      if (candidate.plateauStrength < G.PLATEAU_JOIN) return false;
+      if (candidate.slope > G.PLATEAU_JOIN_SLOPE_MAX) return false;
+      if (!hasNearbyStrongerRelief(gridRef, nx, ny, G.PLATEAU_RELIEF_RADIUS, G.PLATEAU_RELIEF_MIN)) return false;
+      if (candidate.continentClass !== seedSample.continentClass) return false;
+      return Math.abs(candidate.elevation - seedSample.elevation) <= 0.18;
+    },
+    allowSingleFallback() {
+      return false;
+    },
+    assignRegion(region, regionId, gridRef) {
+      for (let i = 0; i < region.length; i += 1) {
+        const x = region[i][0];
+        const y = region[i][1];
+        const sample = gridRef[y][x];
+        sample.plateauId = regionId;
+      }
+    }
+  });
+
+  // plateau role assignment
+  const plateauMembers = new Map();
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const sample = working[y][x];
+      if (sample.plateauId == null) continue;
+      if (!plateauMembers.has(sample.plateauId)) plateauMembers.set(sample.plateauId, []);
+      plateauMembers.get(sample.plateauId).push([x, y]);
+    }
+  }
+
+  for (const [plateauId, cells] of plateauMembers.entries()) {
+    for (let i = 0; i < cells.length; i += 1) {
+      const x = cells[i][0];
+      const y = cells[i][1];
+      const sample = working[y][x];
+      const neighbors = getNeighborCoords4(x, y, width, height);
+
+      let edgeExposure = 0;
+      let strongerReliefAdjacency = 0;
+      let plateauAdjacency = 0;
+
+      for (let n = 0; n < neighbors.length; n += 1) {
+        const nx = neighbors[n][0];
+        const ny = neighbors[n][1];
+        const neighbor = working[ny][nx];
+
+        if (neighbor.plateauId === plateauId) {
+          plateauAdjacency += 1;
+        } else {
+          edgeExposure += 1;
+          if (
+            neighbor.landMask === 1 &&
+            (
+              neighbor.ridgeStrength > sample.ridgeStrength + 0.08 ||
+              neighbor.canyonStrength > sample.canyonStrength + 0.08 ||
+              neighbor.slope > sample.slope + 0.08
+            )
+          ) {
+            strongerReliefAdjacency += 1;
+          }
+        }
+      }
+
+      if (edgeExposure === 0 && sample.plateauStrength >= 0.72 && sample.slope <= 0.08) {
+        sample.plateauRole = "CORE";
+      } else if (edgeExposure > 0 && strongerReliefAdjacency > 0) {
+        sample.plateauRole = "EDGE";
+      } else if (sample.slope > 0.10 || sample.plateauStrength < 0.58) {
+        sample.plateauRole = "SLOPE";
+      } else if (plateauAdjacency >= 2) {
+        sample.plateauRole = "OUTER";
+      } else {
+        sample.plateauRole = "NONE";
+      }
+
+      sample.plateauStrength = clamp(
+        sample.plateauStrength +
+        (sample.plateauRole === "CORE" ? 0.14 : sample.plateauRole === "EDGE" ? 0.08 : 0.04),
+        0,
+        1
+      );
+    }
+  }
+
+  // flow assignment
+  for (let y = 0; y < height; y += 1) {
+    for (let x = 0; x < width; x += 1) {
+      const sample = working[y][x];
+      const gradient = localGradient(working, x, y);
+      const downhillDirection = dominantDirectionFromGradient(-gradient.dx, -gradient.dy);
+
+      if (sample.waterMask === 1) {
+        sample.flowClass = sample.macroWaterClass === "SEA" ? "SEA" : "OCEAN";
+        sample.flowDirection = "NONE";
+        continue;
+      }
+
+      if (sample.basinId != null && sample.slope <= 0.10 && sample.basinStrength >= 0.50) {
+        sample.flowClass = "LAKE";
+        sample.flowDirection = downhillDirection;
+      } else if (sample.creviceId != null || sample.canyonId != null) {
+        sample.flowClass = "RIVER";
+        sample.flowDirection = downhillDirection;
+      } else if (sample.valleyId != null && sample.slope >= 0.04) {
+        sample.flowClass = "STREAM";
+        sample.flowDirection = downhillDirection;
+      } else {
+        sample.flowClass = "NONE";
+        sample.flowDirection = downhillDirection;
+      }
+    }
+  }
+
+  return Object.freeze({
+    grid: working,
+    diagnostics: Object.freeze(diagnostics)
+  });
 }
 
 function stageThermodynamics(grid, constants) {
@@ -1040,10 +1676,10 @@ function determineDrainage(sample, left, right, up, down) {
 
 function stageHydrology(grid, constants) {
   return grid.map((row, y) => row.map((sample, x) => {
-    const left = grid[y]?.[Math.max(0, x - 1)] ?? null;
-    const right = grid[y]?.[Math.min(grid[0].length - 1, x + 1)] ?? null;
-    const up = grid[Math.max(0, y - 1)]?.[x] ?? null;
-    const down = grid[Math.min(grid.length - 1, y + 1)]?.[x] ?? null;
+    const left = getGridCell(grid, x - 1, y);
+    const right = getGridCell(grid, x + 1, y);
+    const up = getGridCell(grid, x, y - 1);
+    const down = getGridCell(grid, x, y + 1);
     const ownAnchor = findAnchor(constants, sample.continentMass);
 
     const maritimeInfluence = clamp(sample.distanceToWater < 0 ? 0 : 1 - (sample.distanceToWater / 26), 0, 1);
@@ -1648,15 +2284,15 @@ function stageFinalTerrainClass(grid, constants) {
       terrainClass = constants.terrainClasses.GLACIAL_HIGHLAND;
     } else if (sample.strongestSummitScore > 0.22 || sample.elevation > 0.62) {
       terrainClass = constants.terrainClasses.SUMMIT;
-    } else if (sample.elevation > 0.44 || sample.ridgeStrength > 0.34) {
+    } else if (sample.elevation > 0.44 || sample.ridgeStrength > 0.34 || sample.backboneStrength > 0.58) {
       terrainClass = constants.terrainClasses.MOUNTAIN;
     } else if (sample.canyonStrength > 0.30 && sample.slope > 0.18) {
       terrainClass = constants.terrainClasses.CANYON;
-    } else if ((sample.strongestBasinScore > 0.065 || sample.basinStrength > 0.22) && sample.slope <= 0.26) {
+    } else if ((sample.strongestBasinScore > 0.065 || sample.basinStrength > 0.22 || sample.basinId != null) && sample.slope <= 0.26) {
       terrainClass = constants.terrainClasses.BASIN;
-    } else if (sample.plateauStrength > 0.52 && sample.elevation > 0.18) {
+    } else if ((sample.plateauStrength > 0.52 || sample.plateauId != null) && sample.elevation > 0.18) {
       terrainClass = constants.terrainClasses.PLATEAU;
-    } else if (sample.ridgeStrength > 0.16 && sample.elevation > 0.14) {
+    } else if ((sample.ridgeStrength > 0.16 || sample.rangeId != null) && sample.elevation > 0.14) {
       terrainClass = constants.terrainClasses.RIDGE;
     } else if (sample.beachCandidate) {
       terrainClass = constants.terrainClasses.BEACH;
@@ -1675,6 +2311,11 @@ function stageFinalTerrainClass(grid, constants) {
     if (sample.shoreline) eventFlags.push("SHORELINE");
     if (sample.biomeType === constants.biomeTypes.GLACIER) eventFlags.push("GLACIER");
     if (sample.biomeType === constants.biomeTypes.WETLAND) eventFlags.push("WETLAND");
+    if (sample.rangeId != null) eventFlags.push("RANGE_GROUPED");
+    if (sample.valleyId != null) eventFlags.push("VALLEY_GROUPED");
+    if (sample.canyonId != null) eventFlags.push("CANYON_GROUPED");
+    if (sample.creviceId != null) eventFlags.push("CREVICE_GROUPED");
+    if (sample.plateauId != null) eventFlags.push("PLATEAU_GROUPED");
 
     return {
       ...sample,
@@ -1684,7 +2325,7 @@ function stageFinalTerrainClass(grid, constants) {
   }));
 }
 
-function buildSummary(grid, constants) {
+function buildSummary(grid, constants, topologyCoordinationDiagnostics = null) {
   const summary = {
     sampleCount: 0,
     landCount: 0,
@@ -1724,7 +2365,10 @@ function buildSummary(grid, constants) {
       POLAR: false
     },
     mountainRegionCount: 0,
-    basinRegionCount: 0
+    basinRegionCount: 0,
+    topologyCoordinationDiagnostics: topologyCoordinationDiagnostics
+      ? Object.freeze(topologyCoordinationDiagnostics)
+      : null
   };
 
   let temperatureTotal = 0;
@@ -1842,6 +2486,7 @@ function buildCompleteness() {
     ocean_depth_realization: true,
     climate_bands: true,
     topology_fields: true,
+    land_topology_coordination: true,
     thermodynamics: true,
     hydrology: true,
     seasonal_field: true,
@@ -1890,19 +2535,21 @@ function buildPlanetFieldInternal(constants) {
   const stage6 = stageOceanDepthRealization(stage5, constants);
   const stage7 = stageClimateBands(stage6, constants);
   const stage8 = stageTopologyFields(stage7, constants);
-  const stage9 = stageThermodynamics(stage8, constants);
-  const stage10 = stageHydrology(stage9, constants);
-  const stage11 = stageSeasonalField(stage10, constants);
-  const stage12 = stageMagnetics(stage11, constants);
-  const stage13 = stageMaterials(stage12);
-  const stage14 = stageSediment(stage13);
-  const stage15 = stageSurfaceBiomeThresholdBands(stage14, constants);
-  const stage16 = stageSurfaceBiomePrecedenceTiebreak(stage15, constants);
-  const stage17 = stageSurfaceBiomeSamplingUnitAssignment(stage16, constants);
-  const stage18 = stageFinalTerrainClass(stage17, constants);
+  const stage9Result = stageLandTopologyCoordination(stage8, constants);
+  const stage9 = stage9Result.grid;
+  const stage10 = stageThermodynamics(stage9, constants);
+  const stage11 = stageHydrology(stage10, constants);
+  const stage12 = stageSeasonalField(stage11, constants);
+  const stage13 = stageMagnetics(stage12, constants);
+  const stage14 = stageMaterials(stage13);
+  const stage15 = stageSediment(stage14);
+  const stage16 = stageSurfaceBiomeThresholdBands(stage15, constants);
+  const stage17 = stageSurfaceBiomePrecedenceTiebreak(stage16, constants);
+  const stage18 = stageSurfaceBiomeSamplingUnitAssignment(stage17, constants);
+  const stage19 = stageFinalTerrainClass(stage18, constants);
 
-  const samples = finalizeSamples(stage18);
-  const summary = buildSummary(samples, constants);
+  const samples = finalizeSamples(stage19);
+  const summary = buildSummary(samples, constants, stage9Result.diagnostics);
   const completeness = buildCompleteness();
 
   return Object.freeze({

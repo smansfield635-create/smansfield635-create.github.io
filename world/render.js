@@ -48,9 +48,37 @@ function getCanvasCssSize(ctx) {
   return { width, height };
 }
 
+function normalizeScopeName(value) {
+  if (typeof value !== "string") return "GLOBAL";
+  const upper = value.toUpperCase();
+  if (upper === "UNIVERSE") return "UNIVERSE";
+  if (upper === "GALAXY") return "GALAXY";
+  if (upper === "GLOBAL") return "GLOBAL";
+  if (upper === "LOCAL") return "LOCAL";
+  return "GLOBAL";
+}
+
+function normalizeLensTier(value) {
+  if (typeof value === "string") {
+    const upper = value.toUpperCase();
+    if (upper === "L1") return 1;
+    if (upper === "L2") return 2;
+    if (upper === "L3") return 3;
+  }
+  if (isFiniteNumber(value)) {
+    if (value <= 1) return 1;
+    if (value === 2) return 2;
+    if (value >= 3) return 3;
+  }
+  return 1;
+}
+
 function getProjectionState(viewState = {}, ctx) {
   const state = normalizeObject(viewState);
   const { width, height } = getCanvasCssSize(ctx);
+
+  const activeScope = normalizeScopeName(state.activeScope);
+  const lensTier = normalizeLensTier(state.lensTier);
 
   return {
     width,
@@ -60,7 +88,11 @@ function getProjectionState(viewState = {}, ctx) {
     radius: isFiniteNumber(state.radius)
       ? state.radius
       : Math.min(width, height) * (WORLD_KERNEL?.constants?.worldRadiusFactor ?? 0.36),
-    observeMode: state.observeMode === true
+    activeScope,
+    lensTier,
+    scopeSizeKm: isFiniteNumber(state.scopeSizeKm) ? state.scopeSizeKm : null,
+    scopeAnchor: typeof state.scopeAnchor === "string" ? state.scopeAnchor : null,
+    scopeTransitionState: state.scopeTransitionState ?? null
   };
 }
 
@@ -221,6 +253,49 @@ function skewPoint(point, center, skewX, skewY) {
   };
 }
 
+function getLensConfig(activeScope, lensTier) {
+  if (activeScope === "LOCAL") {
+    if (lensTier === 3) {
+      return {
+        rowStrideCutoff: 999999,
+        colStrideCutoff: 999999,
+        baseScaleX: 0.88,
+        baseScaleY: 0.76,
+        curvatureScaleGainX: 0.14,
+        curvatureScaleGainY: 0.24,
+        skewBase: 0.030,
+        skewEdgeGain: 0.090,
+        subdivisionBias: 1.0
+      };
+    }
+    if (lensTier === 2) {
+      return {
+        rowStrideCutoff: 140,
+        colStrideCutoff: 260,
+        baseScaleX: 0.89,
+        baseScaleY: 0.79,
+        curvatureScaleGainX: 0.12,
+        curvatureScaleGainY: 0.21,
+        skewBase: 0.024,
+        skewEdgeGain: 0.080,
+        subdivisionBias: 0.55
+      };
+    }
+  }
+
+  return {
+    rowStrideCutoff: 100,
+    colStrideCutoff: 200,
+    baseScaleX: 0.90,
+    baseScaleY: 0.82,
+    curvatureScaleGainX: 0.10,
+    curvatureScaleGainY: 0.18,
+    skewBase: 0.020,
+    skewEdgeGain: 0.065,
+    subdivisionBias: 0.0
+  };
+}
+
 function deformPatch(points, sample, projectionState) {
   const center = averagePoint(points);
   const latitudeRad = (sample.latDeg * Math.PI) / 180;
@@ -229,11 +304,13 @@ function deformPatch(points, sample, projectionState) {
   const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
   const curvatureFactor = clamp(latAbs * 0.55 + edgeFactor * 0.85, 0, 1);
 
-  const scaleX = 0.90 + curvatureFactor * 0.10;
-  const scaleY = 0.82 + curvatureFactor * 0.18;
+  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
 
-  const diagonalBias = Math.sin(latitudeRad) * 0.020;
-  const skewX = diagonalBias * (0.55 + edgeFactor * 0.65);
+  const scaleX = lens.baseScaleX + curvatureFactor * lens.curvatureScaleGainX;
+  const scaleY = lens.baseScaleY + curvatureFactor * lens.curvatureScaleGainY;
+
+  const diagonalBias = Math.sin(latitudeRad) * lens.skewBase;
+  const skewX = diagonalBias * (0.55 + edgeFactor * lens.skewEdgeGain);
   const skewY = -diagonalBias * 0.20;
 
   const p00 = skewPoint(scalePointAround(points[0], center, scaleX, scaleY), center, skewX, skewY);
@@ -263,8 +340,19 @@ function resolveSubdivision(sample, points, projectionState) {
   );
   const patchSpan = Math.max(screenSpanX, screenSpanY);
 
-  const zoomFactor = clamp(projectionState.radius / Math.max(1, Math.min(projectionState.width, projectionState.height) * 0.28), 0, 3);
-  const densityScore = patchSpan / 18 + edgeFactor * 1.4 + latAbs * 0.8 + zoomFactor * 0.35;
+  const zoomFactor = clamp(
+    projectionState.radius / Math.max(1, Math.min(projectionState.width, projectionState.height) * 0.28),
+    0,
+    3
+  );
+
+  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
+  const densityScore =
+    patchSpan / 18 +
+    edgeFactor * 1.4 +
+    latAbs * 0.8 +
+    zoomFactor * 0.35 +
+    lens.subdivisionBias;
 
   if (densityScore > 4.2) return 3;
   if (densityScore > 2.4) return 2;
@@ -301,6 +389,33 @@ function subdivideQuad(p00, p10, p11, p01, subdiv) {
   return quads;
 }
 
+function drawDarkContainer(ctx, projectionState, activeScope) {
+  ctx.save();
+
+  const bg = ctx.createRadialGradient(
+    projectionState.centerX,
+    projectionState.centerY,
+    0,
+    projectionState.centerX,
+    projectionState.centerY,
+    Math.max(projectionState.width, projectionState.height) * 0.72
+  );
+
+  if (activeScope === "UNIVERSE") {
+    bg.addColorStop(0, "rgb(3,5,10)");
+    bg.addColorStop(0.45, "rgb(1,2,5)");
+    bg.addColorStop(1, "rgb(0,0,0)");
+  } else {
+    bg.addColorStop(0, "rgb(5,7,14)");
+    bg.addColorStop(0.45, "rgb(2,3,8)");
+    bg.addColorStop(1, "rgb(0,0,0)");
+  }
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
+  ctx.restore();
+}
+
 function drawPlanetRim(ctx, projectionState) {
   ctx.save();
 
@@ -314,9 +429,12 @@ function drawPlanetRim(ctx, projectionState) {
     outerRadius
   );
 
-  if (projectionState.observeMode) {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.06)");
-    rim.addColorStop(1, "rgba(170,220,255,0.10)");
+  const isLocal = projectionState.activeScope === "LOCAL";
+  const lensTier = projectionState.lensTier;
+
+  if (isLocal && lensTier >= 2) {
+    rim.addColorStop(0.98, "rgba(132,188,255,0.05)");
+    rim.addColorStop(1, "rgba(170,220,255,0.08)");
   } else {
     rim.addColorStop(0.98, "rgba(132,188,255,0.08)");
     rim.addColorStop(1, "rgba(170,220,255,0.16)");
@@ -341,10 +459,10 @@ function drawPlanetRim(ctx, projectionState) {
     0,
     Math.PI * 2
   );
-  ctx.strokeStyle = projectionState.observeMode
-    ? "rgba(188,220,255,0.12)"
+  ctx.strokeStyle = isLocal && lensTier >= 2
+    ? "rgba(188,220,255,0.11)"
     : "rgba(188,220,255,0.18)";
-  ctx.lineWidth = projectionState.observeMode ? 0.9 : 1.1;
+  ctx.lineWidth = isLocal && lensTier >= 2 ? 0.9 : 1.1;
   ctx.stroke();
 
   ctx.restore();
@@ -382,8 +500,9 @@ function drawPlanetBase(ctx, projectionState) {
 function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
   if (!grid.length || !grid[0].length) return;
 
+  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
   const rowCount = grid.length;
-  const rowStride = rowCount >= 100 ? 2 : 1;
+  const rowStride = rowCount >= lens.rowStrideCutoff ? 2 : 1;
 
   ctx.save();
 
@@ -391,7 +510,7 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint, projectionState)
     const row = grid[y];
     const nextRow = grid[y + rowStride];
     const rowLength = row.length;
-    const colStride = rowLength >= 200 ? 2 : 1;
+    const colStride = rowLength >= lens.colStrideCutoff ? 2 : 1;
 
     for (let x = 0; x < rowLength; x += colStride) {
       const nextX = (x + colStride) % rowLength;
@@ -609,16 +728,45 @@ export function createRenderer() {
     viewState = {},
     orbitalSystem = null
   }) {
-    if (!ctx || !planetField) {
-      throw new Error("renderPlanet requires ctx and planetField.");
+    if (!ctx) {
+      throw new Error("renderPlanet requires ctx.");
+    }
+
+    const projectionState = getProjectionState(viewState, ctx);
+    const activeScope = projectionState.activeScope;
+
+    ctx.clearRect(0, 0, projectionState.width, projectionState.height);
+
+    if (activeScope === "UNIVERSE" || activeScope === "GALAXY") {
+      drawDarkContainer(ctx, projectionState, activeScope);
+
+      return {
+        projectionState,
+        orbitalHits: [],
+        orbitalAudit: {
+          count: 0,
+          frontVisibleCount: 0,
+          emittedCount: 0,
+          rejectedBackfaceCount: 0,
+          rejectedWeakVisibilityCount: 0
+        },
+        audit: {
+          sampleCount: 0,
+          waterFamilyCount: 0,
+          landFamilyCount: 0,
+          cryosphereCount: 0,
+          shorelineCount: 0
+        }
+      };
+    }
+
+    if (!planetField) {
+      throw new Error("renderPlanet requires planetField for GLOBAL/LOCAL scope.");
     }
 
     const grid = sampleGrid(planetField);
     const topologyGrid = getTopologyGrid(topologyField);
-    const projectionState = getProjectionState(viewState, ctx);
     const projector = resolveProjectPoint(projectPoint, projectionState);
-
-    ctx.clearRect(0, 0, projectionState.width, projectionState.height);
 
     drawPlanetRim(ctx, projectionState);
     drawPlanetBase(ctx, projectionState);

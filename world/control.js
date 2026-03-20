@@ -85,15 +85,12 @@ export function createControlSystem() {
 
   const ZOOM_EASING = 0.12;
 
-  // Friction-free weightless feel
   const YAW_TRACK_GAIN = 0.88;
   const PITCH_TRACK_GAIN = 0.74;
 
-  // High blending = smooth finger tracking, low jump
   const DRAG_BLEND_YAW = 0.86;
   const DRAG_BLEND_PITCH = 0.90;
 
-  // Release inherits real slide momentum without snapping
   const RELEASE_YAW_GAIN = 1.35;
   const RELEASE_PITCH_GAIN = 0.72;
 
@@ -160,6 +157,15 @@ export function createControlSystem() {
     autoSpinSpeed = value;
   }
 
+  function startDrag() {
+    dragActive = true;
+  }
+
+  function endDrag() {
+    if (!dragActive) return;
+    releaseDrag();
+  }
+
   function setZoomBounds(min, max) {
     if (!isFiniteNumber(min) || !isFiniteNumber(max)) return;
     zoomMin = Math.min(min, max);
@@ -184,16 +190,13 @@ export function createControlSystem() {
     const yawStep = deltaX * K.dragSensitivity * YAW_TRACK_GAIN;
     const pitchStep = deltaY * K.dragSensitivity * PITCH_TRACK_GAIN;
 
-    // Finger-coupled tracking
     yaw = wrapAngle(yaw + yawStep);
     pitch += pitchStep;
     clampPitch();
 
-    // Save actual last slide
     lastDragYawStep = yawStep;
     lastDragPitchStep = pitchStep;
 
-    // Smooth recent slide history
     smoothedDragYaw =
       smoothedDragYaw * DRAG_BLEND_YAW +
       yawStep * (1 - DRAG_BLEND_YAW);
@@ -202,7 +205,6 @@ export function createControlSystem() {
       smoothedDragPitch * DRAG_BLEND_PITCH +
       pitchStep * (1 - DRAG_BLEND_PITCH);
 
-    // Minimal live carry while finger is down
     yawVelocity = smoothedDragYaw * 0.28;
     pitchVelocity = smoothedDragPitch * 0.16;
   }
@@ -210,7 +212,6 @@ export function createControlSystem() {
   function releaseDrag() {
     dragActive = false;
 
-    // Preserve the momentum the finger actually imparted
     yawVelocity =
       yawVelocity * 0.30 +
       smoothedDragYaw * 0.85 +
@@ -247,7 +248,6 @@ export function createControlSystem() {
       yawVelocity *= decay;
       pitchVelocity *= decay;
 
-      // Very soft floor -> natural stop, not abrupt brake
       if (Math.abs(yawVelocity) < 0.00000005) yawVelocity = 0;
       if (Math.abs(pitchVelocity) < 0.00000005) pitchVelocity = 0;
 
@@ -405,7 +405,9 @@ export function createControlSystem() {
       zoomMax,
       mode: presentationMode,
       autoSpinEnabled,
-      autoSpinSpeed
+      autoSpinSpeed,
+      dragActive,
+      inertiaDecay: K.inertiaDecay
     });
   }
 
@@ -465,7 +467,9 @@ export function createControlSystem() {
       zoomMax,
       mode: presentationMode,
       autoSpinEnabled,
-      autoSpinSpeed
+      autoSpinSpeed,
+      dragActive,
+      inertiaDecay: K.inertiaDecay
     });
   }
 
@@ -502,6 +506,7 @@ export function createControlSystem() {
     if (isFiniteNumber(next.zoomTarget)) zoomTarget = clampZoomValue(next.zoomTarget);
     if (typeof next.autoSpinEnabled === "boolean") autoSpinEnabled = next.autoSpinEnabled;
     if (isFiniteNumber(next.autoSpinSpeed)) autoSpinSpeed = next.autoSpinSpeed;
+    if (typeof next.dragActive === "boolean") dragActive = next.dragActive;
   }
 
   return Object.freeze({
@@ -509,6 +514,8 @@ export function createControlSystem() {
     setPresentationMode,
     setAutoSpinEnabled,
     setAutoSpinSpeed,
+    startDrag,
+    endDrag,
     setZoomBounds,
     setZoomAbsolute,
     adjustZoomBy,

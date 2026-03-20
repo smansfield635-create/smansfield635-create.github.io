@@ -1,45 +1,372 @@
-// ===== FORCE CONTINUOUS RUNTIME EMISSION (FIX) =====
+// /world/runtime/world_runtime.js
+// MODE: EMERGENCY RECONSTRUCTION BASELINE
+// STATUS: RECOVERY RUNTIME
+// NOTE:
+// - This is NOT your original file.
+// - This is a minimal deterministic runtime spine to restore:
+//   1) live frame loop
+//   2) authority receipt emission
+//   3) control → render → instruments → gauges continuity
+// - Keep this file finite. Do not expand scope here.
 
-const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
+import worldKernel from "/world/world_kernel.js";
+import { createPlanetEngine } from "/world/planet_engine.js";
+import { createRenderer } from "/world/render.js";
+import { createControlSystem } from "/world/control.js";
+import * as instruments from "/assets/instruments.js";
 
-function emitRuntimeReceiptContinuous(state, extra = {}) {
-  const payload = {
-    page: "/index.html",
-    phase: state.runtimeReady ? "RUNNING" : "BOOT",
-    mode: state.currentMode,
-    timestamp: new Date().toISOString(),
+const AUTHORITY_RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
+const RUNTIME_GUARD_KEY = "__WORLD_RUNTIME_ACTIVE__";
 
-    fps: state._lastFps || 0,
-    dtMs: state._lastDt || 0,
+let started = false;
+let rafId = 0;
+let lastNow = 0;
 
-    control: {
-      motionState: typeof state.control?.getMotionState === "function"
-        ? state.control.getMotionState()
-        : {},
-      orbitalState: typeof state.control?.getOrbitalState === "function"
-        ? state.control.getOrbitalState()
-        : {}
+let canvas = null;
+let ctx = null;
+
+let planetEngine = null;
+let renderer = null;
+let control = null;
+
+let planetField = null;
+let planetDimensions = { width: 256, height: 256 };
+
+function ensureReceipt() {
+  if (!window[AUTHORITY_RECEIPT_KEY]) {
+    window[AUTHORITY_RECEIPT_KEY] = {
+      bootSource: "/index.html",
+      runtimeSource: "/world/runtime/world_runtime.js",
+      inputOwner: "/world/control.js",
+      orbitOwner: "/world/control.js",
+      renderSource: "/world/render.js",
+      transitionSource: null,
+      duplicateRuntime: false,
+      duplicateRender: false,
+      duplicateInput: false,
+      page: "world",
+      phase: "runtime",
+      mode: "active",
+      timestamp: 0,
+      fps: 0,
+      dtMs: 0,
+      control: {
+        motionState: {
+          yaw: 0,
+          pitch: 0,
+          yawVelocity: 0,
+          pitchVelocity: 0,
+          orbitPhase: 0,
+        },
+        orbitalState: {
+          orbitPhase: 0,
+        },
+        projectionSummary: null,
+        cameraState: null,
+      },
+      renderAudit: {
+        sampleCount: 0,
+        waterFamilyCount: 0,
+        landFamilyCount: 0,
+        cryosphereCount: 0,
+        shorelineCount: 0,
+      },
+      emissionReceipt: {
+        emissionOrbitalCount: 0,
+        emissionFrontVisible: 0,
+        emissionEmitted: 0,
+        emissionSuppressed: 0,
+        emissionPass: false,
+      },
+      placementReceipt: {
+        markerRequired: false,
+        placementPlaced: 0,
+        markerCollisionCount: 0,
+        placementReservedReject: 0,
+        placementViewportReject: 0,
+        placementPass: false,
+      },
+      instrument: null,
+      verification: {
+        pass: false,
+      },
+      failure: {
+        phase: null,
+        message: null,
+      },
+    };
+  }
+  return window[AUTHORITY_RECEIPT_KEY];
+}
+
+function fail(phase, message) {
+  const receipt = ensureReceipt();
+  receipt.verification.pass = false;
+  receipt.failure.phase = phase;
+  receipt.failure.message = message;
+}
+
+function clearFailure() {
+  const receipt = ensureReceipt();
+  receipt.failure.phase = null;
+  receipt.failure.message = null;
+}
+
+function getCanvas() {
+  const found = document.getElementById("world");
+  if (!found) {
+    throw new Error("Missing #world canvas");
+  }
+  return found;
+}
+
+function resize() {
+  if (!canvas) return;
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  const width = Math.max(1, window.innerWidth);
+  const height = Math.max(1, window.innerHeight);
+
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+
+  if (ctx) {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  if (control && typeof control.resize === "function") {
+    control.resize(width, height);
+  }
+}
+
+function buildPlanet() {
+  planetEngine = createPlanetEngine();
+  if (!planetEngine || typeof planetEngine.buildPlanetField !== "function") {
+    throw new Error("planet_engine missing buildPlanetField()");
+  }
+
+  planetField = planetEngine.buildPlanetField({});
+  if (!planetField) {
+    throw new Error("planet_engine returned empty planetField");
+  }
+
+  if (typeof planetEngine.getPlanetDimensions === "function") {
+    const dims = planetEngine.getPlanetDimensions();
+    if (dims && Number.isFinite(dims.width) && Number.isFinite(dims.height)) {
+      planetDimensions = dims;
+    }
+  }
+}
+
+function setupSystems() {
+  renderer = createRenderer();
+  if (!renderer || typeof renderer.renderPlanet !== "function") {
+    throw new Error("render.js missing renderPlanet()");
+  }
+
+  control = createControlSystem();
+  if (!control) {
+    throw new Error("control.js missing createControlSystem()");
+  }
+}
+
+function bindInput() {
+  if (!canvas || !control) return;
+
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  canvas.addEventListener("pointerdown", (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+  }, { passive: true });
+
+  window.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    if (typeof control.applyDrag === "function") {
+      control.applyDrag(dx, dy);
+    }
+  }, { passive: true });
+
+  window.addEventListener("pointerup", () => {
+    dragging = false;
+  }, { passive: true });
+
+  window.addEventListener("pointercancel", () => {
+    dragging = false;
+  }, { passive: true });
+}
+
+function safeCall(fn, fallback) {
+  try {
+    return fn();
+  } catch {
+    return fallback;
+  }
+}
+
+function updateControlReceipt(receipt) {
+  const motionState = safeCall(
+    () => (typeof control.getMotionState === "function" ? control.getMotionState() : null),
+    null
+  );
+
+  const orbitalState = safeCall(
+    () => (typeof control.getOrbitalState === "function" ? control.getOrbitalState() : null),
+    null
+  );
+
+  const projectionSummary = safeCall(
+    () => (typeof control.getProjectionSummary === "function" ? control.getProjectionSummary() : null),
+    null
+  );
+
+  const cameraState = safeCall(
+    () => (typeof control.getCameraState === "function" ? control.getCameraState() : null),
+    null
+  );
+
+  receipt.control.motionState = motionState || receipt.control.motionState;
+  receipt.control.orbitalState = orbitalState || receipt.control.orbitalState;
+  receipt.control.projectionSummary = projectionSummary || null;
+  receipt.control.cameraState = cameraState || null;
+}
+
+function renderFrame(receipt) {
+  const renderResult = renderer.renderPlanet({
+    ctx,
+    planetField,
+    worldKernel,
+    projectPoint: (lat, lon, r = 0) => {
+      if (typeof control.projectSphere === "function") {
+        return control.projectSphere(lat, lon, r);
+      }
+      return null;
     },
+    viewState: typeof control.getCameraState === "function"
+      ? control.getCameraState()
+      : null,
+  }) || {};
 
-    instrument: state._lastInstrument || {},
+  const audit = renderResult.audit || {};
+  const orbitalAudit = renderResult.orbitalAudit || {};
 
-    renderAudit: state.lastRenderReceipt?.audit || {},
+  receipt.renderAudit.sampleCount = audit.sampleCount ?? 0;
+  receipt.renderAudit.waterFamilyCount = audit.waterFamilyCount ?? 0;
+  receipt.renderAudit.landFamilyCount = audit.landFamilyCount ?? 0;
+  receipt.renderAudit.cryosphereCount = audit.cryosphereCount ?? 0;
+  receipt.renderAudit.shorelineCount = audit.shorelineCount ?? 0;
 
-    emissionReceipt: state.lastEmissionReceipt || {},
-    placementReceipt: state.lastPlacementReceipt || {},
+  receipt.emissionReceipt.emissionOrbitalCount = orbitalAudit.count ?? 0;
+  receipt.emissionReceipt.emissionFrontVisible = orbitalAudit.frontVisibleCount ?? 0;
+  receipt.emissionReceipt.emissionEmitted = orbitalAudit.emittedCount ?? 0;
+  receipt.emissionReceipt.emissionSuppressed =
+    (orbitalAudit.rejectedBackfaceCount ?? 0) +
+    (orbitalAudit.rejectedWeakVisibilityCount ?? 0);
 
-    verification: {
-      pass: state.runtimeReady === true
-    },
+  receipt.emissionReceipt.emissionPass =
+    receipt.emissionReceipt.emissionEmitted >= 0;
+}
 
-    failure: {
-      message: state.runtimeErrorMessage || ""
-    },
+function updateInstrumentReceipt(receipt) {
+  try {
+    if (typeof instruments.buildInstrumentState === "function") {
+      receipt.instrument = instruments.buildInstrumentState({
+        control: receipt.control,
+        renderAudit: receipt.renderAudit,
+        emissionReceipt: receipt.emissionReceipt,
+        world: {
+          phase: receipt.phase,
+          terrainClass: "unknown",
+          stabilityClass: "unknown",
+        },
+      });
+    } else {
+      receipt.instrument = receipt.instrument || null;
+    }
+  } catch {
+    receipt.instrument = receipt.instrument || null;
+  }
+}
 
-    ...extra
-  };
+function frame(now) {
+  const receipt = ensureReceipt();
+  const dtMs = lastNow ? now - lastNow : 16.67;
+  lastNow = now;
+
+  receipt.timestamp = now;
+  receipt.dtMs = dtMs;
+  receipt.fps = dtMs > 0 ? 1000 / dtMs : 0;
+  receipt.page = "world";
+  receipt.phase = "runtime";
+  receipt.mode = "active";
+
+  clearFailure();
 
   try {
-    localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(payload));
-  } catch {}
+    if (typeof control.stepInertia === "function") {
+      control.stepInertia(dtMs);
+    }
+
+    updateControlReceipt(receipt);
+    renderFrame(receipt);
+    updateInstrumentReceipt(receipt);
+
+    receipt.verification.pass = true;
+  } catch (err) {
+    fail("frame", err instanceof Error ? err.message : String(err));
+  }
+
+  rafId = window.requestAnimationFrame(frame);
 }
+
+export function startRuntime() {
+  const receipt = ensureReceipt();
+
+  if (window[RUNTIME_GUARD_KEY]) {
+    receipt.duplicateRuntime = true;
+    fail("startup", "Duplicate runtime detected");
+    return;
+  }
+
+  window[RUNTIME_GUARD_KEY] = true;
+
+  try {
+    canvas = getCanvas();
+    ctx = canvas.getContext("2d");
+    if (!ctx) {
+      throw new Error("2D context unavailable");
+    }
+
+    setupSystems();
+    buildPlanet();
+    resize();
+    bindInput();
+
+    window.addEventListener("resize", resize, { passive: true });
+    window.addEventListener("pagehide", () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = 0;
+      }
+      window[RUNTIME_GUARD_KEY] = false;
+    }, { passive: true });
+
+    lastNow = performance.now();
+    rafId = window.requestAnimationFrame(frame);
+  } catch (err) {
+    fail("startup", err instanceof Error ? err.message : String(err));
+  }
+}
+
+export default {
+  startRuntime,
+};

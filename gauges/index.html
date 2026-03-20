@@ -5,60 +5,134 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Diagnostic Gauges</title>
 <style>
-body{margin:0;background:#0b0f14;color:#d7f9ff;font-family:monospace}
-.container{padding:16px;max-width:960px;margin:0 auto}
-.block{margin-bottom:16px;padding:12px;border:1px solid #1f2a36;border-radius:8px;background:#0f1620}
-.title{color:#7fffd4;margin-bottom:8px}
+:root{
+  --bg:#0b0f14;
+  --panel:#0f1620;
+  --line:#1f2a36;
+  --text:#d7f9ff;
+  --muted:rgba(215,249,255,.72);
+  --accent:#7fffd4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:monospace}
+.container{padding:16px;max-width:1040px;margin:0 auto}
+.status{color:var(--accent);font-weight:bold;margin-bottom:12px}
+.group{
+  margin-bottom:12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:var(--panel);
+  overflow:hidden;
+}
+.summary{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  width:100%;
+  padding:12px;
+  background:transparent;
+  border:0;
+  color:var(--text);
+  text-align:left;
+  cursor:pointer;
+}
+.summary:active{transform:translateY(1px)}
+.diamondWrap{
+  width:26px;
+  height:26px;
+  position:relative;
+  flex:0 0 26px;
+}
+.diamond{
+  position:absolute;
+  inset:0;
+  transform:rotate(45deg);
+  border-radius:4px;
+  border:1px solid rgba(255,255,255,.18);
+  box-shadow:
+    inset 0 0 12px rgba(255,255,255,.08),
+    0 0 10px rgba(255,255,255,.12);
+  animation:spin 7s linear infinite,pulse 1.8s ease-in-out infinite;
+}
+.spark::after{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius:6px;
+  border:1px solid rgba(255,255,255,.25);
+  transform:rotate(45deg);
+  animation:flicker .6s steps(2,end) infinite;
+}
+@keyframes spin{
+  from{transform:rotate(45deg)}
+  to{transform:rotate(405deg)}
+}
+@keyframes pulse{
+  0%,100%{filter:brightness(.95)}
+  50%{filter:brightness(1.18)}
+}
+@keyframes flicker{
+  0%,100%{opacity:.12}
+  25%{opacity:.55}
+  50%{opacity:.18}
+  75%{opacity:.72}
+}
+.state-white{background:rgba(255,255,255,.88)}
+.state-gray{background:rgba(144,154,166,.72)}
+.state-yellow{background:rgba(255,224,128,.88)}
+.state-orange{background:rgba(255,170,102,.92)}
+.state-red{background:rgba(255,108,108,.95)}
+.state-black{background:rgba(12,12,12,.96);border-color:rgba(255,255,255,.28)}
+.summaryText{min-width:0;flex:1 1 auto}
+.titleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.title{color:var(--accent);font-weight:bold}
+.meta{color:var(--muted);font-size:12px;white-space:nowrap}
+.preview{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  margin-top:6px;
+}
+.previewItem{
+  padding:6px 8px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:rgba(255,255,255,.02);
+}
+.previewK{opacity:.72;font-size:11px}
+.previewV{margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.detail{
+  display:none;
+  padding:0 12px 12px 12px;
+  border-top:1px solid var(--line);
+}
+.group.open .detail{display:block}
+.rows{margin-top:10px}
 .row{display:flex;justify-content:space-between;gap:16px;margin:4px 0}
 .row div:first-child{opacity:.9}
 .row div:last-child{text-align:right;word-break:break-word}
-.status{color:#7fffd4;font-weight:bold;margin-bottom:12px}
-.canvasWrap{margin-top:10px;border:1px solid #1f2a36;border-radius:8px;overflow:hidden;background:#0b0f14}
-canvas{display:block;width:100%;height:120px}
-.small{opacity:.7;font-size:12px}
+.canvasWrap{
+  margin-top:10px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  overflow:hidden;
+  background:var(--bg);
+}
+canvas{display:block;width:100%}
+.small{opacity:.7;font-size:12px;margin-top:6px}
 .good{color:#7fffd4}
 .warn{color:#ffd580}
 .bad{color:#ff8f8f}
+@media (max-width:760px){
+  .preview{grid-template-columns:1fr}
+}
 </style>
 </head>
 
 <body>
 <div class="container">
   <div id="status" class="status">STATE: NO DATA</div>
-
-  <div class="block">
-    <div class="title">RUNTIME</div>
-    <div id="runtime"></div>
-  </div>
-
-  <div class="block">
-    <div class="title">MOTION</div>
-    <div id="motion"></div>
-    <div class="canvasWrap"><canvas id="velocityChart" width="920" height="120"></canvas></div>
-    <div class="small">yawVelocity = cyan · pitchVelocity = green</div>
-  </div>
-
-  <div class="block">
-    <div class="title">HANDOFF</div>
-    <div id="handoff"></div>
-  </div>
-
-  <div class="block">
-    <div class="title">RECENT HISTORY</div>
-    <div id="history"></div>
-    <div class="canvasWrap"><canvas id="dragChart" width="920" height="80"></canvas></div>
-    <div class="small">dragActive latch = white</div>
-  </div>
-
-  <div class="block">
-    <div class="title">AUTO SPIN</div>
-    <div id="autospin"></div>
-  </div>
-
-  <div class="block">
-    <div class="title">EMISSION</div>
-    <div id="emission"></div>
-  </div>
+  <div id="groups"></div>
 </div>
 
 <script>
@@ -87,6 +161,23 @@ let lastReleasePitchVelocity = null;
 let peakVelocityRecent = 0;
 let lastDragAt = null;
 
+const GROUP_ORDER = [
+  "runtime",
+  "motion",
+  "handoff",
+  "history",
+  "autospin",
+  "emission",
+  "scope",
+  "lens",
+  "primitive",
+  "topology",
+  "renderAuthority",
+  "density"
+];
+
+const OPEN_DEFAULT = new Set(["runtime","motion","primitive"]);
+
 function row(k,v){
   return `<div class="row"><div>${k}</div><div>${v}</div></div>`;
 }
@@ -101,6 +192,13 @@ function bool(v){
 
 function num(v){
   return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+function esc(v){
+  return String(v ?? "—")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;");
 }
 
 function read(){
@@ -285,21 +383,368 @@ function drawDragLatch(canvas, dragSeries){
   ctx.stroke();
 }
 
+function inferState(groupId, data, derived){
+  switch(groupId){
+    case "runtime":
+      if(!data) return {color:"gray",spark:false};
+      if(data.failure?.phase) return {color:"red",spark:true};
+      if(data.phase === "RUNNING") return {color:"white",spark:false};
+      return {color:"yellow",spark:false};
+
+    case "motion":
+      if(derived.velocityMagnitude === null) return {color:"gray",spark:false};
+      if(derived.dragActive === true || (derived.velocityMagnitude > EPS)) return {color:"white",spark:false};
+      return {color:"gray",spark:false};
+
+    case "handoff":
+      if(derived.releaseDetected) return {color:"blue",spark:false};
+      if(derived.dragLatched) return {color:"blue",spark:false};
+      return {color:"white",spark:false};
+
+    case "history":
+      if(derived.zeroedThisFrame) return {color:"orange",spark:true};
+      return {color:"white",spark:false};
+
+    case "autospin":
+      if(derived.autoSpinEnabled === false) return {color:"gray",spark:false};
+      return {color:"white",spark:false};
+
+    case "emission":
+      if(data?.emissionReceipt?.emissionPass === true) return {color:"white",spark:false};
+      return {color:"yellow",spark:false};
+
+    case "scope":
+      if(!data?.scope) return {color:"gray",spark:false};
+      if(data.scope.activeScope && data.scope.activeScope !== "UNKNOWN") return {color:"white",spark:false};
+      return {color:"orange",spark:false};
+
+    case "lens":
+      if(!data?.lens) return {color:"gray",spark:false};
+      if(data.lens.lensMode && data.lens.lensMode !== "UNKNOWN") return {color:"white",spark:false};
+      return {color:"orange",spark:false};
+
+    case "primitive":
+      if(!data?.primitive) return {color:"gray",spark:false};
+      if(data.primitive.primitiveType === "UNKNOWN") return {color:"orange",spark:false};
+      if(data.primitive.rowColumnPathActive === true) return {color:"yellow",spark:false};
+      return {color:"white",spark:false};
+
+    case "topology":
+      if(!data?.topology) return {color:"gray",spark:false};
+      if(data.topology.topologyMode === "UNKNOWN") return {color:"orange",spark:false};
+      if(data.topology.neighborLaw === "GRID") return {color:"yellow",spark:false};
+      return {color:"white",spark:false};
+
+    case "renderAuthority":
+      if(!data?.renderAuthority) return {color:"gray",spark:false};
+      if(data.renderAuthority.fallbackMode === true) return {color:"red",spark:true};
+      if(data.renderAuthority.renderReadsScope && data.renderAuthority.renderReadsLens) return {color:"white",spark:false};
+      return {color:"orange",spark:false};
+
+    case "density":
+      if(!data?.density) return {color:"gray",spark:false};
+      if(data.density.densityTier === "UNKNOWN") return {color:"orange",spark:false};
+      return {color:"white",spark:false};
+
+    default:
+      return {color:"gray",spark:false};
+  }
+}
+
+function colorClass(state){
+  switch(state){
+    case "white": return "state-white";
+    case "gray": return "state-gray";
+    case "yellow": return "state-yellow";
+    case "orange": return "state-orange";
+    case "red": return "state-red";
+    case "black": return "state-black";
+    case "blue": return "state-white";
+    default: return "state-gray";
+  }
+}
+
+function buildSummaryPreview(items){
+  return `
+    <div class="preview">
+      ${items.map(([k,v]) => `
+        <div class="previewItem">
+          <div class="previewK">${esc(k)}</div>
+          <div class="previewV">${esc(v)}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
+function groupBlock(id,title,meta,previewItems,detailHtml,state){
+  const openClass = OPEN_DEFAULT.has(id) ? "open" : "";
+  const sparkClass = state.spark ? "spark" : "";
+  return `
+    <div class="group ${openClass}" data-group="${esc(id)}">
+      <button class="summary" type="button">
+        <div class="diamondWrap ${sparkClass}">
+          <div class="diamond ${colorClass(state.color)}"></div>
+        </div>
+        <div class="summaryText">
+          <div class="titleRow">
+            <div class="title">${esc(title)}</div>
+            <div class="meta">${esc(meta)}</div>
+          </div>
+          ${buildSummaryPreview(previewItems)}
+        </div>
+      </button>
+      <div class="detail">${detailHtml}</div>
+    </div>
+  `;
+}
+
+function buildGroups(data, derived){
+  const motion = getMotionState(data);
+  const emission = data?.emissionReceipt || {};
+  const scope = data?.scope || {};
+  const lens = data?.lens || {};
+  const primitive = data?.primitive || {};
+  const topology = data?.topology || {};
+  const renderAuthority = data?.renderAuthority || {};
+  const density = data?.density || {};
+
+  const groups = {
+    runtime: groupBlock(
+      "runtime","RUNTIME",
+      `${data?.phase ?? "—"} • ${Math.round(data?.fps || 0)} fps`,
+      [
+        ["phase", data?.phase ?? "—"],
+        ["mode", data?.mode ?? "—"],
+        ["dtMs", Math.round(data?.dtMs || 0)]
+      ],
+      `<div class="rows">
+        ${row("phase", data?.phase ?? "—")}
+        ${row("mode", data?.mode ?? "—")}
+        ${row("fps", Math.round(data?.fps || 0))}
+        ${row("dtMs", Math.round(data?.dtMs || 0))}
+      </div>`,
+      inferState("runtime",data,derived)
+    ),
+
+    motion: groupBlock(
+      "motion","MOTION",
+      `|v| ${fmt(derived.velocityMagnitude, 9)}`,
+      [
+        ["yaw", fmt(num(motion.yaw),6)],
+        ["pitch", fmt(num(motion.pitch),6)],
+        ["speed", fmt(derived.velocityMagnitude,9)]
+      ],
+      `<div class="rows">
+        ${row("yaw", fmt(num(motion.yaw), 12))}
+        ${row("pitch", fmt(num(motion.pitch), 12))}
+        ${row("orbitPhase", fmt(num(motion.orbitPhase), 6))}
+        ${row("yawVelocity", fmt(derived.yawVelocity, 9))}
+        ${row("pitchVelocity", fmt(derived.pitchVelocity, 9))}
+        ${row("velocityMagnitude", fmt(derived.velocityMagnitude, 9))}
+      </div>
+      <div class="canvasWrap"><canvas id="velocityChart" width="1000" height="120"></canvas></div>
+      <div class="small">yawVelocity = cyan · pitchVelocity = green</div>`,
+      inferState("motion",data,derived)
+    ),
+
+    handoff: groupBlock(
+      "handoff","HANDOFF",
+      `${bool(derived.dragActive)} / ${bool(derived.releaseDetected)}`,
+      [
+        ["dragActive", bool(derived.dragActive)],
+        ["dragLatched", bool(derived.dragLatched)],
+        ["release", bool(derived.releaseDetected)]
+      ],
+      `<div class="rows">
+        ${row("dragActive", bool(derived.dragActive))}
+        ${row("dragLatched", bool(derived.dragLatched))}
+        ${row("releaseDetected", bool(derived.releaseDetected))}
+        ${row("lastReleaseAgeMs", lastReleaseAt ? Math.round(Date.now() - lastReleaseAt) : "—")}
+        ${row("lastReleaseYawVelocity", fmt(lastReleaseYawVelocity, 9))}
+        ${row("lastReleasePitchVelocity", fmt(lastReleasePitchVelocity, 9))}
+        ${row("yawVelocityΔ", fmt(derived.yawVelocityDelta, 9))}
+        ${row("pitchVelocityΔ", fmt(derived.pitchVelocityDelta, 9))}
+      </div>`,
+      inferState("handoff",data,derived)
+    ),
+
+    history: groupBlock(
+      "history","RECENT HISTORY",
+      `${fmt(peakVelocityRecent, 9)}`,
+      [
+        ["peak", fmt(peakVelocityRecent,6)],
+        ["zeroed", bool(derived.zeroedThisFrame)],
+        ["decay", fmt(derived.inertiaDecay,6)]
+      ],
+      `<div class="rows">
+        ${row("peakVelocityRecent", fmt(peakVelocityRecent, 9))}
+        ${row("zeroedThisFrame", bool(derived.zeroedThisFrame))}
+        ${row("prevVelocityMagnitude", fmt(prevVelocityMagnitude, 9))}
+        ${row("currentVelocityMagnitude", fmt(derived.velocityMagnitude, 9))}
+        ${row("inertiaDecay", fmt(derived.inertiaDecay, 6))}
+      </div>
+      <div class="canvasWrap"><canvas id="dragChart" width="1000" height="80"></canvas></div>
+      <div class="small">dragActive latch = white</div>`,
+      inferState("history",data,derived)
+    ),
+
+    autospin: groupBlock(
+      "autospin","AUTO SPIN",
+      `${bool(derived.autoSpinEnabled)}`,
+      [
+        ["enabled", bool(derived.autoSpinEnabled)],
+        ["speed", fmt(derived.autoSpinSpeed,9)],
+        ["pitchLock", fmt(num(motion.pitch),6)]
+      ],
+      `<div class="rows">
+        ${row("autoSpinEnabled", bool(derived.autoSpinEnabled))}
+        ${row("autoSpinSpeed", fmt(derived.autoSpinSpeed, 9))}
+      </div>`,
+      inferState("autospin",data,derived)
+    ),
+
+    emission: groupBlock(
+      "emission","EMISSION",
+      `${bool(emission.emissionPass)}`,
+      [
+        ["emitted", emission.emissionEmitted ?? "—"],
+        ["visible", emission.emissionFrontVisible ?? "—"],
+        ["pass", bool(emission.emissionPass)]
+      ],
+      `<div class="rows">
+        ${row("emitted", emission.emissionEmitted ?? "—")}
+        ${row("frontVisible", emission.emissionFrontVisible ?? "—")}
+        ${row("pass", bool(emission.emissionPass))}
+      </div>`,
+      inferState("emission",data,derived)
+    ),
+
+    scope: groupBlock(
+      "scope","SCOPE",
+      `${scope.activeScope ?? "UNKNOWN"}`,
+      [
+        ["active", scope.activeScope ?? "UNKNOWN"],
+        ["sizeKm", scope.scopeSizeKm ?? "—"],
+        ["anchor", scope.scopeAnchor ?? "—"]
+      ],
+      `<div class="rows">
+        ${row("activeScope", scope.activeScope ?? "UNKNOWN")}
+        ${row("scopeSizeKm", scope.scopeSizeKm ?? "—")}
+        ${row("scopeAnchor", scope.scopeAnchor ?? "—")}
+        ${row("scopeTransitionState", JSON.stringify(scope.scopeTransitionState ?? null))}
+      </div>`,
+      inferState("scope",data,derived)
+    ),
+
+    lens: groupBlock(
+      "lens","LENS",
+      `${lens.lensMode ?? "UNKNOWN"} / ${lens.lensTier ?? "—"}`,
+      [
+        ["mode", lens.lensMode ?? "UNKNOWN"],
+        ["tier", lens.lensTier ?? "—"],
+        ["zoom", fmt(lens.zoomCurrent,4)]
+      ],
+      `<div class="rows">
+        ${row("lensMode", lens.lensMode ?? "UNKNOWN")}
+        ${row("lensTier", lens.lensTier ?? "—")}
+        ${row("zoomCurrent", fmt(lens.zoomCurrent, 6))}
+        ${row("zoomTarget", fmt(lens.zoomTarget, 6))}
+        ${row("zoomMin", fmt(lens.zoomMin, 6))}
+        ${row("zoomMax", fmt(lens.zoomMax, 6))}
+      </div>`,
+      inferState("lens",data,derived)
+    ),
+
+    primitive: groupBlock(
+      "primitive","PRIMITIVE",
+      `${primitive.primitiveType ?? "UNKNOWN"}`,
+      [
+        ["type", primitive.primitiveType ?? "UNKNOWN"],
+        ["center", bool(primitive.centerAnchored)],
+        ["grid", bool(primitive.rowColumnPathActive)]
+      ],
+      `<div class="rows">
+        ${row("primitiveType", primitive.primitiveType ?? "UNKNOWN")}
+        ${row("primitivePath", primitive.primitivePath ?? "UNKNOWN")}
+        ${row("centerAnchored", bool(primitive.centerAnchored))}
+        ${row("rowColumnPathActive", bool(primitive.rowColumnPathActive))}
+        ${row("sectorBandPathActive", bool(primitive.sectorBandPathActive))}
+      </div>`,
+      inferState("primitive",data,derived)
+    ),
+
+    topology: groupBlock(
+      "topology","TOPOLOGY",
+      `${topology.topologyMode ?? "UNKNOWN"}`,
+      [
+        ["mode", topology.topologyMode ?? "UNKNOWN"],
+        ["neighbor", topology.neighborLaw ?? "UNKNOWN"],
+        ["visible", topology.visibleCellCount ?? "—"]
+      ],
+      `<div class="rows">
+        ${row("topologyMode", topology.topologyMode ?? "UNKNOWN")}
+        ${row("neighborLaw", topology.neighborLaw ?? "UNKNOWN")}
+        ${row("visibleCellCount", topology.visibleCellCount ?? "—")}
+        ${row("emittedCellCount", topology.emittedCellCount ?? "—")}
+        ${row("skippedCellCount", topology.skippedCellCount ?? "—")}
+      </div>`,
+      inferState("topology",data,derived)
+    ),
+
+    renderAuthority: groupBlock(
+      "renderAuthority","RENDER AUTHORITY",
+      `${renderAuthority.liveRenderPath ?? "UNKNOWN"}`,
+      [
+        ["scopeRead", bool(renderAuthority.renderReadsScope)],
+        ["lensRead", bool(renderAuthority.renderReadsLens)],
+        ["fallback", bool(renderAuthority.fallbackMode)]
+      ],
+      `<div class="rows">
+        ${row("renderReadsScope", bool(renderAuthority.renderReadsScope))}
+        ${row("renderReadsLens", bool(renderAuthority.renderReadsLens))}
+        ${row("fallbackMode", bool(renderAuthority.fallbackMode))}
+        ${row("liveRenderPath", renderAuthority.liveRenderPath ?? "UNKNOWN")}
+      </div>`,
+      inferState("renderAuthority",data,derived)
+    ),
+
+    density: groupBlock(
+      "density","DENSITY",
+      `${density.densityTier ?? "UNKNOWN"}`,
+      [
+        ["avgSpan", fmt(density.averageCellSpanPx,2)],
+        ["subdiv", density.subdivisionTier ?? "—"],
+        ["tier", density.densityTier ?? "UNKNOWN"]
+      ],
+      `<div class="rows">
+        ${row("averageCellSpanPx", fmt(density.averageCellSpanPx, 4))}
+        ${row("subdivisionTier", density.subdivisionTier ?? "—")}
+        ${row("densityTier", density.densityTier ?? "UNKNOWN")}
+      </div>`,
+      inferState("density",data,derived)
+    )
+  };
+
+  return GROUP_ORDER.map(id => groups[id]).join("");
+}
+
+function installExpanders(){
+  document.querySelectorAll(".group .summary").forEach(btn => {
+    btn.onclick = () => {
+      btn.parentElement.classList.toggle("open");
+    };
+  });
+}
+
 function render(data){
   if(!data){
     document.getElementById("status").textContent = "STATE: NO DATA";
-    document.getElementById("runtime").innerHTML = "";
-    document.getElementById("motion").innerHTML = "";
-    document.getElementById("handoff").innerHTML = "";
-    document.getElementById("history").innerHTML = "";
-    document.getElementById("autospin").innerHTML = "";
-    document.getElementById("emission").innerHTML = "";
+    document.getElementById("groups").innerHTML = "";
     return;
   }
 
   const age = Date.now() - new Date(data.timestamp).getTime();
-  const motion = getMotionState(data);
-  const emission = data.emissionReceipt || {};
 
   const yawVelocity = deriveYawVelocity(data);
   const pitchVelocity = derivePitchVelocity(data);
@@ -317,64 +762,40 @@ function render(data){
   push(history.dragActive, dragActive === true);
   push(history.fps, data.fps ?? 0);
 
-  const releaseDetected = deriveReleaseDetected();
-  const dragLatched = deriveDragLatched();
   const zeroedThisFrame = deriveZeroedThisFrame(velocityMagnitude);
   const yawVelocityDelta = deriveDelta(yawVelocity, prevYawVelocity);
   const pitchVelocityDelta = deriveDelta(pitchVelocity, prevPitchVelocity);
 
+  const derived = {
+    yawVelocity,
+    pitchVelocity,
+    velocityMagnitude,
+    dragActive,
+    inertiaDecay,
+    autoSpinEnabled,
+    autoSpinSpeed,
+    releaseDetected: deriveReleaseDetected(),
+    dragLatched: deriveDragLatched(),
+    zeroedThisFrame,
+    yawVelocityDelta,
+    pitchVelocityDelta
+  };
+
   document.getElementById("status").textContent =
     "STATE: LIVE • " + (data.phase ?? "—") + " • " + age + "ms";
 
-  document.getElementById("runtime").innerHTML =
-    row("phase", data.phase ?? "—") +
-    row("mode", data.mode ?? "—") +
-    row("fps", Math.round(data.fps || 0)) +
-    row("dtMs", Math.round(data.dtMs || 0));
+  document.getElementById("groups").innerHTML = buildGroups(data, derived);
+  installExpanders();
 
-  document.getElementById("motion").innerHTML =
-    row("yaw", fmt(num(motion.yaw), 12)) +
-    row("pitch", fmt(num(motion.pitch), 12)) +
-    row("orbitPhase", fmt(num(motion.orbitPhase), 6)) +
-    row("yawVelocity", fmt(yawVelocity, 9)) +
-    row("pitchVelocity", fmt(pitchVelocity, 9)) +
-    row("velocityMagnitude", fmt(velocityMagnitude, 9));
+  const velocityCanvas = document.getElementById("velocityChart");
+  if(velocityCanvas){
+    drawSeries(velocityCanvas, history.yawVelocity, history.pitchVelocity);
+  }
 
-  document.getElementById("handoff").innerHTML =
-    row("dragActive", bool(dragActive)) +
-    row("dragLatched", bool(dragLatched)) +
-    row("releaseDetected", bool(releaseDetected)) +
-    row("lastReleaseAgeMs", lastReleaseAt ? Math.round(Date.now() - lastReleaseAt) : "—") +
-    row("lastReleaseYawVelocity", fmt(lastReleaseYawVelocity, 9)) +
-    row("lastReleasePitchVelocity", fmt(lastReleasePitchVelocity, 9)) +
-    row("yawVelocityΔ", fmt(yawVelocityDelta, 9)) +
-    row("pitchVelocityΔ", fmt(pitchVelocityDelta, 9));
-
-  document.getElementById("history").innerHTML =
-    row("peakVelocityRecent", fmt(peakVelocityRecent, 9)) +
-    row("zeroedThisFrame", bool(zeroedThisFrame)) +
-    row("prevVelocityMagnitude", fmt(prevVelocityMagnitude, 9)) +
-    row("currentVelocityMagnitude", fmt(velocityMagnitude, 9)) +
-    row("inertiaDecay", fmt(inertiaDecay, 6));
-
-  document.getElementById("autospin").innerHTML =
-    row("autoSpinEnabled", bool(autoSpinEnabled)) +
-    row("autoSpinSpeed", fmt(autoSpinSpeed, 9));
-
-  document.getElementById("emission").innerHTML =
-    row("emitted", emission.emissionEmitted ?? "—") +
-    row("pass", bool(emission.emissionPass));
-
-  drawSeries(
-    document.getElementById("velocityChart"),
-    history.yawVelocity,
-    history.pitchVelocity
-  );
-
-  drawDragLatch(
-    document.getElementById("dragChart"),
-    history.dragActive
-  );
+  const dragCanvas = document.getElementById("dragChart");
+  if(dragCanvas){
+    drawDragLatch(dragCanvas, history.dragActive);
+  }
 
   prevVelocityMagnitude = velocityMagnitude;
   prevYawVelocity = yawVelocity;

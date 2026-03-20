@@ -72,7 +72,7 @@ export function createControlSystem() {
   const K = getKernelConstants();
 
   const HOME_PITCH = clamp(
-    isFiniteNumber(K.initialPitch) ? K.initialPitch : -(Math.PI / 10),
+    isFiniteNumber(K.initialPitch) ? K.initialPitch : 0,
     K.minPitch,
     K.maxPitch
   );
@@ -94,11 +94,11 @@ export function createControlSystem() {
   let presentationMode = "round";
 
   let autoSpinEnabled = true;
-  let autoSpinSpeed = 0.00018;
+  let autoSpinSpeed = 0.00009;
 
   let recoveryEnabled = true;
-  let recoveryYawStrength = 0.0018;
-  let recoveryPitchStrength = 0.0032;
+  let recoveryYawStrength = 0.0025;
+  let recoveryPitchStrength = 0.0018;
   let recoveryVelocityThreshold = 0.0014;
 
   const ZOOM_EASING = 0.12;

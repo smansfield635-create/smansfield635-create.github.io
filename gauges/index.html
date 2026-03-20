@@ -83,6 +83,7 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:monospace}
 .state-orange{background:rgba(255,170,102,.92)}
 .state-red{background:rgba(255,108,108,.95)}
 .state-black{background:rgba(12,12,12,.96);border-color:rgba(255,255,255,.28)}
+.state-blue{background:rgba(110,231,255,.9)}
 .summaryText{min-width:0;flex:1 1 auto}
 .titleRow{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .title{color:var(--accent);font-weight:bold}
@@ -120,9 +121,6 @@ html,body{margin:0;background:var(--bg);color:var(--text);font-family:monospace}
 }
 canvas{display:block;width:100%}
 .small{opacity:.7;font-size:12px;margin-top:6px}
-.good{color:#7fffd4}
-.warn{color:#ffd580}
-.bad{color:#ff8f8f}
 @media (max-width:760px){
   .preview{grid-template-columns:1fr}
 }
@@ -432,7 +430,7 @@ function inferState(groupId, data, derived){
     case "topology":
       if(!data?.topology) return {color:"gray",spark:false};
       if(data.topology.topologyMode === "UNKNOWN") return {color:"orange",spark:false};
-      if(data.topology.neighborLaw === "GRID") return {color:"yellow",spark:false};
+      if(data.topology.neighborLaw === "GRID" || data.topology.neighborLaw === "CROSS_GRID") return {color:"yellow",spark:false};
       return {color:"white",spark:false};
 
     case "renderAuthority":
@@ -459,7 +457,7 @@ function colorClass(state){
     case "orange": return "state-orange";
     case "red": return "state-red";
     case "black": return "state-black";
-    case "blue": return "state-white";
+    case "blue": return "state-blue";
     default: return "state-gray";
   }
 }

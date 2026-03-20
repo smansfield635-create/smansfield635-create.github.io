@@ -153,7 +153,9 @@ export function createWorldRuntime() {
     authorityReceipt: null,
     planetField: null,
     rafId: 0,
+    loopWatchdogId: 0,
     lastFrameAt: performance.now(),
+    lastEmitAt: 0,
     diagnosticsMode: "peek",
     isDragging: false,
     lastX: 0,
@@ -253,13 +255,12 @@ export function createWorldRuntime() {
       ...nextPacket
     };
 
+    state.lastEmitAt = Date.now();
     window.__RUNTIME_STATE__ = Object.freeze(envelope);
 
     try {
       localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(envelope));
-    } catch {
-      return;
-    }
+    } catch {}
   }
 
   function resizeWorld() {
@@ -277,23 +278,17 @@ export function createWorldRuntime() {
   }
 
   function restoreMotionState() {
-    if (!isRoundVisualMode()) return;
     try {
       const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
       if (!raw) return;
       state.control.restoreMotionState(JSON.parse(raw));
-    } catch {
-      return;
-    }
+    } catch {}
   }
 
   function persistMotionState() {
-    if (!isRoundVisualMode()) return;
     try {
       sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(state.control.getMotionState()));
-    } catch {
-      return;
-    }
+    } catch {}
   }
 
   function safeProjectionSummary() {
@@ -315,7 +310,7 @@ export function createWorldRuntime() {
         : {};
 
     return {
-      motionRunning: isRoundVisualMode(),
+      motionRunning: true,
       rafActive: state.rafId !== 0,
       pageVisible: document.visibilityState === "visible",
       pageRestored: true,
@@ -580,7 +575,7 @@ export function createWorldRuntime() {
   }
 
   function hideAllMarkers() {
-    for (const key of Object.keys(state.overlayMap)) {
+    for (const key of Object.keys(state.overlayMap || {})) {
       const node = state.overlayMap[key];
       if (node) node.hidden = true;
     }
@@ -969,7 +964,9 @@ export function createWorldRuntime() {
   }
 
   function renderSurface(dtMs) {
-    if (!state.planetField) return;
+    if (!state.planetField) {
+      throw new Error("Planet field unavailable.");
+    }
 
     state.lastRenderReceipt = state.renderer.renderPlanet({
       ctx: state.ctx,
@@ -990,19 +987,78 @@ export function createWorldRuntime() {
     emitRuntimeReceipt(runtime);
   }
 
-  function frame(now) {
-    const dtMs = now - state.lastFrameAt;
+  function runFrame(now = performance.now()) {
+    const dtMs = Math.max(0, now - state.lastFrameAt);
     state.lastFrameAt = now;
+
+    if (!state.ctx || !state.canvas || !state.control || !state.renderer || !state.instruments) {
+      return;
+    }
 
     state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
 
     if (isRoundVisualMode()) {
-      state.control.stepInertia(dtMs);
+      state.control.stepInertia(dtMs || 16.6667);
     }
 
-    buildProgressionReceipt(dtMs);
-    renderSurface(dtMs);
+    buildProgressionReceipt(dtMs || 16.6667);
+    renderSurface(dtMs || 16.6667);
+  }
+
+  function frame(now) {
+    state.rafId = 0;
+
+    try {
+      runFrame(now);
+      state.runtimeReady = true;
+      state.runtimeErrorMessage = "";
+      clearBootStatus();
+    } catch (error) {
+      state.runtimeReady = false;
+      state.runtimeErrorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+
+      showBootStatus(`World runtime failed during frame.\n\n${state.runtimeErrorMessage}\n\nDiagnostic receipt remains active.`);
+      updateDiagnostics(null);
+      emitRuntimeReceipt({
+        page: "/index.html",
+        phase: "BOOT_FAIL",
+        mode: state.currentMode,
+        diagnosticsMode: state.diagnosticsMode,
+        timestamp: new Date().toISOString(),
+        bootPass: false,
+        renderPass: false,
+        markerPass: false,
+        error: state.runtimeErrorMessage,
+        verification: {
+          pass: false,
+          reasons: [state.runtimeErrorMessage]
+        },
+        failure: {
+          phase: "BOOT",
+          message: state.runtimeErrorMessage
+        }
+      });
+    } finally {
+      ensureAnimationLoop();
+    }
+  }
+
+  function ensureAnimationLoop() {
+    if (state.rafId !== 0) return;
     state.rafId = requestAnimationFrame(frame);
+  }
+
+  function startLoopWatchdog() {
+    if (state.loopWatchdogId !== 0) return;
+
+    state.loopWatchdogId = window.setInterval(() => {
+      if (document.visibilityState === "hidden") return;
+
+      const emitAge = Date.now() - state.lastEmitAt;
+      if (emitAge > 1200 || state.rafId === 0) {
+        ensureAnimationLoop();
+      }
+    }, 600);
   }
 
   function syncModeButtons() {
@@ -1042,8 +1098,12 @@ export function createWorldRuntime() {
         state.diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
     }
 
-    const runtime = buildRuntimePacket(0);
-    emitRuntimeReceipt(runtime);
+    if (state.runtimeReady && state.planetField) {
+      try {
+        const runtime = buildRuntimePacket(16.6667);
+        emitRuntimeReceipt(runtime);
+      } catch {}
+    }
   }
 
   function navigateToMode(nextMode) {
@@ -1092,33 +1152,31 @@ export function createWorldRuntime() {
       });
     }
 
-    if (isRoundVisualMode()) {
-      state.canvas.addEventListener("pointerdown", (event) => {
-        state.isDragging = true;
-        state.lastX = event.clientX;
-        state.lastY = event.clientY;
-      }, { passive: true });
+    state.canvas.addEventListener("pointerdown", (event) => {
+      state.isDragging = true;
+      state.lastX = event.clientX;
+      state.lastY = event.clientY;
+    }, { passive: true });
 
-      window.addEventListener("pointermove", (event) => {
-        if (!state.isDragging) return;
+    window.addEventListener("pointermove", (event) => {
+      if (!state.isDragging) return;
 
-        const dx = event.clientX - state.lastX;
-        const dy = event.clientY - state.lastY;
+      const dx = event.clientX - state.lastX;
+      const dy = event.clientY - state.lastY;
 
-        state.lastX = event.clientX;
-        state.lastY = event.clientY;
+      state.lastX = event.clientX;
+      state.lastY = event.clientY;
 
-        state.control.applyDrag(dx, dy);
-      }, { passive: true });
+      state.control.applyDrag(dx, dy);
+    }, { passive: true });
 
-      window.addEventListener("pointerup", () => {
-        state.isDragging = false;
-      }, { passive: true });
+    window.addEventListener("pointerup", () => {
+      state.isDragging = false;
+    }, { passive: true });
 
-      window.addEventListener("pointercancel", () => {
-        state.isDragging = false;
-      }, { passive: true });
-    }
+    window.addEventListener("pointercancel", () => {
+      state.isDragging = false;
+    }, { passive: true });
 
     if (state.flatLayer) {
       state.flatLayer.querySelectorAll(".flat-card").forEach((card) => {
@@ -1132,13 +1190,14 @@ export function createWorldRuntime() {
 
     window.addEventListener("resize", () => {
       resizeWorld();
-      state.ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
-      renderSurface(16.7);
+      try {
+        runFrame(performancে.now?.() || performance.now());
+      } catch {}
+      ensureAnimationLoop();
     }, { passive: true });
 
     window.addEventListener("pagehide", () => {
       persistMotionState();
-
       if (state.rafId) {
         cancelAnimationFrame(state.rafId);
         state.rafId = 0;
@@ -1148,20 +1207,17 @@ export function createWorldRuntime() {
     window.addEventListener("pageshow", () => {
       state.currentMode = getModeFromLocation();
       state.control.setPresentationMode(state.currentMode);
-
-      if (isRoundVisualMode()) {
-        restoreMotionState();
-      }
-
+      restoreMotionState();
       setModePresentation();
+      state.lastFrameAt = performance.now();
+      ensureAnimationLoop();
+    }, { passive: true });
 
-      if (!state.rafId && isRoundVisualMode()) {
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
         state.lastFrameAt = performance.now();
-        state.rafId = requestAnimationFrame(frame);
+        ensureAnimationLoop();
       }
-
-      const runtime = buildRuntimePacket(0);
-      emitRuntimeReceipt(runtime);
     }, { passive: true });
   }
 
@@ -1230,16 +1286,21 @@ export function createWorldRuntime() {
         intakeReceipt: state.lastIntakeReceipt,
         placementReceipt: state.lastPlacementReceipt,
         renderAudit: {},
-        orbitalAudit: {}
+        orbitalAudit: {},
+        verification: {
+          pass: false,
+          reasons: []
+        },
+        failure: {
+          phase: "",
+          message: ""
+        }
       });
 
       resizeWorld();
       buildPlanetFieldOnce();
       state.control.setPresentationMode(state.currentMode);
-
-      if (isRoundVisualMode()) {
-        restoreMotionState();
-      }
+      restoreMotionState();
 
       bindOverlayRoutes();
       setModePresentation();
@@ -1250,16 +1311,18 @@ export function createWorldRuntime() {
       clearBootStatus();
 
       setDiagnosticsMode("peek");
-      buildProgressionReceipt(16.7);
-      renderSurface(16.7);
+      state.lastFrameAt = performance.now();
 
-      if (isRoundVisualMode() && !state.rafId) {
-        state.lastFrameAt = performance.now();
-        state.rafId = requestAnimationFrame(frame);
+      try {
+        runFrame(state.lastFrameAt);
+      } catch (error) {
+        state.runtimeReady = false;
+        state.runtimeErrorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
+        showBootStatus(`World runtime failed during initial frame.\n\n${state.runtimeErrorMessage}\n\nDiagnostic receipt remains active.`);
       }
 
-      const runtime = buildRuntimePacket(16.7);
-      emitRuntimeReceipt(runtime);
+      startLoopWatchdog();
+      ensureAnimationLoop();
     } catch (error) {
       state.runtimeReady = false;
       state.runtimeErrorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);

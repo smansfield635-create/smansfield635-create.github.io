@@ -137,22 +137,23 @@ function withPlanetClip(ctx, projectionState, drawFn) {
   ctx.restore();
 }
 
-function shouldDrawQuad(points) {
+function shouldDrawPoints(points, minimumVisible = 2) {
   let visibleCount = 0;
   for (let i = 0; i < points.length; i += 1) {
     if (points[i]?.visible === true) visibleCount += 1;
   }
-  return visibleCount >= 3;
+  return visibleCount >= minimumVisible;
 }
 
-function drawQuad(ctx, p00, p10, p11, p01, fillStyle, alpha = 1) {
+function drawPolygon(ctx, points, fillStyle, alpha = 1) {
+  if (!points.length) return;
   ctx.globalAlpha = alpha;
   ctx.fillStyle = fillStyle;
   ctx.beginPath();
-  ctx.moveTo(p00.x, p00.y);
-  ctx.lineTo(p10.x, p10.y);
-  ctx.lineTo(p11.x, p11.y);
-  ctx.lineTo(p01.x, p01.y);
+  ctx.moveTo(points[0].x, points[0].y);
+  for (let i = 1; i < points.length; i += 1) {
+    ctx.lineTo(points[i].x, points[i].y);
+  }
   ctx.closePath();
   ctx.fill();
 }
@@ -208,13 +209,15 @@ function getTopologySample(topologyGrid, x, y) {
   return topologyGrid?.[y]?.[x] || null;
 }
 
-function interpolatePoint(a, b, t) {
+function midpointPoint(a, b) {
   return {
-    x: a.x + (b.x - a.x) * t,
-    y: a.y + (b.y - a.y) * t,
-    z: a.z + (b.z - a.z) * t,
+    x: (a.x + b.x) * 0.5,
+    y: (a.y + b.y) * 0.5,
+    z: (a.z + b.z) * 0.5,
     visible: a.visible || b.visible,
-    resolvedRadius: a.resolvedRadius + ((b.resolvedRadius ?? a.resolvedRadius) - a.resolvedRadius) * t
+    resolvedRadius: isFiniteNumber(a.resolvedRadius) && isFiniteNumber(b.resolvedRadius)
+      ? (a.resolvedRadius + b.resolvedRadius) * 0.5
+      : (a.resolvedRadius ?? b.resolvedRadius ?? 0)
   };
 }
 
@@ -235,185 +238,106 @@ function averagePoint(points) {
   };
 }
 
-function scalePointAround(point, center, scaleX, scaleY) {
-  return {
-    ...point,
-    x: center.x + (point.x - center.x) * scaleX,
-    y: center.y + (point.y - center.y) * scaleY
-  };
-}
-
-function skewPoint(point, center, skewX, skewY) {
-  const dx = point.x - center.x;
-  const dy = point.y - center.y;
-  return {
-    ...point,
-    x: point.x + dy * skewX,
-    y: point.y + dx * skewY
-  };
-}
-
 function getLensConfig(activeScope, lensTier) {
   if (activeScope === "LOCAL") {
     if (lensTier === 3) {
       return {
         rowStrideCutoff: 999999,
         colStrideCutoff: 999999,
-        baseScaleX: 0.88,
-        baseScaleY: 0.76,
-        curvatureScaleGainX: 0.14,
-        curvatureScaleGainY: 0.24,
-        skewBase: 0.030,
-        skewEdgeGain: 0.090,
-        subdivisionBias: 1.0
+        ringScale: 1.0,
+        tangentialSkew: 0.020,
+        radialBias: 0.040,
+        densityBias: 1.15
       };
     }
     if (lensTier === 2) {
       return {
-        rowStrideCutoff: 140,
-        colStrideCutoff: 260,
-        baseScaleX: 0.89,
-        baseScaleY: 0.79,
-        curvatureScaleGainX: 0.12,
-        curvatureScaleGainY: 0.21,
-        skewBase: 0.024,
-        skewEdgeGain: 0.080,
-        subdivisionBias: 0.55
+        rowStrideCutoff: 180,
+        colStrideCutoff: 320,
+        ringScale: 1.0,
+        tangentialSkew: 0.014,
+        radialBias: 0.028,
+        densityBias: 0.60
       };
     }
   }
 
   return {
-    rowStrideCutoff: 100,
-    colStrideCutoff: 200,
-    baseScaleX: 0.90,
-    baseScaleY: 0.82,
-    curvatureScaleGainX: 0.10,
-    curvatureScaleGainY: 0.18,
-    skewBase: 0.020,
-    skewEdgeGain: 0.065,
-    subdivisionBias: 0.0
+    rowStrideCutoff: 120,
+    colStrideCutoff: 220,
+    ringScale: 1.0,
+    tangentialSkew: 0.010,
+    radialBias: 0.018,
+    densityBias: 0.0
   };
 }
 
-function deformPatch(points, sample, projectionState) {
+function buildForwardSignalDiamond(centerPoint, northPoint, eastPoint, southPoint, westPoint, sample, projectionState) {
+  const northMid = midpointPoint(centerPoint, northPoint);
+  const eastMid = midpointPoint(centerPoint, eastPoint);
+  const southMid = midpointPoint(centerPoint, southPoint);
+  const westMid = midpointPoint(centerPoint, westPoint);
+
+  const points = [northMid, eastMid, southMid, westMid];
   const center = averagePoint(points);
+
   const latitudeRad = (sample.latDeg * Math.PI) / 180;
   const latAbs = Math.abs(Math.sin(latitudeRad));
-  const avgZ = clamp((points[0].z + points[1].z + points[2].z + points[3].z) * 0.25, -1, 1);
+  const avgZ = clamp((northMid.z + eastMid.z + southMid.z + westMid.z) * 0.25, -1, 1);
   const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
   const curvatureFactor = clamp(latAbs * 0.55 + edgeFactor * 0.85, 0, 1);
-
   const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
 
-  const scaleX = lens.baseScaleX + curvatureFactor * lens.curvatureScaleGainX;
-  const scaleY = lens.baseScaleY + curvatureFactor * lens.curvatureScaleGainY;
+  const phase = ((sample.lonDeg + 180) / 360) * Math.PI * 2 + latitudeRad * 0.35;
+  const tangential = Math.sin(phase) * lens.tangentialSkew * (0.35 + curvatureFactor * 0.65);
+  const radialBias = lens.radialBias * (0.25 + curvatureFactor * 0.75);
 
-  const diagonalBias = Math.sin(latitudeRad) * lens.skewBase;
-  const skewX = diagonalBias * (0.55 + edgeFactor * lens.skewEdgeGain);
-  const skewY = -diagonalBias * 0.20;
+  const ordered = [northMid, eastMid, southMid, westMid].map((point, index) => {
+    const dx = point.x - center.x;
+    const dy = point.y - center.y;
 
-  const p00 = skewPoint(scalePointAround(points[0], center, scaleX, scaleY), center, skewX, skewY);
-  const p10 = skewPoint(scalePointAround(points[1], center, scaleX, scaleY), center, skewX, skewY);
-  const p11 = skewPoint(scalePointAround(points[2], center, scaleX, scaleY), center, skewX, skewY);
-  const p01 = skewPoint(scalePointAround(points[3], center, scaleX, scaleY), center, skewX, skewY);
+    const radialScale = 1 + radialBias * (index % 2 === 0 ? 0.9 : 1.0);
+    const tx = -dy * tangential;
+    const ty = dx * tangential;
+
+    return {
+      ...point,
+      x: center.x + dx * radialScale + tx,
+      y: center.y + dy * radialScale + ty
+    };
+  });
 
   return {
-    points: [p00, p10, p11, p01],
+    points: ordered,
     curvatureFactor
   };
 }
 
-function resolveSubdivision(sample, points, projectionState) {
+function resolveCellDensity(sample, polygonPoints, projectionState) {
   const latitudeRad = (sample.latDeg * Math.PI) / 180;
   const latAbs = Math.abs(Math.sin(latitudeRad));
-  const avgZ = clamp((points[0].z + points[1].z + points[2].z + points[3].z) * 0.25, -1, 1);
+  const avgZ = clamp(
+    polygonPoints.reduce((sum, point) => sum + point.z, 0) / Math.max(1, polygonPoints.length),
+    -1,
+    1
+  );
   const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
 
-  const screenSpanX = Math.max(
-    Math.abs(points[1].x - points[0].x),
-    Math.abs(points[2].x - points[3].x)
-  );
-  const screenSpanY = Math.max(
-    Math.abs(points[3].y - points[0].y),
-    Math.abs(points[2].y - points[1].y)
-  );
-  const patchSpan = Math.max(screenSpanX, screenSpanY);
+  let span = 0;
+  for (let i = 0; i < polygonPoints.length; i += 1) {
+    const a = polygonPoints[i];
+    const b = polygonPoints[(i + 1) % polygonPoints.length];
+    span = Math.max(span, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+  }
 
+  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
   const zoomFactor = clamp(
     projectionState.radius / Math.max(1, Math.min(projectionState.width, projectionState.height) * 0.28),
     0,
     3
   );
 
-  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
-  const densityScore =
-    patchSpan / 18 +
-    edgeFactor * 1.4 +
-    latAbs * 0.8 +
-    zoomFactor * 0.35 +
-    lens.subdivisionBias;
-
-  if (densityScore > 4.2) return 3;
-  if (densityScore > 2.4) return 2;
-  return 1;
-}
-
-function subdivideQuad(p00, p10, p11, p01, subdiv) {
-  if (subdiv <= 1) {
-    return [[p00, p10, p11, p01]];
-  }
-
-  const quads = [];
-  for (let sy = 0; sy < subdiv; sy += 1) {
-    const ty0 = sy / subdiv;
-    const ty1 = (sy + 1) / subdiv;
-
-    const left0 = interpolatePoint(p00, p01, ty0);
-    const right0 = interpolatePoint(p10, p11, ty0);
-    const left1 = interpolatePoint(p00, p01, ty1);
-    const right1 = interpolatePoint(p10, p11, ty1);
-
-    for (let sx = 0; sx < subdiv; sx += 1) {
-      const tx0 = sx / subdiv;
-      const tx1 = (sx + 1) / subdiv;
-
-      const q00 = interpolatePoint(left0, right0, tx0);
-      const q10 = interpolatePoint(left0, right0, tx1);
-      const q01 = interpolatePoint(left1, right1, tx0);
-      const q11 = interpolatePoint(left1, right1, tx1);
-
-      quads.push([q00, q10, q11, q01]);
-    }
-  }
-  return quads;
-}
-
-function drawDarkContainer(ctx, projectionState, activeScope) {
-  ctx.save();
-
-  const bg = ctx.createRadialGradient(
-    projectionState.centerX,
-    projectionState.centerY,
-    0,
-    projectionState.centerX,
-    projectionState.centerY,
-    Math.max(projectionState.width, projectionState.height) * 0.72
-  );
-
-  if (activeScope === "UNIVERSE") {
-    bg.addColorStop(0, "rgb(3,5,10)");
-    bg.addColorStop(0.45, "rgb(1,2,5)");
-    bg.addColorStop(1, "rgb(0,0,0)");
-  } else {
-    bg.addColorStop(0, "rgb(5,7,14)");
-    bg.addColorStop(0.45, "rgb(2,3,8)");
-    bg.addColorStop(1, "rgb(0,0,0)");
-  }
-
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
-  ctx.restore();
+  return span / 16 + edgeFactor * 1.35 + latAbs * 0.75 + zoomFactor * 0.30 + lens.densityBias;
 }
 
 function drawPlanetRim(ctx, projectionState) {
@@ -497,58 +421,95 @@ function drawPlanetBase(ctx, projectionState) {
   });
 }
 
-function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
+function drawDarkContainer(ctx, projectionState, activeScope) {
+  ctx.save();
+
+  const bg = ctx.createRadialGradient(
+    projectionState.centerX,
+    projectionState.centerY,
+    0,
+    projectionState.centerX,
+    projectionState.centerY,
+    Math.max(projectionState.width, projectionState.height) * 0.72
+  );
+
+  if (activeScope === "UNIVERSE") {
+    bg.addColorStop(0, "rgb(3,5,10)");
+    bg.addColorStop(0.45, "rgb(1,2,5)");
+    bg.addColorStop(1, "rgb(0,0,0)");
+  } else {
+    bg.addColorStop(0, "rgb(5,7,14)");
+    bg.addColorStop(0.45, "rgb(2,3,8)");
+    bg.addColorStop(1, "rgb(0,0,0)");
+  }
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
+  ctx.restore();
+}
+
+function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
   if (!grid.length || !grid[0].length) return;
 
-  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
   const rowCount = grid.length;
+  const rowLength = grid[0].length;
+  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
   const rowStride = rowCount >= lens.rowStrideCutoff ? 2 : 1;
+  const colStride = rowLength >= lens.colStrideCutoff ? 2 : 1;
 
   ctx.save();
 
-  for (let y = 0; y < rowCount - rowStride; y += rowStride) {
+  for (let y = rowStride; y < rowCount - rowStride; y += rowStride) {
     const row = grid[y];
-    const nextRow = grid[y + rowStride];
-    const rowLength = row.length;
-    const colStride = rowLength >= lens.colStrideCutoff ? 2 : 1;
 
     for (let x = 0; x < rowLength; x += colStride) {
-      const nextX = (x + colStride) % rowLength;
+      const westX = (x - colStride + rowLength) % rowLength;
+      const eastX = (x + colStride) % rowLength;
 
-      const s00 = row[x];
-      const s10 = row[nextX];
-      const s01 = nextRow[x];
-      const s11 = nextRow[nextX];
+      const centerSample = row[x];
+      const northSample = grid[y - rowStride]?.[x];
+      const southSample = grid[y + rowStride]?.[x];
+      const westSample = row[westX];
+      const eastSample = row[eastX];
 
-      const t00 = getTopologySample(topologyGrid, x, y);
-      const t10 = getTopologySample(topologyGrid, nextX, y);
-      const t01 = getTopologySample(topologyGrid, x, y + rowStride);
-      const t11 = getTopologySample(topologyGrid, nextX, y + rowStride);
+      if (!centerSample || !northSample || !southSample || !westSample || !eastSample) continue;
 
-      const p00 = pointFromSample(s00, projectPoint, t00);
-      const p10 = pointFromSample(s10, projectPoint, t10);
-      const p01 = pointFromSample(s01, projectPoint, t01);
-      const p11 = pointFromSample(s11, projectPoint, t11);
+      const centerTopology = getTopologySample(topologyGrid, x, y);
+      const northTopology = getTopologySample(topologyGrid, x, y - rowStride);
+      const southTopology = getTopologySample(topologyGrid, x, y + rowStride);
+      const westTopology = getTopologySample(topologyGrid, westX, y);
+      const eastTopology = getTopologySample(topologyGrid, eastX, y);
 
-      if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
+      const centerPoint = pointFromSample(centerSample, projectPoint, centerTopology);
+      const northPoint = pointFromSample(northSample, projectPoint, northTopology);
+      const southPoint = pointFromSample(southSample, projectPoint, southTopology);
+      const westPoint = pointFromSample(westSample, projectPoint, westTopology);
+      const eastPoint = pointFromSample(eastSample, projectPoint, eastTopology);
 
-      const subdiv = resolveSubdivision(s00, [p00, p10, p11, p01], projectionState);
-      const quads = subdivideQuad(p00, p10, p11, p01, subdiv);
-
-      const appearance = describeSurface(s00, p00, t00);
-      const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
-
-      for (const quad of quads) {
-        if (!shouldDrawQuad(quad)) continue;
-
-        const deformed = deformPatch(quad, s00, projectionState);
-        const [d00, d10, d11, d01] = deformed.points;
-
-        if (!shouldDrawQuad([d00, d10, d11, d01])) continue;
-
-        const alpha = appearance.fillAlpha * (0.96 + deformed.curvatureFactor * 0.04);
-        drawQuad(ctx, d00, d10, d11, d01, fillStyle, alpha);
+      if (!centerPoint.visible && !shouldDrawPoints([northPoint, eastPoint, southPoint, westPoint], 2)) {
+        continue;
       }
+
+      const signalCell = buildForwardSignalDiamond(
+        centerPoint,
+        northPoint,
+        eastPoint,
+        southPoint,
+        westPoint,
+        centerSample,
+        projectionState
+      );
+
+      if (!shouldDrawPoints(signalCell.points, 2)) continue;
+
+      const densityScore = resolveCellDensity(centerSample, signalCell.points, projectionState);
+      if (densityScore < 0.2) continue;
+
+      const appearance = describeSurface(centerSample, centerPoint, centerTopology);
+      const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
+      const alpha = appearance.fillAlpha * (0.95 + signalCell.curvatureFactor * 0.05);
+
+      drawPolygon(ctx, signalCell.points, fillStyle, alpha);
     }
   }
 
@@ -772,7 +733,7 @@ export function createRenderer() {
     drawPlanetBase(ctx, projectionState);
 
     withPlanetClip(ctx, projectionState, () => {
-      drawSurfaceMesh(ctx, grid, topologyGrid, projector, projectionState);
+      drawForwardSignalMesh(ctx, grid, topologyGrid, projector, projectionState);
     });
 
     const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);

@@ -8,9 +8,7 @@
 // 4) emit live gauges receipt continuously
 // 5) stay finite, deterministic, and non-drifting
 
-// 🔧 FIX: use named export instead of default
 import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
-
 import { createPlanetEngine } from "/world/planet_engine.js";
 import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
@@ -320,6 +318,83 @@ function updateInstrumentReceipt(receipt) {
   } catch {}
 }
 
+function disposeRuntime() {
+  if (disposed) return;
+  disposed = true;
+
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  if (canvas && onPointerDown) {
+    canvas.removeEventListener("pointerdown", onPointerDown);
+  }
+
+  if (onPointerMove) {
+    window.removeEventListener("pointermove", onPointerMove);
+  }
+
+  if (onPointerUp) {
+    window.removeEventListener("pointerup", onPointerUp);
+  }
+
+  if (onPointerCancel) {
+    window.removeEventListener("pointercancel", onPointerCancel);
+  }
+
+  if (onResize) {
+    window.removeEventListener("resize", onResize);
+  }
+
+  if (onPageHide) {
+    window.removeEventListener("pagehide", onPageHide);
+  }
+
+  window[RUNTIME_ACTIVE_KEY] = false;
+  started = false;
+}
+
+function bindInput() {
+  if (!canvas || !control) return;
+
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  onPointerDown = (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+  };
+
+  onPointerMove = (e) => {
+    if (!dragging) return;
+
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    if (typeof control.applyDrag === "function") {
+      control.applyDrag(dx, dy);
+    }
+  };
+
+  onPointerUp = () => {
+    dragging = false;
+  };
+
+  onPointerCancel = () => {
+    dragging = false;
+  };
+
+  canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("pointerup", onPointerUp, { passive: true });
+  window.addEventListener("pointercancel", onPointerCancel, { passive: true });
+}
+
 function frame(now) {
   const receipt = ensureReceipt();
   const dtMs = lastNow ? now - lastNow : 16.67;
@@ -376,8 +451,18 @@ export function startRuntime() {
 
     setupSystems();
     resize();
+    bindInput();
 
-    window.addEventListener("resize", resize, { passive: true });
+    onResize = () => {
+      resize();
+    };
+
+    onPageHide = () => {
+      disposeRuntime();
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("pagehide", onPageHide, { passive: true });
 
     receipt.page = "world";
     receipt.phase = "BOOT";
@@ -390,6 +475,7 @@ export function startRuntime() {
   } catch (err) {
     setFailure("startup", err instanceof Error ? err.message : String(err));
     emitRuntimeReceiptContinuous(receipt);
+    disposeRuntime();
   }
 }
 

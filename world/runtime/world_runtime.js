@@ -88,13 +88,13 @@ function ensureReceipt() {
           orbitPhase: 0,
           zoomCurrent: 0,
           zoomTarget: 0,
-          mode: null,
+          mode: null
         },
         orbitalState: {
-          orbitPhase: 0,
+          orbitPhase: 0
         },
         projectionSummary: null,
-        cameraState: null,
+        cameraState: null
       },
 
       renderAudit: {
@@ -102,7 +102,7 @@ function ensureReceipt() {
         waterFamilyCount: 0,
         landFamilyCount: 0,
         cryosphereCount: 0,
-        shorelineCount: 0,
+        shorelineCount: 0
       },
 
       emissionReceipt: {
@@ -110,7 +110,7 @@ function ensureReceipt() {
         emissionFrontVisible: 0,
         emissionEmitted: 0,
         emissionSuppressed: 0,
-        emissionPass: false,
+        emissionPass: false
       },
 
       placementReceipt: {
@@ -119,14 +119,14 @@ function ensureReceipt() {
         markerCollisionCount: 0,
         placementReservedReject: 0,
         placementViewportReject: 0,
-        placementPass: false,
+        placementPass: false
       },
 
       scope: {
         activeScope: "UNKNOWN",
         scopeSizeKm: null,
         scopeAnchor: null,
-        scopeTransitionState: null,
+        scopeTransitionState: null
       },
 
       lens: {
@@ -135,7 +135,7 @@ function ensureReceipt() {
         zoomCurrent: 0,
         zoomTarget: 0,
         zoomMin: 0,
-        zoomMax: 0,
+        zoomMax: 0
       },
 
       primitive: {
@@ -143,7 +143,7 @@ function ensureReceipt() {
         primitivePath: "UNKNOWN",
         centerAnchored: false,
         rowColumnPathActive: false,
-        sectorBandPathActive: false,
+        sectorBandPathActive: false
       },
 
       topology: {
@@ -151,32 +151,32 @@ function ensureReceipt() {
         neighborLaw: "UNKNOWN",
         visibleCellCount: 0,
         emittedCellCount: 0,
-        skippedCellCount: 0,
+        skippedCellCount: 0
       },
 
       renderAuthority: {
         renderReadsScope: false,
         renderReadsLens: false,
         fallbackMode: false,
-        liveRenderPath: "UNKNOWN",
+        liveRenderPath: "UNKNOWN"
       },
 
       density: {
         averageCellSpanPx: 0,
         subdivisionTier: 0,
-        densityTier: "UNKNOWN",
+        densityTier: "UNKNOWN"
       },
 
       instrument: null,
 
       verification: {
-        pass: false,
+        pass: false
       },
 
       failure: {
         phase: null,
-        message: null,
-      },
+        message: null
+      }
     };
   }
 
@@ -197,13 +197,11 @@ function emitRuntimeReceiptContinuous(receipt, extra = {}) {
       motionState: receipt.control?.motionState || {},
       orbitalState: receipt.control?.orbitalState || {},
       projectionSummary: receipt.control?.projectionSummary || null,
-      cameraState: receipt.control?.cameraState || null,
+      cameraState: receipt.control?.cameraState || null
     },
 
     instrument: receipt.instrument || {},
-
     renderAudit: receipt.renderAudit || {},
-
     emissionReceipt: receipt.emissionReceipt || {},
     placementReceipt: receipt.placementReceipt || {},
 
@@ -218,10 +216,10 @@ function emitRuntimeReceiptContinuous(receipt, extra = {}) {
 
     failure: {
       phase: receipt.failure?.phase || null,
-      message: receipt.failure?.message || "",
+      message: receipt.failure?.message || ""
     },
 
-    ...extra,
+    ...extra
   };
 
   try {
@@ -312,10 +310,7 @@ function updateControlReceipt(receipt) {
   );
 
   const projectionSummary = safe(
-    () =>
-      typeof control.getProjectionSummary === "function"
-        ? control.getProjectionSummary()
-        : null,
+    () => (typeof control.getProjectionSummary === "function" ? control.getProjectionSummary() : null),
     null
   );
 

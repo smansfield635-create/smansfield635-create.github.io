@@ -31,6 +31,7 @@ function getKernelConstants() {
     initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
     dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0082,
     inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.992,
+    autoSpinSpeed: isFiniteNumber(constants.autoSpinSpeed) ? constants.autoSpinSpeed : 0.000045,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });
@@ -94,7 +95,7 @@ export function createControlSystem() {
   let presentationMode = "round";
 
   let autoSpinEnabled = true;
-  let autoSpinSpeed = 0.00009;
+  let autoSpinSpeed = K.autoSpinSpeed;
 
   let recoveryEnabled = true;
   let recoveryYawStrength = 0.0025;
@@ -111,6 +112,9 @@ export function createControlSystem() {
 
   const RELEASE_YAW_GAIN = 1.35;
   const RELEASE_PITCH_GAIN = 0.72;
+
+  const MAX_RELEASE_YAW_IMPULSE = 0.085;
+  const MAX_RELEASE_PITCH_IMPULSE = 0.045;
 
   const cameraState = {
     width: 0,
@@ -240,8 +244,8 @@ export function createControlSystem() {
       smoothedDragPitch * 0.38 +
       lastDragPitchStep * RELEASE_PITCH_GAIN;
 
-    yawVelocity = clamp(yawVelocity, -0.14, 0.14);
-    pitchVelocity = clamp(pitchVelocity, -0.06, 0.06);
+    yawVelocity = clamp(yawVelocity, -MAX_RELEASE_YAW_IMPULSE, MAX_RELEASE_YAW_IMPULSE);
+    pitchVelocity = clamp(pitchVelocity, -MAX_RELEASE_PITCH_IMPULSE, MAX_RELEASE_PITCH_IMPULSE);
   }
 
   function stepZoom() {

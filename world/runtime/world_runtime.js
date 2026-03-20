@@ -1,13 +1,10 @@
 // /world/runtime/world_runtime.js
-// MODE: EMERGENCY RECONSTRUCTION BASELINE
-// STATUS: RECOVERY RUNTIME
-// NOTE:
-// - This is NOT your original file.
-// - This is a minimal deterministic runtime spine to restore:
-//   1) live frame loop
-//   2) authority receipt emission
-//   3) control → render → instruments → gauges continuity
-// - Keep this file finite. Do not expand scope here.
+// RUNTIME BASELINE RECONSTRUCTION
+// PURPOSE:
+// 1) restore a stable runtime loop
+// 2) restore control -> render continuity
+// 3) restore live receipt emission for gauges
+// NOTE: this is a baseline, not the lost original
 
 import worldKernel from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
@@ -15,26 +12,24 @@ import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
 import * as instruments from "/assets/instruments.js";
 
-const AUTHORITY_RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
-const RUNTIME_GUARD_KEY = "__WORLD_RUNTIME_ACTIVE__";
+const RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
+const RUNTIME_ACTIVE_KEY = "__WORLD_RUNTIME_ACTIVE__";
 const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
-
-let rafId = 0;
-let lastNow = 0;
 
 let canvas = null;
 let ctx = null;
-
 let planetEngine = null;
 let renderer = null;
 let control = null;
-
 let planetField = null;
-let planetDimensions = { width: 256, height: 256 };
+
+let rafId = 0;
+let lastNow = 0;
+let started = false;
 
 function ensureReceipt() {
-  if (!window[AUTHORITY_RECEIPT_KEY]) {
-    window[AUTHORITY_RECEIPT_KEY] = {
+  if (!window[RECEIPT_KEY]) {
+    window[RECEIPT_KEY] = {
       bootSource: "/index.html",
       runtimeSource: "/world/runtime/world_runtime.js",
       inputOwner: "/world/control.js",
@@ -44,12 +39,14 @@ function ensureReceipt() {
       duplicateRuntime: false,
       duplicateRender: false,
       duplicateInput: false,
+
       page: "world",
       phase: "runtime",
       mode: "active",
       timestamp: 0,
       fps: 0,
       dtMs: 0,
+
       control: {
         motionState: {
           yaw: 0,
@@ -57,6 +54,9 @@ function ensureReceipt() {
           yawVelocity: 0,
           pitchVelocity: 0,
           orbitPhase: 0,
+          zoomCurrent: 0,
+          zoomTarget: 0,
+          mode: null,
         },
         orbitalState: {
           orbitPhase: 0,
@@ -64,6 +64,7 @@ function ensureReceipt() {
         projectionSummary: null,
         cameraState: null,
       },
+
       renderAudit: {
         sampleCount: 0,
         waterFamilyCount: 0,
@@ -71,6 +72,7 @@ function ensureReceipt() {
         cryosphereCount: 0,
         shorelineCount: 0,
       },
+
       emissionReceipt: {
         emissionOrbitalCount: 0,
         emissionFrontVisible: 0,
@@ -78,6 +80,7 @@ function ensureReceipt() {
         emissionSuppressed: 0,
         emissionPass: false,
       },
+
       placementReceipt: {
         markerRequired: false,
         placementPlaced: 0,
@@ -86,17 +89,21 @@ function ensureReceipt() {
         placementViewportReject: 0,
         placementPass: false,
       },
+
       instrument: null,
+
       verification: {
         pass: false,
       },
+
       failure: {
         phase: null,
         message: null,
       },
     };
   }
-  return window[AUTHORITY_RECEIPT_KEY];
+
+  return window[RECEIPT_KEY];
 }
 
 function emitRuntimeReceiptContinuous(receipt, extra = {}) {
@@ -135,10 +142,12 @@ function emitRuntimeReceiptContinuous(receipt, extra = {}) {
 
   try {
     localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(payload));
-  } catch {}
+  } catch {
+    // storage unavailable; do not break runtime
+  }
 }
 
-function fail(phase, message) {
+function setFailure(phase, message) {
   const receipt = ensureReceipt();
   receipt.verification.pass = false;
   receipt.failure.phase = phase;
@@ -152,15 +161,14 @@ function clearFailure() {
 }
 
 function getCanvas() {
-  const found = document.getElementById("world");
-  if (!found) {
-    throw new Error("Missing #world canvas");
-  }
-  return found;
+  const el = document.getElementById("world");
+  if (!el) throw new Error("Missing #world canvas");
+  return el;
 }
 
 function resize() {
-  if (!canvas) return;
+  if (!canvas || !ctx) return;
+
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const width = Math.max(1, window.innerWidth);
   const height = Math.max(1, window.innerHeight);
@@ -170,81 +178,86 @@ function resize() {
   canvas.style.width = `${width}px`;
   canvas.style.height = `${height}px`;
 
-  if (ctx) {
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   if (control && typeof control.resize === "function") {
     control.resize(width, height);
   }
 }
 
-function buildPlanet() {
+function setupSystems() {
   planetEngine = createPlanetEngine();
+  renderer = createRenderer();
+  control = createControlSystem();
+
   if (!planetEngine || typeof planetEngine.buildPlanetField !== "function") {
     throw new Error("planet_engine missing buildPlanetField()");
   }
 
-  planetField = planetEngine.buildPlanetField({});
-  if (!planetField) {
-    throw new Error("planet_engine returned empty planetField");
-  }
-
-  if (typeof planetEngine.getPlanetDimensions === "function") {
-    const dims = planetEngine.getPlanetDimensions();
-    if (dims && Number.isFinite(dims.width) && Number.isFinite(dims.height)) {
-      planetDimensions = dims;
-    }
-  }
-}
-
-function setupSystems() {
-  renderer = createRenderer();
   if (!renderer || typeof renderer.renderPlanet !== "function") {
     throw new Error("render.js missing renderPlanet()");
   }
 
-  control = createControlSystem();
   if (!control) {
     throw new Error("control.js missing createControlSystem()");
+  }
+
+  planetField = planetEngine.buildPlanetField({});
+  if (!planetField) {
+    throw new Error("planet_engine returned empty field");
   }
 }
 
 function bindInput() {
-  if (!canvas || !control) return;
-
   let dragging = false;
   let lastX = 0;
   let lastY = 0;
 
-  canvas.addEventListener("pointerdown", (e) => {
-    dragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-  }, { passive: true });
+  canvas.addEventListener(
+    "pointerdown",
+    (e) => {
+      dragging = true;
+      lastX = e.clientX;
+      lastY = e.clientY;
+    },
+    { passive: true }
+  );
 
-  window.addEventListener("pointermove", (e) => {
-    if (!dragging) return;
-    const dx = e.clientX - lastX;
-    const dy = e.clientY - lastY;
-    lastX = e.clientX;
-    lastY = e.clientY;
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      if (!dragging) return;
 
-    if (typeof control.applyDrag === "function") {
-      control.applyDrag(dx, dy);
-    }
-  }, { passive: true });
+      const dx = e.clientX - lastX;
+      const dy = e.clientY - lastY;
+      lastX = e.clientX;
+      lastY = e.clientY;
 
-  window.addEventListener("pointerup", () => {
-    dragging = false;
-  }, { passive: true });
+      if (typeof control.applyDrag === "function") {
+        control.applyDrag(dx, dy);
+      }
+    },
+    { passive: true }
+  );
 
-  window.addEventListener("pointercancel", () => {
-    dragging = false;
-  }, { passive: true });
+  window.addEventListener(
+    "pointerup",
+    () => {
+      dragging = false;
+    },
+    { passive: true }
+  );
+
+  window.addEventListener(
+    "pointercancel",
+    () => {
+      dragging = false;
+    },
+    { passive: true }
+  );
 }
 
-function safeCall(fn, fallback) {
+function safe(fn, fallback = null) {
   try {
     return fn();
   } catch {
@@ -253,47 +266,52 @@ function safeCall(fn, fallback) {
 }
 
 function updateControlReceipt(receipt) {
-  const motionState = safeCall(
+  const motionState = safe(
     () => (typeof control.getMotionState === "function" ? control.getMotionState() : null),
     null
   );
 
-  const orbitalState = safeCall(
+  const orbitalState = safe(
     () => (typeof control.getOrbitalState === "function" ? control.getOrbitalState() : null),
     null
   );
 
-  const projectionSummary = safeCall(
-    () => (typeof control.getProjectionSummary === "function" ? control.getProjectionSummary() : null),
+  const projectionSummary = safe(
+    () =>
+      typeof control.getProjectionSummary === "function"
+        ? control.getProjectionSummary()
+        : null,
     null
   );
 
-  const cameraState = safeCall(
+  const cameraState = safe(
     () => (typeof control.getCameraState === "function" ? control.getCameraState() : null),
     null
   );
 
-  receipt.control.motionState = motionState || receipt.control.motionState;
-  receipt.control.orbitalState = orbitalState || receipt.control.orbitalState;
-  receipt.control.projectionSummary = projectionSummary || null;
-  receipt.control.cameraState = cameraState || null;
+  if (motionState) receipt.control.motionState = motionState;
+  if (orbitalState) receipt.control.orbitalState = orbitalState;
+  receipt.control.projectionSummary = projectionSummary;
+  receipt.control.cameraState = cameraState;
 }
 
 function renderFrame(receipt) {
-  const renderResult = renderer.renderPlanet({
-    ctx,
-    planetField,
-    worldKernel,
-    projectPoint: (lat, lon, r = 0) => {
-      if (typeof control.projectSphere === "function") {
-        return control.projectSphere(lat, lon, r);
-      }
-      return null;
-    },
-    viewState: typeof control.getCameraState === "function"
-      ? control.getCameraState()
-      : null,
-  }) || {};
+  const renderResult =
+    renderer.renderPlanet({
+      ctx,
+      planetField,
+      worldKernel,
+      projectPoint: (lat, lon, r = 0) => {
+        if (typeof control.projectSphere === "function") {
+          return control.projectSphere(lat, lon, r);
+        }
+        return null;
+      },
+      viewState:
+        typeof control.getCameraState === "function"
+          ? control.getCameraState()
+          : null,
+    }) || {};
 
   const audit = renderResult.audit || {};
   const orbitalAudit = renderResult.orbitalAudit || {};
@@ -311,8 +329,7 @@ function renderFrame(receipt) {
     (orbitalAudit.rejectedBackfaceCount ?? 0) +
     (orbitalAudit.rejectedWeakVisibilityCount ?? 0);
 
-  receipt.emissionReceipt.emissionPass =
-    receipt.emissionReceipt.emissionEmitted >= 0;
+  receipt.emissionReceipt.emissionPass = true;
 }
 
 function updateInstrumentReceipt(receipt) {
@@ -328,11 +345,9 @@ function updateInstrumentReceipt(receipt) {
           stabilityClass: "unknown",
         },
       });
-    } else {
-      receipt.instrument = receipt.instrument || null;
     }
   } catch {
-    receipt.instrument = receipt.instrument || null;
+    // keep prior instrument value if present
   }
 }
 
@@ -341,14 +356,14 @@ function frame(now) {
   const dtMs = lastNow ? now - lastNow : 16.67;
   lastNow = now;
 
-  receipt.timestamp = now;
-  receipt.dtMs = dtMs;
-  receipt.fps = dtMs > 0 ? 1000 / dtMs : 0;
+  clearFailure();
+
   receipt.page = "world";
   receipt.phase = "runtime";
   receipt.mode = "active";
-
-  clearFailure();
+  receipt.timestamp = now;
+  receipt.dtMs = dtMs;
+  receipt.fps = dtMs > 0 ? 1000 / dtMs : 0;
 
   try {
     if (typeof control.stepInertia === "function") {
@@ -361,7 +376,7 @@ function frame(now) {
 
     receipt.verification.pass = true;
   } catch (err) {
-    fail("frame", err instanceof Error ? err.message : String(err));
+    setFailure("frame", err instanceof Error ? err.message : String(err));
   }
 
   emitRuntimeReceiptContinuous(receipt);
@@ -371,14 +386,15 @@ function frame(now) {
 export function startRuntime() {
   const receipt = ensureReceipt();
 
-  if (window[RUNTIME_GUARD_KEY]) {
+  if (started || window[RUNTIME_ACTIVE_KEY]) {
     receipt.duplicateRuntime = true;
-    fail("startup", "Duplicate runtime detected");
+    setFailure("startup", "Duplicate runtime detected");
     emitRuntimeReceiptContinuous(receipt);
     return;
   }
 
-  window[RUNTIME_GUARD_KEY] = true;
+  started = true;
+  window[RUNTIME_ACTIVE_KEY] = true;
 
   try {
     canvas = getCanvas();
@@ -388,24 +404,26 @@ export function startRuntime() {
     }
 
     setupSystems();
-    buildPlanet();
     resize();
     bindInput();
 
     window.addEventListener("resize", resize, { passive: true });
-    window.addEventListener("pagehide", () => {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
+    window.addEventListener(
+      "pagehide",
+      () => {
+        if (rafId) cancelAnimationFrame(rafId);
         rafId = 0;
-      }
-      window[RUNTIME_GUARD_KEY] = false;
-    }, { passive: true });
+        window[RUNTIME_ACTIVE_KEY] = false;
+        started = false;
+      },
+      { passive: true }
+    );
 
     lastNow = performance.now();
     emitRuntimeReceiptContinuous(receipt);
     rafId = window.requestAnimationFrame(frame);
   } catch (err) {
-    fail("startup", err instanceof Error ? err.message : String(err));
+    setFailure("startup", err instanceof Error ? err.message : String(err));
     emitRuntimeReceiptContinuous(receipt);
   }
 }

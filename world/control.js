@@ -27,8 +27,8 @@ function getKernelConstants() {
     maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
     initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
     initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
-    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.014,
-    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.68,
+    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.012,
+    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.88,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });
@@ -83,6 +83,11 @@ export function createControlSystem() {
   let presentationMode = "round";
 
   const ZOOM_EASING = 0.12;
+  const YAW_GAIN = 2.2;
+  const PITCH_GAIN = 1.0;
+  const YAW_CARRY = 2.8;
+  const PITCH_CARRY = 1.0;
+  const VELOCITY_BLEND = 0.38;
 
   const cameraState = {
     width: 0,
@@ -151,19 +156,19 @@ export function createControlSystem() {
   }
 
   function applyDrag(deltaX, deltaY) {
-    const yawGain = 2.4;
-    const pitchGain = 1.2;
-    const yawCarry = 1.8;
-    const pitchCarry = 0.9;
-
-    const yawStep = deltaX * K.dragSensitivity * yawGain;
-    const pitchStep = deltaY * K.dragSensitivity * pitchGain;
+    const yawStep = deltaX * K.dragSensitivity * YAW_GAIN;
+    const pitchStep = deltaY * K.dragSensitivity * PITCH_GAIN;
 
     yaw = wrapAngle(yaw + yawStep);
     pitch += pitchStep;
 
-    yawVelocity = yawStep * yawCarry;
-    pitchVelocity = pitchStep * pitchCarry;
+    yawVelocity =
+      yawVelocity * VELOCITY_BLEND +
+      yawStep * YAW_CARRY;
+
+    pitchVelocity =
+      pitchVelocity * VELOCITY_BLEND +
+      pitchStep * PITCH_CARRY;
 
     clampPitch();
   }
@@ -176,7 +181,7 @@ export function createControlSystem() {
   }
 
   function stepInertia(dtMs = 16.6667) {
-    const frameScale = clamp(dtMs / 16.6667, 0.25, 4);
+    const frameScale = clamp(dtMs / 16.6667, 0.25, 2.5);
 
     yaw = wrapAngle(yaw + yawVelocity * frameScale);
     pitch += pitchVelocity * frameScale;

@@ -37,6 +37,28 @@ let onPointerMove = null;
 let onPointerUp = null;
 let onPointerCancel = null;
 
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function pickNumber(...values) {
+  for (const value of values) {
+    if (isFiniteNumber(value)) return value;
+  }
+  return null;
+}
+
+function pickString(...values) {
+  for (const value of values) {
+    if (typeof value === "string" && value.length > 0) return value;
+  }
+  return null;
+}
+
 function ensureReceipt() {
   if (!window[RECEIPT_KEY]) {
     window[RECEIPT_KEY] = {
@@ -100,6 +122,51 @@ function ensureReceipt() {
         placementPass: false,
       },
 
+      scope: {
+        activeScope: "UNKNOWN",
+        scopeSizeKm: null,
+        scopeAnchor: null,
+        scopeTransitionState: null,
+      },
+
+      lens: {
+        lensTier: null,
+        lensMode: "UNKNOWN",
+        zoomCurrent: 0,
+        zoomTarget: 0,
+        zoomMin: 0,
+        zoomMax: 0,
+      },
+
+      primitive: {
+        primitiveType: "UNKNOWN",
+        primitivePath: "UNKNOWN",
+        centerAnchored: false,
+        rowColumnPathActive: false,
+        sectorBandPathActive: false,
+      },
+
+      topology: {
+        topologyMode: "UNKNOWN",
+        neighborLaw: "UNKNOWN",
+        visibleCellCount: 0,
+        emittedCellCount: 0,
+        skippedCellCount: 0,
+      },
+
+      renderAuthority: {
+        renderReadsScope: false,
+        renderReadsLens: false,
+        fallbackMode: false,
+        liveRenderPath: "UNKNOWN",
+      },
+
+      density: {
+        averageCellSpanPx: 0,
+        subdivisionTier: 0,
+        densityTier: "UNKNOWN",
+      },
+
       instrument: null,
 
       verification: {
@@ -139,6 +206,13 @@ function emitRuntimeReceiptContinuous(receipt, extra = {}) {
 
     emissionReceipt: receipt.emissionReceipt || {},
     placementReceipt: receipt.placementReceipt || {},
+
+    scope: receipt.scope || {},
+    lens: receipt.lens || {},
+    primitive: receipt.primitive || {},
+    topology: receipt.topology || {},
+    renderAuthority: receipt.renderAuthority || {},
+    density: receipt.density || {},
 
     verification: receipt.verification || { pass: false },
 
@@ -250,10 +324,47 @@ function updateControlReceipt(receipt) {
     null
   );
 
+  const scopeState = safe(
+    () => (typeof control.getScopeState === "function" ? control.getScopeState() : null),
+    null
+  );
+
+  const lensState = safe(
+    () => (typeof control.getLensState === "function" ? control.getLensState() : null),
+    null
+  );
+
   if (motionState) receipt.control.motionState = motionState;
   if (orbitalState) receipt.control.orbitalState = orbitalState;
   receipt.control.projectionSummary = projectionSummary;
   receipt.control.cameraState = cameraState;
+
+  const camera = normalizeObject(cameraState);
+  const scope = normalizeObject(scopeState);
+  const lens = normalizeObject(lensState);
+  const motion = normalizeObject(motionState);
+
+  receipt.scope.activeScope =
+    pickString(scope.activeScope, camera.activeScope, receipt.scope.activeScope, "UNKNOWN") || "UNKNOWN";
+  receipt.scope.scopeSizeKm =
+    pickNumber(scope.scopeSizeKm, camera.scopeSizeKm, receipt.scope.scopeSizeKm);
+  receipt.scope.scopeAnchor =
+    pickString(scope.scopeAnchor, camera.scopeAnchor, receipt.scope.scopeAnchor);
+  receipt.scope.scopeTransitionState =
+    scope.scopeTransitionState ?? camera.scopeTransitionState ?? receipt.scope.scopeTransitionState ?? null;
+
+  receipt.lens.lensTier =
+    pickNumber(lens.lensTier, camera.lensTier, receipt.lens.lensTier);
+  receipt.lens.lensMode =
+    pickString(lens.lensMode, camera.lensMode, receipt.lens.lensMode, "UNKNOWN") || "UNKNOWN";
+  receipt.lens.zoomCurrent =
+    pickNumber(lens.zoomCurrent, camera.zoomCurrent, motion.zoomCurrent, receipt.lens.zoomCurrent, 0) ?? 0;
+  receipt.lens.zoomTarget =
+    pickNumber(lens.zoomTarget, camera.zoomTarget, motion.zoomTarget, receipt.lens.zoomTarget, 0) ?? 0;
+  receipt.lens.zoomMin =
+    pickNumber(lens.zoomMin, camera.zoomMin, motion.zoomMin, receipt.lens.zoomMin, 0) ?? 0;
+  receipt.lens.zoomMax =
+    pickNumber(lens.zoomMax, camera.zoomMax, motion.zoomMax, receipt.lens.zoomMax, 0) ?? 0;
 }
 
 function renderFrame(receipt) {
@@ -274,9 +385,13 @@ function renderFrame(receipt) {
           : null,
     }) || {};
 
-  const audit = renderResult.audit || {};
-  const orbitalAudit = renderResult.orbitalAudit || {};
-  const placementAudit = renderResult.placementAudit || renderResult.placementReceipt || {};
+  const audit = normalizeObject(renderResult.audit);
+  const orbitalAudit = normalizeObject(renderResult.orbitalAudit);
+  const placementAudit = normalizeObject(renderResult.placementAudit || renderResult.placementReceipt);
+  const primitive = normalizeObject(renderResult.primitive);
+  const topology = normalizeObject(renderResult.topology);
+  const renderAuthority = normalizeObject(renderResult.renderAuthority);
+  const density = normalizeObject(renderResult.density);
 
   receipt.renderAudit.sampleCount = audit.sampleCount ?? 0;
   receipt.renderAudit.waterFamilyCount = audit.waterFamilyCount ?? 0;
@@ -298,6 +413,38 @@ function renderFrame(receipt) {
   receipt.placementReceipt.placementReservedReject = placementAudit.placementReservedReject ?? 0;
   receipt.placementReceipt.placementViewportReject = placementAudit.placementViewportReject ?? 0;
   receipt.placementReceipt.placementPass = placementAudit.placementPass ?? false;
+
+  receipt.primitive.primitiveType =
+    pickString(primitive.primitiveType, receipt.primitive.primitiveType, "UNKNOWN") || "UNKNOWN";
+  receipt.primitive.primitivePath =
+    pickString(primitive.primitivePath, receipt.primitive.primitivePath, "UNKNOWN") || "UNKNOWN";
+  receipt.primitive.centerAnchored = primitive.centerAnchored === true;
+  receipt.primitive.rowColumnPathActive = primitive.rowColumnPathActive === true;
+  receipt.primitive.sectorBandPathActive = primitive.sectorBandPathActive === true;
+
+  receipt.topology.topologyMode =
+    pickString(topology.topologyMode, receipt.topology.topologyMode, "UNKNOWN") || "UNKNOWN";
+  receipt.topology.neighborLaw =
+    pickString(topology.neighborLaw, receipt.topology.neighborLaw, "UNKNOWN") || "UNKNOWN";
+  receipt.topology.visibleCellCount =
+    pickNumber(topology.visibleCellCount, receipt.topology.visibleCellCount, 0) ?? 0;
+  receipt.topology.emittedCellCount =
+    pickNumber(topology.emittedCellCount, receipt.topology.emittedCellCount, 0) ?? 0;
+  receipt.topology.skippedCellCount =
+    pickNumber(topology.skippedCellCount, receipt.topology.skippedCellCount, 0) ?? 0;
+
+  receipt.renderAuthority.renderReadsScope = renderAuthority.renderReadsScope === true;
+  receipt.renderAuthority.renderReadsLens = renderAuthority.renderReadsLens === true;
+  receipt.renderAuthority.fallbackMode = renderAuthority.fallbackMode === true;
+  receipt.renderAuthority.liveRenderPath =
+    pickString(renderAuthority.liveRenderPath, receipt.renderAuthority.liveRenderPath, "UNKNOWN") || "UNKNOWN";
+
+  receipt.density.averageCellSpanPx =
+    pickNumber(density.averageCellSpanPx, receipt.density.averageCellSpanPx, 0) ?? 0;
+  receipt.density.subdivisionTier =
+    pickNumber(density.subdivisionTier, receipt.density.subdivisionTier, 0) ?? 0;
+  receipt.density.densityTier =
+    pickString(density.densityTier, receipt.density.densityTier, "UNKNOWN") || "UNKNOWN";
 }
 
 function updateInstrumentReceipt(receipt) {
@@ -308,6 +455,12 @@ function updateInstrumentReceipt(receipt) {
         renderAudit: receipt.renderAudit,
         emissionReceipt: receipt.emissionReceipt,
         placementReceipt: receipt.placementReceipt,
+        scope: receipt.scope,
+        lens: receipt.lens,
+        primitive: receipt.primitive,
+        topology: receipt.topology,
+        renderAuthority: receipt.renderAuthority,
+        density: receipt.density,
         world: {
           phase: receipt.phase,
           terrainClass: "unknown",

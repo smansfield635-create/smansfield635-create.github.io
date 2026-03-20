@@ -8,6 +8,10 @@ function wrapAngle(value) {
   return Math.atan2(Math.sin(value), Math.cos(value));
 }
 
+function shortestAngleDelta(fromValue, toValue) {
+  return wrapAngle(toValue - fromValue);
+}
+
 function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
@@ -67,8 +71,17 @@ function latLonToSample(latDeg, lonDeg) {
 export function createControlSystem() {
   const K = getKernelConstants();
 
-  let yaw = K.initialYaw;
-  let pitch = K.initialPitch;
+  const HOME_PITCH = clamp(
+    isFiniteNumber(K.initialPitch) ? K.initialPitch : -(Math.PI / 10),
+    K.minPitch,
+    K.maxPitch
+  );
+
+  let homeYaw = wrapAngle(isFiniteNumber(K.initialYaw) ? K.initialYaw : 0);
+  let homePitch = HOME_PITCH;
+
+  let yaw = homeYaw;
+  let pitch = homePitch;
   let yawVelocity = 0;
   let pitchVelocity = 0;
   let orbitPhase = 0;
@@ -80,8 +93,13 @@ export function createControlSystem() {
 
   let presentationMode = "round";
 
-  let autoSpinEnabled = false;
+  let autoSpinEnabled = true;
   let autoSpinSpeed = 0.00018;
+
+  let recoveryEnabled = true;
+  let recoveryYawStrength = 0.0018;
+  let recoveryPitchStrength = 0.0032;
+  let recoveryVelocityThreshold = 0.0014;
 
   const ZOOM_EASING = 0.12;
 
@@ -233,13 +251,30 @@ export function createControlSystem() {
     }
   }
 
+  function applyRecovery(frameScale) {
+    if (!recoveryEnabled) return;
+    if (dragActive) return;
+
+    const velocityMagnitude = Math.hypot(yawVelocity, pitchVelocity);
+    if (velocityMagnitude > recoveryVelocityThreshold) return;
+
+    const yawDeltaToHome = shortestAngleDelta(yaw, homeYaw);
+    const pitchDeltaToHome = homePitch - pitch;
+
+    yawVelocity += yawDeltaToHome * recoveryYawStrength * frameScale;
+    pitchVelocity += pitchDeltaToHome * recoveryPitchStrength * frameScale;
+  }
+
   function stepInertia(dtMs = 16.6667) {
     const frameScale = clamp(dtMs / 16.6667, 0.25, 2.5);
 
     if (!dragActive) {
       if (autoSpinEnabled) {
+        homeYaw = wrapAngle(homeYaw + autoSpinSpeed * frameScale);
         yawVelocity += autoSpinSpeed * frameScale;
       }
+
+      applyRecovery(frameScale);
 
       yaw = wrapAngle(yaw + yawVelocity * frameScale);
       pitch += pitchVelocity * frameScale;
@@ -407,7 +442,13 @@ export function createControlSystem() {
       autoSpinEnabled,
       autoSpinSpeed,
       dragActive,
-      inertiaDecay: K.inertiaDecay
+      inertiaDecay: K.inertiaDecay,
+      homeYaw,
+      homePitch,
+      recoveryEnabled,
+      recoveryYawStrength,
+      recoveryPitchStrength,
+      recoveryVelocityThreshold
     });
   }
 
@@ -469,7 +510,13 @@ export function createControlSystem() {
       autoSpinEnabled,
       autoSpinSpeed,
       dragActive,
-      inertiaDecay: K.inertiaDecay
+      inertiaDecay: K.inertiaDecay,
+      homeYaw,
+      homePitch,
+      recoveryEnabled,
+      recoveryYawStrength,
+      recoveryPitchStrength,
+      recoveryVelocityThreshold
     });
   }
 
@@ -486,6 +533,8 @@ export function createControlSystem() {
     if (isFiniteNumber(next.zoomCurrent)) zoomCurrent = clampZoomValue(next.zoomCurrent);
     if (isFiniteNumber(next.zoomTarget)) zoomTarget = clampZoomValue(next.zoomTarget);
     if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);
+    if (isFiniteNumber(next.homeYaw)) homeYaw = wrapAngle(next.homeYaw);
+    if (isFiniteNumber(next.homePitch)) homePitch = clamp(next.homePitch, K.minPitch, K.maxPitch);
   }
 
   function restoreMotionState(input = {}) {
@@ -507,6 +556,12 @@ export function createControlSystem() {
     if (typeof next.autoSpinEnabled === "boolean") autoSpinEnabled = next.autoSpinEnabled;
     if (isFiniteNumber(next.autoSpinSpeed)) autoSpinSpeed = next.autoSpinSpeed;
     if (typeof next.dragActive === "boolean") dragActive = next.dragActive;
+    if (isFiniteNumber(next.homeYaw)) homeYaw = wrapAngle(next.homeYaw);
+    if (isFiniteNumber(next.homePitch)) homePitch = clamp(next.homePitch, K.minPitch, K.maxPitch);
+    if (typeof next.recoveryEnabled === "boolean") recoveryEnabled = next.recoveryEnabled;
+    if (isFiniteNumber(next.recoveryYawStrength)) recoveryYawStrength = next.recoveryYawStrength;
+    if (isFiniteNumber(next.recoveryPitchStrength)) recoveryPitchStrength = next.recoveryPitchStrength;
+    if (isFiniteNumber(next.recoveryVelocityThreshold)) recoveryVelocityThreshold = Math.max(0, next.recoveryVelocityThreshold);
   }
 
   return Object.freeze({

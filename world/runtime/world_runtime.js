@@ -68,10 +68,6 @@ const orbitalSystem = Object.freeze({
   ])
 });
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
-
 function getModeFromLocation() {
   const params = new URLSearchParams(window.location.search);
   const mode = params.get("mode");
@@ -245,48 +241,21 @@ export function createWorldRuntime() {
     state.bootStatus.classList.remove("is-visible");
   }
 
-  function emitRuntimeReceipt(patch = {}) {
-    const base = {
-      page: "/index.html",
-      phase: state.runtimeReady ? "RUNNING" : "BOOT",
-      mode: state.currentMode,
-      bootPass: state.runtimeReady,
-      renderPass: state.runtimeReady && !!state.planetField,
-      markerPass: !!state.lastPlacementReceipt.markerPlacementAdmissible,
-      diagnosticsMode: state.diagnosticsMode,
-      timestamp: new Date().toISOString(),
-      error: state.runtimeErrorMessage,
-      progressionReceipt: state.lastProgressionReceipt,
-      emissionReceipt: state.lastEmissionReceipt,
-      intakeReceipt: {
-        intakeReceived: state.lastIntakeReceipt.intakeReceived,
-        intakeStaged: state.lastIntakeReceipt.intakeStaged,
-        intakeDiscarded: state.lastIntakeReceipt.intakeDiscarded,
-        intakePass: state.lastIntakeReceipt.intakePass
-      },
-      placementReceipt: {
-        markerRequired: state.lastPlacementReceipt.markerRequired,
-        markerPlacementAdmissible: state.lastPlacementReceipt.markerPlacementAdmissible,
-        markerCollisionCount: state.lastPlacementReceipt.markerCollisionCount,
-        markerRepositionedCount: state.lastPlacementReceipt.markerRepositionedCount,
-        placementPlaceable: state.lastPlacementReceipt.placementPlaceable,
-        placementPlaced: state.lastPlacementReceipt.placementPlaced,
-        placementReservedReject: state.lastPlacementReceipt.placementReservedReject,
-        placementViewportReject: state.lastPlacementReceipt.placementViewportReject,
-        placementPass: state.lastPlacementReceipt.placementPass
-      },
-      renderAudit: state.lastRenderReceipt?.audit || {},
-      orbitalAudit: {
-        ...(state.lastRenderReceipt?.orbitalAudit || {}),
-        markerRequired: state.lastPlacementReceipt.markerRequired,
-        markerPlacementAdmissible: state.lastPlacementReceipt.markerPlacementAdmissible,
-        markerCollisionCount: state.lastPlacementReceipt.markerCollisionCount,
-        markerRepositionedCount: state.lastPlacementReceipt.markerRepositionedCount
-      }
+  function emitRuntimeReceipt(payload = {}) {
+    const data = payload && typeof payload === "object" ? payload : {};
+
+    const envelope = {
+      page: typeof data.page === "string" ? data.page : "/index.html",
+      phase: typeof data.phase === "string" ? data.phase : (state.runtimeReady ? "RUNNING" : "BOOT"),
+      mode: typeof data.mode === "string" ? data.mode : state.currentMode,
+      timestamp: typeof data.timestamp === "string" ? data.timestamp : new Date().toISOString(),
+      diagnosticsMode: typeof data.diagnosticsMode === "string" ? data.diagnosticsMode : state.diagnosticsMode,
+      error: typeof data.error === "string" ? data.error : state.runtimeErrorMessage,
+      ...data
     };
 
     try {
-      localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify({ ...base, ...patch }));
+      localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(envelope));
     } catch {
       return;
     }
@@ -519,10 +488,18 @@ export function createWorldRuntime() {
     });
 
     const runtime = Object.freeze({
-      phase: "HOME",
+      page: "/index.html",
+      phase: "RUNNING",
+      mode: state.currentMode,
+      timestamp: new Date().toISOString(),
       fps: dtMs > 0 ? 1000 / dtMs : 0,
       dtMs,
       elapsedMs: performance.now(),
+      diagnosticsMode: state.diagnosticsMode,
+      bootPass: state.runtimeReady,
+      renderPass: state.runtimeReady && !!state.planetField,
+      markerPass: !!state.lastPlacementReceipt.markerPlacementAdmissible,
+      error: state.runtimeErrorMessage,
       instrument,
       control: {
         projectionSummary,
@@ -530,6 +507,25 @@ export function createWorldRuntime() {
         orbitalState: typeof state.control.getOrbitalState === "function" ? state.control.getOrbitalState() : {}
       },
       planetField: state.planetField,
+      progressionReceipt: state.lastProgressionReceipt,
+      emissionReceipt: state.lastEmissionReceipt,
+      intakeReceipt: {
+        intakeReceived: state.lastIntakeReceipt.intakeReceived,
+        intakeStaged: state.lastIntakeReceipt.intakeStaged,
+        intakeDiscarded: state.lastIntakeReceipt.intakeDiscarded,
+        intakePass: state.lastIntakeReceipt.intakePass
+      },
+      placementReceipt: {
+        markerRequired: state.lastPlacementReceipt.markerRequired,
+        markerPlacementAdmissible: state.lastPlacementReceipt.markerPlacementAdmissible,
+        markerCollisionCount: state.lastPlacementReceipt.markerCollisionCount,
+        markerRepositionedCount: state.lastPlacementReceipt.markerRepositionedCount,
+        placementPlaceable: state.lastPlacementReceipt.placementPlaceable,
+        placementPlaced: state.lastPlacementReceipt.placementPlaced,
+        placementReservedReject: state.lastPlacementReceipt.placementReservedReject,
+        placementViewportReject: state.lastPlacementReceipt.placementViewportReject,
+        placementPass: state.lastPlacementReceipt.placementPass
+      },
       renderAudit: state.lastRenderReceipt?.audit || {},
       orbitalAudit: {
         ...(state.lastRenderReceipt?.orbitalAudit || {}),

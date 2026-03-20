@@ -151,11 +151,19 @@ export function createControlSystem() {
   }
 
   function applyDrag(deltaX, deltaY) {
-    yaw = wrapAngle(yaw + deltaX * K.dragSensitivity);
-    pitch += deltaY * K.dragSensitivity;
+    const yawGain = 2.4;
+    const pitchGain = 1.2;
+    const yawCarry = 1.8;
+    const pitchCarry = 0.9;
 
-    yawVelocity = deltaX * K.dragSensitivity * 0.9;
-    pitchVelocity = deltaY * K.dragSensitivity * 0.9;
+    const yawStep = deltaX * K.dragSensitivity * yawGain;
+    const pitchStep = deltaY * K.dragSensitivity * pitchGain;
+
+    yaw = wrapAngle(yaw + yawStep);
+    pitch += pitchStep;
+
+    yawVelocity = yawStep * yawCarry;
+    pitchVelocity = pitchStep * pitchCarry;
 
     clampPitch();
   }

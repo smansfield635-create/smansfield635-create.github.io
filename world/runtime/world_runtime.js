@@ -17,8 +17,8 @@ import * as instruments from "/assets/instruments.js";
 
 const AUTHORITY_RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
 const RUNTIME_GUARD_KEY = "__WORLD_RUNTIME_ACTIVE__";
+const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
 
-let started = false;
 let rafId = 0;
 let lastNow = 0;
 
@@ -97,6 +97,45 @@ function ensureReceipt() {
     };
   }
   return window[AUTHORITY_RECEIPT_KEY];
+}
+
+function emitRuntimeReceiptContinuous(receipt, extra = {}) {
+  const payload = {
+    page: "/index.html",
+    phase: receipt.verification?.pass ? "RUNNING" : "BOOT",
+    mode: receipt.mode || "active",
+    timestamp: new Date().toISOString(),
+
+    fps: receipt.fps || 0,
+    dtMs: receipt.dtMs || 0,
+
+    control: {
+      motionState: receipt.control?.motionState || {},
+      orbitalState: receipt.control?.orbitalState || {},
+      projectionSummary: receipt.control?.projectionSummary || null,
+      cameraState: receipt.control?.cameraState || null,
+    },
+
+    instrument: receipt.instrument || {},
+
+    renderAudit: receipt.renderAudit || {},
+
+    emissionReceipt: receipt.emissionReceipt || {},
+    placementReceipt: receipt.placementReceipt || {},
+
+    verification: receipt.verification || { pass: false },
+
+    failure: {
+      phase: receipt.failure?.phase || null,
+      message: receipt.failure?.message || "",
+    },
+
+    ...extra,
+  };
+
+  try {
+    localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(payload));
+  } catch {}
 }
 
 function fail(phase, message) {
@@ -325,6 +364,7 @@ function frame(now) {
     fail("frame", err instanceof Error ? err.message : String(err));
   }
 
+  emitRuntimeReceiptContinuous(receipt);
   rafId = window.requestAnimationFrame(frame);
 }
 
@@ -334,6 +374,7 @@ export function startRuntime() {
   if (window[RUNTIME_GUARD_KEY]) {
     receipt.duplicateRuntime = true;
     fail("startup", "Duplicate runtime detected");
+    emitRuntimeReceiptContinuous(receipt);
     return;
   }
 
@@ -361,9 +402,11 @@ export function startRuntime() {
     }, { passive: true });
 
     lastNow = performance.now();
+    emitRuntimeReceiptContinuous(receipt);
     rafId = window.requestAnimationFrame(frame);
   } catch (err) {
     fail("startup", err instanceof Error ? err.message : String(err));
+    emitRuntimeReceiptContinuous(receipt);
   }
 }
 

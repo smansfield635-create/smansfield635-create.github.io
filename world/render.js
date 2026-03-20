@@ -1,6 +1,10 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 
+const CLOUD_STEP = 6;
+const AURORA_STEP = 8;
+const SUBDIV_Z_THRESHOLD = 0.78;
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -23,12 +27,32 @@ function getTopologyGrid(topologyField) {
   return Array.isArray(rows[0]) ? rows : [];
 }
 
+function getCanvasCssSize(ctx) {
+  const canvas = ctx?.canvas;
+  if (!canvas) return { width: 0, height: 0 };
+
+  const rect = typeof canvas.getBoundingClientRect === "function"
+    ? canvas.getBoundingClientRect()
+    : null;
+
+  const width =
+    (rect && isFiniteNumber(rect.width) && rect.width > 0 ? rect.width : 0) ||
+    (isFiniteNumber(canvas.clientWidth) && canvas.clientWidth > 0 ? canvas.clientWidth : 0) ||
+    (isFiniteNumber(canvas.width) && canvas.width > 0 ? canvas.width : 0);
+
+  const height =
+    (rect && isFiniteNumber(rect.height) && rect.height > 0 ? rect.height : 0) ||
+    (isFiniteNumber(canvas.clientHeight) && canvas.clientHeight > 0 ? canvas.clientHeight : 0) ||
+    (isFiniteNumber(canvas.height) && canvas.height > 0 ? canvas.height : 0);
+
+  return { width, height };
+}
+
 function getProjectionState(viewState = {}, ctx) {
   const state = normalizeObject(viewState);
-  const width = ctx.canvas.width;
-  const height = ctx.canvas.height;
+  const { width, height } = getCanvasCssSize(ctx);
 
-  return Object.freeze({
+  return {
     width,
     height,
     centerX: isFiniteNumber(state.centerX) ? state.centerX : width * 0.5,
@@ -37,7 +61,7 @@ function getProjectionState(viewState = {}, ctx) {
       ? state.radius
       : Math.min(width, height) * (WORLD_KERNEL?.constants?.worldRadiusFactor ?? 0.36),
     observeMode: state.observeMode === true
-  });
+  };
 }
 
 function defaultProjectorFactory(projectionState) {
@@ -50,13 +74,13 @@ function defaultProjectorFactory(projectionState) {
     const ny = Math.sin(lat);
     const nz = Math.cos(lat) * Math.cos(lon);
 
-    return Object.freeze({
+    return {
       x: projectionState.centerX + nx * resolvedRadius,
       y: projectionState.centerY - ny * resolvedRadius,
       z: nz,
       visible: nz >= 0,
       resolvedRadius
-    });
+    };
   };
 }
 
@@ -90,17 +114,15 @@ function shouldDrawQuad(points) {
 }
 
 function drawQuad(ctx, p00, p10, p11, p01, fillStyle, alpha = 1) {
-  ctx.save();
   ctx.globalAlpha = alpha;
+  ctx.fillStyle = fillStyle;
   ctx.beginPath();
   ctx.moveTo(p00.x, p00.y);
   ctx.lineTo(p10.x, p10.y);
   ctx.lineTo(p11.x, p11.y);
   ctx.lineTo(p01.x, p01.y);
   ctx.closePath();
-  ctx.fillStyle = fillStyle;
   ctx.fill();
-  ctx.restore();
 }
 
 function isCryosphere(sample) {
@@ -158,16 +180,16 @@ function interpolateSample(s00, s10, s01, s11, fx, fy, crossesSeam = false) {
   if (crossesSeam) {
     const sx = fx < 0.5 ? 0 : 1;
     const sy = fy < 0.5 ? 0 : 1;
-    if (sx === 0 && sy === 0) return Object.freeze({ ...s00 });
-    if (sx === 1 && sy === 0) return Object.freeze({ ...s10 });
-    if (sx === 0 && sy === 1) return Object.freeze({ ...s01 });
-    return Object.freeze({ ...s11 });
+    if (sx === 0 && sy === 0) return s00;
+    if (sx === 1 && sy === 0) return s10;
+    if (sx === 0 && sy === 1) return s01;
+    return s11;
   }
 
   const oneMinusFx = 1 - fx;
   const oneMinusFy = 1 - fy;
 
-  return Object.freeze({
+  return {
     latDeg:
       s00.latDeg * oneMinusFx * oneMinusFy +
       s10.latDeg * fx * oneMinusFy +
@@ -200,17 +222,17 @@ function interpolateSample(s00, s10, s01, s11, fx, fy, crossesSeam = false) {
     evaporationPressure: s00.evaporationPressure,
     maritimeInfluence: s00.maritimeInfluence,
     continentId: s00.continentId
-  });
+  };
 }
 
 function interpolateTopology(t00, t10, t01, t11, fx, fy, crossesSeam = false) {
   if (crossesSeam) {
     const sx = fx < 0.5 ? 0 : 1;
     const sy = fy < 0.5 ? 0 : 1;
-    if (sx === 0 && sy === 0) return Object.freeze({ ...(t00 || {}) });
-    if (sx === 1 && sy === 0) return Object.freeze({ ...(t10 || {}) });
-    if (sx === 0 && sy === 1) return Object.freeze({ ...(t01 || {}) });
-    return Object.freeze({ ...(t11 || {}) });
+    if (sx === 0 && sy === 0) return t00 || {};
+    if (sx === 1 && sy === 0) return t10 || {};
+    if (sx === 0 && sy === 1) return t01 || {};
+    return t11 || {};
   }
 
   const a = t00 || t10 || t01 || t11 || {};
@@ -230,7 +252,7 @@ function interpolateTopology(t00, t10, t01, t11, fx, fy, crossesSeam = false) {
     );
   }
 
-  return Object.freeze({
+  return {
     ridgeAmplified: blend("ridgeAmplified"),
     basinAmplified: blend("basinAmplified"),
     summitAmplified: blend("summitAmplified"),
@@ -239,7 +261,7 @@ function interpolateTopology(t00, t10, t01, t11, fx, fy, crossesSeam = false) {
     reliefComposite: blend("reliefComposite"),
     squareMaskStrength: blend("squareMaskStrength"),
     elevationAmplified: blend("elevationAmplified")
-  });
+  };
 }
 
 function resolveStableSubdiv(c00, c10, c11, c01) {
@@ -250,8 +272,7 @@ function resolveStableSubdiv(c00, c10, c11, c01) {
     c01?.z ?? -1
   );
 
-  if (minZ > 0.42) return 2;
-  return 1;
+  return minZ > SUBDIV_Z_THRESHOLD ? 2 : 1;
 }
 
 function drawPlanetRim(ctx, projectionState) {
@@ -335,13 +356,17 @@ function drawPlanetBase(ctx, projectionState) {
 function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
   if (!grid.length || !grid[0].length) return;
 
-  for (let y = 0; y < grid.length - 1; y += 1) {
+  const rowCount = grid.length;
+
+  ctx.save();
+  for (let y = 0; y < rowCount - 1; y += 1) {
     const row = grid[y];
     const nextRow = grid[y + 1];
+    const rowLength = row.length;
 
-    for (let x = 0; x < row.length; x += 1) {
-      const nextX = (x + 1) % row.length;
-      const crossesSeam = x === row.length - 1;
+    for (let x = 0; x < rowLength; x += 1) {
+      const nextX = (x + 1) % rowLength;
+      const crossesSeam = x === rowLength - 1;
 
       const s00 = row[x];
       const s10 = row[nextX];
@@ -393,22 +418,29 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
             g: appearanceA.fillColor.g + (appearanceB.fillColor.g - appearanceA.fillColor.g) * 0.08,
             b: appearanceA.fillColor.b + (appearanceB.fillColor.b - appearanceA.fillColor.b) * 0.08
           };
-          const fillStyle = `rgb(${Math.round(clamp(blendedColor.r, 0, 255))}, ${Math.round(clamp(blendedColor.g, 0, 255))}, ${Math.round(clamp(blendedColor.b, 0, 255))})`;
-          const alpha = appearanceA.fillAlpha;
 
-          drawQuad(ctx, p00, p10, p11, p01, fillStyle, alpha);
+          const fillStyle = `rgb(${Math.round(clamp(blendedColor.r, 0, 255))}, ${Math.round(clamp(blendedColor.g, 0, 255))}, ${Math.round(clamp(blendedColor.b, 0, 255))})`;
+          drawQuad(ctx, p00, p10, p11, p01, fillStyle, appearanceA.fillAlpha);
         }
       }
     }
   }
+  ctx.globalAlpha = 1;
+  ctx.restore();
 }
 
 function drawCloudLayer(ctx, grid, projectPoint, projectionState) {
+  const rowCount = grid.length;
+  if (!rowCount) return;
+
   ctx.save();
 
-  for (let y = 0; y < grid.length; y += 4) {
-    for (let x = 0; x < grid[y].length; x += 4) {
-      const sample = grid[y][x];
+  for (let y = 0; y < rowCount; y += CLOUD_STEP) {
+    const row = grid[y];
+    const rowLength = row.length;
+
+    for (let x = 0; x < rowLength; x += CLOUD_STEP) {
+      const sample = row[x];
       const cloudiness = clamp(
         (sample?.rainfall ?? 0) * 0.52 +
         (sample?.evaporationPressure ?? 0) * 0.18 +
@@ -417,15 +449,15 @@ function drawCloudLayer(ctx, grid, projectPoint, projectionState) {
         1
       );
 
-      if (cloudiness < 0.58) continue;
+      if (cloudiness < 0.64) continue;
 
       const point = projectPoint(sample.latDeg, sample.lonDeg, 12);
       if (!point.visible) continue;
 
-      const radius = 1.2 + cloudiness * (projectionState.observeMode ? 2.8 : 3.2);
+      const radius = 1.1 + cloudiness * (projectionState.observeMode ? 2.2 : 2.6);
       const alpha = projectionState.observeMode
-        ? 0.014 + cloudiness * 0.03
-        : 0.02 + cloudiness * 0.046;
+        ? 0.010 + cloudiness * 0.022
+        : 0.014 + cloudiness * 0.032;
 
       const grad = ctx.createRadialGradient(
         point.x - radius * 0.2,
@@ -435,7 +467,7 @@ function drawCloudLayer(ctx, grid, projectPoint, projectionState) {
         point.y,
         radius
       );
-      grad.addColorStop(0, `rgba(255,255,255,${(alpha * 1.3).toFixed(3)})`);
+      grad.addColorStop(0, `rgba(255,255,255,${(alpha * 1.2).toFixed(3)})`);
       grad.addColorStop(0.55, `rgba(248,250,255,${alpha.toFixed(3)})`);
       grad.addColorStop(1, "rgba(255,255,255,0)");
 
@@ -450,21 +482,27 @@ function drawCloudLayer(ctx, grid, projectPoint, projectionState) {
 }
 
 function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
+  const rowCount = grid.length;
+  if (!rowCount) return;
+
   ctx.save();
 
-  for (let y = 0; y < grid.length; y += 5) {
-    for (let x = 0; x < grid[y].length; x += 5) {
-      const sample = grid[y][x];
+  for (let y = 0; y < rowCount; y += AURORA_STEP) {
+    const row = grid[y];
+    const rowLength = row.length;
+
+    for (let x = 0; x < rowLength; x += AURORA_STEP) {
+      const sample = row[x];
       const aurora = clamp(sample?.auroralPotential ?? 0, 0, 1);
-      if (aurora < 0.54) continue;
+      if (aurora < 0.62) continue;
 
       const point = projectPoint(sample.latDeg, sample.lonDeg, 14);
       if (!point.visible) continue;
 
-      const radius = 1.2 + aurora * (projectionState.observeMode ? 2.2 : 2.8);
+      const radius = 1.0 + aurora * (projectionState.observeMode ? 1.8 : 2.2);
       const alpha = projectionState.observeMode
-        ? 0.01 + aurora * 0.026
-        : 0.014 + aurora * 0.036;
+        ? 0.008 + aurora * 0.018
+        : 0.010 + aurora * 0.026;
 
       const grad = ctx.createRadialGradient(
         point.x,
@@ -474,8 +512,8 @@ function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
         point.y,
         radius
       );
-      grad.addColorStop(0, `rgba(136,255,186,${(alpha * 1.12).toFixed(3)})`);
-      grad.addColorStop(0.55, `rgba(96,220,255,${(alpha * 0.94).toFixed(3)})`);
+      grad.addColorStop(0, `rgba(136,255,186,${(alpha * 1.08).toFixed(3)})`);
+      grad.addColorStop(0.55, `rgba(96,220,255,${(alpha * 0.92).toFixed(3)})`);
       grad.addColorStop(1, "rgba(96,220,255,0)");
 
       ctx.fillStyle = grad;
@@ -516,7 +554,7 @@ function buildRenderAudit(planetField, topologyField = null) {
     }
   }
 
-  return Object.freeze({
+  return {
     sampleCount: Array.isArray(planetField?.samples)
       ? planetField.samples.reduce((total, row) => total + (Array.isArray(row) ? row.length : 0), 0)
       : 0,
@@ -524,10 +562,10 @@ function buildRenderAudit(planetField, topologyField = null) {
     landFamilyCount,
     cryosphereCount,
     shorelineCount,
-    continentCoverage: Object.freeze(continentCoverage),
+    continentCoverage,
     summary: normalizeObject(planetField?.summary),
     topologySummary: normalizeObject(topologyField?.summary)
-  });
+  };
 }
 
 function resolveOrbitalAltitudePx(orbitalSystem, projectionState) {
@@ -542,7 +580,7 @@ function normalizeOrbitalHit(point, object, edgeVisibility) {
   const scale = 0.88 + edgeVisibility * 0.28;
   const opacity = 0.52 + edgeVisibility * 0.44;
 
-  return Object.freeze({
+  return {
     id: typeof object?.id === "string" ? object.id : "",
     label: typeof object?.label === "string" ? object.label : "",
     route: typeof object?.route === "string" ? object.route : "",
@@ -553,7 +591,7 @@ function normalizeOrbitalHit(point, object, edgeVisibility) {
     frontFacing: point.z >= 0,
     edgeVisibility,
     z: point.z
-  });
+  };
 }
 
 function isAdmissibleOrbitalHit(hit) {
@@ -577,16 +615,16 @@ function isAdmissibleOrbitalHit(hit) {
 function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
   const objects = Array.isArray(orbitalSystem?.objects) ? orbitalSystem.objects : [];
   if (!objects.length) {
-    return Object.freeze({
-      orbitalHits: Object.freeze([]),
-      orbitalAudit: Object.freeze({
+    return {
+      orbitalHits: [],
+      orbitalAudit: {
         count: 0,
         frontVisibleCount: 0,
         emittedCount: 0,
         rejectedBackfaceCount: 0,
         rejectedWeakVisibilityCount: 0
-      })
-    });
+      }
+    };
   }
 
   const phase = isFiniteNumber(orbitalSystem?.phase) ? orbitalSystem.phase : 0;
@@ -631,16 +669,16 @@ function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
     hits.push(hit);
   }
 
-  return Object.freeze({
-    orbitalHits: Object.freeze(hits),
-    orbitalAudit: Object.freeze({
+  return {
+    orbitalHits: hits,
+    orbitalAudit: {
       count: objects.length,
       frontVisibleCount,
       emittedCount: hits.length,
       rejectedBackfaceCount,
       rejectedWeakVisibilityCount
-    })
-  });
+    }
+  };
 }
 
 export function createRenderer() {
@@ -674,17 +712,17 @@ export function createRenderer() {
 
     const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);
 
-    return Object.freeze({
+    return {
       projectionState,
       orbitalHits: orbitalReceipt.orbitalHits,
       orbitalAudit: orbitalReceipt.orbitalAudit,
       audit: buildRenderAudit(planetField, topologyField)
-    });
+    };
   }
 
-  return Object.freeze({
+  return {
     renderPlanet
-  });
+  };
 }
 
 const DEFAULT_RENDERER = createRenderer();

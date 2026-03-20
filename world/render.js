@@ -1,7 +1,8 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 
-const SUBDIV_Z_THRESHOLD = 0.78;
+const SUBDIV_Z_THRESHOLD = 0.55;
+const MAX_SUBDIV = 2;
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -270,7 +271,8 @@ function resolveStableSubdiv(c00, c10, c11, c01) {
     c01?.z ?? -1
   );
 
-  return minZ > SUBDIV_Z_THRESHOLD ? 2 : 1;
+  if (minZ > SUBDIV_Z_THRESHOLD) return 2;
+  return 1;
 }
 
 function drawPlanetRim(ctx, projectionState) {
@@ -357,6 +359,7 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
   const rowCount = grid.length;
 
   ctx.save();
+
   for (let y = 0; y < rowCount - 1; y += 1) {
     const row = grid[y];
     const nextRow = grid[y + 1];
@@ -384,13 +387,14 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
       if (!shouldDrawQuad([c00, c10, c11, c01])) continue;
 
       const subdiv = crossesSeam ? 1 : resolveStableSubdiv(c00, c10, c11, c01);
+      const finalSubdiv = subdiv > MAX_SUBDIV ? MAX_SUBDIV : subdiv;
 
-      for (let sy = 0; sy < subdiv; sy += 1) {
-        for (let sx = 0; sx < subdiv; sx += 1) {
-          const fx0 = sx / subdiv;
-          const fy0 = sy / subdiv;
-          const fx1 = (sx + 1) / subdiv;
-          const fy1 = (sy + 1) / subdiv;
+      for (let sy = 0; sy < finalSubdiv; sy += 1) {
+        for (let sx = 0; sx < finalSubdiv; sx += 1) {
+          const fx0 = sx / finalSubdiv;
+          const fy0 = sy / finalSubdiv;
+          const fx1 = (sx + 1) / finalSubdiv;
+          const fy1 = (sy + 1) / finalSubdiv;
 
           const sm00 = interpolateSample(s00, s10, s01, s11, fx0, fy0, crossesSeam);
           const sm10 = interpolateSample(s00, s10, s01, s11, fx1, fy0, crossesSeam);
@@ -416,13 +420,14 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
             g: appearanceA.fillColor.g + (appearanceB.fillColor.g - appearanceA.fillColor.g) * 0.08,
             b: appearanceA.fillColor.b + (appearanceB.fillColor.b - appearanceA.fillColor.b) * 0.08
           };
-
           const fillStyle = `rgb(${Math.round(clamp(blendedColor.r, 0, 255))}, ${Math.round(clamp(blendedColor.g, 0, 255))}, ${Math.round(clamp(blendedColor.b, 0, 255))})`;
+
           drawQuad(ctx, p00, p10, p11, p01, fillStyle, appearanceA.fillAlpha);
         }
       }
     }
   }
+
   ctx.globalAlpha = 1;
   ctx.restore();
 }

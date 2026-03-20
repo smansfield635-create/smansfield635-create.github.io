@@ -1,4 +1,3 @@
-<!-- DESTINATION FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,58 +5,56 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Nine Summits — Index</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
+<style>
+  html,body{margin:0;padding:0;background:#000}
+  #world{display:block;width:100vw;height:100vh}
+</style>
 </head>
 
-<body data-mode="round" data-diagnostics="peek">
+<body>
 
-<div id="app-shell">
+<!-- HARD CANVAS GUARANTEE -->
+<canvas id="world"></canvas>
 
-  <!-- CANVAS -->
-  <canvas id="world" aria-label="Home world canvas"></canvas>
-
-  <!-- UI ROOT (WORLD RUNTIME OWNS UI HERE) -->
-  <div id="runtime-root"></div>
-
-  <!-- DIAGNOSTICS BAR (NAV → GAUGES) -->
-  <div id="diagnostics-dock" class="diagnostics-dock">
-    <div id="diagnostics-bar" class="diagnostics-bar">
-      <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
-
-      <!-- IMPORTANT: NO TOGGLE → NAVIGATION -->
-      <button
-        id="diagnostics-toggle"
-        class="diagnostics-toggle"
-        type="button"
-      >
-        DIAGNOSTICS
-      </button>
-    </div>
-  </div>
-
-  <!-- DEBUG PANEL (OPTIONAL LOCAL MIRROR) -->
-  <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
-
+<!-- DEBUG SIGNAL -->
+<div id="boot-status" style="
+  position:fixed;
+  top:0;
+  left:0;
+  padding:6px 10px;
+  font-family:monospace;
+  font-size:12px;
+  color:#0f0;
+  background:#000;
+  z-index:9999;
+">
+BOOTING...
 </div>
 
 <script type="module">
-import runtime from "/world/runtime/world_runtime.js";
+let status = document.getElementById("boot-status");
 
-/* ===== FORCE RUNTIME START ===== */
-if (runtime && typeof runtime.startRuntime === "function") {
-  runtime.startRuntime();
-} else {
-  console.error("Runtime start function missing");
+function log(msg){
+  if(status) status.textContent = msg;
+  console.log("[BOOT]", msg);
 }
 
-/* ===== FORCE DIAGNOSTICS → GAUGES ===== */
-const btn = document.getElementById("diagnostics-toggle");
+try {
+  log("IMPORTING RUNTIME...");
 
-if (btn) {
-  btn.addEventListener("click", () => {
-    window.location.href = "/gauges/";
-  });
-}
-</script>
+  const mod = await import("/world/runtime/world_runtime.js");
 
-</body>
-</html>
+  log("RUNTIME IMPORTED");
+
+  if (mod && typeof mod.startRuntime === "function") {
+    log("STARTING RUNTIME...");
+    mod.startRuntime();
+    log("RUNTIME START CALLED");
+  } else {
+    log("ERROR: startRuntime missing");
+    console.error("Runtime start function missing");
+  }
+
+} catch (err) {
+  log("BOOT ERROR");
+  console.error("

@@ -13,7 +13,7 @@
 <div id="app-shell">
 
   <!-- CANVAS -->
-  <canvas id="world-canvas" aria-label="Home world canvas"></canvas>
+  <canvas id="world" aria-label="Home world canvas"></canvas>
 
   <!-- UI ROOT (WORLD RUNTIME OWNS UI HERE) -->
   <div id="runtime-root"></div>
@@ -40,7 +40,14 @@
 </div>
 
 <script type="module">
-import "/world/runtime/world_runtime.js";
+import runtime from "/world/runtime/world_runtime.js";
+
+/* ===== FORCE RUNTIME START ===== */
+if (runtime && typeof runtime.startRuntime === "function") {
+  runtime.startRuntime();
+} else {
+  console.error("Runtime start function missing");
+}
 
 /* ===== FORCE DIAGNOSTICS → GAUGES ===== */
 const btn = document.getElementById("diagnostics-toggle");

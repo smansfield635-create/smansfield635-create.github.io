@@ -176,6 +176,131 @@ function getTopologySample(topologyGrid, x, y) {
   return topologyGrid?.[y]?.[x] || null;
 }
 
+function interpolatePoint(a, b, t) {
+  return {
+    x: a.x + (b.x - a.x) * t,
+    y: a.y + (b.y - a.y) * t,
+    z: a.z + (b.z - a.z) * t,
+    visible: a.visible || b.visible,
+    resolvedRadius: a.resolvedRadius + ((b.resolvedRadius ?? a.resolvedRadius) - a.resolvedRadius) * t
+  };
+}
+
+function averagePoint(points) {
+  let x = 0;
+  let y = 0;
+  let z = 0;
+  for (const p of points) {
+    x += p.x;
+    y += p.y;
+    z += p.z;
+  }
+  const n = points.length || 1;
+  return {
+    x: x / n,
+    y: y / n,
+    z: z / n
+  };
+}
+
+function scalePointAround(point, center, scaleX, scaleY) {
+  return {
+    ...point,
+    x: center.x + (point.x - center.x) * scaleX,
+    y: center.y + (point.y - center.y) * scaleY
+  };
+}
+
+function skewPoint(point, center, skewX, skewY) {
+  const dx = point.x - center.x;
+  const dy = point.y - center.y;
+  return {
+    ...point,
+    x: point.x + dy * skewX,
+    y: point.y + dx * skewY
+  };
+}
+
+function deformPatch(points, sample, projectionState) {
+  const center = averagePoint(points);
+  const latitudeRad = (sample.latDeg * Math.PI) / 180;
+  const latAbs = Math.abs(Math.sin(latitudeRad));
+  const avgZ = clamp((points[0].z + points[1].z + points[2].z + points[3].z) * 0.25, -1, 1);
+  const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
+  const curvatureFactor = clamp(latAbs * 0.55 + edgeFactor * 0.85, 0, 1);
+
+  const scaleX = 0.90 + curvatureFactor * 0.10;
+  const scaleY = 0.82 + curvatureFactor * 0.18;
+
+  const diagonalBias = Math.sin(latitudeRad) * 0.020;
+  const skewX = diagonalBias * (0.55 + edgeFactor * 0.65);
+  const skewY = -diagonalBias * 0.20;
+
+  const p00 = skewPoint(scalePointAround(points[0], center, scaleX, scaleY), center, skewX, skewY);
+  const p10 = skewPoint(scalePointAround(points[1], center, scaleX, scaleY), center, skewX, skewY);
+  const p11 = skewPoint(scalePointAround(points[2], center, scaleX, scaleY), center, skewX, skewY);
+  const p01 = skewPoint(scalePointAround(points[3], center, scaleX, scaleY), center, skewX, skewY);
+
+  return {
+    points: [p00, p10, p11, p01],
+    curvatureFactor
+  };
+}
+
+function resolveSubdivision(sample, points, projectionState) {
+  const latitudeRad = (sample.latDeg * Math.PI) / 180;
+  const latAbs = Math.abs(Math.sin(latitudeRad));
+  const avgZ = clamp((points[0].z + points[1].z + points[2].z + points[3].z) * 0.25, -1, 1);
+  const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
+
+  const screenSpanX = Math.max(
+    Math.abs(points[1].x - points[0].x),
+    Math.abs(points[2].x - points[3].x)
+  );
+  const screenSpanY = Math.max(
+    Math.abs(points[3].y - points[0].y),
+    Math.abs(points[2].y - points[1].y)
+  );
+  const patchSpan = Math.max(screenSpanX, screenSpanY);
+
+  const zoomFactor = clamp(projectionState.radius / Math.max(1, Math.min(projectionState.width, projectionState.height) * 0.28), 0, 3);
+  const densityScore = patchSpan / 18 + edgeFactor * 1.4 + latAbs * 0.8 + zoomFactor * 0.35;
+
+  if (densityScore > 4.2) return 3;
+  if (densityScore > 2.4) return 2;
+  return 1;
+}
+
+function subdivideQuad(p00, p10, p11, p01, subdiv) {
+  if (subdiv <= 1) {
+    return [[p00, p10, p11, p01]];
+  }
+
+  const quads = [];
+  for (let sy = 0; sy < subdiv; sy += 1) {
+    const ty0 = sy / subdiv;
+    const ty1 = (sy + 1) / subdiv;
+
+    const left0 = interpolatePoint(p00, p01, ty0);
+    const right0 = interpolatePoint(p10, p11, ty0);
+    const left1 = interpolatePoint(p00, p01, ty1);
+    const right1 = interpolatePoint(p10, p11, ty1);
+
+    for (let sx = 0; sx < subdiv; sx += 1) {
+      const tx0 = sx / subdiv;
+      const tx1 = (sx + 1) / subdiv;
+
+      const q00 = interpolatePoint(left0, right0, tx0);
+      const q10 = interpolatePoint(left0, right0, tx1);
+      const q01 = interpolatePoint(left1, right1, tx0);
+      const q11 = interpolatePoint(left1, right1, tx1);
+
+      quads.push([q00, q10, q11, q01]);
+    }
+  }
+  return quads;
+}
+
 function drawPlanetRim(ctx, projectionState) {
   ctx.save();
 
@@ -254,7 +379,7 @@ function drawPlanetBase(ctx, projectionState) {
   });
 }
 
-function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
+function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
   if (!grid.length || !grid[0].length) return;
 
   const rowCount = grid.length;
@@ -288,10 +413,23 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
       if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
 
+      const subdiv = resolveSubdivision(s00, [p00, p10, p11, p01], projectionState);
+      const quads = subdivideQuad(p00, p10, p11, p01, subdiv);
+
       const appearance = describeSurface(s00, p00, t00);
       const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
 
-      drawQuad(ctx, p00, p10, p11, p01, fillStyle, appearance.fillAlpha);
+      for (const quad of quads) {
+        if (!shouldDrawQuad(quad)) continue;
+
+        const deformed = deformPatch(quad, s00, projectionState);
+        const [d00, d10, d11, d01] = deformed.points;
+
+        if (!shouldDrawQuad([d00, d10, d11, d01])) continue;
+
+        const alpha = appearance.fillAlpha * (0.96 + deformed.curvatureFactor * 0.04);
+        drawQuad(ctx, d00, d10, d11, d01, fillStyle, alpha);
+      }
     }
   }
 
@@ -486,7 +624,7 @@ export function createRenderer() {
     drawPlanetBase(ctx, projectionState);
 
     withPlanetClip(ctx, projectionState, () => {
-      drawSurfaceMesh(ctx, grid, topologyGrid, projector);
+      drawSurfaceMesh(ctx, grid, topologyGrid, projector, projectionState);
     });
 
     const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);

@@ -366,6 +366,10 @@ function bindInput() {
     dragging = true;
     lastX = e.clientX;
     lastY = e.clientY;
+
+    if (typeof control.startDrag === "function") {
+      control.startDrag();
+    }
   };
 
   onPointerMove = (e) => {
@@ -382,17 +386,20 @@ function bindInput() {
   };
 
   onPointerUp = () => {
-    if (dragging && typeof control.releaseDrag === "function") {
-      control.releaseDrag();
-    }
+    if (!dragging) return;
     dragging = false;
+
+    if (typeof control.endDrag === "function") {
+      control.endDrag();
+    }
   };
 
   onPointerCancel = () => {
-    if (dragging && typeof control.releaseDrag === "function") {
-      control.releaseDrag();
-    }
     dragging = false;
+
+    if (typeof control.endDrag === "function") {
+      control.endDrag();
+    }
   };
 
   canvas.addEventListener("pointerdown", onPointerDown, { passive: true });

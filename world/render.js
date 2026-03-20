@@ -466,6 +466,71 @@ function drawDarkContainer(ctx, projectionState, activeScope) {
   ctx.restore();
 }
 
+/*
+  EXPRESSION HUB CONTRACT
+
+  render.js is the stable orchestrator.
+  Downstream render engines may later plug into these resolver functions.
+
+  Current baseline-preserving policy:
+  - no downstream engine required
+  - all cells resolve to full forward-signal diamonds
+  - hooks exist now so downstream files can be attached later
+*/
+
+function resolvePrimitiveInstruction({
+  sample,
+  signalCell,
+  x,
+  y,
+  grid,
+  topology,
+  projectionState
+}) {
+  return {
+    primitiveType: "FULL_DIAMOND",
+    primitiveScale: 1,
+    primitivePoints: signalCell.points,
+    boundaryClass: "INTERIOR"
+  };
+}
+
+function emitCellPolygon(ctx, fillStyle, alpha, primitiveInstruction) {
+  drawPolygon(ctx, primitiveInstruction.primitivePoints, fillStyle, alpha);
+}
+
+function renderSignalCell({
+  ctx,
+  sample,
+  signalCell,
+  topology,
+  x,
+  y,
+  grid,
+  projectionState
+}) {
+  const appearance = describeSurface(sample, signalCell.points[0], topology);
+  const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
+  const alpha = appearance.fillAlpha * (0.95 + signalCell.curvatureFactor * 0.05);
+
+  const primitiveInstruction = resolvePrimitiveInstruction({
+    sample,
+    signalCell,
+    x,
+    y,
+    grid,
+    topology,
+    projectionState
+  });
+
+  emitCellPolygon(ctx, fillStyle, alpha, primitiveInstruction);
+
+  return {
+    primitiveInstruction,
+    polygonSpanPx: measurePolygonSpan(primitiveInstruction.primitivePoints)
+  };
+}
+
 function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
   if (!grid.length || !grid[0].length) {
     return {
@@ -474,7 +539,18 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
       skippedCellCount: 0,
       averageCellSpanPx: 0,
       subdivisionTier: projectionState.lensTier,
-      densityTier: "EMPTY"
+      densityTier: "EMPTY",
+      primitiveType: "FORWARD_SIGNAL",
+      primitivePath: "forwardSignalDiamond",
+      centerAnchored: true,
+      rowColumnPathActive: true,
+      sectorBandPathActive: false,
+      topologyMode: "HYBRID",
+      neighborLaw: "CROSS_GRID",
+      renderReadsScope: true,
+      renderReadsLens: true,
+      fallbackMode: false,
+      liveRenderPath: "drawForwardSignalMesh"
     };
   }
 
@@ -549,14 +625,19 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
         continue;
       }
 
-      const appearance = describeSurface(centerSample, centerPoint, centerTopology);
-      const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
-      const alpha = appearance.fillAlpha * (0.95 + signalCell.curvatureFactor * 0.05);
-
-      drawPolygon(ctx, signalCell.points, fillStyle, alpha);
+      const renderResult = renderSignalCell({
+        ctx,
+        sample: centerSample,
+        signalCell,
+        topology: centerTopology,
+        x,
+        y,
+        grid,
+        projectionState
+      });
 
       emittedCellCount += 1;
-      totalCellSpanPx += measurePolygonSpan(signalCell.points);
+      totalCellSpanPx += renderResult.polygonSpanPx;
     }
   }
 
@@ -571,7 +652,18 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
     skippedCellCount,
     averageCellSpanPx,
     subdivisionTier: projectionState.lensTier,
-    densityTier: resolveDensityTier(averageCellSpanPx, emittedCellCount)
+    densityTier: resolveDensityTier(averageCellSpanPx, emittedCellCount),
+    primitiveType: "FORWARD_SIGNAL",
+    primitivePath: "forwardSignalDiamond",
+    centerAnchored: true,
+    rowColumnPathActive: true,
+    sectorBandPathActive: false,
+    topologyMode: "HYBRID",
+    neighborLaw: "CROSS_GRID",
+    renderReadsScope: true,
+    renderReadsLens: true,
+    fallbackMode: false,
+    liveRenderPath: "drawForwardSignalMesh"
   };
 }
 
@@ -831,26 +923,30 @@ export function createRenderer() {
       orbitalHits: orbitalReceipt.orbitalHits,
       orbitalAudit: orbitalReceipt.orbitalAudit,
       primitive: {
-        primitiveType: "FORWARD_SIGNAL",
-        primitivePath: "forwardSignalDiamond",
-        centerAnchored: true,
-        rowColumnPathActive: true,
-        sectorBandPathActive: false
+        primitiveType: density.primitiveType,
+        primitivePath: density.primitivePath,
+        centerAnchored: density.centerAnchored,
+        rowColumnPathActive: density.rowColumnPathActive,
+        sectorBandPathActive: density.sectorBandPathActive
       },
       topology: {
-        topologyMode: "HYBRID",
-        neighborLaw: "CROSS_GRID",
+        topologyMode: density.topologyMode,
+        neighborLaw: density.neighborLaw,
         visibleCellCount: density.visibleCellCount,
         emittedCellCount: density.emittedCellCount,
         skippedCellCount: density.skippedCellCount
       },
       renderAuthority: {
-        renderReadsScope: true,
-        renderReadsLens: true,
-        fallbackMode: false,
-        liveRenderPath: "drawForwardSignalMesh"
+        renderReadsScope: density.renderReadsScope,
+        renderReadsLens: density.renderReadsLens,
+        fallbackMode: density.fallbackMode,
+        liveRenderPath: density.liveRenderPath
       },
-      density,
+      density: {
+        averageCellSpanPx: density.averageCellSpanPx,
+        subdivisionTier: density.subdivisionTier,
+        densityTier: density.densityTier
+      },
       audit: buildRenderAudit(planetField, topologyField)
     };
   }

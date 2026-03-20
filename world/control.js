@@ -27,8 +27,8 @@ function getKernelConstants() {
     maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
     initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
     initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
-    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0065,
-    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.85,
+    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.014,
+    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.68,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });
@@ -154,8 +154,8 @@ export function createControlSystem() {
     yaw = wrapAngle(yaw + deltaX * K.dragSensitivity);
     pitch += deltaY * K.dragSensitivity;
 
-    yawVelocity = deltaX * K.dragSensitivity * 0.45;
-    pitchVelocity = deltaY * K.dragSensitivity * 0.45;
+    yawVelocity = deltaX * K.dragSensitivity * 0.9;
+    pitchVelocity = deltaY * K.dragSensitivity * 0.9;
 
     clampPitch();
   }
@@ -176,6 +176,9 @@ export function createControlSystem() {
     const decay = Math.pow(K.inertiaDecay, frameScale);
     yawVelocity *= decay;
     pitchVelocity *= decay;
+
+    if (Math.abs(yawVelocity) < 0.00001) yawVelocity = 0;
+    if (Math.abs(pitchVelocity) < 0.00001) pitchVelocity = 0;
 
     clampPitch();
     stepZoom();

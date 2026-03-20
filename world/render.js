@@ -133,8 +133,9 @@ function withPlanetClip(ctx, projectionState, drawFn) {
     Math.PI * 2
   );
   ctx.clip();
-  drawFn();
+  const result = drawFn();
   ctx.restore();
+  return result;
 }
 
 function shouldDrawPoints(points, minimumVisible = 2) {
@@ -340,6 +341,23 @@ function resolveCellDensity(sample, polygonPoints, projectionState) {
   return span / 16 + edgeFactor * 1.35 + latAbs * 0.75 + zoomFactor * 0.30 + lens.densityBias;
 }
 
+function measurePolygonSpan(points) {
+  let span = 0;
+  for (let i = 0; i < points.length; i += 1) {
+    const a = points[i];
+    const b = points[(i + 1) % points.length];
+    span = Math.max(span, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+  }
+  return span;
+}
+
+function resolveDensityTier(averageCellSpanPx, emittedCellCount) {
+  if (emittedCellCount <= 0) return "EMPTY";
+  if (averageCellSpanPx <= 6) return "HIGH";
+  if (averageCellSpanPx <= 12) return "MEDIUM";
+  return "LOW";
+}
+
 function drawPlanetRim(ctx, projectionState) {
   ctx.save();
 
@@ -449,7 +467,16 @@ function drawDarkContainer(ctx, projectionState, activeScope) {
 }
 
 function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
-  if (!grid.length || !grid[0].length) return;
+  if (!grid.length || !grid[0].length) {
+    return {
+      visibleCellCount: 0,
+      emittedCellCount: 0,
+      skippedCellCount: 0,
+      averageCellSpanPx: 0,
+      subdivisionTier: projectionState.lensTier,
+      densityTier: "EMPTY"
+    };
+  }
 
   const rowCount = grid.length;
   const rowLength = grid[0].length;
@@ -457,12 +484,19 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
   const rowStride = rowCount >= lens.rowStrideCutoff ? 2 : 1;
   const colStride = rowLength >= lens.colStrideCutoff ? 2 : 1;
 
+  let visibleCellCount = 0;
+  let emittedCellCount = 0;
+  let skippedCellCount = 0;
+  let totalCellSpanPx = 0;
+
   ctx.save();
 
   for (let y = rowStride; y < rowCount - rowStride; y += rowStride) {
     const row = grid[y];
 
     for (let x = 0; x < rowLength; x += colStride) {
+      visibleCellCount += 1;
+
       const westX = (x - colStride + rowLength) % rowLength;
       const eastX = (x + colStride) % rowLength;
 
@@ -472,7 +506,10 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
       const westSample = row[westX];
       const eastSample = row[eastX];
 
-      if (!centerSample || !northSample || !southSample || !westSample || !eastSample) continue;
+      if (!centerSample || !northSample || !southSample || !westSample || !eastSample) {
+        skippedCellCount += 1;
+        continue;
+      }
 
       const centerTopology = getTopologySample(topologyGrid, x, y);
       const northTopology = getTopologySample(topologyGrid, x, y - rowStride);
@@ -487,6 +524,7 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
       const eastPoint = pointFromSample(eastSample, projectPoint, eastTopology);
 
       if (!centerPoint.visible && !shouldDrawPoints([northPoint, eastPoint, southPoint, westPoint], 2)) {
+        skippedCellCount += 1;
         continue;
       }
 
@@ -500,21 +538,41 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
         projectionState
       );
 
-      if (!shouldDrawPoints(signalCell.points, 2)) continue;
+      if (!shouldDrawPoints(signalCell.points, 2)) {
+        skippedCellCount += 1;
+        continue;
+      }
 
       const densityScore = resolveCellDensity(centerSample, signalCell.points, projectionState);
-      if (densityScore < 0.2) continue;
+      if (densityScore < 0.2) {
+        skippedCellCount += 1;
+        continue;
+      }
 
       const appearance = describeSurface(centerSample, centerPoint, centerTopology);
       const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
       const alpha = appearance.fillAlpha * (0.95 + signalCell.curvatureFactor * 0.05);
 
       drawPolygon(ctx, signalCell.points, fillStyle, alpha);
+
+      emittedCellCount += 1;
+      totalCellSpanPx += measurePolygonSpan(signalCell.points);
     }
   }
 
   ctx.globalAlpha = 1;
   ctx.restore();
+
+  const averageCellSpanPx = emittedCellCount > 0 ? totalCellSpanPx / emittedCellCount : 0;
+
+  return {
+    visibleCellCount,
+    emittedCellCount,
+    skippedCellCount,
+    averageCellSpanPx,
+    subdivisionTier: projectionState.lensTier,
+    densityTier: resolveDensityTier(averageCellSpanPx, emittedCellCount)
+  };
 }
 
 function buildRenderAudit(planetField, topologyField = null) {
@@ -711,6 +769,31 @@ export function createRenderer() {
           rejectedBackfaceCount: 0,
           rejectedWeakVisibilityCount: 0
         },
+        primitive: {
+          primitiveType: "NONE",
+          primitivePath: activeScope === "UNIVERSE" ? "darkContainerUniverse" : "darkContainerGalaxy",
+          centerAnchored: false,
+          rowColumnPathActive: false,
+          sectorBandPathActive: false
+        },
+        topology: {
+          topologyMode: "NONE",
+          neighborLaw: "NONE",
+          visibleCellCount: 0,
+          emittedCellCount: 0,
+          skippedCellCount: 0
+        },
+        renderAuthority: {
+          renderReadsScope: true,
+          renderReadsLens: true,
+          fallbackMode: false,
+          liveRenderPath: activeScope === "UNIVERSE" ? "darkContainerUniverse" : "darkContainerGalaxy"
+        },
+        density: {
+          averageCellSpanPx: 0,
+          subdivisionTier: 0,
+          densityTier: "EMPTY"
+        },
         audit: {
           sampleCount: 0,
           waterFamilyCount: 0,
@@ -732,8 +815,8 @@ export function createRenderer() {
     drawPlanetRim(ctx, projectionState);
     drawPlanetBase(ctx, projectionState);
 
-    withPlanetClip(ctx, projectionState, () => {
-      drawForwardSignalMesh(ctx, grid, topologyGrid, projector, projectionState);
+    const density = withPlanetClip(ctx, projectionState, () => {
+      return drawForwardSignalMesh(ctx, grid, topologyGrid, projector, projectionState);
     });
 
     const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);
@@ -742,6 +825,27 @@ export function createRenderer() {
       projectionState,
       orbitalHits: orbitalReceipt.orbitalHits,
       orbitalAudit: orbitalReceipt.orbitalAudit,
+      primitive: {
+        primitiveType: "FORWARD_SIGNAL",
+        primitivePath: "forwardSignalDiamond",
+        centerAnchored: true,
+        rowColumnPathActive: true,
+        sectorBandPathActive: false
+      },
+      topology: {
+        topologyMode: "HYBRID",
+        neighborLaw: "CROSS_GRID",
+        visibleCellCount: density.visibleCellCount,
+        emittedCellCount: density.emittedCellCount,
+        skippedCellCount: density.skippedCellCount
+      },
+      renderAuthority: {
+        renderReadsScope: true,
+        renderReadsLens: true,
+        fallbackMode: false,
+        liveRenderPath: "drawForwardSignalMesh"
+      },
+      density,
       audit: buildRenderAudit(planetField, topologyField)
     };
   }

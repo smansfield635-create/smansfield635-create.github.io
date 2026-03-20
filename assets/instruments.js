@@ -1,6 +1,5 @@
-// DESTINATION FILE: /assets/instruments.js
-
 import { WORLD_KERNEL } from "../world/world_kernel.js";
+import { analyzeWorld } from "/world/science/world_analysis.js";
 
 export function createInstruments() {
   const EMPTY = "—";
@@ -16,8 +15,7 @@ export function createInstruments() {
     "/world/planet_surface_projector.js",
     "/world/render.js",
     "/world/control.js",
-    "/assets/instruments.js",
-    "/assets/world_ui.js"
+    "/assets/instruments.js"
   ]);
 
   const INVALIDATED_SOURCES = Object.freeze([
@@ -83,13 +81,8 @@ export function createInstruments() {
   function classifyValueTone(value) {
     const normalized = normalizePrimitive(value);
 
-    if (isCanonicalSource(normalized)) {
-      return "ok";
-    }
-
-    if (isInvalidatedSource(normalized)) {
-      return "danger";
-    }
+    if (isCanonicalSource(normalized)) return "ok";
+    if (isInvalidatedSource(normalized)) return "danger";
 
     if (
       normalized === "PASS" ||
@@ -106,7 +99,9 @@ export function createInstruments() {
       normalized === "round" ||
       normalized === "ROUND" ||
       normalized === "HOME_MODE" ||
-      normalized === "ROUTE_HOME"
+      normalized === "ROUTE_HOME" ||
+      normalized === "LAND" ||
+      normalized === "MIXED"
     ) {
       return "ok";
     }
@@ -127,7 +122,9 @@ export function createInstruments() {
       normalized === "FREEZE_HANDOFF" ||
       normalized === "SYSTEM_HALT" ||
       normalized === "INVALID" ||
-      normalized === "NON_CANONICAL"
+      normalized === "NON_CANONICAL" ||
+      normalized === "WATER" ||
+      normalized === "NONE"
     ) {
       return "danger";
     }
@@ -254,21 +251,21 @@ export function createInstruments() {
     return "OSCILLATION";
   }
 
-  function buildWorldPhase(currentSample) {
-    if (!currentSample) return "VOID";
-    if (currentSample.waterMask === 1) return "WATER";
-    if (currentSample.shoreline === true) return "SHORE";
-    if (currentSample.terrainClass === "SUMMIT") return "SUMMIT";
-    if (currentSample.terrainClass === "MOUNTAIN") return "MOUNTAIN";
-    if (currentSample.terrainClass === "PLATEAU") return "PLATEAU";
-    if (currentSample.terrainClass === "BASIN") return "BASIN";
-    return "LAND";
-  }
+  function buildWorldAnalysis(planetField = null, projectionSummary = {}, fallbackSample = null) {
+    if (planetField && Array.isArray(planetField?.samples) && planetField.samples.length > 0) {
+      return analyzeWorld(planetField, projectionSummary);
+    }
 
-  function buildStabilityClass(coherence) {
-    if (coherence >= GATE_THRESHOLD) return "STABLE";
-    if (coherence >= 0.40) return "STRAINED";
-    return "COLLAPSE";
+    if (fallbackSample) {
+      return analyzeWorld(
+        Object.freeze({
+          samples: Object.freeze([Object.freeze([fallbackSample])])
+        }),
+        Object.freeze({ sampleX: 0, sampleY: 0 })
+      );
+    }
+
+    return analyzeWorld(null, projectionSummary);
   }
 
   function buildValueVector(source = {}) {
@@ -458,8 +455,12 @@ export function createInstruments() {
     psychologyState = null,
     motionState = null,
     authorityState = null,
-    transitionState = null
+    transitionState = null,
+    planetField = null,
+    projectionSummary = {}
   } = {}) {
+    const resolvedWorld = buildWorldAnalysis(planetField, projectionSummary, currentSample || null);
+
     if (!currentSample) {
       return Object.freeze({
         stateIndex: 0,
@@ -470,10 +471,18 @@ export function createInstruments() {
         trajectoryClass: "STALL",
         tickIndex,
         world: Object.freeze({
-          lobeId: "NONE",
-          phase: "VOID",
-          terrainClass: "VOID",
-          stabilityClass: "COLLAPSE"
+          lobeId: normalizeString(resolvedWorld.lobeId, "NONE"),
+          phase: normalizeString(resolvedWorld.phase, "NONE"),
+          terrainClass: normalizeString(resolvedWorld.terrainClass, "NONE"),
+          stabilityClass: normalizeString(resolvedWorld.stabilityClass, "COLLAPSE"),
+          biomeType: normalizeString(resolvedWorld.biomeType, "NONE"),
+          surfaceMaterial: normalizeString(resolvedWorld.surfaceMaterial, "NONE"),
+          continentId: normalizeString(resolvedWorld.continentId, "NONE"),
+          continentName: normalizeString(resolvedWorld.continentName, "NONE"),
+          continentTier: resolvedWorld.continentTier,
+          shardClass: normalizeString(resolvedWorld.shardClass, "NONE"),
+          cellId: normalizeString(resolvedWorld.cellId, "NONE"),
+          reason: normalizeString(resolvedWorld.reason, EMPTY)
         }),
         value: buildValueVector(valueState),
         psychology: buildPsychologyReceipt(psychologyState),
@@ -497,10 +506,18 @@ export function createInstruments() {
       trajectoryClass: buildTrajectoryClass(coherence, previousCoherence, vector.magnitude),
       tickIndex,
       world: Object.freeze({
-        lobeId: normalizeString(currentSample.subRegion, "NONE"),
-        phase: buildWorldPhase(currentSample),
-        terrainClass: normalizeString(currentSample.terrainClass, "VOID"),
-        stabilityClass: buildStabilityClass(coherence)
+        lobeId: normalizeString(resolvedWorld.lobeId, normalizeString(currentSample.subRegion, "NONE")),
+        phase: normalizeString(resolvedWorld.phase, "NONE"),
+        terrainClass: normalizeString(resolvedWorld.terrainClass, normalizeString(currentSample.terrainClass, "NONE")),
+        stabilityClass: normalizeString(resolvedWorld.stabilityClass, "COLLAPSE"),
+        biomeType: normalizeString(resolvedWorld.biomeType, normalizeString(currentSample.biomeType, "NONE")),
+        surfaceMaterial: normalizeString(resolvedWorld.surfaceMaterial, "NONE"),
+        continentId: normalizeString(resolvedWorld.continentId, "NONE"),
+        continentName: normalizeString(resolvedWorld.continentName, "NONE"),
+        continentTier: resolvedWorld.continentTier,
+        shardClass: normalizeString(resolvedWorld.shardClass, "NONE"),
+        cellId: normalizeString(resolvedWorld.cellId, "NONE"),
+        reason: normalizeString(resolvedWorld.reason, EMPTY)
       }),
       value: buildValueVector(valueState),
       psychology: buildPsychologyReceipt(psychologyState),
@@ -538,8 +555,12 @@ export function createInstruments() {
           <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(instrument.coherence, 2))}</span>
         </span>
         <span class="diagnostic-pill">
-          <span class="diagnostic-pill__label">Complete</span>
-          <span class="diagnostic-pill__value">${escapeHTML(toFixedSafe(progress.summitCompletion, 2))}</span>
+          <span class="diagnostic-pill__label">World</span>
+          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(instrument.world?.phase))}</span>
+        </span>
+        <span class="diagnostic-pill">
+          <span class="diagnostic-pill__label">Stable</span>
+          <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(instrument.world?.stabilityClass))}</span>
         </span>
         <span class="diagnostic-pill">
           <span class="diagnostic-pill__label">Orbit</span>
@@ -606,7 +627,13 @@ export function createInstruments() {
         phase: normalizePrimitive(instrument.world?.phase),
         terrainClass: normalizePrimitive(instrument.world?.terrainClass),
         stabilityClass: normalizePrimitive(instrument.world?.stabilityClass),
-        cellId: normalizePrimitive(projection.cellId),
+        biomeType: normalizePrimitive(instrument.world?.biomeType),
+        surfaceMaterial: normalizePrimitive(instrument.world?.surfaceMaterial),
+        continentId: normalizePrimitive(instrument.world?.continentId),
+        continentName: normalizePrimitive(instrument.world?.continentName),
+        continentTier: normalizePrimitive(instrument.world?.continentTier),
+        shardClass: normalizePrimitive(instrument.world?.shardClass),
+        cellId: normalizePrimitive(instrument.world?.cellId),
         sampleX: normalizePrimitive(projection.sampleX),
         sampleY: normalizePrimitive(projection.sampleY),
         mode: normalizePrimitive(projection.mode ?? motionState.mode)

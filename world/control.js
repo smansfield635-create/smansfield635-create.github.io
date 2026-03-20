@@ -25,8 +25,8 @@ function getKernelConstants() {
     maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
     initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
     initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
-    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0084,
-    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.989,
+    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0082,
+    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.992,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });
@@ -81,18 +81,21 @@ export function createControlSystem() {
   let presentationMode = "round";
 
   let autoSpinEnabled = false;
-  let autoSpinSpeed = 0.00022;
+  let autoSpinSpeed = 0.00018;
 
   const ZOOM_EASING = 0.12;
 
-  const YAW_TRACK_GAIN = 0.9;
-  const PITCH_TRACK_GAIN = 0.78;
+  // Friction-free weightless feel
+  const YAW_TRACK_GAIN = 0.88;
+  const PITCH_TRACK_GAIN = 0.74;
 
-  const DRAG_BLEND_YAW = 0.78;
-  const DRAG_BLEND_PITCH = 0.84;
+  // High blending = smooth finger tracking, low jump
+  const DRAG_BLEND_YAW = 0.86;
+  const DRAG_BLEND_PITCH = 0.90;
 
-  const RELEASE_YAW_GAIN = 1.5;
-  const RELEASE_PITCH_GAIN = 0.82;
+  // Release inherits real slide momentum without snapping
+  const RELEASE_YAW_GAIN = 1.35;
+  const RELEASE_PITCH_GAIN = 0.72;
 
   const cameraState = {
     width: 0,
@@ -181,13 +184,16 @@ export function createControlSystem() {
     const yawStep = deltaX * K.dragSensitivity * YAW_TRACK_GAIN;
     const pitchStep = deltaY * K.dragSensitivity * PITCH_TRACK_GAIN;
 
+    // Finger-coupled tracking
     yaw = wrapAngle(yaw + yawStep);
     pitch += pitchStep;
     clampPitch();
 
+    // Save actual last slide
     lastDragYawStep = yawStep;
     lastDragPitchStep = pitchStep;
 
+    // Smooth recent slide history
     smoothedDragYaw =
       smoothedDragYaw * DRAG_BLEND_YAW +
       yawStep * (1 - DRAG_BLEND_YAW);
@@ -196,27 +202,27 @@ export function createControlSystem() {
       smoothedDragPitch * DRAG_BLEND_PITCH +
       pitchStep * (1 - DRAG_BLEND_PITCH);
 
-    // Light tracking continuity only while finger is down.
-    yawVelocity = smoothedDragYaw * 0.55;
-    pitchVelocity = smoothedDragPitch * 0.35;
+    // Minimal live carry while finger is down
+    yawVelocity = smoothedDragYaw * 0.28;
+    pitchVelocity = smoothedDragPitch * 0.16;
   }
 
   function releaseDrag() {
     dragActive = false;
 
-    // Natural handoff from the real final finger motion.
+    // Preserve the momentum the finger actually imparted
     yawVelocity =
-      yawVelocity * 0.35 +
-      smoothedDragYaw * 0.9 +
+      yawVelocity * 0.30 +
+      smoothedDragYaw * 0.85 +
       lastDragYawStep * RELEASE_YAW_GAIN;
 
     pitchVelocity =
-      pitchVelocity * 0.25 +
-      smoothedDragPitch * 0.45 +
+      pitchVelocity * 0.22 +
+      smoothedDragPitch * 0.38 +
       lastDragPitchStep * RELEASE_PITCH_GAIN;
 
-    yawVelocity = clamp(yawVelocity, -0.16, 0.16);
-    pitchVelocity = clamp(pitchVelocity, -0.08, 0.08);
+    yawVelocity = clamp(yawVelocity, -0.14, 0.14);
+    pitchVelocity = clamp(pitchVelocity, -0.06, 0.06);
   }
 
   function stepZoom() {
@@ -241,9 +247,9 @@ export function createControlSystem() {
       yawVelocity *= decay;
       pitchVelocity *= decay;
 
-      // Very soft floor so stop feels natural, not abruptly braked.
-      if (Math.abs(yawVelocity) < 0.00000015) yawVelocity = 0;
-      if (Math.abs(pitchVelocity) < 0.00000015) pitchVelocity = 0;
+      // Very soft floor -> natural stop, not abrupt brake
+      if (Math.abs(yawVelocity) < 0.00000005) yawVelocity = 0;
+      if (Math.abs(pitchVelocity) < 0.00000005) pitchVelocity = 0;
 
       clampPitch();
     }

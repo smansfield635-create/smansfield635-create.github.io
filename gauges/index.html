@@ -1,76 +1,213 @@
-<script>
-const KEY = "cte_runtime_v3";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gauges</title>
+  <style>
+    :root{
+      --bg:#05070b;
+      --panel:#0b1220;
+      --line:rgba(255,255,255,0.08);
+      --text:#d7e2ff;
+      --muted:#8ea3c7;
+      --accent:#46e0b6;
+      --danger:#ff6b6b;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
+    body{min-height:100vh}
+    .shell{max-width:1100px;margin:0 auto;padding:16px}
+    .title{font-size:14px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+    #statusBar{
+      min-height:44px;
+      display:flex;
+      align-items:center;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));
+      border-radius:12px;
+      margin-bottom:12px;
+      color:var(--accent);
+      word-break:break-word;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+    .panel{
+      border:1px solid var(--line);
+      background:var(--panel);
+      border-radius:12px;
+      overflow:hidden;
+      min-height:220px;
+    }
+    .panelHead{
+      padding:10px 12px;
+      border-bottom:1px solid var(--line);
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:12px;
+    }
+    .panelBody{padding:6px 0}
+    .row{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:10px 12px;
+      border-bottom:1px solid var(--line);
+    }
+    .row:last-child{border-bottom:none}
+    .left{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      min-width:0;
+      color:var(--text);
+    }
+    .diamond{
+      width:8px;
+      height:8px;
+      background:var(--accent);
+      transform:rotate(45deg);
+      flex:0 0 auto;
+      opacity:.9;
+    }
+    .value{
+      color:#ffffff;
+      text-align:right;
+      word-break:break-word;
+    }
+    .empty{
+      padding:12px;
+      color:var(--muted);
+    }
+    .danger{color:var(--danger)}
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <h1 class="title">Diagnostic Gauges</h1>
 
-let lastRaw = null;
+    <div id="statusBar">STATE: BOOT</div>
 
-function getData(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    if(!raw) return null;
+    <div class="grid">
+      <section class="panel">
+        <div class="panelHead">Runtime</div>
+        <div class="panelBody" id="runtimeBlock"></div>
+      </section>
 
-    // FORCE re-parse every time (no caching)
-    if(raw !== lastRaw){
-      lastRaw = raw;
-      return JSON.parse(raw);
+      <section class="panel">
+        <div class="panelHead">Motion</div>
+        <div class="panelBody" id="motionBlock"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panelHead">Emission</div>
+        <div class="panelBody" id="emissionBlock"></div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const KEY = "cte_runtime_v3";
+
+    let lastRaw = null;
+
+    function getData(){
+      try{
+        const raw = localStorage.getItem(KEY);
+        if(!raw) return null;
+
+        if(raw !== lastRaw){
+          lastRaw = raw;
+          return JSON.parse(raw);
+        }
+
+        return JSON.parse(raw);
+      }catch(e){
+        console.error(e);
+        return null;
+      }
     }
 
-    return JSON.parse(raw);
-  }catch(e){
-    console.error(e);
-    return null;
-  }
-}
+    function safeValue(value){
+      if(value === null || value === undefined) return "—";
+      if(typeof value === "number"){
+        return Number.isFinite(value) ? String(Math.round(value * 1000) / 1000) : "—";
+      }
+      if(typeof value === "boolean") return value ? "true" : "false";
+      if(typeof value === "object") return JSON.stringify(value);
+      return String(value);
+    }
 
-function row(label, value){
-  return `
-    <div class="row">
-      <div class="left">
-        <div class="diamond"></div>
-        <div>${label}</div>
-      </div>
-      <div class="value">${value}</div>
-    </div>
-  `;
-}
+    function row(label, value){
+      return `
+        <div class="row">
+          <div class="left">
+            <div class="diamond"></div>
+            <div>${label}</div>
+          </div>
+          <div class="value">${safeValue(value)}</div>
+        </div>
+      `;
+    }
 
-function render(data){
-  if(!data){
-    document.getElementById("statusBar").textContent = "STATE: NO DATA";
-    return;
-  }
+    function renderNoData(){
+      document.getElementById("statusBar").textContent = "STATE: NO DATA";
+      document.getElementById("runtimeBlock").innerHTML = `<div class="empty">Waiting for localStorage key: ${KEY}</div>`;
+      document.getElementById("motionBlock").innerHTML = `<div class="empty">No motion data yet</div>`;
+      document.getElementById("emissionBlock").innerHTML = `<div class="empty">No emission data yet</div>`;
+    }
 
-  const age = Date.now() - new Date(data.timestamp).getTime();
+    function render(data){
+      if(!data){
+        renderNoData();
+        return;
+      }
 
-  document.getElementById("statusBar").textContent =
-    "STATE: LIVE • " + data.phase + " • " + Math.round(age) + "ms";
+      const ts = new Date(data.timestamp).getTime();
+      const age = Number.isFinite(ts) ? Date.now() - ts : NaN;
+      const liveText = Number.isFinite(age)
+        ? `STATE: LIVE • ${safeValue(data.phase)} • ${Math.round(age)}ms`
+        : `STATE: LIVE • ${safeValue(data.phase)}`;
 
-  document.getElementById("runtimeBlock").innerHTML = `
-    ${row("phase", data.phase)}
-    ${row("mode", data.mode)}
-    ${row("fps", Math.round(data.fps))}
-    ${row("dtMs", Math.round(data.dtMs))}
-  `;
+      document.getElementById("statusBar").textContent = liveText;
 
-  const m = data.control?.motionState || {};
-  document.getElementById("motionBlock").innerHTML = `
-    ${row("yaw", m.yaw)}
-    ${row("pitch", m.pitch)}
-    ${row("orbitPhase", m.orbitPhase)}
-  `;
+      document.getElementById("runtimeBlock").innerHTML = `
+        ${row("phase", data.phase)}
+        ${row("mode", data.mode)}
+        ${row("fps", data.fps)}
+        ${row("dtMs", data.dtMs)}
+      `;
 
-  const e = data.emissionReceipt || {};
-  document.getElementById("emissionBlock").innerHTML = `
-    ${row("emitted", e.emissionEmitted)}
-    ${row("pass", e.emissionPass)}
-  `;
-}
+      const m = data.control?.motionState || {};
+      document.getElementById("motionBlock").innerHTML = `
+        ${row("yaw", m.yaw)}
+        ${row("pitch", m.pitch)}
+        ${row("orbitPhase", m.orbitPhase)}
+      `;
 
-// 🔥 KEY CHANGE: RAF LOOP INSTEAD OF INTERVAL
-function loop(){
-  const data = getData();
-  render(data);
-  requestAnimationFrame(loop);
-}
+      const e = data.emissionReceipt || {};
+      document.getElementById("emissionBlock").innerHTML = `
+        ${row("emitted", e.emissionEmitted)}
+        ${row("pass", e.emissionPass)}
+      `;
+    }
 
-loop();
-</script>
+    function loop(){
+      const data = getData();
+      render(data);
+      requestAnimationFrame(loop);
+    }
+
+    loop();
+  </script>
+</body>
+</html>

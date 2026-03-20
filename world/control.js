@@ -27,8 +27,8 @@ function getKernelConstants() {
     maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
     initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
     initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
-    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0025,
-    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.92,
+    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0065,
+    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.85,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });

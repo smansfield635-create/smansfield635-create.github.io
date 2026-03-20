@@ -382,10 +382,16 @@ function bindInput() {
   };
 
   onPointerUp = () => {
+    if (dragging && typeof control.releaseDrag === "function") {
+      control.releaseDrag();
+    }
     dragging = false;
   };
 
   onPointerCancel = () => {
+    if (dragging && typeof control.releaseDrag === "function") {
+      control.releaseDrag();
+    }
     dragging = false;
   };
 

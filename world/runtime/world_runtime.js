@@ -1,10 +1,12 @@
 // /world/runtime/world_runtime.js
-// RUNTIME BASELINE RECONSTRUCTION
+// MODE: STANDARD RUNTIME RECOVERY
+// STATUS: SINGLE-FILE CANONICAL RUNTIME SPINE
 // PURPOSE:
-// 1) restore a stable runtime loop
-// 2) restore control -> render continuity
-// 3) restore live receipt emission for gauges
-// NOTE: this is a baseline, not the lost original
+// 1) boot one runtime only
+// 2) maintain control -> render continuity
+// 3) emit authority receipt continuously
+// 4) emit live gauges receipt continuously
+// 5) stay finite, deterministic, and non-drifting
 
 import worldKernel from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
@@ -26,6 +28,14 @@ let planetField = null;
 let rafId = 0;
 let lastNow = 0;
 let started = false;
+let disposed = false;
+
+let onResize = null;
+let onPageHide = null;
+let onPointerDown = null;
+let onPointerMove = null;
+let onPointerUp = null;
+let onPointerCancel = null;
 
 function ensureReceipt() {
   if (!window[RECEIPT_KEY]) {
@@ -41,7 +51,7 @@ function ensureReceipt() {
       duplicateInput: false,
 
       page: "world",
-      phase: "runtime",
+      phase: "BOOT",
       mode: "active",
       timestamp: 0,
       fps: 0,
@@ -143,7 +153,7 @@ function emitRuntimeReceiptContinuous(receipt, extra = {}) {
   try {
     localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(payload));
   } catch {
-    // storage unavailable; do not break runtime
+    // do not break runtime if storage is unavailable
   }
 }
 
@@ -162,7 +172,9 @@ function clearFailure() {
 
 function getCanvas() {
   const el = document.getElementById("world");
-  if (!el) throw new Error("Missing #world canvas");
+  if (!el) {
+    throw new Error("Missing #world canvas");
+  }
   return el;
 }
 
@@ -206,55 +218,6 @@ function setupSystems() {
   if (!planetField) {
     throw new Error("planet_engine returned empty field");
   }
-}
-
-function bindInput() {
-  let dragging = false;
-  let lastX = 0;
-  let lastY = 0;
-
-  canvas.addEventListener(
-    "pointerdown",
-    (e) => {
-      dragging = true;
-      lastX = e.clientX;
-      lastY = e.clientY;
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "pointermove",
-    (e) => {
-      if (!dragging) return;
-
-      const dx = e.clientX - lastX;
-      const dy = e.clientY - lastY;
-      lastX = e.clientX;
-      lastY = e.clientY;
-
-      if (typeof control.applyDrag === "function") {
-        control.applyDrag(dx, dy);
-      }
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "pointerup",
-    () => {
-      dragging = false;
-    },
-    { passive: true }
-  );
-
-  window.addEventListener(
-    "pointercancel",
-    () => {
-      dragging = false;
-    },
-    { passive: true }
-  );
 }
 
 function safe(fn, fallback = null) {
@@ -315,6 +278,7 @@ function renderFrame(receipt) {
 
   const audit = renderResult.audit || {};
   const orbitalAudit = renderResult.orbitalAudit || {};
+  const placementAudit = renderResult.placementAudit || renderResult.placementReceipt || {};
 
   receipt.renderAudit.sampleCount = audit.sampleCount ?? 0;
   receipt.renderAudit.waterFamilyCount = audit.waterFamilyCount ?? 0;
@@ -328,8 +292,14 @@ function renderFrame(receipt) {
   receipt.emissionReceipt.emissionSuppressed =
     (orbitalAudit.rejectedBackfaceCount ?? 0) +
     (orbitalAudit.rejectedWeakVisibilityCount ?? 0);
-
   receipt.emissionReceipt.emissionPass = true;
+
+  receipt.placementReceipt.markerRequired = placementAudit.markerRequired ?? false;
+  receipt.placementReceipt.placementPlaced = placementAudit.placementPlaced ?? 0;
+  receipt.placementReceipt.markerCollisionCount = placementAudit.markerCollisionCount ?? 0;
+  receipt.placementReceipt.placementReservedReject = placementAudit.placementReservedReject ?? 0;
+  receipt.placementReceipt.placementViewportReject = placementAudit.placementViewportReject ?? 0;
+  receipt.placementReceipt.placementPass = placementAudit.placementPass ?? false;
 }
 
 function updateInstrumentReceipt(receipt) {
@@ -339,6 +309,7 @@ function updateInstrumentReceipt(receipt) {
         control: receipt.control,
         renderAudit: receipt.renderAudit,
         emissionReceipt: receipt.emissionReceipt,
+        placementReceipt: receipt.placementReceipt,
         world: {
           phase: receipt.phase,
           terrainClass: "unknown",
@@ -347,8 +318,85 @@ function updateInstrumentReceipt(receipt) {
       });
     }
   } catch {
-    // keep prior instrument value if present
+    // preserve prior instrument value on builder failure
   }
+}
+
+function disposeRuntime() {
+  if (disposed) return;
+  disposed = true;
+
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = 0;
+  }
+
+  if (canvas && onPointerDown) {
+    canvas.removeEventListener("pointerdown", onPointerDown);
+  }
+
+  if (onPointerMove) {
+    window.removeEventListener("pointermove", onPointerMove);
+  }
+
+  if (onPointerUp) {
+    window.removeEventListener("pointerup", onPointerUp);
+  }
+
+  if (onPointerCancel) {
+    window.removeEventListener("pointercancel", onPointerCancel);
+  }
+
+  if (onResize) {
+    window.removeEventListener("resize", onResize);
+  }
+
+  if (onPageHide) {
+    window.removeEventListener("pagehide", onPageHide);
+  }
+
+  window[RUNTIME_ACTIVE_KEY] = false;
+  started = false;
+}
+
+function bindInput() {
+  if (!canvas || !control) return;
+
+  let dragging = false;
+  let lastX = 0;
+  let lastY = 0;
+
+  onPointerDown = (e) => {
+    dragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+  };
+
+  onPointerMove = (e) => {
+    if (!dragging) return;
+
+    const dx = e.clientX - lastX;
+    const dy = e.clientY - lastY;
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    if (typeof control.applyDrag === "function") {
+      control.applyDrag(dx, dy);
+    }
+  };
+
+  onPointerUp = () => {
+    dragging = false;
+  };
+
+  onPointerCancel = () => {
+    dragging = false;
+  };
+
+  canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
+  window.addEventListener("pointermove", onPointerMove, { passive: true });
+  window.addEventListener("pointerup", onPointerUp, { passive: true });
+  window.addEventListener("pointercancel", onPointerCancel, { passive: true });
 }
 
 function frame(now) {
@@ -359,7 +407,7 @@ function frame(now) {
   clearFailure();
 
   receipt.page = "world";
-  receipt.phase = "runtime";
+  receipt.phase = "RUNNING";
   receipt.mode = "active";
   receipt.timestamp = now;
   receipt.dtMs = dtMs;
@@ -394,11 +442,13 @@ export function startRuntime() {
   }
 
   started = true;
+  disposed = false;
   window[RUNTIME_ACTIVE_KEY] = true;
 
   try {
     canvas = getCanvas();
     ctx = canvas.getContext("2d");
+
     if (!ctx) {
       throw new Error("2D context unavailable");
     }
@@ -407,17 +457,21 @@ export function startRuntime() {
     resize();
     bindInput();
 
-    window.addEventListener("resize", resize, { passive: true });
-    window.addEventListener(
-      "pagehide",
-      () => {
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = 0;
-        window[RUNTIME_ACTIVE_KEY] = false;
-        started = false;
-      },
-      { passive: true }
-    );
+    onResize = () => {
+      resize();
+    };
+
+    onPageHide = () => {
+      disposeRuntime();
+    };
+
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("pagehide", onPageHide, { passive: true });
+
+    receipt.page = "world";
+    receipt.phase = "BOOT";
+    receipt.mode = "active";
+    receipt.verification.pass = false;
 
     lastNow = performance.now();
     emitRuntimeReceiptContinuous(receipt);
@@ -425,6 +479,7 @@ export function startRuntime() {
   } catch (err) {
     setFailure("startup", err instanceof Error ? err.message : String(err));
     emitRuntimeReceiptContinuous(receipt);
+    disposeRuntime();
   }
 }
 

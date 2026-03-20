@@ -1,9 +1,6 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 
-const SUBDIV_Z_THRESHOLD = 0.55;
-const MAX_SUBDIV = 2;
-
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -175,106 +172,6 @@ function getTopologySample(topologyGrid, x, y) {
   return topologyGrid?.[y]?.[x] || null;
 }
 
-function interpolateSample(s00, s10, s01, s11, fx, fy, crossesSeam = false) {
-  if (crossesSeam) {
-    const sx = fx < 0.5 ? 0 : 1;
-    const sy = fy < 0.5 ? 0 : 1;
-    if (sx === 0 && sy === 0) return s00;
-    if (sx === 1 && sy === 0) return s10;
-    if (sx === 0 && sy === 1) return s01;
-    return s11;
-  }
-
-  const oneMinusFx = 1 - fx;
-  const oneMinusFy = 1 - fy;
-
-  return {
-    latDeg:
-      s00.latDeg * oneMinusFx * oneMinusFy +
-      s10.latDeg * fx * oneMinusFy +
-      s01.latDeg * oneMinusFx * fy +
-      s11.latDeg * fx * fy,
-    lonDeg:
-      s00.lonDeg * oneMinusFx * oneMinusFy +
-      s10.lonDeg * fx * oneMinusFy +
-      s01.lonDeg * oneMinusFx * fy +
-      s11.lonDeg * fx * fy,
-    elevation:
-      (isFiniteNumber(s00.elevation) ? s00.elevation : 0) * oneMinusFx * oneMinusFy +
-      (isFiniteNumber(s10.elevation) ? s10.elevation : 0) * fx * oneMinusFy +
-      (isFiniteNumber(s01.elevation) ? s01.elevation : 0) * oneMinusFx * fy +
-      (isFiniteNumber(s11.elevation) ? s11.elevation : 0) * fx * fy,
-    oceanDepthField:
-      (isFiniteNumber(s00.oceanDepthField) ? s00.oceanDepthField : 0) * oneMinusFx * oneMinusFy +
-      (isFiniteNumber(s10.oceanDepthField) ? s10.oceanDepthField : 0) * fx * oneMinusFy +
-      (isFiniteNumber(s01.oceanDepthField) ? s01.oceanDepthField : 0) * oneMinusFx * fy +
-      (isFiniteNumber(s11.oceanDepthField) ? s11.oceanDepthField : 0) * fx * fy,
-    terrainClass: s00.terrainClass,
-    biomeType: s00.biomeType,
-    surfaceMaterial: s00.surfaceMaterial,
-    shoreline: s00.shoreline,
-    shorelineBand: s00.shorelineBand,
-    landMask: s00.landMask,
-    waterMask: s00.waterMask,
-    auroralPotential: s00.auroralPotential,
-    rainfall: s00.rainfall,
-    evaporationPressure: s00.evaporationPressure,
-    maritimeInfluence: s00.maritimeInfluence,
-    continentId: s00.continentId
-  };
-}
-
-function interpolateTopology(t00, t10, t01, t11, fx, fy, crossesSeam = false) {
-  if (crossesSeam) {
-    const sx = fx < 0.5 ? 0 : 1;
-    const sy = fy < 0.5 ? 0 : 1;
-    if (sx === 0 && sy === 0) return t00 || {};
-    if (sx === 1 && sy === 0) return t10 || {};
-    if (sx === 0 && sy === 1) return t01 || {};
-    return t11 || {};
-  }
-
-  const a = t00 || t10 || t01 || t11 || {};
-  const b = t10 || t00 || t11 || t01 || a;
-  const c = t01 || t11 || t00 || t10 || a;
-  const d = t11 || t01 || t10 || t00 || a;
-
-  const oneMinusFx = 1 - fx;
-  const oneMinusFy = 1 - fy;
-
-  function blend(key) {
-    return (
-      (isFiniteNumber(a[key]) ? a[key] : 0) * oneMinusFx * oneMinusFy +
-      (isFiniteNumber(b[key]) ? b[key] : 0) * fx * oneMinusFy +
-      (isFiniteNumber(c[key]) ? c[key] : 0) * oneMinusFx * fy +
-      (isFiniteNumber(d[key]) ? d[key] : 0) * fx * fy
-    );
-  }
-
-  return {
-    ridgeAmplified: blend("ridgeAmplified"),
-    basinAmplified: blend("basinAmplified"),
-    summitAmplified: blend("summitAmplified"),
-    canyonAmplified: blend("canyonAmplified"),
-    coastAmplified: blend("coastAmplified"),
-    reliefComposite: blend("reliefComposite"),
-    squareMaskStrength: blend("squareMaskStrength"),
-    elevationAmplified: blend("elevationAmplified")
-  };
-}
-
-function resolveStableSubdiv(c00, c10, c11, c01) {
-  const minZ = Math.min(
-    c00?.z ?? -1,
-    c10?.z ?? -1,
-    c11?.z ?? -1,
-    c01?.z ?? -1
-  );
-
-  if (minZ > SUBDIV_Z_THRESHOLD) return 2;
-  return 1;
-}
-
 function drawPlanetRim(ctx, projectionState) {
   ctx.save();
 
@@ -357,17 +254,19 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
   if (!grid.length || !grid[0].length) return;
 
   const rowCount = grid.length;
+  const rowStride = rowCount >= 100 ? 2 : 1;
 
   ctx.save();
 
-  for (let y = 0; y < rowCount - 1; y += 1) {
+  for (let y = 0; y < rowCount - rowStride; y += rowStride) {
     const row = grid[y];
-    const nextRow = grid[y + 1];
+    const nextRow = grid[y + rowStride];
     const rowLength = row.length;
+    const colStride = rowLength >= 200 ? 2 : 1;
 
-    for (let x = 0; x < rowLength; x += 1) {
-      const nextX = (x + 1) % rowLength;
-      const crossesSeam = x === rowLength - 1;
+    for (let x = 0; x < rowLength; x += colStride) {
+      const nextX = (x + colStride) % rowLength;
+      const crossesSeam = x >= rowLength - colStride;
 
       const s00 = row[x];
       const s10 = row[nextX];
@@ -376,55 +275,20 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
       const t00 = getTopologySample(topologyGrid, x, y);
       const t10 = getTopologySample(topologyGrid, nextX, y);
-      const t01 = getTopologySample(topologyGrid, x, y + 1);
-      const t11 = getTopologySample(topologyGrid, nextX, y + 1);
+      const t01 = getTopologySample(topologyGrid, x, y + rowStride);
+      const t11 = getTopologySample(topologyGrid, nextX, y + rowStride);
 
-      const c00 = pointFromSample(s00, projectPoint, t00);
-      const c10 = pointFromSample(s10, projectPoint, t10);
-      const c01 = pointFromSample(s01, projectPoint, t01);
-      const c11 = pointFromSample(s11, projectPoint, t11);
+      const p00 = pointFromSample(s00, projectPoint, t00);
+      const p10 = pointFromSample(s10, projectPoint, t10);
+      const p01 = pointFromSample(s01, projectPoint, t01);
+      const p11 = pointFromSample(s11, projectPoint, t11);
 
-      if (!shouldDrawQuad([c00, c10, c11, c01])) continue;
+      if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
 
-      const subdiv = crossesSeam ? 1 : resolveStableSubdiv(c00, c10, c11, c01);
-      const finalSubdiv = subdiv > MAX_SUBDIV ? MAX_SUBDIV : subdiv;
+      const appearance = describeSurface(s00, p00, t00);
+      const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
 
-      for (let sy = 0; sy < finalSubdiv; sy += 1) {
-        for (let sx = 0; sx < finalSubdiv; sx += 1) {
-          const fx0 = sx / finalSubdiv;
-          const fy0 = sy / finalSubdiv;
-          const fx1 = (sx + 1) / finalSubdiv;
-          const fy1 = (sy + 1) / finalSubdiv;
-
-          const sm00 = interpolateSample(s00, s10, s01, s11, fx0, fy0, crossesSeam);
-          const sm10 = interpolateSample(s00, s10, s01, s11, fx1, fy0, crossesSeam);
-          const sm01 = interpolateSample(s00, s10, s01, s11, fx0, fy1, crossesSeam);
-          const sm11 = interpolateSample(s00, s10, s01, s11, fx1, fy1, crossesSeam);
-
-          const tm00 = interpolateTopology(t00, t10, t01, t11, fx0, fy0, crossesSeam);
-          const tm10 = interpolateTopology(t00, t10, t01, t11, fx1, fy0, crossesSeam);
-          const tm01 = interpolateTopology(t00, t10, t01, t11, fx0, fy1, crossesSeam);
-          const tm11 = interpolateTopology(t00, t10, t01, t11, fx1, fy1, crossesSeam);
-
-          const p00 = pointFromSample(sm00, projectPoint, tm00);
-          const p10 = pointFromSample(sm10, projectPoint, tm10);
-          const p01 = pointFromSample(sm01, projectPoint, tm01);
-          const p11 = pointFromSample(sm11, projectPoint, tm11);
-
-          if (!shouldDrawQuad([p00, p10, p11, p01])) continue;
-
-          const appearanceA = describeSurface(sm00, p00, tm00);
-          const appearanceB = describeSurface(sm11, p11, tm11);
-          const blendedColor = {
-            r: appearanceA.fillColor.r + (appearanceB.fillColor.r - appearanceA.fillColor.r) * 0.08,
-            g: appearanceA.fillColor.g + (appearanceB.fillColor.g - appearanceA.fillColor.g) * 0.08,
-            b: appearanceA.fillColor.b + (appearanceB.fillColor.b - appearanceA.fillColor.b) * 0.08
-          };
-          const fillStyle = `rgb(${Math.round(clamp(blendedColor.r, 0, 255))}, ${Math.round(clamp(blendedColor.g, 0, 255))}, ${Math.round(clamp(blendedColor.b, 0, 255))})`;
-
-          drawQuad(ctx, p00, p10, p11, p01, fillStyle, appearanceA.fillAlpha);
-        }
-      }
+      drawQuad(ctx, p00, p10, p11, p01, fillStyle, appearance.fillAlpha);
     }
   }
 

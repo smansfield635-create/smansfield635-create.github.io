@@ -8,8 +8,8 @@
 <style>
 :root{
   --bg:#030712;
-  --panel:rgba(8,14,24,.82);
-  --panel2:rgba(10,16,28,.88);
+  --panel:rgba(8,14,24,.84);
+  --panel-2:rgba(10,16,28,.92);
   --border:rgba(255,255,255,.10);
   --text:#eef4ff;
   --muted:#9fb0cc;
@@ -25,6 +25,7 @@
 html,body{
   margin:0;
   padding:0;
+  min-height:100%;
   background:
     radial-gradient(circle at top, #0d1730 0%, #05070d 58%, #030509 100%);
   color:var(--text);
@@ -35,7 +36,7 @@ a{color:inherit;text-decoration:none}
 button{font:inherit}
 
 .page{
-  width:min(1320px,96vw);
+  width:min(1500px,96vw);
   margin:0 auto;
   padding:18px 0 28px;
   display:grid;
@@ -49,7 +50,6 @@ button{font:inherit}
   align-items:center;
   justify-content:space-between;
 }
-
 .topbar-left,.topbar-right{
   display:flex;
   gap:10px;
@@ -98,7 +98,6 @@ button{font:inherit}
     linear-gradient(145deg, rgba(8,14,24,.88), rgba(5,9,18,.94));
   box-shadow:var(--shadow);
 }
-
 .kicker{
   margin:0 0 8px 0;
   color:var(--muted);
@@ -153,20 +152,25 @@ button{font:inherit}
   line-height:1.35;
 }
 
-.layers{
+.compass{
   display:grid;
-  grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);
+  grid-template-columns:minmax(260px,.95fr) minmax(320px,1.25fr) minmax(260px,.95fr);
+  grid-template-rows:auto auto auto;
   gap:14px;
+  grid-template-areas:
+    "north north north"
+    "west center east"
+    "south south south";
 }
 
 .panel{
   border:1px solid var(--border);
   border-radius:22px;
-  background:var(--panel2);
+  background:var(--panel-2);
   box-shadow:var(--shadow);
   overflow:hidden;
+  min-width:0;
 }
-
 .panel-head{
   display:flex;
   align-items:center;
@@ -187,11 +191,28 @@ button{font:inherit}
   font-weight:700;
 }
 
-.grid{
+#north-panel{grid-area:north}
+#west-panel{grid-area:west}
+#center-panel{grid-area:center}
+#east-panel{grid-area:east}
+#south-panel{grid-area:south}
+
+.card-grid{
   display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
   gap:10px;
   padding:12px;
+}
+.card-grid.north{
+  grid-template-columns:repeat(4,minmax(0,1fr));
+}
+.card-grid.center{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+.card-grid.side{
+  grid-template-columns:1fr;
+}
+.card-grid.south{
+  grid-template-columns:repeat(3,minmax(0,1fr));
 }
 
 .card{
@@ -201,7 +222,6 @@ button{font:inherit}
   padding:12px;
   min-width:0;
 }
-
 .card-title{
   margin:0 0 10px 0;
   font-size:12px;
@@ -240,14 +260,12 @@ button{font:inherit}
   display:grid;
   gap:10px;
 }
-
 .class-row{
   border:1px solid rgba(255,255,255,.08);
   border-radius:18px;
   background:rgba(255,255,255,.02);
   overflow:hidden;
 }
-
 .class-head{
   padding:12px 14px;
   display:grid;
@@ -298,12 +316,26 @@ button{font:inherit}
   padding:0 2px;
 }
 
+@media (max-width:1280px){
+  .card-grid.north{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .card-grid.south{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 @media (max-width:1080px){
-  .layers{grid-template-columns:1fr}
+  .compass{
+    grid-template-columns:1fr;
+    grid-template-areas:
+      "north"
+      "center"
+      "west"
+      "east"
+      "south";
+  }
+  .card-grid.center{grid-template-columns:1fr}
 }
 @media (max-width:820px){
   .statusbar{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid{grid-template-columns:1fr}
+  .card-grid.north,
+  .card-grid.south{grid-template-columns:1fr}
 }
 @media (max-width:560px){
   .page{width:min(96vw,96vw)}
@@ -331,7 +363,7 @@ button{font:inherit}
   <section class="hero">
     <p class="kicker">Gauges</p>
     <h1 class="title">Live Diagnostic + Checklist Authority</h1>
-    <p class="sub">This page reads the live runtime receipt from the index, classifies the current state, and tells you what is broken now, who owns it, and what must be fixed next.</p>
+    <p class="sub">North = runtime truth. West = movement and world state. Center = checklist authority. East = render and emission truth. South = ownership, verification, and failure state.</p>
   </section>
 
   <section class="statusbar">
@@ -357,29 +389,63 @@ button{font:inherit}
     </div>
   </section>
 
-  <section class="layers">
-    <section class="panel">
+  <section class="compass">
+    <section id="north-panel" class="panel">
       <div class="panel-head">
-        <div class="panel-title">Layer A · Live Runtime</div>
+        <div class="panel-title">North · Runtime Spine</div>
         <div id="panel-meta-runtime" class="panel-meta">—</div>
       </div>
-      <div class="grid">
+      <div class="card-grid north">
         <section class="card">
           <h2 class="card-title">Runtime</h2>
           <div id="card-runtime"></div>
-        </section>
-        <section class="card">
-          <h2 class="card-title">Motion</h2>
-          <div id="card-motion"></div>
         </section>
         <section class="card">
           <h2 class="card-title">Instrument</h2>
           <div id="card-instrument"></div>
         </section>
         <section class="card">
+          <h2 class="card-title">Progression</h2>
+          <div id="card-progression"></div>
+        </section>
+        <section class="card">
+          <h2 class="card-title">Orbital Handshake</h2>
+          <div id="card-handshake"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="west-panel" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">West · Motion + World</div>
+        <div class="panel-meta">Center-projection state</div>
+      </div>
+      <div class="card-grid side">
+        <section class="card">
+          <h2 class="card-title">Motion</h2>
+          <div id="card-motion"></div>
+        </section>
+        <section class="card">
           <h2 class="card-title">World</h2>
           <div id="card-world"></div>
         </section>
+      </div>
+    </section>
+
+    <section id="center-panel" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">Center · Checklist Authority</div>
+        <div id="panel-meta-checklist" class="panel-meta">—</div>
+      </div>
+      <div id="checklist" class="checklist"></div>
+    </section>
+
+    <section id="east-panel" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">East · Render + Emission</div>
+        <div class="panel-meta">Visibility / output truth</div>
+      </div>
+      <div class="card-grid side">
         <section class="card">
           <h2 class="card-title">Render</h2>
           <div id="card-render"></div>
@@ -392,6 +458,15 @@ button{font:inherit}
           <h2 class="card-title">Placement</h2>
           <div id="card-placement"></div>
         </section>
+      </div>
+    </section>
+
+    <section id="south-panel" class="panel">
+      <div class="panel-head">
+        <div class="panel-title">South · Authority + Verification + Failure</div>
+        <div class="panel-meta">Owner / pass / break</div>
+      </div>
+      <div class="card-grid south">
         <section class="card">
           <h2 class="card-title">Authority</h2>
           <div id="card-authority"></div>
@@ -406,17 +481,9 @@ button{font:inherit}
         </section>
       </div>
     </section>
-
-    <section class="panel">
-      <div class="panel-head">
-        <div class="panel-title">Layer B · Checklist Authority</div>
-        <div id="panel-meta-checklist" class="panel-meta">—</div>
-      </div>
-      <div id="checklist" class="checklist"></div>
-    </section>
   </section>
 
-  <div id="footer-note" class="footer-note">Reading /index.html runtime receipt from localStorage key: cte_runtime_v3</div>
+  <div id="footer-note" class="footer-note">Runtime key: cte_runtime_v3</div>
 </div>
 
 <script>
@@ -448,13 +515,6 @@ button{font:inherit}
 
   function safeInt(value) {
     return isFiniteNumber(value) ? String(Math.round(value)) : "—";
-  }
-
-  function truthyClass(value) {
-    if (value === true || value === "true" || value === "PASS" || value === "RUNNING" || value === "STABLE") return "pass";
-    if (value === false || value === "false" || value === "FAIL" || value === "COLLAPSE") return "fail";
-    if (value === null || value === undefined || value === "—" || value === "") return "idle";
-    return "warn";
   }
 
   function makeRow(key, value) {
@@ -666,6 +726,8 @@ button{font:inherit}
     const renderAudit = safeObject(r.renderAudit);
     const emission = safeObject(r.emissionReceipt);
     const placement = safeObject(r.placementReceipt);
+    const progression = safeObject(r.progressionReceipt);
+    const handshake = safeObject(r.orbitalHandshake);
 
     setText("panel-meta-runtime", isLive(r) ? "Live receipt" : "Static / stale receipt");
     setText("panel-meta-checklist", `Key: ${RUNTIME_KEY}`);
@@ -679,6 +741,30 @@ button{font:inherit}
       makeRow("dtMs", safeNumber(r.dtMs, 2))
     ].join(""));
 
+    setHTML("card-instrument", [
+      makeRow("gate", safeString(inst.gate)),
+      makeRow("coherence", safeNumber(inst.coherence, 3)),
+      makeRow("direction16", safeString(inst.direction16)),
+      makeRow("trajectoryClass", safeString(inst.trajectoryClass)),
+      makeRow("stateIndex", safeString(inst.stateIndex))
+    ].join(""));
+
+    setHTML("card-progression", [
+      makeRow("progressionDtMs", safeString(progression.progressionDtMs)),
+      makeRow("progressionAuthorized", safeString(progression.progressionAuthorized)),
+      makeRow("progressionApplied", safeString(progression.progressionApplied)),
+      makeRow("progressionStep", safeString(progression.progressionStep)),
+      makeRow("progressionPass", safeString(progression.progressionPass))
+    ].join(""));
+
+    setHTML("card-handshake", [
+      makeRow("intakeReceived", safeString(handshake.intakeReceived)),
+      makeRow("intakeStaged", safeString(handshake.intakeStaged)),
+      makeRow("placementPlaced", safeString(handshake.placementPlaced)),
+      makeRow("placementPass", safeString(handshake.placementPass)),
+      makeRow("emissionPass", safeString(handshake.emissionPass))
+    ].join(""));
+
     setHTML("card-motion", [
       makeRow("yaw", safeNumber(motion.yaw, 4)),
       makeRow("pitch", safeNumber(motion.pitch, 4)),
@@ -686,14 +772,6 @@ button{font:inherit}
       makeRow("pitchVelocity", safeNumber(motion.pitchVelocity, 4)),
       makeRow("orbitPhase", safeNumber(orbital.orbitPhase ?? motion.orbitPhase, 4)),
       makeRow("mode", safeString(motion.mode))
-    ].join(""));
-
-    setHTML("card-instrument", [
-      makeRow("gate", safeString(inst.gate)),
-      makeRow("coherence", safeNumber(inst.coherence, 3)),
-      makeRow("direction16", safeString(inst.direction16)),
-      makeRow("trajectoryClass", safeString(inst.trajectoryClass)),
-      makeRow("stateIndex", safeString(inst.stateIndex))
     ].join(""));
 
     setHTML("card-world", [
@@ -785,7 +863,7 @@ button{font:inherit}
       btn.classList.toggle("is-stale", !autoRefresh);
     }
 
-    setText("footer-note", `Reading /index.html runtime receipt from localStorage key: ${RUNTIME_KEY}`);
+    setText("footer-note", `Runtime key: ${RUNTIME_KEY}`);
   }
 
   function renderEmpty() {
@@ -793,8 +871,9 @@ button{font:inherit}
     setText("panel-meta-checklist", `Key: ${RUNTIME_KEY}`);
 
     [
-      "card-runtime","card-motion","card-instrument","card-world","card-render",
-      "card-emission","card-placement","card-authority","card-verification","card-failure"
+      "card-runtime","card-instrument","card-progression","card-handshake",
+      "card-motion","card-world","card-render","card-emission",
+      "card-placement","card-authority","card-verification","card-failure"
     ].forEach((id) => setHTML(id, makeRow("state", "No runtime receipt found")));
 
     renderChecklist([

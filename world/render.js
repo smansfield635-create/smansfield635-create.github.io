@@ -1,8 +1,6 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 
-const CLOUD_STEP = 6;
-const AURORA_STEP = 8;
 const SUBDIV_Z_THRESHOLD = 0.78;
 
 function clamp(value, min, max) {
@@ -429,103 +427,6 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
   ctx.restore();
 }
 
-function drawCloudLayer(ctx, grid, projectPoint, projectionState) {
-  const rowCount = grid.length;
-  if (!rowCount) return;
-
-  ctx.save();
-
-  for (let y = 0; y < rowCount; y += CLOUD_STEP) {
-    const row = grid[y];
-    const rowLength = row.length;
-
-    for (let x = 0; x < rowLength; x += CLOUD_STEP) {
-      const sample = row[x];
-      const cloudiness = clamp(
-        (sample?.rainfall ?? 0) * 0.52 +
-        (sample?.evaporationPressure ?? 0) * 0.18 +
-        (sample?.maritimeInfluence ?? 0) * 0.14,
-        0,
-        1
-      );
-
-      if (cloudiness < 0.64) continue;
-
-      const point = projectPoint(sample.latDeg, sample.lonDeg, 12);
-      if (!point.visible) continue;
-
-      const radius = 1.1 + cloudiness * (projectionState.observeMode ? 2.2 : 2.6);
-      const alpha = projectionState.observeMode
-        ? 0.010 + cloudiness * 0.022
-        : 0.014 + cloudiness * 0.032;
-
-      const grad = ctx.createRadialGradient(
-        point.x - radius * 0.2,
-        point.y - radius * 0.25,
-        radius * 0.1,
-        point.x,
-        point.y,
-        radius
-      );
-      grad.addColorStop(0, `rgba(255,255,255,${(alpha * 1.2).toFixed(3)})`);
-      grad.addColorStop(0.55, `rgba(248,250,255,${alpha.toFixed(3)})`);
-      grad.addColorStop(1, "rgba(255,255,255,0)");
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  ctx.restore();
-}
-
-function drawPolarGlow(ctx, grid, projectPoint, projectionState) {
-  const rowCount = grid.length;
-  if (!rowCount) return;
-
-  ctx.save();
-
-  for (let y = 0; y < rowCount; y += AURORA_STEP) {
-    const row = grid[y];
-    const rowLength = row.length;
-
-    for (let x = 0; x < rowLength; x += AURORA_STEP) {
-      const sample = row[x];
-      const aurora = clamp(sample?.auroralPotential ?? 0, 0, 1);
-      if (aurora < 0.62) continue;
-
-      const point = projectPoint(sample.latDeg, sample.lonDeg, 14);
-      if (!point.visible) continue;
-
-      const radius = 1.0 + aurora * (projectionState.observeMode ? 1.8 : 2.2);
-      const alpha = projectionState.observeMode
-        ? 0.008 + aurora * 0.018
-        : 0.010 + aurora * 0.026;
-
-      const grad = ctx.createRadialGradient(
-        point.x,
-        point.y,
-        radius * 0.1,
-        point.x,
-        point.y,
-        radius
-      );
-      grad.addColorStop(0, `rgba(136,255,186,${(alpha * 1.08).toFixed(3)})`);
-      grad.addColorStop(0.55, `rgba(96,220,255,${(alpha * 0.92).toFixed(3)})`);
-      grad.addColorStop(1, "rgba(96,220,255,0)");
-
-      ctx.fillStyle = grad;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, radius, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  ctx.restore();
-}
-
 function buildRenderAudit(planetField, topologyField = null) {
   const grid = sampleGrid(planetField);
 
@@ -706,8 +607,6 @@ export function createRenderer() {
 
     withPlanetClip(ctx, projectionState, () => {
       drawSurfaceMesh(ctx, grid, topologyGrid, projector);
-      drawCloudLayer(ctx, grid, projector, projectionState);
-      drawPolarGlow(ctx, grid, projector, projectionState);
     });
 
     const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);

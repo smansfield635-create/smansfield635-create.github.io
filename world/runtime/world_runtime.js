@@ -6,6 +6,7 @@ import { createWorldUI } from "/assets/world_ui.js";
 
 const MOTION_STORAGE_KEY = "ns_home_round_motion_v14";
 const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
+const LIVE_CHANNEL_NAME = "cte_runtime_live_v1";
 const MARKER_PADDING = 18;
 const MARKER_PASSES = 3;
 const ORBIT_SPEED_ROUND = 0.00018;
@@ -151,6 +152,7 @@ export function createWorldRuntime() {
     btnObserve: null,
     overlayMap: null,
     authorityReceipt: null,
+    liveChannel: null,
     planetField: null,
     rafId: 0,
     lastFrameAt: performance.now(),
@@ -242,23 +244,29 @@ export function createWorldRuntime() {
   }
 
   function emitRuntimeReceipt(payload = {}) {
-    const data = payload && typeof payload === "object" ? payload : {};
+    const packet = payload && typeof payload === "object" ? payload : {};
 
     const envelope = {
-      page: typeof data.page === "string" ? data.page : "/index.html",
-      phase: typeof data.phase === "string" ? data.phase : (state.runtimeReady ? "RUNNING" : "BOOT"),
-      mode: typeof data.mode === "string" ? data.mode : state.currentMode,
-      timestamp: typeof data.timestamp === "string" ? data.timestamp : new Date().toISOString(),
-      diagnosticsMode: typeof data.diagnosticsMode === "string" ? data.diagnosticsMode : state.diagnosticsMode,
-      error: typeof data.error === "string" ? data.error : state.runtimeErrorMessage,
-      ...data
+      page: typeof packet.page === "string" ? packet.page : "/index.html",
+      phase: typeof packet.phase === "string" ? packet.phase : (state.runtimeReady ? "RUNNING" : "BOOT"),
+      mode: typeof packet.mode === "string" ? packet.mode : state.currentMode,
+      timestamp: typeof packet.timestamp === "string" ? packet.timestamp : new Date().toISOString(),
+      diagnosticsMode: typeof packet.diagnosticsMode === "string" ? packet.diagnosticsMode : state.diagnosticsMode,
+      error: typeof packet.error === "string" ? packet.error : state.runtimeErrorMessage,
+      ...packet
     };
+
+    window.__RUNTIME_STATE__ = Object.freeze(envelope);
 
     try {
       localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(envelope));
-    } catch {
-      return;
-    }
+    } catch {}
+
+    try {
+      if (state.liveChannel) {
+        state.liveChannel.postMessage(envelope);
+      }
+    } catch {}
   }
 
   function resizeWorld() {
@@ -281,18 +289,14 @@ export function createWorldRuntime() {
       const raw = sessionStorage.getItem(MOTION_STORAGE_KEY);
       if (!raw) return;
       state.control.restoreMotionState(JSON.parse(raw));
-    } catch {
-      return;
-    }
+    } catch {}
   }
 
   function persistMotionState() {
     if (!isRoundVisualMode()) return;
     try {
       sessionStorage.setItem(MOTION_STORAGE_KEY, JSON.stringify(state.control.getMotionState()));
-    } catch {
-      return;
-    }
+    } catch {}
   }
 
   function safeProjectionSummary() {
@@ -492,10 +496,10 @@ export function createWorldRuntime() {
       phase: "RUNNING",
       mode: state.currentMode,
       timestamp: new Date().toISOString(),
+      diagnosticsMode: state.diagnosticsMode,
       fps: dtMs > 0 ? 1000 / dtMs : 0,
       dtMs,
       elapsedMs: performance.now(),
-      diagnosticsMode: state.diagnosticsMode,
       bootPass: state.runtimeReady,
       renderPass: state.runtimeReady && !!state.planetField,
       markerPass: !!state.lastPlacementReceipt.markerPlacementAdmissible,
@@ -984,11 +988,7 @@ export function createWorldRuntime() {
     runtime = buildRuntimePacket(dtMs);
 
     updateDiagnostics(runtime);
-    emitRuntimeReceipt({
-      phase: "RUNNING",
-      renderPass: true,
-      markerPass: !!state.lastPlacementReceipt.markerPlacementAdmissible
-    });
+    emitRuntimeReceipt(runtime);
   }
 
   function frame(now) {
@@ -1043,12 +1043,24 @@ export function createWorldRuntime() {
         state.diagnosticsMode === "full" ? "HIDE DIAGNOSTICS" : "DIAGNOSTICS";
     }
 
-    emitRuntimeReceipt();
+    emitRuntimeReceipt(buildRuntimePacket(0));
   }
 
   function navigateToMode(nextMode) {
     persistMotionState();
     window.location.href = buildModeHref(nextMode);
+  }
+
+  function openGaugesWindow() {
+    const targetUrl = withModeQuery("/gauges/", state.currentMode);
+    const win = window.open(targetUrl, "cte_gauges");
+    if (win) {
+      try {
+        win.focus();
+      } catch {}
+      return;
+    }
+    window.location.href = targetUrl;
   }
 
   function bindOverlayRoutes() {
@@ -1058,6 +1070,10 @@ export function createWorldRuntime() {
 
       marker.addEventListener("click", () => {
         persistMotionState();
+        if (obj.route === "/gauges/") {
+          openGaugesWindow();
+          return;
+        }
         window.location.href = withModeQuery(obj.route, state.currentMode);
       });
     });
@@ -1067,7 +1083,7 @@ export function createWorldRuntime() {
     if (state.diagnosticsToggle) {
       state.diagnosticsToggle.addEventListener("click", () => {
         persistMotionState();
-        window.location.href = withModeQuery("/gauges/", state.currentMode);
+        openGaugesWindow();
       });
     }
 
@@ -1159,6 +1175,8 @@ export function createWorldRuntime() {
         state.lastFrameAt = performance.now();
         state.rafId = requestAnimationFrame(frame);
       }
+
+      emitRuntimeReceipt(buildRuntimePacket(0));
     }, { passive: true });
   }
 
@@ -1196,6 +1214,14 @@ export function createWorldRuntime() {
     state.renderer = createRenderer();
     state.control = createControlSystem();
     state.instruments = createInstruments();
+
+    try {
+      if ("BroadcastChannel" in window) {
+        state.liveChannel = new BroadcastChannel(LIVE_CHANNEL_NAME);
+      }
+    } catch {
+      state.liveChannel = null;
+    }
   }
 
   function start() {
@@ -1214,7 +1240,11 @@ export function createWorldRuntime() {
       window.__WORLD_RUNTIME_ACTIVE__ = true;
 
       emitRuntimeReceipt({
+        page: "/index.html",
         phase: "BOOT_START",
+        mode: state.currentMode,
+        timestamp: new Date().toISOString(),
+        diagnosticsMode: state.diagnosticsMode,
         bootPass: false,
         renderPass: false,
         markerPass: false
@@ -1230,13 +1260,13 @@ export function createWorldRuntime() {
 
       bindOverlayRoutes();
       setModePresentation();
-      setDiagnosticsMode("peek");
       bindEvents();
 
       state.runtimeReady = true;
       state.runtimeErrorMessage = "";
       clearBootStatus();
 
+      setDiagnosticsMode("peek");
       buildProgressionReceipt(16.7);
       renderSurface(16.7);
 
@@ -1245,12 +1275,7 @@ export function createWorldRuntime() {
         state.rafId = requestAnimationFrame(frame);
       }
 
-      emitRuntimeReceipt({
-        phase: "BOOT_OK",
-        bootPass: true,
-        renderPass: true,
-        markerPass: true
-      });
+      emitRuntimeReceipt(buildRuntimePacket(16.7));
     } catch (error) {
       state.runtimeReady = false;
       state.runtimeErrorMessage = error instanceof Error ? `${error.name}: ${error.message}` : String(error);
@@ -1258,11 +1283,23 @@ export function createWorldRuntime() {
       showBootStatus(`World runtime failed to boot.\n\n${state.runtimeErrorMessage}\n\nStatic navigation remains active.`);
       updateDiagnostics(null);
       emitRuntimeReceipt({
+        page: "/index.html",
         phase: "BOOT_FAIL",
+        mode: state.currentMode,
+        timestamp: new Date().toISOString(),
+        diagnosticsMode: state.diagnosticsMode,
         bootPass: false,
         renderPass: false,
         markerPass: false,
-        error: state.runtimeErrorMessage
+        error: state.runtimeErrorMessage,
+        verification: {
+          pass: false,
+          reasons: [state.runtimeErrorMessage]
+        },
+        failure: {
+          phase: "BOOT",
+          message: state.runtimeErrorMessage
+        }
       });
 
       if (state.authorityReceipt) {

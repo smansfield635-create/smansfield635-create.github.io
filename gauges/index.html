@@ -205,9 +205,6 @@ button{font:inherit}
 .card-grid.north{
   grid-template-columns:repeat(4,minmax(0,1fr));
 }
-.card-grid.center{
-  grid-template-columns:repeat(2,minmax(0,1fr));
-}
 .card-grid.side{
   grid-template-columns:1fr;
 }
@@ -330,7 +327,6 @@ button{font:inherit}
       "east"
       "south";
   }
-  .card-grid.center{grid-template-columns:1fr}
 }
 @media (max-width:820px){
   .statusbar{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -363,7 +359,7 @@ button{font:inherit}
   <section class="hero">
     <p class="kicker">Gauges</p>
     <h1 class="title">Live Diagnostic + Checklist Authority</h1>
-    <p class="sub">North = runtime truth. West = movement and world state. Center = checklist authority. East = render and emission truth. South = ownership, verification, and failure state.</p>
+    <p class="sub">North = runtime spine. West = motion and world state. Center = checklist authority. East = render, emission, and placement. South = ownership, verification, and failure.</p>
   </section>
 
   <section class="statusbar">
@@ -418,7 +414,7 @@ button{font:inherit}
     <section id="west-panel" class="panel">
       <div class="panel-head">
         <div class="panel-title">West · Motion + World</div>
-        <div class="panel-meta">Center-projection state</div>
+        <div class="panel-meta">Center projection state</div>
       </div>
       <div class="card-grid side">
         <section class="card">
@@ -443,7 +439,7 @@ button{font:inherit}
     <section id="east-panel" class="panel">
       <div class="panel-head">
         <div class="panel-title">East · Render + Emission</div>
-        <div class="panel-meta">Visibility / output truth</div>
+        <div class="panel-meta">Visibility and output truth</div>
       </div>
       <div class="card-grid side">
         <section class="card">
@@ -491,11 +487,14 @@ button{font:inherit}
   "use strict";
 
   const RUNTIME_KEY = "cte_runtime_v3";
+  const LIVE_CHANNEL_NAME = "cte_runtime_live_v1";
   const LIVE_MS = 2000;
-  const TICK_MS = 500;
+  const TICK_MS = 250;
 
   let autoRefresh = true;
   let timerId = 0;
+  let liveChannel = null;
+  let channelPacket = null;
 
   function isFiniteNumber(value) {
     return typeof value === "number" && Number.isFinite(value);
@@ -506,7 +505,10 @@ button{font:inherit}
   }
 
   function safeString(value, fallback = "—") {
-    return typeof value === "string" && value.length ? value : fallback;
+    if (typeof value === "string" && value.length) return value;
+    if (typeof value === "boolean") return value ? "true" : "false";
+    if (typeof value === "number" && Number.isFinite(value)) return String(value);
+    return fallback;
   }
 
   function safeNumber(value, digits = 3) {
@@ -536,13 +538,46 @@ button{font:inherit}
     if (node) node.textContent = text;
   }
 
-  function readReceipt() {
+  function readStorageReceipt() {
     try {
       const raw = localStorage.getItem(RUNTIME_KEY);
       return raw ? JSON.parse(raw) : null;
     } catch {
       return null;
     }
+  }
+
+  function readOpenerReceipt() {
+    try {
+      if (window.opener && !window.opener.closed && window.opener.__RUNTIME_STATE__) {
+        return window.opener.__RUNTIME_STATE__;
+      }
+    } catch {}
+    return null;
+  }
+
+  function readWindowReceipt() {
+    try {
+      if (window.__RUNTIME_STATE__) {
+        return window.__RUNTIME_STATE__;
+      }
+    } catch {}
+    return null;
+  }
+
+  function readBestReceipt() {
+    const openerReceipt = readOpenerReceipt();
+    if (openerReceipt) return { packet: openerReceipt, source: "opener" };
+
+    if (channelPacket) return { packet: channelPacket, source: "channel" };
+
+    const windowReceipt = readWindowReceipt();
+    if (windowReceipt) return { packet: windowReceipt, source: "window" };
+
+    const storageReceipt = readStorageReceipt();
+    if (storageReceipt) return { packet: storageReceipt, source: "storage" };
+
+    return { packet: null, source: "none" };
   }
 
   function getReceiptAgeMs(receipt) {
@@ -578,9 +613,9 @@ button{font:inherit}
       status: live ? "pass" : (r.timestamp ? "warn" : "fail"),
       verdict: live ? "Live" : (r.timestamp ? "Stale" : "Missing"),
       detail: live
-        ? "Index is writing receipts now."
+        ? "Index is writing fresh receipts."
         : (r.timestamp ? "Index wrote a receipt, but it is stale." : "No runtime receipt is being written."),
-      next: live ? "Keep reading live state." : "Restore active runtime receipt emission from index."
+      next: live ? "Inspect the first downstream failing class." : "Restore active receipt emission from index."
     });
 
     const phasePass = safeString(r.phase) !== "BOOT_FAIL" && safeString(r.phase) !== "BOOT";
@@ -589,16 +624,7 @@ button{font:inherit}
       status: phasePass ? "pass" : "fail",
       verdict: safeString(r.phase),
       detail: phasePass ? "Phase is not in hard boot failure." : "Runtime is still in boot or failed boot.",
-      next: phasePass ? "Inspect downstream classes." : "Fix boot failure before trusting any downstream signal."
-    });
-
-    const worldPass = safeString(world.stabilityClass) === "STABLE" || safeString(inst.gate) === "PASS";
-    classes.push({
-      name: "World",
-      status: worldPass ? "pass" : "warn",
-      verdict: `${safeString(world.phase)} / ${safeString(world.stabilityClass)}`,
-      detail: worldPass ? "World sample under center projection is admissible." : "World sample is strained or not fully admissible.",
-      next: worldPass ? "Proceed to render + placement." : "Fix world/coherence path before expecting clean marker behavior."
+      next: phasePass ? "Inspect downstream classes." : "Fix boot failure first."
     });
 
     const controlPass =
@@ -610,7 +636,16 @@ button{font:inherit}
       status: controlPass ? "pass" : "fail",
       verdict: controlPass ? "Readable" : "Incomplete",
       detail: controlPass ? "Yaw, pitch, and orbit phase are present." : "Control state is missing required motion fields.",
-      next: controlPass ? "Proceed to render and placement." : "Repair control state contract."
+      next: controlPass ? "Proceed to render and placement." : "Repair control state emission."
+    });
+
+    const worldPass = safeString(world.phase) !== "—" && safeString(world.stabilityClass) !== "—";
+    classes.push({
+      name: "World",
+      status: worldPass ? "pass" : "warn",
+      verdict: `${safeString(world.phase)} / ${safeString(world.stabilityClass)}`,
+      detail: worldPass ? "World state is present in the runtime packet." : "World state is still under-emitted or incomplete.",
+      next: worldPass ? "Proceed to render + placement." : "Repair world-state emission."
     });
 
     const renderPass = isFiniteNumber(renderAudit.sampleCount) && renderAudit.sampleCount > 0;
@@ -619,7 +654,7 @@ button{font:inherit}
       status: renderPass ? "pass" : "fail",
       verdict: renderPass ? "Active" : "Missing",
       detail: renderPass ? "Render audit is populated." : "Render audit is missing or empty.",
-      next: renderPass ? "Inspect emission and placement." : "Restore render receipt population."
+      next: renderPass ? "Inspect emission and placement." : "Restore render audit emission."
     });
 
     const emissionPass = emission.emissionPass === true || emission.emissionPass === "true";
@@ -641,25 +676,7 @@ button{font:inherit}
       detail: placementPass
         ? "Marker placement is admissible."
         : "Placement is colliding, reserved out, viewport out, or missing candidates.",
-      next: placementPass ? "UI overlay should be able to show markers." : "Fix placement collisions or reserved-space rejection."
-    });
-
-    const uiPass = safeString(authority.worldUiSource) === "/assets/world_ui.js";
-    classes.push({
-      name: "UI",
-      status: uiPass ? "pass" : "warn",
-      verdict: uiPass ? "Bound" : "Unknown",
-      detail: uiPass ? "Runtime reports world UI authority." : "UI authority is missing or mismatched.",
-      next: uiPass ? "Inspect routing and interaction." : "Repair world UI authority contract."
-    });
-
-    const routingPass = safeString(r.page) === "/index.html" && safeString(r.mode) !== "—";
-    classes.push({
-      name: "Routing",
-      status: routingPass ? "pass" : "warn",
-      verdict: routingPass ? "Bound" : "Partial",
-      detail: routingPass ? "Receipt identifies index page and mode." : "Page/mode routing signal is incomplete.",
-      next: routingPass ? "Inspect destination behavior." : "Repair routing receipt fields."
+      next: placementPass ? "Overlay should be able to show markers." : "Fix placement collision or rejection."
     });
 
     const authorityPass =
@@ -671,7 +688,7 @@ button{font:inherit}
       status: authorityPass ? "pass" : "warn",
       verdict: authorityPass ? "Canonical" : "Partial",
       detail: authorityPass ? "Core authority sources are canonical." : "Authority receipt is incomplete or drifted.",
-      next: authorityPass ? "Proceed with downstream debugging." : "Repair authority receipt source mapping."
+      next: authorityPass ? "Proceed with downstream debugging." : "Repair authority receipt mapping."
     });
 
     const verificationPass = verification.pass === true;
@@ -695,26 +712,24 @@ button{font:inherit}
   }
 
   function renderChecklist(classes) {
-    const html = classes.map((entry) => {
-      return `
-        <section class="class-row">
-          <div class="class-head">
-            <div class="diamond ${entry.status}"></div>
-            <div class="class-name">${entry.name}</div>
-            <div class="class-verdict">${entry.verdict}</div>
-          </div>
-          <div class="class-body">
-            <div class="class-copy"><strong>Current:</strong> ${entry.detail}</div>
-            <div class="class-copy"><strong>Next:</strong> ${entry.next}</div>
-          </div>
-        </section>
-      `;
-    }).join("");
+    const html = classes.map((entry) => `
+      <section class="class-row">
+        <div class="class-head">
+          <div class="diamond ${entry.status}"></div>
+          <div class="class-name">${entry.name}</div>
+          <div class="class-verdict">${entry.verdict}</div>
+        </div>
+        <div class="class-body">
+          <div class="class-copy"><strong>Current:</strong> ${entry.detail}</div>
+          <div class="class-copy"><strong>Next:</strong> ${entry.next}</div>
+        </div>
+      </section>
+    `).join("");
 
     setHTML("checklist", html);
   }
 
-  function renderRuntime(receipt) {
+  function renderRuntime(receipt, source) {
     const r = safeObject(receipt);
     const motion = safeObject(r.control?.motionState);
     const orbital = safeObject(r.control?.orbitalState);
@@ -729,7 +744,7 @@ button{font:inherit}
     const progression = safeObject(r.progressionReceipt);
     const handshake = safeObject(r.orbitalHandshake);
 
-    setText("panel-meta-runtime", isLive(r) ? "Live receipt" : "Static / stale receipt");
+    setText("panel-meta-runtime", `${isLive(r) ? "Live" : "Stale"} · ${source}`);
     setText("panel-meta-checklist", `Key: ${RUNTIME_KEY}`);
 
     setHTML("card-runtime", [
@@ -825,7 +840,7 @@ button{font:inherit}
     ].join(""));
   }
 
-  function renderTopStatus(receipt, classes) {
+  function renderTopStatus(receipt, classes, source) {
     const live = isLive(receipt);
     const age = getReceiptAgeMs(receipt);
     const breakClass = primaryBreakClass(classes);
@@ -835,7 +850,7 @@ button{font:inherit}
     setText(
       "status-live-sub",
       receipt?.timestamp
-        ? `Age: ${isFiniteNumber(age) ? `${Math.max(0, Math.round(age))} ms` : "—"}`
+        ? `Age: ${isFiniteNumber(age) ? `${Math.max(0, Math.round(age))} ms` : "—"} · ${source}`
         : "No receipt timestamp"
     );
 
@@ -863,7 +878,7 @@ button{font:inherit}
       btn.classList.toggle("is-stale", !autoRefresh);
     }
 
-    setText("footer-note", `Runtime key: ${RUNTIME_KEY}`);
+    setText("footer-note", `Runtime key: ${RUNTIME_KEY} · Source: ${source}`);
   }
 
   function renderEmpty() {
@@ -881,8 +896,8 @@ button{font:inherit}
         name: "Runtime",
         status: "fail",
         verdict: "Missing",
-        detail: "No index runtime receipt is present in localStorage.",
-        next: "Open /index.html and confirm world runtime is booting and writing cte_runtime_v3."
+        detail: "No index runtime receipt is present in memory or localStorage.",
+        next: "Open /index.html and launch gauges from there."
       }
     ]);
 
@@ -894,19 +909,20 @@ button{font:inherit}
     setText("status-mode-sub", "Mode unknown");
     setText("status-break", "RUNTIME");
     setText("status-break-sub", "No live receipt exists");
+    setText("footer-note", `Runtime key: ${RUNTIME_KEY} · Source: none`);
   }
 
   function renderAll() {
-    const receipt = readReceipt();
-    if (!receipt) {
+    const read = readBestReceipt();
+    if (!read.packet) {
       renderEmpty();
       return;
     }
 
-    const classes = buildChecklist(receipt);
-    renderRuntime(receipt);
+    const classes = buildChecklist(read.packet);
+    renderRuntime(read.packet, read.source);
     renderChecklist(classes);
-    renderTopStatus(receipt, classes);
+    renderTopStatus(read.packet, classes, read.source);
   }
 
   function tick() {
@@ -926,6 +942,20 @@ button{font:inherit}
     }
   }
 
+  function bindLiveChannel() {
+    try {
+      if ("BroadcastChannel" in window) {
+        liveChannel = new BroadcastChannel(LIVE_CHANNEL_NAME);
+        liveChannel.onmessage = (event) => {
+          channelPacket = event.data && typeof event.data === "object" ? event.data : null;
+          tick();
+        };
+      }
+    } catch {
+      liveChannel = null;
+    }
+  }
+
   document.getElementById("refresh-btn")?.addEventListener("click", () => {
     tick();
   });
@@ -941,6 +971,7 @@ button{font:inherit}
     if (event.key === RUNTIME_KEY) tick();
   });
 
+  bindLiveChannel();
   tick();
   startTimer();
 })();

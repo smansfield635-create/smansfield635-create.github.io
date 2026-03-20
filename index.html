@@ -1,4 +1,3 @@
-<!-- DESTINATION FILE: /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -6,61 +5,76 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>Nine Summits — Index</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
+
 <style>
-  html,body{
-    margin:0;
-    padding:0;
-    background:#000;
-    overflow:hidden;
-  }
-  #world{
-    display:block;
-    width:100vw;
-    height:100vh;
-  }
-  #boot-status{
-    position:fixed;
-    top:0;
-    left:0;
-    padding:6px 10px;
-    font-family:monospace;
-    font-size:12px;
-    color:#0f0;
-    background:#000;
-    z-index:9999;
-    white-space:pre-wrap;
-    word-break:break-word;
-    max-width:100vw;
-  }
+html, body {
+  margin: 0;
+  padding: 0;
+  background: #000;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+#app-shell {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* 🔥 FORCE CANVAS VISIBILITY */
+#world {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  z-index: 0;
+  background: black;
+}
+
+/* KEEP UI ABOVE CANVAS */
+#runtime-root,
+#diagnostics-dock,
+#debug-panel {
+  position: relative;
+  z-index: 10;
+}
+
+#boot-status{
+  position:fixed;
+  top:0;
+  left:0;
+  padding:6px 10px;
+  font-family:monospace;
+  font-size:12px;
+  color:#0f0;
+  background:#000;
+  z-index:9999;
+}
 </style>
+
 </head>
 
 <body data-mode="round" data-diagnostics="peek">
 
 <div id="app-shell">
 
-  <!-- CANVAS -->
-  <canvas id="world" aria-label="Home world canvas"></canvas>
+  <canvas id="world"></canvas>
 
-  <!-- UI ROOT -->
   <div id="runtime-root"></div>
 
-  <!-- DIAGNOSTICS BAR -->
   <div id="diagnostics-dock" class="diagnostics-dock">
     <div id="diagnostics-bar" class="diagnostics-bar">
       <div id="diagnostics-summary" class="diagnostic-bar__summary"></div>
-      <button
-        id="diagnostics-toggle"
-        class="diagnostics-toggle"
-        type="button"
-      >
+      <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">
         DIAGNOSTICS
       </button>
     </div>
   </div>
 
-  <!-- DEBUG PANEL -->
-  <div id="debug-panel" class="debug-panel" aria-live="polite"></div>
+  <div id="debug-panel" class="debug-panel"></div>
 
 </div>
 
@@ -77,32 +91,29 @@ function log(msg){
 try {
   log("IMPORTING RUNTIME...");
   const mod = await import("/world/runtime/world_runtime.js");
+
   log("RUNTIME IMPORTED");
 
-  if (mod && typeof mod.startRuntime === "function") {
+  if (mod?.startRuntime) {
     log("STARTING RUNTIME...");
     mod.startRuntime();
-    log("AFTER START RUNTIME");
-  } else if (mod && mod.default && typeof mod.default.startRuntime === "function") {
-    log("STARTING DEFAULT RUNTIME...");
+    log("RUNNING");
+  } else if (mod?.default?.startRuntime) {
+    log("STARTING DEFAULT...");
     mod.default.startRuntime();
-    log("AFTER DEFAULT START RUNTIME");
+    log("RUNNING");
   } else {
     log("ERROR: startRuntime missing");
-    console.error("Runtime start function missing", mod);
   }
+
 } catch (err) {
-  const message = err && err.message ? err.message : String(err);
-  log("BOOT ERROR: " + message);
-  console.error("BOOT FAILURE:", err);
+  log("BOOT ERROR: " + err.message);
+  console.error(err);
 }
 
-const btn = document.getElementById("diagnostics-toggle");
-if (btn) {
-  btn.addEventListener("click", () => {
-    window.location.href = "/gauges/";
-  });
-}
+document.getElementById("diagnostics-toggle")?.addEventListener("click", () => {
+  window.location.href = "/gauges/";
+});
 </script>
 
 </body>

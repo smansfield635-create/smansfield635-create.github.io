@@ -1,6 +1,10 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 
+let lastAuditPlanetField = null;
+let lastAuditTopologyField = null;
+let lastAuditResult = null;
+
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }
@@ -266,7 +270,6 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 
     for (let x = 0; x < rowLength; x += colStride) {
       const nextX = (x + colStride) % rowLength;
-      const crossesSeam = x >= rowLength - colStride;
 
       const s00 = row[x];
       const s10 = row[nextX];
@@ -297,6 +300,10 @@ function drawSurfaceMesh(ctx, grid, topologyGrid, projectPoint) {
 }
 
 function buildRenderAudit(planetField, topologyField = null) {
+  if (planetField === lastAuditPlanetField && topologyField === lastAuditTopologyField && lastAuditResult) {
+    return lastAuditResult;
+  }
+
   const grid = sampleGrid(planetField);
 
   let waterFamilyCount = 0;
@@ -324,7 +331,9 @@ function buildRenderAudit(planetField, topologyField = null) {
     }
   }
 
-  return {
+  lastAuditPlanetField = planetField;
+  lastAuditTopologyField = topologyField;
+  lastAuditResult = {
     sampleCount: Array.isArray(planetField?.samples)
       ? planetField.samples.reduce((total, row) => total + (Array.isArray(row) ? row.length : 0), 0)
       : 0,
@@ -336,6 +345,8 @@ function buildRenderAudit(planetField, topologyField = null) {
     summary: normalizeObject(planetField?.summary),
     topologySummary: normalizeObject(topologyField?.summary)
   };
+
+  return lastAuditResult;
 }
 
 function resolveOrbitalAltitudePx(orbitalSystem, projectionState) {

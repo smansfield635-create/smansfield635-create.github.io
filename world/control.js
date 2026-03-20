@@ -25,8 +25,8 @@ function getKernelConstants() {
     maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
     initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
     initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
-    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0095,
-    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.965,
+    dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0084,
+    inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.982,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });
@@ -82,15 +82,18 @@ export function createControlSystem() {
 
   const ZOOM_EASING = 0.12;
 
-  // Finger-follow tuning
-  const YAW_TRACK_GAIN = 1.0;
-  const PITCH_TRACK_GAIN = 0.85;
+  // Feel model
+  const YAW_TRACK_GAIN = 0.92;
+  const PITCH_TRACK_GAIN = 0.78;
 
-  // Momentum tuning
-  const YAW_DRAG_VELOCITY_BLEND = 0.18;
-  const PITCH_DRAG_VELOCITY_BLEND = 0.12;
-  const YAW_RELEASE_GAIN = 1.15;
-  const PITCH_RELEASE_GAIN = 0.75;
+  const DRAG_VELOCITY_BLEND_YAW = 0.72;
+  const DRAG_VELOCITY_BLEND_PITCH = 0.78;
+
+  const RELEASE_YAW_GAIN = 1.28;
+  const RELEASE_PITCH_GAIN = 0.78;
+
+  const MAGNETIC_TORQUE = 0.996;
+  const PITCH_SUSPENSION = 0.992;
 
   const cameraState = {
     width: 0,
@@ -113,12 +116,11 @@ export function createControlSystem() {
     cellId: "0:0"
   });
 
-  // Track recent drag impulse so release glide reflects last finger slide
+  let dragActive = false;
   let lastDragYawStep = 0;
   let lastDragPitchStep = 0;
-  let lastDragYawImpulse = 0;
-  let lastDragPitchImpulse = 0;
-  let dragActive = false;
+  let smoothedDragYaw = 0;
+  let smoothedDragPitch = 0;
 
   function clampPitch() {
     pitch = clamp(pitch, K.minPitch, K.maxPitch);
@@ -171,49 +173,45 @@ export function createControlSystem() {
     const yawStep = deltaX * K.dragSensitivity * YAW_TRACK_GAIN;
     const pitchStep = deltaY * K.dragSensitivity * PITCH_TRACK_GAIN;
 
-    // Finger-follow first
+    // Finger-coupled movement
     yaw = wrapAngle(yaw + yawStep);
     pitch += pitchStep;
     clampPitch();
 
-    // Store recent drag motion
+    // Save real drag motion
     lastDragYawStep = yawStep;
     lastDragPitchStep = pitchStep;
 
-    // Light momentum blending during drag so it doesn't jump ahead
-    const dragYawImpulse = yawStep * YAW_RELEASE_GAIN;
-    const dragPitchImpulse = pitchStep * PITCH_RELEASE_GAIN;
+    // Suspended smoothing while finger is down
+    smoothedDragYaw =
+      smoothedDragYaw * DRAG_VELOCITY_BLEND_YAW +
+      yawStep * (1 - DRAG_VELOCITY_BLEND_YAW);
 
-    lastDragYawImpulse = dragYawImpulse;
-    lastDragPitchImpulse = dragPitchImpulse;
+    smoothedDragPitch =
+      smoothedDragPitch * DRAG_VELOCITY_BLEND_PITCH +
+      pitchStep * (1 - DRAG_VELOCITY_BLEND_PITCH);
 
-    yawVelocity =
-      yawVelocity * YAW_DRAG_VELOCITY_BLEND +
-      dragYawImpulse * (1 - YAW_DRAG_VELOCITY_BLEND);
-
-    pitchVelocity =
-      pitchVelocity * PITCH_DRAG_VELOCITY_BLEND +
-      dragPitchImpulse * (1 - PITCH_DRAG_VELOCITY_BLEND);
-
-    yawVelocity = clamp(yawVelocity, -0.12, 0.12);
-    pitchVelocity = clamp(pitchVelocity, -0.08, 0.08);
+    // Keep some live continuity, but do not jump ahead of finger
+    yawVelocity = smoothedDragYaw * 0.85;
+    pitchVelocity = smoothedDragPitch * 0.55;
   }
 
   function releaseDrag() {
     dragActive = false;
 
-    // Seed glide from last real finger slide, but don't explode
-    yawVelocity = clamp(
-      yawVelocity * 0.55 + lastDragYawImpulse * 0.85,
-      -0.12,
-      0.12
-    );
+    // Release handoff from actual recent finger motion
+    yawVelocity =
+      yawVelocity * 0.55 +
+      lastDragYawStep * RELEASE_YAW_GAIN +
+      smoothedDragYaw * 0.95;
 
-    pitchVelocity = clamp(
-      pitchVelocity * 0.45 + lastDragPitchImpulse * 0.65,
-      -0.08,
-      0.08
-    );
+    pitchVelocity =
+      pitchVelocity * 0.35 +
+      lastDragPitchStep * RELEASE_PITCH_GAIN +
+      smoothedDragPitch * 0.45;
+
+    yawVelocity = clamp(yawVelocity, -0.11, 0.11);
+    pitchVelocity = clamp(pitchVelocity, -0.07, 0.07);
   }
 
   function stepZoom() {
@@ -234,8 +232,12 @@ export function createControlSystem() {
       yawVelocity *= decay;
       pitchVelocity *= decay;
 
-      if (Math.abs(yawVelocity) < 0.000001) yawVelocity = 0;
-      if (Math.abs(pitchVelocity) < 0.000001) pitchVelocity = 0;
+      // Hidden magnetic torque: preserve coherent arc without feeling sticky
+      yawVelocity *= MAGNETIC_TORQUE;
+      pitchVelocity *= PITCH_SUSPENSION;
+
+      if (Math.abs(yawVelocity) < 0.0000008) yawVelocity = 0;
+      if (Math.abs(pitchVelocity) < 0.0000008) pitchVelocity = 0;
 
       clampPitch();
     }

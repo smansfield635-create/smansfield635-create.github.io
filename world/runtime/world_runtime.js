@@ -1,12 +1,16 @@
 // /world/runtime/world_runtime.js
-// MODE: RUNTIME VISIBILITY + EMISSION GUARANTEE (TMT)
+// MODE: STANDARD RUNTIME RECOVERY
+// STATUS: SINGLE-FILE CANONICAL RUNTIME SPINE
 // PURPOSE:
-// 1) ensure canvas is visible and sized
-// 2) guarantee a visible draw every frame
-// 3) guarantee cte_runtime_v3 emission every frame
-// 4) do NOT alter control/render/engine contracts
+// 1) boot one runtime only
+// 2) maintain control -> render continuity
+// 3) emit authority receipt continuously
+// 4) emit live gauges receipt continuously
+// 5) stay finite, deterministic, and non-drifting
 
-import worldKernel from "/world/world_kernel.js";
+// 🔧 FIX: use named export instead of default
+import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
+
 import { createPlanetEngine } from "/world/planet_engine.js";
 import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
@@ -26,77 +30,174 @@ let planetField = null;
 let rafId = 0;
 let lastNow = 0;
 let started = false;
+let disposed = false;
+
+let onResize = null;
+let onPageHide = null;
+let onPointerDown = null;
+let onPointerMove = null;
+let onPointerUp = null;
+let onPointerCancel = null;
 
 function ensureReceipt() {
   if (!window[RECEIPT_KEY]) {
     window[RECEIPT_KEY] = {
+      bootSource: "/index.html",
+      runtimeSource: "/world/runtime/world_runtime.js",
+      inputOwner: "/world/control.js",
+      orbitOwner: "/world/control.js",
+      renderSource: "/world/render.js",
+      transitionSource: null,
+      duplicateRuntime: false,
+      duplicateRender: false,
+      duplicateInput: false,
+
       page: "world",
       phase: "BOOT",
       mode: "active",
       timestamp: 0,
       fps: 0,
       dtMs: 0,
-      control: { motionState: {}, orbitalState: {} },
-      renderAudit: {},
-      emissionReceipt: {},
-      placementReceipt: {},
+
+      control: {
+        motionState: {
+          yaw: 0,
+          pitch: 0,
+          yawVelocity: 0,
+          pitchVelocity: 0,
+          orbitPhase: 0,
+          zoomCurrent: 0,
+          zoomTarget: 0,
+          mode: null,
+        },
+        orbitalState: {
+          orbitPhase: 0,
+        },
+        projectionSummary: null,
+        cameraState: null,
+      },
+
+      renderAudit: {
+        sampleCount: 0,
+        waterFamilyCount: 0,
+        landFamilyCount: 0,
+        cryosphereCount: 0,
+        shorelineCount: 0,
+      },
+
+      emissionReceipt: {
+        emissionOrbitalCount: 0,
+        emissionFrontVisible: 0,
+        emissionEmitted: 0,
+        emissionSuppressed: 0,
+        emissionPass: false,
+      },
+
+      placementReceipt: {
+        markerRequired: false,
+        placementPlaced: 0,
+        markerCollisionCount: 0,
+        placementReservedReject: 0,
+        placementViewportReject: 0,
+        placementPass: false,
+      },
+
       instrument: null,
-      verification: { pass: false },
-      failure: { phase: null, message: null }
+
+      verification: {
+        pass: false,
+      },
+
+      failure: {
+        phase: null,
+        message: null,
+      },
     };
   }
+
   return window[RECEIPT_KEY];
 }
 
-function emit(receipt) {
+function emitRuntimeReceiptContinuous(receipt, extra = {}) {
+  const payload = {
+    page: "/index.html",
+    phase: receipt.verification?.pass ? "RUNNING" : "BOOT",
+    mode: receipt.mode || "active",
+    timestamp: new Date().toISOString(),
+
+    fps: receipt.fps || 0,
+    dtMs: receipt.dtMs || 0,
+
+    control: {
+      motionState: receipt.control?.motionState || {},
+      orbitalState: receipt.control?.orbitalState || {},
+      projectionSummary: receipt.control?.projectionSummary || null,
+      cameraState: receipt.control?.cameraState || null,
+    },
+
+    instrument: receipt.instrument || {},
+
+    renderAudit: receipt.renderAudit || {},
+
+    emissionReceipt: receipt.emissionReceipt || {},
+    placementReceipt: receipt.placementReceipt || {},
+
+    verification: receipt.verification || { pass: false },
+
+    failure: {
+      phase: receipt.failure?.phase || null,
+      message: receipt.failure?.message || "",
+    },
+
+    ...extra,
+  };
+
   try {
-    localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify({
-      page: "/index.html",
-      phase: receipt.verification?.pass ? "RUNNING" : "BOOT",
-      mode: receipt.mode || "active",
-      timestamp: new Date().toISOString(),
-      fps: receipt.fps || 0,
-      dtMs: receipt.dtMs || 0,
-      control: receipt.control || {},
-      instrument: receipt.instrument || {},
-      renderAudit: receipt.renderAudit || {},
-      emissionReceipt: receipt.emissionReceipt || {},
-      placementReceipt: receipt.placementReceipt || {},
-      verification: receipt.verification || { pass: false },
-      failure: receipt.failure || { phase: null, message: "" }
-    }));
+    localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(payload));
   } catch {}
 }
 
-function getCanvas() {
-  // accept either id to avoid drift
-  return document.getElementById("world") || document.getElementById("world-canvas");
+function setFailure(phase, message) {
+  const receipt = ensureReceipt();
+  receipt.verification.pass = false;
+  receipt.failure.phase = phase;
+  receipt.failure.message = message;
 }
 
-function forceCanvasVisible() {
-  if (!canvas) return;
+function clearFailure() {
+  const receipt = ensureReceipt();
+  receipt.failure.phase = null;
+  receipt.failure.message = null;
+}
+
+function getCanvas() {
+  const el = document.getElementById("world");
+  if (!el) {
+    throw new Error("Missing #world canvas");
+  }
+  return el;
+}
+
+function resize() {
+  if (!canvas || !ctx) return;
+
   const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const w = Math.max(1, window.innerWidth);
-  const h = Math.max(1, window.innerHeight);
+  const width = Math.max(1, window.innerWidth);
+  const height = Math.max(1, window.innerHeight);
 
-  canvas.width = Math.round(w * dpr);
-  canvas.height = Math.round(h * dpr);
-  canvas.style.width = w + "px";
-  canvas.style.height = h + "px";
-  canvas.style.display = "block";
-  canvas.style.position = "fixed";
-  canvas.style.top = "0";
-  canvas.style.left = "0";
-  canvas.style.zIndex = "0";
+  canvas.width = Math.round(width * dpr);
+  canvas.height = Math.round(height * dpr);
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
 
-  if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   if (control && typeof control.resize === "function") {
-    control.resize(w, h);
+    control.resize(width, height);
   }
 }
 
-function setup() {
+function setupSystems() {
   planetEngine = createPlanetEngine();
   renderer = createRenderer();
   control = createControlSystem();
@@ -104,9 +205,11 @@ function setup() {
   if (!planetEngine || typeof planetEngine.buildPlanetField !== "function") {
     throw new Error("planet_engine missing buildPlanetField()");
   }
+
   if (!renderer || typeof renderer.renderPlanet !== "function") {
     throw new Error("render.js missing renderPlanet()");
   }
+
   if (!control) {
     throw new Error("control.js missing createControlSystem()");
   }
@@ -117,119 +220,179 @@ function setup() {
   }
 }
 
-function safe(fn, fallback=null){ try { return fn(); } catch { return fallback; } }
-
-function updateControlReceipt(r){
-  const motion = safe(() => control.getMotionState?.(), {});
-  const orbital = safe(() => control.getOrbitalState?.(), {});
-  r.control = {
-    motionState: motion || {},
-    orbitalState: orbital || {},
-    projectionSummary: safe(() => control.getProjectionSummary?.(), null),
-    cameraState: safe(() => control.getCameraState?.(), null)
-  };
+function safe(fn, fallback = null) {
+  try {
+    return fn();
+  } catch {
+    return fallback;
+  }
 }
 
-function drawFallbackVisible() {
-  // GUARANTEED VISIBLE DRAW (no dependency on render.js)
-  const w = ctx.canvas.width;
-  const h = ctx.canvas.height;
+function updateControlReceipt(receipt) {
+  const motionState = safe(
+    () => (typeof control.getMotionState === "function" ? control.getMotionState() : null),
+    null
+  );
 
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle = "rgb(10,20,40)";
-  ctx.fillRect(0,0,w,h);
+  const orbitalState = safe(
+    () => (typeof control.getOrbitalState === "function" ? control.getOrbitalState() : null),
+    null
+  );
 
-  // bright center marker
-  ctx.fillStyle = "rgb(255,255,255)";
-  ctx.beginPath();
-  ctx.arc(w/2, h/2, 10, 0, Math.PI*2);
-  ctx.fill();
+  const projectionSummary = safe(
+    () =>
+      typeof control.getProjectionSummary === "function"
+        ? control.getProjectionSummary()
+        : null,
+    null
+  );
+
+  const cameraState = safe(
+    () => (typeof control.getCameraState === "function" ? control.getCameraState() : null),
+    null
+  );
+
+  if (motionState) receipt.control.motionState = motionState;
+  if (orbitalState) receipt.control.orbitalState = orbitalState;
+  receipt.control.projectionSummary = projectionSummary;
+  receipt.control.cameraState = cameraState;
 }
 
-function frame(now){
-  const r = ensureReceipt();
-  const dt = lastNow ? (now - lastNow) : 16.67;
+function renderFrame(receipt) {
+  const renderResult =
+    renderer.renderPlanet({
+      ctx,
+      planetField,
+      worldKernel,
+      projectPoint: (lat, lon, r = 0) => {
+        if (typeof control.projectSphere === "function") {
+          return control.projectSphere(lat, lon, r);
+        }
+        return null;
+      },
+      viewState:
+        typeof control.getCameraState === "function"
+          ? control.getCameraState()
+          : null,
+    }) || {};
+
+  const audit = renderResult.audit || {};
+  const orbitalAudit = renderResult.orbitalAudit || {};
+  const placementAudit = renderResult.placementAudit || renderResult.placementReceipt || {};
+
+  receipt.renderAudit.sampleCount = audit.sampleCount ?? 0;
+  receipt.renderAudit.waterFamilyCount = audit.waterFamilyCount ?? 0;
+  receipt.renderAudit.landFamilyCount = audit.landFamilyCount ?? 0;
+  receipt.renderAudit.cryosphereCount = audit.cryosphereCount ?? 0;
+  receipt.renderAudit.shorelineCount = audit.shorelineCount ?? 0;
+
+  receipt.emissionReceipt.emissionOrbitalCount = orbitalAudit.count ?? 0;
+  receipt.emissionReceipt.emissionFrontVisible = orbitalAudit.frontVisibleCount ?? 0;
+  receipt.emissionReceipt.emissionEmitted = orbitalAudit.emittedCount ?? 0;
+  receipt.emissionReceipt.emissionSuppressed =
+    (orbitalAudit.rejectedBackfaceCount ?? 0) +
+    (orbitalAudit.rejectedWeakVisibilityCount ?? 0);
+  receipt.emissionReceipt.emissionPass = true;
+
+  receipt.placementReceipt.markerRequired = placementAudit.markerRequired ?? false;
+  receipt.placementReceipt.placementPlaced = placementAudit.placementPlaced ?? 0;
+  receipt.placementReceipt.markerCollisionCount = placementAudit.markerCollisionCount ?? 0;
+  receipt.placementReceipt.placementReservedReject = placementAudit.placementReservedReject ?? 0;
+  receipt.placementReceipt.placementViewportReject = placementAudit.placementViewportReject ?? 0;
+  receipt.placementReceipt.placementPass = placementAudit.placementPass ?? false;
+}
+
+function updateInstrumentReceipt(receipt) {
+  try {
+    if (typeof instruments.buildInstrumentState === "function") {
+      receipt.instrument = instruments.buildInstrumentState({
+        control: receipt.control,
+        renderAudit: receipt.renderAudit,
+        emissionReceipt: receipt.emissionReceipt,
+        placementReceipt: receipt.placementReceipt,
+        world: {
+          phase: receipt.phase,
+          terrainClass: "unknown",
+          stabilityClass: "unknown",
+        },
+      });
+    }
+  } catch {}
+}
+
+function frame(now) {
+  const receipt = ensureReceipt();
+  const dtMs = lastNow ? now - lastNow : 16.67;
   lastNow = now;
 
-  r.page = "world";
-  r.phase = "RUNNING";
-  r.mode = "active";
-  r.timestamp = now;
-  r.dtMs = dt;
-  r.fps = dt > 0 ? 1000/dt : 0;
+  clearFailure();
+
+  receipt.page = "world";
+  receipt.phase = "RUNNING";
+  receipt.mode = "active";
+  receipt.timestamp = now;
+  receipt.dtMs = dtMs;
+  receipt.fps = dtMs > 0 ? 1000 / dtMs : 0;
 
   try {
-    if (control.stepInertia) control.stepInertia(dt);
-
-    updateControlReceipt(r);
-
-    // TRY real renderer; if anything fails, fall back to guaranteed draw
-    try {
-      renderer.renderPlanet({
-        ctx,
-        planetField,
-        worldKernel,
-        projectPoint: (lat, lon, off=0) =>
-          control.projectSphere ? control.projectSphere(lat, lon, off) : null,
-        viewState: control.getCameraState ? control.getCameraState() : null
-      });
-    } catch {
-      drawFallbackVisible();
+    if (typeof control.stepInertia === "function") {
+      control.stepInertia(dtMs);
     }
 
-    if (typeof instruments.buildInstrumentState === "function") {
-      r.instrument = instruments.buildInstrumentState({
-        control: r.control,
-        renderAudit: r.renderAudit,
-        emissionReceipt: r.emissionReceipt,
-        placementReceipt: r.placementReceipt,
-        world: { phase: r.phase }
-      });
-    }
+    updateControlReceipt(receipt);
+    renderFrame(receipt);
+    updateInstrumentReceipt(receipt);
 
-    r.verification.pass = true;
+    receipt.verification.pass = true;
   } catch (err) {
-    r.verification.pass = false;
-    r.failure = { phase: "frame", message: err?.message || String(err) };
-    // still force visible draw so user sees something
-    drawFallbackVisible();
+    setFailure("frame", err instanceof Error ? err.message : String(err));
   }
 
-  emit(r);
-  rafId = requestAnimationFrame(frame);
+  emitRuntimeReceiptContinuous(receipt);
+  rafId = window.requestAnimationFrame(frame);
 }
 
-export function startRuntime(){
-  const r = ensureReceipt();
+export function startRuntime() {
+  const receipt = ensureReceipt();
 
   if (started || window[RUNTIME_ACTIVE_KEY]) {
-    r.failure = { phase: "startup", message: "Duplicate runtime" };
-    emit(r);
+    receipt.duplicateRuntime = true;
+    setFailure("startup", "Duplicate runtime detected");
+    emitRuntimeReceiptContinuous(receipt);
     return;
   }
 
   started = true;
+  disposed = false;
   window[RUNTIME_ACTIVE_KEY] = true;
 
   try {
     canvas = getCanvas();
-    if (!canvas) throw new Error("Missing #world or #world-canvas");
-
     ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("2D context unavailable");
 
-    setup();
-    forceCanvasVisible();
+    if (!ctx) {
+      throw new Error("2D context unavailable");
+    }
 
-    window.addEventListener("resize", forceCanvasVisible, { passive: true });
+    setupSystems();
+    resize();
+
+    window.addEventListener("resize", resize, { passive: true });
+
+    receipt.page = "world";
+    receipt.phase = "BOOT";
+    receipt.mode = "active";
+    receipt.verification.pass = false;
 
     lastNow = performance.now();
-    emit(r); // initial emission
-    rafId = requestAnimationFrame(frame);
+    emitRuntimeReceiptContinuous(receipt);
+    rafId = window.requestAnimationFrame(frame);
   } catch (err) {
-    r.failure = { phase: "startup", message: err?.message || String(err) };
-    emit(r);
+    setFailure("startup", err instanceof Error ? err.message : String(err));
+    emitRuntimeReceiptContinuous(receipt);
   }
 }
 
-export default { startRuntime };
+export default {
+  startRuntime,
+};

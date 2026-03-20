@@ -759,6 +759,11 @@ export function createRenderer() {
     if (activeScope === "UNIVERSE" || activeScope === "GALAXY") {
       drawDarkContainer(ctx, projectionState, activeScope);
 
+      const liveRenderPath =
+        activeScope === "UNIVERSE"
+          ? "darkContainerUniverse"
+          : "darkContainerGalaxy";
+
       return {
         projectionState,
         orbitalHits: [],
@@ -771,7 +776,7 @@ export function createRenderer() {
         },
         primitive: {
           primitiveType: "NONE",
-          primitivePath: activeScope === "UNIVERSE" ? "darkContainerUniverse" : "darkContainerGalaxy",
+          primitivePath: liveRenderPath,
           centerAnchored: false,
           rowColumnPathActive: false,
           sectorBandPathActive: false
@@ -787,7 +792,7 @@ export function createRenderer() {
           renderReadsScope: true,
           renderReadsLens: true,
           fallbackMode: false,
-          liveRenderPath: activeScope === "UNIVERSE" ? "darkContainerUniverse" : "darkContainerGalaxy"
+          liveRenderPath
         },
         density: {
           averageCellSpanPx: 0,

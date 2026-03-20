@@ -6,16 +6,18 @@
 <title>Diagnostic Gauges</title>
 <style>
 body{margin:0;background:#0b0f14;color:#d7f9ff;font-family:monospace}
-.container{padding:16px}
+.container{padding:16px;max-width:960px;margin:0 auto}
 .block{margin-bottom:16px;padding:12px;border:1px solid #1f2a36;border-radius:8px;background:#0f1620}
 .title{color:#7fffd4;margin-bottom:8px}
 .row{display:flex;justify-content:space-between;gap:16px;margin:4px 0}
 .row div:first-child{opacity:.9}
 .row div:last-child{text-align:right;word-break:break-word}
 .status{color:#7fffd4;font-weight:bold;margin-bottom:12px}
-.muted{opacity:.7}
-.warn{color:#ffd580}
+.canvasWrap{margin-top:10px;border:1px solid #1f2a36;border-radius:8px;overflow:hidden;background:#0b0f14}
+canvas{display:block;width:100%;height:120px}
+.small{opacity:.7;font-size:12px}
 .good{color:#7fffd4}
+.warn{color:#ffd580}
 .bad{color:#ff8f8f}
 </style>
 </head>
@@ -32,6 +34,8 @@ body{margin:0;background:#0b0f14;color:#d7f9ff;font-family:monospace}
   <div class="block">
     <div class="title">MOTION</div>
     <div id="motion"></div>
+    <div class="canvasWrap"><canvas id="velocityChart" width="920" height="120"></canvas></div>
+    <div class="small">yawVelocity = cyan · pitchVelocity = green</div>
   </div>
 
   <div class="block">
@@ -40,8 +44,10 @@ body{margin:0;background:#0b0f14;color:#d7f9ff;font-family:monospace}
   </div>
 
   <div class="block">
-    <div class="title">DECAY</div>
-    <div id="decay"></div>
+    <div class="title">RECENT HISTORY</div>
+    <div id="history"></div>
+    <div class="canvasWrap"><canvas id="dragChart" width="920" height="80"></canvas></div>
+    <div class="small">dragActive latch = white</div>
   </div>
 
   <div class="block">
@@ -57,13 +63,29 @@ body{margin:0;background:#0b0f14;color:#d7f9ff;font-family:monospace}
 
 <script>
 const KEY = "cte_runtime_v3";
+const HISTORY_SIZE = 180;
+const RELEASE_LATCH_MS = 1600;
+const DRAG_LATCH_MS = 200;
+const EPS = 0.000001;
 
+const history = {
+  yawVelocity: [],
+  pitchVelocity: [],
+  velocityMagnitude: [],
+  dragActive: [],
+  fps: []
+};
+
+let prevDragActive = null;
 let prevVelocityMagnitude = null;
 let prevYawVelocity = null;
 let prevPitchVelocity = null;
-let prevDragActive = null;
+
 let lastReleaseAt = null;
-let lastReleaseDetected = false;
+let lastReleaseYawVelocity = null;
+let lastReleasePitchVelocity = null;
+let peakVelocityRecent = 0;
+let lastDragAt = null;
 
 function row(k,v){
   return `<div class="row"><div>${k}</div><div>${v}</div></div>`;
@@ -99,86 +121,168 @@ function getCameraState(data){
   return data?.control?.cameraState || {};
 }
 
+function pickNumber(...values){
+  for(const v of values){
+    if(typeof v === "number" && Number.isFinite(v)) return v;
+  }
+  return null;
+}
+
 function deriveDragActive(data){
   const m = getMotionState(data);
+  const c = getCameraState(data);
   if(typeof m.dragActive === "boolean") return m.dragActive;
-  return "—";
+  if(typeof c.dragActive === "boolean") return c.dragActive;
+  return null;
 }
 
 function deriveYawVelocity(data){
   const m = getMotionState(data);
-  return num(m.yawVelocity);
+  const c = getCameraState(data);
+  return pickNumber(m.yawVelocity, c.yawVelocity);
 }
 
 function derivePitchVelocity(data){
   const m = getMotionState(data);
-  return num(m.pitchVelocity);
+  const c = getCameraState(data);
+  return pickNumber(m.pitchVelocity, c.pitchVelocity);
 }
 
-function deriveVelocityMagnitude(data){
-  const yv = deriveYawVelocity(data);
-  const pv = derivePitchVelocity(data);
+function deriveVelocityMagnitude(yv, pv){
   if(yv === null && pv === null) return null;
   return Math.sqrt((yv || 0) * (yv || 0) + (pv || 0) * (pv || 0));
 }
 
 function deriveInertiaDecay(data){
   const m = getMotionState(data);
-  if(typeof m.inertiaDecay === "number" && Number.isFinite(m.inertiaDecay)) return m.inertiaDecay;
   const c = getCameraState(data);
-  if(typeof c.inertiaDecay === "number" && Number.isFinite(c.inertiaDecay)) return c.inertiaDecay;
-  return null;
+  return pickNumber(m.inertiaDecay, c.inertiaDecay);
 }
 
 function deriveAutoSpinEnabled(data){
   const m = getMotionState(data);
-  if(typeof m.autoSpinEnabled === "boolean") return m.autoSpinEnabled;
   const c = getCameraState(data);
+  if(typeof m.autoSpinEnabled === "boolean") return m.autoSpinEnabled;
   if(typeof c.autoSpinEnabled === "boolean") return c.autoSpinEnabled;
-  return "—";
+  return null;
 }
 
 function deriveAutoSpinSpeed(data){
   const m = getMotionState(data);
-  if(typeof m.autoSpinSpeed === "number" && Number.isFinite(m.autoSpinSpeed)) return m.autoSpinSpeed;
   const c = getCameraState(data);
-  if(typeof c.autoSpinSpeed === "number" && Number.isFinite(c.autoSpinSpeed)) return c.autoSpinSpeed;
-  return null;
+  return pickNumber(m.autoSpinSpeed, c.autoSpinSpeed);
 }
 
-function updateReleaseDetection(data){
-  const dragActive = deriveDragActive(data);
-  const velocityMagnitude = deriveVelocityMagnitude(data);
-  let releaseDetected = false;
+function push(arr, value){
+  arr.push(value);
+  if(arr.length > HISTORY_SIZE) arr.shift();
+}
+
+function updateEventMemory(dragActive, yawVelocity, pitchVelocity, velocityMagnitude){
+  const now = Date.now();
+
+  if(dragActive === true){
+    lastDragAt = now;
+  }
 
   if(prevDragActive === true && dragActive === false){
-    releaseDetected = true;
-    lastReleaseAt = Date.now();
+    lastReleaseAt = now;
+    lastReleaseYawVelocity = yawVelocity;
+    lastReleasePitchVelocity = pitchVelocity;
   }
 
-  if(releaseDetected){
-    lastReleaseDetected = true;
-  }else if(lastReleaseAt && Date.now() - lastReleaseAt > 1500){
-    lastReleaseDetected = false;
+  if(typeof velocityMagnitude === "number" && Number.isFinite(velocityMagnitude)){
+    peakVelocityRecent = Math.max(peakVelocityRecent * 0.992, velocityMagnitude);
   }
 
-  prevDragActive = dragActive === "—" ? prevDragActive : dragActive;
-
-  return {
-    releaseDetected: lastReleaseDetected,
-    releaseAgeMs: lastReleaseAt ? Date.now() - lastReleaseAt : null,
-    velocityMagnitude
-  };
+  prevDragActive = dragActive;
 }
 
-function deriveZeroedThisFrame(velocityMagnitude){
-  if(velocityMagnitude === null || prevVelocityMagnitude === null) return "—";
-  return prevVelocityMagnitude > 0.000001 && velocityMagnitude <= 0.000001;
+function deriveReleaseDetected(){
+  if(!lastReleaseAt) return false;
+  return (Date.now() - lastReleaseAt) <= RELEASE_LATCH_MS;
 }
 
-function deriveVelocityDelta(current, previous){
+function deriveDragLatched(){
+  if(prevDragActive === true) return true;
+  if(!lastDragAt) return false;
+  return (Date.now() - lastDragAt) <= DRAG_LATCH_MS;
+}
+
+function deriveZeroedThisFrame(currentMagnitude){
+  if(prevVelocityMagnitude === null || currentMagnitude === null) return null;
+  return prevVelocityMagnitude > EPS && currentMagnitude <= EPS;
+}
+
+function deriveDelta(current, previous){
   if(current === null || previous === null) return null;
   return current - previous;
+}
+
+function drawSeries(canvas, seriesA, seriesB){
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = "#0b0f14";
+  ctx.fillRect(0,0,w,h);
+
+  const all = [...seriesA, ...seriesB].filter(v => typeof v === "number" && Number.isFinite(v));
+  const maxAbs = Math.max(0.001, ...all.map(v => Math.abs(v)));
+
+  ctx.strokeStyle = "#1f2a36";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, h/2);
+  ctx.lineTo(w, h/2);
+  ctx.stroke();
+
+  function draw(series, color){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    series.forEach((v, i) => {
+      const x = (i / Math.max(1, HISTORY_SIZE - 1)) * w;
+      const y = h/2 - (v / maxAbs) * (h * 0.42);
+      if(i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }
+
+  draw(seriesA, "#6fe7ff");
+  draw(seriesB, "#7fffd4");
+}
+
+function drawDragLatch(canvas, dragSeries){
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = "#0b0f14";
+  ctx.fillRect(0,0,w,h);
+
+  ctx.strokeStyle = "#1f2a36";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, h - 10);
+  ctx.lineTo(w, h - 10);
+  ctx.stroke();
+
+  ctx.strokeStyle = "#ffffff";
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+
+  dragSeries.forEach((v, i) => {
+    const x = (i / Math.max(1, HISTORY_SIZE - 1)) * w;
+    const y = v ? 18 : h - 10;
+    if(i === 0) ctx.moveTo(x, y);
+    else ctx.lineTo(x, y);
+  });
+
+  ctx.stroke();
 }
 
 function render(data){
@@ -187,7 +291,7 @@ function render(data){
     document.getElementById("runtime").innerHTML = "";
     document.getElementById("motion").innerHTML = "";
     document.getElementById("handoff").innerHTML = "";
-    document.getElementById("decay").innerHTML = "";
+    document.getElementById("history").innerHTML = "";
     document.getElementById("autospin").innerHTML = "";
     document.getElementById("emission").innerHTML = "";
     return;
@@ -199,20 +303,28 @@ function render(data){
 
   const yawVelocity = deriveYawVelocity(data);
   const pitchVelocity = derivePitchVelocity(data);
-  const velocityMagnitude = deriveVelocityMagnitude(data);
-  const inertiaDecay = deriveInertiaDecay(data);
+  const velocityMagnitude = deriveVelocityMagnitude(yawVelocity, pitchVelocity);
   const dragActive = deriveDragActive(data);
+  const inertiaDecay = deriveInertiaDecay(data);
   const autoSpinEnabled = deriveAutoSpinEnabled(data);
   const autoSpinSpeed = deriveAutoSpinSpeed(data);
 
-  const releaseState = updateReleaseDetection(data);
+  updateEventMemory(dragActive, yawVelocity, pitchVelocity, velocityMagnitude);
 
-  const yawVelocityDelta = deriveVelocityDelta(yawVelocity, prevYawVelocity);
-  const pitchVelocityDelta = deriveVelocityDelta(pitchVelocity, prevPitchVelocity);
+  push(history.yawVelocity, yawVelocity ?? 0);
+  push(history.pitchVelocity, pitchVelocity ?? 0);
+  push(history.velocityMagnitude, velocityMagnitude ?? 0);
+  push(history.dragActive, dragActive === true);
+  push(history.fps, data.fps ?? 0);
+
+  const releaseDetected = deriveReleaseDetected();
+  const dragLatched = deriveDragLatched();
   const zeroedThisFrame = deriveZeroedThisFrame(velocityMagnitude);
+  const yawVelocityDelta = deriveDelta(yawVelocity, prevYawVelocity);
+  const pitchVelocityDelta = deriveDelta(pitchVelocity, prevPitchVelocity);
 
   document.getElementById("status").textContent =
-    "STATE: LIVE • " + data.phase + " • " + age + "ms";
+    "STATE: LIVE • " + (data.phase ?? "—") + " • " + age + "ms";
 
   document.getElementById("runtime").innerHTML =
     row("phase", data.phase ?? "—") +
@@ -230,16 +342,20 @@ function render(data){
 
   document.getElementById("handoff").innerHTML =
     row("dragActive", bool(dragActive)) +
-    row("releaseDetected", bool(releaseState.releaseDetected)) +
-    row("releaseAgeMs", releaseState.releaseAgeMs === null ? "—" : Math.round(releaseState.releaseAgeMs)) +
+    row("dragLatched", bool(dragLatched)) +
+    row("releaseDetected", bool(releaseDetected)) +
+    row("lastReleaseAgeMs", lastReleaseAt ? Math.round(Date.now() - lastReleaseAt) : "—") +
+    row("lastReleaseYawVelocity", fmt(lastReleaseYawVelocity, 9)) +
+    row("lastReleasePitchVelocity", fmt(lastReleasePitchVelocity, 9)) +
     row("yawVelocityΔ", fmt(yawVelocityDelta, 9)) +
     row("pitchVelocityΔ", fmt(pitchVelocityDelta, 9));
 
-  document.getElementById("decay").innerHTML =
-    row("inertiaDecay", fmt(inertiaDecay, 6)) +
+  document.getElementById("history").innerHTML =
+    row("peakVelocityRecent", fmt(peakVelocityRecent, 9)) +
     row("zeroedThisFrame", bool(zeroedThisFrame)) +
     row("prevVelocityMagnitude", fmt(prevVelocityMagnitude, 9)) +
-    row("currentVelocityMagnitude", fmt(velocityMagnitude, 9));
+    row("currentVelocityMagnitude", fmt(velocityMagnitude, 9)) +
+    row("inertiaDecay", fmt(inertiaDecay, 6));
 
   document.getElementById("autospin").innerHTML =
     row("autoSpinEnabled", bool(autoSpinEnabled)) +
@@ -248,6 +364,17 @@ function render(data){
   document.getElementById("emission").innerHTML =
     row("emitted", emission.emissionEmitted ?? "—") +
     row("pass", bool(emission.emissionPass));
+
+  drawSeries(
+    document.getElementById("velocityChart"),
+    history.yawVelocity,
+    history.pitchVelocity
+  );
+
+  drawDragLatch(
+    document.getElementById("dragChart"),
+    history.dragActive
+  );
 
   prevVelocityMagnitude = velocityMagnitude;
   prevYawVelocity = yawVelocity;

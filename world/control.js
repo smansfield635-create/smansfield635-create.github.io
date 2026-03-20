@@ -20,6 +20,51 @@ function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
+const SCOPE_TABLE = Object.freeze({
+  UNIVERSE: Object.freeze({
+    name: "UNIVERSE",
+    sizeKm: 256000000000,
+    anchor: "UNIVERSE_ORIGIN"
+  }),
+  GALAXY: Object.freeze({
+    name: "GALAXY",
+    sizeKm: 256000000,
+    anchor: "GALAXY_ORIGIN"
+  }),
+  GLOBAL: Object.freeze({
+    name: "GLOBAL",
+    sizeKm: 256000,
+    anchor: "EARTH"
+  }),
+  LOCAL: Object.freeze({
+    name: "LOCAL",
+    sizeKm: 25600,
+    anchor: "EARTH"
+  })
+});
+
+const LENS_MODE_TABLE = Object.freeze({
+  STANDARD: true,
+  ATMOSPHERIC: true
+});
+
+function isValidScopeName(value) {
+  return typeof value === "string" && Object.prototype.hasOwnProperty.call(SCOPE_TABLE, value);
+}
+
+function getScopeConfig(scopeName) {
+  return SCOPE_TABLE[isValidScopeName(scopeName) ? scopeName : "GLOBAL"];
+}
+
+function normalizeLensTier(value) {
+  const next = Math.round(isFiniteNumber(value) ? value : 1);
+  return clamp(next, 1, 3);
+}
+
+function normalizeLensMode(value) {
+  return typeof value === "string" && LENS_MODE_TABLE[value] ? value : "STANDARD";
+}
+
 function getKernelConstants() {
   const constants = normalizeObject(WORLD_KERNEL?.constants);
 
@@ -28,10 +73,10 @@ function getKernelConstants() {
     minPitch: isFiniteNumber(constants.minPitch) ? constants.minPitch : -(Math.PI / 2.2),
     maxPitch: isFiniteNumber(constants.maxPitch) ? constants.maxPitch : Math.PI / 2.2,
     initialYaw: isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
-    initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0.5817764173314432,
+    initialPitch: isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
     dragSensitivity: isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0082,
     inertiaDecay: isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.992,
-    autoSpinSpeed: isFiniteNumber(constants.autoSpinSpeed) ? constants.autoSpinSpeed : 0.00001125,
+    autoSpinSpeed: isFiniteNumber(constants.autoSpinSpeed) ? constants.autoSpinSpeed : 0.000045,
     latSteps: Number.isInteger(constants.latSteps) ? constants.latSteps : 108,
     lonSteps: Number.isInteger(constants.lonSteps) ? constants.lonSteps : 216
   });
@@ -94,6 +139,14 @@ export function createControlSystem() {
 
   let presentationMode = "round";
 
+  let activeScope = "GLOBAL";
+  let scopeSizeKm = getScopeConfig(activeScope).sizeKm;
+  let scopeAnchor = getScopeConfig(activeScope).anchor;
+  let scopeTransitionState = null;
+
+  let lensTier = 1;
+  let lensMode = "STANDARD";
+
   let autoSpinEnabled = true;
   let autoSpinSpeed = K.autoSpinSpeed;
 
@@ -155,6 +208,13 @@ export function createControlSystem() {
     return Math.max(1, cameraState.radius * zoomCurrent);
   }
 
+  function applyScopeDefaults(scopeName) {
+    const config = getScopeConfig(scopeName);
+    activeScope = config.name;
+    scopeSizeKm = config.sizeKm;
+    scopeAnchor = config.anchor;
+  }
+
   function resize(width, height) {
     cameraState.width = width;
     cameraState.height = height;
@@ -177,6 +237,27 @@ export function createControlSystem() {
   function setAutoSpinSpeed(value) {
     if (!isFiniteNumber(value)) return;
     autoSpinSpeed = value;
+  }
+
+  function setLensTier(value) {
+    lensTier = normalizeLensTier(value);
+    return getLensState();
+  }
+
+  function setLensMode(value) {
+    lensMode = normalizeLensMode(value);
+    return getLensState();
+  }
+
+  function getLensState() {
+    return Object.freeze({
+      lensTier,
+      lensMode,
+      zoomCurrent,
+      zoomTarget,
+      zoomMin,
+      zoomMax
+    });
   }
 
   function startDrag() {
@@ -427,6 +508,44 @@ export function createControlSystem() {
     return selectionState;
   }
 
+  function getScopeState() {
+    return Object.freeze({
+      activeScope,
+      scopeSizeKm,
+      scopeAnchor,
+      scopeTransitionState
+    });
+  }
+
+  function setActiveScope(scopeName) {
+    if (!isValidScopeName(scopeName)) return getScopeState();
+    applyScopeDefaults(scopeName);
+    scopeTransitionState = null;
+    return getScopeState();
+  }
+
+  function beginScopeTransition(targetScope) {
+    if (!isValidScopeName(targetScope)) return getScopeState();
+
+    scopeTransitionState = Object.freeze({
+      fromScope: activeScope,
+      toScope: targetScope,
+      status: "TRANSITIONING"
+    });
+
+    return getScopeState();
+  }
+
+  function completeScopeTransition() {
+    if (!scopeTransitionState || !isValidScopeName(scopeTransitionState.toScope)) {
+      return getScopeState();
+    }
+
+    applyScopeDefaults(scopeTransitionState.toScope);
+    scopeTransitionState = null;
+    return getScopeState();
+  }
+
   function getCameraState() {
     return Object.freeze({
       width: cameraState.width,
@@ -452,7 +571,13 @@ export function createControlSystem() {
       recoveryEnabled,
       recoveryYawStrength,
       recoveryPitchStrength,
-      recoveryVelocityThreshold
+      recoveryVelocityThreshold,
+      activeScope,
+      scopeSizeKm,
+      scopeAnchor,
+      scopeTransitionState,
+      lensTier,
+      lensMode
     });
   }
 
@@ -566,13 +691,51 @@ export function createControlSystem() {
     if (isFiniteNumber(next.recoveryYawStrength)) recoveryYawStrength = next.recoveryYawStrength;
     if (isFiniteNumber(next.recoveryPitchStrength)) recoveryPitchStrength = next.recoveryPitchStrength;
     if (isFiniteNumber(next.recoveryVelocityThreshold)) recoveryVelocityThreshold = Math.max(0, next.recoveryVelocityThreshold);
+
+    if (isValidScopeName(next.activeScope)) {
+      applyScopeDefaults(next.activeScope);
+    }
+
+    if (typeof next.scopeAnchor === "string" && next.scopeAnchor.length > 0) {
+      scopeAnchor = next.scopeAnchor;
+    }
+
+    if (isFiniteNumber(next.scopeSizeKm)) {
+      scopeSizeKm = next.scopeSizeKm;
+    }
+
+    if (next.scopeTransitionState && typeof next.scopeTransitionState === "object") {
+      const sts = normalizeObject(next.scopeTransitionState);
+      if (isValidScopeName(sts.fromScope) && isValidScopeName(sts.toScope)) {
+        scopeTransitionState = Object.freeze({
+          fromScope: sts.fromScope,
+          toScope: sts.toScope,
+          status: typeof sts.status === "string" ? sts.status : "TRANSITIONING"
+        });
+      }
+    } else if (next.scopeTransitionState === null) {
+      scopeTransitionState = null;
+    }
+
+    if (next.lensTier !== undefined) {
+      lensTier = normalizeLensTier(next.lensTier);
+    }
+
+    if (next.lensMode !== undefined) {
+      lensMode = normalizeLensMode(next.lensMode);
+    }
   }
+
+  applyScopeDefaults("GLOBAL");
 
   return Object.freeze({
     resize,
     setPresentationMode,
     setAutoSpinEnabled,
     setAutoSpinSpeed,
+    setLensTier,
+    setLensMode,
+    getLensState,
     startDrag,
     endDrag,
     setZoomBounds,
@@ -591,7 +754,11 @@ export function createControlSystem() {
     getProjectionSummary,
     getCardinals,
     getOrbitalState,
-    getMotionState
+    getMotionState,
+    getScopeState,
+    setActiveScope,
+    beginScopeTransition,
+    completeScopeTransition
   });
 }
 

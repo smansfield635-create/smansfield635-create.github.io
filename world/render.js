@@ -1,6 +1,6 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
-import { resolveHydrationPacket } from "./render/hydation_render_engine.js";
+import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
 
 let lastAuditPlanetField = null;
 let lastAuditTopologyField = null;

@@ -1,9 +1,22 @@
+// /world/render.js
+// MODE: STUB-SAFE FIRST PASS
+// STATUS: CANONICAL RENDER ROUTER
+// OWNER_LAYER: EXPRESSION
+// ROLE:
+// - read-only render authority
+// - boot-safe visible globe restore
+// - specialist packet router
+// - runtime-compatible receipt surface
+// - no truth ownership
+// - no control ownership
+
 import { WORLD_KERNEL } from "./world_kernel.js";
-import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
+import { resolveTerrainPacket } from "./render/terrain_render_engine.js";
+import { resolveFaunaPacket } from "./render/fauna_render_engine.js";
+import { resolveCosmicPacket } from "./render/cosmic_render_engine.js";
 
 let lastAuditPlanetField = null;
-let lastAuditTopologyField = null;
 let lastAuditResult = null;
 
 function clamp(value, min, max) {
@@ -20,11 +33,6 @@ function normalizeObject(value) {
 
 function sampleGrid(planetField) {
   const rows = Array.isArray(planetField?.samples) ? planetField.samples : [];
-  return Array.isArray(rows[0]) ? rows : [];
-}
-
-function getTopologyGrid(topologyField) {
-  const rows = Array.isArray(topologyField?.samples) ? topologyField.samples : [];
   return Array.isArray(rows[0]) ? rows : [];
 }
 
@@ -78,9 +86,6 @@ function getProjectionState(viewState = {}, ctx) {
   const state = normalizeObject(viewState);
   const { width, height } = getCanvasCssSize(ctx);
 
-  const activeScope = normalizeScopeName(state.activeScope);
-  const lensTier = normalizeLensTier(state.lensTier);
-
   return {
     width,
     height,
@@ -89,8 +94,8 @@ function getProjectionState(viewState = {}, ctx) {
     radius: isFiniteNumber(state.radius)
       ? state.radius
       : Math.min(width, height) * (WORLD_KERNEL?.constants?.worldRadiusFactor ?? 0.36),
-    activeScope,
-    lensTier,
+    activeScope: normalizeScopeName(state.activeScope),
+    lensTier: normalizeLensTier(state.lensTier),
     scopeSizeKm: isFiniteNumber(state.scopeSizeKm) ? state.scopeSizeKm : null,
     scopeAnchor: typeof state.scopeAnchor === "string" ? state.scopeAnchor : null,
     scopeTransitionState: state.scopeTransitionState ?? null
@@ -139,224 +144,31 @@ function withPlanetClip(ctx, projectionState, drawFn) {
   return result;
 }
 
-function shouldDrawPoints(points, minimumVisible = 2) {
-  let visibleCount = 0;
-  for (let i = 0; i < points.length; i += 1) {
-    if (points[i]?.visible === true) visibleCount += 1;
-  }
-  return visibleCount >= minimumVisible;
-}
+function drawDarkContainer(ctx, projectionState, activeScope) {
+  ctx.save();
 
-function drawPolygon(ctx, points, fillStyle, alpha = 1) {
-  if (!points.length) return;
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = fillStyle;
-  ctx.beginPath();
-  ctx.moveTo(points[0].x, points[0].y);
-  for (let i = 1; i < points.length; i += 1) {
-    ctx.lineTo(points[i].x, points[i].y);
-  }
-  ctx.closePath();
-  ctx.fill();
-}
-
-function isCryosphere(sample) {
-  const tc = typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
-  return (
-    tc === "POLAR_ICE" ||
-    tc === "GLACIAL_HIGHLAND" ||
-    sample?.biomeType === "GLACIER" ||
-    sample?.surfaceMaterial === "ICE" ||
-    sample?.surfaceMaterial === "SNOW"
-  );
-}
-
-function isShoreline(sample) {
-  const tc = typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
-  return tc === "SHORELINE" || tc === "BEACH" || sample?.shoreline === true || sample?.shorelineBand === true;
-}
-
-function resolveElevationOffsetPx(sample, topology = null) {
-  const rawElevation = isFiniteNumber(sample?.elevation) ? sample.elevation : 0;
-  const amplifiedElevation = isFiniteNumber(topology?.elevationAmplified)
-    ? topology.elevationAmplified
-    : rawElevation;
-
-  const relief = clamp(topology?.reliefComposite ?? 0, 0, 1);
-  const ridge = clamp(topology?.ridgeAmplified ?? 0, 0, 1);
-  const summit = clamp(topology?.summitAmplified ?? 0, 0, 1);
-  const basin = clamp(topology?.basinAmplified ?? 0, 0, 1);
-  const canyon = clamp(topology?.canyonAmplified ?? 0, 0, 1);
-
-  const reliefLift =
-    relief * 4.2 +
-    ridge * 2.6 +
-    summit * 4.8 -
-    basin * 1.6 -
-    canyon * 1.0;
-
-  const landBoost = isLandSample(sample) ? 1 : 0;
-  const offset =
-    clamp(amplifiedElevation, -1, 1) * 12 +
-    landBoost * reliefLift;
-
-  return clamp(offset, -10, 20);
-}
-
-function pointFromSample(sample, projectPoint, topology = null) {
-  return projectPoint(sample.latDeg, sample.lonDeg, resolveElevationOffsetPx(sample, topology));
-}
-
-function getTopologySample(topologyGrid, x, y) {
-  return topologyGrid?.[y]?.[x] || null;
-}
-
-function midpointPoint(a, b) {
-  return {
-    x: (a.x + b.x) * 0.5,
-    y: (a.y + b.y) * 0.5,
-    z: (a.z + b.z) * 0.5,
-    visible: a.visible || b.visible,
-    resolvedRadius: isFiniteNumber(a.resolvedRadius) && isFiniteNumber(b.resolvedRadius)
-      ? (a.resolvedRadius + b.resolvedRadius) * 0.5
-      : (a.resolvedRadius ?? b.resolvedRadius ?? 0)
-  };
-}
-
-function averagePoint(points) {
-  let x = 0;
-  let y = 0;
-  let z = 0;
-  for (const p of points) {
-    x += p.x;
-    y += p.y;
-    z += p.z;
-  }
-  const n = points.length || 1;
-  return {
-    x: x / n,
-    y: y / n,
-    z: z / n
-  };
-}
-
-function getLensConfig(activeScope, lensTier) {
-  if (activeScope === "LOCAL") {
-    if (lensTier === 3) {
-      return {
-        rowStrideCutoff: 999999,
-        colStrideCutoff: 999999,
-        ringScale: 1.0,
-        tangentialSkew: 0.020,
-        radialBias: 0.040,
-        densityBias: 1.15
-      };
-    }
-    if (lensTier === 2) {
-      return {
-        rowStrideCutoff: 180,
-        colStrideCutoff: 320,
-        ringScale: 1.0,
-        tangentialSkew: 0.014,
-        radialBias: 0.028,
-        densityBias: 0.60
-      };
-    }
-  }
-
-  return {
-    rowStrideCutoff: 120,
-    colStrideCutoff: 220,
-    ringScale: 1.0,
-    tangentialSkew: 0.010,
-    radialBias: 0.018,
-    densityBias: 0.0
-  };
-}
-
-function buildForwardSignalDiamond(centerPoint, northPoint, eastPoint, southPoint, westPoint, sample, projectionState) {
-  const northMid = midpointPoint(centerPoint, northPoint);
-  const eastMid = midpointPoint(centerPoint, eastPoint);
-  const southMid = midpointPoint(centerPoint, southPoint);
-  const westMid = midpointPoint(centerPoint, westPoint);
-
-  const points = [northMid, eastMid, southMid, westMid];
-  const center = averagePoint(points);
-
-  const latitudeRad = (sample.latDeg * Math.PI) / 180;
-  const latAbs = Math.abs(Math.sin(latitudeRad));
-  const avgZ = clamp((northMid.z + eastMid.z + southMid.z + westMid.z) * 0.25, -1, 1);
-  const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
-  const curvatureFactor = clamp(latAbs * 0.55 + edgeFactor * 0.85, 0, 1);
-  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
-
-  const phase = ((sample.lonDeg + 180) / 360) * Math.PI * 2 + latitudeRad * 0.35;
-  const tangential = Math.sin(phase) * lens.tangentialSkew * (0.35 + curvatureFactor * 0.65);
-  const radialBias = lens.radialBias * (0.25 + curvatureFactor * 0.75);
-
-  const ordered = [northMid, eastMid, southMid, westMid].map((point, index) => {
-    const dx = point.x - center.x;
-    const dy = point.y - center.y;
-
-    const radialScale = 1 + radialBias * (index % 2 === 0 ? 0.9 : 1.0);
-    const tx = -dy * tangential;
-    const ty = dx * tangential;
-
-    return {
-      ...point,
-      x: center.x + dx * radialScale + tx,
-      y: center.y + dy * radialScale + ty
-    };
-  });
-
-  return {
-    points: ordered,
-    curvatureFactor
-  };
-}
-
-function resolveCellDensity(sample, polygonPoints, projectionState) {
-  const latitudeRad = (sample.latDeg * Math.PI) / 180;
-  const latAbs = Math.abs(Math.sin(latitudeRad));
-  const avgZ = clamp(
-    polygonPoints.reduce((sum, point) => sum + point.z, 0) / Math.max(1, polygonPoints.length),
-    -1,
-    1
-  );
-  const edgeFactor = 1 - clamp((avgZ + 1) * 0.5, 0, 1);
-
-  let span = 0;
-  for (let i = 0; i < polygonPoints.length; i += 1) {
-    const a = polygonPoints[i];
-    const b = polygonPoints[(i + 1) % polygonPoints.length];
-    span = Math.max(span, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
-  }
-
-  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
-  const zoomFactor = clamp(
-    projectionState.radius / Math.max(1, Math.min(projectionState.width, projectionState.height) * 0.28),
+  const bg = ctx.createRadialGradient(
+    projectionState.centerX,
+    projectionState.centerY,
     0,
-    3
+    projectionState.centerX,
+    projectionState.centerY,
+    Math.max(projectionState.width, projectionState.height) * 0.72
   );
 
-  return span / 16 + edgeFactor * 1.35 + latAbs * 0.75 + zoomFactor * 0.30 + lens.densityBias;
-}
-
-function measurePolygonSpan(points) {
-  let span = 0;
-  for (let i = 0; i < points.length; i += 1) {
-    const a = points[i];
-    const b = points[(i + 1) % points.length];
-    span = Math.max(span, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
+  if (activeScope === "UNIVERSE") {
+    bg.addColorStop(0, "rgb(3,5,10)");
+    bg.addColorStop(0.45, "rgb(1,2,5)");
+    bg.addColorStop(1, "rgb(0,0,0)");
+  } else {
+    bg.addColorStop(0, "rgb(5,7,14)");
+    bg.addColorStop(0.45, "rgb(2,3,8)");
+    bg.addColorStop(1, "rgb(0,0,0)");
   }
-  return span;
-}
 
-function resolveDensityTier(averageCellSpanPx, emittedCellCount) {
-  if (emittedCellCount <= 0) return "EMPTY";
-  if (averageCellSpanPx <= 6) return "HIGH";
-  if (averageCellSpanPx <= 12) return "MEDIUM";
-  return "LOW";
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
+  ctx.restore();
 }
 
 function drawPlanetRim(ctx, projectionState) {
@@ -372,16 +184,8 @@ function drawPlanetRim(ctx, projectionState) {
     outerRadius
   );
 
-  const isLocal = projectionState.activeScope === "LOCAL";
-  const lensTier = projectionState.lensTier;
-
-  if (isLocal && lensTier >= 2) {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.05)");
-    rim.addColorStop(1, "rgba(170,220,255,0.08)");
-  } else {
-    rim.addColorStop(0.98, "rgba(132,188,255,0.08)");
-    rim.addColorStop(1, "rgba(170,220,255,0.16)");
-  }
+  rim.addColorStop(0.98, "rgba(132,188,255,0.08)");
+  rim.addColorStop(1, "rgba(170,220,255,0.16)");
 
   ctx.beginPath();
   ctx.arc(
@@ -402,10 +206,8 @@ function drawPlanetRim(ctx, projectionState) {
     0,
     Math.PI * 2
   );
-  ctx.strokeStyle = isLocal && lensTier >= 2
-    ? "rgba(188,220,255,0.11)"
-    : "rgba(188,220,255,0.18)";
-  ctx.lineWidth = isLocal && lensTier >= 2 ? 0.9 : 1.1;
+  ctx.strokeStyle = "rgba(188,220,255,0.18)";
+  ctx.lineWidth = 1.1;
   ctx.stroke();
 
   ctx.restore();
@@ -440,265 +242,91 @@ function drawPlanetBase(ctx, projectionState) {
   });
 }
 
-function drawDarkContainer(ctx, projectionState, activeScope) {
-  ctx.save();
-
-  const bg = ctx.createRadialGradient(
-    projectionState.centerX,
-    projectionState.centerY,
-    0,
-    projectionState.centerX,
-    projectionState.centerY,
-    Math.max(projectionState.width, projectionState.height) * 0.72
-  );
-
-  if (activeScope === "UNIVERSE") {
-    bg.addColorStop(0, "rgb(3,5,10)");
-    bg.addColorStop(0.45, "rgb(1,2,5)");
-    bg.addColorStop(1, "rgb(0,0,0)");
-  } else {
-    bg.addColorStop(0, "rgb(5,7,14)");
-    bg.addColorStop(0.45, "rgb(2,3,8)");
-    bg.addColorStop(1, "rgb(0,0,0)");
-  }
-
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, projectionState.width, projectionState.height);
-  ctx.restore();
+function sampleElevationOffsetPx(sample) {
+  const elevation = isFiniteNumber(sample?.elevation) ? sample.elevation : 0;
+  const landBoost = sample?.landMask === 1 ? 1 : 0;
+  return clamp(elevation * 10 + landBoost * 1.25, -8, 14);
 }
 
-/*
-  EXPRESSION HUB CONTRACT
+function sampleColor(sample) {
+  const terrainClass = typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
+  const biomeType = typeof sample?.biomeType === "string" ? sample.biomeType : "NONE";
+  const surfaceMaterial = typeof sample?.surfaceMaterial === "string" ? sample.surfaceMaterial : "NONE";
 
-  render.js is the permanent bridge / router.
-  Specialist sidestream engines plug in here and return packets only.
-
-  Router law:
-  - collect specialist packets
-  - arbitrate once
-  - return one final primitive instruction
-  - no specialist may own truth or time
-*/
-
-function normalizeHydrationInstruction(packet, signalCell, projectionState) {
-  if (!packet || typeof packet !== "object") return null;
-
-  const hydrationClass = typeof packet.hydrationClass === "string" ? packet.hydrationClass : "NONE";
-  const primitivePoints = Array.isArray(packet.hydrationPrimitivePoints) ? packet.hydrationPrimitivePoints : null;
-
-  if (
-    hydrationClass === "NONE" ||
-    hydrationClass === "NON_HYDRATION_DOMAIN" ||
-    !primitivePoints ||
-    primitivePoints.length < 3
-  ) {
-    return null;
+  if (sample?.waterMask === 1) {
+    if (terrainClass === "SHELF") return "rgba(54,132,196,0.82)";
+    return "rgba(34,102,170,0.26)";
   }
 
+  if (terrainClass === "POLAR_ICE" || terrainClass === "GLACIAL_HIGHLAND" || biomeType === "GLACIER" || surfaceMaterial === "ICE" || surfaceMaterial === "SNOW") {
+    return "rgba(224,238,248,0.90)";
+  }
+
+  if (terrainClass === "SUMMIT" || terrainClass === "MOUNTAIN") {
+    return "rgba(158,164,148,0.92)";
+  }
+
+  if (terrainClass === "RIDGE" || terrainClass === "PLATEAU") {
+    return "rgba(126,148,96,0.88)";
+  }
+
+  if (terrainClass === "BEACH" || terrainClass === "SHORELINE" || surfaceMaterial === "SAND") {
+    return "rgba(222,202,136,0.88)";
+  }
+
+  if (biomeType === "WETLAND") {
+    return "rgba(78,132,92,0.90)";
+  }
+
+  if (biomeType === "DESERT") {
+    return "rgba(184,154,88,0.90)";
+  }
+
+  return "rgba(86,150,86,0.88)";
+}
+
+function resolvePointSizePx(projectionState, sampleCount) {
+  const base = projectionState.radius / Math.max(24, Math.sqrt(Math.max(1, sampleCount)));
+  return clamp(base * 1.35, 1.2, 4.6);
+}
+
+function buildSignalCell(point, pointSizePx) {
   return {
-    engineKey: "hydration",
-    primitiveType: typeof packet.hydrationPrimitiveType === "string" ? packet.hydrationPrimitiveType : "HYDRATION_SIGNAL",
-    primitiveScale: clamp(isFiniteNumber(packet.hydrationBlendStrength) ? packet.hydrationBlendStrength : 1, 0, 1),
-    primitivePoints,
-    boundaryClass: typeof packet.hydrationBandClass === "string" ? packet.hydrationBandClass : "HYDRATION",
-    subdivisionTier: isFiniteNumber(packet.subdivisionTier) ? packet.subdivisionTier : projectionState.lensTier,
-    approxSpanPx: isFiniteNumber(packet.approxSpanPx) ? packet.approxSpanPx : measurePolygonSpan(primitivePoints),
-    hydrationClass,
-    hydrationBandClass: typeof packet.hydrationBandClass === "string" ? packet.hydrationBandClass : "NONE",
-    hydrationOverlayClass: typeof packet.hydrationOverlayClass === "string" ? packet.hydrationOverlayClass : "NONE",
-    shoreHandoffClass: typeof packet.shoreHandoffClass === "string" ? packet.shoreHandoffClass : "NONE",
-    freezeThawClass: typeof packet.freezeThawClass === "string" ? packet.freezeThawClass : "NONE",
-    terrainClassResolved: "NONE",
-    terrainBandClass: "NONE",
-    terrainOverlayClass: "NONE",
-    terrainEdgeClass: "NONE",
-    terrainNarrativeClass: "NONE",
-    terrainReliefStrength: 0
+    points: [
+      { x: point.x, y: point.y - pointSizePx, z: point.z, visible: point.visible },
+      { x: point.x + pointSizePx, y: point.y, z: point.z, visible: point.visible },
+      { x: point.x, y: point.y + pointSizePx, z: point.z, visible: point.visible },
+      { x: point.x - pointSizePx, y: point.y, z: point.z, visible: point.visible }
+    ]
   };
 }
 
-function normalizeTerrainInstruction() {
-  return null;
-}
+function resolvePrimitivePackets(sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime = null) {
+  const hydrationPacket = typeof resolveHydrationPacket === "function"
+    ? resolveHydrationPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
+    : null;
 
-function resolveFaunaInstruction() {
-  return null;
-}
+  const terrainPacket = typeof resolveTerrainPacket === "function"
+    ? resolveTerrainPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
+    : null;
 
-function resolveCosmicInstruction() {
-  return null;
-}
+  const faunaPacket = typeof resolveFaunaPacket === "function"
+    ? resolveFaunaPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
+    : null;
 
-function buildFallbackInstruction(signalCell, projectionState) {
+  const cosmicPacket = typeof resolveCosmicPacket === "function"
+    ? resolveCosmicPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
+    : null;
+
   return {
-    engineKey: "fallback",
-    primitiveType: "FULL_DIAMOND",
-    primitiveScale: 1,
-    primitivePoints: signalCell.points,
-    boundaryClass: "INTERIOR",
-    subdivisionTier: projectionState.lensTier,
-    approxSpanPx: measurePolygonSpan(signalCell.points),
-    hydrationClass: "NONE",
-    hydrationBandClass: "NONE",
-    hydrationOverlayClass: "NONE",
-    shoreHandoffClass: "NONE",
-    freezeThawClass: "NONE",
-    terrainClassResolved: "NONE",
-    terrainBandClass: "NONE",
-    terrainOverlayClass: "NONE",
-    terrainEdgeClass: "NONE",
-    terrainNarrativeClass: "NONE",
-    terrainReliefStrength: 0
+    hydrationPacket,
+    terrainPacket,
+    faunaPacket,
+    cosmicPacket
   };
 }
 
-function arbitratePrimitiveInstruction({
-  sample,
-  terrainInstruction,
-  hydrationInstruction,
-  faunaInstruction,
-  cosmicInstruction,
-  fallbackInstruction
-}) {
-  const land = sample?.landMask === 1;
-  const water = sample?.waterMask === 1;
-  const shoreline = sample?.shoreline === true || sample?.shorelineBand === true || sample?.beachCandidate === true;
-
-  if (shoreline && hydrationInstruction) {
-    return hydrationInstruction;
-  }
-
-  if (land && terrainInstruction) {
-    return terrainInstruction;
-  }
-
-  if (water && hydrationInstruction) {
-    return hydrationInstruction;
-  }
-
-  if (terrainInstruction) {
-    return terrainInstruction;
-  }
-
-  if (hydrationInstruction) {
-    return hydrationInstruction;
-  }
-
-  if (faunaInstruction) {
-    return faunaInstruction;
-  }
-
-  if (cosmicInstruction) {
-    return cosmicInstruction;
-  }
-
-  return fallbackInstruction;
-}
-
-function resolvePrimitiveInstruction({
-  sample,
-  signalCell,
-  x,
-  y,
-  grid,
-  topology,
-  projectionState,
-  globalPrimitiveTime = null
-}) {
-  const fallbackInstruction = buildFallbackInstruction(signalCell, projectionState);
-
-  const terrainInstruction = normalizeTerrainInstruction();
-
-  const hydrationInstruction = normalizeHydrationInstruction(
-    typeof resolveHydrationPacket === "function"
-      ? resolveHydrationPacket({
-          sample,
-          signalCell,
-          x,
-          y,
-          grid,
-          topology,
-          projectionState,
-          globalPrimitiveTime
-        })
-      : null,
-    signalCell,
-    projectionState
-  );
-
-  const faunaInstruction = resolveFaunaInstruction({
-    sample,
-    signalCell,
-    x,
-    y,
-    grid,
-    topology,
-    projectionState,
-    globalPrimitiveTime
-  });
-
-  const cosmicInstruction = resolveCosmicInstruction({
-    sample,
-    signalCell,
-    x,
-    y,
-    grid,
-    topology,
-    projectionState,
-    globalPrimitiveTime
-  });
-
-  return arbitratePrimitiveInstruction({
-    sample,
-    terrainInstruction,
-    hydrationInstruction,
-    faunaInstruction,
-    cosmicInstruction,
-    fallbackInstruction
-  });
-}
-
-function emitCellPolygon(ctx, fillStyle, alpha, primitiveInstruction) {
-  drawPolygon(ctx, primitiveInstruction.primitivePoints, fillStyle, alpha);
-}
-
-function renderSignalCell({
-  ctx,
-  sample,
-  signalCell,
-  topology,
-  x,
-  y,
-  grid,
-  projectionState,
-  globalPrimitiveTime = null
-}) {
-  const appearance = describeSurface(sample, signalCell.points[0], topology);
-  const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
-  const alpha = appearance.fillAlpha * (0.95 + signalCell.curvatureFactor * 0.05);
-
-  const primitiveInstruction = resolvePrimitiveInstruction({
-    sample,
-    signalCell,
-    x,
-    y,
-    grid,
-    topology,
-    projectionState,
-    globalPrimitiveTime
-  });
-
-  emitCellPolygon(ctx, fillStyle, alpha, primitiveInstruction);
-
-  return {
-    primitiveInstruction,
-    polygonSpanPx: isFiniteNumber(primitiveInstruction.approxSpanPx)
-      ? primitiveInstruction.approxSpanPx
-      : measurePolygonSpan(primitiveInstruction.primitivePoints)
-  };
-}
-
-function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projectionState, globalPrimitiveTime = null) {
+function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrimitiveTime = null) {
   if (!grid.length || !grid[0].length) {
     return {
       visibleCellCount: 0,
@@ -708,7 +336,7 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
       subdivisionTier: projectionState.lensTier,
       densityTier: "EMPTY",
       primitiveType: "FORWARD_SIGNAL",
-      primitivePath: "forwardSignalDiamond",
+      primitivePath: "drawVisibleSurface",
       centerAnchored: true,
       rowColumnPathActive: true,
       sectorBandPathActive: false,
@@ -717,141 +345,86 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
       renderReadsScope: true,
       renderReadsLens: true,
       fallbackMode: false,
-      liveRenderPath: "drawForwardSignalMesh"
+      liveRenderPath: "drawVisibleSurface",
+      specialistUse: {
+        hydration: false,
+        terrain: false,
+        fauna: false,
+        cosmic: false
+      }
     };
   }
 
   const rowCount = grid.length;
-  const rowLength = grid[0].length;
-  const lens = getLensConfig(projectionState.activeScope, projectionState.lensTier);
-  const rowStride = rowCount >= lens.rowStrideCutoff ? 2 : 1;
-  const colStride = rowLength >= lens.colStrideCutoff ? 2 : 1;
+  const colCount = grid[0].length;
+  const sampleCount = rowCount * colCount;
+  const pointSizePx = resolvePointSizePx(projectionState, sampleCount);
+
+  const stride = sampleCount > 32000 ? 2 : 1;
 
   let visibleCellCount = 0;
   let emittedCellCount = 0;
   let skippedCellCount = 0;
-  let totalCellSpanPx = 0;
-  let maxSubdivisionTier = projectionState.lensTier;
-  let sawHydrationPrimitive = false;
-  let sawTerrainPrimitive = false;
-  let sawSectorBand = false;
+  let totalSpan = 0;
+
+  let hydrationUsed = false;
+  let terrainUsed = false;
+  let faunaUsed = false;
+  let cosmicUsed = false;
 
   ctx.save();
 
-  for (let y = rowStride; y < rowCount - rowStride; y += rowStride) {
+  for (let y = 0; y < rowCount; y += stride) {
     const row = grid[y];
 
-    for (let x = 0; x < rowLength; x += colStride) {
+    for (let x = 0; x < colCount; x += stride) {
+      const sample = row[x];
+      if (!sample) {
+        skippedCellCount += 1;
+        continue;
+      }
+
+      const point = projectPoint(
+        sample.latDeg,
+        sample.lonDeg,
+        sampleElevationOffsetPx(sample)
+      );
+
+      if (!point || point.visible !== true || point.z < 0.02) {
+        skippedCellCount += 1;
+        continue;
+      }
+
       visibleCellCount += 1;
 
-      const westX = (x - colStride + rowLength) % rowLength;
-      const eastX = (x + colStride) % rowLength;
+      const signalCell = buildSignalCell(point, pointSizePx);
+      const packets = resolvePrimitivePackets(sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime);
 
-      const centerSample = row[x];
-      const northSample = grid[y - rowStride]?.[x];
-      const southSample = grid[y + rowStride]?.[x];
-      const westSample = row[westX];
-      const eastSample = row[eastX];
+      if (packets.hydrationPacket) hydrationUsed = true;
+      if (packets.terrainPacket) terrainUsed = true;
+      if (packets.faunaPacket) faunaUsed = true;
+      if (packets.cosmicPacket) cosmicUsed = true;
 
-      if (!centerSample || !northSample || !southSample || !westSample || !eastSample) {
-        skippedCellCount += 1;
-        continue;
-      }
-
-      const centerTopology = getTopologySample(topologyGrid, x, y);
-      const northTopology = getTopologySample(topologyGrid, x, y - rowStride);
-      const southTopology = getTopologySample(topologyGrid, x, y + rowStride);
-      const westTopology = getTopologySample(topologyGrid, westX, y);
-      const eastTopology = getTopologySample(topologyGrid, eastX, y);
-
-      const centerPoint = pointFromSample(centerSample, projectPoint, centerTopology);
-      const northPoint = pointFromSample(northSample, projectPoint, northTopology);
-      const southPoint = pointFromSample(southSample, projectPoint, southTopology);
-      const westPoint = pointFromSample(westSample, projectPoint, westTopology);
-      const eastPoint = pointFromSample(eastSample, projectPoint, eastTopology);
-
-      if (!centerPoint.visible && !shouldDrawPoints([northPoint, eastPoint, southPoint, westPoint], 2)) {
-        skippedCellCount += 1;
-        continue;
-      }
-
-      const signalCell = buildForwardSignalDiamond(
-        centerPoint,
-        northPoint,
-        eastPoint,
-        southPoint,
-        westPoint,
-        centerSample,
-        projectionState
-      );
-
-      if (!shouldDrawPoints(signalCell.points, 2)) {
-        skippedCellCount += 1;
-        continue;
-      }
-
-      const densityScore = resolveCellDensity(centerSample, signalCell.points, projectionState);
-      if (densityScore < 0.2) {
-        skippedCellCount += 1;
-        continue;
-      }
-
-      const renderResult = renderSignalCell({
-        ctx,
-        sample: centerSample,
-        signalCell,
-        topology: centerTopology,
-        x,
-        y,
-        grid,
-        projectionState,
-        globalPrimitiveTime
-      });
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = sampleColor(sample);
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
+      ctx.fill();
 
       emittedCellCount += 1;
-      totalCellSpanPx += renderResult.polygonSpanPx;
-      maxSubdivisionTier = Math.max(
-        maxSubdivisionTier,
-        isFiniteNumber(renderResult.primitiveInstruction.subdivisionTier)
-          ? renderResult.primitiveInstruction.subdivisionTier
-          : projectionState.lensTier
-      );
-
-      if (renderResult.primitiveInstruction.engineKey === "hydration") {
-        sawHydrationPrimitive = true;
-      }
-
-      if (renderResult.primitiveInstruction.engineKey === "terrain") {
-        sawTerrainPrimitive = true;
-      }
-
-      if (
-        renderResult.primitiveInstruction.hydrationBandClass !== "NONE" ||
-        renderResult.primitiveInstruction.shoreHandoffClass !== "NONE" ||
-        renderResult.primitiveInstruction.terrainBandClass !== "NONE"
-      ) {
-        sawSectorBand = true;
-      }
+      totalSpan += pointSizePx * 2;
     }
   }
 
-  ctx.globalAlpha = 1;
   ctx.restore();
 
-  const averageCellSpanPx = emittedCellCount > 0 ? totalCellSpanPx / emittedCellCount : 0;
+  const averageCellSpanPx = emittedCellCount > 0 ? totalSpan / emittedCellCount : 0;
+  let densityTier = "EMPTY";
 
-  let primitiveType = "FORWARD_SIGNAL";
-  let primitivePath = "forwardSignalDiamond";
-
-  if (sawTerrainPrimitive && sawHydrationPrimitive) {
-    primitiveType = "MULTI_ENGINE_SIGNAL";
-    primitivePath = "renderMultiEngineRouter";
-  } else if (sawTerrainPrimitive) {
-    primitiveType = "TERRAIN_SIGNAL";
-    primitivePath = "terrainRenderEngine";
-  } else if (sawHydrationPrimitive) {
-    primitiveType = "HYDRATION_SIGNAL";
-    primitivePath = "hydrationRenderEngine";
+  if (emittedCellCount > 0) {
+    if (averageCellSpanPx <= 3) densityTier = "HIGH";
+    else if (averageCellSpanPx <= 6) densityTier = "MEDIUM";
+    else densityTier = "LOW";
   }
 
   return {
@@ -859,24 +432,30 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
     emittedCellCount,
     skippedCellCount,
     averageCellSpanPx,
-    subdivisionTier: maxSubdivisionTier,
-    densityTier: resolveDensityTier(averageCellSpanPx, emittedCellCount),
-    primitiveType,
-    primitivePath,
+    subdivisionTier: projectionState.lensTier,
+    densityTier,
+    primitiveType: "FORWARD_SIGNAL",
+    primitivePath: "drawVisibleSurface",
     centerAnchored: true,
     rowColumnPathActive: true,
-    sectorBandPathActive: sawSectorBand,
+    sectorBandPathActive: false,
     topologyMode: "HYBRID",
     neighborLaw: "CROSS_GRID",
     renderReadsScope: true,
     renderReadsLens: true,
     fallbackMode: false,
-    liveRenderPath: "drawForwardSignalMesh"
+    liveRenderPath: "drawVisibleSurface",
+    specialistUse: {
+      hydration: hydrationUsed,
+      terrain: terrainUsed,
+      fauna: faunaUsed,
+      cosmic: cosmicUsed
+    }
   };
 }
 
-function buildRenderAudit(planetField, topologyField = null) {
-  if (planetField === lastAuditPlanetField && topologyField === lastAuditTopologyField && lastAuditResult) {
+function buildRenderAudit(planetField) {
+  if (planetField === lastAuditPlanetField && lastAuditResult) {
     return lastAuditResult;
   }
 
@@ -890,16 +469,26 @@ function buildRenderAudit(planetField, topologyField = null) {
 
   for (const row of grid) {
     for (const sample of row) {
-      const landFamily = isLandSample(sample);
-      const waterFamily = !landFamily;
-      const cryosphere = isCryosphere(sample);
-      const shoreline = isShoreline(sample);
+      const isLand = sample?.landMask === 1;
+      const isWater = sample?.waterMask === 1;
+      const terrainClass = typeof sample?.terrainClass === "string" ? sample.terrainClass : "WATER";
       const continentId = typeof sample?.continentId === "string" ? sample.continentId : "";
 
-      if (waterFamily) waterFamilyCount += 1;
-      if (landFamily) landFamilyCount += 1;
-      if (cryosphere) cryosphereCount += 1;
-      if (shoreline) shorelineCount += 1;
+      if (isWater) waterFamilyCount += 1;
+      if (isLand) landFamilyCount += 1;
+      if (
+        terrainClass === "POLAR_ICE" ||
+        terrainClass === "GLACIAL_HIGHLAND" ||
+        sample?.biomeType === "GLACIER" ||
+        sample?.surfaceMaterial === "ICE" ||
+        sample?.surfaceMaterial === "SNOW"
+      ) {
+        cryosphereCount += 1;
+      }
+
+      if (sample?.shoreline === true || sample?.shorelineBand === true || terrainClass === "SHORELINE" || terrainClass === "BEACH") {
+        shorelineCount += 1;
+      }
 
       if (continentId) {
         continentCoverage[continentId] = (continentCoverage[continentId] ?? 0) + 1;
@@ -908,7 +497,6 @@ function buildRenderAudit(planetField, topologyField = null) {
   }
 
   lastAuditPlanetField = planetField;
-  lastAuditTopologyField = topologyField;
   lastAuditResult = {
     sampleCount: Array.isArray(planetField?.samples)
       ? planetField.samples.reduce((total, row) => total + (Array.isArray(row) ? row.length : 0), 0)
@@ -918,123 +506,30 @@ function buildRenderAudit(planetField, topologyField = null) {
     cryosphereCount,
     shorelineCount,
     continentCoverage,
-    summary: normalizeObject(planetField?.summary),
-    topologySummary: normalizeObject(topologyField?.summary)
+    summary: normalizeObject(planetField?.summary)
   };
 
   return lastAuditResult;
 }
 
-function resolveOrbitalAltitudePx(orbitalSystem, projectionState) {
-  const factor = isFiniteNumber(orbitalSystem?.altitudeFactor)
-    ? orbitalSystem.altitudeFactor
-    : 0.42;
-  return projectionState.radius * factor;
-}
-
-function normalizeOrbitalHit(point, object, edgeVisibility) {
-  const sizePx = isFiniteNumber(object?.sizePx) ? object.sizePx : 20;
-  const scale = 0.88 + edgeVisibility * 0.28;
-  const opacity = 0.52 + edgeVisibility * 0.44;
-
+function buildEmptyOrbitalAudit() {
   return {
-    id: typeof object?.id === "string" ? object.id : "",
-    label: typeof object?.label === "string" ? object.label : "",
-    route: typeof object?.route === "string" ? object.route : "",
-    x: point.x,
-    y: point.y,
-    radius: sizePx * scale * 0.72,
-    opacity,
-    frontFacing: point.z >= 0,
-    edgeVisibility,
-    z: point.z
+    count: 0,
+    frontVisibleCount: 0,
+    emittedCount: 0,
+    rejectedBackfaceCount: 0,
+    rejectedWeakVisibilityCount: 0
   };
 }
 
-function isAdmissibleOrbitalHit(hit) {
-  return (
-    typeof hit.id === "string" &&
-    hit.id.length > 0 &&
-    isFiniteNumber(hit.x) &&
-    isFiniteNumber(hit.y) &&
-    isFiniteNumber(hit.radius) &&
-    hit.radius > 0 &&
-    hit.frontFacing === true &&
-    isFiniteNumber(hit.opacity) &&
-    hit.opacity >= 0.62 &&
-    isFiniteNumber(hit.edgeVisibility) &&
-    hit.edgeVisibility >= 0.34 &&
-    isFiniteNumber(hit.z) &&
-    hit.z >= 0.08
-  );
-}
-
-function buildOrbitalHits(orbitalSystem, projectPoint, projectionState) {
-  const objects = Array.isArray(orbitalSystem?.objects) ? orbitalSystem.objects : [];
-  if (!objects.length) {
-    return {
-      orbitalHits: [],
-      orbitalAudit: {
-        count: 0,
-        frontVisibleCount: 0,
-        emittedCount: 0,
-        rejectedBackfaceCount: 0,
-        rejectedWeakVisibilityCount: 0
-      }
-    };
-  }
-
-  const phase = isFiniteNumber(orbitalSystem?.phase) ? orbitalSystem.phase : 0;
-  const altitudePx = resolveOrbitalAltitudePx(orbitalSystem, projectionState);
-
-  const hits = [];
-  let frontVisibleCount = 0;
-  let rejectedBackfaceCount = 0;
-  let rejectedWeakVisibilityCount = 0;
-
-  for (const object of objects) {
-    const baseLatDeg = isFiniteNumber(object?.baseLatDeg) ? object.baseLatDeg : 0;
-    const baseLonDeg = isFiniteNumber(object?.baseLonDeg) ? object.baseLonDeg : 0;
-    const bearingOffsetDeg = isFiniteNumber(object?.bearingOffsetDeg) ? object.bearingOffsetDeg : 0;
-    const spinOffsetRad = isFiniteNumber(object?.spinOffsetRad) ? object.spinOffsetRad : 0;
-    const spinMultiplier = isFiniteNumber(object?.spinMultiplier) ? object.spinMultiplier : 1;
-
-    const lonDeg =
-      baseLonDeg +
-      bearingOffsetDeg +
-      (((phase * spinMultiplier) + spinOffsetRad) * 180) / Math.PI;
-
-    const point = projectPoint(baseLatDeg, lonDeg, altitudePx);
-    const edgeVisibility = clamp((point.z + 1) * 0.5, 0, 1);
-
-    if (point.z >= 0) {
-      frontVisibleCount += 1;
-    }
-
-    if (point.z < 0.08) {
-      rejectedBackfaceCount += 1;
-      continue;
-    }
-
-    const hit = normalizeOrbitalHit(point, object, edgeVisibility);
-
-    if (!isAdmissibleOrbitalHit(hit)) {
-      rejectedWeakVisibilityCount += 1;
-      continue;
-    }
-
-    hits.push(hit);
-  }
-
+function buildEmptyPlacementAudit() {
   return {
-    orbitalHits: hits,
-    orbitalAudit: {
-      count: objects.length,
-      frontVisibleCount,
-      emittedCount: hits.length,
-      rejectedBackfaceCount,
-      rejectedWeakVisibilityCount
-    }
+    markerRequired: false,
+    placementPlaced: 0,
+    markerCollisionCount: 0,
+    placementReservedReject: 0,
+    placementViewportReject: 0,
+    placementPass: false
   };
 }
 
@@ -1042,10 +537,8 @@ export function createRenderer() {
   function renderPlanet({
     ctx,
     planetField,
-    topologyField = null,
     projectPoint,
-    viewState = {},
-    orbitalSystem = null
+    viewState = {}
   }) {
     if (!ctx) {
       throw new Error("renderPlanet requires ctx.");
@@ -1071,13 +564,8 @@ export function createRenderer() {
       return {
         projectionState,
         orbitalHits: [],
-        orbitalAudit: {
-          count: 0,
-          frontVisibleCount: 0,
-          emittedCount: 0,
-          rejectedBackfaceCount: 0,
-          rejectedWeakVisibilityCount: 0
-        },
+        orbitalAudit: buildEmptyOrbitalAudit(),
+        placementAudit: buildEmptyPlacementAudit(),
         primitive: {
           primitiveType: "NONE",
           primitivePath: liveRenderPath,
@@ -1118,22 +606,20 @@ export function createRenderer() {
     }
 
     const grid = sampleGrid(planetField);
-    const topologyGrid = getTopologyGrid(topologyField);
     const projector = resolveProjectPoint(projectPoint, projectionState);
 
     drawPlanetRim(ctx, projectionState);
     drawPlanetBase(ctx, projectionState);
 
-    const density = withPlanetClip(ctx, projectionState, () => {
-      return drawForwardSignalMesh(ctx, grid, topologyGrid, projector, projectionState, globalPrimitiveTime);
-    });
-
-    const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);
+    const density = withPlanetClip(ctx, projectionState, () =>
+      drawVisibleSurface(ctx, grid, projector, projectionState, globalPrimitiveTime)
+    );
 
     return {
       projectionState,
-      orbitalHits: orbitalReceipt.orbitalHits,
-      orbitalAudit: orbitalReceipt.orbitalAudit,
+      orbitalHits: [],
+      orbitalAudit: buildEmptyOrbitalAudit(),
+      placementAudit: buildEmptyPlacementAudit(),
       primitive: {
         primitiveType: density.primitiveType,
         primitivePath: density.primitivePath,
@@ -1159,7 +645,7 @@ export function createRenderer() {
         subdivisionTier: density.subdivisionTier,
         densityTier: density.densityTier
       },
-      audit: buildRenderAudit(planetField, topologyField)
+      audit: buildRenderAudit(planetField)
     };
   }
 
@@ -1173,3 +659,5 @@ const DEFAULT_RENDERER = createRenderer();
 export function renderPlanet(options) {
   return DEFAULT_RENDERER.renderPlanet(options);
 }
+
+export default DEFAULT_RENDERER;

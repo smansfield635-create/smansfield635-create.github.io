@@ -1,12 +1,14 @@
 // /world/runtime/world_runtime.js
-// MODE: STANDARD RUNTIME RECOVERY
+// MODE: RUNTIME PHASE AND INSTRUMENT CONTRACT RENEWAL
 // STATUS: SINGLE-FILE CANONICAL RUNTIME SPINE
 // PURPOSE:
 // 1) boot one runtime only
 // 2) maintain control -> render continuity
 // 3) emit authority receipt continuously
 // 4) emit live gauges receipt continuously
-// 5) stay finite, deterministic, and non-drifting
+// 5) commit RUNNING only after first successful frame
+// 6) honor the live createInstruments() contract
+// 7) stay finite, deterministic, and non-drifting
 
 import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
@@ -24,11 +26,15 @@ let planetEngine = null;
 let renderer = null;
 let control = null;
 let planetField = null;
+let instrumentApi = null;
 
 let rafId = 0;
 let lastNow = 0;
 let started = false;
 let disposed = false;
+let hasCommittedRunning = false;
+let tickIndex = 0;
+let previousInstrumentSample = null;
 
 let onResize = null;
 let onPageHide = null;
@@ -186,7 +192,7 @@ function ensureReceipt() {
 function emitRuntimeReceiptContinuous(receipt, extra = {}) {
   const payload = {
     page: "/index.html",
-    phase: receipt.verification?.pass ? "RUNNING" : "BOOT",
+    phase: receipt.verification?.pass === true ? "RUNNING" : "BOOT",
     mode: receipt.mode || "active",
     timestamp: new Date().toISOString(),
 
@@ -230,6 +236,7 @@ function emitRuntimeReceiptContinuous(receipt, extra = {}) {
 function setFailure(phase, message) {
   const receipt = ensureReceipt();
   receipt.verification.pass = false;
+  receipt.phase = "BOOT";
   receipt.failure.phase = phase;
   receipt.failure.message = message;
 }
@@ -271,6 +278,9 @@ function setupSystems() {
   planetEngine = createPlanetEngine();
   renderer = createRenderer();
   control = createControlSystem();
+  instrumentApi = typeof instruments.createInstruments === "function"
+    ? instruments.createInstruments()
+    : null;
 
   if (!planetEngine || typeof planetEngine.buildPlanetField !== "function") {
     throw new Error("planet_engine missing buildPlanetField()");
@@ -442,27 +452,64 @@ function renderFrame(receipt) {
     pickString(density.densityTier, receipt.density.densityTier, "UNKNOWN") || "UNKNOWN";
 }
 
+function resolveCurrentSample(projectionSummary) {
+  const summary = normalizeObject(projectionSummary);
+  const samples = Array.isArray(planetField?.samples) ? planetField.samples : [];
+  const sampleY = Number.isInteger(summary.sampleY) ? summary.sampleY : null;
+  const sampleX = Number.isInteger(summary.sampleX) ? summary.sampleX : null;
+
+  if (sampleY === null || sampleX === null) return null;
+  return samples?.[sampleY]?.[sampleX] ?? null;
+}
+
+function buildAuthorityState(receipt) {
+  return {
+    shellSource: receipt.bootSource,
+    runtimeSource: receipt.runtimeSource,
+    truthSource: receipt.runtimeSource,
+    structureSource: receipt.runtimeSource,
+    projectionOwner: receipt.inputOwner,
+    renderSource: receipt.renderSource,
+    controlSource: receipt.inputOwner,
+    inputOwner: receipt.inputOwner,
+    orbitSource: receipt.orbitOwner,
+    instrumentSource: "/assets/instruments.js",
+    worldUiSource: null,
+    transitionSource: receipt.transitionSource,
+    receiptWriter: receipt.runtimeSource
+  };
+}
+
+function buildMotionStateForInstruments(receipt) {
+  return {
+    ...normalizeObject(receipt.control.motionState),
+    motionRunning: true,
+    rafActive: rafId !== 0,
+    pageVisible: typeof document !== "undefined" ? document.visibilityState === "visible" : true,
+    pageRestored: hasCommittedRunning
+  };
+}
+
 function updateInstrumentReceipt(receipt) {
   try {
-    if (typeof instruments.buildInstrumentState === "function") {
-      receipt.instrument = instruments.buildInstrumentState({
-        control: receipt.control,
-        renderAudit: receipt.renderAudit,
-        emissionReceipt: receipt.emissionReceipt,
-        placementReceipt: receipt.placementReceipt,
-        scope: receipt.scope,
-        lens: receipt.lens,
-        primitive: receipt.primitive,
-        topology: receipt.topology,
-        renderAuthority: receipt.renderAuthority,
-        density: receipt.density,
-        world: {
-          phase: receipt.phase,
-          terrainClass: "unknown",
-          stabilityClass: "unknown",
-        },
-      });
+    if (!instrumentApi || typeof instrumentApi.buildInstrumentReceipt !== "function") {
+      return;
     }
+
+    const projectionSummary = normalizeObject(receipt.control.projectionSummary);
+    const currentSample = resolveCurrentSample(projectionSummary);
+
+    receipt.instrument = instrumentApi.buildInstrumentReceipt({
+      currentSample,
+      previousSample: previousInstrumentSample,
+      tickIndex,
+      motionState: buildMotionStateForInstruments(receipt),
+      authorityState: buildAuthorityState(receipt),
+      planetField,
+      projectionSummary
+    });
+
+    previousInstrumentSample = currentSample ?? previousInstrumentSample;
   } catch {}
 }
 
@@ -560,11 +607,11 @@ function frame(now) {
   const receipt = ensureReceipt();
   const dtMs = lastNow ? now - lastNow : 16.67;
   lastNow = now;
+  tickIndex += 1;
 
   clearFailure();
 
   receipt.page = "world";
-  receipt.phase = "RUNNING";
   receipt.mode = "active";
   receipt.timestamp = now;
   receipt.dtMs = dtMs;
@@ -580,6 +627,8 @@ function frame(now) {
     updateInstrumentReceipt(receipt);
 
     receipt.verification.pass = true;
+    receipt.phase = "RUNNING";
+    hasCommittedRunning = true;
   } catch (err) {
     setFailure("frame", err instanceof Error ? err.message : String(err));
   }
@@ -600,6 +649,9 @@ export function startRuntime() {
 
   started = true;
   disposed = false;
+  hasCommittedRunning = false;
+  tickIndex = 0;
+  previousInstrumentSample = null;
   window[RUNTIME_ACTIVE_KEY] = true;
 
   try {

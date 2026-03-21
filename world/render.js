@@ -1,5 +1,6 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
+import { resolveHydrationPacket } from "./render/hydation_render_engine.js";
 
 let lastAuditPlanetField = null;
 let lastAuditTopologyField = null;
@@ -478,6 +479,36 @@ function drawDarkContainer(ctx, projectionState, activeScope) {
   - hooks exist now so downstream files can be attached later
 */
 
+function normalizeHydrationInstruction(packet, signalCell, projectionState) {
+  if (!packet || typeof packet !== "object") return null;
+
+  const hydrationClass = typeof packet.hydrationClass === "string" ? packet.hydrationClass : "NONE";
+  const primitivePoints = Array.isArray(packet.hydrationPrimitivePoints) ? packet.hydrationPrimitivePoints : null;
+
+  if (
+    hydrationClass === "NONE" ||
+    hydrationClass === "NON_HYDRATION_DOMAIN" ||
+    !primitivePoints ||
+    primitivePoints.length < 3
+  ) {
+    return null;
+  }
+
+  return {
+    primitiveType: typeof packet.hydrationPrimitiveType === "string" ? packet.hydrationPrimitiveType : "HYDRATION_SIGNAL",
+    primitiveScale: clamp(isFiniteNumber(packet.hydrationBlendStrength) ? packet.hydrationBlendStrength : 1, 0, 1),
+    primitivePoints,
+    boundaryClass: typeof packet.hydrationBandClass === "string" ? packet.hydrationBandClass : "HYDRATION",
+    subdivisionTier: isFiniteNumber(packet.subdivisionTier) ? packet.subdivisionTier : projectionState.lensTier,
+    approxSpanPx: isFiniteNumber(packet.approxSpanPx) ? packet.approxSpanPx : measurePolygonSpan(primitivePoints),
+    hydrationClass,
+    hydrationBandClass: typeof packet.hydrationBandClass === "string" ? packet.hydrationBandClass : "NONE",
+    hydrationOverlayClass: typeof packet.hydrationOverlayClass === "string" ? packet.hydrationOverlayClass : "NONE",
+    shoreHandoffClass: typeof packet.shoreHandoffClass === "string" ? packet.shoreHandoffClass : "NONE",
+    freezeThawClass: typeof packet.freezeThawClass === "string" ? packet.freezeThawClass : "NONE"
+  };
+}
+
 function resolvePrimitiveInstruction({
   sample,
   signalCell,
@@ -485,13 +516,42 @@ function resolvePrimitiveInstruction({
   y,
   grid,
   topology,
-  projectionState
+  projectionState,
+  globalPrimitiveTime = null
 }) {
+  const hydrationInstruction = normalizeHydrationInstruction(
+    typeof resolveHydrationPacket === "function"
+      ? resolveHydrationPacket({
+          sample,
+          signalCell,
+          x,
+          y,
+          grid,
+          topology,
+          projectionState,
+          globalPrimitiveTime
+        })
+      : null,
+    signalCell,
+    projectionState
+  );
+
+  if (hydrationInstruction) {
+    return hydrationInstruction;
+  }
+
   return {
     primitiveType: "FULL_DIAMOND",
     primitiveScale: 1,
     primitivePoints: signalCell.points,
-    boundaryClass: "INTERIOR"
+    boundaryClass: "INTERIOR",
+    subdivisionTier: projectionState.lensTier,
+    approxSpanPx: measurePolygonSpan(signalCell.points),
+    hydrationClass: "NONE",
+    hydrationBandClass: "NONE",
+    hydrationOverlayClass: "NONE",
+    shoreHandoffClass: "NONE",
+    freezeThawClass: "NONE"
   };
 }
 
@@ -507,7 +567,8 @@ function renderSignalCell({
   x,
   y,
   grid,
-  projectionState
+  projectionState,
+  globalPrimitiveTime = null
 }) {
   const appearance = describeSurface(sample, signalCell.points[0], topology);
   const fillStyle = `rgb(${Math.round(clamp(appearance.fillColor.r, 0, 255))}, ${Math.round(clamp(appearance.fillColor.g, 0, 255))}, ${Math.round(clamp(appearance.fillColor.b, 0, 255))})`;
@@ -520,18 +581,21 @@ function renderSignalCell({
     y,
     grid,
     topology,
-    projectionState
+    projectionState,
+    globalPrimitiveTime
   });
 
   emitCellPolygon(ctx, fillStyle, alpha, primitiveInstruction);
 
   return {
     primitiveInstruction,
-    polygonSpanPx: measurePolygonSpan(primitiveInstruction.primitivePoints)
+    polygonSpanPx: isFiniteNumber(primitiveInstruction.approxSpanPx)
+      ? primitiveInstruction.approxSpanPx
+      : measurePolygonSpan(primitiveInstruction.primitivePoints)
   };
 }
 
-function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projectionState) {
+function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projectionState, globalPrimitiveTime = null) {
   if (!grid.length || !grid[0].length) {
     return {
       visibleCellCount: 0,
@@ -564,6 +628,9 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
   let emittedCellCount = 0;
   let skippedCellCount = 0;
   let totalCellSpanPx = 0;
+  let maxSubdivisionTier = projectionState.lensTier;
+  let sawHydrationPrimitive = false;
+  let sawHydrationBand = false;
 
   ctx.save();
 
@@ -633,11 +700,29 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
         x,
         y,
         grid,
-        projectionState
+        projectionState,
+        globalPrimitiveTime
       });
 
       emittedCellCount += 1;
       totalCellSpanPx += renderResult.polygonSpanPx;
+      maxSubdivisionTier = Math.max(
+        maxSubdivisionTier,
+        isFiniteNumber(renderResult.primitiveInstruction.subdivisionTier)
+          ? renderResult.primitiveInstruction.subdivisionTier
+          : projectionState.lensTier
+      );
+
+      if (renderResult.primitiveInstruction.hydrationClass !== "NONE") {
+        sawHydrationPrimitive = true;
+      }
+
+      if (
+        renderResult.primitiveInstruction.hydrationBandClass !== "NONE" ||
+        renderResult.primitiveInstruction.shoreHandoffClass !== "NONE"
+      ) {
+        sawHydrationBand = true;
+      }
     }
   }
 
@@ -651,13 +736,13 @@ function drawForwardSignalMesh(ctx, grid, topologyGrid, projectPoint, projection
     emittedCellCount,
     skippedCellCount,
     averageCellSpanPx,
-    subdivisionTier: projectionState.lensTier,
+    subdivisionTier: maxSubdivisionTier,
     densityTier: resolveDensityTier(averageCellSpanPx, emittedCellCount),
-    primitiveType: "FORWARD_SIGNAL",
-    primitivePath: "forwardSignalDiamond",
+    primitiveType: sawHydrationPrimitive ? "HYDRATION_SIGNAL" : "FORWARD_SIGNAL",
+    primitivePath: sawHydrationPrimitive ? "hydrationRenderEngine" : "forwardSignalDiamond",
     centerAnchored: true,
     rowColumnPathActive: true,
-    sectorBandPathActive: false,
+    sectorBandPathActive: sawHydrationBand,
     topologyMode: "HYBRID",
     neighborLaw: "CROSS_GRID",
     renderReadsScope: true,
@@ -845,6 +930,10 @@ export function createRenderer() {
 
     const projectionState = getProjectionState(viewState, ctx);
     const activeScope = projectionState.activeScope;
+    const globalPrimitiveTime =
+      viewState && typeof viewState === "object" && viewState.globalPrimitiveTime
+        ? viewState.globalPrimitiveTime
+        : null;
 
     ctx.clearRect(0, 0, projectionState.width, projectionState.height);
 
@@ -913,7 +1002,7 @@ export function createRenderer() {
     drawPlanetBase(ctx, projectionState);
 
     const density = withPlanetClip(ctx, projectionState, () => {
-      return drawForwardSignalMesh(ctx, grid, topologyGrid, projector, projectionState);
+      return drawForwardSignalMesh(ctx, grid, topologyGrid, projector, projectionState, globalPrimitiveTime);
     });
 
     const orbitalReceipt = buildOrbitalHits(orbitalSystem, projector, projectionState);

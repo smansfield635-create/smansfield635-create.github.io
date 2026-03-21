@@ -89,13 +89,67 @@ html, body {
 const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
+const BOOT_CONTRACT = Object.freeze({
+  id: "INDEX_BOOT_CONTRACT_RENEWAL_v2",
+  engineContract: "PLANET_ENGINE_CONTRACT_RENEWAL_v1",
+  runtimeContract: "WORLD_RUNTIME_CONTRACT_v1",
+  renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v1",
+  diagnosticsPath: "/gauges/"
+});
+
 const MODULES = Object.freeze([
-  Object.freeze({ key: "world_kernel", path: "/world/world_kernel.js" }),
-  Object.freeze({ key: "planet_engine", path: "/world/planet_engine.js" }),
-  Object.freeze({ key: "render", path: "/world/render.js" }),
-  Object.freeze({ key: "control", path: "/world/control.js" }),
-  Object.freeze({ key: "instruments", path: "/assets/instruments.js" }),
-  Object.freeze({ key: "runtime", path: "/world/runtime/world_runtime.js" })
+  Object.freeze({
+    key: "world_kernel",
+    path: "/world/world_kernel.js",
+    required: true
+  }),
+  Object.freeze({
+    key: "planet_engine",
+    path: "/world/planet_engine.js",
+    required: true,
+    validate(mod) {
+      return typeof mod?.createPlanetEngine === "function" ||
+        typeof mod?.buildPlanetField === "function" ||
+        typeof mod?.default?.buildPlanetField === "function";
+    },
+    validationMessage: "planet_engine contract missing createPlanetEngine/buildPlanetField"
+  }),
+  Object.freeze({
+    key: "render",
+    path: "/world/render.js",
+    required: true,
+    validate(mod) {
+      return typeof mod?.createRenderer === "function" ||
+        typeof mod?.renderPlanet === "function" ||
+        typeof mod?.default?.renderPlanet === "function";
+    },
+    validationMessage: "render contract missing createRenderer/renderPlanet"
+  }),
+  Object.freeze({
+    key: "control",
+    path: "/world/control.js",
+    required: true,
+    validate(mod) {
+      return typeof mod?.createControlSystem === "function" ||
+        typeof mod?.default?.createControlSystem === "function";
+    },
+    validationMessage: "control contract missing createControlSystem"
+  }),
+  Object.freeze({
+    key: "instruments",
+    path: "/assets/instruments.js",
+    required: true
+  }),
+  Object.freeze({
+    key: "runtime",
+    path: "/world/runtime/world_runtime.js",
+    required: true,
+    validate(mod) {
+      return typeof mod?.startRuntime === "function" ||
+        typeof mod?.default?.startRuntime === "function";
+    },
+    validationMessage: "runtime contract missing startRuntime"
+  })
 ]);
 
 function setStatus(message, tone = "boot-warn") {
@@ -116,6 +170,11 @@ function toMessage(error) {
 async function importModule(definition) {
   setStatus(`IMPORTING ${definition.key.toUpperCase()}...`, "boot-warn");
   const mod = await import(definition.path);
+
+  if (typeof definition.validate === "function" && definition.validate(mod) !== true) {
+    throw new Error(definition.validationMessage || `${definition.key} contract validation failed`);
+  }
+
   setStatus(`IMPORTED ${definition.key.toUpperCase()}`, "boot-ok");
   return mod;
 }
@@ -146,29 +205,52 @@ function resolveStartRuntime(runtimeModule) {
   return null;
 }
 
+function validateCanvasPresence() {
+  const world = document.getElementById("world");
+  if (!world) {
+    throw new Error("Missing #world canvas");
+  }
+  return world;
+}
+
 async function boot() {
   try {
+    validateCanvasPresence();
+
+    setStatus(
+      `BOOT CONTRACT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}`,
+      "boot-warn"
+    );
+
     const modules = await preflightModules();
     const startRuntime = resolveStartRuntime(modules.runtime);
 
     if (!startRuntime) {
       setStatus(
-        "BOOT ERROR: runtime startRuntime missing\n/world/runtime/world_runtime.js",
+        `BOOT ERROR: runtime startRuntime missing\n/world/runtime/world_runtime.js`,
         "boot-fail"
       );
       return;
     }
 
-    setStatus("STARTING RUNTIME...", "boot-warn");
+    setStatus(
+      `STARTING RUNTIME...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}`,
+      "boot-warn"
+    );
+
     startRuntime();
-    setStatus("RUNNING", "boot-ok");
+
+    setStatus(
+      `RUNNING\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}`,
+      "boot-ok"
+    );
   } catch {
-    // exact failure already confessed above
+    // exact failure already surfaced above
   }
 }
 
 diagnosticsToggle?.addEventListener("click", () => {
-  window.location.href = "/gauges/";
+  window.location.href = BOOT_CONTRACT.diagnosticsPath;
 });
 
 boot();

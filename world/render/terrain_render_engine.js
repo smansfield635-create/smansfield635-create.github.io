@@ -6,6 +6,7 @@
 // - Tightens admissibility before directional participation
 // - Does not invent terrain identity from UNKNOWN
 // - Arbitrates internally to one normalized terrain packet
+// - Returns safe NON_TERRAIN_DOMAIN packets instead of hard null exits
 // - Preserves render as final bridge authority
 // - Reads shared truth + shared time only
 // - Writes no truth, no time
@@ -95,6 +96,31 @@ function deriveBiomeType(sample) {
     return sample.biomeType;
   }
   return "NONE";
+}
+
+function buildNonTerrainPacket() {
+  return {
+    terrainClassResolved: "NON_TERRAIN_DOMAIN",
+    terrainBandClass: "NONE",
+    terrainOverlayClass: "NONE",
+    terrainEdgeClass: "NONE",
+    terrainNarrativeClass: "NONE",
+    terrainReliefStrength: 0,
+    terrainPrimitiveType: "NONE",
+    terrainPrimitivePoints: null,
+    subdivisionTier: 0,
+    approxSpanPx: 0,
+    dominantDirection: "NONE",
+    arbitrationRule: "NORTH_SOUTH_EAST_WEST_INTERNAL_SELECTION",
+    failureCondition: "FAIL_IF_TERRAIN_WRITES_TRUTH_OR_TIME",
+    terrainFamilyClass: "TERRAIN_FAMILY_BRIDGE",
+    terrainDirectionScores: {
+      north: 0,
+      south: 0,
+      east: 0,
+      west: 0,
+    },
+  };
 }
 
 function computeDirectionalEvidence(sample, topology) {
@@ -429,7 +455,18 @@ function chooseTerrainPacket(candidates, evidence) {
     }
   }
 
-  if (!winner) return null;
+  if (!winner) {
+    const nonTerrainPacket = buildNonTerrainPacket();
+    return {
+      ...nonTerrainPacket,
+      terrainDirectionScores: {
+        north: evidence.northScore,
+        south: evidence.southScore,
+        east: evidence.eastScore,
+        west: evidence.westScore,
+      },
+    };
+  }
 
   return {
     terrainClassResolved: winner.terrainClassResolved,
@@ -471,11 +508,11 @@ export function resolveTerrainPacket({
   void globalPrimitiveTime;
 
   if (!sample || !signalCell || !Array.isArray(signalCell.points) || signalCell.points.length < 4) {
-    return null;
+    return buildNonTerrainPacket();
   }
 
   if (sample.landMask !== 1) {
-    return null;
+    return buildNonTerrainPacket();
   }
 
   const safeTopology = normalizeObject(topology);

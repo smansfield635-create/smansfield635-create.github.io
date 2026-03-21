@@ -1,11 +1,14 @@
 // /world/render/terrain_render_engine.js
-// MODE: EXECUTION-ONLY | NON-DRIFT | SIDESTREAM SPECIALIST
-// OWNER_LAYER: EXPRESSION
-// ROLE:
-// - express terrain structure
-// - classify landform bands
-// - return a normalized render packet
-// - preserve terrain as expression only, never truth authority
+// MODE: TNT FULL FILE REPLACEMENT
+// ROLE: TERRAIN FAMILY BRIDGE
+// RESULT:
+// - Implements N/S/E/W terrain subsidiary constructs
+// - Tightens admissibility before directional participation
+// - Does not invent terrain identity from UNKNOWN
+// - Arbitrates internally to one normalized terrain packet
+// - Preserves render as final bridge authority
+// - Reads shared truth + shared time only
+// - Writes no truth, no time
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -15,278 +18,477 @@ function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function averagePoint(points) {
-  let x = 0;
-  let y = 0;
-  let z = 0;
-
-  for (let i = 0; i < points.length; i += 1) {
-    x += points[i].x;
-    y += points[i].y;
-    z += points[i].z ?? 0;
-  }
-
-  const n = points.length || 1;
-
-  return {
-    x: x / n,
-    y: y / n,
-    z: z / n
-  };
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
-function scalePoints(points, center, scale) {
-  return points.map((point) => ({
-    ...point,
-    x: center.x + (point.x - center.x) * scale,
-    y: center.y + (point.y - center.y) * scale
-  }));
-}
+function measurePolygonSpan(points) {
+  if (!Array.isArray(points) || points.length < 2) return 0;
 
-function measurePrimitiveSpan(points) {
   let span = 0;
-
   for (let i = 0; i < points.length; i += 1) {
     const a = points[i];
     const b = points[(i + 1) % points.length];
     span = Math.max(span, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
   }
-
   return span;
 }
 
-function normalizeTime(globalPrimitiveTime) {
-  const time = globalPrimitiveTime && typeof globalPrimitiveTime === "object" ? globalPrimitiveTime : {};
+function averagePoint(points) {
+  let x = 0;
+  let y = 0;
+  let z = 0;
+
+  for (const p of points) {
+    x += p.x;
+    y += p.y;
+    z += p.z ?? 0;
+  }
+
+  const n = Math.max(1, points.length);
 
   return {
-    tick: isFiniteNumber(time.tick) ? time.tick : 0,
-    cycle: isFiniteNumber(time.cycle) ? time.cycle : 0,
-    day: isFiniteNumber(time.day) ? time.day : 0,
-    yearDayIndex: isFiniteNumber(time.yearDayIndex) ? time.yearDayIndex : 0,
-    yearLength: isFiniteNumber(time.yearLength) ? time.yearLength : 256,
-    cyclePhase: typeof time.cyclePhase === "string" ? time.cyclePhase : "DAY",
-    seasonalPhase: typeof time.seasonalPhase === "string" ? time.seasonalPhase : "MID"
+    x: x / n,
+    y: y / n,
+    z: z / n,
+    visible: points.some((p) => p.visible === true),
   };
 }
 
-function resolveTerrainClass(sample) {
-  if (!sample || sample.landMask !== 1) return "NON_TERRAIN_DOMAIN";
-
-  const terrainClass = typeof sample.terrainClass === "string" ? sample.terrainClass : "LOWLAND";
-
-  if (terrainClass === "SUMMIT") return "SUMMIT";
-  if (terrainClass === "MOUNTAIN") return "MOUNTAIN";
-  if (terrainClass === "GLACIAL_HIGHLAND") return "GLACIAL_HIGHLAND";
-  if (terrainClass === "RIDGE") return "RIDGE";
-  if (terrainClass === "PLATEAU") return "PLATEAU";
-  if (terrainClass === "CANYON") return "CANYON";
-  if (terrainClass === "BASIN") return "BASIN";
-  if (terrainClass === "FOOTHILL") return "FOOTHILL";
-  if (terrainClass === "BEACH") return "BEACH";
-  if (terrainClass === "SHORELINE") return "SHORELINE";
-
-  if (sample.cavePotential >= 0.5) return "CAVERNOUS";
-  return "LOWLAND";
+function pointBetween(a, b, t) {
+  return {
+    x: a.x + (b.x - a.x) * t,
+    y: a.y + (b.y - a.y) * t,
+    z: (a.z ?? 0) + ((b.z ?? 0) - (a.z ?? 0)) * t,
+    visible: (a.visible === true) || (b.visible === true),
+  };
 }
 
-function resolveTerrainBandClass(sample, terrainClass) {
-  if (terrainClass === "NON_TERRAIN_DOMAIN") return "NONE";
-  if (terrainClass === "SUMMIT") return "PEAK_CORE";
-  if (terrainClass === "MOUNTAIN") return "MOUNTAIN_MASS";
-  if (terrainClass === "GLACIAL_HIGHLAND") return "GLACIAL_RISE";
-  if (terrainClass === "RIDGE") return "RIDGE_LINE";
-  if (terrainClass === "PLATEAU") return "PLATEAU_SHELF";
-  if (terrainClass === "CANYON") return "CANYON_CUT";
-  if (terrainClass === "BASIN") return "BASIN_FLOOR";
-  if (terrainClass === "FOOTHILL") return "FOOTHILL_BAND";
-  if (terrainClass === "BEACH") return "LITTORAL_SAND";
-  if (terrainClass === "SHORELINE") return "LITTORAL_EDGE";
-  if (terrainClass === "CAVERNOUS") return "CAVERN_MOUTH";
-  return "LOWLAND_FIELD";
+function insetToward(point, center, amount) {
+  return {
+    x: point.x + (center.x - point.x) * amount,
+    y: point.y + (center.y - point.y) * amount,
+    z: (point.z ?? 0) + ((center.z ?? 0) - (point.z ?? 0)) * amount,
+    visible: point.visible === true || center.visible === true,
+  };
 }
 
-function resolveTerrainOverlayClass(sample, terrainClass, primitiveTime) {
-  if (terrainClass === "SUMMIT" || terrainClass === "MOUNTAIN") {
-    if (primitiveTime.cyclePhase === "DAWN" || primitiveTime.cyclePhase === "DUSK") return "RELIEF_GLOW";
-    return "RELIEF_SHADE";
+function normalizePrimitivePoints(points) {
+  if (!Array.isArray(points) || points.length < 3) return null;
+  return points.map((p) => ({
+    x: p.x,
+    y: p.y,
+    z: p.z ?? 0,
+    visible: p.visible === true,
+  }));
+}
+
+function deriveTerrainClass(sample) {
+  if (typeof sample?.terrainClass === "string" && sample.terrainClass.length > 0) {
+    return sample.terrainClass;
   }
+  return "UNKNOWN";
+}
 
-  if (terrainClass === "GLACIAL_HIGHLAND") return "COLD_RELIEF";
-  if (terrainClass === "RIDGE") return "RIDGE_SHADE";
-  if (terrainClass === "PLATEAU") return "PLATEAU_LIGHT";
-  if (terrainClass === "CANYON") return "CANYON_DEPTH";
-  if (terrainClass === "BASIN") return "BASIN_SINK";
-  if (terrainClass === "CAVERNOUS") return "SUBSURFACE_HINT";
-  if (terrainClass === "BEACH") return "SAND_GLEAM";
-  if (terrainClass === "SHORELINE") return "SHORE_SHADE";
-
-  const freezePotential = clamp(isFiniteNumber(sample?.freezePotential) ? sample.freezePotential : 0, 0, 1);
-  const seasonalPhase = primitiveTime.seasonalPhase;
-
-  if (freezePotential >= 0.75) return "COLD_SURFACE";
-  if (seasonalPhase === "WARM") return "THERMAL_BRIGHTEN";
+function deriveBiomeType(sample) {
+  if (typeof sample?.biomeType === "string" && sample.biomeType.length > 0) {
+    return sample.biomeType;
+  }
   return "NONE";
 }
 
-function resolveTerrainNarrativeClass(sample, terrainClass) {
-  if (terrainClass === "SUMMIT") return "ASCENT";
-  if (terrainClass === "MOUNTAIN") return "MASS";
-  if (terrainClass === "GLACIAL_HIGHLAND") return "AUSTERITY";
-  if (terrainClass === "RIDGE") return "DIVIDE";
-  if (terrainClass === "PLATEAU") return "TABLE";
-  if (terrainClass === "CANYON") return "CUT";
-  if (terrainClass === "BASIN") return "HOLLOW";
-  if (terrainClass === "CAVERNOUS") return "DEPTH";
-  if (terrainClass === "BEACH" || terrainClass === "SHORELINE") return "LITTORAL";
-  if (sample?.strongestSummitScore >= 0.2) return "UPLIFT";
-  if (sample?.strongestBasinScore >= 0.06) return "DESCENT";
-  return "PLAIN";
-}
+function computeDirectionalEvidence(sample, topology) {
+  const terrainClass = deriveTerrainClass(sample);
+  const biomeType = deriveBiomeType(sample);
 
-function resolveTerrainReliefStrength(sample, terrainClass) {
-  const elevation = clamp(isFiniteNumber(sample?.elevation) ? sample.elevation : 0, -1, 1);
-  const ridgeStrength = clamp(isFiniteNumber(sample?.ridgeStrength) ? sample.ridgeStrength : 0, 0, 1);
-  const basinStrength = clamp(isFiniteNumber(sample?.basinStrength) ? sample.basinStrength : 0, 0, 1);
-  const canyonStrength = clamp(isFiniteNumber(sample?.canyonStrength) ? sample.canyonStrength : 0, 0, 1);
-  const plateauStrength = clamp(isFiniteNumber(sample?.plateauStrength) ? sample.plateauStrength : 0, 0, 1);
-  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
+  const elevation = isFiniteNumber(sample?.elevation) ? sample.elevation : 0;
+  const ridgeStrength = clamp(
+    isFiniteNumber(topology?.ridgeStrength) ? topology.ridgeStrength : sample?.ridgeStrength ?? 0,
+    0,
+    1
+  );
+  const basinStrength = clamp(
+    isFiniteNumber(topology?.basinStrength) ? topology.basinStrength : sample?.basinStrength ?? 0,
+    0,
+    1
+  );
+  const canyonStrength = clamp(
+    isFiniteNumber(topology?.canyonStrength) ? topology.canyonStrength : sample?.canyonStrength ?? 0,
+    0,
+    1
+  );
+  const plateauStrength = clamp(
+    isFiniteNumber(topology?.plateauStrength) ? topology.plateauStrength : sample?.plateauStrength ?? 0,
+    0,
+    1
+  );
+  const slope = clamp(
+    Math.abs(isFiniteNumber(topology?.slope) ? topology.slope : sample?.slope ?? 0),
+    0,
+    1
+  );
 
-  let relief =
-    Math.max(0, elevation) * 0.35 +
-    ridgeStrength * 0.25 +
+  const rangeDirection =
+    typeof sample?.rangeDirection === "string" ? sample.rangeDirection : "NONE";
+  const valleyDirection =
+    typeof sample?.valleyDirection === "string" ? sample.valleyDirection : "NONE";
+  const canyonDirection =
+    typeof sample?.canyonDirection === "string" ? sample.canyonDirection : "NONE";
+  const plateauOrientation =
+    typeof sample?.plateauOrientation === "string" ? sample.plateauOrientation : "NONE";
+  const dominantAxis =
+    typeof sample?.dominantAxis === "string" ? sample.dominantAxis : "NONE";
+
+  const northScore =
+    ridgeStrength * 0.68 +
+    (elevation > 0 ? clamp(elevation, 0, 1) * 0.24 : 0) +
+    (terrainClass === "SUMMIT" || terrainClass === "MOUNTAIN" || terrainClass === "RIDGE" ? 0.32 : 0) +
+    (rangeDirection === "NS" ? 0.08 : 0);
+
+  const southScore =
+    basinStrength * 0.50 +
+    canyonStrength * 0.46 +
+    (terrainClass === "BASIN" || terrainClass === "CANYON" || terrainClass === "VALLEY" ? 0.28 : 0) +
+    (valleyDirection === "S" || canyonDirection === "S" ? 0.08 : 0);
+
+  const eastScore =
+    (dominantAxis === "EW" ? 0.18 : 0) +
+    (rangeDirection === "EW" ? 0.16 : 0) +
+    (valleyDirection === "E" || canyonDirection === "E" ? 0.12 : 0) +
+    slope * 0.28 +
+    (terrainClass === "SLOPE" || terrainClass === "PASS" ? 0.18 : 0);
+
+  const westScore =
+    plateauStrength * 0.62 +
+    (plateauOrientation === "EW" || plateauOrientation === "NS" ? 0.12 : 0) +
+    (terrainClass === "PLATEAU" || terrainClass === "CAVERN" ? 0.26 : 0) +
+    (sample?.cavePotential >= 0.5 ? 0.12 : 0);
+
+  const reliefStrength = clamp(
+    ridgeStrength * 0.40 +
+    basinStrength * 0.18 +
     canyonStrength * 0.20 +
-    plateauStrength * 0.12 +
-    slope * 0.08;
+    plateauStrength * 0.14 +
+    slope * 0.08,
+    0,
+    1
+  );
 
-  if (terrainClass === "BASIN") relief = Math.max(relief, basinStrength * 0.55);
-  if (terrainClass === "SUMMIT") relief = Math.max(relief, 0.82);
-  if (terrainClass === "MOUNTAIN") relief = Math.max(relief, 0.62);
-  if (terrainClass === "CANYON") relief = Math.max(relief, 0.58);
-  if (terrainClass === "PLATEAU") relief = Math.max(relief, 0.46);
-  if (terrainClass === "FOOTHILL") relief = Math.max(relief, 0.28);
-
-  return clamp(relief, 0, 1);
+  return {
+    terrainClass,
+    biomeType,
+    rangeDirection,
+    valleyDirection,
+    canyonDirection,
+    plateauOrientation,
+    dominantAxis,
+    elevation,
+    ridgeStrength,
+    basinStrength,
+    canyonStrength,
+    plateauStrength,
+    slope,
+    northScore,
+    southScore,
+    eastScore,
+    westScore,
+    reliefStrength,
+  };
 }
 
-function resolveTerrainEdgeClass(sample, terrainClass) {
-  if (terrainClass === "SHORELINE" || terrainClass === "BEACH") return "COASTAL_EDGE";
-  if (terrainClass === "CANYON") return "CUT_EDGE";
-  if (terrainClass === "RIDGE") return "RIDGE_EDGE";
-  if (terrainClass === "PLATEAU") return "SHELF_EDGE";
-  if (terrainClass === "BASIN") return "BASIN_EDGE";
-  if (sample?.distanceToWater === 0 || sample?.shoreline === true) return "WATER_ADJACENT";
-  return "INTERIOR";
+function getDirectionThresholds(terrainClass) {
+  switch (terrainClass) {
+    case "SUMMIT":
+    case "MOUNTAIN":
+    case "RIDGE":
+      return { north: 0.42, south: 0.28, east: 0.22, west: 0.22 };
+    case "BASIN":
+    case "CANYON":
+    case "VALLEY":
+      return { north: 0.22, south: 0.40, east: 0.24, west: 0.22 };
+    case "PLATEAU":
+    case "CAVERN":
+      return { north: 0.22, south: 0.22, east: 0.24, west: 0.38 };
+    case "SLOPE":
+    case "PASS":
+      return { north: 0.18, south: 0.18, east: 0.34, west: 0.20 };
+    case "BEACH":
+    case "SHORELINE":
+      return { north: 0.16, south: 0.16, east: 0.16, west: 0.16 };
+    case "UNKNOWN":
+    default:
+      return { north: 0.38, south: 0.38, east: 0.38, west: 0.38 };
+  }
 }
 
-function resolveTerrainPrimitiveType(terrainClass, terrainBandClass) {
-  if (terrainClass === "SUMMIT") return "PEAK_DIAMOND";
-  if (terrainClass === "MOUNTAIN") return "MASS_DIAMOND";
-  if (terrainClass === "GLACIAL_HIGHLAND") return "MASS_DIAMOND";
-  if (terrainClass === "RIDGE") return "RIDGE_DIAMOND";
-  if (terrainClass === "PLATEAU") return "PLATEAU_DIAMOND";
-  if (terrainClass === "CANYON") return "CUT_DIAMOND";
-  if (terrainClass === "BASIN") return "BASIN_DIAMOND";
-  if (terrainBandClass === "LITTORAL_EDGE" || terrainBandClass === "LITTORAL_SAND") return "HALF_TRIANGLE";
-  if (terrainClass === "CAVERNOUS") return "CAVERN_DIAMOND";
-  return "FULL_DIAMOND";
+function isDirectionAdmissible(direction, evidence) {
+  const thresholds = getDirectionThresholds(evidence.terrainClass);
+
+  if (evidence.terrainClass === "UNKNOWN" && evidence.reliefStrength < 0.26) {
+    return false;
+  }
+
+  if (direction === "NORTH") {
+    return evidence.northScore >= thresholds.north;
+  }
+
+  if (direction === "SOUTH") {
+    return evidence.southScore >= thresholds.south;
+  }
+
+  if (direction === "EAST") {
+    return evidence.eastScore >= thresholds.east;
+  }
+
+  if (direction === "WEST") {
+    return evidence.westScore >= thresholds.west;
+  }
+
+  return false;
 }
 
-function resolveSubdivisionTier(terrainClass, terrainBandClass) {
-  if (terrainClass === "SUMMIT") return 4;
-  if (terrainClass === "MOUNTAIN") return 3;
-  if (terrainClass === "GLACIAL_HIGHLAND") return 3;
-  if (terrainClass === "RIDGE") return 3;
-  if (terrainClass === "CANYON") return 3;
-  if (terrainClass === "PLATEAU") return 2;
-  if (terrainClass === "BASIN") return 2;
-  if (terrainBandClass === "LITTORAL_EDGE" || terrainBandClass === "LITTORAL_SAND") return 2;
-  return 1;
+function resolveNorthTerrainClass(evidence) {
+  if (evidence.terrainClass === "UNKNOWN") return "UNKNOWN";
+  return evidence.terrainClass;
 }
 
-function buildPrimitivePoints(signalCell, primitiveType, terrainReliefStrength) {
-  const center = averagePoint(signalCell.points);
+function resolveSouthTerrainClass(evidence) {
+  if (evidence.terrainClass === "UNKNOWN") return "UNKNOWN";
+  return evidence.terrainClass;
+}
 
-  if (primitiveType === "PEAK_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.46);
+function resolveEastTerrainClass(evidence) {
+  if (evidence.terrainClass === "UNKNOWN") return "UNKNOWN";
+  return evidence.terrainClass;
+}
+
+function resolveWestTerrainClass(evidence) {
+  if (evidence.terrainClass === "UNKNOWN") return "UNKNOWN";
+  return evidence.terrainClass;
+}
+
+function buildNorthPacket(signalCell, evidence, projectionState) {
+  if (!isDirectionAdmissible("NORTH", evidence)) return null;
+
+  const p = signalCell.points;
+  const center = averagePoint(p);
+
+  const north = p[0];
+  const east = p[1];
+  const west = p[3];
+
+  const packetPoints = normalizePrimitivePoints([
+    north,
+    pointBetween(north, east, 0.42),
+    insetToward(east, center, 0.34),
+    insetToward(west, center, 0.34),
+    pointBetween(west, north, 0.42),
+  ]);
+
+  return {
+    direction: "NORTH",
+    score: evidence.northScore,
+    terrainClassResolved: resolveNorthTerrainClass(evidence),
+    terrainBandClass: "UPLIFT",
+    terrainOverlayClass: evidence.biomeType,
+    terrainEdgeClass: "RIDGE_EDGE",
+    terrainNarrativeClass: "SOURCE_RISE",
+    terrainReliefStrength: evidence.reliefStrength,
+    terrainPrimitiveType: "TERRAIN_NORTH_SIGNAL",
+    terrainPrimitivePoints: packetPoints,
+    subdivisionTier: projectionState.lensTier,
+    approxSpanPx: measurePolygonSpan(packetPoints),
+  };
+}
+
+function buildSouthPacket(signalCell, evidence, projectionState) {
+  if (!isDirectionAdmissible("SOUTH", evidence)) return null;
+
+  const p = signalCell.points;
+  const center = averagePoint(p);
+
+  const east = p[1];
+  const south = p[2];
+  const west = p[3];
+
+  const packetPoints = normalizePrimitivePoints([
+    insetToward(east, center, 0.30),
+    pointBetween(east, south, 0.48),
+    south,
+    pointBetween(south, west, 0.48),
+    insetToward(west, center, 0.30),
+  ]);
+
+  return {
+    direction: "SOUTH",
+    score: evidence.southScore,
+    terrainClassResolved: resolveSouthTerrainClass(evidence),
+    terrainBandClass: "DESCENT",
+    terrainOverlayClass: evidence.biomeType,
+    terrainEdgeClass: "BASIN_EDGE",
+    terrainNarrativeClass: "SINK_DROP",
+    terrainReliefStrength: evidence.reliefStrength,
+    terrainPrimitiveType: "TERRAIN_SOUTH_SIGNAL",
+    terrainPrimitivePoints: packetPoints,
+    subdivisionTier: projectionState.lensTier,
+    approxSpanPx: measurePolygonSpan(packetPoints),
+  };
+}
+
+function buildEastPacket(signalCell, evidence, projectionState) {
+  if (!isDirectionAdmissible("EAST", evidence)) return null;
+
+  const p = signalCell.points;
+  const center = averagePoint(p);
+
+  const north = p[0];
+  const east = p[1];
+  const south = p[2];
+
+  const packetPoints = normalizePrimitivePoints([
+    insetToward(north, center, 0.34),
+    pointBetween(north, east, 0.56),
+    east,
+    pointBetween(east, south, 0.56),
+    insetToward(south, center, 0.34),
+  ]);
+
+  return {
+    direction: "EAST",
+    score: evidence.eastScore,
+    terrainClassResolved: resolveEastTerrainClass(evidence),
+    terrainBandClass: "TRAVERSAL",
+    terrainOverlayClass: evidence.biomeType,
+    terrainEdgeClass: "FLOW_EDGE",
+    terrainNarrativeClass: "PROPAGATION",
+    terrainReliefStrength: evidence.reliefStrength,
+    terrainPrimitiveType: "TERRAIN_EAST_SIGNAL",
+    terrainPrimitivePoints: packetPoints,
+    subdivisionTier: projectionState.lensTier,
+    approxSpanPx: measurePolygonSpan(packetPoints),
+  };
+}
+
+function buildWestPacket(signalCell, evidence, projectionState) {
+  if (!isDirectionAdmissible("WEST", evidence)) return null;
+
+  const p = signalCell.points;
+  const center = averagePoint(p);
+
+  const north = p[0];
+  const south = p[2];
+  const west = p[3];
+
+  const packetPoints = normalizePrimitivePoints([
+    pointBetween(west, north, 0.50),
+    insetToward(north, center, 0.32),
+    insetToward(south, center, 0.32),
+    pointBetween(south, west, 0.50),
+    west,
+  ]);
+
+  return {
+    direction: "WEST",
+    score: evidence.westScore,
+    terrainClassResolved: resolveWestTerrainClass(evidence),
+    terrainBandClass: "RETENTION",
+    terrainOverlayClass: evidence.biomeType,
+    terrainEdgeClass: "PLATEAU_EDGE",
+    terrainNarrativeClass: "STRUCTURAL_HOLD",
+    terrainReliefStrength: evidence.reliefStrength,
+    terrainPrimitiveType: "TERRAIN_WEST_SIGNAL",
+    terrainPrimitivePoints: packetPoints,
+    subdivisionTier: projectionState.lensTier,
+    approxSpanPx: measurePolygonSpan(packetPoints),
+  };
+}
+
+function chooseTerrainPacket(candidates, evidence) {
+  let winner = null;
+
+  for (const candidate of candidates) {
+    if (!candidate || !Array.isArray(candidate.terrainPrimitivePoints) || candidate.terrainPrimitivePoints.length < 3) {
+      continue;
+    }
+
+    if (!winner) {
+      winner = candidate;
+      continue;
+    }
+
+    if (candidate.score > winner.score) {
+      winner = candidate;
+      continue;
+    }
+
+    if (candidate.score === winner.score) {
+      const precedence = ["NORTH", "SOUTH", "EAST", "WEST"];
+      if (precedence.indexOf(candidate.direction) < precedence.indexOf(winner.direction)) {
+        winner = candidate;
+      }
+    }
   }
 
-  if (primitiveType === "MASS_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.66);
-  }
+  if (!winner) return null;
 
-  if (primitiveType === "RIDGE_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.78);
-  }
-
-  if (primitiveType === "PLATEAU_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.88);
-  }
-
-  if (primitiveType === "CUT_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.58);
-  }
-
-  if (primitiveType === "BASIN_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.62);
-  }
-
-  if (primitiveType === "CAVERN_DIAMOND") {
-    return scalePoints(signalCell.points, center, 0.52);
-  }
-
-  if (primitiveType === "HALF_TRIANGLE") {
-    const a = signalCell.points[0];
-    const b = signalCell.points[1];
-    const d = signalCell.points[3];
-    return scalePoints([a, b, d], center, 0.84);
-  }
-
-  const adaptiveScale = clamp(0.92 - terrainReliefStrength * 0.18, 0.64, 0.96);
-  return scalePoints(signalCell.points, center, adaptiveScale);
+  return {
+    terrainClassResolved: winner.terrainClassResolved,
+    terrainBandClass: winner.terrainBandClass,
+    terrainOverlayClass: winner.terrainOverlayClass,
+    terrainEdgeClass: winner.terrainEdgeClass,
+    terrainNarrativeClass: winner.terrainNarrativeClass,
+    terrainReliefStrength: winner.terrainReliefStrength,
+    terrainPrimitiveType: winner.terrainPrimitiveType,
+    terrainPrimitivePoints: winner.terrainPrimitivePoints,
+    subdivisionTier: winner.subdivisionTier,
+    approxSpanPx: winner.approxSpanPx,
+    dominantDirection: winner.direction,
+    arbitrationRule: "NORTH_SOUTH_EAST_WEST_INTERNAL_SELECTION",
+    failureCondition: "FAIL_IF_TERRAIN_WRITES_TRUTH_OR_TIME",
+    terrainFamilyClass: "TERRAIN_FAMILY_BRIDGE",
+    terrainDirectionScores: {
+      north: evidence.northScore,
+      south: evidence.southScore,
+      east: evidence.eastScore,
+      west: evidence.westScore,
+    },
+  };
 }
 
 export function resolveTerrainPacket({
   sample,
   signalCell,
-  globalPrimitiveTime = null
+  topology = null,
+  x = 0,
+  y = 0,
+  grid = null,
+  projectionState = {},
+  globalPrimitiveTime = null,
 }) {
-  const primitiveTime = normalizeTime(globalPrimitiveTime);
-  const terrainClassResolved = resolveTerrainClass(sample);
+  void x;
+  void y;
+  void grid;
+  void globalPrimitiveTime;
 
-  if (terrainClassResolved === "NON_TERRAIN_DOMAIN") {
-    return {
-      terrainClassResolved,
-      terrainBandClass: "NONE",
-      terrainPrimitiveType: "FULL_DIAMOND",
-      terrainPrimitivePoints: signalCell.points,
-      terrainOverlayClass: "NONE",
-      terrainReliefStrength: 0,
-      terrainEdgeClass: "NONE",
-      terrainNarrativeClass: "NONE",
-      subdivisionTier: 1,
-      approxSpanPx: measurePrimitiveSpan(signalCell.points)
-    };
+  if (!sample || !signalCell || !Array.isArray(signalCell.points) || signalCell.points.length < 4) {
+    return null;
   }
 
-  const terrainBandClass = resolveTerrainBandClass(sample, terrainClassResolved);
-  const terrainOverlayClass = resolveTerrainOverlayClass(sample, terrainClassResolved, primitiveTime);
-  const terrainNarrativeClass = resolveTerrainNarrativeClass(sample, terrainClassResolved);
-  const terrainReliefStrength = resolveTerrainReliefStrength(sample, terrainClassResolved);
-  const terrainEdgeClass = resolveTerrainEdgeClass(sample, terrainClassResolved);
-  const terrainPrimitiveType = resolveTerrainPrimitiveType(terrainClassResolved, terrainBandClass);
-  const subdivisionTier = resolveSubdivisionTier(terrainClassResolved, terrainBandClass);
-  const terrainPrimitivePoints = buildPrimitivePoints(signalCell, terrainPrimitiveType, terrainReliefStrength);
+  if (sample.landMask !== 1) {
+    return null;
+  }
 
-  return {
-    terrainClassResolved,
-    terrainBandClass,
-    terrainPrimitiveType,
-    terrainPrimitivePoints,
-    terrainOverlayClass,
-    terrainReliefStrength,
-    terrainEdgeClass,
-    terrainNarrativeClass,
-    subdivisionTier,
-    approxSpanPx: clamp(measurePrimitiveSpan(terrainPrimitivePoints), 0, Number.MAX_SAFE_INTEGER)
-  };
+  const safeTopology = normalizeObject(topology);
+  const safeProjectionState = normalizeObject(projectionState);
+  const evidence = computeDirectionalEvidence(sample, safeTopology);
+
+  const northPacket = buildNorthPacket(signalCell, evidence, safeProjectionState);
+  const southPacket = buildSouthPacket(signalCell, evidence, safeProjectionState);
+  const eastPacket = buildEastPacket(signalCell, evidence, safeProjectionState);
+  const westPacket = buildWestPacket(signalCell, evidence, safeProjectionState);
+
+  return chooseTerrainPacket(
+    [northPacket, southPacket, eastPacket, westPacket],
+    evidence
+  );
 }

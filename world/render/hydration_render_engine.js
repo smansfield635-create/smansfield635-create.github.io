@@ -1,6 +1,6 @@
 // /world/render/hydration_render_engine.js
-// MODE: RENDER EXTENSION FACTOR
-// STATUS: HYDRATION PORT AUTHORITY
+// MODE: RENDER EXTENSION CONTRACT RENEWAL
+// STATUS: HYDRATION CONTRACT AUTHORITY
 // ROLE:
 // - express non-ocean hydration only
 // - classify inland/coastal hydration bands
@@ -16,40 +16,12 @@ function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function normalizeColor(value, fallback) {
+function normalizeString(value, fallback = "NONE") {
   return typeof value === "string" && value.length > 0 ? value : fallback;
 }
 
-function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
-  if (!packet || typeof packet !== "object") return null;
-
-  return {
-    engineKey: "hydration",
-    layer: typeof packet.layer === "string" ? packet.layer : "hydration",
-    color: normalizeColor(packet.color, fallbackColor),
-    radiusPx: clamp(
-      isFiniteNumber(packet.radiusPx) ? packet.radiusPx : fallbackRadiusPx,
-      0.6,
-      12
-    ),
-    alpha: clamp(
-      isFiniteNumber(packet.alpha) ? packet.alpha : 1,
-      0,
-      1
-    ),
-    overlayOnly: packet.overlayOnly === true,
-    hydrationClass: typeof packet.hydrationClass === "string" ? packet.hydrationClass : "NONE",
-    hydrationBandClass: typeof packet.hydrationBandClass === "string" ? packet.hydrationBandClass : "NONE",
-    hydrationOverlayClass: typeof packet.hydrationOverlayClass === "string" ? packet.hydrationOverlayClass : "NONE",
-    shoreHandoffClass: typeof packet.shoreHandoffClass === "string" ? packet.shoreHandoffClass : "NONE",
-    freezeThawClass: typeof packet.freezeThawClass === "string" ? packet.freezeThawClass : "NONE",
-    subdivisionTier: Number.isInteger(packet.subdivisionTier) ? packet.subdivisionTier : 1,
-    hydrationBlendStrength: clamp(
-      isFiniteNumber(packet.hydrationBlendStrength) ? packet.hydrationBlendStrength : 0,
-      0,
-      1
-    )
-  };
+function normalizeColor(value, fallback) {
+  return typeof value === "string" && value.length > 0 ? value : fallback;
 }
 
 function getWrappedX(x, width) {
@@ -125,11 +97,18 @@ function isWetlandLike(sample) {
 }
 
 function getPrimitiveTimeState(globalPrimitiveTime) {
-  const time = globalPrimitiveTime && typeof globalPrimitiveTime === "object" ? globalPrimitiveTime : {};
+  const time = globalPrimitiveTime && typeof globalPrimitiveTime === "object"
+    ? globalPrimitiveTime
+    : {};
 
   return {
-    cyclePhase: typeof time.cyclePhase === "string" ? time.cyclePhase : "DAY",
-    seasonalPhase: typeof time.seasonalPhase === "string" ? time.seasonalPhase : "MID"
+    tick: isFiniteNumber(time.tick) ? time.tick : 0,
+    cycle: isFiniteNumber(time.cycle) ? time.cycle : 0,
+    day: isFiniteNumber(time.day) ? time.day : 0,
+    yearDayIndex: isFiniteNumber(time.yearDayIndex) ? time.yearDayIndex : 0,
+    yearLength: isFiniteNumber(time.yearLength) ? time.yearLength : 256,
+    cyclePhase: normalizeString(time.cyclePhase, "DAY"),
+    seasonalPhase: normalizeString(time.seasonalPhase, "MID")
   };
 }
 
@@ -364,6 +343,46 @@ function resolveOverlayOnly(overlayClass) {
   );
 }
 
+function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
+  if (!packet || typeof packet !== "object") return null;
+
+  return Object.freeze({
+    contractId: "HYDRATION_RENDER_CONTRACT_v2",
+    engineKey: "hydration",
+    layer: normalizeString(packet.layer, "hydration"),
+    color: normalizeColor(packet.color, fallbackColor),
+    radiusPx: clamp(
+      isFiniteNumber(packet.radiusPx) ? packet.radiusPx : fallbackRadiusPx,
+      0.6,
+      12
+    ),
+    alpha: clamp(
+      isFiniteNumber(packet.alpha) ? packet.alpha : 1,
+      0,
+      1
+    ),
+    overlayOnly: packet.overlayOnly === true,
+    hydrationClass: normalizeString(packet.hydrationClass, "NONE"),
+    hydrationBandClass: normalizeString(packet.hydrationBandClass, "NONE"),
+    hydrationOverlayClass: normalizeString(packet.hydrationOverlayClass, "NONE"),
+    shoreHandoffClass: normalizeString(packet.shoreHandoffClass, "NONE"),
+    freezeThawClass: normalizeString(packet.freezeThawClass, "NONE"),
+    subdivisionTier: Number.isInteger(packet.subdivisionTier) ? packet.subdivisionTier : 1,
+    hydrationBlendStrength: clamp(
+      isFiniteNumber(packet.hydrationBlendStrength) ? packet.hydrationBlendStrength : 0,
+      0,
+      1
+    ),
+    renderIntent: Object.freeze({
+      drawsHydration: true,
+      ownsOceanFill: false,
+      ownsBoot: false,
+      ownsRuntime: false,
+      ownsTruth: false
+    })
+  });
+}
+
 export function resolveHydrationPacket({
   sample,
   pointSizePx,
@@ -388,9 +407,30 @@ export function resolveHydrationPacket({
   const subdivisionTier = resolveSubdivisionTier(hydrationBandClass);
   const hydrationBlendStrength = resolveHydrationBlendStrength(sample, hydrationBandClass);
 
-  const radiusPx = resolveHydrationRadius(pointSizePx, hydrationBandClass, hydrationOverlayClass);
-  const color = resolveHydrationColor(hydrationClass, hydrationBandClass, hydrationOverlayClass);
-  const alpha = resolveHydrationAlpha(hydrationBlendStrength, hydrationOverlayClass, hydrationClass);
+  const safePointSizePx = clamp(
+    isFiniteNumber(pointSizePx) ? pointSizePx : 1,
+    0.6,
+    12
+  );
+
+  const radiusPx = resolveHydrationRadius(
+    safePointSizePx,
+    hydrationBandClass,
+    hydrationOverlayClass
+  );
+
+  const color = resolveHydrationColor(
+    hydrationClass,
+    hydrationBandClass,
+    hydrationOverlayClass
+  );
+
+  const alpha = resolveHydrationAlpha(
+    hydrationBlendStrength,
+    hydrationOverlayClass,
+    hydrationClass
+  );
+
   const overlayOnly = resolveOverlayOnly(hydrationOverlayClass);
 
   return normalizePacket({
@@ -406,5 +446,9 @@ export function resolveHydrationPacket({
     freezeThawClass,
     subdivisionTier,
     hydrationBlendStrength
-  }, baseColor, pointSizePx);
+  }, baseColor, safePointSizePx);
 }
+
+export default Object.freeze({
+  resolveHydrationPacket
+});

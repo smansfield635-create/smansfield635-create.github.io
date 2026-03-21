@@ -1,7 +1,6 @@
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { describeSurface, isLandSample } from "./terrain_appearance_engine.js";
 import { resolveHydrationPacket } from "./render/hydation_render_engine.js";
-import { resolveTerrainPacket } from "./render/terrain_render_engine.js";
 
 let lastAuditPlanetField = null;
 let lastAuditTopologyField = null;
@@ -518,46 +517,8 @@ function normalizeHydrationInstruction(packet, signalCell, projectionState) {
   };
 }
 
-function normalizeTerrainInstruction(packet, signalCell, projectionState) {
-  if (!packet || typeof packet !== "object") return null;
-
-  const terrainClassResolved =
-    typeof packet.terrainClassResolved === "string" ? packet.terrainClassResolved : "NON_TERRAIN_DOMAIN";
-  const primitivePoints = Array.isArray(packet.terrainPrimitivePoints) ? packet.terrainPrimitivePoints : null;
-
-  if (
-    terrainClassResolved === "NONE" ||
-    terrainClassResolved === "NON_TERRAIN_DOMAIN" ||
-    !primitivePoints ||
-    primitivePoints.length < 3
-  ) {
-    return null;
-  }
-
-  return {
-    engineKey: "terrain",
-    primitiveType: typeof packet.terrainPrimitiveType === "string" ? packet.terrainPrimitiveType : "TERRAIN_SIGNAL",
-    primitiveScale: 1,
-    primitivePoints,
-    boundaryClass: typeof packet.terrainBandClass === "string" ? packet.terrainBandClass : "TERRAIN",
-    subdivisionTier: isFiniteNumber(packet.subdivisionTier) ? packet.subdivisionTier : projectionState.lensTier,
-    approxSpanPx: isFiniteNumber(packet.approxSpanPx) ? packet.approxSpanPx : measurePolygonSpan(primitivePoints),
-    terrainClassResolved,
-    terrainBandClass: typeof packet.terrainBandClass === "string" ? packet.terrainBandClass : "NONE",
-    terrainOverlayClass: typeof packet.terrainOverlayClass === "string" ? packet.terrainOverlayClass : "NONE",
-    terrainEdgeClass: typeof packet.terrainEdgeClass === "string" ? packet.terrainEdgeClass : "NONE",
-    terrainNarrativeClass: typeof packet.terrainNarrativeClass === "string" ? packet.terrainNarrativeClass : "NONE",
-    terrainReliefStrength: clamp(
-      isFiniteNumber(packet.terrainReliefStrength) ? packet.terrainReliefStrength : 0,
-      0,
-      1
-    ),
-    hydrationClass: "NONE",
-    hydrationBandClass: "NONE",
-    hydrationOverlayClass: "NONE",
-    shoreHandoffClass: "NONE",
-    freezeThawClass: "NONE"
-  };
+function normalizeTerrainInstruction() {
+  return null;
 }
 
 function resolveFaunaInstruction() {
@@ -646,22 +607,7 @@ function resolvePrimitiveInstruction({
 }) {
   const fallbackInstruction = buildFallbackInstruction(signalCell, projectionState);
 
-  const terrainInstruction = normalizeTerrainInstruction(
-    typeof resolveTerrainPacket === "function"
-      ? resolveTerrainPacket({
-          sample,
-          signalCell,
-          topology,
-          x,
-          y,
-          grid,
-          projectionState,
-          globalPrimitiveTime
-        })
-      : null,
-    signalCell,
-    projectionState
-  );
+  const terrainInstruction = normalizeTerrainInstruction();
 
   const hydrationInstruction = normalizeHydrationInstruction(
     typeof resolveHydrationPacket === "function"

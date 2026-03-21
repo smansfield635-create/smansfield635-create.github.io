@@ -1,13 +1,13 @@
 // /world/render/hydration_render_engine.js
-// MODE: RENDER EXTENSION CONTRACT EXPANSION
-// STATUS: HYDRATION FACTOR AUTHORITY (EXPANDED)
+// MODE: RENDER EXTENSION CONTRACT RENEWAL
+// STATUS: HYDRATION FACTOR AUTHORITY v3
 // ROLE:
 // - express non-ocean hydration only
 // - classify inland/coastal hydration bands
 // - classify flow / retention / organ-side hydration roles
 // - return a normalized packet or null
 // - provide ocean-adjacent handoff without owning ocean fill
-// - aligned with terrain contract family
+// - remain coherent with terrain contract family
 // - own no boot, no runtime, no truth
 
 function clamp(value, min, max) {
@@ -24,6 +24,10 @@ function normalizeString(value, fallback = "NONE") {
 
 function normalizeColor(value, fallback) {
   return typeof value === "string" && value.length > 0 ? value : fallback;
+}
+
+function toNumber(value, fallback = 0) {
+  return isFiniteNumber(value) ? value : fallback;
 }
 
 function getWrappedX(x, width) {
@@ -116,14 +120,14 @@ function getPrimitiveTimeState(globalPrimitiveTime) {
 }
 
 /* =========================
-   HYDRATION / FLOW CLASSIFICATION
+   FLOW / RETENTION / ORGAN
 ========================= */
 
 function classifyFlowStrength(sample) {
-  const runoff = clamp(isFiniteNumber(sample?.runoff) ? sample.runoff : 0, 0, 1);
-  const rainfall = clamp(isFiniteNumber(sample?.rainfall) ? sample.rainfall : 0, 0, 1);
-  const basinAccumulation = clamp(isFiniteNumber(sample?.basinAccumulation) ? sample.basinAccumulation : 0, 0, 1);
-  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
+  const runoff = clamp(toNumber(sample?.runoff, 0), 0, 1);
+  const rainfall = clamp(toNumber(sample?.rainfall, 0), 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
 
   return clamp(
     runoff * 0.42 +
@@ -137,7 +141,13 @@ function classifyFlowStrength(sample) {
 
 function classifyFlowClass(sample) {
   const explicit = normalizeString(sample?.flowClass, "NONE");
-  if (explicit === "RIVER" || explicit === "STREAM" || explicit === "BROOK" || explicit === "LAKE" || explicit === "SEA") {
+  if (
+    explicit === "RIVER" ||
+    explicit === "STREAM" ||
+    explicit === "BROOK" ||
+    explicit === "LAKE" ||
+    explicit === "SEA"
+  ) {
     return explicit;
   }
 
@@ -152,8 +162,8 @@ function classifyFlowClass(sample) {
 }
 
 function classifyRetentionClass(sample, flowClass) {
-  const basinAccumulation = clamp(isFiniteNumber(sample?.basinAccumulation) ? sample.basinAccumulation : 0, 0, 1);
-  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
 
   if (flowClass === "LAKE" && basinAccumulation >= 0.68 && slope <= 0.10) return "MAJOR_LAKE";
   if (flowClass === "LAKE" && basinAccumulation >= 0.56 && slope <= 0.10) return "LAKE";
@@ -175,6 +185,25 @@ function classifyHydrationOrgan(sample, flowClass, retentionClass) {
 
   return "NONE";
 }
+
+function resolveDropClass(sample, flowClass) {
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
+  const canyonStrength = clamp(toNumber(sample?.canyonStrength, 0), 0, 1);
+  const plateauStrength = clamp(toNumber(sample?.plateauStrength, 0), 0, 1);
+
+  if ((flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK") && slope >= 0.48 && canyonStrength >= 0.24) {
+    return "WATERFALL";
+  }
+  if ((flowClass === "RIVER" || flowClass === "STREAM") && slope >= 0.34 && plateauStrength >= 0.40) {
+    return "ESCARPMENT_FALL";
+  }
+
+  return "NONE";
+}
+
+/* =========================
+   HYDRATION CLASSIFICATION
+========================= */
 
 function resolveHydrationClass(sample) {
   if (!sample) return "NONE";
@@ -224,8 +253,8 @@ function resolveHydrationBandClass(sample, neighbors) {
 }
 
 function resolveFreezeThawClass(sample, primitiveTime) {
-  const freeze = clamp(isFiniteNumber(sample?.freezePotential) ? sample.freezePotential : 0, 0, 1);
-  const melt = clamp(isFiniteNumber(sample?.meltPotential) ? sample.meltPotential : 0, 0, 1);
+  const freeze = clamp(toNumber(sample?.freezePotential, 0), 0, 1);
+  const melt = clamp(toNumber(sample?.meltPotential, 0), 0, 1);
   const cyclePhase = primitiveTime.cyclePhase;
   const seasonalPhase = primitiveTime.seasonalPhase;
 
@@ -296,9 +325,9 @@ function resolveSubdivisionTier(hydrationBandClass) {
 }
 
 function resolveHydrationBlendStrength(sample, hydrationBandClass) {
-  const runoff = clamp(isFiniteNumber(sample?.runoff) ? sample.runoff : 0, 0, 1);
-  const rainfall = clamp(isFiniteNumber(sample?.rainfall) ? sample.rainfall : 0, 0, 1);
-  const basinAccumulation = clamp(isFiniteNumber(sample?.basinAccumulation) ? sample.basinAccumulation : 0, 0, 1);
+  const runoff = clamp(toNumber(sample?.runoff, 0), 0, 1);
+  const rainfall = clamp(toNumber(sample?.rainfall, 0), 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
 
   const base =
     runoff * 0.40 +
@@ -324,20 +353,9 @@ function resolveHydrationBlendStrength(sample, hydrationBandClass) {
   }
 }
 
-function resolveDropClass(sample, flowClass) {
-  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
-  const canyonStrength = clamp(isFiniteNumber(sample?.canyonStrength) ? sample.canyonStrength : 0, 0, 1);
-  const plateauStrength = clamp(isFiniteNumber(sample?.plateauStrength) ? sample.plateauStrength : 0, 0, 1);
-
-  if ((flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK") && slope >= 0.48 && canyonStrength >= 0.24) {
-    return "WATERFALL";
-  }
-  if ((flowClass === "RIVER" || flowClass === "STREAM") && slope >= 0.34 && plateauStrength >= 0.40) {
-    return "ESCARPMENT_FALL";
-  }
-
-  return "NONE";
-}
+/* =========================
+   PACKET APPEARANCE
+========================= */
 
 function resolveHydrationRadius(pointSizePx, hydrationBandClass, overlayClass, flowClass, retentionClass) {
   if (overlayClass === "ICE_SHEEN" || overlayClass === "PARTIAL_ICE") {
@@ -456,6 +474,10 @@ function resolveOverlayOnly(overlayClass, flowClass, retentionClass, dropClass) 
   );
 }
 
+/* =========================
+   NORMALIZATION
+========================= */
+
 function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
   if (!packet || typeof packet !== "object") return null;
 
@@ -509,6 +531,10 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
     })
   });
 }
+
+/* =========================
+   ENTRY
+========================= */
 
 export function resolveHydrationPacket({
   sample,

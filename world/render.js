@@ -1,20 +1,13 @@
 // /world/render.js
-// MODE: STUB-SAFE FIRST PASS
-// STATUS: CANONICAL RENDER ROUTER
-// OWNER_LAYER: EXPRESSION
+// MODE: RENDER BASELINE CONTRACT RENEWAL
+// STATUS: SELF-CONTAINED BASELINE RENDERER
 // ROLE:
-// - read-only render authority
-// - boot-safe visible globe restore
-// - specialist packet router
-// - runtime-compatible receipt surface
-// - no truth ownership
-// - no control ownership
+// - render visible globe baseline
+// - preserve runtime/gauges receipt contract
+// - own no truth, no control, no runtime
+// - contain no sidestream dependencies
 
 import { WORLD_KERNEL } from "./world_kernel.js";
-import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
-import { resolveTerrainPacket } from "./render/terrain_render_engine.js";
-import { resolveFaunaPacket } from "./render/fauna_render_engine.js";
-import { resolveCosmicPacket } from "./render/cosmic_render_engine.js";
 
 let lastAuditPlanetField = null;
 let lastAuditResult = null;
@@ -74,11 +67,13 @@ function normalizeLensTier(value) {
     if (upper === "L2") return 2;
     if (upper === "L3") return 3;
   }
+
   if (isFiniteNumber(value)) {
     if (value <= 1) return 1;
     if (value === 2) return 2;
     if (value >= 3) return 3;
   }
+
   return 1;
 }
 
@@ -255,10 +250,16 @@ function sampleColor(sample) {
 
   if (sample?.waterMask === 1) {
     if (terrainClass === "SHELF") return "rgba(54,132,196,0.82)";
-    return "rgba(34,102,170,0.26)";
+    return "rgba(34,102,170,0.28)";
   }
 
-  if (terrainClass === "POLAR_ICE" || terrainClass === "GLACIAL_HIGHLAND" || biomeType === "GLACIER" || surfaceMaterial === "ICE" || surfaceMaterial === "SNOW") {
+  if (
+    terrainClass === "POLAR_ICE" ||
+    terrainClass === "GLACIAL_HIGHLAND" ||
+    biomeType === "GLACIER" ||
+    surfaceMaterial === "ICE" ||
+    surfaceMaterial === "SNOW"
+  ) {
     return "rgba(224,238,248,0.90)";
   }
 
@@ -282,6 +283,14 @@ function sampleColor(sample) {
     return "rgba(184,154,88,0.90)";
   }
 
+  if (biomeType === "TROPICAL_RAINFOREST") {
+    return "rgba(52,132,72,0.92)";
+  }
+
+  if (biomeType === "BOREAL_FOREST") {
+    return "rgba(74,116,86,0.90)";
+  }
+
   return "rgba(86,150,86,0.88)";
 }
 
@@ -290,43 +299,14 @@ function resolvePointSizePx(projectionState, sampleCount) {
   return clamp(base * 1.35, 1.2, 4.6);
 }
 
-function buildSignalCell(point, pointSizePx) {
-  return {
-    points: [
-      { x: point.x, y: point.y - pointSizePx, z: point.z, visible: point.visible },
-      { x: point.x + pointSizePx, y: point.y, z: point.z, visible: point.visible },
-      { x: point.x, y: point.y + pointSizePx, z: point.z, visible: point.visible },
-      { x: point.x - pointSizePx, y: point.y, z: point.z, visible: point.visible }
-    ]
-  };
+function classifyDensityTier(averageCellSpanPx, emittedCellCount) {
+  if (emittedCellCount <= 0) return "EMPTY";
+  if (averageCellSpanPx <= 3) return "HIGH";
+  if (averageCellSpanPx <= 6) return "MEDIUM";
+  return "LOW";
 }
 
-function resolvePrimitivePackets(sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime = null) {
-  const hydrationPacket = typeof resolveHydrationPacket === "function"
-    ? resolveHydrationPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
-    : null;
-
-  const terrainPacket = typeof resolveTerrainPacket === "function"
-    ? resolveTerrainPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
-    : null;
-
-  const faunaPacket = typeof resolveFaunaPacket === "function"
-    ? resolveFaunaPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
-    : null;
-
-  const cosmicPacket = typeof resolveCosmicPacket === "function"
-    ? resolveCosmicPacket({ sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime })
-    : null;
-
-  return {
-    hydrationPacket,
-    terrainPacket,
-    faunaPacket,
-    cosmicPacket
-  };
-}
-
-function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrimitiveTime = null) {
+function drawVisibleSurface(ctx, grid, projectPoint, projectionState) {
   if (!grid.length || !grid[0].length) {
     return {
       visibleCellCount: 0,
@@ -345,13 +325,7 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
       renderReadsScope: true,
       renderReadsLens: true,
       fallbackMode: false,
-      liveRenderPath: "drawVisibleSurface",
-      specialistUse: {
-        hydration: false,
-        terrain: false,
-        fauna: false,
-        cosmic: false
-      }
+      liveRenderPath: "drawVisibleSurface"
     };
   }
 
@@ -367,11 +341,6 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
   let skippedCellCount = 0;
   let totalSpan = 0;
 
-  let hydrationUsed = false;
-  let terrainUsed = false;
-  let faunaUsed = false;
-  let cosmicUsed = false;
-
   ctx.save();
 
   for (let y = 0; y < rowCount; y += stride) {
@@ -379,6 +348,7 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
 
     for (let x = 0; x < colCount; x += stride) {
       const sample = row[x];
+
       if (!sample) {
         skippedCellCount += 1;
         continue;
@@ -390,20 +360,12 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
         sampleElevationOffsetPx(sample)
       );
 
-      if (!point || point.visible !== true || point.z < 0.02) {
+      if (!point || point.visible !== true || point.z <= 0) {
         skippedCellCount += 1;
         continue;
       }
 
       visibleCellCount += 1;
-
-      const signalCell = buildSignalCell(point, pointSizePx);
-      const packets = resolvePrimitivePackets(sample, signalCell, x, y, grid, projectionState, globalPrimitiveTime);
-
-      if (packets.hydrationPacket) hydrationUsed = true;
-      if (packets.terrainPacket) terrainUsed = true;
-      if (packets.faunaPacket) faunaUsed = true;
-      if (packets.cosmicPacket) cosmicUsed = true;
 
       ctx.globalAlpha = 1;
       ctx.fillStyle = sampleColor(sample);
@@ -419,13 +381,6 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
   ctx.restore();
 
   const averageCellSpanPx = emittedCellCount > 0 ? totalSpan / emittedCellCount : 0;
-  let densityTier = "EMPTY";
-
-  if (emittedCellCount > 0) {
-    if (averageCellSpanPx <= 3) densityTier = "HIGH";
-    else if (averageCellSpanPx <= 6) densityTier = "MEDIUM";
-    else densityTier = "LOW";
-  }
 
   return {
     visibleCellCount,
@@ -433,7 +388,7 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
     skippedCellCount,
     averageCellSpanPx,
     subdivisionTier: projectionState.lensTier,
-    densityTier,
+    densityTier: classifyDensityTier(averageCellSpanPx, emittedCellCount),
     primitiveType: "FORWARD_SIGNAL",
     primitivePath: "drawVisibleSurface",
     centerAnchored: true,
@@ -444,13 +399,7 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
     renderReadsScope: true,
     renderReadsLens: true,
     fallbackMode: false,
-    liveRenderPath: "drawVisibleSurface",
-    specialistUse: {
-      hydration: hydrationUsed,
-      terrain: terrainUsed,
-      fauna: faunaUsed,
-      cosmic: cosmicUsed
-    }
+    liveRenderPath: "drawVisibleSurface"
   };
 }
 
@@ -476,6 +425,7 @@ function buildRenderAudit(planetField) {
 
       if (isWater) waterFamilyCount += 1;
       if (isLand) landFamilyCount += 1;
+
       if (
         terrainClass === "POLAR_ICE" ||
         terrainClass === "GLACIAL_HIGHLAND" ||
@@ -486,7 +436,12 @@ function buildRenderAudit(planetField) {
         cryosphereCount += 1;
       }
 
-      if (sample?.shoreline === true || sample?.shorelineBand === true || terrainClass === "SHORELINE" || terrainClass === "BEACH") {
+      if (
+        sample?.shoreline === true ||
+        sample?.shorelineBand === true ||
+        terrainClass === "SHORELINE" ||
+        terrainClass === "BEACH"
+      ) {
         shorelineCount += 1;
       }
 
@@ -546,10 +501,6 @@ export function createRenderer() {
 
     const projectionState = getProjectionState(viewState, ctx);
     const activeScope = projectionState.activeScope;
-    const globalPrimitiveTime =
-      viewState && typeof viewState === "object" && viewState.globalPrimitiveTime
-        ? viewState.globalPrimitiveTime
-        : null;
 
     ctx.clearRect(0, 0, projectionState.width, projectionState.height);
 
@@ -612,7 +563,7 @@ export function createRenderer() {
     drawPlanetBase(ctx, projectionState);
 
     const density = withPlanetClip(ctx, projectionState, () =>
-      drawVisibleSurface(ctx, grid, projector, projectionState, globalPrimitiveTime)
+      drawVisibleSurface(ctx, grid, projector, projectionState)
     );
 
     return {

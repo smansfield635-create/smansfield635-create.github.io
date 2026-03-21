@@ -1,11 +1,13 @@
 // /world/render/hydration_render_engine.js
-// MODE: RENDER EXTENSION CONTRACT RENEWAL
-// STATUS: HYDRATION CONTRACT AUTHORITY
+// MODE: RENDER EXTENSION CONTRACT EXPANSION
+// STATUS: HYDRATION FACTOR AUTHORITY (EXPANDED)
 // ROLE:
 // - express non-ocean hydration only
 // - classify inland/coastal hydration bands
+// - classify flow / retention / organ-side hydration roles
 // - return a normalized packet or null
 // - provide ocean-adjacent handoff without owning ocean fill
+// - aligned with terrain contract family
 // - own no boot, no runtime, no truth
 
 function clamp(value, min, max) {
@@ -72,6 +74,7 @@ function isOceanOwnerDomain(sample) {
   return sample?.waterMask === 1 && !(
     sample?.flowClass === "RIVER" ||
     sample?.flowClass === "STREAM" ||
+    sample?.flowClass === "BROOK" ||
     sample?.flowClass === "LAKE" ||
     sample?.flowClass === "SEA" ||
     sample?.riverCandidate === true ||
@@ -112,18 +115,82 @@ function getPrimitiveTimeState(globalPrimitiveTime) {
   };
 }
 
+/* =========================
+   HYDRATION / FLOW CLASSIFICATION
+========================= */
+
+function classifyFlowStrength(sample) {
+  const runoff = clamp(isFiniteNumber(sample?.runoff) ? sample.runoff : 0, 0, 1);
+  const rainfall = clamp(isFiniteNumber(sample?.rainfall) ? sample.rainfall : 0, 0, 1);
+  const basinAccumulation = clamp(isFiniteNumber(sample?.basinAccumulation) ? sample.basinAccumulation : 0, 0, 1);
+  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
+
+  return clamp(
+    runoff * 0.42 +
+    rainfall * 0.18 +
+    basinAccumulation * 0.24 +
+    slope * 0.16,
+    0,
+    1
+  );
+}
+
+function classifyFlowClass(sample) {
+  const explicit = normalizeString(sample?.flowClass, "NONE");
+  if (explicit === "RIVER" || explicit === "STREAM" || explicit === "BROOK" || explicit === "LAKE" || explicit === "SEA") {
+    return explicit;
+  }
+
+  const flowStrength = classifyFlowStrength(sample);
+
+  if (sample?.lakeCandidate === true && flowStrength >= 0.40) return "LAKE";
+  if (sample?.riverCandidate === true && flowStrength >= 0.52) return "RIVER";
+  if (sample?.riverCandidate === true || flowStrength >= 0.34) return "STREAM";
+  if (flowStrength >= 0.22) return "BROOK";
+
+  return "NONE";
+}
+
+function classifyRetentionClass(sample, flowClass) {
+  const basinAccumulation = clamp(isFiniteNumber(sample?.basinAccumulation) ? sample.basinAccumulation : 0, 0, 1);
+  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
+
+  if (flowClass === "LAKE" && basinAccumulation >= 0.68 && slope <= 0.10) return "MAJOR_LAKE";
+  if (flowClass === "LAKE" && basinAccumulation >= 0.56 && slope <= 0.10) return "LAKE";
+  if (sample?.biomeType === "WETLAND" || (basinAccumulation >= 0.48 && slope <= 0.12 && flowClass === "NONE")) {
+    return "WETLAND";
+  }
+  if (basinAccumulation >= 0.42 && slope <= 0.14 && flowClass === "NONE") return "MICRO_RESERVOIR";
+
+  return "NONE";
+}
+
+function classifyHydrationOrgan(sample, flowClass, retentionClass) {
+  if (retentionClass === "MAJOR_LAKE" || retentionClass === "LAKE") return "RESERVOIR_ORGAN";
+  if (retentionClass === "WETLAND") return "DIFFUSION_ORGAN";
+  if (sample?.terrainClass === "BASIN") return "INTAKE_BASIN";
+  if (flowClass === "RIVER") return "ARTERY_PATH";
+  if (flowClass === "STREAM") return "VEIN_PATH";
+  if (flowClass === "BROOK") return "CAPILLARY_ZONE";
+
+  return "NONE";
+}
+
 function resolveHydrationClass(sample) {
   if (!sample) return "NONE";
   if (isOceanOwnerDomain(sample)) return "NON_HYDRATION_DOMAIN";
 
+  const flowClass = classifyFlowClass(sample);
+  const retentionClass = classifyRetentionClass(sample, flowClass);
+
   if (sample.waterMask === 1) {
-    if (sample.flowClass === "RIVER") return "RIVER";
-    if (sample.flowClass === "STREAM") return "STREAM";
-    if (sample.flowClass === "LAKE") return "LAKE";
+    if (flowClass === "RIVER") return "RIVER";
+    if (flowClass === "STREAM" || flowClass === "BROOK") return "STREAM";
+    if (flowClass === "LAKE") return "LAKE";
     if (isSeaAdjacentHydration(sample)) return "LITTORAL_WATER";
   }
 
-  if (isWetlandLike(sample)) return "WETLAND";
+  if (retentionClass === "WETLAND" || isWetlandLike(sample)) return "WETLAND";
   if (sample.riverCandidate === true) return "RIVER_BANK";
   if (sample.lakeCandidate === true) return "LAKE_MARGIN";
   if (sample.shoreline === true || sample.shorelineBand === true) return "COASTAL_HYDRATION_EDGE";
@@ -135,17 +202,19 @@ function resolveHydrationBandClass(sample, neighbors) {
   if (!sample) return "NONE";
   if (isOceanOwnerDomain(sample)) return "NONE";
 
+  const flowClass = classifyFlowClass(sample);
+  const retentionClass = classifyRetentionClass(sample, flowClass);
   const waterNeighborCount = countWaterNeighbors(neighbors);
   const landNeighborCount = countLandNeighbors(neighbors);
 
   if (sample.waterMask === 1) {
-    if (sample.flowClass === "RIVER") return "CHANNEL_CORE";
-    if (sample.flowClass === "STREAM") return "STREAM_THREAD";
-    if (sample.flowClass === "LAKE") return landNeighborCount > 0 ? "LAKE_EDGE" : "LAKE_CORE";
+    if (flowClass === "RIVER") return "CHANNEL_CORE";
+    if (flowClass === "STREAM" || flowClass === "BROOK") return "STREAM_THREAD";
+    if (flowClass === "LAKE") return landNeighborCount > 0 ? "LAKE_EDGE" : "LAKE_CORE";
     if (isSeaAdjacentHydration(sample)) return landNeighborCount > 0 ? "SEA_EDGE" : "SEA_NEARSHORE";
   }
 
-  if (sample.biomeType === "WETLAND") return "WETLAND_BAND";
+  if (retentionClass === "WETLAND" || sample.biomeType === "WETLAND") return "WETLAND_BAND";
   if (sample.shoreline === true) return "COAST_EDGE";
   if (sample.shorelineBand === true) return "COAST_BAND";
   if (sample.riverCandidate === true && waterNeighborCount > 0) return "RIVER_BANK";
@@ -166,6 +235,7 @@ function resolveFreezeThawClass(sample, primitiveTime) {
     return "THAW_ACTIVE";
   }
   if (freeze >= 0.34 || melt >= 0.34) return "TRANSITION";
+
   return "NONE";
 }
 
@@ -193,14 +263,15 @@ function resolveShoreHandoffClass(sample, neighbors) {
 
 function resolveHydrationOverlayClass(sample, primitiveTime) {
   const freezeThawClass = resolveFreezeThawClass(sample, primitiveTime);
+  const flowClass = classifyFlowClass(sample);
 
   if (freezeThawClass === "FROZEN") return "ICE_SHEEN";
   if (freezeThawClass === "PARTIAL_FREEZE") return "PARTIAL_ICE";
   if (freezeThawClass === "THAW_ACTIVE") return "THAW_GLEAM";
 
   if (sample?.biomeType === "WETLAND") return "SATURATED_GROUND";
-  if (sample?.flowClass === "RIVER" || sample?.flowClass === "STREAM") return "FLOW_HIGHLIGHT";
-  if (sample?.flowClass === "LAKE") return "STILL_WATER_GLOSS";
+  if (flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK") return "FLOW_HIGHLIGHT";
+  if (flowClass === "LAKE") return "STILL_WATER_GLOSS";
   if (sample?.shoreline === true || sample?.shorelineBand === true) return "LITTORAL_MOISTURE";
 
   return "NONE";
@@ -253,10 +324,32 @@ function resolveHydrationBlendStrength(sample, hydrationBandClass) {
   }
 }
 
-function resolveHydrationRadius(pointSizePx, hydrationBandClass, overlayClass) {
+function resolveDropClass(sample, flowClass) {
+  const slope = clamp(isFiniteNumber(sample?.slope) ? sample.slope : 0, 0, 1);
+  const canyonStrength = clamp(isFiniteNumber(sample?.canyonStrength) ? sample.canyonStrength : 0, 0, 1);
+  const plateauStrength = clamp(isFiniteNumber(sample?.plateauStrength) ? sample.plateauStrength : 0, 0, 1);
+
+  if ((flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK") && slope >= 0.48 && canyonStrength >= 0.24) {
+    return "WATERFALL";
+  }
+  if ((flowClass === "RIVER" || flowClass === "STREAM") && slope >= 0.34 && plateauStrength >= 0.40) {
+    return "ESCARPMENT_FALL";
+  }
+
+  return "NONE";
+}
+
+function resolveHydrationRadius(pointSizePx, hydrationBandClass, overlayClass, flowClass, retentionClass) {
   if (overlayClass === "ICE_SHEEN" || overlayClass === "PARTIAL_ICE") {
     return pointSizePx * 1.18;
   }
+
+  if (retentionClass === "MAJOR_LAKE") return pointSizePx * 1.02;
+  if (retentionClass === "LAKE") return pointSizePx * 0.96;
+  if (retentionClass === "WETLAND") return pointSizePx * 0.94;
+  if (flowClass === "RIVER") return pointSizePx * 0.86;
+  if (flowClass === "STREAM") return pointSizePx * 0.78;
+  if (flowClass === "BROOK") return pointSizePx * 0.68;
 
   switch (hydrationBandClass) {
     case "CHANNEL_CORE":
@@ -282,10 +375,18 @@ function resolveHydrationRadius(pointSizePx, hydrationBandClass, overlayClass) {
   }
 }
 
-function resolveHydrationColor(hydrationClass, hydrationBandClass, overlayClass) {
+function resolveHydrationColor(hydrationClass, hydrationBandClass, overlayClass, flowClass, retentionClass, dropClass) {
+  if (dropClass === "WATERFALL" || dropClass === "ESCARPMENT_FALL") return "rgba(210,236,255,0.96)";
   if (overlayClass === "ICE_SHEEN") return "rgba(232,244,255,0.90)";
   if (overlayClass === "PARTIAL_ICE") return "rgba(206,230,248,0.82)";
   if (overlayClass === "THAW_GLEAM") return "rgba(144,214,255,0.28)";
+
+  if (retentionClass === "MAJOR_LAKE") return "rgba(82,166,224,0.94)";
+  if (retentionClass === "LAKE" || retentionClass === "MICRO_RESERVOIR") return "rgba(92,176,232,0.92)";
+  if (retentionClass === "WETLAND") return "rgba(110,168,126,0.88)";
+  if (flowClass === "RIVER") return "rgba(98,188,236,0.94)";
+  if (flowClass === "STREAM") return "rgba(118,198,240,0.90)";
+  if (flowClass === "BROOK") return "rgba(146,208,242,0.82)";
 
   switch (hydrationBandClass) {
     case "CHANNEL_CORE":
@@ -320,10 +421,16 @@ function resolveHydrationColor(hydrationClass, hydrationBandClass, overlayClass)
   }
 }
 
-function resolveHydrationAlpha(hydrationBlendStrength, overlayClass, hydrationClass) {
+function resolveHydrationAlpha(hydrationBlendStrength, overlayClass, hydrationClass, flowClass, retentionClass, dropClass) {
+  if (dropClass === "WATERFALL" || dropClass === "ESCARPMENT_FALL") return 0.96;
   if (overlayClass === "THAW_GLEAM") return 0.22;
   if (overlayClass === "ICE_SHEEN") return 0.90;
   if (overlayClass === "PARTIAL_ICE") return 0.82;
+  if (retentionClass === "WETLAND") return 0.88;
+  if (retentionClass === "MAJOR_LAKE" || retentionClass === "LAKE") return 0.92;
+  if (flowClass === "RIVER") return 0.94;
+  if (flowClass === "STREAM") return 0.90;
+  if (flowClass === "BROOK") return 0.82;
 
   const base =
     hydrationClass === "WETLAND"
@@ -335,7 +442,13 @@ function resolveHydrationAlpha(hydrationBlendStrength, overlayClass, hydrationCl
   return clamp(base * (0.72 + hydrationBlendStrength * 0.28), 0.18, 1);
 }
 
-function resolveOverlayOnly(overlayClass) {
+function resolveOverlayOnly(overlayClass, flowClass, retentionClass, dropClass) {
+  if (dropClass === "WATERFALL" || dropClass === "ESCARPMENT_FALL") return true;
+  if (retentionClass === "MAJOR_LAKE" || retentionClass === "LAKE" || retentionClass === "MICRO_RESERVOIR" || retentionClass === "WETLAND") {
+    return true;
+  }
+  if (flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK") return true;
+
   return (
     overlayClass === "THAW_GLEAM" ||
     overlayClass === "ICE_SHEEN" ||
@@ -347,7 +460,7 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
   if (!packet || typeof packet !== "object") return null;
 
   return Object.freeze({
-    contractId: "HYDRATION_RENDER_CONTRACT_v2",
+    contractId: "HYDRATION_RENDER_CONTRACT_v3",
     engineKey: "hydration",
     layer: normalizeString(packet.layer, "hydration"),
     color: normalizeColor(packet.color, fallbackColor),
@@ -362,17 +475,31 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
       1
     ),
     overlayOnly: packet.overlayOnly === true,
+
     hydrationClass: normalizeString(packet.hydrationClass, "NONE"),
     hydrationBandClass: normalizeString(packet.hydrationBandClass, "NONE"),
     hydrationOverlayClass: normalizeString(packet.hydrationOverlayClass, "NONE"),
     shoreHandoffClass: normalizeString(packet.shoreHandoffClass, "NONE"),
     freezeThawClass: normalizeString(packet.freezeThawClass, "NONE"),
+
+    flowClass: normalizeString(packet.flowClass, "NONE"),
+    retentionClass: normalizeString(packet.retentionClass, "NONE"),
+    hydrationOrgan: normalizeString(packet.hydrationOrgan, "NONE"),
+    dropClass: normalizeString(packet.dropClass, "NONE"),
+    flowDirection: normalizeString(packet.flowDirection, "NONE"),
+
     subdivisionTier: Number.isInteger(packet.subdivisionTier) ? packet.subdivisionTier : 1,
     hydrationBlendStrength: clamp(
       isFiniteNumber(packet.hydrationBlendStrength) ? packet.hydrationBlendStrength : 0,
       0,
       1
     ),
+    flowStrength: clamp(
+      isFiniteNumber(packet.flowStrength) ? packet.flowStrength : 0,
+      0,
+      1
+    ),
+
     renderIntent: Object.freeze({
       drawsHydration: true,
       ownsOceanFill: false,
@@ -404,8 +531,16 @@ export function resolveHydrationPacket({
   const freezeThawClass = resolveFreezeThawClass(sample, primitiveTime);
   const hydrationOverlayClass = resolveHydrationOverlayClass(sample, primitiveTime);
   const shoreHandoffClass = resolveShoreHandoffClass(sample, neighbors);
+
+  const flowClass = classifyFlowClass(sample);
+  const retentionClass = classifyRetentionClass(sample, flowClass);
+  const hydrationOrgan = classifyHydrationOrgan(sample, flowClass, retentionClass);
+  const dropClass = resolveDropClass(sample, flowClass);
+  const flowDirection = normalizeString(sample?.flowDirection, "NONE");
+
   const subdivisionTier = resolveSubdivisionTier(hydrationBandClass);
   const hydrationBlendStrength = resolveHydrationBlendStrength(sample, hydrationBandClass);
+  const flowStrength = classifyFlowStrength(sample);
 
   const safePointSizePx = clamp(
     isFiniteNumber(pointSizePx) ? pointSizePx : 1,
@@ -416,22 +551,35 @@ export function resolveHydrationPacket({
   const radiusPx = resolveHydrationRadius(
     safePointSizePx,
     hydrationBandClass,
-    hydrationOverlayClass
+    hydrationOverlayClass,
+    flowClass,
+    retentionClass
   );
 
   const color = resolveHydrationColor(
     hydrationClass,
     hydrationBandClass,
-    hydrationOverlayClass
+    hydrationOverlayClass,
+    flowClass,
+    retentionClass,
+    dropClass
   );
 
   const alpha = resolveHydrationAlpha(
     hydrationBlendStrength,
     hydrationOverlayClass,
-    hydrationClass
+    hydrationClass,
+    flowClass,
+    retentionClass,
+    dropClass
   );
 
-  const overlayOnly = resolveOverlayOnly(hydrationOverlayClass);
+  const overlayOnly = resolveOverlayOnly(
+    hydrationOverlayClass,
+    flowClass,
+    retentionClass,
+    dropClass
+  );
 
   return normalizePacket({
     layer: "hydration",
@@ -439,13 +587,22 @@ export function resolveHydrationPacket({
     radiusPx,
     alpha,
     overlayOnly,
+
     hydrationClass,
     hydrationBandClass,
     hydrationOverlayClass,
     shoreHandoffClass,
     freezeThawClass,
+
+    flowClass,
+    retentionClass,
+    hydrationOrgan,
+    dropClass,
+    flowDirection,
+
     subdivisionTier,
-    hydrationBlendStrength
+    hydrationBlendStrength,
+    flowStrength
   }, baseColor, safePointSizePx);
 }
 

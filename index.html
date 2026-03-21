@@ -23,7 +23,6 @@ html, body {
   height: 100%;
 }
 
-/* 🔥 FORCE CANVAS VISIBILITY */
 #world {
   position: absolute;
   inset: 0;
@@ -31,10 +30,9 @@ html, body {
   height: 100vh;
   display: block;
   z-index: 0;
-  background: black;
+  background: #000;
 }
 
-/* KEEP UI ABOVE CANVAS */
 #runtime-root,
 #diagnostics-dock,
 #debug-panel {
@@ -42,25 +40,33 @@ html, body {
   z-index: 10;
 }
 
-#boot-status{
-  position:fixed;
-  top:0;
-  left:0;
-  padding:6px 10px;
-  font-family:monospace;
-  font-size:12px;
-  color:#0f0;
-  background:#000;
-  z-index:9999;
+#boot-status {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: auto;
+  max-width: calc(100vw - 16px);
+  padding: 6px 10px;
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #0f0;
+  background: #000;
+  border-right: 1px solid rgba(255,255,255,0.12);
+  border-bottom: 1px solid rgba(255,255,255,0.12);
+  z-index: 9999;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
-</style>
 
+.boot-ok { color: #7fffd4; }
+.boot-warn { color: #ffd27a; }
+.boot-fail { color: #ff7a7a; }
+</style>
 </head>
 
 <body data-mode="round" data-diagnostics="peek">
-
 <div id="app-shell">
-
   <canvas id="world"></canvas>
 
   <div id="runtime-root"></div>
@@ -75,46 +81,97 @@ html, body {
   </div>
 
   <div id="debug-panel" class="debug-panel"></div>
-
 </div>
 
-<div id="boot-status">BOOTING...</div>
+<div id="boot-status" class="boot-warn">BOOTING...</div>
 
 <script type="module">
-const status = document.getElementById("boot-status");
+const statusNode = document.getElementById("boot-status");
+const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
-function log(msg){
-  if(status) status.textContent = msg;
-  console.log("[BOOT]", msg);
+const MODULES = Object.freeze([
+  Object.freeze({ key: "world_kernel", path: "/world/world_kernel.js" }),
+  Object.freeze({ key: "planet_engine", path: "/world/planet_engine.js" }),
+  Object.freeze({ key: "render", path: "/world/render.js" }),
+  Object.freeze({ key: "control", path: "/world/control.js" }),
+  Object.freeze({ key: "instruments", path: "/assets/instruments.js" }),
+  Object.freeze({ key: "runtime", path: "/world/runtime/world_runtime.js" })
+]);
+
+function setStatus(message, tone = "boot-warn") {
+  if (statusNode) {
+    statusNode.textContent = message;
+    statusNode.className = tone;
+  }
+  console.log("[BOOT]", message);
 }
 
-try {
-  log("IMPORTING RUNTIME...");
-  const mod = await import("/world/runtime/world_runtime.js");
+function toMessage(error) {
+  if (error instanceof Error && typeof error.message === "string" && error.message.length > 0) {
+    return error.message;
+  }
+  return String(error);
+}
 
-  log("RUNTIME IMPORTED");
+async function importModule(definition) {
+  setStatus(`IMPORTING ${definition.key.toUpperCase()}...`, "boot-warn");
+  const mod = await import(definition.path);
+  setStatus(`IMPORTED ${definition.key.toUpperCase()}`, "boot-ok");
+  return mod;
+}
 
-  if (mod?.startRuntime) {
-    log("STARTING RUNTIME...");
-    mod.startRuntime();
-    log("RUNNING");
-  } else if (mod?.default?.startRuntime) {
-    log("STARTING DEFAULT...");
-    mod.default.startRuntime();
-    log("RUNNING");
-  } else {
-    log("ERROR: startRuntime missing");
+async function preflightModules() {
+  const loaded = Object.create(null);
+
+  for (const definition of MODULES) {
+    try {
+      loaded[definition.key] = await importModule(definition);
+    } catch (error) {
+      const message = toMessage(error);
+      setStatus(
+        `BOOT ERROR: ${definition.key} import failed\n${definition.path}\n${message}`,
+        "boot-fail"
+      );
+      console.error(`[BOOT] ${definition.key} import failed`, error);
+      throw error;
+    }
   }
 
-} catch (err) {
-  log("BOOT ERROR: " + err.message);
-  console.error(err);
+  return loaded;
 }
 
-document.getElementById("diagnostics-toggle")?.addEventListener("click", () => {
+function resolveStartRuntime(runtimeModule) {
+  if (typeof runtimeModule?.startRuntime === "function") return runtimeModule.startRuntime;
+  if (typeof runtimeModule?.default?.startRuntime === "function") return runtimeModule.default.startRuntime;
+  return null;
+}
+
+async function boot() {
+  try {
+    const modules = await preflightModules();
+    const startRuntime = resolveStartRuntime(modules.runtime);
+
+    if (!startRuntime) {
+      setStatus(
+        "BOOT ERROR: runtime startRuntime missing\n/world/runtime/world_runtime.js",
+        "boot-fail"
+      );
+      return;
+    }
+
+    setStatus("STARTING RUNTIME...", "boot-warn");
+    startRuntime();
+    setStatus("RUNNING", "boot-ok");
+  } catch {
+    // exact failure already confessed above
+  }
+}
+
+diagnosticsToggle?.addEventListener("click", () => {
   window.location.href = "/gauges/";
 });
-</script>
 
+boot();
+</script>
 </body>
 </html>

@@ -1,11 +1,12 @@
 // /world/render/hydration_render_engine.js
-// MODE: EXECUTION-ONLY | NON-DRIFT | SIDESTREAM SPECIALIST
-// OWNER_LAYER: EXPRESSION
+// MODE: RENDER EXTENSION FACTOR
+// STATUS: HYDRATION PORT AUTHORITY
 // ROLE:
-// - express non-ocean hydration
+// - express non-ocean hydration only
 // - classify inland/coastal hydration bands
-// - return a normalized render packet
+// - return a normalized packet or null
 // - provide ocean-adjacent handoff without owning ocean fill
+// - own no boot, no runtime, no truth
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -15,44 +16,40 @@ function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
-function averagePoint(points) {
-  let x = 0;
-  let y = 0;
-  let z = 0;
+function normalizeColor(value, fallback) {
+  return typeof value === "string" && value.length > 0 ? value : fallback;
+}
 
-  for (let i = 0; i < points.length; i += 1) {
-    x += points[i].x;
-    y += points[i].y;
-    z += points[i].z ?? 0;
-  }
-
-  const n = points.length || 1;
+function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
+  if (!packet || typeof packet !== "object") return null;
 
   return {
-    x: x / n,
-    y: y / n,
-    z: z / n
+    engineKey: "hydration",
+    layer: typeof packet.layer === "string" ? packet.layer : "hydration",
+    color: normalizeColor(packet.color, fallbackColor),
+    radiusPx: clamp(
+      isFiniteNumber(packet.radiusPx) ? packet.radiusPx : fallbackRadiusPx,
+      0.6,
+      12
+    ),
+    alpha: clamp(
+      isFiniteNumber(packet.alpha) ? packet.alpha : 1,
+      0,
+      1
+    ),
+    overlayOnly: packet.overlayOnly === true,
+    hydrationClass: typeof packet.hydrationClass === "string" ? packet.hydrationClass : "NONE",
+    hydrationBandClass: typeof packet.hydrationBandClass === "string" ? packet.hydrationBandClass : "NONE",
+    hydrationOverlayClass: typeof packet.hydrationOverlayClass === "string" ? packet.hydrationOverlayClass : "NONE",
+    shoreHandoffClass: typeof packet.shoreHandoffClass === "string" ? packet.shoreHandoffClass : "NONE",
+    freezeThawClass: typeof packet.freezeThawClass === "string" ? packet.freezeThawClass : "NONE",
+    subdivisionTier: Number.isInteger(packet.subdivisionTier) ? packet.subdivisionTier : 1,
+    hydrationBlendStrength: clamp(
+      isFiniteNumber(packet.hydrationBlendStrength) ? packet.hydrationBlendStrength : 0,
+      0,
+      1
+    )
   };
-}
-
-function scalePoints(points, center, scale) {
-  return points.map((point) => ({
-    ...point,
-    x: center.x + (point.x - center.x) * scale,
-    y: center.y + (point.y - center.y) * scale
-  }));
-}
-
-function measurePrimitiveSpan(points) {
-  let span = 0;
-
-  for (let i = 0; i < points.length; i += 1) {
-    const a = points[i];
-    const b = points[(i + 1) % points.length];
-    span = Math.max(span, Math.abs(a.x - b.x), Math.abs(a.y - b.y));
-  }
-
-  return span;
 }
 
 function getWrappedX(x, width) {
@@ -104,6 +101,7 @@ function isOceanOwnerDomain(sample) {
     sample?.flowClass === "RIVER" ||
     sample?.flowClass === "STREAM" ||
     sample?.flowClass === "LAKE" ||
+    sample?.flowClass === "SEA" ||
     sample?.riverCandidate === true ||
     sample?.lakeCandidate === true ||
     sample?.macroWaterClass === "SEA"
@@ -117,7 +115,12 @@ function isSeaAdjacentHydration(sample) {
 function isWetlandLike(sample) {
   return (
     sample?.biomeType === "WETLAND" ||
-    (isFiniteNumber(sample?.basinAccumulation) && sample.basinAccumulation >= 0.58 && sample?.slope <= 0.12)
+    (
+      isFiniteNumber(sample?.basinAccumulation) &&
+      sample.basinAccumulation >= 0.58 &&
+      isFiniteNumber(sample?.slope) &&
+      sample.slope <= 0.12
+    )
   );
 }
 
@@ -125,52 +128,49 @@ function getPrimitiveTimeState(globalPrimitiveTime) {
   const time = globalPrimitiveTime && typeof globalPrimitiveTime === "object" ? globalPrimitiveTime : {};
 
   return {
-    tick: isFiniteNumber(time.tick) ? time.tick : 0,
-    cycle: isFiniteNumber(time.cycle) ? time.cycle : 0,
-    day: isFiniteNumber(time.day) ? time.day : 0,
-    yearDayIndex: isFiniteNumber(time.yearDayIndex) ? time.yearDayIndex : 0,
-    yearLength: isFiniteNumber(time.yearLength) ? time.yearLength : 256,
     cyclePhase: typeof time.cyclePhase === "string" ? time.cyclePhase : "DAY",
     seasonalPhase: typeof time.seasonalPhase === "string" ? time.seasonalPhase : "MID"
   };
 }
 
 function resolveHydrationClass(sample) {
+  if (!sample) return "NONE";
   if (isOceanOwnerDomain(sample)) return "NON_HYDRATION_DOMAIN";
 
-  if (sample?.waterMask === 1) {
-    if (sample?.flowClass === "RIVER") return "RIVER";
-    if (sample?.flowClass === "STREAM") return "STREAM";
-    if (sample?.flowClass === "LAKE") return "LAKE";
+  if (sample.waterMask === 1) {
+    if (sample.flowClass === "RIVER") return "RIVER";
+    if (sample.flowClass === "STREAM") return "STREAM";
+    if (sample.flowClass === "LAKE") return "LAKE";
     if (isSeaAdjacentHydration(sample)) return "LITTORAL_WATER";
   }
 
   if (isWetlandLike(sample)) return "WETLAND";
-  if (sample?.riverCandidate === true) return "RIVER_BANK";
-  if (sample?.lakeCandidate === true) return "LAKE_MARGIN";
-  if (sample?.shoreline === true || sample?.shorelineBand === true) return "COASTAL_HYDRATION_EDGE";
+  if (sample.riverCandidate === true) return "RIVER_BANK";
+  if (sample.lakeCandidate === true) return "LAKE_MARGIN";
+  if (sample.shoreline === true || sample.shorelineBand === true) return "COASTAL_HYDRATION_EDGE";
 
   return "NONE";
 }
 
 function resolveHydrationBandClass(sample, neighbors) {
+  if (!sample) return "NONE";
   if (isOceanOwnerDomain(sample)) return "NONE";
 
   const waterNeighborCount = countWaterNeighbors(neighbors);
   const landNeighborCount = countLandNeighbors(neighbors);
 
-  if (sample?.waterMask === 1) {
-    if (sample?.flowClass === "RIVER") return "CHANNEL_CORE";
-    if (sample?.flowClass === "STREAM") return "STREAM_THREAD";
-    if (sample?.flowClass === "LAKE") return landNeighborCount > 0 ? "LAKE_EDGE" : "LAKE_CORE";
+  if (sample.waterMask === 1) {
+    if (sample.flowClass === "RIVER") return "CHANNEL_CORE";
+    if (sample.flowClass === "STREAM") return "STREAM_THREAD";
+    if (sample.flowClass === "LAKE") return landNeighborCount > 0 ? "LAKE_EDGE" : "LAKE_CORE";
     if (isSeaAdjacentHydration(sample)) return landNeighborCount > 0 ? "SEA_EDGE" : "SEA_NEARSHORE";
   }
 
-  if (sample?.biomeType === "WETLAND") return "WETLAND_BAND";
-  if (sample?.shoreline === true) return "COAST_EDGE";
-  if (sample?.shorelineBand === true) return "COAST_BAND";
-  if (sample?.riverCandidate === true && waterNeighborCount > 0) return "RIVER_BANK";
-  if (sample?.lakeCandidate === true && waterNeighborCount > 0) return "LAKE_MARGIN";
+  if (sample.biomeType === "WETLAND") return "WETLAND_BAND";
+  if (sample.shoreline === true) return "COAST_EDGE";
+  if (sample.shorelineBand === true) return "COAST_BAND";
+  if (sample.riverCandidate === true && waterNeighborCount > 0) return "RIVER_BANK";
+  if (sample.lakeCandidate === true && waterNeighborCount > 0) return "LAKE_MARGIN";
 
   return "NONE";
 }
@@ -183,12 +183,15 @@ function resolveFreezeThawClass(sample, primitiveTime) {
 
   if (freeze >= 0.82 && melt <= 0.18) return "FROZEN";
   if (freeze >= 0.58 && melt <= 0.34) return "PARTIAL_FREEZE";
-  if (melt >= 0.72 && (cyclePhase === "DAY" || cyclePhase === "DAWN" || seasonalPhase === "WARM")) return "THAW_ACTIVE";
+  if (melt >= 0.72 && (cyclePhase === "DAY" || cyclePhase === "DAWN" || seasonalPhase === "WARM")) {
+    return "THAW_ACTIVE";
+  }
   if (freeze >= 0.34 || melt >= 0.34) return "TRANSITION";
   return "NONE";
 }
 
 function resolveShoreHandoffClass(sample, neighbors) {
+  if (!sample) return "NONE";
   if (isOceanOwnerDomain(sample)) return "NONE";
 
   const landNeighborCount = countLandNeighbors(neighbors);
@@ -199,12 +202,12 @@ function resolveShoreHandoffClass(sample, neighbors) {
     return "SEA_TO_WATER_BLEND";
   }
 
-  if (sample?.shoreline === true || sample?.shorelineBand === true) {
+  if (sample.shoreline === true || sample.shorelineBand === true) {
     if (waterNeighborCount > 0) return "LAND_TO_WATER_EDGE";
   }
 
-  if (sample?.riverCandidate === true || sample?.lakeCandidate === true) return "INLAND_TO_SURFACE_WATER";
-  if (sample?.biomeType === "WETLAND") return "WETLAND_TO_LAND";
+  if (sample.riverCandidate === true || sample.lakeCandidate === true) return "INLAND_TO_SURFACE_WATER";
+  if (sample.biomeType === "WETLAND") return "WETLAND_TO_LAND";
 
   return "NONE";
 }
@@ -222,35 +225,6 @@ function resolveHydrationOverlayClass(sample, primitiveTime) {
   if (sample?.shoreline === true || sample?.shorelineBand === true) return "LITTORAL_MOISTURE";
 
   return "NONE";
-}
-
-function resolveHydrationPrimitiveType(hydrationBandClass) {
-  switch (hydrationBandClass) {
-    case "CHANNEL_CORE":
-      return "RIVER_THREAD";
-    case "STREAM_THREAD":
-      return "STREAM_THREAD";
-    case "LAKE_EDGE":
-      return "HALF_TRIANGLE";
-    case "LAKE_CORE":
-      return "FULL_DIAMOND";
-    case "SEA_EDGE":
-      return "HALF_TRIANGLE";
-    case "SEA_NEARSHORE":
-      return "FULL_DIAMOND";
-    case "WETLAND_BAND":
-      return "FULL_DIAMOND";
-    case "COAST_EDGE":
-      return "HALF_TRIANGLE";
-    case "COAST_BAND":
-      return "QUARTER_TRIANGLE";
-    case "RIVER_BANK":
-      return "QUARTER_TRIANGLE";
-    case "LAKE_MARGIN":
-      return "QUARTER_TRIANGLE";
-    default:
-      return "FULL_DIAMOND";
-  }
 }
 
 function resolveSubdivisionTier(hydrationBandClass) {
@@ -300,136 +274,137 @@ function resolveHydrationBlendStrength(sample, hydrationBandClass) {
   }
 }
 
-function resolveOrientation(sample, neighbors) {
-  const northWater = neighbors.north?.waterMask === 1 ? 1 : 0;
-  const eastWater = neighbors.east?.waterMask === 1 ? 1 : 0;
-  const southWater = neighbors.south?.waterMask === 1 ? 1 : 0;
-  const westWater = neighbors.west?.waterMask === 1 ? 1 : 0;
-
-  const maxWater = Math.max(northWater, eastWater, southWater, westWater);
-
-  if (maxWater > 0) {
-    if (northWater === maxWater) return "N";
-    if (eastWater === maxWater) return "E";
-    if (southWater === maxWater) return "S";
-    return "W";
+function resolveHydrationRadius(pointSizePx, hydrationBandClass, overlayClass) {
+  if (overlayClass === "ICE_SHEEN" || overlayClass === "PARTIAL_ICE") {
+    return pointSizePx * 1.18;
   }
 
-  const flowDirection = typeof sample?.flowDirection === "string" ? sample.flowDirection : "NONE";
-
-  if (flowDirection === "N" || flowDirection === "NE" || flowDirection === "NW") return "N";
-  if (flowDirection === "E" || flowDirection === "NE" || flowDirection === "SE") return "E";
-  if (flowDirection === "S" || flowDirection === "SE" || flowDirection === "SW") return "S";
-  if (flowDirection === "W" || flowDirection === "NW" || flowDirection === "SW") return "W";
-
-  return "CENTER";
-}
-
-function buildTriangleFromDiamond(points, orientation) {
-  const north = points[0];
-  const east = points[1];
-  const south = points[2];
-  const west = points[3];
-
-  switch (orientation) {
-    case "N":
-      return [north, east, west];
-    case "E":
-      return [east, north, south];
-    case "S":
-      return [south, east, west];
-    case "W":
-      return [west, north, south];
+  switch (hydrationBandClass) {
+    case "CHANNEL_CORE":
+    case "STREAM_THREAD":
+      return pointSizePx * 0.84;
+    case "LAKE_EDGE":
+    case "SEA_EDGE":
+      return pointSizePx * 0.94;
+    case "LAKE_CORE":
+    case "SEA_NEARSHORE":
+      return pointSizePx * 1.00;
+    case "WETLAND_BAND":
+      return pointSizePx * 1.08;
+    case "COAST_EDGE":
+      return pointSizePx * 1.02;
+    case "COAST_BAND":
+      return pointSizePx * 0.96;
+    case "RIVER_BANK":
+    case "LAKE_MARGIN":
+      return pointSizePx * 0.90;
     default:
-      return [north, east, west];
+      return pointSizePx;
   }
 }
 
-function buildRiverThread(points, orientation, scalePrimary, scaleSecondary) {
-  const center = averagePoint(points);
-  const diamond = scalePoints(points, center, scalePrimary);
-  const triangle = buildTriangleFromDiamond(points, orientation);
-  const thread = scalePoints(triangle, center, scaleSecondary);
+function resolveHydrationColor(hydrationClass, hydrationBandClass, overlayClass) {
+  if (overlayClass === "ICE_SHEEN") return "rgba(232,244,255,0.90)";
+  if (overlayClass === "PARTIAL_ICE") return "rgba(206,230,248,0.82)";
+  if (overlayClass === "THAW_GLEAM") return "rgba(144,214,255,0.28)";
 
-  if (thread.length >= 3) return thread;
-  return diamond;
+  switch (hydrationBandClass) {
+    case "CHANNEL_CORE":
+      return "rgba(88,176,228,0.94)";
+    case "STREAM_THREAD":
+      return "rgba(100,186,234,0.92)";
+    case "LAKE_EDGE":
+      return "rgba(82,166,224,0.94)";
+    case "LAKE_CORE":
+      return "rgba(74,154,214,0.94)";
+    case "SEA_EDGE":
+      return "rgba(70,150,212,0.88)";
+    case "SEA_NEARSHORE":
+      return "rgba(62,142,206,0.84)";
+    case "WETLAND_BAND":
+      return "rgba(92,154,112,0.90)";
+    case "COAST_EDGE":
+      return "rgba(214,202,144,0.92)";
+    case "COAST_BAND":
+      return "rgba(200,190,138,0.88)";
+    case "RIVER_BANK":
+      return "rgba(132,188,162,0.86)";
+    case "LAKE_MARGIN":
+      return "rgba(122,182,170,0.84)";
+    default:
+      if (hydrationClass === "WETLAND") return "rgba(92,154,112,0.90)";
+      if (hydrationClass === "RIVER") return "rgba(88,176,228,0.94)";
+      if (hydrationClass === "STREAM") return "rgba(100,186,234,0.92)";
+      if (hydrationClass === "LAKE") return "rgba(74,154,214,0.94)";
+      if (hydrationClass === "COASTAL_HYDRATION_EDGE") return "rgba(206,196,138,0.88)";
+      return "rgba(88,176,228,0.90)";
+  }
 }
 
-function buildPrimitivePoints(signalCell, primitiveType, orientation) {
-  const center = averagePoint(signalCell.points);
+function resolveHydrationAlpha(hydrationBlendStrength, overlayClass, hydrationClass) {
+  if (overlayClass === "THAW_GLEAM") return 0.22;
+  if (overlayClass === "ICE_SHEEN") return 0.90;
+  if (overlayClass === "PARTIAL_ICE") return 0.82;
 
-  if (primitiveType === "FULL_DIAMOND") {
-    return scalePoints(signalCell.points, center, 1);
-  }
+  const base =
+    hydrationClass === "WETLAND"
+      ? 0.90
+      : hydrationClass === "COASTAL_HYDRATION_EDGE"
+        ? 0.86
+        : 0.92;
 
-  if (primitiveType === "HALF_TRIANGLE") {
-    return scalePoints(buildTriangleFromDiamond(signalCell.points, orientation), center, 0.90);
-  }
+  return clamp(base * (0.72 + hydrationBlendStrength * 0.28), 0.18, 1);
+}
 
-  if (primitiveType === "QUARTER_TRIANGLE") {
-    return scalePoints(buildTriangleFromDiamond(signalCell.points, orientation), center, 0.58);
-  }
-
-  if (primitiveType === "RIVER_THREAD") {
-    return buildRiverThread(signalCell.points, orientation, 0.52, 0.34);
-  }
-
-  if (primitiveType === "STREAM_THREAD") {
-    return buildRiverThread(signalCell.points, orientation, 0.42, 0.24);
-  }
-
-  return scalePoints(signalCell.points, center, 1);
+function resolveOverlayOnly(overlayClass) {
+  return (
+    overlayClass === "THAW_GLEAM" ||
+    overlayClass === "ICE_SHEEN" ||
+    overlayClass === "PARTIAL_ICE"
+  );
 }
 
 export function resolveHydrationPacket({
   sample,
-  signalCell,
-  x,
-  y,
-  grid,
-  globalPrimitiveTime = null
+  pointSizePx,
+  grid = null,
+  x = 0,
+  y = 0,
+  globalPrimitiveTime = null,
+  baseColor = "rgba(88,176,228,0.90)"
 }) {
+  if (!sample) return null;
+
   const primitiveTime = getPrimitiveTimeState(globalPrimitiveTime);
   const neighbors = getNeighbors4(grid, x, y);
 
   const hydrationClass = resolveHydrationClass(sample);
+  if (hydrationClass === "NON_HYDRATION_DOMAIN" || hydrationClass === "NONE") return null;
+
   const hydrationBandClass = resolveHydrationBandClass(sample, neighbors);
   const freezeThawClass = resolveFreezeThawClass(sample, primitiveTime);
   const hydrationOverlayClass = resolveHydrationOverlayClass(sample, primitiveTime);
   const shoreHandoffClass = resolveShoreHandoffClass(sample, neighbors);
-  const orientation = resolveOrientation(sample, neighbors);
+  const subdivisionTier = resolveSubdivisionTier(hydrationBandClass);
+  const hydrationBlendStrength = resolveHydrationBlendStrength(sample, hydrationBandClass);
 
-  const hydrationPrimitiveType =
-    hydrationClass === "NON_HYDRATION_DOMAIN" || hydrationClass === "NONE"
-      ? "FULL_DIAMOND"
-      : resolveHydrationPrimitiveType(hydrationBandClass);
+  const radiusPx = resolveHydrationRadius(pointSizePx, hydrationBandClass, hydrationOverlayClass);
+  const color = resolveHydrationColor(hydrationClass, hydrationBandClass, hydrationOverlayClass);
+  const alpha = resolveHydrationAlpha(hydrationBlendStrength, hydrationOverlayClass, hydrationClass);
+  const overlayOnly = resolveOverlayOnly(hydrationOverlayClass);
 
-  const hydrationPrimitivePoints = buildPrimitivePoints(
-    signalCell,
-    hydrationPrimitiveType,
-    orientation
-  );
-
-  const subdivisionTier =
-    hydrationClass === "NON_HYDRATION_DOMAIN" || hydrationClass === "NONE"
-      ? 1
-      : resolveSubdivisionTier(hydrationBandClass);
-
-  const hydrationBlendStrength =
-    hydrationClass === "NON_HYDRATION_DOMAIN" || hydrationClass === "NONE"
-      ? 0
-      : resolveHydrationBlendStrength(sample, hydrationBandClass);
-
-  return {
+  return normalizePacket({
+    layer: "hydration",
+    color,
+    radiusPx,
+    alpha,
+    overlayOnly,
     hydrationClass,
     hydrationBandClass,
-    hydrationPrimitiveType,
-    hydrationPrimitivePoints,
-    hydrationBlendStrength,
     hydrationOverlayClass,
     shoreHandoffClass,
     freezeThawClass,
     subdivisionTier,
-    approxSpanPx: clamp(measurePrimitiveSpan(hydrationPrimitivePoints), 0, Number.MAX_SAFE_INTEGER)
-  };
+    hydrationBlendStrength
+  }, baseColor, pointSizePx);
 }

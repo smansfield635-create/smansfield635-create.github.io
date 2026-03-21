@@ -2502,31 +2502,7 @@ if (!Number.isFinite(summary.elevationMax)) summary.elevationMax = 0;
 return Object.freeze(summary);
 }
 
-function buildCompleteness() {
-return Object.freeze({
-base_sample_grid: true,
-macro_continent_field: true,
-land_water_classification: true,
-continent_labels: true,
-summit_realization: true,
-basin_realization: true,
-ocean_depth_realization: true,
-climate_bands: true,
-topology_fields: true,
-land_topology_coordination: true,
-thermodynamics: true,
-hydrology: true,
-seasonal_field: true,
-magnetics: true,
-materials: true,
-sediment: true,
-surface_biome_threshold_bands: true,
-surface_biome_precedence_tiebreak: true,
-surface_biome_sampling_unit_assignment: true,
-final_terrain_class: true,
-summary_completeness: true
-});
-}
+
 
 function finalizeSamples(grid) {
 return Object.freeze(
@@ -2549,22 +2525,74 @@ delete finalized.anchorScores;
     })  
   )  
 )
-
-);
+function buildCompleteness() {
+  return Object.freeze({
+    base_sample_grid: true,
+    macro_continent_field: true,
+    land_water_classification: true,
+    continent_labels: true,
+    summit_realization: true,
+    basin_realization: true,
+    elevation_redistribution: true,
+    ocean_depth_realization: true,
+    climate_bands: true,
+    topology_fields: true,
+    land_topology_coordination: true,
+    thermodynamics: true,
+    hydrology: true,
+    seasonal_field: true,
+    magnetics: true,
+    materials: true,
+    sediment: true,
+    surface_biome_threshold_bands: true,
+    surface_biome_precedence_tiebreak: true,
+    surface_biome_sampling_unit_assignment: true,
+    final_terrain_class: true,
+    summary_completeness: true
+  });
 }
 
 function buildPlanetFieldInternal(constants) {
-const stage0 = stageBaseSampleGrid(constants);
-const stage1 = stageMacroContinentField(stage0, constants);
-const stage2 = stageLandWaterClassification(stage1, constants);
-const stage3 = stageContinentLabels(stage2, constants);
-const stage4 = stageSummitRealization(stage3, constants);
-const stage5 = stageBasinRealization(stage4, constants);
-const stage6 = stageOceanDepthRealization(stage5, constants);
-const stage7 = stageClimateBands(stage6, constants);
-const stage8 = stageTopologyFields(stage7, constants);
-const stage9Result = stageLandTopologyCoordination(stage8, constants);
-const stage9 = stage9Result.grid;
+  const stage0 = stageBaseSampleGrid(constants);
+  const stage1 = stageMacroContinentField(stage0, constants);
+  const stage2 = stageLandWaterClassification(stage1, constants);
+  const stage3 = stageContinentLabels(stage2, constants);
+  const stage4 = stageSummitRealization(stage3, constants);
+  const stage5 = stageBasinRealization(stage4, constants);
+
+  // NEW CONTRACT INSERT (critical)
+  const stage6 = stageElevationRedistribution(stage5);
+
+  const stage7 = stageOceanDepthRealization(stage6, constants);
+  const stage8 = stageClimateBands(stage7, constants);
+  const stage9 = stageTopologyFields(stage8, constants);
+
+  const stage10Result = stageLandTopologyCoordination(stage9, constants);
+  const stage10 = stage10Result.grid;
+
+  const stage11 = stageThermodynamics(stage10, constants);
+  const stage12 = stageHydrology(stage11, constants);
+  const stage13 = stageSeasonalField(stage12, constants);
+  const stage14 = stageMagnetics(stage13, constants);
+  const stage15 = stageMaterials(stage14);
+  const stage16 = stageSediment(stage15);
+  const stage17 = stageSurfaceBiomeThresholdBands(stage16, constants);
+  const stage18 = stageSurfaceBiomePrecedenceTiebreak(stage17, constants);
+  const stage19 = stageSurfaceBiomeSamplingUnitAssignment(stage18, constants);
+  const stage20 = stageFinalTerrainClass(stage19, constants);
+
+  const samples = finalizeSamples(stage20);
+  const summary = buildSummary(samples, constants, stage10Result.diagnostics);
+  const completeness = buildCompleteness();
+
+  return Object.freeze({
+    width: constants.width,
+    height: constants.height,
+    samples,
+    summary,
+    completeness
+  });
+}
 const stage10 = stageThermodynamics(stage9, constants);
 const stage11 = stageHydrology(stage10, constants);
 const stage12 = stageSeasonalField(stage11, constants);

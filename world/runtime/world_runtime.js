@@ -1,12 +1,12 @@
 // /world/runtime/world_runtime.js
-// MODE: RUNTIME SPINE MERGE TNT
-// STATUS: LEGACY SPINE PRESERVED + WORLD MODE STATE INTEGRATED
+// MODE: RUNTIME CONTRACT RENEWAL v2
+// STATUS: TNT — LOCKED CONVERGENCE BINDER
 // PURPOSE:
 // 1) boot one runtime only
 // 2) maintain control -> render continuity
 // 3) emit authority receipt continuously
 // 4) emit live gauges receipt continuously
-// 5) commit RUNNING only after first successful frame
+// 5) commit RUNNING only after first successful verified frame
 // 6) honor the live createInstruments() contract
 // 7) preserve legacy runtime lifecycle behavior
 // 8) add worldVariantState
@@ -15,7 +15,9 @@
 // 11) add perceptionModifiersState
 // 12) add subsurfaceActivationState
 // 13) bind unified worldModeState
-// 14) stay finite, deterministic, and non-drifting
+// 14) bind planet_engine to runtime state
+// 15) rebuild planetField only when variant changes
+// 16) stay finite, deterministic, and non-drifting
 
 import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
@@ -55,6 +57,7 @@ let onPointerUp = null;
 let onPointerCancel = null;
 
 let runtimeState = null;
+let lastBuiltVariant = null;
 
 function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
@@ -713,6 +716,48 @@ function ensureRuntimeState() {
   return runtimeState;
 }
 
+function buildPlanetFieldInput() {
+  ensureRuntimeState();
+
+  return Object.freeze({
+    worldVariantState: runtimeState.worldVariantState,
+    traversalState: runtimeState.traversalState,
+    coherenceBindingState: runtimeState.coherenceBindingState,
+    perceptionModifiersState: runtimeState.perceptionModifiersState,
+    subsurfaceActivationState: runtimeState.subsurfaceActivationState,
+    worldModeState: runtimeState.worldModeState
+  });
+}
+
+function rebuildPlanetFieldIfNeeded(force = false) {
+  if (!planetEngine || typeof planetEngine.buildPlanetField !== "function") {
+    throw new Error("planet_engine missing buildPlanetField()");
+  }
+
+  const activeVariant = normalizeWorldVariant(runtimeState?.worldVariantState?.activeVariant);
+  if (!force && planetField && lastBuiltVariant === activeVariant) {
+    return;
+  }
+
+  planetField = planetEngine.buildPlanetField(buildPlanetFieldInput());
+  if (!planetField) {
+    throw new Error("planet_engine returned empty field");
+  }
+
+  lastBuiltVariant = activeVariant;
+}
+
+function validateRuntimeStateCompleteness() {
+  ensureRuntimeState();
+
+  if (!runtimeState.worldVariantState) throw new Error("runtime missing worldVariantState");
+  if (!runtimeState.traversalState) throw new Error("runtime missing traversalState");
+  if (!runtimeState.coherenceBindingState) throw new Error("runtime missing coherenceBindingState");
+  if (!runtimeState.perceptionModifiersState) throw new Error("runtime missing perceptionModifiersState");
+  if (!runtimeState.subsurfaceActivationState) throw new Error("runtime missing subsurfaceActivationState");
+  if (!runtimeState.worldModeState) throw new Error("runtime missing worldModeState");
+}
+
 function ensureReceipt() {
   ensureRuntimeState();
 
@@ -960,10 +1005,7 @@ function setupSystems() {
     throw new Error("control.js missing createControlSystem()");
   }
 
-  planetField = planetEngine.buildPlanetField({});
-  if (!planetField) {
-    throw new Error("planet_engine returned empty field");
-  }
+  rebuildPlanetFieldIfNeeded(true);
 }
 
 function safe(fn, fallback = null) {
@@ -1054,6 +1096,11 @@ function buildRenderOptions(receipt) {
         ? control.getCameraState()
         : null,
 
+    worldModeState: receipt.worldModeState,
+    worldVariantState: receipt.worldVariantState,
+    traversalState: receipt.traversalState,
+    perceptionModifiersState: receipt.perceptionModifiersState,
+
     runtimeWorldModeState: receipt.worldModeState,
     runtimeWorldVariantState: receipt.worldVariantState,
     runtimeTraversalState: receipt.traversalState,
@@ -1118,6 +1165,7 @@ function renderFrame(receipt) {
   receipt.renderAuthority.fallbackMode = renderAuthority.fallbackMode === true;
   receipt.renderAuthority.liveRenderPath =
     pickString(renderAuthority.liveRenderPath, receipt.renderAuthority.liveRenderPath, "UNKNOWN") || "UNKNOWN";
+  receipt.renderAuthority.renderReadsWorldMode = renderAuthority.renderReadsWorldMode === true;
 
   receipt.density.averageCellSpanPx =
     pickNumber(density.averageCellSpanPx, receipt.density.averageCellSpanPx, 0) ?? 0;
@@ -1141,7 +1189,7 @@ function buildAuthorityState(receipt) {
   return {
     shellSource: receipt.bootSource,
     runtimeSource: receipt.runtimeSource,
-    truthSource: receipt.runtimeSource,
+    truthSource: "/world/planet_engine.js",
     structureSource: receipt.runtimeSource,
     projectionOwner: receipt.inputOwner,
     renderSource: receipt.renderSource,
@@ -1181,6 +1229,7 @@ function computeLocalCellId(receipt) {
 function computeRegionalZoneId(sample) {
   if (!sample || typeof sample !== "object") return "UNKNOWN";
   return (
+    sample.regionId ||
     sample.continentMass ||
     sample.continentId ||
     sample.continentClass ||
@@ -1242,28 +1291,6 @@ function deriveCoherenceBindingState(receipt, now) {
   const globalNoise = round3(clamp(1 - globalCoherence, 0, 1));
   const globalStability = round3(clamp(globalCoherence * (1 - globalNoise * 0.45), 0, 1));
 
-  const yinValue = round3(
-    clamp(
-      (sample?.waterMask === 1 ? 0.35 : 0) +
-      (sample?.shoreline ? 0.15 : 0) +
-      sampleRainfall * 0.25 +
-      sampleRunoff * 0.25,
-      0,
-      1
-    )
-  );
-
-  const yangValue = round3(
-    clamp(
-      authoritySignal * 0.35 +
-      clamp((receipt.lens.zoomCurrent ?? 0), 0, 1) * 0.25 +
-      clamp((receipt.fps || 0) / 120, 0, 1) * 0.40,
-      0,
-      1
-    )
-  );
-
-  const netValue = round3(clamp(yinValue - yangValue, -1, 1));
   const coordinationFactor = round3(
     runtimeState.traversalState.activeMode === "SOUTH" ? 0.94 : 0.9
   );
@@ -1636,12 +1663,24 @@ function bindWorldModeState(receipt) {
     })
   });
 
+  validateRuntimeStateCompleteness();
+
   receipt.worldVariantState = runtimeState.worldVariantState;
   receipt.traversalState = runtimeState.traversalState;
   receipt.coherenceBindingState = runtimeState.coherenceBindingState;
   receipt.perceptionModifiersState = runtimeState.perceptionModifiersState;
   receipt.subsurfaceActivationState = runtimeState.subsurfaceActivationState;
   receipt.worldModeState = runtimeState.worldModeState;
+}
+
+function verifyFrameIntegrity(receipt) {
+  if (!planetField) throw new Error("planetField missing");
+  if (!receipt.worldModeState) throw new Error("worldModeState missing");
+  if (!receipt.worldVariantState) throw new Error("worldVariantState missing");
+  if (!receipt.traversalState) throw new Error("traversalState missing");
+  if (!receipt.coherenceBindingState) throw new Error("coherenceBindingState missing");
+  if (!receipt.perceptionModifiersState) throw new Error("perceptionModifiersState missing");
+  if (!receipt.subsurfaceActivationState) throw new Error("subsurfaceActivationState missing");
 }
 
 function updateInstrumentReceipt(receipt) {
@@ -1789,7 +1828,9 @@ function frame(now) {
     derivePerceptionModifiersState(receipt);
     deriveSubsurfaceActivationState(receipt);
     bindWorldModeState(receipt);
+    rebuildPlanetFieldIfNeeded(false);
     renderFrame(receipt);
+    verifyFrameIntegrity(receipt);
     updateInstrumentReceipt(receipt);
 
     receipt.verification.pass = true;
@@ -1830,6 +1871,7 @@ export function startRuntime() {
       throw new Error("2D context unavailable");
     }
 
+    bindWorldModeState(receipt);
     setupSystems();
     resize();
     bindInput();
@@ -1844,8 +1886,6 @@ export function startRuntime() {
 
     window.addEventListener("resize", onResize, { passive: true });
     window.addEventListener("pagehide", onPageHide, { passive: true });
-
-    bindWorldModeState(receipt);
 
     receipt.page = "world";
     receipt.phase = "BOOT";

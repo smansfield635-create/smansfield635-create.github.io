@@ -122,9 +122,11 @@ function defaultProjectorFactory(projectionState) {
 }
 
 function resolveProjectPoint(projectPoint, projectionState) {
-  return typeof projectPoint === "function"
-    ? projectPoint
-    : defaultProjectorFactory(projectionState);
+  if (typeof projectPoint === "function") {
+    return projectPoint;
+  }
+
+  return defaultProjectorFactory(projectionState);
 }
 
 function withPlanetClip(ctx, projectionState, drawFn) {
@@ -138,7 +140,9 @@ function withPlanetClip(ctx, projectionState, drawFn) {
     Math.PI * 2
   );
   ctx.clip();
+
   const result = drawFn();
+
   ctx.restore();
   return result;
 }
@@ -212,32 +216,37 @@ function drawPlanetRim(ctx, projectionState) {
   ctx.restore();
 }
 
+function drawPlanetBaseFill(ctx, projectionState) {
+  const oceanGradient = ctx.createRadialGradient(
+    projectionState.centerX - projectionState.radius * 0.24,
+    projectionState.centerY - projectionState.radius * 0.28,
+    projectionState.radius * 0.06,
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius
+  );
+
+  oceanGradient.addColorStop(0, "rgb(22,68,126)");
+  oceanGradient.addColorStop(0.42, "rgb(10,38,88)");
+  oceanGradient.addColorStop(0.82, "rgb(4,18,46)");
+  oceanGradient.addColorStop(1, "rgb(2,10,24)");
+
+  ctx.beginPath();
+  ctx.arc(
+    projectionState.centerX,
+    projectionState.centerY,
+    projectionState.radius,
+    0,
+    Math.PI * 2
+  );
+  ctx.fillStyle = oceanGradient;
+  ctx.fill();
+}
+
 function drawPlanetBase(ctx, projectionState) {
-  withPlanetClip(ctx, projectionState, () => {
-    const oceanGradient = ctx.createRadialGradient(
-      projectionState.centerX - projectionState.radius * 0.24,
-      projectionState.centerY - projectionState.radius * 0.28,
-      projectionState.radius * 0.06,
-      projectionState.centerX,
-      projectionState.centerY,
-      projectionState.radius
-    );
-
-    oceanGradient.addColorStop(0, "rgb(22,68,126)");
-    oceanGradient.addColorStop(0.42, "rgb(10,38,88)");
-    oceanGradient.addColorStop(0.82, "rgb(4,18,46)");
-    oceanGradient.addColorStop(1, "rgb(2,10,24)");
-
-    ctx.beginPath();
-    ctx.arc(
-      projectionState.centerX,
-      projectionState.centerY,
-      projectionState.radius,
-      0,
-      Math.PI * 2
-    );
-    ctx.fillStyle = oceanGradient;
-    ctx.fill();
+  withPlanetClip(ctx, projectionState, function drawPlanetBaseClipped() {
+    drawPlanetBaseFill(ctx, projectionState);
+    return null;
   });
 }
 
@@ -415,6 +424,28 @@ function resolveHydrationDominance(sample, hydrationPacket) {
   return packetSeparationWeight >= 0.46;
 }
 
+function drawBaseSample(ctx, point, pointSizePx, baseColor) {
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = baseColor;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawSuppressedTerrainOverlay(ctx, terrainPacket, point) {
+  const terrainAlpha = isFiniteNumber(terrainPacket.alpha)
+    ? clamp(terrainPacket.alpha * 0.28, 0, 1)
+    : 0.28;
+
+  ctx.save();
+  ctx.globalAlpha = terrainAlpha;
+  ctx.fillStyle = terrainPacket.color;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, terrainPacket.radiusPx, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+}
+
 function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrimitiveTime = null) {
   if (!grid.length || !grid[0].length) {
     return {
@@ -505,15 +536,10 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
 
       const terrainDominant = resolveTerrainDominance(sample, terrainPacket);
       const hydrationDominant = resolveHydrationDominance(sample, hydrationPacket);
-
       const drawBaseFirst = !(terrainDominant || hydrationDominant);
 
       if (drawBaseFirst) {
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = baseColor;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
-        ctx.fill();
+        drawBaseSample(ctx, point, pointSizePx, baseColor);
       }
 
       if (terrainPacket && !hydrationDominant) {
@@ -536,27 +562,12 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
       }
 
       if (terrainPacket && hydrationDominant) {
-        const terrainAlpha = isFiniteNumber(terrainPacket.alpha)
-          ? clamp(terrainPacket.alpha * 0.28, 0, 1)
-          : 0.28;
-
-        ctx.save();
-        ctx.globalAlpha = terrainAlpha;
-        ctx.fillStyle = terrainPacket.color;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, terrainPacket.radiusPx, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
-
+        drawSuppressedTerrainOverlay(ctx, terrainPacket, point);
         sawTerrainSignal = true;
       }
 
       if (!drawBaseFirst && !terrainPacket && !hydrationPacket) {
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = baseColor;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
-        ctx.fill();
+        drawBaseSample(ctx, point, pointSizePx, baseColor);
       }
 
       const terrainRadius = terrainPacket?.radiusPx;
@@ -696,6 +707,82 @@ function buildEmptyPlacementAudit() {
   };
 }
 
+function buildScopeOnlyReturn(projectionState, liveRenderPath) {
+  return {
+    projectionState,
+    orbitalHits: [],
+    orbitalAudit: buildEmptyOrbitalAudit(),
+    placementAudit: buildEmptyPlacementAudit(),
+    primitive: {
+      primitiveType: "NONE",
+      primitivePath: liveRenderPath,
+      centerAnchored: false,
+      rowColumnPathActive: false,
+      sectorBandPathActive: false
+    },
+    topology: {
+      topologyMode: "NONE",
+      neighborLaw: "NONE",
+      visibleCellCount: 0,
+      emittedCellCount: 0,
+      skippedCellCount: 0
+    },
+    renderAuthority: {
+      renderReadsScope: true,
+      renderReadsLens: true,
+      fallbackMode: false,
+      liveRenderPath
+    },
+    density: {
+      averageCellSpanPx: 0,
+      subdivisionTier: 0,
+      densityTier: "EMPTY"
+    },
+    audit: {
+      sampleCount: 0,
+      waterFamilyCount: 0,
+      landFamilyCount: 0,
+      cryosphereCount: 0,
+      shorelineCount: 0
+    }
+  };
+}
+
+function buildSurfaceReturn(projectionState, density, planetField) {
+  return {
+    projectionState,
+    orbitalHits: [],
+    orbitalAudit: buildEmptyOrbitalAudit(),
+    placementAudit: buildEmptyPlacementAudit(),
+    primitive: {
+      primitiveType: density.primitiveType,
+      primitivePath: density.primitivePath,
+      centerAnchored: density.centerAnchored,
+      rowColumnPathActive: density.rowColumnPathActive,
+      sectorBandPathActive: density.sectorBandPathActive
+    },
+    topology: {
+      topologyMode: density.topologyMode,
+      neighborLaw: density.neighborLaw,
+      visibleCellCount: density.visibleCellCount,
+      emittedCellCount: density.emittedCellCount,
+      skippedCellCount: density.skippedCellCount
+    },
+    renderAuthority: {
+      renderReadsScope: density.renderReadsScope,
+      renderReadsLens: density.renderReadsLens,
+      fallbackMode: density.fallbackMode,
+      liveRenderPath: density.liveRenderPath
+    },
+    density: {
+      averageCellSpanPx: density.averageCellSpanPx,
+      subdivisionTier: density.subdivisionTier,
+      densityTier: density.densityTier
+    },
+    audit: buildRenderAudit(planetField)
+  };
+}
+
 export function createRenderer() {
   function renderPlanet({
     ctx,
@@ -724,44 +811,7 @@ export function createRenderer() {
           ? "darkContainerUniverse"
           : "darkContainerGalaxy";
 
-      return {
-        projectionState,
-        orbitalHits: [],
-        orbitalAudit: buildEmptyOrbitalAudit(),
-        placementAudit: buildEmptyPlacementAudit(),
-        primitive: {
-          primitiveType: "NONE",
-          primitivePath: liveRenderPath,
-          centerAnchored: false,
-          rowColumnPathActive: false,
-          sectorBandPathActive: false
-        },
-        topology: {
-          topologyMode: "NONE",
-          neighborLaw: "NONE",
-          visibleCellCount: 0,
-          emittedCellCount: 0,
-          skippedCellCount: 0
-        },
-        renderAuthority: {
-          renderReadsScope: true,
-          renderReadsLens: true,
-          fallbackMode: false,
-          liveRenderPath
-        },
-        density: {
-          averageCellSpanPx: 0,
-          subdivisionTier: 0,
-          densityTier: "EMPTY"
-        },
-        audit: {
-          sampleCount: 0,
-          waterFamilyCount: 0,
-          landFamilyCount: 0,
-          cryosphereCount: 0,
-          shorelineCount: 0
-        }
-      };
+      return buildScopeOnlyReturn(projectionState, liveRenderPath);
     }
 
     if (!planetField) {
@@ -774,42 +824,21 @@ export function createRenderer() {
     drawPlanetRim(ctx, projectionState);
     drawPlanetBase(ctx, projectionState);
 
-    const density = withPlanetClip(ctx, projectionState, () =>
-      drawVisibleSurface(ctx, grid, projector, projectionState, globalPrimitiveTime)
+    const density = withPlanetClip(
+      ctx,
+      projectionState,
+      function renderVisibleSurfaceClipped() {
+        return drawVisibleSurface(
+          ctx,
+          grid,
+          projector,
+          projectionState,
+          globalPrimitiveTime
+        );
+      }
     );
 
-    return {
-      projectionState,
-      orbitalHits: [],
-      orbitalAudit: buildEmptyOrbitalAudit(),
-      placementAudit: buildEmptyPlacementAudit(),
-      primitive: {
-        primitiveType: density.primitiveType,
-        primitivePath: density.primitivePath,
-        centerAnchored: density.centerAnchored,
-        rowColumnPathActive: density.rowColumnPathActive,
-        sectorBandPathActive: density.sectorBandPathActive
-      },
-      topology: {
-        topologyMode: density.topologyMode,
-        neighborLaw: density.neighborLaw,
-        visibleCellCount: density.visibleCellCount,
-        emittedCellCount: density.emittedCellCount,
-        skippedCellCount: density.skippedCellCount
-      },
-      renderAuthority: {
-        renderReadsScope: density.renderReadsScope,
-        renderReadsLens: density.renderReadsLens,
-        fallbackMode: density.fallbackMode,
-        liveRenderPath: density.liveRenderPath
-      },
-      density: {
-        averageCellSpanPx: density.averageCellSpanPx,
-        subdivisionTier: density.subdivisionTier,
-        densityTier: density.densityTier
-      },
-      audit: buildRenderAudit(planetField)
-    };
+    return buildSurfaceReturn(projectionState, density, planetField);
   }
 
   return {

@@ -134,7 +134,7 @@ canvas{display:block;width:100%}
 </div>
 
 <script>
-const KEY = "cte_runtime_v3";
+const KEYS = ["cte_runtime_v4", "cte_runtime_v3"];
 const HISTORY_SIZE = 180;
 const RELEASE_LATCH_MS = 1600;
 const DRAG_LATCH_MS = 200;
@@ -145,7 +145,10 @@ const history = {
   pitchVelocity: [],
   velocityMagnitude: [],
   dragActive: [],
-  fps: []
+  fps: [],
+  coherence: [],
+  clarity: [],
+  stability: []
 };
 
 let prevDragActive = null;
@@ -161,6 +164,13 @@ let lastDragAt = null;
 
 const GROUP_ORDER = [
   "runtime",
+  "trajectory",
+  "worldMode",
+  "variant",
+  "traversal",
+  "coherence",
+  "perception",
+  "subsurface",
   "motion",
   "handoff",
   "history",
@@ -174,7 +184,14 @@ const GROUP_ORDER = [
   "density"
 ];
 
-const OPEN_DEFAULT = new Set(["runtime","motion","primitive"]);
+const OPEN_DEFAULT = new Set([
+  "runtime",
+  "trajectory",
+  "worldMode",
+  "variant",
+  "traversal",
+  "coherence"
+]);
 
 function row(k,v){
   return `<div class="row"><div>${k}</div><div>${v}</div></div>`;
@@ -200,13 +217,18 @@ function esc(v){
 }
 
 function read(){
-  try{
-    const raw = localStorage.getItem(KEY);
-    if(!raw) return null;
-    return JSON.parse(raw);
-  }catch{
-    return null;
+  for(const key of KEYS){
+    try{
+      const raw = localStorage.getItem(key);
+      if(!raw) continue;
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === "object"){
+        parsed.__sourceKey = key;
+        return parsed;
+      }
+    }catch{}
   }
+  return null;
 }
 
 function getMotionState(data){
@@ -217,9 +239,40 @@ function getCameraState(data){
   return data?.control?.cameraState || {};
 }
 
+function getWorldVariantState(data){
+  return data?.worldVariantState || data?.worldModeState?.variantState || {};
+}
+
+function getTraversalState(data){
+  return data?.traversalState || data?.worldModeState?.traversalState || {};
+}
+
+function getCoherenceState(data){
+  return data?.coherenceBindingState || data?.coherenceState || data?.worldModeState?.coherenceBindingState || {};
+}
+
+function getPerceptionState(data){
+  return data?.perceptionModifiersState || data?.perceptionModifiers || data?.worldModeState?.perceptionModifiersState || {};
+}
+
+function getSubsurfaceState(data){
+  return data?.subsurfaceActivationState || data?.worldModeState?.subsurfaceActivationState || {};
+}
+
+function getWorldModeState(data){
+  return data?.worldModeState || {};
+}
+
 function pickNumber(...values){
   for(const v of values){
     if(typeof v === "number" && Number.isFinite(v)) return v;
+  }
+  return null;
+}
+
+function pickString(...values){
+  for(const v of values){
+    if(typeof v === "string" && v.length > 0) return v;
   }
   return null;
 }
@@ -267,6 +320,62 @@ function deriveAutoSpinSpeed(data){
   const m = getMotionState(data);
   const c = getCameraState(data);
   return pickNumber(m.autoSpinSpeed, c.autoSpinSpeed);
+}
+
+function deriveGlobalCoherence(data){
+  const c = getCoherenceState(data);
+  return pickNumber(
+    c?.globalField?.coherence,
+    c?.global?.coherence,
+    c?.diagnostics?.globalCoherence
+  );
+}
+
+function deriveGlobalNoise(data){
+  const c = getCoherenceState(data);
+  return pickNumber(
+    c?.globalField?.noise,
+    c?.global?.noise
+  );
+}
+
+function deriveGlobalStability(data){
+  const c = getCoherenceState(data);
+  return pickNumber(
+    c?.globalField?.stability,
+    c?.global?.stability,
+    c?.diagnostics?.globalStability
+  );
+}
+
+function deriveTrajectory(variant, traversal, coherence, perception, subsurface){
+  const activeVariant = pickNumber(variant?.activeVariant) ?? null;
+  const traversalMode = pickString(traversal?.activeMode) || "—";
+  const coherenceLevel = pickNumber(
+    coherence?.globalField?.coherence,
+    coherence?.global?.coherence
+  );
+  const clarityLevel = pickNumber(
+    perception?.globalEnvelope?.clarityLevel,
+    coherenceLevel
+  );
+  const accessAllowed = subsurface?.accessState?.accessAllowed === true || subsurface?.accessAllowed === true;
+  const zoneState = pickString(subsurface?.zoneState) || "—";
+
+  const destination =
+    activeVariant !== null
+      ? `VARIANT_${activeVariant} → ${traversalMode} → ${zoneState}`
+      : `${traversalMode} → ${zoneState}`;
+
+  return {
+    destination,
+    activeVariant,
+    traversalMode,
+    coherenceLevel,
+    clarityLevel,
+    accessAllowed,
+    zoneState
+  };
 }
 
 function push(arr, value){
@@ -381,6 +490,41 @@ function drawDragLatch(canvas, dragSeries){
   ctx.stroke();
 }
 
+function drawScalarSeries(canvas, seriesA, seriesB, seriesC){
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle = "#0b0f14";
+  ctx.fillRect(0,0,w,h);
+
+  ctx.strokeStyle = "#1f2a36";
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(0, h - 12);
+  ctx.lineTo(w, h - 12);
+  ctx.stroke();
+
+  function draw(series, color){
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    series.forEach((v, i) => {
+      const n = typeof v === "number" && Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
+      const x = (i / Math.max(1, HISTORY_SIZE - 1)) * w;
+      const y = h - 12 - n * (h * 0.72);
+      if(i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+  }
+
+  draw(seriesA, "#7fffd4");
+  draw(seriesB, "#6fe7ff");
+  draw(seriesC, "#ffd27a");
+}
+
 function inferState(groupId, data, derived){
   switch(groupId){
     case "runtime":
@@ -388,6 +532,49 @@ function inferState(groupId, data, derived){
       if(data.failure?.phase) return {color:"red",spark:true};
       if(data.phase === "RUNNING") return {color:"white",spark:false};
       return {color:"yellow",spark:false};
+
+    case "trajectory":
+      if(!data) return {color:"gray",spark:false};
+      if(data.failure?.phase) return {color:"red",spark:true};
+      if(derived.accessAllowed && derived.coherenceLevel !== null && derived.coherenceLevel >= 0.6) {
+        return {color:"blue",spark:false};
+      }
+      if(derived.coherenceLevel !== null) return {color:"yellow",spark:false};
+      return {color:"gray",spark:false};
+
+    case "worldMode":
+      if(!data?.worldModeState) return {color:"gray",spark:false};
+      if(data.worldModeState?.diagnostics?.bindingIntegrity === true) return {color:"white",spark:false};
+      return {color:"orange",spark:false};
+
+    case "variant":
+      if(!data?.worldVariantState && !data?.worldModeState?.variantState) return {color:"gray",spark:false};
+      if(derived.activeVariant >= 8) return {color:"blue",spark:false};
+      if(derived.activeVariant !== null) return {color:"white",spark:false};
+      return {color:"gray",spark:false};
+
+    case "traversal":
+      if(!data?.traversalState && !data?.worldModeState?.traversalState) return {color:"gray",spark:false};
+      if(derived.traversalMode !== "—") return {color:"white",spark:false};
+      return {color:"gray",spark:false};
+
+    case "coherence":
+      if(derived.coherenceLevel === null) return {color:"gray",spark:false};
+      if(derived.coherenceLevel >= 0.8) return {color:"blue",spark:false};
+      if(derived.coherenceLevel >= 0.5) return {color:"white",spark:false};
+      if(derived.coherenceLevel >= 0.25) return {color:"yellow",spark:false};
+      return {color:"orange",spark:false};
+
+    case "perception":
+      if(!data?.perceptionModifiersState && !data?.perceptionModifiers) return {color:"gray",spark:false};
+      if(derived.clarityLevel !== null && derived.clarityLevel >= 0.75) return {color:"white",spark:false};
+      if(derived.clarityLevel !== null) return {color:"yellow",spark:false};
+      return {color:"gray",spark:false};
+
+    case "subsurface":
+      if(!data?.subsurfaceActivationState && !data?.worldModeState?.subsurfaceActivationState) return {color:"gray",spark:false};
+      if(derived.accessAllowed) return {color:"blue",spark:false};
+      return {color:"orange",spark:false};
 
     case "motion":
       if(derived.velocityMagnitude === null) return {color:"gray",spark:false};
@@ -506,6 +693,12 @@ function buildGroups(data, derived){
   const topology = data?.topology || {};
   const renderAuthority = data?.renderAuthority || {};
   const density = data?.density || {};
+  const worldMode = getWorldModeState(data);
+  const variant = getWorldVariantState(data);
+  const traversal = getTraversalState(data);
+  const coherence = getCoherenceState(data);
+  const perception = getPerceptionState(data);
+  const subsurface = getSubsurfaceState(data);
 
   const groups = {
     runtime: groupBlock(
@@ -514,15 +707,159 @@ function buildGroups(data, derived){
       [
         ["phase", data?.phase ?? "—"],
         ["mode", data?.mode ?? "—"],
-        ["dtMs", Math.round(data?.dtMs || 0)]
+        ["source", data?.__sourceKey ?? "—"]
       ],
       `<div class="rows">
         ${row("phase", data?.phase ?? "—")}
         ${row("mode", data?.mode ?? "—")}
         ${row("fps", Math.round(data?.fps || 0))}
         ${row("dtMs", Math.round(data?.dtMs || 0))}
+        ${row("receiptSource", data?.__sourceKey ?? "—")}
+        ${row("failure.phase", data?.failure?.phase ?? "—")}
+        ${row("failure.message", data?.failure?.message ?? "—")}
       </div>`,
       inferState("runtime",data,derived)
+    ),
+
+    trajectory: groupBlock(
+      "trajectory","TRAJECTORY",
+      `${derived.destination}`,
+      [
+        ["destination", derived.destination],
+        ["coherence", fmt(derived.coherenceLevel,3)],
+        ["access", bool(derived.accessAllowed)]
+      ],
+      `<div class="rows">
+        ${row("destination", derived.destination)}
+        ${row("activeVariant", derived.activeVariant ?? "—")}
+        ${row("traversalMode", derived.traversalMode)}
+        ${row("coherenceLevel", fmt(derived.coherenceLevel, 6))}
+        ${row("clarityLevel", fmt(derived.clarityLevel, 6))}
+        ${row("zoneState", derived.zoneState)}
+        ${row("accessAllowed", bool(derived.accessAllowed))}
+      </div>`,
+      inferState("trajectory",data,derived)
+    ),
+
+    worldMode: groupBlock(
+      "worldMode","WORLD MODE",
+      `${worldMode?.diagnostics?.bindingIntegrity === true ? "BOUND" : "UNBOUND"}`,
+      [
+        ["variant", worldMode?.diagnostics?.activeVariant ?? "—"],
+        ["traversal", worldMode?.diagnostics?.activeTraversalMode ?? "—"],
+        ["bound", bool(worldMode?.diagnostics?.bindingIntegrity === true)]
+      ],
+      `<div class="rows">
+        ${row("bindingIntegrity", bool(worldMode?.diagnostics?.bindingIntegrity === true))}
+        ${row("activeVariant", worldMode?.diagnostics?.activeVariant ?? "—")}
+        ${row("activeTraversalMode", worldMode?.diagnostics?.activeTraversalMode ?? "—")}
+        ${row("coherenceLevel", fmt(worldMode?.diagnostics?.coherenceLevel, 6))}
+        ${row("stabilityLevel", fmt(worldMode?.diagnostics?.stabilityLevel, 6))}
+        ${row("unifiedLatticeIndex", worldMode?.latticeBinding?.unifiedLatticeIndex ?? "—")}
+        ${row("activeNodeIndex", worldMode?.nodeBinding?.activeNodeIndex ?? "—")}
+      </div>`,
+      inferState("worldMode",data,derived)
+    ),
+
+    variant: groupBlock(
+      "variant","WORLD VARIANT",
+      `${variant?.ratio ?? "—"} • V${variant?.activeVariant ?? "—"}`,
+      [
+        ["variant", variant?.activeVariant ?? "—"],
+        ["ratio", variant?.ratio ?? "—"],
+        ["scale", fmt(variant?.compositionScale,3)]
+      ],
+      `<div class="rows">
+        ${row("activeVariant", variant?.activeVariant ?? "—")}
+        ${row("ratio", variant?.ratio ?? "—")}
+        ${row("compositionScale", fmt(variant?.compositionScale, 6))}
+        ${row("baseScale", fmt(variant?.baseScale, 6))}
+        ${row("variantLatticeIndex", variant?.latticeBinding?.variantLatticeIndex ?? "—")}
+        ${row("activeCardinalAxis", variant?.cardinalBinding?.activeCardinalAxis ?? "—")}
+        ${row("activeNodeIndex", variant?.nodeBinding?.activeNodeIndex ?? "—")}
+      </div>`,
+      inferState("variant",data,derived)
+    ),
+
+    traversal: groupBlock(
+      "traversal","TRAVERSAL",
+      `${traversal?.activeMode ?? "—"}`,
+      [
+        ["mode", traversal?.activeMode ?? "—"],
+        ["converge", fmt(traversal?.convergenceBias,2)],
+        ["expand", fmt(traversal?.expansionBias,2)]
+      ],
+      `<div class="rows">
+        ${row("activeMode", traversal?.activeMode ?? "—")}
+        ${row("traversalLatticeIndex", traversal?.latticeBinding?.traversalLatticeIndex ?? "—")}
+        ${row("axis", traversal?.cardinalBinding?.axis ?? "—")}
+        ${row("activeNodeIndex", traversal?.nodeBinding?.activeNodeIndex ?? "—")}
+        ${row("convergenceBias", fmt(traversal?.convergenceBias, 6))}
+        ${row("expansionBias", fmt(traversal?.expansionBias, 6))}
+        ${row("preferredDirection", traversal?.navigationBias?.preferredDirection ?? "—")}
+      </div>`,
+      inferState("traversal",data,derived)
+    ),
+
+    coherence: groupBlock(
+      "coherence","COHERENCE",
+      `${fmt(derived.coherenceLevel,3)} / ${fmt(deriveGlobalStability(data),3)}`,
+      [
+        ["coherence", fmt(derived.coherenceLevel,3)],
+        ["noise", fmt(deriveGlobalNoise(data),3)],
+        ["stability", fmt(deriveGlobalStability(data),3)]
+      ],
+      `<div class="rows">
+        ${row("globalCoherence", fmt(deriveGlobalCoherence(data), 6))}
+        ${row("globalNoise", fmt(deriveGlobalNoise(data), 6))}
+        ${row("globalStability", fmt(deriveGlobalStability(data), 6))}
+        ${row("coherenceLatticeIndex", coherence?.latticeBinding?.coherenceLatticeIndex ?? "—")}
+        ${row("variance", fmt(coherence?.diagnostics?.variance, 6))}
+        ${row("activeNodeIndex", coherence?.nodeBinding?.activeNodeIndex ?? "—")}
+      </div>
+      <div class="canvasWrap"><canvas id="coherenceChart" width="1000" height="120"></canvas></div>
+      <div class="small">coherence = green · clarity = cyan · stability = yellow</div>`,
+      inferState("coherence",data,derived)
+    ),
+
+    perception: groupBlock(
+      "perception","PERCEPTION",
+      `${fmt(derived.clarityLevel,3)}`,
+      [
+        ["terrain", fmt(perception?.terrain?.contrast,3)],
+        ["hydration", fmt(perception?.hydration?.flowContinuity,3)],
+        ["subsurface", fmt(perception?.subsurface?.detectability,3)]
+      ],
+      `<div class="rows">
+        ${row("clarityLevel", fmt(perception?.globalEnvelope?.clarityLevel, 6))}
+        ${row("noiseLevel", fmt(perception?.globalEnvelope?.noiseLevel, 6))}
+        ${row("stabilityLevel", fmt(perception?.globalEnvelope?.stabilityLevel, 6))}
+        ${row("terrain.contrast", fmt(perception?.terrain?.contrast, 6))}
+        ${row("hydration.flowContinuity", fmt(perception?.hydration?.flowContinuity, 6))}
+        ${row("subsurface.detectability", fmt(perception?.subsurface?.detectability, 6))}
+        ${row("lighting.activationReadiness", fmt(perception?.lighting?.activationReadiness, 6))}
+      </div>`,
+      inferState("perception",data,derived)
+    ),
+
+    subsurface: groupBlock(
+      "subsurface","SUBSURFACE",
+      `${subsurface?.zoneState ?? "—"}`,
+      [
+        ["zone", subsurface?.zoneState ?? "—"],
+        ["access", bool(subsurface?.accessState?.accessAllowed ?? subsurface?.accessAllowed)],
+        ["depth", subsurface?.activeDepthTier ?? "—"]
+      ],
+      `<div class="rows">
+        ${row("zoneState", subsurface?.zoneState ?? "—")}
+        ${row("accessAllowed", bool(subsurface?.accessState?.accessAllowed ?? subsurface?.accessAllowed))}
+        ${row("activeDepthTier", subsurface?.activeDepthTier ?? "—")}
+        ${row("preferredEntryAxis", subsurface?.cardinalBinding?.preferredEntryAxis ?? "—")}
+        ${row("activeNodeIndex", subsurface?.nodeBinding?.activeNodeIndex ?? "—")}
+        ${row("zoneStability", fmt(subsurface?.stabilityEnvelope?.zoneStability, 6))}
+        ${row("lightingReadiness", fmt(subsurface?.diagnostics?.lightingReadiness, 6))}
+      </div>`,
+      inferState("subsurface",data,derived)
     ),
 
     motion: groupBlock(
@@ -760,9 +1097,25 @@ function render(data){
   push(history.dragActive, dragActive === true);
   push(history.fps, data.fps ?? 0);
 
+  const coherenceLevel = deriveGlobalCoherence(data);
+  const clarityLevel = pickNumber(getPerceptionState(data)?.globalEnvelope?.clarityLevel, coherenceLevel);
+  const stabilityLevel = deriveGlobalStability(data);
+
+  push(history.coherence, coherenceLevel ?? 0);
+  push(history.clarity, clarityLevel ?? 0);
+  push(history.stability, stabilityLevel ?? 0);
+
   const zeroedThisFrame = deriveZeroedThisFrame(velocityMagnitude);
   const yawVelocityDelta = deriveDelta(yawVelocity, prevYawVelocity);
   const pitchVelocityDelta = deriveDelta(pitchVelocity, prevPitchVelocity);
+
+  const derivedTrajectory = deriveTrajectory(
+    getWorldVariantState(data),
+    getTraversalState(data),
+    getCoherenceState(data),
+    getPerceptionState(data),
+    getSubsurfaceState(data)
+  );
 
   const derived = {
     yawVelocity,
@@ -776,7 +1129,8 @@ function render(data){
     dragLatched: deriveDragLatched(),
     zeroedThisFrame,
     yawVelocityDelta,
-    pitchVelocityDelta
+    pitchVelocityDelta,
+    ...derivedTrajectory
   };
 
   document.getElementById("status").textContent =
@@ -793,6 +1147,11 @@ function render(data){
   const dragCanvas = document.getElementById("dragChart");
   if(dragCanvas){
     drawDragLatch(dragCanvas, history.dragActive);
+  }
+
+  const coherenceCanvas = document.getElementById("coherenceChart");
+  if(coherenceCanvas){
+    drawScalarSeries(coherenceCanvas, history.coherence, history.clarity, history.stability);
   }
 
   prevVelocityMagnitude = velocityMagnitude;

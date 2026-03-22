@@ -1,6 +1,6 @@
 // /world/render.js
 // MODE: RENDER BASELINE CONTRACT RENEWAL
-// STATUS: SELF-CONTAINED BASELINE RENDERER + HYDRATION + TERRAIN ATTACHMENTS
+// STATUS: AUTHORITATIVE SOUTH JUG
 // ROLE:
 // - render visible globe baseline
 // - preserve runtime/gauges receipt contract
@@ -37,9 +37,10 @@ function getCanvasCssSize(ctx) {
   const canvas = ctx?.canvas;
   if (!canvas) return { width: 0, height: 0 };
 
-  const rect = typeof canvas.getBoundingClientRect === "function"
-    ? canvas.getBoundingClientRect()
-    : null;
+  const rect =
+    typeof canvas.getBoundingClientRect === "function"
+      ? canvas.getBoundingClientRect()
+      : null;
 
   const width =
     (rect && isFiniteNumber(rect.width) && rect.width > 0 ? rect.width : 0) ||
@@ -473,7 +474,6 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
   const colCount = grid[0].length;
   const sampleCount = rowCount * colCount;
   const pointSizePx = resolvePointSizePx(projectionState, sampleCount);
-
   const stride = sampleCount > 32000 ? 2 : 1;
 
   let visibleCellCount = 0;

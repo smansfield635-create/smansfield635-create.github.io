@@ -90,13 +90,14 @@ const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
 const BOOT_CONTRACT = Object.freeze({
-  id: "INDEX_BOOT_CONTRACT_RENEWAL_v3",
+  id: "INDEX_BOOT_CONTRACT_RENEWAL_v4",
   engineContract: "PLANET_ENGINE_CONTRACT_RENEWAL_v1",
   runtimeContract: "WORLD_RUNTIME_CONTRACT_v1",
-  renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v1",
+  renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v2",
   diagnosticsPath: "/gauges/",
   runtimeStorageKey: "cte_runtime_v4",
   runtimeReceiptKey: "__AUTHORITY_RECEIPT__",
+  bootStateKey: "__INDEX_BOOT_STATE__",
   ignitionTimeoutMs: 12000,
   ignitionPollMs: 100
 });
@@ -156,6 +157,38 @@ const MODULES = Object.freeze([
   })
 ]);
 
+const bootState = {
+  phase: "BOOT_INIT",
+  activeModule: null,
+  modulesLoaded: [],
+  failedModule: null,
+  failurePath: null,
+  failureMessage: "",
+  verificationPass: false
+};
+
+function writeBootState() {
+  window[BOOT_CONTRACT.bootStateKey] = {
+    phase: bootState.phase,
+    activeModule: bootState.activeModule,
+    modulesLoaded: [...bootState.modulesLoaded],
+    failedModule: bootState.failedModule,
+    failurePath: bootState.failurePath,
+    failureMessage: bootState.failureMessage,
+    verificationPass: bootState.verificationPass
+  };
+}
+
+function setBootPhase(phase, extras = {}) {
+  bootState.phase = phase;
+  if ("activeModule" in extras) bootState.activeModule = extras.activeModule;
+  if ("failedModule" in extras) bootState.failedModule = extras.failedModule;
+  if ("failurePath" in extras) bootState.failurePath = extras.failurePath;
+  if ("failureMessage" in extras) bootState.failureMessage = extras.failureMessage;
+  if ("verificationPass" in extras) bootState.verificationPass = extras.verificationPass;
+  writeBootState();
+}
+
 function setStatus(message, tone = "boot-warn") {
   if (statusNode) {
     statusNode.textContent = message;
@@ -171,13 +204,54 @@ function toMessage(error) {
   return String(error);
 }
 
+function classifyImportFailure(error) {
+  const message = toMessage(error);
+  const lowered = message.toLowerCase();
+
+  if (lowered.includes("unexpected end of input") || lowered.includes("unexpected end of script")) {
+    return "PARSE_EOF";
+  }
+  if (lowered.includes("unexpected token")) {
+    return "PARSE_TOKEN";
+  }
+  if (lowered.includes("failed to fetch dynamically imported module")) {
+    return "FETCH_IMPORT";
+  }
+  if (lowered.includes("cannot find module") || lowered.includes("does not provide an export")) {
+    return "EXPORT_CONTRACT";
+  }
+  return "IMPORT_FAILURE";
+}
+
+function formatFailureBlock(definition, error) {
+  const message = toMessage(error);
+  const classification = classifyImportFailure(error);
+
+  return [
+    `BOOT ERROR: ${definition.key} import failed`,
+    definition.path,
+    `CLASS: ${classification}`,
+    message
+  ].join("\n");
+}
+
 async function importModule(definition) {
+  setBootPhase("MODULE_IMPORT", {
+    activeModule: definition.key,
+    failedModule: null,
+    failurePath: null,
+    failureMessage: ""
+  });
+
   setStatus(`IMPORTING ${definition.key.toUpperCase()}...`, "boot-warn");
   const mod = await import(definition.path);
 
   if (typeof definition.validate === "function" && definition.validate(mod) !== true) {
     throw new Error(definition.validationMessage || `${definition.key} contract validation failed`);
   }
+
+  bootState.modulesLoaded.push(definition.key);
+  writeBootState();
 
   setStatus(`IMPORTED ${definition.key.toUpperCase()}`, "boot-ok");
   return mod;
@@ -190,15 +264,28 @@ async function preflightModules() {
     try {
       loaded[definition.key] = await importModule(definition);
     } catch (error) {
-      const message = toMessage(error);
-      setStatus(
-        `BOOT ERROR: ${definition.key} import failed\n${definition.path}\n${message}`,
-        "boot-fail"
-      );
+      const failureBlock = formatFailureBlock(definition, error);
+
+      setBootPhase("MODULE_IMPORT_FAILED", {
+        activeModule: definition.key,
+        failedModule: definition.key,
+        failurePath: definition.path,
+        failureMessage: toMessage(error),
+        verificationPass: false
+      });
+
+      setStatus(failureBlock, "boot-fail");
       console.error(`[BOOT] ${definition.key} import failed`, error);
       throw error;
     }
   }
+
+  setBootPhase("MODULE_PREFLIGHT_OK", {
+    activeModule: null,
+    failedModule: null,
+    failurePath: null,
+    failureMessage: ""
+  });
 
   return loaded;
 }
@@ -261,10 +348,19 @@ function resolveVerificationState() {
 async function waitForIgnition() {
   const startedAt = performance.now();
 
+  setBootPhase("IGNITION_WAIT", {
+    verificationPass: false
+  });
+
   while ((performance.now() - startedAt) < BOOT_CONTRACT.ignitionTimeoutMs) {
     const state = resolveVerificationState();
 
     if (state.failurePhase) {
+      setBootPhase("RUNTIME_FAILURE", {
+        failureMessage: state.failureMessage,
+        verificationPass: false
+      });
+
       setStatus(
         `RUNTIME ERROR: ${state.failurePhase}\n${state.failureMessage || "Unknown runtime failure"}`,
         "boot-fail"
@@ -273,15 +369,20 @@ async function waitForIgnition() {
     }
 
     if (state.verificationPass === true) {
+      setBootPhase("RUNNING", {
+        verificationPass: true,
+        failureMessage: ""
+      });
+
       setStatus(
-        `RUNNING\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+        `RUNNING\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}\nRENDER: ${BOOT_CONTRACT.renderContract}`,
         "boot-ok"
       );
       return true;
     }
 
     setStatus(
-      `WAITING FOR IGNITION...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+      `WAITING FOR IGNITION...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}\nRENDER: ${BOOT_CONTRACT.renderContract}`,
       "boot-warn"
     );
 
@@ -290,6 +391,11 @@ async function waitForIgnition() {
 
   const state = resolveVerificationState();
   if (state.failurePhase) {
+    setBootPhase("RUNTIME_FAILURE", {
+      failureMessage: state.failureMessage,
+      verificationPass: false
+    });
+
     setStatus(
       `RUNTIME ERROR: ${state.failurePhase}\n${state.failureMessage || "Unknown runtime failure"}`,
       "boot-fail"
@@ -297,8 +403,12 @@ async function waitForIgnition() {
     return false;
   }
 
+  setBootPhase("IGNITION_TIMEOUT", {
+    verificationPass: false
+  });
+
   setStatus(
-    `IGNITION TIMEOUT\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+    `IGNITION TIMEOUT\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}\nRENDER: ${BOOT_CONTRACT.renderContract}`,
     "boot-fail"
   );
   return false;
@@ -306,10 +416,18 @@ async function waitForIgnition() {
 
 async function boot() {
   try {
+    setBootPhase("BOOT_INIT", {
+      activeModule: null,
+      failedModule: null,
+      failurePath: null,
+      failureMessage: "",
+      verificationPass: false
+    });
+
     validateCanvasPresence();
 
     setStatus(
-      `BOOT CONTRACT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+      `BOOT CONTRACT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}\nRENDER: ${BOOT_CONTRACT.renderContract}`,
       "boot-warn"
     );
 
@@ -317,6 +435,13 @@ async function boot() {
     const startRuntime = resolveStartRuntime(modules.runtime);
 
     if (!startRuntime) {
+      setBootPhase("RUNTIME_CONTRACT_FAILURE", {
+        failedModule: "runtime",
+        failurePath: "/world/runtime/world_runtime.js",
+        failureMessage: "runtime startRuntime missing",
+        verificationPass: false
+      });
+
       setStatus(
         `BOOT ERROR: runtime startRuntime missing\n/world/runtime/world_runtime.js`,
         "boot-fail"
@@ -324,13 +449,19 @@ async function boot() {
       return;
     }
 
+    setBootPhase("RUNTIME_START", {
+      activeModule: "runtime",
+      failedModule: null,
+      failurePath: null,
+      failureMessage: ""
+    });
+
     setStatus(
-      `STARTING RUNTIME...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+      `STARTING RUNTIME...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}\nRENDER: ${BOOT_CONTRACT.renderContract}`,
       "boot-warn"
     );
 
     startRuntime();
-
     await waitForIgnition();
   } catch {
     // exact failure already surfaced above
@@ -341,6 +472,7 @@ diagnosticsToggle?.addEventListener("click", () => {
   window.location.href = BOOT_CONTRACT.diagnosticsPath;
 });
 
+writeBootState();
 boot();
 </script>
 </body>

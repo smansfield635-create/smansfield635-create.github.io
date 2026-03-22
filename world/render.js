@@ -1,13 +1,15 @@
 // /world/render.js
 // MODE: RENDER BASELINE CONTRACT RENEWAL
-// STATUS: SELF-CONTAINED BASELINE RENDERER
+// STATUS: SELF-CONTAINED BASELINE RENDERER + HYDRATION ATTACHMENT
 // ROLE:
 // - render visible globe baseline
 // - preserve runtime/gauges receipt contract
 // - own no truth, no control, no runtime
-// - contain no sidestream dependencies
+// - attach hydration sidestream only
+// - keep terrain detached for now
 
 import { WORLD_KERNEL } from "./world_kernel.js";
+import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
 
 let lastAuditPlanetField = null;
 let lastAuditResult = null;
@@ -306,7 +308,21 @@ function classifyDensityTier(averageCellSpanPx, emittedCellCount) {
   return "LOW";
 }
 
-function drawVisibleSurface(ctx, grid, projectPoint, projectionState) {
+function drawHydrationOverlay(ctx, packet, point) {
+  if (!packet || packet.engineKey !== "hydration") return false;
+
+  ctx.save();
+  ctx.globalAlpha = packet.alpha;
+  ctx.fillStyle = packet.color;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, packet.radiusPx, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  return true;
+}
+
+function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrimitiveTime = null) {
   if (!grid.length || !grid[0].length) {
     return {
       visibleCellCount: 0,
@@ -340,6 +356,8 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState) {
   let emittedCellCount = 0;
   let skippedCellCount = 0;
   let totalSpan = 0;
+  let sawHydrationSignal = false;
+  let sawSectorBand = false;
 
   ctx.save();
 
@@ -373,8 +391,35 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState) {
       ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
       ctx.fill();
 
+      const hydrationPacket =
+        typeof resolveHydrationPacket === "function"
+          ? resolveHydrationPacket({
+              sample,
+              pointSizePx,
+              grid,
+              x,
+              y,
+              globalPrimitiveTime,
+              baseColor: sampleColor(sample)
+            })
+          : null;
+
+      if (drawHydrationOverlay(ctx, hydrationPacket, point)) {
+        sawHydrationSignal = true;
+
+        if (
+          hydrationPacket?.hydrationBandClass !== "NONE" ||
+          hydrationPacket?.shoreHandoffClass !== "NONE"
+        ) {
+          sawSectorBand = true;
+        }
+
+        totalSpan += hydrationPacket.radiusPx * 2;
+      } else {
+        totalSpan += pointSizePx * 2;
+      }
+
       emittedCellCount += 1;
-      totalSpan += pointSizePx * 2;
     }
   }
 
@@ -389,11 +434,11 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState) {
     averageCellSpanPx,
     subdivisionTier: projectionState.lensTier,
     densityTier: classifyDensityTier(averageCellSpanPx, emittedCellCount),
-    primitiveType: "FORWARD_SIGNAL",
-    primitivePath: "drawVisibleSurface",
+    primitiveType: sawHydrationSignal ? "HYDRATION_SIGNAL" : "FORWARD_SIGNAL",
+    primitivePath: sawHydrationSignal ? "hydrationRenderEngine" : "drawVisibleSurface",
     centerAnchored: true,
     rowColumnPathActive: true,
-    sectorBandPathActive: false,
+    sectorBandPathActive: sawSectorBand,
     topologyMode: "HYBRID",
     neighborLaw: "CROSS_GRID",
     renderReadsScope: true,
@@ -501,6 +546,10 @@ export function createRenderer() {
 
     const projectionState = getProjectionState(viewState, ctx);
     const activeScope = projectionState.activeScope;
+    const globalPrimitiveTime =
+      viewState && typeof viewState === "object" && viewState.globalPrimitiveTime
+        ? viewState.globalPrimitiveTime
+        : null;
 
     ctx.clearRect(0, 0, projectionState.width, projectionState.height);
 
@@ -563,7 +612,7 @@ export function createRenderer() {
     drawPlanetBase(ctx, projectionState);
 
     const density = withPlanetClip(ctx, projectionState, () =>
-      drawVisibleSurface(ctx, grid, projector, projectionState)
+      drawVisibleSurface(ctx, grid, projector, projectionState, globalPrimitiveTime)
     );
 
     return {

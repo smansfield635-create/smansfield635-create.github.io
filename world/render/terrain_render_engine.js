@@ -1,6 +1,6 @@
 // /world/render/terrain_render_engine.js
 // MODE: RENDER EXTENSION CONTRACT RENEWAL
-// STATUS: TERRAIN FACTOR AUTHORITY v4
+// STATUS: TERRAIN FACTOR AUTHORITY v5
 // ROLE:
 // - read planet-engine-facing terrain fields only
 // - classify terrain packet only
@@ -8,6 +8,7 @@
 // - remain coherent with hydration contract family
 // - own no boot, no runtime, no truth
 // - increase terrain expression without changing ownership boundaries
+// - strengthen directional contrast, contour compression, and class separation
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -146,7 +147,7 @@ function computeDiscontinuityWeight(sample) {
 }
 
 /* =========================
-   EXPRESSION METRICS v4
+   EXPRESSION METRICS v5
 ========================= */
 
 function computeDirectionalRelief(sample) {
@@ -245,15 +246,17 @@ function computeMicroVariation(sample) {
   const waveA = Math.sin((lon * 7.0) + (lat * 3.0));
   const waveB = Math.cos((lon * 11.0) - (lat * 5.0));
   const waveC = Math.sin((lon * 17.0) + (elevation * Math.PI * 2));
+  const waveD = Math.cos((lon * 19.0) + (lat * 2.5));
 
-  const raw = (waveA * 0.42) + (waveB * 0.34) + (waveC * 0.24);
+  const raw = (waveA * 0.34) + (waveB * 0.26) + (waveC * 0.22) + (waveD * 0.18);
   const normalized = clamp((raw + 1) * 0.5, 0, 1);
 
   return clamp(
-    normalized * 0.52 +
+    normalized * 0.48 +
     ridgeStrength * 0.18 +
     basinStrength * 0.12 +
-    slope * 0.18,
+    slope * 0.16 +
+    elevation * 0.06,
     0,
     1
   );
@@ -277,17 +280,118 @@ function computeContinuityWeight(sample) {
   );
 }
 
-function strengthenPacketSeparation(heightClass, cutClass, reliefWeight, edgeSharpness) {
-  if (heightClass === "SUMMIT") return clamp(0.88 + reliefWeight * 0.12, 0, 1);
-  if (heightClass === "MOUNTAIN") return clamp(0.78 + reliefWeight * 0.16, 0, 1);
-  if (cutClass === "CLIFF" || cutClass === "ESCARPMENT") return clamp(0.86 + edgeSharpness * 0.12, 0, 1);
-  if (cutClass === "CANYON" || cutClass === "GORGE" || cutClass === "CREVICE") return clamp(0.82 + edgeSharpness * 0.14, 0, 1);
-  if (heightClass === "RIDGE") return clamp(0.70 + reliefWeight * 0.18, 0, 1);
-  if (heightClass === "PLATEAU") return clamp(0.66 + reliefWeight * 0.16, 0, 1);
-  if (heightClass === "HIGHLAND") return clamp(0.56 + reliefWeight * 0.16, 0, 1);
-  if (heightClass === "FOOTHILL") return clamp(0.46 + reliefWeight * 0.12, 0, 1);
-  if (heightClass === "UPLAND") return clamp(0.34 + reliefWeight * 0.10, 0, 1);
-  return clamp(0.22 + reliefWeight * 0.10, 0, 1);
+function computeDirectionalContrast(directional) {
+  const values = [
+    directional.directionalNorthBias,
+    directional.directionalSouthBias,
+    directional.directionalEastBias,
+    directional.directionalWestBias
+  ].sort((a, b) => b - a);
+
+  return clamp(values[0] - values[1], 0, 1);
+}
+
+function computeContourCompression(sample, reliefWeight, edgeSharpness) {
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
+  const curvature = clamp(Math.abs(toNumber(sample?.curvature, 0)), 0, 1);
+  const elevation = clamp(toNumber(sample?.elevation, 0), 0, 1);
+
+  return clamp(
+    reliefWeight * 0.32 +
+    edgeSharpness * 0.30 +
+    slope * 0.22 +
+    curvature * 0.10 +
+    elevation * 0.06,
+    0,
+    1
+  );
+}
+
+function computeCrestFactor(sample, heightClass, cutClass) {
+  const ridgeStrength = clamp(toNumber(sample?.ridgeStrength, 0), 0, 1);
+  const summitStrength = clamp(toNumber(sample?.strongestSummitScore, 0), 0, 1);
+  const plateauStrength = clamp(toNumber(sample?.plateauStrength, 0), 0, 1);
+  const elevation = clamp(toNumber(sample?.elevation, 0), 0, 1);
+
+  let classBoost = 0;
+  if (heightClass === "SUMMIT") classBoost = 0.22;
+  else if (heightClass === "MOUNTAIN") classBoost = 0.16;
+  else if (heightClass === "RIDGE") classBoost = 0.14;
+  else if (heightClass === "PLATEAU") classBoost = 0.08;
+  else if (cutClass === "CLIFF" || cutClass === "ESCARPMENT") classBoost = 0.10;
+
+  return clamp(
+    summitStrength * 0.34 +
+    ridgeStrength * 0.26 +
+    plateauStrength * 0.12 +
+    elevation * 0.18 +
+    classBoost,
+    0,
+    1
+  );
+}
+
+function computeShelfFactor(sample, heightClass) {
+  const plateauStrength = clamp(toNumber(sample?.plateauStrength, 0), 0, 1);
+  const basinStrength = clamp(toNumber(sample?.basinStrength, 0), 0, 1);
+  const curvature = clamp(Math.abs(toNumber(sample?.curvature, 0)), 0, 1);
+
+  let classBoost = 0;
+  if (heightClass === "PLATEAU") classBoost = 0.20;
+  else if (heightClass === "HIGHLAND") classBoost = 0.08;
+
+  return clamp(
+    plateauStrength * 0.42 +
+    basinStrength * 0.08 +
+    curvature * 0.10 +
+    classBoost,
+    0,
+    1
+  );
+}
+
+function computeCutFactor(sample, cutClass) {
+  const canyonStrength = clamp(toNumber(sample?.canyonStrength, 0), 0, 1);
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
+  const curvature = clamp(Math.abs(toNumber(sample?.curvature, 0)), 0, 1);
+
+  let classBoost = 0;
+  if (cutClass === "CLIFF") classBoost = 0.22;
+  else if (cutClass === "ESCARPMENT") classBoost = 0.18;
+  else if (cutClass === "CANYON" || cutClass === "GORGE" || cutClass === "CREVICE") classBoost = 0.20;
+  else if (cutClass === "SLOPE") classBoost = 0.06;
+
+  return clamp(
+    canyonStrength * 0.28 +
+    slope * 0.30 +
+    curvature * 0.16 +
+    classBoost,
+    0,
+    1
+  );
+}
+
+function strengthenPacketSeparation(heightClass, cutClass, reliefWeight, edgeSharpness, contourCompression, directionalContrast) {
+  const base =
+    heightClass === "SUMMIT" ? 0.88 :
+    heightClass === "MOUNTAIN" ? 0.78 :
+    cutClass === "CLIFF" || cutClass === "ESCARPMENT" ? 0.86 :
+    cutClass === "CANYON" || cutClass === "GORGE" || cutClass === "CREVICE" ? 0.82 :
+    heightClass === "RIDGE" ? 0.70 :
+    heightClass === "PLATEAU" ? 0.66 :
+    heightClass === "HIGHLAND" ? 0.56 :
+    heightClass === "FOOTHILL" ? 0.46 :
+    heightClass === "UPLAND" ? 0.34 : 0.22;
+
+  return clamp(
+    base +
+    reliefWeight * 0.08 +
+    edgeSharpness * 0.08 +
+    contourCompression * 0.06 +
+    directionalContrast * 0.04,
+    0,
+    1
+  );
 }
 
 function deriveExpressionMeta(sample) {
@@ -302,11 +406,18 @@ function deriveExpressionMeta(sample) {
   const microVariation = computeMicroVariation(sample);
   const continuityWeight = computeContinuityWeight(sample);
   const directional = computeDirectionalRelief(sample);
+  const directionalContrast = computeDirectionalContrast(directional);
+  const contourCompression = computeContourCompression(sample, reliefWeight, edgeSharpness);
+  const crestFactor = computeCrestFactor(sample, heightClass, cutClass);
+  const shelfFactor = computeShelfFactor(sample, heightClass);
+  const cutFactor = computeCutFactor(sample, cutClass);
   const packetSeparationWeight = strengthenPacketSeparation(
     heightClass,
     cutClass,
     reliefWeight,
-    edgeSharpness
+    edgeSharpness,
+    contourCompression,
+    directionalContrast
   );
 
   return {
@@ -325,7 +436,12 @@ function deriveExpressionMeta(sample) {
     directionalNorthBias: directional.directionalNorthBias,
     directionalSouthBias: directional.directionalSouthBias,
     directionalEastBias: directional.directionalEastBias,
-    directionalWestBias: directional.directionalWestBias
+    directionalWestBias: directional.directionalWestBias,
+    directionalContrast,
+    contourCompression,
+    crestFactor,
+    shelfFactor,
+    cutFactor
   };
 }
 
@@ -345,22 +461,24 @@ function tintColor(baseColor, lightenShift, darkenShift, greenShift = 0, blueShi
   return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a})`;
 }
 
-function scaleRadius(baseRadiusPx, packetSeparationWeight, edgeSharpness, microVariation) {
+function scaleRadius(baseRadiusPx, packetSeparationWeight, edgeSharpness, microVariation, contourCompression) {
   return baseRadiusPx * clamp(
-    0.94 +
+    0.92 +
     packetSeparationWeight * 0.18 +
     edgeSharpness * 0.08 +
-    (microVariation - 0.5) * 0.06,
-    0.78,
-    1.36
+    contourCompression * 0.06 +
+    (microVariation - 0.5) * 0.05,
+    0.76,
+    1.40
   );
 }
 
-function sharpenAlpha(baseAlpha, edgeSharpness, directionalReliefWeight) {
+function sharpenAlpha(baseAlpha, edgeSharpness, directionalReliefWeight, directionalContrast) {
   return clamp(
     baseAlpha +
-    edgeSharpness * 0.14 +
-    directionalReliefWeight * 0.06,
+    edgeSharpness * 0.12 +
+    directionalReliefWeight * 0.05 +
+    directionalContrast * 0.05,
     0,
     1
   );
@@ -375,13 +493,13 @@ function resolveGlacialPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(232,240,248,0.96)",
-      Math.round(meta.microVariation * 10),
+      Math.round(meta.microVariation * 8 + meta.crestFactor * 4),
       Math.round(meta.edgeSharpness * 4),
       0,
-      Math.round(meta.directionalReliefWeight * 4)
+      Math.round(meta.directionalReliefWeight * 5 + meta.directionalContrast * 4)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.16, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.25, meta.directionalReliefWeight * 0.18),
+    radiusPx: scaleRadius(pointSizePx * 1.16, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.20, meta.directionalReliefWeight * 0.16, meta.directionalContrast * 0.14),
     overlayOnly: false,
     ...meta
   };
@@ -392,11 +510,11 @@ function resolveSummitPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(210,214,206,0.96)",
-      Math.round(meta.directionalReliefWeight * 12),
-      Math.round(meta.edgeSharpness * 6)
+      Math.round(meta.directionalReliefWeight * 10 + meta.crestFactor * 8),
+      Math.round(meta.edgeSharpness * 5 + meta.cutFactor * 3)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.22, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.38, meta.directionalReliefWeight * 0.22),
+    radiusPx: scaleRadius(pointSizePx * 1.24, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.28, meta.directionalReliefWeight * 0.18, meta.directionalContrast * 0.18),
     overlayOnly: false,
     ...meta
   };
@@ -407,11 +525,11 @@ function resolveMountainPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(172,168,154,0.94)",
-      Math.round(meta.directionalReliefWeight * 9),
-      Math.round(meta.edgeSharpness * 8)
+      Math.round(meta.directionalReliefWeight * 8 + meta.crestFactor * 5),
+      Math.round(meta.edgeSharpness * 7 + meta.cutFactor * 2)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.14, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.34, meta.directionalReliefWeight * 0.18),
+    radiusPx: scaleRadius(pointSizePx * 1.16, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.28, meta.directionalReliefWeight * 0.16, meta.directionalContrast * 0.14),
     overlayOnly: false,
     ...meta
   };
@@ -422,11 +540,11 @@ function resolveCliffPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(156,146,122,0.94)",
-      Math.round(meta.directionalReliefWeight * 6),
-      Math.round(meta.edgeSharpness * 14)
+      Math.round(meta.directionalReliefWeight * 4 + meta.contourCompression * 4),
+      Math.round(meta.edgeSharpness * 12 + meta.cutFactor * 5)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.10, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.46, meta.directionalReliefWeight * 0.14),
+    radiusPx: scaleRadius(pointSizePx * 1.12, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.40, meta.directionalReliefWeight * 0.12, meta.directionalContrast * 0.12),
     overlayOnly: false,
     ...meta
   };
@@ -437,11 +555,11 @@ function resolveCutPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(124,116,96,0.92)",
-      Math.round(meta.directionalReliefWeight * 4),
-      Math.round(meta.edgeSharpness * 16)
+      Math.round(meta.directionalReliefWeight * 3 + meta.contourCompression * 3),
+      Math.round(meta.edgeSharpness * 14 + meta.cutFactor * 6)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.02, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.44, meta.directionalReliefWeight * 0.12),
+    radiusPx: scaleRadius(pointSizePx * 1.04, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.40, meta.directionalReliefWeight * 0.10, meta.directionalContrast * 0.10),
     overlayOnly: false,
     ...meta
   };
@@ -452,12 +570,12 @@ function resolveRidgePacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(138,154,110,0.92)",
-      Math.round(meta.directionalReliefWeight * 8),
-      Math.round(meta.edgeSharpness * 7),
-      Math.round(meta.microVariation * 6)
+      Math.round(meta.directionalReliefWeight * 7 + meta.crestFactor * 4),
+      Math.round(meta.edgeSharpness * 6),
+      Math.round(meta.microVariation * 5 + meta.shelfFactor * 2)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.08, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.24, meta.directionalReliefWeight * 0.18),
+    radiusPx: scaleRadius(pointSizePx * 1.10, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.20, meta.directionalReliefWeight * 0.14, meta.directionalContrast * 0.12),
     overlayOnly: false,
     ...meta
   };
@@ -471,22 +589,22 @@ function resolvePlateauPacket(sample, pointSizePx, meta) {
 
   if (plateauRole === "CORE") {
     baseColor = "rgba(144,160,112,0.94)";
-    baseRadiusPx = pointSizePx * 1.10;
+    baseRadiusPx = pointSizePx * 1.12;
   } else if (plateauRole === "EDGE") {
     baseColor = "rgba(136,152,106,0.92)";
-    baseRadiusPx = pointSizePx * 1.08;
+    baseRadiusPx = pointSizePx * 1.10;
   }
 
   return {
     layer: "terrain",
     color: tintColor(
       baseColor,
-      Math.round(meta.directionalReliefWeight * 6),
-      Math.round(meta.edgeSharpness * 5),
-      Math.round(meta.microVariation * 5)
+      Math.round(meta.directionalReliefWeight * 5 + meta.shelfFactor * 4),
+      Math.round(meta.edgeSharpness * 4 + meta.cutFactor * 2),
+      Math.round(meta.microVariation * 4 + meta.continuityWeight * 2)
     ),
-    radiusPx: scaleRadius(baseRadiusPx, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.18, meta.directionalReliefWeight * 0.14),
+    radiusPx: scaleRadius(baseRadiusPx, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.16, meta.directionalReliefWeight * 0.12, meta.directionalContrast * 0.10),
     overlayOnly: false,
     ...meta
   };
@@ -497,18 +615,19 @@ function resolveBasinPacket(sample, pointSizePx, meta) {
   const baseColor = basinStrength >= 0.42
     ? "rgba(88,124,76,0.92)"
     : "rgba(98,132,84,0.90)";
-  const baseRadiusPx = pointSizePx * (basinStrength >= 0.42 ? 1.00 : 0.98);
+  const baseRadiusPx = pointSizePx * (basinStrength >= 0.42 ? 1.02 : 1.00);
 
   return {
     layer: "terrain",
     color: tintColor(
       baseColor,
-      Math.round(meta.microVariation * 5),
-      Math.round(meta.edgeSharpness * 6),
-      Math.round(meta.continuityWeight * 4)
+      Math.round(meta.microVariation * 4 + meta.continuityWeight * 2),
+      Math.round(meta.edgeSharpness * 5),
+      Math.round(meta.continuityWeight * 4 + meta.shelfFactor * 2),
+      Math.round(meta.directionalContrast * 3)
     ),
-    radiusPx: scaleRadius(baseRadiusPx, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.22, meta.directionalReliefWeight * 0.10),
+    radiusPx: scaleRadius(baseRadiusPx, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.18, meta.directionalReliefWeight * 0.08, meta.directionalContrast * 0.08),
     overlayOnly: false,
     ...meta
   };
@@ -519,12 +638,12 @@ function resolveHighlandPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(126,148,96,0.90)",
-      Math.round(meta.directionalReliefWeight * 5),
+      Math.round(meta.directionalReliefWeight * 5 + meta.shelfFactor * 2),
       Math.round(meta.edgeSharpness * 4),
-      Math.round(meta.microVariation * 4)
+      Math.round(meta.microVariation * 3)
     ),
-    radiusPx: scaleRadius(pointSizePx * 1.04, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.16, meta.directionalReliefWeight * 0.10),
+    radiusPx: scaleRadius(pointSizePx * 1.06, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.14, meta.directionalReliefWeight * 0.10, meta.directionalContrast * 0.08),
     overlayOnly: false,
     ...meta
   };
@@ -535,12 +654,12 @@ function resolveUplandPacket(pointSizePx, meta) {
     layer: "terrain",
     color: tintColor(
       "rgba(108,144,92,0.90)",
-      Math.round(meta.directionalReliefWeight * 4),
+      Math.round(meta.directionalReliefWeight * 4 + meta.microVariation * 2),
       Math.round(meta.edgeSharpness * 3),
-      Math.round(meta.microVariation * 5)
+      Math.round(meta.microVariation * 4)
     ),
-    radiusPx: scaleRadius(pointSizePx, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.10, meta.directionalReliefWeight * 0.06),
+    radiusPx: scaleRadius(pointSizePx, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+    alpha: sharpenAlpha(1, meta.edgeSharpness * 0.08, meta.directionalReliefWeight * 0.06, meta.directionalContrast * 0.06),
     overlayOnly: false,
     ...meta
   };
@@ -552,11 +671,11 @@ function resolveFallbackPacket(sample, pointSizePx, meta) {
       layer: "terrain",
       color: tintColor(
         "rgba(154,160,142,0.92)",
-        Math.round(meta.directionalReliefWeight * 5),
-        Math.round(meta.edgeSharpness * 5)
+        Math.round(meta.directionalReliefWeight * 4 + meta.crestFactor * 2),
+        Math.round(meta.edgeSharpness * 4)
       ),
-      radiusPx: scaleRadius(pointSizePx * 1.10, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-      alpha: sharpenAlpha(1, meta.edgeSharpness * 0.20, meta.directionalReliefWeight * 0.08),
+      radiusPx: scaleRadius(pointSizePx * 1.10, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+      alpha: sharpenAlpha(1, meta.edgeSharpness * 0.16, meta.directionalReliefWeight * 0.08, meta.directionalContrast * 0.06),
       overlayOnly: false,
       ...meta
     };
@@ -570,8 +689,8 @@ function resolveFallbackPacket(sample, pointSizePx, meta) {
         Math.round(meta.directionalReliefWeight * 4),
         Math.round(meta.edgeSharpness * 4)
       ),
-      radiusPx: scaleRadius(pointSizePx * 1.04, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation),
-      alpha: sharpenAlpha(1, meta.edgeSharpness * 0.14, meta.directionalReliefWeight * 0.08),
+      radiusPx: scaleRadius(pointSizePx * 1.04, meta.packetSeparationWeight, meta.edgeSharpness, meta.microVariation, meta.contourCompression),
+      alpha: sharpenAlpha(1, meta.edgeSharpness * 0.12, meta.directionalReliefWeight * 0.08, meta.directionalContrast * 0.06),
       overlayOnly: false,
       ...meta
     };
@@ -634,7 +753,7 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
   if (!packet || typeof packet !== "object") return null;
 
   return Object.freeze({
-    contractId: "TERRAIN_RENDER_CONTRACT_v4",
+    contractId: "TERRAIN_RENDER_CONTRACT_v5",
     engineKey: "terrain",
     layer: normalizeString(packet.layer, "terrain"),
     color: normalizeColor(packet.color, fallbackColor),
@@ -711,6 +830,31 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
       0,
       1
     ),
+    directionalContrast: clamp(
+      isFiniteNumber(packet.directionalContrast) ? packet.directionalContrast : 0,
+      0,
+      1
+    ),
+    contourCompression: clamp(
+      isFiniteNumber(packet.contourCompression) ? packet.contourCompression : 0,
+      0,
+      1
+    ),
+    crestFactor: clamp(
+      isFiniteNumber(packet.crestFactor) ? packet.crestFactor : 0,
+      0,
+      1
+    ),
+    shelfFactor: clamp(
+      isFiniteNumber(packet.shelfFactor) ? packet.shelfFactor : 0,
+      0,
+      1
+    ),
+    cutFactor: clamp(
+      isFiniteNumber(packet.cutFactor) ? packet.cutFactor : 0,
+      0,
+      1
+    ),
 
     renderIntent: Object.freeze({
       drawsTerrain: true,
@@ -745,4 +889,4 @@ export function resolveTerrainPacket({
 
 export default Object.freeze({
   resolveTerrainPacket
-});
+}

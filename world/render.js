@@ -1,3 +1,4 @@
+// CONTRACT_SENTINEL_START_RENDER_v1
 // /world/render.js
 // MODE: RENDER BASELINE CONTRACT RENEWAL
 // STATUS: SELF-CONTAINED BASELINE RENDERER + HYDRATION + TERRAIN ATTACHMENTS
@@ -10,7 +11,7 @@
 // - keep bridge ownership in render only
 
 import { WORLD_KERNEL } from "./world_kernel.js";
-import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
+import { resolveHydrationPacket } from "./render/hydation_render_engine.js";
 import { resolveTerrainPacket } from "./render/terrain_render_engine.js";
 
 let lastAuditPlanetField = null;
@@ -824,3 +825,5 @@ export function renderPlanet(options) {
 }
 
 export default DEFAULT_RENDERER;
+
+// CONTRACT_SENTINEL_END_RENDER_v1

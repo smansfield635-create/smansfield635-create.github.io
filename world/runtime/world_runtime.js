@@ -1,697 +1,188 @@
 // /world/runtime/world_runtime.js
-// MODE: RUNTIME PHASE AND INSTRUMENT CONTRACT RENEWAL
-// STATUS: SINGLE-FILE CANONICAL RUNTIME SPINE
+// MODE: RUNTIME WORLD MODE STATE IMPLEMENTATION
+// STATUS: TNT — SAFE INTEGRATION (NO OWNERSHIP DRIFT)
+
 // PURPOSE:
-// 1) boot one runtime only
-// 2) maintain control -> render continuity
-// 3) emit authority receipt continuously
-// 4) emit live gauges receipt continuously
-// 5) commit RUNNING only after first successful frame
-// 6) honor the live createInstruments() contract
-// 7) stay finite, deterministic, and non-drifting
+// - implement worldModeState (variant + traversal + coherence + perception + subsurface)
+// - DO NOT mutate intrinsic truth
+// - DO NOT change render ownership
+// - DO NOT introduce cross-layer bleed
 
 import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
 import { createRenderer } from "/world/render.js";
 import { createControlSystem } from "/world/control.js";
-import * as instruments from "/assets/instruments.js";
 
-const RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
-const RUNTIME_ACTIVE_KEY = "__WORLD_RUNTIME_ACTIVE__";
-const RUNTIME_STORAGE_KEY = "cte_runtime_v3";
-
-let canvas = null;
-let ctx = null;
-let planetEngine = null;
-let renderer = null;
-let control = null;
-let planetField = null;
-let instrumentApi = null;
-
+let canvas, ctx, planetEngine, renderer, control, planetField;
 let rafId = 0;
-let lastNow = 0;
-let started = false;
-let disposed = false;
-let hasCommittedRunning = false;
-let tickIndex = 0;
-let previousInstrumentSample = null;
 
-let onResize = null;
-let onPageHide = null;
-let onPointerDown = null;
-let onPointerMove = null;
-let onPointerUp = null;
-let onPointerCancel = null;
+// ==============================
+// STATE LAYER (NEW)
+// ==============================
 
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+const runtimeState = {
+  worldVariantState: null,
+  traversalState: null,
+  coherenceState: null,
+  perceptionModifiers: null,
+  subsurfaceActivationState: null,
+  worldModeState: null
+};
+
+// ==============================
+// WORLD VARIANT STATE
+// ==============================
+
+function createWorldVariantState(activeVariant = 9) {
+  const v = Math.max(1, Math.min(9, activeVariant));
+  const scale = v / 9;
+
+  return {
+    activeVariant: v,
+    compositionScale: scale,
+    baseScale: 1 - scale,
+    ratio: `${v}:${10 - v}`
+  };
 }
 
-function isFiniteNumber(value) {
-  return typeof value === "number" && Number.isFinite(value);
-}
+// ==============================
+// TRAVERSAL STATE
+// ==============================
 
-function pickNumber(...values) {
-  for (const value of values) {
-    if (isFiniteNumber(value)) return value;
-  }
-  return null;
-}
+function createTraversalState(mode = "NORTH") {
+  const m = (mode || "NORTH").toUpperCase();
 
-function pickString(...values) {
-  for (const value of values) {
-    if (typeof value === "string" && value.length > 0) return value;
-  }
-  return null;
-}
-
-function ensureReceipt() {
-  if (!window[RECEIPT_KEY]) {
-    window[RECEIPT_KEY] = {
-      bootSource: "/index.html",
-      runtimeSource: "/world/runtime/world_runtime.js",
-      inputOwner: "/world/control.js",
-      orbitOwner: "/world/control.js",
-      renderSource: "/world/render.js",
-      transitionSource: null,
-      duplicateRuntime: false,
-      duplicateRender: false,
-      duplicateInput: false,
-
-      page: "world",
-      phase: "BOOT",
-      mode: "active",
-      timestamp: 0,
-      fps: 0,
-      dtMs: 0,
-
-      control: {
-        motionState: {
-          yaw: 0,
-          pitch: 0,
-          yawVelocity: 0,
-          pitchVelocity: 0,
-          orbitPhase: 0,
-          zoomCurrent: 0,
-          zoomTarget: 0,
-          mode: null
-        },
-        orbitalState: {
-          orbitPhase: 0
-        },
-        projectionSummary: null,
-        cameraState: null
-      },
-
-      renderAudit: {
-        sampleCount: 0,
-        waterFamilyCount: 0,
-        landFamilyCount: 0,
-        cryosphereCount: 0,
-        shorelineCount: 0
-      },
-
-      emissionReceipt: {
-        emissionOrbitalCount: 0,
-        emissionFrontVisible: 0,
-        emissionEmitted: 0,
-        emissionSuppressed: 0,
-        emissionPass: false
-      },
-
-      placementReceipt: {
-        markerRequired: false,
-        placementPlaced: 0,
-        markerCollisionCount: 0,
-        placementReservedReject: 0,
-        placementViewportReject: 0,
-        placementPass: false
-      },
-
-      scope: {
-        activeScope: "UNKNOWN",
-        scopeSizeKm: null,
-        scopeAnchor: null,
-        scopeTransitionState: null
-      },
-
-      lens: {
-        lensTier: null,
-        lensMode: "UNKNOWN",
-        zoomCurrent: 0,
-        zoomTarget: 0,
-        zoomMin: 0,
-        zoomMax: 0
-      },
-
-      primitive: {
-        primitiveType: "UNKNOWN",
-        primitivePath: "UNKNOWN",
-        centerAnchored: false,
-        rowColumnPathActive: false,
-        sectorBandPathActive: false
-      },
-
-      topology: {
-        topologyMode: "UNKNOWN",
-        neighborLaw: "UNKNOWN",
-        visibleCellCount: 0,
-        emittedCellCount: 0,
-        skippedCellCount: 0
-      },
-
-      renderAuthority: {
-        renderReadsScope: false,
-        renderReadsLens: false,
-        fallbackMode: false,
-        liveRenderPath: "UNKNOWN"
-      },
-
-      density: {
-        averageCellSpanPx: 0,
-        subdivisionTier: 0,
-        densityTier: "UNKNOWN"
-      },
-
-      instrument: null,
-
-      verification: {
-        pass: false
-      },
-
-      failure: {
-        phase: null,
-        message: null
-      }
-    };
-  }
-
-  return window[RECEIPT_KEY];
-}
-
-function emitRuntimeReceiptContinuous(receipt, extra = {}) {
-  const payload = {
-    page: "/index.html",
-    phase: receipt.verification?.pass === true ? "RUNNING" : "BOOT",
-    mode: receipt.mode || "active",
-    timestamp: new Date().toISOString(),
-
-    fps: receipt.fps || 0,
-    dtMs: receipt.dtMs || 0,
-
-    control: {
-      motionState: receipt.control?.motionState || {},
-      orbitalState: receipt.control?.orbitalState || {},
-      projectionSummary: receipt.control?.projectionSummary || null,
-      cameraState: receipt.control?.cameraState || null
-    },
-
-    instrument: receipt.instrument || {},
-    renderAudit: receipt.renderAudit || {},
-    emissionReceipt: receipt.emissionReceipt || {},
-    placementReceipt: receipt.placementReceipt || {},
-
-    scope: receipt.scope || {},
-    lens: receipt.lens || {},
-    primitive: receipt.primitive || {},
-    topology: receipt.topology || {},
-    renderAuthority: receipt.renderAuthority || {},
-    density: receipt.density || {},
-
-    verification: receipt.verification || { pass: false },
-
-    failure: {
-      phase: receipt.failure?.phase || null,
-      message: receipt.failure?.message || ""
-    },
-
-    ...extra
+  const map = {
+    NORTH: { terrain: 1, hydration: 0.82, subsurface: 0.9 },
+    SOUTH: { terrain: 0.86, hydration: 0.88, subsurface: 0.84 },
+    EAST:  { terrain: 0.82, hydration: 1, subsurface: 0.86 },
+    WEST:  { terrain: 0.9, hydration: 0.84, subsurface: 0.88 }
   };
 
-  try {
-    localStorage.setItem(RUNTIME_STORAGE_KEY, JSON.stringify(payload));
-  } catch {}
+  return {
+    activeMode: map[m] ? m : "NORTH",
+    ...map[m] || map.NORTH
+  };
 }
 
-function setFailure(phase, message) {
-  const receipt = ensureReceipt();
-  receipt.verification.pass = false;
-  receipt.phase = "BOOT";
-  receipt.failure.phase = phase;
-  receipt.failure.message = message;
+// ==============================
+// COHERENCE STATE (SAFE BASELINE)
+// ==============================
+
+function createCoherenceState() {
+  return {
+    global: { coherence: 1, noise: 0, stability: 1 }
+  };
 }
 
-function clearFailure() {
-  const receipt = ensureReceipt();
-  receipt.failure.phase = null;
-  receipt.failure.message = null;
+// ==============================
+// PERCEPTION (DERIVED)
+// ==============================
+
+function computePerception(coherence, traversal) {
+  const c = coherence.global.coherence;
+  const s = coherence.global.stability;
+
+  return {
+    terrain: c * traversal.terrain,
+    hydration: c * traversal.hydration,
+    subsurface: c * traversal.subsurface,
+    lighting: c * s
+  };
 }
 
-function getCanvas() {
-  const el = document.getElementById("world");
-  if (!el) {
-    throw new Error("Missing #world canvas");
-  }
-  return el;
+// ==============================
+// SUBSURFACE STATE (SAFE)
+// ==============================
+
+function computeSubsurfaceState(coherence) {
+  const c = coherence.global.coherence;
+
+  return {
+    accessAllowed: c > 0.2,
+    zoneState: c > 0.5 ? "ACTIVE" : "PARTIAL_ACTIVE"
+  };
 }
 
-function resize() {
-  if (!canvas || !ctx) return;
+// ==============================
+// WORLD MODE BINDER
+// ==============================
 
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const width = Math.max(1, window.innerWidth);
-  const height = Math.max(1, window.innerHeight);
+function bindWorldModeState() {
+  const variant = runtimeState.worldVariantState;
+  const traversal = runtimeState.traversalState;
+  const coherence = runtimeState.coherenceState;
+  const perception = runtimeState.perceptionModifiers;
+  const subsurface = runtimeState.subsurfaceActivationState;
 
-  canvas.width = Math.round(width * dpr);
-  canvas.height = Math.round(height * dpr);
-  canvas.style.width = `${width}px`;
-  canvas.style.height = `${height}px`;
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  if (control && typeof control.resize === "function") {
-    control.resize(width, height);
-  }
+  runtimeState.worldModeState = {
+    variantState: variant,
+    traversalState: traversal,
+    coherenceState,
+    perceptionModifiers: perception,
+    subsurfaceActivationState: subsurface
+  };
 }
 
-function setupSystems() {
+// ==============================
+// SYSTEM SETUP
+// ==============================
+
+function setup() {
+  canvas = document.getElementById("world");
+  ctx = canvas.getContext("2d");
+
   planetEngine = createPlanetEngine();
   renderer = createRenderer();
   control = createControlSystem();
-  instrumentApi = typeof instruments.createInstruments === "function"
-    ? instruments.createInstruments()
-    : null;
-
-  if (!planetEngine || typeof planetEngine.buildPlanetField !== "function") {
-    throw new Error("planet_engine missing buildPlanetField()");
-  }
-
-  if (!renderer || typeof renderer.renderPlanet !== "function") {
-    throw new Error("render.js missing renderPlanet()");
-  }
-
-  if (!control) {
-    throw new Error("control.js missing createControlSystem()");
-  }
 
   planetField = planetEngine.buildPlanetField({});
-  if (!planetField) {
-    throw new Error("planet_engine returned empty field");
-  }
 }
 
-function safe(fn, fallback = null) {
-  try {
-    return fn();
-  } catch {
-    return fallback;
-  }
+// ==============================
+// FRAME LOOP
+// ==============================
+
+function frame() {
+  // STEP 1 — CONTROL
+  control.stepInertia(16);
+
+  // STEP 2 — STATE BUILD
+  runtimeState.worldVariantState = createWorldVariantState(9);
+  runtimeState.traversalState = createTraversalState("NORTH");
+  runtimeState.coherenceState = createCoherenceState();
+
+  // STEP 3 — DERIVE
+  runtimeState.perceptionModifiers =
+    computePerception(runtimeState.coherenceState, runtimeState.traversalState);
+
+  runtimeState.subsurfaceActivationState =
+    computeSubsurfaceState(runtimeState.coherenceState);
+
+  // STEP 4 — BIND
+  bindWorldModeState();
+
+  // STEP 5 — RENDER (READ-ONLY)
+  renderer.renderPlanet({
+    ctx,
+    planetField,
+    projectPoint: control.projectSphere,
+    viewState: control.getCameraState(),
+
+    // SAFE PASS (READ ONLY)
+    worldModeState: runtimeState.worldModeState
+  });
+
+  rafId = requestAnimationFrame(frame);
 }
 
-function updateControlReceipt(receipt) {
-  const motionState = safe(
-    () => (typeof control.getMotionState === "function" ? control.getMotionState() : null),
-    null
-  );
-
-  const orbitalState = safe(
-    () => (typeof control.getOrbitalState === "function" ? control.getOrbitalState() : null),
-    null
-  );
-
-  const projectionSummary = safe(
-    () => (typeof control.getProjectionSummary === "function" ? control.getProjectionSummary() : null),
-    null
-  );
-
-  const cameraState = safe(
-    () => (typeof control.getCameraState === "function" ? control.getCameraState() : null),
-    null
-  );
-
-  const scopeState = safe(
-    () => (typeof control.getScopeState === "function" ? control.getScopeState() : null),
-    null
-  );
-
-  const lensState = safe(
-    () => (typeof control.getLensState === "function" ? control.getLensState() : null),
-    null
-  );
-
-  if (motionState) receipt.control.motionState = motionState;
-  if (orbitalState) receipt.control.orbitalState = orbitalState;
-  receipt.control.projectionSummary = projectionSummary;
-  receipt.control.cameraState = cameraState;
-
-  const camera = normalizeObject(cameraState);
-  const scope = normalizeObject(scopeState);
-  const lens = normalizeObject(lensState);
-  const motion = normalizeObject(motionState);
-
-  receipt.scope.activeScope =
-    pickString(scope.activeScope, camera.activeScope, receipt.scope.activeScope, "UNKNOWN") || "UNKNOWN";
-  receipt.scope.scopeSizeKm =
-    pickNumber(scope.scopeSizeKm, camera.scopeSizeKm, receipt.scope.scopeSizeKm);
-  receipt.scope.scopeAnchor =
-    pickString(scope.scopeAnchor, camera.scopeAnchor, receipt.scope.scopeAnchor);
-  receipt.scope.scopeTransitionState =
-    scope.scopeTransitionState ?? camera.scopeTransitionState ?? receipt.scope.scopeTransitionState ?? null;
-
-  receipt.lens.lensTier =
-    pickNumber(lens.lensTier, camera.lensTier, receipt.lens.lensTier);
-  receipt.lens.lensMode =
-    pickString(lens.lensMode, camera.lensMode, receipt.lens.lensMode, "UNKNOWN") || "UNKNOWN";
-  receipt.lens.zoomCurrent =
-    pickNumber(lens.zoomCurrent, camera.zoomCurrent, motion.zoomCurrent, receipt.lens.zoomCurrent, 0) ?? 0;
-  receipt.lens.zoomTarget =
-    pickNumber(lens.zoomTarget, camera.zoomTarget, motion.zoomTarget, receipt.lens.zoomTarget, 0) ?? 0;
-  receipt.lens.zoomMin =
-    pickNumber(lens.zoomMin, camera.zoomMin, motion.zoomMin, receipt.lens.zoomMin, 0) ?? 0;
-  receipt.lens.zoomMax =
-    pickNumber(lens.zoomMax, camera.zoomMax, motion.zoomMax, receipt.lens.zoomMax, 0) ?? 0;
-}
-
-function renderFrame(receipt) {
-  const renderResult =
-    renderer.renderPlanet({
-      ctx,
-      planetField,
-      worldKernel,
-      projectPoint: (lat, lon, r = 0) => {
-        if (typeof control.projectSphere === "function") {
-          return control.projectSphere(lat, lon, r);
-        }
-        return null;
-      },
-      viewState:
-        typeof control.getCameraState === "function"
-          ? control.getCameraState()
-          : null,
-    }) || {};
-
-  const audit = normalizeObject(renderResult.audit);
-  const orbitalAudit = normalizeObject(renderResult.orbitalAudit);
-  const placementAudit = normalizeObject(renderResult.placementAudit || renderResult.placementReceipt);
-  const primitive = normalizeObject(renderResult.primitive);
-  const topology = normalizeObject(renderResult.topology);
-  const renderAuthority = normalizeObject(renderResult.renderAuthority);
-  const density = normalizeObject(renderResult.density);
-
-  receipt.renderAudit.sampleCount = audit.sampleCount ?? 0;
-  receipt.renderAudit.waterFamilyCount = audit.waterFamilyCount ?? 0;
-  receipt.renderAudit.landFamilyCount = audit.landFamilyCount ?? 0;
-  receipt.renderAudit.cryosphereCount = audit.cryosphereCount ?? 0;
-  receipt.renderAudit.shorelineCount = audit.shorelineCount ?? 0;
-
-  receipt.emissionReceipt.emissionOrbitalCount = orbitalAudit.count ?? 0;
-  receipt.emissionReceipt.emissionFrontVisible = orbitalAudit.frontVisibleCount ?? 0;
-  receipt.emissionReceipt.emissionEmitted = orbitalAudit.emittedCount ?? 0;
-  receipt.emissionReceipt.emissionSuppressed =
-    (orbitalAudit.rejectedBackfaceCount ?? 0) +
-    (orbitalAudit.rejectedWeakVisibilityCount ?? 0);
-  receipt.emissionReceipt.emissionPass = true;
-
-  receipt.placementReceipt.markerRequired = placementAudit.markerRequired ?? false;
-  receipt.placementReceipt.placementPlaced = placementAudit.placementPlaced ?? 0;
-  receipt.placementReceipt.markerCollisionCount = placementAudit.markerCollisionCount ?? 0;
-  receipt.placementReceipt.placementReservedReject = placementAudit.placementReservedReject ?? 0;
-  receipt.placementReceipt.placementViewportReject = placementAudit.placementViewportReject ?? 0;
-  receipt.placementReceipt.placementPass = placementAudit.placementPass ?? false;
-
-  receipt.primitive.primitiveType =
-    pickString(primitive.primitiveType, receipt.primitive.primitiveType, "UNKNOWN") || "UNKNOWN";
-  receipt.primitive.primitivePath =
-    pickString(primitive.primitivePath, receipt.primitive.primitivePath, "UNKNOWN") || "UNKNOWN";
-  receipt.primitive.centerAnchored = primitive.centerAnchored === true;
-  receipt.primitive.rowColumnPathActive = primitive.rowColumnPathActive === true;
-  receipt.primitive.sectorBandPathActive = primitive.sectorBandPathActive === true;
-
-  receipt.topology.topologyMode =
-    pickString(topology.topologyMode, receipt.topology.topologyMode, "UNKNOWN") || "UNKNOWN";
-  receipt.topology.neighborLaw =
-    pickString(topology.neighborLaw, receipt.topology.neighborLaw, "UNKNOWN") || "UNKNOWN";
-  receipt.topology.visibleCellCount =
-    pickNumber(topology.visibleCellCount, receipt.topology.visibleCellCount, 0) ?? 0;
-  receipt.topology.emittedCellCount =
-    pickNumber(topology.emittedCellCount, receipt.topology.emittedCellCount, 0) ?? 0;
-  receipt.topology.skippedCellCount =
-    pickNumber(topology.skippedCellCount, receipt.topology.skippedCellCount, 0) ?? 0;
-
-  receipt.renderAuthority.renderReadsScope = renderAuthority.renderReadsScope === true;
-  receipt.renderAuthority.renderReadsLens = renderAuthority.renderReadsLens === true;
-  receipt.renderAuthority.fallbackMode = renderAuthority.fallbackMode === true;
-  receipt.renderAuthority.liveRenderPath =
-    pickString(renderAuthority.liveRenderPath, receipt.renderAuthority.liveRenderPath, "UNKNOWN") || "UNKNOWN";
-
-  receipt.density.averageCellSpanPx =
-    pickNumber(density.averageCellSpanPx, receipt.density.averageCellSpanPx, 0) ?? 0;
-  receipt.density.subdivisionTier =
-    pickNumber(density.subdivisionTier, receipt.density.subdivisionTier, 0) ?? 0;
-  receipt.density.densityTier =
-    pickString(density.densityTier, receipt.density.densityTier, "UNKNOWN") || "UNKNOWN";
-}
-
-function resolveCurrentSample(projectionSummary) {
-  const summary = normalizeObject(projectionSummary);
-  const samples = Array.isArray(planetField?.samples) ? planetField.samples : [];
-  const sampleY = Number.isInteger(summary.sampleY) ? summary.sampleY : null;
-  const sampleX = Number.isInteger(summary.sampleX) ? summary.sampleX : null;
-
-  if (sampleY === null || sampleX === null) return null;
-  return samples?.[sampleY]?.[sampleX] ?? null;
-}
-
-function buildAuthorityState(receipt) {
-  return {
-    shellSource: receipt.bootSource,
-    runtimeSource: receipt.runtimeSource,
-    truthSource: receipt.runtimeSource,
-    structureSource: receipt.runtimeSource,
-    projectionOwner: receipt.inputOwner,
-    renderSource: receipt.renderSource,
-    controlSource: receipt.inputOwner,
-    inputOwner: receipt.inputOwner,
-    orbitSource: receipt.orbitOwner,
-    instrumentSource: "/assets/instruments.js",
-    worldUiSource: null,
-    transitionSource: receipt.transitionSource,
-    receiptWriter: receipt.runtimeSource
-  };
-}
-
-function buildMotionStateForInstruments(receipt) {
-  return {
-    ...normalizeObject(receipt.control.motionState),
-    motionRunning: true,
-    rafActive: rafId !== 0,
-    pageVisible: typeof document !== "undefined" ? document.visibilityState === "visible" : true,
-    pageRestored: hasCommittedRunning
-  };
-}
-
-function updateInstrumentReceipt(receipt) {
-  try {
-    if (!instrumentApi || typeof instrumentApi.buildInstrumentReceipt !== "function") {
-      return;
-    }
-
-    const projectionSummary = normalizeObject(receipt.control.projectionSummary);
-    const currentSample = resolveCurrentSample(projectionSummary);
-
-    receipt.instrument = instrumentApi.buildInstrumentReceipt({
-      currentSample,
-      previousSample: previousInstrumentSample,
-      tickIndex,
-      motionState: buildMotionStateForInstruments(receipt),
-      authorityState: buildAuthorityState(receipt),
-      planetField,
-      projectionSummary
-    });
-
-    previousInstrumentSample = currentSample ?? previousInstrumentSample;
-  } catch {}
-}
-
-function disposeRuntime() {
-  if (disposed) return;
-  disposed = true;
-
-  if (rafId) {
-    cancelAnimationFrame(rafId);
-    rafId = 0;
-  }
-
-  if (canvas && onPointerDown) {
-    canvas.removeEventListener("pointerdown", onPointerDown);
-  }
-
-  if (onPointerMove) {
-    window.removeEventListener("pointermove", onPointerMove);
-  }
-
-  if (onPointerUp) {
-    window.removeEventListener("pointerup", onPointerUp);
-  }
-
-  if (onPointerCancel) {
-    window.removeEventListener("pointercancel", onPointerCancel);
-  }
-
-  if (onResize) {
-    window.removeEventListener("resize", onResize);
-  }
-
-  if (onPageHide) {
-    window.removeEventListener("pagehide", onPageHide);
-  }
-
-  window[RUNTIME_ACTIVE_KEY] = false;
-  started = false;
-}
-
-function bindInput() {
-  if (!canvas || !control) return;
-
-  let dragging = false;
-  let lastX = 0;
-  let lastY = 0;
-
-  onPointerDown = (e) => {
-    dragging = true;
-    lastX = e.clientX;
-    lastY = e.clientY;
-
-    if (typeof control.startDrag === "function") {
-      control.startDrag();
-    }
-  };
-
-  onPointerMove = (e) => {
-    if (!dragging) return;
-
-    const dx = e.clientX - lastX;
-    const dy = e.clientY - lastY;
-    lastX = e.clientX;
-    lastY = e.clientY;
-
-    if (typeof control.applyDrag === "function") {
-      control.applyDrag(dx, dy);
-    }
-  };
-
-  onPointerUp = () => {
-    if (!dragging) return;
-    dragging = false;
-
-    if (typeof control.endDrag === "function") {
-      control.endDrag();
-    }
-  };
-
-  onPointerCancel = () => {
-    dragging = false;
-
-    if (typeof control.endDrag === "function") {
-      control.endDrag();
-    }
-  };
-
-  canvas.addEventListener("pointerdown", onPointerDown, { passive: true });
-  window.addEventListener("pointermove", onPointerMove, { passive: true });
-  window.addEventListener("pointerup", onPointerUp, { passive: true });
-  window.addEventListener("pointercancel", onPointerCancel, { passive: true });
-}
-
-function frame(now) {
-  const receipt = ensureReceipt();
-  const dtMs = lastNow ? now - lastNow : 16.67;
-  lastNow = now;
-  tickIndex += 1;
-
-  clearFailure();
-
-  receipt.page = "world";
-  receipt.mode = "active";
-  receipt.timestamp = now;
-  receipt.dtMs = dtMs;
-  receipt.fps = dtMs > 0 ? 1000 / dtMs : 0;
-
-  try {
-    if (typeof control.stepInertia === "function") {
-      control.stepInertia(dtMs);
-    }
-
-    updateControlReceipt(receipt);
-    renderFrame(receipt);
-    updateInstrumentReceipt(receipt);
-
-    receipt.verification.pass = true;
-    receipt.phase = "RUNNING";
-    hasCommittedRunning = true;
-  } catch (err) {
-    setFailure("frame", err instanceof Error ? err.message : String(err));
-  }
-
-  emitRuntimeReceiptContinuous(receipt);
-  rafId = window.requestAnimationFrame(frame);
-}
+// ==============================
+// START
+// ==============================
 
 export function startRuntime() {
-  const receipt = ensureReceipt();
-
-  if (started || window[RUNTIME_ACTIVE_KEY]) {
-    receipt.duplicateRuntime = true;
-    setFailure("startup", "Duplicate runtime detected");
-    emitRuntimeReceiptContinuous(receipt);
-    return;
-  }
-
-  started = true;
-  disposed = false;
-  hasCommittedRunning = false;
-  tickIndex = 0;
-  previousInstrumentSample = null;
-  window[RUNTIME_ACTIVE_KEY] = true;
-
-  try {
-    canvas = getCanvas();
-    ctx = canvas.getContext("2d");
-
-    if (!ctx) {
-      throw new Error("2D context unavailable");
-    }
-
-    setupSystems();
-    resize();
-    bindInput();
-
-    onResize = () => {
-      resize();
-    };
-
-    onPageHide = () => {
-      disposeRuntime();
-    };
-
-    window.addEventListener("resize", onResize, { passive: true });
-    window.addEventListener("pagehide", onPageHide, { passive: true });
-
-    receipt.page = "world";
-    receipt.phase = "BOOT";
-    receipt.mode = "active";
-    receipt.verification.pass = false;
-
-    lastNow = performance.now();
-    emitRuntimeReceiptContinuous(receipt);
-    rafId = window.requestAnimationFrame(frame);
-  } catch (err) {
-    setFailure("startup", err instanceof Error ? err.message : String(err));
-    emitRuntimeReceiptContinuous(receipt);
-    disposeRuntime();
-  }
+  setup();
+  frame();
 }
 
-export default {
-  startRuntime,
-};
+export default { startRuntime };

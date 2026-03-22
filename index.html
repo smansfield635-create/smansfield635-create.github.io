@@ -90,11 +90,15 @@ const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
 const BOOT_CONTRACT = Object.freeze({
-  id: "INDEX_BOOT_CONTRACT_RENEWAL_v2",
-  engineContract: "PLANET_ENGINE_CONTRACT_RENEWAL_v1",
-  runtimeContract: "WORLD_RUNTIME_CONTRACT_v1",
+  id: "INDEX_BOOT_CONTRACT_RENEWAL_v3",
+  engineContract: "PLANET_ENGINE_TOPOLOGY_PLACEMENT_CONTRACT_v3",
+  runtimeContract: "RUNTIME_WORLD_MODE_STATE_CONTRACT_v1",
   renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v1",
-  diagnosticsPath: "/gauges/"
+  diagnosticsPath: "/gauges/",
+  runtimeStorageKey: "cte_runtime_v4",
+  runtimeReceiptKey: "__AUTHORITY_RECEIPT__",
+  ignitionTimeoutMs: 12000,
+  ignitionPollMs: 100
 });
 
 const MODULES = Object.freeze([
@@ -213,12 +217,101 @@ function validateCanvasPresence() {
   return world;
 }
 
+function readRuntimeStorageReceipt() {
+  try {
+    const raw = localStorage.getItem(BOOT_CONTRACT.runtimeStorageKey);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function readWindowReceipt() {
+  const receipt = window[BOOT_CONTRACT.runtimeReceiptKey];
+  return receipt && typeof receipt === "object" ? receipt : null;
+}
+
+function resolveVerificationState() {
+  const windowReceipt = readWindowReceipt();
+  const storageReceipt = readRuntimeStorageReceipt();
+
+  const verificationPass =
+    windowReceipt?.verification?.pass === true ||
+    storageReceipt?.verification?.pass === true;
+
+  const failurePhase =
+    windowReceipt?.failure?.phase ??
+    storageReceipt?.failure?.phase ??
+    null;
+
+  const failureMessage =
+    windowReceipt?.failure?.message ??
+    storageReceipt?.failure?.message ??
+    "";
+
+  return {
+    verificationPass,
+    failurePhase,
+    failureMessage,
+    windowReceipt,
+    storageReceipt
+  };
+}
+
+async function waitForIgnition() {
+  const startedAt = performance.now();
+
+  while ((performance.now() - startedAt) < BOOT_CONTRACT.ignitionTimeoutMs) {
+    const state = resolveVerificationState();
+
+    if (state.failurePhase) {
+      setStatus(
+        `RUNTIME ERROR: ${state.failurePhase}\n${state.failureMessage || "Unknown runtime failure"}`,
+        "boot-fail"
+      );
+      return false;
+    }
+
+    if (state.verificationPass === true) {
+      setStatus(
+        `RUNNING\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+        "boot-ok"
+      );
+      return true;
+    }
+
+    setStatus(
+      `WAITING FOR IGNITION...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+      "boot-warn"
+    );
+
+    await new Promise((resolve) => window.setTimeout(resolve, BOOT_CONTRACT.ignitionPollMs));
+  }
+
+  const state = resolveVerificationState();
+  if (state.failurePhase) {
+    setStatus(
+      `RUNTIME ERROR: ${state.failurePhase}\n${state.failureMessage || "Unknown runtime failure"}`,
+      "boot-fail"
+    );
+    return false;
+  }
+
+  setStatus(
+    `IGNITION TIMEOUT\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
+    "boot-fail"
+  );
+  return false;
+}
+
 async function boot() {
   try {
     validateCanvasPresence();
 
     setStatus(
-      `BOOT CONTRACT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}`,
+      `BOOT CONTRACT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
       "boot-warn"
     );
 
@@ -234,16 +327,13 @@ async function boot() {
     }
 
     setStatus(
-      `STARTING RUNTIME...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}`,
+      `STARTING RUNTIME...\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}\nRUNTIME: ${BOOT_CONTRACT.runtimeContract}`,
       "boot-warn"
     );
 
     startRuntime();
 
-    setStatus(
-      `RUNNING\nBOOT: ${BOOT_CONTRACT.id}\nENGINE: ${BOOT_CONTRACT.engineContract}`,
-      "boot-ok"
-    );
+    await waitForIgnition();
   } catch {
     // exact failure already surfaced above
   }

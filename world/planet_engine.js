@@ -128,6 +128,30 @@ function buildAuthoredConstants(contract) {
 
     seasonGlobalPhase: toNumber(kc.seasonGlobalPhase, 0.18),
 
+    defaultWorldVariant: clamp(Math.round(toNumber(kc.defaultWorldVariant, 9)), 1, 9),
+
+    compositionField: Object.freeze({
+      continentMacroWeights: Object.freeze({
+        C1: 0.25,
+        C2: 0.50,
+        C3: 0.75,
+        OCEAN: 0.40
+      }),
+
+      countryVariationByQuadrant: Object.freeze({
+        NW: -0.08,
+        NE: -0.03,
+        SW: 0.03,
+        SE: 0.08
+      }),
+
+      blendWeights: Object.freeze({
+        continentMacro: 0.35,
+        regionRank: 0.55,
+        countryVariation: 0.10
+      })
+    }),
+
     oceanDepths: Object.freeze({
       shelf: -0.04,
       slope: -0.10,
@@ -186,6 +210,13 @@ function buildAuthoredConstants(contract) {
       GLACIER: "GLACIER"
     }),
 
+    compositionClasses: Object.freeze({
+      BASE_DOMINANT: "BASE_DOMINANT",
+      BALANCED: "BALANCED",
+      PRECIOUS_DOMINANT: "PRECIOUS_DOMINANT",
+      PURITY_DOMINANT: "PURITY_DOMINANT"
+    }),
+
     seasonLabels: Object.freeze({
       WINTER: "WINTER",
       SPRING: "SPRING",
@@ -237,7 +268,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "N",
         thermalBias: 0.04,
         moistureBias: 0.08,
-        upliftBias: 0.12
+        upliftBias: 0.12,
+        macroContinentId: "C1",
+        regionRank: 1
       }),
       Object.freeze({
         id: "GRATITUDE_CONTINENT",
@@ -251,7 +284,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "N",
         thermalBias: 0.03,
         moistureBias: 0.10,
-        upliftBias: 0.10
+        upliftBias: 0.10,
+        macroContinentId: "C1",
+        regionRank: 2
       }),
       Object.freeze({
         id: "GENEROSITY_CONTINENT",
@@ -265,7 +300,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "N",
         thermalBias: 0.02,
         moistureBias: 0.08,
-        upliftBias: 0.09
+        upliftBias: 0.09,
+        macroContinentId: "C1",
+        regionRank: 3
       }),
       Object.freeze({
         id: "DEPENDABILITY_CONTINENT",
@@ -279,7 +316,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "N",
         thermalBias: -0.06,
         moistureBias: 0.02,
-        upliftBias: 0.15
+        upliftBias: 0.15,
+        macroContinentId: "C2",
+        regionRank: 4
       }),
       Object.freeze({
         id: "ACCOUNTABILITY_CONTINENT",
@@ -293,7 +332,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "N",
         thermalBias: -0.02,
         moistureBias: -0.03,
-        upliftBias: 0.16
+        upliftBias: 0.16,
+        macroContinentId: "C2",
+        regionRank: 5
       }),
       Object.freeze({
         id: "HUMILITY_CONTINENT",
@@ -307,7 +348,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "S",
         thermalBias: 0.05,
         moistureBias: 0.00,
-        upliftBias: 0.13
+        upliftBias: 0.13,
+        macroContinentId: "C2",
+        regionRank: 6
       }),
       Object.freeze({
         id: "FORGIVENESS_CONTINENT",
@@ -321,7 +364,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "S",
         thermalBias: 0.03,
         moistureBias: 0.06,
-        upliftBias: 0.12
+        upliftBias: 0.12,
+        macroContinentId: "C3",
+        regionRank: 7
       }),
       Object.freeze({
         id: "SELF_CONTROL_CONTINENT",
@@ -335,7 +380,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "S",
         thermalBias: -0.08,
         moistureBias: -0.06,
-        upliftBias: 0.14
+        upliftBias: 0.14,
+        macroContinentId: "C3",
+        regionRank: 8
       }),
       Object.freeze({
         id: "PURITY_CONTINENT",
@@ -349,7 +396,9 @@ function buildAuthoredConstants(contract) {
         hemisphereBias: "N",
         thermalBias: -0.14,
         moistureBias: -0.02,
-        upliftBias: 0.18
+        upliftBias: 0.18,
+        macroContinentId: "C3",
+        regionRank: 9
       })
     ]),
 
@@ -381,7 +430,7 @@ function buildAuthoredConstants(contract) {
         regionIds: Object.freeze([
           "DEPENDABILITY_CONTINENT",
           "ACCOUNTABILITY_CONTINENT",
-          "PURITY_CONTINENT"
+          "HUMILITY_CONTINENT"
         ])
       }),
       Object.freeze({
@@ -394,9 +443,9 @@ function buildAuthoredConstants(contract) {
         rotationDeg: 4,
         dominanceWeight: 1.12,
         regionIds: Object.freeze([
-          "HUMILITY_CONTINENT",
           "FORGIVENESS_CONTINENT",
-          "SELF_CONTROL_CONTINENT"
+          "SELF_CONTROL_CONTINENT",
+          "PURITY_CONTINENT"
         ])
       })
     ]),
@@ -493,11 +542,11 @@ function mapContinentClass(continentMass) {
       return "C1";
     case "DEPENDABILITY_CONTINENT":
     case "ACCOUNTABILITY_CONTINENT":
-    case "PURITY_CONTINENT":
-      return "C2";
     case "HUMILITY_CONTINENT":
+      return "C2";
     case "FORGIVENESS_CONTINENT":
     case "SELF_CONTROL_CONTINENT":
+    case "PURITY_CONTINENT":
       return "C3";
     default:
       return "OCEAN";
@@ -572,6 +621,28 @@ function corridorField(latDeg, lonDeg, a, b, corridorWidthDeg, exponent) {
   return Math.max(0, 1 - Math.pow(normalized, exponent));
 }
 
+function resolveWorldVariant(inputState, constants) {
+  const root = normalizeObject(inputState);
+  const worldVariantState =
+    normalizeObject(root.worldVariantState).activeVariant ?
+      normalizeObject(root.worldVariantState) :
+      normalizeObject(normalizeObject(root.worldModeState).variantState);
+
+  const requested = Math.round(toNumber(worldVariantState.activeVariant, constants.defaultWorldVariant));
+  const variant = clamp(requested, 1, 9);
+  const compositionScale =
+    isFiniteNumber(worldVariantState.compositionScale) ?
+      clamp(worldVariantState.compositionScale, 0, 1) :
+      clamp(variant / 9, 0, 1);
+
+  return Object.freeze({
+    activeVariant: variant,
+    compositionScale,
+    baseScale: clamp(1 - compositionScale, 0, 1),
+    ratio: `${variant}:${Math.max(1, 10 - variant)}`
+  });
+}
+
 function createBaseSample(x, y, latDeg, lonDeg) {
   return {
     x,
@@ -604,6 +675,12 @@ function createBaseSample(x, y, latDeg, lonDeg) {
     continentMass: "NONE",
     macroRegion: "NONE",
     subRegion: "NONE",
+    macroContinentId: "OCEAN",
+    regionId: "NONE",
+    regionRank: 0,
+    countryId: "NONE",
+    countryQuadrant: "NONE",
+    countryVariation: 0,
 
     strongestSummitId: "NONE",
     strongestSummitScore: 0,
@@ -654,6 +731,20 @@ function createBaseSample(x, y, latDeg, lonDeg) {
     navigationBias: "N",
     navigationStability: 0,
     gravityConstraint: 1,
+
+    compositionVariant: 9,
+    compositionScale: 1,
+    baseScale: 0,
+    regionalPurityWeight: 0,
+    continentMacroWeight: 0,
+    preciousWeight: 0,
+    baseWeight: 0,
+    compositionWeight: 0,
+    preciousToBaseRatio: 0,
+    compositionClass: "BASE_DOMINANT",
+    waterPurityWeight: 0,
+    mineralReflectanceWeight: 0,
+    sedimentTintWeight: 0,
 
     materialType: "mixed",
     diamondDensity: 0,
@@ -832,7 +923,13 @@ function stageContinentLabels(grid, constants) {
         macroRegion: "NONE",
         subRegion: "NONE",
         continentId: "NONE",
-        continentClass: "OCEAN"
+        continentClass: "OCEAN",
+        macroContinentId: "OCEAN",
+        regionId: "NONE",
+        regionRank: 0,
+        countryId: "NONE",
+        countryQuadrant: "NONE",
+        countryVariation: 0
       };
     }
 
@@ -860,13 +957,59 @@ function stageContinentLabels(grid, constants) {
       if (compatible) bestRegion = compatible[0];
     }
 
+    const anchor = findAnchor(constants, bestRegion);
+
     return {
       ...sample,
       continentMass: bestRegion,
       macroRegion: bestRegion,
       subRegion: bestRegion,
       continentId: bestRegion,
-      continentClass: superClass
+      continentClass: superClass,
+      macroContinentId: anchor?.macroContinentId ?? superClass,
+      regionId: bestRegion,
+      regionRank: anchor?.regionRank ?? 0
+    };
+  }));
+}
+
+function stageRegionCountryMapping(grid, constants) {
+  const countryVariationByQuadrant = constants.compositionField.countryVariationByQuadrant;
+
+  return grid.map((row) => row.map((sample) => {
+    if (sample.landMask !== 1 || sample.regionId === "NONE") {
+      return {
+        ...sample,
+        countryId: "NONE",
+        countryQuadrant: "NONE",
+        countryVariation: 0
+      };
+    }
+
+    const anchor = findAnchor(constants, sample.regionId);
+    if (!anchor) {
+      return {
+        ...sample,
+        countryId: `${sample.regionId}_COUNTRY_1`,
+        countryQuadrant: "NW",
+        countryVariation: countryVariationByQuadrant.NW
+      };
+    }
+
+    const { xr, yr } = rotatedLocalDegrees(sample.latDeg, sample.lonDeg, anchor);
+    let quadrant = "NW";
+    if (xr >= 0 && yr < 0) quadrant = "NE";
+    else if (xr < 0 && yr >= 0) quadrant = "SW";
+    else if (xr >= 0 && yr >= 0) quadrant = "SE";
+
+    const countryId = `${sample.regionId}_${quadrant}`;
+    const countryVariation = countryVariationByQuadrant[quadrant] ?? 0;
+
+    return {
+      ...sample,
+      countryId,
+      countryQuadrant: quadrant,
+      countryVariation
     };
   }));
 }
@@ -1969,24 +2112,95 @@ function stageMagnetics(grid, constants) {
   }));
 }
 
-function stageMaterials(grid) {
+function resolveCompositionClass(compositionWeight, constants) {
+  if (compositionWeight < 0.30) return constants.compositionClasses.BASE_DOMINANT;
+  if (compositionWeight < 0.55) return constants.compositionClasses.BALANCED;
+  if (compositionWeight < 0.80) return constants.compositionClasses.PRECIOUS_DOMINANT;
+  return constants.compositionClasses.PURITY_DOMINANT;
+}
+
+function stageMaterials(grid, constants, worldVariant) {
   const baseDiamond = 0.18;
   const baseOpal = 0.28;
   const baseGranite = 0.22;
   const baseMarble = 0.08;
   const baseMetal = 0.03;
 
+  const macroWeights = constants.compositionField.continentMacroWeights;
+  const blendWeights = constants.compositionField.blendWeights;
+
   return grid.map((row) => row.map((sample) => {
     const absLat = Math.abs(sample.latDeg) / 90;
     const highlandBias = clamp(Math.max(0, sample.elevation) * 0.66 + sample.ridgeStrength * 0.20, 0, 1);
     const basinBias = clamp(toNumber(sample.strongestBasinScore, 0) * 0.9 + sample.basinStrength * 0.35, 0, 1);
     const coastalBias = sample.shorelineBand ? 0.12 : 0;
+    const canyonBias = clamp(sample.canyonStrength * 0.25 + (sample.creviceId != null ? 0.08 : 0), 0, 0.3);
+    const polarBias = clamp(absLat * 0.22 + (sample.climateBandField === constants.climateLabels.POLAR ? 0.08 : 0), 0, 0.3);
 
-    const diamondDensity = clamp(baseDiamond + highlandBias * 0.48, 0, 1);
-    const opalDensity = clamp(baseOpal + (1 - absLat) * 0.26 + coastalBias, 0, 1);
-    const graniteDensity = clamp(baseGranite + (1 - highlandBias) * 0.22, 0, 1);
-    const marbleDensity = clamp(baseMarble + basinBias * 0.24, 0, 1);
-    const metalDensity = clamp(baseMetal + highlandBias * 0.12 + basinBias * 0.04, 0, 1);
+    const continentMacroWeight = macroWeights[sample.macroContinentId] ?? macroWeights.OCEAN;
+    const regionalPurityWeight = clamp(sample.regionRank / 9, 0, 1);
+    const countryVariation = sample.countryVariation ?? 0;
+    const compositionWeight = clamp(
+      blendWeights.continentMacro * continentMacroWeight +
+      blendWeights.regionRank * regionalPurityWeight +
+      blendWeights.countryVariation * countryVariation +
+      (worldVariant.compositionScale - 0.5) * 0.35,
+      0,
+      1
+    );
+
+    const preciousWeight = compositionWeight;
+    const intrinsicBaseWeight = clamp(1 - compositionWeight, 0, 1);
+
+    let diamondDensity = clamp(
+      baseDiamond +
+      highlandBias * 0.24 +
+      preciousWeight * 0.42 +
+      regionalPurityWeight * 0.14 +
+      canyonBias * 0.03,
+      0,
+      1
+    );
+
+    let opalDensity = clamp(
+      baseOpal +
+      (1 - absLat) * 0.18 +
+      coastalBias * 0.28 +
+      preciousWeight * 0.14 -
+      polarBias * 0.14,
+      0,
+      1
+    );
+
+    let graniteDensity = clamp(
+      baseGranite +
+      (1 - highlandBias) * 0.16 +
+      intrinsicBaseWeight * 0.36 +
+      canyonBias * 0.08,
+      0,
+      1
+    );
+
+    let marbleDensity = clamp(
+      baseMarble +
+      basinBias * 0.26 +
+      preciousWeight * 0.10,
+      0,
+      1
+    );
+
+    let metalDensity = clamp(
+      baseMetal +
+      highlandBias * 0.10 +
+      canyonBias * 0.18 +
+      preciousWeight * 0.18,
+      0,
+      1
+    );
+
+    const preciousEnvelope = clamp(diamondDensity + opalDensity + metalDensity, 0, 3);
+    const baseEnvelope = clamp(graniteDensity + marbleDensity, 0.000001, 2);
+    const preciousToBaseRatio = preciousEnvelope / baseEnvelope;
 
     let materialType = "mixed";
     if (diamondDensity >= opalDensity && diamondDensity >= graniteDensity) materialType = "diamond";
@@ -1995,6 +2209,19 @@ function stageMaterials(grid) {
 
     return {
       ...sample,
+      compositionVariant: worldVariant.activeVariant,
+      compositionScale: worldVariant.compositionScale,
+      baseScale: worldVariant.baseScale,
+      regionalPurityWeight,
+      continentMacroWeight,
+      preciousWeight,
+      baseWeight: intrinsicBaseWeight,
+      compositionWeight,
+      preciousToBaseRatio,
+      compositionClass: resolveCompositionClass(compositionWeight, constants),
+      waterPurityWeight: sample.waterMask === 1 ? clamp(preciousWeight * 0.8, 0, 1) : 0,
+      mineralReflectanceWeight: sample.waterMask === 1 ? clamp(preciousWeight * 0.7 + coastalBias * 0.4, 0, 1) : 0,
+      sedimentTintWeight: sample.waterMask === 1 ? clamp(intrinsicBaseWeight * 0.6 + coastalBias * 0.4, 0, 1) : 0,
       materialType,
       diamondDensity,
       opalDensity,
@@ -2023,7 +2250,7 @@ function stageSediment(grid) {
     );
 
     let sedimentType = "mixed";
-    if (sample.waterMask === 1) sedimentType = "marine_sediment";
+    if (sample.waterMask === 1) sedimentType = sample.compositionWeight >= 0.7 ? "luminous_marine_sediment" : "marine_sediment";
     else if (sample.diamondDensity > 0.58 && depositionPotential > 0.45) sedimentType = "diamond_sand";
     else if (sample.opalDensity > 0.5 && transportPotential > 0.35) sedimentType = "opal_dust";
     else if (sample.graniteDensity > 0.42) sedimentType = "stone_sediment";
@@ -2434,7 +2661,7 @@ function stageFinalTerrainClass(grid, constants) {
   }));
 }
 
-function buildSummary(grid, constants, topologyCoordinationDiagnostics = null) {
+function buildSummary(grid, constants, topologyCoordinationDiagnostics = null, worldVariant = null) {
   const summary = {
     sampleCount: 0,
     landCount: 0,
@@ -2477,7 +2704,9 @@ function buildSummary(grid, constants, topologyCoordinationDiagnostics = null) {
     basinRegionCount: 0,
     topologyCoordinationDiagnostics: topologyCoordinationDiagnostics
       ? Object.freeze(topologyCoordinationDiagnostics)
-      : null
+      : null,
+    compositionSummary: null,
+    regionalCompositionSummary: null
   };
 
   let temperatureTotal = 0;
@@ -2493,10 +2722,15 @@ function buildSummary(grid, constants, topologyCoordinationDiagnostics = null) {
   let slopeTotal = 0;
   let ridgeTotal = 0;
   let basinTotal = 0;
+  let preciousWeightTotal = 0;
+  let baseWeightTotal = 0;
+  let preciousDominantSampleCount = 0;
+  let purityDominantSampleCount = 0;
 
   const continentSet = new Set();
   const mountainRegionSet = new Set();
   const basinRegionSet = new Set();
+  const regionalCompositionAccumulator = new Map();
 
   for (const row of grid) {
     for (const sample of row) {
@@ -2554,6 +2788,30 @@ function buildSummary(grid, constants, topologyCoordinationDiagnostics = null) {
       slopeTotal += sample.slope;
       ridgeTotal += sample.ridgeStrength;
       basinTotal += sample.basinStrength;
+      preciousWeightTotal += sample.preciousWeight;
+      baseWeightTotal += sample.baseWeight;
+
+      if (sample.compositionClass === constants.compositionClasses.PRECIOUS_DOMINANT) preciousDominantSampleCount += 1;
+      if (sample.compositionClass === constants.compositionClasses.PURITY_DOMINANT) purityDominantSampleCount += 1;
+
+      if (sample.regionId && sample.regionId !== "NONE") {
+        if (!regionalCompositionAccumulator.has(sample.regionId)) {
+          regionalCompositionAccumulator.set(sample.regionId, {
+            regionId: sample.regionId,
+            macroContinentId: sample.macroContinentId,
+            regionRank: sample.regionRank,
+            sampleCount: 0,
+            compositionWeightTotal: 0,
+            preciousWeightTotal: 0,
+            baseWeightTotal: 0
+          });
+        }
+        const bucket = regionalCompositionAccumulator.get(sample.regionId);
+        bucket.sampleCount += 1;
+        bucket.compositionWeightTotal += sample.compositionWeight;
+        bucket.preciousWeightTotal += sample.preciousWeight;
+        bucket.baseWeightTotal += sample.baseWeight;
+      }
 
       summary.elevationMin = Math.min(summary.elevationMin, sample.elevation);
       summary.elevationMax = Math.max(summary.elevationMax, sample.elevation);
@@ -2581,6 +2839,36 @@ function buildSummary(grid, constants, topologyCoordinationDiagnostics = null) {
   if (!Number.isFinite(summary.elevationMin)) summary.elevationMin = 0;
   if (!Number.isFinite(summary.elevationMax)) summary.elevationMax = 0;
 
+  const regionalCompositionSummary = Object.freeze(
+    Array.from(regionalCompositionAccumulator.values())
+      .sort((a, b) => a.regionRank - b.regionRank)
+      .map((entry) => Object.freeze({
+        regionId: entry.regionId,
+        macroContinentId: entry.macroContinentId,
+        regionRank: entry.regionRank,
+        sampleCount: entry.sampleCount,
+        averageCompositionWeight: entry.compositionWeightTotal / Math.max(1, entry.sampleCount),
+        averagePreciousWeight: entry.preciousWeightTotal / Math.max(1, entry.sampleCount),
+        averageBaseWeight: entry.baseWeightTotal / Math.max(1, entry.sampleCount)
+      }))
+  );
+
+  const firstRegion = regionalCompositionSummary[0] ?? null;
+  const lastRegion = regionalCompositionSummary[regionalCompositionSummary.length - 1] ?? null;
+
+  summary.regionalCompositionSummary = regionalCompositionSummary;
+  summary.compositionSummary = Object.freeze({
+    activeVariant: worldVariant?.activeVariant ?? constants.defaultWorldVariant,
+    compositionScale: worldVariant?.compositionScale ?? 1,
+    baseScale: worldVariant?.baseScale ?? 0,
+    averagePreciousWeight: preciousWeightTotal / count,
+    averageBaseWeight: baseWeightTotal / count,
+    purityRegionStrength: lastRegion?.averageCompositionWeight ?? 0,
+    lowestRegionStrength: firstRegion?.averageCompositionWeight ?? 0,
+    preciousDominantSampleCount,
+    purityDominantSampleCount
+  });
+
   return Object.freeze(summary);
 }
 
@@ -2590,6 +2878,7 @@ function buildCompleteness() {
     macro_continent_field: true,
     land_water_classification: true,
     continent_labels: true,
+    region_country_mapping: true,
     summit_realization: true,
     basin_realization: true,
     elevation_redistribution: true,
@@ -2602,11 +2891,16 @@ function buildCompleteness() {
     seasonal_field: true,
     magnetics: true,
     materials: true,
+    composition_field: true,
+    regional_purity_gradient: true,
+    variant_material_weighting: true,
+    precious_base_ratio: true,
     sediment: true,
     surface_biome_threshold_bands: true,
     surface_biome_precedence_tiebreak: true,
     surface_biome_sampling_unit_assignment: true,
     final_terrain_class: true,
+    composition_summary: true,
     summary_completeness: true
   });
 }
@@ -2635,12 +2929,15 @@ function finalizeSamples(grid) {
   );
 }
 
-function buildPlanetFieldInternal(constants) {
+function buildPlanetFieldInternal(constants, inputState = {}) {
+  const worldVariant = resolveWorldVariant(inputState, constants);
+
   const stage0 = stageBaseSampleGrid(constants);
   const stage1 = stageMacroContinentField(stage0, constants);
   const stage2 = stageLandWaterClassification(stage1, constants);
   const stage3 = stageContinentLabels(stage2, constants);
-  const stage4 = stageSummitRealization(stage3, constants);
+  const stage3b = stageRegionCountryMapping(stage3, constants);
+  const stage4 = stageSummitRealization(stage3b, constants);
   const stage5 = stageBasinRealization(stage4, constants);
   const stage6 = stageElevationRedistribution(stage5);
   const stage7 = stageOceanDepthRealization(stage6, constants);
@@ -2652,7 +2949,7 @@ function buildPlanetFieldInternal(constants) {
   const stage12 = stageHydrology(stage11, constants);
   const stage13 = stageSeasonalField(stage12, constants);
   const stage14 = stageMagnetics(stage13, constants);
-  const stage15 = stageMaterials(stage14);
+  const stage15 = stageMaterials(stage14, constants, worldVariant);
   const stage16 = stageSediment(stage15);
   const stage17 = stageSurfaceBiomeThresholdBands(stage16, constants);
   const stage18 = stageSurfaceBiomePrecedenceTiebreak(stage17, constants);
@@ -2660,7 +2957,7 @@ function buildPlanetFieldInternal(constants) {
   const stage20 = stageFinalTerrainClass(stage19, constants);
 
   const samples = finalizeSamples(stage20);
-  const summary = buildSummary(samples, constants, stage10Result.diagnostics);
+  const summary = buildSummary(samples, constants, stage10Result.diagnostics, worldVariant);
   const completeness = buildCompleteness();
 
   return Object.freeze({
@@ -2676,8 +2973,8 @@ export function createPlanetEngine() {
   const contract = getKernelContract();
   const constants = buildAuthoredConstants(contract);
 
-  function buildField(_inputState = {}) {
-    return buildPlanetFieldInternal(constants);
+  function buildField(inputState = {}) {
+    return buildPlanetFieldInternal(constants, inputState);
   }
 
   return Object.freeze({

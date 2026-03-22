@@ -1,6 +1,6 @@
 // /world/render/hydration_render_engine.js
 // MODE: RENDER EXTENSION CONTRACT RENEWAL
-// STATUS: HYDRATION FACTOR AUTHORITY v3
+// STATUS: HYDRATION FACTOR AUTHORITY v4
 // ROLE:
 // - express non-ocean hydration only
 // - classify inland/coastal hydration bands
@@ -9,6 +9,7 @@
 // - provide ocean-adjacent handoff without owning ocean fill
 // - remain coherent with terrain contract family
 // - own no boot, no runtime, no truth
+// - increase hydration expression without changing ownership boundaries
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -354,6 +355,192 @@ function resolveHydrationBlendStrength(sample, hydrationBandClass) {
 }
 
 /* =========================
+   EXPRESSION METRICS v4
+========================= */
+
+function computeDirectionalHydration(sample, neighbors, flowClass, retentionClass, hydrationBandClass) {
+  const lat = toNumber(sample?.latDeg, 0) * Math.PI / 180;
+  const lon = toNumber(sample?.lonDeg, 0) * Math.PI / 180;
+
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
+  const runoff = clamp(toNumber(sample?.runoff, 0), 0, 1);
+  const rainfall = clamp(toNumber(sample?.rainfall, 0), 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
+
+  const waterNorth = neighbors.north?.waterMask === 1 ? 1 : 0;
+  const waterEast = neighbors.east?.waterMask === 1 ? 1 : 0;
+  const waterSouth = neighbors.south?.waterMask === 1 ? 1 : 0;
+  const waterWest = neighbors.west?.waterMask === 1 ? 1 : 0;
+
+  const northBias = clamp(
+    waterNorth * 0.28 +
+    Math.abs(Math.sin(lat)) * 0.18 +
+    rainfall * 0.18 +
+    (hydrationBandClass === "COAST_EDGE" || hydrationBandClass === "SEA_EDGE" ? 0.08 : 0),
+    0,
+    1
+  );
+
+  const southBias = clamp(
+    waterSouth * 0.24 +
+    basinAccumulation * 0.28 +
+    (1 - clamp(toNumber(sample?.elevation, 0), 0, 1)) * 0.16 +
+    (retentionClass === "WETLAND" || retentionClass === "LAKE" || retentionClass === "MAJOR_LAKE" ? 0.10 : 0),
+    0,
+    1
+  );
+
+  const eastBias = clamp(
+    waterEast * 0.26 +
+    Math.abs(Math.sin(lon)) * 0.20 +
+    runoff * 0.18 +
+    (flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK" ? 0.10 : 0),
+    0,
+    1
+  );
+
+  const westBias = clamp(
+    waterWest * 0.26 +
+    Math.abs(Math.cos(lon)) * 0.20 +
+    slope * 0.14 +
+    (retentionClass === "WETLAND" ? 0.08 : 0),
+    0,
+    1
+  );
+
+  const directionalHydrationWeight = Math.max(northBias, southBias, eastBias, westBias);
+
+  let directionalClass = "CENTERED";
+  if (directionalHydrationWeight === northBias) directionalClass = "NORTH";
+  else if (directionalHydrationWeight === southBias) directionalClass = "SOUTH";
+  else if (directionalHydrationWeight === eastBias) directionalClass = "EAST";
+  else if (directionalHydrationWeight === westBias) directionalClass = "WEST";
+
+  return {
+    directionalClass,
+    directionalHydrationWeight,
+    directionalNorthBias: northBias,
+    directionalSouthBias: southBias,
+    directionalEastBias: eastBias,
+    directionalWestBias: westBias
+  };
+}
+
+function computeHydrationEdgeSharpness(sample, hydrationBandClass, flowClass, retentionClass) {
+  const slope = clamp(toNumber(sample?.slope, 0), 0, 1);
+  const runoff = clamp(toNumber(sample?.runoff, 0), 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
+
+  let bandBoost = 0;
+  if (hydrationBandClass === "CHANNEL_CORE" || hydrationBandClass === "STREAM_THREAD") bandBoost = 0.22;
+  else if (hydrationBandClass === "SEA_EDGE" || hydrationBandClass === "COAST_EDGE") bandBoost = 0.16;
+  else if (hydrationBandClass === "LAKE_EDGE" || hydrationBandClass === "LAKE_MARGIN" || hydrationBandClass === "RIVER_BANK") bandBoost = 0.14;
+  else if (hydrationBandClass === "WETLAND_BAND") bandBoost = 0.10;
+
+  const flowBoost =
+    flowClass === "RIVER" ? 0.18 :
+    flowClass === "STREAM" ? 0.14 :
+    flowClass === "BROOK" ? 0.10 :
+    flowClass === "LAKE" ? 0.08 : 0;
+
+  const retentionSoftness =
+    retentionClass === "WETLAND" ? -0.10 :
+    retentionClass === "MAJOR_LAKE" || retentionClass === "LAKE" ? -0.04 : 0;
+
+  return clamp(
+    slope * 0.32 +
+    runoff * 0.24 +
+    basinAccumulation * 0.12 +
+    bandBoost +
+    flowBoost +
+    retentionSoftness,
+    0,
+    1
+  );
+}
+
+function computeHydrationMicroVariation(sample, primitiveTime, flowClass, retentionClass) {
+  const lat = toNumber(sample?.latDeg, 0) * Math.PI / 180;
+  const lon = toNumber(sample?.lonDeg, 0) * Math.PI / 180;
+  const runoff = clamp(toNumber(sample?.runoff, 0), 0, 1);
+  const rainfall = clamp(toNumber(sample?.rainfall, 0), 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
+
+  const tick = toNumber(primitiveTime.tick, 0);
+  const cycle = toNumber(primitiveTime.cycle, 0);
+  const yearDayIndex = toNumber(primitiveTime.yearDayIndex, 0);
+
+  const waveA = Math.sin((lon * 6.0) + (lat * 4.0) + tick * 0.002);
+  const waveB = Math.cos((lon * 9.0) - (lat * 5.0) + cycle * 0.006);
+  const waveC = Math.sin((yearDayIndex / Math.max(1, primitiveTime.yearLength)) * Math.PI * 2 + lat);
+
+  const raw = waveA * 0.38 + waveB * 0.34 + waveC * 0.28;
+  const normalized = clamp((raw + 1) * 0.5, 0, 1);
+
+  const flowBoost =
+    flowClass === "RIVER" ? 0.12 :
+    flowClass === "STREAM" ? 0.10 :
+    flowClass === "BROOK" ? 0.06 : 0;
+
+  const retentionBoost =
+    retentionClass === "WETLAND" ? 0.10 :
+    retentionClass === "MAJOR_LAKE" || retentionClass === "LAKE" ? 0.06 : 0;
+
+  return clamp(
+    normalized * 0.42 +
+    runoff * 0.18 +
+    rainfall * 0.16 +
+    basinAccumulation * 0.12 +
+    flowBoost +
+    retentionBoost,
+    0,
+    1
+  );
+}
+
+function computeHydrationContinuityWeight(sample, flowClass, retentionClass) {
+  const runoff = clamp(toNumber(sample?.runoff, 0), 0, 1);
+  const rainfall = clamp(toNumber(sample?.rainfall, 0), 0, 1);
+  const basinAccumulation = clamp(toNumber(sample?.basinAccumulation, 0), 0, 1);
+
+  const flowBoost =
+    flowClass === "RIVER" ? 0.20 :
+    flowClass === "STREAM" ? 0.16 :
+    flowClass === "BROOK" ? 0.10 :
+    flowClass === "LAKE" ? 0.14 :
+    flowClass === "SEA" ? 0.12 : 0;
+
+  const retentionBoost =
+    retentionClass === "MAJOR_LAKE" ? 0.18 :
+    retentionClass === "LAKE" ? 0.14 :
+    retentionClass === "WETLAND" ? 0.12 :
+    retentionClass === "MICRO_RESERVOIR" ? 0.08 : 0;
+
+  return clamp(
+    runoff * 0.24 +
+    rainfall * 0.18 +
+    basinAccumulation * 0.28 +
+    flowBoost +
+    retentionBoost,
+    0,
+    1
+  );
+}
+
+function strengthenHydrationPacketSeparation(hydrationClass, hydrationBandClass, flowClass, retentionClass, hydrationBlendStrength, edgeSharpness) {
+  if (hydrationBandClass === "CHANNEL_CORE") return clamp(0.90 + hydrationBlendStrength * 0.10, 0, 1);
+  if (hydrationBandClass === "STREAM_THREAD") return clamp(0.84 + hydrationBlendStrength * 0.12, 0, 1);
+  if (hydrationBandClass === "SEA_EDGE" || hydrationBandClass === "COAST_EDGE") return clamp(0.78 + edgeSharpness * 0.14, 0, 1);
+  if (hydrationBandClass === "LAKE_EDGE" || hydrationBandClass === "LAKE_CORE") return clamp(0.74 + hydrationBlendStrength * 0.14, 0, 1);
+  if (hydrationBandClass === "WETLAND_BAND") return clamp(0.70 + hydrationBlendStrength * 0.14, 0, 1);
+  if (flowClass === "RIVER") return clamp(0.82 + hydrationBlendStrength * 0.14, 0, 1);
+  if (flowClass === "STREAM") return clamp(0.72 + hydrationBlendStrength * 0.16, 0, 1);
+  if (retentionClass === "WETLAND") return clamp(0.68 + edgeSharpness * 0.12, 0, 1);
+  if (hydrationClass === "COASTAL_HYDRATION_EDGE") return clamp(0.66 + edgeSharpness * 0.14, 0, 1);
+  return clamp(0.30 + hydrationBlendStrength * 0.24 + edgeSharpness * 0.18, 0, 1);
+}
+
+/* =========================
    PACKET APPEARANCE
 ========================= */
 
@@ -475,6 +662,84 @@ function resolveOverlayOnly(overlayClass, flowClass, retentionClass, dropClass) 
 }
 
 /* =========================
+   APPEARANCE MODULATION v4
+========================= */
+
+function tintColor(baseColor, lightenShift, darkenShift, greenShift = 0, blueShift = 0) {
+  const match = /^rgba\((\d+),(\d+),(\d+),([^)]+)\)$/.exec(baseColor.replace(/\s+/g, ""));
+  if (!match) return baseColor;
+
+  const r = clamp(Number(match[1]) + lightenShift - darkenShift, 0, 255);
+  const g = clamp(Number(match[2]) + Math.round((lightenShift * 0.52) - (darkenShift * 0.40) + greenShift), 0, 255);
+  const b = clamp(Number(match[3]) + Math.round((lightenShift * 0.78) - (darkenShift * 0.26) + blueShift), 0, 255);
+  const a = clamp(Number(match[4]), 0, 1);
+
+  return `rgba(${Math.round(r)},${Math.round(g)},${Math.round(b)},${a})`;
+}
+
+function scaleRadius(baseRadiusPx, packetSeparationWeight, edgeSharpness, microVariation) {
+  return baseRadiusPx * clamp(
+    0.94 +
+    packetSeparationWeight * 0.18 +
+    edgeSharpness * 0.08 +
+    (microVariation - 0.5) * 0.06,
+    0.74,
+    1.34
+  );
+}
+
+function sharpenAlpha(baseAlpha, edgeSharpness, directionalHydrationWeight) {
+  return clamp(
+    baseAlpha +
+    edgeSharpness * 0.12 +
+    directionalHydrationWeight * 0.06,
+    0,
+    1
+  );
+}
+
+function deriveHydrationExpressionMeta(sample, neighbors, primitiveTime, hydrationClass, hydrationBandClass, hydrationOverlayClass, shoreHandoffClass, freezeThawClass, flowClass, retentionClass, hydrationOrgan, dropClass, flowDirection, subdivisionTier, hydrationBlendStrength, flowStrength) {
+  const directional = computeDirectionalHydration(sample, neighbors, flowClass, retentionClass, hydrationBandClass);
+  const edgeSharpness = computeHydrationEdgeSharpness(sample, hydrationBandClass, flowClass, retentionClass);
+  const microVariation = computeHydrationMicroVariation(sample, primitiveTime, flowClass, retentionClass);
+  const continuityWeight = computeHydrationContinuityWeight(sample, flowClass, retentionClass);
+  const packetSeparationWeight = strengthenHydrationPacketSeparation(
+    hydrationClass,
+    hydrationBandClass,
+    flowClass,
+    retentionClass,
+    hydrationBlendStrength,
+    edgeSharpness
+  );
+
+  return {
+    hydrationClass,
+    hydrationBandClass,
+    hydrationOverlayClass,
+    shoreHandoffClass,
+    freezeThawClass,
+    flowClass,
+    retentionClass,
+    hydrationOrgan,
+    dropClass,
+    flowDirection,
+    subdivisionTier,
+    hydrationBlendStrength,
+    flowStrength,
+    edgeSharpness,
+    microVariation,
+    continuityWeight,
+    packetSeparationWeight,
+    directionalClass: directional.directionalClass,
+    directionalHydrationWeight: directional.directionalHydrationWeight,
+    directionalNorthBias: directional.directionalNorthBias,
+    directionalSouthBias: directional.directionalSouthBias,
+    directionalEastBias: directional.directionalEastBias,
+    directionalWestBias: directional.directionalWestBias
+  };
+}
+
+/* =========================
    NORMALIZATION
 ========================= */
 
@@ -482,7 +747,7 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
   if (!packet || typeof packet !== "object") return null;
 
   return Object.freeze({
-    contractId: "HYDRATION_RENDER_CONTRACT_v3",
+    contractId: "HYDRATION_RENDER_CONTRACT_v4",
     engineKey: "hydration",
     layer: normalizeString(packet.layer, "hydration"),
     color: normalizeColor(packet.color, fallbackColor),
@@ -518,6 +783,53 @@ function normalizePacket(packet, fallbackColor, fallbackRadiusPx) {
     ),
     flowStrength: clamp(
       isFiniteNumber(packet.flowStrength) ? packet.flowStrength : 0,
+      0,
+      1
+    ),
+
+    edgeSharpness: clamp(
+      isFiniteNumber(packet.edgeSharpness) ? packet.edgeSharpness : 0,
+      0,
+      1
+    ),
+    microVariation: clamp(
+      isFiniteNumber(packet.microVariation) ? packet.microVariation : 0,
+      0,
+      1
+    ),
+    continuityWeight: clamp(
+      isFiniteNumber(packet.continuityWeight) ? packet.continuityWeight : 0,
+      0,
+      1
+    ),
+    packetSeparationWeight: clamp(
+      isFiniteNumber(packet.packetSeparationWeight) ? packet.packetSeparationWeight : 0,
+      0,
+      1
+    ),
+    directionalClass: normalizeString(packet.directionalClass, "CENTERED"),
+    directionalHydrationWeight: clamp(
+      isFiniteNumber(packet.directionalHydrationWeight) ? packet.directionalHydrationWeight : 0,
+      0,
+      1
+    ),
+    directionalNorthBias: clamp(
+      isFiniteNumber(packet.directionalNorthBias) ? packet.directionalNorthBias : 0,
+      0,
+      1
+    ),
+    directionalSouthBias: clamp(
+      isFiniteNumber(packet.directionalSouthBias) ? packet.directionalSouthBias : 0,
+      0,
+      1
+    ),
+    directionalEastBias: clamp(
+      isFiniteNumber(packet.directionalEastBias) ? packet.directionalEastBias : 0,
+      0,
+      1
+    ),
+    directionalWestBias: clamp(
+      isFiniteNumber(packet.directionalWestBias) ? packet.directionalWestBias : 0,
       0,
       1
     ),
@@ -574,7 +886,26 @@ export function resolveHydrationPacket({
     12
   );
 
-  const radiusPx = resolveHydrationRadius(
+  const meta = deriveHydrationExpressionMeta(
+    sample,
+    neighbors,
+    primitiveTime,
+    hydrationClass,
+    hydrationBandClass,
+    hydrationOverlayClass,
+    shoreHandoffClass,
+    freezeThawClass,
+    flowClass,
+    retentionClass,
+    hydrationOrgan,
+    dropClass,
+    flowDirection,
+    subdivisionTier,
+    hydrationBlendStrength,
+    flowStrength
+  );
+
+  const baseRadiusPx = resolveHydrationRadius(
     safePointSizePx,
     hydrationBandClass,
     hydrationOverlayClass,
@@ -582,7 +913,7 @@ export function resolveHydrationPacket({
     retentionClass
   );
 
-  const color = resolveHydrationColor(
+  const baseColorResolved = resolveHydrationColor(
     hydrationClass,
     hydrationBandClass,
     hydrationOverlayClass,
@@ -591,7 +922,7 @@ export function resolveHydrationPacket({
     dropClass
   );
 
-  const alpha = resolveHydrationAlpha(
+  const baseAlpha = resolveHydrationAlpha(
     hydrationBlendStrength,
     hydrationOverlayClass,
     hydrationClass,
@@ -607,28 +938,36 @@ export function resolveHydrationPacket({
     dropClass
   );
 
+  const radiusPx = scaleRadius(
+    baseRadiusPx,
+    meta.packetSeparationWeight,
+    meta.edgeSharpness,
+    meta.microVariation
+  );
+
+  const color = tintColor(
+    baseColorResolved,
+    Math.round(meta.directionalHydrationWeight * 10),
+    Math.round(meta.edgeSharpness * 6),
+    retentionClass === "WETLAND" ? Math.round(meta.microVariation * 10) : Math.round(meta.continuityWeight * 4),
+    flowClass === "RIVER" || flowClass === "STREAM" || flowClass === "BROOK"
+      ? Math.round(meta.microVariation * 12)
+      : Math.round(meta.directionalHydrationWeight * 8)
+  );
+
+  const alpha = sharpenAlpha(
+    baseAlpha,
+    meta.edgeSharpness,
+    meta.directionalHydrationWeight
+  );
+
   return normalizePacket({
     layer: "hydration",
     color,
     radiusPx,
     alpha,
     overlayOnly,
-
-    hydrationClass,
-    hydrationBandClass,
-    hydrationOverlayClass,
-    shoreHandoffClass,
-    freezeThawClass,
-
-    flowClass,
-    retentionClass,
-    hydrationOrgan,
-    dropClass,
-    flowDirection,
-
-    subdivisionTier,
-    hydrationBlendStrength,
-    flowStrength
+    ...meta
   }, baseColor, safePointSizePx);
 }
 

@@ -338,6 +338,83 @@ function drawHydrationOverlay(ctx, packet, point) {
   return true;
 }
 
+function resolveTerrainDominance(sample, terrainPacket) {
+  if (!terrainPacket) return false;
+  if (sample?.landMask !== 1) return false;
+
+  const heightClass = typeof terrainPacket?.heightClass === "string" ? terrainPacket.heightClass : "NONE";
+  const cutClass = typeof terrainPacket?.cutClass === "string" ? terrainPacket.cutClass : "NONE";
+  const packetSeparationWeight = isFiniteNumber(terrainPacket?.packetSeparationWeight)
+    ? terrainPacket.packetSeparationWeight
+    : 0;
+
+  return (
+    heightClass !== "LOWLAND" ||
+    cutClass !== "NONE" ||
+    packetSeparationWeight >= 0.42
+  );
+}
+
+function resolveHydrationDominance(sample, hydrationPacket) {
+  if (!hydrationPacket) return false;
+
+  const hydrationClass = typeof hydrationPacket?.hydrationClass === "string" ? hydrationPacket.hydrationClass : "NONE";
+  const hydrationBandClass = typeof hydrationPacket?.hydrationBandClass === "string" ? hydrationPacket.hydrationBandClass : "NONE";
+  const flowClass = typeof hydrationPacket?.flowClass === "string" ? hydrationPacket.flowClass : "NONE";
+  const retentionClass = typeof hydrationPacket?.retentionClass === "string" ? hydrationPacket.retentionClass : "NONE";
+  const packetSeparationWeight = isFiniteNumber(hydrationPacket?.packetSeparationWeight)
+    ? hydrationPacket.packetSeparationWeight
+    : 0;
+
+  if (sample?.waterMask === 1) return true;
+
+  if (
+    flowClass === "RIVER" ||
+    flowClass === "STREAM" ||
+    flowClass === "BROOK" ||
+    flowClass === "LAKE"
+  ) {
+    return true;
+  }
+
+  if (
+    retentionClass === "MAJOR_LAKE" ||
+    retentionClass === "LAKE" ||
+    retentionClass === "WETLAND" ||
+    retentionClass === "MICRO_RESERVOIR"
+  ) {
+    return true;
+  }
+
+  if (
+    hydrationBandClass === "CHANNEL_CORE" ||
+    hydrationBandClass === "STREAM_THREAD" ||
+    hydrationBandClass === "SEA_EDGE" ||
+    hydrationBandClass === "LAKE_EDGE" ||
+    hydrationBandClass === "LAKE_CORE" ||
+    hydrationBandClass === "WETLAND_BAND" ||
+    hydrationBandClass === "COAST_EDGE" ||
+    hydrationBandClass === "COAST_BAND" ||
+    hydrationBandClass === "RIVER_BANK" ||
+    hydrationBandClass === "LAKE_MARGIN"
+  ) {
+    return true;
+  }
+
+  if (
+    hydrationClass === "RIVER" ||
+    hydrationClass === "STREAM" ||
+    hydrationClass === "LAKE" ||
+    hydrationClass === "WETLAND" ||
+    hydrationClass === "LITTORAL_WATER" ||
+    hydrationClass === "COASTAL_HYDRATION_EDGE"
+  ) {
+    return true;
+  }
+
+  return packetSeparationWeight >= 0.46;
+}
+
 function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrimitiveTime = null) {
   if (!grid.length || !grid[0].length) {
     return {
@@ -404,12 +481,6 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
 
       const baseColor = sampleColor(sample);
 
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = baseColor;
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
-      ctx.fill();
-
       const terrainPacket =
         typeof resolveTerrainPacket === "function"
           ? resolveTerrainPacket({
@@ -418,10 +489,6 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
               baseColor
             })
           : null;
-
-      if (drawTerrainOverlay(ctx, terrainPacket, point)) {
-        sawTerrainSignal = true;
-      }
 
       const hydrationPacket =
         typeof resolveHydrationPacket === "function"
@@ -436,15 +503,60 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
             })
           : null;
 
-      if (drawHydrationOverlay(ctx, hydrationPacket, point)) {
-        sawHydrationSignal = true;
+      const terrainDominant = resolveTerrainDominance(sample, terrainPacket);
+      const hydrationDominant = resolveHydrationDominance(sample, hydrationPacket);
 
-        if (
-          hydrationPacket?.hydrationBandClass !== "NONE" ||
-          hydrationPacket?.shoreHandoffClass !== "NONE"
-        ) {
-          sawSectorBand = true;
+      const drawBaseFirst = !(terrainDominant || hydrationDominant);
+
+      if (drawBaseFirst) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = baseColor;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      if (terrainPacket && !hydrationDominant) {
+        if (drawTerrainOverlay(ctx, terrainPacket, point)) {
+          sawTerrainSignal = true;
         }
+      }
+
+      if (hydrationPacket) {
+        if (drawHydrationOverlay(ctx, hydrationPacket, point)) {
+          sawHydrationSignal = true;
+
+          if (
+            hydrationPacket?.hydrationBandClass !== "NONE" ||
+            hydrationPacket?.shoreHandoffClass !== "NONE"
+          ) {
+            sawSectorBand = true;
+          }
+        }
+      }
+
+      if (terrainPacket && hydrationDominant) {
+        const terrainAlpha = isFiniteNumber(terrainPacket.alpha)
+          ? clamp(terrainPacket.alpha * 0.28, 0, 1)
+          : 0.28;
+
+        ctx.save();
+        ctx.globalAlpha = terrainAlpha;
+        ctx.fillStyle = terrainPacket.color;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, terrainPacket.radiusPx, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        sawTerrainSignal = true;
+      }
+
+      if (!drawBaseFirst && !terrainPacket && !hydrationPacket) {
+        ctx.globalAlpha = 1;
+        ctx.fillStyle = baseColor;
+        ctx.beginPath();
+        ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       const terrainRadius = terrainPacket?.radiusPx;

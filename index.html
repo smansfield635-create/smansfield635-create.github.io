@@ -91,8 +91,8 @@ const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 
 const BOOT_CONTRACT = Object.freeze({
   id: "INDEX_BOOT_CONTRACT_RENEWAL_v3",
-  engineContract: "PLANET_ENGINE_TOPOLOGY_PLACEMENT_CONTRACT_v3",
-  runtimeContract: "RUNTIME_WORLD_MODE_STATE_CONTRACT_v1",
+  engineContract: "PLANET_ENGINE_CONTRACT_RENEWAL_v1",
+  runtimeContract: "WORLD_RUNTIME_CONTRACT_v1",
   renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v1",
   diagnosticsPath: "/gauges/",
   runtimeStorageKey: "cte_runtime_v4",
@@ -254,9 +254,7 @@ function resolveVerificationState() {
   return {
     verificationPass,
     failurePhase,
-    failureMessage,
-    windowReceipt,
-    storageReceipt
+    failureMessage
   };
 }
 

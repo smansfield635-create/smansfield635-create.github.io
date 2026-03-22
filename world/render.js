@@ -1,15 +1,17 @@
 // /world/render.js
 // MODE: RENDER BASELINE CONTRACT RENEWAL
-// STATUS: SELF-CONTAINED BASELINE RENDERER + HYDRATION ATTACHMENT
+// STATUS: SELF-CONTAINED BASELINE RENDERER + HYDRATION + TERRAIN ATTACHMENTS
 // ROLE:
 // - render visible globe baseline
 // - preserve runtime/gauges receipt contract
 // - own no truth, no control, no runtime
-// - attach hydration sidestream only
-// - keep terrain detached for now
+// - attach hydration sidestream
+// - attach terrain sidestream
+// - keep bridge ownership in render only
 
 import { WORLD_KERNEL } from "./world_kernel.js";
 import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
+import { resolveTerrainPacket } from "./render/terrain_render_engine.js";
 
 let lastAuditPlanetField = null;
 let lastAuditResult = null;
@@ -308,6 +310,20 @@ function classifyDensityTier(averageCellSpanPx, emittedCellCount) {
   return "LOW";
 }
 
+function drawTerrainOverlay(ctx, packet, point) {
+  if (!packet || packet.engineKey !== "terrain") return false;
+
+  ctx.save();
+  ctx.globalAlpha = packet.alpha;
+  ctx.fillStyle = packet.color;
+  ctx.beginPath();
+  ctx.arc(point.x, point.y, packet.radiusPx, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  return true;
+}
+
 function drawHydrationOverlay(ctx, packet, point) {
   if (!packet || packet.engineKey !== "hydration") return false;
 
@@ -357,6 +373,7 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
   let skippedCellCount = 0;
   let totalSpan = 0;
   let sawHydrationSignal = false;
+  let sawTerrainSignal = false;
   let sawSectorBand = false;
 
   ctx.save();
@@ -385,11 +402,26 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
 
       visibleCellCount += 1;
 
+      const baseColor = sampleColor(sample);
+
       ctx.globalAlpha = 1;
-      ctx.fillStyle = sampleColor(sample);
+      ctx.fillStyle = baseColor;
       ctx.beginPath();
       ctx.arc(point.x, point.y, pointSizePx, 0, Math.PI * 2);
       ctx.fill();
+
+      const terrainPacket =
+        typeof resolveTerrainPacket === "function"
+          ? resolveTerrainPacket({
+              sample,
+              pointSizePx,
+              baseColor
+            })
+          : null;
+
+      if (drawTerrainOverlay(ctx, terrainPacket, point)) {
+        sawTerrainSignal = true;
+      }
 
       const hydrationPacket =
         typeof resolveHydrationPacket === "function"
@@ -400,7 +432,7 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
               x,
               y,
               globalPrimitiveTime,
-              baseColor: sampleColor(sample)
+              baseColor
             })
           : null;
 
@@ -413,12 +445,17 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
         ) {
           sawSectorBand = true;
         }
-
-        totalSpan += hydrationPacket.radiusPx * 2;
-      } else {
-        totalSpan += pointSizePx * 2;
       }
 
+      const terrainRadius = terrainPacket?.radiusPx;
+      const hydrationRadius = hydrationPacket?.radiusPx;
+      const resolvedSpanRadius = Math.max(
+        isFiniteNumber(terrainRadius) ? terrainRadius : 0,
+        isFiniteNumber(hydrationRadius) ? hydrationRadius : 0,
+        pointSizePx
+      );
+
+      totalSpan += resolvedSpanRadius * 2;
       emittedCellCount += 1;
     }
   }
@@ -427,6 +464,20 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
 
   const averageCellSpanPx = emittedCellCount > 0 ? totalSpan / emittedCellCount : 0;
 
+  let primitiveType = "FORWARD_SIGNAL";
+  let primitivePath = "drawVisibleSurface";
+
+  if (sawTerrainSignal && sawHydrationSignal) {
+    primitiveType = "MULTI_ENGINE_SIGNAL";
+    primitivePath = "terrainRenderEngine+hydrationRenderEngine";
+  } else if (sawTerrainSignal) {
+    primitiveType = "TERRAIN_SIGNAL";
+    primitivePath = "terrainRenderEngine";
+  } else if (sawHydrationSignal) {
+    primitiveType = "HYDRATION_SIGNAL";
+    primitivePath = "hydrationRenderEngine";
+  }
+
   return {
     visibleCellCount,
     emittedCellCount,
@@ -434,8 +485,8 @@ function drawVisibleSurface(ctx, grid, projectPoint, projectionState, globalPrim
     averageCellSpanPx,
     subdivisionTier: projectionState.lensTier,
     densityTier: classifyDensityTier(averageCellSpanPx, emittedCellCount),
-    primitiveType: sawHydrationSignal ? "HYDRATION_SIGNAL" : "FORWARD_SIGNAL",
-    primitivePath: sawHydrationSignal ? "hydrationRenderEngine" : "drawVisibleSurface",
+    primitiveType,
+    primitivePath,
     centerAnchored: true,
     rowColumnPathActive: true,
     sectorBandPathActive: sawSectorBand,

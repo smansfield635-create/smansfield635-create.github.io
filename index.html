@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/assets/ui.css"/>
 
 <script>
-(function(){
+(function () {
   var params = new URLSearchParams(location.search);
   var isDoorBg = params.get("doorbg") === "1";
   document.documentElement.setAttribute("data-doorbg", isDoorBg ? "1" : "0");
@@ -15,7 +15,8 @@
 </script>
 
 <style>
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background: #000;
@@ -125,18 +126,10 @@ html, body {
 .boot-warn { color: #ffd27a; }
 .boot-fail { color: #ff7a7a; }
 
-/* DOOR BACKGROUND MODE */
 html[data-doorbg="1"] #runtime-root,
 html[data-doorbg="1"] #diagnostics-dock,
 html[data-doorbg="1"] #boot-status {
   display: none !important;
-}
-
-html[data-doorbg="1"] #world {
-  opacity: 0.44;
-  filter: blur(1.6px) saturate(0.82) brightness(0.64) contrast(0.88);
-  transform: translateY(-4vh) scale(0.96);
-  transform-origin: center center;
 }
 
 @media (max-width: 760px) {
@@ -147,12 +140,6 @@ html[data-doorbg="1"] #world {
   #diagnostics-summary {
     width: 100%;
     white-space: normal;
-  }
-
-  html[data-doorbg="1"] #world {
-    opacity: 0.40;
-    filter: blur(1.8px) saturate(0.80) brightness(0.62) contrast(0.86);
-    transform: translateY(-3vh) scale(0.98);
   }
 }
 </style>
@@ -178,109 +165,83 @@ const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
 const IS_DOOR_BG = document.documentElement.getAttribute("data-doorbg") === "1";
 
-const BOOT_CONTRACT = Object.freeze({
-  id: "INDEX_BOOT_CONTRACT_RENEWAL_v6",
-  engineContract: "PLANET_ENGINE_CONTRACT_RENEWAL_v1",
-  runtimeContract: "WORLD_RUNTIME_CONTRACT_v1",
-  renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v3",
-  diagnosticsPath: "/gauges/",
-  runtimeStorageKey: "cte_runtime_v4",
-  runtimeReceiptKey: "__AUTHORITY_RECEIPT__",
-  bootStateKey: "__INDEX_BOOT_STATE__",
-  ignitionTimeoutMs: 12000,
-  ignitionPollMs: 100
-});
+const RUNTIME_STORAGE_KEY = "cte_runtime_v4";
+const RUNTIME_RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
+const BOOT_STATE_KEY = "__INDEX_BOOT_STATE__";
+const DIAGNOSTICS_PATH = "/gauges/";
+const IGNITION_TIMEOUT_MS = 12000;
+const IGNITION_POLL_MS = 100;
 
 const MODULES = Object.freeze([
   Object.freeze({
     key: "world_kernel",
-    path: "/world/world_kernel.js",
-    required: true
+    path: "/world/world_kernel.js"
   }),
   Object.freeze({
     key: "planet_engine",
     path: "/world/planet_engine.js",
-    required: true,
     validate(mod) {
       return typeof mod?.createPlanetEngine === "function" ||
         typeof mod?.buildPlanetField === "function" ||
         typeof mod?.default?.buildPlanetField === "function";
-    },
-    validationMessage: "planet_engine contract missing createPlanetEngine/buildPlanetField"
+    }
   }),
   Object.freeze({
     key: "render",
     path: "/world/render/index.js",
-    required: true,
     validate(mod) {
       return typeof mod?.createRenderer === "function" ||
         typeof mod?.renderPlanet === "function" ||
         typeof mod?.default?.renderPlanet === "function";
-    },
-    validationMessage: "render contract missing createRenderer/renderPlanet"
+    }
   }),
   Object.freeze({
     key: "control",
     path: "/world/control.js",
-    required: true,
     validate(mod) {
       return typeof mod?.createControlSystem === "function" ||
         typeof mod?.default?.createControlSystem === "function";
-    },
-    validationMessage: "control contract missing createControlSystem"
+    }
   }),
   Object.freeze({
     key: "instruments",
-    path: "/assets/instruments.js",
-    required: true
+    path: "/assets/instruments.js"
   }),
   Object.freeze({
     key: "runtime",
     path: "/world/runtime/world_runtime.js",
-    required: true,
     validate(mod) {
       return typeof mod?.startRuntime === "function" ||
         typeof mod?.default?.startRuntime === "function";
-    },
-    validationMessage: "runtime contract missing startRuntime"
+    }
   })
 ]);
 
 const bootState = {
   phase: "BOOT_INIT",
-  activeModule: null,
   modulesLoaded: [],
   failedModule: null,
-  failurePath: null,
-  failureClass: null,
   failureMessage: "",
   verificationPass: false
 };
 
 function writeBootState() {
-  window[BOOT_CONTRACT.bootStateKey] = {
+  window[BOOT_STATE_KEY] = {
     phase: bootState.phase,
-    activeModule: bootState.activeModule,
-    modulesLoaded: [...bootState.modulesLoaded],
+    modulesLoaded: bootState.modulesLoaded.slice(),
     failedModule: bootState.failedModule,
-    failurePath: bootState.failurePath,
-    failureClass: bootState.failureClass,
     failureMessage: bootState.failureMessage,
     verificationPass: bootState.verificationPass,
     isDoorBackground: IS_DOOR_BG
   };
 }
 
-function setBootPhase(phase, extras = {}) {
-  bootState.phase = phase;
-
-  if ("activeModule" in extras) bootState.activeModule = extras.activeModule;
-  if ("failedModule" in extras) bootState.failedModule = extras.failedModule;
-  if ("failurePath" in extras) bootState.failurePath = extras.failurePath;
-  if ("failureClass" in extras) bootState.failureClass = extras.failureClass;
-  if ("failureMessage" in extras) bootState.failureMessage = extras.failureMessage;
-  if ("verificationPass" in extras) bootState.verificationPass = extras.verificationPass;
-
+function setBootState(next) {
+  if (typeof next.phase === "string") bootState.phase = next.phase;
+  if (Array.isArray(next.modulesLoaded)) bootState.modulesLoaded = next.modulesLoaded.slice();
+  if ("failedModule" in next) bootState.failedModule = next.failedModule;
+  if ("failureMessage" in next) bootState.failureMessage = next.failureMessage;
+  if ("verificationPass" in next) bootState.verificationPass = next.verificationPass;
   writeBootState();
 }
 
@@ -299,57 +260,10 @@ function toMessage(error) {
   return String(error);
 }
 
-function classifyImportFailure(error) {
-  const message = toMessage(error);
-  const lowered = message.toLowerCase();
-
-  if (
-    lowered.includes("unexpected end of input") ||
-    lowered.includes("unexpected end of script")
-  ) {
-    return "PARSE_EOF";
-  }
-
-  if (lowered.includes("missing ) after argument list")) {
-    return "PARSE_ARGUMENT_LIST";
-  }
-
-  if (lowered.includes("unexpected token")) {
-    return "PARSE_TOKEN";
-  }
-
-  if (lowered.includes("failed to fetch dynamically imported module")) {
-    return "FETCH_IMPORT";
-  }
-
-  if (
-    lowered.includes("does not provide an export") ||
-    lowered.includes("cannot find module")
-  ) {
-    return "EXPORT_CONTRACT";
-  }
-
-  return "IMPORT_FAILURE";
-}
-
-function formatImportFailure(definition, error) {
-  const failureClass = classifyImportFailure(error);
-  const message = toMessage(error);
-
-  return [
-    "BOOT ERROR: " + definition.key + " import failed",
-    definition.path,
-    "CLASS: " + failureClass,
-    message
-  ].join("\n");
-}
-
 async function importModule(definition) {
-  setBootPhase("MODULE_IMPORT", {
-    activeModule: definition.key,
+  setBootState({
+    phase: "MODULE_IMPORT",
     failedModule: null,
-    failurePath: null,
-    failureClass: null,
     failureMessage: "",
     verificationPass: false
   });
@@ -357,65 +271,50 @@ async function importModule(definition) {
   setStatus("IMPORTING " + definition.key.toUpperCase() + "...", "boot-warn");
 
   let mod;
-
   try {
     mod = await import(definition.path);
   } catch (error) {
-    const failureClass = classifyImportFailure(error);
-    const failureMessage = toMessage(error);
-    const failureBlock = formatImportFailure(definition, error);
-
-    setBootPhase("MODULE_IMPORT_FAILED", {
-      activeModule: definition.key,
+    const message = toMessage(error);
+    setBootState({
+      phase: "MODULE_IMPORT_FAILED",
       failedModule: definition.key,
-      failurePath: definition.path,
-      failureClass: failureClass,
-      failureMessage: failureMessage,
+      failureMessage: message,
       verificationPass: false
     });
-
-    setStatus(failureBlock, "boot-fail");
-    console.error("[BOOT] " + definition.key + " import failed", error);
+    setStatus(
+      [
+        "BOOT ERROR: " + definition.key + " import failed",
+        definition.path,
+        message
+      ].join("\n"),
+      "boot-fail"
+    );
     throw error;
   }
 
-  if (typeof definition.validate === "function") {
-    const valid = definition.validate(mod);
-
-    if (valid !== true) {
-      const validationError = new Error(
-        definition.validationMessage ||
-        (definition.key + " contract validation failed")
-      );
-
-      const failureClass = "CONTRACT_VALIDATION";
-      const failureMessage = toMessage(validationError);
-      const failureBlock = [
+  if (typeof definition.validate === "function" && definition.validate(mod) !== true) {
+    const message = definition.key + " contract validation failed";
+    setBootState({
+      phase: "MODULE_VALIDATION_FAILED",
+      failedModule: definition.key,
+      failureMessage: message,
+      verificationPass: false
+    });
+    setStatus(
+      [
         "BOOT ERROR: " + definition.key + " validation failed",
         definition.path,
-        "CLASS: " + failureClass,
-        failureMessage
-      ].join("\n");
-
-      setBootPhase("MODULE_VALIDATION_FAILED", {
-        activeModule: definition.key,
-        failedModule: definition.key,
-        failurePath: definition.path,
-        failureClass: failureClass,
-        failureMessage: failureMessage,
-        verificationPass: false
-      });
-
-      setStatus(failureBlock, "boot-fail");
-      console.error("[BOOT] " + definition.key + " validation failed", validationError);
-      throw validationError;
-    }
+        message
+      ].join("\n"),
+      "boot-fail"
+    );
+    throw new Error(message);
   }
 
   bootState.modulesLoaded.push(definition.key);
   writeBootState();
-
   setStatus("IMPORTED " + definition.key.toUpperCase(), "boot-ok");
+
   return mod;
 }
 
@@ -426,11 +325,9 @@ async function preflightModules() {
     loaded[definition.key] = await importModule(definition);
   }
 
-  setBootPhase("MODULE_PREFLIGHT_OK", {
-    activeModule: null,
+  setBootState({
+    phase: "MODULE_PREFLIGHT_OK",
     failedModule: null,
-    failurePath: null,
-    failureClass: null,
     failureMessage: "",
     verificationPass: false
   });
@@ -446,19 +343,16 @@ function resolveStartRuntime(runtimeModule) {
 
 function validateCanvasPresence() {
   const world = document.getElementById("world");
-
   if (!world) {
     throw new Error("Missing #world canvas");
   }
-
   return world;
 }
 
 function readRuntimeStorageReceipt() {
   try {
-    const raw = localStorage.getItem(BOOT_CONTRACT.runtimeStorageKey);
+    const raw = localStorage.getItem(RUNTIME_STORAGE_KEY);
     if (!raw) return null;
-
     const parsed = JSON.parse(raw);
     return parsed && typeof parsed === "object" ? parsed : null;
   } catch {
@@ -467,57 +361,47 @@ function readRuntimeStorageReceipt() {
 }
 
 function readWindowReceipt() {
-  const receipt = window[BOOT_CONTRACT.runtimeReceiptKey];
+  const receipt = window[RUNTIME_RECEIPT_KEY];
   return receipt && typeof receipt === "object" ? receipt : null;
 }
 
-function resolveVerificationState() {
+function readIgnitionState() {
   const windowReceipt = readWindowReceipt();
   const storageReceipt = readRuntimeStorageReceipt();
 
-  const verificationPass =
-    windowReceipt?.verification?.pass === true ||
-    storageReceipt?.verification?.pass === true;
-
-  const failurePhase =
-    windowReceipt?.failure?.phase ??
-    storageReceipt?.failure?.phase ??
-    null;
-
-  const failureMessage =
-    windowReceipt?.failure?.message ??
-    storageReceipt?.failure?.message ??
-    "";
-
   return {
-    verificationPass,
-    failurePhase,
-    failureMessage
+    verificationPass:
+      windowReceipt?.verification?.pass === true ||
+      storageReceipt?.verification?.pass === true,
+    failurePhase:
+      windowReceipt?.failure?.phase ??
+      storageReceipt?.failure?.phase ??
+      null,
+    failureMessage:
+      windowReceipt?.failure?.message ??
+      storageReceipt?.failure?.message ??
+      ""
   };
 }
 
 async function waitForIgnition() {
   const startedAt = performance.now();
 
-  setBootPhase("IGNITION_WAIT", {
-    activeModule: null,
+  setBootState({
+    phase: "IGNITION_WAIT",
     failedModule: null,
-    failurePath: null,
-    failureClass: null,
     failureMessage: "",
     verificationPass: false
   });
 
-  while ((performance.now() - startedAt) < BOOT_CONTRACT.ignitionTimeoutMs) {
-    const state = resolveVerificationState();
+  while ((performance.now() - startedAt) < IGNITION_TIMEOUT_MS) {
+    const state = readIgnitionState();
 
     if (state.failurePhase) {
-      setBootPhase("RUNTIME_FAILURE", {
-        activeModule: "runtime",
+      setBootState({
+        phase: "RUNTIME_FAILURE",
         failedModule: "runtime",
-        failurePath: "/world/runtime/world_runtime.js",
-        failureClass: "RUNTIME_FAILURE",
-        failureMessage: state.failureMessage,
+        failureMessage: state.failureMessage || state.failurePhase,
         verificationPass: false
       });
 
@@ -528,59 +412,31 @@ async function waitForIgnition() {
         ].join("\n"),
         "boot-fail"
       );
-
       return false;
     }
 
     if (state.verificationPass === true) {
-      setBootPhase("RUNNING", {
-        activeModule: null,
+      setBootState({
+        phase: "RUNNING",
         failedModule: null,
-        failurePath: null,
-        failureClass: null,
         failureMessage: "",
         verificationPass: true
       });
 
-      setStatus(
-        [
-          "RUNNING",
-          "BOOT: " + BOOT_CONTRACT.id,
-          "ENGINE: " + BOOT_CONTRACT.engineContract,
-          "RUNTIME: " + BOOT_CONTRACT.runtimeContract,
-          "RENDER: " + BOOT_CONTRACT.renderContract
-        ].join("\n"),
-        "boot-ok"
-      );
-
+      setStatus("RUNNING", "boot-ok");
       return true;
     }
 
-    setStatus(
-      [
-        "WAITING FOR IGNITION...",
-        "BOOT: " + BOOT_CONTRACT.id,
-        "ENGINE: " + BOOT_CONTRACT.engineContract,
-        "RUNTIME: " + BOOT_CONTRACT.runtimeContract,
-        "RENDER: " + BOOT_CONTRACT.renderContract
-      ].join("\n"),
-      "boot-warn"
-    );
-
-    await new Promise(function waitForPoll(resolve) {
-      window.setTimeout(resolve, BOOT_CONTRACT.ignitionPollMs);
-    });
+    setStatus("WAITING FOR IGNITION...", "boot-warn");
+    await new Promise((resolve) => window.setTimeout(resolve, IGNITION_POLL_MS));
   }
 
-  const finalState = resolveVerificationState();
-
+  const finalState = readIgnitionState();
   if (finalState.failurePhase) {
-    setBootPhase("RUNTIME_FAILURE", {
-      activeModule: "runtime",
+    setBootState({
+      phase: "RUNTIME_FAILURE",
       failedModule: "runtime",
-      failurePath: "/world/runtime/world_runtime.js",
-      failureClass: "RUNTIME_FAILURE",
-      failureMessage: finalState.failureMessage,
+      failureMessage: finalState.failureMessage || finalState.failurePhase,
       verificationPass: false
     });
 
@@ -591,114 +447,73 @@ async function waitForIgnition() {
       ].join("\n"),
       "boot-fail"
     );
-
     return false;
   }
 
-  setBootPhase("IGNITION_TIMEOUT", {
-    activeModule: null,
+  setBootState({
+    phase: "IGNITION_TIMEOUT",
     failedModule: "runtime",
-    failurePath: "/world/runtime/world_runtime.js",
-    failureClass: "IGNITION_TIMEOUT",
     failureMessage: "Ignition timed out before verification pass.",
     verificationPass: false
   });
 
-  setStatus(
-    [
-      "IGNITION TIMEOUT",
-      "BOOT: " + BOOT_CONTRACT.id,
-      "ENGINE: " + BOOT_CONTRACT.engineContract,
-      "RUNTIME: " + BOOT_CONTRACT.runtimeContract,
-      "RENDER: " + BOOT_CONTRACT.renderContract
-    ].join("\n"),
-    "boot-fail"
-  );
-
+  setStatus("IGNITION TIMEOUT", "boot-fail");
   return false;
 }
 
 async function boot() {
   try {
-    setBootPhase("BOOT_INIT", {
-      activeModule: null,
+    setBootState({
+      phase: "BOOT_INIT",
+      modulesLoaded: [],
       failedModule: null,
-      failurePath: null,
-      failureClass: null,
       failureMessage: "",
       verificationPass: false
     });
 
     validateCanvasPresence();
-
-    setStatus(
-      [
-        "BOOT CONTRACT: " + BOOT_CONTRACT.id,
-        "ENGINE: " + BOOT_CONTRACT.engineContract,
-        "RUNTIME: " + BOOT_CONTRACT.runtimeContract,
-        "RENDER: " + BOOT_CONTRACT.renderContract
-      ].join("\n"),
-      "boot-warn"
-    );
+    setStatus("BOOTING...", "boot-warn");
 
     const modules = await preflightModules();
     const startRuntime = resolveStartRuntime(modules.runtime);
 
     if (!startRuntime) {
-      const failureMessage = "runtime startRuntime missing";
-
-      setBootPhase("RUNTIME_CONTRACT_FAILURE", {
-        activeModule: "runtime",
+      const message = "runtime startRuntime missing";
+      setBootState({
+        phase: "RUNTIME_CONTRACT_FAILURE",
         failedModule: "runtime",
-        failurePath: "/world/runtime/world_runtime.js",
-        failureClass: "RUNTIME_CONTRACT_FAILURE",
-        failureMessage: failureMessage,
+        failureMessage: message,
         verificationPass: false
       });
-
       setStatus(
         [
           "BOOT ERROR: runtime startRuntime missing",
           "/world/runtime/world_runtime.js",
-          "CLASS: RUNTIME_CONTRACT_FAILURE",
-          failureMessage
+          message
         ].join("\n"),
         "boot-fail"
       );
-
       return;
     }
 
-    setBootPhase("RUNTIME_START", {
-      activeModule: "runtime",
+    setBootState({
+      phase: "RUNTIME_START",
       failedModule: null,
-      failurePath: null,
-      failureClass: null,
       failureMessage: "",
       verificationPass: false
     });
 
-    setStatus(
-      [
-        "STARTING RUNTIME...",
-        "BOOT: " + BOOT_CONTRACT.id,
-        "ENGINE: " + BOOT_CONTRACT.engineContract,
-        "RUNTIME: " + BOOT_CONTRACT.runtimeContract,
-        "RENDER: " + BOOT_CONTRACT.renderContract
-      ].join("\n"),
-      "boot-warn"
-    );
-
+    setStatus("STARTING RUNTIME...", "boot-warn");
     startRuntime();
     await waitForIgnition();
   } catch {
-    // failure already surfaced above
+    // surfaced above
   }
 }
 
 if (!IS_DOOR_BG) {
-  diagnosticsToggle?.addEventListener("click", function goToDiagnostics() {
-    window.location.href = BOOT_CONTRACT.diagnosticsPath;
+  diagnosticsToggle?.addEventListener("click", function () {
+    window.location.href = DIAGNOSTICS_PATH;
   });
 }
 

@@ -1,6 +1,16 @@
-// DESTINATION FILE: /assets/world_ui.js
+// /assets/world_ui.js
+// MODE: WORLD UI CONTRACT RENEWAL
+// STATUS: UI SHELL AUTHORITY v2
+// ROLE:
+// - mount world-facing UI shell only
+// - no render authority
+// - no diagnostics authority
+// - no truth mutation
+// - support current round / flat / observe modes
+// - keep UI under-expressed but structurally complete
+// - remain compatible with /assets/ui.css and /assets/instruments.js
 
-const INLINE_STYLE_ID = "world-ui-inline-style-v1";
+const INLINE_STYLE_ID = "world-ui-inline-style-v2";
 
 function ensureInlineWorldUiStyle() {
   if (document.getElementById(INLINE_STYLE_ID)) return;
@@ -32,6 +42,10 @@ body::before,body::after{pointer-events:none!important}
   --uiAlpha:1;
   --shellAtmosAlpha:.82;
   --starAlpha:1;
+  --overlayAlpha:1;
+  --flatAlpha:0;
+  --heroShiftY:0px;
+  --heroScale:1;
 }
 
 #app-shell{
@@ -74,7 +88,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:2;
   pointer-events:none;
   overflow:hidden;
-  transition:opacity 220ms ease, filter 220ms ease;
+  transition:opacity 220ms ease, filter 220ms ease, transform 220ms ease;
   opacity:var(--starAlpha);
 }
 .star-band{
@@ -122,7 +136,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:3;
   pointer-events:none;
   overflow:hidden;
-  transition:opacity 220ms ease;
+  transition:opacity 220ms ease, transform 220ms ease;
   opacity:var(--shellAtmosAlpha);
 }
 .atmo-glow{
@@ -171,7 +185,7 @@ body::before,body::after{pointer-events:none!important}
   position:absolute;
   left:50%;
   top:12.8vh;
-  transform:translateX(-50%);
+  transform:translateX(-50%) translateY(var(--heroShiftY)) scale(var(--heroScale));
   width:min(92vw,980px);
   display:flex;
   flex-direction:column;
@@ -201,10 +215,12 @@ body::before,body::after{pointer-events:none!important}
 
 #flat-layer{
   z-index:9;
-  display:none;
+  display:flex;
   align-items:center;
   justify-content:center;
   pointer-events:none;
+  opacity:var(--flatAlpha);
+  transition:opacity 180ms ease, transform 180ms ease;
 }
 .flat-menu{
   width:min(92vw,720px);
@@ -233,7 +249,7 @@ body::before,body::after{pointer-events:none!important}
   letter-spacing:.06em;
   cursor:pointer;
   overflow:hidden;
-  transition:transform .18s ease, border-color .18s ease, background .18s ease;
+  transition:transform .18s ease, border-color .18s ease, background .18s ease, opacity .18s ease;
 }
 .flat-card:hover{
   transform:translateY(-2px);
@@ -259,6 +275,7 @@ body::before,body::after{pointer-events:none!important}
   z-index:16;
   pointer-events:none;
   opacity:var(--uiAlpha);
+  transition:opacity 180ms ease, transform 180ms ease;
 }
 .top-ui-row{
   width:100%;
@@ -330,7 +347,8 @@ body::before,body::after{pointer-events:none!important}
 #orbital-overlay{
   z-index:12;
   pointer-events:none;
-  transition:opacity 180ms ease;
+  transition:opacity 180ms ease, transform 180ms ease;
+  opacity:var(--overlayAlpha);
 }
 .orbital-marker{
   position:absolute;
@@ -468,18 +486,30 @@ body[data-mode="round"]{
   --uiAlpha:1;
   --shellAtmosAlpha:.82;
   --starAlpha:1;
+  --overlayAlpha:1;
+  --flatAlpha:0;
+  --heroShiftY:0px;
+  --heroScale:1;
 }
 body[data-mode="flat"]{
   --heroDim:.86;
   --uiAlpha:1;
   --shellAtmosAlpha:.54;
   --starAlpha:.72;
+  --overlayAlpha:0;
+  --flatAlpha:1;
+  --heroShiftY:-10px;
+  --heroScale:.96;
 }
 body[data-mode="observe"]{
   --heroDim:.78;
   --uiAlpha:.88;
   --shellAtmosAlpha:.58;
   --starAlpha:.12;
+  --overlayAlpha:0;
+  --flatAlpha:0;
+  --heroShiftY:-14px;
+  --heroScale:.94;
 }
 body[data-mode="observe"] #orbital-overlay{
   opacity:0;
@@ -546,12 +576,52 @@ body[data-mode="observe"] #orbital-overlay{
   document.head.appendChild(style);
 }
 
-function createMarkerNode(id, code, label) {
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function normalizeString(value, fallback = "") {
+  return typeof value === "string" && value.trim().length > 0 ? value.trim() : fallback;
+}
+
+function buildQueryString(extra = {}) {
+  const current = new URLSearchParams(window.location.search);
+  const next = new URLSearchParams();
+
+  const lang = normalizeString(extra.lang, normalizeString(current.get("lang"), "en"));
+  const style = normalizeString(extra.style, normalizeString(current.get("style"), "informal"));
+  const time = normalizeString(extra.time, normalizeString(current.get("time"), "now"));
+  const depth = normalizeString(extra.depth, normalizeString(current.get("depth"), "1"));
+  const lane = normalizeString(extra.lane, normalizeString(current.get("lane"), ""));
+  const mode = normalizeString(extra.mode, normalizeString(current.get("mode"), ""));
+
+  next.set("lang", lang);
+  next.set("style", style);
+  next.set("time", time);
+  next.set("depth", depth);
+
+  if (lane === "platform" || lane === "engineering") {
+    next.set("lane", lane);
+  }
+
+  if (mode.length > 0) {
+    next.set("mode", mode);
+  }
+
+  return `?${next.toString()}`;
+}
+
+function routeTo(path, extra = {}) {
+  window.location.href = `${path}${buildQueryString(extra)}`;
+}
+
+function createMarkerNode(id, code, label, route) {
   const button = document.createElement("button");
   button.className = "orbital-marker";
   button.id = id;
   button.type = "button";
   button.hidden = true;
+  button.dataset.route = route;
   button.innerHTML = `
     <div class="orbital-glow"></div>
     <div class="orbital-core"></div>
@@ -561,6 +631,60 @@ function createMarkerNode(id, code, label) {
     <div class="orbital-name">${label}</div>
   `;
   return button;
+}
+
+function applyModeToBody(nextMode) {
+  const safeMode =
+    nextMode === "flat" || nextMode === "observe" || nextMode === "round"
+      ? nextMode
+      : "round";
+
+  document.body.setAttribute("data-mode", safeMode);
+  return safeMode;
+}
+
+function applyActiveModeButton(nodes, mode) {
+  const map = {
+    flat: nodes.btnFlat,
+    round: nodes.btnRound,
+    observe: nodes.btnObserve
+  };
+
+  Object.values(map).forEach((node) => {
+    if (!node) return;
+    node.classList.remove("is-active");
+  });
+
+  if (map[mode]) {
+    map[mode].classList.add("is-active");
+  }
+}
+
+function wireFlatCards(flatLayer) {
+  const cards = flatLayer.querySelectorAll("[data-route]");
+  cards.forEach((node) => {
+    node.addEventListener("click", () => {
+      const route = normalizeString(node.dataset.route, "/");
+      routeTo(route);
+    });
+  });
+}
+
+function wireOrbitalMarkers(overlayMap) {
+  Object.values(overlayMap).forEach((node) => {
+    if (!node) return;
+    node.addEventListener("click", () => {
+      const route = normalizeString(node.dataset.route, "/");
+      routeTo(route);
+    });
+  });
+}
+
+function resolveBootTone(message) {
+  const lower = normalizeString(message, "").toLowerCase();
+  if (lower.includes("error") || lower.includes("failed") || lower.includes("timeout")) return "danger";
+  if (lower.includes("running") || lower.includes("imported") || lower.includes("ok")) return "ok";
+  return "warn";
 }
 
 export function createWorldUI(runtimeRoot) {
@@ -616,12 +740,12 @@ export function createWorldUI(runtimeRoot) {
   `;
 
   const orbitalOverlay = runtimeRoot.querySelector("#orbital-overlay");
-  orbitalOverlay.appendChild(createMarkerNode("marker-north", "N", "PRODUCTS"));
-  orbitalOverlay.appendChild(createMarkerNode("marker-east", "E", "GAUGES"));
-  orbitalOverlay.appendChild(createMarkerNode("marker-south", "S", "LAWS"));
-  orbitalOverlay.appendChild(createMarkerNode("marker-west", "W", "EXPLORE"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-north", "N", "PRODUCTS", "/products/"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-east", "E", "GAUGES", "/gauges/"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-south", "S", "LAWS", "/laws/"));
+  orbitalOverlay.appendChild(createMarkerNode("marker-west", "W", "EXPLORE", "/explore/"));
 
-  return Object.freeze({
+  const nodes = Object.freeze({
     universeLayer: runtimeRoot.querySelector("#universe-layer"),
     atmosphereLayer: runtimeRoot.querySelector("#atmosphere-layer"),
     heroLayer: runtimeRoot.querySelector("#hero-layer"),
@@ -641,5 +765,52 @@ export function createWorldUI(runtimeRoot) {
       "south-laws": runtimeRoot.querySelector("#marker-south"),
       "west-explore": runtimeRoot.querySelector("#marker-west")
     })
+  });
+
+  wireFlatCards(nodes.flatLayer);
+  wireOrbitalMarkers(nodes.overlayMap);
+
+  return Object.freeze({
+    ...nodes,
+
+    setMode(nextMode) {
+      const mode = applyModeToBody(nextMode);
+      applyActiveModeButton(nodes, mode);
+      return mode;
+    },
+
+    syncModeFromDocument() {
+      const mode = normalizeString(document.body.getAttribute("data-mode"), "round");
+      const applied = applyModeToBody(mode);
+      applyActiveModeButton(nodes, applied);
+      return applied;
+    },
+
+    wireModeButtons(handler) {
+      if (typeof handler !== "function") return;
+
+      nodes.btnFlat?.addEventListener("click", () => handler("flat"));
+      nodes.btnRound?.addEventListener("click", () => handler("round"));
+      nodes.btnObserve?.addEventListener("click", () => handler("observe"));
+    },
+
+    setBootStatus(message, visible = true) {
+      const text = normalizeString(message, "");
+      nodes.bootStatusCopy.textContent = text;
+      nodes.bootStatus.classList.toggle("is-visible", visible && text.length > 0);
+
+      const tone = resolveBootTone(text);
+      nodes.bootStatus.style.borderColor =
+        tone === "danger"
+          ? "rgba(255,120,120,.34)"
+          : tone === "ok"
+            ? "rgba(130,220,170,.30)"
+            : "rgba(255,220,120,.26)";
+    },
+
+    hideBootStatus() {
+      nodes.bootStatus.classList.remove("is-visible");
+      nodes.bootStatusCopy.textContent = "";
+    }
   });
 }

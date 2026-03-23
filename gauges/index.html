@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D World Runtime - LIVE v6.1</title>
-    <!-- CORE STOCK: FIXED THREE.JS SOURCE -->
+    <!-- CORE STOCK: THE 3D ENGINE LIBRARY -->
     <script src="https://cdnjs.cloudflare.com"></script>
     <style>
         :root { 
@@ -22,20 +22,21 @@
             user-select: none;
         }
 
+        /* 3D RENDER SURFACE */
         #canvas-container { position: absolute; inset: 0; z-index: 1; }
 
-        /* REPLICATING THE HISTORICAL GAUGES INTERFACE */
+        /* OBSERVABILITY LAYER (The Gauges) */
         .container { 
             position: absolute; 
             top: 20px; 
             left: 20px; 
             z-index: 10; 
             width: 360px; 
-            background: rgba(0,0,0,0.9); 
+            background: rgba(0,0,0,0.92); 
             border: 1px solid var(--line); 
             border-radius: 12px; 
             padding: 20px; 
-            backdrop-filter: blur(12px); 
+            backdrop-filter: blur(15px); 
             box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
@@ -85,7 +86,6 @@
             color: #fff;
         }
 
-        /* TRAJECTORY SECTION FROM ARCHIVES */
         .trajectory {
             margin-top: 15px;
             padding: 12px;
@@ -162,6 +162,7 @@ function initPlanetEngine() {
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
+    // Geometry STOCK
     const globe = new THREE.Mesh(
         new THREE.IcosahedronGeometry(2, 4),
         new THREE.MeshBasicMaterial({ color: 0x00ff88, wireframe: true, transparent: true, opacity: 0.15 })
@@ -179,7 +180,7 @@ function initPlanetEngine() {
         globe.rotation.y += 0.002;
         renderer.render(scene, camera);
 
-        // EMIT TELEMETRY TO GLOBAL SCOPE
+        // EMIT TELEMETRY TO SHARED SCOPE
         window.__AUTHORITY_RECEIPT__ = {
             phase: "RUNNING",
             timestamp: Date.now(),
@@ -205,13 +206,14 @@ const history = [];
 function updateGauges() {
     const receipt = window.__AUTHORITY_RECEIPT__ || {};
     const stateTxt = document.getElementById("state-txt");
+    const statusEl = document.getElementById("status");
     const ageTxt = document.getElementById("age-txt");
     
     if (receipt.phase === "RUNNING") {
         const inst = receipt.instrument;
         
         stateTxt.innerText = "LIVE • RUNNING";
-        stateTxt.parentElement.style.color = "var(--accent)";
+        statusEl.style.color = "var(--accent)";
         ageTxt.innerText = (Date.now() - receipt.timestamp) + "ms";
 
         document.getElementById("val-index").innerText = inst.index;
@@ -223,6 +225,9 @@ function updateGauges() {
         history.push(receipt.fps);
         if (history.length > 60) history.shift();
         renderChart();
+    } else {
+        stateTxt.innerText = "SEARCHING...";
+        statusEl.style.color = "#ff4444";
     }
     requestAnimationFrame(updateGauges);
 }
@@ -242,7 +247,7 @@ function renderChart() {
     ctx.stroke();
 }
 
-// TRIGGER INITIALIZATION
+// EXECUTION
 initPlanetEngine();
 updateGauges();
 

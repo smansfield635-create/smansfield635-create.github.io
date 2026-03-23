@@ -623,5 +623,4 @@ export function resolveTerrainPacket({
 
 export default Object.freeze({
   resolveTerrainPacket
-});
-Now should be correct. And then we need to do cut and elevation as the add-on files as well. Let's finish them.
+}

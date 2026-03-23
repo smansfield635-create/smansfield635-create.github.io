@@ -1,3 +1,4 @@
+```javascript
 // /world/render/index.js
 // MODE: RENDER BASELINE FILTER
 // STATUS: AUTHORITATIVE SOUTH JUG (PURE)
@@ -10,14 +11,18 @@
 // - terrain = baseline land coverage
 // - elevation = upward overlay
 // - cut = incision overlay
-// - hydration = water overlay
+// - hydration = water overlay (stubbed until implemented)
 // - botany hose reserved but inactive until dedicated render packet exists
 
 import { WORLD_KERNEL } from "../world_kernel.js";
-import { resolveHydrationPacket } from "./hydration_render_engine.js";
-import { resolveTerrainPacket } from "./terrain/index.js";
-import { resolveElevationPacket } from "./terrain/elevation_render_engine.js";
-import { resolveCutPacket } from "./terrain/cut_render_engine.js";
+import { resolveTerrainPacket  } from "./terrain/index.js";
+import { resolveElevationPacket } from "./elevation_render_engine.js";
+import { resolveCutPacket       } from "./cut_render_engine.js";
+
+// stub hydration until hydration_render_engine.js is implemented
+function resolveHydrationPacket() {
+  return null;
+}
 
 /* =========================
    UTIL
@@ -231,46 +236,13 @@ function resolveBotanyPacket() {
 }
 
 function resolveLayerPackets(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
-  const terrainPacket = resolveTerrainPacket?.({
-    sample,
-    pointSizePx
-  }) || null;
+  const terrainPacket   = resolveTerrainPacket?.({ sample, pointSizePx }) || null;
+  const elevationPacket = resolveElevationPacket?.({ sample, pointSizePx }) || null;
+  const cutPacket       = resolveCutPacket?.({ sample, pointSizePx }) || null;
+  const hydrationPacket = resolveHydrationPacket({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+  const botanyPacket    = resolveBotanyPacket({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
 
-  const elevationPacket = resolveElevationPacket?.({
-    sample,
-    pointSizePx
-  }) || null;
-
-  const cutPacket = resolveCutPacket?.({
-    sample,
-    pointSizePx
-  }) || null;
-
-  const hydrationPacket = resolveHydrationPacket?.({
-    sample,
-    pointSizePx,
-    grid,
-    x,
-    y,
-    globalPrimitiveTime
-  }) || null;
-
-  const botanyPacket = resolveBotanyPacket?.({
-    sample,
-    pointSizePx,
-    grid,
-    x,
-    y,
-    globalPrimitiveTime
-  }) || null;
-
-  return Object.freeze({
-    terrainPacket,
-    elevationPacket,
-    cutPacket,
-    hydrationPacket,
-    botanyPacket
-  });
+  return Object.freeze({ terrainPacket, elevationPacket, cutPacket, hydrationPacket, botanyPacket });
 }
 
 /* =========================
@@ -278,28 +250,25 @@ function resolveLayerPackets(sample, pointSizePx, grid, x, y, globalPrimitiveTim
 ========================= */
 
 function buildPointStyle(sample, point, baseSize, packets, p) {
-  const terrainPacket = normalizeObject(packets.terrainPacket);
+  const terrainPacket   = normalizeObject(packets.terrainPacket);
   const elevationPacket = normalizeObject(packets.elevationPacket);
-  const cutPacket = normalizeObject(packets.cutPacket);
+  const cutPacket       = normalizeObject(packets.cutPacket);
   const hydrationPacket = normalizeObject(packets.hydrationPacket);
-  const botanyPacket = normalizeObject(packets.botanyPacket);
+  const botanyPacket    = normalizeObject(packets.botanyPacket);
 
   const depth = clamp((point.z + 1) * 0.5, 0, 1);
-  const edgeDistance = Math.sqrt(
-    ((point.x - p.centerX) * (point.x - p.centerX)) +
-    ((point.y - p.centerY) * (point.y - p.centerY))
-  );
+  const edgeDistance = Math.hypot(point.x - p.centerX, point.y - p.centerY);
   const edgeRatio = p.radius > 0 ? clamp(edgeDistance / p.radius, 0, 1) : 1;
   const limbFade = clamp(1 - Math.pow(edgeRatio, 1.75), 0.12, 1);
   const lightBias = clamp(0.36 + depth * 0.86, 0.18, 1.18);
 
   const elevation = clamp(sample?.elevation ?? 0, 0, 1);
 
-  const terrainScale = packetRadius(terrainPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const terrainScale   = packetRadius(terrainPacket, baseSize)   / Math.max(baseSize, 0.0001);
   const elevationScale = packetRadius(elevationPacket, baseSize) / Math.max(baseSize, 0.0001);
-  const cutScale = packetRadius(cutPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const cutScale       = packetRadius(cutPacket, baseSize)       / Math.max(baseSize, 0.0001);
   const hydrationScale = packetRadius(hydrationPacket, baseSize) / Math.max(baseSize, 0.0001);
-  const botanyScale = packetRadius(botanyPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const botanyScale    = packetRadius(botanyPacket, baseSize)    / Math.max(baseSize, 0.0001);
 
   const radius = clamp(
     baseSize * (
@@ -316,12 +285,12 @@ function buildPointStyle(sample, point, baseSize, packets, p) {
     6.4
   );
 
-  const baseAlpha = sample?.waterMask === 1 ? 0.24 : 0.78;
-  const terrainAlpha = packetAlpha(terrainPacket, 0);
+  const baseAlpha      = sample?.waterMask === 1 ? 0.24 : 0.78;
+  const terrainAlpha   = packetAlpha(terrainPacket, 0);
   const elevationAlpha = packetAlpha(elevationPacket, 0);
-  const cutAlpha = packetAlpha(cutPacket, 0);
+  const cutAlpha       = packetAlpha(cutPacket, 0);
   const hydrationAlpha = packetAlpha(hydrationPacket, 0);
-  const botanyAlpha = packetAlpha(botanyPacket, 0);
+  const botanyAlpha    = packetAlpha(botanyPacket, 0);
 
   const alpha = clamp(
     (
@@ -414,11 +383,7 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
       const packets = resolveLayerPackets(sample, baseSize, grid, x, y, globalPrimitiveTime);
       const style = buildPointStyle(sample, point, baseSize, packets, p);
 
-      queue.push({
-        point,
-        style,
-        z: point.z
-      });
+      queue.push({ point, style, z: point.z });
 
       if (sample.waterMask === 1 || packets.hydrationPacket) waterFamilyCount += 1;
       if (sample.landMask === 1 || packets.terrainPacket) landFamilyCount += 1;
@@ -541,7 +506,6 @@ export function createRenderer() {
 
     const grid = sampleGrid(planetField);
     const projector = resolveProjectPoint(projectPoint, p);
-
     const density = drawSurface(
       ctx,
       grid,
@@ -563,3 +527,4 @@ export function renderPlanet(options) {
 }
 
 export default DEFAULT_RENDERER;
+```

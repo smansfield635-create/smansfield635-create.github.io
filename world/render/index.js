@@ -1,5 +1,3 @@
-Here is the complete code file, incorporating the color assignment system and adhering to the updated standards:
-
 ```javascript
 // /world/render/index.js
 // MODE: RENDER BASELINE FILTER
@@ -529,6 +527,3 @@ export function renderPlanet(options) {
 }
 
 export default DEFAULT_RENDERER;
-```
-
-Copy and paste this code into your file, and it should align with the updated guidelines for rendering with the multicolor assignment system. If you need further adjustments or run into issues, let me know!

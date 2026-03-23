@@ -623,4 +623,4 @@ export function resolveTerrainPacket({
 
 export default Object.freeze({
   resolveTerrainPacket
-}
+});

@@ -1,21 +1,27 @@
 // /world/render/index.js
-// MODE: RENDER CONTRACT RENEWAL
-// STATUS: AUTHORITATIVE SOUTH JUG (PURE) v3
+// MODE: RENDER MASTER FILTER RENEWAL
+// STATUS: AUTHORITATIVE SOUTH JUG (PURE) v4
 // ROLE:
-// - filter only
+// - 4-channel master filter only
 // - project + draw only
 // - NO diagnostics authority
 // - NO compensation
 // - NO upstream mutation
 // - NO semantic invention
-// - terrain = baseline land coverage
-// - elevation = upward overlay
-// - cut = incision overlay
-// - hydration = water overlay (stubbed until implemented)
-// - botany hose reserved but inactive until dedicated render packet exists
-// - primitive fragmentation + shadow density live here
-// - factor authorities remain downstream packet engines
+// - NO camera authority
 // - render preserves coherence through filtration
+//
+// CHANNELS:
+// 1. PSYCHOLOGY
+// 2. COSMOS
+// 3. TERRAIN
+// 4. ATMOSPHERE
+//
+// NOTES:
+// - terrain absorbs elevation + cut internally
+// - hydration collapses into atmosphere channel
+// - botany/fauna are not top-level peers here
+// - all channels are projections of one field
 
 import { WORLD_KERNEL } from "../world_kernel.js";
 import { resolveTerrainPacket } from "./terrain/index.js";
@@ -291,33 +297,57 @@ function drawPlanet(ctx, p) {
 }
 
 /* =========================
-   HOSE RESOLUTION
+   CHANNEL RESOLUTION
 ========================= */
 
-function resolveBotanyPacket() {
-  return null;
-}
-
-function resolveLayerPackets(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
-  const terrainPacket = resolveTerrainPacket?.({ sample, pointSizePx }) || null;
-  const elevationPacket = resolveElevationPacket?.({ sample, pointSizePx }) || null;
-  const cutPacket = resolveCutPacket?.({ sample, pointSizePx }) || null;
-  const hydrationPacket =
-    resolveHydrationPacket({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
-  const botanyPacket =
-    resolveBotanyPacket({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+function resolveTerrainChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  const terrainPacket = resolveTerrainPacket?.({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+  const elevationPacket = resolveElevationPacket?.({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+  const cutPacket = resolveCutPacket?.({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
 
   return Object.freeze({
     terrainPacket,
     elevationPacket,
-    cutPacket,
-    hydrationPacket,
-    botanyPacket
+    cutPacket
+  });
+}
+
+function resolveAtmosphereChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  const hydrationPacket =
+    resolveHydrationPacket({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+
+  return Object.freeze({
+    hydrationPacket
+  });
+}
+
+function resolveCosmosChannel(sample, pointSizePx) {
+  return Object.freeze({
+    radiusPx: pointSizePx,
+    alpha: 1,
+    color: "rgba(96,170,255,0.20)"
+  });
+}
+
+function resolvePsychologyChannel(sample, pointSizePx) {
+  return Object.freeze({
+    radiusPx: pointSizePx,
+    alpha: 1,
+    color: "rgba(255,236,176,0.18)"
+  });
+}
+
+function resolveChannels(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  return Object.freeze({
+    psychology: resolvePsychologyChannel(sample, pointSizePx),
+    cosmos: resolveCosmosChannel(sample, pointSizePx),
+    terrain: resolveTerrainChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime),
+    atmosphere: resolveAtmosphereChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime)
   });
 }
 
 /* =========================
-   FILTER EXPRESSION
+   MASTER FILTER EXPRESSION
 ========================= */
 
 function classifyPrimitiveShape(sample, x, y) {
@@ -409,6 +439,42 @@ function computeHighlightDensity(sample, depth, lightBias) {
   );
 }
 
+function computePsychologyWeight(sample) {
+  return clamp(
+    (sample?.navigationStability ?? 0) * 0.34 +
+      (sample?.plateauStrength ?? 0) * 0.14 +
+      (sample?.strongestSummitScore ?? 0) * 0.12 +
+      (sample?.strongestBasinScore ?? 0) * 0.10 +
+      (sample?.rainfall ?? 0) * 0.08,
+    0,
+    1
+  );
+}
+
+function computeCosmosWeight(depth, edgeRatio, lightBias) {
+  return clamp(
+    0.16 +
+      depth * 0.28 +
+      (1 - edgeRatio) * 0.20 +
+      lightBias * 0.18,
+    0,
+    1
+  );
+}
+
+function computeAtmosphereWeight(sample) {
+  return clamp(
+    (sample?.waterMask === 1 ? 0.30 : 0) +
+      (sample?.maritimeInfluence ?? 0) * 0.20 +
+      (sample?.rainfall ?? 0) * 0.16 +
+      (sample?.evaporationPressure ?? 0) * 0.12 +
+      (sample?.shorelineBand === true ? 0.10 : 0) +
+      (sample?.freezePotential ?? 0) * 0.06,
+    0,
+    1
+  );
+}
+
 function buildPrimitiveOffsets(sample, x, y, radius, fragmentation) {
   const lat = sample?.latDeg ?? y;
   const lon = sample?.lonDeg ?? x;
@@ -440,40 +506,45 @@ function buildHighlightColor(color, highlightDensity, alpha) {
 }
 
 /* =========================
-   POINT STYLE
+   CHANNEL BLENDING
 ========================= */
 
-function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
-  const terrainPacket = normalizeObject(packets.terrainPacket);
-  const elevationPacket = normalizeObject(packets.elevationPacket);
-  const cutPacket = normalizeObject(packets.cutPacket);
-  const hydrationPacket = normalizeObject(packets.hydrationPacket);
-  const botanyPacket = normalizeObject(packets.botanyPacket);
+function buildMasterStyle(sample, point, baseSize, channels, p, x, y) {
+  const terrain = normalizeObject(channels.terrain);
+  const atmosphere = normalizeObject(channels.atmosphere);
+  const psychology = normalizeObject(channels.psychology);
+  const cosmos = normalizeObject(channels.cosmos);
+
+  const terrainPacket = normalizeObject(terrain.terrainPacket);
+  const elevationPacket = normalizeObject(terrain.elevationPacket);
+  const cutPacket = normalizeObject(terrain.cutPacket);
+  const hydrationPacket = normalizeObject(atmosphere.hydrationPacket);
 
   const depth = clamp((point.z + 1) * 0.5, 0, 1);
   const edgeDistance = Math.hypot(point.x - p.centerX, point.y - p.centerY);
   const edgeRatio = p.radius > 0 ? clamp(edgeDistance / p.radius, 0, 1) : 1;
   const limbFade = clamp(1 - Math.pow(edgeRatio, 1.75), 0.12, 1);
   const lightBias = clamp(0.36 + depth * 0.86, 0.18, 1.18);
-
   const elevation = clamp(sample?.elevation ?? 0, 0, 1);
 
   const terrainScale = packetRadius(terrainPacket, baseSize) / Math.max(baseSize, 0.0001);
   const elevationScale = packetRadius(elevationPacket, baseSize) / Math.max(baseSize, 0.0001);
   const cutScale = packetRadius(cutPacket, baseSize) / Math.max(baseSize, 0.0001);
-  const hydrationScale = packetRadius(hydrationPacket, baseSize) / Math.max(baseSize, 0.0001);
-  const botanyScale = packetRadius(botanyPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const atmosphereScale = packetRadius(hydrationPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const psychologyScale = packetRadius(psychology, baseSize) / Math.max(baseSize, 0.0001);
+  const cosmosScale = packetRadius(cosmos, baseSize) / Math.max(baseSize, 0.0001);
 
   const radius = clamp(
     baseSize *
       (0.76 +
         depth * 0.58 +
         elevation * 0.16 +
-        (terrainScale - 1) * 0.24 +
-        (elevationScale - 1) * 0.22 +
-        (cutScale - 1) * 0.12 +
-        (hydrationScale - 1) * 0.14 +
-        (botanyScale - 1) * 0.08),
+        (terrainScale - 1) * 0.20 +
+        (elevationScale - 1) * 0.18 +
+        (cutScale - 1) * 0.10 +
+        (atmosphereScale - 1) * 0.10 +
+        (psychologyScale - 1) * 0.05 +
+        (cosmosScale - 1) * 0.05),
     0.9,
     6.8
   );
@@ -482,33 +553,51 @@ function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
   const terrainAlpha = packetAlpha(terrainPacket, 0);
   const elevationAlpha = packetAlpha(elevationPacket, 0);
   const cutAlpha = packetAlpha(cutPacket, 0);
-  const hydrationAlpha = packetAlpha(hydrationPacket, 0);
-  const botanyAlpha = packetAlpha(botanyPacket, 0);
+  const atmosphereAlpha = packetAlpha(hydrationPacket, 0);
+  const psychologyWeight = computePsychologyWeight(sample);
+  const cosmosWeight = computeCosmosWeight(depth, edgeRatio, lightBias);
+  const atmosphereWeight = computeAtmosphereWeight(sample);
 
   const alpha = clamp(
     (baseAlpha +
       terrainAlpha * 0.34 +
       elevationAlpha * 0.18 +
       cutAlpha * 0.14 +
-      hydrationAlpha * 0.24 +
-      botanyAlpha * 0.12) *
+      atmosphereAlpha * 0.20 +
+      psychologyWeight * 0.08 +
+      cosmosWeight * 0.08) *
       lightBias *
       limbFade,
     0.08,
     1
   );
 
-  const blur = clamp((1 - depth) * 0.9 + (1 - limbFade) * 0.8, 0, 1.4);
+  const blur = clamp(
+    (1 - depth) * 0.9 +
+      (1 - limbFade) * 0.8 +
+      atmosphereWeight * 0.24 +
+      cosmosWeight * 0.10,
+    0,
+    1.55
+  );
 
-  const baseColor =
-    packetColor(botanyPacket) ||
-    packetColor(hydrationPacket) ||
+  const terrainColor =
     packetColor(cutPacket) ||
     packetColor(elevationPacket) ||
     packetColor(terrainPacket) ||
     (sample?.waterMask === 1
       ? "rgba(68,146,232,0.90)"
       : "rgba(188,206,142,0.94)");
+
+  const cosmosColor = packetColor(cosmos, "rgba(108,174,255,0.22)");
+  const atmosphereColor =
+    packetColor(hydrationPacket, sample?.waterMask === 1 ? "rgba(90,170,242,0.30)" : "rgba(214,235,255,0.12)");
+  const psychologyColor = packetColor(psychology, "rgba(255,236,176,0.18)");
+
+  const colorAfterCosmos = mixColor(terrainColor, cosmosColor, cosmosWeight * 0.24);
+  const colorAfterTerrain = colorAfterCosmos;
+  const colorAfterAtmosphere = mixColor(colorAfterTerrain, atmosphereColor, atmosphereWeight * 0.34);
+  const finalColor = mixColor(colorAfterAtmosphere, psychologyColor, psychologyWeight * 0.18);
 
   const fragmentation = computeFragmentation(sample, x, y, depth);
   const shadowDensity = computeShadowDensity(sample, depth, edgeRatio);
@@ -517,22 +606,24 @@ function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
   const offsets = buildPrimitiveOffsets(sample, x, y, radius, fragmentation);
 
   return Object.freeze({
-    color: baseColor,
-    shadowColor: buildShadowColor(baseColor, shadowDensity, alpha * (0.18 + shadowDensity * 0.16)),
-    highlightColor: buildHighlightColor(
-      baseColor,
-      highlightDensity,
-      alpha * (0.10 + highlightDensity * 0.12)
-    ),
+    color: finalColor,
+    shadowColor: buildShadowColor(finalColor, shadowDensity, alpha * (0.18 + shadowDensity * 0.16)),
+    highlightColor: buildHighlightColor(finalColor, highlightDensity, alpha * (0.10 + highlightDensity * 0.12)),
     radius,
     alpha,
     blur,
-    glowAlpha: clamp(alpha * (0.18 + depth * 0.18), 0, 0.32),
+    glowAlpha: clamp(alpha * (0.18 + depth * 0.18 + cosmosWeight * 0.08), 0, 0.36),
     primitiveShape,
     fragmentation,
     shadowDensity,
     highlightDensity,
-    offsets
+    offsets,
+    channelWeights: Object.freeze({
+      psychology: psychologyWeight,
+      cosmos: cosmosWeight,
+      terrain: clamp(terrainAlpha + elevationAlpha + cutAlpha + 0.30, 0, 1),
+      atmosphere: atmosphereWeight
+    })
   });
 }
 
@@ -726,7 +817,7 @@ function drawPoint(ctx, point, style) {
 }
 
 /* =========================
-   FILTER SPLITTER (CORE)
+   MASTER FILTER CORE
 ========================= */
 
 function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
@@ -735,18 +826,18 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
   const rows = grid.length;
   const cols = grid[0].length;
   const count = rows * cols;
-
-  const baseSize = clamp(p.radius / Math.sqrt(count) * 1.28, 1.05, 4.2);
+  const baseSize = clamp((p.radius / Math.sqrt(count)) * 1.28, 1.05, 4.2);
 
   let visible = 0;
   let emitted = 0;
-  let waterFamilyCount = 0;
   let landFamilyCount = 0;
+  let waterFamilyCount = 0;
   let cryosphereCount = 0;
   let shorelineCount = 0;
-  let elevationFamilyCount = 0;
-  let cutFamilyCount = 0;
-  let botanyFamilyCount = 0;
+  let terrainChannelCount = 0;
+  let atmosphereChannelCount = 0;
+  let cosmosChannelCount = 0;
+  let psychologyChannelCount = 0;
 
   const queue = [];
 
@@ -762,16 +853,17 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
 
       visible += 1;
 
-      const packets = resolveLayerPackets(sample, baseSize, grid, x, y, globalPrimitiveTime);
-      const style = buildPointStyle(sample, point, baseSize, packets, p, x, y);
+      const channels = resolveChannels(sample, baseSize, grid, x, y, globalPrimitiveTime);
+      const style = buildMasterStyle(sample, point, baseSize, channels, p, x, y);
 
       queue.push({ point, style, z: point.z });
 
-      if (sample.waterMask === 1 || packets.hydrationPacket) waterFamilyCount += 1;
-      if (sample.landMask === 1 || packets.terrainPacket) landFamilyCount += 1;
-      if (packets.elevationPacket) elevationFamilyCount += 1;
-      if (packets.cutPacket) cutFamilyCount += 1;
-      if (packets.botanyPacket) botanyFamilyCount += 1;
+      if (sample.waterMask === 1) waterFamilyCount += 1;
+      if (sample.landMask === 1) landFamilyCount += 1;
+      if (style.channelWeights.terrain > 0.01) terrainChannelCount += 1;
+      if (style.channelWeights.atmosphere > 0.01) atmosphereChannelCount += 1;
+      if (style.channelWeights.cosmos > 0.01) cosmosChannelCount += 1;
+      if (style.channelWeights.psychology > 0.01) psychologyChannelCount += 1;
 
       if (
         sample.biomeType === "GLACIER" ||
@@ -798,15 +890,16 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
   return {
     visibleCellCount: visible,
     emittedCellCount: emitted,
-    waterFamilyCount,
     landFamilyCount,
+    waterFamilyCount,
     cryosphereCount,
     shorelineCount,
-    elevationFamilyCount,
-    cutFamilyCount,
-    botanyFamilyCount,
-    primitiveType: "FILTER_SIGNAL",
-    primitivePath: "render.filter.split"
+    terrainChannelCount,
+    atmosphereChannelCount,
+    cosmosChannelCount,
+    psychologyChannelCount,
+    primitiveType: "MASTER_FILTER",
+    primitivePath: "render.master.filter"
   };
 }
 
@@ -818,13 +911,14 @@ function baseReturn() {
   return {
     visibleCellCount: 0,
     emittedCellCount: 0,
-    waterFamilyCount: 0,
     landFamilyCount: 0,
+    waterFamilyCount: 0,
     cryosphereCount: 0,
     shorelineCount: 0,
-    elevationFamilyCount: 0,
-    cutFamilyCount: 0,
-    botanyFamilyCount: 0,
+    terrainChannelCount: 0,
+    atmosphereChannelCount: 0,
+    cosmosChannelCount: 0,
+    psychologyChannelCount: 0,
     primitiveType: "NONE",
     primitivePath: "none"
   };
@@ -849,7 +943,7 @@ function buildReturn(p, density) {
       renderReadsScope: true,
       renderReadsLens: true,
       fallbackMode: false,
-      liveRenderPath: "render.filter"
+      liveRenderPath: "render.master.filter"
     },
     density: {
       averageCellSpanPx: 2,
@@ -862,9 +956,10 @@ function buildReturn(p, density) {
       landFamilyCount: density.landFamilyCount,
       cryosphereCount: density.cryosphereCount,
       shorelineCount: density.shorelineCount,
-      elevationFamilyCount: density.elevationFamilyCount,
-      cutFamilyCount: density.cutFamilyCount,
-      botanyFamilyCount: density.botanyFamilyCount
+      terrainChannelCount: density.terrainChannelCount,
+      atmosphereChannelCount: density.atmosphereChannelCount,
+      cosmosChannelCount: density.cosmosChannelCount,
+      psychologyChannelCount: density.psychologyChannelCount
     }
   };
 }
@@ -880,7 +975,6 @@ export function createRenderer() {
     const p = getProjectionState(viewState, ctx);
 
     ctx.clearRect(0, 0, p.width, p.height);
-
     drawBackground(ctx, p);
     drawPlanet(ctx, p);
 

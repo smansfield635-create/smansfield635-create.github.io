@@ -508,6 +508,21 @@ export function createControlSystem() {
     return selectionState;
   }
 
+  function getSelectionState() {
+    return Object.freeze({
+      screenX: selectionState.screenX,
+      screenY: selectionState.screenY,
+      latDeg: selectionState.latDeg,
+      lonDeg: selectionState.lonDeg,
+      sampleX: selectionState.sampleX,
+      sampleY: selectionState.sampleY,
+      row: selectionState.row,
+      col: selectionState.col,
+      cellIndex: selectionState.cellIndex,
+      cellId: selectionState.cellId
+    });
+  }
+
   function getScopeState() {
     return Object.freeze({
       activeScope,
@@ -546,38 +561,71 @@ export function createControlSystem() {
     return getScopeState();
   }
 
-  function getCameraState() {
+  function getCameraGeometry() {
     return Object.freeze({
       width: cameraState.width,
       height: cameraState.height,
       centerX: cameraState.centerX,
       centerY: cameraState.centerY,
-      radius: getResolvedRadius(),
-      yaw,
-      pitch,
-      yawVelocity,
-      pitchVelocity,
+      baseRadius: cameraState.radius,
+      resolvedRadius: getResolvedRadius()
+    });
+  }
+
+  function getViewpointState() {
+    return Object.freeze({
       zoomCurrent,
       zoomTarget,
       zoomMin,
       zoomMax,
-      mode: presentationMode,
-      autoSpinEnabled,
-      autoSpinSpeed,
-      dragActive,
-      inertiaDecay: K.inertiaDecay,
-      homeYaw,
-      homePitch,
-      recoveryEnabled,
-      recoveryYawStrength,
-      recoveryPitchStrength,
-      recoveryVelocityThreshold,
+      lensTier,
+      lensMode,
       activeScope,
       scopeSizeKm,
       scopeAnchor,
       scopeTransitionState,
-      lensTier,
-      lensMode
+      presentationMode
+    });
+  }
+
+  function getCameraState() {
+    const geometry = getCameraGeometry();
+    const motion = getMotionState();
+    const viewpoint = getViewpointState();
+
+    return Object.freeze({
+      width: geometry.width,
+      height: geometry.height,
+      centerX: geometry.centerX,
+      centerY: geometry.centerY,
+      radius: geometry.resolvedRadius,
+      baseRadius: geometry.baseRadius,
+
+      yaw: motion.yaw,
+      pitch: motion.pitch,
+      yawVelocity: motion.yawVelocity,
+      pitchVelocity: motion.pitchVelocity,
+      zoomCurrent: viewpoint.zoomCurrent,
+      zoomTarget: viewpoint.zoomTarget,
+      zoomMin: viewpoint.zoomMin,
+      zoomMax: viewpoint.zoomMax,
+      mode: viewpoint.presentationMode,
+      autoSpinEnabled: motion.autoSpinEnabled,
+      autoSpinSpeed: motion.autoSpinSpeed,
+      dragActive: motion.dragActive,
+      inertiaDecay: motion.inertiaDecay,
+      homeYaw: motion.homeYaw,
+      homePitch: motion.homePitch,
+      recoveryEnabled: motion.recoveryEnabled,
+      recoveryYawStrength: motion.recoveryYawStrength,
+      recoveryPitchStrength: motion.recoveryPitchStrength,
+      recoveryVelocityThreshold: motion.recoveryVelocityThreshold,
+      activeScope: viewpoint.activeScope,
+      scopeSizeKm: viewpoint.scopeSizeKm,
+      scopeAnchor: viewpoint.scopeAnchor,
+      scopeTransitionState: viewpoint.scopeTransitionState,
+      lensTier: viewpoint.lensTier,
+      lensMode: viewpoint.lensMode
     });
   }
 
@@ -631,10 +679,6 @@ export function createControlSystem() {
       yawVelocity,
       pitchVelocity,
       orbitPhase,
-      zoomCurrent,
-      zoomTarget,
-      zoomMin,
-      zoomMax,
       mode: presentationMode,
       autoSpinEnabled,
       autoSpinSpeed,
@@ -690,7 +734,9 @@ export function createControlSystem() {
     if (typeof next.recoveryEnabled === "boolean") recoveryEnabled = next.recoveryEnabled;
     if (isFiniteNumber(next.recoveryYawStrength)) recoveryYawStrength = next.recoveryYawStrength;
     if (isFiniteNumber(next.recoveryPitchStrength)) recoveryPitchStrength = next.recoveryPitchStrength;
-    if (isFiniteNumber(next.recoveryVelocityThreshold)) recoveryVelocityThreshold = Math.max(0, next.recoveryVelocityThreshold);
+    if (isFiniteNumber(next.recoveryVelocityThreshold)) {
+      recoveryVelocityThreshold = Math.max(0, next.recoveryVelocityThreshold);
+    }
 
     if (isValidScopeName(next.activeScope)) {
       applyScopeDefaults(next.activeScope);
@@ -750,6 +796,9 @@ export function createControlSystem() {
     projectSphere,
     inverseProjection,
     updateSelection,
+    getCameraGeometry,
+    getViewpointState,
+    getSelectionState,
     getCameraState,
     getProjectionSummary,
     getCardinals,

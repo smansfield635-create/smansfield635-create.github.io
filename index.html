@@ -6,6 +6,14 @@
 <title>Nine Summits — Index</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
 
+<script>
+(function(){
+  var params = new URLSearchParams(location.search);
+  var isDoorBg = params.get("doorbg") === "1";
+  document.documentElement.setAttribute("data-doorbg", isDoorBg ? "1" : "0");
+})();
+</script>
+
 <style>
 html, body {
   margin: 0;
@@ -117,6 +125,20 @@ html, body {
 .boot-warn { color: #ffd27a; }
 .boot-fail { color: #ff7a7a; }
 
+/* DOOR BACKGROUND MODE */
+html[data-doorbg="1"] #runtime-root,
+html[data-doorbg="1"] #diagnostics-dock,
+html[data-doorbg="1"] #boot-status {
+  display: none !important;
+}
+
+html[data-doorbg="1"] #world {
+  opacity: 0.44;
+  filter: blur(1.6px) saturate(0.82) brightness(0.64) contrast(0.88);
+  transform: translateY(-4vh) scale(0.96);
+  transform-origin: center center;
+}
+
 @media (max-width: 760px) {
   #diagnostics-bar {
     flex-wrap: wrap;
@@ -125,6 +147,12 @@ html, body {
   #diagnostics-summary {
     width: 100%;
     white-space: normal;
+  }
+
+  html[data-doorbg="1"] #world {
+    opacity: 0.40;
+    filter: blur(1.8px) saturate(0.80) brightness(0.62) contrast(0.86);
+    transform: translateY(-3vh) scale(0.98);
   }
 }
 </style>
@@ -148,6 +176,7 @@ html, body {
 <script type="module">
 const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
+const IS_DOOR_BG = document.documentElement.getAttribute("data-doorbg") === "1";
 
 const BOOT_CONTRACT = Object.freeze({
   id: "INDEX_BOOT_CONTRACT_RENEWAL_v6",
@@ -237,7 +266,8 @@ function writeBootState() {
     failurePath: bootState.failurePath,
     failureClass: bootState.failureClass,
     failureMessage: bootState.failureMessage,
-    verificationPass: bootState.verificationPass
+    verificationPass: bootState.verificationPass,
+    isDoorBackground: IS_DOOR_BG
   };
 }
 
@@ -255,7 +285,7 @@ function setBootPhase(phase, extras = {}) {
 }
 
 function setStatus(message, tone = "boot-warn") {
-  if (statusNode) {
+  if (!IS_DOOR_BG && statusNode) {
     statusNode.textContent = message;
     statusNode.className = tone;
   }
@@ -666,9 +696,11 @@ async function boot() {
   }
 }
 
-diagnosticsToggle?.addEventListener("click", function goToDiagnostics() {
-  window.location.href = BOOT_CONTRACT.diagnosticsPath;
-});
+if (!IS_DOOR_BG) {
+  diagnosticsToggle?.addEventListener("click", function goToDiagnostics() {
+    window.location.href = BOOT_CONTRACT.diagnosticsPath;
+  });
+}
 
 writeBootState();
 boot();

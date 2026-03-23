@@ -1,4 +1,4 @@
-// /world/render/terrain/cut_render_engine.js
+// /world/render/terrain/cut_render/index.js
 // MODE: RENDER EXTENSION CONTRACT RENEWAL
 // STATUS: CUT FACTOR AUTHORITY v1
 // ROLE:

@@ -1,6 +1,6 @@
 // /world/runtime/world_runtime.js
-// MODE: RUNTIME CONTRACT RENEWAL v2
-// STATUS: TNT — LOCKED CONVERGENCE BINDER
+// MODE: RUNTIME CONTRACT RENEWAL v3
+// STATUS: TNT — THIN CONDUCTOR
 // PURPOSE:
 // 1) boot one runtime only
 // 2) maintain control -> render continuity
@@ -9,15 +9,16 @@
 // 5) commit RUNNING only after first successful verified frame
 // 6) honor the live createInstruments() contract
 // 7) preserve legacy runtime lifecycle behavior
-// 8) add worldVariantState
-// 9) add traversalState
-// 10) add coherenceBindingState
-// 11) add perceptionModifiersState
-// 12) add subsurfaceActivationState
+// 8) bind worldVariantState
+// 9) bind traversalState
+// 10) bind coherenceBindingState
+// 11) bind perceptionModifiersState
+// 12) bind subsurfaceActivationState
 // 13) bind unified worldModeState
 // 14) bind planet_engine to runtime state
 // 15) rebuild planetField only when variant changes
 // 16) stay finite, deterministic, and non-drifting
+// 17) strip interpretation and preserve orchestration
 
 import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
@@ -91,7 +92,7 @@ function pickString(...values) {
 
 function normalizeWorldVariant(value) {
   if (!Number.isInteger(value)) return DEFAULT_WORLD_VARIANT;
-  return Math.max(1, Math.min(9, value));
+  return clamp(value, 1, 9);
 }
 
 function normalizeTraversalMode(value) {
@@ -110,24 +111,71 @@ function getKernelDefaults() {
   };
 }
 
+function getTraversalWeights(mode) {
+  const activeMode = normalizeTraversalMode(mode);
+
+  if (activeMode === "SOUTH") {
+    return Object.freeze({
+      axis: "S",
+      northWeight: 0.7,
+      southWeight: 1,
+      eastWeight: 0.75,
+      westWeight: 0.75,
+      preferredDirection: "S"
+    });
+  }
+
+  if (activeMode === "EAST") {
+    return Object.freeze({
+      axis: "E",
+      northWeight: 0.8,
+      southWeight: 0.8,
+      eastWeight: 1,
+      westWeight: 0.7,
+      preferredDirection: "E"
+    });
+  }
+
+  if (activeMode === "WEST") {
+    return Object.freeze({
+      axis: "W",
+      northWeight: 0.8,
+      southWeight: 0.8,
+      eastWeight: 0.7,
+      westWeight: 1,
+      preferredDirection: "W"
+    });
+  }
+
+  return Object.freeze({
+    axis: "N",
+    northWeight: 1,
+    southWeight: 0.85,
+    eastWeight: 0.9,
+    westWeight: 0.9,
+    preferredDirection: "N"
+  });
+}
+
 function createWorldVariantState(activeVariant = DEFAULT_WORLD_VARIANT) {
   const variant = normalizeWorldVariant(activeVariant);
-  const compositionScale = variant / 9;
-  const baseScale = 1 - compositionScale;
+  const compositionScale = round3(variant / 9);
+  const baseScale = round3(1 - compositionScale);
   const ratioRight = Math.max(1, 10 - variant);
+  const nodeIndex = clamp(variant - 1, 0, 15);
 
   return Object.freeze({
     activeVariant: variant,
     ratio: `${variant}:${ratioRight}`,
-    compositionScale: round3(compositionScale),
-    baseScale: round3(baseScale),
+    compositionScale,
+    baseScale,
 
     latticeBinding: Object.freeze({
       latticeEnabled: true,
       latticeResolution: 256,
       variantLatticeIndex: (variant - 1) * 32,
       variantBand: `VARIANT_${variant}`,
-      variantEnvelope: round3(compositionScale)
+      variantEnvelope: compositionScale
     }),
 
     cardinalBinding: Object.freeze({
@@ -140,199 +188,34 @@ function createWorldVariantState(activeVariant = DEFAULT_WORLD_VARIANT) {
 
     nodeBinding: Object.freeze({
       nodeEnabled: true,
-      activeNodeIndex: Math.max(0, Math.min(15, variant - 1)),
+      activeNodeIndex: nodeIndex,
       nodeClass: "SUBSTANCE_ROUTE",
-      nodeRoute: `VARIANT_NODE_${Math.max(0, Math.min(15, variant - 1))}`,
+      nodeRoute: `VARIANT_NODE_${nodeIndex}`,
       nodeModifiers: Object.freeze({
-        compositionWeight: round3(compositionScale),
+        compositionWeight: compositionScale,
         baseWeight: round3(Math.max(baseScale, 0.111))
       })
-    }),
-
-    regionalCompositionBias: Object.freeze({
-      HARBOR_CONTINENT: 0.11,
-      GRATITUDE_CONTINENT: 0.22,
-      GENEROSITY_CONTINENT: 0.33,
-      DEPENDABILITY_CONTINENT: 0.44,
-      ACCOUNTABILITY_CONTINENT: 0.56,
-      HUMILITY_CONTINENT: 0.67,
-      FORGIVENESS_CONTINENT: 0.78,
-      SELF_CONTROL_CONTINENT: 0.89,
-      PURITY_CONTINENT: 1.0
-    }),
-
-    materialModifiers: Object.freeze({
-      diamondScale: round3(compositionScale),
-      opalScale: round3(compositionScale),
-      graniteScale: round3(Math.max(baseScale, 0.15)),
-      metalScale: round3(0.25 + compositionScale * 0.5),
-      clayScale: round3(Math.max(baseScale, 0.2)),
-      sandScale: round3(Math.max(baseScale, 0.2)),
-      siltScale: round3(Math.max(baseScale, 0.2)),
-      soilScale: round3(Math.max(baseScale, 0.25))
-    }),
-
-    sedimentModifiers: Object.freeze({
-      preciousSedimentBias: round3(compositionScale),
-      baseSedimentBias: round3(Math.max(baseScale, 0.15)),
-      transportBias: 1,
-      depositionBias: 1
     }),
 
     diagnostics: Object.freeze({
       activeVariant: variant,
       ratioLabel: `${variant}:${ratioRight}`,
-      compositionScale: round3(compositionScale),
-      baseScale: round3(baseScale),
+      compositionScale,
+      baseScale,
       variantLatticeIndex: (variant - 1) * 32,
-      activeCardinalAxis: "NORTH",
-      activeNodeIndex: Math.max(0, Math.min(15, variant - 1))
+      activeNodeIndex: nodeIndex
     })
   });
 }
 
 function createTraversalState(mode = DEFAULT_TRAVERSAL_MODE) {
   const activeMode = normalizeTraversalMode(mode);
-
-  const byMode = {
-    NORTH: {
-      terrainBias: Object.freeze({
-        contrastWeight: 1.0,
-        edgeWeight: 1.0,
-        elevationWeight: 1.0,
-        cutWeight: 0.95
-      }),
-      hydrationBias: Object.freeze({
-        flowContinuityWeight: 0.85,
-        boundaryWeight: 0.9,
-        hierarchyWeight: 1.0,
-        directionWeight: 0.9
-      }),
-      subsurfaceBias: Object.freeze({
-        detectabilityWeight: 1.0,
-        pathWeight: 0.95,
-        inferenceWeight: 1.0
-      }),
-      convergenceBias: 0.7,
-      expansionBias: 0.8,
-      cardinalBinding: Object.freeze({
-        axis: "N",
-        northWeight: 1.0,
-        southWeight: 0.7,
-        eastWeight: 0.8,
-        westWeight: 0.8
-      }),
-      navigationBias: Object.freeze({
-        preferredDirection: "N",
-        stabilityWeight: 1.0,
-        deviationPenalty: 0.9
-      })
-    },
-
-    SOUTH: {
-      terrainBias: Object.freeze({
-        contrastWeight: 0.9,
-        edgeWeight: 0.85,
-        elevationWeight: 0.8,
-        cutWeight: 0.85
-      }),
-      hydrationBias: Object.freeze({
-        flowContinuityWeight: 0.9,
-        boundaryWeight: 0.9,
-        hierarchyWeight: 0.85,
-        directionWeight: 0.85
-      }),
-      subsurfaceBias: Object.freeze({
-        detectabilityWeight: 0.85,
-        pathWeight: 0.9,
-        inferenceWeight: 0.9
-      }),
-      convergenceBias: 1.0,
-      expansionBias: 0.7,
-      cardinalBinding: Object.freeze({
-        axis: "S",
-        northWeight: 0.7,
-        southWeight: 1.0,
-        eastWeight: 0.75,
-        westWeight: 0.75
-      }),
-      navigationBias: Object.freeze({
-        preferredDirection: "S",
-        stabilityWeight: 0.95,
-        deviationPenalty: 0.85
-      })
-    },
-
-    EAST: {
-      terrainBias: Object.freeze({
-        contrastWeight: 0.85,
-        edgeWeight: 0.9,
-        elevationWeight: 0.85,
-        cutWeight: 0.9
-      }),
-      hydrationBias: Object.freeze({
-        flowContinuityWeight: 1.0,
-        boundaryWeight: 0.85,
-        hierarchyWeight: 0.9,
-        directionWeight: 1.0
-      }),
-      subsurfaceBias: Object.freeze({
-        detectabilityWeight: 0.9,
-        pathWeight: 1.0,
-        inferenceWeight: 0.85
-      }),
-      convergenceBias: 0.7,
-      expansionBias: 1.0,
-      cardinalBinding: Object.freeze({
-        axis: "E",
-        northWeight: 0.8,
-        southWeight: 0.8,
-        eastWeight: 1.0,
-        westWeight: 0.7
-      }),
-      navigationBias: Object.freeze({
-        preferredDirection: "E",
-        stabilityWeight: 0.9,
-        deviationPenalty: 0.8
-      })
-    },
-
-    WEST: {
-      terrainBias: Object.freeze({
-        contrastWeight: 0.9,
-        edgeWeight: 0.95,
-        elevationWeight: 0.9,
-        cutWeight: 0.95
-      }),
-      hydrationBias: Object.freeze({
-        flowContinuityWeight: 0.85,
-        boundaryWeight: 0.9,
-        hierarchyWeight: 0.9,
-        directionWeight: 0.8
-      }),
-      subsurfaceBias: Object.freeze({
-        detectabilityWeight: 0.9,
-        pathWeight: 0.9,
-        inferenceWeight: 1.0
-      }),
-      convergenceBias: 0.9,
-      expansionBias: 0.7,
-      cardinalBinding: Object.freeze({
-        axis: "W",
-        northWeight: 0.8,
-        southWeight: 0.8,
-        eastWeight: 0.7,
-        westWeight: 1.0
-      }),
-      navigationBias: Object.freeze({
-        preferredDirection: "W",
-        stabilityWeight: 0.95,
-        deviationPenalty: 0.85
-      })
-    }
-  };
-
-  const selected = byMode[activeMode];
+  const weights = getTraversalWeights(activeMode);
+  const nodeIndex =
+    activeMode === "NORTH" ? 0 :
+    activeMode === "SOUTH" ? 4 :
+    activeMode === "EAST" ? 8 :
+    12;
 
   return Object.freeze({
     activeMode,
@@ -349,37 +232,40 @@ function createTraversalState(mode = DEFAULT_TRAVERSAL_MODE) {
       traversalEnvelope: 1
     }),
 
-    cardinalBinding: selected.cardinalBinding,
+    cardinalBinding: Object.freeze({
+      axis: weights.axis,
+      northWeight: weights.northWeight,
+      southWeight: weights.southWeight,
+      eastWeight: weights.eastWeight,
+      westWeight: weights.westWeight
+    }),
 
     nodeBinding: Object.freeze({
       nodeEnabled: true,
-      activeNodeIndex:
-        activeMode === "NORTH" ? 0 :
-        activeMode === "SOUTH" ? 4 :
-        activeMode === "EAST" ? 8 :
-        12,
+      activeNodeIndex: nodeIndex,
       nodeClass: "TRAVERSAL_ROUTE",
       nodeRoute: `${activeMode}_TRAVERSAL_ROUTE`,
       nodeModifiers: Object.freeze({
-        convergenceBias: selected.convergenceBias,
-        expansionBias: selected.expansionBias
+        convergenceBias:
+          activeMode === "NORTH" ? 0.7 :
+          activeMode === "SOUTH" ? 1 :
+          activeMode === "EAST" ? 0.7 : 0.9,
+        expansionBias:
+          activeMode === "NORTH" ? 0.8 :
+          activeMode === "SOUTH" ? 0.7 :
+          activeMode === "EAST" ? 1 : 0.7
       })
     }),
 
-    terrainBias: selected.terrainBias,
-    hydrationBias: selected.hydrationBias,
-    subsurfaceBias: selected.subsurfaceBias,
-    convergenceBias: selected.convergenceBias,
-    expansionBias: selected.expansionBias,
-
-    directionalFieldBias: Object.freeze({
-      northFlowWeight: selected.cardinalBinding.northWeight,
-      southFlowWeight: selected.cardinalBinding.southWeight,
-      eastFlowWeight: selected.cardinalBinding.eastWeight,
-      westFlowWeight: selected.cardinalBinding.westWeight
+    navigationBias: Object.freeze({
+      preferredDirection: weights.preferredDirection,
+      stabilityWeight:
+        activeMode === "EAST" ? 0.9 :
+        activeMode === "NORTH" ? 1 : 0.95,
+      deviationPenalty:
+        activeMode === "EAST" ? 0.8 :
+        activeMode === "NORTH" ? 0.9 : 0.85
     }),
-
-    navigationBias: selected.navigationBias,
 
     diagnostics: Object.freeze({
       activeMode,
@@ -388,16 +274,12 @@ function createTraversalState(mode = DEFAULT_TRAVERSAL_MODE) {
         activeMode === "SOUTH" ? 96 :
         activeMode === "EAST" ? 160 :
         224,
-      activeNodeIndex:
-        activeMode === "NORTH" ? 0 :
-        activeMode === "SOUTH" ? 4 :
-        activeMode === "EAST" ? 8 :
-        12
+      activeNodeIndex: nodeIndex
     })
   });
 }
 
-function createInitialCoherenceBindingState() {
+function createBaseCoherenceState() {
   return Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
@@ -451,15 +333,15 @@ function createInitialCoherenceBindingState() {
       globalCoherence: 1,
       globalStability: 1,
       variance: 0,
-      hotspotRegions: [],
-      noiseSpikes: [],
+      hotspotRegions: Object.freeze([]),
+      noiseSpikes: Object.freeze([]),
       authorityMismatchCount: 0,
       groupFragmentationCount: 0
     })
   });
 }
 
-function createInitialPerceptionModifiersState() {
+function createBasePerceptionState() {
   return Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
@@ -529,13 +411,13 @@ function createInitialPerceptionModifiersState() {
       stabilityLevel: 1,
       authorityEffect: 1,
       coordinationEffect: 1,
-      traversalEffect: 1,
+      traversalEffect: "NORTH",
       flowDivergence: 0
     })
   });
 }
 
-function createInitialSubsurfaceActivationState() {
+function createBaseSubsurfaceState() {
   return Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
@@ -566,7 +448,7 @@ function createInitialSubsurfaceActivationState() {
 
     accessState: Object.freeze({
       accessAllowed: false,
-      failedConditions: ["bootstrap"],
+      failedConditions: Object.freeze(["bootstrap"]),
       requiredAuthority: 0,
       requiredCoherence: 0.2,
       requiredEquipment: 0,
@@ -607,8 +489,8 @@ function createInitialSubsurfaceActivationState() {
     waterEntryState: Object.freeze({
       seaEntryCandidate: false,
       waterEntryAllowed: false,
-      requiredWaterEquipment: 0,
-      requiredWaterCoordination: 0,
+      requiredWaterEquipment: 1,
+      requiredWaterCoordination: 0.25,
       flowStabilityPass: false
     }),
 
@@ -624,7 +506,7 @@ function createInitialSubsurfaceActivationState() {
       accessAllowed: false,
       zoneState: "DORMANT",
       activeDepthTier: 0,
-      failedConditions: ["bootstrap"],
+      failedConditions: Object.freeze(["bootstrap"]),
       requiredVsActual: Object.freeze({}),
       crossGroupCoherence: 0,
       wakeAllowed: false,
@@ -637,9 +519,9 @@ function createInitialSubsurfaceActivationState() {
 function createInitialWorldModeState(defaultWorldVariant, defaultTraversalMode) {
   const variantState = createWorldVariantState(defaultWorldVariant);
   const traversalState = createTraversalState(defaultTraversalMode);
-  const coherenceBindingState = createInitialCoherenceBindingState();
-  const perceptionModifiersState = createInitialPerceptionModifiersState();
-  const subsurfaceActivationState = createInitialSubsurfaceActivationState();
+  const coherenceBindingState = createBaseCoherenceState();
+  const perceptionModifiersState = createBasePerceptionState();
+  const subsurfaceActivationState = createBaseSubsurfaceState();
 
   return Object.freeze({
     latticeBinding: Object.freeze({
@@ -653,7 +535,7 @@ function createInitialWorldModeState(defaultWorldVariant, defaultTraversalMode) 
 
     nodeBinding: Object.freeze({
       nodeEnabled: true,
-      activeNodeIndex: 0,
+      activeNodeIndex: traversalState.nodeBinding.activeNodeIndex,
       nodeAggregationFactor: 1,
       nodeStabilityFactor: 1,
       nodeContinuity: 1
@@ -693,7 +575,6 @@ function createInitialWorldModeState(defaultWorldVariant, defaultTraversalMode) 
 
 function createInitialRuntimeState() {
   const defaults = getKernelDefaults();
-
   const worldModeState = createInitialWorldModeState(
     defaults.defaultWorldVariant,
     defaults.defaultTraversalMode
@@ -716,6 +597,16 @@ function ensureRuntimeState() {
   return runtimeState;
 }
 
+function validateRuntimeStateCompleteness() {
+  ensureRuntimeState();
+  if (!runtimeState.worldVariantState) throw new Error("runtime missing worldVariantState");
+  if (!runtimeState.traversalState) throw new Error("runtime missing traversalState");
+  if (!runtimeState.coherenceBindingState) throw new Error("runtime missing coherenceBindingState");
+  if (!runtimeState.perceptionModifiersState) throw new Error("runtime missing perceptionModifiersState");
+  if (!runtimeState.subsurfaceActivationState) throw new Error("runtime missing subsurfaceActivationState");
+  if (!runtimeState.worldModeState) throw new Error("runtime missing worldModeState");
+}
+
 function buildPlanetFieldInput() {
   ensureRuntimeState();
 
@@ -735,9 +626,7 @@ function rebuildPlanetFieldIfNeeded(force = false) {
   }
 
   const activeVariant = normalizeWorldVariant(runtimeState?.worldVariantState?.activeVariant);
-  if (!force && planetField && lastBuiltVariant === activeVariant) {
-    return;
-  }
+  if (!force && planetField && lastBuiltVariant === activeVariant) return;
 
   planetField = planetEngine.buildPlanetField(buildPlanetFieldInput());
   if (!planetField) {
@@ -745,17 +634,6 @@ function rebuildPlanetFieldIfNeeded(force = false) {
   }
 
   lastBuiltVariant = activeVariant;
-}
-
-function validateRuntimeStateCompleteness() {
-  ensureRuntimeState();
-
-  if (!runtimeState.worldVariantState) throw new Error("runtime missing worldVariantState");
-  if (!runtimeState.traversalState) throw new Error("runtime missing traversalState");
-  if (!runtimeState.coherenceBindingState) throw new Error("runtime missing coherenceBindingState");
-  if (!runtimeState.perceptionModifiersState) throw new Error("runtime missing perceptionModifiersState");
-  if (!runtimeState.subsurfaceActivationState) throw new Error("runtime missing subsurfaceActivationState");
-  if (!runtimeState.worldModeState) throw new Error("runtime missing worldModeState");
 }
 
 function ensureReceipt() {
@@ -858,6 +736,7 @@ function ensureReceipt() {
       renderAuthority: {
         renderReadsScope: false,
         renderReadsLens: false,
+        renderReadsWorldMode: false,
         fallbackMode: false,
         liveRenderPath: "UNKNOWN"
       },
@@ -1109,8 +988,7 @@ function buildRenderOptions(receipt) {
 }
 
 function renderFrame(receipt) {
-  const renderResult =
-    renderer.renderPlanet(buildRenderOptions(receipt)) || {};
+  const renderResult = renderer.renderPlanet(buildRenderOptions(receipt)) || {};
 
   const audit = normalizeObject(renderResult.audit);
   const orbitalAudit = normalizeObject(renderResult.orbitalAudit);
@@ -1162,10 +1040,10 @@ function renderFrame(receipt) {
 
   receipt.renderAuthority.renderReadsScope = renderAuthority.renderReadsScope === true;
   receipt.renderAuthority.renderReadsLens = renderAuthority.renderReadsLens === true;
+  receipt.renderAuthority.renderReadsWorldMode = renderAuthority.renderReadsWorldMode === true;
   receipt.renderAuthority.fallbackMode = renderAuthority.fallbackMode === true;
   receipt.renderAuthority.liveRenderPath =
     pickString(renderAuthority.liveRenderPath, receipt.renderAuthority.liveRenderPath, "UNKNOWN") || "UNKNOWN";
-  receipt.renderAuthority.renderReadsWorldMode = renderAuthority.renderReadsWorldMode === true;
 
   receipt.density.averageCellSpanPx =
     pickNumber(density.averageCellSpanPx, receipt.density.averageCellSpanPx, 0) ?? 0;
@@ -1213,70 +1091,47 @@ function buildMotionStateForInstruments(receipt) {
   };
 }
 
-function computeAuthoritySignal(receipt) {
-  const motion = normalizeObject(receipt.control.motionState);
-  const zoomCurrent = clamp(pickNumber(motion.zoomCurrent, receipt.lens.zoomCurrent, 0) ?? 0, 0, 1);
-  return round3(clamp(0.55 + zoomCurrent * 0.45, 0, 1));
-}
-
-function computeLocalCellId(receipt) {
-  const projectionSummary = normalizeObject(receipt.control.projectionSummary);
-  const sampleX = Number.isInteger(projectionSummary.sampleX) ? projectionSummary.sampleX : null;
-  const sampleY = Number.isInteger(projectionSummary.sampleY) ? projectionSummary.sampleY : null;
-  return sampleX === null || sampleY === null ? "UNKNOWN" : `${sampleX}:${sampleY}`;
-}
-
-function computeRegionalZoneId(sample) {
-  if (!sample || typeof sample !== "object") return "UNKNOWN";
-  return (
-    sample.regionId ||
-    sample.continentMass ||
-    sample.continentId ||
-    sample.continentClass ||
-    sample.macroRegion ||
-    "UNKNOWN"
-  );
-}
-
 function deriveWorldVariantState(receipt) {
   const current = runtimeState.worldVariantState;
-  const activeVariant = normalizeWorldVariant(current?.activeVariant ?? DEFAULT_WORLD_VARIANT);
-  runtimeState.worldVariantState = createWorldVariantState(activeVariant);
+  const nextVariant = normalizeWorldVariant(current?.activeVariant ?? DEFAULT_WORLD_VARIANT);
+  runtimeState.worldVariantState = createWorldVariantState(nextVariant);
   receipt.worldVariantState = runtimeState.worldVariantState;
 }
 
 function deriveTraversalState(receipt) {
   const current = runtimeState.traversalState;
-  const activeMode = normalizeTraversalMode(current?.activeMode ?? DEFAULT_TRAVERSAL_MODE);
-  runtimeState.traversalState = createTraversalState(activeMode);
+  const nextMode = normalizeTraversalMode(current?.activeMode ?? DEFAULT_TRAVERSAL_MODE);
+  runtimeState.traversalState = createTraversalState(nextMode);
   receipt.traversalState = runtimeState.traversalState;
 }
 
-function deriveCoherenceBindingState(receipt, now) {
+function deriveLightweightStates(receipt) {
   const sample = resolveCurrentSample(receipt.control.projectionSummary);
-  const localCellId = computeLocalCellId(receipt);
-  const regionalZoneId = computeRegionalZoneId(sample);
-  const authoritySignal = computeAuthoritySignal(receipt);
-
   const renderAudit = normalizeObject(receipt.renderAudit);
+  const motion = normalizeObject(receipt.control.motionState);
+
   const sampleCount = Math.max(1, renderAudit.sampleCount || 1);
   const visibleCount = Math.max(1, receipt.topology.visibleCellCount || 1);
   const emittedCount = Math.max(1, receipt.topology.emittedCellCount || 1);
   const visibilityRatio = clamp(emittedCount / visibleCount, 0, 1);
 
-  const sampleSlope = clamp(sample?.slope ?? 0, 0, 1);
-  const sampleCanyon = clamp(sample?.canyonStrength ?? 0, 0, 1);
-  const sampleRunoff = clamp(sample?.runoff ?? 0, 0, 1);
-  const sampleRainfall = clamp(sample?.rainfall ?? 0, 0, 1);
+  const slope = clamp(sample?.slope ?? 0, 0, 1);
+  const canyon = clamp(sample?.canyonStrength ?? 0, 0, 1);
+  const rainfall = clamp(sample?.rainfall ?? 0, 0, 1);
+  const runoff = clamp(sample?.runoff ?? 0, 0, 1);
+  const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
   const shorelineSignal = clamp((renderAudit.shorelineCount / sampleCount) * 24, 0, 1);
   const cryosphereSignal = clamp((renderAudit.cryosphereCount / sampleCount) * 32, 0, 1);
-  const localCoherence = round3(
+  const zoomCurrent = clamp(pickNumber(motion.zoomCurrent, receipt.lens.zoomCurrent, 0) ?? 0, 0, 1);
+  const authoritySignal = round3(clamp(0.55 + zoomCurrent * 0.45, 0, 1));
+
+  const coherence = round3(
     clamp(
       visibilityRatio * 0.34 +
-      (1 - sampleSlope) * 0.18 +
-      (1 - sampleCanyon) * 0.14 +
-      sampleRainfall * 0.12 +
-      sampleRunoff * 0.08 +
+      (1 - slope) * 0.18 +
+      (1 - canyon) * 0.14 +
+      rainfall * 0.12 +
+      runoff * 0.08 +
       shorelineSignal * 0.08 +
       (1 - cryosphereSignal) * 0.06,
       0,
@@ -1284,44 +1139,63 @@ function deriveCoherenceBindingState(receipt, now) {
     )
   );
 
-  const localNoise = round3(clamp(1 - localCoherence, 0, 1));
-  const localStability = round3(clamp(localCoherence * (1 - localNoise * 0.45), 0, 1));
-  const regionalCoherence = round3(clamp(localCoherence * 0.96 + authoritySignal * 0.04, 0, 1));
-  const globalCoherence = round3(clamp(regionalCoherence * 0.95 + authoritySignal * 0.05, 0, 1));
-  const globalNoise = round3(clamp(1 - globalCoherence, 0, 1));
-  const globalStability = round3(clamp(globalCoherence * (1 - globalNoise * 0.45), 0, 1));
+  const noise = round3(clamp(1 - coherence, 0, 1));
+  const stability = round3(clamp(coherence * (1 - noise * 0.45), 0, 1));
+  const coordination =
+    runtimeState.traversalState.activeMode === "SOUTH" ? 0.94 :
+    runtimeState.traversalState.activeMode === "NORTH" ? 0.9 :
+    0.9;
 
-  const coordinationFactor = round3(
-    runtimeState.traversalState.activeMode === "SOUTH" ? 0.94 : 0.9
-  );
-  const contribution = round3(Math.min(globalCoherence * authoritySignal * coordinationFactor, globalCoherence));
+  const clarity = coherence;
+  const accessAllowed = coherence >= 0.2 && authoritySignal >= 0 && coordination >= 0.1;
+  const zoneStability = round3(clamp(coherence * stability * coordination, 0, 1));
+  const preferredEntryAxis = runtimeState.traversalState.navigationBias.preferredDirection;
+  const coherenceIndex = clamp(Math.round(coherence * 255), 0, 255);
+  const localCellId = (() => {
+    const projectionSummary = normalizeObject(receipt.control.projectionSummary);
+    const sampleX = Number.isInteger(projectionSummary.sampleX) ? projectionSummary.sampleX : null;
+    const sampleY = Number.isInteger(projectionSummary.sampleY) ? projectionSummary.sampleY : null;
+    return sampleX === null || sampleY === null ? "UNKNOWN" : `${sampleX}:${sampleY}`;
+  })();
+  const regionalZoneId =
+    sample?.regionId ||
+    sample?.continentMass ||
+    sample?.continentId ||
+    sample?.continentClass ||
+    sample?.macroRegion ||
+    "UNKNOWN";
 
   runtimeState.coherenceBindingState = Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
       latticeResolution: 256,
-      coherenceLatticeIndex: clamp(Math.round(globalCoherence * 255), 0, 255),
+      coherenceLatticeIndex: coherenceIndex,
       latticeSpread: 1,
-      latticeDecay: round3(globalNoise)
+      latticeDecay: noise
     }),
 
-    cardinalBinding: runtimeState.traversalState.cardinalBinding,
+    cardinalBinding: Object.freeze({
+      northWeight: runtimeState.traversalState.cardinalBinding.northWeight,
+      southWeight: runtimeState.traversalState.cardinalBinding.southWeight,
+      eastWeight: runtimeState.traversalState.cardinalBinding.eastWeight,
+      westWeight: runtimeState.traversalState.cardinalBinding.westWeight
+    }),
 
     nodeBinding: Object.freeze({
       nodeEnabled: true,
       activeNodeIndex: runtimeState.traversalState.nodeBinding.activeNodeIndex,
       nodeAggregationFactor: 1,
-      nodeVariancePenalty: round3(globalNoise),
-      nodeStabilityBoost: round3(globalStability)
+      nodeVariancePenalty: noise,
+      nodeStabilityBoost: stability
     }),
 
     entityContributions: Object.freeze({
       PLAYER_0: Object.freeze({
-        internalCoherence: globalCoherence,
+        internalCoherence: coherence,
         authoritySignal,
-        coordinationFactor,
-        contribution,
-        noiseInjection: round3(1 - globalCoherence),
+        coordinationFactor: coordination,
+        contribution: round3(Math.min(coherence * authoritySignal * coordination, coherence)),
+        noiseInjection: noise,
         localCellId
       })
     }),
@@ -1330,18 +1204,18 @@ function deriveCoherenceBindingState(receipt, now) {
       SOLO_RUNTIME: Object.freeze({
         memberIds: Object.freeze(["PLAYER_0"]),
         memberCount: 1,
-        groupCoherence: globalCoherence,
+        groupCoherence: coherence,
         coherenceVariance: 0,
-        coordinationFactor,
-        effectiveForce: contribution
+        coordinationFactor: coordination,
+        effectiveForce: round3(coherence * coordination)
       })
     }),
 
     localField: Object.freeze({
       [localCellId]: Object.freeze({
-        coherence: localCoherence,
-        noise: localNoise,
-        stability: localStability,
+        coherence,
+        noise,
+        stability,
         contributingEntities: Object.freeze(["PLAYER_0"]),
         contributingGroups: Object.freeze(["SOLO_RUNTIME"])
       })
@@ -1349,179 +1223,124 @@ function deriveCoherenceBindingState(receipt, now) {
 
     regionalField: Object.freeze({
       [regionalZoneId]: Object.freeze({
-        coherence: regionalCoherence,
-        stability: round3(clamp(regionalCoherence * 0.97, 0, 1)),
+        coherence,
+        stability,
         contributorCount: 1
       })
     }),
 
     globalField: Object.freeze({
-      coherence: globalCoherence,
-      noise: globalNoise,
-      stability: globalStability
+      coherence,
+      noise,
+      stability
     }),
 
     coherenceEnvelope: Object.freeze({
-      min: localCoherence,
-      max: globalCoherence,
-      average: globalCoherence,
-      variance: globalNoise
+      min: coherence,
+      max: coherence,
+      average: coherence,
+      variance: noise
     }),
 
     stabilityEnvelope: Object.freeze({
-      min: localStability,
-      max: globalStability,
-      average: globalStability,
-      variance: globalNoise
+      min: stability,
+      max: stability,
+      average: stability,
+      variance: noise
     }),
 
     diagnostics: Object.freeze({
-      globalCoherence,
-      globalStability,
-      variance: globalNoise,
-      hotspotRegions: regionalCoherence < 0.5 ? Object.freeze([regionalZoneId]) : Object.freeze([]),
-      noiseSpikes: localNoise > 0.5 ? Object.freeze([localCellId]) : Object.freeze([]),
+      globalCoherence: coherence,
+      globalStability: stability,
+      variance: noise,
+      hotspotRegions: coherence < 0.5 ? Object.freeze([regionalZoneId]) : Object.freeze([]),
+      noiseSpikes: noise > 0.5 ? Object.freeze([localCellId]) : Object.freeze([]),
       authorityMismatchCount: 0,
-      groupFragmentationCount: 0,
-      timestamp: now
+      groupFragmentationCount: 0
     })
-  });
-
-  receipt.coherenceBindingState = runtimeState.coherenceBindingState;
-}
-
-function derivePerceptionModifiersState(receipt) {
-  const coherenceState = runtimeState.coherenceBindingState;
-  const traversalState = runtimeState.traversalState;
-
-  const coherence = coherenceState.globalField.coherence;
-  const noise = coherenceState.globalField.noise;
-  const stability = coherenceState.globalField.stability;
-  const authoritySignal = computeAuthoritySignal(receipt);
-  const coordinationSignal =
-    runtimeState.coherenceBindingState.groupContributions.SOLO_RUNTIME?.coordinationFactor ?? 0.9;
-
-  const terrain = Object.freeze({
-    contrast: round3(clamp(coherence * traversalState.terrainBias.contrastWeight, 0, 1)),
-    edgeClarity: round3(clamp(coherence * traversalState.terrainBias.edgeWeight, 0, 1)),
-    elevationFidelity: round3(clamp(coherence * stability * traversalState.terrainBias.elevationWeight, 0, 1)),
-    cutDetectability: round3(clamp(coherence * (1 - noise) * traversalState.terrainBias.cutWeight, 0, 1)),
-    discontinuityVisibility: round3(clamp(coherence * stability * traversalState.terrainBias.cutWeight, 0, 1))
-  });
-
-  const hydration = Object.freeze({
-    flowContinuity: round3(clamp(coherence * stability * traversalState.hydrationBias.flowContinuityWeight, 0, 1)),
-    boundaryClarity: round3(clamp(coherence * traversalState.hydrationBias.boundaryWeight, 0, 1)),
-    hierarchyVisibility: round3(clamp(coherence * authoritySignal * traversalState.hydrationBias.hierarchyWeight, 0, 1)),
-    reservoirReadability: round3(clamp(coherence * stability * traversalState.hydrationBias.boundaryWeight, 0, 1)),
-    flowDirectionLegibility: round3(clamp(coherence * (1 - noise) * traversalState.hydrationBias.directionWeight, 0, 1))
-  });
-
-  const subsurface = Object.freeze({
-    detectability: round3(clamp(coherence * authoritySignal * traversalState.subsurfaceBias.detectabilityWeight, 0, 1)),
-    pathContinuity: round3(clamp(coherence * stability * traversalState.subsurfaceBias.pathWeight, 0, 1)),
-    entryInference: round3(clamp(coherence * authoritySignal * stability * traversalState.subsurfaceBias.inferenceWeight, 0, 1)),
-    hiddenPassageLegibility: round3(clamp(coherence * coordinationSignal * traversalState.subsurfaceBias.inferenceWeight, 0, 1)),
-    signalIntegrity: round3(clamp(coherence * (1 - noise), 0, 1))
-  });
-
-  const lighting = Object.freeze({
-    intensity: round3(clamp(authoritySignal * coherence, 0, 1)),
-    stability: round3(clamp(coherence * stability, 0, 1)),
-    radius: round3(clamp(authoritySignal * coherence * stability, 0, 1)),
-    activationReadiness: round3(clamp(coherence * authoritySignal * coordinationSignal, 0, 1))
   });
 
   runtimeState.perceptionModifiersState = Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
       latticeResolution: 256,
-      perceptionLatticeIndex: coherenceState.latticeBinding.coherenceLatticeIndex,
+      perceptionLatticeIndex: coherenceIndex,
       perceptionSpread: 1,
-      perceptionDecay: coherenceState.globalField.noise
+      perceptionDecay: noise
     }),
 
-    cardinalBinding: traversalState.cardinalBinding,
+    cardinalBinding: runtimeState.traversalState.cardinalBinding,
 
     nodeBinding: Object.freeze({
       nodeEnabled: true,
-      activeNodeIndex: traversalState.nodeBinding.activeNodeIndex,
-      nodeClarityBoost: coherence,
+      activeNodeIndex: runtimeState.traversalState.nodeBinding.activeNodeIndex,
+      nodeClarityBoost: clarity,
       nodeNoisePenalty: noise,
       nodeStabilityWeight: stability
     }),
 
-    terrain,
-    hydration,
-    subsurface,
-    lighting,
+    terrain: Object.freeze({
+      contrast: clarity,
+      edgeClarity: clarity,
+      elevationFidelity: round3(clamp(clarity * stability, 0, 1)),
+      cutDetectability: round3(clamp(clarity * (1 - noise), 0, 1)),
+      discontinuityVisibility: round3(clamp(clarity * stability, 0, 1))
+    }),
+
+    hydration: Object.freeze({
+      flowContinuity: round3(clamp(clarity * stability, 0, 1)),
+      boundaryClarity: clarity,
+      hierarchyVisibility: round3(clamp(clarity * authoritySignal, 0, 1)),
+      reservoirReadability: round3(clamp(clarity * stability, 0, 1)),
+      flowDirectionLegibility: round3(clamp(clarity * (1 - noise), 0, 1))
+    }),
+
+    subsurface: Object.freeze({
+      detectability: round3(clamp(clarity * authoritySignal, 0, 1)),
+      pathContinuity: round3(clamp(clarity * stability, 0, 1)),
+      entryInference: round3(clamp(clarity * authoritySignal * stability, 0, 1)),
+      hiddenPassageLegibility: round3(clamp(clarity * coordination, 0, 1)),
+      signalIntegrity: round3(clamp(clarity * (1 - noise), 0, 1))
+    }),
+
+    lighting: Object.freeze({
+      intensity: round3(clamp(authoritySignal * clarity, 0, 1)),
+      stability: round3(clamp(clarity * stability, 0, 1)),
+      radius: round3(clamp(authoritySignal * clarity * stability, 0, 1)),
+      activationReadiness: round3(clamp(clarity * authoritySignal * coordination, 0, 1))
+    }),
 
     globalEnvelope: Object.freeze({
-      clarityLevel: coherence,
+      clarityLevel: clarity,
       noiseLevel: noise,
       stabilityLevel: stability,
       coherenceAverage: coherence,
-      variance: coherenceState.coherenceEnvelope.variance
+      variance: noise
     }),
 
     diagnostics: Object.freeze({
-      clarityLevel: coherence,
+      clarityLevel: clarity,
       noiseLevel: noise,
       stabilityLevel: stability,
       authorityEffect: authoritySignal,
-      coordinationEffect:
-        runtimeState.coherenceBindingState.groupContributions.SOLO_RUNTIME?.coordinationFactor ?? 0.9,
-      traversalEffect: traversalState.activeMode,
-      flowDivergence:
-        runtimeState.coherenceBindingState.diagnostics.variance
+      coordinationEffect: coordination,
+      traversalEffect: runtimeState.traversalState.activeMode,
+      flowDivergence: noise
     })
   });
-
-  receipt.perceptionModifiersState = runtimeState.perceptionModifiersState;
-}
-
-function deriveSubsurfaceActivationState(receipt) {
-  const coherence = runtimeState.coherenceBindingState.globalField.coherence;
-  const stability = runtimeState.coherenceBindingState.globalField.stability;
-  const authoritySignal = computeAuthoritySignal(receipt);
-  const participantCount =
-    runtimeState.coherenceBindingState.groupContributions.SOLO_RUNTIME?.memberCount ?? 1;
-  const coordinationFactor =
-    runtimeState.coherenceBindingState.groupContributions.SOLO_RUNTIME?.coordinationFactor ?? 0.9;
-  const equipmentTier = runtimeState.worldVariantState.activeVariant;
-  const sample = resolveCurrentSample(receipt.control.projectionSummary);
-
-  const activeDepthTier = 0;
-  const requiredAuthority = 0;
-  const requiredCoherence = 0.2;
-  const requiredEquipment = 0;
-  const requiredCoordination = 0.1;
-  const requiredParticipants = 1;
-
-  const failedConditions = [];
-  if (!(authoritySignal >= requiredAuthority)) failedConditions.push("authority");
-  if (!(coherence >= requiredCoherence)) failedConditions.push("coherence");
-  if (!(equipmentTier >= requiredEquipment)) failedConditions.push("equipment");
-  if (!(coordinationFactor >= requiredCoordination)) failedConditions.push("coordination");
-  if (!(participantCount >= requiredParticipants)) failedConditions.push("participants");
-
-  const accessAllowed = failedConditions.length === 0;
-  const zoneState = accessAllowed ? "ACTIVE" : "PARTIAL_ACTIVE";
-  const zoneStability = round3(clamp(coherence * stability * coordinationFactor, 0, 1));
-  const lighting = runtimeState.perceptionModifiersState.lighting;
 
   runtimeState.subsurfaceActivationState = Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
       latticeResolution: 256,
-      subsurfaceLatticeIndex: runtimeState.coherenceBindingState.latticeBinding.coherenceLatticeIndex,
+      subsurfaceLatticeIndex: coherenceIndex,
       accessSpread: 1,
       accessDecay: round3(1 - zoneStability)
     }),
 
     cardinalBinding: Object.freeze({
       ...runtimeState.traversalState.cardinalBinding,
-      preferredEntryAxis: runtimeState.traversalState.navigationBias.preferredDirection
+      preferredEntryAxis
     }),
 
     nodeBinding: Object.freeze({
@@ -1532,29 +1351,29 @@ function deriveSubsurfaceActivationState(receipt) {
       nodeAccessPenalty: round3(1 - coherence)
     }),
 
-    activeDepthTier,
-    zoneState,
+    activeDepthTier: 0,
+    zoneState: accessAllowed ? "ACTIVE" : "PARTIAL_ACTIVE",
 
     accessState: Object.freeze({
       accessAllowed,
-      failedConditions: Object.freeze(failedConditions),
-      requiredAuthority,
-      requiredCoherence,
-      requiredEquipment,
-      requiredCoordination,
-      requiredParticipants,
+      failedConditions: Object.freeze(accessAllowed ? [] : ["coherence"]),
+      requiredAuthority: 0,
+      requiredCoherence: 0.2,
+      requiredEquipment: 0,
+      requiredCoordination: 0.1,
+      requiredParticipants: 1,
       actualAuthority: authoritySignal,
       actualCoherence: coherence,
-      actualEquipment: equipmentTier,
-      actualCoordination: coordinationFactor,
-      actualParticipants: participantCount
+      actualEquipment: runtimeState.worldVariantState.activeVariant,
+      actualCoordination: coordination,
+      actualParticipants: 1
     }),
 
     lightingState: Object.freeze({
-      intensity: lighting.intensity,
-      stability: lighting.stability,
-      radius: lighting.radius,
-      activationReadiness: lighting.activationReadiness,
+      intensity: runtimeState.perceptionModifiersState.lighting.intensity,
+      stability: runtimeState.perceptionModifiersState.lighting.stability,
+      radius: runtimeState.perceptionModifiersState.lighting.radius,
+      activationReadiness: runtimeState.perceptionModifiersState.lighting.activationReadiness,
       localizedOnly: true
     }),
 
@@ -1567,12 +1386,12 @@ function deriveSubsurfaceActivationState(receipt) {
     }),
 
     teamState: Object.freeze({
-      participantCount,
-      requiredParticipants,
-      coordinationFactor,
+      participantCount: 1,
+      requiredParticipants: 1,
+      coordinationFactor: coordination,
       crossGroupCoherence: coherence,
       multiTeamRequired: false,
-      teamPass: participantCount >= requiredParticipants && coordinationFactor >= requiredCoordination
+      teamPass: coordination >= 0.1
     }),
 
     waterEntryState: Object.freeze({
@@ -1593,33 +1412,29 @@ function deriveSubsurfaceActivationState(receipt) {
 
     diagnostics: Object.freeze({
       accessAllowed,
-      zoneState,
-      activeDepthTier,
-      failedConditions: Object.freeze(failedConditions),
+      zoneState: accessAllowed ? "ACTIVE" : "PARTIAL_ACTIVE",
+      activeDepthTier: 0,
+      failedConditions: Object.freeze(accessAllowed ? [] : ["coherence"]),
       requiredVsActual: Object.freeze({
-        authority: `${requiredAuthority} / ${authoritySignal}`,
-        coherence: `${requiredCoherence} / ${coherence}`,
-        equipment: `${requiredEquipment} / ${equipmentTier}`,
-        coordination: `${requiredCoordination} / ${coordinationFactor}`,
-        participants: `${requiredParticipants} / ${participantCount}`
+        authority: `0 / ${authoritySignal}`,
+        coherence: `0.2 / ${coherence}`,
+        equipment: `0 / ${runtimeState.worldVariantState.activeVariant}`,
+        coordination: `0.1 / ${coordination}`,
+        participants: `1 / 1`
       }),
       crossGroupCoherence: coherence,
       wakeAllowed: accessAllowed,
-      lightingReadiness: lighting.activationReadiness,
+      lightingReadiness: runtimeState.perceptionModifiersState.lighting.activationReadiness,
       zoneStability
     })
   });
 
-  receipt.subsurfaceActivationState = runtimeState.subsurfaceActivationState;
-}
-
-function bindWorldModeState(receipt) {
   runtimeState.worldModeState = Object.freeze({
     latticeBinding: Object.freeze({
       latticeEnabled: true,
       latticeResolution: 256,
-      unifiedLatticeIndex: runtimeState.coherenceBindingState.latticeBinding.coherenceLatticeIndex,
-      latticeContinuity: runtimeState.coherenceBindingState.globalField.stability
+      unifiedLatticeIndex: coherenceIndex,
+      latticeContinuity: stability
     }),
 
     cardinalBinding: runtimeState.traversalState.cardinalBinding,
@@ -1628,8 +1443,8 @@ function bindWorldModeState(receipt) {
       nodeEnabled: true,
       activeNodeIndex: runtimeState.traversalState.nodeBinding.activeNodeIndex,
       nodeAggregationFactor: 1,
-      nodeStabilityFactor: runtimeState.coherenceBindingState.globalField.stability,
-      nodeContinuity: runtimeState.coherenceBindingState.globalField.stability
+      nodeStabilityFactor: stability,
+      nodeContinuity: stability
     }),
 
     variantState: runtimeState.worldVariantState,
@@ -1655,18 +1470,14 @@ function bindWorldModeState(receipt) {
     diagnostics: Object.freeze({
       activeVariant: runtimeState.worldVariantState.activeVariant,
       activeTraversalMode: runtimeState.traversalState.activeMode,
-      coherenceLevel: runtimeState.coherenceBindingState.globalField.coherence,
-      stabilityLevel: runtimeState.coherenceBindingState.globalField.stability,
+      coherenceLevel: coherence,
+      stabilityLevel: stability,
       perceptionSummary: runtimeState.perceptionModifiersState.globalEnvelope,
       accessSummary: runtimeState.subsurfaceActivationState.diagnostics,
       bindingIntegrity: true
     })
   });
 
-  validateRuntimeStateCompleteness();
-
-  receipt.worldVariantState = runtimeState.worldVariantState;
-  receipt.traversalState = runtimeState.traversalState;
   receipt.coherenceBindingState = runtimeState.coherenceBindingState;
   receipt.perceptionModifiersState = runtimeState.perceptionModifiersState;
   receipt.subsurfaceActivationState = runtimeState.subsurfaceActivationState;
@@ -1685,9 +1496,7 @@ function verifyFrameIntegrity(receipt) {
 
 function updateInstrumentReceipt(receipt) {
   try {
-    if (!instrumentApi || typeof instrumentApi.buildInstrumentReceipt !== "function") {
-      return;
-    }
+    if (!instrumentApi || typeof instrumentApi.buildInstrumentReceipt !== "function") return;
 
     const projectionSummary = normalizeObject(receipt.control.projectionSummary);
     const currentSample = resolveCurrentSample(projectionSummary);
@@ -1824,10 +1633,7 @@ function frame(now) {
     updateControlReceipt(receipt);
     deriveWorldVariantState(receipt);
     deriveTraversalState(receipt);
-    deriveCoherenceBindingState(receipt, now);
-    derivePerceptionModifiersState(receipt);
-    deriveSubsurfaceActivationState(receipt);
-    bindWorldModeState(receipt);
+    deriveLightweightStates(receipt);
     rebuildPlanetFieldIfNeeded(false);
     renderFrame(receipt);
     verifyFrameIntegrity(receipt);
@@ -1863,6 +1669,7 @@ export function startRuntime() {
 
   try {
     ensureRuntimeState();
+    validateRuntimeStateCompleteness();
 
     canvas = getCanvas();
     ctx = canvas.getContext("2d");
@@ -1871,7 +1678,6 @@ export function startRuntime() {
       throw new Error("2D context unavailable");
     }
 
-    bindWorldModeState(receipt);
     setupSystems();
     resize();
     bindInput();

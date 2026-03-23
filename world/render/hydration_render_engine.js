@@ -1,4 +1,4 @@
-// /world/render/hydration_render_engine.js
+// /world/render/hydration_render/index.js
 // MODE: RENDER EXTENSION CONTRACT RENEWAL
 // STATUS: HYDRATION FACTOR AUTHORITY v4
 // ROLE:

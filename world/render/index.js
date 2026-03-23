@@ -1,6 +1,6 @@
 // /world/render/index.js
-// MODE: RENDER BASELINE FILTER
-// STATUS: AUTHORITATIVE SOUTH JUG (PURE)
+// MODE: RENDER CONTRACT RENEWAL
+// STATUS: AUTHORITATIVE SOUTH JUG (PURE) v2
 // ROLE:
 // - project + draw only
 // - split coherence into layered hoses
@@ -12,6 +12,8 @@
 // - cut = incision overlay
 // - hydration = water overlay (stubbed until implemented)
 // - botany hose reserved but inactive until dedicated render packet exists
+// - primitive fragmentation + shadow density live here
+// - factor authorities remain downstream packet engines
 
 import { WORLD_KERNEL } from "../world_kernel.js";
 import { resolveTerrainPacket } from "./terrain/index.js";
@@ -88,6 +90,57 @@ function withAlpha(color, alpha) {
   return color;
 }
 
+function parseColor(color) {
+  if (typeof color !== "string") return null;
+
+  const rgbaMatch = color.match(
+    /^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
+  if (rgbaMatch) {
+    return {
+      r: Number(rgbaMatch[1]),
+      g: Number(rgbaMatch[2]),
+      b: Number(rgbaMatch[3]),
+      a: Number(rgbaMatch[4])
+    };
+  }
+
+  const rgbMatch = color.match(
+    /^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
+  if (rgbMatch) {
+    return {
+      r: Number(rgbMatch[1]),
+      g: Number(rgbMatch[2]),
+      b: Number(rgbMatch[3]),
+      a: 1
+    };
+  }
+
+  return null;
+}
+
+function mixColor(baseColor, overlayColor, t, alphaOverride = null) {
+  const a = parseColor(baseColor);
+  const b = parseColor(overlayColor);
+  const blend = clamp(t, 0, 1);
+
+  if (!a || !b) {
+    if (alphaOverride === null) return overlayColor || baseColor || "rgba(255,255,255,1)";
+    return withAlpha(overlayColor || baseColor || "rgba(255,255,255,1)", alphaOverride);
+  }
+
+  const r = Math.round(a.r + (b.r - a.r) * blend);
+  const g = Math.round(a.g + (b.g - a.g) * blend);
+  const bv = Math.round(a.b + (b.b - a.b) * blend);
+  const alpha =
+    alphaOverride === null
+      ? clamp(a.a + (b.a - a.a) * blend, 0, 1)
+      : clamp(alphaOverride, 0, 1);
+
+  return `rgba(${r},${g},${bv},${alpha})`;
+}
+
 function packetRadius(packet, fallback) {
   return isFiniteNumber(packet?.radiusPx) ? packet.radiusPx : fallback;
 }
@@ -100,6 +153,15 @@ function packetColor(packet, fallback = "") {
   return typeof packet?.color === "string" && packet.color.length > 0
     ? packet.color
     : fallback;
+}
+
+function pointHash(a, b, c = 0) {
+  const x = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453123;
+  return x - Math.floor(x);
+}
+
+function signedPointHash(a, b, c = 0) {
+  return pointHash(a, b, c) * 2 - 1;
 }
 
 /* =========================
@@ -253,10 +315,138 @@ function resolveLayerPackets(sample, pointSizePx, grid, x, y, globalPrimitiveTim
 }
 
 /* =========================
+   PRIMITIVE EXPRESSION
+========================= */
+
+function classifyPrimitiveShape(sample, x, y) {
+  const terrainClass = sample?.terrainClass ?? "NONE";
+  const water = sample?.waterMask === 1;
+  const shoreline = sample?.shoreline === true || sample?.shorelineBand === true;
+  const canyon = clamp(sample?.canyonStrength ?? 0, 0, 1);
+  const ridge = clamp(sample?.ridgeStrength ?? 0, 0, 1);
+  const plateau = clamp(sample?.plateauStrength ?? 0, 0, 1);
+  const basin = clamp(sample?.basinStrength ?? 0, 0, 1);
+
+  if (water) return shoreline ? "capsule" : "diamond";
+  if (terrainClass === "SUMMIT" || terrainClass === "MOUNTAIN") return "triangle";
+  if (terrainClass === "RIDGE" || ridge > 0.22) return "sliver";
+  if (terrainClass === "CANYON" || canyon > 0.24) return "slash";
+  if (terrainClass === "PLATEAU" || plateau > 0.48) return "square";
+  if (terrainClass === "BASIN" || basin > 0.26) return "kite";
+
+  const selector = pointHash(x + 1.7, y + 9.3, ridge + canyon + plateau + basin);
+  if (selector < 0.20) return "circle";
+  if (selector < 0.38) return "diamond";
+  if (selector < 0.56) return "triangle";
+  if (selector < 0.74) return "kite";
+  if (selector < 0.88) return "sliver";
+  return "capsule";
+}
+
+function computeFragmentation(sample, x, y, depth) {
+  const variation =
+    clamp(Math.abs(sample?.curvature ?? 0), 0, 1) * 0.18 +
+    clamp(sample?.slope ?? 0, 0, 1) * 0.24 +
+    clamp(sample?.canyonStrength ?? 0, 0, 1) * 0.16 +
+    clamp(sample?.ridgeStrength ?? 0, 0, 1) * 0.14 +
+    clamp(sample?.elevation ?? 0, 0, 1) * 0.10;
+
+  const asymmetry =
+    clamp(sample?.continentality ?? 0, 0, 1) * 0.10 +
+    clamp(sample?.rainShadowStrength ?? 0, 0, 1) * 0.08 +
+    clamp(sample?.plateauStrength ?? 0, 0, 1) * 0.08;
+
+  const noise = Math.abs(signedPointHash(sample?.latDeg ?? x, sample?.lonDeg ?? y, depth + 11.3)) * 0.16;
+
+  return clamp(0.18 + variation + asymmetry + noise, 0, 1);
+}
+
+function computeShadowDensity(sample, depth, edgeRatio) {
+  const elevation = clamp(sample?.elevation ?? 0, 0, 1);
+  const slope = clamp(sample?.slope ?? 0, 0, 1);
+  const ridge = clamp(sample?.ridgeStrength ?? 0, 0, 1);
+  const canyon = clamp(sample?.canyonStrength ?? 0, 0, 1);
+  const summit = clamp(sample?.strongestSummitScore ?? 0, 0, 1);
+
+  return clamp(
+    0.10 +
+    elevation * 0.16 +
+    slope * 0.20 +
+    ridge * 0.16 +
+    canyon * 0.14 +
+    summit * 0.10 +
+    edgeRatio * 0.10 +
+    (1 - depth) * 0.08,
+    0,
+    1
+  );
+}
+
+function computeHighlightDensity(sample, depth, lightBias) {
+  const rainfall = clamp(sample?.rainfall ?? 0, 0, 1);
+  const maritime = clamp(sample?.maritimeInfluence ?? 0, 0, 1);
+  const plateau = clamp(sample?.plateauStrength ?? 0, 0, 1);
+  const freeze = clamp(sample?.freezePotential ?? 0, 0, 1);
+  const cryo =
+    sample?.biomeType === "GLACIER" ||
+    sample?.terrainClass === "POLAR_ICE" ||
+    sample?.terrainClass === "GLACIAL_HIGHLAND";
+
+  return clamp(
+    0.08 +
+    depth * 0.12 +
+    lightBias * 0.10 +
+    rainfall * 0.08 +
+    maritime * 0.08 +
+    plateau * 0.06 +
+    freeze * 0.10 +
+    (cryo ? 0.18 : 0),
+    0,
+    1
+  );
+}
+
+function buildPrimitiveOffsets(sample, x, y, radius, fragmentation) {
+  const lat = sample?.latDeg ?? y;
+  const lon = sample?.lonDeg ?? x;
+
+  const jitterX = signedPointHash(lat * 0.19, lon * 0.13, 5.1) * radius * 0.22 * fragmentation;
+  const jitterY = signedPointHash(lat * 0.11, lon * 0.17, 8.4) * radius * 0.22 * fragmentation;
+
+  const leanX =
+    (clamp(sample?.directionalEastBias ?? 0, 0, 1) - clamp(sample?.directionalWestBias ?? 0, 0, 1)) *
+    radius *
+    0.18;
+
+  const leanY =
+    (clamp(sample?.directionalSouthBias ?? 0, 0, 1) - clamp(sample?.directionalNorthBias ?? 0, 0, 1)) *
+    radius *
+    0.18;
+
+  return Object.freeze({
+    jitterX,
+    jitterY,
+    leanX,
+    leanY,
+    drawX: jitterX + leanX,
+    drawY: jitterY + leanY
+  });
+}
+
+function buildShadowColor(color, shadowDensity, alpha) {
+  return mixColor(color, "rgba(0,0,0,1)", clamp(shadowDensity * 0.82, 0, 1), clamp(alpha, 0, 1));
+}
+
+function buildHighlightColor(color, highlightDensity, alpha) {
+  const cryoBoost = clamp(highlightDensity * 0.88, 0, 1);
+  return mixColor(color, "rgba(255,255,255,1)", cryoBoost, clamp(alpha, 0, 1));
+}
+
+/* =========================
    POINT STYLE
 ========================= */
 
-function buildPointStyle(sample, point, baseSize, packets, p) {
+function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
   const terrainPacket = normalizeObject(packets.terrainPacket);
   const elevationPacket = normalizeObject(packets.elevationPacket);
   const cutPacket = normalizeObject(packets.cutPacket);
@@ -289,7 +479,7 @@ function buildPointStyle(sample, point, baseSize, packets, p) {
       (botanyScale - 1) * 0.08
     ),
     0.9,
-    6.4
+    6.8
   );
 
   const baseAlpha = sample?.waterMask === 1 ? 0.24 : 0.78;
@@ -314,7 +504,7 @@ function buildPointStyle(sample, point, baseSize, packets, p) {
 
   const blur = clamp((1 - depth) * 0.9 + (1 - limbFade) * 0.8, 0, 1.4);
 
-  const color =
+  const baseColor =
     packetColor(botanyPacket) ||
     packetColor(hydrationPacket) ||
     packetColor(cutPacket) ||
@@ -324,30 +514,218 @@ function buildPointStyle(sample, point, baseSize, packets, p) {
       ? "rgba(68,146,232,0.90)"
       : "rgba(188,206,142,0.94)");
 
+  const fragmentation = computeFragmentation(sample, x, y, depth);
+  const shadowDensity = computeShadowDensity(sample, depth, edgeRatio);
+  const highlightDensity = computeHighlightDensity(sample, depth, lightBias);
+  const primitiveShape = classifyPrimitiveShape(sample, x, y);
+  const offsets = buildPrimitiveOffsets(sample, x, y, radius, fragmentation);
+
   return Object.freeze({
-    color,
+    color: baseColor,
+    shadowColor: buildShadowColor(baseColor, shadowDensity, alpha * (0.18 + shadowDensity * 0.16)),
+    highlightColor: buildHighlightColor(baseColor, highlightDensity, alpha * (0.10 + highlightDensity * 0.12)),
     radius,
     alpha,
     blur,
-    glowAlpha: clamp(alpha * (0.18 + depth * 0.18), 0, 0.32)
+    glowAlpha: clamp(alpha * (0.18 + depth * 0.18), 0, 0.32),
+    primitiveShape,
+    fragmentation,
+    shadowDensity,
+    highlightDensity,
+    offsets
   });
 }
 
+/* =========================
+   DRAW PRIMITIVES
+========================= */
+
+function drawCirclePrimitive(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+}
+
+function drawDiamondPrimitive(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - radius);
+  ctx.lineTo(x + radius, y);
+  ctx.lineTo(x, y + radius);
+  ctx.lineTo(x - radius, y);
+  ctx.closePath();
+}
+
+function drawSquarePrimitive(ctx, x, y, radius) {
+  const size = radius * 1.44;
+  ctx.beginPath();
+  ctx.rect(x - size * 0.5, y - size * 0.5, size, size);
+}
+
+function drawTrianglePrimitive(ctx, x, y, radius, angle = -Math.PI * 0.5) {
+  const a0 = angle;
+  const a1 = angle + (Math.PI * 2) / 3;
+  const a2 = angle + (Math.PI * 4) / 3;
+
+  ctx.beginPath();
+  ctx.moveTo(x + Math.cos(a0) * radius, y + Math.sin(a0) * radius);
+  ctx.lineTo(x + Math.cos(a1) * radius, y + Math.sin(a1) * radius);
+  ctx.lineTo(x + Math.cos(a2) * radius, y + Math.sin(a2) * radius);
+  ctx.closePath();
+}
+
+function drawKitePrimitive(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - radius);
+  ctx.lineTo(x + radius * 0.72, y);
+  ctx.lineTo(x, y + radius * 1.12);
+  ctx.lineTo(x - radius * 0.58, y);
+  ctx.closePath();
+}
+
+function drawSliverPrimitive(ctx, x, y, radius, angle) {
+  const width = radius * 1.62;
+  const height = Math.max(1, radius * 0.42);
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(-width * 0.5, 0);
+  ctx.quadraticCurveTo(0, -height, width * 0.5, 0);
+  ctx.quadraticCurveTo(0, height, -width * 0.5, 0);
+  ctx.closePath();
+  ctx.restore();
+}
+
+function drawSlashPrimitive(ctx, x, y, radius, angle) {
+  const width = radius * 1.86;
+  const height = Math.max(1, radius * 0.28);
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.rect(-width * 0.5, -height * 0.5, width, height);
+  ctx.restore();
+}
+
+function drawCapsulePrimitive(ctx, x, y, radius, angle) {
+  const width = radius * 1.78;
+  const height = Math.max(1.2, radius * 0.66);
+  const rx = width * 0.5;
+  const ry = height * 0.5;
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(-rx + ry, -ry);
+  ctx.lineTo(rx - ry, -ry);
+  ctx.arc(rx - ry, 0, ry, -Math.PI * 0.5, Math.PI * 0.5);
+  ctx.lineTo(-rx + ry, ry);
+  ctx.arc(-rx + ry, 0, ry, Math.PI * 0.5, Math.PI * 1.5);
+  ctx.closePath();
+  ctx.restore();
+}
+
+function drawPrimitivePath(ctx, x, y, style) {
+  const angleBase =
+    (style.offsets.leanX * 0.18 + style.offsets.leanY * 0.24) +
+    signedPointHash(x * 0.011, y * 0.013, style.fragmentation * 17.1) * 0.32;
+
+  if (style.primitiveShape === "diamond") {
+    drawDiamondPrimitive(ctx, x, y, style.radius);
+    return;
+  }
+
+  if (style.primitiveShape === "square") {
+    drawSquarePrimitive(ctx, x, y, style.radius);
+    return;
+  }
+
+  if (style.primitiveShape === "triangle") {
+    drawTrianglePrimitive(ctx, x, y, style.radius * 1.08, angleBase - Math.PI * 0.5);
+    return;
+  }
+
+  if (style.primitiveShape === "kite") {
+    drawKitePrimitive(ctx, x, y, style.radius);
+    return;
+  }
+
+  if (style.primitiveShape === "sliver") {
+    drawSliverPrimitive(ctx, x, y, style.radius, angleBase);
+    return;
+  }
+
+  if (style.primitiveShape === "slash") {
+    drawSlashPrimitive(ctx, x, y, style.radius, angleBase + Math.PI * 0.25);
+    return;
+  }
+
+  if (style.primitiveShape === "capsule") {
+    drawCapsulePrimitive(ctx, x, y, style.radius, angleBase);
+    return;
+  }
+
+  drawCirclePrimitive(ctx, x, y, style.radius);
+}
+
+function fillPrimitive(ctx, x, y, style, color, blur = 0) {
+  ctx.save();
+  ctx.filter = blur > 0.02 ? `blur(${blur.toFixed(2)}px)` : "none";
+  drawPrimitivePath(ctx, x, y, style);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+
 function drawPoint(ctx, point, style) {
+  const x = point.x + style.offsets.drawX;
+  const y = point.y + style.offsets.drawY;
+
   if (style.glowAlpha > 0.01) {
     ctx.beginPath();
     ctx.fillStyle = withAlpha(style.color, style.glowAlpha);
-    ctx.arc(point.x, point.y, style.radius * 1.9, 0, Math.PI * 2);
+    ctx.arc(x, y, style.radius * 1.9, 0, Math.PI * 2);
     ctx.fill();
   }
 
-  ctx.save();
-  ctx.filter = style.blur > 0.02 ? `blur(${style.blur.toFixed(2)}px)` : "none";
-  ctx.beginPath();
-  ctx.fillStyle = withAlpha(style.color, style.alpha);
-  ctx.arc(point.x, point.y, style.radius, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
+  const shadowOffsetX =
+    style.offsets.leanX * 0.35 +
+    style.offsets.jitterX * 0.18 +
+    (style.shadowDensity - 0.5) * style.radius * 0.22;
+
+  const shadowOffsetY =
+    style.offsets.leanY * 0.35 +
+    style.offsets.jitterY * 0.18 +
+    style.shadowDensity * style.radius * 0.22;
+
+  fillPrimitive(
+    ctx,
+    x + shadowOffsetX,
+    y + shadowOffsetY,
+    style,
+    style.shadowColor,
+    style.blur + style.shadowDensity * 0.5
+  );
+
+  fillPrimitive(ctx, x, y, style, withAlpha(style.color, style.alpha), style.blur);
+
+  if (style.highlightDensity > 0.08) {
+    const hx = x - style.radius * 0.22 - style.offsets.leanX * 0.08;
+    const hy = y - style.radius * 0.22 - style.offsets.leanY * 0.08;
+
+    ctx.beginPath();
+    ctx.fillStyle = style.highlightColor;
+    ctx.arc(
+      hx,
+      hy,
+      Math.max(0.7, style.radius * (0.22 + style.highlightDensity * 0.08)),
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
 }
 
 /* =========================
@@ -388,7 +766,7 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
       visible += 1;
 
       const packets = resolveLayerPackets(sample, baseSize, grid, x, y, globalPrimitiveTime);
-      const style = buildPointStyle(sample, point, baseSize, packets, p);
+      const style = buildPointStyle(sample, point, baseSize, packets, p, x, y);
 
       queue.push({ point, style, z: point.z });
 

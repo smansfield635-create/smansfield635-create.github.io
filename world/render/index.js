@@ -1,12 +1,13 @@
 // /world/render/index.js
 // MODE: RENDER CONTRACT RENEWAL
-// STATUS: AUTHORITATIVE SOUTH JUG (PURE) v2
+// STATUS: AUTHORITATIVE SOUTH JUG (PURE) v3
 // ROLE:
+// - filter only
 // - project + draw only
-// - split coherence into layered hoses
 // - NO diagnostics authority
 // - NO compensation
 // - NO upstream mutation
+// - NO semantic invention
 // - terrain = baseline land coverage
 // - elevation = upward overlay
 // - cut = incision overlay
@@ -14,6 +15,7 @@
 // - botany hose reserved but inactive until dedicated render packet exists
 // - primitive fragmentation + shadow density live here
 // - factor authorities remain downstream packet engines
+// - render preserves coherence through filtration
 
 import { WORLD_KERNEL } from "../world_kernel.js";
 import { resolveTerrainPacket } from "./terrain/index.js";
@@ -132,13 +134,13 @@ function mixColor(baseColor, overlayColor, t, alphaOverride = null) {
 
   const r = Math.round(a.r + (b.r - a.r) * blend);
   const g = Math.round(a.g + (b.g - a.g) * blend);
-  const bv = Math.round(a.b + (b.b - a.b) * blend);
+  const blue = Math.round(a.b + (b.b - a.b) * blend);
   const alpha =
     alphaOverride === null
       ? clamp(a.a + (b.a - a.a) * blend, 0, 1)
       : clamp(alphaOverride, 0, 1);
 
-  return `rgba(${r},${g},${bv},${alpha})`;
+  return `rgba(${r},${g},${blue},${alpha})`;
 }
 
 function packetRadius(packet, fallback) {
@@ -315,7 +317,7 @@ function resolveLayerPackets(sample, pointSizePx, grid, x, y, globalPrimitiveTim
 }
 
 /* =========================
-   PRIMITIVE EXPRESSION
+   FILTER EXPRESSION
 ========================= */
 
 function classifyPrimitiveShape(sample, x, y) {
@@ -351,14 +353,15 @@ function computeFragmentation(sample, x, y, depth) {
     clamp(sample?.ridgeStrength ?? 0, 0, 1) * 0.14 +
     clamp(sample?.elevation ?? 0, 0, 1) * 0.10;
 
-  const asymmetry =
+  const fieldTension =
     clamp(sample?.continentality ?? 0, 0, 1) * 0.10 +
     clamp(sample?.rainShadowStrength ?? 0, 0, 1) * 0.08 +
     clamp(sample?.plateauStrength ?? 0, 0, 1) * 0.08;
 
-  const noise = Math.abs(signedPointHash(sample?.latDeg ?? x, sample?.lonDeg ?? y, depth + 11.3)) * 0.16;
+  const localNoise =
+    Math.abs(signedPointHash(sample?.latDeg ?? x, sample?.lonDeg ?? y, depth + 11.3)) * 0.16;
 
-  return clamp(0.18 + variation + asymmetry + noise, 0, 1);
+  return clamp(0.18 + variation + fieldTension + localNoise, 0, 1);
 }
 
 function computeShadowDensity(sample, depth, edgeRatio) {
@@ -370,13 +373,13 @@ function computeShadowDensity(sample, depth, edgeRatio) {
 
   return clamp(
     0.10 +
-    elevation * 0.16 +
-    slope * 0.20 +
-    ridge * 0.16 +
-    canyon * 0.14 +
-    summit * 0.10 +
-    edgeRatio * 0.10 +
-    (1 - depth) * 0.08,
+      elevation * 0.16 +
+      slope * 0.20 +
+      ridge * 0.16 +
+      canyon * 0.14 +
+      summit * 0.10 +
+      edgeRatio * 0.10 +
+      (1 - depth) * 0.08,
     0,
     1
   );
@@ -394,13 +397,13 @@ function computeHighlightDensity(sample, depth, lightBias) {
 
   return clamp(
     0.08 +
-    depth * 0.12 +
-    lightBias * 0.10 +
-    rainfall * 0.08 +
-    maritime * 0.08 +
-    plateau * 0.06 +
-    freeze * 0.10 +
-    (cryo ? 0.18 : 0),
+      depth * 0.12 +
+      lightBias * 0.10 +
+      rainfall * 0.08 +
+      maritime * 0.08 +
+      plateau * 0.06 +
+      freeze * 0.10 +
+      (cryo ? 0.18 : 0),
     0,
     1
   );
@@ -410,26 +413,16 @@ function buildPrimitiveOffsets(sample, x, y, radius, fragmentation) {
   const lat = sample?.latDeg ?? y;
   const lon = sample?.lonDeg ?? x;
 
-  const jitterX = signedPointHash(lat * 0.19, lon * 0.13, 5.1) * radius * 0.22 * fragmentation;
-  const jitterY = signedPointHash(lat * 0.11, lon * 0.17, 8.4) * radius * 0.22 * fragmentation;
-
-  const leanX =
-    (clamp(sample?.directionalEastBias ?? 0, 0, 1) - clamp(sample?.directionalWestBias ?? 0, 0, 1)) *
-    radius *
-    0.18;
-
-  const leanY =
-    (clamp(sample?.directionalSouthBias ?? 0, 0, 1) - clamp(sample?.directionalNorthBias ?? 0, 0, 1)) *
-    radius *
-    0.18;
+  const jitterX =
+    signedPointHash(lat * 0.19, lon * 0.13, 5.1) * radius * 0.22 * fragmentation;
+  const jitterY =
+    signedPointHash(lat * 0.11, lon * 0.17, 8.4) * radius * 0.22 * fragmentation;
 
   return Object.freeze({
     jitterX,
     jitterY,
-    leanX,
-    leanY,
-    drawX: jitterX + leanX,
-    drawY: jitterY + leanY
+    drawX: jitterX,
+    drawY: jitterY
   });
 }
 
@@ -438,8 +431,12 @@ function buildShadowColor(color, shadowDensity, alpha) {
 }
 
 function buildHighlightColor(color, highlightDensity, alpha) {
-  const cryoBoost = clamp(highlightDensity * 0.88, 0, 1);
-  return mixColor(color, "rgba(255,255,255,1)", cryoBoost, clamp(alpha, 0, 1));
+  return mixColor(
+    color,
+    "rgba(255,255,255,1)",
+    clamp(highlightDensity * 0.88, 0, 1),
+    clamp(alpha, 0, 1)
+  );
 }
 
 /* =========================
@@ -468,16 +465,15 @@ function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
   const botanyScale = packetRadius(botanyPacket, baseSize) / Math.max(baseSize, 0.0001);
 
   const radius = clamp(
-    baseSize * (
-      0.76 +
-      depth * 0.58 +
-      elevation * 0.16 +
-      (terrainScale - 1) * 0.24 +
-      (elevationScale - 1) * 0.22 +
-      (cutScale - 1) * 0.12 +
-      (hydrationScale - 1) * 0.14 +
-      (botanyScale - 1) * 0.08
-    ),
+    baseSize *
+      (0.76 +
+        depth * 0.58 +
+        elevation * 0.16 +
+        (terrainScale - 1) * 0.24 +
+        (elevationScale - 1) * 0.22 +
+        (cutScale - 1) * 0.12 +
+        (hydrationScale - 1) * 0.14 +
+        (botanyScale - 1) * 0.08),
     0.9,
     6.8
   );
@@ -490,14 +486,14 @@ function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
   const botanyAlpha = packetAlpha(botanyPacket, 0);
 
   const alpha = clamp(
-    (
-      baseAlpha +
+    (baseAlpha +
       terrainAlpha * 0.34 +
       elevationAlpha * 0.18 +
       cutAlpha * 0.14 +
       hydrationAlpha * 0.24 +
-      botanyAlpha * 0.12
-    ) * lightBias * limbFade,
+      botanyAlpha * 0.12) *
+      lightBias *
+      limbFade,
     0.08,
     1
   );
@@ -523,7 +519,11 @@ function buildPointStyle(sample, point, baseSize, packets, p, x, y) {
   return Object.freeze({
     color: baseColor,
     shadowColor: buildShadowColor(baseColor, shadowDensity, alpha * (0.18 + shadowDensity * 0.16)),
-    highlightColor: buildHighlightColor(baseColor, highlightDensity, alpha * (0.10 + highlightDensity * 0.12)),
+    highlightColor: buildHighlightColor(
+      baseColor,
+      highlightDensity,
+      alpha * (0.10 + highlightDensity * 0.12)
+    ),
     radius,
     alpha,
     blur,
@@ -629,7 +629,6 @@ function drawCapsulePrimitive(ctx, x, y, radius, angle) {
 
 function drawPrimitivePath(ctx, x, y, style) {
   const angleBase =
-    (style.offsets.leanX * 0.18 + style.offsets.leanY * 0.24) +
     signedPointHash(x * 0.011, y * 0.013, style.fragmentation * 17.1) * 0.32;
 
   if (style.primitiveShape === "diamond") {
@@ -691,12 +690,10 @@ function drawPoint(ctx, point, style) {
   }
 
   const shadowOffsetX =
-    style.offsets.leanX * 0.35 +
     style.offsets.jitterX * 0.18 +
     (style.shadowDensity - 0.5) * style.radius * 0.22;
 
   const shadowOffsetY =
-    style.offsets.leanY * 0.35 +
     style.offsets.jitterY * 0.18 +
     style.shadowDensity * style.radius * 0.22;
 
@@ -712,8 +709,8 @@ function drawPoint(ctx, point, style) {
   fillPrimitive(ctx, x, y, style, withAlpha(style.color, style.alpha), style.blur);
 
   if (style.highlightDensity > 0.08) {
-    const hx = x - style.radius * 0.22 - style.offsets.leanX * 0.08;
-    const hy = y - style.radius * 0.22 - style.offsets.leanY * 0.08;
+    const hx = x - style.radius * 0.22;
+    const hy = y - style.radius * 0.22;
 
     ctx.beginPath();
     ctx.fillStyle = style.highlightColor;

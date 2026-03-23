@@ -1,258 +1,533 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D World Runtime - LIVE v6.1</title>
-    <!-- CORE STOCK: FIXED LIBRARY LINK -->
-    <script src="https://cdnjs.cloudflare.com"></script>
-    <style>
-        :root { 
-            --accent: #00ff88; 
-            --muted: #666; 
-            --line: #222; 
-            --bg: #050505; 
-        }
-        body { 
-            margin: 0; 
-            background: var(--bg); 
-            color: #fff; 
-            font-family: 'Courier New', monospace; 
-            overflow: hidden; 
-            user-select: none;
-        }
-
-        #canvas-container { position: absolute; inset: 0; z-index: 1; }
-
-        .container { 
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            z-index: 10; 
-            width: 360px; 
-            background: rgba(0,0,0,0.92); 
-            border: 1px solid var(--line); 
-            border-radius: 12px; 
-            padding: 20px; 
-            backdrop-filter: blur(15px); 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
-        }
-
-        .status { 
-            font-weight: bold; 
-            margin-bottom: 15px; 
-            color: #ff4444; 
-            font-size: 11px;
-            letter-spacing: 1.5px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .title { 
-            color: var(--accent); 
-            font-weight: bold; 
-            font-size: 14px; 
-            margin-bottom: 18px;
-            border-bottom: 1px solid var(--line);
-            padding-bottom: 10px;
-        }
-
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 12px; 
-        }
-
-        .node { 
-            padding: 12px; 
-            border: 1px solid var(--line); 
-            border-radius: 8px; 
-            background: rgba(255,255,255,0.02); 
-        }
-
-        .label { 
-            opacity: 0.5; 
-            font-size: 9px; 
-            text-transform: uppercase; 
-            margin-bottom: 5px;
-            color: var(--muted);
-        }
-
-        .value { 
-            font-size: 18px; 
-            font-weight: bold;
-            color: #fff;
-        }
-
-        .trajectory {
-            margin-top: 15px;
-            padding: 12px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            background: linear-gradient(90deg, rgba(0,255,136,0.05), transparent);
-        }
-
-        .path {
-            font-size: 11px;
-            color: var(--accent);
-            letter-spacing: 1px;
-            font-weight: bold;
-        }
-
-        .canvasWrap { 
-            margin-top: 20px; 
-            border: 1px solid var(--line); 
-            border-radius: 8px; 
-            overflow: hidden; 
-            background: #000;
-        }
-
-        canvas#runtimeChart { display: block; width: 100%; height: 80px; }
-
-        .footer {
-            margin-top: 15px;
-            font-size: 9px;
-            color: var(--muted);
-            text-align: right;
-            opacity: 0.6;
-        }
-    </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Diagnostic Gauges</title>
+<style>
+:root{
+  --bg:#05070b;
+  --panel:#0b0f16;
+  --panel2:#101722;
+  --line:#1f2a36;
+  --text:#e8f6ff;
+  --muted:rgba(232,246,255,.68);
+  --accent:#7fffd4;
+  --warn:#ffd27a;
+  --bad:#ff7a7a;
+  --good:#7fffd4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{min-height:100vh}
+.wrap{max-width:1560px;margin:0 auto;padding:12px}
+.topbar{
+  display:grid;
+  grid-template-columns:repeat(8,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:10px;
+}
+.kpi,.panel,.chartCard{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border-radius:12px;
+  box-shadow:0 10px 30px rgba(0,0,0,.28);
+}
+.kpi{padding:10px}
+.k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.v{font-size:18px;font-weight:800;line-height:1.1;word-break:break-word}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.bad{color:var(--bad)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.panel{padding:10px}
+.title{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.rows{display:grid;gap:4px}
+.row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+  padding:2px 0;
+}
+.row .rk{font-size:11px;color:var(--muted)}
+.row .rv{font-size:12px;text-align:right;word-break:break-word}
+.chartGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+.chartCard{padding:10px}
+.chartTitle{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border-radius:8px;background:#070b12}
+.footer{
+  margin-top:10px;
+  padding:10px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  font-size:11px;
+  color:var(--muted);
+}
+.mono{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pre{white-space:pre-wrap;word-break:break-word}
+@media (max-width:1280px){
+  .topbar{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chartGrid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .topbar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
+    <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
+    <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
+    <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
+    <div class="kpi"><div class="k">FPS</div><div id="k-fps" class="v">—</div></div>
+    <div class="kpi"><div class="k">Δt</div><div id="k-dt" class="v">—</div></div>
+    <div class="kpi"><div class="k">Age</div><div id="k-age" class="v">—</div></div>
+    <div class="kpi"><div class="k">Verification</div><div id="k-verification" class="v">—</div></div>
+  </div>
 
-<div id="canvas-container"></div>
+  <div class="grid">
+    <section class="panel">
+      <div class="title">Runtime Health</div>
+      <div id="runtimeRows" class="rows"></div>
+    </section>
 
-<div class="container">
-    <div id="status" class="status">
-        <span>STATE: <span id="state-txt">OFFLINE</span></span>
-        <span id="age-txt">0ms</span>
-    </div>
-    <div class="title">DIAMONDGATE_DIAGNOSTICS_v6.1</div>
-    
-    <div class="grid">
-        <div class="node"><div class="label">Lattice_Index</div><div id="val-index" class="value">0</div></div>
-        <div class="node"><div class="label">Coherence_Level</div><div id="val-coh" class="value">0.000</div></div>
-        <div class="node"><div class="label">FPS_Heartbeat</div><div id="val-fps" class="value">0</div></div>
-        <div class="node"><div class="label">Delta_Latency</div><div id="val-dt" class="value">0ms</div></div>
-    </div>
+    <section class="panel">
+      <div class="title">Motion / Control</div>
+      <div id="motionRows" class="rows"></div>
+    </section>
 
-    <div class="trajectory">
-        <div class="label">Current Trajectory</div>
-        <div id="val-path" class="path">HELL → HARP → SKY → HOME</div>
-    </div>
+    <section class="panel">
+      <div class="title">World Chain</div>
+      <div id="worldRows" class="rows"></div>
+    </section>
 
-    <div class="canvasWrap">
-        <canvas id="runtimeChart" width="340" height="80"></canvas>
-    </div>
-    
-    <div class="footer">EA: SEAN // ARCHITECT_AUTHENTICATED</div>
+    <section class="panel">
+      <div class="title">Render Chain</div>
+      <div id="renderRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Scope / Lens</div>
+      <div id="scopeRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Emission / Placement</div>
+      <div id="emitRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Instrument / Diagnostics</div>
+      <div id="diagRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Failure / Source</div>
+      <div id="failureRows" class="rows"></div>
+    </section>
+  </div>
+
+  <div class="chartGrid">
+    <section class="chartCard">
+      <div class="chartTitle">Velocity History</div>
+      <canvas id="velocityChart" width="480" height="140"></canvas>
+    </section>
+    <section class="chartCard">
+      <div class="chartTitle">Coherence / Clarity / Stability</div>
+      <canvas id="coherenceChart" width="480" height="140"></canvas>
+    </section>
+    <section class="chartCard">
+      <div class="chartTitle">FPS / Drag / Fresh</div>
+      <canvas id="miscChart" width="480" height="140"></canvas>
+    </section>
+  </div>
+
+  <div id="footer" class="footer pre">Awaiting authoritative runtime receipt.</div>
 </div>
 
 <script>
-/** 
- * SECTION 1: THE PLANET_ENGINE (DATA EMITTER)
- */
-function initPlanetEngine() {
-    const container = document.getElementById('canvas-container');
-    if (!container) return;
-    
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    container.appendChild(renderer.domElement);
+const RECEIPT_KEY="__AUTHORITY_RECEIPT__";
+const STORAGE_KEY="cte_runtime_v4";
+const HISTORY_MAX=240;
+const EPS=0.000001;
 
-    const globe = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(2, 4),
-        new THREE.MeshBasicMaterial({ color: 0x00ff88, wireframe: true, transparent: true, opacity: 0.15 })
+const history={
+  yawVelocity:[],
+  pitchVelocity:[],
+  velocityMagnitude:[],
+  coherence:[],
+  clarity:[],
+  stability:[],
+  fps:[],
+  dragActive:[],
+  fresh:[]
+};
+
+let prevVelocityMagnitude=null;
+let prevDragActive=null;
+let lastReleaseAt=null;
+let peakVelocityRecent=0;
+
+function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
+function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
+function intfmt(v){return isFiniteNumber(v)?String(Math.round(v)):"—";}
+function bool(v){return v===true?"true":v===false?"false":"—";}
+function safeObj(v){return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}
+function pickNumber(...vals){for(const v of vals){if(isFiniteNumber(v))return v;}return null;}
+function pickString(...vals){for(const v of vals){if(typeof v==="string"&&v.length>0)return v;}return null;}
+function push(arr,v){arr.push(v);if(arr.length>HISTORY_MAX)arr.shift();}
+function ageFromTimestamp(value){
+  if(isFiniteNumber(value)) return Math.max(0,Date.now()-value);
+  if(typeof value==="string"&&value.length>0){
+    const ms=Date.parse(value);
+    return Number.isFinite(ms)?Math.max(0,Date.now()-ms):null;
+  }
+  return null;
+}
+function row(k,v){
+  return `<div class="row"><div class="rk">${escapeHtml(k)}</div><div class="rv">${escapeHtml(v)}</div></div>`;
+}
+function escapeHtml(v){
+  return String(v??"—").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function getReceipt(){
+  const win=window[RECEIPT_KEY];
+  if(win&&typeof win==="object"){
+    return {...win,__source:"window"};
+  }
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    if(raw){
+      const parsed=JSON.parse(raw);
+      if(parsed&&typeof parsed==="object"){
+        return {...parsed,__source:"localStorage"};
+      }
+    }
+  }catch{}
+  return null;
+}
+
+function derive(data){
+  const control=safeObj(data?.control);
+  const motion=safeObj(control.motionState);
+  const camera=safeObj(control.cameraState);
+  const scope=safeObj(data?.scope);
+  const lens=safeObj(data?.lens);
+  const primitive=safeObj(data?.primitive);
+  const topology=safeObj(data?.topology);
+  const renderAuthority=safeObj(data?.renderAuthority);
+  const density=safeObj(data?.density);
+  const emission=safeObj(data?.emissionReceipt);
+  const placement=safeObj(data?.placementReceipt);
+  const variant=safeObj(data?.worldVariantState||safeObj(data?.worldModeState).variantState);
+  const traversal=safeObj(data?.traversalState||safeObj(data?.worldModeState).traversalState);
+  const coherence=safeObj(data?.coherenceBindingState||safeObj(data?.worldModeState).coherenceBindingState);
+  const perception=safeObj(data?.perceptionModifiersState||safeObj(data?.worldModeState).perceptionModifiersState);
+  const subsurface=safeObj(data?.subsurfaceActivationState||safeObj(data?.worldModeState).subsurfaceActivationState);
+  const worldMode=safeObj(data?.worldModeState);
+  const instrument=safeObj(data?.instrument);
+  const diagnosticsPayload=safeObj(instrument.diagnosticsPayload);
+  const displayPayload=safeObj(instrument.displayPayload);
+  const failure=safeObj(data?.failure);
+
+  const dragActive=(typeof motion.dragActive==="boolean")?motion.dragActive:(typeof camera.dragActive==="boolean"?camera.dragActive:null);
+  const yaw=pickNumber(motion.yaw,camera.yaw);
+  const pitch=pickNumber(motion.pitch,camera.pitch);
+  const yawVelocity=pickNumber(motion.yawVelocity,camera.yawVelocity);
+  const pitchVelocity=pickNumber(motion.pitchVelocity,camera.pitchVelocity);
+  const velocityMagnitude=(yawVelocity===null&&pitchVelocity===null)?null:Math.sqrt((yawVelocity||0)**2+(pitchVelocity||0)**2);
+  const inertiaDecay=pickNumber(motion.inertiaDecay,camera.inertiaDecay);
+  const autoSpinEnabled=typeof motion.autoSpinEnabled==="boolean"?motion.autoSpinEnabled:(typeof camera.autoSpinEnabled==="boolean"?camera.autoSpinEnabled:null);
+  const autoSpinSpeed=pickNumber(motion.autoSpinSpeed,camera.autoSpinSpeed);
+  const coherenceLevel=pickNumber(coherence?.globalField?.coherence,coherence?.global?.coherence,coherence?.diagnostics?.globalCoherence);
+  const clarityLevel=pickNumber(perception?.globalEnvelope?.clarityLevel,coherenceLevel);
+  const stabilityLevel=pickNumber(coherence?.globalField?.stability,coherence?.global?.stability,coherence?.diagnostics?.globalStability);
+  const noiseLevel=pickNumber(coherence?.globalField?.noise,coherence?.global?.noise,perception?.globalEnvelope?.noiseLevel);
+  const accessAllowed=subsurface?.accessState?.accessAllowed===true||subsurface?.accessAllowed===true;
+  const zoneState=pickString(subsurface?.zoneState);
+  const traversalMode=pickString(traversal?.activeMode,worldMode?.diagnostics?.activeTraversalMode);
+  const activeVariant=pickNumber(variant?.activeVariant,worldMode?.diagnostics?.activeVariant);
+  const destination=activeVariant!==null?`VARIANT_${activeVariant} → ${traversalMode||"—"} → ${zoneState||"—"}`:`${traversalMode||"—"} → ${zoneState||"—"}`;
+  const sourceTimestamp=pickNumber(diagnosticsPayload.timestampMs,data?.timestamp)||data?.timestamp||null;
+  const ageMs=pickNumber(diagnosticsPayload.ageMs,ageFromTimestamp(sourceTimestamp));
+  const fresh=diagnosticsPayload.fresh===true||(ageMs!==null&&ageMs<2000);
+  const classifiedState=pickString(instrument.classifiedState,diagnosticsPayload.classifiedState);
+  const verificationPass=diagnosticsPayload.verificationPass===true||data?.verification?.pass===true;
+  const frameSync=diagnosticsPayload.frameSync;
+  const timestampValid=diagnosticsPayload.timestampValid;
+  const latticeIndex=
+    pickNumber(
+      diagnosticsPayload.latticeIndex,
+      coherence?.latticeBinding?.coherenceLatticeIndex,
+      worldMode?.latticeBinding?.unifiedLatticeIndex
     );
-    scene.add(globe);
-    camera.position.z = 6;
+  const sourcePhase=pickString(diagnosticsPayload.sourcePhase,data?.phase);
+  const sourceMode=pickString(diagnosticsPayload.sourceMode,data?.mode);
+  const failurePhase=pickString(diagnosticsPayload.failurePhase,failure?.phase);
+  const failureMessage=pickString(diagnosticsPayload.failureMessage,failure?.message);
+  const releaseDetected=prevDragActive===true&&dragActive===false;
+  if(releaseDetected) lastReleaseAt=Date.now();
+  if(isFiniteNumber(velocityMagnitude)) peakVelocityRecent=Math.max(peakVelocityRecent*0.992,velocityMagnitude);
 
-    let lastTime = performance.now();
-    
-    function animate(time) {
-        const dt = time - lastTime;
-        lastTime = time;
-        const fps = dt > 0 ? Math.round(1000 / dt) : 0;
-
-        globe.rotation.y += 0.002;
-        renderer.render(scene, camera);
-
-        // EMIT TELEMETRY TO SHARED GLOBAL SCOPE
-        window.__AUTHORITY_RECEIPT__ = {
-            phase: "RUNNING",
-            timestamp: Date.now(),
-            fps: fps,
-            dtMs: dt,
-            instrument: {
-                classifiedState: "ACTIVE_WORLD",
-                index: 219 + Math.floor(Math.random() * 5),
-                coherence: (0.895 + Math.random() * 0.01).toFixed(6),
-                path: "VARIANT_9 → NORTH → ACTIVE"
-            }
-        };
-        requestAnimationFrame(animate);
-    }
-    requestAnimationFrame(animate);
+  return {
+    control,motion,camera,scope,lens,primitive,topology,renderAuthority,density,emission,placement,
+    variant,traversal,coherence,perception,subsurface,worldMode,instrument,diagnosticsPayload,displayPayload,failure,
+    dragActive,yaw,pitch,yawVelocity,pitchVelocity,velocityMagnitude,inertiaDecay,autoSpinEnabled,autoSpinSpeed,
+    coherenceLevel,clarityLevel,stabilityLevel,noiseLevel,accessAllowed,zoneState,traversalMode,activeVariant,destination,
+    sourceTimestamp,ageMs,fresh,classifiedState,verificationPass,frameSync,timestampValid,latticeIndex,sourcePhase,sourceMode,
+    failurePhase,failureMessage,lastReleaseAt,releaseDetected,peakVelocityRecent
+  };
 }
 
-/** 
- * SECTION 2: THE GAUGES_RUNTIME (OBSERVER)
- */
-const history = [];
-
-function updateGauges() {
-    const receipt = window.__AUTHORITY_RECEIPT__ || {};
-    const stateTxt = document.getElementById("state-txt");
-    const statusBox = document.getElementById("status");
-    const ageTxt = document.getElementById("age-txt");
-    
-    if (receipt.phase === "RUNNING") {
-        const inst = receipt.instrument;
-        
-        stateTxt.innerText = "LIVE • RUNNING";
-        statusBox.style.color = "var(--accent)";
-        ageTxt.innerText = (Date.now() - receipt.timestamp) + "ms";
-
-        document.getElementById("val-index").innerText = inst.index;
-        document.getElementById("val-coh").innerText = inst.coherence;
-        document.getElementById("val-fps").innerText = receipt.fps;
-        document.getElementById("val-dt").innerText = Math.round(receipt.dtMs) + "ms";
-        document.getElementById("val-path").innerText = inst.path;
-
-        history.push(receipt.fps);
-        if (history.length > 60) history.shift();
-        renderChart();
-    } else {
-        stateTxt.innerText = "SEARCHING...";
-        statusBox.style.color = "#ff4444";
-    }
-    requestAnimationFrame(updateGauges);
+function kpiClass(v,type){
+  if(type==="state"){
+    if(v==="LIVE") return "good";
+    if(v==="STALE") return "warn";
+    return "bad";
+  }
+  if(type==="verification") return v==="PASS"?"good":"bad";
+  if(type==="fresh") return v==="FRESH"?"good":"warn";
+  return "";
 }
 
-function renderChart() {
-    const canvas = document.getElementById("runtimeChart");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.strokeStyle = "#00ff88";
-    ctx.lineWidth = 2;
+function setText(id,text,cls=""){
+  const el=document.getElementById(id);
+  el.textContent=text;
+  el.className=`v ${cls}`.trim();
+}
+
+function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
+  const ctx=canvas.getContext("2d");
+  const w=canvas.width,h=canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle="#070b12";
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="#1f2a36";
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(0,h-12);
+  ctx.lineTo(w,h-12);
+  ctx.stroke();
+
+  let vals=[];
+  for(const def of seriesDefs){ vals=vals.concat(def.data.filter(isFiniteNumber)); }
+  let lo=minY, hi=maxY;
+  if(lo===null||hi===null){
+    const absVals=vals.length?vals:[0];
+    lo=Math.min(...absVals);
+    hi=Math.max(...absVals);
+    if(lo===hi){ lo-=1; hi+=1; }
+  }
+  const span=(hi-lo)||1;
+
+  for(const def of seriesDefs){
+    ctx.strokeStyle=def.color;
+    ctx.lineWidth=2;
     ctx.beginPath();
-    history.forEach((v, i) => {
-        const x = (i / 60) * canvas.width;
-        const y = canvas.height - (Math.min(v, 100) / 100) * canvas.height;
-        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    def.data.forEach((v,i)=>{
+      const x=(i/Math.max(1,HISTORY_MAX-1))*w;
+      const y=(h-12)-((v-lo)/span)*(h-24);
+      if(i===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
     });
     ctx.stroke();
+  }
 }
 
-// EXECUTION TRIGGER
-initPlanetEngine();
-updateGauges();
+function render(){
+  const data=getReceipt();
+  if(!data){
+    setText("k-state","OFFLINE","bad");
+    setText("k-classified","—");
+    setText("k-phase","—");
+    setText("k-fresh","—");
+    setText("k-fps","—");
+    setText("k-dt","—");
+    setText("k-age","—");
+    setText("k-verification","FAIL","bad");
+    document.getElementById("footer").textContent="No authoritative runtime receipt found in window or localStorage.";
+    requestAnimationFrame(render);
+    return;
+  }
 
-window.addEventListener('resize', () => {
-    location.reload(); 
-});
+  const d=derive(data);
+
+  push(history.yawVelocity,d.yawVelocity??0);
+  push(history.pitchVelocity,d.pitchVelocity??0);
+  push(history.velocityMagnitude,d.velocityMagnitude??0);
+  push(history.coherence,d.coherenceLevel??0);
+  push(history.clarity,d.clarityLevel??0);
+  push(history.stability,d.stabilityLevel??0);
+  push(history.fps,pickNumber(d.diagnosticsPayload.fps,data?.fps)??0);
+  push(history.dragActive,d.dragActive===true?1:0);
+  push(history.fresh,d.fresh?1:0);
+
+  const stateValue=d.verificationPass?(d.fresh?"LIVE":"STALE"):"OFFLINE";
+  setText("k-state",stateValue,kpiClass(stateValue,"state"));
+  setText("k-classified",d.classifiedState||"—");
+  setText("k-phase",d.sourcePhase||"—");
+  setText("k-fresh",d.fresh?"FRESH":"STALE",kpiClass(d.fresh?"FRESH":"STALE","fresh"));
+  setText("k-fps",intfmt(pickNumber(d.diagnosticsPayload.fps,data?.fps)));
+  setText("k-dt",isFiniteNumber(pickNumber(d.diagnosticsPayload.dtMs,data?.dtMs))?`${Math.round(pickNumber(d.diagnosticsPayload.dtMs,data?.dtMs))}ms`:"—");
+  setText("k-age",isFiniteNumber(d.ageMs)?`${Math.round(d.ageMs)}ms`:"—");
+  setText("k-verification",d.verificationPass?"PASS":"FAIL",kpiClass(d.verificationPass?"PASS":"FAIL","verification"));
+
+  document.getElementById("runtimeRows").innerHTML =
+    row("source",data.__source||"—")+
+    row("phase",d.sourcePhase||"—")+
+    row("mode",d.sourceMode||"—")+
+    row("timestampValid",bool(d.timestampValid))+
+    row("frameSync",bool(d.frameSync))+
+    row("fresh",bool(d.fresh))+
+    row("verificationPass",bool(d.verificationPass))+
+    row("classifiedState",d.classifiedState||"—");
+
+  document.getElementById("motionRows").innerHTML =
+    row("dragActive",bool(d.dragActive))+
+    row("yaw",fmt(d.yaw,6))+
+    row("pitch",fmt(d.pitch,6))+
+    row("yawVelocity",fmt(d.yawVelocity,9))+
+    row("pitchVelocity",fmt(d.pitchVelocity,9))+
+    row("velocityMagnitude",fmt(d.velocityMagnitude,9))+
+    row("inertiaDecay",fmt(d.inertiaDecay,6))+
+    row("autoSpinEnabled",bool(d.autoSpinEnabled))+
+    row("autoSpinSpeed",fmt(d.autoSpinSpeed,9))+
+    row("releaseDetected",bool(d.releaseDetected))+
+    row("peakVelocityRecent",fmt(d.peakVelocityRecent,9));
+
+  document.getElementById("worldRows").innerHTML =
+    row("destination",d.destination)+
+    row("activeVariant",d.activeVariant??"—")+
+    row("ratio",d.variant?.ratio??"—")+
+    row("traversalMode",d.traversalMode||"—")+
+    row("convergenceBias",fmt(d.traversal?.convergenceBias,6))+
+    row("expansionBias",fmt(d.traversal?.expansionBias,6))+
+    row("coherenceLevel",fmt(d.coherenceLevel,6))+
+    row("clarityLevel",fmt(d.clarityLevel,6))+
+    row("stabilityLevel",fmt(d.stabilityLevel,6))+
+    row("noiseLevel",fmt(d.noiseLevel,6))+
+    row("zoneState",d.zoneState||"—")+
+    row("accessAllowed",bool(d.accessAllowed));
+
+  document.getElementById("renderRows").innerHTML =
+    row("primitiveType",d.primitive?.primitiveType??"—")+
+    row("primitivePath",d.primitive?.primitivePath??"—")+
+    row("topologyMode",d.topology?.topologyMode??"—")+
+    row("neighborLaw",d.topology?.neighborLaw??"—")+
+    row("visibleCellCount",d.topology?.visibleCellCount??"—")+
+    row("emittedCellCount",d.topology?.emittedCellCount??"—")+
+    row("skippedCellCount",d.topology?.skippedCellCount??"—")+
+    row("liveRenderPath",d.renderAuthority?.liveRenderPath??"—")+
+    row("renderReadsScope",bool(d.renderAuthority?.renderReadsScope))+
+    row("renderReadsLens",bool(d.renderAuthority?.renderReadsLens))+
+    row("fallbackMode",bool(d.renderAuthority?.fallbackMode))+
+    row("densityTier",d.density?.densityTier??"—")+
+    row("subdivisionTier",d.density?.subdivisionTier??"—")+
+    row("averageCellSpanPx",fmt(d.density?.averageCellSpanPx,4));
+
+  document.getElementById("scopeRows").innerHTML =
+    row("activeScope",d.scope?.activeScope??"—")+
+    row("scopeSizeKm",d.scope?.scopeSizeKm??"—")+
+    row("scopeAnchor",d.scope?.scopeAnchor??"—")+
+    row("lensMode",d.lens?.lensMode??"—")+
+    row("lensTier",d.lens?.lensTier??"—")+
+    row("zoomCurrent",fmt(d.lens?.zoomCurrent,6))+
+    row("zoomTarget",fmt(d.lens?.zoomTarget,6))+
+    row("zoomMin",fmt(d.lens?.zoomMin,6))+
+    row("zoomMax",fmt(d.lens?.zoomMax,6));
+
+  document.getElementById("emitRows").innerHTML =
+    row("emissionPass",bool(d.emission?.emissionPass))+
+    row("emissionEmitted",d.emission?.emissionEmitted??"—")+
+    row("emissionFrontVisible",d.emission?.emissionFrontVisible??"—")+
+    row("emissionSuppressed",d.emission?.emissionSuppressed??"—")+
+    row("placementPass",bool(d.placement?.placementPass))+
+    row("placementPlaced",d.placement?.placementPlaced??"—")+
+    row("markerCollisionCount",d.placement?.markerCollisionCount??"—")+
+    row("placementReservedReject",d.placement?.placementReservedReject??"—")+
+    row("placementViewportReject",d.placement?.placementViewportReject??"—");
+
+  document.getElementById("diagRows").innerHTML =
+    row("instrument.classifiedState",d.instrument?.classifiedState??"—")+
+    row("diagnostics.timestampMs",d.diagnosticsPayload?.timestampMs??"—")+
+    row("diagnostics.ageMs",d.diagnosticsPayload?.ageMs??"—")+
+    row("diagnostics.fps",d.diagnosticsPayload?.fps??"—")+
+    row("diagnostics.dtMs",d.diagnosticsPayload?.dtMs??"—")+
+    row("latticeIndex",d.latticeIndex??"—")+
+    row("coherenceLatticeIndex",d.coherence?.latticeBinding?.coherenceLatticeIndex??"—")+
+    row("unifiedLatticeIndex",d.worldMode?.latticeBinding?.unifiedLatticeIndex??"—")+
+    row("activeNodeIndex",d.coherence?.nodeBinding?.activeNodeIndex??d.worldMode?.nodeBinding?.activeNodeIndex??"—")+
+    row("bindingIntegrity",bool(d.worldMode?.diagnostics?.bindingIntegrity===true))+
+    row("display.baseline.t",d.displayPayload?.baseline?.t??"—")+
+    row("display.progress.c",d.displayPayload?.progress?.c??"—")+
+    row("display.progress.st",d.displayPayload?.progress?.st??"—")+
+    row("display.failure.ph",d.displayPayload?.failure?.ph??"—");
+
+  document.getElementById("failureRows").innerHTML =
+    row("failurePhase",d.failurePhase||"—")+
+    row("failureMessage",d.failureMessage||"—")+
+    row("receipt.timestamp",String(data?.timestamp??"—"))+
+    row("sourcePhase",d.sourcePhase||"—")+
+    row("sourceMode",d.sourceMode||"—")+
+    row("storageKey",STORAGE_KEY)+
+    row("windowKey",RECEIPT_KEY);
+
+  drawMulti(document.getElementById("velocityChart"),[
+    {data:history.yawVelocity,color:"#6fe7ff"},
+    {data:history.pitchVelocity,color:"#7fffd4"},
+    {data:history.velocityMagnitude,color:"#ffd27a"}
+  ]);
+  drawMulti(document.getElementById("coherenceChart"),[
+    {data:history.coherence,color:"#7fffd4"},
+    {data:history.clarity,color:"#6fe7ff"},
+    {data:history.stability,color:"#ffd27a"}
+  ],0,1);
+  drawMulti(document.getElementById("miscChart"),[
+    {data:history.fps,color:"#7fffd4"},
+    {data:history.dragActive,color:"#ff7a7a"},
+    {data:history.fresh,color:"#6fe7ff"}
+  ],0,Math.max(60,...history.fps,1));
+
+  document.getElementById("footer").textContent =
+`SOURCE=${data.__source||"—"} | PHASE=${d.sourcePhase||"—"} | CLASSIFIED=${d.classifiedState||"—"} | AGE=${isFiniteNumber(d.ageMs)?Math.round(d.ageMs)+"ms":"—"} | DEST=${d.destination}`;
+
+  prevVelocityMagnitude=d.velocityMagnitude;
+  prevDragActive=d.dragActive;
+  requestAnimationFrame(render);
+}
+
+render();
 </script>
 </body>
 </html>

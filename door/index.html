@@ -1,9 +1,12 @@
 <!doctype html>
 <!-- TNT — /door/index.html
-     DOOR · AUTHORITY REWRITE
+     DOOR · AUTHORITY REWRITE + DISTANT LIVE WORLD BACKGROUND
      PURPOSE:
        - Door is selection, not simulation
-       - No canvas / no renderer / no inertia / no orbital hit logic
+       - Globe appears behind the print as distant proof
+       - No canvas ownership on door
+       - No renderer ownership on door
+       - Reuses existing round index as a background presentation layer
        - Clean state carry: gd_lang / gd_style / gd_time / gd_depth only
        - lane=platform|engineering remains URL-only
        - EN / 中文 / ES
@@ -22,7 +25,13 @@
 
 <style>
 a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
+html,body{margin:0;min-height:100%;background:#06090d}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  color:#fff;
+  overflow-x:hidden;
+}
 body::before,body::after{pointer-events:none!important}
 
 :root{
@@ -38,6 +47,85 @@ body::before,body::after{pointer-events:none!important}
   --dockH:116px;
 }
 
+/* DISTANT WORLD BACKGROUND */
+.bg-stage{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(38,72,122,.18), transparent 28%),
+    radial-gradient(circle at 50% 52%, rgba(15,24,40,.34), transparent 58%),
+    linear-gradient(180deg, rgba(5,8,12,.96), rgba(5,8,12,.90));
+}
+.bg-stage::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(255,255,255,.04), transparent 24%),
+    radial-gradient(circle at 50% 45%, rgba(80,140,255,.10), transparent 18%),
+    linear-gradient(180deg, rgba(3,5,8,.92) 0%, rgba(3,5,8,.32) 28%, rgba(3,5,8,.18) 62%, rgba(3,5,8,.82) 100%);
+  z-index:2;
+}
+.bg-stage::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 54%, rgba(0,0,0,0) 0 24%, rgba(0,0,0,.10) 42%, rgba(0,0,0,.44) 76%, rgba(0,0,0,.68) 100%);
+  z-index:3;
+}
+.bg-world{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:100vw;
+  height:100vh;
+  transform:translate(-50%,-50%);
+  z-index:1;
+  overflow:hidden;
+}
+.bg-world iframe{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:188vw;
+  height:188vh;
+  border:0;
+  pointer-events:none;
+  opacity:.78;
+  transform:translate(-50%,-44%) scale(1.28);
+  filter:blur(1.6px) saturate(.84) brightness(.70) contrast(.90);
+  transform-origin:center center;
+}
+.bg-veil-top,
+.bg-veil-bottom,
+.bg-veil-left,
+.bg-veil-right{
+  position:absolute;
+  pointer-events:none;
+  z-index:4;
+}
+.bg-veil-top{
+  top:0;left:0;right:0;height:24vh;
+  background:linear-gradient(180deg, rgba(3,5,8,.92), rgba(3,5,8,.54), rgba(3,5,8,0));
+}
+.bg-veil-bottom{
+  left:0;right:0;bottom:0;height:22vh;
+  background:linear-gradient(0deg, rgba(3,5,8,.95), rgba(3,5,8,.58), rgba(3,5,8,0));
+}
+.bg-veil-left{
+  top:0;bottom:0;left:0;width:14vw;
+  background:linear-gradient(90deg, rgba(3,5,8,.72), rgba(3,5,8,0));
+}
+.bg-veil-right{
+  top:0;bottom:0;right:0;width:14vw;
+  background:linear-gradient(-90deg, rgba(3,5,8,.72), rgba(3,5,8,0));
+}
+
+/* FOREGROUND ROOT */
 #root{
   position:relative;
   z-index:10;
@@ -182,6 +270,7 @@ body::before,body::after{pointer-events:none!important}
   width:min(980px,92vw);
   margin:0 auto;
   text-align:center;
+  position:relative;
 }
 .k{
   margin:0 0 10px;
@@ -242,9 +331,10 @@ body::before,body::after{pointer-events:none!important}
     radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 36%),
     radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 62%),
     radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
+    linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.86));
   box-shadow:var(--shadowB);
   overflow:hidden;
+  backdrop-filter:blur(6px);
 }
 .mode-card::before{
   content:"";
@@ -323,6 +413,11 @@ body::before,body::after{pointer-events:none!important}
 }
 
 @media (max-width:760px){
+  .bg-world iframe{
+    width:220vw;
+    height:220vh;
+    transform:translate(-50%,-43%) scale(1.34);
+  }
   .mode-shell{
     grid-template-columns:1fr;
   }
@@ -345,6 +440,22 @@ body::before,body::after{pointer-events:none!important}
 </head>
 
 <body>
+
+<div class="bg-stage" aria-hidden="true">
+  <div class="bg-world">
+    <iframe
+      id="doorWorldBg"
+      title="Door background world"
+      loading="eager"
+      referrerpolicy="strict-origin-when-cross-origin"
+      tabindex="-1"></iframe>
+  </div>
+  <div class="bg-veil-top"></div>
+  <div class="bg-veil-bottom"></div>
+  <div class="bg-veil-left"></div>
+  <div class="bg-veil-right"></div>
+</div>
+
 <div id="root">
 
   <div class="top" aria-label="Top controls">
@@ -471,6 +582,22 @@ body::before,body::after{pointer-events:none!important}
   function P(en,zh,es){ return {en:en,zh:zh,es:es}; }
   function pick(o){ return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en); }
 
+  function setDoorWorldBackground(){
+    var frame = document.getElementById("doorWorldBg");
+    if(!frame) return;
+
+    var p = new URLSearchParams();
+    p.set("lang", lang);
+    p.set("style", style);
+    p.set("time", time);
+    p.set("depth", depth);
+    p.set("mode", "round");
+    if(lane==="platform" || lane==="engineering") p.set("lane", lane);
+    p.set("doorbg", "1");
+
+    frame.src = "/index.html?" + p.toString();
+  }
+
   var COPY = {
     k: P("DOOR","门","PUERTA"),
     h0: P("NINE SUMMITS","九峰","NUEVE CUMBRES"),
@@ -529,6 +656,7 @@ body::before,body::after{pointer-events:none!important}
   document.getElementById("runtimePill").textContent = pick(COPY.runtime);
 
   wireRoutes();
+  setDoorWorldBackground();
 
   document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
   document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});

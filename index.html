@@ -33,11 +33,65 @@ html, body {
   background: #000;
 }
 
-#runtime-root,
-#diagnostics-dock,
-#debug-panel {
+#runtime-root {
   position: relative;
   z-index: 10;
+}
+
+#diagnostics-dock {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 120;
+}
+
+#diagnostics-bar {
+  width: min(1100px, 100%);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 18px;
+  background: rgba(8,12,20,0.78);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.44);
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+}
+
+#diagnostics-summary {
+  min-width: 0;
+  flex: 1 1 auto;
+  color: rgba(255,255,255,0.92);
+  font-family: monospace;
+  font-size: 12px;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#diagnostics-toggle {
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(10,12,20,0.42);
+  color: rgba(255,255,255,0.94);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+#diagnostics-toggle:active {
+  transform: translateY(1px);
 }
 
 #boot-status {
@@ -63,226 +117,14 @@ html, body {
 .boot-warn { color: #ffd27a; }
 .boot-fail { color: #ff7a7a; }
 
-:root{
-  --diag-bg:rgba(11,15,20,.92);
-  --diag-panel:rgba(15,22,32,.96);
-  --diag-line:#1f2a36;
-  --diag-text:#d7f9ff;
-  --diag-muted:rgba(215,249,255,.72);
-  --diag-accent:#7fffd4;
-}
-
-.diagnostics-dock{
-  position:fixed;
-  left:12px;
-  right:12px;
-  bottom:12px;
-  display:flex;
-  justify-content:center;
-  pointer-events:none;
-  z-index:120;
-}
-
-.diagnostics-bar{
-  width:min(1100px,100%);
-  display:flex;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
-  background:rgba(8,12,20,.78);
-  box-shadow:0 20px 60px rgba(0,0,0,.44);
-  backdrop-filter:blur(10px);
-  pointer-events:auto;
-}
-
-.diagnostic-bar__summary{
-  min-width:0;
-  flex:1 1 auto;
-  color:var(--diag-text);
-  font-family:monospace;
-  font-size:12px;
-  line-height:1.35;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.diagnostics-toggle,
-.diagnostics-tab{
-  min-height:38px;
-  padding:0 14px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(10,12,20,.42);
-  color:rgba(255,255,255,.94);
-  font:inherit;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.06em;
-  text-transform:uppercase;
-  cursor:pointer;
-}
-
-.diagnostics-toggle:active,
-.diagnostics-tab:active{transform:translateY(1px)}
-
-.diagnostics-toggle.is-active,
-.diagnostics-tab.is-active{
-  border-color:rgba(127,255,212,.64);
-  color:var(--diag-accent);
-}
-
-.debug-panel{
-  position:fixed;
-  left:12px;
-  right:12px;
-  bottom:76px;
-  display:none;
-  justify-content:center;
-  pointer-events:none;
-  z-index:119;
-}
-
-.debug-panel.is-open{
-  display:flex;
-}
-
-.debug-panel__sheet{
-  width:min(1100px,100%);
-  max-height:min(68vh,900px);
-  overflow:auto;
-  padding:12px;
-  border:1px solid rgba(255,255,255,.14);
-  border-radius:20px;
-  background:var(--diag-bg);
-  box-shadow:0 24px 90px rgba(0,0,0,.52);
-  backdrop-filter:blur(12px);
-  pointer-events:auto;
-}
-
-.debug-panel__tabs{
-  display:flex;
-  gap:8px;
-  flex-wrap:wrap;
-  margin-bottom:12px;
-}
-
-.debug-panel__layer.hidden{
-  display:none;
-}
-
-.debug-group{
-  margin-bottom:12px;
-  border:1px solid var(--diag-line);
-  border-radius:12px;
-  background:var(--diag-panel);
-  overflow:hidden;
-}
-
-.debug-group__title{
-  padding:12px;
-  color:var(--diag-accent);
-  font-weight:bold;
-  font-family:monospace;
-}
-
-.debug-group__block{
-  padding:12px;
-  border-top:1px solid var(--diag-line);
-}
-
-.debug-row{
-  display:flex;
-  justify-content:space-between;
-  gap:16px;
-  margin:4px 0;
-  font-family:monospace;
-  color:var(--diag-text);
-}
-
-.debug-row div:first-child{
-  opacity:.9;
-}
-
-.debug-row div:last-child{
-  text-align:right;
-  word-break:break-word;
-}
-
-.debug-preview{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:8px;
-  margin-top:6px;
-}
-
-.debug-preview__item{
-  padding:6px 8px;
-  border:1px solid var(--diag-line);
-  border-radius:8px;
-  background:rgba(255,255,255,.02);
-  font-family:monospace;
-}
-
-.debug-preview__k{
-  opacity:.72;
-  font-size:11px;
-}
-
-.debug-preview__v{
-  margin-top:2px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.debug-status{
-  color:var(--diag-accent);
-  font-family:monospace;
-  font-weight:bold;
-  margin-bottom:12px;
-}
-
-.debug-small{
-  opacity:.7;
-  font-size:12px;
-  margin-top:6px;
-  font-family:monospace;
-  color:var(--diag-text);
-}
-
-.debug-canvas-wrap{
-  margin-top:10px;
-  border:1px solid var(--diag-line);
-  border-radius:8px;
-  overflow:hidden;
-  background:#0b0f14;
-}
-
-.debug-canvas{
-  display:block;
-  width:100%;
-}
-
-@media (max-width:760px){
-  .debug-preview{
-    grid-template-columns:1fr;
+@media (max-width: 760px) {
+  #diagnostics-bar {
+    flex-wrap: wrap;
   }
-  .debug-row{
-    flex-direction:column;
-    gap:2px;
-  }
-  .debug-row div:last-child{
-    text-align:left;
-  }
-  .diagnostics-bar{
-    flex-wrap:wrap;
-  }
-  .diagnostic-bar__summary{
-    width:100%;
-    white-space:normal;
+
+  #diagnostics-summary {
+    width: 100%;
+    white-space: normal;
   }
 }
 </style>
@@ -291,29 +133,12 @@ html, body {
 <body data-mode="round" data-diagnostics="peek">
 <div id="app-shell">
   <canvas id="world"></canvas>
-
   <div id="runtime-root"></div>
 
-  <div id="diagnostics-dock" class="diagnostics-dock">
-    <div id="diagnostics-bar" class="diagnostics-bar">
-      <div id="diagnostics-summary" class="diagnostic-bar__summary">STATE: OFFLINE</div>
-      <button id="diagnostics-toggle" class="diagnostics-toggle" type="button">
-        DIAGNOSTICS
-      </button>
-    </div>
-  </div>
-
-  <div id="debug-panel" class="debug-panel">
-    <div class="debug-panel__sheet">
-      <div id="debug-status" class="debug-status">STATE: OFFLINE</div>
-
-      <div class="debug-panel__tabs">
-        <button id="debug-tab-display" class="diagnostics-tab is-active" type="button">DISPLAY</button>
-        <button id="debug-tab-diagnostics" class="diagnostics-tab" type="button">DIAGNOSTICS</button>
-      </div>
-
-      <div id="debug-layer-display" class="debug-panel__layer"></div>
-      <div id="debug-layer-diagnostics" class="debug-panel__layer hidden"></div>
+  <div id="diagnostics-dock">
+    <div id="diagnostics-bar">
+      <div id="diagnostics-summary">DIAGNOSTICS AVAILABLE AT /GAUGES/</div>
+      <button id="diagnostics-toggle" type="button">GAUGES</button>
     </div>
   </div>
 </div>
@@ -323,16 +148,9 @@ html, body {
 <script type="module">
 const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
-const diagnosticsSummary = document.getElementById("diagnostics-summary");
-const debugPanel = document.getElementById("debug-panel");
-const debugStatus = document.getElementById("debug-status");
-const debugTabDisplay = document.getElementById("debug-tab-display");
-const debugTabDiagnostics = document.getElementById("debug-tab-diagnostics");
-const debugLayerDisplay = document.getElementById("debug-layer-display");
-const debugLayerDiagnostics = document.getElementById("debug-layer-diagnostics");
 
 const BOOT_CONTRACT = Object.freeze({
-  id: "INDEX_BOOT_CONTRACT_RENEWAL_v5",
+  id: "INDEX_BOOT_CONTRACT_RENEWAL_v6",
   engineContract: "PLANET_ENGINE_CONTRACT_RENEWAL_v1",
   runtimeContract: "WORLD_RUNTIME_CONTRACT_v1",
   renderContract: "RENDER_BASELINE_CONTRACT_RENEWAL_v3",
@@ -410,396 +228,6 @@ const bootState = {
   verificationPass: false
 };
 
-const HISTORY_SIZE = 180;
-const debugHistory = {
-  fps: [],
-  dtMs: [],
-  coherence: [],
-  stability: []
-};
-
-let diagnosticsMode = "display";
-let diagnosticsOpen = false;
-
-function pushHistory(arr, value) {
-  arr.push(value);
-  if (arr.length > HISTORY_SIZE) arr.shift();
-}
-
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
-}
-
-function bool(v) {
-  return v === true ? "true" : v === false ? "false" : "—";
-}
-
-function fmt(v, digits = 6) {
-  return typeof v === "number" && Number.isFinite(v) ? v.toFixed(digits) : "—";
-}
-
-function esc(v) {
-  return String(v ?? "—")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;");
-}
-
-function row(k, v) {
-  return `<div class="debug-row"><div>${k}</div><div>${v ?? "—"}</div></div>`;
-}
-
-function buildPreview(items) {
-  return `
-    <div class="debug-preview">
-      ${items.map(([k, v]) => `
-        <div class="debug-preview__item">
-          <div class="debug-preview__k">${esc(k)}</div>
-          <div class="debug-preview__v">${esc(v)}</div>
-        </div>
-      `).join("")}
-    </div>
-  `;
-}
-
-function buildGroup(title, meta, previewItems, detailHtml) {
-  return `
-    <div class="debug-group">
-      <div class="debug-group__title">
-        ${esc(title)}${meta ? ` <span style="opacity:.7;font-weight:normal">• ${esc(meta)}</span>` : ""}
-      </div>
-      <div class="debug-group__block">
-        ${buildPreview(previewItems)}
-        <div style="margin-top:10px">${detailHtml}</div>
-      </div>
-    </div>
-  `;
-}
-
-function drawSeries(canvas, seriesA, seriesB, yMax) {
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
-
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle = "#0b0f14";
-  ctx.fillRect(0,0,w,h);
-
-  ctx.strokeStyle = "#1f2a36";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(0, h - 12);
-  ctx.lineTo(w, h - 12);
-  ctx.stroke();
-
-  function draw(series, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    series.forEach((v, i) => {
-      const n = typeof v === "number" && Number.isFinite(v)
-        ? Math.max(0, Math.min(1, yMax > 0 ? v / yMax : 0))
-        : 0;
-      const x = (i / Math.max(1, HISTORY_SIZE - 1)) * w;
-      const y = h - 12 - n * (h * 0.72);
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-  }
-
-  draw(seriesA, "#7fffd4");
-  draw(seriesB, "#6fe7ff");
-}
-
-function drawScalarSeries(canvas, seriesA, seriesB) {
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
-
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle = "#0b0f14";
-  ctx.fillRect(0,0,w,h);
-
-  ctx.strokeStyle = "#1f2a36";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(0, h - 12);
-  ctx.lineTo(w, h - 12);
-  ctx.stroke();
-
-  function draw(series, color) {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    series.forEach((v, i) => {
-      const n = typeof v === "number" && Number.isFinite(v) ? Math.max(0, Math.min(1, v)) : 0;
-      const x = (i / Math.max(1, HISTORY_SIZE - 1)) * w;
-      const y = h - 12 - n * (h * 0.72);
-      if (i === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.stroke();
-  }
-
-  draw(seriesA, "#7fffd4");
-  draw(seriesB, "#ffd27a");
-}
-
-function readWindowReceipt() {
-  const receipt = window[BOOT_CONTRACT.runtimeReceiptKey];
-  return receipt && typeof receipt === "object" ? receipt : null;
-}
-
-function readRuntimeStorageReceipt() {
-  try {
-    const raw = localStorage.getItem(BOOT_CONTRACT.runtimeStorageKey);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    return parsed && typeof parsed === "object" ? parsed : null;
-  } catch {
-    return null;
-  }
-}
-
-function readAuthorityReceipt() {
-  return normalizeObject(readWindowReceipt() || readRuntimeStorageReceipt());
-}
-
-function readInstrument(receipt) {
-  return normalizeObject(receipt.instrument);
-}
-
-function renderDiagnosticsSurface() {
-  const receipt = readAuthorityReceipt();
-  const instrument = readInstrument(receipt);
-
-  if (Object.keys(receipt).length === 0 || Object.keys(instrument).length === 0) {
-    diagnosticsSummary.textContent = "STATE: OFFLINE";
-    debugStatus.textContent = "STATE: OFFLINE";
-    debugLayerDisplay.innerHTML = "";
-    debugLayerDiagnostics.innerHTML = "";
-    return;
-  }
-
-  const state = instrument.classifiedState ?? "OFFLINE";
-  const timestampMs = receipt.timestamp ? new Date(receipt.timestamp).getTime() : null;
-  const ageMs = typeof timestampMs === "number" && Number.isFinite(timestampMs)
-    ? Math.max(0, Date.now() - timestampMs)
-    : null;
-
-  diagnosticsSummary.textContent =
-    `STATE: ${state} • ${receipt.phase ?? "—"} • ${Math.round(receipt.fps || 0)}fps • ${ageMs ?? "—"}ms`;
-
-  debugStatus.textContent =
-    `STATE: ${state} • ${receipt.phase ?? "—"} • ${receipt.mode ?? "—"} • ${ageMs ?? "—"}ms`;
-
-  const displayPayload = normalizeObject(instrument.displayPayload);
-  const baseline = normalizeObject(displayPayload.baseline);
-  const progress = normalizeObject(displayPayload.progress);
-  const failure = normalizeObject(displayPayload.failure);
-
-  const diagnosticsPayload = normalizeObject(instrument.diagnosticsPayload);
-
-  pushHistory(debugHistory.fps, typeof diagnosticsPayload.fps === "number" ? diagnosticsPayload.fps : (receipt.fps || 0));
-  pushHistory(debugHistory.dtMs, typeof diagnosticsPayload.dtMs === "number" ? diagnosticsPayload.dtMs : (receipt.dtMs || 0));
-  pushHistory(debugHistory.coherence, typeof progress.c === "number" ? progress.c : 0);
-  pushHistory(debugHistory.stability, typeof progress.st === "number" ? progress.st : 0);
-
-  debugLayerDisplay.innerHTML = [
-    buildGroup(
-      "RUNTIME",
-      `${receipt.phase ?? "—"} • ${Math.round(receipt.fps || 0)} fps`,
-      [
-        ["classifiedState", state],
-        ["phase", receipt.phase ?? "—"],
-        ["mode", receipt.mode ?? "—"]
-      ],
-      [
-        row("classifiedState", state),
-        row("phase", receipt.phase ?? "—"),
-        row("mode", receipt.mode ?? "—"),
-        row("timestamp", receipt.timestamp ?? "—"),
-        row("fps", Math.round(receipt.fps || 0)),
-        row("dtMs", Math.round(receipt.dtMs || 0)),
-        row("failure.phase", receipt.failure?.phase ?? "—"),
-        row("failure.message", receipt.failure?.message ?? "—")
-      ].join("")
-    ),
-    buildGroup(
-      "BASELINE",
-      `${baseline.p ?? "—"} • ${baseline.s ?? "—"}`,
-      [
-        ["t", baseline.t ?? "—"],
-        ["p", baseline.p ?? "—"],
-        ["s", baseline.s ?? "—"]
-      ],
-      [
-        row("t", baseline.t ?? "—"),
-        row("p", baseline.p ?? "—"),
-        row("s", baseline.s ?? "—"),
-        row("v", baseline.v ?? "—")
-      ].join("")
-    ),
-    buildGroup(
-      "PROGRESS",
-      `${fmt(progress.c,3)} / ${fmt(progress.st,3)}`,
-      [
-        ["f", progress.f ?? "—"],
-        ["dt", progress.dt ?? "—"],
-        ["tr", progress.tr ?? "—"]
-      ],
-      [
-        row("f", progress.f ?? "—"),
-        row("dt", progress.dt ?? "—"),
-        row("c", fmt(progress.c, 6)),
-        row("st", fmt(progress.st, 6)),
-        row("tr", progress.tr ?? "—"),
-        `<div class="debug-canvas-wrap"><canvas id="debug-progress-chart" class="debug-canvas" width="1000" height="120"></canvas></div>`,
-        `<div class="debug-small">coherence = green · stability = yellow</div>`
-      ].join("")
-    ),
-    buildGroup(
-      "FAILURE",
-      `${failure.ph ?? "—"}`,
-      [
-        ["ph", failure.ph ?? "—"],
-        ["msg", failure.msg ?? "—"],
-        ["s", bool(failure.s)]
-      ],
-      [
-        row("ph", failure.ph ?? "—"),
-        row("msg", failure.msg ?? "—"),
-        row("s", bool(failure.s))
-      ].join("")
-    )
-  ].join("");
-
-  debugLayerDiagnostics.innerHTML = [
-    buildGroup(
-      "CLASSIFICATION PROOF",
-      `${state}`,
-      [
-        ["classifiedState", state],
-        ["payloadState", diagnosticsPayload.classifiedState ?? "—"],
-        ["sourcePhase", diagnosticsPayload.sourcePhase ?? "—"]
-      ],
-      [
-        row("classifiedState", state),
-        row("diagnostics.classifiedState", diagnosticsPayload.classifiedState ?? "—"),
-        row("sourcePhase", diagnosticsPayload.sourcePhase ?? "—"),
-        row("sourceMode", diagnosticsPayload.sourceMode ?? "—")
-      ].join("")
-    ),
-    buildGroup(
-      "FRESHNESS PROOF",
-      `${bool(diagnosticsPayload.fresh)}`,
-      [
-        ["timestampMs", diagnosticsPayload.timestampMs ?? "—"],
-        ["ageMs", diagnosticsPayload.ageMs ?? "—"],
-        ["fresh", bool(diagnosticsPayload.fresh)]
-      ],
-      [
-        row("timestampMs", diagnosticsPayload.timestampMs ?? "—"),
-        row("ageMs", diagnosticsPayload.ageMs ?? "—"),
-        row("timestampValid", bool(diagnosticsPayload.timestampValid)),
-        row("fresh", bool(diagnosticsPayload.fresh))
-      ].join("")
-    ),
-    buildGroup(
-      "FRAME PROOF",
-      `${bool(diagnosticsPayload.frameSync)} / ${bool(diagnosticsPayload.verificationPass)}`,
-      [
-        ["frameSync", bool(diagnosticsPayload.frameSync)],
-        ["verificationPass", bool(diagnosticsPayload.verificationPass)],
-        ["fps", diagnosticsPayload.fps ?? "—"]
-      ],
-      [
-        row("frameSync", bool(diagnosticsPayload.frameSync)),
-        row("verificationPass", bool(diagnosticsPayload.verificationPass)),
-        row("fps", diagnosticsPayload.fps ?? "—"),
-        row("dtMs", diagnosticsPayload.dtMs ?? "—"),
-        `<div class="debug-canvas-wrap"><canvas id="debug-runtime-chart" class="debug-canvas" width="1000" height="120"></canvas></div>`,
-        `<div class="debug-small">fps = green · dtMs = cyan</div>`
-      ].join("")
-    ),
-    buildGroup(
-      "FAILURE PROOF",
-      `${diagnosticsPayload.failurePhase ?? "—"}`,
-      [
-        ["failurePhase", diagnosticsPayload.failurePhase ?? "—"],
-        ["failureMessage", diagnosticsPayload.failureMessage ?? "—"],
-        ["receiptFailure", receipt.failure?.phase ?? "—"]
-      ],
-      [
-        row("failurePhase", diagnosticsPayload.failurePhase ?? "—"),
-        row("failureMessage", diagnosticsPayload.failureMessage ?? "—"),
-        row("receipt.failure.phase", receipt.failure?.phase ?? "—"),
-        row("receipt.failure.message", receipt.failure?.message ?? "—")
-      ].join("")
-    )
-  ].join("");
-
-  const progressChart = document.getElementById("debug-progress-chart");
-  if (progressChart) {
-    drawScalarSeries(progressChart, debugHistory.coherence, debugHistory.stability);
-  }
-
-  const runtimeChart = document.getElementById("debug-runtime-chart");
-  if (runtimeChart) {
-    drawSeries(
-      runtimeChart,
-      debugHistory.fps,
-      debugHistory.dtMs,
-      Math.max(60, ...debugHistory.fps, ...debugHistory.dtMs, 1)
-    );
-  }
-}
-
-function syncDiagnosticsView() {
-  debugPanel.classList.toggle("is-open", diagnosticsOpen);
-  diagnosticsToggle.classList.toggle("is-active", diagnosticsOpen);
-  debugLayerDisplay.classList.toggle("hidden", diagnosticsMode !== "display");
-  debugLayerDiagnostics.classList.toggle("hidden", diagnosticsMode !== "diagnostics");
-  debugTabDisplay.classList.toggle("is-active", diagnosticsMode === "display");
-  debugTabDiagnostics.classList.toggle("is-active", diagnosticsMode === "diagnostics");
-}
-
-function openDiagnostics(mode) {
-  diagnosticsOpen = true;
-  diagnosticsMode = mode;
-  syncDiagnosticsView();
-}
-
-function closeDiagnostics() {
-  diagnosticsOpen = false;
-  syncDiagnosticsView();
-}
-
-function toggleDiagnostics() {
-  diagnosticsOpen = !diagnosticsOpen;
-  syncDiagnosticsView();
-}
-
-function installDiagnosticsControls() {
-  diagnosticsToggle?.addEventListener("click", function onDiagnosticsToggle() {
-    toggleDiagnostics();
-  });
-
-  debugTabDisplay?.addEventListener("click", function onDisplayTab() {
-    openDiagnostics("display");
-  });
-
-  debugTabDiagnostics?.addEventListener("click", function onDiagnosticsTab() {
-    openDiagnostics("diagnostics");
-  });
-}
-
-function renderDiagnosticsLoop() {
-  renderDiagnosticsSurface();
-  window.requestAnimationFrame(renderDiagnosticsLoop);
-}
-
 function writeBootState() {
   window[BOOT_CONTRACT.bootStateKey] = {
     phase: bootState.phase,
@@ -831,7 +259,6 @@ function setStatus(message, tone = "boot-warn") {
     statusNode.textContent = message;
     statusNode.className = tone;
   }
-
   console.log("[BOOT]", message);
 }
 
@@ -839,7 +266,6 @@ function toMessage(error) {
   if (error instanceof Error && typeof error.message === "string" && error.message.length > 0) {
     return error.message;
   }
-
   return String(error);
 }
 
@@ -996,6 +422,23 @@ function validateCanvasPresence() {
   }
 
   return world;
+}
+
+function readRuntimeStorageReceipt() {
+  try {
+    const raw = localStorage.getItem(BOOT_CONTRACT.runtimeStorageKey);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
+
+function readWindowReceipt() {
+  const receipt = window[BOOT_CONTRACT.runtimeReceiptKey];
+  return receipt && typeof receipt === "object" ? receipt : null;
 }
 
 function resolveVerificationState() {
@@ -1223,10 +666,11 @@ async function boot() {
   }
 }
 
-installDiagnosticsControls();
-syncDiagnosticsView();
+diagnosticsToggle?.addEventListener("click", function goToDiagnostics() {
+  window.location.href = BOOT_CONTRACT.diagnosticsPath;
+});
+
 writeBootState();
-renderDiagnosticsLoop();
 boot();
 </script>
 </body>

@@ -3,14 +3,21 @@
 // STATUS: AUTHORITATIVE SOUTH JUG (PURE)
 // ROLE:
 // - project + draw only
-// - split coherence into tubes (no ownership)
+// - split coherence into layered hoses
 // - NO diagnostics authority
 // - NO compensation
 // - NO upstream mutation
+// - terrain = baseline land coverage
+// - elevation = upward overlay
+// - cut = incision overlay
+// - hydration = water overlay
+// - botany hose reserved but inactive until dedicated render packet exists
 
-import { WORLD_KERNEL } from "./world_kernel.js";
-import { resolveHydrationPacket } from "./render/hydration_render_engine.js";
-import { resolveTerrainPacket } from "./render/terrain_render_engine.js";
+import { WORLD_KERNEL } from "../world_kernel.js";
+import { resolveHydrationPacket } from "./hydration_render_engine.js";
+import { resolveTerrainPacket } from "./terrain/index.js";
+import { resolveElevationPacket } from "./terrain/elevation_render_engine.js";
+import { resolveCutPacket } from "./terrain/cut_render_engine.js";
 
 /* =========================
    UTIL
@@ -56,19 +63,39 @@ function getCanvasCssSize(ctx) {
 }
 
 function withAlpha(color, alpha) {
-  if (typeof color !== "string" || color.length === 0) return `rgba(255,255,255,${alpha})`;
+  if (typeof color !== "string" || color.length === 0) {
+    return `rgba(255,255,255,${clamp(alpha, 0, 1)})`;
+  }
 
-  const rgbaMatch = color.match(/^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i);
+  const rgbaMatch = color.match(
+    /^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
   if (rgbaMatch) {
     return `rgba(${rgbaMatch[1]},${rgbaMatch[2]},${rgbaMatch[3]},${clamp(alpha, 0, 1)})`;
   }
 
-  const rgbMatch = color.match(/^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i);
+  const rgbMatch = color.match(
+    /^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
   if (rgbMatch) {
     return `rgba(${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]},${clamp(alpha, 0, 1)})`;
   }
 
   return color;
+}
+
+function packetRadius(packet, fallback) {
+  return isFiniteNumber(packet?.radiusPx) ? packet.radiusPx : fallback;
+}
+
+function packetAlpha(packet, fallback = 0) {
+  return isFiniteNumber(packet?.alpha) ? packet.alpha : fallback;
+}
+
+function packetColor(packet, fallback = "") {
+  return typeof packet?.color === "string" && packet.color.length > 0
+    ? packet.color
+    : fallback;
 }
 
 /* =========================
@@ -94,7 +121,6 @@ function defaultProjectorFactory(p) {
   return function projectPoint(latDeg, lonDeg, offset = 0) {
     const lat = (latDeg * Math.PI) / 180;
     const lon = (lonDeg * Math.PI) / 180;
-
     const r = p.radius + offset;
 
     const nx = Math.cos(lat) * Math.sin(lon);
@@ -197,12 +223,66 @@ function drawPlanet(ctx, p) {
 }
 
 /* =========================
+   HOSE RESOLUTION
+========================= */
+
+function resolveBotanyPacket() {
+  return null;
+}
+
+function resolveLayerPackets(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  const terrainPacket = resolveTerrainPacket?.({
+    sample,
+    pointSizePx
+  }) || null;
+
+  const elevationPacket = resolveElevationPacket?.({
+    sample,
+    pointSizePx
+  }) || null;
+
+  const cutPacket = resolveCutPacket?.({
+    sample,
+    pointSizePx
+  }) || null;
+
+  const hydrationPacket = resolveHydrationPacket?.({
+    sample,
+    pointSizePx,
+    grid,
+    x,
+    y,
+    globalPrimitiveTime
+  }) || null;
+
+  const botanyPacket = resolveBotanyPacket?.({
+    sample,
+    pointSizePx,
+    grid,
+    x,
+    y,
+    globalPrimitiveTime
+  }) || null;
+
+  return Object.freeze({
+    terrainPacket,
+    elevationPacket,
+    cutPacket,
+    hydrationPacket,
+    botanyPacket
+  });
+}
+
+/* =========================
    POINT STYLE
 ========================= */
 
-function buildPointStyle(sample, point, baseSize, terrainPacket, hydrationPacket, p) {
-  const terrain = normalizeObject(terrainPacket);
-  const hydration = normalizeObject(hydrationPacket);
+function buildPointStyle(sample, point, baseSize, packets, p) {
+  const terrainPacket = normalizeObject(packets.terrainPacket);
+  const elevationPacket = normalizeObject(packets.elevationPacket);
+  const cutPacket = normalizeObject(packets.cutPacket);
+  const hydrationPacket = normalizeObject(packets.hydrationPacket);
+  const botanyPacket = normalizeObject(packets.botanyPacket);
 
   const depth = clamp((point.z + 1) * 0.5, 0, 1);
   const edgeDistance = Math.sqrt(
@@ -214,19 +294,44 @@ function buildPointStyle(sample, point, baseSize, terrainPacket, hydrationPacket
   const lightBias = clamp(0.36 + depth * 0.86, 0.18, 1.18);
 
   const elevation = clamp(sample?.elevation ?? 0, 0, 1);
-  const terrainScale = isFiniteNumber(terrain.radiusPx) ? terrain.radiusPx / Math.max(baseSize, 0.0001) : 1;
-  const hydrationScale = isFiniteNumber(hydration.radiusPx) ? hydration.radiusPx / Math.max(baseSize, 0.0001) : 1;
+
+  const terrainScale = packetRadius(terrainPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const elevationScale = packetRadius(elevationPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const cutScale = packetRadius(cutPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const hydrationScale = packetRadius(hydrationPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const botanyScale = packetRadius(botanyPacket, baseSize) / Math.max(baseSize, 0.0001);
+
   const radius = clamp(
-    baseSize * (0.78 + depth * 0.62 + elevation * 0.18 + (terrainScale - 1) * 0.35 + (hydrationScale - 1) * 0.18),
+    baseSize * (
+      0.76 +
+      depth * 0.58 +
+      elevation * 0.16 +
+      (terrainScale - 1) * 0.24 +
+      (elevationScale - 1) * 0.22 +
+      (cutScale - 1) * 0.12 +
+      (hydrationScale - 1) * 0.14 +
+      (botanyScale - 1) * 0.08
+    ),
     0.9,
-    6.2
+    6.4
   );
 
-  const baseAlpha = sample?.waterMask === 1 ? 0.26 : 0.82;
-  const terrainAlpha = isFiniteNumber(terrain.alpha) ? terrain.alpha : 0;
-  const hydrationAlpha = isFiniteNumber(hydration.alpha) ? hydration.alpha : 0;
+  const baseAlpha = sample?.waterMask === 1 ? 0.24 : 0.78;
+  const terrainAlpha = packetAlpha(terrainPacket, 0);
+  const elevationAlpha = packetAlpha(elevationPacket, 0);
+  const cutAlpha = packetAlpha(cutPacket, 0);
+  const hydrationAlpha = packetAlpha(hydrationPacket, 0);
+  const botanyAlpha = packetAlpha(botanyPacket, 0);
+
   const alpha = clamp(
-    (baseAlpha + terrainAlpha * 0.38 + hydrationAlpha * 0.28) * lightBias * limbFade,
+    (
+      baseAlpha +
+      terrainAlpha * 0.34 +
+      elevationAlpha * 0.18 +
+      cutAlpha * 0.14 +
+      hydrationAlpha * 0.24 +
+      botanyAlpha * 0.12
+    ) * lightBias * limbFade,
     0.08,
     1
   );
@@ -234,13 +339,14 @@ function buildPointStyle(sample, point, baseSize, terrainPacket, hydrationPacket
   const blur = clamp((1 - depth) * 0.9 + (1 - limbFade) * 0.8, 0, 1.4);
 
   const color =
-    typeof hydration.color === "string" && hydration.color.length > 0
-      ? hydration.color
-      : typeof terrain.color === "string" && terrain.color.length > 0
-        ? terrain.color
-        : sample?.waterMask === 1
-          ? "rgba(68,146,232,0.90)"
-          : "rgba(188,206,142,0.94)";
+    packetColor(botanyPacket) ||
+    packetColor(hydrationPacket) ||
+    packetColor(cutPacket) ||
+    packetColor(elevationPacket) ||
+    packetColor(terrainPacket) ||
+    (sample?.waterMask === 1
+      ? "rgba(68,146,232,0.90)"
+      : "rgba(188,206,142,0.94)");
 
   return Object.freeze({
     color,
@@ -287,37 +393,26 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
   let landFamilyCount = 0;
   let cryosphereCount = 0;
   let shorelineCount = 0;
+  let elevationFamilyCount = 0;
+  let cutFamilyCount = 0;
+  let botanyFamilyCount = 0;
 
   const queue = [];
 
-  for (let y = 0; y < rows; y++) {
+  for (let y = 0; y < rows; y += 1) {
     const row = grid[y];
 
-    for (let x = 0; x < cols; x++) {
+    for (let x = 0; x < cols; x += 1) {
       const sample = row[x];
       if (!sample) continue;
 
       const point = projector(sample.latDeg, sample.lonDeg, sample.elevation * 8);
-
       if (!point || !point.visible) continue;
 
-      visible++;
+      visible += 1;
 
-      const terrainPacket = resolveTerrainPacket?.({
-        sample,
-        pointSizePx: baseSize
-      });
-
-      const hydrationPacket = resolveHydrationPacket?.({
-        sample,
-        pointSizePx: baseSize,
-        grid,
-        x,
-        y,
-        globalPrimitiveTime
-      });
-
-      const style = buildPointStyle(sample, point, baseSize, terrainPacket, hydrationPacket, p);
+      const packets = resolveLayerPackets(sample, baseSize, grid, x, y, globalPrimitiveTime);
+      const style = buildPointStyle(sample, point, baseSize, packets, p);
 
       queue.push({
         point,
@@ -325,14 +420,25 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
         z: point.z
       });
 
-      if (sample.waterMask === 1 || hydrationPacket) waterFamilyCount += 1;
-      if (sample.landMask === 1 || terrainPacket) landFamilyCount += 1;
-      if (sample.biomeType === "GLACIER" || sample.terrainClass === "POLAR_ICE" || sample.terrainClass === "GLACIAL_HIGHLAND") {
+      if (sample.waterMask === 1 || packets.hydrationPacket) waterFamilyCount += 1;
+      if (sample.landMask === 1 || packets.terrainPacket) landFamilyCount += 1;
+      if (packets.elevationPacket) elevationFamilyCount += 1;
+      if (packets.cutPacket) cutFamilyCount += 1;
+      if (packets.botanyPacket) botanyFamilyCount += 1;
+
+      if (
+        sample.biomeType === "GLACIER" ||
+        sample.terrainClass === "POLAR_ICE" ||
+        sample.terrainClass === "GLACIAL_HIGHLAND"
+      ) {
         cryosphereCount += 1;
       }
-      if (sample.shoreline === true || sample.shorelineBand === true) shorelineCount += 1;
 
-      emitted++;
+      if (sample.shoreline === true || sample.shorelineBand === true) {
+        shorelineCount += 1;
+      }
+
+      emitted += 1;
     }
   }
 
@@ -349,6 +455,9 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
     landFamilyCount,
     cryosphereCount,
     shorelineCount,
+    elevationFamilyCount,
+    cutFamilyCount,
+    botanyFamilyCount,
     primitiveType: "FILTER_SIGNAL",
     primitivePath: "render.filter.split"
   };
@@ -366,6 +475,9 @@ function baseReturn() {
     landFamilyCount: 0,
     cryosphereCount: 0,
     shorelineCount: 0,
+    elevationFamilyCount: 0,
+    cutFamilyCount: 0,
+    botanyFamilyCount: 0,
     primitiveType: "NONE",
     primitivePath: "none"
   };
@@ -402,7 +514,10 @@ function buildReturn(p, density) {
       waterFamilyCount: density.waterFamilyCount,
       landFamilyCount: density.landFamilyCount,
       cryosphereCount: density.cryosphereCount,
-      shorelineCount: density.shorelineCount
+      shorelineCount: density.shorelineCount,
+      elevationFamilyCount: density.elevationFamilyCount,
+      cutFamilyCount: density.cutFamilyCount,
+      botanyFamilyCount: density.botanyFamilyCount
     }
   };
 }

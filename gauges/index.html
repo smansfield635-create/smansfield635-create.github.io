@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3D World Runtime - LIVE v6.1</title>
-    <!-- CORE STOCK: THE 3D ENGINE LIBRARY -->
+    <!-- CORE STOCK: FIXED LIBRARY LINK -->
     <script src="https://cdnjs.cloudflare.com"></script>
     <style>
         :root { 
@@ -22,10 +22,8 @@
             user-select: none;
         }
 
-        /* 3D RENDER SURFACE */
         #canvas-container { position: absolute; inset: 0; z-index: 1; }
 
-        /* OBSERVABILITY LAYER (The Gauges) */
         .container { 
             position: absolute; 
             top: 20px; 
@@ -156,13 +154,14 @@
  */
 function initPlanetEngine() {
     const container = document.getElementById('canvas-container');
+    if (!container) return;
+    
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     container.appendChild(renderer.domElement);
 
-    // Geometry STOCK
     const globe = new THREE.Mesh(
         new THREE.IcosahedronGeometry(2, 4),
         new THREE.MeshBasicMaterial({ color: 0x00ff88, wireframe: true, transparent: true, opacity: 0.15 })
@@ -175,12 +174,12 @@ function initPlanetEngine() {
     function animate(time) {
         const dt = time - lastTime;
         lastTime = time;
-        const fps = Math.round(1000 / dt);
+        const fps = dt > 0 ? Math.round(1000 / dt) : 0;
 
         globe.rotation.y += 0.002;
         renderer.render(scene, camera);
 
-        // EMIT TELEMETRY TO SHARED SCOPE
+        // EMIT TELEMETRY TO SHARED GLOBAL SCOPE
         window.__AUTHORITY_RECEIPT__ = {
             phase: "RUNNING",
             timestamp: Date.now(),
@@ -206,14 +205,14 @@ const history = [];
 function updateGauges() {
     const receipt = window.__AUTHORITY_RECEIPT__ || {};
     const stateTxt = document.getElementById("state-txt");
-    const statusEl = document.getElementById("status");
+    const statusBox = document.getElementById("status");
     const ageTxt = document.getElementById("age-txt");
     
     if (receipt.phase === "RUNNING") {
         const inst = receipt.instrument;
         
         stateTxt.innerText = "LIVE • RUNNING";
-        statusEl.style.color = "var(--accent)";
+        statusBox.style.color = "var(--accent)";
         ageTxt.innerText = (Date.now() - receipt.timestamp) + "ms";
 
         document.getElementById("val-index").innerText = inst.index;
@@ -227,7 +226,7 @@ function updateGauges() {
         renderChart();
     } else {
         stateTxt.innerText = "SEARCHING...";
-        statusEl.style.color = "#ff4444";
+        statusBox.style.color = "#ff4444";
     }
     requestAnimationFrame(updateGauges);
 }
@@ -247,11 +246,13 @@ function renderChart() {
     ctx.stroke();
 }
 
-// EXECUTION
+// EXECUTION TRIGGER
 initPlanetEngine();
 updateGauges();
 
-window.addEventListener('resize', () => location.reload());
+window.addEventListener('resize', () => {
+    location.reload(); 
+});
 </script>
 </body>
 </html>

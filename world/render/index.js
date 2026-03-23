@@ -1,4 +1,4 @@
-// /world/render.js
+// /world/render/index.js
 // MODE: RENDER BASELINE FILTER
 // STATUS: AUTHORITATIVE SOUTH JUG (PURE)
 // ROLE:

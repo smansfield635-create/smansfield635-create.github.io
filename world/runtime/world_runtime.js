@@ -21,7 +21,7 @@
 
 import { WORLD_KERNEL as worldKernel } from "/world/world_kernel.js";
 import { createPlanetEngine } from "/world/planet_engine.js";
-import { createRenderer } from "/world/render.js";
+import { createRenderer } from "/world/render/index.js";
 import { createControlSystem } from "/world/control.js";
 import * as instruments from "/assets/instruments.js";
 
@@ -767,7 +767,7 @@ function ensureReceipt() {
       runtimeSource: "/world/runtime/world_runtime.js",
       inputOwner: "/world/control.js",
       orbitOwner: "/world/control.js",
-      renderSource: "/world/render.js",
+      renderSource: "/world/render/index.js",
       transitionSource: null,
       duplicateRuntime: false,
       duplicateRender: false,

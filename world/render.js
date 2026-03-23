@@ -55,6 +55,22 @@ function getCanvasCssSize(ctx) {
   return { width, height };
 }
 
+function withAlpha(color, alpha) {
+  if (typeof color !== "string" || color.length === 0) return `rgba(255,255,255,${alpha})`;
+
+  const rgbaMatch = color.match(/^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i);
+  if (rgbaMatch) {
+    return `rgba(${rgbaMatch[1]},${rgbaMatch[2]},${rgbaMatch[3]},${clamp(alpha, 0, 1)})`;
+  }
+
+  const rgbMatch = color.match(/^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i);
+  if (rgbMatch) {
+    return `rgba(${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]},${clamp(alpha, 0, 1)})`;
+  }
+
+  return color;
+}
+
 /* =========================
    PROJECTION
 ========================= */
@@ -104,23 +120,152 @@ function resolveProjectPoint(projectPoint, projectionState) {
    BASE DRAW
 ========================= */
 
-function drawPlanet(ctx, p) {
-  const g = ctx.createRadialGradient(
+function drawBackground(ctx, p) {
+  const bg = ctx.createRadialGradient(
     p.centerX,
     p.centerY,
-    p.radius * 0.1,
+    p.radius * 0.2,
+    p.centerX,
+    p.centerY,
+    Math.max(p.width, p.height) * 0.72
+  );
+
+  bg.addColorStop(0, "rgba(18,30,54,0.26)");
+  bg.addColorStop(0.45, "rgba(8,14,28,0.16)");
+  bg.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, p.width, p.height);
+}
+
+function drawPlanet(ctx, p) {
+  const g = ctx.createRadialGradient(
+    p.centerX - p.radius * 0.18,
+    p.centerY - p.radius * 0.22,
+    p.radius * 0.08,
     p.centerX,
     p.centerY,
     p.radius
   );
 
-  g.addColorStop(0, "rgb(22,68,126)");
+  g.addColorStop(0, "rgb(36,96,176)");
+  g.addColorStop(0.52, "rgb(12,42,88)");
   g.addColorStop(1, "rgb(2,10,24)");
 
   ctx.beginPath();
   ctx.arc(p.centerX, p.centerY, p.radius, 0, Math.PI * 2);
   ctx.fillStyle = g;
   ctx.fill();
+
+  const limb = ctx.createRadialGradient(
+    p.centerX,
+    p.centerY,
+    p.radius * 0.78,
+    p.centerX,
+    p.centerY,
+    p.radius * 1.08
+  );
+  limb.addColorStop(0, "rgba(88,164,255,0)");
+  limb.addColorStop(0.72, "rgba(88,164,255,0.04)");
+  limb.addColorStop(0.9, "rgba(110,190,255,0.16)");
+  limb.addColorStop(1, "rgba(110,190,255,0)");
+
+  ctx.beginPath();
+  ctx.arc(p.centerX, p.centerY, p.radius * 1.03, 0, Math.PI * 2);
+  ctx.fillStyle = limb;
+  ctx.fill();
+
+  const gloss = ctx.createRadialGradient(
+    p.centerX - p.radius * 0.24,
+    p.centerY - p.radius * 0.26,
+    p.radius * 0.04,
+    p.centerX - p.radius * 0.24,
+    p.centerY - p.radius * 0.26,
+    p.radius * 0.52
+  );
+  gloss.addColorStop(0, "rgba(255,255,255,0.22)");
+  gloss.addColorStop(0.24, "rgba(255,255,255,0.08)");
+  gloss.addColorStop(1, "rgba(255,255,255,0)");
+
+  ctx.beginPath();
+  ctx.arc(p.centerX, p.centerY, p.radius, 0, Math.PI * 2);
+  ctx.save();
+  ctx.clip();
+  ctx.fillStyle = gloss;
+  ctx.fillRect(p.centerX - p.radius, p.centerY - p.radius, p.radius * 2, p.radius * 2);
+  ctx.restore();
+}
+
+/* =========================
+   POINT STYLE
+========================= */
+
+function buildPointStyle(sample, point, baseSize, terrainPacket, hydrationPacket, p) {
+  const terrain = normalizeObject(terrainPacket);
+  const hydration = normalizeObject(hydrationPacket);
+
+  const depth = clamp((point.z + 1) * 0.5, 0, 1);
+  const edgeDistance = Math.sqrt(
+    ((point.x - p.centerX) * (point.x - p.centerX)) +
+    ((point.y - p.centerY) * (point.y - p.centerY))
+  );
+  const edgeRatio = p.radius > 0 ? clamp(edgeDistance / p.radius, 0, 1) : 1;
+  const limbFade = clamp(1 - Math.pow(edgeRatio, 1.75), 0.12, 1);
+  const lightBias = clamp(0.36 + depth * 0.86, 0.18, 1.18);
+
+  const elevation = clamp(sample?.elevation ?? 0, 0, 1);
+  const terrainScale = isFiniteNumber(terrain.radiusPx) ? terrain.radiusPx / Math.max(baseSize, 0.0001) : 1;
+  const hydrationScale = isFiniteNumber(hydration.radiusPx) ? hydration.radiusPx / Math.max(baseSize, 0.0001) : 1;
+  const radius = clamp(
+    baseSize * (0.78 + depth * 0.62 + elevation * 0.18 + (terrainScale - 1) * 0.35 + (hydrationScale - 1) * 0.18),
+    0.9,
+    6.2
+  );
+
+  const baseAlpha = sample?.waterMask === 1 ? 0.26 : 0.82;
+  const terrainAlpha = isFiniteNumber(terrain.alpha) ? terrain.alpha : 0;
+  const hydrationAlpha = isFiniteNumber(hydration.alpha) ? hydration.alpha : 0;
+  const alpha = clamp(
+    (baseAlpha + terrainAlpha * 0.38 + hydrationAlpha * 0.28) * lightBias * limbFade,
+    0.08,
+    1
+  );
+
+  const blur = clamp((1 - depth) * 0.9 + (1 - limbFade) * 0.8, 0, 1.4);
+
+  const color =
+    typeof hydration.color === "string" && hydration.color.length > 0
+      ? hydration.color
+      : typeof terrain.color === "string" && terrain.color.length > 0
+        ? terrain.color
+        : sample?.waterMask === 1
+          ? "rgba(68,146,232,0.90)"
+          : "rgba(188,206,142,0.94)";
+
+  return Object.freeze({
+    color,
+    radius,
+    alpha,
+    blur,
+    glowAlpha: clamp(alpha * (0.18 + depth * 0.18), 0, 0.32)
+  });
+}
+
+function drawPoint(ctx, point, style) {
+  if (style.glowAlpha > 0.01) {
+    ctx.beginPath();
+    ctx.fillStyle = withAlpha(style.color, style.glowAlpha);
+    ctx.arc(point.x, point.y, style.radius * 1.9, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.save();
+  ctx.filter = style.blur > 0.02 ? `blur(${style.blur.toFixed(2)}px)` : "none";
+  ctx.beginPath();
+  ctx.fillStyle = withAlpha(style.color, style.alpha);
+  ctx.arc(point.x, point.y, style.radius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
 }
 
 /* =========================
@@ -134,10 +279,16 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
   const cols = grid[0].length;
   const count = rows * cols;
 
-  const size = clamp(p.radius / Math.sqrt(count) * 1.2, 1.2, 4);
+  const baseSize = clamp(p.radius / Math.sqrt(count) * 1.28, 1.05, 4.2);
 
   let visible = 0;
   let emitted = 0;
+  let waterFamilyCount = 0;
+  let landFamilyCount = 0;
+  let cryosphereCount = 0;
+  let shorelineCount = 0;
+
+  const queue = [];
 
   for (let y = 0; y < rows; y++) {
     const row = grid[y];
@@ -152,60 +303,52 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime) {
 
       visible++;
 
-      /* BASE */
-      ctx.fillStyle = sample.waterMask === 1
-        ? "rgba(34,102,170,0.25)"
-        : "rgba(86,150,86,0.85)";
-
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* TUBE 1 — TERRAIN */
       const terrainPacket = resolveTerrainPacket?.({
         sample,
-        pointSizePx: size
+        pointSizePx: baseSize
       });
 
-      if (terrainPacket) {
-        ctx.globalAlpha = terrainPacket.alpha;
-        ctx.fillStyle = terrainPacket.color;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, terrainPacket.radiusPx, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
-
-      /* TUBE 2 — HYDRATION */
       const hydrationPacket = resolveHydrationPacket?.({
         sample,
-        pointSizePx: size,
+        pointSizePx: baseSize,
         grid,
         x,
         y,
         globalPrimitiveTime
       });
 
-      if (hydrationPacket) {
-        ctx.globalAlpha = hydrationPacket.alpha;
-        ctx.fillStyle = hydrationPacket.color;
-        ctx.beginPath();
-        ctx.arc(point.x, point.y, hydrationPacket.radiusPx, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.globalAlpha = 1;
-      }
+      const style = buildPointStyle(sample, point, baseSize, terrainPacket, hydrationPacket, p);
 
-      /* TUBE 3 — FAUNA (stub) */
-      /* TUBE 4 — ANIMAL (stub) */
-      /* TUBE 5 — COSMOS (stub) */
+      queue.push({
+        point,
+        style,
+        z: point.z
+      });
+
+      if (sample.waterMask === 1 || hydrationPacket) waterFamilyCount += 1;
+      if (sample.landMask === 1 || terrainPacket) landFamilyCount += 1;
+      if (sample.biomeType === "GLACIER" || sample.terrainClass === "POLAR_ICE" || sample.terrainClass === "GLACIAL_HIGHLAND") {
+        cryosphereCount += 1;
+      }
+      if (sample.shoreline === true || sample.shorelineBand === true) shorelineCount += 1;
 
       emitted++;
     }
   }
 
+  queue.sort((a, b) => a.z - b.z);
+
+  for (let i = 0; i < queue.length; i += 1) {
+    drawPoint(ctx, queue[i].point, queue[i].style);
+  }
+
   return {
     visibleCellCount: visible,
     emittedCellCount: emitted,
+    waterFamilyCount,
+    landFamilyCount,
+    cryosphereCount,
+    shorelineCount,
     primitiveType: "FILTER_SIGNAL",
     primitivePath: "render.filter.split"
   };
@@ -219,6 +362,10 @@ function baseReturn() {
   return {
     visibleCellCount: 0,
     emittedCellCount: 0,
+    waterFamilyCount: 0,
+    landFamilyCount: 0,
+    cryosphereCount: 0,
+    shorelineCount: 0,
     primitiveType: "NONE",
     primitivePath: "none"
   };
@@ -252,10 +399,10 @@ function buildReturn(p, density) {
     },
     audit: {
       sampleCount: density.emittedCellCount,
-      waterFamilyCount: 0,
-      landFamilyCount: 0,
-      cryosphereCount: 0,
-      shorelineCount: 0
+      waterFamilyCount: density.waterFamilyCount,
+      landFamilyCount: density.landFamilyCount,
+      cryosphereCount: density.cryosphereCount,
+      shorelineCount: density.shorelineCount
     }
   };
 }
@@ -272,6 +419,7 @@ export function createRenderer() {
 
     ctx.clearRect(0, 0, p.width, p.height);
 
+    drawBackground(ctx, p);
     drawPlanet(ctx, p);
 
     if (!planetField) return buildReturn(p, baseReturn());

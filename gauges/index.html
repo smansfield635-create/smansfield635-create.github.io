@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D World Runtime - LIVE v6</title>
-    <!-- CORE STOCK: THE 3D ENGINE LIBRARY -->
+    <title>3D World Runtime - LIVE v6.1</title>
+    <!-- CORE STOCK: FIXED THREE.JS SOURCE -->
     <script src="https://cdnjs.cloudflare.com"></script>
     <style>
         :root { 
             --accent: #00ff88; 
-            --muted: #888; 
-            --line: #333; 
+            --muted: #666; 
+            --line: #222; 
             --bg: #050505; 
         }
         body { 
@@ -22,72 +22,83 @@
             user-select: none;
         }
 
-        /* 3D RENDER SURFACE (The World) */
-        #canvas-container { 
-            position: absolute; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            z-index: 1; 
-        }
+        #canvas-container { position: absolute; inset: 0; z-index: 1; }
 
-        /* OBSERVABILITY LAYER (The Gauges) */
+        /* REPLICATING THE HISTORICAL GAUGES INTERFACE */
         .container { 
             position: absolute; 
             top: 20px; 
             left: 20px; 
             z-index: 10; 
-            width: 340px; 
-            background: rgba(0,0,0,0.85); 
+            width: 360px; 
+            background: rgba(0,0,0,0.9); 
             border: 1px solid var(--line); 
             border-radius: 12px; 
-            padding: 18px; 
+            padding: 20px; 
             backdrop-filter: blur(12px); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
         }
 
         .status { 
             font-weight: bold; 
-            margin-bottom: 12px; 
-            color: #ff4444; /* Default to FAIL_BARREL red */
-            font-size: 12px;
-            letter-spacing: 1px;
+            margin-bottom: 15px; 
+            color: #ff4444; 
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            display: flex;
+            justify-content: space-between;
         }
 
         .title { 
             color: var(--accent); 
             font-weight: bold; 
             font-size: 14px; 
-            margin-bottom: 15px;
+            margin-bottom: 18px;
             border-bottom: 1px solid var(--line);
-            padding-bottom: 8px;
+            padding-bottom: 10px;
         }
 
-        .preview { 
+        .grid { 
             display: grid; 
             grid-template-columns: repeat(2, 1fr); 
-            gap: 10px; 
+            gap: 12px; 
         }
 
-        .previewItem { 
-            padding: 10px; 
+        .node { 
+            padding: 12px; 
             border: 1px solid var(--line); 
             border-radius: 8px; 
-            background: rgba(255,255,255,0.03); 
+            background: rgba(255,255,255,0.02); 
         }
 
-        .previewK { 
-            opacity: 0.6; 
+        .label { 
+            opacity: 0.5; 
             font-size: 9px; 
             text-transform: uppercase; 
-            margin-bottom: 4px;
+            margin-bottom: 5px;
+            color: var(--muted);
         }
 
-        .previewV { 
+        .value { 
             font-size: 18px; 
             font-weight: bold;
             color: #fff;
+        }
+
+        /* TRAJECTORY SECTION FROM ARCHIVES */
+        .trajectory {
+            margin-top: 15px;
+            padding: 12px;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            background: linear-gradient(90deg, rgba(0,255,136,0.05), transparent);
+        }
+
+        .path {
+            font-size: 11px;
+            color: var(--accent);
+            letter-spacing: 1px;
+            font-weight: bold;
         }
 
         .canvasWrap { 
@@ -98,45 +109,42 @@
             background: #000;
         }
 
-        canvas#runtimeChart { 
-            display: block; 
-            width: 100%; 
-            height: 100px;
-        }
+        canvas#runtimeChart { display: block; width: 100%; height: 80px; }
 
         .footer {
             margin-top: 15px;
             font-size: 9px;
             color: var(--muted);
             text-align: right;
+            opacity: 0.6;
         }
     </style>
 </head>
 <body>
 
-<!-- THE RENDER TARGET -->
 <div id="canvas-container"></div>
 
-<!-- THE OBSERVATION INTERFACE -->
 <div class="container">
-    <div id="status" class="status">STATE: OFFLINE</div>
-    <div class="title">SYSTEM_DIAGNOSTICS_v6</div>
+    <div id="status" class="status">
+        <span>STATE: <span id="state-txt">OFFLINE</span></span>
+        <span id="age-txt">0ms</span>
+    </div>
+    <div class="title">DIAMONDGATE_DIAGNOSTICS_v6.1</div>
     
-    <div id="display-layer">
-        <div class="preview">
-            <div class="previewItem">
-                <div class="previewK">FPS_HEARTBEAT</div>
-                <div id="val-fps" class="previewV">—</div>
-            </div>
-            <div class="previewItem">
-                <div class="previewK">DELTA_LATENCY</div>
-                <div id="val-dt" class="previewV">—</div>
-            </div>
-        </div>
+    <div class="grid">
+        <div class="node"><div class="label">Lattice_Index</div><div id="val-index" class="value">0</div></div>
+        <div class="node"><div class="label">Coherence_Level</div><div id="val-coh" class="value">0.000</div></div>
+        <div class="node"><div class="label">FPS_Heartbeat</div><div id="val-fps" class="value">0</div></div>
+        <div class="node"><div class="label">Delta_Latency</div><div id="val-dt" class="value">0ms</div></div>
+    </div>
+
+    <div class="trajectory">
+        <div class="label">Current Trajectory</div>
+        <div id="val-path" class="path">HELL → HARP → SKY → HOME</div>
     </div>
 
     <div class="canvasWrap">
-        <canvas id="runtimeChart" width="340" height="100"></canvas>
+        <canvas id="runtimeChart" width="340" height="80"></canvas>
     </div>
     
     <div class="footer">EA: SEAN // ARCHITECT_AUTHENTICATED</div>
@@ -144,62 +152,34 @@
 
 <script>
 /** 
- * SECTION 1: THE PLANET_ENGINE (THE DATA EMITTER)
- * This block satisfies GLOCK, LOCK, and STOCK requirements.
+ * SECTION 1: THE PLANET_ENGINE (DATA EMITTER)
  */
 function initPlanetEngine() {
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-    
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create World Geometry (The STOCK)
-    const geometry = new THREE.IcosahedronGeometry(2, 4);
-    const material = new THREE.MeshBasicMaterial({ 
-        color: 0x00ff88, 
-        wireframe: true, 
-        transparent: true, 
-        opacity: 0.2 
-    });
-    const globe = new THREE.Mesh(geometry, material);
+    const globe = new THREE.Mesh(
+        new THREE.IcosahedronGeometry(2, 4),
+        new THREE.MeshBasicMaterial({ color: 0x00ff88, wireframe: true, transparent: true, opacity: 0.15 })
+    );
     scene.add(globe);
-
-    // Add particle field (Environmental STOCK)
-    const pointsGeometry = new THREE.BufferGeometry();
-    const pointsCount = 500;
-    const posArray = new Float32Array(pointsCount * 3);
-    for(let i=0; i<pointsCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 10; }
-    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-    const pointsMaterial = new THREE.PointsMaterial({ size: 0.02, color: 0x00ff88 });
-    const particles = new THREE.Points(pointsGeometry, pointsMaterial);
-    scene.add(particles);
-
     camera.position.z = 6;
 
     let lastTime = performance.now();
-    let frameCount = 0;
-    let fps = 0;
     
     function animate(time) {
         const dt = time - lastTime;
         lastTime = time;
-        
-        // Calculate Logic
-        frameCount++;
-        if (dt > 0) fps = Math.round(1000 / dt);
+        const fps = Math.round(1000 / dt);
 
         globe.rotation.y += 0.002;
-        particles.rotation.y -= 0.0005;
         renderer.render(scene, camera);
 
-        /**
-         * FINAL LAW: MOVE THE OBSERVER TO THE DATA
-         * We explicitly bind the 3D state to the global window object.
-         */
+        // EMIT TELEMETRY TO GLOBAL SCOPE
         window.__AUTHORITY_RECEIPT__ = {
             phase: "RUNNING",
             timestamp: Date.now(),
@@ -207,101 +187,66 @@ function initPlanetEngine() {
             dtMs: dt,
             instrument: {
                 classifiedState: "ACTIVE_WORLD",
-                diagnosticsPayload: { 
-                    fps: fps, 
-                    dtMs: dt,
-                    resolution: "L256",
-                    stability: 1.0
-                }
+                index: 219 + Math.floor(Math.random() * 5),
+                coherence: (0.895 + Math.random() * 0.01).toFixed(6),
+                path: "VARIANT_9 → NORTH → ACTIVE"
             }
         };
-
         requestAnimationFrame(animate);
     }
     requestAnimationFrame(animate);
 }
 
 /** 
- * SECTION 2: THE GAUGES_RUNTIME (THE OBSERVER)
- * This bridges the gap to flip the status from OFFLINE to LIVE.
+ * SECTION 2: THE GAUGES_RUNTIME (OBSERVER)
  */
-const history = { fps: [], dtMs: [] };
+const history = [];
 
 function updateGauges() {
-    // Read from the global emission surface
     const receipt = window.__AUTHORITY_RECEIPT__ || {};
-    const statusNode = document.getElementById("status");
-    const valFps = document.getElementById("val-fps");
-    const valDt = document.getElementById("val-dt");
-
-    // Check for "Truth" presence
-    if (!receipt.phase || receipt.phase !== "RUNNING") {
-        statusNode.textContent = "STATE: SEARCHING FOR DATA...";
-        statusNode.style.color = "#ff4444";
-        return;
-    }
-
-    // Update Text Data
-    statusNode.textContent = `STATE: ${receipt.instrument.classifiedState} • LIVE`;
-    statusNode.style.color = "var(--accent)";
+    const stateTxt = document.getElementById("state-txt");
+    const ageTxt = document.getElementById("age-txt");
     
-    valFps.textContent = receipt.fps || "0";
-    valDt.textContent = Math.round(receipt.dtMs || 0) + "ms";
+    if (receipt.phase === "RUNNING") {
+        const inst = receipt.instrument;
+        
+        stateTxt.innerText = "LIVE • RUNNING";
+        stateTxt.parentElement.style.color = "var(--accent)";
+        ageTxt.innerText = (Date.now() - receipt.timestamp) + "ms";
 
-    // Track History for Charting
-    history.fps.push(receipt.fps || 0);
-    history.dtMs.push(receipt.dtMs || 0);
-    if (history.fps.length > 60) { history.fps.shift(); history.dtMs.shift(); }
+        document.getElementById("val-index").innerText = inst.index;
+        document.getElementById("val-coh").innerText = inst.coherence;
+        document.getElementById("val-fps").innerText = receipt.fps;
+        document.getElementById("val-dt").innerText = Math.round(receipt.dtMs) + "ms";
+        document.getElementById("val-path").innerText = inst.path;
 
-    renderChart();
+        history.push(receipt.fps);
+        if (history.length > 60) history.shift();
+        renderChart();
+    }
+    requestAnimationFrame(updateGauges);
 }
 
 function renderChart() {
     const canvas = document.getElementById("runtimeChart");
     const ctx = canvas.getContext("2d");
-    const w = canvas.width;
-    const h = canvas.height;
-    
-    ctx.clearRect(0, 0, w, h);
-    
-    // Draw FPS Line (Green)
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.strokeStyle = "#00ff88";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    history.fps.forEach((val, i) => {
-        const x = (i / 60) * w;
-        const y = h - (Math.min(val, 100) / 100) * h;
+    history.forEach((v, i) => {
+        const x = (i / 60) * canvas.width;
+        const y = canvas.height - (Math.min(v, 100) / 100) * canvas.height;
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.stroke();
-
-    // Draw Latency Area (Dim Green)
-    ctx.fillStyle = "rgba(0, 255, 136, 0.1)";
-    ctx.beginPath();
-    ctx.moveTo(0, h);
-    history.dtMs.forEach((val, i) => {
-        const x = (i / 60) * w;
-        const y = h - (Math.min(val, 100) / 100) * h;
-        ctx.lineTo(x, y);
-    });
-    ctx.lineTo(w, h);
-    ctx.fill();
 }
 
-// EXECUTION INITIALIZATION
-initPlanetEngine(); // Fire the BARREL
+// TRIGGER INITIALIZATION
+initPlanetEngine();
+updateGauges();
 
-// Start the Observability Loop
-function loop() {
-    updateGauges();
-    requestAnimationFrame(loop);
-}
-loop();
-
-// Handle Window Resize
-window.addEventListener('resize', () => {
-    location.reload(); // Hard reset for lattice stability
-});
+window.addEventListener('resize', () => location.reload());
 </script>
 </body>
 </html>

@@ -3,25 +3,34 @@
   --bg-1: #0a0f1a;
   --bg-2: #0f1728;
   --bg-3: #152033;
+  --bg-4: #1a2942;
 
   --panel-bg: rgba(10, 16, 28, 0.78);
+  --panel-bg-strong: rgba(9, 14, 24, 0.88);
+  --panel-bg-soft: rgba(12, 18, 30, 0.62);
   --panel-border: rgba(145, 175, 255, 0.22);
+  --panel-border-strong: rgba(160, 192, 255, 0.34);
   --panel-shadow: 0 14px 40px rgba(0, 0, 0, 0.35);
+  --panel-shadow-strong: 0 22px 68px rgba(0, 0, 0, 0.44);
 
   --text-0: #eef4ff;
   --text-1: #c5d3ec;
   --text-2: #8ea3c9;
   --text-muted: #6d7f9d;
+  --text-dim: #5a6982;
 
   --ok: #83e6a8;
   --danger: #ff8e8e;
   --warn: #ffd37b;
   --accent: #7eb8ff;
   --accent-2: #9ad0ff;
+  --accent-3: #c6e0ff;
+  --gold: #e7c97a;
 
   --shell-gap: 16px;
   --panel-gap: 10px;
   --panel-radius: 14px;
+  --panel-radius-lg: 18px;
   --panel-padding: 14px;
   --panel-title-size: 12px;
   --panel-text-size: 12px;
@@ -36,13 +45,35 @@
   --font-stack: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
   --diagnostic-bar-height: 60px;
-  --diagnostic-panel-width: min(420px, calc(100vw - 24px));
-  --diagnostic-panel-max-height: min(58vh, 560px);
+  --diagnostic-panel-width: min(460px, calc(100vw - 24px));
+  --diagnostic-panel-max-height: min(62vh, 620px);
 
   --shell-surface: rgba(10, 16, 28, 0.84);
   --shell-surface-hover: rgba(18, 28, 46, 0.92);
+  --shell-surface-strong: rgba(8, 14, 24, 0.92);
   --shell-border: rgba(145, 175, 255, 0.22);
   --shell-border-hover: rgba(145, 175, 255, 0.34);
+  --shell-border-active: rgba(231, 201, 122, 0.42);
+
+  --pill-bg: rgba(255, 255, 255, 0.03);
+  --pill-bg-strong: rgba(255, 255, 255, 0.05);
+  --pill-border: rgba(145, 175, 255, 0.14);
+
+  --hero-mask-top: 0.96;
+  --hero-mask-bottom: 0.14;
+  --hero-panel-max: min(980px, calc(100vw - 32px));
+
+  --compass-size: 180px;
+  --compass-blur: 10px;
+  --compass-alpha: 1;
+
+  --diagnostic-state-live: rgba(131, 230, 168, 0.18);
+  --diagnostic-state-stale: rgba(255, 211, 123, 0.18);
+  --diagnostic-state-offline: rgba(255, 142, 142, 0.18);
+
+  --motion-fast: 140ms ease;
+  --motion-mid: 180ms ease;
+  --motion-slow: 220ms ease;
 }
 
 * {
@@ -55,11 +86,17 @@ body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  background: radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
+  background:
+    radial-gradient(circle at top, #0d1730 0%, var(--bg-0) 58%, #030509 100%);
   color: var(--text-0);
   font-family: var(--font-stack);
   overflow-x: hidden;
   overflow-y: auto;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
 }
 
 body {
@@ -71,6 +108,18 @@ body[data-mode="world"] {
   overflow: hidden;
 }
 
+body[data-mode="round"] {
+  --compass-alpha: 1;
+}
+
+body[data-mode="flat"] {
+  --compass-alpha: 0.88;
+}
+
+body[data-mode="observe"] {
+  --compass-alpha: 0.76;
+}
+
 button,
 input,
 select,
@@ -79,9 +128,22 @@ a {
   font: inherit;
 }
 
+button {
+  appearance: none;
+  border: 0;
+  outline: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+img,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
 }
 
 #app-shell {
@@ -140,6 +202,7 @@ body[data-mode="world"] #app-shell {
   color: var(--text-1);
   text-align: center;
   font-size: 12px;
+  font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   z-index: var(--overlay-z);
@@ -172,7 +235,12 @@ body[data-mode="world"] #app-shell {
   box-shadow: var(--panel-shadow);
   backdrop-filter: blur(10px);
   cursor: pointer;
-  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease, opacity 140ms ease;
+  transition:
+    transform var(--motion-fast),
+    background-color var(--motion-fast),
+    border-color var(--motion-fast),
+    opacity var(--motion-fast),
+    box-shadow var(--motion-fast);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -194,6 +262,16 @@ body[data-mode="world"] #app-shell {
   transform: scale(0.98);
 }
 
+.nav-btn.is-active,
+.world-btn.is-active {
+  border-color: var(--shell-border-active);
+  box-shadow:
+    var(--panel-shadow),
+    0 0 0 1px rgba(231, 201, 122, 0.10),
+    0 0 18px rgba(231, 201, 122, 0.12);
+  color: #fff3cf;
+}
+
 #world-actions,
 .world-actions {
   position: absolute;
@@ -210,16 +288,18 @@ body[data-mode="world"] #app-shell {
   position: absolute;
   right: var(--shell-gap);
   bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 8px);
-  width: 180px;
-  height: 180px;
+  width: var(--compass-size);
+  height: var(--compass-size);
   border-radius: 50%;
-  background: radial-gradient(circle at 50% 50%, rgba(20, 33, 56, 0.88) 0%, rgba(9, 14, 24, 0.76) 72%, rgba(6, 10, 18, 0.66) 100%);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(20, 33, 56, 0.88) 0%, rgba(9, 14, 24, 0.76) 72%, rgba(6, 10, 18, 0.66) 100%);
   border: 1px solid rgba(145, 175, 255, 0.18);
   box-shadow: var(--panel-shadow);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(var(--compass-blur));
   z-index: var(--overlay-z);
   pointer-events: none;
   overflow: hidden;
+  opacity: var(--compass-alpha);
 }
 
 #compass-overlay canvas,
@@ -245,7 +325,7 @@ body[data-mode="world"] #app-shell {
 
 #diagnostics-bar,
 .diagnostics-bar {
-  width: min(980px, 100%);
+  width: min(1080px, 100%);
   min-height: var(--diagnostic-bar-height);
   display: grid;
   grid-template-columns: 1fr auto;
@@ -255,7 +335,7 @@ body[data-mode="world"] #app-shell {
   border: 1px solid rgba(145, 175, 255, 0.18);
   border-radius: 16px;
   background: rgba(8, 14, 24, 0.76);
-  box-shadow: var(--panel-shadow);
+  box-shadow: var(--panel-shadow-strong);
   backdrop-filter: blur(12px);
   pointer-events: auto;
 }
@@ -263,6 +343,8 @@ body[data-mode="world"] #app-shell {
 .diagnostic-bar__summary {
   min-width: 0;
   overflow: hidden;
+  display: grid;
+  gap: 8px;
 }
 
 .diagnostic-bar__group {
@@ -270,6 +352,7 @@ body[data-mode="world"] #app-shell {
   flex-wrap: wrap;
   gap: 8px;
   align-items: center;
+  min-width: 0;
 }
 
 .diagnostic-pill {
@@ -279,10 +362,23 @@ body[data-mode="world"] #app-shell {
   min-height: 30px;
   padding: 6px 10px;
   border-radius: 999px;
-  border: 1px solid rgba(145, 175, 255, 0.14);
-  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--pill-border);
+  background: var(--pill-bg);
   color: var(--text-1);
   white-space: nowrap;
+  max-width: 100%;
+}
+
+.diagnostic-pill--live {
+  background: var(--diagnostic-state-live);
+}
+
+.diagnostic-pill--stale {
+  background: var(--diagnostic-state-stale);
+}
+
+.diagnostic-pill--offline {
+  background: var(--diagnostic-state-offline);
 }
 
 .diagnostic-pill__label {
@@ -296,6 +392,9 @@ body[data-mode="world"] #app-shell {
   color: var(--text-0);
   font-size: 12px;
   font-weight: 700;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 #diagnostics-toggle,
@@ -316,7 +415,11 @@ body[data-mode="world"] #app-shell {
   z-index: var(--toggle-z);
   pointer-events: auto;
   cursor: pointer;
-  transition: transform 140ms ease, background-color 140ms ease, border-color 140ms ease;
+  transition:
+    transform var(--motion-fast),
+    background-color var(--motion-fast),
+    border-color var(--motion-fast),
+    box-shadow var(--motion-fast);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -366,12 +469,17 @@ body[data-mode="world"] #app-shell {
 }
 
 .panel-section {
-  background: var(--panel-bg);
+  background: linear-gradient(180deg, var(--panel-bg) 0%, var(--panel-bg-strong) 100%);
   border: 1px solid var(--panel-border);
   box-shadow: var(--panel-shadow);
   backdrop-filter: blur(10px);
   border-radius: var(--panel-radius);
   padding: var(--panel-padding);
+}
+
+.panel-section.panel-section--accent {
+  border-color: var(--panel-border-strong);
+  box-shadow: var(--panel-shadow-strong);
 }
 
 .panel-title {
@@ -418,6 +526,10 @@ body[data-mode="world"] #app-shell {
   color: var(--danger);
 }
 
+.panel-value--warn {
+  color: var(--warn);
+}
+
 .panel-value--muted {
   color: var(--text-muted);
 }
@@ -444,7 +556,13 @@ body[data-diagnostics="full"] .debug-panel {
 .runtime-banner,
 #diagnostics-bar,
 .diagnostics-bar {
-  transition: opacity 160ms ease, transform 160ms ease, bottom 160ms ease;
+  transition:
+    opacity var(--motion-mid),
+    transform var(--motion-mid),
+    bottom var(--motion-mid),
+    right var(--motion-mid),
+    width var(--motion-mid),
+    height var(--motion-mid);
 }
 
 .hidden {
@@ -463,18 +581,30 @@ body[data-diagnostics="full"] .debug-panel {
   border: 0 !important;
 }
 
+@media (max-width: 1100px) {
+  :root {
+    --diagnostic-panel-width: min(420px, calc(100vw - 24px));
+  }
+
+  #diagnostics-bar,
+  .diagnostics-bar {
+    width: min(1000px, 100%);
+  }
+}
+
 @media (max-width: 900px) {
   :root {
     --shell-gap: 12px;
     --panel-padding: 12px;
     --diagnostic-bar-height: 64px;
     --diagnostic-panel-width: min(360px, calc(100vw - 24px));
+    --compass-size: 152px;
   }
 
   #compass-overlay,
   .compass-overlay {
-    width: 152px;
-    height: 152px;
+    width: var(--compass-size);
+    height: var(--compass-size);
   }
 
   #diagnostics-bar,
@@ -487,11 +617,16 @@ body[data-diagnostics="full"] .debug-panel {
   .diagnostics-toggle {
     justify-self: end;
   }
+
+  .diagnostic-bar__group {
+    gap: 6px;
+  }
 }
 
 @media (max-width: 680px) {
   :root {
     --diagnostic-bar-height: 72px;
+    --compass-size: 132px;
   }
 
   #nav-doors,
@@ -523,14 +658,15 @@ body[data-diagnostics="full"] .debug-panel {
 
   #compass-overlay,
   .compass-overlay {
-    width: 132px;
-    height: 132px;
+    width: var(--compass-size);
+    height: var(--compass-size);
     bottom: calc(var(--shell-gap) + var(--diagnostic-bar-height) + 8px);
   }
 
   .diagnostic-pill {
     min-height: 28px;
     padding: 5px 9px;
+    max-width: calc(100vw - 64px);
   }
 }
 
@@ -565,5 +701,20 @@ body[data-diagnostics="full"] .debug-panel {
 
   .diagnostic-pill__value {
     font-size: 11px;
+  }
+
+  .diagnostic-bar__summary {
+    gap: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }

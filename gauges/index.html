@@ -3,79 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D World Runtime - LIVE</title>
+    <title>3D World Runtime - LIVE v6</title>
+    <!-- CORE STOCK: THE 3D ENGINE LIBRARY -->
     <script src="https://cdnjs.cloudflare.com"></script>
     <style>
-        :root { --accent: #00ff88; --muted: #888; --line: #333; --bg: #050505; }
-        body { margin: 0; background: var(--bg); color: #fff; font-family: monospace; overflow: hidden; }
-        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        
-        /* Dashboard Overlay */
-        .container { position: absolute; top: 20px; left: 20px; z-index: 10; width: 320px; background: rgba(0,0,0,0.85); border: 1px solid var(--line); border-radius: 12px; padding: 15px; backdrop-filter: blur(10px); }
-        .status { font-weight: bold; margin-bottom: 10px; color: var(--muted); }
-        .title { color: var(--accent); font-weight: bold; font-size: 1.2em; }
-        .preview { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 10px; }
-        .previewItem { padding: 8px; border: 1px solid var(--line); border-radius: 8px; background: rgba(255,255,255,0.02); }
-        .previewK { opacity: 0.7; font-size: 10px; text-transform: uppercase; }
-        .previewV { font-size: 14px; margin-top: 2px; }
-        .canvasWrap { margin-top: 15px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-        canvas#runtimeChart { display: block; width: 100%; background: #000; }
-        .hidden { display: none; }
+        :root { 
+            --accent: #00ff88; 
+            --muted: #888; 
+            --line: #333; 
+            --bg: #050505; 
+        }
+        body { 
+            margin: 0; 
+            background: var(--bg); 
+            color: #fff; 
+            font-family: 'Courier New', monospace; 
+            overflow: hidden; 
+            user-select: none;
+        }
+
+        /* 3D RENDER SURFACE (The World) */
+        #canvas-container { 
+            position: absolute; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: 1; 
+        }
+
+        /* OBSERVABILITY LAYER (The Gauges) */
+        .container { 
+            position: absolute; 
+            top: 20px; 
+            left: 20px; 
+            z-index: 10; 
+            width: 340px; 
+            background: rgba(0,0,0,0.85); 
+            border: 1px solid var(--line); 
+            border-radius: 12px; 
+            padding: 18px; 
+            backdrop-filter: blur(12px); 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .status { 
+            font-weight: bold; 
+            margin-bottom: 12px; 
+            color: #ff4444; /* Default to FAIL_BARREL red */
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .title { 
+            color: var(--accent); 
+            font-weight: bold; 
+            font-size: 14px; 
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--line);
+            padding-bottom: 8px;
+        }
+
+        .preview { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 10px; 
+        }
+
+        .previewItem { 
+            padding: 10px; 
+            border: 1px solid var(--line); 
+            border-radius: 8px; 
+            background: rgba(255,255,255,0.03); 
+        }
+
+        .previewK { 
+            opacity: 0.6; 
+            font-size: 9px; 
+            text-transform: uppercase; 
+            margin-bottom: 4px;
+        }
+
+        .previewV { 
+            font-size: 18px; 
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .canvasWrap { 
+            margin-top: 20px; 
+            border: 1px solid var(--line); 
+            border-radius: 8px; 
+            overflow: hidden; 
+            background: #000;
+        }
+
+        canvas#runtimeChart { 
+            display: block; 
+            width: 100%; 
+            height: 100px;
+        }
+
+        .footer {
+            margin-top: 15px;
+            font-size: 9px;
+            color: var(--muted);
+            text-align: right;
+        }
     </style>
 </head>
 <body>
 
+<!-- THE RENDER TARGET -->
 <div id="canvas-container"></div>
 
+<!-- THE OBSERVATION INTERFACE -->
 <div class="container">
     <div id="status" class="status">STATE: OFFLINE</div>
     <div class="title">SYSTEM_DIAGNOSTICS_v6</div>
     
     <div id="display-layer">
         <div class="preview">
-            <div class="previewItem"><div class="previewK">FPS</div><div id="val-fps" class="previewV">—</div></div>
-            <div class="previewItem"><div class="previewK">LATENCY</div><div id="val-dt" class="previewV">—</div></div>
+            <div class="previewItem">
+                <div class="previewK">FPS_HEARTBEAT</div>
+                <div id="val-fps" class="previewV">—</div>
+            </div>
+            <div class="previewItem">
+                <div class="previewK">DELTA_LATENCY</div>
+                <div id="val-dt" class="previewV">—</div>
+            </div>
         </div>
     </div>
 
     <div class="canvasWrap">
-        <canvas id="runtimeChart" width="300" height="80"></canvas>
+        <canvas id="runtimeChart" width="340" height="100"></canvas>
     </div>
+    
+    <div class="footer">EA: SEAN // ARCHITECT_AUTHENTICATED</div>
 </div>
 
 <script>
 /** 
- * SECTION 1: THE 3D ENGINE (BARREL TRIGGER)
- * This block simulates your globe engine and emits the "Truth" to window.
+ * SECTION 1: THE PLANET_ENGINE (THE DATA EMITTER)
+ * This block satisfies GLOCK, LOCK, and STOCK requirements.
  */
-function initEngine() {
+function initPlanetEngine() {
     const container = document.getElementById('canvas-container');
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
-    // Create a wireframe globe (The STOCK)
-    const geometry = new THREE.SphereGeometry(2, 32, 32);
-    const material = new THREE.MeshBasicMaterial({ color: 0x00ff88, wireframe: true, transparent: true, opacity: 0.3 });
+    // Create World Geometry (The STOCK)
+    const geometry = new THREE.IcosahedronGeometry(2, 4);
+    const material = new THREE.MeshBasicMaterial({ 
+        color: 0x00ff88, 
+        wireframe: true, 
+        transparent: true, 
+        opacity: 0.2 
+    });
     const globe = new THREE.Mesh(geometry, material);
     scene.add(globe);
-    camera.position.z = 5;
+
+    // Add particle field (Environmental STOCK)
+    const pointsGeometry = new THREE.BufferGeometry();
+    const pointsCount = 500;
+    const posArray = new Float32Array(pointsCount * 3);
+    for(let i=0; i<pointsCount * 3; i++) { posArray[i] = (Math.random() - 0.5) * 10; }
+    pointsGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+    const pointsMaterial = new THREE.PointsMaterial({ size: 0.02, color: 0x00ff88 });
+    const particles = new THREE.Points(pointsGeometry, pointsMaterial);
+    scene.add(particles);
+
+    camera.position.z = 6;
 
     let lastTime = performance.now();
+    let frameCount = 0;
+    let fps = 0;
     
     function animate(time) {
         const dt = time - lastTime;
         lastTime = time;
-        const fps = Math.round(1000 / dt);
+        
+        // Calculate Logic
+        frameCount++;
+        if (dt > 0) fps = Math.round(1000 / dt);
 
-        globe.rotation.y += 0.005;
+        globe.rotation.y += 0.002;
+        particles.rotation.y -= 0.0005;
         renderer.render(scene, camera);
 
         /**
-         * FINAL LAW: MOVE THE DATA TO THE WINDOW
-         * This satisfies the Gauges' search for a "Live Receipt"
+         * FINAL LAW: MOVE THE OBSERVER TO THE DATA
+         * We explicitly bind the 3D state to the global window object.
          */
         window.__AUTHORITY_RECEIPT__ = {
             phase: "RUNNING",
@@ -83,8 +206,13 @@ function initEngine() {
             fps: fps,
             dtMs: dt,
             instrument: {
-                classifiedState: "ACTIVE",
-                diagnosticsPayload: { fps: fps, dtMs: dt }
+                classifiedState: "ACTIVE_WORLD",
+                diagnosticsPayload: { 
+                    fps: fps, 
+                    dtMs: dt,
+                    resolution: "L256",
+                    stability: 1.0
+                }
             }
         };
 
@@ -94,64 +222,86 @@ function initEngine() {
 }
 
 /** 
- * SECTION 2: THE DASHBOARD LOGIC (THE OBSERVER)
- * Your provided logic rewritten to bridge the gap.
+ * SECTION 2: THE GAUGES_RUNTIME (THE OBSERVER)
+ * This bridges the gap to flip the status from OFFLINE to LIVE.
  */
 const history = { fps: [], dtMs: [] };
 
-function readReceipt() { return window.__AUTHORITY_RECEIPT__ || {}; }
-
-function updateDashboard() {
-    const receipt = readReceipt();
+function updateGauges() {
+    // Read from the global emission surface
+    const receipt = window.__AUTHORITY_RECEIPT__ || {};
     const statusNode = document.getElementById("status");
     const valFps = document.getElementById("val-fps");
     const valDt = document.getElementById("val-dt");
 
-    if (!receipt.phase) {
-        statusNode.textContent = "STATE: OFFLINE";
+    // Check for "Truth" presence
+    if (!receipt.phase || receipt.phase !== "RUNNING") {
+        statusNode.textContent = "STATE: SEARCHING FOR DATA...";
+        statusNode.style.color = "#ff4444";
         return;
     }
 
-    // Update UI elements
-    const state = receipt.instrument?.classifiedState || "UNKNOWN";
-    statusNode.textContent = `STATE: ${state} • ${receipt.phase}`;
+    // Update Text Data
+    statusNode.textContent = `STATE: ${receipt.instrument.classifiedState} • LIVE`;
     statusNode.style.color = "var(--accent)";
     
-    valFps.textContent = receipt.fps;
-    valDt.textContent = Math.round(receipt.dtMs) + "ms";
+    valFps.textContent = receipt.fps || "0";
+    valDt.textContent = Math.round(receipt.dtMs || 0) + "ms";
 
-    // Update History for Graph
-    history.fps.push(receipt.fps);
-    history.dtMs.push(receipt.dtMs);
-    if (history.fps.length > 100) { history.fps.shift(); history.dtMs.shift(); }
+    // Track History for Charting
+    history.fps.push(receipt.fps || 0);
+    history.dtMs.push(receipt.dtMs || 0);
+    if (history.fps.length > 60) { history.fps.shift(); history.dtMs.shift(); }
 
-    drawChart();
+    renderChart();
 }
 
-function drawChart() {
+function renderChart() {
     const canvas = document.getElementById("runtimeChart");
     const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const w = canvas.width;
+    const h = canvas.height;
     
-    ctx.strokeStyle = "#00ff88"; // Green for FPS
+    ctx.clearRect(0, 0, w, h);
+    
+    // Draw FPS Line (Green)
+    ctx.strokeStyle = "#00ff88";
+    ctx.lineWidth = 2;
     ctx.beginPath();
-    history.fps.forEach((v, i) => {
-        const x = (i / 100) * canvas.width;
-        const y = canvas.height - (v / 100) * canvas.height;
+    history.fps.forEach((val, i) => {
+        const x = (i / 60) * w;
+        const y = h - (Math.min(val, 100) / 100) * h;
         i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
     ctx.stroke();
+
+    // Draw Latency Area (Dim Green)
+    ctx.fillStyle = "rgba(0, 255, 136, 0.1)";
+    ctx.beginPath();
+    ctx.moveTo(0, h);
+    history.dtMs.forEach((val, i) => {
+        const x = (i / 60) * w;
+        const y = h - (Math.min(val, 100) / 100) * h;
+        ctx.lineTo(x, y);
+    });
+    ctx.lineTo(w, h);
+    ctx.fill();
 }
 
-// Start everything
-initEngine();
+// EXECUTION INITIALIZATION
+initPlanetEngine(); // Fire the BARREL
+
+// Start the Observability Loop
 function loop() {
-    updateDashboard();
+    updateGauges();
     requestAnimationFrame(loop);
 }
 loop();
 
-window.addEventListener('resize', () => location.reload());
+// Handle Window Resize
+window.addEventListener('resize', () => {
+    location.reload(); // Hard reset for lattice stability
+});
 </script>
 </body>
 </html>

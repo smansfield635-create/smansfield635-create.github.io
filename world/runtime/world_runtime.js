@@ -1,6 +1,6 @@
 // /world/runtime/world_runtime.js
 // MODE: THIN CONDUCTOR RENEWAL
-// STATUS: NON-DRIFT | CONTRACT-PRESERVING | PSYCHOLOGY-PREWIRED
+// STATUS: NON-DRIFT | CONTRACT-PRESERVING | FAILURE-ISOLATING | CONTINUITY-PRESERVING
 // OWNER: SEAN
 
 import { WORLD_KERNEL } from "../world_kernel.js";
@@ -16,19 +16,48 @@ function now() {
   return Date.now();
 }
 
+function hasWindow() {
+  return typeof window !== "undefined" && !!window;
+}
+
+function hasRAF() {
+  return typeof requestAnimationFrame === "function";
+}
+
+function hasCAF() {
+  return typeof cancelAnimationFrame === "function";
+}
+
 function safeSetStorage(key, value) {
   try {
     localStorage.setItem(key, JSON.stringify(value));
-  } catch (_) {}
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 function safeGetGlobalInstruments() {
   try {
-    const host = typeof window !== "undefined" ? window : globalThis;
+    const host = hasWindow() ? window : globalThis;
     return host?.__CTE_INSTRUMENTS__ ?? null;
   } catch (_) {
     return null;
   }
+}
+
+function safeWriteAuthorityReceipt(receipt) {
+  try {
+    if (hasWindow()) {
+      window.__AUTHORITY_RECEIPT__ = receipt;
+      return true;
+    }
+  } catch (_) {}
+  return false;
+}
+
+function normalizeObject(value) {
+  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
 function basePsychologySurface() {
@@ -44,6 +73,12 @@ function baseReceipt() {
     phase: "INIT",
     verification: { pass: false },
     timestamp: now(),
+
+    // failure state
+    error: null,
+    errorCode: null,
+    degraded: false,
+    degradedDomains: [],
 
     // render/runtime continuity
     projectionState: null,
@@ -66,27 +101,30 @@ function baseReceipt() {
 }
 
 function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
+  const output = normalizeObject(renderResult);
+  const state = normalizeObject(viewState);
+
   return {
     ...receipt,
-    projectionState: renderResult?.projectionState ?? receipt.projectionState,
-    primitive: renderResult?.primitive ?? receipt.primitive,
-    topology: renderResult?.topology ?? receipt.topology,
-    renderAuthority: renderResult?.renderAuthority ?? receipt.renderAuthority,
-    density: renderResult?.density ?? receipt.density,
-    audit: renderResult?.audit ?? receipt.audit,
+    projectionState: output.projectionState ?? receipt.projectionState,
+    primitive: output.primitive ?? receipt.primitive,
+    topology: output.topology ?? receipt.topology,
+    renderAuthority: output.renderAuthority ?? receipt.renderAuthority,
+    density: output.density ?? receipt.density,
+    audit: output.audit ?? receipt.audit,
 
     // pass-through only
-    scope: viewState?.scope ?? receipt.scope,
-    lens: viewState?.lens ?? receipt.lens,
-    worldVariantState: viewState?.worldVariantState ?? receipt.worldVariantState,
-    traversalState: viewState?.traversalState ?? receipt.traversalState,
-    worldModeState: viewState?.worldModeState ?? receipt.worldModeState,
+    scope: state.scope ?? receipt.scope,
+    lens: state.lens ?? receipt.lens,
+    worldVariantState: state.worldVariantState ?? receipt.worldVariantState,
+    traversalState: state.traversalState ?? receipt.traversalState,
+    worldModeState: state.worldModeState ?? receipt.worldModeState,
 
     // psychology carriage only
     psychology: {
-      state: viewState?.psychologyState ?? receipt.psychology.state,
-      envelope: viewState?.psychologyEnvelope ?? receipt.psychology.envelope,
-      receipt: viewState?.psychologyReceipt ?? receipt.psychology.receipt
+      state: state.psychologyState ?? receipt.psychology.state,
+      envelope: state.psychologyEnvelope ?? receipt.psychology.envelope,
+      receipt: state.psychologyReceipt ?? receipt.psychology.receipt
     }
   };
 }
@@ -98,7 +136,25 @@ function buildFailureReceipt(errorCode, message) {
     verification: { pass: false },
     error: message || errorCode,
     errorCode,
-    timestamp: now()
+    timestamp: now(),
+    degraded: false,
+    degradedDomains: []
+  };
+}
+
+function buildDegradedReceipt(domains, message, priorReceipt = null) {
+  const degradedDomains = Array.isArray(domains) ? domains.slice() : [];
+  const base = priorReceipt ? { ...baseReceipt(), ...priorReceipt } : baseReceipt();
+
+  return {
+    ...base,
+    phase: "DEGRADED",
+    verification: { pass: false },
+    timestamp: now(),
+    degraded: true,
+    degradedDomains,
+    error: message || "Runtime degraded",
+    errorCode: "RUNTIME_DEGRADED"
   };
 }
 
@@ -107,25 +163,100 @@ function buildDuplicateStartReceipt() {
 }
 
 function emitReceipt(receipt, instruments) {
-  try {
-    window.__AUTHORITY_RECEIPT__ = receipt;
-  } catch (_) {}
+  const domains = [];
+  const normalizedReceipt = normalizeObject(receipt);
 
-  safeSetStorage("cte_runtime_v4", receipt);
+  const authorityWriteOk = safeWriteAuthorityReceipt(normalizedReceipt);
+  if (!authorityWriteOk) domains.push("AUTHORITY_RECEIPT");
 
-  try {
-    if (instruments && typeof instruments.update === "function") {
-      instruments.update(receipt);
+  const storageOk = safeSetStorage("cte_runtime_v4", normalizedReceipt);
+  if (!storageOk) domains.push("STORAGE");
+
+  if (instruments && typeof instruments.update === "function") {
+    try {
+      instruments.update(normalizedReceipt);
+    } catch (_) {
+      domains.push("INSTRUMENTS");
     }
-  } catch (_) {}
+  }
+
+  if (domains.length === 0) {
+    return normalizedReceipt;
+  }
+
+  return {
+    ...normalizedReceipt,
+    phase: normalizedReceipt.phase === "FAIL" ? "FAIL" : "DEGRADED",
+    verification: {
+      pass: normalizedReceipt.phase === "RUNNING" ? false : normalizedReceipt.verification?.pass ?? false
+    },
+    degraded: true,
+    degradedDomains: Array.from(new Set([...(normalizedReceipt.degradedDomains || []), ...domains])),
+    error: normalizedReceipt.error || "Receipt emission degraded",
+    errorCode: normalizedReceipt.errorCode || "RECEIPT_DEGRADED",
+    timestamp: now()
+  };
 }
 
-function safeDisposeInstruments(instruments) {
+function safeDisposeInstruments(instruments, options = {}) {
+  const ownsLifecycle = options?.instrumentOwnership === "runtime";
+  if (!ownsLifecycle) return;
+
   try {
     if (instruments && typeof instruments.dispose === "function") {
       instruments.dispose();
     }
   } catch (_) {}
+}
+
+function classifyCriticalInvariantError(error) {
+  const message = String(error?.message || "");
+
+  if (!hasRAF()) {
+    return {
+      critical: true,
+      errorCode: "RUNTIME_NO_FRAME_SCHEDULER",
+      message: "requestAnimationFrame unavailable"
+    };
+  }
+
+  if (!WORLD_KERNEL) {
+    return {
+      critical: true,
+      errorCode: "RUNTIME_KERNEL_UNAVAILABLE",
+      message: "WORLD_KERNEL unavailable"
+    };
+  }
+
+  if (typeof WORLD_KERNEL.resolveNode !== "function") {
+    return {
+      critical: true,
+      errorCode: "RUNTIME_NODE_AUTHORITY_UNAVAILABLE",
+      message: "WORLD_KERNEL.resolveNode unavailable"
+    };
+  }
+
+  if (message.includes("WORLD_KERNEL.resolveNode unavailable")) {
+    return {
+      critical: true,
+      errorCode: "RUNTIME_NODE_AUTHORITY_UNAVAILABLE",
+      message
+    };
+  }
+
+  return {
+    critical: false,
+    errorCode: null,
+    message
+  };
+}
+
+function defaultViewState() {
+  return {};
+}
+
+function validateViewStateCandidate(candidate) {
+  return candidate && typeof candidate === "object" && !Array.isArray(candidate);
 }
 
 /* =========================
@@ -137,7 +268,8 @@ export function startRuntime({
   planetField,
   projectPoint,
   viewState = {},
-  control = null
+  control = null,
+  instrumentOwnership = "external"
 }) {
   if (runtimeActive) {
     const duplicateReceipt = buildDuplicateStartReceipt();
@@ -145,71 +277,166 @@ export function startRuntime({
     return { dispose() {} };
   }
 
+  if (!hasRAF()) {
+    const bootFailureReceipt = buildFailureReceipt(
+      "RUNTIME_NO_FRAME_SCHEDULER",
+      "requestAnimationFrame unavailable"
+    );
+    emitReceipt(bootFailureReceipt, null);
+    return { dispose() {} };
+  }
+
   runtimeActive = true;
 
   let running = true;
   let rafId = null;
+  let lastGoodViewState = validateViewStateCandidate(viewState) ? viewState : defaultViewState();
+  let lastReceipt = baseReceipt();
+
   const instruments = safeGetGlobalInstruments();
 
   function resolveViewState() {
-    if (control && typeof control.getViewState === "function") {
-      return control.getViewState(viewState);
+    try {
+      const candidate =
+        control && typeof control.getViewState === "function"
+          ? control.getViewState(lastGoodViewState)
+          : viewState;
+
+      if (validateViewStateCandidate(candidate)) {
+        lastGoodViewState = candidate;
+        return {
+          viewState: candidate,
+          degraded: false,
+          domains: []
+        };
+      }
+
+      return {
+        viewState: lastGoodViewState,
+        degraded: true,
+        domains: ["VIEW_STATE"],
+        message: "Invalid viewState candidate; using last valid state"
+      };
+    } catch (err) {
+      return {
+        viewState: lastGoodViewState,
+        degraded: true,
+        domains: ["VIEW_STATE"],
+        message: err?.message || "View state resolution failed; using last valid state"
+      };
     }
-    return viewState;
+  }
+
+  function scheduleNextFrame() {
+    if (!running) return;
+    try {
+      rafId = requestAnimationFrame(frame);
+    } catch (err) {
+      running = false;
+      runtimeActive = false;
+      const failureReceipt = buildFailureReceipt(
+        "RUNTIME_BOOT_ERROR",
+        err?.message || "Runtime scheduling failure"
+      );
+      lastReceipt = emitReceipt(failureReceipt, instruments);
+    }
   }
 
   function frame() {
     if (!running) return;
 
+    const kernelCheck = classifyCriticalInvariantError(null);
+    if (kernelCheck.critical) {
+      running = false;
+      runtimeActive = false;
+      const failureReceipt = buildFailureReceipt(kernelCheck.errorCode, kernelCheck.message);
+      lastReceipt = emitReceipt(failureReceipt, instruments);
+      return;
+    }
+
+    const viewResolution = resolveViewState();
+    const nextViewState = viewResolution.viewState;
+
+    let frameReceipt = baseReceipt();
+    let renderFailed = false;
+    let renderMessage = null;
+    let degradedDomains = [];
+    let renderResult = null;
+
     try {
-      // Keep upstream node authority reachable, but do not interpret it here.
-      // This validates availability without creating runtime-side meaning.
-      if (!WORLD_KERNEL || typeof WORLD_KERNEL.resolveNode !== "function") {
-        throw new Error("WORLD_KERNEL.resolveNode unavailable");
-      }
-
-      const nextViewState = resolveViewState();
-
-      const renderResult = renderPlanet({
+      renderResult = renderPlanet({
         ctx,
         planetField,
         projectPoint,
         viewState: nextViewState
       });
 
-      const receipt = mergeRenderIntoReceipt(baseReceipt(), renderResult, nextViewState);
-      receipt.phase = "RUNNING";
-      receipt.verification = { pass: true };
-      receipt.timestamp = now();
-
-      emitReceipt(receipt, instruments);
-
-      rafId = requestAnimationFrame(frame);
+      frameReceipt = mergeRenderIntoReceipt(frameReceipt, renderResult, nextViewState);
+      frameReceipt.phase = "RUNNING";
+      frameReceipt.verification = { pass: true };
+      frameReceipt.timestamp = now();
     } catch (err) {
-      running = false;
-      const failureReceipt = buildFailureReceipt(
-        "RUNTIME_FRAME_ERROR",
-        err?.message || "Runtime frame error"
+      renderFailed = true;
+      renderMessage = err?.message || "Render failure";
+      degradedDomains.push("RENDER");
+
+      frameReceipt = mergeRenderIntoReceipt(
+        buildDegradedReceipt(["RENDER"], renderMessage, lastReceipt),
+        {},
+        nextViewState
       );
-      emitReceipt(failureReceipt, instruments);
     }
+
+    if (viewResolution.degraded) {
+      degradedDomains = degradedDomains.concat(viewResolution.domains || []);
+      frameReceipt = {
+        ...frameReceipt,
+        phase: frameReceipt.phase === "FAIL" ? "FAIL" : "DEGRADED",
+        verification: { pass: false },
+        degraded: true,
+        degradedDomains: Array.from(new Set([...(frameReceipt.degradedDomains || []), ...degradedDomains])),
+        error: frameReceipt.error || viewResolution.message || "Runtime degraded",
+        errorCode: frameReceipt.errorCode || "RUNTIME_DEGRADED",
+        timestamp: now()
+      };
+    }
+
+    if (!renderFailed && degradedDomains.length === 0) {
+      frameReceipt.degraded = false;
+      frameReceipt.degradedDomains = [];
+      frameReceipt.error = null;
+      frameReceipt.errorCode = null;
+    } else if (frameReceipt.phase !== "FAIL") {
+      frameReceipt.phase = "DEGRADED";
+      frameReceipt.verification = { pass: false };
+      frameReceipt.degraded = true;
+      frameReceipt.degradedDomains = Array.from(
+        new Set([...(frameReceipt.degradedDomains || []), ...degradedDomains])
+      );
+      frameReceipt.error = frameReceipt.error || renderMessage || viewResolution.message || "Runtime degraded";
+      frameReceipt.errorCode = frameReceipt.errorCode || "RUNTIME_DEGRADED";
+      frameReceipt.timestamp = now();
+    }
+
+    lastReceipt = emitReceipt(frameReceipt, instruments);
+    scheduleNextFrame();
   }
 
   function dispose() {
     running = false;
     runtimeActive = false;
 
-    if (rafId !== null) {
+    if (rafId !== null && hasCAF()) {
       try {
         cancelAnimationFrame(rafId);
       } catch (_) {}
     }
 
-    safeDisposeInstruments(instruments);
+    safeDisposeInstruments(instruments, { instrumentOwnership });
   }
 
   try {
-    rafId = requestAnimationFrame(frame);
+    scheduleNextFrame();
   } catch (err) {
     running = false;
     runtimeActive = false;
@@ -217,11 +444,13 @@ export function startRuntime({
       "RUNTIME_BOOT_ERROR",
       err?.message || "Runtime boot error"
     );
-    emitReceipt(bootFailureReceipt, instruments);
+    lastReceipt = emitReceipt(bootFailureReceipt, instruments);
   }
 
   try {
-    window.addEventListener("pagehide", dispose, { once: true });
+    if (hasWindow()) {
+      window.addEventListener("pagehide", dispose, { once: true });
+    }
   } catch (_) {}
 
   return { dispose };

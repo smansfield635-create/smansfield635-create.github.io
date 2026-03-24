@@ -6,14 +6,6 @@
 <title>Nine Summits — Index</title>
 <link rel="stylesheet" href="/assets/ui.css"/>
 
-<script>
-(function () {
-  var params = new URLSearchParams(location.search);
-  var isDoorBg = params.get("doorbg") === "1";
-  document.documentElement.setAttribute("data-doorbg", isDoorBg ? "1" : "0");
-})();
-</script>
-
 <style>
 html, body {
   margin: 0;
@@ -36,7 +28,6 @@ html, body {
   height: 100vh;
   display: block;
   background: #000;
-  z-index: 0;
 }
 
 #runtime-root {
@@ -61,11 +52,6 @@ html, body {
 .boot-ok { color: #7fffd4; }
 .boot-warn { color: #ffd27a; }
 .boot-fail { color: #ff7a7a; }
-
-html[data-doorbg="1"] #runtime-root,
-html[data-doorbg="1"] #boot-status {
-  display: none !important;
-}
 </style>
 </head>
 
@@ -80,19 +66,10 @@ html[data-doorbg="1"] #boot-status {
 <script type="module">
 const statusNode = document.getElementById("boot-status");
 const canvas = document.getElementById("world");
-const runtimeRoot = document.getElementById("runtime-root");
+const root = document.getElementById("runtime-root");
 
-const MODULES = Object.freeze([
-  { key: "runtime", path: "/world/runtime/world_runtime.js", validate: m =>
-      typeof m?.startRuntime === "function" ||
-      typeof m?.default?.startRuntime === "function"
-  },
-  { key: "world_kernel", path: "/world/world_kernel.js" },
-  { key: "planet_engine", path: "/world/planet_engine.js" },
-  { key: "render", path: "/world/render/index.js" },
-  { key: "control", path: "/world/control.js" },
-  { key: "instruments", path: "/assets/instruments.js" }
-]);
+const RECEIPT_KEY = "__RUNTIME_RECEIPT__";
+const TIMEOUT_MS = 12000;
 
 function setStatus(msg, tone="boot-warn"){
   if (statusNode){
@@ -102,76 +79,65 @@ function setStatus(msg, tone="boot-warn"){
   console.log("[BOOT]", msg);
 }
 
-function ensureCanvas(canvas){
+function ensureCanvas(c){
   const dpr = Math.max(1, window.devicePixelRatio || 1);
   const w = Math.floor(window.innerWidth * dpr);
   const h = Math.floor(window.innerHeight * dpr);
 
-  canvas.width = w;
-  canvas.height = h;
-  canvas.style.width = "100vw";
-  canvas.style.height = "100vh";
+  c.width = w;
+  c.height = h;
+  c.style.width = "100vw";
+  c.style.height = "100vh";
 }
 
-async function importModule(def){
-  try {
-    const mod = await import(def.path);
-    if (def.validate && !def.validate(mod)) {
-      throw new Error(def.key + " contract invalid");
-    }
-    return mod;
-  } catch (e) {
-    throw new Error(def.key + " failed: " + (e?.message || e));
-  }
+function validateRuntime(mod){
+  return typeof mod?.startRuntime === "function" ||
+         typeof mod?.default?.startRuntime === "function";
 }
 
 async function boot(){
   try {
-    setStatus("BOOTING...", "boot-warn");
-
-    if (!canvas) throw new Error("missing canvas");
+    if (!canvas) throw new Error("canvas missing");
 
     ensureCanvas(canvas);
     window.addEventListener("resize", () => ensureCanvas(canvas));
 
-    const loaded = {};
-    for (const m of MODULES){
-      setStatus("IMPORT " + m.key + "...", "boot-warn");
-      loaded[m.key] = await importModule(m);
+    setStatus("IMPORT RUNTIME...", "boot-warn");
+
+    const runtimeMod = await import("/world/runtime/world_runtime.js");
+
+    if (!validateRuntime(runtimeMod)){
+      throw new Error("runtime contract invalid");
     }
 
-    const runtimeModule = loaded.runtime;
     const startRuntime =
-      runtimeModule.startRuntime ||
-      runtimeModule.default?.startRuntime;
+      runtimeMod.startRuntime ||
+      runtimeMod.default.startRuntime;
 
-    if (!startRuntime){
-      throw new Error("startRuntime missing");
-    }
-
-    setStatus("HANDOFF TO RUNTIME...", "boot-warn");
+    setStatus("START RUNTIME...", "boot-warn");
 
     startRuntime({
       canvas,
-      root: runtimeRoot,
+      root,
       mode: "index"
     });
 
-    setStatus("AWAITING RUNTIME RECEIPT...", "boot-warn");
+    setStatus("WAITING FOR RECEIPT...", "boot-warn");
 
-    // single authoritative receipt
-    const TIMEOUT = 12000;
     const start = performance.now();
 
-    while (performance.now() - start < TIMEOUT){
-      const receipt = window.__RUNTIME_RECEIPT__;
+    while (performance.now() - start < TIMEOUT_MS){
+      const receipt = window[RECEIPT_KEY];
+
       if (receipt?.status === "RUNNING"){
         setStatus("RUNNING", "boot-ok");
         return;
       }
+
       if (receipt?.status === "FAIL"){
-        throw new Error(receipt?.message || "runtime failure");
+        throw new Error(receipt?.error || "runtime failure");
       }
+
       await new Promise(r => setTimeout(r, 100));
     }
 

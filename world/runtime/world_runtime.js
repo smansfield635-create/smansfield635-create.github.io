@@ -1,6 +1,6 @@
 // /world/runtime/world_runtime.js
 // MODE: BASELINE RENEWAL
-// STATUS: PLANET-ENGINE-AUTHORITY | SINGLE-RECEIPT | NON-DRIFT
+// STATUS: PLANET-ENGINE-AUTHORITY | SINGLE-RECEIPT | VARIANCE-VERIFIED | NON-DRIFT
 // OWNER: SEAN
 
 import { createPlanetEngine } from "../planet_engine.js";
@@ -33,8 +33,16 @@ function hasCAF() {
   return typeof cancelAnimationFrame === "function";
 }
 
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
 function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
 
 function safeWriteReceipt(receipt) {
@@ -66,6 +74,8 @@ function baseReceipt() {
     errorCode: null,
     backend: null,
     engineAuthority: "planet_engine",
+    fieldContractVersion: null,
+    motionEnabled: false,
     frameIndex: 0,
     elapsedSeconds: 0,
     dayPhase: 0,
@@ -74,7 +84,18 @@ function baseReceipt() {
     density: 0,
     projectionState: null,
     renderAuthority: null,
-    audit: null
+    audit: null,
+    sampleCount: 0,
+    dynamicIlluminationAverage: null,
+    dynamicCloudBiasAverage: null,
+    dynamicStormBiasAverage: null,
+    dynamicCurrentBiasAverage: null,
+    dynamicAuroraBiasAverage: null,
+    dynamicGlowBiasAverage: null,
+    fieldVariancePass: false,
+    visualProgressPass: false,
+    degraded: false,
+    degradedDomains: []
   };
 }
 
@@ -94,6 +115,24 @@ function buildFailureReceipt(code, message, prior = null) {
     verification: { pass: false },
     errorCode: code,
     error: message,
+    degraded: false,
+    degradedDomains: [],
+    timestamp: nowMs()
+  };
+}
+
+function buildDegradedReceipt(code, message, diagnostics, prior = null) {
+  return {
+    ...baseReceipt(),
+    ...(prior ? normalizeObject(prior) : {}),
+    ...normalizeObject(diagnostics),
+    status: "DEGRADED",
+    phase: "DEGRADED",
+    verification: { pass: false },
+    errorCode: code,
+    error: message,
+    degraded: true,
+    degradedDomains: ["FIELD_SIGNAL"],
     timestamp: nowMs()
   };
 }
@@ -135,6 +174,129 @@ function buildTimeState(elapsedSeconds) {
     dayPhase: ((elapsed * 0.02) % 1 + 1) % 1,
     seasonPhase: ((elapsed * 0.0025) % 1 + 1) % 1,
     stormPhase: ((elapsed * 0.01) % 1 + 1) % 1
+  });
+}
+
+function summarizeField(planetField) {
+  const field = normalizeObject(planetField);
+  const samples = Array.isArray(field.samples) ? field.samples : [];
+  const motionContract = normalizeObject(field.motionContract);
+  const fieldSummary = normalizeObject(field.summary);
+
+  let sampleCount = 0;
+  let illuminationTotal = 0;
+  let cloudTotal = 0;
+  let stormTotal = 0;
+  let currentTotal = 0;
+  let auroraTotal = 0;
+  let glowTotal = 0;
+
+  let illuminationMin = Infinity;
+  let illuminationMax = -Infinity;
+  let cloudMin = Infinity;
+  let cloudMax = -Infinity;
+  let stormMin = Infinity;
+  let stormMax = -Infinity;
+  let currentMin = Infinity;
+  let currentMax = -Infinity;
+  let auroraMin = Infinity;
+  let auroraMax = -Infinity;
+  let glowMin = Infinity;
+  let glowMax = -Infinity;
+
+  for (let y = 0; y < samples.length; y += 1) {
+    const row = samples[y];
+    if (!Array.isArray(row)) continue;
+
+    for (let x = 0; x < row.length; x += 1) {
+      const sample = normalizeObject(row[x]);
+
+      const illumination = clamp(isFiniteNumber(sample.dynamicIllumination) ? sample.dynamicIllumination : 0, 0, 1);
+      const cloud = clamp(isFiniteNumber(sample.dynamicCloudBias) ? sample.dynamicCloudBias : 0, 0, 1);
+      const storm = clamp(isFiniteNumber(sample.dynamicStormBias) ? sample.dynamicStormBias : 0, 0, 1);
+      const current = clamp(isFiniteNumber(sample.dynamicCurrentBias) ? sample.dynamicCurrentBias : 0, 0, 1);
+      const aurora = clamp(isFiniteNumber(sample.dynamicAuroraBias) ? sample.dynamicAuroraBias : 0, 0, 1);
+      const glow = clamp(isFiniteNumber(sample.dynamicGlowBias) ? sample.dynamicGlowBias : 0, 0, 1);
+
+      sampleCount += 1;
+
+      illuminationTotal += illumination;
+      cloudTotal += cloud;
+      stormTotal += storm;
+      currentTotal += current;
+      auroraTotal += aurora;
+      glowTotal += glow;
+
+      illuminationMin = Math.min(illuminationMin, illumination);
+      illuminationMax = Math.max(illuminationMax, illumination);
+      cloudMin = Math.min(cloudMin, cloud);
+      cloudMax = Math.max(cloudMax, cloud);
+      stormMin = Math.min(stormMin, storm);
+      stormMax = Math.max(stormMax, storm);
+      currentMin = Math.min(currentMin, current);
+      currentMax = Math.max(currentMax, current);
+      auroraMin = Math.min(auroraMin, aurora);
+      auroraMax = Math.max(auroraMax, aurora);
+      glowMin = Math.min(glowMin, glow);
+      glowMax = Math.max(glowMax, glow);
+    }
+  }
+
+  const divisor = Math.max(1, sampleCount);
+
+  const dynamicIlluminationAverage = illuminationTotal / divisor;
+  const dynamicCloudBiasAverage = cloudTotal / divisor;
+  const dynamicStormBiasAverage = stormTotal / divisor;
+  const dynamicCurrentBiasAverage = currentTotal / divisor;
+  const dynamicAuroraBiasAverage = auroraTotal / divisor;
+  const dynamicGlowBiasAverage = glowTotal / divisor;
+
+  const illuminationRange = Number.isFinite(illuminationMin) && Number.isFinite(illuminationMax)
+    ? illuminationMax - illuminationMin
+    : 0;
+  const cloudRange = Number.isFinite(cloudMin) && Number.isFinite(cloudMax)
+    ? cloudMax - cloudMin
+    : 0;
+  const stormRange = Number.isFinite(stormMin) && Number.isFinite(stormMax)
+    ? stormMax - stormMin
+    : 0;
+  const currentRange = Number.isFinite(currentMin) && Number.isFinite(currentMax)
+    ? currentMax - currentMin
+    : 0;
+  const auroraRange = Number.isFinite(auroraMin) && Number.isFinite(auroraMax)
+    ? auroraMax - auroraMin
+    : 0;
+  const glowRange = Number.isFinite(glowMin) && Number.isFinite(glowMax)
+    ? glowMax - glowMin
+    : 0;
+
+  const strongestRange = Math.max(
+    illuminationRange,
+    cloudRange,
+    stormRange,
+    currentRange,
+    auroraRange,
+    glowRange
+  );
+
+  const fieldVariancePass = sampleCount > 0 && strongestRange >= 0.02;
+  const visualProgressPass = sampleCount > 0 && strongestRange >= 0.05;
+
+  return Object.freeze({
+    fieldContractVersion:
+      typeof field.contractVersion === "string"
+        ? field.contractVersion
+        : (typeof fieldSummary.contractVersion === "string" ? fieldSummary.contractVersion : null),
+    motionEnabled: motionContract.enabled === true,
+    sampleCount,
+    dynamicIlluminationAverage,
+    dynamicCloudBiasAverage,
+    dynamicStormBiasAverage,
+    dynamicCurrentBiasAverage,
+    dynamicAuroraBiasAverage,
+    dynamicGlowBiasAverage,
+    fieldVariancePass,
+    visualProgressPass
   });
 }
 
@@ -201,6 +363,7 @@ export function startRuntime({ canvas, root = null, mode = "index" } = {}) {
       const elapsedSeconds = Math.max(0, (nowPerf() - startedAt) / 1000);
       const timeState = buildTimeState(elapsedSeconds);
       const planetField = engine.buildPlanetFrame(timeState);
+      const diagnostics = summarizeField(planetField);
 
       const renderResult = renderPlanet({
         ctx: backendState.ctx,
@@ -212,24 +375,71 @@ export function startRuntime({ canvas, root = null, mode = "index" } = {}) {
 
       frameIndex += 1;
 
-      lastReceipt = emitReceipt({
-        ...baseReceipt(),
-        status: "RUNNING",
-        phase: "RUNNING",
-        verification: { pass: true },
-        timestamp: nowMs(),
-        backend: backendState.backend,
-        engineAuthority: "planet_engine",
-        frameIndex,
-        elapsedSeconds: timeState.elapsedSeconds,
-        dayPhase: timeState.dayPhase,
-        seasonPhase: timeState.seasonPhase,
-        stormPhase: timeState.stormPhase,
-        density: renderResult?.density ?? 0,
-        projectionState: renderResult?.projectionState ?? null,
-        renderAuthority: renderResult?.renderAuthority ?? null,
-        audit: renderResult?.audit ?? null
-      });
+      if (!diagnostics.fieldVariancePass) {
+        lastReceipt = emitReceipt(
+          buildDegradedReceipt(
+            "FIELD_VARIANCE_LOW",
+            "Planet field variance below admissible threshold",
+            {
+              backend: backendState.backend,
+              engineAuthority: "planet_engine",
+              fieldContractVersion: diagnostics.fieldContractVersion,
+              motionEnabled: diagnostics.motionEnabled,
+              frameIndex,
+              elapsedSeconds: timeState.elapsedSeconds,
+              dayPhase: timeState.dayPhase,
+              seasonPhase: timeState.seasonPhase,
+              stormPhase: timeState.stormPhase,
+              density: renderResult?.density ?? 0,
+              projectionState: renderResult?.projectionState ?? null,
+              renderAuthority: renderResult?.renderAuthority ?? null,
+              audit: renderResult?.audit ?? null,
+              sampleCount: diagnostics.sampleCount,
+              dynamicIlluminationAverage: diagnostics.dynamicIlluminationAverage,
+              dynamicCloudBiasAverage: diagnostics.dynamicCloudBiasAverage,
+              dynamicStormBiasAverage: diagnostics.dynamicStormBiasAverage,
+              dynamicCurrentBiasAverage: diagnostics.dynamicCurrentBiasAverage,
+              dynamicAuroraBiasAverage: diagnostics.dynamicAuroraBiasAverage,
+              dynamicGlowBiasAverage: diagnostics.dynamicGlowBiasAverage,
+              fieldVariancePass: diagnostics.fieldVariancePass,
+              visualProgressPass: diagnostics.visualProgressPass
+            },
+            lastReceipt
+          )
+        );
+      } else {
+        lastReceipt = emitReceipt({
+          ...baseReceipt(),
+          status: "RUNNING",
+          phase: "RUNNING",
+          verification: { pass: true },
+          timestamp: nowMs(),
+          backend: backendState.backend,
+          engineAuthority: "planet_engine",
+          fieldContractVersion: diagnostics.fieldContractVersion,
+          motionEnabled: diagnostics.motionEnabled,
+          frameIndex,
+          elapsedSeconds: timeState.elapsedSeconds,
+          dayPhase: timeState.dayPhase,
+          seasonPhase: timeState.seasonPhase,
+          stormPhase: timeState.stormPhase,
+          density: renderResult?.density ?? 0,
+          projectionState: renderResult?.projectionState ?? null,
+          renderAuthority: renderResult?.renderAuthority ?? null,
+          audit: renderResult?.audit ?? null,
+          sampleCount: diagnostics.sampleCount,
+          dynamicIlluminationAverage: diagnostics.dynamicIlluminationAverage,
+          dynamicCloudBiasAverage: diagnostics.dynamicCloudBiasAverage,
+          dynamicStormBiasAverage: diagnostics.dynamicStormBiasAverage,
+          dynamicCurrentBiasAverage: diagnostics.dynamicCurrentBiasAverage,
+          dynamicAuroraBiasAverage: diagnostics.dynamicAuroraBiasAverage,
+          dynamicGlowBiasAverage: diagnostics.dynamicGlowBiasAverage,
+          fieldVariancePass: diagnostics.fieldVariancePass,
+          visualProgressPass: diagnostics.visualProgressPass,
+          degraded: false,
+          degradedDomains: []
+        });
+      }
 
       rafId = requestAnimationFrame(frame);
     } catch (error) {

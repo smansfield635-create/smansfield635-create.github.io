@@ -1,6 +1,6 @@
 // /world/render/index.js
 // MODE: EXECUTION-ONLY | NON-DRIFT | VARIANT CHART AUTHORITY
-// STATUS: FINAL TNT — SUPPRESSION CALIBRATION / STRUCTURE PRESERVED
+// STATUS: FINAL TNT — SUPPRESSION GATE REMOVED / STRUCTURE PRESERVED
 // OWNER: SEAN
 // ROLE:
 // - render expresses variant truth only
@@ -1034,9 +1034,10 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime, viewState) {
       const style = buildMasterStyle(sample, point, baseSize, channels, traversal, nodeRelation, x, y);
       const suppression = evaluateSuppression(sample, traversal, nodeRelation, style);
 
+      // Suppression remains computed for audit/telemetry continuity,
+      // but it no longer gates surface emission.
       if (!suppression.emit) {
         skippedCellCount += 1;
-        continue;
       }
 
       queue.push({

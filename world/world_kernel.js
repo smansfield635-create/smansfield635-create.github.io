@@ -1,727 +1,1201 @@
-export const WORLD_KERNEL = Object.freeze({
-  constants: Object.freeze({
-    worldRadiusFactor: 0.36,
-    latSteps: 108,
-    lonSteps: 216,
-    seaLevel: 0.0,
-    shorelineBand: 0.028,
-    shelfBand: 0.075,
-    elevationScale: 1.0
-  }),
+// /world/render/index.js
+// MODE: EXECUTION-ONLY | NON-DRIFT | VARIANT CHART AUTHORITY
+// STATUS: FINAL TNT — RENDER_TRAVERSAL_CONTRACT_v1 COMPLIANT
+// OWNER: SEAN
+// ROLE:
+// - render expresses variant truth only
+// - no upstream mutation
+// - no diagnostics authority
+// - no camera authority
+// - no semantic invention
+// - preserves runtime-facing return shape
+// - consumes canonical node authority from WORLD_KERNEL
 
-  hierarchy: Object.freeze({
-    continents: 9,
-    countriesPerContinent: 4,
-    regionsPerCountry: 4,
-    statesPerCountry: 16,
-    metrosPerState: 16,
-    citiesPerState: 256,
-    capitalsPerCountry: 4
-  }),
+import { WORLD_KERNEL } from "../world_kernel.js";
+import { resolveTerrainPacket } from "./terrain/index.js";
+import { resolveElevationPacket } from "./terrain/elevation_render_engine.js";
+import { resolveCutPacket } from "./terrain/cut_render_engine.js";
 
-  continents: Object.freeze([
-    Object.freeze({
-      id: "C1",
-      tier: 1,
-      canonicalName: "Input Calibration",
-      shardClass: "CORE_FRAGMENT",
-      sizeFactor: 1.0,
-      reliefAmp: 0.35,
-      reliefFreq: 0.50,
-      roughness: 0.20,
-      erosionStrength: 0.70,
-      coastSmoothness: 0.65,
-      ridgeAlignment: 0.40,
-      valleyDepth: 0.30,
-      traversalDifficulty: 0.20,
-      habitabilityFraction: 0.72,
-      activeNodeDensity: 1.0,
-      activeMetroDensity: 1.0,
-      activeCitiesTotal: null,
-      seedLat: 18,
-      seedLon: -42,
-      axisX: 1.65,
-      axisY: 1.02,
-      rotationDeg: -26
-    }),
-    Object.freeze({
-      id: "C2",
-      tier: 2,
-      canonicalName: "Output Allocation",
-      shardClass: "CORE_FRAGMENT",
-      sizeFactor: 0.90,
-      reliefAmp: 0.40,
-      reliefFreq: 0.55,
-      roughness: 0.22,
-      erosionStrength: 0.68,
-      coastSmoothness: 0.63,
-      ridgeAlignment: 0.45,
-      valleyDepth: 0.35,
-      traversalDifficulty: 0.28,
-      habitabilityFraction: 0.64,
-      activeNodeDensity: 0.85,
-      activeMetroDensity: 0.80,
-      activeCitiesTotal: null,
-      seedLat: -14,
-      seedLon: -18,
-      axisX: 1.48,
-      axisY: 0.98,
-      rotationDeg: 14
-    }),
-    Object.freeze({
-      id: "C3",
-      tier: 3,
-      canonicalName: "Uptime Integrity",
-      shardClass: "CORE_FRAGMENT",
-      sizeFactor: 0.80,
-      reliefAmp: 0.45,
-      reliefFreq: 0.60,
-      roughness: 0.25,
-      erosionStrength: 0.66,
-      coastSmoothness: 0.60,
-      ridgeAlignment: 0.50,
-      valleyDepth: 0.40,
-      traversalDifficulty: 0.35,
-      habitabilityFraction: 0.57,
-      activeNodeDensity: 0.70,
-      activeMetroDensity: 0.64,
-      activeCitiesTotal: null,
-      seedLat: 36,
-      seedLon: 6,
-      axisX: 1.34,
-      axisY: 0.92,
-      rotationDeg: -8
-    }),
-    Object.freeze({
-      id: "C4",
-      tier: 4,
-      canonicalName: "Audit Chain",
-      shardClass: "SECONDARY_SPLIT",
-      sizeFactor: 0.70,
-      reliefAmp: 0.55,
-      reliefFreq: 0.65,
-      roughness: 0.28,
-      erosionStrength: 0.63,
-      coastSmoothness: 0.58,
-      ridgeAlignment: 0.55,
-      valleyDepth: 0.50,
-      traversalDifficulty: 0.45,
-      habitabilityFraction: 0.49,
-      activeNodeDensity: 0.55,
-      activeMetroDensity: 0.48,
-      activeCitiesTotal: null,
-      seedLat: -36,
-      seedLon: 22,
-      axisX: 1.18,
-      axisY: 0.86,
-      rotationDeg: 32
-    }),
-    Object.freeze({
-      id: "C5",
-      tier: 5,
-      canonicalName: "Dynamic Resizing",
-      shardClass: "SECONDARY_SPLIT",
-      sizeFactor: 0.60,
-      reliefAmp: 0.65,
-      reliefFreq: 0.70,
-      roughness: 0.32,
-      erosionStrength: 0.60,
-      coastSmoothness: 0.55,
-      ridgeAlignment: 0.60,
-      valleyDepth: 0.60,
-      traversalDifficulty: 0.55,
-      habitabilityFraction: 0.40,
-      activeNodeDensity: 0.40,
-      activeMetroDensity: 0.34,
-      activeCitiesTotal: null,
-      seedLat: 10,
-      seedLon: 46,
-      axisX: 1.04,
-      axisY: 0.80,
-      rotationDeg: -38
-    }),
-    Object.freeze({
-      id: "C6",
-      tier: 6,
-      canonicalName: "Rollback System",
-      shardClass: "SECONDARY_SPLIT",
-      sizeFactor: 0.50,
-      reliefAmp: 0.75,
-      reliefFreq: 0.75,
-      roughness: 0.36,
-      erosionStrength: 0.56,
-      coastSmoothness: 0.52,
-      ridgeAlignment: 0.65,
-      valleyDepth: 0.70,
-      traversalDifficulty: 0.65,
-      habitabilityFraction: 0.31,
-      activeNodeDensity: 0.28,
-      activeMetroDensity: 0.22,
-      activeCitiesTotal: null,
-      seedLat: -4,
-      seedLon: 76,
-      axisX: 0.90,
-      axisY: 0.70,
-      rotationDeg: 18
-    }),
-    Object.freeze({
-      id: "C7",
-      tier: 7,
-      canonicalName: "Boundary Engine",
-      shardClass: "PERIPHERAL_SHARD",
-      sizeFactor: 0.40,
-      reliefAmp: 0.85,
-      reliefFreq: 0.80,
-      roughness: 0.40,
-      erosionStrength: 0.52,
-      coastSmoothness: 0.48,
-      ridgeAlignment: 0.70,
-      valleyDepth: 0.80,
-      traversalDifficulty: 0.75,
-      habitabilityFraction: 0.22,
-      activeNodeDensity: 0.18,
-      activeMetroDensity: 0.12,
-      activeCitiesTotal: null,
-      seedLat: 52,
-      seedLon: 54,
-      axisX: 0.76,
-      axisY: 0.62,
-      rotationDeg: -22
-    }),
-    Object.freeze({
-      id: "C8",
-      tier: 8,
-      canonicalName: "Time Horizon Control",
-      shardClass: "PERIPHERAL_SHARD",
-      sizeFactor: 0.30,
-      reliefAmp: 0.95,
-      reliefFreq: 0.85,
-      roughness: 0.45,
-      erosionStrength: 0.48,
-      coastSmoothness: 0.45,
-      ridgeAlignment: 0.75,
-      valleyDepth: 0.90,
-      traversalDifficulty: 0.88,
-      habitabilityFraction: 0.14,
-      activeNodeDensity: 0.10,
-      activeMetroDensity: 0.06,
-      activeCitiesTotal: null,
-      seedLat: -50,
-      seedLon: -76,
-      axisX: 0.62,
-      axisY: 0.54,
-      rotationDeg: 42
-    }),
-    Object.freeze({
-      id: "C9",
-      tier: 9,
-      canonicalName: "Noise Suppression",
-      shardClass: "PERIPHERAL_SHARD",
-      sizeFactor: 0.10,
-      reliefAmp: 1.05,
-      reliefFreq: 0.90,
-      roughness: 0.50,
-      erosionStrength: 0.45,
-      coastSmoothness: 0.42,
-      ridgeAlignment: 0.80,
-      valleyDepth: 1.00,
-      traversalDifficulty: 1.00,
-      habitabilityFraction: 0.06,
-      activeNodeDensity: 0.0,
-      activeMetroDensity: 0.0,
-      activeCitiesTotal: 16,
-      seedLat: 64,
-      seedLon: -104,
-      axisX: 0.50,
-      axisY: 0.42,
-      rotationDeg: -12
-    })
-  ])
+// Hydration remains collapsed into atmosphere until a dedicated engine exists.
+function resolveHydrationPacket() {
+  return null;
+}
+
+/* =========================
+   CONSTANTS
+========================= */
+
+const CHANNEL_BINDING = Object.freeze({
+  NORTH: "psychology",
+  SOUTH: "terrain",
+  EAST: "cosmos",
+  WEST: "atmosphere"
 });
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+const OCTANTS = Object.freeze(["N", "NE", "E", "SE", "S", "SW", "W", "NW"]);
+
+/* =========================
+   UTIL
+========================= */
+
+function clamp(v, a, b) {
+  return Math.max(a, Math.min(b, v));
 }
 
-function lerp(a, b, t) {
-  return a + ((b - a) * t);
+function isFiniteNumber(v) {
+  return typeof v === "number" && Number.isFinite(v);
 }
 
-function smoothstep(edge0, edge1, x) {
-  const t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
-  return t * t * (3 - 2 * t);
+function normalizeObject(v) {
+  return v && typeof v === "object" && !Array.isArray(v) ? v : {};
 }
 
-function fract(value) {
-  return value - Math.floor(value);
+function sampleGrid(field) {
+  const rows = Array.isArray(field?.samples) ? field.samples : [];
+  return Array.isArray(rows[0]) ? rows : [];
 }
 
-function degToRad(value) {
-  return (value * Math.PI) / 180;
+function getCanvasCssSize(ctx) {
+  const canvas = ctx?.canvas;
+  if (!canvas) return { width: 0, height: 0 };
+
+  const rect =
+    typeof canvas.getBoundingClientRect === "function"
+      ? canvas.getBoundingClientRect()
+      : null;
+
+  const width =
+    (rect?.width > 0 ? rect.width : 0) ||
+    (canvas.clientWidth > 0 ? canvas.clientWidth : 0) ||
+    (canvas.width > 0 ? canvas.width : 0);
+
+  const height =
+    (rect?.height > 0 ? rect.height : 0) ||
+    (canvas.clientHeight > 0 ? canvas.clientHeight : 0) ||
+    (canvas.height > 0 ? canvas.height : 0);
+
+  return { width, height };
 }
 
-function signedAngularDeltaDeg(a, b) {
-  let delta = a - b;
-  while (delta > 180) delta -= 360;
-  while (delta < -180) delta += 360;
-  return delta;
-}
-
-function hash2(a, b, c = 0) {
-  const x = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453123;
-  return fract(x);
-}
-
-function noise2(a, b, c = 0) {
-  return hash2(a, b, c) * 2 - 1;
-}
-
-function octaveNoise(a, b, octaves, persistence, seed = 0) {
-  let amplitude = 1;
-  let frequency = 1;
-  let total = 0;
-  let maxAmplitude = 0;
-
-  for (let i = 0; i < octaves; i += 1) {
-    total += noise2(a * frequency, b * frequency, seed + i * 17.3) * amplitude;
-    maxAmplitude += amplitude;
-    amplitude *= persistence;
-    frequency *= 2;
+function withAlpha(color, alpha) {
+  if (typeof color !== "string" || color.length === 0) {
+    return `rgba(255,255,255,${clamp(alpha, 0, 1)})`;
   }
 
-  return maxAmplitude > 0 ? total / maxAmplitude : 0;
+  const rgbaMatch = color.match(
+    /^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
+  if (rgbaMatch) {
+    return `rgba(${rgbaMatch[1]},${rgbaMatch[2]},${rgbaMatch[3]},${clamp(alpha, 0, 1)})`;
+  }
+
+  const rgbMatch = color.match(
+    /^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
+  if (rgbMatch) {
+    return `rgba(${rgbMatch[1]},${rgbMatch[2]},${rgbMatch[3]},${clamp(alpha, 0, 1)})`;
+  }
+
+  return color;
 }
 
-function rotate2(x, y, rotationDeg) {
-  const radians = degToRad(rotationDeg);
-  const cos = Math.cos(radians);
-  const sin = Math.sin(radians);
+function parseColor(color) {
+  if (typeof color !== "string") return null;
 
-  return {
-    x: x * cos - y * sin,
-    y: x * sin + y * cos
-  };
+  const rgbaMatch = color.match(
+    /^rgba\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
+  if (rgbaMatch) {
+    return {
+      r: Number(rgbaMatch[1]),
+      g: Number(rgbaMatch[2]),
+      b: Number(rgbaMatch[3]),
+      a: Number(rgbaMatch[4])
+    };
+  }
+
+  const rgbMatch = color.match(
+    /^rgb\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)\s*\)$/i
+  );
+  if (rgbMatch) {
+    return {
+      r: Number(rgbMatch[1]),
+      g: Number(rgbMatch[2]),
+      b: Number(rgbMatch[3]),
+      a: 1
+    };
+  }
+
+  return null;
 }
 
-function continentProfileById(continentId) {
-  return WORLD_KERNEL.continents.find((entry) => entry.id === continentId) ?? WORLD_KERNEL.continents[0];
+function mixColor(baseColor, overlayColor, t, alphaOverride = null) {
+  const a = parseColor(baseColor);
+  const b = parseColor(overlayColor);
+  const blend = clamp(t, 0, 1);
+
+  if (!a || !b) {
+    const fallback = overlayColor || baseColor || "rgba(255,255,255,1)";
+    return alphaOverride === null ? fallback : withAlpha(fallback, alphaOverride);
+  }
+
+  const r = Math.round(a.r + (b.r - a.r) * blend);
+  const g = Math.round(a.g + (b.g - a.g) * blend);
+  const blue = Math.round(a.b + (b.b - a.b) * blend);
+  const alpha =
+    alphaOverride === null
+      ? clamp(a.a + (b.a - a.a) * blend, 0, 1)
+      : clamp(alphaOverride, 0, 1);
+
+  return `rgba(${r},${g},${blue},${alpha})`;
 }
 
-function continentDistance(latDeg, lonDeg, profile) {
-  const dLat = (latDeg - profile.seedLat) / 52;
-  const dLon = signedAngularDeltaDeg(lonDeg, profile.seedLon) / 78;
-  const rotated = rotate2(dLon, dLat, profile.rotationDeg);
-
-  const seamWarp =
-    octaveNoise(latDeg * 0.055 + profile.tier, lonDeg * 0.055 - profile.tier, 3, 0.55, 11.2) * 0.12 +
-    octaveNoise(latDeg * 0.11 - profile.tier, lonDeg * 0.09 + profile.tier, 2, 0.50, 19.4) * 0.06;
-
-  const x = rotated.x / profile.axisX;
-  const y = rotated.y / profile.axisY;
-  const radial = Math.sqrt(x * x + y * y);
-
-  return radial + seamWarp;
+function packetRadius(packet, fallback) {
+  return isFiniteNumber(packet?.radiusPx) ? packet.radiusPx : fallback;
 }
 
-function continentMaskStrength(latDeg, lonDeg, profile) {
-  const distance = continentDistance(latDeg, lonDeg, profile);
-  const tectonicBite =
-    octaveNoise(latDeg * 0.07 + profile.tier * 0.3, lonDeg * 0.07 - profile.tier * 0.2, 4, 0.52, 29.8) * 0.11 +
-    octaveNoise(latDeg * 0.16, lonDeg * 0.12, 2, 0.58, 9.7) * 0.04;
-
-  const threshold = 1.02 - profile.sizeFactor * 0.08;
-  return 1 - smoothstep(threshold - 0.18, threshold + 0.18, distance + tectonicBite);
+function packetAlpha(packet, fallback = 0) {
+  return isFiniteNumber(packet?.alpha) ? packet.alpha : fallback;
 }
 
-function findBestContinent(latDeg, lonDeg) {
-  let best = null;
-  let second = null;
+function packetColor(packet, fallback = "") {
+  return typeof packet?.color === "string" && packet.color.length > 0
+    ? packet.color
+    : fallback;
+}
 
-  for (const profile of WORLD_KERNEL.continents) {
-    const strength = continentMaskStrength(latDeg, lonDeg, profile);
+function pointHash(a, b, c = 0) {
+  const x = Math.sin(a * 12.9898 + b * 78.233 + c * 37.719) * 43758.5453123;
+  return x - Math.floor(x);
+}
 
-    if (!best || strength > best.strength) {
-      second = best;
-      best = { profile, strength };
-    } else if (!second || strength > second.strength) {
-      second = { profile, strength };
+function signedPointHash(a, b, c = 0) {
+  return pointHash(a, b, c) * 2 - 1;
+}
+
+function dominantOctant(octants) {
+  let best = "N";
+  let bestValue = -Infinity;
+
+  for (let i = 0; i < OCTANTS.length; i += 1) {
+    const key = OCTANTS[i];
+    const value = isFiniteNumber(octants?.[key]) ? octants[key] : 0;
+    if (value > bestValue) {
+      bestValue = value;
+      best = key;
     }
   }
 
-  return { best, second };
+  return best;
 }
 
-function fractureStrength(latDeg, lonDeg, best, second) {
-  const seamNoise = octaveNoise(latDeg * 0.14, lonDeg * 0.14, 3, 0.48, 41.1) * 0.08;
-  const delta = Math.abs((best?.strength ?? 0) - (second?.strength ?? 0));
-  return clamp(1 - delta * 2.6 + seamNoise, 0, 1);
-}
+/* =========================
+   PROJECTION
+========================= */
 
-function continentNormalizedCoordinates(latDeg, lonDeg, profile) {
-  const dLat = (latDeg - profile.seedLat) / 36;
-  const dLon = signedAngularDeltaDeg(lonDeg, profile.seedLon) / 54;
-  const rotated = rotate2(dLon, dLat, profile.rotationDeg);
+function getProjectionState(viewState = {}, ctx) {
+  const state = normalizeObject(viewState);
+  const { width, height } = getCanvasCssSize(ctx);
 
   return {
-    u: clamp((rotated.x / (profile.axisX * 1.25) + 1) * 0.5, 0, 0.999999),
-    v: clamp((rotated.y / (profile.axisY * 1.25) + 1) * 0.5, 0, 0.999999)
+    width,
+    height,
+    centerX: isFiniteNumber(state.centerX) ? state.centerX : width * 0.5,
+    centerY: isFiniteNumber(state.centerY) ? state.centerY : height * 0.5,
+    radius: isFiniteNumber(state.radius)
+      ? state.radius
+      : Math.min(width, height) * (WORLD_KERNEL?.constants?.worldRadiusFactor ?? 0.36)
   };
 }
 
-function resolveCountryRegionState(localU, localV) {
-  const countryX = clamp(Math.floor(localU * 2), 0, 1);
-  const countryY = clamp(Math.floor(localV * 2), 0, 1);
-  const countryIndex = countryY * 2 + countryX;
+function defaultProjectorFactory(p) {
+  return function projectPoint(latDeg, lonDeg, offset = 0) {
+    const lat = (latDeg * Math.PI) / 180;
+    const lon = (lonDeg * Math.PI) / 180;
+    const r = p.radius + offset;
 
-  const regionWithinCountryX = clamp(Math.floor((localU * 4) % 2), 0, 1);
-  const regionWithinCountryY = clamp(Math.floor((localV * 4) % 2), 0, 1);
-  const regionWithinCountry = regionWithinCountryY * 2 + regionWithinCountryX;
+    const nx = Math.cos(lat) * Math.sin(lon);
+    const ny = Math.sin(lat);
+    const nz = Math.cos(lat) * Math.cos(lon);
 
-  const stateX = clamp(Math.floor(localU * 4), 0, 3);
-  const stateY = clamp(Math.floor(localV * 4), 0, 3);
-  const stateIndex = stateY * 4 + stateX;
-
-  return {
-    countryIndex,
-    regionWithinCountry,
-    stateIndex
+    return {
+      x: p.centerX + nx * r,
+      y: p.centerY - ny * r,
+      z: nz,
+      visible: nz >= 0
+    };
   };
 }
 
-function resolveClimateBand(latDeg, elevation) {
-  const absLat = Math.abs(latDeg);
-
-  if (absLat >= 72 || elevation > 0.80) return "POLAR";
-  if (absLat >= 58 || elevation > 0.68) return "SUBPOLAR";
-  if (absLat >= 42) return "TEMPERATE";
-  if (absLat >= 24) return "SUBTROPICAL";
-  return "TROPICAL";
+function resolveProjectPoint(projectPoint, projectionState) {
+  return typeof projectPoint === "function"
+    ? projectPoint
+    : defaultProjectorFactory(projectionState);
 }
 
-function resolveSeason(latDeg, yearPhase = 0.32) {
-  const northSummer = Math.sin(yearPhase * Math.PI * 2) >= 0;
-  const isNorth = latDeg >= 0;
+/* =========================
+   BASE DRAW
+========================= */
 
-  if ((isNorth && northSummer) || (!isNorth && !northSummer)) return "SUMMER";
-  return Math.abs(latDeg) < 14 ? "SPRING" : "WINTER";
+function drawBackground(ctx, p) {
+  const bg = ctx.createRadialGradient(
+    p.centerX,
+    p.centerY,
+    p.radius * 0.2,
+    p.centerX,
+    p.centerY,
+    Math.max(p.width, p.height) * 0.72
+  );
+
+  bg.addColorStop(0, "rgba(18,30,54,0.26)");
+  bg.addColorStop(0.45, "rgba(8,14,28,0.16)");
+  bg.addColorStop(1, "rgba(0,0,0,0)");
+
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, p.width, p.height);
 }
 
-function deriveMoisture(latDeg, lonDeg, maritimeInfluence, elevation, profile) {
-  const belt = Math.cos(degToRad(latDeg));
-  const synoptic = octaveNoise(latDeg * 0.055 + profile.tier, lonDeg * 0.08 - profile.tier, 4, 0.53, 13.1);
-  const rainShadow = octaveNoise(latDeg * 0.12 - profile.tier, lonDeg * 0.14 + profile.tier, 2, 0.58, 73.5);
-  const value =
-    0.34 +
-    belt * 0.22 +
-    maritimeInfluence * 0.20 +
-    synoptic * 0.14 -
-    clamp(elevation, 0, 1) * 0.22 -
-    Math.max(rainShadow, 0) * 0.12;
+function drawPlanet(ctx, p) {
+  const g = ctx.createRadialGradient(
+    p.centerX - p.radius * 0.18,
+    p.centerY - p.radius * 0.22,
+    p.radius * 0.08,
+    p.centerX,
+    p.centerY,
+    p.radius
+  );
 
-  return clamp(value, 0, 1);
+  g.addColorStop(0, "rgb(36,96,176)");
+  g.addColorStop(0.52, "rgb(12,42,88)");
+  g.addColorStop(1, "rgb(2,10,24)");
+
+  ctx.beginPath();
+  ctx.arc(p.centerX, p.centerY, p.radius, 0, Math.PI * 2);
+  ctx.fillStyle = g;
+  ctx.fill();
+
+  const limb = ctx.createRadialGradient(
+    p.centerX,
+    p.centerY,
+    p.radius * 0.78,
+    p.centerX,
+    p.centerY,
+    p.radius * 1.08
+  );
+  limb.addColorStop(0, "rgba(88,164,255,0)");
+  limb.addColorStop(0.72, "rgba(88,164,255,0.04)");
+  limb.addColorStop(0.9, "rgba(110,190,255,0.16)");
+  limb.addColorStop(1, "rgba(110,190,255,0)");
+
+  ctx.beginPath();
+  ctx.arc(p.centerX, p.centerY, p.radius * 1.03, 0, Math.PI * 2);
+  ctx.fillStyle = limb;
+  ctx.fill();
+
+  const gloss = ctx.createRadialGradient(
+    p.centerX - p.radius * 0.24,
+    p.centerY - p.radius * 0.26,
+    p.radius * 0.04,
+    p.centerX - p.radius * 0.24,
+    p.centerY - p.radius * 0.26,
+    p.radius * 0.52
+  );
+  gloss.addColorStop(0, "rgba(255,255,255,0.22)");
+  gloss.addColorStop(0.24, "rgba(255,255,255,0.08)");
+  gloss.addColorStop(1, "rgba(255,255,255,0)");
+
+  ctx.beginPath();
+  ctx.arc(p.centerX, p.centerY, p.radius, 0, Math.PI * 2);
+  ctx.save();
+  ctx.clip();
+  ctx.fillStyle = gloss;
+  ctx.fillRect(p.centerX - p.radius, p.centerY - p.radius, p.radius * 2, p.radius * 2);
+  ctx.restore();
 }
 
-function deriveTemperature(latDeg, elevation, climateBandField) {
-  const absLat = Math.abs(latDeg);
-  let base = 1 - absLat / 90;
-  base -= clamp(elevation, 0, 1) * 0.42;
+/* =========================
+   TRAVERSAL
+========================= */
 
-  if (climateBandField === "POLAR") base -= 0.35;
-  else if (climateBandField === "SUBPOLAR") base -= 0.20;
-  else if (climateBandField === "TROPICAL") base += 0.08;
+function resolveTraversalBias(viewState = {}) {
+  const bias = typeof viewState?.traversalBias === "string"
+    ? viewState.traversalBias.toUpperCase()
+    : "SOUTH";
 
-  return clamp(base, 0, 1);
+  return bias === "NORTH" || bias === "SOUTH" || bias === "EAST" || bias === "WEST"
+    ? bias
+    : "SOUTH";
 }
 
-function deriveBiome(temperature, rainfall, terrainClass) {
-  if (terrainClass === "POLAR_ICE" || terrainClass === "GLACIAL_HIGHLAND") return "GLACIER";
-  if (temperature < 0.18) return rainfall > 0.42 ? "TUNDRA" : "GLACIER";
-  if (temperature < 0.34) return rainfall > 0.48 ? "BOREAL_FOREST" : "TUNDRA";
-  if (temperature < 0.56) {
-    if (rainfall > 0.64) return "TEMPERATE_FOREST";
-    if (rainfall > 0.34) return "TEMPERATE_GRASSLAND";
-    return "DESERT";
+function computeTraversal(sample, viewState = {}) {
+  const lat = clamp(sample?.latDeg ?? 0, -90, 90);
+  const lon = clamp(sample?.lonDeg ?? 0, -180, 180);
+
+  const north = clamp((lat + 90) / 180, 0, 1);
+  const south = 1 - north;
+  const east = clamp((lon + 180) / 360, 0, 1);
+  const west = 1 - east;
+
+  const bias = resolveTraversalBias(viewState);
+
+  const biased = { north, south, east, west };
+  const biasBoost = 0.16;
+
+  if (bias === "NORTH") biased.north = clamp(biased.north + biasBoost, 0, 1);
+  if (bias === "SOUTH") biased.south = clamp(biased.south + biasBoost, 0, 1);
+  if (bias === "EAST") biased.east = clamp(biased.east + biasBoost, 0, 1);
+  if (bias === "WEST") biased.west = clamp(biased.west + biasBoost, 0, 1);
+
+  const nsMagnitude = clamp(Math.abs(biased.north - biased.south), 0, 1);
+  const ewMagnitude = clamp(Math.abs(biased.east - biased.west), 0, 1);
+
+  const octants = Object.freeze({
+    N: clamp(biased.north * (1 - ewMagnitude * 0.5), 0, 1),
+    NE: clamp(biased.north * biased.east, 0, 1),
+    E: clamp(biased.east * (1 - nsMagnitude * 0.5), 0, 1),
+    SE: clamp(biased.south * biased.east, 0, 1),
+    S: clamp(biased.south * (1 - ewMagnitude * 0.5), 0, 1),
+    SW: clamp(biased.south * biased.west, 0, 1),
+    W: clamp(biased.west * (1 - nsMagnitude * 0.5), 0, 1),
+    NW: clamp(biased.north * biased.west, 0, 1)
+  });
+
+  return Object.freeze({
+    bias,
+    cardinal: Object.freeze(biased),
+    bilateral: Object.freeze({
+      northVsSouth: biased.north - biased.south,
+      eastVsWest: biased.east - biased.west,
+      nsMagnitude,
+      ewMagnitude
+    }),
+    octants,
+    dominantOctant: dominantOctant(octants)
+  });
+}
+
+/* =========================
+   NODE AUTHORITY
+========================= */
+
+function resolveNodeRelation(sample) {
+  const relation = WORLD_KERNEL.resolveNode(sample);
+  if (!relation || relation.provisional !== false) {
+    throw new Error("WORLD_KERNEL.resolveNode(sample) must return non-provisional node truth");
   }
-  if (rainfall > 0.70) return "TROPICAL_RAINFOREST";
-  if (rainfall > 0.42) return "TROPICAL_GRASSLAND";
-  return "DESERT";
+  return Object.freeze(relation);
 }
 
-function deriveSurfaceMaterial(terrainClass, rainfall, freezePotential) {
-  if (terrainClass === "POLAR_ICE" || terrainClass === "GLACIAL_HIGHLAND") return "ICE";
-  if (terrainClass === "BEACH") return "SAND";
-  if (terrainClass === "SHORELINE") return "SILT";
-  if (terrainClass === "SUMMIT" || terrainClass === "RIDGE") return "BEDROCK";
-  if (terrainClass === "CANYON") return "CLAY";
-  if (terrainClass === "PLATEAU") return "GRAVEL";
-  if (freezePotential > 0.82) return "SNOW";
-  if (rainfall < 0.22) return "SAND";
-  if (rainfall < 0.42) return "SOIL";
-  return "SOIL";
+/* =========================
+   CHANNEL RESOLUTION
+========================= */
+
+function resolveTerrainChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  const terrainPacket = resolveTerrainPacket?.({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+  const elevationPacket = resolveElevationPacket?.({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+  const cutPacket = resolveCutPacket?.({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+
+  return Object.freeze({
+    terrainPacket,
+    elevationPacket,
+    cutPacket
+  });
 }
 
-function terrainClassFromElevation(elevation, shoreline, freezePotential) {
-  if (freezePotential > 0.86 && elevation > 0.22) return "POLAR_ICE";
-  if (freezePotential > 0.74 && elevation > 0.62) return "GLACIAL_HIGHLAND";
-  if (shoreline) return "SHORELINE";
-  if (elevation > 0.92) return "SUMMIT";
-  if (elevation > 0.76) return "MOUNTAIN";
-  if (elevation > 0.58) return "RIDGE";
-  if (elevation > 0.36) return "PLATEAU";
-  if (elevation < 0.10) return "BASIN";
-  if (elevation < 0.18) return "CANYON";
-  return "LAND";
+function resolveAtmosphereChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  const hydrationPacket =
+    resolveHydrationPacket({ sample, pointSizePx, grid, x, y, globalPrimitiveTime }) || null;
+
+  return Object.freeze({
+    hydrationPacket,
+    radiusPx: pointSizePx * (sample?.waterMask === 1 ? 1.08 : 0.98),
+    alpha:
+      (sample?.waterMask === 1 ? 0.22 : 0.10) +
+      clamp(sample?.maritimeInfluence ?? 0, 0, 1) * 0.18 +
+      clamp(sample?.rainfall ?? 0, 0, 1) * 0.14,
+    color:
+      sample?.waterMask === 1
+        ? "rgba(120,188,255,0.28)"
+        : "rgba(204,226,255,0.18)"
+  });
 }
 
-function buildContinentRelief(latDeg, lonDeg, profile, fracture) {
-  const macro = octaveNoise(
-    latDeg * (0.035 + profile.reliefFreq * 0.018),
-    lonDeg * (0.035 + profile.reliefFreq * 0.014),
-    4,
-    0.52,
-    profile.tier * 10.3
+function resolveCosmosChannel(sample, pointSizePx) {
+  return Object.freeze({
+    radiusPx: pointSizePx,
+    alpha: 0.18 + clamp(sample?.freezePotential ?? 0, 0, 1) * 0.10,
+    color: "rgba(96,170,255,0.20)"
+  });
+}
+
+function resolvePsychologyChannel(sample, pointSizePx) {
+  return Object.freeze({
+    radiusPx: pointSizePx,
+    alpha:
+      0.10 +
+      clamp(sample?.navigationStability ?? 0, 0, 1) * 0.18 +
+      clamp(sample?.strongestSummitScore ?? 0, 0, 1) * 0.08,
+    color: "rgba(255,236,176,0.18)"
+  });
+}
+
+function resolveChannels(sample, pointSizePx, grid, x, y, globalPrimitiveTime) {
+  return Object.freeze({
+    psychology: resolvePsychologyChannel(sample, pointSizePx),
+    cosmos: resolveCosmosChannel(sample, pointSizePx),
+    terrain: resolveTerrainChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime),
+    atmosphere: resolveAtmosphereChannel(sample, pointSizePx, grid, x, y, globalPrimitiveTime)
+  });
+}
+
+/* =========================
+   TERRAIN ANCHOR TRANSFER LAW
+========================= */
+
+function buildTerrainGrammar(sample, point, baseSize, channels, traversal) {
+  const terrain = normalizeObject(channels.terrain);
+  const terrainPacket = normalizeObject(terrain.terrainPacket);
+  const elevationPacket = normalizeObject(terrain.elevationPacket);
+  const cutPacket = normalizeObject(terrain.cutPacket);
+
+  const depth = clamp((point.z + 1) * 0.5, 0, 1);
+  const south = traversal.cardinal.south;
+  const eastWestBalance = 1 - traversal.bilateral.ewMagnitude;
+
+  const terrainScale = packetRadius(terrainPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const elevationScale = packetRadius(elevationPacket, baseSize) / Math.max(baseSize, 0.0001);
+  const cutScale = packetRadius(cutPacket, baseSize) / Math.max(baseSize, 0.0001);
+
+  const grammarRadius = clamp(
+    baseSize *
+      (0.76 +
+        depth * 0.50 +
+        south * 0.16 +
+        (terrainScale - 1) * 0.18 +
+        (elevationScale - 1) * 0.16 +
+        (cutScale - 1) * 0.10),
+    0.9,
+    6.8
   );
 
-  const ridge = octaveNoise(
-    latDeg * (0.09 + profile.reliefFreq * 0.022),
-    lonDeg * (0.11 + profile.ridgeAlignment * 0.030),
-    3,
-    0.48,
-    80 + profile.tier * 7.1
+  const terrainAlpha = packetAlpha(terrainPacket, 0);
+  const elevationAlpha = packetAlpha(elevationPacket, 0);
+  const cutAlpha = packetAlpha(cutPacket, 0);
+
+  const grammarAlpha = clamp(
+    0.24 +
+      terrainAlpha * 0.28 +
+      elevationAlpha * 0.16 +
+      cutAlpha * 0.12 +
+      depth * 0.20 +
+      south * 0.10 +
+      eastWestBalance * 0.06,
+    0.08,
+    1
   );
 
-  const rough = octaveNoise(
-    latDeg * (0.18 + profile.roughness * 0.08),
-    lonDeg * (0.16 + profile.roughness * 0.07),
-    2,
-    0.45,
-    140 + profile.tier * 5.7
+  const grammarBlur = clamp(
+    (1 - depth) * 0.84 +
+      traversal.bilateral.ewMagnitude * 0.14 +
+      traversal.bilateral.nsMagnitude * 0.10,
+    0,
+    1.55
   );
 
-  const erosion = octaveNoise(
-    latDeg * 0.07,
-    lonDeg * 0.07,
-    3,
-    0.50,
-    220 + profile.tier * 3.2
-  ) * (1 - profile.erosionStrength * 0.5);
+  const terrainColor =
+    packetColor(cutPacket) ||
+    packetColor(elevationPacket) ||
+    packetColor(terrainPacket) ||
+    (sample?.waterMask === 1
+      ? "rgba(68,146,232,0.90)"
+      : "rgba(188,206,142,0.94)");
 
-  const relief =
-    macro * 0.52 +
-    ridge * (0.18 + profile.ridgeAlignment * 0.22) +
-    rough * (0.08 + profile.roughness * 0.10) +
-    fracture * profile.valleyDepth * 0.10 -
-    erosion * profile.erosionStrength * 0.18;
-
-  return clamp(relief * profile.reliefAmp, -1, 1);
+  return Object.freeze({
+    radius: grammarRadius,
+    alpha: grammarAlpha,
+    blur: grammarBlur,
+    baseColor: terrainColor
+  });
 }
 
-function deriveElevation(latDeg, lonDeg, best, second) {
-  const profile = best.profile;
-  const landStrength = best.strength;
-  const seam = fractureStrength(latDeg, lonDeg, best, second);
+/* =========================
+   WEIGHTS / STYLE
+========================= */
 
-  const coastalFade = smoothstep(0.18, 0.84, landStrength);
-  const relief = buildContinentRelief(latDeg, lonDeg, profile, seam);
+function computeChannelWeights(sample, traversal, channels, point) {
+  const depth = clamp((point.z + 1) * 0.5, 0, 1);
+  const psychologyPacket = normalizeObject(channels.psychology);
+  const cosmosPacket = normalizeObject(channels.cosmos);
+  const atmospherePacket = normalizeObject(channels.atmosphere);
+  const terrain = normalizeObject(channels.terrain);
 
-  const baseElevation =
-    (landStrength - 0.50) * 1.75 +
-    relief * (0.55 + profile.traversalDifficulty * 0.35);
+  const terrainPacket = normalizeObject(terrain.terrainPacket);
+  const elevationPacket = normalizeObject(terrain.elevationPacket);
+  const cutPacket = normalizeObject(terrain.cutPacket);
 
-  const eroded = lerp(baseElevation, baseElevation * 0.82, profile.erosionStrength * 0.45);
-  const finalElevation = clamp(eroded * coastalFade + (landStrength - 0.48) * 0.38, -1, 1);
-
-  return { elevation: finalElevation, seam };
-}
-
-function deriveOceanDepth(latDeg, lonDeg) {
-  const deep = octaveNoise(latDeg * 0.026, lonDeg * 0.026, 4, 0.56, 310.4);
-  const trench = octaveNoise(latDeg * 0.08, lonDeg * 0.05, 2, 0.52, 470.9);
-  return clamp(-0.25 - Math.abs(deep) * 0.55 - Math.max(trench, 0) * 0.30, -1, 0);
-}
-
-function activeCitiesForContinent(profile) {
-  const baselineStatesPerContinent =
-    WORLD_KERNEL.hierarchy.countriesPerContinent * WORLD_KERNEL.hierarchy.statesPerCountry;
-  const baselineCitiesPerContinent = baselineStatesPerContinent * WORLD_KERNEL.hierarchy.citiesPerState;
-
-  if (typeof profile.activeCitiesTotal === "number") return profile.activeCitiesTotal;
-  return Math.max(16, Math.round(baselineCitiesPerContinent * profile.activeNodeDensity));
-}
-
-function activeMetrosForContinent(profile) {
-  const baselineStatesPerContinent =
-    WORLD_KERNEL.hierarchy.countriesPerContinent * WORLD_KERNEL.hierarchy.statesPerCountry;
-  const baselineMetrosPerContinent = baselineStatesPerContinent * WORLD_KERNEL.hierarchy.metrosPerState;
-
-  if (profile.tier === 9) return 1;
-  return Math.max(4, Math.round(baselineMetrosPerContinent * profile.activeMetroDensity));
-}
-
-function buildSample(latDeg, lonDeg) {
-  const { best, second } = findBestContinent(latDeg, lonDeg);
-
-  const oceanDepthField = deriveOceanDepth(latDeg, lonDeg);
-  const landStrength = best?.strength ?? 0;
-  const isLand = landStrength >= 0.46;
-
-  if (!best || !isLand) {
-    const climateBandField = resolveClimateBand(latDeg, -0.2);
-    const freezePotential = clamp((Math.abs(latDeg) - 46) / 34, 0, 1);
-    const rainfall = clamp(0.36 + Math.cos(degToRad(latDeg)) * 0.18 + noise2(latDeg * 0.05, lonDeg * 0.05, 5.4) * 0.08, 0, 1);
-
-    return Object.freeze({
-      latDeg,
-      lonDeg,
-      continentId: null,
-      continentTier: null,
-      continentName: null,
-      shardClass: null,
-      countryIndex: null,
-      regionWithinCountry: null,
-      stateIndex: null,
-      capitalRegionIndex: null,
-      elevation: clamp(oceanDepthField * 0.55, -1, 0),
-      terrainClass: Math.abs(oceanDepthField) < WORLD_KERNEL.constants.shelfBand ? "SHELF" : "WATER",
-      biomeType: "NONE",
-      surfaceMaterial: "NONE",
-      climateBandField,
-      hemisphereSeason: resolveSeason(latDeg),
-      waterMask: 1,
-      landMask: 0,
-      shoreline: false,
-      shorelineBand: false,
-      oceanDepthField,
-      freezePotential,
-      rainfall,
-      continentality: 0,
-      evaporationPressure: clamp(0.32 + (1 - Math.abs(latDeg) / 90) * 0.24, 0, 1),
-      maritimeInfluence: 1,
-      auroralPotential: clamp((Math.abs(latDeg) - 52) / 24, 0, 1),
-      habitability: 0,
-      activationWeight: 0,
-      activeCitiesTotal: 0,
-      activeMetrosTotal: 0,
-      tectonicMemory: 0,
-      traversalDifficulty: 0,
-      slopeSeverity: 0
-    });
-  }
-
-  const profile = best.profile;
-  const { elevation, seam } = deriveElevation(latDeg, lonDeg, best, second);
-  const shorelineBand = elevation >= -WORLD_KERNEL.constants.shorelineBand && elevation <= WORLD_KERNEL.constants.shorelineBand;
-  const climateBandField = resolveClimateBand(latDeg, elevation);
-  const maritimeInfluence = clamp(1 - smoothstep(0.50, 1.0, Math.abs(elevation) + best.strength), 0, 1);
-  const rainfall = deriveMoisture(latDeg, lonDeg, maritimeInfluence, elevation, profile);
-  const temperature = deriveTemperature(latDeg, elevation, climateBandField);
-  const freezePotential = clamp(1 - temperature + Math.max(0, elevation - 0.45) * 0.45, 0, 1);
-  const terrainClass = terrainClassFromElevation(elevation, shorelineBand, freezePotential);
-  const biomeType = deriveBiome(temperature, rainfall, terrainClass);
-  const surfaceMaterial = deriveSurfaceMaterial(terrainClass, rainfall, freezePotential);
-  const local = continentNormalizedCoordinates(latDeg, lonDeg, profile);
-  const structure = resolveCountryRegionState(local.u, local.v);
-  const continentality = clamp(1 - maritimeInfluence, 0, 1);
-  const habitability = clamp(
-    profile.habitabilityFraction *
-      (1 - profile.traversalDifficulty * 0.30) *
-      (1 - Math.max(0, elevation - 0.40) * 0.65) *
-      (0.70 + rainfall * 0.40),
+  const terrainWeight = clamp(
+    0.26 +
+      traversal.cardinal.south * 0.26 +
+      packetAlpha(terrainPacket, 0) * 0.16 +
+      packetAlpha(elevationPacket, 0) * 0.10 +
+      packetAlpha(cutPacket, 0) * 0.08,
     0,
     1
   );
 
-  const activationWeight = profile.tier === 9
-    ? clamp(habitability * 0.25 + (1 - Math.abs(local.u - 0.5) - Math.abs(local.v - 0.5)) * 0.18, 0, 1)
-    : clamp(habitability * profile.activeNodeDensity, 0, 1);
+  const psychologyWeight = clamp(
+    0.08 +
+      traversal.cardinal.north * 0.26 +
+      packetAlpha(psychologyPacket, 0) * 0.22,
+    0,
+    1
+  );
+
+  const cosmosWeight = clamp(
+    0.08 +
+      traversal.cardinal.east * 0.24 +
+      depth * 0.16 +
+      packetAlpha(cosmosPacket, 0) * 0.18,
+    0,
+    1
+  );
+
+  const atmosphereWeight = clamp(
+    0.10 +
+      traversal.cardinal.west * 0.26 +
+      packetAlpha(atmospherePacket, 0) * 0.22 +
+      (sample?.waterMask === 1 ? 0.10 : 0) +
+      clamp(sample?.maritimeInfluence ?? 0, 0, 1) * 0.10,
+    0,
+    1
+  );
 
   return Object.freeze({
-    latDeg,
-    lonDeg,
-    continentId: profile.id,
-    continentTier: profile.tier,
-    continentName: profile.canonicalName,
-    shardClass: profile.shardClass,
-    countryIndex: structure.countryIndex,
-    regionWithinCountry: structure.regionWithinCountry,
-    stateIndex: structure.stateIndex,
-    capitalRegionIndex: structure.regionWithinCountry,
-    elevation,
-    terrainClass: shorelineBand && elevation > 0 ? "BEACH" : terrainClass,
-    biomeType,
-    surfaceMaterial,
-    climateBandField,
-    hemisphereSeason: resolveSeason(latDeg),
-    waterMask: 0,
-    landMask: 1,
-    shoreline: shorelineBand,
-    shorelineBand,
-    oceanDepthField,
-    freezePotential,
-    rainfall,
-    continentality,
-    evaporationPressure: clamp(0.24 + temperature * 0.44 + continentality * 0.12, 0, 1),
-    maritimeInfluence,
-    auroralPotential: clamp((Math.abs(latDeg) - 52) / 24, 0, 1),
-    habitability,
-    activationWeight,
-    activeCitiesTotal: activeCitiesForContinent(profile),
-    activeMetrosTotal: activeMetrosForContinent(profile),
-    tectonicMemory: clamp(seam * (0.35 + profile.ridgeAlignment * 0.55), 0, 1),
-    traversalDifficulty: profile.traversalDifficulty,
-    slopeSeverity: clamp(Math.abs(elevation) * 0.55 + profile.reliefAmp * 0.35 + seam * 0.22, 0, 1)
+    terrain: terrainWeight,
+    psychology: psychologyWeight,
+    cosmos: cosmosWeight,
+    atmosphere: atmosphereWeight
   });
 }
 
-function buildSummary(samples) {
-  const summary = {
-    continents: {}
-  };
+function classifyPrimitiveShape(sample, traversal, nodeRelation) {
+  const octant = traversal.dominantOctant;
+  const terrainClass = sample?.terrainClass ?? "NONE";
+  const water = sample?.waterMask === 1;
+  const shoreline = sample?.shoreline === true || sample?.shorelineBand === true;
+  const nodeId = nodeRelation.id;
 
-  for (const profile of WORLD_KERNEL.continents) {
-    summary.continents[profile.id] = {
-      tier: profile.tier,
-      canonicalName: profile.canonicalName,
-      shardClass: profile.shardClass,
-      landSamples: 0,
-      activeCitiesTotal: activeCitiesForContinent(profile),
-      activeMetrosTotal: activeMetrosForContinent(profile),
-      habitabilityFraction: profile.habitabilityFraction,
-      traversalDifficulty: profile.traversalDifficulty
-    };
+  if (water) return shoreline ? "capsule" : "diamond";
+  if (terrainClass === "SUMMIT" || terrainClass === "MOUNTAIN") return "triangle";
+  if (terrainClass === "RIDGE") return "sliver";
+  if (terrainClass === "CANYON") return "slash";
+  if (terrainClass === "PLATEAU" && nodeId % 2 === 0) return "square";
+
+  if (octant === "NE" || octant === "SW") return "diamond";
+  if (octant === "NW" || octant === "SE") return "kite";
+  if (octant === "E" || octant === "W") return "capsule";
+  if (octant === "N") return nodeId % 2 === 0 ? "circle" : "diamond";
+  if (octant === "S") return nodeId % 3 === 0 ? "square" : "triangle";
+
+  if (nodeId % 4 === 0) return "square";
+  if (nodeId % 4 === 1) return "diamond";
+  if (nodeId % 4 === 2) return "kite";
+  return "circle";
+}
+
+function buildPrimitiveOffsets(sample, x, y, radius, blur) {
+  const lat = sample?.latDeg ?? y;
+  const lon = sample?.lonDeg ?? x;
+
+  const jitterX =
+    signedPointHash(lat * 0.19, lon * 0.13, 5.1) * radius * 0.16 * clamp(blur + 0.2, 0, 1);
+  const jitterY =
+    signedPointHash(lat * 0.11, lon * 0.17, 8.4) * radius * 0.16 * clamp(blur + 0.2, 0, 1);
+
+  return Object.freeze({
+    jitterX,
+    jitterY,
+    drawX: jitterX,
+    drawY: jitterY
+  });
+}
+
+function buildMasterStyle(sample, point, baseSize, channels, traversal, nodeRelation, x, y) {
+  const terrainGrammar = buildTerrainGrammar(sample, point, baseSize, channels, traversal);
+  const weights = computeChannelWeights(sample, traversal, channels, point);
+
+  const atmosphere = normalizeObject(channels.atmosphere);
+  const cosmos = normalizeObject(channels.cosmos);
+  const psychology = normalizeObject(channels.psychology);
+
+  const depth = clamp((point.z + 1) * 0.5, 0, 1);
+  const octants = traversal.octants;
+  const nodeBoost = (nodeRelation.id % 4) * 0.03;
+  const relationBoost = nodeRelation.relation_type === "state_index_membership" ? 0.04 : 0.02;
+
+  const radius = clamp(
+    terrainGrammar.radius *
+      (1 +
+        weights.cosmos * 0.06 +
+        weights.psychology * 0.04 +
+        weights.atmosphere * 0.08 +
+        nodeBoost +
+        relationBoost),
+    0.9,
+    7.0
+  );
+
+  const alpha = clamp(
+    terrainGrammar.alpha *
+      (1 +
+        weights.psychology * 0.06 +
+        weights.cosmos * 0.04 +
+        weights.atmosphere * 0.10),
+    0.08,
+    1
+  );
+
+  const blur = clamp(
+    terrainGrammar.blur +
+      weights.atmosphere * 0.24 +
+      octants.W * 0.16 +
+      octants.NE * 0.08,
+    0,
+    1.8
+  );
+
+  const cosmosColor = packetColor(cosmos, "rgba(108,174,255,0.22)");
+  const atmosphereColor = packetColor(
+    atmosphere,
+    sample?.waterMask === 1 ? "rgba(90,170,242,0.30)" : "rgba(214,235,255,0.12)"
+  );
+  const psychologyColor = packetColor(psychology, "rgba(255,236,176,0.18)");
+
+  const colorAfterCosmos = mixColor(terrainGrammar.baseColor, cosmosColor, weights.cosmos * 0.22);
+  const colorAfterAtmosphere = mixColor(colorAfterCosmos, atmosphereColor, weights.atmosphere * 0.34);
+  const finalColor = mixColor(colorAfterAtmosphere, psychologyColor, weights.psychology * 0.18);
+
+  const shadowMix = clamp(0.26 + traversal.bilateral.nsMagnitude * 0.20 + octants.SW * 0.14, 0, 1);
+  const highlightMix = clamp(0.18 + depth * 0.16 + octants.NE * 0.18 + octants.NW * 0.08, 0, 1);
+
+  const shadowColor = mixColor(
+    finalColor,
+    "rgba(0,0,0,1)",
+    shadowMix,
+    clamp(alpha * (0.16 + shadowMix * 0.14), 0, 1)
+  );
+
+  const highlightColor = mixColor(
+    finalColor,
+    "rgba(255,255,255,1)",
+    highlightMix,
+    clamp(alpha * (0.08 + highlightMix * 0.10), 0, 1)
+  );
+
+  const glowAlpha = clamp(
+    alpha * (0.14 + weights.cosmos * 0.12 + weights.atmosphere * 0.08),
+    0,
+    0.38
+  );
+
+  return Object.freeze({
+    color: finalColor,
+    shadowColor,
+    highlightColor,
+    radius,
+    alpha,
+    blur,
+    glowAlpha,
+    primitiveShape: classifyPrimitiveShape(sample, traversal, nodeRelation),
+    offsets: buildPrimitiveOffsets(sample, x, y, radius, blur),
+    traversal,
+    nodeRelation,
+    channelWeights: weights
+  });
+}
+
+/* =========================
+   SUPPRESSION / ORDERING LAW
+========================= */
+
+function evaluateSuppression(sample, traversal, nodeRelation, style) {
+  const weights = style.channelWeights;
+
+  const readability =
+    weights.terrain * 0.26 +
+    weights.psychology * 0.18 +
+    weights.cosmos * 0.18 +
+    weights.atmosphere * 0.18 +
+    (1 - traversal.bilateral.nsMagnitude) * 0.06 +
+    (1 - traversal.bilateral.ewMagnitude) * 0.06;
+
+  const focus =
+    traversal.octants[traversal.dominantOctant] * 0.26 +
+    (traversal.bias === "SOUTH" ? weights.terrain * 0.12 : 0) +
+    (traversal.bias === "NORTH" ? weights.psychology * 0.12 : 0) +
+    (traversal.bias === "EAST" ? weights.cosmos * 0.12 : 0) +
+    (traversal.bias === "WEST" ? weights.atmosphere * 0.12 : 0);
+
+  const nodeLegibility =
+    0.10 +
+    (nodeRelation.id % 4) * 0.01 +
+    (nodeRelation.relation_type === "state_index_membership" ? 0.02 : 0.01);
+
+  const faceLegibility =
+    traversal.dominantOctant === "NE" ||
+    traversal.dominantOctant === "SE" ||
+    traversal.dominantOctant === "SW" ||
+    traversal.dominantOctant === "NW"
+      ? 0.10
+      : 0.04;
+
+  const atmosphericPresence = weights.atmosphere * 0.10;
+  const terrainTransfer = weights.terrain * 0.08;
+  const threshold = 0.48;
+
+  const score =
+    readability +
+    focus +
+    nodeLegibility +
+    faceLegibility +
+    atmosphericPresence +
+    terrainTransfer;
+
+  return Object.freeze({
+    emit: score >= threshold,
+    score,
+    threshold
+  });
+}
+
+function computeOrderingDepth(point, traversal, style) {
+  const octantBoost =
+    traversal.octants.NE * 0.03 +
+    traversal.octants.SE * 0.01 -
+    traversal.octants.SW * 0.01 -
+    traversal.octants.NW * 0.02;
+
+  const westFogLift = style.channelWeights.atmosphere * 0.02;
+  const northClarityLift = style.channelWeights.psychology * 0.01;
+
+  return point.z + octantBoost + westFogLift + northClarityLift;
+}
+
+/* =========================
+   DRAW PRIMITIVES
+========================= */
+
+function drawCirclePrimitive(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+}
+
+function drawDiamondPrimitive(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - radius);
+  ctx.lineTo(x + radius, y);
+  ctx.lineTo(x, y + radius);
+  ctx.lineTo(x - radius, y);
+  ctx.closePath();
+}
+
+function drawSquarePrimitive(ctx, x, y, radius) {
+  const size = radius * 1.44;
+  ctx.beginPath();
+  ctx.rect(x - size * 0.5, y - size * 0.5, size, size);
+}
+
+function drawTrianglePrimitive(ctx, x, y, radius, angle = -Math.PI * 0.5) {
+  const a0 = angle;
+  const a1 = angle + (Math.PI * 2) / 3;
+  const a2 = angle + (Math.PI * 4) / 3;
+
+  ctx.beginPath();
+  ctx.moveTo(x + Math.cos(a0) * radius, y + Math.sin(a0) * radius);
+  ctx.lineTo(x + Math.cos(a1) * radius, y + Math.sin(a1) * radius);
+  ctx.lineTo(x + Math.cos(a2) * radius, y + Math.sin(a2) * radius);
+  ctx.closePath();
+}
+
+function drawKitePrimitive(ctx, x, y, radius) {
+  ctx.beginPath();
+  ctx.moveTo(x, y - radius);
+  ctx.lineTo(x + radius * 0.72, y);
+  ctx.lineTo(x, y + radius * 1.12);
+  ctx.lineTo(x - radius * 0.58, y);
+  ctx.closePath();
+}
+
+function drawSliverPrimitive(ctx, x, y, radius, angle) {
+  const width = radius * 1.62;
+  const height = Math.max(1, radius * 0.42);
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(-width * 0.5, 0);
+  ctx.quadraticCurveTo(0, -height, width * 0.5, 0);
+  ctx.quadraticCurveTo(0, height, -width * 0.5, 0);
+  ctx.closePath();
+  ctx.restore();
+}
+
+function drawSlashPrimitive(ctx, x, y, radius, angle) {
+  const width = radius * 1.86;
+  const height = Math.max(1, radius * 0.28);
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.rect(-width * 0.5, -height * 0.5, width, height);
+  ctx.restore();
+}
+
+function drawCapsulePrimitive(ctx, x, y, radius, angle) {
+  const width = radius * 1.78;
+  const height = Math.max(1.2, radius * 0.66);
+  const rx = width * 0.5;
+  const ry = height * 0.5;
+
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.rotate(angle);
+  ctx.beginPath();
+  ctx.moveTo(-rx + ry, -ry);
+  ctx.lineTo(rx - ry, -ry);
+  ctx.arc(rx - ry, 0, ry, -Math.PI * 0.5, Math.PI * 0.5);
+  ctx.lineTo(-rx + ry, ry);
+  ctx.arc(-rx + ry, 0, ry, Math.PI * 0.5, Math.PI * 1.5);
+  ctx.closePath();
+  ctx.restore();
+}
+
+function drawPrimitivePath(ctx, x, y, style) {
+  const octant = style.traversal.dominantOctant;
+  const angleBase =
+    (octant === "NE" ? -Math.PI * 0.25 :
+      octant === "SE" ? Math.PI * 0.25 :
+      octant === "SW" ? Math.PI * 0.75 :
+      octant === "NW" ? -Math.PI * 0.75 :
+      octant === "E" ? 0 :
+      octant === "W" ? Math.PI :
+      octant === "S" ? Math.PI * 0.5 :
+      -Math.PI * 0.5) +
+    signedPointHash(x * 0.011, y * 0.013, style.radius * 17.1) * 0.16;
+
+  if (style.primitiveShape === "diamond") {
+    drawDiamondPrimitive(ctx, x, y, style.radius);
+    return;
   }
 
-  for (const row of samples) {
-    for (const sample of row) {
-      if (sample.continentId && summary.continents[sample.continentId]) {
-        summary.continents[sample.continentId].landSamples += 1;
+  if (style.primitiveShape === "square") {
+    drawSquarePrimitive(ctx, x, y, style.radius);
+    return;
+  }
+
+  if (style.primitiveShape === "triangle") {
+    drawTrianglePrimitive(ctx, x, y, style.radius * 1.08, angleBase);
+    return;
+  }
+
+  if (style.primitiveShape === "kite") {
+    drawKitePrimitive(ctx, x, y, style.radius);
+    return;
+  }
+
+  if (style.primitiveShape === "sliver") {
+    drawSliverPrimitive(ctx, x, y, style.radius, angleBase);
+    return;
+  }
+
+  if (style.primitiveShape === "slash") {
+    drawSlashPrimitive(ctx, x, y, style.radius, angleBase);
+    return;
+  }
+
+  if (style.primitiveShape === "capsule") {
+    drawCapsulePrimitive(ctx, x, y, style.radius, angleBase);
+    return;
+  }
+
+  drawCirclePrimitive(ctx, x, y, style.radius);
+}
+
+function fillPrimitive(ctx, x, y, style, color, blur = 0) {
+  ctx.save();
+  ctx.filter = blur > 0.02 ? `blur(${blur.toFixed(2)}px)` : "none";
+  drawPrimitivePath(ctx, x, y, style);
+  ctx.fillStyle = color;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawPoint(ctx, point, style) {
+  const x = point.x + style.offsets.drawX;
+  const y = point.y + style.offsets.drawY;
+
+  if (style.glowAlpha > 0.01) {
+    ctx.beginPath();
+    ctx.fillStyle = withAlpha(style.color, style.glowAlpha);
+    ctx.arc(x, y, style.radius * (1.8 + style.channelWeights.atmosphere * 0.2), 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const shadowOffsetX =
+    style.offsets.jitterX * 0.18 +
+    (style.channelWeights.cosmos - style.channelWeights.psychology) * style.radius * 0.14;
+
+  const shadowOffsetY =
+    style.offsets.jitterY * 0.18 +
+    (style.channelWeights.atmosphere - style.channelWeights.terrain) * style.radius * 0.14;
+
+  fillPrimitive(
+    ctx,
+    x + shadowOffsetX,
+    y + shadowOffsetY,
+    style,
+    style.shadowColor,
+    style.blur + style.channelWeights.atmosphere * 0.4
+  );
+
+  fillPrimitive(ctx, x, y, style, withAlpha(style.color, style.alpha), style.blur);
+
+  if (style.channelWeights.psychology > 0.10 || style.channelWeights.cosmos > 0.10) {
+    const hx = x - style.radius * 0.22;
+    const hy = y - style.radius * 0.22;
+
+    ctx.beginPath();
+    ctx.fillStyle = style.highlightColor;
+    ctx.arc(
+      hx,
+      hy,
+      Math.max(0.7, style.radius * (0.18 + style.channelWeights.psychology * 0.08 + style.channelWeights.cosmos * 0.06)),
+      0,
+      Math.PI * 2
+    );
+    ctx.fill();
+  }
+}
+
+/* =========================
+   SURFACE
+========================= */
+
+function drawSurface(ctx, grid, projector, p, globalPrimitiveTime, viewState) {
+  if (!grid.length) return baseDensity();
+
+  const rows = grid.length;
+  const cols = grid[0].length;
+  const count = rows * cols;
+  const baseSize = clamp((p.radius / Math.sqrt(count)) * 1.28, 1.05, 4.2);
+
+  let visible = 0;
+  let emitted = 0;
+  let landFamilyCount = 0;
+  let waterFamilyCount = 0;
+  let cryosphereCount = 0;
+  let shorelineCount = 0;
+  let terrainChannelCount = 0;
+  let atmosphereChannelCount = 0;
+  let cosmosChannelCount = 0;
+  let psychologyChannelCount = 0;
+  let skippedCellCount = 0;
+
+  const queue = [];
+
+  for (let y = 0; y < rows; y += 1) {
+    const row = grid[y];
+
+    for (let x = 0; x < cols; x += 1) {
+      const sample = row[x];
+      if (!sample) continue;
+
+      const point = projector(sample.latDeg, sample.lonDeg, sample.elevation * 8);
+      if (!point || !point.visible) continue;
+
+      visible += 1;
+
+      const traversal = computeTraversal(sample, viewState);
+      const nodeRelation = resolveNodeRelation(sample);
+      const channels = resolveChannels(sample, baseSize, grid, x, y, globalPrimitiveTime);
+      const style = buildMasterStyle(sample, point, baseSize, channels, traversal, nodeRelation, x, y);
+      const suppression = evaluateSuppression(sample, traversal, nodeRelation, style);
+
+      if (!suppression.emit) {
+        skippedCellCount += 1;
+        continue;
       }
+
+      queue.push({
+        point,
+        style,
+        z: computeOrderingDepth(point, traversal, style)
+      });
+
+      if (sample.waterMask === 1) waterFamilyCount += 1;
+      if (sample.landMask === 1) landFamilyCount += 1;
+      if (style.channelWeights.terrain > 0.01) terrainChannelCount += 1;
+      if (style.channelWeights.atmosphere > 0.01) atmosphereChannelCount += 1;
+      if (style.channelWeights.cosmos > 0.01) cosmosChannelCount += 1;
+      if (style.channelWeights.psychology > 0.01) psychologyChannelCount += 1;
+
+      if (
+        sample.biomeType === "GLACIER" ||
+        sample.terrainClass === "POLAR_ICE" ||
+        sample.terrainClass === "GLACIAL_HIGHLAND"
+      ) {
+        cryosphereCount += 1;
+      }
+
+      if (sample.shoreline === true || sample.shorelineBand === true) {
+        shorelineCount += 1;
+      }
+
+      emitted += 1;
     }
   }
 
-  return Object.freeze(summary);
-}
+  queue.sort((a, b) => a.z - b.z);
 
-export function generatePlanetField() {
-  const samples = [];
-  const { latSteps, lonSteps } = WORLD_KERNEL.constants;
-
-  for (let y = 0; y < latSteps; y += 1) {
-    const v = y / (latSteps - 1);
-    const latDeg = lerp(82, -82, v);
-    const row = [];
-
-    for (let x = 0; x < lonSteps; x += 1) {
-      const u = x / lonSteps;
-      const lonDeg = lerp(-180, 180, u);
-      row.push(buildSample(latDeg, lonDeg));
-    }
-
-    samples.push(Object.freeze(row));
+  for (let i = 0; i < queue.length; i += 1) {
+    drawPoint(ctx, queue[i].point, queue[i].style);
   }
 
-  return Object.freeze({
-    samples: Object.freeze(samples),
-    summary: buildSummary(samples)
-  });
+  const effectiveSpan =
+    emitted > 0 && p.radius > 0
+      ? clamp((p.radius * 2) / Math.sqrt(emitted), 1, 12)
+      : 2;
+
+  const densityTier =
+    emitted === 0 ? "NONE" :
+    emitted > visible * 0.72 ? "HIGH" :
+    emitted > visible * 0.42 ? "BASELINE" :
+    "SUPPRESSED";
+
+  return {
+    visibleCellCount: visible,
+    emittedCellCount: emitted,
+    skippedCellCount,
+    landFamilyCount,
+    waterFamilyCount,
+    cryosphereCount,
+    shorelineCount,
+    terrainChannelCount,
+    atmosphereChannelCount,
+    cosmosChannelCount,
+    psychologyChannelCount,
+    primitiveType: "TRAVERSAL_FILTER",
+    primitivePath: "render.traversal.filter",
+    averageCellSpanPx: effectiveSpan,
+    subdivisionTier: emitted > visible * 0.72 ? 2 : 1,
+    densityTier
+  };
 }
+
+/* =========================
+   RETURNS
+========================= */
+
+function baseDensity() {
+  return {
+    visibleCellCount: 0,
+    emittedCellCount: 0,
+    skippedCellCount: 0,
+    landFamilyCount: 0,
+    waterFamilyCount: 0,
+    cryosphereCount: 0,
+    shorelineCount: 0,
+    terrainChannelCount: 0,
+    atmosphereChannelCount: 0,
+    cosmosChannelCount: 0,
+    psychologyChannelCount: 0,
+    primitiveType: "NONE",
+    primitivePath: "none",
+    averageCellSpanPx: 2,
+    subdivisionTier: 1,
+    densityTier: "BASELINE"
+  };
+}
+
+function buildReturn(p, density) {
+  return {
+    projectionState: p,
+    primitive: {
+      primitiveType: density.primitiveType,
+      primitivePath: density.primitivePath,
+      centerAnchored: true,
+      rowColumnPathActive: true,
+      sectorBandPathActive: false
+    },
+    topology: {
+      visibleCellCount: density.visibleCellCount,
+      emittedCellCount: density.emittedCellCount,
+      skippedCellCount: density.skippedCellCount
+    },
+    renderAuthority: {
+      renderReadsScope: true,
+      renderReadsLens: true,
+      fallbackMode: false,
+      liveRenderPath: "render.traversal.filter"
+    },
+    density: {
+      averageCellSpanPx: density.averageCellSpanPx,
+      subdivisionTier: density.subdivisionTier,
+      densityTier: density.densityTier
+    },
+    audit: {
+      sampleCount: density.emittedCellCount,
+      waterFamilyCount: density.waterFamilyCount,
+      landFamilyCount: density.landFamilyCount,
+      cryosphereCount: density.cryosphereCount,
+      shorelineCount: density.shorelineCount,
+      terrainChannelCount: density.terrainChannelCount,
+      atmosphereChannelCount: density.atmosphereChannelCount,
+      cosmosChannelCount: density.cosmosChannelCount,
+      psychologyChannelCount: density.psychologyChannelCount
+    }
+  };
+}
+
+/* =========================
+   ENTRY
+========================= */
+
+export function createRenderer() {
+  function renderPlanet({ ctx, planetField, projectPoint, viewState = {} }) {
+    if (!ctx) throw new Error("ctx required");
+
+    const p = getProjectionState(viewState, ctx);
+
+    ctx.clearRect(0, 0, p.width, p.height);
+    drawBackground(ctx, p);
+    drawPlanet(ctx, p);
+
+    if (!planetField) return buildReturn(p, baseDensity());
+
+    const grid = sampleGrid(planetField);
+    const projector = resolveProjectPoint(projectPoint, p);
+    const density = drawSurface(
+      ctx,
+      grid,
+      projector,
+      p,
+      viewState?.globalPrimitiveTime || null,
+      viewState
+    );
+
+    return buildReturn(p, density);
+  }
+
+  return { renderPlanet };
+}
+
+const DEFAULT_RENDERER = createRenderer();
+
+export function renderPlanet(options) {
+  return DEFAULT_RENDERER.renderPlanet(options);
+}
+
+export default DEFAULT_RENDERER;

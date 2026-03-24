@@ -163,6 +163,7 @@ html[data-doorbg="1"] #boot-status {
 <script type="module">
 const statusNode = document.getElementById("boot-status");
 const diagnosticsToggle = document.getElementById("diagnostics-toggle");
+const worldCanvas = document.getElementById("world");
 const IS_DOOR_BG = document.documentElement.getAttribute("data-doorbg") === "1";
 
 const RUNTIME_STORAGE_KEY = "cte_runtime_v4";
@@ -175,7 +176,10 @@ const IGNITION_POLL_MS = 100;
 const MODULES = Object.freeze([
   Object.freeze({
     key: "world_kernel",
-    path: "/world/world_kernel.js"
+    path: "/world/world_kernel.js",
+    validate(mod) {
+      return !!mod?.WORLD_KERNEL && typeof mod?.generatePlanetField === "function";
+    }
   }),
   Object.freeze({
     key: "planet_engine",
@@ -222,7 +226,8 @@ const bootState = {
   modulesLoaded: [],
   failedModule: null,
   failureMessage: "",
-  verificationPass: false
+  verificationPass: false,
+  runtimeStarted: false
 };
 
 function writeBootState() {
@@ -232,6 +237,7 @@ function writeBootState() {
     failedModule: bootState.failedModule,
     failureMessage: bootState.failureMessage,
     verificationPass: bootState.verificationPass,
+    runtimeStarted: bootState.runtimeStarted,
     isDoorBackground: IS_DOOR_BG
   };
 }
@@ -242,6 +248,7 @@ function setBootState(next) {
   if ("failedModule" in next) bootState.failedModule = next.failedModule;
   if ("failureMessage" in next) bootState.failureMessage = next.failureMessage;
   if ("verificationPass" in next) bootState.verificationPass = next.verificationPass;
+  if ("runtimeStarted" in next) bootState.runtimeStarted = next.runtimeStarted;
   writeBootState();
 }
 
@@ -342,11 +349,24 @@ function resolveStartRuntime(runtimeModule) {
 }
 
 function validateCanvasPresence() {
-  const world = document.getElementById("world");
-  if (!world) {
+  if (!worldCanvas) {
     throw new Error("Missing #world canvas");
   }
-  return world;
+  return worldCanvas;
+}
+
+function ensureCanvasBackingStore(canvas) {
+  const dpr = Math.max(1, window.devicePixelRatio || 1);
+  const width = Math.max(1, Math.floor(window.innerWidth * dpr));
+  const height = Math.max(1, Math.floor(window.innerHeight * dpr));
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+
+  canvas.style.width = "100vw";
+  canvas.style.height = "100vh";
 }
 
 function readRuntimeStorageReceipt() {
@@ -369,18 +389,24 @@ function readIgnitionState() {
   const windowReceipt = readWindowReceipt();
   const storageReceipt = readRuntimeStorageReceipt();
 
+  const verificationPass =
+    windowReceipt?.verification?.pass === true ||
+    storageReceipt?.verification?.pass === true;
+
+  const failureMessage =
+    windowReceipt?.error ??
+    storageReceipt?.error ??
+    windowReceipt?.failure?.message ??
+    storageReceipt?.failure?.message ??
+    "";
+
   return {
-    verificationPass:
-      windowReceipt?.verification?.pass === true ||
-      storageReceipt?.verification?.pass === true,
-    failurePhase:
-      windowReceipt?.failure?.phase ??
-      storageReceipt?.failure?.phase ??
+    verificationPass,
+    phase:
+      windowReceipt?.phase ??
+      storageReceipt?.phase ??
       null,
-    failureMessage:
-      windowReceipt?.failure?.message ??
-      storageReceipt?.failure?.message ??
-      ""
+    failureMessage
   };
 }
 
@@ -397,17 +423,17 @@ async function waitForIgnition() {
   while ((performance.now() - startedAt) < IGNITION_TIMEOUT_MS) {
     const state = readIgnitionState();
 
-    if (state.failurePhase) {
+    if (state.phase === "FAIL") {
       setBootState({
         phase: "RUNTIME_FAILURE",
         failedModule: "runtime",
-        failureMessage: state.failureMessage || state.failurePhase,
+        failureMessage: state.failureMessage || "Unknown runtime failure",
         verificationPass: false
       });
 
       setStatus(
         [
-          "RUNTIME ERROR: " + state.failurePhase,
+          "RUNTIME ERROR",
           state.failureMessage || "Unknown runtime failure"
         ].join("\n"),
         "boot-fail"
@@ -432,17 +458,17 @@ async function waitForIgnition() {
   }
 
   const finalState = readIgnitionState();
-  if (finalState.failurePhase) {
+  if (finalState.phase === "FAIL") {
     setBootState({
       phase: "RUNTIME_FAILURE",
       failedModule: "runtime",
-      failureMessage: finalState.failureMessage || finalState.failurePhase,
+      failureMessage: finalState.failureMessage || "Unknown runtime failure",
       verificationPass: false
     });
 
     setStatus(
       [
-        "RUNTIME ERROR: " + finalState.failurePhase,
+        "RUNTIME ERROR",
         finalState.failureMessage || "Unknown runtime failure"
       ].join("\n"),
       "boot-fail"
@@ -461,22 +487,120 @@ async function waitForIgnition() {
   return false;
 }
 
+function resolveBuildPlanetField(modules) {
+  if (typeof modules.world_kernel?.generatePlanetField === "function") {
+    return modules.world_kernel.generatePlanetField;
+  }
+  if (typeof modules.planet_engine?.buildPlanetField === "function") {
+    return modules.planet_engine.buildPlanetField;
+  }
+  if (typeof modules.planet_engine?.default?.buildPlanetField === "function") {
+    return modules.planet_engine.default.buildPlanetField;
+  }
+  if (typeof modules.planet_engine?.createPlanetEngine === "function") {
+    const engine = modules.planet_engine.createPlanetEngine();
+    if (typeof engine?.buildPlanetField === "function") {
+      return engine.buildPlanetField.bind(engine);
+    }
+  }
+  return null;
+}
+
+function resolveCreateControlSystem(modules) {
+  if (typeof modules.control?.createControlSystem === "function") return modules.control.createControlSystem;
+  if (typeof modules.control?.default?.createControlSystem === "function") return modules.control.default.createControlSystem;
+  return null;
+}
+
+function resolveCreateInstruments(modules) {
+  if (typeof modules.instruments?.createInstruments === "function") return modules.instruments.createInstruments;
+  if (typeof modules.instruments?.default?.createInstruments === "function") return modules.instruments.default.createInstruments;
+  return null;
+}
+
+function installGlobalInstruments(modules) {
+  const createInstruments = resolveCreateInstruments(modules);
+  if (!createInstruments) return null;
+
+  const instruments = createInstruments({
+    mode: "index"
+  });
+
+  window.__CTE_INSTRUMENTS__ = instruments;
+  return instruments;
+}
+
+function buildInitialViewState() {
+  return {
+    scope: "world",
+    lens: "baseline",
+    worldVariantState: {
+      variant: "default"
+    },
+    traversalState: {
+      bias: "SOUTH"
+    },
+    worldModeState: {
+      mode: "round"
+    },
+    psychologyState: null,
+    psychologyEnvelope: null,
+    psychologyReceipt: null
+  };
+}
+
+function startResizeLoop(canvas) {
+  function apply() {
+    ensureCanvasBackingStore(canvas);
+  }
+
+  apply();
+  window.addEventListener("resize", apply);
+  return () => window.removeEventListener("resize", apply);
+}
+
 async function boot() {
+  let cleanupResize = null;
+
   try {
     setBootState({
       phase: "BOOT_INIT",
       modulesLoaded: [],
       failedModule: null,
       failureMessage: "",
-      verificationPass: false
+      verificationPass: false,
+      runtimeStarted: false
     });
 
-    validateCanvasPresence();
+    const canvas = validateCanvasPresence();
+    cleanupResize = startResizeLoop(canvas);
     setStatus("BOOTING...", "boot-warn");
 
     const modules = await preflightModules();
-    const startRuntime = resolveStartRuntime(modules.runtime);
 
+    const buildPlanetField = resolveBuildPlanetField(modules);
+    if (!buildPlanetField) {
+      const message = "planet field builder missing";
+      setBootState({
+        phase: "PLANET_FIELD_CONTRACT_FAILURE",
+        failedModule: "planet_engine",
+        failureMessage: message,
+        verificationPass: false
+      });
+      setStatus(
+        [
+          "BOOT ERROR: planet field builder missing",
+          "/world/planet_engine.js",
+          message
+        ].join("\n"),
+        "boot-fail"
+      );
+      return;
+    }
+
+    installGlobalInstruments(modules);
+
+    const startRuntime = resolveStartRuntime(modules.runtime);
     if (!startRuntime) {
       const message = "runtime startRuntime missing";
       setBootState({
@@ -497,17 +621,81 @@ async function boot() {
     }
 
     setBootState({
-      phase: "RUNTIME_START",
+      phase: "PLANET_FIELD_BUILD",
       failedModule: null,
       failureMessage: "",
       verificationPass: false
     });
 
+    setStatus("BUILDING PLANET FIELD...", "boot-warn");
+    const planetField = buildPlanetField();
+
+    const createControlSystem = resolveCreateControlSystem(modules);
+    const control = createControlSystem
+      ? createControlSystem({
+          canvas,
+          mode: "index"
+        })
+      : null;
+
+    const ctx = canvas.getContext("2d", { alpha: false });
+    if (!ctx) {
+      const message = "2d context unavailable";
+      setBootState({
+        phase: "CANVAS_CONTEXT_FAILURE",
+        failedModule: "render",
+        failureMessage: message,
+        verificationPass: false
+      });
+      setStatus(
+        [
+          "BOOT ERROR: canvas context unavailable",
+          "#world",
+          message
+        ].join("\n"),
+        "boot-fail"
+      );
+      return;
+    }
+
+    setBootState({
+      phase: "RUNTIME_START",
+      failedModule: null,
+      failureMessage: "",
+      verificationPass: false,
+      runtimeStarted: true
+    });
+
     setStatus("STARTING RUNTIME...", "boot-warn");
-    startRuntime();
+
+    startRuntime({
+      ctx,
+      planetField,
+      projectPoint: null,
+      viewState: buildInitialViewState(),
+      control
+    });
+
     await waitForIgnition();
-  } catch {
-    // surfaced above
+  } catch (error) {
+    const message = toMessage(error);
+    setBootState({
+      phase: "BOOT_FATAL",
+      failedModule: bootState.failedModule,
+      failureMessage: message,
+      verificationPass: false
+    });
+    setStatus(
+      [
+        "BOOT ERROR: fatal boot failure",
+        message
+      ].join("\n"),
+      "boot-fail"
+    );
+  } finally {
+    if (cleanupResize && bootState.phase !== "RUNNING") {
+      cleanupResize();
+    }
   }
 }
 

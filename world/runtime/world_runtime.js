@@ -1,19 +1,14 @@
 // /world/runtime/world_runtime.js
-// MODE: THIN CONDUCTOR (CONTRACT-PRESERVING)
-// STATUS: NON-DRIFT | RUNTIME CONTRACT RENEWAL
+// MODE: THIN CONDUCTOR (CONTRACT-PRESERVING · FULL TNT)
+// STATUS: NON-DRIFT | RUNTIME RENEWAL (NO SEMANTIC ACCRETION)
 // OWNER: SEAN
-// NOTE:
-// - preserves orchestration, receipts, gauges continuity
-// - consumes upstream truth (WORLD_KERNEL)
-// - does NOT create semantic meaning layers
 
 import { WORLD_KERNEL } from "../world_kernel.js";
 import { renderPlanet } from "../render/index.js";
 
-// If instruments module exists, keep it; otherwise guard usage
+// Optional instruments (must not break if absent)
 let createInstrumentsSafe = null;
 try {
-  // optional import; must not crash if absent
   // eslint-disable-next-line import/no-unresolved
   ({ createInstruments: createInstrumentsSafe } = await import("../instruments/index.js"));
 } catch (_) {
@@ -23,7 +18,7 @@ try {
 let runtimeActive = false;
 
 /* =========================
-   INTERNAL HELPERS (NON-SEMANTIC)
+   UTIL (NON-SEMANTIC)
 ========================= */
 
 function now() {
@@ -56,7 +51,7 @@ function baseReceipt() {
 }
 
 function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
-  // Pass-through only. No reinterpretation.
+  // Strict pass-through. No reinterpretation, no synthesis.
   return {
     ...receipt,
     projectionState: renderResult?.projectionState ?? receipt.projectionState,
@@ -65,7 +60,7 @@ function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
     renderAuthority: renderResult?.renderAuthority ?? receipt.renderAuthority,
     density: renderResult?.density ?? receipt.density,
     audit: renderResult?.audit ?? receipt.audit,
-    // carry-through view state without mutation
+    // carry-through view state surfaces unchanged
     scope: viewState?.scope ?? receipt.scope,
     lens: viewState?.lens ?? receipt.lens,
     worldVariantState: viewState?.worldVariantState ?? receipt.worldVariantState,
@@ -75,12 +70,11 @@ function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
 }
 
 /* =========================
-   RUNTIME
+   RUNTIME (THIN CONDUCTOR)
 ========================= */
 
 export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, control = null }) {
   if (runtimeActive) {
-    // emit duplicate-start failure receipt without crashing loop
     const dup = {
       ...baseReceipt(),
       phase: "FAIL",
@@ -98,7 +92,7 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
   let running = true;
   let rafId = null;
 
-  // optional instruments (gauges)
+  // Optional instruments (gauges)
   const instruments = typeof createInstrumentsSafe === "function"
     ? createInstrumentsSafe()
     : null;
@@ -109,7 +103,7 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
     let receipt = baseReceipt();
 
     try {
-      // CONTROL → VIEWSTATE continuity (pass-through)
+      // CONTROL → VIEWSTATE continuity (pass-through only)
       const vs = control && typeof control.getViewState === "function"
         ? control.getViewState(viewState)
         : viewState;
@@ -122,10 +116,10 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
         viewState: vs
       });
 
-      // PASS-THROUGH merge (no semantic construction)
+      // PASS-THROUGH MERGE (no semantic construction)
       receipt = mergeRenderIntoReceipt(receipt, renderResult, vs);
 
-      // SUCCESS
+      // SUCCESS (shape preserved)
       receipt.phase = "RUNNING";
       receipt.verification = { pass: true };
       receipt.timestamp = now();
@@ -141,7 +135,6 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
 
       rafId = requestAnimationFrame(frame);
     } catch (err) {
-      // FAILURE PATH (contract-preserving)
       const failure = {
         ...baseReceipt(),
         phase: "FAIL",
@@ -187,7 +180,6 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
     }
   }
 
-  // best-effort cleanup hooks (non-invasive)
   try {
     window.addEventListener("pagehide", dispose, { once: true });
   } catch (_) {}

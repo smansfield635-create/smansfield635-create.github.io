@@ -1,0 +1,11 @@
+body{margin:0;background:#05070b;color:#e8f6ff;font-family:monospace}
+.wrap{padding:10px}
+.topbar{display:flex;gap:8px}
+.kpi{background:#0b0f16;padding:6px;border:1px solid #1f2a36}
+.k{font-size:10px;color:#aaa}
+.v{font-weight:800}
+.grid{display:flex;gap:10px;margin-top:10px}
+.panel{flex:1;background:#0b0f16;padding:6px;border:1px solid #1f2a36}
+.title{font-size:11px;color:#7fffd4;margin-bottom:6px}
+.row{display:flex;justify-content:space-between;font-size:11px}
+canvas{margin-top:10px;border:1px solid #1f2a36}

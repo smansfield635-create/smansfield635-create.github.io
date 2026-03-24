@@ -1,24 +1,15 @@
 // /world/runtime/world_runtime.js
-// MODE: THIN CONDUCTOR (CONTRACT-PRESERVING · PSYCHOLOGY PREWIRE)
-// STATUS: NON-DRIFT | RUNTIME RENEWAL (NO SEMANTIC ACCRETION)
+// MODE: THIN CONDUCTOR RENEWAL
+// STATUS: NON-DRIFT | CONTRACT-PRESERVING | PSYCHOLOGY-PREWIRED
 // OWNER: SEAN
 
 import { WORLD_KERNEL } from "../world_kernel.js";
 import { renderPlanet } from "../render/index.js";
 
-// Optional instruments (must not break if absent)
-let createInstrumentsSafe = null;
-try {
-  // eslint-disable-next-line import/no-unresolved
-  ({ createInstruments: createInstrumentsSafe } = await import("../instruments/index.js"));
-} catch (_) {
-  createInstrumentsSafe = null;
-}
-
 let runtimeActive = false;
 
 /* =========================
-   UTIL (NON-SEMANTIC)
+   UTIL
 ========================= */
 
 function now() {
@@ -31,13 +22,30 @@ function safeSetStorage(key, value) {
   } catch (_) {}
 }
 
+function safeGetGlobalInstruments() {
+  try {
+    const host = typeof window !== "undefined" ? window : globalThis;
+    return host?.__CTE_INSTRUMENTS__ ?? null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function basePsychologySurface() {
+  return {
+    state: null,
+    envelope: null,
+    receipt: null
+  };
+}
+
 function baseReceipt() {
   return {
     phase: "INIT",
     verification: { pass: false },
     timestamp: now(),
 
-    // REQUIRED SURFACES
+    // render/runtime continuity
     projectionState: null,
     primitive: null,
     topology: null,
@@ -45,23 +53,19 @@ function baseReceipt() {
     density: null,
     audit: null,
 
-    // STATE CARRIAGE
+    // state carriage
     scope: null,
     lens: null,
     worldVariantState: null,
     traversalState: null,
     worldModeState: null,
 
-    // PSYCHOLOGY PREWIRE (EMPTY / THIN)
-    psychology: {
-      state: null,
-      envelope: null
-    }
+    // universal domain prewire
+    psychology: basePsychologySurface()
   };
 }
 
 function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
-  // Strict pass-through. No interpretation.
   return {
     ...receipt,
     projectionState: renderResult?.projectionState ?? receipt.projectionState,
@@ -71,36 +75,73 @@ function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
     density: renderResult?.density ?? receipt.density,
     audit: renderResult?.audit ?? receipt.audit,
 
-    // PASS-THROUGH STATE
+    // pass-through only
     scope: viewState?.scope ?? receipt.scope,
     lens: viewState?.lens ?? receipt.lens,
     worldVariantState: viewState?.worldVariantState ?? receipt.worldVariantState,
     traversalState: viewState?.traversalState ?? receipt.traversalState,
     worldModeState: viewState?.worldModeState ?? receipt.worldModeState,
 
-    // PSYCHOLOGY PASS-THROUGH (NO SEMANTIC CREATION)
+    // psychology carriage only
     psychology: {
       state: viewState?.psychologyState ?? receipt.psychology.state,
-      envelope: viewState?.psychologyEnvelope ?? receipt.psychology.envelope
+      envelope: viewState?.psychologyEnvelope ?? receipt.psychology.envelope,
+      receipt: viewState?.psychologyReceipt ?? receipt.psychology.receipt
     }
   };
 }
 
+function buildFailureReceipt(errorCode, message) {
+  return {
+    ...baseReceipt(),
+    phase: "FAIL",
+    verification: { pass: false },
+    error: message || errorCode,
+    errorCode,
+    timestamp: now()
+  };
+}
+
+function buildDuplicateStartReceipt() {
+  return buildFailureReceipt("RUNTIME_DUPLICATE_START", "Runtime already active");
+}
+
+function emitReceipt(receipt, instruments) {
+  try {
+    window.__AUTHORITY_RECEIPT__ = receipt;
+  } catch (_) {}
+
+  safeSetStorage("cte_runtime_v4", receipt);
+
+  try {
+    if (instruments && typeof instruments.update === "function") {
+      instruments.update(receipt);
+    }
+  } catch (_) {}
+}
+
+function safeDisposeInstruments(instruments) {
+  try {
+    if (instruments && typeof instruments.dispose === "function") {
+      instruments.dispose();
+    }
+  } catch (_) {}
+}
+
 /* =========================
-   RUNTIME (THIN CONDUCTOR)
+   RUNTIME
 ========================= */
 
-export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, control = null }) {
+export function startRuntime({
+  ctx,
+  planetField,
+  projectPoint,
+  viewState = {},
+  control = null
+}) {
   if (runtimeActive) {
-    const dup = {
-      ...baseReceipt(),
-      phase: "FAIL",
-      verification: { pass: false },
-      error: "RUNTIME_DUPLICATE_START",
-      timestamp: now()
-    };
-    window.__AUTHORITY_RECEIPT__ = dup;
-    safeSetStorage("cte_runtime_v4", dup);
+    const duplicateReceipt = buildDuplicateStartReceipt();
+    emitReceipt(duplicateReceipt, null);
     return { dispose() {} };
   }
 
@@ -108,92 +149,75 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
 
   let running = true;
   let rafId = null;
+  const instruments = safeGetGlobalInstruments();
 
-  const instruments = typeof createInstrumentsSafe === "function"
-    ? createInstrumentsSafe()
-    : null;
+  function resolveViewState() {
+    if (control && typeof control.getViewState === "function") {
+      return control.getViewState(viewState);
+    }
+    return viewState;
+  }
 
   function frame() {
     if (!running) return;
 
-    let receipt = baseReceipt();
-
     try {
-      // CONTROL → VIEWSTATE continuity (pass-through only)
-      const vs = control && typeof control.getViewState === "function"
-        ? control.getViewState(viewState)
-        : viewState;
+      // Keep upstream node authority reachable, but do not interpret it here.
+      // This validates availability without creating runtime-side meaning.
+      if (!WORLD_KERNEL || typeof WORLD_KERNEL.resolveNode !== "function") {
+        throw new Error("WORLD_KERNEL.resolveNode unavailable");
+      }
 
-      // RENDER
+      const nextViewState = resolveViewState();
+
       const renderResult = renderPlanet({
         ctx,
         planetField,
         projectPoint,
-        viewState: vs
+        viewState: nextViewState
       });
 
-      // MERGE (NO SEMANTIC ACCRETION)
-      receipt = mergeRenderIntoReceipt(receipt, renderResult, vs);
-
-      // SUCCESS
+      const receipt = mergeRenderIntoReceipt(baseReceipt(), renderResult, nextViewState);
       receipt.phase = "RUNNING";
       receipt.verification = { pass: true };
       receipt.timestamp = now();
 
-      // EMIT RECEIPTS
-      window.__AUTHORITY_RECEIPT__ = receipt;
-      safeSetStorage("cte_runtime_v4", receipt);
-
-      // INSTRUMENTS (PASS-THROUGH)
-      if (instruments && typeof instruments.update === "function") {
-        instruments.update(receipt);
-      }
+      emitReceipt(receipt, instruments);
 
       rafId = requestAnimationFrame(frame);
     } catch (err) {
-      const failure = {
-        ...baseReceipt(),
-        phase: "FAIL",
-        verification: { pass: false },
-        error: err?.message || "RUNTIME_FRAME_ERROR",
-        timestamp: now()
-      };
-
-      window.__AUTHORITY_RECEIPT__ = failure;
-      safeSetStorage("cte_runtime_v4", failure);
-
-      if (instruments && typeof instruments.update === "function") {
-        instruments.update(failure);
-      }
-
       running = false;
+      const failureReceipt = buildFailureReceipt(
+        "RUNTIME_FRAME_ERROR",
+        err?.message || "Runtime frame error"
+      );
+      emitReceipt(failureReceipt, instruments);
     }
   }
 
-  // BOOT
-  try {
-    rafId = requestAnimationFrame(frame);
-  } catch (err) {
-    const bootFail = {
-      ...baseReceipt(),
-      phase: "FAIL",
-      verification: { pass: false },
-      error: err?.message || "RUNTIME_BOOT_ERROR",
-      timestamp: now()
-    };
-    window.__AUTHORITY_RECEIPT__ = bootFail;
-    safeSetStorage("cte_runtime_v4", bootFail);
-    running = false;
-  }
-
-  // LIFECYCLE
   function dispose() {
     running = false;
     runtimeActive = false;
-    if (rafId) cancelAnimationFrame(rafId);
-    if (instruments && typeof instruments.dispose === "function") {
-      instruments.dispose();
+
+    if (rafId !== null) {
+      try {
+        cancelAnimationFrame(rafId);
+      } catch (_) {}
     }
+
+    safeDisposeInstruments(instruments);
+  }
+
+  try {
+    rafId = requestAnimationFrame(frame);
+  } catch (err) {
+    running = false;
+    runtimeActive = false;
+    const bootFailureReceipt = buildFailureReceipt(
+      "RUNTIME_BOOT_ERROR",
+      err?.message || "Runtime boot error"
+    );
+    emitReceipt(bootFailureReceipt, instruments);
   }
 
   try {

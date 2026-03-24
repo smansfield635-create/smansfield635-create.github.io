@@ -1,5 +1,5 @@
 // /world/runtime/world_runtime.js
-// MODE: THIN CONDUCTOR (CONTRACT-PRESERVING · FULL TNT)
+// MODE: THIN CONDUCTOR (CONTRACT-PRESERVING · PSYCHOLOGY PREWIRE)
 // STATUS: NON-DRIFT | RUNTIME RENEWAL (NO SEMANTIC ACCRETION)
 // OWNER: SEAN
 
@@ -36,22 +36,32 @@ function baseReceipt() {
     phase: "INIT",
     verification: { pass: false },
     timestamp: now(),
+
+    // REQUIRED SURFACES
     projectionState: null,
     primitive: null,
     topology: null,
     renderAuthority: null,
     density: null,
     audit: null,
+
+    // STATE CARRIAGE
     scope: null,
     lens: null,
     worldVariantState: null,
     traversalState: null,
-    worldModeState: null
+    worldModeState: null,
+
+    // PSYCHOLOGY PREWIRE (EMPTY / THIN)
+    psychology: {
+      state: null,
+      envelope: null
+    }
   };
 }
 
 function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
-  // Strict pass-through. No reinterpretation, no synthesis.
+  // Strict pass-through. No interpretation.
   return {
     ...receipt,
     projectionState: renderResult?.projectionState ?? receipt.projectionState,
@@ -60,12 +70,19 @@ function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
     renderAuthority: renderResult?.renderAuthority ?? receipt.renderAuthority,
     density: renderResult?.density ?? receipt.density,
     audit: renderResult?.audit ?? receipt.audit,
-    // carry-through view state surfaces unchanged
+
+    // PASS-THROUGH STATE
     scope: viewState?.scope ?? receipt.scope,
     lens: viewState?.lens ?? receipt.lens,
     worldVariantState: viewState?.worldVariantState ?? receipt.worldVariantState,
     traversalState: viewState?.traversalState ?? receipt.traversalState,
-    worldModeState: viewState?.worldModeState ?? receipt.worldModeState
+    worldModeState: viewState?.worldModeState ?? receipt.worldModeState,
+
+    // PSYCHOLOGY PASS-THROUGH (NO SEMANTIC CREATION)
+    psychology: {
+      state: viewState?.psychologyState ?? receipt.psychology.state,
+      envelope: viewState?.psychologyEnvelope ?? receipt.psychology.envelope
+    }
   };
 }
 
@@ -92,7 +109,6 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
   let running = true;
   let rafId = null;
 
-  // Optional instruments (gauges)
   const instruments = typeof createInstrumentsSafe === "function"
     ? createInstrumentsSafe()
     : null;
@@ -108,7 +124,7 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
         ? control.getViewState(viewState)
         : viewState;
 
-      // RENDER (downstream expression)
+      // RENDER
       const renderResult = renderPlanet({
         ctx,
         planetField,
@@ -116,10 +132,10 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
         viewState: vs
       });
 
-      // PASS-THROUGH MERGE (no semantic construction)
+      // MERGE (NO SEMANTIC ACCRETION)
       receipt = mergeRenderIntoReceipt(receipt, renderResult, vs);
 
-      // SUCCESS (shape preserved)
+      // SUCCESS
       receipt.phase = "RUNNING";
       receipt.verification = { pass: true };
       receipt.timestamp = now();
@@ -128,7 +144,7 @@ export function startRuntime({ ctx, planetField, projectPoint, viewState = {}, c
       window.__AUTHORITY_RECEIPT__ = receipt;
       safeSetStorage("cte_runtime_v4", receipt);
 
-      // INSTRUMENTS (if present)
+      // INSTRUMENTS (PASS-THROUGH)
       if (instruments && typeof instruments.update === "function") {
         instruments.update(receipt);
       }

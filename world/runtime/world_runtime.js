@@ -1,12 +1,15 @@
 // /world/runtime/world_runtime.js
-// MODE: THIN CONDUCTOR RENEWAL
-// STATUS: NON-DRIFT | CONTRACT-PRESERVING | FAILURE-ISOLATING | CONTINUITY-PRESERVING
+// MODE: RUNTIME CONTRACT RENEWAL
+// STATUS: NON-DRIFT | THIN-INDEX-ALIGNED | SINGLE-AUTHORITY | RECEIPT-CANONICAL
 // OWNER: SEAN
 
-import { WORLD_KERNEL } from "../world_kernel.js";
+import { WORLD_KERNEL, generatePlanetField } from "../world_kernel.js";
 import { renderPlanet } from "../render/index.js";
 
 let runtimeActive = false;
+
+const RECEIPT_KEY = "__RUNTIME_RECEIPT__";
+const STORAGE_KEY = "cte_runtime_v4";
 
 /* =========================
    UTIL
@@ -20,12 +23,24 @@ function hasWindow() {
   return typeof window !== "undefined" && !!window;
 }
 
+function hasDocument() {
+  return typeof document !== "undefined" && !!document;
+}
+
 function hasRAF() {
   return typeof requestAnimationFrame === "function";
 }
 
 function hasCAF() {
   return typeof cancelAnimationFrame === "function";
+}
+
+function isObject(value) {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function normalizeObject(value) {
+  return isObject(value) ? value : {};
 }
 
 function safeSetStorage(key, value) {
@@ -37,27 +52,62 @@ function safeSetStorage(key, value) {
   }
 }
 
-function safeGetGlobalInstruments() {
+function safeGetStorage(key) {
   try {
-    const host = hasWindow() ? window : globalThis;
-    return host?.__CTE_INSTRUMENTS__ ?? null;
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return isObject(parsed) ? parsed : null;
   } catch (_) {
     return null;
   }
 }
 
-function safeWriteAuthorityReceipt(receipt) {
+function safeWriteRuntimeReceipt(receipt) {
   try {
-    if (hasWindow()) {
-      window.__AUTHORITY_RECEIPT__ = receipt;
-      return true;
-    }
-  } catch (_) {}
-  return false;
+    if (!hasWindow()) return false;
+    window[RECEIPT_KEY] = receipt;
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
-function normalizeObject(value) {
-  return value && typeof value === "object" && !Array.isArray(value) ? value : {};
+function safeInstallGlobalInstruments(instruments) {
+  try {
+    if (!hasWindow()) return false;
+    window.__CTE_INSTRUMENTS__ = instruments;
+    return true;
+  } catch (_) {
+    return false;
+  }
+}
+
+function safeClearGlobalInstruments(instruments) {
+  try {
+    if (!hasWindow()) return;
+    if (window.__CTE_INSTRUMENTS__ === instruments) {
+      window.__CTE_INSTRUMENTS__ = null;
+    }
+  } catch (_) {}
+}
+
+function safeCreateInstruments() {
+  try {
+    if (!hasWindow()) return null;
+    const factory =
+      typeof window.createInstruments === "function"
+        ? window.createInstruments
+        : null;
+
+    if (typeof factory !== "function") {
+      return null;
+    }
+
+    return factory({ mode: "index" });
+  } catch (_) {
+    return null;
+  }
 }
 
 function basePsychologySurface() {
@@ -70,17 +120,17 @@ function basePsychologySurface() {
 
 function baseReceipt() {
   return {
+    status: "BOOTING",
     phase: "INIT",
     verification: { pass: false },
     timestamp: now(),
 
-    // failure state
     error: null,
     errorCode: null,
     degraded: false,
     degradedDomains: [],
 
-    // render/runtime continuity
+    backend: null,
     projectionState: null,
     primitive: null,
     topology: null,
@@ -88,24 +138,43 @@ function baseReceipt() {
     density: null,
     audit: null,
 
-    // state carriage
     scope: null,
     lens: null,
     worldVariantState: null,
     traversalState: null,
     worldModeState: null,
 
-    // universal domain prewire
     psychology: basePsychologySurface()
   };
 }
 
-function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
+function buildInitialViewState(mode) {
+  return {
+    scope: "world",
+    lens: "baseline",
+    worldVariantState: {
+      variant: "default"
+    },
+    traversalState: {
+      bias: "SOUTH"
+    },
+    worldModeState: {
+      mode: mode === "index" ? "round" : "round"
+    },
+    psychologyState: null,
+    psychologyEnvelope: null,
+    psychologyReceipt: null
+  };
+}
+
+function mergeRenderIntoReceipt(receipt, renderResult, viewState, backend) {
   const output = normalizeObject(renderResult);
   const state = normalizeObject(viewState);
+  const priorPsychology = isObject(receipt.psychology) ? receipt.psychology : basePsychologySurface();
 
   return {
     ...receipt,
+    backend: backend ?? receipt.backend,
     projectionState: output.projectionState ?? receipt.projectionState,
     primitive: output.primitive ?? receipt.primitive,
     topology: output.topology ?? receipt.topology,
@@ -113,48 +182,33 @@ function mergeRenderIntoReceipt(receipt, renderResult, viewState) {
     density: output.density ?? receipt.density,
     audit: output.audit ?? receipt.audit,
 
-    // pass-through only
     scope: state.scope ?? receipt.scope,
     lens: state.lens ?? receipt.lens,
     worldVariantState: state.worldVariantState ?? receipt.worldVariantState,
     traversalState: state.traversalState ?? receipt.traversalState,
     worldModeState: state.worldModeState ?? receipt.worldModeState,
 
-    // psychology carriage only
     psychology: {
-      state: state.psychologyState ?? receipt.psychology.state,
-      envelope: state.psychologyEnvelope ?? receipt.psychology.envelope,
-      receipt: state.psychologyReceipt ?? receipt.psychology.receipt
+      state: state.psychologyState ?? priorPsychology.state,
+      envelope: state.psychologyEnvelope ?? priorPsychology.envelope,
+      receipt: state.psychologyReceipt ?? priorPsychology.receipt
     }
   };
 }
 
-function buildFailureReceipt(errorCode, message) {
+function buildFailureReceipt(errorCode, message, priorReceipt = null) {
+  const prior = priorReceipt ? normalizeObject(priorReceipt) : {};
   return {
     ...baseReceipt(),
+    ...prior,
+    status: "FAIL",
     phase: "FAIL",
     verification: { pass: false },
     error: message || errorCode,
-    errorCode,
-    timestamp: now(),
+    errorCode: errorCode || "RUNTIME_FAILURE",
     degraded: false,
-    degradedDomains: []
-  };
-}
-
-function buildDegradedReceipt(domains, message, priorReceipt = null) {
-  const degradedDomains = Array.isArray(domains) ? domains.slice() : [];
-  const base = priorReceipt ? { ...baseReceipt(), ...priorReceipt } : baseReceipt();
-
-  return {
-    ...base,
-    phase: "DEGRADED",
-    verification: { pass: false },
-    timestamp: now(),
-    degraded: true,
-    degradedDomains,
-    error: message || "Runtime degraded",
-    errorCode: "RUNTIME_DEGRADED"
+    degradedDomains: [],
+    timestamp: now()
   };
 }
 
@@ -162,56 +216,163 @@ function buildDuplicateStartReceipt() {
   return buildFailureReceipt("RUNTIME_DUPLICATE_START", "Runtime already active");
 }
 
-function emitReceipt(receipt, instruments) {
-  const domains = [];
-  const normalizedReceipt = normalizeObject(receipt);
-
-  const authorityWriteOk = safeWriteAuthorityReceipt(normalizedReceipt);
-  if (!authorityWriteOk) domains.push("AUTHORITY_RECEIPT");
-
-  const storageOk = safeSetStorage("cte_runtime_v4", normalizedReceipt);
-  if (!storageOk) domains.push("STORAGE");
-
-  if (instruments && typeof instruments.update === "function") {
-    try {
-      instruments.update(normalizedReceipt);
-    } catch (_) {
-      domains.push("INSTRUMENTS");
-    }
-  }
-
-  if (domains.length === 0) {
-    return normalizedReceipt;
-  }
+function buildRunningReceipt(priorReceipt, renderResult, viewState, backend) {
+  const merged = mergeRenderIntoReceipt(
+    priorReceipt ? { ...baseReceipt(), ...priorReceipt } : baseReceipt(),
+    renderResult,
+    viewState,
+    backend
+  );
 
   return {
-    ...normalizedReceipt,
-    phase: normalizedReceipt.phase === "FAIL" ? "FAIL" : "DEGRADED",
-    verification: {
-      pass: normalizedReceipt.phase === "RUNNING" ? false : normalizedReceipt.verification?.pass ?? false
-    },
-    degraded: true,
-    degradedDomains: Array.from(new Set([...(normalizedReceipt.degradedDomains || []), ...domains])),
-    error: normalizedReceipt.error || "Receipt emission degraded",
-    errorCode: normalizedReceipt.errorCode || "RECEIPT_DEGRADED",
+    ...merged,
+    status: "RUNNING",
+    phase: "RUNNING",
+    verification: { pass: true },
+    degraded: false,
+    degradedDomains: [],
+    error: null,
+    errorCode: null,
     timestamp: now()
   };
 }
 
-function safeDisposeInstruments(instruments, options = {}) {
-  const ownsLifecycle = options?.instrumentOwnership === "runtime";
-  if (!ownsLifecycle) return;
+function buildDegradedReceipt(domains, message, priorReceipt, renderResult, viewState, backend) {
+  const merged = mergeRenderIntoReceipt(
+    priorReceipt ? { ...baseReceipt(), ...priorReceipt } : baseReceipt(),
+    renderResult,
+    viewState,
+    backend
+  );
 
-  try {
-    if (instruments && typeof instruments.dispose === "function") {
-      instruments.dispose();
-    }
-  } catch (_) {}
+  return {
+    ...merged,
+    status: "DEGRADED",
+    phase: "DEGRADED",
+    verification: { pass: false },
+    degraded: true,
+    degradedDomains: Array.from(new Set(Array.isArray(domains) ? domains : [])),
+    error: message || "Runtime degraded",
+    errorCode: "RUNTIME_DEGRADED",
+    timestamp: now()
+  };
 }
 
-function classifyCriticalInvariantError(error) {
-  const message = String(error?.message || "");
+function emitReceipt(receipt, instruments) {
+  const normalized = normalizeObject(receipt);
+  const degradedDomains = Array.isArray(normalized.degradedDomains) ? normalized.degradedDomains.slice() : [];
 
+  const writeOk = safeWriteRuntimeReceipt(normalized);
+  if (!writeOk) degradedDomains.push("RUNTIME_RECEIPT");
+
+  const storageOk = safeSetStorage(STORAGE_KEY, normalized);
+  if (!storageOk) degradedDomains.push("STORAGE");
+
+  if (instruments && typeof instruments.update === "function") {
+    try {
+      instruments.update(normalized);
+    } catch (_) {
+      degradedDomains.push("INSTRUMENTS");
+    }
+  }
+
+  if (degradedDomains.length === 0) {
+    return normalized;
+  }
+
+  if (normalized.status === "FAIL") {
+    return {
+      ...normalized,
+      degraded: true,
+      degradedDomains: Array.from(new Set([...(normalized.degradedDomains || []), ...degradedDomains])),
+      timestamp: now()
+    };
+  }
+
+  return {
+    ...normalized,
+    status: "DEGRADED",
+    phase: "DEGRADED",
+    verification: { pass: false },
+    degraded: true,
+    degradedDomains: Array.from(new Set([...(normalized.degradedDomains || []), ...degradedDomains])),
+    error: normalized.error || "Receipt emission degraded",
+    errorCode: normalized.errorCode || "RECEIPT_DEGRADED",
+    timestamp: now()
+  };
+}
+
+function ensureCanvasSurface(canvas) {
+  if (!canvas || typeof canvas.getContext !== "function") {
+    throw new Error("Missing valid canvas surface");
+  }
+  return canvas;
+}
+
+function ensureRootSurface(root) {
+  if (!root) return null;
+  return root;
+}
+
+function ensureCanvasBackingStore(canvas) {
+  const dpr = Math.max(1, hasWindow() ? window.devicePixelRatio || 1 : 1);
+  const width = Math.max(1, Math.floor((hasWindow() ? window.innerWidth : canvas.clientWidth || 1) * dpr));
+  const height = Math.max(1, Math.floor((hasWindow() ? window.innerHeight : canvas.clientHeight || 1) * dpr));
+
+  if (canvas.width !== width) canvas.width = width;
+  if (canvas.height !== height) canvas.height = height;
+
+  canvas.style.width = "100vw";
+  canvas.style.height = "100vh";
+}
+
+function resolveBackend(canvas) {
+  const ctx2d = canvas.getContext("2d", { alpha: false });
+  if (ctx2d) {
+    return {
+      backend: "2d",
+      ctx: ctx2d
+    };
+  }
+
+  throw new Error("No supported rendering backend available");
+}
+
+function resolvePlanetField() {
+  if (typeof generatePlanetField === "function") {
+    return generatePlanetField();
+  }
+
+  if (WORLD_KERNEL && typeof WORLD_KERNEL.generatePlanetField === "function") {
+    return WORLD_KERNEL.generatePlanetField();
+  }
+
+  throw new Error("Planet field builder unavailable");
+}
+
+function resolveViewState(priorState) {
+  if (isObject(priorState)) {
+    return priorState;
+  }
+
+  const storageState = safeGetStorage(STORAGE_KEY);
+  if (isObject(storageState)) {
+    return {
+      scope: storageState.scope ?? "world",
+      lens: storageState.lens ?? "baseline",
+      worldVariantState: isObject(storageState.worldVariantState) ? storageState.worldVariantState : { variant: "default" },
+      traversalState: isObject(storageState.traversalState) ? storageState.traversalState : { bias: "SOUTH" },
+      worldModeState: isObject(storageState.worldModeState) ? storageState.worldModeState : { mode: "round" },
+      psychologyState: storageState.psychology?.state ?? null,
+      psychologyEnvelope: storageState.psychology?.envelope ?? null,
+      psychologyReceipt: storageState.psychology?.receipt ?? null
+    };
+  }
+
+  return buildInitialViewState("index");
+}
+
+function classifyCriticalInvariantError() {
   if (!hasRAF()) {
     return {
       critical: true,
@@ -228,35 +389,19 @@ function classifyCriticalInvariantError(error) {
     };
   }
 
-  if (typeof WORLD_KERNEL.resolveNode !== "function") {
+  if (typeof renderPlanet !== "function") {
     return {
       critical: true,
-      errorCode: "RUNTIME_NODE_AUTHORITY_UNAVAILABLE",
-      message: "WORLD_KERNEL.resolveNode unavailable"
-    };
-  }
-
-  if (message.includes("WORLD_KERNEL.resolveNode unavailable")) {
-    return {
-      critical: true,
-      errorCode: "RUNTIME_NODE_AUTHORITY_UNAVAILABLE",
-      message
+      errorCode: "RUNTIME_RENDER_UNAVAILABLE",
+      message: "renderPlanet unavailable"
     };
   }
 
   return {
     critical: false,
     errorCode: null,
-    message
+    message: null
   };
-}
-
-function defaultViewState() {
-  return {};
-}
-
-function validateViewStateCandidate(candidate) {
-  return candidate && typeof candidate === "object" && !Array.isArray(candidate);
 }
 
 /* =========================
@@ -264,161 +409,154 @@ function validateViewStateCandidate(candidate) {
 ========================= */
 
 export function startRuntime({
-  ctx,
-  planetField,
-  projectPoint,
-  viewState = {},
-  control = null,
-  instrumentOwnership = "external"
-}) {
+  canvas,
+  root = null,
+  mode = "index"
+} = {}) {
   if (runtimeActive) {
-    const duplicateReceipt = buildDuplicateStartReceipt();
-    emitReceipt(duplicateReceipt, null);
+    emitReceipt(buildDuplicateStartReceipt(), null);
     return { dispose() {} };
   }
 
-  if (!hasRAF()) {
-    const bootFailureReceipt = buildFailureReceipt(
-      "RUNTIME_NO_FRAME_SCHEDULER",
-      "requestAnimationFrame unavailable"
-    );
-    emitReceipt(bootFailureReceipt, null);
+  const invariantCheck = classifyCriticalInvariantError();
+  if (invariantCheck.critical) {
+    emitReceipt(buildFailureReceipt(invariantCheck.errorCode, invariantCheck.message), null);
     return { dispose() {} };
   }
 
-  runtimeActive = true;
-
-  let running = true;
+  let runtimeCanvas;
+  let runtimeRoot;
+  let backendState;
+  let planetField;
+  let instruments = null;
+  let running = false;
   let rafId = null;
-  let lastGoodViewState = validateViewStateCandidate(viewState) ? viewState : defaultViewState();
+  let resizeHandlerInstalled = false;
   let lastReceipt = baseReceipt();
+  let lastGoodViewState = buildInitialViewState(mode);
 
-  const instruments = safeGetGlobalInstruments();
+  try {
+    runtimeCanvas = ensureCanvasSurface(canvas);
+    runtimeRoot = ensureRootSurface(root);
+    ensureCanvasBackingStore(runtimeCanvas);
+    backendState = resolveBackend(runtimeCanvas);
+    planetField = resolvePlanetField();
 
-  function resolveViewState() {
-    try {
-      const candidate =
-        control && typeof control.getViewState === "function"
-          ? control.getViewState(lastGoodViewState)
-          : viewState;
-
-      if (validateViewStateCandidate(candidate)) {
-        lastGoodViewState = candidate;
-        return {
-          viewState: candidate,
-          degraded: false,
-          domains: []
-        };
-      }
-
-      return {
-        viewState: lastGoodViewState,
-        degraded: true,
-        domains: ["VIEW_STATE"],
-        message: "Invalid viewState candidate; using last valid state"
-      };
-    } catch (err) {
-      return {
-        viewState: lastGoodViewState,
-        degraded: true,
-        domains: ["VIEW_STATE"],
-        message: err?.message || "View state resolution failed; using last valid state"
-      };
+    instruments = safeCreateInstruments();
+    if (instruments) {
+      safeInstallGlobalInstruments(instruments);
     }
+
+    runtimeActive = true;
+    running = true;
+
+    lastReceipt = emitReceipt(
+      {
+        ...baseReceipt(),
+        status: "BOOTING",
+        phase: "BOOTING",
+        verification: { pass: false },
+        backend: backendState.backend,
+        scope: lastGoodViewState.scope,
+        lens: lastGoodViewState.lens,
+        worldVariantState: lastGoodViewState.worldVariantState,
+        traversalState: lastGoodViewState.traversalState,
+        worldModeState: lastGoodViewState.worldModeState,
+        psychology: {
+          state: lastGoodViewState.psychologyState,
+          envelope: lastGoodViewState.psychologyEnvelope,
+          receipt: lastGoodViewState.psychologyReceipt
+        },
+        timestamp: now()
+      },
+      instruments
+    );
+  } catch (error) {
+    runtimeActive = false;
+    emitReceipt(
+      buildFailureReceipt(
+        "RUNTIME_BOOT_ERROR",
+        error instanceof Error ? error.message : String(error)
+      ),
+      instruments
+    );
+    return { dispose() {} };
+  }
+
+  function onResize() {
+    try {
+      ensureCanvasBackingStore(runtimeCanvas);
+    } catch (_) {}
   }
 
   function scheduleNextFrame() {
     if (!running) return;
     try {
       rafId = requestAnimationFrame(frame);
-    } catch (err) {
+    } catch (error) {
       running = false;
       runtimeActive = false;
-      const failureReceipt = buildFailureReceipt(
-        "RUNTIME_BOOT_ERROR",
-        err?.message || "Runtime scheduling failure"
+      lastReceipt = emitReceipt(
+        buildFailureReceipt(
+          "RUNTIME_SCHEDULER_FAILURE",
+          error instanceof Error ? error.message : String(error),
+          lastReceipt
+        ),
+        instruments
       );
-      lastReceipt = emitReceipt(failureReceipt, instruments);
     }
   }
 
   function frame() {
     if (!running) return;
 
-    const kernelCheck = classifyCriticalInvariantError(null);
-    if (kernelCheck.critical) {
+    const invariant = classifyCriticalInvariantError();
+    if (invariant.critical) {
       running = false;
       runtimeActive = false;
-      const failureReceipt = buildFailureReceipt(kernelCheck.errorCode, kernelCheck.message);
-      lastReceipt = emitReceipt(failureReceipt, instruments);
+      lastReceipt = emitReceipt(
+        buildFailureReceipt(invariant.errorCode, invariant.message, lastReceipt),
+        instruments
+      );
       return;
     }
 
-    const viewResolution = resolveViewState();
-    const nextViewState = viewResolution.viewState;
-
-    let frameReceipt = baseReceipt();
-    let renderFailed = false;
-    let renderMessage = null;
-    let degradedDomains = [];
+    let nextViewState = lastGoodViewState;
     let renderResult = null;
 
     try {
+      nextViewState = resolveViewState(lastGoodViewState);
+      lastGoodViewState = nextViewState;
+
       renderResult = renderPlanet({
-        ctx,
+        ctx: backendState.ctx,
         planetField,
-        projectPoint,
-        viewState: nextViewState
+        projectPoint: null,
+        viewState: nextViewState,
+        root: runtimeRoot,
+        canvas: runtimeCanvas,
+        mode,
+        backend: backendState.backend
       });
 
-      frameReceipt = mergeRenderIntoReceipt(frameReceipt, renderResult, nextViewState);
-      frameReceipt.phase = "RUNNING";
-      frameReceipt.verification = { pass: true };
-      frameReceipt.timestamp = now();
-    } catch (err) {
-      renderFailed = true;
-      renderMessage = err?.message || "Render failure";
-      degradedDomains.push("RENDER");
-
-      frameReceipt = mergeRenderIntoReceipt(
-        buildDegradedReceipt(["RENDER"], renderMessage, lastReceipt),
-        {},
-        nextViewState
+      lastReceipt = emitReceipt(
+        buildRunningReceipt(lastReceipt, renderResult, nextViewState, backendState.backend),
+        instruments
+      );
+    } catch (error) {
+      lastReceipt = emitReceipt(
+        buildDegradedReceipt(
+          ["RENDER"],
+          error instanceof Error ? error.message : String(error),
+          lastReceipt,
+          renderResult,
+          nextViewState,
+          backendState.backend
+        ),
+        instruments
       );
     }
 
-    if (viewResolution.degraded) {
-      degradedDomains = degradedDomains.concat(viewResolution.domains || []);
-      frameReceipt = {
-        ...frameReceipt,
-        phase: frameReceipt.phase === "FAIL" ? "FAIL" : "DEGRADED",
-        verification: { pass: false },
-        degraded: true,
-        degradedDomains: Array.from(new Set([...(frameReceipt.degradedDomains || []), ...degradedDomains])),
-        error: frameReceipt.error || viewResolution.message || "Runtime degraded",
-        errorCode: frameReceipt.errorCode || "RUNTIME_DEGRADED",
-        timestamp: now()
-      };
-    }
-
-    if (!renderFailed && degradedDomains.length === 0) {
-      frameReceipt.degraded = false;
-      frameReceipt.degradedDomains = [];
-      frameReceipt.error = null;
-      frameReceipt.errorCode = null;
-    } else if (frameReceipt.phase !== "FAIL") {
-      frameReceipt.phase = "DEGRADED";
-      frameReceipt.verification = { pass: false };
-      frameReceipt.degraded = true;
-      frameReceipt.degradedDomains = Array.from(
-        new Set([...(frameReceipt.degradedDomains || []), ...degradedDomains])
-      );
-      frameReceipt.error = frameReceipt.error || renderMessage || viewResolution.message || "Runtime degraded";
-      frameReceipt.errorCode = frameReceipt.errorCode || "RUNTIME_DEGRADED";
-      frameReceipt.timestamp = now();
-    }
-
-    lastReceipt = emitReceipt(frameReceipt, instruments);
     scheduleNextFrame();
   }
 
@@ -432,26 +570,40 @@ export function startRuntime({
       } catch (_) {}
     }
 
-    safeDisposeInstruments(instruments, { instrumentOwnership });
-  }
-
-  try {
-    scheduleNextFrame();
-  } catch (err) {
-    running = false;
-    runtimeActive = false;
-    const bootFailureReceipt = buildFailureReceipt(
-      "RUNTIME_BOOT_ERROR",
-      err?.message || "Runtime boot error"
-    );
-    lastReceipt = emitReceipt(bootFailureReceipt, instruments);
-  }
-
-  try {
-    if (hasWindow()) {
-      window.addEventListener("pagehide", dispose, { once: true });
+    if (resizeHandlerInstalled && hasWindow()) {
+      try {
+        window.removeEventListener("resize", onResize);
+      } catch (_) {}
     }
-  } catch (_) {}
+
+    if (instruments && typeof instruments.dispose === "function") {
+      try {
+        instruments.dispose();
+      } catch (_) {}
+    }
+
+    safeClearGlobalInstruments(instruments);
+  }
+
+  if (hasWindow()) {
+    try {
+      window.addEventListener("resize", onResize);
+      resizeHandlerInstalled = true;
+    } catch (_) {}
+
+    try {
+      window.addEventListener("pagehide", dispose, { once: true });
+    } catch (_) {}
+  }
+
+  if (hasDocument() && runtimeRoot) {
+    try {
+      runtimeRoot.setAttribute("data-runtime-mode", mode);
+      runtimeRoot.setAttribute("data-runtime-status", "booting");
+    } catch (_) {}
+  }
+
+  scheduleNextFrame();
 
   return { dispose };
 }

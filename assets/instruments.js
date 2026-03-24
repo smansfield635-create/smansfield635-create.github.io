@@ -1,6 +1,6 @@
 // /assets/instruments.js
 // MODE: INSTRUMENT CONTRACT RENEWAL
-// STATUS: DIAGNOSTIC / CLASSIFICATION AUTHORITY v2
+// STATUS: DIAGNOSTIC / CLASSIFICATION AUTHORITY v3
 // ROLE:
 // - observe runtime state only
 // - classify / summarize / render compact diagnostics only
@@ -9,7 +9,9 @@
 // - no runtime mutation
 // - no compensation
 // - pair lawfully with world / terrain / traversal / coherence contracts
-// - expand reporting terms to fuller current baseline expression
+// - preserve thin-conductor runtime compatibility
+// - preserve receipt/gauges continuity
+// - expose canonical threshold constants without inventing meaning
 
 import { WORLD_KERNEL } from "/world/world_kernel.js";
 
@@ -19,6 +21,16 @@ const DEFAULT_FPS = 0;
 const DEFAULT_DT_MS = 0;
 const DEFAULT_SOURCE_PHASE = "RUNNING";
 const DEFAULT_SOURCE_MODE = "active";
+
+const CANONICAL_THRESHOLDS = Object.freeze({
+  stateLattice: 256,
+  admissibilityMembrane: 61,
+  totalBurden: 451,
+  partitionUnit: 64,
+  structuralHarmonic91: 91,
+  structuralHarmonic7: 7,
+  structuralHarmonic13: 13
+});
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -286,6 +298,7 @@ function buildTerrainMetrics(sample) {
   const plateauStrength = clamp(readMetric(sample, "plateauStrength", 0), 0, 1);
   const basinStrength = clamp(readMetric(sample, "basinStrength", 0), 0, 1);
   const canyonStrength = clamp(readMetric(sample, "canyonStrength", 0), 0, 1);
+
   const continuity =
     clamp(
       plateauStrength * 0.24 +
@@ -521,13 +534,63 @@ function buildAuthorityMetrics(authorityState, renderSummary = {}) {
   });
 }
 
+function buildPsychologyMetrics(psychologyState = null, psychologyEnvelope = null, psychologyReceipt = null) {
+  const state = normalizeObject(psychologyState);
+  const envelope = normalizeObject(psychologyEnvelope);
+  const receipt = normalizeObject(psychologyReceipt);
+
+  const stateKeys = Object.keys(state);
+  const envelopeKeys = Object.keys(envelope);
+  const receiptKeys = Object.keys(receipt);
+
+  return Object.freeze({
+    statePresent: stateKeys.length > 0,
+    envelopePresent: envelopeKeys.length > 0,
+    receiptPresent: receiptKeys.length > 0,
+    stateKeyCount: stateKeys.length,
+    envelopeKeyCount: envelopeKeys.length,
+    receiptKeyCount: receiptKeys.length,
+    carriageMode: (stateKeys.length || envelopeKeys.length || receiptKeys.length) > 0 ? "THIN" : "EMPTY"
+  });
+}
+
+function buildThresholdMetrics(stateIndex, coherence, stability) {
+  const normalizedState = isFiniteNumber(stateIndex)
+    ? clamp(stateIndex / (CANONICAL_THRESHOLDS.stateLattice - 1), 0, 1)
+    : null;
+
+  const admissibilityProgress = isFiniteNumber(coherence)
+    ? clamp(coherence, 0, 1)
+    : null;
+
+  const totalBurdenProxy =
+    isFiniteNumber(coherence) && isFiniteNumber(stability)
+      ? clamp(((1 - coherence) * 0.60) + ((1 - stability) * 0.40), 0, 1)
+      : null;
+
+  return Object.freeze({
+    stateLattice: CANONICAL_THRESHOLDS.stateLattice,
+    admissibilityMembrane: CANONICAL_THRESHOLDS.admissibilityMembrane,
+    totalBurden: CANONICAL_THRESHOLDS.totalBurden,
+    partitionUnit: CANONICAL_THRESHOLDS.partitionUnit,
+    structuralHarmonic91: CANONICAL_THRESHOLDS.structuralHarmonic91,
+    structuralHarmonic7: CANONICAL_THRESHOLDS.structuralHarmonic7,
+    structuralHarmonic13: CANONICAL_THRESHOLDS.structuralHarmonic13,
+    normalizedState,
+    admissibilityProgress,
+    totalBurdenProxy
+  });
+}
+
 function buildSummaryStrings({
   classifiedState,
   sourcePhase,
   primitiveMetrics,
   scopeMetrics,
   lifecycleMetrics,
-  roleMetrics
+  roleMetrics,
+  psychologyMetrics,
+  thresholdMetrics
 }) {
   const compactState = [
     `STATE=${classifiedState}`,
@@ -548,9 +611,44 @@ function buildSummaryStrings({
     `FREEZE=${toFixedSafe(lifecycleMetrics.freezePotential, 2)}`
   ].join(" | ");
 
+  const compactExtended = [
+    `PSY=${psychologyMetrics.carriageMode}`,
+    `256=${normalizePrimitive(thresholdMetrics.stateLattice)}`,
+    `61=${normalizePrimitive(thresholdMetrics.admissibilityMembrane)}`,
+    `451=${normalizePrimitive(thresholdMetrics.totalBurden)}`
+  ].join(" | ");
+
   return Object.freeze({
     compactState,
-    compactWorld
+    compactWorld,
+    compactExtended
+  });
+}
+
+function resolveRuntimeReceiptShape(receipt = {}) {
+  const runtime = normalizeObject(receipt);
+  const verification = normalizeObject(runtime.verification);
+  const psychology = normalizeObject(runtime.psychology);
+
+  return Object.freeze({
+    phase: normalizeString(runtime.phase, DEFAULT_SOURCE_PHASE),
+    verificationPass: verification.pass === true,
+    timestampMs: isFiniteNumber(runtime.timestamp) ? runtime.timestamp : null,
+    projectionState: normalizeObject(runtime.projectionState),
+    primitive: normalizeObject(runtime.primitive),
+    topology: normalizeObject(runtime.topology),
+    renderAuthority: normalizeObject(runtime.renderAuthority),
+    density: normalizeObject(runtime.density),
+    audit: normalizeObject(runtime.audit),
+    scope: runtime.scope,
+    lens: runtime.lens,
+    worldVariantState: normalizeObject(runtime.worldVariantState),
+    traversalState: normalizeObject(runtime.traversalState),
+    worldModeState: normalizeObject(runtime.worldModeState),
+    psychologyState: psychology.state,
+    psychologyEnvelope: psychology.envelope,
+    psychologyReceipt: psychology.receipt,
+    error: normalizeString(runtime.error, "")
   });
 }
 
@@ -568,31 +666,65 @@ export function buildInstrumentReceipt({
   perceptionModifiersState = null,
   subsurfaceActivationState = null,
   worldModeState = null,
-  renderSummary = null
+  renderSummary = null,
+  runtimeReceipt = null,
+  psychologyState = null,
+  psychologyEnvelope = null,
+  psychologyReceipt = null
 } = {}) {
   const current = normalizeObject(currentSample);
   const previous = normalizeObject(previousSample);
   const motion = normalizeObject(motionState);
   const authority = normalizeObject(authorityState);
-  const traversal = normalizeObject(traversalState);
   const coherence = normalizeObject(coherenceBindingState);
   const perception = normalizeObject(perceptionModifiersState);
   const subsurface = normalizeObject(subsurfaceActivationState);
-  const worldMode = normalizeObject(worldModeState);
-  const variant = normalizeObject(worldVariantState);
+  const runtimeShape = resolveRuntimeReceiptShape(runtimeReceipt);
+
+  const effectiveVariantState = Object.keys(normalizeObject(worldVariantState)).length > 0
+    ? normalizeObject(worldVariantState)
+    : runtimeShape.worldVariantState;
+
+  const effectiveTraversalState = Object.keys(normalizeObject(traversalState)).length > 0
+    ? normalizeObject(traversalState)
+    : runtimeShape.traversalState;
+
+  const effectiveWorldModeState = Object.keys(normalizeObject(worldModeState)).length > 0
+    ? normalizeObject(worldModeState)
+    : runtimeShape.worldModeState;
+
+  const effectiveRenderSummary =
+    Object.keys(normalizeObject(renderSummary)).length > 0
+      ? normalizeObject(renderSummary)
+      : Object.freeze({
+          primitive: runtimeShape.primitive,
+          topology: runtimeShape.topology,
+          renderAuthority: runtimeShape.renderAuthority,
+          density: runtimeShape.density,
+          audit: runtimeShape.audit
+        });
+
+  const effectiveProjectionSummary =
+    Object.keys(normalizeObject(projectionSummary)).length > 0
+      ? normalizeObject(projectionSummary)
+      : runtimeShape.projectionState;
 
   const fps = isFiniteNumber(motion.fps) ? motion.fps : DEFAULT_FPS;
   const dtMs = isFiniteNumber(motion.dtMs) ? motion.dtMs : DEFAULT_DT_MS;
-  const timestampMs = deriveTimestampMs(tickIndex, fps);
+  const timestampMs = runtimeShape.timestampMs ?? deriveTimestampMs(tickIndex, fps);
   const ageMs = deriveAgeMs(timestampMs);
   const timestampValid = isFiniteNumber(timestampMs);
   const fresh = isFiniteNumber(ageMs) ? ageMs <= STALE_THRESHOLD_MS : false;
   const frameSync = deriveFrameSync(motion);
-  const verificationPass = motion.motionRunning === true && motion.rafActive === true;
-  const sourcePhase = normalizeString(motion.sourcePhase, DEFAULT_SOURCE_PHASE);
+
+  const verificationPass =
+    runtimeShape.verificationPass === true ||
+    (motion.motionRunning === true && motion.rafActive === true);
+
+  const sourcePhase = runtimeShape.phase !== EMPTY ? runtimeShape.phase : normalizeString(motion.sourcePhase, DEFAULT_SOURCE_PHASE);
   const sourceMode = normalizeString(motion.sourceMode, DEFAULT_SOURCE_MODE);
-  const failurePhase = normalizeString(motion.failurePhase, "");
-  const failureMessage = normalizeString(motion.failureMessage, "");
+  const failurePhase = runtimeShape.phase === "FAIL" ? "FAIL" : normalizeString(motion.failurePhase, "");
+  const failureMessage = runtimeShape.error !== EMPTY ? runtimeShape.error : normalizeString(motion.failureMessage, "");
 
   const coherenceValue = buildCoherence(current, coherence, perception);
   const previousCoherence = buildCoherence(previous, coherence, perception);
@@ -600,6 +732,7 @@ export function buildInstrumentReceipt({
   const direction16 = buildDirection16FromSamples(current, previous);
   const stateIndex = buildStateIndex(current);
   const trajectoryClass = buildTrajectoryClass(coherenceValue, previousCoherence, vector.magnitude);
+
   const stability =
     coherence?.globalField?.stability ??
     coherence?.global?.stability ??
@@ -614,19 +747,28 @@ export function buildInstrumentReceipt({
     failurePhase
   });
 
-  const primitiveMetrics = buildPrimitiveMetrics(current, previous, renderSummary);
-  const primitiveEnvelope = classifyPrimitiveEnvelope(renderSummary);
-  const scopeMetrics = buildScopeMetrics(current, planetField, projectionSummary, variant, traversal, worldMode);
+  const primitiveMetrics = buildPrimitiveMetrics(current, previous, effectiveRenderSummary);
+  const primitiveEnvelope = classifyPrimitiveEnvelope(effectiveRenderSummary);
+  const scopeMetrics = buildScopeMetrics(current, planetField, effectiveProjectionSummary, effectiveVariantState, effectiveTraversalState, effectiveWorldModeState);
   const lifecycleMetrics = buildLifecycleMetrics(current);
   const roleMetrics = buildRoleMetrics(current);
-  const authorityMetrics = buildAuthorityMetrics(authority, renderSummary);
+  const authorityMetrics = buildAuthorityMetrics(authority, effectiveRenderSummary);
+  const psychologyMetrics = buildPsychologyMetrics(
+    psychologyState ?? runtimeShape.psychologyState,
+    psychologyEnvelope ?? runtimeShape.psychologyEnvelope,
+    psychologyReceipt ?? runtimeShape.psychologyReceipt
+  );
+  const thresholdMetrics = buildThresholdMetrics(stateIndex, coherenceValue, stability);
+
   const summaryStrings = buildSummaryStrings({
     classifiedState,
     sourcePhase,
     primitiveMetrics,
     scopeMetrics,
     lifecycleMetrics,
-    roleMetrics
+    roleMetrics,
+    psychologyMetrics,
+    thresholdMetrics
   });
 
   return Object.freeze({
@@ -637,11 +779,11 @@ export function buildInstrumentReceipt({
         t: normalizeString(sourcePhase, EMPTY),
         p: normalizeString(direction16, EMPTY),
         s: normalizePrimitive(stateIndex, EMPTY),
-        v: normalizeString(variant.ratio, EMPTY)
+        v: normalizeString(effectiveVariantState.ratio, EMPTY)
       }),
 
       progress: Object.freeze({
-        f: normalizeString(worldMode?.diagnostics?.activeTraversalMode ?? traversal.activeMode, EMPTY),
+        f: normalizeString(effectiveWorldModeState?.diagnostics?.activeTraversalMode ?? effectiveTraversalState.activeMode, EMPTY),
         dt: isFiniteNumber(dtMs) ? `${Math.round(dtMs)}ms` : EMPTY,
         c: coherenceValue,
         st: isFiniteNumber(stability) ? clamp(stability, 0, 1) : 0,
@@ -656,7 +798,8 @@ export function buildInstrumentReceipt({
 
       summary: Object.freeze({
         state: summaryStrings.compactState,
-        world: summaryStrings.compactWorld
+        world: summaryStrings.compactWorld,
+        extended: summaryStrings.compactExtended
       })
     }),
 
@@ -686,7 +829,7 @@ export function buildInstrumentReceipt({
       trajectoryClass,
       vector: Object.freeze(vector),
       authority: Object.freeze(authorityMetrics),
-      projectionSummary: Object.freeze(normalizeObject(projectionSummary)),
+      projectionSummary: Object.freeze(effectiveProjectionSummary),
       fieldSummary: Object.freeze({
         hasPlanetField: Array.isArray(planetField?.samples),
         accessAllowed: subsurface?.accessState?.accessAllowed === true || subsurface.accessAllowed === true,
@@ -696,7 +839,9 @@ export function buildInstrumentReceipt({
       scope: Object.freeze(scopeMetrics),
       primitive: Object.freeze(primitiveMetrics),
       lifecycle: Object.freeze(lifecycleMetrics),
-      role: Object.freeze(roleMetrics)
+      role: Object.freeze(roleMetrics),
+      psychology: Object.freeze(psychologyMetrics),
+      thresholds: Object.freeze(thresholdMetrics)
     })
   });
 }
@@ -766,6 +911,12 @@ export function renderCompactBarHTML(runtime = {}) {
         <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(summary.state, EMPTY))}</span>
       </span>
     </div>
+    <div class="diagnostic-bar__group">
+      <span class="diagnostic-pill">
+        <span class="diagnostic-pill__label">Canon</span>
+        <span class="diagnostic-pill__value">${escapeHTML(normalizePrimitive(summary.extended, EMPTY))}</span>
+      </span>
+    </div>
   `.trim();
 }
 
@@ -783,6 +934,8 @@ export function renderPanelHTML(runtime = {}) {
   const lifecycle = normalizeObject(meta.lifecycle);
   const role = normalizeObject(meta.role);
   const authority = normalizeObject(meta.authority);
+  const psychology = normalizeObject(meta.psychology);
+  const thresholds = normalizeObject(meta.thresholds);
 
   const sections = [
     renderKeyValueSection("Instrument", Object.freeze({
@@ -815,7 +968,8 @@ export function renderPanelHTML(runtime = {}) {
     })),
     renderKeyValueSection("Summary", Object.freeze({
       state: normalizePrimitive(summary.state),
-      world: normalizePrimitive(summary.world)
+      world: normalizePrimitive(summary.world),
+      extended: normalizePrimitive(summary.extended)
     })),
     renderKeyValueSection("Failure", Object.freeze({
       phase: normalizePrimitive(failure.ph),
@@ -889,6 +1043,27 @@ export function renderPanelHTML(runtime = {}) {
       hemisphereSeason: normalizePrimitive(role.hemisphereSeason),
       seasonalBiomePhase: normalizePrimitive(role.seasonalBiomePhase)
     })),
+    renderKeyValueSection("Psychology", Object.freeze({
+      statePresent: normalizePrimitive(psychology.statePresent),
+      envelopePresent: normalizePrimitive(psychology.envelopePresent),
+      receiptPresent: normalizePrimitive(psychology.receiptPresent),
+      stateKeyCount: normalizePrimitive(psychology.stateKeyCount),
+      envelopeKeyCount: normalizePrimitive(psychology.envelopeKeyCount),
+      receiptKeyCount: normalizePrimitive(psychology.receiptKeyCount),
+      carriageMode: normalizePrimitive(psychology.carriageMode)
+    })),
+    renderKeyValueSection("Thresholds", Object.freeze({
+      stateLattice256: normalizePrimitive(thresholds.stateLattice),
+      admissibility61: normalizePrimitive(thresholds.admissibilityMembrane),
+      totalBurden451: normalizePrimitive(thresholds.totalBurden),
+      partitionUnit64: normalizePrimitive(thresholds.partitionUnit),
+      structuralHarmonic91: normalizePrimitive(thresholds.structuralHarmonic91),
+      structuralHarmonic7: normalizePrimitive(thresholds.structuralHarmonic7),
+      structuralHarmonic13: normalizePrimitive(thresholds.structuralHarmonic13),
+      normalizedState: toFixedSafe(thresholds.normalizedState, 3),
+      admissibilityProgress: toFixedSafe(thresholds.admissibilityProgress, 3),
+      totalBurdenProxy: toFixedSafe(thresholds.totalBurdenProxy, 3)
+    })),
     renderKeyValueSection("Authority", Object.freeze({
       runtimeSource: normalizePrimitive(authority.runtimeSource),
       instrumentSource: normalizePrimitive(authority.instrumentSource),
@@ -903,7 +1078,25 @@ export function renderPanelHTML(runtime = {}) {
 }
 
 export function createInstruments() {
+  let lastReceipt = null;
+
+  function update(receipt) {
+    lastReceipt = receipt && typeof receipt === "object" ? receipt : lastReceipt;
+    return lastReceipt;
+  }
+
+  function read() {
+    return lastReceipt;
+  }
+
+  function dispose() {
+    lastReceipt = null;
+  }
+
   return Object.freeze({
+    update,
+    read,
+    dispose,
     buildInstrumentState,
     buildInstrumentReceipt,
     renderCompactBarHTML,

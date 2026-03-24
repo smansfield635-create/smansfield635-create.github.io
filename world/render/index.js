@@ -1,6 +1,6 @@
 // /world/render/index.js
 // MODE: EXECUTION-ONLY | NON-DRIFT | VARIANT CHART AUTHORITY
-// STATUS: FINAL TNT — RENDER_TRAVERSAL_CONTRACT_v1 COMPLIANT
+// STATUS: FINAL TNT — SUPPRESSION CALIBRATION / STRUCTURE PRESERVED
 // OWNER: SEAN
 // ROLE:
 // - render expresses variant truth only
@@ -722,23 +722,23 @@ function evaluateSuppression(sample, traversal, nodeRelation, style) {
   const weights = style.channelWeights;
 
   const readability =
-    weights.terrain * 0.26 +
-    weights.psychology * 0.18 +
-    weights.cosmos * 0.18 +
+    weights.terrain * 0.22 +
+    weights.psychology * 0.14 +
+    weights.cosmos * 0.14 +
     weights.atmosphere * 0.18 +
     (1 - traversal.bilateral.nsMagnitude) * 0.06 +
     (1 - traversal.bilateral.ewMagnitude) * 0.06;
 
   const focus =
-    traversal.octants[traversal.dominantOctant] * 0.26 +
-    (traversal.bias === "SOUTH" ? weights.terrain * 0.12 : 0) +
-    (traversal.bias === "NORTH" ? weights.psychology * 0.12 : 0) +
-    (traversal.bias === "EAST" ? weights.cosmos * 0.12 : 0) +
-    (traversal.bias === "WEST" ? weights.atmosphere * 0.12 : 0);
+    traversal.octants[traversal.dominantOctant] * 0.22 +
+    (traversal.bias === "SOUTH" ? weights.terrain * 0.10 : 0) +
+    (traversal.bias === "NORTH" ? weights.psychology * 0.10 : 0) +
+    (traversal.bias === "EAST" ? weights.cosmos * 0.10 : 0) +
+    (traversal.bias === "WEST" ? weights.atmosphere * 0.10 : 0);
 
   const nodeLegibility =
-    0.10 +
-    (nodeRelation.id % 4) * 0.01 +
+    0.06 +
+    (nodeRelation.id % 4) * 0.008 +
     (nodeRelation.relation_type === "state_index_membership" ? 0.02 : 0.01);
 
   const faceLegibility =
@@ -746,12 +746,14 @@ function evaluateSuppression(sample, traversal, nodeRelation, style) {
     traversal.dominantOctant === "SE" ||
     traversal.dominantOctant === "SW" ||
     traversal.dominantOctant === "NW"
-      ? 0.10
-      : 0.04;
+      ? 0.08
+      : 0.03;
 
   const atmosphericPresence = weights.atmosphere * 0.10;
-  const terrainTransfer = weights.terrain * 0.08;
-  const threshold = 0.48;
+  const terrainTransfer = weights.terrain * 0.06;
+  const waterCoherence = sample?.waterMask === 1 ? 0.03 : 0;
+  const summitClarity =
+    sample?.terrainClass === "SUMMIT" || sample?.terrainClass === "MOUNTAIN" ? 0.04 : 0;
 
   const score =
     readability +
@@ -759,7 +761,16 @@ function evaluateSuppression(sample, traversal, nodeRelation, style) {
     nodeLegibility +
     faceLegibility +
     atmosphericPresence +
-    terrainTransfer;
+    terrainTransfer +
+    waterCoherence +
+    summitClarity;
+
+  const threshold =
+    0.80 -
+    weights.terrain * 0.08 -
+    weights.atmosphere * 0.06 -
+    faceLegibility * 0.12 -
+    (traversal.dominantOctant === "NE" || traversal.dominantOctant === "NW" ? 0.03 : 0);
 
   return Object.freeze({
     emit: score >= threshold,
@@ -1071,7 +1082,7 @@ function drawSurface(ctx, grid, projector, p, globalPrimitiveTime, viewState) {
   const densityTier =
     emitted === 0 ? "NONE" :
     emitted > visible * 0.72 ? "HIGH" :
-    emitted > visible * 0.42 ? "BASELINE" :
+    emitted > visible * 0.40 ? "BASELINE" :
     "SUPPRESSED";
 
   return {

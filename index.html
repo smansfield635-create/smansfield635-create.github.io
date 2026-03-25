@@ -1,301 +1,140 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Nine Summits — Index</title>
-<link rel="stylesheet" href="/assets/ui.css"/>
+import worldKernel from "./world/world_kernel.js";
+import planetEngine from "./world/planet_engine.js";
+import runtime from "./world/runtime.js";
 
-<style>
-html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  background: #000;
-}
+const BOOT_META = Object.freeze({
+  name: "index",
+  version: "G1",
+  role: "boot_orchestrator",
+  deterministic: true,
+  sourceOfTruth: false
+});
 
-#app-shell {
-  position: fixed;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-}
+const BOOT_CONSTANTS = Object.freeze({
+  REQUIRED_LATTICE_SIZE: 16,
+  REQUIRED_TOTAL_NODES: 256,
+  REQUIRED_SEQUENCE: Object.freeze(["kernel", "engine", "runtime"])
+});
 
-#world {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100vw;
-  height: 100vh;
-  background: #000;
-}
-
-#runtime-root {
-  position: relative;
-  z-index: 10;
-}
-
-#boot-status {
-  position: fixed;
-  top: 0;
-  left: 0;
-  max-width: calc(100vw - 16px);
-  padding: 6px 10px;
-  font-family: monospace;
-  font-size: 12px;
-  line-height: 1.35;
-  color: #0f0;
-  background: #000;
-  border-right: 1px solid rgba(255,255,255,0.12);
-  border-bottom: 1px solid rgba(255,255,255,0.12);
-  z-index: 9999;
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.boot-ok { color: #7fffd4; }
-.boot-warn { color: #ffd27a; }
-.boot-fail { color: #ff7a7a; }
-</style>
-</head>
-
-<body>
-<div id="app-shell">
-  <canvas id="world"></canvas>
-  <div id="runtime-root"></div>
-</div>
-
-<div id="boot-status" class="boot-warn">BOOTING...</div>
-
-<script type="module">
-const statusNode = document.getElementById("boot-status");
-const canvas = document.getElementById("world");
-const root = document.getElementById("runtime-root");
-
-const RECEIPT_KEY = "__RUNTIME_RECEIPT__";
-const BOOT_STATE_KEY = "__INDEX_BOOT_STATE__";
-const TIMEOUT_MS = 12000;
-const POLL_MS = 100;
-const RUNTIME_PATH = "/world/runtime/world_runtime.js";
-
-const bootState = {
-  phase: "BOOT_INIT",
-  runtimeImported: false,
-  runtimeStarted: false,
-  receiptSeen: false,
-  failureMessage: "",
-  receiptStatus: null
+const deepFreeze = (value) => {
+  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.getOwnPropertyNames(value).forEach((key) => {
+    deepFreeze(value[key]);
+  });
+  return Object.freeze(value);
 };
 
-function writeBootState() {
-  try {
-    window[BOOT_STATE_KEY] = {
-      phase: bootState.phase,
-      runtimeImported: bootState.runtimeImported,
-      runtimeStarted: bootState.runtimeStarted,
-      receiptSeen: bootState.receiptSeen,
-      failureMessage: bootState.failureMessage,
-      receiptStatus: bootState.receiptStatus
-    };
-  } catch (_) {}
-}
+const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
 
-function setBootState(patch) {
-  if (patch && typeof patch === "object") {
-    if (typeof patch.phase === "string") bootState.phase = patch.phase;
-    if ("runtimeImported" in patch) bootState.runtimeImported = !!patch.runtimeImported;
-    if ("runtimeStarted" in patch) bootState.runtimeStarted = !!patch.runtimeStarted;
-    if ("receiptSeen" in patch) bootState.receiptSeen = !!patch.receiptSeen;
-    if ("failureMessage" in patch) bootState.failureMessage = String(patch.failureMessage || "");
-    if ("receiptStatus" in patch) bootState.receiptStatus = patch.receiptStatus == null ? null : String(patch.receiptStatus);
+const assert = (condition, code) => {
+  if (!condition) {
+    const error = new Error(code);
+    error.code = code;
+    throw error;
   }
-  writeBootState();
-}
+};
 
-function setStatus(message, tone = "boot-warn") {
-  if (statusNode) {
-    statusNode.textContent = message;
-    statusNode.className = tone;
-  }
-  console.log("[BOOT]", message);
-}
+const validateKernel = (kernel) => {
+  assert(kernel && typeof kernel === "object", "KERNEL_MISSING");
+  assert(Object.isFrozen(kernel), "KERNEL_NOT_IMMUTABLE");
+  assert(hasOwn(kernel, "meta"), "KERNEL_META_MISSING");
+  assert(hasOwn(kernel, "constants"), "KERNEL_CONSTANTS_MISSING");
+  assert(hasOwn(kernel, "lattice"), "KERNEL_LATTICE_MISSING");
+  assert(hasOwn(kernel, "validation"), "KERNEL_VALIDATION_MISSING");
+  assert(kernel.meta && kernel.meta.sourceOfTruth === true, "KERNEL_NOT_SOURCE_OF_TRUTH");
+  assert(kernel.meta && kernel.meta.immutable === true, "KERNEL_IMMUTABLE_FLAG_INVALID");
+  assert(kernel.meta && kernel.meta.deterministic === true, "KERNEL_DETERMINISM_FLAG_INVALID");
+  assert(kernel.meta && kernel.meta.latticeSize === BOOT_CONSTANTS.REQUIRED_LATTICE_SIZE, "KERNEL_LATTICE_SIZE_INVALID");
+  assert(kernel.meta && kernel.meta.totalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "KERNEL_TOTAL_NODES_INVALID");
+  assert(Array.isArray(kernel.lattice.nodes), "KERNEL_LATTICE_NODES_INVALID");
+  assert(kernel.lattice.nodes.length === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "KERNEL_LATTICE_COVERAGE_INVALID");
+  assert(kernel.validation && kernel.validation.ok === true, "KERNEL_VALIDATION_FAILED");
+  return Object.freeze({
+    ok: true,
+    immutable: Object.isFrozen(kernel),
+    latticeCoverage: kernel.lattice.nodes.length,
+    deterministic: kernel.meta.deterministic === true
+  });
+};
 
-function toMessage(error) {
-  if (error instanceof Error && typeof error.message === "string" && error.message.length > 0) {
-    return error.message;
-  }
-  return String(error);
-}
+const validateEngine = (engine, kernel) => {
+  assert(engine && typeof engine === "object", "ENGINE_MISSING");
+  assert(Object.isFrozen(engine), "ENGINE_NOT_IMMUTABLE");
+  assert(engine !== kernel, "ENGINE_EQUALS_KERNEL");
+  assert(!((engine.meta && engine.meta.sourceOfTruth === true) || engine.sourceOfTruth === true), "ENGINE_DEFINES_TRUTH");
+  const coverage =
+    typeof engine.totalNodes === "number"
+      ? engine.totalNodes
+      : engine.meta && typeof engine.meta.totalNodes === "number"
+        ? engine.meta.totalNodes
+        : kernel.lattice.nodes.length;
+  assert(coverage === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "ENGINE_LATTICE_COVERAGE_INVALID");
+  return Object.freeze({
+    ok: true,
+    immutable: Object.isFrozen(engine),
+    latticeCoverage: coverage,
+    deterministic: engine.meta ? engine.meta.deterministic !== false : true
+  });
+};
 
-function ensureCanvasSurface(node) {
-  if (!node || typeof node.getContext !== "function") {
-    throw new Error("Missing valid #world canvas");
-  }
-  return node;
-}
+const validateRuntime = (runtimeModule) => {
+  assert(runtimeModule && typeof runtimeModule === "object", "RUNTIME_MISSING");
+  assert(Object.isFrozen(runtimeModule), "RUNTIME_NOT_IMMUTABLE");
+  assert(!((runtimeModule.meta && runtimeModule.meta.sourceOfTruth === true) || runtimeModule.sourceOfTruth === true), "RUNTIME_DEFINES_TRUTH");
+  assert(!((runtimeModule.meta && runtimeModule.meta.mutatesState === true) || runtimeModule.mutatesState === true), "RUNTIME_MUTATES_STATE");
+  return Object.freeze({
+    ok: true,
+    immutable: Object.isFrozen(runtimeModule),
+    deterministic: runtimeModule.meta ? runtimeModule.meta.deterministic !== false : true
+  });
+};
 
-function sizeCanvas(node) {
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const width = Math.max(1, Math.floor(window.innerWidth * dpr));
-  const height = Math.max(1, Math.floor(window.innerHeight * dpr));
+const validateModules = (kernel, engine, runtimeModule) => {
+  const kernelValidation = validateKernel(kernel);
+  const engineValidation = validateEngine(engine, kernel);
+  const runtimeValidation = validateRuntime(runtimeModule);
+  return Object.freeze({
+    ok: kernelValidation.ok && engineValidation.ok && runtimeValidation.ok,
+    kernel: kernelValidation,
+    engine: engineValidation,
+    runtime: runtimeValidation
+  });
+};
 
-  if (node.width !== width) node.width = width;
-  if (node.height !== height) node.height = height;
-
-  node.style.width = "100vw";
-  node.style.height = "100vh";
-}
-
-function installResizeAuthority(node) {
-  function apply() {
-    sizeCanvas(node);
-  }
-
-  apply();
-  window.addEventListener("resize", apply);
-  return function disposeResizeAuthority() {
-    window.removeEventListener("resize", apply);
-  };
-}
-
-function validateRuntimeModule(mod) {
-  return typeof mod?.startRuntime === "function" ||
-    typeof mod?.default?.startRuntime === "function";
-}
-
-function resolveStartRuntime(mod) {
-  if (typeof mod?.startRuntime === "function") return mod.startRuntime;
-  if (typeof mod?.default?.startRuntime === "function") return mod.default.startRuntime;
-  return null;
-}
-
-function readReceipt() {
-  const receipt = window[RECEIPT_KEY];
-  return receipt && typeof receipt === "object" ? receipt : null;
-}
-
-async function waitForReceipt() {
-  const startedAt = performance.now();
-
-  setBootState({
-    phase: "RECEIPT_WAIT",
-    receiptSeen: false,
-    failureMessage: "",
-    receiptStatus: null
+const bindPipeline = (kernel, engine, runtimeModule) =>
+  Object.freeze({
+    sequence: BOOT_CONSTANTS.REQUIRED_SEQUENCE,
+    kernel,
+    engine,
+    runtime: runtimeModule
   });
 
-  while ((performance.now() - startedAt) < TIMEOUT_MS) {
-    const receipt = readReceipt();
-
-    if (receipt) {
-      setBootState({
-        receiptSeen: true,
-        receiptStatus: receipt.status ?? null
-      });
-
-      if (receipt.status === "RUNNING") {
-        setBootState({
-          phase: "RUNNING",
-          failureMessage: "",
-          receiptStatus: "RUNNING"
-        });
-        setStatus("RUNNING", "boot-ok");
-        return true;
-      }
-
-      if (receipt.status === "FAIL") {
-        const message = receipt.error || receipt.errorCode || "runtime failure";
-        setBootState({
-          phase: "RUNTIME_FAIL",
-          failureMessage: message,
-          receiptStatus: "FAIL"
-        });
-        setStatus("BOOT ERROR:\n" + message, "boot-fail");
-        return false;
-      }
-    }
-
-    await new Promise((resolve) => window.setTimeout(resolve, POLL_MS));
-  }
-
-  setBootState({
-    phase: "IGNITION_TIMEOUT",
-    failureMessage: "ignition timeout",
-    receiptStatus: bootState.receiptStatus
+const createSystemHandle = (pipeline, validation) =>
+  deepFreeze({
+    meta: BOOT_META,
+    validation,
+    pipeline: Object.freeze({
+      sequence: pipeline.sequence
+    }),
+    runtime: pipeline.runtime,
+    getKernelMeta: () => pipeline.kernel.meta,
+    getEngineMeta: () => (pipeline.engine && pipeline.engine.meta ? pipeline.engine.meta : null),
+    getRuntimeMeta: () => (pipeline.runtime && pipeline.runtime.meta ? pipeline.runtime.meta : null),
+    getValidation: () => validation,
+    getSequence: () => pipeline.sequence.slice()
   });
-  setStatus("BOOT ERROR:\nignition timeout", "boot-fail");
-  return false;
-}
 
-async function boot() {
-  let disposeResizeAuthority = null;
+const initialize = () => {
+  const kernel = worldKernel;
+  const engine = planetEngine;
+  const runtimeModule = runtime;
+  const validation = validateModules(kernel, engine, runtimeModule);
+  assert(validation.ok === true, "BOOT_VALIDATION_FAILED");
+  const pipeline = bindPipeline(kernel, engine, runtimeModule);
+  return createSystemHandle(pipeline, validation);
+};
 
-  try {
-    setBootState({
-      phase: "BOOT_INIT",
-      runtimeImported: false,
-      runtimeStarted: false,
-      receiptSeen: false,
-      failureMessage: "",
-      receiptStatus: null
-    });
+const systemHandle = initialize();
 
-    const worldCanvas = ensureCanvasSurface(canvas);
-    disposeResizeAuthority = installResizeAuthority(worldCanvas);
-
-    setBootState({ phase: "RUNTIME_IMPORT" });
-    setStatus("IMPORT RUNTIME...", "boot-warn");
-
-    const runtimeModule = await import(RUNTIME_PATH);
-
-    if (!validateRuntimeModule(runtimeModule)) {
-      throw new Error("runtime contract invalid");
-    }
-
-    setBootState({
-      phase: "RUNTIME_IMPORTED",
-      runtimeImported: true
-    });
-
-    const startRuntime = resolveStartRuntime(runtimeModule);
-    if (!startRuntime) {
-      throw new Error("startRuntime missing");
-    }
-
-    setBootState({ phase: "RUNTIME_START" });
-    setStatus("START RUNTIME...", "boot-warn");
-
-    startRuntime({
-      canvas: worldCanvas,
-      root,
-      mode: "index"
-    });
-
-    setBootState({
-      phase: "RUNTIME_STARTED",
-      runtimeStarted: true
-    });
-
-    setStatus("WAITING FOR RECEIPT...", "boot-warn");
-    await waitForReceipt();
-  } catch (error) {
-    const message = toMessage(error);
-    setBootState({
-      phase: "BOOT_FATAL",
-      failureMessage: message
-    });
-    setStatus("BOOT ERROR:\n" + message, "boot-fail");
-    if (disposeResizeAuthority) {
-      disposeResizeAuthority();
-    }
-  }
-}
-
-writeBootState();
-boot();
-</script>
-</body>
-</html>
+export { systemHandle, initialize };
+export default systemHandle;

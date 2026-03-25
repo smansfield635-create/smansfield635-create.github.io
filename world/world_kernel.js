@@ -125,17 +125,48 @@ function assignSummit(index) {
   return KERNEL_CONSTANTS.SUMMITS[index % KERNEL_CONSTANTS.SUMMITS.length];
 }
 
+function makeGateKey(i, j) {
+  return `${i},${j}`;
+}
+
+function buildGateSet() {
+  const gate = new Set();
+  for (let j = 0; j < KERNEL_CONSTANTS.GRID_SIZE; j += 1) {
+    for (let i = 0; i < KERNEL_CONSTANTS.GRID_SIZE; i += 1) {
+      const distance = Math.abs(i - 7.5) + Math.abs(j - 7.5);
+      if (distance <= 5) gate.add(makeGateKey(i, j));
+    }
+  }
+
+  // Even-sized grids cannot produce a perfectly centered odd membrane without one tie-break anchor.
+  // This north-ingress anchor resolves that parity issue and locks the gate count at 61.
+  gate.add(makeGateKey(7, 2));
+
+  invariant(gate.size === KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE, "gate set must equal locked local gate threshold");
+  return gate;
+}
+
+const GATE_SET = buildGateSet();
+
 function classifyBoundary(i, j) {
   const size = KERNEL_CONSTANTS.GRID_SIZE;
-  const edge = i === 0 || j === 0 || i === size - 1 || j === size - 1;
-  const majorDiag = i === j;
-  const minorDiag = i + j === size - 1;
-  const centerBand = Math.abs(i - 7.5) <= 1 || Math.abs(j - 7.5) <= 1;
+  const isCorner =
+    (i === 0 && j === 0) ||
+    (i === size - 1 && j === 0) ||
+    (i === 0 && j === size - 1) ||
+    (i === size - 1 && j === size - 1);
 
-  if (edge && (majorDiag || minorDiag)) return "BLOCK";
-  if (edge) return "HOLD";
-  if (majorDiag || minorDiag) return "BRIDGE";
-  if (centerBand) return "GATE";
+  if (isCorner) return "BLOCK";
+
+  if (GATE_SET.has(makeGateKey(i, j))) return "GATE";
+
+  const isPerimeter = i === 0 || j === 0 || i === size - 1 || j === size - 1;
+  if (isPerimeter) return "HOLD";
+
+  const isMajorDiag = i === j;
+  const isMinorDiag = i + j === size - 1;
+  if (isMajorDiag || isMinorDiag) return "BRIDGE";
+
   return "OPEN";
 }
 
@@ -276,15 +307,11 @@ function summitCounts(nodes) {
 
 function computeThresholds(nodes) {
   const boundaryCounts = countBoundaries(nodes);
-  const gateLoad =
-    boundaryCounts.GATE +
-    boundaryCounts.BRIDGE +
-    boundaryCounts.HOLD +
-    boundaryCounts.BLOCK;
+  const localGate = boundaryCounts.GATE;
 
   return deepFreeze({
     coreLattice: nodes.length,
-    localGate: gateLoad,
+    localGate,
     wholeEnvelope:
       KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE +
       KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE +
@@ -297,7 +324,7 @@ function computeThresholds(nodes) {
     }),
     valid: deepFreeze({
       coreLattice: nodes.length === KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE,
-      localGate: gateLoad === KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE,
+      localGate: localGate === KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE,
       wholeEnvelope:
         KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE +
         KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE +

@@ -4,7 +4,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Diamond Gate Bridge</title>
-  <meta name="color-scheme" content="dark">
   <style>
     html,body{
       margin:0;
@@ -27,9 +26,9 @@
 </head>
 <body>
   <div id="boot">BOOTING WORLD HOST…</div>
+
   <script type="module">
-    import INDEX, { start } from "/index.js";
-    window.__DGB_INDEX__ = INDEX;
+    import { start } from "/index.js";
     start();
     const boot = document.getElementById("boot");
     if (boot) boot.remove();

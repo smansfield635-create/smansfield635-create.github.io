@@ -487,6 +487,7 @@ function computeChecksum(renderState) {
   for (const projection of RENDER_CONSTANTS.PROJECTIONS) {
     const artifacts = renderState.projections[projection];
     for (const node of artifacts.nodes) {
+      const fill = node.style.fill;
       acc = (
         acc * 43 +
         node.index * 19 +
@@ -496,7 +497,12 @@ function computeChecksum(renderState) {
         Math.round(node.style.radius * 1000) +
         Math.round(node.style.light * 1000) +
         Math.round(node.style.motion * 1000) +
-        node.fill?.charCodeAt?.(1) || 0
+        (fill.charCodeAt(1) || 0) +
+        (fill.charCodeAt(2) || 0) +
+        (fill.charCodeAt(3) || 0) +
+        (fill.charCodeAt(4) || 0) +
+        (fill.charCodeAt(5) || 0) +
+        (fill.charCodeAt(6) || 0)
       ) % 1000000007;
     }
   }

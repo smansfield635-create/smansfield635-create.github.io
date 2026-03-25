@@ -37,11 +37,6 @@ function invariant(condition, message) {
   if (!condition) throw new Error(`[index] ${message}`);
 }
 
-function round(value, places = 6) {
-  const factor = 10 ** places;
-  return Math.round(value * factor) / factor;
-}
-
 function buildModuleMeta() {
   return deepFreeze({
     kernel: worldKernel.getMeta(),
@@ -137,8 +132,8 @@ function buildWorldSummary() {
     totalNodes: runtimeReceipt.totalNodes,
     focusCell: runtimeReceipt.focusCell,
     hydrology: engineReceipt.hydrology,
-    biomeSummary: runtimeReceipt.biomeSummary,
-    boundarySummary: runtimeReceipt.boundarySummary,
+    biomeSummary: runtime.getBiomeSummary(),
+    boundarySummary: runtime.getBoundarySummary(),
     regions: runtimeReceipt.regions,
     overlay: renderReceipt.overlay
   });

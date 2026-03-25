@@ -1,364 +1,578 @@
-import worldKernel from "./world/world_kernel.js";
-import planetEngine from "./world/planet_engine.js";
-import runtime from "./world/runtime.js";
-import render from "./world/render.js";
+// /index.js
+// MODE: CONTRACT EXECUTION
+// CONTRACT: INDEX_BASELINE_CONTRACT_G1
+// STATUS: HOST ONLY | PLATFORM OWNER | NON-DRIFT
 
-const BOOT_META = Object.freeze({
+import { createRuntime } from "./world/runtime.js";
+import renderModule from "./world/render.js";
+
+const INDEX_META = Object.freeze({
   name: "index",
   version: "G1",
-  role: "boot_orchestrator",
+  contract: "INDEX_BASELINE_CONTRACT_G1",
+  role: "platform_host_and_boot_layer",
   deterministic: true,
   sourceOfTruth: false,
-  mutatesState: false
+  mutatesState: false,
+  platformOwned: true
 });
 
-const BOOT_CONSTANTS = Object.freeze({
-  REQUIRED_TOTAL_NODES: 256,
-  REQUIRED_LOCAL_GATE: 61,
-  WHOLE_ENVELOPE: 451,
-  REQUIRED_STACK: Object.freeze([
-    "world_kernel",
-    "planet_engine",
-    "runtime",
-    "render"
-  ]),
-  REQUIRED_PROJECTIONS: Object.freeze(["flat", "tree", "globe"]),
-  RECEIPT_VERSION: "BOOT_RECEIPT_G1"
+const INDEX_CONSTANTS = Object.freeze({
+  DEFAULT_PROJECTION: "flat",
+  CANVAS_ID: "world-canvas",
+  ROOT_ID: "app",
+  HUD_ID: "world-hud",
+  PANEL_ID: "instrument-panel",
+  BACKGROUND: "#05070b",
+  FOREGROUND: "#e8edf5",
+  GRID_COLOR: "rgba(255,255,255,0.08)",
+  BLOCK_COLOR: "#ff4d4f",
+  HOLD_COLOR: "#faad14",
+  GATE_COLOR: "#40a9ff",
+  BRIDGE_COLOR: "#73d13d",
+  OPEN_COLOR: "#b7eb8f",
+  FONT: "12px system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
+  MOVE_STEP: 1,
+  MARKER_RADIUS: 8,
+  GLOBE_RADIUS_RATIO: 0.36
 });
 
-function deepFreeze(value) {
-  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.freeze(value);
-  for (const key of Object.keys(value)) deepFreeze(value[key]);
+const deepFreeze = (value) => {
+  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.getOwnPropertyNames(value).forEach((key) => deepFreeze(value[key]));
+  return Object.freeze(value);
+};
+
+const assert = (condition, code) => {
+  if (!condition) {
+    const error = new Error(code);
+    error.code = code;
+    throw error;
+  }
+};
+
+const hasWindow = () => typeof window !== "undefined" && !!window;
+const hasDocument = () => typeof document !== "undefined" && !!document;
+
+const clamp = (value, min, max) => {
+  if (!Number.isFinite(value)) return min;
+  if (value < min) return min;
+  if (value > max) return max;
   return value;
-}
+};
 
-function invariant(condition, message) {
-  if (!condition) throw new Error(`[index] ${message}`);
-}
+const clamp01 = (value) => {
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  if (value >= 1) return 1;
+  return value;
+};
 
-function buildModuleMeta() {
-  return deepFreeze({
-    kernel: worldKernel.getMeta(),
-    engine: planetEngine.getMeta(),
-    runtime: runtime.getMeta(),
-    render: render.getMeta()
-  });
-}
+const stableRound = (value, places = 12) => {
+  const factor = 10 ** places;
+  return Math.round(value * factor) / factor;
+};
 
-function buildValidationPacket() {
-  const kernelValidation = worldKernel.validate();
-  const engineValidation = planetEngine.validate();
-  const runtimeValidation = runtime.validate();
-  const renderValidation = render.validate();
+const normalizeObject = (value) =>
+  value && typeof value === "object" && !Array.isArray(value) ? value : {};
 
-  invariant(kernelValidation.latticeCompleteness, "kernel lattice completeness failed");
-  invariant(kernelValidation.projectionCompleteness, "kernel projection completeness failed");
-  invariant(kernelValidation.determinism, "kernel determinism failed");
-  invariant(kernelValidation.thresholdIntegrity, "kernel threshold integrity failed");
-  invariant(kernelValidation.receiptConsistency, "kernel receipt consistency failed");
+const normalizeProjection = (value) => {
+  const projection = String(value || INDEX_CONSTANTS.DEFAULT_PROJECTION).toLowerCase();
+  assert(
+    projection === "flat" || projection === "tree" || projection === "globe",
+    "INVALID_INDEX_PROJECTION"
+  );
+  return projection;
+};
 
-  invariant(engineValidation.kernelDependencyIntegrity, "engine kernel dependency failed");
-  invariant(engineValidation.totalNodeIntegrity, "engine total node integrity failed");
-  invariant(engineValidation.projectionCompleteness, "engine projection completeness failed");
-  invariant(engineValidation.determinism, "engine determinism failed");
-  invariant(engineValidation.hydrologyIntegrity, "engine hydrology integrity failed");
-  invariant(engineValidation.regionIntegrity, "engine region integrity failed");
-  invariant(engineValidation.climateIntegrity, "engine climate integrity failed");
+const ensureElement = (id, tagName, parent) => {
+  let element = document.getElementById(id);
+  if (element) return element;
 
-  invariant(runtimeValidation.runtimeTraceability, "runtime traceability failed");
-  invariant(runtimeValidation.kernelDependencyIntegrity, "runtime kernel dependency failed");
-  invariant(runtimeValidation.engineDependencyIntegrity, "runtime engine dependency failed");
-  invariant(runtimeValidation.latticeCompleteness, "runtime lattice completeness failed");
-  invariant(runtimeValidation.projectionConsistency, "runtime projection consistency failed");
-  invariant(runtimeValidation.determinism, "runtime determinism failed");
-  invariant(runtimeValidation.boundaryConsistency, "runtime boundary consistency failed");
-  invariant(runtimeValidation.receiptConsistency, "runtime receipt consistency failed");
-  invariant(runtimeValidation.thresholdIntegrity, "runtime threshold integrity failed");
+  element = document.createElement(tagName);
+  element.id = id;
+  parent.appendChild(element);
+  return element;
+};
 
-  invariant(renderValidation.runtimeTraceability, "render runtime traceability failed");
-  invariant(renderValidation.latticeCompleteness, "render lattice completeness failed");
-  invariant(renderValidation.projectionConsistency, "render projection consistency failed");
-  invariant(renderValidation.determinism, "render determinism failed");
-  invariant(renderValidation.boundaryConsistency, "render boundary consistency failed");
-  invariant(renderValidation.receiptConsistency, "render receipt consistency failed");
-  invariant(renderValidation.thresholdIntegrity, "render threshold integrity failed");
-  invariant(renderValidation.successorProjectionCompleteness, "render successor projection completeness failed");
+const applyBaseStyles = () => {
+  document.documentElement.style.background = INDEX_CONSTANTS.BACKGROUND;
+  document.body.style.margin = "0";
+  document.body.style.background = INDEX_CONSTANTS.BACKGROUND;
+  document.body.style.color = INDEX_CONSTANTS.FOREGROUND;
+  document.body.style.font = INDEX_CONSTANTS.FONT;
+  document.body.style.overflow = "hidden";
+};
 
-  return deepFreeze({
-    kernel: kernelValidation,
-    engine: engineValidation,
-    runtime: runtimeValidation,
-    render: renderValidation
-  });
-}
+const createLayout = () => {
+  applyBaseStyles();
 
-function buildReceiptChain() {
-  return deepFreeze({
-    kernel: worldKernel.getReceipt(),
-    engine: planetEngine.getReceipt(),
-    runtime: runtime.getReceipt(),
-    render: render.getReceipt()
-  });
-}
+  const root = ensureElement(INDEX_CONSTANTS.ROOT_ID, "div", document.body);
+  root.style.position = "fixed";
+  root.style.inset = "0";
+  root.style.display = "grid";
+  root.style.gridTemplateRows = "1fr auto";
+  root.style.background = INDEX_CONSTANTS.BACKGROUND;
 
-function buildProjectionSummary() {
-  const out = {};
+  const canvasWrap = ensureElement("world-canvas-wrap", "div", root);
+  canvasWrap.style.position = "relative";
+  canvasWrap.style.minHeight = "0";
+  canvasWrap.style.overflow = "hidden";
 
-  for (const projection of BOOT_CONSTANTS.REQUIRED_PROJECTIONS) {
-    const kernelProjection = worldKernel.getProjection(projection);
-    const engineProjection = planetEngine.getProjection(projection);
-    const runtimeProjection = runtime.getProjection(projection);
-    const renderProjection = render.getProjection(projection);
+  const canvas = ensureElement(INDEX_CONSTANTS.CANVAS_ID, "canvas", canvasWrap);
+  canvas.style.display = "block";
+  canvas.style.width = "100%";
+  canvas.style.height = "100%";
+  canvas.style.background = INDEX_CONSTANTS.BACKGROUND;
 
-    out[projection] = deepFreeze({
-      kernelNodes: kernelProjection.length,
-      engineNodes: engineProjection.length,
-      runtimeNodes: runtimeProjection.length,
-      renderNodes: renderProjection.nodes.length,
-      renderEdges: renderProjection.edges.length
-    });
+  const hud = ensureElement(INDEX_CONSTANTS.HUD_ID, "div", canvasWrap);
+  hud.style.position = "absolute";
+  hud.style.left = "12px";
+  hud.style.top = "12px";
+  hud.style.maxWidth = "min(520px, calc(100vw - 24px))";
+  hud.style.padding = "10px 12px";
+  hud.style.border = "1px solid rgba(255,255,255,0.08)";
+  hud.style.background = "rgba(255,255,255,0.04)";
+  hud.style.backdropFilter = "blur(6px)";
+  hud.style.borderRadius = "10px";
+  hud.style.pointerEvents = "none";
+  hud.style.whiteSpace = "pre-wrap";
+  hud.style.lineHeight = "1.35";
+
+  const panel = ensureElement(INDEX_CONSTANTS.PANEL_ID, "div", root);
+  panel.style.padding = "10px 12px";
+  panel.style.borderTop = "1px solid rgba(255,255,255,0.08)";
+  panel.style.background = "rgba(255,255,255,0.02)";
+  panel.style.overflow = "auto";
+  panel.style.maxHeight = "22vh";
+  panel.textContent = "instrument boot path intentionally excluded";
+
+  return deepFreeze({ root, canvasWrap, canvas, hud, panel });
+};
+
+const getCanvasContext = (canvas) => {
+  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: false });
+  assert(ctx, "CANVAS_CONTEXT_UNAVAILABLE");
+  return ctx;
+};
+
+const resizeCanvas = (canvas, ctx) => {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = Math.max(1, Math.min(2, hasWindow() ? window.devicePixelRatio || 1 : 1));
+  const width = Math.max(1, Math.floor(rect.width * dpr));
+  const height = Math.max(1, Math.floor(rect.height * dpr));
+
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
   }
 
-  return deepFreeze(out);
-}
-
-function buildWorldSummary() {
-  const runtimeReceipt = runtime.getReceipt();
-  const engineReceipt = planetEngine.getReceipt();
-  const renderReceipt = render.getReceipt();
-
   return deepFreeze({
-    totalNodes: runtimeReceipt.totalNodes,
-    focusCell: runtimeReceipt.focusCell,
-    hydrology: engineReceipt.hydrology,
-    biomeSummary: runtime.getBiomeSummary(),
-    boundarySummary: runtime.getBoundarySummary(),
-    regions: runtimeReceipt.regions,
-    overlay: renderReceipt.overlay
+    cssWidth: Math.max(1, Math.floor(rect.width)),
+    cssHeight: Math.max(1, Math.floor(rect.height)),
+    dpr
   });
-}
+};
 
-function computeChecksum(receiptChain, projectionSummary) {
-  let acc = 37;
+const hsvToRgb = (h, s, v) => {
+  const hue = ((h % 1) + 1) % 1;
+  const sat = clamp01(s);
+  const val = clamp01(v);
 
-  const values = [
-    receiptChain.kernel.checksum,
-    receiptChain.engine.engineChecksum,
-    receiptChain.runtime.runtimeChecksum,
-    receiptChain.render.renderChecksum
+  const i = Math.floor(hue * 6);
+  const f = hue * 6 - i;
+  const p = val * (1 - sat);
+  const q = val * (1 - f * sat);
+  const t = val * (1 - (1 - f) * sat);
+
+  let r = 0;
+  let g = 0;
+  let b = 0;
+
+  switch (i % 6) {
+    case 0: r = val; g = t; b = p; break;
+    case 1: r = q; g = val; b = p; break;
+    case 2: r = p; g = val; b = t; break;
+    case 3: r = p; g = q; b = val; break;
+    case 4: r = t; g = p; b = val; break;
+    default: r = val; g = p; b = q; break;
+  }
+
+  return {
+    r: Math.round(r * 255),
+    g: Math.round(g * 255),
+    b: Math.round(b * 255)
+  };
+};
+
+const rgbString = ({ r, g, b }, alpha = 1) => `rgba(${r},${g},${b},${alpha})`;
+
+const pickBoundaryColor = (boundaryClass) => {
+  if (boundaryClass === "BLOCK") return INDEX_CONSTANTS.BLOCK_COLOR;
+  if (boundaryClass === "HOLD") return INDEX_CONSTANTS.HOLD_COLOR;
+  if (boundaryClass === "GATE") return INDEX_CONSTANTS.GATE_COLOR;
+  if (boundaryClass === "BRIDGE") return INDEX_CONSTANTS.BRIDGE_COLOR;
+  return INDEX_CONSTANTS.OPEN_COLOR;
+};
+
+const buildHudText = ({ frameState, runtimePacket, renderPacket }) => {
+  const selected = normalizeObject(renderPacket?.projection?.selectedProjection);
+
+  const lines = [
+    "WORLD HOST",
+    `projection=${runtimePacket.projectionState}`,
+    `elapsedSeconds=${stableRound(frameState.elapsedSeconds, 3)}`,
+    `kernel=(${runtimePacket.index.i},${runtimePacket.index.j})`,
+    `dense=(${runtimePacket.denseIndex.x},${runtimePacket.denseIndex.y})`,
+    `region=${runtimePacket.region.label}`,
+    `node=${runtimePacket.node.label}`,
+    `boundary=${runtimePacket.boundary.classification}`,
+    `terrain=${runtimePacket.terrainClass}`,
+    `biome=${runtimePacket.biomeType}`,
+    `traversal=${runtimePacket.traversalStatus.action}`,
+    `receipt=${runtimePacket.receipt.timestamp}`,
+    `projectionSelected=${JSON.stringify(selected)}`
   ];
 
-  for (const value of values) {
-    const text = String(value);
-    for (let i = 0; i < text.length; i += 1) {
-      acc = (acc * 47 + text.charCodeAt(i)) % 1000000007;
+  return lines.join("\n");
+};
+
+const clearCanvas = (ctx, canvasState) => {
+  ctx.clearRect(0, 0, canvasState.cssWidth, canvasState.cssHeight);
+  ctx.fillStyle = INDEX_CONSTANTS.BACKGROUND;
+  ctx.fillRect(0, 0, canvasState.cssWidth, canvasState.cssHeight);
+};
+
+const drawBackdrop = (ctx, canvasState, renderPacket) => {
+  const color = renderPacket.visible.colorOutput;
+  const rgb = hsvToRgb(color.hue, color.saturation, color.value);
+
+  ctx.fillStyle = rgbString(rgb, 0.12);
+  ctx.fillRect(0, 0, canvasState.cssWidth, canvasState.cssHeight);
+
+  ctx.strokeStyle = INDEX_CONSTANTS.GRID_COLOR;
+  ctx.lineWidth = 1;
+
+  const cols = 12;
+  const rows = 8;
+
+  for (let i = 1; i < cols; i += 1) {
+    const x = (i / cols) * canvasState.cssWidth;
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, canvasState.cssHeight);
+    ctx.stroke();
+  }
+
+  for (let j = 1; j < rows; j += 1) {
+    const y = (j / rows) * canvasState.cssHeight;
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(canvasState.cssWidth, y);
+    ctx.stroke();
+  }
+};
+
+const drawMarker = (ctx, x, y, radius, fill, stroke) => {
+  ctx.beginPath();
+  ctx.arc(x, y, radius, 0, Math.PI * 2);
+  ctx.fillStyle = fill;
+  ctx.fill();
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = stroke;
+  ctx.stroke();
+};
+
+const drawFlat = (ctx, renderPacket, field, canvasState) => {
+  const width = Number(field && field.width) || 1;
+  const height = Number(field && field.height) || 1;
+
+  const x = ((renderPacket.runtime.denseIndex.x + 0.5) / width) * canvasState.cssWidth;
+  const y = ((renderPacket.runtime.denseIndex.y + 0.5) / height) * canvasState.cssHeight;
+
+  drawMarker(
+    ctx,
+    x,
+    y,
+    INDEX_CONSTANTS.MARKER_RADIUS,
+    rgbString(
+      hsvToRgb(
+        renderPacket.visible.colorOutput.hue,
+        renderPacket.visible.colorOutput.saturation,
+        renderPacket.visible.colorOutput.value
+      ),
+      0.95
+    ),
+    pickBoundaryColor(renderPacket.runtime.boundary.classification)
+  );
+};
+
+const drawTree = (ctx, renderPacket, canvasState) => {
+  const width = canvasState.cssWidth;
+  const height = canvasState.cssHeight;
+  const selected = normalizeObject(renderPacket.projection.selectedProjection);
+
+  ctx.strokeStyle = INDEX_CONSTANTS.GRID_COLOR;
+  ctx.lineWidth = 1;
+
+  for (let i = 1; i < 9; i += 1) {
+    const gx = (i / 9) * width;
+    ctx.beginPath();
+    ctx.moveTo(gx, 0);
+    ctx.lineTo(gx, height);
+    ctx.stroke();
+  }
+
+  for (let j = 1; j < 16; j += 1) {
+    const gy = (j / 16) * height;
+    ctx.beginPath();
+    ctx.moveTo(0, gy);
+    ctx.lineTo(width, gy);
+    ctx.stroke();
+  }
+
+  const x = (Number(selected.root || 0) / 9) * width;
+  const y = (Number(selected.leaf || 0) / 16) * height;
+
+  drawMarker(
+    ctx,
+    x,
+    y,
+    INDEX_CONSTANTS.MARKER_RADIUS,
+    rgbString(
+      hsvToRgb(
+        renderPacket.visible.colorOutput.hue,
+        renderPacket.visible.colorOutput.saturation,
+        renderPacket.visible.colorOutput.value
+      ),
+      0.95
+    ),
+    pickBoundaryColor(renderPacket.runtime.boundary.classification)
+  );
+};
+
+const drawGlobe = (ctx, renderPacket, canvasState) => {
+  const width = canvasState.cssWidth;
+  const height = canvasState.cssHeight;
+  const cx = width / 2;
+  const cy = height / 2;
+  const r = Math.min(width, height) * INDEX_CONSTANTS.GLOBE_RADIUS_RATIO;
+  const selected = normalizeObject(renderPacket.projection.selectedProjection);
+
+  ctx.strokeStyle = "rgba(255,255,255,0.18)";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.stroke();
+
+  const px = cx + Number(selected.x || 0) * r;
+  const py = cy + Number(selected.y || 0) * r;
+
+  drawMarker(
+    ctx,
+    px,
+    py,
+    INDEX_CONSTANTS.MARKER_RADIUS,
+    rgbString(
+      hsvToRgb(
+        renderPacket.visible.colorOutput.hue,
+        renderPacket.visible.colorOutput.saturation,
+        renderPacket.visible.colorOutput.value
+      ),
+      0.95
+    ),
+    pickBoundaryColor(renderPacket.runtime.boundary.classification)
+  );
+};
+
+const renderToCanvas = (ctx, renderPacket, field, canvasState) => {
+  clearCanvas(ctx, canvasState);
+  drawBackdrop(ctx, canvasState, renderPacket);
+
+  const projection = renderPacket.runtime.projectionState;
+  if (projection === "tree") {
+    drawTree(ctx, renderPacket, canvasState);
+    return;
+  }
+  if (projection === "globe") {
+    drawGlobe(ctx, renderPacket, canvasState);
+    return;
+  }
+  drawFlat(ctx, renderPacket, field, canvasState);
+};
+
+const createIndexHost = () => {
+  assert(hasDocument() && hasWindow(), "PLATFORM_UNAVAILABLE");
+
+  const layout = createLayout();
+  const ctx = getCanvasContext(layout.canvas);
+
+  const state = {
+    started: false,
+    rafId: null,
+    startedAtMs: null,
+    frameState: deepFreeze({ elapsedSeconds: 0 }),
+    lastRenderPacket: null,
+    lastInstrumentPacket: null,
+    projection: INDEX_CONSTANTS.DEFAULT_PROJECTION,
+    pendingMove: deepFreeze({ dx: 0, dy: 0 }),
+    runtimeHandle: null
+  };
+
+  const syncPlatform = () => resizeCanvas(layout.canvas, ctx);
+
+  const createInitialRuntime = () => {
+    state.runtimeHandle = createRuntime({
+      projection: state.projection,
+      frameState: state.frameState
+    });
+  };
+
+  const refreshRuntimeForFrame = () => {
+    assert(state.runtimeHandle, "RUNTIME_HANDLE_MISSING");
+
+    const current = state.runtimeHandle.getCurrentState();
+
+    state.runtimeHandle.reset({
+      frameState: state.frameState,
+      projection: state.projection,
+      initialX: current.denseIndex.x,
+      initialY: current.denseIndex.y
+    });
+  };
+
+  const applyPendingMoveIfNeeded = () => {
+    if (!state.runtimeHandle) return;
+
+    const dx = state.pendingMove.dx;
+    const dy = state.pendingMove.dy;
+
+    if (dx === 0 && dy === 0) return;
+
+    state.runtimeHandle.advance({ dx, dy });
+    state.pendingMove = deepFreeze({ dx: 0, dy: 0 });
+  };
+
+  const stepFrame = (nowMs) => {
+    if (!state.started) return;
+
+    if (!Number.isFinite(state.startedAtMs)) {
+      state.startedAtMs = nowMs;
     }
-  }
 
-  for (const projection of BOOT_CONSTANTS.REQUIRED_PROJECTIONS) {
-    const summary = projectionSummary[projection];
-    acc = (
-      acc * 53 +
-      summary.kernelNodes * 3 +
-      summary.engineNodes * 5 +
-      summary.runtimeNodes * 7 +
-      summary.renderNodes * 11 +
-      summary.renderEdges * 13
-    ) % 1000000007;
-  }
-
-  return String(acc);
-}
-
-function buildReceipt(receiptChain, projectionSummary, worldSummary) {
-  return deepFreeze({
-    receiptVersion: BOOT_CONSTANTS.RECEIPT_VERSION,
-    boot: BOOT_META.name,
-    version: BOOT_META.version,
-    deterministic: true,
-    stack: BOOT_CONSTANTS.REQUIRED_STACK,
-    totalNodes: worldSummary.totalNodes,
-    requiredTotalNodes: BOOT_CONSTANTS.REQUIRED_TOTAL_NODES,
-    requiredLocalGate: BOOT_CONSTANTS.REQUIRED_LOCAL_GATE,
-    wholeEnvelope: BOOT_CONSTANTS.WHOLE_ENVELOPE,
-    kernelChecksum: receiptChain.kernel.checksum,
-    engineChecksum: receiptChain.engine.engineChecksum,
-    runtimeChecksum: receiptChain.runtime.runtimeChecksum,
-    renderChecksum: receiptChain.render.renderChecksum,
-    bootChecksum: computeChecksum(receiptChain, projectionSummary),
-    projectionSummary,
-    focusCell: worldSummary.focusCell,
-    overlay: worldSummary.overlay
-  });
-}
-
-function buildBootState() {
-  const moduleMeta = buildModuleMeta();
-  const validations = buildValidationPacket();
-  const receiptChain = buildReceiptChain();
-  const projectionSummary = buildProjectionSummary();
-  const worldSummary = buildWorldSummary();
-  const receipt = buildReceipt(receiptChain, projectionSummary, worldSummary);
-
-  invariant(moduleMeta.kernel.name === "world_kernel", "kernel meta mismatch");
-  invariant(moduleMeta.engine.name === "planet_engine", "engine meta mismatch");
-  invariant(moduleMeta.runtime.name === "runtime", "runtime meta mismatch");
-  invariant(moduleMeta.render.name === "render", "render meta mismatch");
-
-  invariant(receipt.totalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "boot total nodes invalid");
-  invariant(receipt.requiredLocalGate === BOOT_CONSTANTS.REQUIRED_LOCAL_GATE, "boot local gate invalid");
-  invariant(receipt.wholeEnvelope === BOOT_CONSTANTS.WHOLE_ENVELOPE, "boot whole envelope invalid");
-
-  for (const projection of BOOT_CONSTANTS.REQUIRED_PROJECTIONS) {
-    const summary = projectionSummary[projection];
-    invariant(summary.kernelNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `kernel projection invalid: ${projection}`);
-    invariant(summary.engineNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `engine projection invalid: ${projection}`);
-    invariant(summary.runtimeNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `runtime projection invalid: ${projection}`);
-    invariant(summary.renderNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `render projection invalid: ${projection}`);
-  }
-
-  return deepFreeze({
-    meta: BOOT_META,
-    constants: BOOT_CONSTANTS,
-    moduleMeta,
-    validations,
-    receiptChain,
-    projectionSummary,
-    worldSummary,
-    receipt
-  });
-}
-
-const BOOT = buildBootState();
-
-const index = deepFreeze({
-  meta: BOOT.meta,
-  constants: BOOT.constants,
-
-  getMeta() {
-    return BOOT.meta;
-  },
-
-  getConstants() {
-    return BOOT.constants;
-  },
-
-  getModuleMeta() {
-    return BOOT.moduleMeta;
-  },
-
-  getValidations() {
-    return BOOT.validations;
-  },
-
-  getReceiptChain() {
-    return BOOT.receiptChain;
-  },
-
-  getProjectionSummary() {
-    return BOOT.projectionSummary;
-  },
-
-  getWorldSummary() {
-    return BOOT.worldSummary;
-  },
-
-  getReceipt() {
-    return BOOT.receipt;
-  },
-
-  getKernel() {
-    return worldKernel;
-  },
-
-  getEngine() {
-    return planetEngine;
-  },
-
-  getRuntime() {
-    return runtime;
-  },
-
-  getRender() {
-    return render;
-  },
-
-  getProjection(projection) {
-    invariant(
-      BOOT_CONSTANTS.REQUIRED_PROJECTIONS.includes(projection),
-      `unknown projection: ${projection}`
-    );
-
-    return deepFreeze({
-      kernel: worldKernel.getProjection(projection),
-      engine: planetEngine.getProjection(projection),
-      runtime: runtime.getProjection(projection),
-      render: render.getProjection(projection)
+    state.frameState = deepFreeze({
+      elapsedSeconds: stableRound((nowMs - state.startedAtMs) / 1000, 6)
     });
-  },
 
-  validate() {
-    const validations = BOOT.validations;
-    const receipt = BOOT.receipt;
-    const recomputedChecksum = computeChecksum(BOOT.receiptChain, BOOT.projectionSummary);
+    refreshRuntimeForFrame();
+    applyPendingMoveIfNeeded();
 
-    return deepFreeze({
-      stackIntegrity:
-        BOOT.moduleMeta.kernel.name === "world_kernel" &&
-        BOOT.moduleMeta.engine.name === "planet_engine" &&
-        BOOT.moduleMeta.runtime.name === "runtime" &&
-        BOOT.moduleMeta.render.name === "render",
-      kernelIntegrity:
-        validations.kernel.latticeCompleteness &&
-        validations.kernel.projectionCompleteness &&
-        validations.kernel.determinism &&
-        validations.kernel.thresholdIntegrity,
-      engineIntegrity:
-        validations.engine.kernelDependencyIntegrity &&
-        validations.engine.totalNodeIntegrity &&
-        validations.engine.projectionCompleteness &&
-        validations.engine.determinism &&
-        validations.engine.hydrologyIntegrity &&
-        validations.engine.regionIntegrity &&
-        validations.engine.climateIntegrity,
-      runtimeIntegrity:
-        validations.runtime.runtimeTraceability &&
-        validations.runtime.kernelDependencyIntegrity &&
-        validations.runtime.engineDependencyIntegrity &&
-        validations.runtime.latticeCompleteness &&
-        validations.runtime.projectionConsistency &&
-        validations.runtime.determinism &&
-        validations.runtime.boundaryConsistency &&
-        validations.runtime.receiptConsistency &&
-        validations.runtime.thresholdIntegrity,
-      renderIntegrity:
-        validations.render.runtimeTraceability &&
-        validations.render.latticeCompleteness &&
-        validations.render.projectionConsistency &&
-        validations.render.determinism &&
-        validations.render.boundaryConsistency &&
-        validations.render.receiptConsistency &&
-        validations.render.thresholdIntegrity &&
-        validations.render.successorProjectionCompleteness,
-      projectionIntegrity: BOOT_CONSTANTS.REQUIRED_PROJECTIONS.every((projection) => {
-        const summary = BOOT.projectionSummary[projection];
-        return (
-          summary.kernelNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
-          summary.engineNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
-          summary.runtimeNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
-          summary.renderNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES
-        );
-      }),
-      receiptConsistency:
-        receipt.totalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
-        receipt.requiredTotalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
-        receipt.requiredLocalGate === BOOT_CONSTANTS.REQUIRED_LOCAL_GATE &&
-        receipt.wholeEnvelope === BOOT_CONSTANTS.WHOLE_ENVELOPE,
-      determinism: receipt.bootChecksum === recomputedChecksum,
-      artifactDrift: false
+    const renderPacket = renderModule.render(state.runtimeHandle);
+    state.lastRenderPacket = renderPacket;
+    state.lastInstrumentPacket = null;
+
+    const canvasState = syncPlatform();
+    renderToCanvas(ctx, renderPacket, state.runtimeHandle.getField(), canvasState);
+    layout.hud.textContent = buildHudText({
+      frameState: state.frameState,
+      runtimePacket: renderPacket.runtime,
+      renderPacket
     });
-  }
-});
 
-export default index;
+    state.rafId = window.requestAnimationFrame(stepFrame);
+  };
+
+  const handleKeyDown = (event) => {
+    if (!state.started) return;
+
+    const key = String(event.key || "");
+    if (key === "1") {
+      state.projection = "flat";
+      return;
+    }
+    if (key === "2") {
+      state.projection = "tree";
+      return;
+    }
+    if (key === "3") {
+      state.projection = "globe";
+      return;
+    }
+    if (key === "ArrowUp" || key === "w" || key === "W") {
+      state.pendingMove = deepFreeze({ dx: 0, dy: -INDEX_CONSTANTS.MOVE_STEP });
+      return;
+    }
+    if (key === "ArrowDown" || key === "s" || key === "S") {
+      state.pendingMove = deepFreeze({ dx: 0, dy: INDEX_CONSTANTS.MOVE_STEP });
+      return;
+    }
+    if (key === "ArrowLeft" || key === "a" || key === "A") {
+      state.pendingMove = deepFreeze({ dx: -INDEX_CONSTANTS.MOVE_STEP, dy: 0 });
+      return;
+    }
+    if (key === "ArrowRight" || key === "d" || key === "D") {
+      state.pendingMove = deepFreeze({ dx: INDEX_CONSTANTS.MOVE_STEP, dy: 0 });
+    }
+  };
+
+  const start = () => {
+    if (state.started) return deepFreeze({ started: true });
+
+    syncPlatform();
+    state.started = true;
+    state.startedAtMs = null;
+    state.frameState = deepFreeze({ elapsedSeconds: 0 });
+    state.lastRenderPacket = null;
+    state.lastInstrumentPacket = null;
+    state.pendingMove = deepFreeze({ dx: 0, dy: 0 });
+
+    createInitialRuntime();
+
+    window.addEventListener("resize", syncPlatform, { passive: true });
+    window.addEventListener("keydown", handleKeyDown);
+    state.rafId = window.requestAnimationFrame(stepFrame);
+
+    return deepFreeze({ started: true });
+  };
+
+  const stop = () => {
+    if (!state.started) return deepFreeze({ started: false });
+
+    state.started = false;
+
+    if (state.rafId !== null) {
+      window.cancelAnimationFrame(state.rafId);
+      state.rafId = null;
+    }
+
+    window.removeEventListener("resize", syncPlatform);
+    window.removeEventListener("keydown", handleKeyDown);
+
+    return deepFreeze({ started: false });
+  };
+
+  const getFrameState = () => state.frameState;
+  const getLastRenderPacket = () => state.lastRenderPacket;
+  const getLastInstrumentPacket = () => state.lastInstrumentPacket;
+
+  return deepFreeze({
+    meta: INDEX_META,
+    constants: INDEX_CONSTANTS,
+    start,
+    stop,
+    getFrameState,
+    getLastRenderPacket,
+    getLastInstrumentPacket
+  });
+};
+
+const INDEX = createIndexHost();
+
+export const start = () => INDEX.start();
+export const stop = () => INDEX.stop();
+export const getFrameState = () => INDEX.getFrameState();
+export const getLastRenderPacket = () => INDEX.getLastRenderPacket();
+export const getLastInstrumentPacket = () => INDEX.getLastInstrumentPacket();
+
+export default INDEX;

@@ -73,7 +73,11 @@ const normalizeProjection = (value) => {
 };
 
 const normalizeIntegerStep = (value) =>
-  clamp(Number.isFinite(value) ? Math.trunc(value) : 0, RUNTIME_CONSTANTS.STEP_MIN, RUNTIME_CONSTANTS.STEP_MAX);
+  clamp(
+    Number.isFinite(value) ? Math.trunc(value) : 0,
+    RUNTIME_CONSTANTS.STEP_MIN,
+    RUNTIME_CONSTANTS.STEP_MAX
+  );
 
 const safeReceiptClone = (receipt, timestamp) => {
   const source = normalizeObject(receipt);
@@ -201,7 +205,8 @@ const normalizePlanetField = (planetField) => {
       const normalizedSample = normalizeSample(row[x], x, y);
       normalizedRow.push(normalizedSample);
       byDenseKey[`${x},${y}`] = normalizedSample;
-      byKernelReceiptKey[`${normalizedSample.kernel.i},${normalizedSample.kernel.j}`] = normalizedSample;
+      byKernelReceiptKey[`${normalizedSample.kernel.i},${normalizedSample.kernel.j}`] =
+        normalizedSample;
     }
     normalizedRows.push(deepFreeze(normalizedRow));
   }
@@ -264,7 +269,12 @@ const buildProjectionPackets = (sample) => {
 const selectProjectionPacket = (projectionPackets, projectionState) =>
   projectionPackets[projectionState] || null;
 
-const buildCurrentStatePacket = (sample, projectionState, traversalStatus, successorReceipt = null) => {
+const buildCurrentStatePacket = (
+  sample,
+  projectionState,
+  traversalStatus,
+  successorReceipt = null
+) => {
   const projectionPackets = buildProjectionPackets(sample);
 
   return deepFreeze({
@@ -379,7 +389,7 @@ const computeSuccessor = (snapshot, dx, dy) => {
   });
 };
 
-const buildFacade = (stateRef, engineRef, initialFrameState) => {
+const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
   const api = {
     meta: RUNTIME_META,
 
@@ -442,6 +452,31 @@ const buildFacade = (stateRef, engineRef, initialFrameState) => {
       return stateRef.current.field;
     },
 
+    refreshFrameState(nextFrameState = {}) {
+      const normalizedFrameState = normalizeFrameState(nextFrameState);
+      initialFrameStateRef.current = normalizedFrameState;
+
+      const refreshedField = normalizePlanetField(
+        engineRef.current.buildPlanetFrame(normalizedFrameState)
+      );
+
+      const safeCursor = deepFreeze({
+        x: clamp(stateRef.current.cursor.x, 0, refreshedField.width - 1),
+        y: clamp(stateRef.current.cursor.y, 0, refreshedField.height - 1)
+      });
+
+      stateRef.current = buildRuntimeSnapshot(
+        refreshedField,
+        safeCursor,
+        stateRef.current.projectionState,
+        stateRef.current.runtimeTick,
+        null,
+        null
+      );
+
+      return stateRef.current.currentPacket;
+    },
+
     advance(step = {}) {
       const move = normalizeObject(step);
       const dx = normalizeIntegerStep(move.dx);
@@ -497,8 +532,10 @@ const buildFacade = (stateRef, engineRef, initialFrameState) => {
     reset(resetOptions = {}) {
       const next = normalizeObject(resetOptions);
       const nextFrameState = normalizeFrameState(
-        hasOwn(next, "frameState") ? next.frameState : initialFrameState
+        hasOwn(next, "frameState") ? next.frameState : initialFrameStateRef.current
       );
+      initialFrameStateRef.current = nextFrameState;
+
       const nextProjectionState = normalizeProjection(
         hasOwn(next, "projection") ? next.projection : stateRef.current.projectionState
       );
@@ -547,23 +584,34 @@ export function createRuntime(options = {}) {
         : createPlanetEngine()
   };
 
-  const initialFrameState = normalizeFrameState(source.frameState);
+  const initialFrameStateRef = {
+    current: normalizeFrameState(source.frameState)
+  };
+
   const initialProjectionState = normalizeProjection(source.projection || "flat");
   const providedField = source.planetField || null;
   const field = normalizePlanetField(
-    providedField || engineRef.current.buildPlanetFrame(initialFrameState)
+    providedField || engineRef.current.buildPlanetFrame(initialFrameStateRef.current)
   );
 
   const initialCursor = deepFreeze({
-    x: clamp(Number.isInteger(source.initialX) ? source.initialX : 0, 0, field.width - 1),
-    y: clamp(Number.isInteger(source.initialY) ? source.initialY : 0, 0, field.height - 1)
+    x: clamp(
+      Number.isInteger(source.initialX) ? source.initialX : 0,
+      0,
+      field.width - 1
+    ),
+    y: clamp(
+      Number.isInteger(source.initialY) ? source.initialY : 0,
+      0,
+      field.height - 1
+    )
   });
 
   const stateRef = {
     current: buildRuntimeSnapshot(field, initialCursor, initialProjectionState, 0, null, null)
   };
 
-  return buildFacade(stateRef, engineRef, initialFrameState);
+  return buildFacade(stateRef, engineRef, initialFrameStateRef);
 }
 
 const DEFAULT_RUNTIME = createRuntime();
@@ -576,6 +624,8 @@ export const getProjections = () => DEFAULT_RUNTIME.getProjections();
 export const getSuccessorReceipt = () => DEFAULT_RUNTIME.getSuccessorReceipt();
 export const getStateByReceipt = (receipt) => DEFAULT_RUNTIME.getStateByReceipt(receipt);
 export const getField = () => DEFAULT_RUNTIME.getField();
+export const refreshFrameState = (frameState = {}) =>
+  DEFAULT_RUNTIME.refreshFrameState(frameState);
 export const advance = (step = {}) => DEFAULT_RUNTIME.advance(step);
 export const reset = (options = {}) => DEFAULT_RUNTIME.reset(options);
 

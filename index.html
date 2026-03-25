@@ -1,140 +1,369 @@
 import worldKernel from "./world/world_kernel.js";
 import planetEngine from "./world/planet_engine.js";
 import runtime from "./world/runtime.js";
+import render from "./world/render.js";
 
 const BOOT_META = Object.freeze({
   name: "index",
   version: "G1",
   role: "boot_orchestrator",
   deterministic: true,
-  sourceOfTruth: false
+  sourceOfTruth: false,
+  mutatesState: false
 });
 
 const BOOT_CONSTANTS = Object.freeze({
-  REQUIRED_LATTICE_SIZE: 16,
   REQUIRED_TOTAL_NODES: 256,
-  REQUIRED_SEQUENCE: Object.freeze(["kernel", "engine", "runtime"])
+  REQUIRED_LOCAL_GATE: 61,
+  WHOLE_ENVELOPE: 451,
+  REQUIRED_STACK: Object.freeze([
+    "world_kernel",
+    "planet_engine",
+    "runtime",
+    "render"
+  ]),
+  REQUIRED_PROJECTIONS: Object.freeze(["flat", "tree", "globe"]),
+  RECEIPT_VERSION: "BOOT_RECEIPT_G1"
 });
 
-const deepFreeze = (value) => {
-  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.getOwnPropertyNames(value).forEach((key) => {
-    deepFreeze(value[key]);
+function deepFreeze(value) {
+  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.freeze(value);
+  for (const key of Object.keys(value)) deepFreeze(value[key]);
+  return value;
+}
+
+function invariant(condition, message) {
+  if (!condition) throw new Error(`[index] ${message}`);
+}
+
+function round(value, places = 6) {
+  const factor = 10 ** places;
+  return Math.round(value * factor) / factor;
+}
+
+function buildModuleMeta() {
+  return deepFreeze({
+    kernel: worldKernel.getMeta(),
+    engine: planetEngine.getMeta(),
+    runtime: runtime.getMeta(),
+    render: render.getMeta()
   });
-  return Object.freeze(value);
-};
+}
 
-const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+function buildValidationPacket() {
+  const kernelValidation = worldKernel.validate();
+  const engineValidation = planetEngine.validate();
+  const runtimeValidation = runtime.validate();
+  const renderValidation = render.validate();
 
-const assert = (condition, code) => {
-  if (!condition) {
-    const error = new Error(code);
-    error.code = code;
-    throw error;
-  }
-};
+  invariant(kernelValidation.latticeCompleteness, "kernel lattice completeness failed");
+  invariant(kernelValidation.projectionCompleteness, "kernel projection completeness failed");
+  invariant(kernelValidation.determinism, "kernel determinism failed");
+  invariant(kernelValidation.thresholdIntegrity, "kernel threshold integrity failed");
+  invariant(kernelValidation.receiptConsistency, "kernel receipt consistency failed");
 
-const validateKernel = (kernel) => {
-  assert(kernel && typeof kernel === "object", "KERNEL_MISSING");
-  assert(Object.isFrozen(kernel), "KERNEL_NOT_IMMUTABLE");
-  assert(hasOwn(kernel, "meta"), "KERNEL_META_MISSING");
-  assert(hasOwn(kernel, "constants"), "KERNEL_CONSTANTS_MISSING");
-  assert(hasOwn(kernel, "lattice"), "KERNEL_LATTICE_MISSING");
-  assert(hasOwn(kernel, "validation"), "KERNEL_VALIDATION_MISSING");
-  assert(kernel.meta && kernel.meta.sourceOfTruth === true, "KERNEL_NOT_SOURCE_OF_TRUTH");
-  assert(kernel.meta && kernel.meta.immutable === true, "KERNEL_IMMUTABLE_FLAG_INVALID");
-  assert(kernel.meta && kernel.meta.deterministic === true, "KERNEL_DETERMINISM_FLAG_INVALID");
-  assert(kernel.meta && kernel.meta.latticeSize === BOOT_CONSTANTS.REQUIRED_LATTICE_SIZE, "KERNEL_LATTICE_SIZE_INVALID");
-  assert(kernel.meta && kernel.meta.totalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "KERNEL_TOTAL_NODES_INVALID");
-  assert(Array.isArray(kernel.lattice.nodes), "KERNEL_LATTICE_NODES_INVALID");
-  assert(kernel.lattice.nodes.length === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "KERNEL_LATTICE_COVERAGE_INVALID");
-  assert(kernel.validation && kernel.validation.ok === true, "KERNEL_VALIDATION_FAILED");
-  return Object.freeze({
-    ok: true,
-    immutable: Object.isFrozen(kernel),
-    latticeCoverage: kernel.lattice.nodes.length,
-    deterministic: kernel.meta.deterministic === true
-  });
-};
+  invariant(engineValidation.kernelDependencyIntegrity, "engine kernel dependency failed");
+  invariant(engineValidation.totalNodeIntegrity, "engine total node integrity failed");
+  invariant(engineValidation.projectionCompleteness, "engine projection completeness failed");
+  invariant(engineValidation.determinism, "engine determinism failed");
+  invariant(engineValidation.hydrologyIntegrity, "engine hydrology integrity failed");
+  invariant(engineValidation.regionIntegrity, "engine region integrity failed");
+  invariant(engineValidation.climateIntegrity, "engine climate integrity failed");
 
-const validateEngine = (engine, kernel) => {
-  assert(engine && typeof engine === "object", "ENGINE_MISSING");
-  assert(Object.isFrozen(engine), "ENGINE_NOT_IMMUTABLE");
-  assert(engine !== kernel, "ENGINE_EQUALS_KERNEL");
-  assert(!((engine.meta && engine.meta.sourceOfTruth === true) || engine.sourceOfTruth === true), "ENGINE_DEFINES_TRUTH");
-  const coverage =
-    typeof engine.totalNodes === "number"
-      ? engine.totalNodes
-      : engine.meta && typeof engine.meta.totalNodes === "number"
-        ? engine.meta.totalNodes
-        : kernel.lattice.nodes.length;
-  assert(coverage === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "ENGINE_LATTICE_COVERAGE_INVALID");
-  return Object.freeze({
-    ok: true,
-    immutable: Object.isFrozen(engine),
-    latticeCoverage: coverage,
-    deterministic: engine.meta ? engine.meta.deterministic !== false : true
-  });
-};
+  invariant(runtimeValidation.runtimeTraceability, "runtime traceability failed");
+  invariant(runtimeValidation.kernelDependencyIntegrity, "runtime kernel dependency failed");
+  invariant(runtimeValidation.engineDependencyIntegrity, "runtime engine dependency failed");
+  invariant(runtimeValidation.latticeCompleteness, "runtime lattice completeness failed");
+  invariant(runtimeValidation.projectionConsistency, "runtime projection consistency failed");
+  invariant(runtimeValidation.determinism, "runtime determinism failed");
+  invariant(runtimeValidation.boundaryConsistency, "runtime boundary consistency failed");
+  invariant(runtimeValidation.receiptConsistency, "runtime receipt consistency failed");
+  invariant(runtimeValidation.thresholdIntegrity, "runtime threshold integrity failed");
 
-const validateRuntime = (runtimeModule) => {
-  assert(runtimeModule && typeof runtimeModule === "object", "RUNTIME_MISSING");
-  assert(Object.isFrozen(runtimeModule), "RUNTIME_NOT_IMMUTABLE");
-  assert(!((runtimeModule.meta && runtimeModule.meta.sourceOfTruth === true) || runtimeModule.sourceOfTruth === true), "RUNTIME_DEFINES_TRUTH");
-  assert(!((runtimeModule.meta && runtimeModule.meta.mutatesState === true) || runtimeModule.mutatesState === true), "RUNTIME_MUTATES_STATE");
-  return Object.freeze({
-    ok: true,
-    immutable: Object.isFrozen(runtimeModule),
-    deterministic: runtimeModule.meta ? runtimeModule.meta.deterministic !== false : true
-  });
-};
+  invariant(renderValidation.runtimeTraceability, "render runtime traceability failed");
+  invariant(renderValidation.latticeCompleteness, "render lattice completeness failed");
+  invariant(renderValidation.projectionConsistency, "render projection consistency failed");
+  invariant(renderValidation.determinism, "render determinism failed");
+  invariant(renderValidation.boundaryConsistency, "render boundary consistency failed");
+  invariant(renderValidation.receiptConsistency, "render receipt consistency failed");
+  invariant(renderValidation.thresholdIntegrity, "render threshold integrity failed");
+  invariant(renderValidation.successorProjectionCompleteness, "render successor projection completeness failed");
 
-const validateModules = (kernel, engine, runtimeModule) => {
-  const kernelValidation = validateKernel(kernel);
-  const engineValidation = validateEngine(engine, kernel);
-  const runtimeValidation = validateRuntime(runtimeModule);
-  return Object.freeze({
-    ok: kernelValidation.ok && engineValidation.ok && runtimeValidation.ok,
+  return deepFreeze({
     kernel: kernelValidation,
     engine: engineValidation,
-    runtime: runtimeValidation
+    runtime: runtimeValidation,
+    render: renderValidation
   });
-};
+}
 
-const bindPipeline = (kernel, engine, runtimeModule) =>
-  Object.freeze({
-    sequence: BOOT_CONSTANTS.REQUIRED_SEQUENCE,
-    kernel,
-    engine,
-    runtime: runtimeModule
+function buildReceiptChain() {
+  return deepFreeze({
+    kernel: worldKernel.getReceipt(),
+    engine: planetEngine.getReceipt(),
+    runtime: runtime.getReceipt(),
+    render: render.getReceipt()
   });
+}
 
-const createSystemHandle = (pipeline, validation) =>
-  deepFreeze({
+function buildProjectionSummary() {
+  const out = {};
+
+  for (const projection of BOOT_CONSTANTS.REQUIRED_PROJECTIONS) {
+    const kernelProjection = worldKernel.getProjection(projection);
+    const engineProjection = planetEngine.getProjection(projection);
+    const runtimeProjection = runtime.getProjection(projection);
+    const renderProjection = render.getProjection(projection);
+
+    out[projection] = deepFreeze({
+      kernelNodes: kernelProjection.length,
+      engineNodes: engineProjection.length,
+      runtimeNodes: runtimeProjection.length,
+      renderNodes: renderProjection.nodes.length,
+      renderEdges: renderProjection.edges.length
+    });
+  }
+
+  return deepFreeze(out);
+}
+
+function buildWorldSummary() {
+  const runtimeReceipt = runtime.getReceipt();
+  const engineReceipt = planetEngine.getReceipt();
+  const renderReceipt = render.getReceipt();
+
+  return deepFreeze({
+    totalNodes: runtimeReceipt.totalNodes,
+    focusCell: runtimeReceipt.focusCell,
+    hydrology: engineReceipt.hydrology,
+    biomeSummary: runtimeReceipt.biomeSummary,
+    boundarySummary: runtimeReceipt.boundarySummary,
+    regions: runtimeReceipt.regions,
+    overlay: renderReceipt.overlay
+  });
+}
+
+function computeChecksum(receiptChain, projectionSummary) {
+  let acc = 37;
+
+  const values = [
+    receiptChain.kernel.checksum,
+    receiptChain.engine.engineChecksum,
+    receiptChain.runtime.runtimeChecksum,
+    receiptChain.render.renderChecksum
+  ];
+
+  for (const value of values) {
+    const text = String(value);
+    for (let i = 0; i < text.length; i += 1) {
+      acc = (acc * 47 + text.charCodeAt(i)) % 1000000007;
+    }
+  }
+
+  for (const projection of BOOT_CONSTANTS.REQUIRED_PROJECTIONS) {
+    const summary = projectionSummary[projection];
+    acc = (
+      acc * 53 +
+      summary.kernelNodes * 3 +
+      summary.engineNodes * 5 +
+      summary.runtimeNodes * 7 +
+      summary.renderNodes * 11 +
+      summary.renderEdges * 13
+    ) % 1000000007;
+  }
+
+  return String(acc);
+}
+
+function buildReceipt(receiptChain, projectionSummary, worldSummary) {
+  return deepFreeze({
+    receiptVersion: BOOT_CONSTANTS.RECEIPT_VERSION,
+    boot: BOOT_META.name,
+    version: BOOT_META.version,
+    deterministic: true,
+    stack: BOOT_CONSTANTS.REQUIRED_STACK,
+    totalNodes: worldSummary.totalNodes,
+    requiredTotalNodes: BOOT_CONSTANTS.REQUIRED_TOTAL_NODES,
+    requiredLocalGate: BOOT_CONSTANTS.REQUIRED_LOCAL_GATE,
+    wholeEnvelope: BOOT_CONSTANTS.WHOLE_ENVELOPE,
+    kernelChecksum: receiptChain.kernel.checksum,
+    engineChecksum: receiptChain.engine.engineChecksum,
+    runtimeChecksum: receiptChain.runtime.runtimeChecksum,
+    renderChecksum: receiptChain.render.renderChecksum,
+    bootChecksum: computeChecksum(receiptChain, projectionSummary),
+    projectionSummary,
+    focusCell: worldSummary.focusCell,
+    overlay: worldSummary.overlay
+  });
+}
+
+function buildBootState() {
+  const moduleMeta = buildModuleMeta();
+  const validations = buildValidationPacket();
+  const receiptChain = buildReceiptChain();
+  const projectionSummary = buildProjectionSummary();
+  const worldSummary = buildWorldSummary();
+  const receipt = buildReceipt(receiptChain, projectionSummary, worldSummary);
+
+  invariant(moduleMeta.kernel.name === "world_kernel", "kernel meta mismatch");
+  invariant(moduleMeta.engine.name === "planet_engine", "engine meta mismatch");
+  invariant(moduleMeta.runtime.name === "runtime", "runtime meta mismatch");
+  invariant(moduleMeta.render.name === "render", "render meta mismatch");
+
+  invariant(receipt.totalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, "boot total nodes invalid");
+  invariant(receipt.requiredLocalGate === BOOT_CONSTANTS.REQUIRED_LOCAL_GATE, "boot local gate invalid");
+  invariant(receipt.wholeEnvelope === BOOT_CONSTANTS.WHOLE_ENVELOPE, "boot whole envelope invalid");
+
+  for (const projection of BOOT_CONSTANTS.REQUIRED_PROJECTIONS) {
+    const summary = projectionSummary[projection];
+    invariant(summary.kernelNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `kernel projection invalid: ${projection}`);
+    invariant(summary.engineNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `engine projection invalid: ${projection}`);
+    invariant(summary.runtimeNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `runtime projection invalid: ${projection}`);
+    invariant(summary.renderNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES, `render projection invalid: ${projection}`);
+  }
+
+  return deepFreeze({
     meta: BOOT_META,
-    validation,
-    pipeline: Object.freeze({
-      sequence: pipeline.sequence
-    }),
-    runtime: pipeline.runtime,
-    getKernelMeta: () => pipeline.kernel.meta,
-    getEngineMeta: () => (pipeline.engine && pipeline.engine.meta ? pipeline.engine.meta : null),
-    getRuntimeMeta: () => (pipeline.runtime && pipeline.runtime.meta ? pipeline.runtime.meta : null),
-    getValidation: () => validation,
-    getSequence: () => pipeline.sequence.slice()
+    constants: BOOT_CONSTANTS,
+    moduleMeta,
+    validations,
+    receiptChain,
+    projectionSummary,
+    worldSummary,
+    receipt
   });
+}
 
-const initialize = () => {
-  const kernel = worldKernel;
-  const engine = planetEngine;
-  const runtimeModule = runtime;
-  const validation = validateModules(kernel, engine, runtimeModule);
-  assert(validation.ok === true, "BOOT_VALIDATION_FAILED");
-  const pipeline = bindPipeline(kernel, engine, runtimeModule);
-  return createSystemHandle(pipeline, validation);
-};
+const BOOT = buildBootState();
 
-const systemHandle = initialize();
+const index = deepFreeze({
+  meta: BOOT.meta,
+  constants: BOOT.constants,
 
-export { systemHandle, initialize };
-export default systemHandle;
+  getMeta() {
+    return BOOT.meta;
+  },
+
+  getConstants() {
+    return BOOT.constants;
+  },
+
+  getModuleMeta() {
+    return BOOT.moduleMeta;
+  },
+
+  getValidations() {
+    return BOOT.validations;
+  },
+
+  getReceiptChain() {
+    return BOOT.receiptChain;
+  },
+
+  getProjectionSummary() {
+    return BOOT.projectionSummary;
+  },
+
+  getWorldSummary() {
+    return BOOT.worldSummary;
+  },
+
+  getReceipt() {
+    return BOOT.receipt;
+  },
+
+  getKernel() {
+    return worldKernel;
+  },
+
+  getEngine() {
+    return planetEngine;
+  },
+
+  getRuntime() {
+    return runtime;
+  },
+
+  getRender() {
+    return render;
+  },
+
+  getProjection(projection) {
+    invariant(
+      BOOT_CONSTANTS.REQUIRED_PROJECTIONS.includes(projection),
+      `unknown projection: ${projection}`
+    );
+
+    return deepFreeze({
+      kernel: worldKernel.getProjection(projection),
+      engine: planetEngine.getProjection(projection),
+      runtime: runtime.getProjection(projection),
+      render: render.getProjection(projection)
+    });
+  },
+
+  validate() {
+    const validations = BOOT.validations;
+    const receipt = BOOT.receipt;
+    const recomputedChecksum = computeChecksum(BOOT.receiptChain, BOOT.projectionSummary);
+
+    return deepFreeze({
+      stackIntegrity:
+        BOOT.moduleMeta.kernel.name === "world_kernel" &&
+        BOOT.moduleMeta.engine.name === "planet_engine" &&
+        BOOT.moduleMeta.runtime.name === "runtime" &&
+        BOOT.moduleMeta.render.name === "render",
+      kernelIntegrity:
+        validations.kernel.latticeCompleteness &&
+        validations.kernel.projectionCompleteness &&
+        validations.kernel.determinism &&
+        validations.kernel.thresholdIntegrity,
+      engineIntegrity:
+        validations.engine.kernelDependencyIntegrity &&
+        validations.engine.totalNodeIntegrity &&
+        validations.engine.projectionCompleteness &&
+        validations.engine.determinism &&
+        validations.engine.hydrologyIntegrity &&
+        validations.engine.regionIntegrity &&
+        validations.engine.climateIntegrity,
+      runtimeIntegrity:
+        validations.runtime.runtimeTraceability &&
+        validations.runtime.kernelDependencyIntegrity &&
+        validations.runtime.engineDependencyIntegrity &&
+        validations.runtime.latticeCompleteness &&
+        validations.runtime.projectionConsistency &&
+        validations.runtime.determinism &&
+        validations.runtime.boundaryConsistency &&
+        validations.runtime.receiptConsistency &&
+        validations.runtime.thresholdIntegrity,
+      renderIntegrity:
+        validations.render.runtimeTraceability &&
+        validations.render.latticeCompleteness &&
+        validations.render.projectionConsistency &&
+        validations.render.determinism &&
+        validations.render.boundaryConsistency &&
+        validations.render.receiptConsistency &&
+        validations.render.thresholdIntegrity &&
+        validations.render.successorProjectionCompleteness,
+      projectionIntegrity: BOOT_CONSTANTS.REQUIRED_PROJECTIONS.every((projection) => {
+        const summary = BOOT.projectionSummary[projection];
+        return (
+          summary.kernelNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
+          summary.engineNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
+          summary.runtimeNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
+          summary.renderNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES
+        );
+      }),
+      receiptConsistency:
+        receipt.totalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
+        receipt.requiredTotalNodes === BOOT_CONSTANTS.REQUIRED_TOTAL_NODES &&
+        receipt.requiredLocalGate === BOOT_CONSTANTS.REQUIRED_LOCAL_GATE &&
+        receipt.wholeEnvelope === BOOT_CONSTANTS.WHOLE_ENVELOPE,
+      determinism: receipt.bootChecksum === recomputedChecksum,
+      artifactDrift: false
+    });
+  }
+});
+
+export default index;

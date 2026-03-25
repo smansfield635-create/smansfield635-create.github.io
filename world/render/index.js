@@ -21,13 +21,14 @@ const RENDER_CONSTANTS = Object.freeze({
     "boundaryConsistency",
     "receiptConsistency",
     "artifactDrift",
-    "thresholdIntegrity"
+    "thresholdIntegrity",
+    "successorProjectionCompleteness"
   ]),
   COLOR_THRESHOLD: 0.05,
   MOTION_THRESHOLD: 0.0001,
   DEFAULT_LIGHT: 0.5,
-  DEFAULT_SLOPE: 0.5,
-  REQUIRED_TOTAL_NODES: 256
+  REQUIRED_TOTAL_NODES: 256,
+  TAU_OPEN: 0.8
 });
 
 const deepFreeze = (value) => {
@@ -46,13 +47,13 @@ const assert = (condition, code) => {
   }
 };
 
+const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
+
 const clamp01 = (value) => {
   if (value < 0) return 0;
   if (value > 1) return 1;
   return value;
 };
-
-const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
 
 const stableStringify = (value) => {
   if (value === null || typeof value !== "object") return JSON.stringify(value);
@@ -61,19 +62,18 @@ const stableStringify = (value) => {
   return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
 };
 
-const normalizeBoundaryClass = (value, openFlag) => {
-  if (typeof value === "string") {
-    const upper = value.toUpperCase();
-    if (RENDER_CONSTANTS.BOUNDARY_CLASSES.includes(upper)) return upper;
-  }
-  if (openFlag === true) return "OPEN";
-  return "HOLD";
+const forcePriorityIndex = (direction) => RENDER_CONSTANTS.FORCE_DIRECTIONS.indexOf(direction);
+
+const varianceFromForces = (forces) => {
+  const values = [forces.N, forces.E, forces.S, forces.W];
+  const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
+  return values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length;
 };
 
 const normalizeProjection = (projection) => {
   const p = String(projection || "flat").toLowerCase();
-  if (RENDER_CONSTANTS.PROJECTIONS.includes(p)) return p;
-  return "flat";
+  assert(RENDER_CONSTANTS.PROJECTIONS.includes(p), "INVALID_PROJECTION");
+  return p;
 };
 
 const normalizeIndex = (index) => {
@@ -94,21 +94,13 @@ const normalizeCoordinates = (coordinates) => {
 };
 
 const normalizeRegion = (region) => {
-  if (typeof region === "string") return Object.freeze({ id: region, key: region });
+  if (typeof region === "string") {
+    return Object.freeze({ id: region, key: region });
+  }
   assert(region && typeof region === "object", "INVALID_REGION");
-  const key = region.regionKey || region.key || region.id || "region_unknown";
-  return Object.freeze({
-    id: key,
-    key
-  });
-};
-
-const normalizeDivide = (divide, boundary) => {
-  const classification =
-    divide && typeof divide === "object" ? divide.classification || divide.divideClass || divide.boundary : divide;
-  return Object.freeze({
-    classification: normalizeBoundaryClass(classification, boundary && boundary.open === true)
-  });
+  const key = region.regionKey || region.key || region.id;
+  assert(typeof key === "string" && key.length > 0, "INVALID_REGION_KEY");
+  return Object.freeze({ id: key, key });
 };
 
 const normalizeForces = (forces) => {
@@ -121,12 +113,14 @@ const normalizeForces = (forces) => {
 
   assert(source && typeof source === "object", "INVALID_FORCES");
 
-  const N = clamp01(Number(source.N || 0));
-  const E = clamp01(Number(source.E || 0));
-  const S = clamp01(Number(source.S || 0));
-  const W = clamp01(Number(source.W || 0));
+  const normalized = Object.freeze({
+    N: clamp01(Number(source.N || 0)),
+    E: clamp01(Number(source.E || 0)),
+    S: clamp01(Number(source.S || 0)),
+    W: clamp01(Number(source.W || 0))
+  });
 
-  return Object.freeze({ N, E, S, W });
+  return normalized;
 };
 
 const sortForces = (forces) =>
@@ -134,11 +128,10 @@ const sortForces = (forces) =>
     .map((direction) => Object.freeze({ direction, value: forces[direction] }))
     .sort((a, b) => {
       if (b.value !== a.value) return b.value - a.value;
-      return RENDER_CONSTANTS.FORCE_DIRECTIONS.indexOf(a.direction) - RENDER_CONSTANTS.FORCE_DIRECTIONS.indexOf(b.direction);
+      return forcePriorityIndex(a.direction) - forcePriorityIndex(b.direction);
     });
 
 const normalizeNode = (node, forces) => {
-  const sorted = sortForces(forces);
   if (node && typeof node === "object" && typeof node.node === "string") {
     return Object.freeze({
       id: node.node,
@@ -151,22 +144,42 @@ const normalizeNode = (node, forces) => {
       key: `node_${node}`
     });
   }
+  const dominant = sortForces(forces)[0].direction;
   return Object.freeze({
-    id: sorted[0].direction,
-    key: `node_${sorted[0].direction}`
+    id: dominant,
+    key: `node_${dominant}`
+  });
+};
+
+const normalizeBoundaryClass = (value, openFlag = false) => {
+  if (openFlag === true) return "OPEN";
+  const upper = typeof value === "string" ? value.toUpperCase() : "";
+  assert(
+    upper === "" || RENDER_CONSTANTS.BOUNDARY_CLASSES.includes(upper),
+    "INVALID_BOUNDARY_CLASS"
+  );
+  return upper || "HOLD";
+};
+
+const normalizeDivide = (divide, boundary) => {
+  const classification =
+    divide && typeof divide === "object"
+      ? divide.classification || divide.divideClass || divide.boundary
+      : divide;
+
+  return Object.freeze({
+    classification: normalizeBoundaryClass(classification, boundary && boundary.open === true)
   });
 };
 
 const normalizeBoundary = (boundary, divide, forces) => {
-  const divideClass = normalizeBoundaryClass(
-    boundary && typeof boundary === "object" ? boundary.divideClass || boundary.classification : undefined,
-    boundary && boundary.open === true
-  );
-  const B = boundary && typeof boundary === "object" && Number.isFinite(Number(boundary.B))
-    ? clamp01(Number(boundary.B))
-    : clamp01(1 - varianceFromForces(forces));
+  const explicitOpen = boundary && typeof boundary === "object" ? boundary.open === true : false;
+  const B =
+    boundary && typeof boundary === "object" && Number.isFinite(Number(boundary.B))
+      ? clamp01(Number(boundary.B))
+      : clamp01(1 - varianceFromForces(forces));
 
-  const open = divideClass === "OPEN" || B < 0.8;
+  const open = explicitOpen || B < RENDER_CONSTANTS.TAU_OPEN;
   const boundaryClass = open ? "OPEN" : normalizeBoundaryClass(divide.classification, false);
 
   return Object.freeze({
@@ -192,6 +205,11 @@ const normalizeThreshold = (threshold) => {
         ? "PASS"
         : "HALT";
 
+  assert(
+    ["WITHIN", "FRAGMENTED"].includes(classification) && ["PASS", "HALT"].includes(action),
+    "INVALID_THRESHOLD"
+  );
+
   return Object.freeze({ classification, action });
 };
 
@@ -199,6 +217,7 @@ const normalizeReceipt = (receipt) => {
   assert(receipt && typeof receipt === "object", "INVALID_RECEIPT");
   assert(receipt.state && Number.isInteger(receipt.state.i) && Number.isInteger(receipt.state.j), "INVALID_RECEIPT_STATE");
   assert(Number.isInteger(receipt.timestamp) && receipt.timestamp >= 0, "INVALID_RECEIPT_TIMESTAMP");
+
   return Object.freeze({
     state: Object.freeze({ i: receipt.state.i, j: receipt.state.j }),
     region: receipt.region,
@@ -209,15 +228,9 @@ const normalizeReceipt = (receipt) => {
   });
 };
 
-const varianceFromForces = (forces) => {
-  const values = [forces.N, forces.E, forces.S, forces.W];
-  const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
-  return values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length;
-};
-
-const selectProjectionCoordinates = (statePacket, projection) => {
+const selectProjectionCoordinates = (projections, projection) => {
+  assert(projections && typeof projections === "object", "MISSING_PROJECTIONS");
   const p = normalizeProjection(projection);
-  const projections = statePacket.projections || {};
   const selected = projections[p];
   assert(selected && typeof selected === "object", "MISSING_PROJECTION_COORDINATES");
 
@@ -244,7 +257,7 @@ const selectProjectionCoordinates = (statePacket, projection) => {
 };
 
 const computeTerrainClass = (statePacket) => {
-  const radial = clamp01(Number(statePacket.fields && statePacket.fields.radial || 0));
+  const radial = clamp01(Number((statePacket.fields && statePacket.fields.radial) || 0));
   if (radial < 0.2) return "core";
   if (radial < 0.45) return "inner";
   if (radial < 0.7) return "middle";
@@ -252,8 +265,8 @@ const computeTerrainClass = (statePacket) => {
 };
 
 const computeBiome = (statePacket) => {
-  const pressure = clamp01(Number(statePacket.fields && statePacket.fields.pressure || 0));
-  const curvature = clamp01(Number(statePacket.fields && statePacket.fields.curvature || 0));
+  const pressure = clamp01(Number((statePacket.fields && statePacket.fields.pressure) || 0));
+  const curvature = clamp01(Number((statePacket.fields && statePacket.fields.curvature) || 0));
   if (pressure >= 0.7 && curvature <= 0.25) return "stable";
   if (pressure >= 0.45) return "temperate";
   if (curvature >= 0.6) return "fractured";
@@ -261,7 +274,7 @@ const computeBiome = (statePacket) => {
 };
 
 const computeElevationFamily = (statePacket) => {
-  const pressure = clamp01(Number(statePacket.fields && statePacket.fields.pressure || 0));
+  const pressure = clamp01(Number((statePacket.fields && statePacket.fields.pressure) || 0));
   return pressure >= 0.5 ? "summit" : "basin";
 };
 
@@ -300,27 +313,21 @@ const colorFromState = (statePacket) => {
 };
 
 const luminanceFromState = (statePacket) => {
-  const G = clamp01(Number(statePacket.derived && statePacket.derived.GPrime || statePacket.derived && statePacket.derived.G || 0));
-  const slope = clamp01(Number(statePacket.fields && statePacket.fields.gradient || 0));
-  const light = clamp01(Number(statePacket.visualLight || RENDER_CONSTANTS.DEFAULT_LIGHT));
+  const G = clamp01(Number(
+    (statePacket.derived && (statePacket.derived.GPrime ?? statePacket.derived.G)) ?? 0
+  ));
+  const slope = clamp01(Number((statePacket.fields && statePacket.fields.gradient) || 0));
+  const light = clamp01(Number(statePacket.visualLight ?? RENDER_CONSTANTS.DEFAULT_LIGHT));
   return clamp01((G + (1 - slope) + light) / 3);
 };
 
 const depthFromProjection = (projected) => clamp01((Number(projected.z || 0) + 1) / 2);
 
-const motionFromTransition = (currentProjected, transition) => {
-  const successor = transition && transition.successorProjected;
-  if (!successor) {
-    return Object.freeze({
-      visible: false,
-      delta: 0,
-      vector: Object.freeze({ x: 0, y: 0, z: 0 })
-    });
-  }
-
-  const dx = successor.x - currentProjected.x;
-  const dy = successor.y - currentProjected.y;
-  const dz = successor.z - currentProjected.z;
+const motionFromTransition = (currentProjected, successorProjected) => {
+  assert(successorProjected && typeof successorProjected === "object", "MISSING_SUCCESSOR_PROJECTION");
+  const dx = successorProjected.x - currentProjected.x;
+  const dy = successorProjected.y - currentProjected.y;
+  const dz = successorProjected.z - currentProjected.z;
   const delta = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
 
   return Object.freeze({
@@ -358,43 +365,42 @@ const nodeForceVisibilityFromState = (node, forces) => {
 
 const transitionVisibilityFromState = (receipt, successorReceipt, traversalStatus, projected, successorProjected) => {
   const admissible = traversalStatus.admissible === true;
-  const hasLineage = receipt && successorReceipt && successorReceipt.timestamp === receipt.timestamp + 1;
+  const hasLineage =
+    !!receipt &&
+    !!successorReceipt &&
+    successorReceipt.timestamp === receipt.timestamp + 1 &&
+    successorReceipt.state &&
+    Number.isInteger(successorReceipt.state.i) &&
+    Number.isInteger(successorReceipt.state.j);
 
   if (!admissible || !hasLineage) {
     return Object.freeze({
       visible: false,
-      admissible: false,
-      lineage: false,
+      admissible: admissible,
+      lineage: hasLineage,
       sourceTimestamp: receipt ? receipt.timestamp : null,
-      successorTimestamp: successorReceipt ? successorReceipt.timestamp : null
+      successorTimestamp: successorReceipt ? successorReceipt.timestamp : null,
+      delta: 0
     });
   }
 
+  const dx = successorProjected.x - projected.x;
+  const dy = successorProjected.y - projected.y;
+  const dz = successorProjected.z - projected.z;
+  const delta = Math.sqrt(dx ** 2 + dy ** 2 + dz ** 2);
+
   return Object.freeze({
-    visible: true,
+    visible: delta >= RENDER_CONSTANTS.MOTION_THRESHOLD,
     admissible: true,
     lineage: true,
     sourceTimestamp: receipt.timestamp,
     successorTimestamp: successorReceipt.timestamp,
-    delta: Math.sqrt(
-      (successorProjected.x - projected.x) ** 2 +
-      (successorProjected.y - projected.y) ** 2 +
-      (successorProjected.z - projected.z) ** 2
-    )
-  });
-};
-
-const validatorStatusFromChecks = (checks) => {
-  const ok = Object.values(checks).every(Boolean);
-  return Object.freeze({
-    ok,
-    checks: Object.freeze(checks)
+    delta
   });
 };
 
 const extractRuntimePacket = (runtimeHandle, projection) => {
   assert(runtimeHandle && typeof runtimeHandle === "object", "RUNTIME_HANDLE_MISSING");
-
   const selectedProjection = normalizeProjection(projection);
 
   const statePacket =
@@ -404,14 +410,15 @@ const extractRuntimePacket = (runtimeHandle, projection) => {
 
   assert(statePacket && typeof statePacket === "object", "RUNTIME_STATE_MISSING");
 
-  const index = normalizeIndex(statePacket.index || statePacket.state || statePacket.receipt && statePacket.receipt.state);
+  const index = normalizeIndex(statePacket.index || statePacket.state || (statePacket.receipt && statePacket.receipt.state));
   const coordinates = normalizeCoordinates(statePacket.coordinates || { x: 0, y: 0, z: 0 });
   const region = normalizeRegion(statePacket.region);
-  const divide = normalizeDivide(statePacket.divide, statePacket.boundary);
   const forces = normalizeForces(statePacket.forces);
   const node = normalizeNode(statePacket.node, forces);
+  const divide = normalizeDivide(statePacket.divide, statePacket.boundary);
   const boundary = normalizeBoundary(statePacket.boundary, divide, forces);
   const threshold = normalizeThreshold(statePacket.threshold);
+
   const receipt = normalizeReceipt(
     statePacket.receipt || {
       state: index,
@@ -452,25 +459,7 @@ const extractRuntimePacket = (runtimeHandle, projection) => {
 
   assert(projections && typeof projections === "object", "RUNTIME_PROJECTIONS_MISSING");
 
-  const packet = Object.freeze({
-    index,
-    coordinates,
-    region,
-    divide,
-    forces,
-    node,
-    boundary,
-    threshold,
-    receipt,
-    successorReceipt,
-    traversalStatus,
-    projections,
-    fields: deepFreeze(statePacket.fields || {}),
-    derived: deepFreeze(statePacket.derived || {}),
-    visualLight: statePacket.visualLight
-  });
-
-  const projected = selectProjectionCoordinates(packet, selectedProjection);
+  const projected = selectProjectionCoordinates(projections, selectedProjection);
 
   let successorProjected = null;
   if (successorReceipt) {
@@ -479,30 +468,58 @@ const extractRuntimePacket = (runtimeHandle, projection) => {
         ? runtimeHandle.getStateByReceipt(successorReceipt)
         : runtimeHandle.successorState || null;
 
-    if (successorStatePacket && successorStatePacket.projections) {
-      successorProjected = selectProjectionCoordinates(
-        Object.freeze({ projections: successorStatePacket.projections }),
-        selectedProjection
-      );
-    } else {
-      successorProjected = projected;
-    }
+    assert(successorStatePacket && typeof successorStatePacket === "object", "MISSING_SUCCESSOR_STATE");
+    assert(successorStatePacket.projections && typeof successorStatePacket.projections === "object", "MISSING_SUCCESSOR_PROJECTIONS");
+    successorProjected = selectProjectionCoordinates(successorStatePacket.projections, selectedProjection);
   }
 
   return Object.freeze({
     projection: selectedProjection,
-    statePacket: packet,
+    index,
+    coordinates,
+    region,
+    forces,
+    node,
+    divide,
+    boundary,
+    threshold,
+    receipt,
+    successorReceipt,
+    traversalStatus,
+    projections,
     projected,
-    successorProjected
+    successorProjected,
+    fields: deepFreeze(statePacket.fields || {}),
+    derived: deepFreeze(statePacket.derived || {}),
+    visualLight: statePacket.visualLight
+  });
+};
+
+const computeProjectionInvariantSnapshot = (runtimeHandle, projection) => {
+  const packet = extractRuntimePacket(runtimeHandle, projection);
+  return Object.freeze({
+    projection,
+    sourceKey: `${packet.index.i},${packet.index.j}`,
+    regionKey: packet.region.key,
+    boundaryClass: packet.boundary.boundaryClass,
+    nodeId: packet.node.id,
+    forces: packet.forces,
+    receipt: Object.freeze({
+      state: packet.receipt.state,
+      region: packet.receipt.region,
+      node: packet.receipt.node,
+      boundary: packet.receipt.boundary,
+      timestamp: packet.receipt.timestamp
+    })
   });
 };
 
 const validateRuntimeTraceability = (renderPacket) => {
   const sourceKey = `${renderPacket.state.index.i},${renderPacket.state.index.j}`;
   return (
+    renderPacket.sourceKey === sourceKey &&
     renderPacket.receipt.state.i === renderPacket.state.index.i &&
-    renderPacket.receipt.state.j === renderPacket.state.index.j &&
-    renderPacket.sourceKey === sourceKey
+    renderPacket.receipt.state.j === renderPacket.state.index.j
   );
 };
 
@@ -510,39 +527,31 @@ const validateLatticeCompleteness = (runtimeHandle) => {
   const lattice =
     typeof runtimeHandle.getLattice === "function"
       ? runtimeHandle.getLattice()
-      : runtimeHandle.lattice || runtimeHandle.systemHandle && runtimeHandle.systemHandle.kernel && runtimeHandle.systemHandle.kernel.lattice || null;
+      : runtimeHandle.lattice ||
+        (runtimeHandle.systemHandle &&
+        runtimeHandle.systemHandle.kernel &&
+        runtimeHandle.systemHandle.kernel.lattice
+          ? runtimeHandle.systemHandle.kernel.lattice
+          : null);
 
-  if (!lattice || !Array.isArray(lattice.nodes)) return false;
-  return lattice.nodes.length === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES;
+  return !!(lattice && Array.isArray(lattice.nodes) && lattice.nodes.length === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES);
 };
 
-const validateProjectionConsistency = (statePacket) => {
-  const regionFlat = statePacket.region.key;
-  const regionTree = statePacket.region.key;
-  const regionGlobe = statePacket.region.key;
-
-  const divideFlat = statePacket.divide.classification;
-  const divideTree = statePacket.divide.classification;
-  const divideGlobe = statePacket.divide.classification;
-
-  const forcesFlat = stableStringify(statePacket.forces);
-  const forcesTree = stableStringify(statePacket.forces);
-  const forcesGlobe = stableStringify(statePacket.forces);
-
-  return (
-    regionFlat === regionTree &&
-    regionTree === regionGlobe &&
-    divideFlat === divideTree &&
-    divideTree === divideGlobe &&
-    forcesFlat === forcesTree &&
-    forcesTree === forcesGlobe
+const validateProjectionConsistency = (runtimeHandle) => {
+  const snapshots = RENDER_CONSTANTS.PROJECTIONS.map((projection) =>
+    computeProjectionInvariantSnapshot(runtimeHandle, projection)
   );
-};
 
-const validateDeterminism = (runtimeHandle, projection) => {
-  const first = buildRenderState(runtimeHandle, projection);
-  const second = buildRenderState(runtimeHandle, projection);
-  return stableStringify(first) === stableStringify(second);
+  const reference = snapshots[0];
+
+  return snapshots.every((snapshot) =>
+    snapshot.sourceKey === reference.sourceKey &&
+    snapshot.regionKey === reference.regionKey &&
+    snapshot.boundaryClass === reference.boundaryClass &&
+    snapshot.nodeId === reference.nodeId &&
+    stableStringify(snapshot.forces) === stableStringify(reference.forces) &&
+    stableStringify(snapshot.receipt) === stableStringify(reference.receipt)
+  );
 };
 
 const validateBoundaryConsistency = (renderPacket) => {
@@ -555,18 +564,28 @@ const validateReceiptConsistency = (renderPacket) => {
   if (!renderPacket.state.successorReceipt) return true;
   return (
     renderPacket.state.successorReceipt.timestamp === renderPacket.receipt.timestamp + 1 &&
-    renderPacket.visible.transitionVisibility.lineage === true
+    renderPacket.visible.transitionVisibility.lineage === true &&
+    renderPacket.visible.transitionVisibility.sourceTimestamp === renderPacket.receipt.timestamp &&
+    renderPacket.visible.transitionVisibility.successorTimestamp === renderPacket.state.successorReceipt.timestamp
   );
 };
 
 const validateArtifactDrift = (renderPacket) => {
+  const expectedColor = colorFromState(renderPacket.fullState);
+  const expectedLuminance = luminanceFromState(renderPacket.fullState);
+  const expectedDepth = depthFromProjection(renderPacket.projected);
+  const expectedBoundaryVisibility = boundaryVisibilityFromState(renderPacket.state.boundary.boundaryClass);
+  const expectedNodeForceVisibility = nodeForceVisibilityFromState(
+    renderPacket.state.node,
+    renderPacket.state.forces
+  );
+
   return (
-    renderPacket.visible.colorOutput != null &&
-    renderPacket.visible.luminanceOutput != null &&
-    renderPacket.visible.motionOutput != null &&
-    renderPacket.visible.depthOutput != null &&
-    renderPacket.visible.nodeForceVisibility != null &&
-    renderPacket.visible.validatorStatus != null
+    stableStringify(renderPacket.visible.colorOutput) === stableStringify(expectedColor) &&
+    renderPacket.visible.luminanceOutput === expectedLuminance &&
+    renderPacket.visible.depthOutput === expectedDepth &&
+    stableStringify(renderPacket.visible.boundaryVisibility) === stableStringify(expectedBoundaryVisibility) &&
+    stableStringify(renderPacket.visible.nodeForceVisibility) === stableStringify(expectedNodeForceVisibility)
   );
 };
 
@@ -576,75 +595,120 @@ const validateThresholdIntegrity = (renderPacket) => {
   const motionVisible = renderPacket.visible.motionOutput.visible;
   const transitionVisible = renderPacket.visible.transitionVisibility.visible;
 
-  if (!admissible && motionVisible) return false;
+  if (!admissible && (motionVisible || transitionVisible)) return false;
   if (boundaryBlocked && transitionVisible) return false;
+  if (renderPacket.state.successorReceipt && !transitionVisible && admissible && !boundaryBlocked) {
+    return renderPacket.visible.motionOutput.delta < RENDER_CONSTANTS.MOTION_THRESHOLD;
+  }
   return true;
 };
 
-const buildRenderState = (runtimeHandle = runtime, projection = "flat") => {
-  const extracted = extractRuntimePacket(runtimeHandle, projection);
-  const statePacket = extracted.statePacket;
+const validateSuccessorProjectionCompleteness = (renderPacket) => {
+  if (!renderPacket.state.successorReceipt) return true;
+  return !!renderPacket.successorProjected;
+};
 
-  const colorOutput = colorFromState(statePacket);
-  const luminanceOutput = luminanceFromState(statePacket);
-  const motionOutput = motionFromTransition(extracted.projected, {
-    successorProjected: extracted.successorProjected
-  });
-  const depthOutput = depthFromProjection(extracted.projected);
-  const boundaryVisibility = boundaryVisibilityFromState(statePacket.boundary.boundaryClass);
-  const nodeForceVisibility = nodeForceVisibilityFromState(statePacket.node, statePacket.forces);
+const buildVisibleOutputs = (fullState) => {
+  const colorOutput = colorFromState(fullState);
+  const luminanceOutput = luminanceFromState(fullState);
+  const depthOutput = depthFromProjection(fullState.projected);
+  const boundaryVisibility = boundaryVisibilityFromState(fullState.boundary.boundaryClass);
+  const nodeForceVisibility = nodeForceVisibilityFromState(fullState.node, fullState.forces);
+
+  const motionOutput =
+    fullState.successorReceipt && fullState.traversalStatus.admissible
+      ? motionFromTransition(fullState.projected, fullState.successorProjected)
+      : Object.freeze({
+          visible: false,
+          delta: 0,
+          vector: Object.freeze({ x: 0, y: 0, z: 0 })
+        });
+
   const transitionVisibility = transitionVisibilityFromState(
-    statePacket.receipt,
-    statePacket.successorReceipt,
-    statePacket.traversalStatus,
-    extracted.projected,
-    extracted.successorProjected || extracted.projected
+    fullState.receipt,
+    fullState.successorReceipt,
+    fullState.traversalStatus,
+    fullState.projected,
+    fullState.successorProjected || fullState.projected
   );
+
+  return Object.freeze({
+    colorOutput,
+    luminanceOutput,
+    motionOutput,
+    depthOutput,
+    boundaryVisibility,
+    nodeForceVisibility,
+    transitionVisibility
+  });
+};
+
+const runValidatorSuite = (runtimeHandle, renderPacket) => {
+  const validators = Object.freeze({
+    runtimeTraceability: () => validateRuntimeTraceability(renderPacket),
+    latticeCompleteness: () => validateLatticeCompleteness(runtimeHandle),
+    projectionConsistency: () => validateProjectionConsistency(runtimeHandle),
+    determinism: () => true,
+    boundaryConsistency: () => validateBoundaryConsistency(renderPacket),
+    receiptConsistency: () => validateReceiptConsistency(renderPacket),
+    artifactDrift: () => validateArtifactDrift(renderPacket),
+    thresholdIntegrity: () => validateThresholdIntegrity(renderPacket),
+    successorProjectionCompleteness: () => validateSuccessorProjectionCompleteness(renderPacket)
+  });
+
+  const keys = RENDER_CONSTANTS.VALIDATOR_KEYS;
+  const actualKeys = Object.keys(validators).sort();
+  const canonicalKeys = [...keys].sort();
+
+  assert(
+    stableStringify(actualKeys) === stableStringify(canonicalKeys),
+    "VALIDATOR_KEY_DRIFT"
+  );
+
+  const checks = {};
+  keys.forEach((key) => {
+    checks[key] = Boolean(validators[key]());
+  });
+
+  return Object.freeze({
+    ok: Object.values(checks).every(Boolean),
+    checks: Object.freeze(checks)
+  });
+};
+
+const buildRenderState = (runtimeHandle = runtime, projection = "flat") => {
+  const fullState = extractRuntimePacket(runtimeHandle, projection);
+  const visible = buildVisibleOutputs(fullState);
 
   const renderPacket = Object.freeze({
     meta: RENDER_META,
-    projection: extracted.projection,
-    sourceKey: `${statePacket.index.i},${statePacket.index.j}`,
+    projection: fullState.projection,
+    sourceKey: `${fullState.index.i},${fullState.index.j}`,
     state: Object.freeze({
-      index: statePacket.index,
-      region: statePacket.region,
-      divide: statePacket.divide,
-      node: statePacket.node,
-      boundary: statePacket.boundary,
-      threshold: statePacket.threshold,
-      traversalStatus: statePacket.traversalStatus,
-      successorReceipt: statePacket.successorReceipt
+      index: fullState.index,
+      region: fullState.region,
+      divide: fullState.divide,
+      node: fullState.node,
+      forces: fullState.forces,
+      boundary: fullState.boundary,
+      threshold: fullState.threshold,
+      traversalStatus: fullState.traversalStatus,
+      successorReceipt: fullState.successorReceipt
     }),
-    receipt: statePacket.receipt,
-    projected: extracted.projected,
+    receipt: fullState.receipt,
+    projected: fullState.projected,
+    successorProjected: fullState.successorProjected,
+    fullState,
     visible: Object.freeze({
-      colorOutput,
-      luminanceOutput,
-      motionOutput: statePacket.traversalStatus.admissible ? motionOutput : Object.freeze({
-        visible: false,
-        delta: 0,
-        vector: Object.freeze({ x: 0, y: 0, z: 0 })
-      }),
-      depthOutput,
-      boundaryVisibility,
-      nodeForceVisibility,
-      transitionVisibility,
-      validatorStatus: null
+      ...visible,
+      validatorStatus: Object.freeze({
+        ok: false,
+        checks: Object.freeze({})
+      })
     })
   });
 
-  const checks = Object.freeze({
-    runtimeTraceability: validateRuntimeTraceability(renderPacket),
-    latticeCompleteness: validateLatticeCompleteness(runtimeHandle),
-    projectionConsistency: validateProjectionConsistency(statePacket),
-    determinism: true,
-    boundaryConsistency: validateBoundaryConsistency(renderPacket),
-    receiptConsistency: validateReceiptConsistency(renderPacket),
-    artifactDrift: validateArtifactDrift(renderPacket),
-    thresholdIntegrity: validateThresholdIntegrity(renderPacket)
-  });
-
-  const validatorStatus = validatorStatusFromChecks(checks);
+  const validatorStatus = runValidatorSuite(runtimeHandle, renderPacket);
 
   return deepFreeze({
     ...renderPacket,
@@ -655,10 +719,77 @@ const buildRenderState = (runtimeHandle = runtime, projection = "flat") => {
   });
 };
 
+const validateDeterminism = (runtimeHandle = runtime, projection = "flat") => {
+  const first = buildRenderState(runtimeHandle, projection);
+  const second = buildRenderState(runtimeHandle, projection);
+
+  const firstComparable = Object.freeze({
+    projection: first.projection,
+    sourceKey: first.sourceKey,
+    state: first.state,
+    receipt: first.receipt,
+    projected: first.projected,
+    successorProjected: first.successorProjected,
+    visible: {
+      colorOutput: first.visible.colorOutput,
+      luminanceOutput: first.visible.luminanceOutput,
+      motionOutput: first.visible.motionOutput,
+      depthOutput: first.visible.depthOutput,
+      boundaryVisibility: first.visible.boundaryVisibility,
+      nodeForceVisibility: first.visible.nodeForceVisibility,
+      transitionVisibility: first.visible.transitionVisibility
+    }
+  });
+
+  const secondComparable = Object.freeze({
+    projection: second.projection,
+    sourceKey: second.sourceKey,
+    state: second.state,
+    receipt: second.receipt,
+    projected: second.projected,
+    successorProjected: second.successorProjected,
+    visible: {
+      colorOutput: second.visible.colorOutput,
+      luminanceOutput: second.visible.luminanceOutput,
+      motionOutput: second.visible.motionOutput,
+      depthOutput: second.visible.depthOutput,
+      boundaryVisibility: second.visible.boundaryVisibility,
+      nodeForceVisibility: second.visible.nodeForceVisibility,
+      transitionVisibility: second.visible.transitionVisibility
+    }
+  });
+
+  return stableStringify(firstComparable) === stableStringify(secondComparable);
+};
+
+const finalizeValidatorStatus = (runtimeHandle, renderPacket) => {
+  const determinism = validateDeterminism(runtimeHandle, renderPacket.projection);
+
+  const checks = Object.freeze({
+    ...renderPacket.visible.validatorStatus.checks,
+    determinism
+  });
+
+  return Object.freeze({
+    ok: Object.values(checks).every(Boolean),
+    checks
+  });
+};
+
 const render = (runtimeHandle = runtime, projection = "flat") => {
   const packet = buildRenderState(runtimeHandle, projection);
-  assert(packet.visible.validatorStatus.ok === true, "RENDER_VALIDATION_FAILED");
-  return packet;
+  const validatorStatus = finalizeValidatorStatus(runtimeHandle, packet);
+
+  const finalizedPacket = deepFreeze({
+    ...packet,
+    visible: Object.freeze({
+      ...packet.visible,
+      validatorStatus
+    })
+  });
+
+  assert(finalizedPacket.visible.validatorStatus.ok === true, "RENDER_VALIDATION_FAILED");
+  return finalizedPacket;
 };
 
 const renderFlat = (runtimeHandle = runtime) => render(runtimeHandle, "flat");
@@ -667,17 +798,18 @@ const renderGlobe = (runtimeHandle = runtime) => render(runtimeHandle, "globe");
 
 const validateRender = (runtimeHandle = runtime, projection = "flat") => {
   const packet = buildRenderState(runtimeHandle, projection);
-  const determinism = validateDeterminism(runtimeHandle, projection);
-
-  const mergedChecks = Object.freeze({
-    ...packet.visible.validatorStatus.checks,
-    determinism
-  });
+  const validatorStatus = finalizeValidatorStatus(runtimeHandle, packet);
 
   return Object.freeze({
-    ok: Object.values(mergedChecks).every(Boolean),
-    checks: mergedChecks,
-    packet
+    ok: validatorStatus.ok,
+    checks: validatorStatus.checks,
+    packet: deepFreeze({
+      ...packet,
+      visible: Object.freeze({
+        ...packet.visible,
+        validatorStatus
+      })
+    })
   });
 };
 

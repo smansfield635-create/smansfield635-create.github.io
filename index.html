@@ -54,13 +54,6 @@ const assert = (condition, code) => {
 const hasWindow = () => typeof window !== "undefined" && !!window;
 const hasDocument = () => typeof document !== "undefined" && !!document;
 
-const clamp = (value, min, max) => {
-  if (!Number.isFinite(value)) return min;
-  if (value < min) return min;
-  if (value > max) return max;
-  return value;
-};
-
 const clamp01 = (value) => {
   if (!Number.isFinite(value) || value <= 0) return 0;
   if (value >= 1) return 1;
@@ -74,15 +67,6 @@ const stableRound = (value, places = 12) => {
 
 const normalizeObject = (value) =>
   value && typeof value === "object" && !Array.isArray(value) ? value : {};
-
-const normalizeProjection = (value) => {
-  const projection = String(value || INDEX_CONSTANTS.DEFAULT_PROJECTION).toLowerCase();
-  assert(
-    projection === "flat" || projection === "tree" || projection === "globe",
-    "INVALID_INDEX_PROJECTION"
-  );
-  return projection;
-};
 
 const ensureElement = (id, tagName, parent) => {
   let element = document.getElementById(id);
@@ -431,15 +415,18 @@ const createIndexHost = () => {
 
   const refreshRuntimeForFrame = () => {
     assert(state.runtimeHandle, "RUNTIME_HANDLE_MISSING");
+    state.runtimeHandle.refreshFrameState(state.frameState);
 
     const current = state.runtimeHandle.getCurrentState();
-
-    state.runtimeHandle.reset({
-      frameState: state.frameState,
-      projection: state.projection,
-      initialX: current.denseIndex.x,
-      initialY: current.denseIndex.y
-    });
+    if (current.projectionState !== state.projection) {
+      state.runtimeHandle.reset({
+        projection: state.projection,
+        frameState: state.frameState,
+        initialX: current.denseIndex.x,
+        initialY: current.denseIndex.y,
+        planetField: state.runtimeHandle.getField()
+      });
+    }
   };
 
   const applyPendingMoveIfNeeded = () => {

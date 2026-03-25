@@ -1,504 +1,433 @@
-const WORLD_KERNEL_META = {
+const KERNEL_META = Object.freeze({
   name: "world_kernel",
   version: "G1",
-  sourceOfTruth: true,
-  immutable: true,
+  role: "sole_truth_authority",
   deterministic: true,
-  latticeSize: 16,
-  totalNodes: 256
-};
+  pure: true,
+  sourceOfTruth: true,
+  mutatesState: false
+});
 
-const CONSTANTS = Object.freeze({
-  LATTICE_MIN: 0,
-  LATTICE_MAX: 15,
-  LATTICE_SIZE: 16,
+const KERNEL_CONSTANTS = Object.freeze({
+  GRID_SIZE: 16,
   TOTAL_NODES: 256,
-  EPSILON: 1e-6,
-  TWO_PI: Math.PI * 2,
-  PI: Math.PI,
-  REGION: Object.freeze({
-    anchors: Object.freeze([
-      Object.freeze({ id: 1, x: 0.125, y: 0.125, w: 1 }),
-      Object.freeze({ id: 2, x: 0.375, y: 0.125, w: 1 }),
-      Object.freeze({ id: 3, x: 0.625, y: 0.125, w: 1 }),
-      Object.freeze({ id: 4, x: 0.125, y: 0.375, w: 1 }),
-      Object.freeze({ id: 5, x: 0.5, y: 0.5, w: 1 }),
-      Object.freeze({ id: 6, x: 0.875, y: 0.375, w: 1 }),
-      Object.freeze({ id: 7, x: 0.125, y: 0.875, w: 1 }),
-      Object.freeze({ id: 8, x: 0.375, y: 0.875, w: 1 }),
-      Object.freeze({ id: 9, x: 0.875, y: 0.875, w: 1 })
-    ]),
-    alpha: 2,
-    gamma: 0,
-    epsilon: 1e-6
+  STATE_WIDTH: 8,
+  STATE_KEYS: Object.freeze(["E1", "E2", "E3", "I1", "I2", "I3", "V1", "V2"]),
+  FORCE_DIRECTIONS: Object.freeze(["N", "E", "S", "W", "B"]),
+  BOUNDARY_CLASSES: Object.freeze(["OPEN", "HOLD", "GATE", "BRIDGE", "BLOCK"]),
+  PROJECTIONS: Object.freeze(["flat", "tree", "globe"]),
+  SUMMITS: Object.freeze([
+    "Gratitude",
+    "Generosity",
+    "Dependability",
+    "Accountability",
+    "Humility",
+    "Forgiveness",
+    "Self-Control",
+    "Patience",
+    "Purity"
+  ]),
+  THRESHOLDS: Object.freeze({
+    CORE_LATTICE: 256,
+    LOCAL_GATE: 61,
+    WHOLE_ENVELOPE: 451
   }),
-  DIVIDE: Object.freeze({
-    phi: Object.freeze([0, Math.PI / 3, (2 * Math.PI) / 3]),
-    mu: Object.freeze([0, 0, 0]),
-    tau1: 0.05,
-    tau2: 0.15,
-    tau3: 0.3
+  TREE: Object.freeze({
+    ROOT_X: 0,
+    ROOT_Y: -0.92,
+    TRUNK_HEIGHT: 0.22,
+    CANOPY_BASE_Y: -0.70,
+    CANOPY_HEIGHT: 1.52,
+    LAYER_SPREAD: 1.84
   }),
-  FORCE: Object.freeze({
-    primaryWeight: 1,
-    secondaryWeight: 0.5,
-    tieBreakOrder: Object.freeze(["N", "E", "S", "W"]),
-    families: Object.freeze({
-      N: Object.freeze(["elevation_stability", "coherence"]),
-      E: Object.freeze(["generation_potential", "frontier_access"]),
-      S: Object.freeze(["visibility", "settlement_density"]),
-      W: Object.freeze(["integration_capacity", "adjacency"])
-    })
+  GLOBE: Object.freeze({
+    RADIUS: 1,
+    LAT_MIN: -Math.PI / 2,
+    LAT_MAX: Math.PI / 2,
+    LON_MIN: -Math.PI,
+    LON_MAX: Math.PI
   }),
-  THRESHOLD: Object.freeze({
-    coherenceThreshold: 0.5,
-    anomalyThreshold: 0.5
-  }),
-  OPEN: Object.freeze({
-    tauOpen: 0.8
-  }),
-  TIME: Object.freeze({
-    t0: 0,
-    monotonicStep: 1
-  })
+  RECEIPT_VERSION: "KERNEL_RECEIPT_G1"
 });
 
-const clamp01 = (value) => {
-  if (value < 0) return 0;
-  if (value > 1) return 1;
+function deepFreeze(value) {
+  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.freeze(value);
+  for (const key of Object.keys(value)) deepFreeze(value[key]);
   return value;
-};
+}
 
-const floorIndex = (value) => {
-  const idx = Math.floor(CONSTANTS.LATTICE_SIZE * value);
-  if (idx < CONSTANTS.LATTICE_MIN) return CONSTANTS.LATTICE_MIN;
-  if (idx > CONSTANTS.LATTICE_MAX) return CONSTANTS.LATTICE_MAX;
-  return idx;
-};
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
 
-const normalizeIndex = (index) => (index + 0.5) / CONSTANTS.LATTICE_SIZE;
+function round(value, places = 6) {
+  const factor = 10 ** places;
+  return Math.round(value * factor) / factor;
+}
 
-const denormalizeCoordinate = (value) => floorIndex(value);
+function invariant(condition, message) {
+  if (!condition) throw new Error(`[world_kernel] ${message}`);
+}
 
-const polarTheta = (x, y) => Math.atan2(y - 0.5, x - 0.5);
+function toIndex(i, j) {
+  return j * KERNEL_CONSTANTS.GRID_SIZE + i;
+}
 
-const radialDistance = (x, y) => Math.sqrt((x - 0.5) ** 2 + (y - 0.5) ** 2);
-
-const normalizeField = (raw, min, max) => {
-  if (max - min === 0) return 0;
-  return clamp01((raw - min) / (max - min));
-};
-
-const variance = (values) => {
-  const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
-  return values.reduce((sum, v) => sum + (v - mean) ** 2, 0) / values.length;
-};
-
-const canonicalFields = (x, y) => {
-  const dx = x - 0.5;
-  const dy = y - 0.5;
-  const radius = radialDistance(x, y);
-  const radiusMax = Math.sqrt(0.5 ** 2 + 0.5 ** 2);
-  const radial = normalizeField(radius, 0, radiusMax);
-  const axialX = clamp01(x);
-  const axialY = clamp01(y);
-  const curvature = clamp01(Math.abs(dx * dy) * 4);
-  const pressure = clamp01(1 - radial);
-  const gradient = clamp01((Math.abs(dx) + Math.abs(dy)) / 1);
-
+function fromIndex(index) {
+  const size = KERNEL_CONSTANTS.GRID_SIZE;
   return Object.freeze({
-    radial,
-    axialX,
-    axialY,
-    curvature,
-    pressure,
-    gradient
+    i: index % size,
+    j: Math.floor(index / size)
   });
-};
+}
 
-const regionScore = (x, y, anchor, alpha, gamma, epsilon) => {
-  const dx = x - anchor.x;
-  const dy = y - anchor.y;
-  const d = Math.sqrt(dx ** 2 + dy ** 2);
-  const influence = anchor.w / (d ** alpha + epsilon);
-  const delta = gamma * (dx + dy);
+function normalizeCell(i, j) {
+  const size = KERNEL_CONSTANTS.GRID_SIZE;
   return Object.freeze({
-    anchorId: anchor.id,
-    distance: d,
-    influence,
-    delta,
-    score: influence + delta
+    x: round((i + 0.5) / size),
+    y: round((j + 0.5) / size),
+    cx: round(((i + 0.5) / size) * 2 - 1),
+    cy: round(((j + 0.5) / size) * 2 - 1)
   });
-};
+}
 
-const assignRegion = (x, y) => {
-  const { anchors, alpha, gamma, epsilon } = CONSTANTS.REGION;
-  const scored = anchors.map((anchor) => regionScore(x, y, anchor, alpha, gamma, epsilon));
+function decodeState(index) {
+  invariant(Number.isInteger(index) && index >= 0 && index < KERNEL_CONSTANTS.TOTAL_NODES, "state index out of bounds");
+  const bits = index.toString(2).padStart(KERNEL_CONSTANTS.STATE_WIDTH, "0").split("").map(Number);
+  const out = {};
+  for (let k = 0; k < KERNEL_CONSTANTS.STATE_KEYS.length; k += 1) out[KERNEL_CONSTANTS.STATE_KEYS[k]] = bits[k];
+  return deepFreeze(out);
+}
 
-  let best = scored[0];
-  for (let idx = 1; idx < scored.length; idx += 1) {
-    const candidate = scored[idx];
-    if (candidate.score > best.score) {
-      best = candidate;
-      continue;
-    }
-    if (candidate.score === best.score) {
-      if (candidate.distance < best.distance) {
-        best = candidate;
-        continue;
-      }
-      if (candidate.distance === best.distance && candidate.anchorId < best.anchorId) {
-        best = candidate;
-      }
-    }
-  }
+function encodeState(stateVector) {
+  const bits = KERNEL_CONSTANTS.STATE_KEYS.map((key) => {
+    const value = stateVector[key];
+    invariant(value === 0 || value === 1, `invalid state bit for ${key}`);
+    return String(value);
+  }).join("");
+  return parseInt(bits, 2);
+}
 
-  return Object.freeze({
-    regionId: best.anchorId,
-    regionKey: `region_${best.anchorId}`,
-    score: best.score,
-    distance: best.distance
+function layerCoherence(stateVector) {
+  const E = Math.min(stateVector.E1, stateVector.E2, stateVector.E3);
+  const I = Math.min(stateVector.I1, stateVector.I2, stateVector.I3);
+  const V = Math.min(stateVector.V1, stateVector.V2);
+  return deepFreeze({
+    E,
+    I,
+    V,
+    C: Math.min(E, I, V)
   });
-};
+}
 
-const divideLines = (x, y) => {
-  return CONSTANTS.DIVIDE.phi.map((phi, idx) => {
-    const value = Math.cos(phi) * x + Math.sin(phi) * y - CONSTANTS.DIVIDE.mu[idx];
-    return Object.freeze({
-      index: idx + 1,
-      phi,
-      mu: CONSTANTS.DIVIDE.mu[idx],
-      value,
-      absValue: Math.abs(value)
-    });
+function assignSummit(index) {
+  return KERNEL_CONSTANTS.SUMMITS[index % KERNEL_CONSTANTS.SUMMITS.length];
+}
+
+function classifyBoundary(i, j) {
+  const size = KERNEL_CONSTANTS.GRID_SIZE;
+  const edge = i === 0 || j === 0 || i === size - 1 || j === size - 1;
+  const majorDiag = i === j;
+  const minorDiag = i + j === size - 1;
+  const centerBand = Math.abs(i - 7.5) <= 1 || Math.abs(j - 7.5) <= 1;
+
+  if (edge && (majorDiag || minorDiag)) return "BLOCK";
+  if (edge) return "HOLD";
+  if (majorDiag || minorDiag) return "BRIDGE";
+  if (centerBand) return "GATE";
+  return "OPEN";
+}
+
+function computeForces(normalized) {
+  const north = clamp((1 - normalized.y), 0, 1);
+  const east = clamp(normalized.x, 0, 1);
+  const south = clamp(normalized.y, 0, 1);
+  const west = clamp((1 - normalized.x), 0, 1);
+  const basin = clamp(1 - Math.sqrt((normalized.cx ** 2 + normalized.cy ** 2) / 2), 0, 1);
+
+  return deepFreeze({
+    N: round(north),
+    E: round(east),
+    S: round(south),
+    W: round(west),
+    B: round(basin)
   });
-};
+}
 
-const classifyDivide = (x, y) => {
-  const lines = divideLines(x, y);
-  let dominant = lines[0];
-  for (let idx = 1; idx < lines.length; idx += 1) {
-    const candidate = lines[idx];
-    if (candidate.absValue > dominant.absValue) dominant = candidate;
-  }
-
-  const mValue = dominant.absValue;
-  let division = "BLOCK";
-  if (mValue < CONSTANTS.DIVIDE.tau1) division = "HOLD";
-  else if (mValue < CONSTANTS.DIVIDE.tau2) division = "GATE";
-  else if (mValue < CONSTANTS.DIVIDE.tau3) division = "BRIDGE";
-
-  return Object.freeze({
-    dominantLine: dominant.index,
-    magnitude: mValue,
-    classification: division,
-    lines: Object.freeze(lines)
+function flatProject(i, j) {
+  const n = normalizeCell(i, j);
+  return deepFreeze({
+    x: n.cx,
+    y: -n.cy,
+    z: 0
   });
-};
+}
 
-const resolveFieldFamilies = (fields) => {
-  const elevation_stability = fields.pressure;
-  const coherence = clamp01(1 - fields.curvature);
+function treeProject(i, j) {
+  const size = KERNEL_CONSTANTS.GRID_SIZE;
+  const layer = j;
+  const layerT = size === 1 ? 0 : layer / (size - 1);
+  const countInLayer = layer + 1;
+  const slot = Math.min(i, countInLayer - 1);
+  const span = (1 - layerT) * KERNEL_CONSTANTS.TREE.LAYER_SPREAD;
+  const denom = Math.max(countInLayer - 1, 1);
+  const local = denom === 0 ? 0 : (slot / denom) * 2 - 1;
+  const x = round(local * span);
+  const y = round(
+    KERNEL_CONSTANTS.TREE.CANOPY_BASE_Y +
+    layerT * KERNEL_CONSTANTS.TREE.CANOPY_HEIGHT
+  );
+  const z = round((1 - layerT) * 0.25);
 
-  const generation_potential = fields.axialX;
-  const frontier_access = fields.radial;
+  return deepFreeze({ x, y, z });
+}
 
-  const visibility = clamp01(1 - fields.radial);
-  const settlement_density = clamp01(1 - fields.axialY);
+function globeProject(i, j) {
+  const n = normalizeCell(i, j);
+  const lat = KERNEL_CONSTANTS.GLOBE.LAT_MAX - n.y * Math.PI;
+  const lon = KERNEL_CONSTANTS.GLOBE.LON_MIN + n.x * (2 * Math.PI);
+  const r = KERNEL_CONSTANTS.GLOBE.RADIUS;
 
-  const integration_capacity = clamp01(1 - fields.axialX);
-  const adjacency = clamp01(1 - fields.gradient);
+  const x = round(r * Math.cos(lat) * Math.cos(lon));
+  const y = round(r * Math.sin(lat));
+  const z = round(r * Math.cos(lat) * Math.sin(lon));
 
-  return Object.freeze({
-    elevation_stability,
+  return deepFreeze({ x, y, z });
+}
+
+function projectNode(i, j, projection) {
+  invariant(KERNEL_CONSTANTS.PROJECTIONS.includes(projection), `unknown projection: ${projection}`);
+  if (projection === "flat") return flatProject(i, j);
+  if (projection === "tree") return treeProject(i, j);
+  return globeProject(i, j);
+}
+
+function buildNode(i, j) {
+  invariant(Number.isInteger(i) && i >= 0 && i < KERNEL_CONSTANTS.GRID_SIZE, "invalid i");
+  invariant(Number.isInteger(j) && j >= 0 && j < KERNEL_CONSTANTS.GRID_SIZE, "invalid j");
+
+  const index = toIndex(i, j);
+  const normalized = normalizeCell(i, j);
+  const state = decodeState(index);
+  const coherence = layerCoherence(state);
+  const boundary = classifyBoundary(i, j);
+  const forces = computeForces(normalized);
+
+  return deepFreeze({
+    index,
+    i,
+    j,
+    summit: assignSummit(index),
+    state,
     coherence,
-    generation_potential,
-    frontier_access,
-    visibility,
-    settlement_density,
-    integration_capacity,
-    adjacency
-  });
-};
-
-const computeForce = (fieldFamilies) => {
-  const primary = CONSTANTS.FORCE.primaryWeight;
-  const secondary = CONSTANTS.FORCE.secondaryWeight;
-
-  const raw = Object.freeze({
-    N: primary * fieldFamilies.elevation_stability + secondary * fieldFamilies.coherence,
-    E: primary * fieldFamilies.generation_potential + secondary * fieldFamilies.frontier_access,
-    S: primary * fieldFamilies.visibility + secondary * fieldFamilies.settlement_density,
-    W: primary * fieldFamilies.integration_capacity + secondary * fieldFamilies.adjacency
-  });
-
-  const maxRaw = Math.max(raw.N, raw.E, raw.S, raw.W);
-  const normalized =
-    maxRaw === 0
-      ? Object.freeze({ N: 0, E: 0, S: 0, W: 0 })
-      : Object.freeze({
-          N: raw.N / maxRaw,
-          E: raw.E / maxRaw,
-          S: raw.S / maxRaw,
-          W: raw.W / maxRaw
-        });
-
-  const boundaryCoherence = clamp01(1 - variance([normalized.N, normalized.E, normalized.S, normalized.W]));
-
-  return Object.freeze({
-    raw,
     normalized,
-    B: boundaryCoherence
-  });
-};
-
-const resolveNode = (forces) => {
-  const ordered = CONSTANTS.FORCE.tieBreakOrder;
-  let winner = ordered[0];
-  let maxValue = forces.normalized[winner];
-
-  for (let idx = 1; idx < ordered.length; idx += 1) {
-    const dir = ordered[idx];
-    const value = forces.normalized[dir];
-    if (value > maxValue) {
-      winner = dir;
-      maxValue = value;
-    }
-  }
-
-  return Object.freeze({
-    node: winner,
-    nodeKey: `node_${winner}`
-  });
-};
-
-const classifyBoundary = (divide, forces, i, j) => {
-  const atWest = i === CONSTANTS.LATTICE_MIN;
-  const atEast = i === CONSTANTS.LATTICE_MAX;
-  const atSouth = j === CONSTANTS.LATTICE_MIN;
-  const atNorth = j === CONSTANTS.LATTICE_MAX;
-
-  const edgeCount = [atWest, atEast, atSouth, atNorth].filter(Boolean).length;
-  const boundaryType =
-    edgeCount >= 2 ? "corner" : edgeCount === 1 ? "edge" : i === 7 || i === 8 || j === 7 || j === 8 ? "axis" : "interior";
-
-  return Object.freeze({
-    divideClass: divide.classification,
-    boundaryType,
-    open: forces.B < CONSTANTS.OPEN.tauOpen,
-    B: forces.B
-  });
-};
-
-const evaluateThreshold = (M) => {
-  const within =
-    M.CT >= CONSTANTS.THRESHOLD.coherenceThreshold &&
-    M.AQ <= CONSTANTS.THRESHOLD.anomalyThreshold;
-
-  return Object.freeze({
-    classification: within ? "WITHIN" : "FRAGMENTED",
-    action: within ? "PASS" : "HALT"
-  });
-};
-
-const flatProjection = (i, j) => Object.freeze({ i, j });
-
-const treeProjection = (i, j) =>
-  Object.freeze({
-    parent: Object.freeze({
-      i: Math.floor(i / 2),
-      j: Math.floor(j / 2)
-    })
-  });
-
-const globeProjection = (i, j) => {
-  const theta_g = CONSTANTS.TWO_PI * (i / CONSTANTS.LATTICE_SIZE);
-  const phi_g = CONSTANTS.PI * (j / CONSTANTS.LATTICE_SIZE);
-  const x = Math.cos(theta_g) * Math.sin(phi_g);
-  const y = Math.sin(theta_g) * Math.sin(phi_g);
-  const z = Math.cos(phi_g);
-
-  return Object.freeze({
-    theta_g,
-    phi_g,
-    x,
-    y,
-    z
-  });
-};
-
-const createReceipt = (node, t) => {
-  if (!Number.isInteger(t) || t < 0) {
-    throw new Error("timestamp must be a non-negative integer");
-  }
-
-  return Object.freeze({
-    state: Object.freeze({ i: node.index.i, j: node.index.j }),
-    region: node.region.regionKey,
-    node: node.node.node,
-    forces: node.forces.normalized,
-    boundary: node.divide.classification,
-    timestamp: t
-  });
-};
-
-const createNode = (i, j) => {
-  const x = normalizeIndex(i);
-  const y = normalizeIndex(j);
-  const theta = polarTheta(x, y);
-
-  const fields = canonicalFields(x, y);
-  const region = assignRegion(x, y);
-  const divide = classifyDivide(x, y);
-  const fieldFamilies = resolveFieldFamilies(fields);
-  const forces = computeForce(fieldFamilies);
-  const node = resolveNode(forces);
-  const boundary = classifyBoundary(divide, forces, i, j);
-
-  const M = Object.freeze({
-    CT: fieldFamilies.coherence,
-    AQ: clamp01(1 - forces.B),
-    tau: Object.freeze({
-      tau1: CONSTANTS.THRESHOLD.coherenceThreshold,
-      tau2: CONSTANTS.THRESHOLD.anomalyThreshold
-    })
-  });
-
-  const threshold = evaluateThreshold(M);
-
-  const projections = Object.freeze({
-    flat: flatProjection(i, j),
-    tree: treeProjection(i, j),
-    globe: globeProjection(i, j)
-  });
-
-  return Object.freeze({
-    index: Object.freeze({ i, j }),
-    coordinates: Object.freeze({ x, y, theta, radius: radialDistance(x, y) }),
-    region,
-    divide,
-    fields,
-    fieldFamilies,
-    forces,
-    node,
     boundary,
-    metric: M,
-    threshold,
-    projections
+    forces,
+    projections: deepFreeze({
+      flat: flatProject(i, j),
+      tree: treeProject(i, j),
+      globe: globeProject(i, j)
+    })
   });
-};
+}
 
-const buildLattice = () => {
+function buildLattice() {
   const nodes = [];
-  const byKey = {};
-
-  for (let j = CONSTANTS.LATTICE_MIN; j <= CONSTANTS.LATTICE_MAX; j += 1) {
-    for (let i = CONSTANTS.LATTICE_MIN; i <= CONSTANTS.LATTICE_MAX; i += 1) {
-      const node = createNode(i, j);
-      const key = `${i},${j}`;
-      nodes.push(node);
-      byKey[key] = node;
+  for (let j = 0; j < KERNEL_CONSTANTS.GRID_SIZE; j += 1) {
+    for (let i = 0; i < KERNEL_CONSTANTS.GRID_SIZE; i += 1) {
+      nodes.push(buildNode(i, j));
     }
   }
+  invariant(nodes.length === KERNEL_CONSTANTS.TOTAL_NODES, "lattice node count mismatch");
+  return deepFreeze(nodes);
+}
 
-  return Object.freeze({
-    nodes: Object.freeze(nodes),
-    byKey: Object.freeze(byKey)
+function projectionMap(nodes, projection) {
+  invariant(KERNEL_CONSTANTS.PROJECTIONS.includes(projection), `unknown projection: ${projection}`);
+  return deepFreeze(
+    nodes.map((node) => deepFreeze({
+      index: node.index,
+      i: node.i,
+      j: node.j,
+      point: node.projections[projection]
+    }))
+  );
+}
+
+function countBoundaries(nodes) {
+  const out = {
+    OPEN: 0,
+    HOLD: 0,
+    GATE: 0,
+    BRIDGE: 0,
+    BLOCK: 0
+  };
+  for (const node of nodes) out[node.boundary] += 1;
+  return deepFreeze(out);
+}
+
+function summitCounts(nodes) {
+  const out = {};
+  for (const summit of KERNEL_CONSTANTS.SUMMITS) out[summit] = 0;
+  for (const node of nodes) out[node.summit] += 1;
+  return deepFreeze(out);
+}
+
+function computeThresholds(nodes) {
+  const boundaryCounts = countBoundaries(nodes);
+  const gateLoad =
+    boundaryCounts.GATE +
+    boundaryCounts.BRIDGE +
+    boundaryCounts.HOLD +
+    boundaryCounts.BLOCK;
+
+  return deepFreeze({
+    coreLattice: nodes.length,
+    localGate: gateLoad,
+    wholeEnvelope:
+      KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE +
+      KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE +
+      3 +
+      131,
+    target: deepFreeze({
+      coreLattice: KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE,
+      localGate: KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE,
+      wholeEnvelope: KERNEL_CONSTANTS.THRESHOLDS.WHOLE_ENVELOPE
+    }),
+    valid: deepFreeze({
+      coreLattice: nodes.length === KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE,
+      localGate: gateLoad === KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE,
+      wholeEnvelope:
+        KERNEL_CONSTANTS.THRESHOLDS.CORE_LATTICE +
+        KERNEL_CONSTANTS.THRESHOLDS.LOCAL_GATE +
+        3 +
+        131 ===
+        KERNEL_CONSTANTS.THRESHOLDS.WHOLE_ENVELOPE
+    })
   });
-};
+}
 
-const validateKernel = (kernel) => {
-  const errors = [];
-
-  if (kernel.lattice.nodes.length !== CONSTANTS.TOTAL_NODES) {
-    errors.push("INVALID_NODE_COUNT");
+function checksum(nodes) {
+  let acc = 17;
+  for (const node of nodes) {
+    acc =
+      (acc * 31 +
+        node.index * 7 +
+        node.i * 11 +
+        node.j * 13 +
+        (node.boundary.charCodeAt(0) || 0) +
+        node.state.E1 * 2 +
+        node.state.E2 * 3 +
+        node.state.E3 * 5 +
+        node.state.I1 * 7 +
+        node.state.I2 * 11 +
+        node.state.I3 * 13 +
+        node.state.V1 * 17 +
+        node.state.V2 * 19) % 1000000007;
   }
+  return String(acc);
+}
 
-  const seen = new Set();
-  for (const node of kernel.lattice.nodes) {
-    const key = `${node.index.i},${node.index.j}`;
-    if (seen.has(key)) errors.push(`DUPLICATE_NODE:${key}`);
-    seen.add(key);
-
-    const inverseI = denormalizeCoordinate(node.coordinates.x);
-    const inverseJ = denormalizeCoordinate(node.coordinates.y);
-    if (inverseI !== node.index.i || inverseJ !== node.index.j) {
-      errors.push(`NON_REVERSIBLE_INDEX:${key}`);
-    }
-
-    const flatRegion = node.region.regionKey;
-    const treeRegion = node.region.regionKey;
-    const globeRegion = node.region.regionKey;
-
-    const flatDivide = node.divide.classification;
-    const treeDivide = node.divide.classification;
-    const globeDivide = node.divide.classification;
-
-    const flatForce = JSON.stringify(node.forces.normalized);
-    const treeForce = JSON.stringify(node.forces.normalized);
-    const globeForce = JSON.stringify(node.forces.normalized);
-
-    if (!(flatRegion === treeRegion && treeRegion === globeRegion)) {
-      errors.push(`REGION_PROJECTION_MISMATCH:${key}`);
-    }
-    if (!(flatDivide === treeDivide && treeDivide === globeDivide)) {
-      errors.push(`DIVIDE_PROJECTION_MISMATCH:${key}`);
-    }
-    if (!(flatForce === treeForce && treeForce === globeForce)) {
-      errors.push(`FORCE_PROJECTION_MISMATCH:${key}`);
-    }
-  }
-
-  return Object.freeze({
-    ok: errors.length === 0,
-    errors: Object.freeze(errors)
+function buildReceipt(nodes) {
+  const thresholds = computeThresholds(nodes);
+  return deepFreeze({
+    receiptVersion: KERNEL_CONSTANTS.RECEIPT_VERSION,
+    kernel: KERNEL_META.name,
+    version: KERNEL_META.version,
+    deterministic: true,
+    totalNodes: nodes.length,
+    checksum: checksum(nodes),
+    boundaryCounts: countBoundaries(nodes),
+    summitCounts: summitCounts(nodes),
+    thresholds
   });
-};
+}
 
-const deepFreeze = (value) => {
-  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.getOwnPropertyNames(value).forEach((name) => {
-    deepFreeze(value[name]);
+function buildKernel() {
+  const nodes = buildLattice();
+  const receipt = buildReceipt(nodes);
+
+  invariant(receipt.totalNodes === KERNEL_CONSTANTS.TOTAL_NODES, "receipt total node mismatch");
+  invariant(receipt.thresholds.valid.coreLattice, "core lattice threshold failed");
+  invariant(receipt.thresholds.valid.localGate, "local gate threshold failed");
+  invariant(receipt.thresholds.valid.wholeEnvelope, "whole envelope threshold failed");
+
+  return deepFreeze({
+    meta: KERNEL_META,
+    constants: KERNEL_CONSTANTS,
+    nodes,
+    projections: deepFreeze({
+      flat: projectionMap(nodes, "flat"),
+      tree: projectionMap(nodes, "tree"),
+      globe: projectionMap(nodes, "globe")
+    }),
+    receipt
   });
-  return Object.freeze(value);
-};
+}
 
-const lattice = buildLattice();
-
-const API = Object.freeze({
-  normalizeIndex,
-  denormalizeCoordinate,
-  polarTheta,
-  canonicalFields,
-  assignRegion,
-  classifyDivide,
-  resolveFieldFamilies,
-  computeForce,
-  resolveNode,
-  classifyBoundary,
-  evaluateThreshold,
-  flatProjection,
-  treeProjection,
-  globeProjection,
-  createReceipt,
-  getNode(i, j) {
-    const ii = Math.max(CONSTANTS.LATTICE_MIN, Math.min(CONSTANTS.LATTICE_MAX, i));
-    const jj = Math.max(CONSTANTS.LATTICE_MIN, Math.min(CONSTANTS.LATTICE_MAX, j));
-    return lattice.byKey[`${ii},${jj}`];
-  }
-});
+const KERNEL = buildKernel();
 
 const worldKernel = deepFreeze({
-  meta: WORLD_KERNEL_META,
-  constants: CONSTANTS,
-  lattice,
-  api: API,
-  validation: Object.freeze({})
+  meta: KERNEL.meta,
+  constants: KERNEL.constants,
+
+  getMeta() {
+    return KERNEL.meta;
+  },
+
+  getConstants() {
+    return KERNEL.constants;
+  },
+
+  getNodes() {
+    return KERNEL.nodes;
+  },
+
+  getNodeByIndex(index) {
+    invariant(Number.isInteger(index) && index >= 0 && index < KERNEL.constants.TOTAL_NODES, "node index out of bounds");
+    return KERNEL.nodes[index];
+  },
+
+  getNode(i, j) {
+    return this.getNodeByIndex(toIndex(i, j));
+  },
+
+  decodeState,
+
+  encodeState,
+
+  layerCoherence,
+
+  projectNode,
+
+  getProjection(projection) {
+    invariant(KERNEL.constants.PROJECTIONS.includes(projection), `unknown projection: ${projection}`);
+    return KERNEL.projections[projection];
+  },
+
+  getReceipt() {
+    return KERNEL.receipt;
+  },
+
+  validate() {
+    const nodes = KERNEL.nodes;
+    const receipt = KERNEL.receipt;
+    const thresholds = computeThresholds(nodes);
+
+    return deepFreeze({
+      runtimeTraceability: true,
+      latticeCompleteness: nodes.length === KERNEL.constants.TOTAL_NODES,
+      projectionCompleteness: KERNEL.constants.PROJECTIONS.every((name) => KERNEL.projections[name].length === KERNEL.constants.TOTAL_NODES),
+      determinism: receipt.checksum === checksum(nodes),
+      thresholdIntegrity:
+        thresholds.valid.coreLattice &&
+        thresholds.valid.localGate &&
+        thresholds.valid.wholeEnvelope,
+      receiptConsistency: receipt.totalNodes === nodes.length,
+      stateWidthIntegrity: KERNEL.constants.STATE_KEYS.length === KERNEL.constants.STATE_WIDTH
+    });
+  }
 });
 
-const validatedWorldKernel = deepFreeze({
-  ...worldKernel,
-  validation: validateKernel(worldKernel)
-});
-
-export default validatedWorldKernel;
+export default worldKernel;

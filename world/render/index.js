@@ -1,12 +1,20 @@
+// /world/render.js
+// MODE: CONTRACT EXECUTION
+// CONTRACT: RENDER_BASELINE_CONTRACT_G1
+// STATUS: DETERMINISTIC EXPRESSION ONLY | NON-DRIFT | RUNTIME-SUBORDINATE
+
 import runtime from "./runtime.js";
 
 const RENDER_META = Object.freeze({
   name: "render",
   version: "G1",
+  contract: "RENDER_BASELINE_CONTRACT_G1",
   role: "deterministic_expression_layer",
   deterministic: true,
   sourceOfTruth: false,
-  mutatesState: false
+  mutatesState: false,
+  platformOwned: false,
+  runtimeSubordinate: true,
 });
 
 const RENDER_CONSTANTS = Object.freeze({
@@ -15,658 +23,699 @@ const RENDER_CONSTANTS = Object.freeze({
   FORCE_DIRECTIONS: Object.freeze(["N", "E", "S", "W"]),
   VALIDATOR_KEYS: Object.freeze([
     "runtimeTraceability",
-    "latticeCompleteness",
+    "fieldCompleteness",
     "projectionConsistency",
     "determinism",
     "boundaryConsistency",
     "receiptConsistency",
     "artifactDrift",
     "thresholdIntegrity",
-    "successorProjectionCompleteness"
+    "successorProjectionCompleteness",
   ]),
   COLOR_THRESHOLD: 0.05,
   MOTION_THRESHOLD: 0.0001,
-  DEFAULT_LIGHT: 0.5,
-  DEFAULT_SLOPE: 0.5,
-  REQUIRED_TOTAL_NODES: 256,
-  REQUIRED_LOCAL_GATE: 61,
-  WHOLE_ENVELOPE: 451,
-  NODE_RADIUS: 0.028,
-  BOUNDARY_RING_SCALE: 1.45,
-  LABEL_OFFSET: 0.065,
-  EDGE_ALPHA_MIN: 0.22,
-  EDGE_ALPHA_MAX: 0.92,
-  RECEIPT_VERSION: "RENDER_RECEIPT_G1"
 });
 
-function deepFreeze(value) {
-  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.freeze(value);
-  for (const key of Object.keys(value)) deepFreeze(value[key]);
+const deepFreeze = (value) => {
+  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.getOwnPropertyNames(value).forEach((key) => deepFreeze(value[key]));
+  return Object.freeze(value);
+};
+
+const assert = (condition, code) => {
+  if (!condition) {
+    const error = new Error(code);
+    error.code = code;
+    throw error;
+  }
+};
+
+const clamp01 = (value) => {
+  if (!Number.isFinite(value) || value <= 0) return 0;
+  if (value >= 1) return 1;
   return value;
-}
+};
 
-function invariant(condition, message) {
-  if (!condition) throw new Error(`[render] ${message}`);
-}
+const normalizeObject = (value) =>
+  value && typeof value === "object" && !Array.isArray(value) ? value : {};
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
-}
+const stableStringify = (value) => {
+  if (value === null || typeof value !== "object") return JSON.stringify(value);
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+  const keys = Object.keys(value).sort();
+  return `{${keys.map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
+};
 
-function round(value, places = 6) {
-  const factor = 10 ** places;
-  return Math.round(value * factor) / factor;
-}
+const normalizeProjection = (value) => {
+  const projection = String(value || "flat").toLowerCase();
+  assert(RENDER_CONSTANTS.PROJECTIONS.includes(projection), "INVALID_PROJECTION");
+  return projection;
+};
 
-function mix(a, b, t) {
-  return round(a + (b - a) * t);
-}
+const forcePriorityIndex = (direction) => RENDER_CONSTANTS.FORCE_DIRECTIONS.indexOf(direction);
 
-function hexToRgb(hex) {
-  const normalized = hex.replace("#", "");
-  invariant(normalized.length === 6, `invalid hex color: ${hex}`);
-  return {
-    r: parseInt(normalized.slice(0, 2), 16),
-    g: parseInt(normalized.slice(2, 4), 16),
-    b: parseInt(normalized.slice(4, 6), 16)
-  };
-}
+const sortForces = (forces) =>
+  RENDER_CONSTANTS.FORCE_DIRECTIONS
+    .map((direction) => deepFreeze({ direction, value: Number(forces[direction] || 0) }))
+    .sort((a, b) => {
+      if (b.value !== a.value) return b.value - a.value;
+      return forcePriorityIndex(a.direction) - forcePriorityIndex(b.direction);
+    });
 
-function rgbToHex({ r, g, b }) {
-  const toHex = (value) => {
-    const n = clamp(Math.round(value), 0, 255);
-    return n.toString(16).padStart(2, "0");
-  };
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
-}
+const normalizeReceipt = (receipt) => {
+  const source = normalizeObject(receipt);
+  const state = normalizeObject(source.state);
+  const region = normalizeObject(source.region);
+  const node = normalizeObject(source.node);
+  const forces = normalizeObject(source.forces);
 
-function mixHex(hexA, hexB, t) {
-  const a = hexToRgb(hexA);
-  const b = hexToRgb(hexB);
-  return rgbToHex({
-    r: mix(a.r, b.r, t),
-    g: mix(a.g, b.g, t),
-    b: mix(a.b, b.b, t)
-  });
-}
-
-function luminance(hex) {
-  const { r, g, b } = hexToRgb(hex);
-  return round((0.2126 * r + 0.7152 * g + 0.0722 * b) / 255);
-}
-
-function colorDistance(hexA, hexB) {
-  const a = hexToRgb(hexA);
-  const b = hexToRgb(hexB);
-  const dr = (a.r - b.r) / 255;
-  const dg = (a.g - b.g) / 255;
-  const db = (a.b - b.b) / 255;
-  return round(Math.sqrt(dr * dr + dg * dg + db * db));
-}
-
-const PALETTE = deepFreeze({
-  biomeBase: deepFreeze({
-    ocean: "#1f4fa3",
-    lake: "#3478c7",
-    river: "#4e96dd",
-    wetland: "#5b8c7b",
-    desert: "#c9ab6a",
-    grassland: "#7ea358",
-    forest: "#3e6f44",
-    temperate_forest: "#567b4f",
-    boreal_forest: "#436457",
-    tundra: "#9aa59f",
-    highland: "#8e826d",
-    alpine: "#b7bcc4",
-    peak: "#f1f4f8"
-  }),
-  boundaryStroke: deepFreeze({
-    OPEN: "#d8e2ec",
-    HOLD: "#f2c66d",
-    GATE: "#f07f61",
-    BRIDGE: "#85d3b0",
-    BLOCK: "#af4b45"
-  }),
-  text: deepFreeze({
-    dark: "#17212b",
-    light: "#f5f7fa"
-  })
-});
-
-function getRuntimeCells() {
-  const cells = runtime.getCells();
-  invariant(Array.isArray(cells), "runtime cells unavailable");
-  invariant(cells.length === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES, "runtime cell count mismatch");
-  return cells;
-}
-
-function computeLight(packet) {
-  const altitude =
-    packet.point.z !== undefined ? (packet.point.z + 1) * 0.5 : RENDER_CONSTANTS.DEFAULT_LIGHT;
-  const heightLight = packet.scalar.elevation * 0.45;
-  const slopeRelief = (1 - packet.scalar.slope) * 0.15;
-  const coherenceLift = packet.scalar.coherence * 0.10;
-  const rainfallDim = packet.scalar.rainfall * 0.06;
-  return round(clamp(
-    0.30 + altitude * 0.24 + heightLight + slopeRelief + coherenceLift - rainfallDim,
-    0,
-    1
-  ));
-}
-
-function computeMotion(packet, projection) {
-  const radial =
-    projection === "globe"
-      ? Math.abs(packet.point.z) * 0.35
-      : projection === "tree"
-        ? Math.abs(packet.point.x) * 0.22
-        : Math.abs(packet.point.y) * 0.12;
-
-  const flow = clamp(packet.scalar.flowAccumulation / 10, 0, 1) * 0.30;
-  const slope = packet.scalar.slope * 0.18;
-  return round(clamp(radial + flow + slope, 0, 1));
-}
-
-function computeRadius(packet) {
-  const boundaryBoost =
-    packet.boundary === "BLOCK" ? 0.012 :
-    packet.boundary === "GATE" ? 0.009 :
-    packet.boundary === "BRIDGE" ? 0.007 :
-    packet.boundary === "HOLD" ? 0.004 : 0;
-
-  const waterAdjust =
-    packet.waterClass === "ocean" ? 0.004 :
-    packet.waterClass === "lake" ? 0.003 :
-    packet.waterClass === "river" ? -0.003 : 0;
-
-  return round(clamp(
-    RENDER_CONSTANTS.NODE_RADIUS +
-    packet.scalar.elevation * 0.012 +
-    packet.scalar.coherence * 0.010 +
-    boundaryBoost +
-    waterAdjust,
-    0.016,
-    0.060
-  ));
-}
-
-function computeFillColor(packet, light) {
-  const base = PALETTE.biomeBase[packet.biome] || "#888888";
-  const highlight = packet.waterClass === "ocean" || packet.waterClass === "lake" || packet.waterClass === "river"
-    ? "#dff3ff"
-    : "#ffffff";
-  const shadow = "#101820";
-
-  const lit = mixHex(base, highlight, clamp(light * 0.42, 0, 0.42));
-  return mixHex(lit, shadow, clamp((1 - light) * 0.24, 0, 0.24));
-}
-
-function computeStrokeColor(packet, fillColor) {
-  const boundary = PALETTE.boundaryStroke[packet.boundary];
-  return colorDistance(fillColor, boundary) < RENDER_CONSTANTS.COLOR_THRESHOLD
-    ? mixHex(boundary, "#ffffff", 0.18)
-    : boundary;
-}
-
-function computeLabelColor(fillColor) {
-  return luminance(fillColor) > 0.56 ? PALETTE.text.dark : PALETTE.text.light;
-}
-
-function computeOpacity(packet, light) {
-  const waterOpacity =
-    packet.waterClass === "ocean" ? 0.82 :
-    packet.waterClass === "lake" ? 0.86 :
-    packet.waterClass === "river" ? 0.90 : 0.96;
-
-  return round(clamp(waterOpacity - (1 - light) * 0.08, 0.60, 1));
-}
-
-function computeRing(packet, radius) {
-  const needed =
-    packet.boundary === "GATE" ||
-    packet.boundary === "BRIDGE" ||
-    packet.boundary === "BLOCK" ||
-    packet.boundary === "HOLD";
+  assert(Number.isInteger(state.i) && Number.isInteger(state.j), "INVALID_RECEIPT_STATE");
+  assert(Number.isFinite(source.timestamp), "INVALID_RECEIPT_TIMESTAMP");
 
   return deepFreeze({
-    enabled: needed,
-    radius: needed ? round(radius * RENDER_CONSTANTS.BOUNDARY_RING_SCALE) : 0,
-    stroke: needed ? PALETTE.boundaryStroke[packet.boundary] : null,
-    alpha: needed
-      ? round(clamp(
-          packet.boundary === "BLOCK" ? 0.90 :
-          packet.boundary === "GATE" ? 0.78 :
-          packet.boundary === "BRIDGE" ? 0.66 : 0.54,
-          0,
-          1
-        ))
-      : 0
-  });
-}
-
-function computeLabel(packet, radius, labelColor) {
-  return deepFreeze({
-    text: `${packet.region}`,
-    shortText: `${packet.region.slice(0, 3).toUpperCase()}`,
-    color: labelColor,
-    anchor: deepFreeze({
-      x: round(packet.point.x),
-      y: round(packet.point.y + radius + RENDER_CONSTANTS.LABEL_OFFSET),
-      z: round(packet.point.z)
-    })
-  });
-}
-
-function buildNodeArtifact(packet, projection) {
-  const light = computeLight(packet);
-  const motion = computeMotion(packet, projection);
-  const radius = computeRadius(packet);
-  const fill = computeFillColor(packet, light);
-  const stroke = computeStrokeColor(packet, fill);
-  const labelColor = computeLabelColor(fill);
-  const opacity = computeOpacity(packet, light);
-  const ring = computeRing(packet, radius);
-  const label = computeLabel(packet, radius, labelColor);
-
-  return deepFreeze({
-    index: packet.index,
-    i: packet.i,
-    j: packet.j,
-    region: packet.region,
-    summit: packet.summit,
-    biome: packet.biome,
-    boundary: packet.boundary,
-    waterClass: packet.waterClass,
-    point: deepFreeze({
-      x: round(packet.point.x),
-      y: round(packet.point.y),
-      z: round(packet.point.z)
+    state: deepFreeze({
+      i: state.i,
+      j: state.j,
     }),
-    style: deepFreeze({
-      radius,
-      fill,
-      stroke,
-      labelColor,
-      opacity,
-      light,
-      motion
+    region:
+      typeof source.region === "string"
+        ? source.region
+        : deepFreeze({
+            regionId: region.regionId,
+            label: typeof region.label === "string" ? region.label : String(region.regionId),
+          }),
+    node:
+      typeof source.node === "string"
+        ? source.node
+        : deepFreeze({
+            nodeId: node.nodeId,
+            label: typeof node.label === "string" ? node.label : String(node.nodeId),
+          }),
+    forces: deepFreeze({
+      N: Number(forces.N || 0),
+      E: Number(forces.E || 0),
+      S: Number(forces.S || 0),
+      W: Number(forces.W || 0),
+      B: Number(forces.B || 0),
     }),
-    ring,
-    label,
-    scalar: packet.scalar
+    boundary: source.boundary,
+    timestamp: source.timestamp,
   });
-}
+};
 
-function buildEdgeArtifact(nodeA, nodeB) {
-  const sameRegion = nodeA.region === nodeB.region;
-  const bridgeBonus =
-    nodeA.boundary === "BRIDGE" || nodeB.boundary === "BRIDGE" ? 0.18 : 0;
-  const gateBonus =
-    nodeA.boundary === "GATE" || nodeB.boundary === "GATE" ? 0.12 : 0;
-  const blockPenalty =
-    nodeA.boundary === "BLOCK" || nodeB.boundary === "BLOCK" ? 0.22 : 0;
-  const elevationContrast = Math.abs(nodeA.scalar.elevation - nodeB.scalar.elevation) * 0.35;
+const normalizeBoundaryClass = (value) => {
+  const boundaryClass = String(value || "").toUpperCase();
+  assert(RENDER_CONSTANTS.BOUNDARY_CLASSES.includes(boundaryClass), "INVALID_BOUNDARY_CLASS");
+  return boundaryClass;
+};
 
-  const alpha = round(clamp(
-    (sameRegion ? 0.52 : 0.36) +
-    bridgeBonus +
-    gateBonus -
-    blockPenalty -
-    elevationContrast,
-    RENDER_CONSTANTS.EDGE_ALPHA_MIN,
-    RENDER_CONSTANTS.EDGE_ALPHA_MAX
-  ));
+const normalizeRuntimePacket = (runtimePacket) => {
+  const packet = normalizeObject(runtimePacket);
+  const index = normalizeObject(packet.index);
+  const denseIndex = normalizeObject(packet.denseIndex);
+  const region = normalizeObject(packet.region);
+  const divide = normalizeObject(packet.divide);
+  const node = normalizeObject(packet.node);
+  const boundary = normalizeObject(packet.boundary);
+  const forces = normalizeObject(packet.forces);
+  const force = normalizeObject(packet.force);
+  const threshold = normalizeObject(packet.threshold);
+  const receipt = normalizeReceipt(packet.receipt);
+  const traversalStatus = normalizeObject(packet.traversalStatus);
+  const projections = normalizeObject(packet.projections);
+  const fields = normalizeObject(packet.fields);
+  const derived = normalizeObject(packet.derived);
 
-  const color = sameRegion
-    ? mixHex(nodeA.style.fill, nodeB.style.fill, 0.50)
-    : mixHex(nodeA.style.stroke, nodeB.style.stroke, 0.50);
+  assert(Number.isInteger(index.i) && Number.isInteger(index.j), "INVALID_RUNTIME_INDEX");
+  assert(Number.isInteger(denseIndex.x) && Number.isInteger(denseIndex.y), "INVALID_RUNTIME_DENSE_INDEX");
+  assert(
+    typeof region.label === "string" || Number.isFinite(region.regionId),
+    "INVALID_RUNTIME_REGION",
+  );
+  assert(
+    typeof divide.label === "string" || Number.isFinite(divide.divideId),
+    "INVALID_RUNTIME_DIVIDE",
+  );
+  assert(typeof node.label === "string" || Number.isFinite(node.nodeId), "INVALID_RUNTIME_NODE");
+  assert(typeof boundary.classification === "string", "INVALID_RUNTIME_BOUNDARY");
+  assert(typeof threshold.action === "string", "INVALID_RUNTIME_THRESHOLD");
+  assert(typeof traversalStatus.action === "string", "INVALID_RUNTIME_TRAVERSAL");
+  assert(projections.flat && projections.tree && projections.globe, "INVALID_RUNTIME_PROJECTIONS");
 
   return deepFreeze({
-    from: nodeA.index,
-    to: nodeB.index,
-    points: deepFreeze([
-      deepFreeze({ x: nodeA.point.x, y: nodeA.point.y, z: nodeA.point.z }),
-      deepFreeze({ x: nodeB.point.x, y: nodeB.point.y, z: nodeB.point.z })
-    ]),
-    alpha,
-    color
+    index: deepFreeze({ i: index.i, j: index.j }),
+    denseIndex: deepFreeze({ x: denseIndex.x, y: denseIndex.y }),
+    projectionState: normalizeProjection(packet.projectionState || "flat"),
+    selectedProjection: packet.selectedProjection || null,
+    region: deepFreeze({
+      regionId: region.regionId,
+      label: typeof region.label === "string" ? region.label : String(region.regionId),
+    }),
+    divide: deepFreeze({
+      divideId: divide.divideId,
+      label: typeof divide.label === "string" ? divide.label : String(divide.divideId),
+    }),
+    node: deepFreeze({
+      nodeId: node.nodeId,
+      label: typeof node.label === "string" ? node.label : String(node.nodeId),
+    }),
+    boundary: deepFreeze({
+      ...boundary,
+      classification: normalizeBoundaryClass(boundary.classification),
+    }),
+    forces: deepFreeze({
+      N: Number(forces.N || 0),
+      E: Number(forces.E || 0),
+      S: Number(forces.S || 0),
+      W: Number(forces.W || 0),
+      B: Number(forces.B || 0),
+    }),
+    force,
+    threshold,
+    receipt,
+    successorReceipt: packet.successorReceipt ? normalizeReceipt(packet.successorReceipt) : null,
+    traversalStatus,
+    projections,
+    fields,
+    derived,
+    terrainClass: String(packet.terrainClass || "UNKNOWN"),
+    biomeType: String(packet.biomeType || "UNKNOWN"),
+    surfaceMaterial: String(packet.surfaceMaterial || "UNKNOWN"),
+    climateBand: packet.climateBand !== undefined && packet.climateBand !== null ? String(packet.climateBand) : null,
+    climate: Number(packet.climate || 0),
+    moisture: Number(packet.moisture || 0),
+    accumulation: Number(packet.accumulation || 0),
+    shorelineMask: Number(packet.shorelineMask || 0),
+    landMask: Number(packet.landMask || 0),
+    waterMask: Number(packet.waterMask || 0),
+    habitability: Number(packet.habitability || 0),
+    traversalDifficulty: Number(packet.traversalDifficulty || 0),
+    dynamicIllumination: Number(packet.dynamicIllumination || 0),
+    dynamicCloudBias: Number(packet.dynamicCloudBias || 0),
+    dynamicStormBias: Number(packet.dynamicStormBias || 0),
+    dynamicCurrentBias: Number(packet.dynamicCurrentBias || 0),
+    dynamicAuroraBias: Number(packet.dynamicAuroraBias || 0),
+    dynamicGlowBias: Number(packet.dynamicGlowBias || 0),
+    motionState: normalizeObject(packet.motionState),
+    visualLight: Number(packet.visualLight || 0),
   });
-}
+};
 
-function buildProjectionArtifacts(projection) {
-  const packets = runtime.getProjection(projection);
-  invariant(
-    Array.isArray(packets) && packets.length === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES,
-    `projection packet count mismatch: ${projection}`
+const projectionCoordinatesFromSelected = (projectionState, selectedProjection) => {
+  const selected = normalizeObject(selectedProjection);
+
+  if (projectionState === "flat") {
+    assert(Number.isFinite(selected.x) && Number.isFinite(selected.y), "INVALID_FLAT_PROJECTION");
+    return deepFreeze({ x: selected.x, y: selected.y, z: 0 });
+  }
+
+  if (projectionState === "tree") {
+    assert(
+      Number.isFinite(selected.root) &&
+        (typeof selected.branch === "string" || Number.isFinite(selected.branch)) &&
+        Number.isFinite(selected.leaf),
+      "INVALID_TREE_PROJECTION",
+    );
+    const x = selected.root / 9;
+    const y = selected.leaf / 16;
+    return deepFreeze({ x, y, z: 0 });
+  }
+
+  assert(
+    Number.isFinite(selected.x) && Number.isFinite(selected.y) && Number.isFinite(selected.z),
+    "INVALID_GLOBE_PROJECTION",
   );
 
-  const nodes = packets.map((packet) => buildNodeArtifact(packet, projection));
-  const nodeMap = new Map(nodes.map((node) => [node.index, node]));
-  const edges = [];
-  const seen = new Set();
-
-  for (const node of nodes) {
-    const neighbors = runtime.getNeighbors(node.index);
-    for (const neighbor of neighbors) {
-      const low = Math.min(node.index, neighbor.index);
-      const high = Math.max(node.index, neighbor.index);
-      const key = `${low}:${high}`;
-      if (seen.has(key)) continue;
-      seen.add(key);
-
-      const other = nodeMap.get(neighbor.index);
-      if (!other) continue;
-      edges.push(buildEdgeArtifact(node, other));
-    }
-  }
-
   return deepFreeze({
-    projection,
-    nodes: deepFreeze(nodes),
-    edges: deepFreeze(edges)
+    x: selected.x,
+    y: selected.y,
+    z: selected.z,
   });
-}
+};
 
-function buildProjectionSuite() {
-  const suite = {};
-  for (const projection of RENDER_CONSTANTS.PROJECTIONS) {
-    suite[projection] = buildProjectionArtifacts(projection);
-  }
-  return deepFreeze(suite);
-}
+const selectProjectionPacket = (runtimePacket) => {
+  const projectionState = runtimePacket.projectionState;
+  const selectedProjection =
+    runtimePacket.selectedProjection || runtimePacket.projections[projectionState] || null;
 
-function countBoundaryNodes(nodes) {
-  const counts = {
-    OPEN: 0,
-    HOLD: 0,
-    GATE: 0,
-    BRIDGE: 0,
-    BLOCK: 0
-  };
-  for (const node of nodes) counts[node.boundary] += 1;
-  return deepFreeze(counts);
-}
-
-function collectProjectionSummary(artifacts) {
-  const nodes = artifacts.nodes;
-  let minX = Infinity;
-  let maxX = -Infinity;
-  let minY = Infinity;
-  let maxY = -Infinity;
-  let minZ = Infinity;
-  let maxZ = -Infinity;
-  let averageLight = 0;
-  let averageMotion = 0;
-
-  for (const node of nodes) {
-    if (node.point.x < minX) minX = node.point.x;
-    if (node.point.x > maxX) maxX = node.point.x;
-    if (node.point.y < minY) minY = node.point.y;
-    if (node.point.y > maxY) maxY = node.point.y;
-    if (node.point.z < minZ) minZ = node.point.z;
-    if (node.point.z > maxZ) maxZ = node.point.z;
-    averageLight += node.style.light;
-    averageMotion += node.style.motion;
-  }
-
-  const denom = Math.max(nodes.length, 1);
+  assert(selectedProjection, "MISSING_SELECTED_PROJECTION");
 
   return deepFreeze({
-    nodeCount: nodes.length,
-    edgeCount: artifacts.edges.length,
-    extent: deepFreeze({
-      minX: round(minX),
-      maxX: round(maxX),
-      minY: round(minY),
-      maxY: round(maxY),
-      minZ: round(minZ),
-      maxZ: round(maxZ)
+    projectionState,
+    selectedProjection,
+    coordinates: projectionCoordinatesFromSelected(projectionState, selectedProjection),
+  });
+};
+
+const normalizeSuccessorPacket = (runtimeHandle) => {
+  const successorReceipt =
+    typeof runtimeHandle.getSuccessorReceipt === "function" ? runtimeHandle.getSuccessorReceipt() : null;
+
+  if (!successorReceipt) return null;
+
+  const successorState =
+    typeof runtimeHandle.getStateByReceipt === "function"
+      ? runtimeHandle.getStateByReceipt(successorReceipt)
+      : null;
+
+  assert(successorState, "MISSING_SUCCESSOR_STATE");
+
+  const normalizedSuccessor = normalizeRuntimePacket(successorState);
+  const selected = selectProjectionPacket(normalizedSuccessor);
+
+  return deepFreeze({
+    receipt: normalizeReceipt(successorReceipt),
+    state: normalizedSuccessor,
+    selectedProjection: selected.selectedProjection,
+    coordinates: selected.coordinates,
+  });
+};
+
+const buildColorOutput = (packet) => {
+  const terrainHue = Object.freeze({
+    BASIN: 0.58,
+    PLAIN: 0.22,
+    PLATEAU: 0.16,
+    RIDGE: 0.12,
+    MOUNTAIN: 0.08,
+    SUMMIT: 0.04,
+  });
+
+  const biomeSat = Object.freeze({
+    DESERT: 0.35,
+    GRASSLAND: 0.5,
+    FOREST: 0.62,
+    RAINFOREST: 0.78,
+    GLACIER: 0.1,
+    TUNDRA: 0.16,
+  });
+
+  const elevationProxy = clamp01(1 - Number(packet.forces.B || 0));
+  const climate = clamp01(packet.climate);
+  const moisture = clamp01(packet.moisture);
+
+  const baseHue = terrainHue[packet.terrainClass] ?? 0.5;
+  const baseSat = biomeSat[packet.biomeType] ?? 0.4;
+  const value = clamp01(0.35 + climate * 0.25 + moisture * 0.15 + elevationProxy * 0.25);
+
+  return deepFreeze({
+    terrainClass: packet.terrainClass,
+    biomeType: packet.biomeType,
+    hue: baseHue,
+    saturation: clamp01(baseSat),
+    value,
+  });
+};
+
+const buildLuminanceOutput = (packet) => {
+  const illumination = clamp01(packet.dynamicIllumination);
+  const gradient = clamp01(Number(packet.fields.boundaryPressure || 0));
+  const climate = clamp01(packet.climate);
+  const moisture = clamp01(packet.moisture);
+  return clamp01(illumination * 0.45 + (1 - gradient) * 0.2 + climate * 0.2 + moisture * 0.15);
+};
+
+const buildDepthOutput = (projectionCoordinates) => clamp01((Number(projectionCoordinates.z || 0) + 1) / 2);
+
+const buildBoundaryVisibility = (boundaryClass) =>
+  deepFreeze({
+    OPEN: boundaryClass === "OPEN",
+    HOLD: boundaryClass === "HOLD",
+    GATE: boundaryClass === "GATE",
+    BRIDGE: boundaryClass === "BRIDGE",
+    BLOCK: boundaryClass === "BLOCK",
+  });
+
+const buildNodeForceVisibility = (packet) => {
+  const sorted = sortForces(packet.forces);
+
+  return deepFreeze({
+    nodeId: packet.node.nodeId,
+    nodeLabel: packet.node.label,
+    dominantForce: sorted[0].direction,
+    dominantValue: sorted[0].value,
+    secondaryForce: sorted[1].direction,
+    secondaryValue: sorted[1].value,
+    inspectableForces: deepFreeze({
+      N: packet.forces.N,
+      E: packet.forces.E,
+      S: packet.forces.S,
+      W: packet.forces.W,
+      B: packet.forces.B,
     }),
-    averageLight: round(averageLight / denom),
-    averageMotion: round(averageMotion / denom),
-    boundaryCounts: countBoundaryNodes(nodes)
   });
-}
+};
 
-function buildOverlayArtifacts(runtimeCells, flatNodes) {
-  const focus = runtime.getFocusCell();
-  const flatFocus = flatNodes.find((node) => node.index === focus.index);
-
-  const regionAnchors = runtime.getRegionPackets().map((region) => {
-    const members = flatNodes.filter((node) => node.region === region.name);
-    let x = 0;
-    let y = 0;
-    let z = 0;
-
-    for (const node of members) {
-      x += node.point.x;
-      y += node.point.y;
-      z += node.point.z;
-    }
-
-    const denom = Math.max(members.length, 1);
-
+const buildMotionOutput = (packet, successorPacket) => {
+  if (!successorPacket || packet.runtime.traversalStatus.admissible !== true) {
     return deepFreeze({
-      region: region.name,
-      anchor: deepFreeze({
-        x: round(x / denom),
-        y: round(y / denom + 0.09),
-        z: round(z / denom)
+      visible: false,
+      delta: 0,
+      vector: deepFreeze({ x: 0, y: 0, z: 0 }),
+    });
+  }
+
+  const dx = successorPacket.coordinates.x - packet.projection.coordinates.x;
+  const dy = successorPacket.coordinates.y - packet.projection.coordinates.y;
+  const dz = successorPacket.coordinates.z - packet.projection.coordinates.z;
+  const delta = Math.sqrt(dx * dx + dy * dy + dz * dz);
+
+  return deepFreeze({
+    visible: delta >= RENDER_CONSTANTS.MOTION_THRESHOLD,
+    delta,
+    vector: deepFreeze({ x: dx, y: dy, z: dz }),
+  });
+};
+
+const buildTransitionVisibility = (packet, successorPacket, motionOutput) => {
+  const currentReceipt = packet.runtime.receipt;
+  const successorReceipt = successorPacket ? successorPacket.receipt : null;
+
+  const lineage =
+    !!successorReceipt &&
+    successorReceipt.timestamp === currentReceipt.timestamp + 1 &&
+    successorReceipt.state.i === successorPacket.state.index.i &&
+    successorReceipt.state.j === successorPacket.state.index.j;
+
+  if (packet.runtime.traversalStatus.admissible !== true || !lineage) {
+    return deepFreeze({
+      visible: false,
+      admissible: packet.runtime.traversalStatus.admissible === true,
+      lineage,
+      sourceTimestamp: currentReceipt.timestamp,
+      successorTimestamp: successorReceipt ? successorReceipt.timestamp : null,
+      delta: 0,
+    });
+  }
+
+  return deepFreeze({
+    visible: motionOutput.visible,
+    admissible: true,
+    lineage: true,
+    sourceTimestamp: currentReceipt.timestamp,
+    successorTimestamp: successorReceipt.timestamp,
+    delta: motionOutput.delta,
+  });
+};
+
+const validateRuntimeTraceability = (packet) =>
+  packet.runtime.receipt.state.i === packet.runtime.index.i &&
+  packet.runtime.receipt.state.j === packet.runtime.index.j &&
+  packet.runtime.denseIndex.x === packet.sourceDense.x &&
+  packet.runtime.denseIndex.y === packet.sourceDense.y;
+
+const validateFieldCompleteness = (runtimeHandle) => {
+  const field = typeof runtimeHandle.getField === "function" ? runtimeHandle.getField() : null;
+
+  const width = Number(field && field.width);
+  const height = Number(field && field.height);
+  const samples = field && Array.isArray(field.samples) ? field.samples : null;
+
+  if (!(Number.isInteger(width) && Number.isInteger(height) && samples && samples.length === height)) {
+    return false;
+  }
+
+  for (let y = 0; y < height; y += 1) {
+    if (!Array.isArray(samples[y]) || samples[y].length !== width) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const validateProjectionConsistency = (packet) => {
+  const base = packet.runtime;
+
+  const variants = RENDER_CONSTANTS.PROJECTIONS.map((projection) => {
+    const selected = base.projections[projection];
+    assert(selected, "MISSING_PROJECTION_VARIANT");
+    return deepFreeze({
+      projection,
+      regionLabel: base.region.label,
+      boundaryClass: base.boundary.classification,
+      nodeId: base.node.nodeId,
+      forces: base.forces,
+      receipt: deepFreeze({
+        state: base.receipt.state,
+        region: base.receipt.region,
+        node: base.receipt.node,
+        boundary: base.receipt.boundary,
+        timestamp: base.receipt.timestamp,
       }),
-      cellCount: region.cellCount
+      selected,
     });
   });
 
-  const gateMarkers = flatNodes
-    .filter((node) => node.boundary === "GATE")
-    .map((node) =>
-      deepFreeze({
-        index: node.index,
-        point: node.point,
-        radius: round(node.style.radius * 1.18)
-      })
-    );
+  const reference = variants[0];
+  return variants.every(
+    (variant) =>
+      variant.regionLabel === reference.regionLabel &&
+      variant.boundaryClass === reference.boundaryClass &&
+      variant.nodeId === reference.nodeId &&
+      stableStringify(variant.forces) === stableStringify(reference.forces) &&
+      stableStringify(variant.receipt) === stableStringify(reference.receipt),
+  );
+};
 
-  return deepFreeze({
-    focus: deepFreeze({
-      index: focus.index,
-      point: flatFocus ? flatFocus.point : { x: 0, y: 0, z: 0 },
-      radius: flatFocus ? round(flatFocus.style.radius * 1.55) : 0.05,
-      color: "#ffffff"
-    }),
-    regionAnchors: deepFreeze(regionAnchors),
-    gateMarkers: deepFreeze(gateMarkers),
-    totalRuntimeCells: runtimeCells.length
-  });
-}
+const validateBoundaryConsistency = (packet) => {
+  const visible = packet.visible.boundaryVisibility;
+  const active = packet.runtime.boundary.classification;
+  return Object.keys(visible).every((key) => visible[key] === (key === active));
+};
 
-function computeChecksum(renderState) {
-  let acc = 31;
+const validateReceiptConsistency = (packet) => {
+  const currentReceipt = packet.runtime.receipt;
+  const successorReceipt = packet.successor ? packet.successor.receipt : null;
 
-  for (const projection of RENDER_CONSTANTS.PROJECTIONS) {
-    const artifacts = renderState.projections[projection];
-    for (const node of artifacts.nodes) {
-      const fill = node.style.fill;
-      acc = (
-        acc * 43 +
-        node.index * 19 +
-        Math.round(node.point.x * 1000) +
-        Math.round(node.point.y * 1000) +
-        Math.round(node.point.z * 1000) +
-        Math.round(node.style.radius * 1000) +
-        Math.round(node.style.light * 1000) +
-        Math.round(node.style.motion * 1000) +
-        (fill.charCodeAt(1) || 0) +
-        (fill.charCodeAt(2) || 0) +
-        (fill.charCodeAt(3) || 0) +
-        (fill.charCodeAt(4) || 0) +
-        (fill.charCodeAt(5) || 0) +
-        (fill.charCodeAt(6) || 0)
-      ) % 1000000007;
-    }
+  if (!successorReceipt) return true;
+
+  return (
+    successorReceipt.timestamp === currentReceipt.timestamp + 1 &&
+    packet.visible.transitionVisibility.lineage === true &&
+    packet.visible.transitionVisibility.sourceTimestamp === currentReceipt.timestamp &&
+    packet.visible.transitionVisibility.successorTimestamp === successorReceipt.timestamp
+  );
+};
+
+const validateArtifactDrift = (packet) => {
+  const expectedColor = buildColorOutput(packet.runtime);
+  const expectedLuminance = buildLuminanceOutput(packet.runtime);
+  const expectedDepth = buildDepthOutput(packet.projection.coordinates);
+  const expectedBoundaryVisibility = buildBoundaryVisibility(packet.runtime.boundary.classification);
+  const expectedNodeForceVisibility = buildNodeForceVisibility(packet.runtime);
+
+  return (
+    stableStringify(packet.visible.colorOutput) === stableStringify(expectedColor) &&
+    packet.visible.luminanceOutput === expectedLuminance &&
+    packet.visible.depthOutput === expectedDepth &&
+    stableStringify(packet.visible.boundaryVisibility) === stableStringify(expectedBoundaryVisibility) &&
+    stableStringify(packet.visible.nodeForceVisibility) === stableStringify(expectedNodeForceVisibility)
+  );
+};
+
+const validateThresholdIntegrity = (packet) => {
+  const admissible = packet.runtime.traversalStatus.admissible;
+  const blocked = packet.runtime.boundary.classification === "BLOCK";
+  const motionVisible = packet.visible.motionOutput.visible;
+  const transitionVisible = packet.visible.transitionVisibility.visible;
+
+  if (!admissible && (motionVisible || transitionVisible)) return false;
+  if (blocked && transitionVisible) return false;
+  if (packet.successor && !transitionVisible && admissible && !blocked) {
+    return packet.visible.motionOutput.delta < RENDER_CONSTANTS.MOTION_THRESHOLD;
   }
 
-  return String(acc);
-}
+  return true;
+};
 
-function buildReceipt(renderState) {
-  const runtimeReceipt = runtime.getReceipt();
+const validateSuccessorProjectionCompleteness = (packet) => {
+  if (!packet.successor) return true;
+  return !!(packet.successor.selectedProjection && packet.successor.coordinates);
+};
+
+const runValidatorSuite = (runtimeHandle, packet) => {
+  const validators = Object.freeze({
+    runtimeTraceability: () => validateRuntimeTraceability(packet),
+    fieldCompleteness: () => validateFieldCompleteness(runtimeHandle),
+    projectionConsistency: () => validateProjectionConsistency(packet),
+    determinism: () => true,
+    boundaryConsistency: () => validateBoundaryConsistency(packet),
+    receiptConsistency: () => validateReceiptConsistency(packet),
+    artifactDrift: () => validateArtifactDrift(packet),
+    thresholdIntegrity: () => validateThresholdIntegrity(packet),
+    successorProjectionCompleteness: () => validateSuccessorProjectionCompleteness(packet),
+  });
+
+  const actualKeys = Object.keys(validators).sort();
+  const canonicalKeys = [...RENDER_CONSTANTS.VALIDATOR_KEYS].sort();
+
+  assert(stableStringify(actualKeys) === stableStringify(canonicalKeys), "VALIDATOR_KEY_DRIFT");
+
+  const checks = {};
+  RENDER_CONSTANTS.VALIDATOR_KEYS.forEach((key) => {
+    checks[key] = Boolean(validators[key]());
+  });
 
   return deepFreeze({
-    receiptVersion: RENDER_CONSTANTS.RECEIPT_VERSION,
-    render: RENDER_META.name,
-    version: RENDER_META.version,
-    deterministic: true,
-    runtimeChecksum: runtimeReceipt.runtimeChecksum,
-    renderChecksum: computeChecksum(renderState),
-    requiredTotalNodes: RENDER_CONSTANTS.REQUIRED_TOTAL_NODES,
-    requiredLocalGate: RENDER_CONSTANTS.REQUIRED_LOCAL_GATE,
-    wholeEnvelope: RENDER_CONSTANTS.WHOLE_ENVELOPE,
-    projectionSummaries: deepFreeze({
-      flat: collectProjectionSummary(renderState.projections.flat),
-      tree: collectProjectionSummary(renderState.projections.tree),
-      globe: collectProjectionSummary(renderState.projections.globe)
-    }),
-    overlay: deepFreeze({
-      regionAnchorCount: renderState.overlay.regionAnchors.length,
-      gateMarkerCount: renderState.overlay.gateMarkers.length,
-      focusIndex: renderState.overlay.focus.index
-    })
+    ok: Object.values(checks).every(Boolean),
+    checks: deepFreeze(checks),
   });
-}
+};
 
-function buildValidators(renderState) {
-  const runtimeValidation = runtime.validate();
-  const receipt = renderState.receipt;
-  const flatSummary = receipt.projectionSummaries.flat;
-  const treeSummary = receipt.projectionSummaries.tree;
-  const globeSummary = receipt.projectionSummaries.globe;
+const buildRenderPacket = (runtimeHandle = runtime) => {
+  const runtimePacket = normalizeRuntimePacket(
+    typeof runtimeHandle.getCurrentState === "function" ? runtimeHandle.getCurrentState() : runtimeHandle,
+  );
 
-  return deepFreeze({
-    runtimeTraceability: runtimeValidation.runtimeTraceability === true,
-    latticeCompleteness:
-      flatSummary.nodeCount === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES &&
-      treeSummary.nodeCount === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES &&
-      globeSummary.nodeCount === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES,
-    projectionConsistency:
-      flatSummary.edgeCount > 0 &&
-      treeSummary.edgeCount > 0 &&
-      globeSummary.edgeCount > 0,
-    determinism: receipt.renderChecksum === computeChecksum(renderState),
-    boundaryConsistency:
-      flatSummary.boundaryCounts.GATE === RENDER_CONSTANTS.REQUIRED_LOCAL_GATE &&
-      treeSummary.boundaryCounts.GATE === RENDER_CONSTANTS.REQUIRED_LOCAL_GATE &&
-      globeSummary.boundaryCounts.GATE === RENDER_CONSTANTS.REQUIRED_LOCAL_GATE,
-    receiptConsistency:
-      receipt.requiredTotalNodes === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES &&
-      receipt.requiredLocalGate === RENDER_CONSTANTS.REQUIRED_LOCAL_GATE &&
-      receipt.wholeEnvelope === RENDER_CONSTANTS.WHOLE_ENVELOPE,
-    artifactDrift: false,
-    thresholdIntegrity:
-      runtime.getReceipt().requiredTotalNodes === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES &&
-      runtime.getReceipt().requiredLocalGate === RENDER_CONSTANTS.REQUIRED_LOCAL_GATE &&
-      runtime.getReceipt().wholeEnvelope === RENDER_CONSTANTS.WHOLE_ENVELOPE,
-    successorProjectionCompleteness:
-      collectProjectionSummary(renderState.projections.flat).nodeCount === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES &&
-      collectProjectionSummary(renderState.projections.tree).nodeCount === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES &&
-      collectProjectionSummary(renderState.projections.globe).nodeCount === RENDER_CONSTANTS.REQUIRED_TOTAL_NODES
-  });
-}
+  const projection = selectProjectionPacket(runtimePacket);
+  const successor = normalizeSuccessorPacket(runtimeHandle);
 
-function buildRenderState() {
-  const runtimeValidation = runtime.validate();
+  const colorOutput = buildColorOutput(runtimePacket);
+  const luminanceOutput = buildLuminanceOutput(runtimePacket);
+  const depthOutput = buildDepthOutput(projection.coordinates);
+  const boundaryVisibility = buildBoundaryVisibility(runtimePacket.boundary.classification);
+  const nodeForceVisibility = buildNodeForceVisibility(runtimePacket);
+  const motionOutput = buildMotionOutput(
+    {
+      runtime: runtimePacket,
+      projection,
+    },
+    successor,
+  );
+  const transitionVisibility = buildTransitionVisibility(
+    {
+      runtime: runtimePacket,
+      projection,
+    },
+    successor,
+    motionOutput,
+  );
 
-  invariant(runtimeValidation.runtimeTraceability, "runtime traceability invalid");
-  invariant(runtimeValidation.latticeCompleteness, "runtime lattice invalid");
-  invariant(runtimeValidation.projectionConsistency, "runtime projection invalid");
-  invariant(runtimeValidation.determinism, "runtime determinism invalid");
-  invariant(runtimeValidation.boundaryConsistency, "runtime boundary invalid");
-  invariant(runtimeValidation.receiptConsistency, "runtime receipt invalid");
-  invariant(runtimeValidation.thresholdIntegrity, "runtime threshold invalid");
-
-  const runtimeCells = getRuntimeCells();
-  const projections = buildProjectionSuite();
-  const overlay = buildOverlayArtifacts(runtimeCells, projections.flat.nodes);
-
-  const state = deepFreeze({
+  const basePacket = deepFreeze({
     meta: RENDER_META,
-    constants: RENDER_CONSTANTS,
-    projections,
-    overlay
+    sourceDense: deepFreeze({
+      x: runtimePacket.denseIndex.x,
+      y: runtimePacket.denseIndex.y,
+    }),
+    runtime: runtimePacket,
+    projection,
+    successor,
+    visible: deepFreeze({
+      colorOutput,
+      luminanceOutput,
+      motionOutput,
+      depthOutput,
+      boundaryVisibility,
+      nodeForceVisibility,
+      transitionVisibility,
+      validatorStatus: deepFreeze({
+        ok: false,
+        checks: deepFreeze({}),
+      }),
+    }),
   });
 
-  const receipt = buildReceipt(state);
-  const fullState = deepFreeze({
-    ...state,
-    receipt
-  });
-  const validators = buildValidators(fullState);
-
-  invariant(validators.runtimeTraceability, "render runtime traceability failed");
-  invariant(validators.latticeCompleteness, "render lattice completeness failed");
-  invariant(validators.projectionConsistency, "render projection consistency failed");
-  invariant(validators.determinism, "render determinism failed");
-  invariant(validators.boundaryConsistency, "render boundary consistency failed");
-  invariant(validators.receiptConsistency, "render receipt consistency failed");
-  invariant(validators.thresholdIntegrity, "render threshold integrity failed");
-  invariant(validators.successorProjectionCompleteness, "render successor projection completeness failed");
+  const validatorStatus = runValidatorSuite(runtimeHandle, basePacket);
 
   return deepFreeze({
-    ...fullState,
-    validators
+    ...basePacket,
+    visible: deepFreeze({
+      ...basePacket.visible,
+      validatorStatus,
+    }),
   });
-}
+};
 
-const RENDER = buildRenderState();
+const deterministicComparable = (packet) =>
+  deepFreeze({
+    sourceDense: packet.sourceDense,
+    projectionState: packet.runtime.projectionState,
+    runtime: {
+      index: packet.runtime.index,
+      denseIndex: packet.runtime.denseIndex,
+      receipt: packet.runtime.receipt,
+      traversalStatus: packet.runtime.traversalStatus,
+      boundary: packet.runtime.boundary,
+      forces: packet.runtime.forces,
+    },
+    projection: packet.projection,
+    successor: packet.successor
+      ? {
+          receipt: packet.successor.receipt,
+          coordinates: packet.successor.coordinates,
+        }
+      : null,
+    visible: {
+      colorOutput: packet.visible.colorOutput,
+      luminanceOutput: packet.visible.luminanceOutput,
+      motionOutput: packet.visible.motionOutput,
+      depthOutput: packet.visible.depthOutput,
+      boundaryVisibility: packet.visible.boundaryVisibility,
+      nodeForceVisibility: packet.visible.nodeForceVisibility,
+      transitionVisibility: packet.visible.transitionVisibility,
+    },
+  });
 
-const render = deepFreeze({
-  meta: RENDER.meta,
-  constants: RENDER.constants,
+const validateDeterminism = (runtimeHandle = runtime) => {
+  const first = buildRenderPacket(runtimeHandle);
+  const second = buildRenderPacket(runtimeHandle);
+  return stableStringify(deterministicComparable(first)) === stableStringify(deterministicComparable(second));
+};
 
-  getMeta() {
-    return RENDER.meta;
-  },
+const finalizeValidatorStatus = (runtimeHandle, packet) => {
+  const determinism = validateDeterminism(runtimeHandle);
 
-  getConstants() {
-    return RENDER.constants;
-  },
+  const checks = deepFreeze({
+    ...packet.visible.validatorStatus.checks,
+    determinism,
+  });
 
-  getProjection(projection) {
-    invariant(
-      RENDER_CONSTANTS.PROJECTIONS.includes(projection),
-      `unknown projection: ${projection}`
-    );
-    return RENDER.projections[projection];
-  },
+  return deepFreeze({
+    ok: Object.values(checks).every(Boolean),
+    checks,
+  });
+};
 
-  getNodes(projection) {
-    return this.getProjection(projection).nodes;
-  },
+const render = (runtimeHandle = runtime) => {
+  const packet = buildRenderPacket(runtimeHandle);
+  const validatorStatus = finalizeValidatorStatus(runtimeHandle, packet);
 
-  getEdges(projection) {
-    return this.getProjection(projection).edges;
-  },
+  const finalized = deepFreeze({
+    ...packet,
+    visible: deepFreeze({
+      ...packet.visible,
+      validatorStatus,
+    }),
+  });
 
-  getOverlay() {
-    return RENDER.overlay;
-  },
+  assert(finalized.visible.validatorStatus.ok === true, "RENDER_VALIDATION_FAILED");
+  return finalized;
+};
 
-  getReceipt() {
-    return RENDER.receipt;
-  },
+const validateRender = (runtimeHandle = runtime) => {
+  const packet = buildRenderPacket(runtimeHandle);
+  const validatorStatus = finalizeValidatorStatus(runtimeHandle, packet);
 
-  getValidators() {
-    return RENDER.validators;
-  },
+  return deepFreeze({
+    ok: validatorStatus.ok,
+    checks: validatorStatus.checks,
+    packet: deepFreeze({
+      ...packet,
+      visible: deepFreeze({
+        ...packet.visible,
+        validatorStatus,
+      }),
+    }),
+  });
+};
 
-  getValidatorKeys() {
-    return RENDER_CONSTANTS.VALIDATOR_KEYS;
-  },
-
-  validate() {
-    return RENDER.validators;
-  }
+const renderModule = deepFreeze({
+  meta: RENDER_META,
+  constants: RENDER_CONSTANTS,
+  render,
+  validateRender,
 });
 
-export default render;
+export { render, validateRender };
+export default renderModule;

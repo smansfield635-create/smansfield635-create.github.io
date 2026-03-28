@@ -19,19 +19,90 @@
       inset:0;
       display:grid;
       place-items:center;
+      padding:24px;
+      box-sizing:border-box;
+    }
+    .boot-wrap{
+      max-width:min(960px,92vw);
+      text-align:center;
+      line-height:1.45;
+    }
+    .boot-title{
       letter-spacing:.04em;
-      opacity:.8;
+      opacity:.92;
+      margin-bottom:12px;
+    }
+    .boot-detail{
+      margin:0;
+      padding:12px;
+      text-align:left;
+      white-space:pre-wrap;
+      word-break:break-word;
+      overflow:auto;
+      max-height:60vh;
+      border:1px solid rgba(255,255,255,0.08);
+      background:rgba(255,255,255,0.04);
+      border-radius:10px;
+      color:#ffd7d7;
     }
   </style>
 </head>
 <body>
-  <div id="boot">BOOTING WORLD HOST…</div>
+  <div id="boot"></div>
 
   <script type="module">
-    import { start } from "/index.js";
-    start();
     const boot = document.getElementById("boot");
-    if (boot) boot.remove();
+
+    function renderBoot(title, detail = "") {
+      if (!boot) return;
+
+      boot.innerHTML = "";
+
+      const wrap = document.createElement("div");
+      wrap.className = "boot-wrap";
+
+      const headline = document.createElement("div");
+      headline.className = "boot-title";
+      headline.textContent = title;
+      wrap.appendChild(headline);
+
+      if (detail) {
+        const pre = document.createElement("pre");
+        pre.className = "boot-detail";
+        pre.textContent = detail;
+        wrap.appendChild(pre);
+      }
+
+      boot.appendChild(wrap);
+    }
+
+    (async () => {
+      try {
+        renderBoot("BOOTING WORLD HOST…");
+
+        const mod = await import("/index.js");
+
+        if (!mod || typeof mod.start !== "function") {
+          throw new Error("INDEX_START_EXPORT_MISSING");
+        }
+
+        const result = mod.start();
+
+        if (result && typeof result.then === "function") {
+          await result;
+        }
+
+        if (boot) boot.remove();
+      } catch (error) {
+        const detail =
+          error && (error.stack || error.message)
+            ? String(error.stack || error.message)
+            : String(error);
+
+        console.error(error);
+        renderBoot("BOOT FAILED", detail);
+      }
+    })();
   </script>
 </body>
 </html>

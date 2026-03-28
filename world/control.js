@@ -3,7 +3,7 @@
 // STATUS: BACKWARD-COMPATIBLE | MOTION-AUTHORITY | RUNTIME-SAFE | NON-DRIFT
 // OWNER: SEAN
 
-import { WORLD_KERNEL } from "./world_kernel.js";
+import WORLD_KERNEL from "./world_kernel.js";
 
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
@@ -56,69 +56,29 @@ function normalizeLensMode(value) {
 
 function getKernelConstants() {
   const kernel = normalizeObject(WORLD_KERNEL);
-  const resources = normalizeObject(kernel.resources);
-  const world = normalizeObject(resources.world);
   const constants = normalizeObject(kernel.constants);
 
   return Object.freeze({
-    worldRadiusFactor:
-      isFiniteNumber(world.radiusFactor) ? world.radiusFactor :
-      isFiniteNumber(constants.worldRadiusFactor) ? constants.worldRadiusFactor :
-      0.36,
-
-    minPitch:
-      isFiniteNumber(constants.minPitch) ? constants.minPitch :
-      -(Math.PI / 2.2),
-
-    maxPitch:
-      isFiniteNumber(constants.maxPitch) ? constants.maxPitch :
-      Math.PI / 2.2,
-
-    initialYaw:
-      isFiniteNumber(constants.initialYaw) ? constants.initialYaw : 0,
-
-    initialPitch:
-      isFiniteNumber(constants.initialPitch) ? constants.initialPitch : 0,
-
-    dragSensitivity:
-      isFiniteNumber(constants.dragSensitivity) ? constants.dragSensitivity : 0.0082,
-
-    inertiaDecay:
-      isFiniteNumber(constants.inertiaDecay) ? constants.inertiaDecay : 0.988,
-
-    autoSpinSpeed:
-      isFiniteNumber(constants.autoSpinSpeed) ? constants.autoSpinSpeed : 0.00008,
-
+    worldRadiusFactor: 0.36,
+    minPitch: -(Math.PI / 2.2),
+    maxPitch: Math.PI / 2.2,
+    initialYaw: 0,
+    initialPitch: 0,
+    dragSensitivity: 0.0082,
+    inertiaDecay: 0.988,
+    autoSpinSpeed: 0.00008,
     latSteps:
-      Number.isInteger(world.latSteps) ? world.latSteps :
-      Number.isInteger(constants.latSteps) ? constants.latSteps :
-      108,
-
+      Number.isInteger(constants.GRID_SIZE) ? constants.GRID_SIZE * 16 : 256,
     lonSteps:
-      Number.isInteger(world.lonSteps) ? world.lonSteps :
-      Number.isInteger(constants.lonSteps) ? constants.lonSteps :
-      216
+      Number.isInteger(constants.GRID_SIZE) ? constants.GRID_SIZE * 16 : 256
   });
 }
 
 function getPlanetFieldShape() {
-  const kernel = normalizeObject(WORLD_KERNEL);
-  const resources = normalizeObject(kernel.resources);
-  const world = normalizeObject(resources.world);
-  const planetField = normalizeObject(kernel.planetField);
-  const constants = getKernelConstants();
-
+  const K = getKernelConstants();
   return Object.freeze({
-    width:
-      Number.isInteger(kernel.width) ? kernel.width :
-      Number.isInteger(world.lonSteps) ? world.lonSteps :
-      Number.isInteger(planetField.width) ? planetField.width :
-      constants.lonSteps,
-    height:
-      Number.isInteger(kernel.height) ? kernel.height :
-      Number.isInteger(world.latSteps) ? world.latSteps :
-      Number.isInteger(planetField.height) ? planetField.height :
-      constants.latSteps
+    width: K.lonSteps,
+    height: K.latSteps
   });
 }
 
@@ -619,6 +579,27 @@ export function createControlSystem() {
     });
   }
 
+  function getMotionState() {
+    return Object.freeze({
+      yaw,
+      pitch,
+      yawVelocity,
+      pitchVelocity,
+      orbitPhase,
+      mode: presentationMode,
+      autoSpinEnabled,
+      autoSpinSpeed,
+      dragActive,
+      inertiaDecay: K.inertiaDecay,
+      homeYaw,
+      homePitch,
+      recoveryEnabled,
+      recoveryYawStrength,
+      recoveryPitchStrength,
+      recoveryVelocityThreshold
+    });
+  }
+
   function getCameraState() {
     const geometry = getCameraGeometry();
     const motion = getMotionState();
@@ -631,7 +612,6 @@ export function createControlSystem() {
       centerY: geometry.centerY,
       radius: geometry.resolvedRadius,
       baseRadius: geometry.baseRadius,
-
       yaw: motion.yaw,
       pitch: motion.pitch,
       yawVelocity: motion.yawVelocity,
@@ -703,27 +683,6 @@ export function createControlSystem() {
     });
   }
 
-  function getMotionState() {
-    return Object.freeze({
-      yaw,
-      pitch,
-      yawVelocity,
-      pitchVelocity,
-      orbitPhase,
-      mode: presentationMode,
-      autoSpinEnabled,
-      autoSpinSpeed,
-      dragActive,
-      inertiaDecay: K.inertiaDecay,
-      homeYaw,
-      homePitch,
-      recoveryEnabled,
-      recoveryYawStrength,
-      recoveryPitchStrength,
-      recoveryVelocityThreshold
-    });
-  }
-
   function setOrientation(input = {}) {
     const next = normalizeObject(input);
 
@@ -749,9 +708,7 @@ export function createControlSystem() {
     }
 
     if (isFiniteNumber(next.yaw)) yaw = wrapAngle(next.yaw);
-    if (isFiniteNumber(next.pitch)) {
-      pitch = clamp(next.pitch, K.minPitch, K.maxPitch);
-    }
+    if (isFiniteNumber(next.pitch)) pitch = clamp(next.pitch, K.minPitch, K.maxPitch);
     if (isFiniteNumber(next.yawVelocity)) yawVelocity = next.yawVelocity;
     if (isFiniteNumber(next.pitchVelocity)) pitchVelocity = next.pitchVelocity;
     if (isFiniteNumber(next.orbitPhase)) orbitPhase = wrapAngle(next.orbitPhase);

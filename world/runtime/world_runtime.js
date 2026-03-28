@@ -7,7 +7,7 @@ import { createPlanetEngine } from "./planet_engine.js";
 
 const RUNTIME_META = Object.freeze({
   name: "runtime",
-  version: "G1",
+  version: "G1_BASELINE",
   contract: "RUNTIME_BASELINE_CONTRACT_G1",
   role: "orchestration_only",
   deterministic: true,
@@ -205,8 +205,11 @@ const normalizePlanetField = (planetField) => {
       const normalizedSample = normalizeSample(row[x], x, y);
       normalizedRow.push(normalizedSample);
       byDenseKey[`${x},${y}`] = normalizedSample;
-      byKernelReceiptKey[`${normalizedSample.kernel.i},${normalizedSample.kernel.j}`] =
-        normalizedSample;
+
+      const kernelKey = `${normalizedSample.kernel.i},${normalizedSample.kernel.j}`;
+      if (!hasOwn(byKernelReceiptKey, kernelKey)) {
+        byKernelReceiptKey[kernelKey] = normalizedSample;
+      }
     }
     normalizedRows.push(deepFreeze(normalizedRow));
   }
@@ -269,12 +272,7 @@ const buildProjectionPackets = (sample) => {
 const selectProjectionPacket = (projectionPackets, projectionState) =>
   projectionPackets[projectionState] || null;
 
-const buildCurrentStatePacket = (
-  sample,
-  projectionState,
-  traversalStatus,
-  successorReceipt = null
-) => {
+const buildCurrentStatePacket = (sample, projectionState, traversalStatus) => {
   const projectionPackets = buildProjectionPackets(sample);
 
   return deepFreeze({
@@ -296,7 +294,7 @@ const buildCurrentStatePacket = (
     force: sample.force,
     threshold: sample.threshold,
     receipt: sample.receipt,
-    successorReceipt,
+    successorReceipt: null,
     traversalStatus,
     projections: projectionPackets,
     fields: sample.fields,
@@ -329,20 +327,19 @@ const buildRuntimeSnapshot = (
   cursor,
   projectionState,
   runtimeTick,
-  lastSuccessorReceipt = null,
   activeTraversalStatus = null
 ) => {
   const currentSample = getSampleByDenseIndex(field, cursor.x, cursor.y);
   const traversalStatus = activeTraversalStatus || buildTraversalStatus(currentSample, null);
   const currentReceipt = safeReceiptClone(currentSample.receipt, runtimeTick);
+
   const currentPacket = buildCurrentStatePacket(
     deepFreeze({
       ...currentSample,
       receipt: currentReceipt
     }),
     projectionState,
-    traversalStatus,
-    lastSuccessorReceipt
+    traversalStatus
   );
 
   return deepFreeze({
@@ -353,7 +350,6 @@ const buildRuntimeSnapshot = (
     currentSample,
     currentReceipt,
     traversalStatus,
-    lastSuccessorReceipt,
     currentPacket,
     projectionPackets: currentPacket.projections
   });
@@ -371,25 +367,45 @@ const computeSuccessor = (snapshot, dx, dy) => {
       advanced: false,
       cursor: snapshot.cursor,
       sample: snapshot.currentSample,
-      receipt: snapshot.currentReceipt,
-      successorReceipt: null,
       traversalStatus
     });
   }
-
-  const successorReceipt = safeReceiptClone(targetSample.receipt, snapshot.runtimeTick + 1);
 
   return deepFreeze({
     advanced: true,
     cursor: deepFreeze({ x: nextX, y: nextY }),
     sample: targetSample,
-    receipt: successorReceipt,
-    successorReceipt,
     traversalStatus
   });
 };
 
-const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
+const resolveDefaultCursor = (field, source = {}) => {
+  const summary = normalizeObject(field.summary);
+  const preferred = normalizeObject(summary.defaultCursor);
+
+  return deepFreeze({
+    x: clamp(
+      Number.isInteger(source.initialX)
+        ? source.initialX
+        : Number.isInteger(preferred.x)
+          ? preferred.x
+          : Math.floor(field.width / 2),
+      0,
+      field.width - 1
+    ),
+    y: clamp(
+      Number.isInteger(source.initialY)
+        ? source.initialY
+        : Number.isInteger(preferred.y)
+          ? preferred.y
+          : Math.floor(field.height / 2),
+      0,
+      field.height - 1
+    )
+  });
+};
+
+const buildFacade = (stateRef, engineRef, frameStateRef) => {
   const api = {
     meta: RUNTIME_META,
 
@@ -417,7 +433,7 @@ const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
     },
 
     getSuccessorReceipt() {
-      return stateRef.current.lastSuccessorReceipt;
+      return null;
     },
 
     getStateByReceipt(receipt) {
@@ -443,8 +459,7 @@ const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
           receipt: clonedReceipt
         }),
         stateRef.current.projectionState,
-        buildTraversalStatus(sample, null),
-        null
+        buildTraversalStatus(sample, null)
       );
     },
 
@@ -453,24 +468,13 @@ const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
     },
 
     refreshFrameState(nextFrameState = {}) {
-      const normalizedFrameState = normalizeFrameState(nextFrameState);
-      initialFrameStateRef.current = normalizedFrameState;
-
-      const refreshedField = normalizePlanetField(
-        engineRef.current.buildPlanetFrame(normalizedFrameState)
-      );
-
-      const safeCursor = deepFreeze({
-        x: clamp(stateRef.current.cursor.x, 0, refreshedField.width - 1),
-        y: clamp(stateRef.current.cursor.y, 0, refreshedField.height - 1)
-      });
+      frameStateRef.current = normalizeFrameState(nextFrameState);
 
       stateRef.current = buildRuntimeSnapshot(
-        refreshedField,
-        safeCursor,
+        stateRef.current.field,
+        stateRef.current.cursor,
         stateRef.current.projectionState,
         stateRef.current.runtimeTick,
-        null,
         null
       );
 
@@ -485,28 +489,17 @@ const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
       const successor = computeSuccessor(stateRef.current, dx, dy);
 
       if (!successor.advanced) {
-        const haltedPacket = buildCurrentStatePacket(
-          deepFreeze({
-            ...stateRef.current.currentSample,
-            receipt: stateRef.current.currentReceipt
-          }),
-          stateRef.current.projectionState,
-          successor.traversalStatus,
-          null
-        );
-
         stateRef.current = buildRuntimeSnapshot(
           stateRef.current.field,
           stateRef.current.cursor,
           stateRef.current.projectionState,
           stateRef.current.runtimeTick,
-          null,
           successor.traversalStatus
         );
 
         return deepFreeze({
           advanced: false,
-          state: haltedPacket,
+          state: stateRef.current.currentPacket,
           traversalStatus: successor.traversalStatus,
           successorReceipt: null
         });
@@ -517,7 +510,6 @@ const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
         successor.cursor,
         stateRef.current.projectionState,
         stateRef.current.runtimeTick + 1,
-        successor.successorReceipt,
         successor.traversalStatus
       );
 
@@ -525,45 +517,33 @@ const buildFacade = (stateRef, engineRef, initialFrameStateRef) => {
         advanced: true,
         state: stateRef.current.currentPacket,
         traversalStatus: stateRef.current.traversalStatus,
-        successorReceipt: successor.successorReceipt
+        successorReceipt: null
       });
     },
 
     reset(resetOptions = {}) {
       const next = normalizeObject(resetOptions);
-      const nextFrameState = normalizeFrameState(
-        hasOwn(next, "frameState") ? next.frameState : initialFrameStateRef.current
+      frameStateRef.current = normalizeFrameState(
+        hasOwn(next, "frameState") ? next.frameState : frameStateRef.current
       );
-      initialFrameStateRef.current = nextFrameState;
 
       const nextProjectionState = normalizeProjection(
         hasOwn(next, "projection") ? next.projection : stateRef.current.projectionState
       );
+
       const nextField = normalizePlanetField(
         hasOwn(next, "planetField")
           ? next.planetField
-          : engineRef.current.buildPlanetFrame(nextFrameState)
+          : stateRef.current.field
       );
 
-      const nextCursor = deepFreeze({
-        x: clamp(
-          Number.isInteger(next.initialX) ? next.initialX : 0,
-          0,
-          nextField.width - 1
-        ),
-        y: clamp(
-          Number.isInteger(next.initialY) ? next.initialY : 0,
-          0,
-          nextField.height - 1
-        )
-      });
+      const nextCursor = resolveDefaultCursor(nextField, next);
 
       stateRef.current = buildRuntimeSnapshot(
         nextField,
         nextCursor,
         nextProjectionState,
         0,
-        null,
         null
       );
 
@@ -584,34 +564,30 @@ export function createRuntime(options = {}) {
         : createPlanetEngine()
   };
 
-  const initialFrameStateRef = {
+  const frameStateRef = {
     current: normalizeFrameState(source.frameState)
   };
 
   const initialProjectionState = normalizeProjection(source.projection || "flat");
   const providedField = source.planetField || null;
+
   const field = normalizePlanetField(
-    providedField || engineRef.current.buildPlanetFrame(initialFrameStateRef.current)
+    providedField || engineRef.current.buildPlanetFrame(frameStateRef.current)
   );
 
-  const initialCursor = deepFreeze({
-    x: clamp(
-      Number.isInteger(source.initialX) ? source.initialX : 0,
-      0,
-      field.width - 1
-    ),
-    y: clamp(
-      Number.isInteger(source.initialY) ? source.initialY : 0,
-      0,
-      field.height - 1
-    )
-  });
+  const initialCursor = resolveDefaultCursor(field, source);
 
   const stateRef = {
-    current: buildRuntimeSnapshot(field, initialCursor, initialProjectionState, 0, null, null)
+    current: buildRuntimeSnapshot(
+      field,
+      initialCursor,
+      initialProjectionState,
+      0,
+      null
+    )
   };
 
-  return buildFacade(stateRef, engineRef, initialFrameStateRef);
+  return buildFacade(stateRef, engineRef, frameStateRef);
 }
 
 const DEFAULT_RUNTIME = createRuntime();

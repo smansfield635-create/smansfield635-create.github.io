@@ -1,15 +1,18 @@
+Path: /index.js
+
 // /index.js
 // MODE: CONTRACT EXECUTION
-// CONTRACT: INDEX_BASELINE_CONTRACT_G1
+// CONTRACT: INDEX_BASELINE_CONTRACT_G2
 // STATUS: HOST ONLY | PLATFORM OWNER | NON-DRIFT
 
 import { createRuntime } from "./world/runtime.js";
 import renderModule from "./world/render.js";
+import instrumentsModule from "./assets/instruments.js";
 
 const INDEX_META = Object.freeze({
   name: "index",
-  version: "G1",
-  contract: "INDEX_BASELINE_CONTRACT_G1",
+  version: "G2",
+  contract: "INDEX_BASELINE_CONTRACT_G2",
   role: "platform_host_and_boot_layer",
   deterministic: true,
   sourceOfTruth: false,
@@ -131,8 +134,10 @@ const createLayout = () => {
   panel.style.background = "rgba(255,255,255,0.02)";
   panel.style.overflow = "auto";
   panel.style.maxHeight = "22vh";
-  if (!panel.textContent) {
-    panel.textContent = "instrument boot path intentionally excluded";
+  panel.style.font = INDEX_CONSTANTS.FONT;
+  panel.style.lineHeight = "1.45";
+  if (!panel.innerHTML) {
+    panel.innerHTML = "<div><b>STATE:</b> boot_pending</div><div><b>PANEL:</b> awaiting instrument receipt</div>";
   }
 
   return deepFreeze({ root, canvasWrap, canvas, hud, panel });
@@ -205,11 +210,15 @@ const pickBoundaryColor = (boundaryClass) => {
   return INDEX_CONSTANTS.OPEN_COLOR;
 };
 
-const buildHudText = ({ frameState, runtimePacket, renderPacket }) => {
+const buildHudText = ({ frameState, runtimePacket, renderPacket, instrumentPacket }) => {
   const selected = normalizeObject(renderPacket?.projection?.selectedProjection);
+  const stateLine = typeof instrumentPacket?.classifiedState === "string"
+    ? instrumentPacket.classifiedState
+    : "—";
 
   const lines = [
     "WORLD HOST",
+    `state=${stateLine}`,
     `projection=${runtimePacket.projectionState}`,
     `elapsedSeconds=${stableRound(frameState.elapsedSeconds, 3)}`,
     `kernel=(${runtimePacket.index.i},${runtimePacket.index.j})`,
@@ -406,9 +415,13 @@ const createIndexHost = () => {
     lastInstrumentPacket: null,
     projection: INDEX_CONSTANTS.DEFAULT_PROJECTION,
     pendingMove: deepFreeze({ dx: 0, dy: 0 }),
-    runtimeHandle: null,
-    booted: false
+    runtimeHandle: null
   };
+
+  const instruments =
+    instrumentsModule && typeof instrumentsModule.createInstruments === "function"
+      ? instrumentsModule.createInstruments()
+      : instrumentsModule;
 
   const syncPlatform = () => resizeCanvas(layout.canvas, ctx);
 
@@ -447,6 +460,23 @@ const createIndexHost = () => {
     state.pendingMove = deepFreeze({ dx: 0, dy: 0 });
   };
 
+  const updateInstrumentPanel = (instrumentPacket) => {
+    if (!instrumentPacket) return;
+
+    if (instruments && typeof instruments.renderPanelHTML === "function") {
+      layout.panel.innerHTML = instruments.renderPanelHTML(instrumentPacket);
+      return;
+    }
+
+    if (instruments && typeof instruments.renderPanelText === "function") {
+      layout.panel.textContent = instruments.renderPanelText(instrumentPacket);
+      return;
+    }
+
+    const lines = normalizeObject(instrumentPacket.displayPayload).lines;
+    layout.panel.textContent = Array.isArray(lines) ? lines.join("\n") : "instrument packet received";
+  };
+
   const stepFrame = (nowMs) => {
     if (!state.started) return;
 
@@ -463,14 +493,25 @@ const createIndexHost = () => {
 
     const renderPacket = renderModule.render(state.runtimeHandle);
     state.lastRenderPacket = renderPacket;
-    state.lastInstrumentPacket = null;
+
+    const instrumentPacket =
+      instruments && typeof instruments.update === "function"
+        ? instruments.update({
+            runtimeState: renderPacket.runtime,
+            renderState: renderPacket
+          })
+        : null;
+
+    state.lastInstrumentPacket = instrumentPacket;
 
     const canvasState = syncPlatform();
     renderToCanvas(ctx, renderPacket, state.runtimeHandle.getField(), canvasState);
+    updateInstrumentPanel(instrumentPacket);
     layout.hud.textContent = buildHudText({
       frameState: state.frameState,
       runtimePacket: renderPacket.runtime,
-      renderPacket
+      renderPacket,
+      instrumentPacket
     });
 
     state.rafId = window.requestAnimationFrame(stepFrame);
@@ -541,6 +582,10 @@ const createIndexHost = () => {
 
     window.removeEventListener("resize", syncPlatform);
     window.removeEventListener("keydown", handleKeyDown);
+
+    if (instruments && typeof instruments.dispose === "function") {
+      instruments.dispose();
+    }
 
     return deepFreeze({ started: false });
   };

@@ -23,7 +23,7 @@ body{min-height:100vh}
 .wrap{max-width:1560px;margin:0 auto;padding:12px}
 .topbar{
   display:grid;
-  grid-template-columns:repeat(8,minmax(0,1fr));
+  grid-template-columns:repeat(10,minmax(0,1fr));
   gap:8px;
   margin-bottom:10px;
 }
@@ -92,7 +92,7 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
 }
 .pre{white-space:pre-wrap;word-break:break-word}
 @media (max-width:1280px){
-  .topbar{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .topbar{grid-template-columns:repeat(5,minmax(0,1fr))}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .chartGrid{grid-template-columns:1fr}
 }
@@ -106,6 +106,8 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
 <div class="wrap">
   <div class="topbar">
     <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
+    <div class="kpi"><div class="k">Parent Stack</div><div id="k-parent-stack" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Parent Files</div><div id="k-parent-files" class="v">0/5</div></div>
     <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
     <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
     <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
@@ -116,6 +118,11 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
   </div>
 
   <div class="grid">
+    <section class="panel">
+      <div class="title">Parent Stack / Smoke Test</div>
+      <div id="parentRows" class="rows"></div>
+    </section>
+
     <section class="panel">
       <div class="title">Runtime Health</div>
       <div id="runtimeRows" class="rows"></div>
@@ -172,7 +179,7 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
     </section>
   </div>
 
-  <div id="footer" class="footer pre">Awaiting authoritative runtime receipt.</div>
+  <div id="footer" class="footer pre">Awaiting authoritative runtime receipt and parent-stack smoke result.</div>
 </div>
 
 <script type="module">
@@ -182,6 +189,14 @@ const RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
 const STORAGE_KEY = "cte_runtime_v4";
 const HISTORY_MAX = 240;
 const REFRESH_MS = 250;
+const PARENT_STACK_PATH = "/runtime/parent/parent_stack_smoke_test.js";
+const PARENT_STACK_FILES = Object.freeze([
+  "/runtime/parent/diamond_interface_spine.js",
+  "/runtime/parent/kernel_adapter.js",
+  "/runtime/parent/universe_engine_factory.js",
+  "/runtime/parent/instrument_factory.js",
+  "/runtime/parent/orchestration_fabric.js",
+]);
 
 const history = {
   velocityA: [],
@@ -195,6 +210,17 @@ const history = {
   burden: []
 };
 
+const parentStackState = {
+  started: false,
+  loaded: false,
+  status: "PENDING",
+  pass: false,
+  loadedCount: 0,
+  summary: {},
+  error: null,
+  source: PARENT_STACK_PATH,
+};
+
 let timer = null;
 
 function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
@@ -202,21 +228,33 @@ function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
 function intfmt(v){return isFiniteNumber(v)?String(Math.round(v)):"—";}
 function bool(v){return v===true?"true":v===false?"false":"—";}
 function safeObj(v){return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}
-function pickNumber(...vals){for(const v of vals){if(isFiniteNumber(v))return v;}return null;}
 function push(arr,v){arr.push(v);if(arr.length>HISTORY_MAX)arr.shift();}
-function ageFromTimestamp(value){
-  if(isFiniteNumber(value)) return Math.max(0, Date.now() - value);
-  if(typeof value==="string"&&value.length>0){
-    const ms=Date.parse(value);
-    return Number.isFinite(ms)?Math.max(0,Date.now()-ms):null;
-  }
-  return null;
-}
 function row(k,v){
   return `<div class="row"><div class="rk">${escapeHtml(k)}</div><div class="rv">${escapeHtml(v)}</div></div>`;
 }
 function escapeHtml(v){
   return String(v ?? "—").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+function kpiClass(v,type){
+  if(type==="state"){
+    if(v==="LIVE") return "good";
+    if(v==="STALE") return "warn";
+    return "bad";
+  }
+  if(type==="verification") return v==="PASS"?"good":"bad";
+  if(type==="fresh") return v==="FRESH"?"good":"warn";
+  if(type==="parent"){
+    if(v==="PASS") return "good";
+    if(v==="PENDING") return "warn";
+    return "bad";
+  }
+  return "";
+}
+function setText(id,text,cls=""){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=text;
+  el.className=`v ${cls}`.trim();
 }
 
 function getReceipt(){
@@ -236,46 +274,80 @@ function getReceipt(){
   return null;
 }
 
-function buildInstrument(runtimeReceipt){
-  const runtime = safeObj(runtimeReceipt);
-  return instrumentsModule.buildInstrumentReceipt({
-    runtimeReceipt: runtime,
-    authorityState: {
-      runtimeSource: "/world/runtime/world_runtime.js",
-      instrumentSource: "/assets/instruments.js"
-    },
-    renderSummary: {
-      primitive: safeObj(runtime.primitive),
-      topology: safeObj(runtime.topology),
-      renderAuthority: safeObj(runtime.renderAuthority),
-      density: safeObj(runtime.density),
-      audit: safeObj(runtime.audit)
-    },
-    projectionSummary: safeObj(runtime.projectionState),
-    worldVariantState: safeObj(runtime.worldVariantState),
-    traversalState: safeObj(runtime.traversalState),
-    worldModeState: safeObj(runtime.worldModeState),
-    psychologyState: safeObj(safeObj(runtime.psychology).state),
-    psychologyEnvelope: safeObj(safeObj(runtime.psychology).envelope),
-    psychologyReceipt: safeObj(safeObj(runtime.psychology).receipt)
-  });
-}
+async function ensureParentStackStatus(){
+  if(parentStackState.started) return;
+  parentStackState.started = true;
 
-function kpiClass(v,type){
-  if(type==="state"){
-    if(v==="LIVE") return "good";
-    if(v==="STALE") return "warn";
-    return "bad";
+  try{
+    const module = await import(PARENT_STACK_PATH);
+    const runner =
+      typeof module.runParentStackSmokeTest === "function"
+        ? module.runParentStackSmokeTest
+        : module.default;
+
+    if(typeof runner !== "function"){
+      throw new Error("Smoke test export not found.");
+    }
+
+    const result = await runner();
+    if(!result || result.ok !== true){
+      throw new Error("Smoke test did not return ok=true.");
+    }
+
+    const stack = safeObj(result.stack);
+    const summary = {
+      spine: !!stack.spine,
+      adapter: !!stack.adapterBundle,
+      universe: !!stack.universeFactory,
+      instrument: !!stack.instrumentFactory,
+      orchestration: !!stack.orchestration,
+    };
+
+    parentStackState.summary = summary;
+    parentStackState.loadedCount = Object.values(summary).filter(Boolean).length;
+    parentStackState.pass = parentStackState.loadedCount === 5;
+    parentStackState.status = parentStackState.pass ? "PASS" : "FAIL";
+    parentStackState.loaded = true;
+    parentStackState.error = null;
+  }catch(error){
+    parentStackState.loaded = true;
+    parentStackState.pass = false;
+    parentStackState.status = "FAIL";
+    parentStackState.loadedCount = 0;
+    parentStackState.summary = {
+      spine: false,
+      adapter: false,
+      universe: false,
+      instrument: false,
+      orchestration: false,
+    };
+    parentStackState.error = error instanceof Error ? error.message : String(error);
   }
-  if(type==="verification") return v==="PASS"?"good":"bad";
-  if(type==="fresh") return v==="FRESH"?"good":"warn";
-  return "";
 }
 
-function setText(id,text,cls=""){
-  const el=document.getElementById(id);
-  el.textContent=text;
-  el.className=`v ${cls}`.trim();
+function renderParentStack(){
+  setText("k-parent-stack", parentStackState.status, kpiClass(parentStackState.status, "parent"));
+  setText("k-parent-files", `${parentStackState.loadedCount}/5`);
+
+  const summary = safeObj(parentStackState.summary);
+  const statusText =
+    parentStackState.status === "PENDING"
+      ? "Loading parent stack smoke test"
+      : parentStackState.status === "PASS"
+      ? "Parent stack smoke test passed"
+      : "Parent stack smoke test failed";
+
+  document.getElementById("parentRows").innerHTML =
+    row("status", statusText) +
+    row("module", parentStackState.source) +
+    row("spine", summary.spine ? "loaded" : "missing") +
+    row("adapter", summary.adapter ? "loaded" : "missing") +
+    row("universe factory", summary.universe ? "loaded" : "missing") +
+    row("instrument factory", summary.instrument ? "loaded" : "missing") +
+    row("orchestration", summary.orchestration ? "loaded" : "missing") +
+    row("files expected", String(PARENT_STACK_FILES.length)) +
+    row("files loaded", String(parentStackState.loadedCount)) +
+    row("error", parentStackState.error || "none");
 }
 
 function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
@@ -320,41 +392,57 @@ function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
   }
 }
 
-function render(){
-  const data = getReceipt();
-  if(!data){
-    setText("k-state","OFFLINE","bad");
-    setText("k-classified","—");
-    setText("k-phase","—");
-    setText("k-fresh","—");
-    setText("k-fps","—");
-    setText("k-dt","—");
-    setText("k-age","—");
-    setText("k-verification","FAIL","bad");
-    document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("renderRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("diagRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
-    document.getElementById("footer").textContent = "No authoritative runtime receipt found in window or localStorage.";
-    return;
-  }
+function renderOfflineRuntime(){
+  setText("k-state","OFFLINE","bad");
+  setText("k-classified","—");
+  setText("k-phase","—");
+  setText("k-fresh","—");
+  setText("k-fps","—");
+  setText("k-dt","—");
+  setText("k-age","—");
+  setText("k-verification","FAIL","bad");
 
+  document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("renderRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("diagRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
+}
+
+function renderRuntime(data){
   const runtime = safeObj(data);
-  const instrument = buildInstrument(runtime);
+  const instrument = instrumentsModule.buildInstrumentReceipt({
+    runtimeReceipt: runtime,
+    authorityState: {
+      runtimeSource: "/world/runtime/world_runtime.js",
+      instrumentSource: "/assets/instruments.js"
+    },
+    renderSummary: {
+      primitive: safeObj(runtime.primitive),
+      topology: safeObj(runtime.topology),
+      renderAuthority: safeObj(runtime.renderAuthority),
+      density: safeObj(runtime.density),
+      audit: safeObj(runtime.audit)
+    },
+    projectionSummary: safeObj(runtime.projectionState),
+    worldVariantState: safeObj(runtime.worldVariantState),
+    traversalState: safeObj(runtime.traversalState),
+    worldModeState: safeObj(runtime.worldModeState),
+    psychologyState: safeObj(safeObj(runtime.psychology).state),
+    psychologyEnvelope: safeObj(safeObj(runtime.psychology).envelope),
+    psychologyReceipt: safeObj(safeObj(runtime.psychology).receipt)
+  });
+
   const diagnostics = safeObj(instrument.diagnosticsPayload);
   const display = safeObj(instrument.displayPayload);
-  const baseline = safeObj(display.baseline);
-  const progress = safeObj(display.progress);
   const failure = safeObj(display.failure);
   const summary = safeObj(display.summary);
   const meta = safeObj(instrument.meta);
   const primitive = safeObj(meta.primitive);
   const scope = safeObj(meta.scope);
-  const lifecycle = safeObj(meta.lifecycle);
   const role = safeObj(meta.role);
   const authority = safeObj(meta.authority);
   const psychology = safeObj(meta.psychology);
@@ -368,8 +456,8 @@ function render(){
   push(history.velocityB, primitive.shadowDensity ?? 0);
   push(history.velocityC, primitive.fragmentWeight ?? 0);
   push(history.coherence, meta.coherence ?? 0);
-  push(history.clarity, progress.c ?? 0);
-  push(history.stability, progress.st ?? 0);
+  push(history.clarity, safeObj(display.progress).c ?? 0);
+  push(history.stability, safeObj(display.progress).st ?? 0);
   push(history.fps, diagnostics.fps ?? 0);
   push(history.fresh, diagnostics.fresh === true ? 1 : 0);
   push(history.burden, thresholds.totalBurdenProxy ?? 0);
@@ -504,11 +592,23 @@ function render(){
   ],0,Math.max(60,...history.fps,1));
 
   document.getElementById("footer").textContent =
-`SOURCE=${data.__source || "—"} | PHASE=${diagnostics.sourcePhase || runtime.phase || "—"} | CLASSIFIED=${instrument.classifiedState || "—"} | AGE=${isFiniteNumber(diagnostics.ageMs) ? Math.round(diagnostics.ageMs) + "ms" : "—"} | CONT=${scope.continentId || "—"} | MODE=${scope.traversalMode || "—"}`;
+`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | SOURCE=${data.__source || "—"} | PHASE=${diagnostics.sourcePhase || runtime.phase || "—"} | CLASSIFIED=${instrument.classifiedState || "—"} | AGE=${isFiniteNumber(diagnostics.ageMs) ? Math.round(diagnostics.ageMs) + "ms" : "—"} | CONT=${scope.continentId || "—"} | MODE=${scope.traversalMode || "—"}`;
 }
 
-function tick(){
-  render();
+async function tick(){
+  await ensureParentStackStatus();
+  renderParentStack();
+
+  const data = getReceipt();
+  if(!data){
+    renderOfflineRuntime();
+    document.getElementById("footer").textContent =
+`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | RUNTIME=OFFLINE | ERROR=${parentStackState.error || "none"}`;
+    timer = window.setTimeout(tick, REFRESH_MS);
+    return;
+  }
+
+  renderRuntime(data);
   timer = window.setTimeout(tick, REFRESH_MS);
 }
 

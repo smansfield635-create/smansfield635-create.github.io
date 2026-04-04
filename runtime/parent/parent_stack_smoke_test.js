@@ -1,503 +1,320 @@
-import {
-  SCALE_CLASSES,
-  PATH_CLASSES,
-  FLAG_STATUSES,
-  PHASE_STATUSES,
-  createTopologyObject,
-  createCoordinateObject,
-  createAdjacencyObject,
-  createDiagnosticObject,
-  createRouteObject,
-  createClosureObject,
-  assertSpineLegibility,
-} from "./diamond_interface_spine.js";
+(function (global) {
+  "use strict";
 
-import {
-  NOTE_SET_SIZE,
-  createNoteBindObject,
-  createNodeBindObject,
-  createMicrostateBindObject,
-  createEngineBindObject,
-  createMacroEngineBindObject,
-  createFlagPhaseBindObject,
-  adaptKernelToSpine,
-  assertScaleLadderIntegrity,
-} from "./kernel_adapter.js";
+  const VERSION = "PARENT_STACK_SMOKE_TEST_BASELINE_v1";
+  const TEST_ID = "PARENT_STACK_SMOKE_TEST";
 
-import {
-  createUniverseTemplate,
-  createWorldEngine,
-  createPlanetEngine,
-  createBodyEngine,
-  createRegionEngine,
-  createEnvironmentEngine,
-  createRelationField,
-  createSeedState,
-  assertUniverseFactoryOutput,
-} from "./universe_engine_factory.js";
-
-import {
-  createStateInstrument,
-  createDiagnosticInstrument,
-  createRouteInstrument,
-  createEngineInstrument,
-  createFidelityInstrument,
-  createDriftInstrument,
-  createFractureInstrument,
-  createClosureInstrument,
-  createReturnAudit,
-  assertInstrumentFactoryOutput,
-} from "./instrument_factory.js";
-
-import {
-  createAdmissionDecision,
-  createRoutingDecision,
-  createMonitoringState,
-  createLockDecision,
-  createSealDecision,
-  createReturnDecision,
-  createParentAuditTrail,
-  createPhaseGate,
-  createTrackPermission,
-  assertOrchestrationDecision,
-} from "./orchestration_fabric.js";
-
-function range(count, mapper) {
-  return Array.from({ length: count }, (_, index) => mapper(index));
-}
-
-export function runParentStackSmokeTest() {
-  const topology = createTopologyObject({
-    regionSet: ["root_region"],
-    containmentRelations: [{ parent: "root", child: "root_region" }],
-    partitionRules: ["single_partition"],
-    boundaryFlags: ["bounded"],
+  const STATUS = Object.freeze({
+    UNINITIALIZED: "UNINITIALIZED",
+    RUNNING: "RUNNING",
+    READY: "READY",
+    PENDING: "PENDING",
+    ERROR: "ERROR",
   });
 
-  const coordinate = createCoordinateObject({
-    objectId: "microstate_1",
-    scaleClass: SCALE_CLASSES.MICROSTATE,
-    positionVector: { x: 0, y: 0, z: 0 },
-    regionId: "root_region",
-    orientationRead: "neutral",
-    phaseTag: PHASE_STATUSES.NEW_MOON,
-  });
+  function assert(condition, message) {
+    if (!condition) {
+      throw new Error("[PARENT_STACK_SMOKE_TEST] " + message);
+    }
+  }
 
-  const adjacency = createAdjacencyObject({
-    sourceId: "microstate_1",
-    targetId: "microstate_2",
-    edgeClass: "adjacent",
-  });
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+  }
 
-  const diagnostic = createDiagnosticObject({
-    energy: 1,
-    coherence: 1,
-    entropy: 0,
-    phase: PHASE_STATUSES.NEW_MOON,
-    overlayTags: ["baseline"],
-  });
+  function freezeCopy(value) {
+    return Object.freeze(clone(value));
+  }
 
-  const route = createRouteObject({
-    pathId: "path_1",
-    pathClass: PATH_CLASSES.ASCENDING,
-    edgeSequence: [adjacency],
-    ascentFlag: true,
-  });
+  function nowIso() {
+    return new Date().toISOString();
+  }
 
-  const closure = createClosureObject({
-    closureStatus: "depth_bound_complete",
-    returnStatus: "ready",
-    checkeredFlag: true,
-    eclipseFlag: false,
-    preservationRead: "bound_inheritance_object",
-  });
+  function publishEvent(name, detail) {
+    if (typeof global.dispatchEvent === "function" && typeof global.CustomEvent === "function") {
+      try {
+        global.dispatchEvent(new CustomEvent(name, { detail: detail }));
+      } catch (_) {}
+    }
+  }
 
-  assertSpineLegibility(
-    { topology, coordinate, adjacency, diagnostic, route, closure },
-    "spineBundle",
-  );
+  function getKernel() {
+    const kernel = global.LiveRuntimeKernel;
+    assert(kernel, "LiveRuntimeKernel is required");
+    return kernel;
+  }
 
-  const notes = range(NOTE_SET_SIZE, (index) =>
-    createNoteBindObject({
-      noteId: `note_${index + 1}`,
-      chargeRead: index,
-      localPosition: { x: index, y: 0 },
-      neighborSet: index > 0 ? [`note_${index}`] : [],
-    }),
-  );
+  function getPlanetEngine() {
+    const planetEngine = global.PlanetEngine;
+    assert(planetEngine, "PlanetEngine is required");
+    return planetEngine;
+  }
 
-  const node = createNodeBindObject({
-    nodeId: "node_1",
-    noteSet: notes.map((item) => item.noteId),
-    adjacencySet: ["node_2"],
-  });
+  function getAdapter() {
+    const adapter = global.ParentKernelAdapter;
+    assert(adapter, "ParentKernelAdapter is required");
+    return adapter;
+  }
 
-  const microstate = createMicrostateBindObject({
-    stateId: "microstate_1",
-    stateVector: [1, 0, 1, 0, 1, 0, 1, 0],
-    nodeProjectionSet: [node.nodeId],
-    spineCoordinate: coordinate,
-    diagnosticObject: diagnostic,
-    engineProjectionTarget: "engine_1",
-  });
+  function getSpine() {
+    const spine = global.DiamondInterfaceSpine;
+    assert(spine, "DiamondInterfaceSpine is required");
+    return spine;
+  }
 
-  const mesoEngine = createEngineBindObject({
-    engineId: "engine_1",
-    microstateRegionSet: [microstate.stateId],
-    routeCompatibility: [route.pathClass],
-    fusionCoreCompatibility: ["fusion_core_1"],
-    flagPhaseAttachments: {
-      flag: FLAG_STATUSES.GREEN,
-      phase: PHASE_STATUSES.NEW_MOON,
-    },
-  });
+  function getParentFactory() {
+    const parentFactory = global.ParentFactoryEngine;
+    assert(parentFactory, "ParentFactoryEngine is required");
+    return parentFactory;
+  }
 
-  const macroEngine = createMacroEngineBindObject({
-    macroEngineId: "macro_1",
-    fusionCoreId: "fusion_core_1",
-    mesoEngineDependencies: [mesoEngine.engineId],
-    noteNodeTraversalSignature: [notes[0].noteId, node.nodeId],
-    universeContextTag: "universe_alpha",
-    closureCompatibility: { checkered: true },
-  });
+  function getUniverseFactory() {
+    const universeFactory = global.UniverseEngineFactory;
+    assert(universeFactory, "UniverseEngineFactory is required");
+    return universeFactory;
+  }
 
-  const flagPhaseBinding = createFlagPhaseBindObject({
-    objectId: "microstate_1",
-    flagStatus: FLAG_STATUSES.CHECKERED,
-    phaseStatus: PHASE_STATUSES.SETTING_SUN,
-    checkeredFlagRead: true,
-    eclipseFlagRead: false,
-    depthBoundClosureRead: "closed",
-    returnStatusRead: "ready",
-  });
+  function getInstrumentFactory() {
+    const instrumentFactory = global.InstrumentFactory;
+    assert(instrumentFactory, "InstrumentFactory is required");
+    return instrumentFactory;
+  }
 
-  const adapterBundle = adaptKernelToSpine({
-    notes,
-    nodes: [node],
-    microstates: [microstate],
-    engines: [mesoEngine],
-    macroEngines: [macroEngine],
-    flagPhaseBindings: [flagPhaseBinding],
-    spineBundle: { topology, coordinate, adjacency, diagnostic, route, closure },
-  });
+  function getOrchestrationFabric() {
+    const orchestrationFabric = global.OrchestrationFabric;
+    assert(orchestrationFabric, "OrchestrationFabric is required");
+    return orchestrationFabric;
+  }
 
-  assertScaleLadderIntegrity({
-    notes: adapterBundle.notes,
-    nodes: adapterBundle.nodes,
-    microstates: adapterBundle.microstates,
-    engines: adapterBundle.engines,
-    macroEngines: adapterBundle.macroEngines,
-  });
+  function createInitialState() {
+    return {
+      version: VERSION,
+      testId: TEST_ID,
+      status: STATUS.UNINITIALIZED,
+      passed: false,
+      checks: [],
+      result: null,
+      receipt: null,
+      lastError: null,
+      events: [],
+      lastUpdatedAt: null,
+    };
+  }
 
-  const universeTemplate = createUniverseTemplate({
-    universeId: "universe_alpha",
-    topologyBind: topology,
-    scaleContext: { rootScale: SCALE_CLASSES.UNIVERSE_CONTEXT },
-    fusionCoreSet: [macroEngine.fusionCoreId],
-    relationFieldSchema: ["relation_field_alpha"],
-    seedRuleset: { entry: "seed_state_alpha" },
-    closureCompatibility: { allowsDepthBoundClosure: true },
-  });
+  function createSmokeTest() {
+    let state = createInitialState();
+    const subscribers = new Set();
 
-  const worldEngine = createWorldEngine({
-    worldId: "world_alpha",
-    universeId: universeTemplate.universeId,
-    macroEngineDependencies: [macroEngine.macroEngineId],
-    regionSet: ["root_region"],
-    environmentRules: { climate: "temperate" },
-    routeSpace: [route.pathId],
-    runtimeReadyFlag: true,
-  });
+    function emit(type, payload) {
+      state.events.push({
+        type,
+        at: nowIso(),
+        payload: clone(payload || {}),
+      });
+      state.lastUpdatedAt = nowIso();
 
-  const planetEngine = createPlanetEngine({
-    planetId: "planet_alpha",
-    worldId: worldEngine.worldId,
-    engineDependencies: [mesoEngine.engineId, macroEngine.macroEngineId],
-    regionDependencies: ["root_region"],
-    seedStateBind: { seedId: "seed_state_alpha" },
-    diagnosticCompatibility: { readable: true },
-  });
+      const snapshot = api.getState();
+      subscribers.forEach(function (listener) {
+        try {
+          listener(snapshot, type);
+        } catch (_) {}
+      });
+    }
 
-  const bodyEngine = createBodyEngine({
-    bodyId: "body_alpha",
-    planetId: planetEngine.planetId,
-    engineDependencies: [planetEngine.planetId],
-    relationFields: ["relation_field_alpha"],
-  });
+    function setStatus(nextStatus) {
+      state.status = nextStatus;
+      state.lastUpdatedAt = nowIso();
+    }
 
-  const regionEngine = createRegionEngine({
-    regionId: "root_region",
-    parentId: worldEngine.worldId,
-    coordinate,
-    adjacencySet: [adjacency.targetId],
-  });
+    function setAliases(result, receipt) {
+      global.__PARENT_STACK_SMOKE_RESULT__ = result;
+      global.ParentStackSmokeResult = result;
+      global.parentStackSmokeResult = result;
+      global.parentStackSmokeReady = !!result.passed;
 
-  const environmentEngine = createEnvironmentEngine({
-    environmentId: "env_alpha",
-    parentId: worldEngine.worldId,
-    rules: { weather: "stable" },
-    diagnosticCompatibility: { readable: true },
-  });
+      global.__RUNTIME_BRIDGE_RECEIPT__ = receipt;
+      global.RuntimeBridgeReceipt = receipt;
+      global.runtimeBridgeReceipt = receipt;
+      global.runtimeBridgeReady = receipt.status === "READY";
+    }
 
-  const relationField = createRelationField({
-    fieldId: "relation_field_alpha",
-    sourceObjects: [worldEngine.worldId],
-    targetObjects: [planetEngine.planetId],
-    adjacencySchema: [adjacency],
-    pressureRules: { mode: "bounded" },
-    transferRules: { mode: "lawful" },
-  });
+    function buildChecks() {
+      const planetState = getPlanetEngine().getState();
+      const adapterState = getAdapter().getState();
+      const spineState = getSpine().getState();
+      const parentFactoryState = getParentFactory().getState();
+      const universeState = getUniverseFactory().getState();
+      const instrumentState = getInstrumentFactory().getState();
+      const fabricState = getOrchestrationFabric().getState();
 
-  const seedState = createSeedState({
-    seedId: "seed_state_alpha",
-    targetClass: "planet_engine",
-    noteNodeBindSet: {
-      notes: notes.map((note) => note.noteId),
-      node: node.nodeId,
-    },
-    microstateSet: [microstate.stateId],
-    engineAttachments: [mesoEngine.engineId, macroEngine.macroEngineId],
-    flagPhaseBind: flagPhaseBinding,
-    initialRouteRead: route,
-  });
+      return [
+        { name: "PlanetEngine", ready: !!planetState.baselineEstablished },
+        { name: "ParentKernelAdapter", ready: !!adapterState.ready },
+        { name: "DiamondInterfaceSpine", ready: !!spineState.ready },
+        { name: "ParentFactoryEngine", ready: !!parentFactoryState.ready },
+        { name: "UniverseEngineFactory", ready: !!universeState.ready },
+        { name: "InstrumentFactory", ready: !!instrumentState.ready },
+        { name: "OrchestrationFabric", ready: !!fabricState.ready },
+      ];
+    }
 
-  [
-    universeTemplate,
-    worldEngine,
-    planetEngine,
-    bodyEngine,
-    regionEngine,
-    environmentEngine,
-    relationField,
-    seedState,
-  ].forEach((output) => assertUniverseFactoryOutput(output, { adapterBundle }));
+    function ensureChainReady() {
+      const planetEngine = getPlanetEngine();
+      if (!planetEngine.getState().baselineEstablished) {
+        planetEngine.establishBaseline();
+      }
 
-  const stateInstrument = createStateInstrument({
-    instrumentId: "state_inst_1",
-    targetObjectId: worldEngine.worldId,
-    scaleClass: SCALE_CLASSES.MACRO_ENGINE,
-    positionRead: { region: "root_region" },
-    identityPreservationRead: true,
-    regionRead: "root_region",
-  });
+      const adapter = getAdapter();
+      if (!adapter.getState().ready) {
+        adapter.establishBaseline();
+      }
 
-  const diagnosticInstrument = createDiagnosticInstrument({
-    instrumentId: "diag_inst_1",
-    targetObjectId: worldEngine.worldId,
-    energyRead: 1,
-    coherenceRead: 1,
-    entropyRead: 0,
-    phaseRead: PHASE_STATUSES.MORNING_SUN,
-    overlaySet: ["healthy"],
-  });
+      const spine = getSpine();
+      if (!spine.getState().ready) {
+        spine.establishBaseline();
+      }
 
-  const routeInstrument = createRouteInstrument({
-    instrumentId: "route_inst_1",
-    targetObjectId: worldEngine.worldId,
-    pathId: route.pathId,
-    pathClass: route.pathClass,
-    edgeSequence: route.edgeSequence,
-  });
+      const parentFactory = getParentFactory();
+      if (!parentFactory.getState().ready) {
+        parentFactory.establishBaseline();
+      }
 
-  const engineInstrument = createEngineInstrument({
-    instrumentId: "engine_inst_1",
-    targetObjectId: worldEngine.worldId,
-    mesoEngineRead: mesoEngine.engineId,
-    macroFusionRead: macroEngine.macroEngineId,
-  });
+      const universeFactory = getUniverseFactory();
+      if (!universeFactory.getState().ready && typeof universeFactory.boot === "function") {
+        universeFactory.boot();
+      }
 
-  const fidelityInstrument = createFidelityInstrument({
-    instrumentId: "fidelity_inst_1",
-    targetObjectId: worldEngine.worldId,
-    kernelMatchRead: true,
-    spineMatchRead: true,
-    driftScore: 0,
-    misfitLocus: null,
-  });
+      const instrumentFactory = getInstrumentFactory();
+      if (!instrumentFactory.getState().ready && typeof instrumentFactory.boot === "function") {
+        instrumentFactory.boot();
+      }
 
-  const driftInstrument = createDriftInstrument({
-    instrumentId: "drift_inst_1",
-    targetObjectId: worldEngine.worldId,
-    driftDetected: false,
-    driftDetails: { source: "smoke_test" },
-  });
+      const orchestrationFabric = getOrchestrationFabric();
+      if (!orchestrationFabric.getState().ready && typeof orchestrationFabric.boot === "function") {
+        orchestrationFabric.boot();
+      }
+    }
 
-  const fractureInstrument = createFractureInstrument({
-    instrumentId: "fracture_inst_1",
-    targetObjectId: worldEngine.worldId,
-    fractureDetected: false,
-    discontinuityMap: [],
-  });
+    const api = {
+      version: VERSION,
 
-  const closureInstrument = createClosureInstrument({
-    instrumentId: "closure_inst_1",
-    targetObjectId: worldEngine.worldId,
-    checkeredFlagRead: true,
-    settingSunRead: true,
-    eclipseRead: false,
-    depthBoundClosureRead: "closed",
-    returnStatusRead: "ready",
-  });
-
-  const returnAudit = createReturnAudit({
-    auditId: "audit_1",
-    targetObjectId: worldEngine.worldId,
-    stateSummary: { ok: true },
-    diagnosticSummary: { ok: true },
-    routeSummary: { ok: true },
-    fidelitySummary: { ok: true },
-    closureSummary: { ok: true },
-    orchestrationReadyFlag: true,
-  });
-
-  [
-    stateInstrument,
-    diagnosticInstrument,
-    routeInstrument,
-    engineInstrument,
-    fidelityInstrument,
-    driftInstrument,
-    fractureInstrument,
-    closureInstrument,
-    returnAudit,
-  ].forEach((output) => assertInstrumentFactoryOutput(output, { adapterBundle }));
-
-  const admissionDecision = createAdmissionDecision({
-    decisionId: "admission_1",
-    targetObjectId: worldEngine.worldId,
-    admissionStrength: "support",
-    trackAssignment: "parent_factory_track",
-    burdenStatus: "held",
-    rationaleTags: ["smoke_test"],
-  });
-
-  const routingDecision = createRoutingDecision({
-    decisionId: "routing_1",
-    targetObjectId: worldEngine.worldId,
-    currentTrack: "generation",
-    nextTrack: "verification",
-    expressStatus: false,
-    returnRequiredFlag: true,
-  });
-
-  const monitoringState = createMonitoringState({
-    monitorId: "monitor_1",
-    targetObjectId: worldEngine.worldId,
-    locationRead: { region: "root_region" },
-    diagnosticSummary: { coherence: 1 },
-    routeSummary: { pathClass: PATH_CLASSES.ASCENDING },
-    flagStatus: FLAG_STATUSES.GREEN,
-    phaseStatus: PHASE_STATUSES.MORNING_SUN,
-    driftAlerts: [],
-    fractureAlerts: [],
-  });
-
-  const lockDecision = createLockDecision({
-    lockId: "lock_1",
-    targetObjectId: worldEngine.worldId,
-    lockClass: "threshold_lock",
-    lockStatus: "locked",
-    thresholdRead: { coherence: 1 },
-  });
-
-  const sealDecision = createSealDecision({
-    sealId: "seal_1",
-    targetObjectId: worldEngine.worldId,
-    checkeredStatus: true,
-    settingSunStatus: true,
-    eclipseStatus: false,
-    sealStatus: "sealed",
-    falseClosureFlag: false,
-  });
-
-  const returnDecision = createReturnDecision({
-    returnId: "return_1",
-    targetObjectId: worldEngine.worldId,
-    returnStatus: "ready",
-    inheritanceObjectId: "inheritance_1",
-    nextCycleAttachments: ["cycle_2"],
-    memoryPreservationRead: "preserved",
-  });
-
-  const parentAuditTrail = createParentAuditTrail({
-    auditId: "trail_1",
-    targetObjectId: worldEngine.worldId,
-    admissionHistory: [admissionDecision],
-    routingHistory: [routingDecision],
-    monitoringHistory: [monitoringState],
-    lockHistory: [lockDecision],
-    sealHistory: [sealDecision],
-    returnHistory: [returnDecision],
-  });
-
-  const phaseGate = createPhaseGate({
-    gateId: "phase_gate_1",
-    targetObjectId: worldEngine.worldId,
-    requiredFlagStatus: FLAG_STATUSES.GREEN,
-    requiredPhaseStatus: PHASE_STATUSES.MORNING_SUN,
-    pass: true,
-  });
-
-  const trackPermission = createTrackPermission({
-    permissionId: "permission_1",
-    targetObjectId: worldEngine.worldId,
-    currentTrack: "verification",
-    nextTrack: "orchestration",
-    granted: true,
-    rationaleTags: ["smoke_test"],
-  });
-
-  [
-    admissionDecision,
-    routingDecision,
-    monitoringState,
-    lockDecision,
-    sealDecision,
-    returnDecision,
-    parentAuditTrail,
-    phaseGate,
-    trackPermission,
-  ].forEach((output) => assertOrchestrationDecision(output));
-
-  return {
-    ok: true,
-    stack: {
-      spine: { topology, coordinate, adjacency, diagnostic, route, closure },
-      adapterBundle,
-      universeFactory: {
-        universeTemplate,
-        worldEngine,
-        planetEngine,
-        bodyEngine,
-        regionEngine,
-        environmentEngine,
-        relationField,
-        seedState,
+      getState: function () {
+        return freezeCopy(state);
       },
-      instrumentFactory: {
-        stateInstrument,
-        diagnosticInstrument,
-        routeInstrument,
-        engineInstrument,
-        fidelityInstrument,
-        driftInstrument,
-        fractureInstrument,
-        closureInstrument,
-        returnAudit,
-      },
-      orchestration: {
-        admissionDecision,
-        routingDecision,
-        monitoringState,
-        lockDecision,
-        sealDecision,
-        returnDecision,
-        parentAuditTrail,
-        phaseGate,
-        trackPermission,
-      },
-    },
-  };
-}
 
-export default runParentStackSmokeTest;
+      subscribe: function (listener) {
+        assert(typeof listener === "function", "subscribe requires a function");
+        subscribers.add(listener);
+        return function unsubscribe() {
+          subscribers.delete(listener);
+        };
+      },
+
+      run: function () {
+        const kernel = getKernel();
+
+        try {
+          setStatus(STATUS.RUNNING);
+          ensureChainReady();
+
+          const checks = buildChecks();
+          const passed = checks.every(function (check) {
+            return !!check.ready;
+          });
+
+          const result = {
+            version: VERSION,
+            testId: TEST_ID,
+            passed: passed,
+            checks: checks,
+            at: nowIso(),
+          };
+
+          const receipt = {
+            version: VERSION,
+            receiptId: "RUNTIME_BRIDGE_RECEIPT_v1",
+            status: passed ? "READY" : "PENDING",
+            bridgeStatus: passed ? "RUNTIME_BRIDGE_RECEIPT_READY" : "RUNTIME_BRIDGE_RECEIPT_PENDING",
+            at: nowIso(),
+          };
+
+          state.checks = checks;
+          state.passed = passed;
+          state.result = result;
+          state.receipt = receipt;
+
+          kernel.setParentStackStatus(passed ? "PARENT_STACK_SMOKE_READY" : "PARENT_STACK_SMOKE_PENDING", 8);
+          kernel.setRuntimeBridgeStatus(receipt.bridgeStatus);
+          kernel.setLiveRuntimeState(
+            passed ? "BASELINE_STRETCH_READY_FOR_GAUGES_GATE" : "BASELINE_STRETCH_PENDING"
+          );
+
+          setAliases(result, receipt);
+
+          publishEvent("parent-stack-smoke-ready", result);
+          publishEvent("runtime-bridge-receipt-ready", receipt);
+
+          emit("PARENT_STACK_SMOKE_TEST_COMPLETED", {
+            passed: passed,
+            receiptStatus: receipt.status,
+          });
+
+          setStatus(passed ? STATUS.READY : STATUS.PENDING);
+          return api.getState();
+        } catch (error) {
+          state.lastError = error && error.message ? error.message : String(error);
+          setStatus(STATUS.ERROR);
+
+          const result = {
+            version: VERSION,
+            testId: TEST_ID,
+            passed: false,
+            checks: state.checks,
+            error: state.lastError,
+            at: nowIso(),
+          };
+
+          const receipt = {
+            version: VERSION,
+            receiptId: "RUNTIME_BRIDGE_RECEIPT_v1",
+            status: "PENDING",
+            bridgeStatus: "RUNTIME_BRIDGE_RECEIPT_PENDING",
+            error: state.lastError,
+            at: nowIso(),
+          };
+
+          state.result = result;
+          state.receipt = receipt;
+
+          setAliases(result, receipt);
+
+          publishEvent("parent-stack-smoke-ready", result);
+          publishEvent("runtime-bridge-receipt-ready", receipt);
+
+          emit("PARENT_STACK_SMOKE_TEST_ERROR", { message: state.lastError });
+
+          if (typeof console !== "undefined" && console.error) {
+            console.error(error);
+          }
+
+          return api.getState();
+        }
+      },
+
+      boot: function () {
+        return api.run();
+      },
+    };
+
+    return Object.freeze(api);
+  }
+
+  const ParentStackSmokeTest = createSmokeTest();
+  global.ParentStackSmokeTest = ParentStackSmokeTest;
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = ParentStackSmokeTest;
+  }
+
+  ParentStackSmokeTest.boot();
+})(typeof globalThis !== "undefined" ? globalThis : window);

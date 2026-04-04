@@ -188,10 +188,9 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
 </div>
 
 <script type="module">
-import instrumentsModule from "/assets/instruments.js";
+import { getRuntimeReceipt } from "/world/runtime.js";
+import runParentStackSmokeTest from "/runtime/parent/parent_stack_smoke_test.js";
 
-const RECEIPT_KEY = "__AUTHORITY_RECEIPT__";
-const STORAGE_KEY = "cte_runtime_v4";
 const HISTORY_MAX = 240;
 const REFRESH_MS = 250;
 const PARENT_STACK_PATH = "/runtime/parent/parent_stack_smoke_test.js";
@@ -217,7 +216,6 @@ const history = {
 };
 
 const parentStackState = {
-  started: false,
   loaded: false,
   status: "PENDING",
   pass: false,
@@ -228,16 +226,15 @@ const parentStackState = {
 };
 
 const runtimeBridgeState = {
-  started: false,
   loaded: false,
   status: "PENDING",
-  module: null,
   error: null,
   lastReceipt: null,
   source: RUNTIME_MODULE_PATH,
 };
 
 let timer = null;
+let lastTickMs = performance.now();
 
 function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
 function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
@@ -271,93 +268,49 @@ function setText(id,text,cls=""){
   el.textContent=text;
   el.className=`v ${cls}`.trim();
 }
+function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle="#070b12";
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="#1f2a36";
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(0,h-12);
+  ctx.lineTo(w,h-12);
+  ctx.stroke();
 
-function getStoredReceipt(){
-  const win = window[RECEIPT_KEY];
-  if(win && typeof win === "object"){
-    return { ...win, __source: "window" };
+  let vals = [];
+  for (const def of seriesDefs) {
+    vals = vals.concat(def.data.filter(isFiniteNumber));
   }
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(raw){
-      const parsed = JSON.parse(raw);
-      if(parsed && typeof parsed === "object"){
-        return { ...parsed, __source: "localStorage" };
-      }
-    }
-  }catch{}
-  return null;
-}
 
-async function ensureParentStackStatus(){
-  if(parentStackState.started) return;
-  parentStackState.started = true;
+  let lo=minY, hi=maxY;
+  if(lo===null || hi===null){
+    const absVals = vals.length ? vals : [0];
+    lo = Math.min(...absVals);
+    hi = Math.max(...absVals);
+    if(lo===hi){ lo -= 1; hi += 1; }
+  }
+  const span = (hi - lo) || 1;
 
-  try{
-    const module = await import(PARENT_STACK_PATH);
-    const runner =
-      typeof module.runParentStackSmokeTest === "function"
-        ? module.runParentStackSmokeTest
-        : module.default;
-
-    if(typeof runner !== "function"){
-      throw new Error("Smoke test export not found.");
-    }
-
-    const result = await runner();
-    if(!result || result.ok !== true){
-      throw new Error("Smoke test did not return ok=true.");
-    }
-
-    const stack = safeObj(result.stack);
-    const summary = {
-      spine: !!stack.spine,
-      adapter: !!stack.adapterBundle,
-      universe: !!stack.universeFactory,
-      instrument: !!stack.instrumentFactory,
-      orchestration: !!stack.orchestration,
-    };
-
-    parentStackState.summary = summary;
-    parentStackState.loadedCount = Object.values(summary).filter(Boolean).length;
-    parentStackState.pass = parentStackState.loadedCount === 5;
-    parentStackState.status = parentStackState.pass ? "PASS" : "FAIL";
-    parentStackState.loaded = true;
-    parentStackState.error = null;
-  }catch(error){
-    parentStackState.loaded = true;
-    parentStackState.pass = false;
-    parentStackState.status = "FAIL";
-    parentStackState.loadedCount = 0;
-    parentStackState.summary = {
-      spine: false,
-      adapter: false,
-      universe: false,
-      instrument: false,
-      orchestration: false,
-    };
-    parentStackState.error = error instanceof Error ? error.message : String(error);
+  for (const def of seriesDefs) {
+    ctx.strokeStyle = def.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    def.data.forEach((v,i)=>{
+      const x = (i / Math.max(1, HISTORY_MAX - 1)) * w;
+      const y = (h - 12) - ((v - lo) / span) * (h - 24);
+      if(i===0) ctx.moveTo(x,y);
+      else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
   }
 }
 
-async function ensureRuntimeBridge(){
-  if(runtimeBridgeState.started) return;
-  runtimeBridgeState.started = true;
-
-  try{
-    const module = await import(RUNTIME_MODULE_PATH);
-    runtimeBridgeState.module = module;
-    runtimeBridgeState.loaded = true;
-    runtimeBridgeState.status = "ONLINE";
-    runtimeBridgeState.error = null;
-  }catch(error){
-    runtimeBridgeState.loaded = true;
-    runtimeBridgeState.status = "FAIL";
-    runtimeBridgeState.error = error instanceof Error ? error.message : String(error);
-  }
-}
-
-function computePrimitiveMetrics(forceVector = {}){
+function computePrimitiveMetrics(forceVector = {}) {
   const N = Number(forceVector.N || 0);
   const E = Number(forceVector.E || 0);
   const S = Number(forceVector.S || 0);
@@ -377,160 +330,71 @@ function computePrimitiveMetrics(forceVector = {}){
     asymmetryWeight: Math.min(1, Math.abs((N + E) - (S + W)) / 10),
     directionalWeight: Math.min(1, (ew + ns + vertical) / 10),
     directionalContrast: Math.min(1, Math.max(ew, ns, vertical) / 10),
-    magnitude,
+    magnitude
   };
 }
 
-function buildRuntimeReceiptFromBridge(){
-  if(!runtimeBridgeState.module) return null;
+function classifyState(receipt, ageMs) {
+  if (!receipt || safeObj(receipt.verification).pass !== true) return "OFFLINE";
+  if (isFiniteNumber(ageMs) && ageMs > 2500) return "STALE";
+  return "LIVE";
+}
 
-  try{
-    const runtimeModule = runtimeBridgeState.module;
-    if(typeof runtimeModule.refreshFrameState === "function"){
-      runtimeModule.refreshFrameState({ elapsedSeconds: performance.now() / 1000 });
-    }
-
-    const currentState =
-      typeof runtimeModule.getCurrentState === "function"
-        ? runtimeModule.getCurrentState()
-        : null;
-
-    const traversalStatus =
-      typeof runtimeModule.getTraversalStatus === "function"
-        ? runtimeModule.getTraversalStatus()
-        : null;
-
-    const projectionState =
-      typeof runtimeModule.getProjectionState === "function"
-        ? runtimeModule.getProjectionState()
-        : "flat";
-
-    const field =
-      typeof runtimeModule.getField === "function"
-        ? runtimeModule.getField()
-        : null;
-
-    if(!currentState || !field){
-      throw new Error("Runtime module did not return current state and field.");
-    }
-
-    const forceVector = safeObj(safeObj(currentState.force).vector);
-    const primitiveMetrics = computePrimitiveMetrics(forceVector);
-    const selectedProjection = safeObj(currentState.selectedProjection);
-    const region = safeObj(currentState.region);
-    const boundary = safeObj(currentState.boundary);
-    const threshold = safeObj(currentState.threshold);
-    const currentReceipt = safeObj(currentState.receipt);
-    const sourcePhase =
-      threshold.action ||
-      (safeObj(traversalStatus).admissible ? "PASS" : "HALT") ||
-      projectionState ||
-      "runtime_live";
-
-    const receipt = {
-      __source: "runtime-module",
-      timestamp: Date.now(),
-      verification: { pass: true },
-      phase: sourcePhase,
-      scope: "runtime_module",
-      lens: projectionState,
-      primitive: {
-        primitiveType: "runtime_packet",
-        primitivePath: projectionState,
-        packetSeparationWeight: primitiveMetrics.packetSeparationWeight,
-        shadowDensity: primitiveMetrics.shadowDensity,
-        fragmentWeight: primitiveMetrics.fragmentWeight,
-        asymmetryWeight: primitiveMetrics.asymmetryWeight,
-        directionalWeight: primitiveMetrics.directionalWeight,
-        directionalContrast: primitiveMetrics.directionalContrast,
-        terrainEnvelope: currentState.terrainClass || "unknown",
-      },
-      topology: {
-        visibleCellCount: Number(field.width || 0) * Number(field.height || 0),
-        emittedCellCount: Number(field.width || 0) * Number(field.height || 0),
-        skippedCellCount: 0,
-      },
-      renderAuthority: {
-        liveRenderPath: RUNTIME_MODULE_PATH,
-        renderReadsScope: true,
-        renderReadsLens: true,
-        fallbackMode: false,
-      },
-      density: {
-        densityTier: "runtime_module",
-        subdivisionTier: "parent",
-        averageCellSpanPx: 0,
-      },
-      audit: {
-        waterFamilyCount: currentState.waterMask ? 1 : 0,
-        landFamilyCount: currentState.landMask ? 1 : 0,
-        cryosphereCount: 0,
-        shorelineCount: currentState.shorelineMask ? 1 : 0,
-        terrainChannelCount: currentState.terrainClass ? 1 : 0,
-        atmosphereChannelCount: currentState.climateBand ? 1 : 0,
-        cosmosChannelCount: 1,
-        psychologyChannelCount: 0,
-      },
-      projectionState: Object.keys(selectedProjection).length
-        ? selectedProjection
-        : { mode: projectionState },
-      worldVariantState: {
-        activeVariant: projectionState,
-        regionId: region.regionId || region.label || "unknown",
-      },
-      traversalState: {
-        admissible: !!safeObj(traversalStatus).admissible,
-        action: safeObj(traversalStatus).action || threshold.action || "UNKNOWN",
-        thresholdPass: !!safeObj(traversalStatus).thresholdPass,
-        boundaryPass: !!safeObj(traversalStatus).boundaryPass,
-      },
-      worldModeState: {
-        traversalMode: projectionState,
-        zoneState: boundary.classification || "unknown",
-      },
-      psychology: {
-        state: { carriageMode: "runtime_bridge" },
-        envelope: {},
-        receipt: {},
-      },
-      region: {
-        regionId: region.regionId || region.label || "unknown",
-        label: region.label || region.regionId || "unknown",
-      },
-      node: currentState.node,
-      force: currentState.force,
-      forces: currentState.forces,
-      boundary: currentState.boundary,
-      threshold: currentState.threshold,
-      runtimeMeta: {
-        kernelI: currentState.index?.i ?? currentReceipt.state?.i ?? null,
-        kernelJ: currentState.index?.j ?? currentReceipt.state?.j ?? null,
-        denseX: currentState.denseIndex?.x ?? null,
-        denseY: currentState.denseIndex?.y ?? null,
-        projectionState,
-        habitability: currentState.habitability ?? null,
-        traversalDifficulty: currentState.traversalDifficulty ?? null,
-      }
+async function loadParentStack() {
+  try {
+    const result = await runParentStackSmokeTest();
+    const stack = safeObj(result.stack);
+    const summary = {
+      spine: !!stack.spine,
+      adapter: !!stack.adapterBundle,
+      universe: !!stack.universeFactory,
+      instrument: !!stack.instrumentFactory,
+      orchestration: !!stack.orchestration
     };
 
-    runtimeBridgeState.lastReceipt = receipt;
+    parentStackState.summary = summary;
+    parentStackState.loadedCount = Object.values(summary).filter(Boolean).length;
+    parentStackState.pass = result?.ok === true && parentStackState.loadedCount === 5;
+    parentStackState.status = parentStackState.pass ? "PASS" : "FAIL";
+    parentStackState.loaded = true;
+    parentStackState.error = null;
+  } catch (error) {
+    parentStackState.loaded = true;
+    parentStackState.pass = false;
+    parentStackState.status = "FAIL";
+    parentStackState.loadedCount = 0;
+    parentStackState.summary = {
+      spine: false,
+      adapter: false,
+      universe: false,
+      instrument: false,
+      orchestration: false
+    };
+    parentStackState.error = error instanceof Error ? error.message : String(error);
+  }
+}
+
+function loadRuntimeBridge() {
+  try {
+    const receipt = getRuntimeReceipt({
+      frameState: { elapsedSeconds: performance.now() / 1000 },
+      timestamp: Date.now()
+    });
+    runtimeBridgeState.loaded = true;
     runtimeBridgeState.status = "ONLINE";
     runtimeBridgeState.error = null;
+    runtimeBridgeState.lastReceipt = receipt;
     return receipt;
-  }catch(error){
+  } catch (error) {
+    runtimeBridgeState.loaded = true;
     runtimeBridgeState.status = "FAIL";
     runtimeBridgeState.error = error instanceof Error ? error.message : String(error);
+    runtimeBridgeState.lastReceipt = null;
     return null;
   }
 }
 
-function getReceipt(){
-  const stored = getStoredReceipt();
-  if(stored) return stored;
-  return buildRuntimeReceiptFromBridge();
-}
-
-function renderParentStack(){
+function renderParentStack() {
   setText("k-parent-stack", parentStackState.status, kpiClass(parentStackState.status, "parent"));
   setText("k-parent-files", `${parentStackState.loadedCount}/5`);
 
@@ -539,8 +403,8 @@ function renderParentStack(){
     parentStackState.status === "PENDING"
       ? "Loading parent stack smoke test"
       : parentStackState.status === "PASS"
-      ? "Parent stack smoke test passed"
-      : "Parent stack smoke test failed";
+        ? "Parent stack smoke test passed"
+        : "Parent stack smoke test failed";
 
   document.getElementById("parentRows").innerHTML =
     row("status", statusText) +
@@ -555,67 +419,24 @@ function renderParentStack(){
     row("error", parentStackState.error || "none");
 }
 
-function renderRuntimeBridge(){
+function renderRuntimeBridge() {
   setText("k-runtime-bridge", runtimeBridgeState.status, kpiClass(runtimeBridgeState.status, "bridge"));
+
+  const receipt = safeObj(runtimeBridgeState.lastReceipt);
+  const state = safeObj(receipt.state);
+  const denseIndex = safeObj(receipt.denseIndex);
 
   document.getElementById("bridgeRows").innerHTML =
     row("status", runtimeBridgeState.status) +
     row("module", runtimeBridgeState.source) +
-    row("receipt source", runtimeBridgeState.lastReceipt?.__source || "none") +
-    row("verification", runtimeBridgeState.lastReceipt?.verification?.pass === true ? "pass" : "none") +
-    row("projection", runtimeBridgeState.lastReceipt?.runtimeMeta?.projectionState || "—") +
-    row("kernel index", runtimeBridgeState.lastReceipt
-      ? `${runtimeBridgeState.lastReceipt.runtimeMeta?.kernelI ?? "—"},${runtimeBridgeState.lastReceipt.runtimeMeta?.kernelJ ?? "—"}`
-      : "—") +
-    row("dense index", runtimeBridgeState.lastReceipt
-      ? `${runtimeBridgeState.lastReceipt.runtimeMeta?.denseX ?? "—"},${runtimeBridgeState.lastReceipt.runtimeMeta?.denseY ?? "—"}`
-      : "—") +
+    row("contract", receipt.contract || "—") +
+    row("projection", receipt.projection || "—") +
+    row("kernel index", `${state.i ?? "—"},${state.j ?? "—"}`) +
+    row("dense index", `${denseIndex.x ?? "—"},${denseIndex.y ?? "—"}`) +
     row("error", runtimeBridgeState.error || "none");
 }
 
-function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle="#070b12";
-  ctx.fillRect(0,0,w,h);
-  ctx.strokeStyle="#1f2a36";
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(0,h-12);
-  ctx.lineTo(w,h-12);
-  ctx.stroke();
-
-  let vals = [];
-  for(const def of seriesDefs){
-    vals = vals.concat(def.data.filter(isFiniteNumber));
-  }
-
-  let lo=minY, hi=maxY;
-  if(lo===null || hi===null){
-    const absVals = vals.length ? vals : [0];
-    lo = Math.min(...absVals);
-    hi = Math.max(...absVals);
-    if(lo===hi){ lo -= 1; hi += 1; }
-  }
-  const span = (hi - lo) || 1;
-
-  for(const def of seriesDefs){
-    ctx.strokeStyle = def.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    def.data.forEach((v,i)=>{
-      const x = (i / Math.max(1, HISTORY_MAX - 1)) * w;
-      const y = (h - 12) - ((v - lo) / span) * (h - 24);
-      if(i===0) ctx.moveTo(x,y);
-      else ctx.lineTo(x,y);
-    });
-    ctx.stroke();
-  }
-}
-
-function renderOfflineRuntime(){
+function renderOfflineRuntime() {
   setText("k-state","OFFLINE","bad");
   setText("k-classified","—");
   setText("k-phase","—");
@@ -634,165 +455,125 @@ function renderOfflineRuntime(){
   document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
 }
 
-function renderRuntime(data){
-  const runtime = safeObj(data);
-  const instrument = instrumentsModule.buildInstrumentReceipt({
-    runtimeReceipt: runtime,
-    authorityState: {
-      runtimeSource: runtime.renderAuthority?.liveRenderPath || RUNTIME_MODULE_PATH,
-      instrumentSource: "/assets/instruments.js"
-    },
-    renderSummary: {
-      primitive: safeObj(runtime.primitive),
-      topology: safeObj(runtime.topology),
-      renderAuthority: safeObj(runtime.renderAuthority),
-      density: safeObj(runtime.density),
-      audit: safeObj(runtime.audit)
-    },
-    projectionSummary: safeObj(runtime.projectionState),
-    worldVariantState: safeObj(runtime.worldVariantState),
-    traversalState: safeObj(runtime.traversalState),
-    worldModeState: safeObj(runtime.worldModeState),
-    psychologyState: safeObj(safeObj(runtime.psychology).state),
-    psychologyEnvelope: safeObj(safeObj(runtime.psychology).envelope),
-    psychologyReceipt: safeObj(safeObj(runtime.psychology).receipt)
-  });
+function renderRuntime(receipt, nowMs, dtMs) {
+  const state = safeObj(receipt.state);
+  const denseIndex = safeObj(receipt.denseIndex);
+  const region = safeObj(receipt.region);
+  const node = safeObj(receipt.node);
+  const boundary = safeObj(receipt.boundary);
+  const threshold = safeObj(receipt.threshold);
+  const forces = safeObj(receipt.forces);
+  const traversalStatus = safeObj(receipt.traversalStatus);
+  const selectedProjection = safeObj(receipt.selectedProjection);
+  const fieldSummary = safeObj(receipt.fieldSummary);
 
-  const diagnostics = safeObj(instrument.diagnosticsPayload);
-  const display = safeObj(instrument.displayPayload);
-  const failure = safeObj(display.failure);
-  const summary = safeObj(display.summary);
-  const meta = safeObj(instrument.meta);
-  const primitive = safeObj(meta.primitive);
-  const scope = safeObj(meta.scope);
-  const role = safeObj(meta.role);
-  const authority = safeObj(meta.authority);
-  const psychology = safeObj(meta.psychology);
-  const thresholds = safeObj(meta.thresholds);
+  const ageMs = isFiniteNumber(receipt.timestamp) ? Math.max(0, nowMs - receipt.timestamp) : null;
+  const fps = dtMs > 0 ? 1000 / dtMs : null;
+  const primitive = computePrimitiveMetrics(forces);
+  const freshness = isFiniteNumber(ageMs) ? ageMs <= 2500 : false;
+  const classifiedState = classifyState(receipt, ageMs);
 
-  const stateValue = runtime.verification?.pass === true
-    ? (diagnostics.fresh === true ? "LIVE" : "STALE")
-    : "OFFLINE";
+  push(history.velocityA, primitive.packetSeparationWeight);
+  push(history.velocityB, primitive.shadowDensity);
+  push(history.velocityC, primitive.fragmentWeight);
+  push(history.coherence, primitive.directionalWeight);
+  push(history.clarity, primitive.directionalContrast);
+  push(history.stability, traversalStatus.admissible ? 1 : 0);
+  push(history.fps, fps ?? 0);
+  push(history.fresh, freshness ? 1 : 0);
+  push(history.burden, primitive.fragmentWeight);
 
-  push(history.velocityA, primitive.packetSeparationWeight ?? 0);
-  push(history.velocityB, primitive.shadowDensity ?? 0);
-  push(history.velocityC, primitive.fragmentWeight ?? 0);
-  push(history.coherence, meta.coherence ?? 0);
-  push(history.clarity, safeObj(display.progress).c ?? 0);
-  push(history.stability, safeObj(display.progress).st ?? 0);
-  push(history.fps, diagnostics.fps ?? 0);
-  push(history.fresh, diagnostics.fresh === true ? 1 : 0);
-  push(history.burden, thresholds.totalBurdenProxy ?? 0);
-
-  setText("k-state", stateValue, kpiClass(stateValue,"state"));
-  setText("k-classified", instrument.classifiedState || "—");
-  setText("k-phase", diagnostics.sourcePhase || runtime.phase || "—");
-  setText("k-fresh", diagnostics.fresh ? "FRESH" : "STALE", kpiClass(diagnostics.fresh ? "FRESH" : "STALE","fresh"));
-  setText("k-fps", intfmt(diagnostics.fps));
-  setText("k-dt", isFiniteNumber(diagnostics.dtMs) ? `${Math.round(diagnostics.dtMs)}ms` : "—");
-  setText("k-age", isFiniteNumber(diagnostics.ageMs) ? `${Math.round(diagnostics.ageMs)}ms` : "—");
+  setText("k-state", classifiedState, kpiClass(classifiedState, "state"));
+  setText("k-classified", classifiedState);
+  setText("k-phase", receipt.phase || "—");
+  setText("k-fresh", freshness ? "FRESH" : "STALE", kpiClass(freshness ? "FRESH" : "STALE", "fresh"));
+  setText("k-fps", intfmt(fps));
+  setText("k-dt", isFiniteNumber(dtMs) ? `${Math.round(dtMs)}ms` : "—");
+  setText("k-age", isFiniteNumber(ageMs) ? `${Math.round(ageMs)}ms` : "—");
 
   document.getElementById("runtimeRows").innerHTML =
-    row("source", data.__source || "—") +
-    row("phase", diagnostics.sourcePhase || runtime.phase || "—") +
-    row("mode", diagnostics.sourceMode || "active") +
-    row("timestampValid", bool(diagnostics.timestampValid)) +
-    row("frameSync", bool(diagnostics.frameSync)) +
-    row("fresh", bool(diagnostics.fresh)) +
-    row("verificationPass", bool(diagnostics.verificationPass)) +
-    row("classifiedState", instrument.classifiedState || "—");
+    row("source", receipt.source || "—") +
+    row("contract", receipt.contract || "—") +
+    row("verificationPass", bool(safeObj(receipt.verification).pass)) +
+    row("fresh", bool(freshness)) +
+    row("timestamp", String(receipt.timestamp ?? "—")) +
+    row("classifiedState", classifiedState) +
+    row("projection", receipt.projection || "—") +
+    row("phase", receipt.phase || "—");
 
   document.getElementById("motionRows").innerHTML =
-    row("direction16", meta.direction16 || "—") +
-    row("trajectoryClass", meta.trajectoryClass || "—") +
-    row("packetSeparationWeight", fmt(primitive.packetSeparationWeight,6)) +
-    row("shadowDensity", fmt(primitive.shadowDensity,6)) +
-    row("fragmentWeight", fmt(primitive.fragmentWeight,6)) +
-    row("asymmetryWeight", fmt(primitive.asymmetryWeight,6)) +
-    row("vectorMagnitude", fmt(safeObj(meta.vector).magnitude,6)) +
-    row("directionalWeight", fmt(primitive.directionalWeight,6)) +
-    row("directionalContrast", fmt(primitive.directionalContrast,6)) +
-    row("yaw/pitch", "RESERVED") +
-    row("drag/autospin", "RESERVED");
+    row("packetSeparationWeight", fmt(primitive.packetSeparationWeight, 6)) +
+    row("shadowDensity", fmt(primitive.shadowDensity, 6)) +
+    row("fragmentWeight", fmt(primitive.fragmentWeight, 6)) +
+    row("asymmetryWeight", fmt(primitive.asymmetryWeight, 6)) +
+    row("directionalWeight", fmt(primitive.directionalWeight, 6)) +
+    row("directionalContrast", fmt(primitive.directionalContrast, 6)) +
+    row("force.N", fmt(forces.N, 3)) +
+    row("force.E", fmt(forces.E, 3)) +
+    row("force.S", fmt(forces.S, 3)) +
+    row("force.W", fmt(forces.W, 3)) +
+    row("force.B", fmt(forces.B, 3));
 
   document.getElementById("worldRows").innerHTML =
-    row("continentId", scope.continentId || "—") +
-    row("continentName", scope.continentName || "—") +
-    row("continentTier", scope.continentTier ?? "—") +
-    row("activeVariant", scope.activeVariant ?? "—") +
-    row("ratio", scope.ratio || "—") +
-    row("traversalMode", scope.traversalMode || "—") +
-    row("zoneState", scope.zoneState || "—") +
-    row("terrainEnvelope", primitive.terrainEnvelope || "—") +
-    row("flowClass", role.flowClass || "—") +
-    row("flowDirection", role.flowDirection || "—") +
-    row("hemisphereSeason", role.hemisphereSeason || "—");
+    row("regionId", region.regionId || "—") +
+    row("regionLabel", region.label || "—") +
+    row("nodeId", node.nodeId || "—") +
+    row("nodeLabel", node.label || "—") +
+    row("terrainClass", receipt.terrainClass || "—") +
+    row("biomeType", receipt.biomeType || "—") +
+    row("surfaceMaterial", receipt.surfaceMaterial || "—") +
+    row("climateBand", receipt.climateBand || "—") +
+    row("climate", receipt.climate || "—") +
+    row("habitability", fmt(receipt.habitability, 3)) +
+    row("traversalDifficulty", fmt(receipt.traversalDifficulty, 3));
 
   document.getElementById("renderRows").innerHTML =
-    row("primitiveType", runtime.primitive?.primitiveType ?? "—") +
-    row("primitivePath", runtime.primitive?.primitivePath ?? "—") +
-    row("visibleCellCount", runtime.topology?.visibleCellCount ?? "—") +
-    row("emittedCellCount", runtime.topology?.emittedCellCount ?? "—") +
-    row("skippedCellCount", runtime.topology?.skippedCellCount ?? "—") +
-    row("densityTier", runtime.density?.densityTier ?? "—") +
-    row("subdivisionTier", runtime.density?.subdivisionTier ?? "—") +
-    row("averageCellSpanPx", fmt(runtime.density?.averageCellSpanPx,4)) +
-    row("liveRenderPath", runtime.renderAuthority?.liveRenderPath ?? "—") +
-    row("renderReadsScope", bool(runtime.renderAuthority?.renderReadsScope)) +
-    row("renderReadsLens", bool(runtime.renderAuthority?.renderReadsLens)) +
-    row("fallbackMode", bool(runtime.renderAuthority?.fallbackMode));
+    row("selectedProjection", Object.keys(selectedProjection).length ? "present" : "none") +
+    row("projectionMode", receipt.projection || "—") +
+    row("fieldWidth", fieldSummary.width ?? "—") +
+    row("fieldHeight", fieldSummary.height ?? "—") +
+    row("denseX", denseIndex.x ?? "—") +
+    row("denseY", denseIndex.y ?? "—") +
+    row("kernelI", state.i ?? "—") +
+    row("kernelJ", state.j ?? "—");
 
   document.getElementById("scopeRows").innerHTML =
-    row("scope", runtime.scope ?? "—") +
-    row("lens", runtime.lens ?? "—") +
-    row("sampleX", scope.sampleX ?? "—") +
-    row("sampleY", scope.sampleY ?? "—") +
-    row("width", scope.width ?? "—") +
-    row("height", scope.height ?? "—") +
-    row("projection.centerX", fmt(safeObj(meta.projectionSummary).centerX,2)) +
-    row("projection.centerY", fmt(safeObj(meta.projectionSummary).centerY,2)) +
-    row("projection.radius", fmt(safeObj(meta.projectionSummary).radius,2)) +
-    row("projection.yaw", fmt(safeObj(meta.projectionSummary).yaw,4)) +
-    row("projection.pitch", fmt(safeObj(meta.projectionSummary).pitch,4));
+    row("boundary.classification", boundary.classification || "—") +
+    row("threshold.action", threshold.action || "—") +
+    row("threshold.value", fmt(threshold.value, 3)) +
+    row("admissible", bool(traversalStatus.admissible)) +
+    row("targetExists", bool(traversalStatus.targetExists)) +
+    row("targetLawful", bool(traversalStatus.targetLawful)) +
+    row("thresholdPass", bool(traversalStatus.thresholdPass)) +
+    row("boundaryPass", bool(traversalStatus.boundaryPass));
 
   document.getElementById("emitRows").innerHTML =
-    row("waterFamilyCount", runtime.audit?.waterFamilyCount ?? "—") +
-    row("landFamilyCount", runtime.audit?.landFamilyCount ?? "—") +
-    row("cryosphereCount", runtime.audit?.cryosphereCount ?? "—") +
-    row("shorelineCount", runtime.audit?.shorelineCount ?? "—") +
-    row("terrainChannelCount", runtime.audit?.terrainChannelCount ?? "—") +
-    row("atmosphereChannelCount", runtime.audit?.atmosphereChannelCount ?? "—") +
-    row("cosmosChannelCount", runtime.audit?.cosmosChannelCount ?? "—") +
-    row("psychologyChannelCount", runtime.audit?.psychologyChannelCount ?? "—") +
-    row("placement", "RESERVED");
+    row("waterMask", fmt(receipt.waterMask, 3)) +
+    row("landMask", fmt(receipt.landMask, 3)) +
+    row("shorelineMask", fmt(receipt.shorelineMask, 3)) +
+    row("moisture", fmt(receipt.moisture, 3)) +
+    row("accumulation", fmt(receipt.accumulation, 3)) +
+    row("selectedProjection.flat", selectedProjection.flat ? "yes" : "no") +
+    row("selectedProjection.tree", selectedProjection.tree ? "yes" : "no") +
+    row("selectedProjection.globe", selectedProjection.globe ? "yes" : "no");
 
   document.getElementById("diagRows").innerHTML =
-    row("instrument.classifiedState", instrument.classifiedState ?? "—") +
-    row("diagnostics.timestampMs", diagnostics.timestampMs ?? "—") +
-    row("diagnostics.ageMs", diagnostics.ageMs ?? "—") +
-    row("diagnostics.fps", diagnostics.fps ?? "—") +
-    row("diagnostics.dtMs", diagnostics.dtMs ?? "—") +
-    row("stateIndex", meta.stateIndex ?? "—") +
-    row("coherence", fmt(meta.coherence,6)) +
-    row("psychology.carriageMode", psychology.carriageMode ?? "—") +
-    row("256", thresholds.stateLattice ?? "—") +
-    row("61", thresholds.admissibilityMembrane ?? "—") +
-    row("451", thresholds.totalBurden ?? "—") +
-    row("normalizedState", fmt(thresholds.normalizedState,6)) +
-    row("admissibilityProgress", fmt(thresholds.admissibilityProgress,6)) +
-    row("totalBurdenProxy", fmt(thresholds.totalBurdenProxy,6)) +
-    row("summary.state", summary.state ?? "—") +
-    row("summary.world", summary.world ?? "—") +
-    row("summary.extended", summary.extended ?? "—");
+    row("coherence", fmt(primitive.directionalWeight, 6)) +
+    row("clarity", fmt(primitive.directionalContrast, 6)) +
+    row("stability", fmt(traversalStatus.admissible ? 1 : 0, 6)) +
+    row("fps", fmt(fps, 2)) +
+    row("dtMs", fmt(dtMs, 2)) +
+    row("ageMs", fmt(ageMs, 2)) +
+    row("fresh", bool(freshness)) +
+    row("deterministic", bool(safeObj(receipt.verification).deterministic));
 
   document.getElementById("failureRows").innerHTML =
-    row("failurePhase", failure.ph || "—") +
-    row("failureMessage", failure.msg || "—") +
-    row("receipt.timestamp", String(runtime.timestamp ?? "—")) +
-    row("runtimeSource", authority.runtimeSource || "—") +
-    row("instrumentSource", authority.instrumentSource || "—") +
-    row("storageKey", STORAGE_KEY) +
-    row("windowKey", RECEIPT_KEY);
+    row("bridgeError", runtimeBridgeState.error || "none") +
+    row("parentStackError", parentStackState.error || "none") +
+    row("moduleSource", runtimeBridgeState.source) +
+    row("parentStackSource", parentStackState.source) +
+    row("notes", "No controller failure") +
+    row("status", "live receipt acquired");
 
   drawMulti(document.getElementById("velocityChart"),[
     {data:history.velocityA,color:"#6fe7ff"},
@@ -813,49 +594,45 @@ function renderRuntime(data){
   ],0,Math.max(60,...history.fps,1));
 
   document.getElementById("footer").textContent =
-`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | BRIDGE=${runtimeBridgeState.status} | SOURCE=${data.__source || "—"} | PHASE=${diagnostics.sourcePhase || runtime.phase || "—"} | CLASSIFIED=${instrument.classifiedState || "—"} | AGE=${isFiniteNumber(diagnostics.ageMs) ? Math.round(diagnostics.ageMs) + "ms" : "—"} | CONT=${scope.continentId || "—"} | MODE=${scope.traversalMode || "—"}`;
+`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | BRIDGE=${runtimeBridgeState.status} | STATE=${classifiedState} | PHASE=${receipt.phase || "—"} | AGE=${isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—"} | KERNEL=${state.i ?? "—"},${state.j ?? "—"} | DENSE=${denseIndex.x ?? "—"},${denseIndex.y ?? "—"}`;
 }
 
-function renderOfflineRuntime(){
-  setText("k-state","OFFLINE","bad");
-  setText("k-classified","—");
-  setText("k-phase","—");
-  setText("k-fresh","—");
-  setText("k-fps","—");
-  setText("k-dt","—");
-  setText("k-age","—");
-
-  document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("renderRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("diagRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
-}
-
-async function tick(){
-  await ensureParentStackStatus();
-  await ensureRuntimeBridge();
-
+async function boot() {
+  await loadParentStack();
   renderParentStack();
+  loadRuntimeBridge();
   renderRuntimeBridge();
 
-  const data = getReceipt();
-  if(!data){
+  if (!parentStackState.pass && runtimeBridgeState.status === "FAIL") {
+    renderOfflineRuntime();
+  }
+
+  tick();
+}
+
+function tick() {
+  const nowMs = performance.now();
+  const dtMs = nowMs - lastTickMs;
+  lastTickMs = nowMs;
+
+  renderParentStack();
+
+  const receipt = loadRuntimeBridge();
+  renderRuntimeBridge();
+
+  if (!receipt) {
     renderOfflineRuntime();
     document.getElementById("footer").textContent =
-`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | BRIDGE=${runtimeBridgeState.status} | RUNTIME=OFFLINE | BRIDGE_ERROR=${runtimeBridgeState.error || "none"}`;
+`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | BRIDGE=${runtimeBridgeState.status} | RUNTIME=OFFLINE | ERROR=${runtimeBridgeState.error || "none"}`;
     timer = window.setTimeout(tick, REFRESH_MS);
     return;
   }
 
-  renderRuntime(data);
+  renderRuntime(receipt, Date.now(), dtMs);
   timer = window.setTimeout(tick, REFRESH_MS);
 }
 
-tick();
+boot();
 </script>
 </body>
 </html>

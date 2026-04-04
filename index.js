@@ -91,11 +91,12 @@ const createLayout = () => {
   applyBaseStyles();
 
   const root = ensureElement(INDEX_CONSTANTS.ROOT_ID, "div", document.body);
-  root.style.position = "fixed";
+  root.style.position = "absolute";
   root.style.inset = "0";
   root.style.display = "grid";
   root.style.gridTemplateRows = "1fr auto";
-  root.style.background = INDEX_CONSTANTS.BACKGROUND;
+  root.style.background = "transparent";
+  root.style.minHeight = "0";
 
   const canvasWrap = ensureElement("world-canvas-wrap", "div", root);
   canvasWrap.style.position = "relative";
@@ -112,7 +113,7 @@ const createLayout = () => {
   hud.style.position = "absolute";
   hud.style.left = "12px";
   hud.style.top = "12px";
-  hud.style.maxWidth = "min(520px, calc(100vw - 24px))";
+  hud.style.maxWidth = "min(520px, calc(100vw - 48px))";
   hud.style.padding = "10px 12px";
   hud.style.border = "1px solid rgba(255,255,255,0.08)";
   hud.style.background = "rgba(255,255,255,0.04)";
@@ -121,6 +122,8 @@ const createLayout = () => {
   hud.style.pointerEvents = "none";
   hud.style.whiteSpace = "pre-wrap";
   hud.style.lineHeight = "1.35";
+  hud.style.font = INDEX_CONSTANTS.FONT;
+  hud.style.color = INDEX_CONSTANTS.FOREGROUND;
 
   const panel = ensureElement(INDEX_CONSTANTS.PANEL_ID, "div", root);
   panel.style.padding = "10px 12px";
@@ -128,7 +131,9 @@ const createLayout = () => {
   panel.style.background = "rgba(255,255,255,0.02)";
   panel.style.overflow = "auto";
   panel.style.maxHeight = "22vh";
-  panel.textContent = "instrument boot path intentionally excluded";
+  if (!panel.textContent) {
+    panel.textContent = "instrument boot path intentionally excluded";
+  }
 
   return deepFreeze({ root, canvasWrap, canvas, hud, panel });
 };
@@ -148,9 +153,9 @@ const resizeCanvas = (canvas, ctx) => {
   if (canvas.width !== width || canvas.height !== height) {
     canvas.width = width;
     canvas.height = height;
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(dpr, dpr);
   }
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
   return deepFreeze({
     cssWidth: Math.max(1, Math.floor(rect.width)),
@@ -401,7 +406,8 @@ const createIndexHost = () => {
     lastInstrumentPacket: null,
     projection: INDEX_CONSTANTS.DEFAULT_PROJECTION,
     pendingMove: deepFreeze({ dx: 0, dy: 0 }),
-    runtimeHandle: null
+    runtimeHandle: null,
+    booted: false
   };
 
   const syncPlatform = () => resizeCanvas(layout.canvas, ctx);
@@ -561,5 +567,15 @@ export const stop = () => INDEX.stop();
 export const getFrameState = () => INDEX.getFrameState();
 export const getLastRenderPacket = () => INDEX.getLastRenderPacket();
 export const getLastInstrumentPacket = () => INDEX.getLastInstrumentPacket();
+
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => {
+      INDEX.start();
+    }, { once: true });
+  } else {
+    INDEX.start();
+  }
+}
 
 export default INDEX;

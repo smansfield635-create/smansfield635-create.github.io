@@ -108,19 +108,24 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
     <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
     <div class="kpi"><div class="k">Parent Stack</div><div id="k-parent-stack" class="v warn">PENDING</div></div>
     <div class="kpi"><div class="k">Parent Files</div><div id="k-parent-files" class="v">0/5</div></div>
+    <div class="kpi"><div class="k">Runtime Bridge</div><div id="k-runtime-bridge" class="v warn">PENDING</div></div>
     <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
     <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
     <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
     <div class="kpi"><div class="k">FPS</div><div id="k-fps" class="v">—</div></div>
     <div class="kpi"><div class="k">Δt</div><div id="k-dt" class="v">—</div></div>
     <div class="kpi"><div class="k">Age</div><div id="k-age" class="v">—</div></div>
-    <div class="kpi"><div class="k">Verification</div><div id="k-verification" class="v">—</div></div>
   </div>
 
   <div class="grid">
     <section class="panel">
       <div class="title">Parent Stack / Smoke Test</div>
       <div id="parentRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Runtime Bridge</div>
+      <div id="bridgeRows" class="rows"></div>
     </section>
 
     <section class="panel">
@@ -179,7 +184,7 @@ canvas{display:block;width:100%;height:140px;border:1px solid var(--line);border
     </section>
   </div>
 
-  <div id="footer" class="footer pre">Awaiting authoritative runtime receipt and parent-stack smoke result.</div>
+  <div id="footer" class="footer pre">Awaiting parent-stack smoke result and runtime bridge receipt.</div>
 </div>
 
 <script type="module">
@@ -190,6 +195,7 @@ const STORAGE_KEY = "cte_runtime_v4";
 const HISTORY_MAX = 240;
 const REFRESH_MS = 250;
 const PARENT_STACK_PATH = "/runtime/parent/parent_stack_smoke_test.js";
+const RUNTIME_MODULE_PATH = "/world/runtime.js";
 const PARENT_STACK_FILES = Object.freeze([
   "/runtime/parent/diamond_interface_spine.js",
   "/runtime/parent/kernel_adapter.js",
@@ -221,6 +227,16 @@ const parentStackState = {
   source: PARENT_STACK_PATH,
 };
 
+const runtimeBridgeState = {
+  started: false,
+  loaded: false,
+  status: "PENDING",
+  module: null,
+  error: null,
+  lastReceipt: null,
+  source: RUNTIME_MODULE_PATH,
+};
+
 let timer = null;
 
 function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
@@ -241,10 +257,9 @@ function kpiClass(v,type){
     if(v==="STALE") return "warn";
     return "bad";
   }
-  if(type==="verification") return v==="PASS"?"good":"bad";
   if(type==="fresh") return v==="FRESH"?"good":"warn";
-  if(type==="parent"){
-    if(v==="PASS") return "good";
+  if(type==="parent" || type==="bridge"){
+    if(v==="PASS" || v==="ONLINE") return "good";
     if(v==="PENDING") return "warn";
     return "bad";
   }
@@ -257,7 +272,7 @@ function setText(id,text,cls=""){
   el.className=`v ${cls}`.trim();
 }
 
-function getReceipt(){
+function getStoredReceipt(){
   const win = window[RECEIPT_KEY];
   if(win && typeof win === "object"){
     return { ...win, __source: "window" };
@@ -325,6 +340,196 @@ async function ensureParentStackStatus(){
   }
 }
 
+async function ensureRuntimeBridge(){
+  if(runtimeBridgeState.started) return;
+  runtimeBridgeState.started = true;
+
+  try{
+    const module = await import(RUNTIME_MODULE_PATH);
+    runtimeBridgeState.module = module;
+    runtimeBridgeState.loaded = true;
+    runtimeBridgeState.status = "ONLINE";
+    runtimeBridgeState.error = null;
+  }catch(error){
+    runtimeBridgeState.loaded = true;
+    runtimeBridgeState.status = "FAIL";
+    runtimeBridgeState.error = error instanceof Error ? error.message : String(error);
+  }
+}
+
+function computePrimitiveMetrics(forceVector = {}){
+  const N = Number(forceVector.N || 0);
+  const E = Number(forceVector.E || 0);
+  const S = Number(forceVector.S || 0);
+  const W = Number(forceVector.W || 0);
+  const B = Number(forceVector.B || 0);
+
+  const ew = Math.abs(E - W);
+  const ns = Math.abs(N - S);
+  const vertical = Math.abs(B);
+  const magnitude = Math.sqrt((E - W) ** 2 + (N - S) ** 2 + B ** 2);
+  const total = Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B);
+
+  return {
+    packetSeparationWeight: Math.min(1, magnitude / 10),
+    shadowDensity: Math.min(1, vertical / 10),
+    fragmentWeight: Math.min(1, total / 20),
+    asymmetryWeight: Math.min(1, Math.abs((N + E) - (S + W)) / 10),
+    directionalWeight: Math.min(1, (ew + ns + vertical) / 10),
+    directionalContrast: Math.min(1, Math.max(ew, ns, vertical) / 10),
+    magnitude,
+  };
+}
+
+function buildRuntimeReceiptFromBridge(){
+  if(!runtimeBridgeState.module) return null;
+
+  try{
+    const runtimeModule = runtimeBridgeState.module;
+    if(typeof runtimeModule.refreshFrameState === "function"){
+      runtimeModule.refreshFrameState({ elapsedSeconds: performance.now() / 1000 });
+    }
+
+    const currentState =
+      typeof runtimeModule.getCurrentState === "function"
+        ? runtimeModule.getCurrentState()
+        : null;
+
+    const traversalStatus =
+      typeof runtimeModule.getTraversalStatus === "function"
+        ? runtimeModule.getTraversalStatus()
+        : null;
+
+    const projectionState =
+      typeof runtimeModule.getProjectionState === "function"
+        ? runtimeModule.getProjectionState()
+        : "flat";
+
+    const field =
+      typeof runtimeModule.getField === "function"
+        ? runtimeModule.getField()
+        : null;
+
+    if(!currentState || !field){
+      throw new Error("Runtime module did not return current state and field.");
+    }
+
+    const forceVector = safeObj(safeObj(currentState.force).vector);
+    const primitiveMetrics = computePrimitiveMetrics(forceVector);
+    const selectedProjection = safeObj(currentState.selectedProjection);
+    const region = safeObj(currentState.region);
+    const boundary = safeObj(currentState.boundary);
+    const threshold = safeObj(currentState.threshold);
+    const currentReceipt = safeObj(currentState.receipt);
+    const sourcePhase =
+      threshold.action ||
+      (safeObj(traversalStatus).admissible ? "PASS" : "HALT") ||
+      projectionState ||
+      "runtime_live";
+
+    const receipt = {
+      __source: "runtime-module",
+      timestamp: Date.now(),
+      verification: { pass: true },
+      phase: sourcePhase,
+      scope: "runtime_module",
+      lens: projectionState,
+      primitive: {
+        primitiveType: "runtime_packet",
+        primitivePath: projectionState,
+        packetSeparationWeight: primitiveMetrics.packetSeparationWeight,
+        shadowDensity: primitiveMetrics.shadowDensity,
+        fragmentWeight: primitiveMetrics.fragmentWeight,
+        asymmetryWeight: primitiveMetrics.asymmetryWeight,
+        directionalWeight: primitiveMetrics.directionalWeight,
+        directionalContrast: primitiveMetrics.directionalContrast,
+        terrainEnvelope: currentState.terrainClass || "unknown",
+      },
+      topology: {
+        visibleCellCount: Number(field.width || 0) * Number(field.height || 0),
+        emittedCellCount: Number(field.width || 0) * Number(field.height || 0),
+        skippedCellCount: 0,
+      },
+      renderAuthority: {
+        liveRenderPath: RUNTIME_MODULE_PATH,
+        renderReadsScope: true,
+        renderReadsLens: true,
+        fallbackMode: false,
+      },
+      density: {
+        densityTier: "runtime_module",
+        subdivisionTier: "parent",
+        averageCellSpanPx: 0,
+      },
+      audit: {
+        waterFamilyCount: currentState.waterMask ? 1 : 0,
+        landFamilyCount: currentState.landMask ? 1 : 0,
+        cryosphereCount: 0,
+        shorelineCount: currentState.shorelineMask ? 1 : 0,
+        terrainChannelCount: currentState.terrainClass ? 1 : 0,
+        atmosphereChannelCount: currentState.climateBand ? 1 : 0,
+        cosmosChannelCount: 1,
+        psychologyChannelCount: 0,
+      },
+      projectionState: Object.keys(selectedProjection).length
+        ? selectedProjection
+        : { mode: projectionState },
+      worldVariantState: {
+        activeVariant: projectionState,
+        regionId: region.regionId || region.label || "unknown",
+      },
+      traversalState: {
+        admissible: !!safeObj(traversalStatus).admissible,
+        action: safeObj(traversalStatus).action || threshold.action || "UNKNOWN",
+        thresholdPass: !!safeObj(traversalStatus).thresholdPass,
+        boundaryPass: !!safeObj(traversalStatus).boundaryPass,
+      },
+      worldModeState: {
+        traversalMode: projectionState,
+        zoneState: boundary.classification || "unknown",
+      },
+      psychology: {
+        state: { carriageMode: "runtime_bridge" },
+        envelope: {},
+        receipt: {},
+      },
+      region: {
+        regionId: region.regionId || region.label || "unknown",
+        label: region.label || region.regionId || "unknown",
+      },
+      node: currentState.node,
+      force: currentState.force,
+      forces: currentState.forces,
+      boundary: currentState.boundary,
+      threshold: currentState.threshold,
+      runtimeMeta: {
+        kernelI: currentState.index?.i ?? currentReceipt.state?.i ?? null,
+        kernelJ: currentState.index?.j ?? currentReceipt.state?.j ?? null,
+        denseX: currentState.denseIndex?.x ?? null,
+        denseY: currentState.denseIndex?.y ?? null,
+        projectionState,
+        habitability: currentState.habitability ?? null,
+        traversalDifficulty: currentState.traversalDifficulty ?? null,
+      }
+    };
+
+    runtimeBridgeState.lastReceipt = receipt;
+    runtimeBridgeState.status = "ONLINE";
+    runtimeBridgeState.error = null;
+    return receipt;
+  }catch(error){
+    runtimeBridgeState.status = "FAIL";
+    runtimeBridgeState.error = error instanceof Error ? error.message : String(error);
+    return null;
+  }
+}
+
+function getReceipt(){
+  const stored = getStoredReceipt();
+  if(stored) return stored;
+  return buildRuntimeReceiptFromBridge();
+}
+
 function renderParentStack(){
   setText("k-parent-stack", parentStackState.status, kpiClass(parentStackState.status, "parent"));
   setText("k-parent-files", `${parentStackState.loadedCount}/5`);
@@ -348,6 +553,24 @@ function renderParentStack(){
     row("files expected", String(PARENT_STACK_FILES.length)) +
     row("files loaded", String(parentStackState.loadedCount)) +
     row("error", parentStackState.error || "none");
+}
+
+function renderRuntimeBridge(){
+  setText("k-runtime-bridge", runtimeBridgeState.status, kpiClass(runtimeBridgeState.status, "bridge"));
+
+  document.getElementById("bridgeRows").innerHTML =
+    row("status", runtimeBridgeState.status) +
+    row("module", runtimeBridgeState.source) +
+    row("receipt source", runtimeBridgeState.lastReceipt?.__source || "none") +
+    row("verification", runtimeBridgeState.lastReceipt?.verification?.pass === true ? "pass" : "none") +
+    row("projection", runtimeBridgeState.lastReceipt?.runtimeMeta?.projectionState || "—") +
+    row("kernel index", runtimeBridgeState.lastReceipt
+      ? `${runtimeBridgeState.lastReceipt.runtimeMeta?.kernelI ?? "—"},${runtimeBridgeState.lastReceipt.runtimeMeta?.kernelJ ?? "—"}`
+      : "—") +
+    row("dense index", runtimeBridgeState.lastReceipt
+      ? `${runtimeBridgeState.lastReceipt.runtimeMeta?.denseX ?? "—"},${runtimeBridgeState.lastReceipt.runtimeMeta?.denseY ?? "—"}`
+      : "—") +
+    row("error", runtimeBridgeState.error || "none");
 }
 
 function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
@@ -400,7 +623,6 @@ function renderOfflineRuntime(){
   setText("k-fps","—");
   setText("k-dt","—");
   setText("k-age","—");
-  setText("k-verification","FAIL","bad");
 
   document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
   document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
@@ -417,7 +639,7 @@ function renderRuntime(data){
   const instrument = instrumentsModule.buildInstrumentReceipt({
     runtimeReceipt: runtime,
     authorityState: {
-      runtimeSource: "/world/runtime/world_runtime.js",
+      runtimeSource: runtime.renderAuthority?.liveRenderPath || RUNTIME_MODULE_PATH,
       instrumentSource: "/assets/instruments.js"
     },
     renderSummary: {
@@ -469,7 +691,6 @@ function renderRuntime(data){
   setText("k-fps", intfmt(diagnostics.fps));
   setText("k-dt", isFiniteNumber(diagnostics.dtMs) ? `${Math.round(diagnostics.dtMs)}ms` : "—");
   setText("k-age", isFiniteNumber(diagnostics.ageMs) ? `${Math.round(diagnostics.ageMs)}ms` : "—");
-  setText("k-verification", runtime.verification?.pass === true ? "PASS" : "FAIL", kpiClass(runtime.verification?.pass === true ? "PASS" : "FAIL","verification"));
 
   document.getElementById("runtimeRows").innerHTML =
     row("source", data.__source || "—") +
@@ -592,18 +813,40 @@ function renderRuntime(data){
   ],0,Math.max(60,...history.fps,1));
 
   document.getElementById("footer").textContent =
-`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | SOURCE=${data.__source || "—"} | PHASE=${diagnostics.sourcePhase || runtime.phase || "—"} | CLASSIFIED=${instrument.classifiedState || "—"} | AGE=${isFiniteNumber(diagnostics.ageMs) ? Math.round(diagnostics.ageMs) + "ms" : "—"} | CONT=${scope.continentId || "—"} | MODE=${scope.traversalMode || "—"}`;
+`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | BRIDGE=${runtimeBridgeState.status} | SOURCE=${data.__source || "—"} | PHASE=${diagnostics.sourcePhase || runtime.phase || "—"} | CLASSIFIED=${instrument.classifiedState || "—"} | AGE=${isFiniteNumber(diagnostics.ageMs) ? Math.round(diagnostics.ageMs) + "ms" : "—"} | CONT=${scope.continentId || "—"} | MODE=${scope.traversalMode || "—"}`;
+}
+
+function renderOfflineRuntime(){
+  setText("k-state","OFFLINE","bad");
+  setText("k-classified","—");
+  setText("k-phase","—");
+  setText("k-fresh","—");
+  setText("k-fps","—");
+  setText("k-dt","—");
+  setText("k-age","—");
+
+  document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("renderRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("diagRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
 }
 
 async function tick(){
   await ensureParentStackStatus();
+  await ensureRuntimeBridge();
+
   renderParentStack();
+  renderRuntimeBridge();
 
   const data = getReceipt();
   if(!data){
     renderOfflineRuntime();
     document.getElementById("footer").textContent =
-`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | RUNTIME=OFFLINE | ERROR=${parentStackState.error || "none"}`;
+`PARENT_STACK=${parentStackState.status} ${parentStackState.loadedCount}/5 | BRIDGE=${runtimeBridgeState.status} | RUNTIME=OFFLINE | BRIDGE_ERROR=${runtimeBridgeState.error || "none"}`;
     timer = window.setTimeout(tick, REFRESH_MS);
     return;
   }

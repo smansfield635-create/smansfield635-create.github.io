@@ -590,19 +590,183 @@ export function createRuntime(options = {}) {
   return buildFacade(stateRef, engineRef, frameStateRef);
 }
 
-const DEFAULT_RUNTIME = createRuntime();
+const defaultRuntimeRef = {
+  current: null
+};
 
-export const getCurrentState = () => DEFAULT_RUNTIME.getCurrentState();
-export const getTraversalStatus = () => DEFAULT_RUNTIME.getTraversalStatus();
-export const getProjectionState = () => DEFAULT_RUNTIME.getProjectionState();
-export const getSelectedProjection = () => DEFAULT_RUNTIME.getSelectedProjection();
-export const getProjections = () => DEFAULT_RUNTIME.getProjections();
-export const getSuccessorReceipt = () => DEFAULT_RUNTIME.getSuccessorReceipt();
-export const getStateByReceipt = (receipt) => DEFAULT_RUNTIME.getStateByReceipt(receipt);
-export const getField = () => DEFAULT_RUNTIME.getField();
+const ensureDefaultRuntime = () => {
+  if (!defaultRuntimeRef.current) {
+    defaultRuntimeRef.current = createRuntime();
+  }
+  return defaultRuntimeRef.current;
+};
+
+export const hasDefaultRuntime = () => defaultRuntimeRef.current !== null;
+
+export const clearDefaultRuntime = () => {
+  defaultRuntimeRef.current = null;
+  return null;
+};
+
+export const getDefaultRuntime = () => ensureDefaultRuntime();
+
+export const getCurrentState = () => ensureDefaultRuntime().getCurrentState();
+export const getTraversalStatus = () => ensureDefaultRuntime().getTraversalStatus();
+export const getProjectionState = () => ensureDefaultRuntime().getProjectionState();
+export const getSelectedProjection = () => ensureDefaultRuntime().getSelectedProjection();
+export const getProjections = () => ensureDefaultRuntime().getProjections();
+export const getSuccessorReceipt = () => ensureDefaultRuntime().getSuccessorReceipt();
+export const getStateByReceipt = (receipt) => ensureDefaultRuntime().getStateByReceipt(receipt);
+export const getField = () => ensureDefaultRuntime().getField();
 export const refreshFrameState = (frameState = {}) =>
-  DEFAULT_RUNTIME.refreshFrameState(frameState);
-export const advance = (step = {}) => DEFAULT_RUNTIME.advance(step);
-export const reset = (options = {}) => DEFAULT_RUNTIME.reset(options);
+  ensureDefaultRuntime().refreshFrameState(frameState);
+export const advance = (step = {}) => ensureDefaultRuntime().advance(step);
+export const reset = (options = {}) => ensureDefaultRuntime().reset(options);
+
+const buildRuntimeReceipt = (runtime, timestamp) => {
+  const currentState = normalizeObject(runtime.getCurrentState());
+  const traversalStatus = normalizeObject(runtime.getTraversalStatus());
+  const field = normalizeObject(runtime.getField());
+  const receipt = normalizeObject(currentState.receipt);
+  const state = normalizeObject(receipt.state);
+  const region = normalizeObject(currentState.region);
+  const node = normalizeObject(currentState.node);
+  const boundary = normalizeObject(currentState.boundary);
+  const threshold = normalizeObject(currentState.threshold);
+  const force = normalizeObject(currentState.force);
+  const forceVector = normalizeObject(force.vector);
+  const selectedProjection = normalizeObject(currentState.selectedProjection);
+
+  return deepFreeze({
+    source: RUNTIME_META.name,
+    contract: RUNTIME_META.contract,
+    timestamp,
+    verification: deepFreeze({
+      pass: true,
+      deterministic: RUNTIME_META.deterministic
+    }),
+    phase:
+      typeof threshold.action === "string"
+        ? threshold.action
+        : traversalStatus.admissible
+          ? "PASS"
+          : "HALT",
+    projection: runtime.getProjectionState(),
+    state: deepFreeze({
+      i: Number.isInteger(currentState.index?.i) ? currentState.index.i : state.i,
+      j: Number.isInteger(currentState.index?.j) ? currentState.index.j : state.j
+    }),
+    denseIndex: deepFreeze({
+      x: Number.isInteger(currentState.denseIndex?.x) ? currentState.denseIndex.x : 0,
+      y: Number.isInteger(currentState.denseIndex?.y) ? currentState.denseIndex.y : 0
+    }),
+    region:
+      typeof currentState.region === "string"
+        ? currentState.region
+        : deepFreeze({
+            regionId: region.regionId || region.label || null,
+            label: region.label || region.regionId || null
+          }),
+    node:
+      typeof currentState.node === "string"
+        ? currentState.node
+        : deepFreeze({
+            nodeId: node.nodeId || node.label || null,
+            label: node.label || node.nodeId || null
+          }),
+    boundary: currentState.boundary,
+    threshold: currentState.threshold,
+    forces: deepFreeze({
+      N: Number(forceVector.N || 0),
+      E: Number(forceVector.E || 0),
+      S: Number(forceVector.S || 0),
+      W: Number(forceVector.W || 0),
+      B: Number(forceVector.B || 0)
+    }),
+    traversalStatus: currentState.traversalStatus,
+    selectedProjection,
+    fieldSummary: deepFreeze({
+      width: Number(field.width || 0),
+      height: Number(field.height || 0)
+    }),
+    terrainClass: currentState.terrainClass || null,
+    biomeType: currentState.biomeType || null,
+    surfaceMaterial: currentState.surfaceMaterial || null,
+    climateBand: currentState.climateBand || null,
+    habitability: currentState.habitability ?? null,
+    traversalDifficulty: currentState.traversalDifficulty ?? null
+  });
+};
+
+export const getRuntimeReceipt = (options = {}) => {
+  const source = normalizeObject(options);
+  const runtime =
+    source.runtime && typeof source.runtime.getCurrentState === "function"
+      ? source.runtime
+      : ensureDefaultRuntime();
+
+  if (hasOwn(source, "frameState")) {
+    runtime.refreshFrameState(source.frameState);
+  }
+
+  const timestamp =
+    typeof source.timestamp === "number" && Number.isFinite(source.timestamp)
+      ? source.timestamp
+      : Date.now();
+
+  return buildRuntimeReceipt(runtime, timestamp);
+};
+
+const DEFAULT_RUNTIME = deepFreeze({
+  meta: RUNTIME_META,
+
+  getCurrentState() {
+    return ensureDefaultRuntime().getCurrentState();
+  },
+
+  getTraversalStatus() {
+    return ensureDefaultRuntime().getTraversalStatus();
+  },
+
+  getProjectionState() {
+    return ensureDefaultRuntime().getProjectionState();
+  },
+
+  getSelectedProjection() {
+    return ensureDefaultRuntime().getSelectedProjection();
+  },
+
+  getProjections() {
+    return ensureDefaultRuntime().getProjections();
+  },
+
+  getSuccessorReceipt() {
+    return ensureDefaultRuntime().getSuccessorReceipt();
+  },
+
+  getStateByReceipt(receipt) {
+    return ensureDefaultRuntime().getStateByReceipt(receipt);
+  },
+
+  getField() {
+    return ensureDefaultRuntime().getField();
+  },
+
+  refreshFrameState(frameState = {}) {
+    return ensureDefaultRuntime().refreshFrameState(frameState);
+  },
+
+  advance(step = {}) {
+    return ensureDefaultRuntime().advance(step);
+  },
+
+  reset(options = {}) {
+    return ensureDefaultRuntime().reset(options);
+  },
+
+  getRuntimeReceipt(options = {}) {
+    return getRuntimeReceipt(options);
+  }
+});
 
 export default DEFAULT_RUNTIME;

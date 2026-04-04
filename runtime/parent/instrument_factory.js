@@ -1,376 +1,172 @@
-import {
-  FLAG_STATUSES,
-  PHASE_STATUSES,
-  FakeClosureError,
-  IdentityLossError,
-  ParentBoundaryViolationError,
-  PrivateGeometryError,
-} from "./diamond_interface_spine.js";
-import { ADAPTER_NAMESPACE } from "./kernel_adapter.js";
+(function (global) {
+  "use strict";
 
-export const INSTRUMENT_FACTORY_NAMESPACE = "instrument_factory_v1";
+  const VERSION = "INSTRUMENT_FACTORY_BASELINE_v1";
+  const FACTORY_ID = "INSTRUMENT_FACTORY";
 
-function assert(condition, ErrorType, message, context = {}) {
-  if (!condition) {
-    throw new ErrorType(message, context);
-  }
-}
-
-function assertNonEmptyString(value, fieldName) {
-  assert(
-    typeof value === "string" && value.trim().length > 0,
-    IdentityLossError,
-    `${fieldName} must be a non-empty string.`,
-    { fieldName, value },
-  );
-}
-
-function assertArray(value, fieldName) {
-  assert(
-    Array.isArray(value),
-    IdentityLossError,
-    `${fieldName} must be an array.`,
-    { fieldName, value },
-  );
-}
-
-function assertPlainObject(value, fieldName) {
-  assert(
-    value !== null && typeof value === "object" && !Array.isArray(value),
-    IdentityLossError,
-    `${fieldName} must be a plain object.`,
-    { fieldName, value },
-  );
-}
-
-function cloneObject(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-function createInstrumentEnvelope({
-  instrumentType,
-  targetObjectId,
-  payload,
-}) {
-  assertNonEmptyString(instrumentType, "instrumentType");
-  assertNonEmptyString(targetObjectId, "targetObjectId");
-  assertPlainObject(payload, "payload");
-
-  return Object.freeze({
-    factoryNamespace: INSTRUMENT_FACTORY_NAMESPACE,
-    outputClass: instrumentType,
-    targetObjectId,
-    payload: cloneObject(payload),
+  const STATUS = Object.freeze({
+    UNINITIALIZED: "UNINITIALIZED",
+    ATTACHING: "ATTACHING",
+    READY: "READY",
+    ERROR: "ERROR",
   });
-}
 
-export function createStateInstrument({
-  instrumentId,
-  targetObjectId,
-  scaleClass,
-  positionRead,
-  identityPreservationRead = true,
-  regionRead = null,
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-  assertNonEmptyString(scaleClass, "scaleClass");
-
-  return createInstrumentEnvelope({
-    instrumentType: "state_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      scaleClass,
-      positionRead: cloneObject(positionRead),
-      identityPreservationRead: Boolean(identityPreservationRead),
-      regionRead,
-    },
-  });
-}
-
-export function createDiagnosticInstrument({
-  instrumentId,
-  targetObjectId,
-  energyRead,
-  coherenceRead,
-  entropyRead,
-  phaseRead,
-  overlaySet = [],
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-  assert(
-    Number.isFinite(energyRead) &&
-      Number.isFinite(coherenceRead) &&
-      Number.isFinite(entropyRead),
-    IdentityLossError,
-    "Diagnostic reads must be finite numbers.",
-    { energyRead, coherenceRead, entropyRead },
-  );
-  assertArray(overlaySet, "overlaySet");
-
-  return createInstrumentEnvelope({
-    instrumentType: "diagnostic_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      energyRead,
-      coherenceRead,
-      entropyRead,
-      phaseRead,
-      overlaySet: cloneObject(overlaySet),
-    },
-  });
-}
-
-export function createRouteInstrument({
-  instrumentId,
-  targetObjectId,
-  pathId,
-  pathClass,
-  edgeSequence = [],
-  fractureFlag = false,
-  falseClosureFlag = false,
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-  assertNonEmptyString(pathId, "pathId");
-  assertNonEmptyString(pathClass, "pathClass");
-  assertArray(edgeSequence, "edgeSequence");
-
-  return createInstrumentEnvelope({
-    instrumentType: "route_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      pathId,
-      pathClass,
-      edgeSequence: cloneObject(edgeSequence),
-      fractureFlag: Boolean(fractureFlag),
-      falseClosureFlag: Boolean(falseClosureFlag),
-    },
-  });
-}
-
-export function createEngineInstrument({
-  instrumentId,
-  targetObjectId,
-  mesoEngineRead,
-  macroFusionRead,
-  compatibilityRead = true,
-  scaleAlignmentRead = true,
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-
-  return createInstrumentEnvelope({
-    instrumentType: "engine_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      mesoEngineRead,
-      macroFusionRead,
-      compatibilityRead: Boolean(compatibilityRead),
-      scaleAlignmentRead: Boolean(scaleAlignmentRead),
-    },
-  });
-}
-
-export function createFidelityInstrument({
-  instrumentId,
-  targetObjectId,
-  kernelMatchRead = true,
-  spineMatchRead = true,
-  driftScore = 0,
-  misfitLocus = null,
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-  assert(
-    Number.isFinite(driftScore),
-    IdentityLossError,
-    "driftScore must be finite.",
-    { driftScore },
-  );
-
-  return createInstrumentEnvelope({
-    instrumentType: "fidelity_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      kernelMatchRead: Boolean(kernelMatchRead),
-      spineMatchRead: Boolean(spineMatchRead),
-      driftScore,
-      misfitLocus,
-    },
-  });
-}
-
-export function createDriftInstrument({
-  instrumentId,
-  targetObjectId,
-  driftDetected = false,
-  driftClass = null,
-  driftDetails = {},
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-  assertPlainObject(driftDetails, "driftDetails");
-
-  return createInstrumentEnvelope({
-    instrumentType: "drift_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      driftDetected: Boolean(driftDetected),
-      driftClass,
-      driftDetails: cloneObject(driftDetails),
-    },
-  });
-}
-
-export function createFractureInstrument({
-  instrumentId,
-  targetObjectId,
-  fractureDetected = false,
-  fractureClass = null,
-  discontinuityMap = [],
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-  assertArray(discontinuityMap, "discontinuityMap");
-
-  return createInstrumentEnvelope({
-    instrumentType: "fracture_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      fractureDetected: Boolean(fractureDetected),
-      fractureClass,
-      discontinuityMap: cloneObject(discontinuityMap),
-    },
-  });
-}
-
-export function createClosureInstrument({
-  instrumentId,
-  targetObjectId,
-  checkeredFlagRead = false,
-  settingSunRead = false,
-  eclipseRead = false,
-  depthBoundClosureRead = "open",
-  returnStatusRead = "pending",
-} = {}) {
-  assertNonEmptyString(instrumentId, "instrumentId");
-
-  if (eclipseRead && !checkeredFlagRead) {
-    throw new FakeClosureError(
-      "Closure instruments cannot assert eclipse without checkered status.",
-      { targetObjectId, checkeredFlagRead, eclipseRead },
-    );
+  function assert(condition, message) {
+    if (!condition) {
+      throw new Error("[INSTRUMENT_FACTORY] " + message);
+    }
   }
 
-  return createInstrumentEnvelope({
-    instrumentType: "closure_instrument",
-    targetObjectId,
-    payload: {
-      instrumentId,
-      checkeredFlagRead: Boolean(checkeredFlagRead),
-      settingSunRead: Boolean(settingSunRead),
-      eclipseRead: Boolean(eclipseRead),
-      depthBoundClosureRead,
-      returnStatusRead,
-    },
-  });
-}
-
-export function createReturnAudit({
-  auditId,
-  targetObjectId,
-  stateSummary = {},
-  diagnosticSummary = {},
-  routeSummary = {},
-  fidelitySummary = {},
-  closureSummary = {},
-  orchestrationReadyFlag = false,
-} = {}) {
-  assertNonEmptyString(auditId, "auditId");
-  assertPlainObject(stateSummary, "stateSummary");
-  assertPlainObject(diagnosticSummary, "diagnosticSummary");
-  assertPlainObject(routeSummary, "routeSummary");
-  assertPlainObject(fidelitySummary, "fidelitySummary");
-  assertPlainObject(closureSummary, "closureSummary");
-
-  return createInstrumentEnvelope({
-    instrumentType: "return_audit",
-    targetObjectId,
-    payload: {
-      auditId,
-      stateSummary: cloneObject(stateSummary),
-      diagnosticSummary: cloneObject(diagnosticSummary),
-      routeSummary: cloneObject(routeSummary),
-      fidelitySummary: cloneObject(fidelitySummary),
-      closureSummary: cloneObject(closureSummary),
-      orchestrationReadyFlag: Boolean(orchestrationReadyFlag),
-    },
-  });
-}
-
-export function assertInstrumentFactoryOutput(output, { adapterBundle = null } = {}) {
-  assertPlainObject(output, "output");
-  assert(
-    output.factoryNamespace === INSTRUMENT_FACTORY_NAMESPACE,
-    ParentBoundaryViolationError,
-    "Output does not belong to instrument_factory_v1.",
-    { output },
-  );
-
-  if (adapterBundle) {
-    assert(
-      adapterBundle.adapterNamespace === ADAPTER_NAMESPACE,
-      ParentBoundaryViolationError,
-      "Instrument factory comparisons must use kernel_adapter_v1 inputs.",
-      { adapterBundle },
-    );
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
-  const supportedClasses = new Set([
-    "state_instrument",
-    "diagnostic_instrument",
-    "route_instrument",
-    "engine_instrument",
-    "fidelity_instrument",
-    "drift_instrument",
-    "fracture_instrument",
-    "closure_instrument",
-    "return_audit",
-  ]);
-
-  assert(
-    supportedClasses.has(output.outputClass),
-    ParentBoundaryViolationError,
-    "Unsupported instrument factory output class.",
-    { outputClass: output.outputClass },
-  );
-
-  if ("geometryNamespace" in output && output.geometryNamespace !== undefined) {
-    throw new PrivateGeometryError(
-      "Instrument factory outputs must not declare private geometry.",
-      { output },
-    );
+  function freezeCopy(value) {
+    return Object.freeze(clone(value));
   }
 
-  const payload = output.payload ?? {};
-  if ("flagStatus" in payload) {
-    assert(
-      Object.values(FLAG_STATUSES).includes(payload.flagStatus),
-      IdentityLossError,
-      "flagStatus must be canonical.",
-      { payload },
-    );
-  }
-  if ("phaseStatus" in payload) {
-    assert(
-      Object.values(PHASE_STATUSES).includes(payload.phaseStatus),
-      IdentityLossError,
-      "phaseStatus must be canonical.",
-      { payload },
-    );
+  function nowIso() {
+    return new Date().toISOString();
   }
 
-  return true;
-}
+  function getKernel() {
+    const kernel = global.LiveRuntimeKernel;
+    assert(kernel, "LiveRuntimeKernel is required");
+    return kernel;
+  }
+
+  function getUniverseFactory() {
+    const universeFactory = global.UniverseEngineFactory;
+    assert(universeFactory, "UniverseEngineFactory is required");
+    return universeFactory;
+  }
+
+  function createInitialState() {
+    return {
+      version: VERSION,
+      factoryId: FACTORY_ID,
+      status: STATUS.UNINITIALIZED,
+      ready: false,
+      attached: false,
+      gaugesDeferred: true,
+      routeMap: {
+        universeFactory: "/runtime/parent/universe_engine_factory.js",
+        instrumentFactory: "/runtime/parent/instrument_factory.js",
+      },
+      parentStack: {
+        status: "UNBOUND",
+        filesCount: 0,
+      },
+      bridge: {
+        status: "UNINITIALIZED",
+      },
+      events: [],
+      lastError: null,
+      lastUpdatedAt: null,
+    };
+  }
+
+  function createFactory() {
+    let state = createInitialState();
+    const subscribers = new Set();
+
+    function emit(type, payload) {
+      state.events.push({
+        type,
+        at: nowIso(),
+        payload: clone(payload || {}),
+      });
+      state.lastUpdatedAt = nowIso();
+
+      const snapshot = api.getState();
+      subscribers.forEach(function (listener) {
+        try {
+          listener(snapshot, type);
+        } catch (_) {}
+      });
+    }
+
+    function setStatus(nextStatus) {
+      state.status = nextStatus;
+      state.lastUpdatedAt = nowIso();
+    }
+
+    const api = {
+      version: VERSION,
+
+      getState: function () {
+        return freezeCopy(state);
+      },
+
+      subscribe: function (listener) {
+        assert(typeof listener === "function", "subscribe requires a function");
+        subscribers.add(listener);
+        return function unsubscribe() {
+          subscribers.delete(listener);
+        };
+      },
+
+      establishBaseline: function () {
+        const kernel = getKernel();
+        const universeFactory = getUniverseFactory();
+        const universeState = universeFactory.getState();
+
+        if (!universeState.ready && typeof universeFactory.boot === "function") {
+          universeFactory.boot();
+        }
+
+        assert(universeFactory.getState().ready, "UniverseEngineFactory must be ready");
+
+        setStatus(STATUS.ATTACHING);
+
+        state.attached = true;
+        state.ready = true;
+        state.parentStack.status = "INSTRUMENT_FACTORY_READY";
+        state.parentStack.filesCount = 6;
+        state.bridge.status = "INSTRUMENT_FACTORY_READY";
+
+        kernel.setParentStackStatus("INSTRUMENT_FACTORY_READY", 6);
+        kernel.setRuntimeBridgeStatus("INSTRUMENT_FACTORY_READY");
+        kernel.setLiveRuntimeState("INSTRUMENT_FACTORY_LAYER_READY");
+
+        setStatus(STATUS.READY);
+
+        emit("INSTRUMENT_FACTORY_READY", {
+          parentStackStatus: state.parentStack.status,
+          parentFilesCount: state.parentStack.filesCount,
+        });
+
+        return api.getState();
+      },
+
+      boot: function () {
+        try {
+          const current = api.getState();
+          if (current.ready) {
+            return current;
+          }
+          return api.establishBaseline();
+        } catch (error) {
+          state.lastError = error && error.message ? error.message : String(error);
+          setStatus(STATUS.ERROR);
+          emit("INSTRUMENT_FACTORY_ERROR", { message: state.lastError });
+          if (typeof console !== "undefined" && console.error) {
+            console.error(error);
+          }
+          return api.getState();
+        }
+      },
+    };
+
+    return Object.freeze(api);
+  }
+
+  const InstrumentFactory = createFactory();
+  global.InstrumentFactory = InstrumentFactory;
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = InstrumentFactory;
+  }
+
+  InstrumentFactory.boot();
+})(typeof globalThis !== "undefined" ? globalThis : window);

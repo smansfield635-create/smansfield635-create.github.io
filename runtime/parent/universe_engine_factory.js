@@ -1,325 +1,216 @@
-import {
-  IdentityLossError,
-  ParentBoundaryViolationError,
-  PrivateGeometryError,
-  ScaleCollapseError,
-  assertSpineLegibility,
-} from "./diamond_interface_spine.js";
-import { ADAPTER_NAMESPACE, assertScaleLadderIntegrity } from "./kernel_adapter.js";
+(function (global) {
+  "use strict";
 
-export const UNIVERSE_FACTORY_NAMESPACE = "universe_engine_factory_v1";
+  const VERSION = "UNIVERSE_ENGINE_FACTORY_BASELINE_v1";
+  const FACTORY_ID = "UNIVERSE_ENGINE_FACTORY";
 
-function assert(condition, ErrorType, message, context = {}) {
-  if (!condition) {
-    throw new ErrorType(message, context);
-  }
-}
-
-function assertNonEmptyString(value, fieldName) {
-  assert(
-    typeof value === "string" && value.trim().length > 0,
-    IdentityLossError,
-    `${fieldName} must be a non-empty string.`,
-    { fieldName, value },
-  );
-}
-
-function assertArray(value, fieldName) {
-  assert(
-    Array.isArray(value),
-    IdentityLossError,
-    `${fieldName} must be an array.`,
-    { fieldName, value },
-  );
-}
-
-function assertPlainObject(value, fieldName) {
-  assert(
-    value !== null && typeof value === "object" && !Array.isArray(value),
-    IdentityLossError,
-    `${fieldName} must be a plain object.`,
-    { fieldName, value },
-  );
-}
-
-function cloneObject(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-function assertAdapterBundle(adapterBundle) {
-  assertPlainObject(adapterBundle, "adapterBundle");
-  assert(
-    adapterBundle.adapterNamespace === ADAPTER_NAMESPACE,
-    ParentBoundaryViolationError,
-    "Universe factory requires kernel_adapter_v1 inputs.",
-    { adapterBundle },
-  );
-}
-
-export function createUniverseTemplate({
-  universeId,
-  topologyBind,
-  scaleContext,
-  fusionCoreSet = [],
-  relationFieldSchema = [],
-  seedRuleset = {},
-  closureCompatibility = {},
-} = {}) {
-  assertNonEmptyString(universeId, "universeId");
-  assertSpineLegibility(topologyBind, "topologyBind");
-  assertPlainObject(scaleContext, "scaleContext");
-  assertArray(fusionCoreSet, "fusionCoreSet");
-  assertArray(relationFieldSchema, "relationFieldSchema");
-  assertPlainObject(seedRuleset, "seedRuleset");
-  assertPlainObject(closureCompatibility, "closureCompatibility");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "universe_template",
-    universeId,
-    topologyBind: cloneObject(topologyBind),
-    scaleContext: cloneObject(scaleContext),
-    fusionCoreSet: cloneObject(fusionCoreSet),
-    relationFieldSchema: cloneObject(relationFieldSchema),
-    seedRuleset: cloneObject(seedRuleset),
-    closureCompatibility: cloneObject(closureCompatibility),
+  const STATUS = Object.freeze({
+    UNINITIALIZED: "UNINITIALIZED",
+    ATTACHING: "ATTACHING",
+    READY: "READY",
+    ERROR: "ERROR",
   });
-}
 
-export function createWorldEngine({
-  worldId,
-  universeId,
-  macroEngineDependencies = [],
-  regionSet = [],
-  environmentRules = {},
-  routeSpace = [],
-  runtimeReadyFlag = false,
-} = {}) {
-  assertNonEmptyString(worldId, "worldId");
-  assertNonEmptyString(universeId, "universeId");
-  assertArray(macroEngineDependencies, "macroEngineDependencies");
-  assert(
-    macroEngineDependencies.length > 0,
-    ScaleCollapseError,
-    "World engines must depend on macro-engine inputs.",
-    { worldId },
-  );
-  assertArray(regionSet, "regionSet");
-  assertPlainObject(environmentRules, "environmentRules");
-  assertArray(routeSpace, "routeSpace");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "world_engine",
-    worldId,
-    universeId,
-    macroEngineDependencies: cloneObject(macroEngineDependencies),
-    regionSet: cloneObject(regionSet),
-    environmentRules: cloneObject(environmentRules),
-    routeSpace: cloneObject(routeSpace),
-    runtimeReadyFlag: Boolean(runtimeReadyFlag),
-  });
-}
-
-export function createPlanetEngine({
-  planetId,
-  worldId,
-  bodyClass = "planet",
-  engineDependencies = [],
-  regionDependencies = [],
-  seedStateBind = null,
-  diagnosticCompatibility = {},
-} = {}) {
-  assertNonEmptyString(planetId, "planetId");
-  assertNonEmptyString(worldId, "worldId");
-  assertNonEmptyString(bodyClass, "bodyClass");
-  assertArray(engineDependencies, "engineDependencies");
-  assertArray(regionDependencies, "regionDependencies");
-  assertPlainObject(diagnosticCompatibility, "diagnosticCompatibility");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "planet_engine",
-    planetId,
-    worldId,
-    bodyClass,
-    engineDependencies: cloneObject(engineDependencies),
-    regionDependencies: cloneObject(regionDependencies),
-    seedStateBind: seedStateBind ? cloneObject(seedStateBind) : null,
-    diagnosticCompatibility: cloneObject(diagnosticCompatibility),
-  });
-}
-
-export function createBodyEngine({
-  bodyId,
-  planetId = null,
-  bodyClass = "body",
-  engineDependencies = [],
-  relationFields = [],
-} = {}) {
-  assertNonEmptyString(bodyId, "bodyId");
-  assertNonEmptyString(bodyClass, "bodyClass");
-  assertArray(engineDependencies, "engineDependencies");
-  assertArray(relationFields, "relationFields");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "body_engine",
-    bodyId,
-    planetId,
-    bodyClass,
-    engineDependencies: cloneObject(engineDependencies),
-    relationFields: cloneObject(relationFields),
-  });
-}
-
-export function createRegionEngine({
-  regionId,
-  parentId,
-  regionClass = "region",
-  coordinate = null,
-  adjacencySet = [],
-} = {}) {
-  assertNonEmptyString(regionId, "regionId");
-  assertNonEmptyString(parentId, "parentId");
-  assertNonEmptyString(regionClass, "regionClass");
-  assertArray(adjacencySet, "adjacencySet");
-
-  if (coordinate) {
-    assertSpineLegibility(coordinate, "coordinate");
+  function assert(condition, message) {
+    if (!condition) {
+      throw new Error("[UNIVERSE_ENGINE_FACTORY] " + message);
+    }
   }
 
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "region_engine",
-    regionId,
-    parentId,
-    regionClass,
-    coordinate: coordinate ? cloneObject(coordinate) : null,
-    adjacencySet: cloneObject(adjacencySet),
-  });
-}
-
-export function createEnvironmentEngine({
-  environmentId,
-  parentId,
-  rules = {},
-  diagnosticCompatibility = {},
-} = {}) {
-  assertNonEmptyString(environmentId, "environmentId");
-  assertNonEmptyString(parentId, "parentId");
-  assertPlainObject(rules, "rules");
-  assertPlainObject(diagnosticCompatibility, "diagnosticCompatibility");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "environment_engine",
-    environmentId,
-    parentId,
-    rules: cloneObject(rules),
-    diagnosticCompatibility: cloneObject(diagnosticCompatibility),
-  });
-}
-
-export function createRelationField({
-  fieldId,
-  sourceObjects = [],
-  targetObjects = [],
-  adjacencySchema = [],
-  pressureRules = {},
-  transferRules = {},
-} = {}) {
-  assertNonEmptyString(fieldId, "fieldId");
-  assertArray(sourceObjects, "sourceObjects");
-  assertArray(targetObjects, "targetObjects");
-  assertArray(adjacencySchema, "adjacencySchema");
-  assertPlainObject(pressureRules, "pressureRules");
-  assertPlainObject(transferRules, "transferRules");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "relation_field",
-    fieldId,
-    sourceObjects: cloneObject(sourceObjects),
-    targetObjects: cloneObject(targetObjects),
-    adjacencySchema: cloneObject(adjacencySchema),
-    pressureRules: cloneObject(pressureRules),
-    transferRules: cloneObject(transferRules),
-  });
-}
-
-export function createSeedState({
-  seedId,
-  targetClass,
-  noteNodeBindSet = {},
-  microstateSet = [],
-  engineAttachments = [],
-  flagPhaseBind = null,
-  initialRouteRead = null,
-} = {}) {
-  assertNonEmptyString(seedId, "seedId");
-  assertNonEmptyString(targetClass, "targetClass");
-  assertPlainObject(noteNodeBindSet, "noteNodeBindSet");
-  assertArray(microstateSet, "microstateSet");
-  assertArray(engineAttachments, "engineAttachments");
-
-  return Object.freeze({
-    factoryNamespace: UNIVERSE_FACTORY_NAMESPACE,
-    outputClass: "seed_state",
-    seedId,
-    targetClass,
-    noteNodeBindSet: cloneObject(noteNodeBindSet),
-    microstateSet: cloneObject(microstateSet),
-    engineAttachments: cloneObject(engineAttachments),
-    flagPhaseBind: flagPhaseBind ? cloneObject(flagPhaseBind) : null,
-    initialRouteRead: initialRouteRead ? cloneObject(initialRouteRead) : null,
-  });
-}
-
-export function assertUniverseFactoryOutput(output, { adapterBundle = null } = {}) {
-  assertPlainObject(output, "output");
-  assert(
-    output.factoryNamespace === UNIVERSE_FACTORY_NAMESPACE,
-    ParentBoundaryViolationError,
-    "Output does not belong to universe_engine_factory_v1.",
-    { output },
-  );
-
-  if (adapterBundle) {
-    assertAdapterBundle(adapterBundle);
-    assertScaleLadderIntegrity({
-      notes: adapterBundle.notes ?? [],
-      nodes: adapterBundle.nodes ?? [],
-      microstates: adapterBundle.microstates ?? [],
-      engines: adapterBundle.engines ?? [],
-      macroEngines: adapterBundle.macroEngines ?? [],
-    });
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
-  if ("geometryNamespace" in output && output.geometryNamespace !== undefined) {
-    throw new PrivateGeometryError(
-      "Universe factory outputs must not declare private geometry.",
-      { output },
-    );
+  function freezeCopy(value) {
+    return Object.freeze(clone(value));
   }
 
-  const supportedClasses = new Set([
-    "universe_template",
-    "world_engine",
-    "planet_engine",
-    "body_engine",
-    "region_engine",
-    "environment_engine",
-    "relation_field",
-    "seed_state",
-  ]);
+  function nowIso() {
+    return new Date().toISOString();
+  }
 
-  assert(
-    supportedClasses.has(output.outputClass),
-    ParentBoundaryViolationError,
-    "Unsupported universe factory output class.",
-    { outputClass: output.outputClass },
-  );
+  function getKernel() {
+    const kernel = global.LiveRuntimeKernel;
+    assert(kernel, "LiveRuntimeKernel is required");
+    return kernel;
+  }
 
-  return true;
-}
+  function getPlanetEngine() {
+    const engine = global.PlanetEngine;
+    assert(engine, "PlanetEngine is required");
+    return engine;
+  }
+
+  function getAdapter() {
+    const adapter = global.ParentKernelAdapter;
+    assert(adapter, "ParentKernelAdapter is required");
+    return adapter;
+  }
+
+  function getSpine() {
+    const spine = global.DiamondInterfaceSpine;
+    assert(spine, "DiamondInterfaceSpine is required");
+    return spine;
+  }
+
+  function getParentFactory() {
+    const parentFactory = global.ParentFactoryEngine;
+    assert(parentFactory, "ParentFactoryEngine is required");
+    return parentFactory;
+  }
+
+  function createInitialState() {
+    return {
+      version: VERSION,
+      factoryId: FACTORY_ID,
+      status: STATUS.UNINITIALIZED,
+      ready: false,
+      attached: false,
+      gaugesDeferred: true,
+      routeMap: {
+        kernel: "/runtime/live_runtime_kernel.js",
+        planetEngine: "/world/planet_engine.js",
+        adapter: "/runtime/parent/kernel_adapter.js",
+        spine: "/runtime/parent/diamond_interface_spine.js",
+        parentFactory: "/runtime/parent/parent_factory_engine.js",
+        universeFactory: "/runtime/parent/universe_engine_factory.js",
+      },
+      parentStack: {
+        status: "UNBOUND",
+        filesCount: 0,
+      },
+      bridge: {
+        status: "UNINITIALIZED",
+      },
+      events: [],
+      lastError: null,
+      lastUpdatedAt: null,
+    };
+  }
+
+  function createFactory() {
+    let state = createInitialState();
+    const subscribers = new Set();
+
+    function emit(type, payload) {
+      state.events.push({
+        type,
+        at: nowIso(),
+        payload: clone(payload || {}),
+      });
+      state.lastUpdatedAt = nowIso();
+
+      const snapshot = api.getState();
+      subscribers.forEach(function (listener) {
+        try {
+          listener(snapshot, type);
+        } catch (_) {}
+      });
+    }
+
+    function setStatus(nextStatus) {
+      state.status = nextStatus;
+      state.lastUpdatedAt = nowIso();
+    }
+
+    function ensureChainReady() {
+      const planetEngine = getPlanetEngine();
+      const adapter = getAdapter();
+      const spine = getSpine();
+      const parentFactory = getParentFactory();
+
+      const planetState = planetEngine.getState();
+      if (!planetState.baselineEstablished) {
+        planetEngine.establishBaseline();
+      }
+
+      const adapterState = adapter.getState();
+      if (!adapterState.ready) {
+        adapter.establishBaseline();
+      }
+
+      const spineState = spine.getState();
+      if (!spineState.ready) {
+        spine.establishBaseline();
+      }
+
+      const parentFactoryState = parentFactory.getState();
+      if (!parentFactoryState.ready) {
+        parentFactory.establishBaseline();
+      }
+    }
+
+    const api = {
+      version: VERSION,
+
+      getState: function () {
+        return freezeCopy(state);
+      },
+
+      subscribe: function (listener) {
+        assert(typeof listener === "function", "subscribe requires a function");
+        subscribers.add(listener);
+        return function unsubscribe() {
+          subscribers.delete(listener);
+        };
+      },
+
+      establishBaseline: function () {
+        const kernel = getKernel();
+
+        ensureChainReady();
+
+        setStatus(STATUS.ATTACHING);
+
+        state.attached = true;
+        state.ready = true;
+        state.parentStack.status = "UNIVERSE_FACTORY_READY";
+        state.parentStack.filesCount = 5;
+        state.bridge.status = "UNIVERSE_FACTORY_READY";
+
+        kernel.setParentStackStatus("UNIVERSE_FACTORY_READY", 5);
+        kernel.setRuntimeBridgeStatus("UNIVERSE_FACTORY_READY");
+        kernel.setLiveRuntimeState("UNIVERSE_FACTORY_LAYER_READY");
+
+        setStatus(STATUS.READY);
+
+        emit("UNIVERSE_ENGINE_FACTORY_READY", {
+          parentStackStatus: state.parentStack.status,
+          parentFilesCount: state.parentStack.filesCount,
+          gaugesDeferred: state.gaugesDeferred,
+        });
+
+        return api.getState();
+      },
+
+      boot: function () {
+        try {
+          const current = api.getState();
+          if (current.ready) {
+            return current;
+          }
+          return api.establishBaseline();
+        } catch (error) {
+          state.lastError = error && error.message ? error.message : String(error);
+          setStatus(STATUS.ERROR);
+          emit("UNIVERSE_ENGINE_FACTORY_ERROR", { message: state.lastError });
+          if (typeof console !== "undefined" && console.error) {
+            console.error(error);
+          }
+          return api.getState();
+        }
+      },
+    };
+
+    return Object.freeze(api);
+  }
+
+  const UniverseEngineFactory = createFactory();
+  global.UniverseEngineFactory = UniverseEngineFactory;
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = UniverseEngineFactory;
+  }
+
+  UniverseEngineFactory.boot();
+})(typeof globalThis !== "undefined" ? globalThis : window);

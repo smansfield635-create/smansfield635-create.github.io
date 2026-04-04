@@ -1,373 +1,172 @@
-import {
-  FakeClosureError,
-  IdentityLossError,
-  LocalWriteReleaseError,
-  ParentBoundaryViolationError,
-  SupportToBindDriftError,
-} from "./diamond_interface_spine.js";
-import { UNIVERSE_FACTORY_NAMESPACE } from "./universe_engine_factory.js";
-import { INSTRUMENT_FACTORY_NAMESPACE } from "./instrument_factory.js";
+(function (global) {
+  "use strict";
 
-export const ORCHESTRATION_NAMESPACE = "orchestration_fabric_v1";
+  const VERSION = "ORCHESTRATION_FABRIC_BASELINE_v1";
+  const FABRIC_ID = "ORCHESTRATION_FABRIC";
 
-function assert(condition, ErrorType, message, context = {}) {
-  if (!condition) {
-    throw new ErrorType(message, context);
-  }
-}
-
-function assertNonEmptyString(value, fieldName) {
-  assert(
-    typeof value === "string" && value.trim().length > 0,
-    IdentityLossError,
-    `${fieldName} must be a non-empty string.`,
-    { fieldName, value },
-  );
-}
-
-function assertArray(value, fieldName) {
-  assert(
-    Array.isArray(value),
-    IdentityLossError,
-    `${fieldName} must be an array.`,
-    { fieldName, value },
-  );
-}
-
-function assertPlainObject(value, fieldName) {
-  assert(
-    value !== null && typeof value === "object" && !Array.isArray(value),
-    IdentityLossError,
-    `${fieldName} must be a plain object.`,
-    { fieldName, value },
-  );
-}
-
-function cloneObject(value) {
-  return JSON.parse(JSON.stringify(value));
-}
-
-function createDecisionEnvelope({
-  decisionType,
-  targetObjectId,
-  payload,
-}) {
-  assertNonEmptyString(decisionType, "decisionType");
-  assertNonEmptyString(targetObjectId, "targetObjectId");
-  assertPlainObject(payload, "payload");
-
-  return Object.freeze({
-    factoryNamespace: ORCHESTRATION_NAMESPACE,
-    outputClass: decisionType,
-    targetObjectId,
-    payload: cloneObject(payload),
+  const STATUS = Object.freeze({
+    UNINITIALIZED: "UNINITIALIZED",
+    ATTACHING: "ATTACHING",
+    READY: "READY",
+    ERROR: "ERROR",
   });
-}
 
-export function createAdmissionDecision({
-  decisionId,
-  targetObjectId,
-  admissionStrength,
-  trackAssignment,
-  burdenStatus,
-  rationaleTags = [],
-} = {}) {
-  assertNonEmptyString(decisionId, "decisionId");
-  assertNonEmptyString(admissionStrength, "admissionStrength");
-  assertNonEmptyString(trackAssignment, "trackAssignment");
-  assertNonEmptyString(burdenStatus, "burdenStatus");
-  assertArray(rationaleTags, "rationaleTags");
-
-  if (admissionStrength === "full_bind" && burdenStatus !== "cleared") {
-    throw new SupportToBindDriftError(
-      "Full-bind admission cannot be issued while burdenStatus is uncleared.",
-      { decisionId, targetObjectId, admissionStrength, burdenStatus },
-    );
+  function assert(condition, message) {
+    if (!condition) {
+      throw new Error("[ORCHESTRATION_FABRIC] " + message);
+    }
   }
 
-  return createDecisionEnvelope({
-    decisionType: "admission_decision",
-    targetObjectId,
-    payload: {
-      decisionId,
-      admissionStrength,
-      trackAssignment,
-      burdenStatus,
-      rationaleTags: cloneObject(rationaleTags),
-    },
-  });
-}
-
-export function createRoutingDecision({
-  decisionId,
-  targetObjectId,
-  currentTrack,
-  nextTrack,
-  expressStatus = false,
-  returnRequiredFlag = false,
-} = {}) {
-  assertNonEmptyString(decisionId, "decisionId");
-  assertNonEmptyString(currentTrack, "currentTrack");
-  assertNonEmptyString(nextTrack, "nextTrack");
-
-  return createDecisionEnvelope({
-    decisionType: "routing_decision",
-    targetObjectId,
-    payload: {
-      decisionId,
-      currentTrack,
-      nextTrack,
-      expressStatus: Boolean(expressStatus),
-      returnRequiredFlag: Boolean(returnRequiredFlag),
-    },
-  });
-}
-
-export function createMonitoringState({
-  monitorId,
-  targetObjectId,
-  locationRead,
-  diagnosticSummary = {},
-  routeSummary = {},
-  flagStatus = null,
-  phaseStatus = null,
-  driftAlerts = [],
-  fractureAlerts = [],
-} = {}) {
-  assertNonEmptyString(monitorId, "monitorId");
-  assertPlainObject(locationRead, "locationRead");
-  assertPlainObject(diagnosticSummary, "diagnosticSummary");
-  assertPlainObject(routeSummary, "routeSummary");
-  assertArray(driftAlerts, "driftAlerts");
-  assertArray(fractureAlerts, "fractureAlerts");
-
-  return createDecisionEnvelope({
-    decisionType: "monitoring_state",
-    targetObjectId,
-    payload: {
-      monitorId,
-      locationRead: cloneObject(locationRead),
-      diagnosticSummary: cloneObject(diagnosticSummary),
-      routeSummary: cloneObject(routeSummary),
-      flagStatus,
-      phaseStatus,
-      driftAlerts: cloneObject(driftAlerts),
-      fractureAlerts: cloneObject(fractureAlerts),
-    },
-  });
-}
-
-export function createLockDecision({
-  lockId,
-  targetObjectId,
-  lockClass,
-  lockStatus,
-  thresholdRead,
-  lowerLayerOverrideRefused = true,
-} = {}) {
-  assertNonEmptyString(lockId, "lockId");
-  assertNonEmptyString(lockClass, "lockClass");
-  assertNonEmptyString(lockStatus, "lockStatus");
-
-  return createDecisionEnvelope({
-    decisionType: "lock_decision",
-    targetObjectId,
-    payload: {
-      lockId,
-      lockClass,
-      lockStatus,
-      thresholdRead: cloneObject(thresholdRead),
-      lowerLayerOverrideRefused: Boolean(lowerLayerOverrideRefused),
-    },
-  });
-}
-
-export function createSealDecision({
-  sealId,
-  targetObjectId,
-  checkeredStatus = false,
-  settingSunStatus = false,
-  eclipseStatus = false,
-  sealStatus = "open",
-  falseClosureFlag = false,
-} = {}) {
-  assertNonEmptyString(sealId, "sealId");
-  assertNonEmptyString(sealStatus, "sealStatus");
-
-  if (eclipseStatus && !checkeredStatus) {
-    throw new FakeClosureError(
-      "Eclipse cannot be sealed without checkered status.",
-      { sealId, targetObjectId, checkeredStatus, eclipseStatus },
-    );
+  function clone(value) {
+    return JSON.parse(JSON.stringify(value));
   }
 
-  if (falseClosureFlag) {
-    throw new FakeClosureError(
-      "Seal decisions cannot be issued while falseClosureFlag is active.",
-      { sealId, targetObjectId },
-    );
+  function freezeCopy(value) {
+    return Object.freeze(clone(value));
   }
 
-  return createDecisionEnvelope({
-    decisionType: "seal_decision",
-    targetObjectId,
-    payload: {
-      sealId,
-      checkeredStatus: Boolean(checkeredStatus),
-      settingSunStatus: Boolean(settingSunStatus),
-      eclipseStatus: Boolean(eclipseStatus),
-      sealStatus,
-      falseClosureFlag: Boolean(falseClosureFlag),
-    },
-  });
-}
-
-export function createReturnDecision({
-  returnId,
-  targetObjectId,
-  returnStatus,
-  inheritanceObjectId,
-  nextCycleAttachments = [],
-  memoryPreservationRead = "preserved",
-} = {}) {
-  assertNonEmptyString(returnId, "returnId");
-  assertNonEmptyString(returnStatus, "returnStatus");
-  assertNonEmptyString(inheritanceObjectId, "inheritanceObjectId");
-  assertArray(nextCycleAttachments, "nextCycleAttachments");
-
-  return createDecisionEnvelope({
-    decisionType: "return_decision",
-    targetObjectId,
-    payload: {
-      returnId,
-      returnStatus,
-      inheritanceObjectId,
-      nextCycleAttachments: cloneObject(nextCycleAttachments),
-      memoryPreservationRead,
-    },
-  });
-}
-
-export function createParentAuditTrail({
-  auditId,
-  targetObjectId,
-  admissionHistory = [],
-  routingHistory = [],
-  monitoringHistory = [],
-  lockHistory = [],
-  sealHistory = [],
-  returnHistory = [],
-} = {}) {
-  assertNonEmptyString(auditId, "auditId");
-  assertArray(admissionHistory, "admissionHistory");
-  assertArray(routingHistory, "routingHistory");
-  assertArray(monitoringHistory, "monitoringHistory");
-  assertArray(lockHistory, "lockHistory");
-  assertArray(sealHistory, "sealHistory");
-  assertArray(returnHistory, "returnHistory");
-
-  return createDecisionEnvelope({
-    decisionType: "parent_audit_trail",
-    targetObjectId,
-    payload: {
-      auditId,
-      admissionHistory: cloneObject(admissionHistory),
-      routingHistory: cloneObject(routingHistory),
-      monitoringHistory: cloneObject(monitoringHistory),
-      lockHistory: cloneObject(lockHistory),
-      sealHistory: cloneObject(sealHistory),
-      returnHistory: cloneObject(returnHistory),
-    },
-  });
-}
-
-export function createPhaseGate({
-  gateId,
-  targetObjectId,
-  requiredFlagStatus = null,
-  requiredPhaseStatus = null,
-  pass = false,
-} = {}) {
-  assertNonEmptyString(gateId, "gateId");
-
-  return createDecisionEnvelope({
-    decisionType: "phase_gate",
-    targetObjectId,
-    payload: {
-      gateId,
-      requiredFlagStatus,
-      requiredPhaseStatus,
-      pass: Boolean(pass),
-    },
-  });
-}
-
-export function createTrackPermission({
-  permissionId,
-  targetObjectId,
-  currentTrack,
-  nextTrack,
-  granted = false,
-  rationaleTags = [],
-} = {}) {
-  assertNonEmptyString(permissionId, "permissionId");
-  assertNonEmptyString(currentTrack, "currentTrack");
-  assertNonEmptyString(nextTrack, "nextTrack");
-  assertArray(rationaleTags, "rationaleTags");
-
-  return createDecisionEnvelope({
-    decisionType: "track_permission",
-    targetObjectId,
-    payload: {
-      permissionId,
-      currentTrack,
-      nextTrack,
-      granted: Boolean(granted),
-      rationaleTags: cloneObject(rationaleTags),
-    },
-  });
-}
-
-export function assertOrchestrationDecision(
-  output,
-  { universeFactoryNamespace = UNIVERSE_FACTORY_NAMESPACE, instrumentFactoryNamespace = INSTRUMENT_FACTORY_NAMESPACE } = {},
-) {
-  assertPlainObject(output, "output");
-  assert(
-    output.factoryNamespace === ORCHESTRATION_NAMESPACE,
-    ParentBoundaryViolationError,
-    "Output does not belong to orchestration_fabric_v1.",
-    { output },
-  );
-
-  const supportedClasses = new Set([
-    "admission_decision",
-    "routing_decision",
-    "monitoring_state",
-    "lock_decision",
-    "seal_decision",
-    "return_decision",
-    "parent_audit_trail",
-    "phase_gate",
-    "track_permission",
-  ]);
-
-  assert(
-    supportedClasses.has(output.outputClass),
-    ParentBoundaryViolationError,
-    "Unsupported orchestration output class.",
-    { outputClass: output.outputClass },
-  );
-
-  assertNonEmptyString(universeFactoryNamespace, "universeFactoryNamespace");
-  assertNonEmptyString(instrumentFactoryNamespace, "instrumentFactoryNamespace");
-
-  if (output.payload?.localWriteRelease === true) {
-    throw new LocalWriteReleaseError(
-      "Parent orchestration may not grant local file-write release.",
-      { output },
-    );
+  function nowIso() {
+    return new Date().toISOString();
   }
 
-  return true;
-}
+  function getKernel() {
+    const kernel = global.LiveRuntimeKernel;
+    assert(kernel, "LiveRuntimeKernel is required");
+    return kernel;
+  }
+
+  function getInstrumentFactory() {
+    const instrumentFactory = global.InstrumentFactory;
+    assert(instrumentFactory, "InstrumentFactory is required");
+    return instrumentFactory;
+  }
+
+  function createInitialState() {
+    return {
+      version: VERSION,
+      fabricId: FABRIC_ID,
+      status: STATUS.UNINITIALIZED,
+      ready: false,
+      attached: false,
+      gaugesDeferred: true,
+      routeMap: {
+        instrumentFactory: "/runtime/parent/instrument_factory.js",
+        orchestrationFabric: "/runtime/parent/orchestration_fabric.js",
+      },
+      parentStack: {
+        status: "UNBOUND",
+        filesCount: 0,
+      },
+      bridge: {
+        status: "UNINITIALIZED",
+      },
+      events: [],
+      lastError: null,
+      lastUpdatedAt: null,
+    };
+  }
+
+  function createFabric() {
+    let state = createInitialState();
+    const subscribers = new Set();
+
+    function emit(type, payload) {
+      state.events.push({
+        type,
+        at: nowIso(),
+        payload: clone(payload || {}),
+      });
+      state.lastUpdatedAt = nowIso();
+
+      const snapshot = api.getState();
+      subscribers.forEach(function (listener) {
+        try {
+          listener(snapshot, type);
+        } catch (_) {}
+      });
+    }
+
+    function setStatus(nextStatus) {
+      state.status = nextStatus;
+      state.lastUpdatedAt = nowIso();
+    }
+
+    const api = {
+      version: VERSION,
+
+      getState: function () {
+        return freezeCopy(state);
+      },
+
+      subscribe: function (listener) {
+        assert(typeof listener === "function", "subscribe requires a function");
+        subscribers.add(listener);
+        return function unsubscribe() {
+          subscribers.delete(listener);
+        };
+      },
+
+      establishBaseline: function () {
+        const kernel = getKernel();
+        const instrumentFactory = getInstrumentFactory();
+        const instrumentState = instrumentFactory.getState();
+
+        if (!instrumentState.ready && typeof instrumentFactory.boot === "function") {
+          instrumentFactory.boot();
+        }
+
+        assert(instrumentFactory.getState().ready, "InstrumentFactory must be ready");
+
+        setStatus(STATUS.ATTACHING);
+
+        state.attached = true;
+        state.ready = true;
+        state.parentStack.status = "ORCHESTRATION_FABRIC_READY";
+        state.parentStack.filesCount = 7;
+        state.bridge.status = "ORCHESTRATION_FABRIC_READY";
+
+        kernel.setParentStackStatus("ORCHESTRATION_FABRIC_READY", 7);
+        kernel.setRuntimeBridgeStatus("ORCHESTRATION_FABRIC_READY");
+        kernel.setLiveRuntimeState("ORCHESTRATION_FABRIC_LAYER_READY");
+
+        setStatus(STATUS.READY);
+
+        emit("ORCHESTRATION_FABRIC_READY", {
+          parentStackStatus: state.parentStack.status,
+          parentFilesCount: state.parentStack.filesCount,
+        });
+
+        return api.getState();
+      },
+
+      boot: function () {
+        try {
+          const current = api.getState();
+          if (current.ready) {
+            return current;
+          }
+          return api.establishBaseline();
+        } catch (error) {
+          state.lastError = error && error.message ? error.message : String(error);
+          setStatus(STATUS.ERROR);
+          emit("ORCHESTRATION_FABRIC_ERROR", { message: state.lastError });
+          if (typeof console !== "undefined" && console.error) {
+            console.error(error);
+          }
+          return api.getState();
+        }
+      },
+    };
+
+    return Object.freeze(api);
+  }
+
+  const OrchestrationFabric = createFabric();
+  global.OrchestrationFabric = OrchestrationFabric;
+
+  if (typeof module !== "undefined" && module.exports) {
+    module.exports = OrchestrationFabric;
+  }
+
+  OrchestrationFabric.boot();
+})(typeof globalThis !== "undefined" ? globalThis : window);

@@ -4,126 +4,192 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Diamond Gate Bridge</title>
-  <meta name="description" content="Greenfield world entry for Diamond Gate Bridge." />
-  <meta name="theme-color" content="#0b1020" />
+  <meta name="description" content="Diamond Gate Bridge platform host." />
+  <meta name="theme-color" content="#05070b" />
   <style>
     :root{
-      --bg:#07111f;
-      --bg2:#0d1830;
-      --panel:rgba(255,255,255,.06);
-      --line:rgba(255,255,255,.12);
-      --text:#f3f7ff;
-      --muted:#a6b3ca;
-      --accent:#dbe7ff;
-      --shadow:0 20px 60px rgba(0,0,0,.38);
-      --radius:20px;
-      --max:1320px;
+      --bg:#05070b;
+      --bg2:#0b1220;
+      --fg:#e8edf5;
+      --muted:#9aa7bd;
+      --line:rgba(255,255,255,.08);
+      --panel:rgba(255,255,255,.04);
+      --shadow:0 18px 48px rgba(0,0,0,.36);
+      --radius:14px;
+      --max:1440px;
+      --font:12px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;background:linear-gradient(180deg,var(--bg),var(--bg2));color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    html,body{
+      margin:0;
+      padding:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 20% 12%, rgba(255,255,255,.05), transparent 22%),
+        radial-gradient(circle at 80% 78%, rgba(64,169,255,.08), transparent 24%),
+        linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
+      color:var(--fg);
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      -webkit-font-smoothing:antialiased;
+      text-rendering:optimizeLegibility;
+    }
     body{overflow:hidden}
     a{color:inherit;text-decoration:none}
+
     .shell{
-      position:fixed;inset:0;display:grid;grid-template-rows:72px 1fr;overflow:hidden;
-      background:
-        radial-gradient(circle at 18% 10%, rgba(255,255,255,.08), transparent 25%),
-        radial-gradient(circle at 85% 80%, rgba(110,140,255,.12), transparent 26%),
-        linear-gradient(180deg,#07111f 0%,#0d1830 100%);
+      position:fixed;
+      inset:0;
+      display:grid;
+      grid-template-rows:64px 1fr;
+      overflow:hidden;
+      isolation:isolate;
     }
+
     .topbar{
-      display:flex;align-items:center;justify-content:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
       border-bottom:1px solid var(--line);
+      background:rgba(5,7,11,.62);
       backdrop-filter:blur(12px);
-      background:rgba(7,17,31,.58);
       z-index:10;
     }
+
     .topbar-inner{
       width:min(calc(100% - 24px),var(--max));
-      display:flex;align-items:center;justify-content:space-between;gap:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
     }
-    .brand{display:inline-flex;align-items:center;gap:12px;font-weight:700;letter-spacing:.02em}
+
+    .brand{
+      display:inline-flex;
+      align-items:center;
+      gap:12px;
+      font-weight:700;
+      letter-spacing:.02em;
+    }
+
     .brand-mark{
-      width:16px;height:16px;transform:rotate(45deg);
-      border:1px solid rgba(255,255,255,.65);
-      background:linear-gradient(180deg,rgba(255,255,255,.24),rgba(255,255,255,.08));
-      box-shadow:0 0 18px rgba(255,255,255,.10);
+      width:16px;
+      height:16px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,255,255,.6);
+      background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.06));
+      box-shadow:0 0 14px rgba(255,255,255,.08);
       flex:0 0 auto;
     }
-    .nav{display:flex;gap:16px;color:var(--muted);font-size:.95rem}
-    .viewport{
-      position:relative;
+
+    .nav{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .stage{
       width:min(calc(100% - 24px),var(--max));
-      height:calc(100vh - 96px);
+      height:calc(100vh - 88px);
       margin:12px auto;
+      position:relative;
       border:1px solid var(--line);
-      border-radius:28px;
+      border-radius:24px;
       overflow:hidden;
       background:rgba(255,255,255,.02);
       box-shadow:var(--shadow);
     }
-    canvas{
-      position:absolute;inset:0;width:100%;height:100%;display:block;
-      background:transparent;
+
+    #app{
+      position:absolute;
+      inset:0;
+      display:grid;
+      grid-template-rows:1fr auto;
+      min-height:0;
     }
-    .overlay{
-      position:absolute;inset:0;pointer-events:none;
-      display:grid;grid-template-columns:minmax(260px,340px) 1fr minmax(220px,280px);
-      gap:18px;padding:18px;
+
+    #world-canvas-wrap{
+      position:relative;
+      min-height:0;
+      overflow:hidden;
     }
-    .panel{
-      align-self:start;
+
+    #world-canvas{
+      display:block;
+      width:100%;
+      height:100%;
+      background:#05070b;
+    }
+
+    #world-hud{
+      position:absolute;
+      left:12px;
+      top:12px;
+      max-width:min(520px,calc(100vw - 48px));
+      padding:10px 12px;
       border:1px solid var(--line);
-      border-radius:var(--radius);
-      background:var(--panel);
-      backdrop-filter:blur(10px);
+      border-radius:10px;
+      background:rgba(255,255,255,.04);
+      backdrop-filter:blur(6px);
+      white-space:pre-wrap;
+      line-height:1.35;
+      font:var(--font);
+      color:var(--fg);
+      pointer-events:none;
       box-shadow:var(--shadow);
-      padding:16px 16px 14px;
     }
-    .panel h1,.panel h2,.panel p{margin:0}
-    .panel h1{font-size:clamp(1.8rem,2vw,2.4rem);line-height:.96;letter-spacing:-.04em;margin-bottom:10px}
-    .panel h2{font-size:1rem;letter-spacing:.02em;margin-bottom:8px}
-    .panel p{color:var(--muted);line-height:1.55}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;margin-bottom:12px;
-      padding:8px 12px;border:1px solid var(--line);border-radius:999px;
-      background:rgba(255,255,255,.04);color:var(--accent);font-size:.82rem;
-      letter-spacing:.08em;text-transform:uppercase
+
+    #instrument-panel{
+      padding:10px 12px;
+      border-top:1px solid var(--line);
+      background:rgba(255,255,255,.02);
+      overflow:auto;
+      max-height:22vh;
+      color:var(--muted);
+      font:var(--font);
     }
-    .center-spacer{min-width:0}
-    .stats{display:grid;gap:10px}
-    .stat{
-      display:grid;gap:4px;padding:12px 14px;border:1px solid var(--line);
-      border-radius:16px;background:rgba(255,255,255,.03)
+
+    .overlay-note{
+      position:absolute;
+      right:12px;
+      top:12px;
+      width:min(320px,calc(100vw - 48px));
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:12px;
+      background:var(--panel);
+      backdrop-filter:blur(8px);
+      box-shadow:var(--shadow);
+      pointer-events:none;
     }
-    .stat strong{font-size:1.15rem;letter-spacing:-.03em}
-    .legend{display:grid;gap:8px;margin-top:10px}
-    .legend-row{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:.93rem}
-    .swatch{width:12px;height:12px;border-radius:999px;border:1px solid rgba(255,255,255,.18)}
-    .footer-note{
-      position:absolute;left:18px;right:18px;bottom:18px;
-      border:1px solid var(--line);border-radius:16px;background:rgba(255,255,255,.04);
-      backdrop-filter:blur(10px);padding:12px 14px;color:var(--muted);font-size:.92rem
+
+    .overlay-note strong{
+      display:block;
+      margin-bottom:6px;
+      font-size:.95rem;
+      letter-spacing:.01em;
     }
-    .status-pill{
-      display:inline-flex;align-items:center;gap:8px;padding:7px 10px;
-      border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);
-      color:var(--accent);font-size:.82rem
+
+    .overlay-note span{
+      display:block;
+      color:var(--muted);
+      line-height:1.45;
+      font-size:.9rem;
     }
-    @media (max-width:980px){
-      .overlay{grid-template-columns:1fr;align-content:start}
-      .center-spacer{display:none}
-      .panel:last-child{max-width:380px}
-    }
-    @media (max-width:680px){
-      .shell{grid-template-rows:64px 1fr}
+
+    @media (max-width:720px){
       .nav{display:none}
-      .viewport{height:calc(100vh - 84px);margin:10px auto}
-      .overlay{padding:12px;gap:12px}
-      .panel h1{max-width:12ch}
-      .footer-note{left:12px;right:12px;bottom:12px}
+      .stage{height:calc(100vh - 80px);margin:8px auto}
+      #world-hud,.overlay-note{max-width:calc(100vw - 32px)}
     }
+
     @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+      *,*::before,*::after{
+        animation:none!important;
+        transition:none!important;
+        scroll-behavior:auto!important;
+      }
     }
   </style>
 </head>
@@ -143,54 +209,24 @@
       </div>
     </header>
 
-    <main class="viewport" id="app">
-      <canvas id="world-canvas" aria-label="World canvas"></canvas>
-
-      <div class="overlay">
-        <section class="panel">
-          <div class="eyebrow">Visible lawful world entry</div>
-          <h1>Greenfield runtime now mounted.</h1>
-          <p>
-            The first live world state renders directly in the browser with deterministic geometry,
-            a clean canvas boot surface, and isolated expansion boundaries for subsequent layers.
-          </p>
-        </section>
-
-        <div class="center-spacer"></div>
-
-        <aside class="panel">
-          <h2>Runtime status</h2>
-          <div class="stats" aria-live="polite">
-            <div class="stat">
-              <span class="status-pill">Boot active</span>
-              <strong id="boot-status">Loading world…</strong>
-              <p>Scene authority initializes deterministic world state and render loop.</p>
-            </div>
-            <div class="stat">
-              <strong id="camera-status">Camera pending</strong>
-              <p>Projection binds world space to visible render space.</p>
-            </div>
-            <div class="stat">
-              <strong id="world-status">Kernel pending</strong>
-              <p>World kernel owns regions, water, paths, markers, and seed discipline.</p>
-            </div>
+    <main class="stage">
+      <div id="app">
+        <div id="world-canvas-wrap">
+          <canvas id="world-canvas" aria-label="World canvas"></canvas>
+          <div id="world-hud">WORLD HOST
+projection=flat
+elapsedSeconds=0
+status=boot_pending</div>
+          <div class="overlay-note" aria-hidden="true">
+            <strong>Platform host active</strong>
+            <span>HTML host shell aligned to <code>/index.js</code>, canvas mount, HUD, and instrument panel IDs.</span>
           </div>
-
-          <div class="legend" aria-hidden="true">
-            <div class="legend-row"><span class="swatch" style="background:rgba(88,173,255,.85)"></span><span>Water shell</span></div>
-            <div class="legend-row"><span class="swatch" style="background:rgba(64,125,94,.9)"></span><span>Ground mass</span></div>
-            <div class="legend-row"><span class="swatch" style="background:rgba(242,214,143,.95)"></span><span>Traversal path</span></div>
-            <div class="legend-row"><span class="swatch" style="background:rgba(255,255,255,.92)"></span><span>Markers and stars</span></div>
-          </div>
-        </aside>
-      </div>
-
-      <div class="footer-note" id="footer-note">
-        Runtime receipt pending.
+        </div>
+        <div id="instrument-panel">instrument boot path intentionally excluded</div>
       </div>
     </main>
   </div>
 
-  <script type="module" src="./runtime/scene.js"></script>
+  <script type="module" src="./index.js"></script>
 </body>
 </html>

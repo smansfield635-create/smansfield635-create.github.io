@@ -693,6 +693,12 @@ const buildRuntimeReceipt = (runtime, timestamp) => {
     biomeType: currentState.biomeType || null,
     surfaceMaterial: currentState.surfaceMaterial || null,
     climateBand: currentState.climateBand || null,
+    climate: currentState.climate || null,
+    moisture: currentState.moisture ?? null,
+    accumulation: currentState.accumulation ?? null,
+    shorelineMask: currentState.shorelineMask ?? null,
+    landMask: currentState.landMask ?? null,
+    waterMask: currentState.waterMask ?? null,
     habitability: currentState.habitability ?? null,
     traversalDifficulty: currentState.traversalDifficulty ?? null
   });

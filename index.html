@@ -3,28 +3,34 @@ DESTINATION: /index.html
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
   <title>Compass Page Baseline</title>
   <style>
     :root {
-      --bg-0: #040814;
-      --bg-1: #071126;
-      --bg-2: #0d1a35;
-      --fg: #e7eeff;
-      --muted: #9aaed2;
-      --line: rgba(255,255,255,0.10);
-      --panel: rgba(6,14,30,0.72);
-      --panel-strong: rgba(5,11,24,0.84);
+      --bg-0: #030712;
+      --bg-1: #071127;
+      --bg-2: #0d1d3d;
+      --fg: #e9efff;
+      --muted: #9db0d4;
+      --line: rgba(255, 255, 255, 0.10);
+      --panel: rgba(5, 12, 26, 0.78);
+      --panel-strong: rgba(4, 10, 22, 0.88);
+      --shadow: rgba(0, 0, 0, 0.30);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html, body {
       margin: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: radial-gradient(circle at 50% 50%, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
+      background: #030712;
       color: var(--fg);
       font-family: Arial, Helvetica, sans-serif;
     }
@@ -39,9 +45,10 @@ DESTINATION: /index.html
       height: 100%;
       overflow: hidden;
       background:
-        radial-gradient(circle at 18% 24%, rgba(108,86,196,0.10) 0%, rgba(108,86,196,0) 28%),
-        radial-gradient(circle at 80% 70%, rgba(42,122,196,0.08) 0%, rgba(42,122,196,0) 30%),
-        radial-gradient(circle at 50% 42%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 36%);
+        radial-gradient(circle at 50% 45%, rgba(86, 122, 210, 0.10) 0%, rgba(86, 122, 210, 0) 35%),
+        radial-gradient(circle at 18% 24%, rgba(132, 88, 210, 0.12) 0%, rgba(132, 88, 210, 0) 28%),
+        radial-gradient(circle at 82% 72%, rgba(46, 132, 197, 0.10) 0%, rgba(46, 132, 197, 0) 30%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 48%, var(--bg-0) 100%);
     }
 
     #scene {
@@ -56,29 +63,33 @@ DESTINATION: /index.html
       position: absolute;
       inset: 0;
       pointer-events: none;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      padding-left: env(safe-area-inset-left, 0px);
     }
 
     .panel {
       border: 1px solid var(--line);
       background: var(--panel);
       backdrop-filter: blur(7px);
-      border-radius: 14px;
-      box-shadow: 0 10px 34px rgba(0,0,0,0.22);
+      border-radius: 18px;
+      box-shadow: 0 14px 42px var(--shadow);
     }
 
     .title-block {
       position: absolute;
       top: 18px;
       left: 18px;
-      width: min(620px, calc(100vw - 36px));
-      padding: 14px 16px;
+      width: min(680px, calc(100vw - 36px));
+      padding: 16px 18px;
     }
 
     .title-block h1 {
-      margin: 0 0 8px 0;
+      margin: 0 0 10px 0;
       font-size: 18px;
       line-height: 1.12;
-      letter-spacing: 0.07em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
@@ -86,7 +97,7 @@ DESTINATION: /index.html
       margin: 0;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.5;
+      line-height: 1.55;
       letter-spacing: 0.02em;
     }
 
@@ -94,16 +105,35 @@ DESTINATION: /index.html
       position: absolute;
       top: 18px;
       right: 18px;
-      min-width: 280px;
-      max-width: min(360px, calc(100vw - 36px));
-      padding: 14px 16px;
+      width: min(400px, calc(100vw - 36px));
+      padding: 16px 18px;
+    }
+
+    .scale-panel {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: min(430px, calc(100vw - 36px));
+      padding: 16px 18px;
+      background: var(--panel-strong);
+    }
+
+    .status {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      width: min(760px, calc(100vw - 36px));
+      padding: 13px 16px;
+      font-size: 12px;
+      line-height: 1.55;
+      color: var(--muted);
     }
 
     .legend h2,
     .scale-panel h2 {
-      margin: 0 0 10px 0;
+      margin: 0 0 11px 0;
       font-size: 13px;
-      line-height: 1.15;
+      line-height: 1.1;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
@@ -112,9 +142,11 @@ DESTINATION: /index.html
     .scale-row {
       display: flex;
       justify-content: space-between;
+      align-items: flex-start;
       gap: 16px;
       margin: 7px 0;
       font-size: 12px;
+      line-height: 1.35;
       color: var(--muted);
     }
 
@@ -123,27 +155,13 @@ DESTINATION: /index.html
       color: var(--fg);
       font-weight: 700;
       text-align: right;
+      flex: 0 0 auto;
+      max-width: 58%;
     }
 
-    .scale-panel {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      min-width: 300px;
-      max-width: min(390px, calc(100vw - 36px));
-      padding: 14px 16px;
-      background: var(--panel-strong);
-    }
-
-    .status {
-      position: absolute;
-      left: 18px;
-      bottom: 18px;
-      width: min(700px, calc(100vw - 36px));
-      padding: 12px 14px;
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--muted);
+    .legend-row span,
+    .scale-row span {
+      min-width: 0;
     }
 
     .status strong {
@@ -154,61 +172,69 @@ DESTINATION: /index.html
     .inline-divider {
       display: inline-block;
       margin: 0 7px;
-      color: rgba(255,255,255,0.24);
+      color: rgba(255, 255, 255, 0.22);
     }
 
     @media (max-width: 980px) {
       .legend {
         top: auto;
-        right: 18px;
-        bottom: 164px;
-      }
-
-      .scale-panel {
-        bottom: 18px;
+        bottom: 170px;
       }
     }
 
     @media (max-width: 760px) {
       .title-block,
       .legend,
-      .status,
-      .scale-panel {
+      .scale-panel,
+      .status {
         left: 14px;
         right: 14px;
         width: auto;
         max-width: none;
       }
 
+      .title-block {
+        top: 12px;
+      }
+
       .legend {
         top: auto;
-        bottom: 208px;
-        min-width: 0;
+        bottom: 210px;
       }
 
       .scale-panel {
-        min-width: 0;
+        bottom: 74px;
       }
 
       .status {
-        bottom: 18px;
+        bottom: 12px;
       }
 
       .title-block h1 {
         font-size: 16px;
       }
-    }
-
-    @media (max-width: 540px) {
-      .legend {
-        bottom: 254px;
-      }
 
       .title-block,
       .legend,
-      .status,
-      .scale-panel {
-        padding: 12px 13px;
+      .scale-panel,
+      .status {
+        padding: 14px 15px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .legend {
+        bottom: 252px;
+      }
+
+      .legend-row,
+      .scale-row {
+        gap: 10px;
+      }
+
+      .legend-row strong,
+      .scale-row strong {
+        max-width: 54%;
       }
     }
   </style>
@@ -221,10 +247,11 @@ DESTINATION: /index.html
       <div class="panel title-block">
         <h1>Compass Page Baseline — 9 Variant Solar Systems</h1>
         <p>
-          Macro easel only. One visible universe field contains nine diamond-anchored variant
-          solar systems derived from our actual solar system as reference. Each system holds
-          one distant sun-class core and nine planetary slots counting Pluto. Ordering is
-          diamond + chronology + reference physics. Livability and deeper composition remain deferred.
+          Macro easel only. One visible universe field contains nine diamond-anchored
+          variant solar systems derived from our actual solar system as reference.
+          Each system holds one distant sun-class core and nine planetary slots counting Pluto.
+          Ordering is diamond + chronology + reference physics. Final composition, core typing,
+          atmospheric detail, livability, and local planet work remain deferred beyond baseline.
         </p>
       </div>
 
@@ -251,7 +278,8 @@ DESTINATION: /index.html
         <span class="inline-divider">|</span>
         Nine systems must stay discernible.
         <span class="inline-divider">|</span>
-        Secondary richness degrades before anchor geometry, star-core visibility, solar-template structure, or scale clarity.
+        Secondary richness degrades before anchor geometry, star-core visibility,
+        solar-template structure, or scale clarity.
       </div>
     </div>
   </div>

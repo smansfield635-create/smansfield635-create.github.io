@@ -7,13 +7,14 @@ DESTINATION: /index.html
   <title>Compass Page Baseline</title>
   <style>
     :root {
-      --bg-0: #050816;
+      --bg-0: #040814;
       --bg-1: #071126;
-      --bg-2: #0c1832;
-      --fg: #dfe9ff;
-      --muted: #8ea2c9;
+      --bg-2: #0d1a35;
+      --fg: #e7eeff;
+      --muted: #9aaed2;
       --line: rgba(255,255,255,0.10);
-      --panel: rgba(7,17,38,0.72);
+      --panel: rgba(6,14,30,0.72);
+      --panel-strong: rgba(5,11,24,0.84);
     }
 
     * { box-sizing: border-box; }
@@ -23,10 +24,13 @@ DESTINATION: /index.html
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 50%, var(--bg-2) 0%, var(--bg-1) 40%, var(--bg-0) 100%);
+      background: radial-gradient(circle at 50% 50%, var(--bg-2) 0%, var(--bg-1) 42%, var(--bg-0) 100%);
       color: var(--fg);
       font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
     }
 
     #app {
@@ -35,10 +39,9 @@ DESTINATION: /index.html
       height: 100%;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% 50%, rgba(80,110,170,0.06) 0%, rgba(0,0,0,0) 55%),
-        radial-gradient(circle at 20% 25%, rgba(95,70,170,0.10) 0%, rgba(0,0,0,0) 28%),
-        radial-gradient(circle at 80% 75%, rgba(40,120,180,0.08) 0%, rgba(0,0,0,0) 30%),
-        linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 100%);
+        radial-gradient(circle at 18% 24%, rgba(108,86,196,0.10) 0%, rgba(108,86,196,0) 28%),
+        radial-gradient(circle at 80% 70%, rgba(42,122,196,0.08) 0%, rgba(42,122,196,0) 30%),
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 36%);
     }
 
     #scene {
@@ -55,23 +58,27 @@ DESTINATION: /index.html
       pointer-events: none;
     }
 
+    .panel {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(7px);
+      border-radius: 14px;
+      box-shadow: 0 10px 34px rgba(0,0,0,0.22);
+    }
+
     .title-block {
       position: absolute;
       top: 18px;
       left: 18px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border-radius: 12px;
-      max-width: min(520px, calc(100vw - 36px));
+      width: min(620px, calc(100vw - 36px));
+      padding: 14px 16px;
     }
 
     .title-block h1 {
-      margin: 0 0 6px 0;
+      margin: 0 0 8px 0;
       font-size: 18px;
-      line-height: 1.15;
-      letter-spacing: 0.06em;
+      line-height: 1.12;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
     }
 
@@ -79,68 +86,112 @@ DESTINATION: /index.html
       margin: 0;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.45;
+      line-height: 1.5;
       letter-spacing: 0.02em;
     }
 
     .legend {
       position: absolute;
-      right: 18px;
       top: 18px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border-radius: 12px;
-      min-width: 240px;
+      right: 18px;
+      min-width: 280px;
+      max-width: min(360px, calc(100vw - 36px));
+      padding: 14px 16px;
     }
 
-    .legend h2 {
-      margin: 0 0 8px 0;
+    .legend h2,
+    .scale-panel h2 {
+      margin: 0 0 10px 0;
       font-size: 13px;
-      text-transform: uppercase;
+      line-height: 1.15;
       letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .legend-row {
+    .legend-row,
+    .scale-row {
       display: flex;
       justify-content: space-between;
       gap: 16px;
-      margin: 6px 0;
+      margin: 7px 0;
       font-size: 12px;
       color: var(--muted);
     }
 
-    .legend-row strong {
+    .legend-row strong,
+    .scale-row strong {
       color: var(--fg);
       font-weight: 700;
+      text-align: right;
+    }
+
+    .scale-panel {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      min-width: 300px;
+      max-width: min(390px, calc(100vw - 36px));
+      padding: 14px 16px;
+      background: var(--panel-strong);
     }
 
     .status {
       position: absolute;
       left: 18px;
       bottom: 18px;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      backdrop-filter: blur(6px);
-      border-radius: 12px;
-      max-width: min(620px, calc(100vw - 36px));
-      color: var(--muted);
+      width: min(700px, calc(100vw - 36px));
+      padding: 12px 14px;
       font-size: 12px;
-      line-height: 1.45;
+      line-height: 1.5;
+      color: var(--muted);
     }
 
     .status strong {
       color: var(--fg);
+      font-weight: 700;
     }
 
-    @media (max-width: 820px) {
+    .inline-divider {
+      display: inline-block;
+      margin: 0 7px;
+      color: rgba(255,255,255,0.24);
+    }
+
+    @media (max-width: 980px) {
       .legend {
         top: auto;
-        bottom: 96px;
         right: 18px;
-        min-width: 220px;
+        bottom: 164px;
+      }
+
+      .scale-panel {
+        bottom: 18px;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .title-block,
+      .legend,
+      .status,
+      .scale-panel {
+        left: 14px;
+        right: 14px;
+        width: auto;
+        max-width: none;
+      }
+
+      .legend {
+        top: auto;
+        bottom: 208px;
+        min-width: 0;
+      }
+
+      .scale-panel {
+        min-width: 0;
+      }
+
+      .status {
+        bottom: 18px;
       }
 
       .title-block h1 {
@@ -148,12 +199,16 @@ DESTINATION: /index.html
       }
     }
 
-    @media (max-width: 620px) {
+    @media (max-width: 540px) {
       .legend {
-        left: 18px;
-        right: 18px;
-        bottom: 108px;
-        min-width: 0;
+        bottom: 254px;
+      }
+
+      .title-block,
+      .legend,
+      .status,
+      .scale-panel {
+        padding: 12px 13px;
       }
     }
   </style>
@@ -163,27 +218,40 @@ DESTINATION: /index.html
     <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
 
     <div class="hud">
-      <div class="title-block">
-        <h1>Compass Page Baseline</h1>
+      <div class="panel title-block">
+        <h1>Compass Page Baseline — 9 Variant Solar Systems</h1>
         <p>
-          Physics-governed macro field with 9 diamond-anchored variant solar systems.
-          Reference scale is structural and comparative. Primary read: anchor geometry,
-          star-core visibility, system count clarity, and cosmic depth.
+          Macro easel only. One visible universe field contains nine diamond-anchored variant
+          solar systems derived from our actual solar system as reference. Each system holds
+          one distant sun-class core and nine planetary slots counting Pluto. Ordering is
+          diamond + chronology + reference physics. Livability and deeper composition remain deferred.
         </p>
       </div>
 
-      <div class="legend">
-        <h2>Baseline Lock</h2>
-        <div class="legend-row"><span>Visible Systems</span><strong>9</strong></div>
-        <div class="legend-row"><span>Anchor Logic</span><strong>N NE E SE S SW W NW C</strong></div>
-        <div class="legend-row"><span>Reference Class</span><strong>Sun-Class Core Stars</strong></div>
-        <div class="legend-row"><span>Degrade Rule</span><strong>Secondary Effects First</strong></div>
+      <div class="panel legend">
+        <h2>Locked Baseline Read</h2>
+        <div class="legend-row"><span>Visible Macro Systems</span><strong>9 Variant Solar Systems</strong></div>
+        <div class="legend-row"><span>Planet Slots Per System</span><strong>9 Counting Pluto</strong></div>
+        <div class="legend-row"><span>Anchor Set</span><strong>N NE E SE S SW W NW C</strong></div>
+        <div class="legend-row"><span>Reference Model</span><strong>Actual Solar System Scaffold</strong></div>
+        <div class="legend-row"><span>Variation Driver</span><strong>Star Age / Strength Order</strong></div>
+        <div class="legend-row"><span>Scene Class</span><strong>Macro Easel, Not Final World</strong></div>
       </div>
 
-      <div class="status">
-        <strong>Read:</strong> Universe field first. Final planet detail excluded.
-        This baseline establishes macro structure, diamond topology, star variance by
-        lawful strength ranking, and a clear nine-system compass layout.
+      <div class="panel scale-panel">
+        <h2>Scale Ladder</h2>
+        <div class="scale-row"><span>Universe Scope</span><strong>256,000,000,000 km × 256,000,000,000 km</strong></div>
+        <div class="scale-row"><span>System Scope</span><strong>256,000,000 km × 256,000,000 km</strong></div>
+        <div class="scale-row"><span>Local System View</span><strong>256,000 km × 256,000 km</strong></div>
+        <div class="scale-row"><span>Planet Zoom View</span><strong>26,500 km × 26,500 km</strong></div>
+      </div>
+
+      <div class="panel status">
+        <strong>Inspection Read:</strong> Primary structure must read before effects.
+        <span class="inline-divider">|</span>
+        Nine systems must stay discernible.
+        <span class="inline-divider">|</span>
+        Secondary richness degrades before anchor geometry, star-core visibility, solar-template structure, or scale clarity.
       </div>
     </div>
   </div>

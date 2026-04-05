@@ -7,13 +7,12 @@ DESTINATION: /index.html
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
-  <title>Compass Page Baseline — Galaxy First</title>
+  <title>Compass Page Baseline — Canvas Authority</title>
   <style>
     :root {
-      --bg-0: #020611;
-      --bg-1: #06101f;
-      --bg-2: #0b1831;
-      --bg-3: #13254a;
+      --bg-0: #01040c;
+      --bg-1: #04101f;
+      --bg-2: #09172d;
       --fg: #eef3ff;
       --muted: #a9b8dc;
       --line: rgba(255, 255, 255, 0.12);
@@ -31,12 +30,13 @@ DESTINATION: /index.html
       box-sizing: border-box;
     }
 
-    html, body {
+    html,
+    body {
       margin: 0;
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #020611;
+      background: #01040c;
       color: var(--fg);
       font-family: Arial, Helvetica, sans-serif;
     }
@@ -52,92 +52,19 @@ DESTINATION: /index.html
       overflow: hidden;
       isolation: isolate;
       background:
-        radial-gradient(circle at 50% 50%, rgba(94, 127, 226, 0.09) 0%, rgba(94, 127, 226, 0) 34%),
-        radial-gradient(circle at 18% 24%, rgba(122, 82, 219, 0.10) 0%, rgba(122, 82, 219, 0) 28%),
-        radial-gradient(circle at 82% 76%, rgba(42, 154, 220, 0.08) 0%, rgba(42, 154, 220, 0) 28%),
-        linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 24%, var(--bg-1) 62%, var(--bg-0) 100%);
+        radial-gradient(circle at 50% 50%, rgba(80, 110, 200, 0.06) 0%, rgba(80, 110, 200, 0) 38%),
+        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 40%, var(--bg-0) 100%);
     }
 
-    .space-layer {
+    .canvas-underlay {
       position: absolute;
       inset: 0;
-      pointer-events: none;
-    }
-
-    #cosmos {
       z-index: 0;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 50% 56%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 16%),
-        radial-gradient(circle at 50% 50%, rgba(95, 136, 248, 0.18) 0%, rgba(95, 136, 248, 0.10) 12%, rgba(95, 136, 248, 0.03) 24%, rgba(95, 136, 248, 0) 42%),
-        radial-gradient(circle at 26% 34%, rgba(176, 92, 255, 0.18) 0%, rgba(176, 92, 255, 0.06) 16%, rgba(176, 92, 255, 0) 34%),
-        radial-gradient(circle at 76% 68%, rgba(62, 181, 255, 0.18) 0%, rgba(62, 181, 255, 0.06) 14%, rgba(62, 181, 255, 0) 32%),
-        radial-gradient(circle at 58% 26%, rgba(255, 155, 102, 0.10) 0%, rgba(255, 155, 102, 0.03) 10%, rgba(255, 155, 102, 0) 24%),
-        linear-gradient(180deg, rgba(8, 13, 28, 0.00) 0%, rgba(3, 7, 18, 0.24) 100%);
-      filter: saturate(1.15);
-    }
-
-    #nebula {
-      z-index: 1;
-      opacity: 0.95;
-      background:
-        radial-gradient(ellipse at 50% 52%, rgba(130, 165, 255, 0.18) 0%, rgba(130, 165, 255, 0.09) 16%, rgba(130, 165, 255, 0.03) 30%, rgba(130, 165, 255, 0) 48%),
-        radial-gradient(ellipse at 38% 44%, rgba(186, 96, 255, 0.11) 0%, rgba(186, 96, 255, 0.04) 15%, rgba(186, 96, 255, 0) 30%),
-        radial-gradient(ellipse at 64% 58%, rgba(56, 184, 255, 0.10) 0%, rgba(56, 184, 255, 0.04) 15%, rgba(56, 184, 255, 0) 28%);
-      mix-blend-mode: screen;
-      animation: nebulaDrift 20s ease-in-out infinite alternate;
-    }
-
-    .stars {
-      z-index: 2;
-      opacity: 0.95;
-      background-repeat: repeat;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
-    }
-
-    #stars-a {
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.95) 0 0.7px, transparent 1.2px),
-        radial-gradient(circle, rgba(180,205,255,0.85) 0 0.9px, transparent 1.5px),
-        radial-gradient(circle, rgba(255,255,255,0.75) 0 0.5px, transparent 1px);
-      background-size: 160px 160px, 220px 220px, 120px 120px;
-      background-position: 12px 24px, 80px 40px, 0 0;
-      animation-name: driftA;
-      animation-duration: 180s;
-    }
-
-    #stars-b {
-      z-index: 3;
-      opacity: 0.55;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.95) 0 1.1px, transparent 1.8px),
-        radial-gradient(circle, rgba(142,183,255,0.78) 0 1.2px, transparent 1.9px),
-        radial-gradient(circle, rgba(255,225,184,0.62) 0 0.8px, transparent 1.5px);
-      background-size: 320px 320px, 420px 420px, 260px 260px;
-      background-position: 40px 90px, 180px 130px, 70px 40px;
-      filter: blur(0.2px);
-      animation-name: driftB;
-      animation-duration: 260s;
-    }
-
-    #stars-c {
-      z-index: 4;
-      opacity: 0.28;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.95) 0 1.8px, transparent 2.8px),
-        radial-gradient(circle, rgba(154,198,255,0.78) 0 2.2px, transparent 3.4px),
-        radial-gradient(circle, rgba(255,255,255,0.85) 0 1.3px, transparent 2.2px);
-      background-size: 540px 540px, 760px 760px, 460px 460px;
-      background-position: 160px 60px, 240px 200px, 60px 260px;
-      filter: blur(0.35px);
-      animation-name: driftC;
-      animation-duration: 340s;
-    }
-
-    #vignette {
-      z-index: 5;
-      background:
-        radial-gradient(circle at 50% 48%, rgba(0,0,0,0) 44%, rgba(0,0,0,0.20) 72%, rgba(0,0,0,0.42) 100%);
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 14%),
+        radial-gradient(circle at 50% 50%, rgba(116,148,255,0.08) 0%, rgba(116,148,255,0.03) 16%, rgba(116,148,255,0) 42%),
+        linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.10) 100%);
     }
 
     #scene {
@@ -146,8 +73,9 @@ DESTINATION: /index.html
       width: 100%;
       height: 100%;
       display: block;
-      z-index: 6;
+      z-index: 1;
       background: transparent;
+      touch-action: manipulation;
     }
 
     .hud-toggle {
@@ -169,10 +97,25 @@ DESTINATION: /index.html
       letter-spacing: 0.08em;
       text-transform: uppercase;
       cursor: pointer;
+      user-select: none;
     }
 
     .hud-toggle:hover {
       background: rgba(8, 16, 34, 0.72);
+    }
+
+    .galaxy-first-note {
+      position: absolute;
+      left: calc(16px + var(--safe-left));
+      top: calc(16px + var(--safe-top));
+      z-index: 15;
+      pointer-events: none;
+      color: rgba(238,243,255,0.74);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      max-width: min(360px, calc(100vw - 120px));
     }
 
     .hud {
@@ -193,6 +136,10 @@ DESTINATION: /index.html
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
+    }
+
+    #hud-toggle:checked ~ .galaxy-first-note {
+      opacity: 0;
     }
 
     .panel {
@@ -303,44 +250,6 @@ DESTINATION: /index.html
       color: rgba(255, 255, 255, 0.22);
     }
 
-    .galaxy-first-note {
-      position: absolute;
-      left: calc(16px + var(--safe-left));
-      top: calc(16px + var(--safe-top));
-      z-index: 15;
-      pointer-events: none;
-      color: rgba(238,243,255,0.72);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      max-width: min(320px, calc(100vw - 120px));
-    }
-
-    #hud-toggle:checked ~ .galaxy-first-note {
-      opacity: 0;
-    }
-
-    @keyframes nebulaDrift {
-      0% { transform: translate3d(-1.5%, -1%, 0) scale(1); }
-      100% { transform: translate3d(1.5%, 1%, 0) scale(1.04); }
-    }
-
-    @keyframes driftA {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-180px, 120px, 0); }
-    }
-
-    @keyframes driftB {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(140px, -100px, 0); }
-    }
-
-    @keyframes driftC {
-      0% { transform: translate3d(0, 0, 0); }
-      100% { transform: translate3d(-110px, -70px, 0); }
-    }
-
     @media (max-width: 980px) {
       .legend {
         top: auto;
@@ -418,13 +327,6 @@ DESTINATION: /index.html
     }
 
     @media (prefers-reduced-motion: reduce) {
-      #nebula,
-      #stars-a,
-      #stars-b,
-      #stars-c {
-        animation: none;
-      }
-
       .hud {
         transition: none;
       }
@@ -433,20 +335,14 @@ DESTINATION: /index.html
 </head>
 <body>
   <div id="app">
-    <div id="cosmos" class="space-layer" aria-hidden="true"></div>
-    <div id="nebula" class="space-layer" aria-hidden="true"></div>
-    <div id="stars-a" class="space-layer stars" aria-hidden="true"></div>
-    <div id="stars-b" class="space-layer stars" aria-hidden="true"></div>
-    <div id="stars-c" class="space-layer stars" aria-hidden="true"></div>
-    <div id="vignette" class="space-layer" aria-hidden="true"></div>
-
+    <div class="canvas-underlay" aria-hidden="true"></div>
     <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
 
     <input id="hud-toggle" type="checkbox" hidden />
     <label for="hud-toggle" class="hud-toggle">Panels</label>
 
     <div class="galaxy-first-note" aria-hidden="true">
-      Galaxy-first view active. Open Panels only when needed.
+      Canvas-authority view active. Panels are optional.
     </div>
 
     <div class="hud">
@@ -490,6 +386,6 @@ DESTINATION: /index.html
     </div>
   </div>
 
-  <script src="./index.js?v=3"></script>
+  <script src="/index.js?v=8"></script>
 </body>
 </html>

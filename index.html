@@ -7,7 +7,7 @@ DESTINATION: /index.html
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
-  <title>Compass Page Baseline — Canvas Authority</title>
+  <title>Compass Page Baseline — Canvas Direct</title>
   <style>
     :root {
       --bg-0: #01040c;
@@ -56,17 +56,6 @@ DESTINATION: /index.html
         linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 40%, var(--bg-0) 100%);
     }
 
-    .canvas-underlay {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0) 14%),
-        radial-gradient(circle at 50% 50%, rgba(116,148,255,0.08) 0%, rgba(116,148,255,0.03) 16%, rgba(116,148,255,0) 42%),
-        linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.10) 100%);
-    }
-
     #scene {
       position: absolute;
       inset: 0;
@@ -98,10 +87,6 @@ DESTINATION: /index.html
       text-transform: uppercase;
       cursor: pointer;
       user-select: none;
-    }
-
-    .hud-toggle:hover {
-      background: rgba(8, 16, 34, 0.72);
     }
 
     .galaxy-first-note {
@@ -234,11 +219,6 @@ DESTINATION: /index.html
       max-width: 56%;
     }
 
-    .legend-row span,
-    .scale-row span {
-      min-width: 0;
-    }
-
     .status strong {
       color: var(--fg);
       font-weight: 700;
@@ -248,6 +228,52 @@ DESTINATION: /index.html
       display: inline-block;
       margin: 0 7px;
       color: rgba(255, 255, 255, 0.22);
+    }
+
+    .boot-banner {
+      position: absolute;
+      top: calc(14px + var(--safe-top));
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 25;
+      min-width: 180px;
+      max-width: calc(100vw - 120px);
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(5, 11, 24, 0.68);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(235,242,255,0.92);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      pointer-events: none;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .boot-fail {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: calc(14px + var(--safe-bottom));
+      z-index: 40;
+      display: none;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,120,120,0.28);
+      background: rgba(30, 8, 10, 0.90);
+      color: rgba(255,235,235,0.96);
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
+    }
+
+    .boot-fail.is-visible {
+      display: block;
     }
 
     @media (max-width: 980px) {
@@ -296,6 +322,10 @@ DESTINATION: /index.html
       .status {
         padding: 14px 15px;
       }
+
+      .boot-banner {
+        max-width: calc(100vw - 140px);
+      }
     }
 
     @media (max-width: 520px) {
@@ -324,6 +354,11 @@ DESTINATION: /index.html
         bottom: calc(18px + var(--safe-bottom));
         max-width: calc(100vw - 110px);
       }
+
+      .boot-banner {
+        top: calc(10px + var(--safe-top));
+        max-width: calc(100vw - 140px);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -335,15 +370,18 @@ DESTINATION: /index.html
 </head>
 <body>
   <div id="app">
-    <div class="canvas-underlay" aria-hidden="true"></div>
     <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
 
     <input id="hud-toggle" type="checkbox" hidden />
     <label for="hud-toggle" class="hud-toggle">Panels</label>
 
+    <div class="boot-banner" id="boot-banner">HTML H10 + JS J10</div>
+
     <div class="galaxy-first-note" aria-hidden="true">
       Canvas-authority view active. Panels are optional.
     </div>
+
+    <div id="boot-fail" class="boot-fail" aria-live="polite"></div>
 
     <div class="hud">
       <div class="panel title-block">
@@ -386,6 +424,24 @@ DESTINATION: /index.html
     </div>
   </div>
 
-  <script src="/index.js?v=8"></script>
+  <script>
+    (function () {
+      "use strict";
+      var failNode = document.getElementById("boot-fail");
+      window.addEventListener("error", function (event) {
+        if (!failNode) return;
+        failNode.textContent = "BOOT FAILED\n" + String(event && event.message ? event.message : "Unknown error");
+        failNode.classList.add("is-visible");
+      });
+      window.addEventListener("unhandledrejection", function (event) {
+        if (!failNode) return;
+        var reason = event && event.reason ? event.reason : "Unhandled promise rejection";
+        failNode.textContent = "BOOT FAILED\n" + String(reason);
+        failNode.classList.add("is-visible");
+      });
+    })();
+  </script>
+
+  <script src="/index.js?v=10"></script>
 </body>
 </html>

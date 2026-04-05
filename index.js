@@ -31,26 +31,26 @@ DESTINATION: /index.js
 
   const REFERENCE_SOLAR_LAYOUT = [
     { name: "Mercury", orbitKm: 57910000, diameterKm: 4879, color: "#c7d0df" },
-    { name: "Venus",   orbitKm: 108200000, diameterKm: 12104, color: "#ecd39e" },
-    { name: "Earth",   orbitKm: 149600000, diameterKm: 12742, color: "#8db6ff" },
-    { name: "Mars",    orbitKm: 227900000, diameterKm: 6779, color: "#d88b6f" },
+    { name: "Venus", orbitKm: 108200000, diameterKm: 12104, color: "#ecd39e" },
+    { name: "Earth", orbitKm: 149600000, diameterKm: 12742, color: "#8db6ff" },
+    { name: "Mars", orbitKm: 227900000, diameterKm: 6779, color: "#d88b6f" },
     { name: "Jupiter", orbitKm: 778500000, diameterKm: 139820, color: "#e0d0ab" },
-    { name: "Saturn",  orbitKm: 1433000000, diameterKm: 116460, color: "#ead9a6" },
-    { name: "Uranus",  orbitKm: 2872000000, diameterKm: 50724, color: "#a6e3ea" },
+    { name: "Saturn", orbitKm: 1433000000, diameterKm: 116460, color: "#ead9a6" },
+    { name: "Uranus", orbitKm: 2872000000, diameterKm: 50724, color: "#a6e3ea" },
     { name: "Neptune", orbitKm: 4495000000, diameterKm: 49244, color: "#7795ec" },
-    { name: "Pluto",   orbitKm: 5906000000, diameterKm: 2377, color: "#d8d1c7" }
+    { name: "Pluto", orbitKm: 5906000000, diameterKm: 2377, color: "#d8d1c7" }
   ];
 
   const CHRONO_SYSTEMS = [
-    { anchor: "N",  rank: 1, starStrength: 1.00, ageBias: 0.10 },
+    { anchor: "N", rank: 1, starStrength: 1.00, ageBias: 0.10 },
     { anchor: "NE", rank: 2, starStrength: 0.93, ageBias: 0.18 },
-    { anchor: "E",  rank: 3, starStrength: 0.86, ageBias: 0.26 },
+    { anchor: "E", rank: 3, starStrength: 0.86, ageBias: 0.26 },
     { anchor: "SE", rank: 4, starStrength: 0.79, ageBias: 0.34 },
-    { anchor: "S",  rank: 5, starStrength: 0.72, ageBias: 0.42 },
+    { anchor: "S", rank: 5, starStrength: 0.72, ageBias: 0.42 },
     { anchor: "SW", rank: 6, starStrength: 0.65, ageBias: 0.50 },
-    { anchor: "W",  rank: 7, starStrength: 0.58, ageBias: 0.58 },
+    { anchor: "W", rank: 7, starStrength: 0.58, ageBias: 0.58 },
     { anchor: "NW", rank: 8, starStrength: 0.51, ageBias: 0.66 },
-    { anchor: "C",  rank: 9, starStrength: 0.44, ageBias: 0.74 }
+    { anchor: "C", rank: 9, starStrength: 0.44, ageBias: 0.74 }
   ];
 
   const state = {
@@ -63,7 +63,9 @@ DESTINATION: /index.js
     comets: [],
     systems: [],
     degradeLevel: 0,
-    raf: null
+    raf: null,
+    hudMask: null,
+    layout: null
   };
 
   function clamp(value, min, max) {
@@ -92,15 +94,114 @@ DESTINATION: /index.js
 
   function getDiamondAnchors(cx, cy, spacing) {
     return {
-      N:  { x: cx, y: cy - spacing * 1.38 },
+      N: { x: cx, y: cy - spacing * 1.38 },
       NE: { x: cx + spacing, y: cy - spacing * 0.69 },
-      E:  { x: cx + spacing * 1.38, y: cy },
+      E: { x: cx + spacing * 1.38, y: cy },
       SE: { x: cx + spacing, y: cy + spacing * 0.69 },
-      S:  { x: cx, y: cy + spacing * 1.38 },
+      S: { x: cx, y: cy + spacing * 1.38 },
       SW: { x: cx - spacing, y: cy + spacing * 0.69 },
-      W:  { x: cx - spacing * 1.38, y: cy },
+      W: { x: cx - spacing * 1.38, y: cy },
       NW: { x: cx - spacing, y: cy - spacing * 0.69 },
-      C:  { x: cx, y: cy }
+      C: { x: cx, y: cy }
+    };
+  }
+
+  function readHudMask() {
+    const panels = Array.from(document.querySelectorAll(".title-block,.legend,.scale-panel,.status"));
+    if (!panels.length) {
+      state.hudMask = {
+        topLimit: state.height * 0.20,
+        bottomLimit: state.height * 0.80,
+        topRects: [],
+        bottomRects: []
+      };
+      return;
+    }
+
+    const topRects = [];
+    const bottomRects = [];
+
+    for (const el of panels) {
+      const rect = el.getBoundingClientRect();
+      const box = {
+        left: rect.left,
+        right: rect.right,
+        top: rect.top,
+        bottom: rect.bottom,
+        width: rect.width,
+        height: rect.height
+      };
+      if (box.top < state.height * 0.45) {
+        topRects.push(box);
+      } else {
+        bottomRects.push(box);
+      }
+    }
+
+    const topLimit = topRects.length
+      ? Math.max(...topRects.map((r) => r.bottom)) + 22
+      : state.height * 0.20;
+
+    const bottomLimit = bottomRects.length
+      ? Math.min(...bottomRects.map((r) => r.top)) - 24
+      : state.height * 0.82;
+
+    state.hudMask = {
+      topLimit,
+      bottomLimit,
+      topRects,
+      bottomRects
+    };
+  }
+
+  function computeLayout() {
+    readHudMask();
+
+    const mobile = state.width < 760;
+    const hudTop = state.hudMask ? state.hudMask.topLimit : state.height * 0.20;
+    const hudBottom = state.hudMask ? state.hudMask.bottomLimit : state.height * 0.82;
+    const usableTop = clamp(hudTop + 24, state.height * 0.18, state.height * 0.52);
+    const usableBottom = clamp(hudBottom - 24, state.height * 0.48, state.height * 0.86);
+
+    let centerY = (usableTop + usableBottom) * 0.5;
+    if (usableBottom <= usableTop + 40) {
+      centerY = state.height * (mobile ? 0.52 : 0.50);
+    }
+
+    const verticalBand = Math.max(usableBottom - usableTop, state.height * (mobile ? 0.22 : 0.30));
+    const horizontalBand = state.width * (mobile ? 0.74 : 0.64);
+
+    let spacingFromVertical = verticalBand / 2.76;
+    let spacingFromHorizontal = horizontalBand / 2.76;
+    let spacing = Math.min(spacingFromVertical, spacingFromHorizontal);
+    spacing = clamp(
+      spacing,
+      Math.min(state.width, state.height) * (mobile ? 0.12 : 0.13),
+      Math.min(state.width, state.height) * (mobile ? 0.19 : 0.21)
+    );
+
+    const maxNorth = centerY - spacing * 1.38;
+    const maxSouth = centerY + spacing * 1.38;
+
+    if (maxNorth < usableTop) {
+      centerY += usableTop - maxNorth;
+    }
+    if (maxSouth > usableBottom) {
+      centerY -= maxSouth - usableBottom;
+    }
+
+    centerY = clamp(centerY, state.height * 0.24, state.height * 0.72);
+
+    const centerX = state.width * 0.5;
+
+    state.layout = {
+      mobile,
+      centerX,
+      centerY,
+      spacing,
+      usableTop,
+      usableBottom,
+      verticalBand
     };
   }
 
@@ -149,25 +250,24 @@ DESTINATION: /index.js
   function buildSystems() {
     state.systems = [];
 
-    const cx = state.width * 0.5;
-    const cy = state.height * (state.width < 760 ? 0.60 : 0.56);
-    const spacing = Math.min(state.width, state.height) * (state.width < 760 ? 0.115 : 0.145);
-    const anchors = getDiamondAnchors(cx, cy, spacing);
+    computeLayout();
+    const { centerX, centerY, spacing, mobile } = state.layout;
+    const anchors = getDiamondAnchors(centerX, centerY, spacing);
 
     for (const systemMeta of CHRONO_SYSTEMS) {
       const anchor = anchors[systemMeta.anchor];
       const strength = systemMeta.starStrength;
 
-      const systemRadius = lerp(34, 56, 1 - systemMeta.ageBias);
-      const glowRadius = lerp(18, 34, strength);
-      const starRadius = lerp(3.0, 5.8, strength);
+      const systemRadius = lerp(mobile ? 46 : 52, mobile ? 72 : 84, 1 - systemMeta.ageBias);
+      const glowRadius = lerp(mobile ? 34 : 38, mobile ? 64 : 72, strength);
+      const starRadius = lerp(mobile ? 5.2 : 5.8, mobile ? 10.8 : 12.0, strength);
 
       const planets = REFERENCE_SOLAR_LAYOUT.map((planet, index) => {
         const renderOrbit = mapRange(
           planet.orbitKm,
           REFERENCE_SOLAR_LAYOUT[0].orbitKm,
           REFERENCE_SOLAR_LAYOUT[REFERENCE_SOLAR_LAYOUT.length - 1].orbitKm,
-          systemRadius * 0.26,
+          systemRadius * 0.24,
           systemRadius
         );
 
@@ -175,8 +275,8 @@ DESTINATION: /index.js
           planet.diameterKm,
           2377,
           139820,
-          1.25,
-          3.8
+          mobile ? 1.8 : 2.0,
+          mobile ? 5.4 : 5.8
         );
 
         return {
@@ -235,9 +335,9 @@ DESTINATION: /index.js
     const w = state.width;
     const h = state.height;
 
-    const radial = ctx.createRadialGradient(w * 0.5, h * 0.48, 0, w * 0.5, h * 0.48, Math.max(w, h) * 0.72);
-    radial.addColorStop(0, "#11254b");
-    radial.addColorStop(0.35, "#0a1630");
+    const radial = ctx.createRadialGradient(w * 0.5, h * 0.46, 0, w * 0.5, h * 0.46, Math.max(w, h) * 0.74);
+    radial.addColorStop(0, "#163468");
+    radial.addColorStop(0.32, "#0b1937");
     radial.addColorStop(1, "#030712");
     ctx.fillStyle = radial;
     ctx.fillRect(0, 0, w, h);
@@ -318,8 +418,8 @@ DESTINATION: /index.js
     if (!center) return;
 
     ctx.save();
-    ctx.strokeStyle = "rgba(255,255,255,0.08)";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255,255,255,0.12)";
+    ctx.lineWidth = 1.2;
 
     const ringOrder = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
     ctx.beginPath();
@@ -348,15 +448,15 @@ DESTINATION: /index.js
     let maxY = -Infinity;
 
     for (const system of state.systems) {
-      minX = Math.min(minX, system.x - system.systemRadius - 22);
-      minY = Math.min(minY, system.y - system.systemRadius - 22);
-      maxX = Math.max(maxX, system.x + system.systemRadius + 22);
-      maxY = Math.max(maxY, system.y + system.systemRadius + 22);
+      minX = Math.min(minX, system.x - system.systemRadius - 28);
+      minY = Math.min(minY, system.y - system.systemRadius - 28);
+      maxX = Math.max(maxX, system.x + system.systemRadius + 28);
+      maxY = Math.max(maxY, system.y + system.systemRadius + 28);
     }
 
     ctx.save();
-    ctx.strokeStyle = "rgba(255,255,255,0.07)";
-    ctx.lineWidth = 1;
+    ctx.strokeStyle = "rgba(255,255,255,0.10)";
+    ctx.lineWidth = 1.2;
     ctx.strokeRect(minX, minY, maxX - minX, maxY - minY);
     ctx.restore();
   }
@@ -364,7 +464,7 @@ DESTINATION: /index.js
   function drawStarCross(x, y, radius, alpha) {
     ctx.save();
     ctx.strokeStyle = `rgba(255,245,220,${alpha})`;
-    ctx.lineWidth = 1;
+    ctx.lineWidth = 1.2;
     ctx.beginPath();
     ctx.moveTo(x - radius, y);
     ctx.lineTo(x + radius, y);
@@ -379,8 +479,8 @@ DESTINATION: /index.js
     const glowRadius = system.glowRadius * pulse;
 
     const glow = ctx.createRadialGradient(system.x, system.y, 0, system.x, system.y, glowRadius);
-    glow.addColorStop(0, `rgba(255,244,214,${0.64 * system.starStrength + 0.20})`);
-    glow.addColorStop(0.34, `rgba(255,215,150,${0.18 * system.starStrength + 0.08})`);
+    glow.addColorStop(0, `rgba(255,244,214,${0.72 * system.starStrength + 0.26})`);
+    glow.addColorStop(0.32, `rgba(255,215,150,${0.24 * system.starStrength + 0.12})`);
     glow.addColorStop(1, "rgba(255,215,150,0)");
     ctx.fillStyle = glow;
     ctx.beginPath();
@@ -394,7 +494,7 @@ DESTINATION: /index.js
       const px = system.x + Math.cos(theta) * planet.renderOrbit;
       const py = system.y + Math.sin(theta) * planet.renderOrbit * orbitYScale;
 
-      ctx.strokeStyle = "rgba(255,255,255,0.050)";
+      ctx.strokeStyle = "rgba(255,255,255,0.080)";
       ctx.beginPath();
       ctx.ellipse(system.x, system.y, planet.renderOrbit, planet.renderOrbit * orbitYScale, 0, 0, Math.PI * 2);
       ctx.stroke();
@@ -410,8 +510,8 @@ DESTINATION: /index.js
         ctx.save();
         ctx.translate(px, py);
         ctx.rotate(0.34);
-        ctx.strokeStyle = "rgba(234,223,189,0.60)";
-        ctx.lineWidth = 0.8;
+        ctx.strokeStyle = "rgba(234,223,189,0.72)";
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.ellipse(0, 0, planet.renderSize * 2.0, planet.renderSize * 0.82, 0, 0, Math.PI * 2);
         ctx.stroke();
@@ -424,17 +524,17 @@ DESTINATION: /index.js
     ctx.arc(system.x, system.y, system.starRadius * pulse, 0, Math.PI * 2);
     ctx.fill();
 
-    drawStarCross(system.x, system.y, system.starRadius * 3.6, 0.14 + system.starStrength * 0.14);
+    drawStarCross(system.x, system.y, system.starRadius * 4.0, 0.18 + system.starStrength * 0.16);
 
-    ctx.fillStyle = "rgba(233,239,255,0.92)";
-    ctx.font = "bold 11px Arial";
+    ctx.fillStyle = "rgba(233,239,255,0.96)";
+    ctx.font = "bold 12px Arial";
     ctx.textAlign = "center";
-    ctx.fillText(`${system.anchor} · ${system.rank}`, system.x, system.y - system.systemRadius - 12);
+    ctx.fillText(`${system.anchor} · ${system.rank}`, system.x, system.y - system.systemRadius - 14);
 
-    if (state.degradeLevel === 0) {
-      ctx.fillStyle = "rgba(157,176,212,0.84)";
-      ctx.font = "10px Arial";
-      ctx.fillText("9 planets", system.x, system.y + system.systemRadius + 15);
+    if (state.degradeLevel <= 1) {
+      ctx.fillStyle = "rgba(157,176,212,0.92)";
+      ctx.font = state.degradeLevel === 0 ? "11px Arial" : "10px Arial";
+      ctx.fillText("9 planets", system.x, system.y + system.systemRadius + 16);
     }
   }
 
@@ -459,12 +559,26 @@ DESTINATION: /index.js
 
   function start() {
     resize();
-    if (state.raf) cancelAnimationFrame(state.raf);
+    if (state.raf) {
+      cancelAnimationFrame(state.raf);
+    }
     state.raf = requestAnimationFrame(render);
     window.__COMPASS_BASELINE_RAF__ = state.raf;
   }
 
-  window.addEventListener("resize", resize, { passive: true });
+  let resizeTimer = null;
+  window.addEventListener("resize", () => {
+    if (resizeTimer) {
+      clearTimeout(resizeTimer);
+    }
+    resizeTimer = setTimeout(() => {
+      resize();
+    }, 40);
+  }, { passive: true });
+
+  window.addEventListener("load", () => {
+    resize();
+  }, { passive: true });
 
   start();
 })();

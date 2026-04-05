@@ -2,7 +2,8 @@ DESTINATION: /index.js
 (() => {
   "use strict";
 
-  const JS_STAMP = "J8-CANVAS-ONLY-OVERCORRECTION";
+  const JS_STAMP = "J10-ALIGNED-DIRECT";
+  const HTML_STAMP = "H10";
   const canvas = document.getElementById("scene");
   if (!canvas) {
     throw new Error("Compass page requires #scene canvas");
@@ -17,9 +18,9 @@ DESTINATION: /index.js
   const TWO_PI = Math.PI * 2;
 
   const STAR_COUNTS = {
-    deep: 260,
-    band: 420,
-    bright: 110,
+    deep: 320,
+    band: 520,
+    bright: 140,
     hero: 18
   };
 
@@ -153,8 +154,8 @@ DESTINATION: /index.js
       const star = {
         x: rand() * state.width,
         y: rand() * state.height,
-        radius: lerp(0.45, 1.15, Math.pow(rand(), 1.75)),
-        alpha: lerp(0.18, 0.48, rand()),
+        radius: lerp(0.45, 1.20, Math.pow(rand(), 1.7)),
+        alpha: lerp(0.18, 0.52, rand()),
         twinkle: rand() * TWO_PI,
         driftX: lerp(-1.8, 1.8, rand()),
         driftY: lerp(-1.8, 1.8, rand()),
@@ -208,10 +209,10 @@ DESTINATION: /index.js
       const star = {
         x: p.x,
         y: p.y,
-        radius: lerp(2.6, 5.2, rand()),
-        alpha: lerp(0.68, 0.98, rand()),
+        radius: lerp(2.8, 5.6, rand()),
+        alpha: lerp(0.70, 1.0, rand()),
         twinkle: rand() * TWO_PI,
-        glow: lerp(18, 34, rand()),
+        glow: lerp(18, 36, rand()),
         rgb: rand() < 0.40 ? [255, 220, 174] : [214, 232, 255]
       };
       pushIfNotInQuietZone(stars, star);
@@ -290,7 +291,7 @@ DESTINATION: /index.js
   }
 
   function buildScene() {
-    const seedBase = hashString(`diamondgatebridge:/index:${state.width}x${state.height}:${JS_STAMP}`);
+    const seedBase = hashString(`diamondgatebridge:/index:${state.width}x${state.height}:${JS_STAMP}:${HTML_STAMP}`);
     const primaryRand = createRng(seedBase ^ 0x51EE7712);
     const deepRand = createRng(seedBase ^ 0xA53C19E5);
     const bandRand = createRng(seedBase ^ 0x17F2D043);
@@ -303,8 +304,8 @@ DESTINATION: /index.js
 
     state.primarySystems = buildPrimarySystems(primaryRand);
     state.deepStars = buildDeepStars(deepRand, STAR_COUNTS.deep);
-    state.bandStars = buildBandStars(bandRand, STAR_COUNTS.band, rotation, 0.62, 1.70, 0.22, 0.90);
-    state.brightStars = buildBandStars(brightRand, STAR_COUNTS.bright, rotation, 1.45, 2.80, 0.42, 0.98);
+    state.bandStars = buildBandStars(bandRand, STAR_COUNTS.band, rotation, 0.62, 1.75, 0.22, 0.92);
+    state.brightStars = buildBandStars(brightRand, STAR_COUNTS.bright, rotation, 1.45, 2.90, 0.42, 1.0);
     state.heroStars = buildHeroStars(heroRand, STAR_COUNTS.hero, rotation);
     state.nebulaClouds = buildNebula(nebulaRand, 12);
     state.dustLanes = buildDustLanes(dustRand, 22, rotation);
@@ -598,7 +599,6 @@ DESTINATION: /index.js
     const timeSeconds = (now - state.timeStart) * 0.001;
 
     ctx.clearRect(0, 0, state.width, state.height);
-
     drawBackground();
     drawNebula(timeSeconds);
     drawStarField(state.deepStars, timeSeconds, 0.22, 2.0);
@@ -623,6 +623,7 @@ DESTINATION: /index.js
     window.__ROOT_INDEX_JS_PROOF__ = true;
     window.__COMPASS_GALAXY_ACTIVE__ = true;
     window.__COMPASS_JS_STAMP__ = JS_STAMP;
+    window.__COMPASS_HTML_STAMP__ = HTML_STAMP;
   }
 
   let resizeTimer = 0;

@@ -2,7 +2,7 @@ DESTINATION: /index.js
 (() => {
   "use strict";
 
-  const JS_STAMP = "J5-GALAXY-UPGRADE";
+  const JS_STAMP = "J6-CINEMATIC-GALAXY";
   const canvas = document.getElementById("scene");
   if (!canvas) {
     throw new Error("Compass page requires #scene canvas");
@@ -16,10 +16,12 @@ DESTINATION: /index.js
   const DPR_CAP = 2;
   const TWO_PI = Math.PI * 2;
   const PLANET_SLOT_COUNT = 9;
+
   const STAR_COUNTS = {
-    near: 420,
-    mid: 180,
-    far: 90
+    deep: 900,
+    band: 780,
+    bright: 180,
+    hero: 26
   };
 
   const state = {
@@ -31,11 +33,12 @@ DESTINATION: /index.js
     universeRadius: 1,
     timeStart: performance.now(),
     rafId: 0,
-    starsNear: [],
-    starsMid: [],
-    starsFar: [],
+    deepStars: [],
+    bandStars: [],
+    brightStars: [],
+    heroStars: [],
     nebulaClouds: [],
-    galaxyDust: [],
+    dustLanes: [],
     systems: [],
     buildStampVisible: true
   };
@@ -80,7 +83,7 @@ DESTINATION: /index.js
     state.height = size.height;
     state.cx = state.width * 0.5;
     state.cy = state.height * 0.54;
-    state.universeRadius = Math.min(state.width, state.height) * (state.width < 700 ? 0.34 : 0.29);
+    state.universeRadius = Math.min(state.width, state.height) * (state.width < 700 ? 0.36 : 0.31);
 
     canvas.width = Math.max(1, Math.floor(state.width * state.dpr));
     canvas.height = Math.max(1, Math.floor(state.height * state.dpr));
@@ -95,38 +98,44 @@ DESTINATION: /index.js
     const r = state.universeRadius;
     const diag = r * 0.72;
     return [
-      { key: "N",  x: state.cx,        y: state.cy - r },
+      { key: "N", x: state.cx, y: state.cy - r },
       { key: "NE", x: state.cx + diag, y: state.cy - diag },
-      { key: "E",  x: state.cx + r,    y: state.cy },
+      { key: "E", x: state.cx + r, y: state.cy },
       { key: "SE", x: state.cx + diag, y: state.cy + diag },
-      { key: "S",  x: state.cx,        y: state.cy + r },
+      { key: "S", x: state.cx, y: state.cy + r },
       { key: "SW", x: state.cx - diag, y: state.cy + diag },
-      { key: "W",  x: state.cx - r,    y: state.cy },
+      { key: "W", x: state.cx - r, y: state.cy },
       { key: "NW", x: state.cx - diag, y: state.cy - diag },
-      { key: "C",  x: state.cx,        y: state.cy }
+      { key: "C", x: state.cx, y: state.cy }
     ];
   }
 
-  function buildStarLayer(rand, count, minR, maxR, minA, maxA, tintMode, driftScale) {
+  function galaxyBandPoint(rand, spreadX, spreadY, rotation) {
+    const t = lerp(-1, 1, rand());
+    const curve = Math.sin(t * Math.PI * 1.12) * spreadY;
+    const x0 = t * spreadX;
+    const y0 = curve + lerp(-1, 1, rand()) * spreadY * 0.33;
+
+    const cosR = Math.cos(rotation);
+    const sinR = Math.sin(rotation);
+
+    return {
+      x: state.cx + x0 * cosR - y0 * sinR,
+      y: state.cy + x0 * sinR + y0 * cosR
+    };
+  }
+
+  function buildDeepStars(rand, count) {
     const stars = [];
     for (let i = 0; i < count; i += 1) {
       const x = rand() * state.width;
       const y = rand() * state.height;
-      const radius = lerp(minR, maxR, Math.pow(rand(), 1.7));
-      const alpha = lerp(minA, maxA, rand());
+      const radius = lerp(0.35, 1.1, Math.pow(rand(), 1.9));
+      const alpha = lerp(0.14, 0.55, rand());
       const twinkle = rand() * TWO_PI;
-      const driftX = lerp(-driftScale, driftScale, rand());
-      const driftY = lerp(-driftScale, driftScale, rand());
-
-      let base;
-      if (tintMode === 0) {
-        base = rand() < 0.16 ? [190, 214, 255] : [255, 255, 255];
-      } else if (tintMode === 1) {
-        base = rand() < 0.24 ? [255, 224, 190] : [182, 205, 255];
-      } else {
-        base = rand() < 0.35 ? [204, 176, 255] : [160, 198, 255];
-      }
-
+      const driftX = lerp(-3, 3, rand());
+      const driftY = lerp(-3, 3, rand());
+      const cool = rand() < 0.24;
       stars.push({
         x,
         y,
@@ -135,9 +144,71 @@ DESTINATION: /index.js
         twinkle,
         driftX,
         driftY,
-        rgb: base
+        rgb: cool ? [184, 208, 255] : [255, 255, 255]
       });
     }
+    return stars;
+  }
+
+  function buildBandStars(rand, count, rotation) {
+    const stars = [];
+    const spreadX = state.universeRadius * 1.95;
+    const spreadY = state.universeRadius * 0.18;
+
+    for (let i = 0; i < count; i += 1) {
+      const p = galaxyBandPoint(rand, spreadX, spreadY, rotation);
+      const radius = lerp(0.45, 1.45, Math.pow(rand(), 1.55));
+      const alpha = lerp(0.22, 0.92, rand());
+      const twinkle = rand() * TWO_PI;
+      const driftX = lerp(-6, 6, rand());
+      const driftY = lerp(-3, 3, rand());
+
+      let rgb;
+      const pick = rand();
+      if (pick < 0.18) rgb = [255, 228, 194];
+      else if (pick < 0.48) rgb = [198, 220, 255];
+      else if (pick < 0.76) rgb = [255, 255, 255];
+      else rgb = [214, 184, 255];
+
+      stars.push({
+        x: p.x,
+        y: p.y,
+        radius,
+        alpha,
+        twinkle,
+        driftX,
+        driftY,
+        rgb
+      });
+    }
+
+    return stars;
+  }
+
+  function buildHeroStars(rand, count, rotation) {
+    const stars = [];
+    const spreadX = state.universeRadius * 1.7;
+    const spreadY = state.universeRadius * 0.14;
+
+    for (let i = 0; i < count; i += 1) {
+      const p = galaxyBandPoint(rand, spreadX, spreadY, rotation);
+      const radius = lerp(1.9, 3.8, rand());
+      const alpha = lerp(0.55, 0.95, rand());
+      const twinkle = rand() * TWO_PI;
+      const glow = lerp(10, 26, rand());
+      const warm = rand() < 0.35;
+
+      stars.push({
+        x: p.x,
+        y: p.y,
+        radius,
+        alpha,
+        twinkle,
+        glow,
+        rgb: warm ? [255, 220, 174] : [214, 232, 255]
+      });
+    }
+
     return stars;
   }
 
@@ -145,14 +216,14 @@ DESTINATION: /index.js
     const clouds = [];
     for (let i = 0; i < count; i += 1) {
       const angle = rand() * TWO_PI;
-      const distance = Math.pow(rand(), 0.72) * state.universeRadius * 1.1;
+      const distance = Math.pow(rand(), 0.72) * state.universeRadius * 1.12;
       const x = state.cx + Math.cos(angle) * distance * 0.82;
-      const y = state.cy + Math.sin(angle) * distance * 0.48;
-      const spreadX = lerp(120, 320, rand()) * (state.width < 700 ? 0.92 : 1);
-      const spreadY = lerp(38, 120, rand());
-      const rotation = lerp(-0.9, 0.9, rand());
-      const alpha = lerp(0.025, 0.105, rand());
-      const hue = rand() < 0.34 ? "88,146,255" : rand() < 0.67 ? "176,98,255" : "58,188,255";
+      const y = state.cy + Math.sin(angle) * distance * 0.46;
+      const spreadX = lerp(160, 400, rand()) * (state.width < 700 ? 0.94 : 1);
+      const spreadY = lerp(44, 138, rand());
+      const rotation = lerp(-1.05, 1.05, rand());
+      const alpha = lerp(0.026, 0.14, rand());
+      const hue = rand() < 0.34 ? "82,138,255" : rand() < 0.67 ? "176,96,255" : "42,184,255";
 
       clouds.push({
         x,
@@ -168,57 +239,53 @@ DESTINATION: /index.js
     return clouds;
   }
 
-  function buildDust(rand, count) {
-    const dust = [];
+  function buildDustLanes(rand, count, rotation) {
+    const lanes = [];
+    const spreadX = state.universeRadius * 1.84;
+    const spreadY = state.universeRadius * 0.12;
+
     for (let i = 0; i < count; i += 1) {
-      const angle = rand() * TWO_PI;
-      const distance = Math.pow(rand(), 0.56) * state.universeRadius * 1.32;
-      dust.push({
-        x: state.cx + Math.cos(angle) * distance * 0.9,
-        y: state.cy + Math.sin(angle) * distance * 0.42,
-        rx: lerp(80, 220, rand()),
-        ry: lerp(10, 34, rand()),
-        rotation: angle + lerp(-0.7, 0.7, rand()),
-        alpha: lerp(0.015, 0.075, rand()),
-        hue: rand() < 0.55 ? "120,165,255" : "188,104,255"
+      const p = galaxyBandPoint(rand, spreadX, spreadY, rotation);
+      lanes.push({
+        x: p.x,
+        y: p.y,
+        rx: lerp(110, 280, rand()),
+        ry: lerp(12, 34, rand()),
+        rotation: rotation + lerp(-0.26, 0.26, rand()),
+        alpha: lerp(0.03, 0.09, rand())
       });
     }
-    return dust;
+
+    return lanes;
   }
 
   function buildSystems(rand) {
     const anchors = diamondAnchors();
     const systems = [];
-    const baseOrbit = clamp(Math.min(state.width, state.height) * 0.022, 16, 28);
+    const baseOrbit = clamp(Math.min(state.width, state.height) * 0.0205, 15, 26);
 
     for (let i = 0; i < anchors.length; i += 1) {
       const anchor = anchors[i];
       const ageBias = i / (anchors.length - 1);
-      const coreRadius = lerp(10, 17, 1 - ageBias) * (state.width < 640 ? 0.82 : 1);
-      const glow = lerp(44, 94, 1 - ageBias);
-      const orbitTilt = lerp(-0.55, 0.55, rand());
+      const coreRadius = lerp(9.5, 16, 1 - ageBias) * (state.width < 640 ? 0.82 : 1);
+      const glow = lerp(40, 84, 1 - ageBias);
+      const orbitTilt = lerp(-0.58, 0.58, rand());
       const orbitScaleY = lerp(0.34, 0.56, rand());
 
       const planets = [];
       for (let slot = 0; slot < PLANET_SLOT_COUNT; slot += 1) {
         const slotBias = slot / (PLANET_SLOT_COUNT - 1);
-        const radius = baseOrbit + slot * (baseOrbit * 0.42 + 5.4 + i * 0.12);
-        const planetRadius = clamp(lerp(2.1, 6.0, 1 - slotBias) * lerp(0.72, 1.14, rand()), 1.3, 6.2);
-        const speed = lerp(0.34, 0.05, slotBias);
+        const radius = baseOrbit + slot * (baseOrbit * 0.40 + 5.0 + i * 0.10);
+        const planetRadius = clamp(lerp(1.8, 5.6, 1 - slotBias) * lerp(0.72, 1.12, rand()), 1.2, 6.0);
+        const speed = lerp(0.28, 0.045, slotBias);
         const phase = rand() * TWO_PI;
-        const alpha = lerp(0.72, 0.97, rand());
-        const huePick = rand();
 
         let fill;
-        if (huePick < 0.2) {
-          fill = `rgba(255,212,156,${alpha.toFixed(3)})`;
-        } else if (huePick < 0.45) {
-          fill = `rgba(194,221,255,${alpha.toFixed(3)})`;
-        } else if (huePick < 0.7) {
-          fill = `rgba(162,184,255,${alpha.toFixed(3)})`;
-        } else {
-          fill = `rgba(214,182,255,${alpha.toFixed(3)})`;
-        }
+        const pick = rand();
+        if (pick < 0.20) fill = "rgba(255,212,156,0.92)";
+        else if (pick < 0.46) fill = "rgba(194,221,255,0.90)";
+        else if (pick < 0.74) fill = "rgba(162,184,255,0.90)";
+        else fill = "rgba(214,182,255,0.90)";
 
         planets.push({
           radius,
@@ -248,28 +315,47 @@ DESTINATION: /index.js
 
   function buildScene() {
     const seedBase = hashString(`diamondgatebridge:/index:${state.width}x${state.height}:${JS_STAMP}`);
-    const starRandA = createRng(seedBase ^ 0xA53C19E5);
-    const starRandB = createRng(seedBase ^ 0x17F2D043);
-    const starRandC = createRng(seedBase ^ 0xC014A55E);
+    const deepRand = createRng(seedBase ^ 0xA53C19E5);
+    const bandRand = createRng(seedBase ^ 0x17F2D043);
+    const brightRand = createRng(seedBase ^ 0xC014A55E);
+    const heroRand = createRng(seedBase ^ 0x9B1DC0DE);
     const nebulaRand = createRng(seedBase ^ 0x6B2E91D0);
     const dustRand = createRng(seedBase ^ 0x90AB12F4);
     const systemRand = createRng(seedBase ^ 0x51EE7712);
 
-    state.starsNear = buildStarLayer(starRandA, STAR_COUNTS.near, 0.45, 1.45, 0.35, 1.0, 0, 5);
-    state.starsMid = buildStarLayer(starRandB, STAR_COUNTS.mid, 0.9, 2.0, 0.20, 0.76, 1, 9);
-    state.starsFar = buildStarLayer(starRandC, STAR_COUNTS.far, 1.2, 3.1, 0.12, 0.56, 2, 14);
-    state.nebulaClouds = buildNebula(nebulaRand, 18);
-    state.galaxyDust = buildDust(dustRand, 28);
+    const rotation = -0.52;
+
+    state.deepStars = buildDeepStars(deepRand, STAR_COUNTS.deep);
+    state.bandStars = buildBandStars(bandRand, STAR_COUNTS.band, rotation);
+    state.brightStars = buildBandStars(brightRand, STAR_COUNTS.bright, rotation);
+    state.heroStars = buildHeroStars(heroRand, STAR_COUNTS.hero, rotation);
+    state.nebulaClouds = buildNebula(nebulaRand, 22);
+    state.dustLanes = buildDustLanes(dustRand, 34, rotation);
     state.systems = buildSystems(systemRand);
   }
 
   function drawBackground() {
     const bg = ctx.createLinearGradient(0, 0, 0, state.height);
-    bg.addColorStop(0, "#06101f");
-    bg.addColorStop(0.24, "#07152b");
-    bg.addColorStop(0.60, "#030c19");
-    bg.addColorStop(1, "#01040d");
+    bg.addColorStop(0, "#071224");
+    bg.addColorStop(0.22, "#08142a");
+    bg.addColorStop(0.60, "#030a17");
+    bg.addColorStop(1, "#01040c");
     ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, state.width, state.height);
+
+    const coreGlow = ctx.createRadialGradient(
+      state.cx,
+      state.cy,
+      0,
+      state.cx,
+      state.cy,
+      state.universeRadius * 1.7
+    );
+    coreGlow.addColorStop(0, "rgba(126,162,255,0.15)");
+    coreGlow.addColorStop(0.24, "rgba(90,126,255,0.08)");
+    coreGlow.addColorStop(0.42, "rgba(176,98,255,0.05)");
+    coreGlow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = coreGlow;
     ctx.fillRect(0, 0, state.width, state.height);
 
     const vignette = ctx.createRadialGradient(
@@ -278,11 +364,11 @@ DESTINATION: /index.js
       state.universeRadius * 0.2,
       state.cx,
       state.cy,
-      Math.max(state.width, state.height) * 0.7
+      Math.max(state.width, state.height) * 0.74
     );
     vignette.addColorStop(0, "rgba(0,0,0,0)");
-    vignette.addColorStop(0.65, "rgba(0,0,0,0.08)");
-    vignette.addColorStop(1, "rgba(0,0,0,0.42)");
+    vignette.addColorStop(0.64, "rgba(0,0,0,0.10)");
+    vignette.addColorStop(1, "rgba(0,0,0,0.48)");
     ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, state.width, state.height);
   }
@@ -290,9 +376,9 @@ DESTINATION: /index.js
   function drawNebula(timeSeconds) {
     for (let i = 0; i < state.nebulaClouds.length; i += 1) {
       const n = state.nebulaClouds[i];
-      const drift = Math.sin(timeSeconds * 0.07 + n.phase) * 10;
+      const drift = Math.sin(timeSeconds * 0.06 + n.phase) * 10;
       const x = n.x + drift;
-      const y = n.y + drift * 0.36;
+      const y = n.y + drift * 0.34;
 
       ctx.save();
       ctx.translate(x, y);
@@ -300,7 +386,7 @@ DESTINATION: /index.js
 
       const g = ctx.createRadialGradient(0, 0, 0, 0, 0, n.spreadX);
       g.addColorStop(0, `rgba(${n.hue},${n.alpha.toFixed(3)})`);
-      g.addColorStop(0.38, `rgba(${n.hue},${(n.alpha * 0.42).toFixed(3)})`);
+      g.addColorStop(0.36, `rgba(${n.hue},${(n.alpha * 0.44).toFixed(3)})`);
       g.addColorStop(1, "rgba(0,0,0,0)");
 
       ctx.fillStyle = g;
@@ -311,18 +397,18 @@ DESTINATION: /index.js
     }
   }
 
-  function drawGalaxyDust(timeSeconds) {
-    for (let i = 0; i < state.galaxyDust.length; i += 1) {
-      const d = state.galaxyDust[i];
-      const sway = Math.sin(timeSeconds * 0.05 + i * 0.81) * 6;
+  function drawDustLanes(timeSeconds) {
+    for (let i = 0; i < state.dustLanes.length; i += 1) {
+      const d = state.dustLanes[i];
+      const sway = Math.sin(timeSeconds * 0.04 + i * 0.73) * 5;
 
       ctx.save();
-      ctx.translate(d.x + sway, d.y + sway * 0.28);
+      ctx.translate(d.x + sway, d.y + sway * 0.20);
       ctx.rotate(d.rotation);
 
       const g = ctx.createRadialGradient(0, 0, 0, 0, 0, d.rx);
-      g.addColorStop(0, `rgba(${d.hue},${d.alpha.toFixed(3)})`);
-      g.addColorStop(0.34, `rgba(${d.hue},${(d.alpha * 0.38).toFixed(3)})`);
+      g.addColorStop(0, `rgba(0,0,0,${d.alpha.toFixed(3)})`);
+      g.addColorStop(0.42, `rgba(3,7,18,${(d.alpha * 0.82).toFixed(3)})`);
       g.addColorStop(1, "rgba(0,0,0,0)");
 
       ctx.fillStyle = g;
@@ -333,47 +419,78 @@ DESTINATION: /index.js
     }
   }
 
-  function drawStarField(stars, timeSeconds, pulseScale) {
+  function drawStarField(stars, timeSeconds, pulseScale, crossThreshold) {
     for (let i = 0; i < stars.length; i += 1) {
       const s = stars[i];
       const twinkle = 0.72 + Math.sin(timeSeconds * pulseScale + s.twinkle) * 0.28;
       const alpha = clamp(s.alpha * twinkle, 0, 1);
-      const x = s.x + Math.sin(timeSeconds * 0.02 + s.twinkle) * s.driftX;
-      const y = s.y + Math.cos(timeSeconds * 0.02 + s.twinkle) * s.driftY;
+      const x = s.x + Math.sin(timeSeconds * 0.018 + s.twinkle) * s.driftX;
+      const y = s.y + Math.cos(timeSeconds * 0.018 + s.twinkle) * s.driftY;
 
       ctx.fillStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${alpha.toFixed(3)})`;
       ctx.beginPath();
       ctx.arc(x, y, s.radius, 0, TWO_PI);
       ctx.fill();
 
-      if (s.radius > 1.7) {
-        ctx.strokeStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.32).toFixed(3)})`;
+      if (s.radius > crossThreshold) {
+        ctx.strokeStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.34).toFixed(3)})`;
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(x - s.radius * 2.2, y);
-        ctx.lineTo(x + s.radius * 2.2, y);
-        ctx.moveTo(x, y - s.radius * 2.2);
-        ctx.lineTo(x, y + s.radius * 2.2);
+        ctx.moveTo(x - s.radius * 2.6, y);
+        ctx.lineTo(x + s.radius * 2.6, y);
+        ctx.moveTo(x, y - s.radius * 2.6);
+        ctx.lineTo(x, y + s.radius * 2.6);
         ctx.stroke();
       }
+    }
+  }
+
+  function drawHeroStars(timeSeconds) {
+    for (let i = 0; i < state.heroStars.length; i += 1) {
+      const s = state.heroStars[i];
+      const pulse = 0.80 + Math.sin(timeSeconds * 0.9 + s.twinkle) * 0.20;
+      const alpha = clamp(s.alpha * pulse, 0, 1);
+
+      const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.glow);
+      glow.addColorStop(0, `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.30).toFixed(3)})`);
+      glow.addColorStop(0.45, `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.12).toFixed(3)})`);
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.glow, 0, TWO_PI);
+      ctx.fill();
+
+      ctx.fillStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${alpha.toFixed(3)})`;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.radius, 0, TWO_PI);
+      ctx.fill();
+
+      ctx.strokeStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.44).toFixed(3)})`;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(s.x - s.radius * 4.2, s.y);
+      ctx.lineTo(s.x + s.radius * 4.2, s.y);
+      ctx.moveTo(s.x, s.y - s.radius * 4.2);
+      ctx.lineTo(s.x, s.y + s.radius * 4.2);
+      ctx.stroke();
     }
   }
 
   function drawGalaxySpine(timeSeconds) {
     ctx.save();
     ctx.translate(state.cx, state.cy);
-    ctx.rotate(-0.48 + Math.sin(timeSeconds * 0.03) * 0.016);
+    ctx.rotate(-0.52 + Math.sin(timeSeconds * 0.024) * 0.014);
 
-    const spineLength = state.universeRadius * 2.6;
-    const spineHeight = state.universeRadius * 0.23;
+    const spineLength = state.universeRadius * 2.9;
+    const spineHeight = state.universeRadius * 0.19;
 
     const spineGlow = ctx.createLinearGradient(-spineLength * 0.5, 0, spineLength * 0.5, 0);
     spineGlow.addColorStop(0, "rgba(0,0,0,0)");
-    spineGlow.addColorStop(0.14, "rgba(92,145,255,0.05)");
-    spineGlow.addColorStop(0.32, "rgba(178,112,255,0.06)");
-    spineGlow.addColorStop(0.5, "rgba(242,245,255,0.22)");
-    spineGlow.addColorStop(0.68, "rgba(126,176,255,0.08)");
-    spineGlow.addColorStop(0.86, "rgba(82,128,255,0.04)");
+    spineGlow.addColorStop(0.12, "rgba(86,136,255,0.05)");
+    spineGlow.addColorStop(0.28, "rgba(156,104,255,0.08)");
+    spineGlow.addColorStop(0.50, "rgba(244,246,255,0.28)");
+    spineGlow.addColorStop(0.72, "rgba(118,174,255,0.10)");
+    spineGlow.addColorStop(0.88, "rgba(74,122,255,0.04)");
     spineGlow.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = spineGlow;
@@ -381,16 +498,16 @@ DESTINATION: /index.js
     ctx.ellipse(0, 0, spineLength * 0.5, spineHeight, 0, 0, TWO_PI);
     ctx.fill();
 
-    const coreGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, state.universeRadius * 0.34);
-    coreGlow.addColorStop(0, "rgba(255,255,255,0.26)");
-    coreGlow.addColorStop(0.18, "rgba(214,228,255,0.20)");
-    coreGlow.addColorStop(0.42, "rgba(144,176,255,0.10)");
+    const coreGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, state.universeRadius * 0.38);
+    coreGlow.addColorStop(0, "rgba(255,255,255,0.30)");
+    coreGlow.addColorStop(0.18, "rgba(214,228,255,0.22)");
+    coreGlow.addColorStop(0.40, "rgba(144,176,255,0.11)");
     coreGlow.addColorStop(0.68, "rgba(180,104,255,0.05)");
     coreGlow.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = coreGlow;
     ctx.beginPath();
-    ctx.arc(0, 0, state.universeRadius * 0.34, 0, TWO_PI);
+    ctx.arc(0, 0, state.universeRadius * 0.38, 0, TWO_PI);
     ctx.fill();
 
     ctx.restore();
@@ -401,7 +518,7 @@ DESTINATION: /index.js
 
     ctx.save();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "rgba(180,205,255,0.08)";
+    ctx.strokeStyle = "rgba(180,205,255,0.055)";
 
     ctx.beginPath();
     ctx.moveTo(anchors[0].x, anchors[0].y);
@@ -422,21 +539,21 @@ DESTINATION: /index.js
   }
 
   function drawSystem(system, timeSeconds, index) {
-    const pulse = 0.92 + Math.sin(timeSeconds * 0.9 + index * 0.7) * 0.08;
+    const pulse = 0.92 + Math.sin(timeSeconds * 0.7 + index * 0.7) * 0.08;
 
     ctx.save();
     ctx.translate(system.x, system.y);
 
     const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, system.glow);
-    glow.addColorStop(0, `rgba(${system.coreFillA},0.34)`);
-    glow.addColorStop(0.28, `rgba(${system.coreFillB},0.15)`);
+    glow.addColorStop(0, `rgba(${system.coreFillA},0.24)`);
+    glow.addColorStop(0.28, `rgba(${system.coreFillB},0.10)`);
     glow.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = glow;
     ctx.beginPath();
     ctx.arc(0, 0, system.glow, 0, TWO_PI);
     ctx.fill();
 
-    ctx.strokeStyle = "rgba(205,220,255,0.13)";
+    ctx.strokeStyle = "rgba(205,220,255,0.10)";
     ctx.lineWidth = 1;
 
     for (let i = 0; i < system.planets.length; i += 1) {
@@ -450,16 +567,16 @@ DESTINATION: /index.js
     }
 
     const starGradient = ctx.createRadialGradient(
-      -system.coreRadius * 0.22,
-      -system.coreRadius * 0.22,
+      -system.coreRadius * 0.20,
+      -system.coreRadius * 0.20,
       0,
       0,
       0,
-      system.coreRadius * 1.9
+      system.coreRadius * 1.8
     );
-    starGradient.addColorStop(0, `rgba(255,255,255,${(0.98 * pulse).toFixed(3)})`);
-    starGradient.addColorStop(0.22, `rgba(${system.coreFillA},${(0.92 * pulse).toFixed(3)})`);
-    starGradient.addColorStop(0.7, `rgba(${system.coreFillB},${(0.72 * pulse).toFixed(3)})`);
+    starGradient.addColorStop(0, `rgba(255,255,255,${(0.96 * pulse).toFixed(3)})`);
+    starGradient.addColorStop(0.22, `rgba(${system.coreFillA},${(0.86 * pulse).toFixed(3)})`);
+    starGradient.addColorStop(0.70, `rgba(${system.coreFillB},${(0.62 * pulse).toFixed(3)})`);
     starGradient.addColorStop(1, `rgba(${system.coreFillB},0)`);
 
     ctx.fillStyle = starGradient;
@@ -479,11 +596,11 @@ DESTINATION: /index.js
       ctx.fill();
     }
 
-    ctx.fillStyle = "rgba(238,243,255,0.82)";
+    ctx.fillStyle = "rgba(238,243,255,0.56)";
     ctx.font = `700 ${state.width < 640 ? 10 : 11}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
-    ctx.fillText(system.key, 0, -(system.glow + 10));
+    ctx.fillText(system.key, 0, -(system.glow + 8));
 
     ctx.restore();
   }
@@ -540,17 +657,18 @@ DESTINATION: /index.js
 
     drawBackground();
     drawNebula(timeSeconds);
-    drawGalaxyDust(timeSeconds);
-    drawStarField(state.starsNear, timeSeconds, 1.15);
+    drawStarField(state.deepStars, timeSeconds, 0.26, 1.75);
     drawGalaxySpine(timeSeconds);
-    drawStarField(state.starsMid, timeSeconds, 0.55);
+    drawDustLanes(timeSeconds);
+    drawStarField(state.bandStars, timeSeconds, 0.54, 1.6);
+    drawStarField(state.brightStars, timeSeconds, 0.82, 1.45);
+    drawHeroStars(timeSeconds);
     drawAnchorLines();
 
     for (let i = 0; i < state.systems.length; i += 1) {
       drawSystem(state.systems[i], timeSeconds, i);
     }
 
-    drawStarField(state.starsFar, timeSeconds, 0.22);
     drawBuildStamp();
 
     state.rafId = window.requestAnimationFrame(drawFrame);

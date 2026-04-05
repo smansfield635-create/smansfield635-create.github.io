@@ -1,15 +1,15 @@
 DESTINATION: /world/render.js
 // /world/render.js
 // MODE: DIRECT RENDER AUTHORITY
-// CONTRACT: RENDER_CONTRACT_G3
-// STATUS: DETERMINISTIC | RUNTIME SUBORDINATE | PUBLIC PATH SAFE
+// CONTRACT: RENDER_CONTRACT_G4
+// STATUS: DETERMINISTIC | RUNTIME SUBORDINATE | SIBLING LOCKED TO /world/runtime.js
 
 import runtime from "./runtime.js";
 
 const RENDER_META = Object.freeze({
   name: "render",
-  version: "G3",
-  contract: "RENDER_CONTRACT_G3",
+  version: "G4",
+  contract: "RENDER_CONTRACT_G4",
   role: "expression_authority",
   deterministic: true,
   sourceOfTruth: false,
@@ -21,9 +21,7 @@ const RENDER_META = Object.freeze({
 function deepFreeze(value) {
   if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
   const keys = Object.getOwnPropertyNames(value);
-  for (let i = 0; i < keys.length; i += 1) {
-    deepFreeze(value[keys[i]]);
-  }
+  for (let i = 0; i < keys.length; i += 1) deepFreeze(value[keys[i]]);
   return Object.freeze(value);
 }
 

@@ -1,13 +1,13 @@
 DESTINATION: /assets/instruments.js
 // /assets/instruments.js
 // MODE: DIRECT DIAGNOSTIC AUTHORITY
-// CONTRACT: INSTRUMENT_CONTRACT_G3
+// CONTRACT: INSTRUMENT_CONTRACT_G4
 // STATUS: READ ONLY | PARSE SAFE | NON-DRIFT
 
 const INSTRUMENT_META = Object.freeze({
   name: "instruments",
-  version: "G3",
-  contract: "INSTRUMENT_CONTRACT_G3",
+  version: "G4",
+  contract: "INSTRUMENT_CONTRACT_G4",
   role: "diagnostic_shaping_only",
   deterministic: true,
   sourceOfTruth: false,
@@ -88,7 +88,9 @@ function normalizeProjectionKind(render) {
   return "flat";
 }
 
-function classifyState({ runtime, render }) {
+function classifyState(input) {
+  const runtime = normalizeObject(input.runtime);
+  const render = normalizeObject(input.render);
   const receiptRaw = runtime?.receipt?.timestamp;
   const receipt = receiptRaw === null || receiptRaw === undefined ? "—" : String(receiptRaw);
   const traversal = normalizeString(runtime?.traversalStatus?.action, "idle").toUpperCase();
@@ -103,7 +105,10 @@ function classifyState({ runtime, render }) {
   return "LIVE";
 }
 
-function buildSummary({ runtime, render, classifiedState }) {
+function buildSummary(input) {
+  const runtime = normalizeObject(input.runtime);
+  const render = normalizeObject(input.render);
+  const classifiedState = input.classifiedState;
   const node = normalizeString(runtime?.node?.label);
   const region = normalizeString(runtime?.region?.label);
   const boundary = normalizeBoundary(runtime);
@@ -128,7 +133,9 @@ function buildSummary({ runtime, render, classifiedState }) {
   });
 }
 
-function buildDiagnostics({ runtime, render }) {
+function buildDiagnostics(input) {
+  const runtime = normalizeObject(input.runtime);
+  const render = normalizeObject(input.render);
   const colorOutput = normalizeObject(render?.visible?.colorOutput);
   const emphasis = normalizeObject(render?.visible?.emphasis);
   const selectedProjection =
@@ -161,7 +168,9 @@ function buildDiagnostics({ runtime, render }) {
   });
 }
 
-function buildMeta({ runtime, render }) {
+function buildMeta(input) {
+  const runtime = normalizeObject(input.runtime);
+  const render = normalizeObject(input.render);
   const selectedProjection =
     normalizeObject(render?.projection?.selectedProjection).kind !== undefined
       ? normalizeObject(render?.projection?.selectedProjection)
@@ -206,9 +215,9 @@ function buildMeta({ runtime, render }) {
   });
 }
 
-export function buildInstrumentReceipt({ runtimeState = null, renderState = null } = {}) {
-  const runtime = normalizeObject(runtimeState);
-  const render = normalizeObject(renderState);
+export function buildInstrumentReceipt(options = {}) {
+  const runtime = normalizeObject(options.runtimeState);
+  const render = normalizeObject(options.renderState);
   const classifiedState = classifyState({ runtime, render });
   const summary = buildSummary({ runtime, render, classifiedState });
   const diagnostics = buildDiagnostics({ runtime, render });
@@ -304,8 +313,8 @@ export function createInstruments() {
   return deepFreeze({
     meta: INSTRUMENT_META,
 
-    update({ runtimeState = null, renderState = null } = {}) {
-      last = buildInstrumentReceipt({ runtimeState, renderState });
+    update(options = {}) {
+      last = buildInstrumentReceipt(options);
       return last;
     },
 

@@ -1,14 +1,14 @@
+DESTINATION: /world/runtime.js
 // /world/runtime.js
 // MODE: CONTRACT EXECUTION
-// CONTRACT: RUNTIME_BASELINE_CONTRACT_G1
-// STATUS: ORCHESTRATION ONLY | DETERMINISTIC | NON-DRIFT | NO PLATFORM OWNERSHIP
-
-import { createPlanetEngine } from "./planet_engine.js";
+// CONTRACT: UNIVERSE_RUNTIME_CONTRACT_G2
+// STATUS: ORCHESTRATION ONLY | DETERMINISTIC | NON-DRIFT | CANVAS-FIRST
+// OWNER: SEAN
 
 const RUNTIME_META = Object.freeze({
   name: "runtime",
-  version: "G1_BASELINE",
-  contract: "RUNTIME_BASELINE_CONTRACT_G1",
+  version: "G2_UNIVERSE",
+  contract: "UNIVERSE_RUNTIME_CONTRACT_G2",
   role: "orchestration_only",
   deterministic: true,
   sourceOfTruth: false,
@@ -20,7 +20,11 @@ const RUNTIME_META = Object.freeze({
 const RUNTIME_CONSTANTS = Object.freeze({
   PROJECTIONS: Object.freeze(["flat", "tree", "globe"]),
   STEP_MIN: -1,
-  STEP_MAX: 1
+  STEP_MAX: 1,
+  PRIMARY_SYSTEM_CODES: Object.freeze(["N", "NE", "E", "SE", "S", "SW", "W", "NW", "C"]),
+  DEFAULT_WIDTH: 256,
+  DEFAULT_HEIGHT: 256,
+  DEFAULT_PRIMARY_SYSTEM_COUNT: 9
 });
 
 const deepFreeze = (value) => {
@@ -51,6 +55,8 @@ const clamp = (value, min, max) => {
 const normalizeObject = (value) =>
   value && typeof value === "object" && !Array.isArray(value) ? value : {};
 
+const normalizeArray = (value) => (Array.isArray(value) ? value : []);
+
 const normalizeFrameState = (value = {}) => {
   const source = normalizeObject(value);
   const elapsedSeconds =
@@ -65,10 +71,7 @@ const normalizeFrameState = (value = {}) => {
 
 const normalizeProjection = (value) => {
   const projection = String(value || "flat").toLowerCase();
-  assert(
-    RUNTIME_CONSTANTS.PROJECTIONS.includes(projection),
-    "INVALID_PROJECTION"
-  );
+  assert(RUNTIME_CONSTANTS.PROJECTIONS.includes(projection), "INVALID_PROJECTION");
   return projection;
 };
 
@@ -123,13 +126,16 @@ const safeReceiptClone = (receipt, timestamp) => {
   });
 };
 
-const normalizeSample = (sample, x, y) => {
+const normalizeUniverseSample = (sample, x, y, index) => {
   const s = normalizeObject(sample);
   const receipt = normalizeObject(s.receipt);
   const threshold = normalizeObject(s.threshold);
   const boundary = normalizeObject(s.boundary);
   const force = normalizeObject(s.force);
   const projections = normalizeObject(s.projections);
+  const region = normalizeObject(s.region);
+  const divide = normalizeObject(s.divide);
+  const node = normalizeObject(s.node);
 
   assert(Number.isInteger(s.i) && Number.isInteger(s.j), "INVALID_SAMPLE_KERNEL_INDEX");
   assert(receipt && typeof receipt === "object", "INVALID_SAMPLE_RECEIPT");
@@ -141,43 +147,272 @@ const normalizeSample = (sample, x, y) => {
   return deepFreeze({
     dense: deepFreeze({ x, y }),
     kernel: deepFreeze({ i: s.i, j: s.j }),
-    region: s.region,
-    divide: s.divide,
-    node: s.node,
-    boundary: s.boundary,
-    force: s.force,
-    terrainClass: s.terrainClass,
-    biomeType: s.biomeType,
-    surfaceMaterial: s.surfaceMaterial,
-    climateBand: s.climateBand,
-    climate: s.climate,
-    moisture: s.moisture,
-    accumulation: s.accumulation,
-    shorelineMask: s.shorelineMask,
-    landMask: s.landMask,
-    waterMask: s.waterMask,
-    habitability: s.habitability,
-    traversalDifficulty: s.traversalDifficulty,
-    fields: s.fields,
-    derived: s.derived,
-    projections: s.projections,
-    receipt: s.receipt,
-    threshold: s.threshold,
-    dynamicIllumination: s.dynamicIllumination,
-    dynamicCloudBias: s.dynamicCloudBias,
-    dynamicStormBias: s.dynamicStormBias,
-    dynamicCurrentBias: s.dynamicCurrentBias,
-    dynamicAuroraBias: s.dynamicAuroraBias,
-    dynamicGlowBias: s.dynamicGlowBias,
-    motionState: s.motionState
+    order: index,
+    code: String(s.code || RUNTIME_CONSTANTS.PRIMARY_SYSTEM_CODES[index] || `P${index + 1}`),
+    region: deepFreeze({
+      regionId: region.regionId || s.code || `REGION_${index + 1}`,
+      label: region.label || "MACRO_UNIVERSE"
+    }),
+    divide: deepFreeze({
+      divideId: divide.divideId || `DIVIDE_${index + 1}`,
+      label: divide.label || "PRIMARY_FIELD"
+    }),
+    node: deepFreeze({
+      nodeId: node.nodeId || s.code || `NODE_${index + 1}`,
+      label: node.label || `${s.code || RUNTIME_CONSTANTS.PRIMARY_SYSTEM_CODES[index] || `P${index + 1}`}_SYSTEM`
+    }),
+    boundary: deepFreeze({
+      classification: String(boundary.classification || "OPEN").toUpperCase(),
+      label: String(boundary.label || "OPEN")
+    }),
+    force: deepFreeze({
+      vector: deepFreeze({
+        N: Number(normalizeObject(force.vector).N || 0),
+        E: Number(normalizeObject(force.vector).E || 0),
+        S: Number(normalizeObject(force.vector).S || 0),
+        W: Number(normalizeObject(force.vector).W || 0),
+        B: Number(normalizeObject(force.vector).B || 0)
+      }),
+      dominant: String(force.dominant || "N")
+    }),
+    terrainClass: String(s.terrainClass || "MACRO_UNIVERSE"),
+    biomeType: String(s.biomeType || "UNIVERSE"),
+    surfaceMaterial: String(s.surfaceMaterial || "VACUUM"),
+    climateBand: s.climateBand ?? null,
+    climate: Number(s.climate || 0),
+    moisture: Number(s.moisture || 0),
+    accumulation: Number(s.accumulation || 0),
+    shorelineMask: Number(s.shorelineMask || 0),
+    landMask: Number(s.landMask || 0),
+    waterMask: Number(s.waterMask || 0),
+    habitability: Number(s.habitability || 0),
+    traversalDifficulty: Number(s.traversalDifficulty || 0),
+    fields: deepFreeze(normalizeObject(s.fields)),
+    derived: deepFreeze(normalizeObject(s.derived)),
+    projections: deepFreeze(projections),
+    receipt: deepFreeze(receipt),
+    threshold: deepFreeze({
+      action: String(threshold.action || "PASS").toUpperCase()
+    }),
+    dynamicIllumination: Number(s.dynamicIllumination || 1),
+    dynamicCloudBias: Number(s.dynamicCloudBias || 0),
+    dynamicStormBias: Number(s.dynamicStormBias || 0),
+    dynamicCurrentBias: Number(s.dynamicCurrentBias || 0),
+    dynamicAuroraBias: Number(s.dynamicAuroraBias || 0),
+    dynamicGlowBias: Number(s.dynamicGlowBias || 1),
+    motionState: deepFreeze(normalizeObject(s.motionState)),
+    position: deepFreeze({
+      x: Number(normalizeObject(s.position).x || 0),
+      y: Number(normalizeObject(s.position).y || 0),
+      z: Number(normalizeObject(s.position).z || 0)
+    }),
+    prominence: Number(s.prominence || 1),
+    haloStrength: Number(s.haloStrength || 1),
+    galaxyBandWeight: Number(s.galaxyBandWeight || 1)
   });
 };
 
-const normalizePlanetField = (planetField) => {
-  const field = normalizeObject(planetField);
-  const samples = Array.isArray(field.samples) ? field.samples : null;
+const buildDefaultUniverseField = (source = {}) => {
+  const width =
+    Number.isInteger(source.width) && source.width > 0
+      ? source.width
+      : RUNTIME_CONSTANTS.DEFAULT_WIDTH;
+  const height =
+    Number.isInteger(source.height) && source.height > 0
+      ? source.height
+      : RUNTIME_CONSTANTS.DEFAULT_HEIGHT;
 
-  assert(samples && samples.length > 0, "INVALID_PLANET_FIELD_SAMPLES");
+  const cx = width * 0.5;
+  const cy = height * 0.53;
+  const r = Math.min(width, height) * 0.32;
+  const d = r * 0.72;
+
+  const anchors = [
+    { code: "N", x: cx, y: cy - r },
+    { code: "NE", x: cx + d, y: cy - d },
+    { code: "E", x: cx + r, y: cy },
+    { code: "SE", x: cx + d, y: cy + d },
+    { code: "S", x: cx, y: cy + r },
+    { code: "SW", x: cx - d, y: cy + d },
+    { code: "W", x: cx - r, y: cy },
+    { code: "NW", x: cx - d, y: cy - d },
+    { code: "C", x: cx, y: cy }
+  ];
+
+  const samples = anchors.map((anchor, index) => {
+    const ageBias = index / Math.max(anchors.length - 1, 1);
+    const regionLabel = "MACRO_UNIVERSE";
+    const nodeLabel = `${anchor.code}_SYSTEM`;
+
+    return deepFreeze({
+      i: index,
+      j: 0,
+      code: anchor.code,
+      region: deepFreeze({
+        regionId: regionLabel,
+        label: regionLabel
+      }),
+      divide: deepFreeze({
+        divideId: "PRIMARY_FIELD",
+        label: "PRIMARY_FIELD"
+      }),
+      node: deepFreeze({
+        nodeId: nodeLabel,
+        label: nodeLabel
+      }),
+      boundary: deepFreeze({
+        classification: "OPEN",
+        label: "OPEN"
+      }),
+      force: deepFreeze({
+        vector: deepFreeze({
+          N: anchor.code.includes("N") ? 1 : 0,
+          E: anchor.code.includes("E") ? 1 : 0,
+          S: anchor.code.includes("S") ? 1 : 0,
+          W: anchor.code.includes("W") ? 1 : 0,
+          B: 1 - ageBias
+        }),
+        dominant: anchor.code === "C" ? "N" : anchor.code.charAt(0)
+      }),
+      terrainClass: "MACRO_UNIVERSE",
+      biomeType: "UNIVERSE",
+      surfaceMaterial: "VACUUM",
+      climateBand: null,
+      climate: 0,
+      moisture: 0,
+      accumulation: 0,
+      shorelineMask: 0,
+      landMask: 0,
+      waterMask: 0,
+      habitability: 0,
+      traversalDifficulty: 0,
+      fields: deepFreeze({
+        primarySystemCount: 9,
+        galaxyBandState: "STRONG",
+        filterMode: "UNIVERSE_FIRST",
+        filterTarget: "UNIVERSE"
+      }),
+      derived: deepFreeze({
+        prominence: 1 - ageBias * 0.36,
+        ageBias
+      }),
+      projections: deepFreeze({
+        flat: deepFreeze({
+          kind: "macro-universe-flat",
+          x: anchor.x,
+          y: anchor.y,
+          width,
+          height
+        }),
+        tree: deepFreeze({
+          kind: "tree",
+          root: 0,
+          branch: anchor.code,
+          leaf: index
+        }),
+        globe: deepFreeze({
+          kind: "globe",
+          x: (anchor.x - cx) / Math.max(r, 1),
+          y: (anchor.y - cy) / Math.max(r, 1),
+          z: 0
+        })
+      }),
+      receipt: deepFreeze({
+        state: deepFreeze({ i: index, j: 0 }),
+        region: deepFreeze({
+          regionId: regionLabel,
+          label: regionLabel
+        }),
+        node: deepFreeze({
+          nodeId: nodeLabel,
+          label: nodeLabel
+        }),
+        forces: deepFreeze({
+          N: anchor.code.includes("N") ? 1 : 0,
+          E: anchor.code.includes("E") ? 1 : 0,
+          S: anchor.code.includes("S") ? 1 : 0,
+          W: anchor.code.includes("W") ? 1 : 0,
+          B: 1 - ageBias
+        }),
+        boundary: "OPEN",
+        timestamp: 0
+      }),
+      threshold: deepFreeze({
+        action: "PASS"
+      }),
+      dynamicIllumination: 1,
+      dynamicCloudBias: 0,
+      dynamicStormBias: 0,
+      dynamicCurrentBias: 0,
+      dynamicAuroraBias: 0,
+      dynamicGlowBias: 1,
+      motionState: deepFreeze({}),
+      position: deepFreeze({
+        x: anchor.x,
+        y: anchor.y,
+        z: 0
+      }),
+      prominence: 1 - ageBias * 0.36,
+      haloStrength: 1 - ageBias * 0.28,
+      galaxyBandWeight: 1 - ageBias * 0.18
+    });
+  });
+
+  const normalizedRows = [deepFreeze(samples)];
+  const byDenseKey = {};
+  const byKernelReceiptKey = {};
+
+  samples.forEach((sample, x) => {
+    const normalizedSample = normalizeUniverseSample(sample, x, 0, x);
+    byDenseKey[`${x},0`] = normalizedSample;
+    byKernelReceiptKey[`${normalizedSample.kernel.i},${normalizedSample.kernel.j}`] = normalizedSample;
+    normalizedRows[0] = Object.freeze([...(normalizedRows[0] || []).slice(0, x), normalizedSample, ...(normalizedRows[0] || []).slice(x + 1)]);
+  });
+
+  return deepFreeze({
+    width: samples.length,
+    height: 1,
+    samples: deepFreeze([deepFreeze(samples.map((sample, x) => normalizeUniverseSample(sample, x, 0, x)))]),
+    byDenseKey: deepFreeze(
+      samples.reduce((acc, sample, x) => {
+        const normalizedSample = normalizeUniverseSample(sample, x, 0, x);
+        acc[`${x},0`] = normalizedSample;
+        return acc;
+      }, {})
+    ),
+    byKernelReceiptKey: deepFreeze(
+      samples.reduce((acc, sample, x) => {
+        const normalizedSample = normalizeUniverseSample(sample, x, 0, x);
+        acc[`${normalizedSample.kernel.i},${normalizedSample.kernel.j}`] = normalizedSample;
+        return acc;
+      }, {})
+    ),
+    summary: deepFreeze({
+      sceneClass: "MACRO_UNIVERSE",
+      filterMode: "UNIVERSE_FIRST",
+      filterTarget: "UNIVERSE",
+      primarySystemCount: 9,
+      defaultCursor: deepFreeze({ x: 8, y: 0 }),
+      width,
+      height
+    }),
+    motionContract: deepFreeze({
+      mode: "PRIMARY_SYSTEM_SELECTION"
+    }),
+    timeState: deepFreeze({
+      elapsedSeconds: 0
+    })
+  });
+};
+
+const normalizeUniverseField = (universeField) => {
+  const field = normalizeObject(universeField);
+  if (!Array.isArray(field.samples) || field.samples.length === 0) {
+    return buildDefaultUniverseField(field);
+  }
+
+  const samples = Array.isArray(field.samples) ? field.samples : null;
+  assert(samples && samples.length > 0, "INVALID_UNIVERSE_FIELD_SAMPLES");
 
   const height = typeof field.height === "number" ? field.height : samples.length;
   const width =
@@ -187,25 +422,26 @@ const normalizePlanetField = (planetField) => {
         ? samples[0].length
         : 0;
 
-  assert(Number.isInteger(width) && width > 0, "INVALID_PLANET_FIELD_WIDTH");
-  assert(Number.isInteger(height) && height > 0, "INVALID_PLANET_FIELD_HEIGHT");
-  assert(samples.length === height, "PLANET_FIELD_HEIGHT_MISMATCH");
+  assert(Number.isInteger(width) && width > 0, "INVALID_UNIVERSE_FIELD_WIDTH");
+  assert(Number.isInteger(height) && height > 0, "INVALID_UNIVERSE_FIELD_HEIGHT");
+  assert(samples.length === height, "UNIVERSE_FIELD_HEIGHT_MISMATCH");
 
   const normalizedRows = [];
   const byDenseKey = {};
   const byKernelReceiptKey = {};
 
+  let order = 0;
   for (let y = 0; y < height; y += 1) {
     const row = samples[y];
-    assert(Array.isArray(row), "INVALID_PLANET_FIELD_ROW");
-    assert(row.length === width, "PLANET_FIELD_WIDTH_MISMATCH");
+    assert(Array.isArray(row), "INVALID_UNIVERSE_FIELD_ROW");
+    assert(row.length === width, "UNIVERSE_FIELD_WIDTH_MISMATCH");
 
     const normalizedRow = [];
     for (let x = 0; x < width; x += 1) {
-      const normalizedSample = normalizeSample(row[x], x, y);
+      const normalizedSample = normalizeUniverseSample(row[x], x, y, order);
+      order += 1;
       normalizedRow.push(normalizedSample);
       byDenseKey[`${x},${y}`] = normalizedSample;
-
       const kernelKey = `${normalizedSample.kernel.i},${normalizedSample.kernel.j}`;
       if (!hasOwn(byKernelReceiptKey, kernelKey)) {
         byKernelReceiptKey[kernelKey] = normalizedSample;
@@ -260,19 +496,17 @@ const buildTraversalStatus = (currentSample, targetSample = null) => {
   });
 };
 
-const buildProjectionPackets = (sample) => {
-  const projections = normalizeObject(sample.projections);
-  return deepFreeze({
-    flat: projections.flat || null,
-    tree: projections.tree || null,
-    globe: projections.globe || null
+const buildProjectionPackets = (sample) =>
+  deepFreeze({
+    flat: normalizeObject(sample.projections).flat || null,
+    tree: normalizeObject(sample.projections).tree || null,
+    globe: normalizeObject(sample.projections).globe || null
   });
-};
 
 const selectProjectionPacket = (projectionPackets, projectionState) =>
   projectionPackets[projectionState] || null;
 
-const buildCurrentStatePacket = (sample, projectionState, traversalStatus) => {
+const buildCurrentStatePacket = (sample, projectionState, traversalStatus, field) => {
   const projectionPackets = buildProjectionPackets(sample);
 
   return deepFreeze({
@@ -318,7 +552,18 @@ const buildCurrentStatePacket = (sample, projectionState, traversalStatus) => {
     dynamicAuroraBias: sample.dynamicAuroraBias,
     dynamicGlowBias: sample.dynamicGlowBias,
     motionState: sample.motionState,
-    visualLight: sample.dynamicIllumination
+    visualLight: sample.dynamicIllumination,
+    sceneClass: "MACRO_UNIVERSE",
+    universeMode: "UNIVERSE_FIRST",
+    filterTarget: "UNIVERSE",
+    primarySystemCount: Number(normalizeObject(field.summary).primarySystemCount || 9),
+    primaryProminence: Number(sample.prominence || 1),
+    galaxyBandState: "STRONG",
+    jsStamp: "RUNTIME_G2_UNIVERSE",
+    htmlStamp: "INDEX_HTML_ACTIVE",
+    canvasAuthority: "CANVAS_FIRST",
+    canvasActive: true,
+    cssFallbackActive: false
   });
 };
 
@@ -339,7 +584,8 @@ const buildRuntimeSnapshot = (
       receipt: currentReceipt
     }),
     projectionState,
-    traversalStatus
+    traversalStatus,
+    field
   );
 
   return deepFreeze({
@@ -405,7 +651,7 @@ const resolveDefaultCursor = (field, source = {}) => {
   });
 };
 
-const buildFacade = (stateRef, engineRef, frameStateRef) => {
+const buildFacade = (stateRef, frameStateRef) => {
   const api = {
     meta: RUNTIME_META,
 
@@ -459,7 +705,8 @@ const buildFacade = (stateRef, engineRef, frameStateRef) => {
           receipt: clonedReceipt
         }),
         stateRef.current.projectionState,
-        buildTraversalStatus(sample, null)
+        buildTraversalStatus(sample, null),
+        stateRef.current.field
       );
     },
 
@@ -531,9 +778,9 @@ const buildFacade = (stateRef, engineRef, frameStateRef) => {
         hasOwn(next, "projection") ? next.projection : stateRef.current.projectionState
       );
 
-      const nextField = normalizePlanetField(
-        hasOwn(next, "planetField")
-          ? next.planetField
+      const nextField = normalizeUniverseField(
+        hasOwn(next, "universeField")
+          ? next.universeField
           : stateRef.current.field
       );
 
@@ -557,24 +804,12 @@ const buildFacade = (stateRef, engineRef, frameStateRef) => {
 export function createRuntime(options = {}) {
   const source = normalizeObject(options);
 
-  const engineRef = {
-    current:
-      source.engine && typeof source.engine.buildPlanetFrame === "function"
-        ? source.engine
-        : createPlanetEngine()
-  };
-
   const frameStateRef = {
     current: normalizeFrameState(source.frameState)
   };
 
   const initialProjectionState = normalizeProjection(source.projection || "flat");
-  const providedField = source.planetField || null;
-
-  const field = normalizePlanetField(
-    providedField || engineRef.current.buildPlanetFrame(frameStateRef.current)
-  );
-
+  const field = normalizeUniverseField(source.universeField || source.planetField || null);
   const initialCursor = resolveDefaultCursor(field, source);
 
   const stateRef = {
@@ -587,7 +822,7 @@ export function createRuntime(options = {}) {
     )
   };
 
-  return buildFacade(stateRef, engineRef, frameStateRef);
+  return buildFacade(stateRef, frameStateRef);
 }
 
 const defaultRuntimeRef = {
@@ -631,7 +866,6 @@ const buildRuntimeReceipt = (runtime, timestamp) => {
   const state = normalizeObject(receipt.state);
   const region = normalizeObject(currentState.region);
   const node = normalizeObject(currentState.node);
-  const boundary = normalizeObject(currentState.boundary);
   const threshold = normalizeObject(currentState.threshold);
   const force = normalizeObject(currentState.force);
   const forceVector = normalizeObject(force.vector);
@@ -687,7 +921,8 @@ const buildRuntimeReceipt = (runtime, timestamp) => {
     selectedProjection,
     fieldSummary: deepFreeze({
       width: Number(field.width || 0),
-      height: Number(field.height || 0)
+      height: Number(field.height || 0),
+      primarySystemCount: Number(normalizeObject(field.summary).primarySystemCount || 9)
     }),
     terrainClass: currentState.terrainClass || null,
     biomeType: currentState.biomeType || null,
@@ -700,7 +935,18 @@ const buildRuntimeReceipt = (runtime, timestamp) => {
     landMask: currentState.landMask ?? null,
     waterMask: currentState.waterMask ?? null,
     habitability: currentState.habitability ?? null,
-    traversalDifficulty: currentState.traversalDifficulty ?? null
+    traversalDifficulty: currentState.traversalDifficulty ?? null,
+    sceneClass: currentState.sceneClass || "MACRO_UNIVERSE",
+    universeMode: currentState.universeMode || "UNIVERSE_FIRST",
+    filterTarget: currentState.filterTarget || "UNIVERSE",
+    primarySystemCount: currentState.primarySystemCount ?? 9,
+    primaryProminence: currentState.primaryProminence ?? 1,
+    galaxyBandState: currentState.galaxyBandState || "STRONG",
+    jsStamp: currentState.jsStamp || "RUNTIME_G2_UNIVERSE",
+    htmlStamp: currentState.htmlStamp || "INDEX_HTML_ACTIVE",
+    canvasAuthority: currentState.canvasAuthority || "CANVAS_FIRST",
+    canvasActive: currentState.canvasActive !== false,
+    cssFallbackActive: currentState.cssFallbackActive === true
   });
 };
 

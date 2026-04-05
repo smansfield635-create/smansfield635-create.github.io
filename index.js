@@ -2,7 +2,7 @@ DESTINATION: /index.js
 (() => {
   "use strict";
 
-  const JS_STAMP = "J7-MACRO-UNIVERSE-CALIBRATION";
+  const JS_STAMP = "J8-CANVAS-ONLY-OVERCORRECTION";
   const canvas = document.getElementById("scene");
   if (!canvas) {
     throw new Error("Compass page requires #scene canvas");
@@ -17,10 +17,10 @@ DESTINATION: /index.js
   const TWO_PI = Math.PI * 2;
 
   const STAR_COUNTS = {
-    deep: 820,
-    band: 920,
-    bright: 160,
-    hero: 22
+    deep: 260,
+    band: 420,
+    bright: 110,
+    hero: 18
   };
 
   const state = {
@@ -97,23 +97,23 @@ DESTINATION: /index.js
     const r = state.universeRadius;
     const d = r * 0.72;
     return [
-      { key: "N",  x: state.cx,      y: state.cy - r },
-      { key: "NE", x: state.cx + d,  y: state.cy - d },
-      { key: "E",  x: state.cx + r,  y: state.cy },
-      { key: "SE", x: state.cx + d,  y: state.cy + d },
-      { key: "S",  x: state.cx,      y: state.cy + r },
-      { key: "SW", x: state.cx - d,  y: state.cy + d },
-      { key: "W",  x: state.cx - r,  y: state.cy },
-      { key: "NW", x: state.cx - d,  y: state.cy - d },
-      { key: "C",  x: state.cx,      y: state.cy }
+      { key: "N", x: state.cx, y: state.cy - r },
+      { key: "NE", x: state.cx + d, y: state.cy - d },
+      { key: "E", x: state.cx + r, y: state.cy },
+      { key: "SE", x: state.cx + d, y: state.cy + d },
+      { key: "S", x: state.cx, y: state.cy + r },
+      { key: "SW", x: state.cx - d, y: state.cy + d },
+      { key: "W", x: state.cx - r, y: state.cy },
+      { key: "NW", x: state.cx - d, y: state.cy - d },
+      { key: "C", x: state.cx, y: state.cy }
     ];
   }
 
   function galaxyBandPoint(rand, spreadX, spreadY, rotation) {
     const t = lerp(-1, 1, rand());
-    const curve = Math.sin(t * Math.PI * 1.16) * spreadY;
+    const curve = Math.sin(t * Math.PI * 1.12) * spreadY;
     const x0 = t * spreadX;
-    const y0 = curve + lerp(-1, 1, rand()) * spreadY * 0.30;
+    const y0 = curve + lerp(-1, 1, rand()) * spreadY * 0.24;
     const cosR = Math.cos(rotation);
     const sinR = Math.sin(rotation);
 
@@ -148,17 +148,17 @@ DESTINATION: /index.js
   function buildDeepStars(rand, count) {
     const stars = [];
     let attempts = 0;
-    while (stars.length < count && attempts < count * 3) {
+    while (stars.length < count && attempts < count * 5) {
       attempts += 1;
       const star = {
         x: rand() * state.width,
         y: rand() * state.height,
-        radius: lerp(0.28, 0.95, Math.pow(rand(), 1.8)),
-        alpha: lerp(0.10, 0.42, rand()),
+        radius: lerp(0.45, 1.15, Math.pow(rand(), 1.75)),
+        alpha: lerp(0.18, 0.48, rand()),
         twinkle: rand() * TWO_PI,
-        driftX: lerp(-2.4, 2.4, rand()),
-        driftY: lerp(-2.4, 2.4, rand()),
-        rgb: rand() < 0.22 ? [184, 208, 255] : [255, 255, 255]
+        driftX: lerp(-1.8, 1.8, rand()),
+        driftY: lerp(-1.8, 1.8, rand()),
+        rgb: rand() < 0.24 ? [184, 208, 255] : [255, 255, 255]
       };
       pushIfNotInQuietZone(stars, star);
     }
@@ -167,21 +167,21 @@ DESTINATION: /index.js
 
   function buildBandStars(rand, count, rotation, minRadius, maxRadius, minAlpha, maxAlpha) {
     const stars = [];
-    const spreadX = state.universeRadius * 2.02;
-    const spreadY = state.universeRadius * 0.15;
+    const spreadX = state.universeRadius * 1.92;
+    const spreadY = state.universeRadius * 0.11;
     let attempts = 0;
 
-    while (stars.length < count && attempts < count * 4) {
+    while (stars.length < count && attempts < count * 6) {
       attempts += 1;
       const p = galaxyBandPoint(rand, spreadX, spreadY, rotation);
       const star = {
         x: p.x,
         y: p.y,
-        radius: lerp(minRadius, maxRadius, Math.pow(rand(), 1.5)),
+        radius: lerp(minRadius, maxRadius, Math.pow(rand(), 1.45)),
         alpha: lerp(minAlpha, maxAlpha, rand()),
         twinkle: rand() * TWO_PI,
-        driftX: lerp(-4.5, 4.5, rand()),
-        driftY: lerp(-2.0, 2.0, rand()),
+        driftX: lerp(-3.0, 3.0, rand()),
+        driftY: lerp(-1.4, 1.4, rand()),
         rgb: (() => {
           const pick = rand();
           if (pick < 0.18) return [255, 228, 194];
@@ -198,21 +198,21 @@ DESTINATION: /index.js
 
   function buildHeroStars(rand, count, rotation) {
     const stars = [];
-    const spreadX = state.universeRadius * 1.75;
-    const spreadY = state.universeRadius * 0.11;
+    const spreadX = state.universeRadius * 1.55;
+    const spreadY = state.universeRadius * 0.09;
     let attempts = 0;
 
-    while (stars.length < count && attempts < count * 5) {
+    while (stars.length < count && attempts < count * 6) {
       attempts += 1;
       const p = galaxyBandPoint(rand, spreadX, spreadY, rotation);
       const star = {
         x: p.x,
         y: p.y,
-        radius: lerp(1.8, 3.9, rand()),
-        alpha: lerp(0.54, 0.94, rand()),
+        radius: lerp(2.6, 5.2, rand()),
+        alpha: lerp(0.68, 0.98, rand()),
         twinkle: rand() * TWO_PI,
-        glow: lerp(12, 28, rand()),
-        rgb: rand() < 0.38 ? [255, 220, 174] : [214, 232, 255]
+        glow: lerp(18, 34, rand()),
+        rgb: rand() < 0.40 ? [255, 220, 174] : [214, 232, 255]
       };
       pushIfNotInQuietZone(stars, star);
     }
@@ -224,14 +224,14 @@ DESTINATION: /index.js
     const clouds = [];
     for (let i = 0; i < count; i += 1) {
       const angle = rand() * TWO_PI;
-      const distance = Math.pow(rand(), 0.72) * state.universeRadius * 1.16;
+      const distance = Math.pow(rand(), 0.72) * state.universeRadius * 1.08;
       clouds.push({
-        x: state.cx + Math.cos(angle) * distance * 0.82,
-        y: state.cy + Math.sin(angle) * distance * 0.48,
-        spreadX: lerp(170, 430, rand()) * (state.width < 700 ? 0.95 : 1),
-        spreadY: lerp(46, 145, rand()),
-        rotation: lerp(-1.08, 1.08, rand()),
-        alpha: lerp(0.022, 0.12, rand()),
+        x: state.cx + Math.cos(angle) * distance * 0.78,
+        y: state.cy + Math.sin(angle) * distance * 0.42,
+        spreadX: lerp(130, 320, rand()) * (state.width < 700 ? 0.94 : 1),
+        spreadY: lerp(30, 92, rand()),
+        rotation: lerp(-1.0, 1.0, rand()),
+        alpha: lerp(0.014, 0.07, rand()),
         hue: rand() < 0.34 ? "82,138,255" : rand() < 0.67 ? "176,96,255" : "42,184,255",
         phase: rand() * TWO_PI
       });
@@ -241,17 +241,17 @@ DESTINATION: /index.js
 
   function buildDustLanes(rand, count, rotation) {
     const lanes = [];
-    const spreadX = state.universeRadius * 1.92;
-    const spreadY = state.universeRadius * 0.10;
+    const spreadX = state.universeRadius * 1.82;
+    const spreadY = state.universeRadius * 0.08;
     for (let i = 0; i < count; i += 1) {
       const p = galaxyBandPoint(rand, spreadX, spreadY, rotation);
       lanes.push({
         x: p.x,
         y: p.y,
-        rx: lerp(120, 300, rand()),
-        ry: lerp(12, 34, rand()),
-        rotation: rotation + lerp(-0.22, 0.22, rand()),
-        alpha: lerp(0.034, 0.095, rand())
+        rx: lerp(90, 220, rand()),
+        ry: lerp(8, 24, rand()),
+        rotation: rotation + lerp(-0.18, 0.18, rand()),
+        alpha: lerp(0.026, 0.080, rand())
       });
     }
     return lanes;
@@ -260,15 +260,15 @@ DESTINATION: /index.js
   function buildPrimarySystems(rand) {
     const anchors = diamondAnchors();
     const systems = [];
-    const smallScreenScale = state.width < 640 ? 0.86 : 1;
+    const smallScreenScale = state.width < 640 ? 0.92 : 1;
 
     for (let i = 0; i < anchors.length; i += 1) {
       const ageBias = i / (anchors.length - 1);
       const anchor = anchors[i];
-      const dominantRadius = lerp(4.9, 8.8, 1 - ageBias) * smallScreenScale;
-      const haloRadius = lerp(38, 82, 1 - ageBias) * smallScreenScale;
-      const coronaRadius = haloRadius * lerp(1.45, 1.72, rand());
-      const quietRadius = haloRadius * 0.82;
+      const dominantRadius = lerp(11, 20, 1 - ageBias) * smallScreenScale;
+      const haloRadius = lerp(88, 160, 1 - ageBias) * smallScreenScale;
+      const coronaRadius = haloRadius * lerp(1.55, 1.92, rand());
+      const quietRadius = haloRadius * 1.28;
       const pulseOffset = rand() * TWO_PI;
 
       systems.push({
@@ -303,17 +303,17 @@ DESTINATION: /index.js
 
     state.primarySystems = buildPrimarySystems(primaryRand);
     state.deepStars = buildDeepStars(deepRand, STAR_COUNTS.deep);
-    state.bandStars = buildBandStars(bandRand, STAR_COUNTS.band, rotation, 0.42, 1.30, 0.16, 0.86);
-    state.brightStars = buildBandStars(brightRand, STAR_COUNTS.bright, rotation, 1.10, 2.15, 0.30, 0.95);
+    state.bandStars = buildBandStars(bandRand, STAR_COUNTS.band, rotation, 0.62, 1.70, 0.22, 0.90);
+    state.brightStars = buildBandStars(brightRand, STAR_COUNTS.bright, rotation, 1.45, 2.80, 0.42, 0.98);
     state.heroStars = buildHeroStars(heroRand, STAR_COUNTS.hero, rotation);
-    state.nebulaClouds = buildNebula(nebulaRand, 22);
-    state.dustLanes = buildDustLanes(dustRand, 34, rotation);
+    state.nebulaClouds = buildNebula(nebulaRand, 12);
+    state.dustLanes = buildDustLanes(dustRand, 22, rotation);
   }
 
   function drawBackground() {
     const bg = ctx.createLinearGradient(0, 0, 0, state.height);
     bg.addColorStop(0, "#071224");
-    bg.addColorStop(0.22, "#08142a");
+    bg.addColorStop(0.20, "#08142a");
     bg.addColorStop(0.60, "#030a17");
     bg.addColorStop(1, "#01040c");
     ctx.fillStyle = bg;
@@ -325,11 +325,11 @@ DESTINATION: /index.js
       0,
       state.cx,
       state.cy,
-      state.universeRadius * 1.86
+      state.universeRadius * 1.64
     );
-    coreGlow.addColorStop(0, "rgba(126,162,255,0.16)");
-    coreGlow.addColorStop(0.22, "rgba(90,126,255,0.09)");
-    coreGlow.addColorStop(0.42, "rgba(176,98,255,0.06)");
+    coreGlow.addColorStop(0, "rgba(126,162,255,0.14)");
+    coreGlow.addColorStop(0.22, "rgba(90,126,255,0.08)");
+    coreGlow.addColorStop(0.42, "rgba(176,98,255,0.04)");
     coreGlow.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = coreGlow;
     ctx.fillRect(0, 0, state.width, state.height);
@@ -337,14 +337,14 @@ DESTINATION: /index.js
     const vignette = ctx.createRadialGradient(
       state.cx,
       state.cy,
-      state.universeRadius * 0.2,
+      state.universeRadius * 0.18,
       state.cx,
       state.cy,
       Math.max(state.width, state.height) * 0.76
     );
     vignette.addColorStop(0, "rgba(0,0,0,0)");
-    vignette.addColorStop(0.64, "rgba(0,0,0,0.10)");
-    vignette.addColorStop(1, "rgba(0,0,0,0.50)");
+    vignette.addColorStop(0.60, "rgba(0,0,0,0.10)");
+    vignette.addColorStop(1, "rgba(0,0,0,0.52)");
     ctx.fillStyle = vignette;
     ctx.fillRect(0, 0, state.width, state.height);
   }
@@ -352,9 +352,9 @@ DESTINATION: /index.js
   function drawNebula(timeSeconds) {
     for (let i = 0; i < state.nebulaClouds.length; i += 1) {
       const n = state.nebulaClouds[i];
-      const drift = Math.sin(timeSeconds * 0.06 + n.phase) * 10;
+      const drift = Math.sin(timeSeconds * 0.05 + n.phase) * 8;
       const x = n.x + drift;
-      const y = n.y + drift * 0.34;
+      const y = n.y + drift * 0.28;
 
       ctx.save();
       ctx.translate(x, y);
@@ -362,7 +362,7 @@ DESTINATION: /index.js
 
       const g = ctx.createRadialGradient(0, 0, 0, 0, 0, n.spreadX);
       g.addColorStop(0, `rgba(${n.hue},${n.alpha.toFixed(3)})`);
-      g.addColorStop(0.36, `rgba(${n.hue},${(n.alpha * 0.44).toFixed(3)})`);
+      g.addColorStop(0.34, `rgba(${n.hue},${(n.alpha * 0.40).toFixed(3)})`);
       g.addColorStop(1, "rgba(0,0,0,0)");
 
       ctx.fillStyle = g;
@@ -376,18 +376,18 @@ DESTINATION: /index.js
   function drawGalaxySpine(timeSeconds) {
     ctx.save();
     ctx.translate(state.cx, state.cy);
-    ctx.rotate(-0.52 + Math.sin(timeSeconds * 0.024) * 0.014);
+    ctx.rotate(-0.52 + Math.sin(timeSeconds * 0.024) * 0.012);
 
-    const spineLength = state.universeRadius * 3.05;
-    const spineHeight = state.universeRadius * 0.17;
+    const spineLength = state.universeRadius * 3.0;
+    const spineHeight = state.universeRadius * 0.13;
 
     const spineGlow = ctx.createLinearGradient(-spineLength * 0.5, 0, spineLength * 0.5, 0);
     spineGlow.addColorStop(0, "rgba(0,0,0,0)");
-    spineGlow.addColorStop(0.10, "rgba(86,136,255,0.05)");
-    spineGlow.addColorStop(0.26, "rgba(156,104,255,0.09)");
-    spineGlow.addColorStop(0.50, "rgba(244,246,255,0.34)");
-    spineGlow.addColorStop(0.74, "rgba(118,174,255,0.11)");
-    spineGlow.addColorStop(0.90, "rgba(74,122,255,0.04)");
+    spineGlow.addColorStop(0.12, "rgba(86,136,255,0.04)");
+    spineGlow.addColorStop(0.26, "rgba(156,104,255,0.07)");
+    spineGlow.addColorStop(0.50, "rgba(244,246,255,0.32)");
+    spineGlow.addColorStop(0.74, "rgba(118,174,255,0.10)");
+    spineGlow.addColorStop(0.88, "rgba(74,122,255,0.04)");
     spineGlow.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = spineGlow;
@@ -397,26 +397,14 @@ DESTINATION: /index.js
 
     const narrowCore = ctx.createLinearGradient(-spineLength * 0.5, 0, spineLength * 0.5, 0);
     narrowCore.addColorStop(0, "rgba(0,0,0,0)");
-    narrowCore.addColorStop(0.18, "rgba(176,202,255,0.03)");
-    narrowCore.addColorStop(0.50, "rgba(255,255,255,0.16)");
-    narrowCore.addColorStop(0.82, "rgba(176,202,255,0.03)");
+    narrowCore.addColorStop(0.22, "rgba(176,202,255,0.04)");
+    narrowCore.addColorStop(0.50, "rgba(255,255,255,0.18)");
+    narrowCore.addColorStop(0.78, "rgba(176,202,255,0.04)");
     narrowCore.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = narrowCore;
     ctx.beginPath();
-    ctx.ellipse(0, 0, spineLength * 0.47, spineHeight * 0.44, 0, 0, TWO_PI);
-    ctx.fill();
-
-    const coreGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, state.universeRadius * 0.40);
-    coreGlow.addColorStop(0, "rgba(255,255,255,0.32)");
-    coreGlow.addColorStop(0.18, "rgba(214,228,255,0.24)");
-    coreGlow.addColorStop(0.40, "rgba(144,176,255,0.11)");
-    coreGlow.addColorStop(0.68, "rgba(180,104,255,0.05)");
-    coreGlow.addColorStop(1, "rgba(0,0,0,0)");
-
-    ctx.fillStyle = coreGlow;
-    ctx.beginPath();
-    ctx.arc(0, 0, state.universeRadius * 0.40, 0, TWO_PI);
+    ctx.ellipse(0, 0, spineLength * 0.46, spineHeight * 0.38, 0, 0, TWO_PI);
     ctx.fill();
 
     ctx.restore();
@@ -425,10 +413,10 @@ DESTINATION: /index.js
   function drawDustLanes(timeSeconds) {
     for (let i = 0; i < state.dustLanes.length; i += 1) {
       const d = state.dustLanes[i];
-      const sway = Math.sin(timeSeconds * 0.04 + i * 0.73) * 5;
+      const sway = Math.sin(timeSeconds * 0.035 + i * 0.63) * 4;
 
       ctx.save();
-      ctx.translate(d.x + sway, d.y + sway * 0.20);
+      ctx.translate(d.x + sway, d.y + sway * 0.18);
       ctx.rotate(d.rotation);
 
       const g = ctx.createRadialGradient(0, 0, 0, 0, 0, d.rx);
@@ -447,10 +435,10 @@ DESTINATION: /index.js
   function drawStarField(stars, timeSeconds, pulseScale, crossThreshold) {
     for (let i = 0; i < stars.length; i += 1) {
       const s = stars[i];
-      const twinkle = 0.72 + Math.sin(timeSeconds * pulseScale + s.twinkle) * 0.28;
+      const twinkle = 0.74 + Math.sin(timeSeconds * pulseScale + s.twinkle) * 0.26;
       const alpha = clamp(s.alpha * twinkle, 0, 1);
-      const x = s.x + Math.sin(timeSeconds * 0.018 + s.twinkle) * s.driftX;
-      const y = s.y + Math.cos(timeSeconds * 0.018 + s.twinkle) * s.driftY;
+      const x = s.x + Math.sin(timeSeconds * 0.016 + s.twinkle) * s.driftX;
+      const y = s.y + Math.cos(timeSeconds * 0.016 + s.twinkle) * s.driftY;
 
       ctx.fillStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${alpha.toFixed(3)})`;
       ctx.beginPath();
@@ -473,12 +461,12 @@ DESTINATION: /index.js
   function drawHeroStars(timeSeconds) {
     for (let i = 0; i < state.heroStars.length; i += 1) {
       const s = state.heroStars[i];
-      const pulse = 0.80 + Math.sin(timeSeconds * 0.9 + s.twinkle) * 0.20;
+      const pulse = 0.82 + Math.sin(timeSeconds * 0.8 + s.twinkle) * 0.18;
       const alpha = clamp(s.alpha * pulse, 0, 1);
 
       const glow = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.glow);
-      glow.addColorStop(0, `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.30).toFixed(3)})`);
-      glow.addColorStop(0.45, `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.12).toFixed(3)})`);
+      glow.addColorStop(0, `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.34).toFixed(3)})`);
+      glow.addColorStop(0.45, `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.14).toFixed(3)})`);
       glow.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
@@ -493,10 +481,10 @@ DESTINATION: /index.js
       ctx.strokeStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${(alpha * 0.44).toFixed(3)})`;
       ctx.lineWidth = 1;
       ctx.beginPath();
-      ctx.moveTo(s.x - s.radius * 4.2, s.y);
-      ctx.lineTo(s.x + s.radius * 4.2, s.y);
-      ctx.moveTo(s.x, s.y - s.radius * 4.2);
-      ctx.lineTo(s.x, s.y + s.radius * 4.2);
+      ctx.moveTo(s.x - s.radius * 4.0, s.y);
+      ctx.lineTo(s.x + s.radius * 4.0, s.y);
+      ctx.moveTo(s.x, s.y - s.radius * 4.0);
+      ctx.lineTo(s.x, s.y + s.radius * 4.0);
       ctx.stroke();
     }
   }
@@ -504,13 +492,13 @@ DESTINATION: /index.js
   function drawPrimarySystems(timeSeconds) {
     for (let i = 0; i < state.primarySystems.length; i += 1) {
       const s = state.primarySystems[i];
-      const pulse = 0.88 + Math.sin(timeSeconds * 0.72 + s.pulseOffset) * 0.12;
-      const haloPulse = 0.94 + Math.sin(timeSeconds * 0.44 + s.pulseOffset) * 0.06;
+      const pulse = 0.90 + Math.sin(timeSeconds * 0.66 + s.pulseOffset) * 0.10;
+      const haloPulse = 0.95 + Math.sin(timeSeconds * 0.40 + s.pulseOffset) * 0.05;
 
       const corona = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.coronaRadius * haloPulse);
-      corona.addColorStop(0, `rgba(${s.coronaA},0.14)`);
-      corona.addColorStop(0.24, `rgba(${s.coronaA},0.08)`);
-      corona.addColorStop(0.56, `rgba(${s.coronaA},0.03)`);
+      corona.addColorStop(0, `rgba(${s.coronaA},0.18)`);
+      corona.addColorStop(0.24, `rgba(${s.coronaA},0.10)`);
+      corona.addColorStop(0.56, `rgba(${s.coronaA},0.04)`);
       corona.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = corona;
       ctx.beginPath();
@@ -518,9 +506,9 @@ DESTINATION: /index.js
       ctx.fill();
 
       const halo = ctx.createRadialGradient(s.x, s.y, 0, s.x, s.y, s.haloRadius * haloPulse);
-      halo.addColorStop(0, `rgba(${s.coreA},0.34)`);
-      halo.addColorStop(0.22, `rgba(${s.coreB},0.20)`);
-      halo.addColorStop(0.52, `rgba(${s.coreB},0.08)`);
+      halo.addColorStop(0, `rgba(${s.coreA},0.42)`);
+      halo.addColorStop(0.22, `rgba(${s.coreB},0.24)`);
+      halo.addColorStop(0.52, `rgba(${s.coreB},0.10)`);
       halo.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = halo;
       ctx.beginPath();
@@ -533,25 +521,31 @@ DESTINATION: /index.js
         0,
         s.x,
         s.y,
-        s.radius * 2.6
+        s.radius * 2.8
       );
-      core.addColorStop(0, "rgba(255,255,255,0.98)");
-      core.addColorStop(0.18, `rgba(${s.coreA},0.96)`);
-      core.addColorStop(0.66, `rgba(${s.coreB},0.84)`);
+      core.addColorStop(0, "rgba(255,255,255,1)");
+      core.addColorStop(0.18, `rgba(${s.coreA},0.98)`);
+      core.addColorStop(0.66, `rgba(${s.coreB},0.88)`);
       core.addColorStop(1, `rgba(${s.coreB},0)`);
       ctx.fillStyle = core;
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.radius * pulse, 0, TWO_PI);
       ctx.fill();
 
-      ctx.strokeStyle = "rgba(255,255,255,0.14)";
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = "rgba(255,255,255,0.18)";
+      ctx.lineWidth = 1.25;
       ctx.beginPath();
-      ctx.moveTo(s.x - s.radius * 3.8, s.y);
-      ctx.lineTo(s.x + s.radius * 3.8, s.y);
-      ctx.moveTo(s.x, s.y - s.radius * 3.8);
-      ctx.lineTo(s.x, s.y + s.radius * 3.8);
+      ctx.moveTo(s.x - s.radius * 4.6, s.y);
+      ctx.lineTo(s.x + s.radius * 4.6, s.y);
+      ctx.moveTo(s.x, s.y - s.radius * 4.6);
+      ctx.lineTo(s.x, s.y + s.radius * 4.6);
       ctx.stroke();
+
+      ctx.fillStyle = "rgba(238,243,255,0.90)";
+      ctx.font = `700 ${state.width < 640 ? 11 : 12}px Arial`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "bottom";
+      ctx.fillText(s.key, s.x, s.y - s.haloRadius - 10);
     }
   }
 
@@ -607,11 +601,11 @@ DESTINATION: /index.js
 
     drawBackground();
     drawNebula(timeSeconds);
-    drawStarField(state.deepStars, timeSeconds, 0.24, 1.75);
+    drawStarField(state.deepStars, timeSeconds, 0.22, 2.0);
     drawGalaxySpine(timeSeconds);
     drawDustLanes(timeSeconds);
-    drawStarField(state.bandStars, timeSeconds, 0.52, 1.55);
-    drawStarField(state.brightStars, timeSeconds, 0.82, 1.45);
+    drawStarField(state.bandStars, timeSeconds, 0.46, 1.85);
+    drawStarField(state.brightStars, timeSeconds, 0.76, 1.65);
     drawHeroStars(timeSeconds);
     drawPrimarySystems(timeSeconds);
     drawBuildStamp();

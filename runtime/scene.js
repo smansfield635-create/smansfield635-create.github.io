@@ -1,7 +1,3 @@
-Destination: /runtime/scene.js
-
-Confidence is not 100%. This is a best-effort full TNT to replace the wrong file and restore a lawful host scene authority that actually paints the canvas from the /world/* stack.
-
 import runtime from "../world/runtime.js";
 import renderModule from "../world/render.js";
 
@@ -18,9 +14,10 @@ function clamp(value, min, max) {
 }
 
 function createScene(options = {}) {
-  const canvasId = typeof options.canvasId === "string" && options.canvasId.length > 0
-    ? options.canvasId
-    : DEFAULT_CANVAS_ID;
+  const canvasId =
+    typeof options.canvasId === "string" && options.canvasId.length > 0
+      ? options.canvasId
+      : DEFAULT_CANVAS_ID;
 
   const runtimeHandle =
     options.runtimeHandle && typeof options.runtimeHandle.getCurrentState === "function"
@@ -116,14 +113,29 @@ function createScene(options = {}) {
     const q = v * (1 - f * s);
     const t = v * (1 - (1 - f) * s);
 
-    let r = 0, g = 0, b = 0;
+    let r = 0;
+    let g = 0;
+    let b = 0;
+
     switch (i % 6) {
-      case 0: r = v; g = t; b = p; break;
-      case 1: r = q; g = v; b = p; break;
-      case 2: r = p; g = v; b = t; break;
-      case 3: r = p; g = q; b = v; break;
-      case 4: r = t; g = p; b = v; break;
-      case 5: r = v; g = p; b = q; break;
+      case 0:
+        r = v; g = t; b = p;
+        break;
+      case 1:
+        r = q; g = v; b = p;
+        break;
+      case 2:
+        r = p; g = v; b = t;
+        break;
+      case 3:
+        r = p; g = q; b = v;
+        break;
+      case 4:
+        r = t; g = p; b = v;
+        break;
+      default:
+        r = v; g = p; b = q;
+        break;
     }
 
     return `rgba(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)},${a})`;
@@ -131,8 +143,6 @@ function createScene(options = {}) {
 
   function projectPacket(packet) {
     const proj = packet.projection;
-    const sourceDense = packet.sourceDense;
-    const runtimePacket = packet.runtime;
 
     if (proj.projectionState === "flat") {
       const fx = proj.selectedProjection.x;
@@ -140,12 +150,9 @@ function createScene(options = {}) {
       const fieldW = Math.max(1, proj.selectedProjection.width || 1);
       const fieldH = Math.max(1, proj.selectedProjection.height || 1);
 
-      const px = fieldW <= 1 ? width * 0.5 : (fx / (fieldW - 1)) * width;
-      const py = fieldH <= 1 ? height * 0.5 : (fy / (fieldH - 1)) * height;
-
       return {
-        x: px,
-        y: py,
+        x: fieldW <= 1 ? width * 0.5 : (fx / (fieldW - 1)) * width,
+        y: fieldH <= 1 ? height * 0.5 : (fy / (fieldH - 1)) * height,
         z: 0
       };
     }
@@ -164,8 +171,8 @@ function createScene(options = {}) {
     const gx = Number(proj.coordinates.x || 0);
     const gy = Number(proj.coordinates.y || 0);
     const gz = Number(proj.coordinates.z || 0);
-
     const radius = Math.min(width, height) * 0.26;
+
     return {
       x: width * 0.5 + gx * radius,
       y: height * 0.52 - gy * radius,
@@ -223,11 +230,7 @@ function createScene(options = {}) {
     g.fillStyle = "rgba(233,239,255,0.92)";
     g.font = "bold 12px Arial";
     g.textAlign = "center";
-    g.fillText(
-      `${packet.runtime.region.label}`,
-      point.x,
-      point.y - baseRadius - 10
-    );
+    g.fillText(`${packet.runtime.region.label}`, point.x, point.y - baseRadius - 10);
 
     g.font = "10px Arial";
     g.fillStyle = "rgba(157,176,212,0.90)";
@@ -254,7 +257,7 @@ function createScene(options = {}) {
   function frame(ts) {
     if (!running) return;
 
-    const dtMs = lastTs > 0 ? ts - lastTs : 16.6667;
+    lastTs = lastTs > 0 ? ts - lastTs : 16.6667;
     lastTs = ts;
 
     if (typeof runtimeHandle.refreshFrameState === "function") {

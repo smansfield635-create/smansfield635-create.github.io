@@ -2,16 +2,12 @@ DESTINATION: /index.js
 (() => {
   "use strict";
 
-  const JS_STAMP = "J11-VISIBILITY-PROOF";
+  const JS_STAMP = "J11-VISIBILITY-PROOF-SAFE";
   const canvas = document.getElementById("scene");
-  if (!canvas) {
-    throw new Error("Compass page requires #scene canvas");
-  }
+  if (!canvas) throw new Error("Compass page requires #scene canvas");
 
   const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-  if (!ctx) {
-    throw new Error("2D canvas context unavailable");
-  }
+  if (!ctx) throw new Error("2D canvas context unavailable");
 
   const DPR_CAP = 2;
   const TWO_PI = Math.PI * 2;
@@ -22,12 +18,12 @@ DESTINATION: /index.js
     height: 1,
     cx: 0,
     cy: 0,
-    universeRadius: 1,
-    timeStart: performance.now(),
+    radius: 1,
     rafId: 0,
+    startTime: performance.now(),
     stars: [],
     anchors: [],
-    buildStampVisible: true
+    showStamp: true
   };
 
   function clamp(value, min, max) {
@@ -63,6 +59,45 @@ DESTINATION: /index.js
     };
   }
 
+  function buildAnchors() {
+    const r = state.radius;
+    const d = r * 0.72;
+    return [
+      { key: "N",  x: state.cx,     y: state.cy - r, size: 22, glow: 120, rgb: [255, 245, 220] },
+      { key: "NE", x: state.cx + d, y: state.cy - d, size: 18, glow: 96,  rgb: [220, 232, 255] },
+      { key: "E",  x: state.cx + r, y: state.cy,     size: 18, glow: 96,  rgb: [220, 232, 255] },
+      { key: "SE", x: state.cx + d, y: state.cy + d, size: 17, glow: 90,  rgb: [255, 222, 180] },
+      { key: "S",  x: state.cx,     y: state.cy + r, size: 17, glow: 90,  rgb: [255, 222, 180] },
+      { key: "SW", x: state.cx - d, y: state.cy + d, size: 16, glow: 84,  rgb: [255, 212, 170] },
+      { key: "W",  x: state.cx - r, y: state.cy,     size: 18, glow: 96,  rgb: [220, 232, 255] },
+      { key: "NW", x: state.cx - d, y: state.cy - d, size: 18, glow: 96,  rgb: [220, 232, 255] },
+      { key: "C",  x: state.cx,     y: state.cy,     size: 26, glow: 150, rgb: [255, 255, 255] }
+    ];
+  }
+
+  function buildStars(rand, count) {
+    const stars = [];
+    for (let i = 0; i < count; i += 1) {
+      const pick = rand();
+      stars.push({
+        x: rand() * state.width,
+        y: rand() * state.height,
+        r: lerp(0.9, 2.2, Math.pow(rand(), 1.35)),
+        a: lerp(0.45, 0.95, rand()),
+        tw: rand() * TWO_PI,
+        rgb: pick < 0.2 ? [255, 230, 190] : pick < 0.55 ? [255, 255, 255] : [200, 220, 255]
+      });
+    }
+    return stars;
+  }
+
+  function buildScene() {
+    const seed = hashString("diamondgatebridge:/index:" + state.width + "x" + state.height + ":" + JS_STAMP);
+    const rand = createRng(seed ^ 0x51EE7712);
+    state.stars = buildStars(rand, state.width < 700 ? 120 : 180);
+    state.anchors = buildAnchors();
+  }
+
   function resize() {
     const size = getRectSize();
     state.dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
@@ -70,57 +105,15 @@ DESTINATION: /index.js
     state.height = size.height;
     state.cx = state.width * 0.5;
     state.cy = state.height * 0.53;
-    state.universeRadius = Math.min(state.width, state.height) * (state.width < 700 ? 0.37 : 0.32);
+    state.radius = Math.min(state.width, state.height) * (state.width < 700 ? 0.30 : 0.26);
 
     canvas.width = Math.max(1, Math.floor(state.width * state.dpr));
     canvas.height = Math.max(1, Math.floor(state.height * state.dpr));
-    canvas.style.width = `${state.width}px`;
-    canvas.style.height = `${state.height}px`;
+    canvas.style.width = state.width + "px";
+    canvas.style.height = state.height + "px";
 
     ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
     buildScene();
-  }
-
-  function diamondAnchors() {
-    const r = state.universeRadius;
-    const d = r * 0.72;
-    return [
-      { key: "N",  x: state.cx,     y: state.cy - r, size: 30, glow: 210, rgb: [255, 245, 220] },
-      { key: "NE", x: state.cx + d, y: state.cy - d, size: 26, glow: 180, rgb: [220, 232, 255] },
-      { key: "E",  x: state.cx + r, y: state.cy,     size: 26, glow: 180, rgb: [220, 232, 255] },
-      { key: "SE", x: state.cx + d, y: state.cy + d, size: 24, glow: 170, rgb: [255, 220, 180] },
-      { key: "S",  x: state.cx,     y: state.cy + r, size: 24, glow: 170, rgb: [255, 220, 180] },
-      { key: "SW", x: state.cx - d, y: state.cy + d, size: 22, glow: 160, rgb: [255, 210, 170] },
-      { key: "W",  x: state.cx - r, y: state.cy,     size: 26, glow: 180, rgb: [220, 232, 255] },
-      { key: "NW", x: state.cx - d, y: state.cy - d, size: 26, glow: 180, rgb: [220, 232, 255] },
-      { key: "C",  x: state.cx,     y: state.cy,     size: 36, glow: 240, rgb: [255, 255, 255] }
-    ];
-  }
-
-  function buildBackgroundStars(rand, count) {
-    const stars = [];
-    for (let i = 0; i < count; i += 1) {
-      const pick = rand();
-      stars.push({
-        x: rand() * state.width,
-        y: rand() * state.height,
-        r: lerp(1.0, 2.6, Math.pow(rand(), 1.35)),
-        alpha: lerp(0.45, 0.95, rand()),
-        twinkle: rand() * TWO_PI,
-        rgb:
-          pick < 0.20 ? [255, 230, 190] :
-          pick < 0.55 ? [255, 255, 255] :
-          [200, 220, 255]
-      });
-    }
-    return stars;
-  }
-
-  function buildScene() {
-    const seedBase = hashString(`diamondgatebridge:/index:${state.width}x${state.height}:${JS_STAMP}`);
-    const rand = createRng(seedBase ^ 0x51EE7712);
-    state.stars = buildBackgroundStars(rand, state.width < 700 ? 120 : 180);
-    state.anchors = diamondAnchors();
   }
 
   function drawBackground() {
@@ -128,18 +121,18 @@ DESTINATION: /index.js
     ctx.fillRect(0, 0, state.width, state.height);
   }
 
-  function drawBackgroundStars(timeSeconds) {
+  function drawStars(timeSeconds) {
     for (let i = 0; i < state.stars.length; i += 1) {
       const s = state.stars[i];
-      const alpha = clamp(s.alpha * (0.78 + Math.sin(timeSeconds * 0.9 + s.twinkle) * 0.22), 0, 1);
-      ctx.fillStyle = `rgba(${s.rgb[0]},${s.rgb[1]},${s.rgb[2]},${alpha.toFixed(3)})`;
+      const a = clamp(s.a * (0.78 + Math.sin(timeSeconds * 0.9 + s.tw) * 0.22), 0, 1);
+      ctx.fillStyle = "rgba(" + s.rgb[0] + "," + s.rgb[1] + "," + s.rgb[2] + "," + a.toFixed(3) + ")";
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, TWO_PI);
       ctx.fill();
     }
   }
 
-  function drawDiamondGuides() {
+  function drawGuides() {
     const a = state.anchors;
     ctx.save();
     ctx.strokeStyle = "rgba(140,170,255,0.28)";
@@ -147,9 +140,7 @@ DESTINATION: /index.js
 
     ctx.beginPath();
     ctx.moveTo(a[0].x, a[0].y);
-    for (let i = 1; i < 8; i += 1) {
-      ctx.lineTo(a[i].x, a[i].y);
-    }
+    for (let i = 1; i < 8; i += 1) ctx.lineTo(a[i].x, a[i].y);
     ctx.closePath();
     ctx.stroke();
 
@@ -164,12 +155,12 @@ DESTINATION: /index.js
   }
 
   function drawAnchor(anchor, timeSeconds, index) {
-    const pulse = 0.90 + Math.sin(timeSeconds * 1.1 + index * 0.5) * 0.10;
+    const pulse = 0.9 + Math.sin(timeSeconds * 1.1 + index * 0.5) * 0.1;
 
     const glow = ctx.createRadialGradient(anchor.x, anchor.y, 0, anchor.x, anchor.y, anchor.glow);
-    glow.addColorStop(0, `rgba(${anchor.rgb[0]},${anchor.rgb[1]},${anchor.rgb[2]},0.22)`);
-    glow.addColorStop(0.22, `rgba(${anchor.rgb[0]},${anchor.rgb[1]},${anchor.rgb[2]},0.10)`);
-    glow.addColorStop(0.55, `rgba(${anchor.rgb[0]},${anchor.rgb[1]},${anchor.rgb[2]},0.04)`);
+    glow.addColorStop(0, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.22)");
+    glow.addColorStop(0.22, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.10)");
+    glow.addColorStop(0.55, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.04)");
     glow.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = glow;
     ctx.beginPath();
@@ -182,12 +173,12 @@ DESTINATION: /index.js
       0,
       anchor.x,
       anchor.y,
-      anchor.size * 3.0
+      anchor.size * 3
     );
     core.addColorStop(0, "rgba(255,255,255,1)");
-    core.addColorStop(0.20, `rgba(${anchor.rgb[0]},${anchor.rgb[1]},${anchor.rgb[2]},0.98)`);
-    core.addColorStop(0.70, `rgba(${anchor.rgb[0]},${anchor.rgb[1]},${anchor.rgb[2]},0.84)`);
-    core.addColorStop(1, `rgba(${anchor.rgb[0]},${anchor.rgb[1]},${anchor.rgb[2]},0)`);
+    core.addColorStop(0.2, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.98)");
+    core.addColorStop(0.7, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.84)");
+    core.addColorStop(1, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0)");
     ctx.fillStyle = core;
     ctx.beginPath();
     ctx.arc(anchor.x, anchor.y, anchor.size * pulse, 0, TWO_PI);
@@ -196,23 +187,23 @@ DESTINATION: /index.js
     ctx.strokeStyle = "rgba(255,255,255,0.90)";
     ctx.lineWidth = 2;
     ctx.beginPath();
-    ctx.moveTo(anchor.x - anchor.size * 5.0, anchor.y);
-    ctx.lineTo(anchor.x + anchor.size * 5.0, anchor.y);
-    ctx.moveTo(anchor.x, anchor.y - anchor.size * 5.0);
-    ctx.lineTo(anchor.x, anchor.y + anchor.size * 5.0);
+    ctx.moveTo(anchor.x - anchor.size * 5, anchor.y);
+    ctx.lineTo(anchor.x + anchor.size * 5, anchor.y);
+    ctx.moveTo(anchor.x, anchor.y - anchor.size * 5);
+    ctx.lineTo(anchor.x, anchor.y + anchor.size * 5);
     ctx.stroke();
 
     ctx.fillStyle = "rgba(255,255,255,0.98)";
-    ctx.font = `700 ${state.width < 640 ? 16 : 18}px Arial`;
+    ctx.font = "700 " + (state.width < 640 ? 16 : 18) + "px Arial";
     ctx.textAlign = "center";
     ctx.textBaseline = "bottom";
     ctx.fillText(anchor.key, anchor.x, anchor.y - anchor.glow - 10);
   }
 
-  function drawBuildStamp() {
-    if (!state.buildStampVisible) return;
+  function drawStamp() {
+    if (!state.showStamp) return;
 
-    const label = `JS ${JS_STAMP}`;
+    const label = "JS " + JS_STAMP;
     const padX = 10;
     const padY = 7;
     const fontSize = 11;
@@ -220,7 +211,7 @@ DESTINATION: /index.js
     const y = state.height - 14;
 
     ctx.save();
-    ctx.font = `700 ${fontSize}px Arial`;
+    ctx.font = "700 " + fontSize + "px Arial";
     ctx.textAlign = "left";
     ctx.textBaseline = "bottom";
 
@@ -255,27 +246,25 @@ DESTINATION: /index.js
   }
 
   function drawFrame(now) {
-    const timeSeconds = (now - state.timeStart) * 0.001;
+    const timeSeconds = (now - state.startTime) * 0.001;
 
     ctx.clearRect(0, 0, state.width, state.height);
     drawBackground();
-    drawBackgroundStars(timeSeconds);
-    drawDiamondGuides();
+    drawStars(timeSeconds);
+    drawGuides();
 
     for (let i = 0; i < state.anchors.length; i += 1) {
       drawAnchor(state.anchors[i], timeSeconds, i);
     }
 
-    drawBuildStamp();
+    drawStamp();
     state.rafId = window.requestAnimationFrame(drawFrame);
   }
 
   function start() {
     resize();
-    if (state.rafId) {
-      window.cancelAnimationFrame(state.rafId);
-    }
-    state.timeStart = performance.now();
+    if (state.rafId) window.cancelAnimationFrame(state.rafId);
+    state.startTime = performance.now();
     state.rafId = window.requestAnimationFrame(drawFrame);
     window.__ROOT_INDEX_JS_PROOF__ = true;
     window.__COMPASS_GALAXY_ACTIVE__ = true;
@@ -285,9 +274,7 @@ DESTINATION: /index.js
   let resizeTimer = 0;
   function onResize() {
     window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(() => {
-      resize();
-    }, 60);
+    resizeTimer = window.setTimeout(resize, 60);
   }
 
   window.addEventListener("resize", onResize, { passive: true });
@@ -301,15 +288,14 @@ DESTINATION: /index.js
       }
       return;
     }
-
     if (!state.rafId) {
-      state.timeStart = performance.now();
+      state.startTime = performance.now();
       state.rafId = window.requestAnimationFrame(drawFrame);
     }
   });
 
   canvas.addEventListener("click", () => {
-    state.buildStampVisible = !state.buildStampVisible;
+    state.showStamp = !state.showStamp;
   });
 
   start();

@@ -7,18 +7,24 @@ DESTINATION: /index.html
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
-  <title>Compass Page Baseline</title>
+  <title>Compass Page Baseline — Visible Galaxy Upgrade</title>
   <style>
     :root {
-      --bg-0: #030712;
-      --bg-1: #071127;
-      --bg-2: #0d1d3d;
-      --fg: #e9efff;
-      --muted: #9db0d4;
-      --line: rgba(255, 255, 255, 0.10);
-      --panel: rgba(5, 12, 26, 0.78);
-      --panel-strong: rgba(4, 10, 22, 0.88);
-      --shadow: rgba(0, 0, 0, 0.30);
+      --bg-0: #020611;
+      --bg-1: #06101f;
+      --bg-2: #0b1831;
+      --bg-3: #13254a;
+      --fg: #eef3ff;
+      --muted: #a9b8dc;
+      --line: rgba(255, 255, 255, 0.12);
+      --panel: rgba(5, 11, 24, 0.38);
+      --panel-strong: rgba(5, 11, 24, 0.54);
+      --shadow: rgba(0, 0, 0, 0.34);
+      --hud-blur: 8px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-right: env(safe-area-inset-right, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-left: env(safe-area-inset-left, 0px);
     }
 
     * {
@@ -30,7 +36,7 @@ DESTINATION: /index.html
       width: 100%;
       height: 100%;
       overflow: hidden;
-      background: #030712;
+      background: #020611;
       color: var(--fg);
       font-family: Arial, Helvetica, sans-serif;
     }
@@ -45,10 +51,93 @@ DESTINATION: /index.html
       height: 100%;
       overflow: hidden;
       background:
-        radial-gradient(circle at 50% 45%, rgba(86, 122, 210, 0.10) 0%, rgba(86, 122, 210, 0) 35%),
-        radial-gradient(circle at 18% 24%, rgba(132, 88, 210, 0.12) 0%, rgba(132, 88, 210, 0) 28%),
-        radial-gradient(circle at 82% 72%, rgba(46, 132, 197, 0.10) 0%, rgba(46, 132, 197, 0) 30%),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 48%, var(--bg-0) 100%);
+        radial-gradient(circle at 50% 50%, rgba(94, 127, 226, 0.09) 0%, rgba(94, 127, 226, 0) 34%),
+        radial-gradient(circle at 18% 24%, rgba(122, 82, 219, 0.10) 0%, rgba(122, 82, 219, 0) 28%),
+        radial-gradient(circle at 82% 76%, rgba(42, 154, 220, 0.08) 0%, rgba(42, 154, 220, 0) 28%),
+        linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 24%, var(--bg-1) 62%, var(--bg-0) 100%);
+      isolation: isolate;
+    }
+
+    .space-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    #cosmos {
+      z-index: 0;
+      background:
+        radial-gradient(circle at 50% 56%, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 16%),
+        radial-gradient(circle at 50% 50%, rgba(95, 136, 248, 0.18) 0%, rgba(95, 136, 248, 0.10) 12%, rgba(95, 136, 248, 0.03) 24%, rgba(95, 136, 248, 0) 42%),
+        radial-gradient(circle at 26% 34%, rgba(176, 92, 255, 0.18) 0%, rgba(176, 92, 255, 0.06) 16%, rgba(176, 92, 255, 0) 34%),
+        radial-gradient(circle at 76% 68%, rgba(62, 181, 255, 0.18) 0%, rgba(62, 181, 255, 0.06) 14%, rgba(62, 181, 255, 0) 32%),
+        radial-gradient(circle at 58% 26%, rgba(255, 155, 102, 0.10) 0%, rgba(255, 155, 102, 0.03) 10%, rgba(255, 155, 102, 0) 24%),
+        linear-gradient(180deg, rgba(8, 13, 28, 0.00) 0%, rgba(3, 7, 18, 0.24) 100%);
+      filter: saturate(1.15);
+    }
+
+    #nebula {
+      z-index: 1;
+      opacity: 0.95;
+      background:
+        radial-gradient(ellipse at 50% 52%, rgba(130, 165, 255, 0.18) 0%, rgba(130, 165, 255, 0.09) 16%, rgba(130, 165, 255, 0.03) 30%, rgba(130, 165, 255, 0) 48%),
+        radial-gradient(ellipse at 38% 44%, rgba(186, 96, 255, 0.11) 0%, rgba(186, 96, 255, 0.04) 15%, rgba(186, 96, 255, 0) 30%),
+        radial-gradient(ellipse at 64% 58%, rgba(56, 184, 255, 0.10) 0%, rgba(56, 184, 255, 0.04) 15%, rgba(56, 184, 255, 0) 28%);
+      mix-blend-mode: screen;
+      animation: nebulaDrift 20s ease-in-out infinite alternate;
+    }
+
+    .stars {
+      z-index: 2;
+      opacity: 0.95;
+      background-repeat: repeat;
+      animation-timing-function: linear;
+      animation-iteration-count: infinite;
+    }
+
+    #stars-a {
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.95) 0 0.7px, transparent 1.2px),
+        radial-gradient(circle, rgba(180,205,255,0.85) 0 0.9px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,255,255,0.75) 0 0.5px, transparent 1px);
+      background-size: 160px 160px, 220px 220px, 120px 120px;
+      background-position: 12px 24px, 80px 40px, 0 0;
+      animation-name: driftA;
+      animation-duration: 180s;
+    }
+
+    #stars-b {
+      z-index: 3;
+      opacity: 0.55;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.95) 0 1.1px, transparent 1.8px),
+        radial-gradient(circle, rgba(142,183,255,0.78) 0 1.2px, transparent 1.9px),
+        radial-gradient(circle, rgba(255,225,184,0.62) 0 0.8px, transparent 1.5px);
+      background-size: 320px 320px, 420px 420px, 260px 260px;
+      background-position: 40px 90px, 180px 130px, 70px 40px;
+      filter: blur(0.2px);
+      animation-name: driftB;
+      animation-duration: 260s;
+    }
+
+    #stars-c {
+      z-index: 4;
+      opacity: 0.28;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.95) 0 1.8px, transparent 2.8px),
+        radial-gradient(circle, rgba(154,198,255,0.78) 0 2.2px, transparent 3.4px),
+        radial-gradient(circle, rgba(255,255,255,0.85) 0 1.3px, transparent 2.2px);
+      background-size: 540px 540px, 760px 760px, 460px 460px;
+      background-position: 160px 60px, 240px 200px, 60px 260px;
+      filter: blur(0.35px);
+      animation-name: driftC;
+      animation-duration: 340s;
+    }
+
+    #vignette {
+      z-index: 5;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(0,0,0,0) 44%, rgba(0,0,0,0.20) 72%, rgba(0,0,0,0.42) 100%);
     }
 
     #scene {
@@ -57,22 +146,26 @@ DESTINATION: /index.html
       width: 100%;
       height: 100%;
       display: block;
+      z-index: 6;
+      background: transparent;
     }
 
     .hud {
       position: absolute;
       inset: 0;
+      z-index: 10;
       pointer-events: none;
-      padding-top: env(safe-area-inset-top, 0px);
-      padding-right: env(safe-area-inset-right, 0px);
-      padding-bottom: env(safe-area-inset-bottom, 0px);
-      padding-left: env(safe-area-inset-left, 0px);
+      padding-top: var(--safe-top);
+      padding-right: var(--safe-right);
+      padding-bottom: var(--safe-bottom);
+      padding-left: var(--safe-left);
     }
 
     .panel {
       border: 1px solid var(--line);
       background: var(--panel);
-      backdrop-filter: blur(7px);
+      backdrop-filter: blur(var(--hud-blur));
+      -webkit-backdrop-filter: blur(var(--hud-blur));
       border-radius: 18px;
       box-shadow: 0 14px 42px var(--shadow);
     }
@@ -81,14 +174,14 @@ DESTINATION: /index.html
       position: absolute;
       top: 18px;
       left: 18px;
-      width: min(680px, calc(100vw - 36px));
-      padding: 16px 18px;
+      width: min(620px, calc(100vw - 36px));
+      padding: 15px 17px;
     }
 
     .title-block h1 {
-      margin: 0 0 10px 0;
+      margin: 0 0 8px 0;
       font-size: 18px;
-      line-height: 1.12;
+      line-height: 1.08;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
@@ -97,7 +190,7 @@ DESTINATION: /index.html
       margin: 0;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.55;
+      line-height: 1.5;
       letter-spacing: 0.02em;
     }
 
@@ -105,16 +198,16 @@ DESTINATION: /index.html
       position: absolute;
       top: 18px;
       right: 18px;
-      width: min(400px, calc(100vw - 36px));
-      padding: 16px 18px;
+      width: min(360px, calc(100vw - 36px));
+      padding: 14px 16px;
     }
 
     .scale-panel {
       position: absolute;
       right: 18px;
       bottom: 18px;
-      width: min(430px, calc(100vw - 36px));
-      padding: 16px 18px;
+      width: min(390px, calc(100vw - 36px));
+      padding: 14px 16px;
       background: var(--panel-strong);
     }
 
@@ -122,16 +215,17 @@ DESTINATION: /index.html
       position: absolute;
       left: 18px;
       bottom: 18px;
-      width: min(760px, calc(100vw - 36px));
-      padding: 13px 16px;
+      width: min(700px, calc(100vw - 36px));
+      padding: 12px 15px;
       font-size: 12px;
-      line-height: 1.55;
+      line-height: 1.5;
       color: var(--muted);
+      background: rgba(5, 11, 24, 0.28);
     }
 
     .legend h2,
     .scale-panel h2 {
-      margin: 0 0 11px 0;
+      margin: 0 0 10px 0;
       font-size: 13px;
       line-height: 1.1;
       letter-spacing: 0.08em;
@@ -143,10 +237,10 @@ DESTINATION: /index.html
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 16px;
+      gap: 14px;
       margin: 7px 0;
       font-size: 12px;
-      line-height: 1.35;
+      line-height: 1.3;
       color: var(--muted);
     }
 
@@ -156,7 +250,7 @@ DESTINATION: /index.html
       font-weight: 700;
       text-align: right;
       flex: 0 0 auto;
-      max-width: 58%;
+      max-width: 56%;
     }
 
     .legend-row span,
@@ -175,10 +269,64 @@ DESTINATION: /index.html
       color: rgba(255, 255, 255, 0.22);
     }
 
+    .scene-hint {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 7;
+      pointer-events: none;
+      text-align: center;
+      width: min(560px, calc(100vw - 40px));
+      padding: 14px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.10);
+      border-radius: 20px;
+      background: rgba(5, 11, 24, 0.16);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
+    }
+
+    .scene-hint strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 14px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+
+    .scene-hint span {
+      display: block;
+      font-size: 12px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    @keyframes nebulaDrift {
+      0% { transform: translate3d(-1.5%, -1%, 0) scale(1); }
+      100% { transform: translate3d(1.5%, 1%, 0) scale(1.04); }
+    }
+
+    @keyframes driftA {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-180px, 120px, 0); }
+    }
+
+    @keyframes driftB {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(140px, -100px, 0); }
+    }
+
+    @keyframes driftC {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-110px, -70px, 0); }
+    }
+
     @media (max-width: 980px) {
       .legend {
         top: auto;
-        bottom: 170px;
+        bottom: 168px;
       }
     }
 
@@ -199,11 +347,11 @@ DESTINATION: /index.html
 
       .legend {
         top: auto;
-        bottom: 210px;
+        bottom: 196px;
       }
 
       .scale-panel {
-        bottom: 74px;
+        bottom: 72px;
       }
 
       .status {
@@ -220,11 +368,15 @@ DESTINATION: /index.html
       .status {
         padding: 14px 15px;
       }
+
+      .scene-hint {
+        top: 56%;
+      }
     }
 
     @media (max-width: 520px) {
       .legend {
-        bottom: 252px;
+        bottom: 236px;
       }
 
       .legend-row,
@@ -236,12 +388,42 @@ DESTINATION: /index.html
       .scale-row strong {
         max-width: 54%;
       }
+
+      .scene-hint {
+        width: calc(100vw - 28px);
+        padding: 12px 14px;
+      }
+
+      .scene-hint strong {
+        font-size: 13px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #nebula,
+      #stars-a,
+      #stars-b,
+      #stars-c {
+        animation: none;
+      }
     }
   </style>
 </head>
 <body>
   <div id="app">
+    <div id="cosmos" class="space-layer" aria-hidden="true"></div>
+    <div id="nebula" class="space-layer" aria-hidden="true"></div>
+    <div id="stars-a" class="space-layer stars" aria-hidden="true"></div>
+    <div id="stars-b" class="space-layer stars" aria-hidden="true"></div>
+    <div id="stars-c" class="space-layer stars" aria-hidden="true"></div>
+    <div id="vignette" class="space-layer" aria-hidden="true"></div>
+
     <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
+
+    <div class="scene-hint" aria-hidden="true">
+      <strong>Galaxy Field Active</strong>
+      <span>CSS cosmos fallback is now visible behind the scene canvas so the page reads as space immediately while /index.js upgrades the live universe render layer.</span>
+    </div>
 
     <div class="hud">
       <div class="panel title-block">

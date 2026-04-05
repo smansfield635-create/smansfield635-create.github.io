@@ -12,7 +12,6 @@ DESTINATION: /gauges/index.html
   --panel:#0b0f16;
   --panel2:#101722;
   --line:#1f2a36;
-  --line2:rgba(127,255,212,.12);
   --text:#e8f6ff;
   --muted:rgba(232,246,255,.68);
   --accent:#7fffd4;
@@ -172,14 +171,14 @@ canvas{
 <div class="wrap">
   <div class="topline">
     <div class="title">Diagnostic Gauges</div>
-    <div class="stamp">GAUGES G2 · RUNTIME BRIDGE DIRECT · CACHE-BUSTED</div>
+    <div class="stamp">GAUGES G3 · DIRECT AUTHORITY · NO PARENT STACK</div>
   </div>
 
   <div class="topbar">
     <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
-    <div class="kpi"><div class="k">Parent Stack</div><div id="k-parent-stack" class="v warn">PENDING</div></div>
-    <div class="kpi"><div class="k">Parent Files</div><div id="k-parent-files" class="v">0/5</div></div>
-    <div class="kpi"><div class="k">Runtime Bridge</div><div id="k-runtime-bridge" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Runtime</div><div id="k-runtime" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Render</div><div id="k-render" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Instruments</div><div id="k-instruments" class="v warn">PENDING</div></div>
     <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
     <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
     <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
@@ -190,48 +189,48 @@ canvas{
 
   <div class="grid">
     <section class="panel">
-      <div class="title">Parent Stack / Smoke Test</div>
-      <div id="parentRows" class="rows"></div>
+      <div class="title">Module Authority</div>
+      <div id="moduleRows" class="rows"></div>
     </section>
 
     <section class="panel">
-      <div class="title">Runtime Bridge</div>
-      <div id="bridgeRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Runtime Health</div>
+      <div class="title">Runtime Receipt</div>
       <div id="runtimeRows" class="rows"></div>
     </section>
 
     <section class="panel">
-      <div class="title">Motion / Control</div>
-      <div id="motionRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">World Chain</div>
-      <div id="worldRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Render Chain</div>
+      <div class="title">Render Receipt</div>
       <div id="renderRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Scope / Lens</div>
-      <div id="scopeRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Emission / Placement</div>
-      <div id="emitRows" class="rows"></div>
     </section>
 
     <section class="panel">
       <div class="title">Instrument / Diagnostics</div>
       <div id="diagRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Motion / Force</div>
+      <div id="motionRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">World / Region / Node</div>
+      <div id="worldRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Scope / Traversal</div>
+      <div id="scopeRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Projection / Field</div>
+      <div id="projectionRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Emission / Masks</div>
+      <div id="emitRows" class="rows"></div>
     </section>
 
     <section class="panel">
@@ -255,24 +254,18 @@ canvas{
     </section>
   </div>
 
-  <div id="footer" class="footer pre">Awaiting parent-stack smoke result and runtime bridge receipt.</div>
+  <div id="footer" class="footer pre">Awaiting direct authority module receipts.</div>
   <div id="bootFail" class="bootFail"></div>
 </div>
 
 <script type="module">
-const BUILD_STAMP = "GAUGES_G2";
+const BUILD_STAMP = "GAUGES_G3_DIRECT";
 const HISTORY_MAX = 240;
 const REFRESH_MS = 250;
-const CACHE_BUST = "g2";
-const PARENT_STACK_PATH = "/runtime/parent/parent_stack_smoke_test.js?v=" + CACHE_BUST;
+const CACHE_BUST = "g3";
 const RUNTIME_MODULE_PATH = "/world/runtime.js?v=" + CACHE_BUST;
-const PARENT_STACK_FILES = Object.freeze([
-  "/runtime/parent/diamond_interface_spine.js",
-  "/runtime/parent/kernel_adapter.js",
-  "/runtime/parent/universe_engine_factory.js",
-  "/runtime/parent/instrument_factory.js",
-  "/runtime/parent/orchestration_fabric.js"
-]);
+const RENDER_MODULE_PATH = "/world/render.js?v=" + CACHE_BUST;
+const INSTRUMENTS_MODULE_PATH = "/assets/instruments.js?v=" + CACHE_BUST;
 
 const history = {
   velocityA: [],
@@ -286,28 +279,17 @@ const history = {
   burden: []
 };
 
-const parentStackState = {
-  loaded: false,
-  status: "PENDING",
-  pass: false,
-  loadedCount: 0,
-  summary: {},
-  error: null,
-  source: PARENT_STACK_PATH
+const moduleState = {
+  runtime: { status: "PENDING", error: null, source: RUNTIME_MODULE_PATH, loaded: false },
+  render: { status: "PENDING", error: null, source: RENDER_MODULE_PATH, loaded: false },
+  instruments: { status: "PENDING", error: null, source: INSTRUMENTS_MODULE_PATH, loaded: false }
 };
 
-const runtimeBridgeState = {
-  loaded: false,
-  status: "PENDING",
-  error: null,
-  lastReceipt: null,
-  source: RUNTIME_MODULE_PATH
-};
-
+let runtimeApi = null;
+let renderApi = null;
+let instrumentsApi = null;
 let timer = null;
 let lastTickMs = performance.now();
-let runtimeApi = null;
-let runParentStackSmokeTest = null;
 
 function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
 function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
@@ -317,26 +299,6 @@ function safeObj(v){return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}
 function push(arr,v){arr.push(v);if(arr.length>HISTORY_MAX)arr.shift();}
 function escapeHtml(v){return String(v ?? "—").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
 function row(k,v){return '<div class="row"><div class="rk">'+escapeHtml(k)+'</div><div class="rv">'+escapeHtml(v)+'</div></div>';}
-function kpiClass(v,type){
-  if(type==="state"){
-    if(v==="LIVE") return "good";
-    if(v==="STALE") return "warn";
-    return "bad";
-  }
-  if(type==="fresh") return v==="FRESH"?"good":"warn";
-  if(type==="parent" || type==="bridge"){
-    if(v==="PASS" || v==="ONLINE") return "good";
-    if(v==="PENDING") return "warn";
-    return "bad";
-  }
-  return "";
-}
-function setText(id,text,cls=""){
-  const el=document.getElementById(id);
-  if(!el) return;
-  el.textContent=text;
-  el.className=('v '+cls).trim();
-}
 function showBootFail(message){
   const node = document.getElementById("bootFail");
   if(!node) return;
@@ -348,6 +310,26 @@ function hideBootFail(){
   if(!node) return;
   node.textContent = "";
   node.classList.remove("is-visible");
+}
+function setText(id,text,cls=""){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=text;
+  el.className=('v '+cls).trim();
+}
+function kpiClass(v,type){
+  if(type==="state"){
+    if(v==="LIVE") return "good";
+    if(v==="STALE") return "warn";
+    return "bad";
+  }
+  if(type==="fresh") return v==="FRESH" ? "good" : "warn";
+  if(type==="module"){
+    if(v==="ONLINE") return "good";
+    if(v==="PENDING") return "warn";
+    return "bad";
+  }
+  return "";
 }
 function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
   const ctx = canvas.getContext("2d");
@@ -387,7 +369,6 @@ function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
     ctx.stroke();
   }
 }
-
 function computePrimitiveMetrics(forceVector = {}) {
   const N = Number(forceVector.N || 0);
   const E = Number(forceVector.E || 0);
@@ -410,141 +391,132 @@ function computePrimitiveMetrics(forceVector = {}) {
     magnitude
   };
 }
-
 function classifyState(receipt, ageMs) {
   if (!receipt || safeObj(receipt.verification).pass !== true) return "OFFLINE";
   if (isFiniteNumber(ageMs) && ageMs > 2500) return "STALE";
   return "LIVE";
 }
 
-async function loadModules() {
+async function loadModule(path, key) {
   try {
-    const [runtimeModule, parentModule] = await Promise.all([
-      import(RUNTIME_MODULE_PATH),
-      import(PARENT_STACK_PATH)
-    ]);
-    runtimeApi = runtimeModule;
-    runParentStackSmokeTest = parentModule.default;
-    hideBootFail();
+    const mod = await import(path);
+    moduleState[key].status = "ONLINE";
+    moduleState[key].error = null;
+    moduleState[key].loaded = true;
+    return mod;
   } catch (error) {
-    const msg = error instanceof Error ? error.stack || error.message : String(error);
-    showBootFail("GAUGES BOOT FAILED\n" + msg);
-    throw error;
-  }
-}
-
-async function loadParentStack() {
-  if (typeof runParentStackSmokeTest !== "function") {
-    parentStackState.loaded = true;
-    parentStackState.pass = false;
-    parentStackState.status = "FAIL";
-    parentStackState.loadedCount = 0;
-    parentStackState.error = "Parent stack smoke test function unavailable";
-    return;
-  }
-
-  try {
-    const result = await runParentStackSmokeTest();
-    const stack = safeObj(result.stack);
-    const summary = {
-      spine: !!stack.spine,
-      adapter: !!stack.adapterBundle,
-      universe: !!stack.universeFactory,
-      instrument: !!stack.instrumentFactory,
-      orchestration: !!stack.orchestration
-    };
-
-    parentStackState.summary = summary;
-    parentStackState.loadedCount = Object.values(summary).filter(Boolean).length;
-    parentStackState.pass = result?.ok === true && parentStackState.loadedCount === 5;
-    parentStackState.status = parentStackState.pass ? "PASS" : "FAIL";
-    parentStackState.loaded = true;
-    parentStackState.error = null;
-  } catch (error) {
-    parentStackState.loaded = true;
-    parentStackState.pass = false;
-    parentStackState.status = "FAIL";
-    parentStackState.loadedCount = 0;
-    parentStackState.summary = {
-      spine: false,
-      adapter: false,
-      universe: false,
-      instrument: false,
-      orchestration: false
-    };
-    parentStackState.error = error instanceof Error ? error.message : String(error);
-  }
-}
-
-function loadRuntimeBridge() {
-  if (!runtimeApi || typeof runtimeApi.getRuntimeReceipt !== "function") {
-    runtimeBridgeState.loaded = true;
-    runtimeBridgeState.status = "FAIL";
-    runtimeBridgeState.error = "Runtime receipt function unavailable";
-    runtimeBridgeState.lastReceipt = null;
+    moduleState[key].status = "FAIL";
+    moduleState[key].error = error instanceof Error ? (error.stack || error.message) : String(error);
+    moduleState[key].loaded = true;
     return null;
   }
+}
 
+async function bootModules() {
+  const [runtimeMod, renderMod, instrumentsMod] = await Promise.all([
+    loadModule(RUNTIME_MODULE_PATH, "runtime"),
+    loadModule(RENDER_MODULE_PATH, "render"),
+    loadModule(INSTRUMENTS_MODULE_PATH, "instruments")
+  ]);
+
+  runtimeApi = runtimeMod;
+  renderApi = renderMod;
+  instrumentsApi = instrumentsMod;
+}
+
+function renderModuleState() {
+  setText("k-runtime", moduleState.runtime.status, kpiClass(moduleState.runtime.status, "module"));
+  setText("k-render", moduleState.render.status, kpiClass(moduleState.render.status, "module"));
+  setText("k-instruments", moduleState.instruments.status, kpiClass(moduleState.instruments.status, "module"));
+
+  document.getElementById("moduleRows").innerHTML =
+    row("runtime status", moduleState.runtime.status) +
+    row("runtime source", moduleState.runtime.source) +
+    row("runtime error", moduleState.runtime.error || "none") +
+    row("render status", moduleState.render.status) +
+    row("render source", moduleState.render.source) +
+    row("render error", moduleState.render.error || "none") +
+    row("instruments status", moduleState.instruments.status) +
+    row("instruments source", moduleState.instruments.source) +
+    row("instruments error", moduleState.instruments.error || "none");
+}
+
+function getRuntimeReceipt() {
+  if (!runtimeApi || typeof runtimeApi.getRuntimeReceipt !== "function") return null;
   try {
-    const receipt = runtimeApi.getRuntimeReceipt({
+    return runtimeApi.getRuntimeReceipt({
       frameState: { elapsedSeconds: performance.now() / 1000 },
       timestamp: Date.now()
     });
-    runtimeBridgeState.loaded = true;
-    runtimeBridgeState.status = "ONLINE";
-    runtimeBridgeState.error = null;
-    runtimeBridgeState.lastReceipt = receipt;
-    return receipt;
   } catch (error) {
-    runtimeBridgeState.loaded = true;
-    runtimeBridgeState.status = "FAIL";
-    runtimeBridgeState.error = error instanceof Error ? error.message : String(error);
-    runtimeBridgeState.lastReceipt = null;
+    moduleState.runtime.status = "FAIL";
+    moduleState.runtime.error = error instanceof Error ? (error.stack || error.message) : String(error);
     return null;
   }
 }
 
-function renderParentStack() {
-  setText("k-parent-stack", parentStackState.status, kpiClass(parentStackState.status, "parent"));
-  setText("k-parent-files", parentStackState.loadedCount + "/5");
-
-  const summary = safeObj(parentStackState.summary);
-  const statusText =
-    parentStackState.status === "PENDING" ? "Loading parent stack smoke test" :
-    parentStackState.status === "PASS" ? "Parent stack smoke test passed" :
-    "Parent stack smoke test failed";
-
-  document.getElementById("parentRows").innerHTML =
-    row("status", statusText) +
-    row("module", parentStackState.source) +
-    row("spine", summary.spine ? "loaded" : "missing") +
-    row("adapter", summary.adapter ? "loaded" : "missing") +
-    row("universe factory", summary.universe ? "loaded" : "missing") +
-    row("instrument factory", summary.instrument ? "loaded" : "missing") +
-    row("orchestration", summary.orchestration ? "loaded" : "missing") +
-    row("files expected", String(PARENT_STACK_FILES.length)) +
-    row("files loaded", String(parentStackState.loadedCount)) +
-    row("error", parentStackState.error || "none");
+function getRenderPacket() {
+  if (!renderApi) return null;
+  try {
+    if (typeof renderApi.render === "function") return renderApi.render();
+    if (renderApi.default && typeof renderApi.default.render === "function") return renderApi.default.render();
+    return null;
+  } catch (error) {
+    moduleState.render.status = "FAIL";
+    moduleState.render.error = error instanceof Error ? (error.stack || error.message) : String(error);
+    return null;
+  }
 }
 
-function renderRuntimeBridge() {
-  setText("k-runtime-bridge", runtimeBridgeState.status, kpiClass(runtimeBridgeState.status, "bridge"));
+function getInstrumentPacket(runtimeReceipt, renderPacket) {
+  if (!instrumentsApi) return null;
+  try {
+    const builder =
+      typeof instrumentsApi.buildInstrumentReceipt === "function"
+        ? instrumentsApi.buildInstrumentReceipt
+        : instrumentsApi.default && typeof instrumentsApi.default.buildInstrumentReceipt === "function"
+          ? instrumentsApi.default.buildInstrumentReceipt
+          : null;
 
-  const receipt = safeObj(runtimeBridgeState.lastReceipt);
-  const state = safeObj(receipt.state);
-  const denseIndex = safeObj(receipt.denseIndex);
+    if (!builder) return null;
 
-  document.getElementById("bridgeRows").innerHTML =
-    row("status", runtimeBridgeState.status) +
-    row("module", runtimeBridgeState.source) +
-    row("contract", receipt.contract || "—") +
-    row("projection", receipt.projection || "—") +
-    row("kernel index", (state.i ?? "—") + "," + (state.j ?? "—")) +
-    row("dense index", (denseIndex.x ?? "—") + "," + (denseIndex.y ?? "—")) +
-    row("error", runtimeBridgeState.error || "none");
+    const runtimeState =
+      runtimeReceipt
+        ? {
+            projectionState: runtimeReceipt.projection,
+            region: runtimeReceipt.region,
+            node: runtimeReceipt.node,
+            boundary: runtimeReceipt.boundary,
+            terrainClass: runtimeReceipt.terrainClass,
+            biomeType: runtimeReceipt.biomeType,
+            denseIndex: runtimeReceipt.denseIndex,
+            index: runtimeReceipt.state,
+            traversalStatus: runtimeReceipt.traversalStatus,
+            receipt: { timestamp: runtimeReceipt.timestamp }
+          }
+        : null;
+
+    const renderState = renderPacket
+      ? {
+          visible: {
+            colorOutput: safeObj(safeObj(renderPacket.visible).colorOutput),
+            emphasis: safeObj(safeObj(renderPacket.visible).emphasis)
+          },
+          projection: {
+            selectedProjection: safeObj(safeObj(renderPacket.projection).selectedProjection || safeObj(renderPacket.projection))
+          }
+        }
+      : null;
+
+    return builder({ runtimeState, renderState });
+  } catch (error) {
+    moduleState.instruments.status = "FAIL";
+    moduleState.instruments.error = error instanceof Error ? (error.stack || error.message) : String(error);
+    return null;
+  }
 }
 
-function renderOfflineRuntime() {
+function renderOffline() {
   setText("k-state","OFFLINE","bad");
   setText("k-classified","—");
   setText("k-phase","—");
@@ -554,32 +526,49 @@ function renderOfflineRuntime() {
   setText("k-age","—");
 
   document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("renderRows").innerHTML = row("status","No render packet");
+  document.getElementById("diagRows").innerHTML = row("status","No diagnostics packet");
   document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
   document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("renderRows").innerHTML = row("status","No runtime receipt");
   document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("projectionRows").innerHTML = row("status","No runtime/render receipt");
   document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("diagRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("failureRows").innerHTML =
+    row("runtime", moduleState.runtime.error || "none") +
+    row("render", moduleState.render.error || "none") +
+    row("instruments", moduleState.instruments.error || "none");
 }
 
-function renderRuntime(receipt, nowMs, dtMs) {
-  const state = safeObj(receipt.state);
-  const denseIndex = safeObj(receipt.denseIndex);
-  const region = safeObj(receipt.region);
-  const node = safeObj(receipt.node);
-  const boundary = safeObj(receipt.boundary);
-  const threshold = safeObj(receipt.threshold);
-  const forces = safeObj(receipt.forces);
-  const traversalStatus = safeObj(receipt.traversalStatus);
-  const selectedProjection = safeObj(receipt.selectedProjection);
-  const fieldSummary = safeObj(receipt.fieldSummary);
+function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) {
+  const state = safeObj(runtimeReceipt.state);
+  const denseIndex = safeObj(runtimeReceipt.denseIndex);
+  const region = safeObj(runtimeReceipt.region);
+  const node = safeObj(runtimeReceipt.node);
+  const boundary = safeObj(runtimeReceipt.boundary);
+  const threshold = safeObj(runtimeReceipt.threshold);
+  const forces = safeObj(runtimeReceipt.forces);
+  const traversalStatus = safeObj(runtimeReceipt.traversalStatus);
+  const selectedProjection = safeObj(runtimeReceipt.selectedProjection);
+  const fieldSummary = safeObj(runtimeReceipt.fieldSummary);
 
-  const ageMs = isFiniteNumber(receipt.timestamp) ? Math.max(0, nowMs - receipt.timestamp) : null;
+  const renderVisible = safeObj(renderPacket.visible);
+  const renderProjection = safeObj(renderPacket.projection);
+  const renderSuccessor = safeObj(renderPacket.successor);
+  const validatorStatus = safeObj(renderVisible.validatorStatus);
+  const colorOutput = safeObj(renderVisible.colorOutput);
+  const motionOutput = safeObj(renderVisible.motionOutput);
+  const boundaryVisibility = safeObj(renderVisible.boundaryVisibility);
+  const nodeForceVisibility = safeObj(renderVisible.nodeForceVisibility);
+  const transitionVisibility = safeObj(renderVisible.transitionVisibility);
+
+  const diagnostics = safeObj(instrumentPacket?.diagnosticsPayload);
+  const displaySummary = safeObj(safeObj(instrumentPacket?.displayPayload).summary);
+
+  const ageMs = isFiniteNumber(runtimeReceipt.timestamp) ? Math.max(0, nowMs - runtimeReceipt.timestamp) : null;
   const fps = dtMs > 0 ? 1000 / dtMs : null;
-  const primitive = computePrimitiveMetrics(forces);
   const freshness = isFiniteNumber(ageMs) ? ageMs <= 2500 : false;
-  const classifiedState = classifyState(receipt, ageMs);
+  const classifiedState = classifyState(runtimeReceipt, ageMs);
+  const primitive = computePrimitiveMetrics(forces);
 
   push(history.velocityA, primitive.packetSeparationWeight);
   push(history.velocityB, primitive.shadowDensity);
@@ -592,22 +581,42 @@ function renderRuntime(receipt, nowMs, dtMs) {
   push(history.burden, primitive.fragmentWeight);
 
   setText("k-state", classifiedState, kpiClass(classifiedState, "state"));
-  setText("k-classified", classifiedState);
-  setText("k-phase", receipt.phase || "—");
+  setText("k-classified", instrumentPacket ? (instrumentPacket.classifiedState || classifiedState) : classifiedState);
+  setText("k-phase", runtimeReceipt.phase || "—");
   setText("k-fresh", freshness ? "FRESH" : "STALE", kpiClass(freshness ? "FRESH" : "STALE", "fresh"));
   setText("k-fps", intfmt(fps));
   setText("k-dt", isFiniteNumber(dtMs) ? Math.round(dtMs) + "ms" : "—");
   setText("k-age", isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—");
 
   document.getElementById("runtimeRows").innerHTML =
-    row("source", receipt.source || "—") +
-    row("contract", receipt.contract || "—") +
-    row("verificationPass", bool(safeObj(receipt.verification).pass)) +
-    row("fresh", bool(freshness)) +
-    row("timestamp", String(receipt.timestamp ?? "—")) +
+    row("source", runtimeReceipt.source || "—") +
+    row("contract", runtimeReceipt.contract || "—") +
+    row("verificationPass", bool(safeObj(runtimeReceipt.verification).pass)) +
+    row("deterministic", bool(safeObj(runtimeReceipt.verification).deterministic)) +
+    row("projection", runtimeReceipt.projection || "—") +
+    row("phase", runtimeReceipt.phase || "—") +
     row("classifiedState", classifiedState) +
-    row("projection", receipt.projection || "—") +
-    row("phase", receipt.phase || "—");
+    row("timestamp", String(runtimeReceipt.timestamp ?? "—"));
+
+  document.getElementById("renderRows").innerHTML =
+    row("render meta", safeObj(renderPacket.meta).contract || safeObj(renderPacket.meta).name || "—") +
+    row("validator ok", bool(validatorStatus.ok)) +
+    row("color hue", fmt(colorOutput.hue, 3)) +
+    row("color saturation", fmt(colorOutput.saturation, 3)) +
+    row("color value", fmt(colorOutput.value, 3)) +
+    row("luminance", fmt(renderVisible.luminanceOutput, 3)) +
+    row("depth", fmt(renderVisible.depthOutput, 3)) +
+    row("successor", Object.keys(renderSuccessor).length ? "present" : "none");
+
+  document.getElementById("diagRows").innerHTML =
+    row("instrument state", instrumentPacket ? (instrumentPacket.classifiedState || "—") : "none") +
+    row("summary state", displaySummary.state || "—") +
+    row("summary boundary", displaySummary.boundary || "—") +
+    row("summary projection", displaySummary.projection || "—") +
+    row("terrain", diagnostics.terrain || runtimeReceipt.terrainClass || "—") +
+    row("biome", diagnostics.biome || runtimeReceipt.biomeType || "—") +
+    row("traversal", diagnostics.traversal || "—") +
+    row("receipt", diagnostics.receipt || "—");
 
   document.getElementById("motionRows").innerHTML =
     row("packetSeparationWeight", fmt(primitive.packetSeparationWeight, 6)) +
@@ -616,6 +625,8 @@ function renderRuntime(receipt, nowMs, dtMs) {
     row("asymmetryWeight", fmt(primitive.asymmetryWeight, 6)) +
     row("directionalWeight", fmt(primitive.directionalWeight, 6)) +
     row("directionalContrast", fmt(primitive.directionalContrast, 6)) +
+    row("motion visible", bool(motionOutput.visible)) +
+    row("motion delta", fmt(motionOutput.delta, 6)) +
     row("force.N", fmt(forces.N, 3)) +
     row("force.E", fmt(forces.E, 3)) +
     row("force.S", fmt(forces.S, 3)) +
@@ -627,61 +638,65 @@ function renderRuntime(receipt, nowMs, dtMs) {
     row("regionLabel", region.label || "—") +
     row("nodeId", node.nodeId || "—") +
     row("nodeLabel", node.label || "—") +
-    row("terrainClass", receipt.terrainClass || "—") +
-    row("biomeType", receipt.biomeType || "—") +
-    row("surfaceMaterial", receipt.surfaceMaterial || "—") +
-    row("climateBand", receipt.climateBand || "—") +
-    row("climate", receipt.climate || "—") +
-    row("habitability", fmt(receipt.habitability, 3)) +
-    row("traversalDifficulty", fmt(receipt.traversalDifficulty, 3));
-
-  document.getElementById("renderRows").innerHTML =
-    row("selectedProjection", Object.keys(selectedProjection).length ? "present" : "none") +
-    row("projectionMode", receipt.projection || "—") +
-    row("fieldWidth", fieldSummary.width ?? "—") +
-    row("fieldHeight", fieldSummary.height ?? "—") +
-    row("denseX", denseIndex.x ?? "—") +
-    row("denseY", denseIndex.y ?? "—") +
-    row("kernelI", state.i ?? "—") +
-    row("kernelJ", state.j ?? "—");
+    row("terrainClass", runtimeReceipt.terrainClass || "—") +
+    row("biomeType", runtimeReceipt.biomeType || "—") +
+    row("surfaceMaterial", runtimeReceipt.surfaceMaterial || "—") +
+    row("climateBand", runtimeReceipt.climateBand || "—") +
+    row("climate", runtimeReceipt.climate || "—") +
+    row("habitability", fmt(runtimeReceipt.habitability, 3)) +
+    row("traversalDifficulty", fmt(runtimeReceipt.traversalDifficulty, 3));
 
   document.getElementById("scopeRows").innerHTML =
     row("boundary.classification", boundary.classification || "—") +
     row("threshold.action", threshold.action || "—") +
-    row("threshold.value", fmt(threshold.value, 3)) +
     row("admissible", bool(traversalStatus.admissible)) +
     row("targetExists", bool(traversalStatus.targetExists)) +
     row("targetLawful", bool(traversalStatus.targetLawful)) +
     row("thresholdPass", bool(traversalStatus.thresholdPass)) +
-    row("boundaryPass", bool(traversalStatus.boundaryPass));
+    row("boundaryPass", bool(traversalStatus.boundaryPass)) +
+    row("boundary.OPEN", bool(boundaryVisibility.OPEN)) +
+    row("boundary.HOLD", bool(boundaryVisibility.HOLD)) +
+    row("boundary.GATE", bool(boundaryVisibility.GATE)) +
+    row("boundary.BRIDGE", bool(boundaryVisibility.BRIDGE)) +
+    row("boundary.BLOCK", bool(boundaryVisibility.BLOCK));
+
+  document.getElementById("projectionRows").innerHTML =
+    row("selectedProjection", Object.keys(selectedProjection).length ? "present" : "none") +
+    row("render projection kind", safeObj(renderProjection.selectedProjection).kind || "—") +
+    row("fieldWidth", fieldSummary.width ?? "—") +
+    row("fieldHeight", fieldSummary.height ?? "—") +
+    row("kernelI", state.i ?? "—") +
+    row("kernelJ", state.j ?? "—") +
+    row("denseX", denseIndex.x ?? "—") +
+    row("denseY", denseIndex.y ?? "—") +
+    row("dominantForce", nodeForceVisibility.dominantForce || "—") +
+    row("secondaryForce", nodeForceVisibility.secondaryForce || "—") +
+    row("transition visible", bool(transitionVisibility.visible)) +
+    row("transition lineage", bool(transitionVisibility.lineage));
 
   document.getElementById("emitRows").innerHTML =
-    row("waterMask", fmt(receipt.waterMask, 3)) +
-    row("landMask", fmt(receipt.landMask, 3)) +
-    row("shorelineMask", fmt(receipt.shorelineMask, 3)) +
-    row("moisture", fmt(receipt.moisture, 3)) +
-    row("accumulation", fmt(receipt.accumulation, 3)) +
-    row("selectedProjection.flat", selectedProjection.flat ? "yes" : "no") +
-    row("selectedProjection.tree", selectedProjection.tree ? "yes" : "no") +
-    row("selectedProjection.globe", selectedProjection.globe ? "yes" : "no");
-
-  document.getElementById("diagRows").innerHTML =
-    row("coherence", fmt(primitive.directionalWeight, 6)) +
-    row("clarity", fmt(primitive.directionalContrast, 6)) +
-    row("stability", fmt(traversalStatus.admissible ? 1 : 0, 6)) +
-    row("fps", fmt(fps, 2)) +
-    row("dtMs", fmt(dtMs, 2)) +
-    row("ageMs", fmt(ageMs, 2)) +
-    row("fresh", bool(freshness)) +
-    row("deterministic", bool(safeObj(receipt.verification).deterministic));
+    row("waterMask", fmt(runtimeReceipt.waterMask, 3)) +
+    row("landMask", fmt(runtimeReceipt.landMask, 3)) +
+    row("shorelineMask", fmt(runtimeReceipt.shorelineMask, 3)) +
+    row("moisture", fmt(runtimeReceipt.moisture, 3)) +
+    row("accumulation", fmt(runtimeReceipt.accumulation, 3)) +
+    row("validator runtimeTraceability", bool(safeObj(validatorStatus.checks).runtimeTraceability)) +
+    row("validator fieldCompleteness", bool(safeObj(validatorStatus.checks).fieldCompleteness)) +
+    row("validator projectionConsistency", bool(safeObj(validatorStatus.checks).projectionConsistency)) +
+    row("validator determinism", bool(safeObj(validatorStatus.checks).determinism)) +
+    row("validator artifactDrift", bool(safeObj(validatorStatus.checks).artifactDrift)) +
+    row("validator thresholdIntegrity", bool(safeObj(validatorStatus.checks).thresholdIntegrity)) +
+    row("validator successorProjectionCompleteness", bool(safeObj(validatorStatus.checks).successorProjectionCompleteness));
 
   document.getElementById("failureRows").innerHTML =
-    row("bridgeError", runtimeBridgeState.error || "none") +
-    row("parentStackError", parentStackState.error || "none") +
-    row("moduleSource", runtimeBridgeState.source) +
-    row("parentStackSource", parentStackState.source) +
+    row("runtimeError", moduleState.runtime.error || "none") +
+    row("renderError", moduleState.render.error || "none") +
+    row("instrumentError", moduleState.instruments.error || "none") +
+    row("runtimeSource", moduleState.runtime.source) +
+    row("renderSource", moduleState.render.source) +
+    row("instrumentSource", moduleState.instruments.source) +
     row("build", BUILD_STAMP) +
-    row("status", "live receipt acquired");
+    row("status", "live direct authority");
 
   drawMulti(document.getElementById("velocityChart"),[
     {data:history.velocityA,color:"#6fe7ff"},
@@ -703,51 +718,58 @@ function renderRuntime(receipt, nowMs, dtMs) {
 
   document.getElementById("footer").textContent =
     "BUILD=" + BUILD_STAMP +
-    " | PARENT_STACK=" + parentStackState.status + " " + parentStackState.loadedCount + "/5" +
-    " | BRIDGE=" + runtimeBridgeState.status +
+    " | RUNTIME=" + moduleState.runtime.status +
+    " | RENDER=" + moduleState.render.status +
+    " | INSTRUMENTS=" + moduleState.instruments.status +
     " | STATE=" + classifiedState +
-    " | PHASE=" + (receipt.phase || "—") +
+    " | PHASE=" + (runtimeReceipt.phase || "—") +
     " | AGE=" + (isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—") +
     " | KERNEL=" + (state.i ?? "—") + "," + (state.j ?? "—") +
     " | DENSE=" + (denseIndex.x ?? "—") + "," + (denseIndex.y ?? "—");
 }
 
 async function boot() {
-  await loadModules();
-  await loadParentStack();
-  renderParentStack();
-  loadRuntimeBridge();
-  renderRuntimeBridge();
+  await bootModules();
+  renderModuleState();
 
-  if (!parentStackState.pass && runtimeBridgeState.status === "FAIL") {
-    renderOfflineRuntime();
+  if (!runtimeApi && !renderApi && !instrumentsApi) {
+    showBootFail(
+      "GAUGES BOOT FAILED\n" +
+      "Runtime: " + (moduleState.runtime.error || "missing") + "\n\n" +
+      "Render: " + (moduleState.render.error || "missing") + "\n\n" +
+      "Instruments: " + (moduleState.instruments.error || "missing")
+    );
+  } else {
+    hideBootFail();
   }
 
   tick();
 }
 
 function tick() {
-  const nowMs = performance.now();
-  const dtMs = nowMs - lastTickMs;
-  lastTickMs = nowMs;
+  const nowPerf = performance.now();
+  const dtMs = nowPerf - lastTickMs;
+  lastTickMs = nowPerf;
 
-  renderParentStack();
+  renderModuleState();
 
-  const receipt = loadRuntimeBridge();
-  renderRuntimeBridge();
+  const runtimeReceipt = getRuntimeReceipt();
+  const renderPacket = getRenderPacket();
+  const instrumentPacket = getInstrumentPacket(runtimeReceipt, renderPacket);
 
-  if (!receipt) {
-    renderOfflineRuntime();
+  if (!runtimeReceipt) {
+    renderOffline();
     document.getElementById("footer").textContent =
       "BUILD=" + BUILD_STAMP +
-      " | PARENT_STACK=" + parentStackState.status + " " + parentStackState.loadedCount + "/5" +
-      " | BRIDGE=" + runtimeBridgeState.status +
-      " | RUNTIME=OFFLINE | ERROR=" + (runtimeBridgeState.error || "none");
+      " | RUNTIME=" + moduleState.runtime.status +
+      " | RENDER=" + moduleState.render.status +
+      " | INSTRUMENTS=" + moduleState.instruments.status +
+      " | OFFLINE";
     timer = window.setTimeout(tick, REFRESH_MS);
     return;
   }
 
-  renderRuntime(receipt, Date.now(), dtMs);
+  renderAll(runtimeReceipt, renderPacket || {}, instrumentPacket || {}, Date.now(), dtMs);
   timer = window.setTimeout(tick, REFRESH_MS);
 }
 
@@ -756,8 +778,8 @@ window.addEventListener("beforeunload", () => {
 });
 
 boot().catch((error) => {
-  const msg = error instanceof Error ? error.stack || error.message : String(error);
-  document.getElementById("footer").textContent = "BUILD=" + BUILD_STAMP + " | BOOT=FAIL | " + msg;
+  showBootFail("GAUGES BOOT FAILED\n" + (error instanceof Error ? (error.stack || error.message) : String(error)));
+  document.getElementById("footer").textContent = "BUILD=" + BUILD_STAMP + " | BOOT=FAIL";
 });
 </script>
 </body>

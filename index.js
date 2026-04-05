@@ -1,4 +1,3 @@
-DESTINATION: /index.js
 (() => {
   "use strict";
 

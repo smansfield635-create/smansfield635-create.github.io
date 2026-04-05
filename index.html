@@ -1,232 +1,193 @@
+DESTINATION: /index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge platform host." />
-  <meta name="theme-color" content="#05070b" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compass Page Baseline</title>
   <style>
-    :root{
-      --bg:#05070b;
-      --bg2:#0b1220;
-      --fg:#e8edf5;
-      --muted:#9aa7bd;
-      --line:rgba(255,255,255,.08);
-      --panel:rgba(255,255,255,.04);
-      --shadow:0 18px 48px rgba(0,0,0,.36);
-      --radius:14px;
-      --max:1440px;
-      --font:12px system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    :root {
+      --bg-0: #050816;
+      --bg-1: #071126;
+      --bg-2: #0c1832;
+      --fg: #dfe9ff;
+      --muted: #8ea2c9;
+      --line: rgba(255,255,255,0.10);
+      --panel: rgba(7,17,38,0.72);
     }
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      padding:0;
-      min-height:100%;
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
       background:
-        radial-gradient(circle at 20% 12%, rgba(255,255,255,.05), transparent 22%),
-        radial-gradient(circle at 80% 78%, rgba(64,169,255,.08), transparent 24%),
-        linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);
-      color:var(--fg);
-      font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-      -webkit-font-smoothing:antialiased;
-      text-rendering:optimizeLegibility;
-    }
-    body{overflow:hidden}
-    a{color:inherit;text-decoration:none}
-
-    .shell{
-      position:fixed;
-      inset:0;
-      display:grid;
-      grid-template-rows:64px 1fr;
-      overflow:hidden;
-      isolation:isolate;
+        radial-gradient(circle at 50% 50%, var(--bg-2) 0%, var(--bg-1) 40%, var(--bg-0) 100%);
+      color: var(--fg);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      border-bottom:1px solid var(--line);
-      background:rgba(5,7,11,.62);
-      backdrop-filter:blur(12px);
-      z-index:10;
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(80,110,170,0.06) 0%, rgba(0,0,0,0) 55%),
+        radial-gradient(circle at 20% 25%, rgba(95,70,170,0.10) 0%, rgba(0,0,0,0) 28%),
+        radial-gradient(circle at 80% 75%, rgba(40,120,180,0.08) 0%, rgba(0,0,0,0) 30%),
+        linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0.00) 100%);
     }
 
-    .topbar-inner{
-      width:min(calc(100% - 24px),var(--max));
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
+    #scene {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
     }
 
-    .brand{
-      display:inline-flex;
-      align-items:center;
-      gap:12px;
-      font-weight:700;
-      letter-spacing:.02em;
+    .hud {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
     }
 
-    .brand-mark{
-      width:16px;
-      height:16px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,255,255,.6);
-      background:linear-gradient(180deg,rgba(255,255,255,.22),rgba(255,255,255,.06));
-      box-shadow:0 0 14px rgba(255,255,255,.08);
-      flex:0 0 auto;
+    .title-block {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      max-width: min(520px, calc(100vw - 36px));
     }
 
-    .nav{
-      display:flex;
-      align-items:center;
-      gap:14px;
-      color:var(--muted);
-      font-size:.95rem;
+    .title-block h1 {
+      margin: 0 0 6px 0;
+      font-size: 18px;
+      line-height: 1.15;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
     }
 
-    .stage{
-      width:min(calc(100% - 24px),var(--max));
-      height:calc(100vh - 88px);
-      margin:12px auto;
-      position:relative;
-      border:1px solid var(--line);
-      border-radius:24px;
-      overflow:hidden;
-      background:rgba(255,255,255,.02);
-      box-shadow:var(--shadow);
+    .title-block p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+      letter-spacing: 0.02em;
     }
 
-    #app{
-      position:absolute;
-      inset:0;
-      display:grid;
-      grid-template-rows:1fr auto;
-      min-height:0;
+    .legend {
+      position: absolute;
+      right: 18px;
+      top: 18px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      min-width: 240px;
     }
 
-    #world-canvas-wrap{
-      position:relative;
-      min-height:0;
-      overflow:hidden;
+    .legend h2 {
+      margin: 0 0 8px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
     }
 
-    #world-canvas{
-      display:block;
-      width:100%;
-      height:100%;
-      background:#05070b;
+    .legend-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 6px 0;
+      font-size: 12px;
+      color: var(--muted);
     }
 
-    #world-hud{
-      position:absolute;
-      left:12px;
-      top:12px;
-      max-width:min(520px,calc(100vw - 48px));
-      padding:10px 12px;
-      border:1px solid var(--line);
-      border-radius:10px;
-      background:rgba(255,255,255,.04);
-      backdrop-filter:blur(6px);
-      white-space:pre-wrap;
-      line-height:1.35;
-      font:var(--font);
-      color:var(--fg);
-      pointer-events:none;
-      box-shadow:var(--shadow);
+    .legend-row strong {
+      color: var(--fg);
+      font-weight: 700;
     }
 
-    #instrument-panel{
-      padding:10px 12px;
-      border-top:1px solid var(--line);
-      background:rgba(255,255,255,.02);
-      overflow:auto;
-      max-height:22vh;
-      color:var(--muted);
-      font:var(--font);
+    .status {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      backdrop-filter: blur(6px);
+      border-radius: 12px;
+      max-width: min(620px, calc(100vw - 36px));
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
     }
 
-    .overlay-note{
-      position:absolute;
-      right:12px;
-      top:12px;
-      width:min(320px,calc(100vw - 48px));
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      background:var(--panel);
-      backdrop-filter:blur(8px);
-      box-shadow:var(--shadow);
-      pointer-events:none;
+    .status strong {
+      color: var(--fg);
     }
 
-    .overlay-note strong{
-      display:block;
-      margin-bottom:6px;
-      font-size:.95rem;
-      letter-spacing:.01em;
+    @media (max-width: 820px) {
+      .legend {
+        top: auto;
+        bottom: 96px;
+        right: 18px;
+        min-width: 220px;
+      }
+
+      .title-block h1 {
+        font-size: 16px;
+      }
     }
 
-    .overlay-note span{
-      display:block;
-      color:var(--muted);
-      line-height:1.45;
-      font-size:.9rem;
-    }
-
-    @media (max-width:720px){
-      .nav{display:none}
-      .stage{height:calc(100vh - 80px);margin:8px auto}
-      #world-hud,.overlay-note{max-width:calc(100vw - 32px)}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *,*::before,*::after{
-        animation:none!important;
-        transition:none!important;
-        scroll-behavior:auto!important;
+    @media (max-width: 620px) {
+      .legend {
+        left: 18px;
+        right: 18px;
+        bottom: 108px;
+        min-width: 0;
       }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="topbar-inner">
-        <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span>Diamond Gate Bridge</span>
-        </a>
-        <nav class="nav" aria-label="Primary">
-          <a href="/">Entry</a>
-          <a href="/">World</a>
-          <a href="/">Runtime</a>
-        </nav>
-      </div>
-    </header>
+  <div id="app">
+    <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
 
-    <main class="stage">
-      <div id="app">
-        <div id="world-canvas-wrap">
-          <canvas id="world-canvas" aria-label="World canvas"></canvas>
-          <div id="world-hud">WORLD HOST
-projection=flat
-elapsedSeconds=0
-status=boot_pending</div>
-          <div class="overlay-note" aria-hidden="true">
-            <strong>Platform host active</strong>
-            <span>HTML host shell aligned to <code>/index.js</code>, canvas mount, HUD, and instrument panel IDs.</span>
-          </div>
-        </div>
-        <div id="instrument-panel">instrument boot path intentionally excluded</div>
+    <div class="hud">
+      <div class="title-block">
+        <h1>Compass Page Baseline</h1>
+        <p>
+          Physics-governed macro field with 9 diamond-anchored variant solar systems.
+          Reference scale is structural and comparative. Primary read: anchor geometry,
+          star-core visibility, system count clarity, and cosmic depth.
+        </p>
       </div>
-    </main>
+
+      <div class="legend">
+        <h2>Baseline Lock</h2>
+        <div class="legend-row"><span>Visible Systems</span><strong>9</strong></div>
+        <div class="legend-row"><span>Anchor Logic</span><strong>N NE E SE S SW W NW C</strong></div>
+        <div class="legend-row"><span>Reference Class</span><strong>Sun-Class Core Stars</strong></div>
+        <div class="legend-row"><span>Degrade Rule</span><strong>Secondary Effects First</strong></div>
+      </div>
+
+      <div class="status">
+        <strong>Read:</strong> Universe field first. Final planet detail excluded.
+        This baseline establishes macro structure, diamond topology, star variance by
+        lawful strength ranking, and a clear nine-system compass layout.
+      </div>
+    </div>
   </div>
 
-  <script type="module" src="./index.js"></script>
+  <script src="./index.js"></script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-DESTINATION: /assets/instruments.js
 // /assets/instruments.js
 // MODE: DIRECT DIAGNOSTIC AUTHORITY
 // CONTRACT: INSTRUMENT_CONTRACT_G4

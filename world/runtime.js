@@ -1,4 +1,3 @@
-DESTINATION: /world/runtime.js
 // /world/runtime.js
 // MODE: DIRECT RUNTIME AUTHORITY
 // CONTRACT: RUNTIME_CONTRACT_G4

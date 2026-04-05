@@ -1,4 +1,3 @@
-DESTINATION: /world/render.js
 // /world/render.js
 // MODE: DIRECT RENDER AUTHORITY
 // CONTRACT: RENDER_CONTRACT_G4

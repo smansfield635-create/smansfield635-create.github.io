@@ -7,7 +7,7 @@ DESTINATION: /index.html
     name="viewport"
     content="width=device-width, initial-scale=1.0, viewport-fit=cover"
   />
-  <title>Compass Page Baseline — Visible Galaxy Upgrade</title>
+  <title>Compass Page Baseline — Galaxy First</title>
   <style>
     :root {
       --bg-0: #020611;
@@ -17,10 +17,10 @@ DESTINATION: /index.html
       --fg: #eef3ff;
       --muted: #a9b8dc;
       --line: rgba(255, 255, 255, 0.12);
-      --panel: rgba(5, 11, 24, 0.38);
-      --panel-strong: rgba(5, 11, 24, 0.54);
+      --panel: rgba(5, 11, 24, 0.58);
+      --panel-strong: rgba(5, 11, 24, 0.72);
       --shadow: rgba(0, 0, 0, 0.34);
-      --hud-blur: 8px;
+      --hud-blur: 10px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -50,12 +50,12 @@ DESTINATION: /index.html
       width: 100%;
       height: 100%;
       overflow: hidden;
+      isolation: isolate;
       background:
         radial-gradient(circle at 50% 50%, rgba(94, 127, 226, 0.09) 0%, rgba(94, 127, 226, 0) 34%),
         radial-gradient(circle at 18% 24%, rgba(122, 82, 219, 0.10) 0%, rgba(122, 82, 219, 0) 28%),
         radial-gradient(circle at 82% 76%, rgba(42, 154, 220, 0.08) 0%, rgba(42, 154, 220, 0) 28%),
         linear-gradient(180deg, var(--bg-3) 0%, var(--bg-2) 24%, var(--bg-1) 62%, var(--bg-0) 100%);
-      isolation: isolate;
     }
 
     .space-layer {
@@ -150,15 +150,49 @@ DESTINATION: /index.html
       background: transparent;
     }
 
+    .hud-toggle {
+      position: absolute;
+      top: calc(14px + var(--safe-top));
+      right: calc(14px + var(--safe-right));
+      z-index: 30;
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      background: rgba(5, 11, 24, 0.54);
+      color: var(--fg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    .hud-toggle:hover {
+      background: rgba(8, 16, 34, 0.72);
+    }
+
     .hud {
       position: absolute;
       inset: 0;
-      z-index: 10;
+      z-index: 20;
       pointer-events: none;
       padding-top: var(--safe-top);
       padding-right: var(--safe-right);
       padding-bottom: var(--safe-bottom);
       padding-left: var(--safe-left);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 180ms ease, visibility 180ms ease;
+    }
+
+    #hud-toggle:checked ~ .hud {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
     .panel {
@@ -174,7 +208,7 @@ DESTINATION: /index.html
       position: absolute;
       top: 18px;
       left: 18px;
-      width: min(620px, calc(100vw - 36px));
+      width: min(620px, calc(100vw - 100px));
       padding: 15px 17px;
     }
 
@@ -269,38 +303,22 @@ DESTINATION: /index.html
       color: rgba(255, 255, 255, 0.22);
     }
 
-    .scene-hint {
+    .galaxy-first-note {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      z-index: 7;
+      left: calc(16px + var(--safe-left));
+      top: calc(16px + var(--safe-top));
+      z-index: 15;
       pointer-events: none;
-      text-align: center;
-      width: min(560px, calc(100vw - 40px));
-      padding: 14px 18px;
-      border: 1px solid rgba(255, 255, 255, 0.10);
-      border-radius: 20px;
-      background: rgba(5, 11, 24, 0.16);
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.24);
-    }
-
-    .scene-hint strong {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 14px;
+      color: rgba(238,243,255,0.72);
+      font-size: 11px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--fg);
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      max-width: min(320px, calc(100vw - 120px));
     }
 
-    .scene-hint span {
-      display: block;
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--muted);
+    #hud-toggle:checked ~ .galaxy-first-note {
+      opacity: 0;
     }
 
     @keyframes nebulaDrift {
@@ -343,6 +361,7 @@ DESTINATION: /index.html
 
       .title-block {
         top: 12px;
+        width: auto;
       }
 
       .legend {
@@ -368,10 +387,6 @@ DESTINATION: /index.html
       .status {
         padding: 14px 15px;
       }
-
-      .scene-hint {
-        top: 56%;
-      }
     }
 
     @media (max-width: 520px) {
@@ -389,13 +404,16 @@ DESTINATION: /index.html
         max-width: 54%;
       }
 
-      .scene-hint {
-        width: calc(100vw - 28px);
-        padding: 12px 14px;
+      .hud-toggle {
+        top: auto;
+        bottom: calc(14px + var(--safe-bottom));
+        right: calc(14px + var(--safe-right));
       }
 
-      .scene-hint strong {
-        font-size: 13px;
+      .galaxy-first-note {
+        top: auto;
+        bottom: calc(18px + var(--safe-bottom));
+        max-width: calc(100vw - 110px);
       }
     }
 
@@ -405,6 +423,10 @@ DESTINATION: /index.html
       #stars-b,
       #stars-c {
         animation: none;
+      }
+
+      .hud {
+        transition: none;
       }
     }
   </style>
@@ -420,9 +442,11 @@ DESTINATION: /index.html
 
     <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
 
-    <div class="scene-hint" aria-hidden="true">
-      <strong>Galaxy Field Active</strong>
-      <span>CSS cosmos fallback is now visible behind the scene canvas so the page reads as space immediately while /index.js upgrades the live universe render layer.</span>
+    <input id="hud-toggle" type="checkbox" hidden />
+    <label for="hud-toggle" class="hud-toggle">Panels</label>
+
+    <div class="galaxy-first-note" aria-hidden="true">
+      Galaxy-first view active. Open Panels only when needed.
     </div>
 
     <div class="hud">
@@ -466,6 +490,6 @@ DESTINATION: /index.html
     </div>
   </div>
 
-  <script src="./index.js"></script>
+  <script src="./index.js?v=3"></script>
 </body>
 </html>

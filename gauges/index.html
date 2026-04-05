@@ -1,447 +1,764 @@
-DESTINATION: /index.html
-<!DOCTYPE html>
+DESTINATION: /gauges/index.html
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-  />
-  <title>Compass Page Baseline — Canvas Direct</title>
-  <style>
-    :root {
-      --bg-0: #01040c;
-      --bg-1: #04101f;
-      --bg-2: #09172d;
-      --fg: #eef3ff;
-      --muted: #a9b8dc;
-      --line: rgba(255, 255, 255, 0.12);
-      --panel: rgba(5, 11, 24, 0.58);
-      --panel-strong: rgba(5, 11, 24, 0.72);
-      --shadow: rgba(0, 0, 0, 0.34);
-      --hud-blur: 10px;
-      --safe-top: env(safe-area-inset-top, 0px);
-      --safe-right: env(safe-area-inset-right, 0px);
-      --safe-bottom: env(safe-area-inset-bottom, 0px);
-      --safe-left: env(safe-area-inset-left, 0px);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      background: #01040c;
-      color: var(--fg);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body {
-      min-height: 100vh;
-    }
-
-    #app {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      isolation: isolate;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(80, 110, 200, 0.06) 0%, rgba(80, 110, 200, 0) 38%),
-        linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 40%, var(--bg-0) 100%);
-    }
-
-    #scene {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      display: block;
-      z-index: 1;
-      background: transparent;
-      touch-action: manipulation;
-    }
-
-    .hud-toggle {
-      position: absolute;
-      top: calc(14px + var(--safe-top));
-      right: calc(14px + var(--safe-right));
-      z-index: 30;
-      appearance: none;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      background: rgba(5, 11, 24, 0.54);
-      color: var(--fg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.28);
-      padding: 10px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .galaxy-first-note {
-      position: absolute;
-      left: calc(16px + var(--safe-left));
-      top: calc(16px + var(--safe-top));
-      z-index: 15;
-      pointer-events: none;
-      color: rgba(238,243,255,0.74);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      max-width: min(360px, calc(100vw - 120px));
-    }
-
-    .hud {
-      position: absolute;
-      inset: 0;
-      z-index: 20;
-      pointer-events: none;
-      padding-top: var(--safe-top);
-      padding-right: var(--safe-right);
-      padding-bottom: var(--safe-bottom);
-      padding-left: var(--safe-left);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 180ms ease, visibility 180ms ease;
-    }
-
-    #hud-toggle:checked ~ .hud {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    #hud-toggle:checked ~ .galaxy-first-note {
-      opacity: 0;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      background: var(--panel);
-      backdrop-filter: blur(var(--hud-blur));
-      -webkit-backdrop-filter: blur(var(--hud-blur));
-      border-radius: 18px;
-      box-shadow: 0 14px 42px var(--shadow);
-    }
-
-    .title-block {
-      position: absolute;
-      top: 18px;
-      left: 18px;
-      width: min(620px, calc(100vw - 100px));
-      padding: 15px 17px;
-    }
-
-    .title-block h1 {
-      margin: 0 0 8px 0;
-      font-size: 18px;
-      line-height: 1.08;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .title-block p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 12px;
-      line-height: 1.5;
-      letter-spacing: 0.02em;
-    }
-
-    .legend {
-      position: absolute;
-      top: 18px;
-      right: 18px;
-      width: min(360px, calc(100vw - 36px));
-      padding: 14px 16px;
-    }
-
-    .scale-panel {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      width: min(390px, calc(100vw - 36px));
-      padding: 14px 16px;
-      background: var(--panel-strong);
-    }
-
-    .status {
-      position: absolute;
-      left: 18px;
-      bottom: 18px;
-      width: min(700px, calc(100vw - 36px));
-      padding: 12px 15px;
-      font-size: 12px;
-      line-height: 1.5;
-      color: var(--muted);
-      background: rgba(5, 11, 24, 0.28);
-    }
-
-    .legend h2,
-    .scale-panel h2 {
-      margin: 0 0 10px 0;
-      font-size: 13px;
-      line-height: 1.1;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .legend-row,
-    .scale-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 14px;
-      margin: 7px 0;
-      font-size: 12px;
-      line-height: 1.3;
-      color: var(--muted);
-    }
-
-    .legend-row strong,
-    .scale-row strong {
-      color: var(--fg);
-      font-weight: 700;
-      text-align: right;
-      flex: 0 0 auto;
-      max-width: 56%;
-    }
-
-    .status strong {
-      color: var(--fg);
-      font-weight: 700;
-    }
-
-    .inline-divider {
-      display: inline-block;
-      margin: 0 7px;
-      color: rgba(255, 255, 255, 0.22);
-    }
-
-    .boot-banner {
-      position: absolute;
-      top: calc(14px + var(--safe-top));
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 25;
-      min-width: 180px;
-      max-width: calc(100vw - 120px);
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(5, 11, 24, 0.68);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(235,242,255,0.92);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-align: center;
-      pointer-events: none;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .boot-fail {
-      position: absolute;
-      left: 14px;
-      right: 14px;
-      bottom: calc(14px + var(--safe-bottom));
-      z-index: 40;
-      display: none;
-      padding: 12px 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,120,120,0.28);
-      background: rgba(30, 8, 10, 0.90);
-      color: rgba(255,235,235,0.96);
-      font-size: 12px;
-      line-height: 1.45;
-      white-space: pre-wrap;
-      box-shadow: 0 14px 40px rgba(0,0,0,0.35);
-    }
-
-    .boot-fail.is-visible {
-      display: block;
-    }
-
-    @media (max-width: 980px) {
-      .legend {
-        top: auto;
-        bottom: 168px;
-      }
-    }
-
-    @media (max-width: 760px) {
-      .title-block,
-      .legend,
-      .scale-panel,
-      .status {
-        left: 14px;
-        right: 14px;
-        width: auto;
-        max-width: none;
-      }
-
-      .title-block {
-        top: 12px;
-        width: auto;
-      }
-
-      .legend {
-        top: auto;
-        bottom: 196px;
-      }
-
-      .scale-panel {
-        bottom: 72px;
-      }
-
-      .status {
-        bottom: 12px;
-      }
-
-      .title-block h1 {
-        font-size: 16px;
-      }
-
-      .title-block,
-      .legend,
-      .scale-panel,
-      .status {
-        padding: 14px 15px;
-      }
-
-      .boot-banner {
-        max-width: calc(100vw - 140px);
-      }
-    }
-
-    @media (max-width: 520px) {
-      .legend {
-        bottom: 236px;
-      }
-
-      .legend-row,
-      .scale-row {
-        gap: 10px;
-      }
-
-      .legend-row strong,
-      .scale-row strong {
-        max-width: 54%;
-      }
-
-      .hud-toggle {
-        top: auto;
-        bottom: calc(14px + var(--safe-bottom));
-        right: calc(14px + var(--safe-right));
-      }
-
-      .galaxy-first-note {
-        top: auto;
-        bottom: calc(18px + var(--safe-bottom));
-        max-width: calc(100vw - 110px);
-      }
-
-      .boot-banner {
-        top: calc(10px + var(--safe-top));
-        max-width: calc(100vw - 140px);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .hud {
-        transition: none;
-      }
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Diagnostic Gauges</title>
+<style>
+:root{
+  --bg:#05070b;
+  --bg2:#08101a;
+  --panel:#0b0f16;
+  --panel2:#101722;
+  --line:#1f2a36;
+  --line2:rgba(127,255,212,.12);
+  --text:#e8f6ff;
+  --muted:rgba(232,246,255,.68);
+  --accent:#7fffd4;
+  --accent2:#6fe7ff;
+  --warn:#ffd27a;
+  --bad:#ff7a7a;
+  --good:#7fffd4;
+  --shadow:0 10px 30px rgba(0,0,0,.28);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(111,231,255,.06), transparent 28%),
+    linear-gradient(180deg,var(--bg2),var(--bg));
+  color:var(--text);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body{min-height:100vh}
+.wrap{
+  max-width:1560px;
+  margin:0 auto;
+  padding:calc(12px + var(--safe-top)) calc(12px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(12px + var(--safe-left));
+}
+.topline{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+  padding:10px 12px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  box-shadow:var(--shadow);
+}
+.topline .title{
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.topline .stamp{
+  color:var(--muted);
+  font-size:11px;
+  white-space:nowrap;
+}
+.topbar{
+  display:grid;
+  grid-template-columns:repeat(10,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:10px;
+}
+.kpi,.panel,.chartCard,.footer{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border-radius:12px;
+  box-shadow:var(--shadow);
+}
+.kpi{padding:10px;min-height:72px}
+.k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.v{font-size:18px;font-weight:800;line-height:1.1;word-break:break-word}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.bad{color:var(--bad)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.panel{padding:10px}
+.title{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.rows{display:grid;gap:4px}
+.row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+  padding:2px 0;
+}
+.row .rk{font-size:11px;color:var(--muted)}
+.row .rv{font-size:12px;text-align:right;word-break:break-word}
+.chartGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+.chartCard{padding:10px}
+.chartTitle{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+canvas{
+  display:block;
+  width:100%;
+  height:140px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#070b12;
+}
+.footer{
+  margin-top:10px;
+  padding:10px;
+  font-size:11px;
+  color:var(--muted);
+}
+.pre{white-space:pre-wrap;word-break:break-word}
+.bootFail{
+  margin-top:10px;
+  padding:12px 14px;
+  border:1px solid rgba(255,122,122,.28);
+  border-radius:12px;
+  background:rgba(40,10,10,.78);
+  color:#ffdada;
+  font-size:12px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  display:none;
+}
+.bootFail.is-visible{display:block}
+@media (max-width:1280px){
+  .topbar{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chartGrid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .topline{flex-direction:column;align-items:flex-start}
+  .topbar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-  <div id="app">
-    <canvas id="scene" aria-label="Compass Page Baseline Universe"></canvas>
-
-    <input id="hud-toggle" type="checkbox" hidden />
-    <label for="hud-toggle" class="hud-toggle">Panels</label>
-
-    <div class="boot-banner" id="boot-banner">HTML H10 + JS J11</div>
-
-    <div class="galaxy-first-note" aria-hidden="true">
-      Canvas-authority view active. Panels are optional.
-    </div>
-
-    <div id="boot-fail" class="boot-fail" aria-live="polite"></div>
-
-    <div class="hud">
-      <div class="panel title-block">
-        <h1>Compass Page Baseline — 9 Variant Solar Systems</h1>
-        <p>
-          Macro easel only. One visible universe field contains nine diamond-anchored
-          variant solar systems derived from our actual solar system as reference.
-          Each system holds one distant sun-class core and nine planetary slots counting Pluto.
-          Ordering is diamond + chronology + reference physics. Final composition, core typing,
-          atmospheric detail, livability, and local planet work remain deferred beyond baseline.
-        </p>
-      </div>
-
-      <div class="panel legend">
-        <h2>Locked Baseline Read</h2>
-        <div class="legend-row"><span>Visible Macro Systems</span><strong>9 Variant Solar Systems</strong></div>
-        <div class="legend-row"><span>Planet Slots Per System</span><strong>9 Counting Pluto</strong></div>
-        <div class="legend-row"><span>Anchor Set</span><strong>N NE E SE S SW W NW C</strong></div>
-        <div class="legend-row"><span>Reference Model</span><strong>Actual Solar System Scaffold</strong></div>
-        <div class="legend-row"><span>Variation Driver</span><strong>Star Age / Strength Order</strong></div>
-        <div class="legend-row"><span>Scene Class</span><strong>Macro Easel, Not Final World</strong></div>
-      </div>
-
-      <div class="panel scale-panel">
-        <h2>Scale Ladder</h2>
-        <div class="scale-row"><span>Universe Scope</span><strong>256,000,000,000 km × 256,000,000,000 km</strong></div>
-        <div class="scale-row"><span>System Scope</span><strong>256,000,000 km × 256,000,000 km</strong></div>
-        <div class="scale-row"><span>Local System View</span><strong>256,000 km × 256,000 km</strong></div>
-        <div class="scale-row"><span>Planet Zoom View</span><strong>26,500 km × 26,500 km</strong></div>
-      </div>
-
-      <div class="panel status">
-        <strong>Inspection Read:</strong> Primary structure must read before effects.
-        <span class="inline-divider">|</span>
-        Nine systems must stay discernible.
-        <span class="inline-divider">|</span>
-        Secondary richness degrades before anchor geometry, star-core visibility,
-        solar-template structure, or scale clarity.
-      </div>
-    </div>
+<div class="wrap">
+  <div class="topline">
+    <div class="title">Diagnostic Gauges</div>
+    <div class="stamp">GAUGES G2 · RUNTIME BRIDGE DIRECT · CACHE-BUSTED</div>
   </div>
 
-  <script>
-    (function () {
-      "use strict";
-      var failNode = document.getElementById("boot-fail");
-      window.addEventListener("error", function (event) {
-        if (!failNode) return;
-        failNode.textContent = "BOOT FAILED\n" + String(event && event.message ? event.message : "Unknown error");
-        failNode.classList.add("is-visible");
-      });
-      window.addEventListener("unhandledrejection", function (event) {
-        if (!failNode) return;
-        var reason = event && event.reason ? event.reason : "Unhandled promise rejection";
-        failNode.textContent = "BOOT FAILED\n" + String(reason);
-        failNode.classList.add("is-visible");
-      });
-    })();
-  </script>
+  <div class="topbar">
+    <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
+    <div class="kpi"><div class="k">Parent Stack</div><div id="k-parent-stack" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Parent Files</div><div id="k-parent-files" class="v">0/5</div></div>
+    <div class="kpi"><div class="k">Runtime Bridge</div><div id="k-runtime-bridge" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
+    <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
+    <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
+    <div class="kpi"><div class="k">FPS</div><div id="k-fps" class="v">—</div></div>
+    <div class="kpi"><div class="k">Δt</div><div id="k-dt" class="v">—</div></div>
+    <div class="kpi"><div class="k">Age</div><div id="k-age" class="v">—</div></div>
+  </div>
 
-  <script src="/index.js?v=11"></script>
+  <div class="grid">
+    <section class="panel">
+      <div class="title">Parent Stack / Smoke Test</div>
+      <div id="parentRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Runtime Bridge</div>
+      <div id="bridgeRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Runtime Health</div>
+      <div id="runtimeRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Motion / Control</div>
+      <div id="motionRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">World Chain</div>
+      <div id="worldRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Render Chain</div>
+      <div id="renderRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Scope / Lens</div>
+      <div id="scopeRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Emission / Placement</div>
+      <div id="emitRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Instrument / Diagnostics</div>
+      <div id="diagRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Failure / Source</div>
+      <div id="failureRows" class="rows"></div>
+    </section>
+  </div>
+
+  <div class="chartGrid">
+    <section class="chartCard">
+      <div class="chartTitle">Velocity History</div>
+      <canvas id="velocityChart" width="480" height="140"></canvas>
+    </section>
+    <section class="chartCard">
+      <div class="chartTitle">Coherence / Clarity / Stability</div>
+      <canvas id="coherenceChart" width="480" height="140"></canvas>
+    </section>
+    <section class="chartCard">
+      <div class="chartTitle">FPS / Fresh / Burden</div>
+      <canvas id="miscChart" width="480" height="140"></canvas>
+    </section>
+  </div>
+
+  <div id="footer" class="footer pre">Awaiting parent-stack smoke result and runtime bridge receipt.</div>
+  <div id="bootFail" class="bootFail"></div>
+</div>
+
+<script type="module">
+const BUILD_STAMP = "GAUGES_G2";
+const HISTORY_MAX = 240;
+const REFRESH_MS = 250;
+const CACHE_BUST = "g2";
+const PARENT_STACK_PATH = "/runtime/parent/parent_stack_smoke_test.js?v=" + CACHE_BUST;
+const RUNTIME_MODULE_PATH = "/world/runtime.js?v=" + CACHE_BUST;
+const PARENT_STACK_FILES = Object.freeze([
+  "/runtime/parent/diamond_interface_spine.js",
+  "/runtime/parent/kernel_adapter.js",
+  "/runtime/parent/universe_engine_factory.js",
+  "/runtime/parent/instrument_factory.js",
+  "/runtime/parent/orchestration_fabric.js"
+]);
+
+const history = {
+  velocityA: [],
+  velocityB: [],
+  velocityC: [],
+  coherence: [],
+  clarity: [],
+  stability: [],
+  fps: [],
+  fresh: [],
+  burden: []
+};
+
+const parentStackState = {
+  loaded: false,
+  status: "PENDING",
+  pass: false,
+  loadedCount: 0,
+  summary: {},
+  error: null,
+  source: PARENT_STACK_PATH
+};
+
+const runtimeBridgeState = {
+  loaded: false,
+  status: "PENDING",
+  error: null,
+  lastReceipt: null,
+  source: RUNTIME_MODULE_PATH
+};
+
+let timer = null;
+let lastTickMs = performance.now();
+let runtimeApi = null;
+let runParentStackSmokeTest = null;
+
+function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
+function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
+function intfmt(v){return isFiniteNumber(v)?String(Math.round(v)):"—";}
+function bool(v){return v===true?"true":v===false?"false":"—";}
+function safeObj(v){return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}
+function push(arr,v){arr.push(v);if(arr.length>HISTORY_MAX)arr.shift();}
+function escapeHtml(v){return String(v ?? "—").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+function row(k,v){return '<div class="row"><div class="rk">'+escapeHtml(k)+'</div><div class="rv">'+escapeHtml(v)+'</div></div>';}
+function kpiClass(v,type){
+  if(type==="state"){
+    if(v==="LIVE") return "good";
+    if(v==="STALE") return "warn";
+    return "bad";
+  }
+  if(type==="fresh") return v==="FRESH"?"good":"warn";
+  if(type==="parent" || type==="bridge"){
+    if(v==="PASS" || v==="ONLINE") return "good";
+    if(v==="PENDING") return "warn";
+    return "bad";
+  }
+  return "";
+}
+function setText(id,text,cls=""){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=text;
+  el.className=('v '+cls).trim();
+}
+function showBootFail(message){
+  const node = document.getElementById("bootFail");
+  if(!node) return;
+  node.textContent = message;
+  node.classList.add("is-visible");
+}
+function hideBootFail(){
+  const node = document.getElementById("bootFail");
+  if(!node) return;
+  node.textContent = "";
+  node.classList.remove("is-visible");
+}
+function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle="#070b12";
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="#1f2a36";
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(0,h-12);
+  ctx.lineTo(w,h-12);
+  ctx.stroke();
+
+  let vals = [];
+  for (const def of seriesDefs) vals = vals.concat(def.data.filter(isFiniteNumber));
+
+  let lo=minY, hi=maxY;
+  if(lo===null || hi===null){
+    const absVals = vals.length ? vals : [0];
+    lo = Math.min(...absVals);
+    hi = Math.max(...absVals);
+    if(lo===hi){ lo -= 1; hi += 1; }
+  }
+  const span = (hi - lo) || 1;
+
+  for (const def of seriesDefs) {
+    ctx.strokeStyle = def.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    def.data.forEach((v,i)=>{
+      const x = (i / Math.max(1, HISTORY_MAX - 1)) * w;
+      const y = (h - 12) - ((v - lo) / span) * (h - 24);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+}
+
+function computePrimitiveMetrics(forceVector = {}) {
+  const N = Number(forceVector.N || 0);
+  const E = Number(forceVector.E || 0);
+  const S = Number(forceVector.S || 0);
+  const W = Number(forceVector.W || 0);
+  const B = Number(forceVector.B || 0);
+  const ew = Math.abs(E - W);
+  const ns = Math.abs(N - S);
+  const vertical = Math.abs(B);
+  const magnitude = Math.sqrt((E - W) ** 2 + (N - S) ** 2 + B ** 2);
+  const total = Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B);
+
+  return {
+    packetSeparationWeight: Math.min(1, magnitude / 10),
+    shadowDensity: Math.min(1, vertical / 10),
+    fragmentWeight: Math.min(1, total / 20),
+    asymmetryWeight: Math.min(1, Math.abs((N + E) - (S + W)) / 10),
+    directionalWeight: Math.min(1, (ew + ns + vertical) / 10),
+    directionalContrast: Math.min(1, Math.max(ew, ns, vertical) / 10),
+    magnitude
+  };
+}
+
+function classifyState(receipt, ageMs) {
+  if (!receipt || safeObj(receipt.verification).pass !== true) return "OFFLINE";
+  if (isFiniteNumber(ageMs) && ageMs > 2500) return "STALE";
+  return "LIVE";
+}
+
+async function loadModules() {
+  try {
+    const [runtimeModule, parentModule] = await Promise.all([
+      import(RUNTIME_MODULE_PATH),
+      import(PARENT_STACK_PATH)
+    ]);
+    runtimeApi = runtimeModule;
+    runParentStackSmokeTest = parentModule.default;
+    hideBootFail();
+  } catch (error) {
+    const msg = error instanceof Error ? error.stack || error.message : String(error);
+    showBootFail("GAUGES BOOT FAILED\n" + msg);
+    throw error;
+  }
+}
+
+async function loadParentStack() {
+  if (typeof runParentStackSmokeTest !== "function") {
+    parentStackState.loaded = true;
+    parentStackState.pass = false;
+    parentStackState.status = "FAIL";
+    parentStackState.loadedCount = 0;
+    parentStackState.error = "Parent stack smoke test function unavailable";
+    return;
+  }
+
+  try {
+    const result = await runParentStackSmokeTest();
+    const stack = safeObj(result.stack);
+    const summary = {
+      spine: !!stack.spine,
+      adapter: !!stack.adapterBundle,
+      universe: !!stack.universeFactory,
+      instrument: !!stack.instrumentFactory,
+      orchestration: !!stack.orchestration
+    };
+
+    parentStackState.summary = summary;
+    parentStackState.loadedCount = Object.values(summary).filter(Boolean).length;
+    parentStackState.pass = result?.ok === true && parentStackState.loadedCount === 5;
+    parentStackState.status = parentStackState.pass ? "PASS" : "FAIL";
+    parentStackState.loaded = true;
+    parentStackState.error = null;
+  } catch (error) {
+    parentStackState.loaded = true;
+    parentStackState.pass = false;
+    parentStackState.status = "FAIL";
+    parentStackState.loadedCount = 0;
+    parentStackState.summary = {
+      spine: false,
+      adapter: false,
+      universe: false,
+      instrument: false,
+      orchestration: false
+    };
+    parentStackState.error = error instanceof Error ? error.message : String(error);
+  }
+}
+
+function loadRuntimeBridge() {
+  if (!runtimeApi || typeof runtimeApi.getRuntimeReceipt !== "function") {
+    runtimeBridgeState.loaded = true;
+    runtimeBridgeState.status = "FAIL";
+    runtimeBridgeState.error = "Runtime receipt function unavailable";
+    runtimeBridgeState.lastReceipt = null;
+    return null;
+  }
+
+  try {
+    const receipt = runtimeApi.getRuntimeReceipt({
+      frameState: { elapsedSeconds: performance.now() / 1000 },
+      timestamp: Date.now()
+    });
+    runtimeBridgeState.loaded = true;
+    runtimeBridgeState.status = "ONLINE";
+    runtimeBridgeState.error = null;
+    runtimeBridgeState.lastReceipt = receipt;
+    return receipt;
+  } catch (error) {
+    runtimeBridgeState.loaded = true;
+    runtimeBridgeState.status = "FAIL";
+    runtimeBridgeState.error = error instanceof Error ? error.message : String(error);
+    runtimeBridgeState.lastReceipt = null;
+    return null;
+  }
+}
+
+function renderParentStack() {
+  setText("k-parent-stack", parentStackState.status, kpiClass(parentStackState.status, "parent"));
+  setText("k-parent-files", parentStackState.loadedCount + "/5");
+
+  const summary = safeObj(parentStackState.summary);
+  const statusText =
+    parentStackState.status === "PENDING" ? "Loading parent stack smoke test" :
+    parentStackState.status === "PASS" ? "Parent stack smoke test passed" :
+    "Parent stack smoke test failed";
+
+  document.getElementById("parentRows").innerHTML =
+    row("status", statusText) +
+    row("module", parentStackState.source) +
+    row("spine", summary.spine ? "loaded" : "missing") +
+    row("adapter", summary.adapter ? "loaded" : "missing") +
+    row("universe factory", summary.universe ? "loaded" : "missing") +
+    row("instrument factory", summary.instrument ? "loaded" : "missing") +
+    row("orchestration", summary.orchestration ? "loaded" : "missing") +
+    row("files expected", String(PARENT_STACK_FILES.length)) +
+    row("files loaded", String(parentStackState.loadedCount)) +
+    row("error", parentStackState.error || "none");
+}
+
+function renderRuntimeBridge() {
+  setText("k-runtime-bridge", runtimeBridgeState.status, kpiClass(runtimeBridgeState.status, "bridge"));
+
+  const receipt = safeObj(runtimeBridgeState.lastReceipt);
+  const state = safeObj(receipt.state);
+  const denseIndex = safeObj(receipt.denseIndex);
+
+  document.getElementById("bridgeRows").innerHTML =
+    row("status", runtimeBridgeState.status) +
+    row("module", runtimeBridgeState.source) +
+    row("contract", receipt.contract || "—") +
+    row("projection", receipt.projection || "—") +
+    row("kernel index", (state.i ?? "—") + "," + (state.j ?? "—")) +
+    row("dense index", (denseIndex.x ?? "—") + "," + (denseIndex.y ?? "—")) +
+    row("error", runtimeBridgeState.error || "none");
+}
+
+function renderOfflineRuntime() {
+  setText("k-state","OFFLINE","bad");
+  setText("k-classified","—");
+  setText("k-phase","—");
+  setText("k-fresh","—");
+  setText("k-fps","—");
+  setText("k-dt","—");
+  setText("k-age","—");
+
+  document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("renderRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("diagRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("failureRows").innerHTML = row("status","No runtime receipt");
+}
+
+function renderRuntime(receipt, nowMs, dtMs) {
+  const state = safeObj(receipt.state);
+  const denseIndex = safeObj(receipt.denseIndex);
+  const region = safeObj(receipt.region);
+  const node = safeObj(receipt.node);
+  const boundary = safeObj(receipt.boundary);
+  const threshold = safeObj(receipt.threshold);
+  const forces = safeObj(receipt.forces);
+  const traversalStatus = safeObj(receipt.traversalStatus);
+  const selectedProjection = safeObj(receipt.selectedProjection);
+  const fieldSummary = safeObj(receipt.fieldSummary);
+
+  const ageMs = isFiniteNumber(receipt.timestamp) ? Math.max(0, nowMs - receipt.timestamp) : null;
+  const fps = dtMs > 0 ? 1000 / dtMs : null;
+  const primitive = computePrimitiveMetrics(forces);
+  const freshness = isFiniteNumber(ageMs) ? ageMs <= 2500 : false;
+  const classifiedState = classifyState(receipt, ageMs);
+
+  push(history.velocityA, primitive.packetSeparationWeight);
+  push(history.velocityB, primitive.shadowDensity);
+  push(history.velocityC, primitive.fragmentWeight);
+  push(history.coherence, primitive.directionalWeight);
+  push(history.clarity, primitive.directionalContrast);
+  push(history.stability, traversalStatus.admissible ? 1 : 0);
+  push(history.fps, fps ?? 0);
+  push(history.fresh, freshness ? 1 : 0);
+  push(history.burden, primitive.fragmentWeight);
+
+  setText("k-state", classifiedState, kpiClass(classifiedState, "state"));
+  setText("k-classified", classifiedState);
+  setText("k-phase", receipt.phase || "—");
+  setText("k-fresh", freshness ? "FRESH" : "STALE", kpiClass(freshness ? "FRESH" : "STALE", "fresh"));
+  setText("k-fps", intfmt(fps));
+  setText("k-dt", isFiniteNumber(dtMs) ? Math.round(dtMs) + "ms" : "—");
+  setText("k-age", isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—");
+
+  document.getElementById("runtimeRows").innerHTML =
+    row("source", receipt.source || "—") +
+    row("contract", receipt.contract || "—") +
+    row("verificationPass", bool(safeObj(receipt.verification).pass)) +
+    row("fresh", bool(freshness)) +
+    row("timestamp", String(receipt.timestamp ?? "—")) +
+    row("classifiedState", classifiedState) +
+    row("projection", receipt.projection || "—") +
+    row("phase", receipt.phase || "—");
+
+  document.getElementById("motionRows").innerHTML =
+    row("packetSeparationWeight", fmt(primitive.packetSeparationWeight, 6)) +
+    row("shadowDensity", fmt(primitive.shadowDensity, 6)) +
+    row("fragmentWeight", fmt(primitive.fragmentWeight, 6)) +
+    row("asymmetryWeight", fmt(primitive.asymmetryWeight, 6)) +
+    row("directionalWeight", fmt(primitive.directionalWeight, 6)) +
+    row("directionalContrast", fmt(primitive.directionalContrast, 6)) +
+    row("force.N", fmt(forces.N, 3)) +
+    row("force.E", fmt(forces.E, 3)) +
+    row("force.S", fmt(forces.S, 3)) +
+    row("force.W", fmt(forces.W, 3)) +
+    row("force.B", fmt(forces.B, 3));
+
+  document.getElementById("worldRows").innerHTML =
+    row("regionId", region.regionId || "—") +
+    row("regionLabel", region.label || "—") +
+    row("nodeId", node.nodeId || "—") +
+    row("nodeLabel", node.label || "—") +
+    row("terrainClass", receipt.terrainClass || "—") +
+    row("biomeType", receipt.biomeType || "—") +
+    row("surfaceMaterial", receipt.surfaceMaterial || "—") +
+    row("climateBand", receipt.climateBand || "—") +
+    row("climate", receipt.climate || "—") +
+    row("habitability", fmt(receipt.habitability, 3)) +
+    row("traversalDifficulty", fmt(receipt.traversalDifficulty, 3));
+
+  document.getElementById("renderRows").innerHTML =
+    row("selectedProjection", Object.keys(selectedProjection).length ? "present" : "none") +
+    row("projectionMode", receipt.projection || "—") +
+    row("fieldWidth", fieldSummary.width ?? "—") +
+    row("fieldHeight", fieldSummary.height ?? "—") +
+    row("denseX", denseIndex.x ?? "—") +
+    row("denseY", denseIndex.y ?? "—") +
+    row("kernelI", state.i ?? "—") +
+    row("kernelJ", state.j ?? "—");
+
+  document.getElementById("scopeRows").innerHTML =
+    row("boundary.classification", boundary.classification || "—") +
+    row("threshold.action", threshold.action || "—") +
+    row("threshold.value", fmt(threshold.value, 3)) +
+    row("admissible", bool(traversalStatus.admissible)) +
+    row("targetExists", bool(traversalStatus.targetExists)) +
+    row("targetLawful", bool(traversalStatus.targetLawful)) +
+    row("thresholdPass", bool(traversalStatus.thresholdPass)) +
+    row("boundaryPass", bool(traversalStatus.boundaryPass));
+
+  document.getElementById("emitRows").innerHTML =
+    row("waterMask", fmt(receipt.waterMask, 3)) +
+    row("landMask", fmt(receipt.landMask, 3)) +
+    row("shorelineMask", fmt(receipt.shorelineMask, 3)) +
+    row("moisture", fmt(receipt.moisture, 3)) +
+    row("accumulation", fmt(receipt.accumulation, 3)) +
+    row("selectedProjection.flat", selectedProjection.flat ? "yes" : "no") +
+    row("selectedProjection.tree", selectedProjection.tree ? "yes" : "no") +
+    row("selectedProjection.globe", selectedProjection.globe ? "yes" : "no");
+
+  document.getElementById("diagRows").innerHTML =
+    row("coherence", fmt(primitive.directionalWeight, 6)) +
+    row("clarity", fmt(primitive.directionalContrast, 6)) +
+    row("stability", fmt(traversalStatus.admissible ? 1 : 0, 6)) +
+    row("fps", fmt(fps, 2)) +
+    row("dtMs", fmt(dtMs, 2)) +
+    row("ageMs", fmt(ageMs, 2)) +
+    row("fresh", bool(freshness)) +
+    row("deterministic", bool(safeObj(receipt.verification).deterministic));
+
+  document.getElementById("failureRows").innerHTML =
+    row("bridgeError", runtimeBridgeState.error || "none") +
+    row("parentStackError", parentStackState.error || "none") +
+    row("moduleSource", runtimeBridgeState.source) +
+    row("parentStackSource", parentStackState.source) +
+    row("build", BUILD_STAMP) +
+    row("status", "live receipt acquired");
+
+  drawMulti(document.getElementById("velocityChart"),[
+    {data:history.velocityA,color:"#6fe7ff"},
+    {data:history.velocityB,color:"#7fffd4"},
+    {data:history.velocityC,color:"#ffd27a"}
+  ],0,1);
+
+  drawMulti(document.getElementById("coherenceChart"),[
+    {data:history.coherence,color:"#7fffd4"},
+    {data:history.clarity,color:"#6fe7ff"},
+    {data:history.stability,color:"#ffd27a"}
+  ],0,1);
+
+  drawMulti(document.getElementById("miscChart"),[
+    {data:history.fps,color:"#7fffd4"},
+    {data:history.fresh,color:"#6fe7ff"},
+    {data:history.burden,color:"#ff7a7a"}
+  ],0,Math.max(60,...history.fps,1));
+
+  document.getElementById("footer").textContent =
+    "BUILD=" + BUILD_STAMP +
+    " | PARENT_STACK=" + parentStackState.status + " " + parentStackState.loadedCount + "/5" +
+    " | BRIDGE=" + runtimeBridgeState.status +
+    " | STATE=" + classifiedState +
+    " | PHASE=" + (receipt.phase || "—") +
+    " | AGE=" + (isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—") +
+    " | KERNEL=" + (state.i ?? "—") + "," + (state.j ?? "—") +
+    " | DENSE=" + (denseIndex.x ?? "—") + "," + (denseIndex.y ?? "—");
+}
+
+async function boot() {
+  await loadModules();
+  await loadParentStack();
+  renderParentStack();
+  loadRuntimeBridge();
+  renderRuntimeBridge();
+
+  if (!parentStackState.pass && runtimeBridgeState.status === "FAIL") {
+    renderOfflineRuntime();
+  }
+
+  tick();
+}
+
+function tick() {
+  const nowMs = performance.now();
+  const dtMs = nowMs - lastTickMs;
+  lastTickMs = nowMs;
+
+  renderParentStack();
+
+  const receipt = loadRuntimeBridge();
+  renderRuntimeBridge();
+
+  if (!receipt) {
+    renderOfflineRuntime();
+    document.getElementById("footer").textContent =
+      "BUILD=" + BUILD_STAMP +
+      " | PARENT_STACK=" + parentStackState.status + " " + parentStackState.loadedCount + "/5" +
+      " | BRIDGE=" + runtimeBridgeState.status +
+      " | RUNTIME=OFFLINE | ERROR=" + (runtimeBridgeState.error || "none");
+    timer = window.setTimeout(tick, REFRESH_MS);
+    return;
+  }
+
+  renderRuntime(receipt, Date.now(), dtMs);
+  timer = window.setTimeout(tick, REFRESH_MS);
+}
+
+window.addEventListener("beforeunload", () => {
+  if (timer) window.clearTimeout(timer);
+});
+
+boot().catch((error) => {
+  const msg = error instanceof Error ? error.stack || error.message : String(error);
+  document.getElementById("footer").textContent = "BUILD=" + BUILD_STAMP + " | BOOT=FAIL | " + msg;
+});
+</script>
 </body>
 </html>

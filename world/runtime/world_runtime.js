@@ -18,9 +18,7 @@ const RUNTIME_META = Object.freeze({
 function deepFreeze(value) {
   if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
   const keys = Object.getOwnPropertyNames(value);
-  for (let i = 0; i < keys.length; i += 1) {
-    deepFreeze(value[keys[i]]);
-  }
+  for (let i = 0; i < keys.length; i += 1) deepFreeze(value[keys[i]]);
   return Object.freeze(value);
 }
 
@@ -41,10 +39,7 @@ function getElapsedSeconds(frameState = {}) {
 }
 
 function computeFieldSummary() {
-  return deepFreeze({
-    width: 256,
-    height: 256
-  });
+  return deepFreeze({ width: 256, height: 256 });
 }
 
 function computeDenseIndex(elapsedSeconds) {
@@ -83,20 +78,20 @@ function computeForceVector(elapsedSeconds, denseIndex) {
 function computeBoundary(forceVector) {
   const burden = Math.abs(forceVector.B);
   if (burden > 1.2) {
-    return deepFreeze({
-      classification: "HOLD",
-      label: "HOLD"
-    });
+    return deepFreeze({ classification: "HOLD", label: "HOLD" });
   }
-  return deepFreeze({
-    classification: "OPEN",
-    label: "OPEN"
-  });
+  return deepFreeze({ classification: "OPEN", label: "OPEN" });
 }
 
 function computeThreshold(forceVector) {
-  const magnitude = Math.abs(forceVector.N) + Math.abs(forceVector.E) + Math.abs(forceVector.S) + Math.abs(forceVector.W);
+  const magnitude =
+    Math.abs(forceVector.N) +
+    Math.abs(forceVector.E) +
+    Math.abs(forceVector.S) +
+    Math.abs(forceVector.W);
+
   const pass = magnitude < 12;
+
   return deepFreeze({
     action: pass ? "PASS" : "HALT",
     value: Math.round((magnitude / 12) * 1000) / 1000
@@ -204,8 +199,7 @@ function buildReceipt({
 
 export function getRuntimeReceipt(options = {}) {
   const source = normalizeObject(options);
-  const timestamp =
-    Number.isFinite(source.timestamp) ? source.timestamp : Date.now();
+  const timestamp = Number.isFinite(source.timestamp) ? source.timestamp : Date.now();
   const elapsedSeconds = getElapsedSeconds(source.frameState);
   const denseIndex = computeDenseIndex(elapsedSeconds);
   const kernelIndex = computeKernelIndex(denseIndex);

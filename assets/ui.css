@@ -1,3 +1,4 @@
+DESTINATION: replace the stylesheet file that currently contains this block
 :root {
   --bg-0: #05070d;
   --bg-1: #0a0f1a;
@@ -158,25 +159,31 @@ body[data-mode="world"] #app-shell {
   min-height: 100vh;
 }
 
+/* CANVAS AUTHORITY — FULL STRENGTH, NO GLOBAL DIM */
 #world-canvas,
-.world-canvas {
+.world-canvas,
+#scene {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   display: block;
   z-index: var(--canvas-z);
-  opacity: 0.92;
+  opacity: 1;
+  background: transparent;
 }
 
+/* RUNTIME ROOT SHOULD NOT VISUALLY COMPETE WITH CANVAS */
 #runtime-root,
 .runtime-root {
   position: absolute;
   inset: 0;
   z-index: var(--runtime-root-z);
   pointer-events: none;
+  background: transparent;
 }
 
+/* HUD IS OPTIONAL INFORMATION, NOT DEFAULT VISUAL AUTHORITY */
 #hud,
 .hud {
   position: absolute;
@@ -283,6 +290,7 @@ body[data-mode="world"] #app-shell {
   pointer-events: none;
 }
 
+/* COMPASS OVERLAY REMAINS OPTIONAL AND SHOULD NOT SOFTEN THE WORLD */
 #compass-overlay,
 .compass-overlay {
   position: absolute;

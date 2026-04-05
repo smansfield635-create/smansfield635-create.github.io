@@ -1,626 +1,374 @@
-Path: /index.js
+DESTINATION: /index.js
+(() => {
+  "use strict";
 
-// /index.js
-// MODE: CONTRACT EXECUTION
-// CONTRACT: INDEX_BASELINE_CONTRACT_G2
-// STATUS: HOST ONLY | PLATFORM OWNER | NON-DRIFT
+  const canvas = document.getElementById("scene");
+  const ctx = canvas.getContext("2d", { alpha: false });
 
-import { createRuntime } from "./world/runtime.js";
-import renderModule from "./world/render.js";
-import instrumentsModule from "./assets/instruments.js";
+  const DPR_CAP = 2;
+  const STARFIELD_COUNT = 900;
+  const MICRO_DUST_COUNT = 260;
+  const COMET_COUNT = 6;
 
-const INDEX_META = Object.freeze({
-  name: "index",
-  version: "G2",
-  contract: "INDEX_BASELINE_CONTRACT_G2",
-  role: "platform_host_and_boot_layer",
-  deterministic: true,
-  sourceOfTruth: false,
-  mutatesState: false,
-  platformOwned: true
-});
-
-const INDEX_CONSTANTS = Object.freeze({
-  DEFAULT_PROJECTION: "flat",
-  CANVAS_ID: "world-canvas",
-  ROOT_ID: "app",
-  HUD_ID: "world-hud",
-  PANEL_ID: "instrument-panel",
-  BACKGROUND: "#05070b",
-  FOREGROUND: "#e8edf5",
-  GRID_COLOR: "rgba(255,255,255,0.08)",
-  BLOCK_COLOR: "#ff4d4f",
-  HOLD_COLOR: "#faad14",
-  GATE_COLOR: "#40a9ff",
-  BRIDGE_COLOR: "#73d13d",
-  OPEN_COLOR: "#b7eb8f",
-  FONT: "12px system-ui, -apple-system, Segoe UI, Roboto, sans-serif",
-  MOVE_STEP: 1,
-  MARKER_RADIUS: 8,
-  GLOBE_RADIUS_RATIO: 0.36
-});
-
-const deepFreeze = (value) => {
-  if (value === null || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.getOwnPropertyNames(value).forEach((key) => deepFreeze(value[key]));
-  return Object.freeze(value);
-};
-
-const assert = (condition, code) => {
-  if (!condition) {
-    const error = new Error(code);
-    error.code = code;
-    throw error;
-  }
-};
-
-const hasWindow = () => typeof window !== "undefined" && !!window;
-const hasDocument = () => typeof document !== "undefined" && !!document;
-
-const clamp01 = (value) => {
-  if (!Number.isFinite(value) || value <= 0) return 0;
-  if (value >= 1) return 1;
-  return value;
-};
-
-const stableRound = (value, places = 12) => {
-  const factor = 10 ** places;
-  return Math.round(value * factor) / factor;
-};
-
-const normalizeObject = (value) =>
-  value && typeof value === "object" && !Array.isArray(value) ? value : {};
-
-const ensureElement = (id, tagName, parent) => {
-  let element = document.getElementById(id);
-  if (element) return element;
-
-  element = document.createElement(tagName);
-  element.id = id;
-  parent.appendChild(element);
-  return element;
-};
-
-const applyBaseStyles = () => {
-  document.documentElement.style.background = INDEX_CONSTANTS.BACKGROUND;
-  document.body.style.margin = "0";
-  document.body.style.background = INDEX_CONSTANTS.BACKGROUND;
-  document.body.style.color = INDEX_CONSTANTS.FOREGROUND;
-  document.body.style.font = INDEX_CONSTANTS.FONT;
-  document.body.style.overflow = "hidden";
-};
-
-const createLayout = () => {
-  applyBaseStyles();
-
-  const root = ensureElement(INDEX_CONSTANTS.ROOT_ID, "div", document.body);
-  root.style.position = "absolute";
-  root.style.inset = "0";
-  root.style.display = "grid";
-  root.style.gridTemplateRows = "1fr auto";
-  root.style.background = "transparent";
-  root.style.minHeight = "0";
-
-  const canvasWrap = ensureElement("world-canvas-wrap", "div", root);
-  canvasWrap.style.position = "relative";
-  canvasWrap.style.minHeight = "0";
-  canvasWrap.style.overflow = "hidden";
-
-  const canvas = ensureElement(INDEX_CONSTANTS.CANVAS_ID, "canvas", canvasWrap);
-  canvas.style.display = "block";
-  canvas.style.width = "100%";
-  canvas.style.height = "100%";
-  canvas.style.background = INDEX_CONSTANTS.BACKGROUND;
-
-  const hud = ensureElement(INDEX_CONSTANTS.HUD_ID, "div", canvasWrap);
-  hud.style.position = "absolute";
-  hud.style.left = "12px";
-  hud.style.top = "12px";
-  hud.style.maxWidth = "min(520px, calc(100vw - 48px))";
-  hud.style.padding = "10px 12px";
-  hud.style.border = "1px solid rgba(255,255,255,0.08)";
-  hud.style.background = "rgba(255,255,255,0.04)";
-  hud.style.backdropFilter = "blur(6px)";
-  hud.style.borderRadius = "10px";
-  hud.style.pointerEvents = "none";
-  hud.style.whiteSpace = "pre-wrap";
-  hud.style.lineHeight = "1.35";
-  hud.style.font = INDEX_CONSTANTS.FONT;
-  hud.style.color = INDEX_CONSTANTS.FOREGROUND;
-
-  const panel = ensureElement(INDEX_CONSTANTS.PANEL_ID, "div", root);
-  panel.style.padding = "10px 12px";
-  panel.style.borderTop = "1px solid rgba(255,255,255,0.08)";
-  panel.style.background = "rgba(255,255,255,0.02)";
-  panel.style.overflow = "auto";
-  panel.style.maxHeight = "22vh";
-  panel.style.font = INDEX_CONSTANTS.FONT;
-  panel.style.lineHeight = "1.45";
-  if (!panel.innerHTML) {
-    panel.innerHTML = "<div><b>STATE:</b> boot_pending</div><div><b>PANEL:</b> awaiting instrument receipt</div>";
-  }
-
-  return deepFreeze({ root, canvasWrap, canvas, hud, panel });
-};
-
-const getCanvasContext = (canvas) => {
-  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: false });
-  assert(ctx, "CANVAS_CONTEXT_UNAVAILABLE");
-  return ctx;
-};
-
-const resizeCanvas = (canvas, ctx) => {
-  const rect = canvas.getBoundingClientRect();
-  const dpr = Math.max(1, Math.min(2, hasWindow() ? window.devicePixelRatio || 1 : 1));
-  const width = Math.max(1, Math.floor(rect.width * dpr));
-  const height = Math.max(1, Math.floor(rect.height * dpr));
-
-  if (canvas.width !== width || canvas.height !== height) {
-    canvas.width = width;
-    canvas.height = height;
-  }
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-  return deepFreeze({
-    cssWidth: Math.max(1, Math.floor(rect.width)),
-    cssHeight: Math.max(1, Math.floor(rect.height)),
-    dpr
-  });
-};
-
-const hsvToRgb = (h, s, v) => {
-  const hue = ((h % 1) + 1) % 1;
-  const sat = clamp01(s);
-  const val = clamp01(v);
-
-  const i = Math.floor(hue * 6);
-  const f = hue * 6 - i;
-  const p = val * (1 - sat);
-  const q = val * (1 - f * sat);
-  const t = val * (1 - (1 - f) * sat);
-
-  let r = 0;
-  let g = 0;
-  let b = 0;
-
-  switch (i % 6) {
-    case 0: r = val; g = t; b = p; break;
-    case 1: r = q; g = val; b = p; break;
-    case 2: r = p; g = val; b = t; break;
-    case 3: r = p; g = q; b = val; break;
-    case 4: r = t; g = p; b = val; break;
-    default: r = val; g = p; b = q; break;
-  }
-
-  return {
-    r: Math.round(r * 255),
-    g: Math.round(g * 255),
-    b: Math.round(b * 255)
-  };
-};
-
-const rgbString = ({ r, g, b }, alpha = 1) => `rgba(${r},${g},${b},${alpha})`;
-
-const pickBoundaryColor = (boundaryClass) => {
-  if (boundaryClass === "BLOCK") return INDEX_CONSTANTS.BLOCK_COLOR;
-  if (boundaryClass === "HOLD") return INDEX_CONSTANTS.HOLD_COLOR;
-  if (boundaryClass === "GATE") return INDEX_CONSTANTS.GATE_COLOR;
-  if (boundaryClass === "BRIDGE") return INDEX_CONSTANTS.BRIDGE_COLOR;
-  return INDEX_CONSTANTS.OPEN_COLOR;
-};
-
-const buildHudText = ({ frameState, runtimePacket, renderPacket, instrumentPacket }) => {
-  const selected = normalizeObject(renderPacket?.projection?.selectedProjection);
-  const stateLine = typeof instrumentPacket?.classifiedState === "string"
-    ? instrumentPacket.classifiedState
-    : "—";
-
-  const lines = [
-    "WORLD HOST",
-    `state=${stateLine}`,
-    `projection=${runtimePacket.projectionState}`,
-    `elapsedSeconds=${stableRound(frameState.elapsedSeconds, 3)}`,
-    `kernel=(${runtimePacket.index.i},${runtimePacket.index.j})`,
-    `dense=(${runtimePacket.denseIndex.x},${runtimePacket.denseIndex.y})`,
-    `region=${runtimePacket.region.label}`,
-    `node=${runtimePacket.node.label}`,
-    `boundary=${runtimePacket.boundary.classification}`,
-    `terrain=${runtimePacket.terrainClass}`,
-    `biome=${runtimePacket.biomeType}`,
-    `traversal=${runtimePacket.traversalStatus.action}`,
-    `receipt=${runtimePacket.receipt.timestamp}`,
-    `projectionSelected=${JSON.stringify(selected)}`
-  ];
-
-  return lines.join("\n");
-};
-
-const clearCanvas = (ctx, canvasState) => {
-  ctx.clearRect(0, 0, canvasState.cssWidth, canvasState.cssHeight);
-  ctx.fillStyle = INDEX_CONSTANTS.BACKGROUND;
-  ctx.fillRect(0, 0, canvasState.cssWidth, canvasState.cssHeight);
-};
-
-const drawBackdrop = (ctx, canvasState, renderPacket) => {
-  const color = renderPacket.visible.colorOutput;
-  const rgb = hsvToRgb(color.hue, color.saturation, color.value);
-
-  ctx.fillStyle = rgbString(rgb, 0.12);
-  ctx.fillRect(0, 0, canvasState.cssWidth, canvasState.cssHeight);
-
-  ctx.strokeStyle = INDEX_CONSTANTS.GRID_COLOR;
-  ctx.lineWidth = 1;
-
-  const cols = 12;
-  const rows = 8;
-
-  for (let i = 1; i < cols; i += 1) {
-    const x = (i / cols) * canvasState.cssWidth;
-    ctx.beginPath();
-    ctx.moveTo(x, 0);
-    ctx.lineTo(x, canvasState.cssHeight);
-    ctx.stroke();
-  }
-
-  for (let j = 1; j < rows; j += 1) {
-    const y = (j / rows) * canvasState.cssHeight;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.lineTo(canvasState.cssWidth, y);
-    ctx.stroke();
-  }
-};
-
-const drawMarker = (ctx, x, y, radius, fill, stroke) => {
-  ctx.beginPath();
-  ctx.arc(x, y, radius, 0, Math.PI * 2);
-  ctx.fillStyle = fill;
-  ctx.fill();
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = stroke;
-  ctx.stroke();
-};
-
-const drawFlat = (ctx, renderPacket, field, canvasState) => {
-  const width = Number(field && field.width) || 1;
-  const height = Number(field && field.height) || 1;
-
-  const x = ((renderPacket.runtime.denseIndex.x + 0.5) / width) * canvasState.cssWidth;
-  const y = ((renderPacket.runtime.denseIndex.y + 0.5) / height) * canvasState.cssHeight;
-
-  drawMarker(
-    ctx,
-    x,
-    y,
-    INDEX_CONSTANTS.MARKER_RADIUS,
-    rgbString(
-      hsvToRgb(
-        renderPacket.visible.colorOutput.hue,
-        renderPacket.visible.colorOutput.saturation,
-        renderPacket.visible.colorOutput.value
-      ),
-      0.95
-    ),
-    pickBoundaryColor(renderPacket.runtime.boundary.classification)
-  );
-};
-
-const drawTree = (ctx, renderPacket, canvasState) => {
-  const width = canvasState.cssWidth;
-  const height = canvasState.cssHeight;
-  const selected = normalizeObject(renderPacket.projection.selectedProjection);
-
-  ctx.strokeStyle = INDEX_CONSTANTS.GRID_COLOR;
-  ctx.lineWidth = 1;
-
-  for (let i = 1; i < 9; i += 1) {
-    const gx = (i / 9) * width;
-    ctx.beginPath();
-    ctx.moveTo(gx, 0);
-    ctx.lineTo(gx, height);
-    ctx.stroke();
-  }
-
-  for (let j = 1; j < 16; j += 1) {
-    const gy = (j / 16) * height;
-    ctx.beginPath();
-    ctx.moveTo(0, gy);
-    ctx.lineTo(width, gy);
-    ctx.stroke();
-  }
-
-  const x = (Number(selected.root || 0) / 9) * width;
-  const y = (Number(selected.leaf || 0) / 16) * height;
-
-  drawMarker(
-    ctx,
-    x,
-    y,
-    INDEX_CONSTANTS.MARKER_RADIUS,
-    rgbString(
-      hsvToRgb(
-        renderPacket.visible.colorOutput.hue,
-        renderPacket.visible.colorOutput.saturation,
-        renderPacket.visible.colorOutput.value
-      ),
-      0.95
-    ),
-    pickBoundaryColor(renderPacket.runtime.boundary.classification)
-  );
-};
-
-const drawGlobe = (ctx, renderPacket, canvasState) => {
-  const width = canvasState.cssWidth;
-  const height = canvasState.cssHeight;
-  const cx = width / 2;
-  const cy = height / 2;
-  const r = Math.min(width, height) * INDEX_CONSTANTS.GLOBE_RADIUS_RATIO;
-  const selected = normalizeObject(renderPacket.projection.selectedProjection);
-
-  ctx.strokeStyle = "rgba(255,255,255,0.18)";
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.stroke();
-
-  const px = cx + Number(selected.x || 0) * r;
-  const py = cy + Number(selected.y || 0) * r;
-
-  drawMarker(
-    ctx,
-    px,
-    py,
-    INDEX_CONSTANTS.MARKER_RADIUS,
-    rgbString(
-      hsvToRgb(
-        renderPacket.visible.colorOutput.hue,
-        renderPacket.visible.colorOutput.saturation,
-        renderPacket.visible.colorOutput.value
-      ),
-      0.95
-    ),
-    pickBoundaryColor(renderPacket.runtime.boundary.classification)
-  );
-};
-
-const renderToCanvas = (ctx, renderPacket, field, canvasState) => {
-  clearCanvas(ctx, canvasState);
-  drawBackdrop(ctx, canvasState, renderPacket);
-
-  const projection = renderPacket.runtime.projectionState;
-  if (projection === "tree") {
-    drawTree(ctx, renderPacket, canvasState);
-    return;
-  }
-  if (projection === "globe") {
-    drawGlobe(ctx, renderPacket, canvasState);
-    return;
-  }
-  drawFlat(ctx, renderPacket, field, canvasState);
-};
-
-const createIndexHost = () => {
-  assert(hasDocument() && hasWindow(), "PLATFORM_UNAVAILABLE");
-
-  const layout = createLayout();
-  const ctx = getCanvasContext(layout.canvas);
+  const SYSTEM_NAMES = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "C"];
+  const SYSTEM_STRENGTHS = [1.00, 0.93, 0.86, 0.79, 0.72, 0.65, 0.58, 0.51, 0.44];
 
   const state = {
-    started: false,
-    rafId: null,
-    startedAtMs: null,
-    frameState: deepFreeze({ elapsedSeconds: 0 }),
-    lastRenderPacket: null,
-    lastInstrumentPacket: null,
-    projection: INDEX_CONSTANTS.DEFAULT_PROJECTION,
-    pendingMove: deepFreeze({ dx: 0, dy: 0 }),
-    runtimeHandle: null
+    width: 0,
+    height: 0,
+    dpr: 1,
+    timeStart: performance.now(),
+    stars: [],
+    dust: [],
+    comets: [],
+    systems: []
   };
 
-  const instruments =
-    instrumentsModule && typeof instrumentsModule.createInstruments === "function"
-      ? instrumentsModule.createInstruments()
-      : instrumentsModule;
+  function clamp(v, min, max) {
+    return Math.max(min, Math.min(max, v));
+  }
 
-  const syncPlatform = () => resizeCanvas(layout.canvas, ctx);
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
 
-  const createInitialRuntime = () => {
-    state.runtimeHandle = createRuntime({
-      projection: state.projection,
-      frameState: state.frameState
-    });
-  };
+  function resize() {
+    const rect = canvas.getBoundingClientRect();
+    state.dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
+    state.width = Math.max(1, Math.floor(rect.width));
+    state.height = Math.max(1, Math.floor(rect.height));
+    canvas.width = Math.floor(state.width * state.dpr);
+    canvas.height = Math.floor(state.height * state.dpr);
+    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
 
-  const refreshRuntimeForFrame = () => {
-    assert(state.runtimeHandle, "RUNTIME_HANDLE_MISSING");
-    state.runtimeHandle.refreshFrameState(state.frameState);
+    rebuildStaticField();
+  }
 
-    const current = state.runtimeHandle.getCurrentState();
-    if (current.projectionState !== state.projection) {
-      state.runtimeHandle.reset({
-        projection: state.projection,
-        frameState: state.frameState,
-        initialX: current.denseIndex.x,
-        initialY: current.denseIndex.y,
-        planetField: state.runtimeHandle.getField()
+  function rebuildStaticField() {
+    buildStarfield();
+    buildDust();
+    buildComets();
+    buildSystems();
+  }
+
+  function buildStarfield() {
+    state.stars = [];
+    const w = state.width;
+    const h = state.height;
+
+    for (let i = 0; i < STARFIELD_COUNT; i += 1) {
+      const layer = i % 3;
+      state.stars.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: layer === 0 ? Math.random() * 0.8 + 0.25 : layer === 1 ? Math.random() * 1.1 + 0.45 : Math.random() * 1.5 + 0.7,
+        a: layer === 0 ? Math.random() * 0.30 + 0.08 : layer === 1 ? Math.random() * 0.35 + 0.12 : Math.random() * 0.45 + 0.18,
+        t: Math.random() * Math.PI * 2,
+        s: Math.random() * 0.8 + 0.2
       });
     }
-  };
-
-  const applyPendingMoveIfNeeded = () => {
-    if (!state.runtimeHandle) return;
-
-    const dx = state.pendingMove.dx;
-    const dy = state.pendingMove.dy;
-
-    if (dx === 0 && dy === 0) return;
-
-    state.runtimeHandle.advance({ dx, dy });
-    state.pendingMove = deepFreeze({ dx: 0, dy: 0 });
-  };
-
-  const updateInstrumentPanel = (instrumentPacket) => {
-    if (!instrumentPacket) return;
-
-    if (instruments && typeof instruments.renderPanelHTML === "function") {
-      layout.panel.innerHTML = instruments.renderPanelHTML(instrumentPacket);
-      return;
-    }
-
-    if (instruments && typeof instruments.renderPanelText === "function") {
-      layout.panel.textContent = instruments.renderPanelText(instrumentPacket);
-      return;
-    }
-
-    const lines = normalizeObject(instrumentPacket.displayPayload).lines;
-    layout.panel.textContent = Array.isArray(lines) ? lines.join("\n") : "instrument packet received";
-  };
-
-  const stepFrame = (nowMs) => {
-    if (!state.started) return;
-
-    if (!Number.isFinite(state.startedAtMs)) {
-      state.startedAtMs = nowMs;
-    }
-
-    state.frameState = deepFreeze({
-      elapsedSeconds: stableRound((nowMs - state.startedAtMs) / 1000, 6)
-    });
-
-    refreshRuntimeForFrame();
-    applyPendingMoveIfNeeded();
-
-    const renderPacket = renderModule.render(state.runtimeHandle);
-    state.lastRenderPacket = renderPacket;
-
-    const instrumentPacket =
-      instruments && typeof instruments.update === "function"
-        ? instruments.update({
-            runtimeState: renderPacket.runtime,
-            renderState: renderPacket
-          })
-        : null;
-
-    state.lastInstrumentPacket = instrumentPacket;
-
-    const canvasState = syncPlatform();
-    renderToCanvas(ctx, renderPacket, state.runtimeHandle.getField(), canvasState);
-    updateInstrumentPanel(instrumentPacket);
-    layout.hud.textContent = buildHudText({
-      frameState: state.frameState,
-      runtimePacket: renderPacket.runtime,
-      renderPacket,
-      instrumentPacket
-    });
-
-    state.rafId = window.requestAnimationFrame(stepFrame);
-  };
-
-  const handleKeyDown = (event) => {
-    if (!state.started) return;
-
-    const key = String(event.key || "");
-    if (key === "1") {
-      state.projection = "flat";
-      return;
-    }
-    if (key === "2") {
-      state.projection = "tree";
-      return;
-    }
-    if (key === "3") {
-      state.projection = "globe";
-      return;
-    }
-    if (key === "ArrowUp" || key === "w" || key === "W") {
-      state.pendingMove = deepFreeze({ dx: 0, dy: -INDEX_CONSTANTS.MOVE_STEP });
-      return;
-    }
-    if (key === "ArrowDown" || key === "s" || key === "S") {
-      state.pendingMove = deepFreeze({ dx: 0, dy: INDEX_CONSTANTS.MOVE_STEP });
-      return;
-    }
-    if (key === "ArrowLeft" || key === "a" || key === "A") {
-      state.pendingMove = deepFreeze({ dx: -INDEX_CONSTANTS.MOVE_STEP, dy: 0 });
-      return;
-    }
-    if (key === "ArrowRight" || key === "d" || key === "D") {
-      state.pendingMove = deepFreeze({ dx: INDEX_CONSTANTS.MOVE_STEP, dy: 0 });
-    }
-  };
-
-  const start = () => {
-    if (state.started) return deepFreeze({ started: true });
-
-    syncPlatform();
-    state.started = true;
-    state.startedAtMs = null;
-    state.frameState = deepFreeze({ elapsedSeconds: 0 });
-    state.lastRenderPacket = null;
-    state.lastInstrumentPacket = null;
-    state.pendingMove = deepFreeze({ dx: 0, dy: 0 });
-
-    createInitialRuntime();
-
-    window.addEventListener("resize", syncPlatform, { passive: true });
-    window.addEventListener("keydown", handleKeyDown);
-    state.rafId = window.requestAnimationFrame(stepFrame);
-
-    return deepFreeze({ started: true });
-  };
-
-  const stop = () => {
-    if (!state.started) return deepFreeze({ started: false });
-
-    state.started = false;
-
-    if (state.rafId !== null) {
-      window.cancelAnimationFrame(state.rafId);
-      state.rafId = null;
-    }
-
-    window.removeEventListener("resize", syncPlatform);
-    window.removeEventListener("keydown", handleKeyDown);
-
-    if (instruments && typeof instruments.dispose === "function") {
-      instruments.dispose();
-    }
-
-    return deepFreeze({ started: false });
-  };
-
-  const getFrameState = () => state.frameState;
-  const getLastRenderPacket = () => state.lastRenderPacket;
-  const getLastInstrumentPacket = () => state.lastInstrumentPacket;
-
-  return deepFreeze({
-    meta: INDEX_META,
-    constants: INDEX_CONSTANTS,
-    start,
-    stop,
-    getFrameState,
-    getLastRenderPacket,
-    getLastInstrumentPacket
-  });
-};
-
-const INDEX = createIndexHost();
-
-export const start = () => INDEX.start();
-export const stop = () => INDEX.stop();
-export const getFrameState = () => INDEX.getFrameState();
-export const getLastRenderPacket = () => INDEX.getLastRenderPacket();
-export const getLastInstrumentPacket = () => INDEX.getLastInstrumentPacket();
-
-if (typeof window !== "undefined" && typeof document !== "undefined") {
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => {
-      INDEX.start();
-    }, { once: true });
-  } else {
-    INDEX.start();
   }
-}
 
-export default INDEX;
+  function buildDust() {
+    state.dust = [];
+    const w = state.width;
+    const h = state.height;
+
+    for (let i = 0; i < MICRO_DUST_COUNT; i += 1) {
+      state.dust.push({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        r: Math.random() * 70 + 30,
+        a: Math.random() * 0.035 + 0.008
+      });
+    }
+  }
+
+  function buildComets() {
+    state.comets = [];
+    const w = state.width;
+    const h = state.height;
+
+    for (let i = 0; i < COMET_COUNT; i += 1) {
+      const side = i % 2 === 0 ? -1 : 1;
+      state.comets.push({
+        baseX: side < 0 ? -Math.random() * 0.25 * w : w + Math.random() * 0.25 * w,
+        baseY: Math.random() * h * 0.85,
+        dx: side < 0 ? 1 : -1,
+        speed: Math.random() * 30 + 18,
+        len: Math.random() * 110 + 70,
+        phase: Math.random() * 1000
+      });
+    }
+  }
+
+  function diamondPoints(cx, cy, spacing) {
+    return [
+      { label: "N", x: cx, y: cy - spacing * 1.35 },
+      { label: "NE", x: cx + spacing, y: cy - spacing * 0.68 },
+      { label: "E", x: cx + spacing * 1.35, y: cy },
+      { label: "SE", x: cx + spacing, y: cy + spacing * 0.68 },
+      { label: "S", x: cx, y: cy + spacing * 1.35 },
+      { label: "SW", x: cx - spacing, y: cy + spacing * 0.68 },
+      { label: "W", x: cx - spacing * 1.35, y: cy },
+      { label: "NW", x: cx - spacing, y: cy - spacing * 0.68 },
+      { label: "C", x: cx, y: cy }
+    ];
+  }
+
+  function buildSystems() {
+    state.systems = [];
+
+    const w = state.width;
+    const h = state.height;
+    const cx = w * 0.5;
+    const cy = h * 0.54;
+    const spacing = Math.min(w, h) * 0.17;
+    const points = diamondPoints(cx, cy, spacing);
+
+    for (let i = 0; i < points.length; i += 1) {
+      const p = points[i];
+      const strength = SYSTEM_STRENGTHS[i];
+      const baseOrbit = lerp(26, 48, 1 - strength);
+      const orbitCount = 3 + (i % 3);
+
+      const planets = [];
+      for (let j = 0; j < orbitCount; j += 1) {
+        planets.push({
+          orbitR: baseOrbit + j * 10 + Math.random() * 4,
+          theta: Math.random() * Math.PI * 2,
+          speed: (0.08 + Math.random() * 0.06) * (1 / (j + 1)),
+          size: clamp(1.4 + Math.random() * 2.1 - j * 0.12, 1.1, 3.2)
+        });
+      }
+
+      state.systems.push({
+        name: p.label,
+        x: p.x,
+        y: p.y,
+        strength,
+        starRadius: lerp(2.6, 5.8, strength),
+        glowRadius: lerp(16, 34, strength),
+        ringRadius: baseOrbit + orbitCount * 8,
+        planets
+      });
+    }
+  }
+
+  function drawBackground() {
+    const w = state.width;
+    const h = state.height;
+
+    const bg = ctx.createRadialGradient(w * 0.5, h * 0.52, 0, w * 0.5, h * 0.52, Math.max(w, h) * 0.65);
+    bg.addColorStop(0, "#0d1a35");
+    bg.addColorStop(0.4, "#071126");
+    bg.addColorStop(1, "#040814");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, w, h);
+
+    drawNebula(w * 0.24, h * 0.29, Math.min(w, h) * 0.28, "rgba(102,72,168,0.13)");
+    drawNebula(w * 0.77, h * 0.68, Math.min(w, h) * 0.24, "rgba(48,122,182,0.11)");
+    drawNebula(w * 0.56, h * 0.42, Math.min(w, h) * 0.20, "rgba(255,255,255,0.035)");
+  }
+
+  function drawNebula(x, y, r, color) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+    g.addColorStop(0, color);
+    g.addColorStop(0.45, color.replace(/0\.\d+\)/, "0.045)"));
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawDust() {
+    for (const d of state.dust) {
+      const g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+      g.addColorStop(0, `rgba(255,255,255,${d.a})`);
+      g.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawStars(t) {
+    for (const s of state.stars) {
+      const flicker = 0.75 + 0.25 * Math.sin(t * 0.0012 * s.s + s.t);
+      ctx.globalAlpha = s.a * flicker;
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function drawDiamondGuides() {
+    const c = state.systems.find((s) => s.name === "C");
+    if (!c) return;
+
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 1;
+
+    const order = ["N", "NE", "E", "SE", "S", "SW", "W", "NW", "N"];
+    ctx.beginPath();
+
+    for (let i = 0; i < order.length; i += 1) {
+      const sys = state.systems.find((s) => s.name === order[i]);
+      if (!sys) continue;
+      if (i === 0) ctx.moveTo(sys.x, sys.y);
+      else ctx.lineTo(sys.x, sys.y);
+    }
+
+    ctx.stroke();
+
+    for (const s of state.systems) {
+      if (s.name === "C") continue;
+      ctx.beginPath();
+      ctx.moveTo(c.x, c.y);
+      ctx.lineTo(s.x, s.y);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  function drawComets(t) {
+    for (const c of state.comets) {
+      const cycle = ((t * 0.001 * c.speed) + c.phase) % (state.width * 1.8);
+      const x = c.baseX + cycle * c.dx;
+      const y = c.baseY + Math.sin((t * 0.0003) + c.phase) * 28;
+
+      const tx = x - c.dx * c.len;
+      const ty = y + c.len * 0.06;
+
+      const g = ctx.createLinearGradient(x, y, tx, ty);
+      g.addColorStop(0, "rgba(255,255,255,0.9)");
+      g.addColorStop(0.18, "rgba(190,220,255,0.45)");
+      g.addColorStop(1, "rgba(190,220,255,0)");
+
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.4;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(255,255,255,0.95)";
+      ctx.beginPath();
+      ctx.arc(x, y, 1.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function drawSystem(sys, elapsed) {
+    const pulse = 0.92 + 0.08 * Math.sin(elapsed * 0.0011 + sys.strength * 10);
+
+    const glow = ctx.createRadialGradient(sys.x, sys.y, 0, sys.x, sys.y, sys.glowRadius * pulse);
+    glow.addColorStop(0, `rgba(255,245,220,${0.55 * sys.strength + 0.25})`);
+    glow.addColorStop(0.35, `rgba(255,220,160,${0.18 * sys.strength + 0.08})`);
+    glow.addColorStop(1, "rgba(255,220,160,0)");
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(sys.x, sys.y, sys.glowRadius * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = "rgba(255,255,255,0.06)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(sys.x, sys.y, sys.ringRadius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    for (const p of sys.planets) {
+      const theta = p.theta + elapsed * 0.001 * p.speed;
+      const px = sys.x + Math.cos(theta) * p.orbitR;
+      const py = sys.y + Math.sin(theta) * p.orbitR * 0.62;
+
+      ctx.strokeStyle = "rgba(255,255,255,0.045)";
+      ctx.beginPath();
+      ctx.ellipse(sys.x, sys.y, p.orbitR, p.orbitR * 0.62, 0, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = "rgba(170,200,255,0.92)";
+      ctx.beginPath();
+      ctx.arc(px, py, p.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = "#fff4dd";
+    ctx.beginPath();
+    ctx.arc(sys.x, sys.y, sys.starRadius * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    drawStarCross(sys.x, sys.y, sys.starRadius * 3.3, 0.14 + sys.strength * 0.12);
+
+    ctx.fillStyle = "rgba(223,233,255,0.90)";
+    ctx.font = "12px Arial";
+    ctx.textAlign = "center";
+    ctx.fillText(sys.name, sys.x, sys.y - sys.ringRadius - 10);
+  }
+
+  function drawStarCross(x, y, r, alpha) {
+    ctx.save();
+    ctx.strokeStyle = `rgba(255,245,220,${alpha})`;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.moveTo(x - r, y);
+    ctx.lineTo(x + r, y);
+    ctx.moveTo(x, y - r);
+    ctx.lineTo(x, y + r);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  function drawScaleRead() {
+    const systems = state.systems;
+    if (!systems.length) return;
+
+    let minX = Infinity;
+    let maxX = -Infinity;
+    let minY = Infinity;
+    let maxY = -Infinity;
+
+    for (const s of systems) {
+      minX = Math.min(minX, s.x - s.ringRadius);
+      maxX = Math.max(maxX, s.x + s.ringRadius);
+      minY = Math.min(minY, s.y - s.ringRadius);
+      maxY = Math.max(maxY, s.y + s.ringRadius);
+    }
+
+    const pad = 28;
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,255,255,0.08)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(minX - pad, minY - pad, (maxX - minX) + pad * 2, (maxY - minY) + pad * 2);
+    ctx.restore();
+  }
+
+  function render(now) {
+    const elapsed = now - state.timeStart;
+
+    drawBackground();
+    drawDust();
+    drawStars(elapsed);
+    drawDiamondGuides();
+    drawComets(elapsed);
+
+    for (const sys of state.systems) {
+      drawSystem(sys, elapsed);
+    }
+
+    drawScaleRead();
+
+    requestAnimationFrame(render);
+  }
+
+  window.addEventListener("resize", resize, { passive: true });
+
+  resize();
+  requestAnimationFrame(render);
+})();

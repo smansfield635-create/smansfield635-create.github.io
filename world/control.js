@@ -1,6 +1,7 @@
+DESTINATION: /world/control.js
 // /world/control.js
 // MODE: CONTROL CONTRACT RENEWAL
-// STATUS: BACKWARD-COMPATIBLE | MOTION-AUTHORITY | RUNTIME-SAFE | NON-DRIFT
+// STATUS: BACKWARD-COMPATIBLE | MOTION-AUTHORITY | PROJECTION-ALIGNED | RUNTIME-SAFE | NON-DRIFT
 // OWNER: SEAN
 
 import WORLD_KERNEL from "./world_kernel.js";
@@ -19,6 +20,10 @@ function shortestAngleDelta(fromValue, toValue) {
 
 function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
+}
+
+function isPositiveFiniteNumber(value) {
+  return isFiniteNumber(value) && value > 0;
 }
 
 function normalizeObject(value) {
@@ -54,7 +59,7 @@ function normalizeLensMode(value) {
   return typeof value === "string" && LENS_MODE_TABLE[value] ? value : "STANDARD";
 }
 
-function getKernelConstants() {
+function createKernelConstants() {
   const kernel = normalizeObject(WORLD_KERNEL);
   const constants = normalizeObject(kernel.constants);
 
@@ -67,28 +72,36 @@ function getKernelConstants() {
     dragSensitivity: 0.0082,
     inertiaDecay: 0.988,
     autoSpinSpeed: 0.00008,
-    latSteps:
-      Number.isInteger(constants.GRID_SIZE) ? constants.GRID_SIZE * 16 : 256,
-    lonSteps:
-      Number.isInteger(constants.GRID_SIZE) ? constants.GRID_SIZE * 16 : 256
+    latSteps: Number.isInteger(constants.GRID_SIZE) ? constants.GRID_SIZE * 16 : 256,
+    lonSteps: Number.isInteger(constants.GRID_SIZE) ? constants.GRID_SIZE * 16 : 256
   });
 }
+
+const KERNEL_CONSTANTS = createKernelConstants();
 
 function getPlanetFieldShape() {
-  const K = getKernelConstants();
   return Object.freeze({
-    width: K.lonSteps,
-    height: K.latSteps
+    width: KERNEL_CONSTANTS.lonSteps,
+    height: KERNEL_CONSTANTS.latSteps
   });
 }
 
+const PLANET_FIELD_SHAPE = getPlanetFieldShape();
+
 function latLonToSample(latDeg, lonDeg) {
-  const shape = getPlanetFieldShape();
   const normalizedLon = (wrapAngle((lonDeg * Math.PI) / 180) + Math.PI) / (Math.PI * 2);
   const normalizedLat = (90 - latDeg) / 180;
 
-  const sampleX = clamp(Math.floor(normalizedLon * shape.width), 0, shape.width - 1);
-  const sampleY = clamp(Math.floor(normalizedLat * shape.height), 0, shape.height - 1);
+  const sampleX = clamp(
+    Math.floor(normalizedLon * PLANET_FIELD_SHAPE.width),
+    0,
+    PLANET_FIELD_SHAPE.width - 1
+  );
+  const sampleY = clamp(
+    Math.floor(normalizedLat * PLANET_FIELD_SHAPE.height),
+    0,
+    PLANET_FIELD_SHAPE.height - 1
+  );
 
   return Object.freeze({
     sampleX,
@@ -97,7 +110,7 @@ function latLonToSample(latDeg, lonDeg) {
 }
 
 export function createControlSystem() {
-  const K = getKernelConstants();
+  const K = KERNEL_CONSTANTS;
 
   const HOME_PITCH = clamp(
     isFiniteNumber(K.initialPitch) ? K.initialPitch : 0,
@@ -151,12 +164,15 @@ export function createControlSystem() {
   const MAX_RELEASE_YAW_IMPULSE = 0.085;
   const MAX_RELEASE_PITCH_IMPULSE = 0.045;
 
+  const HORIZON_EPSILON = 0.0000001;
+
   const cameraState = {
     width: 0,
     height: 0,
     centerX: 0,
     centerY: 0,
-    radius: 0
+    radius: 0,
+    pixelRatio: 1
   };
 
   let selectionState = Object.freeze({
@@ -190,6 +206,16 @@ export function createControlSystem() {
     return Math.max(1, cameraState.radius * zoomCurrent);
   }
 
+  function getBasis() {
+    const cosPitch = Math.cos(pitch);
+    const sinPitch = Math.sin(pitch);
+
+    return Object.freeze({
+      cosPitch,
+      sinPitch
+    });
+  }
+
   function applyScopeDefaults(scopeName) {
     const config = getScopeConfig(scopeName);
     activeScope = config.name;
@@ -197,12 +223,17 @@ export function createControlSystem() {
     scopeAnchor = config.anchor;
   }
 
-  function resize(width, height) {
-    cameraState.width = width;
-    cameraState.height = height;
-    cameraState.centerX = width * 0.5;
-    cameraState.centerY = height * 0.5;
-    cameraState.radius = Math.min(width, height) * K.worldRadiusFactor;
+  function resize(width, height, pixelRatio = 1) {
+    const safeWidth = isPositiveFiniteNumber(width) ? width : 1;
+    const safeHeight = isPositiveFiniteNumber(height) ? height : 1;
+    const safePixelRatio = isPositiveFiniteNumber(pixelRatio) ? pixelRatio : 1;
+
+    cameraState.width = safeWidth;
+    cameraState.height = safeHeight;
+    cameraState.centerX = safeWidth * 0.5;
+    cameraState.centerY = safeHeight * 0.5;
+    cameraState.radius = Math.min(safeWidth, safeHeight) * K.worldRadiusFactor;
+    cameraState.pixelRatio = safePixelRatio;
   }
 
   function setPresentationMode(mode = "round") {
@@ -240,6 +271,46 @@ export function createControlSystem() {
       zoomMin,
       zoomMax
     });
+  }
+
+  function setHomeOrientation(nextYaw = homeYaw, nextPitch = homePitch) {
+    if (isFiniteNumber(nextYaw)) {
+      homeYaw = wrapAngle(nextYaw);
+    }
+    if (isFiniteNumber(nextPitch)) {
+      homePitch = clamp(nextPitch, K.minPitch, K.maxPitch);
+    }
+
+    return Object.freeze({
+      homeYaw,
+      homePitch
+    });
+  }
+
+  function getHomeOrientation() {
+    return Object.freeze({
+      homeYaw,
+      homePitch
+    });
+  }
+
+  function setRecoveryConfig(input = {}) {
+    const next = normalizeObject(input);
+
+    if (typeof next.enabled === "boolean") {
+      recoveryEnabled = next.enabled;
+    }
+    if (isFiniteNumber(next.yawStrength)) {
+      recoveryYawStrength = Math.max(0, next.yawStrength);
+    }
+    if (isFiniteNumber(next.pitchStrength)) {
+      recoveryPitchStrength = Math.max(0, next.pitchStrength);
+    }
+    if (isFiniteNumber(next.velocityThreshold)) {
+      recoveryVelocityThreshold = Math.max(0, next.velocityThreshold);
+    }
+
+    return getMotionState();
   }
 
   function startDrag() {
@@ -373,16 +444,6 @@ export function createControlSystem() {
     orbitPhase = wrapAngle(orbitPhase + velocity * dtMs);
   }
 
-  function getBasis() {
-    const cosPitch = Math.cos(pitch);
-    const sinPitch = Math.sin(pitch);
-
-    return Object.freeze({
-      cosPitch,
-      sinPitch
-    });
-  }
-
   function projectSphere(latDeg, lonDeg, radiusOffsetPx = 0) {
     const lat = (latDeg * Math.PI) / 180;
     const lon = (lonDeg * Math.PI) / 180;
@@ -407,8 +468,8 @@ export function createControlSystem() {
       x: cameraState.centerX + x * resolvedRadius,
       y: cameraState.centerY - y * resolvedRadius,
       z,
-      visible: z >= 0,
-      horizonExcluded: z < 0,
+      visible: z >= -HORIZON_EPSILON,
+      horizonExcluded: z < -HORIZON_EPSILON,
       resolvedRadius,
       radiusOffsetPx
     });
@@ -422,7 +483,7 @@ export function createControlSystem() {
     const dy = -(screenY - cameraState.centerY) / resolvedRadius;
     const distanceSquared = dx * dx + dy * dy;
 
-    if (distanceSquared > 1) return null;
+    if (distanceSquared > 1 + HORIZON_EPSILON) return null;
 
     const dz = Math.sqrt(Math.max(0, 1 - distanceSquared));
 
@@ -430,7 +491,7 @@ export function createControlSystem() {
       x: dx,
       y: dy,
       z: dz,
-      visible: dz >= 0
+      visible: dz >= -HORIZON_EPSILON
     });
   }
 
@@ -460,7 +521,6 @@ export function createControlSystem() {
     if (!latLon) return null;
 
     const sample = latLonToSample(latLon.latDeg, latLon.lonDeg);
-    const shape = getPlanetFieldShape();
 
     return Object.freeze({
       screenX,
@@ -474,7 +534,7 @@ export function createControlSystem() {
       sampleY: sample.sampleY,
       row: sample.sampleY,
       col: sample.sampleX,
-      cellIndex: sample.sampleY * shape.width + sample.sampleX,
+      cellIndex: sample.sampleY * PLANET_FIELD_SHAPE.width + sample.sampleX,
       cellId: `${sample.sampleY}:${sample.sampleX}`
     });
   }
@@ -559,7 +619,8 @@ export function createControlSystem() {
       centerX: cameraState.centerX,
       centerY: cameraState.centerY,
       baseRadius: cameraState.radius,
-      resolvedRadius: getResolvedRadius()
+      resolvedRadius: getResolvedRadius(),
+      pixelRatio: cameraState.pixelRatio
     });
   }
 
@@ -612,6 +673,7 @@ export function createControlSystem() {
       centerY: geometry.centerY,
       radius: geometry.resolvedRadius,
       baseRadius: geometry.baseRadius,
+      pixelRatio: geometry.pixelRatio,
       yaw: motion.yaw,
       pitch: motion.pitch,
       yawVelocity: motion.yawVelocity,
@@ -770,6 +832,9 @@ export function createControlSystem() {
     setLensTier,
     setLensMode,
     getLensState,
+    setHomeOrientation,
+    getHomeOrientation,
+    setRecoveryConfig,
     startDrag,
     endDrag,
     setZoomBounds,

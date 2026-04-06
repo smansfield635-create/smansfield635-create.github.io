@@ -210,20 +210,20 @@
   function getAnchors() {
     if (STATE.mobile) {
       return [
-        { x: 0.50, y: 0.56, z: 64, spin: 0.020, tilt: -9, swing: 15 },
-        { x: 0.24, y: 0.28, z: 22, spin: 0.017, tilt: -9, swing: 12 },
-        { x: 0.76, y: 0.28, z: 22, spin: -0.017, tilt: -9, swing: 12 },
-        { x: 0.26, y: 0.82, z: 10, spin: 0.015, tilt: -9, swing: 12 },
-        { x: 0.74, y: 0.82, z: 10, spin: -0.015, tilt: -9, swing: 12 }
+        { x: 0.50, y: 0.50, z: 64, spin: 0.020, tilt: -9, swing: 15 },
+        { x: 0.24, y: 0.25, z: 22, spin: 0.017, tilt: -9, swing: 12 },
+        { x: 0.76, y: 0.25, z: 22, spin: -0.017, tilt: -9, swing: 12 },
+        { x: 0.26, y: 0.76, z: 10, spin: 0.015, tilt: -9, swing: 12 },
+        { x: 0.74, y: 0.76, z: 10, spin: -0.015, tilt: -9, swing: 12 }
       ];
     }
 
     return [
-      { x: 0.50, y: 0.56, z: 72, spin: 0.020, tilt: -9, swing: 15 },
-      { x: 0.25, y: 0.28, z: 28, spin: 0.017, tilt: -9, swing: 12 },
-      { x: 0.75, y: 0.28, z: 28, spin: -0.017, tilt: -9, swing: 12 },
-      { x: 0.27, y: 0.82, z: 14, spin: 0.015, tilt: -9, swing: 12 },
-      { x: 0.73, y: 0.82, z: 14, spin: -0.015, tilt: -9, swing: 12 }
+      { x: 0.50, y: 0.52, z: 72, spin: 0.020, tilt: -9, swing: 15 },
+      { x: 0.25, y: 0.26, z: 28, spin: 0.017, tilt: -9, swing: 12 },
+      { x: 0.75, y: 0.26, z: 28, spin: -0.017, tilt: -9, swing: 12 },
+      { x: 0.27, y: 0.78, z: 14, spin: 0.015, tilt: -9, swing: 12 },
+      { x: 0.73, y: 0.78, z: 14, spin: -0.015, tilt: -9, swing: 12 }
     ];
   }
 
@@ -279,7 +279,7 @@
 
       shadow = node.querySelector(".product-shadow");
       if (shadow) {
-        shadow.style.opacity = i === STATE.focusedIndex ? "0.94" : "0.78";
+        shadow.style.opacity = i === STATE.focusedIndex ? "0.90" : "0.72";
         shadow.style.transform = "scale(" + (0.94 + ((focusScale - 1) * 0.8)) + ")";
       }
     }

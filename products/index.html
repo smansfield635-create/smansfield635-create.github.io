@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — GLASS COMPASS PRODUCT CHAMBER HOST
+     PRODUCTS AUTHORITY — TRUE 3D GLASS COMPASS CHAMBER HOST
      LOCKS:
        - host/layout only
        - runtime authority lives in /products/index.js
@@ -236,6 +236,8 @@
       position:absolute;
       inset:0;
       z-index:12;
+      perspective:1800px;
+      perspective-origin:50% 50%;
     }
 
     .chamber{
@@ -247,12 +249,13 @@
       transform:translate(-50%,-50%);
       z-index:4;
       pointer-events:none;
+      transform-style:preserve-3d;
     }
 
     .product-node{
       position:absolute;
       width:172px;
-      height:210px;
+      height:216px;
       border:0;
       padding:0;
       background:transparent;
@@ -261,13 +264,14 @@
       pointer-events:auto;
       -webkit-tap-highlight-color:transparent;
       touch-action:manipulation;
+      transform-style:preserve-3d;
     }
 
     .product-shadow{
       position:absolute;
       left:14%;
       right:14%;
-      bottom:8px;
+      bottom:10px;
       height:18px;
       border-radius:999px;
       background:radial-gradient(circle at 50% 50%, rgba(0,0,0,.36), transparent 72%);
@@ -285,6 +289,7 @@
       margin-left:-66px;
       margin-top:-82px;
       pointer-events:none;
+      transform-style:preserve-3d;
     }
 
     .glass-compass{
@@ -308,32 +313,55 @@
       -webkit-backdrop-filter:blur(3px);
     }
 
+    .glass-front{transform:translateZ(18px)}
     .glass-back{
       transform:translateZ(-18px) scale(.95);
       opacity:.42;
       filter:brightness(.82);
     }
 
-    .glass-edge-left,
-    .glass-edge-right{
+    .side-face{
       position:absolute;
-      top:18px;
-      bottom:18px;
-      width:18px;
-      background:linear-gradient(180deg, rgba(255,246,225,.20), rgba(244,226,176,.10));
+      left:50%;
+      top:50%;
+      background:linear-gradient(180deg, rgba(255,246,225,.18), rgba(244,226,176,.10));
       border-left:1px solid rgba(244,226,176,.28);
       border-right:1px solid rgba(244,226,176,.18);
-      opacity:.36;
+      opacity:.34;
+      transform-style:preserve-3d;
+      pointer-events:none;
     }
 
-    .glass-edge-left{
-      left:22px;
-      transform:skewY(42deg) translateZ(-8px);
+    .side-top{
+      width:18px;
+      height:64px;
+      margin-left:-9px;
+      margin-top:-82px;
+      transform:rotateY(90deg) rotateZ(45deg) translateZ(58px);
     }
 
-    .glass-edge-right{
-      right:22px;
-      transform:skewY(-42deg) translateZ(-8px);
+    .side-right{
+      width:18px;
+      height:64px;
+      margin-left:40px;
+      margin-top:-32px;
+      transform:rotateY(90deg) rotateZ(-45deg) translateZ(58px);
+    }
+
+    .side-bottom{
+      width:18px;
+      height:64px;
+      margin-left:-9px;
+      margin-top:18px;
+      transform:rotateY(90deg) rotateZ(45deg) translateZ(-58px);
+    }
+
+    .side-left{
+      width:18px;
+      height:64px;
+      margin-left:-58px;
+      margin-top:-32px;
+      transform:rotateY(90deg) rotateZ(-45deg) translateZ(-58px);
     }
 
     .facet{
@@ -349,7 +377,7 @@
       top:14px;
       width:2px;
       height:130px;
-      transform:rotate(9deg) translateZ(14px);
+      transform:translateZ(22px) rotate(9deg);
     }
 
     .facet.v2{
@@ -357,7 +385,7 @@
       top:24px;
       width:2px;
       height:114px;
-      transform:rotate(-28deg) translateZ(14px);
+      transform:translateZ(22px) rotate(-28deg);
     }
 
     .facet.v3{
@@ -365,7 +393,7 @@
       top:24px;
       width:2px;
       height:114px;
-      transform:rotate(28deg) translateZ(14px);
+      transform:translateZ(22px) rotate(28deg);
     }
 
     .facet.h1{
@@ -373,7 +401,7 @@
       top:80px;
       width:92px;
       height:2px;
-      transform:rotate(-17deg) translateZ(14px);
+      transform:translateZ(22px) rotate(-17deg);
     }
 
     .facet.h2{
@@ -381,7 +409,7 @@
       top:80px;
       width:92px;
       height:2px;
-      transform:rotate(17deg) translateZ(14px);
+      transform:translateZ(22px) rotate(17deg);
     }
 
     .core-dot{
@@ -397,7 +425,7 @@
       box-shadow:
         0 0 0 2px rgba(244,226,176,.12),
         0 0 18px rgba(255,246,225,.24);
-      transform:translateZ(18px);
+      transform:translateZ(26px);
     }
 
     .cardinal{
@@ -408,12 +436,13 @@
       color:rgba(255,246,225,.95);
       text-shadow:0 4px 10px rgba(0,0,0,.36);
       pointer-events:none;
+      transform:translateZ(26px);
     }
 
-    .cardinal.n{left:50%;top:10px;transform:translateX(-50%)}
-    .cardinal.e{right:10px;top:50%;transform:translateY(-50%)}
-    .cardinal.s{left:50%;bottom:10px;transform:translateX(-50%)}
-    .cardinal.w{left:10px;top:50%;transform:translateY(-50%)}
+    .cardinal.n{left:50%;top:10px;transform:translateX(-50%) translateZ(26px)}
+    .cardinal.e{right:10px;top:50%;transform:translateY(-50%) translateZ(26px)}
+    .cardinal.s{left:50%;bottom:10px;transform:translateX(-50%) translateZ(26px)}
+    .cardinal.w{left:10px;top:50%;transform:translateY(-50%) translateZ(26px)}
 
     .spark{
       position:absolute;
@@ -422,6 +451,7 @@
       background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.98), rgba(244,226,176,.88) 42%, transparent 72%);
       pointer-events:none;
       filter:drop-shadow(0 0 6px rgba(255,246,225,.54));
+      transform:translateZ(28px);
     }
 
     .spark.top{left:50%;top:-2px;margin-left:-5px}
@@ -581,7 +611,8 @@
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="glass-back"></div><div class="glass-front"></div>
+              <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
               <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
@@ -594,7 +625,8 @@
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="glass-back"></div><div class="glass-front"></div>
+              <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
               <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
@@ -607,7 +639,8 @@
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="glass-back"></div><div class="glass-front"></div>
+              <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
               <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
@@ -620,7 +653,8 @@
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="glass-back"></div><div class="glass-front"></div>
+              <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
               <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
@@ -633,7 +667,8 @@
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="glass-back"></div><div class="glass-front"></div>
+              <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
               <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
@@ -654,6 +689,6 @@
     </div>
   </div>
 
-  <script src="/products/index.js?v=4"></script>
+  <script src="/products/index.js?v=5"></script>
 </body>
 </html>

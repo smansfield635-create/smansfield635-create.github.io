@@ -1,4 +1,3 @@
-DESTINATION: /assets/ui.css
 :root{
   --bg-0:#05070d;
   --bg-1:#0a0f1a;
@@ -75,11 +74,13 @@ DESTINATION: /assets/ui.css
 
 *{box-sizing:border-box}
 
-html,body{
+html{
   margin:0;
   padding:0;
   width:100%;
   min-height:100%;
+  -webkit-text-size-adjust:100%;
+  text-rendering:optimizeLegibility;
   background:radial-gradient(circle at top,#0d1730 0%,var(--bg-0) 58%,#030509 100%);
   color:var(--text-0);
   font-family:var(--font-stack);
@@ -87,25 +88,41 @@ html,body{
   overflow-y:auto;
 }
 
-html{
-  -webkit-text-size-adjust:100%;
-  text-rendering:optimizeLegibility;
+body{
+  margin:0;
+  padding:0;
+  width:100%;
+  min-height:100%;
+  background:transparent;
+  color:inherit;
+  font-family:inherit;
+  overflow-x:hidden;
+  overflow-y:auto;
+  position:relative;
 }
 
-body{position:relative}
-body[data-mode="world"]{height:100%;overflow:hidden}
+body[data-mode="world"]{
+  height:100%;
+  overflow:hidden;
+}
+
 body[data-mode="round"]{--compass-alpha:1}
 body[data-mode="flat"]{--compass-alpha:.88}
 body[data-mode="observe"]{--compass-alpha:.76}
 
 button,input,select,textarea,a{font:inherit}
-button{appearance:none;border:0;outline:none}
+button{
+  appearance:none;
+  border:0;
+  outline:none;
+  background:transparent;
+}
 a{color:inherit;text-decoration:none}
 img,canvas,svg{display:block;max-width:100%}
 
 #app-shell{
   position:relative;
-  width:100vw;
+  width:100%;
   min-height:100vh;
   isolation:isolate;
 }
@@ -118,28 +135,41 @@ body[data-mode="world"] #app-shell{
 #world-canvas,
 .world-canvas,
 #scene{
-  position:absolute;
-  inset:0;
+  display:block;
   width:100%;
   height:100%;
-  display:block;
+  background:transparent;
+}
+
+body[data-mode="world"] #world-canvas,
+body[data-mode="world"] .world-canvas,
+body[data-mode="world"] #scene{
+  position:absolute;
+  inset:0;
   z-index:var(--canvas-z);
   opacity:1;
-  background:transparent;
 }
 
 #runtime-root,
 .runtime-root{
+  background:transparent;
+}
+
+body[data-mode="world"] #runtime-root,
+body[data-mode="world"] .runtime-root{
   position:absolute;
   inset:0;
   z-index:var(--runtime-root-z);
   pointer-events:none;
+}
+
+#universe-overlay-root,
+.universe-overlay-root{
   background:transparent;
 }
 
-/* universe overlay authority lives here structurally, not decoratively in css */
-#universe-overlay-root,
-.universe-overlay-root{
+body[data-mode="world"] #universe-overlay-root,
+body[data-mode="world"] .universe-overlay-root{
   position:absolute;
   inset:0;
   z-index:var(--universe-overlay-z);
@@ -147,6 +177,11 @@ body[data-mode="world"] #app-shell{
 }
 
 #hud,.hud{
+  background:transparent;
+}
+
+body[data-mode="world"] #hud,
+body[data-mode="world"] .hud{
   position:absolute;
   inset:0;
   pointer-events:none;
@@ -154,10 +189,16 @@ body[data-mode="world"] #app-shell{
 }
 
 #runtime-banner,.runtime-banner{
+  display:none;
+}
+
+body[data-mode="world"] #runtime-banner,
+body[data-mode="world"] .runtime-banner{
   position:absolute;
   top:var(--shell-gap);
   left:50%;
   transform:translateX(-50%);
+  display:block;
   min-width:180px;
   max-width:calc(100vw - 32px);
   padding:10px 14px;
@@ -176,10 +217,27 @@ body[data-mode="world"] #app-shell{
   pointer-events:none;
 }
 
-#nav-doors,.nav-doors{
+#nav-doors,.nav-doors,
+#world-actions,.world-actions{
+  display:none;
+}
+
+body[data-mode="world"] #nav-doors,
+body[data-mode="world"] .nav-doors{
   position:absolute;
   top:var(--shell-gap);
   left:var(--shell-gap);
+  display:flex;
+  gap:10px;
+  z-index:calc(var(--overlay-z) + 1);
+  pointer-events:none;
+}
+
+body[data-mode="world"] #world-actions,
+body[data-mode="world"] .world-actions{
+  position:absolute;
+  top:var(--shell-gap);
+  right:var(--shell-gap);
   display:flex;
   gap:10px;
   z-index:calc(var(--overlay-z) + 1);
@@ -222,22 +280,18 @@ body[data-mode="world"] #app-shell{
   color:#fff3cf;
 }
 
-#world-actions,.world-actions{
-  position:absolute;
-  top:var(--shell-gap);
-  right:var(--shell-gap);
-  display:flex;
-  gap:10px;
-  z-index:calc(var(--overlay-z) + 1);
-  pointer-events:none;
+#compass-overlay,.compass-overlay{
+  display:none;
 }
 
-#compass-overlay,.compass-overlay{
+body[data-mode="world"] #compass-overlay,
+body[data-mode="world"] .compass-overlay{
   position:absolute;
   right:var(--shell-gap);
   bottom:calc(var(--shell-gap) + var(--diagnostic-bar-height) + 8px);
   width:var(--compass-size);
   height:var(--compass-size);
+  display:block;
   border-radius:50%;
   background:radial-gradient(circle at 50% 50%,rgba(20,33,56,.88) 0%,rgba(9,14,24,.76) 72%,rgba(6,10,18,.66) 100%);
   border:1px solid rgba(145,175,255,.18);
@@ -255,7 +309,14 @@ body[data-mode="world"] #app-shell{
   display:block;
 }
 
-#diagnostics-dock,.diagnostics-dock{
+#diagnostics-dock,.diagnostics-dock,
+#diagnostics-bar,.diagnostics-bar,
+#debug-panel,.debug-panel{
+  display:none;
+}
+
+body[data-mode="world"] #diagnostics-dock,
+body[data-mode="world"] .diagnostics-dock{
   position:absolute;
   left:var(--shell-gap);
   right:var(--shell-gap);
@@ -268,7 +329,8 @@ body[data-mode="world"] #app-shell{
   pointer-events:none;
 }
 
-#diagnostics-bar,.diagnostics-bar{
+body[data-mode="world"] #diagnostics-bar,
+body[data-mode="world"] .diagnostics-bar{
   width:min(1080px,100%);
   min-height:var(--diagnostic-bar-height);
   display:grid;
@@ -351,7 +413,8 @@ body[data-mode="world"] #app-shell{
 }
 #diagnostics-toggle:active,.diagnostics-toggle:active{transform:scale(.98)}
 
-#debug-panel,.debug-panel{
+body[data-mode="world"] #debug-panel,
+body[data-mode="world"] .debug-panel{
   position:absolute;
   left:var(--shell-gap);
   bottom:calc(var(--shell-gap) + var(--diagnostic-bar-height) + 14px);
@@ -366,6 +429,7 @@ body[data-mode="world"] #app-shell{
   opacity:0;
   transform:translateY(10px);
 }
+
 #debug-panel::-webkit-scrollbar,.debug-panel::-webkit-scrollbar{width:8px}
 #debug-panel::-webkit-scrollbar-thumb,.debug-panel::-webkit-scrollbar-thumb{
   background:rgba(126,184,255,.24);
@@ -453,7 +517,10 @@ body[data-diagnostics="full"] .debug-panel{
 
 @media (max-width:1100px){
   :root{--diagnostic-panel-width:min(420px,calc(100vw - 24px))}
-  #diagnostics-bar,.diagnostics-bar{width:min(1000px,100%)}
+  body[data-mode="world"] #diagnostics-bar,
+  body[data-mode="world"] .diagnostics-bar{
+    width:min(1000px,100%);
+  }
 }
 
 @media (max-width:900px){
@@ -464,11 +531,13 @@ body[data-diagnostics="full"] .debug-panel{
     --diagnostic-panel-width:min(360px,calc(100vw - 24px));
     --compass-size:152px;
   }
-  #compass-overlay,.compass-overlay{
+  body[data-mode="world"] #compass-overlay,
+  body[data-mode="world"] .compass-overlay{
     width:var(--compass-size);
     height:var(--compass-size);
   }
-  #diagnostics-bar,.diagnostics-bar{
+  body[data-mode="world"] #diagnostics-bar,
+  body[data-mode="world"] .diagnostics-bar{
     grid-template-columns:1fr;
     justify-items:stretch;
   }
@@ -481,26 +550,31 @@ body[data-diagnostics="full"] .debug-panel{
     --diagnostic-bar-height:72px;
     --compass-size:132px;
   }
-  #nav-doors,.nav-doors{
+  body[data-mode="world"] #nav-doors,
+  body[data-mode="world"] .nav-doors{
     top:auto;
     bottom:calc(var(--shell-gap) + var(--diagnostic-bar-height) + 154px);
   }
-  #world-actions,.world-actions{
+  body[data-mode="world"] #world-actions,
+  body[data-mode="world"] .world-actions{
     top:auto;
     right:var(--shell-gap);
     bottom:calc(var(--shell-gap) + var(--diagnostic-bar-height) + 154px);
   }
-  #runtime-banner,.runtime-banner{
+  body[data-mode="world"] #runtime-banner,
+  body[data-mode="world"] .runtime-banner{
     top:auto;
     bottom:calc(var(--shell-gap) + var(--diagnostic-bar-height) + 208px);
     font-size:11px;
   }
-  #debug-panel,.debug-panel{
+  body[data-mode="world"] #debug-panel,
+  body[data-mode="world"] .debug-panel{
     width:calc(100vw - 24px);
     max-height:min(50vh,440px);
     left:12px;
   }
-  #compass-overlay,.compass-overlay{
+  body[data-mode="world"] #compass-overlay,
+  body[data-mode="world"] .compass-overlay{
     width:var(--compass-size);
     height:var(--compass-size);
     bottom:calc(var(--shell-gap) + var(--diagnostic-bar-height) + 8px);

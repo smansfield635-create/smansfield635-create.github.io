@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — TRUE 3D GLASS COMPASS CHAMBER HOST
+     PRODUCTS AUTHORITY — REFINED TRUE 3D GLASS COMPASS CHAMBER HOST
      LOCKS:
        - host/layout only
        - runtime authority lives in /products/index.js
@@ -27,9 +27,7 @@
       --mut:rgba(255,255,255,.80);
       --gold:rgba(244,226,176,.96);
       --goldSoft:rgba(244,226,176,.22);
-      --panel:rgba(5,11,24,.46);
-      --shadowA:0 30px 90px rgba(0,0,0,.50);
-      --shadowB:0 18px 54px rgba(0,0,0,.42);
+      --shellShadow:0 18px 54px rgba(0,0,0,.42);
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
       --safe-bottom:env(safe-area-inset-bottom,0px);
@@ -140,7 +138,7 @@
       letter-spacing:.05em;
       backdrop-filter:blur(10px);
       -webkit-backdrop-filter:blur(10px);
-      box-shadow:var(--shadowB);
+      box-shadow:var(--shellShadow);
       position:relative;
       overflow:hidden;
       display:inline-flex;
@@ -167,7 +165,7 @@
     .nav-btn:hover,
     .top-pill:hover{
       border-color:rgba(244,226,176,.34);
-      box-shadow:var(--shadowB),0 0 16px rgba(244,226,176,.10);
+      box-shadow:var(--shellShadow),0 0 16px rgba(244,226,176,.10);
       transform:translateY(-1px);
     }
 
@@ -225,7 +223,7 @@
       justify-content:center;
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
-      box-shadow:var(--shadowB);
+      box-shadow:var(--shellShadow);
       max-width:min(72vw,420px);
       white-space:nowrap;
       overflow:hidden;
@@ -305,71 +303,49 @@
       clip-path:polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
       border:2px solid var(--gold);
       background:
-        linear-gradient(135deg, rgba(255,246,225,.12), rgba(255,246,225,.02) 24%, rgba(180,50,50,.16) 25%, rgba(160,52,52,.24) 48%, rgba(248,225,178,.18) 49%, rgba(248,225,178,.22) 72%, rgba(255,246,225,.12) 100%);
+        linear-gradient(135deg, rgba(255,246,225,.08), rgba(255,246,225,.015) 22%, rgba(180,50,50,.12) 25%, rgba(160,52,52,.18) 46%, rgba(248,225,178,.12) 48%, rgba(248,225,178,.14) 72%, rgba(255,246,225,.08) 100%);
       box-shadow:
-        0 0 0 1px rgba(255,246,225,.12) inset,
-        0 0 24px rgba(244,226,176,.14);
-      backdrop-filter:blur(3px);
-      -webkit-backdrop-filter:blur(3px);
+        0 0 0 1px rgba(255,246,225,.10) inset,
+        0 0 18px rgba(244,226,176,.10);
+      backdrop-filter:blur(1.5px);
+      -webkit-backdrop-filter:blur(1.5px);
     }
 
-    .glass-front{transform:translateZ(18px)}
+    .glass-front{transform:translateZ(16px)}
     .glass-back{
-      transform:translateZ(-18px) scale(.95);
-      opacity:.42;
-      filter:brightness(.82);
+      transform:translateZ(-16px) scale(.95);
+      opacity:.28;
+      filter:brightness(.88);
     }
 
     .side-face{
       position:absolute;
       left:50%;
       top:50%;
-      background:linear-gradient(180deg, rgba(255,246,225,.18), rgba(244,226,176,.10));
-      border-left:1px solid rgba(244,226,176,.28);
-      border-right:1px solid rgba(244,226,176,.18);
-      opacity:.34;
+      width:10px;
+      height:54px;
+      margin-left:-5px;
+      margin-top:-27px;
+      background:linear-gradient(180deg, rgba(255,246,225,.10), rgba(244,226,176,.05));
+      border-left:1px solid rgba(244,226,176,.16);
+      border-right:1px solid rgba(244,226,176,.10);
+      opacity:.20;
       transform-style:preserve-3d;
       pointer-events:none;
+      filter:none;
     }
 
-    .side-top{
-      width:18px;
-      height:64px;
-      margin-left:-9px;
-      margin-top:-82px;
-      transform:rotateY(90deg) rotateZ(45deg) translateZ(58px);
-    }
-
-    .side-right{
-      width:18px;
-      height:64px;
-      margin-left:40px;
-      margin-top:-32px;
-      transform:rotateY(90deg) rotateZ(-45deg) translateZ(58px);
-    }
-
-    .side-bottom{
-      width:18px;
-      height:64px;
-      margin-left:-9px;
-      margin-top:18px;
-      transform:rotateY(90deg) rotateZ(45deg) translateZ(-58px);
-    }
-
-    .side-left{
-      width:18px;
-      height:64px;
-      margin-left:-58px;
-      margin-top:-32px;
-      transform:rotateY(90deg) rotateZ(-45deg) translateZ(-58px);
-    }
+    .side-top{transform:translate3d(0,-56px,0) rotateY(90deg) rotateZ(45deg)}
+    .side-right{transform:translate3d(46px,0,0) rotateY(90deg) rotateZ(-45deg)}
+    .side-bottom{transform:translate3d(0,56px,0) rotateY(90deg) rotateZ(45deg)}
+    .side-left{transform:translate3d(-46px,0,0) rotateY(90deg) rotateZ(-45deg)}
 
     .facet{
       position:absolute;
       background:var(--gold);
-      opacity:.92;
+      opacity:.88;
       pointer-events:none;
-      box-shadow:0 0 10px rgba(244,226,176,.16);
+      box-shadow:0 0 8px rgba(244,226,176,.14);
     }
 
     .facet.v1{
@@ -377,7 +353,7 @@
       top:14px;
       width:2px;
       height:130px;
-      transform:translateZ(22px) rotate(9deg);
+      transform:translateZ(20px) rotate(9deg);
     }
 
     .facet.v2{
@@ -385,7 +361,7 @@
       top:24px;
       width:2px;
       height:114px;
-      transform:translateZ(22px) rotate(-28deg);
+      transform:translateZ(20px) rotate(-28deg);
     }
 
     .facet.v3{
@@ -393,7 +369,7 @@
       top:24px;
       width:2px;
       height:114px;
-      transform:translateZ(22px) rotate(28deg);
+      transform:translateZ(20px) rotate(28deg);
     }
 
     .facet.h1{
@@ -401,7 +377,7 @@
       top:80px;
       width:92px;
       height:2px;
-      transform:translateZ(22px) rotate(-17deg);
+      transform:translateZ(20px) rotate(-17deg);
     }
 
     .facet.h2{
@@ -409,7 +385,7 @@
       top:80px;
       width:92px;
       height:2px;
-      transform:translateZ(22px) rotate(17deg);
+      transform:translateZ(20px) rotate(17deg);
     }
 
     .core-dot{
@@ -424,8 +400,8 @@
       background:rgba(255,246,225,.94);
       box-shadow:
         0 0 0 2px rgba(244,226,176,.12),
-        0 0 18px rgba(255,246,225,.24);
-      transform:translateZ(26px);
+        0 0 16px rgba(255,246,225,.18);
+      transform:translateZ(24px);
     }
 
     .cardinal{
@@ -436,13 +412,13 @@
       color:rgba(255,246,225,.95);
       text-shadow:0 4px 10px rgba(0,0,0,.36);
       pointer-events:none;
-      transform:translateZ(26px);
+      transform:translateZ(24px);
     }
 
-    .cardinal.n{left:50%;top:10px;transform:translateX(-50%) translateZ(26px)}
-    .cardinal.e{right:10px;top:50%;transform:translateY(-50%) translateZ(26px)}
-    .cardinal.s{left:50%;bottom:10px;transform:translateX(-50%) translateZ(26px)}
-    .cardinal.w{left:10px;top:50%;transform:translateY(-50%) translateZ(26px)}
+    .cardinal.n{left:50%;top:10px;transform:translateX(-50%) translateZ(24px)}
+    .cardinal.e{right:10px;top:50%;transform:translateY(-50%) translateZ(24px)}
+    .cardinal.s{left:50%;bottom:10px;transform:translateX(-50%) translateZ(24px)}
+    .cardinal.w{left:10px;top:50%;transform:translateY(-50%) translateZ(24px)}
 
     .spark{
       position:absolute;
@@ -451,7 +427,7 @@
       background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.98), rgba(244,226,176,.88) 42%, transparent 72%);
       pointer-events:none;
       filter:drop-shadow(0 0 6px rgba(255,246,225,.54));
-      transform:translateZ(28px);
+      transform:translateZ(26px);
     }
 
     .spark.top{left:50%;top:-2px;margin-left:-5px}
@@ -491,9 +467,9 @@
     .product-node.is-focus .glass-front,
     .product-node:hover .glass-front{
       box-shadow:
-        0 0 0 1px rgba(255,246,225,.14) inset,
-        0 0 28px rgba(244,226,176,.18),
-        0 0 32px rgba(255,246,225,.10);
+        0 0 0 1px rgba(255,246,225,.12) inset,
+        0 0 22px rgba(244,226,176,.14),
+        0 0 24px rgba(255,246,225,.08);
     }
 
     .mobile-dock{
@@ -521,7 +497,7 @@
       text-transform:uppercase;
       backdrop-filter:blur(10px);
       -webkit-backdrop-filter:blur(10px);
-      box-shadow:var(--shadowB);
+      box-shadow:var(--shellShadow);
       display:flex;
       align-items:center;
       justify-content:center;
@@ -532,7 +508,7 @@
 
     .dock-btn.is-active{
       border-color:rgba(244,226,176,.42);
-      box-shadow:var(--shadowB),0 0 16px rgba(244,226,176,.10);
+      box-shadow:var(--shellShadow),0 0 16px rgba(244,226,176,.10);
     }
 
     @keyframes starDrift{
@@ -578,6 +554,11 @@
       .facet.v1{height:88px;top:12px}
       .facet.v2,.facet.v3{height:78px;top:18px}
       .facet.h1,.facet.h2{width:64px;top:58px;left:12px}
+      .side-face{width:8px;height:44px;margin-left:-4px;margin-top:-22px}
+      .side-top{transform:translate3d(0,-40px,0) rotateY(90deg) rotateZ(45deg)}
+      .side-right{transform:translate3d(34px,0,0) rotateY(90deg) rotateZ(-45deg)}
+      .side-bottom{transform:translate3d(0,40px,0) rotateY(90deg) rotateZ(45deg)}
+      .side-left{transform:translate3d(-34px,0,0) rotateY(90deg) rotateZ(-45deg)}
     }
   </style>
 </head>
@@ -594,12 +575,12 @@
     </nav>
 
     <div class="top-right" aria-label="Products meta">
-      <div class="top-pill" id="scenePill">GLASS COMPASS CHAMBER</div>
+      <div class="top-pill" id="scenePill">REFINED 3D GLASS COMPASS</div>
     </div>
 
     <section class="hero" aria-label="Products hero">
       <h1 id="heroTitle">PRODUCTS</h1>
-      <p id="heroTag">Five separate glass compass objects, each spinning in place with direct product routing.</p>
+      <p id="heroTag">Five separate refined true-3D glass compass objects, each spinning in place with direct product routing.</p>
     </section>
 
     <div class="focus-pill" id="focusPill">FOCUS: BASELINE NUTRITION</div>
@@ -689,6 +670,6 @@
     </div>
   </div>
 
-  <script src="/products/index.js?v=5"></script>
+  <script src="/products/index.js?v=6"></script>
 </body>
 </html>

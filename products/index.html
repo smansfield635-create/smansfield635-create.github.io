@@ -1,12 +1,11 @@
 <!doctype html>
 <!-- TNT — /products/index.html
      PRODUCTS AUTHORITY — REFINED TRUE 3D GLASS COMPASS CHAMBER HOST
-     LOCKS:
-       - host/layout only
-       - runtime authority lives in /products/index.js
-       - five separate euclidean product objects only
-       - no inline onclick
-       - no modal overlays
+     RENEWAL:
+       - remove page-local bubble ownership
+       - use shared asset light classes from /assets/ui.css
+       - increase object/label separation
+       - preserve five separate 3D product objects
 -->
 
 <html lang="en">
@@ -26,7 +25,6 @@
       --ink:rgba(255,255,255,.96);
       --mut:rgba(255,255,255,.80);
       --gold:rgba(244,226,176,.96);
-      --goldSoft:rgba(244,226,176,.22);
       --shellShadow:0 18px 54px rgba(0,0,0,.42);
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
@@ -253,7 +251,7 @@
     .product-node{
       position:absolute;
       width:172px;
-      height:224px;
+      height:236px;
       border:0;
       padding:0;
       background:transparent;
@@ -269,7 +267,7 @@
       position:absolute;
       left:14%;
       right:14%;
-      bottom:12px;
+      bottom:18px;
       height:16px;
       border-radius:999px;
       background:radial-gradient(circle at 50% 50%, rgba(0,0,0,.28), transparent 72%);
@@ -281,7 +279,7 @@
     .object-wrap{
       position:absolute;
       left:50%;
-      top:40%;
+      top:36%;
       width:132px;
       height:164px;
       margin-left:-66px;
@@ -420,23 +418,36 @@
     .cardinal.s{left:50%;bottom:12px;transform:translateX(-50%) translateZ(24px)}
     .cardinal.w{left:6px;top:50%;transform:translateY(-50%) translateZ(24px)}
 
-    .spark{
-      position:absolute;
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.94), rgba(244,226,176,.76) 42%, transparent 72%);
-      pointer-events:none;
-      filter:drop-shadow(0 0 3px rgba(255,246,225,.32));
-      transform:translateZ(26px);
-      opacity:.72;
+    .asset-lights.product-lights{
+      inset:-12px;
       z-index:1;
     }
 
-    .spark.top{left:50%;top:-8px;margin-left:-3px}
-    .spark.right{right:-8px;top:50%;margin-top:-3px}
-    .spark.bottom{left:50%;bottom:-8px;margin-left:-3px}
-    .spark.left{left:-8px;top:50%;margin-top:-3px}
+    .asset-lights.product-lights .asset-light{
+      --asset-light-size:4px;
+      --asset-light-glow:2px;
+      --asset-light-opacity:.46;
+    }
+
+    .asset-lights.product-lights .asset-light.top{
+      left:50%;
+      top:-6px;
+    }
+
+    .asset-lights.product-lights .asset-light.right{
+      left:calc(100% + 6px);
+      top:50%;
+    }
+
+    .asset-lights.product-lights .asset-light.bottom{
+      left:50%;
+      top:calc(100% + 6px);
+    }
+
+    .asset-lights.product-lights .asset-light.left{
+      left:-6px;
+      top:50%;
+    }
 
     .label{
       position:absolute;
@@ -523,7 +534,7 @@
     @media (max-width:980px){
       .hero{top:12%}
       .chamber{width:min(96vw,760px);height:min(560px,48vh)}
-      .product-node{width:154px;height:200px}
+      .product-node{width:154px;height:212px}
       .object-wrap{width:118px;height:146px;margin-left:-59px;margin-top:-73px}
       .label{width:148px}
     }
@@ -533,7 +544,7 @@
       .hero{top:14%;width:min(94vw,640px)}
       .hero p{font-size:15px;max-width:520px}
       .chamber{top:59%;width:min(98vw,540px);height:420px}
-      .product-node{width:130px;height:176px}
+      .product-node{width:130px;height:186px}
       .object-wrap{width:100px;height:128px;margin-left:-50px;margin-top:-64px}
       .label{width:132px}
       .product-title{font-size:13px}
@@ -549,7 +560,7 @@
       .hero{top:15%}
       .hero h1{font-size:40px}
       .chamber{top:58%;width:min(100vw,390px);height:344px}
-      .product-node{width:116px;height:160px}
+      .product-node{width:116px;height:168px}
       .object-wrap{width:88px;height:114px;margin-left:-44px;margin-top:-57px}
       .label{width:116px}
       .product-title{font-size:11px}
@@ -563,16 +574,15 @@
       .side-right{transform:translate3d(30px,0,0) rotateY(90deg) rotateZ(-45deg)}
       .side-bottom{transform:translate3d(0,36px,0) rotateY(90deg) rotateZ(45deg)}
       .side-left{transform:translate3d(-30px,0,0) rotateY(90deg) rotateZ(-45deg)}
-      .spark{
-        width:5px;
-        height:5px;
-        margin-left:-2.5px;
-        margin-top:-2.5px;
+      .asset-lights.product-lights .asset-light{
+        --asset-light-size:3px;
+        --asset-light-glow:1px;
+        --asset-light-opacity:.38;
       }
-      .spark.top{top:-6px}
-      .spark.right{right:-6px}
-      .spark.bottom{bottom:-6px}
-      .spark.left{left:-6px}
+      .asset-lights.product-lights .asset-light.top{top:-4px}
+      .asset-lights.product-lights .asset-light.right{left:calc(100% + 4px)}
+      .asset-lights.product-lights .asset-light.bottom{top:calc(100% + 4px)}
+      .asset-lights.product-lights .asset-light.left{left:-4px}
     }
   </style>
 </head>
@@ -610,7 +620,9 @@
               <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
-              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
+              <div class="asset-lights product-lights" aria-hidden="true">
+                <span class="asset-light top"></span><span class="asset-light right"></span><span class="asset-light bottom"></span><span class="asset-light left"></span>
+              </div>
             </div>
           </div>
           <div class="label"><div class="product-title" id="titleNutrition">BASELINE NUTRITION</div><div class="product-sub" id="subNutrition">SYSTEMS</div></div>
@@ -624,7 +636,9 @@
               <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
-              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
+              <div class="asset-lights product-lights" aria-hidden="true">
+                <span class="asset-light top"></span><span class="asset-light right"></span><span class="asset-light bottom"></span><span class="asset-light left"></span>
+              </div>
             </div>
           </div>
           <div class="label"><div class="product-title" id="titleAI">ON YOUR SIDE AI</div><div class="product-sub" id="subAI">INTELLIGENCE</div></div>
@@ -638,7 +652,9 @@
               <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
-              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
+              <div class="asset-lights product-lights" aria-hidden="true">
+                <span class="asset-light top"></span><span class="asset-light right"></span><span class="asset-light bottom"></span><span class="asset-light left"></span>
+              </div>
             </div>
           </div>
           <div class="label"><div class="product-title" id="titleLanguage">EDUCATION &amp; LANGUAGE</div><div class="product-sub" id="subLanguage">SYSTEMS</div></div>
@@ -652,7 +668,9 @@
               <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
-              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
+              <div class="asset-lights product-lights" aria-hidden="true">
+                <span class="asset-light top"></span><span class="asset-light right"></span><span class="asset-light bottom"></span><span class="asset-light left"></span>
+              </div>
             </div>
           </div>
           <div class="label"><div class="product-title" id="titleGame">FIVE FLAGS</div><div class="product-sub" id="subGame">WHAT'S MY THEME?</div></div>
@@ -666,7 +684,9 @@
               <div class="side-face side-top"></div><div class="side-face side-right"></div><div class="side-face side-bottom"></div><div class="side-face side-left"></div>
               <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
               <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
-              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
+              <div class="asset-lights product-lights" aria-hidden="true">
+                <span class="asset-light top"></span><span class="asset-light right"></span><span class="asset-light bottom"></span><span class="asset-light left"></span>
+              </div>
             </div>
           </div>
           <div class="label"><div class="product-title" id="titleCoin">ARCHCOIN</div><div class="product-sub" id="subCoin">PRODUCT LINE</div></div>
@@ -684,6 +704,6 @@
     </div>
   </div>
 
-  <script src="/products/index.js?v=6"></script>
+  <script src="/products/index.js?v=7"></script>
 </body>
 </html>

@@ -1,9 +1,11 @@
 // TNT — /products/on-your-side-ai/index.js
 // ON YOUR SIDE AI — G1V1 NEW CONTRACT
+// LEGACY/NEW MERGE
 // SCOPE:
 //   - page-local enhancement only
 //   - no global runtime touches
 //   - no ownership of product law or route truth
+//   - buffet-style FAQ control: open one, many, or all; close any
 
 (() => {
   "use strict";
@@ -20,14 +22,9 @@
     window.location.href = "/products/";
   }
 
-  function closeFaq(item, toggle) {
-    item.classList.remove("isOpen");
-    toggle.setAttribute("aria-expanded", "false");
-  }
-
-  function openFaq(item, toggle) {
-    item.classList.add("isOpen");
-    toggle.setAttribute("aria-expanded", "true");
+  function setFaqState(item, toggle, isOpen) {
+    item.classList.toggle("isOpen", isOpen);
+    toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
   }
 
   function toggleFaq(toggle) {
@@ -35,18 +32,7 @@
     if (!item) return;
 
     const isOpen = item.classList.contains("isOpen");
-
-    faqToggles.forEach((otherToggle) => {
-      const otherItem = otherToggle.closest(".faqItem");
-      if (!otherItem || otherItem === item) return;
-      closeFaq(otherItem, otherToggle);
-    });
-
-    if (isOpen) {
-      closeFaq(item, toggle);
-    } else {
-      openFaq(item, toggle);
-    }
+    setFaqState(item, toggle, !isOpen);
   }
 
   function bindPrimaryButtons() {

@@ -85,11 +85,11 @@
   var COPY = {
     heroTitle: pick("PRODUCTS", "产品", "PRODUCTOS"),
     heroTag: pick(
-      "Five separate glass compass objects, each spinning in place with direct product routing.",
-      "五个独立玻璃指南针对象，各自原地旋转并直接跳转到对应产品。",
-      "Cinco objetos brújula de vidrio, separados y girando en su propio lugar con ruta directa."
+      "Five separate true-3D glass compass objects, each spinning in place with direct product routing.",
+      "五个独立的真正三维玻璃指南针对象，各自原地旋转并直接跳转到对应产品。",
+      "Cinco objetos brújula de vidrio realmente 3D, separados y girando en su propio lugar con ruta directa."
     ),
-    scenePill: pick("GLASS COMPASS CHAMBER", "玻璃指南针舱", "CÁMARA BRÚJULA DE VIDRIO"),
+    scenePill: pick("TRUE 3D GLASS COMPASS", "真正 3D 玻璃指南针", "BRÚJULA DE VIDRIO 3D"),
     navCompass: pick("COMPASS", "指南针", "BRÚJULA"),
     navProducts: pick("PRODUCTS", "产品", "PRODUCTOS"),
     navExplore: pick("EXPLORE", "探索", "EXPLORAR"),
@@ -210,20 +210,20 @@
   function getAnchors() {
     if (STATE.mobile) {
       return [
-        { x: 0.50, y: 0.56, z: 64, spin: 0.020 }, /* nutrition center */
-        { x: 0.24, y: 0.28, z: 22, spin: 0.017 }, /* ai upper-left */
-        { x: 0.76, y: 0.28, z: 22, spin: -0.017 }, /* coin upper-right */
-        { x: 0.26, y: 0.82, z: 10, spin: 0.015 }, /* language lower-left */
-        { x: 0.74, y: 0.82, z: 10, spin: -0.015 } /* game lower-right */
+        { x: 0.50, y: 0.56, z: 64, spin: 0.020, tilt: -10 },
+        { x: 0.24, y: 0.28, z: 22, spin: 0.017, tilt: -10 },
+        { x: 0.76, y: 0.28, z: 22, spin: -0.017, tilt: -10 },
+        { x: 0.26, y: 0.82, z: 10, spin: 0.015, tilt: -10 },
+        { x: 0.74, y: 0.82, z: 10, spin: -0.015, tilt: -10 }
       ];
     }
 
     return [
-      { x: 0.50, y: 0.56, z: 72, spin: 0.020 },
-      { x: 0.25, y: 0.28, z: 28, spin: 0.017 },
-      { x: 0.75, y: 0.28, z: 28, spin: -0.017 },
-      { x: 0.27, y: 0.82, z: 14, spin: 0.015 },
-      { x: 0.73, y: 0.82, z: 14, spin: -0.015 }
+      { x: 0.50, y: 0.56, z: 72, spin: 0.020, tilt: -10 },
+      { x: 0.25, y: 0.28, z: 28, spin: 0.017, tilt: -10 },
+      { x: 0.75, y: 0.28, z: 28, spin: -0.017, tilt: -10 },
+      { x: 0.27, y: 0.82, z: 14, spin: 0.015, tilt: -10 },
+      { x: 0.73, y: 0.82, z: 14, spin: -0.015, tilt: -10 }
     ];
   }
 
@@ -244,6 +244,7 @@
     var tiltX;
     var lift;
     var opacity;
+    var focusScale;
 
     for (i = 0; i < productNodes.length; i += 1) {
       node = productNodes[i];
@@ -253,9 +254,10 @@
       z = anchor.z;
 
       rotationY = STATE.reducedMotion ? 0 : (STATE.time * anchor.spin);
-      tiltX = STATE.reducedMotion ? -6 : (-6 + Math.sin((STATE.time * 0.001) + i) * 2);
+      tiltX = STATE.reducedMotion ? anchor.tilt : (anchor.tilt + Math.sin((STATE.time * 0.001) + i) * 1.2);
       lift = i === STATE.focusedIndex ? 8 : 0;
       opacity = i === STATE.focusedIndex ? 1 : 0.96;
+      focusScale = i === STATE.focusedIndex ? 1.06 : 1;
 
       node.style.left = x + "px";
       node.style.top = (y - lift) + "px";
@@ -263,12 +265,14 @@
       node.style.marginTop = (-node.offsetHeight / 2) + "px";
       node.style.zIndex = String(20 + Math.round(z));
       node.style.opacity = String(opacity);
+      node.style.transform = "translate3d(0,0," + z + "px)";
 
       wrap = node.querySelector(".object-wrap");
       if (wrap) {
         wrap.style.transform =
           "rotateX(" + tiltX + "deg) " +
-          "rotateY(" + rotationY + "deg)";
+          "rotateY(" + rotationY + "deg) " +
+          "scale(" + focusScale + ")";
       }
 
       shadow = node.querySelector(".product-shadow");
@@ -336,25 +340,10 @@
     }, false);
   }
 
-  function expose() {
-    window.__PRODUCTS_GLASS_COMPASS_CHAMBER__ = {
-      getSummary: function () {
-        return {
-          focus: focus,
-          focusedIndex: STATE.focusedIndex,
-          reducedMotion: STATE.reducedMotion,
-          mobile: STATE.mobile,
-          products: COPY.products
-        };
-      }
-    };
-  }
-
   syncCopy();
   bindNodes();
   bindDock();
   bindSystem();
-  expose();
   setFocus(resolveFocusIndex(), false);
   updateResponsiveState();
   animate(0);

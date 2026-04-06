@@ -1,11 +1,11 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — NAV TEXT REMOVED / PRODUCT FIELD RAISED
+     PRODUCTS AUTHORITY — BUBBLE REMOVAL / PRODUCTS-FIRST HIERARCHY
      RENEWAL:
-       - remove the top nav words from this page
-       - keep branch nav markup present but visually hidden on this page
+       - keep branch nav markup present but fully demoted on this page
+       - remove bottom focus bubble from visual flow
        - raise the products chamber upward
-       - keep approved scope inside /products/index.html only
+       - keep approved scope inside /products/index.html and /assets/branch.css only
 -->
 
 <html lang="en">
@@ -97,12 +97,6 @@
         linear-gradient(180deg, transparent 0%, rgba(255,255,255,.01) 50%, transparent 100%);
       filter:blur(4px);
       opacity:.42;
-    }
-
-    .branch-page-nav{
-      opacity:0 !important;
-      pointer-events:none !important;
-      visibility:hidden !important;
     }
 
     .page-meta{
@@ -224,7 +218,7 @@
     .chamber{
       position:absolute;
       left:50%;
-      top:55%;
+      top:52%;
       width:min(1080px,92vw);
       height:min(620px,58vh);
       transform:translate(-50%,-50%);
@@ -503,7 +497,7 @@
 
     @media (max-width:980px){
       .hero{top:13%}
-      .chamber{top:56%;width:min(96vw,760px);height:min(560px,48vh)}
+      .chamber{top:54%;width:min(96vw,760px);height:min(560px,48vh)}
       .product-node{width:154px;height:212px}
       .object-wrap{width:118px;height:146px;margin-left:-59px;margin-top:-73px}
       .label{width:148px}
@@ -516,7 +510,7 @@
       }
       .hero{top:15%;width:min(94vw,640px)}
       .hero p{font-size:15px;max-width:520px}
-      .chamber{top:57%;width:min(98vw,540px);height:420px}
+      .chamber{top:55%;width:min(98vw,540px);height:420px}
       .product-node{width:130px;height:186px}
       .object-wrap{width:100px;height:128px;margin-left:-50px;margin-top:-64px}
       .label{width:132px}
@@ -530,7 +524,7 @@
       .hero{top:16%}
       .hero h1{font-size:40px}
       .meta-pill{min-height:40px;padding:9px 12px;font-size:12px}
-      .chamber{top:58%;width:min(100vw,390px);height:344px}
+      .chamber{top:56%;width:min(100vw,390px);height:344px}
       .product-node{width:116px;height:168px}
       .object-wrap{width:88px;height:114px;margin-left:-44px;margin-top:-57px}
       .label{width:116px}
@@ -558,7 +552,7 @@
   </style>
 </head>
 
-<body>
+<body class="products-page">
   <div id="app-shell">
     <div class="env" aria-hidden="true"></div>
 

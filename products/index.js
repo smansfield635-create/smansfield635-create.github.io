@@ -5,17 +5,11 @@
   var LS = window.localStorage;
 
   function safeGet(key) {
-    try {
-      return LS.getItem(key);
-    } catch (e) {
-      return null;
-    }
+    try { return LS.getItem(key); } catch (e) { return null; }
   }
 
   function safeSet(key, value) {
-    try {
-      LS.setItem(key, value);
-    } catch (e) {}
+    try { LS.setItem(key, value); } catch (e) {}
   }
 
   var lang = qs.get("lang") || safeGet("gd_lang") || "en";
@@ -58,14 +52,10 @@
     p.set("depth", extra && extra.depth ? String(extra.depth) : depth);
 
     var resolvedLane = extra && extra.lane ? extra.lane : lane;
-    if (resolvedLane === "platform" || resolvedLane === "engineering") {
-      p.set("lane", resolvedLane);
-    }
+    if (resolvedLane === "platform" || resolvedLane === "engineering") p.set("lane", resolvedLane);
 
     var resolvedFocus = extra && extra.focus ? extra.focus : focus;
-    if (resolvedFocus) {
-      p.set("focus", resolvedFocus);
-    }
+    if (resolvedFocus) p.set("focus", resolvedFocus);
 
     return "?" + p.toString();
   }
@@ -84,14 +74,11 @@
     var i;
     var el;
     var route;
-
     for (i = 0; i < nodes.length; i += 1) {
       el = nodes[i];
       route = el.getAttribute("data-route") || "";
       if (!route) continue;
-      if (el.tagName === "A") {
-        el.setAttribute("href", withState(route));
-      }
+      if (el.tagName === "A") el.setAttribute("href", withState(route));
     }
   }
 
@@ -169,21 +156,7 @@
     reducedMotion: false,
     paused: false,
     mobile: false,
-    time: 0,
-    desktopAnchors: [
-      { x: 0.50, y: 0.56, z: 70, scale: 1.00, spin: 0.022 }, /* center nutrition */
-      { x: 0.25, y: 0.28, z: 28, scale: 0.92, spin: 0.020 }, /* upper-left ai */
-      { x: 0.75, y: 0.28, z: 28, scale: 0.92, spin: -0.020 }, /* upper-right coin */
-      { x: 0.27, y: 0.82, z: 12, scale: 0.88, spin: 0.018 }, /* lower-left language */
-      { x: 0.73, y: 0.82, z: 12, scale: 0.88, spin: -0.018 } /* lower-right game */
-    ],
-    mobileAnchors: [
-      { x: 0.50, y: 0.56, z: 64, scale: 0.98, spin: 0.022 },
-      { x: 0.24, y: 0.28, z: 22, scale: 0.84, spin: 0.020 },
-      { x: 0.76, y: 0.28, z: 22, scale: 0.84, spin: -0.020 },
-      { x: 0.26, y: 0.82, z: 10, scale: 0.80, spin: 0.018 },
-      { x: 0.74, y: 0.82, z: 10, scale: 0.80, spin: -0.018 }
-    ]
+    time: 0
   };
 
   try {
@@ -235,7 +208,23 @@
   }
 
   function getAnchors() {
-    return STATE.mobile ? STATE.mobileAnchors : STATE.desktopAnchors;
+    if (STATE.mobile) {
+      return [
+        { x: 0.50, y: 0.56, z: 64, spin: 0.020 }, /* nutrition center */
+        { x: 0.24, y: 0.28, z: 22, spin: 0.017 }, /* ai upper-left */
+        { x: 0.76, y: 0.28, z: 22, spin: -0.017 }, /* coin upper-right */
+        { x: 0.26, y: 0.82, z: 10, spin: 0.015 }, /* language lower-left */
+        { x: 0.74, y: 0.82, z: 10, spin: -0.015 } /* game lower-right */
+      ];
+    }
+
+    return [
+      { x: 0.50, y: 0.56, z: 72, spin: 0.020 },
+      { x: 0.25, y: 0.28, z: 28, spin: 0.017 },
+      { x: 0.75, y: 0.28, z: 28, spin: -0.017 },
+      { x: 0.27, y: 0.82, z: 14, spin: 0.015 },
+      { x: 0.73, y: 0.82, z: 14, spin: -0.015 }
+    ];
   }
 
   function layoutProducts() {
@@ -249,48 +238,42 @@
     var x;
     var y;
     var z;
-    var scale;
+    var wrap;
+    var shadow;
     var rotationY;
     var tiltX;
-    var wrap;
-    var focusBoost;
-    var shadow;
-    var objectScale;
+    var lift;
+    var opacity;
 
     for (i = 0; i < productNodes.length; i += 1) {
       node = productNodes[i];
       anchor = anchors[i];
-
       x = w * anchor.x;
       y = h * anchor.y;
       z = anchor.z;
-      scale = anchor.scale;
-      focusBoost = i === STATE.focusedIndex ? 1.06 : 1;
-      objectScale = scale * focusBoost;
 
       rotationY = STATE.reducedMotion ? 0 : (STATE.time * anchor.spin);
-      tiltX = STATE.reducedMotion ? -8 : (-8 + Math.sin((STATE.time * 0.001) + i) * 2.5);
+      tiltX = STATE.reducedMotion ? -6 : (-6 + Math.sin((STATE.time * 0.001) + i) * 2);
+      lift = i === STATE.focusedIndex ? 8 : 0;
+      opacity = i === STATE.focusedIndex ? 1 : 0.96;
 
       node.style.left = x + "px";
-      node.style.top = y + "px";
+      node.style.top = (y - lift) + "px";
       node.style.marginLeft = (-node.offsetWidth / 2) + "px";
       node.style.marginTop = (-node.offsetHeight / 2) + "px";
       node.style.zIndex = String(20 + Math.round(z));
-      node.style.transform = "translate3d(0,0," + z + "px)";
+      node.style.opacity = String(opacity);
 
       wrap = node.querySelector(".object-wrap");
       if (wrap) {
         wrap.style.transform =
-          "translateZ(0) " +
           "rotateX(" + tiltX + "deg) " +
-          "rotateY(" + rotationY + "deg) " +
-          "scale(" + objectScale + ")";
+          "rotateY(" + rotationY + "deg)";
       }
 
       shadow = node.querySelector(".product-shadow");
       if (shadow) {
-        shadow.style.opacity = i === STATE.focusedIndex ? "0.92" : "0.78";
-        shadow.style.transform = "translateZ(-42px) scale(" + (0.94 + scale * 0.22) + ")";
+        shadow.style.opacity = i === STATE.focusedIndex ? "0.94" : "0.78";
       }
     }
   }
@@ -363,16 +346,6 @@
           mobile: STATE.mobile,
           products: COPY.products
         };
-      },
-      setFocusByKey: function (key) {
-        var i;
-        for (i = 0; i < COPY.products.length; i += 1) {
-          if (COPY.products[i].key === key) {
-            setFocus(i, true);
-            return true;
-          }
-        }
-        return false;
       }
     };
   }

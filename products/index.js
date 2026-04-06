@@ -2,10 +2,10 @@ DESTINATION: /products/index.html
 
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — 3D PRODUCT CHAMBER HOST
+     PRODUCTS AUTHORITY — 3D COMPASS-DIAMOND PRODUCT CHAMBER HOST
      LOCKS:
-       - HTML is host/layout only
-       - runtime lives in /products/index.js
+       - host/layout only
+       - runtime authority lives in /products/index.js
        - no inline onclick
        - no modal overlays
        - all product objects route
@@ -14,7 +14,7 @@ DESTINATION: /products/index.html
          2) Baseline Nutrition Systems
          3) Education & Language Systems
          4) Five Flags / What's My Theme?
-         5) ARK Coin
+         5) ARCHCOIN
 -->
 
 <html lang="en">
@@ -30,14 +30,12 @@ DESTINATION: /products/index.html
     :root{
       --bg0:#030712;
       --bg1:#081225;
-      --bg2:#0d1e38;
+      --bg2:#0f1f39;
       --ink:rgba(255,255,255,.96);
       --mut:rgba(255,255,255,.80);
       --line:rgba(255,255,255,.14);
-      --line2:rgba(255,255,255,.08);
       --gold:rgba(212,175,55,.54);
-      --goldSoft:rgba(212,175,55,.16);
-      --blueGlow:rgba(110,170,255,.22);
+      --gold2:rgba(233,214,154,.34);
       --panel:rgba(5,11,24,.48);
       --panel2:rgba(5,11,24,.66);
       --shadowA:0 30px 90px rgba(0,0,0,.52);
@@ -58,16 +56,8 @@ DESTINATION: /products/index.html
       color:var(--ink);
       font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
     }
-
-    body::before,
-    body::after{
-      pointer-events:none!important;
-    }
-
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
+    a{color:inherit;text-decoration:none}
+    body::before,body::after{pointer-events:none!important}
 
     #app-shell{
       position:fixed;
@@ -76,7 +66,7 @@ DESTINATION: /products/index.html
       isolation:isolate;
       background:
         radial-gradient(circle at 50% 18%, rgba(120,180,255,.10), transparent 30%),
-        radial-gradient(circle at 50% 80%, rgba(120,180,255,.08), transparent 34%),
+        radial-gradient(circle at 50% 76%, rgba(110,160,255,.08), transparent 34%),
         linear-gradient(180deg, var(--bg2) 0%, var(--bg1) 48%, var(--bg0) 100%);
     }
 
@@ -91,21 +81,25 @@ DESTINATION: /products/index.html
     .env::before{
       content:"";
       position:absolute;
-      inset:-12%;
+      inset:-10%;
       background:
-        radial-gradient(circle at 16% 26%, rgba(255,255,255,.98) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 28% 18%, rgba(255,255,255,.70) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 42% 24%, rgba(255,255,255,.88) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 58% 14%, rgba(255,255,255,.90) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 76% 20%, rgba(255,255,255,.75) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 84% 32%, rgba(255,255,255,.94) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 18% 62%, rgba(255,255,255,.80) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 34% 70%, rgba(255,255,255,.95) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 52% 74%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 66% 68%, rgba(255,255,255,.92) 0 1.2px, transparent 2px),
-        radial-gradient(circle at 82% 72%, rgba(255,255,255,.80) 0 1px, transparent 1.8px);
+        radial-gradient(circle at 12% 22%, rgba(255,255,255,.98) 0 1.2px, transparent 2px),
+        radial-gradient(circle at 20% 44%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,.74) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 36% 30%, rgba(255,255,255,.90) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 44% 14%, rgba(255,255,255,.84) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 58% 22%, rgba(255,255,255,.96) 0 1.2px, transparent 2px),
+        radial-gradient(circle at 68% 16%, rgba(255,255,255,.74) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 76% 34%, rgba(255,255,255,.88) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 84% 20%, rgba(255,255,255,.82) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 90% 48%, rgba(255,255,255,.94) 0 1.2px, transparent 2px),
+        radial-gradient(circle at 18% 72%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 36% 78%, rgba(255,255,255,.95) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 54% 74%, rgba(255,255,255,.80) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 70% 70%, rgba(255,255,255,.90) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 86% 76%, rgba(255,255,255,.82) 0 1px, transparent 1.8px);
       opacity:.62;
-      animation:starDrift 28s linear infinite;
+      animation:starDrift 30s linear infinite;
     }
 
     .env::after{
@@ -113,10 +107,10 @@ DESTINATION: /products/index.html
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 50% 50%, rgba(90,140,230,.12), transparent 26%),
-        linear-gradient(180deg, transparent 0%, rgba(255,255,255,.02) 50%, transparent 100%);
+        radial-gradient(circle at 50% 50%, rgba(90,140,230,.08), transparent 28%),
+        linear-gradient(180deg, transparent 0%, rgba(255,255,255,.018) 50%, transparent 100%);
+      filter:blur(6px);
       opacity:.72;
-      filter:blur(8px);
     }
 
     .top-nav{
@@ -136,7 +130,6 @@ DESTINATION: /products/index.html
       z-index:30;
       display:flex;
       gap:10px;
-      flex-wrap:wrap;
       justify-content:flex-end;
       align-items:center;
     }
@@ -188,9 +181,13 @@ DESTINATION: /products/index.html
       transform:translateY(-1px);
     }
 
+    .nav-btn.active{
+      border-color:rgba(212,175,55,.40);
+    }
+
     .hero{
       position:absolute;
-      top:12%;
+      top:11%;
       left:50%;
       transform:translateX(-50%);
       width:min(94vw,1040px);
@@ -210,7 +207,7 @@ DESTINATION: /products/index.html
 
     .hero p{
       margin:12px auto 0;
-      max-width:900px;
+      max-width:920px;
       font-size:clamp(15px,1.8vw,21px);
       line-height:1.5;
       color:rgba(255,255,255,.88);
@@ -239,51 +236,24 @@ DESTINATION: /products/index.html
       backdrop-filter:blur(8px);
       -webkit-backdrop-filter:blur(8px);
       box-shadow:var(--shadowB);
+      max-width:min(72vw,420px);
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
     .stage{
       position:absolute;
       inset:0;
       z-index:12;
-      perspective:1400px;
-      perspective-origin:50% 48%;
+      perspective:1600px;
+      perspective-origin:50% 50%;
     }
 
-    .orbit-guide{
+    .chamber{
       position:absolute;
       left:50%;
-      top:61%;
-      width:min(980px,86vw);
-      height:min(530px,48vh);
-      transform:translate(-50%,-50%);
-      z-index:2;
-      pointer-events:none;
-      opacity:.26;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,.03) inset,
-        0 0 80px rgba(110,170,255,.06);
-    }
-
-    .orbit-guide::before,
-    .orbit-guide::after{
-      content:"";
-      position:absolute;
-      inset:10%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.06);
-    }
-
-    .orbit-guide::after{
-      inset:22%;
-      border-color:rgba(255,255,255,.05);
-    }
-
-    .product-stage{
-      position:absolute;
-      left:50%;
-      top:61%;
+      top:60%;
       width:min(1080px,92vw);
       height:min(620px,58vh);
       transform:translate(-50%,-50%);
@@ -296,10 +266,6 @@ DESTINATION: /products/index.html
       position:absolute;
       width:180px;
       height:180px;
-      left:50%;
-      top:50%;
-      margin-left:-90px;
-      margin-top:-90px;
       border:0;
       padding:0;
       background:transparent;
@@ -309,159 +275,194 @@ DESTINATION: /products/index.html
       -webkit-tap-highlight-color:transparent;
       touch-action:manipulation;
       transform-style:preserve-3d;
+      transition:filter .18s ease;
     }
 
     .product-shadow{
       position:absolute;
-      left:16%;
-      right:16%;
-      bottom:6%;
-      height:18%;
+      left:12%;
+      right:12%;
+      bottom:2%;
+      height:16%;
       border-radius:999px;
       background:radial-gradient(circle at 50% 50%, rgba(0,0,0,.34), transparent 72%);
       filter:blur(10px);
-      opacity:.84;
+      opacity:.86;
+      transform:translateZ(-44px);
       pointer-events:none;
-      transform:translateZ(-40px);
     }
 
-    .product-body{
+    .compass{
       position:absolute;
       inset:0;
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.18);
-      background:
-        radial-gradient(circle at 24% 18%, rgba(255,255,255,.16), transparent 24%),
-        radial-gradient(circle at 78% 24%, rgba(212,175,55,.10), transparent 34%),
-        linear-gradient(155deg, rgba(22,34,62,.96), rgba(9,14,28,.96));
-      box-shadow:
-        0 28px 64px rgba(0,0,0,.42),
-        0 0 18px rgba(110,170,255,.12),
-        inset 0 0 0 1px rgba(255,255,255,.04);
-      overflow:hidden;
       transform-style:preserve-3d;
-      transition:border-color .18s ease, box-shadow .18s ease, filter .18s ease;
     }
 
-    .product-body::before{
+    .compass-ring{
+      position:absolute;
+      inset:8px;
+      transform:rotate(45deg) translateZ(0);
+      border-radius:26px;
+      border:1.5px solid rgba(255,255,255,.20);
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.14), transparent 24%),
+        radial-gradient(circle at 78% 22%, rgba(212,175,55,.10), transparent 34%),
+        linear-gradient(155deg, rgba(25,38,72,.96), rgba(9,14,28,.96));
+      box-shadow:
+        0 28px 64px rgba(0,0,0,.42),
+        inset 0 0 0 1px rgba(255,255,255,.04),
+        0 0 18px rgba(110,170,255,.10);
+      overflow:hidden;
+    }
+
+    .compass-ring::before{
       content:"";
       position:absolute;
       inset:10px;
-      border-radius:20px;
+      border-radius:18px;
       border:1px solid rgba(212,175,55,.42);
       pointer-events:none;
-      opacity:.96;
     }
 
-    .product-body::after{
+    .compass-ring::after{
       content:"";
       position:absolute;
       inset:0;
       background:
         linear-gradient(90deg, transparent 0 16%, rgba(255,255,255,.05) 16% 17%, transparent 17% 50%, rgba(255,255,255,.04) 50% 51%, transparent 51% 84%, rgba(255,255,255,.05) 84% 85%, transparent 85% 100%),
         linear-gradient(180deg, transparent 0 16%, rgba(255,255,255,.05) 16% 17%, transparent 17% 50%, rgba(255,255,255,.04) 50% 51%, transparent 51% 84%, rgba(255,255,255,.05) 84% 85%, transparent 85% 100%);
-      opacity:.30;
+      opacity:.28;
       mix-blend-mode:screen;
       pointer-events:none;
     }
 
-    .product-face{
+    .compass-core{
       position:absolute;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      text-align:center;
-      padding:18px;
-      z-index:2;
-      pointer-events:none;
-      text-shadow:0 8px 22px rgba(0,0,0,.55);
-      transform:translateZ(24px);
-    }
-
-    .product-icon{
-      width:68px;
-      height:68px;
+      inset:30px;
+      transform:rotate(45deg) translateZ(18px);
       border-radius:18px;
-      border:1px solid rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.12);
       background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,.20), transparent 28%),
-        linear-gradient(145deg, rgba(80,130,255,.22), rgba(255,255,255,.03));
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 54%),
+        linear-gradient(145deg, rgba(20,28,62,.14), rgba(8,10,22,.04));
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.04),
-        0 14px 34px rgba(0,0,0,.30);
-      margin-bottom:14px;
-      position:relative;
-      overflow:hidden;
+        inset 0 0 0 1px rgba(255,255,255,.03),
+        0 8px 22px rgba(0,0,0,.22);
+      opacity:.80;
     }
 
-    .product-node[data-kind="coin"] .product-icon{
+    .compass-axis-h,
+    .compass-axis-v{
+      position:absolute;
+      left:50%;
+      top:50%;
+      background:rgba(255,255,255,.16);
       border-radius:999px;
-      background:
-        radial-gradient(circle at 32% 28%, rgba(255,255,255,.22), transparent 24%),
-        radial-gradient(circle at 50% 50%, rgba(212,175,55,.18), transparent 64%),
-        linear-gradient(145deg, rgba(96,76,24,.78), rgba(42,32,10,.98));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.05),
-        inset 0 0 0 6px rgba(212,175,55,.18),
-        0 14px 34px rgba(0,0,0,.30),
-        0 0 24px rgba(212,175,55,.12);
+      transform:translate(-50%,-50%) translateZ(22px);
+      pointer-events:none;
     }
 
-    .product-node[data-kind="game"] .product-icon{
-      border-radius:16px;
-      background:
-        radial-gradient(circle at 30% 24%, rgba(255,255,255,.20), transparent 26%),
-        linear-gradient(145deg, rgba(160,70,255,.24), rgba(20,10,44,.96));
+    .compass-axis-h{
+      width:58%;
+      height:1px;
     }
 
-    .product-node[data-kind="nutrition"] .product-icon{
-      border-radius:20px;
-      background:
-        radial-gradient(circle at 30% 24%, rgba(255,255,255,.20), transparent 26%),
-        linear-gradient(145deg, rgba(56,180,120,.24), rgba(10,34,24,.96));
+    .compass-axis-v{
+      width:1px;
+      height:58%;
     }
 
-    .product-node[data-kind="language"] .product-icon{
-      border-radius:20px;
-      background:
-        radial-gradient(circle at 30% 24%, rgba(255,255,255,.20), transparent 26%),
-        linear-gradient(145deg, rgba(70,150,255,.24), rgba(8,24,44,.96));
+    .cardinal{
+      position:absolute;
+      font-size:10px;
+      font-weight:900;
+      letter-spacing:.14em;
+      color:rgba(248,239,214,.84);
+      text-shadow:0 4px 10px rgba(0,0,0,.36);
+      pointer-events:none;
+      transform:translateZ(26px);
     }
 
-    .product-node[data-kind="ai"] .product-icon{
-      border-radius:20px;
-      background:
-        radial-gradient(circle at 30% 24%, rgba(255,255,255,.20), transparent 26%),
-        linear-gradient(145deg, rgba(255,120,120,.18), rgba(20,24,44,.96));
+    .cardinal.n{left:50%;top:20px;transform:translateX(-50%) translateZ(26px)}
+    .cardinal.e{right:16px;top:50%;transform:translateY(-50%) translateZ(26px)}
+    .cardinal.s{left:50%;bottom:16px;transform:translateX(-50%) translateZ(26px)}
+    .cardinal.w{left:18px;top:50%;transform:translateY(-50%) translateZ(26px)}
+
+    .face-label{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:78%;
+      text-align:center;
+      transform:translate(-50%,-50%) translateZ(30px);
+      text-shadow:0 8px 22px rgba(0,0,0,.55);
+      pointer-events:none;
     }
 
     .product-title{
-      font-size:clamp(16px,1.45vw,24px);
+      margin:0;
+      font-size:clamp(15px,1.35vw,23px);
       line-height:1.02;
       font-weight:950;
       letter-spacing:.05em;
-      margin:0;
     }
 
     .product-sub{
-      margin-top:9px;
-      font-size:clamp(10px,.9vw,13px);
-      line-height:1.18;
+      margin-top:8px;
+      font-size:clamp(10px,.85vw,13px);
+      line-height:1.16;
       font-weight:900;
-      letter-spacing:.08em;
+      letter-spacing:.09em;
       color:rgba(255,255,255,.84);
       text-transform:uppercase;
     }
 
-    .product-node.is-focus .product-body,
-    .product-node:hover .product-body{
-      border-color:rgba(212,175,55,.46);
+    .product-node[data-kind="coin"] .compass-ring{
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.16), transparent 24%),
+        radial-gradient(circle at 50% 50%, rgba(212,175,55,.12), transparent 52%),
+        linear-gradient(155deg, rgba(58,44,14,.94), rgba(16,12,6,.98));
+      box-shadow:
+        0 28px 64px rgba(0,0,0,.42),
+        inset 0 0 0 1px rgba(255,255,255,.03),
+        0 0 22px rgba(212,175,55,.10);
+    }
+
+    .product-node[data-kind="nutrition"] .compass-ring{
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.14), transparent 24%),
+        radial-gradient(circle at 78% 22%, rgba(120,220,160,.08), transparent 34%),
+        linear-gradient(155deg, rgba(22,50,52,.94), rgba(7,18,18,.98));
+    }
+
+    .product-node[data-kind="ai"] .compass-ring{
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.14), transparent 24%),
+        radial-gradient(circle at 78% 22%, rgba(255,120,120,.08), transparent 34%),
+        linear-gradient(155deg, rgba(36,34,68,.94), rgba(10,10,22,.98));
+    }
+
+    .product-node[data-kind="language"] .compass-ring{
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.14), transparent 24%),
+        radial-gradient(circle at 78% 22%, rgba(90,180,255,.10), transparent 34%),
+        linear-gradient(155deg, rgba(20,40,72,.94), rgba(8,14,28,.98));
+    }
+
+    .product-node[data-kind="game"] .compass-ring{
+      background:
+        radial-gradient(circle at 24% 18%, rgba(255,255,255,.14), transparent 24%),
+        radial-gradient(circle at 78% 22%, rgba(160,110,255,.10), transparent 34%),
+        linear-gradient(155deg, rgba(42,26,78,.94), rgba(12,8,28,.98));
+    }
+
+    .product-node.is-focus .compass-ring,
+    .product-node:hover .compass-ring{
+      border-color:rgba(233,214,154,.44);
       box-shadow:
         0 34px 76px rgba(0,0,0,.50),
         0 0 18px rgba(212,175,55,.14),
-        0 0 20px rgba(110,170,255,.16);
+        0 0 20px rgba(110,170,255,.12);
       filter:saturate(1.08);
     }
 
@@ -510,18 +511,14 @@ DESTINATION: /products/index.html
     }
 
     @media (max-width:980px){
-      .hero{
-        top:13%;
-      }
-      .product-stage{
+      .hero{top:12%}
+      .chamber{
         width:min(96vw,760px);
         height:min(560px,48vh);
       }
       .product-node{
         width:162px;
         height:162px;
-        margin-left:-81px;
-        margin-top:-81px;
       }
     }
 
@@ -539,80 +536,47 @@ DESTINATION: /products/index.html
         font-size:15px;
         max-width:520px;
       }
-      .product-stage{
-        top:58%;
+      .chamber{
+        top:59%;
         width:min(98vw,540px);
         height:420px;
       }
       .product-node{
-        width:140px;
-        height:140px;
-        margin-left:-70px;
-        margin-top:-70px;
+        width:136px;
+        height:136px;
       }
-      .product-icon{
-        width:54px;
-        height:54px;
-        margin-bottom:10px;
-      }
-      .product-title{
-        font-size:15px;
-      }
-      .product-sub{
-        font-size:10px;
-      }
-      .mobile-dock{
-        display:grid;
-      }
+      .compass-core{inset:24px}
+      .mobile-dock{display:grid}
       .focus-pill{
         bottom:calc(72px + var(--safe-bottom));
       }
+      .cardinal{font-size:9px}
+      .product-title{font-size:14px}
+      .product-sub{font-size:9px}
     }
 
     @media (max-width:520px){
-      .top-nav{
-        gap:8px;
-      }
-      .nav-btn,
-      .top-pill{
+      .top-nav{gap:8px}
+      .nav-btn,.top-pill{
         min-height:40px;
         padding:9px 12px;
         font-size:12px;
       }
-      .hero{
-        top:15%;
-      }
-      .hero h1{
-        font-size:40px;
-      }
-      .product-stage{
+      .hero{top:15%}
+      .hero h1{font-size:40px}
+      .chamber{
         top:58%;
         width:min(100vw,390px);
-        height:340px;
+        height:336px;
       }
       .product-node{
-        width:122px;
-        height:122px;
-        margin-left:-61px;
-        margin-top:-61px;
+        width:114px;
+        height:114px;
       }
-      .product-icon{
-        width:44px;
-        height:44px;
-        margin-bottom:8px;
-      }
-      .product-title{
-        font-size:13px;
-      }
-      .product-sub{
-        margin-top:6px;
-        font-size:9px;
-      }
-      .orbit-guide{
-        width:min(94vw,360px);
-        height:250px;
-        top:58%;
-      }
+      .compass-core{inset:20px}
+      .cardinal{font-size:8px}
+      .product-title{font-size:12px}
+      .product-sub{margin-top:6px;font-size:8px}
     }
   </style>
 </head>
@@ -629,69 +593,109 @@ DESTINATION: /products/index.html
     </nav>
 
     <div class="top-right" aria-label="Products meta">
-      <div class="top-pill" id="scenePill">3D PRODUCT CHAMBER</div>
+      <div class="top-pill" id="scenePill">3D COMPASS CHAMBER</div>
     </div>
 
     <section class="hero" aria-label="Products hero">
       <h1 id="heroTitle">PRODUCTS</h1>
-      <p id="heroTag">Select a live product or active build line. Rotating object field with direct product routing.</p>
+      <p id="heroTag">Five separate spinning compass-diamond product buttons with direct routing and mobile-safe separation.</p>
     </section>
 
     <div class="focus-pill" id="focusPill">FOCUS: BASELINE NUTRITION</div>
 
     <section class="stage" aria-label="Products chamber">
-      <div class="orbit-guide" aria-hidden="true"></div>
+      <div class="chamber" id="productChamber">
 
-      <div class="product-stage" id="productStage">
         <button class="product-node is-focus" id="nodeNutrition" data-index="0" data-kind="nutrition" data-route="/products/nutrition/" aria-label="Baseline Nutrition Systems" type="button">
           <div class="product-shadow"></div>
-          <div class="product-body"></div>
-          <div class="product-face">
-            <div class="product-icon" aria-hidden="true"></div>
-            <div class="product-title" id="titleNutrition">BASELINE NUTRITION</div>
-            <div class="product-sub" id="subNutrition">SYSTEMS</div>
+          <div class="compass">
+            <div class="compass-ring"></div>
+            <div class="compass-core"></div>
+            <div class="compass-axis-h"></div>
+            <div class="compass-axis-v"></div>
+            <div class="cardinal n">N</div>
+            <div class="cardinal e">E</div>
+            <div class="cardinal s">S</div>
+            <div class="cardinal w">W</div>
+            <div class="face-label">
+              <div class="product-title" id="titleNutrition">BASELINE NUTRITION</div>
+              <div class="product-sub" id="subNutrition">SYSTEMS</div>
+            </div>
           </div>
         </button>
 
         <button class="product-node" id="nodeAI" data-index="1" data-kind="ai" data-route="/products/on-your-side-ai/" aria-label="On Your Side AI" type="button">
           <div class="product-shadow"></div>
-          <div class="product-body"></div>
-          <div class="product-face">
-            <div class="product-icon" aria-hidden="true"></div>
-            <div class="product-title" id="titleAI">ON YOUR SIDE AI</div>
-            <div class="product-sub" id="subAI">INTELLIGENCE</div>
+          <div class="compass">
+            <div class="compass-ring"></div>
+            <div class="compass-core"></div>
+            <div class="compass-axis-h"></div>
+            <div class="compass-axis-v"></div>
+            <div class="cardinal n">N</div>
+            <div class="cardinal e">E</div>
+            <div class="cardinal s">S</div>
+            <div class="cardinal w">W</div>
+            <div class="face-label">
+              <div class="product-title" id="titleAI">ON YOUR SIDE AI</div>
+              <div class="product-sub" id="subAI">INTELLIGENCE</div>
+            </div>
           </div>
         </button>
 
         <button class="product-node" id="nodeLanguage" data-index="2" data-kind="language" data-route="/products/education/" aria-label="Education and Language Systems" type="button">
           <div class="product-shadow"></div>
-          <div class="product-body"></div>
-          <div class="product-face">
-            <div class="product-icon" aria-hidden="true"></div>
-            <div class="product-title" id="titleLanguage">EDUCATION &amp; LANGUAGE</div>
-            <div class="product-sub" id="subLanguage">SYSTEMS</div>
+          <div class="compass">
+            <div class="compass-ring"></div>
+            <div class="compass-core"></div>
+            <div class="compass-axis-h"></div>
+            <div class="compass-axis-v"></div>
+            <div class="cardinal n">N</div>
+            <div class="cardinal e">E</div>
+            <div class="cardinal s">S</div>
+            <div class="cardinal w">W</div>
+            <div class="face-label">
+              <div class="product-title" id="titleLanguage">EDUCATION &amp; LANGUAGE</div>
+              <div class="product-sub" id="subLanguage">SYSTEMS</div>
+            </div>
           </div>
         </button>
 
         <button class="product-node" id="nodeGame" data-index="3" data-kind="game" data-route="/products/five-flags/" aria-label="Five Flags What's My Theme" type="button">
           <div class="product-shadow"></div>
-          <div class="product-body"></div>
-          <div class="product-face">
-            <div class="product-icon" aria-hidden="true"></div>
-            <div class="product-title" id="titleGame">FIVE FLAGS</div>
-            <div class="product-sub" id="subGame">WHAT'S MY THEME?</div>
+          <div class="compass">
+            <div class="compass-ring"></div>
+            <div class="compass-core"></div>
+            <div class="compass-axis-h"></div>
+            <div class="compass-axis-v"></div>
+            <div class="cardinal n">N</div>
+            <div class="cardinal e">E</div>
+            <div class="cardinal s">S</div>
+            <div class="cardinal w">W</div>
+            <div class="face-label">
+              <div class="product-title" id="titleGame">FIVE FLAGS</div>
+              <div class="product-sub" id="subGame">WHAT'S MY THEME?</div>
+            </div>
           </div>
         </button>
 
-        <button class="product-node" id="nodeCoin" data-index="4" data-kind="coin" data-route="/products/ark-coin/" aria-label="ARK Coin" type="button">
+        <button class="product-node" id="nodeCoin" data-index="4" data-kind="coin" data-route="/products/archcoin/" aria-label="ARCHCOIN" type="button">
           <div class="product-shadow"></div>
-          <div class="product-body"></div>
-          <div class="product-face">
-            <div class="product-icon" aria-hidden="true"></div>
-            <div class="product-title" id="titleCoin">ARK COIN</div>
-            <div class="product-sub" id="subCoin">PRODUCT LINE</div>
+          <div class="compass">
+            <div class="compass-ring"></div>
+            <div class="compass-core"></div>
+            <div class="compass-axis-h"></div>
+            <div class="compass-axis-v"></div>
+            <div class="cardinal n">N</div>
+            <div class="cardinal e">E</div>
+            <div class="cardinal s">S</div>
+            <div class="cardinal w">W</div>
+            <div class="face-label">
+              <div class="product-title" id="titleCoin">ARCHCOIN</div>
+              <div class="product-sub" id="subCoin">PRODUCT LINE</div>
+            </div>
           </div>
         </button>
+
       </div>
     </section>
 
@@ -700,11 +704,11 @@ DESTINATION: /products/index.html
       <button class="dock-btn" data-focus-index="1" type="button">AI</button>
       <button class="dock-btn" data-focus-index="2" type="button">Education</button>
       <button class="dock-btn" data-focus-index="3" type="button">Five Flags</button>
-      <button class="dock-btn" data-focus-index="4" type="button">ARK Coin</button>
+      <button class="dock-btn" data-focus-index="4" type="button">ARCHCOIN</button>
     </div>
   </div>
 
-  <script src="/products/index.js?v=1"></script>
+  <script src="/products/index.js?v=2"></script>
 </body>
 </html>
 
@@ -715,6 +719,20 @@ DESTINATION: /products/index.js
 
   var qs = new URLSearchParams(window.location.search);
   var LS = window.localStorage;
+
+  function safeGet(key) {
+    try {
+      return LS.getItem(key);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function safeSet(key, value) {
+    try {
+      LS.setItem(key, value);
+    } catch (e) {}
+  }
 
   var lang = qs.get("lang") || safeGet("gd_lang") || "en";
   var style = qs.get("style") || safeGet("gd_style") || "informal";
@@ -741,20 +759,6 @@ DESTINATION: /products/index.js
   safeSet("gd_depth", depth);
 
   document.documentElement.lang = lang === "zh" ? "zh" : (lang === "es" ? "es" : "en");
-
-  function safeGet(key) {
-    try {
-      return LS.getItem(key);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  function safeSet(key, value) {
-    try {
-      LS.setItem(key, value);
-    } catch (e) {}
-  }
 
   function pick(en, zh, es) {
     if (lang === "zh") return zh;
@@ -810,11 +814,11 @@ DESTINATION: /products/index.js
   var COPY = {
     heroTitle: pick("PRODUCTS", "产品", "PRODUCTOS"),
     heroTag: pick(
-      "Select a live product or active build line. Rotating object field with direct product routing.",
-      "选择一个已存在的产品或正在建设中的产品线。旋转对象场，直接进入产品页面。",
-      "Selecciona un producto activo o una línea en construcción. Campo de objetos rotantes con ruta directa."
+      "Five separate spinning compass-diamond product buttons with direct routing and mobile-safe separation.",
+      "五个独立旋转的指南针菱形产品按钮，支持直接跳转，并保持移动端安全间距。",
+      "Cinco botones de producto tipo brújula-diamante con giro controlado, ruta directa y separación segura en móvil."
     ),
-    scenePill: pick("3D PRODUCT CHAMBER", "3D 产品舱", "CÁMARA DE PRODUCTOS 3D"),
+    scenePill: pick("3D COMPASS CHAMBER", "3D 指南针舱", "CÁMARA BRÚJULA 3D"),
     navCompass: pick("COMPASS", "指南针", "BRÚJULA"),
     navProducts: pick("PRODUCTS", "产品", "PRODUCTOS"),
     navExplore: pick("EXPLORE", "探索", "EXPLORAR"),
@@ -847,9 +851,9 @@ DESTINATION: /products/index.js
       },
       {
         key: "coin",
-        title: pick("ARK COIN", "ARK 币", "ARK COIN"),
+        title: pick("ARCHCOIN", "ARCHCOIN", "ARCHCOIN"),
         sub: pick("PRODUCT LINE", "产品线", "LÍNEA DE PRODUCTO"),
-        route: "/products/ark-coin/"
+        route: "/products/archcoin/"
       }
     ]
   };
@@ -862,7 +866,7 @@ DESTINATION: /products/index.js
   var navExplore = document.getElementById("navExplore");
   var navGauges = document.getElementById("navGauges");
   var focusPill = document.getElementById("focusPill");
-  var stage = document.getElementById("productStage");
+  var chamber = document.getElementById("productChamber");
   var productNodes = Array.prototype.slice.call(document.querySelectorAll(".product-node"));
   var dockButtons = Array.prototype.slice.call(document.querySelectorAll(".dock-btn"));
 
@@ -876,23 +880,9 @@ DESTINATION: /products/index.js
 
   wireRoutes();
 
-  var STATE = {
-    raf: 0,
-    rotation: 0,
-    targetRotation: 0,
-    focusedIndex: 0,
-    pointerX: 0,
-    pointerY: 0,
-    reducedMotion: false,
-    paused: false
-  };
-
-  var motionQuery = null;
-  try {
-    motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    STATE.reducedMotion = !!motionQuery.matches;
-  } catch (e) {
-    STATE.reducedMotion = false;
+  function setNodeText(id, value) {
+    var node = document.getElementById(id);
+    if (node) node.textContent = value;
   }
 
   function syncCopy() {
@@ -911,12 +901,46 @@ DESTINATION: /products/index.js
     if (dockButtons[1]) dockButtons[1].textContent = pick("AI", "AI", "AI");
     if (dockButtons[2]) dockButtons[2].textContent = pick("Education", "教育", "Educación");
     if (dockButtons[3]) dockButtons[3].textContent = pick("Five Flags", "五旗", "Five Flags");
-    if (dockButtons[4]) dockButtons[4].textContent = pick("ARK Coin", "ARK 币", "ARK Coin");
+    if (dockButtons[4]) dockButtons[4].textContent = COPY.products[4].title;
   }
 
-  function setNodeText(id, value) {
-    var node = document.getElementById(id);
-    if (node) node.textContent = value;
+  var STATE = {
+    raf: 0,
+    focusedIndex: 0,
+    reducedMotion: false,
+    paused: false,
+    mobile: false,
+    time: 0,
+    baseAnchorsDesktop: [
+      { x: 0.50, y: 0.58, z: 80,  scale: 1.10 },  /* center nutrition */
+      { x: 0.23, y: 0.29, z: 30,  scale: 0.94 },  /* upper-left ai */
+      { x: 0.77, y: 0.29, z: 30,  scale: 0.94 },  /* upper-right archcoin */
+      { x: 0.25, y: 0.80, z: 16,  scale: 0.90 },  /* lower-left language */
+      { x: 0.75, y: 0.80, z: 16,  scale: 0.90 }   /* lower-right game */
+    ],
+    baseAnchorsMobile: [
+      { x: 0.50, y: 0.56, z: 76,  scale: 1.08 },
+      { x: 0.24, y: 0.31, z: 24,  scale: 0.90 },
+      { x: 0.76, y: 0.31, z: 24,  scale: 0.90 },
+      { x: 0.26, y: 0.77, z: 12,  scale: 0.86 },
+      { x: 0.74, y: 0.77, z: 12,  scale: 0.86 }
+    ]
+  };
+
+  try {
+    var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    STATE.reducedMotion = !!motionQuery.matches;
+    if (typeof motionQuery.addEventListener === "function") {
+      motionQuery.addEventListener("change", function () {
+        STATE.reducedMotion = !!motionQuery.matches;
+      });
+    } else if (typeof motionQuery.addListener === "function") {
+      motionQuery.addListener(function () {
+        STATE.reducedMotion = !!motionQuery.matches;
+      });
+    }
+  } catch (e) {
+    STATE.reducedMotion = false;
   }
 
   function resolveFocusIndex() {
@@ -935,7 +959,6 @@ DESTINATION: /products/index.js
 
     STATE.focusedIndex = safeIndex;
     focus = COPY.products[safeIndex].key;
-    STATE.targetRotation = safeIndex * ((Math.PI * 2) / COPY.products.length);
 
     for (i = 0; i < productNodes.length; i += 1) {
       productNodes[i].classList.toggle("is-focus", i === safeIndex);
@@ -952,90 +975,88 @@ DESTINATION: /products/index.js
     }
   }
 
+  function getAnchors() {
+    return STATE.mobile ? STATE.baseAnchorsMobile : STATE.baseAnchorsDesktop;
+  }
+
   function layoutProducts() {
-    var w = stage.clientWidth;
-    var h = stage.clientHeight;
-    var cx = w * 0.5;
-    var cy = h * 0.56;
-    var ringX = Math.min(w * 0.36, 360);
-    var ringY = Math.min(h * 0.18, 120);
+    var anchors = getAnchors();
+    var rect = chamber.getBoundingClientRect();
+    var w = rect.width;
+    var h = rect.height;
     var i;
     var node;
-    var angleStep = (Math.PI * 2) / COPY.products.length;
-    var angle;
+    var anchor;
     var x;
     var y;
-    var depthZ;
-    var depthNorm;
+    var z;
     var scale;
-    var opacity;
-    var rotateY;
-    var rotateX;
-    var widthBase;
-
-    if (window.innerWidth < 720) {
-      ringX = Math.min(w * 0.26, 140);
-      ringY = Math.min(h * 0.10, 46);
-    }
+    var spinY;
+    var tiltX;
+    var sway;
+    var glow;
+    var compass;
+    var shadow;
+    var focusLift;
 
     for (i = 0; i < productNodes.length; i += 1) {
       node = productNodes[i];
-      angle = (i * angleStep) - STATE.rotation;
-      x = cx + Math.sin(angle) * ringX;
-      y = cy + Math.cos(angle) * ringY * 0.72;
-      depthZ = Math.cos(angle) * 220;
-      depthNorm = (depthZ + 220) / 440;
-      scale = 0.72 + (depthNorm * 0.42);
-      opacity = 0.42 + (depthNorm * 0.58);
-      rotateY = Math.sin(angle) * -28;
-      rotateX = 10 - (depthNorm * 10);
-      widthBase = parseFloat(node.offsetWidth || 180);
+      anchor = anchors[i];
+
+      x = w * anchor.x;
+      y = h * anchor.y;
+      z = anchor.z;
+      scale = anchor.scale;
+
+      sway = STATE.reducedMotion ? 0 : Math.sin((STATE.time * 0.0012) + (i * 0.9)) * 6;
+      spinY = STATE.reducedMotion ? 0 : ((STATE.time * 0.028) + (i * 23)) % 360;
+      tiltX = STATE.reducedMotion ? -10 : (-10 + Math.cos((STATE.time * 0.0014) + (i * 1.1)) * 4);
+      focusLift = i === STATE.focusedIndex ? 10 : 0;
+      glow = i === STATE.focusedIndex ? 1.06 : 1;
 
       node.style.left = x + "px";
-      node.style.top = y + "px";
-      node.style.marginLeft = (-widthBase / 2) + "px";
-      node.style.marginTop = (-widthBase / 2) + "px";
-      node.style.opacity = String(opacity);
-      node.style.zIndex = String(20 + Math.round(depthNorm * 80));
+      node.style.top = (y + sway - focusLift) + "px";
+      node.style.marginLeft = (-node.offsetWidth / 2) + "px";
+      node.style.marginTop = (-node.offsetHeight / 2) + "px";
+      node.style.zIndex = String(20 + Math.round(z));
       node.style.transform =
-        "translate3d(0,0," + depthZ + "px) " +
-        "rotateX(" + rotateX + "deg) " +
-        "rotateY(" + rotateY + "deg) " +
+        "translate3d(0,0," + z + "px) " +
         "scale(" + scale + ")";
+
+      compass = node.querySelector(".compass");
+      if (compass) {
+        compass.style.transform =
+          "rotateX(" + tiltX + "deg) " +
+          "rotateY(" + spinY + "deg) " +
+          "scale(" + glow + ")";
+      }
+
+      shadow = node.querySelector(".product-shadow");
+      if (shadow) {
+        shadow.style.opacity = i === STATE.focusedIndex ? "0.92" : "0.76";
+        shadow.style.transform = "translateZ(-44px) scale(" + (0.96 + (scale - 0.85) * 0.24) + ")";
+      }
     }
   }
 
-  function animate() {
+  function animate(ts) {
     if (!STATE.paused) {
-      if (STATE.reducedMotion) {
-        STATE.rotation = STATE.targetRotation;
-      } else {
-        STATE.targetRotation += 0.0026;
-        STATE.rotation += (STATE.targetRotation - STATE.rotation) * 0.04;
-      }
+      STATE.time = ts || 0;
       layoutProducts();
     }
     STATE.raf = window.requestAnimationFrame(animate);
   }
 
-  function handlePointerMove(event) {
-    if (window.innerWidth < 720) return;
-    var rect = stage.getBoundingClientRect();
-    var x = event.clientX - rect.left;
-    var ratio = rect.width ? (x / rect.width) : 0.5;
-    STATE.pointerX = (ratio - 0.5) * 0.36;
-  }
-
   function bindNodes() {
     var i;
     var node;
-    var route;
     var index;
+    var route;
 
     for (i = 0; i < productNodes.length; i += 1) {
       node = productNodes[i];
-      route = node.getAttribute("data-route") || "/products/";
       index = parseInt(node.getAttribute("data-index") || "0", 10);
+      route = node.getAttribute("data-route") || "/products/";
 
       (function (boundNode, boundIndex, boundRoute) {
         boundNode.addEventListener("mouseenter", function () {
@@ -1064,45 +1085,27 @@ DESTINATION: /products/index.js
     }
   }
 
-  function bindStage() {
-    stage.addEventListener("pointermove", handlePointerMove, { passive: true });
+  function updateResponsiveState() {
+    STATE.mobile = window.innerWidth < 720;
+    layoutProducts();
+  }
 
-    stage.addEventListener("mouseenter", function () {
-      STATE.paused = false;
-    }, { passive: true });
-
-    stage.addEventListener("mouseleave", function () {
-      STATE.paused = false;
-    }, { passive: true });
+  function bindSystem() {
+    window.addEventListener("resize", updateResponsiveState, { passive: true });
 
     document.addEventListener("visibilitychange", function () {
-      STATE.paused = document.hidden;
+      STATE.paused = !!document.hidden;
     }, false);
-
-    window.addEventListener("resize", function () {
-      layoutProducts();
-    }, { passive: true });
-
-    if (motionQuery) {
-      if (typeof motionQuery.addEventListener === "function") {
-        motionQuery.addEventListener("change", function () {
-          STATE.reducedMotion = !!motionQuery.matches;
-        });
-      } else if (typeof motionQuery.addListener === "function") {
-        motionQuery.addListener(function () {
-          STATE.reducedMotion = !!motionQuery.matches;
-        });
-      }
-    }
   }
 
   function expose() {
-    window.__PRODUCTS_CHAMBER__ = {
+    window.__PRODUCTS_COMPASS_CHAMBER__ = {
       getSummary: function () {
         return {
           focus: focus,
           focusedIndex: STATE.focusedIndex,
           reducedMotion: STATE.reducedMotion,
+          mobile: STATE.mobile,
           products: COPY.products
         };
       },
@@ -1122,9 +1125,9 @@ DESTINATION: /products/index.js
   syncCopy();
   bindNodes();
   bindDock();
-  bindStage();
+  bindSystem();
   expose();
   setFocus(resolveFocusIndex(), false);
-  layoutProducts();
-  animate();
+  updateResponsiveState();
+  animate(0);
 })();

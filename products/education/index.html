@@ -1,17 +1,19 @@
-<!doctype html> 
+<!doctype html>
 <!-- TNT — /products/education/index.html
-     EDUCATION · UNIFIED SCROLL · TRI-LINGUAL (EN/中文/ES) · ESL MARKETING DEPTH
+     EDUCATION · UNIFIED SCROLL · TRI-LINGUAL (EN/中文/ES) · LEGACY/NEW MERGE
      MODEL (LOCKED):
-       - Unified long-scroll surface (no diamonds, no modals)
-       - Strong marketing tone + clear ESL language
+       - Unified long-scroll surface
+       - Legacy red/blue/purple atmosphere preserved
+       - Newer cleaner spacing and disclosure control
        - Stage 1 FREE PDF + soft gate form (required to download)
        - Immediate download after submit (best-effort email automation)
-       - TRAVERSAL LOCK:
-           * No jump buttons inside the traversal
-           * Linear forward-only flow
-           * Previous sections stay open
-           * No collapse once opened
-           * PDF gate remains allowed at top and final completion state
+       - BUFFET DISCLOSURE LOCK:
+           * No forced traversal
+           * No continue-gated progression
+           * Any section can open
+           * Multiple sections can stay open
+           * Any section can close again
+           * User controls depth/order
        - Full state carry: lang/style/time/depth + gd_* localStorage ONLY
      PDF PATH (LOCKED): /assets/education/stage-1-vocab-strategy-pack.pdf
      EMAIL TARGET (LOCKED): Geodiametrics@gmail.com
@@ -40,18 +42,21 @@ body::before,body::after{pointer-events:none!important}
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
 
-  --ink:rgba(255,255,255,.94);
+  --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.92);
   --mut:rgba(255,255,255,.80);
+  --soft:rgba(255,255,255,.68);
 
   --onyx0:rgba(6,8,10,.92);
   --onyx1:rgba(10,12,16,.82);
 
   --crimson:rgba(120,0,22,.34);
   --festival:rgba(255,43,43,.18);
-  --opalV:rgba(90,40,120,.12);
+  --opalV:rgba(90,40,120,.16);
+  --blueField:rgba(18,58,140,.12);
 
   --goldSoft:rgba(201,162,74,.18);
+  --goldLine:rgba(201,162,74,.26);
 
   --shadowA:0 40px 140px rgba(0,0,0,.65);
   --shadowB:0 22px 80px rgba(0,0,0,.55);
@@ -72,6 +77,7 @@ body::before,body::after{pointer-events:none!important}
   touch-action:manipulation;
   box-shadow:var(--shadowC);
   white-space:nowrap;
+  cursor:pointer;
 }
 .btn:active{transform:translateY(1px)}
 .btn::after{
@@ -80,7 +86,10 @@ body::before,body::after{pointer-events:none!important}
   background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
   opacity:.60;pointer-events:none;
 }
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
+.btn.red{
+  border-color:rgba(255,43,43,.22);
+  box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);
+}
 .btn.active{
   border-color:rgba(201,162,74,.44);
   box-shadow:var(--shadowC), 0 0 18px rgba(201,162,74,.16);
@@ -106,17 +115,19 @@ body::before,body::after{pointer-events:none!important}
   position:relative;
   z-index:10;
 }
+
 .hero{
   margin-top:16px;
   border-radius:28px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 18% 18%, var(--crimson), transparent 70%),
-    radial-gradient(circle at 82% 28%, var(--opalV), transparent 74%),
-    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
+    radial-gradient(circle at 12% 18%, var(--crimson), transparent 70%),
+    radial-gradient(circle at 82% 24%, var(--opalV), transparent 74%),
+    radial-gradient(circle at 76% 82%, var(--festival), transparent 62%),
+    radial-gradient(circle at 62% 28%, var(--blueField), transparent 70%),
     radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, var(--onyx1), var(--onyx0));
-  padding:26px 24px 22px;
+  padding:28px 24px 22px;
   box-shadow:var(--shadowA);
   position:relative;
   overflow:hidden;
@@ -166,8 +177,9 @@ body::before,body::after{pointer-events:none!important}
   border-radius:22px;
   border:1px solid var(--stroke);
   background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 16% 18%, rgba(255,43,43,.11), transparent 62%),
+    radial-gradient(circle at 84% 24%, rgba(90,40,120,.14), transparent 66%),
+    radial-gradient(circle at 64% 22%, rgba(18,58,140,.10), transparent 68%),
     radial-gradient(circle at 26% 22%, rgba(201,162,74,.10), transparent 62%),
     linear-gradient(160deg, rgba(10,12,16,.74), rgba(6,8,10,.86));
   box-shadow:var(--shadowB), inset 0 1px 0 rgba(255,255,255,.06);
@@ -276,8 +288,9 @@ body::before,body::after{pointer-events:none!important}
   border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 58%),
+    radial-gradient(circle at 82% 28%, rgba(90,40,120,.14), transparent 66%),
+    radial-gradient(circle at 66% 24%, rgba(18,58,140,.10), transparent 68%),
     linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
   box-shadow:0 16px 52px rgba(0,0,0,.60);
   overflow:hidden;
@@ -289,6 +302,10 @@ body::before,body::after{pointer-events:none!important}
   box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
   opacity:.55;
 }
+.section.open{
+  border-color:rgba(201,162,74,.20);
+  box-shadow:0 16px 52px rgba(0,0,0,.60), 0 0 18px rgba(201,162,74,.08);
+}
 .head{
   position:relative;
   padding:16px 16px;
@@ -296,14 +313,21 @@ body::before,body::after{pointer-events:none!important}
   justify-content:space-between;
   align-items:flex-start;
   gap:12px;
+  cursor:pointer;
 }
 .hL{min-width:0}
 .hT{margin:0;font-weight:980;letter-spacing:.2px;color:var(--ink)}
 .hS{margin:8px 0 0;font-size:12.75px;opacity:.86;line-height:1.45;max-width:92ch;color:rgba(255,255,255,.86)}
-.chev{opacity:.80;margin-top:2px;color:rgba(255,255,255,.78)}
+.chev{
+  opacity:.80;
+  margin-top:2px;
+  color:rgba(255,255,255,.78);
+  transition:transform 180ms ease;
+}
+.section.open .chev{transform:rotate(90deg)}
 .body{
   display:none;
-  padding:16px 16px 16px;
+  padding:16px 16px 18px;
   border-top:1px solid rgba(255,255,255,.08);
   background:
     radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
@@ -318,7 +342,13 @@ body::before,body::after{pointer-events:none!important}
   font-size:13.75px;
 }
 .body p + p{margin-top:12px}
-.body .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.body .actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
 .body .actions .btn{padding:10px 14px;border-radius:999px}
 
 .completionPanel{
@@ -338,7 +368,8 @@ body::before,body::after{pointer-events:none!important}
   border:1px solid rgba(255,255,255,.12);
   background:
     radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
+    radial-gradient(circle at 82% 70%, rgba(90,40,120,.14), transparent 64%),
+    radial-gradient(circle at 62% 24%, rgba(18,58,140,.10), transparent 68%),
     linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
@@ -347,7 +378,15 @@ body::before,body::after{pointer-events:none!important}
   gap:10px;
 }
 .dock .btn{width:100%;border-radius:999px;padding:10px;white-space:nowrap}
-@media (max-width:520px){ :root{--dockH:112px} .dock{grid-template-columns:repeat(3,1fr)} }
+@media (max-width:520px){
+  :root{--dockH:112px}
+  .dock{grid-template-columns:repeat(3,1fr)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .chev{transition:none !important}
+  body, .page, .hero, .panel, .section, .dock{scroll-behavior:auto}
+}
 </style>
 </head>
 
@@ -416,24 +455,21 @@ body::before,body::after{pointer-events:none!important}
   </div>
 
   <div class="section open" id="sec1" data-step="1">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="true" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t1">What makes this different</div>
         <div class="hS" id="s1"></div>
       </div>
-      <div class="chev">▾</div>
+      <div class="chev">▸</div>
     </div>
     <div class="body">
       <p id="p1a"></p>
       <p id="p1b"></p>
-      <div class="actions">
-        <button class="btn" id="btnNext1" type="button">CONTINUE</button>
-      </div>
     </div>
   </div>
 
   <div class="section" id="sec2" data-step="2">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="false" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t2">Traversal learning (the core idea)</div>
         <div class="hS" id="s2"></div>
@@ -443,14 +479,11 @@ body::before,body::after{pointer-events:none!important}
     <div class="body">
       <p id="p2a"></p>
       <p id="p2b"></p>
-      <div class="actions">
-        <button class="btn" id="btnNext2" type="button">CONTINUE</button>
-      </div>
     </div>
   </div>
 
   <div class="section" id="sec3" data-step="3">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="false" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t3">The Stage 1 routine (simple, repeatable)</div>
         <div class="hS" id="s3"></div>
@@ -460,14 +493,11 @@ body::before,body::after{pointer-events:none!important}
     <div class="body">
       <p id="p3a"></p>
       <p id="p3b"></p>
-      <div class="actions">
-        <button class="btn" id="btnNext3" type="button">CONTINUE</button>
-      </div>
     </div>
   </div>
 
   <div class="section" id="sec4" data-step="4">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="false" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t4">Checkpoints (proof, not feelings)</div>
         <div class="hS" id="s4"></div>
@@ -477,14 +507,11 @@ body::before,body::after{pointer-events:none!important}
     <div class="body">
       <p id="p4a"></p>
       <p id="p4b"></p>
-      <div class="actions">
-        <button class="btn" id="btnNext4" type="button">CONTINUE</button>
-      </div>
     </div>
   </div>
 
   <div class="section" id="sec5" data-step="5">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="false" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t5">From individual to organization</div>
         <div class="hS" id="s5"></div>
@@ -494,14 +521,11 @@ body::before,body::after{pointer-events:none!important}
     <div class="body">
       <p id="p5a"></p>
       <p id="p5b"></p>
-      <div class="actions">
-        <button class="btn" id="btnNext5" type="button">CONTINUE</button>
-      </div>
     </div>
   </div>
 
   <div class="section" id="sec6" data-step="6">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="false" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t6">What you can do today (quick start)</div>
         <div class="hS" id="s6"></div>
@@ -511,14 +535,11 @@ body::before,body::after{pointer-events:none!important}
     <div class="body">
       <p id="p6a"></p>
       <p id="p6b"></p>
-      <div class="actions">
-        <button class="btn" id="btnNext6" type="button">CONTINUE</button>
-      </div>
     </div>
   </div>
 
   <div class="section" id="sec7" data-step="7">
-    <div class="head" aria-hidden="false">
+    <div class="head" aria-expanded="false" role="button" tabindex="0">
       <div class="hL">
         <div class="hT" id="t7">You’re ready</div>
         <div class="hS" id="s7"></div>
@@ -552,7 +573,7 @@ body::before,body::after{pointer-events:none!important}
   var PDF_URL = "/assets/education/stage-1-vocab-strategy-pack.pdf";
   var EMAIL_TARGET = "Geodiametrics@gmail.com";
 
-  var qs=new URLSearchParams(location.search);
+  var qs = new URLSearchParams(location.search);
   var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
   var style = qs.get("style") || localStorage.getItem("gd_style") || "informal";
   var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
@@ -571,7 +592,7 @@ body::before,body::after{pointer-events:none!important}
     localStorage.setItem("gd_depth",depth);
   }catch(e){}
 
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
+  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es") ? "es" : "en";
 
   function q(over){
     var L=(over&&over.lang)?over.lang:lang;
@@ -605,6 +626,7 @@ body::before,body::after{pointer-events:none!important}
     try{ localStorage.setItem("gd_lang",lang); }catch(e){}
     window.location.href = window.location.pathname + q({lang:lang});
   }
+
   btnEN.addEventListener("click", function(){ setLang("en"); });
   btnZH.addEventListener("click", function(){ setLang("zh"); });
   btnES.addEventListener("click", function(){ setLang("es"); });
@@ -654,8 +676,7 @@ body::before,body::after{pointer-events:none!important}
       s7:"You now have the structure. The next move is execution.",
       p7a:"At this point, you do not need more theory. You need repetition. Download Stage 1, run the loop, pass a checkpoint, and prove output. That is how this system is supposed to work: simple structure, repeated honestly.",
       p7b:"If you want support beyond the PDF, the next layer is guided progression. But the right first move is still the same: take the free pack, start today, and let the proof come from your output.",
-      getFinal:"GET THE FREE PDF",
-      continue:"CONTINUE"
+      getFinal:"GET THE FREE PDF"
     },
     zh: {
       nav:{back:"返回",exit:"退出",index:"索引",products:"产品",laws:"法则",gauges:"量规",returnProducts:"返回产品页"},
@@ -701,8 +722,7 @@ body::before,body::after{pointer-events:none!important}
       s7:"你现在已经有了结构，下一步是执行。",
       p7a:"到这里，你不需要更多理论。你需要的是重复。下载阶段1，跑循环，过一个检查点，用输出证明自己。这就是这个系统应该工作的方式：简单结构，诚实重复。",
       p7b:"如果你希望超越 PDF 获得进一步支持，下一层是引导式进阶。但正确的第一步仍然相同：拿到免费包，今天开始，让证据来自你的输出。",
-      getFinal:"获取免费PDF",
-      continue:"继续"
+      getFinal:"获取免费PDF"
     },
     es: {
       nav:{back:"VOLVER",exit:"SALIR",index:"ÍNDICE",products:"PRODUCTOS",laws:"LEYES",gauges:"MEDIDORES",returnProducts:"VOLVER A PRODUCTOS"},
@@ -748,8 +768,7 @@ body::before,body::after{pointer-events:none!important}
       s7:"Ahora ya tienes la estructura. El siguiente movimiento es ejecución.",
       p7a:"En este punto no necesitas más teoría. Necesitas repetición. Descarga Etapa 1, corre el bucle, pasa un checkpoint y prueba salida. Así está diseñado este sistema: estructura simple, repetición honesta.",
       p7b:"Si quieres apoyo más allá del PDF, la siguiente capa es progresión guiada. Pero el primer movimiento correcto sigue siendo el mismo: toma el pack gratis, empieza hoy y deja que la prueba venga de tu salida.",
-      getFinal:"OBTENER PDF GRATIS",
-      continue:"CONTINUAR"
+      getFinal:"OBTENER PDF GRATIS"
     }
   };
 
@@ -835,13 +854,9 @@ body::before,body::after{pointer-events:none!important}
 
     document.getElementById("btnGetFinal").textContent=t.getFinal;
 
-    var continueIds=["btnNext1","btnNext2","btnNext3","btnNext4","btnNext5","btnNext6"];
-    continueIds.forEach(function(id){
-      document.getElementById(id).textContent=t.continue;
-    });
-
     paintLang();
   }
+
   applyText();
 
   var insidePanel=document.getElementById("insidePanel");
@@ -912,38 +927,41 @@ body::before,body::after{pointer-events:none!important}
 
     window.open(PDF_URL,"_blank");
   }
+
   document.getElementById("btnSubmit").addEventListener("click", submitAndDownload);
 
   var sections=[].slice.call(document.querySelectorAll(".section"));
 
-  function setOpen(idx){
-    sections.forEach(function(sec, i){
-      var isOpen = i <= idx;
-      sec.classList.toggle("open", isOpen);
-      var c = sec.querySelector(".chev");
-      if(c) c.textContent = isOpen ? "▾" : "▸";
+  function syncExpanded(section, isOpen){
+    var head = section.querySelector(".head");
+    if(head) head.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  }
+
+  function setOpen(section, isOpen){
+    section.classList.toggle("open", isOpen);
+    syncExpanded(section, isOpen);
+  }
+
+  function toggleSection(section){
+    var isOpen = section.classList.contains("open");
+    setOpen(section, !isOpen);
+  }
+
+  sections.forEach(function(section){
+    var head = section.querySelector(".head");
+    if(!head) return;
+
+    head.addEventListener("click", function(){
+      toggleSection(section);
     });
-  }
 
-  function openNext(currentId, nextId){
-    var currentIndex = sections.findIndex(function(s){ return s.id===currentId; });
-    var nextIndex = sections.findIndex(function(s){ return s.id===nextId; });
-    if(currentIndex===-1 || nextIndex===-1) return;
-    if(nextIndex > currentIndex){
-      setOpen(nextIndex);
-      var nextEl=document.getElementById(nextId);
-      if(nextEl) nextEl.scrollIntoView({behavior:"smooth", block:"start"});
-    }
-  }
-
-  setOpen(0);
-
-  document.getElementById("btnNext1").addEventListener("click", function(){ openNext("sec1","sec2"); }, {passive:true});
-  document.getElementById("btnNext2").addEventListener("click", function(){ openNext("sec2","sec3"); }, {passive:true});
-  document.getElementById("btnNext3").addEventListener("click", function(){ openNext("sec3","sec4"); }, {passive:true});
-  document.getElementById("btnNext4").addEventListener("click", function(){ openNext("sec4","sec5"); }, {passive:true});
-  document.getElementById("btnNext5").addEventListener("click", function(){ openNext("sec5","sec6"); }, {passive:true});
-  document.getElementById("btnNext6").addEventListener("click", function(){ openNext("sec6","sec7"); }, {passive:true});
+    head.addEventListener("keydown", function(e){
+      if(e.key==="Enter" || e.key===" "){
+        e.preventDefault();
+        toggleSection(section);
+      }
+    });
+  });
 })();
 </script>
 

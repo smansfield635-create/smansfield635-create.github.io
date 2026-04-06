@@ -85,11 +85,11 @@
   var COPY = {
     heroTitle: pick("PRODUCTS", "产品", "PRODUCTOS"),
     heroTag: pick(
-      "Five separate true-3D glass compass objects, each spinning in place with direct product routing.",
-      "五个独立的真正三维玻璃指南针对象，各自原地旋转并直接跳转到对应产品。",
-      "Cinco objetos brújula de vidrio realmente 3D, separados y girando en su propio lugar con ruta directa."
+      "Five separate refined true-3D glass compass objects, each spinning in place with direct product routing.",
+      "五个独立的精炼真正三维玻璃指南针对象，各自原地旋转并直接跳转到对应产品。",
+      "Cinco objetos brújula de vidrio 3D refinados, separados y girando en su propio lugar con ruta directa."
     ),
-    scenePill: pick("TRUE 3D GLASS COMPASS", "真正 3D 玻璃指南针", "BRÚJULA DE VIDRIO 3D"),
+    scenePill: pick("REFINED 3D GLASS COMPASS", "精炼 3D 玻璃指南针", "BRÚJULA DE VIDRIO 3D REFINADA"),
     navCompass: pick("COMPASS", "指南针", "BRÚJULA"),
     navProducts: pick("PRODUCTS", "产品", "PRODUCTOS"),
     navExplore: pick("EXPLORE", "探索", "EXPLORAR"),
@@ -210,20 +210,20 @@
   function getAnchors() {
     if (STATE.mobile) {
       return [
-        { x: 0.50, y: 0.56, z: 64, spin: 0.020, tilt: -10 },
-        { x: 0.24, y: 0.28, z: 22, spin: 0.017, tilt: -10 },
-        { x: 0.76, y: 0.28, z: 22, spin: -0.017, tilt: -10 },
-        { x: 0.26, y: 0.82, z: 10, spin: 0.015, tilt: -10 },
-        { x: 0.74, y: 0.82, z: 10, spin: -0.015, tilt: -10 }
+        { x: 0.50, y: 0.56, z: 64, spin: 0.020, tilt: -9, swing: 15 },
+        { x: 0.24, y: 0.28, z: 22, spin: 0.017, tilt: -9, swing: 12 },
+        { x: 0.76, y: 0.28, z: 22, spin: -0.017, tilt: -9, swing: 12 },
+        { x: 0.26, y: 0.82, z: 10, spin: 0.015, tilt: -9, swing: 12 },
+        { x: 0.74, y: 0.82, z: 10, spin: -0.015, tilt: -9, swing: 12 }
       ];
     }
 
     return [
-      { x: 0.50, y: 0.56, z: 72, spin: 0.020, tilt: -10 },
-      { x: 0.25, y: 0.28, z: 28, spin: 0.017, tilt: -10 },
-      { x: 0.75, y: 0.28, z: 28, spin: -0.017, tilt: -10 },
-      { x: 0.27, y: 0.82, z: 14, spin: 0.015, tilt: -10 },
-      { x: 0.73, y: 0.82, z: 14, spin: -0.015, tilt: -10 }
+      { x: 0.50, y: 0.56, z: 72, spin: 0.020, tilt: -9, swing: 15 },
+      { x: 0.25, y: 0.28, z: 28, spin: 0.017, tilt: -9, swing: 12 },
+      { x: 0.75, y: 0.28, z: 28, spin: -0.017, tilt: -9, swing: 12 },
+      { x: 0.27, y: 0.82, z: 14, spin: 0.015, tilt: -9, swing: 12 },
+      { x: 0.73, y: 0.82, z: 14, spin: -0.015, tilt: -9, swing: 12 }
     ];
   }
 
@@ -241,6 +241,7 @@
     var wrap;
     var shadow;
     var rotationY;
+    var swayY;
     var tiltX;
     var lift;
     var opacity;
@@ -253,14 +254,15 @@
       y = h * anchor.y;
       z = anchor.z;
 
-      rotationY = STATE.reducedMotion ? 0 : (STATE.time * anchor.spin);
-      tiltX = STATE.reducedMotion ? anchor.tilt : (anchor.tilt + Math.sin((STATE.time * 0.001) + i) * 1.2);
+      rotationY = STATE.reducedMotion ? 28 : (Math.sin((STATE.time * anchor.spin * 0.06) + i) * anchor.swing);
+      swayY = STATE.reducedMotion ? 0 : Math.sin((STATE.time * 0.0012) + (i * 0.9)) * 4;
+      tiltX = STATE.reducedMotion ? anchor.tilt : (anchor.tilt + Math.sin((STATE.time * 0.001) + i) * 1.1);
       lift = i === STATE.focusedIndex ? 8 : 0;
       opacity = i === STATE.focusedIndex ? 1 : 0.96;
-      focusScale = i === STATE.focusedIndex ? 1.06 : 1;
+      focusScale = i === STATE.focusedIndex ? 1.04 : 1;
 
       node.style.left = x + "px";
-      node.style.top = (y - lift) + "px";
+      node.style.top = (y - lift + swayY) + "px";
       node.style.marginLeft = (-node.offsetWidth / 2) + "px";
       node.style.marginTop = (-node.offsetHeight / 2) + "px";
       node.style.zIndex = String(20 + Math.round(z));
@@ -278,6 +280,7 @@
       shadow = node.querySelector(".product-shadow");
       if (shadow) {
         shadow.style.opacity = i === STATE.focusedIndex ? "0.94" : "0.78";
+        shadow.style.transform = "scale(" + (0.94 + ((focusScale - 1) * 0.8)) + ")";
       }
     }
   }

@@ -1,9 +1,11 @@
 // TNT — /products/archcoin/index.js
 // ARCHCOIN — FIRST-CLASS FIRST-PASS PRODUCT PAGE
+// LEGACY/NEW MERGE
 // SCOPE:
 //   - page-local enhancement only
 //   - no global runtime touches
-//   - no route reinterpretation
+//   - no ownership of product law or route truth
+//   - buffet-style FAQ control: open one, many, or all; close any
 
 (() => {
   "use strict";
@@ -22,37 +24,22 @@
     window.location.href = "/products/";
   }
 
-  function closeFaq(item, toggle) {
-    item.classList.remove("is-open");
-    toggle.setAttribute("aria-expanded", "false");
+  function setFaqState(item, toggle, isOpen) {
+    item.classList.toggle("is-open", isOpen);
+    toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
   }
 
-  function openFaq(item, toggle) {
-    item.classList.add("is-open");
-    toggle.setAttribute("aria-expanded", "true");
-  }
+  function toggleFaq(toggle) {
+    const item = toggle.closest(".faq-item");
+    if (!item) return;
 
-  function toggleFaq(currentToggle) {
-    const currentItem = currentToggle.closest(".faq-item");
-    if (!currentItem) return;
-
-    const isOpen = currentItem.classList.contains("is-open");
-
-    faqToggles.forEach((toggle) => {
-      const item = toggle.closest(".faq-item");
-      if (!item) return;
-      if (item !== currentItem) closeFaq(item, toggle);
-    });
-
-    if (isOpen) {
-      closeFaq(currentItem, currentToggle);
-    } else {
-      openFaq(currentItem, currentToggle);
-    }
+    const isOpen = item.classList.contains("is-open");
+    setFaqState(item, toggle, !isOpen);
   }
 
   function animateReadiness() {
     if (!meterFill) return;
+
     if (reduceMotion) {
       meterFill.style.width = "95%";
       return;

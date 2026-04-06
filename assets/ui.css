@@ -70,6 +70,16 @@
   --motion-fast:140ms ease;
   --motion-mid:180ms ease;
   --motion-slow:220ms ease;
+
+  /* shared asset bubbles / endpoint lights */
+  --asset-light-core:rgba(255,255,255,.96);
+  --asset-light-edge:rgba(231,201,122,.82);
+  --asset-light-size:6px;
+  --asset-light-glow:4px;
+  --asset-light-opacity:.72;
+  --asset-light-distance:8px;
+  --asset-light-z:4;
+  --asset-light-scale:1;
 }
 
 *{box-sizing:border-box}
@@ -502,6 +512,44 @@ body[data-diagnostics="full"] .debug-panel{
   transition:opacity var(--motion-mid),transform var(--motion-mid),bottom var(--motion-mid),right var(--motion-mid),width var(--motion-mid),height var(--motion-mid);
 }
 
+/* neutral shared asset light layer */
+.asset-lights{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:var(--asset-light-z);
+}
+
+.asset-light{
+  position:absolute;
+  width:var(--asset-light-size);
+  height:var(--asset-light-size);
+  border-radius:999px;
+  background:
+    radial-gradient(circle at 50% 50%,
+      var(--asset-light-core) 0 36%,
+      var(--asset-light-edge) 36% 62%,
+      transparent 62% 100%);
+  opacity:var(--asset-light-opacity);
+  filter:drop-shadow(0 0 var(--asset-light-glow) rgba(255,246,225,.26));
+  transform:translate(-50%,-50%) scale(var(--asset-light-scale));
+}
+
+.asset-light--muted{
+  --asset-light-opacity:.42;
+  --asset-light-glow:2px;
+}
+
+.asset-light--tiny{
+  --asset-light-size:4px;
+  --asset-light-glow:2px;
+  --asset-light-opacity:.56;
+}
+
+.asset-light--off{
+  display:none !important;
+}
+
 .hidden{display:none !important}
 .visually-hidden{
   position:absolute !important;
@@ -591,6 +639,9 @@ body[data-diagnostics="full"] .debug-panel{
     --panel-title-size:11px;
     --panel-text-size:11px;
     --diagnostic-bar-height:78px;
+    --asset-light-size:5px;
+    --asset-light-glow:2px;
+    --asset-light-opacity:.58;
   }
   .panel-row{gap:6px}
   .panel-value{

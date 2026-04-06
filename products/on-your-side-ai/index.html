@@ -1,0 +1,946 @@
+<!doctype html>
+<!-- TNT — /products/on-your-side-ai/index.html
+     ON YOUR SIDE AI — G1V1 NEW CONTRACT
+     SCOPE:
+       - first lawful implementation from clean origin
+       - html-first bounded diagnostic product page
+       - paired only with /products/on-your-side-ai/index.js
+-->
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Nine Summits — On Your Side AI</title>
+
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
+
+  <style>
+    :root{
+      --bg0:#041124;
+      --bg1:#07203d;
+      --bg2:#0b2f58;
+      --ink:rgba(255,255,255,.97);
+      --mut:rgba(255,255,255,.84);
+      --soft:rgba(255,255,255,.66);
+      --gold:rgba(244,226,176,.96);
+      --line:rgba(255,255,255,.12);
+      --lineStrong:rgba(244,226,176,.26);
+      --panel:rgba(8,14,24,.78);
+      --panelStrong:rgba(8,14,24,.90);
+      --shadow:0 18px 54px rgba(0,0,0,.42);
+      --shadowStrong:0 24px 76px rgba(0,0,0,.48);
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+    }
+
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      width:100%;
+      min-height:100%;
+      background:var(--bg0);
+      color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    }
+    body{
+      min-height:100vh;
+      overflow-x:hidden;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(125,180,255,.08), transparent 26%),
+        radial-gradient(circle at 50% 82%, rgba(125,180,255,.05), transparent 30%),
+        linear-gradient(180deg, var(--bg2) 0%, var(--bg1) 48%, var(--bg0) 100%);
+    }
+    a{color:inherit;text-decoration:none}
+
+    .page{
+      position:relative;
+      min-height:100vh;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .env{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .env::before{
+      content:"";
+      position:absolute;
+      inset:-10%;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.92) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 18% 50%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 24% 28%, rgba(255,255,255,.68) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 36% 16%, rgba(255,255,255,.82) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 42% 42%, rgba(255,255,255,.70) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 58% 18%, rgba(255,255,255,.86) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 66% 36%, rgba(255,255,255,.72) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 74% 22%, rgba(255,255,255,.84) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 84% 34%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 90% 54%, rgba(255,255,255,.88) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 20% 78%, rgba(255,255,255,.72) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 34% 72%, rgba(255,255,255,.84) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 50% 82%, rgba(255,255,255,.76) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 70% 76%, rgba(255,255,255,.86) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 86% 80%, rgba(255,255,255,.78) 0 1px, transparent 1.8px);
+      opacity:.42;
+      animation:starDrift 32s linear infinite;
+    }
+
+    .env::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 36%, rgba(244,226,176,.05), transparent 18%),
+        radial-gradient(circle at 50% 68%, rgba(125,180,255,.04), transparent 26%),
+        linear-gradient(180deg, transparent 0%, rgba(255,255,255,.01) 50%, transparent 100%);
+      filter:blur(5px);
+      opacity:.42;
+    }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      width:min(1180px,calc(100vw - 32px));
+      margin:0 auto;
+      padding:
+        calc(24px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(40px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:30px;
+      flex-wrap:wrap;
+    }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a,
+    .nav button{
+      min-height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(244,226,176,.10), transparent 64%),
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.10), transparent 40%),
+        linear-gradient(145deg, rgba(10,12,20,.44), rgba(4,6,10,.62));
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+
+    .statusStack{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .statusPill{
+      min-height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(244,226,176,.10), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,20,.44), rgba(4,6,10,.62));
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      white-space:nowrap;
+    }
+
+    .statusPill--strong{
+      border-color:var(--lineStrong);
+      color:#fff3cf;
+      box-shadow:var(--shadow),0 0 0 1px rgba(244,226,176,.08),0 0 18px rgba(244,226,176,.10);
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
+      gap:22px;
+      align-items:stretch;
+      margin-bottom:22px;
+    }
+
+    .heroMain,
+    .heroSide{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(244,226,176,.07), transparent 50%),
+        linear-gradient(180deg, var(--panel) 0%, var(--panelStrong) 100%);
+      box-shadow:var(--shadowStrong);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+    }
+
+    .heroMain{
+      padding:30px 28px 26px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .heroMain::after{
+      content:"";
+      position:absolute;
+      right:-34px;
+      top:-24px;
+      width:170px;
+      height:170px;
+      border-radius:22px;
+      transform:rotate(45deg);
+      border:1px solid rgba(244,226,176,.10);
+      background:
+        linear-gradient(135deg, rgba(255,246,225,.05), rgba(255,246,225,0)),
+        radial-gradient(circle at 50% 50%, rgba(244,226,176,.05), transparent 64%);
+      opacity:.9;
+      pointer-events:none;
+    }
+
+    .eyebrow{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(44px,7vw,82px);
+      line-height:.94;
+      letter-spacing:.05em;
+      font-weight:950;
+      text-shadow:0 10px 38px rgba(0,0,0,.58);
+    }
+
+    .heroIdentity{
+      margin:16px 0 0;
+      font-size:clamp(18px,2.1vw,24px);
+      line-height:1.38;
+      font-weight:800;
+      color:rgba(255,255,255,.94);
+    }
+
+    .heroBoundary{
+      margin:14px 0 0;
+      color:var(--gold);
+      font-size:15px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .heroSub{
+      margin:14px 0 0;
+      max-width:760px;
+      color:var(--mut);
+      font-size:clamp(15px,1.8vw,19px);
+      line-height:1.58;
+    }
+
+    .heroActions{
+      margin-top:22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .actionBtn{
+      min-height:48px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
+      color:#fff;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      box-shadow:var(--shadow);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      cursor:pointer;
+      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
+      -webkit-tap-highlight-color:transparent;
+      touch-action:manipulation;
+    }
+
+    .actionBtn:hover{transform:scale(1.02)}
+    .actionBtn:active{transform:scale(.98)}
+    .actionBtn--primary{
+      border-color:var(--lineStrong);
+      color:#fff3cf;
+      box-shadow:var(--shadow),0 0 0 1px rgba(244,226,176,.08),0 0 18px rgba(244,226,176,.10);
+    }
+
+    .heroFacts{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .heroSide{
+      padding:24px 22px;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      justify-content:space-between;
+    }
+
+    .heroSide h2,
+    .sectionTitle{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .heroSide p{
+      margin:8px 0 0;
+      color:var(--mut);
+      line-height:1.58;
+      font-size:15px;
+    }
+
+    .diagnosticCard{
+      border:1px dashed rgba(244,226,176,.22);
+      border-radius:22px;
+      min-height:220px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:22px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(244,226,176,.05), transparent 56%),
+        linear-gradient(180deg, rgba(10,16,30,.74) 0%, rgba(8,14,26,.90) 100%);
+    }
+
+    .diagnosticCard strong{
+      display:block;
+      font-size:14px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:#fff3cf;
+    }
+
+    .diagnosticCard span{
+      display:block;
+      margin-top:10px;
+      color:var(--soft);
+      font-size:13px;
+      line-height:1.5;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .quickRow{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin:22px 0;
+    }
+
+    .quickCard{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panelStrong) 100%);
+      box-shadow:var(--shadow);
+      padding:18px 18px 16px;
+      min-width:0;
+    }
+
+    .quickCard h3{
+      margin:0;
+      font-size:13px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .quickCard p{
+      margin:10px 0 0;
+      color:var(--mut);
+      font-size:15px;
+      line-height:1.55;
+    }
+
+    .section{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:linear-gradient(180deg, var(--panel) 0%, var(--panelStrong) 100%);
+      box-shadow:var(--shadow);
+      padding:24px;
+      margin-top:18px;
+    }
+
+    .sectionHeader{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-bottom:18px;
+    }
+
+    .sectionIntro{
+      color:var(--mut);
+      line-height:1.55;
+      font-size:16px;
+      max-width:760px;
+    }
+
+    .grid2,
+    .grid4{
+      display:grid;
+      gap:14px;
+    }
+
+    .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(244,226,176,.05), transparent 45%),
+        linear-gradient(180deg, rgba(10,16,30,.76) 0%, rgba(8,14,26,.90) 100%);
+      padding:18px;
+      min-width:0;
+    }
+
+    .card h4{
+      margin:0;
+      font-size:16px;
+      line-height:1.2;
+      letter-spacing:.03em;
+      font-weight:900;
+    }
+
+    .card p{
+      margin:10px 0 0;
+      color:var(--mut);
+      font-size:15px;
+      line-height:1.58;
+    }
+
+    .miniList{
+      list-style:none;
+      padding:0;
+      margin:12px 0 0;
+      display:grid;
+      gap:8px;
+    }
+
+    .miniList li{
+      position:relative;
+      padding-left:16px;
+      color:var(--mut);
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .miniList li::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:.56em;
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:rgba(244,226,176,.86);
+      box-shadow:0 0 8px rgba(244,226,176,.10);
+    }
+
+    .sideGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .faqList{
+      display:grid;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .faqItem{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:linear-gradient(180deg, rgba(10,16,30,.74) 0%, rgba(8,14,26,.90) 100%);
+      overflow:hidden;
+    }
+
+    .faqToggle{
+      width:100%;
+      border:0;
+      background:transparent;
+      color:var(--ink);
+      padding:18px 18px 16px;
+      text-align:left;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      font-size:14px;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .faqToggle span:last-child{
+      color:var(--gold);
+      font-size:18px;
+      line-height:1;
+      min-width:18px;
+      text-align:center;
+      transition:transform 160ms ease;
+    }
+
+    .faqBody{
+      padding:0 18px 18px;
+      color:var(--mut);
+      font-size:15px;
+      line-height:1.6;
+      display:none;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .faqItem.isOpen .faqBody{display:block}
+    .faqItem.isOpen .faqToggle span:last-child{transform:rotate(45deg)}
+
+    .footnote{
+      margin-top:12px;
+      color:var(--soft);
+      font-size:12px;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
+
+    @keyframes starDrift{
+      from{transform:translate3d(-1.2%,-.8%,0)}
+      to{transform:translate3d(1.2%,.8%,0)}
+    }
+
+    @media (max-width:1080px){
+      .hero{grid-template-columns:minmax(0,1fr)}
+      .quickRow{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid4,.sideGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:800px){
+      .grid2,.grid4,.sideGrid{grid-template-columns:minmax(0,1fr)}
+    }
+
+    @media (max-width:720px){
+      .wrap{width:min(100vw - 20px,1180px)}
+      .heroMain,.heroSide,.section{padding:20px;border-radius:24px}
+      .topbar{align-items:flex-start}
+      .nav{width:100%}
+      .quickRow{grid-template-columns:minmax(0,1fr)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .actionBtn,
+      .faqToggle span:last-child{
+        transition:none !important;
+      }
+      .env::before{
+        animation:none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="env" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="topbar">
+        <nav class="nav" aria-label="Page navigation">
+          <button id="backButton" type="button">Back</button>
+          <a href="/products/">Products</a>
+          <a href="/index.html">Compass</a>
+          <a href="/explore/">Explore</a>
+        </nav>
+
+        <div class="statusStack" aria-label="On Your Side AI status">
+          <div class="statusPill statusPill--strong">Never In Control</div>
+          <div class="statusPill">Always On Your Side</div>
+          <div class="statusPill">Diagnostic Path</div>
+        </div>
+      </div>
+
+      <header class="hero" aria-label="On Your Side AI hero">
+        <section class="heroMain">
+          <p class="eyebrow">G1V1 New Contract</p>
+          <h1>ON YOUR SIDE AI</h1>
+          <p class="heroIdentity">On Your Side AI is a bounded diagnostic tool that helps you read signals more cleanly so you can make more aligned decisions without giving up control.</p>
+          <p class="heroBoundary">It is never in control and it is always on your side.</p>
+          <p class="heroSub">This page presents the product as a diagnostic path, not a command system. Its purpose is to help you see signals, reduce noise, restore internal alignment, and support more reliable execution paths. The long-range goal is recalibration toward less dependence on AI, not more.</p>
+
+          <div class="heroActions">
+            <a class="actionBtn actionBtn--primary" href="#diagnostic-path">See the Diagnostic Path</a>
+            <a class="actionBtn" href="#side">What SIDE Means</a>
+          </div>
+
+          <div class="heroFacts" aria-label="Product truth summary">
+            <div class="statusPill statusPill--strong">Bounded Tool</div>
+            <div class="statusPill">Diagnostic Path</div>
+            <div class="statusPill">Agency Preserved</div>
+            <div class="statusPill">Alignment First</div>
+          </div>
+        </section>
+
+        <aside class="heroSide" aria-label="Diagnostic position">
+          <div>
+            <h2>Primary Read</h2>
+            <div class="diagnosticCard" aria-label="Diagnostic card">
+              <div>
+                <strong>Support Without Override</strong>
+                <span>Clarity over pressure. Agency over override. Observable signals over intent fiction.</span>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <h2>Long-Range Goal</h2>
+            <p>The strongest outcome is not dependence. The strongest outcome is recalibration: better internal alignment, better balance, more harmony of self, and more reliable execution with less need for AI over time.</p>
+          </div>
+        </aside>
+      </header>
+
+      <section class="quickRow" aria-label="Quick product truths">
+        <article class="quickCard">
+          <h3>What It Is</h3>
+          <p>A bounded diagnostic tool and diagnostic path.</p>
+        </article>
+        <article class="quickCard">
+          <h3>What It Supports</h3>
+          <p>Clearer signal reading and more aligned decisions.</p>
+        </article>
+        <article class="quickCard">
+          <h3>What It Preserves</h3>
+          <p>User agency, user authorship, and user control.</p>
+        </article>
+        <article class="quickCard">
+          <h3>What It Avoids</h3>
+          <p>Override logic, pressure logic, and control claims.</p>
+        </article>
+      </section>
+
+      <section class="section" aria-label="What it is section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">What It Is</h2>
+            <p class="sectionIntro">On Your Side AI is presented here as a product-first diagnostic surface. It is not the full app and it is not a total platform claim. It is a bounded tool designed to help a user read the decision surface more cleanly.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <article class="card">
+            <h4>Core Identity</h4>
+            <ul class="miniList">
+              <li>Bounded diagnostic tool</li>
+              <li>User-side diagnostic path</li>
+              <li>Decision-support surface</li>
+              <li>Clarity-first product</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h4>Primary Promise</h4>
+            <ul class="miniList">
+              <li>Never in control</li>
+              <li>Always on your side</li>
+              <li>Clarity over pressure</li>
+              <li>Agency over override</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-label="What it does section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">What It Does</h2>
+            <p class="sectionIntro">The tool helps organize what is already observable so the user can see the situation more clearly and move with more reliable execution.</p>
+          </div>
+        </div>
+
+        <div class="grid4">
+          <article class="card">
+            <h4>Reads Signals</h4>
+            <p>It helps surface the relevant signals in behavior and context instead of collapsing everything into noise.</p>
+          </article>
+
+          <article class="card">
+            <h4>Clarifies Interpretation</h4>
+            <p>It organizes those signals into a cleaner read so the user can see what actually matters.</p>
+          </article>
+
+          <article class="card">
+            <h4>Supports Decisions</h4>
+            <p>It helps the decision surface become easier to understand without taking the decision away from the user.</p>
+          </article>
+
+          <article class="card">
+            <h4>Improves Execution</h4>
+            <p>It supports more reliable and better-aligned action once the user has clarity.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-label="What it never does section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">What It Never Does</h2>
+            <p class="sectionIntro">The boundary is part of the product law. This section exists so the page does not imply false control, false authorship, or identity replacement.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <article class="card">
+            <h4>Never In Control</h4>
+            <ul class="miniList">
+              <li>Does not replace user judgment</li>
+              <li>Does not override user agency</li>
+              <li>Does not become the author of the user</li>
+              <li>Does not convert support into command</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h4>Never Identity Replacement</h4>
+            <ul class="miniList">
+              <li>Does not replace internal balance</li>
+              <li>Does not replace harmony of self</li>
+              <li>Does not replace self-authorship</li>
+              <li>Does not aim to deepen dependency</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="diagnostic-path" aria-label="How it works at a high level">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">How It Works at a High Level</h2>
+            <p class="sectionIntro">The product flow is diagnostic, not mystical. It moves from what can be observed to what can be understood to what can be acted on more cleanly.</p>
+          </div>
+        </div>
+
+        <div class="sideGrid">
+          <article class="card">
+            <h4>1. Gather</h4>
+            <p>Take in the relevant behavioral and contextual signals.</p>
+          </article>
+
+          <article class="card">
+            <h4>2. Organize</h4>
+            <p>Sort those signals into a clearer pattern instead of leaving them fragmented.</p>
+          </article>
+
+          <article class="card">
+            <h4>3. Clarify</h4>
+            <p>Reduce confusion so the decision surface becomes more intelligible.</p>
+          </article>
+
+          <article class="card">
+            <h4>4. Support Action</h4>
+            <p>Help the user move with more reliable and better-aligned execution.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="side" aria-label="What SIDE means section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">What SIDE Means</h2>
+            <p class="sectionIntro">SIDE is explained here in plain user-facing language. It supports the product claim directly and stays inside the diagnostic frame.</p>
+          </div>
+        </div>
+
+        <div class="grid4">
+          <article class="card">
+            <h4>Signals</h4>
+            <p>What the tool observes in behavioral and contextual inputs.</p>
+          </article>
+
+          <article class="card">
+            <h4>Interpretation</h4>
+            <p>How the tool organizes those signals into a clearer read.</p>
+          </article>
+
+          <article class="card">
+            <h4>Decisions</h4>
+            <p>How the user can see the decision surface more cleanly.</p>
+          </article>
+
+          <article class="card">
+            <h4>Execution</h4>
+            <p>How the user can move with more reliable and better-aligned action.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Why that matters section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">Why That Matters</h2>
+            <p class="sectionIntro">The benefit is not just better information. The benefit is a better relationship between the self, the signals, and the action that follows.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <article class="card">
+            <h4>Internal Alignment</h4>
+            <p>Clearer diagnosis supports better alignment between what the user is seeing, choosing, and doing.</p>
+          </article>
+
+          <article class="card">
+            <h4>Reliable Execution</h4>
+            <p>When the read is cleaner, execution paths become more stable, more grounded, and less reactive.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Recalibration and reliable execution section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">Recalibration and Reliable Execution</h2>
+            <p class="sectionIntro">The strongest version of the tool leads toward less dependence, not more. It should help the user regain balance, strengthen self-authorship, and rely less on external support over time.</p>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <article class="card">
+            <h4>Recalibration</h4>
+            <ul class="miniList">
+              <li>Supports internal alignment</li>
+              <li>Supports balance</li>
+              <li>Supports harmony of self</li>
+              <li>Supports stronger self-guided action</li>
+            </ul>
+          </article>
+
+          <article class="card">
+            <h4>Long-Range Read</h4>
+            <ul class="miniList">
+              <li>Use AI as support, not replacement</li>
+              <li>Reduce confusion and pressure</li>
+              <li>Strengthen reliable execution paths</li>
+              <li>Need the tool less over time, not more</li>
+            </ul>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" aria-label="Primary action section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">Primary Action</h2>
+            <p class="sectionIntro">The page ends with one clean motion. The user should be able to see the diagnostic path without being pushed into hype, control language, or platform sprawl.</p>
+          </div>
+        </div>
+
+        <div class="heroActions">
+          <a class="actionBtn actionBtn--primary" href="#diagnostic-path">See the Diagnostic Path</a>
+        </div>
+
+        <div class="footnote">On Your Side AI remains bounded, diagnostic, and never in control.</div>
+      </section>
+
+      <section class="section" aria-label="FAQ section">
+        <div class="sectionHeader">
+          <div>
+            <h2 class="sectionTitle">FAQ</h2>
+            <p class="sectionIntro">These answers protect the product boundary and keep the page readable without expanding into heavier scope.</p>
+          </div>
+        </div>
+
+        <div class="faqList">
+          <article class="faqItem isOpen">
+            <button class="faqToggle" type="button" aria-expanded="true">
+              <span>Is this tool in control of the user?</span>
+              <span>+</span>
+            </button>
+            <div class="faqBody">
+              No. The boundary is explicit: it is never in control. It supports the user without replacing the user.
+            </div>
+          </article>
+
+          <article class="faqItem">
+            <button class="faqToggle" type="button" aria-expanded="false">
+              <span>Is this a command system?</span>
+              <span>+</span>
+            </button>
+            <div class="faqBody">
+              No. It is a diagnostic path and a diagnostic tool. Its role is to help the user see more clearly, not to command action.
+            </div>
+          </article>
+
+          <article class="faqItem">
+            <button class="faqToggle" type="button" aria-expanded="false">
+              <span>What is the long-range purpose?</span>
+              <span>+</span>
+            </button>
+            <div class="faqBody">
+              Recalibration. Better alignment, better balance, more harmony of self, and more reliable execution with less long-term dependence on AI.
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script src="/products/on-your-side-ai/index.js"></script>
+</body>
+</html>

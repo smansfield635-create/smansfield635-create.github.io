@@ -1,11 +1,11 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — BUBBLE REMOVAL / PRODUCTS-FIRST HIERARCHY
+     PRODUCTS AUTHORITY — HERO COPY UPGRADE / BOTTOM UTILITY DOCK
      RENEWAL:
-       - keep branch nav markup present but fully demoted on this page
-       - remove bottom focus bubble from visual flow
-       - raise the products chamber upward
-       - keep approved scope inside /products/index.html and /assets/branch.css only
+       - replace bottom product-focus bubbles with four utility actions
+       - keep bottom-right meta pill present
+       - upgrade hero subcopy to Nine Summits-useful language
+       - keep scope inside /products/index.html and /assets/branch.css only
 -->
 
 <html lang="en">
@@ -451,45 +451,6 @@
         0 0 22px rgba(255,246,225,.06);
     }
 
-    .mobile-dock{
-      position:fixed;
-      left:12px;
-      right:12px;
-      bottom:calc(12px + var(--safe-bottom));
-      z-index:28;
-      display:none;
-      grid-template-columns:repeat(5,1fr);
-      gap:8px;
-    }
-
-    .dock-btn{
-      min-height:48px;
-      padding:8px 10px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.14);
-      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
-      color:#fff;
-      font-weight:900;
-      font-size:10px;
-      line-height:1.12;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      box-shadow:var(--shellShadow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      touch-action:manipulation;
-      -webkit-tap-highlight-color:transparent;
-    }
-
-    .dock-btn.is-active{
-      border-color:rgba(244,226,176,.42);
-      box-shadow:var(--shellShadow),0 0 16px rgba(244,226,176,.10);
-    }
-
     @keyframes starDrift{
       from{transform:translate3d(-1.2%,-.8%,0)}
       to{transform:translate3d(1.2%,.8%,0)}
@@ -506,7 +467,7 @@
     @media (max-width:720px){
       .page-meta{
         right:16px;
-        bottom:calc(76px + var(--safe-bottom));
+        bottom:calc(16px + var(--safe-bottom));
       }
       .hero{top:15%;width:min(94vw,640px)}
       .hero p{font-size:15px;max-width:520px}
@@ -517,7 +478,6 @@
       .product-title{font-size:13px}
       .product-sub{font-size:9px}
       .cardinal{font-size:9px}
-      .mobile-dock{display:grid}
     }
 
     @media (max-width:520px){
@@ -565,13 +525,9 @@
       </div>
     </nav>
 
-    <div class="page-meta" aria-label="Products meta">
-      <div class="meta-pill" id="scenePill">REFINED 3D GLASS COMPASS</div>
-    </div>
-
     <section class="hero" aria-label="Products hero">
       <h1 id="heroTitle">PRODUCTS</h1>
-      <p id="heroTag">Five separate refined true-3D glass compass objects, each spinning in place with direct product routing.</p>
+      <p id="heroTag">Choose your path, explore the system, and enter each product through the lens of the Nine Summits.</p>
     </section>
 
     <div class="focus-pill" id="focusPill" aria-hidden="true">FOCUS: BASELINE NUTRITION</div>
@@ -662,12 +618,20 @@
       </div>
     </section>
 
-    <div class="mobile-dock" aria-label="Mobile product navigation">
-      <button class="dock-btn is-active" data-focus-index="0" type="button">Nutrition</button>
-      <button class="dock-btn" data-focus-index="1" type="button">AI</button>
-      <button class="dock-btn" data-focus-index="2" type="button">Education</button>
-      <button class="dock-btn" data-focus-index="3" type="button">Five Flags</button>
-      <button class="dock-btn" data-focus-index="4" type="button">ARCHCOIN</button>
+    <nav class="branch-utility-dock" aria-label="Products utility navigation">
+      <button
+        class="branch-utility-dock__btn"
+        type="button"
+        onclick="if(window.history.length>1){window.history.back();}else{window.location.href='/products/';}"
+        aria-label="Back"
+      >Back</button>
+      <a class="branch-utility-dock__btn" href="/" aria-label="Home">Home</a>
+      <a class="branch-utility-dock__btn" href="/index.html" aria-label="Compass">Compass</a>
+      <a class="branch-utility-dock__btn" href="/explore/" aria-label="Explore">Explore</a>
+    </nav>
+
+    <div class="page-meta" aria-label="Products meta">
+      <div class="meta-pill" id="scenePill">REFINED 3D GLASS COMPASS</div>
     </div>
   </div>
 

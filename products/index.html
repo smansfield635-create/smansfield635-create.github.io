@@ -1,11 +1,11 @@
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — NAV DEMOTED / PRODUCTS-FIRST HIERARCHY
+     PRODUCTS AUTHORITY — NAV TEXT REMOVED / PRODUCT FIELD RAISED
      RENEWAL:
-       - adopt shared branch topbar nav
-       - remove left-lane obstruction
-       - strongly demote bottom focus bubble while preserving DOM for current JS
-       - preserve 3D products as visual authority
+       - remove the top nav words from this page
+       - keep branch nav markup present but visually hidden on this page
+       - raise the products chamber upward
+       - keep approved scope inside /products/index.html only
 -->
 
 <html lang="en">
@@ -99,10 +99,16 @@
       opacity:.42;
     }
 
+    .branch-page-nav{
+      opacity:0 !important;
+      pointer-events:none !important;
+      visibility:hidden !important;
+    }
+
     .page-meta{
       position:fixed;
       right:16px;
-      top:calc(16px + var(--safe-top));
+      bottom:calc(16px + var(--safe-bottom));
       z-index:30;
       display:flex;
       gap:10px;
@@ -149,7 +155,7 @@
 
     .hero{
       position:absolute;
-      top:14%;
+      top:12%;
       left:50%;
       transform:translateX(-50%);
       width:min(94vw,1040px);
@@ -192,7 +198,7 @@
       font-weight:900;
       font-size:13px;
       letter-spacing:.05em;
-      display:inline-flex;
+      display:none;
       align-items:center;
       justify-content:center;
       backdrop-filter:blur(8px);
@@ -218,7 +224,7 @@
     .chamber{
       position:absolute;
       left:50%;
-      top:61%;
+      top:55%;
       width:min(1080px,92vw);
       height:min(620px,58vh);
       transform:translate(-50%,-50%);
@@ -496,8 +502,8 @@
     }
 
     @media (max-width:980px){
-      .hero{top:15%}
-      .chamber{width:min(96vw,760px);height:min(560px,48vh)}
+      .hero{top:13%}
+      .chamber{top:56%;width:min(96vw,760px);height:min(560px,48vh)}
       .product-node{width:154px;height:212px}
       .object-wrap{width:118px;height:146px;margin-left:-59px;margin-top:-73px}
       .label{width:148px}
@@ -505,13 +511,12 @@
 
     @media (max-width:720px){
       .page-meta{
-        top:auto;
-        bottom:calc(76px + var(--safe-bottom));
         right:16px;
+        bottom:calc(76px + var(--safe-bottom));
       }
-      .hero{top:17%;width:min(94vw,640px)}
+      .hero{top:15%;width:min(94vw,640px)}
       .hero p{font-size:15px;max-width:520px}
-      .chamber{top:60%;width:min(98vw,540px);height:420px}
+      .chamber{top:57%;width:min(98vw,540px);height:420px}
       .product-node{width:130px;height:186px}
       .object-wrap{width:100px;height:128px;margin-left:-50px;margin-top:-64px}
       .label{width:132px}
@@ -522,10 +527,10 @@
     }
 
     @media (max-width:520px){
-      .hero{top:18%}
+      .hero{top:16%}
       .hero h1{font-size:40px}
       .meta-pill{min-height:40px;padding:9px 12px;font-size:12px}
-      .chamber{top:60%;width:min(100vw,390px);height:344px}
+      .chamber{top:58%;width:min(100vw,390px);height:344px}
       .product-node{width:116px;height:168px}
       .object-wrap{width:88px;height:114px;margin-left:-44px;margin-top:-57px}
       .label{width:116px}

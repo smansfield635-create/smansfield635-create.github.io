@@ -171,7 +171,7 @@ canvas{
 <div class="wrap">
   <div class="topline">
     <div class="title">Diagnostic Gauges</div>
-    <div class="stamp">GAUGES G3 · DIRECT AUTHORITY · NO PARENT STACK</div>
+    <div class="stamp">GAUGES G4 · DIRECT AUTHORITY · NO PARENT STACK</div>
   </div>
 
   <div class="topbar">
@@ -259,10 +259,10 @@ canvas{
 </div>
 
 <script type="module">
-const BUILD_STAMP = "GAUGES_G3_DIRECT";
+const BUILD_STAMP = "GAUGES_G4_DIRECT";
 const HISTORY_MAX = 240;
 const REFRESH_MS = 250;
-const CACHE_BUST = "g3";
+const CACHE_BUST = "g4";
 const RUNTIME_MODULE_PATH = "/world/runtime.js?v=" + CACHE_BUST;
 const RENDER_MODULE_PATH = "/world/render.js?v=" + CACHE_BUST;
 const INSTRUMENTS_MODULE_PATH = "/assets/instruments.js?v=" + CACHE_BUST;
@@ -441,13 +441,10 @@ function renderModuleState() {
     row("instruments error", moduleState.instruments.error || "none");
 }
 
-function getRuntimeReceipt() {
+function getRuntimeReceipt(snapshotOptions) {
   if (!runtimeApi || typeof runtimeApi.getRuntimeReceipt !== "function") return null;
   try {
-    return runtimeApi.getRuntimeReceipt({
-      frameState: { elapsedSeconds: performance.now() / 1000 },
-      timestamp: Date.now()
-    });
+    return runtimeApi.getRuntimeReceipt(snapshotOptions);
   } catch (error) {
     moduleState.runtime.status = "FAIL";
     moduleState.runtime.error = error instanceof Error ? (error.stack || error.message) : String(error);
@@ -455,11 +452,11 @@ function getRuntimeReceipt() {
   }
 }
 
-function getRenderPacket() {
+function getRenderPacket(snapshotOptions) {
   if (!renderApi) return null;
   try {
-    if (typeof renderApi.render === "function") return renderApi.render();
-    if (renderApi.default && typeof renderApi.default.render === "function") return renderApi.default.render();
+    if (typeof renderApi.render === "function") return renderApi.render(snapshotOptions);
+    if (renderApi.default && typeof renderApi.default.render === "function") return renderApi.default.render(snapshotOptions);
     return null;
   } catch (error) {
     moduleState.render.status = "FAIL";
@@ -753,8 +750,13 @@ function tick() {
 
   renderModuleState();
 
-  const runtimeReceipt = getRuntimeReceipt();
-  const renderPacket = getRenderPacket();
+  const snapshotOptions = {
+    frameState: { elapsedSeconds: nowPerf / 1000 },
+    timestamp: Date.now()
+  };
+
+  const runtimeReceipt = getRuntimeReceipt(snapshotOptions);
+  const renderPacket = getRenderPacket(snapshotOptions);
   const instrumentPacket = getInstrumentPacket(runtimeReceipt, renderPacket);
 
   if (!runtimeReceipt) {

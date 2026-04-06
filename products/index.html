@@ -1,10 +1,12 @@
+DESTINATION: /products/index.html
+
 <!doctype html>
 <!-- TNT — /products/index.html
-     PRODUCTS AUTHORITY — REFINED TRUE 3D GLASS COMPASS CHAMBER HOST
+     PRODUCTS AUTHORITY — BRANCH-NAV ADOPTED
      RENEWAL:
-       - remove page-local bubble ownership
-       - use shared asset light classes from /assets/ui.css
-       - increase object/label separation
+       - remove page-local nav bubble system
+       - adopt shared branch page-nav component from /assets/branch.css
+       - keep shared asset lights from /assets/ui.css
        - preserve five separate 3D product objects
 -->
 
@@ -99,17 +101,7 @@
       opacity:.42;
     }
 
-    .top-nav{
-      position:fixed;
-      left:16px;
-      top:calc(16px + var(--safe-top));
-      z-index:30;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-
-    .top-right{
+    .page-meta{
       position:fixed;
       right:16px;
       top:calc(16px + var(--safe-top));
@@ -120,8 +112,7 @@
       align-items:center;
     }
 
-    .nav-btn,
-    .top-pill{
+    .meta-pill{
       min-height:42px;
       padding:10px 14px;
       border-radius:14px;
@@ -144,11 +135,9 @@
       justify-content:center;
       -webkit-tap-highlight-color:transparent;
       touch-action:manipulation;
-      transition:border-color .18s ease, box-shadow .18s ease, transform .18s ease;
     }
 
-    .nav-btn::after,
-    .top-pill::after{
+    .meta-pill::after{
       content:"";
       position:absolute;
       left:10px;
@@ -158,17 +147,6 @@
       background:radial-gradient(circle at 50% 0%, rgba(244,226,176,.22), transparent 72%);
       opacity:.56;
       pointer-events:none;
-    }
-
-    .nav-btn:hover,
-    .top-pill:hover{
-      border-color:rgba(244,226,176,.34);
-      box-shadow:var(--shellShadow),0 0 16px rgba(244,226,176,.10);
-      transform:translateY(-1px);
-    }
-
-    .nav-btn.active{
-      border-color:rgba(244,226,176,.42);
     }
 
     .hero{
@@ -429,25 +407,10 @@
       --asset-light-opacity:.46;
     }
 
-    .asset-lights.product-lights .asset-light.top{
-      left:50%;
-      top:-6px;
-    }
-
-    .asset-lights.product-lights .asset-light.right{
-      left:calc(100% + 6px);
-      top:50%;
-    }
-
-    .asset-lights.product-lights .asset-light.bottom{
-      left:50%;
-      top:calc(100% + 6px);
-    }
-
-    .asset-lights.product-lights .asset-light.left{
-      left:-6px;
-      top:50%;
-    }
+    .asset-lights.product-lights .asset-light.top{left:50%;top:-6px}
+    .asset-lights.product-lights .asset-light.right{left:calc(100% + 6px);top:50%}
+    .asset-lights.product-lights .asset-light.bottom{left:50%;top:calc(100% + 6px)}
+    .asset-lights.product-lights .asset-light.left{left:-6px;top:50%}
 
     .label{
       position:absolute;
@@ -540,7 +503,11 @@
     }
 
     @media (max-width:720px){
-      .top-right{top:auto;bottom:calc(76px + var(--safe-bottom));right:16px}
+      .page-meta{
+        top:auto;
+        bottom:calc(76px + var(--safe-bottom));
+        right:16px;
+      }
       .hero{top:14%;width:min(94vw,640px)}
       .hero p{font-size:15px;max-width:520px}
       .chamber{top:59%;width:min(98vw,540px);height:420px}
@@ -555,10 +522,9 @@
     }
 
     @media (max-width:520px){
-      .top-nav{gap:8px}
-      .nav-btn,.top-pill{min-height:40px;padding:9px 12px;font-size:12px}
       .hero{top:15%}
       .hero h1{font-size:40px}
+      .meta-pill{min-height:40px;padding:9px 12px;font-size:12px}
       .chamber{top:58%;width:min(100vw,390px);height:344px}
       .product-node{width:116px;height:168px}
       .object-wrap{width:88px;height:114px;margin-left:-44px;margin-top:-57px}
@@ -591,15 +557,17 @@
   <div id="app-shell">
     <div class="env" aria-hidden="true"></div>
 
-    <nav class="top-nav" aria-label="Primary">
-      <a class="nav-btn" id="navCompass" href="/index.html" data-route="/index.html">COMPASS</a>
-      <a class="nav-btn active" id="navProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-      <a class="nav-btn" id="navExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
-      <a class="nav-btn" id="navGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
+    <nav class="branch-page-nav" aria-label="Primary">
+      <div class="branch-page-nav__group">
+        <a class="branch-page-nav__link" id="navCompass" href="/index.html" data-route="/index.html">COMPASS</a>
+        <a class="branch-page-nav__link is-active" id="navProducts" href="/products/" data-route="/products/" aria-current="page">PRODUCTS</a>
+        <a class="branch-page-nav__link" id="navExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
+        <a class="branch-page-nav__link" id="navGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
+      </div>
     </nav>
 
-    <div class="top-right" aria-label="Products meta">
-      <div class="top-pill" id="scenePill">REFINED 3D GLASS COMPASS</div>
+    <div class="page-meta" aria-label="Products meta">
+      <div class="meta-pill" id="scenePill">REFINED 3D GLASS COMPASS</div>
     </div>
 
     <section class="hero" aria-label="Products hero">

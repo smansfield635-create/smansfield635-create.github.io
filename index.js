@@ -2,17 +2,13 @@
   "use strict";
 
   var APP = {
-    NAME: "INDEX_UNIVERSE_ENTRY_V1",
+    NAME: "INDEX_EUCLIDEAN_UNIVERSE_V1",
     VERSION: "1.0.0",
     START_TS: Date.now(),
     state: "BOOTING",
     errors: [],
     warnings: [],
     raf: 0,
-    stars: [],
-    dust: [],
-    rings: [],
-    nebulae: [],
     root: null,
     canvas: null,
     hud: null,
@@ -22,6 +18,9 @@
     dpr: 1,
     cx: 0,
     cy: 0,
+    stars: [],
+    orbitBands: [],
+    planets: [],
     universeReady: false
   };
 
@@ -146,7 +145,7 @@
       if (!canvas) {
         canvas = document.createElement("canvas");
         canvas.id = "scene";
-        canvas.setAttribute("aria-label", "Universe display");
+        canvas.setAttribute("aria-label", "Euclidean universe display");
         root.appendChild(canvas);
       }
 
@@ -174,28 +173,12 @@
       if (!hud) {
         hud = document.createElement("div");
         hud.id = "boot-status";
-        hud.setAttribute("role", "status");
-        hud.setAttribute("aria-live", "polite");
         root.appendChild(hud);
       }
 
-      hud.style.position = "fixed";
-      hud.style.top = "18px";
-      hud.style.left = "18px";
-      hud.style.right = "18px";
-      hud.style.maxWidth = "760px";
-      hud.style.padding = "14px 16px";
-      hud.style.border = "1px solid rgba(255,255,255,0.14)";
-      hud.style.borderRadius = "22px";
-      hud.style.background = "rgba(2,8,22,0.52)";
-      hud.style.backdropFilter = "blur(10px)";
-      hud.style.color = "#eef3ff";
-      hud.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, monospace";
-      hud.style.fontSize = "12px";
-      hud.style.lineHeight = "1.45";
-      hud.style.zIndex = "10";
-      hud.style.pointerEvents = "none";
-      hud.style.whiteSpace = "pre-wrap";
+      hud.setAttribute("role", "status");
+      hud.setAttribute("aria-live", "polite");
+      hud.style.display = "none";
 
       return hud;
     }, null);
@@ -227,7 +210,7 @@
       APP.width = w;
       APP.height = h;
       APP.cx = w * 0.5;
-      APP.cy = h * 0.5;
+      APP.cy = h * 0.58;
 
       APP.canvas.width = w;
       APP.canvas.height = h;
@@ -243,60 +226,61 @@
   function buildUniverse() {
     return safeRun("buildUniverse", function () {
       var i;
-      var countStars;
-      var countDust;
-      var countNebulae;
-      var countRings;
+      var starCount;
+      var baseRadius;
+      var orbitCount;
+      var radius;
+      var tilt;
+      var speed;
+      var angle;
+      var planetRadius;
+      var tone;
 
       APP.stars = [];
-      APP.dust = [];
-      APP.nebulae = [];
-      APP.rings = [];
+      APP.orbitBands = [];
+      APP.planets = [];
 
-      countStars = Math.max(140, Math.floor((window.innerWidth * window.innerHeight) / 9000));
-      countDust = Math.max(50, Math.floor((window.innerWidth * window.innerHeight) / 26000));
-      countNebulae = 4;
-      countRings = 3;
+      starCount = Math.max(90, Math.floor((window.innerWidth * window.innerHeight) / 14000));
+      baseRadius = Math.min(APP.width, APP.height) * 0.12;
+      orbitCount = 5;
 
-      for (i = 0; i < countStars; i += 1) {
+      for (i = 0; i < starCount; i += 1) {
         APP.stars.push({
           x: rand(0, APP.width),
           y: rand(0, APP.height),
-          r: rand(0.6, 2.2) * APP.dpr,
-          a: rand(0.25, 1.0),
-          tw: rand(0.4, 1.6),
-          drift: rand(0.002, 0.018),
+          r: rand(0.5, 1.6) * APP.dpr,
+          a: rand(0.18, 0.95),
+          tw: rand(0.3, 1.4),
           phase: rand(0, Math.PI * 2)
         });
       }
 
-      for (i = 0; i < countDust; i += 1) {
-        APP.dust.push({
-          x: rand(0, APP.width),
-          y: rand(0, APP.height),
-          r: rand(18, 120) * APP.dpr,
-          a: rand(0.02, 0.08),
-          dx: rand(-0.03, 0.03),
-          dy: rand(-0.02, 0.02)
-        });
-      }
+      for (i = 0; i < orbitCount; i += 1) {
+        radius = baseRadius * (1.18 + i * 0.46);
+        tilt = 0.42 - i * 0.03;
+        speed = 0.00014 + i * 0.00005;
+        angle = rand(0, Math.PI * 2);
+        planetRadius = (6 + i * 2.5) * APP.dpr;
 
-      for (i = 0; i < countNebulae; i += 1) {
-        APP.nebulae.push({
-          x: rand(APP.width * 0.12, APP.width * 0.88),
-          y: rand(APP.height * 0.12, APP.height * 0.88),
-          r: rand(APP.width * 0.12, APP.width * 0.28),
-          a: rand(0.05, 0.12)
-        });
-      }
+        if (i === 0) tone = "rgba(188,205,255,0.95)";
+        else if (i === 1) tone = "rgba(220,210,190,0.90)";
+        else if (i === 2) tone = "rgba(165,195,235,0.92)";
+        else if (i === 3) tone = "rgba(210,185,150,0.88)";
+        else tone = "rgba(185,190,210,0.86)";
 
-      for (i = 0; i < countRings; i += 1) {
-        APP.rings.push({
-          r: Math.min(APP.width, APP.height) * (0.14 + i * 0.09),
-          lw: Math.max(1, Math.floor((2 + i) * APP.dpr)),
-          a: 0.05 + i * 0.025,
-          speed: 0.03 + i * 0.02,
-          offset: rand(0, Math.PI * 2)
+        APP.orbitBands.push({
+          rx: radius,
+          ry: radius * tilt,
+          lineWidth: Math.max(1, Math.floor(APP.dpr * (1 + i * 0.15))),
+          alpha: 0.11 + i * 0.015
+        });
+
+        APP.planets.push({
+          orbitIndex: i,
+          angle: angle,
+          speed: speed,
+          r: planetRadius,
+          color: tone
         });
       }
 
@@ -307,183 +291,149 @@
 
   function drawBackground(ctx) {
     var g = ctx.createLinearGradient(0, 0, 0, APP.height);
-    g.addColorStop(0, "#01040c");
-    g.addColorStop(0.35, "#031021");
-    g.addColorStop(0.7, "#04172d");
-    g.addColorStop(1, "#071d38");
+    g.addColorStop(0, "#020611");
+    g.addColorStop(0.40, "#09182d");
+    g.addColorStop(1, "#132946");
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, APP.width, APP.height);
   }
 
-  function drawNebulae(ctx, t) {
-    var i;
-    var n;
-    var g;
-    var pulse;
-
-    for (i = 0; i < APP.nebulae.length; i += 1) {
-      n = APP.nebulae[i];
-      pulse = 1 + Math.sin(t * 0.00025 + i) * 0.08;
-      g = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, n.r * pulse);
-      g.addColorStop(0, "rgba(90,130,255," + String(n.a) + ")");
-      g.addColorStop(0.45, "rgba(70,110,220," + String(n.a * 0.45) + ")");
-      g.addColorStop(1, "rgba(20,40,90,0)");
-      ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r * pulse, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function drawDust(ctx) {
-    var i;
-    var d;
-
-    for (i = 0; i < APP.dust.length; i += 1) {
-      d = APP.dust[i];
-      d.x += d.dx * APP.dpr;
-      d.y += d.dy * APP.dpr;
-
-      if (d.x < -d.r) d.x = APP.width + d.r;
-      if (d.x > APP.width + d.r) d.x = -d.r;
-      if (d.y < -d.r) d.y = APP.height + d.r;
-      if (d.y > APP.height + d.r) d.y = -d.r;
-
-      ctx.fillStyle = "rgba(255,255,255," + String(d.a) + ")";
-      ctx.beginPath();
-      ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
-      ctx.fill();
-    }
-  }
-
-  function drawStars(ctx, t) {
+  function drawStarField(ctx, t) {
     var i;
     var s;
     var alpha;
+    var cross;
 
     for (i = 0; i < APP.stars.length; i += 1) {
       s = APP.stars[i];
-      alpha = s.a * (0.65 + 0.35 * Math.sin(t * 0.001 * s.tw + s.phase));
+      alpha = s.a * (0.72 + 0.28 * Math.sin(t * 0.001 * s.tw + s.phase));
+      alpha = clamp(alpha, 0.08, 1);
 
-      ctx.fillStyle = "rgba(255,255,255," + String(clamp(alpha, 0.08, 1)) + ")";
+      ctx.fillStyle = "rgba(255,255,255," + String(alpha) + ")";
       ctx.beginPath();
       ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
       ctx.fill();
 
-      if (s.r > 1.4 * APP.dpr) {
-        ctx.strokeStyle = "rgba(255,255,255," + String(alpha * 0.3) + ")";
+      if (s.r > 1.2 * APP.dpr) {
+        cross = s.r * 2.4;
+        ctx.strokeStyle = "rgba(255,255,255," + String(alpha * 0.22) + ")";
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(s.x - s.r * 2.1, s.y);
-        ctx.lineTo(s.x + s.r * 2.1, s.y);
-        ctx.moveTo(s.x, s.y - s.r * 2.1);
-        ctx.lineTo(s.x, s.y + s.r * 2.1);
+        ctx.moveTo(s.x - cross, s.y);
+        ctx.lineTo(s.x + cross, s.y);
+        ctx.moveTo(s.x, s.y - cross);
+        ctx.lineTo(s.x, s.y + cross);
         ctx.stroke();
       }
     }
   }
 
-  function drawCore(ctx, t) {
-    var coreR = Math.min(APP.width, APP.height) * 0.12;
-    var innerR = coreR * 0.58;
-    var glowR = coreR * 2.6;
-    var g1;
-    var g2;
-    var phase = t * 0.00035;
+  function drawSunGlow(ctx) {
+    var outer = Math.min(APP.width, APP.height) * 0.20;
+    var inner = Math.min(APP.width, APP.height) * 0.058;
+    var g = ctx.createRadialGradient(APP.cx, APP.cy, 0, APP.cx, APP.cy, outer);
 
-    g1 = ctx.createRadialGradient(APP.cx, APP.cy, 0, APP.cx, APP.cy, glowR);
-    g1.addColorStop(0, "rgba(245,248,255,0.28)");
-    g1.addColorStop(0.25, "rgba(120,170,255,0.16)");
-    g1.addColorStop(0.6, "rgba(60,110,220,0.07)");
-    g1.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g1;
+    g.addColorStop(0, "rgba(255,248,228,0.92)");
+    g.addColorStop(0.10, "rgba(255,235,180,0.65)");
+    g.addColorStop(0.22, "rgba(255,220,130,0.24)");
+    g.addColorStop(1, "rgba(255,200,100,0)");
+
+    ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(APP.cx, APP.cy, glowR, 0, Math.PI * 2);
+    ctx.arc(APP.cx, APP.cy, outer, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.save();
-    ctx.translate(APP.cx, APP.cy);
-    ctx.rotate(phase);
-
-    ctx.strokeStyle = "rgba(238,243,255,0.9)";
-    ctx.lineWidth = Math.max(2, Math.floor(APP.dpr * 2));
+    ctx.fillStyle = "rgba(255,246,220,0.96)";
     ctx.beginPath();
-    ctx.moveTo(0, -coreR);
-    ctx.lineTo(coreR, 0);
-    ctx.lineTo(0, coreR);
-    ctx.lineTo(-coreR, 0);
-    ctx.closePath();
-    ctx.stroke();
+    ctx.arc(APP.cx, APP.cy, inner, 0, Math.PI * 2);
+    ctx.fill();
 
-    ctx.strokeStyle = "rgba(170,190,230,0.42)";
+    ctx.strokeStyle = "rgba(255,255,255,0.12)";
     ctx.lineWidth = Math.max(1, Math.floor(APP.dpr * 1.2));
     ctx.beginPath();
-    ctx.moveTo(0, -innerR);
-    ctx.lineTo(innerR, 0);
-    ctx.lineTo(0, innerR);
-    ctx.lineTo(-innerR, 0);
-    ctx.closePath();
+    ctx.arc(APP.cx, APP.cy, inner * 1.26, 0, Math.PI * 2);
     ctx.stroke();
-
-    ctx.restore();
-
-    g2 = ctx.createRadialGradient(APP.cx, APP.cy, 0, APP.cx, APP.cy, coreR * 0.7);
-    g2.addColorStop(0, "rgba(255,255,255,0.22)");
-    g2.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = g2;
-    ctx.beginPath();
-    ctx.arc(APP.cx, APP.cy, coreR * 0.7, 0, Math.PI * 2);
-    ctx.fill();
   }
 
-  function drawRings(ctx, t) {
+  function drawOrbits(ctx) {
     var i;
-    var ring;
-    var ry;
-    var rot;
+    var orbit;
 
     ctx.save();
     ctx.translate(APP.cx, APP.cy);
 
-    for (i = 0; i < APP.rings.length; i += 1) {
-      ring = APP.rings[i];
-      ry = ring.r * 0.32;
-      rot = ring.offset + t * 0.0001 * ring.speed * 10;
-
-      ctx.save();
-      ctx.rotate(rot);
-      ctx.strokeStyle = "rgba(180,210,255," + String(ring.a) + ")";
-      ctx.lineWidth = ring.lw;
+    for (i = 0; i < APP.orbitBands.length; i += 1) {
+      orbit = APP.orbitBands[i];
+      ctx.strokeStyle = "rgba(205,220,255," + String(orbit.alpha) + ")";
+      ctx.lineWidth = orbit.lineWidth;
       ctx.beginPath();
-      ctx.ellipse(0, 0, ring.r, ry, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 0, orbit.rx, orbit.ry, 0, 0, Math.PI * 2);
       ctx.stroke();
-      ctx.restore();
     }
 
     ctx.restore();
   }
 
-  function drawHorizon(ctx) {
-    var y = APP.height * 0.82;
-    var g = ctx.createLinearGradient(0, y - APP.height * 0.18, 0, APP.height);
-    g.addColorStop(0, "rgba(15,35,68,0)");
-    g.addColorStop(0.55, "rgba(10,30,62,0.22)");
-    g.addColorStop(1, "rgba(5,18,38,0.82)");
+  function drawPlanets(ctx) {
+    var i;
+    var p;
+    var orbit;
+    var x;
+    var y;
 
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.moveTo(0, y);
-    ctx.quadraticCurveTo(APP.width * 0.2, y - 24 * APP.dpr, APP.width * 0.4, y - 6 * APP.dpr);
-    ctx.quadraticCurveTo(APP.width * 0.62, y + 22 * APP.dpr, APP.width * 0.8, y - 10 * APP.dpr);
-    ctx.quadraticCurveTo(APP.width * 0.9, y - 20 * APP.dpr, APP.width, y);
-    ctx.lineTo(APP.width, APP.height);
-    ctx.lineTo(0, APP.height);
-    ctx.closePath();
-    ctx.fill();
+    for (i = 0; i < APP.planets.length; i += 1) {
+      p = APP.planets[i];
+      orbit = APP.orbitBands[p.orbitIndex];
+
+      x = APP.cx + Math.cos(p.angle) * orbit.rx;
+      y = APP.cy + Math.sin(p.angle) * orbit.ry;
+
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(x, y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
+      ctx.lineWidth = Math.max(1, Math.floor(APP.dpr));
+      ctx.beginPath();
+      ctx.arc(x, y, p.r + 1.3 * APP.dpr, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+
+  function drawDepthGrid(ctx) {
+    var left = APP.width * 0.12;
+    var right = APP.width * 0.88;
+    var top = APP.height * 0.14;
+    var bottom = APP.height * 0.88;
+    var i;
+    var y;
+    var x;
+    var rows = 5;
+    var cols = 5;
+
+    ctx.strokeStyle = "rgba(190,210,255,0.035)";
+    ctx.lineWidth = 1;
+
+    for (i = 0; i <= rows; i += 1) {
+      y = top + ((bottom - top) / rows) * i;
+      ctx.beginPath();
+      ctx.moveTo(left, y);
+      ctx.lineTo(right, y);
+      ctx.stroke();
+    }
+
+    for (i = 0; i <= cols; i += 1) {
+      x = left + ((right - left) / cols) * i;
+      ctx.beginPath();
+      ctx.moveTo(x, top);
+      ctx.lineTo(x, bottom);
+      ctx.stroke();
+    }
   }
 
   function drawCaption(ctx) {
-    var titleSize = Math.max(20, Math.floor(Math.min(APP.width, APP.height) * 0.027));
+    var titleSize = Math.max(20, Math.floor(Math.min(APP.width, APP.height) * 0.026));
     var subSize = Math.max(11, Math.floor(Math.min(APP.width, APP.height) * 0.012));
 
     ctx.save();
@@ -492,13 +442,23 @@
 
     ctx.fillStyle = "#eef3ff";
     ctx.font = titleSize + "px system-ui, sans-serif";
-    ctx.fillText("Universe Online", APP.cx, APP.cy + Math.min(APP.width, APP.height) * 0.19);
+    ctx.fillText("Universe Online", APP.cx, APP.cy + Math.min(APP.width, APP.height) * 0.22);
 
     ctx.fillStyle = "rgba(185,200,226,0.92)";
     ctx.font = subSize + "px ui-monospace, monospace";
-    ctx.fillText("index.js universe entry active", APP.cx, APP.cy + Math.min(APP.width, APP.height) * 0.225);
+    ctx.fillText("euclidean runtime active", APP.cx, APP.cy + Math.min(APP.width, APP.height) * 0.255);
 
     ctx.restore();
+  }
+
+  function updateSimulation(ts) {
+    var i;
+    var p;
+
+    for (i = 0; i < APP.planets.length; i += 1) {
+      p = APP.planets[i];
+      p.angle += p.speed * (16 + (ts % 3));
+    }
   }
 
   function renderFrame(ts) {
@@ -507,13 +467,13 @@
         throw new Error("2D context missing");
       }
 
+      updateSimulation(ts);
       drawBackground(APP.ctx);
-      drawNebulae(APP.ctx, ts);
-      drawDust(APP.ctx);
-      drawStars(APP.ctx, ts);
-      drawRings(APP.ctx, ts);
-      drawCore(APP.ctx, ts);
-      drawHorizon(APP.ctx);
+      drawDepthGrid(APP.ctx);
+      drawStarField(APP.ctx, ts);
+      drawOrbits(APP.ctx);
+      drawSunGlow(APP.ctx);
+      drawPlanets(APP.ctx);
       drawCaption(APP.ctx);
       updateHud();
     }, null);
@@ -533,9 +493,9 @@
         " | WARNINGS=" + APP.warnings.length +
         "\nUNIVERSE=" + (APP.universeReady ? "ONLINE" : "OFFLINE") +
         " | STARS=" + APP.stars.length +
-        " | DUST=" + APP.dust.length +
-        " | NEBULAE=" + APP.nebulae.length +
-        " | RINGS=" + APP.rings.length;
+        " | ORBITS=" + APP.orbitBands.length +
+        " | PLANETS=" + APP.planets.length +
+        " | GEOMETRY=EUCLIDEAN_ONLY";
     }, null);
   }
 
@@ -611,9 +571,8 @@
           return {
             state: APP.state,
             stars: APP.stars.length,
-            dust: APP.dust.length,
-            nebulae: APP.nebulae.length,
-            rings: APP.rings.length,
+            orbits: APP.orbitBands.length,
+            planets: APP.planets.length,
             width: APP.width,
             height: APP.height,
             dpr: APP.dpr
@@ -658,12 +617,11 @@
     }
     APP.raf = requestAnimationFrame(renderFrame);
 
-    log("info", "Universe boot completed", {
+    log("info", "Euclidean universe boot completed", {
       state: APP.state,
       stars: APP.stars.length,
-      dust: APP.dust.length,
-      nebulae: APP.nebulae.length,
-      rings: APP.rings.length
+      orbits: APP.orbitBands.length,
+      planets: APP.planets.length
     });
   }
 

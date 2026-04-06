@@ -1,302 +1,306 @@
-DESTINATION: /index.js
 (() => {
   "use strict";
 
-  const JS_STAMP = "J11-VISIBILITY-PROOF-SAFE";
-  const canvas = document.getElementById("scene");
-  if (!canvas) throw new Error("Compass page requires #scene canvas");
-
-  const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-  if (!ctx) throw new Error("2D canvas context unavailable");
-
-  const DPR_CAP = 2;
-  const TWO_PI = Math.PI * 2;
-
-  const state = {
-    dpr: 1,
-    width: 1,
-    height: 1,
-    cx: 0,
-    cy: 0,
-    radius: 1,
-    rafId: 0,
-    startTime: performance.now(),
-    stars: [],
-    anchors: [],
-    showStamp: true
+  const BOOT = {
+    NAME: "INDEX_BOOT_SAFE_BASELINE_V1",
+    VERSION: "1.0.0",
+    START_TS: Date.now(),
+    state: "BOOTING",
+    errors: [],
+    warnings: [],
   };
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  function hashString(input) {
-    let h = 2166136261 >>> 0;
-    for (let i = 0; i < input.length; i += 1) {
-      h ^= input.charCodeAt(i);
-      h = Math.imul(h, 16777619);
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_) {
+      return "";
     }
-    return h >>> 0;
   }
 
-  function createRng(seedValue) {
-    let seed = seedValue >>> 0;
-    return function rand() {
-      seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0;
-      return seed / 4294967296;
+  function log(level, message, extra) {
+    const payload = {
+      t: nowIso(),
+      boot: BOOT.NAME,
+      level,
+      message,
+      ...(extra && typeof extra === "object" ? { extra } : {}),
     };
+    try {
+      if (level === "error") console.error(payload);
+      else if (level === "warn") console.warn(payload);
+      else console.log(payload);
+    } catch (_) {}
   }
 
-  function getRectSize() {
-    const rect = canvas.getBoundingClientRect();
-    return {
-      width: Math.max(1, Math.floor(rect.width)),
-      height: Math.max(1, Math.floor(rect.height))
-    };
-  }
-
-  function buildAnchors() {
-    const r = state.radius;
-    const d = r * 0.72;
-    return [
-      { key: "N",  x: state.cx,     y: state.cy - r, size: 22, glow: 120, rgb: [255, 245, 220] },
-      { key: "NE", x: state.cx + d, y: state.cy - d, size: 18, glow: 96,  rgb: [220, 232, 255] },
-      { key: "E",  x: state.cx + r, y: state.cy,     size: 18, glow: 96,  rgb: [220, 232, 255] },
-      { key: "SE", x: state.cx + d, y: state.cy + d, size: 17, glow: 90,  rgb: [255, 222, 180] },
-      { key: "S",  x: state.cx,     y: state.cy + r, size: 17, glow: 90,  rgb: [255, 222, 180] },
-      { key: "SW", x: state.cx - d, y: state.cy + d, size: 16, glow: 84,  rgb: [255, 212, 170] },
-      { key: "W",  x: state.cx - r, y: state.cy,     size: 18, glow: 96,  rgb: [220, 232, 255] },
-      { key: "NW", x: state.cx - d, y: state.cy - d, size: 18, glow: 96,  rgb: [220, 232, 255] },
-      { key: "C",  x: state.cx,     y: state.cy,     size: 26, glow: 150, rgb: [255, 255, 255] }
-    ];
-  }
-
-  function buildStars(rand, count) {
-    const stars = [];
-    for (let i = 0; i < count; i += 1) {
-      const pick = rand();
-      stars.push({
-        x: rand() * state.width,
-        y: rand() * state.height,
-        r: lerp(0.9, 2.2, Math.pow(rand(), 1.35)),
-        a: lerp(0.45, 0.95, rand()),
-        tw: rand() * TWO_PI,
-        rgb: pick < 0.2 ? [255, 230, 190] : pick < 0.55 ? [255, 255, 255] : [200, 220, 255]
-      });
-    }
-    return stars;
-  }
-
-  function buildScene() {
-    const seed = hashString("diamondgatebridge:/index:" + state.width + "x" + state.height + ":" + JS_STAMP);
-    const rand = createRng(seed ^ 0x51EE7712);
-    state.stars = buildStars(rand, state.width < 700 ? 120 : 180);
-    state.anchors = buildAnchors();
-  }
-
-  function resize() {
-    const size = getRectSize();
-    state.dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP);
-    state.width = size.width;
-    state.height = size.height;
-    state.cx = state.width * 0.5;
-    state.cy = state.height * 0.53;
-    state.radius = Math.min(state.width, state.height) * (state.width < 700 ? 0.30 : 0.26);
-
-    canvas.width = Math.max(1, Math.floor(state.width * state.dpr));
-    canvas.height = Math.max(1, Math.floor(state.height * state.dpr));
-    canvas.style.width = state.width + "px";
-    canvas.style.height = state.height + "px";
-
-    ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
-    buildScene();
-  }
-
-  function drawBackground() {
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, state.width, state.height);
-  }
-
-  function drawStars(timeSeconds) {
-    for (let i = 0; i < state.stars.length; i += 1) {
-      const s = state.stars[i];
-      const a = clamp(s.a * (0.78 + Math.sin(timeSeconds * 0.9 + s.tw) * 0.22), 0, 1);
-      ctx.fillStyle = "rgba(" + s.rgb[0] + "," + s.rgb[1] + "," + s.rgb[2] + "," + a.toFixed(3) + ")";
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, TWO_PI);
-      ctx.fill();
+  function safeRun(label, fn, fallback = null) {
+    try {
+      return fn();
+    } catch (error) {
+      BOOT.errors.push({ label, message: String(error && error.message ? error.message : error) });
+      log("error", `${label} failed`, { error: String(error && error.stack ? error.stack : error) });
+      return fallback;
     }
   }
 
-  function drawGuides() {
-    const a = state.anchors;
-    ctx.save();
-    ctx.strokeStyle = "rgba(140,170,255,0.28)";
-    ctx.lineWidth = 1.5;
+  function ensureBody() {
+    return safeRun("ensureBody", () => {
+      if (document.body) return document.body;
+      const body = document.createElement("body");
+      document.documentElement.appendChild(body);
+      return body;
+    });
+  }
 
-    ctx.beginPath();
-    ctx.moveTo(a[0].x, a[0].y);
-    for (let i = 1; i < 8; i += 1) ctx.lineTo(a[i].x, a[i].y);
-    ctx.closePath();
-    ctx.stroke();
+  function ensureRoot() {
+    return safeRun("ensureRoot", () => {
+      const body = ensureBody();
+      if (!body) throw new Error("document.body unavailable");
 
-    ctx.strokeStyle = "rgba(140,170,255,0.18)";
-    for (let i = 0; i < 8; i += 1) {
+      let root =
+        document.getElementById("app") ||
+        document.getElementById("root") ||
+        document.querySelector("[data-app-root]");
+
+      if (!root) {
+        root = document.createElement("div");
+        root.id = "app";
+        root.setAttribute("data-app-root", "true");
+        body.appendChild(root);
+        BOOT.warnings.push("No app root found; created #app.");
+      }
+
+      return root;
+    });
+  }
+
+  function ensureCanvas(root) {
+    return safeRun("ensureCanvas", () => {
+      let canvas =
+        document.getElementById("scene") ||
+        document.getElementById("canvas") ||
+        root.querySelector("canvas");
+
+      if (!canvas) {
+        canvas = document.createElement("canvas");
+        canvas.id = "scene";
+        canvas.setAttribute("aria-label", "Main display");
+        canvas.style.display = "block";
+        canvas.style.width = "100vw";
+        canvas.style.height = "100vh";
+        canvas.style.position = "fixed";
+        canvas.style.inset = "0";
+        canvas.style.zIndex = "0";
+        root.appendChild(canvas);
+        BOOT.warnings.push("No canvas found; created #scene.");
+      }
+
+      return canvas;
+    });
+  }
+
+  function ensureHud(root) {
+    return safeRun("ensureHud", () => {
+      let hud = document.getElementById("boot-status");
+
+      if (!hud) {
+        hud = document.createElement("div");
+        hud.id = "boot-status";
+        hud.setAttribute("role", "status");
+        hud.setAttribute("aria-live", "polite");
+        hud.style.position = "fixed";
+        hud.style.top = "12px";
+        hud.style.left = "12px";
+        hud.style.right = "12px";
+        hud.style.maxWidth = "560px";
+        hud.style.padding = "10px 12px";
+        hud.style.border = "1px solid rgba(255,255,255,0.14)";
+        hud.style.borderRadius = "12px";
+        hud.style.background = "rgba(5,11,24,0.72)";
+        hud.style.backdropFilter = "blur(10px)";
+        hud.style.color = "#eef3ff";
+        hud.style.fontFamily = "ui-monospace, SFMono-Regular, Menlo, monospace";
+        hud.style.fontSize = "12px";
+        hud.style.lineHeight = "1.4";
+        hud.style.zIndex = "10";
+        hud.style.pointerEvents = "none";
+        root.appendChild(hud);
+      }
+
+      return hud;
+    });
+  }
+
+  function resizeCanvas(canvas) {
+    return safeRun("resizeCanvas", () => {
+      const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+      const width = Math.max(1, Math.floor(window.innerWidth * dpr));
+      const height = Math.max(1, Math.floor(window.innerHeight * dpr));
+
+      if (canvas.width !== width) canvas.width = width;
+      if (canvas.height !== height) canvas.height = height;
+
+      canvas.dataset.cssWidth = String(window.innerWidth);
+      canvas.dataset.cssHeight = String(window.innerHeight);
+      canvas.dataset.dpr = String(dpr);
+
+      return { width, height, dpr };
+    });
+  }
+
+  function get2D(canvas) {
+    return safeRun("get2D", () => {
+      const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+      if (!ctx) throw new Error("2D context unavailable");
+      return ctx;
+    });
+  }
+
+  function renderBootFrame(ctx, canvas) {
+    return safeRun("renderBootFrame", () => {
+      const w = canvas.width;
+      const h = canvas.height;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg.addColorStop(0, "#01040c");
+      bg.addColorStop(0.5, "#04101f");
+      bg.addColorStop(1, "#09172d");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, w, h);
+
+      const cx = w * 0.5;
+      const cy = h * 0.5;
+      const r = Math.min(w, h) * 0.18;
+      const t = (Date.now() - BOOT.START_TS) / 1000;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(t * 0.35);
+
       ctx.beginPath();
-      ctx.moveTo(state.cx, state.cy);
-      ctx.lineTo(a[i].x, a[i].y);
+      ctx.moveTo(0, -r);
+      ctx.lineTo(r, 0);
+      ctx.lineTo(0, r);
+      ctx.lineTo(-r, 0);
+      ctx.closePath();
+      ctx.strokeStyle = "rgba(238,243,255,0.9)";
+      ctx.lineWidth = Math.max(2, Math.floor(Math.min(w, h) * 0.004));
       ctx.stroke();
-    }
-    ctx.restore();
+
+      ctx.beginPath();
+      ctx.moveTo(0, -r * 0.6);
+      ctx.lineTo(r * 0.6, 0);
+      ctx.lineTo(0, r * 0.6);
+      ctx.lineTo(-r * 0.6, 0);
+      ctx.closePath();
+      ctx.strokeStyle = "rgba(169,184,220,0.65)";
+      ctx.lineWidth = Math.max(1, Math.floor(Math.min(w, h) * 0.0025));
+      ctx.stroke();
+
+      ctx.restore();
+
+      ctx.save();
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillStyle = "#eef3ff";
+      ctx.font = `${Math.max(18, Math.floor(Math.min(w, h) * 0.028))}px system-ui, sans-serif`;
+      ctx.fillText("Boot Restored", cx, cy + r + 40);
+
+      ctx.fillStyle = "rgba(169,184,220,0.95)";
+      ctx.font = `${Math.max(11, Math.floor(Math.min(w, h) * 0.014))}px ui-monospace, monospace`;
+      ctx.fillText("index.js baseline active", cx, cy + r + 68);
+      ctx.restore();
+    });
   }
 
-  function drawAnchor(anchor, timeSeconds, index) {
-    const pulse = 0.9 + Math.sin(timeSeconds * 1.1 + index * 0.5) * 0.1;
-
-    const glow = ctx.createRadialGradient(anchor.x, anchor.y, 0, anchor.x, anchor.y, anchor.glow);
-    glow.addColorStop(0, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.22)");
-    glow.addColorStop(0.22, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.10)");
-    glow.addColorStop(0.55, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.04)");
-    glow.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(anchor.x, anchor.y, anchor.glow * pulse, 0, TWO_PI);
-    ctx.fill();
-
-    const core = ctx.createRadialGradient(
-      anchor.x - anchor.size * 0.25,
-      anchor.y - anchor.size * 0.25,
-      0,
-      anchor.x,
-      anchor.y,
-      anchor.size * 3
-    );
-    core.addColorStop(0, "rgba(255,255,255,1)");
-    core.addColorStop(0.2, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.98)");
-    core.addColorStop(0.7, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0.84)");
-    core.addColorStop(1, "rgba(" + anchor.rgb[0] + "," + anchor.rgb[1] + "," + anchor.rgb[2] + ",0)");
-    ctx.fillStyle = core;
-    ctx.beginPath();
-    ctx.arc(anchor.x, anchor.y, anchor.size * pulse, 0, TWO_PI);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(255,255,255,0.90)";
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(anchor.x - anchor.size * 5, anchor.y);
-    ctx.lineTo(anchor.x + anchor.size * 5, anchor.y);
-    ctx.moveTo(anchor.x, anchor.y - anchor.size * 5);
-    ctx.lineTo(anchor.x, anchor.y + anchor.size * 5);
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(255,255,255,0.98)";
-    ctx.font = "700 " + (state.width < 640 ? 16 : 18) + "px Arial";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "bottom";
-    ctx.fillText(anchor.key, anchor.x, anchor.y - anchor.glow - 10);
+  function updateHud(hud) {
+    return safeRun("updateHud", () => {
+      const elapsed = Date.now() - BOOT.START_TS;
+      hud.textContent =
+        `BOOT=${BOOT.state} | NAME=${BOOT.NAME} | VERSION=${BOOT.VERSION} | ` +
+        `ELAPSED_MS=${elapsed} | ERRORS=${BOOT.errors.length} | WARNINGS=${BOOT.warnings.length}`;
+    });
   }
 
-  function drawStamp() {
-    if (!state.showStamp) return;
+  function installGlobalErrorHooks(hud) {
+    safeRun("installGlobalErrorHooks", () => {
+      window.addEventListener("error", (event) => {
+        const message = event?.error?.message || event?.message || "Unknown window error";
+        BOOT.errors.push({ label: "window.error", message: String(message) });
+        BOOT.state = "DEGRADED";
+        updateHud(hud);
+        log("error", "Unhandled window error", { message });
+      });
 
-    const label = "JS " + JS_STAMP;
-    const padX = 10;
-    const padY = 7;
-    const fontSize = 11;
-    const x = 12;
-    const y = state.height - 14;
-
-    ctx.save();
-    ctx.font = "700 " + fontSize + "px Arial";
-    ctx.textAlign = "left";
-    ctx.textBaseline = "bottom";
-
-    const width = ctx.measureText(label).width + padX * 2;
-    const height = fontSize + padY * 2;
-
-    ctx.fillStyle = "rgba(5,11,24,0.72)";
-    ctx.strokeStyle = "rgba(255,255,255,0.16)";
-    ctx.lineWidth = 1;
-
-    const rx = x - 4;
-    const ry = y - height + 4;
-    const rr = 10;
-
-    ctx.beginPath();
-    ctx.moveTo(rx + rr, ry);
-    ctx.lineTo(rx + width - rr, ry);
-    ctx.quadraticCurveTo(rx + width, ry, rx + width, ry + rr);
-    ctx.lineTo(rx + width, ry + height - rr);
-    ctx.quadraticCurveTo(rx + width, ry + height, rx + width - rr, ry + height);
-    ctx.lineTo(rx + rr, ry + height);
-    ctx.quadraticCurveTo(rx, ry + height, rx, ry + height - rr);
-    ctx.lineTo(rx, ry + rr);
-    ctx.quadraticCurveTo(rx, ry, rx + rr, ry);
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-
-    ctx.fillStyle = "rgba(235,242,255,0.92)";
-    ctx.fillText(label, x + padX - 4, y - padY + 2);
-    ctx.restore();
+      window.addEventListener("unhandledrejection", (event) => {
+        const reason = event?.reason?.message || event?.reason || "Unknown promise rejection";
+        BOOT.errors.push({ label: "unhandledrejection", message: String(reason) });
+        BOOT.state = "DEGRADED";
+        updateHud(hud);
+        log("error", "Unhandled promise rejection", { reason: String(reason) });
+      });
+    });
   }
 
-  function drawFrame(now) {
-    const timeSeconds = (now - state.startTime) * 0.001;
+  function installResize(canvas, ctx, hud) {
+    safeRun("installResize", () => {
+      let raf = 0;
 
-    ctx.clearRect(0, 0, state.width, state.height);
-    drawBackground();
-    drawStars(timeSeconds);
-    drawGuides();
+      const onResize = () => {
+        if (raf) cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(() => {
+          resizeCanvas(canvas);
+          renderBootFrame(ctx, canvas);
+          updateHud(hud);
+        });
+      };
 
-    for (let i = 0; i < state.anchors.length; i += 1) {
-      drawAnchor(state.anchors[i], timeSeconds, i);
-    }
+      window.addEventListener("resize", onResize, { passive: true });
+      window.addEventListener("orientationchange", onResize, { passive: true });
+    });
+  }
 
-    drawStamp();
-    state.rafId = window.requestAnimationFrame(drawFrame);
+  function boot() {
+    const root = ensureRoot();
+    if (!root) throw new Error("Unable to establish app root");
+
+    const canvas = ensureCanvas(root);
+    if (!canvas) throw new Error("Unable to establish canvas");
+
+    const hud = ensureHud(root);
+    if (!hud) throw new Error("Unable to establish HUD");
+
+    installGlobalErrorHooks(hud);
+
+    resizeCanvas(canvas);
+    const ctx = get2D(canvas);
+    if (!ctx) throw new Error("Unable to acquire 2D context");
+
+    renderBootFrame(ctx, canvas);
+    installResize(canvas, ctx, hud);
+
+    BOOT.state = BOOT.errors.length ? "DEGRADED" : "READY";
+    updateHud(hud);
+
+    window.__INDEX_BOOT__ = {
+      ...BOOT,
+      canvasId: canvas.id,
+      rootId: root.id || null,
+      hudId: hud.id,
+    };
+
+    log("info", "Boot completed", window.__INDEX_BOOT__);
   }
 
   function start() {
-    resize();
-    if (state.rafId) window.cancelAnimationFrame(state.rafId);
-    state.startTime = performance.now();
-    state.rafId = window.requestAnimationFrame(drawFrame);
-    window.__ROOT_INDEX_JS_PROOF__ = true;
-    window.__COMPASS_GALAXY_ACTIVE__ = true;
-    window.__COMPASS_JS_STAMP__ = JS_STAMP;
+    safeRun("start", boot);
   }
 
-  let resizeTimer = 0;
-  function onResize() {
-    window.clearTimeout(resizeTimer);
-    resizeTimer = window.setTimeout(resize, 60);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
   }
-
-  window.addEventListener("resize", onResize, { passive: true });
-  window.addEventListener("orientationchange", onResize, { passive: true });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      if (state.rafId) {
-        window.cancelAnimationFrame(state.rafId);
-        state.rafId = 0;
-      }
-      return;
-    }
-    if (!state.rafId) {
-      state.startTime = performance.now();
-      state.rafId = window.requestAnimationFrame(drawFrame);
-    }
-  });
-
-  canvas.addEventListener("click", () => {
-    state.showStamp = !state.showStamp;
-  });
-
-  start();
 })();

@@ -2,8 +2,8 @@
   "use strict";
 
   var APP = {
-    NAME: "INDEX_EUCLIDEAN_UNIVERSE_V1",
-    VERSION: "1.0.0",
+    NAME: "INDEX_EUCLIDEAN_UNIVERSE_V2",
+    VERSION: "2.0.0",
     START_TS: Date.now(),
     state: "BOOTING",
     errors: [],
@@ -11,7 +11,10 @@
     raf: 0,
     root: null,
     canvas: null,
+    uiRoot: null,
     hud: null,
+    failNode: null,
+    bannerNode: null,
     ctx: null,
     width: 0,
     height: 0,
@@ -21,7 +24,8 @@
     stars: [],
     orbitBands: [],
     planets: [],
-    universeReady: false
+    universeReady: false,
+    reducedMotion: false
   };
 
   function nowIso() {
@@ -88,6 +92,15 @@
     return min + Math.random() * (max - min);
   }
 
+  function escapeHtml(value) {
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function ensureBody() {
     return safeRun("ensureBody", function () {
       if (document.body) return document.body;
@@ -149,16 +162,35 @@
         root.appendChild(canvas);
       }
 
-      canvas.style.position = "fixed";
+      canvas.style.position = "absolute";
       canvas.style.top = "0";
       canvas.style.left = "0";
       canvas.style.width = "100vw";
       canvas.style.height = "100vh";
       canvas.style.display = "block";
-      canvas.style.zIndex = "0";
-      canvas.style.background = "#020611";
+      canvas.style.zIndex = "1";
+      canvas.style.background = "transparent";
 
       return canvas;
+    }, null);
+  }
+
+  function ensureUiRoot(root) {
+    return safeRun("ensureUiRoot", function () {
+      var node = document.getElementById("home-ui");
+
+      if (!root) {
+        throw new Error("root unavailable");
+      }
+
+      if (!node) {
+        node = document.createElement("div");
+        node.id = "home-ui";
+        root.appendChild(node);
+        pushWarning("No #home-ui found; created dynamically.");
+      }
+
+      return node;
     }, null);
   }
 
@@ -181,6 +213,45 @@
       hud.style.display = "none";
 
       return hud;
+    }, null);
+  }
+
+  function ensureFailNode(root) {
+    return safeRun("ensureFailNode", function () {
+      var node = document.getElementById("boot-fail");
+
+      if (!root) {
+        throw new Error("root unavailable");
+      }
+
+      if (!node) {
+        node = document.createElement("div");
+        node.id = "boot-fail";
+        node.className = "boot-fail";
+        node.setAttribute("aria-live", "polite");
+        root.appendChild(node);
+      }
+
+      return node;
+    }, null);
+  }
+
+  function ensureBannerNode(root) {
+    return safeRun("ensureBannerNode", function () {
+      var node = document.getElementById("boot-banner");
+
+      if (!root) {
+        throw new Error("root unavailable");
+      }
+
+      if (!node) {
+        node = document.createElement("div");
+        node.id = "boot-banner";
+        node.className = "boot-banner";
+        root.appendChild(node);
+      }
+
+      return node;
     }, null);
   }
 
@@ -432,25 +503,6 @@
     }
   }
 
-  function drawCaption(ctx) {
-    var titleSize = Math.max(20, Math.floor(Math.min(APP.width, APP.height) * 0.026));
-    var subSize = Math.max(11, Math.floor(Math.min(APP.width, APP.height) * 0.012));
-
-    ctx.save();
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-
-    ctx.fillStyle = "#eef3ff";
-    ctx.font = titleSize + "px system-ui, sans-serif";
-    ctx.fillText("Universe Online", APP.cx, APP.cy + Math.min(APP.width, APP.height) * 0.22);
-
-    ctx.fillStyle = "rgba(185,200,226,0.92)";
-    ctx.font = subSize + "px ui-monospace, monospace";
-    ctx.fillText("euclidean runtime active", APP.cx, APP.cy + Math.min(APP.width, APP.height) * 0.255);
-
-    ctx.restore();
-  }
-
   function updateSimulation(ts) {
     var i;
     var p;
@@ -459,6 +511,155 @@
       p = APP.planets[i];
       p.angle += p.speed * (16 + (ts % 3));
     }
+  }
+
+  function buildPresentationState() {
+    return {
+      bannerText: APP.errors.length ? "Boot Degraded" : "Euclidean Universe Host",
+      title: "Diamond Gate Bridge — Euclidean Universe Entry",
+      subtitle:
+        "This host now renders only Euclidean forms. The runtime favors circles, ellipses, straight lines, and standard-orientation inspection surfaces. Symbolic diamonds and decorative fog masses have been removed from the scene contract.",
+      chips: [
+        { text: "Euclidean Only", strong: true },
+        { text: "Canvas First", strong: false },
+        { text: "Runtime Online", strong: APP.universeReady }
+      ],
+      actions: [
+        { text: "View Runtime Read", href: "#legend", strong: true },
+        { text: "Read Current Scope", href: "#scope", strong: false }
+      ],
+      legendRows: [
+        ["Entry Authority", "index.js"],
+        ["Geometry Rule", "Euclidean Only"],
+        ["Primary Surface", "Canvas First"],
+        ["Center Object", "Sun + Orbits + Planets"],
+        ["Field Density", "Sparse, Depth-First"],
+        ["Failure Surface", "Inline Boot Capture"]
+      ],
+      scopeRows: [
+        ["Host Layer", "Universe Field"],
+        ["Visual Mode", "Clean Euclidean Pass"],
+        ["Priority", "Structure Before Effects"],
+        ["Next Stretch", "System Multiplication"]
+      ],
+      inspectionText:
+        "Boot integrity stays primary. Euclidean composition replaces symbolic placeholder geometry. Secondary richness must degrade before orbit clarity, core visibility, or spatial legibility.",
+      runtimeSummary: {
+        state: APP.state,
+        stars: APP.stars.length,
+        orbits: APP.orbitBands.length,
+        planets: APP.planets.length,
+        geometry: "EUCLIDEAN_ONLY"
+      }
+    };
+  }
+
+  function renderHomeUi() {
+    return safeRun("renderHomeUi", function () {
+      var state;
+      var legendRowsHtml;
+      var scopeRowsHtml;
+      var chipsHtml;
+      var actionsHtml;
+      var statusHtml;
+
+      if (!APP.uiRoot) {
+        throw new Error("#home-ui unavailable");
+      }
+
+      state = buildPresentationState();
+
+      if (APP.bannerNode) {
+        APP.bannerNode.textContent = state.bannerText;
+      }
+
+      legendRowsHtml = state.legendRows
+        .map(function (row) {
+          return (
+            '<div class="legend-row"><span>' +
+            escapeHtml(row[0]) +
+            '</span><strong>' +
+            escapeHtml(row[1]) +
+            "</strong></div>"
+          );
+        })
+        .join("");
+
+      scopeRowsHtml = state.scopeRows
+        .map(function (row) {
+          return (
+            '<div class="scale-row"><span>' +
+            escapeHtml(row[0]) +
+            '</span><strong>' +
+            escapeHtml(row[1]) +
+            "</strong></div>"
+          );
+        })
+        .join("");
+
+      chipsHtml = state.chips
+        .map(function (chip) {
+          return (
+            '<div class="chip' +
+            (chip.strong ? " chip--strong" : "") +
+            '">' +
+            escapeHtml(chip.text) +
+            "</div>"
+          );
+        })
+        .join("");
+
+      actionsHtml = state.actions
+        .map(function (action) {
+          return (
+            '<a class="action' +
+            (action.strong ? " action--strong" : "") +
+            '" href="' +
+            escapeHtml(action.href) +
+            '">' +
+            escapeHtml(action.text) +
+            "</a>"
+          );
+        })
+        .join("");
+
+      statusHtml =
+        "<strong>Inspection Read:</strong> " +
+        escapeHtml(state.inspectionText) +
+        '<span class="inline-divider">|</span>' +
+        "<strong>State:</strong> " +
+        escapeHtml(state.runtimeSummary.state) +
+        '<span class="inline-divider">|</span>' +
+        "<strong>Stars:</strong> " +
+        escapeHtml(state.runtimeSummary.stars) +
+        '<span class="inline-divider">|</span>' +
+        "<strong>Orbits:</strong> " +
+        escapeHtml(state.runtimeSummary.orbits) +
+        '<span class="inline-divider">|</span>' +
+        "<strong>Planets:</strong> " +
+        escapeHtml(state.runtimeSummary.planets);
+
+      APP.uiRoot.innerHTML =
+        '<div class="panel title-block" id="title-block">' +
+          "<h1>" + escapeHtml(state.title) + "</h1>" +
+          "<p>" + escapeHtml(state.subtitle) + "</p>" +
+          '<div class="chip-row">' + chipsHtml + "</div>" +
+          '<div class="action-row">' + actionsHtml + "</div>" +
+        "</div>" +
+        '<div class="panel legend" id="legend">' +
+          "<h2>Runtime Read</h2>" +
+          legendRowsHtml +
+        "</div>" +
+        '<div class="panel scale-panel" id="scope">' +
+          "<h2>Current Scope</h2>" +
+          scopeRowsHtml +
+        "</div>" +
+        '<div class="panel status" id="status-panel">' +
+          statusHtml +
+        "</div>";
+
+      return true;
+    }, false);
   }
 
   function renderFrame(ts) {
@@ -474,7 +675,6 @@
       drawOrbits(APP.ctx);
       drawSunGlow(APP.ctx);
       drawPlanets(APP.ctx);
-      drawCaption(APP.ctx);
       updateHud();
     }, null);
 
@@ -496,6 +696,21 @@
         " | ORBITS=" + APP.orbitBands.length +
         " | PLANETS=" + APP.planets.length +
         " | GEOMETRY=EUCLIDEAN_ONLY";
+
+      renderHomeUi();
+    }, null);
+  }
+
+  function showBootFailure(message) {
+    return safeRun("showBootFailure", function () {
+      if (APP.failNode) {
+        APP.failNode.textContent = "BOOT FAILED\n" + String(message || "Unknown error");
+        APP.failNode.classList.add("is-visible");
+      }
+
+      if (APP.bannerNode) {
+        APP.bannerNode.textContent = "Boot Failed";
+      }
     }, null);
   }
 
@@ -536,6 +751,7 @@
         pushError("window.error", message);
         APP.state = "DEGRADED";
         updateHud();
+        showBootFailure(message);
         log("error", "Unhandled window error", { message: message });
       });
 
@@ -553,6 +769,7 @@
         pushError("unhandledrejection", reason);
         APP.state = "DEGRADED";
         updateHud();
+        showBootFailure(reason);
         log("error", "Unhandled promise rejection", { reason: reason });
       });
     }, null);
@@ -577,12 +794,19 @@
             height: APP.height,
             dpr: APP.dpr
           };
+        },
+        getPresentationState: function () {
+          return buildPresentationState();
         }
       };
     }, null);
   }
 
   function boot() {
+    APP.reducedMotion =
+      !!window.matchMedia &&
+      !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     APP.root = ensureRoot();
     if (!APP.root) {
       throw new Error("Unable to establish app root");
@@ -593,10 +817,18 @@
       throw new Error("Unable to establish canvas");
     }
 
+    APP.uiRoot = ensureUiRoot(APP.root);
+    if (!APP.uiRoot) {
+      throw new Error("Unable to establish home-ui mount");
+    }
+
     APP.hud = ensureHud(APP.root);
     if (!APP.hud) {
       throw new Error("Unable to establish HUD");
     }
+
+    APP.failNode = ensureFailNode(APP.root);
+    APP.bannerNode = ensureBannerNode(APP.root);
 
     APP.ctx = get2D(APP.canvas);
     if (!APP.ctx) {

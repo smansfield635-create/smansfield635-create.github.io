@@ -1,63 +1,91 @@
-(() => {
+(function () {
   "use strict";
 
-  const BOOT = {
-    NAME: "INDEX_BOOT_SAFE_BASELINE_V1",
-    VERSION: "1.0.0",
+  var BOOT = {
+    NAME: "INDEX_BOOT_SAFE_BASELINE_V2",
+    VERSION: "1.0.1",
     START_TS: Date.now(),
     state: "BOOTING",
     errors: [],
-    warnings: [],
+    warnings: []
   };
 
   function nowIso() {
     try {
       return new Date().toISOString();
-    } catch (_) {
+    } catch (e) {
       return "";
     }
   }
 
-  function log(level, message, extra) {
-    const payload = {
-      t: nowIso(),
-      boot: BOOT.NAME,
-      level,
-      message,
-      ...(extra && typeof extra === "object" ? { extra } : {}),
-    };
-    try {
-      if (level === "error") console.error(payload);
-      else if (level === "warn") console.warn(payload);
-      else console.log(payload);
-    } catch (_) {}
+  function pushError(label, message) {
+    BOOT.errors.push({
+      label: String(label || "unknown"),
+      message: String(message || "unknown")
+    });
   }
 
-  function safeRun(label, fn, fallback = null) {
+  function pushWarning(message) {
+    BOOT.warnings.push(String(message || "unknown"));
+  }
+
+  function log(level, message, extra) {
+    var payload = {
+      t: nowIso(),
+      boot: BOOT.NAME,
+      level: level,
+      message: message
+    };
+
+    if (extra && typeof extra === "object") {
+      payload.extra = extra;
+    }
+
+    try {
+      if (level === "error") {
+        console.error(payload);
+      } else if (level === "warn") {
+        console.warn(payload);
+      } else {
+        console.log(payload);
+      }
+    } catch (e) {}
+  }
+
+  function safeRun(label, fn, fallback) {
     try {
       return fn();
     } catch (error) {
-      BOOT.errors.push({ label, message: String(error && error.message ? error.message : error) });
-      log("error", `${label} failed`, { error: String(error && error.stack ? error.stack : error) });
+      pushError(label, error && error.message ? error.message : String(error));
+      log("error", label + " failed", {
+        error: error && error.stack ? String(error.stack) : String(error)
+      });
       return fallback;
     }
   }
 
   function ensureBody() {
-    return safeRun("ensureBody", () => {
-      if (document.body) return document.body;
-      const body = document.createElement("body");
+    return safeRun("ensureBody", function () {
+      if (document.body) {
+        return document.body;
+      }
+
+      var body = document.createElement("body");
       document.documentElement.appendChild(body);
       return body;
-    });
+    }, null);
   }
 
   function ensureRoot() {
-    return safeRun("ensureRoot", () => {
-      const body = ensureBody();
-      if (!body) throw new Error("document.body unavailable");
+    return safeRun("ensureRoot", function () {
+      var body = ensureBody();
+      var root = null;
 
-      let root =
+      if (!body) {
+        throw new Error("document.body unavailable");
+      }
+
+      root =
         document.getElementById("app") ||
         document.getElementById("root") ||
         document.querySelector("[data-app-root]");
@@ -67,16 +95,22 @@
         root.id = "app";
         root.setAttribute("data-app-root", "true");
         body.appendChild(root);
-        BOOT.warnings.push("No app root found; created #app.");
+        pushWarning("No app root found; created #app.");
       }
 
       return root;
-    });
+    }, null);
   }
 
   function ensureCanvas(root) {
-    return safeRun("ensureCanvas", () => {
-      let canvas =
+    return safeRun("ensureCanvas", function () {
+      var canvas = null;
+
+      if (!root) {
+        throw new Error("root unavailable");
+      }
+
+      canvas =
         document.getElementById("scene") ||
         document.getElementById("canvas") ||
         root.querySelector("canvas");
@@ -89,19 +123,26 @@
         canvas.style.width = "100vw";
         canvas.style.height = "100vh";
         canvas.style.position = "fixed";
-        canvas.style.inset = "0";
+        canvas.style.top = "0";
+        canvas.style.right = "0";
+        canvas.style.bottom = "0";
+        canvas.style.left = "0";
         canvas.style.zIndex = "0";
         root.appendChild(canvas);
-        BOOT.warnings.push("No canvas found; created #scene.");
+        pushWarning("No canvas found; created #scene.");
       }
 
       return canvas;
-    });
+    }, null);
   }
 
   function ensureHud(root) {
-    return safeRun("ensureHud", () => {
-      let hud = document.getElementById("boot-status");
+    return safeRun("ensureHud", function () {
+      var hud = document.getElementById("boot-status");
+
+      if (!root) {
+        throw new Error("root unavailable");
+      }
 
       if (!hud) {
         hud = document.createElement("div");
@@ -128,52 +169,74 @@
       }
 
       return hud;
-    });
+    }, null);
   }
 
   function resizeCanvas(canvas) {
-    return safeRun("resizeCanvas", () => {
-      const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
-      const width = Math.max(1, Math.floor(window.innerWidth * dpr));
-      const height = Math.max(1, Math.floor(window.innerHeight * dpr));
+    return safeRun("resizeCanvas", function () {
+      var dpr = window.devicePixelRatio || 1;
+      var width;
+      var height;
 
-      if (canvas.width !== width) canvas.width = width;
-      if (canvas.height !== height) canvas.height = height;
+      if (dpr < 1) dpr = 1;
+      if (dpr > 2) dpr = 2;
 
-      canvas.dataset.cssWidth = String(window.innerWidth);
-      canvas.dataset.cssHeight = String(window.innerHeight);
-      canvas.dataset.dpr = String(dpr);
+      width = Math.max(1, Math.floor(window.innerWidth * dpr));
+      height = Math.max(1, Math.floor(window.innerHeight * dpr));
 
-      return { width, height, dpr };
-    });
+      if (canvas.width !== width) {
+        canvas.width = width;
+      }
+
+      if (canvas.height !== height) {
+        canvas.height = height;
+      }
+
+      canvas.setAttribute("data-css-width", String(window.innerWidth));
+      canvas.setAttribute("data-css-height", String(window.innerHeight));
+      canvas.setAttribute("data-dpr", String(dpr));
+
+      return {
+        width: width,
+        height: height,
+        dpr: dpr
+      };
+    }, null);
   }
 
   function get2D(canvas) {
-    return safeRun("get2D", () => {
-      const ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
-      if (!ctx) throw new Error("2D context unavailable");
+    return safeRun("get2D", function () {
+      var ctx = canvas.getContext("2d");
+      if (!ctx) {
+        throw new Error("2D context unavailable");
+      }
       return ctx;
-    });
+    }, null);
   }
 
   function renderBootFrame(ctx, canvas) {
-    return safeRun("renderBootFrame", () => {
-      const w = canvas.width;
-      const h = canvas.height;
+    return safeRun("renderBootFrame", function () {
+      var w = canvas.width;
+      var h = canvas.height;
+      var bg;
+      var cx;
+      var cy;
+      var r;
+      var t;
 
       ctx.clearRect(0, 0, w, h);
 
-      const bg = ctx.createLinearGradient(0, 0, 0, h);
+      bg = ctx.createLinearGradient(0, 0, 0, h);
       bg.addColorStop(0, "#01040c");
       bg.addColorStop(0.5, "#04101f");
       bg.addColorStop(1, "#09172d");
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, w, h);
 
-      const cx = w * 0.5;
-      const cy = h * 0.5;
-      const r = Math.min(w, h) * 0.18;
-      const t = (Date.now() - BOOT.START_TS) / 1000;
+      cx = w * 0.5;
+      cy = h * 0.5;
+      r = Math.min(w, h) * 0.18;
+      t = (Date.now() - BOOT.START_TS) / 1000;
 
       ctx.save();
       ctx.translate(cx, cy);
@@ -205,101 +268,149 @@
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillStyle = "#eef3ff";
-      ctx.font = `${Math.max(18, Math.floor(Math.min(w, h) * 0.028))}px system-ui, sans-serif`;
+      ctx.font = Math.max(18, Math.floor(Math.min(w, h) * 0.028)) + "px system-ui, sans-serif";
       ctx.fillText("Boot Restored", cx, cy + r + 40);
 
       ctx.fillStyle = "rgba(169,184,220,0.95)";
-      ctx.font = `${Math.max(11, Math.floor(Math.min(w, h) * 0.014))}px ui-monospace, monospace`;
+      ctx.font = Math.max(11, Math.floor(Math.min(w, h) * 0.014)) + "px ui-monospace, monospace";
       ctx.fillText("index.js baseline active", cx, cy + r + 68);
       ctx.restore();
-    });
+    }, null);
   }
 
   function updateHud(hud) {
-    return safeRun("updateHud", () => {
-      const elapsed = Date.now() - BOOT.START_TS;
+    return safeRun("updateHud", function () {
+      var elapsed = Date.now() - BOOT.START_TS;
       hud.textContent =
-        `BOOT=${BOOT.state} | NAME=${BOOT.NAME} | VERSION=${BOOT.VERSION} | ` +
-        `ELAPSED_MS=${elapsed} | ERRORS=${BOOT.errors.length} | WARNINGS=${BOOT.warnings.length}`;
-    });
+        "BOOT=" + BOOT.state +
+        " | NAME=" + BOOT.NAME +
+        " | VERSION=" + BOOT.VERSION +
+        " | ELAPSED_MS=" + elapsed +
+        " | ERRORS=" + BOOT.errors.length +
+        " | WARNINGS=" + BOOT.warnings.length;
+    }, null);
   }
 
   function installGlobalErrorHooks(hud) {
-    safeRun("installGlobalErrorHooks", () => {
-      window.addEventListener("error", (event) => {
-        const message = event?.error?.message || event?.message || "Unknown window error";
-        BOOT.errors.push({ label: "window.error", message: String(message) });
+    safeRun("installGlobalErrorHooks", function () {
+      window.addEventListener("error", function (event) {
+        var message = "Unknown window error";
+
+        if (event) {
+          if (event.error && event.error.message) {
+            message = event.error.message;
+          } else if (event.message) {
+            message = event.message;
+          }
+        }
+
+        pushError("window.error", message);
         BOOT.state = "DEGRADED";
         updateHud(hud);
-        log("error", "Unhandled window error", { message });
+        log("error", "Unhandled window error", { message: message });
       });
 
-      window.addEventListener("unhandledrejection", (event) => {
-        const reason = event?.reason?.message || event?.reason || "Unknown promise rejection";
-        BOOT.errors.push({ label: "unhandledrejection", message: String(reason) });
+      window.addEventListener("unhandledrejection", function (event) {
+        var reason = "Unknown promise rejection";
+
+        if (event && typeof event.reason !== "undefined") {
+          if (event.reason && event.reason.message) {
+            reason = event.reason.message;
+          } else {
+            reason = String(event.reason);
+          }
+        }
+
+        pushError("unhandledrejection", reason);
         BOOT.state = "DEGRADED";
         updateHud(hud);
-        log("error", "Unhandled promise rejection", { reason: String(reason) });
+        log("error", "Unhandled promise rejection", { reason: reason });
       });
-    });
+    }, null);
   }
 
   function installResize(canvas, ctx, hud) {
-    safeRun("installResize", () => {
-      let raf = 0;
+    safeRun("installResize", function () {
+      var raf = 0;
 
-      const onResize = () => {
-        if (raf) cancelAnimationFrame(raf);
-        raf = requestAnimationFrame(() => {
+      function onResize() {
+        if (raf) {
+          cancelAnimationFrame(raf);
+        }
+
+        raf = requestAnimationFrame(function () {
           resizeCanvas(canvas);
           renderBootFrame(ctx, canvas);
           updateHud(hud);
         });
-      };
+      }
 
-      window.addEventListener("resize", onResize, { passive: true });
-      window.addEventListener("orientationchange", onResize, { passive: true });
-    });
+      window.addEventListener("resize", onResize, false);
+      window.addEventListener("orientationchange", onResize, false);
+    }, null);
+  }
+
+  function exposeBoot(root, canvas, hud) {
+    safeRun("exposeBoot", function () {
+      window.__INDEX_BOOT__ = {
+        NAME: BOOT.NAME,
+        VERSION: BOOT.VERSION,
+        START_TS: BOOT.START_TS,
+        state: BOOT.state,
+        errors: BOOT.errors.slice(),
+        warnings: BOOT.warnings.slice(),
+        canvasId: canvas ? canvas.id : null,
+        rootId: root ? (root.id || null) : null,
+        hudId: hud ? hud.id : null
+      };
+    }, null);
   }
 
   function boot() {
-    const root = ensureRoot();
-    if (!root) throw new Error("Unable to establish app root");
+    var root = ensureRoot();
+    var canvas;
+    var hud;
+    var ctx;
 
-    const canvas = ensureCanvas(root);
-    if (!canvas) throw new Error("Unable to establish canvas");
+    if (!root) {
+      throw new Error("Unable to establish app root");
+    }
 
-    const hud = ensureHud(root);
-    if (!hud) throw new Error("Unable to establish HUD");
+    canvas = ensureCanvas(root);
+    if (!canvas) {
+      throw new Error("Unable to establish canvas");
+    }
+
+    hud = ensureHud(root);
+    if (!hud) {
+      throw new Error("Unable to establish HUD");
+    }
 
     installGlobalErrorHooks(hud);
 
     resizeCanvas(canvas);
-    const ctx = get2D(canvas);
-    if (!ctx) throw new Error("Unable to acquire 2D context");
+
+    ctx = get2D(canvas);
+    if (!ctx) {
+      throw new Error("Unable to acquire 2D context");
+    }
 
     renderBootFrame(ctx, canvas);
     installResize(canvas, ctx, hud);
 
     BOOT.state = BOOT.errors.length ? "DEGRADED" : "READY";
     updateHud(hud);
-
-    window.__INDEX_BOOT__ = {
-      ...BOOT,
-      canvasId: canvas.id,
-      rootId: root.id || null,
-      hudId: hud.id,
-    };
+    exposeBoot(root, canvas, hud);
 
     log("info", "Boot completed", window.__INDEX_BOOT__);
   }
 
   function start() {
-    safeRun("start", boot);
+    safeRun("start", boot, null);
   }
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
+    document.addEventListener("DOMContentLoaded", start, false);
   } else {
     start();
   }

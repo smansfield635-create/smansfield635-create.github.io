@@ -4,9 +4,9 @@
      LOCKS:
        - host/layout only
        - runtime authority lives in /products/index.js
+       - five separate euclidean product objects only
        - no inline onclick
        - no modal overlays
-       - five separate euclidean product objects only
 -->
 
 <html lang="en">
@@ -25,12 +25,8 @@
       --bg2:#0b2f58;
       --ink:rgba(255,255,255,.96);
       --mut:rgba(255,255,255,.80);
-      --line:rgba(255,255,255,.14);
       --gold:rgba(244,226,176,.96);
       --goldSoft:rgba(244,226,176,.22);
-      --glassA:rgba(255,214,184,.16);
-      --glassB:rgba(255,120,120,.18);
-      --glassC:rgba(248,225,178,.22);
       --panel:rgba(5,11,24,.46);
       --shadowA:0 30px 90px rgba(0,0,0,.50);
       --shadowB:0 18px 54px rgba(0,0,0,.42);
@@ -240,8 +236,6 @@
       position:absolute;
       inset:0;
       z-index:12;
-      perspective:1800px;
-      perspective-origin:50% 50%;
     }
 
     .chamber{
@@ -252,7 +246,6 @@
       height:min(620px,58vh);
       transform:translate(-50%,-50%);
       z-index:4;
-      transform-style:preserve-3d;
       pointer-events:none;
     }
 
@@ -268,7 +261,6 @@
       pointer-events:auto;
       -webkit-tap-highlight-color:transparent;
       touch-action:manipulation;
-      transform-style:preserve-3d;
     }
 
     .product-shadow{
@@ -282,7 +274,6 @@
       filter:blur(10px);
       opacity:.85;
       pointer-events:none;
-      transform:translateZ(-42px);
     }
 
     .object-wrap{
@@ -293,7 +284,6 @@
       height:164px;
       margin-left:-66px;
       margin-top:-82px;
-      transform-style:preserve-3d;
       pointer-events:none;
     }
 
@@ -418,13 +408,12 @@
       color:rgba(255,246,225,.95);
       text-shadow:0 4px 10px rgba(0,0,0,.36);
       pointer-events:none;
-      transform:translateZ(20px);
     }
 
-    .cardinal.n{left:50%;top:10px;transform:translateX(-50%) translateZ(20px)}
-    .cardinal.e{right:10px;top:50%;transform:translateY(-50%) translateZ(20px)}
-    .cardinal.s{left:50%;bottom:10px;transform:translateX(-50%) translateZ(20px)}
-    .cardinal.w{left:10px;top:50%;transform:translateY(-50%) translateZ(20px)}
+    .cardinal.n{left:50%;top:10px;transform:translateX(-50%)}
+    .cardinal.e{right:10px;top:50%;transform:translateY(-50%)}
+    .cardinal.s{left:50%;bottom:10px;transform:translateX(-50%)}
+    .cardinal.w{left:10px;top:50%;transform:translateY(-50%)}
 
     .spark{
       position:absolute;
@@ -433,7 +422,6 @@
       background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.98), rgba(244,226,176,.88) 42%, transparent 72%);
       pointer-events:none;
       filter:drop-shadow(0 0 6px rgba(255,246,225,.54));
-      transform:translateZ(24px);
     }
 
     .spark.top{left:50%;top:-2px;margin-left:-5px}
@@ -524,57 +512,20 @@
 
     @media (max-width:980px){
       .hero{top:12%}
-      .chamber{
-        width:min(96vw,760px);
-        height:min(560px,48vh);
-      }
-      .product-node{
-        width:154px;
-        height:194px;
-      }
-      .object-wrap{
-        width:118px;
-        height:146px;
-        margin-left:-59px;
-        margin-top:-73px;
-      }
-      .label{
-        width:148px;
-      }
+      .chamber{width:min(96vw,760px);height:min(560px,48vh)}
+      .product-node{width:154px;height:194px}
+      .object-wrap{width:118px;height:146px;margin-left:-59px;margin-top:-73px}
+      .label{width:148px}
     }
 
     @media (max-width:720px){
-      .top-right{
-        top:auto;
-        bottom:calc(76px + var(--safe-bottom));
-        right:16px;
-      }
-      .hero{
-        top:14%;
-        width:min(94vw,640px);
-      }
-      .hero p{
-        font-size:15px;
-        max-width:520px;
-      }
-      .chamber{
-        top:59%;
-        width:min(98vw,540px);
-        height:420px;
-      }
-      .product-node{
-        width:130px;
-        height:170px;
-      }
-      .object-wrap{
-        width:100px;
-        height:128px;
-        margin-left:-50px;
-        margin-top:-64px;
-      }
-      .label{
-        width:130px;
-      }
+      .top-right{top:auto;bottom:calc(76px + var(--safe-bottom));right:16px}
+      .hero{top:14%;width:min(94vw,640px)}
+      .hero p{font-size:15px;max-width:520px}
+      .chamber{top:59%;width:min(98vw,540px);height:420px}
+      .product-node{width:130px;height:170px}
+      .object-wrap{width:100px;height:128px;margin-left:-50px;margin-top:-64px}
+      .label{width:130px}
       .product-title{font-size:13px}
       .product-sub{font-size:9px}
       .cardinal{font-size:9px}
@@ -584,31 +535,13 @@
 
     @media (max-width:520px){
       .top-nav{gap:8px}
-      .nav-btn,.top-pill{
-        min-height:40px;
-        padding:9px 12px;
-        font-size:12px;
-      }
+      .nav-btn,.top-pill{min-height:40px;padding:9px 12px;font-size:12px}
       .hero{top:15%}
       .hero h1{font-size:40px}
-      .chamber{
-        top:58%;
-        width:min(100vw,390px);
-        height:344px;
-      }
-      .product-node{
-        width:116px;
-        height:154px;
-      }
-      .object-wrap{
-        width:88px;
-        height:114px;
-        margin-left:-44px;
-        margin-top:-57px;
-      }
-      .label{
-        width:116px;
-      }
+      .chamber{top:58%;width:min(100vw,390px);height:344px}
+      .product-node{width:116px;height:154px}
+      .object-wrap{width:88px;height:114px;margin-left:-44px;margin-top:-57px}
+      .label{width:116px}
       .product-title{font-size:11px}
       .product-sub{margin-top:6px;font-size:8px}
       .cardinal{font-size:8px}
@@ -648,150 +581,65 @@
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div>
-              <div class="glass-edge-left"></div>
-              <div class="glass-edge-right"></div>
-              <div class="glass-front"></div>
-              <div class="facet v1"></div>
-              <div class="facet v2"></div>
-              <div class="facet v3"></div>
-              <div class="facet h1"></div>
-              <div class="facet h2"></div>
-              <div class="core-dot"></div>
-              <div class="cardinal n">N</div>
-              <div class="cardinal e">E</div>
-              <div class="cardinal s">S</div>
-              <div class="cardinal w">W</div>
-              <div class="spark top"></div>
-              <div class="spark right"></div>
-              <div class="spark bottom"></div>
-              <div class="spark left"></div>
+              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
+              <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
+              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
             </div>
           </div>
-          <div class="label">
-            <div class="product-title" id="titleNutrition">BASELINE NUTRITION</div>
-            <div class="product-sub" id="subNutrition">SYSTEMS</div>
-          </div>
+          <div class="label"><div class="product-title" id="titleNutrition">BASELINE NUTRITION</div><div class="product-sub" id="subNutrition">SYSTEMS</div></div>
         </button>
 
         <button class="product-node" id="nodeAI" data-index="1" data-route="/products/on-your-side-ai/" aria-label="On Your Side AI" type="button">
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div>
-              <div class="glass-edge-left"></div>
-              <div class="glass-edge-right"></div>
-              <div class="glass-front"></div>
-              <div class="facet v1"></div>
-              <div class="facet v2"></div>
-              <div class="facet v3"></div>
-              <div class="facet h1"></div>
-              <div class="facet h2"></div>
-              <div class="core-dot"></div>
-              <div class="cardinal n">N</div>
-              <div class="cardinal e">E</div>
-              <div class="cardinal s">S</div>
-              <div class="cardinal w">W</div>
-              <div class="spark top"></div>
-              <div class="spark right"></div>
-              <div class="spark bottom"></div>
-              <div class="spark left"></div>
+              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
+              <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
+              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
             </div>
           </div>
-          <div class="label">
-            <div class="product-title" id="titleAI">ON YOUR SIDE AI</div>
-            <div class="product-sub" id="subAI">INTELLIGENCE</div>
-          </div>
+          <div class="label"><div class="product-title" id="titleAI">ON YOUR SIDE AI</div><div class="product-sub" id="subAI">INTELLIGENCE</div></div>
         </button>
 
         <button class="product-node" id="nodeLanguage" data-index="2" data-route="/products/education/" aria-label="Education and Language Systems" type="button">
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div>
-              <div class="glass-edge-left"></div>
-              <div class="glass-edge-right"></div>
-              <div class="glass-front"></div>
-              <div class="facet v1"></div>
-              <div class="facet v2"></div>
-              <div class="facet v3"></div>
-              <div class="facet h1"></div>
-              <div class="facet h2"></div>
-              <div class="core-dot"></div>
-              <div class="cardinal n">N</div>
-              <div class="cardinal e">E</div>
-              <div class="cardinal s">S</div>
-              <div class="cardinal w">W</div>
-              <div class="spark top"></div>
-              <div class="spark right"></div>
-              <div class="spark bottom"></div>
-              <div class="spark left"></div>
+              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
+              <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
+              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
             </div>
           </div>
-          <div class="label">
-            <div class="product-title" id="titleLanguage">EDUCATION &amp; LANGUAGE</div>
-            <div class="product-sub" id="subLanguage">SYSTEMS</div>
-          </div>
+          <div class="label"><div class="product-title" id="titleLanguage">EDUCATION &amp; LANGUAGE</div><div class="product-sub" id="subLanguage">SYSTEMS</div></div>
         </button>
 
         <button class="product-node" id="nodeGame" data-index="3" data-route="/products/five-flags/" aria-label="Five Flags What's My Theme" type="button">
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div>
-              <div class="glass-edge-left"></div>
-              <div class="glass-edge-right"></div>
-              <div class="glass-front"></div>
-              <div class="facet v1"></div>
-              <div class="facet v2"></div>
-              <div class="facet v3"></div>
-              <div class="facet h1"></div>
-              <div class="facet h2"></div>
-              <div class="core-dot"></div>
-              <div class="cardinal n">N</div>
-              <div class="cardinal e">E</div>
-              <div class="cardinal s">S</div>
-              <div class="cardinal w">W</div>
-              <div class="spark top"></div>
-              <div class="spark right"></div>
-              <div class="spark bottom"></div>
-              <div class="spark left"></div>
+              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
+              <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
+              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
             </div>
           </div>
-          <div class="label">
-            <div class="product-title" id="titleGame">FIVE FLAGS</div>
-            <div class="product-sub" id="subGame">WHAT'S MY THEME?</div>
-          </div>
+          <div class="label"><div class="product-title" id="titleGame">FIVE FLAGS</div><div class="product-sub" id="subGame">WHAT'S MY THEME?</div></div>
         </button>
 
         <button class="product-node" id="nodeCoin" data-index="4" data-route="/products/archcoin/" aria-label="ARCHCOIN" type="button">
           <div class="product-shadow"></div>
           <div class="object-wrap">
             <div class="glass-compass">
-              <div class="glass-back"></div>
-              <div class="glass-edge-left"></div>
-              <div class="glass-edge-right"></div>
-              <div class="glass-front"></div>
-              <div class="facet v1"></div>
-              <div class="facet v2"></div>
-              <div class="facet v3"></div>
-              <div class="facet h1"></div>
-              <div class="facet h2"></div>
-              <div class="core-dot"></div>
-              <div class="cardinal n">N</div>
-              <div class="cardinal e">E</div>
-              <div class="cardinal s">S</div>
-              <div class="cardinal w">W</div>
-              <div class="spark top"></div>
-              <div class="spark right"></div>
-              <div class="spark bottom"></div>
-              <div class="spark left"></div>
+              <div class="glass-back"></div><div class="glass-edge-left"></div><div class="glass-edge-right"></div><div class="glass-front"></div>
+              <div class="facet v1"></div><div class="facet v2"></div><div class="facet v3"></div><div class="facet h1"></div><div class="facet h2"></div>
+              <div class="core-dot"></div><div class="cardinal n">N</div><div class="cardinal e">E</div><div class="cardinal s">S</div><div class="cardinal w">W</div>
+              <div class="spark top"></div><div class="spark right"></div><div class="spark bottom"></div><div class="spark left"></div>
             </div>
           </div>
-          <div class="label">
-            <div class="product-title" id="titleCoin">ARCHCOIN</div>
-            <div class="product-sub" id="subCoin">PRODUCT LINE</div>
-          </div>
+          <div class="label"><div class="product-title" id="titleCoin">ARCHCOIN</div><div class="product-sub" id="subCoin">PRODUCT LINE</div></div>
         </button>
 
       </div>
@@ -806,6 +654,6 @@
     </div>
   </div>
 
-  <script src="/products/index.js?v=3"></script>
+  <script src="/products/index.js?v=4"></script>
 </body>
 </html>

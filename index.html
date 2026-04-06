@@ -16,13 +16,28 @@
       --bg-0: #020611;
       --bg-1: #071427;
       --bg-2: #10233d;
+
       --fg: #eef3ff;
       --muted: #a9b8dc;
+      --soft: rgba(238, 243, 255, 0.74);
+
       --line: rgba(255, 255, 255, 0.12);
+      --line-strong: rgba(244, 226, 176, 0.22);
+
       --panel: rgba(5, 11, 24, 0.54);
       --panel-strong: rgba(5, 11, 24, 0.70);
+
+      --gold: rgba(244, 226, 176, 0.96);
+      --gold-soft: rgba(244, 226, 176, 0.14);
+
+      --crimson: rgba(120, 0, 22, 0.34);
+      --festival: rgba(255, 43, 43, 0.18);
+      --opalV: rgba(90, 40, 120, 0.16);
+      --blueField: rgba(18, 58, 140, 0.12);
+
       --shadow: rgba(0, 0, 0, 0.34);
       --hud-blur: 10px;
+
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-right: env(safe-area-inset-right, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
@@ -70,43 +85,7 @@
       touch-action: manipulation;
     }
 
-    .hud-toggle {
-      position: absolute;
-      top: calc(14px + var(--safe-top));
-      right: calc(14px + var(--safe-right));
-      z-index: 30;
-      appearance: none;
-      border: 1px solid rgba(255,255,255,0.14);
-      border-radius: 999px;
-      background: rgba(5, 11, 24, 0.54);
-      color: var(--fg);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.28);
-      padding: 10px 14px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .universe-note {
-      position: absolute;
-      left: calc(16px + var(--safe-left));
-      top: calc(16px + var(--safe-top));
-      z-index: 15;
-      pointer-events: none;
-      color: rgba(238,243,255,0.74);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
-      max-width: min(420px, calc(100vw - 120px));
-    }
-
-    .hud {
+    #home-ui {
       position: absolute;
       inset: 0;
       z-index: 20;
@@ -120,7 +99,7 @@
       transition: opacity 180ms ease, visibility 180ms ease;
     }
 
-    #hud-toggle:checked ~ .hud {
+    #hud-toggle:checked ~ #home-ui {
       opacity: 1;
       visibility: visible;
       pointer-events: auto;
@@ -130,17 +109,87 @@
       opacity: 0;
     }
 
+    .hud-toggle {
+      position: absolute;
+      top: calc(14px + var(--safe-top));
+      right: calc(14px + var(--safe-right));
+      z-index: 30;
+      appearance: none;
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,20,.62), rgba(4,6,10,.78));
+      color: var(--fg);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.28);
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      user-select: none;
+      overflow: hidden;
+    }
+
+    .hud-toggle::after,
+    .chip::after,
+    .action::after {
+      content: "";
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: -12px;
+      height: 28px;
+      background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
+      opacity: 0.52;
+      pointer-events: none;
+    }
+
+    .universe-note {
+      position: absolute;
+      left: calc(16px + var(--safe-left));
+      top: calc(16px + var(--safe-top));
+      z-index: 15;
+      pointer-events: none;
+      color: var(--soft);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.4);
+      max-width: min(420px, calc(100vw - 120px));
+      transition: opacity 180ms ease;
+    }
+
     .panel {
       border: 1px solid var(--line);
-      background: var(--panel);
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255,43,43,.10), transparent 58%),
+        radial-gradient(circle at 84% 24%, rgba(90,40,120,.14), transparent 66%),
+        radial-gradient(circle at 64% 24%, rgba(18,58,140,.10), transparent 68%),
+        radial-gradient(circle at 26% 22%, rgba(201,162,74,.10), transparent 62%),
+        linear-gradient(180deg, var(--panel) 0%, var(--panel-strong) 100%);
       backdrop-filter: blur(var(--hud-blur));
       -webkit-backdrop-filter: blur(var(--hud-blur));
       border-radius: 18px;
       box-shadow: 0 14px 42px var(--shadow);
+      position: absolute;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
+      opacity: 0.55;
+      pointer-events: none;
     }
 
     .title-block {
-      position: absolute;
       top: 18px;
       left: 18px;
       width: min(640px, calc(100vw - 100px));
@@ -164,7 +213,6 @@
     }
 
     .legend {
-      position: absolute;
       top: 18px;
       right: 18px;
       width: min(360px, calc(100vw - 36px));
@@ -172,16 +220,18 @@
     }
 
     .scale-panel {
-      position: absolute;
       right: 18px;
       bottom: 18px;
       width: min(390px, calc(100vw - 36px));
       padding: 14px 16px;
-      background: var(--panel-strong);
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255,43,43,.10), transparent 58%),
+        radial-gradient(circle at 84% 24%, rgba(90,40,120,.14), transparent 66%),
+        radial-gradient(circle at 64% 24%, rgba(18,58,140,.10), transparent 68%),
+        linear-gradient(180deg, rgba(5,11,24,.68) 0%, rgba(5,11,24,.78) 100%);
     }
 
     .status {
-      position: absolute;
       left: 18px;
       bottom: 18px;
       width: min(700px, calc(100vw - 36px));
@@ -189,7 +239,11 @@
       font-size: 12px;
       line-height: 1.5;
       color: var(--muted);
-      background: rgba(5, 11, 24, 0.28);
+      background:
+        radial-gradient(circle at 14% 18%, rgba(255,43,43,.08), transparent 58%),
+        radial-gradient(circle at 84% 24%, rgba(90,40,120,.10), transparent 66%),
+        radial-gradient(circle at 64% 24%, rgba(18,58,140,.08), transparent 68%),
+        linear-gradient(180deg, rgba(5,11,24,.28) 0%, rgba(5,11,24,.38) 100%);
     }
 
     .legend h2,
@@ -199,6 +253,7 @@
       line-height: 1.1;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      color: var(--gold);
     }
 
     .legend-row,
@@ -243,7 +298,9 @@
       max-width: calc(100vw - 120px);
       padding: 8px 12px;
       border-radius: 999px;
-      background: rgba(5, 11, 24, 0.68);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,20,.68), rgba(4,6,10,.82));
       border: 1px solid rgba(255,255,255,0.12);
       color: rgba(235,242,255,0.92);
       font-size: 10px;
@@ -255,6 +312,11 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.24);
+    }
+
+    #boot-status {
+      display: none;
     }
 
     .boot-fail {
@@ -277,6 +339,63 @@
 
     .boot-fail.is-visible {
       display: block;
+    }
+
+    .chip-row,
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .chip,
+    .action {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
+        linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action {
+      min-height: 42px;
+      padding: 0 16px;
+      font-size: 12px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 140ms ease, opacity 140ms ease, border-color 140ms ease;
+    }
+
+    .action:hover {
+      transform: scale(1.02);
+    }
+
+    .action:active {
+      transform: scale(0.98);
+    }
+
+    .action--strong,
+    .chip--strong {
+      border-color: var(--line-strong);
+      color: #fff3cf;
+      box-shadow:
+        0 10px 30px rgba(0,0,0,0.22),
+        0 0 0 1px rgba(244,226,176,.08),
+        0 0 18px rgba(244,226,176,.10);
     }
 
     @media (max-width: 980px) {
@@ -364,7 +483,11 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .hud {
+      #home-ui {
+        transition: none;
+      }
+
+      .action {
         transition: none;
       }
     }
@@ -385,82 +508,9 @@
 
     <div id="boot-status" aria-live="polite"></div>
     <div id="boot-fail" class="boot-fail" aria-live="polite"></div>
-
-    <div class="hud">
-      <div class="panel title-block">
-        <h1>Diamond Gate Bridge — Euclidean Universe Entry</h1>
-        <p>
-          This host now renders only Euclidean forms. The runtime favors circles, ellipses,
-          straight lines, and standard-orientation rectangular inspection surfaces. Symbolic
-          diamonds and decorative fog masses have been removed from the scene contract.
-        </p>
-      </div>
-
-      <div class="panel legend">
-        <h2>Runtime Read</h2>
-        <div class="legend-row"><span>Entry Authority</span><strong>index.js</strong></div>
-        <div class="legend-row"><span>Geometry Rule</span><strong>Euclidean Only</strong></div>
-        <div class="legend-row"><span>Primary Surface</span><strong>Canvas First</strong></div>
-        <div class="legend-row"><span>Center Object</span><strong>Sun + Orbits + Planets</strong></div>
-        <div class="legend-row"><span>Field Density</span><strong>Sparse, Depth-First</strong></div>
-        <div class="legend-row"><span>Failure Surface</span><strong>Inline Boot Capture</strong></div>
-      </div>
-
-      <div class="panel scale-panel">
-        <h2>Current Scope</h2>
-        <div class="scale-row"><span>Host Layer</span><strong>Universe Field</strong></div>
-        <div class="scale-row"><span>Visual Mode</span><strong>Clean Euclidean Pass</strong></div>
-        <div class="scale-row"><span>Priority</span><strong>Structure Before Effects</strong></div>
-        <div class="scale-row"><span>Next Stretch</span><strong>System Multiplication</strong></div>
-      </div>
-
-      <div class="panel status">
-        <strong>Inspection Read:</strong> Boot integrity stays primary.
-        <span class="inline-divider">|</span>
-        Euclidean composition replaces symbolic placeholder geometry.
-        <span class="inline-divider">|</span>
-        Secondary richness must degrade before orbit clarity, core visibility, or spatial legibility.
-      </div>
-    </div>
+    <div id="home-ui" aria-live="polite"></div>
   </div>
 
-  <script>
-    (function () {
-      "use strict";
-
-      var failNode = document.getElementById("boot-fail");
-      var bannerNode = document.getElementById("boot-banner");
-
-      window.addEventListener("error", function (event) {
-        var message = "Unknown error";
-        if (event && event.message) {
-          message = event.message;
-        }
-        if (failNode) {
-          failNode.textContent = "BOOT FAILED\n" + String(message);
-          failNode.classList.add("is-visible");
-        }
-        if (bannerNode) {
-          bannerNode.textContent = "Boot Failed";
-        }
-      });
-
-      window.addEventListener("unhandledrejection", function (event) {
-        var reason = "Unhandled promise rejection";
-        if (event && typeof event.reason !== "undefined") {
-          reason = event.reason;
-        }
-        if (failNode) {
-          failNode.textContent = "BOOT FAILED\n" + String(reason);
-          failNode.classList.add("is-visible");
-        }
-        if (bannerNode) {
-          bannerNode.textContent = "Boot Failed";
-        }
-      });
-    })();
-  </script>
-
-  <script src="/index.js?v=13"></script>
+  <script src="/index.js?v=14"></script>
 </body>
 </html>

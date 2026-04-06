@@ -1,17 +1,19 @@
 // /assets/instruments.js
 // MODE: DIRECT DIAGNOSTIC AUTHORITY
-// CONTRACT: INSTRUMENT_CONTRACT_G4
-// STATUS: READ ONLY | PARSE SAFE | NON-DRIFT
+// CONTRACT: INSTRUMENT_CONTRACT_G5
+// STATUS: READ ONLY | PARSE SAFE | NON-DRIFT | PAGE-NEUTRAL
 
 const INSTRUMENT_META = Object.freeze({
   name: "instruments",
-  version: "G4",
-  contract: "INSTRUMENT_CONTRACT_G4",
+  version: "G5",
+  contract: "INSTRUMENT_CONTRACT_G5",
   role: "diagnostic_shaping_only",
   deterministic: true,
   sourceOfTruth: false,
   mutatesState: false,
-  platformOwned: true
+  mutatesDOM: false,
+  platformOwned: true,
+  pageNeutral: true
 });
 
 function deepFreeze(value) {
@@ -27,19 +29,22 @@ function normalizeObject(value) {
   return value && typeof value === "object" && !Array.isArray(value) ? value : {};
 }
 
-function normalizeString(value, fallback = "—") {
+function normalizeString(value, fallback) {
+  if (typeof fallback !== "string") fallback = "—";
   if (typeof value !== "string") return fallback;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : fallback;
 }
 
-function normalizeNumber(value, fallback = null) {
+function normalizeNumber(value, fallback) {
+  if (fallback === undefined) fallback = null;
   return Number.isFinite(value) ? value : fallback;
 }
 
-function stableRound(value, places = 3) {
+function stableRound(value, places) {
+  if (places === undefined) places = 3;
   if (!Number.isFinite(value)) return null;
-  const factor = 10 ** places;
+  const factor = Math.pow(10, places);
   return Math.round(value * factor) / factor;
 }
 
@@ -61,7 +66,8 @@ function escapeHtml(value) {
 }
 
 function normalizeBoundary(runtime) {
-  const classification = normalizeString(runtime?.boundary?.classification, "OPEN").toUpperCase();
+  const boundary = normalizeObject(runtime).boundary;
+  const classification = normalizeString(boundary.classification, "OPEN").toUpperCase();
   if (classification === "BLOCK") return "BLOCK";
   if (classification === "HOLD") return "HOLD";
   if (classification === "GATE") return "GATE";
@@ -70,29 +76,41 @@ function normalizeBoundary(runtime) {
 }
 
 function normalizeProjectionState(runtime) {
-  const projection = normalizeString(runtime?.projectionState, "flat").toLowerCase();
+  const projection = normalizeString(normalizeObject(runtime).projectionState, "flat").toLowerCase();
   if (projection === "tree") return "tree";
   if (projection === "globe") return "globe";
   return "flat";
 }
 
+function pickProjectionObject(render) {
+  const renderObj = normalizeObject(render);
+  const projection = normalizeObject(renderObj.projection);
+  const selectedProjection = normalizeObject(projection.selectedProjection);
+  if (selectedProjection.kind !== undefined) return selectedProjection;
+  return projection;
+}
+
 function normalizeProjectionKind(render) {
-  const selected =
-    normalizeObject(render?.projection?.selectedProjection).kind !== undefined
-      ? normalizeObject(render?.projection?.selectedProjection)
-      : normalizeObject(render?.projection);
+  const selected = pickProjectionObject(render);
   const kind = normalizeString(selected.kind, "flat").toLowerCase();
   if (kind === "tree") return "tree";
   if (kind === "globe") return "globe";
   return "flat";
 }
 
+function buildReceiptStamp(prefix, timestamp) {
+  const head = normalizeString(prefix, "ARC::INSTRUMENTS");
+  const tail = timestamp === null || timestamp === undefined ? "—" : String(timestamp);
+  return head + "::" + tail;
+}
+
 function classifyState(input) {
   const runtime = normalizeObject(input.runtime);
   const render = normalizeObject(input.render);
-  const receiptRaw = runtime?.receipt?.timestamp;
+
+  const receiptRaw = normalizeObject(runtime.receipt).timestamp;
   const receipt = receiptRaw === null || receiptRaw === undefined ? "—" : String(receiptRaw);
-  const traversal = normalizeString(runtime?.traversalStatus?.action, "idle").toUpperCase();
+  const traversal = normalizeString(normalizeObject(runtime.traversalStatus).action, "idle").toUpperCase();
   const runtimeProjection = normalizeProjectionState(runtime);
   const renderProjection = normalizeProjectionKind(render);
   const boundary = normalizeBoundary(runtime);
@@ -107,20 +125,20 @@ function classifyState(input) {
 function buildSummary(input) {
   const runtime = normalizeObject(input.runtime);
   const render = normalizeObject(input.render);
-  const classifiedState = input.classifiedState;
-  const node = normalizeString(runtime?.node?.label);
-  const region = normalizeString(runtime?.region?.label);
+  const classifiedState = normalizeString(input.classifiedState, "PENDING");
+  const node = normalizeString(normalizeObject(runtime.node).label);
+  const region = normalizeString(normalizeObject(runtime.region).label);
   const boundary = normalizeBoundary(runtime);
   const projection = normalizeProjectionState(runtime);
   const projectionKind = normalizeProjectionKind(render);
 
   return deepFreeze({
     state: classifiedState,
-    node,
-    region,
-    boundary,
-    projection,
-    projectionKind,
+    node: node,
+    region: region,
+    boundary: boundary,
+    projection: projection,
+    projectionKind: projectionKind,
     line: [
       "STATE=" + classifiedState,
       "NODE=" + node,
@@ -135,21 +153,19 @@ function buildSummary(input) {
 function buildDiagnostics(input) {
   const runtime = normalizeObject(input.runtime);
   const render = normalizeObject(input.render);
-  const colorOutput = normalizeObject(render?.visible?.colorOutput);
-  const emphasis = normalizeObject(render?.visible?.emphasis);
-  const selectedProjection =
-    normalizeObject(render?.projection?.selectedProjection).kind !== undefined
-      ? normalizeObject(render?.projection?.selectedProjection)
-      : normalizeObject(render?.projection);
+  const visible = normalizeObject(render.visible);
+  const colorOutput = normalizeObject(visible.colorOutput);
+  const emphasis = normalizeObject(visible.emphasis);
+  const selectedProjection = pickProjectionObject(render);
 
   return deepFreeze({
-    traversal: normalizeString(runtime?.traversalStatus?.action),
+    traversal: normalizeString(normalizeObject(runtime.traversalStatus).action),
     receipt:
-      runtime?.receipt?.timestamp === null || runtime?.receipt?.timestamp === undefined
+      normalizeObject(runtime.receipt).timestamp === null || normalizeObject(runtime.receipt).timestamp === undefined
         ? "—"
-        : String(runtime.receipt.timestamp),
-    terrain: normalizeString(runtime?.terrainClass),
-    biome: normalizeString(runtime?.biomeType),
+        : String(normalizeObject(runtime.receipt).timestamp),
+    terrain: normalizeString(runtime.terrainClass),
+    biome: normalizeString(runtime.biomeType),
     hue: stableRound(normalizeNumber(colorOutput.hue), 3),
     saturation: stableRound(normalizeNumber(colorOutput.saturation), 3),
     value: stableRound(normalizeNumber(colorOutput.value), 3),
@@ -170,33 +186,32 @@ function buildDiagnostics(input) {
 function buildMeta(input) {
   const runtime = normalizeObject(input.runtime);
   const render = normalizeObject(input.render);
-  const selectedProjection =
-    normalizeObject(render?.projection?.selectedProjection).kind !== undefined
-      ? normalizeObject(render?.projection?.selectedProjection)
-      : normalizeObject(render?.projection);
+  const visible = normalizeObject(render.visible);
+  const colorOutput = normalizeObject(visible.colorOutput);
+  const selectedProjection = pickProjectionObject(render);
 
   return deepFreeze({
     runtime: deepFreeze({
-      i: normalizeNumber(runtime?.index?.i),
-      j: normalizeNumber(runtime?.index?.j),
-      x: normalizeNumber(runtime?.denseIndex?.x),
-      y: normalizeNumber(runtime?.denseIndex?.y),
-      region: normalizeString(runtime?.region?.label),
-      node: normalizeString(runtime?.node?.label),
+      i: normalizeNumber(normalizeObject(runtime.index).i),
+      j: normalizeNumber(normalizeObject(runtime.index).j),
+      x: normalizeNumber(normalizeObject(runtime.denseIndex).x),
+      y: normalizeNumber(normalizeObject(runtime.denseIndex).y),
+      region: normalizeString(normalizeObject(runtime.region).label),
+      node: normalizeString(normalizeObject(runtime.node).label),
       boundary: normalizeBoundary(runtime),
-      terrain: normalizeString(runtime?.terrainClass),
-      biome: normalizeString(runtime?.biomeType),
-      traversal: normalizeString(runtime?.traversalStatus?.action),
+      terrain: normalizeString(runtime.terrainClass),
+      biome: normalizeString(runtime.biomeType),
+      traversal: normalizeString(normalizeObject(runtime.traversalStatus).action),
       receipt:
-        runtime?.receipt?.timestamp === null || runtime?.receipt?.timestamp === undefined
+        normalizeObject(runtime.receipt).timestamp === null || normalizeObject(runtime.receipt).timestamp === undefined
           ? "—"
-          : String(runtime.receipt.timestamp),
+          : String(normalizeObject(runtime.receipt).timestamp),
       projectionState: normalizeProjectionState(runtime)
     }),
     render: deepFreeze({
-      hue: stableRound(normalizeNumber(render?.visible?.colorOutput?.hue), 3),
-      saturation: stableRound(normalizeNumber(render?.visible?.colorOutput?.saturation), 3),
-      value: stableRound(normalizeNumber(render?.visible?.colorOutput?.value), 3),
+      hue: stableRound(normalizeNumber(colorOutput.hue), 3),
+      saturation: stableRound(normalizeNumber(colorOutput.saturation), 3),
+      value: stableRound(normalizeNumber(colorOutput.value), 3),
       projectionKind: normalizeProjectionKind(render)
     }),
     projection: deepFreeze({
@@ -214,18 +229,35 @@ function buildMeta(input) {
   });
 }
 
-export function buildInstrumentReceipt(options = {}) {
-  const runtime = normalizeObject(options.runtimeState);
-  const render = normalizeObject(options.renderState);
-  const classifiedState = classifyState({ runtime, render });
-  const summary = buildSummary({ runtime, render, classifiedState });
-  const diagnostics = buildDiagnostics({ runtime, render });
-  const meta = buildMeta({ runtime, render });
+function buildLifecycle(options) {
+  const eventPrefix = normalizeString(options.eventPrefix, "ARC::INSTRUMENTS");
+  const timestamp = options.timestamp === undefined ? null : options.timestamp;
 
   return deepFreeze({
-    classifiedState,
+    packet: buildReceiptStamp(eventPrefix + "::packet", timestamp),
+    update: buildReceiptStamp(eventPrefix + "::update", timestamp),
+    read: buildReceiptStamp(eventPrefix + "::read", timestamp),
+    dispose: buildReceiptStamp(eventPrefix + "::dispose", timestamp)
+  });
+}
+
+export function buildInstrumentReceipt(options) {
+  const safeOptions = normalizeObject(options);
+  const runtime = normalizeObject(safeOptions.runtimeState);
+  const render = normalizeObject(safeOptions.renderState);
+  const classifiedState = classifyState({ runtime: runtime, render: render });
+  const summary = buildSummary({ runtime: runtime, render: render, classifiedState: classifiedState });
+  const diagnostics = buildDiagnostics({ runtime: runtime, render: render });
+  const meta = buildMeta({ runtime: runtime, render: render });
+  const lifecycle = buildLifecycle({
+    eventPrefix: safeOptions.eventPrefix,
+    timestamp: normalizeObject(runtime.receipt).timestamp
+  });
+
+  return deepFreeze({
+    classifiedState: classifiedState,
     displayPayload: deepFreeze({
-      summary,
+      summary: summary,
       lines: deepFreeze([
         summary.line,
         "TERRAIN=" + stringifyValue(diagnostics.terrain) + " | BIOME=" + stringifyValue(diagnostics.biome),
@@ -234,15 +266,16 @@ export function buildInstrumentReceipt(options = {}) {
       ])
     }),
     diagnosticsPayload: diagnostics,
-    meta
+    lifecycle: lifecycle,
+    meta: meta
   });
 }
 
-export function renderPanelHTML(packet = null) {
+export function renderPanelHTML(packet) {
   const instrument = normalizeObject(packet);
-  const summary = normalizeObject(instrument?.displayPayload?.summary);
-  const diagnostics = normalizeObject(instrument?.diagnosticsPayload);
-  const meta = normalizeObject(instrument?.meta);
+  const summary = normalizeObject(normalizeObject(instrument.displayPayload).summary);
+  const diagnostics = normalizeObject(instrument.diagnosticsPayload);
+  const meta = normalizeObject(instrument.meta);
   const runtimeMeta = normalizeObject(meta.runtime);
   const projectionMeta = normalizeObject(meta.projection);
 
@@ -283,11 +316,11 @@ export function renderPanelHTML(packet = null) {
   ].join("");
 }
 
-export function renderPanelText(packet = null) {
+export function renderPanelText(packet) {
   const instrument = normalizeObject(packet);
-  const summary = normalizeObject(instrument?.displayPayload?.summary);
-  const diagnostics = normalizeObject(instrument?.diagnosticsPayload);
-  const meta = normalizeObject(instrument?.meta);
+  const summary = normalizeObject(normalizeObject(instrument.displayPayload).summary);
+  const diagnostics = normalizeObject(instrument.diagnosticsPayload);
+  const meta = normalizeObject(instrument.meta);
   const runtimeMeta = normalizeObject(meta.runtime);
 
   return [
@@ -309,11 +342,11 @@ export function renderPanelText(packet = null) {
 export function createInstruments() {
   let last = null;
 
-  return deepFreeze({
+  const api = {
     meta: INSTRUMENT_META,
 
-    update(options = {}) {
-      last = buildInstrumentReceipt(options);
+    update(options) {
+      last = buildInstrumentReceipt(options || {});
       return last;
     },
 
@@ -325,10 +358,12 @@ export function createInstruments() {
       last = null;
     },
 
-    buildInstrumentReceipt,
-    renderPanelHTML,
-    renderPanelText
-  });
+    buildInstrumentReceipt: buildInstrumentReceipt,
+    renderPanelHTML: renderPanelHTML,
+    renderPanelText: renderPanelText
+  };
+
+  return Object.freeze(api);
 }
 
 const DEFAULT = createInstruments();

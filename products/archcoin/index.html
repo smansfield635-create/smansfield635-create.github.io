@@ -10,86 +10,111 @@
   />
   <style>
     :root{
-      --bg-0:#020204;
-      --bg-1:#06030b;
-      --bg-2:#0b0713;
-      --panel:#120a1f;
-      --panel-2:#1a1028;
-      --line:rgba(181,120,255,.18);
-      --line-strong:rgba(238,110,255,.28);
-      --text:#f7f1ff;
-      --muted:#bbaed1;
-      --accent:#d04dff;
-      --accent-2:#ff4d9a;
-      --accent-3:#9d5cff;
-      --glow:rgba(208,77,255,.34);
-      --glow-2:rgba(255,77,154,.22);
-      --good:#bfffcf;
-      --warn:#ffdca8;
-      --shadow:0 28px 80px rgba(0,0,0,.42);
-      --radius-xl:28px;
+      --bg-0:#010205;
+      --bg-1:#030713;
+      --bg-2:#071326;
+      --panel:#09111f;
+      --panel-2:#0d1728;
+      --line:rgba(145,181,255,.18);
+      --line-2:rgba(255,107,107,.16);
+      --line-strong:rgba(199,220,255,.28);
+      --text:#f7fbff;
+      --muted:#b8c5d8;
+      --blue:#57a6ff;
+      --blue-2:#89c6ff;
+      --red:#ff6b6b;
+      --red-2:#ff9e7a;
+      --gold:#ffe29c;
+      --shadow:0 24px 70px rgba(0,0,0,.42);
+      --radius-xl:30px;
       --radius-lg:22px;
       --radius-md:18px;
-      --maxw:1280px;
+      --maxw:1320px;
+      --header-h:96px;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
-    html{background:var(--bg-0)}
+    html{background:#010205}
     body{
       min-height:100vh;
       color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at 12% 18%, rgba(255,77,154,.10), transparent 0 18%),
-        radial-gradient(circle at 84% 10%, rgba(208,77,255,.12), transparent 0 22%),
-        radial-gradient(circle at 66% 42%, rgba(157,92,255,.08), transparent 0 20%),
-        radial-gradient(circle at 30% 76%, rgba(208,77,255,.08), transparent 0 22%),
-        linear-gradient(180deg, #010103 0%, #04020a 28%, #090411 62%, #020204 100%);
+        radial-gradient(circle at 12% 14%, rgba(87,166,255,.16), transparent 0 18%),
+        radial-gradient(circle at 82% 12%, rgba(255,107,107,.14), transparent 0 20%),
+        radial-gradient(circle at 50% 52%, rgba(61,121,255,.08), transparent 0 22%),
+        linear-gradient(180deg, #010205 0%, #02050d 28%, #04101f 60%, #010205 100%);
       overflow-x:hidden;
     }
 
-    body::before,
-    body::after{
-      content:"";
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+
+    .starfield,
+    .starfield::before,
+    .starfield::after{
       position:fixed;
       inset:0;
       pointer-events:none;
+      content:"";
       z-index:0;
     }
 
-    body::before{
+    .starfield{
       background-image:
-        radial-gradient(2px 2px at 8% 16%, rgba(255,255,255,.92), transparent 55%),
-        radial-gradient(1.5px 1.5px at 18% 72%, rgba(255,255,255,.72), transparent 55%),
-        radial-gradient(2px 2px at 28% 32%, rgba(255,255,255,.86), transparent 55%),
-        radial-gradient(1.5px 1.5px at 38% 82%, rgba(255,255,255,.74), transparent 55%),
-        radial-gradient(2px 2px at 44% 18%, rgba(255,255,255,.88), transparent 55%),
-        radial-gradient(1.5px 1.5px at 52% 58%, rgba(255,255,255,.76), transparent 55%),
-        radial-gradient(2px 2px at 61% 24%, rgba(255,255,255,.90), transparent 55%),
-        radial-gradient(1.5px 1.5px at 69% 78%, rgba(255,255,255,.74), transparent 55%),
-        radial-gradient(2px 2px at 78% 38%, rgba(255,255,255,.90), transparent 55%),
-        radial-gradient(1.5px 1.5px at 86% 68%, rgba(255,255,255,.72), transparent 55%),
-        radial-gradient(2px 2px at 93% 16%, rgba(255,255,255,.90), transparent 55%);
-      opacity:.66;
+        radial-gradient(2px 2px at 8% 14%, rgba(255,255,255,.95), transparent 55%),
+        radial-gradient(1.5px 1.5px at 18% 62%, rgba(255,255,255,.88), transparent 55%),
+        radial-gradient(2px 2px at 27% 27%, rgba(255,240,210,.95), transparent 55%),
+        radial-gradient(1.5px 1.5px at 36% 76%, rgba(255,255,255,.82), transparent 55%),
+        radial-gradient(2px 2px at 47% 18%, rgba(255,255,255,.90), transparent 55%),
+        radial-gradient(1.5px 1.5px at 58% 64%, rgba(255,245,220,.92), transparent 55%),
+        radial-gradient(2px 2px at 67% 24%, rgba(255,255,255,.95), transparent 55%),
+        radial-gradient(1.5px 1.5px at 76% 72%, rgba(255,255,255,.82), transparent 55%),
+        radial-gradient(2px 2px at 86% 34%, rgba(255,255,255,.93), transparent 55%),
+        radial-gradient(1.5px 1.5px at 93% 16%, rgba(255,245,220,.92), transparent 55%);
+      animation:twinkleA 5.8s ease-in-out infinite alternate;
+      opacity:.72;
     }
 
-    body::after{
+    .starfield::before{
+      background-image:
+        radial-gradient(1.5px 1.5px at 11% 48%, rgba(255,255,255,.78), transparent 55%),
+        radial-gradient(1.5px 1.5px at 24% 83%, rgba(255,255,255,.74), transparent 55%),
+        radial-gradient(1.5px 1.5px at 33% 44%, rgba(255,250,230,.92), transparent 55%),
+        radial-gradient(1.5px 1.5px at 44% 88%, rgba(255,255,255,.76), transparent 55%),
+        radial-gradient(1.5px 1.5px at 54% 36%, rgba(255,255,255,.84), transparent 55%),
+        radial-gradient(1.5px 1.5px at 63% 83%, rgba(255,250,230,.84), transparent 55%),
+        radial-gradient(1.5px 1.5px at 73% 47%, rgba(255,255,255,.72), transparent 55%),
+        radial-gradient(1.5px 1.5px at 82% 86%, rgba(255,255,255,.78), transparent 55%);
+      animation:twinkleB 7.2s ease-in-out infinite alternate;
+      opacity:.55;
+    }
+
+    .starfield::after{
       background:
-        radial-gradient(circle at 20% 22%, rgba(255,77,154,.06), transparent 0 10%),
-        radial-gradient(circle at 72% 20%, rgba(208,77,255,.08), transparent 0 14%),
-        radial-gradient(circle at 74% 72%, rgba(157,92,255,.07), transparent 0 14%);
-      filter:blur(18px);
+        radial-gradient(circle at 18% 18%, rgba(87,166,255,.08), transparent 0 10%),
+        radial-gradient(circle at 79% 22%, rgba(255,107,107,.08), transparent 0 11%),
+        radial-gradient(circle at 74% 74%, rgba(137,198,255,.06), transparent 0 13%);
+      filter:blur(16px);
       opacity:.9;
     }
 
-    a{color:inherit}
+    @keyframes twinkleA{
+      0%, 100%{opacity:.48}
+      50%{opacity:.82}
+    }
+    @keyframes twinkleB{
+      0%, 100%{opacity:.26}
+      50%{opacity:.62}
+    }
+
     .page{
       position:relative;
       z-index:1;
       max-width:var(--maxw);
       margin:0 auto;
-      padding:28px 18px 90px;
+      padding:28px 18px 80px;
     }
 
     .hero{
@@ -98,21 +123,35 @@
       border:1px solid var(--line);
       border-radius:34px;
       background:
-        linear-gradient(180deg, rgba(23,12,35,.92), rgba(8,5,14,.94)),
-        radial-gradient(circle at top right, rgba(208,77,255,.12), transparent 30%);
+        linear-gradient(180deg, rgba(9,17,31,.94), rgba(7,13,24,.96)),
+        radial-gradient(circle at 18% 16%, rgba(87,166,255,.12), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(255,107,107,.10), transparent 28%);
       box-shadow:var(--shadow);
-      padding:34px 28px 30px;
+      padding:34px 28px 28px;
+      margin-bottom:22px;
     }
 
     .hero::before{
       content:"";
       position:absolute;
-      inset:auto -8% -32% auto;
+      inset:auto auto -18% -8%;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(87,166,255,.16), transparent 70%);
+      filter:blur(10px);
+      pointer-events:none;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:-12% -6% auto auto;
       width:280px;
       height:280px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(208,77,255,.26), rgba(255,77,154,.10) 42%, transparent 72%);
-      filter:blur(6px);
+      background:radial-gradient(circle, rgba(255,107,107,.14), transparent 70%);
+      filter:blur(12px);
       pointer-events:none;
     }
 
@@ -128,23 +167,22 @@
       font-size:12px;
       letter-spacing:.1em;
       text-transform:uppercase;
-      backdrop-filter:blur(6px);
     }
 
     h1{
       margin:18px 0 12px;
-      font-size:clamp(34px, 6vw, 64px);
+      font-size:clamp(34px,6vw,66px);
       line-height:1.02;
       letter-spacing:-.05em;
       max-width:980px;
     }
 
     .subhead{
-      max-width:940px;
       margin:0;
+      max-width:940px;
       color:var(--muted);
       font-size:18px;
-      line-height:1.68;
+      line-height:1.66;
     }
 
     .truth-band{
@@ -156,9 +194,9 @@
 
     .truth-chip{
       border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       border-radius:20px;
-      padding:16px 14px;
+      padding:15px 14px;
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
     }
 
@@ -175,218 +213,433 @@
       line-height:1.45;
     }
 
-    .system-orbit{
-      margin-top:18px;
-      border:1px solid var(--line);
-      border-radius:30px;
-      padding:24px;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(208,77,255,.08), transparent 0 30%),
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015));
-    }
-
-    .orbit-grid{
-      display:grid;
-      grid-template-columns:1fr 1.25fr 1fr;
-      gap:14px;
-      align-items:center;
-    }
-
-    .orbital-card{
-      border:1px solid var(--line);
-      border-radius:24px;
-      padding:18px;
-      background:rgba(255,255,255,.025);
-      min-height:132px;
-    }
-
-    .orbital-card.center{
-      min-height:170px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      text-align:center;
-      background:
-        radial-gradient(circle at center, rgba(208,77,255,.20), rgba(255,77,154,.10) 28%, rgba(255,255,255,.03) 58%, rgba(255,255,255,.02) 100%);
-      border-color:var(--line-strong);
-      box-shadow:0 0 40px rgba(208,77,255,.14);
-    }
-
-    .orbital-card .mini{
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-      margin-bottom:10px;
-    }
-
-    .orbital-card .title{
-      font-size:20px;
-      line-height:1.25;
-      letter-spacing:-.03em;
-      margin-bottom:8px;
-    }
-
-    .orbital-card .desc{
-      color:var(--muted);
-      line-height:1.62;
-      font-size:14px;
-    }
-
-    .bubble-field{
-      margin-top:26px;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:18px;
-    }
-
-    .bubble{
+    .field-shell{
       position:relative;
       border:1px solid var(--line);
-      border-radius:32px;
-      background:
-        radial-gradient(circle at top, rgba(255,255,255,.05), transparent 26%),
-        linear-gradient(180deg, rgba(22,11,34,.94), rgba(10,6,17,.96));
-      box-shadow:var(--shadow);
+      border-radius:34px;
       overflow:hidden;
-      isolation:isolate;
+      min-height:720px;
+      background:
+        linear-gradient(180deg, rgba(4,9,18,.82), rgba(3,7,13,.90)),
+        radial-gradient(circle at 20% 24%, rgba(87,166,255,.10), transparent 18%),
+        radial-gradient(circle at 80% 26%, rgba(255,107,107,.08), transparent 18%);
+      box-shadow:var(--shadow);
     }
 
-    .bubble::before{
-      content:"";
-      position:absolute;
-      inset:-25% auto auto -10%;
-      width:180px;
-      height:180px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(208,77,255,.18), transparent 70%);
-      filter:blur(8px);
-      pointer-events:none;
-      z-index:0;
+    .field-shell.reading .scene{
+      animation-play-state:paused;
     }
 
-    .bubble > *{
+    .field-shell.reading .diamond-box{
+      animation-play-state:paused;
+    }
+
+    .field-shell.reading .orbit{
+      animation-play-state:paused;
+    }
+
+    .field-shell.reading .scene-layer{
+      transform:scale(1.01);
+      filter:blur(4px) saturate(.78);
+      opacity:.26;
+    }
+
+    .field-shell.reading .selected-shadow{
+      opacity:1;
+    }
+
+    .field-topbar{
       position:relative;
-      z-index:1;
-    }
-
-    .bubble-toggle{
-      width:100%;
-      appearance:none;
-      border:0;
-      background:transparent;
-      color:var(--text);
-      text-align:left;
-      padding:22px 22px 18px;
-      cursor:pointer;
-      font:inherit;
+      z-index:2;
+      padding:18px 18px 0;
       display:flex;
-      align-items:flex-start;
+      align-items:center;
       justify-content:space-between;
       gap:16px;
     }
 
-    .bubble-toggle:focus-visible{
-      outline:2px solid rgba(255,255,255,.42);
-      outline-offset:-2px;
-    }
-
-    .bubble-eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      font-size:11px;
-      letter-spacing:.1em;
+    .field-title{
+      font-size:14px;
+      letter-spacing:.12em;
       text-transform:uppercase;
       color:var(--muted);
+    }
+
+    .field-hint{
+      font-size:13px;
+      color:var(--muted);
+    }
+
+    .scene{
+      position:relative;
+      min-height:640px;
+      overflow:hidden;
+    }
+
+    .scene-layer{
+      position:absolute;
+      inset:0;
+      transition:filter .32s ease, opacity .32s ease, transform .32s ease;
+    }
+
+    .orbit{
+      position:absolute;
+      border:1px solid rgba(175,210,255,.12);
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      animation:orbitGlow 10s linear infinite;
+      opacity:.58;
+    }
+
+    .orbit.red{
+      border-color:rgba(255,138,138,.10);
+      animation-duration:13s;
+    }
+
+    .orbit.blue{
+      border-color:rgba(129,191,255,.12);
+      animation-duration:11s;
+    }
+
+    @keyframes orbitGlow{
+      0%{transform:translate(-50%,-50%) rotate(0deg)}
+      100%{transform:translate(-50%,-50%) rotate(360deg)}
+    }
+
+    .diamond-node{
+      position:absolute;
+      width:126px;
+      height:126px;
+      transform:translate(-50%,-50%);
+      z-index:2;
+    }
+
+    .diamond-box{
+      position:relative;
+      width:100%;
+      height:100%;
+      border:0;
+      background:transparent;
+      padding:0;
+      cursor:pointer;
+      transform-style:preserve-3d;
+      animation:spinFloat 11s linear infinite;
+    }
+
+    .diamond-node.fast .diamond-box{animation-duration:8.5s}
+    .diamond-node.slow .diamond-box{animation-duration:13.5s}
+
+    @keyframes spinFloat{
+      0%{transform:rotateZ(0deg) rotateY(0deg) translateY(0)}
+      25%{transform:rotateZ(90deg) rotateY(11deg) translateY(-2px)}
+      50%{transform:rotateZ(180deg) rotateY(0deg) translateY(0)}
+      75%{transform:rotateZ(270deg) rotateY(-11deg) translateY(2px)}
+      100%{transform:rotateZ(360deg) rotateY(0deg) translateY(0)}
+    }
+
+    .diamond-shape{
+      position:absolute;
+      inset:0;
+      transform:rotate(45deg);
+      border-radius:16px;
+      background:
+        linear-gradient(135deg, rgba(255,107,107,.28), rgba(255,226,156,.20) 40%, rgba(87,166,255,.24) 100%);
+      border:1px solid rgba(255,236,190,.58);
+      box-shadow:
+        0 0 0 1px rgba(255,248,220,.10) inset,
+        0 0 28px rgba(87,166,255,.18),
+        0 0 26px rgba(255,107,107,.12);
+      overflow:hidden;
+    }
+
+    .diamond-shape::before,
+    .diamond-shape::after{
+      content:"";
+      position:absolute;
+      inset:12%;
+      border:1px solid rgba(255,241,196,.42);
+      clip-path:polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+    }
+
+    .diamond-shape::after{
+      inset:28%;
+      border-color:rgba(255,248,220,.32);
+    }
+
+    .diamond-core{
+      position:absolute;
+      inset:29%;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,243,205,.96), rgba(255,226,156,.40) 36%, rgba(255,255,255,0) 68%);
+      filter:blur(.2px);
+    }
+
+    .diamond-point{
+      position:absolute;
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:rgba(255,246,213,.95);
+      box-shadow:0 0 14px rgba(255,240,205,.60);
+    }
+
+    .diamond-point.n{top:5px;left:50%;transform:translateX(-50%)}
+    .diamond-point.e{top:50%;right:5px;transform:translateY(-50%)}
+    .diamond-point.s{bottom:5px;left:50%;transform:translateX(-50%)}
+    .diamond-point.w{top:50%;left:5px;transform:translateY(-50%)}
+
+    .diamond-lines{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+
+    .diamond-lines span{
+      position:absolute;
+      background:rgba(255,241,196,.52);
+      box-shadow:0 0 10px rgba(255,236,180,.18);
+      transform-origin:center;
+    }
+
+    .diamond-lines .v{width:2px;height:82px;left:50%;top:22px;transform:translateX(-50%)}
+    .diamond-lines .h{height:2px;width:82px;top:50%;left:22px;transform:translateY(-50%)}
+    .diamond-lines .d1{width:2px;height:92px;left:50%;top:17px;transform:translateX(-50%) rotate(45deg)}
+    .diamond-lines .d2{width:2px;height:92px;left:50%;top:17px;transform:translateX(-50%) rotate(-45deg)}
+
+    .diamond-label{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:flex-end;
+      justify-content:center;
+      text-align:center;
+      padding:0 8px 10px;
+      font-size:12px;
+      line-height:1.2;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      font-weight:700;
+      color:#fff6dd;
+      text-shadow:0 1px 4px rgba(0,0,0,.45);
+    }
+
+    .diamond-node.active{
+      z-index:8;
+    }
+
+    .diamond-node.active .diamond-box{
+      animation-play-state:paused;
+    }
+
+    .diamond-node.active .diamond-shape{
+      box-shadow:
+        0 0 0 1px rgba(255,248,220,.14) inset,
+        0 0 44px rgba(87,166,255,.30),
+        0 0 40px rgba(255,107,107,.24);
+    }
+
+    .selected-shadow{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(6,10,18,.12), rgba(1,2,5,.62) 56%, rgba(1,2,5,.88) 100%);
+      opacity:0;
+      transition:opacity .32s ease;
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .panel-wrap{
+      position:absolute;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+      z-index:10;
+      pointer-events:none;
+    }
+
+    .info-panel{
+      width:min(980px, 100%);
+      max-height:calc(100% - 20px);
+      overflow:auto;
+      border:1px solid var(--line-strong);
+      border-radius:30px;
+      background:
+        linear-gradient(180deg, rgba(7,12,22,.98), rgba(8,12,20,.98)),
+        radial-gradient(circle at 20% 14%, rgba(87,166,255,.10), transparent 20%),
+        radial-gradient(circle at 80% 14%, rgba(255,107,107,.10), transparent 20%);
+      box-shadow:0 26px 90px rgba(0,0,0,.55);
+      opacity:0;
+      transform:translateY(22px) scale(.96);
+      transition:opacity .28s ease, transform .28s ease;
+      pointer-events:none;
+    }
+
+    .field-shell.reading .info-panel{
+      opacity:1;
+      transform:translateY(0) scale(1);
+      pointer-events:auto;
+    }
+
+    .panel-head{
+      position:sticky;
+      top:0;
+      z-index:2;
+      padding:22px 22px 16px;
+      background:linear-gradient(180deg, rgba(7,12,22,.98), rgba(7,12,22,.88));
+      backdrop-filter:blur(10px);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .panel-kicker{
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
       margin-bottom:10px;
     }
 
-    .bubble-title{
-      font-size:24px;
-      line-height:1.1;
-      letter-spacing:-.04em;
-      margin:0 0 8px;
+    .panel-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:18px;
     }
 
-    .bubble-summary{
+    .panel-title{
       margin:0;
+      font-size:clamp(28px,4vw,44px);
+      line-height:1.04;
+      letter-spacing:-.04em;
+    }
+
+    .panel-summary{
+      margin:12px 0 0;
       color:var(--muted);
-      line-height:1.62;
-      font-size:15px;
-      max-width:48ch;
+      font-size:17px;
+      line-height:1.65;
+      max-width:760px;
     }
 
-    .bubble-icon{
+    .panel-close{
       flex:0 0 auto;
-      width:46px;
-      height:46px;
-      border-radius:50%;
-      border:1px solid var(--line-strong);
-      display:grid;
-      place-items:center;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
       color:var(--text);
-      background:linear-gradient(180deg, rgba(208,77,255,.18), rgba(255,77,154,.12));
-      box-shadow:0 0 24px rgba(208,77,255,.14);
-      margin-top:2px;
-      font-size:24px;
-      line-height:1;
+      padding:12px 14px;
+      border-radius:999px;
+      cursor:pointer;
     }
 
-    .bubble-panel{
-      display:none;
-      padding:0 22px 22px;
+    .panel-body{
+      padding:18px 22px 24px;
     }
 
-    .bubble.open .bubble-panel{
-      display:block;
-      animation:fadeIn .18s ease-out;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:0;transform:translateY(-4px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-
-    .bubble-panel-inner{
-      border-top:1px solid rgba(255,255,255,.06);
-      padding-top:18px;
-    }
-
-    .stack{
+    .subbubble-list{
       display:grid;
       gap:12px;
     }
 
-    .detail-card{
-      border:1px solid rgba(255,255,255,.05);
-      border-radius:20px;
-      padding:16px;
-      background:rgba(255,255,255,.02);
+    .subbubble{
+      border:1px solid rgba(255,255,255,.07);
+      border-radius:22px;
+      overflow:hidden;
+      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
     }
 
-    .detail-card h3{
+    .subbubble-toggle{
+      width:100%;
+      border:0;
+      background:transparent;
+      color:var(--text);
+      padding:18px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .subbubble-label{
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      margin-bottom:7px;
+    }
+
+    .subbubble-title{
+      font-size:22px;
+      line-height:1.14;
+      letter-spacing:-.03em;
+      margin:0 0 6px;
+    }
+
+    .subbubble-mini{
+      color:var(--muted);
+      line-height:1.58;
+      font-size:15px;
+      margin:0;
+      max-width:48ch;
+    }
+
+    .subbubble-icon{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      flex:0 0 auto;
+      background:rgba(255,255,255,.04);
+      font-size:20px;
+    }
+
+    .subbubble-panel{
+      display:none;
+      padding:0 18px 18px;
+      color:var(--muted);
+      line-height:1.7;
+      font-size:16px;
+    }
+
+    .subbubble.open .subbubble-panel{
+      display:block;
+    }
+
+    .subbubble-panel-inner{
+      border-top:1px solid rgba(255,255,255,.06);
+      padding-top:14px;
+    }
+
+    .detail-card{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.02);
+      margin:0 0 12px;
+    }
+
+    .detail-card h4{
       margin:0 0 8px;
       font-size:17px;
+      color:var(--text);
       letter-spacing:-.02em;
     }
 
     .detail-card p{
       margin:0;
-      color:var(--muted);
-      line-height:1.65;
     }
 
     .law-list{
       margin:0;
       padding-left:18px;
-      color:var(--muted);
-      line-height:1.68;
     }
 
-    .law-list li{
-      margin:8px 0;
-    }
+    .law-list li{margin:8px 0}
 
     .mapping-grid{
       display:grid;
@@ -397,22 +650,22 @@
     .mapping-item{
       border:1px solid rgba(255,255,255,.06);
       border-radius:18px;
-      padding:15px;
+      padding:14px;
       background:rgba(255,255,255,.02);
     }
 
     .mapping-item .dir{
-      color:#f1b7ff;
+      color:var(--gold);
       font-size:11px;
-      letter-spacing:.1em;
+      letter-spacing:.10em;
       text-transform:uppercase;
       margin-bottom:8px;
     }
 
     .mapping-item .name{
       font-size:18px;
-      line-height:1.25;
-      margin-bottom:7px;
+      color:var(--text);
+      margin-bottom:6px;
     }
 
     .mapping-item .desc{
@@ -422,34 +675,55 @@
     }
 
     .footer-note{
-      margin-top:18px;
+      margin-top:16px;
       text-align:center;
       color:var(--muted);
       font-size:14px;
       line-height:1.7;
     }
 
-    @media (max-width: 1120px){
+    @media (max-width: 1100px){
       .truth-band{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .bubble-field{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .orbit-grid{grid-template-columns:1fr}
-      .orbital-card.center{text-align:left}
     }
 
-    @media (max-width: 720px){
-      .page{padding:18px 14px 70px}
+    @media (max-width: 820px){
+      .page{padding:18px 14px 64px}
       .hero{padding:24px 18px 20px}
       .truth-band{grid-template-columns:1fr}
-      .bubble-field{grid-template-columns:1fr}
+      .field-shell{min-height:840px}
+      .scene{min-height:760px}
+      .panel-wrap{padding:14px}
+      .panel-row{flex-direction:column}
+      .panel-close{align-self:flex-start}
       .mapping-grid{grid-template-columns:1fr}
-      .bubble-toggle{padding:18px 18px 14px}
-      .bubble-panel{padding:0 18px 18px}
-      .bubble-title{font-size:22px}
-      .bubble-summary{font-size:14px}
+
+      .diamond-node{width:112px;height:112px}
+      .diamond-node[data-node="0"]{left:18%!important;top:20%!important}
+      .diamond-node[data-node="1"]{left:50%!important;top:14%!important}
+      .diamond-node[data-node="2"]{left:82%!important;top:21%!important}
+      .diamond-node[data-node="3"]{left:20%!important;top:43%!important}
+      .diamond-node[data-node="4"]{left:80%!important;top:43%!important}
+      .diamond-node[data-node="5"]{left:16%!important;top:66%!important}
+      .diamond-node[data-node="6"]{left:50%!important;top:74%!important}
+      .diamond-node[data-node="7"]{left:84%!important;top:66%!important}
+    }
+
+    @media (max-width: 560px){
+      .diamond-node{width:100px;height:100px}
+      .field-topbar{padding:16px 14px 0}
+      .panel-head{padding:18px 16px 14px}
+      .panel-body{padding:16px}
+      .subbubble-toggle{padding:16px}
+      .subbubble-panel{padding:0 16px 16px}
+      .subbubble-title{font-size:20px}
+      .subbubble-mini{font-size:14px}
+      .panel-summary{font-size:15px}
     }
   </style>
 </head>
 <body>
+  <div class="starfield" aria-hidden="true"></div>
+
   <main class="page">
     <section class="hero" aria-labelledby="page-title">
       <div class="eyebrow">Archcoin • Five-Coin Financial Architecture</div>
@@ -457,7 +731,7 @@
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
         The four cardinal coins remain distinct financial governors for contracts, inbound value, outbound obligation,
-        and growth allocation. This page presents hierarchy first and expansion second.
+        and growth allocation. Choose an object to inspect. The system pauses while you read.
       </p>
 
       <div class="truth-band" aria-label="Top-level system truth">
@@ -482,269 +756,129 @@
           <div class="value">High-control financial architecture</div>
         </div>
       </div>
-
-      <div class="system-orbit" aria-label="Five-coin hierarchy">
-        <div class="orbit-grid">
-          <div class="orbital-card">
-            <div class="mini">Parent Authority</div>
-            <div class="title">Archcoin</div>
-            <div class="desc">
-              Master template and construction authority for the five-coin system.
-              It defines the system frame and does not collapse into the four derived governors.
-            </div>
-          </div>
-
-          <div class="orbital-card center">
-            <div class="mini">Master Body</div>
-            <div class="title">The Vault</div>
-            <div class="desc">
-              Central storage and routing body for financial objects, compartments, and finance-class movement.
-            </div>
-          </div>
-
-          <div class="orbital-card">
-            <div class="mini">Derived Governors</div>
-            <div class="title">Contracts • AR • AP • GYP</div>
-            <div class="desc">
-              Four cardinal finance governors with non-overlapping roles under one preserved hierarchy.
-            </div>
-          </div>
-        </div>
-      </div>
     </section>
 
-    <section class="bubble-field" id="bubble-field" aria-label="Expandable architecture sections">
-      <article class="bubble open" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="true">
-          <div>
-            <div class="bubble-eyebrow">Bubble 01 • System Identity</div>
-            <h2 class="bubble-title">Archcoin parent authority</h2>
-            <p class="bubble-summary">
-              Archcoin is the parent construction authority and master template. It stands above the four derived governors.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <div class="detail-card">
-              <h3>Controlling read</h3>
-              <p>
-                Archcoin is the system parent. It defines the architecture between the body and the governors.
-                It is not interchangeable with the four cardinal coins, and the four cardinal coins do not substitute for it.
-              </p>
-            </div>
-            <ul class="law-list">
-              <li>Archcoin remains the master template and parent construction authority.</li>
-              <li>Archcoin must not be flattened into the four derived governors.</li>
-              <li>The page reads as controlled architecture rather than token hype.</li>
-              <li>Hierarchy is load-bearing and visible before any expansion.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
+    <section class="field-shell" id="field-shell" aria-label="Archcoin selection field">
+      <div class="field-topbar">
+        <div class="field-title">Select a star-compass object to inspect</div>
+        <div class="field-hint">Motion for choosing. Stillness for reading.</div>
+      </div>
 
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 02 • Master Body</div>
-            <h2 class="bubble-title">The Vault</h2>
-            <p class="bubble-summary">
-              The Vault is the central body that stores, routes, and classifies financial objects by direction and finance class.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <div class="detail-card">
-              <h3>Body role</h3>
-              <p>
-                The Vault is not another coin and not a decorative wrapper. It is the master body.
-                It governs compartments, storage domains, and the routing of stored objects.
-              </p>
-            </div>
-            <div class="detail-card">
-              <h3>Routing principle</h3>
-              <p>
-                Financial objects route through the Vault under both a finance class and a cardinal direction.
-                Direction is tied to authority type, not visual ornament.
-              </p>
-            </div>
-          </div>
-        </div>
-      </article>
+      <div class="scene" id="scene">
+        <div class="scene-layer" id="scene-layer">
+          <div class="orbit blue" style="left:50%;top:40%;width:74%;height:34%"></div>
+          <div class="orbit red" style="left:50%;top:48%;width:54%;height:54%"></div>
+          <div class="orbit blue" style="left:50%;top:58%;width:80%;height:26%"></div>
 
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 03 • Cardinal Governors</div>
-            <h2 class="bubble-title">The four cardinal coins</h2>
-            <p class="bubble-summary">
-              The four derived governors remain distinct and non-overlapping: contracts, receivables, payables, and growth allocation.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner">
-            <div class="mapping-grid">
-              <div class="mapping-item">
-                <div class="dir">North</div>
-                <div class="name">Contracts Coin</div>
-                <div class="desc">Binding authority for agreements, commitments, and enforceable contract structure.</div>
+          <div class="diamond-node fast" data-node="0" data-panel="system-identity" style="left:18%;top:20%;">
+            <button class="diamond-box" type="button" aria-label="Open system identity">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
               </div>
-              <div class="mapping-item">
-                <div class="dir">East</div>
-                <div class="name">Accounts Receivable Coin</div>
-                <div class="desc">Inbound value authority for receivable-class movement, money due, and collected value.</div>
+              <div class="diamond-label">Identity</div>
+            </button>
+          </div>
+
+          <div class="diamond-node slow" data-node="1" data-panel="parent-authority" style="left:50%;top:14%;">
+            <button class="diamond-box" type="button" aria-label="Open parent authority">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
               </div>
-              <div class="mapping-item">
-                <div class="dir">South</div>
-                <div class="name">Accounts Payable Coin</div>
-                <div class="desc">Outbound obligation authority for liabilities owed, settlement pressure, and release.</div>
+              <div class="diamond-label">Parent</div>
+            </button>
+          </div>
+
+          <div class="diamond-node fast" data-node="2" data-panel="vault-overview" style="left:82%;top:21%;">
+            <button class="diamond-box" type="button" aria-label="Open Vault overview">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
               </div>
-              <div class="mapping-item">
-                <div class="dir">West</div>
-                <div class="name">GYP Coin</div>
-                <div class="desc">Growth-allocation authority for expansion budgets, forecast pressure, and controlled promotion.</div>
+              <div class="diamond-label">Vault</div>
+            </button>
+          </div>
+
+          <div class="diamond-node slow" data-node="3" data-panel="cardinal-coins" style="left:20%;top:43%;">
+            <button class="diamond-box" type="button" aria-label="Open cardinal coins">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+              </div>
+              <div class="diamond-label">Governors</div>
+            </button>
+          </div>
+
+          <div class="diamond-node fast" data-node="4" data-panel="cardinal-mapping" style="left:80%;top:43%;">
+            <button class="diamond-box" type="button" aria-label="Open cardinal mapping">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+              </div>
+              <div class="diamond-label">Mapping</div>
+            </button>
+          </div>
+
+          <div class="diamond-node slow" data-node="5" data-panel="routing-law" style="left:16%;top:66%;">
+            <button class="diamond-box" type="button" aria-label="Open routing law">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+              </div>
+              <div class="diamond-label">Routing</div>
+            </button>
+          </div>
+
+          <div class="diamond-node fast" data-node="6" data-panel="gyp-distinction" style="left:50%;top:74%;">
+            <button class="diamond-box" type="button" aria-label="Open GYP distinction">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+              </div>
+              <div class="diamond-label">GYP</div>
+            </button>
+          </div>
+
+          <div class="diamond-node slow" data-node="7" data-panel="nonoverlap-status" style="left:84%;top:66%;">
+            <button class="diamond-box" type="button" aria-label="Open system status">
+              <div class="diamond-shape">
+                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+                <div class="diamond-core"></div>
+                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+              </div>
+              <div class="diamond-label">Status</div>
+            </button>
+          </div>
+        </div>
+
+        <div class="selected-shadow" aria-hidden="true"></div>
+
+        <div class="panel-wrap">
+          <article class="info-panel" id="info-panel" aria-live="polite">
+            <div class="panel-head">
+              <div class="panel-kicker" id="panel-kicker">Inspection panel</div>
+              <div class="panel-row">
+                <div>
+                  <h2 class="panel-title" id="panel-title">Select an object</h2>
+                  <p class="panel-summary" id="panel-summary">Choose one of the rotating star-compass objects to inspect the corresponding architecture bulletin.</p>
+                </div>
+                <button class="panel-close" id="panel-close" type="button" aria-label="Close inspection">Close inspection</button>
               </div>
             </div>
-          </div>
-        </div>
-      </article>
-
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 04 • Cardinal Mapping</div>
-            <h2 class="bubble-title">Direction and finance class stay linked</h2>
-            <p class="bubble-summary">
-              Cardinal direction identifies finance authority. This mapping is literal, fixed, and not ornamental.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <ul class="law-list">
-              <li>North governs contract-class objects and binding control.</li>
-              <li>East governs receivable-class objects and inbound value.</li>
-              <li>South governs payable-class objects and outbound obligation.</li>
-              <li>West governs growth allocation and controlled expansion budgets.</li>
-              <li>The Vault routes under both class and direction.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 05 • Retrieval and Routing Law</div>
-            <h2 class="bubble-title">Stored objects do not move generically</h2>
-            <p class="bubble-summary">
-              The system preserves traceability by routing financial objects through the Vault under defined authority lanes.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <div class="detail-card">
-              <h3>Handling rule</h3>
-              <p>
-                Each object enters under a defined class, routes to a cardinal governor, and remains inside the parent
-                frame established by Archcoin. This preserves non-overlap and operational discipline.
-              </p>
+            <div class="panel-body">
+              <div class="subbubble-list" id="subbubble-list"></div>
             </div>
-            <ul class="law-list">
-              <li>Objects enter the Vault under a known financial class.</li>
-              <li>Each class routes to a matching cardinal governor.</li>
-              <li>Archcoin remains parent authority across all routes.</li>
-              <li>The Vault remains the master body across all routes.</li>
-            </ul>
-          </div>
+          </article>
         </div>
-      </article>
-
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 06 • GYP Distinction</div>
-            <h2 class="bubble-title">GYP is a governor, not a promise engine</h2>
-            <p class="bubble-summary">
-              GYP handles growth allocation and forecast pressure without speculative price language or false upside claims.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <ul class="law-list">
-              <li>GYP governs growth allocation, not guaranteed reward language.</li>
-              <li>GYP may support expansion budgets and promotion discipline.</li>
-              <li>GYP does not replace contracts, AR, or AP functions.</li>
-              <li>Its role remains bounded within the five-coin hierarchy.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 07 • Non-Overlap</div>
-            <h2 class="bubble-title">The hierarchy remains visible and clean</h2>
-            <p class="bubble-summary">
-              The page dignifies all five coins without flattening the parent, the body, and the governors into one another.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <div class="detail-card">
-              <h3>System read</h3>
-              <p>
-                Archcoin remains the parent. The Vault remains the body. The four cardinal coins remain the derived governors.
-                Expansion reveals detail, but it does not create truth.
-              </p>
-            </div>
-            <ul class="law-list">
-              <li>Parent-child relations are preserved.</li>
-              <li>Cardinal order is preserved.</li>
-              <li>HTML owns identity and role truth.</li>
-              <li>JS owns expansion behavior only.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
-
-      <article class="bubble" data-bubble>
-        <button class="bubble-toggle" type="button" aria-expanded="false">
-          <div>
-            <div class="bubble-eyebrow">Bubble 08 • Status and Next Motion</div>
-            <h2 class="bubble-title">Current status</h2>
-            <p class="bubble-summary">
-              The page now expresses the five-coin architecture in a compressed bubble structure with a cosmic black and reddish-purple visual system.
-            </p>
-          </div>
-          <div class="bubble-icon">+</div>
-        </button>
-        <div class="bubble-panel">
-          <div class="bubble-panel-inner stack">
-            <ul class="law-list">
-              <li>Parent authority expressed: yes.</li>
-              <li>Vault body expressed: yes.</li>
-              <li>Cardinal financial mapping expressed: yes.</li>
-              <li>Bubble compression structure active: yes.</li>
-              <li>Page-local interaction only: yes.</li>
-              <li>Marketing-first drift avoided: yes.</li>
-            </ul>
-          </div>
-        </div>
-      </article>
+      </div>
     </section>
 
     <div class="footer-note">

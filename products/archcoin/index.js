@@ -18,14 +18,14 @@
             '<li>No parent-child flattening is allowed.</li>' +
             '<li>No role collapse is allowed.</li>' +
             '<li>Reading begins only after explicit selection.</li>' +
-            "</ul>"
+            '</ul>'
         },
         {
           label: "Bulletin 02",
           title: "Why the motion exists",
           mini: "Motion is for choosing, not for reading.",
           html:
-            '<div class="detail-card"><h4>Interaction law</h4><p>The spinning field acts like a selection environment. Once one object is chosen, the rest of the field recedes into haze and stillness so the user can inspect without distraction. When inspection ends, the field resumes its natural motion.</p></div>'
+            '<div class="detail-card"><h4>Interaction law</h4><p>The rotating field acts like a selection environment. Once one object is chosen, the rest of the field recedes into haze and stillness so the user can inspect without distraction. When inspection ends, the field resumes its natural motion.</p></div>'
         }
       ]
     },
@@ -45,7 +45,7 @@
             '<li>Archcoin must not be flattened into the four derived coins.</li>' +
             '<li>Archcoin remains above the role-specific lanes.</li>' +
             '<li>The page’s top truth layer preserves this read immediately.</li>' +
-            "</ul>"
+            '</ul>'
         },
         {
           label: "Bulletin 02",
@@ -79,7 +79,7 @@
             '<li>The Vault routes by both finance class and cardinal direction.</li>' +
             '<li>Containment logic stays distinct from parent authority logic.</li>' +
             '<li>The body remains the same across all lanes.</li>' +
-            "</ul>"
+            '</ul>'
         }
       ]
     },
@@ -99,7 +99,7 @@
             '<div class="mapping-item"><div class="dir">East</div><div class="name">Accounts Receivable Coin</div><div class="desc">Inbound value authority for money due, collected value, and receivable movement.</div></div>' +
             '<div class="mapping-item"><div class="dir">South</div><div class="name">Accounts Payable Coin</div><div class="desc">Outbound obligation authority for liabilities owed and controlled settlement release.</div></div>' +
             '<div class="mapping-item"><div class="dir">West</div><div class="name">GYP Coin</div><div class="desc">Growth-allocation authority for expansion budgets, prediction pressure, and controlled promotion.</div></div>' +
-            "</div>"
+            '</div>'
         },
         {
           label: "Bulletin 02",
@@ -126,11 +126,11 @@
             '<li>East governs receivable-class objects and inbound value.</li>' +
             '<li>South governs payable-class objects and outbound obligation.</li>' +
             '<li>West governs growth allocation and budgeted expansion.</li>' +
-            "</ul>"
+            '</ul>'
         },
         {
           label: "Bulletin 02",
-          title: "Why the diamond-compass form fits",
+          title: "Why the star-compass form fits",
           mini: "Shape, motion, and meaning align.",
           html:
             '<div class="detail-card"><h4>Form fit</h4><p>The rotating diamond-projected compass objects are not arbitrary decoration. They echo the directional logic already present in the financial mapping, which makes the selection system feel tied to the underlying page truth.</p></div>'
@@ -159,7 +159,7 @@
             '<li>Archcoin remains the parent authority across all routing paths.</li>' +
             '<li>The Vault remains the master body across all routing paths.</li>' +
             '<li>Each governor receives only its correct class of burden.</li>' +
-            "</ul>"
+            '</ul>'
         }
       ]
     },
@@ -186,7 +186,7 @@
             '<li>No listing-story substitution.</li>' +
             '<li>No role confusion with contracts, receivables, or payables.</li>' +
             '<li>GYP remains one governor within the five-coin system.</li>' +
-            "</ul>"
+            '</ul>'
         }
       ]
     },
@@ -208,22 +208,22 @@
             '<li>Rotating selection field active: yes.</li>' +
             '<li>Reading haze and freeze state active: yes.</li>' +
             '<li>Inner disclosure bubbles available: yes.</li>' +
-            "</ul>"
+            '</ul>'
         },
         {
           label: "Bulletin 02",
           title: "Non-overlap read",
           mini: "Truth stays in HTML; interaction stays in JS.",
           html:
-            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript only controls selection, freeze, haze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
+            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript only controls scene state, orbit projection, depth calculation, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
         }
       ]
     }
   };
 
   var fieldShell = document.getElementById("field-shell");
-  var nodes = Array.prototype.slice.call(document.querySelectorAll(".diamond-node"));
-  var panel = document.getElementById("info-panel");
+  var scene = document.getElementById("scene");
+  var nodes = Array.prototype.slice.call(document.querySelectorAll(".node"));
   var panelKicker = document.getElementById("panel-kicker");
   var panelTitle = document.getElementById("panel-title");
   var panelSummary = document.getElementById("panel-summary");
@@ -231,7 +231,10 @@
   var subbubbleList = document.getElementById("subbubble-list");
 
   var activeKey = null;
-  var lastActiveNode = null;
+  var lastActiveButton = null;
+  var freezeTime = 0;
+  var sceneStart = performance.now();
+  var rafId = null;
 
   function escapeHtml(value) {
     return String(value)
@@ -245,19 +248,19 @@
   function buildSubbubbles(sections) {
     return sections.map(function (section, index) {
       return (
-        '<section class="subbubble' + (index === 0 ? " open" : "") + '">' +
-          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? "true" : "false") + '">' +
+        '<section class="subbubble' + (index === 0 ? ' open' : '') + '">' +
+          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? 'true' : 'false') + '">' +
             '<div>' +
-              '<div class="subbubble-label">' + escapeHtml(section.label) + "</div>" +
-              '<h3 class="subbubble-title">' + escapeHtml(section.title) + "</h3>" +
-              '<p class="subbubble-mini">' + escapeHtml(section.mini) + "</p>" +
-            "</div>" +
-            '<div class="subbubble-icon">' + (index === 0 ? "−" : "+") + "</div>" +
-          "</button>" +
+              '<div class="subbubble-label">' + escapeHtml(section.label) + '</div>' +
+              '<h3 class="subbubble-title">' + escapeHtml(section.title) + '</h3>' +
+              '<p class="subbubble-mini">' + escapeHtml(section.mini) + '</p>' +
+            '</div>' +
+            '<div class="subbubble-icon">' + (index === 0 ? '−' : '+') + '</div>' +
+          '</button>' +
           '<div class="subbubble-panel">' +
-            '<div class="subbubble-panel-inner">' + section.html + "</div>" +
-          "</div>" +
-        "</section>"
+            '<div class="subbubble-panel-inner">' + section.html + '</div>' +
+          '</div>' +
+        '</section>'
       );
     }).join("");
   }
@@ -272,21 +275,126 @@
 
       toggle.addEventListener("click", function () {
         var isOpen = bubble.classList.contains("open");
+
         bubbles.forEach(function (other) {
           other.classList.remove("open");
           var otherToggle = other.querySelector(".subbubble-toggle");
           var otherIcon = other.querySelector(".subbubble-icon");
           if (otherToggle) otherToggle.setAttribute("aria-expanded", "false");
-          if (otherIcon) otherIcon.textContent = "+";
+          if (otherIcon) otherIcon.textContent = '+';
         });
 
         if (!isOpen) {
           bubble.classList.add("open");
           toggle.setAttribute("aria-expanded", "true");
-          if (icon) icon.textContent = "−";
+          if (icon) icon.textContent = '−';
         }
       });
     });
+  }
+
+  var SCENE = {
+    cameraDepth: 780,
+    sceneDepth: 240,
+    centerX: 0,
+    centerY: 0,
+    objects: []
+  };
+
+  var OBJECT_CONFIG = [
+    { key: "system-identity", baseAngle: 0.20, speed: 0.00020, radiusX: 300, radiusY: 128, planeTilt: 1.05, tiltX: -22, tiltY: 18, spinSpeed: 0.00055, bobAmp: 10, bobSpeed: 0.0012 },
+    { key: "parent-authority", baseAngle: 1.05, speed: 0.00017, radiusX: 220, radiusY: 220, planeTilt: 0.78, tiltX: -16, tiltY: 24, spinSpeed: 0.00048, bobAmp: 9, bobSpeed: 0.0011 },
+    { key: "vault-overview", baseAngle: 2.15, speed: 0.00022, radiusX: 300, radiusY: 128, planeTilt: 1.10, tiltX: -26, tiltY: 15, spinSpeed: 0.00058, bobAmp: 10, bobSpeed: 0.0013 },
+    { key: "cardinal-coins", baseAngle: 3.05, speed: 0.00016, radiusX: 220, radiusY: 220, planeTilt: 0.80, tiltX: -14, tiltY: 20, spinSpeed: 0.00044, bobAmp: 8, bobSpeed: 0.0010 },
+    { key: "cardinal-mapping", baseAngle: 4.15, speed: 0.00023, radiusX: 220, radiusY: 220, planeTilt: 0.80, tiltX: -18, tiltY: 26, spinSpeed: 0.00052, bobAmp: 8, bobSpeed: 0.00115 },
+    { key: "routing-law", baseAngle: 5.10, speed: 0.00018, radiusX: 300, radiusY: 128, planeTilt: 1.08, tiltX: -24, tiltY: 16, spinSpeed: 0.00057, bobAmp: 10, bobSpeed: 0.00125 },
+    { key: "gyp-distinction", baseAngle: 6.00, speed: 0.00015, radiusX: 220, radiusY: 220, planeTilt: 0.78, tiltX: -16, tiltY: 22, spinSpeed: 0.00046, bobAmp: 9, bobSpeed: 0.0011 },
+    { key: "nonoverlap-status", baseAngle: 7.05, speed: 0.00021, radiusX: 300, radiusY: 128, planeTilt: 1.12, tiltX: -22, tiltY: 18, spinSpeed: 0.00054, bobAmp: 10, bobSpeed: 0.00118 }
+  ];
+
+  function initSceneObjects() {
+    SCENE.objects = nodes.map(function (node, index) {
+      var config = OBJECT_CONFIG[index];
+      var button = node.querySelector(".node-button");
+      return {
+        node: node,
+        button: button,
+        key: config.key,
+        baseAngle: config.baseAngle,
+        speed: config.speed,
+        radiusX: config.radiusX,
+        radiusY: config.radiusY,
+        planeTilt: config.planeTilt,
+        tiltX: config.tiltX,
+        tiltY: config.tiltY,
+        spinSpeed: config.spinSpeed,
+        bobAmp: config.bobAmp,
+        bobSpeed: config.bobSpeed
+      };
+    });
+  }
+
+  function updateSceneMetrics() {
+    var rect = scene.getBoundingClientRect();
+    SCENE.centerX = rect.width / 2;
+    SCENE.centerY = rect.height / 2 + 8;
+  }
+
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function applyObjectState(object, time) {
+    var angle = object.baseAngle + time * object.speed;
+    var orbitX = Math.cos(angle) * object.radiusX;
+    var orbitY = Math.sin(angle) * object.radiusY;
+
+    var z = Math.sin(angle) * SCENE.sceneDepth;
+    var bob = Math.sin(time * object.bobSpeed + object.baseAngle) * object.bobAmp;
+
+    var projectedY = orbitY * Math.cos(object.planeTilt) + bob;
+    var projectedZ = z + (orbitY * Math.sin(object.planeTilt) * 0.55);
+
+    var perspective = SCENE.cameraDepth / (SCENE.cameraDepth - projectedZ);
+    var scale = perspective * 0.96;
+    var x = SCENE.centerX + orbitX * perspective;
+    var y = SCENE.centerY + projectedY * perspective;
+
+    var depthRatio = clamp((projectedZ + SCENE.sceneDepth) / (SCENE.sceneDepth * 2), 0, 1);
+    var brightness = 0.78 + depthRatio * 0.34;
+    var opacity = 0.46 + depthRatio * 0.54;
+    var blur = (1 - depthRatio) * 0.45;
+    var spinY = Math.sin(time * object.spinSpeed + object.baseAngle) * 42;
+    var spinX = object.tiltX + Math.cos(time * object.spinSpeed * 0.77 + object.baseAngle) * 8;
+    var spinZ = Math.sin(time * object.spinSpeed * 0.48 + object.baseAngle) * 8 + (orbitX / object.radiusX) * 3;
+
+    object.node.style.transform =
+      "translate3d(" + (x - object.node.offsetWidth / 2) + "px," + (y - object.node.offsetHeight / 2) + "px,0) " +
+      "scale(" + scale + ")";
+    object.node.style.zIndex = String(100 + Math.round(depthRatio * 100));
+    object.node.style.opacity = String(opacity);
+    object.node.style.filter = "brightness(" + brightness + ") blur(" + blur + "px)";
+
+    var body = object.node.querySelector(".diamond-body");
+    if (body) {
+      body.style.transform =
+        "rotateX(" + spinX + "deg) " +
+        "rotateY(" + spinY + "deg) " +
+        "rotateZ(" + spinZ + "deg)";
+    }
+  }
+
+  function animate(now) {
+    var activeTime = activeKey ? freezeTime : (now - sceneStart);
+
+    SCENE.objects.forEach(function (object) {
+      if (activeKey && object.key !== activeKey) {
+        object.node.classList.remove("active");
+      }
+      applyObjectState(object, activeTime);
+    });
+
+    rafId = requestAnimationFrame(animate);
   }
 
   function clearActiveNodes() {
@@ -295,16 +403,18 @@
     });
   }
 
-  function openInspection(key, node) {
+  function openInspection(key, button) {
     var data = DATA[key];
     if (!data) return;
 
     activeKey = key;
-    lastActiveNode = node || null;
+    freezeTime = performance.now() - sceneStart;
+    lastActiveButton = button || null;
 
     clearActiveNodes();
-    if (node) {
-      node.classList.add("active");
+    var activeNode = button ? button.closest(".node") : null;
+    if (activeNode) {
+      activeNode.classList.add("active");
     }
 
     panelKicker.textContent = data.kicker;
@@ -318,29 +428,25 @@
 
   function closeInspection() {
     activeKey = null;
-    fieldShell.classList.remove("reading");
     clearActiveNodes();
-    if (lastActiveNode) {
-      var button = lastActiveNode.querySelector(".diamond-box");
-      if (button) {
-        button.focus({ preventScroll: true });
-      }
+    fieldShell.classList.remove("reading");
+
+    if (lastActiveButton) {
+      lastActiveButton.focus({ preventScroll: true });
     }
   }
 
-  nodes.forEach(function (node) {
-    var key = node.getAttribute("data-panel");
-    var button = node.querySelector(".diamond-box");
-    if (!button) return;
-
-    button.addEventListener("click", function () {
-      if (activeKey === key) {
-        closeInspection();
-        return;
-      }
-      openInspection(key, node);
+  function bindNodeActions() {
+    SCENE.objects.forEach(function (object) {
+      object.button.addEventListener("click", function () {
+        if (activeKey === object.key) {
+          closeInspection();
+          return;
+        }
+        openInspection(object.key, object.button);
+      });
     });
-  });
+  }
 
   panelClose.addEventListener("click", closeInspection);
 
@@ -349,4 +455,11 @@
       closeInspection();
     }
   });
+
+  window.addEventListener("resize", updateSceneMetrics);
+
+  initSceneObjects();
+  updateSceneMetrics();
+  bindNodeActions();
+  rafId = requestAnimationFrame(animate);
 })();

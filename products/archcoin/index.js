@@ -1,32 +1,52 @@
 (function () {
   "use strict";
 
-  const accordions = Array.from(document.querySelectorAll(".accordion"));
-  if (!accordions.length) return;
+  var bubbles = Array.prototype.slice.call(document.querySelectorAll("[data-bubble]"));
+  if (!bubbles.length) return;
 
-  function setOpenState(item, shouldOpen) {
-    item.classList.toggle("open", shouldOpen);
-    const button = item.querySelector("button");
+  function setOpenState(bubble, isOpen) {
+    bubble.classList.toggle("open", isOpen);
+
+    var button = bubble.querySelector(".bubble-toggle");
+    var icon = bubble.querySelector(".bubble-icon");
+
     if (button) {
-      button.setAttribute("aria-expanded", shouldOpen ? "true" : "false");
+      button.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    if (icon) {
+      icon.textContent = isOpen ? "−" : "+";
     }
   }
 
-  function openOnly(target) {
-    accordions.forEach((item) => setOpenState(item, item === target));
+  function closeOthers(activeBubble) {
+    bubbles.forEach(function (bubble) {
+      if (bubble !== activeBubble) {
+        setOpenState(bubble, false);
+      }
+    });
   }
 
-  accordions.forEach((item) => {
-    const button = item.querySelector("button");
+  bubbles.forEach(function (bubble, index) {
+    var button = bubble.querySelector(".bubble-toggle");
     if (!button) return;
 
+    if (index === 0) {
+      setOpenState(bubble, true);
+    } else {
+      setOpenState(bubble, false);
+    }
+
     button.addEventListener("click", function () {
-      const isOpen = item.classList.contains("open");
+      var isOpen = bubble.classList.contains("open");
+
       if (isOpen) {
-        setOpenState(item, false);
+        setOpenState(bubble, false);
         return;
       }
-      openOnly(item);
+
+      closeOthers(bubble);
+      setOpenState(bubble, true);
     });
   });
 })();

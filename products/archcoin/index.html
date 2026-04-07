@@ -10,32 +10,112 @@
   />
   <style>
     :root{
-      --bg:#081018;
-      --panel:#0f1722;
-      --panel-2:#111d2b;
-      --line:#223449;
-      --text:#e9f1f7;
-      --muted:#9fb0c1;
-      --accent:#7dd3fc;
-      --accent-2:#c4b5fd;
-      --good:#86efac;
-      --warn:#fde68a;
+      --bg-0:#020204;
+      --bg-1:#06030b;
+      --bg-2:#0b0713;
+      --panel:#120a1f;
+      --panel-2:#1a1028;
+      --line:rgba(181,120,255,.18);
+      --line-strong:rgba(238,110,255,.28);
+      --text:#f7f1ff;
+      --muted:#bbaed1;
+      --accent:#d04dff;
+      --accent-2:#ff4d9a;
+      --accent-3:#9d5cff;
+      --glow:rgba(208,77,255,.34);
+      --glow-2:rgba(255,77,154,.22);
+      --good:#bfffcf;
+      --warn:#ffdca8;
+      --shadow:0 28px 80px rgba(0,0,0,.42);
+      --radius-xl:28px;
+      --radius-lg:22px;
+      --radius-md:18px;
+      --maxw:1280px;
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:linear-gradient(180deg,#061019 0%,#0a1420 100%);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
-    a{color:inherit}
-    .page{max-width:1200px;margin:0 auto;padding:32px 20px 96px}
-    .hero{
-      padding:28px;
-      border:1px solid var(--line);
-      border-radius:24px;
+    html,body{margin:0;padding:0}
+    html{background:var(--bg-0)}
+    body{
+      min-height:100vh;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at top right, rgba(125,211,252,.14), transparent 28%),
-        radial-gradient(circle at top left, rgba(196,181,253,.10), transparent 24%),
-        linear-gradient(180deg, rgba(17,29,43,.95), rgba(10,18,28,.98));
-      box-shadow:0 20px 60px rgba(0,0,0,.30);
+        radial-gradient(circle at 12% 18%, rgba(255,77,154,.10), transparent 0 18%),
+        radial-gradient(circle at 84% 10%, rgba(208,77,255,.12), transparent 0 22%),
+        radial-gradient(circle at 66% 42%, rgba(157,92,255,.08), transparent 0 20%),
+        radial-gradient(circle at 30% 76%, rgba(208,77,255,.08), transparent 0 22%),
+        linear-gradient(180deg, #010103 0%, #04020a 28%, #090411 62%, #020204 100%);
+      overflow-x:hidden;
     }
+
+    body::before,
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body::before{
+      background-image:
+        radial-gradient(2px 2px at 8% 16%, rgba(255,255,255,.92), transparent 55%),
+        radial-gradient(1.5px 1.5px at 18% 72%, rgba(255,255,255,.72), transparent 55%),
+        radial-gradient(2px 2px at 28% 32%, rgba(255,255,255,.86), transparent 55%),
+        radial-gradient(1.5px 1.5px at 38% 82%, rgba(255,255,255,.74), transparent 55%),
+        radial-gradient(2px 2px at 44% 18%, rgba(255,255,255,.88), transparent 55%),
+        radial-gradient(1.5px 1.5px at 52% 58%, rgba(255,255,255,.76), transparent 55%),
+        radial-gradient(2px 2px at 61% 24%, rgba(255,255,255,.90), transparent 55%),
+        radial-gradient(1.5px 1.5px at 69% 78%, rgba(255,255,255,.74), transparent 55%),
+        radial-gradient(2px 2px at 78% 38%, rgba(255,255,255,.90), transparent 55%),
+        radial-gradient(1.5px 1.5px at 86% 68%, rgba(255,255,255,.72), transparent 55%),
+        radial-gradient(2px 2px at 93% 16%, rgba(255,255,255,.90), transparent 55%);
+      opacity:.66;
+    }
+
+    body::after{
+      background:
+        radial-gradient(circle at 20% 22%, rgba(255,77,154,.06), transparent 0 10%),
+        radial-gradient(circle at 72% 20%, rgba(208,77,255,.08), transparent 0 14%),
+        radial-gradient(circle at 74% 72%, rgba(157,92,255,.07), transparent 0 14%);
+      filter:blur(18px);
+      opacity:.9;
+    }
+
+    a{color:inherit}
+    .page{
+      position:relative;
+      z-index:1;
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:28px 18px 90px;
+    }
+
+    .hero{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:34px;
+      background:
+        linear-gradient(180deg, rgba(23,12,35,.92), rgba(8,5,14,.94)),
+        radial-gradient(circle at top right, rgba(208,77,255,.12), transparent 30%);
+      box-shadow:var(--shadow);
+      padding:34px 28px 30px;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -8% -32% auto;
+      width:280px;
+      height:280px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(208,77,255,.26), rgba(255,77,154,.10) 42%, transparent 72%);
+      filter:blur(6px);
+      pointer-events:none;
+    }
+
     .eyebrow{
       display:inline-flex;
       align-items:center;
@@ -43,267 +123,329 @@
       padding:8px 12px;
       border:1px solid var(--line);
       border-radius:999px;
+      background:rgba(255,255,255,.03);
       color:var(--muted);
-      background:rgba(255,255,255,.02);
       font-size:12px;
-      letter-spacing:.08em;
+      letter-spacing:.1em;
       text-transform:uppercase;
-    }
-    h1{
-      margin:18px 0 10px;
-      font-size:clamp(34px,5vw,56px);
-      line-height:1.03;
-      letter-spacing:-.04em;
-    }
-    .subhead{
-      margin:0;
-      max-width:880px;
-      font-size:18px;
-      line-height:1.6;
-      color:var(--muted);
-    }
-    .summary-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-      margin-top:24px;
-    }
-    .summary-card{
-      padding:16px;
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.02);
-    }
-    .summary-card .k{
-      font-size:12px;
-      text-transform:uppercase;
-      letter-spacing:.08em;
-      color:var(--muted);
-      margin-bottom:8px;
-    }
-    .summary-card .v{
-      font-size:16px;
-      line-height:1.4;
+      backdrop-filter:blur(6px);
     }
 
-    .section-stack{
+    h1{
+      margin:18px 0 12px;
+      font-size:clamp(34px, 6vw, 64px);
+      line-height:1.02;
+      letter-spacing:-.05em;
+      max-width:980px;
+    }
+
+    .subhead{
+      max-width:940px;
+      margin:0;
+      color:var(--muted);
+      font-size:18px;
+      line-height:1.68;
+    }
+
+    .truth-band{
       display:grid;
-      grid-template-columns:1.35fr .85fr;
-      gap:18px;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:12px;
       margin-top:24px;
     }
-    .panel{
+
+    .truth-chip{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      border-radius:20px;
+      padding:16px 14px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+
+    .truth-chip .label{
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .truth-chip .value{
+      font-size:15px;
+      line-height:1.45;
+    }
+
+    .system-orbit{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:24px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(208,77,255,.08), transparent 0 30%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.015));
+    }
+
+    .orbit-grid{
+      display:grid;
+      grid-template-columns:1fr 1.25fr 1fr;
+      gap:14px;
+      align-items:center;
+    }
+
+    .orbital-card{
       border:1px solid var(--line);
       border-radius:24px;
-      background:linear-gradient(180deg,var(--panel),var(--panel-2));
-      overflow:hidden;
-      box-shadow:0 18px 50px rgba(0,0,0,.22);
-    }
-    .panel-inner{padding:24px}
-    .panel h2{
-      margin:0 0 12px;
-      font-size:26px;
-      letter-spacing:-.03em;
-    }
-    .panel p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.7;
-    }
-
-    .architecture{
-      display:grid;
-      gap:14px;
-      margin-top:18px;
-    }
-    .architecture-block{
-      border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(255,255,255,.02);
       padding:18px;
-    }
-    .architecture-block h3{
-      margin:0 0 8px;
-      font-size:18px;
-      letter-spacing:-.02em;
-    }
-    .architecture-block p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.65;
+      background:rgba(255,255,255,.025);
+      min-height:132px;
     }
 
-    .coin-map{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-      margin-top:18px;
-    }
-    .coin{
-      border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(255,255,255,.02);
-      padding:18px;
-    }
-    .coin .dir{
-      display:inline-block;
-      margin-bottom:10px;
-      color:var(--accent);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-    .coin h3{
-      margin:0 0 6px;
-      font-size:20px;
-      letter-spacing:-.02em;
-    }
-    .coin p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.65;
-    }
-
-    .vault-diagram{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
-    }
-    .node{
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:16px;
-      min-height:126px;
-      background:rgba(255,255,255,.02);
-    }
-    .node.center{
-      grid-column:2 / 3;
+    .orbital-card.center{
+      min-height:170px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      text-align:center;
       background:
-        radial-gradient(circle at top right, rgba(125,211,252,.08), transparent 38%),
-        rgba(255,255,255,.03);
+        radial-gradient(circle at center, rgba(208,77,255,.20), rgba(255,77,154,.10) 28%, rgba(255,255,255,.03) 58%, rgba(255,255,255,.02) 100%);
+      border-color:var(--line-strong);
+      box-shadow:0 0 40px rgba(208,77,255,.14);
     }
-    .node .label{
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
+
+    .orbital-card .mini{
       color:var(--muted);
+      font-size:11px;
+      letter-spacing:.1em;
+      text-transform:uppercase;
       margin-bottom:10px;
     }
-    .node .title{
-      font-size:18px;
+
+    .orbital-card .title{
+      font-size:20px;
+      line-height:1.25;
+      letter-spacing:-.03em;
       margin-bottom:8px;
-      letter-spacing:-.02em;
     }
-    .node .desc{
+
+    .orbital-card .desc{
       color:var(--muted);
-      line-height:1.55;
+      line-height:1.62;
       font-size:14px;
     }
 
-    .law-list,
-    .status-list{
-      margin:18px 0 0;
-      padding-left:18px;
-      color:var(--muted);
-      line-height:1.7;
-    }
-    .law-list li,
-    .status-list li{margin:8px 0}
-
-    .accordion-wrap{
-      margin-top:24px;
+    .bubble-field{
+      margin-top:26px;
       display:grid;
-      gap:12px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
     }
-    .accordion{
+
+    .bubble{
+      position:relative;
       border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.02);
+      border-radius:32px;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.05), transparent 26%),
+        linear-gradient(180deg, rgba(22,11,34,.94), rgba(10,6,17,.96));
+      box-shadow:var(--shadow);
       overflow:hidden;
+      isolation:isolate;
     }
-    .accordion button{
+
+    .bubble::before{
+      content:"";
+      position:absolute;
+      inset:-25% auto auto -10%;
+      width:180px;
+      height:180px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(208,77,255,.18), transparent 70%);
+      filter:blur(8px);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .bubble > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .bubble-toggle{
       width:100%;
       appearance:none;
       border:0;
-      margin:0;
       background:transparent;
       color:var(--text);
       text-align:left;
-      padding:18px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
+      padding:22px 22px 18px;
       cursor:pointer;
       font:inherit;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:16px;
     }
-    .accordion button span:last-child{
-      color:var(--accent);
-      font-size:14px;
-      white-space:nowrap;
-    }
-    .accordion .content{
-      display:none;
-      padding:0 20px 20px;
-      color:var(--muted);
-      line-height:1.7;
-    }
-    .accordion.open .content{display:block}
 
-    .status-bar{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
+    .bubble-toggle:focus-visible{
+      outline:2px solid rgba(255,255,255,.42);
+      outline-offset:-2px;
     }
-    .status-box{
-      padding:16px;
-      border:1px solid var(--line);
-      border-radius:18px;
-      background:rgba(255,255,255,.02);
-    }
-    .status-box .t{
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-    .status-box .b{
-      line-height:1.55;
-    }
-    .pill{
+
+    .bubble-eyebrow{
       display:inline-flex;
       align-items:center;
       gap:8px;
-      padding:7px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      font-size:12px;
-      margin-right:8px;
-      margin-bottom:8px;
+      font-size:11px;
+      letter-spacing:.1em;
+      text-transform:uppercase;
       color:var(--muted);
+      margin-bottom:10px;
+    }
+
+    .bubble-title{
+      font-size:24px;
+      line-height:1.1;
+      letter-spacing:-.04em;
+      margin:0 0 8px;
+    }
+
+    .bubble-summary{
+      margin:0;
+      color:var(--muted);
+      line-height:1.62;
+      font-size:15px;
+      max-width:48ch;
+    }
+
+    .bubble-icon{
+      flex:0 0 auto;
+      width:46px;
+      height:46px;
+      border-radius:50%;
+      border:1px solid var(--line-strong);
+      display:grid;
+      place-items:center;
+      color:var(--text);
+      background:linear-gradient(180deg, rgba(208,77,255,.18), rgba(255,77,154,.12));
+      box-shadow:0 0 24px rgba(208,77,255,.14);
+      margin-top:2px;
+      font-size:24px;
+      line-height:1;
+    }
+
+    .bubble-panel{
+      display:none;
+      padding:0 22px 22px;
+    }
+
+    .bubble.open .bubble-panel{
+      display:block;
+      animation:fadeIn .18s ease-out;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:0;transform:translateY(-4px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+
+    .bubble-panel-inner{
+      border-top:1px solid rgba(255,255,255,.06);
+      padding-top:18px;
+    }
+
+    .stack{
+      display:grid;
+      gap:12px;
+    }
+
+    .detail-card{
+      border:1px solid rgba(255,255,255,.05);
+      border-radius:20px;
+      padding:16px;
       background:rgba(255,255,255,.02);
     }
-    .pill.good{color:var(--good)}
-    .pill.warn{color:var(--warn)}
 
-    footer{
-      margin-top:24px;
+    .detail-card h3{
+      margin:0 0 8px;
+      font-size:17px;
+      letter-spacing:-.02em;
+    }
+
+    .detail-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .law-list{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.68;
+    }
+
+    .law-list li{
+      margin:8px 0;
+    }
+
+    .mapping-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .mapping-item{
+      border:1px solid rgba(255,255,255,.06);
+      border-radius:18px;
+      padding:15px;
+      background:rgba(255,255,255,.02);
+    }
+
+    .mapping-item .dir{
+      color:#f1b7ff;
+      font-size:11px;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+    }
+
+    .mapping-item .name{
+      font-size:18px;
+      line-height:1.25;
+      margin-bottom:7px;
+    }
+
+    .mapping-item .desc{
+      color:var(--muted);
+      line-height:1.58;
+      font-size:14px;
+    }
+
+    .footer-note{
+      margin-top:18px;
+      text-align:center;
       color:var(--muted);
       font-size:14px;
       line-height:1.7;
-      text-align:center;
     }
 
-    @media (max-width: 980px){
-      .summary-grid,
-      .section-stack,
-      .coin-map,
-      .status-bar{grid-template-columns:1fr}
-      .vault-diagram{grid-template-columns:1fr}
-      .node.center{grid-column:auto}
+    @media (max-width: 1120px){
+      .truth-band{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .bubble-field{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .orbit-grid{grid-template-columns:1fr}
+      .orbital-card.center{text-align:left}
+    }
+
+    @media (max-width: 720px){
+      .page{padding:18px 14px 70px}
+      .hero{padding:24px 18px 20px}
+      .truth-band{grid-template-columns:1fr}
+      .bubble-field{grid-template-columns:1fr}
+      .mapping-grid{grid-template-columns:1fr}
+      .bubble-toggle{padding:18px 18px 14px}
+      .bubble-panel{padding:0 18px 18px}
+      .bubble-title{font-size:22px}
+      .bubble-summary{font-size:14px}
     }
   </style>
 </head>
@@ -311,337 +453,303 @@
   <main class="page">
     <section class="hero" aria-labelledby="page-title">
       <div class="eyebrow">Archcoin • Five-Coin Financial Architecture</div>
-      <h1 id="page-title">Archcoin is the parent authority of a five-coin financial system.</h1>
+      <h1 id="page-title">One parent. One body. Four derived governors.</h1>
       <p class="subhead">
-        The system is structured as one parent template, one master body, and four derived governors.
-        Archcoin remains the parent construction authority. The Vault remains the master body.
-        The four cardinal coins remain distinct financial governors with non-overlapping roles.
+        Archcoin remains the parent template and construction authority. The Vault remains the master body.
+        The four cardinal coins remain distinct financial governors for contracts, inbound value, outbound obligation,
+        and growth allocation. This page presents hierarchy first and expansion second.
       </p>
 
-      <div class="summary-grid" aria-label="System summary">
-        <div class="summary-card">
-          <div class="k">Parent Object</div>
-          <div class="v">Archcoin</div>
+      <div class="truth-band" aria-label="Top-level system truth">
+        <div class="truth-chip">
+          <div class="label">Parent</div>
+          <div class="value">Archcoin</div>
         </div>
-        <div class="summary-card">
-          <div class="k">Master Body</div>
-          <div class="v">The Vault</div>
+        <div class="truth-chip">
+          <div class="label">Master Body</div>
+          <div class="value">The Vault</div>
         </div>
-        <div class="summary-card">
-          <div class="k">Derived Governors</div>
-          <div class="v">Contracts, Accounts Receivable, Accounts Payable, GYP</div>
+        <div class="truth-chip">
+          <div class="label">North</div>
+          <div class="value">Contracts Coin</div>
         </div>
-        <div class="summary-card">
-          <div class="k">System Count</div>
-          <div class="v">5 coins under one controlled hierarchy</div>
+        <div class="truth-chip">
+          <div class="label">East / South / West</div>
+          <div class="value">AR, AP, and GYP governors</div>
+        </div>
+        <div class="truth-chip">
+          <div class="label">Read</div>
+          <div class="value">High-control financial architecture</div>
         </div>
       </div>
-    </section>
 
-    <div class="section-stack">
-      <section class="panel" aria-labelledby="system-identity">
-        <div class="panel-inner">
-          <h2 id="system-identity">System identity</h2>
-          <p>
-            Archcoin is a high-control financial architecture. It is not presented as a generic token page,
-            a speculative sales surface, or a listing narrative. It is a role-defined system in which the parent,
-            the body, and the governors remain clearly separated.
-          </p>
-
-          <div class="architecture">
-            <div class="architecture-block">
-              <h3>Parent authority</h3>
-              <p>
-                Archcoin is the master template and parent construction authority for the full five-coin structure.
-                It defines the system frame. It does not collapse into the four cardinal governors.
-              </p>
-            </div>
-            <div class="architecture-block">
-              <h3>Vault overview</h3>
-              <p>
-                The Vault is the master body. It holds financial compartments, routes stored objects,
-                and preserves relationship integrity between direction and finance class.
-              </p>
-            </div>
-            <div class="architecture-block">
-              <h3>Derived governance</h3>
-              <p>
-                The four cardinal coins govern distinct operational classes: binding authority, inbound value,
-                outbound obligation, and growth allocation. Their responsibilities stay separate by design.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <aside class="panel" aria-labelledby="visual-priority">
-        <div class="panel-inner">
-          <h2 id="visual-priority">Visual priority</h2>
-          <div class="pill good">Archcoin first</div>
-          <div class="pill">Vault second</div>
-          <div class="pill">Cardinal coins third</div>
-          <div class="pill warn">GYP present without overpromise</div>
-
-          <ul class="law-list">
-            <li>Archcoin must read as parent template authority.</li>
-            <li>The Vault must read as the master operating body.</li>
-            <li>The cardinal coins must read as derived governors.</li>
-            <li>Language must remain financial and structural.</li>
-            <li>No speculative price or listing language is used.</li>
-          </ul>
-        </div>
-      </aside>
-    </div>
-
-    <section class="panel" aria-labelledby="vault-overview" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="vault-overview">The Vault and the system overview</h2>
-        <p>
-          The Vault is the central financial body. It governs storage domains and routes stored objects
-          according to both cardinal direction and finance class. This preserves a controlled operating model
-          in which architecture determines role, and role determines handling.
-        </p>
-
-        <div class="vault-diagram" aria-label="Vault hierarchy diagram">
-          <div class="node">
-            <div class="label">North</div>
-            <div class="title">Contracts Coin</div>
-            <div class="desc">Binding authority for commitments, formal obligations, and executable contract structure.</div>
-          </div>
-
-          <div class="node center">
-            <div class="label">Center</div>
-            <div class="title">The Vault</div>
-            <div class="desc">Master body for storage, routing, compartment logic, and system-wide containment.</div>
-          </div>
-
-          <div class="node">
-            <div class="label">East</div>
-            <div class="title">Accounts Receivable Coin</div>
-            <div class="desc">Inbound value authority for money due, collected value, and receivable-class movement.</div>
-          </div>
-
-          <div class="node">
-            <div class="label">South</div>
-            <div class="title">Accounts Payable Coin</div>
-            <div class="desc">Outbound obligation authority for liabilities, payable flows, and settlement-class release.</div>
-          </div>
-
-          <div class="node">
-            <div class="label">Parent</div>
+      <div class="system-orbit" aria-label="Five-coin hierarchy">
+        <div class="orbit-grid">
+          <div class="orbital-card">
+            <div class="mini">Parent Authority</div>
             <div class="title">Archcoin</div>
-            <div class="desc">Master template and parent construction authority over the full five-coin architecture.</div>
-          </div>
-
-          <div class="node">
-            <div class="label">West</div>
-            <div class="title">GYP Coin</div>
-            <div class="desc">Growth-allocation authority for expansion budgets, forecast pressure, and controlled promotion.</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="parent-authority" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="parent-authority">Archcoin parent authority</h2>
-        <p>
-          Archcoin is the parent template. It is responsible for the full construction logic of the architecture.
-          It defines the relationship between the body and the governors. It is not interchangeable with the four
-          derived coins, and the four derived coins do not replace Archcoin.
-        </p>
-
-        <ul class="law-list">
-          <li>Archcoin stands above the derived governors as parent authority.</li>
-          <li>Archcoin does not collapse into any single financial class.</li>
-          <li>The cardinal coins remain specialized expressions under Archcoin, not substitutes for it.</li>
-          <li>The page therefore presents hierarchy first and token language second.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="cardinal-coins" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="cardinal-coins">Four cardinal coins</h2>
-        <p>
-          The four cardinal coins are derived governors. Each one owns a different operational lane.
-          None of them are written as broad catch-all abstractions. Each coin is tied to one finance class.
-        </p>
-
-        <div class="coin-map">
-          <article class="coin">
-            <div class="dir">North • Binding authority</div>
-            <h3>Contracts Coin</h3>
-            <p>
-              The Contracts Coin governs formal commitments, agreements, terms, and the system’s binding layer.
-              It is the north-facing authority because it determines what is held as enforceable structure.
-            </p>
-          </article>
-
-          <article class="coin">
-            <div class="dir">East • Inbound value authority</div>
-            <h3>Accounts Receivable Coin</h3>
-            <p>
-              The Accounts Receivable Coin governs inbound value, collected receipts, and all receivable-class flows.
-              It is the east-facing authority because it handles value entering the system.
-            </p>
-          </article>
-
-          <article class="coin">
-            <div class="dir">South • Outbound obligation authority</div>
-            <h3>Accounts Payable Coin</h3>
-            <p>
-              The Accounts Payable Coin governs obligations leaving the system, liabilities owed,
-              and payable-class release. It is the south-facing authority for controlled outward settlement.
-            </p>
-          </article>
-
-          <article class="coin">
-            <div class="dir">West • Growth-allocation authority</div>
-            <h3>GYP Coin</h3>
-            <p>
-              The GYP Coin governs growth allocation, prediction pressure, and marketing-budget style deployment.
-              It is a financial planning and expansion governor, not a promise engine and not a speculation surface.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="cardinal-mapping" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="cardinal-mapping">Cardinal-financial mapping</h2>
-        <p>
-          The mapping is fixed at execution level and should be read literally. Direction is not decorative.
-          Direction identifies authority type within the financial body.
-        </p>
-
-        <div class="accordion-wrap" id="mapping-accordion">
-          <div class="accordion open">
-            <button type="button" aria-expanded="true">
-              <span>North → Contracts Coin</span>
-              <span>Binding authority</span>
-            </button>
-            <div class="content">
-              North governs contract-class objects, formal commitments, and binding control. It determines what is held as authorized agreement.
+            <div class="desc">
+              Master template and construction authority for the five-coin system.
+              It defines the system frame and does not collapse into the four derived governors.
             </div>
           </div>
 
-          <div class="accordion">
-            <button type="button" aria-expanded="false">
-              <span>East → Accounts Receivable Coin</span>
-              <span>Inbound value authority</span>
-            </button>
-            <div class="content">
-              East governs receivable-class objects, incoming value, collected money, and inbound financial rights.
+          <div class="orbital-card center">
+            <div class="mini">Master Body</div>
+            <div class="title">The Vault</div>
+            <div class="desc">
+              Central storage and routing body for financial objects, compartments, and finance-class movement.
             </div>
           </div>
 
-          <div class="accordion">
-            <button type="button" aria-expanded="false">
-              <span>South → Accounts Payable Coin</span>
-              <span>Outbound obligation authority</span>
-            </button>
-            <div class="content">
-              South governs payable-class objects, obligations owed, settlement pressure, and outbound release.
-            </div>
-          </div>
-
-          <div class="accordion">
-            <button type="button" aria-expanded="false">
-              <span>West → GYP Coin</span>
-              <span>Growth-allocation authority</span>
-            </button>
-            <div class="content">
-              West governs growth allocation, forecast-informed budget deployment, and controlled expansion channels.
+          <div class="orbital-card">
+            <div class="mini">Derived Governors</div>
+            <div class="title">Contracts • AR • AP • GYP</div>
+            <div class="desc">
+              Four cardinal finance governors with non-overlapping roles under one preserved hierarchy.
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="routing-law" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="routing-law">Retrieval and routing law</h2>
-        <p>
-          Stored objects in the Vault are not handled generically. They are routed by both cardinal direction
-          and finance class. This preserves traceability, role separation, and operational discipline.
-        </p>
-
-        <ul class="law-list">
-          <li>Objects enter the Vault under a defined class.</li>
-          <li>Each class routes to a cardinal governor aligned to its financial role.</li>
-          <li>Direction and finance class are both required for correct handling.</li>
-          <li>The parent template remains Archcoin across all routes.</li>
-          <li>The body remains the Vault across all routes.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="gyp-distinction" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="gyp-distinction">GYP Coin distinction</h2>
-        <p>
-          GYP Coin is the growth-allocation governor. It should not be framed with false promise language,
-          guaranteed upside language, or generic promotional hype. Its role is budgetary, directional, and predictive.
-        </p>
-
-        <ul class="law-list">
-          <li>GYP governs growth allocation rather than speculative reward claims.</li>
-          <li>GYP may inform expansion pressure and forecast-oriented deployment.</li>
-          <li>GYP does not replace contracts, receivables, or payables.</li>
-          <li>GYP remains one governor within the five-coin structure, not the whole story.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="nonoverlap" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="nonoverlap">System dignification and non-overlap</h2>
-        <p>
-          The page dignifies all five coins without flattening them into one another. Archcoin is the parent template.
-          The Vault is the master body. The four cardinal coins are derived governors. This is the controlling read.
-        </p>
-
-        <div class="status-bar">
-          <div class="status-box">
-            <div class="t">Parent</div>
-            <div class="b">Archcoin remains the construction authority and system template.</div>
+    <section class="bubble-field" id="bubble-field" aria-label="Expandable architecture sections">
+      <article class="bubble open" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="true">
+          <div>
+            <div class="bubble-eyebrow">Bubble 01 • System Identity</div>
+            <h2 class="bubble-title">Archcoin parent authority</h2>
+            <p class="bubble-summary">
+              Archcoin is the parent construction authority and master template. It stands above the four derived governors.
+            </p>
           </div>
-          <div class="status-box">
-            <div class="t">Body</div>
-            <div class="b">The Vault remains the storage and routing body for financial objects.</div>
-          </div>
-          <div class="status-box">
-            <div class="t">Governors</div>
-            <div class="b">The four cardinal coins remain derived and non-overlapping in role.</div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <div class="detail-card">
+              <h3>Controlling read</h3>
+              <p>
+                Archcoin is the system parent. It defines the architecture between the body and the governors.
+                It is not interchangeable with the four cardinal coins, and the four cardinal coins do not substitute for it.
+              </p>
+            </div>
+            <ul class="law-list">
+              <li>Archcoin remains the master template and parent construction authority.</li>
+              <li>Archcoin must not be flattened into the four derived governors.</li>
+              <li>The page reads as controlled architecture rather than token hype.</li>
+              <li>Hierarchy is load-bearing and visible before any expansion.</li>
+            </ul>
           </div>
         </div>
-      </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 02 • Master Body</div>
+            <h2 class="bubble-title">The Vault</h2>
+            <p class="bubble-summary">
+              The Vault is the central body that stores, routes, and classifies financial objects by direction and finance class.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <div class="detail-card">
+              <h3>Body role</h3>
+              <p>
+                The Vault is not another coin and not a decorative wrapper. It is the master body.
+                It governs compartments, storage domains, and the routing of stored objects.
+              </p>
+            </div>
+            <div class="detail-card">
+              <h3>Routing principle</h3>
+              <p>
+                Financial objects route through the Vault under both a finance class and a cardinal direction.
+                Direction is tied to authority type, not visual ornament.
+              </p>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 03 • Cardinal Governors</div>
+            <h2 class="bubble-title">The four cardinal coins</h2>
+            <p class="bubble-summary">
+              The four derived governors remain distinct and non-overlapping: contracts, receivables, payables, and growth allocation.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner">
+            <div class="mapping-grid">
+              <div class="mapping-item">
+                <div class="dir">North</div>
+                <div class="name">Contracts Coin</div>
+                <div class="desc">Binding authority for agreements, commitments, and enforceable contract structure.</div>
+              </div>
+              <div class="mapping-item">
+                <div class="dir">East</div>
+                <div class="name">Accounts Receivable Coin</div>
+                <div class="desc">Inbound value authority for receivable-class movement, money due, and collected value.</div>
+              </div>
+              <div class="mapping-item">
+                <div class="dir">South</div>
+                <div class="name">Accounts Payable Coin</div>
+                <div class="desc">Outbound obligation authority for liabilities owed, settlement pressure, and release.</div>
+              </div>
+              <div class="mapping-item">
+                <div class="dir">West</div>
+                <div class="name">GYP Coin</div>
+                <div class="desc">Growth-allocation authority for expansion budgets, forecast pressure, and controlled promotion.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 04 • Cardinal Mapping</div>
+            <h2 class="bubble-title">Direction and finance class stay linked</h2>
+            <p class="bubble-summary">
+              Cardinal direction identifies finance authority. This mapping is literal, fixed, and not ornamental.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <ul class="law-list">
+              <li>North governs contract-class objects and binding control.</li>
+              <li>East governs receivable-class objects and inbound value.</li>
+              <li>South governs payable-class objects and outbound obligation.</li>
+              <li>West governs growth allocation and controlled expansion budgets.</li>
+              <li>The Vault routes under both class and direction.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 05 • Retrieval and Routing Law</div>
+            <h2 class="bubble-title">Stored objects do not move generically</h2>
+            <p class="bubble-summary">
+              The system preserves traceability by routing financial objects through the Vault under defined authority lanes.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <div class="detail-card">
+              <h3>Handling rule</h3>
+              <p>
+                Each object enters under a defined class, routes to a cardinal governor, and remains inside the parent
+                frame established by Archcoin. This preserves non-overlap and operational discipline.
+              </p>
+            </div>
+            <ul class="law-list">
+              <li>Objects enter the Vault under a known financial class.</li>
+              <li>Each class routes to a matching cardinal governor.</li>
+              <li>Archcoin remains parent authority across all routes.</li>
+              <li>The Vault remains the master body across all routes.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 06 • GYP Distinction</div>
+            <h2 class="bubble-title">GYP is a governor, not a promise engine</h2>
+            <p class="bubble-summary">
+              GYP handles growth allocation and forecast pressure without speculative price language or false upside claims.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <ul class="law-list">
+              <li>GYP governs growth allocation, not guaranteed reward language.</li>
+              <li>GYP may support expansion budgets and promotion discipline.</li>
+              <li>GYP does not replace contracts, AR, or AP functions.</li>
+              <li>Its role remains bounded within the five-coin hierarchy.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 07 • Non-Overlap</div>
+            <h2 class="bubble-title">The hierarchy remains visible and clean</h2>
+            <p class="bubble-summary">
+              The page dignifies all five coins without flattening the parent, the body, and the governors into one another.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <div class="detail-card">
+              <h3>System read</h3>
+              <p>
+                Archcoin remains the parent. The Vault remains the body. The four cardinal coins remain the derived governors.
+                Expansion reveals detail, but it does not create truth.
+              </p>
+            </div>
+            <ul class="law-list">
+              <li>Parent-child relations are preserved.</li>
+              <li>Cardinal order is preserved.</li>
+              <li>HTML owns identity and role truth.</li>
+              <li>JS owns expansion behavior only.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="bubble" data-bubble>
+        <button class="bubble-toggle" type="button" aria-expanded="false">
+          <div>
+            <div class="bubble-eyebrow">Bubble 08 • Status and Next Motion</div>
+            <h2 class="bubble-title">Current status</h2>
+            <p class="bubble-summary">
+              The page now expresses the five-coin architecture in a compressed bubble structure with a cosmic black and reddish-purple visual system.
+            </p>
+          </div>
+          <div class="bubble-icon">+</div>
+        </button>
+        <div class="bubble-panel">
+          <div class="bubble-panel-inner stack">
+            <ul class="law-list">
+              <li>Parent authority expressed: yes.</li>
+              <li>Vault body expressed: yes.</li>
+              <li>Cardinal financial mapping expressed: yes.</li>
+              <li>Bubble compression structure active: yes.</li>
+              <li>Page-local interaction only: yes.</li>
+              <li>Marketing-first drift avoided: yes.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
     </section>
 
-    <section class="panel" aria-labelledby="status-next-motion" style="margin-top:18px;">
-      <div class="panel-inner">
-        <h2 id="status-next-motion">Status and next motion</h2>
-        <p>
-          The five-coin architecture is now expressed as a high-control financial page object.
-          The page preserves parent-child hierarchy, cardinal-financial mapping, and HTML-owned role truth.
-        </p>
-
-        <ul class="status-list">
-          <li>System identity expressed: yes.</li>
-          <li>Parent authority preserved: yes.</li>
-          <li>Vault body preserved: yes.</li>
-          <li>Cardinal coin distinctions preserved: yes.</li>
-          <li>Non-hype language preserved: yes.</li>
-          <li>Page-local interaction only: yes.</li>
-        </ul>
-      </div>
-    </section>
-
-    <footer>
-      Archcoin page scope: locked to local expression of the five-coin architecture.
-    </footer>
+    <div class="footer-note">
+      Archcoin page scope remains locked to a local expression of the five-coin architecture.
+    </div>
   </main>
 
   <script src="./index.js"></script>

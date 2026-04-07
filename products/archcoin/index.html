@@ -11,26 +11,25 @@
   <style>
     :root{
       --bg-0:#010205;
-      --bg-1:#030713;
-      --bg-2:#071326;
-      --panel:#09111f;
-      --panel-2:#0d1728;
-      --line:rgba(145,181,255,.18);
-      --line-2:rgba(255,107,107,.16);
-      --line-strong:rgba(199,220,255,.28);
+      --bg-1:#020814;
+      --bg-2:#071427;
+      --panel:#08111d;
+      --panel-2:#0c1726;
+      --line:rgba(143,188,255,.18);
+      --line-2:rgba(255,109,109,.18);
+      --line-strong:rgba(216,231,255,.30);
       --text:#f7fbff;
-      --muted:#b8c5d8;
-      --blue:#57a6ff;
-      --blue-2:#89c6ff;
-      --red:#ff6b6b;
-      --red-2:#ff9e7a;
-      --gold:#ffe29c;
-      --shadow:0 24px 70px rgba(0,0,0,.42);
+      --muted:#b9c7d9;
+      --blue:#5ea8ff;
+      --blue-2:#9dd0ff;
+      --red:#ff6d6d;
+      --red-2:#ffab88;
+      --gold:#ffe4a3;
+      --shadow:0 28px 80px rgba(0,0,0,.46);
       --radius-xl:30px;
       --radius-lg:22px;
       --radius-md:18px;
       --maxw:1320px;
-      --header-h:96px;
     }
 
     *{box-sizing:border-box}
@@ -41,10 +40,10 @@
       color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:
-        radial-gradient(circle at 12% 14%, rgba(87,166,255,.16), transparent 0 18%),
-        radial-gradient(circle at 82% 12%, rgba(255,107,107,.14), transparent 0 20%),
-        radial-gradient(circle at 50% 52%, rgba(61,121,255,.08), transparent 0 22%),
-        linear-gradient(180deg, #010205 0%, #02050d 28%, #04101f 60%, #010205 100%);
+        radial-gradient(circle at 12% 14%, rgba(94,168,255,.16), transparent 0 18%),
+        radial-gradient(circle at 84% 12%, rgba(255,109,109,.14), transparent 0 20%),
+        radial-gradient(circle at 54% 44%, rgba(85,129,255,.08), transparent 0 20%),
+        linear-gradient(180deg, #010205 0%, #02060f 26%, #041120 58%, #010205 100%);
       overflow-x:hidden;
     }
 
@@ -63,50 +62,50 @@
 
     .starfield{
       background-image:
-        radial-gradient(2px 2px at 8% 14%, rgba(255,255,255,.95), transparent 55%),
-        radial-gradient(1.5px 1.5px at 18% 62%, rgba(255,255,255,.88), transparent 55%),
-        radial-gradient(2px 2px at 27% 27%, rgba(255,240,210,.95), transparent 55%),
-        radial-gradient(1.5px 1.5px at 36% 76%, rgba(255,255,255,.82), transparent 55%),
+        radial-gradient(2px 2px at 8% 14%, rgba(255,255,255,.96), transparent 55%),
+        radial-gradient(1.5px 1.5px at 18% 62%, rgba(255,255,255,.84), transparent 55%),
+        radial-gradient(2px 2px at 29% 25%, rgba(255,245,222,.92), transparent 55%),
+        radial-gradient(1.5px 1.5px at 37% 78%, rgba(255,255,255,.80), transparent 55%),
         radial-gradient(2px 2px at 47% 18%, rgba(255,255,255,.90), transparent 55%),
-        radial-gradient(1.5px 1.5px at 58% 64%, rgba(255,245,220,.92), transparent 55%),
-        radial-gradient(2px 2px at 67% 24%, rgba(255,255,255,.95), transparent 55%),
-        radial-gradient(1.5px 1.5px at 76% 72%, rgba(255,255,255,.82), transparent 55%),
-        radial-gradient(2px 2px at 86% 34%, rgba(255,255,255,.93), transparent 55%),
-        radial-gradient(1.5px 1.5px at 93% 16%, rgba(255,245,220,.92), transparent 55%);
+        radial-gradient(1.5px 1.5px at 56% 66%, rgba(255,245,220,.88), transparent 55%),
+        radial-gradient(2px 2px at 65% 24%, rgba(255,255,255,.92), transparent 55%),
+        radial-gradient(1.5px 1.5px at 76% 74%, rgba(255,255,255,.80), transparent 55%),
+        radial-gradient(2px 2px at 88% 36%, rgba(255,255,255,.94), transparent 55%),
+        radial-gradient(1.5px 1.5px at 94% 16%, rgba(255,244,218,.90), transparent 55%);
       animation:twinkleA 5.8s ease-in-out infinite alternate;
       opacity:.72;
     }
 
     .starfield::before{
       background-image:
-        radial-gradient(1.5px 1.5px at 11% 48%, rgba(255,255,255,.78), transparent 55%),
-        radial-gradient(1.5px 1.5px at 24% 83%, rgba(255,255,255,.74), transparent 55%),
-        radial-gradient(1.5px 1.5px at 33% 44%, rgba(255,250,230,.92), transparent 55%),
-        radial-gradient(1.5px 1.5px at 44% 88%, rgba(255,255,255,.76), transparent 55%),
-        radial-gradient(1.5px 1.5px at 54% 36%, rgba(255,255,255,.84), transparent 55%),
-        radial-gradient(1.5px 1.5px at 63% 83%, rgba(255,250,230,.84), transparent 55%),
-        radial-gradient(1.5px 1.5px at 73% 47%, rgba(255,255,255,.72), transparent 55%),
-        radial-gradient(1.5px 1.5px at 82% 86%, rgba(255,255,255,.78), transparent 55%);
+        radial-gradient(1.5px 1.5px at 12% 48%, rgba(255,255,255,.76), transparent 55%),
+        radial-gradient(1.5px 1.5px at 24% 84%, rgba(255,255,255,.70), transparent 55%),
+        radial-gradient(1.5px 1.5px at 34% 44%, rgba(255,248,226,.88), transparent 55%),
+        radial-gradient(1.5px 1.5px at 44% 88%, rgba(255,255,255,.72), transparent 55%),
+        radial-gradient(1.5px 1.5px at 55% 36%, rgba(255,255,255,.80), transparent 55%),
+        radial-gradient(1.5px 1.5px at 64% 82%, rgba(255,248,226,.80), transparent 55%),
+        radial-gradient(1.5px 1.5px at 74% 48%, rgba(255,255,255,.70), transparent 55%),
+        radial-gradient(1.5px 1.5px at 82% 86%, rgba(255,255,255,.76), transparent 55%);
       animation:twinkleB 7.2s ease-in-out infinite alternate;
-      opacity:.55;
+      opacity:.52;
     }
 
     .starfield::after{
       background:
-        radial-gradient(circle at 18% 18%, rgba(87,166,255,.08), transparent 0 10%),
-        radial-gradient(circle at 79% 22%, rgba(255,107,107,.08), transparent 0 11%),
-        radial-gradient(circle at 74% 74%, rgba(137,198,255,.06), transparent 0 13%);
+        radial-gradient(circle at 20% 18%, rgba(94,168,255,.09), transparent 0 10%),
+        radial-gradient(circle at 80% 20%, rgba(255,109,109,.09), transparent 0 11%),
+        radial-gradient(circle at 76% 72%, rgba(157,208,255,.06), transparent 0 13%);
       filter:blur(16px);
-      opacity:.9;
+      opacity:.88;
     }
 
     @keyframes twinkleA{
-      0%, 100%{opacity:.48}
-      50%{opacity:.82}
+      0%,100%{opacity:.50}
+      50%{opacity:.84}
     }
     @keyframes twinkleB{
-      0%, 100%{opacity:.26}
-      50%{opacity:.62}
+      0%,100%{opacity:.26}
+      50%{opacity:.60}
     }
 
     .page{
@@ -123,9 +122,9 @@
       border:1px solid var(--line);
       border-radius:34px;
       background:
-        linear-gradient(180deg, rgba(9,17,31,.94), rgba(7,13,24,.96)),
-        radial-gradient(circle at 18% 16%, rgba(87,166,255,.12), transparent 30%),
-        radial-gradient(circle at 82% 18%, rgba(255,107,107,.10), transparent 28%);
+        linear-gradient(180deg, rgba(8,17,29,.95), rgba(6,12,22,.96)),
+        radial-gradient(circle at 18% 18%, rgba(94,168,255,.12), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(255,109,109,.11), transparent 28%);
       box-shadow:var(--shadow);
       padding:34px 28px 28px;
       margin-bottom:22px;
@@ -134,24 +133,26 @@
     .hero::before{
       content:"";
       position:absolute;
-      inset:auto auto -18% -8%;
+      left:-6%;
+      bottom:-18%;
       width:260px;
       height:260px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(87,166,255,.16), transparent 70%);
-      filter:blur(10px);
+      background:radial-gradient(circle, rgba(94,168,255,.16), transparent 70%);
+      filter:blur(12px);
       pointer-events:none;
     }
 
     .hero::after{
       content:"";
       position:absolute;
-      inset:-12% -6% auto auto;
+      right:-6%;
+      top:-10%;
       width:280px;
       height:280px;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(255,107,107,.14), transparent 70%);
-      filter:blur(12px);
+      background:radial-gradient(circle, rgba(255,109,109,.14), transparent 70%);
+      filter:blur(14px);
       pointer-events:none;
     }
 
@@ -165,7 +166,7 @@
       background:rgba(255,255,255,.03);
       color:var(--muted);
       font-size:12px;
-      letter-spacing:.1em;
+      letter-spacing:.10em;
       text-transform:uppercase;
     }
 
@@ -203,7 +204,7 @@
     .truth-chip .label{
       color:var(--muted);
       font-size:11px;
-      letter-spacing:.1em;
+      letter-spacing:.10em;
       text-transform:uppercase;
       margin-bottom:8px;
     }
@@ -215,37 +216,15 @@
 
     .field-shell{
       position:relative;
+      overflow:hidden;
       border:1px solid var(--line);
       border-radius:34px;
-      overflow:hidden;
-      min-height:720px;
+      min-height:760px;
       background:
-        linear-gradient(180deg, rgba(4,9,18,.82), rgba(3,7,13,.90)),
-        radial-gradient(circle at 20% 24%, rgba(87,166,255,.10), transparent 18%),
-        radial-gradient(circle at 80% 26%, rgba(255,107,107,.08), transparent 18%);
+        linear-gradient(180deg, rgba(4,9,18,.84), rgba(3,7,13,.92)),
+        radial-gradient(circle at 20% 24%, rgba(94,168,255,.09), transparent 20%),
+        radial-gradient(circle at 80% 24%, rgba(255,109,109,.08), transparent 18%);
       box-shadow:var(--shadow);
-    }
-
-    .field-shell.reading .scene{
-      animation-play-state:paused;
-    }
-
-    .field-shell.reading .diamond-box{
-      animation-play-state:paused;
-    }
-
-    .field-shell.reading .orbit{
-      animation-play-state:paused;
-    }
-
-    .field-shell.reading .scene-layer{
-      transform:scale(1.01);
-      filter:blur(4px) saturate(.78);
-      opacity:.26;
-    }
-
-    .field-shell.reading .selected-shadow{
-      opacity:1;
     }
 
     .field-topbar{
@@ -272,49 +251,68 @@
 
     .scene{
       position:relative;
-      min-height:640px;
+      min-height:680px;
       overflow:hidden;
+      perspective:1200px;
+      perspective-origin:50% 42%;
     }
 
     .scene-layer{
       position:absolute;
       inset:0;
+      transform-style:preserve-3d;
       transition:filter .32s ease, opacity .32s ease, transform .32s ease;
+      will-change:transform, filter, opacity;
     }
 
-    .orbit{
+    .field-shell.reading .scene-layer{
+      filter:blur(4px) saturate(.72);
+      opacity:.22;
+      transform:scale(1.01);
+    }
+
+    .orbit-ring{
       position:absolute;
-      border:1px solid rgba(175,210,255,.12);
+      left:50%;
+      top:50%;
+      width:var(--w);
+      height:var(--h);
+      transform:translate(-50%,-50%) rotateX(70deg) rotateZ(var(--rz, 0deg));
+      border:1px solid rgba(160,205,255,.12);
       border-radius:50%;
-      transform:translate(-50%,-50%);
-      animation:orbitGlow 10s linear infinite;
-      opacity:.58;
+      box-shadow:0 0 20px rgba(94,168,255,.04);
+      opacity:.60;
+      transform-style:preserve-3d;
+      pointer-events:none;
     }
 
-    .orbit.red{
-      border-color:rgba(255,138,138,.10);
-      animation-duration:13s;
+    .orbit-ring.red{
+      border-color:rgba(255,132,132,.10);
+      box-shadow:0 0 18px rgba(255,109,109,.04);
     }
 
-    .orbit.blue{
-      border-color:rgba(129,191,255,.12);
-      animation-duration:11s;
-    }
-
-    @keyframes orbitGlow{
-      0%{transform:translate(-50%,-50%) rotate(0deg)}
-      100%{transform:translate(-50%,-50%) rotate(360deg)}
-    }
-
-    .diamond-node{
+    .orbit-ring::before{
+      content:"";
       position:absolute;
-      width:126px;
-      height:126px;
-      transform:translate(-50%,-50%);
-      z-index:2;
+      inset:-1px;
+      border-radius:50%;
+      border-top:1px solid rgba(255,255,255,.14);
+      border-bottom:1px solid rgba(255,255,255,.03);
+      opacity:.50;
     }
 
-    .diamond-box{
+    .node{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:128px;
+      height:128px;
+      transform-style:preserve-3d;
+      transform-origin:center center;
+      will-change:transform, opacity, filter;
+    }
+
+    .node-button{
       position:relative;
       width:100%;
       height:100%;
@@ -323,154 +321,153 @@
       padding:0;
       cursor:pointer;
       transform-style:preserve-3d;
-      animation:spinFloat 11s linear infinite;
     }
 
-    .diamond-node.fast .diamond-box{animation-duration:8.5s}
-    .diamond-node.slow .diamond-box{animation-duration:13.5s}
-
-    @keyframes spinFloat{
-      0%{transform:rotateZ(0deg) rotateY(0deg) translateY(0)}
-      25%{transform:rotateZ(90deg) rotateY(11deg) translateY(-2px)}
-      50%{transform:rotateZ(180deg) rotateY(0deg) translateY(0)}
-      75%{transform:rotateZ(270deg) rotateY(-11deg) translateY(2px)}
-      100%{transform:rotateZ(360deg) rotateY(0deg) translateY(0)}
+    .node-hit{
+      position:absolute;
+      inset:-10px;
     }
 
-    .diamond-shape{
+    .diamond-body{
+      position:absolute;
+      inset:0;
+      transform-style:preserve-3d;
+      filter:drop-shadow(0 10px 20px rgba(0,0,0,.28));
+    }
+
+    .diamond-face{
       position:absolute;
       inset:0;
       transform:rotate(45deg);
-      border-radius:16px;
+      border-radius:18px;
       background:
-        linear-gradient(135deg, rgba(255,107,107,.28), rgba(255,226,156,.20) 40%, rgba(87,166,255,.24) 100%);
-      border:1px solid rgba(255,236,190,.58);
+        linear-gradient(135deg, rgba(255,109,109,.30), rgba(255,228,163,.20) 40%, rgba(94,168,255,.28) 100%);
+      border:1px solid rgba(255,238,198,.56);
       box-shadow:
-        0 0 0 1px rgba(255,248,220,.10) inset,
-        0 0 28px rgba(87,166,255,.18),
-        0 0 26px rgba(255,107,107,.12);
+        inset 0 0 0 1px rgba(255,248,224,.08),
+        0 0 26px rgba(94,168,255,.18),
+        0 0 22px rgba(255,109,109,.14);
       overflow:hidden;
+      backface-visibility:hidden;
     }
 
-    .diamond-shape::before,
-    .diamond-shape::after{
+    .diamond-face::before,
+    .diamond-face::after{
       content:"";
       position:absolute;
       inset:12%;
-      border:1px solid rgba(255,241,196,.42);
-      clip-path:polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+      clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);
+      border:1px solid rgba(255,243,202,.42);
     }
 
-    .diamond-shape::after{
+    .diamond-face::after{
       inset:28%;
-      border-color:rgba(255,248,220,.32);
+      border-color:rgba(255,248,220,.30);
     }
 
     .diamond-core{
       position:absolute;
       inset:29%;
       border-radius:50%;
-      background:radial-gradient(circle, rgba(255,243,205,.96), rgba(255,226,156,.40) 36%, rgba(255,255,255,0) 68%);
-      filter:blur(.2px);
+      background:radial-gradient(circle, rgba(255,244,214,.96), rgba(255,228,163,.42) 34%, rgba(255,255,255,0) 70%);
     }
 
-    .diamond-point{
+    .diamond-edge{
       position:absolute;
-      width:6px;
-      height:6px;
-      border-radius:50%;
-      background:rgba(255,246,213,.95);
-      box-shadow:0 0 14px rgba(255,240,205,.60);
+      inset:0;
+      transform-style:preserve-3d;
+      pointer-events:none;
     }
 
-    .diamond-point.n{top:5px;left:50%;transform:translateX(-50%)}
-    .diamond-point.e{top:50%;right:5px;transform:translateY(-50%)}
-    .diamond-point.s{bottom:5px;left:50%;transform:translateX(-50%)}
-    .diamond-point.w{top:50%;left:5px;transform:translateY(-50%)}
+    .diamond-edge span{
+      position:absolute;
+      background:linear-gradient(180deg, rgba(255,247,214,.44), rgba(255,247,214,.04));
+      transform-origin:center;
+      box-shadow:0 0 8px rgba(255,240,200,.10);
+      opacity:.72;
+    }
 
-    .diamond-lines{
+    .diamond-edge .v{width:2px;height:82px;left:50%;top:22px;transform:translateX(-50%)}
+    .diamond-edge .h{height:2px;width:82px;left:22px;top:50%;transform:translateY(-50%)}
+    .diamond-edge .d1{width:2px;height:94px;left:50%;top:16px;transform:translateX(-50%) rotate(45deg)}
+    .diamond-edge .d2{width:2px;height:94px;left:50%;top:16px;transform:translateX(-50%) rotate(-45deg)}
+
+    .cardinal-points{
       position:absolute;
       inset:0;
       pointer-events:none;
     }
 
-    .diamond-lines span{
+    .cardinal-points i{
       position:absolute;
-      background:rgba(255,241,196,.52);
-      box-shadow:0 0 10px rgba(255,236,180,.18);
-      transform-origin:center;
+      width:6px;
+      height:6px;
+      border-radius:50%;
+      background:rgba(255,246,216,.95);
+      box-shadow:0 0 14px rgba(255,237,192,.62);
     }
 
-    .diamond-lines .v{width:2px;height:82px;left:50%;top:22px;transform:translateX(-50%)}
-    .diamond-lines .h{height:2px;width:82px;top:50%;left:22px;transform:translateY(-50%)}
-    .diamond-lines .d1{width:2px;height:92px;left:50%;top:17px;transform:translateX(-50%) rotate(45deg)}
-    .diamond-lines .d2{width:2px;height:92px;left:50%;top:17px;transform:translateX(-50%) rotate(-45deg)}
+    .cardinal-points .n{top:5px;left:50%;transform:translateX(-50%)}
+    .cardinal-points .e{top:50%;right:5px;transform:translateY(-50%)}
+    .cardinal-points .s{bottom:5px;left:50%;transform:translateX(-50%)}
+    .cardinal-points .w{top:50%;left:5px;transform:translateY(-50%)}
 
-    .diamond-label{
+    .node-label{
       position:absolute;
-      inset:0;
-      display:flex;
-      align-items:flex-end;
-      justify-content:center;
+      inset:auto 0 8px 0;
       text-align:center;
-      padding:0 8px 10px;
+      padding:0 8px;
       font-size:12px;
       line-height:1.2;
       letter-spacing:.06em;
       text-transform:uppercase;
       font-weight:700;
-      color:#fff6dd;
+      color:#fff6df;
       text-shadow:0 1px 4px rgba(0,0,0,.45);
+      pointer-events:none;
     }
 
-    .diamond-node.active{
-      z-index:8;
-    }
-
-    .diamond-node.active .diamond-box{
-      animation-play-state:paused;
-    }
-
-    .diamond-node.active .diamond-shape{
-      box-shadow:
-        0 0 0 1px rgba(255,248,220,.14) inset,
-        0 0 44px rgba(87,166,255,.30),
-        0 0 40px rgba(255,107,107,.24);
+    .node.active{
+      z-index:20 !important;
     }
 
     .selected-shadow{
       position:absolute;
       inset:0;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(6,10,18,.12), rgba(1,2,5,.62) 56%, rgba(1,2,5,.88) 100%);
-      opacity:0;
-      transition:opacity .32s ease;
-      pointer-events:none;
       z-index:3;
+      opacity:0;
+      transition:opacity .30s ease;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(5,10,18,.08), rgba(1,2,5,.58) 58%, rgba(1,2,5,.86) 100%);
+      pointer-events:none;
+    }
+
+    .field-shell.reading .selected-shadow{
+      opacity:1;
     }
 
     .panel-wrap{
       position:absolute;
       inset:0;
+      z-index:10;
       display:flex;
       align-items:center;
       justify-content:center;
       padding:22px;
-      z-index:10;
       pointer-events:none;
     }
 
     .info-panel{
-      width:min(980px, 100%);
+      width:min(980px,100%);
       max-height:calc(100% - 20px);
       overflow:auto;
       border:1px solid var(--line-strong);
       border-radius:30px;
       background:
         linear-gradient(180deg, rgba(7,12,22,.98), rgba(8,12,20,.98)),
-        radial-gradient(circle at 20% 14%, rgba(87,166,255,.10), transparent 20%),
-        radial-gradient(circle at 80% 14%, rgba(255,107,107,.10), transparent 20%);
-      box-shadow:0 26px 90px rgba(0,0,0,.55);
+        radial-gradient(circle at 18% 14%, rgba(94,168,255,.10), transparent 22%),
+        radial-gradient(circle at 82% 14%, rgba(255,109,109,.10), transparent 22%);
+      box-shadow:0 30px 90px rgba(0,0,0,.58);
       opacity:0;
       transform:translateY(22px) scale(.96);
       transition:opacity .28s ease, transform .28s ease;
@@ -488,7 +485,7 @@
       top:0;
       z-index:2;
       padding:22px 22px 16px;
-      background:linear-gradient(180deg, rgba(7,12,22,.98), rgba(7,12,22,.88));
+      background:linear-gradient(180deg, rgba(7,12,22,.98), rgba(7,12,22,.90));
       backdrop-filter:blur(10px);
       border-bottom:1px solid rgba(255,255,255,.06);
     }
@@ -639,7 +636,9 @@
       padding-left:18px;
     }
 
-    .law-list li{margin:8px 0}
+    .law-list li{
+      margin:8px 0;
+    }
 
     .mapping-grid{
       display:grid;
@@ -682,11 +681,11 @@
       line-height:1.7;
     }
 
-    @media (max-width: 1100px){
+    @media (max-width:1100px){
       .truth-band{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width: 820px){
+    @media (max-width:820px){
       .page{padding:18px 14px 64px}
       .hero{padding:24px 18px 20px}
       .truth-band{grid-template-columns:1fr}
@@ -696,21 +695,12 @@
       .panel-row{flex-direction:column}
       .panel-close{align-self:flex-start}
       .mapping-grid{grid-template-columns:1fr}
-
-      .diamond-node{width:112px;height:112px}
-      .diamond-node[data-node="0"]{left:18%!important;top:20%!important}
-      .diamond-node[data-node="1"]{left:50%!important;top:14%!important}
-      .diamond-node[data-node="2"]{left:82%!important;top:21%!important}
-      .diamond-node[data-node="3"]{left:20%!important;top:43%!important}
-      .diamond-node[data-node="4"]{left:80%!important;top:43%!important}
-      .diamond-node[data-node="5"]{left:16%!important;top:66%!important}
-      .diamond-node[data-node="6"]{left:50%!important;top:74%!important}
-      .diamond-node[data-node="7"]{left:84%!important;top:66%!important}
+      .node{width:112px;height:112px}
     }
 
-    @media (max-width: 560px){
-      .diamond-node{width:100px;height:100px}
+    @media (max-width:560px){
       .field-topbar{padding:16px 14px 0}
+      .node{width:100px;height:100px}
       .panel-head{padding:18px 16px 14px}
       .panel-body{padding:16px}
       .subbubble-toggle{padding:16px}
@@ -731,7 +721,7 @@
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
         The four cardinal coins remain distinct financial governors for contracts, inbound value, outbound obligation,
-        and growth allocation. Choose an object to inspect. The system pauses while you read.
+        and growth allocation. Choose an object to inspect. The field pauses while you read.
       </p>
 
       <div class="truth-band" aria-label="Top-level system truth">
@@ -766,95 +756,111 @@
 
       <div class="scene" id="scene">
         <div class="scene-layer" id="scene-layer">
-          <div class="orbit blue" style="left:50%;top:40%;width:74%;height:34%"></div>
-          <div class="orbit red" style="left:50%;top:48%;width:54%;height:54%"></div>
-          <div class="orbit blue" style="left:50%;top:58%;width:80%;height:26%"></div>
+          <div class="orbit-ring" style="--w:76%;--h:32%;--rz:0deg;"></div>
+          <div class="orbit-ring red" style="--w:58%;--h:58%;--rz:22deg;"></div>
+          <div class="orbit-ring" style="--w:86%;--h:24%;--rz:-18deg;"></div>
 
-          <div class="diamond-node fast" data-node="0" data-panel="system-identity" style="left:18%;top:20%;">
-            <button class="diamond-box" type="button" aria-label="Open system identity">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="system-identity" aria-label="Open system identity">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Identity</div>
+              <div class="node-label">Identity</div>
             </button>
           </div>
 
-          <div class="diamond-node slow" data-node="1" data-panel="parent-authority" style="left:50%;top:14%;">
-            <button class="diamond-box" type="button" aria-label="Open parent authority">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="parent-authority" aria-label="Open parent authority">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Parent</div>
+              <div class="node-label">Parent</div>
             </button>
           </div>
 
-          <div class="diamond-node fast" data-node="2" data-panel="vault-overview" style="left:82%;top:21%;">
-            <button class="diamond-box" type="button" aria-label="Open Vault overview">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="vault-overview" aria-label="Open Vault overview">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Vault</div>
+              <div class="node-label">Vault</div>
             </button>
           </div>
 
-          <div class="diamond-node slow" data-node="3" data-panel="cardinal-coins" style="left:20%;top:43%;">
-            <button class="diamond-box" type="button" aria-label="Open cardinal coins">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="cardinal-coins" aria-label="Open cardinal coins">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Governors</div>
+              <div class="node-label">Governors</div>
             </button>
           </div>
 
-          <div class="diamond-node fast" data-node="4" data-panel="cardinal-mapping" style="left:80%;top:43%;">
-            <button class="diamond-box" type="button" aria-label="Open cardinal mapping">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="cardinal-mapping" aria-label="Open cardinal mapping">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Mapping</div>
+              <div class="node-label">Mapping</div>
             </button>
           </div>
 
-          <div class="diamond-node slow" data-node="5" data-panel="routing-law" style="left:16%;top:66%;">
-            <button class="diamond-box" type="button" aria-label="Open routing law">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="routing-law" aria-label="Open routing law">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Routing</div>
+              <div class="node-label">Routing</div>
             </button>
           </div>
 
-          <div class="diamond-node fast" data-node="6" data-panel="gyp-distinction" style="left:50%;top:74%;">
-            <button class="diamond-box" type="button" aria-label="Open GYP distinction">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="gyp-distinction" aria-label="Open GYP distinction">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">GYP</div>
+              <div class="node-label">GYP</div>
             </button>
           </div>
 
-          <div class="diamond-node slow" data-node="7" data-panel="nonoverlap-status" style="left:84%;top:66%;">
-            <button class="diamond-box" type="button" aria-label="Open system status">
-              <div class="diamond-shape">
-                <div class="diamond-lines"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
+          <div class="node" data-panel="nonoverlap-status" aria-label="Open system status">
+            <button class="node-button" type="button">
+              <span class="node-hit" aria-hidden="true"></span>
+              <div class="diamond-body">
+                <div class="diamond-face"></div>
+                <div class="diamond-edge"><span class="v"></span><span class="h"></span><span class="d1"></span><span class="d2"></span></div>
                 <div class="diamond-core"></div>
-                <div class="diamond-point n"></div><div class="diamond-point e"></div><div class="diamond-point s"></div><div class="diamond-point w"></div>
+                <div class="cardinal-points"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>
               </div>
-              <div class="diamond-label">Status</div>
+              <div class="node-label">Status</div>
             </button>
           </div>
         </div>

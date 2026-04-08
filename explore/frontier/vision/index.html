@@ -1,11 +1,11 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: FRONTIER BASELINE · TWO-FILE SPLIT · SUN-CENTERED PLANETARY REMOTE
+     STATUS: FRONTIER BASELINE · CONJUGATED DIAMOND UNIVERSE
      PURPOSE:
        - Split structure from runtime authority
-       - Center INDEX as the sun-button
-       - All other controls behave as planet-buttons
-       - Allow multiple orbital lanes on a flat Euclidean page plane
+       - Conjugate core and planets into one diamond-body grammar
+       - Core remains INDEX button and acts as diamond-sun
+       - Planets orbit with depth cycling around the core
        - Preserve canonical carry: gd_lang/gd_style/gd_time/gd_depth only
        - Lane remains URL-only
 -->
@@ -21,10 +21,10 @@
 
   <style>
     :root{
-      --D0:150px;
-      --D1:110px;
-      --D2:92px;
-      --D3:82px;
+      --D0:148px;
+      --D1:108px;
+      --D2:90px;
+      --D3:80px;
 
       --Z0:28px;
       --Z1:22px;
@@ -53,11 +53,7 @@
     }
 
     *{box-sizing:border-box}
-
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
+    a{color:inherit;text-decoration:none}
 
     body{
       margin:0;
@@ -158,11 +154,7 @@
       border-radius:999px;
       opacity:.90;
       background:
-        radial-gradient(circle at 50% 46%,
-          rgba(255,255,255,.06),
-          rgba(0,0,0,.16) 58%,
-          rgba(0,0,0,.44) 79%,
-          rgba(0,0,0,0) 92%),
+        radial-gradient(circle at 50% 46%, rgba(255,255,255,.06), rgba(0,0,0,.16) 58%, rgba(0,0,0,.44) 79%, rgba(0,0,0,0) 92%),
         radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 62%),
         radial-gradient(circle at 50% 50%, rgba(255,43,43,.07), transparent 67%),
         linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.10));
@@ -192,66 +184,25 @@
       animation:dialSweep 16s linear infinite;
     }
 
-    .sunSystem{
+    .coreGlow{
       position:absolute;
       left:50%;
       top:50%;
-      z-index:4;
-      width:190px;
-      height:190px;
-      pointer-events:none;
-      transform:translate(-50%,-50%);
-    }
-
-    .sunGlow{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:280px;
-      height:280px;
+      z-index:3;
+      width:340px;
+      height:340px;
       border-radius:999px;
       transform:translate(-50%,-50%);
+      pointer-events:none;
       background:
         radial-gradient(circle at 50% 50%,
-          rgba(255,248,228,.92) 0%,
-          rgba(255,235,180,.58) 12%,
-          rgba(255,220,130,.18) 30%,
+          rgba(255,244,210,.92) 0%,
+          rgba(255,225,150,.42) 18%,
+          rgba(255,200,100,.14) 36%,
           rgba(255,200,100,0) 72%);
-      filter:blur(8px);
-      animation:sunGlowPulse 7.6s ease-in-out infinite;
+      filter:blur(10px);
+      animation:coreGlowPulse 7.4s ease-in-out infinite;
     }
-
-    .sunCore{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:82px;
-      height:82px;
-      border-radius:999px;
-      transform:translate(-50%,-50%);
-      background:
-        radial-gradient(circle at 34% 30%, rgba(255,255,255,.46), transparent 26%),
-        radial-gradient(circle at 50% 50%, rgba(255,248,228,.98) 0%, rgba(242,231,204,.96) 68%, rgba(220,201,160,.90) 100%);
-      box-shadow:
-        0 0 36px rgba(255,235,180,.24),
-        0 0 90px rgba(255,215,130,.16),
-        inset 0 2px 0 rgba(255,255,255,.18);
-      border:1px solid rgba(255,255,255,.14);
-      animation:sunCorePulse 6.8s ease-in-out infinite;
-    }
-
-    .sunRing{
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:999px;
-      transform:translate(-50%,-50%);
-      border:1px solid rgba(255,255,255,.08);
-      opacity:.62;
-    }
-
-    .sunRing--1{ width:118px; height:118px; }
-    .sunRing--2{ width:154px; height:154px; opacity:.34; }
 
     .orbitBand{
       position:absolute;
@@ -284,28 +235,10 @@
       filter:drop-shadow(0 16px 36px rgba(0,0,0,.34));
     }
 
-    .planetNode--l1{ --face:var(--D1); --depth:var(--Z1); z-index:10; }
-    .planetNode--l2{ --face:var(--D2); --depth:var(--Z2); z-index:9; }
-    .planetNode--l3{ --face:var(--D3); --depth:var(--Z3); z-index:8; }
-
-    .sunButtonNode{
-      --face:var(--D0);
-      --depth:var(--Z0);
-
-      position:absolute;
-      left:50%;
-      top:50%;
-      z-index:20;
-      width:calc(var(--face) + (var(--depth) * 2));
-      height:calc(var(--face) + (var(--depth) * 2));
-      pointer-events:auto;
-      cursor:pointer;
-      touch-action:manipulation;
-      -webkit-tap-highlight-color:transparent;
-      transform:translate(-50%,-50%);
-      transform-style:preserve-3d;
-      filter:drop-shadow(0 18px 40px rgba(0,0,0,.38));
-    }
+    .planetNode--l1{ --face:var(--D1); --depth:var(--Z1); }
+    .planetNode--l2{ --face:var(--D2); --depth:var(--Z2); }
+    .planetNode--l3{ --face:var(--D3); --depth:var(--Z3); }
+    .planetNode--core{ --face:var(--D0); --depth:var(--Z0); }
 
     .planetShadow{
       position:absolute;
@@ -317,11 +250,7 @@
       transform:translate(-50%, calc(var(--face) * .42)) rotate(-8deg);
       border-radius:999px;
       background:
-        radial-gradient(circle at 50% 50%,
-          rgba(0,0,0,.40) 0%,
-          rgba(0,0,0,.22) 42%,
-          rgba(0,0,0,.07) 72%,
-          rgba(0,0,0,0) 100%);
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.40) 0%, rgba(0,0,0,.22) 42%, rgba(0,0,0,.07) 72%, rgba(0,0,0,0) 100%);
       filter:blur(9px);
       opacity:.80;
     }
@@ -333,21 +262,14 @@
       width:var(--face);
       height:var(--face);
       transform-style:preserve-3d;
-      transform:
-        translate(-50%,-50%)
-        rotateZ(45deg)
-        rotateX(62deg)
-        rotateY(-36deg);
+      transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-36deg);
       transition:filter .18s ease;
       will-change:transform;
     }
 
     .planetNode:hover .planetCube,
     .planetNode:focus .planetCube,
-    .planetNode:focus-within .planetCube,
-    .sunButtonNode:hover .planetCube,
-    .sunButtonNode:focus .planetCube,
-    .sunButtonNode:focus-within .planetCube{
+    .planetNode:focus-within .planetCube{
       filter:brightness(1.04) saturate(1.05);
     }
 
@@ -356,9 +278,7 @@
       overflow:hidden;
       border:1px solid rgba(255,255,255,.14);
       backface-visibility:hidden;
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.14),
-        inset 0 -22px 42px rgba(0,0,0,.34);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -22px 42px rgba(0,0,0,.34);
     }
 
     .face::before{
@@ -383,14 +303,7 @@
       pointer-events:none;
       opacity:.34;
       transform:rotate(10deg);
-      background:linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.04) 24%,
-        rgba(255,255,255,.18) 50%,
-        rgba(255,255,255,.04) 72%,
-        rgba(255,255,255,0) 100%
-      );
+      background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.04) 24%, rgba(255,255,255,.18) 50%, rgba(255,255,255,.04) 72%, rgba(255,255,255,0) 100%);
       filter:blur(2px);
       animation:faceSweep 9s linear infinite;
       animation-delay:var(--phase,0s);
@@ -421,17 +334,17 @@
         inset 0 -42px 82px rgba(0,0,0,.72);
     }
 
-    .sunButtonNode .face--front{
+    .planetNode--core .face--front{
       background:
-        radial-gradient(circle at 24% 22%, rgba(255,255,255,.32), transparent 34%),
-        radial-gradient(circle at 76% 26%, rgba(255,220,130,.20), transparent 58%),
-        radial-gradient(circle at 74% 82%, rgba(201,162,74,.16), transparent 64%),
+        radial-gradient(circle at 24% 22%, rgba(255,255,255,.34), transparent 34%),
+        radial-gradient(circle at 76% 26%, rgba(255,220,130,.24), transparent 58%),
+        radial-gradient(circle at 74% 82%, rgba(201,162,74,.18), transparent 64%),
         radial-gradient(circle at 26% 82%, rgba(255,120,60,.14), transparent 66%),
-        linear-gradient(155deg, rgba(120,82,32,.78), rgba(26,14,8,.98));
+        linear-gradient(155deg, rgba(128,90,34,.84), rgba(22,12,8,.98));
       box-shadow:
-        0 0 28px rgba(255,220,130,.16),
-        inset 0 2px 0 rgba(255,255,255,.20),
-        inset 0 -42px 82px rgba(0,0,0,.70);
+        0 0 34px rgba(255,220,130,.18),
+        inset 0 2px 0 rgba(255,255,255,.24),
+        inset 0 -42px 82px rgba(0,0,0,.66);
     }
 
     .face--back{
@@ -460,11 +373,23 @@
         linear-gradient(155deg, rgba(110,22,28,.46), rgba(14,18,26,.94));
     }
 
+    .planetNode--core .face--left{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.14)),
+        linear-gradient(155deg, rgba(154,92,40,.54), rgba(28,16,10,.94));
+    }
+
     .face--right{
       transform:rotateY(90deg) translateZ(calc(var(--face) / 2));
       background:
         linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.08)),
         linear-gradient(155deg, rgba(184,146,92,.46), rgba(16,18,24,.90));
+    }
+
+    .planetNode--core .face--right{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.06)),
+        linear-gradient(155deg, rgba(218,180,108,.52), rgba(32,22,12,.92));
     }
 
     .face--top,
@@ -483,6 +408,12 @@
       background:
         linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.04)),
         linear-gradient(155deg, rgba(116,86,52,.58), rgba(34,28,22,.88));
+    }
+
+    .planetNode--core .face--top{
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,0,0,.02)),
+        linear-gradient(155deg, rgba(230,196,126,.54), rgba(80,54,22,.88));
     }
 
     .face--bottom{
@@ -514,6 +445,10 @@
       backface-visibility:hidden;
     }
 
+    .planetNode--core .skeleton__plane{
+      box-shadow:inset 0 0 0 1px rgba(255,224,146,.24);
+    }
+
     .skeleton__plane--front{
       transform:translateZ(calc(var(--depth) / 2 + 1px));
     }
@@ -538,6 +473,11 @@
       filter:drop-shadow(0 0 6px rgba(201,162,74,.18));
     }
 
+    .planetNode--core .skeleton__edge{
+      background:linear-gradient(180deg, rgba(255,224,146,.08), rgba(255,224,146,.52), rgba(255,224,146,.08));
+      filter:drop-shadow(0 0 8px rgba(255,224,146,.22));
+    }
+
     .skeleton__edge--v{ transform:translateZ(calc(var(--depth) / 2 + 2px)); }
     .skeleton__edge--d1{ transform:translateZ(calc(var(--depth) / 2 + 2px)) rotate(45deg); }
     .skeleton__edge--d2{ transform:translateZ(calc(var(--depth) / 2 + 2px)) rotate(-45deg); }
@@ -557,6 +497,11 @@
       filter:drop-shadow(0 0 4px rgba(201,162,74,.14));
     }
 
+    .planetNode--core .skeleton__spine{
+      background:linear-gradient(180deg, rgba(255,224,146,.18), rgba(255,255,255,.34), rgba(255,224,146,.18));
+      filter:drop-shadow(0 0 6px rgba(255,224,146,.18));
+    }
+
     .planetLabel{
       position:absolute;
       left:50%;
@@ -571,9 +516,7 @@
       pointer-events:none;
       transform:translate(-50%,-50%);
       text-align:center;
-      text-shadow:
-        0 0 18px rgba(0,0,0,.42),
-        0 1px 0 rgba(255,255,255,.04);
+      text-shadow:0 0 18px rgba(0,0,0,.42), 0 1px 0 rgba(255,255,255,.04);
     }
 
     .planetLabel::before{
@@ -604,6 +547,13 @@
       pointer-events:none;
     }
 
+    .planetNode--core .planetLabel::after{
+      opacity:.22;
+      background:
+        radial-gradient(circle at 50% 64%, rgba(255,170,80,.28), transparent 52%),
+        radial-gradient(circle at 50% 42%, rgba(255,224,146,.24), transparent 58%);
+    }
+
     .planetWord{
       position:relative;
       z-index:2;
@@ -624,8 +574,8 @@
       opacity:.82;
     }
 
-    .sunButtonNode .planetWord{ font-size:15px; }
-    .sunButtonNode .planetCode{ font-size:10px; }
+    .planetNode--core .planetWord{ font-size:15px; }
+    .planetNode--core .planetCode{ font-size:10px; }
     .planetNode--l1 .planetWord{ font-size:13px; }
     .planetNode--l2 .planetWord{ font-size:12px; }
 
@@ -678,19 +628,13 @@
 
     .control:hover{
       border-color:rgba(201,162,74,.34);
-      box-shadow:
-        var(--shadowC),
-        0 0 0 2px rgba(201,162,74,.14),
-        0 0 26px rgba(201,162,74,.16);
+      box-shadow:var(--shadowC), 0 0 0 2px rgba(201,162,74,.14), 0 0 26px rgba(201,162,74,.16);
       filter:brightness(1.03);
     }
 
     .control.is-on{
       border-color:rgba(255,43,43,.26);
-      box-shadow:
-        var(--shadowC),
-        0 0 16px rgba(255,43,43,.12),
-        0 0 26px rgba(201,162,74,.08);
+      box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12), 0 0 26px rgba(201,162,74,.08);
     }
 
     .control__label{
@@ -744,14 +688,9 @@
       50%{opacity:.90;filter:blur(.25px) brightness(1.05)}
     }
 
-    @keyframes sunGlowPulse{
+    @keyframes coreGlowPulse{
       0%,100%{opacity:.86;transform:translate(-50%,-50%) scale(1)}
       50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
-    }
-
-    @keyframes sunCorePulse{
-      0%,100%{filter:brightness(1)}
-      50%{filter:brightness(1.05)}
     }
 
     @keyframes faceSweep{
@@ -777,11 +716,10 @@
       .star,
       .dialFace::before,
       .dialFace::after,
-      .sunGlow,
-      .sunCore,
       .face::after,
       .planetLabel::after,
-      .control{
+      .control,
+      .coreGlow{
         animation:none !important;
       }
     }
@@ -792,19 +730,15 @@
         --D1:108px;
         --D2:88px;
         --D3:78px;
-
         --Z0:26px;
         --Z1:20px;
         --Z2:17px;
         --Z3:15px;
-
         --padTop:128px;
       }
 
       .planetWord{font-size:11.25px}
-      .sunSystem{width:168px;height:168px}
-      .sunGlow{width:236px;height:236px}
-      .sunCore{width:74px;height:74px}
+      .coreGlow{width:300px;height:300px}
     }
 
     @media (max-width:420px){
@@ -813,7 +747,6 @@
         --D1:104px;
         --D2:86px;
         --D3:76px;
-
         --Z0:24px;
         --Z1:18px;
         --Z2:16px;
@@ -821,9 +754,7 @@
       }
 
       .planetWord{font-size:11px}
-      .sunSystem{width:158px;height:158px}
-      .sunGlow{width:220px;height:220px}
-      .sunCore{width:68px;height:68px}
+      .coreGlow{width:264px;height:264px}
     }
   </style>
 </head>
@@ -831,50 +762,30 @@
 <body>
   <header class="top" aria-label="Top controls">
     <div class="top__group" aria-label="Language">
-      <div class="control is-on" id="langEN" role="button" tabindex="0" aria-label="English">
-        <span class="control__label">EN</span>
-      </div>
-      <div class="control" id="langZH" role="button" tabindex="0" aria-label="Chinese">
-        <span class="control__label">中文</span>
-      </div>
-      <div class="control" id="langES" role="button" tabindex="0" aria-label="Spanish">
-        <span class="control__label">ES</span>
-      </div>
+      <div class="control is-on" id="langEN" role="button" tabindex="0" aria-label="English"><span class="control__label">EN</span></div>
+      <div class="control" id="langZH" role="button" tabindex="0" aria-label="Chinese"><span class="control__label">中文</span></div>
+      <div class="control" id="langES" role="button" tabindex="0" aria-label="Spanish"><span class="control__label">ES</span></div>
     </div>
 
     <div class="top__group" aria-label="Lane">
-      <div class="control is-on" id="lanePlatform" role="button" tabindex="0" aria-label="Platform lane">
-        <span class="control__label">P</span>
-      </div>
-      <div class="control" id="laneEngineering" role="button" tabindex="0" aria-label="Engineering lane">
-        <span class="control__label">E</span>
-      </div>
+      <div class="control is-on" id="lanePlatform" role="button" tabindex="0" aria-label="Platform lane"><span class="control__label">P</span></div>
+      <div class="control" id="laneEngineering" role="button" tabindex="0" aria-label="Engineering lane"><span class="control__label">E</span></div>
     </div>
   </header>
 
   <main class="stage" id="stage" aria-label="Vision Remote">
     <div class="starfield" id="starfield" aria-hidden="true"></div>
     <div class="dialFace" aria-hidden="true"></div>
-
-    <div class="sunSystem" aria-hidden="true">
-      <div class="sunGlow"></div>
-      <div class="sunRing sunRing--1"></div>
-      <div class="sunRing sunRing--2"></div>
-      <div class="sunCore"></div>
-    </div>
+    <div class="coreGlow" aria-hidden="true"></div>
   </main>
 
   <div class="corner corner--left" aria-label="Exit">
-    <div class="control" id="btnExit" role="button" tabindex="0" aria-label="Exit to Door">
-      <span class="control__label">⟲</span>
-    </div>
+    <div class="control" id="btnExit" role="button" tabindex="0" aria-label="Exit to Door"><span class="control__label">⟲</span></div>
     <div class="corner__text" id="lblExit">EXIT</div>
   </div>
 
   <div class="corner corner--right" aria-label="Hub Jump">
-    <div class="control" id="btnHub" role="button" tabindex="0" aria-label="Hub Jump to Compass">
-      <span class="control__label">◆</span>
-    </div>
+    <div class="control" id="btnHub" role="button" tabindex="0" aria-label="Hub Jump to Compass"><span class="control__label">◆</span></div>
     <div class="corner__text" id="lblHub">HUB</div>
   </div>
 

@@ -53,7 +53,6 @@
   };
 
   const ORBIT_LANES = {
-    core: { rx: 0, ry: 0 },
     lane1: { rx: 184, ry: 86 },
     lane2: { rx: 252, ry: 108 },
     lane3: { rx: 314, ry: 128 },
@@ -61,22 +60,22 @@
   };
 
   const MANIFOLDS = [
-    { code: "N",   href: "/explore/frontier/urban/",                     p: { en: "CITIES",   zh: "城市",   es: "CIUDADES" }, e: { en: "URBAN",   zh: "城市OS", es: "URB-OS" }, tier: "l1", lane: "lane1", angle: -Math.PI/2 + 0.02 },
-    { code: "NNE", href: "/explore/frontier/shimmer/",                   p: { en: "SHIMMER",  zh: "闪烁",   es: "SHIMMER" },  e: { en: "CLEAR",   zh: "清晰",   es: "CLAR" },   tier: "l3", lane: "lane3", angle: -Math.PI/2 + 0.52 },
-    { code: "NE",  href: "/explore/frontier/water/",                     p: { en: "WATER",    zh: "水",     es: "AGUA" },     e: { en: "H2O",     zh: "水系",   es: "H2O" },    tier: "l2", lane: "lane2", angle: -Math.PI/2 + 0.98 },
-    { code: "ENE", href: "/explore/frontier/trajectory/",                p: { en: "TRAJ",     zh: "轨迹",   es: "TRAY" },     e: { en: "WIN",     zh: "窗口",   es: "VENT" },   tier: "l3", lane: "lane4", angle: -Math.PI/2 + 1.32 },
-    { code: "E",   href: "/explore/frontier/energy/",                    p: { en: "ENERGY",   zh: "能源",   es: "ENERGÍA" },  e: { en: "POWER",   zh: "功率",   es: "PWR" },    tier: "l1", lane: "lane1", angle: 0.04 },
-    { code: "ESE", href: "/explore/frontier/waste/",                     p: { en: "WASTE",    zh: "废弃物", es: "RESID" },    e: { en: "ENTROPY", zh: "熵",     es: "ENT" },    tier: "l3", lane: "lane4", angle: 0.72 },
-    { code: "SE",  href: "/explore/frontier/closed-loop/",               p: { en: "HABITATS", zh: "栖息地", es: "HÁBIT" },    e: { en: "HAB",     zh: "栖息",   es: "HAB" },    tier: "l2", lane: "lane2", angle: 0.98 },
-    { code: "SSE", href: "/explore/frontier/urban/",                     p: { en: "URBAN",    zh: "城市群", es: "URBANO" },   e: { en: "CLUSTER", zh: "集群",   es: "CLUST" },  tier: "l3", lane: "lane4", angle: 1.26 },
-    { code: "S",   href: "/explore/frontier/agri/",                      p: { en: "AGRI",     zh: "农业",   es: "AGRO" },     e: { en: "FOOD",    zh: "食物",   es: "ALIM" },   tier: "l1", lane: "lane1", angle: Math.PI/2 + 0.03 },
-    { code: "SSW", href: "/explore/frontier/closed-loop/",               p: { en: "CLOSED",   zh: "闭环",   es: "CERRADO" },  e: { en: "NO-AWAY", zh: "无扔掉", es: "SIN" },    tier: "l3", lane: "lane4", angle: Math.PI/2 + 0.44 },
-    { code: "SW",  href: "/products/finance/",                           p: { en: "FINANCE",  zh: "金融",   es: "FINANZ" },   e: { en: "CAPITAL", zh: "资本",   es: "CAP" },    tier: "l2", lane: "lane2", angle: Math.PI/2 + 0.98 },
-    { code: "WSW", href: "/explore/infrastructure/grid-storage/",        p: { en: "GRID",     zh: "电网",   es: "RED" },      e: { en: "BALANCE", zh: "平衡",   es: "BAL" },    tier: "l3", lane: "lane4", angle: Math.PI/2 + 1.22 },
-    { code: "W",   href: "/explore/infrastructure/",                     p: { en: "INFRA",    zh: "基建",   es: "INFRA" },    e: { en: "SUBST",   zh: "替代",   es: "SUB" },    tier: "l1", lane: "lane1", angle: Math.PI - 0.02 },
-    { code: "WNW", href: "/products/capital-doctrine/",                  p: { en: "DOCTRINE", zh: "教义",   es: "DOCTR" },    e: { en: "CCD",     zh: "CCD",    es: "CCD" },    tier: "l3", lane: "lane4", angle: Math.PI + 0.38 },
-    { code: "NW",  href: "/explore/frontier/lattice/",                   p: { en: "LATTICE",  zh: "晶格",   es: "LATTICE" },  e: { en: "256",     zh: "256态",  es: "256" },    tier: "l2", lane: "lane2", angle: Math.PI + 0.98 },
-    { code: "NNW", href: "/explore/frontier/vision/",                    p: { en: "VISION",   zh: "愿景",   es: "VISIÓN" },   e: { en: "MAP",     zh: "映射",   es: "MAP" },    tier: "l3", lane: "lane3", angle: Math.PI + 1.52 }
+    { code: "N",   href: "/explore/frontier/urban/",                     p: { en: "CITIES",   zh: "城市",   es: "CIUDADES" }, e: { en: "URBAN",   zh: "城市OS", es: "URB-OS" }, tier: "l1", lane: "lane1", angle: -Math.PI / 2 + 0.02, orbitSpeed: 0.000034, spinSpeed: 0.00104 },
+    { code: "NNE", href: "/explore/frontier/shimmer/",                   p: { en: "SHIMMER",  zh: "闪烁",   es: "SHIMMER" },  e: { en: "CLEAR",   zh: "清晰",   es: "CLAR" },   tier: "l3", lane: "lane3", angle: -Math.PI / 2 + 0.52, orbitSpeed: 0.000024, spinSpeed: 0.00120 },
+    { code: "NE",  href: "/explore/frontier/water/",                     p: { en: "WATER",    zh: "水",     es: "AGUA" },     e: { en: "H2O",     zh: "水系",   es: "H2O" },    tier: "l2", lane: "lane2", angle: -Math.PI / 2 + 0.98, orbitSpeed: 0.000028, spinSpeed: 0.00112 },
+    { code: "ENE", href: "/explore/frontier/trajectory/",                p: { en: "TRAJ",     zh: "轨迹",   es: "TRAY" },     e: { en: "WIN",     zh: "窗口",   es: "VENT" },   tier: "l3", lane: "lane4", angle: -Math.PI / 2 + 1.32, orbitSpeed: 0.000020, spinSpeed: 0.00116 },
+    { code: "E",   href: "/explore/frontier/energy/",                    p: { en: "ENERGY",   zh: "能源",   es: "ENERGÍA" },  e: { en: "POWER",   zh: "功率",   es: "PWR" },    tier: "l1", lane: "lane1", angle: 0.04,                orbitSpeed: 0.000036, spinSpeed: 0.00102 },
+    { code: "ESE", href: "/explore/frontier/waste/",                     p: { en: "WASTE",    zh: "废弃物", es: "RESID" },    e: { en: "ENTROPY", zh: "熵",     es: "ENT" },    tier: "l3", lane: "lane4", angle: 0.72,                orbitSpeed: 0.000021, spinSpeed: 0.00118 },
+    { code: "SE",  href: "/explore/frontier/closed-loop/",               p: { en: "HABITATS", zh: "栖息地", es: "HÁBIT" },    e: { en: "HAB",     zh: "栖息",   es: "HAB" },    tier: "l2", lane: "lane2", angle: 0.98,                orbitSpeed: 0.000027, spinSpeed: 0.00108 },
+    { code: "SSE", href: "/explore/frontier/urban/",                     p: { en: "URBAN",    zh: "城市群", es: "URBANO" },   e: { en: "CLUSTER", zh: "集群",   es: "CLUST" },  tier: "l3", lane: "lane4", angle: 1.26,                orbitSpeed: 0.000022, spinSpeed: 0.00114 },
+    { code: "S",   href: "/explore/frontier/agri/",                      p: { en: "AGRI",     zh: "农业",   es: "AGRO" },     e: { en: "FOOD",    zh: "食物",   es: "ALIM" },   tier: "l1", lane: "lane1", angle: Math.PI / 2 + 0.03,  orbitSpeed: 0.000035, spinSpeed: 0.00100 },
+    { code: "SSW", href: "/explore/frontier/closed-loop/",               p: { en: "CLOSED",   zh: "闭环",   es: "CERRADO" },  e: { en: "NO-AWAY", zh: "无扔掉", es: "SIN" },    tier: "l3", lane: "lane4", angle: Math.PI / 2 + 0.44,  orbitSpeed: 0.000023, spinSpeed: 0.00122 },
+    { code: "SW",  href: "/products/finance/",                           p: { en: "FINANCE",  zh: "金融",   es: "FINANZ" },   e: { en: "CAPITAL", zh: "资本",   es: "CAP" },    tier: "l2", lane: "lane2", angle: Math.PI / 2 + 0.98,  orbitSpeed: 0.000029, spinSpeed: 0.00110 },
+    { code: "WSW", href: "/explore/infrastructure/grid-storage/",        p: { en: "GRID",     zh: "电网",   es: "RED" },      e: { en: "BALANCE", zh: "平衡",   es: "BAL" },    tier: "l3", lane: "lane4", angle: Math.PI / 2 + 1.22,  orbitSpeed: 0.000021, spinSpeed: 0.00118 },
+    { code: "W",   href: "/explore/infrastructure/",                     p: { en: "INFRA",    zh: "基建",   es: "INFRA" },    e: { en: "SUBST",   zh: "替代",   es: "SUB" },    tier: "l1", lane: "lane1", angle: Math.PI - 0.02,      orbitSpeed: 0.000036, spinSpeed: 0.00102 },
+    { code: "WNW", href: "/products/capital-doctrine/",                  p: { en: "DOCTRINE", zh: "教义",   es: "DOCTR" },    e: { en: "CCD",     zh: "CCD",    es: "CCD" },    tier: "l3", lane: "lane4", angle: Math.PI + 0.38,      orbitSpeed: 0.000022, spinSpeed: 0.00116 },
+    { code: "NW",  href: "/explore/frontier/lattice/",                   p: { en: "LATTICE",  zh: "晶格",   es: "LATTICE" },  e: { en: "256",     zh: "256态",  es: "256" },    tier: "l2", lane: "lane2", angle: Math.PI + 0.98,      orbitSpeed: 0.000028, spinSpeed: 0.00108 },
+    { code: "NNW", href: "/explore/frontier/vision/",                    p: { en: "VISION",   zh: "愿景",   es: "VISIÓN" },   e: { en: "MAP",     zh: "映射",   es: "MAP" },    tier: "l3", lane: "lane3", angle: Math.PI + 1.52,      orbitSpeed: 0.000024, spinSpeed: 0.00118 }
   ];
 
   const elements = {
@@ -108,7 +107,8 @@
     centerX: 0,
     centerY: 0,
     planets: [],
-    orbitNodes: []
+    orbitNodes: [],
+    sun: null
   };
 
   function getSearchParams() {
@@ -339,14 +339,17 @@
       }
     });
 
+    if (runtime.sun && runtime.sun.node && runtime.sun.node.parentNode === elements.stage) {
+      elements.stage.removeChild(runtime.sun.node);
+    }
+
     runtime.planets = [];
     runtime.orbitNodes = [];
+    runtime.sun = null;
   }
 
   function buildOrbitBands() {
-    const lanes = ["lane1", "lane2", "lane3", "lane4"];
-
-    lanes.forEach((laneKey) => {
+    Object.keys(ORBIT_LANES).forEach((laneKey) => {
       const lane = ORBIT_LANES[laneKey];
       const band = document.createElement("div");
       band.className = "orbitBand";
@@ -392,15 +395,13 @@
       elements.stage.appendChild(markup.node);
 
       const lane = ORBIT_LANES[manifold.lane];
-      const orbitSpeed = 0.00003 + (index % 5) * 0.000004 + (manifold.tier === "l1" ? 0.000004 : manifold.tier === "l2" ? 0.000002 : 0);
-      const spinSpeed = 0.0010 + (index % 4) * 0.00012;
 
       return {
         manifold,
         lane,
         angle: manifold.angle,
-        orbitSpeed,
-        spinSpeed,
+        orbitSpeed: manifold.orbitSpeed,
+        spinSpeed: manifold.spinSpeed,
         phase,
         node: markup.node,
         cube: markup.cube,
@@ -452,19 +453,26 @@
     runtime.planets.forEach((planet) => {
       planet.angle += planet.orbitSpeed * delta;
 
+      const depth = (Math.sin(planet.angle) + 1) * 0.5;
+      const behind = depth < 0.5;
       const x = runtime.centerX + Math.cos(planet.angle) * planet.lane.rx;
       const y = runtime.centerY + Math.sin(planet.angle) * planet.lane.ry;
-      const depthScale = 0.90 + ((Math.sin(planet.angle) + 1) * 0.08);
-      const localSpin = Math.sin(ts * 0.001 * planet.spinSpeed * 1000 + planet.phase) * 7;
-      const localTilt = Math.cos(ts * 0.001 * planet.spinSpeed * 840 + planet.phase) * 1.4;
+
+      const scale = 0.70 + depth * 0.42;
+      const brightness = 0.74 + depth * 0.34;
+      const opacity = behind ? 0.72 + depth * 0.24 : 0.92 + (depth - 0.5) * 0.10;
+      const localSpin = Math.sin(ts * planet.spinSpeed + planet.phase) * 6.5;
+      const localTilt = Math.cos(ts * planet.spinSpeed * 0.82 + planet.phase) * 1.4;
 
       planet.node.style.left = `${x}px`;
       planet.node.style.top = `${y}px`;
-      planet.node.style.transform = `translate(-50%,-50%) scale(${depthScale})`;
-      planet.node.style.zIndex = String(100 + Math.round((Math.sin(planet.angle) + 1) * 20));
+      planet.node.style.transform = `translate(-50%,-50%) scale(${scale})`;
+      planet.node.style.opacity = String(opacity);
+      planet.node.style.zIndex = behind ? "6" : String(120 + Math.round(depth * 30));
 
       planet.cube.style.transform =
         `translate(-50%,-50%) rotateZ(45deg) rotateX(${62 + localTilt}deg) rotateY(${-36 + localSpin}deg)`;
+      planet.cube.style.filter = `brightness(${brightness}) saturate(${0.92 + depth * 0.16})`;
     });
 
     if (runtime.sun && runtime.sun.cube) {

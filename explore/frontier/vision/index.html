@@ -1,12 +1,13 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: FULL-FILE REWRITE · VOLUMETRIC DIAMOND-CUBE CONTROLS
+     STATUS: FULL-FILE REWRITE · FRONTIER BASELINE · SKELETONED VOLUMETRIC DIAMOND-CUBES
      PURPOSE:
-       - Replace flat controls with real volumetric diamond-oriented cuboids
        - Preserve locked geometry, routing model, and state carry
        - Keep ui.css as background owner
+       - Establish new frontier baseline separate from locked flat-world legacy
+       - Use one global centric field and minimal local per-diamond spin axes
+       - Add internal skeleton so motion reads as object truth, not blob drift
        - Keep lane URL-only and never stored
-       - Keep no inline onclick; addEventListener only
 -->
 
 <html lang="en">
@@ -25,10 +26,10 @@
       --D2:92px;
       --D3:80px;
 
-      --Z0:54px;
-      --Z1:38px;
-      --Z2:30px;
-      --Z3:24px;
+      --Z0:52px;
+      --Z1:36px;
+      --Z2:28px;
+      --Z3:22px;
 
       --R1:178px;
       --R2:246px;
@@ -42,15 +43,15 @@
       --onyx0:rgba(4,6,10,.98);
       --onyx1:rgba(10,12,18,.92);
       --onyx2:rgba(18,22,30,.82);
-      --onyx3:rgba(28,34,42,.58);
+      --onyx3:rgba(30,36,44,.56);
 
       --crimson:rgba(120,0,22,.42);
-      --festival:rgba(255,43,43,.22);
-      --opalV:rgba(90,40,120,.16);
+      --festival:rgba(255,43,43,.20);
+      --opalV:rgba(90,40,120,.15);
 
       --gold:rgba(201,162,74,.58);
       --goldGlow:rgba(201,162,74,.24);
-      --goldLine:rgba(201,162,74,.14);
+      --goldLine:rgba(201,162,74,.18);
 
       --shadowDeep:0 44px 140px rgba(0,0,0,.82);
       --shadowC:0 18px 60px rgba(0,0,0,.55);
@@ -144,7 +145,7 @@
           transparent 360deg);
       opacity:.55;
       filter:blur(22px);
-      animation:dialPhase 22s linear infinite;
+      animation:dialPhase 28s linear infinite;
     }
 
     .slab{
@@ -223,7 +224,7 @@
         radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
       mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
       -webkit-mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-      animation:dialSweep 14s linear infinite;
+      animation:dialSweep 15s linear infinite;
     }
 
     .dialHalo{
@@ -273,7 +274,7 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:calc(var(--face) * .88);
+      width:calc(var(--face) * .90);
       height:calc(var(--face) * .22);
       pointer-events:none;
       transform:translate(-50%, calc(var(--face) * .42)) rotate(-8deg);
@@ -300,25 +301,19 @@
       transform:
         translate(-50%,-50%)
         rotateZ(45deg)
-        rotateX(60deg)
-        rotateY(-34deg);
-      animation:
-        cubeIdle 9.4s ease-in-out infinite;
+        rotateX(62deg)
+        rotateY(-36deg);
+      animation:cubeSpin 7.8s linear infinite;
       animation-delay:var(--phase,0s);
       transition:
         filter .18s ease,
-        transform .22s ease;
+        transform .18s ease;
       will-change:transform, filter;
     }
 
     .cubeScene:hover .diamondCube,
     .cubeScene:focus .diamondCube,
     .cubeScene:focus-within .diamondCube{
-      transform:
-        translate(-50%,-50%)
-        rotateZ(45deg)
-        rotateX(63deg)
-        rotateY(-41deg);
       filter:brightness(1.04) saturate(1.05);
     }
 
@@ -449,6 +444,70 @@
         linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22)),
         linear-gradient(155deg, rgba(12,14,18,.86), rgba(4,6,10,.98));
       opacity:.94;
+    }
+
+    .skeleton{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--face);
+      margin-left:calc(var(--face) / -2);
+      margin-top:calc(var(--face) / -2);
+      pointer-events:none;
+      transform-style:preserve-3d;
+    }
+
+    .skeleton__plane{
+      position:absolute;
+      inset:0;
+      border-radius:22px;
+      border:1px solid transparent;
+      box-shadow:inset 0 0 0 1px rgba(201,162,74,.18);
+      backface-visibility:hidden;
+    }
+
+    .skeleton__plane--front{
+      transform:translateZ(calc(var(--depth) / 2 + 1px));
+    }
+
+    .skeleton__plane--back{
+      transform:rotateY(180deg) translateZ(calc(var(--depth) / 2 + 1px));
+      opacity:.34;
+    }
+
+    .skeleton__edge{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:2px;
+      height:calc(var(--face) * 1.10);
+      margin-left:-1px;
+      margin-top:calc(var(--face) * -0.55);
+      background:linear-gradient(180deg, rgba(201,162,74,.04), rgba(201,162,74,.42), rgba(201,162,74,.04));
+      border-radius:999px;
+      transform-origin:center center;
+      opacity:.88;
+      filter:drop-shadow(0 0 6px rgba(201,162,74,.18));
+    }
+
+    .skeleton__edge--v{ transform:translateZ(calc(var(--depth) / 2 + 2px)); }
+    .skeleton__edge--d1{ transform:translateZ(calc(var(--depth) / 2 + 2px)) rotate(45deg); }
+    .skeleton__edge--d2{ transform:translateZ(calc(var(--depth) / 2 + 2px)) rotate(-45deg); }
+
+    .skeleton__spine{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:2px;
+      height:calc(var(--depth) + 10px);
+      margin-left:-1px;
+      margin-top:calc((var(--depth) + 10px) / -2);
+      background:linear-gradient(180deg, rgba(201,162,74,.16), rgba(255,255,255,.28), rgba(201,162,74,.16));
+      transform:translateZ(0) rotateX(90deg);
+      border-radius:999px;
+      opacity:.78;
+      filter:drop-shadow(0 0 4px rgba(201,162,74,.14));
     }
 
     .cubeLabel{
@@ -643,20 +702,21 @@
       50%{opacity:.82;filter:blur(14px)}
     }
 
-    @keyframes cubeIdle{
-      0%,100%{
-        transform:
-          translate(-50%,-50%)
-          rotateZ(45deg)
-          rotateX(60deg)
-          rotateY(-34deg);
+    @keyframes cubeSpin{
+      0%{
+        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-36deg);
+      }
+      25%{
+        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(63deg) rotateY(-31deg);
       }
       50%{
-        transform:
-          translate(-50%,-50%)
-          rotateZ(45deg)
-          rotateX(64deg)
-          rotateY(-40deg);
+        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-26deg);
+      }
+      75%{
+        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(61deg) rotateY(-31deg);
+      }
+      100%{
+        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-36deg);
       }
     }
 
@@ -707,8 +767,8 @@
 
         --Z0:50px;
         --Z1:34px;
-        --Z2:28px;
-        --Z3:22px;
+        --Z2:26px;
+        --Z3:20px;
 
         --R1:168px;
         --R2:234px;
@@ -728,8 +788,8 @@
 
         --Z0:46px;
         --Z1:32px;
-        --Z2:26px;
-        --Z3:20px;
+        --Z2:24px;
+        --Z3:18px;
 
         --R1:160px;
         --R2:224px;
@@ -1024,6 +1084,37 @@
         return face;
       }
 
+      function createSkeleton() {
+        const s = document.createElement("div");
+        s.className = "skeleton";
+
+        const front = document.createElement("div");
+        front.className = "skeleton__plane skeleton__plane--front";
+
+        const back = document.createElement("div");
+        back.className = "skeleton__plane skeleton__plane--back";
+
+        const v = document.createElement("div");
+        v.className = "skeleton__edge skeleton__edge--v";
+
+        const d1 = document.createElement("div");
+        d1.className = "skeleton__edge skeleton__edge--d1";
+
+        const d2 = document.createElement("div");
+        d2.className = "skeleton__edge skeleton__edge--d2";
+
+        const spine = document.createElement("div");
+        spine.className = "skeleton__spine";
+
+        s.appendChild(front);
+        s.appendChild(back);
+        s.appendChild(v);
+        s.appendChild(d1);
+        s.appendChild(d2);
+        s.appendChild(spine);
+        return s;
+      }
+
       function createCubeNode({ word, code, sceneClass, ariaLabel, phase }) {
         const scene = document.createElement("div");
         scene.className = `cubeScene ${sceneClass}`;
@@ -1044,6 +1135,7 @@
         cube.appendChild(createFace("face--right"));
         cube.appendChild(createFace("face--top"));
         cube.appendChild(createFace("face--bottom"));
+        cube.appendChild(createSkeleton());
 
         const label = document.createElement("div");
         label.className = "cubeLabel";

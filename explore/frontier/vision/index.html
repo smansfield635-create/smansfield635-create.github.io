@@ -1,15 +1,12 @@
-Full-file replacement for /explore/frontier/vision/index.html with the 3D/material/animation pass applied while keeping the geometry, routing model, state rules, and no-hover-movement constraint intact.
-
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: STANDARDIZED FULL-FILE REWRITE · 3D MATERIAL / AMBIENT ANIMATION PASS
+     STATUS: FULL-FILE REWRITE · VOLUMETRIC DIAMOND-CUBE CONTROLS
      PURPOSE:
+       - Replace flat controls with real volumetric diamond-oriented cuboids
        - Preserve locked geometry, routing model, and state carry
        - Keep ui.css as background owner
-       - Add deeper 3D material feel without positional drift
-       - Add restrained ambient animation: dial breath, gold shimmer, glass sweep
-       - Keep hover = glow/intensity only (NO movement)
        - Keep lane URL-only and never stored
+       - Keep no inline onclick; addEventListener only
 -->
 
 <html lang="en">
@@ -28,6 +25,11 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       --D2:92px;
       --D3:80px;
 
+      --Z0:54px;
+      --Z1:38px;
+      --Z2:30px;
+      --Z3:24px;
+
       --R1:178px;
       --R2:246px;
       --R3:300px;
@@ -38,22 +40,20 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       --mut:rgba(255,255,255,.78);
 
       --onyx0:rgba(4,6,10,.98);
-      --onyx1:rgba(10,12,18,.90);
-      --onyx2:rgba(18,22,28,.78);
+      --onyx1:rgba(10,12,18,.92);
+      --onyx2:rgba(18,22,30,.82);
+      --onyx3:rgba(28,34,42,.58);
 
       --crimson:rgba(120,0,22,.42);
-      --festival:rgba(255,43,43,.24);
+      --festival:rgba(255,43,43,.22);
       --opalV:rgba(90,40,120,.16);
 
       --gold:rgba(201,162,74,.58);
       --goldGlow:rgba(201,162,74,.24);
-      --goldLine:rgba(201,162,74,.10);
+      --goldLine:rgba(201,162,74,.14);
 
       --shadowDeep:0 44px 140px rgba(0,0,0,.82);
       --shadowC:0 18px 60px rgba(0,0,0,.55);
-
-      --glassHi:rgba(255,255,255,.24);
-      --glassLo:rgba(255,255,255,.04);
     }
 
     *{box-sizing:border-box}
@@ -103,6 +103,9 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       height:min(980px,82vh);
       margin:var(--padTop) auto 0;
       pointer-events:none;
+      perspective:1600px;
+      perspective-origin:50% 42%;
+      transform-style:preserve-3d;
     }
 
     .stage::before{
@@ -242,181 +245,260 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       animation:haloPulse 8.4s ease-in-out infinite;
     }
 
-    .diamond{
+    .cubeScene{
+      --face:var(--D3);
+      --depth:var(--Z3);
+
       position:absolute;
       top:50%;
       left:50%;
-      z-index:5;
-      overflow:hidden;
-      width:var(--D3);
-      height:var(--D3);
-      border:1px solid rgba(255,255,255,.17);
-      border-radius:18px;
-      cursor:pointer;
+      z-index:6;
+      width:calc(var(--face) + (var(--depth) * 2));
+      height:calc(var(--face) + (var(--depth) * 2));
       pointer-events:auto;
+      cursor:pointer;
       touch-action:manipulation;
       -webkit-tap-highlight-color:transparent;
-      transform:translate(-50%,-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 20% 18%, rgba(255,255,255,.24), transparent 42%),
-        radial-gradient(circle at 78% 22%, rgba(255,43,43,.18), transparent 58%),
-        radial-gradient(circle at 74% 84%, rgba(90,40,120,.18), transparent 64%),
-        radial-gradient(circle at 28% 84%, rgba(120,0,22,.26), transparent 68%),
-        linear-gradient(155deg, rgba(20,24,30,.86), rgba(6,8,12,.98));
-      box-shadow:
-        var(--shadowDeep),
-        0 24px 50px rgba(0,0,0,.38),
-        0 0 28px rgba(255,43,43,.12),
-        inset 0 2px 0 rgba(255,255,255,.18),
-        inset 0 -48px 90px rgba(0,0,0,.86);
-      transition:
-        box-shadow .18s ease,
-        border-color .18s ease,
-        filter .18s ease;
-      animation:
-        redCorePulse 7.6s ease-in-out infinite,
-        diamondAmbient 10.2s ease-in-out infinite;
-      animation-delay:var(--phase, 0s), var(--phase, 0s);
-      will-change:box-shadow, filter;
+      transform:translate(-50%,-50%);
+      transform-style:preserve-3d;
+      filter:drop-shadow(0 16px 36px rgba(0,0,0,.34));
     }
 
-    .diamond::before{
+    .cubeScene--core{ --face:var(--D0); --depth:var(--Z0); z-index:12; }
+    .cubeScene--l1  { --face:var(--D1); --depth:var(--Z1); z-index:9; }
+    .cubeScene--l2  { --face:var(--D2); --depth:var(--Z2); z-index:8; }
+    .cubeScene--l3  { --face:var(--D3); --depth:var(--Z3); z-index:7; }
+
+    .cubeShadow{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:calc(var(--face) * .88);
+      height:calc(var(--face) * .22);
+      pointer-events:none;
+      transform:translate(-50%, calc(var(--face) * .42)) rotate(-8deg);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%,
+          rgba(0,0,0,.44) 0%,
+          rgba(0,0,0,.26) 42%,
+          rgba(0,0,0,.08) 72%,
+          rgba(0,0,0,0) 100%);
+      filter:blur(9px);
+      opacity:.82;
+      animation:shadowPulse 8s ease-in-out infinite;
+      animation-delay:var(--phase,0s);
+    }
+
+    .diamondCube{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--face);
+      transform-style:preserve-3d;
+      transform:
+        translate(-50%,-50%)
+        rotateZ(45deg)
+        rotateX(60deg)
+        rotateY(-34deg);
+      animation:
+        cubeIdle 9.4s ease-in-out infinite;
+      animation-delay:var(--phase,0s);
+      transition:
+        filter .18s ease,
+        transform .22s ease;
+      will-change:transform, filter;
+    }
+
+    .cubeScene:hover .diamondCube,
+    .cubeScene:focus .diamondCube,
+    .cubeScene:focus-within .diamondCube{
+      transform:
+        translate(-50%,-50%)
+        rotateZ(45deg)
+        rotateX(63deg)
+        rotateY(-41deg);
+      filter:brightness(1.04) saturate(1.05);
+    }
+
+    .face{
+      position:absolute;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.14);
+      backface-visibility:hidden;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -22px 42px rgba(0,0,0,.34);
+    }
+
+    .face::before{
       content:"";
       position:absolute;
       inset:0;
-      border-radius:inherit;
-      opacity:.46;
       pointer-events:none;
-      box-shadow:
-        inset 0 0 0 1px rgba(201,162,74,.22),
-        inset 0 18px 30px rgba(255,255,255,.04),
-        inset 0 -24px 36px rgba(0,0,0,.28);
       background:
-        repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
-        repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
-        linear-gradient(180deg, rgba(255,255,255,.05), transparent 26%, transparent 74%, rgba(0,0,0,.15));
-      mask:
-        radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
-        linear-gradient(#000,#000);
-      -webkit-mask:
-        radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
-        linear-gradient(#000,#000);
-      animation:gridShimmer 12s linear infinite;
-      animation-delay:var(--phase, 0s);
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 30%, transparent 72%, rgba(0,0,0,.10)),
+        repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
+      opacity:.72;
     }
 
-    .diamond::after{
+    .face::after{
       content:"";
       position:absolute;
-      top:-12%;
-      bottom:-12%;
-      left:-62%;
-      width:52%;
-      opacity:.58;
+      top:-16%;
+      left:-34%;
+      width:58%;
+      height:148%;
       pointer-events:none;
+      opacity:.34;
       transform:rotate(10deg);
       background:linear-gradient(
         90deg,
         rgba(255,255,255,0) 0%,
-        rgba(255,255,255,.03) 22%,
-        rgba(255,255,255,.15) 48%,
+        rgba(255,255,255,.04) 24%,
+        rgba(255,255,255,.18) 50%,
         rgba(255,255,255,.04) 72%,
         rgba(255,255,255,0) 100%
       );
       filter:blur(2px);
-      animation:glassSweep 8.8s linear infinite;
-      animation-delay:var(--phase, 0s);
+      animation:faceSweep 9s linear infinite;
+      animation-delay:var(--phase,0s);
     }
 
-    .diamond:hover{
-      border-color:rgba(201,162,74,.38);
-      box-shadow:
-        var(--shadowDeep),
-        0 28px 62px rgba(0,0,0,.42),
-        0 0 0 2px rgba(201,162,74,.14),
-        0 0 34px rgba(201,162,74,.18),
-        0 0 54px rgba(201,162,74,.12),
-        inset 0 2px 0 rgba(255,255,255,.24),
-        inset 0 -48px 90px rgba(0,0,0,.88);
-      filter:brightness(1.03) saturate(1.04);
-    }
-
-    .diamond:active{
-      filter:brightness(1.01) saturate(1.02);
-    }
-
-    .diamond--core{
-      z-index:10;
-      width:var(--D0);
-      height:var(--D0);
-      border-radius:26px;
-      animation-duration:6.8s, 8.8s;
-    }
-
-    .diamond--core::after{
-      animation-duration:7.2s;
-    }
-
-    .diamond--l1{
-      width:var(--D1);
-      height:var(--D1);
+    .face--front,
+    .face--back{
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--face);
+      margin-left:calc(var(--face) / -2);
+      margin-top:calc(var(--face) / -2);
       border-radius:22px;
     }
 
-    .diamond--l2{
-      width:var(--D2);
-      height:var(--D2);
-      border-radius:20px;
+    .face--front{
+      transform:translateZ(calc(var(--depth) / 2));
+      background:
+        radial-gradient(circle at 24% 22%, rgba(255,255,255,.24), transparent 36%),
+        radial-gradient(circle at 76% 26%, var(--festival), transparent 56%),
+        radial-gradient(circle at 74% 82%, var(--opalV), transparent 64%),
+        radial-gradient(circle at 26% 82%, var(--crimson), transparent 68%),
+        linear-gradient(155deg, var(--onyx2), var(--onyx0));
+      box-shadow:
+        0 0 24px rgba(255,43,43,.10),
+        inset 0 2px 0 rgba(255,255,255,.16),
+        inset 0 -42px 82px rgba(0,0,0,.72);
     }
 
-    .diamond--l3{
-      width:var(--D3);
-      height:var(--D3);
-      border-radius:18px;
+    .face--back{
+      transform:rotateY(180deg) translateZ(calc(var(--depth) / 2));
+      background:
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.06), transparent 56%),
+        linear-gradient(155deg, rgba(16,18,24,.84), rgba(4,6,10,.96));
+      opacity:.86;
     }
 
-    .diamond__inner{
-      position:relative;
+    .face--left,
+    .face--right{
+      top:50%;
+      left:50%;
+      width:var(--depth);
+      height:var(--face);
+      margin-left:calc(var(--depth) / -2);
+      margin-top:calc(var(--face) / -2);
+      border-radius:14px;
+    }
+
+    .face--left{
+      transform:rotateY(-90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18)),
+        linear-gradient(155deg, rgba(110,22,28,.46), rgba(14,18,26,.94));
+    }
+
+    .face--right{
+      transform:rotateY(90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.08)),
+        linear-gradient(155deg, rgba(184,146,92,.46), rgba(16,18,24,.90));
+    }
+
+    .face--top,
+    .face--bottom{
+      left:50%;
+      top:50%;
+      width:var(--face);
+      height:var(--depth);
+      margin-left:calc(var(--face) / -2);
+      margin-top:calc(var(--depth) / -2);
+      border-radius:14px;
+    }
+
+    .face--top{
+      transform:rotateX(90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.04)),
+        linear-gradient(155deg, rgba(116,86,52,.58), rgba(34,28,22,.88));
+    }
+
+    .face--bottom{
+      transform:rotateX(-90deg) translateZ(calc(var(--face) / 2));
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22)),
+        linear-gradient(155deg, rgba(12,14,18,.86), rgba(4,6,10,.98));
+      opacity:.94;
+    }
+
+    .cubeLabel{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:20;
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:center;
-      width:100%;
-      height:100%;
-      padding:6px;
-      text-align:center;
-      user-select:none;
+      width:var(--face);
+      height:var(--face);
       pointer-events:none;
-      transform:rotate(-45deg);
+      transform:translate(-50%,-50%);
+      text-align:center;
+      text-shadow:
+        0 0 18px rgba(0,0,0,.42),
+        0 1px 0 rgba(255,255,255,.04);
     }
 
-    .diamond__inner::before{
+    .cubeLabel::before{
       content:"";
       position:absolute;
-      inset:8% 12% auto;
-      height:28%;
+      inset:14% 10% auto;
+      height:26%;
       border-radius:999px;
-      opacity:.9;
-      background:linear-gradient(to bottom, rgba(255,255,255,.20), rgba(255,255,255,0));
+      opacity:.70;
+      background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
       transform:rotate(-12deg);
       filter:blur(.3px);
+      pointer-events:none;
     }
 
-    .diamond__inner::after{
+    .cubeLabel::after{
       content:"";
       position:absolute;
       inset:18% 16%;
       border-radius:18px;
       opacity:.14;
       background:
-        radial-gradient(circle at 50% 64%, rgba(255,43,43,.36), transparent 52%),
-        radial-gradient(circle at 50% 42%, rgba(201,162,74,.18), transparent 58%);
+        radial-gradient(circle at 50% 64%, rgba(255,43,43,.34), transparent 52%),
+        radial-gradient(circle at 50% 42%, rgba(201,162,74,.16), transparent 58%);
       filter:blur(10px);
-      animation:innerGlow 7.8s ease-in-out infinite;
-      animation-delay:var(--phase, 0s);
+      animation:innerGlow 8s ease-in-out infinite;
+      animation-delay:var(--phase,0s);
+      pointer-events:none;
     }
 
-    .diamond__word{
+    .cubeWord{
       position:relative;
       z-index:2;
       font-size:11.5px;
@@ -424,12 +506,9 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       line-height:1.05;
       letter-spacing:.55px;
       color:var(--ink);
-      text-shadow:
-        0 0 18px rgba(0,0,0,.42),
-        0 1px 0 rgba(255,255,255,.05);
     }
 
-    .diamond__code{
+    .cubeCode{
       position:relative;
       z-index:2;
       margin-top:5px;
@@ -439,10 +518,10 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       opacity:.82;
     }
 
-    .diamond--core .diamond__word{font-size:15px}
-    .diamond--core .diamond__code{font-size:10px}
-    .diamond--l1 .diamond__word{font-size:13px}
-    .diamond--l2 .diamond__word{font-size:12px}
+    .cubeScene--core .cubeWord{ font-size:15px; }
+    .cubeScene--core .cubeCode{ font-size:10px; }
+    .cubeScene--l1 .cubeWord{ font-size:13px; }
+    .cubeScene--l2 .cubeWord{ font-size:12px; }
 
     .control{
       position:relative;
@@ -500,10 +579,6 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       filter:brightness(1.03);
     }
 
-    .control:active{
-      filter:brightness(1.01);
-    }
-
     .control.is-on{
       border-color:rgba(255,43,43,.26);
       box-shadow:
@@ -532,9 +607,7 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
     .corner--left{left:18px}
     .corner--right{right:18px}
 
-    .corner .control{
-      pointer-events:auto;
-    }
+    .corner .control{ pointer-events:auto; }
 
     .corner__text{
       margin-top:10px;
@@ -570,41 +643,34 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       50%{opacity:.82;filter:blur(14px)}
     }
 
-    @keyframes redCorePulse{
+    @keyframes cubeIdle{
       0%,100%{
-        box-shadow:
-          var(--shadowDeep),
-          0 24px 50px rgba(0,0,0,.38),
-          0 0 28px rgba(255,43,43,.10),
-          inset 0 2px 0 rgba(255,255,255,.18),
-          inset 0 -48px 90px rgba(0,0,0,.86);
+        transform:
+          translate(-50%,-50%)
+          rotateZ(45deg)
+          rotateX(60deg)
+          rotateY(-34deg);
       }
       50%{
-        box-shadow:
-          var(--shadowDeep),
-          0 26px 56px rgba(0,0,0,.40),
-          0 0 34px rgba(255,43,43,.14),
-          inset 0 2px 0 rgba(255,255,255,.20),
-          inset 0 -50px 94px rgba(0,0,0,.88);
+        transform:
+          translate(-50%,-50%)
+          rotateZ(45deg)
+          rotateX(64deg)
+          rotateY(-40deg);
       }
     }
 
-    @keyframes diamondAmbient{
-      0%,100%{filter:saturate(1) brightness(1)}
-      50%{filter:saturate(1.04) brightness(1.02)}
+    @keyframes shadowPulse{
+      0%,100%{opacity:.72;filter:blur(8px)}
+      50%{opacity:.88;filter:blur(10px)}
     }
 
-    @keyframes glassSweep{
-      0%{left:-62%;opacity:.10}
-      12%{opacity:.26}
-      48%{opacity:.48}
-      72%{opacity:.16}
-      100%{left:118%;opacity:.06}
-    }
-
-    @keyframes gridShimmer{
-      0%,100%{opacity:.36}
-      50%{opacity:.50}
+    @keyframes faceSweep{
+      0%{left:-34%;opacity:.10}
+      18%{opacity:.18}
+      52%{opacity:.34}
+      80%{opacity:.12}
+      100%{left:88%;opacity:.06}
     }
 
     @keyframes innerGlow{
@@ -623,10 +689,10 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       .dialFace::before,
       .dialFace::after,
       .dialHalo,
-      .diamond,
-      .diamond::before,
-      .diamond::after,
-      .diamond__inner::after,
+      .cubeShadow,
+      .diamondCube,
+      .face::after,
+      .cubeLabel::after,
       .control{
         animation:none !important;
       }
@@ -638,15 +704,19 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
         --D1:108px;
         --D2:88px;
         --D3:78px;
+
+        --Z0:50px;
+        --Z1:34px;
+        --Z2:28px;
+        --Z3:22px;
+
         --R1:168px;
         --R2:234px;
         --R3:286px;
         --padTop:128px;
       }
 
-      .diamond__word{
-        font-size:11.25px;
-      }
+      .cubeWord{font-size:11.25px}
     }
 
     @media (max-width:420px){
@@ -655,14 +725,18 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
         --D1:104px;
         --D2:86px;
         --D3:76px;
+
+        --Z0:46px;
+        --Z1:32px;
+        --Z2:26px;
+        --Z3:20px;
+
         --R1:160px;
         --R2:224px;
         --R3:274px;
       }
 
-      .diamond__word{
-        font-size:11px;
-      }
+      .cubeWord{font-size:11px}
     }
   </style>
 </head>
@@ -919,12 +993,12 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
 
       function tierFor(code) {
         if (code === "N" || code === "E" || code === "S" || code === "W") {
-          return { cls: "diamond--l1", radiusLevel: 1 };
+          return { cls: "cubeScene--l1", radiusLevel: 1 };
         }
         if (code === "NE" || code === "SE" || code === "SW" || code === "NW") {
-          return { cls: "diamond--l2", radiusLevel: 2 };
+          return { cls: "cubeScene--l2", radiusLevel: 2 };
         }
-        return { cls: "diamond--l3", radiusLevel: 3 };
+        return { cls: "cubeScene--l3", radiusLevel: 3 };
       }
 
       function radiusFor(level) {
@@ -932,34 +1006,6 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
         if (level === 1) return parseFloat(styles.getPropertyValue("--R1")) || 178;
         if (level === 2) return parseFloat(styles.getPropertyValue("--R2")) || 246;
         return parseFloat(styles.getPropertyValue("--R3")) || 300;
-      }
-
-      function createDiamond({ word, code, tierClass, ariaLabel, phase }) {
-        const node = document.createElement("div");
-        node.className = `diamond ${tierClass}`;
-        node.setAttribute("role", "button");
-        node.setAttribute("tabindex", "0");
-        node.style.setProperty("--phase", `${phase}s`);
-        if (ariaLabel) {
-          node.setAttribute("aria-label", ariaLabel);
-        }
-
-        const inner = document.createElement("div");
-        inner.className = "diamond__inner";
-
-        const wordEl = document.createElement("div");
-        wordEl.className = "diamond__word";
-        wordEl.textContent = word;
-
-        const codeEl = document.createElement("div");
-        codeEl.className = "diamond__code";
-        codeEl.textContent = code;
-
-        inner.appendChild(wordEl);
-        inner.appendChild(codeEl);
-        node.appendChild(inner);
-
-        return node;
       }
 
       function bindPress(node, handler) {
@@ -970,6 +1016,54 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
             handler();
           }
         });
+      }
+
+      function createFace(faceClass) {
+        const face = document.createElement("div");
+        face.className = `face ${faceClass}`;
+        return face;
+      }
+
+      function createCubeNode({ word, code, sceneClass, ariaLabel, phase }) {
+        const scene = document.createElement("div");
+        scene.className = `cubeScene ${sceneClass}`;
+        scene.setAttribute("role", "button");
+        scene.setAttribute("tabindex", "0");
+        scene.style.setProperty("--phase", `${phase}s`);
+        scene.setAttribute("aria-label", ariaLabel);
+
+        const shadow = document.createElement("div");
+        shadow.className = "cubeShadow";
+
+        const cube = document.createElement("div");
+        cube.className = "diamondCube";
+
+        cube.appendChild(createFace("face--front"));
+        cube.appendChild(createFace("face--back"));
+        cube.appendChild(createFace("face--left"));
+        cube.appendChild(createFace("face--right"));
+        cube.appendChild(createFace("face--top"));
+        cube.appendChild(createFace("face--bottom"));
+
+        const label = document.createElement("div");
+        label.className = "cubeLabel";
+
+        const wordEl = document.createElement("div");
+        wordEl.className = "cubeWord";
+        wordEl.textContent = word;
+
+        const codeEl = document.createElement("div");
+        codeEl.className = "cubeCode";
+        codeEl.textContent = code;
+
+        label.appendChild(wordEl);
+        label.appendChild(codeEl);
+
+        scene.appendChild(shadow);
+        scene.appendChild(cube);
+        scene.appendChild(label);
+
+        return scene;
       }
 
       function preserveScaffold() {
@@ -986,12 +1080,12 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       function renderCore(cx, cy) {
         const copy = currentCopy();
 
-        const core = createDiamond({
+        const core = createCubeNode({
           word: copy.core,
           code: "CORE",
-          tierClass: "diamond--core",
+          sceneClass: "cubeScene--core",
           ariaLabel: copy.core,
-          phase: 0.12
+          phase: 0.10
         });
 
         core.style.left = `${cx}px`;
@@ -1014,21 +1108,21 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
           const y = cy + radius * Math.sin(angle);
 
           const label = labelFor(manifold);
-          const diamond = createDiamond({
+          const node = createCubeNode({
             word: label,
             code: manifold.code,
-            tierClass: tier.cls,
+            sceneClass: tier.cls,
             ariaLabel: `${label} ${manifold.code}`,
-            phase: 0.18 * (index + 1)
+            phase: 0.16 * (index + 1)
           });
 
-          diamond.style.left = `${x}px`;
-          diamond.style.top = `${y}px`;
+          node.style.left = `${x}px`;
+          node.style.top = `${y}px`;
 
-          bindPress(diamond, () => navigate(manifold.href));
-          elements.stage.appendChild(diamond);
+          bindPress(node, () => navigate(manifold.href));
+          elements.stage.appendChild(node);
 
-          ringRefs.push({ el: diamond, manifold });
+          ringRefs.push({ el: node, manifold });
         });
       }
 
@@ -1053,7 +1147,7 @@ Full-file replacement for /explore/frontier/vision/index.html with the 3D/materi
       function updateRingLabelsOnly() {
         ringRefs.forEach(({ el, manifold }) => {
           const label = labelFor(manifold);
-          const word = el.querySelector(".diamond__word");
+          const word = el.querySelector(".cubeWord");
           if (word) word.textContent = label;
           el.setAttribute("aria-label", `${label} ${manifold.code}`);
         });

@@ -108,7 +108,7 @@
     centerY: 0,
     planets: [],
     orbitNodes: [],
-    sun: null
+    core: null
   };
 
   function getSearchParams() {
@@ -181,7 +181,6 @@
     writeStorage(STORAGE_KEYS.style, DEFAULTS.style);
     writeStorage(STORAGE_KEYS.time, state.time);
     writeStorage(STORAGE_KEYS.depth, DEFAULTS.depth);
-
     window.history.replaceState({}, "", window.location.pathname + buildQueryString());
     document.documentElement.lang = state.lang === "zh" ? "zh" : state.lang === "es" ? "es" : "en";
   }
@@ -233,7 +232,6 @@
     elements.starfield.innerHTML = "";
 
     const count = Math.max(50, Math.floor((window.innerWidth * window.innerHeight) / 16000));
-
     for (let i = 0; i < count; i += 1) {
       const star = document.createElement("div");
       const size = 1 + Math.random() * 2.2;
@@ -261,19 +259,14 @@
 
     const front = document.createElement("div");
     front.className = "skeleton__plane skeleton__plane--front";
-
     const back = document.createElement("div");
     back.className = "skeleton__plane skeleton__plane--back";
-
     const v = document.createElement("div");
     v.className = "skeleton__edge skeleton__edge--v";
-
     const d1 = document.createElement("div");
     d1.className = "skeleton__edge skeleton__edge--d1";
-
     const d2 = document.createElement("div");
     d2.className = "skeleton__edge skeleton__edge--d2";
-
     const spine = document.createElement("div");
     spine.className = "skeleton__spine";
 
@@ -339,13 +332,13 @@
       }
     });
 
-    if (runtime.sun && runtime.sun.node && runtime.sun.node.parentNode === elements.stage) {
-      elements.stage.removeChild(runtime.sun.node);
+    if (runtime.core && runtime.core.node && runtime.core.node.parentNode === elements.stage) {
+      elements.stage.removeChild(runtime.core.node);
     }
 
     runtime.planets = [];
     runtime.orbitNodes = [];
-    runtime.sun = null;
+    runtime.core = null;
   }
 
   function buildOrbitBands() {
@@ -360,20 +353,21 @@
     });
   }
 
-  function buildSunButton() {
+  function buildCore() {
     const copy = currentCopy();
-    const markup = createCubeMarkup("sunButtonNode", copy.core, "CORE", 0.10);
+    const markup = createCubeMarkup("planetNode planetNode--core", copy.core, "CORE", 0.10);
 
     markup.node.setAttribute("role", "button");
     markup.node.setAttribute("tabindex", "0");
     markup.node.setAttribute("aria-label", copy.core);
     markup.node.style.left = `${runtime.centerX}px`;
     markup.node.style.top = `${runtime.centerY}px`;
+    markup.node.style.zIndex = "200";
 
     bindPress(markup.node, () => navigate(ROUTES.core));
     elements.stage.appendChild(markup.node);
 
-    runtime.sun = {
+    runtime.core = {
       node: markup.node,
       cube: markup.cube,
       wordEl: markup.wordEl
@@ -395,7 +389,6 @@
       elements.stage.appendChild(markup.node);
 
       const lane = ORBIT_LANES[manifold.lane];
-
       return {
         manifold,
         lane,
@@ -420,7 +413,7 @@
     clearRuntimeNodes();
     layoutCenter();
     buildOrbitBands();
-    buildSunButton();
+    buildCore();
     buildPlanets();
     updateCornerLabels();
   }
@@ -429,9 +422,9 @@
     const copy = currentCopy();
     elements.lblExit.textContent = copy.exit;
     elements.lblHub.textContent = copy.hub;
-    if (runtime.sun && runtime.sun.wordEl) {
-      runtime.sun.wordEl.textContent = copy.core;
-      runtime.sun.node.setAttribute("aria-label", copy.core);
+    if (runtime.core && runtime.core.wordEl) {
+      runtime.core.wordEl.textContent = copy.core;
+      runtime.core.node.setAttribute("aria-label", copy.core);
     }
   }
 
@@ -444,9 +437,7 @@
   }
 
   function updateRuntime(ts) {
-    if (!updateRuntime.lastTs) {
-      updateRuntime.lastTs = ts;
-    }
+    if (!updateRuntime.lastTs) updateRuntime.lastTs = ts;
     const delta = ts - updateRuntime.lastTs;
     updateRuntime.lastTs = ts;
 
@@ -454,13 +445,11 @@
       planet.angle += planet.orbitSpeed * delta;
 
       const depth = (Math.sin(planet.angle) + 1) * 0.5;
-      const behind = depth < 0.5;
       const x = runtime.centerX + Math.cos(planet.angle) * planet.lane.rx;
       const y = runtime.centerY + Math.sin(planet.angle) * planet.lane.ry;
-
       const scale = 0.70 + depth * 0.42;
       const brightness = 0.74 + depth * 0.34;
-      const opacity = behind ? 0.72 + depth * 0.24 : 0.92 + (depth - 0.5) * 0.10;
+      const opacity = 0.72 + depth * 0.28;
       const localSpin = Math.sin(ts * planet.spinSpeed + planet.phase) * 6.5;
       const localTilt = Math.cos(ts * planet.spinSpeed * 0.82 + planet.phase) * 1.4;
 
@@ -468,17 +457,18 @@
       planet.node.style.top = `${y}px`;
       planet.node.style.transform = `translate(-50%,-50%) scale(${scale})`;
       planet.node.style.opacity = String(opacity);
-      planet.node.style.zIndex = behind ? "6" : String(120 + Math.round(depth * 30));
+      planet.node.style.zIndex = String(20 + Math.round(depth * 120));
 
       planet.cube.style.transform =
         `translate(-50%,-50%) rotateZ(45deg) rotateX(${62 + localTilt}deg) rotateY(${-36 + localSpin}deg)`;
       planet.cube.style.filter = `brightness(${brightness}) saturate(${0.92 + depth * 0.16})`;
     });
 
-    if (runtime.sun && runtime.sun.cube) {
-      const sunSpin = Math.sin(ts * 0.00055) * 4;
-      runtime.sun.cube.style.transform =
-        `translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(${-30 + sunSpin}deg)`;
+    if (runtime.core && runtime.core.cube) {
+      const coreSpin = Math.sin(ts * 0.00055) * 4;
+      runtime.core.cube.style.transform =
+        `translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(${-30 + coreSpin}deg)`;
+      runtime.core.cube.style.filter = "brightness(1.04) saturate(1.04)";
     }
 
     runtime.raf = window.requestAnimationFrame(updateRuntime);
@@ -521,13 +511,10 @@
     bindPress(elements.langEN, () => setLanguage("en"));
     bindPress(elements.langZH, () => setLanguage("zh"));
     bindPress(elements.langES, () => setLanguage("es"));
-
     bindPress(elements.lanePlatform, () => setLane("platform"));
     bindPress(elements.laneEngineering, () => setLane("engineering"));
-
     bindPress(elements.btnExit, () => navigate(ROUTES.exit));
     bindPress(elements.btnHub, () => navigate(ROUTES.hub));
-
     window.addEventListener("resize", requestSafeLayout);
   }
 
@@ -537,9 +524,7 @@
     syncCanonicalState();
     setToggleStates();
     safeLayout();
-    if (runtime.raf) {
-      window.cancelAnimationFrame(runtime.raf);
-    }
+    if (runtime.raf) window.cancelAnimationFrame(runtime.raf);
     runtime.raf = window.requestAnimationFrame(updateRuntime);
   }
 

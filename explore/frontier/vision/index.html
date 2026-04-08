@@ -1,11 +1,10 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: FRONTIER BASELINE · CONJUGATED DIAMOND UNIVERSE
+     STATUS: FRONTIER BASELINE · CONJUGATED DIAMOND UNIVERSE · ROUNDED LATTICE-CUBE PASS
      PURPOSE:
-       - Split structure from runtime authority
-       - Conjugate core and planets into one diamond-body grammar
-       - Core remains INDEX button and acts as diamond-sun
-       - Planets orbit with depth cycling around the core
+       - Keep the current sun/core baseline exactly as the stable center treatment
+       - Preserve split structure/runtime architecture
+       - Promote orbiting controls from flat caps into fuller rounded lattice-cubes
        - Preserve canonical carry: gd_lang/gd_style/gd_time/gd_depth only
        - Lane remains URL-only
 -->
@@ -23,13 +22,13 @@
     :root{
       --D0:148px;
       --D1:108px;
-      --D2:90px;
-      --D3:80px;
+      --D2:92px;
+      --D3:82px;
 
-      --Z0:28px;
-      --Z1:22px;
-      --Z2:18px;
-      --Z3:15px;
+      --Z0:38px;
+      --Z1:34px;
+      --Z2:30px;
+      --Z3:28px;
 
       --padTop:118px;
 
@@ -37,8 +36,8 @@
       --mut:rgba(255,255,255,.78);
 
       --onyx0:rgba(4,6,10,.98);
-      --onyx1:rgba(10,12,18,.92);
-      --onyx2:rgba(18,22,30,.82);
+      --onyx1:rgba(10,12,18,.94);
+      --onyx2:rgba(18,22,30,.84);
 
       --crimson:rgba(120,0,22,.42);
       --festival:rgba(255,43,43,.20);
@@ -195,11 +194,7 @@
       transform:translate(-50%,-50%);
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 50%,
-          rgba(255,244,210,.92) 0%,
-          rgba(255,225,150,.42) 18%,
-          rgba(255,200,100,.14) 36%,
-          rgba(255,200,100,0) 72%);
+        radial-gradient(circle at 50% 50%, rgba(255,244,210,.92) 0%, rgba(255,225,150,.42) 18%, rgba(255,200,100,.14) 36%, rgba(255,200,100,0) 72%);
       filter:blur(10px);
       animation:coreGlowPulse 7.4s ease-in-out infinite;
     }
@@ -219,6 +214,8 @@
     .planetNode{
       --face:var(--D3);
       --depth:var(--Z3);
+      --round:28px;
+      --shadowY:calc(var(--face) * .48);
 
       position:absolute;
       left:50%;
@@ -235,24 +232,24 @@
       filter:drop-shadow(0 16px 36px rgba(0,0,0,.34));
     }
 
-    .planetNode--l1{ --face:var(--D1); --depth:var(--Z1); }
-    .planetNode--l2{ --face:var(--D2); --depth:var(--Z2); }
-    .planetNode--l3{ --face:var(--D3); --depth:var(--Z3); }
-    .planetNode--core{ --face:var(--D0); --depth:var(--Z0); }
+    .planetNode--l1{ --face:var(--D1); --depth:var(--Z1); --round:30px; }
+    .planetNode--l2{ --face:var(--D2); --depth:var(--Z2); --round:28px; }
+    .planetNode--l3{ --face:var(--D3); --depth:var(--Z3); --round:26px; }
+    .planetNode--core{ --face:var(--D0); --depth:var(--Z0); --round:32px; }
 
     .planetShadow{
       position:absolute;
       left:50%;
       top:50%;
-      width:calc(var(--face) * .90);
-      height:calc(var(--face) * .22);
+      width:calc(var(--face) * .98);
+      height:calc(var(--face) * .28);
       pointer-events:none;
-      transform:translate(-50%, calc(var(--face) * .42)) rotate(-8deg);
+      transform:translate(-50%, var(--shadowY)) rotate(-8deg);
       border-radius:999px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,.40) 0%, rgba(0,0,0,.22) 42%, rgba(0,0,0,.07) 72%, rgba(0,0,0,0) 100%);
-      filter:blur(9px);
-      opacity:.80;
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.48) 0%, rgba(0,0,0,.24) 42%, rgba(0,0,0,.08) 72%, rgba(0,0,0,0) 100%);
+      filter:blur(10px);
+      opacity:.84;
     }
 
     .planetCube{
@@ -262,7 +259,7 @@
       width:var(--face);
       height:var(--face);
       transform-style:preserve-3d;
-      transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-36deg);
+      transform:translate(-50%,-50%) rotateZ(45deg) rotateX(58deg) rotateY(-30deg);
       transition:filter .18s ease;
       will-change:transform;
     }
@@ -278,7 +275,9 @@
       overflow:hidden;
       border:1px solid rgba(255,255,255,.14);
       backface-visibility:hidden;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.14), inset 0 -22px 42px rgba(0,0,0,.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -22px 42px rgba(0,0,0,.34);
     }
 
     .face::before{
@@ -287,8 +286,8 @@
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.08), transparent 30%, transparent 72%, rgba(0,0,0,.10)),
-        repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 30%, transparent 72%, rgba(0,0,0,.10)),
+        repeating-linear-gradient(45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px),
         repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
       opacity:.72;
     }
@@ -317,7 +316,7 @@
       height:var(--face);
       margin-left:calc(var(--face) / -2);
       margin-top:calc(var(--face) / -2);
-      border-radius:22px;
+      border-radius:var(--round);
     }
 
     .face--front{
@@ -336,23 +335,24 @@
 
     .planetNode--core .face--front{
       background:
-        radial-gradient(circle at 24% 22%, rgba(255,255,255,.34), transparent 34%),
-        radial-gradient(circle at 76% 26%, rgba(255,220,130,.24), transparent 58%),
-        radial-gradient(circle at 74% 82%, rgba(201,162,74,.18), transparent 64%),
-        radial-gradient(circle at 26% 82%, rgba(255,120,60,.14), transparent 66%),
-        linear-gradient(155deg, rgba(128,90,34,.84), rgba(22,12,8,.98));
+        radial-gradient(circle at 24% 22%, rgba(255,255,255,.18), transparent 34%),
+        radial-gradient(circle at 76% 26%, rgba(255,220,130,.12), transparent 58%),
+        radial-gradient(circle at 74% 82%, rgba(201,162,74,.12), transparent 64%),
+        radial-gradient(circle at 26% 82%, rgba(255,120,60,.10), transparent 66%),
+        linear-gradient(155deg, rgba(74,58,24,.42), rgba(18,12,8,.40));
       box-shadow:
-        0 0 34px rgba(255,220,130,.18),
-        inset 0 2px 0 rgba(255,255,255,.24),
-        inset 0 -42px 82px rgba(0,0,0,.66);
+        0 0 14px rgba(255,220,130,.08),
+        inset 0 1px 0 rgba(255,255,255,.14),
+        inset 0 -26px 58px rgba(0,0,0,.28);
+      border-color:rgba(255,240,200,.08);
     }
 
     .face--back{
       transform:rotateY(180deg) translateZ(calc(var(--depth) / 2));
       background:
-        radial-gradient(circle at 50% 50%, rgba(201,162,74,.06), transparent 56%),
-        linear-gradient(155deg, rgba(16,18,24,.84), rgba(4,6,10,.96));
-      opacity:.86;
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.04), transparent 56%),
+        linear-gradient(155deg, rgba(16,18,24,.88), rgba(4,6,10,.98));
+      opacity:.88;
     }
 
     .face--left,
@@ -360,68 +360,68 @@
       top:50%;
       left:50%;
       width:var(--depth);
-      height:var(--face);
+      height:calc(var(--face) * .96);
       margin-left:calc(var(--depth) / -2);
-      margin-top:calc(var(--face) / -2);
-      border-radius:14px;
+      margin-top:calc((var(--face) * .96) / -2);
+      border-radius:18px;
     }
 
     .face--left{
       transform:rotateY(-90deg) translateZ(calc(var(--face) / 2));
       background:
-        linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.18)),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.14)),
         linear-gradient(155deg, rgba(110,22,28,.46), rgba(14,18,26,.94));
     }
 
     .planetNode--core .face--left{
       background:
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.14)),
-        linear-gradient(155deg, rgba(154,92,40,.54), rgba(28,16,10,.94));
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.10)),
+        linear-gradient(155deg, rgba(132,96,34,.34), rgba(28,16,10,.52));
     }
 
     .face--right{
       transform:rotateY(90deg) translateZ(calc(var(--face) / 2));
       background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.08)),
-        linear-gradient(155deg, rgba(184,146,92,.46), rgba(16,18,24,.90));
+        linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.08)),
+        linear-gradient(155deg, rgba(184,146,92,.54), rgba(16,18,24,.90));
     }
 
     .planetNode--core .face--right{
       background:
-        linear-gradient(180deg, rgba(255,255,255,.16), rgba(0,0,0,.06)),
-        linear-gradient(155deg, rgba(218,180,108,.52), rgba(32,22,12,.92));
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.06)),
+        linear-gradient(155deg, rgba(218,180,108,.34), rgba(32,22,12,.52));
     }
 
     .face--top,
     .face--bottom{
       left:50%;
       top:50%;
-      width:var(--face);
+      width:calc(var(--face) * .96);
       height:var(--depth);
-      margin-left:calc(var(--face) / -2);
+      margin-left:calc((var(--face) * .96) / -2);
       margin-top:calc(var(--depth) / -2);
-      border-radius:14px;
+      border-radius:18px;
     }
 
     .face--top{
       transform:rotateX(90deg) translateZ(calc(var(--face) / 2));
       background:
-        linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.04)),
-        linear-gradient(155deg, rgba(116,86,52,.58), rgba(34,28,22,.88));
+        linear-gradient(180deg, rgba(255,255,255,.20), rgba(0,0,0,.04)),
+        linear-gradient(155deg, rgba(116,86,52,.64), rgba(34,28,22,.88));
     }
 
     .planetNode--core .face--top{
       background:
-        linear-gradient(180deg, rgba(255,255,255,.22), rgba(0,0,0,.02)),
-        linear-gradient(155deg, rgba(230,196,126,.54), rgba(80,54,22,.88));
+        linear-gradient(180deg, rgba(255,255,255,.18), rgba(0,0,0,.02)),
+        linear-gradient(155deg, rgba(230,196,126,.30), rgba(80,54,22,.48));
     }
 
     .face--bottom{
       transform:rotateX(-90deg) translateZ(calc(var(--face) / 2));
       background:
-        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.22)),
-        linear-gradient(155deg, rgba(12,14,18,.86), rgba(4,6,10,.98));
-      opacity:.94;
+        linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.24)),
+        linear-gradient(155deg, rgba(12,14,18,.92), rgba(4,6,10,.98));
+      opacity:.96;
     }
 
     .skeleton{
@@ -439,14 +439,14 @@
     .skeleton__plane{
       position:absolute;
       inset:0;
-      border-radius:22px;
+      border-radius:var(--round);
       border:1px solid transparent;
       box-shadow:inset 0 0 0 1px rgba(201,162,74,.18);
       backface-visibility:hidden;
     }
 
     .planetNode--core .skeleton__plane{
-      box-shadow:inset 0 0 0 1px rgba(255,224,146,.24);
+      box-shadow:inset 0 0 0 1px rgba(255,224,146,.10);
     }
 
     .skeleton__plane--front{
@@ -455,7 +455,7 @@
 
     .skeleton__plane--back{
       transform:rotateY(180deg) translateZ(calc(var(--depth) / 2 + 1px));
-      opacity:.34;
+      opacity:.30;
     }
 
     .skeleton__edge{
@@ -463,19 +463,20 @@
       left:50%;
       top:50%;
       width:2px;
-      height:calc(var(--face) * 1.10);
+      height:calc(var(--face) * 1.04);
       margin-left:-1px;
-      margin-top:calc(var(--face) * -0.55);
+      margin-top:calc((var(--face) * 1.04) / -2);
       background:linear-gradient(180deg, rgba(201,162,74,.04), rgba(201,162,74,.42), rgba(201,162,74,.04));
       border-radius:999px;
       transform-origin:center center;
-      opacity:.88;
+      opacity:.84;
       filter:drop-shadow(0 0 6px rgba(201,162,74,.18));
     }
 
     .planetNode--core .skeleton__edge{
-      background:linear-gradient(180deg, rgba(255,224,146,.08), rgba(255,224,146,.52), rgba(255,224,146,.08));
-      filter:drop-shadow(0 0 8px rgba(255,224,146,.22));
+      background:linear-gradient(180deg, rgba(255,224,146,.04), rgba(255,224,146,.18), rgba(255,224,146,.04));
+      filter:drop-shadow(0 0 4px rgba(255,224,146,.10));
+      opacity:.54;
     }
 
     .skeleton__edge--v{ transform:translateZ(calc(var(--depth) / 2 + 2px)); }
@@ -493,13 +494,13 @@
       background:linear-gradient(180deg, rgba(201,162,74,.16), rgba(255,255,255,.28), rgba(201,162,74,.16));
       transform:translateZ(0) rotateX(90deg);
       border-radius:999px;
-      opacity:.78;
+      opacity:.72;
       filter:drop-shadow(0 0 4px rgba(201,162,74,.14));
     }
 
     .planetNode--core .skeleton__spine{
-      background:linear-gradient(180deg, rgba(255,224,146,.18), rgba(255,255,255,.34), rgba(255,224,146,.18));
-      filter:drop-shadow(0 0 6px rgba(255,224,146,.18));
+      opacity:.44;
+      filter:drop-shadow(0 0 3px rgba(255,224,146,.08));
     }
 
     .planetLabel{
@@ -522,10 +523,10 @@
     .planetLabel::before{
       content:"";
       position:absolute;
-      inset:14% 10% auto;
-      height:26%;
+      inset:12% 10% auto;
+      height:28%;
       border-radius:999px;
-      opacity:.70;
+      opacity:.74;
       background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
       transform:rotate(-12deg);
       filter:blur(.3px);
@@ -535,9 +536,9 @@
     .planetLabel::after{
       content:"";
       position:absolute;
-      inset:18% 16%;
-      border-radius:18px;
-      opacity:.14;
+      inset:16% 14%;
+      border-radius:20px;
+      opacity:.16;
       background:
         radial-gradient(circle at 50% 64%, rgba(255,43,43,.34), transparent 52%),
         radial-gradient(circle at 50% 42%, rgba(201,162,74,.16), transparent 58%);
@@ -548,10 +549,10 @@
     }
 
     .planetNode--core .planetLabel::after{
-      opacity:.22;
+      opacity:.18;
       background:
-        radial-gradient(circle at 50% 64%, rgba(255,170,80,.28), transparent 52%),
-        radial-gradient(circle at 50% 42%, rgba(255,224,146,.24), transparent 58%);
+        radial-gradient(circle at 50% 64%, rgba(255,170,80,.18), transparent 52%),
+        radial-gradient(circle at 50% 42%, rgba(255,224,146,.14), transparent 58%);
     }
 
     .planetWord{
@@ -656,7 +657,6 @@
 
     .corner--left{left:18px}
     .corner--right{right:18px}
-
     .corner .control{ pointer-events:auto; }
 
     .corner__text{
@@ -730,10 +730,10 @@
         --D1:108px;
         --D2:88px;
         --D3:78px;
-        --Z0:26px;
-        --Z1:20px;
-        --Z2:17px;
-        --Z3:15px;
+        --Z0:36px;
+        --Z1:32px;
+        --Z2:28px;
+        --Z3:26px;
         --padTop:128px;
       }
 
@@ -747,10 +747,10 @@
         --D1:104px;
         --D2:86px;
         --D3:76px;
-        --Z0:24px;
-        --Z1:18px;
-        --Z2:16px;
-        --Z3:14px;
+        --Z0:34px;
+        --Z1:30px;
+        --Z2:26px;
+        --Z3:24px;
       }
 
       .planetWord{font-size:11px}

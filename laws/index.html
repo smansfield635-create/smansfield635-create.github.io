@@ -1,532 +1,510 @@
 <!doctype html>
 <!-- TNT — /laws/index.html
-     CANONICAL SEVEN LAWS — FLAGSHIP SCIENTIFIC EDITION
-     STATUS: STRUCTURAL-CORRECTION PASS · TRILINGUAL · CANON STATE CARRY
-     STRUCTURE:
-       - 7 Primary Laws
-       - Formal Scientific Expression
-       - Informal Narrative Lens
-       - EN / 中文 / ES Toggle (no reload)
-       - Formal ⇄ Informal Toggle (no reload)
-       - Single-Open Law Accordion
-       - Canon State Carry (gd_lang/gd_style/gd_time/gd_depth ONLY)
-       - URL State Carry (lang/style/time/depth)
-       - Mobile Shell / Dock Collision Corrected
-     FIELD: ui.css owns background (NO html/body overrides)
+     STATUS: STANDARDIZED FULL-FILE REWRITE
+     PURPOSE:
+       - Replace legacy inline organization with cleaner standard structure
+       - Preserve existing behavior and state carry
+       - Keep ui.css as background owner
+       - Maintain single-open accordion and no-reload toggles
 -->
 
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Seven Canonical Laws</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Seven Canonical Laws</title>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
+  <link rel="stylesheet" href="/assets/ui.css"/>
+  <link rel="stylesheet" href="/assets/branch.css"/>
 
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
+  <style>
+    :root{
+      --topH:76px;
+      --topStackH:76px;
+      --dockH:104px;
 
-:root{
-  --topH:76px;
-  --topStackH:76px;
-  --dockH:104px;
+      --ink:#ffffff;
+      --mut:rgba(255,255,255,.82);
+      --soft:rgba(255,255,255,.66);
 
-  --ink:#ffffff;
-  --mut:rgba(255,255,255,.82);
-  --soft:rgba(255,255,255,.66);
+      --stroke:rgba(255,255,255,.14);
+      --gold:rgba(212,175,55,.65);
+      --goldSoft:rgba(212,175,55,.22);
 
-  --stroke:rgba(255,255,255,.14);
-  --gold:rgba(212,175,55,.65);
-  --goldSoft:rgba(212,175,55,.22);
+      --redA:rgba(255,43,43,.18);
+      --redB:rgba(120,0,22,.40);
 
-  --redA:rgba(255,43,43,.18);
-  --redB:rgba(120,0,22,.40);
+      --shadowDeep:0 40px 140px rgba(0,0,0,.85);
+      --shadowMid:0 18px 60px rgba(0,0,0,.65);
+    }
 
-  --shadowDeep:0 40px 140px rgba(0,0,0,.85);
-  --shadowMid:0 18px 60px rgba(0,0,0,.65);
-}
+    *{box-sizing:border-box}
 
-.top{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  height:var(--topH);
-  padding:16px 16px 12px;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-  box-sizing:border-box;
-}
-.top .left,.top .right{
-  display:flex;
-  gap:10px;
-  align-items:center;
-  pointer-events:auto;
-  flex-wrap:wrap;
-}
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
 
-.btn{
-  padding:10px 14px;
-  min-height:44px;
-  border-radius:16px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 64%),
-    linear-gradient(145deg, rgba(12,16,22,.92), rgba(6,8,12,.98));
-  color:var(--ink);
-  font-weight:950;
-  letter-spacing:.3px;
-  cursor:pointer;
-  position:relative;
-  overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowMid);
-}
-.btn::after{
-  content:"";
-  position:absolute;
-  left:10px;
-  right:10px;
-  bottom:-12px;
-  height:28px;
-  background:radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
-  opacity:.6;
-}
-.btn.active{
-  border-color:var(--gold);
-  box-shadow:0 0 0 2px var(--goldSoft), 0 0 28px var(--goldSoft);
-}
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+    }
 
-.page{
-  width:min(1200px,94vw);
-  margin:0 auto;
-  padding:
-    calc(var(--topStackH) + 18px)
-    0
-    calc(var(--dockH) + 38px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-  position:relative;
-  z-index:10;
-  box-sizing:border-box;
-}
+    body::before,
+    body::after{
+      pointer-events:none !important;
+    }
 
-.header{
-  border-radius:28px;
-  border:1px solid var(--stroke);
-  padding:28px 30px;
-  background:
-    radial-gradient(circle at 20% 20%, var(--redB), transparent 70%),
-    radial-gradient(circle at 80% 80%, var(--redA), transparent 60%),
-    linear-gradient(160deg, rgba(0,0,0,.45), rgba(0,0,0,.20));
-  box-shadow:var(--shadowDeep);
-  position:relative;
-  overflow:hidden;
-  margin-top:8px;
-}
-.header::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:28px;
-  box-shadow:inset 0 0 0 1px var(--goldSoft);
-  background:
-    repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
-  opacity:.35;
-  pointer-events:none;
-}
-.hTitle{
-  font-size:42px;
-  font-weight:980;
-  letter-spacing:1px;
-  margin:0 0 12px;
-}
-.hSub{
-  font-size:18px;
-  line-height:1.7;
-  color:var(--mut);
-  max-width:1000px;
-}
-.timestamp{
-  margin-top:14px;
-  font-size:13px;
-  color:var(--soft);
-  letter-spacing:.3px;
-}
+    .top{
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      z-index:240;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      height:var(--topH);
+      padding:16px 16px 12px;
+      pointer-events:none;
+    }
 
-.laws{
-  display:flex;
-  flex-direction:column;
-  gap:16px;
-}
+    .top__group{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      pointer-events:auto;
+    }
 
-.law{
-  border-radius:26px;
-  border:1px solid var(--stroke);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.14), transparent 60%),
-    linear-gradient(145deg, rgba(14,20,28,.92), rgba(8,12,18,.98));
-  box-shadow:var(--shadowMid);
-  overflow:hidden;
-  position:relative;
-}
-.law::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:26px;
-  box-shadow:inset 0 0 0 1px var(--goldSoft);
-  opacity:.6;
-  pointer-events:none;
-}
-.law.open{
-  border-color:rgba(212,175,55,.30);
-  box-shadow:var(--shadowMid), 0 0 18px rgba(212,175,55,.12);
-}
+    .btn{
+      position:relative;
+      overflow:hidden;
+      min-height:44px;
+      padding:10px 14px;
+      border:1px solid var(--stroke);
+      border-radius:16px;
+      background:
+        radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 64%),
+        linear-gradient(145deg, rgba(12,16,22,.92), rgba(6,8,12,.98));
+      color:var(--ink);
+      font-weight:950;
+      letter-spacing:.3px;
+      cursor:pointer;
+      touch-action:manipulation;
+      box-shadow:var(--shadowMid);
+    }
 
-.lawHead{
-  padding:20px 24px;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:14px;
-}
-.lawHeadLeft{
-  min-width:0;
-}
-.lawTitle{
-  font-size:22px;
-  font-weight:960;
-  line-height:1.2;
-}
-.lawChevron{
-  width:34px;
-  height:34px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.20);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex:0 0 auto;
-  color:var(--mut);
-  font-weight:950;
-}
+    .btn::after{
+      content:"";
+      position:absolute;
+      left:10px;
+      right:10px;
+      bottom:-12px;
+      height:28px;
+      opacity:.6;
+      background:radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
+    }
 
-.lawBody{
-  display:none;
-  padding:24px 26px 28px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.law.open .lawBody{display:block}
+    .btn.active{
+      border-color:var(--gold);
+      box-shadow:0 0 0 2px var(--goldSoft), 0 0 28px var(--goldSoft);
+    }
 
-.sectionTitle{
-  font-weight:950;
-  margin:0 0 10px;
-  letter-spacing:.3px;
-}
-.formalBlock{
-  font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size:14px;
-  line-height:1.6;
-  background:rgba(0,0,0,.28);
-  padding:16px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.10);
-  margin-bottom:18px;
-  white-space:pre-wrap;
-}
-.informalBlock{
-  font-size:16px;
-  line-height:1.8;
-  color:var(--mut);
-}
+    .page{
+      position:relative;
+      z-index:10;
+      display:flex;
+      flex-direction:column;
+      gap:18px;
+      width:min(1200px,94vw);
+      margin:0 auto;
+      padding:
+        calc(var(--topStackH) + 18px)
+        0
+        calc(var(--dockH) + 38px);
+    }
 
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(1000px,94vw);
-  min-height:var(--dockH);
-  padding:12px;
-  border-radius:24px;
-  border:1px solid var(--stroke);
-  background:rgba(0,0,0,.40);
-  backdrop-filter:blur(12px);
-  box-shadow:0 20px 70px rgba(0,0,0,.70);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  z-index:220;
-  box-sizing:border-box;
-}
-.dock .btn{
-  width:100%;
-  min-width:0;
-  text-align:center;
-}
+    .hero{
+      position:relative;
+      overflow:hidden;
+      margin-top:8px;
+      padding:28px 30px;
+      border:1px solid var(--stroke);
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 20% 20%, var(--redB), transparent 70%),
+        radial-gradient(circle at 80% 80%, var(--redA), transparent 60%),
+        linear-gradient(160deg, rgba(0,0,0,.45), rgba(0,0,0,.20));
+      box-shadow:var(--shadowDeep);
+    }
 
-@media (max-width:767px){
-  :root{
-    --topH:124px;
-    --topStackH:132px;
-    --dockH:112px;
-  }
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:28px;
+      opacity:.35;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px var(--goldSoft);
+      background:
+        repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
+    }
 
-  .top{
-    height:var(--topH);
-    padding:12px 12px 8px;
-    flex-direction:column;
-    align-items:stretch;
-    justify-content:flex-start;
-    gap:8px;
-  }
+    .hero__title{
+      margin:0 0 12px;
+      font-size:42px;
+      font-weight:980;
+      letter-spacing:1px;
+    }
 
-  .top .left,
-  .top .right{
-    width:100%;
-    justify-content:space-between;
-    align-items:center;
-    gap:8px;
-    flex-wrap:nowrap;
-  }
+    .hero__sub{
+      max-width:1000px;
+      font-size:18px;
+      line-height:1.7;
+      color:var(--mut);
+    }
 
-  .top .left .btn,
-  .top .right .btn{
-    flex:1 1 0;
-    min-width:0;
-    min-height:48px;
-    padding:10px 8px;
-  }
+    .hero__timestamp{
+      margin-top:14px;
+      font-size:13px;
+      letter-spacing:.3px;
+      color:var(--soft);
+    }
 
-  .page{
-    padding-top:calc(var(--topStackH) + 16px);
-    padding-bottom:calc(var(--dockH) + 40px);
-  }
+    .laws{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
 
-  .header{
-    padding:22px 20px;
-  }
+    .law{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--stroke);
+      border-radius:26px;
+      background:
+        radial-gradient(circle at 22% 18%, rgba(255,43,43,.14), transparent 60%),
+        linear-gradient(145deg, rgba(14,20,28,.92), rgba(8,12,18,.98));
+      box-shadow:var(--shadowMid);
+    }
 
-  .hTitle{
-    font-size:32px;
-    line-height:1.08;
-  }
+    .law::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:26px;
+      opacity:.6;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px var(--goldSoft);
+    }
 
-  .hSub{
-    font-size:16px;
-    line-height:1.65;
-  }
-}
+    .law.open{
+      border-color:rgba(212,175,55,.30);
+      box-shadow:var(--shadowMid), 0 0 18px rgba(212,175,55,.12);
+    }
 
-@media (max-width:520px){
-  :root{
-    --topH:132px;
-    --topStackH:140px;
-    --dockH:118px;
-  }
+    .law__trigger{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      width:100%;
+      padding:20px 24px;
+      border:0;
+      background:transparent;
+      color:inherit;
+      text-align:left;
+      cursor:pointer;
+    }
 
-  .dock{
-    width:min(96vw,720px);
-    grid-template-columns:repeat(2,1fr);
-    gap:10px;
-    padding:10px;
-  }
+    .law__titleWrap{
+      min-width:0;
+    }
 
-  .lawHead{
-    padding:18px 18px;
-  }
+    .law__title{
+      font-size:22px;
+      font-weight:960;
+      line-height:1.2;
+    }
 
-  .lawBody{
-    padding:20px 18px 24px;
-  }
+    .law__chevron{
+      display:flex;
+      flex:0 0 auto;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:12px;
+      background:rgba(0,0,0,.20);
+      color:var(--mut);
+      font-weight:950;
+    }
 
-  .lawTitle{
-    font-size:19px;
-  }
+    .law__body{
+      display:none;
+      padding:24px 26px 28px;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
 
-  .formalBlock{
-    font-size:13px;
-  }
+    .law.open .law__body{
+      display:block;
+    }
 
-  .informalBlock{
-    font-size:15px;
-    line-height:1.72;
-  }
-}
-</style>
+    .sectionTitle{
+      margin:0 0 10px;
+      font-weight:950;
+      letter-spacing:.3px;
+    }
+
+    .formalBlock{
+      margin-bottom:18px;
+      padding:16px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background:rgba(0,0,0,.28);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:14px;
+      line-height:1.6;
+      white-space:pre-wrap;
+    }
+
+    .informalBlock{
+      font-size:16px;
+      line-height:1.8;
+      color:var(--mut);
+    }
+
+    .dock{
+      position:fixed;
+      left:50%;
+      bottom:max(12px, env(safe-area-inset-bottom));
+      z-index:220;
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      width:min(1000px,94vw);
+      min-height:var(--dockH);
+      padding:12px;
+      border:1px solid var(--stroke);
+      border-radius:24px;
+      background:rgba(0,0,0,.40);
+      backdrop-filter:blur(12px);
+      transform:translateX(-50%);
+      box-shadow:0 20px 70px rgba(0,0,0,.70);
+    }
+
+    .dock .btn{
+      width:100%;
+      min-width:0;
+      text-align:center;
+    }
+
+    @media (max-width:767px){
+      :root{
+        --topH:124px;
+        --topStackH:132px;
+        --dockH:112px;
+      }
+
+      .top{
+        flex-direction:column;
+        align-items:stretch;
+        justify-content:flex-start;
+        gap:8px;
+        height:var(--topH);
+        padding:12px 12px 8px;
+      }
+
+      .top__group{
+        width:100%;
+        justify-content:space-between;
+        align-items:center;
+        gap:8px;
+        flex-wrap:nowrap;
+      }
+
+      .top__group .btn{
+        flex:1 1 0;
+        min-width:0;
+        min-height:48px;
+        padding:10px 8px;
+      }
+
+      .page{
+        padding-top:calc(var(--topStackH) + 16px);
+        padding-bottom:calc(var(--dockH) + 40px);
+      }
+
+      .hero{
+        padding:22px 20px;
+      }
+
+      .hero__title{
+        font-size:32px;
+        line-height:1.08;
+      }
+
+      .hero__sub{
+        font-size:16px;
+        line-height:1.65;
+      }
+    }
+
+    @media (max-width:520px){
+      :root{
+        --topH:132px;
+        --topStackH:140px;
+        --dockH:118px;
+      }
+
+      .dock{
+        grid-template-columns:repeat(2,1fr);
+        gap:10px;
+        width:min(96vw,720px);
+        padding:10px;
+      }
+
+      .law__trigger{
+        padding:18px 18px;
+      }
+
+      .law__body{
+        padding:20px 18px 24px;
+      }
+
+      .law__title{
+        font-size:19px;
+      }
+
+      .formalBlock{
+        font-size:13px;
+      }
+
+      .informalBlock{
+        font-size:15px;
+        line-height:1.72;
+      }
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="top">
-  <div class="left">
-    <button class="btn active" id="lensFormal" type="button">FORMAL</button>
-    <button class="btn" id="lensInformal" type="button">INFORMAL</button>
-  </div>
-  <div class="right">
-    <button class="btn active" id="langEN" type="button">EN</button>
-    <button class="btn" id="langZH" type="button">中文</button>
-    <button class="btn" id="langES" type="button">ES</button>
-  </div>
-</div>
-
-<div class="page">
-
-  <div class="header">
-    <h1 class="hTitle" id="headerTitle">Seven Canonical Laws of Structural Coherence</h1>
-    <div class="hSub" id="headerSub">
-      A unified formal constraint framework governing coherence, admissibility,
-      stability, calibration authority, non-contradiction, scope binding,
-      and cascade containment across multi-scale systems.
+  <header class="top" aria-label="Page controls">
+    <div class="top__group" aria-label="Style controls">
+      <button class="btn active" id="lensFormal" type="button">FORMAL</button>
+      <button class="btn" id="lensInformal" type="button">INFORMAL</button>
     </div>
-    <div class="timestamp" id="headerTimestamp">
-      Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0
+
+    <div class="top__group" aria-label="Language controls">
+      <button class="btn active" id="langEN" type="button">EN</button>
+      <button class="btn" id="langZH" type="button">中文</button>
+      <button class="btn" id="langES" type="button">ES</button>
     </div>
-  </div>
+  </header>
 
-  <div class="laws" id="lawsContainer"></div>
+  <main class="page">
+    <section class="hero" aria-labelledby="headerTitle">
+      <h1 class="hero__title" id="headerTitle">Seven Canonical Laws of Structural Coherence</h1>
+      <div class="hero__sub" id="headerSub">
+        A unified formal constraint framework governing coherence, admissibility,
+        stability, calibration authority, non-contradiction, scope binding,
+        and cascade containment across multi-scale systems.
+      </div>
+      <div class="hero__timestamp" id="headerTimestamp">
+        Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0
+      </div>
+    </section>
 
-</div>
+    <section class="laws" id="lawsContainer" aria-label="Canonical laws"></section>
+  </main>
 
-<nav class="dock">
-  <a class="btn" id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
-  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
-</nav>
+  <nav class="dock" aria-label="Primary navigation">
+    <a class="btn" id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
+    <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
+    <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
+    <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
+  </nav>
 
-<script>
-(function(){
-"use strict";
+  <script>
+    (() => {
+      "use strict";
 
-var qs = new URLSearchParams(location.search);
-var LS = window.localStorage;
+      const STORAGE_KEYS = {
+        lang: "gd_lang",
+        style: "gd_style",
+        time: "gd_time",
+        depth: "gd_depth"
+      };
 
-var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
-var style = qs.get("style") || LS.getItem("gd_style") || "formal";
-var time = qs.get("time") || LS.getItem("gd_time") || "now";
-var depth = qs.get("depth") || LS.getItem("gd_depth") || "explore";
+      const VALID = {
+        lang: new Set(["en", "zh", "es"]),
+        style: new Set(["formal", "informal"]),
+        time: new Set(["origin", "now", "post"]),
+        depth: new Set(["overview", "explore", "deep"])
+      };
 
-if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-if(style!=="formal" && style!=="informal") style="formal";
-if(time==="trajectory") time="post";
-if(time!=="origin" && time!=="now" && time!=="post") time="now";
-if(depth!=="overview" && depth!=="explore" && depth!=="deep") depth="explore";
+      const DEFAULTS = {
+        lang: "en",
+        style: "formal",
+        time: "now",
+        depth: "explore"
+      };
 
-var lens = style;
-var openLaw = 0;
+      const headerCopy = {
+        en: {
+          title: "Seven Canonical Laws of Structural Coherence",
+          sub: "A unified formal constraint framework governing coherence, admissibility, stability, calibration authority, non-contradiction, scope binding, and cascade containment across multi-scale systems.",
+          ts: "Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0",
+          formal: "FORMAL",
+          informal: "INFORMAL",
+          compass: "COMPASS",
+          explore: "EXPLORE",
+          products: "PRODUCTS",
+          gauges: "GAUGES",
+          formalLabel: "Formal Scientific Expression",
+          informalLabel: "Narrative Interpretation"
+        },
+        zh: {
+          title: "结构一致性的七条规范法则",
+          sub: "一个统一的形式约束框架，用于治理多尺度系统中的一致性、可采信性、稳定性、校准权威、不矛盾性、范围绑定与级联隔离。",
+          ts: "发布时间戳：2026-03-02 · 规范档案发布 v1.0",
+          formal: "FORMAL",
+          informal: "INFORMAL",
+          compass: "COMPASS",
+          explore: "EXPLORE",
+          products: "PRODUCTS",
+          gauges: "GAUGES",
+          formalLabel: "正式科学表达",
+          informalLabel: "叙事解释"
+        },
+        es: {
+          title: "Siete Leyes Canónicas de la Coherencia Estructural",
+          sub: "Un marco unificado de restricciones formales que gobierna coherencia, admisibilidad, estabilidad, autoridad de calibración, no contradicción, vinculación de alcance y contención de cascadas en sistemas multi-escala.",
+          ts: "Marca de publicación: 2026-03-02 · Lanzamiento de archivo canónico v1.0",
+          formal: "FORMAL",
+          informal: "INFORMAL",
+          compass: "COMPASS",
+          explore: "EXPLORE",
+          products: "PRODUCTS",
+          gauges: "GAUGES",
+          formalLabel: "Expresión Científica Formal",
+          informalLabel: "Interpretación Narrativa"
+        }
+      };
 
-try{
-  LS.setItem("gd_lang", lang);
-  LS.setItem("gd_style", style);
-  LS.setItem("gd_time", time);
-  LS.setItem("gd_depth", depth);
-}catch(e){}
-
-document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es") ? "es" : "en";
-
-function q(over){
-  var p = new URLSearchParams();
-  p.set("lang", (over && over.lang) ? over.lang : lang);
-  p.set("style", (over && over.style) ? over.style : style);
-  p.set("time", (over && over.time) ? over.time : time);
-  p.set("depth", (over && over.depth) ? over.depth : depth);
-  return "?" + p.toString();
-}
-
-function syncState(){
-  try{
-    LS.setItem("gd_lang", lang);
-    LS.setItem("gd_style", style);
-    LS.setItem("gd_time", time);
-    LS.setItem("gd_depth", depth);
-  }catch(e){}
-  history.replaceState({}, "", location.pathname + q());
-}
-
-function setButtonState(activeId, ids){
-  for(var i=0;i<ids.length;i++){
-    var el = document.getElementById(ids[i]);
-    if(!el) continue;
-    if(ids[i]===activeId) el.classList.add("active");
-    else el.classList.remove("active");
-  }
-}
-
-function wireRoutes(){
-  var nodes = document.querySelectorAll("[data-route]");
-  for(var i=0;i<nodes.length;i++){
-    var el = nodes[i];
-    var route = el.getAttribute("data-route") || "";
-    if(!route) continue;
-    el.setAttribute("href", route + q());
-  }
-}
-
-var copy = {
-  header:{
-    en:{
-      title:"Seven Canonical Laws of Structural Coherence",
-      sub:"A unified formal constraint framework governing coherence, admissibility, stability, calibration authority, non-contradiction, scope binding, and cascade containment across multi-scale systems.",
-      ts:"Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0",
-      formal:"FORMAL",
-      informal:"INFORMAL",
-      compass:"COMPASS",
-      explore:"EXPLORE",
-      products:"PRODUCTS",
-      gauges:"GAUGES",
-      formalLabel:"Formal Scientific Expression",
-      informalLabel:"Narrative Interpretation"
-    },
-    zh:{
-      title:"结构一致性的七条规范法则",
-      sub:"一个统一的形式约束框架，用于治理多尺度系统中的一致性、可采信性、稳定性、校准权威、不矛盾性、范围绑定与级联隔离。",
-      ts:"发布时间戳：2026-03-02 · 规范档案发布 v1.0",
-      formal:"FORMAL",
-      informal:"INFORMAL",
-      compass:"COMPASS",
-      explore:"EXPLORE",
-      products:"PRODUCTS",
-      gauges:"GAUGES",
-      formalLabel:"正式科学表达",
-      informalLabel:"叙事解释"
-    },
-    es:{
-      title:"Siete Leyes Canónicas de la Coherencia Estructural",
-      sub:"Un marco unificado de restricciones formales que gobierna coherencia, admisibilidad, estabilidad, autoridad de calibración, no contradicción, vinculación de alcance y contención de cascadas en sistemas multi-escala.",
-      ts:"Marca de publicación: 2026-03-02 · Lanzamiento de archivo canónico v1.0",
-      formal:"FORMAL",
-      informal:"INFORMAL",
-      compass:"COMPASS",
-      explore:"EXPLORE",
-      products:"PRODUCTS",
-      gauges:"GAUGES",
-      formalLabel:"Expresión Científica Formal",
-      informalLabel:"Interpretación Narrativa"
-    }
-  }
-};
-
-var laws = [
-{
-title:{
-en:"1. Coherence Constraint Law",
-zh:"1. 一致性约束法则",
-es:"1. Ley de Restricción de Coherencia"
-},
-formal:`Under identical scope S and identical evidence set E:
+      const laws = [
+        {
+          title: {
+            en: "1. Coherence Constraint Law",
+            zh: "1. 一致性约束法则",
+            es: "1. Ley de Restricción de Coherencia"
+          },
+          formal: `Under identical scope S and identical evidence set E:
 
 External Trust ≤ Internal Structural Consistency
 
@@ -534,268 +512,406 @@ Where:
 Consistency = f(Declared Values, Observed Actions, Outcomes)
 
 Violation produces measurable divergence ΔC.`,
-informal:{
-en:"A system cannot be trusted more than it is internally consistent. When what it says, what it does, and what results it produces drift apart, pressure exposes the gap.",
-zh:"系统不可能比它自身更一致更值得信任。言行与结果之间的偏离会在压力下暴露。",
-es:"Un sistema no puede ser más confiable que coherente. Cuando palabras, acciones y resultados divergen, la presión lo revela."
-}
-},
-{
-title:{
-en:"2. Non-Contradiction Law",
-zh:"2. 不矛盾法则",
-es:"2. Ley de No-Contradicción"
-},
-formal:`For identical scope S and evidence E:
+          informal: {
+            en: "A system cannot be trusted more than it is internally consistent. When what it says, what it does, and what results it produces drift apart, pressure exposes the gap.",
+            zh: "系统不可能比它自身更一致更值得信任。言行与结果之间的偏离会在压力下暴露。",
+            es: "Un sistema no puede ser más confiable que coherente. Cuando palabras, acciones y resultados divergen, la presión lo revela."
+          }
+        },
+        {
+          title: {
+            en: "2. Non-Contradiction Law",
+            zh: "2. 不矛盾法则",
+            es: "2. Ley de No-Contradicción"
+          },
+          formal: `For identical scope S and evidence E:
 
 If Output₁ ≠ Output₂
 Then either Scope₁ ≠ Scope₂
 or Evidence₁ ≠ Evidence₂
 
 Determinism required under fixed inputs.`,
-informal:{
-en:"Same inputs must produce the same truth. If two conclusions differ, something in scope or evidence changed.",
-zh:"相同输入必须产生相同结论。若不同，则范围或证据改变。",
-es:"Mismos insumos deben producir misma verdad. Si no, cambió el alcance o la evidencia."
-}
-},
-{
-title:{
-en:"3. Scope Precedes Authority",
-zh:"3. 范围先于权威",
-es:"3. El Alcance Precede a la Autoridad"
-},
-formal:`All claims C are valid only within declared scope S.
+          informal: {
+            en: "Same inputs must produce the same truth. If two conclusions differ, something in scope or evidence changed.",
+            zh: "相同输入必须产生相同结论。若不同，则范围或证据改变。",
+            es: "Mismos insumos deben producir misma verdad. Si no, cambió el alcance o la evidencia."
+          }
+        },
+        {
+          title: {
+            en: "3. Scope Precedes Authority",
+            zh: "3. 范围先于权威",
+            es: "3. El Alcance Precede a la Autoridad"
+          },
+          formal: `All claims C are valid only within declared scope S.
 
 Undefined Scope ⇒ Output = UNDETERMINED.`,
-informal:{
-en:"Before you claim power or truth, define the boundaries you operate inside.",
-zh:"在宣称权威之前，先定义你所处的边界。",
-es:"Antes de afirmar autoridad, define el alcance."
-}
-},
-{
-title:{
-en:"4. Admissibility Law",
-zh:"4. 可采信法则",
-es:"4. Ley de Admisibilidad"
-},
-formal:`Escalation of claim level L requires receipt-backed evidence R.
+          informal: {
+            en: "Before you claim power or truth, define the boundaries you operate inside.",
+            zh: "在宣称权威之前，先定义你所处的边界。",
+            es: "Antes de afirmar autoridad, define el alcance."
+          }
+        },
+        {
+          title: {
+            en: "4. Admissibility Law",
+            zh: "4. 可采信法则",
+            es: "4. Ley de Admisibilidad"
+          },
+          formal: `Escalation of claim level L requires receipt-backed evidence R.
 
 If R is incomplete:
 Claim Status = NOT MEASURED.`,
-informal:{
-en:"You don’t upgrade claims because of confidence. You upgrade because of receipts.",
-zh:"升级不是因为自信，而是因为收据。",
-es:"No se escala por confianza, sino por evidencia."
-}
-},
-{
-title:{
-en:"5. Calibration Authority Law",
-zh:"5. 校准权威法则",
-es:"5. Ley de Autoridad de Calibración"
-},
-formal:`Calibration parameters θ may only be modified
+          informal: {
+            en: "You don’t upgrade claims because of confidence. You upgrade because of receipts.",
+            zh: "升级不是因为自信，而是因为收据。",
+            es: "No se escala por confianza, sino por evidencia."
+          }
+        },
+        {
+          title: {
+            en: "5. Calibration Authority Law",
+            zh: "5. 校准权威法则",
+            es: "5. Ley de Autoridad de Calibración"
+          },
+          formal: `Calibration parameters θ may only be modified
 by designated calibration authority A.
 
 Unauthorized modification ⇒ System Invalid.`,
-informal:{
-en:"If everyone can adjust the measuring stick, measurement becomes meaningless.",
-zh:"若人人可调尺子，测量将失效。",
-es:"Si todos ajustan la regla, la medición pierde sentido."
-}
-},
-{
-title:{
-en:"6. Measurable Stability Law",
-zh:"6. 可测稳定法则",
-es:"6. Ley de Estabilidad Medible"
-},
-formal:`Instability I = d(ΔC)/dt
+          informal: {
+            en: "If everyone can adjust the measuring stick, measurement becomes meaningless.",
+            zh: "若人人可调尺子，测量将失效。",
+            es: "Si todos ajustan la regla, la medición pierde sentido."
+          }
+        },
+        {
+          title: {
+            en: "6. Measurable Stability Law",
+            zh: "6. 可测稳定法则",
+            es: "6. Ley de Estabilidad Medible"
+          },
+          formal: `Instability I = d(ΔC)/dt
 
 Where ΔC = coherence divergence.
 Acceleration indicates systemic risk.`,
-informal:{
-en:"Instability isn’t a feeling. It’s measurable drift that accelerates under scale.",
-zh:"不稳定不是感觉，而是可测的加速偏离。",
-es:"La inestabilidad es desviación medible que acelera."
-}
-},
-{
-title:{
-en:"7. Containment Prevents Cascade",
-zh:"7. 隔离阻断级联",
-es:"7. La Contención Evita la Cascada"
-},
-formal:`Failure domain F must remain locally bounded.
+          informal: {
+            en: "Instability isn’t a feeling. It’s measurable drift that accelerates under scale.",
+            zh: "不稳定不是感觉，而是可测的加速偏离。",
+            es: "La inestabilidad es desviación medible que acelera."
+          }
+        },
+        {
+          title: {
+            en: "7. Containment Prevents Cascade",
+            zh: "7. 隔离阻断级联",
+            es: "7. La Contención Evita la Cascada"
+          },
+          formal: `Failure domain F must remain locally bounded.
 
 If spread(F) > containment threshold T:
 Cascade Risk = TRUE.`,
-informal:{
-en:"Keep failure local. Roll back early. Containment preserves system survival.",
-zh:"让失败局部化。尽早回滚。",
-es:"Mantén el fallo local. El rollback salva el sistema."
-}
-}
-];
-
-var container = document.getElementById("lawsContainer");
-
-function closeAll(){
-  var nodes = container.querySelectorAll(".law");
-  for(var i=0;i<nodes.length;i++){
-    nodes[i].classList.remove("open");
-    var chev = nodes[i].querySelector(".lawChevron");
-    if(chev) chev.textContent = "▸";
-  }
-}
-
-function openLawAt(index){
-  var nodes = container.querySelectorAll(".law");
-  if(!nodes[index]) return;
-  closeAll();
-  nodes[index].classList.add("open");
-  var chev = nodes[index].querySelector(".lawChevron");
-  if(chev) chev.textContent = "▾";
-  openLaw = index;
-}
-
-function toggleLaw(index){
-  var nodes = container.querySelectorAll(".law");
-  if(!nodes[index]) return;
-  var isOpen = nodes[index].classList.contains("open");
-  if(isOpen){
-    nodes[index].classList.remove("open");
-    var chev0 = nodes[index].querySelector(".lawChevron");
-    if(chev0) chev0.textContent = "▸";
-    return;
-  }
-  openLawAt(index);
-}
-
-function applyHeader(){
-  var H = copy.header[lang] || copy.header.en;
-  document.getElementById("headerTitle").textContent = H.title;
-  document.getElementById("headerSub").textContent = H.sub;
-  document.getElementById("headerTimestamp").textContent = H.ts;
-
-  document.getElementById("lensFormal").textContent = H.formal;
-  document.getElementById("lensInformal").textContent = H.informal;
-
-  document.getElementById("dockCompass").textContent = H.compass;
-  document.getElementById("dockExplore").textContent = H.explore;
-  document.getElementById("dockProducts").textContent = H.products;
-  document.getElementById("dockGauges").textContent = H.gauges;
-}
-
-function render(){
-  container.innerHTML = "";
-  applyHeader();
-
-  var H = copy.header[lang] || copy.header.en;
-
-  laws.forEach(function(law, i){
-    var div = document.createElement("div");
-    div.className = "law";
-
-    var head = document.createElement("div");
-    head.className = "lawHead";
-    head.setAttribute("role","button");
-    head.tabIndex = 0;
-
-    var left = document.createElement("div");
-    left.className = "lawHeadLeft";
-
-    var title = document.createElement("div");
-    title.className = "lawTitle";
-    title.textContent = law.title[lang];
-
-    left.appendChild(title);
-
-    var chev = document.createElement("div");
-    chev.className = "lawChevron";
-    chev.textContent = "▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body = document.createElement("div");
-    body.className = "lawBody";
-
-    if(lens === "formal"){
-      body.innerHTML =
-        "<div class='sectionTitle'>" + H.formalLabel + "</div>" +
-        "<div class='formalBlock'>" + law.formal + "</div>";
-    }else{
-      body.innerHTML =
-        "<div class='sectionTitle'>" + H.informalLabel + "</div>" +
-        "<div class='informalBlock'>" + law.informal[lang] + "</div>";
-    }
-
-    (function(index){
-      function act(){ toggleLaw(index); }
-      head.addEventListener("click", act, {passive:true});
-      head.addEventListener("keydown", function(e){
-        if(e.key==="Enter" || e.key===" "){
-          e.preventDefault();
-          act();
+          informal: {
+            en: "Keep failure local. Roll back early. Containment preserves system survival.",
+            zh: "让失败局部化。尽早回滚。",
+            es: "Mantén el fallo local. El rollback salva el sistema."
+          }
         }
-      });
-    })(i);
+      ];
 
-    div.appendChild(head);
-    div.appendChild(body);
-    container.appendChild(div);
-  });
+      const elements = {
+        headerTitle: document.getElementById("headerTitle"),
+        headerSub: document.getElementById("headerSub"),
+        headerTimestamp: document.getElementById("headerTimestamp"),
+        lawsContainer: document.getElementById("lawsContainer"),
+        lensFormal: document.getElementById("lensFormal"),
+        lensInformal: document.getElementById("lensInformal"),
+        langEN: document.getElementById("langEN"),
+        langZH: document.getElementById("langZH"),
+        langES: document.getElementById("langES"),
+        dockCompass: document.getElementById("dockCompass"),
+        dockExplore: document.getElementById("dockExplore"),
+        dockProducts: document.getElementById("dockProducts"),
+        dockGauges: document.getElementById("dockGauges")
+      };
 
-  if(openLaw < 0 || openLaw >= laws.length) openLaw = 0;
-  openLawAt(openLaw);
-}
+      const state = {
+        lang: readInitialLang(),
+        style: readInitialStyle(),
+        time: readInitialTime(),
+        depth: readInitialDepth(),
+        openLaw: 0
+      };
 
-function applyLensFormal(){
-  lens = "formal";
-  style = "formal";
-  setButtonState("lensFormal", ["lensFormal","lensInformal"]);
-  syncState();
-  render();
-  wireRoutes();
-}
+      function getSearchParams(){
+        return new URLSearchParams(window.location.search);
+      }
 
-function applyLensInformal(){
-  lens = "informal";
-  style = "informal";
-  setButtonState("lensInformal", ["lensFormal","lensInformal"]);
-  syncState();
-  render();
-  wireRoutes();
-}
+      function readStorage(key){
+        try{
+          return window.localStorage.getItem(key);
+        }catch(_error){
+          return null;
+        }
+      }
 
-function applyLang(next){
-  lang = next;
-  document.documentElement.lang = next === "zh" ? "zh" : (next === "es" ? "es" : "en");
-  setButtonState(next === "zh" ? "langZH" : (next === "es" ? "langES" : "langEN"), ["langEN","langZH","langES"]);
-  syncState();
-  render();
-  wireRoutes();
-}
+      function writeStorage(key, value){
+        try{
+          window.localStorage.setItem(key, value);
+        }catch(_error){}
+      }
 
-document.getElementById("lensFormal").addEventListener("click", applyLensFormal, {passive:true});
-document.getElementById("lensInformal").addEventListener("click", applyLensInformal, {passive:true});
+      function normalizeLang(value){
+        return VALID.lang.has(value) ? value : DEFAULTS.lang;
+      }
 
-document.getElementById("langEN").addEventListener("click", function(){ applyLang("en"); }, {passive:true});
-document.getElementById("langZH").addEventListener("click", function(){ applyLang("zh"); }, {passive:true});
-document.getElementById("langES").addEventListener("click", function(){ applyLang("es"); }, {passive:true});
+      function normalizeStyle(value){
+        return VALID.style.has(value) ? value : DEFAULTS.style;
+      }
 
-setButtonState(lens === "formal" ? "lensFormal" : "lensInformal", ["lensFormal","lensInformal"]);
-setButtonState(lang === "zh" ? "langZH" : (lang === "es" ? "langES" : "langEN"), ["langEN","langZH","langES"]);
+      function normalizeTime(value){
+        if(value === "trajectory") return "post";
+        return VALID.time.has(value) ? value : DEFAULTS.time;
+      }
 
-syncState();
-render();
-wireRoutes();
+      function normalizeDepth(value){
+        return VALID.depth.has(value) ? value : DEFAULTS.depth;
+      }
 
-})();
-</script>
+      function readInitialLang(){
+        const params = getSearchParams();
+        return normalizeLang(params.get("lang") || readStorage(STORAGE_KEYS.lang) || DEFAULTS.lang);
+      }
 
+      function readInitialStyle(){
+        const params = getSearchParams();
+        return normalizeStyle(params.get("style") || readStorage(STORAGE_KEYS.style) || DEFAULTS.style);
+      }
+
+      function readInitialTime(){
+        const params = getSearchParams();
+        return normalizeTime(params.get("time") || readStorage(STORAGE_KEYS.time) || DEFAULTS.time);
+      }
+
+      function readInitialDepth(){
+        const params = getSearchParams();
+        return normalizeDepth(params.get("depth") || readStorage(STORAGE_KEYS.depth) || DEFAULTS.depth);
+      }
+
+      function currentHeaderCopy(){
+        return headerCopy[state.lang] || headerCopy.en;
+      }
+
+      function buildQueryString(overrides = {}){
+        const params = new URLSearchParams();
+        params.set("lang", overrides.lang || state.lang);
+        params.set("style", overrides.style || state.style);
+        params.set("time", overrides.time || state.time);
+        params.set("depth", overrides.depth || state.depth);
+        return `?${params.toString()}`;
+      }
+
+      function syncCanonicalState(){
+        writeStorage(STORAGE_KEYS.lang, state.lang);
+        writeStorage(STORAGE_KEYS.style, state.style);
+        writeStorage(STORAGE_KEYS.time, state.time);
+        writeStorage(STORAGE_KEYS.depth, state.depth);
+
+        window.history.replaceState({}, "", window.location.pathname + buildQueryString());
+        document.documentElement.lang = state.lang === "zh" ? "zh" : state.lang === "es" ? "es" : "en";
+      }
+
+      function setActiveButton(activeId, allIds){
+        allIds.forEach((id) => {
+          const node = document.getElementById(id);
+          if(!node) return;
+          node.classList.toggle("active", id === activeId);
+        });
+      }
+
+      function syncButtons(){
+        setActiveButton(
+          state.style === "formal" ? "lensFormal" : "lensInformal",
+          ["lensFormal", "lensInformal"]
+        );
+
+        setActiveButton(
+          state.lang === "zh" ? "langZH" : state.lang === "es" ? "langES" : "langEN",
+          ["langEN", "langZH", "langES"]
+        );
+      }
+
+      function syncRoutes(){
+        document.querySelectorAll("[data-route]").forEach((node) => {
+          const route = node.getAttribute("data-route");
+          if(route){
+            node.setAttribute("href", route + buildQueryString());
+          }
+        });
+      }
+
+      function applyHeader(){
+        const H = currentHeaderCopy();
+
+        elements.headerTitle.textContent = H.title;
+        elements.headerSub.textContent = H.sub;
+        elements.headerTimestamp.textContent = H.ts;
+
+        elements.lensFormal.textContent = H.formal;
+        elements.lensInformal.textContent = H.informal;
+
+        elements.dockCompass.textContent = H.compass;
+        elements.dockExplore.textContent = H.explore;
+        elements.dockProducts.textContent = H.products;
+        elements.dockGauges.textContent = H.gauges;
+      }
+
+      function createLawBody(law){
+        const H = currentHeaderCopy();
+
+        if(state.style === "formal"){
+          return `
+            <div class="sectionTitle">${H.formalLabel}</div>
+            <div class="formalBlock">${law.formal}</div>
+          `;
+        }
+
+        return `
+          <div class="sectionTitle">${H.informalLabel}</div>
+          <div class="informalBlock">${law.informal[state.lang]}</div>
+        `;
+      }
+
+      function createLawNode(law, index){
+        const article = document.createElement("article");
+        article.className = "law";
+        article.dataset.index = String(index);
+
+        const trigger = document.createElement("button");
+        trigger.className = "law__trigger";
+        trigger.type = "button";
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.setAttribute("aria-controls", `law-panel-${index}`);
+        trigger.id = `law-trigger-${index}`;
+
+        const titleWrap = document.createElement("div");
+        titleWrap.className = "law__titleWrap";
+
+        const title = document.createElement("div");
+        title.className = "law__title";
+        title.textContent = law.title[state.lang];
+
+        const chevron = document.createElement("div");
+        chevron.className = "law__chevron";
+        chevron.textContent = "▸";
+
+        titleWrap.appendChild(title);
+        trigger.appendChild(titleWrap);
+        trigger.appendChild(chevron);
+
+        const body = document.createElement("div");
+        body.className = "law__body";
+        body.id = `law-panel-${index}`;
+        body.setAttribute("role", "region");
+        body.setAttribute("aria-labelledby", trigger.id);
+        body.innerHTML = createLawBody(law);
+
+        trigger.addEventListener("click", () => toggleLaw(index), { passive: true });
+
+        article.appendChild(trigger);
+        article.appendChild(body);
+
+        return article;
+      }
+
+      function closeAllLaws(){
+        elements.lawsContainer.querySelectorAll(".law").forEach((node) => {
+          node.classList.remove("open");
+          const trigger = node.querySelector(".law__trigger");
+          const chevron = node.querySelector(".law__chevron");
+          if(trigger) trigger.setAttribute("aria-expanded", "false");
+          if(chevron) chevron.textContent = "▸";
+        });
+      }
+
+      function openLawAt(index){
+        const lawsList = elements.lawsContainer.querySelectorAll(".law");
+        const node = lawsList[index];
+        if(!node) return;
+
+        closeAllLaws();
+
+        node.classList.add("open");
+        const trigger = node.querySelector(".law__trigger");
+        const chevron = node.querySelector(".law__chevron");
+
+        if(trigger) trigger.setAttribute("aria-expanded", "true");
+        if(chevron) chevron.textContent = "▾";
+
+        state.openLaw = index;
+      }
+
+      function toggleLaw(index){
+        const lawsList = elements.lawsContainer.querySelectorAll(".law");
+        const node = lawsList[index];
+        if(!node) return;
+
+        if(node.classList.contains("open")){
+          node.classList.remove("open");
+          const trigger = node.querySelector(".law__trigger");
+          const chevron = node.querySelector(".law__chevron");
+          if(trigger) trigger.setAttribute("aria-expanded", "false");
+          if(chevron) chevron.textContent = "▸";
+          return;
+        }
+
+        openLawAt(index);
+      }
+
+      function renderLaws(){
+        elements.lawsContainer.innerHTML = "";
+        laws.forEach((law, index) => {
+          elements.lawsContainer.appendChild(createLawNode(law, index));
+        });
+
+        if(state.openLaw < 0 || state.openLaw >= laws.length){
+          state.openLaw = 0;
+        }
+
+        openLawAt(state.openLaw);
+      }
+
+      function render(){
+        applyHeader();
+        syncButtons();
+        renderLaws();
+        syncRoutes();
+      }
+
+      function applyStyle(nextStyle){
+        state.style = normalizeStyle(nextStyle);
+        syncCanonicalState();
+        render();
+      }
+
+      function applyLanguage(nextLang){
+        state.lang = normalizeLang(nextLang);
+        syncCanonicalState();
+        render();
+      }
+
+      function bindEvents(){
+        elements.lensFormal.addEventListener("click", () => applyStyle("formal"), { passive: true });
+        elements.lensInformal.addEventListener("click", () => applyStyle("informal"), { passive: true });
+
+        elements.langEN.addEventListener("click", () => applyLanguage("en"), { passive: true });
+        elements.langZH.addEventListener("click", () => applyLanguage("zh"), { passive: true });
+        elements.langES.addEventListener("click", () => applyLanguage("es"), { passive: true });
+      }
+
+      bindEvents();
+      syncCanonicalState();
+      render();
+    })();
+  </script>
 </body>
 </html>

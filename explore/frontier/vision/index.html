@@ -1,11 +1,14 @@
+Full-file replacement for /explore/frontier/vision/index.html with the 3D/material/animation pass applied while keeping the geometry, routing model, state rules, and no-hover-movement constraint intact.
+
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: STANDARDIZED FULL-FILE REWRITE
+     STATUS: STANDARDIZED FULL-FILE REWRITE · 3D MATERIAL / AMBIENT ANIMATION PASS
      PURPOSE:
        - Preserve locked geometry, routing model, and state carry
-       - Replace legacy inline structure with cleaner standard organization
        - Keep ui.css as background owner
-       - Keep hover glow only, no movement
+       - Add deeper 3D material feel without positional drift
+       - Add restrained ambient animation: dial breath, gold shimmer, glass sweep
+       - Keep hover = glow/intensity only (NO movement)
        - Keep lane URL-only and never stored
 -->
 
@@ -31,20 +34,26 @@
 
       --padTop:118px;
 
-      --ink:rgba(255,255,255,.94);
+      --ink:rgba(255,255,255,.96);
+      --mut:rgba(255,255,255,.78);
 
-      --onyx0:rgba(6,8,10,.96);
-      --onyx1:rgba(10,12,16,.86);
+      --onyx0:rgba(4,6,10,.98);
+      --onyx1:rgba(10,12,18,.90);
+      --onyx2:rgba(18,22,28,.78);
 
-      --crimson:rgba(120,0,22,.40);
-      --festival:rgba(255,43,43,.22);
-      --opalV:rgba(90,40,120,.14);
+      --crimson:rgba(120,0,22,.42);
+      --festival:rgba(255,43,43,.24);
+      --opalV:rgba(90,40,120,.16);
 
-      --gold:rgba(201,162,74,.56);
-      --goldGlow:rgba(201,162,74,.22);
+      --gold:rgba(201,162,74,.58);
+      --goldGlow:rgba(201,162,74,.24);
+      --goldLine:rgba(201,162,74,.10);
 
       --shadowDeep:0 44px 140px rgba(0,0,0,.82);
       --shadowC:0 18px 60px rgba(0,0,0,.55);
+
+      --glassHi:rgba(255,255,255,.24);
+      --glassLo:rgba(255,255,255,.04);
     }
 
     *{box-sizing:border-box}
@@ -96,6 +105,45 @@
       pointer-events:none;
     }
 
+    .stage::before{
+      content:"";
+      position:absolute;
+      inset:8% 10% 12%;
+      z-index:0;
+      pointer-events:none;
+      border-radius:999px;
+      opacity:.72;
+      background:
+        radial-gradient(circle at 50% 52%, rgba(255,43,43,.11), transparent 32%),
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 48%),
+        radial-gradient(circle at 50% 50%, rgba(30,60,140,.12), transparent 72%);
+      filter:blur(42px);
+      animation:stagePulse 10.4s ease-in-out infinite;
+    }
+
+    .stage::after{
+      content:"";
+      position:absolute;
+      inset:14%;
+      z-index:0;
+      pointer-events:none;
+      border-radius:999px;
+      background:
+        conic-gradient(from 0deg,
+          transparent 0deg,
+          rgba(201,162,74,.04) 34deg,
+          transparent 74deg,
+          rgba(255,255,255,.03) 132deg,
+          transparent 178deg,
+          rgba(255,43,43,.04) 242deg,
+          transparent 290deg,
+          rgba(201,162,74,.04) 338deg,
+          transparent 360deg);
+      opacity:.55;
+      filter:blur(22px);
+      animation:dialPhase 22s linear infinite;
+    }
+
     .slab{
       position:absolute;
       top:50%;
@@ -104,7 +152,7 @@
       height:min(820px,92vw);
       border:1px solid rgba(255,255,255,.10);
       border-radius:72px;
-      opacity:.16;
+      opacity:.18;
       pointer-events:none;
       transform:translate(-50%,-50%) rotate(45deg);
       background:
@@ -136,28 +184,29 @@
       position:absolute;
       inset:0;
       border-radius:999px;
-      opacity:.92;
+      opacity:.94;
       background:
-        radial-gradient(circle at 50% 45%,
-          rgba(255,255,255,.06),
+        radial-gradient(circle at 50% 46%,
+          rgba(255,255,255,.07),
           rgba(0,0,0,.18) 58%,
-          rgba(0,0,0,.46) 78%,
+          rgba(0,0,0,.48) 79%,
           rgba(0,0,0,0) 92%),
         radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-        radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 66%),
-        linear-gradient(180deg, rgba(0,0,0,.10), rgba(0,0,0,0));
+        radial-gradient(circle at 50% 50%, rgba(255,43,43,.09), transparent 67%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.10));
       box-shadow:
         inset 0 0 0 2px rgba(255,255,255,.06),
         inset 0 0 0 10px rgba(0,0,0,.10),
         inset 0 0 70px rgba(0,0,0,.45),
         0 50px 180px rgba(0,0,0,.35);
+      animation:dialBreath 8.8s ease-in-out infinite;
     }
 
     .dialFace::after{
       content:"";
       position:absolute;
       inset:-16%;
-      opacity:.78;
+      opacity:.82;
       filter:blur(.25px);
       background:
         radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
@@ -171,6 +220,26 @@
         radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
       mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
       -webkit-mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
+      animation:dialSweep 14s linear infinite;
+    }
+
+    .dialHalo{
+      position:absolute;
+      top:50%;
+      left:50%;
+      z-index:2;
+      width:min(760px,84vw);
+      height:min(760px,84vw);
+      pointer-events:none;
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 34%),
+        radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 44%),
+        radial-gradient(circle at 50% 50%, transparent 56%, rgba(201,162,74,.07) 57% 58%, transparent 59%);
+      filter:blur(10px);
+      opacity:.74;
+      animation:haloPulse 8.4s ease-in-out infinite;
     }
 
     .diamond{
@@ -181,7 +250,7 @@
       overflow:hidden;
       width:var(--D3);
       height:var(--D3);
-      border:1px solid rgba(255,255,255,.16);
+      border:1px solid rgba(255,255,255,.17);
       border-radius:18px;
       cursor:pointer;
       pointer-events:auto;
@@ -189,17 +258,26 @@
       -webkit-tap-highlight-color:transparent;
       transform:translate(-50%,-50%) rotate(45deg);
       background:
-        radial-gradient(circle at 20% 18%, rgba(255,255,255,.28), transparent 46%),
-        radial-gradient(circle at 78% 22%, var(--festival), transparent 62%),
-        radial-gradient(circle at 74% 84%, var(--opalV), transparent 64%),
-        radial-gradient(circle at 28% 84%, var(--crimson), transparent 70%),
-        linear-gradient(160deg, var(--onyx1), var(--onyx0));
+        radial-gradient(circle at 20% 18%, rgba(255,255,255,.24), transparent 42%),
+        radial-gradient(circle at 78% 22%, rgba(255,43,43,.18), transparent 58%),
+        radial-gradient(circle at 74% 84%, rgba(90,40,120,.18), transparent 64%),
+        radial-gradient(circle at 28% 84%, rgba(120,0,22,.26), transparent 68%),
+        linear-gradient(155deg, rgba(20,24,30,.86), rgba(6,8,12,.98));
       box-shadow:
         var(--shadowDeep),
-        0 0 28px rgba(255,43,43,.10),
+        0 24px 50px rgba(0,0,0,.38),
+        0 0 28px rgba(255,43,43,.12),
         inset 0 2px 0 rgba(255,255,255,.18),
-        inset 0 -44px 84px rgba(0,0,0,.84);
-      transition:box-shadow .16s ease,border-color .16s ease,filter .16s ease;
+        inset 0 -48px 90px rgba(0,0,0,.86);
+      transition:
+        box-shadow .18s ease,
+        border-color .18s ease,
+        filter .18s ease;
+      animation:
+        redCorePulse 7.6s ease-in-out infinite,
+        diamondAmbient 10.2s ease-in-out infinite;
+      animation-delay:var(--phase, 0s), var(--phase, 0s);
+      will-change:box-shadow, filter;
     }
 
     .diamond::before{
@@ -207,47 +285,64 @@
       position:absolute;
       inset:0;
       border-radius:inherit;
-      opacity:.42;
+      opacity:.46;
       pointer-events:none;
-      box-shadow:inset 0 0 0 1px rgba(201,162,74,.20);
+      box-shadow:
+        inset 0 0 0 1px rgba(201,162,74,.22),
+        inset 0 18px 30px rgba(255,255,255,.04),
+        inset 0 -24px 36px rgba(0,0,0,.28);
       background:
         repeating-linear-gradient(45deg, rgba(201,162,74,.09) 0 1px, transparent 1px 18px),
-        repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px);
+        repeating-linear-gradient(-45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
+        linear-gradient(180deg, rgba(255,255,255,.05), transparent 26%, transparent 74%, rgba(0,0,0,.15));
       mask:
         radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
         linear-gradient(#000,#000);
       -webkit-mask:
         radial-gradient(circle at 50% 50%, transparent 0 70%, #000 78% 100%),
         linear-gradient(#000,#000);
+      animation:gridShimmer 12s linear infinite;
+      animation-delay:var(--phase, 0s);
     }
 
     .diamond::after{
       content:"";
       position:absolute;
-      left:12%;
-      right:12%;
-      top:10%;
-      height:32%;
-      border-radius:999px;
-      opacity:.92;
+      top:-12%;
+      bottom:-12%;
+      left:-62%;
+      width:52%;
+      opacity:.58;
       pointer-events:none;
-      transform:rotate(-12deg);
-      background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
+      transform:rotate(10deg);
+      background:linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,.03) 22%,
+        rgba(255,255,255,.15) 48%,
+        rgba(255,255,255,.04) 72%,
+        rgba(255,255,255,0) 100%
+      );
+      filter:blur(2px);
+      animation:glassSweep 8.8s linear infinite;
+      animation-delay:var(--phase, 0s);
     }
 
     .diamond:hover{
-      border-color:rgba(201,162,74,.34);
+      border-color:rgba(201,162,74,.38);
       box-shadow:
         var(--shadowDeep),
+        0 28px 62px rgba(0,0,0,.42),
         0 0 0 2px rgba(201,162,74,.14),
-        0 0 28px rgba(201,162,74,.18),
-        0 0 44px rgba(201,162,74,.10),
-        inset 0 2px 0 rgba(255,255,255,.22),
-        inset 0 -46px 86px rgba(0,0,0,.88);
+        0 0 34px rgba(201,162,74,.18),
+        0 0 54px rgba(201,162,74,.12),
+        inset 0 2px 0 rgba(255,255,255,.24),
+        inset 0 -48px 90px rgba(0,0,0,.88);
+      filter:brightness(1.03) saturate(1.04);
     }
 
     .diamond:active{
-      filter:brightness(.985);
+      filter:brightness(1.01) saturate(1.02);
     }
 
     .diamond--core{
@@ -255,6 +350,11 @@
       width:var(--D0);
       height:var(--D0);
       border-radius:26px;
+      animation-duration:6.8s, 8.8s;
+    }
+
+    .diamond--core::after{
+      animation-duration:7.2s;
     }
 
     .diamond--l1{
@@ -276,6 +376,7 @@
     }
 
     .diamond__inner{
+      position:relative;
       display:flex;
       flex-direction:column;
       align-items:center;
@@ -289,21 +390,53 @@
       transform:rotate(-45deg);
     }
 
+    .diamond__inner::before{
+      content:"";
+      position:absolute;
+      inset:8% 12% auto;
+      height:28%;
+      border-radius:999px;
+      opacity:.9;
+      background:linear-gradient(to bottom, rgba(255,255,255,.20), rgba(255,255,255,0));
+      transform:rotate(-12deg);
+      filter:blur(.3px);
+    }
+
+    .diamond__inner::after{
+      content:"";
+      position:absolute;
+      inset:18% 16%;
+      border-radius:18px;
+      opacity:.14;
+      background:
+        radial-gradient(circle at 50% 64%, rgba(255,43,43,.36), transparent 52%),
+        radial-gradient(circle at 50% 42%, rgba(201,162,74,.18), transparent 58%);
+      filter:blur(10px);
+      animation:innerGlow 7.8s ease-in-out infinite;
+      animation-delay:var(--phase, 0s);
+    }
+
     .diamond__word{
+      position:relative;
+      z-index:2;
       font-size:11.5px;
       font-weight:980;
       line-height:1.05;
       letter-spacing:.55px;
       color:var(--ink);
-      text-shadow:0 0 18px rgba(0,0,0,.42);
+      text-shadow:
+        0 0 18px rgba(0,0,0,.42),
+        0 1px 0 rgba(255,255,255,.05);
     }
 
     .diamond__code{
+      position:relative;
+      z-index:2;
       margin-top:5px;
       font-size:9px;
       letter-spacing:1.1px;
       color:rgba(255,255,255,.84);
-      opacity:.78;
+      opacity:.82;
     }
 
     .diamond--core .diamond__word{font-size:15px}
@@ -330,6 +463,20 @@
         linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
       box-shadow:var(--shadowC);
       transition:box-shadow .16s ease,border-color .16s ease,filter .16s ease;
+      animation:controlAmbient 8.6s ease-in-out infinite;
+    }
+
+    .control::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      opacity:.34;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px rgba(201,162,74,.18);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.08), transparent 42%),
+        radial-gradient(circle at 78% 24%, rgba(255,43,43,.10), transparent 46%);
     }
 
     .control::after{
@@ -346,17 +493,23 @@
 
     .control:hover{
       border-color:rgba(201,162,74,.34);
-      box-shadow:var(--shadowC),0 0 0 2px rgba(201,162,74,.14),0 0 26px rgba(201,162,74,.16);
+      box-shadow:
+        var(--shadowC),
+        0 0 0 2px rgba(201,162,74,.14),
+        0 0 26px rgba(201,162,74,.16);
+      filter:brightness(1.03);
     }
 
     .control:active{
-      filter:brightness(.985);
-      transform:rotate(45deg) translateY(1px);
+      filter:brightness(1.01);
     }
 
     .control.is-on{
       border-color:rgba(255,43,43,.26);
-      box-shadow:var(--shadowC), 0 0 16px rgba(255,43,43,.12);
+      box-shadow:
+        var(--shadowC),
+        0 0 16px rgba(255,43,43,.12),
+        0 0 26px rgba(201,162,74,.08);
     }
 
     .control__label{
@@ -366,6 +519,7 @@
       color:var(--ink);
       user-select:none;
       transform:rotate(-45deg);
+      text-shadow:0 0 12px rgba(0,0,0,.34);
     }
 
     .corner{
@@ -387,7 +541,95 @@
       font-size:11px;
       letter-spacing:.4px;
       text-align:center;
-      color:rgba(255,255,255,.70);
+      color:rgba(255,255,255,.72);
+      text-shadow:0 0 12px rgba(0,0,0,.38);
+    }
+
+    @keyframes stagePulse{
+      0%,100%{opacity:.68;filter:blur(42px)}
+      50%{opacity:.82;filter:blur(48px)}
+    }
+
+    @keyframes dialPhase{
+      0%{transform:rotate(0deg)}
+      100%{transform:rotate(360deg)}
+    }
+
+    @keyframes dialBreath{
+      0%,100%{opacity:.92;filter:saturate(1) brightness(1)}
+      50%{opacity:.98;filter:saturate(1.05) brightness(1.03)}
+    }
+
+    @keyframes dialSweep{
+      0%,100%{opacity:.76;filter:blur(.25px) brightness(1)}
+      50%{opacity:.90;filter:blur(.25px) brightness(1.05)}
+    }
+
+    @keyframes haloPulse{
+      0%,100%{opacity:.68;filter:blur(10px)}
+      50%{opacity:.82;filter:blur(14px)}
+    }
+
+    @keyframes redCorePulse{
+      0%,100%{
+        box-shadow:
+          var(--shadowDeep),
+          0 24px 50px rgba(0,0,0,.38),
+          0 0 28px rgba(255,43,43,.10),
+          inset 0 2px 0 rgba(255,255,255,.18),
+          inset 0 -48px 90px rgba(0,0,0,.86);
+      }
+      50%{
+        box-shadow:
+          var(--shadowDeep),
+          0 26px 56px rgba(0,0,0,.40),
+          0 0 34px rgba(255,43,43,.14),
+          inset 0 2px 0 rgba(255,255,255,.20),
+          inset 0 -50px 94px rgba(0,0,0,.88);
+      }
+    }
+
+    @keyframes diamondAmbient{
+      0%,100%{filter:saturate(1) brightness(1)}
+      50%{filter:saturate(1.04) brightness(1.02)}
+    }
+
+    @keyframes glassSweep{
+      0%{left:-62%;opacity:.10}
+      12%{opacity:.26}
+      48%{opacity:.48}
+      72%{opacity:.16}
+      100%{left:118%;opacity:.06}
+    }
+
+    @keyframes gridShimmer{
+      0%,100%{opacity:.36}
+      50%{opacity:.50}
+    }
+
+    @keyframes innerGlow{
+      0%,100%{opacity:.10}
+      50%{opacity:.18}
+    }
+
+    @keyframes controlAmbient{
+      0%,100%{filter:saturate(1) brightness(1)}
+      50%{filter:saturate(1.04) brightness(1.02)}
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .stage::before,
+      .stage::after,
+      .dialFace::before,
+      .dialFace::after,
+      .dialHalo,
+      .diamond,
+      .diamond::before,
+      .diamond::after,
+      .diamond__inner::after,
+      .control{
+        animation:none !important;
+      }
     }
 
     @media (max-width:640px){
@@ -452,6 +694,7 @@
   <main class="stage" id="stage" aria-label="Vision Remote">
     <div class="slab" aria-hidden="true"></div>
     <div class="dialFace" aria-hidden="true"></div>
+    <div class="dialHalo" aria-hidden="true"></div>
   </main>
 
   <div class="corner corner--left" aria-label="Exit">
@@ -497,17 +740,23 @@
         en: {
           exit: "EXIT",
           hub: "HUB",
-          core: "INDEX"
+          core: "INDEX",
+          langLabels: { en: "English", zh: "Chinese", es: "Spanish" },
+          laneLabels: { platform: "Platform lane", engineering: "Engineering lane" }
         },
         zh: {
           exit: "退出",
           hub: "枢纽",
-          core: "索引"
+          core: "索引",
+          langLabels: { en: "英文", zh: "中文", es: "西班牙语" },
+          laneLabels: { platform: "平台通道", engineering: "工程通道" }
         },
         es: {
           exit: "SALIR",
           hub: "HUB",
-          core: "ÍNDICE"
+          core: "ÍNDICE",
+          langLabels: { en: "Inglés", zh: "Chino", es: "Español" },
+          laneLabels: { platform: "Carril de plataforma", engineering: "Carril de ingeniería" }
         }
       };
 
@@ -560,6 +809,7 @@
       };
 
       let ringRefs = [];
+      let resizeScheduled = false;
 
       function getSearchParams() {
         return new URLSearchParams(window.location.search);
@@ -641,12 +891,20 @@
       }
 
       function setToggleStates() {
+        const copy = currentCopy();
+
         elements.langEN.classList.toggle("is-on", state.lang === "en");
         elements.langZH.classList.toggle("is-on", state.lang === "zh");
         elements.langES.classList.toggle("is-on", state.lang === "es");
 
         elements.lanePlatform.classList.toggle("is-on", state.lane === "platform");
         elements.laneEngineering.classList.toggle("is-on", state.lane === "engineering");
+
+        elements.langEN.setAttribute("aria-label", copy.langLabels.en);
+        elements.langZH.setAttribute("aria-label", copy.langLabels.zh);
+        elements.langES.setAttribute("aria-label", copy.langLabels.es);
+        elements.lanePlatform.setAttribute("aria-label", copy.laneLabels.platform);
+        elements.laneEngineering.setAttribute("aria-label", copy.laneLabels.engineering);
       }
 
       function pickLocalized(map) {
@@ -676,11 +934,12 @@
         return parseFloat(styles.getPropertyValue("--R3")) || 300;
       }
 
-      function createDiamond({ word, code, tierClass, ariaLabel }) {
+      function createDiamond({ word, code, tierClass, ariaLabel, phase }) {
         const node = document.createElement("div");
         node.className = `diamond ${tierClass}`;
         node.setAttribute("role", "button");
         node.setAttribute("tabindex", "0");
+        node.style.setProperty("--phase", `${phase}s`);
         if (ariaLabel) {
           node.setAttribute("aria-label", ariaLabel);
         }
@@ -716,10 +975,12 @@
       function preserveScaffold() {
         const slab = elements.stage.querySelector(".slab");
         const dial = elements.stage.querySelector(".dialFace");
+        const halo = elements.stage.querySelector(".dialHalo");
 
         elements.stage.innerHTML = "";
         if (slab) elements.stage.appendChild(slab);
         if (dial) elements.stage.appendChild(dial);
+        if (halo) elements.stage.appendChild(halo);
       }
 
       function renderCore(cx, cy) {
@@ -729,7 +990,8 @@
           word: copy.core,
           code: "CORE",
           tierClass: "diamond--core",
-          ariaLabel: copy.core
+          ariaLabel: copy.core,
+          phase: 0.12
         });
 
         core.style.left = `${cx}px`;
@@ -741,7 +1003,6 @@
 
       function renderManifolds(cx, cy) {
         ringRefs = [];
-
         const total = MANIFOLDS.length;
 
         MANIFOLDS.forEach((manifold, index) => {
@@ -752,11 +1013,13 @@
           const x = cx + radius * Math.cos(angle);
           const y = cy + radius * Math.sin(angle);
 
+          const label = labelFor(manifold);
           const diamond = createDiamond({
-            word: labelFor(manifold),
+            word: label,
             code: manifold.code,
             tierClass: tier.cls,
-            ariaLabel: `${labelFor(manifold)} ${manifold.code}`
+            ariaLabel: `${label} ${manifold.code}`,
+            phase: 0.18 * (index + 1)
           });
 
           diamond.style.left = `${x}px`;
@@ -789,10 +1052,10 @@
 
       function updateRingLabelsOnly() {
         ringRefs.forEach(({ el, manifold }) => {
+          const label = labelFor(manifold);
           const word = el.querySelector(".diamond__word");
-          if (word) {
-            word.textContent = labelFor(manifold);
-          }
+          if (word) word.textContent = label;
+          el.setAttribute("aria-label", `${label} ${manifold.code}`);
         });
       }
 
@@ -820,6 +1083,15 @@
         renderStage();
       }
 
+      function requestSafeLayout() {
+        if (resizeScheduled) return;
+        resizeScheduled = true;
+        window.requestAnimationFrame(() => {
+          resizeScheduled = false;
+          safeLayout();
+        });
+      }
+
       function bindEvents() {
         bindPress(elements.langEN, () => setLanguage("en"));
         bindPress(elements.langZH, () => setLanguage("zh"));
@@ -831,7 +1103,7 @@
         bindPress(elements.btnExit, () => navigate(ROUTES.exit));
         bindPress(elements.btnHub, () => navigate(ROUTES.hub));
 
-        window.addEventListener("resize", safeLayout);
+        window.addEventListener("resize", requestSafeLayout);
       }
 
       bindEvents();

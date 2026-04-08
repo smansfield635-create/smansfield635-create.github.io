@@ -1,12 +1,13 @@
 <!doctype html>
 <!-- TNT — /explore/frontier/vision/index.html
-     STATUS: FULL-FILE REWRITE · FRONTIER BASELINE · SKELETONED VOLUMETRIC DIAMOND-CUBES
+     STATUS: FULL-FILE REWRITE · FRONTIER BASELINE · SUN-CENTERED PLANAR DIAMOND SYSTEM
      PURPOSE:
        - Preserve locked geometry, routing model, and state carry
        - Keep ui.css as background owner
-       - Establish new frontier baseline separate from locked flat-world legacy
-       - Use one global centric field and minimal local per-diamond spin axes
-       - Add internal skeleton so motion reads as object truth, not blob drift
+       - Establish one central sun and one flat Euclidean page plane
+       - Treat diamonds as planet-controls orbiting on the shared plane
+       - Keep all planets the same diamond body class
+       - Use one shared RAF authority and continuous runtime motion
        - Keep lane URL-only and never stored
 -->
 
@@ -26,10 +27,10 @@
       --D2:92px;
       --D3:80px;
 
-      --Z0:52px;
-      --Z1:36px;
-      --Z2:28px;
-      --Z3:22px;
+      --Z0:30px;
+      --Z1:24px;
+      --Z2:20px;
+      --Z3:18px;
 
       --R1:178px;
       --R2:246px;
@@ -43,7 +44,6 @@
       --onyx0:rgba(4,6,10,.98);
       --onyx1:rgba(10,12,18,.92);
       --onyx2:rgba(18,22,30,.82);
-      --onyx3:rgba(30,36,44,.56);
 
       --crimson:rgba(120,0,22,.42);
       --festival:rgba(255,43,43,.20);
@@ -104,70 +104,43 @@
       height:min(980px,82vh);
       margin:var(--padTop) auto 0;
       pointer-events:none;
-      perspective:1600px;
-      perspective-origin:50% 42%;
+      perspective:1200px;
+      perspective-origin:50% 44%;
       transform-style:preserve-3d;
+      overflow:hidden;
     }
 
     .stage::before{
       content:"";
       position:absolute;
-      inset:8% 10% 12%;
+      inset:6% 8% 12%;
       z-index:0;
       pointer-events:none;
       border-radius:999px;
-      opacity:.72;
       background:
-        radial-gradient(circle at 50% 52%, rgba(255,43,43,.11), transparent 32%),
-        radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(30,60,140,.12), transparent 72%);
+        radial-gradient(circle at 50% 52%, rgba(255,43,43,.10), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 44%),
+        radial-gradient(circle at 50% 50%, rgba(30,60,140,.10), transparent 74%);
       filter:blur(42px);
-      animation:stagePulse 10.4s ease-in-out infinite;
+      opacity:.70;
+      animation:stagePulse 10s ease-in-out infinite;
     }
 
-    .stage::after{
-      content:"";
+    .starfield{
       position:absolute;
-      inset:14%;
+      inset:0;
       z-index:0;
       pointer-events:none;
-      border-radius:999px;
-      background:
-        conic-gradient(from 0deg,
-          transparent 0deg,
-          rgba(201,162,74,.04) 34deg,
-          transparent 74deg,
-          rgba(255,255,255,.03) 132deg,
-          transparent 178deg,
-          rgba(255,43,43,.04) 242deg,
-          transparent 290deg,
-          rgba(201,162,74,.04) 338deg,
-          transparent 360deg);
-      opacity:.55;
-      filter:blur(22px);
-      animation:dialPhase 28s linear infinite;
+      overflow:hidden;
     }
 
-    .slab{
+    .star{
       position:absolute;
-      top:50%;
-      left:50%;
-      width:min(820px,92vw);
-      height:min(820px,92vw);
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:72px;
-      opacity:.18;
-      pointer-events:none;
-      transform:translate(-50%,-50%) rotate(45deg);
-      background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,.08), transparent 55%),
-        radial-gradient(circle at 70% 80%, var(--opalV), transparent 60%),
-        radial-gradient(circle at 50% 55%, var(--crimson), transparent 72%),
-        linear-gradient(160deg, rgba(10,12,16,.55) 0%, rgba(6,8,10,.78) 70%);
-      box-shadow:
-        0 90px 260px rgba(0,0,0,.52),
-        inset 0 2px 0 rgba(255,255,255,.10),
-        inset 0 -50px 90px rgba(0,0,0,.55);
+      border-radius:999px;
+      background:rgba(255,255,255,.82);
+      box-shadow:0 0 6px rgba(255,255,255,.22);
+      animation:starTwinkle linear infinite;
+      will-change:opacity;
     }
 
     .dialFace{
@@ -188,18 +161,18 @@
       position:absolute;
       inset:0;
       border-radius:999px;
-      opacity:.94;
+      opacity:.90;
       background:
         radial-gradient(circle at 50% 46%,
-          rgba(255,255,255,.07),
-          rgba(0,0,0,.18) 58%,
-          rgba(0,0,0,.48) 79%,
+          rgba(255,255,255,.06),
+          rgba(0,0,0,.16) 58%,
+          rgba(0,0,0,.44) 79%,
           rgba(0,0,0,0) 92%),
-        radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 62%),
-        radial-gradient(circle at 50% 50%, rgba(255,43,43,.09), transparent 67%),
+        radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 62%),
+        radial-gradient(circle at 50% 50%, rgba(255,43,43,.07), transparent 67%),
         linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.10));
       box-shadow:
-        inset 0 0 0 2px rgba(255,255,255,.06),
+        inset 0 0 0 2px rgba(255,255,255,.05),
         inset 0 0 0 10px rgba(0,0,0,.10),
         inset 0 0 70px rgba(0,0,0,.45),
         0 50px 180px rgba(0,0,0,.35);
@@ -210,24 +183,21 @@
       content:"";
       position:absolute;
       inset:-16%;
-      opacity:.82;
+      opacity:.80;
       filter:blur(.25px);
       background:
-        radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.06) 36% 36.6%, transparent 37% 100%),
-        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.06) 52% 52.6%, transparent 53% 100%),
-        radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.06) 69% 69.6%, transparent 70% 100%),
-        linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-        linear-gradient(0deg, transparent 0 49.7%, rgba(201,162,74,.10) 49.7% 50.3%, transparent 50.3% 100%),
-        repeating-conic-gradient(from 45deg at 50% 50%,
-          rgba(201,162,74,.06) 0 1.2deg,
-          transparent 1.2deg 7.5deg),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+        radial-gradient(circle at 50% 50%, transparent 0 36%, rgba(255,255,255,.05) 36% 36.6%, transparent 37% 100%),
+        radial-gradient(circle at 50% 50%, transparent 0 52%, rgba(255,255,255,.05) 52% 52.6%, transparent 53% 100%),
+        radial-gradient(circle at 50% 50%, transparent 0 69%, rgba(255,255,255,.05) 69% 69.6%, transparent 70% 100%),
+        linear-gradient(90deg, transparent 0 49.7%, rgba(201,162,74,.09) 49.7% 50.3%, transparent 50.3% 100%),
+        linear-gradient(0deg, transparent 0 49.7%, rgba(201,162,74,.09) 49.7% 50.3%, transparent 50.3% 100%),
+        repeating-conic-gradient(from 45deg at 50% 50%, rgba(201,162,74,.05) 0 1.2deg, transparent 1.2deg 7.5deg);
       mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
       -webkit-mask:radial-gradient(circle at 50% 50%, transparent 0 18%, #000 20% 100%);
-      animation:dialSweep 15s linear infinite;
+      animation:dialSweep 16s linear infinite;
     }
 
-    .dialHalo{
+    .orbitPlane{
       position:absolute;
       top:50%;
       left:50%;
@@ -237,23 +207,104 @@
       pointer-events:none;
       border-radius:999px;
       transform:translate(-50%,-50%);
+    }
+
+    .orbitPlane__glow{
+      position:absolute;
+      inset:0;
+      border-radius:999px;
       background:
         radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 34%),
         radial-gradient(circle at 50% 50%, rgba(255,43,43,.08), transparent 44%),
-        radial-gradient(circle at 50% 50%, transparent 56%, rgba(201,162,74,.07) 57% 58%, transparent 59%);
+        radial-gradient(circle at 50% 50%, transparent 56%, rgba(201,162,74,.06) 57% 58%, transparent 59%);
       filter:blur(10px);
-      opacity:.74;
+      opacity:.70;
       animation:haloPulse 8.4s ease-in-out infinite;
     }
 
-    .cubeScene{
+    .orbitBand{
+      position:absolute;
+      left:50%;
+      top:50%;
+      border:1px solid rgba(205,220,255,.12);
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      opacity:.56;
+    }
+
+    .orbitBand--r1{ width:calc(var(--R1) * 2); height:calc(var(--R1) * .86); }
+    .orbitBand--r2{ width:calc(var(--R2) * 2); height:calc(var(--R2) * .86); }
+    .orbitBand--r3{ width:calc(var(--R3) * 2); height:calc(var(--R3) * .86); }
+
+    .sunSystem{
+      position:absolute;
+      left:50%;
+      top:50%;
+      z-index:4;
+      width:180px;
+      height:180px;
+      pointer-events:none;
+      transform:translate(-50%,-50%);
+    }
+
+    .sunGlow{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:260px;
+      height:260px;
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 50% 50%,
+          rgba(255,248,228,.92) 0%,
+          rgba(255,235,180,.58) 12%,
+          rgba(255,220,130,.18) 30%,
+          rgba(255,200,100,0) 72%);
+      filter:blur(8px);
+      animation:sunGlowPulse 7.6s ease-in-out infinite;
+    }
+
+    .sunCore{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:74px;
+      height:74px;
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      background:
+        radial-gradient(circle at 34% 30%, rgba(255,255,255,.46), transparent 26%),
+        radial-gradient(circle at 50% 50%, rgba(255,248,228,.98) 0%, rgba(242,231,204,.96) 68%, rgba(220,201,160,.90) 100%);
+      box-shadow:
+        0 0 36px rgba(255,235,180,.24),
+        0 0 90px rgba(255,215,130,.16),
+        inset 0 2px 0 rgba(255,255,255,.18);
+      border:1px solid rgba(255,255,255,.14);
+      animation:sunCorePulse 6.8s ease-in-out infinite;
+    }
+
+    .sunRing{
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:999px;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(255,255,255,.08);
+      opacity:.62;
+    }
+
+    .sunRing--1{ width:110px; height:110px; }
+    .sunRing--2{ width:146px; height:146px; opacity:.34; }
+
+    .planetNode{
       --face:var(--D3);
       --depth:var(--Z3);
 
       position:absolute;
-      top:50%;
       left:50%;
-      z-index:6;
+      top:50%;
+      z-index:8;
       width:calc(var(--face) + (var(--depth) * 2));
       height:calc(var(--face) + (var(--depth) * 2));
       pointer-events:auto;
@@ -265,12 +316,12 @@
       filter:drop-shadow(0 16px 36px rgba(0,0,0,.34));
     }
 
-    .cubeScene--core{ --face:var(--D0); --depth:var(--Z0); z-index:12; }
-    .cubeScene--l1  { --face:var(--D1); --depth:var(--Z1); z-index:9; }
-    .cubeScene--l2  { --face:var(--D2); --depth:var(--Z2); z-index:8; }
-    .cubeScene--l3  { --face:var(--D3); --depth:var(--Z3); z-index:7; }
+    .planetNode--core{ --face:var(--D0); --depth:var(--Z0); z-index:11; }
+    .planetNode--l1{ --face:var(--D1); --depth:var(--Z1); z-index:10; }
+    .planetNode--l2{ --face:var(--D2); --depth:var(--Z2); z-index:9; }
+    .planetNode--l3{ --face:var(--D3); --depth:var(--Z3); z-index:8; }
 
-    .cubeShadow{
+    .planetShadow{
       position:absolute;
       left:50%;
       top:50%;
@@ -281,17 +332,15 @@
       border-radius:999px;
       background:
         radial-gradient(circle at 50% 50%,
-          rgba(0,0,0,.44) 0%,
-          rgba(0,0,0,.26) 42%,
-          rgba(0,0,0,.08) 72%,
+          rgba(0,0,0,.40) 0%,
+          rgba(0,0,0,.22) 42%,
+          rgba(0,0,0,.07) 72%,
           rgba(0,0,0,0) 100%);
       filter:blur(9px);
-      opacity:.82;
-      animation:shadowPulse 8s ease-in-out infinite;
-      animation-delay:var(--phase,0s);
+      opacity:.80;
     }
 
-    .diamondCube{
+    .planetCube{
       position:absolute;
       left:50%;
       top:50%;
@@ -303,17 +352,13 @@
         rotateZ(45deg)
         rotateX(62deg)
         rotateY(-36deg);
-      animation:cubeSpin 7.8s linear infinite;
-      animation-delay:var(--phase,0s);
-      transition:
-        filter .18s ease,
-        transform .18s ease;
-      will-change:transform, filter;
+      transition:filter .18s ease;
+      will-change:transform;
     }
 
-    .cubeScene:hover .diamondCube,
-    .cubeScene:focus .diamondCube,
-    .cubeScene:focus-within .diamondCube{
+    .planetNode:hover .planetCube,
+    .planetNode:focus .planetCube,
+    .planetNode:focus-within .planetCube{
       filter:brightness(1.04) saturate(1.05);
     }
 
@@ -510,7 +555,7 @@
       filter:drop-shadow(0 0 4px rgba(201,162,74,.14));
     }
 
-    .cubeLabel{
+    .planetLabel{
       position:absolute;
       left:50%;
       top:50%;
@@ -529,7 +574,7 @@
         0 1px 0 rgba(255,255,255,.04);
     }
 
-    .cubeLabel::before{
+    .planetLabel::before{
       content:"";
       position:absolute;
       inset:14% 10% auto;
@@ -542,7 +587,7 @@
       pointer-events:none;
     }
 
-    .cubeLabel::after{
+    .planetLabel::after{
       content:"";
       position:absolute;
       inset:18% 16%;
@@ -557,7 +602,7 @@
       pointer-events:none;
     }
 
-    .cubeWord{
+    .planetWord{
       position:relative;
       z-index:2;
       font-size:11.5px;
@@ -567,7 +612,7 @@
       color:var(--ink);
     }
 
-    .cubeCode{
+    .planetCode{
       position:relative;
       z-index:2;
       margin-top:5px;
@@ -577,10 +622,10 @@
       opacity:.82;
     }
 
-    .cubeScene--core .cubeWord{ font-size:15px; }
-    .cubeScene--core .cubeCode{ font-size:10px; }
-    .cubeScene--l1 .cubeWord{ font-size:13px; }
-    .cubeScene--l2 .cubeWord{ font-size:12px; }
+    .planetNode--core .planetWord{ font-size:15px; }
+    .planetNode--core .planetCode{ font-size:10px; }
+    .planetNode--l1 .planetWord{ font-size:13px; }
+    .planetNode--l2 .planetWord{ font-size:12px; }
 
     .control{
       position:relative;
@@ -682,9 +727,9 @@
       50%{opacity:.82;filter:blur(48px)}
     }
 
-    @keyframes dialPhase{
-      0%{transform:rotate(0deg)}
-      100%{transform:rotate(360deg)}
+    @keyframes starTwinkle{
+      0%,100%{opacity:.24}
+      50%{opacity:.92}
     }
 
     @keyframes dialBreath{
@@ -702,27 +747,14 @@
       50%{opacity:.82;filter:blur(14px)}
     }
 
-    @keyframes cubeSpin{
-      0%{
-        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-36deg);
-      }
-      25%{
-        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(63deg) rotateY(-31deg);
-      }
-      50%{
-        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-26deg);
-      }
-      75%{
-        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(61deg) rotateY(-31deg);
-      }
-      100%{
-        transform:translate(-50%,-50%) rotateZ(45deg) rotateX(62deg) rotateY(-36deg);
-      }
+    @keyframes sunGlowPulse{
+      0%,100%{opacity:.86;transform:translate(-50%,-50%) scale(1)}
+      50%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
     }
 
-    @keyframes shadowPulse{
-      0%,100%{opacity:.72;filter:blur(8px)}
-      50%{opacity:.88;filter:blur(10px)}
+    @keyframes sunCorePulse{
+      0%,100%{filter:brightness(1)}
+      50%{filter:brightness(1.05)}
     }
 
     @keyframes faceSweep{
@@ -745,14 +777,14 @@
 
     @media (prefers-reduced-motion: reduce){
       .stage::before,
-      .stage::after,
+      .star,
       .dialFace::before,
       .dialFace::after,
-      .dialHalo,
-      .cubeShadow,
-      .diamondCube,
+      .orbitPlane__glow,
+      .sunGlow,
+      .sunCore,
       .face::after,
-      .cubeLabel::after,
+      .planetLabel::after,
       .control{
         animation:none !important;
       }
@@ -765,10 +797,10 @@
         --D2:88px;
         --D3:78px;
 
-        --Z0:50px;
-        --Z1:34px;
-        --Z2:26px;
-        --Z3:20px;
+        --Z0:28px;
+        --Z1:22px;
+        --Z2:18px;
+        --Z3:16px;
 
         --R1:168px;
         --R2:234px;
@@ -776,7 +808,10 @@
         --padTop:128px;
       }
 
-      .cubeWord{font-size:11.25px}
+      .planetWord{font-size:11.25px}
+      .sunSystem{width:168px;height:168px}
+      .sunGlow{width:232px;height:232px}
+      .sunCore{width:68px;height:68px}
     }
 
     @media (max-width:420px){
@@ -786,17 +821,20 @@
         --D2:86px;
         --D3:76px;
 
-        --Z0:46px;
-        --Z1:32px;
-        --Z2:24px;
-        --Z3:18px;
+        --Z0:26px;
+        --Z1:20px;
+        --Z2:17px;
+        --Z3:15px;
 
         --R1:160px;
         --R2:224px;
         --R3:274px;
       }
 
-      .cubeWord{font-size:11px}
+      .planetWord{font-size:11px}
+      .sunSystem{width:160px;height:160px}
+      .sunGlow{width:220px;height:220px}
+      .sunCore{width:64px;height:64px}
     }
   </style>
 </head>
@@ -826,9 +864,22 @@
   </header>
 
   <main class="stage" id="stage" aria-label="Vision Remote">
-    <div class="slab" aria-hidden="true"></div>
+    <div class="starfield" id="starfield" aria-hidden="true"></div>
     <div class="dialFace" aria-hidden="true"></div>
-    <div class="dialHalo" aria-hidden="true"></div>
+
+    <div class="orbitPlane" aria-hidden="true">
+      <div class="orbitPlane__glow"></div>
+      <div class="orbitBand orbitBand--r1"></div>
+      <div class="orbitBand orbitBand--r2"></div>
+      <div class="orbitBand orbitBand--r3"></div>
+    </div>
+
+    <div class="sunSystem" aria-hidden="true">
+      <div class="sunGlow"></div>
+      <div class="sunRing sunRing--1"></div>
+      <div class="sunRing sunRing--2"></div>
+      <div class="sunCore"></div>
+    </div>
   </main>
 
   <div class="corner corner--left" aria-label="Exit">
@@ -923,6 +974,7 @@
 
       const elements = {
         stage: document.getElementById("stage"),
+        starfield: document.getElementById("starfield"),
         langEN: document.getElementById("langEN"),
         langZH: document.getElementById("langZH"),
         langES: document.getElementById("langES"),
@@ -942,8 +994,16 @@
         depth: DEFAULTS.depth
       };
 
-      let ringRefs = [];
-      let resizeScheduled = false;
+      const runtime = {
+        raf: 0,
+        resizeScheduled: false,
+        ringRefs: [],
+        starsBuilt: false,
+        centerX: 0,
+        centerY: 0,
+        orbitScaleY: 0.43,
+        planets: []
+      };
 
       function getSearchParams() {
         return new URLSearchParams(window.location.search);
@@ -1053,12 +1113,12 @@
 
       function tierFor(code) {
         if (code === "N" || code === "E" || code === "S" || code === "W") {
-          return { cls: "cubeScene--l1", radiusLevel: 1 };
+          return { cls: "planetNode--l1", radiusLevel: 1 };
         }
         if (code === "NE" || code === "SE" || code === "SW" || code === "NW") {
-          return { cls: "cubeScene--l2", radiusLevel: 2 };
+          return { cls: "planetNode--l2", radiusLevel: 2 };
         }
-        return { cls: "cubeScene--l3", radiusLevel: 3 };
+        return { cls: "planetNode--l3", radiusLevel: 3 };
       }
 
       function radiusFor(level) {
@@ -1115,19 +1175,19 @@
         return s;
       }
 
-      function createCubeNode({ word, code, sceneClass, ariaLabel, phase }) {
+      function createPlanetNode({ word, code, sceneClass, ariaLabel, phase }) {
         const scene = document.createElement("div");
-        scene.className = `cubeScene ${sceneClass}`;
+        scene.className = `planetNode ${sceneClass}`;
         scene.setAttribute("role", "button");
         scene.setAttribute("tabindex", "0");
         scene.style.setProperty("--phase", `${phase}s`);
         scene.setAttribute("aria-label", ariaLabel);
 
         const shadow = document.createElement("div");
-        shadow.className = "cubeShadow";
+        shadow.className = "planetShadow";
 
         const cube = document.createElement("div");
-        cube.className = "diamondCube";
+        cube.className = "planetCube";
 
         cube.appendChild(createFace("face--front"));
         cube.appendChild(createFace("face--back"));
@@ -1138,14 +1198,14 @@
         cube.appendChild(createSkeleton());
 
         const label = document.createElement("div");
-        label.className = "cubeLabel";
+        label.className = "planetLabel";
 
         const wordEl = document.createElement("div");
-        wordEl.className = "cubeWord";
+        wordEl.className = "planetWord";
         wordEl.textContent = word;
 
         const codeEl = document.createElement("div");
-        codeEl.className = "cubeCode";
+        codeEl.className = "planetCode";
         codeEl.textContent = code;
 
         label.appendChild(wordEl);
@@ -1158,106 +1218,166 @@
         return scene;
       }
 
-      function preserveScaffold() {
-        const slab = elements.stage.querySelector(".slab");
-        const dial = elements.stage.querySelector(".dialFace");
-        const halo = elements.stage.querySelector(".dialHalo");
+      function ensureStars() {
+        if (runtime.starsBuilt) return;
+        runtime.starsBuilt = true;
+        elements.starfield.innerHTML = "";
 
-        elements.stage.innerHTML = "";
-        if (slab) elements.stage.appendChild(slab);
-        if (dial) elements.stage.appendChild(dial);
-        if (halo) elements.stage.appendChild(halo);
+        const count = Math.max(50, Math.floor((window.innerWidth * window.innerHeight) / 16000));
+
+        for (let i = 0; i < count; i += 1) {
+          const star = document.createElement("div");
+          const size = 1 + Math.random() * 2.2;
+          star.className = "star";
+          star.style.width = `${size}px`;
+          star.style.height = `${size}px`;
+          star.style.left = `${Math.random() * 100}%`;
+          star.style.top = `${Math.random() * 100}%`;
+          star.style.opacity = `${0.18 + Math.random() * 0.66}`;
+          star.style.animationDuration = `${3.4 + Math.random() * 6.8}s`;
+          star.style.animationDelay = `${Math.random() * 5.2}s`;
+          elements.starfield.appendChild(star);
+        }
       }
 
-      function renderCore(cx, cy) {
-        const copy = currentCopy();
-
-        const core = createCubeNode({
-          word: copy.core,
-          code: "CORE",
-          sceneClass: "cubeScene--core",
-          ariaLabel: copy.core,
-          phase: 0.10
+      function clearPlanets() {
+        runtime.ringRefs.forEach(({ el }) => {
+          if (el && el.parentNode === elements.stage) {
+            elements.stage.removeChild(el);
+          }
         });
-
-        core.style.left = `${cx}px`;
-        core.style.top = `${cy}px`;
-
-        bindPress(core, () => navigate(ROUTES.core));
-        elements.stage.appendChild(core);
+        runtime.ringRefs = [];
+        runtime.planets = [];
       }
 
-      function renderManifolds(cx, cy) {
-        ringRefs = [];
-        const total = MANIFOLDS.length;
-
-        MANIFOLDS.forEach((manifold, index) => {
-          const angle = (index / total) * Math.PI * 2 - Math.PI / 2;
+      function buildPlanetModel() {
+        runtime.planets = MANIFOLDS.map((manifold, index) => {
           const tier = tierFor(manifold.code);
           const radius = radiusFor(tier.radiusLevel);
+          const angle = (index / MANIFOLDS.length) * Math.PI * 2 - Math.PI / 2;
+          const localPhase = 0.6 + index * 0.23;
+          const orbitSpeed = 0.000035 + tier.radiusLevel * 0.000006 + index * 0.0000009;
+          const spinSpeed = 0.0012 + tier.radiusLevel * 0.00022 + (index % 3) * 0.00008;
 
-          const x = cx + radius * Math.cos(angle);
-          const y = cy + radius * Math.sin(angle);
-
-          const label = labelFor(manifold);
-          const node = createCubeNode({
-            word: label,
-            code: manifold.code,
-            sceneClass: tier.cls,
-            ariaLabel: `${label} ${manifold.code}`,
-            phase: 0.16 * (index + 1)
-          });
-
-          node.style.left = `${x}px`;
-          node.style.top = `${y}px`;
-
-          bindPress(node, () => navigate(manifold.href));
-          elements.stage.appendChild(node);
-
-          ringRefs.push({ el: node, manifold });
+          return {
+            manifold,
+            tier,
+            radius,
+            angle,
+            orbitSpeed,
+            spinSpeed,
+            phase: localPhase,
+            ellipseY: runtime.orbitScaleY,
+            x: 0,
+            y: 0,
+            depthScale: 1,
+            node: null,
+            cube: null
+          };
         });
       }
 
-      function renderCornerLabels() {
+      function renderPlanets() {
+        clearPlanets();
+        buildPlanetModel();
+
+        runtime.planets.forEach((planet) => {
+          const label = labelFor(planet.manifold);
+          const node = createPlanetNode({
+            word: label,
+            code: planet.manifold.code,
+            sceneClass: planet.tier.cls,
+            ariaLabel: `${label} ${planet.manifold.code}`,
+            phase: planet.phase
+          });
+
+          bindPress(node, () => navigate(planet.manifold.href));
+          elements.stage.appendChild(node);
+
+          planet.node = node;
+          planet.cube = node.querySelector(".planetCube");
+          runtime.ringRefs.push({ el: node, manifold: planet.manifold });
+        });
+      }
+
+      function updatePlanetLabelsOnly() {
+        runtime.planets.forEach((planet) => {
+          const label = labelFor(planet.manifold);
+          const word = planet.node ? planet.node.querySelector(".planetWord") : null;
+          if (word) word.textContent = label;
+          if (planet.node) planet.node.setAttribute("aria-label", `${label} ${planet.manifold.code}`);
+        });
+      }
+
+      function updateCornerLabels() {
         const copy = currentCopy();
         elements.lblExit.textContent = copy.exit;
         elements.lblHub.textContent = copy.hub;
       }
 
-      function renderStage() {
-        preserveScaffold();
-
+      function layoutCenter() {
         const rect = elements.stage.getBoundingClientRect();
-        const cx = rect.width / 2;
-        const cy = rect.height / 2;
-
-        renderCore(cx, cy);
-        renderManifolds(cx, cy);
-        renderCornerLabels();
+        runtime.centerX = rect.width * 0.5;
+        runtime.centerY = rect.height * 0.58;
       }
 
-      function updateRingLabelsOnly() {
-        ringRefs.forEach(({ el, manifold }) => {
-          const label = labelFor(manifold);
-          const word = el.querySelector(".cubeWord");
-          if (word) word.textContent = label;
-          el.setAttribute("aria-label", `${label} ${manifold.code}`);
+      function positionPlanets(time) {
+        runtime.planets.forEach((planet) => {
+          planet.angle += planet.orbitSpeed * time.delta;
+          const x = runtime.centerX + Math.cos(planet.angle) * planet.radius;
+          const y = runtime.centerY + Math.sin(planet.angle) * (planet.radius * planet.ellipseY);
+          const depthScale = 0.90 + ((Math.sin(planet.angle) + 1) * 0.08);
+          const localSpin = Math.sin(time.t * 0.001 * planet.spinSpeed * 1000 + planet.phase) * 7;
+          const localTilt = Math.cos(time.t * 0.001 * planet.spinSpeed * 840 + planet.phase) * 1.4;
+
+          planet.x = x;
+          planet.y = y;
+          planet.depthScale = depthScale;
+
+          if (planet.node) {
+            planet.node.style.left = `${x}px`;
+            planet.node.style.top = `${y}px`;
+            planet.node.style.transform = `translate(-50%,-50%) scale(${depthScale})`;
+            planet.node.style.zIndex = String(100 + Math.round((Math.sin(planet.angle) + 1) * 20));
+          }
+
+          if (planet.cube) {
+            planet.cube.style.transform =
+              `translate(-50%,-50%) rotateZ(45deg) rotateX(${62 + localTilt}deg) rotateY(${-36 + localSpin}deg)`;
+          }
         });
+      }
+
+      function renderRuntimeFrame(ts) {
+        if (!renderRuntimeFrame.lastTs) {
+          renderRuntimeFrame.lastTs = ts;
+        }
+        const delta = ts - renderRuntimeFrame.lastTs;
+        renderRuntimeFrame.lastTs = ts;
+
+        positionPlanets({ t: ts, delta });
+        runtime.raf = window.requestAnimationFrame(renderRuntimeFrame);
+      }
+
+      function buildScene() {
+        layoutCenter();
+        renderPlanets();
+        updateCornerLabels();
       }
 
       function setLanguage(nextLang) {
         state.lang = normalizeLang(nextLang);
         syncCanonicalState();
         setToggleStates();
-        updateRingLabelsOnly();
-        renderCornerLabels();
+        updatePlanetLabelsOnly();
+        updateCornerLabels();
       }
 
       function setLane(nextLane) {
         state.lane = normalizeLane(nextLane);
         window.history.replaceState({}, "", window.location.pathname + buildQueryString());
         setToggleStates();
-        updateRingLabelsOnly();
+        updatePlanetLabelsOnly();
       }
 
       function safeLayout() {
@@ -1266,14 +1386,14 @@
           window.requestAnimationFrame(safeLayout);
           return;
         }
-        renderStage();
+        buildScene();
       }
 
       function requestSafeLayout() {
-        if (resizeScheduled) return;
-        resizeScheduled = true;
+        if (runtime.resizeScheduled) return;
+        runtime.resizeScheduled = true;
         window.requestAnimationFrame(() => {
-          resizeScheduled = false;
+          runtime.resizeScheduled = false;
           safeLayout();
         });
       }
@@ -1292,10 +1412,17 @@
         window.addEventListener("resize", requestSafeLayout);
       }
 
-      bindEvents();
-      syncCanonicalState();
-      setToggleStates();
-      window.requestAnimationFrame(safeLayout);
+      function start() {
+        ensureStars();
+        bindEvents();
+        syncCanonicalState();
+        setToggleStates();
+        safeLayout();
+        if (runtime.raf) window.cancelAnimationFrame(runtime.raf);
+        runtime.raf = window.requestAnimationFrame(renderRuntimeFrame);
+      }
+
+      start();
     })();
   </script>
 </body>

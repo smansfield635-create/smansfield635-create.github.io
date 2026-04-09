@@ -18,14 +18,14 @@
             '<li>No parent-child flattening is allowed.</li>' +
             '<li>No role collapse is allowed.</li>' +
             '<li>Reading begins only after explicit selection.</li>' +
-            '</ul>'
+            "</ul>"
         },
         {
           label: "Bulletin 02",
           title: "Why the motion exists",
           mini: "Motion is for choosing, not for reading.",
           html:
-            '<div class="detail-card"><h4>Interaction law</h4><p>The field now reads as four active launch corridors. Each path carries its own family of coin-objects upward through a controlled route so the system feels directional, routed, and alive instead of trapped in one Euclidean ring.</p></div>'
+            '<div class="detail-card"><h4>Interaction law</h4><p>The field reads as a manufacturing scene. Four mint tubes feed coin-objects downward into the vault pile so the architecture feels routed, produced, and accumulated rather than merely displayed.</p></div>'
         }
       ]
     },
@@ -45,7 +45,7 @@
             '<li>Archcoin must not be flattened into the four derived coins.</li>' +
             '<li>Archcoin remains above the role-specific lanes.</li>' +
             '<li>The page’s top truth layer preserves this read immediately.</li>' +
-            '</ul>'
+            "</ul>"
         },
         {
           label: "Bulletin 02",
@@ -79,7 +79,7 @@
             '<li>The Vault routes by both finance class and cardinal direction.</li>' +
             '<li>Containment logic stays distinct from parent authority logic.</li>' +
             '<li>The body remains the same across all lanes.</li>' +
-            '</ul>'
+            "</ul>"
         }
       ]
     },
@@ -99,7 +99,7 @@
             '<div class="mapping-item"><div class="dir">East</div><div class="name">Accounts Receivable Coin</div><div class="desc">Inbound value authority for money due, collected value, and receivable movement.</div></div>' +
             '<div class="mapping-item"><div class="dir">South</div><div class="name">Accounts Payable Coin</div><div class="desc">Outbound obligation authority for liabilities owed and controlled settlement release.</div></div>' +
             '<div class="mapping-item"><div class="dir">West</div><div class="name">GYP Coin</div><div class="desc">Growth-allocation authority for expansion budgets, prediction pressure, and controlled promotion.</div></div>' +
-            '</div>'
+            "</div>"
         },
         {
           label: "Bulletin 02",
@@ -126,14 +126,14 @@
             '<li>East governs receivable-class objects and inbound value.</li>' +
             '<li>South governs payable-class objects and outbound obligation.</li>' +
             '<li>West governs growth allocation and budgeted expansion.</li>' +
-            '</ul>'
+            "</ul>"
         },
         {
           label: "Bulletin 02",
-          title: "Why launch paths fit",
-          mini: "Direction is carried by ascent and traffic.",
+          title: "Why tube production fits",
+          mini: "Direction is carried by manufacture and descent.",
           html:
-            '<div class="detail-card"><h4>Form fit</h4><p>The upward launch grammar makes the page read like a live corridor system. The objects behave like active terminals moving through path-class routes rather than bodies trapped on a decorative ring.</p></div>'
+            '<div class="detail-card"><h4>Form fit</h4><p>The manufacturing grammar makes the page read like active financial throughput. The objects behave like minted terminals moving through controlled tubes into the vault instead of decorative badges floating in space.</p></div>'
         }
       ]
     },
@@ -159,7 +159,7 @@
             '<li>Archcoin remains the parent authority across all routing paths.</li>' +
             '<li>The Vault remains the master body across all routing paths.</li>' +
             '<li>Each governor receives only its correct class of burden.</li>' +
-            '</ul>'
+            "</ul>"
         }
       ]
     },
@@ -186,7 +186,7 @@
             '<li>No listing-story substitution.</li>' +
             '<li>No role confusion with contracts, receivables, or payables.</li>' +
             '<li>GYP remains one governor within the five-coin system.</li>' +
-            '</ul>'
+            "</ul>"
         }
       ]
     },
@@ -194,152 +194,80 @@
     "nonoverlap-status": {
       kicker: "Inspection • Status and Non-Overlap",
       title: "The hierarchy remains visible and clean",
-      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses controlled path launches instead of an imposed orbital grid.",
+      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses manufacturing descent into the vault pile.",
       sections: [
         {
           label: "Bulletin 01",
           title: "Current status",
-          mini: "Launch during choosing. Stillness during reading.",
+          mini: "Manufacture during choosing. Stillness during reading.",
           html:
             '<ul class="law-list">' +
             '<li>Parent authority expressed: yes.</li>' +
             '<li>Vault body expressed: yes.</li>' +
             '<li>Cardinal financial mapping expressed: yes.</li>' +
-            '<li>Path-class launch field active: yes.</li>' +
+            '<li>Mint tube manufacture active: yes.</li>' +
+            '<li>Growing vault pile active: yes.</li>' +
             '<li>Reading freeze state active: yes.</li>' +
-            '<li>Inner disclosure bubbles available: yes.</li>' +
-            '</ul>'
+            "</ul>"
         },
         {
           label: "Bulletin 02",
           title: "Non-overlap read",
           mini: "Truth stays in HTML; motion stays in JS.",
           html:
-            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript controls path timing, grouped launch sequencing, cinematic overlap, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
+            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript controls tube sequencing, top-down drops, pile accumulation, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
         }
       ]
     }
   };
 
+  var COIN_DEFS = [
+    { key: "system-identity", label: "Identity", family: "coin", style: "coin", tube: 0, order: 0 },
+    { key: "parent-authority", label: "Parent", family: "authority", style: "authority", tube: 3, order: 0 },
+    { key: "vault-overview", label: "Vault", family: "description", style: "description", tube: 1, order: 0 },
+    { key: "cardinal-coins", label: "Governors", family: "coin", style: "coin", tube: 0, order: 1 },
+    { key: "cardinal-mapping", label: "Mapping", family: "info", style: "info", tube: 2, order: 0 },
+    { key: "routing-law", label: "Routing", family: "authority", style: "authority", tube: 3, order: 1 },
+    { key: "gyp-distinction", label: "GYP", family: "info", style: "info", tube: 2, order: 1 },
+    { key: "nonoverlap-status", label: "Status", family: "description", style: "description", tube: 1, order: 1 }
+  ];
+
   var fieldShell = document.getElementById("field-shell");
   var scene = document.getElementById("scene");
-  var nodes = Array.prototype.slice.call(document.querySelectorAll(".node"));
-  var orbitRings = Array.prototype.slice.call(document.querySelectorAll(".orbit-ring"));
+  var sceneLayer = document.getElementById("scene-layer");
+  var tubeHeads = Array.prototype.slice.call(document.querySelectorAll(".tube-head"));
+  var fallField = document.getElementById("fall-field");
+  var pileCoins = document.getElementById("pile-coins");
   var panelKicker = document.getElementById("panel-kicker");
   var panelTitle = document.getElementById("panel-title");
   var panelSummary = document.getElementById("panel-summary");
   var panelClose = document.getElementById("panel-close");
   var subbubbleList = document.getElementById("subbubble-list");
 
-  var activeKey = null;
-  var lastActiveButton = null;
-  var freezeTime = 0;
-  var lastFrameTime = 0;
-  var sceneStart = performance.now();
-  var rafId = null;
-
-  var PATH_FAMILY = {
-    coin: {
-      rimGlow: 1.18,
-      faceBrightness: 1.04,
-      spinBiasY: 0,
-      labelOffsetY: 0
-    },
-    description: {
-      rimGlow: 1.00,
-      faceBrightness: 1.00,
-      spinBiasY: -5,
-      labelOffsetY: 2
-    },
-    info: {
-      rimGlow: 0.94,
-      faceBrightness: 0.98,
-      spinBiasY: 6,
-      labelOffsetY: 3
-    },
-    authority: {
-      rimGlow: 1.24,
-      faceBrightness: 1.08,
-      spinBiasY: 2,
-      labelOffsetY: -1
+  var runtime = {
+    coins: [],
+    landed: [],
+    rafId: 0,
+    sceneStart: performance.now(),
+    freezeTime: 0,
+    lastFrameTime: 0,
+    activeKey: null,
+    lastActiveButton: null,
+    metrics: {
+      fallRect: null,
+      pileRect: null,
+      sceneRect: null,
+      tubeX: [0, 0, 0, 0]
     }
-  };
-
-  var PATHS = {
-    coin: {
-      id: "coin",
-      xBase: 0.18,
-      xAmp: 0.10,
-      tilt: -18,
-      curvature: 0.95,
-      travelMs: 14200,
-      staggerMs: 1650
-    },
-    description: {
-      id: "description",
-      xBase: 0.40,
-      xAmp: 0.08,
-      tilt: -7,
-      curvature: 1.08,
-      travelMs: 14800,
-      staggerMs: 1750
-    },
-    info: {
-      id: "info",
-      xBase: 0.63,
-      xAmp: 0.08,
-      tilt: 7,
-      curvature: 1.04,
-      travelMs: 14500,
-      staggerMs: 1725
-    },
-    authority: {
-      id: "authority",
-      xBase: 0.84,
-      xAmp: 0.10,
-      tilt: 18,
-      curvature: 0.92,
-      travelMs: 15000,
-      staggerMs: 1825
-    }
-  };
-
-  var OBJECT_CONFIG = {
-    "system-identity":   { pathId: "coin",        order: 0, coinStyle: "coin",        yBias: 12,  scaleBias: 0.08, spinSpeed: 0.00044, bobAmp: 6 },
-    "parent-authority":  { pathId: "authority",   order: 0, coinStyle: "authority",   yBias: -18, scaleBias: 0.14, spinSpeed: 0.00048, bobAmp: 7 },
-    "vault-overview":    { pathId: "description", order: 0, coinStyle: "description", yBias: 10,  scaleBias: 0.10, spinSpeed: 0.00043, bobAmp: 6 },
-    "cardinal-coins":    { pathId: "coin",        order: 1, coinStyle: "coin",        yBias: -14, scaleBias: 0.09, spinSpeed: 0.00045, bobAmp: 6 },
-    "cardinal-mapping":  { pathId: "info",        order: 0, coinStyle: "info",        yBias: 0,   scaleBias: 0.10, spinSpeed: 0.00046, bobAmp: 6 },
-    "routing-law":       { pathId: "authority",   order: 1, coinStyle: "authority",   yBias: 14,  scaleBias: 0.12, spinSpeed: 0.00049, bobAmp: 7 },
-    "gyp-distinction":   { pathId: "info",        order: 1, coinStyle: "info",        yBias: -12, scaleBias: 0.10, spinSpeed: 0.00047, bobAmp: 6 },
-    "nonoverlap-status": { pathId: "description", order: 1, coinStyle: "description", yBias: 18,  scaleBias: 0.11, spinSpeed: 0.00044, bobAmp: 6 }
-  };
-
-  var SCENE = {
-    width: 0,
-    height: 0,
-    topBound: -180,
-    bottomBound: 0,
-    activeHeight: 0,
-    objects: []
   };
 
   function clamp(value, min, max) {
     return Math.max(min, Math.min(max, value));
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
-  }
-
-  function easeOutCubic(t) {
+  function easeInCubic(t) {
     var x = clamp(t, 0, 1);
-    return 1 - Math.pow(1 - x, 3);
-  }
-
-  function easeInOutSine(t) {
-    var x = clamp(t, 0, 1);
-    return -(Math.cos(Math.PI * x) - 1) / 2;
+    return x * x * x;
   }
 
   function escapeHtml(value) {
@@ -373,7 +301,6 @@
 
   function wireSubbubbles() {
     var bubbles = Array.prototype.slice.call(document.querySelectorAll(".subbubble"));
-
     bubbles.forEach(function (bubble) {
       var toggle = bubble.querySelector(".subbubble-toggle");
       var icon = bubble.querySelector(".subbubble-icon");
@@ -399,190 +326,70 @@
     });
   }
 
-  function updateSceneMetrics() {
-    var rect = scene.getBoundingClientRect();
-    SCENE.width = rect.width;
-    SCENE.height = rect.height;
-    SCENE.topBound = -200;
-    SCENE.bottomBound = rect.height + 170;
-    SCENE.activeHeight = SCENE.bottomBound - SCENE.topBound;
+  function createCoinMarkup(definition, className) {
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = className || "coin";
+    button.setAttribute("data-key", definition.key);
+    button.setAttribute("data-family", definition.family);
+    button.setAttribute("data-style", definition.style);
+    button.setAttribute("aria-label", definition.label);
+
+    button.innerHTML =
+      '<div class="coin-shell">' +
+        '<div class="coin-rim"></div>' +
+        '<div class="coin-face"></div>' +
+        '<div class="coin-sigil"></div>' +
+        '<div class="coin-markers"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>' +
+      "</div>" +
+      '<div class="coin-label">' + escapeHtml(definition.label) + "</div>";
+
+    return button;
   }
 
-  function hideOrbitSurface() {
-    orbitRings.forEach(function (ring) {
-      ring.style.display = "none";
-      ring.style.opacity = "0";
+  function updateMetrics() {
+    runtime.metrics.sceneRect = scene.getBoundingClientRect();
+    runtime.metrics.fallRect = fallField.getBoundingClientRect();
+    runtime.metrics.pileRect = pileCoins.getBoundingClientRect();
+
+    runtime.metrics.tubeX = tubeHeads.map(function (tubeHead) {
+      var rect = tubeHead.getBoundingClientRect();
+      return rect.left + rect.width * 0.5 - runtime.metrics.fallRect.left;
     });
   }
 
-  function applyCoinVisualIdentity(node, coinStyle, objectIndex) {
-    var family = PATH_FAMILY[coinStyle] || PATH_FAMILY.coin;
-    var face = node.querySelector(".diamond-face");
-    var core = node.querySelector(".diamond-core");
-    var edgeSpans = Array.prototype.slice.call(node.querySelectorAll(".diamond-edge span"));
-    var points = Array.prototype.slice.call(node.querySelectorAll(".cardinal-points i"));
-    var label = node.querySelector(".node-label");
+  function buildCoins() {
+    fallField.innerHTML = "";
+    pileCoins.innerHTML = "";
+    runtime.coins = [];
+    runtime.landed = [];
 
-    if (face) {
-      if (coinStyle === "authority") {
-        face.style.background =
-          "linear-gradient(135deg, rgba(255,140,90,.30), rgba(255,228,163,.24) 38%, rgba(94,168,255,.22) 100%)";
-      } else if (coinStyle === "info") {
-        face.style.background =
-          "linear-gradient(135deg, rgba(120,160,255,.24), rgba(255,228,163,.16) 40%, rgba(94,168,255,.34) 100%)";
-      } else if (coinStyle === "description") {
-        face.style.background =
-          "linear-gradient(135deg, rgba(255,109,109,.22), rgba(255,228,163,.18) 40%, rgba(160,200,255,.24) 100%)";
-      } else {
-        face.style.background =
-          "linear-gradient(135deg, rgba(255,109,109,.30), rgba(255,228,163,.20) 40%, rgba(94,168,255,.28) 100%)";
-      }
+    COIN_DEFS.forEach(function (definition, index) {
+      var button = createCoinMarkup(definition, "coin");
+      fallField.appendChild(button);
 
-      face.style.boxShadow =
-        "inset 0 0 0 1px rgba(255,248,224,.08), 0 0 " +
-        (24 * family.rimGlow) +
-        "px rgba(94,168,255,.16), 0 0 " +
-        (20 * family.rimGlow) +
-        "px rgba(255,109,109,.12)";
-      face.style.filter = "brightness(" + family.faceBrightness + ")";
-    }
-
-    if (core) {
-      var coreScale = 1 + (objectIndex % 3) * 0.04;
-      core.style.inset = (29 - objectIndex % 2) + "%";
-      core.style.transform = "scale(" + coreScale + ")";
-    }
-
-    edgeSpans.forEach(function (span, spanIndex) {
-      span.style.opacity = String(0.62 + ((objectIndex + spanIndex) % 3) * 0.08);
-    });
-
-    points.forEach(function (point, pointIndex) {
-      point.style.transform += " scale(" + (1 + ((pointIndex + objectIndex) % 2) * 0.08) + ")";
-    });
-
-    if (label) {
-      label.style.transform = "translateY(" + family.labelOffsetY + "px)";
-    }
-  }
-
-  function initSceneObjects() {
-    SCENE.objects = nodes.map(function (node, index) {
-      var key = node.getAttribute("data-panel");
-      var config = OBJECT_CONFIG[key];
-      var path = PATHS[config.pathId];
-      var coinStyle = config.coinStyle || config.pathId;
-      var button = node.querySelector(".node-button");
-
-      applyCoinVisualIdentity(node, coinStyle, index);
-
-      return {
-        index: index,
-        key: key,
-        node: node,
+      runtime.coins.push({
+        definition: definition,
         button: button,
-        path: path,
-        pathId: path.id,
-        coinStyle: coinStyle,
-        order: config.order,
-        yBias: config.yBias,
-        scaleBias: config.scaleBias,
-        spinSpeed: config.spinSpeed,
-        bobAmp: config.bobAmp
-      };
+        landed: false,
+        activeDropMs: 7600 + definition.order * 340 + definition.tube * 140,
+        startDelayMs: definition.order * 1800 + definition.tube * 420,
+        wobbleSeed: index * 0.73 + 1.2
+      });
+
+      button.addEventListener("click", function () {
+        if (runtime.activeKey === definition.key) {
+          closeInspection();
+          return;
+        }
+        openInspection(definition.key, button);
+      });
     });
   }
 
-  function getPathProgress(object, time) {
-    var offset = object.path.staggerMs * object.order;
-    var raw = (time + offset) % object.path.travelMs;
-    if (raw < 0) raw += object.path.travelMs;
-    return raw / object.path.travelMs;
-  }
-
-  function getPathPosition(object, progress, time) {
-    var eased = easeOutCubic(progress);
-    var y = lerp(SCENE.bottomBound, SCENE.topBound, eased);
-
-    var curvature = Math.sin(progress * Math.PI) * object.path.curvature;
-    var lateral =
-      Math.sin(progress * Math.PI * 1.05 + object.index * 0.35) *
-      object.path.xAmp *
-      SCENE.width *
-      curvature;
-
-    var pathOscillation =
-      Math.cos(time * 0.00042 + object.order * 0.9 + object.index * 0.21) *
-      10;
-
-    var x = SCENE.width * object.path.xBase + lateral + pathOscillation;
-
-    return {
-      x: x,
-      y: y + object.yBias
-    };
-  }
-
-  function applyObjectState(object, time) {
-    var progress = getPathProgress(object, time);
-    var point = getPathPosition(object, progress, time);
-    var pathDepth = 1 - progress;
-    var midPulse = easeInOutSine(1 - Math.min(1, Math.abs(0.5 - progress) / 0.5));
-
-    var scale = 0.70 + object.scaleBias + pathDepth * 0.24 + midPulse * 0.08;
-    var opacity = 0.18 + midPulse * 0.66 + pathDepth * 0.18;
-    var brightness = 0.76 + pathDepth * 0.20 + midPulse * 0.08;
-    var blur = (1 - midPulse) * 0.42;
-
-    if (progress < 0.08) {
-      opacity *= progress / 0.08;
-    }
-    if (progress > 0.93) {
-      opacity *= (1 - progress) / 0.07;
-    }
-
-    opacity = clamp(opacity, 0, 1);
-
-    var zIndex = 35 + Math.round(pathDepth * 80 + midPulse * 50);
-    var family = PATH_FAMILY[object.coinStyle] || PATH_FAMILY.coin;
-
-    var spinY = object.path.tilt + family.spinBiasY + Math.sin(time * object.spinSpeed + object.index) * 9;
-    var spinX = 57 + Math.cos(time * object.spinSpeed * 0.82 + object.index) * 6;
-    var spinZ = Math.sin(time * object.spinSpeed * 0.55 + object.index) * 4;
-
-    object.node.style.transform =
-      "translate3d(" + (point.x - object.node.offsetWidth / 2) + "px," + (point.y - object.node.offsetHeight / 2) + "px,0) " +
-      "scale(" + scale + ")";
-    object.node.style.opacity = String(opacity);
-    object.node.style.zIndex = String(zIndex);
-    object.node.style.filter = "brightness(" + brightness + ") blur(" + blur + "px)";
-
-    var body = object.node.querySelector(".diamond-body");
-    if (body) {
-      body.style.transform =
-        "rotateX(" + spinX + "deg) " +
-        "rotateY(" + spinY + "deg) " +
-        "rotateZ(" + spinZ + "deg)";
-    }
-  }
-
-  function animate(now) {
-    lastFrameTime = now;
-    var activeTime = activeKey ? freezeTime : (now - sceneStart);
-
-    SCENE.objects.forEach(function (object) {
-      if (activeKey && object.key !== activeKey) {
-        object.node.classList.remove("active");
-      }
-      applyObjectState(object, activeTime);
-    });
-
-    rafId = requestAnimationFrame(animate);
-  }
-
-  function clearActiveNodes() {
-    nodes.forEach(function (node) {
-      node.classList.remove("active");
+  function clearActiveButtons() {
+    runtime.coins.forEach(function (coin) {
+      coin.button.classList.remove("active");
     });
   }
 
@@ -590,14 +397,13 @@
     var data = DATA[key];
     if (!data) return;
 
-    activeKey = key;
-    freezeTime = lastFrameTime ? (lastFrameTime - sceneStart) : 0;
-    lastActiveButton = button || null;
+    runtime.activeKey = key;
+    runtime.freezeTime = runtime.lastFrameTime ? runtime.lastFrameTime - runtime.sceneStart : 0;
+    runtime.lastActiveButton = button || null;
 
-    clearActiveNodes();
-    var activeNode = button ? button.closest(".node") : null;
-    if (activeNode) {
-      activeNode.classList.add("active");
+    clearActiveButtons();
+    if (button) {
+      button.classList.add("active");
     }
 
     panelKicker.textContent = data.kicker;
@@ -605,29 +411,136 @@
     panelSummary.textContent = data.summary;
     subbubbleList.innerHTML = buildSubbubbles(data.sections);
     wireSubbubbles();
-
     fieldShell.classList.add("reading");
   }
 
   function closeInspection() {
-    activeKey = null;
-    clearActiveNodes();
+    runtime.activeKey = null;
+    clearActiveButtons();
     fieldShell.classList.remove("reading");
 
-    if (lastActiveButton) {
-      lastActiveButton.focus({ preventScroll: true });
+    if (runtime.lastActiveButton) {
+      runtime.lastActiveButton.focus({ preventScroll: true });
     }
   }
 
-  function bindNodeActions() {
-    SCENE.objects.forEach(function (object) {
-      object.button.addEventListener("click", function () {
-        if (activeKey === object.key) {
-          closeInspection();
-          return;
-        }
-        openInspection(object.key, object.button);
-      });
+  function createPileClone(coin, x, y, scale, rotation) {
+    var clone = createCoinMarkup(coin.definition, "coin");
+    clone.setAttribute("aria-hidden", "true");
+    clone.tabIndex = -1;
+    clone.style.pointerEvents = "none";
+    clone.style.left = x + "px";
+    clone.style.top = y + "px";
+    clone.style.transform =
+      "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ") rotate(" + rotation + "deg)";
+    clone.style.opacity = "0.98";
+    clone.style.filter = "brightness(1.02)";
+    pileCoins.appendChild(clone);
+    runtime.landed.push(clone);
+  }
+
+  function settleCoin(coin, nowMs) {
+    if (coin.landed) return;
+    coin.landed = true;
+    coin.button.style.display = "none";
+
+    var pileWidth = runtime.metrics.pileRect.width;
+    var pileHeight = runtime.metrics.pileRect.height;
+    var stackBaseX = pileWidth * 0.5;
+    var bandWidth = pileWidth * 0.54;
+    var normalizedTube = (coin.definition.tube - 1.5) / 1.5;
+    var x =
+      stackBaseX +
+      normalizedTube * bandWidth * 0.28 +
+      Math.sin(nowMs * 0.001 + coin.wobbleSeed) * 12 +
+      (coin.definition.order ? 14 : -14);
+
+    var y =
+      pileHeight * 0.63 +
+      coin.definition.order * 20 +
+      coin.definition.tube * 6 +
+      Math.cos(nowMs * 0.0013 + coin.wobbleSeed) * 5;
+
+    var scale = 0.82 + coin.definition.order * 0.06 + coin.definition.tube * 0.01;
+    var rotation = -10 + coin.definition.tube * 6 + coin.definition.order * 4;
+
+    createPileClone(coin, x, y, scale, rotation);
+  }
+
+  function updateCoin(coin, activeTime) {
+    if (coin.landed) return;
+
+    var elapsed = activeTime - coin.startDelayMs;
+    if (elapsed < 0) {
+      coin.button.style.opacity = "0";
+      return;
+    }
+
+    var progress = clamp(elapsed / coin.activeDropMs, 0, 1);
+    var eased = easeInCubic(progress);
+
+    var startY = -120;
+    var endY = runtime.metrics.fallRect.height + 60;
+    var xBase = runtime.metrics.tubeX[coin.definition.tube] || runtime.metrics.fallRect.width * 0.5;
+
+    var sway =
+      Math.sin(progress * Math.PI * 1.15 + coin.wobbleSeed) *
+      (14 + coin.definition.order * 3);
+    var drift = Math.cos(activeTime * 0.0007 + coin.wobbleSeed) * 6;
+    var x = xBase + sway + drift;
+    var y = startY + (endY - startY) * eased;
+
+    var depth = 1 - progress;
+    var scale = 0.86 + depth * 0.18 + coin.definition.order * 0.04;
+    var opacity = 0.16 + depth * 0.42 + (1 - Math.abs(0.5 - progress) * 2) * 0.34;
+    if (progress < 0.06) opacity *= progress / 0.06;
+    if (progress > 0.96) opacity *= (1 - progress) / 0.04;
+    opacity = clamp(opacity, 0, 1);
+
+    var rotateY = Math.sin(activeTime * 0.001 + coin.wobbleSeed) * 10;
+    var rotateX = 66 + Math.cos(activeTime * 0.0009 + coin.wobbleSeed) * 4;
+    var rotateZ = Math.sin(activeTime * 0.0007 + coin.wobbleSeed) * 3;
+
+    coin.button.style.display = "block";
+    coin.button.style.opacity = String(opacity);
+    coin.button.style.zIndex = String(40 + Math.round(depth * 70));
+    coin.button.style.transform =
+      "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ")";
+    coin.button.style.filter = "brightness(" + (0.9 + depth * 0.18) + ")";
+
+    var shell = coin.button.querySelector(".coin-shell");
+    if (shell) {
+      shell.style.transform =
+        "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) rotateZ(" + rotateZ + "deg)";
+    }
+
+    if (progress >= 1) {
+      settleCoin(coin, activeTime);
+    }
+  }
+
+  function animate(now) {
+    runtime.lastFrameTime = now;
+    var activeTime = runtime.activeKey ? runtime.freezeTime : now - runtime.sceneStart;
+
+    runtime.coins.forEach(function (coin) {
+      if (runtime.activeKey && coin.definition.key !== runtime.activeKey) {
+        coin.button.classList.remove("active");
+      }
+      updateCoin(coin, activeTime);
+    });
+
+    runtime.rafId = requestAnimationFrame(animate);
+  }
+
+  function handleResize() {
+    updateMetrics();
+
+    runtime.landed.forEach(function (landedCoin, index) {
+      var offsetX = (index % 4) * 14 - 21;
+      var offsetY = Math.floor(index / 4) * 14;
+      landedCoin.style.left = runtime.metrics.pileRect.width * 0.5 + offsetX + "px";
+      landedCoin.style.top = runtime.metrics.pileRect.height * 0.68 + offsetY + "px";
     });
   }
 
@@ -639,15 +552,11 @@
     }
   });
 
-  window.addEventListener("resize", function () {
-    updateSceneMetrics();
-  });
+  window.addEventListener("resize", handleResize);
 
-  hideOrbitSurface();
-  updateSceneMetrics();
-  initSceneObjects();
-  bindNodeActions();
+  updateMetrics();
+  buildCoins();
 
-  if (rafId) cancelAnimationFrame(rafId);
-  rafId = requestAnimationFrame(animate);
+  if (runtime.rafId) cancelAnimationFrame(runtime.rafId);
+  runtime.rafId = requestAnimationFrame(animate);
 })();

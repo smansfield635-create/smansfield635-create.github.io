@@ -53,29 +53,29 @@
   };
 
   const ORBIT_LANES = {
-    lane1: { rx: 184, ry: 86 },
-    lane2: { rx: 252, ry: 108 },
-    lane3: { rx: 314, ry: 128 },
-    lane4: { rx: 358, ry: 150 }
+    lane1: { rx: 184, ry: 86,  zBias: 38,  yBias: -10, group: "inner" },
+    lane2: { rx: 252, ry: 108, zBias: 18,  yBias: 4,   group: "mid" },
+    lane3: { rx: 314, ry: 128, zBias: -4,  yBias: 10,  group: "outer" },
+    lane4: { rx: 358, ry: 150, zBias: -20, yBias: 16,  group: "outerWide" }
   };
 
   const MANIFOLDS = [
-    { code: "N",   href: "/explore/frontier/urban/",                     p: { en: "CITIES",   zh: "城市",   es: "CIUDADES" }, e: { en: "URBAN",   zh: "城市OS", es: "URB-OS" }, tier: "l1", lane: "lane1", angle: -Math.PI / 2 + 0.02, orbitSpeed: 0.000034, spinSpeed: 0.00104 },
-    { code: "NNE", href: "/explore/frontier/shimmer/",                   p: { en: "SHIMMER",  zh: "闪烁",   es: "SHIMMER" },  e: { en: "CLEAR",   zh: "清晰",   es: "CLAR" },   tier: "l3", lane: "lane3", angle: -Math.PI / 2 + 0.52, orbitSpeed: 0.000024, spinSpeed: 0.00120 },
-    { code: "NE",  href: "/explore/frontier/water/",                     p: { en: "WATER",    zh: "水",     es: "AGUA" },     e: { en: "H2O",     zh: "水系",   es: "H2O" },    tier: "l2", lane: "lane2", angle: -Math.PI / 2 + 0.98, orbitSpeed: 0.000028, spinSpeed: 0.00112 },
-    { code: "ENE", href: "/explore/frontier/trajectory/",                p: { en: "TRAJ",     zh: "轨迹",   es: "TRAY" },     e: { en: "WIN",     zh: "窗口",   es: "VENT" },   tier: "l3", lane: "lane4", angle: -Math.PI / 2 + 1.32, orbitSpeed: 0.000020, spinSpeed: 0.00116 },
-    { code: "E",   href: "/explore/frontier/energy/",                    p: { en: "ENERGY",   zh: "能源",   es: "ENERGÍA" },  e: { en: "POWER",   zh: "功率",   es: "PWR" },    tier: "l1", lane: "lane1", angle: 0.04,                orbitSpeed: 0.000036, spinSpeed: 0.00102 },
-    { code: "ESE", href: "/explore/frontier/waste/",                     p: { en: "WASTE",    zh: "废弃物", es: "RESID" },    e: { en: "ENTROPY", zh: "熵",     es: "ENT" },    tier: "l3", lane: "lane4", angle: 0.72,                orbitSpeed: 0.000021, spinSpeed: 0.00118 },
-    { code: "SE",  href: "/explore/frontier/closed-loop/",               p: { en: "HABITATS", zh: "栖息地", es: "HÁBIT" },    e: { en: "HAB",     zh: "栖息",   es: "HAB" },    tier: "l2", lane: "lane2", angle: 0.98,                orbitSpeed: 0.000027, spinSpeed: 0.00108 },
-    { code: "SSE", href: "/explore/frontier/urban/",                     p: { en: "URBAN",    zh: "城市群", es: "URBANO" },   e: { en: "CLUSTER", zh: "集群",   es: "CLUST" },  tier: "l3", lane: "lane4", angle: 1.26,                orbitSpeed: 0.000022, spinSpeed: 0.00114 },
-    { code: "S",   href: "/explore/frontier/agri/",                      p: { en: "AGRI",     zh: "农业",   es: "AGRO" },     e: { en: "FOOD",    zh: "食物",   es: "ALIM" },   tier: "l1", lane: "lane1", angle: Math.PI / 2 + 0.03,  orbitSpeed: 0.000035, spinSpeed: 0.00100 },
-    { code: "SSW", href: "/explore/frontier/closed-loop/",               p: { en: "CLOSED",   zh: "闭环",   es: "CERRADO" },  e: { en: "NO-AWAY", zh: "无扔掉", es: "SIN" },    tier: "l3", lane: "lane4", angle: Math.PI / 2 + 0.44,  orbitSpeed: 0.000023, spinSpeed: 0.00122 },
-    { code: "SW",  href: "/products/finance/",                           p: { en: "FINANCE",  zh: "金融",   es: "FINANZ" },   e: { en: "CAPITAL", zh: "资本",   es: "CAP" },    tier: "l2", lane: "lane2", angle: Math.PI / 2 + 0.98,  orbitSpeed: 0.000029, spinSpeed: 0.00110 },
-    { code: "WSW", href: "/explore/infrastructure/grid-storage/",        p: { en: "GRID",     zh: "电网",   es: "RED" },      e: { en: "BALANCE", zh: "平衡",   es: "BAL" },    tier: "l3", lane: "lane4", angle: Math.PI / 2 + 1.22,  orbitSpeed: 0.000021, spinSpeed: 0.00118 },
-    { code: "W",   href: "/explore/infrastructure/",                     p: { en: "INFRA",    zh: "基建",   es: "INFRA" },    e: { en: "SUBST",   zh: "替代",   es: "SUB" },    tier: "l1", lane: "lane1", angle: Math.PI - 0.02,      orbitSpeed: 0.000036, spinSpeed: 0.00102 },
-    { code: "WNW", href: "/products/capital-doctrine/",                  p: { en: "DOCTRINE", zh: "教义",   es: "DOCTR" },    e: { en: "CCD",     zh: "CCD",    es: "CCD" },    tier: "l3", lane: "lane4", angle: Math.PI + 0.38,      orbitSpeed: 0.000022, spinSpeed: 0.00116 },
-    { code: "NW",  href: "/explore/frontier/lattice/",                   p: { en: "LATTICE",  zh: "晶格",   es: "LATTICE" },  e: { en: "256",     zh: "256态",  es: "256" },    tier: "l2", lane: "lane2", angle: Math.PI + 0.98,      orbitSpeed: 0.000028, spinSpeed: 0.00108 },
-    { code: "NNW", href: "/explore/frontier/vision/",                    p: { en: "VISION",   zh: "愿景",   es: "VISIÓN" },   e: { en: "MAP",     zh: "映射",   es: "MAP" },    tier: "l3", lane: "lane3", angle: Math.PI + 1.52,      orbitSpeed: 0.000024, spinSpeed: 0.00118 }
+    { code: "N",   href: "/explore/frontier/urban/",              p: { en: "CITIES",   zh: "城市",   es: "CIUDADES" }, e: { en: "URBAN",   zh: "城市OS", es: "URB-OS" }, tier: "l1", lane: "lane1", angle: -Math.PI / 2 + 0.02, orbitSpeed: 0.000034, spinSpeed: 0.00104 },
+    { code: "NNE", href: "/explore/frontier/shimmer/",            p: { en: "SHIMMER",  zh: "闪烁",   es: "SHIMMER" },  e: { en: "CLEAR",   zh: "清晰",   es: "CLAR" },   tier: "l3", lane: "lane3", angle: -Math.PI / 2 + 0.52, orbitSpeed: 0.000024, spinSpeed: 0.00120 },
+    { code: "NE",  href: "/explore/frontier/water/",              p: { en: "WATER",    zh: "水",     es: "AGUA" },     e: { en: "H2O",     zh: "水系",   es: "H2O" },    tier: "l2", lane: "lane2", angle: -Math.PI / 2 + 0.98, orbitSpeed: 0.000028, spinSpeed: 0.00112 },
+    { code: "ENE", href: "/explore/frontier/trajectory/",         p: { en: "TRAJ",     zh: "轨迹",   es: "TRAY" },     e: { en: "WIN",     zh: "窗口",   es: "VENT" },   tier: "l3", lane: "lane4", angle: -Math.PI / 2 + 1.32, orbitSpeed: 0.000020, spinSpeed: 0.00116 },
+    { code: "E",   href: "/explore/frontier/energy/",             p: { en: "ENERGY",   zh: "能源",   es: "ENERGÍA" },  e: { en: "POWER",   zh: "功率",   es: "PWR" },    tier: "l1", lane: "lane1", angle: 0.04,                orbitSpeed: 0.000036, spinSpeed: 0.00102 },
+    { code: "ESE", href: "/explore/frontier/waste/",              p: { en: "WASTE",    zh: "废弃物", es: "RESID" },    e: { en: "ENTROPY", zh: "熵",     es: "ENT" },    tier: "l3", lane: "lane4", angle: 0.72,                orbitSpeed: 0.000021, spinSpeed: 0.00118 },
+    { code: "SE",  href: "/explore/frontier/closed-loop/",        p: { en: "HABITATS", zh: "栖息地", es: "HÁBIT" },    e: { en: "HAB",     zh: "栖息",   es: "HAB" },    tier: "l2", lane: "lane2", angle: 0.98,                orbitSpeed: 0.000027, spinSpeed: 0.00108 },
+    { code: "SSE", href: "/explore/frontier/urban/",              p: { en: "URBAN",    zh: "城市群", es: "URBANO" },   e: { en: "CLUSTER", zh: "集群",   es: "CLUST" },  tier: "l3", lane: "lane4", angle: 1.26,                orbitSpeed: 0.000022, spinSpeed: 0.00114 },
+    { code: "S",   href: "/explore/frontier/agri/",               p: { en: "AGRI",     zh: "农业",   es: "AGRO" },     e: { en: "FOOD",    zh: "食物",   es: "ALIM" },   tier: "l1", lane: "lane1", angle: Math.PI / 2 + 0.03,  orbitSpeed: 0.000035, spinSpeed: 0.00100 },
+    { code: "SSW", href: "/explore/frontier/closed-loop/",        p: { en: "CLOSED",   zh: "闭环",   es: "CERRADO" },  e: { en: "NO-AWAY", zh: "无扔掉", es: "SIN" },    tier: "l3", lane: "lane4", angle: Math.PI / 2 + 0.44,  orbitSpeed: 0.000023, spinSpeed: 0.00122 },
+    { code: "SW",  href: "/products/finance/",                    p: { en: "FINANCE",  zh: "金融",   es: "FINANZ" },   e: { en: "CAPITAL", zh: "资本",   es: "CAP" },    tier: "l2", lane: "lane2", angle: Math.PI / 2 + 0.98,  orbitSpeed: 0.000029, spinSpeed: 0.00110 },
+    { code: "WSW", href: "/explore/infrastructure/grid-storage/", p: { en: "GRID",     zh: "电网",   es: "RED" },      e: { en: "BALANCE", zh: "平衡",   es: "BAL" },    tier: "l3", lane: "lane4", angle: Math.PI / 2 + 1.22,  orbitSpeed: 0.000021, spinSpeed: 0.00118 },
+    { code: "W",   href: "/explore/infrastructure/",              p: { en: "INFRA",    zh: "基建",   es: "INFRA" },    e: { en: "SUBST",   zh: "替代",   es: "SUB" },    tier: "l1", lane: "lane1", angle: Math.PI - 0.02,      orbitSpeed: 0.000036, spinSpeed: 0.00102 },
+    { code: "WNW", href: "/products/capital-doctrine/",           p: { en: "DOCTRINE", zh: "教义",   es: "DOCTR" },    e: { en: "CCD",     zh: "CCD",    es: "CCD" },    tier: "l3", lane: "lane4", angle: Math.PI + 0.38,      orbitSpeed: 0.000022, spinSpeed: 0.00116 },
+    { code: "NW",  href: "/explore/frontier/lattice/",            p: { en: "LATTICE",  zh: "晶格",   es: "LATTICE" },  e: { en: "256",     zh: "256态",  es: "256" },    tier: "l2", lane: "lane2", angle: Math.PI + 0.98,      orbitSpeed: 0.000028, spinSpeed: 0.00108 },
+    { code: "NNW", href: "/explore/frontier/vision/",             p: { en: "VISION",   zh: "愿景",   es: "VISIÓN" },   e: { en: "MAP",     zh: "映射",   es: "MAP" },    tier: "l3", lane: "lane3", angle: Math.PI + 1.52,      orbitSpeed: 0.000024, spinSpeed: 0.00118 }
   ];
 
   const elements = {
@@ -106,6 +106,9 @@
     starsBuilt: false,
     centerX: 0,
     centerY: 0,
+    stageWidth: 0,
+    stageHeight: 0,
+    mobile: false,
     planets: [],
     orbitNodes: [],
     core: null
@@ -226,6 +229,14 @@
     });
   }
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
   function ensureStars() {
     if (runtime.starsBuilt) return;
     runtime.starsBuilt = true;
@@ -341,13 +352,24 @@
     runtime.core = null;
   }
 
+  function getLaneScale() {
+    return runtime.mobile ? 0.78 : 1;
+  }
+
+  function getLaneFlatten() {
+    return runtime.mobile ? 0.88 : 1;
+  }
+
   function buildOrbitBands() {
+    const laneScale = getLaneScale();
+    const laneFlatten = getLaneFlatten();
+
     Object.keys(ORBIT_LANES).forEach((laneKey) => {
       const lane = ORBIT_LANES[laneKey];
       const band = document.createElement("div");
       band.className = "orbitBand";
-      band.style.width = `${lane.rx * 2}px`;
-      band.style.height = `${lane.ry * 2}px`;
+      band.style.width = `${lane.rx * laneScale * 2}px`;
+      band.style.height = `${lane.ry * laneFlatten * 2}px`;
       elements.stage.appendChild(band);
       runtime.orbitNodes.push(band);
     });
@@ -362,7 +384,7 @@
     markup.node.setAttribute("aria-label", copy.core);
     markup.node.style.left = `${runtime.centerX}px`;
     markup.node.style.top = `${runtime.centerY}px`;
-    markup.node.style.zIndex = "200";
+    markup.node.style.zIndex = "240";
 
     bindPress(markup.node, () => navigate(ROUTES.core));
     elements.stage.appendChild(markup.node);
@@ -372,6 +394,12 @@
       cube: markup.cube,
       wordEl: markup.wordEl
     };
+  }
+
+  function getTierBaseScale(tier) {
+    if (tier === "l1") return runtime.mobile ? 0.92 : 1;
+    if (tier === "l2") return runtime.mobile ? 0.86 : 0.94;
+    return runtime.mobile ? 0.80 : 0.88;
   }
 
   function buildPlanets() {
@@ -389,6 +417,7 @@
       elements.stage.appendChild(markup.node);
 
       const lane = ORBIT_LANES[manifold.lane];
+
       return {
         manifold,
         lane,
@@ -398,24 +427,26 @@
         phase,
         node: markup.node,
         cube: markup.cube,
-        wordEl: markup.wordEl
+        wordEl: markup.wordEl,
+        tierBaseScale: getTierBaseScale(manifold.tier),
+        projected: {
+          x: 0,
+          y: 0,
+          z: 0,
+          depth: 0.5,
+          scale: 1
+        }
       };
     });
   }
 
   function layoutCenter() {
     const rect = elements.stage.getBoundingClientRect();
-    runtime.centerX = rect.width * 0.5;
-    runtime.centerY = rect.height * 0.58;
-  }
-
-  function buildScene() {
-    clearRuntimeNodes();
-    layoutCenter();
-    buildOrbitBands();
-    buildCore();
-    buildPlanets();
-    updateCornerLabels();
+    runtime.stageWidth = rect.width || 1;
+    runtime.stageHeight = rect.height || 1;
+    runtime.mobile = runtime.stageWidth <= 640;
+    runtime.centerX = runtime.stageWidth * 0.5;
+    runtime.centerY = runtime.stageHeight * (runtime.mobile ? 0.585 : 0.58);
   }
 
   function updateCornerLabels() {
@@ -436,32 +467,122 @@
     });
   }
 
+  function computeProjectedState(planet, ts, delta) {
+    planet.angle += planet.orbitSpeed * delta;
+
+    const laneScale = getLaneScale();
+    const laneFlatten = getLaneFlatten();
+    const rx = planet.lane.rx * laneScale;
+    const ry = planet.lane.ry * laneFlatten;
+
+    const depth = (Math.sin(planet.angle) + 1) * 0.5;
+    const x = runtime.centerX + Math.cos(planet.angle) * rx;
+    const y = runtime.centerY + Math.sin(planet.angle) * ry + planet.lane.yBias;
+    const z = lerp(planet.lane.zBias - 12, planet.lane.zBias + 12, depth);
+
+    const baseScale = planet.tierBaseScale;
+    const scale = baseScale + depth * (runtime.mobile ? 0.24 : 0.30);
+
+    const localSpin = Math.sin(ts * planet.spinSpeed + planet.phase) * 6.5;
+    const localTilt = Math.cos(ts * planet.spinSpeed * 0.82 + planet.phase) * 1.4;
+    const brightness = 0.76 + depth * 0.28;
+    const opacity = 0.76 + depth * 0.22;
+
+    planet.projected = {
+      x,
+      y,
+      z,
+      depth,
+      scale,
+      localSpin,
+      localTilt,
+      brightness,
+      opacity
+    };
+  }
+
+  function solveFieldSeparation() {
+    const planets = runtime.planets.slice();
+    const minGapX = runtime.mobile ? 76 : 94;
+    const minGapY = runtime.mobile ? 64 : 78;
+    const edgePadX = runtime.mobile ? 46 : 60;
+    const topPad = runtime.mobile ? 66 : 48;
+    const bottomPad = runtime.mobile ? 78 : 54;
+    const iterations = 2;
+
+    for (let pass = 0; pass < iterations; pass += 1) {
+      planets.sort((a, b) => a.projected.y - b.projected.y);
+
+      for (let i = 0; i < planets.length; i += 1) {
+        const current = planets[i];
+
+        current.projected.x = clamp(current.projected.x, edgePadX, runtime.stageWidth - edgePadX);
+        current.projected.y = clamp(current.projected.y, topPad, runtime.stageHeight - bottomPad);
+
+        for (let j = i + 1; j < planets.length; j += 1) {
+          const other = planets[j];
+          const dx = other.projected.x - current.projected.x;
+          const dy = other.projected.y - current.projected.y;
+          const absDx = Math.abs(dx);
+          const absDy = Math.abs(dy);
+
+          if (absDx < minGapX && absDy < minGapY) {
+            const overlapX = minGapX - absDx;
+            const overlapY = minGapY - absDy;
+
+            if (overlapX > overlapY) {
+              const pushY = overlapY * 0.5 + 3;
+              current.projected.y -= pushY;
+              other.projected.y += pushY;
+            } else {
+              const pushX = overlapX * 0.5 + 3;
+              if (dx >= 0) {
+                current.projected.x -= pushX;
+                other.projected.x += pushX;
+              } else {
+                current.projected.x += pushX;
+                other.projected.x -= pushX;
+              }
+            }
+
+            current.projected.x = clamp(current.projected.x, edgePadX, runtime.stageWidth - edgePadX);
+            other.projected.x = clamp(other.projected.x, edgePadX, runtime.stageWidth - edgePadX);
+            current.projected.y = clamp(current.projected.y, topPad, runtime.stageHeight - bottomPad);
+            other.projected.y = clamp(other.projected.y, topPad, runtime.stageHeight - bottomPad);
+          }
+        }
+      }
+    }
+  }
+
+  function applyProjectedState(planet, ts) {
+    const projected = planet.projected;
+    const zIndex = 40 + Math.round(projected.depth * 120);
+
+    planet.node.style.left = `${projected.x}px`;
+    planet.node.style.top = `${projected.y}px`;
+    planet.node.style.transform = `translate(-50%,-50%) scale(${projected.scale})`;
+    planet.node.style.opacity = String(projected.opacity);
+    planet.node.style.zIndex = String(zIndex);
+
+    planet.cube.style.transform =
+      `translate(-50%,-50%) rotateZ(45deg) rotateX(${62 + projected.localTilt}deg) rotateY(${-36 + projected.localSpin}deg)`;
+    planet.cube.style.filter = `brightness(${projected.brightness}) saturate(${0.94 + projected.depth * 0.14})`;
+  }
+
   function updateRuntime(ts) {
     if (!updateRuntime.lastTs) updateRuntime.lastTs = ts;
     const delta = ts - updateRuntime.lastTs;
     updateRuntime.lastTs = ts;
 
     runtime.planets.forEach((planet) => {
-      planet.angle += planet.orbitSpeed * delta;
+      computeProjectedState(planet, ts, delta);
+    });
 
-      const depth = (Math.sin(planet.angle) + 1) * 0.5;
-      const x = runtime.centerX + Math.cos(planet.angle) * planet.lane.rx;
-      const y = runtime.centerY + Math.sin(planet.angle) * planet.lane.ry;
-      const scale = 0.70 + depth * 0.42;
-      const brightness = 0.74 + depth * 0.34;
-      const opacity = 0.72 + depth * 0.28;
-      const localSpin = Math.sin(ts * planet.spinSpeed + planet.phase) * 6.5;
-      const localTilt = Math.cos(ts * planet.spinSpeed * 0.82 + planet.phase) * 1.4;
+    solveFieldSeparation();
 
-      planet.node.style.left = `${x}px`;
-      planet.node.style.top = `${y}px`;
-      planet.node.style.transform = `translate(-50%,-50%) scale(${scale})`;
-      planet.node.style.opacity = String(opacity);
-      planet.node.style.zIndex = String(20 + Math.round(depth * 120));
-
-      planet.cube.style.transform =
-        `translate(-50%,-50%) rotateZ(45deg) rotateX(${62 + localTilt}deg) rotateY(${-36 + localSpin}deg)`;
-      planet.cube.style.filter = `brightness(${brightness}) saturate(${0.92 + depth * 0.16})`;
+    runtime.planets.forEach((planet) => {
+      applyProjectedState(planet, ts);
     });
 
     if (runtime.core && runtime.core.cube) {
@@ -505,6 +626,15 @@
       runtime.resizeScheduled = false;
       safeLayout();
     });
+  }
+
+  function buildScene() {
+    clearRuntimeNodes();
+    layoutCenter();
+    buildOrbitBands();
+    buildCore();
+    buildPlanets();
+    updateCornerLabels();
   }
 
   function bindEvents() {

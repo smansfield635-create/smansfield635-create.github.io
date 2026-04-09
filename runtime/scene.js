@@ -1,323 +1,135 @@
-import runtime from "../world/runtime.js";
-import renderModule from "../world/render.js";
+import { createWorldRuntime } from "./world_runtime.js";
+import { createPlanetProjection } from "./planet_projection.js";
+import { renderGroundLayer } from "./ground_renderer.js";
+import { renderEnvironmentLayer } from "./environment_renderer.js";
 
-const DEFAULT_CANVAS_ID = "scene";
+const META = Object.freeze({
+  name: "SCENE",
+  version: "G1_EXTERNAL_BASELINE",
+  role: "canvas_scene_orchestrator",
+  contract: "SCENE_CONTRACT_G1",
+  status: "ACTIVE",
+  deterministic: true
+});
 
-function assert(condition, message) {
-  if (!condition) {
-    throw new Error(`[scene] ${message}`);
-  }
+function ensureCanvas(canvas) {
+  if (canvas) return canvas;
+  const next = document.createElement("canvas");
+  next.id = "world-scene";
+  next.style.display = "block";
+  next.style.width = "100%";
+  next.style.height = "100%";
+  next.style.background = "#05070b";
+  return next;
 }
 
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
+function sizeCanvas(canvas) {
+  const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+  const rect = canvas.getBoundingClientRect();
+  const width = Math.max(1, Math.round((rect.width || window.innerWidth) * dpr));
+  const height = Math.max(1, Math.round((rect.height || window.innerHeight) * dpr));
+  canvas.width = width;
+  canvas.height = height;
+  return { width, height, dpr };
 }
 
-function createScene(options = {}) {
-  const canvasId =
-    typeof options.canvasId === "string" && options.canvasId.length > 0
-      ? options.canvasId
-      : DEFAULT_CANVAS_ID;
+export function createScene(config = {}) {
+  const canvas = ensureCanvas(config.canvas || null);
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("SCENE_2D_CONTEXT_UNAVAILABLE");
 
-  const runtimeHandle =
-    options.runtimeHandle && typeof options.runtimeHandle.getCurrentState === "function"
-      ? options.runtimeHandle
-      : runtime;
+  const runtime = createWorldRuntime({
+    sessionId: typeof config.sessionId === "string" ? config.sessionId : "SCENE_RUNTIME_SESSION"
+  });
 
-  const renderer =
-    options.renderer && typeof options.renderer.render === "function"
-      ? options.renderer
-      : renderModule;
+  const state = {
+    running: false,
+    frameId: 0,
+    viewport: { width: canvas.width || 1280, height: canvas.height || 720, dpr: 1 },
+    snapshot: null
+  };
 
-  let canvas = null;
-  let ctx = null;
-  let raf = null;
-  let running = false;
-  let width = 0;
-  let height = 0;
-  let dpr = 1;
-  let lastTs = 0;
+  function draw() {
+    if (!state.snapshot) return;
 
-  function getCanvas() {
-    if (!canvas) {
-      canvas = document.getElementById(canvasId);
-      assert(canvas, `canvas #${canvasId} not found`);
-    }
-    return canvas;
+    const projection = createPlanetProjection(
+      state.viewport,
+      state.snapshot.projection.projection
+    );
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const bg = ctx.createLinearGradient(0, 0, 0, canvas.height);
+    bg.addColorStop(0, "#05070b");
+    bg.addColorStop(1, "#08101a");
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    renderEnvironmentLayer(ctx, state.snapshot, projection);
+    renderGroundLayer(ctx, state.snapshot, projection);
   }
 
-  function getContext() {
-    if (!ctx) {
-      ctx = getCanvas().getContext("2d", { alpha: false, desynchronized: true });
-      assert(ctx, "2d context unavailable");
-    }
-    return ctx;
+  function frame() {
+    if (!state.running) return;
+    state.snapshot = runtime.update(state.viewport);
+    draw();
+    state.frameId = window.requestAnimationFrame(frame);
   }
 
   function resize() {
-    const el = getCanvas();
-    const nextDpr = Math.min(window.devicePixelRatio || 1, 2);
-    const rect = el.getBoundingClientRect();
-
-    width = Math.max(1, Math.floor(rect.width));
-    height = Math.max(1, Math.floor(rect.height));
-    dpr = nextDpr;
-
-    el.width = Math.floor(width * dpr);
-    el.height = Math.floor(height * dpr);
-
-    getContext().setTransform(dpr, 0, 0, dpr, 0, 0);
+    state.viewport = sizeCanvas(canvas);
+    state.snapshot = runtime.update(state.viewport);
+    draw();
   }
 
-  function clearFrame() {
-    const g = getContext();
+  return {
+    meta: META,
 
-    const gradient = g.createRadialGradient(
-      width * 0.5,
-      height * 0.45,
-      0,
-      width * 0.5,
-      height * 0.45,
-      Math.max(width, height) * 0.75
-    );
-    gradient.addColorStop(0, "#17335f");
-    gradient.addColorStop(0.35, "#0a1834");
-    gradient.addColorStop(1, "#030712");
+    mount(root) {
+      if (root && canvas.parentNode !== root) {
+        root.appendChild(canvas);
+      }
+      resize();
+      return this;
+    },
 
-    g.fillStyle = gradient;
-    g.fillRect(0, 0, width, height);
-  }
+    start() {
+      if (state.running) return this;
+      state.running = true;
+      state.snapshot = runtime.start(state.viewport);
+      draw();
+      state.frameId = window.requestAnimationFrame(frame);
+      return this;
+    },
 
-  function drawStars() {
-    const g = getContext();
-    const starCount = 96;
+    stop() {
+      state.running = false;
+      if (state.frameId) {
+        window.cancelAnimationFrame(state.frameId);
+        state.frameId = 0;
+      }
+      runtime.stop();
+      return this;
+    },
 
-    for (let i = 0; i < starCount; i += 1) {
-      const x = ((i * 97) % width) + (((i * 17) % 13) * 0.35);
-      const y = ((i * 53) % height) * 0.78;
-      const radius = 0.5 + ((i * 19) % 7) * 0.18;
-      const alpha = 0.22 + (((i * 29) % 11) * 0.04);
-
-      g.fillStyle = `rgba(255,255,255,${alpha})`;
-      g.beginPath();
-      g.arc(x, y, radius, 0, Math.PI * 2);
-      g.fill();
-    }
-  }
-
-  function colorFromHSV(h, s, v, a = 1) {
-    const hh = ((h % 1) + 1) % 1;
-    const i = Math.floor(hh * 6);
-    const f = hh * 6 - i;
-    const p = v * (1 - s);
-    const q = v * (1 - f * s);
-    const t = v * (1 - (1 - f) * s);
-
-    let r = 0;
-    let g = 0;
-    let b = 0;
-
-    switch (i % 6) {
-      case 0:
-        r = v; g = t; b = p;
-        break;
-      case 1:
-        r = q; g = v; b = p;
-        break;
-      case 2:
-        r = p; g = v; b = t;
-        break;
-      case 3:
-        r = p; g = q; b = v;
-        break;
-      case 4:
-        r = t; g = p; b = v;
-        break;
-      default:
-        r = v; g = p; b = q;
-        break;
-    }
-
-    return `rgba(${Math.round(r * 255)},${Math.round(g * 255)},${Math.round(b * 255)},${a})`;
-  }
-
-  function projectPacket(packet) {
-    const proj = packet.projection;
-
-    if (proj.projectionState === "flat") {
-      const fx = proj.selectedProjection.x;
-      const fy = proj.selectedProjection.y;
-      const fieldW = Math.max(1, proj.selectedProjection.width || 1);
-      const fieldH = Math.max(1, proj.selectedProjection.height || 1);
-
-      return {
-        x: fieldW <= 1 ? width * 0.5 : (fx / (fieldW - 1)) * width,
-        y: fieldH <= 1 ? height * 0.5 : (fy / (fieldH - 1)) * height,
-        z: 0
-      };
-    }
-
-    if (proj.projectionState === "tree") {
-      const root = Number(proj.selectedProjection.root || 0);
-      const leaf = Number(proj.selectedProjection.leaf || 0);
-
-      return {
-        x: ((root + 0.5) / 9) * width,
-        y: ((leaf + 0.5) / 16) * height,
-        z: 0
-      };
-    }
-
-    const gx = Number(proj.coordinates.x || 0);
-    const gy = Number(proj.coordinates.y || 0);
-    const gz = Number(proj.coordinates.z || 0);
-    const radius = Math.min(width, height) * 0.26;
-
-    return {
-      x: width * 0.5 + gx * radius,
-      y: height * 0.52 - gy * radius,
-      z: gz
-    };
-  }
-
-  function drawPacket(packet) {
-    const g = getContext();
-    const point = projectPacket(packet);
-    const color = packet.visible.colorOutput;
-    const boundary = packet.runtime.boundary.classification;
-    const motion = packet.visible.motionOutput;
-    const transition = packet.visible.transitionVisibility;
-    const depth = clamp(Number(packet.visible.depthOutput || 0), 0, 1);
-    const luminance = clamp(Number(packet.visible.luminanceOutput || 0), 0, 1);
-
-    const baseRadius = 8 + depth * 20 + luminance * 10;
-    const glowRadius = baseRadius * 3.2;
-
-    const glow = g.createRadialGradient(point.x, point.y, 0, point.x, point.y, glowRadius);
-    glow.addColorStop(0, colorFromHSV(color.hue, color.saturation, Math.min(1, color.value + 0.12), 0.50));
-    glow.addColorStop(0.35, colorFromHSV(color.hue, color.saturation, color.value, 0.20));
-    glow.addColorStop(1, colorFromHSV(color.hue, color.saturation, color.value, 0));
-
-    g.fillStyle = glow;
-    g.beginPath();
-    g.arc(point.x, point.y, glowRadius, 0, Math.PI * 2);
-    g.fill();
-
-    g.fillStyle = colorFromHSV(color.hue, color.saturation, color.value, 0.98);
-    g.beginPath();
-    g.arc(point.x, point.y, baseRadius, 0, Math.PI * 2);
-    g.fill();
-
-    if (boundary === "GATE" || boundary === "BRIDGE") {
-      g.strokeStyle = "rgba(255,255,255,0.75)";
-      g.lineWidth = 1.5;
-      g.beginPath();
-      g.arc(point.x, point.y, baseRadius + 4, 0, Math.PI * 2);
-      g.stroke();
-    }
-
-    if (boundary === "BLOCK") {
-      g.strokeStyle = "rgba(255,240,240,0.82)";
-      g.lineWidth = 2;
-      g.beginPath();
-      g.moveTo(point.x - baseRadius - 5, point.y - baseRadius - 5);
-      g.lineTo(point.x + baseRadius + 5, point.y + baseRadius + 5);
-      g.moveTo(point.x + baseRadius + 5, point.y - baseRadius - 5);
-      g.lineTo(point.x - baseRadius - 5, point.y + baseRadius + 5);
-      g.stroke();
-    }
-
-    g.fillStyle = "rgba(233,239,255,0.92)";
-    g.font = "bold 12px Arial";
-    g.textAlign = "center";
-    g.fillText(`${packet.runtime.region.label}`, point.x, point.y - baseRadius - 10);
-
-    g.font = "10px Arial";
-    g.fillStyle = "rgba(157,176,212,0.90)";
-    g.fillText(
-      `${packet.runtime.terrainClass} · ${packet.runtime.biomeType}`,
-      point.x,
-      point.y + baseRadius + 14
-    );
-
-    if (transition.visible && motion.visible) {
-      const vector = motion.vector;
-      const dx = Number(vector.x || 0) * 34;
-      const dy = Number(vector.y || 0) * 34;
-
-      g.strokeStyle = "rgba(255,255,255,0.60)";
-      g.lineWidth = 1.2;
-      g.beginPath();
-      g.moveTo(point.x, point.y);
-      g.lineTo(point.x + dx, point.y - dy);
-      g.stroke();
-    }
-  }
-
-  function frame(ts) {
-    if (!running) return;
-
-    lastTs = lastTs > 0 ? ts - lastTs : 16.6667;
-    lastTs = ts;
-
-    if (typeof runtimeHandle.refreshFrameState === "function") {
-      runtimeHandle.refreshFrameState({
-        elapsedSeconds: ts / 1000
-      });
-    }
-
-    clearFrame();
-    drawStars();
-
-    const packet = renderer.render(runtimeHandle);
-    drawPacket(packet);
-
-    raf = requestAnimationFrame(frame);
-    window.__COMPASS_BASELINE_RAF__ = raf;
-  }
-
-  function start() {
-    resize();
-    running = true;
-    lastTs = 0;
-
-    if (raf) {
-      cancelAnimationFrame(raf);
-    }
-
-    raf = requestAnimationFrame(frame);
-    window.__COMPASS_BASELINE_RAF__ = raf;
-  }
-
-  function stop() {
-    running = false;
-    if (raf) {
-      cancelAnimationFrame(raf);
-      raf = null;
-      window.__COMPASS_BASELINE_RAF__ = null;
-    }
-  }
-
-  function destroy() {
-    stop();
-    canvas = null;
-    ctx = null;
-  }
-
-  window.addEventListener("resize", resize, { passive: true });
-
-  return Object.freeze({
     resize,
-    start,
-    stop,
-    destroy,
-    getRuntimeHandle() {
-      return runtimeHandle;
+
+    destroy() {
+      this.stop();
+      runtime.destroy();
+    },
+
+    getSnapshot() {
+      return state.snapshot;
+    },
+
+    getCanvas() {
+      return canvas;
     }
-  });
+  };
 }
 
-const defaultScene = createScene();
-
-export { createScene };
-export default defaultScene;
+export default {
+  meta: META,
+  createScene
+};

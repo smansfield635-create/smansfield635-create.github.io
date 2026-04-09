@@ -6,7 +6,7 @@
   <title>Archcoin | Five-Coin Financial Architecture</title>
   <meta
     name="description"
-    content="Archcoin is the parent template of a five-coin financial architecture. The Vault is the master body. Four path-class coin families govern contracts, receivables, payables, and growth allocation through a controlled launch field."
+    content="Archcoin is the parent template of a five-coin financial architecture. The Vault is the master body. Four path-class coin families govern contracts, receivables, payables, and growth allocation through a centered rain field."
   />
   <style>
     :root{
@@ -14,16 +14,10 @@
       --bg-1:#020814;
       --bg-2:#071427;
       --panel:#08111d;
-      --panel-2:#0c1726;
       --line:rgba(143,188,255,.18);
-      --line-2:rgba(255,109,109,.18);
       --line-strong:rgba(216,231,255,.30);
       --text:#f7fbff;
       --muted:#b9c7d9;
-      --blue:#5ea8ff;
-      --blue-2:#9dd0ff;
-      --red:#ff6d6d;
-      --red-2:#ffab88;
       --gold:#ffe4a3;
       --shadow:0 28px 80px rgba(0,0,0,.46);
       --maxw:1320px;
@@ -32,6 +26,7 @@
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
     html{background:#010205}
+
     body{
       min-height:100vh;
       color:var(--text);
@@ -100,6 +95,7 @@
       0%,100%{opacity:.50}
       50%{opacity:.84}
     }
+
     @keyframes twinkleB{
       0%,100%{opacity:.26}
       50%{opacity:.60}
@@ -219,8 +215,8 @@
       min-height:760px;
       background:
         linear-gradient(180deg, rgba(4,9,18,.84), rgba(3,7,13,.92)),
-        radial-gradient(circle at 20% 24%, rgba(94,168,255,.08), transparent 22%),
-        radial-gradient(circle at 80% 24%, rgba(255,109,109,.08), transparent 20%);
+        radial-gradient(circle at 50% 18%, rgba(94,168,255,.08), transparent 24%),
+        radial-gradient(circle at 50% 32%, rgba(255,109,109,.07), transparent 20%);
       box-shadow:var(--shadow);
     }
 
@@ -497,13 +493,13 @@
     .coin-tail{
       position:absolute;
       left:50%;
-      bottom:-10px;
+      top:-8px;
       width:16px;
       height:72px;
       transform:translateX(-50%);
       pointer-events:none;
       background:
-        linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,228,163,.16) 28%, rgba(94,168,255,.10) 64%, transparent 100%);
+        linear-gradient(180deg, transparent 0%, rgba(255,255,255,.22) 20%, rgba(255,228,163,.16) 50%, rgba(94,168,255,.10) 82%, rgba(94,168,255,0) 100%);
       filter:blur(4px);
       opacity:.88;
       border-radius:999px;
@@ -514,7 +510,7 @@
       content:"";
       position:absolute;
       left:50%;
-      bottom:0;
+      top:0;
       transform:translateX(-50%);
       border-radius:999px;
       filter:blur(8px);
@@ -850,8 +846,8 @@
       <h1 id="page-title">One parent. One body. Four derived governors.</h1>
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
-        The four path-class families now rise through controlled launch routes, with each coin sharing family law while
-        keeping its own face, appearance, and identity. Choose an object to inspect. The field rises while you choose and freezes while you read.
+        The four path-class families now fall through a centered coin-rain corridor, with each coin sharing family law while
+        keeping its own face, appearance, and identity. Choose an object to inspect. The field rains while you choose and freezes while you read.
       </p>
 
       <div class="truth-band" aria-label="Top-level system truth">
@@ -868,20 +864,20 @@
           <div class="value">Coin, Description, Info, Authority</div>
         </div>
         <div class="truth-chip">
-          <div class="label">Launch Law</div>
-          <div class="value">Path by path, overlap within family</div>
+          <div class="label">Motion Law</div>
+          <div class="value">Centered rain with path overlap</div>
         </div>
         <div class="truth-chip">
           <div class="label">Read</div>
-          <div class="value">Ascending corridor architecture</div>
+          <div class="value">Descending corridor architecture</div>
         </div>
       </div>
     </section>
 
     <section class="field-shell" id="field-shell" aria-label="Archcoin selection field">
       <div class="field-topbar">
-        <div class="field-title">Select a rising coin-object to inspect</div>
-        <div class="field-hint">Path launch for choosing. Stillness for reading.</div>
+        <div class="field-title">Select a falling coin-object to inspect</div>
+        <div class="field-hint">Rain for choosing. Stillness for reading.</div>
       </div>
 
       <div class="scene" id="scene">
@@ -1010,7 +1006,7 @@
               <div class="panel-row">
                 <div>
                   <h2 class="panel-title" id="panel-title">Select an object</h2>
-                  <p class="panel-summary" id="panel-summary">Choose one of the rising coin-objects to inspect the corresponding architecture bulletin.</p>
+                  <p class="panel-summary" id="panel-summary">Choose one of the falling coin-objects to inspect the corresponding architecture bulletin.</p>
                 </div>
                 <button class="panel-close" id="panel-close" type="button" aria-label="Close inspection">Close inspection</button>
               </div>

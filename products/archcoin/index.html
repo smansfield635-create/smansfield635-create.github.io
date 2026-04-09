@@ -245,15 +245,15 @@
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:18px;
       padding:0 28px;
-      pointer-events:none;
     }
 
     .tube-head{
       position:relative;
-      height:150px;
+      height:170px;
       display:flex;
       justify-content:center;
       align-items:flex-start;
+      pointer-events:none;
     }
 
     .machine-crown{
@@ -272,6 +272,7 @@
         0 0 24px rgba(255,228,163,.10),
         inset 0 1px 0 rgba(255,255,255,.16);
       overflow:hidden;
+      pointer-events:none;
     }
 
     .machine-window{
@@ -288,6 +289,7 @@
         linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
         radial-gradient(circle at 50% 50%, rgba(255,228,163,.08), transparent 60%);
       overflow:hidden;
+      pointer-events:none;
     }
 
     .machine-window::before,
@@ -331,6 +333,7 @@
       text-transform:uppercase;
       color:rgba(255,255,255,.68);
       white-space:nowrap;
+      pointer-events:none;
     }
 
     .tube-neck{
@@ -346,6 +349,7 @@
       box-shadow:
         0 0 16px rgba(255,228,163,.08),
         inset 0 1px 0 rgba(255,255,255,.10);
+      pointer-events:none;
     }
 
     .tube-flow{
@@ -357,6 +361,48 @@
       background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,228,163,.16), rgba(94,168,255,.06), transparent 100%);
       filter:blur(2px);
       opacity:.72;
+      pointer-events:none;
+    }
+
+    .machine-knob{
+      position:absolute;
+      top:118px;
+      left:50%;
+      width:42px;
+      height:42px;
+      margin-left:-21px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 32% 30%, rgba(255,255,255,.24), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(255,228,163,.18), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.16)),
+        linear-gradient(145deg, rgba(24,30,40,.98), rgba(10,14,22,.98));
+      box-shadow:
+        0 0 18px rgba(255,228,163,.08),
+        inset 0 1px 0 rgba(255,255,255,.14);
+      pointer-events:auto;
+      cursor:pointer;
+      transform-origin:50% 50%;
+      transition:transform .26s ease;
+    }
+
+    .machine-knob::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:4px;
+      height:15px;
+      margin-left:-2px;
+      margin-top:-13px;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,228,163,.56));
+      box-shadow:0 0 10px rgba(255,228,163,.16);
+    }
+
+    .machine-knob.turning{
+      transform:rotate(25deg);
     }
 
     .fall-field{
@@ -639,6 +685,10 @@
       pointer-events:none;
     }
 
+    .coin.falling-open{
+      z-index:180 !important;
+    }
+
     .selected-shadow{
       position:absolute;
       inset:0;
@@ -905,6 +955,7 @@
       .machine-label{top:72px;font-size:9px}
       .tube-neck{top:86px;height:90px}
       .tube-flow{top:98px;height:78px}
+      .machine-knob{top:102px;width:38px;height:38px;margin-left:-19px}
       .coin{width:104px;height:104px}
       .pile-zone{height:228px}
       .fall-field{inset:190px 12px 172px}
@@ -925,9 +976,10 @@
       .machine-crown{width:74px;height:88px}
       .machine-window{width:50px;height:40px;top:14px}
       .machine-label{top:64px}
-      .tube-head{height:132px}
+      .tube-head{height:146px}
       .tube-neck{top:78px;height:82px}
       .tube-flow{top:92px;height:68px}
+      .machine-knob{top:96px;width:34px;height:34px;margin-left:-17px}
       .fall-field{inset:174px 10px 174px}
     }
   </style>
@@ -942,7 +994,7 @@
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
         Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity.
-        Refresh restarts the generation cycle from the top.
+        Tap a mint head to turn its knob and release one coin.
       </p>
 
       <div class="truth-band" aria-label="Top-level system truth">
@@ -960,7 +1012,7 @@
         </div>
         <div class="truth-chip">
           <div class="label">Generation Law</div>
-          <div class="value">Top-down mint into the vault</div>
+          <div class="value">Tap knob, release one coin</div>
         </div>
         <div class="truth-chip">
           <div class="label">Read</div>
@@ -972,12 +1024,12 @@
     <section class="field-shell" id="field-shell" aria-label="Archcoin vault field">
       <div class="field-topbar">
         <div class="field-title">Select a generated coin-object to inspect</div>
-        <div class="field-hint">Generation for choosing. Stillness for reading.</div>
+        <div class="field-hint">Tap a head to mint. Tap a falling coin to inspect.</div>
       </div>
 
       <div class="scene" id="scene">
         <div class="scene-layer" id="scene-layer">
-          <div class="vault-top" aria-hidden="true">
+          <div class="vault-top" aria-label="Archetype mint heads">
             <div class="tube-head" data-head="coin">
               <div class="machine-crown">
                 <div class="machine-window"><i></i></div>
@@ -985,6 +1037,7 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
+              <button class="machine-knob" type="button" data-head-index="0" aria-label="Dispense from Coin head"></button>
             </div>
             <div class="tube-head" data-head="description">
               <div class="machine-crown">
@@ -993,6 +1046,7 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
+              <button class="machine-knob" type="button" data-head-index="1" aria-label="Dispense from Description head"></button>
             </div>
             <div class="tube-head" data-head="info">
               <div class="machine-crown">
@@ -1001,6 +1055,7 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
+              <button class="machine-knob" type="button" data-head-index="2" aria-label="Dispense from Info head"></button>
             </div>
             <div class="tube-head" data-head="authority">
               <div class="machine-crown">
@@ -1009,6 +1064,7 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
+              <button class="machine-knob" type="button" data-head-index="3" aria-label="Dispense from Authority head"></button>
             </div>
           </div>
 

@@ -1,95 +1,244 @@
 (function () {
   "use strict";
 
-  var APP = {
-    NAME: "INDEX_EUCLIDEAN_UNIVERSE_V2",
-    VERSION: "2.0.0",
-    START_TS: Date.now(),
-    state: "BOOTING",
-    errors: [],
-    warnings: [],
-    raf: 0,
-    root: null,
-    canvas: null,
-    uiRoot: null,
-    hud: null,
-    failNode: null,
-    bannerNode: null,
-    ctx: null,
-    width: 0,
-    height: 0,
-    dpr: 1,
-    cx: 0,
-    cy: 0,
-    stars: [],
-    orbitBands: [],
-    planets: [],
-    universeReady: false,
-    reducedMotion: false
+  var DATA = {
+    "system-identity": {
+      kicker: "Inspection • System Identity",
+      title: "High-control financial architecture",
+      summary: "This page is not a token-hype surface, listing story, or speculative sales panel. It is a controlled system read: one parent, one body, four derived governors.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Controlling read",
+          mini: "Hierarchy first. Expansion second.",
+          html:
+            '<div class="detail-card"><h4>Architecture read</h4><p>Archcoin is presented as the parent template. The Vault is presented as the master body. The four cardinal coins are presented as derived governors. This page therefore reads as controlled financial architecture rather than generic crypto branding.</p></div>' +
+            '<ul class="law-list"><li>No foundational rediscovery occurs here.</li><li>No parent-child flattening is allowed.</li><li>No role collapse is allowed.</li><li>Reading begins only after explicit selection.</li></ul>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Why the motion exists",
+          mini: "Motion is for choosing, not for reading.",
+          html:
+            '<div class="detail-card"><h4>Interaction law</h4><p>The field reads as a generation scene. Four archetype mint heads feed coin-objects downward into the vault pile so the architecture feels routed, produced, and accumulated rather than merely displayed.</p></div>'
+        }
+      ]
+    },
+    "parent-authority": {
+      kicker: "Inspection • Parent Authority",
+      title: "Archcoin remains the parent template",
+      summary: "Archcoin stands above the four derived governors as the system’s construction authority. It defines the frame. It does not collapse into the parts beneath it.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Parent role",
+          mini: "Master template and construction authority.",
+          html:
+            '<div class="detail-card"><h4>Parent authority</h4><p>Archcoin governs the relationship between the body and the governors. It provides the system frame under which the financial classes remain distinct and legible.</p></div>' +
+            '<ul class="law-list"><li>Archcoin must not be flattened into the four derived coins.</li><li>Archcoin remains above the role-specific lanes.</li><li>The page’s top truth layer preserves this read immediately.</li></ul>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Non-substitution rule",
+          mini: "The parts do not replace the parent.",
+          html:
+            '<div class="detail-card"><h4>Non-overlap</h4><p>Contracts, receivables, payables, and growth allocation each cover different financial duties. None of them replace the higher-order template that Archcoin provides.</p></div>'
+        }
+      ]
+    },
+    "vault-overview": {
+      kicker: "Inspection • Master Body",
+      title: "The Vault remains the master body",
+      summary: "The Vault is not another coin and not a decorative wrapper. It is the storage, routing, and compartment body through which financial objects are handled.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Body role",
+          mini: "Storage, routing, and compartment authority.",
+          html:
+            '<div class="detail-card"><h4>Master body</h4><p>The Vault preserves system order by holding financial compartments and routing stored objects through the correct authority lanes. It is the body through which financial handling occurs.</p></div>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Containment read",
+          mini: "Direction and finance class both matter.",
+          html:
+            '<ul class="law-list"><li>Objects are not moved generically.</li><li>The Vault routes by both finance class and cardinal direction.</li><li>Containment logic stays distinct from parent authority logic.</li><li>The body remains the same across all lanes.</li></ul>'
+        }
+      ]
+    },
+    "cardinal-coins": {
+      kicker: "Inspection • Derived Governors",
+      title: "Four cardinal coins, four distinct duties",
+      summary: "The governors remain derived, bounded, and non-overlapping. Each one covers a different financial authority lane under the parent Archcoin frame.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Cardinal governor map",
+          mini: "Each direction identifies a finance authority.",
+          html:
+            '<div class="mapping-grid">' +
+            '<div class="mapping-item"><div class="dir">North</div><div class="name">Contracts Coin</div><div class="desc">Binding authority for agreements, terms, and enforceable structure.</div></div>' +
+            '<div class="mapping-item"><div class="dir">East</div><div class="name">Accounts Receivable Coin</div><div class="desc">Inbound value authority for money due, collected value, and receivable movement.</div></div>' +
+            '<div class="mapping-item"><div class="dir">South</div><div class="name">Accounts Payable Coin</div><div class="desc">Outbound obligation authority for liabilities owed and controlled settlement release.</div></div>' +
+            '<div class="mapping-item"><div class="dir">West</div><div class="name">GYP Coin</div><div class="desc">Growth-allocation authority for expansion budgets, prediction pressure, and controlled promotion.</div></div>' +
+            "</div>"
+        },
+        {
+          label: "Bulletin 02",
+          title: "Derived, not equalized",
+          mini: "Role clarity is preserved.",
+          html:
+            '<div class="detail-card"><h4>Governor rule</h4><p>The four coins are dignified as real governors, but they remain derived rather than parent-level authorities. Their power is real, specific, and bounded.</p></div>'
+        }
+      ]
+    },
+    "cardinal-mapping": {
+      kicker: "Inspection • Cardinal-Financial Mapping",
+      title: "Direction is not decoration",
+      summary: "Cardinal direction identifies finance authority. The mapping is literal and load-bearing, not ornamental styling.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Literal mapping",
+          mini: "North, East, South, and West all mean something exact.",
+          html:
+            '<ul class="law-list"><li>North governs contract-class objects and binding control.</li><li>East governs receivable-class objects and inbound value.</li><li>South governs payable-class objects and outbound obligation.</li><li>West governs growth allocation and budgeted expansion.</li></ul>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Why mint heads fit",
+          mini: "Direction is carried by generation and descent.",
+          html:
+            '<div class="detail-card"><h4>Form fit</h4><p>The generation grammar makes the page read like active financial throughput. The objects behave like minted terminals moving through controlled heads into the vault instead of decorative badges floating in space.</p></div>'
+        }
+      ]
+    },
+    "routing-law": {
+      kicker: "Inspection • Retrieval and Routing",
+      title: "Stored objects do not move generically",
+      summary: "The Vault routes financial objects through defined lanes. Class and direction both govern handling, which preserves traceability and operational discipline.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Handling rule",
+          mini: "Known class. Known lane. Known authority.",
+          html:
+            '<div class="detail-card"><h4>Routing logic</h4><p>Objects enter under a defined financial class, then route to the corresponding cardinal governor under the parent Archcoin frame. This reduces confusion and preserves clean operating boundaries.</p></div>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Readback",
+          mini: "Parent and body remain stable across all routes.",
+          html:
+            '<ul class="law-list"><li>Archcoin remains the parent authority across all routing paths.</li><li>The Vault remains the master body across all routing paths.</li><li>Each governor receives only its correct class of burden.</li></ul>'
+        }
+      ]
+    },
+    "gyp-distinction": {
+      kicker: "Inspection • GYP Distinction",
+      title: "GYP is a governor, not a promise engine",
+      summary: "GYP handles growth allocation, forecast pressure, and bounded promotional deployment. It is not a guarantee surface and not a speculative upside claim.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Growth-allocation role",
+          mini: "Budgetary and directional, not magical.",
+          html:
+            '<div class="detail-card"><h4>GYP role</h4><p>GYP governs growth-allocation decisions, forecast-oriented pressure, and controlled budget deployment. It helps direct expansion without replacing the other financial lanes.</p></div>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Language discipline",
+          mini: "No false promise language.",
+          html:
+            '<ul class="law-list"><li>No guaranteed upside language.</li><li>No listing-story substitution.</li><li>No role confusion with contracts, receivables, or payables.</li><li>GYP remains one governor within the five-coin system.</li></ul>'
+        }
+      ]
+    },
+    "nonoverlap-status": {
+      kicker: "Inspection • Status and Non-Overlap",
+      title: "The hierarchy remains visible and clean",
+      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses generated descent into the vault pile.",
+      sections: [
+        {
+          label: "Bulletin 01",
+          title: "Current status",
+          mini: "Generation during choosing. Stillness during reading.",
+          html:
+            '<ul class="law-list"><li>Parent authority expressed: yes.</li><li>Vault body expressed: yes.</li><li>Cardinal financial mapping expressed: yes.</li><li>Archetype mint heads active: yes.</li><li>Growing vault pile active: yes.</li><li>Reading freeze state active: yes.</li></ul>'
+        },
+        {
+          label: "Bulletin 02",
+          title: "Non-overlap read",
+          mini: "Truth stays in HTML; motion stays in JS.",
+          html:
+            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript controls head dispense state, quarter-turn cylinder motion, falling-coin lifecycle, tap-to-open behavior, pile accumulation, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
+        }
+      ]
+    }
   };
 
-  function nowIso() {
-    try {
-      return new Date().toISOString();
-    } catch (e) {
-      return "";
+  var HEAD_POOLS = [
+    [
+      { key: "system-identity", label: "Identity", family: "coin", style: "coin" },
+      { key: "cardinal-coins", label: "Governors", family: "coin", style: "coin" }
+    ],
+    [
+      { key: "vault-overview", label: "Vault", family: "description", style: "description" },
+      { key: "nonoverlap-status", label: "Status", family: "description", style: "description" }
+    ],
+    [
+      { key: "cardinal-mapping", label: "Mapping", family: "info", style: "info" },
+      { key: "gyp-distinction", label: "GYP", family: "info", style: "info" }
+    ],
+    [
+      { key: "parent-authority", label: "Parent", family: "authority", style: "authority" },
+      { key: "routing-law", label: "Routing", family: "authority", style: "authority" }
+    ]
+  ];
+
+  var fieldShell = document.getElementById("field-shell");
+  var scene = document.getElementById("scene");
+  var headNodes = Array.prototype.slice.call(document.querySelectorAll(".tube-head"));
+  var controlNodes = Array.prototype.slice.call(document.querySelectorAll(".control-assembly"));
+  var fallField = document.getElementById("fall-field");
+  var pileCoins = document.getElementById("pile-coins");
+  var panelKicker = document.getElementById("panel-kicker");
+  var panelTitle = document.getElementById("panel-title");
+  var panelSummary = document.getElementById("panel-summary");
+  var panelClose = document.getElementById("panel-close");
+  var subbubbleList = document.getElementById("subbubble-list");
+
+  var runtime = {
+    rafId: 0,
+    sceneStart: performance.now(),
+    freezeTime: 0,
+    lastFrameTime: 0,
+    activeKey: null,
+    lastActiveButton: null,
+    activeCoins: [],
+    landed: [],
+    headState: [
+      { busy: false, cycle: 0, releaseAt: 0, unlockAt: 0 },
+      { busy: false, cycle: 0, releaseAt: 0, unlockAt: 0 },
+      { busy: false, cycle: 0, releaseAt: 0, unlockAt: 0 },
+      { busy: false, cycle: 0, releaseAt: 0, unlockAt: 0 }
+    ],
+    metrics: {
+      fallRect: null,
+      pileRect: null,
+      headX: [0, 0, 0, 0]
     }
-  }
-
-  function pushError(label, message) {
-    APP.errors.push({
-      label: String(label || "unknown"),
-      message: String(message || "unknown")
-    });
-  }
-
-  function pushWarning(message) {
-    APP.warnings.push(String(message || "unknown"));
-  }
-
-  function log(level, message, extra) {
-    var payload = {
-      t: nowIso(),
-      app: APP.NAME,
-      level: level,
-      message: message
-    };
-
-    if (extra && typeof extra === "object") {
-      payload.extra = extra;
-    }
-
-    try {
-      if (level === "error") {
-        console.error(payload);
-      } else if (level === "warn") {
-        console.warn(payload);
-      } else {
-        console.log(payload);
-      }
-    } catch (e) {}
-  }
-
-  function safeRun(label, fn, fallback) {
-    try {
-      return fn();
-    } catch (error) {
-      pushError(label, error && error.message ? error.message : String(error));
-      log("error", label + " failed", {
-        error: error && error.stack ? String(error.stack) : String(error)
-      });
-      return fallback;
-    }
-  }
+  };
 
   function clamp(value, min, max) {
-    if (value < min) return min;
-    if (value > max) return max;
-    return value;
+    return Math.max(min, Math.min(max, value));
   }
 
-  function rand(min, max) {
-    return min + Math.random() * (max - min);
+  function easeInCubic(t) {
+    var x = clamp(t, 0, 1);
+    return x * x * x;
   }
 
   function escapeHtml(value) {
@@ -101,769 +250,298 @@
       .replace(/'/g, "&#39;");
   }
 
-  function ensureBody() {
-    return safeRun("ensureBody", function () {
-      if (document.body) return document.body;
-      var body = document.createElement("body");
-      document.documentElement.appendChild(body);
-      return body;
-    }, null);
+  function buildSubbubbles(sections) {
+    return sections.map(function (section, index) {
+      return (
+        '<section class="subbubble' + (index === 0 ? " open" : "") + '">' +
+          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? "true" : "false") + '">' +
+            "<div>" +
+              '<div class="subbubble-label">' + escapeHtml(section.label) + "</div>" +
+              '<h3 class="subbubble-title">' + escapeHtml(section.title) + "</h3>" +
+              '<p class="subbubble-mini">' + escapeHtml(section.mini) + "</p>" +
+            "</div>" +
+            '<div class="subbubble-icon">' + (index === 0 ? "−" : "+") + "</div>" +
+          "</button>" +
+          '<div class="subbubble-panel"><div class="subbubble-panel-inner">' + section.html + "</div></div>" +
+        "</section>"
+      );
+    }).join("");
   }
 
-  function ensureRoot() {
-    return safeRun("ensureRoot", function () {
-      var body = ensureBody();
-      var root = null;
+  function wireSubbubbles() {
+    var bubbles = Array.prototype.slice.call(document.querySelectorAll(".subbubble"));
+    bubbles.forEach(function (bubble) {
+      var toggle = bubble.querySelector(".subbubble-toggle");
+      var icon = bubble.querySelector(".subbubble-icon");
+      if (!toggle) return;
 
-      if (!body) {
-        throw new Error("document.body unavailable");
-      }
+      toggle.addEventListener("click", function () {
+        var isOpen = bubble.classList.contains("open");
 
-      root =
-        document.getElementById("app") ||
-        document.getElementById("root") ||
-        document.querySelector("[data-app-root]");
-
-      if (!root) {
-        root = document.createElement("div");
-        root.id = "app";
-        root.setAttribute("data-app-root", "true");
-        body.appendChild(root);
-        pushWarning("No app root found; created #app.");
-      }
-
-      root.style.position = "relative";
-      root.style.width = "100%";
-      root.style.minHeight = "100vh";
-      root.style.overflow = "hidden";
-      root.style.background = "#020611";
-
-      return root;
-    }, null);
-  }
-
-  function ensureCanvas(root) {
-    return safeRun("ensureCanvas", function () {
-      var canvas = null;
-
-      if (!root) {
-        throw new Error("root unavailable");
-      }
-
-      canvas =
-        document.getElementById("scene") ||
-        document.getElementById("canvas") ||
-        root.querySelector("canvas");
-
-      if (!canvas) {
-        canvas = document.createElement("canvas");
-        canvas.id = "scene";
-        canvas.setAttribute("aria-label", "Euclidean universe display");
-        root.appendChild(canvas);
-      }
-
-      canvas.style.position = "absolute";
-      canvas.style.top = "0";
-      canvas.style.left = "0";
-      canvas.style.width = "100vw";
-      canvas.style.height = "100vh";
-      canvas.style.display = "block";
-      canvas.style.zIndex = "1";
-      canvas.style.background = "transparent";
-
-      return canvas;
-    }, null);
-  }
-
-  function ensureUiRoot(root) {
-    return safeRun("ensureUiRoot", function () {
-      var node = document.getElementById("home-ui");
-
-      if (!root) {
-        throw new Error("root unavailable");
-      }
-
-      if (!node) {
-        node = document.createElement("div");
-        node.id = "home-ui";
-        root.appendChild(node);
-        pushWarning("No #home-ui found; created dynamically.");
-      }
-
-      return node;
-    }, null);
-  }
-
-  function ensureHud(root) {
-    return safeRun("ensureHud", function () {
-      var hud = document.getElementById("boot-status");
-
-      if (!root) {
-        throw new Error("root unavailable");
-      }
-
-      if (!hud) {
-        hud = document.createElement("div");
-        hud.id = "boot-status";
-        root.appendChild(hud);
-      }
-
-      hud.setAttribute("role", "status");
-      hud.setAttribute("aria-live", "polite");
-      hud.style.display = "none";
-
-      return hud;
-    }, null);
-  }
-
-  function ensureFailNode(root) {
-    return safeRun("ensureFailNode", function () {
-      var node = document.getElementById("boot-fail");
-
-      if (!root) {
-        throw new Error("root unavailable");
-      }
-
-      if (!node) {
-        node = document.createElement("div");
-        node.id = "boot-fail";
-        node.className = "boot-fail";
-        node.setAttribute("aria-live", "polite");
-        root.appendChild(node);
-      }
-
-      return node;
-    }, null);
-  }
-
-  function ensureBannerNode(root) {
-    return safeRun("ensureBannerNode", function () {
-      var node = document.getElementById("boot-banner");
-
-      if (!root) {
-        throw new Error("root unavailable");
-      }
-
-      if (!node) {
-        node = document.createElement("div");
-        node.id = "boot-banner";
-        node.className = "boot-banner";
-        root.appendChild(node);
-      }
-
-      return node;
-    }, null);
-  }
-
-  function get2D(canvas) {
-    return safeRun("get2D", function () {
-      var ctx = canvas.getContext("2d");
-      if (!ctx) {
-        throw new Error("2D context unavailable");
-      }
-      return ctx;
-    }, null);
-  }
-
-  function sizeCanvas() {
-    return safeRun("sizeCanvas", function () {
-      var dpr = window.devicePixelRatio || 1;
-      var w;
-      var h;
-
-      if (dpr < 1) dpr = 1;
-      if (dpr > 2) dpr = 2;
-
-      w = Math.max(1, Math.floor(window.innerWidth * dpr));
-      h = Math.max(1, Math.floor(window.innerHeight * dpr));
-
-      APP.dpr = dpr;
-      APP.width = w;
-      APP.height = h;
-      APP.cx = w * 0.5;
-      APP.cy = h * 0.58;
-
-      APP.canvas.width = w;
-      APP.canvas.height = h;
-
-      APP.canvas.setAttribute("data-css-width", String(window.innerWidth));
-      APP.canvas.setAttribute("data-css-height", String(window.innerHeight));
-      APP.canvas.setAttribute("data-dpr", String(APP.dpr));
-
-      return true;
-    }, false);
-  }
-
-  function buildUniverse() {
-    return safeRun("buildUniverse", function () {
-      var i;
-      var starCount;
-      var baseRadius;
-      var orbitCount;
-      var radius;
-      var tilt;
-      var speed;
-      var angle;
-      var planetRadius;
-      var tone;
-
-      APP.stars = [];
-      APP.orbitBands = [];
-      APP.planets = [];
-
-      starCount = Math.max(90, Math.floor((window.innerWidth * window.innerHeight) / 14000));
-      baseRadius = Math.min(APP.width, APP.height) * 0.12;
-      orbitCount = 5;
-
-      for (i = 0; i < starCount; i += 1) {
-        APP.stars.push({
-          x: rand(0, APP.width),
-          y: rand(0, APP.height),
-          r: rand(0.5, 1.6) * APP.dpr,
-          a: rand(0.18, 0.95),
-          tw: rand(0.3, 1.4),
-          phase: rand(0, Math.PI * 2)
-        });
-      }
-
-      for (i = 0; i < orbitCount; i += 1) {
-        radius = baseRadius * (1.18 + i * 0.46);
-        tilt = 0.42 - i * 0.03;
-        speed = 0.00014 + i * 0.00005;
-        angle = rand(0, Math.PI * 2);
-        planetRadius = (6 + i * 2.5) * APP.dpr;
-
-        if (i === 0) tone = "rgba(188,205,255,0.95)";
-        else if (i === 1) tone = "rgba(220,210,190,0.90)";
-        else if (i === 2) tone = "rgba(165,195,235,0.92)";
-        else if (i === 3) tone = "rgba(210,185,150,0.88)";
-        else tone = "rgba(185,190,210,0.86)";
-
-        APP.orbitBands.push({
-          rx: radius,
-          ry: radius * tilt,
-          lineWidth: Math.max(1, Math.floor(APP.dpr * (1 + i * 0.15))),
-          alpha: 0.11 + i * 0.015
+        bubbles.forEach(function (other) {
+          other.classList.remove("open");
+          var otherToggle = other.querySelector(".subbubble-toggle");
+          var otherIcon = other.querySelector(".subbubble-icon");
+          if (otherToggle) otherToggle.setAttribute("aria-expanded", "false");
+          if (otherIcon) otherIcon.textContent = "+";
         });
 
-        APP.planets.push({
-          orbitIndex: i,
-          angle: angle,
-          speed: speed,
-          r: planetRadius,
-          color: tone
-        });
-      }
-
-      APP.universeReady = true;
-      return true;
-    }, false);
-  }
-
-  function drawBackground(ctx) {
-    var g = ctx.createLinearGradient(0, 0, 0, APP.height);
-    g.addColorStop(0, "#020611");
-    g.addColorStop(0.40, "#09182d");
-    g.addColorStop(1, "#132946");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, APP.width, APP.height);
-  }
-
-  function drawStarField(ctx, t) {
-    var i;
-    var s;
-    var alpha;
-    var cross;
-
-    for (i = 0; i < APP.stars.length; i += 1) {
-      s = APP.stars[i];
-      alpha = s.a * (0.72 + 0.28 * Math.sin(t * 0.001 * s.tw + s.phase));
-      alpha = clamp(alpha, 0.08, 1);
-
-      ctx.fillStyle = "rgba(255,255,255," + String(alpha) + ")";
-      ctx.beginPath();
-      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-      ctx.fill();
-
-      if (s.r > 1.2 * APP.dpr) {
-        cross = s.r * 2.4;
-        ctx.strokeStyle = "rgba(255,255,255," + String(alpha * 0.22) + ")";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(s.x - cross, s.y);
-        ctx.lineTo(s.x + cross, s.y);
-        ctx.moveTo(s.x, s.y - cross);
-        ctx.lineTo(s.x, s.y + cross);
-        ctx.stroke();
-      }
-    }
-  }
-
-  function drawSunGlow(ctx) {
-    var outer = Math.min(APP.width, APP.height) * 0.20;
-    var inner = Math.min(APP.width, APP.height) * 0.058;
-    var g = ctx.createRadialGradient(APP.cx, APP.cy, 0, APP.cx, APP.cy, outer);
-
-    g.addColorStop(0, "rgba(255,248,228,0.92)");
-    g.addColorStop(0.10, "rgba(255,235,180,0.65)");
-    g.addColorStop(0.22, "rgba(255,220,130,0.24)");
-    g.addColorStop(1, "rgba(255,200,100,0)");
-
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(APP.cx, APP.cy, outer, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.fillStyle = "rgba(255,246,220,0.96)";
-    ctx.beginPath();
-    ctx.arc(APP.cx, APP.cy, inner, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.strokeStyle = "rgba(255,255,255,0.12)";
-    ctx.lineWidth = Math.max(1, Math.floor(APP.dpr * 1.2));
-    ctx.beginPath();
-    ctx.arc(APP.cx, APP.cy, inner * 1.26, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  function drawOrbits(ctx) {
-    var i;
-    var orbit;
-
-    ctx.save();
-    ctx.translate(APP.cx, APP.cy);
-
-    for (i = 0; i < APP.orbitBands.length; i += 1) {
-      orbit = APP.orbitBands[i];
-      ctx.strokeStyle = "rgba(205,220,255," + String(orbit.alpha) + ")";
-      ctx.lineWidth = orbit.lineWidth;
-      ctx.beginPath();
-      ctx.ellipse(0, 0, orbit.rx, orbit.ry, 0, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawPlanets(ctx) {
-    var i;
-    var p;
-    var orbit;
-    var x;
-    var y;
-
-    for (i = 0; i < APP.planets.length; i += 1) {
-      p = APP.planets[i];
-      orbit = APP.orbitBands[p.orbitIndex];
-
-      x = APP.cx + Math.cos(p.angle) * orbit.rx;
-      y = APP.cy + Math.sin(p.angle) * orbit.ry;
-
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(x, y, p.r, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.strokeStyle = "rgba(255,255,255,0.14)";
-      ctx.lineWidth = Math.max(1, Math.floor(APP.dpr));
-      ctx.beginPath();
-      ctx.arc(x, y, p.r + 1.3 * APP.dpr, 0, Math.PI * 2);
-      ctx.stroke();
-    }
-  }
-
-  function drawDepthGrid(ctx) {
-    var left = APP.width * 0.12;
-    var right = APP.width * 0.88;
-    var top = APP.height * 0.14;
-    var bottom = APP.height * 0.88;
-    var i;
-    var y;
-    var x;
-    var rows = 5;
-    var cols = 5;
-
-    ctx.strokeStyle = "rgba(190,210,255,0.035)";
-    ctx.lineWidth = 1;
-
-    for (i = 0; i <= rows; i += 1) {
-      y = top + ((bottom - top) / rows) * i;
-      ctx.beginPath();
-      ctx.moveTo(left, y);
-      ctx.lineTo(right, y);
-      ctx.stroke();
-    }
-
-    for (i = 0; i <= cols; i += 1) {
-      x = left + ((right - left) / cols) * i;
-      ctx.beginPath();
-      ctx.moveTo(x, top);
-      ctx.lineTo(x, bottom);
-      ctx.stroke();
-    }
-  }
-
-  function updateSimulation(ts) {
-    var i;
-    var p;
-
-    for (i = 0; i < APP.planets.length; i += 1) {
-      p = APP.planets[i];
-      p.angle += p.speed * (16 + (ts % 3));
-    }
-  }
-
-  function buildPresentationState() {
-    return {
-      bannerText: APP.errors.length ? "Boot Degraded" : "Euclidean Universe Host",
-      title: "Diamond Gate Bridge — Euclidean Universe Entry",
-      subtitle:
-        "This host now renders only Euclidean forms. The runtime favors circles, ellipses, straight lines, and standard-orientation inspection surfaces. Symbolic diamonds and decorative fog masses have been removed from the scene contract.",
-      chips: [
-        { text: "Euclidean Only", strong: true },
-        { text: "Canvas First", strong: false },
-        { text: "Runtime Online", strong: APP.universeReady }
-      ],
-      actions: [
-        { text: "View Runtime Read", href: "#legend", strong: true },
-        { text: "Read Current Scope", href: "#scope", strong: false }
-      ],
-      legendRows: [
-        ["Entry Authority", "index.js"],
-        ["Geometry Rule", "Euclidean Only"],
-        ["Primary Surface", "Canvas First"],
-        ["Center Object", "Sun + Orbits + Planets"],
-        ["Field Density", "Sparse, Depth-First"],
-        ["Failure Surface", "Inline Boot Capture"]
-      ],
-      scopeRows: [
-        ["Host Layer", "Universe Field"],
-        ["Visual Mode", "Clean Euclidean Pass"],
-        ["Priority", "Structure Before Effects"],
-        ["Next Stretch", "System Multiplication"]
-      ],
-      inspectionText:
-        "Boot integrity stays primary. Euclidean composition replaces symbolic placeholder geometry. Secondary richness must degrade before orbit clarity, core visibility, or spatial legibility.",
-      runtimeSummary: {
-        state: APP.state,
-        stars: APP.stars.length,
-        orbits: APP.orbitBands.length,
-        planets: APP.planets.length,
-        geometry: "EUCLIDEAN_ONLY"
-      }
-    };
-  }
-
-  function renderHomeUi() {
-    return safeRun("renderHomeUi", function () {
-      var state;
-      var legendRowsHtml;
-      var scopeRowsHtml;
-      var chipsHtml;
-      var actionsHtml;
-      var statusHtml;
-
-      if (!APP.uiRoot) {
-        throw new Error("#home-ui unavailable");
-      }
-
-      state = buildPresentationState();
-
-      if (APP.bannerNode) {
-        APP.bannerNode.textContent = state.bannerText;
-      }
-
-      legendRowsHtml = state.legendRows
-        .map(function (row) {
-          return (
-            '<div class="legend-row"><span>' +
-            escapeHtml(row[0]) +
-            '</span><strong>' +
-            escapeHtml(row[1]) +
-            "</strong></div>"
-          );
-        })
-        .join("");
-
-      scopeRowsHtml = state.scopeRows
-        .map(function (row) {
-          return (
-            '<div class="scale-row"><span>' +
-            escapeHtml(row[0]) +
-            '</span><strong>' +
-            escapeHtml(row[1]) +
-            "</strong></div>"
-          );
-        })
-        .join("");
-
-      chipsHtml = state.chips
-        .map(function (chip) {
-          return (
-            '<div class="chip' +
-            (chip.strong ? " chip--strong" : "") +
-            '">' +
-            escapeHtml(chip.text) +
-            "</div>"
-          );
-        })
-        .join("");
-
-      actionsHtml = state.actions
-        .map(function (action) {
-          return (
-            '<a class="action' +
-            (action.strong ? " action--strong" : "") +
-            '" href="' +
-            escapeHtml(action.href) +
-            '">' +
-            escapeHtml(action.text) +
-            "</a>"
-          );
-        })
-        .join("");
-
-      statusHtml =
-        "<strong>Inspection Read:</strong> " +
-        escapeHtml(state.inspectionText) +
-        '<span class="inline-divider">|</span>' +
-        "<strong>State:</strong> " +
-        escapeHtml(state.runtimeSummary.state) +
-        '<span class="inline-divider">|</span>' +
-        "<strong>Stars:</strong> " +
-        escapeHtml(state.runtimeSummary.stars) +
-        '<span class="inline-divider">|</span>' +
-        "<strong>Orbits:</strong> " +
-        escapeHtml(state.runtimeSummary.orbits) +
-        '<span class="inline-divider">|</span>' +
-        "<strong>Planets:</strong> " +
-        escapeHtml(state.runtimeSummary.planets);
-
-      APP.uiRoot.innerHTML =
-        '<div class="panel title-block" id="title-block">' +
-          "<h1>" + escapeHtml(state.title) + "</h1>" +
-          "<p>" + escapeHtml(state.subtitle) + "</p>" +
-          '<div class="chip-row">' + chipsHtml + "</div>" +
-          '<div class="action-row">' + actionsHtml + "</div>" +
-        "</div>" +
-        '<div class="panel legend" id="legend">' +
-          "<h2>Runtime Read</h2>" +
-          legendRowsHtml +
-        "</div>" +
-        '<div class="panel scale-panel" id="scope">' +
-          "<h2>Current Scope</h2>" +
-          scopeRowsHtml +
-        "</div>" +
-        '<div class="panel status" id="status-panel">' +
-          statusHtml +
-        "</div>";
-
-      return true;
-    }, false);
-  }
-
-  function renderFrame(ts) {
-    safeRun("renderFrame", function () {
-      if (!APP.ctx) {
-        throw new Error("2D context missing");
-      }
-
-      updateSimulation(ts);
-      drawBackground(APP.ctx);
-      drawDepthGrid(APP.ctx);
-      drawStarField(APP.ctx, ts);
-      drawOrbits(APP.ctx);
-      drawSunGlow(APP.ctx);
-      drawPlanets(APP.ctx);
-      updateHud();
-    }, null);
-
-    APP.raf = requestAnimationFrame(renderFrame);
-  }
-
-  function updateHud() {
-    return safeRun("updateHud", function () {
-      var elapsed = Date.now() - APP.START_TS;
-      APP.hud.textContent =
-        "STATE=" + APP.state +
-        " | NAME=" + APP.NAME +
-        " | VERSION=" + APP.VERSION +
-        " | ELAPSED_MS=" + elapsed +
-        " | ERRORS=" + APP.errors.length +
-        " | WARNINGS=" + APP.warnings.length +
-        "\nUNIVERSE=" + (APP.universeReady ? "ONLINE" : "OFFLINE") +
-        " | STARS=" + APP.stars.length +
-        " | ORBITS=" + APP.orbitBands.length +
-        " | PLANETS=" + APP.planets.length +
-        " | GEOMETRY=EUCLIDEAN_ONLY";
-
-      renderHomeUi();
-    }, null);
-  }
-
-  function showBootFailure(message) {
-    return safeRun("showBootFailure", function () {
-      if (APP.failNode) {
-        APP.failNode.textContent = "BOOT FAILED\n" + String(message || "Unknown error");
-        APP.failNode.classList.add("is-visible");
-      }
-
-      if (APP.bannerNode) {
-        APP.bannerNode.textContent = "Boot Failed";
-      }
-    }, null);
-  }
-
-  function installResize() {
-    return safeRun("installResize", function () {
-      var resizeRaf = 0;
-
-      function onResize() {
-        if (resizeRaf) {
-          cancelAnimationFrame(resizeRaf);
+        if (!isOpen) {
+          bubble.classList.add("open");
+          toggle.setAttribute("aria-expanded", "true");
+          if (icon) icon.textContent = "−";
         }
-
-        resizeRaf = requestAnimationFrame(function () {
-          sizeCanvas();
-          buildUniverse();
-          updateHud();
-        });
-      }
-
-      window.addEventListener("resize", onResize, false);
-      window.addEventListener("orientationchange", onResize, false);
-    }, null);
-  }
-
-  function installGlobalErrorHooks() {
-    return safeRun("installGlobalErrorHooks", function () {
-      window.addEventListener("error", function (event) {
-        var message = "Unknown window error";
-
-        if (event) {
-          if (event.error && event.error.message) {
-            message = event.error.message;
-          } else if (event.message) {
-            message = event.message;
-          }
-        }
-
-        pushError("window.error", message);
-        APP.state = "DEGRADED";
-        updateHud();
-        showBootFailure(message);
-        log("error", "Unhandled window error", { message: message });
       });
-
-      window.addEventListener("unhandledrejection", function (event) {
-        var reason = "Unknown promise rejection";
-
-        if (event && typeof event.reason !== "undefined") {
-          if (event.reason && event.reason.message) {
-            reason = event.reason.message;
-          } else {
-            reason = String(event.reason);
-          }
-        }
-
-        pushError("unhandledrejection", reason);
-        APP.state = "DEGRADED";
-        updateHud();
-        showBootFailure(reason);
-        log("error", "Unhandled promise rejection", { reason: reason });
-      });
-    }, null);
-  }
-
-  function exposeState() {
-    return safeRun("exposeState", function () {
-      window.__INDEX_UNIVERSE__ = {
-        NAME: APP.NAME,
-        VERSION: APP.VERSION,
-        START_TS: APP.START_TS,
-        state: APP.state,
-        errors: APP.errors,
-        warnings: APP.warnings,
-        getSummary: function () {
-          return {
-            state: APP.state,
-            stars: APP.stars.length,
-            orbits: APP.orbitBands.length,
-            planets: APP.planets.length,
-            width: APP.width,
-            height: APP.height,
-            dpr: APP.dpr
-          };
-        },
-        getPresentationState: function () {
-          return buildPresentationState();
-        }
-      };
-    }, null);
-  }
-
-  function boot() {
-    APP.reducedMotion =
-      !!window.matchMedia &&
-      !!window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    APP.root = ensureRoot();
-    if (!APP.root) {
-      throw new Error("Unable to establish app root");
-    }
-
-    APP.canvas = ensureCanvas(APP.root);
-    if (!APP.canvas) {
-      throw new Error("Unable to establish canvas");
-    }
-
-    APP.uiRoot = ensureUiRoot(APP.root);
-    if (!APP.uiRoot) {
-      throw new Error("Unable to establish home-ui mount");
-    }
-
-    APP.hud = ensureHud(APP.root);
-    if (!APP.hud) {
-      throw new Error("Unable to establish HUD");
-    }
-
-    APP.failNode = ensureFailNode(APP.root);
-    APP.bannerNode = ensureBannerNode(APP.root);
-
-    APP.ctx = get2D(APP.canvas);
-    if (!APP.ctx) {
-      throw new Error("Unable to acquire 2D context");
-    }
-
-    sizeCanvas();
-    buildUniverse();
-    installResize();
-    installGlobalErrorHooks();
-    exposeState();
-
-    APP.state = APP.errors.length ? "DEGRADED" : "READY";
-    updateHud();
-
-    if (APP.raf) {
-      cancelAnimationFrame(APP.raf);
-    }
-    APP.raf = requestAnimationFrame(renderFrame);
-
-    log("info", "Euclidean universe boot completed", {
-      state: APP.state,
-      stars: APP.stars.length,
-      orbits: APP.orbitBands.length,
-      planets: APP.planets.length
     });
   }
 
-  function start() {
-    safeRun("start", boot, null);
+  function createCoinMarkup(definition, className) {
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = className || "coin";
+    button.setAttribute("data-key", definition.key);
+    button.setAttribute("data-family", definition.family);
+    button.setAttribute("data-style", definition.style);
+    button.setAttribute("aria-label", definition.label);
+
+    button.innerHTML =
+      '<div class="coin-shell">' +
+        '<div class="coin-rim"></div>' +
+        '<div class="coin-face"></div>' +
+        '<div class="coin-sigil"></div>' +
+        '<div class="coin-markers"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>' +
+      "</div>" +
+      '<div class="coin-label">' + escapeHtml(definition.label) + "</div>";
+
+    return button;
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, false);
-  } else {
-    start();
+  function updateMetrics() {
+    runtime.metrics.fallRect = fallField.getBoundingClientRect();
+    runtime.metrics.pileRect = pileCoins.getBoundingClientRect();
+    runtime.metrics.headX = headNodes.map(function (node) {
+      var rect = node.getBoundingClientRect();
+      return rect.left + rect.width * 0.5 - runtime.metrics.fallRect.left;
+    });
   }
+
+  function clearActiveCoinsHighlight() {
+    runtime.activeCoins.forEach(function (coin) {
+      coin.button.classList.remove("active");
+      coin.button.classList.remove("falling-open");
+    });
+  }
+
+  function openInspection(key, button) {
+    var data = DATA[key];
+    if (!data) return;
+
+    runtime.activeKey = key;
+    runtime.freezeTime = runtime.lastFrameTime ? runtime.lastFrameTime - runtime.sceneStart : 0;
+    runtime.lastActiveButton = button || null;
+
+    clearActiveCoinsHighlight();
+    if (button) {
+      button.classList.add("active");
+      button.classList.add("falling-open");
+    }
+
+    panelKicker.textContent = data.kicker;
+    panelTitle.textContent = data.title;
+    panelSummary.textContent = data.summary;
+    subbubbleList.innerHTML = buildSubbubbles(data.sections);
+    wireSubbubbles();
+    fieldShell.classList.add("reading");
+  }
+
+  function closeInspection() {
+    runtime.activeKey = null;
+    clearActiveCoinsHighlight();
+    fieldShell.classList.remove("reading");
+
+    if (runtime.lastActiveButton) {
+      runtime.lastActiveButton.focus({ preventScroll: true });
+    }
+  }
+
+  function getNextDefinition(headIndex) {
+    var state = runtime.headState[headIndex];
+    var pool = HEAD_POOLS[headIndex];
+    var definition = pool[state.cycle % pool.length];
+    state.cycle += 1;
+    return definition;
+  }
+
+  function createFallingCoin(headIndex, activeTime) {
+    var definition = getNextDefinition(headIndex);
+    var button = createCoinMarkup(definition, "coin");
+    fallField.appendChild(button);
+
+    var coin = {
+      definition: definition,
+      button: button,
+      headIndex: headIndex,
+      landed: false,
+      startedAt: activeTime,
+      dropMs: 2800,
+      wobbleSeed: headIndex * 1.37 + runtime.headState[headIndex].cycle * 0.83 + 1.1
+    };
+
+    button.addEventListener("click", function () {
+      openInspection(definition.key, button);
+    });
+
+    runtime.activeCoins.push(coin);
+  }
+
+  function releaseHead(headIndex, activeTime) {
+    var state = runtime.headState[headIndex];
+    var control = controlNodes[headIndex];
+    if (!state || !control || state.busy || runtime.activeKey) return;
+
+    state.busy = true;
+    state.releaseAt = activeTime + 120;
+    state.unlockAt = activeTime + 320;
+    control.classList.add("turning");
+  }
+
+  function updateHeadState(activeTime) {
+    runtime.headState.forEach(function (state, headIndex) {
+      var control = controlNodes[headIndex];
+      if (!state.busy) return;
+
+      if (state.releaseAt && activeTime >= state.releaseAt) {
+        createFallingCoin(headIndex, activeTime);
+        state.releaseAt = 0;
+      }
+
+      if (state.unlockAt && activeTime >= state.unlockAt) {
+        state.busy = false;
+        state.unlockAt = 0;
+        if (control) control.classList.remove("turning");
+      }
+    });
+  }
+
+  function createPileClone(coin, x, y, scale, rotation) {
+    var clone = createCoinMarkup(coin.definition, "coin");
+    clone.setAttribute("aria-hidden", "true");
+    clone.tabIndex = -1;
+    clone.style.pointerEvents = "none";
+    clone.style.opacity = "0.98";
+    clone.style.left = x + "px";
+    clone.style.top = y + "px";
+    clone.style.transform =
+      "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ") rotate(" + rotation + "deg)";
+    pileCoins.appendChild(clone);
+    runtime.landed.push(clone);
+  }
+
+  function settleCoin(coin, activeTime) {
+    if (coin.landed) return;
+    coin.landed = true;
+    coin.button.remove();
+
+    var pileWidth = runtime.metrics.pileRect.width;
+    var pileHeight = runtime.metrics.pileRect.height;
+    var landedIndex = runtime.landed.length;
+    var row = Math.floor(landedIndex / 4);
+    var slot = landedIndex % 4;
+    var center = pileWidth * 0.5;
+    var slotOffset = (slot - 1.5) * 32;
+    var headBias = (coin.headIndex - 1.5) * 18;
+    var x = center + slotOffset + headBias + Math.sin(activeTime * 0.001 + coin.wobbleSeed) * 4;
+    var y = pileHeight * 0.68 - row * 16 + coin.headIndex * 3;
+
+    var scale = 0.74 + row * 0.01;
+    var rotation = -12 + slot * 5 + coin.headIndex * 2;
+
+    createPileClone(coin, x, y, scale, rotation);
+  }
+
+  function updateCoin(coin, activeTime) {
+    if (coin.landed) return;
+
+    var elapsed = activeTime - coin.startedAt;
+    var progress = clamp(elapsed / coin.dropMs, 0, 1);
+    var eased = easeInCubic(progress);
+
+    var startY = -120;
+    var endY = runtime.metrics.fallRect.height + 46;
+    var xBase = runtime.metrics.headX[coin.headIndex] || runtime.metrics.fallRect.width * 0.5;
+
+    var sway = Math.sin(progress * Math.PI * 1.14 + coin.wobbleSeed) * 12;
+    var drift = Math.cos(activeTime * 0.0007 + coin.wobbleSeed) * 4;
+    var x = xBase + sway + drift;
+    var y = startY + (endY - startY) * eased;
+
+    var depth = 1 - progress;
+    var scale = 0.90 + depth * 0.15;
+    var opacity = 0.20 + depth * 0.42 + (1 - Math.abs(0.5 - progress) * 2) * 0.24;
+    if (progress < 0.06) opacity *= progress / 0.06;
+    if (progress > 0.96) opacity *= (1 - progress) / 0.04;
+    opacity = clamp(opacity, 0, 1);
+
+    coin.button.style.display = "block";
+    coin.button.style.opacity = String(opacity);
+    coin.button.style.zIndex = String((coin.button.classList.contains("falling-open") ? 180 : 40) + Math.round(depth * 60));
+    coin.button.style.transform =
+      "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ")";
+    coin.button.style.filter = "brightness(" + (0.92 + depth * 0.16) + ")";
+
+    var shell = coin.button.querySelector(".coin-shell");
+    if (shell) {
+      var rotateY = Math.sin(activeTime * 0.001 + coin.wobbleSeed) * 10;
+      var rotateX = 66 + Math.cos(activeTime * 0.0009 + coin.wobbleSeed) * 4;
+      var rotateZ = Math.sin(activeTime * 0.0007 + coin.wobbleSeed) * 3;
+      shell.style.transform =
+        "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) rotateZ(" + rotateZ + "deg)";
+    }
+
+    if (progress >= 1) {
+      settleCoin(coin, activeTime);
+    }
+  }
+
+  function animate(now) {
+    runtime.lastFrameTime = now;
+    var activeTime = runtime.activeKey ? runtime.freezeTime : now - runtime.sceneStart;
+
+    if (!runtime.activeKey) {
+      updateHeadState(activeTime);
+    }
+
+    runtime.activeCoins.forEach(function (coin) {
+      updateCoin(coin, activeTime);
+    });
+
+    runtime.activeCoins = runtime.activeCoins.filter(function (coin) {
+      return !coin.landed;
+    });
+
+    runtime.rafId = requestAnimationFrame(animate);
+  }
+
+  controlNodes.forEach(function (control, index) {
+    control.addEventListener("click", function () {
+      releaseHead(index, runtime.lastFrameTime ? runtime.lastFrameTime - runtime.sceneStart : 0);
+    });
+  });
+
+  panelClose.addEventListener("click", closeInspection);
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && fieldShell.classList.contains("reading")) {
+      closeInspection();
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    updateMetrics();
+  });
+
+  updateMetrics();
+
+  if (runtime.rafId) cancelAnimationFrame(runtime.rafId);
+  runtime.rafId = requestAnimationFrame(animate);
 })();

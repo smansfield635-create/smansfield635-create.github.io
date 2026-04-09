@@ -1,4 +1,3 @@
-DESTINATION: /gauges/index.html
 <!doctype html>
 <html lang="en">
 <head>
@@ -9,49 +8,97 @@ DESTINATION: /gauges/index.html
 :root{
   --bg:#05070b;
   --bg2:#08101a;
+  --bg3:#0d1623;
   --panel:#0b0f16;
   --panel2:#101722;
+  --panel3:#121c2a;
   --line:#1f2a36;
+  --line2:rgba(127,255,212,.16);
   --text:#e8f6ff;
   --muted:rgba(232,246,255,.68);
+  --muted2:rgba(232,246,255,.48);
   --accent:#7fffd4;
   --accent2:#6fe7ff;
   --warn:#ffd27a;
   --bad:#ff7a7a;
   --good:#7fffd4;
   --shadow:0 10px 30px rgba(0,0,0,.28);
+  --shadow2:0 18px 60px rgba(0,0,0,.34);
   --safe-top:env(safe-area-inset-top,0px);
   --safe-right:env(safe-area-inset-right,0px);
   --safe-bottom:env(safe-area-inset-bottom,0px);
   --safe-left:env(safe-area-inset-left,0px);
+  --radius:14px;
+  --radius2:18px;
 }
 *{box-sizing:border-box}
 html,body{
   margin:0;
   min-height:100%;
   background:
-    radial-gradient(circle at 50% 0%, rgba(111,231,255,.06), transparent 28%),
-    linear-gradient(180deg,var(--bg2),var(--bg));
+    radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
+    radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
+    linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
   color:var(--text);
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
-body{min-height:100vh}
+body{min-height:100vh;overflow-x:hidden}
+.hostGlow{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(127,255,212,.045), transparent 18%),
+    radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
+    radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
+  filter:blur(10px);
+}
+.gridLines{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+}
 .wrap{
+  position:relative;
+  z-index:1;
   max-width:1560px;
   margin:0 auto;
   padding:calc(12px + var(--safe-top)) calc(12px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(12px + var(--safe-left));
+}
+.hostbar{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+  gap:10px;
+  margin-bottom:10px;
+}
+.topline,
+.hostCard,
+.kpi,
+.panel,
+.chartCard,
+.footer{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
 }
 .topline{
   display:flex;
   justify-content:space-between;
   align-items:center;
   gap:10px;
-  margin-bottom:10px;
   padding:10px 12px;
-  border:1px solid var(--line);
-  border-radius:12px;
-  background:linear-gradient(180deg,var(--panel),var(--panel2));
-  box-shadow:var(--shadow);
+  min-height:62px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
+    radial-gradient(circle at 18% 18%, rgba(127,255,212,.05), transparent 26%);
 }
 .topline .title{
   margin:0;
@@ -68,21 +115,71 @@ body{min-height:100vh}
   font-size:11px;
   white-space:nowrap;
 }
+.hostCard{
+  padding:12px 14px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.94),rgba(16,23,34,.96)),
+    radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
+}
+.hostCard .eyebrow{
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.hostCard .hostTitle{
+  font-size:20px;
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:.01em;
+  margin:0 0 8px 0;
+}
+.hostCard .hostText{
+  font-size:12px;
+  line-height:1.6;
+  color:var(--muted);
+  margin:0;
+}
 .topbar{
   display:grid;
   grid-template-columns:repeat(10,minmax(0,1fr));
   gap:8px;
   margin-bottom:10px;
 }
-.kpi,.panel,.chartCard,.footer{
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,var(--panel),var(--panel2));
-  border-radius:12px;
-  box-shadow:var(--shadow);
+.kpi{
+  padding:10px;
+  min-height:82px;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 50% 0%, rgba(127,255,212,.04), transparent 48%);
 }
-.kpi{padding:10px;min-height:72px}
-.k{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
-.v{font-size:18px;font-weight:800;line-height:1.1;word-break:break-word}
+.kpi::before{
+  content:"";
+  position:absolute;
+  left:10px;
+  right:10px;
+  top:0;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg, transparent, rgba(127,255,212,.36), transparent);
+  opacity:.9;
+}
+.k{
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.v{
+  font-size:18px;
+  font-weight:800;
+  line-height:1.1;
+  word-break:break-word;
+}
 .good{color:var(--good)}
 .warn{color:var(--warn)}
 .bad{color:var(--bad)}
@@ -91,7 +188,12 @@ body{min-height:100vh}
   grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
 }
-.panel{padding:10px}
+.panel{
+  padding:10px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 50% 0%, rgba(111,231,255,.025), transparent 36%);
+}
 .title{
   font-size:12px;
   font-weight:800;
@@ -108,17 +210,30 @@ body{min-height:100vh}
   grid-template-columns:minmax(0,1fr) minmax(0,1fr);
   gap:10px;
   align-items:start;
-  padding:2px 0;
+  padding:4px 0;
 }
-.row .rk{font-size:11px;color:var(--muted)}
-.row .rv{font-size:12px;text-align:right;word-break:break-word}
+.row .rk{
+  font-size:11px;
+  color:var(--muted);
+}
+.row .rv{
+  font-size:12px;
+  text-align:right;
+  word-break:break-word;
+  color:var(--text);
+}
 .chartGrid{
   display:grid;
   grid-template-columns:repeat(3,minmax(0,1fr));
   gap:10px;
   margin-top:10px;
 }
-.chartCard{padding:10px}
+.chartCard{
+  padding:10px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 50% 0%, rgba(127,255,212,.03), transparent 40%);
+}
 .chartTitle{
   font-size:11px;
   font-weight:800;
@@ -132,14 +247,18 @@ canvas{
   width:100%;
   height:140px;
   border:1px solid var(--line);
-  border-radius:8px;
-  background:#070b12;
+  border-radius:10px;
+  background:
+    linear-gradient(180deg,#070b12,#09101a);
 }
 .footer{
   margin-top:10px;
-  padding:10px;
+  padding:10px 12px;
   font-size:11px;
   color:var(--muted);
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 12% 18%, rgba(127,255,212,.025), transparent 18%);
 }
 .pre{white-space:pre-wrap;word-break:break-word}
 .bootFail{
@@ -156,6 +275,7 @@ canvas{
 }
 .bootFail.is-visible{display:block}
 @media (max-width:1280px){
+  .hostbar{grid-template-columns:1fr}
   .topbar{grid-template-columns:repeat(5,minmax(0,1fr))}
   .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .chartGrid{grid-template-columns:1fr}
@@ -164,14 +284,26 @@ canvas{
   .topline{flex-direction:column;align-items:flex-start}
   .topbar{grid-template-columns:repeat(2,minmax(0,1fr))}
   .grid{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+  .row .rv{text-align:left}
 }
 </style>
 </head>
 <body>
+<div class="hostGlow" aria-hidden="true"></div>
+<div class="gridLines" aria-hidden="true"></div>
+
 <div class="wrap">
-  <div class="topline">
-    <div class="title">Diagnostic Gauges</div>
-    <div class="stamp">GAUGES G4 · DIRECT AUTHORITY · NO PARENT STACK</div>
+  <div class="hostbar">
+    <div class="topline">
+      <div class="title">Diagnostic Gauges</div>
+      <div class="stamp">GAUGES G5 · NEXT GENERATION HOST · DIRECT AUTHORITY</div>
+    </div>
+    <section class="hostCard" aria-label="Host read">
+      <div class="eyebrow">Structure before effects</div>
+      <h1 class="hostTitle">Euclidean host, signal windows, direct receipts.</h1>
+      <p class="hostText">This renewed gauges surface treats geometry as the stable host and charts, metrics, and classification as the signal layer. Runtime, render, and instruments remain explicit and separately diagnosable.</p>
+    </section>
   </div>
 
   <div class="topbar">
@@ -259,10 +391,10 @@ canvas{
 </div>
 
 <script type="module">
-const BUILD_STAMP = "GAUGES_G4_DIRECT";
+const BUILD_STAMP = "GAUGES_G5_NEXT_GENERATION_HOST";
 const HISTORY_MAX = 240;
 const REFRESH_MS = 250;
-const CACHE_BUST = "g4";
+const CACHE_BUST = "g5";
 const RUNTIME_MODULE_PATH = "/world/runtime.js?v=" + CACHE_BUST;
 const RENDER_MODULE_PATH = "/world/render.js?v=" + CACHE_BUST;
 const INSTRUMENTS_MODULE_PATH = "/assets/instruments.js?v=" + CACHE_BUST;
@@ -336,7 +468,10 @@ function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
   const w = canvas.width;
   const h = canvas.height;
   ctx.clearRect(0,0,w,h);
-  ctx.fillStyle="#070b12";
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,"#0a1019");
+  grad.addColorStop(1,"#070b12");
+  ctx.fillStyle=grad;
   ctx.fillRect(0,0,w,h);
   ctx.strokeStyle="#1f2a36";
   ctx.lineWidth=1;

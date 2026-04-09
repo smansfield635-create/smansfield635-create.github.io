@@ -153,4 +153,4 @@ boot().catch(function (error) {
     "INDEX BOOT FAILED\n" +
     (error instanceof Error ? (error.stack || error.message) : String(error))
   );
-})
+});

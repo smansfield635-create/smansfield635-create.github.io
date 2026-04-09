@@ -25,7 +25,7 @@
           title: "Why the motion exists",
           mini: "Motion is for choosing, not for reading.",
           html:
-            '<div class="detail-card"><h4>Interaction law</h4><p>The field now reads as an ascending corridor rather than a locked orbital surface. Each object rises through a controlled launch lane so the system feels directional, routed, and alive instead of trapped in one Euclidean ring.</p></div>'
+            '<div class="detail-card"><h4>Interaction law</h4><p>The field now reads as four active launch corridors. Each path carries its own family of coin-objects upward through a controlled route so the system feels directional, routed, and alive instead of trapped in one Euclidean ring.</p></div>'
         }
       ]
     },
@@ -130,10 +130,10 @@
         },
         {
           label: "Bulletin 02",
-          title: "Why launch lanes fit",
+          title: "Why launch paths fit",
           mini: "Direction is carried by ascent and traffic.",
           html:
-            '<div class="detail-card"><h4>Form fit</h4><p>The new upward-launch grammar makes the page read like a live corridor system. The objects behave more like active terminals moving through a controlled path than bodies trapped on a decorative ring.</p></div>'
+            '<div class="detail-card"><h4>Form fit</h4><p>The upward launch grammar makes the page read like a live corridor system. The objects behave like active terminals moving through path-class routes rather than bodies trapped on a decorative ring.</p></div>'
         }
       ]
     },
@@ -194,7 +194,7 @@
     "nonoverlap-status": {
       kicker: "Inspection • Status and Non-Overlap",
       title: "The hierarchy remains visible and clean",
-      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses controlled upward motion instead of an imposed orbital grid.",
+      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses controlled path launches instead of an imposed orbital grid.",
       sections: [
         {
           label: "Bulletin 01",
@@ -205,7 +205,7 @@
             '<li>Parent authority expressed: yes.</li>' +
             '<li>Vault body expressed: yes.</li>' +
             '<li>Cardinal financial mapping expressed: yes.</li>' +
-            '<li>Ascending launch field active: yes.</li>' +
+            '<li>Path-class launch field active: yes.</li>' +
             '<li>Reading freeze state active: yes.</li>' +
             '<li>Inner disclosure bubbles available: yes.</li>' +
             '</ul>'
@@ -215,7 +215,7 @@
           title: "Non-overlap read",
           mini: "Truth stays in HTML; motion stays in JS.",
           html:
-            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript only controls launch timing, vertical routing, cinematic overlap, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
+            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript controls path timing, grouped launch sequencing, cinematic overlap, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
         }
       ]
     }
@@ -223,9 +223,8 @@
 
   var fieldShell = document.getElementById("field-shell");
   var scene = document.getElementById("scene");
-  var sceneLayer = document.getElementById("scene-layer");
-  var orbitRings = Array.prototype.slice.call(document.querySelectorAll(".orbit-ring"));
   var nodes = Array.prototype.slice.call(document.querySelectorAll(".node"));
+  var orbitRings = Array.prototype.slice.call(document.querySelectorAll(".orbit-ring"));
   var panelKicker = document.getElementById("panel-kicker");
   var panelTitle = document.getElementById("panel-title");
   var panelSummary = document.getElementById("panel-summary");
@@ -239,22 +238,81 @@
   var sceneStart = performance.now();
   var rafId = null;
 
-  var LANE_CONFIG = {
-    laneA: { x: 0.18, sway: 14, tilt: -12, scaleBias: 0.10, launchDelay: 0 },
-    laneB: { x: 0.39, sway: 18, tilt: -6, scaleBias: 0.16, launchDelay: 1200 },
-    laneC: { x: 0.63, sway: 18, tilt: 6, scaleBias: 0.18, launchDelay: 2400 },
-    laneD: { x: 0.84, sway: 14, tilt: 12, scaleBias: 0.12, launchDelay: 3600 }
+  var PATH_FAMILY = {
+    coin: {
+      rimGlow: 1.18,
+      faceBrightness: 1.04,
+      spinBiasY: 0,
+      labelOffsetY: 0
+    },
+    description: {
+      rimGlow: 1.00,
+      faceBrightness: 1.00,
+      spinBiasY: -5,
+      labelOffsetY: 2
+    },
+    info: {
+      rimGlow: 0.94,
+      faceBrightness: 0.98,
+      spinBiasY: 6,
+      labelOffsetY: 3
+    },
+    authority: {
+      rimGlow: 1.24,
+      faceBrightness: 1.08,
+      spinBiasY: 2,
+      labelOffsetY: -1
+    }
+  };
+
+  var PATHS = {
+    coin: {
+      id: "coin",
+      xBase: 0.18,
+      xAmp: 0.10,
+      tilt: -18,
+      curvature: 0.95,
+      travelMs: 14200,
+      staggerMs: 1650
+    },
+    description: {
+      id: "description",
+      xBase: 0.40,
+      xAmp: 0.08,
+      tilt: -7,
+      curvature: 1.08,
+      travelMs: 14800,
+      staggerMs: 1750
+    },
+    info: {
+      id: "info",
+      xBase: 0.63,
+      xAmp: 0.08,
+      tilt: 7,
+      curvature: 1.04,
+      travelMs: 14500,
+      staggerMs: 1725
+    },
+    authority: {
+      id: "authority",
+      xBase: 0.84,
+      xAmp: 0.10,
+      tilt: 18,
+      curvature: 0.92,
+      travelMs: 15000,
+      staggerMs: 1825
+    }
   };
 
   var OBJECT_CONFIG = {
-    "system-identity":   { lane: "laneA", cycleMs: 15000, phaseMs: 0,    spinSpeed: 0.00048, bobAmp: 8,  yBias: 0 },
-    "parent-authority":  { lane: "laneB", cycleMs: 14500, phaseMs: 2200, spinSpeed: 0.00052, bobAmp: 10, yBias: -30 },
-    "vault-overview":    { lane: "laneC", cycleMs: 14800, phaseMs: 4200, spinSpeed: 0.00046, bobAmp: 8,  yBias: 20 },
-    "cardinal-coins":    { lane: "laneD", cycleMs: 15200, phaseMs: 6400, spinSpeed: 0.00050, bobAmp: 9,  yBias: -10 },
-    "cardinal-mapping":  { lane: "laneA", cycleMs: 15400, phaseMs: 7600, spinSpeed: 0.00049, bobAmp: 8,  yBias: 14 },
-    "routing-law":       { lane: "laneB", cycleMs: 14900, phaseMs: 9200, spinSpeed: 0.00054, bobAmp: 11, yBias: -14 },
-    "gyp-distinction":   { lane: "laneC", cycleMs: 14600, phaseMs: 10800, spinSpeed: 0.00051, bobAmp: 9, yBias: 24 },
-    "nonoverlap-status": { lane: "laneD", cycleMs: 15100, phaseMs: 12600, spinSpeed: 0.00047, bobAmp: 8,  yBias: -24 }
+    "system-identity":   { pathId: "coin",        order: 0, coinStyle: "coin",        yBias: 12,  scaleBias: 0.08, spinSpeed: 0.00044, bobAmp: 6 },
+    "parent-authority":  { pathId: "authority",   order: 0, coinStyle: "authority",   yBias: -18, scaleBias: 0.14, spinSpeed: 0.00048, bobAmp: 7 },
+    "vault-overview":    { pathId: "description", order: 0, coinStyle: "description", yBias: 10,  scaleBias: 0.10, spinSpeed: 0.00043, bobAmp: 6 },
+    "cardinal-coins":    { pathId: "coin",        order: 1, coinStyle: "coin",        yBias: -14, scaleBias: 0.09, spinSpeed: 0.00045, bobAmp: 6 },
+    "cardinal-mapping":  { pathId: "info",        order: 0, coinStyle: "info",        yBias: 0,   scaleBias: 0.10, spinSpeed: 0.00046, bobAmp: 6 },
+    "routing-law":       { pathId: "authority",   order: 1, coinStyle: "authority",   yBias: 14,  scaleBias: 0.12, spinSpeed: 0.00049, bobAmp: 7 },
+    "gyp-distinction":   { pathId: "info",        order: 1, coinStyle: "info",        yBias: -12, scaleBias: 0.10, spinSpeed: 0.00047, bobAmp: 6 },
+    "nonoverlap-status": { pathId: "description", order: 1, coinStyle: "description", yBias: 18,  scaleBias: 0.11, spinSpeed: 0.00044, bobAmp: 6 }
   };
 
   var SCENE = {
@@ -279,8 +337,9 @@
     return 1 - Math.pow(1 - x, 3);
   }
 
-  function smoothPulse(t) {
-    return Math.sin(t * Math.PI);
+  function easeInOutSine(t) {
+    var x = clamp(t, 0, 1);
+    return -(Math.cos(Math.PI * x) - 1) / 2;
   }
 
   function escapeHtml(value) {
@@ -295,19 +354,19 @@
   function buildSubbubbles(sections) {
     return sections.map(function (section, index) {
       return (
-        '<section class="subbubble' + (index === 0 ? ' open' : '') + '">' +
-          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? 'true' : 'false') + '">' +
-            '<div>' +
-              '<div class="subbubble-label">' + escapeHtml(section.label) + '</div>' +
-              '<h3 class="subbubble-title">' + escapeHtml(section.title) + '</h3>' +
-              '<p class="subbubble-mini">' + escapeHtml(section.mini) + '</p>' +
-            '</div>' +
-            '<div class="subbubble-icon">' + (index === 0 ? '−' : '+') + '</div>' +
-          '</button>' +
+        '<section class="subbubble' + (index === 0 ? " open" : "") + '">' +
+          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? "true" : "false") + '">' +
+            "<div>" +
+              '<div class="subbubble-label">' + escapeHtml(section.label) + "</div>" +
+              '<h3 class="subbubble-title">' + escapeHtml(section.title) + "</h3>" +
+              '<p class="subbubble-mini">' + escapeHtml(section.mini) + "</p>" +
+            "</div>" +
+            '<div class="subbubble-icon">' + (index === 0 ? "−" : "+") + "</div>" +
+          "</button>" +
           '<div class="subbubble-panel">' +
-            '<div class="subbubble-panel-inner">' + section.html + '</div>' +
-          '</div>' +
-        '</section>'
+            '<div class="subbubble-panel-inner">' + section.html + "</div>" +
+          "</div>" +
+        "</section>"
       );
     }).join("");
   }
@@ -340,86 +399,159 @@
     });
   }
 
+  function updateSceneMetrics() {
+    var rect = scene.getBoundingClientRect();
+    SCENE.width = rect.width;
+    SCENE.height = rect.height;
+    SCENE.topBound = -200;
+    SCENE.bottomBound = rect.height + 170;
+    SCENE.activeHeight = SCENE.bottomBound - SCENE.topBound;
+  }
+
+  function hideOrbitSurface() {
+    orbitRings.forEach(function (ring) {
+      ring.style.display = "none";
+      ring.style.opacity = "0";
+    });
+  }
+
+  function applyCoinVisualIdentity(node, coinStyle, objectIndex) {
+    var family = PATH_FAMILY[coinStyle] || PATH_FAMILY.coin;
+    var face = node.querySelector(".diamond-face");
+    var core = node.querySelector(".diamond-core");
+    var edgeSpans = Array.prototype.slice.call(node.querySelectorAll(".diamond-edge span"));
+    var points = Array.prototype.slice.call(node.querySelectorAll(".cardinal-points i"));
+    var label = node.querySelector(".node-label");
+
+    if (face) {
+      if (coinStyle === "authority") {
+        face.style.background =
+          "linear-gradient(135deg, rgba(255,140,90,.30), rgba(255,228,163,.24) 38%, rgba(94,168,255,.22) 100%)";
+      } else if (coinStyle === "info") {
+        face.style.background =
+          "linear-gradient(135deg, rgba(120,160,255,.24), rgba(255,228,163,.16) 40%, rgba(94,168,255,.34) 100%)";
+      } else if (coinStyle === "description") {
+        face.style.background =
+          "linear-gradient(135deg, rgba(255,109,109,.22), rgba(255,228,163,.18) 40%, rgba(160,200,255,.24) 100%)";
+      } else {
+        face.style.background =
+          "linear-gradient(135deg, rgba(255,109,109,.30), rgba(255,228,163,.20) 40%, rgba(94,168,255,.28) 100%)";
+      }
+
+      face.style.boxShadow =
+        "inset 0 0 0 1px rgba(255,248,224,.08), 0 0 " +
+        (24 * family.rimGlow) +
+        "px rgba(94,168,255,.16), 0 0 " +
+        (20 * family.rimGlow) +
+        "px rgba(255,109,109,.12)";
+      face.style.filter = "brightness(" + family.faceBrightness + ")";
+    }
+
+    if (core) {
+      var coreScale = 1 + (objectIndex % 3) * 0.04;
+      core.style.inset = (29 - objectIndex % 2) + "%";
+      core.style.transform = "scale(" + coreScale + ")";
+    }
+
+    edgeSpans.forEach(function (span, spanIndex) {
+      span.style.opacity = String(0.62 + ((objectIndex + spanIndex) % 3) * 0.08);
+    });
+
+    points.forEach(function (point, pointIndex) {
+      point.style.transform += " scale(" + (1 + ((pointIndex + objectIndex) % 2) * 0.08) + ")";
+    });
+
+    if (label) {
+      label.style.transform = "translateY(" + family.labelOffsetY + "px)";
+    }
+  }
+
   function initSceneObjects() {
     SCENE.objects = nodes.map(function (node, index) {
       var key = node.getAttribute("data-panel");
       var config = OBJECT_CONFIG[key];
-      var lane = LANE_CONFIG[config.lane];
+      var path = PATHS[config.pathId];
+      var coinStyle = config.coinStyle || config.pathId;
       var button = node.querySelector(".node-button");
+
+      applyCoinVisualIdentity(node, coinStyle, index);
 
       return {
         index: index,
         key: key,
         node: node,
         button: button,
-        lane: lane,
-        cycleMs: config.cycleMs,
-        phaseMs: config.phaseMs,
+        path: path,
+        pathId: path.id,
+        coinStyle: coinStyle,
+        order: config.order,
+        yBias: config.yBias,
+        scaleBias: config.scaleBias,
         spinSpeed: config.spinSpeed,
-        bobAmp: config.bobAmp,
-        yBias: config.yBias
+        bobAmp: config.bobAmp
       };
     });
   }
 
-  function updateSceneMetrics() {
-    var rect = scene.getBoundingClientRect();
-    SCENE.width = rect.width;
-    SCENE.height = rect.height;
-    SCENE.topBound = -190;
-    SCENE.bottomBound = rect.height + 160;
-    SCENE.activeHeight = SCENE.bottomBound - SCENE.topBound;
+  function getPathProgress(object, time) {
+    var offset = object.path.staggerMs * object.order;
+    var raw = (time + offset) % object.path.travelMs;
+    if (raw < 0) raw += object.path.travelMs;
+    return raw / object.path.travelMs;
   }
 
-  function hideEuclideanSurface() {
-    orbitRings.forEach(function (ring) {
-      ring.style.opacity = "0";
-      ring.style.display = "none";
-    });
-  }
+  function getPathPosition(object, progress, time) {
+    var eased = easeOutCubic(progress);
+    var y = lerp(SCENE.bottomBound, SCENE.topBound, eased);
 
-  function getLaunchProgress(object, time) {
-    var laneDelay = object.lane.launchDelay || 0;
-    var cycle = object.cycleMs;
-    var phase = object.phaseMs + laneDelay;
-    var raw = (time + phase) % cycle;
-    if (raw < 0) raw += cycle;
-    return raw / cycle;
+    var curvature = Math.sin(progress * Math.PI) * object.path.curvature;
+    var lateral =
+      Math.sin(progress * Math.PI * 1.05 + object.index * 0.35) *
+      object.path.xAmp *
+      SCENE.width *
+      curvature;
+
+    var pathOscillation =
+      Math.cos(time * 0.00042 + object.order * 0.9 + object.index * 0.21) *
+      10;
+
+    var x = SCENE.width * object.path.xBase + lateral + pathOscillation;
+
+    return {
+      x: x,
+      y: y + object.yBias
+    };
   }
 
   function applyObjectState(object, time) {
-    var progress = getLaunchProgress(object, time);
-    var eased = easeOutCubic(progress);
-    var launchY = lerp(SCENE.bottomBound, SCENE.topBound, eased);
-    var sway = Math.sin((time * 0.0011) + object.index * 0.7 + progress * Math.PI * 2) * object.lane.sway;
-    var drift = Math.cos((time * 0.00052) + object.index * 0.45) * 8;
-    var x = SCENE.width * object.lane.x + sway + drift;
-    var y = launchY + object.yBias + Math.sin(time * 0.0016 + object.index) * object.bobAmp;
+    var progress = getPathProgress(object, time);
+    var point = getPathPosition(object, progress, time);
+    var pathDepth = 1 - progress;
+    var midPulse = easeInOutSine(1 - Math.min(1, Math.abs(0.5 - progress) / 0.5));
 
-    var depth = 1 - progress;
-    var centerBoost = 1 - Math.min(1, Math.abs(0.52 - progress) / 0.52);
-    var cinematicBoost = smoothPulse(centerBoost);
-    var scale = 0.72 + depth * 0.24 + object.lane.scaleBias + cinematicBoost * 0.10;
-    var opacity = 0.28 + centerBoost * 0.62 + depth * 0.14;
+    var scale = 0.70 + object.scaleBias + pathDepth * 0.24 + midPulse * 0.08;
+    var opacity = 0.18 + midPulse * 0.66 + pathDepth * 0.18;
+    var brightness = 0.76 + pathDepth * 0.20 + midPulse * 0.08;
+    var blur = (1 - midPulse) * 0.42;
 
-    if (progress < 0.06) {
-      opacity *= progress / 0.06;
+    if (progress < 0.08) {
+      opacity *= progress / 0.08;
     }
-    if (progress > 0.94) {
-      opacity *= (1 - progress) / 0.06;
+    if (progress > 0.93) {
+      opacity *= (1 - progress) / 0.07;
     }
 
     opacity = clamp(opacity, 0, 1);
 
-    var zIndex = 40 + Math.round(depth * 90 + cinematicBoost * 40);
-    var brightness = 0.74 + depth * 0.22 + cinematicBoost * 0.10;
-    var blur = (1 - centerBoost) * 0.6;
-    var spinY = object.lane.tilt + Math.sin(time * object.spinSpeed + object.index) * 10;
-    var spinX = 58 + Math.cos(time * object.spinSpeed * 0.81 + object.index) * 7;
-    var spinZ = Math.sin(time * object.spinSpeed * 0.56 + object.index) * 5;
+    var zIndex = 35 + Math.round(pathDepth * 80 + midPulse * 50);
+    var family = PATH_FAMILY[object.coinStyle] || PATH_FAMILY.coin;
+
+    var spinY = object.path.tilt + family.spinBiasY + Math.sin(time * object.spinSpeed + object.index) * 9;
+    var spinX = 57 + Math.cos(time * object.spinSpeed * 0.82 + object.index) * 6;
+    var spinZ = Math.sin(time * object.spinSpeed * 0.55 + object.index) * 4;
 
     object.node.style.transform =
-      "translate3d(" + (x - object.node.offsetWidth / 2) + "px," + (y - object.node.offsetHeight / 2) + "px,0) " +
+      "translate3d(" + (point.x - object.node.offsetWidth / 2) + "px," + (point.y - object.node.offsetHeight / 2) + "px,0) " +
       "scale(" + scale + ")";
     object.node.style.opacity = String(opacity);
     object.node.style.zIndex = String(zIndex);
@@ -511,9 +643,9 @@
     updateSceneMetrics();
   });
 
-  hideEuclideanSurface();
-  initSceneObjects();
+  hideOrbitSurface();
   updateSceneMetrics();
+  initSceneObjects();
   bindNodeActions();
 
   if (rafId) cancelAnimationFrame(rafId);

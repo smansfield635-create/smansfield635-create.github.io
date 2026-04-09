@@ -3,1147 +3,391 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Archcoin | Richie Rich's Vault</title>
+  <title>Diamond Gate Bridge — Euclidean Universe Entry</title>
   <meta
     name="description"
-    content="Archcoin is presented as a controlled five-coin financial architecture inside a cinematic vault scene, with four archetype mint heads feeding coins into a growing vault pile."
+    content="Euclidean universe host for Diamond Gate Bridge. Canvas-first runtime with orbit bands, planets, runtime readouts, and inline boot failure capture."
   />
   <style>
     :root{
-      --bg-0:#010205;
-      --bg-1:#020814;
-      --bg-2:#071427;
-      --panel:#08111d;
-      --line:rgba(143,188,255,.18);
-      --line-strong:rgba(216,231,255,.30);
-      --text:#f7fbff;
-      --muted:#b9c7d9;
-      --gold:#ffe4a3;
-      --gold-2:#ffd58f;
-      --gold-3:#fff1c8;
-      --blue:#5ea8ff;
-      --red:#ff6d6d;
-      --shadow:0 28px 80px rgba(0,0,0,.46);
-      --maxw:1320px;
+      --bg-0:#020611;
+      --bg-1:#09182d;
+      --bg-2:#132946;
+      --panel:rgba(7,16,30,.72);
+      --panel-strong:rgba(7,16,30,.84);
+      --line:rgba(190,210,255,.14);
+      --line-strong:rgba(220,232,255,.22);
+      --text:#f5f8ff;
+      --muted:#bfd0ea;
+      --chip:rgba(255,255,255,.05);
+      --chip-strong:rgba(255,248,225,.10);
+      --shadow:0 22px 56px rgba(0,0,0,.30);
+      --blur:16px;
+      --radius:28px;
+      --radius-sm:18px;
+      --maxw:1180px;
     }
 
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
-    html{background:#010205}
-
+    html,body{min-height:100%}
     body{
-      min-height:100vh;
+      background:#020611;
       color:var(--text);
       font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      background:
-        radial-gradient(circle at 12% 14%, rgba(94,168,255,.16), transparent 0 18%),
-        radial-gradient(circle at 84% 12%, rgba(255,109,109,.14), transparent 0 20%),
-        radial-gradient(circle at 54% 44%, rgba(85,129,255,.08), transparent 0 20%),
-        linear-gradient(180deg, #010205 0%, #02060f 26%, #041120 58%, #010205 100%);
-      overflow-x:hidden;
     }
 
     a{color:inherit;text-decoration:none}
-    button{font:inherit}
 
-    .starfield,
-    .starfield::before,
-    .starfield::after{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      content:"";
-      z-index:0;
-    }
-
-    .starfield{
-      background-image:
-        radial-gradient(2px 2px at 8% 14%, rgba(255,255,255,.96), transparent 55%),
-        radial-gradient(1.5px 1.5px at 18% 62%, rgba(255,255,255,.84), transparent 55%),
-        radial-gradient(2px 2px at 29% 25%, rgba(255,245,222,.92), transparent 55%),
-        radial-gradient(1.5px 1.5px at 37% 78%, rgba(255,255,255,.80), transparent 55%),
-        radial-gradient(2px 2px at 47% 18%, rgba(255,255,255,.90), transparent 55%),
-        radial-gradient(1.5px 1.5px at 56% 66%, rgba(255,245,220,.88), transparent 55%),
-        radial-gradient(2px 2px at 65% 24%, rgba(255,255,255,.92), transparent 55%),
-        radial-gradient(1.5px 1.5px at 76% 74%, rgba(255,255,255,.80), transparent 55%),
-        radial-gradient(2px 2px at 88% 36%, rgba(255,255,255,.94), transparent 55%),
-        radial-gradient(1.5px 1.5px at 94% 16%, rgba(255,244,218,.90), transparent 55%);
-      animation:twinkleA 5.8s ease-in-out infinite alternate;
-      opacity:.72;
-    }
-
-    .starfield::before{
-      background-image:
-        radial-gradient(1.5px 1.5px at 12% 48%, rgba(255,255,255,.76), transparent 55%),
-        radial-gradient(1.5px 1.5px at 24% 84%, rgba(255,255,255,.70), transparent 55%),
-        radial-gradient(1.5px 1.5px at 34% 44%, rgba(255,248,226,.88), transparent 55%),
-        radial-gradient(1.5px 1.5px at 44% 88%, rgba(255,255,255,.72), transparent 55%),
-        radial-gradient(1.5px 1.5px at 55% 36%, rgba(255,255,255,.80), transparent 55%),
-        radial-gradient(1.5px 1.5px at 64% 82%, rgba(255,248,226,.80), transparent 55%),
-        radial-gradient(1.5px 1.5px at 74% 48%, rgba(255,255,255,.70), transparent 55%),
-        radial-gradient(1.5px 1.5px at 82% 86%, rgba(255,255,255,.76), transparent 55%);
-      animation:twinkleB 7.2s ease-in-out infinite alternate;
-      opacity:.52;
-    }
-
-    .starfield::after{
-      background:
-        radial-gradient(circle at 20% 18%, rgba(94,168,255,.09), transparent 0 10%),
-        radial-gradient(circle at 80% 20%, rgba(255,109,109,.09), transparent 0 11%),
-        radial-gradient(circle at 76% 72%, rgba(157,208,255,.06), transparent 0 13%);
-      filter:blur(16px);
-      opacity:.88;
-    }
-
-    @keyframes twinkleA{0%,100%{opacity:.50}50%{opacity:.84}}
-    @keyframes twinkleB{0%,100%{opacity:.26}50%{opacity:.60}}
-
-    .page{
+    #app{
       position:relative;
-      z-index:1;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:28px 18px 80px;
-    }
-
-    .hero{
-      position:relative;
+      min-height:100vh;
       overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:34px;
       background:
-        linear-gradient(180deg, rgba(8,17,29,.95), rgba(6,12,22,.96)),
-        radial-gradient(circle at 18% 18%, rgba(94,168,255,.12), transparent 30%),
-        radial-gradient(circle at 82% 18%, rgba(255,109,109,.11), transparent 28%);
-      box-shadow:var(--shadow);
-      padding:34px 28px 28px;
-      margin-bottom:22px;
+        radial-gradient(circle at 50% 56%, rgba(255,245,214,.05), transparent 0 12%),
+        linear-gradient(180deg,var(--bg-0) 0%,var(--bg-1) 40%,var(--bg-2) 100%);
     }
 
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
+    #scene{
+      position:absolute;
+      inset:0;
+      display:block;
+      width:100vw;
+      height:100vh;
+      z-index:1;
+    }
+
+    #home-ui{
+      position:relative;
+      z-index:3;
+      width:min(var(--maxw),calc(100vw - 32px));
+      margin:0 auto;
+      padding:24px 0 40px;
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+      grid-template-areas:
+        "title legend"
+        "title scope"
+        "status status";
+      gap:18px;
+      min-height:100vh;
+      align-content:start;
+      pointer-events:none;
+    }
+
+    #home-ui > *{
+      pointer-events:auto;
+    }
+
+    .panel{
       border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      color:var(--muted);
-      font-size:12px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
+      background:var(--panel);
+      backdrop-filter:blur(var(--blur));
+      -webkit-backdrop-filter:blur(var(--blur));
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
-    h1{
-      margin:18px 0 12px;
-      font-size:clamp(34px,6vw,66px);
-      line-height:1.02;
-      letter-spacing:-.05em;
-      max-width:980px;
+    .title-block{
+      grid-area:title;
+      padding:26px 24px 24px;
+      margin-top:82px;
     }
 
-    .subhead{
+    .title-block h1{
+      margin:0 0 14px;
+      font-size:clamp(34px,6vw,70px);
+      line-height:.96;
+      letter-spacing:-.06em;
+      max-width:12ch;
+    }
+
+    .title-block p{
       margin:0;
-      max-width:940px;
+      max-width:62ch;
       color:var(--muted);
       font-size:18px;
-      line-height:1.66;
+      line-height:1.65;
     }
 
-    .truth-band{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:12px;
-      margin-top:24px;
-    }
-
-    .truth-chip{
-      border:1px solid var(--line);
-      border-radius:20px;
-      padding:15px 14px;
-      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
-    }
-
-    .truth-chip .label{
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-
-    .truth-chip .value{
-      font-size:15px;
-      line-height:1.45;
-    }
-
-    .field-shell{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:34px;
-      min-height:940px;
-      background:
-        linear-gradient(180deg, rgba(4,9,18,.88), rgba(3,7,13,.96)),
-        radial-gradient(circle at 50% 14%, rgba(255,228,163,.10), transparent 18%),
-        radial-gradient(circle at 50% 72%, rgba(94,168,255,.08), transparent 28%);
-      box-shadow:var(--shadow);
-    }
-
-    .field-topbar{
-      position:relative;
-      z-index:2;
-      padding:18px 18px 0;
+    .chip-row{
       display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
     }
 
-    .field-title{
-      font-size:14px;
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      min-height:38px;
+      padding:9px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:var(--chip);
+      color:var(--muted);
+      font-size:12px;
       letter-spacing:.12em;
       text-transform:uppercase;
-      color:var(--muted);
     }
 
-    .field-hint{
-      font-size:13px;
-      color:var(--muted);
+    .chip--strong{
+      background:var(--chip-strong);
+      color:var(--text);
+      border-color:var(--line-strong);
     }
 
-    .scene{
-      position:relative;
-      min-height:860px;
-      overflow:hidden;
-      perspective:1200px;
-      perspective-origin:50% 32%;
-    }
-
-    .scene-layer{
-      position:absolute;
-      inset:0;
-      transform-style:preserve-3d;
-      transition:filter .32s ease, opacity .32s ease, transform .32s ease;
-      will-change:transform, filter, opacity;
-    }
-
-    .field-shell.reading .scene-layer{
-      filter:blur(4px) saturate(.72);
-      opacity:.22;
-      transform:scale(1.01);
-    }
-
-    .vault-top{
-      position:absolute;
-      left:0;
-      right:0;
-      top:16px;
-      z-index:2;
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:18px;
-      padding:0 28px;
-    }
-
-    .tube-head{
-      position:relative;
-      height:182px;
+    .action-row{
       display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .action{
+      display:inline-flex;
+      align-items:center;
       justify-content:center;
-      align-items:flex-start;
-      pointer-events:none;
-    }
-
-    .machine-crown{
-      position:absolute;
-      top:0;
-      width:116px;
-      height:116px;
-      border-radius:58px 58px 34px 34px;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        radial-gradient(circle at 50% 38%, rgba(255,255,255,.16), transparent 34%),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.16), transparent 56%),
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.16)),
-        linear-gradient(145deg, rgba(22,28,38,.92), rgba(10,14,22,.98));
-      box-shadow:
-        0 0 24px rgba(255,228,163,.10),
-        inset 0 1px 0 rgba(255,255,255,.16);
-      overflow:hidden;
-      pointer-events:none;
-    }
-
-    .machine-window{
-      position:absolute;
-      left:50%;
-      top:16px;
-      width:78px;
-      height:62px;
-      transform:translateX(-50%);
-      border-radius:40px 40px 24px 24px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 35%, rgba(255,255,255,.14), transparent 34%),
-        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.08), transparent 60%);
-      overflow:hidden;
-      pointer-events:none;
-    }
-
-    .machine-window::before,
-    .machine-window::after{
-      content:"";
-      position:absolute;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(255,228,163,.88), rgba(255,213,143,.44) 58%, transparent 76%);
-      width:22px;
-      height:22px;
-      top:14px;
-      box-shadow:0 0 12px rgba(255,228,163,.18);
-    }
-
-    .machine-window::before{left:12px}
-    .machine-window::after{right:12px}
-
-    .machine-window i{
-      position:absolute;
-      left:50%;
-      bottom:10px;
-      width:18px;
-      height:18px;
-      margin-left:-9px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(201,228,255,.90), rgba(157,208,255,.44) 58%, transparent 76%);
-      box-shadow:0 0 12px rgba(157,208,255,.18);
-    }
-
-    .machine-label{
-      position:absolute;
-      left:50%;
-      top:84px;
-      transform:translateX(-50%);
-      padding:6px 10px;
+      min-height:44px;
+      padding:10px 16px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
+      border:1px solid var(--line);
       background:rgba(255,255,255,.04);
-      font-size:10px;
+      color:var(--muted);
+      font-weight:600;
+      transition:background .2s ease,border-color .2s ease,transform .2s ease;
+    }
+
+    .action:hover{
+      background:rgba(255,255,255,.07);
+      border-color:var(--line-strong);
+      transform:translateY(-1px);
+    }
+
+    .action--strong{
+      color:var(--text);
+      border-color:var(--line-strong);
+      background:rgba(255,248,225,.08);
+    }
+
+    .legend{
+      grid-area:legend;
+      padding:20px 20px 16px;
+      margin-top:82px;
+    }
+
+    .scale-panel{
+      grid-area:scope;
+      padding:20px 20px 16px;
+    }
+
+    .status{
+      grid-area:status;
+      padding:16px 18px;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+      margin-bottom:12px;
+    }
+
+    .legend h2,
+    .scale-panel h2{
+      margin:0 0 14px;
+      font-size:14px;
       letter-spacing:.14em;
       text-transform:uppercase;
-      color:rgba(255,255,255,.68);
-      white-space:nowrap;
-      pointer-events:none;
-    }
-
-    .tube-neck{
-      position:absolute;
-      top:102px;
-      width:34px;
-      height:98px;
-      border-radius:20px;
-      border:1px solid rgba(255,255,255,.12);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.02)),
-        linear-gradient(90deg, rgba(255,228,163,.08), rgba(94,168,255,.05));
-      box-shadow:
-        0 0 16px rgba(255,228,163,.08),
-        inset 0 1px 0 rgba(255,255,255,.10);
-      pointer-events:none;
-    }
-
-    .tube-flow{
-      position:absolute;
-      top:116px;
-      width:10px;
-      height:84px;
-      border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,228,163,.16), rgba(94,168,255,.06), transparent 100%);
-      filter:blur(2px);
-      opacity:.72;
-      pointer-events:none;
-    }
-
-    .control-assembly{
-      position:absolute;
-      top:118px;
-      left:50%;
-      width:62px;
-      height:46px;
-      margin-left:-31px;
-      border:1px solid rgba(255,255,255,.16);
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 50% 30%, rgba(255,255,255,.14), transparent 28%),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.14), transparent 58%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.18)),
-        linear-gradient(145deg, rgba(24,30,40,.98), rgba(10,14,22,.98));
-      box-shadow:
-        0 0 18px rgba(255,228,163,.08),
-        inset 0 1px 0 rgba(255,255,255,.14);
-      transform-origin:50% 50%;
-      transition:transform .28s ease;
-      pointer-events:auto;
-      cursor:pointer;
-    }
-
-    .control-assembly::before{
-      content:"";
-      position:absolute;
-      inset:8px 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.08)),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.08), transparent 64%);
-    }
-
-    .control-assembly.turning{
-      transform:rotate(25deg);
-    }
-
-    .control-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:28px;
-      height:28px;
-      margin-left:-14px;
-      margin-top:-14px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 32% 30%, rgba(255,255,255,.22), transparent 28%),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.16), transparent 60%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.16)),
-        linear-gradient(145deg, rgba(18,24,34,.98), rgba(8,12,18,.98));
-      box-shadow:
-        0 0 12px rgba(255,228,163,.08),
-        inset 0 1px 0 rgba(255,255,255,.12);
-      pointer-events:none;
-    }
-
-    .control-indicator{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:4px;
-      height:16px;
-      margin-left:-2px;
-      margin-top:-13px;
-      border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,228,163,.56));
-      box-shadow:0 0 10px rgba(255,228,163,.16);
-      pointer-events:none;
-    }
-
-    .fall-field{
-      position:absolute;
-      inset:212px 22px 168px;
-      z-index:1;
-      pointer-events:none;
-    }
-
-    .pile-zone{
-      position:absolute;
-      left:18px;
-      right:18px;
-      bottom:18px;
-      height:218px;
-      z-index:2;
-      border-radius:28px;
-      border:1px solid rgba(255,255,255,.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.16)),
-        radial-gradient(circle at 50% 30%, rgba(255,228,163,.12), transparent 34%),
-        radial-gradient(circle at 50% 100%, rgba(255,228,163,.14), transparent 42%);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.08),
-        inset 0 -18px 38px rgba(0,0,0,.24);
-      overflow:hidden;
-      pointer-events:none;
-    }
-
-    .pile-zone::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:10px;
-      width:72%;
-      height:118px;
-      transform:translateX(-50%);
-      border-radius:50%;
-      background:radial-gradient(circle at 50% 50%, rgba(255,228,163,.16), rgba(255,228,163,.04) 56%, transparent 72%);
-      filter:blur(10px);
-    }
-
-    .pile-label{
-      position:absolute;
-      left:50%;
-      bottom:18px;
-      transform:translateX(-50%);
-      z-index:3;
-      font-size:12px;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.72);
-      text-align:center;
-      white-space:nowrap;
-      pointer-events:none;
-    }
-
-    .pile-coins{
-      position:absolute;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
-    }
-
-    .coin{
-      position:absolute;
-      width:116px;
-      height:116px;
-      pointer-events:auto;
-      cursor:pointer;
-      border:0;
-      background:transparent;
-      padding:0;
-      transform-style:preserve-3d;
-      will-change:transform, opacity;
-      --coin-rim:#ffefc7;
-      --coin-glow:rgba(255,228,163,.26);
-      --coin-core:rgba(255,244,214,.96);
-      --coin-mark:rgba(255,243,202,.42);
-      --coin-beam:rgba(255,255,255,.20);
-    }
-
-    .coin[data-family="coin"]{
-      --coin-rim:#ffe7a8;
-      --coin-glow:rgba(255,228,163,.30);
-      --coin-core:rgba(255,239,188,.98);
-      --coin-mark:rgba(255,234,170,.44);
-    }
-
-    .coin[data-family="description"]{
-      --coin-rim:#ffd2b4;
-      --coin-glow:rgba(255,171,136,.26);
-      --coin-core:rgba(255,222,204,.96);
-      --coin-mark:rgba(255,188,160,.38);
-    }
-
-    .coin[data-family="info"]{
-      --coin-rim:#cde4ff;
-      --coin-glow:rgba(157,208,255,.26);
-      --coin-core:rgba(223,239,255,.96);
-      --coin-mark:rgba(173,213,255,.40);
-    }
-
-    .coin[data-family="authority"]{
-      --coin-rim:#ffd695;
-      --coin-glow:rgba(255,214,149,.32);
-      --coin-core:rgba(255,233,180,.98);
-      --coin-mark:rgba(255,208,120,.42);
-    }
-
-    .coin-shell{
-      position:absolute;
-      inset:0;
-      transform-style:preserve-3d;
-      filter:drop-shadow(0 14px 26px rgba(0,0,0,.30));
-    }
-
-    .coin-rim{
-      position:absolute;
-      inset:4px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%, transparent 57%, var(--coin-rim) 61%, rgba(255,255,255,.16) 66%, transparent 72%),
-        radial-gradient(circle at 50% 50%, var(--coin-glow), transparent 74%);
-      transform:translateZ(2px);
-    }
-
-    .coin-rim::before{
-      content:"";
-      position:absolute;
-      inset:8%;
-      border-radius:50%;
-      border:1px dashed rgba(255,255,255,.16);
-      opacity:.44;
-    }
-
-    .coin-face{
-      position:absolute;
-      inset:10px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 30% 24%, var(--coin-beam), transparent 28%),
-        radial-gradient(circle at 72% 70%, rgba(255,255,255,.08), transparent 22%),
-        linear-gradient(145deg, rgba(255,255,255,.12), rgba(0,0,0,.06)),
-        radial-gradient(circle at 50% 50%, var(--coin-core) 0%, rgba(255,228,163,.28) 42%, rgba(94,168,255,.18) 100%);
-      border:1px solid rgba(255,255,255,.16);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.18),
-        inset 0 -16px 26px rgba(0,0,0,.20),
-        0 0 24px var(--coin-glow);
-      transform:translateZ(6px);
-      overflow:hidden;
-    }
-
-    .coin-face::before{
-      content:"";
-      position:absolute;
-      inset:12%;
-      border-radius:50%;
-      border:1px solid var(--coin-mark);
-      opacity:.72;
-    }
-
-    .coin-face::after{
-      content:"";
-      position:absolute;
-      inset:22%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.14);
-      opacity:.64;
-    }
-
-    .coin-sigil{
-      position:absolute;
-      inset:24px;
-      border-radius:50%;
-      transform:translateZ(8px);
-      pointer-events:none;
-    }
-
-    .coin-sigil::before,
-    .coin-sigil::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform-origin:center;
-    }
-
-    .coin-sigil::before{
-      width:2px;
-      height:52px;
-      margin-left:-1px;
-      margin-top:-26px;
-      background:linear-gradient(180deg, transparent, var(--coin-mark), transparent);
-      border-radius:999px;
-    }
-
-    .coin-sigil::after{
-      width:52px;
-      height:2px;
-      margin-left:-26px;
-      margin-top:-1px;
-      background:linear-gradient(90deg, transparent, var(--coin-mark), transparent);
-      border-radius:999px;
-    }
-
-    .coin[data-style="description"] .coin-sigil::before{
-      height:44px;
-      margin-top:-22px;
-      transform:rotate(22deg);
-    }
-
-    .coin[data-style="description"] .coin-sigil::after{
-      width:44px;
-      margin-left:-22px;
-      transform:rotate(-22deg);
-    }
-
-    .coin[data-style="info"] .coin-sigil::before{
-      height:56px;
-      margin-top:-28px;
-      box-shadow:0 0 0 1px rgba(255,255,255,.04);
-    }
-
-    .coin[data-style="info"] .coin-sigil::after{
-      width:56px;
-      margin-left:-28px;
-      box-shadow:0 0 0 1px rgba(255,255,255,.04);
-    }
-
-    .coin[data-style="authority"] .coin-sigil::before{
-      height:58px;
-      margin-top:-29px;
-    }
-
-    .coin[data-style="authority"] .coin-sigil::after{
-      width:58px;
-      margin-left:-29px;
-    }
-
-    .coin-markers{
-      position:absolute;
-      inset:14px;
-      border-radius:50%;
-      transform:translateZ(7px);
-      pointer-events:none;
-    }
-
-    .coin-markers i{
-      position:absolute;
-      width:7px;
-      height:7px;
-      border-radius:50%;
-      background:var(--coin-rim);
-      box-shadow:0 0 14px var(--coin-glow);
-      opacity:.94;
-    }
-
-    .coin-markers .n{top:6px;left:50%;transform:translateX(-50%)}
-    .coin-markers .e{top:50%;right:6px;transform:translateY(-50%)}
-    .coin-markers .s{bottom:6px;left:50%;transform:translateX(-50%)}
-    .coin-markers .w{top:50%;left:6px;transform:translateY(-50%)}
-
-    .coin-label{
-      position:absolute;
-      left:50%;
-      bottom:6px;
-      transform:translateX(-50%);
-      width:100%;
-      text-align:center;
-      padding:0 6px;
-      font-size:12px;
-      line-height:1.15;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      font-weight:700;
-      color:#fff6df;
-      text-shadow:0 1px 4px rgba(0,0,0,.45);
-      pointer-events:none;
-    }
-
-    .coin.falling-open{
-      z-index:180 !important;
-    }
-
-    .selected-shadow{
-      position:absolute;
-      inset:0;
-      z-index:3;
-      opacity:0;
-      transition:opacity .30s ease;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(5,10,18,.08), rgba(1,2,5,.58) 58%, rgba(1,2,5,.86) 100%);
-      pointer-events:none;
-    }
-
-    .field-shell.reading .selected-shadow{
-      opacity:1;
-    }
-
-    .panel-wrap{
-      position:absolute;
-      inset:0;
-      z-index:10;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:22px;
-      pointer-events:none;
-    }
-
-    .info-panel{
-      width:min(980px,100%);
-      max-height:calc(100% - 20px);
-      overflow:auto;
-      border:1px solid var(--line-strong);
-      border-radius:30px;
-      background:
-        linear-gradient(180deg, rgba(7,12,22,.98), rgba(8,12,20,.98)),
-        radial-gradient(circle at 18% 14%, rgba(94,168,255,.10), transparent 22%),
-        radial-gradient(circle at 82% 14%, rgba(255,109,109,.10), transparent 22%);
-      box-shadow:0 30px 90px rgba(0,0,0,.58);
-      opacity:0;
-      transform:translateY(22px) scale(.96);
-      transition:opacity .28s ease, transform .28s ease;
-      pointer-events:none;
-    }
-
-    .field-shell.reading .info-panel{
-      opacity:1;
-      transform:translateY(0) scale(1);
-      pointer-events:auto;
-    }
-
-    .panel-head{
-      position:sticky;
-      top:0;
-      z-index:2;
-      padding:22px 22px 16px;
-      background:linear-gradient(180deg, rgba(7,12,22,.98), rgba(7,12,22,.90));
-      backdrop-filter:blur(10px);
-      border-bottom:1px solid rgba(255,255,255,.06);
-    }
-
-    .panel-kicker{
       color:var(--muted);
-      font-size:12px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:10px;
     }
 
-    .panel-row{
+    .legend-row,
+    .scale-row{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:18px;
-    }
-
-    .panel-title{
-      margin:0;
-      font-size:clamp(28px,4vw,44px);
-      line-height:1.04;
-      letter-spacing:-.04em;
-    }
-
-    .panel-summary{
-      margin:12px 0 0;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.65;
-      max-width:760px;
-    }
-
-    .panel-close{
-      flex:0 0 auto;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      padding:12px 14px;
-      border-radius:999px;
-      cursor:pointer;
-    }
-
-    .panel-body{
-      padding:18px 22px 24px;
-    }
-
-    .subbubble-list{
-      display:grid;
-      gap:12px;
-    }
-
-    .subbubble{
-      border:1px solid rgba(255,255,255,.07);
-      border-radius:22px;
-      overflow:hidden;
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-    }
-
-    .subbubble-toggle{
-      width:100%;
-      border:0;
-      background:transparent;
-      color:var(--text);
-      padding:18px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
       gap:16px;
-      text-align:left;
-      cursor:pointer;
+      padding:12px 0;
+      border-top:1px solid rgba(255,255,255,.06);
     }
 
-    .subbubble-label{
+    .legend-row:first-of-type,
+    .scale-row:first-of-type{
+      border-top:0;
+      padding-top:0;
+    }
+
+    .legend-row span,
+    .scale-row span{
       color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
+      font-size:14px;
+      line-height:1.5;
+    }
+
+    .legend-row strong,
+    .scale-row strong{
+      color:var(--text);
+      font-size:14px;
+      line-height:1.5;
+      text-align:right;
+      font-weight:700;
+    }
+
+    .inline-divider{
+      display:inline-block;
+      margin:0 10px;
+      color:rgba(255,255,255,.22);
+    }
+
+    #boot-banner{
+      position:fixed;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%);
+      z-index:5;
+      min-height:42px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 18px;
+      border-radius:999px;
+      border:1px solid var(--line-strong);
+      background:rgba(7,16,30,.72);
+      backdrop-filter:blur(var(--blur));
+      -webkit-backdrop-filter:blur(var(--blur));
+      box-shadow:var(--shadow);
+      color:var(--text);
+      font-size:13px;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      margin-bottom:7px;
+      white-space:nowrap;
     }
 
-    .subbubble-title{
-      font-size:22px;
-      line-height:1.14;
-      letter-spacing:-.03em;
-      margin:0 0 6px;
-    }
-
-    .subbubble-mini{
-      color:var(--muted);
-      line-height:1.58;
-      font-size:15px;
-      margin:0;
-      max-width:48ch;
-    }
-
-    .subbubble-icon{
-      width:40px;
-      height:40px;
-      border-radius:50%;
-      border:1px solid var(--line);
-      display:grid;
-      place-items:center;
-      flex:0 0 auto;
-      background:rgba(255,255,255,.04);
-      font-size:20px;
-    }
-
-    .subbubble-panel{
+    #boot-status{
+      position:fixed;
+      left:14px;
+      right:14px;
+      bottom:14px;
+      z-index:4;
+      max-width:min(980px,calc(100vw - 28px));
+      margin:0 auto;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.08);
+      background:rgba(4,10,20,.72);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);
+      color:rgba(235,242,255,.82);
+      font:12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:pre-wrap;
+      word-break:break-word;
       display:none;
-      padding:0 18px 18px;
-      color:var(--muted);
-      line-height:1.7;
-      font-size:16px;
     }
 
-    .subbubble.open .subbubble-panel{
+    #boot-fail{
+      position:fixed;
+      left:50%;
+      top:96px;
+      transform:translateX(-50%);
+      z-index:6;
+      width:min(760px,calc(100vw - 28px));
+      display:none;
+      padding:16px 18px;
+      border-radius:20px;
+      border:1px solid rgba(255,120,120,.28);
+      background:rgba(48,8,10,.88);
+      box-shadow:0 24px 56px rgba(0,0,0,.38);
+      color:#ffe8e8;
+      font:13px/1.6 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    #boot-fail.is-visible{
       display:block;
     }
 
-    .subbubble-panel-inner{
-      border-top:1px solid rgba(255,255,255,.06);
-      padding-top:14px;
+    @media (max-width:980px){
+      #home-ui{
+        grid-template-columns:1fr;
+        grid-template-areas:
+          "title"
+          "legend"
+          "scope"
+          "status";
+        padding-top:16px;
+      }
+
+      .title-block,
+      .legend{
+        margin-top:70px;
+      }
+
+      .title-block h1{
+        max-width:none;
+      }
     }
 
-    .detail-card{
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.02);
-      margin:0 0 12px;
+    @media (max-width:640px){
+      #home-ui{
+        width:calc(100vw - 20px);
+        gap:14px;
+      }
+
+      .title-block,
+      .legend,
+      .scale-panel,
+      .status{
+        padding-left:16px;
+        padding-right:16px;
+      }
+
+      .title-block{
+        padding-top:20px;
+      }
+
+      .title-block p{
+        font-size:16px;
+      }
+
+      .legend-row,
+      .scale-row{
+        flex-direction:column;
+        gap:4px;
+      }
+
+      .legend-row strong,
+      .scale-row strong{
+        text-align:left;
+      }
+
+      #boot-banner{
+        top:12px;
+        max-width:calc(100vw - 20px);
+        font-size:12px;
+        letter-spacing:.1em;
+      }
+
+      #boot-fail{
+        top:72px;
+      }
     }
 
-    .detail-card h4{
-      margin:0 0 8px;
-      font-size:17px;
-      color:var(--text);
-      letter-spacing:-.02em;
-    }
-
-    .detail-card p{margin:0}
-
-    .law-list{
-      margin:0;
-      padding-left:18px;
-    }
-
-    .law-list li{margin:8px 0}
-
-    .mapping-grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .mapping-item{
-      border:1px solid rgba(255,255,255,.06);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.02);
-    }
-
-    .mapping-item .dir{
-      color:var(--gold);
-      font-size:11px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      margin-bottom:8px;
-    }
-
-    .mapping-item .name{
-      font-size:18px;
-      color:var(--text);
-      margin-bottom:6px;
-    }
-
-    .mapping-item .desc{
-      color:var(--muted);
-      line-height:1.58;
-      font-size:14px;
-    }
-
-    .footer-note{
-      margin-top:16px;
-      text-align:center;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
-    }
-
-    @media (max-width:1100px){
-      .truth-band{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media (max-width:820px){
-      .page{padding:18px 14px 64px}
-      .hero{padding:24px 18px 20px}
-      .truth-band{grid-template-columns:1fr}
-      .field-shell{min-height:1028px}
-      .scene{min-height:946px}
-      .panel-wrap{padding:14px}
-      .panel-row{flex-direction:column}
-      .panel-close{align-self:flex-start}
-      .mapping-grid{grid-template-columns:1fr}
-      .vault-top{padding:0 12px;gap:6px}
-      .machine-crown{width:88px;height:96px;border-radius:44px 44px 26px 26px}
-      .machine-window{width:58px;height:48px}
-      .machine-label{top:72px;font-size:9px}
-      .tube-neck{top:86px;height:90px}
-      .tube-flow{top:98px;height:78px}
-      .control-assembly{top:102px;width:54px;height:42px;margin-left:-27px}
-      .control-core{width:24px;height:24px;margin-left:-12px;margin-top:-12px}
-      .coin{width:104px;height:104px}
-      .pile-zone{height:228px}
-      .fall-field{inset:190px 12px 172px}
-    }
-
-    @media (max-width:560px){
-      .field-topbar{padding:16px 14px 0}
-      .coin{width:96px;height:96px}
-      .panel-head{padding:18px 16px 14px}
-      .panel-body{padding:16px}
-      .subbubble-toggle{padding:16px}
-      .subbubble-panel{padding:0 16px 16px}
-      .subbubble-title{font-size:20px}
-      .subbubble-mini{font-size:14px}
-      .panel-summary{font-size:15px}
-      .coin-face{inset:8px}
-      .coin-sigil{inset:18px}
-      .machine-crown{width:74px;height:88px}
-      .machine-window{width:50px;height:40px;top:14px}
-      .machine-label{top:64px}
-      .tube-head{height:152px}
-      .tube-neck{top:78px;height:82px}
-      .tube-flow{top:92px;height:68px}
-      .control-assembly{top:96px;width:48px;height:38px;margin-left:-24px}
-      .control-core{width:22px;height:22px;margin-left:-11px;margin-top:-11px}
-      .fall-field{inset:174px 10px 174px}
+    @media (prefers-reduced-motion: reduce){
+      .action{
+        transition:none;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="starfield" aria-hidden="true"></div>
-
-  <main class="page">
-    <section class="hero" aria-labelledby="page-title">
-      <div class="eyebrow">Archcoin • Richie Rich's Vault</div>
-      <h1 id="page-title">One parent. One body. Four derived governors.</h1>
-      <p class="subhead">
-        Archcoin remains the parent template and construction authority. The Vault remains the master body.
-        Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity.
-        Tap a control assembly to rotate the full cylinder and release one coin.
-      </p>
-
-      <div class="truth-band" aria-label="Top-level system truth">
-        <div class="truth-chip">
-          <div class="label">Parent</div>
-          <div class="value">Archcoin</div>
-        </div>
-        <div class="truth-chip">
-          <div class="label">Master Body</div>
-          <div class="value">The Vault</div>
-        </div>
-        <div class="truth-chip">
-          <div class="label">Mint Heads</div>
-          <div class="value">Coin, Description, Info, Authority</div>
-        </div>
-        <div class="truth-chip">
-          <div class="label">Generation Law</div>
-          <div class="value">Turn full cylinder 25°</div>
-        </div>
-        <div class="truth-chip">
-          <div class="label">Read</div>
-          <div class="value">Growing vault pile</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="field-shell" id="field-shell" aria-label="Archcoin vault field">
-      <div class="field-topbar">
-        <div class="field-title">Select a generated coin-object to inspect</div>
-        <div class="field-hint">Tap a head control to mint. Tap a falling coin to inspect.</div>
-      </div>
-
-      <div class="scene" id="scene">
-        <div class="scene-layer" id="scene-layer">
-          <div class="vault-top" aria-label="Archetype mint heads">
-            <div class="tube-head" data-head="coin">
-              <div class="machine-crown">
-                <div class="machine-window"><i></i></div>
-                <div class="machine-label">Coin</div>
-              </div>
-              <div class="tube-neck"></div>
-              <div class="tube-flow"></div>
-              <button class="control-assembly" type="button" data-head-index="0" aria-label="Dispense from Coin head">
-                <span class="control-core"><span class="control-indicator"></span></span>
-              </button>
-            </div>
-            <div class="tube-head" data-head="description">
-              <div class="machine-crown">
-                <div class="machine-window"><i></i></div>
-                <div class="machine-label">Description</div>
-              </div>
-              <div class="tube-neck"></div>
-              <div class="tube-flow"></div>
-              <button class="control-assembly" type="button" data-head-index="1" aria-label="Dispense from Description head">
-                <span class="control-core"><span class="control-indicator"></span></span>
-              </button>
-            </div>
-            <div class="tube-head" data-head="info">
-              <div class="machine-crown">
-                <div class="machine-window"><i></i></div>
-                <div class="machine-label">Info</div>
-              </div>
-              <div class="tube-neck"></div>
-              <div class="tube-flow"></div>
-              <button class="control-assembly" type="button" data-head-index="2" aria-label="Dispense from Info head">
-                <span class="control-core"><span class="control-indicator"></span></span>
-              </button>
-            </div>
-            <div class="tube-head" data-head="authority">
-              <div class="machine-crown">
-                <div class="machine-window"><i></i></div>
-                <div class="machine-label">Authority</div>
-              </div>
-              <div class="tube-neck"></div>
-              <div class="tube-flow"></div>
-              <button class="control-assembly" type="button" data-head-index="3" aria-label="Dispense from Authority head">
-                <span class="control-core"><span class="control-indicator"></span></span>
-              </button>
-            </div>
-          </div>
-
-          <div class="fall-field" id="fall-field"></div>
-
-          <div class="pile-zone" aria-hidden="true">
-            <div class="pile-coins" id="pile-coins"></div>
-            <div class="pile-label">Richie Rich's Vault</div>
-          </div>
-        </div>
-
-        <div class="selected-shadow" aria-hidden="true"></div>
-
-        <div class="panel-wrap">
-          <article class="info-panel" id="info-panel" aria-live="polite">
-            <div class="panel-head">
-              <div class="panel-kicker" id="panel-kicker">Inspection panel</div>
-              <div class="panel-row">
-                <div>
-                  <h2 class="panel-title" id="panel-title">Select an object</h2>
-                  <p class="panel-summary" id="panel-summary">Choose one of the generated coin-objects to inspect the corresponding architecture bulletin.</p>
-                </div>
-                <button class="panel-close" id="panel-close" type="button" aria-label="Close inspection">Close inspection</button>
-              </div>
-            </div>
-            <div class="panel-body">
-              <div class="subbubble-list" id="subbubble-list"></div>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <div class="footer-note">
-      Archcoin page scope remains locked to a local expression of the five-coin architecture.
-    </div>
-  </main>
+  <div id="app" data-app-root="true">
+    <canvas id="scene" aria-label="Euclidean universe display"></canvas>
+    <div id="boot-banner" class="boot-banner">Euclidean Universe Host</div>
+    <div id="home-ui"></div>
+    <div id="boot-status" role="status" aria-live="polite"></div>
+    <div id="boot-fail" class="boot-fail" aria-live="polite"></div>
+  </div>
 
   <script src="./index.js"></script>
 </body>

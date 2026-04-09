@@ -61,7 +61,11 @@ function pickProjectionObject(render) {
 }
 
 function normalizeBoundary(runtime) {
-  const classification = normalizeString(normalizeObject(normalizeObject(runtime).boundary).classification, "OPEN").toUpperCase();
+  const classification = normalizeString(
+    normalizeObject(normalizeObject(runtime).boundary).classification,
+    "OPEN"
+  ).toUpperCase();
+
   if (classification === "BLOCK") return "BLOCK";
   if (classification === "HOLD") return "HOLD";
   if (classification === "GATE") return "GATE";
@@ -85,7 +89,10 @@ function normalizeRenderProjection(render) {
 
 function classifyState(runtime, render) {
   const receiptTimestamp = normalizeObject(normalizeObject(runtime).receipt).timestamp;
-  const traversal = normalizeString(normalizeObject(normalizeObject(runtime).traversalStatus).action, "idle").toUpperCase();
+  const traversal = normalizeString(
+    normalizeObject(normalizeObject(runtime).traversalStatus).action,
+    "idle"
+  ).toUpperCase();
   const boundary = normalizeBoundary(runtime);
   const runtimeProjection = normalizeRuntimeProjection(runtime);
   const renderProjection = normalizeRenderProjection(render);
@@ -97,21 +104,38 @@ function classifyState(runtime, render) {
   return "LIVE";
 }
 
+function normalizeForceVector(runtime) {
+  const source = normalizeObject(runtime).forces;
+  return {
+    N: Number.isFinite(source.N) ? source.N : 0,
+    E: Number.isFinite(source.E) ? source.E : 0,
+    S: Number.isFinite(source.S) ? source.S : 0,
+    W: Number.isFinite(source.W) ? source.W : 0,
+    B: Number.isFinite(source.B) ? source.B : 0
+  };
+}
+
 function computeSignalMetrics(runtime, render) {
-  const forceVector = normalizeObject(runtime).forces;
+  const forceVector = normalizeForceVector(runtime);
   const visible = normalizeObject(normalizeObject(render).visible);
   const color = normalizeObject(visible.colorOutput);
 
-  const N = Number(forceVector.N || 0);
-  const E = Number(forceVector.E || 0);
-  const S = Number(forceVector.S || 0);
-  const W = Number(forceVector.W || 0);
-  const B = Number(forceVector.B || 0);
+  const N = forceVector.N;
+  const E = forceVector.E;
+  const S = forceVector.S;
+  const W = forceVector.W;
+  const B = forceVector.B;
 
   const magnitude = Math.sqrt((E - W) ** 2 + (N - S) ** 2 + B ** 2);
-  const fragmentWeight = Math.min(1, (Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B)) / 20);
+  const fragmentWeight = Math.min(
+    1,
+    (Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B)) / 20
+  );
   const directionalWeight = Math.min(1, (Math.abs(E - W) + Math.abs(N - S) + Math.abs(B)) / 10);
-  const directionalContrast = Math.min(1, Math.max(Math.abs(E - W), Math.abs(N - S), Math.abs(B)) / 10);
+  const directionalContrast = Math.min(
+    1,
+    Math.max(Math.abs(E - W), Math.abs(N - S), Math.abs(B)) / 10
+  );
 
   return deepFreeze({
     magnitude: stableRound(magnitude, 6),
@@ -120,7 +144,14 @@ function computeSignalMetrics(runtime, render) {
     directionalContrast: stableRound(directionalContrast, 6),
     hue: stableRound(normalizeNumber(color.hue), 3),
     saturation: stableRound(normalizeNumber(color.saturation), 3),
-    value: stableRound(normalizeNumber(color.value), 3)
+    value: stableRound(normalizeNumber(color.value), 3),
+    forces: deepFreeze({
+      N: stableRound(N, 6),
+      E: stableRound(E, 6),
+      S: stableRound(S, 6),
+      W: stableRound(W, 6),
+      B: stableRound(B, 6)
+    })
   });
 }
 

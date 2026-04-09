@@ -2,7 +2,7 @@ export function createWorldKernel(config = {}) {
   const seed = Number.isFinite(config.seed) ? config.seed : 25645161;
   const regionRadius = Number.isFinite(config.regionRadius) ? config.regionRadius : 100;
   const waterRadius = Number.isFinite(config.waterRadius) ? config.waterRadius : 136;
-
+  const roomRadius = Number.isFinite(config.roomRadius) ? config.roomRadius : regionRadius * 0.28;
   const rng = createRng(seed);
 
   const regionPolygon = createDiamondPolygon(regionRadius, 40, 0.16, rng);
@@ -13,15 +13,43 @@ export function createWorldKernel(config = {}) {
   const paths = createPaths(regionRadius);
   const markers = createMarkers(regionRadius);
   const stars = createStars(64, 210, rng);
+  const rooms = createRooms(regionRadius, roomRadius);
+  const house = createHouse(regionRadius, roomRadius);
+  const layers = createLayers(regionRadius, waterRadius);
 
-  const world = {
+  const world = deepFreeze({
+    meta: {
+      name: "WORLD_KERNEL",
+      version: "G1_EXTERNAL_BASELINE",
+      seed,
+      role: "external_host_truth",
+      status: "ACTIVE",
+      posture: "HOUSE_FIRST",
+      signalLaw: "SUBORDINATE_TO_GEOMETRY",
+      metaverse: "DOWNSTREAM_OPTIONAL"
+    },
+
     seed,
+
     bounds: {
       minX: -waterRadius,
       maxX: waterRadius,
       minY: -waterRadius,
       maxY: waterRadius
     },
+
+    host: {
+      type: "house_first_external_host",
+      publicEntry: "house",
+      descendantOrder: ["render", "control", "index", "explore", "products"]
+    },
+
+    layers,
+
+    house,
+
+    rooms,
+
     regions: [
       {
         id: "outer-ground",
@@ -34,6 +62,7 @@ export function createWorldKernel(config = {}) {
         polygon: innerPolygon
       }
     ],
+
     waters: [
       {
         id: "water-shell",
@@ -41,17 +70,108 @@ export function createWorldKernel(config = {}) {
         polygon: waterPolygon
       }
     ],
+
     gridLines,
     paths,
     markers,
     stars
-  };
+  });
 
   function getWorld() {
     return world;
   }
 
-  return { getWorld };
+  function getMeta() {
+    return world.meta;
+  }
+
+  function getHostRead() {
+    return deepFreeze({
+      publicEntry: world.host.publicEntry,
+      house: world.house.id,
+      roomCount: world.rooms.length,
+      layers: world.layers.map(function mapLayer(layer) {
+        return {
+          id: layer.id,
+          label: layer.label,
+          public: layer.public
+        };
+      })
+    });
+  }
+
+  return {
+    getWorld,
+    getMeta,
+    getHostRead
+  };
+}
+
+function createLayers(regionRadius, waterRadius) {
+  return deepFreeze([
+    {
+      id: "flat",
+      label: "World Is Flat",
+      type: "schematic",
+      public: true,
+      description: "Under-the-hood schematic/platform/engineering layer.",
+      radius: regionRadius
+    },
+    {
+      id: "round",
+      label: "World Is Round",
+      type: "living-world",
+      public: true,
+      description: "Living environmental layer: tree, fruit, insects, duration.",
+      radius: regionRadius * 0.9
+    },
+    {
+      id: "globe",
+      label: "World Is A Globe",
+      type: "metaverse",
+      public: true,
+      description: "Outer metaverse layer. Optional for first-contact users.",
+      radius: waterRadius
+    }
+  ]);
+}
+
+function createHouse(regionRadius, roomRadius) {
+  return deepFreeze({
+    id: "house-core",
+    label: "House",
+    x: 0,
+    y: 0,
+    radius: roomRadius * 0.92,
+    entry: true,
+    programmable: true,
+    visibleRooms: true,
+    shellRadius: regionRadius * 0.42
+  });
+}
+
+function createRooms(regionRadius, roomRadius) {
+  const offsets = [
+    { id: "north-room", label: "North Room", x: 0, y: -regionRadius * 0.30, axis: "N" },
+    { id: "east-room", label: "East Room", x: regionRadius * 0.30, y: 0, axis: "E" },
+    { id: "south-room", label: "South Room", x: 0, y: regionRadius * 0.30, axis: "S" },
+    { id: "west-room", label: "West Room", x: -regionRadius * 0.30, y: 0, axis: "W" }
+  ];
+
+  return deepFreeze(
+    offsets.map(function mapRoom(room) {
+      return {
+        id: room.id,
+        label: room.label,
+        axis: room.axis,
+        x: room.x,
+        y: room.y,
+        radius: roomRadius,
+        programmable: true,
+        visibleFromHouse: true
+      };
+    })
+  );
 }
 
 function createDiamondPolygon(radius, pointsPerSide, jitter, rng) {
@@ -61,7 +181,6 @@ function createDiamondPolygon(radius, pointsPerSide, jitter, rng) {
     [0, radius],
     [-radius, 0]
   ];
-
   const polygon = [];
 
   for (let c = 0; c < corners.length; c += 1) {
@@ -74,7 +193,11 @@ function createDiamondPolygon(radius, pointsPerSide, jitter, rng) {
       const y = lerp(a[1], b[1], t);
       const nx = (rng() - 0.5) * radius * jitter;
       const ny = (rng() - 0.5) * radius * jitter;
-      polygon.push({ x: x + nx, y: y + ny });
+
+      polygon.push({
+        x: x + nx,
+        y: y + ny
+      });
     }
   }
 
@@ -111,10 +234,19 @@ function createPaths(radius) {
   const center = { x: 0, y: 0 };
 
   return [
-    { id: "north-south", points: [north, center, south] },
-    { id: "west-east", points: [west, center, east] },
     {
-      id: "ring",
+      id: "north-south",
+      type: "axis",
+      points: [north, center, south]
+    },
+    {
+      id: "west-east",
+      type: "axis",
+      points: [west, center, east]
+    },
+    {
+      id: "house-ring",
+      type: "house-ring",
       points: [
         { x: 0, y: -radius * 0.46 },
         { x: radius * 0.46, y: 0 },
@@ -132,12 +264,13 @@ function createMarkers(radius) {
     { id: "east", label: "East", x: radius * 0.88, y: 0, size: 5 },
     { id: "south", label: "South", x: 0, y: radius * 0.88, size: 5 },
     { id: "west", label: "West", x: -radius * 0.88, y: 0, size: 5 },
-    { id: "core", label: "Core", x: 0, y: 0, size: 6 }
+    { id: "house", label: "House", x: 0, y: 0, size: 7 }
   ];
 }
 
 function createStars(count, spread, rng) {
   const stars = [];
+
   for (let i = 0; i < count; i += 1) {
     stars.push({
       x: (rng() - 0.5) * spread * 2.4,
@@ -146,11 +279,13 @@ function createStars(count, spread, rng) {
       alpha: 0.25 + rng() * 0.75
     });
   }
+
   return stars;
 }
 
 function createRng(seed) {
   let value = seed >>> 0;
+
   return function next() {
     value = (value * 1664525 + 1013904223) >>> 0;
     return value / 4294967296;
@@ -159,4 +294,14 @@ function createRng(seed) {
 
 function lerp(a, b, t) {
   return a + (b - a) * t;
+}
+
+function deepFreeze(value) {
+  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+
+  Object.getOwnPropertyNames(value).forEach(function eachKey(key) {
+    deepFreeze(value[key]);
+  });
+
+  return Object.freeze(value);
 }

@@ -223,6 +223,7 @@
 
   var fieldShell = document.getElementById("field-shell");
   var scene = document.getElementById("scene");
+  var sceneLayer = document.getElementById("scene-layer");
   var nodes = Array.prototype.slice.call(document.querySelectorAll(".node"));
   var panelKicker = document.getElementById("panel-kicker");
   var panelTitle = document.getElementById("panel-title");
@@ -248,19 +249,19 @@
   function buildSubbubbles(sections) {
     return sections.map(function (section, index) {
       return (
-        '<section class="subbubble' + (index === 0 ? ' open' : '') + '">' +
-          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? 'true' : 'false') + '">' +
-            '<div>' +
-              '<div class="subbubble-label">' + escapeHtml(section.label) + '</div>' +
-              '<h3 class="subbubble-title">' + escapeHtml(section.title) + '</h3>' +
-              '<p class="subbubble-mini">' + escapeHtml(section.mini) + '</p>' +
-            '</div>' +
-            '<div class="subbubble-icon">' + (index === 0 ? '−' : '+') + '</div>' +
-          '</button>' +
+        '<section class="subbubble' + (index === 0 ? " open" : "") + '">' +
+          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? "true" : "false") + '">' +
+            "<div>" +
+              '<div class="subbubble-label">' + escapeHtml(section.label) + "</div>" +
+              '<h3 class="subbubble-title">' + escapeHtml(section.title) + "</h3>" +
+              '<p class="subbubble-mini">' + escapeHtml(section.mini) + "</p>" +
+            "</div>" +
+            '<div class="subbubble-icon">' + (index === 0 ? "−" : "+") + "</div>" +
+          "</button>" +
           '<div class="subbubble-panel">' +
-            '<div class="subbubble-panel-inner">' + section.html + '</div>' +
-          '</div>' +
-        '</section>'
+            '<div class="subbubble-panel-inner">' + section.html + "</div>" +
+          "</div>" +
+        "</section>"
       );
     }).join("");
   }
@@ -281,45 +282,110 @@
           var otherToggle = other.querySelector(".subbubble-toggle");
           var otherIcon = other.querySelector(".subbubble-icon");
           if (otherToggle) otherToggle.setAttribute("aria-expanded", "false");
-          if (otherIcon) otherIcon.textContent = '+';
+          if (otherIcon) otherIcon.textContent = "+";
         });
 
         if (!isOpen) {
           bubble.classList.add("open");
           toggle.setAttribute("aria-expanded", "true");
-          if (icon) icon.textContent = '−';
+          if (icon) icon.textContent = "−";
         }
       });
     });
   }
 
+  function clamp(value, min, max) {
+    return Math.max(min, Math.min(max, value));
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function easeOutCubic(t) {
+    return 1 - Math.pow(1 - t, 3);
+  }
+
+  function easeInOutSine(t) {
+    return -(Math.cos(Math.PI * t) - 1) / 2;
+  }
+
   var SCENE = {
-    cameraDepth: 780,
-    sceneDepth: 240,
+    cameraDepth: 980,
+    sceneDepth: 340,
     centerX: 0,
     centerY: 0,
+    width: 0,
+    height: 0,
+    mobile: false,
     objects: []
   };
 
   var OBJECT_CONFIG = [
-    { key: "system-identity", baseAngle: 0.20, speed: 0.00020, radiusX: 300, radiusY: 128, planeTilt: 1.05, tiltX: -22, tiltY: 18, spinSpeed: 0.00055, bobAmp: 10, bobSpeed: 0.0012 },
-    { key: "parent-authority", baseAngle: 1.05, speed: 0.00017, radiusX: 220, radiusY: 220, planeTilt: 0.78, tiltX: -16, tiltY: 24, spinSpeed: 0.00048, bobAmp: 9, bobSpeed: 0.0011 },
-    { key: "vault-overview", baseAngle: 2.15, speed: 0.00022, radiusX: 300, radiusY: 128, planeTilt: 1.10, tiltX: -26, tiltY: 15, spinSpeed: 0.00058, bobAmp: 10, bobSpeed: 0.0013 },
-    { key: "cardinal-coins", baseAngle: 3.05, speed: 0.00016, radiusX: 220, radiusY: 220, planeTilt: 0.80, tiltX: -14, tiltY: 20, spinSpeed: 0.00044, bobAmp: 8, bobSpeed: 0.0010 },
-    { key: "cardinal-mapping", baseAngle: 4.15, speed: 0.00023, radiusX: 220, radiusY: 220, planeTilt: 0.80, tiltX: -18, tiltY: 26, spinSpeed: 0.00052, bobAmp: 8, bobSpeed: 0.00115 },
-    { key: "routing-law", baseAngle: 5.10, speed: 0.00018, radiusX: 300, radiusY: 128, planeTilt: 1.08, tiltX: -24, tiltY: 16, spinSpeed: 0.00057, bobAmp: 10, bobSpeed: 0.00125 },
-    { key: "gyp-distinction", baseAngle: 6.00, speed: 0.00015, radiusX: 220, radiusY: 220, planeTilt: 0.78, tiltX: -16, tiltY: 22, spinSpeed: 0.00046, bobAmp: 9, bobSpeed: 0.0011 },
-    { key: "nonoverlap-status", baseAngle: 7.05, speed: 0.00021, radiusX: 300, radiusY: 128, planeTilt: 1.12, tiltX: -22, tiltY: 18, spinSpeed: 0.00054, bobAmp: 10, bobSpeed: 0.00118 }
+    { key: "system-identity", orbitBand: "outerWide",   baseAngle: 0.10, speed: 0.00016, radiusX: 360, radiusY: 122, planeTilt: 1.08, tiltX: -24, tiltY: 18, spinSpeed: 0.00052, bobAmp: 9,  bobSpeed: 0.00112, laneBias: -0.16 },
+    { key: "parent-authority", orbitBand: "innerNorth", baseAngle: 0.92, speed: 0.00013, radiusX: 216, radiusY: 210, planeTilt: 0.82, tiltX: -16, tiltY: 24, spinSpeed: 0.00044, bobAmp: 7,  bobSpeed: 0.00100, laneBias: -0.08 },
+    { key: "vault-overview",   orbitBand: "outerWide",  baseAngle: 1.72, speed: 0.00017, radiusX: 338, radiusY: 132, planeTilt: 1.04, tiltX: -24, tiltY: 16, spinSpeed: 0.00054, bobAmp: 9,  bobSpeed: 0.00118, laneBias: 0.18 },
+    { key: "cardinal-coins",   orbitBand: "innerSouth", baseAngle: 2.44, speed: 0.00012, radiusX: 222, radiusY: 214, planeTilt: 0.80, tiltX: -14, tiltY: 21, spinSpeed: 0.00042, bobAmp: 7,  bobSpeed: 0.00098, laneBias: -0.14 },
+    { key: "cardinal-mapping", orbitBand: "midBridge",  baseAngle: 3.18, speed: 0.00015, radiusX: 286, radiusY: 164, planeTilt: 0.94, tiltX: -18, tiltY: 25, spinSpeed: 0.00048, bobAmp: 8,  bobSpeed: 0.00106, laneBias: 0.10 },
+    { key: "routing-law",      orbitBand: "outerWide",  baseAngle: 3.98, speed: 0.00016, radiusX: 350, radiusY: 124, planeTilt: 1.10, tiltX: -22, tiltY: 17, spinSpeed: 0.00053, bobAmp: 9,  bobSpeed: 0.00120, laneBias: -0.18 },
+    { key: "gyp-distinction",  orbitBand: "innerNorth", baseAngle: 4.82, speed: 0.00012, radiusX: 212, radiusY: 206, planeTilt: 0.80, tiltX: -16, tiltY: 22, spinSpeed: 0.00043, bobAmp: 7,  bobSpeed: 0.00099, laneBias: 0.12 },
+    { key: "nonoverlap-status",orbitBand: "midBridge",  baseAngle: 5.64, speed: 0.00015, radiusX: 292, radiusY: 168, planeTilt: 0.96, tiltX: -20, tiltY: 18, spinSpeed: 0.00049, bobAmp: 8,  bobSpeed: 0.00108, laneBias: 0.22 }
   ];
+
+  var ORBIT_BANDS = {
+    outerWide:  { radiusX: 360, radiusY: 126, planeTilt: 1.08, sceneZBias: 16,  laneSpread: 54, depthBias: 22 },
+    midBridge:  { radiusX: 286, radiusY: 166, planeTilt: 0.95, sceneZBias: 0,   laneSpread: 42, depthBias: 8 },
+    innerNorth: { radiusX: 214, radiusY: 208, planeTilt: 0.82, sceneZBias: -18, laneSpread: 34, depthBias: -6 },
+    innerSouth: { radiusX: 224, radiusY: 216, planeTilt: 0.79, sceneZBias: -12, laneSpread: 36, depthBias: -2 }
+  };
+
+  function updateSceneMetrics() {
+    var rect = scene.getBoundingClientRect();
+    var width = rect.width || 1;
+    var height = rect.height || 1;
+    var mobile = width <= 820;
+
+    SCENE.width = width;
+    SCENE.height = height;
+    SCENE.mobile = mobile;
+    SCENE.centerX = width / 2;
+    SCENE.centerY = height * (mobile ? 0.56 : 0.54);
+    SCENE.cameraDepth = mobile ? 1180 : 980;
+    SCENE.sceneDepth = mobile ? 380 : 340;
+
+    if (sceneLayer) {
+      sceneLayer.style.transformOrigin = SCENE.centerX + "px " + SCENE.centerY + "px";
+    }
+  }
+
+  function getBandConfig(object) {
+    var band = ORBIT_BANDS[object.orbitBand] || ORBIT_BANDS.midBridge;
+    var mobileScale = SCENE.mobile ? 0.78 : 1;
+    var mobileFlatten = SCENE.mobile ? 0.86 : 1;
+    return {
+      radiusX: object.radiusX ? object.radiusX * mobileScale : band.radiusX * mobileScale,
+      radiusY: object.radiusY ? object.radiusY * mobileFlatten : band.radiusY * mobileFlatten,
+      planeTilt: object.planeTilt != null ? object.planeTilt : band.planeTilt,
+      sceneZBias: band.sceneZBias,
+      laneSpread: band.laneSpread * (SCENE.mobile ? 0.72 : 1),
+      depthBias: band.depthBias
+    };
+  }
 
   function initSceneObjects() {
     SCENE.objects = nodes.map(function (node, index) {
       var config = OBJECT_CONFIG[index];
       var button = node.querySelector(".node-button");
+      var body = node.querySelector(".diamond-body");
+      var label = node.querySelector(".node-label");
+
       return {
         node: node,
         button: button,
+        body: body,
+        label: label,
         key: config.key,
+        orbitBand: config.orbitBand,
         baseAngle: config.baseAngle,
         speed: config.speed,
         radiusX: config.radiusX,
@@ -329,58 +395,138 @@
         tiltY: config.tiltY,
         spinSpeed: config.spinSpeed,
         bobAmp: config.bobAmp,
-        bobSpeed: config.bobSpeed
+        bobSpeed: config.bobSpeed,
+        laneBias: config.laneBias,
+        projected: {
+          x: 0,
+          y: 0,
+          z: 0,
+          depthRatio: 0.5,
+          perspective: 1
+        }
       };
     });
   }
 
-  function updateSceneMetrics() {
-    var rect = scene.getBoundingClientRect();
-    SCENE.centerX = rect.width / 2;
-    SCENE.centerY = rect.height / 2 + 8;
+  function solveFieldSeparation(projectedObjects) {
+    var iterations = 2;
+    var minGapX = SCENE.mobile ? 98 : 116;
+    var minGapY = SCENE.mobile ? 78 : 94;
+    var edgePadX = SCENE.mobile ? 26 : 40;
+    var topPad = SCENE.mobile ? 92 : 68;
+    var bottomPad = SCENE.mobile ? 82 : 58;
+
+    for (var pass = 0; pass < iterations; pass += 1) {
+      projectedObjects.sort(function (a, b) {
+        return a.projected.y - b.projected.y;
+      });
+
+      for (var i = 0; i < projectedObjects.length; i += 1) {
+        var current = projectedObjects[i];
+
+        current.projected.x = clamp(
+          current.projected.x,
+          edgePadX,
+          SCENE.width - edgePadX
+        );
+        current.projected.y = clamp(
+          current.projected.y,
+          topPad,
+          SCENE.height - bottomPad
+        );
+
+        for (var j = i + 1; j < projectedObjects.length; j += 1) {
+          var other = projectedObjects[j];
+          var dx = other.projected.x - current.projected.x;
+          var dy = other.projected.y - current.projected.y;
+          var absDx = Math.abs(dx);
+          var absDy = Math.abs(dy);
+
+          if (absDx < minGapX && absDy < minGapY) {
+            var overlapX = minGapX - absDx;
+            var overlapY = minGapY - absDy;
+
+            if (overlapX >= overlapY) {
+              var pushY = overlapY * 0.5 + 4;
+              current.projected.y -= pushY;
+              other.projected.y += pushY;
+            } else {
+              var pushX = overlapX * 0.5 + 4;
+              if (dx >= 0) {
+                current.projected.x -= pushX;
+                other.projected.x += pushX;
+              } else {
+                current.projected.x += pushX;
+                other.projected.x -= pushX;
+              }
+            }
+
+            current.projected.x = clamp(current.projected.x, edgePadX, SCENE.width - edgePadX);
+            other.projected.x = clamp(other.projected.x, edgePadX, SCENE.width - edgePadX);
+            current.projected.y = clamp(current.projected.y, topPad, SCENE.height - bottomPad);
+            other.projected.y = clamp(other.projected.y, topPad, SCENE.height - bottomPad);
+          }
+        }
+      }
+    }
   }
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
+  function computeProjectedState(object, time) {
+    var band = getBandConfig(object);
+    var angle = object.baseAngle + time * object.speed;
+
+    var orbitX = Math.cos(angle) * band.radiusX;
+    var orbitY = Math.sin(angle) * band.radiusY;
+    var laneOffset = object.laneBias * band.laneSpread;
+    var bob = Math.sin(time * object.bobSpeed + object.baseAngle) * object.bobAmp;
+
+    var z = Math.sin(angle) * SCENE.sceneDepth + band.sceneZBias + band.depthBias;
+    var projectedY = orbitY * Math.cos(band.planeTilt) + bob + laneOffset;
+    var projectedZ = z + (orbitY * Math.sin(band.planeTilt) * 0.48);
+
+    var perspective = SCENE.cameraDepth / (SCENE.cameraDepth - projectedZ);
+    var depthRatio = clamp((projectedZ + SCENE.sceneDepth) / (SCENE.sceneDepth * 2), 0, 1);
+
+    object.projected = {
+      x: SCENE.centerX + orbitX * perspective,
+      y: SCENE.centerY + projectedY * perspective,
+      z: projectedZ,
+      depthRatio: depthRatio,
+      perspective: perspective,
+      angle: angle,
+      laneOffset: laneOffset
+    };
   }
 
   function applyObjectState(object, time) {
-    var angle = object.baseAngle + time * object.speed;
-    var orbitX = Math.cos(angle) * object.radiusX;
-    var orbitY = Math.sin(angle) * object.radiusY;
+    var projected = object.projected;
+    var depthRatio = projected.depthRatio;
 
-    var z = Math.sin(angle) * SCENE.sceneDepth;
-    var bob = Math.sin(time * object.bobSpeed + object.baseAngle) * object.bobAmp;
+    var scale = projected.perspective * (SCENE.mobile ? 0.88 : 0.94);
+    var brightness = 0.80 + depthRatio * 0.32;
+    var opacity = 0.52 + depthRatio * 0.46;
+    var blur = (1 - depthRatio) * (SCENE.mobile ? 0.28 : 0.20);
 
-    var projectedY = orbitY * Math.cos(object.planeTilt) + bob;
-    var projectedZ = z + (orbitY * Math.sin(object.planeTilt) * 0.55);
-
-    var perspective = SCENE.cameraDepth / (SCENE.cameraDepth - projectedZ);
-    var scale = perspective * 0.96;
-    var x = SCENE.centerX + orbitX * perspective;
-    var y = SCENE.centerY + projectedY * perspective;
-
-    var depthRatio = clamp((projectedZ + SCENE.sceneDepth) / (SCENE.sceneDepth * 2), 0, 1);
-    var brightness = 0.78 + depthRatio * 0.34;
-    var opacity = 0.46 + depthRatio * 0.54;
-    var blur = (1 - depthRatio) * 0.45;
     var spinY = Math.sin(time * object.spinSpeed + object.baseAngle) * 42;
     var spinX = object.tiltX + Math.cos(time * object.spinSpeed * 0.77 + object.baseAngle) * 8;
-    var spinZ = Math.sin(time * object.spinSpeed * 0.48 + object.baseAngle) * 8 + (orbitX / object.radiusX) * 3;
+    var spinZ = Math.sin(time * object.spinSpeed * 0.48 + object.baseAngle) * 8 + Math.sin(projected.angle) * 3;
 
     object.node.style.transform =
-      "translate3d(" + (x - object.node.offsetWidth / 2) + "px," + (y - object.node.offsetHeight / 2) + "px,0) " +
+      "translate3d(" + (projected.x - object.node.offsetWidth / 2) + "px," + (projected.y - object.node.offsetHeight / 2) + "px,0) " +
       "scale(" + scale + ")";
     object.node.style.zIndex = String(100 + Math.round(depthRatio * 100));
     object.node.style.opacity = String(opacity);
     object.node.style.filter = "brightness(" + brightness + ") blur(" + blur + "px)";
 
-    var body = object.node.querySelector(".diamond-body");
-    if (body) {
-      body.style.transform =
+    if (object.body) {
+      object.body.style.transform =
         "rotateX(" + spinX + "deg) " +
         "rotateY(" + spinY + "deg) " +
         "rotateZ(" + spinZ + "deg)";
+    }
+
+    if (object.label) {
+      object.label.style.opacity = String(clamp(0.72 + depthRatio * 0.35, 0.72, 1));
     }
   }
 
@@ -388,9 +534,15 @@
     var activeTime = activeKey ? freezeTime : (now - sceneStart);
 
     SCENE.objects.forEach(function (object) {
+      computeProjectedState(object, activeTime);
       if (activeKey && object.key !== activeKey) {
         object.node.classList.remove("active");
       }
+    });
+
+    solveFieldSeparation(SCENE.objects);
+
+    SCENE.objects.forEach(function (object) {
       applyObjectState(object, activeTime);
     });
 
@@ -432,7 +584,11 @@
     fieldShell.classList.remove("reading");
 
     if (lastActiveButton) {
-      lastActiveButton.focus({ preventScroll: true });
+      try {
+        lastActiveButton.focus({ preventScroll: true });
+      } catch (_) {
+        lastActiveButton.focus();
+      }
     }
   }
 
@@ -456,7 +612,13 @@
     }
   });
 
-  window.addEventListener("resize", updateSceneMetrics);
+  window.addEventListener("resize", function () {
+    updateSceneMetrics();
+
+    if (!activeKey) {
+      sceneStart = performance.now();
+    }
+  });
 
   initSceneObjects();
   updateSceneMetrics();

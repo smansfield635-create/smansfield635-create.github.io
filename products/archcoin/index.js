@@ -13,23 +13,17 @@
           mini: "Hierarchy first. Expansion second.",
           html:
             '<div class="detail-card"><h4>Architecture read</h4><p>Archcoin is presented as the parent template. The Vault is presented as the master body. The four cardinal coins are presented as derived governors. This page therefore reads as controlled financial architecture rather than generic crypto branding.</p></div>' +
-            '<ul class="law-list">' +
-            '<li>No foundational rediscovery occurs here.</li>' +
-            '<li>No parent-child flattening is allowed.</li>' +
-            '<li>No role collapse is allowed.</li>' +
-            '<li>Reading begins only after explicit selection.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>No foundational rediscovery occurs here.</li><li>No parent-child flattening is allowed.</li><li>No role collapse is allowed.</li><li>Reading begins only after explicit selection.</li></ul>'
         },
         {
           label: "Bulletin 02",
           title: "Why the motion exists",
           mini: "Motion is for choosing, not for reading.",
           html:
-            '<div class="detail-card"><h4>Interaction law</h4><p>The field reads as a manufacturing scene. Four mint tubes feed coin-objects downward into the vault pile so the architecture feels routed, produced, and accumulated rather than merely displayed.</p></div>'
+            '<div class="detail-card"><h4>Interaction law</h4><p>The field reads as a generation scene. Four archetype mint heads feed coin-objects downward into the vault pile so the architecture feels routed, produced, and accumulated rather than merely displayed.</p></div>'
         }
       ]
     },
-
     "parent-authority": {
       kicker: "Inspection • Parent Authority",
       title: "Archcoin remains the parent template",
@@ -41,11 +35,7 @@
           mini: "Master template and construction authority.",
           html:
             '<div class="detail-card"><h4>Parent authority</h4><p>Archcoin governs the relationship between the body and the governors. It provides the system frame under which the financial classes remain distinct and legible.</p></div>' +
-            '<ul class="law-list">' +
-            '<li>Archcoin must not be flattened into the four derived coins.</li>' +
-            '<li>Archcoin remains above the role-specific lanes.</li>' +
-            '<li>The page’s top truth layer preserves this read immediately.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>Archcoin must not be flattened into the four derived coins.</li><li>Archcoin remains above the role-specific lanes.</li><li>The page’s top truth layer preserves this read immediately.</li></ul>'
         },
         {
           label: "Bulletin 02",
@@ -56,7 +46,6 @@
         }
       ]
     },
-
     "vault-overview": {
       kicker: "Inspection • Master Body",
       title: "The Vault remains the master body",
@@ -74,16 +63,10 @@
           title: "Containment read",
           mini: "Direction and finance class both matter.",
           html:
-            '<ul class="law-list">' +
-            '<li>Objects are not moved generically.</li>' +
-            '<li>The Vault routes by both finance class and cardinal direction.</li>' +
-            '<li>Containment logic stays distinct from parent authority logic.</li>' +
-            '<li>The body remains the same across all lanes.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>Objects are not moved generically.</li><li>The Vault routes by both finance class and cardinal direction.</li><li>Containment logic stays distinct from parent authority logic.</li><li>The body remains the same across all lanes.</li></ul>'
         }
       ]
     },
-
     "cardinal-coins": {
       kicker: "Inspection • Derived Governors",
       title: "Four cardinal coins, four distinct duties",
@@ -99,7 +82,7 @@
             '<div class="mapping-item"><div class="dir">East</div><div class="name">Accounts Receivable Coin</div><div class="desc">Inbound value authority for money due, collected value, and receivable movement.</div></div>' +
             '<div class="mapping-item"><div class="dir">South</div><div class="name">Accounts Payable Coin</div><div class="desc">Outbound obligation authority for liabilities owed and controlled settlement release.</div></div>' +
             '<div class="mapping-item"><div class="dir">West</div><div class="name">GYP Coin</div><div class="desc">Growth-allocation authority for expansion budgets, prediction pressure, and controlled promotion.</div></div>' +
-            "</div>"
+            '</div>'
         },
         {
           label: "Bulletin 02",
@@ -110,7 +93,6 @@
         }
       ]
     },
-
     "cardinal-mapping": {
       kicker: "Inspection • Cardinal-Financial Mapping",
       title: "Direction is not decoration",
@@ -121,23 +103,17 @@
           title: "Literal mapping",
           mini: "North, East, South, and West all mean something exact.",
           html:
-            '<ul class="law-list">' +
-            '<li>North governs contract-class objects and binding control.</li>' +
-            '<li>East governs receivable-class objects and inbound value.</li>' +
-            '<li>South governs payable-class objects and outbound obligation.</li>' +
-            '<li>West governs growth allocation and budgeted expansion.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>North governs contract-class objects and binding control.</li><li>East governs receivable-class objects and inbound value.</li><li>South governs payable-class objects and outbound obligation.</li><li>West governs growth allocation and budgeted expansion.</li></ul>'
         },
         {
           label: "Bulletin 02",
-          title: "Why tube production fits",
-          mini: "Direction is carried by manufacture and descent.",
+          title: "Why mint heads fit",
+          mini: "Direction is carried by generation and descent.",
           html:
-            '<div class="detail-card"><h4>Form fit</h4><p>The manufacturing grammar makes the page read like active financial throughput. The objects behave like minted terminals moving through controlled tubes into the vault instead of decorative badges floating in space.</p></div>'
+            '<div class="detail-card"><h4>Form fit</h4><p>The generation grammar makes the page read like active financial throughput. The objects behave like minted terminals moving through controlled heads into the vault instead of decorative badges floating in space.</p></div>'
         }
       ]
     },
-
     "routing-law": {
       kicker: "Inspection • Retrieval and Routing",
       title: "Stored objects do not move generically",
@@ -155,15 +131,10 @@
           title: "Readback",
           mini: "Parent and body remain stable across all routes.",
           html:
-            '<ul class="law-list">' +
-            '<li>Archcoin remains the parent authority across all routing paths.</li>' +
-            '<li>The Vault remains the master body across all routing paths.</li>' +
-            '<li>Each governor receives only its correct class of burden.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>Archcoin remains the parent authority across all routing paths.</li><li>The Vault remains the master body across all routing paths.</li><li>Each governor receives only its correct class of burden.</li></ul>'
         }
       ]
     },
-
     "gyp-distinction": {
       kicker: "Inspection • GYP Distinction",
       title: "GYP is a governor, not a promise engine",
@@ -181,61 +152,47 @@
           title: "Language discipline",
           mini: "No false promise language.",
           html:
-            '<ul class="law-list">' +
-            '<li>No guaranteed upside language.</li>' +
-            '<li>No listing-story substitution.</li>' +
-            '<li>No role confusion with contracts, receivables, or payables.</li>' +
-            '<li>GYP remains one governor within the five-coin system.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>No guaranteed upside language.</li><li>No listing-story substitution.</li><li>No role confusion with contracts, receivables, or payables.</li><li>GYP remains one governor within the five-coin system.</li></ul>'
         }
       ]
     },
-
     "nonoverlap-status": {
       kicker: "Inspection • Status and Non-Overlap",
       title: "The hierarchy remains visible and clean",
-      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses manufacturing descent into the vault pile.",
+      summary: "The page separates choosing from reading. The architecture remains stable while the field now expresses generated descent into the vault pile.",
       sections: [
         {
           label: "Bulletin 01",
           title: "Current status",
-          mini: "Manufacture during choosing. Stillness during reading.",
+          mini: "Generation during choosing. Stillness during reading.",
           html:
-            '<ul class="law-list">' +
-            '<li>Parent authority expressed: yes.</li>' +
-            '<li>Vault body expressed: yes.</li>' +
-            '<li>Cardinal financial mapping expressed: yes.</li>' +
-            '<li>Mint tube manufacture active: yes.</li>' +
-            '<li>Growing vault pile active: yes.</li>' +
-            '<li>Reading freeze state active: yes.</li>' +
-            "</ul>"
+            '<ul class="law-list"><li>Parent authority expressed: yes.</li><li>Vault body expressed: yes.</li><li>Cardinal financial mapping expressed: yes.</li><li>Archetype mint heads active: yes.</li><li>Growing vault pile active: yes.</li><li>Reading freeze state active: yes.</li></ul>'
         },
         {
           label: "Bulletin 02",
           title: "Non-overlap read",
           mini: "Truth stays in HTML; motion stays in JS.",
           html:
-            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript controls tube sequencing, top-down drops, pile accumulation, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
+            '<div class="detail-card"><h4>Ownership boundary</h4><p>The page’s structural truth remains in the HTML-defined content model. JavaScript controls head sequencing, top-down drops, pile accumulation, selection freeze, restore, and the local open-close behavior of the inner disclosure bullets.</p></div>'
         }
       ]
     }
   };
 
   var COIN_DEFS = [
-    { key: "system-identity", label: "Identity", family: "coin", style: "coin", tube: 0, order: 0 },
-    { key: "parent-authority", label: "Parent", family: "authority", style: "authority", tube: 3, order: 0 },
-    { key: "vault-overview", label: "Vault", family: "description", style: "description", tube: 1, order: 0 },
-    { key: "cardinal-coins", label: "Governors", family: "coin", style: "coin", tube: 0, order: 1 },
-    { key: "cardinal-mapping", label: "Mapping", family: "info", style: "info", tube: 2, order: 0 },
-    { key: "routing-law", label: "Routing", family: "authority", style: "authority", tube: 3, order: 1 },
-    { key: "gyp-distinction", label: "GYP", family: "info", style: "info", tube: 2, order: 1 },
-    { key: "nonoverlap-status", label: "Status", family: "description", style: "description", tube: 1, order: 1 }
+    { key: "system-identity", label: "Identity", family: "coin", style: "coin", head: 0, order: 0 },
+    { key: "parent-authority", label: "Parent", family: "authority", style: "authority", head: 3, order: 0 },
+    { key: "vault-overview", label: "Vault", family: "description", style: "description", head: 1, order: 0 },
+    { key: "cardinal-coins", label: "Governors", family: "coin", style: "coin", head: 0, order: 1 },
+    { key: "cardinal-mapping", label: "Mapping", family: "info", style: "info", head: 2, order: 0 },
+    { key: "routing-law", label: "Routing", family: "authority", style: "authority", head: 3, order: 1 },
+    { key: "gyp-distinction", label: "GYP", family: "info", style: "info", head: 2, order: 1 },
+    { key: "nonoverlap-status", label: "Status", family: "description", style: "description", head: 1, order: 1 }
   ];
 
   var fieldShell = document.getElementById("field-shell");
   var scene = document.getElementById("scene");
-  var sceneLayer = document.getElementById("scene-layer");
-  var tubeHeads = Array.prototype.slice.call(document.querySelectorAll(".tube-head"));
+  var headNodes = Array.prototype.slice.call(document.querySelectorAll(".tube-head"));
   var fallField = document.getElementById("fall-field");
   var pileCoins = document.getElementById("pile-coins");
   var panelKicker = document.getElementById("panel-kicker");
@@ -256,8 +213,7 @@
     metrics: {
       fallRect: null,
       pileRect: null,
-      sceneRect: null,
-      tubeX: [0, 0, 0, 0]
+      headX: [0, 0, 0, 0]
     }
   };
 
@@ -282,19 +238,17 @@
   function buildSubbubbles(sections) {
     return sections.map(function (section, index) {
       return (
-        '<section class="subbubble' + (index === 0 ? " open" : "") + '">' +
-          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? "true" : "false") + '">' +
-            "<div>" +
-              '<div class="subbubble-label">' + escapeHtml(section.label) + "</div>" +
-              '<h3 class="subbubble-title">' + escapeHtml(section.title) + "</h3>" +
-              '<p class="subbubble-mini">' + escapeHtml(section.mini) + "</p>" +
-            "</div>" +
-            '<div class="subbubble-icon">' + (index === 0 ? "−" : "+") + "</div>" +
-          "</button>" +
-          '<div class="subbubble-panel">' +
-            '<div class="subbubble-panel-inner">' + section.html + "</div>" +
-          "</div>" +
-        "</section>"
+        '<section class="subbubble' + (index === 0 ? ' open' : '') + '">' +
+          '<button class="subbubble-toggle" type="button" aria-expanded="' + (index === 0 ? 'true' : 'false') + '">' +
+            '<div>' +
+              '<div class="subbubble-label">' + escapeHtml(section.label) + '</div>' +
+              '<h3 class="subbubble-title">' + escapeHtml(section.title) + '</h3>' +
+              '<p class="subbubble-mini">' + escapeHtml(section.mini) + '</p>' +
+            '</div>' +
+            '<div class="subbubble-icon">' + (index === 0 ? '−' : '+') + '</div>' +
+          '</button>' +
+          '<div class="subbubble-panel"><div class="subbubble-panel-inner">' + section.html + '</div></div>' +
+        '</section>'
       );
     }).join("");
   }
@@ -305,10 +259,8 @@
       var toggle = bubble.querySelector(".subbubble-toggle");
       var icon = bubble.querySelector(".subbubble-icon");
       if (!toggle) return;
-
       toggle.addEventListener("click", function () {
         var isOpen = bubble.classList.contains("open");
-
         bubbles.forEach(function (other) {
           other.classList.remove("open");
           var otherToggle = other.querySelector(".subbubble-toggle");
@@ -316,7 +268,6 @@
           if (otherToggle) otherToggle.setAttribute("aria-expanded", "false");
           if (otherIcon) otherIcon.textContent = "+";
         });
-
         if (!isOpen) {
           bubble.classList.add("open");
           toggle.setAttribute("aria-expanded", "true");
@@ -334,26 +285,22 @@
     button.setAttribute("data-family", definition.family);
     button.setAttribute("data-style", definition.style);
     button.setAttribute("aria-label", definition.label);
-
     button.innerHTML =
       '<div class="coin-shell">' +
         '<div class="coin-rim"></div>' +
         '<div class="coin-face"></div>' +
         '<div class="coin-sigil"></div>' +
         '<div class="coin-markers"><i class="n"></i><i class="e"></i><i class="s"></i><i class="w"></i></div>' +
-      "</div>" +
-      '<div class="coin-label">' + escapeHtml(definition.label) + "</div>";
-
+      '</div>' +
+      '<div class="coin-label">' + escapeHtml(definition.label) + '</div>';
     return button;
   }
 
   function updateMetrics() {
-    runtime.metrics.sceneRect = scene.getBoundingClientRect();
     runtime.metrics.fallRect = fallField.getBoundingClientRect();
     runtime.metrics.pileRect = pileCoins.getBoundingClientRect();
-
-    runtime.metrics.tubeX = tubeHeads.map(function (tubeHead) {
-      var rect = tubeHead.getBoundingClientRect();
+    runtime.metrics.headX = headNodes.map(function (node) {
+      var rect = node.getBoundingClientRect();
       return rect.left + rect.width * 0.5 - runtime.metrics.fallRect.left;
     });
   }
@@ -372,9 +319,9 @@
         definition: definition,
         button: button,
         landed: false,
-        activeDropMs: 7600 + definition.order * 340 + definition.tube * 140,
-        startDelayMs: definition.order * 1800 + definition.tube * 420,
-        wobbleSeed: index * 0.73 + 1.2
+        dropMs: 7600 + definition.order * 320 + definition.head * 150,
+        startDelayMs: definition.order * 1780 + definition.head * 420,
+        wobbleSeed: index * 0.77 + 1.3
       });
 
       button.addEventListener("click", function () {
@@ -396,15 +343,12 @@
   function openInspection(key, button) {
     var data = DATA[key];
     if (!data) return;
-
     runtime.activeKey = key;
     runtime.freezeTime = runtime.lastFrameTime ? runtime.lastFrameTime - runtime.sceneStart : 0;
     runtime.lastActiveButton = button || null;
 
     clearActiveButtons();
-    if (button) {
-      button.classList.add("active");
-    }
+    if (button) button.classList.add("active");
 
     panelKicker.textContent = data.kicker;
     panelTitle.textContent = data.title;
@@ -418,7 +362,6 @@
     runtime.activeKey = null;
     clearActiveButtons();
     fieldShell.classList.remove("reading");
-
     if (runtime.lastActiveButton) {
       runtime.lastActiveButton.focus({ preventScroll: true });
     }
@@ -429,40 +372,38 @@
     clone.setAttribute("aria-hidden", "true");
     clone.tabIndex = -1;
     clone.style.pointerEvents = "none";
+    clone.style.opacity = "0.98";
     clone.style.left = x + "px";
     clone.style.top = y + "px";
-    clone.style.transform =
-      "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ") rotate(" + rotation + "deg)";
-    clone.style.opacity = "0.98";
-    clone.style.filter = "brightness(1.02)";
+    clone.style.transform = "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ") rotate(" + rotation + "deg)";
     pileCoins.appendChild(clone);
     runtime.landed.push(clone);
   }
 
-  function settleCoin(coin, nowMs) {
+  function settleCoin(coin, activeTime) {
     if (coin.landed) return;
     coin.landed = true;
     coin.button.style.display = "none";
 
     var pileWidth = runtime.metrics.pileRect.width;
     var pileHeight = runtime.metrics.pileRect.height;
-    var stackBaseX = pileWidth * 0.5;
-    var bandWidth = pileWidth * 0.54;
-    var normalizedTube = (coin.definition.tube - 1.5) / 1.5;
+    var moundCenter = pileWidth * 0.5;
+    var bandWidth = pileWidth * 0.52;
+    var normalizedHead = (coin.definition.head - 1.5) / 1.5;
     var x =
-      stackBaseX +
-      normalizedTube * bandWidth * 0.28 +
-      Math.sin(nowMs * 0.001 + coin.wobbleSeed) * 12 +
+      moundCenter +
+      normalizedHead * bandWidth * 0.25 +
+      Math.sin(activeTime * 0.001 + coin.wobbleSeed) * 10 +
       (coin.definition.order ? 14 : -14);
 
     var y =
-      pileHeight * 0.63 +
-      coin.definition.order * 20 +
-      coin.definition.tube * 6 +
-      Math.cos(nowMs * 0.0013 + coin.wobbleSeed) * 5;
+      pileHeight * 0.62 +
+      coin.definition.order * 18 +
+      coin.definition.head * 6 +
+      Math.cos(activeTime * 0.0012 + coin.wobbleSeed) * 4;
 
-    var scale = 0.82 + coin.definition.order * 0.06 + coin.definition.tube * 0.01;
-    var rotation = -10 + coin.definition.tube * 6 + coin.definition.order * 4;
+    var scale = 0.82 + coin.definition.order * 0.06 + coin.definition.head * 0.01;
+    var rotation = -10 + coin.definition.head * 6 + coin.definition.order * 4;
 
     createPileClone(coin, x, y, scale, rotation);
   }
@@ -476,16 +417,14 @@
       return;
     }
 
-    var progress = clamp(elapsed / coin.activeDropMs, 0, 1);
+    var progress = clamp(elapsed / coin.dropMs, 0, 1);
     var eased = easeInCubic(progress);
 
     var startY = -120;
     var endY = runtime.metrics.fallRect.height + 60;
-    var xBase = runtime.metrics.tubeX[coin.definition.tube] || runtime.metrics.fallRect.width * 0.5;
+    var xBase = runtime.metrics.headX[coin.definition.head] || runtime.metrics.fallRect.width * 0.5;
 
-    var sway =
-      Math.sin(progress * Math.PI * 1.15 + coin.wobbleSeed) *
-      (14 + coin.definition.order * 3);
+    var sway = Math.sin(progress * Math.PI * 1.15 + coin.wobbleSeed) * (14 + coin.definition.order * 3);
     var drift = Math.cos(activeTime * 0.0007 + coin.wobbleSeed) * 6;
     var x = xBase + sway + drift;
     var y = startY + (endY - startY) * eased;
@@ -497,26 +436,21 @@
     if (progress > 0.96) opacity *= (1 - progress) / 0.04;
     opacity = clamp(opacity, 0, 1);
 
-    var rotateY = Math.sin(activeTime * 0.001 + coin.wobbleSeed) * 10;
-    var rotateX = 66 + Math.cos(activeTime * 0.0009 + coin.wobbleSeed) * 4;
-    var rotateZ = Math.sin(activeTime * 0.0007 + coin.wobbleSeed) * 3;
-
     coin.button.style.display = "block";
     coin.button.style.opacity = String(opacity);
     coin.button.style.zIndex = String(40 + Math.round(depth * 70));
-    coin.button.style.transform =
-      "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ")";
+    coin.button.style.transform = "translate3d(" + (x - 58) + "px," + (y - 58) + "px,0) scale(" + scale + ")";
     coin.button.style.filter = "brightness(" + (0.9 + depth * 0.18) + ")";
 
     var shell = coin.button.querySelector(".coin-shell");
     if (shell) {
-      shell.style.transform =
-        "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) rotateZ(" + rotateZ + "deg)";
+      var rotateY = Math.sin(activeTime * 0.001 + coin.wobbleSeed) * 10;
+      var rotateX = 66 + Math.cos(activeTime * 0.0009 + coin.wobbleSeed) * 4;
+      var rotateZ = Math.sin(activeTime * 0.0007 + coin.wobbleSeed) * 3;
+      shell.style.transform = "rotateX(" + rotateX + "deg) rotateY(" + rotateY + "deg) rotateZ(" + rotateZ + "deg)";
     }
 
-    if (progress >= 1) {
-      settleCoin(coin, activeTime);
-    }
+    if (progress >= 1) settleCoin(coin, activeTime);
   }
 
   function animate(now) {
@@ -535,23 +469,14 @@
 
   function handleResize() {
     updateMetrics();
-
-    runtime.landed.forEach(function (landedCoin, index) {
-      var offsetX = (index % 4) * 14 - 21;
-      var offsetY = Math.floor(index / 4) * 14;
-      landedCoin.style.left = runtime.metrics.pileRect.width * 0.5 + offsetX + "px";
-      landedCoin.style.top = runtime.metrics.pileRect.height * 0.68 + offsetY + "px";
-    });
   }
 
   panelClose.addEventListener("click", closeInspection);
-
   document.addEventListener("keydown", function (event) {
     if (event.key === "Escape" && fieldShell.classList.contains("reading")) {
       closeInspection();
     }
   });
-
   window.addEventListener("resize", handleResize);
 
   updateMetrics();

@@ -222,8 +222,8 @@
       min-height:760px;
       background:
         linear-gradient(180deg, rgba(4,9,18,.84), rgba(3,7,13,.92)),
-        radial-gradient(circle at 20% 24%, rgba(94,168,255,.09), transparent 20%),
-        radial-gradient(circle at 80% 24%, rgba(255,109,109,.08), transparent 18%);
+        radial-gradient(circle at 20% 24%, rgba(94,168,255,.08), transparent 22%),
+        radial-gradient(circle at 80% 24%, rgba(255,109,109,.08), transparent 20%);
       box-shadow:var(--shadow);
     }
 
@@ -281,24 +281,14 @@
       border:1px solid rgba(160,205,255,.12);
       border-radius:50%;
       box-shadow:0 0 20px rgba(94,168,255,.04);
-      opacity:.60;
-      transform-style:preserve-3d;
+      opacity:0;
+      display:none;
       pointer-events:none;
     }
 
     .orbit-ring.red{
       border-color:rgba(255,132,132,.10);
       box-shadow:0 0 18px rgba(255,109,109,.04);
-    }
-
-    .orbit-ring::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      border-radius:50%;
-      border-top:1px solid rgba(255,255,255,.14);
-      border-bottom:1px solid rgba(255,255,255,.03);
-      opacity:.50;
     }
 
     .node{
@@ -721,7 +711,7 @@
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
         The four cardinal coins remain distinct financial governors for contracts, inbound value, outbound obligation,
-        and growth allocation. Choose an object to inspect. The field pauses while you read.
+        and growth allocation. Choose an object to inspect. The field rises while you choose and freezes while you read.
       </p>
 
       <div class="truth-band" aria-label="Top-level system truth">
@@ -743,15 +733,15 @@
         </div>
         <div class="truth-chip">
           <div class="label">Read</div>
-          <div class="value">High-control financial architecture</div>
+          <div class="value">Ascending corridor architecture</div>
         </div>
       </div>
     </section>
 
     <section class="field-shell" id="field-shell" aria-label="Archcoin selection field">
       <div class="field-topbar">
-        <div class="field-title">Select a star-compass object to inspect</div>
-        <div class="field-hint">Motion for choosing. Stillness for reading.</div>
+        <div class="field-title">Select a rising star-compass object to inspect</div>
+        <div class="field-hint">Launch for choosing. Stillness for reading.</div>
       </div>
 
       <div class="scene" id="scene">
@@ -874,7 +864,7 @@
               <div class="panel-row">
                 <div>
                   <h2 class="panel-title" id="panel-title">Select an object</h2>
-                  <p class="panel-summary" id="panel-summary">Choose one of the rotating star-compass objects to inspect the corresponding architecture bulletin.</p>
+                  <p class="panel-summary" id="panel-summary">Choose one of the rising star-compass objects to inspect the corresponding architecture bulletin.</p>
                 </div>
                 <button class="panel-close" id="panel-close" type="button" aria-label="Close inspection">Close inspection</button>
               </div>

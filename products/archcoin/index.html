@@ -6,7 +6,7 @@
   <title>Archcoin | Richie Rich's Vault</title>
   <meta
     name="description"
-    content="Archcoin is presented as a controlled five-coin financial architecture inside a cinematic vault scene, with four mint tubes generating coins into a growing vault pile."
+    content="Archcoin is presented as a controlled five-coin financial architecture inside a cinematic vault scene, with four archetype mint heads feeding coins into a growing vault pile."
   />
   <style>
     :root{
@@ -95,15 +95,8 @@
       opacity:.88;
     }
 
-    @keyframes twinkleA{
-      0%,100%{opacity:.50}
-      50%{opacity:.84}
-    }
-
-    @keyframes twinkleB{
-      0%,100%{opacity:.26}
-      50%{opacity:.60}
-    }
+    @keyframes twinkleA{0%,100%{opacity:.50}50%{opacity:.84}}
+    @keyframes twinkleB{0%,100%{opacity:.26}50%{opacity:.60}}
 
     .page{
       position:relative;
@@ -190,7 +183,7 @@
       overflow:hidden;
       border:1px solid var(--line);
       border-radius:34px;
-      min-height:920px;
+      min-height:940px;
       background:
         linear-gradient(180deg, rgba(4,9,18,.88), rgba(3,7,13,.96)),
         radial-gradient(circle at 50% 14%, rgba(255,228,163,.10), transparent 18%),
@@ -222,7 +215,7 @@
 
     .scene{
       position:relative;
-      min-height:840px;
+      min-height:860px;
       overflow:hidden;
       perspective:1200px;
       perspective-origin:50% 32%;
@@ -246,43 +239,105 @@
       position:absolute;
       left:0;
       right:0;
-      top:24px;
+      top:16px;
       z-index:2;
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-      padding:0 26px;
+      gap:18px;
+      padding:0 28px;
       pointer-events:none;
     }
 
     .tube-head{
       position:relative;
-      height:120px;
+      height:150px;
       display:flex;
       justify-content:center;
       align-items:flex-start;
     }
 
-    .tube-cap{
+    .machine-crown{
       position:absolute;
       top:0;
-      width:96px;
-      height:34px;
-      border-radius:999px;
+      width:116px;
+      height:116px;
+      border-radius:58px 58px 34px 34px;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255,255,255,.16), transparent 34%),
+        radial-gradient(circle at 50% 50%, rgba(255,228,163,.16), transparent 56%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.16)),
+        linear-gradient(145deg, rgba(22,28,38,.92), rgba(10,14,22,.98));
+      box-shadow:
+        0 0 24px rgba(255,228,163,.10),
+        inset 0 1px 0 rgba(255,255,255,.16);
+      overflow:hidden;
+    }
+
+    .machine-window{
+      position:absolute;
+      left:50%;
+      top:16px;
+      width:78px;
+      height:62px;
+      transform:translateX(-50%);
+      border-radius:40px 40px 24px 24px;
       border:1px solid rgba(255,255,255,.14);
       background:
-        linear-gradient(180deg, rgba(255,255,255,.12), rgba(0,0,0,.16)),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.18), transparent 60%);
-      box-shadow:
-        0 0 20px rgba(255,228,163,.10),
-        inset 0 1px 0 rgba(255,255,255,.16);
+        radial-gradient(circle at 50% 35%, rgba(255,255,255,.14), transparent 34%),
+        linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.02)),
+        radial-gradient(circle at 50% 50%, rgba(255,228,163,.08), transparent 60%);
+      overflow:hidden;
+    }
+
+    .machine-window::before,
+    .machine-window::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,228,163,.88), rgba(255,213,143,.44) 58%, transparent 76%);
+      width:22px;
+      height:22px;
+      top:14px;
+      box-shadow:0 0 12px rgba(255,228,163,.18);
+    }
+
+    .machine-window::before{left:12px}
+    .machine-window::after{right:12px}
+
+    .machine-window i{
+      position:absolute;
+      left:50%;
+      bottom:10px;
+      width:18px;
+      height:18px;
+      margin-left:-9px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(201,228,255,.90), rgba(157,208,255,.44) 58%, transparent 76%);
+      box-shadow:0 0 12px rgba(157,208,255,.18);
+    }
+
+    .machine-label{
+      position:absolute;
+      left:50%;
+      top:84px;
+      transform:translateX(-50%);
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      font-size:10px;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:rgba(255,255,255,.68);
+      white-space:nowrap;
     }
 
     .tube-neck{
-      position:relative;
-      top:26px;
+      position:absolute;
+      top:102px;
       width:34px;
-      height:96px;
+      height:98px;
       border-radius:20px;
       border:1px solid rgba(255,255,255,.12);
       background:
@@ -295,28 +350,18 @@
 
     .tube-flow{
       position:absolute;
-      top:40px;
+      top:116px;
       width:10px;
-      height:80px;
+      height:84px;
       border-radius:999px;
       background:linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,228,163,.16), rgba(94,168,255,.06), transparent 100%);
       filter:blur(2px);
       opacity:.72;
     }
 
-    .tube-label{
-      position:absolute;
-      top:92px;
-      font-size:10px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:rgba(255,255,255,.62);
-      white-space:nowrap;
-    }
-
     .fall-field{
       position:absolute;
-      inset:138px 22px 160px;
+      inset:212px 22px 168px;
       z-index:1;
       pointer-events:none;
     }
@@ -326,7 +371,7 @@
       left:18px;
       right:18px;
       bottom:18px;
-      height:210px;
+      height:218px;
       z-index:2;
       border-radius:28px;
       border:1px solid rgba(255,255,255,.08);
@@ -347,7 +392,7 @@
       left:50%;
       bottom:10px;
       width:72%;
-      height:110px;
+      height:118px;
       transform:translateX(-50%);
       border-radius:50%;
       background:radial-gradient(circle at 50% 50%, rgba(255,228,163,.16), rgba(255,228,163,.04) 56%, transparent 72%);
@@ -848,16 +893,21 @@
       .page{padding:18px 14px 64px}
       .hero{padding:24px 18px 20px}
       .truth-band{grid-template-columns:1fr}
-      .field-shell{min-height:980px}
-      .scene{min-height:900px}
+      .field-shell{min-height:1010px}
+      .scene{min-height:930px}
       .panel-wrap{padding:14px}
       .panel-row{flex-direction:column}
       .panel-close{align-self:flex-start}
       .mapping-grid{grid-template-columns:1fr}
       .vault-top{padding:0 12px;gap:6px}
-      .tube-cap{width:72px}
+      .machine-crown{width:88px;height:96px;border-radius:44px 44px 26px 26px}
+      .machine-window{width:58px;height:48px}
+      .machine-label{top:72px;font-size:9px}
+      .tube-neck{top:86px;height:90px}
+      .tube-flow{top:98px;height:78px}
       .coin{width:104px;height:104px}
-      .pile-zone{height:220px}
+      .pile-zone{height:228px}
+      .fall-field{inset:190px 12px 172px}
     }
 
     @media (max-width:560px){
@@ -872,10 +922,13 @@
       .panel-summary{font-size:15px}
       .coin-face{inset:8px}
       .coin-sigil{inset:18px}
-      .tube-head{height:104px}
-      .tube-neck{height:82px}
-      .tube-flow{height:68px}
-      .fall-field{inset:126px 10px 168px}
+      .machine-crown{width:74px;height:88px}
+      .machine-window{width:50px;height:40px;top:14px}
+      .machine-label{top:64px}
+      .tube-head{height:132px}
+      .tube-neck{top:78px;height:82px}
+      .tube-flow{top:92px;height:68px}
+      .fall-field{inset:174px 10px 174px}
     }
   </style>
 </head>
@@ -888,7 +941,7 @@
       <h1 id="page-title">One parent. One body. Four derived governors.</h1>
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
-        Four mint tubes generate a growing vault pile below, with each coin family sharing one production line while keeping its own face, appearance, and identity.
+        Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity.
         Refresh restarts the generation cycle from the top.
       </p>
 
@@ -902,7 +955,7 @@
           <div class="value">The Vault</div>
         </div>
         <div class="truth-chip">
-          <div class="label">Mint Tubes</div>
+          <div class="label">Mint Heads</div>
           <div class="value">Coin, Description, Info, Authority</div>
         </div>
         <div class="truth-chip">
@@ -925,29 +978,37 @@
       <div class="scene" id="scene">
         <div class="scene-layer" id="scene-layer">
           <div class="vault-top" aria-hidden="true">
-            <div class="tube-head">
-              <div class="tube-cap"></div>
+            <div class="tube-head" data-head="coin">
+              <div class="machine-crown">
+                <div class="machine-window"><i></i></div>
+                <div class="machine-label">Coin</div>
+              </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <div class="tube-label">Coin Tube</div>
             </div>
-            <div class="tube-head">
-              <div class="tube-cap"></div>
+            <div class="tube-head" data-head="description">
+              <div class="machine-crown">
+                <div class="machine-window"><i></i></div>
+                <div class="machine-label">Description</div>
+              </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <div class="tube-label">Description Tube</div>
             </div>
-            <div class="tube-head">
-              <div class="tube-cap"></div>
+            <div class="tube-head" data-head="info">
+              <div class="machine-crown">
+                <div class="machine-window"><i></i></div>
+                <div class="machine-label">Info</div>
+              </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <div class="tube-label">Info Tube</div>
             </div>
-            <div class="tube-head">
-              <div class="tube-cap"></div>
+            <div class="tube-head" data-head="authority">
+              <div class="machine-crown">
+                <div class="machine-window"><i></i></div>
+                <div class="machine-label">Authority</div>
+              </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <div class="tube-label">Authority Tube</div>
             </div>
           </div>
 

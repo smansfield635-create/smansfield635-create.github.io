@@ -249,7 +249,7 @@
 
     .tube-head{
       position:relative;
-      height:170px;
+      height:182px;
       display:flex;
       justify-content:center;
       align-items:flex-start;
@@ -364,45 +364,77 @@
       pointer-events:none;
     }
 
-    .machine-knob{
+    .control-assembly{
       position:absolute;
       top:118px;
       left:50%;
-      width:42px;
-      height:42px;
-      margin-left:-21px;
-      border-radius:50%;
+      width:62px;
+      height:46px;
+      margin-left:-31px;
       border:1px solid rgba(255,255,255,.16);
+      border-radius:999px;
       background:
-        radial-gradient(circle at 32% 30%, rgba(255,255,255,.24), transparent 28%),
-        radial-gradient(circle at 50% 50%, rgba(255,228,163,.18), transparent 58%),
-        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.16)),
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,.14), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(255,228,163,.14), transparent 58%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.18)),
         linear-gradient(145deg, rgba(24,30,40,.98), rgba(10,14,22,.98));
       box-shadow:
         0 0 18px rgba(255,228,163,.08),
         inset 0 1px 0 rgba(255,255,255,.14);
+      transform-origin:50% 50%;
+      transition:transform .28s ease;
       pointer-events:auto;
       cursor:pointer;
-      transform-origin:50% 50%;
-      transition:transform .26s ease;
     }
 
-    .machine-knob::before{
+    .control-assembly::before{
       content:"";
+      position:absolute;
+      inset:8px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.05), rgba(0,0,0,.08)),
+        radial-gradient(circle at 50% 50%, rgba(255,228,163,.08), transparent 64%);
+    }
+
+    .control-assembly.turning{
+      transform:rotate(25deg);
+    }
+
+    .control-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:28px;
+      height:28px;
+      margin-left:-14px;
+      margin-top:-14px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 32% 30%, rgba(255,255,255,.22), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(255,228,163,.16), transparent 60%),
+        linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.16)),
+        linear-gradient(145deg, rgba(18,24,34,.98), rgba(8,12,18,.98));
+      box-shadow:
+        0 0 12px rgba(255,228,163,.08),
+        inset 0 1px 0 rgba(255,255,255,.12);
+      pointer-events:none;
+    }
+
+    .control-indicator{
       position:absolute;
       left:50%;
       top:50%;
       width:4px;
-      height:15px;
+      height:16px;
       margin-left:-2px;
       margin-top:-13px;
       border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.86), rgba(255,228,163,.56));
+      background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,228,163,.56));
       box-shadow:0 0 10px rgba(255,228,163,.16);
-    }
-
-    .machine-knob.turning{
-      transform:rotate(25deg);
+      pointer-events:none;
     }
 
     .fall-field{
@@ -943,8 +975,8 @@
       .page{padding:18px 14px 64px}
       .hero{padding:24px 18px 20px}
       .truth-band{grid-template-columns:1fr}
-      .field-shell{min-height:1010px}
-      .scene{min-height:930px}
+      .field-shell{min-height:1028px}
+      .scene{min-height:946px}
       .panel-wrap{padding:14px}
       .panel-row{flex-direction:column}
       .panel-close{align-self:flex-start}
@@ -955,7 +987,8 @@
       .machine-label{top:72px;font-size:9px}
       .tube-neck{top:86px;height:90px}
       .tube-flow{top:98px;height:78px}
-      .machine-knob{top:102px;width:38px;height:38px;margin-left:-19px}
+      .control-assembly{top:102px;width:54px;height:42px;margin-left:-27px}
+      .control-core{width:24px;height:24px;margin-left:-12px;margin-top:-12px}
       .coin{width:104px;height:104px}
       .pile-zone{height:228px}
       .fall-field{inset:190px 12px 172px}
@@ -976,10 +1009,11 @@
       .machine-crown{width:74px;height:88px}
       .machine-window{width:50px;height:40px;top:14px}
       .machine-label{top:64px}
-      .tube-head{height:146px}
+      .tube-head{height:152px}
       .tube-neck{top:78px;height:82px}
       .tube-flow{top:92px;height:68px}
-      .machine-knob{top:96px;width:34px;height:34px;margin-left:-17px}
+      .control-assembly{top:96px;width:48px;height:38px;margin-left:-24px}
+      .control-core{width:22px;height:22px;margin-left:-11px;margin-top:-11px}
       .fall-field{inset:174px 10px 174px}
     }
   </style>
@@ -994,7 +1028,7 @@
       <p class="subhead">
         Archcoin remains the parent template and construction authority. The Vault remains the master body.
         Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity.
-        Tap a mint head to turn its knob and release one coin.
+        Tap a control assembly to rotate the full cylinder and release one coin.
       </p>
 
       <div class="truth-band" aria-label="Top-level system truth">
@@ -1012,7 +1046,7 @@
         </div>
         <div class="truth-chip">
           <div class="label">Generation Law</div>
-          <div class="value">Tap knob, release one coin</div>
+          <div class="value">Turn full cylinder 25°</div>
         </div>
         <div class="truth-chip">
           <div class="label">Read</div>
@@ -1024,7 +1058,7 @@
     <section class="field-shell" id="field-shell" aria-label="Archcoin vault field">
       <div class="field-topbar">
         <div class="field-title">Select a generated coin-object to inspect</div>
-        <div class="field-hint">Tap a head to mint. Tap a falling coin to inspect.</div>
+        <div class="field-hint">Tap a head control to mint. Tap a falling coin to inspect.</div>
       </div>
 
       <div class="scene" id="scene">
@@ -1037,7 +1071,9 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <button class="machine-knob" type="button" data-head-index="0" aria-label="Dispense from Coin head"></button>
+              <button class="control-assembly" type="button" data-head-index="0" aria-label="Dispense from Coin head">
+                <span class="control-core"><span class="control-indicator"></span></span>
+              </button>
             </div>
             <div class="tube-head" data-head="description">
               <div class="machine-crown">
@@ -1046,7 +1082,9 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <button class="machine-knob" type="button" data-head-index="1" aria-label="Dispense from Description head"></button>
+              <button class="control-assembly" type="button" data-head-index="1" aria-label="Dispense from Description head">
+                <span class="control-core"><span class="control-indicator"></span></span>
+              </button>
             </div>
             <div class="tube-head" data-head="info">
               <div class="machine-crown">
@@ -1055,7 +1093,9 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <button class="machine-knob" type="button" data-head-index="2" aria-label="Dispense from Info head"></button>
+              <button class="control-assembly" type="button" data-head-index="2" aria-label="Dispense from Info head">
+                <span class="control-core"><span class="control-indicator"></span></span>
+              </button>
             </div>
             <div class="tube-head" data-head="authority">
               <div class="machine-crown">
@@ -1064,7 +1104,9 @@
               </div>
               <div class="tube-neck"></div>
               <div class="tube-flow"></div>
-              <button class="machine-knob" type="button" data-head-index="3" aria-label="Dispense from Authority head"></button>
+              <button class="control-assembly" type="button" data-head-index="3" aria-label="Dispense from Authority head">
+                <span class="control-core"><span class="control-indicator"></span></span>
+              </button>
             </div>
           </div>
 

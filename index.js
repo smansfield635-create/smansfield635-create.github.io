@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Why the Metaverse Works | Under the Hood | CPU Processing</title>
+  <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A visible three-layer laws page: why the metaverse works, what is actually under the hood, and laws with CPU processing, plus direct frontier access."
+    content="House-first public entry for Diamond Gate Bridge. Stable Euclidean host, visible rooms, governed surfaces, and metaverse classification held until evidenced."
   />
   <style>
     :root{
@@ -19,18 +19,18 @@
       --line2:rgba(127,255,212,.16);
       --text:#e8f6ff;
       --muted:rgba(232,246,255,.68);
-      --muted2:rgba(232,246,255,.48);
       --accent:#7fffd4;
       --accent2:#6fe7ff;
-      --warn:#ffd27a;
       --good:#7fffd4;
+      --warn:#ffd27a;
+      --bad:#ff7a7a;
       --shadow:0 14px 40px rgba(0,0,0,.30);
       --shadow2:0 20px 70px rgba(0,0,0,.38);
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
       --safe-bottom:env(safe-area-inset-bottom,0px);
       --safe-left:env(safe-area-inset-left,0px);
-      --maxw:1460px;
+      --maxw:1440px;
       --radius:16px;
       --radius2:22px;
     }
@@ -49,8 +49,7 @@
 
     body{min-height:100vh;overflow-x:hidden}
 
-    .hostGlow,
-    .gridLines{
+    .hostGlow,.gridLines{
       position:fixed;
       inset:0;
       pointer-events:none;
@@ -114,14 +113,11 @@
       display:grid;
       grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
       gap:12px;
+      align-items:stretch;
       margin-bottom:12px;
     }
 
-    .heroCard,
-    .statusCard,
-    .layerHero,
-    .layerPanel,
-    .footer{
+    .heroCard,.statusCard,.sceneShell,.panel,.footer{
       border:1px solid var(--line);
       border-radius:var(--radius2);
       background:
@@ -130,9 +126,7 @@
       box-shadow:var(--shadow2);
     }
 
-    .heroCard{
-      padding:22px 20px 20px;
-    }
+    .heroCard{padding:22px 20px 20px}
 
     .eyebrow{
       display:inline-flex;
@@ -152,10 +146,10 @@
 
     h1{
       margin:0 0 14px;
-      font-size:clamp(36px,5.4vw,74px);
-      line-height:.96;
+      font-size:clamp(38px,6vw,82px);
+      line-height:.94;
       letter-spacing:-.06em;
-      max-width:12ch;
+      max-width:10.5ch;
     }
 
     .heroText{
@@ -163,7 +157,7 @@
       max-width:64ch;
       color:var(--muted);
       font-size:17px;
-      line-height:1.72;
+      line-height:1.7;
     }
 
     .chipRow{
@@ -242,199 +236,106 @@
       word-break:break-word;
     }
 
-    .layerHero{
+    .good{color:var(--good)}
+    .warn{color:var(--warn)}
+    .bad{color:var(--bad)}
+
+    .sceneShell{
       position:relative;
       overflow:hidden;
-      padding:20px;
+      min-height:620px;
       margin-bottom:12px;
     }
 
-    .layerHero::before{
-      content:"";
+    #sceneMount{
       position:absolute;
-      inset:-20% auto auto 50%;
-      width:520px;
-      height:520px;
-      transform:translateX(-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(127,255,212,.08), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(111,231,255,.05), transparent 64%);
-      pointer-events:none;
-      filter:blur(12px);
-    }
-
-    .layerHeroInner{
-      position:relative;
+      inset:0;
       z-index:1;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      align-items:stretch;
     }
 
-    .layerCard{
+    .sceneOverlay{
       position:relative;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px;
-      min-height:360px;
-      padding:16px;
-      background:
-        linear-gradient(180deg,rgba(9,14,22,.88),rgba(12,18,28,.92)),
-        radial-gradient(circle at 50% 0%, rgba(127,255,212,.05), transparent 46%);
-      overflow:hidden;
-      transform-style:preserve-3d;
-    }
-
-    .layerCard::after{
-      content:"";
-      position:absolute;
-      inset:auto -10% -18% -10%;
-      height:120px;
-      background:radial-gradient(circle at 50% 50%, rgba(127,255,212,.08), transparent 62%);
-      filter:blur(18px);
+      z-index:2;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);
+      gap:12px;
+      padding:18px;
+      min-height:620px;
       pointer-events:none;
     }
 
-    .layerNumber{
-      position:absolute;
-      top:12px;
-      right:12px;
-      min-width:34px;
-      min-height:34px;
-      display:grid;
-      place-items:center;
-      border-radius:999px;
-      border:1px solid rgba(127,255,212,.22);
-      background:rgba(127,255,212,.08);
-      color:var(--text);
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.08em;
+    .sceneOverlay > *{pointer-events:auto}
+
+    .overlayCard{
+      align-self:end;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(5,9,16,.62);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+      box-shadow:var(--shadow);
     }
 
-    .layerLabel{
-      font-size:11px;
+    .overlayCard h2,.overlayCard h3{
+      margin:0 0 10px;
+      font-size:13px;
       letter-spacing:.12em;
       text-transform:uppercase;
       color:var(--accent);
-      margin-bottom:10px;
     }
 
-    .layerTitle{
-      margin:0 0 12px;
-      font-size:28px;
-      line-height:1.02;
-      letter-spacing:-.04em;
-      max-width:12ch;
-    }
-
-    .layerText{
+    .overlayText{
       margin:0;
       color:var(--muted);
       font-size:14px;
-      line-height:1.72;
-      max-width:42ch;
+      line-height:1.65;
     }
 
-    .artWrap{
-      position:relative;
-      width:100%;
-      height:142px;
-      margin:16px 0 14px;
-      perspective:900px;
-    }
-
-    .artStack{
-      position:absolute;
-      inset:0;
+    .roomList{
       display:grid;
-      place-items:center;
-      transform-style:preserve-3d;
+      gap:8px;
+      margin-top:12px;
     }
 
-    .slab{
-      position:absolute;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:20px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),
-        radial-gradient(circle at 50% 10%, rgba(127,255,212,.08), transparent 48%);
-      box-shadow:0 18px 30px rgba(0,0,0,.22);
+    .roomRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:9px 10px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:12px;
+      background:rgba(255,255,255,.03);
+      font-size:13px;
     }
 
-    .slab.flat.a{width:210px;height:92px;transform:rotateX(68deg) translateZ(0)}
-    .slab.flat.b{width:176px;height:74px;transform:rotateX(68deg) translateZ(24px)}
-    .ring{
-      position:absolute;
-      width:148px;height:148px;
-      border-radius:50%;
-      border:1px solid rgba(111,231,255,.22);
-      transform:rotateX(66deg) rotateZ(18deg);
-      box-shadow:0 0 24px rgba(111,231,255,.08);
+    .roomRow span:first-child{color:var(--text);font-weight:600}
+    .roomRow span:last-child{color:var(--muted)}
+
+    .contentGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:12px;
     }
-    .sphere{
-      position:absolute;
-      width:108px;height:108px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,.22), transparent 18%),
-        radial-gradient(circle at 50% 50%, rgba(111,231,255,.18), rgba(127,255,212,.06) 58%, rgba(0,0,0,.10) 100%);
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 18px 30px rgba(0,0,0,.22), inset 0 0 24px rgba(111,231,255,.08);
-      transform:translateZ(8px);
+
+    .panel{padding:16px}
+
+    .panelTitle{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line);
     }
-    .pillar{
-      position:absolute;
-      width:18px;
-      height:94px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg, rgba(127,255,212,.24), rgba(111,231,255,.08), rgba(255,255,255,.02));
-      box-shadow:0 12px 26px rgba(0,0,0,.18);
-    }
-    .pillar.p1{transform:translateX(-44px) rotateZ(-10deg)}
-    .pillar.p2{transform:translateX(0) rotateZ(0deg)}
-    .pillar.p3{transform:translateX(44px) rotateZ(10deg)}
-    .beam{
-      position:absolute;
-      width:184px;
-      height:14px;
-      border-radius:999px;
-      border:1px solid rgba(127,255,212,.16);
-      background:linear-gradient(90deg, rgba(127,255,212,.10), rgba(111,231,255,.22), rgba(127,255,212,.10));
-      box-shadow:0 0 18px rgba(111,231,255,.08);
-      transform:translateY(-10px);
-    }
-    .chipBlock{
-      position:absolute;
-      width:172px;
-      height:104px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.98)),
-        radial-gradient(circle at 50% 10%, rgba(127,255,212,.06), transparent 48%);
-      box-shadow:0 18px 30px rgba(0,0,0,.22);
-      transform:rotateX(62deg);
-    }
-    .trace{
-      position:absolute;
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(111,231,255,.10), rgba(127,255,212,.34), rgba(111,231,255,.10));
-      box-shadow:0 0 12px rgba(127,255,212,.10);
-    }
-    .trace.t1{width:120px;height:3px;transform:translateY(-24px)}
-    .trace.t2{width:86px;height:3px;transform:translateY(0)}
-    .trace.t3{width:132px;height:3px;transform:translateY(24px)}
-    .trace.v1{width:3px;height:70px;transform:translateX(-42px)}
-    .trace.v2{width:3px;height:70px;transform:translateX(42px)}
 
     .rows{
       display:grid;
       gap:8px;
-      margin-top:12px;
     }
 
     .row{
@@ -456,58 +357,6 @@
       line-height:1.45;
       text-align:right;
       word-break:break-word;
-    }
-
-    .layerPanel{
-      padding:16px;
-      margin-bottom:12px;
-    }
-
-    .panelTitle{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .panelText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
-    }
-
-    .detailGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-
-    .detailCard{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .detailTitle{
-      margin:0 0 8px;
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .detailText{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.66;
     }
 
     .actionRow{
@@ -534,11 +383,6 @@
       text-decoration:none;
     }
 
-    .action.strong{
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
-    }
-
     .footer{
       padding:12px 14px;
       color:var(--muted);
@@ -547,15 +391,25 @@
       word-break:break-word;
     }
 
+    .bootFail{
+      margin-top:12px;
+      padding:12px 14px;
+      border:1px solid rgba(255,122,122,.28);
+      border-radius:14px;
+      background:rgba(40,10,10,.78);
+      color:#ffdada;
+      font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      white-space:pre-wrap;
+      display:none;
+    }
+
+    .bootFail.is-visible{display:block}
+
     @media (max-width:1180px){
-      .hero,
-      .layerHeroInner,
-      .detailGrid{
+      .hero,.sceneOverlay,.contentGrid{
         grid-template-columns:1fr;
       }
-
       h1{max-width:none}
-      .layerTitle{max-width:none}
     }
 
     @media (max-width:760px){
@@ -563,12 +417,7 @@
       .statusGrid{grid-template-columns:1fr}
       .row{grid-template-columns:1fr}
       .rv{text-align:left}
-      .artWrap{height:120px}
-      .slab.flat.a{width:170px;height:78px}
-      .slab.flat.b{width:146px;height:62px}
-      .ring{width:122px;height:122px}
-      .sphere{width:92px;height:92px}
-      .chipBlock{width:150px;height:94px}
+      .sceneShell,.sceneOverlay{min-height:740px}
     }
   </style>
 </head>
@@ -578,162 +427,102 @@
 
   <main class="wrap">
     <div class="topbar">
-      <div class="brand">Why the Metaverse Works</div>
-      <div class="stamp">LAWS · CPU PROCESSING · G1 EXTERNAL EXPRESSION</div>
+      <div class="brand">Diamond Gate Bridge</div>
+      <div class="stamp">INDEX · G1 EXTERNAL EXPRESSION · HOUSE FIRST</div>
     </div>
 
     <section class="hero">
       <article class="heroCard">
-        <div class="eyebrow">Visible three-layer laws surface</div>
-        <h1>See the laws, the extensions, and the processing layer.</h1>
+        <div class="eyebrow">Structure before effects</div>
+        <h1>Enter through the house.</h1>
         <p class="heroText">
-          The laws page now visibly presents all three layers instead of merely naming them. It revolves around governing law first, then the extensions beneath it, then the CPU processing layer that turns lawful structure into visible execution.
+          The public entry is the house, not the metaverse burden. The house exposes rooms, the flat layer supports platform and engineering read, the round layer carries living-world read, and the globe remains available only when the surface actually earns it.
         </p>
         <div class="chipRow">
-          <div class="chip strong">Layer 1 Visible</div>
-          <div class="chip strong">Layer 2 Visible</div>
-          <div class="chip strong">Layer 3 Visible</div>
-          <div class="chip">Frontier Connected</div>
+          <div class="chip strong">House First</div>
+          <div class="chip">Flat Underlay</div>
+          <div class="chip">Round Living Layer</div>
+          <div class="chip" id="heroMetaverseChip">Metaverse Pending</div>
         </div>
       </article>
 
       <aside class="statusCard">
-        <h2 class="statusTitle">Capability Read</h2>
+        <h2 class="statusTitle">Host Read</h2>
         <div class="statusGrid">
           <div class="stat">
-            <div class="statLabel">Laws</div>
-            <div class="statValue">Visible</div>
+            <div class="statLabel">World Kernel</div>
+            <div id="k-kernel" class="statValue warn">Pending</div>
           </div>
           <div class="stat">
-            <div class="statLabel">Extensions</div>
-            <div class="statValue">Visible</div>
+            <div class="statLabel">Render</div>
+            <div id="k-render" class="statValue warn">Pending</div>
           </div>
           <div class="stat">
-            <div class="statLabel">CPU Processing</div>
-            <div class="statValue">Visible</div>
+            <div class="statLabel">Control</div>
+            <div id="k-control" class="statValue warn">Pending</div>
           </div>
           <div class="stat">
-            <div class="statLabel">Frontier</div>
-            <div class="statValue">Direct Access</div>
+            <div class="statLabel">Metaverse Line</div>
+            <div id="k-metaverse" class="statValue warn">Pending Classification</div>
           </div>
         </div>
       </aside>
     </section>
 
-    <section class="layerHero">
-      <div class="layerHeroInner">
-        <article class="layerCard">
-          <div class="layerNumber">1</div>
-          <div class="layerLabel">Layer 1</div>
-          <h2 class="layerTitle">Why the Metaverse Works</h2>
-          <p class="layerText">
-            The metaverse works when the world descends from governed structure instead of visual noise carrying the burden. Law gives the world admissibility. Host geometry gives it stability. Only then can signal, motion, and extension appear without collapse.
+    <section class="sceneShell">
+      <div id="sceneMount" aria-label="House-first world scene"></div>
+
+      <div class="sceneOverlay">
+        <article class="overlayCard">
+          <h2>House / Rooms</h2>
+          <p class="overlayText">
+            The house is the first public authority. Rooms are visible from the house and remain programmable domains beneath a governed host rather than separate inventions.
           </p>
-          <div class="artWrap" aria-hidden="true">
-            <div class="artStack">
-              <div class="slab flat a"></div>
-              <div class="slab flat b"></div>
-              <div class="ring"></div>
-              <div class="sphere"></div>
-            </div>
-          </div>
-          <div class="rows">
-            <div class="row"><div class="rk">Host Law</div><div class="rv">Structure before effects</div></div>
-            <div class="row"><div class="rk">Public Entry</div><div class="rv">House first</div></div>
-            <div class="row"><div class="rk">Metaverse Burden</div><div class="rv">Not required on first contact</div></div>
+          <div class="roomList" id="roomList">
+            <div class="roomRow"><span>North Room</span><span>Pending</span></div>
+            <div class="roomRow"><span>East Room</span><span>Pending</span></div>
+            <div class="roomRow"><span>South Room</span><span>Pending</span></div>
+            <div class="roomRow"><span>West Room</span><span>Pending</span></div>
           </div>
         </article>
 
-        <article class="layerCard">
-          <div class="layerNumber">2</div>
-          <div class="layerLabel">Layer 2</div>
-          <h2 class="layerTitle">What’s Actually Under the Hood</h2>
-          <p class="layerText">
-            Under the hood is the sealed interior: template, engine, routing logic, inheritance law, and the code-of-life platform structure. This layer shows that the metaverse is not magic. It is governed extension standing on an already-built machine.
-          </p>
-          <div class="artWrap" aria-hidden="true">
-            <div class="artStack">
-              <div class="beam"></div>
-              <div class="pillar p1"></div>
-              <div class="pillar p2"></div>
-              <div class="pillar p3"></div>
-            </div>
+        <article class="overlayCard">
+          <h3>Layer Read</h3>
+          <div class="rows" id="layerRows">
+            <div class="row"><div class="rk">Flat</div><div class="rv">Pending</div></div>
+            <div class="row"><div class="rk">Round</div><div class="rv">Pending</div></div>
+            <div class="row"><div class="rk">Globe</div><div class="rv">Pending</div></div>
           </div>
-          <div class="rows">
-            <div class="row"><div class="rk">Interior Status</div><div class="rv">Sealed</div></div>
-            <div class="row"><div class="rk">Template Status</div><div class="rv">Canonically bound</div></div>
-            <div class="row"><div class="rk">Active Domain</div><div class="rv">Frame-outward only</div></div>
-          </div>
-        </article>
-
-        <article class="layerCard">
-          <div class="layerNumber">3</div>
-          <div class="layerLabel">Layer 3</div>
-          <h2 class="layerTitle">Laws and CPU Processing</h2>
-          <p class="layerText">
-            Laws define what is admissible. CPU processing defines how those laws are sequenced, evaluated, and expressed. This is where rules become timing, inheritance becomes execution, and external behavior becomes measurable instead of theatrical.
-          </p>
-          <div class="artWrap" aria-hidden="true">
-            <div class="artStack">
-              <div class="chipBlock"></div>
-              <div class="trace t1"></div>
-              <div class="trace t2"></div>
-              <div class="trace t3"></div>
-              <div class="trace v1"></div>
-              <div class="trace v2"></div>
-            </div>
-          </div>
-          <div class="rows">
-            <div class="row"><div class="rk">Law</div><div class="rv">Admissibility / inheritance / bounds</div></div>
-            <div class="row"><div class="rk">CPU</div><div class="rv">Sequence / evaluation / execution</div></div>
-            <div class="row"><div class="rk">Failure Mode</div><div class="rv">Processing without lawful structure</div></div>
+          <div class="actionRow">
+            <a class="action" href="/explore/">Explore</a>
+            <a class="action" href="/products/">Products</a>
+            <a class="action" href="/gauges/">Gauges</a>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="layerPanel">
-      <h2 class="panelTitle">Extensions and Connected Surfaces</h2>
-      <p class="panelText">
-        The laws page is still about the laws, but now the extensions are explicit. The page shows what the laws support, what the sealed interior means, how CPU processing externalizes that law, and where the frontier sits in relation to all of it.
-      </p>
+    <section class="contentGrid">
+      <article class="panel">
+        <h2 class="panelTitle">Public Entry Contract</h2>
+        <div class="rows" id="entryRows"></div>
+      </article>
 
-      <div class="detailGrid">
-        <article class="detailCard">
-          <h3 class="detailTitle">Core Invariants</h3>
-          <p class="detailText">The invariant layer that tells the system what it must remain in order to stay lawful.</p>
-          <div class="actionRow">
-            <a class="action" href="/laws/core-invariants/">Open</a>
-          </div>
-        </article>
+      <article class="panel">
+        <h2 class="panelTitle">Runtime / Receipt</h2>
+        <div class="rows" id="runtimeRows"></div>
+      </article>
 
-        <article class="detailCard">
-          <h3 class="detailTitle">Fusion Readiness</h3>
-          <p class="detailText">The readiness layer that tells the system when higher-order convergence becomes lawful.</p>
-          <div class="actionRow">
-            <a class="action" href="/laws/fusion-readiness/">Open</a>
-          </div>
-        </article>
-
-        <article class="detailCard">
-          <h3 class="detailTitle">Industrial Posture</h3>
-          <p class="detailText">The posture layer for scale, seriousness, deployment discipline, and non-toy execution.</p>
-          <div class="actionRow">
-            <a class="action" href="/laws/industrial-posture/">Open</a>
-          </div>
-        </article>
-
-        <article class="detailCard">
-          <h3 class="detailTitle">Frontier</h3>
-          <p class="detailText">The direct bridge to the frontier catalog so the boundary of current capability remains visible.</p>
-          <div class="actionRow">
-            <a class="action strong" href="/explore/frontier/">Open Frontier</a>
-          </div>
-        </article>
-      </div>
+      <article class="panel">
+        <h2 class="panelTitle">Descendant Order</h2>
+        <div class="rows" id="descendantRows"></div>
+      </article>
     </section>
 
-    <div class="footer">BUILD=LAWS_G1_VISIBLE_THREE_LAYER_SURFACE | ROLE=WHY_METAVERSE_WORKS_UNDER_THE_HOOD_CPU_PROCESSING | LAYERS=3_VISIBLE | FRONTIER=/explore/frontier/ | STATUS=ACTIVE</div>
+    <div id="footer" class="footer">Awaiting host receipts.</div>
+    <div id="bootFail" class="bootFail"></div>
   </main>
+
+  <script type="module" src="./index.js"></script>
 </body>
 </html>

@@ -20,23 +20,17 @@
       --text: #f5f7ff;
       --muted: rgba(245, 247, 255, 0.72);
       --soft: rgba(245, 247, 255, 0.5);
-      --glow-a: rgba(124, 166, 255, 0.22);
-      --glow-b: rgba(111, 255, 219, 0.12);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
       --shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
       --max: 1280px;
       --nav-h: 74px;
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -114,9 +108,7 @@
       flex: 0 0 auto;
     }
 
-    .brand-copy {
-      min-width: 0;
-    }
+    .brand-copy { min-width: 0; }
 
     .eyebrow {
       margin: 0 0 4px;
@@ -382,94 +374,19 @@
       max-width: 70ch;
     }
 
-    .catalog-wrap {
-      padding: 18px 24px 24px;
+    .bubble-wrap {
+      padding: 20px 24px 24px;
     }
 
-    .catalog {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .lane-card {
-      display: flex;
-      flex-direction: column;
-      min-height: 228px;
-      padding: 20px;
-      border-radius: 22px;
+    .bubble-runtime {
+      min-height: 430px;
+      border-radius: calc(var(--radius-xl) - 8px);
       border: 1px solid rgba(255,255,255,0.08);
       background:
-        radial-gradient(circle at top right, rgba(124,166,255,0.14), transparent 36%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-      transition: 160ms ease;
-    }
-
-    .lane-card:hover,
-    .lane-card:focus-within {
-      transform: translateY(-2px);
-      border-color: rgba(255,255,255,0.16);
-    }
-
-    .lane-top {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-    }
-
-    .lane-kicker {
-      margin: 0 0 8px;
-      color: #7df0d3;
-      font-size: 0.78rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .lane-card h3 {
-      margin: 0;
-      font-size: 1.16rem;
-      letter-spacing: -0.02em;
-    }
-
-    .lane-badge {
-      padding: 8px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.04);
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .lane-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.65;
-      flex: 1 1 auto;
-    }
-
-    .lane-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-top: 18px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .lane-path {
-      color: var(--soft);
-      font-size: 0.84rem;
-      overflow-wrap: anywhere;
-    }
-
-    .lane-open {
-      font-weight: 600;
+        radial-gradient(circle at 50% 0%, rgba(124,166,255,0.08), transparent 42%),
+        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
+      overflow: hidden;
+      position: relative;
     }
 
     .receipt {
@@ -522,10 +439,6 @@
       .hero-grid {
         grid-template-columns: 1fr;
       }
-
-      .catalog {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
     }
 
     @media (max-width: 760px) {
@@ -544,7 +457,7 @@
 
       .hero-copy,
       .section-head,
-      .catalog-wrap,
+      .bubble-wrap,
       .receipt-head,
       .receipt-body {
         padding-left: 18px;
@@ -570,15 +483,13 @@
         height: 148px;
       }
 
-      .catalog {
-        grid-template-columns: 1fr;
+      .bubble-runtime {
+        min-height: 620px;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
-      }
+      html { scroll-behavior: auto; }
 
       *,
       *::before,
@@ -588,8 +499,6 @@
         transition-duration: 0.001ms !important;
       }
 
-      .lane-card:hover,
-      .lane-card:focus-within,
       .button:hover,
       .button:focus-visible,
       .nav a:hover,
@@ -628,19 +537,19 @@
           <h1 id="products-title">The animated products gateway.</h1>
           <p class="lead">
             Products is the entry surface for the live product lanes. HTML owns structure. Page JS
-            owns orchestration. Runtime JS owns the planetary construct. The catalog below remains
-            fixed while the hero stage carries the Beta Version Generation 2 motion system.
+            owns orchestration. Runtime JS owns the planetary construct. The lower surface is now
+            compressed into a Russian-doll bubble field instead of a long-scroll card wall.
           </p>
 
           <ul class="hero-points" aria-label="Page qualities">
             <li>G2 Planetary Runtime</li>
-            <li>Bounded Stage Ownership</li>
+            <li>Russian-Doll Bubbles</li>
             <li>Direct Route Access</li>
             <li>Reduced-Motion Safe</li>
           </ul>
 
           <div class="hero-actions">
-            <a class="button button-primary" href="#catalog">Open product lanes</a>
+            <a class="button button-primary" href="#products-bubbles">Open product lanes</a>
             <a class="button" href="/explore/">Return to Explore</a>
           </div>
         </section>
@@ -665,198 +574,23 @@
 
     <main>
       <section class="section">
-        <div class="shell panel" id="catalog">
+        <div class="shell panel" id="products-bubbles">
           <div class="section-head">
             <p class="eyebrow">Products</p>
-            <h2>Live product lanes.</h2>
+            <h2>Russian-doll lane field.</h2>
             <p>
-              The catalog remains fixed. Only the hero-stage runtime changes. This keeps route
-              authority readable while the animation layer handles the planetary construct above.
+              The lower surface is compressed. Each primary bubble represents a real route. Open a
+              bubble to reveal identity. Open deeper to reveal route, status, and purpose. Mobile
+              stays single-open to prevent clutter.
             </p>
           </div>
 
-          <div class="catalog-wrap">
-            <div class="catalog">
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Core</p>
-                    <h3>Platform</h3>
-                  </div>
-                  <span class="lane-badge">Live</span>
-                </div>
-                <p>Core platform lane tying host law, structure, and runtime into an actionable surface.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/platform/</span>
-                  <a class="lane-open" href="/platform/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Runtime</p>
-                    <h3>Software</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Software-facing surface for runtime, implementation, and controlled productized tools.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/software/</span>
-                  <a class="lane-open" href="/software/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Intelligence</p>
-                    <h3>On Your Side AI</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Intelligence product line anchored in clarity, safety, and user-side structure.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/ai/</span>
-                  <a class="lane-open" href="/ai/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Language</p>
-                    <h3>Syntax</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Behavioral syntax and execution-language surface for governed systems.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/ssg/</span>
-                  <a class="lane-open" href="/ssg/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Value</p>
-                    <h3>ArchCoin</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Coin-facing lane for governed value architecture and later vault alignment.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/archcoin/</span>
-                  <a class="lane-open" href="/archcoin/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Baseline</p>
-                    <h3>Nutrition</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Baseline system lane for nourishment, correction, and applied human support.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/nutrition/</span>
-                  <a class="lane-open" href="/nutrition/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Output</p>
-                    <h3>Energy</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>System-output lane for measurable movement, recovery, and usable capacity.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/energy/</span>
-                  <a class="lane-open" href="/energy/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Learning</p>
-                    <h3>Education</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Language systems and learning surfaces under coherent explanatory structure.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/education/</span>
-                  <a class="lane-open" href="/education/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Playable</p>
-                    <h3>Games</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Five Flags and related playable systems under bounded public expression.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/games/</span>
-                  <a class="lane-open" href="/games/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Applied</p>
-                    <h3>Agriculture</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Applied growth lane for cultivation, yield, continuity, and material support.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/agriculture/</span>
-                  <a class="lane-open" href="/agriculture/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Identity</p>
-                    <h3>Domains</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Identity and routing lane for naming, structure, continuity, and surface ownership.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/domains/</span>
-                  <a class="lane-open" href="/domains/">Open</a>
-                </div>
-              </article>
-
-              <article class="lane-card">
-                <div class="lane-top">
-                  <div>
-                    <p class="lane-kicker">Measurement</p>
-                    <h3>Diagnostics</h3>
-                  </div>
-                  <span class="lane-badge">Route</span>
-                </div>
-                <p>Coherence measurement lane for thresholds, tracking, receipt, and system readback.</p>
-                <div class="lane-meta">
-                  <span class="lane-path">/diagnostics/</span>
-                  <a class="lane-open" href="/diagnostics/">Open</a>
-                </div>
-              </article>
-            </div>
+          <div class="bubble-wrap">
+            <div
+              class="bubble-runtime"
+              id="products-bubbles-runtime"
+              aria-label="Compressed product lane field"
+            ></div>
           </div>
         </div>
       </section>
@@ -864,17 +598,19 @@
       <div class="shell receipt">
         <div class="receipt-head">
           <strong>Runtime / Receipt</strong>
-          <span>HTML=STRUCTURE | JS=ORCHESTRATION | RUNTIME=G2_PLANETARY | STATUS=ACTIVE</span>
+          <span>HTML=STRUCTURE | JS=ORCHESTRATION | HERO_RUNTIME=G2_PLANETARY | BUBBLE_RUNTIME=ACTIVE</span>
         </div>
         <div class="receipt-body">
-          The page is split correctly. HTML owns layout and catalog. Page JS owns lifecycle and
-          runtime mounting. Runtime JS owns the bounded planetary construct only.
+          The page is split correctly. HTML owns layout. Page JS owns lifecycle and runtime
+          mounting. Hero runtime owns the planetary stage. Bubble runtime owns the compressed lower
+          lane field.
         </div>
       </div>
     </main>
   </div>
 
   <script src="./products_runtime.js" defer></script>
+  <script src="./products_bubbles_runtime.js" defer></script>
   <script src="./products.js" defer></script>
 </body>
 </html>

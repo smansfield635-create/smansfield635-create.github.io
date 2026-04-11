@@ -46,9 +46,7 @@
 
   function scheduleRebuild() {
     window.clearTimeout(rebuildTimer);
-    rebuildTimer = window.setTimeout(() => {
-      buildAll();
-    }, 80);
+    rebuildTimer = window.setTimeout(buildAll, 80);
   }
 
   function onPreferenceChange() {

@@ -5,9 +5,9 @@ const STAGE = document.getElementById("orbitalStage");
 const NODES = Array.from(document.querySelectorAll(".orbitNode"));
 
 const PRODUCT_LAYOUT = {
-  1: { radius: 250, speed: 0.00018, depth: 56 },
-  2: { radius: 188, speed: -0.00024, depth: 34 },
-  3: { radius: 132, speed: 0.00032, depth: 18 }
+  1: { radiusX: 252, radiusY: 118, speed: 0.00016, depth: 64, zipper: 28, scaleBase: 0.86, scaleSpan: 0.30 },
+  2: { radiusX: 192, radiusY: 92,  speed: -0.00022, depth: 40, zipper: 22, scaleBase: 0.88, scaleSpan: 0.24 },
+  3: { radiusX: 136, radiusY: 66,  speed: 0.00030, depth: 24, zipper: 16, scaleBase: 0.90, scaleSpan: 0.18 }
 };
 
 const pointer = { x: 0.5, y: 0.5 };
@@ -84,32 +84,50 @@ function drawField() {
   ctx.fillRect(0, 0, field.width, field.height);
 }
 
+function getLemniscatePosition(theta, cfg, zipperSign) {
+  // Figure-eight traversal via Gerono lemniscate:
+  // x = a sin(t), y = b sin(t) cos(t)
+  const x = Math.sin(theta) * cfg.radiusX;
+  const y = Math.sin(theta) * Math.cos(theta) * cfg.radiusY;
+
+  // Zipper law:
+  // alternate lanes cross the center on staggered depth and vertical offsets
+  // so cards "zip" past each other instead of stacking directly on top.
+  const zipperOffset = zipperSign * cfg.zipper;
+  const zippedY = y + zipperOffset * Math.cos(theta);
+  const z = Math.cos(theta * 2) * cfg.depth + zipperSign * (cfg.zipper * 0.45);
+
+  return { x, y: zippedY, z };
+}
+
 function placeNodes(now) {
   if (!STAGE) return;
 
   const tiltX = (pointer.y - 0.5) * -14;
   const tiltY = (pointer.x - 0.5) * 18;
-
   STAGE.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
 
-  for (const node of NODES) {
+  NODES.forEach((node, index) => {
     const ringId = Number(node.dataset.ring || 1);
-    const angle = Number(node.dataset.angle || 0);
+    const baseAngle = Number(node.dataset.angle || 0) * (Math.PI / 180);
     const cfg = PRODUCT_LAYOUT[ringId] || PRODUCT_LAYOUT[1];
 
+    const zipperSign = index % 2 === 0 ? 1 : -1;
+    const zipperPhase = zipperSign > 0 ? 0 : Math.PI / 2;
     const t = REDUCED_MOTION ? 0 : now * cfg.speed;
-    const theta = angle * (Math.PI / 180) + t;
-    const x = Math.cos(theta) * cfg.radius;
-    const y = Math.sin(theta) * cfg.radius * 0.34;
-    const z = Math.sin(theta) * cfg.depth;
+    const theta = baseAngle + t + zipperPhase;
 
-    const scale = 0.88 + ((z + cfg.depth) / (cfg.depth * 2)) * 0.30;
-    const opacity = 0.62 + ((z + cfg.depth) / (cfg.depth * 2)) * 0.38;
+    const pos = getLemniscatePosition(theta, cfg, zipperSign);
 
-    node.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
+    const normalizedDepth = (pos.z + cfg.depth + cfg.zipper * 0.45) / ((cfg.depth + cfg.zipper * 0.45) * 2);
+    const clampedDepth = Math.max(0, Math.min(1, normalizedDepth));
+    const scale = cfg.scaleBase + clampedDepth * cfg.scaleSpan;
+    const opacity = 0.58 + clampedDepth * 0.42;
+
+    node.style.transform = `translate3d(${pos.x}px, ${pos.y}px, ${pos.z}px) scale(${scale})`;
     node.style.opacity = opacity.toFixed(3);
-    node.style.zIndex = String(Math.round(1000 + z));
-  }
+    node.style.zIndex = String(Math.round(1000 + pos.z));
+  });
 }
 
 function frame(now) {

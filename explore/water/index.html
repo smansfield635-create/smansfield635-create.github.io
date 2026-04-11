@@ -1,322 +1,48 @@
-<!-- TNT — /explore/water/index.html
-     EXPLORE · WATER (FRONTIER ORIENTATION SURFACE) · TRILINGUAL (EN/中文/ES)
-     STYLE:
-       - Monument density
-       - Single-open accordion
-       - No lenses (orientation layer)
-       - No modal traps
-       - State carry
--->
-
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Explore · Water</title>
-
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
-
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
-
-:root{
-  --dockH:92px;
-  --inkA:rgba(10,18,30,.94);
-  --inkB:rgba(5,9,14,.98);
-
-  --opalA:rgba(210,190,255,.14);
-  --opalB:rgba(120,70,255,.10);
-
-  /* water = cool silver-blue signal (subtle, not washed) */
-  --sigW:rgba(120,180,255,.10);
-
-  --stroke:rgba(255,255,255,.12);
-  --mut:rgba(255,255,255,.80);
-  --txt:rgba(255,255,255,.92);
-}
-
-.top{
-  position:fixed;left:16px;right:16px;top:16px;
-  z-index:240;display:flex;justify-content:space-between;
-  pointer-events:none;
-}
-.top .left,.top .right{display:flex;gap:10px;white-space:nowrap;pointer-events:auto}
-
-.page{
-  width:min(1200px,94vw);
-  margin:0 auto;
-  padding:86px 0 calc(var(--dockH)+18px);
-  display:flex;flex-direction:column;gap:14px;
-}
-
-.hero{
-  border:1px solid var(--stroke);
-  border-radius:28px;
-  padding:22px;
-  background:
-    radial-gradient(circle at 22% 18%, var(--opalA), transparent 62%),
-    radial-gradient(circle at 80% 30%, var(--opalB), transparent 66%),
-    radial-gradient(circle at 55% 110%, var(--sigW), transparent 62%),
-    linear-gradient(160deg,var(--inkA),var(--inkB));
-  box-shadow:0 44px 160px rgba(0,0,0,.68);
-}
-
-.k{margin:0 0 10px;font-size:12px;letter-spacing:6px;text-transform:uppercase;opacity:.72}
-.h1{margin:0 0 14px;font-size:40px;font-weight:950;line-height:1.08}
-.lede{margin:0;font-size:18px;line-height:1.7;color:var(--txt)}
-.rule{margin-top:14px;border:1px solid var(--stroke);border-radius:18px;padding:12px 14px;background:rgba(0,0,0,.16);font-size:13.5px;color:var(--mut)}
-
-.band{padding:12px 14px;border-radius:18px;border:1px solid var(--stroke);background:rgba(0,0,0,.14);font-weight:950}
-
-.accordion{display:flex;flex-direction:column;gap:12px}
-.panel{border:1px solid var(--stroke);border-radius:24px;background:linear-gradient(145deg, rgba(17,22,28,.90), rgba(10,14,20,.96));overflow:hidden}
-.pHead{padding:18px;display:flex;justify-content:space-between;cursor:pointer}
-.pTitle{font-size:20px;font-weight:950}
-.pSub{margin-top:8px;font-size:14px;opacity:.82}
-.pChev{font-size:18px;opacity:.75}
-.pBody{display:none;padding:18px;border-top:1px solid rgba(255,255,255,.08)}
-.panel.open .pBody{display:block}
-
-.p{margin:0;font-size:16px;line-height:1.75;color:rgba(255,255,255,.88)}
-.p + .p{margin-top:12px}
-.ul{margin:12px 0 0 18px;font-size:15px}
-.ul li{margin:8px 0}
-
-.actions{margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:flex-end}
-
-.dock{
-  position:fixed;left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;width:min(1000px,94vw);
-  padding:10px;border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.28);
-  display:grid;grid-template-columns:repeat(4,1fr);gap:10px
-}
-.dock .btn{width:100%;padding:12px;border-radius:999px}
-
-@media(max-width:520px){:root{--dockH:104px}.dock{grid-template-columns:repeat(3,1fr)}}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Explore Water | Diamond Gate Bridge</title>
+  <meta name="description" content="Water exploration under environmental and systems constraint." />
+  <style>
+    :root{--bg:#05070b;--bg2:#08101a;--bg3:#0d1623;--panel:#0b0f16;--panel2:#101722;--line:#1f2a36;--line2:rgba(127,255,212,.16);--text:#e8f6ff;--muted:rgba(232,246,255,.68);--accent:#7fffd4;--shadow:0 14px 40px rgba(0,0,0,.30);--shadow2:0 20px 70px rgba(0,0,0,.38);--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);--maxw:1360px}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif} body{min-height:100vh;overflow-x:hidden}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left))}
+    .topbar,.hero,.panel,.footer{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);box-shadow:var(--shadow2)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:12px;border-radius:14px;box-shadow:var(--shadow)}
+    .brand{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)} .stamp{font-size:11px;color:var(--muted);white-space:nowrap}
+    .hero{padding:22px 20px 20px;margin-bottom:12px} .eyebrow{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:8px 12px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.03);color:var(--accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+    h1{margin:0 0 14px;font-size:clamp(34px,4.8vw,64px);line-height:.96;letter-spacing:-.06em;max-width:10ch} .heroText{margin:0;max-width:62ch;color:var(--muted);font-size:17px;line-height:1.72}
+    .actionRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px} .action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px} .panel{padding:16px}
+    .panelTitle{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding-bottom:10px;border-bottom:1px solid var(--line)} .panelText{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+    .footer{padding:12px 14px;color:var(--muted);font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}h1{max-width:none}} @media (max-width:760px){.topbar{flex-direction:column;align-items:flex-start}}
+  </style>
 </head>
-
 <body>
-
-<div class="top">
-  <div class="left">
-    <a class="btn" id="btnBack" href="/explore/">BACK</a>
-    <a class="btn" id="btnDoor" href="/door/">DOOR</a>
-    <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-  </div>
-  <div class="right">
-    <button class="btn" id="btnEN">EN</button>
-    <button class="btn" id="btnZH">中文</button>
-    <button class="btn" id="btnES">ES</button>
-  </div>
-</div>
-
-<div class="page">
-
-  <div class="hero">
-    <p class="k" id="hk">EXPLORE · WATER</p>
-    <h1 class="h1" id="ht">WHAT IF WATER IS A CONTROL PROBLEM?</h1>
-    <p class="lede" id="hs"></p>
-    <div class="rule" id="rule"></div>
-  </div>
-
-  <div class="band" id="band"></div>
-
-  <div class="accordion">
-
-    <div class="panel">
-      <div class="pHead" role="button" tabindex="0">
-        <div>
-          <div class="pTitle" id="t1"></div>
-          <div class="pSub" id="s1"></div>
-        </div>
-        <div class="pChev">▸</div>
-      </div>
-      <div class="pBody">
-        <p class="p" id="b1a"></p>
-        <p class="p" id="b1b"></p>
-        <ul class="ul" id="b1ul"></ul>
-        <div class="actions">
-          <a class="btn" id="goProducts" href="/products/">OPEN PRODUCTS</a>
-          <a class="btn" id="goExplore" href="/explore/">OPEN EXPLORE</a>
-        </div>
-      </div>
+  <main class="wrap">
+    <div class="topbar">
+      <div class="brand">Explore Water</div>
+      <div class="stamp">ENVIRONMENTAL SYSTEM SURFACE</div>
     </div>
-
-    <div class="panel">
-      <div class="pHead" role="button" tabindex="0">
-        <div>
-          <div class="pTitle" id="t2"></div>
-          <div class="pSub" id="s2"></div>
-        </div>
-        <div class="pChev">▸</div>
+    <section class="hero">
+      <div class="eyebrow">Flow under control</div>
+      <h1>Water surface.</h1>
+      <p class="heroText">Water belongs here as a constrained environmental and systems question: movement, storage, access, quality, and dependency, all without dissolving into decorative ecology language.</p>
+      <div class="actionRow">
+        <a class="action" href="/explore/">Explore</a>
+        <a class="action" href="/laws/">Laws</a>
+        <a class="action" href="/gauges/">Gauges</a>
       </div>
-      <div class="pBody">
-        <p class="p" id="b2a"></p>
-        <p class="p" id="b2b"></p>
-        <ul class="ul" id="b2ul"></ul>
-        <div class="actions">
-          <a class="btn" id="goVision" href="/explore/frontier/vision/">OPEN VISION</a>
-          <a class="btn" id="goLaws" href="/laws/">OPEN LAWS</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="panel">
-      <div class="pHead" role="button" tabindex="0">
-        <div>
-          <div class="pTitle" id="t3"></div>
-          <div class="pSub" id="s3"></div>
-        </div>
-        <div class="pChev">▸</div>
-      </div>
-      <div class="pBody">
-        <p class="p" id="b3a"></p>
-        <p class="p" id="b3b"></p>
-        <ul class="ul" id="b3ul"></ul>
-        <div class="actions">
-          <a class="btn" id="goGauges" href="/gauges/">OPEN GAUGES</a>
-          <a class="btn" id="goDotGrid" href="/products/dot-grid/">OPEN DOT.GRID</a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-<nav class="dock">
-  <a class="btn" id="dockHome" href="/home/">HOME</a>
-  <a class="btn" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
-
-<script>
-(function(){
-
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(){ return "?lang="+encodeURIComponent(lang); }
-  function wire(id,path){var el=document.getElementById(id);if(el)el.href=path+q();}
-  wire("btnBack","/explore/");
-  wire("btnDoor","/door/");
-  wire("btnExit","/index.html");
-  wire("dockHome","/home/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-  wire("goProducts","/products/");
-  wire("goExplore","/explore/");
-  wire("goVision","/explore/frontier/vision/");
-  wire("goLaws","/laws/");
-  wire("goGauges","/gauges/");
-  wire("goDotGrid","/products/dot-grid/");
-
-  var COPY={
-    en:{
-      hk:"EXPLORE · WATER",
-      ht:"WHAT IF WATER IS A CONTROL PROBLEM?",
-      hs:"Water systems rarely fail because we lack pipes. They fail because control breaks: pressure misalignment, contamination pathways, and invisible correlation across networks.",
-      rule:"Boundary: Orientation surface. Frames water posture. Enforcement and measurement live in Laws and Gauges.",
-      band:"WATER SYSTEM MAP",
-      t1:"The physical boundary",
-      s1:"Flow, pressure, and contamination are measurable.",
-      b1a:"Water systems are governed by hydraulics and chemistry. Pressure gradients, flow velocity, and contamination thresholds define real limits.",
-      b1b:"When those limits are ignored, the failure is not random. It follows structure—shared supply nodes, shared filtration, shared regulatory blind spots.",
-      b1ul:[
-        "Pressure imbalance.",
-        "Cross-connection contamination.",
-        "Aging infrastructure fatigue.",
-        "Correlation across districts."
-      ],
-      t2:"Control and segmentation",
-      s2:"Stability requires isolation before expansion.",
-      b2a:"Modern water optimization is not a slogan. It is zoning, metering, leak detection, and windowed pressure control.",
-      b2b:"Urban Resource Operating logic applies: segment loads, validate in windows, scale only where metrics hold.",
-      b2ul:[
-        "Segmented distribution.",
-        "Smart metering.",
-        "Leak detection under variance.",
-        "Rollback on threshold violation."
-      ],
-      t3:"Measurement before confidence",
-      s3:"Clean water is a measurable claim.",
-      b3a:"Concept, live, and roadmap must remain separated. If contamination reduction has not cleared defined bands, it stays roadmap.",
-      b3b:"Gauges quantify system alignment. Laws define what may be claimed. Dot.Grid reveals correlation between pressure nodes and failure clusters.",
-      b3ul:[
-        "No ‘trust the upgrade’ claims.",
-        "No unverified efficiency metrics.",
-        "No expansion without drift validation.",
-        "Epoch reset on structural change."
-      ]
-    },
-    zh:{
-      hk:"探索 · 水",
-      ht:"如果水是一个“控制问题”呢？",
-      hs:"水系统失败往往不是因为缺管道，而是控制失效：压力错位、污染路径、网络中的隐性相关。",
-      rule:"边界：导览层。说明水系统姿态。执行与测量在法则与量规中。",
-      band:"水系统地图",
-      t1:"物理边界",
-      s1:"流量、压力、污染都是可测的。",
-      b1a:"水系统受水力学与化学支配。压力梯度、流速、污染阈值是真实极限。",
-      b1b:"忽视这些极限，失败并非随机，而是结构性——共享供水节点、共享过滤、共享监管盲点。",
-      b1ul:["压力失衡。","交叉污染。","老化基础设施疲劳。","区域相关风险。"],
-      t2:"控制与分段",
-      s2:"扩张前先隔离。",
-      b2a:"现代水优化不是口号，而是分区、计量、漏损检测与窗口化压力控制。",
-      b2b:"城市资源操作逻辑适用：分段负载、窗口验证、指标稳定后再扩张。",
-      b2ul:["分段配水。","智能计量。","方差下漏损检测。","阈值违例即回滚。"],
-      t3:"测量先于信心",
-      s3:"清洁水是可测主张。",
-      b3a:"概念、上线、路线图必须分离。若污染指标未达区间，只能标为路线图。",
-      b3b:"量规量化系统对齐；法则限定主张；Dot.Grid 揭示压力节点与故障集群的相关。",
-      b3ul:["不做“升级即安全”主张。","不发布未验证效率。","未验证漂移不扩张。","结构变更开新纪元。"]
-    },
-    es:{
-      hk:"EXPLORAR · AGUA",
-      ht:"¿Y SI EL AGUA ES UN PROBLEMA DE CONTROL?",
-      hs:"Los sistemas de agua no fallan por falta de tuberías. Fallan cuando el control se rompe: desalineación de presión, rutas de contaminación y correlaciones invisibles.",
-      rule:"Límite: superficie de orientación. La ejecución y medición viven en Leyes y Medidores.",
-      band:"MAPA SISTEMA AGUA",
-      t1:"El límite físico",
-      s1:"Flujo, presión y contaminación son medibles.",
-      b1a:"Los sistemas de agua obedecen hidráulica y química. Gradientes de presión y umbrales de contaminación son límites reales.",
-      b1b:"Ignorarlos no produce fallo aleatorio; produce fallo estructural: nodos compartidos, filtración compartida, puntos ciegos regulatorios.",
-      b1ul:["Desbalance de presión.","Contaminación cruzada.","Fatiga de infraestructura.","Riesgo correlacionado entre distritos."],
-      t2:"Control y segmentación",
-      s2:"Aislar antes de expandir.",
-      b2a:"Optimización moderna implica zonificación, medición inteligente y control por ventanas.",
-      b2b:"La lógica de Urban Resource aplica: segmentar, validar en ventana y escalar solo donde métricas se sostienen.",
-      b2ul:["Distribución segmentada.","Medición inteligente.","Detección de fugas.","Rollback ante violación."],
-      t3:"Medición antes que confianza",
-      s3:"El agua limpia es una afirmación medible.",
-      b3a:"Separar concepto, en vivo y hoja de ruta. Si no cumple banda, queda como hoja de ruta.",
-      b3b:"Medidores cuantifica alineación; Leyes define qué puede afirmarse; Dot.Grid revela correlación entre nodos y fallos.",
-      b3ul:["Sin afirmaciones de seguridad sin prueba.","Sin métricas infladas.","Sin expansión sin validación.","Nueva época ante cambio estructural."]
-    }
-  };
-
-  function T(){return (lang==="zh")?COPY.zh:(lang==="es")?COPY.es:COPY.en;}
-  var P=T();
-  function set(id,v){var el=document.getElementById(id);if(el)el.textContent=v;}
-  function fillUL(id,arr){var ul=document.getElementById(id);ul.innerHTML="";arr.forEach(function(x){var li=document.createElement("li");li.textContent=x;ul.appendChild(li);});}
-
-  set("hk",P.hk); set("ht",P.ht); set("hs",P.hs);
-  set("rule",P.rule); set("band",P.band);
-
-  set("t1",P.t1); set("s1",P.s1); set("b1a",P.b1a); set("b1b",P.b1b); fillUL("b1ul",P.b1ul);
-  set("t2",P.t2); set("s2",P.s2); set("b2a",P.b2a); set("b2b",P.b2b); fillUL("b2ul",P.b2ul);
-  set("t3",P.t3); set("s3",P.s3); set("b3a",P.b
+    </section>
+    <section class="grid">
+      <article class="panel"><h2 class="panelTitle">Read</h2><p class="panelText">Flow, quality, storage, access, dependency.</p></article>
+      <article class="panel"><h2 class="panelTitle">Constraint</h2><p class="panelText">Environmental language must remain measurable and system-linked.</p></article>
+      <article class="panel"><h2 class="panelTitle">Use</h2><p class="panelText">Supports later infrastructure and sustainability surfaces without overloading entry.</p></article>
+    </section>
+    <div class="footer">BUILD=EXPLORE_WATER_G1 | ROLE=WATER_SURFACE | STATUS=ACTIVE</div>
+  </main>
+</body>
+</html>

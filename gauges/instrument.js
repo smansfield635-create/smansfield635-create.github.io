@@ -1,4 +1,23 @@
-import { buildInstrumentReceipt } from "../assets/instruments.js";
+import { createWorldKernel } from "/world/world_kernel.js";
+import { getRuntimeReceipt } from "/world/runtime.js";
+import { getPlanetEngineReceipt, getPlanetProjection } from "/world/planet_engine.js";
+import { render } from "/world/render.js";
+import { getControlReceipt } from "/world/control.js";
+import { createScene } from "/runtime/scene.js";
+
+const BUILD = "INDEX_G1_EXTERNAL_EXPRESSION";
+const KERNEL = createWorldKernel();
+
+function setText(id, text, className = null) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = text;
+  if (className) el.className = className;
+}
+
+function row(k, v) {
+  return '<div class="row"><div class="rk">' + escapeHtml(k) + '</div><div class="rv">' + escapeHtml(v) + '</div></div>';
+}
 
 function escapeHtml(value) {
   return String(value ?? "—")
@@ -7,170 +26,149 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;");
 }
 
-function ensureRoot(rootId = "app") {
-  let root = document.getElementById(rootId);
-  if (root) return root;
-
-  root = document.createElement("div");
-  root.id = rootId;
-  document.body.appendChild(root);
-  return root;
+function showBootFail(message) {
+  const node = document.getElementById("bootFail");
+  if (!node) return;
+  node.textContent = message;
+  node.classList.add("is-visible");
 }
 
-function row(k, v) {
-  return (
-    '<div class="instrument-row">' +
-      '<div class="instrument-row__k">' + escapeHtml(k) + "</div>" +
-      '<div class="instrument-row__v">' + escapeHtml(v) + "</div>" +
-    "</div>"
-  );
+function hideBootFail() {
+  const node = document.getElementById("bootFail");
+  if (!node) return;
+  node.textContent = "";
+  node.classList.remove("is-visible");
 }
 
-function ensureCanvas(id) {
-  const node = document.getElementById(id);
-  return node && node.tagName === "CANVAS" ? node : null;
-}
-
-function drawSeries(canvas, seriesDefs, minY = null, maxY = null) {
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return;
-
-  const w = canvas.width;
-  const h = canvas.height;
-
-  ctx.clearRect(0, 0, w, h);
-
-  const bg = ctx.createLinearGradient(0, 0, 0, h);
-  bg.addColorStop(0, "#0a1019");
-  bg.addColorStop(1, "#070b12");
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, w, h);
-
-  ctx.strokeStyle = "#1f2a36";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(0, h - 12);
-  ctx.lineTo(w, h - 12);
-  ctx.stroke();
-
-  let values = [];
-  seriesDefs.forEach((series) => {
-    values = values.concat((series.data || []).filter((value) => Number.isFinite(value)));
-  });
-
-  let lo = minY;
-  let hi = maxY;
-
-  if (lo === null || hi === null) {
-    const safeValues = values.length ? values : [0];
-    lo = Math.min(...safeValues);
-    hi = Math.max(...safeValues);
-    if (lo === hi) {
-      lo -= 1;
-      hi += 1;
-    }
+function classifyMetaverseLine(hostRead, renderPacket, controlReceipt) {
+  if (!hostRead || !renderPacket || !controlReceipt) {
+    return {
+      label: "Pending Classification",
+      chip: "Metaverse Pending",
+      className: "statValue warn"
+    };
   }
 
-  const span = (hi - lo) || 1;
+  const motionVisible = (((renderPacket.visible || {}).motionOutput || {}).visible) === true;
+  const houseFirst = (((controlReceipt.publicTraversal || {}).houseFirst) === true);
+  const metaverseRequired = (((controlReceipt.publicTraversal || {}).metaverseRequired) === true);
 
-  seriesDefs.forEach((series) => {
-    const data = Array.isArray(series.data) ? series.data : [];
-    if (!data.length) return;
+  if (houseFirst && !metaverseRequired && motionVisible) {
+    return {
+      label: "Observation Active",
+      chip: "Metaverse Emerging",
+      className: "statValue good"
+    };
+  }
 
-    ctx.beginPath();
-    ctx.strokeStyle = series.color || "#6fe7ff";
-    ctx.lineWidth = 2;
-
-    data.forEach((value, index) => {
-      const x = (index / Math.max(1, data.length - 1)) * w;
-      const y = (h - 12) - ((value - lo) / span) * (h - 24);
-
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-
-    ctx.stroke();
-  });
-}
-
-function normalizeHistory(history = {}) {
-  const safe = history && typeof history === "object" ? history : {};
   return {
-    fragmentWeight: Array.isArray(safe.fragmentWeight) ? safe.fragmentWeight : [],
-    directionalWeight: Array.isArray(safe.directionalWeight) ? safe.directionalWeight : [],
-    directionalContrast: Array.isArray(safe.directionalContrast) ? safe.directionalContrast : []
+    label: "Pending Classification",
+    chip: "Metaverse Pending",
+    className: "statValue warn"
   };
 }
 
-export function renderInstrument(receiptLike, options = {}) {
-  const root = ensureRoot(options.rootId || "app");
+function buildRoomList(rooms) {
+  return rooms.map((room) => {
+    return '<div class="roomRow"><span>' +
+      escapeHtml(room.label) +
+      '</span><span>' +
+      (room.visibleFromHouse ? "Visible / Programmable" : "Restricted") +
+      "</span></div>";
+  }).join("");
+}
 
-  const packet =
-    receiptLike && receiptLike.classifiedState
-      ? receiptLike
-      : buildInstrumentReceipt(receiptLike || {});
+async function boot() {
+  const sceneMount = document.getElementById("sceneMount");
+  const footer = document.getElementById("footer");
 
-  if (!packet) {
-    root.innerHTML =
-      '<section class="instrument-ui__panel">' +
-        '<h3 class="instrument-ui__panel-title">Instrument Surface</h3>' +
-        row("State", "OFFLINE") +
-      "</section>";
-    return null;
+  if (!sceneMount || !footer) {
+    throw new Error("INDEX_REQUIRED_NODES_MISSING");
   }
 
-  const summary = (packet.displayPayload || {}).summary || {};
-  const diagnostics = packet.diagnosticsPayload || {};
-  const signal = diagnostics.signal || {};
-  const history = normalizeHistory(options.history);
+  const scene = createScene({ sessionId: "INDEX_SCENE_RUNTIME" });
+  scene.mount(sceneMount).start();
 
-  root.innerHTML =
-    '<section class="instrument-ui">' +
-      '<header class="instrument-ui__head">' +
-        '<div class="instrument-ui__eyebrow">Instrument Surface</div>' +
-        '<h2 class="instrument-ui__title">' + escapeHtml(packet.classifiedState || "OFFLINE") + "</h2>" +
-      "</header>" +
-      '<div class="instrument-ui__grid">' +
-        '<section class="instrument-ui__panel">' +
-          '<h3 class="instrument-ui__panel-title">Summary</h3>' +
-          row("Node", summary.node || "—") +
-          row("Region", summary.region || "—") +
-          row("Boundary", summary.boundary || "—") +
-          row("Projection", summary.projection || "—") +
-          row("Render Kind", summary.projectionKind || "—") +
-        "</section>" +
-        '<section class="instrument-ui__panel">' +
-          '<h3 class="instrument-ui__panel-title">Diagnostics</h3>' +
-          row("Terrain", diagnostics.terrain || "—") +
-          row("Biome", diagnostics.biome || "—") +
-          row("Traversal", diagnostics.traversal || "—") +
-          row("Receipt", diagnostics.receipt || "—") +
-          row(
-            "Signal",
-            "(" +
-              (signal.fragmentWeight ?? "—") + ", " +
-              (signal.directionalWeight ?? "—") + ", " +
-              (signal.directionalContrast ?? "—") +
-            ")"
-          ) +
-        "</section>" +
-      "</div>" +
-      '<section class="instrument-ui__panel">' +
-        '<h3 class="instrument-ui__panel-title">Signal History</h3>' +
-        '<canvas id="instrumentSignalChart" width="480" height="140"></canvas>' +
-      "</section>" +
-    "</section>";
+  const timestamp = Date.now();
+  const frameState = { elapsedSeconds: performance.now() / 1000 };
 
-  drawSeries(ensureCanvas("instrumentSignalChart"), [
-    { data: history.fragmentWeight, color: "#ffd27a" },
-    { data: history.directionalWeight, color: "#7fffd4" },
-    { data: history.directionalContrast, color: "#6fe7ff" }
-  ], 0, 1);
+  const hostRead = KERNEL.getHostRead();
+  const runtimeReceipt = getRuntimeReceipt({ frameState, timestamp });
+  const planetReceipt = getPlanetEngineReceipt({ timestamp });
+  const projection = getPlanetProjection({ scale: 1 });
+  const renderPacket = render({ frameState, timestamp });
+  const controlReceipt = getControlReceipt({ frameState, timestamp });
 
-  return packet;
+  const metaverseLine = classifyMetaverseLine(hostRead, renderPacket, controlReceipt);
+
+  setText("k-kernel", "Online", "statValue good");
+  setText("k-render", "Online", "statValue good");
+  setText("k-control", "Online", "statValue good");
+  setText("k-metaverse", metaverseLine.label, metaverseLine.className);
+
+  const metaverseChip = document.getElementById("heroMetaverseChip");
+  if (metaverseChip) {
+    metaverseChip.textContent = metaverseLine.chip;
+    metaverseChip.className = "chip" + (metaverseLine.label === "Observation Active" ? " strong" : "");
+  }
+
+  const roomList = document.getElementById("roomList");
+  if (roomList) {
+    roomList.innerHTML = buildRoomList(projection.rooms || []);
+  }
+
+  const layerRows = document.getElementById("layerRows");
+  if (layerRows) {
+    layerRows.innerHTML = (hostRead.layers || []).map((layer) => {
+      return row(layer.label, layer.public ? "Public / Active" : "Hidden");
+    }).join("");
+  }
+
+  const entryRows = document.getElementById("entryRows");
+  if (entryRows) {
+    entryRows.innerHTML =
+      row("Entry", hostRead.publicEntry || "—") +
+      row("Rooms Visible", "true") +
+      row("Programmable", "true") +
+      row("Host Priority", "house-first");
+  }
+
+  const runtimeRows = document.getElementById("runtimeRows");
+  if (runtimeRows) {
+    runtimeRows.innerHTML =
+      row("Phase", runtimeReceipt.phase || "—") +
+      row("Boundary", ((runtimeReceipt.boundary || {}).classification) || "—") +
+      row("Region", ((runtimeReceipt.region || {}).label) || "—") +
+      row("Node", ((runtimeReceipt.node || {}).label) || "—");
+  }
+
+  const descendantRows = document.getElementById("descendantRows");
+  if (descendantRows) {
+    const order = controlReceipt.descendantOrder || [];
+    descendantRows.innerHTML =
+      row("1", order[0] || "—") +
+      row("2", order[1] || "—") +
+      row("3", order[2] || "—") +
+      row("4", order[3] || "—") +
+      row("5", order[4] || "—");
+  }
+
+  footer.textContent =
+    "BUILD=" + BUILD +
+    " | ENTRY=" + (hostRead.publicEntry || "—") +
+    " | ROOMS=" + (hostRead.roomCount ?? "—") +
+    " | PLANET=" + ((planetReceipt.projection || {}).kind || "—") +
+    " | PHASE=" + (runtimeReceipt.phase || "—") +
+    " | BOUNDARY=" + (((runtimeReceipt.boundary || {}).classification) || "—") +
+    " | METAVERSE=" + metaverseLine.label;
+
+  hideBootFail();
 }
 
-export default {
-  renderInstrument
-}
+boot().catch((error) => {
+  console.error("[INDEX_BOOT_ERROR]", error);
+  showBootFail(
+    "INDEX BOOT FAILED\n" +
+    (error instanceof Error ? (error.stack || error.message) : String(error))
+  );
+});

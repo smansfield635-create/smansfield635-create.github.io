@@ -1,353 +1,131 @@
-(function () {
-  "use strict";
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var qs = new URLSearchParams(window.location.search);
-  var LS = window.localStorage;
+const CANVAS = document.getElementById("fieldCanvas");
+const STAGE = document.getElementById("orbitalStage");
+const NODES = Array.from(document.querySelectorAll(".orbitNode"));
 
-  function safeGet(key) {
-    try { return LS.getItem(key); } catch (e) { return null; }
+const PRODUCT_LAYOUT = {
+  1: { radius: 250, speed: 0.00018, depth: 56 },
+  2: { radius: 188, speed: -0.00024, depth: 34 },
+  3: { radius: 132, speed: 0.00032, depth: 18 }
+};
+
+const pointer = { x: 0.5, y: 0.5 };
+const field = {
+  stars: [],
+  width: 0,
+  height: 0,
+  dpr: Math.min(window.devicePixelRatio || 1, 2)
+};
+
+function resizeCanvas() {
+  if (!CANVAS) return;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  field.width = w;
+  field.height = h;
+  CANVAS.width = Math.floor(w * field.dpr);
+  CANVAS.height = Math.floor(h * field.dpr);
+  CANVAS.style.width = w + "px";
+  CANVAS.style.height = h + "px";
+  const ctx = CANVAS.getContext("2d");
+  ctx.setTransform(field.dpr, 0, 0, field.dpr, 0, 0);
+  buildStars();
+}
+
+function buildStars() {
+  const count = Math.min(180, Math.max(120, Math.floor((field.width * field.height) / 14000)));
+  field.stars = Array.from({ length: count }, () => ({
+    x: Math.random() * field.width,
+    y: Math.random() * field.height,
+    z: 0.25 + Math.random() * 0.75,
+    size: 0.6 + Math.random() * 2.2,
+    drift: (Math.random() - 0.5) * 0.08,
+    pulse: Math.random() * Math.PI * 2
+  }));
+}
+
+function drawField(now) {
+  if (!CANVAS) return;
+  const ctx = CANVAS.getContext("2d");
+  ctx.clearRect(0, 0, field.width, field.height);
+
+  const gx = (pointer.x - 0.5) * 36;
+  const gy = (pointer.y - 0.5) * 36;
+
+  for (const star of field.stars) {
+    star.pulse += 0.01 * star.z;
+    star.y += star.drift * star.z;
+    if (star.y < -10) star.y = field.height + 10;
+    if (star.y > field.height + 10) star.y = -10;
+
+    const px = star.x + gx * star.z;
+    const py = star.y + gy * star.z;
+    const alpha = 0.18 + (Math.sin(star.pulse) * 0.5 + 0.5) * 0.42 * star.z;
+
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(190,225,255,${alpha.toFixed(3)})`;
+    ctx.arc(px, py, star.size * star.z, 0, Math.PI * 2);
+    ctx.fill();
   }
 
-  function safeSet(key, value) {
-    try { LS.setItem(key, value); } catch (e) {}
+  const grad = ctx.createRadialGradient(
+    field.width * 0.5 + gx * 2,
+    field.height * 0.34 + gy * 2,
+    0,
+    field.width * 0.5,
+    field.height * 0.5,
+    Math.max(field.width, field.height) * 0.48
+  );
+  grad.addColorStop(0, "rgba(127,255,212,0.05)");
+  grad.addColorStop(0.45, "rgba(126,203,255,0.03)");
+  grad.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, field.width, field.height);
+}
+
+function placeNodes(now) {
+  if (!STAGE) return;
+
+  const tiltX = (pointer.y - 0.5) * -14;
+  const tiltY = (pointer.x - 0.5) * 18;
+
+  STAGE.style.transform =
+    `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+
+  for (const node of NODES) {
+    const ringId = Number(node.dataset.ring || 1);
+    const angle = Number(node.dataset.angle || 0);
+    const cfg = PRODUCT_LAYOUT[ringId] || PRODUCT_LAYOUT[1];
+
+    const t = REDUCED_MOTION ? 0 : now * cfg.speed;
+    const theta = angle * (Math.PI / 180) + t;
+    const x = Math.cos(theta) * cfg.radius;
+    const y = Math.sin(theta) * cfg.radius * 0.34;
+    const z = Math.sin(theta) * cfg.depth;
+
+    const scale = 0.88 + ((z + cfg.depth) / (cfg.depth * 2)) * 0.30;
+    const opacity = 0.62 + ((z + cfg.depth) / (cfg.depth * 2)) * 0.38;
+
+    node.style.transform =
+      `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
+    node.style.opacity = opacity.toFixed(3);
+    node.style.zIndex = String(Math.round(1000 + z));
   }
+}
 
-  var lang = qs.get("lang") || safeGet("gd_lang") || "en";
-  var style = qs.get("style") || safeGet("gd_style") || "informal";
-  var time = qs.get("time") || safeGet("gd_time") || "now";
-  var depth = qs.get("depth") || safeGet("gd_depth") || "1";
-  var lane = qs.get("lane") || "";
-  var focus = qs.get("focus") || "nutrition";
+function frame(now) {
+  drawField(now);
+  placeNodes(now);
+  window.requestAnimationFrame(frame);
+}
 
-  if (lang !== "en" && lang !== "zh" && lang !== "es") lang = "en";
-  if (style !== "informal" && style !== "formal") style = "informal";
-  if (time !== "origin" && time !== "now" && time !== "post") time = "now";
+window.addEventListener("pointermove", (event) => {
+  pointer.x = event.clientX / Math.max(window.innerWidth, 1);
+  pointer.y = event.clientY / Math.max(window.innerHeight, 1);
+}, { passive: true });
 
-  var d = parseInt(depth, 10);
-  if (!isFinite(d)) d = 1;
-  if (d < 1) d = 1;
-  if (d > 9) d = 9;
-  depth = String(d);
+window.addEventListener("resize", resizeCanvas);
 
-  if (lane !== "platform" && lane !== "engineering") lane = "";
-
-  safeSet("gd_lang", lang);
-  safeSet("gd_style", style);
-  safeSet("gd_time", time);
-  safeSet("gd_depth", depth);
-
-  document.documentElement.lang = lang === "zh" ? "zh" : (lang === "es" ? "es" : "en");
-
-  function pick(en, zh, es) {
-    if (lang === "zh") return zh;
-    if (lang === "es") return es;
-    return en;
-  }
-
-  function buildQuery(extra) {
-    var p = new URLSearchParams();
-    p.set("lang", extra && extra.lang ? extra.lang : lang);
-    p.set("style", extra && extra.style ? extra.style : style);
-    p.set("time", extra && extra.time ? extra.time : time);
-    p.set("depth", extra && extra.depth ? String(extra.depth) : depth);
-
-    var resolvedLane = extra && extra.lane ? extra.lane : lane;
-    if (resolvedLane === "platform" || resolvedLane === "engineering") p.set("lane", resolvedLane);
-
-    var resolvedFocus = extra && extra.focus ? extra.focus : focus;
-    if (resolvedFocus) p.set("focus", resolvedFocus);
-
-    return "?" + p.toString();
-  }
-
-  function withState(route, extra) {
-    var glue = route.indexOf("?") >= 0 ? "&" : "?";
-    return route + glue + buildQuery(extra).slice(1);
-  }
-
-  function navigateTo(path, extra) {
-    window.location.href = withState(path, extra || null);
-  }
-
-  function wireRoutes() {
-    var nodes = document.querySelectorAll("[data-route]");
-    var i;
-    var el;
-    var route;
-    for (i = 0; i < nodes.length; i += 1) {
-      el = nodes[i];
-      route = el.getAttribute("data-route") || "";
-      if (!route) continue;
-      if (el.tagName === "A") el.setAttribute("href", withState(route));
-    }
-  }
-
-  var COPY = {
-    heroTitle: pick("PRODUCTS", "产品", "PRODUCTOS"),
-    heroTag: pick(
-      "Five separate refined true-3D glass compass objects, each spinning in place with direct product routing.",
-      "五个独立的精炼真正三维玻璃指南针对象，各自原地旋转并直接跳转到对应产品。",
-      "Cinco objetos brújula de vidrio 3D refinados, separados y girando en su propio lugar con ruta directa."
-    ),
-    scenePill: pick("REFINED 3D GLASS COMPASS", "精炼 3D 玻璃指南针", "BRÚJULA DE VIDRIO 3D REFINADA"),
-    navCompass: pick("COMPASS", "指南针", "BRÚJULA"),
-    navProducts: pick("PRODUCTS", "产品", "PRODUCTOS"),
-    navExplore: pick("EXPLORE", "探索", "EXPLORAR"),
-    navGauges: pick("GAUGES", "量规", "MEDIDORES"),
-    focusPrefix: pick("FOCUS:", "聚焦：", "FOCO:"),
-    products: [
-      { key: "nutrition", title: pick("BASELINE NUTRITION", "基线营养", "NUTRICIÓN BASELINE"), sub: pick("SYSTEMS", "系统", "SISTEMAS"), route: "/products/nutrition/" },
-      { key: "ai", title: pick("ON YOUR SIDE AI", "站你这边 AI", "ON YOUR SIDE AI"), sub: pick("INTELLIGENCE", "智能", "INTELIGENCIA"), route: "/products/on-your-side-ai/" },
-      { key: "language", title: pick("EDUCATION & LANGUAGE", "教育与语言", "EDUCACIÓN Y LENGUAJE"), sub: pick("SYSTEMS", "系统", "SISTEMAS"), route: "/products/education/" },
-      { key: "game", title: pick("FIVE FLAGS", "五旗", "FIVE FLAGS"), sub: pick("WHAT'S MY THEME?", "我的主题是什么？", "¿CUÁL ES MI TEMA?"), route: "/products/five-flags/" },
-      { key: "coin", title: pick("ARCHCOIN", "ARCHCOIN", "ARCHCOIN"), sub: pick("PRODUCT LINE", "产品线", "LÍNEA DE PRODUCTO"), route: "/products/archcoin/" }
-    ]
-  };
-
-  var heroTitle = document.getElementById("heroTitle");
-  var heroTag = document.getElementById("heroTag");
-  var scenePill = document.getElementById("scenePill");
-  var navCompass = document.getElementById("navCompass");
-  var navProducts = document.getElementById("navProducts");
-  var navExplore = document.getElementById("navExplore");
-  var navGauges = document.getElementById("navGauges");
-  var focusPill = document.getElementById("focusPill");
-  var chamber = document.getElementById("productChamber");
-  var productNodes = Array.prototype.slice.call(document.querySelectorAll(".product-node"));
-  var dockButtons = Array.prototype.slice.call(document.querySelectorAll(".dock-btn"));
-
-  heroTitle.textContent = COPY.heroTitle;
-  heroTag.textContent = COPY.heroTag;
-  scenePill.textContent = COPY.scenePill;
-  navCompass.textContent = COPY.navCompass;
-  navProducts.textContent = COPY.navProducts;
-  navExplore.textContent = COPY.navExplore;
-  navGauges.textContent = COPY.navGauges;
-
-  wireRoutes();
-
-  function setNodeText(id, value) {
-    var node = document.getElementById(id);
-    if (node) node.textContent = value;
-  }
-
-  function syncCopy() {
-    setNodeText("titleNutrition", COPY.products[0].title);
-    setNodeText("subNutrition", COPY.products[0].sub);
-    setNodeText("titleAI", COPY.products[1].title);
-    setNodeText("subAI", COPY.products[1].sub);
-    setNodeText("titleLanguage", COPY.products[2].title);
-    setNodeText("subLanguage", COPY.products[2].sub);
-    setNodeText("titleGame", COPY.products[3].title);
-    setNodeText("subGame", COPY.products[3].sub);
-    setNodeText("titleCoin", COPY.products[4].title);
-    setNodeText("subCoin", COPY.products[4].sub);
-
-    if (dockButtons[0]) dockButtons[0].textContent = pick("Nutrition", "营养", "Nutrición");
-    if (dockButtons[1]) dockButtons[1].textContent = pick("AI", "AI", "AI");
-    if (dockButtons[2]) dockButtons[2].textContent = pick("Education", "教育", "Educación");
-    if (dockButtons[3]) dockButtons[3].textContent = pick("Five Flags", "五旗", "Five Flags");
-    if (dockButtons[4]) dockButtons[4].textContent = COPY.products[4].title;
-  }
-
-  var STATE = {
-    raf: 0,
-    focusedIndex: 0,
-    reducedMotion: false,
-    paused: false,
-    mobile: false,
-    time: 0
-  };
-
-  try {
-    var motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    STATE.reducedMotion = !!motionQuery.matches;
-    if (typeof motionQuery.addEventListener === "function") {
-      motionQuery.addEventListener("change", function () {
-        STATE.reducedMotion = !!motionQuery.matches;
-      });
-    } else if (typeof motionQuery.addListener === "function") {
-      motionQuery.addListener(function () {
-        STATE.reducedMotion = !!motionQuery.matches;
-      });
-    }
-  } catch (e) {
-    STATE.reducedMotion = false;
-  }
-
-  function resolveFocusIndex() {
-    var i;
-    for (i = 0; i < COPY.products.length; i += 1) {
-      if (COPY.products[i].key === focus) return i;
-    }
-    return 0;
-  }
-
-  function setFocus(index, updateUrl) {
-    var i;
-    var safeIndex = index;
-    if (safeIndex < 0) safeIndex = 0;
-    if (safeIndex >= COPY.products.length) safeIndex = COPY.products.length - 1;
-
-    STATE.focusedIndex = safeIndex;
-    focus = COPY.products[safeIndex].key;
-
-    for (i = 0; i < productNodes.length; i += 1) {
-      productNodes[i].classList.toggle("is-focus", i === safeIndex);
-    }
-
-    for (i = 0; i < dockButtons.length; i += 1) {
-      dockButtons[i].classList.toggle("is-active", i === safeIndex);
-    }
-
-    focusPill.textContent = COPY.focusPrefix + " " + COPY.products[safeIndex].title;
-
-    if (updateUrl) {
-      window.history.replaceState({}, "", window.location.pathname + buildQuery({ focus: focus }));
-    }
-  }
-
-  function getAnchors() {
-    if (STATE.mobile) {
-      return [
-        { x: 0.50, y: 0.50, z: 64, spin: 0.020, tilt: -9, swing: 15 },
-        { x: 0.24, y: 0.25, z: 22, spin: 0.017, tilt: -9, swing: 12 },
-        { x: 0.76, y: 0.25, z: 22, spin: -0.017, tilt: -9, swing: 12 },
-        { x: 0.26, y: 0.76, z: 10, spin: 0.015, tilt: -9, swing: 12 },
-        { x: 0.74, y: 0.76, z: 10, spin: -0.015, tilt: -9, swing: 12 }
-      ];
-    }
-
-    return [
-      { x: 0.50, y: 0.52, z: 72, spin: 0.020, tilt: -9, swing: 15 },
-      { x: 0.25, y: 0.26, z: 28, spin: 0.017, tilt: -9, swing: 12 },
-      { x: 0.75, y: 0.26, z: 28, spin: -0.017, tilt: -9, swing: 12 },
-      { x: 0.27, y: 0.78, z: 14, spin: 0.015, tilt: -9, swing: 12 },
-      { x: 0.73, y: 0.78, z: 14, spin: -0.015, tilt: -9, swing: 12 }
-    ];
-  }
-
-  function layoutProducts() {
-    var anchors = getAnchors();
-    var rect = chamber.getBoundingClientRect();
-    var w = rect.width;
-    var h = rect.height;
-    var i;
-    var node;
-    var anchor;
-    var x;
-    var y;
-    var z;
-    var wrap;
-    var shadow;
-    var rotationY;
-    var swayY;
-    var tiltX;
-    var lift;
-    var opacity;
-    var focusScale;
-
-    for (i = 0; i < productNodes.length; i += 1) {
-      node = productNodes[i];
-      anchor = anchors[i];
-      x = w * anchor.x;
-      y = h * anchor.y;
-      z = anchor.z;
-
-      rotationY = STATE.reducedMotion ? 28 : (Math.sin((STATE.time * anchor.spin * 0.06) + i) * anchor.swing);
-      swayY = STATE.reducedMotion ? 0 : Math.sin((STATE.time * 0.0012) + (i * 0.9)) * 4;
-      tiltX = STATE.reducedMotion ? anchor.tilt : (anchor.tilt + Math.sin((STATE.time * 0.001) + i) * 1.1);
-      lift = i === STATE.focusedIndex ? 8 : 0;
-      opacity = i === STATE.focusedIndex ? 1 : 0.96;
-      focusScale = i === STATE.focusedIndex ? 1.04 : 1;
-
-      node.style.left = x + "px";
-      node.style.top = (y - lift + swayY) + "px";
-      node.style.marginLeft = (-node.offsetWidth / 2) + "px";
-      node.style.marginTop = (-node.offsetHeight / 2) + "px";
-      node.style.zIndex = String(20 + Math.round(z));
-      node.style.opacity = String(opacity);
-      node.style.transform = "translate3d(0,0," + z + "px)";
-
-      wrap = node.querySelector(".object-wrap");
-      if (wrap) {
-        wrap.style.transform =
-          "rotateX(" + tiltX + "deg) " +
-          "rotateY(" + rotationY + "deg) " +
-          "scale(" + focusScale + ")";
-      }
-
-      shadow = node.querySelector(".product-shadow");
-      if (shadow) {
-        shadow.style.opacity = i === STATE.focusedIndex ? "0.90" : "0.72";
-        shadow.style.transform = "scale(" + (0.94 + ((focusScale - 1) * 0.8)) + ")";
-      }
-    }
-  }
-
-  function animate(ts) {
-    if (!STATE.paused) {
-      STATE.time = ts || 0;
-      layoutProducts();
-    }
-    STATE.raf = window.requestAnimationFrame(animate);
-  }
-
-  function bindNodes() {
-    var i;
-    var node;
-    var index;
-    var route;
-
-    for (i = 0; i < productNodes.length; i += 1) {
-      node = productNodes[i];
-      index = parseInt(node.getAttribute("data-index") || "0", 10);
-      route = node.getAttribute("data-route") || "/products/";
-
-      (function (boundNode, boundIndex, boundRoute) {
-        boundNode.addEventListener("mouseenter", function () {
-          setFocus(boundIndex, true);
-        }, { passive: true });
-
-        boundNode.addEventListener("focus", function () {
-          setFocus(boundIndex, true);
-        }, { passive: true });
-
-        boundNode.addEventListener("click", function () {
-          navigateTo(boundRoute, { focus: COPY.products[boundIndex].key });
-        }, { passive: true });
-      })(node, index, route);
-    }
-  }
-
-  function bindDock() {
-    var i;
-    for (i = 0; i < dockButtons.length; i += 1) {
-      (function (boundIndex) {
-        dockButtons[boundIndex].addEventListener("click", function () {
-          setFocus(boundIndex, true);
-        }, { passive: true });
-      })(i);
-    }
-  }
-
-  function updateResponsiveState() {
-    STATE.mobile = window.innerWidth < 720;
-    layoutProducts();
-  }
-
-  function bindSystem() {
-    window.addEventListener("resize", updateResponsiveState, { passive: true });
-    document.addEventListener("visibilitychange", function () {
-      STATE.paused = !!document.hidden;
-    }, false);
-  }
-
-  syncCopy();
-  bindNodes();
-  bindDock();
-  bindSystem();
-  setFocus(resolveFocusIndex(), false);
-  updateResponsiveState();
-  animate(0);
-})();
+resizeCanvas();
+window.requestAnimationFrame(frame);

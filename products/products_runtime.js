@@ -64,19 +64,19 @@
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
 
-      this.planetLinks = [
-        { title: "Platform", href: "/platform/", angle: -90, kicker: "Core" },
-        { title: "Software", href: "/software/", angle: -60, kicker: "Runtime" },
-        { title: "On Your Side AI", href: "/ai/", angle: -30, kicker: "Intelligence" },
-        { title: "Syntax", href: "/ssg/", angle: 0, kicker: "Language" },
-        { title: "ArchCoin", href: "/archcoin/", angle: 30, kicker: "Value" },
-        { title: "Nutrition", href: "/nutrition/", angle: 60, kicker: "Baseline" },
-        { title: "Energy", href: "/energy/", angle: 90, kicker: "Output" },
-        { title: "Education", href: "/education/", angle: 120, kicker: "Learning" },
-        { title: "Games", href: "/games/", angle: 150, kicker: "Playable" },
-        { title: "Agriculture", href: "/agriculture/", angle: 180, kicker: "Applied" },
-        { title: "Domains", href: "/domains/", angle: 210, kicker: "Identity" },
-        { title: "Diagnostics", href: "/diagnostics/", angle: 240, kicker: "Measurement" }
+      this.nodes = [
+        { title: "Platform", href: "/platform/", kicker: "Core", angle: 0, group: "outer", priority: "E" },
+        { title: "Diagnostics", href: "/diagnostics/", kicker: "Measurement", angle: -30, group: "outer", priority: "NE" },
+        { title: "Energy", href: "/energy/", kicker: "Output", angle: -60, group: "inner", priority: "NNE" },
+        { title: "Domains", href: "/domains/", kicker: "Identity", angle: -120, group: "outer", priority: "NNW" },
+        { title: "Nutrition", href: "/nutrition/", kicker: "Baseline", angle: -150, group: "inner", priority: "NW" },
+        { title: "Agriculture", href: "/agriculture/", kicker: "Applied", angle: 150, group: "outer", priority: "W" },
+        { title: "Games", href: "/games/", kicker: "Playable", angle: 120, group: "inner", priority: "SW" },
+        { title: "On Your Side AI", href: "/ai/", kicker: "Intelligence", angle: 90, group: "outer", priority: "S" },
+        { title: "Education", href: "/education/", kicker: "Learning", angle: 45, group: "outer", priority: "SE" },
+        { title: "Software", href: "/software/", kicker: "Runtime", angle: 30, group: "inner", priority: "ESE" },
+        { title: "Syntax", href: "/ssg/", kicker: "Language", angle: -210, group: "inner", priority: "WSW" },
+        { title: "ArchCoin", href: "/archcoin/", kicker: "Value", angle: 210, group: "outer", priority: "SSW" }
       ];
 
       this.frame = 0;
@@ -93,7 +93,7 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-g2-snowflake-planet");
+      this.mount.setAttribute("data-runtime", "products-g2-axis-snowflake");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -131,15 +131,43 @@
       this.glowA = createElement("div", "products-glow products-glow-a", this.glowLayer);
       this.glowB = createElement("div", "products-glow products-glow-b", this.glowLayer);
       this.snowflakeShell = createElement("div", "products-snowflake-shell", this.snowflakeLayer);
+      this.verticalAxis = createElement("div", "products-vertical-axis", this.snowflakeLayer);
+      this.axisCapsuleTop = createElement("div", "products-axis-cap top", this.snowflakeLayer);
+      this.axisCapsuleBottom = createElement("div", "products-axis-cap bottom", this.snowflakeLayer);
 
       setStyles(this.glowA, { position: "absolute", inset: "0" });
       setStyles(this.glowB, { position: "absolute", inset: "0" });
+
       setStyles(this.snowflakeShell, {
         position: "absolute",
         left: "50%",
         top: "50%",
         transform: "translate(-50%, -50%)",
         transformOrigin: "50% 50%"
+      });
+
+      setStyles(this.verticalAxis, {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "2px",
+        borderRadius: "999px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.28), rgba(255,255,255,0))",
+        boxShadow: "0 0 16px rgba(124,166,255,0.12)"
+      });
+
+      [this.axisCapsuleTop, this.axisCapsuleBottom].forEach((cap) => {
+        setStyles(cap, {
+          position: "absolute",
+          left: "50%",
+          width: "12px",
+          height: "12px",
+          borderRadius: "50%",
+          transform: "translateX(-50%)",
+          background: "linear-gradient(135deg, rgba(124,166,255,0.52), rgba(111,255,219,0.24))",
+          boxShadow: "0 0 18px rgba(124,166,255,0.18)"
+        });
       });
 
       this.stars = createStarField(this.starLayer, 52);
@@ -173,16 +201,17 @@
 
       this.planetShell = createElement("div", "products-planet-shell", this.planetLink);
       this.planetAtmosphere = createElement("div", "products-planet-atmosphere", this.planetShell);
-      this.planetBody = createElement("div", "products-planet-body", this.planetShell);
       this.planetGlow = createElement("div", "products-planet-glow", this.planetShell);
       this.planetShadow = createElement("div", "products-planet-shadow", this.planetShell);
-      this.axisLine = createElement("div", "products-axis-line", this.planetShell);
+      this.planetBody = createElement("div", "products-planet-body", this.planetShell);
+      this.equatorBand = createElement("div", "products-equator-band", this.planetBody);
+      this.surfaceLayer = createElement("div", "products-surface-layer", this.planetBody);
 
-      this.continentA = createElement("div", "products-continent continent-a", this.planetBody);
-      this.continentB = createElement("div", "products-continent continent-b", this.planetBody);
-      this.continentC = createElement("div", "products-continent continent-c", this.planetBody);
+      this.continentA = createElement("div", "products-continent continent-a", this.surfaceLayer);
+      this.continentB = createElement("div", "products-continent continent-b", this.surfaceLayer);
+      this.continentC = createElement("div", "products-continent continent-c", this.surfaceLayer);
 
-      [this.planetShell, this.planetAtmosphere, this.planetBody, this.planetGlow, this.planetShadow].forEach((node) => {
+      [this.planetShell, this.planetAtmosphere, this.planetGlow, this.planetShadow, this.planetBody].forEach((node) => {
         setStyles(node, {
           position: "absolute",
           left: "50%",
@@ -202,17 +231,6 @@
         boxShadow: "0 0 58px rgba(119,176,255,0.24)"
       });
 
-      setStyles(this.planetBody, {
-        overflow: "hidden",
-        borderRadius: "50%",
-        border: "1px solid rgba(255,255,255,0.12)",
-        background: [
-          "radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), transparent 18%)",
-          "radial-gradient(circle at 66% 72%, rgba(111,255,219,0.16), transparent 22%)",
-          "linear-gradient(145deg, #152d63 0%, #2352a8 30%, #1a7d9f 58%, #10284f 100%)"
-        ].join(",")
-      });
-
       setStyles(this.planetGlow, {
         borderRadius: "50%",
         background: "radial-gradient(circle, rgba(124,166,255,0.18), transparent 65%)",
@@ -226,18 +244,33 @@
         opacity: "0.85"
       });
 
-      setStyles(this.axisLine, {
+      setStyles(this.planetBody, {
+        overflow: "hidden",
+        borderRadius: "50%",
+        border: "1px solid rgba(255,255,255,0.12)",
+        background: [
+          "radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), transparent 18%)",
+          "radial-gradient(circle at 66% 72%, rgba(111,255,219,0.16), transparent 22%)",
+          "linear-gradient(145deg, #152d63 0%, #2352a8 30%, #1a7d9f 58%, #10284f 100%)"
+        ].join(",")
+      });
+
+      setStyles(this.equatorBand, {
         position: "absolute",
-        left: "50%",
+        left: "-10%",
         top: "50%",
-        width: "10%",
-        height: "150%",
-        transform: "translate(-50%, -50%) rotate(18deg)",
+        width: "120%",
+        height: "20%",
+        transform: "translateY(-50%)",
         borderRadius: "999px",
-        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.24), rgba(255,255,255,0))",
-        boxShadow: "0 0 18px rgba(255,255,255,0.08)",
-        opacity: "0.75",
-        pointerEvents: "none"
+        background: "linear-gradient(180deg, rgba(93,198,255,0.06), rgba(255,255,255,0.18), rgba(41,111,255,0.08))",
+        boxShadow: "0 0 20px rgba(90,170,255,0.12)"
+      });
+
+      setStyles(this.surfaceLayer, {
+        position: "absolute",
+        inset: "0",
+        willChange: "transform"
       });
 
       const continentBase = {
@@ -331,8 +364,9 @@
 
       this.outerRing = createElement("div", "products-snowflake-ring outer", this.snowflakeShell);
       this.innerRing = createElement("div", "products-snowflake-ring inner", this.snowflakeShell);
+      this.crossRing = createElement("div", "products-snowflake-ring cross", this.snowflakeShell);
 
-      [this.outerRing, this.innerRing].forEach((ring, index) => {
+      [this.outerRing, this.innerRing, this.crossRing].forEach((ring, index) => {
         setStyles(ring, {
           position: "absolute",
           left: "50%",
@@ -340,15 +374,17 @@
           transform: "translate(-50%, -50%)",
           borderRadius: "50%",
           border: index === 0
-            ? "1px solid rgba(124,166,255,0.18)"
-            : "1px solid rgba(255,255,255,0.12)",
+            ? "1px solid rgba(124,166,255,0.2)"
+            : index === 1
+              ? "1px solid rgba(255,255,255,0.12)"
+              : "1px dashed rgba(111,255,219,0.16)",
           boxShadow: index === 0 ? "0 0 20px rgba(124,166,255,0.1)" : "none"
         });
       });
     }
 
     buildTokens() {
-      this.tokens = this.planetLinks.map((item) => {
+      this.tokens = this.nodes.map((item) => {
         const token = document.createElement("a");
         token.href = item.href;
         token.className = "products-orbit-token";
@@ -365,9 +401,9 @@
 
         setStyles(token, {
           position: "absolute",
-          minWidth: "102px",
-          maxWidth: "138px",
-          padding: "9px 10px",
+          minWidth: "104px",
+          maxWidth: "142px",
+          padding: "10px 11px",
           borderRadius: "999px",
           border: "1px solid rgba(255,255,255,0.14)",
           background: "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))",
@@ -412,7 +448,9 @@
 
         return {
           el: token,
-          angle: item.angle
+          angle: item.angle,
+          group: item.group,
+          priority: item.priority
         };
       });
     }
@@ -423,12 +461,15 @@
       const small = rect.width <= 480;
 
       const centerX = rect.width * 0.5;
-      const centerY = rect.height * 0.5;
-      const planetSize = clamp(rect.width * (mobile ? 0.38 : 0.4), 168, mobile ? 238 : 288);
-      const shellRadius = clamp(rect.width * (mobile ? 0.31 : 0.33), 118, mobile ? 170 : 218);
-      const branchLength = shellRadius * 0.32;
-      const spokeLength = shellRadius * 0.98;
-      const tokenRadius = shellRadius + (small ? 10 : mobile ? 14 : 18);
+      const centerY = rect.height * 0.54;
+      const planetSize = clamp(rect.width * (mobile ? 0.34 : 0.36), 164, mobile ? 224 : 270);
+      const shellRadius = clamp(rect.width * (mobile ? 0.43 : 0.46), 164, mobile ? 224 : 310);
+      const spokeLength = shellRadius * 0.86;
+      const branchLength = shellRadius * 0.24;
+      const outerRadius = shellRadius;
+      const innerRadius = shellRadius * 0.78;
+      const outerAmplitude = shellRadius * 0.16;
+      const innerAmplitude = shellRadius * 0.16;
 
       return {
         width: rect.width,
@@ -437,9 +478,12 @@
         centerY,
         planetSize,
         shellRadius,
-        branchLength,
         spokeLength,
-        tokenRadius,
+        branchLength,
+        outerRadius,
+        innerRadius,
+        outerAmplitude,
+        innerAmplitude,
         mobile,
         small
       };
@@ -449,7 +493,7 @@
       const m = this.measure();
 
       setStyles(this.glowA, {
-        background: "radial-gradient(circle at 50% 50%, rgba(124,166,255,0.18), transparent 58%)",
+        background: "radial-gradient(circle at 50% 58%, rgba(124,166,255,0.18), transparent 58%)",
         filter: "blur(22px)"
       });
 
@@ -458,12 +502,24 @@
         filter: "blur(34px)"
       });
 
+      setStyles(this.verticalAxis, {
+        height: `${m.shellRadius * 2.2}px`
+      });
+
+      setStyles(this.axisCapsuleTop, {
+        top: `${m.centerY - m.shellRadius - 22}px`
+      });
+
+      setStyles(this.axisCapsuleBottom, {
+        top: `${m.centerY + m.shellRadius + 10}px`
+      });
+
       setStyles(this.planetLink, {
         width: `${m.planetSize}px`,
         height: `${m.planetSize}px`
       });
 
-      [this.planetShell, this.planetAtmosphere, this.planetBody, this.planetGlow, this.planetShadow].forEach((node) => {
+      [this.planetShell, this.planetAtmosphere, this.planetGlow, this.planetShadow, this.planetBody].forEach((node) => {
         setStyles(node, {
           width: `${m.planetSize}px`,
           height: `${m.planetSize}px`
@@ -476,19 +532,25 @@
       });
 
       setStyles(this.outerRing, {
-        width: `${m.shellRadius * 2.02}px`,
-        height: `${m.shellRadius * 2.02}px`
+        width: `${m.outerRadius * 2.02}px`,
+        height: `${m.outerRadius * 2.02}px`
       });
 
       setStyles(this.innerRing, {
-        width: `${m.shellRadius * 1.46}px`,
-        height: `${m.shellRadius * 1.46}px`
+        width: `${m.innerRadius * 2.02}px`,
+        height: `${m.innerRadius * 2.02}px`
+      });
+
+      setStyles(this.crossRing, {
+        width: `${m.shellRadius * 1.64}px`,
+        height: `${m.shellRadius * 1.64}px`
       });
 
       this.spokes.forEach(({ spoke, branchA, branchB, crystal, rotation }) => {
         setStyles(spoke, {
           height: `${m.spokeLength}px`,
-          transform: `translate(-50%, 0) rotate(${rotation}deg)`
+          transform: `translate(-50%, 0) rotate(${rotation}deg)`,
+          background: "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(124,166,255,0.1))"
         });
 
         setStyles(branchA, {
@@ -507,23 +569,41 @@
           width: `${m.small ? 12 : 14}px`,
           height: `${m.small ? 12 : 14}px`
         });
-
-        spoke.style.background = "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(124,166,255,0.1))";
       });
 
-      this.tokens.forEach((token) => {
-        const anchor = polarToCartesian(m.centerX, m.centerY, m.tokenRadius, token.angle);
-        this.positionToken(token.el, anchor.x, anchor.y);
-      });
+      this.positionTokens(0);
     }
 
-    positionToken(el, x, y) {
-      const width = el.offsetWidth || 120;
-      const height = el.offsetHeight || 48;
+    positionTokens(shellRotationDeg) {
+      const m = this.measure();
+
+      this.tokens.forEach((token, index) => {
+        const phase = (shellRotationDeg + token.angle) * Math.PI / 180;
+        const breathing = Math.sin(phase);
+        const radius = token.group === "outer"
+          ? m.outerRadius - m.outerAmplitude * breathing
+          : m.innerRadius + m.innerAmplitude * breathing;
+
+        const anchor = polarToCartesian(m.centerX, m.centerY, radius, token.angle + shellRotationDeg);
+        this.positionToken(token.el, anchor.x, anchor.y, token.priority);
+      });
+
+      this.verticalAxis.style.left = `${m.centerX}px`;
+      this.verticalAxis.style.top = `${m.centerY}px`;
+    }
+
+    positionToken(el, x, y, priority) {
+      const width = el.offsetWidth || 122;
+      const height = el.offsetHeight || 50;
       const left = clamp(x - width / 2, 8, this.stage.clientWidth - width - 8);
       const top = clamp(y - height / 2, 8, this.stage.clientHeight - height - 8);
-      const transform = `translate3d(${left}px, ${top}px, 0)`;
-      el.dataset.transform = transform;
+
+      const boost = priority === "N" || priority === "S" || priority === "E" || priority === "W"
+        ? " scale(1.03)"
+        : "";
+
+      const transform = `translate3d(${left}px, ${top}px, 0)${boost}`;
+      el.dataset.transform = `translate3d(${left}px, ${top}px, 0)`;
       el.style.transform = transform;
     }
 
@@ -532,16 +612,18 @@
       if (!this.startTime) this.startTime = time;
 
       const elapsed = time - this.startTime;
-
       const shellRotation = elapsed * 0.0018;
-      const planetRotation = elapsed * 0.0048;
+      const globeSpin = elapsed * 0.009;
+      const atmospherePulse = 1.038 + Math.sin(elapsed * 0.0011) * 0.008;
+      const glowPulse = 1.16 + Math.cos(elapsed * 0.0008) * 0.02;
       const glowShiftA = Math.sin(elapsed * 0.00055) * 9;
       const glowShiftB = Math.cos(elapsed * 0.00042) * 7;
 
       this.snowflakeShell.style.transform = `translate(-50%, -50%) rotate(${shellRotation}deg)`;
-      this.planetShell.style.transform = `translate(-50%, -50%) rotate(${planetRotation}deg)`;
-      this.planetAtmosphere.style.transform = `translate(-50%, -50%) scale(${1.038 + Math.sin(elapsed * 0.0011) * 0.008})`;
-      this.planetGlow.style.transform = `translate(-50%, -50%) scale(${1.16 + Math.cos(elapsed * 0.0008) * 0.02})`;
+      this.planetAtmosphere.style.transform = `translate(-50%, -50%) scale(${atmospherePulse})`;
+      this.planetGlow.style.transform = `translate(-50%, -50%) scale(${glowPulse})`;
+      this.surfaceLayer.style.transform = `translateX(${Math.sin(globeSpin * Math.PI / 180) * 10}px)`;
+      this.equatorBand.style.transform = `translateY(-50%) scaleX(${1 + Math.cos(globeSpin * Math.PI / 180) * 0.04})`;
 
       this.stars.forEach((star, index) => {
         const twinkle = 0.42 + (Math.sin(elapsed * 0.001 * star.drift + star.phase + index) + 1) * 0.2;
@@ -550,6 +632,8 @@
 
       this.glowA.style.transform = `translate(${glowShiftA}px, ${glowShiftB}px)`;
       this.glowB.style.transform = `translate(${-glowShiftB}px, ${glowShiftA * 0.6}px)`;
+
+      this.positionTokens(shellRotation);
 
       this.frame = window.requestAnimationFrame(this.animate);
     }

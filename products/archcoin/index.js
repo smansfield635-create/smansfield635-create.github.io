@@ -1,110 +1,542 @@
-(function () {
-  "use strict";
+const ROOT = "/products/archcoin";
+const APP = document.getElementById("app");
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var RUNTIME_FILES = [
-    "./runtime/spine_runtime_contract.js",
-    "./runtime/spine_runtime.js",
-    "./runtime/archcoin_vault_motion.js"
+function el(tag, className, text) {
+  const node = document.createElement(tag);
+  if (className) node.className = className;
+  if (text !== undefined) node.textContent = text;
+  return node;
+}
+
+function button(label, href, strong = false) {
+  const a = document.createElement("a");
+  a.className = "action" + (strong ? " strong" : "");
+  a.href = href;
+  a.textContent = label;
+  return a;
+}
+
+function buildShell() {
+  const shell = el("main", "vault-shell");
+
+  const hero = el("section", "vault-hero");
+  const eyebrow = el("div", "eyebrow", "ARCHCOIN · RICHIE RICH'S VAULT");
+  const title = el("h1", "hero-title", "One parent. One body. Four derived governors.");
+  const text = el(
+    "p",
+    "hero-text",
+    "Archcoin remains the parent template and construction authority. The Vault remains the master body. Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity. Tap a control assembly to rotate the full cylinder and release one coin."
+  );
+
+  const statGrid = el("div", "stat-grid");
+  statGrid.append(
+    statCard("Parent", "Archcoin"),
+    statCard("Master Body", "Vault"),
+    statCard("Governors", "4"),
+    statCard("Mode", "Local Safe Boot")
+  );
+
+  const controls = el("div", "action-row");
+  controls.append(
+    button("Home", "/", false),
+    button("Products", "/products/", false),
+    button("Vault", "/products/archcoin/", true)
+  );
+
+  hero.append(eyebrow, title, text, statGrid, controls);
+
+  const machine = el("section", "machine-panel");
+  const machineTitle = el("h2", "panel-title", "Vault Cylinder");
+  const machineText = el(
+    "p",
+    "panel-text",
+    "The cylinder now runs on a self-contained local motion surface. No external spine runtime is required for this boot path."
+  );
+
+  const stage = el("div", "machine-stage");
+  stage.id = "machineStage";
+
+  const core = el("div", "vault-core");
+  core.innerHTML = "<span>ARCH<br>COIN</span>";
+  stage.appendChild(core);
+
+  const ringOuter = el("div", "vault-ring outer");
+  const ringMid = el("div", "vault-ring mid");
+  const ringInner = el("div", "vault-ring inner");
+  stage.append(ringOuter, ringMid, ringInner);
+
+  const nodes = [
+    { key: "North", label: "North Governor", short: "N", angle: 0 },
+    { key: "East", label: "East Governor", short: "E", angle: 90 },
+    { key: "South", label: "South Governor", short: "S", angle: 180 },
+    { key: "West", label: "West Governor", short: "W", angle: 270 }
   ];
 
-  function loadScript(src) {
-    return new Promise(function (resolve, reject) {
-      var existing = document.querySelector('script[data-runtime-src="' + src + '"]');
-
-      if (existing) {
-        if (existing.getAttribute("data-loaded") === "true") {
-          resolve();
-          return;
-        }
-        existing.addEventListener("load", function () {
-          resolve();
-        }, { once: true });
-        existing.addEventListener("error", function () {
-          reject(new Error("Failed to load " + src));
-        }, { once: true });
-        return;
-      }
-
-      var script = document.createElement("script");
-      script.src = src;
-      script.async = false;
-      script.defer = true;
-      script.setAttribute("data-runtime-src", src);
-
-      script.addEventListener("load", function () {
-        script.setAttribute("data-loaded", "true");
-        resolve();
-      }, { once: true });
-
-      script.addEventListener("error", function () {
-        reject(new Error("Failed to load " + src));
-      }, { once: true });
-
-      document.head.appendChild(script);
-    });
+  for (const item of nodes) {
+    const node = el("button", "mint-node");
+    node.type = "button";
+    node.dataset.angle = String(item.angle);
+    node.dataset.key = item.key;
+    node.innerHTML =
+      `<span class="mint-short">${item.short}</span>` +
+      `<span class="mint-label">${item.label}</span>`;
+    stage.appendChild(node);
   }
 
-  function loadAll(files) {
-    return files.reduce(function (promise, src) {
-      return promise.then(function () {
-        return loadScript(src);
-      });
-    }, Promise.resolve());
-  }
+  const receipt = el("section", "panel");
+  const receiptTitle = el("h2", "panel-title", "Boot Receipt");
+  const receiptRows = el("div", "rows");
+  receiptRows.append(
+    infoRow("Boot path", "Local self-contained"),
+    infoRow("Runtime dependency", "None"),
+    infoRow("Failure class cleared", "Missing external spine files"),
+    infoRow("Status", "Active")
+  );
+  receipt.append(receiptTitle, receiptRows);
 
-  function showBootError(message) {
-    var note = document.createElement("div");
-    note.style.position = "fixed";
-    note.style.left = "12px";
-    note.style.right = "12px";
-    note.style.bottom = "12px";
-    note.style.zIndex = "9999";
-    note.style.padding = "12px 14px";
-    note.style.borderRadius = "14px";
-    note.style.border = "1px solid rgba(255,120,120,.28)";
-    note.style.background = "rgba(48,8,10,.92)";
-    note.style.color = "#ffe8e8";
-    note.style.font = "12px/1.55 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace";
-    note.style.whiteSpace = "pre-wrap";
-    note.textContent = "[ARCHCOIN_BOOT_ERROR] " + String(message || "Unknown boot error");
-    document.body.appendChild(note);
-  }
+  machine.append(machineTitle, machineText, stage);
 
-  function boot() {
-    var spineRuntimeApi = window.__SPINE_RUNTIME__;
-    var motionApi = window.__ARCHCOIN_VAULT_MOTION__;
+  const lower = el("section", "lower-grid");
+  lower.append(machine, receipt);
 
-    if (!spineRuntimeApi || !motionApi) {
-      throw new Error("Archcoin runtime modules unavailable");
+  shell.append(hero, lower);
+  return shell;
+}
+
+function statCard(k, v) {
+  const card = el("div", "stat-card");
+  card.append(el("div", "stat-label", k), el("div", "stat-value", v));
+  return card;
+}
+
+function infoRow(k, v) {
+  const row = el("div", "row");
+  row.append(el("div", "rk", k), el("div", "rv", v));
+  return row;
+}
+
+function injectStyles() {
+  if (document.getElementById("archcoin-local-safeboot-style")) return;
+
+  const style = document.createElement("style");
+  style.id = "archcoin-local-safeboot-style";
+  style.textContent = `
+    :root{
+      --bg:#03050a;
+      --bg2:#09111d;
+      --bg3:#101b29;
+      --panel:rgba(8,12,19,.74);
+      --panel2:rgba(12,18,30,.86);
+      --line:rgba(160,220,255,.12);
+      --line2:rgba(127,255,212,.18);
+      --text:#edf7ff;
+      --muted:rgba(237,247,255,.72);
+      --muted2:rgba(237,247,255,.54);
+      --accent:#7fffd4;
+      --accent2:#7ecbff;
+      --shadow:0 18px 40px rgba(0,0,0,.30);
+      --shadow2:0 28px 80px rgba(0,0,0,.45);
+      --radius:18px;
+      --radius2:26px;
     }
 
-    var runtime = spineRuntimeApi.createSpineRuntime({
-      root: document.getElementById("archcoin-page") || document,
-      name: "ARCHCOIN_SPINE_RUNTIME",
-      version: "T1"
+    html,body{
+      background:
+        radial-gradient(circle at 50% -10%, rgba(126,203,255,.16), transparent 30%),
+        radial-gradient(circle at 18% 22%, rgba(127,255,212,.06), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(255,210,122,.05), transparent 18%),
+        linear-gradient(180deg,var(--bg3),var(--bg2) 42%,var(--bg));
+      color:var(--text);
+    }
+
+    #app{
+      max-width:1440px;
+      margin:0 auto;
+      padding:24px 16px 32px;
+    }
+
+    .vault-shell{
+      display:grid;
+      gap:16px;
+    }
+
+    .vault-hero,
+    .machine-panel,
+    .panel{
+      border:1px solid var(--line);
+      border-radius:var(--radius2);
+      background:
+        linear-gradient(180deg,var(--panel),var(--panel2)),
+        radial-gradient(circle at 82% 18%, rgba(126,203,255,.06), transparent 24%);
+      box-shadow:var(--shadow2);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
+    }
+
+    .vault-hero{
+      padding:24px 22px 22px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    .hero-title{
+      margin:0 0 14px;
+      font-size:clamp(36px,6vw,82px);
+      line-height:.93;
+      letter-spacing:-.06em;
+      max-width:10ch;
+    }
+
+    .hero-text,
+    .panel-text{
+      margin:0;
+      max-width:70ch;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.75;
+    }
+
+    .stat-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .stat-card{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+      min-height:100px;
+    }
+
+    .stat-label{
+      font-size:11px;
+      color:var(--muted2);
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      margin-bottom:10px;
+    }
+
+    .stat-value{
+      font-size:18px;
+      font-weight:800;
+      line-height:1.2;
+    }
+
+    .action-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .action{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      text-decoration:none;
+    }
+
+    .action.strong{
+      border-color:rgba(127,255,212,.26);
+      background:rgba(127,255,212,.10);
+    }
+
+    .lower-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);
+      gap:16px;
+    }
+
+    .machine-panel,
+    .panel{
+      padding:20px;
+    }
+
+    .panel-title{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .machine-stage{
+      position:relative;
+      min-height:520px;
+      margin-top:18px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(126,203,255,.10), rgba(127,255,212,.04) 36%, rgba(0,0,0,0) 72%),
+        linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
+      perspective:1400px;
+    }
+
+    .vault-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:160px;
+      height:160px;
+      margin-left:-80px;
+      margin-top:-80px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.24), transparent 16%),
+        radial-gradient(circle at 50% 50%, rgba(126,203,255,.28), rgba(127,255,212,.10) 58%, rgba(0,0,0,.12) 100%);
+      border:1px solid rgba(255,255,255,.12);
+      box-shadow:
+        0 24px 40px rgba(0,0,0,.28),
+        inset 0 0 40px rgba(126,203,255,.10),
+        0 0 80px rgba(127,255,212,.12);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:20px;
+      z-index:4;
+    }
+
+    .vault-core span{
+      font-size:18px;
+      line-height:1.3;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:800;
+    }
+
+    .vault-ring{
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.10);
+      transform-style:preserve-3d;
+      pointer-events:none;
+    }
+
+    .vault-ring.outer{
+      width:520px;
+      height:520px;
+      margin-left:-260px;
+      margin-top:-260px;
+      transform:rotateX(72deg) rotateZ(10deg);
+      box-shadow:0 0 30px rgba(126,203,255,.08);
+    }
+
+    .vault-ring.mid{
+      width:390px;
+      height:390px;
+      margin-left:-195px;
+      margin-top:-195px;
+      transform:rotateX(72deg) rotateZ(54deg);
+      box-shadow:0 0 24px rgba(127,255,212,.08);
+    }
+
+    .vault-ring.inner{
+      width:270px;
+      height:270px;
+      margin-left:-135px;
+      margin-top:-135px;
+      transform:rotateX(72deg) rotateZ(96deg);
+      box-shadow:0 0 18px rgba(126,203,255,.06);
+    }
+
+    .mint-node{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:158px;
+      margin-left:-79px;
+      margin-top:-36px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:12px;
+      background:
+        linear-gradient(180deg,rgba(8,12,19,.80),rgba(12,18,30,.88)),
+        radial-gradient(circle at 82% 18%, rgba(126,203,255,.05), transparent 22%);
+      color:var(--text);
+      box-shadow:0 18px 28px rgba(0,0,0,.28);
+      cursor:pointer;
+      transform-style:preserve-3d;
+    }
+
+    .mint-short{
+      display:block;
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted2);
+      margin-bottom:8px;
+    }
+
+    .mint-label{
+      display:block;
+      font-size:15px;
+      line-height:1.35;
+      font-weight:800;
+    }
+
+    .rows{
+      display:grid;
+      gap:10px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+
+    .rk{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .rv{
+      color:var(--text);
+      font-size:12px;
+      line-height:1.45;
+      text-align:right;
+      word-break:break-word;
+    }
+
+    @media (max-width:1080px){
+      .stat-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .lower-grid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width:760px){
+      .stat-grid{
+        grid-template-columns:1fr;
+      }
+
+      .row{
+        grid-template-columns:1fr;
+      }
+
+      .rv{
+        text-align:left;
+      }
+
+      .machine-stage{
+        min-height:460px;
+      }
+
+      .vault-core{
+        width:132px;
+        height:132px;
+        margin-left:-66px;
+        margin-top:-66px;
+      }
+
+      .mint-node{
+        width:136px;
+        margin-left:-68px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function placeNodes(now) {
+  const nodes = Array.from(document.querySelectorAll(".mint-node"));
+  const rings = {
+    outer: { radiusX: 230, radiusY: 108, speed: 0.00016, depth: 52, zipper: 24 },
+    inner: { radiusX: 164, radiusY: 78, speed: -0.00022, depth: 34, zipper: 18 }
+  };
+
+  nodes.forEach((node, index) => {
+    const angleDeg = Number(node.dataset.angle || 0);
+    const base = angleDeg * (Math.PI / 180);
+    const zipperSign = index % 2 === 0 ? 1 : -1;
+    const ring = index < 2 ? rings.outer : rings.inner;
+    const t = REDUCED_MOTION ? 0 : now * ring.speed + (zipperSign > 0 ? 0 : Math.PI / 2);
+    const theta = base + t;
+
+    const x = Math.sin(theta) * ring.radiusX;
+    const y = Math.sin(theta) * Math.cos(theta) * ring.radiusY + zipperSign * ring.zipper * Math.cos(theta);
+    const z = Math.cos(theta * 2) * ring.depth + zipperSign * (ring.zipper * 0.4);
+
+    const normalized = (z + ring.depth + ring.zipper * 0.4) / ((ring.depth + ring.zipper * 0.4) * 2);
+    const depth = Math.max(0, Math.min(1, normalized));
+    const scale = 0.88 + depth * 0.24;
+    const opacity = 0.62 + depth * 0.38;
+
+    node.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
+    node.style.opacity = opacity.toFixed(3);
+    node.style.zIndex = String(Math.round(1000 + z));
+  });
+}
+
+function bindNodeActions() {
+  const nodes = Array.from(document.querySelectorAll(".mint-node"));
+  nodes.forEach((node) => {
+    node.addEventListener("click", () => {
+      const key = node.dataset.key || "Governor";
+      const rows = APP.querySelector(".rows");
+      if (!rows) return;
+      rows.innerHTML = "";
+      rows.append(
+        infoRow("Boot path", "Local self-contained"),
+        infoRow("Governor selected", key),
+        infoRow("Traversal mode", "Figure-eight with zipper law"),
+        infoRow("Status", "Coin release simulated")
+      );
     });
+  });
+}
 
-    var motion = motionApi.createArchcoinVaultMotion();
+function boot() {
+  if (!APP) return;
+  injectStyles();
+  APP.replaceChildren(buildShell());
+  bindNodeActions();
 
-    runtime.registerModule(motion);
-    runtime.mount();
-    runtime.start();
-
-    window.__ARCHCOIN_SPINE_RUNTIME_INSTANCE__ = runtime;
+  function frame(now) {
+    placeNodes(now);
+    window.requestAnimationFrame(frame);
   }
 
-  function start() {
-    loadAll(RUNTIME_FILES)
-      .then(boot)
-      .catch(function (error) {
-        console.error("[ARCHCOIN_BOOT_ERROR]", error);
-        showBootError(error && error.message ? error.message : String(error));
-      });
-  }
+  window.requestAnimationFrame(frame);
+}
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
-  } else {
-    start();
-  }
-})();
+boot();

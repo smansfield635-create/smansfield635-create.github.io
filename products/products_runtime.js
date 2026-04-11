@@ -24,6 +24,14 @@
     };
   }
 
+  function polarToCartesian(cx, cy, radius, angleDeg) {
+    const angle = (angleDeg * Math.PI) / 180;
+    return {
+      x: cx + Math.cos(angle) * radius,
+      y: cy + Math.sin(angle) * radius
+    };
+  }
+
   function createStarField(container, count) {
     const random = createSeededRandom(256451);
     const stars = [];
@@ -57,24 +65,25 @@
       this.reducedMotion = !!options.reducedMotion;
 
       this.planetLinks = [
-        { title: "Platform", href: "/platform/", angle: -86, ring: 0, kicker: "Core" },
-        { title: "Software", href: "/software/", angle: -20, ring: 0, kicker: "Runtime" },
-        { title: "On Your Side AI", href: "/ai/", angle: 48, ring: 0, kicker: "Intelligence" },
-        { title: "Syntax", href: "/ssg/", angle: 116, ring: 0, kicker: "Language" },
-        { title: "ArchCoin", href: "/archcoin/", angle: 184, ring: 1, kicker: "Value" },
-        { title: "Nutrition", href: "/nutrition/", angle: 240, ring: 1, kicker: "Baseline" },
-        { title: "Energy", href: "/energy/", angle: 296, ring: 1, kicker: "Output" },
-        { title: "Education", href: "/education/", angle: 14, ring: 2, kicker: "Learning" },
-        { title: "Games", href: "/games/", angle: 74, ring: 2, kicker: "Playable" },
-        { title: "Agriculture", href: "/agriculture/", angle: 138, ring: 2, kicker: "Applied" },
-        { title: "Domains", href: "/domains/", angle: 208, ring: 2, kicker: "Identity" },
-        { title: "Diagnostics", href: "/diagnostics/", angle: 280, ring: 2, kicker: "Measurement" }
+        { title: "Platform", href: "/platform/", angle: -90, kicker: "Core" },
+        { title: "Software", href: "/software/", angle: -60, kicker: "Runtime" },
+        { title: "On Your Side AI", href: "/ai/", angle: -30, kicker: "Intelligence" },
+        { title: "Syntax", href: "/ssg/", angle: 0, kicker: "Language" },
+        { title: "ArchCoin", href: "/archcoin/", angle: 30, kicker: "Value" },
+        { title: "Nutrition", href: "/nutrition/", angle: 60, kicker: "Baseline" },
+        { title: "Energy", href: "/energy/", angle: 90, kicker: "Output" },
+        { title: "Education", href: "/education/", angle: 120, kicker: "Learning" },
+        { title: "Games", href: "/games/", angle: 150, kicker: "Playable" },
+        { title: "Agriculture", href: "/agriculture/", angle: 180, kicker: "Applied" },
+        { title: "Domains", href: "/domains/", angle: 210, kicker: "Identity" },
+        { title: "Diagnostics", href: "/diagnostics/", angle: 240, kicker: "Measurement" }
       ];
 
       this.frame = 0;
       this.startTime = 0;
       this.resizeTimer = 0;
       this.tokens = [];
+      this.spokes = [];
       this.stars = [];
       this.destroyed = false;
 
@@ -84,7 +93,7 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-g2-planet");
+      this.mount.setAttribute("data-runtime", "products-g2-snowflake-planet");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -100,14 +109,13 @@
         overflow: "hidden"
       });
 
-      this.glowA = createElement("div", "products-glow products-glow-a", this.root);
-      this.glowB = createElement("div", "products-glow products-glow-b", this.root);
-      this.ringsLayer = createElement("div", "products-rings-layer", this.root);
-      this.planetLayer = createElement("div", "products-planet-layer", this.root);
-      this.tokenLayer = createElement("div", "products-token-layer", this.root);
+      this.glowLayer = createElement("div", "products-glow-layer", this.root);
       this.starLayer = createElement("div", "products-star-layer", this.root);
+      this.snowflakeLayer = createElement("div", "products-snowflake-layer", this.root);
+      this.tokenLayer = createElement("div", "products-token-layer", this.root);
+      this.planetLayer = createElement("div", "products-planet-layer", this.root);
 
-      [this.glowA, this.glowB, this.ringsLayer, this.planetLayer, this.tokenLayer, this.starLayer].forEach((node) => {
+      [this.glowLayer, this.starLayer, this.snowflakeLayer, this.tokenLayer, this.planetLayer].forEach((node) => {
         setStyles(node, {
           position: "absolute",
           inset: "0"
@@ -115,12 +123,28 @@
       });
 
       setStyles(this.starLayer, { pointerEvents: "none" });
-      setStyles(this.ringsLayer, { pointerEvents: "none" });
-      setStyles(this.planetLayer, { pointerEvents: "none" });
+      setStyles(this.glowLayer, { pointerEvents: "none" });
+      setStyles(this.snowflakeLayer, { pointerEvents: "none" });
       setStyles(this.tokenLayer, { pointerEvents: "auto" });
+      setStyles(this.planetLayer, { pointerEvents: "auto" });
+
+      this.glowA = createElement("div", "products-glow products-glow-a", this.glowLayer);
+      this.glowB = createElement("div", "products-glow products-glow-b", this.glowLayer);
+      this.snowflakeShell = createElement("div", "products-snowflake-shell", this.snowflakeLayer);
+
+      setStyles(this.glowA, { position: "absolute", inset: "0" });
+      setStyles(this.glowB, { position: "absolute", inset: "0" });
+      setStyles(this.snowflakeShell, {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        transformOrigin: "50% 50%"
+      });
 
       this.stars = createStarField(this.starLayer, 52);
       this.buildPlanet();
+      this.buildSnowflake();
       this.buildTokens();
       this.layoutStatic();
 
@@ -132,11 +156,27 @@
     }
 
     buildPlanet() {
-      this.planetShell = createElement("div", "products-planet-shell", this.planetLayer);
+      this.planetLink = createElement("a", "products-planet-link", this.planetLayer);
+      this.planetLink.href = "/products/";
+      this.planetLink.setAttribute("aria-label", "Open the Products core page");
+
+      setStyles(this.planetLink, {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        display: "block",
+        borderRadius: "50%",
+        textDecoration: "none",
+        zIndex: "3"
+      });
+
+      this.planetShell = createElement("div", "products-planet-shell", this.planetLink);
       this.planetAtmosphere = createElement("div", "products-planet-atmosphere", this.planetShell);
       this.planetBody = createElement("div", "products-planet-body", this.planetShell);
       this.planetGlow = createElement("div", "products-planet-glow", this.planetShell);
       this.planetShadow = createElement("div", "products-planet-shadow", this.planetShell);
+      this.axisLine = createElement("div", "products-axis-line", this.planetShell);
 
       this.continentA = createElement("div", "products-continent continent-a", this.planetBody);
       this.continentB = createElement("div", "products-continent continent-b", this.planetBody);
@@ -186,6 +226,20 @@
         opacity: "0.85"
       });
 
+      setStyles(this.axisLine, {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        width: "10%",
+        height: "150%",
+        transform: "translate(-50%, -50%) rotate(18deg)",
+        borderRadius: "999px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.24), rgba(255,255,255,0))",
+        boxShadow: "0 0 18px rgba(255,255,255,0.08)",
+        opacity: "0.75",
+        pointerEvents: "none"
+      });
+
       const continentBase = {
         position: "absolute",
         background: "linear-gradient(145deg, rgba(111,255,219,0.42), rgba(127,208,255,0.14))",
@@ -222,29 +276,79 @@
         transform: "rotate(8deg)"
       });
 
-      this.ringOuter = createElement("div", "products-ring ring-outer", this.ringsLayer);
-      this.ringMid = createElement("div", "products-ring ring-mid", this.ringsLayer);
-      this.ringInner = createElement("div", "products-ring ring-inner", this.ringsLayer);
+      this.planetLink.addEventListener("mouseenter", () => {
+        this.planetLink.style.filter = "brightness(1.06)";
+      });
 
-      [this.ringOuter, this.ringMid, this.ringInner].forEach((ring, index) => {
+      this.planetLink.addEventListener("mouseleave", () => {
+        this.planetLink.style.filter = "brightness(1)";
+      });
+    }
+
+    buildSnowflake() {
+      for (let i = 0; i < 6; i += 1) {
+        const spoke = createElement("div", "products-snowflake-spoke", this.snowflakeShell);
+        const branchA = createElement("div", "products-snowflake-branch branch-a", spoke);
+        const branchB = createElement("div", "products-snowflake-branch branch-b", spoke);
+        const crystal = createElement("div", "products-snowflake-crystal", spoke);
+
+        setStyles(spoke, {
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          width: "2px",
+          transformOrigin: "50% 0%"
+        });
+
+        setStyles(branchA, {
+          position: "absolute",
+          top: "30%",
+          left: "50%",
+          width: "2px",
+          transformOrigin: "50% 0%"
+        });
+
+        setStyles(branchB, {
+          position: "absolute",
+          top: "30%",
+          left: "50%",
+          width: "2px",
+          transformOrigin: "50% 0%"
+        });
+
+        setStyles(crystal, {
+          position: "absolute",
+          left: "50%",
+          top: "0",
+          transform: "translate(-50%, -50%) rotate(45deg)",
+          borderRadius: "4px",
+          background: "linear-gradient(135deg, rgba(124,166,255,0.42), rgba(111,255,219,0.22))",
+          boxShadow: "0 0 16px rgba(124,166,255,0.14)"
+        });
+
+        this.spokes.push({ spoke, branchA, branchB, crystal, rotation: i * 60 });
+      }
+
+      this.outerRing = createElement("div", "products-snowflake-ring outer", this.snowflakeShell);
+      this.innerRing = createElement("div", "products-snowflake-ring inner", this.snowflakeShell);
+
+      [this.outerRing, this.innerRing].forEach((ring, index) => {
         setStyles(ring, {
           position: "absolute",
           left: "50%",
           top: "50%",
-          borderRadius: "50%",
           transform: "translate(-50%, -50%)",
+          borderRadius: "50%",
           border: index === 0
-            ? "1px solid rgba(124,166,255,0.24)"
-            : index === 1
-              ? "1px solid rgba(111,255,219,0.18)"
-              : "1px solid rgba(255,255,255,0.14)",
-          boxShadow: index === 0 ? "0 0 20px rgba(124,166,255,0.12)" : "none"
+            ? "1px solid rgba(124,166,255,0.18)"
+            : "1px solid rgba(255,255,255,0.12)",
+          boxShadow: index === 0 ? "0 0 20px rgba(124,166,255,0.1)" : "none"
         });
       });
     }
 
     buildTokens() {
-      this.tokens = this.planetLinks.map((item, index) => {
+      this.tokens = this.planetLinks.map((item) => {
         const token = document.createElement("a");
         token.href = item.href;
         token.className = "products-orbit-token";
@@ -261,8 +365,8 @@
 
         setStyles(token, {
           position: "absolute",
-          minWidth: "100px",
-          maxWidth: "136px",
+          minWidth: "102px",
+          maxWidth: "138px",
           padding: "9px 10px",
           borderRadius: "999px",
           border: "1px solid rgba(255,255,255,0.14)",
@@ -308,10 +412,7 @@
 
         return {
           el: token,
-          angle: item.angle,
-          ring: item.ring,
-          drift: index % 2 === 0 ? 6 : -6,
-          speed: item.ring === 0 ? 0.017 : item.ring === 1 ? -0.012 : 0.009
+          angle: item.angle
         };
       });
     }
@@ -324,24 +425,10 @@
       const centerX = rect.width * 0.5;
       const centerY = rect.height * 0.5;
       const planetSize = clamp(rect.width * (mobile ? 0.38 : 0.4), 168, mobile ? 238 : 288);
-
-      const ringSet = small
-        ? [
-            { rx: rect.width * 0.24, ry: rect.height * 0.17 },
-            { rx: rect.width * 0.33, ry: rect.height * 0.24 },
-            { rx: rect.width * 0.4, ry: rect.height * 0.3 }
-          ]
-        : mobile
-          ? [
-              { rx: rect.width * 0.26, ry: rect.height * 0.18 },
-              { rx: rect.width * 0.35, ry: rect.height * 0.25 },
-              { rx: rect.width * 0.42, ry: rect.height * 0.31 }
-            ]
-          : [
-              { rx: rect.width * 0.27, ry: rect.height * 0.19 },
-              { rx: rect.width * 0.37, ry: rect.height * 0.27 },
-              { rx: rect.width * 0.45, ry: rect.height * 0.33 }
-            ];
+      const shellRadius = clamp(rect.width * (mobile ? 0.31 : 0.33), 118, mobile ? 170 : 218);
+      const branchLength = shellRadius * 0.32;
+      const spokeLength = shellRadius * 0.98;
+      const tokenRadius = shellRadius + (small ? 10 : mobile ? 14 : 18);
 
       return {
         width: rect.width,
@@ -349,7 +436,12 @@
         centerX,
         centerY,
         planetSize,
-        ringSet
+        shellRadius,
+        branchLength,
+        spokeLength,
+        tokenRadius,
+        mobile,
+        small
       };
     }
 
@@ -366,6 +458,11 @@
         filter: "blur(34px)"
       });
 
+      setStyles(this.planetLink, {
+        width: `${m.planetSize}px`,
+        height: `${m.planetSize}px`
+      });
+
       [this.planetShell, this.planetAtmosphere, this.planetBody, this.planetGlow, this.planetShadow].forEach((node) => {
         setStyles(node, {
           width: `${m.planetSize}px`,
@@ -373,33 +470,56 @@
         });
       });
 
-      setStyles(this.ringOuter, {
-        width: `${m.ringSet[2].rx * 2.15}px`,
-        height: `${m.ringSet[2].ry * 2.15}px`
+      setStyles(this.snowflakeShell, {
+        width: `${m.shellRadius * 2.5}px`,
+        height: `${m.shellRadius * 2.5}px`
       });
 
-      setStyles(this.ringMid, {
-        width: `${m.ringSet[1].rx * 2.08}px`,
-        height: `${m.ringSet[1].ry * 2.08}px`
+      setStyles(this.outerRing, {
+        width: `${m.shellRadius * 2.02}px`,
+        height: `${m.shellRadius * 2.02}px`
       });
 
-      setStyles(this.ringInner, {
-        width: `${m.ringSet[0].rx * 2.03}px`,
-        height: `${m.ringSet[0].ry * 2.03}px`
+      setStyles(this.innerRing, {
+        width: `${m.shellRadius * 1.46}px`,
+        height: `${m.shellRadius * 1.46}px`
+      });
+
+      this.spokes.forEach(({ spoke, branchA, branchB, crystal, rotation }) => {
+        setStyles(spoke, {
+          height: `${m.spokeLength}px`,
+          transform: `translate(-50%, 0) rotate(${rotation}deg)`
+        });
+
+        setStyles(branchA, {
+          height: `${m.branchLength}px`,
+          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(124,166,255,0.08))",
+          transform: "translate(-50%, 0) rotate(32deg)"
+        });
+
+        setStyles(branchB, {
+          height: `${m.branchLength}px`,
+          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(124,166,255,0.08))",
+          transform: "translate(-50%, 0) rotate(-32deg)"
+        });
+
+        setStyles(crystal, {
+          width: `${m.small ? 12 : 14}px`,
+          height: `${m.small ? 12 : 14}px`
+        });
+
+        spoke.style.background = "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(124,166,255,0.1))";
       });
 
       this.tokens.forEach((token) => {
-        const angle = (token.angle * Math.PI) / 180;
-        const ring = m.ringSet[token.ring];
-        const x = m.centerX + Math.cos(angle) * ring.rx;
-        const y = m.centerY + Math.sin(angle) * ring.ry;
-        this.positionToken(token.el, x, y);
+        const anchor = polarToCartesian(m.centerX, m.centerY, m.tokenRadius, token.angle);
+        this.positionToken(token.el, anchor.x, anchor.y);
       });
     }
 
     positionToken(el, x, y) {
-      const width = el.offsetWidth || 116;
-      const height = el.offsetHeight || 46;
+      const width = el.offsetWidth || 120;
+      const height = el.offsetHeight || 48;
       const left = clamp(x - width / 2, 8, this.stage.clientWidth - width - 8);
       const top = clamp(y - height / 2, 8, this.stage.clientHeight - height - 8);
       const transform = `translate3d(${left}px, ${top}px, 0)`;
@@ -412,34 +532,24 @@
       if (!this.startTime) this.startTime = time;
 
       const elapsed = time - this.startTime;
-      const m = this.measure();
 
-      const swayA = Math.sin(elapsed * 0.00055) * 9;
-      const swayB = Math.cos(elapsed * 0.00042) * 7;
+      const shellRotation = elapsed * 0.0018;
+      const planetRotation = elapsed * 0.0048;
+      const glowShiftA = Math.sin(elapsed * 0.00055) * 9;
+      const glowShiftB = Math.cos(elapsed * 0.00042) * 7;
 
-      this.planetShell.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.0034}deg)`;
+      this.snowflakeShell.style.transform = `translate(-50%, -50%) rotate(${shellRotation}deg)`;
+      this.planetShell.style.transform = `translate(-50%, -50%) rotate(${planetRotation}deg)`;
       this.planetAtmosphere.style.transform = `translate(-50%, -50%) scale(${1.038 + Math.sin(elapsed * 0.0011) * 0.008})`;
       this.planetGlow.style.transform = `translate(-50%, -50%) scale(${1.16 + Math.cos(elapsed * 0.0008) * 0.02})`;
-      this.ringOuter.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.0052}deg)`;
-      this.ringMid.style.transform = `translate(-50%, -50%) rotate(${-elapsed * 0.0039}deg)`;
-      this.ringInner.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.0028}deg)`;
-
-      this.tokens.forEach((token, index) => {
-        const baseAngle = (token.angle * Math.PI) / 180;
-        const ring = m.ringSet[token.ring];
-        const phase = baseAngle + elapsed * token.speed * 0.001;
-        const x = m.centerX + Math.cos(phase) * ring.rx;
-        const y = m.centerY + Math.sin(phase) * ring.ry + Math.sin(elapsed * 0.0015 + index) * token.drift;
-        this.positionToken(token.el, x, y);
-      });
 
       this.stars.forEach((star, index) => {
         const twinkle = 0.42 + (Math.sin(elapsed * 0.001 * star.drift + star.phase + index) + 1) * 0.2;
         star.el.style.opacity = `${twinkle}`;
       });
 
-      this.glowA.style.transform = `translate(${swayA}px, ${swayB}px)`;
-      this.glowB.style.transform = `translate(${-swayB}px, ${swayA * 0.6}px)`;
+      this.glowA.style.transform = `translate(${glowShiftA}px, ${glowShiftB}px)`;
+      this.glowB.style.transform = `translate(${-glowShiftB}px, ${glowShiftA * 0.6}px)`;
 
       this.frame = window.requestAnimationFrame(this.animate);
     }

@@ -1,5 +1,12 @@
 import { buildInstrumentReceipt } from "../assets/instruments.js";
 
+function escapeHtml(value) {
+  return String(value ?? "—")
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
+}
+
 function ensureRoot(rootId = "app") {
   let root = document.getElementById(rootId);
   if (root) return root;
@@ -10,6 +17,15 @@ function ensureRoot(rootId = "app") {
   return root;
 }
 
+function row(k, v) {
+  return (
+    '<div class="instrument-row">' +
+      '<div class="instrument-row__k">' + escapeHtml(k) + "</div>" +
+      '<div class="instrument-row__v">' + escapeHtml(v) + "</div>" +
+    "</div>"
+  );
+}
+
 function ensureCanvas(id) {
   const node = document.getElementById(id);
   return node && node.tagName === "CANVAS" ? node : null;
@@ -17,7 +33,6 @@ function ensureCanvas(id) {
 
 function drawSeries(canvas, seriesDefs, minY = null, maxY = null) {
   if (!canvas) return;
-
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
@@ -79,24 +94,36 @@ function drawSeries(canvas, seriesDefs, minY = null, maxY = null) {
   });
 }
 
-function row(k, v) {
-  return '<div class="instrument-row"><div class="instrument-row__k">' + escapeHtml(k) + '</div><div class="instrument-row__v">' + escapeHtml(v) + "</div></div>";
+function normalizeHistory(history = {}) {
+  const safe = history && typeof history === "object" ? history : {};
+  return {
+    fragmentWeight: Array.isArray(safe.fragmentWeight) ? safe.fragmentWeight : [],
+    directionalWeight: Array.isArray(safe.directionalWeight) ? safe.directionalWeight : [],
+    directionalContrast: Array.isArray(safe.directionalContrast) ? safe.directionalContrast : []
+  };
 }
 
-function escapeHtml(value) {
-  return String(value ?? "—")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-
-export function renderInstrument(receipt, options = {}) {
+export function renderInstrument(receiptLike, options = {}) {
   const root = ensureRoot(options.rootId || "app");
-  const packet = receipt && receipt.classifiedState ? receipt : buildInstrumentReceipt(receipt || {});
-  const diagnostics = packet.diagnosticsPayload || {};
+
+  const packet =
+    receiptLike && receiptLike.classifiedState
+      ? receiptLike
+      : buildInstrumentReceipt(receiptLike || {});
+
+  if (!packet) {
+    root.innerHTML =
+      '<section class="instrument-ui__panel">' +
+        '<h3 class="instrument-ui__panel-title">Instrument Surface</h3>' +
+        row("State", "OFFLINE") +
+      "</section>";
+    return null;
+  }
+
   const summary = (packet.displayPayload || {}).summary || {};
+  const diagnostics = packet.diagnosticsPayload || {};
   const signal = diagnostics.signal || {};
-  const history = options.history || {};
+  const history = normalizeHistory(options.history);
 
   root.innerHTML =
     '<section class="instrument-ui">' +
@@ -111,7 +138,7 @@ export function renderInstrument(receipt, options = {}) {
           row("Region", summary.region || "—") +
           row("Boundary", summary.boundary || "—") +
           row("Projection", summary.projection || "—") +
-          row("Render", summary.projectionKind || "—") +
+          row("Render Kind", summary.projectionKind || "—") +
         "</section>" +
         '<section class="instrument-ui__panel">' +
           '<h3 class="instrument-ui__panel-title">Diagnostics</h3>' +
@@ -119,7 +146,14 @@ export function renderInstrument(receipt, options = {}) {
           row("Biome", diagnostics.biome || "—") +
           row("Traversal", diagnostics.traversal || "—") +
           row("Receipt", diagnostics.receipt || "—") +
-          row("Signal", "(" + (signal.fragmentWeight ?? "—") + ", " + (signal.directionalWeight ?? "—") + ", " + (signal.directionalContrast ?? "—") + ")") +
+          row(
+            "Signal",
+            "(" +
+              (signal.fragmentWeight ?? "—") + ", " +
+              (signal.directionalWeight ?? "—") + ", " +
+              (signal.directionalContrast ?? "—") +
+            ")"
+          ) +
         "</section>" +
       "</div>" +
       '<section class="instrument-ui__panel">' +
@@ -129,9 +163,9 @@ export function renderInstrument(receipt, options = {}) {
     "</section>";
 
   drawSeries(ensureCanvas("instrumentSignalChart"), [
-    { data: history.fragmentWeight || [], color: "#ffd27a" },
-    { data: history.directionalWeight || [], color: "#7fffd4" },
-    { data: history.directionalContrast || [], color: "#6fe7ff" }
+    { data: history.fragmentWeight, color: "#ffd27a" },
+    { data: history.directionalWeight, color: "#7fffd4" },
+    { data: history.directionalContrast, color: "#6fe7ff" }
   ], 0, 1);
 
   return packet;
@@ -139,4 +173,4 @@ export function renderInstrument(receipt, options = {}) {
 
 export default {
   renderInstrument
-};
+}

@@ -295,7 +295,7 @@
       const small = rect.width <= 480;
 
       const centerX = rect.width * 0.5;
-      const centerY = rect.height * (mobile ? 0.5 : 0.5);
+      const centerY = rect.height * 0.5;
       const planetSize = clamp(rect.width * (mobile ? 0.34 : 0.36), 150, mobile ? 220 : 260);
 
       const ringSet = small
@@ -308,7 +308,7 @@
           ? [
               { rx: rect.width * 0.24, ry: rect.height * 0.17 },
               { rx: rect.width * 0.34, ry: rect.height * 0.24 },
-              { rx: rect.width * 0.41, ry: rect.height * 0.3 }
+              { rx: rect.width * 0.41, ry: rect.height * 0.30 }
             ]
           : [
               { rx: rect.width * 0.25, ry: rect.height * 0.18 },
@@ -319,7 +319,6 @@
       return {
         width: rect.width,
         height: rect.height,
-        mobile,
         centerX,
         centerY,
         planetSize,

@@ -2,90 +2,18 @@
   const GLOBAL_KEY = "ProductsBubblesRuntime";
 
   const LANE_DATA = [
-    {
-      title: "Platform",
-      kicker: "Core",
-      href: "/platform/",
-      status: "Live",
-      purpose: "Core platform lane tying host law, structure, and runtime into an actionable surface."
-    },
-    {
-      title: "Software",
-      kicker: "Runtime",
-      href: "/software/",
-      status: "Route",
-      purpose: "Software-facing surface for runtime, implementation, and controlled productized tools."
-    },
-    {
-      title: "On Your Side AI",
-      kicker: "Intelligence",
-      href: "/ai/",
-      status: "Route",
-      purpose: "Intelligence product line anchored in clarity, safety, and user-side structure."
-    },
-    {
-      title: "Syntax",
-      kicker: "Language",
-      href: "/ssg/",
-      status: "Route",
-      purpose: "Behavioral syntax and execution-language surface for governed systems."
-    },
-    {
-      title: "ArchCoin",
-      kicker: "Value",
-      href: "/archcoin/",
-      status: "Route",
-      purpose: "Coin-facing lane for governed value architecture and later vault alignment."
-    },
-    {
-      title: "Nutrition",
-      kicker: "Baseline",
-      href: "/nutrition/",
-      status: "Route",
-      purpose: "Baseline system lane for nourishment, correction, and applied human support."
-    },
-    {
-      title: "Energy",
-      kicker: "Output",
-      href: "/energy/",
-      status: "Route",
-      purpose: "System-output lane for measurable movement, recovery, and usable capacity."
-    },
-    {
-      title: "Education",
-      kicker: "Learning",
-      href: "/education/",
-      status: "Route",
-      purpose: "Language systems and learning surfaces under coherent explanatory structure."
-    },
-    {
-      title: "Games",
-      kicker: "Playable",
-      href: "/games/",
-      status: "Route",
-      purpose: "Five Flags and related playable systems under bounded public expression."
-    },
-    {
-      title: "Agriculture",
-      kicker: "Applied",
-      href: "/agriculture/",
-      status: "Route",
-      purpose: "Applied growth lane for cultivation, yield, continuity, and material support."
-    },
-    {
-      title: "Domains",
-      kicker: "Identity",
-      href: "/domains/",
-      status: "Route",
-      purpose: "Identity and routing lane for naming, structure, continuity, and surface ownership."
-    },
-    {
-      title: "Diagnostics",
-      kicker: "Measurement",
-      href: "/diagnostics/",
-      status: "Route",
-      purpose: "Coherence measurement lane for thresholds, tracking, receipt, and system readback."
-    }
+    { title: "Platform", kicker: "Core", href: "/platform/", status: "Live", purpose: "Core platform lane tying host law, structure, and runtime into an actionable surface." },
+    { title: "Software", kicker: "Runtime", href: "/software/", status: "Route", purpose: "Software-facing surface for runtime, implementation, and controlled productized tools." },
+    { title: "On Your Side AI", kicker: "Intelligence", href: "/ai/", status: "Route", purpose: "Intelligence product line anchored in clarity, safety, and user-side structure." },
+    { title: "Syntax", kicker: "Language", href: "/ssg/", status: "Route", purpose: "Behavioral syntax and execution-language surface for governed systems." },
+    { title: "ArchCoin", kicker: "Value", href: "/archcoin/", status: "Route", purpose: "Coin-facing lane for governed value architecture and later vault alignment." },
+    { title: "Nutrition", kicker: "Baseline", href: "/nutrition/", status: "Route", purpose: "Baseline system lane for nourishment, correction, and applied human support." },
+    { title: "Energy", kicker: "Output", href: "/energy/", status: "Route", purpose: "System-output lane for measurable movement, recovery, and usable capacity." },
+    { title: "Education", kicker: "Learning", href: "/education/", status: "Route", purpose: "Language systems and learning surfaces under coherent explanatory structure." },
+    { title: "Games", kicker: "Playable", href: "/games/", status: "Route", purpose: "Five Flags and related playable systems under bounded public expression." },
+    { title: "Agriculture", kicker: "Applied", href: "/agriculture/", status: "Route", purpose: "Applied growth lane for cultivation, yield, continuity, and material support." },
+    { title: "Domains", kicker: "Identity", href: "/domains/", status: "Route", purpose: "Identity and routing lane for naming, structure, continuity, and surface ownership." },
+    { title: "Diagnostics", kicker: "Measurement", href: "/diagnostics/", status: "Route", purpose: "Coherence measurement lane for thresholds, tracking, receipt, and system readback." }
   ];
 
   function setStyles(node, styles) {
@@ -141,12 +69,12 @@
 
         setStyles(card, {
           position: "relative",
-          minHeight: "110px",
+          minHeight: "108px",
           borderRadius: "28px",
-          border: "1px solid rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.12)",
           background: [
-            "radial-gradient(circle at 30% 20%, rgba(124,166,255,0.16), transparent 36%)",
-            "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))"
+            "radial-gradient(circle at 30% 20%, rgba(124,166,255,0.18), transparent 36%)",
+            "linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035))"
           ].join(","),
           boxShadow: "0 16px 40px rgba(0,0,0,0.22)",
           overflow: "hidden",
@@ -172,14 +100,14 @@
         });
 
         const primaryText = createElement("div", "products-bubble-primary-text", primary);
+
         const kicker = createElement("div", "products-bubble-kicker", primaryText);
         kicker.textContent = lane.kicker;
-
         setStyles(kicker, {
           fontSize: "0.66rem",
           letterSpacing: "0.16em",
           textTransform: "uppercase",
-          color: "rgba(245,247,255,0.56)",
+          color: "rgba(245,247,255,0.58)",
           marginBottom: "6px"
         });
 
@@ -199,8 +127,8 @@
           padding: "8px 10px",
           borderRadius: "999px",
           border: "1px solid rgba(255,255,255,0.1)",
-          background: "rgba(255,255,255,0.05)",
-          color: "rgba(245,247,255,0.72)",
+          background: "rgba(255,255,255,0.06)",
+          color: "rgba(245,247,255,0.76)",
           fontSize: "0.68rem",
           letterSpacing: "0.14em",
           textTransform: "uppercase"
@@ -216,7 +144,7 @@
         purpose.textContent = lane.purpose;
         setStyles(purpose, {
           margin: "0 0 14px",
-          color: "rgba(245,247,255,0.74)",
+          color: "rgba(245,247,255,0.78)",
           lineHeight: "1.6",
           fontSize: "0.92rem"
         });
@@ -278,47 +206,34 @@
             padding: "0 12px",
             borderRadius: "999px",
             border: "1px solid rgba(255,255,255,0.1)",
-            background: "rgba(255,255,255,0.04)",
-            color: "rgba(245,247,255,0.76)",
+            background: "rgba(255,255,255,0.05)",
+            color: "rgba(245,247,255,0.78)",
             fontSize: "0.78rem",
             overflowWrap: "anywhere",
             maxWidth: "100%"
           });
         });
 
-        primary.addEventListener("click", () => {
-          this.togglePrimary(index);
-        });
-
-        deepButton.addEventListener("click", () => {
-          this.toggleDeep(index);
-        });
+        primary.addEventListener("click", () => this.togglePrimary(index));
+        deepButton.addEventListener("click", () => this.toggleDeep(index));
 
         if (!this.reducedMotion) {
           card.addEventListener("mouseenter", () => {
             if (!this.isMobile()) {
               card.style.transform = "translateY(-2px)";
-              card.style.borderColor = "rgba(124,166,255,0.24)";
+              card.style.borderColor = "rgba(124,166,255,0.28)";
             }
           });
 
           card.addEventListener("mouseleave", () => {
             card.style.transform = "translateY(0)";
             if (card.getAttribute("data-open") !== "true") {
-              card.style.borderColor = "rgba(255,255,255,0.1)";
+              card.style.borderColor = "rgba(255,255,255,0.12)";
             }
           });
         }
 
-        this.cards.push({
-          index,
-          lane,
-          card,
-          primary,
-          content,
-          deep,
-          deepButton
-        });
+        this.cards.push({ index, card, primary, content, deep, deepButton });
       });
     }
 
@@ -332,13 +247,9 @@
       card.card.setAttribute("data-open", "false");
       card.primary.setAttribute("aria-expanded", "false");
       card.content.style.display = "none";
-      card.card.style.borderColor = "rgba(255,255,255,0.1)";
-      if (this.openDeep === index) {
-        this.closeDeep(index);
-      }
-      if (this.openPrimary === index) {
-        this.openPrimary = null;
-      }
+      card.card.style.borderColor = "rgba(255,255,255,0.12)";
+      if (this.openDeep === index) this.closeDeep(index);
+      if (this.openPrimary === index) this.openPrimary = null;
     }
 
     openPrimaryCard(index) {
@@ -354,14 +265,13 @@
       card.card.setAttribute("data-open", "true");
       card.primary.setAttribute("aria-expanded", "true");
       card.content.style.display = "block";
-      card.card.style.borderColor = "rgba(124,166,255,0.26)";
+      card.card.style.borderColor = "rgba(124,166,255,0.28)";
       this.openPrimary = index;
     }
 
     togglePrimary(index) {
       const card = this.cards[index];
       if (!card) return;
-
       if (card.card.getAttribute("data-open") === "true") {
         this.closePrimary(index);
       } else {
@@ -375,9 +285,7 @@
       card.card.setAttribute("data-deep-open", "false");
       card.deep.style.display = "none";
       card.deepButton.textContent = "Open deeper";
-      if (this.openDeep === index) {
-        this.openDeep = null;
-      }
+      if (this.openDeep === index) this.openDeep = null;
     }
 
     openDeepCard(index) {
@@ -403,7 +311,6 @@
     toggleDeep(index) {
       const card = this.cards[index];
       if (!card) return;
-
       if (card.card.getAttribute("data-deep-open") === "true") {
         this.closeDeep(index);
       } else {
@@ -420,20 +327,11 @@
 
       this.cards.forEach((card) => {
         setStyles(card.card, {
-          minHeight: this.isMobile() ? "100px" : "110px"
+          minHeight: this.isMobile() ? "100px" : "108px"
         });
       });
 
-      if (!this.isMobile()) {
-        this.openDeep = null;
-        this.cards.forEach((card) => {
-          if (card.card.getAttribute("data-deep-open") === "true") {
-            card.deep.style.display = "none";
-            card.deepButton.textContent = "Open deeper";
-            card.card.setAttribute("data-deep-open", "false");
-          }
-        });
-      } else {
+      if (this.isMobile()) {
         let seenOpen = false;
         this.cards.forEach((card, index) => {
           if (card.card.getAttribute("data-open") === "true") {
@@ -455,9 +353,7 @@
     destroy() {
       this.destroyed = true;
       window.removeEventListener("resize", this.handleResize);
-      if (this.mount) {
-        this.mount.innerHTML = "";
-      }
+      if (this.mount) this.mount.innerHTML = "";
       this.cards = [];
     }
   }

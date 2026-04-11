@@ -31,7 +31,6 @@
     }
 
     *{box-sizing:border-box}
-
     html,body{
       margin:0;
       min-height:100%;
@@ -45,8 +44,7 @@
 
     body{min-height:100vh;overflow-x:hidden}
 
-    .hostGlow,
-    .gridLines{
+    .hostGlow,.gridLines{
       position:fixed;
       inset:0;
       pointer-events:none;
@@ -77,11 +75,7 @@
       padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
     }
 
-    .topbar,
-    .hero,
-    .panel,
-    .tile,
-    .footer{
+    .topbar,.hero,.panel,.tile,.footer{
       border:1px solid var(--line);
       border-radius:22px;
       background:
@@ -152,16 +146,14 @@
       line-height:1.72;
     }
 
-    .actionRow,
-    .chipRow{
+    .actionRow,.chipRow{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       margin-top:18px;
     }
 
-    .action,
-    .chip{
+    .action,.chip{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -184,8 +176,7 @@
       letter-spacing:.10em;
     }
 
-    .action.strong,
-    .chip.strong{
+    .action.strong,.chip.strong{
       border-color:rgba(127,255,212,.26);
       background:rgba(127,255,212,.08);
       color:var(--text);
@@ -287,23 +278,14 @@
     }
 
     @media (max-width:1180px){
-      .summaryGrid,
-      .catalog{
-        grid-template-columns:1fr 1fr;
-      }
-
+      .summaryGrid,.catalog{grid-template-columns:1fr 1fr}
       h1{max-width:none}
     }
 
     @media (max-width:760px){
       .topbar{flex-direction:column;align-items:flex-start}
-      .summaryGrid,
-      .catalog{
-        grid-template-columns:1fr;
-      }
-      .row{
-        grid-template-columns:1fr;
-      }
+      .summaryGrid,.catalog{grid-template-columns:1fr}
+      .row{grid-template-columns:1fr}
       .rv{text-align:left}
     }
   </style>
@@ -368,131 +350,30 @@
     </section>
 
     <section class="catalog">
-      <article class="tile">
-        <h3 class="tileTitle">Economic</h3>
-        <p class="tileText">Economic exploration under measurable structure and downstream vault compatibility.</p>
-        <div class="actionRow"><a class="action" href="/explore/economic/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Economic Risk</h3>
-        <p class="tileText">Burden, exposure, volatility, and threshold consequence under structured read.</p>
-        <div class="actionRow"><a class="action" href="/explore/economic-risk/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Finance</h3>
-        <p class="tileText">Flow, allocation, receipt, and accountability as governed value movement.</p>
-        <div class="actionRow"><a class="action" href="/explore/finance/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Finance Core</h3>
-        <p class="tileText">Core receipt, reserve, obligation, and continuity beneath broader economic layers.</p>
-        <div class="actionRow"><a class="action" href="/explore/finance-core/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Infrastructure</h3>
-        <p class="tileText">Support continuity and durability without competing with the host itself.</p>
-        <div class="actionRow"><a class="action" href="/explore/infrastructure/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Systems</h3>
-        <p class="tileText">Whole-body relation, thresholds, inheritance, and interacting parts.</p>
-        <div class="actionRow"><a class="action" href="/explore/systems/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Engines</h3>
-        <p class="tileText">Execution bodies beneath visible public surfaces and host law.</p>
-        <div class="actionRow"><a class="action" href="/explore/engines/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Models</h3>
-        <p class="tileText">Comparable model surfaces under stable scope and visible lineage.</p>
-        <div class="actionRow"><a class="action" href="/explore/models/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Innovation Lattice</h3>
-        <p class="tileText">Novelty under lattice constraint instead of free-floating trend behavior.</p>
-        <div class="actionRow"><a class="action" href="/explore/innovation-lattice/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Innovation Language</h3>
-        <p class="tileText">Precision, translation, and execution clarity as language innovation.</p>
-        <div class="actionRow"><a class="action" href="/explore/innovation/language/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Science</h3>
-        <p class="tileText">Method, comparison, falsification pressure, and downstream consequence.</p>
-        <div class="actionRow"><a class="action" href="/explore/science/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Legal</h3>
-        <p class="tileText">Authority, admissibility, placement, and consequence under bounded interpretation.</p>
-        <div class="actionRow"><a class="action" href="/explore/legal/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Rights</h3>
-        <p class="tileText">Rights as bounded claims paired with duty and consequence.</p>
-        <div class="actionRow"><a class="action" href="/explore/rights/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Trust</h3>
-        <p class="tileText">Trust as earned continuity under evidence, behavior, and receipt.</p>
-        <div class="actionRow"><a class="action" href="/explore/trust/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Energy</h3>
-        <p class="tileText">Energy as measurable movement, burden, direction, and usable capacity.</p>
-        <div class="actionRow"><a class="action" href="/explore/energy/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Water</h3>
-        <p class="tileText">Flow, quality, storage, dependency, and access under systems constraint.</p>
-        <div class="actionRow"><a class="action" href="/explore/water/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Waste</h3>
-        <p class="tileText">Residue, burden, recovery, and accountability as measurable consequence.</p>
-        <div class="actionRow"><a class="action" href="/explore/waste/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Sustainability</h3>
-        <p class="tileText">Continuity under time, burden, recovery, and resource draw.</p>
-        <div class="actionRow"><a class="action" href="/explore/sustainability/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Roots</h3>
-        <p class="tileText">Origin, dependency, inheritance, and source traceability under structure.</p>
-        <div class="actionRow"><a class="action" href="/explore/roots/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Adoption Ladder</h3>
-        <p class="tileText">Progressive lawful uptake from entry through durable placement.</p>
-        <div class="actionRow"><a class="action" href="/explore/adoption-ladder/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Market Relations</h3>
-        <p class="tileText">Position, overlap, dependency, leverage, and interaction consequence.</p>
-        <div class="actionRow"><a class="action" href="/explore/market-relations/">Open</a></div>
-      </article>
+      <article class="tile"><h3 class="tileTitle">Economic</h3><p class="tileText">Economic exploration surfaces under structured entry and measurable constraint.</p><div class="actionRow"><a class="action" href="/explore/economic/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Economic Risk</h3><p class="tileText">Burden, exposure, volatility, and threshold consequence under structured read.</p><div class="actionRow"><a class="action" href="/explore/economic-risk/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Finance</h3><p class="tileText">Flow, allocation, receipt, and accountability as governed value movement.</p><div class="actionRow"><a class="action" href="/explore/finance/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Finance Core</h3><p class="tileText">Core receipt, reserve, obligation, and continuity beneath broader economic layers.</p><div class="actionRow"><a class="action" href="/explore/finance-core/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Infrastructure</h3><p class="tileText">Support continuity and durability without competing with the host itself.</p><div class="actionRow"><a class="action" href="/explore/infrastructure/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Systems</h3><p class="tileText">Whole-body relation, thresholds, inheritance, and interacting parts.</p><div class="actionRow"><a class="action" href="/explore/systems/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Engines</h3><p class="tileText">Execution bodies beneath visible public surfaces and host law.</p><div class="actionRow"><a class="action" href="/explore/engines/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Models</h3><p class="tileText">Comparable model surfaces under stable scope and visible lineage.</p><div class="actionRow"><a class="action" href="/explore/models/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Innovation Lattice</h3><p class="tileText">Novelty under lattice constraint instead of free-floating trend behavior.</p><div class="actionRow"><a class="action" href="/explore/innovation-lattice/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Innovation Language</h3><p class="tileText">Precision, translation, and execution clarity as language innovation.</p><div class="actionRow"><a class="action" href="/explore/innovation/language/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Science</h3><p class="tileText">Method, comparison, falsification pressure, and downstream consequence.</p><div class="actionRow"><a class="action" href="/explore/science/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Legal</h3><p class="tileText">Authority, admissibility, placement, and consequence under bounded interpretation.</p><div class="actionRow"><a class="action" href="/explore/legal/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Rights</h3><p class="tileText">Rights as bounded claims paired with duty and consequence.</p><div class="actionRow"><a class="action" href="/explore/rights/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Trust</h3><p class="tileText">Trust as earned continuity under evidence, behavior, and receipt.</p><div class="actionRow"><a class="action" href="/explore/trust/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Energy</h3><p class="tileText">Energy as measurable movement, burden, direction, and usable capacity.</p><div class="actionRow"><a class="action" href="/explore/energy/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Water</h3><p class="tileText">Flow, quality, storage, dependency, and access under systems constraint.</p><div class="actionRow"><a class="action" href="/explore/water/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Waste</h3><p class="tileText">Residue, burden, recovery, and accountability as measurable consequence.</p><div class="actionRow"><a class="action" href="/explore/waste/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Sustainability</h3><p class="tileText">Continuity under time, burden, recovery, and resource draw.</p><div class="actionRow"><a class="action" href="/explore/sustainability/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Roots</h3><p class="tileText">Origin, dependency, inheritance, and source traceability under structure.</p><div class="actionRow"><a class="action" href="/explore/roots/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Adoption Ladder</h3><p class="tileText">Progressive lawful uptake from entry through durable placement.</p><div class="actionRow"><a class="action" href="/explore/adoption-ladder/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Market Relations</h3><p class="tileText">Position, overlap, dependency, leverage, and interaction consequence.</p><div class="actionRow"><a class="action" href="/explore/market-relations/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Science</h3><p class="tileText">Method, comparison, falsification pressure, and downstream consequence.</p><div class="actionRow"><a class="action" href="/explore/science/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Systems</h3><p class="tileText">Whole-body relation, thresholds, inheritance, and interacting parts.</p><div class="actionRow"><a class="action" href="/explore/systems/">Open</a></div></article>
+      <article class="tile"><h3 class="tileTitle">Engines</h3><p class="tileText">Execution bodies beneath visible public surfaces and host law.</p><div class="actionRow"><a class="action" href="/explore/engines/">Open</a></div></article>
     </section>
 
     <div class="footer">BUILD=EXPLORE_FRONTIER_CATALOG_G1 | ROLE=FRONTIER_ACCESS_SURFACE | ACCESS=EXPLORE_STACK | STATUS=ACTIVE</div>

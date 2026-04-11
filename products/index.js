@@ -889,4 +889,372 @@
         </section>
 
         <section class="hero-stage" aria-labelledby="motion-stage-title">
-          <div class="stage-frame" id="motion-stage
+          <div class="stage-frame" id="motion-stage">
+            <h2 class="sr-only" id="motion-stage-title">Orbital product lane field</h2>
+
+            <div class="orbit orbit-a" aria-hidden="true">
+              <a class="lane-token" href="/platform/" style="transform: translate(118px, -186px);">
+                <strong>Platform</strong>
+                <span>Core system surface</span>
+                <small>/platform/</small>
+              </a>
+              <a class="lane-token" href="/software/" style="transform: translate(182px, 34px);">
+                <strong>Software</strong>
+                <span>Runtime-facing tools</span>
+                <small>/software/</small>
+              </a>
+              <a class="lane-token" href="/ai/" style="transform: translate(-48px, 160px);">
+                <strong>On Your Side AI</strong>
+                <span>Intelligence product line</span>
+                <small>/ai/</small>
+              </a>
+            </div>
+
+            <div class="orbit orbit-b" aria-hidden="true">
+              <a class="lane-token" href="/ssg/" style="transform: translate(182px, -212px);">
+                <strong>Syntax</strong>
+                <span>SSG behavioral language</span>
+                <small>/ssg/</small>
+              </a>
+              <a class="lane-token" href="/archcoin/" style="transform: translate(220px, 86px);">
+                <strong>ArchCoin</strong>
+                <span>Governed coin line</span>
+                <small>/archcoin/</small>
+              </a>
+              <a class="lane-token" href="/nutrition/" style="transform: translate(-98px, 194px);">
+                <strong>Nutrition</strong>
+                <span>Baseline system lane</span>
+                <small>/nutrition/</small>
+              </a>
+              <a class="lane-token" href="/energy/" style="transform: translate(-242px, -22px);">
+                <strong>Energy</strong>
+                <span>System output lane</span>
+                <small>/energy/</small>
+              </a>
+            </div>
+
+            <div class="orbit orbit-c" aria-hidden="true">
+              <a class="lane-token" href="/education/" style="transform: translate(268px, -172px);">
+                <strong>Education</strong>
+                <span>Language systems lane</span>
+                <small>/education/</small>
+              </a>
+              <a class="lane-token" href="/games/" style="transform: translate(300px, 122px);">
+                <strong>Games</strong>
+                <span>Five Flags playable systems</span>
+                <small>/games/</small>
+              </a>
+              <a class="lane-token" href="/agriculture/" style="transform: translate(-42px, 272px);">
+                <strong>Agriculture</strong>
+                <span>Applied growth lane</span>
+                <small>/agriculture/</small>
+              </a>
+              <a class="lane-token" href="/domains/" style="transform: translate(-296px, 118px);">
+                <strong>Domains</strong>
+                <span>Identity and routing lane</span>
+                <small>/domains/</small>
+              </a>
+              <a class="lane-token" href="/diagnostics/" style="transform: translate(-282px, -176px);">
+                <strong>Diagnostics</strong>
+                <span>Coherence measurement lane</span>
+                <small>/diagnostics/</small>
+              </a>
+            </div>
+
+            <div class="stage-center" aria-hidden="true">
+              <div>
+                <strong>Products</strong>
+                <span>In motion. Extravagant, not chaotic.</span>
+              </div>
+            </div>
+
+            <div class="stage-read" aria-hidden="true">
+              <div class="read-chip">Animation Class · 3D Orbital</div>
+              <div class="read-chip">Navigation · Direct Routes</div>
+              <div class="read-chip">Fallback · Reduced Motion Safe</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </header>
+
+    <main>
+      <section class="section">
+        <div class="shell section-card">
+          <div class="section-head">
+            <p class="eyebrow">Posture</p>
+            <h2>Extravagant, not chaotic.</h2>
+            <p>
+              This surface is allowed to carry spectacle because the route discipline is already in
+              place. Motion serves discovery, not confusion. Every lane below remains a bounded
+              descendant path with explicit scope and direct access.
+            </p>
+          </div>
+
+          <div class="stats">
+            <article class="stat">
+              <span class="label">Animation Class</span>
+              <strong>3D Orbital</strong>
+              <span>Living motion field with depth posture and bounded orbital lanes.</span>
+            </article>
+            <article class="stat">
+              <span class="label">Navigation</span>
+              <strong>Direct Routes</strong>
+              <span>Cards and stage tokens both point to explicit descendant paths.</span>
+            </article>
+            <article class="stat">
+              <span class="label">Fallback</span>
+              <strong>Reduced Motion Safe</strong>
+              <span>Motion degrades cleanly without destroying access or readability.</span>
+            </article>
+            <article class="stat">
+              <span class="label">Role</span>
+              <strong>Gateway Authority</strong>
+              <span>Products is the entry layer, not the product lane itself.</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="shell section-card" id="catalog">
+          <div class="section-head">
+            <p class="eyebrow">Products</p>
+            <h2>Live product lanes.</h2>
+            <p>
+              The card catalog mirrors the orbital field so the page stays usable under any motion
+              mode. Replace placeholder routes below only when the descendant pages actually exist.
+            </p>
+          </div>
+
+          <div class="catalog-wrap">
+            <div class="catalog">
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Core</p>
+                    <h3>Platform</h3>
+                  </div>
+                  <span class="lane-badge">Live</span>
+                </div>
+                <p>Core platform lane tying host law, structure, and runtime into an actionable surface.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/platform/</span>
+                  <a class="lane-open" href="/platform/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Runtime</p>
+                    <h3>Software</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Software-facing surface for runtime, implementation, and controlled productized tools.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/software/</span>
+                  <a class="lane-open" href="/software/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Intelligence</p>
+                    <h3>On Your Side AI</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Intelligence product line anchored in clarity, safety, and user-side structure.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/ai/</span>
+                  <a class="lane-open" href="/ai/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Language</p>
+                    <h3>Syntax</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Behavioral syntax and execution-language surface for governed systems.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/ssg/</span>
+                  <a class="lane-open" href="/ssg/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Value</p>
+                    <h3>ArchCoin</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Coin-facing lane for governed value architecture and later vault alignment.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/archcoin/</span>
+                  <a class="lane-open" href="/archcoin/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Baseline</p>
+                    <h3>Nutrition</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Baseline system lane for nourishment, correction, and applied human support.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/nutrition/</span>
+                  <a class="lane-open" href="/nutrition/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Output</p>
+                    <h3>Energy</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>System-output lane for measurable movement, recovery, and usable capacity.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/energy/</span>
+                  <a class="lane-open" href="/energy/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Learning</p>
+                    <h3>Education</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Language systems and learning surfaces under coherent explanatory structure.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/education/</span>
+                  <a class="lane-open" href="/education/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Playable</p>
+                    <h3>Games</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Five Flags and related playable systems under bounded public expression.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/games/</span>
+                  <a class="lane-open" href="/games/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Applied</p>
+                    <h3>Agriculture</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Applied growth lane for cultivation, yield, continuity, and material support.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/agriculture/</span>
+                  <a class="lane-open" href="/agriculture/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Identity</p>
+                    <h3>Domains</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Identity and routing lane for naming, structure, continuity, and surface ownership.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/domains/</span>
+                  <a class="lane-open" href="/domains/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Measurement</p>
+                    <h3>Diagnostics</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Coherence measurement lane for thresholds, tracking, receipt, and system readback.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/diagnostics/</span>
+                  <a class="lane-open" href="/diagnostics/">Open</a>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="contract">
+            <section class="contract-panel">
+              <h3>Navigation contract</h3>
+              <p>
+                The orbital field is expressive, but access must remain ordinary. The same lane set
+                appears in the stage and in the card catalog so no interaction depends on animation.
+              </p>
+              <ul class="contract-list">
+                <li>Every visible lane has an explicit descendant route.</li>
+                <li>Stage tokens and cards resolve to the same destinations.</li>
+                <li>Reduced motion removes spectacle, not access.</li>
+                <li>Products remains a gateway authority, not a narrative pile.</li>
+              </ul>
+            </section>
+
+            <section class="contract-panel">
+              <h3>Write boundary</h3>
+              <p>
+                This file owns the Products root surface only. If a descendant lane does not exist
+                yet, keep its route placeholder clean or temporarily redirect it to a lawful parent
+                surface until the lane is built.
+              </p>
+              <ul class="contract-list">
+                <li>Do not bury route ownership in animation code.</li>
+                <li>Do not re-open Explore unless upstream routing breaks again.</li>
+                <li>Add deeper motion in JS only after this root HTML is stable.</li>
+                <li>Preserve path clarity over visual novelty.</li>
+              </ul>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <div class="shell receipt">
+        <div class="receipt-head">
+          <strong>Runtime / Receipt</strong>
+          <span>BUILD=PRODUCTS_G1_ORBITAL_GATEWAY | ROLE=3D_PRODUCTS_ENTRY | MOTION=ACTIVE | ROUTES=BOUND | STATUS=ACTIVE</span>
+        </div>
+        <div class="receipt-body">
+          This page is the public products gateway. It is cinematic by permission, not by drift.
+          Route authority stays explicit. Motion remains subordinate to navigation.
+        </div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

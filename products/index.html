@@ -1,754 +1,960 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Extravagant animated products gateway for Diamond Gate Bridge. Browse live products and active product lanes through a cinematic 3D field."
+    content="Products gateway for Diamond Gate Bridge. Cinematic motion, coherent navigation, and direct access to live product lanes."
   />
+  <meta name="theme-color" content="#050816" />
   <style>
-    :root{
-      --bg:#03050a;
-      --bg2:#09111d;
-      --bg3:#101b29;
-      --panel:rgba(8,12,19,.70);
-      --panel2:rgba(12,18,30,.82);
-      --line:rgba(160,220,255,.12);
-      --line2:rgba(127,255,212,.18);
-      --text:#edf7ff;
-      --muted:rgba(237,247,255,.72);
-      --muted2:rgba(237,247,255,.52);
-      --accent:#7fffd4;
-      --accent2:#7ecbff;
-      --accent3:#ffd27a;
-      --good:#7fffd4;
-      --warn:#ffd27a;
-      --bad:#ff8a8a;
-      --shadow:0 18px 40px rgba(0,0,0,.30);
-      --shadow2:0 28px 80px rgba(0,0,0,.45);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
-      --maxw:1540px;
-      --radius:18px;
-      --radius2:26px;
+    :root {
+      --bg-0: #050816;
+      --bg-1: #0a1026;
+      --bg-2: #101935;
+      --surface: rgba(255, 255, 255, 0.05);
+      --surface-2: rgba(255, 255, 255, 0.08);
+      --line: rgba(255, 255, 255, 0.1);
+      --text: #f5f7ff;
+      --muted: rgba(245, 247, 255, 0.72);
+      --soft: rgba(245, 247, 255, 0.5);
+      --glow-a: rgba(124, 166, 255, 0.22);
+      --glow-b: rgba(111, 255, 219, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
+      --max: 1280px;
+      --nav-h: 74px;
     }
 
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      min-height:100%;
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 50% -10%, rgba(126,203,255,.16), transparent 30%),
-        radial-gradient(circle at 18% 22%, rgba(127,255,212,.06), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(255,210,122,.05), transparent 18%),
-        linear-gradient(180deg,var(--bg3),var(--bg2) 42%,var(--bg));
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
+        radial-gradient(circle at 18% 12%, rgba(124,166,255,0.12), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(111,255,219,0.08), transparent 20%),
+        radial-gradient(circle at 50% 76%, rgba(124,166,255,0.12), transparent 28%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 42%, #060913 100%);
+      overflow-x: hidden;
     }
 
-    body{min-height:100vh}
-
-    .backdrop,
-    .gridLines,
-    #fieldCanvas{
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-    }
-
-    .backdrop{
-      background:
-        radial-gradient(circle at 50% 14%, rgba(127,255,212,.06), transparent 20%),
-        radial-gradient(circle at 50% 56%, rgba(126,203,255,.04), transparent 24%),
-        radial-gradient(circle at 50% 92%, rgba(255,210,122,.03), transparent 16%);
-      filter:blur(10px);
-    }
-
-    .gridLines{
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.32),rgba(0,0,0,.10));
+        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(circle at center, black 28%, transparent 85%);
+      opacity: 0.35;
+      z-index: 0;
     }
 
-    #fieldCanvas{
-      width:100%;
-      height:100%;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .wrap{
-      position:relative;
-      z-index:1;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(30px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    .page {
+      position: relative;
+      z-index: 1;
     }
 
-    .topbar,
-    .heroShell,
-    .panel,
-    .footer{
-      border:1px solid var(--line);
-      border-radius:var(--radius2);
+    .shell {
+      width: min(calc(100% - 24px), var(--max));
+      margin: 0 auto;
+    }
+
+    .topbar-wrap {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(180deg, rgba(5,8,22,0.88), rgba(5,8,22,0.6));
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .topbar {
+      min-height: var(--nav-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 14px;
+      height: 14px;
+      transform: rotate(45deg);
+      border-radius: 2px;
+      background: linear-gradient(135deg, #dbe7ff, #7aaaff 55%, #68ffda);
+      box-shadow: 0 0 18px rgba(122,170,255,0.6);
+      flex: 0 0 auto;
+    }
+
+    .brand-copy {
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 4px;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--soft);
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 0.98rem;
+      line-height: 1.1;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.03);
+      color: var(--muted);
+      transition: 160ms ease;
+      font-size: 0.92rem;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.18);
+      color: var(--text);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .nav a[aria-current="page"] {
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(124,166,255,0.18), rgba(255,255,255,0.06));
+      border-color: rgba(124,166,255,0.4);
+    }
+
+    .hero {
+      padding: 28px 0 20px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .panel {
+      position: relative;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
       background:
-        linear-gradient(180deg,var(--panel),var(--panel2)),
-        radial-gradient(circle at 82% 18%, rgba(126,203,255,.06), transparent 24%);
-      box-shadow:var(--shadow2);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025)),
+        rgba(255,255,255,0.02);
+      box-shadow: var(--shadow);
+      overflow: hidden;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      margin-bottom:12px;
-      border-radius:14px;
-      box-shadow:var(--shadow);
+    .hero-copy {
+      padding: 30px;
     }
 
-    .brand{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
+    .hero-copy h1 {
+      margin: 0 0 12px;
+      font-size: clamp(2.1rem, 4vw, 4.2rem);
+      line-height: 0.95;
+      letter-spacing: -0.04em;
+      max-width: 11ch;
     }
 
-    .stamp{
-      font-size:11px;
-      color:var(--muted);
-      white-space:nowrap;
+    .hero-copy p.lead {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 62ch;
+      font-size: 1.02rem;
     }
 
-    .heroShell{
-      position:relative;
-      overflow:hidden;
-      min-height:760px;
-      margin-bottom:12px;
-      padding:24px;
+    .hero-points {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 0;
+      margin: 22px 0 0;
     }
 
-    .heroGrid{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:minmax(0,1.04fr) minmax(420px,.96fr);
-      gap:16px;
-      align-items:stretch;
-      min-height:712px;
+    .hero-points li {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      font-size: 0.9rem;
     }
 
-    .heroCard,
-    .orbitShell,
-    .panel{
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:22px;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-weight: 600;
+      transition: 160ms ease;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      outline: none;
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, rgba(124,166,255,0.22), rgba(111,255,219,0.12));
+      border-color: rgba(124,166,255,0.4);
+    }
+
+    .hero-stage {
+      min-height: 560px;
+      padding: 14px;
+    }
+
+    .stage-frame {
+      position: relative;
+      min-height: 530px;
+      height: 100%;
+      border-radius: calc(var(--radius-xl) - 8px);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
       background:
-        linear-gradient(180deg,rgba(8,12,19,.62),rgba(12,18,30,.76)),
-        radial-gradient(circle at 82% 18%, rgba(126,203,255,.05), transparent 24%);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
+        radial-gradient(circle at center, rgba(124,166,255,0.1), transparent 34%),
+        radial-gradient(circle at center, rgba(111,255,219,0.06), transparent 56%),
+        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
     }
 
-    .heroCard{
-      padding:24px 22px 22px;
-      align-self:stretch;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
+    .stage-backdrop,
+    .stage-rings,
+    .stage-lanes,
+    .stage-core {
+      position: absolute;
+      inset: 0;
     }
 
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:14px;
+    .stage-backdrop::before,
+    .stage-backdrop::after {
+      content: "";
+      position: absolute;
+      inset: auto;
+      border-radius: 50%;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
 
-    h1{
-      margin:0 0 14px;
-      font-size:clamp(42px,6.2vw,92px);
-      line-height:.92;
-      letter-spacing:-.07em;
-      max-width:9ch;
+    .stage-backdrop::before {
+      width: 74%;
+      aspect-ratio: 1 / 1;
+      background: radial-gradient(circle, rgba(124,166,255,0.12), transparent 68%);
+      filter: blur(18px);
     }
 
-    .heroText{
-      margin:0;
-      max-width:66ch;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.76;
+    .stage-backdrop::after {
+      width: 52%;
+      aspect-ratio: 1 / 1;
+      background: radial-gradient(circle, rgba(111,255,219,0.08), transparent 66%);
+      filter: blur(24px);
     }
 
-    .chipRow,
-    .actionRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+    .ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.08);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: 0.8;
     }
 
-    .chip,
-    .action{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:10px 14px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      text-decoration:none;
+    .ring.r1 { width: 44%; height: 18%; }
+    .ring.r2 { width: 62%; height: 28%; }
+    .ring.r3 { width: 80%; height: 40%; }
+
+    .stage-core {
+      display: grid;
+      place-items: center;
+      pointer-events: none;
     }
 
-    .chip{
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
-    }
-
-    .strong{
-      border-color:rgba(127,255,212,.26) !important;
-      background:rgba(127,255,212,.10) !important;
-      color:var(--text) !important;
-    }
-
-    .subGrid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .stat{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:12px;
-      background:rgba(255,255,255,.03);
-      min-height:86px;
-    }
-
-    .statLabel{
-      font-size:10px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--muted);
-      margin-bottom:8px;
-    }
-
-    .statValue{
-      font-size:18px;
-      font-weight:800;
-      line-height:1.15;
-    }
-
-    .orbitShell{
-      position:relative;
-      overflow:hidden;
-      min-height:712px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      perspective:1400px;
-    }
-
-    .orbitalStage{
-      position:relative;
-      width:min(100%,640px);
-      height:680px;
-      transform-style:preserve-3d;
-    }
-
-    .halo,
-    .ring,
-    .axisGlow{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform-style:preserve-3d;
-      pointer-events:none;
-    }
-
-    .halo{
-      width:420px;
-      height:420px;
-      margin-left:-210px;
-      margin-top:-210px;
-      border-radius:50%;
+    .core-shell {
+      width: 176px;
+      height: 176px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
       background:
-        radial-gradient(circle at 50% 50%, rgba(126,203,255,.12), rgba(127,255,212,.06) 38%, rgba(0,0,0,0) 72%);
-      filter:blur(6px);
-      transform:translateZ(0);
-    }
-
-    .axisGlow{
-      width:640px;
-      height:640px;
-      margin-left:-320px;
-      margin-top:-320px;
-      border-radius:50%;
-      border:1px solid rgba(126,203,255,.08);
-      transform:rotateX(72deg) rotateZ(16deg);
-      box-shadow:0 0 50px rgba(126,203,255,.10), inset 0 0 40px rgba(127,255,212,.05);
-    }
-
-    .ring{
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 0 30px rgba(126,203,255,.08);
-    }
-
-    .ring.r1{
-      width:520px;
-      height:520px;
-      margin-left:-260px;
-      margin-top:-260px;
-      transform:rotateX(72deg) rotateZ(0deg);
-    }
-
-    .ring.r2{
-      width:400px;
-      height:400px;
-      margin-left:-200px;
-      margin-top:-200px;
-      transform:rotateX(72deg) rotateZ(44deg);
-    }
-
-    .ring.r3{
-      width:280px;
-      height:280px;
-      margin-left:-140px;
-      margin-top:-140px;
-      transform:rotateX(72deg) rotateZ(88deg);
-    }
-
-    .core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:160px;
-      height:160px;
-      margin-left:-80px;
-      margin-top:-80px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,.24), transparent 16%),
-        radial-gradient(circle at 50% 50%, rgba(126,203,255,.28), rgba(127,255,212,.10) 58%, rgba(0,0,0,.12) 100%);
-      border:1px solid rgba(255,255,255,.12);
+        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.18), rgba(124,166,255,0.12) 44%, rgba(5,8,22,0.9) 74%);
+      border: 1px solid rgba(255,255,255,0.1);
       box-shadow:
-        0 24px 40px rgba(0,0,0,.28),
-        inset 0 0 40px rgba(126,203,255,.10),
-        0 0 80px rgba(127,255,212,.12);
-      transform:translateZ(30px);
-      display:grid;
-      place-items:center;
-      text-align:center;
-      padding:20px;
+        0 0 0 18px rgba(255,255,255,0.018),
+        0 0 40px rgba(124,166,255,0.22);
+      text-align: center;
+      padding: 18px;
     }
 
-    .core span{
-      font-size:14px;
-      line-height:1.45;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-weight:800;
-      color:var(--text);
+    .core-shell strong {
+      display: block;
+      font-size: 1.08rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
     }
 
-    .orbitNode{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:156px;
-      transform-style:preserve-3d;
-      transform-origin:center center;
-      margin-left:-78px;
-      margin-top:-34px;
-      text-decoration:none;
-      color:inherit;
+    .core-shell span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
     }
 
-    .orbitNodeCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      padding:12px;
+    .stage-lanes {
+      z-index: 3;
+    }
+
+    .lane-token {
+      position: absolute;
+      width: 152px;
+      min-height: 84px;
+      padding: 12px 12px 10px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.1);
       background:
-        linear-gradient(180deg,rgba(8,12,19,.80),rgba(12,18,30,.88)),
-        radial-gradient(circle at 82% 18%, rgba(126,203,255,.05), transparent 22%);
-      box-shadow:0 18px 28px rgba(0,0,0,.28);
-      transform:translateZ(0);
-      transition:transform .22s ease,border-color .22s ease,background .22s ease;
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035)),
+        rgba(8,12,30,0.8);
+      box-shadow: 0 16px 34px rgba(0,0,0,0.26);
+      backdrop-filter: blur(14px);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+      overflow: hidden;
     }
 
-    .orbitNode:hover .orbitNodeCard{
-      transform:translateY(-4px) scale(1.02);
-      border-color:rgba(127,255,212,.28);
+    .lane-token:hover,
+    .lane-token:focus-visible {
+      outline: none;
+      border-color: rgba(124,166,255,0.34);
       background:
-        linear-gradient(180deg,rgba(10,16,25,.88),rgba(14,22,34,.92)),
-        radial-gradient(circle at 82% 18%, rgba(127,255,212,.08), transparent 22%);
+        linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.045)),
+        rgba(8,12,30,0.84);
+      transform: translateY(-2px);
     }
 
-    .orbitNodeK{
-      font-size:10px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--muted2);
-      margin-bottom:6px;
+    .lane-token .kicker {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--soft);
+      font-size: 0.65rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .orbitNodeV{
-      font-size:15px;
-      font-weight:800;
-      line-height:1.2;
-      color:var(--text);
-      margin-bottom:6px;
+    .lane-token strong {
+      display: block;
+      font-size: 0.96rem;
+      line-height: 1.1;
+      margin-bottom: 6px;
     }
 
-    .orbitNodeT{
-      font-size:12px;
-      line-height:1.45;
-      color:var(--muted);
+    .lane-token span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1.35;
     }
 
-    .catalog{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:12px;
+    .section {
+      padding: 12px 0 22px;
     }
 
-    .panel{
-      padding:16px;
+    .section-head {
+      padding: 24px 24px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
     }
 
-    .panelTitle{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: clamp(1.45rem, 2vw, 2rem);
+      letter-spacing: -0.03em;
     }
 
-    .panelText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.72;
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 70ch;
     }
 
-    .productTile{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
+    .catalog-wrap {
+      padding: 18px 24px 24px;
+    }
+
+    .catalog {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .lane-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 228px;
+      padding: 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
       background:
-        linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-        radial-gradient(circle at 50% 0%, rgba(127,255,212,.03), transparent 40%);
-      box-shadow:var(--shadow);
+        radial-gradient(circle at top right, rgba(124,166,255,0.14), transparent 36%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      transition: 160ms ease;
     }
 
-    .productTitle{
-      margin:0 0 8px;
-      font-size:13px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--accent);
+    .lane-card:hover,
+    .lane-card:focus-within {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.16);
     }
 
-    .productText{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.66;
-      min-height:70px;
+    .lane-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
     }
 
-    .footer{
-      padding:12px 14px;
-      color:var(--muted);
-      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
+    .lane-kicker {
+      margin: 0 0 8px;
+      color: #7df0d3;
+      font-size: 0.78rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
-    @media (max-width:1240px){
-      .heroGrid{
-        grid-template-columns:1fr;
+    .lane-card h3 {
+      margin: 0;
+      font-size: 1.16rem;
+      letter-spacing: -0.02em;
+    }
+
+    .lane-badge {
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .lane-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      flex: 1 1 auto;
+    }
+
+    .lane-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .lane-path {
+      color: var(--soft);
+      font-size: 0.84rem;
+      overflow-wrap: anywhere;
+    }
+
+    .lane-open {
+      font-weight: 600;
+    }
+
+    .receipt {
+      margin: 0 0 44px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-xl);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
+        rgba(255,255,255,0.02);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .receipt-head {
+      padding: 18px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px 14px;
+    }
+
+    .receipt-head strong {
+      font-size: 0.82rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .receipt-body {
+      padding: 18px 20px 22px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
       }
 
-      .catalog{
-        grid-template-columns:1fr 1fr;
+      .catalog {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar {
+        flex-direction: column;
+        align-items: flex-start;
       }
 
-      h1{max-width:none}
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero {
+        padding-top: 18px;
+      }
+
+      .hero-copy,
+      .section-head,
+      .catalog-wrap,
+      .receipt-head,
+      .receipt-body {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .hero-copy {
+        padding-top: 22px;
+        padding-bottom: 22px;
+      }
+
+      .hero-stage {
+        min-height: 520px;
+        padding: 10px;
+      }
+
+      .stage-frame {
+        min-height: 500px;
+      }
+
+      .core-shell {
+        width: 148px;
+        height: 148px;
+      }
+
+      .lane-token {
+        width: 132px;
+        min-height: 74px;
+        padding: 10px 10px 9px;
+      }
+
+      .lane-token strong {
+        font-size: 0.88rem;
+      }
+
+      .lane-token span {
+        font-size: 0.74rem;
+      }
+
+      .catalog {
+        grid-template-columns: 1fr;
+      }
     }
 
-    @media (max-width:760px){
-      .topbar{flex-direction:column;align-items:flex-start}
-      .catalog{grid-template-columns:1fr}
-      .subGrid{grid-template-columns:1fr}
-      .heroShell{padding:16px;min-height:auto}
-      .orbitShell{min-height:620px}
-      .orbitalStage{height:580px}
-      .core{width:132px;height:132px;margin-left:-66px;margin-top:-66px}
-      .orbitNode{width:138px;margin-left:-69px}
-    }
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
 
-    @media (prefers-reduced-motion: reduce){
-      *{scroll-behavior:auto}
-      .orbitNodeCard{transition:none}
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+      }
+
+      .lane-token:hover,
+      .lane-token:focus-visible,
+      .lane-card:hover,
+      .lane-card:focus-within,
+      .button:hover,
+      .button:focus-visible,
+      .nav a:hover,
+      .nav a:focus-visible {
+        transform: none !important;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="backdrop" aria-hidden="true"></div>
-  <div class="gridLines" aria-hidden="true"></div>
-  <canvas id="fieldCanvas" aria-hidden="true"></canvas>
+  <div class="page">
+    <div class="topbar-wrap">
+      <div class="shell topbar">
+        <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+          <span class="brand-mark" aria-hidden="true"></span>
+          <span class="brand-copy">
+            <p class="eyebrow">Cinematic G1 · Products Gateway</p>
+            <p class="brand-title">Diamond Gate Bridge — Products</p>
+          </span>
+        </a>
 
-  <main class="wrap">
-    <div class="topbar">
-      <div class="brand">Products</div>
-      <div class="stamp">CINEMATIC G1 · ORBITAL GATEWAY</div>
+        <nav class="nav" aria-label="Primary">
+          <a href="/home/">Home</a>
+          <a href="/explore/">Explore</a>
+          <a href="/gauges/">Gauges</a>
+          <a href="/platform/">Platform</a>
+          <a href="/products/" aria-current="page">Products</a>
+        </nav>
+      </div>
     </div>
 
-    <section class="heroShell">
-      <div class="heroGrid">
-        <article class="heroCard">
-          <div>
-            <div class="eyebrow">Extravagant motion, coherent structure</div>
-            <h1>The animated products gateway.</h1>
-            <p class="heroText">
-              The products root is now the most cinematic surface on the site: a living 3D field with orbital product lanes, depth motion, and direct access to real product routes. The spectacle is subordinate to navigation, so the page still works as a coherent gateway instead of a visual dead end.
-            </p>
+    <header class="hero">
+      <div class="shell hero-grid">
+        <section class="panel hero-copy" aria-labelledby="products-title">
+          <p class="eyebrow">Extravagant motion, bounded authority</p>
+          <h1 id="products-title">The animated products gateway.</h1>
+          <p class="lead">
+            Products is the entry surface for the live product lanes. HTML owns the page structure.
+            JavaScript owns the stage runtime, token placement, and motion. That split keeps the
+            page stable on mobile instead of collapsing into the core.
+          </p>
 
-            <div class="chipRow">
-              <div class="chip strong">3D Motion Field</div>
-              <div class="chip">Orbital Routing</div>
-              <div class="chip">Real Product Links</div>
-              <div class="chip">Reduced-Motion Safe</div>
-            </div>
+          <ul class="hero-points" aria-label="Page qualities">
+            <li>3D Motion Field</li>
+            <li>Split Runtime Ownership</li>
+            <li>Direct Route Access</li>
+            <li>Reduced-Motion Safe</li>
+          </ul>
 
-            <div class="actionRow">
-              <a class="action" href="/">Home</a>
-              <a class="action" href="/explore/">Explore</a>
-              <a class="action" href="/gauges/">Gauges</a>
-              <a class="action strong" href="/products/platform/">Platform</a>
-            </div>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#catalog">Open product lanes</a>
+            <a class="button" href="/explore/">Return to Explore</a>
           </div>
+        </section>
 
-          <div class="subGrid">
-            <div class="stat">
-              <div class="statLabel">Animation Class</div>
-              <div class="statValue">3D Orbital</div>
-            </div>
-            <div class="stat">
-              <div class="statLabel">Navigation</div>
-              <div class="statValue">Direct Routes</div>
-            </div>
-            <div class="stat">
-              <div class="statLabel">Fallback</div>
-              <div class="statValue">Reduced Motion Safe</div>
-            </div>
-            <div class="stat">
-              <div class="statLabel">Posture</div>
-              <div class="statValue">Extravagant, Not Chaotic</div>
-            </div>
-          </div>
-        </article>
+        <section class="panel hero-stage" aria-labelledby="motion-stage-title">
+          <div class="stage-frame" id="products-stage">
+            <h2 class="sr-only" id="motion-stage-title">Products orbital stage</h2>
 
-        <section class="orbitShell" aria-label="Orbital product field">
-          <div class="orbitalStage" id="orbitalStage">
-            <div class="halo"></div>
-            <div class="axisGlow"></div>
-            <div class="ring r1"></div>
-            <div class="ring r2"></div>
-            <div class="ring r3"></div>
+            <div class="stage-backdrop" aria-hidden="true"></div>
 
-            <div class="core">
-              <span>Products<br/>In Motion</span>
+            <div class="stage-rings" aria-hidden="true">
+              <div class="ring r1"></div>
+              <div class="ring r2"></div>
+              <div class="ring r3"></div>
             </div>
 
-            <a class="orbitNode" data-ring="1" data-angle="0" href="/products/platform/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Platform</div>
-                <div class="orbitNodeV">Platform</div>
-                <div class="orbitNodeT">Core system surface</div>
-              </div>
-            </a>
+            <div class="stage-lanes" id="stage-lanes" aria-label="Product lane stage"></div>
 
-            <a class="orbitNode" data-ring="1" data-angle="72" href="/products/software/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Software</div>
-                <div class="orbitNodeV">Software</div>
-                <div class="orbitNodeT">Runtime-facing tools</div>
+            <div class="stage-core" aria-hidden="true">
+              <div class="core-shell">
+                <div>
+                  <strong>Products</strong>
+                  <span>In motion. Not collapsed.</span>
+                </div>
               </div>
-            </a>
-
-            <a class="orbitNode" data-ring="1" data-angle="144" href="/products/on-your-side-ai/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">AI</div>
-                <div class="orbitNodeV">On Your Side AI</div>
-                <div class="orbitNodeT">Intelligence product line</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="1" data-angle="216" href="/products/ssg/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Syntax</div>
-                <div class="orbitNodeV">SSG</div>
-                <div class="orbitNodeT">Behavioral language system</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="1" data-angle="288" href="/products/archcoin/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Coin</div>
-                <div class="orbitNodeV">ArchCoin</div>
-                <div class="orbitNodeT">Governed coin line</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="2" data-angle="32" href="/products/nutrition/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Nutrition</div>
-                <div class="orbitNodeV">Nutrition</div>
-                <div class="orbitNodeT">Baseline system lane</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="2" data-angle="122" href="/products/energy/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Energy</div>
-                <div class="orbitNodeV">Energy</div>
-                <div class="orbitNodeT">System output lane</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="2" data-angle="212" href="/products/education/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Education</div>
-                <div class="orbitNodeV">Education</div>
-                <div class="orbitNodeT">Language systems lane</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="2" data-angle="302" href="/products/five-flags/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Games</div>
-                <div class="orbitNodeV">Five Flags</div>
-                <div class="orbitNodeT">Playable systems lane</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="3" data-angle="70" href="/products/agriculture/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Agriculture</div>
-                <div class="orbitNodeV">Agriculture</div>
-                <div class="orbitNodeT">Applied growth lane</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="3" data-angle="190" href="/products/domains/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Domains</div>
-                <div class="orbitNodeV">Domains</div>
-                <div class="orbitNodeT">Identity and routing lane</div>
-              </div>
-            </a>
-
-            <a class="orbitNode" data-ring="3" data-angle="310" href="/products/coherence-diagnostic/">
-              <div class="orbitNodeCard">
-                <div class="orbitNodeK">Diagnostics</div>
-                <div class="orbitNodeV">Coherence</div>
-                <div class="orbitNodeT">Measurement lane</div>
-              </div>
-            </a>
+            </div>
           </div>
         </section>
       </div>
-    </section>
+    </header>
 
-    <section class="catalog">
-      <article class="productTile">
-        <h3 class="productTitle">Platform</h3>
-        <p class="productText">Core platform lane tying host law, structure, and runtime into an actionable surface.</p>
-        <div class="actionRow"><a class="action strong" href="/products/platform/">Open</a></div>
-      </article>
+    <main>
+      <section class="section">
+        <div class="shell panel" id="catalog">
+          <div class="section-head">
+            <p class="eyebrow">Products</p>
+            <h2>Live product lanes.</h2>
+            <p>
+              The catalog remains static and readable. The stage above is runtime-owned and rebuilt
+              by JavaScript so token spacing stays lawful across desktop and mobile.
+            </p>
+          </div>
 
-      <article class="productTile">
-        <h3 class="productTitle">Software</h3>
-        <p class="productText">Software-facing surface for runtime, implementation, and controlled productized tools.</p>
-        <div class="actionRow"><a class="action" href="/products/software/">Open</a></div>
-      </article>
+          <div class="catalog-wrap">
+            <div class="catalog">
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Core</p>
+                    <h3>Platform</h3>
+                  </div>
+                  <span class="lane-badge">Live</span>
+                </div>
+                <p>Core platform lane tying host law, structure, and runtime into an actionable surface.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/platform/</span>
+                  <a class="lane-open" href="/platform/">Open</a>
+                </div>
+              </article>
 
-      <article class="productTile">
-        <h3 class="productTitle">On Your Side AI</h3>
-        <p class="productText">Intelligence product line anchored in clarity, safety, and user-side structure.</p>
-        <div class="actionRow"><a class="action" href="/products/on-your-side-ai/">Open</a></div>
-      </article>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Runtime</p>
+                    <h3>Software</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Software-facing surface for runtime, implementation, and controlled productized tools.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/software/</span>
+                  <a class="lane-open" href="/software/">Open</a>
+                </div>
+              </article>
 
-      <article class="productTile">
-        <h3 class="productTitle">SSG</h3>
-        <p class="productText">Behavioral syntax and execution-language surface for governed systems.</p>
-        <div class="actionRow"><a class="action" href="/products/ssg/">Open</a></div>
-      </article>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Intelligence</p>
+                    <h3>On Your Side AI</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Intelligence product line anchored in clarity, safety, and user-side structure.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/ai/</span>
+                  <a class="lane-open" href="/ai/">Open</a>
+                </div>
+              </article>
 
-      <article class="productTile">
-        <h3 class="productTitle">Nutrition</h3>
-        <p class="productText">Baseline system lane for nourishment, correction, and applied human support.</p>
-        <div class="actionRow"><a class="action" href="/products/nutrition/">Open</a></div>
-      </article>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Language</p>
+                    <h3>Syntax</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Behavioral syntax and execution-language surface for governed systems.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/ssg/</span>
+                  <a class="lane-open" href="/ssg/">Open</a>
+                </div>
+              </article>
 
-      <article class="productTile">
-        <h3 class="productTitle">Energy</h3>
-        <p class="productText">System-output lane for measurable movement, recovery, and usable capacity.</p>
-        <div class="actionRow"><a class="action" href="/products/energy/">Open</a></div>
-      </article>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Value</p>
+                    <h3>ArchCoin</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Coin-facing lane for governed value architecture and later vault alignment.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/archcoin/</span>
+                  <a class="lane-open" href="/archcoin/">Open</a>
+                </div>
+              </article>
 
-      <article class="productTile">
-        <h3 class="productTitle">Education</h3>
-        <p class="productText">Language systems and learning surfaces under coherent explanatory structure.</p>
-        <div class="actionRow"><a class="action" href="/products/education/">Open</a></div>
-      </article>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Baseline</p>
+                    <h3>Nutrition</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Baseline system lane for nourishment, correction, and applied human support.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/nutrition/</span>
+                  <a class="lane-open" href="/nutrition/">Open</a>
+                </div>
+              </article>
 
-      <article class="productTile">
-        <h3 class="productTitle">ArchCoin</h3>
-        <p class="productText">Coin-facing lane for governed value architecture and later vault alignment.</p>
-        <div class="actionRow"><a class="action" href="/products/archcoin/">Open</a></div>
-      </article>
-    </section>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Output</p>
+                    <h3>Energy</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>System-output lane for measurable movement, recovery, and usable capacity.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/energy/</span>
+                  <a class="lane-open" href="/energy/">Open</a>
+                </div>
+              </article>
 
-    <div class="footer">BUILD=PRODUCTS_G1_ORBITAL_GATEWAY | ROLE=3D_PRODUCTS_ENTRY | MOTION=ACTIVE | ROUTES=BOUND | STATUS=ACTIVE</div>
-  </main>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Learning</p>
+                    <h3>Education</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Language systems and learning surfaces under coherent explanatory structure.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/education/</span>
+                  <a class="lane-open" href="/education/">Open</a>
+                </div>
+              </article>
 
-  <script type="module" src="./index.js"></script>
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Playable</p>
+                    <h3>Games</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Five Flags and related playable systems under bounded public expression.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/games/</span>
+                  <a class="lane-open" href="/games/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Applied</p>
+                    <h3>Agriculture</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Applied growth lane for cultivation, yield, continuity, and material support.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/agriculture/</span>
+                  <a class="lane-open" href="/agriculture/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Identity</p>
+                    <h3>Domains</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Identity and routing lane for naming, structure, continuity, and surface ownership.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/domains/</span>
+                  <a class="lane-open" href="/domains/">Open</a>
+                </div>
+              </article>
+
+              <article class="lane-card">
+                <div class="lane-top">
+                  <div>
+                    <p class="lane-kicker">Measurement</p>
+                    <h3>Diagnostics</h3>
+                  </div>
+                  <span class="lane-badge">Route</span>
+                </div>
+                <p>Coherence measurement lane for thresholds, tracking, receipt, and system readback.</p>
+                <div class="lane-meta">
+                  <span class="lane-path">/diagnostics/</span>
+                  <a class="lane-open" href="/diagnostics/">Open</a>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="shell receipt">
+        <div class="receipt-head">
+          <strong>Runtime / Receipt</strong>
+          <span>HTML=STRUCTURE | JS=STAGE_RUNTIME | STATUS=SPLIT_AND_STABLE</span>
+        </div>
+        <div class="receipt-body">
+          The page is now split correctly. HTML owns layout and catalog. JavaScript owns orbital
+          token generation, placement, and motion behavior.
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./products.js" defer></script>
 </body>
 </html>

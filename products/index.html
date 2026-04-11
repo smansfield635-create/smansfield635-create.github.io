@@ -275,14 +275,19 @@
         radial-gradient(circle at center, rgba(124,166,255,0.1), transparent 34%),
         radial-gradient(circle at center, rgba(111,255,219,0.06), transparent 56%),
         linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+      isolation: isolate;
     }
 
     .stage-backdrop,
-    .stage-rings,
-    .stage-lanes,
+    .stage-runtime,
     .stage-core {
       position: absolute;
       inset: 0;
+    }
+
+    .stage-backdrop {
+      z-index: 1;
+      pointer-events: none;
     }
 
     .stage-backdrop::before,
@@ -311,22 +316,13 @@
       filter: blur(24px);
     }
 
-    .ring {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.08);
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      opacity: 0.8;
+    .stage-runtime {
+      z-index: 2;
+      overflow: hidden;
     }
 
-    .ring.r1 { width: 44%; height: 18%; }
-    .ring.r2 { width: 62%; height: 28%; }
-    .ring.r3 { width: 80%; height: 40%; }
-
     .stage-core {
+      z-index: 3;
       display: grid;
       place-items: center;
       pointer-events: none;
@@ -346,6 +342,7 @@
         0 0 40px rgba(124,166,255,0.22);
       text-align: center;
       padding: 18px;
+      backdrop-filter: blur(10px);
     }
 
     .core-shell strong {
@@ -361,59 +358,6 @@
       color: var(--muted);
       font-size: 0.88rem;
       line-height: 1.45;
-    }
-
-    .stage-lanes {
-      z-index: 3;
-    }
-
-    .lane-token {
-      position: absolute;
-      width: 152px;
-      min-height: 84px;
-      padding: 12px 12px 10px;
-      border-radius: 18px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.035)),
-        rgba(8,12,30,0.8);
-      box-shadow: 0 16px 34px rgba(0,0,0,0.26);
-      backdrop-filter: blur(14px);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-      overflow: hidden;
-    }
-
-    .lane-token:hover,
-    .lane-token:focus-visible {
-      outline: none;
-      border-color: rgba(124,166,255,0.34);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.045)),
-        rgba(8,12,30,0.84);
-      transform: translateY(-2px);
-    }
-
-    .lane-token .kicker {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--soft);
-      font-size: 0.65rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .lane-token strong {
-      display: block;
-      font-size: 0.96rem;
-      line-height: 1.1;
-      margin-bottom: 6px;
-    }
-
-    .lane-token span {
-      display: block;
-      color: var(--muted);
-      font-size: 0.8rem;
-      line-height: 1.35;
     }
 
     .section {
@@ -626,20 +570,6 @@
         height: 148px;
       }
 
-      .lane-token {
-        width: 132px;
-        min-height: 74px;
-        padding: 10px 10px 9px;
-      }
-
-      .lane-token strong {
-        font-size: 0.88rem;
-      }
-
-      .lane-token span {
-        font-size: 0.74rem;
-      }
-
       .catalog {
         grid-template-columns: 1fr;
       }
@@ -658,8 +588,6 @@
         transition-duration: 0.001ms !important;
       }
 
-      .lane-token:hover,
-      .lane-token:focus-visible,
       .lane-card:hover,
       .lane-card:focus-within,
       .button:hover,
@@ -678,7 +606,7 @@
         <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
           <span class="brand-mark" aria-hidden="true"></span>
           <span class="brand-copy">
-            <p class="eyebrow">Cinematic G1 · Products Gateway</p>
+            <p class="eyebrow">Cinematic G2 · Products Gateway</p>
             <p class="brand-title">Diamond Gate Bridge — Products</p>
           </span>
         </a>
@@ -696,17 +624,17 @@
     <header class="hero">
       <div class="shell hero-grid">
         <section class="panel hero-copy" aria-labelledby="products-title">
-          <p class="eyebrow">Extravagant motion, bounded authority</p>
+          <p class="eyebrow">Extensive animation split three ways</p>
           <h1 id="products-title">The animated products gateway.</h1>
           <p class="lead">
-            Products is the entry surface for the live product lanes. HTML owns the page structure.
-            JavaScript owns the stage runtime, token placement, and motion. That split keeps the
-            page stable on mobile instead of collapsing into the core.
+            Products is the entry surface for the live product lanes. HTML owns structure. Page JS
+            owns orchestration. Runtime JS owns the planetary construct. The catalog below remains
+            fixed while the hero stage carries the Beta Version Generation 2 motion system.
           </p>
 
           <ul class="hero-points" aria-label="Page qualities">
-            <li>3D Motion Field</li>
-            <li>Split Runtime Ownership</li>
+            <li>G2 Planetary Runtime</li>
+            <li>Bounded Stage Ownership</li>
             <li>Direct Route Access</li>
             <li>Reduced-Motion Safe</li>
           </ul>
@@ -719,23 +647,14 @@
 
         <section class="panel hero-stage" aria-labelledby="motion-stage-title">
           <div class="stage-frame" id="products-stage">
-            <h2 class="sr-only" id="motion-stage-title">Products orbital stage</h2>
-
+            <h2 class="sr-only" id="motion-stage-title">Products planetary stage</h2>
             <div class="stage-backdrop" aria-hidden="true"></div>
-
-            <div class="stage-rings" aria-hidden="true">
-              <div class="ring r1"></div>
-              <div class="ring r2"></div>
-              <div class="ring r3"></div>
-            </div>
-
-            <div class="stage-lanes" id="stage-lanes" aria-label="Product lane stage"></div>
-
+            <div class="stage-runtime" id="products-stage-runtime" aria-hidden="true"></div>
             <div class="stage-core" aria-hidden="true">
               <div class="core-shell">
                 <div>
                   <strong>Products</strong>
-                  <span>In motion. Not collapsed.</span>
+                  <span>Generation 2 planetary gateway.</span>
                 </div>
               </div>
             </div>
@@ -751,8 +670,8 @@
             <p class="eyebrow">Products</p>
             <h2>Live product lanes.</h2>
             <p>
-              The catalog remains static and readable. The stage above is runtime-owned and rebuilt
-              by JavaScript so token spacing stays lawful across desktop and mobile.
+              The catalog remains fixed. Only the hero-stage runtime changes. This keeps route
+              authority readable while the animation layer handles the planetary construct above.
             </p>
           </div>
 
@@ -945,16 +864,17 @@
       <div class="shell receipt">
         <div class="receipt-head">
           <strong>Runtime / Receipt</strong>
-          <span>HTML=STRUCTURE | JS=STAGE_RUNTIME | STATUS=SPLIT_AND_STABLE</span>
+          <span>HTML=STRUCTURE | JS=ORCHESTRATION | RUNTIME=G2_PLANETARY | STATUS=ACTIVE</span>
         </div>
         <div class="receipt-body">
-          The page is now split correctly. HTML owns layout and catalog. JavaScript owns orbital
-          token generation, placement, and motion behavior.
+          The page is split correctly. HTML owns layout and catalog. Page JS owns lifecycle and
+          runtime mounting. Runtime JS owns the bounded planetary construct only.
         </div>
       </div>
     </main>
   </div>
 
+  <script src="./products_runtime.js" defer></script>
   <script src="./products.js" defer></script>
 </body>
 </html>

@@ -1,50 +1,67 @@
 (() => {
   const stage = document.getElementById("products-stage");
-  const runtimeMount = document.getElementById("products-stage-runtime");
-  const runtimeFactory = window.ProductsPlanetRuntime;
-  const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const stageMount = document.getElementById("products-stage-runtime");
+  const bubblesMount = document.getElementById("products-bubbles-runtime");
 
-  if (!stage || !runtimeMount || !runtimeFactory || typeof runtimeFactory.create !== "function") {
+  const planetFactory = window.ProductsPlanetRuntime;
+  const bubblesFactory = window.ProductsBubblesRuntime;
+
+  const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const mobileQuery = window.matchMedia("(max-width: 760px)");
+
+  if (!stage || !stageMount || !bubblesMount || !planetFactory || !bubblesFactory) {
     return;
   }
 
-  let runtime = null;
+  let planetRuntime = null;
+  let bubblesRuntime = null;
   let rebuildTimer = 0;
 
-  function destroyRuntime() {
-    if (runtime && typeof runtime.destroy === "function") {
-      runtime.destroy();
+  function destroyAll() {
+    if (planetRuntime && typeof planetRuntime.destroy === "function") {
+      planetRuntime.destroy();
     }
-    runtime = null;
+    if (bubblesRuntime && typeof bubblesRuntime.destroy === "function") {
+      bubblesRuntime.destroy();
+    }
+    planetRuntime = null;
+    bubblesRuntime = null;
   }
 
-  function buildRuntime() {
-    destroyRuntime();
-    runtime = runtimeFactory.create({
+  function buildAll() {
+    destroyAll();
+
+    planetRuntime = planetFactory.create({
       stage,
-      mount: runtimeMount,
-      reducedMotion: media.matches
+      mount: stageMount,
+      reducedMotion: reducedMotionQuery.matches
+    });
+
+    bubblesRuntime = bubblesFactory.create({
+      mount: bubblesMount,
+      reducedMotion: reducedMotionQuery.matches,
+      mobileQuery
     });
   }
 
   function scheduleRebuild() {
     window.clearTimeout(rebuildTimer);
     rebuildTimer = window.setTimeout(() => {
-      buildRuntime();
+      buildAll();
     }, 80);
   }
 
-  function handleMotionPreferenceChange() {
+  function onPreferenceChange() {
     scheduleRebuild();
   }
 
-  buildRuntime();
+  buildAll();
 
-  if (typeof media.addEventListener === "function") {
-    media.addEventListener("change", handleMotionPreferenceChange);
-  } else if (typeof media.addListener === "function") {
-    media.addListener(handleMotionPreferenceChange);
+  if (typeof reducedMotionQuery.addEventListener === "function") {
+    reducedMotionQuery.addEventListener("change", onPreferenceChange);
+  } else if (typeof reducedMotionQuery.addListener === "function") {
+    reducedMotionQuery.addListener(onPreferenceChange);
   }
 
-  window.addEventListener("pagehide", destroyRuntime);
+  window.addEventListener("pagehide", destroyAll);
 })();

@@ -1,917 +1,927 @@
 <!doctype html>
-<!-- TNT — /laws/index.html
-     STATUS: STANDARDIZED FULL-FILE REWRITE
-     PURPOSE:
-       - Replace legacy inline organization with cleaner standard structure
-       - Preserve existing behavior and state carry
-       - Keep ui.css as background owner
-       - Maintain single-open accordion and no-reload toggles
--->
-
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Seven Canonical Laws</title>
-
-  <link rel="stylesheet" href="/assets/ui.css"/>
-  <link rel="stylesheet" href="/assets/branch.css"/>
-
-  <style>
-    :root{
-      --topH:76px;
-      --topStackH:76px;
-      --dockH:104px;
-
-      --ink:#ffffff;
-      --mut:rgba(255,255,255,.82);
-      --soft:rgba(255,255,255,.66);
-
-      --stroke:rgba(255,255,255,.14);
-      --gold:rgba(212,175,55,.65);
-      --goldSoft:rgba(212,175,55,.22);
-
-      --redA:rgba(255,43,43,.18);
-      --redB:rgba(120,0,22,.40);
-
-      --shadowDeep:0 40px 140px rgba(0,0,0,.85);
-      --shadowMid:0 18px 60px rgba(0,0,0,.65);
-    }
-
-    *{box-sizing:border-box}
-
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
-
-    body{
-      margin:0;
-      color:var(--ink);
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    }
-
-    body::before,
-    body::after{
-      pointer-events:none !important;
-    }
-
-    .top{
-      position:fixed;
-      top:0;
-      left:0;
-      right:0;
-      z-index:240;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:12px;
-      height:var(--topH);
-      padding:16px 16px 12px;
-      pointer-events:none;
-    }
-
-    .top__group{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      pointer-events:auto;
-    }
-
-    .btn{
-      position:relative;
-      overflow:hidden;
-      min-height:44px;
-      padding:10px 14px;
-      border:1px solid var(--stroke);
-      border-radius:16px;
-      background:
-        radial-gradient(circle at 50% 120%, var(--goldSoft), transparent 64%),
-        linear-gradient(145deg, rgba(12,16,22,.92), rgba(6,8,12,.98));
-      color:var(--ink);
-      font-weight:950;
-      letter-spacing:.3px;
-      cursor:pointer;
-      touch-action:manipulation;
-      box-shadow:var(--shadowMid);
-    }
-
-    .btn::after{
-      content:"";
-      position:absolute;
-      left:10px;
-      right:10px;
-      bottom:-12px;
-      height:28px;
-      opacity:.6;
-      background:radial-gradient(circle at 50% 0%, var(--gold), transparent 70%);
-    }
-
-    .btn.active{
-      border-color:var(--gold);
-      box-shadow:0 0 0 2px var(--goldSoft), 0 0 28px var(--goldSoft);
-    }
-
-    .page{
-      position:relative;
-      z-index:10;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      width:min(1200px,94vw);
-      margin:0 auto;
-      padding:
-        calc(var(--topStackH) + 18px)
-        0
-        calc(var(--dockH) + 38px);
-    }
-
-    .hero{
-      position:relative;
-      overflow:hidden;
-      margin-top:8px;
-      padding:28px 30px;
-      border:1px solid var(--stroke);
-      border-radius:28px;
-      background:
-        radial-gradient(circle at 20% 20%, var(--redB), transparent 70%),
-        radial-gradient(circle at 80% 80%, var(--redA), transparent 60%),
-        linear-gradient(160deg, rgba(0,0,0,.45), rgba(0,0,0,.20));
-      box-shadow:var(--shadowDeep);
-    }
-
-    .hero::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:28px;
-      opacity:.35;
-      pointer-events:none;
-      box-shadow:inset 0 0 0 1px var(--goldSoft);
-      background:
-        repeating-linear-gradient(45deg, rgba(212,175,55,.08) 0 1px, transparent 1px 18px),
-        repeating-linear-gradient(-45deg, rgba(212,175,55,.06) 0 1px, transparent 1px 18px);
-    }
-
-    .hero__title{
-      margin:0 0 12px;
-      font-size:42px;
-      font-weight:980;
-      letter-spacing:1px;
-    }
-
-    .hero__sub{
-      max-width:1000px;
-      font-size:18px;
-      line-height:1.7;
-      color:var(--mut);
-    }
-
-    .hero__timestamp{
-      margin-top:14px;
-      font-size:13px;
-      letter-spacing:.3px;
-      color:var(--soft);
-    }
-
-    .laws{
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-
-    .law{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--stroke);
-      border-radius:26px;
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,43,43,.14), transparent 60%),
-        linear-gradient(145deg, rgba(14,20,28,.92), rgba(8,12,18,.98));
-      box-shadow:var(--shadowMid);
-    }
-
-    .law::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:26px;
-      opacity:.6;
-      pointer-events:none;
-      box-shadow:inset 0 0 0 1px var(--goldSoft);
-    }
-
-    .law.open{
-      border-color:rgba(212,175,55,.30);
-      box-shadow:var(--shadowMid), 0 0 18px rgba(212,175,55,.12);
-    }
-
-    .law__trigger{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      width:100%;
-      padding:20px 24px;
-      border:0;
-      background:transparent;
-      color:inherit;
-      text-align:left;
-      cursor:pointer;
-    }
-
-    .law__titleWrap{
-      min-width:0;
-    }
-
-    .law__title{
-      font-size:22px;
-      font-weight:960;
-      line-height:1.2;
-    }
-
-    .law__chevron{
-      display:flex;
-      flex:0 0 auto;
-      align-items:center;
-      justify-content:center;
-      width:34px;
-      height:34px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:12px;
-      background:rgba(0,0,0,.20);
-      color:var(--mut);
-      font-weight:950;
-    }
-
-    .law__body{
-      display:none;
-      padding:24px 26px 28px;
-      border-top:1px solid rgba(255,255,255,.08);
-    }
-
-    .law.open .law__body{
-      display:block;
-    }
-
-    .sectionTitle{
-      margin:0 0 10px;
-      font-weight:950;
-      letter-spacing:.3px;
-    }
-
-    .formalBlock{
-      margin-bottom:18px;
-      padding:16px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:16px;
-      background:rgba(0,0,0,.28);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:14px;
-      line-height:1.6;
-      white-space:pre-wrap;
-    }
-
-    .informalBlock{
-      font-size:16px;
-      line-height:1.8;
-      color:var(--mut);
-    }
-
-    .dock{
-      position:fixed;
-      left:50%;
-      bottom:max(12px, env(safe-area-inset-bottom));
-      z-index:220;
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-      width:min(1000px,94vw);
-      min-height:var(--dockH);
-      padding:12px;
-      border:1px solid var(--stroke);
-      border-radius:24px;
-      background:rgba(0,0,0,.40);
-      backdrop-filter:blur(12px);
-      transform:translateX(-50%);
-      box-shadow:0 20px 70px rgba(0,0,0,.70);
-    }
-
-    .dock .btn{
-      width:100%;
-      min-width:0;
-      text-align:center;
-    }
-
-    @media (max-width:767px){
-      :root{
-        --topH:124px;
-        --topStackH:132px;
-        --dockH:112px;
-      }
-
-      .top{
-        flex-direction:column;
-        align-items:stretch;
-        justify-content:flex-start;
-        gap:8px;
-        height:var(--topH);
-        padding:12px 12px 8px;
-      }
-
-      .top__group{
-        width:100%;
-        justify-content:space-between;
-        align-items:center;
-        gap:8px;
-        flex-wrap:nowrap;
-      }
-
-      .top__group .btn{
-        flex:1 1 0;
-        min-width:0;
-        min-height:48px;
-        padding:10px 8px;
-      }
-
-      .page{
-        padding-top:calc(var(--topStackH) + 16px);
-        padding-bottom:calc(var(--dockH) + 40px);
-      }
-
-      .hero{
-        padding:22px 20px;
-      }
-
-      .hero__title{
-        font-size:32px;
-        line-height:1.08;
-      }
-
-      .hero__sub{
-        font-size:16px;
-        line-height:1.65;
-      }
-    }
-
-    @media (max-width:520px){
-      :root{
-        --topH:132px;
-        --topStackH:140px;
-        --dockH:118px;
-      }
-
-      .dock{
-        grid-template-columns:repeat(2,1fr);
-        gap:10px;
-        width:min(96vw,720px);
-        padding:10px;
-      }
-
-      .law__trigger{
-        padding:18px 18px;
-      }
-
-      .law__body{
-        padding:20px 18px 24px;
-      }
-
-      .law__title{
-        font-size:19px;
-      }
-
-      .formalBlock{
-        font-size:13px;
-      }
-
-      .informalBlock{
-        font-size:15px;
-        line-height:1.72;
-      }
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>Diagnostic Gauges</title>
+<style>
+:root{
+  --bg:#05070b;
+  --bg2:#08101a;
+  --bg3:#0d1623;
+  --panel:#0b0f16;
+  --panel2:#101722;
+  --line:#1f2a36;
+  --line2:rgba(127,255,212,.16);
+  --text:#e8f6ff;
+  --muted:rgba(232,246,255,.68);
+  --muted2:rgba(232,246,255,.48);
+  --accent:#7fffd4;
+  --accent2:#6fe7ff;
+  --warn:#ffd27a;
+  --bad:#ff7a7a;
+  --good:#7fffd4;
+  --shadow:0 10px 30px rgba(0,0,0,.28);
+  --shadow2:0 18px 60px rgba(0,0,0,.34);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-right:env(safe-area-inset-right,0px);
+  --safe-bottom:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --radius:14px;
+  --radius2:18px;
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  min-height:100%;
+  background:
+    radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
+    radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
+    linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
+  color:var(--text);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+body{min-height:100vh;overflow-x:hidden}
+.hostGlow,
+.gridLines{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:0;
+}
+.hostGlow{
+  background:
+    radial-gradient(circle at 50% 12%, rgba(127,255,212,.045), transparent 18%),
+    radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
+    radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
+  filter:blur(10px);
+}
+.gridLines{
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+  background-size:40px 40px;
+  mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+}
+.wrap{
+  position:relative;
+  z-index:1;
+  max-width:1560px;
+  margin:0 auto;
+  padding:calc(12px + var(--safe-top)) calc(12px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(12px + var(--safe-left));
+}
+.hostbar{
+  display:grid;
+  grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
+  gap:10px;
+  margin-bottom:10px;
+}
+.topline,
+.hostCard,
+.kpi,
+.panel,
+.chartCard,
+.footer{
+  border:1px solid var(--line);
+  background:linear-gradient(180deg,var(--panel),var(--panel2));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+}
+.topline{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  padding:10px 12px;
+  min-height:62px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
+    radial-gradient(circle at 18% 18%, rgba(127,255,212,.05), transparent 26%);
+}
+.topline .title{
+  margin:0;
+  padding:0;
+  border:0;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.10em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.topline .stamp{
+  color:var(--muted);
+  font-size:11px;
+  white-space:nowrap;
+}
+.hostCard{
+  padding:12px 14px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.94),rgba(16,23,34,.96)),
+    radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
+}
+.hostCard .eyebrow{
+  font-size:10px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+.hostCard .hostTitle{
+  font-size:20px;
+  font-weight:800;
+  line-height:1.1;
+  letter-spacing:.01em;
+  margin:0 0 8px 0;
+}
+.hostCard .hostText{
+  font-size:12px;
+  line-height:1.6;
+  color:var(--muted);
+  margin:0;
+}
+.topbar{
+  display:grid;
+  grid-template-columns:repeat(10,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:10px;
+}
+.kpi{
+  padding:10px;
+  min-height:82px;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 50% 0%, rgba(127,255,212,.04), transparent 48%);
+}
+.kpi::before{
+  content:"";
+  position:absolute;
+  left:10px;
+  right:10px;
+  top:0;
+  height:2px;
+  border-radius:999px;
+  background:linear-gradient(90deg, transparent, rgba(127,255,212,.36), transparent);
+  opacity:.9;
+}
+.k{
+  font-size:10px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+}
+.v{
+  font-size:18px;
+  font-weight:800;
+  line-height:1.1;
+  word-break:break-word;
+}
+.good{color:var(--good)}
+.warn{color:var(--warn)}
+.bad{color:var(--bad)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+.panel{
+  padding:10px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 50% 0%, rgba(111,231,255,.025), transparent 36%);
+}
+.title{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--line);
+}
+.rows{display:grid;gap:4px}
+.row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  gap:10px;
+  align-items:start;
+  padding:4px 0;
+}
+.row .rk{
+  font-size:11px;
+  color:var(--muted);
+}
+.row .rv{
+  font-size:12px;
+  text-align:right;
+  word-break:break-word;
+  color:var(--text);
+}
+.chartGrid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+.chartCard{
+  padding:10px;
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 50% 0%, rgba(127,255,212,.03), transparent 40%);
+}
+.chartTitle{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--accent);
+  margin-bottom:8px;
+}
+canvas{
+  display:block;
+  width:100%;
+  height:140px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:
+    linear-gradient(180deg,#0a1019,#070b12);
+}
+.footer{
+  margin-top:10px;
+  padding:10px 12px;
+  font-size:11px;
+  color:var(--muted);
+  background:
+    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+    radial-gradient(circle at 12% 18%, rgba(127,255,212,.025), transparent 18%);
+}
+.pre{white-space:pre-wrap;word-break:break-word}
+.bootFail{
+  margin-top:10px;
+  padding:12px 14px;
+  border:1px solid rgba(255,122,122,.28);
+  border-radius:12px;
+  background:rgba(40,10,10,.78);
+  color:#ffdada;
+  font-size:12px;
+  line-height:1.45;
+  white-space:pre-wrap;
+  display:none;
+}
+.bootFail.is-visible{display:block}
+@media (max-width:1280px){
+  .hostbar{grid-template-columns:1fr}
+  .topbar{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .chartGrid{grid-template-columns:1fr}
+}
+@media (max-width:760px){
+  .topline{flex-direction:column;align-items:flex-start}
+  .topbar{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid{grid-template-columns:1fr}
+  .row{grid-template-columns:1fr}
+  .row .rv{text-align:left}
+}
+</style>
 </head>
-
 <body>
-  <header class="top" aria-label="Page controls">
-    <div class="top__group" aria-label="Style controls">
-      <button class="btn active" id="lensFormal" type="button">FORMAL</button>
-      <button class="btn" id="lensInformal" type="button">INFORMAL</button>
-    </div>
+<div class="hostGlow" aria-hidden="true"></div>
+<div class="gridLines" aria-hidden="true"></div>
 
-    <div class="top__group" aria-label="Language controls">
-      <button class="btn active" id="langEN" type="button">EN</button>
-      <button class="btn" id="langZH" type="button">中文</button>
-      <button class="btn" id="langES" type="button">ES</button>
+<div class="wrap">
+  <div class="hostbar">
+    <div class="topline">
+      <div class="title">Diagnostic Gauges</div>
+      <div class="stamp">GAUGES G5 · NEXT GENERATION HOST · DIRECT AUTHORITY</div>
     </div>
-  </header>
+    <section class="hostCard" aria-label="Host read">
+      <div class="eyebrow">Structure before effects</div>
+      <h1 class="hostTitle">Euclidean host, signal windows, direct receipts.</h1>
+      <p class="hostText">This renewed gauges surface treats geometry as the stable host and charts, metrics, and classification as the signal layer. Runtime, render, and instruments remain explicit and separately diagnosable.</p>
+    </section>
+  </div>
 
-  <main class="page">
-    <section class="hero" aria-labelledby="headerTitle">
-      <h1 class="hero__title" id="headerTitle">Seven Canonical Laws of Structural Coherence</h1>
-      <div class="hero__sub" id="headerSub">
-        A unified formal constraint framework governing coherence, admissibility,
-        stability, calibration authority, non-contradiction, scope binding,
-        and cascade containment across multi-scale systems.
-      </div>
-      <div class="hero__timestamp" id="headerTimestamp">
-        Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0
-      </div>
+  <div class="topbar">
+    <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
+    <div class="kpi"><div class="k">Runtime</div><div id="k-runtime" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Render</div><div id="k-render" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Instruments</div><div id="k-instruments" class="v warn">PENDING</div></div>
+    <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
+    <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
+    <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
+    <div class="kpi"><div class="k">FPS</div><div id="k-fps" class="v">—</div></div>
+    <div class="kpi"><div class="k">Δt</div><div id="k-dt" class="v">—</div></div>
+    <div class="kpi"><div class="k">Age</div><div id="k-age" class="v">—</div></div>
+  </div>
+
+  <div class="grid">
+    <section class="panel">
+      <div class="title">Module Authority</div>
+      <div id="moduleRows" class="rows"></div>
     </section>
 
-    <section class="laws" id="lawsContainer" aria-label="Canonical laws"></section>
-  </main>
+    <section class="panel">
+      <div class="title">Runtime Receipt</div>
+      <div id="runtimeRows" class="rows"></div>
+    </section>
 
-  <nav class="dock" aria-label="Primary navigation">
-    <a class="btn" id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
-    <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-    <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-    <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
-  </nav>
+    <section class="panel">
+      <div class="title">Render Receipt</div>
+      <div id="renderRows" class="rows"></div>
+    </section>
 
-  <script>
-    (() => {
-      "use strict";
+    <section class="panel">
+      <div class="title">Instrument / Diagnostics</div>
+      <div id="diagRows" class="rows"></div>
+    </section>
 
-      const STORAGE_KEYS = {
-        lang: "gd_lang",
-        style: "gd_style",
-        time: "gd_time",
-        depth: "gd_depth"
-      };
+    <section class="panel">
+      <div class="title">Motion / Force</div>
+      <div id="motionRows" class="rows"></div>
+    </section>
 
-      const VALID = {
-        lang: new Set(["en", "zh", "es"]),
-        style: new Set(["formal", "informal"]),
-        time: new Set(["origin", "now", "post"]),
-        depth: new Set(["overview", "explore", "deep"])
-      };
+    <section class="panel">
+      <div class="title">World / Region / Node</div>
+      <div id="worldRows" class="rows"></div>
+    </section>
 
-      const DEFAULTS = {
-        lang: "en",
-        style: "formal",
-        time: "now",
-        depth: "explore"
-      };
+    <section class="panel">
+      <div class="title">Scope / Traversal</div>
+      <div id="scopeRows" class="rows"></div>
+    </section>
 
-      const headerCopy = {
-        en: {
-          title: "Seven Canonical Laws of Structural Coherence",
-          sub: "A unified formal constraint framework governing coherence, admissibility, stability, calibration authority, non-contradiction, scope binding, and cascade containment across multi-scale systems.",
-          ts: "Publication Timestamp: 2026-03-02 · Canonical Archive Release v1.0",
-          formal: "FORMAL",
-          informal: "INFORMAL",
-          compass: "COMPASS",
-          explore: "EXPLORE",
-          products: "PRODUCTS",
-          gauges: "GAUGES",
-          formalLabel: "Formal Scientific Expression",
-          informalLabel: "Narrative Interpretation"
-        },
-        zh: {
-          title: "结构一致性的七条规范法则",
-          sub: "一个统一的形式约束框架，用于治理多尺度系统中的一致性、可采信性、稳定性、校准权威、不矛盾性、范围绑定与级联隔离。",
-          ts: "发布时间戳：2026-03-02 · 规范档案发布 v1.0",
-          formal: "FORMAL",
-          informal: "INFORMAL",
-          compass: "COMPASS",
-          explore: "EXPLORE",
-          products: "PRODUCTS",
-          gauges: "GAUGES",
-          formalLabel: "正式科学表达",
-          informalLabel: "叙事解释"
-        },
-        es: {
-          title: "Siete Leyes Canónicas de la Coherencia Estructural",
-          sub: "Un marco unificado de restricciones formales que gobierna coherencia, admisibilidad, estabilidad, autoridad de calibración, no contradicción, vinculación de alcance y contención de cascadas en sistemas multi-escala.",
-          ts: "Marca de publicación: 2026-03-02 · Lanzamiento de archivo canónico v1.0",
-          formal: "FORMAL",
-          informal: "INFORMAL",
-          compass: "COMPASS",
-          explore: "EXPLORE",
-          products: "PRODUCTS",
-          gauges: "GAUGES",
-          formalLabel: "Expresión Científica Formal",
-          informalLabel: "Interpretación Narrativa"
+    <section class="panel">
+      <div class="title">Projection / Field</div>
+      <div id="projectionRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Emission / Masks</div>
+      <div id="emitRows" class="rows"></div>
+    </section>
+
+    <section class="panel">
+      <div class="title">Failure / Source</div>
+      <div id="failureRows" class="rows"></div>
+    </section>
+  </div>
+
+  <div class="chartGrid">
+    <section class="chartCard">
+      <div class="chartTitle">Velocity History</div>
+      <canvas id="velocityChart" width="480" height="140"></canvas>
+    </section>
+    <section class="chartCard">
+      <div class="chartTitle">Coherence / Clarity / Stability</div>
+      <canvas id="coherenceChart" width="480" height="140"></canvas>
+    </section>
+    <section class="chartCard">
+      <div class="chartTitle">FPS / Fresh / Burden</div>
+      <canvas id="miscChart" width="480" height="140"></canvas>
+    </section>
+  </div>
+
+  <div id="footer" class="footer pre">Awaiting direct authority module receipts.</div>
+  <div id="bootFail" class="bootFail"></div>
+</div>
+
+<script type="module">
+const BUILD_STAMP = "GAUGES_G5_NEXT_GENERATION_HOST";
+const HISTORY_MAX = 240;
+const REFRESH_MS = 250;
+const CACHE_BUST = "g5";
+const RUNTIME_MODULE_PATH = "/world/runtime.js?v=" + CACHE_BUST;
+const RENDER_MODULE_PATH = "/world/render.js?v=" + CACHE_BUST;
+const INSTRUMENTS_MODULE_PATH = "/assets/instruments.js?v=" + CACHE_BUST;
+
+const history = {
+  velocityA: [],
+  velocityB: [],
+  velocityC: [],
+  coherence: [],
+  clarity: [],
+  stability: [],
+  fps: [],
+  fresh: [],
+  burden: []
+};
+
+const moduleState = {
+  runtime: { status: "PENDING", error: null, source: RUNTIME_MODULE_PATH, loaded: false },
+  render: { status: "PENDING", error: null, source: RENDER_MODULE_PATH, loaded: false },
+  instruments: { status: "PENDING", error: null, source: INSTRUMENTS_MODULE_PATH, loaded: false }
+};
+
+let runtimeApi = null;
+let renderApi = null;
+let instrumentsApi = null;
+let timer = null;
+let lastTickMs = performance.now();
+
+function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
+function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
+function intfmt(v){return isFiniteNumber(v)?String(Math.round(v)):"—";}
+function bool(v){return v===true?"true":v===false?"false":"—";}
+function safeObj(v){return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}
+function push(arr,v){arr.push(v);if(arr.length>HISTORY_MAX)arr.shift();}
+function escapeHtml(v){return String(v ?? "—").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
+function row(k,v){return '<div class="row"><div class="rk">'+escapeHtml(k)+'</div><div class="rv">'+escapeHtml(v)+'</div></div>';}
+function showBootFail(message){
+  const node = document.getElementById("bootFail");
+  if(!node) return;
+  node.textContent = message;
+  node.classList.add("is-visible");
+}
+function hideBootFail(){
+  const node = document.getElementById("bootFail");
+  if(!node) return;
+  node.textContent = "";
+  node.classList.remove("is-visible");
+}
+function setText(id,text,cls=""){
+  const el=document.getElementById(id);
+  if(!el) return;
+  el.textContent=text;
+  el.className=('v '+cls).trim();
+}
+function kpiClass(v,type){
+  if(type==="state"){
+    if(v==="LIVE") return "good";
+    if(v==="STALE") return "warn";
+    return "bad";
+  }
+  if(type==="fresh") return v==="FRESH" ? "good" : "warn";
+  if(type==="module"){
+    if(v==="ONLINE") return "good";
+    if(v==="PENDING") return "warn";
+    return "bad";
+  }
+  return "";
+}
+function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
+  const ctx = canvas.getContext("2d");
+  const w = canvas.width;
+  const h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0,"#0a1019");
+  grad.addColorStop(1,"#070b12");
+  ctx.fillStyle=grad;
+  ctx.fillRect(0,0,w,h);
+  ctx.strokeStyle="#1f2a36";
+  ctx.lineWidth=1;
+  ctx.beginPath();
+  ctx.moveTo(0,h-12);
+  ctx.lineTo(w,h-12);
+  ctx.stroke();
+
+  let vals = [];
+  for (const def of seriesDefs) vals = vals.concat(def.data.filter(isFiniteNumber));
+
+  let lo=minY, hi=maxY;
+  if(lo===null || hi===null){
+    const absVals = vals.length ? vals : [0];
+    lo = Math.min(...absVals);
+    hi = Math.max(...absVals);
+    if(lo===hi){ lo -= 1; hi += 1; }
+  }
+  const span = (hi - lo) || 1;
+
+  for (const def of seriesDefs) {
+    ctx.strokeStyle = def.color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    def.data.forEach((v,i)=>{
+      const x = (i / Math.max(1, HISTORY_MAX - 1)) * w;
+      const y = (h - 12) - ((v - lo) / span) * (h - 24);
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+  }
+}
+function computePrimitiveMetrics(forceVector = {}) {
+  const N = Number(forceVector.N || 0);
+  const E = Number(forceVector.E || 0);
+  const S = Number(forceVector.S || 0);
+  const W = Number(forceVector.W || 0);
+  const B = Number(forceVector.B || 0);
+  const ew = Math.abs(E - W);
+  const ns = Math.abs(N - S);
+  const vertical = Math.abs(B);
+  const magnitude = Math.sqrt((E - W) ** 2 + (N - S) ** 2 + B ** 2);
+  const total = Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B);
+
+  return {
+    packetSeparationWeight: Math.min(1, magnitude / 10),
+    shadowDensity: Math.min(1, vertical / 10),
+    fragmentWeight: Math.min(1, total / 20),
+    asymmetryWeight: Math.min(1, Math.abs((N + E) - (S + W)) / 10),
+    directionalWeight: Math.min(1, (ew + ns + vertical) / 10),
+    directionalContrast: Math.min(1, Math.max(ew, ns, vertical) / 10),
+    magnitude
+  };
+}
+function classifyState(receipt, ageMs) {
+  if (!receipt || safeObj(receipt.verification).pass !== true) return "OFFLINE";
+  if (isFiniteNumber(ageMs) && ageMs > 2500) return "STALE";
+  return "LIVE";
+}
+
+async function loadModule(path, key) {
+  try {
+    const mod = await import(path);
+    moduleState[key].status = "ONLINE";
+    moduleState[key].error = null;
+    moduleState[key].loaded = true;
+    return mod;
+  } catch (error) {
+    moduleState[key].status = "FAIL";
+    moduleState[key].error = error instanceof Error ? (error.stack || error.message) : String(error);
+    moduleState[key].loaded = true;
+    return null;
+  }
+}
+
+async function bootModules() {
+  const [runtimeMod, renderMod, instrumentsMod] = await Promise.all([
+    loadModule(RUNTIME_MODULE_PATH, "runtime"),
+    loadModule(RENDER_MODULE_PATH, "render"),
+    loadModule(INSTRUMENTS_MODULE_PATH, "instruments")
+  ]);
+
+  runtimeApi = runtimeMod;
+  renderApi = renderMod;
+  instrumentsApi = instrumentsMod;
+}
+
+function renderModuleState() {
+  setText("k-runtime", moduleState.runtime.status, kpiClass(moduleState.runtime.status, "module"));
+  setText("k-render", moduleState.render.status, kpiClass(moduleState.render.status, "module"));
+  setText("k-instruments", moduleState.instruments.status, kpiClass(moduleState.instruments.status, "module"));
+
+  document.getElementById("moduleRows").innerHTML =
+    row("runtime status", moduleState.runtime.status) +
+    row("runtime source", moduleState.runtime.source) +
+    row("runtime error", moduleState.runtime.error || "none") +
+    row("render status", moduleState.render.status) +
+    row("render source", moduleState.render.source) +
+    row("render error", moduleState.render.error || "none") +
+    row("instruments status", moduleState.instruments.status) +
+    row("instruments source", moduleState.instruments.source) +
+    row("instruments error", moduleState.instruments.error || "none");
+}
+
+function getRuntimeReceipt(snapshotOptions) {
+  if (!runtimeApi || typeof runtimeApi.getRuntimeReceipt !== "function") return null;
+  try {
+    return runtimeApi.getRuntimeReceipt(snapshotOptions);
+  } catch (error) {
+    moduleState.runtime.status = "FAIL";
+    moduleState.runtime.error = error instanceof Error ? (error.stack || error.message) : String(error);
+    return null;
+  }
+}
+
+function getRenderPacket(snapshotOptions) {
+  if (!renderApi) return null;
+  try {
+    if (typeof renderApi.render === "function") return renderApi.render(snapshotOptions);
+    if (renderApi.default && typeof renderApi.default.render === "function") return renderApi.default.render(snapshotOptions);
+    return null;
+  } catch (error) {
+    moduleState.render.status = "FAIL";
+    moduleState.render.error = error instanceof Error ? (error.stack || error.message) : String(error);
+    return null;
+  }
+}
+
+function getInstrumentPacket(runtimeReceipt, renderPacket) {
+  if (!instrumentsApi) return null;
+  try {
+    const builder =
+      typeof instrumentsApi.buildInstrumentReceipt === "function"
+        ? instrumentsApi.buildInstrumentReceipt
+        : instrumentsApi.default && typeof instrumentsApi.default.buildInstrumentReceipt === "function"
+          ? instrumentsApi.default.buildInstrumentReceipt
+          : null;
+
+    if (!builder) return null;
+
+    const runtimeState =
+      runtimeReceipt
+        ? {
+            projectionState: runtimeReceipt.projection,
+            region: runtimeReceipt.region,
+            node: runtimeReceipt.node,
+            boundary: runtimeReceipt.boundary,
+            terrainClass: runtimeReceipt.terrainClass,
+            biomeType: runtimeReceipt.biomeType,
+            denseIndex: runtimeReceipt.denseIndex,
+            index: runtimeReceipt.state,
+            traversalStatus: runtimeReceipt.traversalStatus,
+            receipt: { timestamp: runtimeReceipt.timestamp },
+            forces: runtimeReceipt.forces
+          }
+        : null;
+
+    const renderState = renderPacket
+      ? {
+          visible: safeObj(renderPacket.visible),
+          projection: {
+            selectedProjection: safeObj(safeObj(renderPacket.projection).selectedProjection || safeObj(renderPacket.projection))
+          }
         }
-      };
-
-      const laws = [
-        {
-          title: {
-            en: "1. Coherence Constraint Law",
-            zh: "1. 一致性约束法则",
-            es: "1. Ley de Restricción de Coherencia"
-          },
-          formal: `Under identical scope S and identical evidence set E:
-
-External Trust ≤ Internal Structural Consistency
-
-Where:
-Consistency = f(Declared Values, Observed Actions, Outcomes)
-
-Violation produces measurable divergence ΔC.`,
-          informal: {
-            en: "A system cannot be trusted more than it is internally consistent. When what it says, what it does, and what results it produces drift apart, pressure exposes the gap.",
-            zh: "系统不可能比它自身更一致更值得信任。言行与结果之间的偏离会在压力下暴露。",
-            es: "Un sistema no puede ser más confiable que coherente. Cuando palabras, acciones y resultados divergen, la presión lo revela."
-          }
-        },
-        {
-          title: {
-            en: "2. Non-Contradiction Law",
-            zh: "2. 不矛盾法则",
-            es: "2. Ley de No-Contradicción"
-          },
-          formal: `For identical scope S and evidence E:
-
-If Output₁ ≠ Output₂
-Then either Scope₁ ≠ Scope₂
-or Evidence₁ ≠ Evidence₂
-
-Determinism required under fixed inputs.`,
-          informal: {
-            en: "Same inputs must produce the same truth. If two conclusions differ, something in scope or evidence changed.",
-            zh: "相同输入必须产生相同结论。若不同，则范围或证据改变。",
-            es: "Mismos insumos deben producir misma verdad. Si no, cambió el alcance o la evidencia."
-          }
-        },
-        {
-          title: {
-            en: "3. Scope Precedes Authority",
-            zh: "3. 范围先于权威",
-            es: "3. El Alcance Precede a la Autoridad"
-          },
-          formal: `All claims C are valid only within declared scope S.
-
-Undefined Scope ⇒ Output = UNDETERMINED.`,
-          informal: {
-            en: "Before you claim power or truth, define the boundaries you operate inside.",
-            zh: "在宣称权威之前，先定义你所处的边界。",
-            es: "Antes de afirmar autoridad, define el alcance."
-          }
-        },
-        {
-          title: {
-            en: "4. Admissibility Law",
-            zh: "4. 可采信法则",
-            es: "4. Ley de Admisibilidad"
-          },
-          formal: `Escalation of claim level L requires receipt-backed evidence R.
-
-If R is incomplete:
-Claim Status = NOT MEASURED.`,
-          informal: {
-            en: "You don’t upgrade claims because of confidence. You upgrade because of receipts.",
-            zh: "升级不是因为自信，而是因为收据。",
-            es: "No se escala por confianza, sino por evidencia."
-          }
-        },
-        {
-          title: {
-            en: "5. Calibration Authority Law",
-            zh: "5. 校准权威法则",
-            es: "5. Ley de Autoridad de Calibración"
-          },
-          formal: `Calibration parameters θ may only be modified
-by designated calibration authority A.
-
-Unauthorized modification ⇒ System Invalid.`,
-          informal: {
-            en: "If everyone can adjust the measuring stick, measurement becomes meaningless.",
-            zh: "若人人可调尺子，测量将失效。",
-            es: "Si todos ajustan la regla, la medición pierde sentido."
-          }
-        },
-        {
-          title: {
-            en: "6. Measurable Stability Law",
-            zh: "6. 可测稳定法则",
-            es: "6. Ley de Estabilidad Medible"
-          },
-          formal: `Instability I = d(ΔC)/dt
-
-Where ΔC = coherence divergence.
-Acceleration indicates systemic risk.`,
-          informal: {
-            en: "Instability isn’t a feeling. It’s measurable drift that accelerates under scale.",
-            zh: "不稳定不是感觉，而是可测的加速偏离。",
-            es: "La inestabilidad es desviación medible que acelera."
-          }
-        },
-        {
-          title: {
-            en: "7. Containment Prevents Cascade",
-            zh: "7. 隔离阻断级联",
-            es: "7. La Contención Evita la Cascada"
-          },
-          formal: `Failure domain F must remain locally bounded.
-
-If spread(F) > containment threshold T:
-Cascade Risk = TRUE.`,
-          informal: {
-            en: "Keep failure local. Roll back early. Containment preserves system survival.",
-            zh: "让失败局部化。尽早回滚。",
-            es: "Mantén el fallo local. El rollback salva el sistema."
-          }
-        }
-      ];
-
-      const elements = {
-        headerTitle: document.getElementById("headerTitle"),
-        headerSub: document.getElementById("headerSub"),
-        headerTimestamp: document.getElementById("headerTimestamp"),
-        lawsContainer: document.getElementById("lawsContainer"),
-        lensFormal: document.getElementById("lensFormal"),
-        lensInformal: document.getElementById("lensInformal"),
-        langEN: document.getElementById("langEN"),
-        langZH: document.getElementById("langZH"),
-        langES: document.getElementById("langES"),
-        dockCompass: document.getElementById("dockCompass"),
-        dockExplore: document.getElementById("dockExplore"),
-        dockProducts: document.getElementById("dockProducts"),
-        dockGauges: document.getElementById("dockGauges")
-      };
-
-      const state = {
-        lang: readInitialLang(),
-        style: readInitialStyle(),
-        time: readInitialTime(),
-        depth: readInitialDepth(),
-        openLaw: 0
-      };
-
-      function getSearchParams(){
-        return new URLSearchParams(window.location.search);
-      }
-
-      function readStorage(key){
-        try{
-          return window.localStorage.getItem(key);
-        }catch(_error){
-          return null;
-        }
-      }
-
-      function writeStorage(key, value){
-        try{
-          window.localStorage.setItem(key, value);
-        }catch(_error){}
-      }
-
-      function normalizeLang(value){
-        return VALID.lang.has(value) ? value : DEFAULTS.lang;
-      }
-
-      function normalizeStyle(value){
-        return VALID.style.has(value) ? value : DEFAULTS.style;
-      }
-
-      function normalizeTime(value){
-        if(value === "trajectory") return "post";
-        return VALID.time.has(value) ? value : DEFAULTS.time;
-      }
-
-      function normalizeDepth(value){
-        return VALID.depth.has(value) ? value : DEFAULTS.depth;
-      }
-
-      function readInitialLang(){
-        const params = getSearchParams();
-        return normalizeLang(params.get("lang") || readStorage(STORAGE_KEYS.lang) || DEFAULTS.lang);
-      }
-
-      function readInitialStyle(){
-        const params = getSearchParams();
-        return normalizeStyle(params.get("style") || readStorage(STORAGE_KEYS.style) || DEFAULTS.style);
-      }
-
-      function readInitialTime(){
-        const params = getSearchParams();
-        return normalizeTime(params.get("time") || readStorage(STORAGE_KEYS.time) || DEFAULTS.time);
-      }
-
-      function readInitialDepth(){
-        const params = getSearchParams();
-        return normalizeDepth(params.get("depth") || readStorage(STORAGE_KEYS.depth) || DEFAULTS.depth);
-      }
-
-      function currentHeaderCopy(){
-        return headerCopy[state.lang] || headerCopy.en;
-      }
-
-      function buildQueryString(overrides = {}){
-        const params = new URLSearchParams();
-        params.set("lang", overrides.lang || state.lang);
-        params.set("style", overrides.style || state.style);
-        params.set("time", overrides.time || state.time);
-        params.set("depth", overrides.depth || state.depth);
-        return `?${params.toString()}`;
-      }
-
-      function syncCanonicalState(){
-        writeStorage(STORAGE_KEYS.lang, state.lang);
-        writeStorage(STORAGE_KEYS.style, state.style);
-        writeStorage(STORAGE_KEYS.time, state.time);
-        writeStorage(STORAGE_KEYS.depth, state.depth);
-
-        window.history.replaceState({}, "", window.location.pathname + buildQueryString());
-        document.documentElement.lang = state.lang === "zh" ? "zh" : state.lang === "es" ? "es" : "en";
-      }
-
-      function setActiveButton(activeId, allIds){
-        allIds.forEach((id) => {
-          const node = document.getElementById(id);
-          if(!node) return;
-          node.classList.toggle("active", id === activeId);
-        });
-      }
-
-      function syncButtons(){
-        setActiveButton(
-          state.style === "formal" ? "lensFormal" : "lensInformal",
-          ["lensFormal", "lensInformal"]
-        );
-
-        setActiveButton(
-          state.lang === "zh" ? "langZH" : state.lang === "es" ? "langES" : "langEN",
-          ["langEN", "langZH", "langES"]
-        );
-      }
-
-      function syncRoutes(){
-        document.querySelectorAll("[data-route]").forEach((node) => {
-          const route = node.getAttribute("data-route");
-          if(route){
-            node.setAttribute("href", route + buildQueryString());
-          }
-        });
-      }
-
-      function applyHeader(){
-        const H = currentHeaderCopy();
-
-        elements.headerTitle.textContent = H.title;
-        elements.headerSub.textContent = H.sub;
-        elements.headerTimestamp.textContent = H.ts;
-
-        elements.lensFormal.textContent = H.formal;
-        elements.lensInformal.textContent = H.informal;
-
-        elements.dockCompass.textContent = H.compass;
-        elements.dockExplore.textContent = H.explore;
-        elements.dockProducts.textContent = H.products;
-        elements.dockGauges.textContent = H.gauges;
-      }
-
-      function createLawBody(law){
-        const H = currentHeaderCopy();
-
-        if(state.style === "formal"){
-          return `
-            <div class="sectionTitle">${H.formalLabel}</div>
-            <div class="formalBlock">${law.formal}</div>
-          `;
-        }
-
-        return `
-          <div class="sectionTitle">${H.informalLabel}</div>
-          <div class="informalBlock">${law.informal[state.lang]}</div>
-        `;
-      }
-
-      function createLawNode(law, index){
-        const article = document.createElement("article");
-        article.className = "law";
-        article.dataset.index = String(index);
-
-        const trigger = document.createElement("button");
-        trigger.className = "law__trigger";
-        trigger.type = "button";
-        trigger.setAttribute("aria-expanded", "false");
-        trigger.setAttribute("aria-controls", `law-panel-${index}`);
-        trigger.id = `law-trigger-${index}`;
-
-        const titleWrap = document.createElement("div");
-        titleWrap.className = "law__titleWrap";
-
-        const title = document.createElement("div");
-        title.className = "law__title";
-        title.textContent = law.title[state.lang];
-
-        const chevron = document.createElement("div");
-        chevron.className = "law__chevron";
-        chevron.textContent = "▸";
-
-        titleWrap.appendChild(title);
-        trigger.appendChild(titleWrap);
-        trigger.appendChild(chevron);
-
-        const body = document.createElement("div");
-        body.className = "law__body";
-        body.id = `law-panel-${index}`;
-        body.setAttribute("role", "region");
-        body.setAttribute("aria-labelledby", trigger.id);
-        body.innerHTML = createLawBody(law);
-
-        trigger.addEventListener("click", () => toggleLaw(index), { passive: true });
-
-        article.appendChild(trigger);
-        article.appendChild(body);
-
-        return article;
-      }
-
-      function closeAllLaws(){
-        elements.lawsContainer.querySelectorAll(".law").forEach((node) => {
-          node.classList.remove("open");
-          const trigger = node.querySelector(".law__trigger");
-          const chevron = node.querySelector(".law__chevron");
-          if(trigger) trigger.setAttribute("aria-expanded", "false");
-          if(chevron) chevron.textContent = "▸";
-        });
-      }
-
-      function openLawAt(index){
-        const lawsList = elements.lawsContainer.querySelectorAll(".law");
-        const node = lawsList[index];
-        if(!node) return;
-
-        closeAllLaws();
-
-        node.classList.add("open");
-        const trigger = node.querySelector(".law__trigger");
-        const chevron = node.querySelector(".law__chevron");
-
-        if(trigger) trigger.setAttribute("aria-expanded", "true");
-        if(chevron) chevron.textContent = "▾";
-
-        state.openLaw = index;
-      }
-
-      function toggleLaw(index){
-        const lawsList = elements.lawsContainer.querySelectorAll(".law");
-        const node = lawsList[index];
-        if(!node) return;
-
-        if(node.classList.contains("open")){
-          node.classList.remove("open");
-          const trigger = node.querySelector(".law__trigger");
-          const chevron = node.querySelector(".law__chevron");
-          if(trigger) trigger.setAttribute("aria-expanded", "false");
-          if(chevron) chevron.textContent = "▸";
-          return;
-        }
-
-        openLawAt(index);
-      }
-
-      function renderLaws(){
-        elements.lawsContainer.innerHTML = "";
-        laws.forEach((law, index) => {
-          elements.lawsContainer.appendChild(createLawNode(law, index));
-        });
-
-        if(state.openLaw < 0 || state.openLaw >= laws.length){
-          state.openLaw = 0;
-        }
-
-        openLawAt(state.openLaw);
-      }
-
-      function render(){
-        applyHeader();
-        syncButtons();
-        renderLaws();
-        syncRoutes();
-      }
-
-      function applyStyle(nextStyle){
-        state.style = normalizeStyle(nextStyle);
-        syncCanonicalState();
-        render();
-      }
-
-      function applyLanguage(nextLang){
-        state.lang = normalizeLang(nextLang);
-        syncCanonicalState();
-        render();
-      }
-
-      function bindEvents(){
-        elements.lensFormal.addEventListener("click", () => applyStyle("formal"), { passive: true });
-        elements.lensInformal.addEventListener("click", () => applyStyle("informal"), { passive: true });
-
-        elements.langEN.addEventListener("click", () => applyLanguage("en"), { passive: true });
-        elements.langZH.addEventListener("click", () => applyLanguage("zh"), { passive: true });
-        elements.langES.addEventListener("click", () => applyLanguage("es"), { passive: true });
-      }
-
-      bindEvents();
-      syncCanonicalState();
-      render();
-    })();
-  </script>
+      : null;
+
+    return builder({ runtimeState, renderState });
+  } catch (error) {
+    moduleState.instruments.status = "FAIL";
+    moduleState.instruments.error = error instanceof Error ? (error.stack || error.message) : String(error);
+    return null;
+  }
+}
+
+function renderOffline() {
+  setText("k-state","OFFLINE","bad");
+  setText("k-classified","—");
+  setText("k-phase","—");
+  setText("k-fresh","—");
+  setText("k-fps","—");
+  setText("k-dt","—");
+  setText("k-age","—");
+
+  document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("renderRows").innerHTML = row("status","No render packet");
+  document.getElementById("diagRows").innerHTML = row("status","No diagnostics packet");
+  document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("projectionRows").innerHTML = row("status","No runtime/render receipt");
+  document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
+  document.getElementById("failureRows").innerHTML =
+    row("runtime", moduleState.runtime.error || "none") +
+    row("render", moduleState.render.error || "none") +
+    row("instruments", moduleState.instruments.error || "none");
+}
+
+function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) {
+  const state = safeObj(runtimeReceipt.state);
+  const denseIndex = safeObj(runtimeReceipt.denseIndex);
+  const region = safeObj(runtimeReceipt.region);
+  const node = safeObj(runtimeReceipt.node);
+  const boundary = safeObj(runtimeReceipt.boundary);
+  const threshold = safeObj(runtimeReceipt.threshold);
+  const forces = safeObj(runtimeReceipt.forces);
+  const traversalStatus = safeObj(runtimeReceipt.traversalStatus);
+  const selectedProjection = safeObj(runtimeReceipt.selectedProjection);
+  const fieldSummary = safeObj(runtimeReceipt.fieldSummary);
+
+  const renderVisible = safeObj(renderPacket.visible);
+  const renderProjection = safeObj(renderPacket.projection);
+  const renderSuccessor = safeObj(renderPacket.successor);
+  const validatorStatus = safeObj(renderVisible.validatorStatus);
+  const colorOutput = safeObj(renderVisible.colorOutput);
+  const motionOutput = safeObj(renderVisible.motionOutput);
+  const boundaryVisibility = safeObj(renderVisible.boundaryVisibility);
+  const nodeForceVisibility = safeObj(renderVisible.nodeForceVisibility);
+  const transitionVisibility = safeObj(renderVisible.transitionVisibility);
+
+  const diagnostics = safeObj(instrumentPacket && instrumentPacket.diagnosticsPayload);
+  const displayPayload = safeObj(instrumentPacket && instrumentPacket.displayPayload);
+  const displaySummary = safeObj(displayPayload.summary);
+  const classifiedStateFromInstrument = instrumentPacket && instrumentPacket.classifiedState
+    ? instrumentPacket.classifiedState
+    : "—";
+
+  const ageMs = isFiniteNumber(runtimeReceipt.timestamp) ? Math.max(0, nowMs - runtimeReceipt.timestamp) : null;
+  const fps = dtMs > 0 ? 1000 / dtMs : null;
+  const freshness = isFiniteNumber(ageMs) ? ageMs <= 2500 : false;
+  const classifiedState = classifyState(runtimeReceipt, ageMs);
+  const primitive = computePrimitiveMetrics(forces);
+
+  push(history.velocityA, primitive.packetSeparationWeight);
+  push(history.velocityB, primitive.shadowDensity);
+  push(history.velocityC, primitive.fragmentWeight);
+  push(history.coherence, primitive.directionalWeight);
+  push(history.clarity, primitive.directionalContrast);
+  push(history.stability, traversalStatus.admissible ? 1 : 0);
+  push(history.fps, fps ?? 0);
+  push(history.fresh, freshness ? 1 : 0);
+  push(history.burden, primitive.fragmentWeight);
+
+  setText("k-state", classifiedState, kpiClass(classifiedState, "state"));
+  setText("k-classified", classifiedStateFromInstrument);
+  setText("k-phase", runtimeReceipt.phase || "—");
+  setText("k-fresh", freshness ? "FRESH" : "STALE", kpiClass(freshness ? "FRESH" : "STALE", "fresh"));
+  setText("k-fps", intfmt(fps));
+  setText("k-dt", isFiniteNumber(dtMs) ? Math.round(dtMs) + "ms" : "—");
+  setText("k-age", isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—");
+
+  document.getElementById("runtimeRows").innerHTML =
+    row("source", runtimeReceipt.source || "—") +
+    row("contract", runtimeReceipt.contract || "—") +
+    row("verificationPass", bool(safeObj(runtimeReceipt.verification).pass)) +
+    row("deterministic", bool(safeObj(runtimeReceipt.verification).deterministic)) +
+    row("projection", runtimeReceipt.projection || "—") +
+    row("phase", runtimeReceipt.phase || "—") +
+    row("classifiedState", classifiedState) +
+    row("timestamp", String(runtimeReceipt.timestamp ?? "—"));
+
+  document.getElementById("renderRows").innerHTML =
+    row("render meta", safeObj(renderPacket.meta).contract || safeObj(renderPacket.meta).name || "—") +
+    row("validator ok", bool(validatorStatus.ok)) +
+    row("color hue", fmt(colorOutput.hue, 3)) +
+    row("color saturation", fmt(colorOutput.saturation, 3)) +
+    row("color value", fmt(colorOutput.value, 3)) +
+    row("luminance", fmt(renderVisible.luminanceOutput, 3)) +
+    row("depth", fmt(renderVisible.depthOutput, 3)) +
+    row("successor", Object.keys(renderSuccessor).length ? "present" : "none");
+
+  document.getElementById("diagRows").innerHTML =
+    row("instrument state", classifiedStateFromInstrument) +
+    row("summary state", displaySummary.state || "—") +
+    row("summary boundary", displaySummary.boundary || "—") +
+    row("summary projection", displaySummary.projection || "—") +
+    row("terrain", diagnostics.terrain || runtimeReceipt.terrainClass || "—") +
+    row("biome", diagnostics.biome || runtimeReceipt.biomeType || "—") +
+    row("traversal", diagnostics.traversal || "—") +
+    row("receipt", diagnostics.receipt || "—");
+
+  document.getElementById("motionRows").innerHTML =
+    row("packetSeparationWeight", fmt(primitive.packetSeparationWeight, 6)) +
+    row("shadowDensity", fmt(primitive.shadowDensity, 6)) +
+    row("fragmentWeight", fmt(primitive.fragmentWeight, 6)) +
+    row("asymmetryWeight", fmt(primitive.asymmetryWeight, 6)) +
+    row("directionalWeight", fmt(primitive.directionalWeight, 6)) +
+    row("directionalContrast", fmt(primitive.directionalContrast, 6)) +
+    row("motion visible", bool(motionOutput.visible)) +
+    row("motion delta", fmt(motionOutput.delta, 6)) +
+    row("force.N", fmt(forces.N, 3)) +
+    row("force.E", fmt(forces.E, 3)) +
+    row("force.S", fmt(forces.S, 3)) +
+    row("force.W", fmt(forces.W, 3)) +
+    row("force.B", fmt(forces.B, 3));
+
+  document.getElementById("worldRows").innerHTML =
+    row("regionId", region.regionId || "—") +
+    row("regionLabel", region.label || "—") +
+    row("nodeId", node.nodeId || "—") +
+    row("nodeLabel", node.label || "—") +
+    row("terrainClass", runtimeReceipt.terrainClass || "—") +
+    row("biomeType", runtimeReceipt.biomeType || "—") +
+    row("surfaceMaterial", runtimeReceipt.surfaceMaterial || "—") +
+    row("climateBand", runtimeReceipt.climateBand || "—") +
+    row("climate", runtimeReceipt.climate || "—") +
+    row("habitability", fmt(runtimeReceipt.habitability, 3)) +
+    row("traversalDifficulty", fmt(runtimeReceipt.traversalDifficulty, 3));
+
+  document.getElementById("scopeRows").innerHTML =
+    row("boundary.classification", boundary.classification || "—") +
+    row("threshold.action", threshold.action || "—") +
+    row("admissible", bool(traversalStatus.admissible)) +
+    row("targetExists", bool(traversalStatus.targetExists)) +
+    row("targetLawful", bool(traversalStatus.targetLawful)) +
+    row("thresholdPass", bool(traversalStatus.thresholdPass)) +
+    row("boundaryPass", bool(traversalStatus.boundaryPass)) +
+    row("boundary.OPEN", bool(boundaryVisibility.OPEN)) +
+    row("boundary.HOLD", bool(boundaryVisibility.HOLD)) +
+    row("boundary.GATE", bool(boundaryVisibility.GATE)) +
+    row("boundary.BRIDGE", bool(boundaryVisibility.BRIDGE)) +
+    row("boundary.BLOCK", bool(boundaryVisibility.BLOCK));
+
+  document.getElementById("projectionRows").innerHTML =
+    row("selectedProjection", Object.keys(selectedProjection).length ? "present" : "none") +
+    row("render projection kind", safeObj(renderProjection.selectedProjection).kind || "—") +
+    row("fieldWidth", fieldSummary.width ?? "—") +
+    row("fieldHeight", fieldSummary.height ?? "—") +
+    row("kernelI", state.i ?? "—") +
+    row("kernelJ", state.j ?? "—") +
+    row("denseX", denseIndex.x ?? "—") +
+    row("denseY", denseIndex.y ?? "—") +
+    row("dominantForce", nodeForceVisibility.dominantForce || "—") +
+    row("secondaryForce", nodeForceVisibility.secondaryForce || "—") +
+    row("transition visible", bool(transitionVisibility.visible)) +
+    row("transition lineage", bool(transitionVisibility.lineage));
+
+  document.getElementById("emitRows").innerHTML =
+    row("waterMask", fmt(runtimeReceipt.waterMask, 3)) +
+    row("landMask", fmt(runtimeReceipt.landMask, 3)) +
+    row("shorelineMask", fmt(runtimeReceipt.shorelineMask, 3)) +
+    row("moisture", fmt(runtimeReceipt.moisture, 3)) +
+    row("accumulation", fmt(runtimeReceipt.accumulation, 3)) +
+    row("validator runtimeTraceability", bool(safeObj(validatorStatus.checks).runtimeTraceability)) +
+    row("validator fieldCompleteness", bool(safeObj(validatorStatus.checks).fieldCompleteness)) +
+    row("validator projectionConsistency", bool(safeObj(validatorStatus.checks).projectionConsistency)) +
+    row("validator determinism", bool(safeObj(validatorStatus.checks).determinism)) +
+    row("validator artifactDrift", bool(safeObj(validatorStatus.checks).artifactDrift)) +
+    row("validator thresholdIntegrity", bool(safeObj(validatorStatus.checks).thresholdIntegrity)) +
+    row("validator successorProjectionCompleteness", bool(safeObj(validatorStatus.checks).successorProjectionCompleteness));
+
+  document.getElementById("failureRows").innerHTML =
+    row("runtimeError", moduleState.runtime.error || "none") +
+    row("renderError", moduleState.render.error || "none") +
+    row("instrumentError", moduleState.instruments.error || "none") +
+    row("runtimeSource", moduleState.runtime.source) +
+    row("renderSource", moduleState.render.source) +
+    row("instrumentSource", moduleState.instruments.source) +
+    row("build", BUILD_STAMP) +
+    row("status", "live direct authority");
+
+  drawMulti(document.getElementById("velocityChart"),[
+    {data:history.velocityA,color:"#6fe7ff"},
+    {data:history.velocityB,color:"#7fffd4"},
+    {data:history.velocityC,color:"#ffd27a"}
+  ],0,1);
+
+  drawMulti(document.getElementById("coherenceChart"),[
+    {data:history.coherence,color:"#7fffd4"},
+    {data:history.clarity,color:"#6fe7ff"},
+    {data:history.stability,color:"#ffd27a"}
+  ],0,1);
+
+  drawMulti(document.getElementById("miscChart"),[
+    {data:history.fps,color:"#7fffd4"},
+    {data:history.fresh,color:"#6fe7ff"},
+    {data:history.burden,color:"#ff7a7a"}
+  ],0,Math.max(60,...history.fps,1));
+
+  const summaryLine = Array.isArray(displayPayload.lines) && displayPayload.lines.length
+    ? displayPayload.lines[0]
+    : "—";
+
+  document.getElementById("footer").textContent =
+    "BUILD=" + BUILD_STAMP +
+    " | RUNTIME=" + moduleState.runtime.status +
+    " | RENDER=" + moduleState.render.status +
+    " | INSTRUMENTS=" + moduleState.instruments.status +
+    " | STATE=" + classifiedState +
+    " | INSTRUMENT=" + classifiedStateFromInstrument +
+    " | PHASE=" + (runtimeReceipt.phase || "—") +
+    " | AGE=" + (isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—") +
+    " | SUMMARY=" + summaryLine;
+}
+
+async function boot() {
+  await bootModules();
+  renderModuleState();
+
+  if (!runtimeApi && !renderApi && !instrumentsApi) {
+    showBootFail(
+      "GAUGES BOOT FAILED\n" +
+      "Runtime: " + (moduleState.runtime.error || "missing") + "\n\n" +
+      "Render: " + (moduleState.render.error || "missing") + "\n\n" +
+      "Instruments: " + (moduleState.instruments.error || "missing")
+    );
+  } else {
+    hideBootFail();
+  }
+
+  tick();
+}
+
+function tick() {
+  const nowPerf = performance.now();
+  const dtMs = nowPerf - lastTickMs;
+  lastTickMs = nowPerf;
+
+  renderModuleState();
+
+  const snapshotOptions = {
+    frameState: { elapsedSeconds: nowPerf / 1000 },
+    timestamp: Date.now()
+  };
+
+  const runtimeReceipt = getRuntimeReceipt(snapshotOptions);
+  const renderPacket = getRenderPacket(snapshotOptions);
+  const instrumentPacket = getInstrumentPacket(runtimeReceipt, renderPacket);
+
+  if (!runtimeReceipt) {
+    renderOffline();
+    document.getElementById("footer").textContent =
+      "BUILD=" + BUILD_STAMP +
+      " | RUNTIME=" + moduleState.runtime.status +
+      " | RENDER=" + moduleState.render.status +
+      " | INSTRUMENTS=" + moduleState.instruments.status +
+      " | OFFLINE";
+    timer = window.setTimeout(tick, REFRESH_MS);
+    return;
+  }
+
+  renderAll(runtimeReceipt, renderPacket || {}, instrumentPacket || {}, Date.now(), dtMs);
+  timer = window.setTimeout(tick, REFRESH_MS);
+}
+
+window.addEventListener("beforeunload", () => {
+  if (timer) window.clearTimeout(timer);
+});
+
+boot().catch((error) => {
+  showBootFail("GAUGES BOOT FAILED\n" + (error instanceof Error ? (error.stack || error.message) : String(error)));
+  document.getElementById("footer").textContent = "BUILD=" + BUILD_STAMP + " | BOOT=FAIL";
+});
+</script>
 </body>
 </html>

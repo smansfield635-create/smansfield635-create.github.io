@@ -3,383 +3,46 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Explore | Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Structured expansion layer for Diamond Gate Bridge. Explore outward without breaking upstream order."
-  />
+  <title>Explore Energy | Diamond Gate Bridge</title>
+  <meta name="description" content="Energy exploration under governed scope and measurable system read." />
   <style>
-    :root{
-      --bg:#05070b;
-      --bg2:#08101a;
-      --bg3:#0d1623;
-      --panel:#0b0f16;
-      --panel2:#101722;
-      --line:#1f2a36;
-      --line2:rgba(127,255,212,.16);
-      --text:#e8f6ff;
-      --muted:rgba(232,246,255,.68);
-      --accent:#7fffd4;
-      --accent2:#6fe7ff;
-      --shadow:0 14px 40px rgba(0,0,0,.30);
-      --shadow2:0 20px 70px rgba(0,0,0,.38);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
-      --maxw:1460px;
-    }
-
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      min-height:100%;
-      background:
-        radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
-        radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
-        linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    }
-
-    body{min-height:100vh;overflow-x:hidden}
-
-    .hostGlow,.gridLines{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .hostGlow{
-      background:
-        radial-gradient(circle at 50% 12%, rgba(127,255,212,.050), transparent 18%),
-        radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
-        radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
-      filter:blur(10px);
-    }
-
-    .gridLines{
-      background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
-    }
-
-    .wrap{
-      position:relative;
-      z-index:1;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .footer{
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-        radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
-      box-shadow:var(--shadow2);
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      margin-bottom:12px;
-      border-radius:14px;
-      box-shadow:var(--shadow);
-    }
-
-    .brand{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .stamp{
-      font-size:11px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-
-    .hero{
-      padding:22px 20px 20px;
-      margin-bottom:12px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
-
-    h1{
-      margin:0 0 14px;
-      font-size:clamp(36px,5vw,72px);
-      line-height:.96;
-      letter-spacing:-.06em;
-      max-width:10ch;
-    }
-
-    .heroText{
-      margin:0;
-      max-width:66ch;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.72;
-    }
-
-    .chipRow,
-    .actionRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .chip,
-    .action{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:10px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      text-decoration:none;
-    }
-
-    .chip{
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
-    }
-
-    .chip.strong,
-    .action.strong{
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
-      color:var(--text);
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .panel{
-      padding:16px;
-    }
-
-    .panelTitle{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .panelText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
-    }
-
-    .rows{
-      display:grid;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      align-items:start;
-    }
-
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.45;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .catalog{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .tile{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .tileTitle{
-      margin:0 0 8px;
-      font-size:13px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .tileText{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.66;
-      min-height:66px;
-    }
-
-    .footer{
-      padding:12px 14px;
-      color:var(--muted);
-      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
-    }
-
-    @media (max-width:1180px){
-      .grid,.catalog{grid-template-columns:1fr 1fr}
-      h1{max-width:none}
-    }
-
-    @media (max-width:760px){
-      .topbar{flex-direction:column;align-items:flex-start}
-      .grid,.catalog{grid-template-columns:1fr}
-      .row{grid-template-columns:1fr}
-      .rv{text-align:left}
-    }
+    :root{--bg:#05070b;--bg2:#08101a;--bg3:#0d1623;--panel:#0b0f16;--panel2:#101722;--line:#1f2a36;--line2:rgba(127,255,212,.16);--text:#e8f6ff;--muted:rgba(232,246,255,.68);--accent:#7fffd4;--shadow:0 14px 40px rgba(0,0,0,.30);--shadow2:0 20px 70px rgba(0,0,0,.38);--safe-top:env(safe-area-inset-top,0px);--safe-right:env(safe-area-inset-right,0px);--safe-bottom:env(safe-area-inset-bottom,0px);--safe-left:env(safe-area-inset-left,0px);--maxw:1360px}
+    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif} body{min-height:100vh;overflow-x:hidden}
+    .wrap{max-width:var(--maxw);margin:0 auto;padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left))}
+    .topbar,.hero,.panel,.footer{border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);box-shadow:var(--shadow2)}
+    .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;margin-bottom:12px;border-radius:14px;box-shadow:var(--shadow)}
+    .brand{font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)} .stamp{font-size:11px;color:var(--muted);white-space:nowrap}
+    .hero{padding:22px 20px 20px;margin-bottom:12px} .eyebrow{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:8px 12px;border:1px solid var(--line2);border-radius:999px;background:rgba(255,255,255,.03);color:var(--accent);font-size:11px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:14px}
+    h1{margin:0 0 14px;font-size:clamp(34px,4.8vw,64px);line-height:.96;letter-spacing:-.06em;max-width:10ch} .heroText{margin:0;max-width:62ch;color:var(--muted);font-size:17px;line-height:1.72}
+    .actionRow{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px} .action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:10px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;text-decoration:none}
+    .grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:12px} .panel{padding:16px}
+    .panelTitle{margin:0 0 12px;font-size:12px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding-bottom:10px;border-bottom:1px solid var(--line)} .panelText{margin:0;color:var(--muted);font-size:14px;line-height:1.7}
+    .footer{padding:12px 14px;color:var(--muted);font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;white-space:pre-wrap;word-break:break-word}
+    @media (max-width:980px){.grid{grid-template-columns:1fr}h1{max-width:none}} @media (max-width:760px){.topbar{flex-direction:column;align-items:flex-start}}
   </style>
 </head>
 <body>
-  <div class="hostGlow" aria-hidden="true"></div>
-  <div class="gridLines" aria-hidden="true"></div>
-
   <main class="wrap">
     <div class="topbar">
-      <div class="brand">Explore</div>
-      <div class="stamp">G1 EXTERNAL EXPRESSION · STRUCTURED EXPANSION</div>
+      <div class="brand">Explore Energy</div>
+      <div class="stamp">ENERGY UNDER CONSTRAINT</div>
     </div>
-
     <section class="hero">
-      <div class="eyebrow">Expansion under structure</div>
-      <h1>The expansion layer.</h1>
-      <p class="heroText">
-        Explore extends outward without breaking upstream order. Each surface below is a bounded entry point, not a mixed narrative pile. Vision expands, but the frame stays coherent.
-      </p>
-      <div class="chipRow">
-        <div class="chip strong">Prerequisite First</div>
-        <div class="chip">Bounded Entries</div>
-        <div class="chip">Frontier Without Drift</div>
-      </div>
+      <div class="eyebrow">Measured vitality</div>
+      <h1>Energy surface.</h1>
+      <p class="heroText">Energy belongs here when it can be discussed as measurable movement, burden, stability, and usable capacity rather than mystique or decorative language.</p>
       <div class="actionRow">
-        <a class="action" href="/">Home</a>
+        <a class="action" href="/explore/">Explore</a>
         <a class="action" href="/laws/">Laws</a>
-        <a class="action strong" href="/explore/frontier/">Frontier</a>
         <a class="action" href="/gauges/">Gauges</a>
       </div>
     </section>
-
     <section class="grid">
-      <article class="panel">
-        <h2 class="panelTitle">Posture</h2>
-        <p class="panelText">Expansion under structure. The explore layer is downstream from the host and does not invent a new foundation for itself.</p>
-        <div class="rows">
-          <div class="row"><div class="rk">Host Relation</div><div class="rv">Descendant, not replacement</div></div>
-          <div class="row"><div class="rk">Expansion Rule</div><div class="rv">Outward without drift</div></div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2 class="panelTitle">Entry</h2>
-        <p class="panelText">Clean surfaces only. Each block below is a discrete entry path with measurable scope.</p>
-        <div class="rows">
-          <div class="row"><div class="rk">Surface Type</div><div class="rv">Bounded entry point</div></div>
-          <div class="row"><div class="rk">Narrative Load</div><div class="rv">Separated, not piled</div></div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2 class="panelTitle">Rule</h2>
-        <p class="panelText">Prerequisite first. Anything that cannot support fixed scope or measurable constraint stays downstream.</p>
-        <div class="rows">
-          <div class="row"><div class="rk">Admission</div><div class="rv">Constraint first</div></div>
-          <div class="row"><div class="rk">Result</div><div class="rv">Frontier without drift</div></div>
-        </div>
-      </article>
+      <article class="panel"><h2 class="panelTitle">Read</h2><p class="panelText">Energy is treated as system behavior and usable movement.</p></article>
+      <article class="panel"><h2 class="panelTitle">Constraint</h2><p class="panelText">No vague force language. It must connect to stability, direction, and burden.</p></article>
+      <article class="panel"><h2 class="panelTitle">Outcome</h2><p class="panelText">Clearer translation from intuition to governed surface.</p></article>
     </section>
-
-    <section class="catalog">
-      <article class="tile">
-        <h3 class="tileTitle">Frontier</h3>
-        <p class="tileText">Platform engineering and boundary discovery under governed scope.</p>
-        <div class="actionRow"><a class="action strong" href="/explore/frontier/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Economic</h3>
-        <p class="tileText">Economic exploration surfaces under structured entry and measurable constraint.</p>
-        <div class="actionRow"><a class="action" href="/explore/economic/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Infrastructure</h3>
-        <p class="tileText">Infrastructure as downstream expansion, not a competing foundation.</p>
-        <div class="actionRow"><a class="action" href="/explore/infrastructure/">Open</a></div>
-      </article>
-
-      <article class="tile">
-        <h3 class="tileTitle">Models</h3>
-        <p class="tileText">Model surfaces held to bounded scope before broader multiplication.</p>
-        <div class="actionRow"><a class="action" href="/explore/models/">Open</a></div>
-      </article>
-    </section>
-
-    <div class="footer">BUILD=EXPLORE_G1_STRUCTURED_EXPANSION | ENTRY=BOUNDED | RULE=PREREQUISITE_FIRST | FRONTIER=/explore/frontier/ | STATUS=ACTIVE</div>
+    <div class="footer">BUILD=EXPLORE_ENERGY_G1 | ROLE=ENERGY_SURFACE | STATUS=ACTIVE</div>
   </main>
 </body>
 </html>

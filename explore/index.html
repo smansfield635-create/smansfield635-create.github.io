@@ -1,759 +1,385 @@
 <!doctype html>
-<!-- TNT — /explore/index.html
-     EXPLORE · EXPANSION MAP (INTRO-TIER ORIENTATION — NO LENSES)
-     STATUS:
-       - full authority rewrite
-       - 3D gloss material system upgraded
-       - perimeter gold glow added
-       - diamond-aligned silk inlay added
-       - hover = glow only
-       - no overlays / no modals
-       - single-open accordion preserved
-       - trilingual reload preserved
-       - canon state carry preserved
-       - lane remains URL-only
-       - ui.css owns background
--->
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Nine Summits — Explore</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Explore | Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Structured expansion layer for Diamond Gate Bridge. Explore outward without breaking upstream order."
+  />
+  <style>
+    :root{
+      --bg:#05070b;
+      --bg2:#08101a;
+      --bg3:#0d1623;
+      --panel:#0b0f16;
+      --panel2:#101722;
+      --line:#1f2a36;
+      --line2:rgba(127,255,212,.16);
+      --text:#e8f6ff;
+      --muted:rgba(232,246,255,.68);
+      --accent:#7fffd4;
+      --accent2:#6fe7ff;
+      --shadow:0 14px 40px rgba(0,0,0,.30);
+      --shadow2:0 20px 70px rgba(0,0,0,.38);
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+      --maxw:1460px;
+    }
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+    *{box-sizing:border-box}
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
+        radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
+        linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
 
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
+    body{min-height:100vh;overflow-x:hidden}
 
-:root{
-  --dockH:100px;
+    .hostGlow,.gridLines{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
 
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.08);
+    .hostGlow{
+      background:
+        radial-gradient(circle at 50% 12%, rgba(127,255,212,.050), transparent 18%),
+        radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
+        radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
+      filter:blur(10px);
+    }
 
-  --ink:rgba(255,255,255,.95);
-  --mut:rgba(255,255,255,.84);
-  --mut2:rgba(255,255,255,.74);
+    .gridLines{
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:40px 40px;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+    }
 
-  --crimson:rgba(120,0,22,.28);
-  --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    }
 
-  --goldA:rgba(201,162,74,.22);
-  --goldB:rgba(201,162,74,.10);
-  --gold:rgba(201,162,74,.58);
-  --goldGlow:rgba(201,162,74,.24);
-  --goldGlow2:rgba(201,162,74,.14);
+    .topbar,
+    .hero,
+    .panel,
+    .footer{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
+        radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
+      box-shadow:var(--shadow2);
+    }
 
-  --shadowA:0 40px 140px rgba(0,0,0,.65);
-  --shadowB:0 20px 70px rgba(0,0,0,.60);
-  --shadowC:0 18px 60px rgba(0,0,0,.55);
-}
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      margin-bottom:12px;
+      border-radius:14px;
+      box-shadow:var(--shadow);
+    }
 
-/* =========================
-   TOP CONTROLS
-========================= */
-.top-left{
-  position:fixed;
-  left:16px;
-  top:16px;
-  z-index:240;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.top-right{
-  position:fixed;
-  right:16px;
-  top:16px;
-  z-index:240;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-  justify-content:flex-end;
-}
+    .brand{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
 
-/* =========================
-   3D GLOSS BUTTON SYSTEM
-========================= */
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:44px;
-  padding:10px 14px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 18% 22%, rgba(255,255,255,.10), transparent 46%),
-    radial-gradient(circle at 82% 24%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 70% 86%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:var(--ink);
-  font-weight:950;
-  font-size:14px;
-  letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;
-  overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowC);
-  white-space:nowrap;
-  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
-}
-.btn::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    radial-gradient(130% 130% at 50% 50%, rgba(201,162,74,0) 58%, rgba(201,162,74,.18) 82%, rgba(201,162,74,0) 100%),
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 18px);
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  opacity:.32;
-}
-.btn::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
-  height:32%;
-  border-radius:999px;
-  pointer-events:none;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  opacity:.92;
-}
-.btn:hover{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    var(--shadowC),
-    0 0 0 2px rgba(201,162,74,.14),
-    0 0 28px rgba(201,162,74,.20),
-    0 0 44px rgba(201,162,74,.10);
-  filter:saturate(1.04);
-}
-.btn:active{filter:brightness(.98)}
-.btn.red{
-  border-color:rgba(255,43,43,.22);
-  box-shadow:
-    var(--shadowC),
-    0 0 18px rgba(255,43,43,.10);
-}
-.btn.red:hover{
-  border-color:rgba(201,162,74,.46);
-  box-shadow:
-    var(--shadowC),
-    0 0 0 2px rgba(201,162,74,.14),
-    0 0 28px rgba(201,162,74,.20),
-    0 0 44px rgba(201,162,74,.10),
-    0 0 18px rgba(255,43,43,.08);
-}
+    .stamp{
+      font-size:11px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
 
-/* =========================
-   PAGE
-========================= */
-.page{
-  width:min(1200px,94vw);
-  margin:0 auto;
-  padding:92px 0 calc(var(--dockH) + 24px);
-  display:flex;
-  flex-direction:column;
-  gap:18px;
-}
+    .hero{
+      padding:22px 20px 20px;
+      margin-bottom:12px;
+    }
 
-/* =========================
-   HEADER
-========================= */
-.header{
-  border:1px solid var(--stroke);
-  border-radius:28px;
-  padding:26px 28px;
-  background:
-    radial-gradient(circle at 18% 18%, var(--crimson), transparent 70%),
-    radial-gradient(circle at 82% 26%, var(--opalV), transparent 72%),
-    radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
-    radial-gradient(circle at 28% 22%, var(--goldA), transparent 62%),
-    radial-gradient(circle at 78% 80%, var(--goldB), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  box-shadow:var(--shadowA);
-  backdrop-filter:blur(10px);
-  position:relative;
-  overflow:hidden;
-}
-.header::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:28px;
-  pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.30;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 76%, #000 80% 100%),
-    linear-gradient(#000,#000);
-}
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
 
-.k{
-  font-size:12px;
-  letter-spacing:6px;
-  text-transform:uppercase;
-  opacity:.74;
-  margin:0 0 14px;
-  color:var(--mut);
-}
-.t{
-  font-size:40px;
-  font-weight:950;
-  letter-spacing:.6px;
-  margin:0 0 16px;
-  color:var(--ink);
-  line-height:1.02;
-}
-.s{
-  font-size:18px;
-  line-height:1.7;
-  color:var(--mut);
-  margin:0;
-  max-width:1000px;
-}
+    h1{
+      margin:0 0 14px;
+      font-size:clamp(36px,5vw,72px);
+      line-height:.96;
+      letter-spacing:-.06em;
+      max-width:10ch;
+    }
 
-/* =========================
-   FEATURE ROW
-========================= */
-.feature-row{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:12px;
-}
-.feature{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:var(--shadowB);
-  padding:16px;
-  position:relative;
-  overflow:hidden;
-}
-.feature::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:22px;
-  pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.60;
-}
-.feature-k{
-  font-size:11px;
-  letter-spacing:.16em;
-  text-transform:uppercase;
-  color:var(--mut2);
-}
-.feature-t{
-  margin-top:8px;
-  font-size:16px;
-  font-weight:950;
-  color:var(--ink);
-}
-.feature-p{
-  margin-top:8px;
-  font-size:13px;
-  line-height:1.55;
-  color:var(--mut2);
-}
+    .heroText{
+      margin:0;
+      max-width:66ch;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.72;
+    }
 
-/* =========================
-   ACCORDION
-========================= */
-.accordion{
-  display:flex;
-  flex-direction:column;
-  gap:14px;
-}
+    .chipRow,
+    .actionRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
 
-.block{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:26px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:var(--shadowB);
-  overflow:hidden;
-  position:relative;
-}
-.block::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:26px;
-  pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
-  opacity:.60;
-}
+    .chip,
+    .action{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      text-decoration:none;
+    }
 
-.head{
-  padding:20px 24px;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  gap:14px;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.title{
-  font-size:22px;
-  font-weight:950;
-  letter-spacing:.3px;
-  color:var(--ink);
-}
-.chev{
-  width:36px;
-  height:36px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background:rgba(0,0,0,.16);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--mut);
-  font-weight:950;
-  position:relative;
-  overflow:hidden;
-  flex:0 0 auto;
-}
-.chev::after{
-  content:"";
-  position:absolute;
-  left:6px;
-  right:6px;
-  bottom:-10px;
-  height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
-  opacity:.62;
-  pointer-events:none;
-}
+    .chip{
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.10em;
+    }
 
-.body{
-  display:none;
-  padding:22px 24px 26px;
-  border-top:1px solid rgba(255,255,255,.08);
-}
-.block.open .body{display:block}
+    .chip.strong,
+    .action.strong{
+      border-color:rgba(127,255,212,.26);
+      background:rgba(127,255,212,.08);
+      color:var(--text);
+    }
 
-.p{
-  font-size:17px;
-  line-height:1.75;
-  color:var(--mut2);
-  margin:0 0 18px;
-}
-.jump{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:44px;
-  margin-top:10px;
-  padding:10px 18px;
-  border-radius:999px;
-}
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:12px;
+    }
 
-/* =========================
-   DOCK
-========================= */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(1000px,94vw);
-  padding:12px;
-  border-radius:24px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
-}
-.dock .btn{
-  width:100%;
-  border-radius:999px;
-  padding:10px 0;
-}
+    .panel{
+      padding:16px;
+    }
 
-/* =========================
-   BREAKPOINTS
-========================= */
-@media (max-width:980px){
-  .feature-row{
-    grid-template-columns:repeat(2,minmax(0,1fr));
-  }
-}
-@media (max-width:560px){
-  :root{--dockH:114px}
-  .dock{grid-template-columns:repeat(3,1fr)}
-  .t{font-size:34px}
-  .s{font-size:16px}
-  .feature-row{
-    grid-template-columns:1fr;
-  }
-}
-</style>
+    .panelTitle{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .panelText{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .rows{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+
+    .rk{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .rv{
+      color:var(--text);
+      font-size:12px;
+      line-height:1.45;
+      text-align:right;
+      word-break:break-word;
+    }
+
+    .catalog{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .tile{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      padding:14px;
+      background:rgba(255,255,255,.03);
+    }
+
+    .tileTitle{
+      margin:0 0 8px;
+      font-size:13px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .tileText{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.66;
+      min-height:66px;
+    }
+
+    .footer{
+      padding:12px 14px;
+      color:var(--muted);
+      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    @media (max-width:1180px){
+      .grid,.catalog{grid-template-columns:1fr 1fr}
+      h1{max-width:none}
+    }
+
+    @media (max-width:760px){
+      .topbar{flex-direction:column;align-items:flex-start}
+      .grid,.catalog{grid-template-columns:1fr}
+      .row{grid-template-columns:1fr}
+      .rv{text-align:left}
+    }
+  </style>
 </head>
-
 <body>
+  <div class="hostGlow" aria-hidden="true"></div>
+  <div class="gridLines" aria-hidden="true"></div>
 
-<div class="top-left" aria-label="Top navigation">
-  <a class="btn" id="btnHome" href="/home/" data-route="/home/">HOME</a>
-  <a class="btn" id="btnProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-</div>
+  <main class="wrap">
+    <div class="topbar">
+      <div class="brand">Explore</div>
+      <div class="stamp">G1 EXTERNAL EXPRESSION · STRUCTURED EXPANSION</div>
+    </div>
 
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
+    <section class="hero">
+      <div class="eyebrow">Expansion under structure</div>
+      <h1>The expansion layer.</h1>
+      <p class="heroText">
+        Explore extends outward without breaking upstream order. Each surface below is a bounded entry point, not a mixed narrative pile. Vision expands, but the frame stays coherent.
+      </p>
+      <div class="chipRow">
+        <div class="chip strong">Prerequisite First</div>
+        <div class="chip">Bounded Entries</div>
+        <div class="chip">Frontier Without Drift</div>
+      </div>
+      <div class="actionRow">
+        <a class="action" href="/">Home</a>
+        <a class="action" href="/laws/">Laws</a>
+        <a class="action strong" href="/explore/frontier/">Frontier</a>
+        <a class="action" href="/gauges/">Gauges</a>
+      </div>
+    </section>
 
-<div class="page">
+    <section class="grid">
+      <article class="panel">
+        <h2 class="panelTitle">Posture</h2>
+        <p class="panelText">Expansion under structure. The explore layer is downstream from the host and does not invent a new foundation for itself.</p>
+        <div class="rows">
+          <div class="row"><div class="rk">Host Relation</div><div class="rv">Descendant, not replacement</div></div>
+          <div class="row"><div class="rk">Expansion Rule</div><div class="rv">Outward without drift</div></div>
+        </div>
+      </article>
 
-  <div class="header" aria-label="Explore header">
-    <p class="k" id="k">EXPLORE</p>
-    <h1 class="t" id="t">The Expansion Layer</h1>
-    <p class="s" id="s"></p>
-  </div>
+      <article class="panel">
+        <h2 class="panelTitle">Entry</h2>
+        <p class="panelText">Clean surfaces only. Each block below is a discrete entry path with measurable scope.</p>
+        <div class="rows">
+          <div class="row"><div class="rk">Surface Type</div><div class="rv">Bounded entry point</div></div>
+          <div class="row"><div class="rk">Narrative Load</div><div class="rv">Separated, not piled</div></div>
+        </div>
+      </article>
 
-  <section class="feature-row" aria-label="Explore framing">
-    <article class="feature">
-      <div class="feature-k" id="f1k">POSTURE</div>
-      <div class="feature-t" id="f1t">Expansion under structure</div>
-      <div class="feature-p" id="f1p">This layer extends outward without breaking upstream order.</div>
-    </article>
-    <article class="feature">
-      <div class="feature-k" id="f2k">ENTRY</div>
-      <div class="feature-t" id="f2t">Clean surfaces only</div>
-      <div class="feature-p" id="f2p">Each block opens as a bounded entry point, not a mixed narrative pile.</div>
-    </article>
-    <article class="feature">
-      <div class="feature-k" id="f3k">RULE</div>
-      <div class="feature-t" id="f3t">Prerequisite first</div>
-      <div class="feature-p" id="f3p">Anything that cannot support fixed scope or measurable constraint stays downstream.</div>
-    </article>
-    <article class="feature">
-      <div class="feature-k" id="f4k">RESULT</div>
-      <div class="feature-t" id="f4t">Frontier without drift</div>
-      <div class="feature-p" id="f4p">Vision expands, but the frame stays coherent.</div>
-    </article>
-  </section>
+      <article class="panel">
+        <h2 class="panelTitle">Rule</h2>
+        <p class="panelText">Prerequisite first. Anything that cannot support fixed scope or measurable constraint stays downstream.</p>
+        <div class="rows">
+          <div class="row"><div class="rk">Admission</div><div class="rv">Constraint first</div></div>
+          <div class="row"><div class="rk">Result</div><div class="rv">Frontier without drift</div></div>
+        </div>
+      </article>
+    </section>
 
-  <div class="accordion" id="accordion" aria-label="Explore accordion"></div>
+    <section class="catalog">
+      <article class="tile">
+        <h3 class="tileTitle">Frontier</h3>
+        <p class="tileText">Platform engineering and boundary discovery under governed scope.</p>
+        <div class="actionRow"><a class="action strong" href="/explore/frontier/">Open</a></div>
+      </article>
 
-</div>
+      <article class="tile">
+        <h3 class="tileTitle">Economic</h3>
+        <p class="tileText">Economic exploration surfaces under structured entry and measurable constraint.</p>
+        <div class="actionRow"><a class="action" href="/explore/economic/">Open</a></div>
+      </article>
 
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockIndex" href="/index.html" data-route="/index.html">COMPASS</a>
-  <a class="btn" id="dockLaws" href="/laws/" data-route="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/" data-route="/gauges/">GAUGES</a>
-  <a class="btn red" id="dockDoor" href="/door/" data-route="/door/">DOOR</a>
-</nav>
+      <article class="tile">
+        <h3 class="tileTitle">Infrastructure</h3>
+        <p class="tileText">Infrastructure as downstream expansion, not a competing foundation.</p>
+        <div class="actionRow"><a class="action" href="/explore/infrastructure/">Open</a></div>
+      </article>
 
-<script>
-(function(){
-  "use strict";
+      <article class="tile">
+        <h3 class="tileTitle">Models</h3>
+        <p class="tileText">Model surfaces held to bounded scope before broader multiplication.</p>
+        <div class="actionRow"><a class="action" href="/explore/models/">Open</a></div>
+      </article>
+    </section>
 
-  var qs = new URLSearchParams(location.search);
-  var LS = window.localStorage;
-
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || "";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  var d=parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
-
-  if(lane!=="platform" && lane!=="engineering") lane="";
-
-  try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-
-  function q(extra){
-    var p = new URLSearchParams();
-    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
-    p.set("style",(extra&&extra.style)?extra.style:style);
-    p.set("time", (extra&&extra.time)?extra.time:time);
-    p.set("depth",(extra&&extra.depth)?String(extra.depth):depth);
-    var L = (extra&&extra.lane)?extra.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane", L);
-    return "?" + p.toString();
-  }
-
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-
-      if(route.indexOf("?")!==-1){
-        try{
-          var u=new URL(route, location.origin);
-          var sp=u.searchParams;
-          if(!sp.get("lang")) sp.set("lang", lang);
-          if(!sp.get("style")) sp.set("style", style);
-          if(!sp.get("time")) sp.set("time", time);
-          if(!sp.get("depth")) sp.set("depth", depth);
-          if(!sp.get("lane") && (lane==="platform"||lane==="engineering")) sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){
-          el.setAttribute("href", route);
-        }
-      }else{
-        el.setAttribute("href", route + q());
-      }
-    }
-  }
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang); }catch(e){}
-    location.href = location.pathname + q({lang:lang});
-  }
-
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-  if(btnEN) btnEN.addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  if(btnZH) btnZH.addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  if(btnES) btnES.addEventListener("click", function(){ setLang("es"); }, {passive:true});
-
-  var COPY={
-    en:{
-      k:"EXPLORE",
-      head:"The Expansion Layer",
-      desc:"Explore is where we extend capability without breaking structure. It holds frontier direction as organized surfaces: prerequisites, boundaries, and clean entry points.",
-      topHome:"HOME",
-      topProducts:"PRODUCTS",
-      dockCompass:"COMPASS",
-      dockLaws:"LAWS",
-      dockGauges:"GAUGES",
-      dockDoor:"DOOR",
-      features:[
-        {k:"POSTURE",t:"Expansion under structure",p:"This layer extends outward without breaking upstream order."},
-        {k:"ENTRY",t:"Clean surfaces only",p:"Each block opens as a bounded entry point, not a mixed narrative pile."},
-        {k:"RULE",t:"Prerequisite first",p:"Anything that cannot support fixed scope or measurable constraint stays downstream."},
-        {k:"RESULT",t:"Frontier without drift",p:"Vision expands, but the frame stays coherent."}
-      ],
-      blocks:[
-        {t:"Frontier Systems",p:"Water, Waste, Energy, Habitat, Urban OS. Structured deployment visions built on measurable substrate logic.",link:"/explore/frontier/"},
-        {t:"Economic & Risk Architecture",p:"Finance, insurance, compliance, contracts, regulatory mapping. Expansion only works when incentives and constraints are aligned.",link:"/explore/economic/"},
-        {t:"Infrastructure Substitution",p:"Industrial replacement systems that operate within constraint law and deployment gating.",link:"/explore/infrastructure/"},
-        {t:"Applied Coherence Models",p:"Where lattice structure meets real-world systems. Measurable, bounded, replayable under fixed scope.",link:"/explore/models/"}
-      ],
-      enter:"ENTER"
-    },
-    zh:{
-      k:"探索",
-      head:"扩展层",
-      desc:"Explore 是“在不破坏结构前提下扩展能力”的地方。它把前沿方向做成有序面：前置条件、边界、与清晰入口。",
-      topHome:"主页",
-      topProducts:"产品",
-      dockCompass:"指南针",
-      dockLaws:"法则",
-      dockGauges:"量规",
-      dockDoor:"门",
-      features:[
-        {k:"姿态",t:"在结构下扩展",p:"这一层向外延展，但不破坏上游秩序。"},
-        {k:"入口",t:"只保留干净表面",p:"每个区块都是有界入口，而不是混杂叙事堆。"},
-        {k:"规则",t:"前置优先",p:"凡是不能支撑固定范围与可测约束的内容，都保持在下游。"},
-        {k:"结果",t:"无漂移前沿",p:"愿景扩展，但框架保持一致。"}
-      ],
-      blocks:[
-        {t:"前沿系统",p:"水、废弃物、能源、栖息地、城市操作系统。基于可测底层逻辑的结构化部署愿景。",link:"/explore/frontier/"},
-        {t:"经济与风险架构",p:"金融、保险、合规、合同、监管映射。只有激励与约束对齐，扩展才成立。",link:"/explore/economic/"},
-        {t:"基础设施替代",p:"在约束法则与部署闸门下运行的工业替代系统。",link:"/explore/infrastructure/"},
-        {t:"应用一致性模型",p:"晶格结构与现实系统结合：可测、有界、在固定范围下可回放。",link:"/explore/models/"}
-      ],
-      enter:"进入"
-    },
-    es:{
-      k:"EXPLORAR",
-      head:"Capa de Expansión",
-      desc:"Explore es donde extendemos capacidad sin romper estructura. Mantiene dirección frontera como superficies organizadas: prerrequisitos, límites y entradas limpias.",
-      topHome:"INICIO",
-      topProducts:"PRODUCTOS",
-      dockCompass:"BRÚJULA",
-      dockLaws:"LEYES",
-      dockGauges:"MEDIDORES",
-      dockDoor:"PUERTA",
-      features:[
-        {k:"POSTURA",t:"Expansión bajo estructura",p:"Esta capa extiende capacidad sin romper el orden upstream."},
-        {k:"ENTRADA",t:"Solo superficies limpias",p:"Cada bloque abre como punto de entrada acotado, no como mezcla narrativa."},
-        {k:"REGLA",t:"Primero prerrequisito",p:"Todo lo que no soporte alcance fijo o restricción medible queda downstream."},
-        {k:"RESULTADO",t:"Frontera sin deriva",p:"La visión se expande, pero el marco sigue coherente."}
-      ],
-      blocks:[
-        {t:"Sistemas Frontier",p:"Agua, residuos, energía, hábitat, sistema urbano. Visiones desplegables estructuradas sobre lógica medible.",link:"/explore/frontier/"},
-        {t:"Arquitectura Económica y de Riesgo",p:"Finanzas, seguros, cumplimiento, contratos, regulación. Escalar funciona solo con incentivos y restricciones alineados.",link:"/explore/economic/"},
-        {t:"Sustitución de Infraestructura",p:"Sistemas industriales de reemplazo bajo leyes de restricción y compuertas de despliegue.",link:"/explore/infrastructure/"},
-        {t:"Modelos Aplicados de Coherencia",p:"Donde la estructura lattice se une con sistemas reales. Medible, acotado, replayable bajo alcance fijo.",link:"/explore/models/"}
-      ],
-      enter:"ENTRAR"
-    }
-  };
-
-  var C=COPY[lang]||COPY.en;
-
-  document.getElementById("k").textContent=C.k;
-  document.getElementById("t").textContent=C.head;
-  document.getElementById("s").textContent=C.desc;
-
-  document.getElementById("btnHome").textContent=C.topHome;
-  document.getElementById("btnProducts").textContent=C.topProducts;
-  document.getElementById("dockIndex").textContent=C.dockCompass;
-  document.getElementById("dockLaws").textContent=C.dockLaws;
-  document.getElementById("dockGauges").textContent=C.dockGauges;
-  document.getElementById("dockDoor").textContent=C.dockDoor;
-
-  var features=C.features;
-  document.getElementById("f1k").textContent=features[0].k;
-  document.getElementById("f1t").textContent=features[0].t;
-  document.getElementById("f1p").textContent=features[0].p;
-  document.getElementById("f2k").textContent=features[1].k;
-  document.getElementById("f2t").textContent=features[1].t;
-  document.getElementById("f2p").textContent=features[1].p;
-  document.getElementById("f3k").textContent=features[2].k;
-  document.getElementById("f3t").textContent=features[2].t;
-  document.getElementById("f3p").textContent=features[2].p;
-  document.getElementById("f4k").textContent=features[3].k;
-  document.getElementById("f4t").textContent=features[3].t;
-  document.getElementById("f4p").textContent=features[3].p;
-
-  var acc=document.getElementById("accordion");
-
-  function closeAll(){
-    var blocks=acc.querySelectorAll(".block");
-    for(var i=0;i<blocks.length;i++){
-      blocks[i].classList.remove("open");
-      var ch=blocks[i].querySelector(".chev");
-      if(ch) ch.textContent="▸";
-    }
-  }
-
-  C.blocks.forEach(function(b,i){
-    var block=document.createElement("div");
-    block.className="block";
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var title=document.createElement("div");
-    title.className="title";
-    title.textContent=b.t;
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
-
-    head.appendChild(title);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var p=document.createElement("p");
-    p.className="p";
-    p.textContent=b.p;
-
-    var a=document.createElement("a");
-    a.className="btn jump";
-    a.textContent=C.enter;
-    a.setAttribute("data-route", b.link);
-
-    body.appendChild(p);
-    body.appendChild(a);
-
-    function toggle(){
-      var openNow=!block.classList.contains("open");
-      if(openNow){
-        closeAll();
-        block.classList.add("open");
-        chev.textContent="▾";
-      }else{
-        block.classList.remove("open");
-        chev.textContent="▸";
-      }
-      wireAll();
-    }
-
-    head.addEventListener("click", toggle, {passive:true});
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){
-        e.preventDefault();
-        toggle();
-      }
-    });
-
-    block.appendChild(head);
-    block.appendChild(body);
-    acc.appendChild(block);
-
-    if(i===0){
-      block.classList.add("open");
-      chev.textContent="▾";
-    }
-  });
-
-  wireAll();
-})();
-</script>
-
+    <div class="footer">BUILD=EXPLORE_G1_STRUCTURED_EXPANSION | ENTRY=BOUNDED | RULE=PREREQUISITE_FIRST | FRONTIER=/explore/frontier/ | STATUS=ACTIVE</div>
+  </main>
 </body>
 </html>

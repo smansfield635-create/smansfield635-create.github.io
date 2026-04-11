@@ -1,3 +1,15 @@
+/* TNT FULL-FILE REPLACEMENT
+   FILE: products/products_runtime.js
+
+   Result:
+   - Widens the exterior node shell materially.
+   - Makes the north-south vertical axis visually dominant.
+   - Keeps the globe as the sole Euclidean axial object.
+   - Rebuilds the exterior as a 2D snowflake shell with cardinal priority.
+   - Prevents the node field from crowding the globe.
+   - Keeps the globe linked to /products/ and the outer nodes linked to the same product lanes.
+*/
+
 (() => {
   const GLOBAL_KEY = "ProductsPlanetRuntime";
 
@@ -28,7 +40,7 @@
     const angle = (angleDeg * Math.PI) / 180;
     return {
       x: cx + Math.cos(angle) * radius,
-      y: cy + Math.sin(angle) * radius
+      y: cy + Math.sin(angle) * radius,
     };
   }
 
@@ -47,12 +59,12 @@
         borderRadius: "50%",
         background: "rgba(255,255,255,0.88)",
         opacity: `${0.34 + random() * 0.44}`,
-        boxShadow: "0 0 10px rgba(255,255,255,0.32)"
+        boxShadow: "0 0 10px rgba(255,255,255,0.32)",
       });
       stars.push({
         el: star,
         drift: 0.15 + random() * 0.3,
-        phase: random() * Math.PI * 2
+        phase: random() * Math.PI * 2,
       });
     }
     return stars;
@@ -64,19 +76,22 @@
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
 
+      // Cardinal first, then secondaries derived from those anchors.
       this.nodes = [
-        { title: "Platform", href: "/platform/", kicker: "Core", angle: 0, group: "outer", priority: "E" },
-        { title: "Diagnostics", href: "/diagnostics/", kicker: "Measurement", angle: -30, group: "outer", priority: "NE" },
-        { title: "Energy", href: "/energy/", kicker: "Output", angle: -60, group: "inner", priority: "NNE" },
-        { title: "Domains", href: "/domains/", kicker: "Identity", angle: -120, group: "outer", priority: "NNW" },
-        { title: "Nutrition", href: "/nutrition/", kicker: "Baseline", angle: -150, group: "inner", priority: "NW" },
-        { title: "Agriculture", href: "/agriculture/", kicker: "Applied", angle: 150, group: "outer", priority: "W" },
-        { title: "Games", href: "/games/", kicker: "Playable", angle: 120, group: "inner", priority: "SW" },
-        { title: "On Your Side AI", href: "/ai/", kicker: "Intelligence", angle: 90, group: "outer", priority: "S" },
-        { title: "Education", href: "/education/", kicker: "Learning", angle: 45, group: "outer", priority: "SE" },
-        { title: "Software", href: "/software/", kicker: "Runtime", angle: 30, group: "inner", priority: "ESE" },
-        { title: "Syntax", href: "/ssg/", kicker: "Language", angle: -210, group: "inner", priority: "WSW" },
-        { title: "ArchCoin", href: "/archcoin/", kicker: "Value", angle: 210, group: "outer", priority: "SSW" }
+        { title: "Energy", href: "/energy/", kicker: "Output", angle: -90, tier: "cardinal" },          // N
+        { title: "On Your Side AI", href: "/ai/", kicker: "Intelligence", angle: 90, tier: "cardinal" }, // S
+        { title: "Platform", href: "/platform/", kicker: "Core", angle: 0, tier: "cardinal" },           // E
+        { title: "Agriculture", href: "/agriculture/", kicker: "Applied", angle: 180, tier: "cardinal" },// W
+
+        { title: "Diagnostics", href: "/diagnostics/", kicker: "Measurement", angle: -60, tier: "outer" },
+        { title: "Domains", href: "/domains/", kicker: "Identity", angle: -120, tier: "outer" },
+        { title: "Education", href: "/education/", kicker: "Learning", angle: 60, tier: "outer" },
+        { title: "Games", href: "/games/", kicker: "Playable", angle: 120, tier: "outer" },
+
+        { title: "Software", href: "/software/", kicker: "Runtime", angle: -30, tier: "inner" },
+        { title: "Syntax", href: "/ssg/", kicker: "Language", angle: -150, tier: "inner" },
+        { title: "ArchCoin", href: "/archcoin/", kicker: "Value", angle: 150, tier: "inner" },
+        { title: "Nutrition", href: "/nutrition/", kicker: "Baseline", angle: 30, tier: "inner" },
       ];
 
       this.frame = 0;
@@ -93,37 +108,39 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-g2-axis-snowflake");
+      this.mount.setAttribute("data-runtime", "products-g2-axis-snowflake-wide");
 
       setStyles(this.mount, {
         position: "absolute",
         inset: "0",
         overflow: "hidden",
-        pointerEvents: "auto"
+        pointerEvents: "auto",
       });
 
       this.root = createElement("div", "products-runtime-root", this.mount);
       setStyles(this.root, {
         position: "absolute",
         inset: "0",
-        overflow: "hidden"
+        overflow: "hidden",
       });
 
       this.glowLayer = createElement("div", "products-glow-layer", this.root);
       this.starLayer = createElement("div", "products-star-layer", this.root);
+      this.axisLayer = createElement("div", "products-axis-layer", this.root);
       this.snowflakeLayer = createElement("div", "products-snowflake-layer", this.root);
       this.tokenLayer = createElement("div", "products-token-layer", this.root);
       this.planetLayer = createElement("div", "products-planet-layer", this.root);
 
-      [this.glowLayer, this.starLayer, this.snowflakeLayer, this.tokenLayer, this.planetLayer].forEach((node) => {
+      [this.glowLayer, this.starLayer, this.axisLayer, this.snowflakeLayer, this.tokenLayer, this.planetLayer].forEach((node) => {
         setStyles(node, {
           position: "absolute",
-          inset: "0"
+          inset: "0",
         });
       });
 
       setStyles(this.starLayer, { pointerEvents: "none" });
       setStyles(this.glowLayer, { pointerEvents: "none" });
+      setStyles(this.axisLayer, { pointerEvents: "none" });
       setStyles(this.snowflakeLayer, { pointerEvents: "none" });
       setStyles(this.tokenLayer, { pointerEvents: "auto" });
       setStyles(this.planetLayer, { pointerEvents: "auto" });
@@ -131,9 +148,10 @@
       this.glowA = createElement("div", "products-glow products-glow-a", this.glowLayer);
       this.glowB = createElement("div", "products-glow products-glow-b", this.glowLayer);
       this.snowflakeShell = createElement("div", "products-snowflake-shell", this.snowflakeLayer);
-      this.verticalAxis = createElement("div", "products-vertical-axis", this.snowflakeLayer);
-      this.axisCapsuleTop = createElement("div", "products-axis-cap top", this.snowflakeLayer);
-      this.axisCapsuleBottom = createElement("div", "products-axis-cap bottom", this.snowflakeLayer);
+      this.verticalAxis = createElement("div", "products-vertical-axis", this.axisLayer);
+      this.axisHalo = createElement("div", "products-axis-halo", this.axisLayer);
+      this.axisCapTop = createElement("div", "products-axis-cap top", this.axisLayer);
+      this.axisCapBottom = createElement("div", "products-axis-cap bottom", this.axisLayer);
 
       setStyles(this.glowA, { position: "absolute", inset: "0" });
       setStyles(this.glowB, { position: "absolute", inset: "0" });
@@ -141,32 +159,43 @@
       setStyles(this.snowflakeShell, {
         position: "absolute",
         left: "50%",
-        top: "50%",
+        top: "56%",
         transform: "translate(-50%, -50%)",
-        transformOrigin: "50% 50%"
+        transformOrigin: "50% 50%",
       });
 
       setStyles(this.verticalAxis, {
         position: "absolute",
         left: "50%",
-        top: "50%",
+        top: "56%",
         transform: "translate(-50%, -50%)",
-        width: "2px",
+        width: "3px",
         borderRadius: "999px",
-        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.28), rgba(255,255,255,0))",
-        boxShadow: "0 0 16px rgba(124,166,255,0.12)"
+        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.34), rgba(255,255,255,0))",
+        boxShadow: "0 0 18px rgba(124,166,255,0.18)",
       });
 
-      [this.axisCapsuleTop, this.axisCapsuleBottom].forEach((cap) => {
+      setStyles(this.axisHalo, {
+        position: "absolute",
+        left: "50%",
+        top: "56%",
+        transform: "translate(-50%, -50%)",
+        width: "18px",
+        borderRadius: "999px",
+        background: "linear-gradient(180deg, rgba(124,166,255,0), rgba(124,166,255,0.12), rgba(124,166,255,0))",
+        filter: "blur(10px)",
+      });
+
+      [this.axisCapTop, this.axisCapBottom].forEach((cap) => {
         setStyles(cap, {
           position: "absolute",
           left: "50%",
-          width: "12px",
-          height: "12px",
+          width: "14px",
+          height: "14px",
           borderRadius: "50%",
           transform: "translateX(-50%)",
-          background: "linear-gradient(135deg, rgba(124,166,255,0.52), rgba(111,255,219,0.24))",
-          boxShadow: "0 0 18px rgba(124,166,255,0.18)"
+          background: "linear-gradient(135deg, rgba(124,166,255,0.6), rgba(111,255,219,0.28))",
+          boxShadow: "0 0 18px rgba(124,166,255,0.2)",
         });
       });
 
@@ -191,12 +220,12 @@
       setStyles(this.planetLink, {
         position: "absolute",
         left: "50%",
-        top: "50%",
+        top: "56%",
         transform: "translate(-50%, -50%)",
         display: "block",
         borderRadius: "50%",
         textDecoration: "none",
-        zIndex: "3"
+        zIndex: "4",
       });
 
       this.planetShell = createElement("div", "products-planet-shell", this.planetLink);
@@ -216,32 +245,32 @@
           position: "absolute",
           left: "50%",
           top: "50%",
-          transform: "translate(-50%, -50%)"
+          transform: "translate(-50%, -50%)",
         });
       });
 
       setStyles(this.planetShell, {
         borderRadius: "50%",
-        filter: "drop-shadow(0 24px 52px rgba(0,0,0,0.34))"
+        filter: "drop-shadow(0 24px 52px rgba(0,0,0,0.34))",
       });
 
       setStyles(this.planetAtmosphere, {
         borderRadius: "50%",
         background: "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.22), rgba(127,183,255,0.16) 28%, rgba(54,105,210,0.15) 54%, rgba(13,22,50,0.03) 76%, transparent 80%)",
-        boxShadow: "0 0 58px rgba(119,176,255,0.24)"
+        boxShadow: "0 0 58px rgba(119,176,255,0.24)",
       });
 
       setStyles(this.planetGlow, {
         borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(124,166,255,0.18), transparent 65%)",
-        filter: "blur(18px)"
+        background: "radial-gradient(circle, rgba(124,166,255,0.2), transparent 65%)",
+        filter: "blur(18px)",
       });
 
       setStyles(this.planetShadow, {
         borderRadius: "50%",
         background: "radial-gradient(circle at 66% 66%, rgba(2,5,18,0.42), transparent 44%)",
         mixBlendMode: "multiply",
-        opacity: "0.85"
+        opacity: "0.85",
       });
 
       setStyles(this.planetBody, {
@@ -251,8 +280,8 @@
         background: [
           "radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), transparent 18%)",
           "radial-gradient(circle at 66% 72%, rgba(111,255,219,0.16), transparent 22%)",
-          "linear-gradient(145deg, #152d63 0%, #2352a8 30%, #1a7d9f 58%, #10284f 100%)"
-        ].join(",")
+          "linear-gradient(145deg, #152d63 0%, #2352a8 30%, #1a7d9f 58%, #10284f 100%)",
+        ].join(","),
       });
 
       setStyles(this.equatorBand, {
@@ -264,19 +293,19 @@
         transform: "translateY(-50%)",
         borderRadius: "999px",
         background: "linear-gradient(180deg, rgba(93,198,255,0.06), rgba(255,255,255,0.18), rgba(41,111,255,0.08))",
-        boxShadow: "0 0 20px rgba(90,170,255,0.12)"
+        boxShadow: "0 0 20px rgba(90,170,255,0.12)",
       });
 
       setStyles(this.surfaceLayer, {
         position: "absolute",
         inset: "0",
-        willChange: "transform"
+        willChange: "transform",
       });
 
       const continentBase = {
         position: "absolute",
         background: "linear-gradient(145deg, rgba(111,255,219,0.42), rgba(127,208,255,0.14))",
-        border: "1px solid rgba(255,255,255,0.06)"
+        border: "1px solid rgba(255,255,255,0.06)",
       };
 
       setStyles(this.continentA, {
@@ -286,7 +315,7 @@
         width: "36%",
         height: "24%",
         borderRadius: "48% 52% 42% 58% / 52% 38% 62% 48%",
-        transform: "rotate(-18deg)"
+        transform: "rotate(-18deg)",
       });
 
       setStyles(this.continentB, {
@@ -296,7 +325,7 @@
         width: "28%",
         height: "18%",
         borderRadius: "46% 54% 62% 38% / 45% 62% 38% 55%",
-        transform: "rotate(22deg)"
+        transform: "rotate(22deg)",
       });
 
       setStyles(this.continentC, {
@@ -306,7 +335,7 @@
         width: "24%",
         height: "17%",
         borderRadius: "54% 46% 55% 45% / 52% 44% 56% 48%",
-        transform: "rotate(8deg)"
+        transform: "rotate(8deg)",
       });
 
       this.planetLink.addEventListener("mouseenter", () => {
@@ -330,23 +359,23 @@
           left: "50%",
           top: "50%",
           width: "2px",
-          transformOrigin: "50% 0%"
+          transformOrigin: "50% 0%",
         });
 
         setStyles(branchA, {
           position: "absolute",
-          top: "30%",
+          top: "28%",
           left: "50%",
           width: "2px",
-          transformOrigin: "50% 0%"
+          transformOrigin: "50% 0%",
         });
 
         setStyles(branchB, {
           position: "absolute",
-          top: "30%",
+          top: "28%",
           left: "50%",
           width: "2px",
-          transformOrigin: "50% 0%"
+          transformOrigin: "50% 0%",
         });
 
         setStyles(crystal, {
@@ -356,7 +385,7 @@
           transform: "translate(-50%, -50%) rotate(45deg)",
           borderRadius: "4px",
           background: "linear-gradient(135deg, rgba(124,166,255,0.42), rgba(111,255,219,0.22))",
-          boxShadow: "0 0 16px rgba(124,166,255,0.14)"
+          boxShadow: "0 0 16px rgba(124,166,255,0.14)",
         });
 
         this.spokes.push({ spoke, branchA, branchB, crystal, rotation: i * 60 });
@@ -378,7 +407,7 @@
             : index === 1
               ? "1px solid rgba(255,255,255,0.12)"
               : "1px dashed rgba(111,255,219,0.16)",
-          boxShadow: index === 0 ? "0 0 20px rgba(124,166,255,0.1)" : "none"
+          boxShadow: index === 0 ? "0 0 20px rgba(124,166,255,0.1)" : "none",
         });
       });
     }
@@ -399,22 +428,28 @@
         token.appendChild(title);
         this.tokenLayer.appendChild(token);
 
+        const isCardinal = item.tier === "cardinal";
+
         setStyles(token, {
           position: "absolute",
-          minWidth: "104px",
-          maxWidth: "142px",
-          padding: "10px 11px",
+          minWidth: isCardinal ? "112px" : "104px",
+          maxWidth: isCardinal ? "152px" : "142px",
+          padding: isCardinal ? "11px 12px" : "10px 11px",
           borderRadius: "999px",
-          border: "1px solid rgba(255,255,255,0.14)",
-          background: "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))",
+          border: isCardinal ? "1px solid rgba(124,166,255,0.3)" : "1px solid rgba(255,255,255,0.14)",
+          background: isCardinal
+            ? "linear-gradient(180deg, rgba(124,166,255,0.16), rgba(255,255,255,0.06))"
+            : "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))",
           color: "#f5f7ff",
           backdropFilter: "blur(10px)",
-          boxShadow: "0 12px 30px rgba(0,0,0,0.22)",
+          boxShadow: isCardinal
+            ? "0 14px 34px rgba(0,0,0,0.26)"
+            : "0 12px 30px rgba(0,0,0,0.22)",
           textAlign: "center",
           fontSize: "0.74rem",
           lineHeight: "1.2",
           transition: "transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease",
-          zIndex: "4"
+          zIndex: isCardinal ? "5" : "4",
         });
 
         setStyles(kicker, {
@@ -423,13 +458,13 @@
           fontSize: "0.56rem",
           letterSpacing: "0.14em",
           textTransform: "uppercase",
-          color: "rgba(245,247,255,0.6)"
+          color: isCardinal ? "rgba(245,247,255,0.72)" : "rgba(245,247,255,0.6)",
         });
 
         setStyles(title, {
           display: "block",
-          fontSize: "0.76rem",
-          fontWeight: "700"
+          fontSize: isCardinal ? "0.8rem" : "0.76rem",
+          fontWeight: "700",
         });
 
         token.addEventListener("mouseenter", () => {
@@ -441,16 +476,19 @@
 
         token.addEventListener("mouseleave", () => {
           token.style.transform = token.dataset.transform || "";
-          token.style.borderColor = "rgba(255,255,255,0.14)";
-          token.style.background = "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
-          token.style.boxShadow = "0 12px 30px rgba(0,0,0,0.22)";
+          token.style.borderColor = isCardinal ? "rgba(124,166,255,0.3)" : "rgba(255,255,255,0.14)";
+          token.style.background = isCardinal
+            ? "linear-gradient(180deg, rgba(124,166,255,0.16), rgba(255,255,255,0.06))"
+            : "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
+          token.style.boxShadow = isCardinal
+            ? "0 14px 34px rgba(0,0,0,0.26)"
+            : "0 12px 30px rgba(0,0,0,0.22)";
         });
 
         return {
           el: token,
           angle: item.angle,
-          group: item.group,
-          priority: item.priority
+          tier: item.tier,
         };
       });
     }
@@ -461,15 +499,17 @@
       const small = rect.width <= 480;
 
       const centerX = rect.width * 0.5;
-      const centerY = rect.height * 0.54;
-      const planetSize = clamp(rect.width * (mobile ? 0.34 : 0.36), 164, mobile ? 224 : 270);
-      const shellRadius = clamp(rect.width * (mobile ? 0.43 : 0.46), 164, mobile ? 224 : 310);
-      const spokeLength = shellRadius * 0.86;
-      const branchLength = shellRadius * 0.24;
-      const outerRadius = shellRadius;
-      const innerRadius = shellRadius * 0.78;
-      const outerAmplitude = shellRadius * 0.16;
-      const innerAmplitude = shellRadius * 0.16;
+      const centerY = rect.height * 0.56;
+
+      const planetSize = clamp(rect.width * (mobile ? 0.28 : 0.3), 154, mobile ? 206 : 238);
+
+      // Materially wider shell.
+      const outerRadius = clamp(rect.width * (mobile ? 0.44 : 0.47), 170, mobile ? 232 : 320);
+      const innerRadius = clamp(rect.width * (mobile ? 0.36 : 0.39), 138, mobile ? 188 : 260);
+
+      const shellRadius = outerRadius;
+      const spokeLength = outerRadius * 0.9;
+      const branchLength = outerRadius * 0.25;
 
       return {
         width: rect.width,
@@ -477,15 +517,13 @@
         centerX,
         centerY,
         planetSize,
+        outerRadius,
+        innerRadius,
         shellRadius,
         spokeLength,
         branchLength,
-        outerRadius,
-        innerRadius,
-        outerAmplitude,
-        innerAmplitude,
         mobile,
-        small
+        small,
       };
     }
 
@@ -494,80 +532,88 @@
 
       setStyles(this.glowA, {
         background: "radial-gradient(circle at 50% 58%, rgba(124,166,255,0.18), transparent 58%)",
-        filter: "blur(22px)"
+        filter: "blur(22px)",
       });
 
       setStyles(this.glowB, {
         background: "radial-gradient(circle at 46% 54%, rgba(111,255,219,0.1), transparent 62%)",
-        filter: "blur(34px)"
+        filter: "blur(34px)",
       });
 
       setStyles(this.verticalAxis, {
-        height: `${m.shellRadius * 2.2}px`
+        left: `${m.centerX}px`,
+        top: `${m.centerY}px`,
+        height: `${m.outerRadius * 2.5}px`,
       });
 
-      setStyles(this.axisCapsuleTop, {
-        top: `${m.centerY - m.shellRadius - 22}px`
+      setStyles(this.axisHalo, {
+        left: `${m.centerX}px`,
+        top: `${m.centerY}px`,
+        height: `${m.outerRadius * 2.5}px`,
       });
 
-      setStyles(this.axisCapsuleBottom, {
-        top: `${m.centerY + m.shellRadius + 10}px`
+      setStyles(this.axisCapTop, {
+        top: `${m.centerY - m.outerRadius - 26}px`,
+      });
+
+      setStyles(this.axisCapBottom, {
+        top: `${m.centerY + m.outerRadius + 12}px`,
       });
 
       setStyles(this.planetLink, {
         width: `${m.planetSize}px`,
-        height: `${m.planetSize}px`
+        height: `${m.planetSize}px`,
       });
 
       [this.planetShell, this.planetAtmosphere, this.planetGlow, this.planetShadow, this.planetBody].forEach((node) => {
         setStyles(node, {
           width: `${m.planetSize}px`,
-          height: `${m.planetSize}px`
+          height: `${m.planetSize}px`,
         });
       });
 
       setStyles(this.snowflakeShell, {
-        width: `${m.shellRadius * 2.5}px`,
-        height: `${m.shellRadius * 2.5}px`
+        width: `${m.shellRadius * 2.55}px`,
+        height: `${m.shellRadius * 2.55}px`,
       });
 
       setStyles(this.outerRing, {
         width: `${m.outerRadius * 2.02}px`,
-        height: `${m.outerRadius * 2.02}px`
+        height: `${m.outerRadius * 2.02}px`,
       });
 
       setStyles(this.innerRing, {
         width: `${m.innerRadius * 2.02}px`,
-        height: `${m.innerRadius * 2.02}px`
+        height: `${m.innerRadius * 2.02}px`,
       });
 
       setStyles(this.crossRing, {
-        width: `${m.shellRadius * 1.64}px`,
-        height: `${m.shellRadius * 1.64}px`
+        width: `${m.shellRadius * 1.72}px`,
+        height: `${m.shellRadius * 1.72}px`,
       });
 
       this.spokes.forEach(({ spoke, branchA, branchB, crystal, rotation }) => {
         setStyles(spoke, {
           height: `${m.spokeLength}px`,
           transform: `translate(-50%, 0) rotate(${rotation}deg)`,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(124,166,255,0.1))"
+          background: "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(124,166,255,0.1))",
         });
 
         setStyles(branchA, {
           height: `${m.branchLength}px`,
           background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(124,166,255,0.08))",
-          transform: "translate(-50%, 0) rotate(32deg)"
+          transform: "translate(-50%, 0) rotate(32deg)",
         });
 
         setStyles(branchB, {
           height: `${m.branchLength}px`,
           background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(124,166,255,0.08))",
-          transform: "translate(-50%, 0) rotate(-32deg)"
+          transform: "translate(-50%, 0) rotate(-32deg)",
         });
 
         setStyles(crystal, {
           width: `${m.small ? 12 : 14}px`,
-          height: `${m.small ? 12 : 14}px`
+          height: `${m.small ? 12 : 14}px`,
         });
       });
 
@@ -577,33 +623,25 @@
     positionTokens(shellRotationDeg) {
       const m = this.measure();
 
-      this.tokens.forEach((token, index) => {
-        const phase = (shellRotationDeg + token.angle) * Math.PI / 180;
-        const breathing = Math.sin(phase);
-        const radius = token.group === "outer"
-          ? m.outerRadius - m.outerAmplitude * breathing
-          : m.innerRadius + m.innerAmplitude * breathing;
+      this.tokens.forEach((token) => {
+        const radius = token.tier === "cardinal"
+          ? m.outerRadius
+          : token.tier === "outer"
+            ? m.outerRadius * 0.92
+            : m.innerRadius;
 
         const anchor = polarToCartesian(m.centerX, m.centerY, radius, token.angle + shellRotationDeg);
-        this.positionToken(token.el, anchor.x, anchor.y, token.priority);
+        this.positionToken(token.el, anchor.x, anchor.y);
       });
-
-      this.verticalAxis.style.left = `${m.centerX}px`;
-      this.verticalAxis.style.top = `${m.centerY}px`;
     }
 
-    positionToken(el, x, y, priority) {
+    positionToken(el, x, y) {
       const width = el.offsetWidth || 122;
       const height = el.offsetHeight || 50;
       const left = clamp(x - width / 2, 8, this.stage.clientWidth - width - 8);
       const top = clamp(y - height / 2, 8, this.stage.clientHeight - height - 8);
-
-      const boost = priority === "N" || priority === "S" || priority === "E" || priority === "W"
-        ? " scale(1.03)"
-        : "";
-
-      const transform = `translate3d(${left}px, ${top}px, 0)${boost}`;
-      el.dataset.transform = `translate3d(${left}px, ${top}px, 0)`;
+      const transform = `translate3d(${left}px, ${top}px, 0)`;
+      el.dataset.transform = transform;
       el.style.transform = transform;
     }
 
@@ -612,7 +650,7 @@
       if (!this.startTime) this.startTime = time;
 
       const elapsed = time - this.startTime;
-      const shellRotation = elapsed * 0.0018;
+      const shellRotation = elapsed * 0.0016;
       const globeSpin = elapsed * 0.009;
       const atmospherePulse = 1.038 + Math.sin(elapsed * 0.0011) * 0.008;
       const glowPulse = 1.16 + Math.cos(elapsed * 0.0008) * 0.02;
@@ -632,6 +670,12 @@
 
       this.glowA.style.transform = `translate(${glowShiftA}px, ${glowShiftB}px)`;
       this.glowB.style.transform = `translate(${-glowShiftB}px, ${glowShiftA * 0.6}px)`;
+
+      // Inner/outer breathing interchange without behind-the-planet drift.
+      const breathe = Math.sin(elapsed * 0.0012) * 0.5 + 0.5;
+      this.outerRing.style.opacity = `${0.68 + breathe * 0.2}`;
+      this.innerRing.style.opacity = `${0.9 - breathe * 0.18}`;
+      this.crossRing.style.opacity = `${0.38 + breathe * 0.16}`;
 
       this.positionTokens(shellRotation);
 
@@ -664,6 +708,6 @@
       const runtime = new PlanetRuntime(options);
       runtime.mountRuntime();
       return runtime;
-    }
+    },
   };
 })();

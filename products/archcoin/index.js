@@ -1,6 +1,15 @@
 const ROOT = "/products/archcoin";
 const APP = document.getElementById("app");
+const CANVAS = document.getElementById("fieldCanvas");
 const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+const pointer = { x: 0.5, y: 0.5 };
+const field = {
+  stars: [],
+  width: 0,
+  height: 0,
+  dpr: Math.min(window.devicePixelRatio || 1, 2)
+};
 
 function el(tag, className, text) {
   const node = document.createElement(tag);
@@ -15,93 +24,6 @@ function button(label, href, strong = false) {
   a.href = href;
   a.textContent = label;
   return a;
-}
-
-function buildShell() {
-  const shell = el("main", "vault-shell");
-
-  const hero = el("section", "vault-hero");
-  const eyebrow = el("div", "eyebrow", "ARCHCOIN · RICHIE RICH'S VAULT");
-  const title = el("h1", "hero-title", "One parent. One body. Four derived governors.");
-  const text = el(
-    "p",
-    "hero-text",
-    "Archcoin remains the parent template and construction authority. The Vault remains the master body. Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity. Tap a control assembly to rotate the full cylinder and release one coin."
-  );
-
-  const statGrid = el("div", "stat-grid");
-  statGrid.append(
-    statCard("Parent", "Archcoin"),
-    statCard("Master Body", "Vault"),
-    statCard("Governors", "4"),
-    statCard("Mode", "Local Safe Boot")
-  );
-
-  const controls = el("div", "action-row");
-  controls.append(
-    button("Home", "/", false),
-    button("Products", "/products/", false),
-    button("Vault", "/products/archcoin/", true)
-  );
-
-  hero.append(eyebrow, title, text, statGrid, controls);
-
-  const machine = el("section", "machine-panel");
-  const machineTitle = el("h2", "panel-title", "Vault Cylinder");
-  const machineText = el(
-    "p",
-    "panel-text",
-    "The cylinder now runs on a self-contained local motion surface. No external spine runtime is required for this boot path."
-  );
-
-  const stage = el("div", "machine-stage");
-  stage.id = "machineStage";
-
-  const core = el("div", "vault-core");
-  core.innerHTML = "<span>ARCH<br>COIN</span>";
-  stage.appendChild(core);
-
-  const ringOuter = el("div", "vault-ring outer");
-  const ringMid = el("div", "vault-ring mid");
-  const ringInner = el("div", "vault-ring inner");
-  stage.append(ringOuter, ringMid, ringInner);
-
-  const nodes = [
-    { key: "North", label: "North Governor", short: "N", angle: 0 },
-    { key: "East", label: "East Governor", short: "E", angle: 90 },
-    { key: "South", label: "South Governor", short: "S", angle: 180 },
-    { key: "West", label: "West Governor", short: "W", angle: 270 }
-  ];
-
-  for (const item of nodes) {
-    const node = el("button", "mint-node");
-    node.type = "button";
-    node.dataset.angle = String(item.angle);
-    node.dataset.key = item.key;
-    node.innerHTML =
-      `<span class="mint-short">${item.short}</span>` +
-      `<span class="mint-label">${item.label}</span>`;
-    stage.appendChild(node);
-  }
-
-  const receipt = el("section", "panel");
-  const receiptTitle = el("h2", "panel-title", "Boot Receipt");
-  const receiptRows = el("div", "rows");
-  receiptRows.append(
-    infoRow("Boot path", "Local self-contained"),
-    infoRow("Runtime dependency", "None"),
-    infoRow("Failure class cleared", "Missing external spine files"),
-    infoRow("Status", "Active")
-  );
-  receipt.append(receiptTitle, receiptRows);
-
-  machine.append(machineTitle, machineText, stage);
-
-  const lower = el("section", "lower-grid");
-  lower.append(machine, receipt);
-
-  shell.append(hero, lower);
-  return shell;
 }
 
 function statCard(k, v) {
@@ -122,40 +44,6 @@ function injectStyles() {
   const style = document.createElement("style");
   style.id = "archcoin-local-safeboot-style";
   style.textContent = `
-    :root{
-      --bg:#03050a;
-      --bg2:#09111d;
-      --bg3:#101b29;
-      --panel:rgba(8,12,19,.74);
-      --panel2:rgba(12,18,30,.86);
-      --line:rgba(160,220,255,.12);
-      --line2:rgba(127,255,212,.18);
-      --text:#edf7ff;
-      --muted:rgba(237,247,255,.72);
-      --muted2:rgba(237,247,255,.54);
-      --accent:#7fffd4;
-      --accent2:#7ecbff;
-      --shadow:0 18px 40px rgba(0,0,0,.30);
-      --shadow2:0 28px 80px rgba(0,0,0,.45);
-      --radius:18px;
-      --radius2:26px;
-    }
-
-    html,body{
-      background:
-        radial-gradient(circle at 50% -10%, rgba(126,203,255,.16), transparent 30%),
-        radial-gradient(circle at 18% 22%, rgba(127,255,212,.06), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(255,210,122,.05), transparent 18%),
-        linear-gradient(180deg,var(--bg3),var(--bg2) 42%,var(--bg));
-      color:var(--text);
-    }
-
-    #app{
-      max-width:1440px;
-      margin:0 auto;
-      padding:24px 16px 32px;
-    }
-
     .vault-shell{
       display:grid;
       gap:16px;
@@ -165,7 +53,7 @@ function injectStyles() {
     .machine-panel,
     .panel{
       border:1px solid var(--line);
-      border-radius:var(--radius2);
+      border-radius:26px;
       background:
         linear-gradient(180deg,var(--panel),var(--panel2)),
         radial-gradient(circle at 82% 18%, rgba(126,203,255,.06), transparent 24%);
@@ -477,6 +365,161 @@ function injectStyles() {
   document.head.appendChild(style);
 }
 
+function buildShell() {
+  const shell = el("main", "vault-shell");
+
+  const hero = el("section", "vault-hero");
+  const eyebrow = el("div", "eyebrow", "ARCHCOIN · RICHIE RICH'S VAULT");
+  const title = el("h1", "hero-title", "One parent. One body. Four derived governors.");
+  const text = el(
+    "p",
+    "hero-text",
+    "Archcoin remains the parent template and construction authority. The Vault remains the master body. Four archetype mint heads generate a growing vault pile below, with each coin family sharing one production channel while keeping its own face, appearance, and identity. Tap a control assembly to rotate the full cylinder and release one coin."
+  );
+
+  const statGrid = el("div", "stat-grid");
+  statGrid.append(
+    statCard("Parent", "Archcoin"),
+    statCard("Master Body", "Vault"),
+    statCard("Governors", "4"),
+    statCard("Mode", "Local Safe Boot")
+  );
+
+  const controls = el("div", "action-row");
+  controls.append(
+    button("Home", "/", false),
+    button("Products", "/products/", false),
+    button("Vault", ROOT + "/", true)
+  );
+
+  hero.append(eyebrow, title, text, statGrid, controls);
+
+  const machine = el("section", "machine-panel");
+  const machineTitle = el("h2", "panel-title", "Vault Cylinder");
+  const machineText = el(
+    "p",
+    "panel-text",
+    "The cylinder now runs on a self-contained local motion surface. No external spine runtime is required for this boot path."
+  );
+
+  const stage = el("div", "machine-stage");
+  stage.id = "machineStage";
+
+  const core = el("div", "vault-core");
+  core.innerHTML = "<span>ARCH<br>COIN</span>";
+  stage.appendChild(core);
+
+  const ringOuter = el("div", "vault-ring outer");
+  const ringMid = el("div", "vault-ring mid");
+  const ringInner = el("div", "vault-ring inner");
+  stage.append(ringOuter, ringMid, ringInner);
+
+  const nodes = [
+    { key: "North", label: "North Governor", short: "N", angle: 0 },
+    { key: "East", label: "East Governor", short: "E", angle: 90 },
+    { key: "South", label: "South Governor", short: "S", angle: 180 },
+    { key: "West", label: "West Governor", short: "W", angle: 270 }
+  ];
+
+  for (const item of nodes) {
+    const node = el("button", "mint-node");
+    node.type = "button";
+    node.dataset.angle = String(item.angle);
+    node.dataset.key = item.key;
+    node.innerHTML =
+      `<span class="mint-short">${item.short}</span>` +
+      `<span class="mint-label">${item.label}</span>`;
+    stage.appendChild(node);
+  }
+
+  const receipt = el("section", "panel");
+  const receiptTitle = el("h2", "panel-title", "Boot Receipt");
+  const receiptRows = el("div", "rows");
+  receiptRows.append(
+    infoRow("Boot path", "Local self-contained"),
+    infoRow("Runtime dependency", "None"),
+    infoRow("Failure class cleared", "Missing external spine files"),
+    infoRow("Status", "Active")
+  );
+  receipt.append(receiptTitle, receiptRows);
+
+  machine.append(machineTitle, machineText, stage);
+
+  const lower = el("section", "lower-grid");
+  lower.append(machine, receipt);
+
+  shell.append(hero, lower);
+  return shell;
+}
+
+function resizeCanvas() {
+  if (!CANVAS) return;
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  field.width = w;
+  field.height = h;
+  CANVAS.width = Math.floor(w * field.dpr);
+  CANVAS.height = Math.floor(h * field.dpr);
+  CANVAS.style.width = w + "px";
+  CANVAS.style.height = h + "px";
+  const ctx = CANVAS.getContext("2d");
+  if (!ctx) return;
+  ctx.setTransform(field.dpr, 0, 0, field.dpr, 0, 0);
+  buildStars();
+}
+
+function buildStars() {
+  const count = Math.min(180, Math.max(120, Math.floor((field.width * field.height) / 14000)));
+  field.stars = Array.from({ length: count }, () => ({
+    x: Math.random() * field.width,
+    y: Math.random() * field.height,
+    z: 0.25 + Math.random() * 0.75,
+    size: 0.6 + Math.random() * 2.2,
+    drift: (Math.random() - 0.5) * 0.08,
+    pulse: Math.random() * Math.PI * 2
+  }));
+}
+
+function drawField() {
+  if (!CANVAS) return;
+  const ctx = CANVAS.getContext("2d");
+  if (!ctx) return;
+  ctx.clearRect(0, 0, field.width, field.height);
+
+  const gx = (pointer.x - 0.5) * 36;
+  const gy = (pointer.y - 0.5) * 36;
+
+  for (const star of field.stars) {
+    star.pulse += 0.01 * star.z;
+    star.y += star.drift * star.z;
+    if (star.y < -10) star.y = field.height + 10;
+    if (star.y > field.height + 10) star.y = -10;
+
+    const px = star.x + gx * star.z;
+    const py = star.y + gy * star.z;
+    const alpha = 0.18 + (Math.sin(star.pulse) * 0.5 + 0.5) * 0.42 * star.z;
+
+    ctx.beginPath();
+    ctx.fillStyle = `rgba(190,225,255,${alpha.toFixed(3)})`;
+    ctx.arc(px, py, star.size * star.z, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  const grad = ctx.createRadialGradient(
+    field.width * 0.5 + gx * 2,
+    field.height * 0.34 + gy * 2,
+    0,
+    field.width * 0.5,
+    field.height * 0.5,
+    Math.max(field.width, field.height) * 0.48
+  );
+  grad.addColorStop(0, "rgba(127,255,212,0.05)");
+  grad.addColorStop(0.45, "rgba(126,203,255,0.03)");
+  grad.addColorStop(1, "rgba(0,0,0,0)");
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, field.width, field.height);
+}
+
 function placeNodes(now) {
   const nodes = Array.from(document.querySelectorAll(".mint-node"));
   const rings = {
@@ -514,8 +557,7 @@ function bindNodeActions() {
       const key = node.dataset.key || "Governor";
       const rows = APP.querySelector(".rows");
       if (!rows) return;
-      rows.innerHTML = "";
-      rows.append(
+      rows.replaceChildren(
         infoRow("Boot path", "Local self-contained"),
         infoRow("Governor selected", key),
         infoRow("Traversal mode", "Figure-eight with zipper law"),
@@ -530,13 +572,22 @@ function boot() {
   injectStyles();
   APP.replaceChildren(buildShell());
   bindNodeActions();
+  resizeCanvas();
 
   function frame(now) {
+    drawField();
     placeNodes(now);
     window.requestAnimationFrame(frame);
   }
 
   window.requestAnimationFrame(frame);
 }
+
+window.addEventListener("pointermove", (event) => {
+  pointer.x = event.clientX / Math.max(window.innerWidth, 1);
+  pointer.y = event.clientY / Math.max(window.innerHeight, 1);
+}, { passive: true });
+
+window.addEventListener("resize", resizeCanvas);
 
 boot();

@@ -19,11 +19,10 @@
       --line2:rgba(127,255,212,.16);
       --text:#e8f6ff;
       --muted:rgba(232,246,255,.68);
-      --muted2:rgba(232,246,255,.50);
       --accent:#7fffd4;
       --accent2:#6fe7ff;
-      --warn:#ffd27a;
       --good:#7fffd4;
+      --warn:#ffd27a;
       --bad:#ff7a7a;
       --shadow:0 14px 40px rgba(0,0,0,.30);
       --shadow2:0 20px 70px rgba(0,0,0,.38);
@@ -50,8 +49,7 @@
 
     body{min-height:100vh;overflow-x:hidden}
 
-    .hostGlow,
-    .gridLines{
+    .hostGlow,.gridLines{
       position:fixed;
       inset:0;
       pointer-events:none;
@@ -119,11 +117,7 @@
       margin-bottom:12px;
     }
 
-    .heroCard,
-    .statusCard,
-    .sceneShell,
-    .panel,
-    .footer{
+    .heroCard,.statusCard,.sceneShell,.panel,.footer{
       border:1px solid var(--line);
       border-radius:var(--radius2);
       background:
@@ -132,9 +126,7 @@
       box-shadow:var(--shadow2);
     }
 
-    .heroCard{
-      padding:22px 20px 20px;
-    }
+    .heroCard{padding:22px 20px 20px}
 
     .eyebrow{
       display:inline-flex;
@@ -224,7 +216,7 @@
       border-radius:14px;
       padding:12px;
       background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
+        linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
         radial-gradient(circle at 50% 0%, rgba(127,255,212,.04), transparent 48%);
       min-height:86px;
     }
@@ -285,8 +277,7 @@
       box-shadow:var(--shadow);
     }
 
-    .overlayCard h2,
-    .overlayCard h3{
+    .overlayCard h2,.overlayCard h3{
       margin:0 0 10px;
       font-size:13px;
       letter-spacing:.12em;
@@ -329,9 +320,7 @@
       margin-bottom:12px;
     }
 
-    .panel{
-      padding:16px;
-    }
+    .panel{padding:16px}
 
     .panelTitle{
       margin:0 0 12px;
@@ -391,6 +380,7 @@
       font-weight:700;
       letter-spacing:.05em;
       text-transform:uppercase;
+      text-decoration:none;
     }
 
     .footer{
@@ -416,12 +406,9 @@
     .bootFail.is-visible{display:block}
 
     @media (max-width:1180px){
-      .hero,
-      .sceneOverlay,
-      .contentGrid{
+      .hero,.sceneOverlay,.contentGrid{
         grid-template-columns:1fr;
       }
-
       h1{max-width:none}
     }
 
@@ -518,33 +505,17 @@
     <section class="contentGrid">
       <article class="panel">
         <h2 class="panelTitle">Public Entry Contract</h2>
-        <div class="rows" id="entryRows">
-          <div class="row"><div class="rk">Entry</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">Rooms Visible</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">Programmable</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">Host Priority</div><div class="rv">Pending</div></div>
-        </div>
+        <div class="rows" id="entryRows"></div>
       </article>
 
       <article class="panel">
         <h2 class="panelTitle">Runtime / Receipt</h2>
-        <div class="rows" id="runtimeRows">
-          <div class="row"><div class="rk">Phase</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">Boundary</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">Region</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">Node</div><div class="rv">Pending</div></div>
-        </div>
+        <div class="rows" id="runtimeRows"></div>
       </article>
 
       <article class="panel">
         <h2 class="panelTitle">Descendant Order</h2>
-        <div class="rows" id="descendantRows">
-          <div class="row"><div class="rk">1</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">2</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">3</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">4</div><div class="rv">Pending</div></div>
-          <div class="row"><div class="rk">5</div><div class="rv">Pending</div></div>
-        </div>
+        <div class="rows" id="descendantRows"></div>
       </article>
     </section>
 

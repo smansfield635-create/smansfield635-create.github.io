@@ -45,7 +45,7 @@ function buildStars() {
   }));
 }
 
-function drawField(now) {
+function drawField() {
   if (!CANVAS) return;
   const ctx = CANVAS.getContext("2d");
   ctx.clearRect(0, 0, field.width, field.height);
@@ -90,8 +90,7 @@ function placeNodes(now) {
   const tiltX = (pointer.y - 0.5) * -14;
   const tiltY = (pointer.x - 0.5) * 18;
 
-  STAGE.style.transform =
-    `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
+  STAGE.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
 
   for (const node of NODES) {
     const ringId = Number(node.dataset.ring || 1);
@@ -107,15 +106,14 @@ function placeNodes(now) {
     const scale = 0.88 + ((z + cfg.depth) / (cfg.depth * 2)) * 0.30;
     const opacity = 0.62 + ((z + cfg.depth) / (cfg.depth * 2)) * 0.38;
 
-    node.style.transform =
-      `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
+    node.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
     node.style.opacity = opacity.toFixed(3);
     node.style.zIndex = String(Math.round(1000 + z));
   }
 }
 
 function frame(now) {
-  drawField(now);
+  drawField();
   placeNodes(now);
   window.requestAnimationFrame(frame);
 }

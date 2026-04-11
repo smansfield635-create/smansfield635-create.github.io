@@ -1,879 +1,501 @@
 <!doctype html>
-<!-- TNT — /explore/frontier/index.html
-     FRONTIER · INDEX (WIRING HUB) — NEW STANDARD (INFORMAL SITE LAYER)
-     PURPOSE:
-       - One place that links EVERY frontier room you already created:
-         closed-loop / energy / lattice / shimmer / trajectory / urban / vision / waste / water / infrastructure
-       - Clean routing + state carry + no loops + no modal traps
-     REQUIREMENTS (NEW STANDARD):
-       - Trilingual: EN / 中文 / ES
-       - LENSES (VISIBLE ONLY):
-           lane=platform|engineering (URL-only; NEVER stored)
-         (Informal/formal is NOT user-visible in this layer.)
-       - Pins this page to informal layer:
-           style = informal (stored in gd_style)
-           depth = explore  (stored in gd_depth)
-       - Single-open accordion (one open at a time)
-       - Inside each row: 3 sub-bubbles (Concept / Build Now / Roadmap) tap-to-open
-       - Monument typography (bigger print)
-       - Dark opal + red (no washed-out blue)
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-       - Uses ui.css + branch.css + instruments.js only
-       - ui.css owns html/body background (NO overrides)
-       - No inline onclick; addEventListener only
-     UX (CRITICAL):
-       - Switching LANG or LANE does NOT reload page
-       - Switching LANG or LANE does NOT close the open row
--->
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>EXPLORE · FRONTIER</title>
-
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
-
-<style>
-a{color:inherit;text-decoration:none}
-body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff}
-body::before,body::after{pointer-events:none!important}
-
-/* ===== TOKENS ===== */
-:root{
-  --dockH:112px;
-
-  /* Onyx + opal sheen + dual-red + gold trim */
-  --stroke:rgba(255,255,255,.12);
-  --stroke2:rgba(255,255,255,.10);
-
-  --ink:rgba(255,255,255,.94);
-  --txt:rgba(255,255,255,.92);
-  --mut:rgba(255,255,255,.78);
-
-  --crimson:rgba(120,0,22,.30);
-  --festival:rgba(255,43,43,.14);
-  --opalV:rgba(90,40,120,.10);
-
-  --gold:rgba(201,162,74,.40);
-  --goldSoft:rgba(201,162,74,.18);
-
-  --shadowA:0 24px 90px rgba(0,0,0,.58);
-  --shadowB:0 16px 56px rgba(0,0,0,.62);
-  --shadowC:0 18px 60px rgba(0,0,0,.55);
-}
-
-/* ===== PAGE WRAP ===== */
-.page{
-  width:min(1120px,94vw);
-  margin:0 auto;
-  padding:14px 0 calc(var(--dockH) + 18px);
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  position:relative;
-  z-index:10;
-}
-
-/* ===== TOP CONTROLS (sticky; no traps) ===== */
-.top{
-  position:sticky;
-  top:0;
-  z-index:240;
-  padding:10px 0 6px;
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-}
-.top .left,.top .right{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  white-space:nowrap;
-  align-items:center;
-}
-
-/* ===== Button (gold under-light only) ===== */
-.btn{
-  display:inline-flex;align-items:center;justify-content:center;gap:8px;
-  padding:10px 12px;min-height:44px;border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.16), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.78), rgba(6,8,10,.90));
-  color:var(--ink);
-  font-weight:950;font-size:14px;letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:var(--shadowC);
-}
-.btn:active{transform:translateY(1px)}
-.btn::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-12px;height:28px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.34), transparent 72%);
-  opacity:.60;pointer-events:none;
-}
-.btn.red{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowC), 0 0 18px rgba(255,43,43,.12);}
-
-/* Segmented controls */
-.seg{
-  display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow: var(--shadowC);
-}
-.seg button{
-  appearance:none;border:0;background:transparent;color:var(--mut);
-  padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
-  letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.seg button[aria-pressed="true"]{
-  color:var(--ink);
-  background:
-    radial-gradient(circle at 50% 120%, rgba(201,162,74,.22), transparent 62%),
-    linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 -10px 22px rgba(201,162,74,.16);
-}
-
-/* ===== HEADER ===== */
-.header{
-  border:1px solid var(--stroke);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
-    radial-gradient(circle at 82% 34%, var(--opalV), transparent 74%),
-    radial-gradient(circle at 55% 110%, var(--festival), transparent 62%),
-    radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
-    linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadowA);
-  padding:16px 16px 14px;
-  position:relative;
-  overflow:hidden;
-}
-.header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
-  background:
-    repeating-linear-gradient(45deg, rgba(201,162,74,.08) 0 1px, transparent 1px 16px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.06) 0 1px, transparent 1px 16px);
-  opacity:.28;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-}
-
-.k{margin:0 0 8px;font-size:12px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut)}
-.t{margin:0;font-weight:950;font-size:32px;letter-spacing:.8px;line-height:1.08;color:var(--ink)}
-.s{
-  margin:12px 0 0;
-  font-size:16px;
-  opacity:.92;
-  line-height:1.55;
-  max-width:980px;
-  color:var(--txt);
-}
-.rule{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.10), transparent 62%),
-    linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
-  font-size:13.5px;
-  color:rgba(255,255,255,.82);
-  line-height:1.45;
-}
-
-/* ===== LENS ROW (NEW STANDARD) ===== */
-.lenses{
-  margin-top:12px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
-}
-.statePill{
-  display:inline-flex;align-items:center;gap:8px;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  color:var(--mut);
-  font-weight:950;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
-}
-
-/* ===== BAND ===== */
-.band{
-  padding:10px 12px;
-  border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-weight:950;
-  letter-spacing:.2px;
-  color:rgba(255,255,255,.88);
-  font-size:14px;
-}
-
-/* ===== ACCORDION ===== */
-.list{display:flex;flex-direction:column;gap:12px}
-.row{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.92));
-  box-shadow:var(--shadowB);
-  overflow:hidden;
-  position:relative;
-}
-.row::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.12);
-  opacity:.60;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;
-  padding:16px 16px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-}
-.left{
-  display:flex;
-  align-items:flex-start;
-  gap:12px;
-  min-width:0;
-}
-.mark{
-  width:10px;height:10px;
-  transform:rotate(45deg);
-  border-radius:3px;
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;
-  margin-top:4px;
-}
-.titleBlock{min-width:0}
-.title{
-  font-weight:950;
-  letter-spacing:.25px;
-  font-size:18px;
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  color:var(--ink);
-}
-.sub{
-  margin-top:8px;
-  font-size:14px;
-  opacity:.86;
-  line-height:1.45;
-  max-width:92ch;
-  color:rgba(255,255,255,.86);
-}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--mut);
-  font-weight:950;
-  position:relative;overflow:hidden;
-  flex:0 0 auto;margin-top:2px;
-}
-.chev::after{
-  content:"";
-  position:absolute;left:6px;right:6px;bottom:-10px;height:22px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.32), transparent 70%);
-  opacity:.62;pointer-events:none;
-}
-
-.body{
-  display:none;
-  padding:16px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.92));
-  position:relative;
-}
-.row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowB), 0 0 18px rgba(255,43,43,.10);}
-
-.pdesc{
-  margin:0;
-  color:rgba(255,255,255,.90);
-  line-height:1.65;
-  font-size:15px;
-}
-.pdesc + .pdesc{margin-top:10px}
-
-/* Sub-bubbles */
-.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
-.bubble{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 82% 70%, rgba(201,162,74,.08), transparent 62%),
-    rgba(0,0,0,.12);
-  padding:14px 14px 12px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
-}
-.bubble::after{
-  content:"";
-  position:absolute;left:10px;right:10px;bottom:-14px;height:30px;
-  background: radial-gradient(circle at 50% 0%, rgba(201,162,74,.22), transparent 72%);
-  opacity:.50;pointer-events:none;
-}
-.bubble h4{
-  margin:0 0 8px;
-  font-weight:950;
-  letter-spacing:.15px;
-  font-size:15px;
-  color:var(--ink);
-}
-.bubble p{
-  margin:0;
-  color:rgba(255,255,255,.80);
-  line-height:1.7;
-  display:none;
-  font-size:14.5px;
-}
-.bubble.open p{display:block}
-
-.actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  justify-content:flex-end;
-  margin-top:14px;
-}
-.actions .btn{
-  padding:10px 14px;
-  border-radius:999px;
-  white-space:nowrap;
-}
-
-/* ===== DOCK ===== */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
-  padding:10px 12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;
-  grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
-}
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
-@media (max-width:520px){
-  :root{--dockH:132px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
-  .title{font-size:17px}
-  .s{font-size:15px}
-}
-</style>
-</head>
-
-<body>
-
-<div class="page">
-
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-      <a class="btn" id="btnDoor" data-route="/door/" href="/door/">DOOR</a>
-      <a class="btn" id="btnHome" data-route="/home/" href="/home/">HOME</a>
-    </div>
-    <div class="right" aria-label="Controls">
-      <div class="seg" role="group" aria-label="Language">
-        <button type="button" id="langEN" aria-pressed="true">EN</button>
-        <button type="button" id="langZH" aria-pressed="false">中文</button>
-        <button type="button" id="langES" aria-pressed="false">ES</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="header" aria-label="Header">
-    <p class="k" id="hk">EXPLORE · FRONTIER</p>
-    <h1 class="t" id="ht">FRONTIER INDEX</h1>
-    <p class="s" id="hs"></p>
-    <div class="rule" id="rule"></div>
-
-    <div class="lenses" aria-label="Lenses">
-      <div class="seg" role="group" aria-label="Lane">
-        <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-        <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-      </div>
-      <div class="statePill" id="laneState">—</div>
-    </div>
-  </div>
-
-  <div class="band" id="band">FRONTIER ROOMS</div>
-  <div class="list" id="list"></div>
-
-</div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-  <a class="btn" id="dockProducts" data-route="/products/" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" data-route="/gauges/" href="/gauges/">GAUGES</a>
-</nav>
-
-<script>
-(function(){
-  "use strict";
-
-  // ===== Canon state (gd_* only; no new keys) =====
-  var qs=new URLSearchParams(location.search);
-  var LS=window.localStorage;
-
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || "platform"; // URL-only
-
-  // Pin informal layer
-  var style = "informal";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  var d=parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth=String(d);
-
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
-
-  try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style","informal");
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth","explore"); // pin page to informal-layer meaning
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)?over.lang:lang);
-    p.set("style","informal");
-    p.set("time",(over&&over.time)?over.time:time);
-    p.set("depth","explore");
-    p.set("lane",(over&&over.lane)?over.lane:lane);
-    return "?"+p.toString();
-  }
-
-  // ===== Helpers =====
-  function setPressed(ids, activeId){
-    for(var i=0;i<ids.length;i++){
-      var el=document.getElementById(ids[i]);
-      if(!el) continue;
-      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Explore Frontier | Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Frontier catalog for platform engineering, bounded discovery, and downstream explore surfaces."
+  />
+  <style>
+    :root{
+      --bg:#05070b;
+      --bg2:#08101a;
+      --bg3:#0d1623;
+      --panel:#0b0f16;
+      --panel2:#101722;
+      --line:#1f2a36;
+      --line2:rgba(127,255,212,.16);
+      --text:#e8f6ff;
+      --muted:rgba(232,246,255,.68);
+      --accent:#7fffd4;
+      --accent2:#6fe7ff;
+      --shadow:0 14px 40px rgba(0,0,0,.30);
+      --shadow2:0 20px 70px rgba(0,0,0,.38);
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+      --maxw:1460px;
     }
-  }
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-  function pick(o){ return (lang==="zh")?o.zh:(lang==="es")?(o.es||o.en):o.en; }
 
-  function labConcept(){ return (lang==="zh")?"概念":(lang==="es")?"Concepto":"Concept"; }
-  function labBuild(){ return (lang==="zh")?"现在建":(lang==="es")?"Construir ahora":"Build Now"; }
-  function labRoadmap(){ return (lang==="zh")?"路线图":(lang==="es")?"Hoja de ruta":"Roadmap"; }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
+    *{box-sizing:border-box}
 
-  function laneLabel(){
-    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
-  }
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
+        radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
+        linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    }
 
-  // ===== Wire all [data-route] with full state (pinned style/depth) =====
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
+    body{min-height:100vh;overflow-x:hidden}
 
-      if(route.indexOf("?")!==-1){
-        try{
-          var u=new URL(route, location.origin);
-          var sp=u.searchParams;
-          sp.set("lang", lang);
-          sp.set("style","informal");
-          sp.set("time", time);
-          sp.set("depth","explore");
-          sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){
-          el.setAttribute("href", route);
-        }
-      }else{
-        el.setAttribute("href", route + q());
+    .hostGlow,
+    .gridLines{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:0;
+    }
+
+    .hostGlow{
+      background:
+        radial-gradient(circle at 50% 12%, rgba(127,255,212,.05), transparent 18%),
+        radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
+        radial-gradient(circle at 50% 86%, rgba(255,210,122,.02), transparent 18%);
+      filter:blur(10px);
+    }
+
+    .gridLines{
+      background-image:
+        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size:40px 40px;
+      mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+    }
+
+    .wrap{
+      position:relative;
+      z-index:1;
+      max-width:var(--maxw);
+      margin:0 auto;
+      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    }
+
+    .topbar,
+    .hero,
+    .panel,
+    .tile,
+    .footer{
+      border:1px solid var(--line);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
+        radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
+      box-shadow:var(--shadow2);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
+      margin-bottom:12px;
+      border-radius:14px;
+      box-shadow:var(--shadow);
+    }
+
+    .brand{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .stamp{
+      font-size:11px;
+      color:var(--muted);
+      white-space:nowrap;
+    }
+
+    .hero{
+      padding:22px 20px 20px;
+      margin-bottom:12px;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-size:clamp(36px,5vw,72px);
+      line-height:.96;
+      letter-spacing:-.06em;
+      max-width:10ch;
+    }
+
+    .heroText{
+      margin:0;
+      max-width:68ch;
+      color:var(--muted);
+      font-size:17px;
+      line-height:1.72;
+    }
+
+    .actionRow,
+    .chipRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .action,
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--text);
+      font-size:12px;
+      font-weight:700;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      text-decoration:none;
+    }
+
+    .chip{
+      color:var(--muted);
+      font-size:11px;
+      letter-spacing:.10em;
+    }
+
+    .action.strong,
+    .chip.strong{
+      border-color:rgba(127,255,212,.26);
+      background:rgba(127,255,212,.08);
+      color:var(--text);
+    }
+
+    .summaryGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .panel{
+      padding:16px;
+    }
+
+    .panelTitle{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--accent);
+      padding-bottom:10px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .panelText{
+      margin:0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.7;
+    }
+
+    .rows{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+    }
+
+    .rk{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .rv{
+      color:var(--text);
+      font-size:12px;
+      line-height:1.45;
+      text-align:right;
+      word-break:break-word;
+    }
+
+    .catalog{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-bottom:12px;
+    }
+
+    .tile{
+      padding:14px;
+      border-radius:18px;
+      background:
+        linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
+        radial-gradient(circle at 50% 0%, rgba(127,255,212,.03), transparent 40%);
+    }
+
+    .tileTitle{
+      margin:0 0 8px;
+      font-size:13px;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:var(--accent);
+    }
+
+    .tileText{
+      margin:0;
+      color:var(--muted);
+      font-size:13px;
+      line-height:1.66;
+      min-height:66px;
+    }
+
+    .footer{
+      padding:12px 14px;
+      color:var(--muted);
+      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      white-space:pre-wrap;
+      word-break:break-word;
+    }
+
+    @media (max-width:1180px){
+      .summaryGrid,
+      .catalog{
+        grid-template-columns:1fr 1fr;
       }
-    }
-  }
 
-  // ===== Header copy =====
-  var HEADER={
-    en:{
-      k:"EXPLORE · FRONTIER",
-      t:"FRONTIER INDEX",
-      s_platform:"This is the wiring hub. Open one room, take one next step.",
-      s_engineering:"Engineering view: frontier rooms are shells until measurement exists. Open one room, verify prerequisites.",
-      r:"Rule: frontier stays labeled. Concept stays concept until measurement exists."
-    },
-    zh:{
-      k:"探索 · 前沿",
-      t:"前沿索引",
-      s_platform:"这是接线枢纽。一次打开一个房间，走一个下一步。",
-      s_engineering:"工程视图：没有测量就只能是壳。打开一个房间，先验证前置条件。",
-      r:"规则：前沿必须保持标签。没有测量就只能是概念/路线图。"
-    },
-    es:{
-      k:"EXPLORAR · FRONTERA",
-      t:"ÍNDICE DE FRONTERA",
-      s_platform:"Este es el hub de cableado. Abre una sala y toma un siguiente paso.",
-      s_engineering:"Vista ingeniería: las salas son carcasas hasta tener medición. Abre una sala y verifica prerrequisitos.",
-      r:"Regla: la frontera permanece etiquetada. Concepto sigue siendo concepto hasta tener medición."
-    }
-  };
-
-  function bandLabel(){
-    if(lang==="zh") return "前沿房间（一次只开一个）";
-    if(lang==="es") return "SALAS DE FRONTERA (una a la vez)";
-    return "FRONTIER ROOMS (one open at a time)";
-  }
-
-  // ===== Rooms list (authoritative) =====
-  var ROOMS = [
-    {c:"#c9a24a", href:"/explore/frontier/vision/",         t:P("Vision (Index)","愿景（索引）","Visión (índice)"), s:P("All vision pages live here (labeled).","所有愿景页在这里（有标签）。","Aquí viven páginas de visión (etiquetadas).")},
-    {c:"#c9a24a", href:"/explore/frontier/infrastructure/", t:P("Infrastructure","基础设施","Infraestructura"),     s:P("Integration hub across frontier domains.","跨前沿领域的集成枢纽。","Hub de integración entre dominios.")},
-    {c:"#ff2b2b", href:"/explore/frontier/energy/",         t:P("Energy","能源","Energía"),                        s:P("Industrial substitution pathways.","工业替代路径。","Vías de sustitución industrial.")},
-    {c:"#ff2b2b", href:"/explore/frontier/waste/",          t:P("Waste","废弃物","Residuos"),                      s:P("Recovery-first routing.","回收优先路由。","Ruteo recovery-first.")},
-    {c:"#c9a24a", href:"/explore/frontier/water/",          t:P("Water","水","Agua"),                              s:P("Source → clean → store → verify → reuse.","取水→净化→储存→验证→复用。","Fuente→limpiar→almacenar→verificar→reusar.")},
-    {c:"#ff2b2b", href:"/explore/frontier/shimmer/",        t:P("SHIMMER","SHIMMER","SHIMMER"),                   s:P("Entropy-routing spine.","熵路由主干。","Columna de ruteo entrópico.")},
-    {c:"#a3a3a3", href:"/explore/frontier/closed-loop/",    t:P("Closed-Loop","闭环","Ciclo cerrado"),            s:P("No ‘away’. Inventory + routing + verification.","没有‘扔掉’：库存+路由+验证。","Sin ‘afuera’: inventario+ruteo+verificación.")},
-    {c:"#c9a24a", href:"/explore/frontier/lattice/",        t:P("Lattice","晶格","Lattice"),                      s:P("Finite mapping into enumerated states.","有限映射到可枚举状态。","Mapeo finito a estados enumerables.")},
-    {c:"#c9a24a", href:"/explore/frontier/trajectory/",     t:P("Trajectory","轨迹","Trayectoria"),                s:P("Windowed evidence over time.","时间窗口证据。","Evidencia por ventanas.")},
-    {c:"#c9a24a", href:"/explore/frontier/urban/",          t:P("Urban","城市","Urbano"),                          s:P("Multi-utility routing in one ledger.","一套账的多公用事业路由。","Ruteo multi-utility en un solo libro.")}
-  ];
-
-  // ===== Accordion state to preserve on lens/lang changes =====
-  var list=document.getElementById("list");
-  var rowEls=[]; // {row, chev, title, sub, intro, b1p, b2p, b3p, openA}
-  var openIndex=0;
-
-  function closeAllRows(){
-    for(var i=0;i<rowEls.length;i++){
-      rowEls[i].row.classList.remove("open");
-      rowEls[i].chev.textContent="▸";
-    }
-  }
-
-  function toggleRow(i){
-    var isOpen=rowEls[i].row.classList.contains("open");
-    if(isOpen){
-      rowEls[i].row.classList.remove("open");
-      rowEls[i].chev.textContent="▸";
-      return;
-    }
-    closeAllRows();
-    openIndex=i;
-    rowEls[i].row.classList.add("open");
-    rowEls[i].chev.textContent="▾";
-  }
-
-  function makeSubBubble(label, text){
-    var b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
-
-    var h=document.createElement("h4");
-    h.textContent=label;
-
-    var p=document.createElement("p");
-    p.textContent=text;
-
-    b.appendChild(h);
-    b.appendChild(p);
-
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-    return {wrap:b, p:p};
-  }
-
-  function buildRow(item, idx){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", item.c);
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var left=document.createElement("div");
-    left.className="left";
-
-    var mark=document.createElement("div");
-    mark.className="mark";
-    mark.style.background=item.c;
-
-    var tb=document.createElement("div");
-    tb.className="titleBlock";
-
-    var title=document.createElement("div");
-    title.className="title";
-
-    var sub=document.createElement("div");
-    sub.className="sub";
-
-    tb.appendChild(title);
-    tb.appendChild(sub);
-
-    left.appendChild(mark);
-    left.appendChild(tb);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.textContent="▸";
-
-    head.appendChild(left);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var intro=document.createElement("p");
-    intro.className="pdesc";
-
-    var bubbles=document.createElement("div");
-    bubbles.className="subBubbles";
-
-    var b1=makeSubBubble(labConcept(),"");
-    var b2=makeSubBubble(labBuild(),"");
-    var b3=makeSubBubble(labRoadmap(),"");
-    bubbles.appendChild(b1.wrap);
-    bubbles.appendChild(b2.wrap);
-    bubbles.appendChild(b3.wrap);
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-
-    var a=document.createElement("a");
-    a.className="btn red";
-    a.setAttribute("data-route", item.href);
-    actions.appendChild(a);
-
-    body.appendChild(intro);
-    body.appendChild(bubbles);
-    body.appendChild(actions);
-
-    function onToggle(){ toggleRow(idx); }
-    head.addEventListener("click", onToggle, {passive:true});
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); onToggle(); }});
-
-    row.appendChild(head);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    rowEls.push({
-      row:row,
-      chev:chev,
-      title:title,
-      sub:sub,
-      intro:intro,
-      b1p:b1.p,
-      b2p:b2.p,
-      b3p:b3.p,
-      openA:a
-    });
-  }
-
-  function render(){
-    list.innerHTML="";
-    rowEls=[];
-    for(var i=0;i<ROOMS.length;i++){
-      buildRow(ROOMS[i], i);
-    }
-    openIndex=0;
-    toggleRow(0);
-  }
-
-  function applyStatic(){
-    // Top labels
-    document.getElementById("btnExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("btnDoor").textContent    = pick3("DOOR","门","PUERTA");
-    document.getElementById("btnHome").textContent    = pick3("HOME","主页","INICIO");
-
-    document.getElementById("dockExplore").textContent  = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("dockProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("dockLaws").textContent     = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGauges").textContent   = pick3("GAUGES","量规","MEDIDORES");
-
-    // Header copy
-    var H=HEADER[lang] || HEADER.en;
-    document.getElementById("hk").textContent = H.k;
-    document.getElementById("ht").textContent = H.t;
-    document.getElementById("hs").textContent = (lane==="engineering") ? H.s_engineering : H.s_platform;
-    document.getElementById("rule").textContent = H.r;
-
-    document.getElementById("band").textContent = bandLabel();
-
-    // Controls text + pressed
-    document.getElementById("lanePlatform").textContent   = pick3("PLATFORM","平台","PLATAFORMA");
-    document.getElementById("laneEngineering").textContent= pick3("ENGINEERING","工程","INGENIERÍA");
-
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-
-    document.getElementById("laneState").textContent =
-      (lang==="zh") ? ("当前透镜："+laneLabel()) :
-      (lang==="es") ? ("Lente actual: "+laneLabel()) :
-      ("Current lens: "+laneLabel());
-  }
-
-  function updateBodies(){
-    var keep=openIndex;
-
-    for(var i=0;i<ROOMS.length;i++){
-      var item=ROOMS[i];
-      var r=rowEls[i];
-
-      r.title.textContent = pick(item.t);
-      r.sub.textContent   = pick(item.s);
-
-      // lane-aware intro
-      var introText = (lane==="platform")
-        ? pick3(
-            "What this gives you: a clean route. Click once and land where the frontier work lives.",
-            "你得到的是：干净的路由。点一次，落在该房间。",
-            "Te da: una ruta limpia. Un clic y llegas a la sala."
-          )
-        : pick3(
-            "Engineering view: what must be measured and contained before any scale claim is allowed.",
-            "工程视图：在允许规模化主张前，必须测量与隔离什么。",
-            "Vista de ingeniería: qué medir y contener antes de permitir cualquier afirmación de escala."
-          );
-      r.intro.textContent=introText;
-
-      // lane-aware sub-bubbles
-      var conceptText = (lane==="platform")
-        ? pick3(
-            "Concept: this is an entry. Guide the user: what to tap and what to see first.",
-            "概念：这是入口。先让人知道要点哪里、要看什么。",
-            "Concepto: esta es una entrada. Primero guía al usuario: qué tocar y qué ver."
-          )
-        : pick3(
-            "Concept: this is interface. Declare inputs/outputs and thresholds before scaling.",
-            "概念：这是接口。先声明输入/输出与阈值，再谈扩张。",
-            "Concepto: esto es interfaz. Declara entradas/salidas y umbrales antes de escalar."
-          );
-
-      var buildText = (lane==="platform")
-        ? pick3(
-            "Build now: routes, returns, and state carry. Usable first.",
-            "现在建：确保路由存在、返回存在、状态携带存在。",
-            "Construir ahora: rutas, retorno y estado. Primero usable."
-          )
-        : pick3(
-            "Build now: minimum loop measure→reason codes→contain→rollback.",
-            "现在建：最小闭环：测量→原因码→隔离→回滚。",
-            "Construir ahora: bucle mínimo medir→razones→contener→rollback."
-          );
-
-      var roadText = pick3(
-        "Roadmap: turn shells into a system: shared contracts, shared windows, audit-ready outputs.",
-        "路线图：把壳变成系统：共享契约、共享窗口、共享审计输出。",
-        "Hoja de ruta: convertir shells en sistema: contratos compartidos, ventanas compartidas, salidas auditables."
-      );
-
-      r.b1p.textContent=conceptText;
-      r.b2p.textContent=buildText;
-      r.b3p.textContent=roadText;
-
-      r.openA.textContent = openLabel() + ": " + pick3("ENTER","进入房间","ENTRAR");
-      // keep data-route stable (already set)
+      h1{max-width:none}
     }
 
-    closeAllRows();
-    toggleRow(keep);
-    wireAll();
-  }
+    @media (max-width:760px){
+      .topbar{flex-direction:column;align-items:flex-start}
+      .summaryGrid,
+      .catalog{
+        grid-template-columns:1fr;
+      }
+      .row{
+        grid-template-columns:1fr;
+      }
+      .rv{text-align:left}
+    }
+  </style>
+</head>
+<body>
+  <div class="hostGlow" aria-hidden="true"></div>
+  <div class="gridLines" aria-hidden="true"></div>
 
-  // ===== No reload lens/lang changes =====
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    applyStatic();
-    updateBodies();
-  }
+  <main class="wrap">
+    <div class="topbar">
+      <div class="brand">Explore Frontier</div>
+      <div class="stamp">PLATFORM ENGINEERING · FRONTIER CATALOG · G1</div>
+    </div>
 
-  function setLane(next){
-    if(next!=="platform" && next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    applyStatic();
-    updateBodies();
-  }
+    <section class="hero">
+      <div class="eyebrow">Frontier without drift</div>
+      <h1>Frontier access surface.</h1>
+      <p class="heroText">
+        Frontier is now the access catalog for the explore layer. It remains a bounded engineering and discovery surface, but now gives direct reach into the pages already established beneath structured expansion.
+      </p>
+      <div class="chipRow">
+        <div class="chip strong">Catalog Active</div>
+        <div class="chip">Bounded Entries</div>
+        <div class="chip">Explore Access</div>
+        <div class="chip">No Drift</div>
+      </div>
+      <div class="actionRow">
+        <a class="action" href="/explore/">Explore</a>
+        <a class="action" href="/">Home</a>
+        <a class="action" href="/laws/">Laws</a>
+        <a class="action" href="/gauges/">Gauges</a>
+      </div>
+    </section>
 
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+    <section class="summaryGrid">
+      <article class="panel">
+        <h2 class="panelTitle">Role</h2>
+        <p class="panelText">Frontier is the access catalog for high-value explore surfaces that already exist beneath the host.</p>
+        <div class="rows">
+          <div class="row"><div class="rk">Surface Type</div><div class="rv">Catalog / boundary</div></div>
+          <div class="row"><div class="rk">Primary Function</div><div class="rv">Access without drift</div></div>
+        </div>
+      </article>
 
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+      <article class="panel">
+        <h2 class="panelTitle">Rule</h2>
+        <p class="panelText">Every tile below is a bounded descendant route, not a mixed narrative pile or speculative overflow lane.</p>
+        <div class="rows">
+          <div class="row"><div class="rk">Admission</div><div class="rv">Constraint first</div></div>
+          <div class="row"><div class="rk">Behavior</div><div class="rv">Expansion under structure</div></div>
+        </div>
+      </article>
 
-  // ===== INIT =====
-  render();
-  applyStatic();
-  updateBodies();
-  wireAll();
-})();
-</script>
+      <article class="panel">
+        <h2 class="panelTitle">Result</h2>
+        <p class="panelText">Frontier now becomes the fastest way to move through the explore stack while preserving upstream order.</p>
+        <div class="rows">
+          <div class="row"><div class="rk">Entry Quality</div><div class="rv">Direct</div></div>
+          <div class="row"><div class="rk">Grammar</div><div class="rv">Consistent with host</div></div>
+        </div>
+      </article>
+    </section>
 
+    <section class="catalog">
+      <article class="tile">
+        <h3 class="tileTitle">Economic</h3>
+        <p class="tileText">Economic exploration under measurable structure and downstream vault compatibility.</p>
+        <div class="actionRow"><a class="action" href="/explore/economic/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Economic Risk</h3>
+        <p class="tileText">Burden, exposure, volatility, and threshold consequence under structured read.</p>
+        <div class="actionRow"><a class="action" href="/explore/economic-risk/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Finance</h3>
+        <p class="tileText">Flow, allocation, receipt, and accountability as governed value movement.</p>
+        <div class="actionRow"><a class="action" href="/explore/finance/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Finance Core</h3>
+        <p class="tileText">Core receipt, reserve, obligation, and continuity beneath broader economic layers.</p>
+        <div class="actionRow"><a class="action" href="/explore/finance-core/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Infrastructure</h3>
+        <p class="tileText">Support continuity and durability without competing with the host itself.</p>
+        <div class="actionRow"><a class="action" href="/explore/infrastructure/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Systems</h3>
+        <p class="tileText">Whole-body relation, thresholds, inheritance, and interacting parts.</p>
+        <div class="actionRow"><a class="action" href="/explore/systems/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Engines</h3>
+        <p class="tileText">Execution bodies beneath visible public surfaces and host law.</p>
+        <div class="actionRow"><a class="action" href="/explore/engines/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Models</h3>
+        <p class="tileText">Comparable model surfaces under stable scope and visible lineage.</p>
+        <div class="actionRow"><a class="action" href="/explore/models/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Innovation Lattice</h3>
+        <p class="tileText">Novelty under lattice constraint instead of free-floating trend behavior.</p>
+        <div class="actionRow"><a class="action" href="/explore/innovation-lattice/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Innovation Language</h3>
+        <p class="tileText">Precision, translation, and execution clarity as language innovation.</p>
+        <div class="actionRow"><a class="action" href="/explore/innovation/language/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Science</h3>
+        <p class="tileText">Method, comparison, falsification pressure, and downstream consequence.</p>
+        <div class="actionRow"><a class="action" href="/explore/science/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Legal</h3>
+        <p class="tileText">Authority, admissibility, placement, and consequence under bounded interpretation.</p>
+        <div class="actionRow"><a class="action" href="/explore/legal/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Rights</h3>
+        <p class="tileText">Rights as bounded claims paired with duty and consequence.</p>
+        <div class="actionRow"><a class="action" href="/explore/rights/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Trust</h3>
+        <p class="tileText">Trust as earned continuity under evidence, behavior, and receipt.</p>
+        <div class="actionRow"><a class="action" href="/explore/trust/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Energy</h3>
+        <p class="tileText">Energy as measurable movement, burden, direction, and usable capacity.</p>
+        <div class="actionRow"><a class="action" href="/explore/energy/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Water</h3>
+        <p class="tileText">Flow, quality, storage, dependency, and access under systems constraint.</p>
+        <div class="actionRow"><a class="action" href="/explore/water/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Waste</h3>
+        <p class="tileText">Residue, burden, recovery, and accountability as measurable consequence.</p>
+        <div class="actionRow"><a class="action" href="/explore/waste/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Sustainability</h3>
+        <p class="tileText">Continuity under time, burden, recovery, and resource draw.</p>
+        <div class="actionRow"><a class="action" href="/explore/sustainability/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Roots</h3>
+        <p class="tileText">Origin, dependency, inheritance, and source traceability under structure.</p>
+        <div class="actionRow"><a class="action" href="/explore/roots/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Adoption Ladder</h3>
+        <p class="tileText">Progressive lawful uptake from entry through durable placement.</p>
+        <div class="actionRow"><a class="action" href="/explore/adoption-ladder/">Open</a></div>
+      </article>
+
+      <article class="tile">
+        <h3 class="tileTitle">Market Relations</h3>
+        <p class="tileText">Position, overlap, dependency, leverage, and interaction consequence.</p>
+        <div class="actionRow"><a class="action" href="/explore/market-relations/">Open</a></div>
+      </article>
+    </section>
+
+    <div class="footer">BUILD=EXPLORE_FRONTIER_CATALOG_G1 | ROLE=FRONTIER_ACCESS_SURFACE | ACCESS=EXPLORE_STACK | STATUS=ACTIVE</div>
+  </main>
 </body>
 </html>

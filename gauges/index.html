@@ -11,7 +11,6 @@
   --bg3:#0d1623;
   --panel:#0b0f16;
   --panel2:#101722;
-  --panel3:#121c2a;
   --line:#1f2a36;
   --line2:rgba(127,255,212,.16);
   --text:#e8f6ff;
@@ -43,11 +42,14 @@ html,body{
   font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 body{min-height:100vh;overflow-x:hidden}
-.hostGlow{
+.hostGlow,
+.gridLines{
   position:fixed;
   inset:0;
   pointer-events:none;
   z-index:0;
+}
+.hostGlow{
   background:
     radial-gradient(circle at 50% 12%, rgba(127,255,212,.045), transparent 18%),
     radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
@@ -55,10 +57,6 @@ body{min-height:100vh;overflow-x:hidden}
   filter:blur(10px);
 }
 .gridLines{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
   background-image:
     linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
@@ -249,7 +247,7 @@ canvas{
   border:1px solid var(--line);
   border-radius:10px;
   background:
-    linear-gradient(180deg,#070b12,#09101a);
+    linear-gradient(180deg,#0a1019,#070b12);
 }
 .footer{
   margin-top:10px;
@@ -624,16 +622,14 @@ function getInstrumentPacket(runtimeReceipt, renderPacket) {
             denseIndex: runtimeReceipt.denseIndex,
             index: runtimeReceipt.state,
             traversalStatus: runtimeReceipt.traversalStatus,
-            receipt: { timestamp: runtimeReceipt.timestamp }
+            receipt: { timestamp: runtimeReceipt.timestamp },
+            forces: runtimeReceipt.forces
           }
         : null;
 
     const renderState = renderPacket
       ? {
-          visible: {
-            colorOutput: safeObj(safeObj(renderPacket.visible).colorOutput),
-            emphasis: safeObj(safeObj(renderPacket.visible).emphasis)
-          },
+          visible: safeObj(renderPacket.visible),
           projection: {
             selectedProjection: safeObj(safeObj(renderPacket.projection).selectedProjection || safeObj(renderPacket.projection))
           }
@@ -693,8 +689,12 @@ function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) 
   const nodeForceVisibility = safeObj(renderVisible.nodeForceVisibility);
   const transitionVisibility = safeObj(renderVisible.transitionVisibility);
 
-  const diagnostics = safeObj(instrumentPacket?.diagnosticsPayload);
-  const displaySummary = safeObj(safeObj(instrumentPacket?.displayPayload).summary);
+  const diagnostics = safeObj(instrumentPacket && instrumentPacket.diagnosticsPayload);
+  const displayPayload = safeObj(instrumentPacket && instrumentPacket.displayPayload);
+  const displaySummary = safeObj(displayPayload.summary);
+  const classifiedStateFromInstrument = instrumentPacket && instrumentPacket.classifiedState
+    ? instrumentPacket.classifiedState
+    : "—";
 
   const ageMs = isFiniteNumber(runtimeReceipt.timestamp) ? Math.max(0, nowMs - runtimeReceipt.timestamp) : null;
   const fps = dtMs > 0 ? 1000 / dtMs : null;
@@ -713,7 +713,7 @@ function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) 
   push(history.burden, primitive.fragmentWeight);
 
   setText("k-state", classifiedState, kpiClass(classifiedState, "state"));
-  setText("k-classified", instrumentPacket ? (instrumentPacket.classifiedState || classifiedState) : classifiedState);
+  setText("k-classified", classifiedStateFromInstrument);
   setText("k-phase", runtimeReceipt.phase || "—");
   setText("k-fresh", freshness ? "FRESH" : "STALE", kpiClass(freshness ? "FRESH" : "STALE", "fresh"));
   setText("k-fps", intfmt(fps));
@@ -741,7 +741,7 @@ function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) 
     row("successor", Object.keys(renderSuccessor).length ? "present" : "none");
 
   document.getElementById("diagRows").innerHTML =
-    row("instrument state", instrumentPacket ? (instrumentPacket.classifiedState || "—") : "none") +
+    row("instrument state", classifiedStateFromInstrument) +
     row("summary state", displaySummary.state || "—") +
     row("summary boundary", displaySummary.boundary || "—") +
     row("summary projection", displaySummary.projection || "—") +
@@ -848,16 +848,20 @@ function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) 
     {data:history.burden,color:"#ff7a7a"}
   ],0,Math.max(60,...history.fps,1));
 
+  const summaryLine = Array.isArray(displayPayload.lines) && displayPayload.lines.length
+    ? displayPayload.lines[0]
+    : "—";
+
   document.getElementById("footer").textContent =
     "BUILD=" + BUILD_STAMP +
     " | RUNTIME=" + moduleState.runtime.status +
     " | RENDER=" + moduleState.render.status +
     " | INSTRUMENTS=" + moduleState.instruments.status +
     " | STATE=" + classifiedState +
+    " | INSTRUMENT=" + classifiedStateFromInstrument +
     " | PHASE=" + (runtimeReceipt.phase || "—") +
     " | AGE=" + (isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—") +
-    " | KERNEL=" + (state.i ?? "—") + "," + (state.j ?? "—") +
-    " | DENSE=" + (denseIndex.x ?? "—") + "," + (denseIndex.y ?? "—");
+    " | SUMMARY=" + summaryLine;
 }
 
 async function boot() {

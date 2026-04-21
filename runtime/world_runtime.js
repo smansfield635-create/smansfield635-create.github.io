@@ -1,12 +1,5 @@
-import {
-  getControlReceipt,
-  getCameraFrame,
-  getLabelVisibilityPolicy
-} from "/world/control.js";
-import {
-  getPlanetEngineReceipt,
-  getPlanetProjection
-} from "/world/planet_engine.js";
+import { getControlReceipt, getLabelVisibilityPolicy } from "/world/control.js";
+import { getPlanetEngineReceipt, getPlanetProjection } from "/world/planet_engine.js";
 import { render } from "/world/render.js";
 
 const META = Object.freeze({
@@ -35,7 +28,6 @@ function normalizeViewport(viewport = {}) {
   const width = Number.isFinite(viewport.width) && viewport.width > 0 ? viewport.width : 1280;
   const height = Number.isFinite(viewport.height) && viewport.height > 0 ? viewport.height : 720;
   const dpr = Number.isFinite(viewport.dpr) && viewport.dpr > 0 ? viewport.dpr : 1;
-
   return { width, height, dpr };
 }
 
@@ -58,10 +50,6 @@ function normalizeFrameState(frameState = {}) {
   };
 }
 
-function getDepthFromAngle(angle) {
-  return (Math.sin(Number(angle || 0)) + 1) * 0.5;
-}
-
 function buildSunSceneNode(projection = {}) {
   const sun = projection.sun || {};
   const viewport = sun.viewport || { x: 0, y: 0 };
@@ -70,7 +58,7 @@ function buildSunSceneNode(projection = {}) {
     key: sun.key || "sun",
     label: sun.label || "Sun",
     radiusKm: Number(sun.radiusKm || 0),
-    compressedRadiusKm: Number(sun.compressedRadiusKm || 0),
+    scaledRadiusKm: Number(sun.scaledRadiusKm || sun.compressedRadiusKm || 0),
     radiusPx: Number(sun.radiusPx || 0),
     viewport: {
       x: Number(viewport.x || 0),
@@ -83,22 +71,22 @@ function buildPlanetSceneNodes(projection = {}, frameState = {}, viewport = {}) 
   const planets = Array.isArray(projection.planets) ? projection.planets : [];
   const labelPolicy = getLabelVisibilityPolicy(viewport);
   const pointer = normalizePointer(frameState.pointer || {});
-  const pointerShiftX = pointer.active ? pointer.x * 8 : 0;
-  const pointerShiftY = pointer.active ? pointer.y * 6 : 0;
+
+  const shiftX = pointer.active ? pointer.x * 6 : 0;
+  const shiftY = pointer.active ? pointer.y * 4 : 0;
 
   return deepFreeze(
     planets.map((planet) => {
       const positionKm = planet.positionKm || {};
-      const viewportPosition = planet.viewport || { x: 0, y: 0 };
-      const radiusPx = Number(planet.radiusPx || 0);
+      const viewportPoint = planet.viewport || { x: 0, y: 0 };
       const angle = Number(positionKm.angle || 0);
-      const depth = getDepthFromAngle(angle);
+      const depth = (Math.sin(angle) + 1) * 0.5;
       const scale = 0.9 + depth * 0.16;
       const opacity = 0.86 + depth * 0.14;
       const zIndex = Math.floor(10 + depth * 20);
-
-      const x = Number(viewportPosition.x || 0) + pointerShiftX;
-      const y = Number(viewportPosition.y || 0) + pointerShiftY;
+      const radiusPx = Number(planet.radiusPx || 0);
+      const x = Number(viewportPoint.x || 0) + shiftX;
+      const y = Number(viewportPoint.y || 0) + shiftY;
 
       return deepFreeze({
         key: planet.key,
@@ -108,7 +96,7 @@ function buildPlanetSceneNodes(projection = {}, frameState = {}, viewport = {}) 
         hasRing: planet.hasRing === true,
         order: Number(planet.order || 0),
         radiusKm: Number(planet.radiusKm || 0),
-        compressedRadiusKm: Number(planet.compressedRadiusKm || 0),
+        scaledRadiusKm: Number(planet.scaledRadiusKm || planet.compressedRadiusKm || 0),
         radiusPx,
         orbitPxX: Number((planet.orbitPx || {}).x || 0),
         orbitPxY: Number((planet.orbitPx || {}).y || 0),
@@ -160,7 +148,6 @@ function buildOrbitSceneNodes(projection = {}) {
 
 function buildStarSceneNodes(projection = {}) {
   const stars = Array.isArray(projection.stars) ? projection.stars : [];
-
   return deepFreeze(
     stars.map((star) =>
       deepFreeze({
@@ -174,7 +161,7 @@ function buildStarSceneNodes(projection = {}) {
 }
 
 function buildSceneState(viewport, frameState, projection) {
-  const camera = projection.camera || getCameraFrame(viewport);
+  const camera = projection.camera || {};
   const sun = buildSunSceneNode(projection);
   const planets = buildPlanetSceneNodes(projection, frameState, viewport);
   const orbitRings = buildOrbitSceneNodes(projection);
@@ -186,7 +173,7 @@ function buildSceneState(viewport, frameState, projection) {
     elapsedSeconds: frameState.elapsedSeconds,
     reducedMotion: frameState.reducedMotion,
     pointer: frameState.pointer,
-    centerPx: deepFreeze(camera.centerPx || { x: viewport.width * 0.5, y: viewport.height * 0.5 }),
+    centerPx: deepFreeze(camera.centerPx || { x: viewport.width * 0.5, y: viewport.height * 0.44 }),
     worldScale: deepFreeze({
       kmPerPx: Number(camera.kmPerPx || 0),
       pxPerKm: Number(camera.pxPerKm || 0)
@@ -213,7 +200,6 @@ export function buildWorldRuntimeSnapshot(options = {}) {
     viewport,
     elapsedSeconds: frameState.elapsedSeconds
   });
-
   const sceneState = buildSceneState(viewport, frameState, projection);
 
   const renderPacket = render({

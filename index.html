@@ -1,958 +1,398 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Solar Index</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge root index with hard HTML routes and a complete nine-planet solar-system navigation chamber."
-  />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diamond Gate Bridge · Home</title>
+  <meta name="description" content="Diamond Gate Bridge entry surface. Clear utility navigation with lightweight runtime proof.">
   <style>
-    :root {
-      --bg-0: #020711;
-      --bg-1: #071222;
-      --bg-2: #0b1830;
-      --panel: rgba(9, 19, 36, 0.84);
-      --panel-soft: rgba(255, 255, 255, 0.04);
-      --line: rgba(177, 214, 255, 0.16);
-      --text: #eef5ff;
-      --muted: #abc0da;
-      --accent: #d7ecff;
-      --gold: #f0d89a;
-      --shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
-      --radius-xl: 30px;
-      --max: 1280px;
-      --focus: 0 0 0 3px rgba(196, 229, 255, 0.22);
+    :root{
+      --bg:#05070b;
+      --panel:#0d1320;
+      --panel-2:#10192a;
+      --text:#eef4ff;
+      --muted:#9fb0cf;
+      --line:rgba(255,255,255,.10);
+      --accent:#8ec5ff;
+      --accent-2:#d2e7ff;
+      --ok:#8fffb5;
+      --shadow:0 24px 80px rgba(0,0,0,.38);
+      --radius:20px;
+      --max:1180px;
     }
-
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif}
+    body{min-height:100vh;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .page{
+      position:relative;
+      min-height:100vh;
+      isolation:isolate;
       background:
-        radial-gradient(circle at 14% 12%, rgba(110, 158, 255, 0.18), transparent 20%),
-        radial-gradient(circle at 82% 16%, rgba(106, 228, 255, 0.10), transparent 18%),
-        radial-gradient(circle at 50% 86%, rgba(129, 124, 255, 0.10), transparent 24%),
-        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 44%, var(--bg-2) 100%);
+        radial-gradient(circle at top, rgba(88,124,181,.18), transparent 30%),
+        linear-gradient(180deg, #05070b 0%, #08101b 100%);
     }
-
-    a {
-      color: inherit;
-      text-decoration: none;
+    .fx{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      opacity:.9;
     }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: none;
-      box-shadow: var(--focus);
+    .shell{
+      position:relative;
+      z-index:1;
+      width:min(100% - 28px, var(--max));
+      margin:0 auto;
+      padding:20px 0 48px;
     }
-
-    .shell {
-      width: min(100% - 28px, var(--max));
-      margin: 0 auto;
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:10px 0 20px;
     }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      backdrop-filter: blur(16px);
-      background: rgba(4, 10, 20, 0.76);
-      border-bottom: 1px solid rgba(177, 214, 255, 0.12);
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
-
-    .topbar-inner {
-      width: min(100% - 28px, var(--max));
-      margin: 0 auto;
-      display: flex;
-      gap: 14px;
-      align-items: center;
-      justify-content: space-between;
-      padding: 14px 0;
+    .brand-mark{
+      width:14px;
+      height:14px;
+      border-radius:999px;
+      background:linear-gradient(135deg, var(--accent), #ffffff);
+      box-shadow:0 0 28px rgba(142,197,255,.55);
+      flex:0 0 auto;
     }
-
-    .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
+    .brand-copy{
+      min-width:0;
     }
-
-    .brand-mark {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      border: 1px solid rgba(217, 236, 255, 0.24);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)),
-        radial-gradient(circle at 50% 45%, rgba(255, 229, 157, 0.86), rgba(255, 180, 88, 0.18) 42%, transparent 68%),
-        linear-gradient(180deg, rgba(24, 40, 68, 0.96), rgba(11, 19, 34, 0.98));
-      box-shadow:
-        inset 0 0 22px rgba(255, 239, 198, 0.08),
-        0 0 24px rgba(148, 202, 255, 0.08);
-      flex: 0 0 auto;
+    .brand-title{
+      margin:0;
+      font-size:14px;
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
-
-    .brand-copy {
-      min-width: 0;
+    .brand-sub{
+      margin:2px 0 0;
+      color:var(--muted);
+      font-size:12px;
     }
-
-    .brand-copy strong {
-      display: block;
-      font-size: 0.96rem;
-      letter-spacing: 0.04em;
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      gap:10px;
     }
-
-    .brand-copy span {
-      display: block;
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 0.82rem;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .nav a{
+      padding:10px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.03);
+      color:var(--accent-2);
+      font-size:14px;
+      transition:border-color .18s ease, transform .18s ease, background .18s ease;
     }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: flex-end;
-    }
-
-    .nav a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(177, 214, 255, 0.14);
-      background: rgba(255, 255, 255, 0.03);
-      font-size: 0.92rem;
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
     .nav a:hover,
-    .nav a:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(217, 236, 255, 0.30);
-      background: rgba(255, 255, 255, 0.06);
+    .nav a:focus-visible{
+      border-color:rgba(255,255,255,.22);
+      background:rgba(255,255,255,.06);
+      transform:translateY(-1px);
+      outline:none;
     }
-
-    .nav a[aria-current="page"] {
-      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.08));
-      border-color: rgba(217, 236, 255, 0.30);
-      box-shadow: inset 0 0 0 1px rgba(217, 236, 255, 0.06);
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,1.2fr) minmax(300px,.8fr);
+      gap:20px;
+      padding:24px 0 18px;
     }
-
-    .hero {
-      padding: 42px 0 26px;
+    .panel{
+      background:linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.025));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
-
-    .hero-panel {
-      position: relative;
-      overflow: hidden;
-      border-radius: var(--radius-xl);
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 12%, rgba(191, 225, 255, 0.10), transparent 28%),
-        linear-gradient(180deg, rgba(14, 28, 52, 0.94), rgba(7, 15, 29, 0.98));
-      box-shadow: var(--shadow);
-      padding: 30px;
+    .hero-main{
+      padding:30px;
     }
-
-    .hero-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 0.88fr) minmax(480px, 1.12fr);
-      gap: 28px;
-      align-items: start;
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      margin:0 0 14px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--accent-2);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
-
-    .eyebrow {
-      margin: 0 0 10px;
-      color: var(--accent);
-      font-size: 0.84rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+    h1{
+      margin:0;
+      font-size:clamp(34px,6vw,62px);
+      line-height:1.02;
+      letter-spacing:-.04em;
     }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 5vw, 3.45rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-      max-width: 12ch;
+    .lede{
+      margin:18px 0 0;
+      max-width:60ch;
+      color:var(--muted);
+      font-size:18px;
     }
-
-    .hero-copy {
-      max-width: 68ch;
-      margin: 14px 0 0;
-      color: var(--muted);
-      font-size: 1.02rem;
-      line-height: 1.72;
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:24px;
     }
-
-    .hero-actions,
-    .crumbs {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 18px;
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      font-weight:600;
     }
-
-    .button,
-    .crumbs a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 0 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(177, 214, 255, 0.16);
-      background: rgba(255, 255, 255, 0.04);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    .button-primary{
+      background:linear-gradient(135deg, rgba(142,197,255,.18), rgba(255,255,255,.08));
+      color:#fff;
     }
-
-    .button:hover,
-    .button:focus-visible,
-    .crumbs a:hover,
-    .crumbs a:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(217, 236, 255, 0.28);
-      background: rgba(255, 255, 255, 0.06);
+    .button-secondary{
+      background:rgba(255,255,255,.03);
+      color:var(--accent-2);
     }
-
-    .button.primary {
-      border-color: rgba(240, 216, 154, 0.34);
-      background: linear-gradient(180deg, rgba(240, 216, 154, 0.24), rgba(240, 216, 154, 0.08));
+    .hero-side{
+      padding:22px;
+      display:grid;
+      gap:14px;
+      align-content:start;
     }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin-top: 22px;
+    .proof-label{
+      margin:0;
+      color:var(--muted);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
-
-    .summary-card {
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: var(--panel-soft);
-      padding: 16px 16px 14px;
-      backdrop-filter: blur(8px);
+    .proof-value{
+      margin:6px 0 0;
+      font-size:15px;
+      color:var(--text);
+      word-break:break-word;
     }
-
-    .summary-card strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 0.84rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
+    .proof-good{
+      color:var(--ok);
     }
-
-    .summary-card span {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
+    .routes{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
     }
-
-    .solar-frame {
-      position: relative;
-      min-height: 780px;
-      border-radius: 30px;
-      border: 1px solid rgba(217, 236, 255, 0.18);
-      background:
-        radial-gradient(circle at 50% 24%, rgba(240, 216, 154, 0.06), transparent 28%),
-        linear-gradient(180deg, rgba(9, 19, 36, 0.94), rgba(8, 17, 31, 0.98));
-      box-shadow:
-        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
-        inset 0 0 60px rgba(143, 200, 255, 0.04),
-        0 22px 60px rgba(0, 0, 0, 0.30);
-      overflow: hidden;
-      isolation: isolate;
+    .route-card{
+      padding:18px;
+      min-height:160px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
-
-    .solar-frame-header {
-      position: relative;
-      z-index: 5;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 16px 18px 0;
+    .route-kicker{
+      color:var(--accent-2);
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
-
-    .solar-frame-header strong {
-      display: block;
-      font-size: 0.84rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
+    .route-title{
+      margin:0;
+      font-size:24px;
+      line-height:1.1;
     }
-
-    .solar-frame-header span {
-      color: var(--muted);
-      font-size: 0.76rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .route-copy{
+      margin:0;
+      color:var(--muted);
+      flex:1 1 auto;
     }
-
-    .solar-frame-shell {
-      position: relative;
-      height: calc(100% - 54px);
-      min-height: 720px;
-      padding: 14px;
+    .route-link{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#fff;
+      font-weight:600;
     }
-
-    .hero-stage {
-      position: absolute;
-      inset: 14px;
-      z-index: 1;
-      pointer-events: none;
-      overflow: hidden;
-      border-radius: 22px;
+    .footer{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-top:18px;
+      padding:18px 4px 0;
+      color:var(--muted);
+      font-size:13px;
     }
-
-    .solar-shell {
-      position: absolute;
-      inset: 14px;
-      z-index: 3;
-      overflow: hidden;
-      border-radius: 22px;
+    .sr-only{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
     }
-
-    .solar-grid {
-      position: absolute;
-      inset: 0;
-    }
-
-    .solar-center-label {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, calc(-50% + 86px));
-      z-index: 6;
-      min-height: 34px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(240, 216, 154, 0.24);
-      background: rgba(7, 15, 28, 0.78);
-      color: var(--gold);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      pointer-events: none;
-      backdrop-filter: blur(8px);
-    }
-
-    .route-body {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 96px;
-      height: 96px;
-      pointer-events: auto;
-    }
-
-    .route-body a {
-      display: block;
-      width: 100%;
-      height: 100%;
-    }
-
-    .planet-body {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      border: 1px solid rgba(217, 236, 255, 0.22);
-      box-shadow:
-        0 14px 34px rgba(0, 0, 0, 0.34),
-        inset -14px -18px 28px rgba(0, 0, 0, 0.28),
-        inset 8px 10px 16px rgba(255, 255, 255, 0.06),
-        0 0 28px rgba(143, 200, 255, 0.08);
-      overflow: hidden;
-    }
-
-    .planet-body::before {
-      content: "";
-      position: absolute;
-      inset: 18% 56% 54% 14%;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.14);
-      filter: blur(2px);
-    }
-
-    .planet-body::after {
-      content: "";
-      position: absolute;
-      inset: auto 14% 18% auto;
-      width: 18%;
-      height: 18%;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.12);
-      filter: blur(4px);
-    }
-
-    .planet-label-wrap {
-      position: absolute;
-      inset: 0;
-      display: grid;
-      place-items: center;
-      pointer-events: none;
-    }
-
-    .planet-label {
-      display: inline-block;
-      max-width: 68px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.62rem;
-      font-weight: 800;
-      line-height: 1.15;
-      text-align: center;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.36);
-    }
-
-    .planet-meta {
-      position: absolute;
-      left: 50%;
-      top: calc(100% + 10px);
-      transform: translateX(-50%);
-      min-width: 110px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(217, 236, 255, 0.16);
-      background: rgba(6, 16, 32, 0.84);
-      color: var(--accent);
-      font-size: 0.58rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-align: center;
-      white-space: nowrap;
-      backdrop-filter: blur(8px);
-      pointer-events: none;
-    }
-
-    .planet-mercury .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(164, 170, 180, 0.24), rgba(20, 23, 31, 0.98) 68%);
-    }
-
-    .planet-venus .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(219, 176, 124, 0.28), rgba(36, 24, 16, 0.98) 68%);
-    }
-
-    .planet-earth .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(92, 156, 255, 0.28), rgba(10, 24, 42, 0.98) 68%);
-    }
-
-    .planet-mars .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(201, 111, 95, 0.28), rgba(34, 14, 14, 0.98) 68%);
-    }
-
-    .planet-jupiter .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), linear-gradient(180deg, rgba(203, 171, 141, 0.94), rgba(137, 104, 76, 0.94) 28%, rgba(183, 152, 120, 0.94) 52%, rgba(128, 90, 66, 0.94) 74%, rgba(88, 57, 43, 0.96));
-    }
-
-    .planet-saturn .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(217, 197, 145, 0.28), rgba(46, 36, 18, 0.98) 68%);
-    }
-
-    .planet-uranus .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(146, 216, 221, 0.28), rgba(16, 35, 42, 0.98) 68%);
-    }
-
-    .planet-neptune .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(88, 120, 255, 0.28), rgba(10, 18, 44, 0.98) 68%);
-    }
-
-    .planet-pluto .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.06) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(181, 165, 152, 0.22), rgba(20, 18, 18, 0.98) 68%);
-    }
-
-    .section {
-      padding: 18px 0 42px;
-    }
-
-    .section-head {
-      display: flex;
-      align-items: end;
-      justify-content: space-between;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-head h2 {
-      margin: 0;
-      font-size: clamp(1.35rem, 3vw, 2rem);
-      letter-spacing: -0.02em;
-    }
-
-    .section-head p {
-      margin: 0;
-      max-width: 54ch;
-      color: var(--muted);
-      line-height: 1.68;
-    }
-
-    .route-list,
-    .surface-grid,
-    .governance-grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .route-list {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .surface-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .governance-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .route-card,
-    .surface-card,
-    .governance-card {
-      border-radius: 22px;
-      border: 1px solid var(--line);
-      background: var(--panel);
-      box-shadow: var(--shadow);
-      padding: 18px;
-    }
-
-    .route-card strong,
-    .surface-card strong,
-    .governance-card strong {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 0.86rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    .route-card p,
-    .surface-card p,
-    .governance-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.64;
-      font-size: 0.95rem;
-    }
-
-    .route-card a,
-    .surface-card a {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 16px;
-      min-height: 40px;
-      padding: 0 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(177, 214, 255, 0.16);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .footer {
-      padding: 10px 0 30px;
-    }
-
-    .footer-panel {
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(9, 18, 32, 0.82);
-      padding: 14px 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .footer-panel p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 1180px) {
-      .hero-layout,
-      .route-list,
-      .surface-grid,
-      .governance-grid {
-        grid-template-columns: 1fr;
+    @media (max-width:980px){
+      .hero{
+        grid-template-columns:1fr;
       }
     }
-
-    @media (max-width: 760px) {
-      .topbar-inner {
-        flex-direction: column;
-        align-items: stretch;
+    @media (max-width:720px){
+      .shell{
+        width:min(100% - 20px, var(--max));
+        padding-top:14px;
       }
-
-      .nav {
-        justify-content: flex-start;
+      .topbar{
+        align-items:flex-start;
+        flex-direction:column;
       }
-
-      .hero-panel {
-        padding: 22px;
+      .nav{
+        justify-content:flex-start;
       }
-
-      .summary {
-        grid-template-columns: 1fr;
+      .hero-main,
+      .hero-side,
+      .route-card{
+        padding:18px;
       }
-
-      .solar-frame {
-        min-height: 840px;
+      .routes{
+        grid-template-columns:1fr;
       }
-
-      .solar-frame-shell {
-        min-height: 780px;
+      .lede{
+        font-size:16px;
       }
-
-      .route-body {
-        width: 82px;
-        height: 82px;
+      .nav a,
+      .button{
+        width:100%;
       }
-
-      .planet-label {
-        max-width: 56px;
-        font-size: 0.56rem;
+      .hero-actions{
+        flex-direction:column;
       }
-
-      .planet-meta {
-        min-width: 94px;
-        font-size: 0.52rem;
-      }
-
-      .section-head {
-        align-items: start;
-        flex-direction: column;
-      }
+    }
+    @media (prefers-reduced-motion:reduce){
+      .nav a{transition:none}
     }
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="topbar-inner">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-copy">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Solar index · nine planets · one orbital template</span>
-        </span>
-      </a>
+  <div class="page">
+    <canvas class="fx" id="home-fx" aria-hidden="true"></canvas>
 
-      <nav class="nav" aria-label="Primary">
-        <a href="/" aria-current="page">Home</a>
-        <a href="/explore/">Explore</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/laws/">Laws</a>
-      </nav>
-    </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="shell">
-        <div class="hero-panel">
-          <div class="hero-layout">
-            <div>
-              <p class="eyebrow">Index · Complete Solar System Contract</p>
-              <h1>Complete the solar system.</h1>
-              <p class="hero-copy">
-                The index now uses the full nine-planet template. One sun sits at the center. Nine
-                route bodies inherit the same orbital system. This page does solar navigation only.
-              </p>
-
-              <div class="hero-actions">
-                <a class="button primary" href="#primary-routes">Open all nine items</a>
-                <a class="button" href="/explore/">Go to Explore</a>
-              </div>
-
-              <div class="summary" aria-label="Solar system summary">
-                <div class="summary-card">
-                  <strong>Center</strong>
-                  <span>The center object is the sun only.</span>
-                </div>
-                <div class="summary-card">
-                  <strong>Count</strong>
-                  <span>Nine route bodies now exist in the chamber.</span>
-                </div>
-                <div class="summary-card">
-                  <strong>Template</strong>
-                  <span>The solar system is the governing template.</span>
-                </div>
-                <div class="summary-card">
-                  <strong>Rule</strong>
-                  <span>All nine planets follow the same orbital law.</span>
-                </div>
-              </div>
-
-              <nav class="crumbs" aria-label="Home context links">
-                <a href="/">Home</a>
-                <a href="/explore/">Explore</a>
-                <a href="/products/">Products</a>
-                <a href="/gauges/">Gauges</a>
-                <a href="/laws/">Laws</a>
-                <a href="/governance/">Governance</a>
-                <a href="/about/">About</a>
-                <a href="/contact/">Contact</a>
-                <a href="#primary-routes">Nine Planets</a>
-              </nav>
-            </div>
-
-            <div>
-              <div class="solar-frame" id="home-solar-frame">
-                <div class="solar-frame-header">
-                  <strong>Solar Navigation</strong>
-                  <span>Sun Center · Nine Planets</span>
-                </div>
-
-                <div class="solar-frame-shell">
-                  <div class="hero-stage" id="home-hero-stage" aria-hidden="true"></div>
-
-                  <div class="solar-shell" aria-hidden="true">
-                    <div class="solar-grid" id="home-orbit-grid">
-                      <article class="route-body planet-mercury" data-planet="mercury" data-route="/explore/">
-                        <a href="/explore/" aria-label="Mercury · Explore">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Explore</span></div>
-                          <span class="planet-meta">Mercury</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-venus" data-planet="venus" data-route="/products/">
-                        <a href="/products/" aria-label="Venus · Products">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Products</span></div>
-                          <span class="planet-meta">Venus</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-earth" data-planet="earth" data-route="/gauges/">
-                        <a href="/gauges/" aria-label="Earth · Gauges">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Gauges</span></div>
-                          <span class="planet-meta">Earth</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-mars" data-planet="mars" data-route="/laws/">
-                        <a href="/laws/" aria-label="Mars · Laws">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Laws</span></div>
-                          <span class="planet-meta">Mars</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-jupiter" data-planet="jupiter" data-route="/governance/">
-                        <a href="/governance/" aria-label="Jupiter · Governance">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Governance</span></div>
-                          <span class="planet-meta">Jupiter</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-saturn" data-planet="saturn" data-route="/about/">
-                        <a href="/about/" aria-label="Saturn · About">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">About</span></div>
-                          <span class="planet-meta">Saturn</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-uranus" data-planet="uranus" data-route="/contact/">
-                        <a href="/contact/" aria-label="Uranus · Contact">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Contact</span></div>
-                          <span class="planet-meta">Uranus</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-neptune" data-planet="neptune" data-route="/">
-                        <a href="/" aria-label="Neptune · Home">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Home</span></div>
-                          <span class="planet-meta">Neptune</span>
-                        </a>
-                      </article>
-
-                      <article class="route-body planet-pluto" data-planet="pluto" data-route="#primary-routes">
-                        <a href="#primary-routes" aria-label="Pluto · Nine Routes">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Routes</span></div>
-                          <span class="planet-meta">Pluto</span>
-                        </a>
-                      </article>
-                    </div>
-
-                    <div class="solar-center-label">Solar Center</div>
-                  </div>
-                </div>
-              </div>
-            </div>
+    <div class="shell">
+      <header class="topbar" aria-label="Primary">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
+          <div class="brand-copy">
+            <p class="brand-title">Diamond Gate Bridge</p>
+            <p class="brand-sub">Home · utility entry surface</p>
           </div>
         </div>
-      </div>
-    </section>
 
-    <section id="primary-routes" class="section">
-      <div class="shell">
-        <div class="section-head">
-          <div><h2>Nine planetary items</h2></div>
-          <p>
-            These are the nine route bodies now present in the chamber.
-          </p>
-        </div>
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="/">Home</a>
+          <a href="/explore/">Explore</a>
+          <a href="/products/">Products</a>
+          <a href="/gauges/">Gauges</a>
+          <a href="/laws/">Laws</a>
+          <a href="/governance/">Governance</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+        </nav>
+      </header>
 
-        <div class="route-list">
-          <article class="route-card">
-            <strong>Mercury · Explore</strong>
-            <p>Frontier and discovery surface.</p>
-            <a href="/explore/">Open route</a>
+      <main>
+        <section class="hero" aria-labelledby="home-title">
+          <article class="panel hero-main">
+            <p class="eyebrow">Entry first · motion second</p>
+            <h1 id="home-title">One clear home surface.</h1>
+            <p class="lede">
+              This page is the entry point. It keeps route safety, utility navigation, and a lightweight runtime proof surface without carrying the old nine-planet showroom burden.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="/explore/">Enter Explore</a>
+              <a class="button button-secondary" href="/laws/">Open Laws</a>
+            </div>
           </article>
 
-          <article class="route-card">
-            <strong>Venus · Products</strong>
-            <p>Product page remains separate from the index chamber concept.</p>
-            <a href="/products/">Open route</a>
+          <aside class="panel hero-side" aria-labelledby="runtime-proof-title">
+            <div>
+              <p class="proof-label" id="runtime-proof-title">Runtime proof</p>
+              <p class="proof-value proof-good" id="runtime-status">READY</p>
+            </div>
+            <div>
+              <p class="proof-label">Contract</p>
+              <p class="proof-value" id="runtime-contract">HOME_ENTRY_RUNTIME_V1</p>
+            </div>
+            <div>
+              <p class="proof-label">Reduced motion</p>
+              <p class="proof-value" id="runtime-motion">unknown</p>
+            </div>
+            <div>
+              <p class="proof-label">Viewport</p>
+              <p class="proof-value" id="runtime-viewport">pending</p>
+            </div>
+            <div>
+              <p class="proof-label">Updated</p>
+              <p class="proof-value" id="runtime-updated">pending</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="routes" aria-label="Primary route surfaces">
+          <article class="panel route-card">
+            <p class="route-kicker">Discovery</p>
+            <h2 class="route-title">Explore</h2>
+            <p class="route-copy">Frontier and discovery surface.</p>
+            <a class="route-link" href="/explore/">Open route</a>
           </article>
 
-          <article class="route-card">
-            <strong>Earth · Gauges</strong>
-            <p>Telemetry and stability read layer.</p>
-            <a href="/gauges/">Open route</a>
+          <article class="panel route-card">
+            <p class="route-kicker">Catalog</p>
+            <h2 class="route-title">Products</h2>
+            <p class="route-copy">Product gateway kept separate from the home entry surface.</p>
+            <a class="route-link" href="/products/">Open route</a>
           </article>
 
-          <article class="route-card">
-            <strong>Mars · Laws</strong>
-            <p>Constraint and admissibility layer.</p>
-            <a href="/laws/">Open route</a>
+          <article class="panel route-card">
+            <p class="route-kicker">Telemetry</p>
+            <h2 class="route-title">Gauges</h2>
+            <p class="route-copy">Monitoring and stability read layer.</p>
+            <a class="route-link" href="/gauges/">Open route</a>
           </article>
 
-          <article class="route-card">
-            <strong>Jupiter · Governance</strong>
-            <p>Deployment and governance surface.</p>
-            <a href="/governance/">Open route</a>
+          <article class="panel route-card">
+            <p class="route-kicker">Constraints</p>
+            <h2 class="route-title">Laws</h2>
+            <p class="route-copy">Law, admissibility, and governing constraints surface.</p>
+            <a class="route-link" href="/laws/">Open route</a>
           </article>
+        </section>
+      </main>
 
-          <article class="route-card">
-            <strong>Saturn · About</strong>
-            <p>Project identity and orientation layer.</p>
-            <a href="/about/">Open route</a>
-          </article>
-
-          <article class="route-card">
-            <strong>Uranus · Contact</strong>
-            <p>Direct communication surface.</p>
-            <a href="/contact/">Open route</a>
-          </article>
-
-          <article class="route-card">
-            <strong>Neptune · Home</strong>
-            <p>Root return path.</p>
-            <a href="/">Open route</a>
-          </article>
-
-          <article class="route-card">
-            <strong>Pluto · Routes</strong>
-            <p>Ninth item completing the chamber count.</p>
-            <a href="#primary-routes">Open item</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="shell">
-        <div class="section-head">
-          <div><h2>Secondary public surfaces</h2></div>
-          <p>
-            The chamber count is now complete.
-          </p>
-        </div>
-
-        <div class="surface-grid">
-          <article class="surface-card">
-            <strong>Explore</strong>
-            <p>Discovery surface.</p>
-            <a href="/explore/">Open surface</a>
-          </article>
-
-          <article class="surface-card">
-            <strong>Products</strong>
-            <p>Products surface.</p>
-            <a href="/products/">Open surface</a>
-          </article>
-
-          <article class="surface-card">
-            <strong>Gauges</strong>
-            <p>Monitoring surface.</p>
-            <a href="/gauges/">Open surface</a>
-          </article>
-
-          <article class="surface-card">
-            <strong>Laws</strong>
-            <p>Law surface.</p>
-            <a href="/laws/">Open surface</a>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="shell">
-        <div class="section-head">
-          <div><h2>Execution governance</h2></div>
-          <p>
-            This file handles the complete nine-planet HTML structure.
-          </p>
-        </div>
-
-        <div class="governance-grid">
-          <article class="governance-card">
-            <strong>Count</strong>
-            <p>Nine route bodies are present in the markup.</p>
-          </article>
-
-          <article class="governance-card">
-            <strong>Center</strong>
-            <p>The center remains reserved for the sun only.</p>
-          </article>
-
-          <article class="governance-card">
-            <strong>Motion</strong>
-            <p>The chamber is animated by the root runtime.</p>
-          </article>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <div class="shell">
-      <div class="footer-panel">
-        <p>
-          Result / Receipt: HTML=STRUCTURE | PAGE=SOLAR_INDEX |
-          CENTER=SUN | PLANET_COUNT=9 | TEMPLATE=SOLAR_SYSTEM |
-          ROOT_RUNTIME=index.js
-        </p>
-      </div>
+      <footer class="footer">
+        <span>Receipt: HTML=STRUCTURE | PAGE=HOME_ENTRY | CONTRACT=HOME_ENTRY_UTILITY_V1 | ROOT_RUNTIME=index.js</span>
+        <span id="footer-year">Year</span>
+      </footer>
     </div>
-  </footer>
+  </div>
 
   <script type="module" src="/index.js"></script>
 </body>

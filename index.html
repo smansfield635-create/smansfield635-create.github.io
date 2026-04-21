@@ -1,528 +1,841 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="House-first public entry for Diamond Gate Bridge. Stable Euclidean host, visible rooms, governed surfaces, and metaverse classification held until evidenced."
+    content="Public entry compass with a bounded Euclidean chamber, hard route safety, and direct access to the primary descendant surfaces."
   />
   <style>
-    :root{
-      --bg:#05070b;
-      --bg2:#08101a;
-      --bg3:#0d1623;
-      --panel:#0b0f16;
-      --panel2:#101722;
-      --line:#1f2a36;
-      --line2:rgba(127,255,212,.16);
-      --text:#e8f6ff;
-      --muted:rgba(232,246,255,.68);
-      --accent:#7fffd4;
-      --accent2:#6fe7ff;
-      --good:#7fffd4;
-      --warn:#ffd27a;
-      --bad:#ff7a7a;
-      --shadow:0 14px 40px rgba(0,0,0,.30);
-      --shadow2:0 20px 70px rgba(0,0,0,.38);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
-      --maxw:1440px;
-      --radius:16px;
-      --radius2:22px;
+    :root {
+      --bg-a: #030913;
+      --bg-b: #071427;
+      --bg-c: #0a1a31;
+      --panel: rgba(10, 22, 42, 0.74);
+      --line: rgba(165, 208, 255, 0.18);
+      --text: #ecf4ff;
+      --muted: #a7bddb;
+      --accent: #c4e6ff;
+      --shadow: 0 18px 52px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+      --max: 1180px;
     }
 
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      min-height:100%;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
-        radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
-        linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+        radial-gradient(circle at 16% 14%, rgba(82, 125, 255, 0.16), transparent 24%),
+        radial-gradient(circle at 82% 20%, rgba(96, 214, 255, 0.10), transparent 20%),
+        radial-gradient(circle at 50% 82%, rgba(118, 142, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
     }
 
-    body{min-height:100vh;overflow-x:hidden}
+    a { color: inherit; text-decoration: none; }
 
-    .hostGlow,.gridLines{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
+    .shell {
+      width: min(100% - 28px, var(--max));
+      margin: 0 auto;
     }
 
-    .hostGlow{
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(14px);
+      background: rgba(5, 11, 22, 0.74);
+      border-bottom: 1px solid rgba(160, 205, 255, 0.12);
+    }
+
+    .topbar-inner {
+      width: min(100% - 28px, var(--max));
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(191, 230, 255, 0.28);
       background:
-        radial-gradient(circle at 50% 12%, rgba(127,255,212,.050), transparent 18%),
-        radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
-        radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
-      filter:blur(10px);
+        radial-gradient(circle at 50% 42%, rgba(191, 230, 255, 0.92), rgba(143, 200, 255, 0.18) 42%, transparent 62%),
+        radial-gradient(circle at 50% 50%, rgba(120, 164, 255, 0.18), transparent 70%);
+      box-shadow: inset 0 0 18px rgba(191, 230, 255, 0.16), 0 0 28px rgba(143, 200, 255, 0.12);
+      flex: 0 0 auto;
     }
 
-    .gridLines{
-      background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+    .brand-copy strong {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
     }
 
-    .wrap{
-      position:relative;
-      z-index:1;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    .brand-copy span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
+    .nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(160, 205, 255, 0.14);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.92rem;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(191, 230, 255, 0.34);
+      background: rgba(255, 255, 255, 0.06);
+      outline: none;
+    }
+
+    .nav a[aria-current="page"] {
+      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.08));
+      border-color: rgba(191, 230, 255, 0.34);
+      box-shadow: 0 0 0 1px rgba(191, 230, 255, 0.08) inset;
+    }
+
+    .hero { padding: 42px 0 24px; }
+
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      border-radius: 28px;
+      border: 1px solid var(--line);
       background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-        radial-gradient(circle at 18% 18%, rgba(127,255,212,.05), transparent 26%);
-      box-shadow:var(--shadow);
-      margin-bottom:12px;
+        radial-gradient(circle at 50% 18%, rgba(143, 200, 255, 0.10), transparent 30%),
+        linear-gradient(180deg, rgba(14, 29, 54, 0.92), rgba(8, 18, 35, 0.96));
+      box-shadow: var(--shadow);
+      padding: 30px;
     }
 
-    .brand{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
+    .hero-layout {
+      position: relative;
+      z-index: 3;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 0.9fr);
+      gap: 28px;
+      align-items: start;
     }
 
-    .stamp{
-      font-size:11px;
-      color:var(--muted);
-      white-space:nowrap;
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .hero{
-      display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
-      gap:12px;
-      align-items:stretch;
-      margin-bottom:12px;
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.45rem);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
+      max-width: 12ch;
     }
 
-    .heroCard,.statusCard,.sceneShell,.panel,.footer{
-      border:1px solid var(--line);
-      border-radius:var(--radius2);
+    .hero-copy {
+      max-width: 68ch;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.7;
+    }
+
+    .hero-actions,
+    .crumbs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .button,
+    .crumbs a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 230, 255, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .button:hover,
+    .button:focus-visible,
+    .crumbs a:hover,
+    .crumbs a:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(191, 230, 255, 0.34);
+      background: rgba(255, 255, 255, 0.07);
+      outline: none;
+    }
+
+    .button.primary {
+      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.10));
+      border-color: rgba(191, 230, 255, 0.34);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
+
+    .summary-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(8px);
+      padding: 16px 16px 14px;
+    }
+
+    .summary-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .summary-card span {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.94rem;
+    }
+
+    .compass-frame {
+      position: relative;
+      min-height: 620px;
+      border-radius: 28px;
+      border: 1px solid rgba(191, 230, 255, 0.20);
       background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-        radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
-      box-shadow:var(--shadow2);
+        linear-gradient(180deg, rgba(6, 16, 31, 0.92), rgba(8, 18, 35, 0.98)),
+        radial-gradient(circle at 50% 50%, rgba(143, 200, 255, 0.05), transparent 52%);
+      box-shadow:
+        inset 0 0 0 1px rgba(191, 230, 255, 0.05),
+        inset 0 0 54px rgba(143, 200, 255, 0.04),
+        0 18px 52px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      isolation: isolate;
     }
 
-    .heroCard{padding:22px 20px 20px}
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:14px;
+    .compass-frame-header {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px 0;
     }
 
-    h1{
-      margin:0 0 14px;
-      font-size:clamp(38px,6vw,82px);
-      line-height:.94;
-      letter-spacing:-.06em;
-      max-width:10.5ch;
+    .compass-frame-header strong {
+      display: block;
+      font-size: 0.86rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
     }
 
-    .heroText{
-      margin:0;
-      max-width:64ch;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.7;
+    .compass-frame-header span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .chipRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+    .compass-frame-shell {
+      position: relative;
+      height: calc(100% - 56px);
+      min-height: 564px;
+      padding: 14px;
     }
 
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      min-height:38px;
-      padding:9px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
+    .hero-stage {
+      position: absolute;
+      inset: 14px;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 22px;
     }
 
-    .chip.strong{
-      color:var(--text);
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
+    .orbit-shell {
+      position: absolute;
+      inset: 14px;
+      z-index: 3;
+      perspective: 1800px;
+      transform-style: preserve-3d;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 22px;
     }
 
-    .statusCard{
-      padding:18px;
-      display:grid;
-      gap:10px;
-      align-content:start;
+    .orbit-grid {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
     }
 
-    .statusTitle{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin:0;
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .statusGrid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .stat{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px;
+    .center-core-mask {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 148px;
+      height: 148px;
+      margin-left: -74px;
+      margin-top: -74px;
+      border-radius: 50%;
+      border: 1px solid rgba(191, 230, 255, 0.12);
       background:
-        linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-        radial-gradient(circle at 50% 0%, rgba(127,255,212,.04), transparent 48%);
-      min-height:86px;
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), rgba(143,200,255,0.03) 42%, transparent 76%);
+      box-shadow:
+        inset 0 0 36px rgba(143, 200, 255, 0.05),
+        0 0 30px rgba(143, 200, 255, 0.03);
+      z-index: 4;
+      pointer-events: none;
     }
 
-    .statLabel{
-      font-size:10px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--muted);
-      margin-bottom:8px;
+    .compass-token {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 90px;
+      height: 90px;
+      margin: 0;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      pointer-events: auto;
     }
 
-    .statValue{
-      font-size:18px;
-      font-weight:800;
-      line-height:1.15;
-      word-break:break-word;
+    .compass-token a {
+      display: block;
+      width: 100%;
+      height: 100%;
     }
 
-    .good{color:var(--good)}
-    .warn{color:var(--warn)}
-    .bad{color:var(--bad)}
-
-    .sceneShell{
-      position:relative;
-      overflow:hidden;
-      min-height:620px;
-      margin-bottom:12px;
+    .token-diamond {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
     }
 
-    #sceneMount{
-      position:absolute;
-      inset:0;
-      z-index:1;
+    .token-shadow {
+      position: absolute;
+      inset: 12px;
+      border-radius: 12px;
+      transform: translateZ(-18px) rotate(45deg);
+      background: rgba(0, 0, 0, 0.24);
+      filter: blur(10px);
+      opacity: 0.68;
     }
 
-    .sceneOverlay{
-      position:relative;
-      z-index:2;
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(320px,.72fr);
-      gap:12px;
-      padding:18px;
-      min-height:620px;
-      pointer-events:none;
+    .token-spine {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 58px;
+      height: 58px;
+      margin-left: -29px;
+      margin-top: -29px;
+      transform: rotate(45deg) translateZ(-8px);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(33, 56, 88, 0.82), rgba(16, 27, 46, 0.94));
+      border: 1px solid rgba(191, 230, 255, 0.10);
+      opacity: 0.9;
     }
 
-    .sceneOverlay > *{pointer-events:auto}
-
-    .overlayCard{
-      align-self:end;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      padding:14px;
-      background:rgba(5,9,16,.62);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      box-shadow:var(--shadow);
+    .token-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 15px;
+      transform: rotate(45deg);
+      border: 1px solid rgba(191, 230, 255, 0.28);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)),
+        linear-gradient(180deg, rgba(10, 23, 44, 0.94), rgba(8, 18, 34, 0.98));
+      box-shadow:
+        0 10px 22px rgba(0, 0, 0, 0.24),
+        inset 0 0 24px rgba(196, 230, 255, 0.04),
+        0 0 26px rgba(143, 200, 255, 0.08);
+      backdrop-filter: blur(10px);
+      transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
     }
 
-    .overlayCard h2,.overlayCard h3{
-      margin:0 0 10px;
-      font-size:13px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
+    .compass-token:hover .token-face,
+    .compass-token:focus-within .token-face,
+    .compass-token.is-active .token-face {
+      border-color: rgba(196, 230, 255, 0.42);
+      box-shadow:
+        0 14px 28px rgba(0, 0, 0, 0.28),
+        inset 0 0 28px rgba(196, 230, 255, 0.06),
+        0 0 34px rgba(143, 200, 255, 0.15);
     }
 
-    .overlayText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.65;
+    .token-inner {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
     }
 
-    .roomList{
-      display:grid;
-      gap:8px;
-      margin-top:12px;
+    .token-compass {
+      position: absolute;
+      inset: 14px;
+      opacity: 0.42;
+      transform: translateZ(6px);
     }
 
-    .roomRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:9px 10px;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:12px;
-      background:rgba(255,255,255,.03);
-      font-size:13px;
+    .token-compass::before,
+    .token-compass::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: rgba(196, 230, 255, 0.20);
+      transform: translate(-50%, -50%);
     }
 
-    .roomRow span:first-child{color:var(--text);font-weight:600}
-    .roomRow span:last-child{color:var(--muted)}
+    .token-compass::before { width: 1px; height: 100%; }
+    .token-compass::after { width: 100%; height: 1px; }
 
-    .contentGrid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:12px;
+    .token-compass .ring {
+      position: absolute;
+      inset: 20%;
+      border-radius: 50%;
+      border: 1px solid rgba(196, 230, 255, 0.17);
     }
 
-    .panel{padding:16px}
-
-    .panelTitle{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
+    .token-label-wrap {
+      position: relative;
+      z-index: 2;
+      transform-style: preserve-3d;
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
-    .rows{
-      display:grid;
-      gap:8px;
+    .token-label {
+      transform: translateZ(12px);
+      max-width: 62px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-size: 0.62rem;
+      font-weight: 800;
+      line-height: 1.14;
+      text-align: center;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.34);
     }
 
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      align-items:start;
+    .token-meta {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 12px);
+      transform: translateX(-50%);
+      min-width: 124px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 230, 255, 0.18);
+      background: rgba(6, 16, 32, 0.82);
+      backdrop-filter: blur(8px);
+      color: var(--accent);
+      font-size: 0.64rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 180ms ease, border-color 180ms ease;
+      pointer-events: none;
+      white-space: nowrap;
     }
 
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
+    .compass-token:hover .token-meta,
+    .compass-token:focus-within .token-meta,
+    .compass-token.is-active .token-meta {
+      opacity: 1;
+      border-color: rgba(196, 230, 255, 0.30);
     }
 
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.45;
-      text-align:right;
-      word-break:break-word;
+    .section { padding: 18px 0 42px; }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
     }
 
-    .actionRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:14px;
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      letter-spacing: -0.02em;
     }
 
-    .action{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:42px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      text-decoration:none;
+    .section-head p {
+      margin: 0;
+      max-width: 62ch;
+      color: var(--muted);
+      line-height: 1.7;
     }
 
-    .footer{
-      padding:12px 14px;
-      color:var(--muted);
-      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
+    .route-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
     }
 
-    .bootFail{
-      margin-top:12px;
-      padding:12px 14px;
-      border:1px solid rgba(255,122,122,.28);
-      border-radius:14px;
-      background:rgba(40,10,10,.78);
-      color:#ffdada;
-      font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      display:none;
+    .route-card {
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at top right, rgba(143, 200, 255, 0.10), transparent 35%),
+        linear-gradient(180deg, rgba(11, 23, 48, 0.88), rgba(8, 18, 35, 0.92));
+      box-shadow: var(--shadow);
+      padding: 18px;
     }
 
-    .bootFail.is-visible{display:block}
+    .route-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.96rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
 
-    @media (max-width:1180px){
-      .hero,.sceneOverlay,.contentGrid{
-        grid-template-columns:1fr;
+    .route-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 0.96rem;
+    }
+
+    .route-card a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 230, 255, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.86rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .footer { padding: 20px 0 52px; }
+
+    .footer-panel {
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .footer-panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    @media (max-width: 1080px) {
+      .hero-layout,
+      .summary,
+      .route-list {
+        grid-template-columns: 1fr;
       }
-      h1{max-width:none}
     }
 
-    @media (max-width:760px){
-      .topbar{flex-direction:column;align-items:flex-start}
-      .statusGrid{grid-template-columns:1fr}
-      .row{grid-template-columns:1fr}
-      .rv{text-align:left}
-      .sceneShell,.sceneOverlay{min-height:740px}
+    @media (max-width: 760px) {
+      .topbar-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .nav { justify-content: flex-start; }
+      .hero-panel { padding: 22px; }
+      .compass-frame { min-height: 560px; }
+      .compass-frame-shell { min-height: 504px; }
+
+      .compass-token {
+        width: 74px;
+        height: 74px;
+      }
+
+      .token-label {
+        max-width: 52px;
+        font-size: 0.56rem;
+      }
+
+      .center-core-mask {
+        width: 128px;
+        height: 128px;
+        margin-left: -64px;
+        margin-top: -64px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .compass-token,
+      .token-face,
+      .token-meta {
+        transition: none !important;
+        animation: none !important;
+      }
+      .orbit-shell { display: none; }
     }
   </style>
 </head>
 <body>
-  <div class="hostGlow" aria-hidden="true"></div>
-  <div class="gridLines" aria-hidden="true"></div>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-copy">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Public entry compass with bounded Euclidean chamber</span>
+        </span>
+      </a>
 
-  <main class="wrap">
-    <div class="topbar">
-      <div class="brand">Diamond Gate Bridge</div>
-      <div class="stamp">INDEX · G1 EXTERNAL EXPRESSION · HOUSE FIRST</div>
+      <nav class="nav" aria-label="Primary">
+        <a href="/" aria-current="page">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
     </div>
+  </header>
 
+  <main>
     <section class="hero">
-      <article class="heroCard">
-        <div class="eyebrow">Structure before effects</div>
-        <h1>Enter through the house.</h1>
-        <p class="heroText">
-          The public entry is the house, not the metaverse burden. The house exposes rooms, the flat layer supports platform and engineering read, the round layer carries living-world read, and the globe remains available only when the surface actually earns it.
-        </p>
-        <div class="chipRow">
-          <div class="chip strong">House First</div>
-          <div class="chip">Flat Underlay</div>
-          <div class="chip">Round Living Layer</div>
-          <div class="chip" id="heroMetaverseChip">Metaverse Pending</div>
+      <div class="shell">
+        <div class="hero-panel">
+          <div class="hero-layout">
+            <div>
+              <p class="eyebrow">Index · G1 External Expression · Compass First</p>
+              <h1>Enter through the compass.</h1>
+              <p class="hero-copy">
+                The public entry is a governed compass, not a pending shell. The home page now
+                exposes direct descendant motion through a bounded Euclidean chamber while keeping
+                hard route access clear and readable.
+              </p>
+
+              <div class="hero-actions">
+                <a class="button primary" href="#primary-routes">Open primary routes</a>
+                <a class="button" href="/explore/">Go to Explore</a>
+                <a class="button" href="/products/">Go to Products</a>
+              </div>
+
+              <div class="summary" aria-label="Home compass summary">
+                <div class="summary-card">
+                  <strong>Entry</strong>
+                  <span>House-first public compass with direct descendant access.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Universe</strong>
+                  <span>Bounded internal Euclidean field for visual discipline.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Structure</strong>
+                  <span>Hard HTML routes remain readable without runtime.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Motion</strong>
+                  <span>Compressed 3D compass objects around a single core.</span>
+                </div>
+              </div>
+
+              <nav class="crumbs" aria-label="Home context links">
+                <a href="/">Home</a>
+                <a href="/explore/">Explore</a>
+                <a href="/products/">Products</a>
+                <a href="/gauges/">Gauges</a>
+              </nav>
+            </div>
+
+            <div>
+              <div class="compass-frame" id="home-compass-frame">
+                <div class="compass-frame-header">
+                  <strong>Compass Chamber</strong>
+                  <span>Governed Entry Surface</span>
+                </div>
+
+                <div class="compass-frame-shell">
+                  <div class="hero-stage" id="home-hero-stage" aria-hidden="true"></div>
+
+                  <div class="orbit-shell" aria-hidden="true">
+                    <div class="orbit-grid" id="home-orbit-grid">
+                      <article class="compass-token">
+                        <a href="/explore/" aria-label="Explore">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <div class="token-label-wrap"><span class="token-label">Explore</span></div>
+                            </div>
+                          </div>
+                          <span class="token-meta">Primary Descendant</span>
+                        </a>
+                      </article>
+
+                      <article class="compass-token">
+                        <a href="/products/" aria-label="Products">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <div class="token-label-wrap"><span class="token-label">Products</span></div>
+                            </div>
+                          </div>
+                          <span class="token-meta">Primary Descendant</span>
+                        </a>
+                      </article>
+
+                      <article class="compass-token">
+                        <a href="/gauges/" aria-label="Gauges">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <div class="token-label-wrap"><span class="token-label">Gauges</span></div>
+                            </div>
+                          </div>
+                          <span class="token-meta">Primary Descendant</span>
+                        </a>
+                      </article>
+
+                      <article class="compass-token">
+                        <a href="/laws/" aria-label="Laws">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <div class="token-label-wrap"><span class="token-label">Laws</span></div>
+                            </div>
+                          </div>
+                          <span class="token-meta">Structural Surface</span>
+                        </a>
+                      </article>
+                    </div>
+
+                    <div class="center-core-mask"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </article>
-
-      <aside class="statusCard">
-        <h2 class="statusTitle">Host Read</h2>
-        <div class="statusGrid">
-          <div class="stat">
-            <div class="statLabel">World Kernel</div>
-            <div id="k-kernel" class="statValue warn">Pending</div>
-          </div>
-          <div class="stat">
-            <div class="statLabel">Render</div>
-            <div id="k-render" class="statValue warn">Pending</div>
-          </div>
-          <div class="stat">
-            <div class="statLabel">Control</div>
-            <div id="k-control" class="statValue warn">Pending</div>
-          </div>
-          <div class="stat">
-            <div class="statLabel">Metaverse Line</div>
-            <div id="k-metaverse" class="statValue warn">Pending Classification</div>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="sceneShell">
-      <div id="sceneMount" aria-label="House-first world scene"></div>
-
-      <div class="sceneOverlay">
-        <article class="overlayCard">
-          <h2>House / Rooms</h2>
-          <p class="overlayText">
-            The house is the first public authority. Rooms are visible from the house and remain programmable domains beneath a governed host rather than separate inventions.
-          </p>
-          <div class="roomList" id="roomList">
-            <div class="roomRow"><span>North Room</span><span>Pending</span></div>
-            <div class="roomRow"><span>East Room</span><span>Pending</span></div>
-            <div class="roomRow"><span>South Room</span><span>Pending</span></div>
-            <div class="roomRow"><span>West Room</span><span>Pending</span></div>
-          </div>
-        </article>
-
-        <article class="overlayCard">
-          <h3>Layer Read</h3>
-          <div class="rows" id="layerRows">
-            <div class="row"><div class="rk">Flat</div><div class="rv">Pending</div></div>
-            <div class="row"><div class="rk">Round</div><div class="rv">Pending</div></div>
-            <div class="row"><div class="rk">Globe</div><div class="rv">Pending</div></div>
-          </div>
-          <div class="actionRow">
-            <a class="action" href="/explore/">Explore</a>
-            <a class="action" href="/products/">Products</a>
-            <a class="action" href="/gauges/">Gauges</a>
-          </div>
-        </article>
       </div>
     </section>
 
-    <section class="contentGrid">
-      <article class="panel">
-        <h2 class="panelTitle">Public Entry Contract</h2>
-        <div class="rows" id="entryRows"></div>
-      </article>
+    <section id="primary-routes" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Primary routes</h2></div>
+          <p>
+            The chamber is visual. The route surface below remains the readable HTML layer for direct entry.
+          </p>
+        </div>
 
-      <article class="panel">
-        <h2 class="panelTitle">Runtime / Receipt</h2>
-        <div class="rows" id="runtimeRows"></div>
-      </article>
+        <div class="route-list">
+          <article class="route-card">
+            <strong>Explore</strong>
+            <p>Frontier and descendant discovery surface.</p>
+            <a href="/explore/">Open route</a>
+          </article>
 
-      <article class="panel">
-        <h2 class="panelTitle">Descendant Order</h2>
-        <div class="rows" id="descendantRows"></div>
-      </article>
+          <article class="route-card">
+            <strong>Products</strong>
+            <p>Animated product-universe gateway with route-safe backlinks.</p>
+            <a href="/products/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Gauges</strong>
+            <p>Telemetry and stability surfaces for public read.</p>
+            <a href="/gauges/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Laws</strong>
+            <p>Constraint, admissibility, and structural read layer.</p>
+            <a href="/laws/">Open route</a>
+          </article>
+        </div>
+      </div>
     </section>
-
-    <div id="footer" class="footer">Awaiting host receipts.</div>
-    <div id="bootFail" class="bootFail"></div>
   </main>
 
-  <script type="module" src="./index.js"></script>
+  <footer class="footer">
+    <div class="shell">
+      <div class="footer-panel">
+        <p>
+          Result / Receipt: HTML=STRUCTURE | JS=HOME_COMPASS_PROJECTION |
+          ENTRY=COMPASS_FIRST | ROUTES=HARD_HTML | MOTION=BOUNDED_3D_COMPASSES
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/index.js"></script>
 </body>
 </html>

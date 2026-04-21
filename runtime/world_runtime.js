@@ -58,6 +58,7 @@ export function createWorldRuntime(config = {}) {
     typeof config.sessionId === "string" && config.sessionId
       ? config.sessionId
       : "WORLD_RUNTIME_SESSION";
+
   const kernel =
     typeof window !== "undefined" ? window.liveRuntimeKernel || null : null;
 
@@ -73,11 +74,13 @@ export function createWorldRuntime(config = {}) {
   function buildSnapshot(viewport) {
     const timestamp = Date.now();
     const frameState = { elapsedSeconds: state.elapsedSeconds };
+
     state.snapshot = buildWorldRuntimeSnapshot({
       frameState,
       timestamp,
       viewport
     });
+
     return state.snapshot;
   }
 
@@ -86,18 +89,26 @@ export function createWorldRuntime(config = {}) {
 
     start(viewport = {}) {
       if (state.destroyed) throw new Error("WORLD_RUNTIME_DESTROYED");
+
       state.running = true;
       state.startedAt = performance.now();
+
       if (kernel && typeof kernel.registerSession === "function") {
         kernel.registerSession(sessionId, { meta: META });
-        kernel.markSessionStarted(sessionId, Date.now());
+        if (typeof kernel.markSessionStarted === "function") {
+          kernel.markSessionStarted(sessionId, Date.now());
+        }
       }
+
       return buildSnapshot(viewport);
     },
 
     update(viewport = {}) {
       if (state.destroyed) throw new Error("WORLD_RUNTIME_DESTROYED");
-      if (!state.running) return state.snapshot || buildSnapshot(viewport);
+
+      if (!state.running) {
+        return state.snapshot || buildSnapshot(viewport);
+      }
 
       state.elapsedSeconds = Math.max(0, (performance.now() - state.startedAt) / 1000);
       state.frameCount += 1;
@@ -111,6 +122,7 @@ export function createWorldRuntime(config = {}) {
 
     stop() {
       state.running = false;
+
       if (kernel && typeof kernel.markSessionStopped === "function") {
         kernel.markSessionStopped(sessionId, Date.now());
       }
@@ -119,6 +131,7 @@ export function createWorldRuntime(config = {}) {
     destroy() {
       this.stop();
       state.destroyed = true;
+
       if (kernel && typeof kernel.unregisterSession === "function") {
         kernel.unregisterSession(sessionId);
       }
@@ -143,3 +156,4 @@ export default {
   meta: META,
   buildWorldRuntimeSnapshot,
   createWorldRuntime
+};

@@ -6,7 +6,7 @@
   <title>Diamond Gate Bridge · Solar Index</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge root index with hard HTML routes and a solar-system navigation chamber."
+    content="Diamond Gate Bridge root index with hard HTML routes and a complete nine-planet solar-system navigation chamber."
   />
   <style>
     :root {
@@ -22,8 +22,7 @@
       --gold: #f0d89a;
       --shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
       --radius-xl: 30px;
-      --radius-lg: 22px;
-      --max: 1220px;
+      --max: 1280px;
       --focus: 0 0 0 3px rgba(196, 229, 255, 0.22);
     }
 
@@ -170,7 +169,7 @@
 
     .hero-layout {
       display: grid;
-      grid-template-columns: minmax(0, 0.94fr) minmax(440px, 0.98fr);
+      grid-template-columns: minmax(0, 0.88fr) minmax(480px, 1.12fr);
       gap: 28px;
       align-items: start;
     }
@@ -266,11 +265,11 @@
 
     .solar-frame {
       position: relative;
-      min-height: 660px;
+      min-height: 780px;
       border-radius: 30px;
       border: 1px solid rgba(217, 236, 255, 0.18);
       background:
-        radial-gradient(circle at 50% 20%, rgba(240, 216, 154, 0.06), transparent 24%),
+        radial-gradient(circle at 50% 24%, rgba(240, 216, 154, 0.06), transparent 28%),
         linear-gradient(180deg, rgba(9, 19, 36, 0.94), rgba(8, 17, 31, 0.98));
       box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.03),
@@ -308,7 +307,7 @@
     .solar-frame-shell {
       position: relative;
       height: calc(100% - 54px);
-      min-height: 600px;
+      min-height: 720px;
       padding: 14px;
     }
 
@@ -334,12 +333,34 @@
       inset: 0;
     }
 
+    .solar-center-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, calc(-50% + 86px));
+      z-index: 6;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(240, 216, 154, 0.24);
+      background: rgba(7, 15, 28, 0.78);
+      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+
     .route-body {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 108px;
-      height: 108px;
+      width: 96px;
+      height: 96px;
       pointer-events: auto;
     }
 
@@ -355,7 +376,6 @@
       height: 100%;
       border-radius: 50%;
       border: 1px solid rgba(217, 236, 255, 0.22);
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.10) 16%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(96, 150, 255, 0.22), rgba(10, 18, 34, 0.98) 68%);
       box-shadow:
         0 14px 34px rgba(0, 0, 0, 0.34),
         inset -14px -18px 28px rgba(0, 0, 0, 0.28),
@@ -397,7 +417,7 @@
       max-width: 68px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      font-size: 0.66rem;
+      font-size: 0.62rem;
       font-weight: 800;
       line-height: 1.15;
       text-align: center;
@@ -407,36 +427,57 @@
     .planet-meta {
       position: absolute;
       left: 50%;
-      top: calc(100% + 12px);
+      top: calc(100% + 10px);
       transform: translateX(-50%);
-      min-width: 132px;
-      padding: 7px 10px;
+      min-width: 110px;
+      padding: 6px 10px;
       border-radius: 999px;
       border: 1px solid rgba(217, 236, 255, 0.16);
       background: rgba(6, 16, 32, 0.84);
       color: var(--accent);
-      font-size: 0.64rem;
+      font-size: 0.58rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-align: center;
       white-space: nowrap;
       backdrop-filter: blur(8px);
+      pointer-events: none;
     }
 
-    .planet-explore .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(158, 170, 188, 0.24), rgba(11, 18, 32, 0.98) 68%);
+    .planet-mercury .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(164, 170, 180, 0.24), rgba(20, 23, 31, 0.98) 68%);
     }
 
-    .planet-products .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.12) 16%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(225, 186, 138, 0.24), rgba(23, 17, 15, 0.98) 68%);
+    .planet-venus .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(219, 176, 124, 0.28), rgba(36, 24, 16, 0.98) 68%);
     }
 
-    .planet-gauges .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.12) 16%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(102, 152, 255, 0.24), rgba(10, 17, 34, 0.98) 68%);
+    .planet-earth .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(92, 156, 255, 0.28), rgba(10, 24, 42, 0.98) 68%);
     }
 
-    .planet-laws .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.12) 16%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(215, 134, 122, 0.24), rgba(21, 15, 18, 0.98) 68%);
+    .planet-mars .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(201, 111, 95, 0.28), rgba(34, 14, 14, 0.98) 68%);
+    }
+
+    .planet-jupiter .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), linear-gradient(180deg, rgba(203, 171, 141, 0.94), rgba(137, 104, 76, 0.94) 28%, rgba(183, 152, 120, 0.94) 52%, rgba(128, 90, 66, 0.94) 74%, rgba(88, 57, 43, 0.96));
+    }
+
+    .planet-saturn .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(217, 197, 145, 0.28), rgba(46, 36, 18, 0.98) 68%);
+    }
+
+    .planet-uranus .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(146, 216, 221, 0.28), rgba(16, 35, 42, 0.98) 68%);
+    }
+
+    .planet-neptune .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(88, 120, 255, 0.28), rgba(10, 18, 44, 0.98) 68%);
+    }
+
+    .planet-pluto .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.06) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(181, 165, 152, 0.22), rgba(20, 18, 18, 0.98) 68%);
     }
 
     .section {
@@ -471,7 +512,10 @@
       gap: 16px;
     }
 
-    .route-list,
+    .route-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
     .surface-grid {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
@@ -542,7 +586,7 @@
       line-height: 1.6;
     }
 
-    @media (max-width: 1120px) {
+    @media (max-width: 1180px) {
       .hero-layout,
       .route-list,
       .surface-grid,
@@ -570,21 +614,26 @@
       }
 
       .solar-frame {
-        min-height: 760px;
+        min-height: 840px;
       }
 
       .solar-frame-shell {
-        min-height: 700px;
+        min-height: 780px;
       }
 
       .route-body {
-        width: 92px;
-        height: 92px;
+        width: 82px;
+        height: 82px;
       }
 
       .planet-label {
-        max-width: 58px;
-        font-size: 0.60rem;
+        max-width: 56px;
+        font-size: 0.56rem;
+      }
+
+      .planet-meta {
+        min-width: 94px;
+        font-size: 0.52rem;
       }
 
       .section-head {
@@ -601,7 +650,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <strong>Diamond Gate Bridge</strong>
-          <span>Solar index · hard routes · one orbital law</span>
+          <span>Solar index · nine planets · one orbital template</span>
         </span>
       </a>
 
@@ -621,35 +670,34 @@
         <div class="hero-panel">
           <div class="hero-layout">
             <div>
-              <p class="eyebrow">Index · Solar Chamber Contract</p>
-              <h1>Navigate by one solar law.</h1>
+              <p class="eyebrow">Index · Complete Solar System Contract</p>
+              <h1>Complete the solar system.</h1>
               <p class="hero-copy">
-                The index is the solar-system page. It does one thing only:
-                center navigation around a sun with routes expressed as planets
-                under one shared orbital rule. Product-machine language does not belong here.
+                The index now uses the full nine-planet template. One sun sits at the center. Nine
+                route bodies inherit the same orbital system. This page does solar navigation only.
               </p>
 
               <div class="hero-actions">
-                <a class="button primary" href="#primary-routes">Open primary routes</a>
+                <a class="button primary" href="#primary-routes">Open all nine items</a>
                 <a class="button" href="/explore/">Go to Explore</a>
               </div>
 
-              <div class="summary" aria-label="Root solar summary">
+              <div class="summary" aria-label="Solar system summary">
                 <div class="summary-card">
                   <strong>Center</strong>
-                  <span>The center object is the sun, not a globe, machine, or capsule.</span>
+                  <span>The center object is the sun only.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Routes</strong>
-                  <span>Every visible route body is a planet on the same motion law.</span>
+                  <strong>Count</strong>
+                  <span>Nine route bodies now exist in the chamber.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Ownership</strong>
-                  <span>HTML keeps the route structure readable without runtime.</span>
+                  <strong>Template</strong>
+                  <span>The solar system is the governing template.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Scope</strong>
-                  <span>The gumball-drop concept is intentionally excluded from this page.</span>
+                  <strong>Rule</strong>
+                  <span>All nine planets will follow the same orbital law in the runtime file.</span>
                 </div>
               </div>
 
@@ -659,6 +707,10 @@
                 <a href="/products/">Products</a>
                 <a href="/gauges/">Gauges</a>
                 <a href="/laws/">Laws</a>
+                <a href="/governance/">Governance</a>
+                <a href="/about/">About</a>
+                <a href="/contact/">Contact</a>
+                <a href="#primary-routes">Nine Planets</a>
               </nav>
             </div>
 
@@ -666,7 +718,7 @@
               <div class="solar-frame" id="home-solar-frame">
                 <div class="solar-frame-header">
                   <strong>Solar Navigation</strong>
-                  <span>Sun Center · Route Planets</span>
+                  <span>Sun Center · Nine Planets</span>
                 </div>
 
                 <div class="solar-frame-shell">
@@ -674,38 +726,80 @@
 
                   <div class="solar-shell" aria-hidden="true">
                     <div class="solar-grid" id="home-orbit-grid">
-                      <article class="route-body planet-explore" data-planet="explore">
-                        <a href="/explore/" aria-label="Explore">
+                      <article class="route-body planet-mercury" data-planet="mercury" data-route="/explore/">
+                        <a href="/explore/" aria-label="Mercury · Explore">
                           <div class="planet-body"></div>
                           <div class="planet-label-wrap"><span class="planet-label">Explore</span></div>
-                          <span class="planet-meta">Inner Route</span>
+                          <span class="planet-meta">Mercury</span>
                         </a>
                       </article>
 
-                      <article class="route-body planet-products" data-planet="products">
-                        <a href="/products/" aria-label="Products">
+                      <article class="route-body planet-venus" data-planet="venus" data-route="/products/">
+                        <a href="/products/" aria-label="Venus · Products">
                           <div class="planet-body"></div>
                           <div class="planet-label-wrap"><span class="planet-label">Products</span></div>
-                          <span class="planet-meta">Inner Route</span>
+                          <span class="planet-meta">Venus</span>
                         </a>
                       </article>
 
-                      <article class="route-body planet-gauges" data-planet="gauges">
-                        <a href="/gauges/" aria-label="Gauges">
+                      <article class="route-body planet-earth" data-planet="earth" data-route="/gauges/">
+                        <a href="/gauges/" aria-label="Earth · Gauges">
                           <div class="planet-body"></div>
                           <div class="planet-label-wrap"><span class="planet-label">Gauges</span></div>
-                          <span class="planet-meta">Outer Route</span>
+                          <span class="planet-meta">Earth</span>
                         </a>
                       </article>
 
-                      <article class="route-body planet-laws" data-planet="laws">
-                        <a href="/laws/" aria-label="Laws">
+                      <article class="route-body planet-mars" data-planet="mars" data-route="/laws/">
+                        <a href="/laws/" aria-label="Mars · Laws">
                           <div class="planet-body"></div>
                           <div class="planet-label-wrap"><span class="planet-label">Laws</span></div>
-                          <span class="planet-meta">Outer Route</span>
+                          <span class="planet-meta">Mars</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-jupiter" data-planet="jupiter" data-route="/governance/">
+                        <a href="/governance/" aria-label="Jupiter · Governance">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Governance</span></div>
+                          <span class="planet-meta">Jupiter</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-saturn" data-planet="saturn" data-route="/about/">
+                        <a href="/about/" aria-label="Saturn · About">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">About</span></div>
+                          <span class="planet-meta">Saturn</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-uranus" data-planet="uranus" data-route="/contact/">
+                        <a href="/contact/" aria-label="Uranus · Contact">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Contact</span></div>
+                          <span class="planet-meta">Uranus</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-neptune" data-planet="neptune" data-route="/">
+                        <a href="/" aria-label="Neptune · Home">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Home</span></div>
+                          <span class="planet-meta">Neptune</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-pluto" data-planet="pluto" data-route="#primary-routes">
+                        <a href="#primary-routes" aria-label="Pluto · Nine Routes">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Routes</span></div>
+                          <span class="planet-meta">Pluto</span>
                         </a>
                       </article>
                     </div>
+
+                    <div class="solar-center-label">Solar Center</div>
                   </div>
                 </div>
               </div>
@@ -718,35 +812,66 @@
     <section id="primary-routes" class="section">
       <div class="shell">
         <div class="section-head">
-          <div><h2>Primary routes</h2></div>
+          <div><h2>Nine planetary items</h2></div>
           <p>
-            The solar chamber is visual support only. Hard route access remains readable below it.
+            These are the nine route bodies now present in the chamber. The next file will position
+            them on the shared orbital system.
           </p>
         </div>
 
         <div class="route-list">
           <article class="route-card">
-            <strong>Explore</strong>
-            <p>Frontier and descendant discovery surface.</p>
+            <strong>Mercury · Explore</strong>
+            <p>Frontier and discovery surface.</p>
             <a href="/explore/">Open route</a>
           </article>
 
           <article class="route-card">
-            <strong>Products</strong>
-            <p>Product-machine concepts belong there, not on the index.</p>
+            <strong>Venus · Products</strong>
+            <p>Product page remains separate from the index chamber concept.</p>
             <a href="/products/">Open route</a>
           </article>
 
           <article class="route-card">
-            <strong>Gauges</strong>
-            <p>Telemetry and stability surfaces for public read.</p>
+            <strong>Earth · Gauges</strong>
+            <p>Telemetry and stability read layer.</p>
             <a href="/gauges/">Open route</a>
           </article>
 
           <article class="route-card">
-            <strong>Laws</strong>
-            <p>Constraint, admissibility, and structural read layer.</p>
+            <strong>Mars · Laws</strong>
+            <p>Constraint and admissibility layer.</p>
             <a href="/laws/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Jupiter · Governance</strong>
+            <p>Deployment and governance surface.</p>
+            <a href="/governance/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Saturn · About</strong>
+            <p>Project identity and orientation layer.</p>
+            <a href="/about/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Uranus · Contact</strong>
+            <p>Direct communication surface.</p>
+            <a href="/contact/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Neptune · Home</strong>
+            <p>Root return path.</p>
+            <a href="/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Pluto · Routes</strong>
+            <p>Ninth item completing the chamber count.</p>
+            <a href="#primary-routes">Open item</a>
           </article>
         </div>
       </div>
@@ -757,33 +882,33 @@
         <div class="section-head">
           <div><h2>Secondary public surfaces</h2></div>
           <p>
-            These remain publicly readable descendants below the index contract and can be renewed later under the same baseline.
+            The chamber count is now complete. Motion is still pending until the next single-file runtime pass.
           </p>
         </div>
 
         <div class="surface-grid">
           <article class="surface-card">
-            <strong>Governance</strong>
-            <p>Policy and deployment-facing public governance surface.</p>
-            <a href="/governance/">Open surface</a>
+            <strong>Explore</strong>
+            <p>Discovery surface.</p>
+            <a href="/explore/">Open surface</a>
           </article>
 
           <article class="surface-card">
-            <strong>About</strong>
-            <p>Project identity, framing, and public orientation surface.</p>
-            <a href="/about/">Open surface</a>
+            <strong>Products</strong>
+            <p>Products surface.</p>
+            <a href="/products/">Open surface</a>
           </article>
 
           <article class="surface-card">
-            <strong>Contact</strong>
-            <p>Direct public contact and communication surface.</p>
-            <a href="/contact/">Open surface</a>
+            <strong>Gauges</strong>
+            <p>Monitoring surface.</p>
+            <a href="/gauges/">Open surface</a>
           </article>
 
           <article class="surface-card">
-            <strong>Home</strong>
-            <p>Solar index return point.</p>
-            <a href="/">Return home</a>
+            <strong>Laws</strong>
+            <p>Law surface.</p>
+            <a href="/laws/">Open surface</a>
           </article>
         </div>
       </div>
@@ -794,24 +919,24 @@
         <div class="section-head">
           <div><h2>Execution governance</h2></div>
           <p>
-            This page now does one job only: solar navigation. Product-machine concepts remain excluded from the index.
+            This file now handles one thing only: the complete nine-planet HTML structure.
           </p>
         </div>
 
         <div class="governance-grid">
           <article class="governance-card">
-            <strong>Structure</strong>
-            <p>HTML owns the route shell, labels, and hard route safety.</p>
+            <strong>Count</strong>
+            <p>Nine route bodies are now present in the markup.</p>
           </article>
 
           <article class="governance-card">
-            <strong>Motion</strong>
-            <p>JavaScript will own bounded solar motion only in the next file.</p>
+            <strong>Center</strong>
+            <p>The center remains reserved for the sun only.</p>
           </article>
 
           <article class="governance-card">
-            <strong>Scope</strong>
-            <p>No manor icon competition. No vault orb. No gumball-drop contamination.</p>
+            <strong>Next File</strong>
+            <p>`/index.js` must now place all nine planets on the shared solar template.</p>
           </article>
         </div>
       </div>
@@ -823,8 +948,8 @@
       <div class="footer-panel">
         <p>
           Result / Receipt: HTML=STRUCTURE | PAGE=SOLAR_INDEX |
-          CENTER=SUN | ROUTES=PLANETS | ROUTES=HARD_HTML |
-          PRODUCT_MACHINE_CONCEPT=EXCLUDED
+          CENTER=SUN | PLANET_COUNT=9 | TEMPLATE=SOLAR_SYSTEM |
+          MOTION_PENDING_IN_INDEX_JS=TRUE
         </p>
       </div>
     </div>

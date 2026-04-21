@@ -162,6 +162,22 @@
         linear-gradient(180deg, rgba(16, 34, 62, 0.92), rgba(8, 18, 35, 0.94));
       box-shadow: var(--shadow);
       padding: 28px;
+      isolation: isolate;
+      min-height: 560px;
+    }
+
+    .hero-stage {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: inherit;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
     }
 
     .eyebrow {
@@ -236,6 +252,7 @@
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.03);
       padding: 16px 16px 14px;
+      backdrop-filter: blur(8px);
     }
 
     .summary-card strong {
@@ -278,14 +295,27 @@
       line-height: 1.7;
     }
 
+    .lane-field {
+      position: relative;
+      min-height: 620px;
+      perspective: 1400px;
+      transform-style: preserve-3d;
+    }
+
     .lane-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      position: absolute;
+      inset: 0;
+      display: block;
+      transform-style: preserve-3d;
     }
 
     .lane-card {
-      position: relative;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(44%, 420px);
+      max-width: 420px;
+      margin: 0;
       border-radius: var(--radius);
       border: 1px solid var(--line);
       background:
@@ -293,12 +323,17 @@
         linear-gradient(180deg, rgba(11, 23, 48, 0.88), rgba(8, 18, 35, 0.92));
       box-shadow: var(--shadow);
       overflow: hidden;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
     }
 
     .lane-card a {
       display: block;
       padding: 20px;
       min-height: 100%;
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 2;
     }
 
     .lane-card h3 {
@@ -383,27 +418,22 @@
       font-size: 0.95rem;
     }
 
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
     @media (max-width: 900px) {
-      .summary,
-      .lane-grid {
+      .summary {
         grid-template-columns: 1fr;
       }
 
       .section-head {
         align-items: start;
         flex-direction: column;
+      }
+
+      .lane-field {
+        min-height: 820px;
+      }
+
+      .lane-card {
+        width: min(78vw, 420px);
       }
     }
 
@@ -419,6 +449,39 @@
 
       .hero-panel {
         padding: 22px;
+        min-height: 520px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .lane-field {
+        min-height: 940px;
+      }
+
+      .lane-card {
+        width: min(86vw, 360px);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lane-field {
+        min-height: auto;
+        perspective: none;
+      }
+
+      .lane-grid {
+        position: static;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .lane-card {
+        position: relative;
+        left: auto;
+        top: auto;
+        width: auto;
+        max-width: none;
       }
     }
   </style>
@@ -430,7 +493,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <strong>Diamond Gate Bridge</strong>
-          <span>Products gateway with hard backlink recovery</span>
+          <span>Products gateway with Euclidean route motion</span>
         </span>
       </a>
 
@@ -448,47 +511,51 @@
     <section class="hero">
       <div class="shell">
         <div class="hero-panel">
-          <p class="eyebrow">Cinematic G2 · Products Gateway</p>
-          <h1>The animated products gateway.</h1>
+          <div class="hero-stage" id="products-hero-stage" aria-hidden="true"></div>
 
-          <p class="hero-copy">
-            Products is the entry surface for the live product lanes. This version keeps the page
-            runtime-friendly while restoring hard HTML backlinks and route-safe lane anchors so the
-            page still works when animation or page orchestration is late, stale, or unavailable.
-          </p>
+          <div class="hero-content">
+            <p class="eyebrow">G2 Products Gateway · Euclidean Motion Restored</p>
+            <h1>The animated products gateway.</h1>
 
-          <div class="hero-actions">
-            <a class="button primary" href="#product-lanes">Open product lanes</a>
-            <a class="button" href="/explore/">Return to Explore</a>
-            <a class="button" href="/">Return Home</a>
+            <p class="hero-copy">
+              Products is the entry surface for the live product lanes. This page keeps the hard
+              backlink contract intact while the hero runtime demonstrates bounded Euclidean motion
+              without pretending to own upstream kernels it does not own.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button primary" href="#product-lanes">Open product lanes</a>
+              <a class="button" href="/explore/">Return to Explore</a>
+              <a class="button" href="/">Return Home</a>
+            </div>
+
+            <div class="summary" aria-label="Products gateway summary">
+              <div class="summary-card">
+                <strong>HTML</strong>
+                <span>Owns structure and hard route safety.</span>
+              </div>
+              <div class="summary-card">
+                <strong>JS</strong>
+                <span>Owns Euclidean motion orchestration only.</span>
+              </div>
+              <div class="summary-card">
+                <strong>Hero Runtime</strong>
+                <span>Owns bounded planetary stage expression.</span>
+              </div>
+              <div class="summary-card">
+                <strong>Backlinks</strong>
+                <span>Remain visible and clickable without runtime dependency.</span>
+              </div>
+            </div>
+
+            <nav class="crumbs" aria-label="Products context links">
+              <a href="/">Home</a>
+              <a href="/explore/">Explore</a>
+              <a href="/gauges/">Gauges</a>
+              <a href="/platform/">Platform</a>
+              <a href="/products/">Products</a>
+            </nav>
           </div>
-
-          <div class="summary" aria-label="Products gateway summary">
-            <div class="summary-card">
-              <strong>HTML</strong>
-              <span>Owns structure and hard route safety.</span>
-            </div>
-            <div class="summary-card">
-              <strong>Page JS</strong>
-              <span>Owns orchestration and page lifecycle only.</span>
-            </div>
-            <div class="summary-card">
-              <strong>Hero Runtime</strong>
-              <span>Owns the planetary stage when present.</span>
-            </div>
-            <div class="summary-card">
-              <strong>Backlinks</strong>
-              <span>Remain visible and clickable without runtime dependency.</span>
-            </div>
-          </div>
-
-          <nav class="crumbs" aria-label="Products context links">
-            <a href="/">Home</a>
-            <a href="/explore/">Explore</a>
-            <a href="/gauges/">Gauges</a>
-            <a href="/platform/">Platform</a>
-            <a href="/products/">Products</a>
-          </nav>
         </div>
       </div>
     </section>
@@ -500,81 +567,85 @@
             <h2>Russian-doll lane field</h2>
           </div>
           <p>
-            The cards below are hard HTML route anchors. They are not hidden behind runtime. If the
-            animation mounts successfully, it enhances this surface. If runtime does not mount, these
-            links still preserve route access and backlink continuity.
+            The cards below are hard HTML route anchors. The runtime may move them through a
+            Euclidean orbital field, but the route surface remains stable, direct, and readable even
+            when runtime is absent.
           </p>
         </div>
 
-        <div class="lane-grid">
-          <article class="lane-card">
-            <a href="/products/nutrition/">
-              <h3>Baseline Nutrition</h3>
-              <p>
-                Nutrition lane entry with direct path safety and return continuity back to the
-                products root.
-              </p>
-              <span class="route-chip">/products/nutrition/</span>
-            </a>
-          </article>
+        <div class="lane-field">
+          <div class="lane-grid" id="products-lane-grid">
+            <article class="lane-card">
+              <a href="/products/nutrition/">
+                <h3>Baseline Nutrition</h3>
+                <p>
+                  Nutrition lane entry with direct path safety and return continuity back to the
+                  products root.
+                </p>
+                <span class="route-chip">/products/nutrition/</span>
+              </a>
+            </article>
 
-          <article class="lane-card">
-            <a href="/products/ai/">
-              <h3>On Your Side AI</h3>
-              <p>
-                AI lane entry preserved as a hard route instead of runtime-only presentation.
-              </p>
-              <span class="route-chip">/products/ai/</span>
-            </a>
-          </article>
+            <article class="lane-card">
+              <a href="/products/ai/">
+                <h3>On Your Side AI</h3>
+                <p>
+                  AI lane entry preserved as a hard route instead of runtime-only presentation.
+                </p>
+                <span class="route-chip">/products/ai/</span>
+              </a>
+            </article>
 
-          <article class="lane-card">
-            <a href="/products/education/">
-              <h3>Education &amp; Language</h3>
-              <p>
-                Education lane with direct anchor access and stable upstream return behavior.
-              </p>
-              <span class="route-chip">/products/education/</span>
-            </a>
-          </article>
+            <article class="lane-card">
+              <a href="/products/education/">
+                <h3>Education &amp; Language</h3>
+                <p>
+                  Education lane with direct anchor access and stable upstream return behavior.
+                </p>
+                <span class="route-chip">/products/education/</span>
+              </a>
+            </article>
 
-          <article class="lane-card">
-            <a href="/products/five-flags/">
-              <h3>Five Flags</h3>
-              <p>
-                Five Flags lane restored as a route-safe product destination under the products path.
-              </p>
-              <span class="route-chip">/products/five-flags/</span>
-            </a>
-          </article>
+            <article class="lane-card">
+              <a href="/products/five-flags/">
+                <h3>Five Flags</h3>
+                <p>
+                  Five Flags lane restored as a route-safe product destination under the products
+                  path.
+                </p>
+                <span class="route-chip">/products/five-flags/</span>
+              </a>
+            </article>
 
-          <article class="lane-card">
-            <a href="/products/archcoin/">
-              <h3>ARCHCOIN</h3>
-              <p>
-                ARCHCOIN destination with static path exposure and clean return-to-products behavior.
-              </p>
-              <span class="route-chip">/products/archcoin/</span>
-            </a>
-          </article>
+            <article class="lane-card">
+              <a href="/products/archcoin/">
+                <h3>ARCHCOIN</h3>
+                <p>
+                  ARCHCOIN destination with static path exposure and clean return-to-products
+                  behavior.
+                </p>
+                <span class="route-chip">/products/archcoin/</span>
+              </a>
+            </article>
 
-          <article class="lane-card">
-            <a href="/products/">
-              <h3>Products Root</h3>
-              <p>
-                Self-anchor for route normalization, refresh safety, and root recovery from nested
-                product destinations.
-              </p>
-              <span class="route-chip">/products/</span>
-            </a>
-          </article>
+            <article class="lane-card">
+              <a href="/products/">
+                <h3>Products Root</h3>
+                <p>
+                  Self-anchor for route normalization, refresh safety, and root recovery from nested
+                  product destinations.
+                </p>
+                <span class="route-chip">/products/</span>
+              </a>
+            </article>
+          </div>
         </div>
 
         <div class="backfill">
           <p>
-            <strong>Backlink contract.</strong> Every child product destination should expose at least
-            three hard HTML links at the top: <strong>Home</strong>, <strong>Explore</strong>, and
-            <strong>Return to Products</strong>. The products root should expose the lane map above even
+            <strong>Backlink contract.</strong> Every child product destination should expose at
+            least three hard HTML links at the top: <strong>Home</strong>, <strong>Explore</strong>,
+            and <strong>Return to Products</strong>. The products root keeps the lane map above even
             when runtime is unavailable.
           </p>
 
@@ -594,11 +665,13 @@
     <div class="shell">
       <div class="footer-panel">
         <p>
-          Runtime / Receipt: HTML=STRUCTURE | JS=ORCHESTRATION | HERO_RUNTIME=OPTIONAL |
-          BACKLINKS=HARD_HTML | ROUTE_ACCESS=STATIC_SAFE
+          Runtime / Receipt: HTML=STRUCTURE | JS=EUCLIDEAN_ORCHESTRATION |
+          HERO_RUNTIME=BOUNDED | BACKLINKS=HARD_HTML | ROUTE_ACCESS=STATIC_SAFE
         </p>
       </div>
     </div>
   </footer>
+
+  <script src="/products/index.js"></script>
 </body>
 </html>

@@ -1,5 +1,12 @@
-import { getControlReceipt, getLabelVisibilityPolicy } from "/world/control.js";
-import { getPlanetEngineReceipt, getPlanetProjection } from "/world/planet_engine.js";
+import {
+  getControlReceipt,
+  getCameraFrame,
+  getLabelVisibilityPolicy
+} from "/world/control.js";
+import {
+  getPlanetEngineReceipt,
+  getPlanetProjection
+} from "/world/planet_engine.js";
 import { render } from "/world/render.js";
 
 const META = Object.freeze({
@@ -25,12 +32,9 @@ function clamp(value, min, max) {
 }
 
 function normalizeViewport(viewport = {}) {
-  const width =
-    Number.isFinite(viewport.width) && viewport.width > 0 ? viewport.width : 1280;
-  const height =
-    Number.isFinite(viewport.height) && viewport.height > 0 ? viewport.height : 720;
-  const dpr =
-    Number.isFinite(viewport.dpr) && viewport.dpr > 0 ? viewport.dpr : 1;
+  const width = Number.isFinite(viewport.width) && viewport.width > 0 ? viewport.width : 1280;
+  const height = Number.isFinite(viewport.height) && viewport.height > 0 ? viewport.height : 720;
+  const dpr = Number.isFinite(viewport.dpr) && viewport.dpr > 0 ? viewport.dpr : 1;
 
   return { width, height, dpr };
 }
@@ -49,100 +53,17 @@ function normalizeFrameState(frameState = {}) {
       Number.isFinite(frameState.elapsedSeconds) && frameState.elapsedSeconds >= 0
         ? frameState.elapsedSeconds
         : 0,
-    pointer: normalizePointer(frameState.pointer || {}),
-    reducedMotion: frameState.reducedMotion === true
+    reducedMotion: frameState.reducedMotion === true,
+    pointer: normalizePointer(frameState.pointer || {})
   };
 }
 
-function projectOrbitRings(planetProjection) {
-  const orbitRings = Array.isArray(planetProjection.orbitRings)
-    ? planetProjection.orbitRings
-    : [];
-
-  const camera = planetProjection.camera || {};
-  const centerPx = camera.centerPx || { x: 0, y: 0 };
-
-  return orbitRings.map((ring) =>
-    deepFreeze({
-      key: ring.key,
-      label: ring.label,
-      center: {
-        x: centerPx.x,
-        y: centerPx.y
-      },
-      radiusPxX: Number(ring.radiusPxX || 0),
-      radiusPxY: Number(ring.radiusPxY || 0)
-    })
-  );
+function getDepthFromAngle(angle) {
+  return (Math.sin(Number(angle || 0)) + 1) * 0.5;
 }
 
-function projectStars(planetProjection) {
-  const stars = Array.isArray(planetProjection.stars) ? planetProjection.stars : [];
-  return stars.map((star) =>
-    deepFreeze({
-      x: Number(star.x || 0),
-      y: Number(star.y || 0),
-      size: Number(star.size || 0),
-      alpha: Number(star.alpha || 0)
-    })
-  );
-}
-
-function buildPlanetBodies(planetProjection, frameState, viewport) {
-  const planets = Array.isArray(planetProjection.planets) ? planetProjection.planets : [];
-  const labelPolicy = getLabelVisibilityPolicy(viewport);
-  const pointer = frameState.pointer;
-
-  return planets.map((planet) => {
-    const viewportPosition = planet.viewport || { x: 0, y: 0 };
-    const radiusPx = Number(planet.radiusPx || 0);
-    const orbitPx = planet.orbitPx || { x: 0, y: 0 };
-    const angle = Number((planet.positionKm || {}).angle || 0);
-
-    const depth = (Math.sin(angle) + 1) * 0.5;
-    const scale = 0.82 + depth * 0.22;
-    const opacity = 0.68 + depth * 0.32;
-    const zIndex = Math.floor(10 + depth * 20);
-
-    const pointerOffsetX = pointer.active ? pointer.x * 10 : 0;
-    const pointerOffsetY = pointer.active ? pointer.y * 8 : 0;
-
-    const x = viewportPosition.x + pointerOffsetX;
-    const y = viewportPosition.y + pointerOffsetY;
-
-    return deepFreeze({
-      key: planet.key,
-      label: planet.label,
-      route: planet.route || null,
-      visibleColorClass: planet.visibleColorClass || "",
-      hasRing: planet.hasRing === true,
-      order: Number(planet.order || 0),
-      radiusKm: Number(planet.radiusKm || 0),
-      compressedRadiusKm: Number(planet.compressedRadiusKm || 0),
-      radiusPx,
-      orbitPxX: Number(orbitPx.x || 0),
-      orbitPxY: Number(orbitPx.y || 0),
-      positionKm: deepFreeze(planet.positionKm || {}),
-      viewport: deepFreeze({ x, y }),
-      labelPosition: deepFreeze({
-        x,
-        y: y + Number(labelPolicy.minLabelOffsetPx || 0)
-      }),
-      metaPosition: deepFreeze({
-        x,
-        y: y + radiusPx + Number(labelPolicy.metaOffsetPx || 10)
-      }),
-      depth,
-      scale,
-      opacity,
-      zIndex,
-      angle
-    });
-  });
-}
-
-function buildSunBody(planetProjection) {
-  const sun = planetProjection.sun || {};
+function buildSunSceneNode(projection = {}) {
+  const sun = projection.sun || {};
   const viewport = sun.viewport || { x: 0, y: 0 };
 
   return deepFreeze({
@@ -158,9 +79,129 @@ function buildSunBody(planetProjection) {
   });
 }
 
+function buildPlanetSceneNodes(projection = {}, frameState = {}, viewport = {}) {
+  const planets = Array.isArray(projection.planets) ? projection.planets : [];
+  const labelPolicy = getLabelVisibilityPolicy(viewport);
+  const pointer = normalizePointer(frameState.pointer || {});
+  const pointerShiftX = pointer.active ? pointer.x * 8 : 0;
+  const pointerShiftY = pointer.active ? pointer.y * 6 : 0;
+
+  return deepFreeze(
+    planets.map((planet) => {
+      const positionKm = planet.positionKm || {};
+      const viewportPosition = planet.viewport || { x: 0, y: 0 };
+      const radiusPx = Number(planet.radiusPx || 0);
+      const angle = Number(positionKm.angle || 0);
+      const depth = getDepthFromAngle(angle);
+      const scale = 0.9 + depth * 0.16;
+      const opacity = 0.86 + depth * 0.14;
+      const zIndex = Math.floor(10 + depth * 20);
+
+      const x = Number(viewportPosition.x || 0) + pointerShiftX;
+      const y = Number(viewportPosition.y || 0) + pointerShiftY;
+
+      return deepFreeze({
+        key: planet.key,
+        label: planet.label,
+        route: planet.route || null,
+        visibleColorClass: planet.visibleColorClass || "",
+        hasRing: planet.hasRing === true,
+        order: Number(planet.order || 0),
+        radiusKm: Number(planet.radiusKm || 0),
+        compressedRadiusKm: Number(planet.compressedRadiusKm || 0),
+        radiusPx,
+        orbitPxX: Number((planet.orbitPx || {}).x || 0),
+        orbitPxY: Number((planet.orbitPx || {}).y || 0),
+        angle,
+        depth,
+        scale,
+        opacity,
+        zIndex,
+        positionKm: deepFreeze({
+          x: Number(positionKm.x || 0),
+          y: Number(positionKm.y || 0),
+          angle,
+          orbitRadiusKmX: Number(positionKm.orbitRadiusKmX || 0),
+          orbitRadiusKmY: Number(positionKm.orbitRadiusKmY || 0)
+        }),
+        viewport: deepFreeze({ x, y }),
+        labelPosition: deepFreeze({
+          x,
+          y: y + Number(labelPolicy.minLabelOffsetPx || 0)
+        }),
+        metaPosition: deepFreeze({
+          x,
+          y: y + radiusPx + Number(labelPolicy.metaOffsetPx || 10)
+        })
+      });
+    })
+  );
+}
+
+function buildOrbitSceneNodes(projection = {}) {
+  const orbitRings = Array.isArray(projection.orbitRings) ? projection.orbitRings : [];
+  const centerPx = ((projection.camera || {}).centerPx) || { x: 0, y: 0 };
+
+  return deepFreeze(
+    orbitRings.map((ring) =>
+      deepFreeze({
+        key: ring.key,
+        label: ring.label,
+        center: {
+          x: Number(centerPx.x || 0),
+          y: Number(centerPx.y || 0)
+        },
+        radiusPxX: Number(ring.radiusPxX || 0),
+        radiusPxY: Number(ring.radiusPxY || 0)
+      })
+    )
+  );
+}
+
+function buildStarSceneNodes(projection = {}) {
+  const stars = Array.isArray(projection.stars) ? projection.stars : [];
+
+  return deepFreeze(
+    stars.map((star) =>
+      deepFreeze({
+        x: Number(star.x || 0),
+        y: Number(star.y || 0),
+        size: Number(star.size || 0),
+        alpha: Number(star.alpha || 0)
+      })
+    )
+  );
+}
+
+function buildSceneState(viewport, frameState, projection) {
+  const camera = projection.camera || getCameraFrame(viewport);
+  const sun = buildSunSceneNode(projection);
+  const planets = buildPlanetSceneNodes(projection, frameState, viewport);
+  const orbitRings = buildOrbitSceneNodes(projection);
+  const stars = buildStarSceneNodes(projection);
+  const labelPolicy = getLabelVisibilityPolicy(viewport);
+
+  return deepFreeze({
+    viewport,
+    elapsedSeconds: frameState.elapsedSeconds,
+    reducedMotion: frameState.reducedMotion,
+    pointer: frameState.pointer,
+    centerPx: deepFreeze(camera.centerPx || { x: viewport.width * 0.5, y: viewport.height * 0.5 }),
+    worldScale: deepFreeze({
+      kmPerPx: Number(camera.kmPerPx || 0),
+      pxPerKm: Number(camera.pxPerKm || 0)
+    }),
+    sun,
+    planets,
+    orbitRings,
+    stars,
+    labelPolicy
+  });
+}
+
 export function buildWorldRuntimeSnapshot(options = {}) {
-  const viewport = normalizeViewport(options.viewport);
-  const frameState = normalizeFrameState(options.frameState);
+  const viewport = normalizeViewport(options.viewport || {});
+  const frameState = normalizeFrameState(options.frameState || {});
   const timestamp = Number.isFinite(options.timestamp) ? options.timestamp : Date.now();
 
   const controlReceipt = getControlReceipt({ viewport });
@@ -173,37 +214,11 @@ export function buildWorldRuntimeSnapshot(options = {}) {
     elapsedSeconds: frameState.elapsedSeconds
   });
 
-  const visibleBodies = buildPlanetBodies(projection, frameState, viewport);
-  const orbitRings = projectOrbitRings(projection);
-  const stars = projectStars(projection);
-  const sun = buildSunBody(projection);
-  const labelPolicy = getLabelVisibilityPolicy(viewport);
-
-  const sceneState = deepFreeze({
-    timestamp,
-    viewport,
-    elapsedSeconds: frameState.elapsedSeconds,
-    reducedMotion: frameState.reducedMotion,
-    pointer: frameState.pointer,
-    centerPx: deepFreeze(projection.camera.centerPx || { x: 0, y: 0 }),
-    worldScale: deepFreeze({
-      kmPerPx: Number((projection.camera || {}).kmPerPx || 0),
-      pxPerKm: Number((projection.camera || {}).pxPerKm || 0)
-    }),
-    sun,
-    planets: visibleBodies,
-    orbitRings,
-    stars,
-    labelPolicy
-  });
+  const sceneState = buildSceneState(viewport, frameState, projection);
 
   const renderPacket = render({
-    frameState: {
-      elapsedSeconds: frameState.elapsedSeconds,
-      pointer: frameState.pointer,
-      reducedMotion: frameState.reducedMotion
-    },
     timestamp,
+    frameState,
     sceneState
   });
 
@@ -211,11 +226,12 @@ export function buildWorldRuntimeSnapshot(options = {}) {
     meta: META,
     timestamp,
     viewport,
+    frameState,
     controlReceipt,
     planetReceipt,
     projection,
-    renderPacket,
-    sceneState
+    sceneState,
+    renderPacket
   });
 }
 
@@ -225,8 +241,7 @@ export function createWorldRuntime(config = {}) {
       ? config.sessionId
       : "WORLD_RUNTIME_SESSION";
 
-  const kernel =
-    typeof window !== "undefined" ? window.liveRuntimeKernel || null : null;
+  const kernel = typeof window !== "undefined" ? window.liveRuntimeKernel || null : null;
 
   const state = {
     running: false,
@@ -240,8 +255,6 @@ export function createWorldRuntime(config = {}) {
   };
 
   function buildSnapshot(viewport, overrides = {}) {
-    const timestamp = Date.now();
-
     if (typeof overrides.reducedMotion === "boolean") {
       state.reducedMotion = overrides.reducedMotion;
     }
@@ -249,6 +262,8 @@ export function createWorldRuntime(config = {}) {
     if (overrides.pointer && typeof overrides.pointer === "object") {
       state.pointer = normalizePointer(overrides.pointer);
     }
+
+    const timestamp = Date.now();
 
     state.snapshot = buildWorldRuntimeSnapshot({
       viewport,

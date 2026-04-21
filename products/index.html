@@ -14,26 +14,17 @@
       --bg-b: #071427;
       --bg-c: #0a1a31;
       --panel: rgba(10, 22, 42, 0.74);
-      --panel-strong: rgba(9, 20, 39, 0.88);
       --line: rgba(165, 208, 255, 0.18);
-      --line-strong: rgba(191, 230, 255, 0.28);
       --text: #ecf4ff;
       --muted: #a7bddb;
       --accent: #c4e6ff;
-      --accent-soft: rgba(196, 230, 255, 0.16);
-      --glow: rgba(146, 202, 255, 0.20);
       --shadow: 0 18px 52px rgba(0, 0, 0, 0.34);
       --radius: 24px;
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
     body {
       margin: 0;
@@ -47,10 +38,7 @@
         linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .shell {
       width: min(100% - 28px, var(--max));
@@ -145,9 +133,7 @@
       box-shadow: 0 0 0 1px rgba(191, 230, 255, 0.08) inset;
     }
 
-    .hero {
-      padding: 42px 0 24px;
-    }
+    .hero { padding: 42px 0 24px; }
 
     .hero-panel {
       position: relative;
@@ -169,10 +155,6 @@
       grid-template-columns: minmax(0, 0.95fr) minmax(420px, 0.9fr);
       gap: 28px;
       align-items: start;
-    }
-
-    .hero-copy-column {
-      min-width: 0;
     }
 
     .eyebrow {
@@ -265,10 +247,6 @@
       font-size: 0.94rem;
     }
 
-    .universe-column {
-      min-width: 0;
-    }
-
     .universe-frame {
       position: relative;
       min-height: 620px;
@@ -330,7 +308,7 @@
       position: absolute;
       inset: 14px;
       z-index: 3;
-      perspective: 1600px;
+      perspective: 1800px;
       transform-style: preserve-3d;
       pointer-events: none;
       overflow: hidden;
@@ -347,14 +325,14 @@
       position: absolute;
       left: 50%;
       top: 52%;
-      width: 160px;
-      height: 160px;
-      margin-left: -80px;
-      margin-top: -80px;
+      width: 142px;
+      height: 142px;
+      margin-left: -71px;
+      margin-top: -71px;
       border-radius: 50%;
       border: 1px solid rgba(191, 230, 255, 0.12);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03), rgba(143, 200, 255, 0.02) 42%, transparent 76%);
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), rgba(143,200,255,0.03) 42%, transparent 76%);
       box-shadow:
         inset 0 0 36px rgba(143, 200, 255, 0.05),
         0 0 30px rgba(143, 200, 255, 0.03);
@@ -366,8 +344,8 @@
       position: absolute;
       left: 50%;
       top: 52%;
-      width: 92px;
-      height: 92px;
+      width: 82px;
+      height: 82px;
       margin: 0;
       transform-style: preserve-3d;
       will-change: transform, opacity;
@@ -378,8 +356,6 @@
       display: block;
       width: 100%;
       height: 100%;
-      color: inherit;
-      text-decoration: none;
     }
 
     .token-diamond {
@@ -389,14 +365,39 @@
       transform-style: preserve-3d;
     }
 
+    .token-shadow {
+      position: absolute;
+      inset: 12px;
+      border-radius: 12px;
+      transform: translateZ(-18px) rotate(45deg);
+      background: rgba(0, 0, 0, 0.24);
+      filter: blur(10px);
+      opacity: 0.68;
+    }
+
+    .token-spine {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 52px;
+      height: 52px;
+      margin-left: -26px;
+      margin-top: -26px;
+      transform: rotate(45deg) translateZ(-8px);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(33, 56, 88, 0.82), rgba(16, 27, 46, 0.94));
+      border: 1px solid rgba(191, 230, 255, 0.10);
+      opacity: 0.9;
+    }
+
     .token-face {
       position: absolute;
       inset: 0;
-      border-radius: 16px;
+      border-radius: 15px;
       transform: rotate(45deg);
       border: 1px solid rgba(191, 230, 255, 0.28);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)),
         linear-gradient(180deg, rgba(10, 23, 44, 0.94), rgba(8, 18, 34, 0.98));
       box-shadow:
         0 10px 22px rgba(0, 0, 0, 0.24),
@@ -404,31 +405,6 @@
         0 0 26px rgba(143, 200, 255, 0.08);
       backdrop-filter: blur(10px);
       transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
-    }
-
-    .token-shadow {
-      position: absolute;
-      inset: 14px;
-      border-radius: 14px;
-      transform: translateZ(-14px) rotate(45deg);
-      background: rgba(0, 0, 0, 0.24);
-      filter: blur(10px);
-      opacity: 0.7;
-    }
-
-    .token-spine {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 56px;
-      height: 56px;
-      margin-left: -28px;
-      margin-top: -28px;
-      transform: rotate(45deg) translateZ(-8px);
-      border-radius: 12px;
-      background: linear-gradient(180deg, rgba(35, 57, 90, 0.82), rgba(17, 28, 48, 0.94));
-      border: 1px solid rgba(191, 230, 255, 0.10);
-      opacity: 0.85;
     }
 
     .lane-token:hover .token-face,
@@ -439,23 +415,20 @@
         0 14px 28px rgba(0, 0, 0, 0.28),
         inset 0 0 28px rgba(196, 230, 255, 0.06),
         0 0 34px rgba(143, 200, 255, 0.15);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04)),
-        linear-gradient(180deg, rgba(12, 28, 52, 0.96), rgba(8, 18, 34, 1));
     }
 
     .token-inner {
       position: absolute;
       inset: 0;
-      transform-style: preserve-3d;
       display: grid;
       place-items: center;
+      transform-style: preserve-3d;
     }
 
     .token-compass {
       position: absolute;
-      inset: 16px;
-      opacity: 0.46;
+      inset: 14px;
+      opacity: 0.42;
       transform: translateZ(6px);
     }
 
@@ -465,37 +438,39 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      background: rgba(196, 230, 255, 0.22);
+      background: rgba(196, 230, 255, 0.20);
       transform: translate(-50%, -50%);
     }
 
-    .token-compass::before {
-      width: 1px;
-      height: 100%;
-    }
-
-    .token-compass::after {
-      width: 100%;
-      height: 1px;
-    }
+    .token-compass::before { width: 1px; height: 100%; }
+    .token-compass::after { width: 100%; height: 1px; }
 
     .token-compass .ring {
       position: absolute;
-      inset: 18%;
+      inset: 20%;
       border-radius: 50%;
-      border: 1px solid rgba(196, 230, 255, 0.18);
+      border: 1px solid rgba(196, 230, 255, 0.17);
+    }
+
+    .token-label-wrap {
+      position: relative;
+      z-index: 2;
+      transform-style: preserve-3d;
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
     }
 
     .token-label {
-      position: relative;
-      z-index: 2;
       transform: translateZ(12px);
-      max-width: 66px;
+      max-width: 58px;
       text-transform: uppercase;
       letter-spacing: 0.07em;
-      font-size: 0.68rem;
+      font-size: 0.60rem;
       font-weight: 800;
-      line-height: 1.12;
+      line-height: 1.14;
       text-align: center;
       text-shadow: 0 2px 10px rgba(0, 0, 0, 0.34);
     }
@@ -505,14 +480,14 @@
       left: 50%;
       top: calc(100% + 12px);
       transform: translateX(-50%);
-      min-width: 136px;
+      min-width: 130px;
       padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(191, 230, 255, 0.18);
       background: rgba(6, 16, 32, 0.82);
       backdrop-filter: blur(8px);
       color: var(--accent);
-      font-size: 0.68rem;
+      font-size: 0.64rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-align: center;
@@ -529,9 +504,7 @@
       border-color: rgba(196, 230, 255, 0.30);
     }
 
-    .section {
-      padding: 18px 0 42px;
-    }
+    .section { padding: 18px 0 42px; }
 
     .section-head {
       display: flex;
@@ -615,9 +588,7 @@
       line-height: 1.7;
     }
 
-    .backfill strong {
-      color: var(--text);
-    }
+    .backfill strong { color: var(--text); }
 
     .fallback-links {
       display: flex;
@@ -636,9 +607,7 @@
       border: 1px solid rgba(160, 205, 255, 0.14);
     }
 
-    .footer {
-      padding: 20px 0 52px;
-    }
+    .footer { padding: 20px 0 52px; }
 
     .footer-panel {
       border-radius: 22px;
@@ -655,10 +624,7 @@
     }
 
     @media (max-width: 1080px) {
-      .hero-layout {
-        grid-template-columns: 1fr;
-      }
-
+      .hero-layout,
       .summary,
       .lane-list {
         grid-template-columns: 1fr;
@@ -671,42 +637,26 @@
         align-items: stretch;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .hero-panel {
-        padding: 22px;
-      }
-
-      .universe-frame {
-        min-height: 560px;
-      }
-
-      .universe-frame-shell {
-        min-height: 504px;
-      }
+      .nav { justify-content: flex-start; }
+      .hero-panel { padding: 22px; }
+      .universe-frame { min-height: 560px; }
+      .universe-frame-shell { min-height: 504px; }
 
       .lane-token {
-        width: 78px;
-        height: 78px;
+        width: 72px;
+        height: 72px;
       }
 
       .token-label {
-        max-width: 54px;
-        font-size: 0.60rem;
-      }
-
-      .token-meta {
-        min-width: 122px;
-        font-size: 0.64rem;
+        max-width: 50px;
+        font-size: 0.56rem;
       }
 
       .center-core-mask {
-        width: 132px;
-        height: 132px;
-        margin-left: -66px;
-        margin-top: -66px;
+        width: 126px;
+        height: 126px;
+        margin-left: -63px;
+        margin-top: -63px;
       }
     }
 
@@ -717,10 +667,7 @@
         transition: none !important;
         animation: none !important;
       }
-
-      .orbit-shell {
-        display: none;
-      }
+      .orbit-shell { display: none; }
     }
   </style>
 </head>
@@ -750,14 +697,13 @@
       <div class="shell">
         <div class="hero-panel">
           <div class="hero-layout">
-            <div class="hero-copy-column">
-              <p class="eyebrow">G2 Products Gateway · Universe Chamber Visible</p>
+            <div>
+              <p class="eyebrow">G2 Products Gateway · Calibration Pass</p>
               <h1>The animated products gateway.</h1>
-
               <p class="hero-copy">
-                The Euclidean runtime now sits inside its own chamber instead of competing with the
-                copy layer. The moving diamonds are smaller, three-dimensional, and revolve around a
-                visible center focus so the geometry stays readable.
+                The universe chamber is now live. This refinement pass preserves the current
+                structure while improving label readability, 3D token depth, center-axis
+                discipline, Euclidean clarity, and orbital separation.
               </p>
 
               <div class="hero-actions">
@@ -772,12 +718,12 @@
                   <span>256000 km by 256000 km internal domain.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Frame</strong>
-                  <span>Dedicated visible chamber for the orbit layer.</span>
+                  <strong>Clarity</strong>
+                  <span>Reduced ring noise and cleaner orbital lanes.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Geometry</strong>
-                  <span>Smaller 3D diamonds with readable Euclidean spacing.</span>
+                  <strong>Tokens</strong>
+                  <span>Smaller 3D diamonds with readable labels.</span>
                 </div>
                 <div class="summary-card">
                   <strong>Backlinks</strong>
@@ -794,7 +740,7 @@
               </nav>
             </div>
 
-            <div class="universe-column">
+            <div>
               <div class="universe-frame" id="products-universe-frame">
                 <div class="universe-frame-header">
                   <strong>Universe Chamber</strong>
@@ -806,7 +752,7 @@
 
                   <div class="orbit-shell" aria-hidden="true">
                     <div class="orbit-grid" id="products-orbit-grid">
-                      <article class="lane-token" data-label="ARCHCOIN" data-route="/products/archcoin/">
+                      <article class="lane-token">
                         <a href="/products/archcoin/" aria-label="ARCHCOIN">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -814,14 +760,14 @@
                             <div class="token-face"></div>
                             <div class="token-inner">
                               <div class="token-compass"><span class="ring"></span></div>
-                              <span class="token-label">ARCHCOIN</span>
+                              <div class="token-label-wrap"><span class="token-label">ARCHCOIN</span></div>
                             </div>
                           </div>
                           <span class="token-meta">/products/archcoin/</span>
                         </a>
                       </article>
 
-                      <article class="lane-token" data-label="FIVE FLAGS" data-route="/products/five-flags/">
+                      <article class="lane-token">
                         <a href="/products/five-flags/" aria-label="FIVE FLAGS">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -829,14 +775,14 @@
                             <div class="token-face"></div>
                             <div class="token-inner">
                               <div class="token-compass"><span class="ring"></span></div>
-                              <span class="token-label">FIVE FLAGS</span>
+                              <div class="token-label-wrap"><span class="token-label">FIVE FLAGS</span></div>
                             </div>
                           </div>
                           <span class="token-meta">/products/five-flags/</span>
                         </a>
                       </article>
 
-                      <article class="lane-token" data-label="OUR AI" data-route="/products/ai/">
+                      <article class="lane-token">
                         <a href="/products/ai/" aria-label="OUR AI">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -844,14 +790,14 @@
                             <div class="token-face"></div>
                             <div class="token-inner">
                               <div class="token-compass"><span class="ring"></span></div>
-                              <span class="token-label">OUR AI</span>
+                              <div class="token-label-wrap"><span class="token-label">OUR AI</span></div>
                             </div>
                           </div>
                           <span class="token-meta">/products/ai/</span>
                         </a>
                       </article>
 
-                      <article class="lane-token" data-label="WHAT'S MY THEME" data-route="/products/education/">
+                      <article class="lane-token">
                         <a href="/products/education/" aria-label="WHAT'S MY THEME">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -859,14 +805,14 @@
                             <div class="token-face"></div>
                             <div class="token-inner">
                               <div class="token-compass"><span class="ring"></span></div>
-                              <span class="token-label">WHAT'S MY THEME</span>
+                              <div class="token-label-wrap"><span class="token-label">WHAT'S MY THEME</span></div>
                             </div>
                           </div>
                           <span class="token-meta">/products/education/</span>
                         </a>
                       </article>
 
-                      <article class="lane-token" data-label="NUTRITION" data-route="/products/nutrition/">
+                      <article class="lane-token">
                         <a href="/products/nutrition/" aria-label="NUTRITION">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -874,14 +820,14 @@
                             <div class="token-face"></div>
                             <div class="token-inner">
                               <div class="token-compass"><span class="ring"></span></div>
-                              <span class="token-label">NUTRITION</span>
+                              <div class="token-label-wrap"><span class="token-label">NUTRITION</span></div>
                             </div>
                           </div>
                           <span class="token-meta">/products/nutrition/</span>
                         </a>
                       </article>
 
-                      <article class="lane-token" data-label="ROOT" data-route="/products/">
+                      <article class="lane-token">
                         <a href="/products/" aria-label="ROOT">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -889,7 +835,7 @@
                             <div class="token-face"></div>
                             <div class="token-inner">
                               <div class="token-compass"><span class="ring"></span></div>
-                              <span class="token-label">ROOT</span>
+                              <div class="token-label-wrap"><span class="token-label">ROOT</span></div>
                             </div>
                           </div>
                           <span class="token-meta">/products/</span>
@@ -910,11 +856,9 @@
     <section id="product-lanes" class="section">
       <div class="shell">
         <div class="section-head">
-          <div>
-            <h2>Static route surface</h2>
-          </div>
+          <div><h2>Static route surface</h2></div>
           <p>
-            The orbit remains visual. The route detail remains below as a stable HTML surface so the
+            The orbit remains visual. Route detail stays below as a stable HTML surface so the
             moving layer stays clean and the navigation remains direct.
           </p>
         </div>
@@ -959,9 +903,8 @@
 
         <div class="backfill">
           <p>
-            <strong>Backlink contract.</strong> Every child product destination should expose at
-            least three hard HTML links at the top: <strong>Home</strong>, <strong>Explore</strong>,
-            and <strong>Return to Products</strong>.
+            <strong>Backlink contract.</strong> Every child product destination should expose at least three hard HTML links at the top:
+            <strong>Home</strong>, <strong>Explore</strong>, and <strong>Return to Products</strong>.
           </p>
 
           <div class="fallback-links" aria-label="Backfill links">
@@ -981,8 +924,8 @@
       <div class="footer-panel">
         <p>
           Result / Receipt: HTML=STRUCTURE | JS=EUCLIDEAN_PROJECTION |
-          UNIVERSE=256000x256000_KM | FRAME=VISIBLE_CHAMBER |
-          TOKENS=SMALL_3D_DIAMONDS | BACKLINKS=HARD_HTML
+          UNIVERSE=256000x256000_KM | TOKENS=3D_DIAMOND_COMPASSES |
+          LABELS=FACE_FORWARD | GEOMETRY=CALIBRATED | BACKLINKS=HARD_HTML
         </p>
       </div>
     </div>

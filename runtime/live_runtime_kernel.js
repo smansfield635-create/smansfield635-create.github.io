@@ -107,10 +107,10 @@
   }
 
   function setParentStackStatus(status = "UNSET", filesCount = 0) {
-    state.parentStack.status =
-      typeof status === "string" ? status : state.parentStack.status;
-    state.parentStack.filesCount =
-      Number.isFinite(filesCount) ? Math.trunc(filesCount) : state.parentStack.filesCount;
+    state.parentStack.status = typeof status === "string" ? status : state.parentStack.status;
+    state.parentStack.filesCount = Number.isFinite(filesCount)
+      ? Math.trunc(filesCount)
+      : state.parentStack.filesCount;
   }
 
   function setRuntimeBridgeStatus(status = "UNSET") {
@@ -147,6 +147,7 @@
 
   function registerSession(sessionId, meta = {}) {
     if (typeof sessionId !== "string" || !sessionId) return;
+
     state.sessions[sessionId] = {
       status: "REGISTERED",
       meta: clone(meta),
@@ -191,7 +192,6 @@
     __type: "LIVE_RUNTIME_KERNEL",
     __active: true,
     __authority: "G1_EXTERNAL_RUNTIME_KERNEL",
-
     initializeKernel,
     bindTargets,
     attachRuntime,
@@ -208,7 +208,6 @@
     markSessionStopped,
     unregisterSession,
     resetForNewRun,
-
     getKernel() {
       return {
         initialized: state.kernel.initialized,
@@ -216,15 +215,12 @@
         scope: state.kernel.scope
       };
     },
-
     getRuntime() {
       return clone(state.runtime);
     },
-
     getState() {
       return snapshot();
     },
-
     isActive() {
       return state.active === true;
     }

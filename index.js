@@ -2,502 +2,541 @@
   "use strict";
 
   const SELECTORS = {
-    frame: "#home-solar-frame",
     stage: "#home-hero-stage",
-    bodies: ".route-body",
-    centerLabel: ".solar-center-label"
+    grid: "#home-orbit-grid",
+    tokens: ".compass-token"
   };
 
   const CONFIG = {
-    MOBILE_BREAKPOINT: 760,
+    UNIVERSE_WIDTH_KM: 256000,
+    UNIVERSE_HEIGHT_KM: 256000,
     REDUCE_MOTION_QUERY: "(prefers-reduced-motion: reduce)",
+    MOBILE_BREAKPOINT: 760,
     DPR_CAP: 2,
 
-    STAR_COUNT_DESKTOP: 180,
-    STAR_COUNT_MOBILE: 110,
+    STAR_COUNT: 120,
+    PARTICLE_COUNT: 14,
 
-    CENTER_Y_DESKTOP: 0.44,
-    CENTER_Y_MOBILE: 0.36,
+    DESKTOP_ORBIT_WIDTH_KM: 124000,
+    DESKTOP_ORBIT_HEIGHT_KM: 84000,
+    MOBILE_ORBIT_WIDTH_KM: 92000,
+    MOBILE_ORBIT_HEIGHT_KM: 108000,
 
-    SUN_RADIUS_DESKTOP: 54,
-    SUN_RADIUS_MOBILE: 42,
-    SUN_GLOW_DESKTOP: 160,
-    SUN_GLOW_MOBILE: 126,
+    TOKEN_SCALE_MIN: 0.76,
+    TOKEN_SCALE_MAX: 1.04,
+    TOKEN_OPACITY_MIN: 0.58,
+    TOKEN_OPACITY_MAX: 1,
 
-    CHAMBER_PADDING_DESKTOP: 28,
-    CHAMBER_PADDING_MOBILE: 18,
+    ORBIT_SPEED_RAD_MS: 0.00022,
+    BODY_SPIN_DEG_MS: 0.014,
 
-    ORBIT_TILT_Y_DESKTOP: 0.72,
-    ORBIT_TILT_Y_MOBILE: 0.62,
+    WOBBLE_KM_X: 2600,
+    WOBBLE_KM_Y: 1800,
+    POINTER_KM_X: 3600,
+    POINTER_KM_Y: 2800,
 
-    POINTER_SHIFT_X: 6,
-    POINTER_SHIFT_Y: 4,
-
-    SHOW_META_ON_TOUCH: false
+    CENTER_X_RATIO: 0.5,
+    CENTER_Y_RATIO: 0.52
   };
-
-  const SOLAR_MODEL = {
-    mercury: { order: 1, label: "Mercury", periodYears: 0.2408467, baseAngle: -1.35, orbitRatio: 0.12, sizeDesktop: 28, sizeMobile: 22, hasRing: false },
-    venus:   { order: 2, label: "Venus",   periodYears: 0.61519726, baseAngle: -0.62, orbitRatio: 0.21, sizeDesktop: 36, sizeMobile: 28, hasRing: false },
-    earth:   { order: 3, label: "Earth",   periodYears: 1.0,        baseAngle: 0.12,  orbitRatio: 0.30, sizeDesktop: 38, sizeMobile: 30, hasRing: false },
-    mars:    { order: 4, label: "Mars",    periodYears: 1.8808476,  baseAngle: 0.82,  orbitRatio: 0.39, sizeDesktop: 32, sizeMobile: 24, hasRing: false },
-    jupiter: { order: 5, label: "Jupiter", periodYears: 11.862615,  baseAngle: 1.46,  orbitRatio: 0.53, sizeDesktop: 60, sizeMobile: 44, hasRing: false },
-    saturn:  { order: 6, label: "Saturn",  periodYears: 29.447498,  baseAngle: 2.08,  orbitRatio: 0.65, sizeDesktop: 54, sizeMobile: 40, hasRing: true  },
-    uranus:  { order: 7, label: "Uranus",  periodYears: 84.016846,  baseAngle: 2.70,  orbitRatio: 0.77, sizeDesktop: 46, sizeMobile: 34, hasRing: false },
-    neptune: { order: 8, label: "Neptune", periodYears: 164.79132,  baseAngle: 3.22,  orbitRatio: 0.88, sizeDesktop: 42, sizeMobile: 30, hasRing: false },
-    pluto:   { order: 9, label: "Pluto",   periodYears: 248.0,      baseAngle: 3.72,  orbitRatio: 0.97, sizeDesktop: 20, sizeMobile: 14, hasRing: false }
-  };
-
-  const frame = document.querySelector(SELECTORS.frame);
-  const stage = document.querySelector(SELECTORS.stage);
-  const bodyElements = Array.from(document.querySelectorAll(SELECTORS.bodies));
-  const centerLabel = document.querySelector(SELECTORS.centerLabel);
-
-  if (!frame || !stage || bodyElements.length === 0) return;
-
-  const reduceMotionMedia = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
 
   const state = {
     mounted: false,
+    reducedMotion: false,
     rafId: 0,
-    startTime: 0,
-    reducedMotion: reduceMotionMedia.matches,
-    viewport: { width: 0, height: 0, dpr: 1, mobile: false, touch: false },
-    pointer: { x: 0, y: 0, active: false },
+    startTs: 0,
+    width: 0,
+    height: 0,
+    dpr: 1,
+    pointerX: 0,
+    pointerY: 0,
+    pointerActive: false,
     stars: [],
+    particles: [],
+    tokens: [],
     canvas: null,
-    ctx: null,
-    bodies: []
+    ctx: null
   };
 
-  buildCanvas();
-  buildBodies();
-  injectRuntimeStyles();
+  const stage = document.querySelector(SELECTORS.stage);
+  const grid = document.querySelector(SELECTORS.grid);
+  const tokenElements = Array.from(document.querySelectorAll(SELECTORS.tokens));
+
+  if (!stage || !grid || tokenElements.length === 0) {
+    return;
+  }
+
+  const reducedMotionMedia = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
+  state.reducedMotion = reducedMotionMedia.matches;
+
+  buildStage();
+  bindTokens();
   resize();
   seedStars();
+  seedParticles();
   bindEvents();
-  drawFrame(0);
 
-  if (!state.reducedMotion) start();
-
-  function buildCanvas() {
-    const canvas = document.createElement("canvas");
-    canvas.className = "home-solar-canvas";
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.display = "block";
-    canvas.style.pointerEvents = "none";
-
-    stage.innerHTML = "";
-    stage.appendChild(canvas);
-
-    state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", { alpha: true });
+  if (state.reducedMotion) {
+    applyReducedMotionState();
+  } else {
+    start();
   }
 
-  function buildBodies() {
-    state.bodies = bodyElements
-      .map((el) => {
-        const key = String(el.dataset.planet || "").trim().toLowerCase();
-        const model = SOLAR_MODEL[key];
-        if (!model) return null;
+  function buildStage() {
+    stage.innerHTML = `
+      <canvas class="home-compass-canvas"></canvas>
+      <div class="home-compass-glow glow-a"></div>
+      <div class="home-compass-glow glow-b"></div>
+      <div class="home-compass-core"></div>
+      <div class="home-compass-ring ring-a"></div>
+      <div class="home-compass-ring ring-b"></div>
+      <div class="home-compass-ring ring-c"></div>
+    `;
 
-        const body = el.querySelector(".planet-body");
-        const meta = el.querySelector(".planet-meta");
+    injectRuntimeStyles();
 
-        if (model.hasRing && body && !body.querySelector(".planet-ring")) {
-          const ring = document.createElement("span");
-          ring.className = "planet-ring";
-          body.appendChild(ring);
-        }
-
-        el.addEventListener("mouseenter", () => {
-          if (!state.viewport.touch) el.classList.add("is-active");
-        });
-        el.addEventListener("mouseleave", () => {
-          if (!state.viewport.touch) el.classList.remove("is-active");
-        });
-        el.addEventListener("focusin", () => el.classList.add("is-active"));
-        el.addEventListener("focusout", () => el.classList.remove("is-active"));
-
-        if (meta) meta.textContent = model.label;
-
-        return { key, el, body, meta, model };
-      })
-      .filter(Boolean)
-      .sort((a, b) => a.model.order - b.model.order);
+    state.canvas = stage.querySelector(".home-compass-canvas");
+    state.ctx = state.canvas.getContext("2d", { alpha: true });
   }
 
-  function bindEvents() {
-    window.addEventListener("resize", handleResize, { passive: true });
-    frame.addEventListener("pointermove", handlePointerMove, { passive: true });
-    frame.addEventListener("pointerleave", handlePointerLeave, { passive: true });
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+  function bindTokens() {
+    const step = (Math.PI * 2) / tokenElements.length;
+    const laneBands = [1.00, 0.92, 1.08, 0.96];
 
-    reduceMotionMedia.addEventListener("change", (event) => {
-      state.reducedMotion = event.matches;
-      if (state.reducedMotion) {
-        stop();
-        drawFrame(0);
-      } else {
-        start();
-      }
+    state.tokens = tokenElements.map((el, index) => {
+      const baseAngle = step * index - Math.PI / 2;
+      const phase = baseAngle + index * 0.37;
+      const laneBand = laneBands[index % laneBands.length];
+      const diamond = el.querySelector(".token-diamond");
+      const labelWrap = el.querySelector(".token-label-wrap");
+
+      el.addEventListener("mouseenter", () => el.classList.add("is-active"));
+      el.addEventListener("mouseleave", () => el.classList.remove("is-active"));
+      el.addEventListener("focusin", () => el.classList.add("is-active"));
+      el.addEventListener("focusout", () => el.classList.remove("is-active"));
+
+      return { el, diamond, labelWrap, baseAngle, phase, laneBand };
     });
-
-    window.addEventListener("beforeunload", stop, { once: true });
-  }
-
-  function handleResize() {
-    resize();
-    seedStars();
-    drawFrame(getElapsedSeconds());
-  }
-
-  function handlePointerMove(event) {
-    if (state.viewport.touch) return;
-
-    const rect = frame.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1;
-    const y = ((event.clientY - rect.top) / Math.max(1, rect.height)) * 2 - 1;
-
-    state.pointer.x = clamp(x, -1, 1);
-    state.pointer.y = clamp(y, -1, 1);
-    state.pointer.active = true;
-  }
-
-  function handlePointerLeave() {
-    state.pointer.x = 0;
-    state.pointer.y = 0;
-    state.pointer.active = false;
-  }
-
-  function handleVisibilityChange() {
-    if (document.hidden) {
-      stop();
-    } else if (!state.reducedMotion) {
-      start();
-    }
   }
 
   function resize() {
     const rect = stage.getBoundingClientRect();
-    const width = Math.max(320, Math.floor(rect.width));
-    const height = Math.max(420, Math.floor(rect.height));
-    const dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
-    const mobile = width <= CONFIG.MOBILE_BREAKPOINT;
-    const touch = matchMedia("(hover: none), (pointer: coarse)").matches;
+    state.width = Math.max(320, Math.floor(rect.width));
+    state.height = Math.max(320, Math.floor(rect.height));
+    state.dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
 
-    state.viewport = { width, height, dpr, mobile, touch };
-
-    if (state.canvas && state.ctx) {
-      state.canvas.width = Math.floor(width * dpr);
-      state.canvas.height = Math.floor(height * dpr);
-      state.canvas.style.width = `${width}px`;
-      state.canvas.style.height = `${height}px`;
-      state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    }
-
-    frame.classList.toggle("is-touch-device", touch);
+    state.canvas.width = Math.floor(state.width * state.dpr);
+    state.canvas.height = Math.floor(state.height * state.dpr);
+    state.canvas.style.width = `${state.width}px`;
+    state.canvas.style.height = `${state.height}px`;
+    state.ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
   }
 
   function seedStars() {
-    const count = state.viewport.mobile ? CONFIG.STAR_COUNT_MOBILE : CONFIG.STAR_COUNT_DESKTOP;
-    const width = state.viewport.width;
-    const height = state.viewport.height;
+    state.stars = Array.from({ length: CONFIG.STAR_COUNT }, () => ({
+      x: Math.random() * state.width,
+      y: Math.random() * state.height,
+      r: Math.random() * 1.25 + 0.25,
+      a: Math.random() * 0.7 + 0.14,
+      tw: Math.random() * Math.PI * 2,
+      speed: 0.35 + Math.random()
+    }));
+  }
 
-    state.stars = Array.from({ length: count }, (_, index) => {
-      const s1 = pseudoRandom(index + 1);
-      const s2 = pseudoRandom(index + 101);
-      const s3 = pseudoRandom(index + 201);
-      const s4 = pseudoRandom(index + 301);
+  function seedParticles() {
+    state.particles = Array.from({ length: CONFIG.PARTICLE_COUNT }, () => ({
+      angle: Math.random() * Math.PI * 2,
+      radiusXKm: 14000 + Math.random() * getOrbitWidthKm() * 0.42,
+      radiusYKm: 11000 + Math.random() * getOrbitHeightKm() * 0.42,
+      size: 1.4 + Math.random() * 2.2,
+      speed: 0.22 + Math.random() * 0.48,
+      alpha: 0.08 + Math.random() * 0.14
+    }));
+  }
 
-      return {
-        x: s1 * width,
-        y: s2 * height,
-        size: 0.4 + s3 * 1.5,
-        alpha: 0.10 + s4 * 0.56
-      };
-    });
+  function bindEvents() {
+    window.addEventListener("resize", onResize, { passive: true });
+    window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerleave", onPointerLeave, { passive: true });
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    reducedMotionMedia.addEventListener("change", onReducedMotionChange);
+    window.addEventListener("beforeunload", () => stop(), { once: true });
+  }
+
+  function onResize() {
+    resize();
+    seedStars();
+    seedParticles();
+    if (state.reducedMotion) applyReducedMotionState();
+  }
+
+  function onPointerMove(event) {
+    state.pointerActive = true;
+    state.pointerX = event.clientX;
+    state.pointerY = event.clientY;
+  }
+
+  function onPointerLeave() {
+    state.pointerActive = false;
+  }
+
+  function onVisibilityChange() {
+    if (document.hidden) stop();
+    else if (!state.reducedMotion) start();
+  }
+
+  function onReducedMotionChange(event) {
+    state.reducedMotion = event.matches;
+    if (state.reducedMotion) {
+      stop();
+      applyReducedMotionState();
+    } else {
+      start();
+    }
   }
 
   function start() {
     if (state.mounted) return;
     state.mounted = true;
-    state.startTime = performance.now() - getElapsedSeconds() * 1000;
+    state.startTs = performance.now();
     state.rafId = requestAnimationFrame(tick);
   }
 
   function stop() {
     state.mounted = false;
-    if (state.rafId) {
-      cancelAnimationFrame(state.rafId);
-      state.rafId = 0;
-    }
+    if (state.rafId) cancelAnimationFrame(state.rafId);
+    state.rafId = 0;
   }
 
-  function tick(now) {
-    if (!state.mounted) return;
-    const elapsedSeconds = Math.max(0, (now - state.startTime) / 1000);
-    drawFrame(elapsedSeconds);
+  function tick(ts) {
+    if (!state.mounted || state.reducedMotion) return;
+
+    const elapsed = ts - state.startTs;
+    drawUniverse(elapsed);
+    moveShell(elapsed);
+    positionTokens(elapsed);
+
     state.rafId = requestAnimationFrame(tick);
   }
 
-  function getElapsedSeconds() {
-    if (!state.mounted) return 0;
-    return Math.max(0, (performance.now() - state.startTime) / 1000);
-  }
-
-  function drawFrame(elapsedSeconds) {
-    drawScene(elapsedSeconds);
-    positionBodies(elapsedSeconds);
-  }
-
-  function drawScene(elapsedSeconds) {
+  function drawUniverse(elapsed) {
     const ctx = state.ctx;
-    if (!ctx) return;
+    const cx = state.width * CONFIG.CENTER_X_RATIO;
+    const cy = state.height * CONFIG.CENTER_Y_RATIO;
+    const orbitWidthPx = universeKmToPxX(getOrbitWidthKm());
+    const orbitHeightPx = universeKmToPxY(getOrbitHeightKm());
 
-    const { width, height, mobile } = state.viewport;
-    const center = getCenter();
-    const sunRadius = mobile ? CONFIG.SUN_RADIUS_MOBILE : CONFIG.SUN_RADIUS_DESKTOP;
-    const sunGlow = mobile ? CONFIG.SUN_GLOW_MOBILE : CONFIG.SUN_GLOW_DESKTOP;
+    ctx.clearRect(0, 0, state.width, state.height);
 
-    ctx.clearRect(0, 0, width, height);
+    const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, orbitWidthPx * 1.02);
+    gradient.addColorStop(0, "rgba(191,230,255,0.20)");
+    gradient.addColorStop(0.28, "rgba(143,200,255,0.10)");
+    gradient.addColorStop(0.54, "rgba(108,156,255,0.05)");
+    gradient.addColorStop(1, "rgba(0,0,0,0)");
 
-    const glow = ctx.createRadialGradient(center.x, center.y, 6, center.x, center.y, sunGlow);
-    glow.addColorStop(0, "rgba(255,250,224,0.98)");
-    glow.addColorStop(0.10, "rgba(255,232,170,0.94)");
-    glow.addColorStop(0.30, "rgba(255,196,98,0.58)");
-    glow.addColorStop(0.58, "rgba(255,160,74,0.18)");
-    glow.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, state.width, state.height);
 
-    drawStars(ctx);
-    drawOrbits(ctx);
-    drawSun(ctx, center, sunRadius, elapsedSeconds);
-  }
-
-  function drawStars(ctx) {
-    for (const star of state.stars) {
+    state.stars.forEach((star) => {
+      const twinkle = 0.58 + Math.sin(elapsed * 0.001 * star.speed + star.tw) * 0.42;
       ctx.beginPath();
-      ctx.fillStyle = `rgba(232,242,255,${star.alpha})`;
-      ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(224,240,255,${star.a * twinkle})`;
+      ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
       ctx.fill();
-    }
-  }
-
-  function drawOrbits(ctx) {
-    const center = getCenter();
+    });
 
     ctx.save();
+    ctx.translate(cx, cy);
+    ctx.rotate(elapsed * 0.0001);
+    ctx.strokeStyle = "rgba(170,210,255,0.085)";
     ctx.lineWidth = 1;
 
-    for (const entry of state.bodies) {
-      const orbit = getOrbitFor(entry.model);
-      ctx.beginPath();
-      ctx.strokeStyle = entry.model.order <= 4
-        ? "rgba(180,214,255,0.11)"
-        : "rgba(180,214,255,0.08)";
-      ctx.ellipse(center.x, center.y, orbit.a, orbit.b, 0, 0, Math.PI * 2);
-      ctx.stroke();
-    }
+    ctx.beginPath();
+    ctx.ellipse(0, 0, orbitWidthPx * 0.48, orbitHeightPx * 0.48, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, orbitWidthPx * 0.76, orbitHeightPx * 0.76, 0, 0, Math.PI * 2);
+    ctx.stroke();
 
     ctx.restore();
+
+    state.particles.forEach((particle) => {
+      const angle = particle.angle + elapsed * 0.00018 * particle.speed;
+      const x = cx + universeKmToPxX(Math.cos(angle) * particle.radiusXKm);
+      const y = cy + universeKmToPxY(Math.sin(angle) * particle.radiusYKm);
+
+      ctx.beginPath();
+      ctx.fillStyle = `rgba(175,225,255,${particle.alpha})`;
+      ctx.arc(x, y, particle.size, 0, Math.PI * 2);
+      ctx.fill();
+    });
   }
 
-  function drawSun(ctx, center, radius, elapsedSeconds) {
-    const pulse = 1 + Math.sin(elapsedSeconds * 1.4) * 0.045;
+  function moveShell(elapsed) {
+    const glowA = stage.querySelector(".glow-a");
+    const glowB = stage.querySelector(".glow-b");
+    const core = stage.querySelector(".home-compass-core");
+    const ringA = stage.querySelector(".ring-a");
+    const ringB = stage.querySelector(".ring-b");
+    const ringC = stage.querySelector(".ring-c");
 
-    const corona = ctx.createRadialGradient(center.x, center.y, 0, center.x, center.y, radius * 1.55 * pulse);
-    corona.addColorStop(0, "rgba(255,255,246,1)");
-    corona.addColorStop(0.20, "rgba(255,246,198,0.98)");
-    corona.addColorStop(0.52, "rgba(255,214,116,0.90)");
-    corona.addColorStop(1, "rgba(255,168,70,0)");
-    ctx.fillStyle = corona;
-    ctx.beginPath();
-    ctx.arc(center.x, center.y, radius * 1.55 * pulse, 0, Math.PI * 2);
-    ctx.fill();
+    const px = normalizePointerX();
+    const py = normalizePointerY();
 
-    ctx.beginPath();
-    ctx.fillStyle = "rgba(255,244,204,0.98)";
-    ctx.arc(center.x, center.y, radius * 0.64 * pulse, 0, Math.PI * 2);
-    ctx.fill();
-
-    ctx.beginPath();
-    ctx.strokeStyle = "rgba(255,216,132,0.22)";
-    ctx.lineWidth = 2;
-    ctx.arc(center.x, center.y, radius * 1.98 * pulse, 0, Math.PI * 2);
-    ctx.stroke();
+    glowA.style.transform = `translate3d(${px * 14}px, ${py * 10}px, 0) scale(${1 + Math.sin(elapsed * 0.0011) * 0.04})`;
+    glowB.style.transform = `translate3d(${px * -12}px, ${py * -8}px, 0) scale(${1 + Math.cos(elapsed * 0.0012) * 0.03})`;
+    core.style.transform = `translate3d(${px * 9}px, ${py * 7}px, 0) scale(${1 + Math.sin(elapsed * 0.001) * 0.02})`;
+    ringA.style.transform = `translate3d(${px * 6}px, ${py * 4}px, 0) rotate(${elapsed * 0.008}deg)`;
+    ringB.style.transform = `translate3d(${px * -5}px, ${py * 3}px, 0) rotate(${elapsed * -0.006}deg)`;
+    ringC.style.transform = `translate3d(${px * 6}px, ${py * -5}px, 0) rotate(${elapsed * 0.009}deg)`;
   }
 
-  function positionBodies(elapsedSeconds) {
-    const center = getCenter();
-    const bounds = getBounds();
+  function positionTokens(elapsed) {
+    const orbitWidthKm = getOrbitWidthKm();
+    const orbitHeightKm = getOrbitHeightKm();
+    const pointerShiftXKm = normalizePointerX() * CONFIG.POINTER_KM_X;
+    const pointerShiftYKm = normalizePointerY() * CONFIG.POINTER_KM_Y;
 
-    for (const entry of state.bodies) {
-      const { el, body, meta, model } = entry;
-      const orbit = getOrbitFor(model);
-      const size = state.viewport.mobile ? model.sizeMobile : model.sizeDesktop;
-      const angle = model.baseAngle + elapsedSeconds * getAngularVelocity(model.periodYears);
-
-      let x = center.x + Math.cos(angle) * orbit.a;
-      let y = center.y + Math.sin(angle) * orbit.b;
-
-      if (state.pointer.active) {
-        x += state.pointer.x * CONFIG.POINTER_SHIFT_X;
-        y += state.pointer.y * CONFIG.POINTER_SHIFT_Y;
-      }
-
-      x = clamp(x, bounds.left + size * 0.5, bounds.right - size * 0.5);
-      y = clamp(y, bounds.top + size * 0.5, bounds.bottom - size * 0.5);
-
+    state.tokens.forEach((token) => {
+      const angle = token.baseAngle + elapsed * CONFIG.ORBIT_SPEED_RAD_MS;
       const depth = (Math.sin(angle) + 1) * 0.5;
-      const scale = 0.90 + depth * 0.16;
-      const opacity = 0.86 + depth * 0.14;
-      const zIndex = Math.floor(10 + depth * 20);
+      const band = token.laneBand;
 
-      el.style.width = `${size}px`;
-      el.style.height = `${size}px`;
-      el.style.transform = `translate3d(${(x - size / 2).toFixed(2)}px, ${(y - size / 2).toFixed(2)}px, 0)`;
-      el.style.opacity = opacity.toFixed(3);
-      el.style.zIndex = String(zIndex);
+      const wobbleXKm = Math.sin(elapsed * 0.00082 + token.phase) * CONFIG.WOBBLE_KM_X;
+      const wobbleYKm = Math.cos(elapsed * 0.00076 + token.phase) * CONFIG.WOBBLE_KM_Y;
 
-      if (body) {
-        const hoverBoost = !state.viewport.touch && el.classList.contains("is-active") ? 0.05 : 0;
-        const spin = angle * 0.65;
-        body.style.transform = `rotate(${spin.toFixed(3)}rad) scale(${(scale + hoverBoost).toFixed(3)})`;
-      }
+      const worldXKm = Math.cos(angle) * orbitWidthKm * 0.5 * band + wobbleXKm + pointerShiftXKm;
+      const worldYKm = Math.sin(angle) * orbitHeightKm * 0.5 * band + wobbleYKm + pointerShiftYKm;
 
-      if (meta) {
-        meta.style.display = state.viewport.touch && !CONFIG.SHOW_META_ON_TOUCH ? "none" : "";
-      }
-    }
+      const projectedXPx = universeKmToPxX(worldXKm);
+      const projectedYPx = universeKmToPxY(worldYKm);
 
-    if (centerLabel) {
-      centerLabel.textContent = "Solar Center";
-      centerLabel.style.transform = `translate(-50%, calc(-50% + ${state.viewport.mobile ? 74 : 88}px))`;
-    }
+      const scale = CONFIG.TOKEN_SCALE_MIN + depth * (CONFIG.TOKEN_SCALE_MAX - CONFIG.TOKEN_SCALE_MIN);
+      const opacity = CONFIG.TOKEN_OPACITY_MIN + depth * (CONFIG.TOKEN_OPACITY_MAX - CONFIG.TOKEN_OPACITY_MIN);
+
+      const tiltY = Math.cos(angle) * 13 + normalizePointerX() * 5;
+      const tiltX = Math.sin(angle) * 10 + normalizePointerY() * 4;
+      const bodySpin = elapsed * CONFIG.BODY_SPIN_DEG_MS + token.baseAngle * 10;
+
+      token.el.style.transform = `
+        translate3d(${projectedXPx}px, ${projectedYPx}px, ${depth > 0.5 ? 12 : -4}px)
+        scale(${scale})
+        rotateX(${tiltX}deg)
+        rotateY(${tiltY}deg)
+      `;
+      token.el.style.opacity = String(opacity);
+      token.el.style.zIndex = String(20 + Math.round(depth * 60));
+
+      if (token.diamond) token.diamond.style.transform = `rotateZ(${bodySpin}deg)`;
+      if (token.labelWrap) token.labelWrap.style.transform = `rotateZ(${-bodySpin}deg) translateZ(12px)`;
+
+      const face = token.el.querySelector(".token-face");
+      if (face) face.style.filter = `brightness(${0.82 + depth * 0.28})`;
+    });
+
+    state.tokens
+      .slice()
+      .sort((a, b) => Number(a.el.style.zIndex) - Number(b.el.style.zIndex))
+      .forEach((token) => grid.appendChild(token.el));
   }
 
-  function getCenter() {
-    return {
-      x: state.viewport.width * 0.5,
-      y: state.viewport.height * (state.viewport.mobile ? CONFIG.CENTER_Y_MOBILE : CONFIG.CENTER_Y_DESKTOP)
-    };
+  function applyReducedMotionState() {
+    drawUniverse(0);
+
+    state.tokens.forEach((token, index) => {
+      token.el.style.transform = "translate3d(0,0,0)";
+      token.el.style.opacity = "1";
+      token.el.style.zIndex = String(index + 1);
+      if (token.diamond) token.diamond.style.transform = "rotateZ(0deg)";
+      if (token.labelWrap) token.labelWrap.style.transform = "translateZ(12px)";
+    });
+
+    stage.querySelectorAll(".home-compass-glow,.home-compass-core,.home-compass-ring")
+      .forEach((node) => {
+        node.style.transform = "translate3d(0,0,0)";
+      });
   }
 
-  function getBounds() {
-    const pad = state.viewport.mobile ? CONFIG.CHAMBER_PADDING_MOBILE : CONFIG.CHAMBER_PADDING_DESKTOP;
-    return {
-      left: pad,
-      right: state.viewport.width - pad,
-      top: pad,
-      bottom: state.viewport.height - pad
-    };
+  function getOrbitWidthKm() {
+    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
+      ? CONFIG.MOBILE_ORBIT_WIDTH_KM
+      : CONFIG.DESKTOP_ORBIT_WIDTH_KM;
   }
 
-  function getOrbitFor(model) {
-    const { width, height, mobile } = state.viewport;
-    const pad = mobile ? CONFIG.CHAMBER_PADDING_MOBILE : CONFIG.CHAMBER_PADDING_DESKTOP;
-    const sunRadius = mobile ? CONFIG.SUN_RADIUS_MOBILE : CONFIG.SUN_RADIUS_DESKTOP;
-    const tilt = mobile ? CONFIG.ORBIT_TILT_Y_MOBILE : CONFIG.ORBIT_TILT_Y_DESKTOP;
-
-    const usableWidth = width - pad * 2;
-    const usableHeight = height - pad * 2;
-
-    const minA = sunRadius + (mobile ? 26 : 34);
-    const maxA = usableWidth * (mobile ? 0.40 : 0.42);
-
-    const minB = sunRadius + (mobile ? 12 : 18);
-    const maxB = usableHeight * (mobile ? 0.22 : 0.30);
-
-    const a = lerp(minA, maxA, model.orbitRatio);
-    const b = Math.min(lerp(minB, maxB, model.orbitRatio), a * tilt);
-
-    return { a, b };
+  function getOrbitHeightKm() {
+    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
+      ? CONFIG.MOBILE_ORBIT_HEIGHT_KM
+      : CONFIG.DESKTOP_ORBIT_HEIGHT_KM;
   }
 
-  function getAngularVelocity(periodYears) {
-    const base = state.viewport.mobile ? 0.00105 : 0.0012;
-    return base / Math.sqrt(periodYears);
+  function universeKmToPxX(km) {
+    return (km / CONFIG.UNIVERSE_WIDTH_KM) * state.width;
   }
 
-  function injectRuntimeStyles() {
-    if (document.getElementById("solar-bootstrap-runtime-style")) return;
-
-    const style = document.createElement("style");
-    style.id = "solar-bootstrap-runtime-style";
-    style.textContent = `
-      .planet-body {
-        transition: box-shadow 160ms ease, border-color 160ms ease;
-      }
-
-      .route-body {
-        will-change: transform, opacity;
-      }
-
-      .route-body.is-active .planet-body,
-      .route-body:focus-within .planet-body,
-      .route-body:hover .planet-body {
-        border-color: rgba(240, 216, 154, 0.36);
-        box-shadow:
-          0 18px 38px rgba(0, 0, 0, 0.38),
-          inset -14px -18px 28px rgba(0, 0, 0, 0.30),
-          inset 8px 10px 16px rgba(255, 255, 255, 0.08),
-          0 0 34px rgba(240, 216, 154, 0.12);
-      }
-
-      .planet-meta {
-        opacity: 0;
-        transition: opacity 160ms ease, border-color 160ms ease;
-      }
-
-      .route-body.is-active .planet-meta,
-      .route-body:focus-within .planet-meta,
-      .route-body:hover .planet-meta {
-        opacity: 1;
-        border-color: rgba(240, 216, 154, 0.24);
-      }
-
-      #home-solar-frame.is-touch-device .planet-meta {
-        display: none !important;
-      }
-
-      .planet-ring {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 168%;
-        height: 42%;
-        transform: translate(-50%, -50%) rotate(-16deg);
-        border-radius: 50%;
-        border: 2px solid rgba(227, 212, 170, 0.42);
-        box-shadow: 0 0 12px rgba(227, 212, 170, 0.10);
-        pointer-events: none;
-      }
-
-      .planet-saturn .planet-body {
-        overflow: visible;
-      }
-    `;
-    document.head.appendChild(style);
+  function universeKmToPxY(km) {
+    return (km / CONFIG.UNIVERSE_HEIGHT_KM) * state.height;
   }
 
-  function pseudoRandom(seed) {
-    const x = Math.sin(seed * 9973.13) * 43758.5453123;
-    return x - Math.floor(x);
+  function normalizePointerX() {
+    if (!state.pointerActive) return 0;
+    const n = (state.pointerX / Math.max(window.innerWidth, 1)) * 2 - 1;
+    return clamp(n, -1, 1);
+  }
+
+  function normalizePointerY() {
+    if (!state.pointerActive) return 0;
+    const n = (state.pointerY / Math.max(window.innerHeight, 1)) * 2 - 1;
+    return clamp(n, -1, 1);
   }
 
   function clamp(value, min, max) {
-    if (!Number.isFinite(value)) return min;
-    if (value < min) return min;
-    if (value > max) return max;
-    return value;
+    return Math.min(max, Math.max(min, value));
   }
 
-  function lerp(a, b, t) {
-    return a + (b - a) * t;
+  function injectRuntimeStyles() {
+    if (document.getElementById("home-compass-runtime-style")) return;
+
+    const style = document.createElement("style");
+    style.id = "home-compass-runtime-style";
+    style.textContent = `
+      .home-compass-canvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.96;
+      }
+
+      .home-compass-glow,
+      .home-compass-core,
+      .home-compass-ring {
+        position: absolute;
+        left: 50%;
+        top: 52%;
+        transform: translate3d(0,0,0);
+        will-change: transform, opacity;
+      }
+
+      .home-compass-glow {
+        border-radius: 999px;
+        filter: blur(32px);
+        opacity: 0.38;
+      }
+
+      .glow-a {
+        width: 250px;
+        height: 250px;
+        margin-left: -125px;
+        margin-top: -125px;
+        background: radial-gradient(circle, rgba(143,200,255,0.24), rgba(143,200,255,0.06) 48%, transparent 72%);
+      }
+
+      .glow-b {
+        width: 320px;
+        height: 190px;
+        margin-left: -160px;
+        margin-top: -95px;
+        background: radial-gradient(circle, rgba(108,132,255,0.16), rgba(108,132,255,0.05) 50%, transparent 76%);
+        filter: blur(40px);
+      }
+
+      .home-compass-core {
+        width: 104px;
+        height: 104px;
+        margin-left: -52px;
+        margin-top: -52px;
+        border-radius: 50%;
+        background:
+          radial-gradient(circle at 45% 42%, rgba(248,252,255,0.96), rgba(188,228,255,0.78) 22%, rgba(123,178,255,0.24) 42%, transparent 72%);
+        box-shadow:
+          0 0 34px rgba(143,200,255,0.24),
+          inset 0 0 18px rgba(255,255,255,0.18);
+        opacity: 0.92;
+      }
+
+      .home-compass-ring {
+        border-radius: 50%;
+        border: 1px solid rgba(191,230,255,0.12);
+        box-shadow: 0 0 20px rgba(143,200,255,0.06), inset 0 0 16px rgba(191,230,255,0.04);
+      }
+
+      .ring-a {
+        width: 236px;
+        height: 116px;
+        margin-left: -118px;
+        margin-top: -58px;
+      }
+
+      .ring-b {
+        width: 174px;
+        height: 174px;
+        margin-left: -87px;
+        margin-top: -87px;
+        border-color: rgba(160,205,255,0.09);
+      }
+
+      .ring-c {
+        width: 304px;
+        height: 136px;
+        margin-left: -152px;
+        margin-top: -68px;
+        border-color: rgba(191,230,255,0.08);
+      }
+
+      @media (max-width: 760px) {
+        .glow-a {
+          width: 220px;
+          height: 220px;
+          margin-left: -110px;
+          margin-top: -110px;
+        }
+
+        .glow-b {
+          width: 280px;
+          height: 168px;
+          margin-left: -140px;
+          margin-top: -84px;
+        }
+
+        .home-compass-core {
+          width: 92px;
+          height: 92px;
+          margin-left: -46px;
+          margin-top: -46px;
+        }
+
+        .ring-a {
+          width: 206px;
+          height: 102px;
+          margin-left: -103px;
+          margin-top: -51px;
+        }
+
+        .ring-b {
+          width: 158px;
+          height: 158px;
+          margin-left: -79px;
+          margin-top: -79px;
+        }
+
+        .ring-c {
+          width: 270px;
+          height: 122px;
+          margin-left: -135px;
+          margin-top: -61px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .home-compass-glow,
+        .home-compass-core,
+        .home-compass-ring,
+        .compass-token {
+          transition: none !important;
+          animation: none !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
   }
 })();

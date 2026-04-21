@@ -36,7 +36,10 @@ function sizeCanvas(canvas) {
 export function createScene(config = {}) {
   const canvas = ensureCanvas(config.canvas || null);
   const ctx = canvas.getContext("2d");
-  if (!ctx) throw new Error("SCENE_2D_CONTEXT_UNAVAILABLE");
+
+  if (!ctx) {
+    throw new Error("SCENE_2D_CONTEXT_UNAVAILABLE");
+  }
 
   const runtime = createWorldRuntime({
     sessionId: typeof config.sessionId === "string" ? config.sessionId : "SCENE_RUNTIME_SESSION"
@@ -49,13 +52,21 @@ export function createScene(config = {}) {
     snapshot: null
   };
 
-  function draw() {
-    if (!state.snapshot) return;
+  function buildProjection() {
+    if (!state.snapshot || !state.snapshot.projection || !state.snapshot.projection.projection) {
+      return createPlanetProjection(state.viewport, {});
+    }
 
-    const projection = createPlanetProjection(
+    return createPlanetProjection(
       state.viewport,
       state.snapshot.projection.projection
     );
+  }
+
+  function draw() {
+    if (!state.snapshot) return;
+
+    const projection = buildProjection();
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 

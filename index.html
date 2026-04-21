@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge · Richie’s Manor</title>
+  <title>Diamond Gate Bridge · Solar Index</title>
   <meta
     name="description"
-    content="Richie’s Manor is the root house surface for Diamond Gate Bridge, with hard HTML routes above and vault access beneath the house."
+    content="Diamond Gate Bridge root index with hard HTML routes and a solar-system navigation chamber."
   />
   <style>
     :root {
@@ -16,7 +16,6 @@
       --panel: rgba(9, 19, 36, 0.84);
       --panel-soft: rgba(255, 255, 255, 0.04);
       --line: rgba(177, 214, 255, 0.16);
-      --line-strong: rgba(196, 229, 255, 0.30);
       --text: #eef5ff;
       --muted: #abc0da;
       --accent: #d7ecff;
@@ -24,7 +23,6 @@
       --shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
       --radius-xl: 30px;
       --radius-lg: 22px;
-      --radius-md: 16px;
       --max: 1220px;
       --focus: 0 0 0 3px rgba(196, 229, 255, 0.22);
     }
@@ -92,9 +90,9 @@
       border-radius: 14px;
       border: 1px solid rgba(217, 236, 255, 0.24);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)),
-        radial-gradient(circle at 50% 35%, rgba(255, 235, 184, 0.82), rgba(255, 218, 128, 0.14) 42%, transparent 68%),
-        linear-gradient(180deg, rgba(30, 46, 72, 0.96), rgba(12, 20, 35, 0.98));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)),
+        radial-gradient(circle at 50% 45%, rgba(255, 229, 157, 0.86), rgba(255, 180, 88, 0.18) 42%, transparent 68%),
+        linear-gradient(180deg, rgba(24, 40, 68, 0.96), rgba(11, 19, 34, 0.98));
       box-shadow:
         inset 0 0 22px rgba(255, 239, 198, 0.08),
         0 0 24px rgba(148, 202, 255, 0.08);
@@ -171,8 +169,6 @@
     }
 
     .hero-layout {
-      position: relative;
-      z-index: 2;
       display: grid;
       grid-template-columns: minmax(0, 0.94fr) minmax(440px, 0.98fr);
       gap: 28px;
@@ -268,13 +264,13 @@
       line-height: 1.6;
     }
 
-    .chamber-frame {
+    .solar-frame {
       position: relative;
       min-height: 660px;
       border-radius: 30px;
       border: 1px solid rgba(217, 236, 255, 0.18);
       background:
-        radial-gradient(circle at 50% 18%, rgba(240, 216, 154, 0.10), transparent 24%),
+        radial-gradient(circle at 50% 20%, rgba(240, 216, 154, 0.06), transparent 24%),
         linear-gradient(180deg, rgba(9, 19, 36, 0.94), rgba(8, 17, 31, 0.98));
       box-shadow:
         inset 0 0 0 1px rgba(255, 255, 255, 0.03),
@@ -284,7 +280,7 @@
       isolation: isolate;
     }
 
-    .chamber-frame-header {
+    .solar-frame-header {
       position: relative;
       z-index: 5;
       display: flex;
@@ -294,7 +290,7 @@
       padding: 16px 18px 0;
     }
 
-    .chamber-frame-header strong {
+    .solar-frame-header strong {
       display: block;
       font-size: 0.84rem;
       letter-spacing: 0.12em;
@@ -302,14 +298,14 @@
       color: var(--accent);
     }
 
-    .chamber-frame-header span {
+    .solar-frame-header span {
       color: var(--muted);
       font-size: 0.76rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .chamber-frame-shell {
+    .solar-frame-shell {
       position: relative;
       height: calc(100% - 54px);
       min-height: 600px;
@@ -325,129 +321,17 @@
       border-radius: 22px;
     }
 
-    .orbit-shell {
+    .solar-shell {
       position: absolute;
       inset: 14px;
       z-index: 3;
-      pointer-events: none;
       overflow: hidden;
       border-radius: 22px;
     }
 
-    .orbit-grid {
+    .solar-grid {
       position: absolute;
       inset: 0;
-    }
-
-    .manor-core {
-      position: absolute;
-      left: 50%;
-      top: 14%;
-      width: 192px;
-      height: 142px;
-      margin-left: -96px;
-      z-index: 5;
-      pointer-events: none;
-      filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.34));
-    }
-
-    .manor-house {
-      position: absolute;
-      inset: 0;
-      border-radius: 24px;
-      border: 1px solid rgba(228, 239, 255, 0.24);
-      background:
-        linear-gradient(180deg, rgba(30, 46, 73, 0.92), rgba(12, 22, 40, 0.98)),
-        radial-gradient(circle at 50% 26%, rgba(255, 231, 171, 0.14), transparent 38%);
-      box-shadow:
-        inset 0 0 34px rgba(255, 255, 255, 0.03),
-        inset 0 -20px 30px rgba(0, 0, 0, 0.18);
-    }
-
-    .manor-house::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: -34px;
-      width: 118px;
-      height: 68px;
-      margin-left: -59px;
-      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
-      background:
-        linear-gradient(180deg, rgba(250, 232, 177, 0.34), rgba(250, 232, 177, 0.08)),
-        linear-gradient(180deg, rgba(34, 52, 82, 0.96), rgba(17, 29, 48, 0.98));
-      border: 1px solid rgba(228, 239, 255, 0.18);
-      border-bottom: none;
-      border-top-left-radius: 14px;
-      border-top-right-radius: 14px;
-    }
-
-    .manor-house::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 16px;
-      width: 36px;
-      height: 56px;
-      margin-left: -18px;
-      border-radius: 12px 12px 6px 6px;
-      border: 1px solid rgba(240, 216, 154, 0.22);
-      background:
-        linear-gradient(180deg, rgba(240, 216, 154, 0.14), rgba(240, 216, 154, 0.03)),
-        linear-gradient(180deg, rgba(16, 27, 44, 0.98), rgba(8, 16, 30, 0.98));
-      box-shadow: inset 0 0 18px rgba(240, 216, 154, 0.04);
-    }
-
-    .manor-windows {
-      position: absolute;
-      inset: 34px 28px 38px;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-    }
-
-    .manor-window {
-      border-radius: 10px;
-      border: 1px solid rgba(240, 216, 154, 0.16);
-      background:
-        linear-gradient(180deg, rgba(255, 240, 205, 0.18), rgba(255, 240, 205, 0.06)),
-        linear-gradient(180deg, rgba(25, 43, 66, 0.94), rgba(12, 23, 41, 0.96));
-      box-shadow: inset 0 0 14px rgba(255, 240, 205, 0.04);
-    }
-
-    .vault-access {
-      position: absolute;
-      left: 50%;
-      bottom: 18px;
-      transform: translateX(-50%);
-      z-index: 5;
-      width: 172px;
-      text-align: center;
-      pointer-events: none;
-    }
-
-    .vault-shaft {
-      width: 2px;
-      height: 56px;
-      margin: 0 auto 10px;
-      background: linear-gradient(180deg, rgba(240, 216, 154, 0.28), rgba(240, 216, 154, 0.04));
-      box-shadow: 0 0 12px rgba(240, 216, 154, 0.10);
-    }
-
-    .vault-badge {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 0 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(240, 216, 154, 0.26);
-      background: rgba(11, 19, 34, 0.88);
-      color: var(--gold);
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      box-shadow: 0 0 24px rgba(240, 216, 154, 0.08);
     }
 
     .route-body {
@@ -456,9 +340,6 @@
       top: 50%;
       width: 108px;
       height: 108px;
-      margin: 0;
-      transform-style: preserve-3d;
-      will-change: transform, opacity;
       pointer-events: auto;
     }
 
@@ -480,20 +361,7 @@
         inset -14px -18px 28px rgba(0, 0, 0, 0.28),
         inset 8px 10px 16px rgba(255, 255, 255, 0.06),
         0 0 28px rgba(143, 200, 255, 0.08);
-      transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
       overflow: hidden;
-      backdrop-filter: blur(6px);
-    }
-
-    .route-body:hover .planet-body,
-    .route-body:focus-within .planet-body,
-    .route-body.is-active .planet-body {
-      border-color: rgba(240, 216, 154, 0.34);
-      box-shadow:
-        0 18px 40px rgba(0, 0, 0, 0.38),
-        inset -16px -20px 30px rgba(0, 0, 0, 0.32),
-        inset 8px 10px 16px rgba(255, 255, 255, 0.08),
-        0 0 38px rgba(240, 216, 154, 0.12);
     }
 
     .planet-body::before {
@@ -551,18 +419,8 @@
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-align: center;
-      opacity: 0;
-      transition: opacity 180ms ease, border-color 180ms ease;
-      pointer-events: none;
       white-space: nowrap;
       backdrop-filter: blur(8px);
-    }
-
-    .route-body:hover .planet-meta,
-    .route-body:focus-within .planet-meta,
-    .route-body.is-active .planet-meta {
-      opacity: 1;
-      border-color: rgba(240, 216, 154, 0.28);
     }
 
     .planet-explore .planet-body {
@@ -579,10 +437,6 @@
 
     .planet-laws .planet-body {
       background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.30), rgba(255,255,255,0.12) 16%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(215, 134, 122, 0.24), rgba(21, 15, 18, 0.98) 68%);
-    }
-
-    .planet-vault .planet-body {
-      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(240, 216, 154, 0.28), rgba(24, 19, 12, 0.98) 68%);
     }
 
     .section {
@@ -628,17 +482,11 @@
 
     .route-card,
     .surface-card,
-    .governance-card,
-    .vault-panel {
+    .governance-card {
       border-radius: 22px;
       border: 1px solid var(--line);
       background: var(--panel);
       box-shadow: var(--shadow);
-    }
-
-    .route-card,
-    .surface-card,
-    .governance-card {
       padding: 18px;
     }
 
@@ -673,85 +521,6 @@
       border-radius: 999px;
       border: 1px solid rgba(177, 214, 255, 0.16);
       background: rgba(255, 255, 255, 0.03);
-      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
-    }
-
-    .route-card a:hover,
-    .route-card a:focus-visible,
-    .surface-card a:hover,
-    .surface-card a:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(217, 236, 255, 0.28);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .vault-panel {
-      padding: 22px;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(240, 216, 154, 0.10), transparent 34%),
-        linear-gradient(180deg, rgba(10, 18, 32, 0.96), rgba(6, 12, 24, 0.98));
-    }
-
-    .vault-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
-      gap: 18px;
-      align-items: start;
-    }
-
-    .vault-panel strong {
-      display: block;
-      margin-bottom: 10px;
-      font-size: 0.9rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .vault-panel p,
-    .vault-panel li {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.97rem;
-    }
-
-    .vault-panel ul {
-      margin: 12px 0 0;
-      padding-left: 18px;
-    }
-
-    .vault-readout {
-      border-radius: 18px;
-      border: 1px solid rgba(240, 216, 154, 0.18);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 16px;
-    }
-
-    .vault-readout .row {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 10px 0;
-      border-bottom: 1px solid rgba(240, 216, 154, 0.08);
-    }
-
-    .vault-readout .row:last-child {
-      border-bottom: none;
-    }
-
-    .vault-readout span:first-child {
-      color: var(--accent);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      font-size: 0.72rem;
-    }
-
-    .vault-readout span:last-child {
-      color: var(--text);
-      font-size: 0.9rem;
-      text-align: right;
     }
 
     .footer {
@@ -775,7 +544,6 @@
 
     @media (max-width: 1120px) {
       .hero-layout,
-      .vault-grid,
       .route-list,
       .surface-grid,
       .governance-grid {
@@ -801,23 +569,12 @@
         grid-template-columns: 1fr;
       }
 
-      .chamber-frame {
+      .solar-frame {
         min-height: 760px;
       }
 
-      .chamber-frame-shell {
+      .solar-frame-shell {
         min-height: 700px;
-      }
-
-      .manor-core {
-        top: 10%;
-        width: 172px;
-        height: 128px;
-        margin-left: -86px;
-      }
-
-      .vault-access {
-        bottom: 16px;
       }
 
       .route-body {
@@ -835,20 +592,6 @@
         flex-direction: column;
       }
     }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-
-      .nav a,
-      .button,
-      .crumbs a,
-      .route-card a,
-      .surface-card a,
-      .planet-body,
-      .planet-meta {
-        transition: none;
-      }
-    }
   </style>
 </head>
 <body>
@@ -858,7 +601,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <strong>Diamond Gate Bridge</strong>
-          <span>Richie’s Manor · house above · vault beneath</span>
+          <span>Solar index · hard routes · one orbital law</span>
         </span>
       </a>
 
@@ -878,36 +621,35 @@
         <div class="hero-panel">
           <div class="hero-layout">
             <div>
-              <p class="eyebrow">Index · Richie’s Manor · Solar Chamber Contract</p>
-              <h1>Enter through Richie’s Manor.</h1>
+              <p class="eyebrow">Index · Solar Chamber Contract</p>
+              <h1>Navigate by one solar law.</h1>
               <p class="hero-copy">
-                The root page is Richie’s Manor. Inside the manor chamber, one solar-system rule now
-                governs the motion layer: a sun at center, planets as routes, readable labels, and one
-                shared orbital law. The vault remains beneath the house.
+                The index is the solar-system page. It does one thing only:
+                center navigation around a sun with routes expressed as planets
+                under one shared orbital rule. Product-machine language does not belong here.
               </p>
 
               <div class="hero-actions">
                 <a class="button primary" href="#primary-routes">Open primary routes</a>
-                <a class="button" href="#vault-access">Open vault access</a>
                 <a class="button" href="/explore/">Go to Explore</a>
               </div>
 
-              <div class="summary" aria-label="Root house summary">
+              <div class="summary" aria-label="Root solar summary">
                 <div class="summary-card">
-                  <strong>House</strong>
-                  <span>Richie’s Manor is the readable root structure above the stack.</span>
-                </div>
-                <div class="summary-card">
-                  <strong>Chamber</strong>
-                  <span>The motion chamber now follows one sun-and-planets rule instead of mixed compass objects.</span>
+                  <strong>Center</strong>
+                  <span>The center object is the sun, not a globe, machine, or capsule.</span>
                 </div>
                 <div class="summary-card">
                   <strong>Routes</strong>
-                  <span>Hard HTML routes remain readable even without JavaScript motion.</span>
+                  <span>Every visible route body is a planet on the same motion law.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Vault</strong>
-                  <span>Vault access remains explicit beneath the house rather than implied off-screen.</span>
+                  <strong>Ownership</strong>
+                  <span>HTML keeps the route structure readable without runtime.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Scope</strong>
+                  <span>The gumball-drop concept is intentionally excluded from this page.</span>
                 </div>
               </div>
 
@@ -917,22 +659,21 @@
                 <a href="/products/">Products</a>
                 <a href="/gauges/">Gauges</a>
                 <a href="/laws/">Laws</a>
-                <a href="#vault-access">Vault Access</a>
               </nav>
             </div>
 
             <div>
-              <div class="chamber-frame" id="home-solar-frame">
-                <div class="chamber-frame-header">
-                  <strong>Richie’s Manor</strong>
-                  <span>Solar Chamber with Vault Beneath</span>
+              <div class="solar-frame" id="home-solar-frame">
+                <div class="solar-frame-header">
+                  <strong>Solar Navigation</strong>
+                  <span>Sun Center · Route Planets</span>
                 </div>
 
-                <div class="chamber-frame-shell">
+                <div class="solar-frame-shell">
                   <div class="hero-stage" id="home-hero-stage" aria-hidden="true"></div>
 
-                  <div class="orbit-shell" aria-hidden="true">
-                    <div class="orbit-grid" id="home-orbit-grid">
+                  <div class="solar-shell" aria-hidden="true">
+                    <div class="solar-grid" id="home-orbit-grid">
                       <article class="route-body planet-explore" data-planet="explore">
                         <a href="/explore/" aria-label="Explore">
                           <div class="planet-body"></div>
@@ -964,29 +705,6 @@
                           <span class="planet-meta">Outer Route</span>
                         </a>
                       </article>
-
-                      <article class="route-body planet-vault" data-planet="vault">
-                        <a href="#vault-access" aria-label="Vault Access">
-                          <div class="planet-body"></div>
-                          <div class="planet-label-wrap"><span class="planet-label">Vault</span></div>
-                          <span class="planet-meta">Below the House</span>
-                        </a>
-                      </article>
-                    </div>
-
-                    <div class="manor-core" aria-hidden="true">
-                      <div class="manor-house"></div>
-                      <div class="manor-windows">
-                        <span class="manor-window"></span>
-                        <span class="manor-window"></span>
-                        <span class="manor-window"></span>
-                        <span class="manor-window"></span>
-                      </div>
-                    </div>
-
-                    <div class="vault-access" aria-hidden="true">
-                      <div class="vault-shaft"></div>
-                      <div class="vault-badge">Vault Access Beneath</div>
                     </div>
                   </div>
                 </div>
@@ -1002,8 +720,7 @@
         <div class="section-head">
           <div><h2>Primary routes</h2></div>
           <p>
-            The animated chamber is visual support only. The readable route layer below remains plain,
-            direct, and hard-linked in HTML.
+            The solar chamber is visual support only. Hard route access remains readable below it.
           </p>
         </div>
 
@@ -1016,7 +733,7 @@
 
           <article class="route-card">
             <strong>Products</strong>
-            <p>Animated product-universe gateway with route-safe access.</p>
+            <p>Product-machine concepts belong there, not on the index.</p>
             <a href="/products/">Open route</a>
           </article>
 
@@ -1035,52 +752,12 @@
       </div>
     </section>
 
-    <section id="vault-access" class="section">
-      <div class="shell">
-        <div class="section-head">
-          <div><h2>Vault access beneath the house</h2></div>
-          <p>
-            The house remains the top readable surface. The vault stays subordinate beneath Richie’s
-            Manor rather than competing with the solar chamber.
-          </p>
-        </div>
-
-        <div class="vault-panel">
-          <div class="vault-grid">
-            <div>
-              <strong>Vault Access Read</strong>
-              <p>
-                The root page now declares one structural order clearly: Richie’s Manor above, a solar
-                chamber inside the house, and vault access beneath the house. The motion layer remains
-                supportive and never replaces the route layer.
-              </p>
-              <ul>
-                <li>House above, vault beneath.</li>
-                <li>Sun at center, planets as routes.</li>
-                <li>Readable labels remain visible during motion.</li>
-                <li>HTML owns routes. JS owns motion only.</li>
-              </ul>
-            </div>
-
-            <div class="vault-readout" aria-label="Vault access receipt">
-              <div class="row"><span>Root Identity</span><span>Richie’s Manor</span></div>
-              <div class="row"><span>Chamber Model</span><span>Sun Center with Route Planets</span></div>
-              <div class="row"><span>Substructure</span><span>Vault Access Beneath House</span></div>
-              <div class="row"><span>HTML Authority</span><span>Structure and Hard Routes</span></div>
-              <div class="row"><span>JS Authority</span><span>Bounded Solar Motion Only</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section class="section">
       <div class="shell">
         <div class="section-head">
           <div><h2>Secondary public surfaces</h2></div>
           <p>
-            These remain publicly readable descendants below the root contract and can be renewed
-            later under the same baseline.
+            These remain publicly readable descendants below the index contract and can be renewed later under the same baseline.
           </p>
         </div>
 
@@ -1105,7 +782,7 @@
 
           <article class="surface-card">
             <strong>Home</strong>
-            <p>Root house receipt and structured return point.</p>
+            <p>Solar index return point.</p>
             <a href="/">Return home</a>
           </article>
         </div>
@@ -1117,25 +794,24 @@
         <div class="section-head">
           <div><h2>Execution governance</h2></div>
           <p>
-            The root page advertises the contract directly so descendant chambers inherit from one
-            clear baseline instead of mixed public assumptions.
+            This page now does one job only: solar navigation. Product-machine concepts remain excluded from the index.
           </p>
         </div>
 
         <div class="governance-grid">
           <article class="governance-card">
             <strong>Structure</strong>
-            <p>HTML owns the house identity, readable labels, and hard route safety.</p>
+            <p>HTML owns the route shell, labels, and hard route safety.</p>
           </article>
 
           <article class="governance-card">
             <strong>Motion</strong>
-            <p>JavaScript owns bounded solar motion only and does not own routes.</p>
+            <p>JavaScript will own bounded solar motion only in the next file.</p>
           </article>
 
           <article class="governance-card">
-            <strong>Inheritance</strong>
-            <p>Descendant surfaces renew beneath one root baseline rather than local drift contracts.</p>
+            <strong>Scope</strong>
+            <p>No manor icon competition. No vault orb. No gumball-drop contamination.</p>
           </article>
         </div>
       </div>
@@ -1146,10 +822,9 @@
     <div class="shell">
       <div class="footer-panel">
         <p>
-          Result / Receipt: HTML=STRUCTURE | JS=SOLAR_CHAMBER_MOTION |
-          ENTRY=RICHIES_MANOR | CHAMBER=SUN_AND_ROUTE_PLANETS |
-          SUBSTRUCTURE=VAULT_BENEATH_HOUSE | ROUTES=HARD_HTML |
-          MOTION=BOUNDED_SOLAR | LABELS=READABLE
+          Result / Receipt: HTML=STRUCTURE | PAGE=SOLAR_INDEX |
+          CENTER=SUN | ROUTES=PLANETS | ROUTES=HARD_HTML |
+          PRODUCT_MACHINE_CONCEPT=EXCLUDED
         </p>
       </div>
     </div>

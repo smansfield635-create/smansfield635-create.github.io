@@ -7,6 +7,12 @@ const RENDER_META = Object.freeze({
   deterministic: true
 });
 
+function deepFreeze(value) {
+  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
+  Object.getOwnPropertyNames(value).forEach((key) => deepFreeze(value[key]));
+  return Object.freeze(value);
+}
+
 function clamp01(value) {
   if (!Number.isFinite(value)) return 0;
   if (value < 0) return 0;
@@ -14,97 +20,109 @@ function clamp01(value) {
   return Math.round(value * 1000) / 1000;
 }
 
-function deepFreeze(value) {
-  if (!value || typeof value !== "object" || Object.isFrozen(value)) return value;
-  Object.getOwnPropertyNames(value).forEach((key) => deepFreeze(value[key]));
-  return Object.freeze(value);
+function toNumber(value, fallback = 0) {
+  return Number.isFinite(value) ? value : fallback;
 }
 
-function getSunPacket(sceneState = {}) {
+function buildSunPacket(sceneState = {}) {
   const sun = sceneState.sun || {};
   const viewport = sun.viewport || { x: 0, y: 0 };
 
   return deepFreeze({
     key: sun.key || "sun",
     label: sun.label || "Sun",
+    radiusKm: toNumber(sun.radiusKm),
+    scaledRadiusKm: toNumber(sun.scaledRadiusKm || sun.compressedRadiusKm),
+    radiusPx: toNumber(sun.radiusPx),
     viewport: {
-      x: Number(viewport.x || 0),
-      y: Number(viewport.y || 0)
-    },
-    radiusPx: Number(sun.radiusPx || 0),
-    radiusKm: Number(sun.radiusKm || 0),
-    compressedRadiusKm: Number(sun.compressedRadiusKm || 0)
+      x: toNumber(viewport.x),
+      y: toNumber(viewport.y)
+    }
   });
 }
 
-function getPlanetPackets(sceneState = {}) {
+function buildPlanetPackets(sceneState = {}) {
   const planets = Array.isArray(sceneState.planets) ? sceneState.planets : [];
 
   return deepFreeze(
-    planets.map((planet) =>
-      deepFreeze({
-        key: planet.key,
-        label: planet.label,
+    planets.map((planet) => {
+      const viewport = planet.viewport || { x: 0, y: 0 };
+      const labelPosition = planet.labelPosition || viewport;
+      const metaPosition = planet.metaPosition || viewport;
+      const positionKm = planet.positionKm || {};
+
+      return deepFreeze({
+        key: planet.key || "",
+        label: planet.label || "",
         route: planet.route || null,
         visibleColorClass: planet.visibleColorClass || "",
         hasRing: planet.hasRing === true,
-        order: Number(planet.order || 0),
+        order: toNumber(planet.order),
+        radiusKm: toNumber(planet.radiusKm),
+        scaledRadiusKm: toNumber(planet.scaledRadiusKm || planet.compressedRadiusKm),
+        radiusPx: toNumber(planet.radiusPx),
+        orbitPxX: toNumber(planet.orbitPxX),
+        orbitPxY: toNumber(planet.orbitPxY),
+        angle: toNumber(planet.angle),
+        depth: toNumber(planet.depth),
+        scale: toNumber(planet.scale, 1),
+        opacity: toNumber(planet.opacity, 1),
+        zIndex: toNumber(planet.zIndex, 1),
         viewport: {
-          x: Number((planet.viewport || {}).x || 0),
-          y: Number((planet.viewport || {}).y || 0)
+          x: toNumber(viewport.x),
+          y: toNumber(viewport.y)
         },
         labelPosition: {
-          x: Number((planet.labelPosition || {}).x || 0),
-          y: Number((planet.labelPosition || {}).y || 0)
+          x: toNumber(labelPosition.x),
+          y: toNumber(labelPosition.y)
         },
         metaPosition: {
-          x: Number((planet.metaPosition || {}).x || 0),
-          y: Number((planet.metaPosition || {}).y || 0)
+          x: toNumber(metaPosition.x),
+          y: toNumber(metaPosition.y)
         },
-        radiusPx: Number(planet.radiusPx || 0),
-        radiusKm: Number(planet.radiusKm || 0),
-        compressedRadiusKm: Number(planet.compressedRadiusKm || 0),
-        orbitPxX: Number(planet.orbitPxX || 0),
-        orbitPxY: Number(planet.orbitPxY || 0),
-        depth: Number(planet.depth || 0),
-        scale: Number(planet.scale || 1),
-        opacity: Number(planet.opacity || 1),
-        zIndex: Number(planet.zIndex || 1),
-        angle: Number(planet.angle || 0)
-      })
-    )
+        positionKm: {
+          x: toNumber(positionKm.x),
+          y: toNumber(positionKm.y),
+          angle: toNumber(positionKm.angle),
+          orbitRadiusKmX: toNumber(positionKm.orbitRadiusKmX),
+          orbitRadiusKmY: toNumber(positionKm.orbitRadiusKmY)
+        }
+      });
+    })
   );
 }
 
-function getOrbitPackets(sceneState = {}) {
+function buildOrbitPackets(sceneState = {}) {
   const rings = Array.isArray(sceneState.orbitRings) ? sceneState.orbitRings : [];
 
   return deepFreeze(
-    rings.map((ring) =>
-      deepFreeze({
-        key: ring.key,
-        label: ring.label,
+    rings.map((ring) => {
+      const center = ring.center || { x: 0, y: 0 };
+
+      return deepFreeze({
+        key: ring.key || "",
+        label: ring.label || "",
         center: {
-          x: Number((ring.center || {}).x || 0),
-          y: Number((ring.center || {}).y || 0)
+          x: toNumber(center.x),
+          y: toNumber(center.y)
         },
-        radiusPxX: Number(ring.radiusPxX || 0),
-        radiusPxY: Number(ring.radiusPxY || 0)
-      })
-    )
+        radiusPxX: toNumber(ring.radiusPxX),
+        radiusPxY: toNumber(ring.radiusPxY)
+      });
+    })
   );
 }
 
-function getStarPackets(sceneState = {}) {
+function buildStarPackets(sceneState = {}) {
   const stars = Array.isArray(sceneState.stars) ? sceneState.stars : [];
 
   return deepFreeze(
     stars.map((star) =>
       deepFreeze({
-        x: Number(star.x || 0),
-        y: Number(star.y || 0),
-        size: Number(star.size || 0),
-        alpha: Number(star.alpha || 0)
+        x: toNumber(star.x),
+        y: toNumber(star.y),
+        size: toNumber(star.size),
+        alpha: toNumber(star.alpha)
       })
     )
   );
@@ -112,127 +130,118 @@ function getStarPackets(sceneState = {}) {
 
 function getLargestPlanet(planets = []) {
   if (!planets.length) return null;
-  return planets.reduce((largest, next) =>
-    Number(next.radiusKm || 0) > Number(largest.radiusKm || 0) ? next : largest
-  );
-}
-
-function getFastestPlanet(planets = []) {
-  if (!planets.length) return null;
-  return planets.reduce((fastest, next) =>
-    Math.abs(Number(next.angle || 0)) > Math.abs(Number(fastest.angle || 0)) ? next : fastest
-  );
+  return planets.reduce((largest, next) => {
+    return toNumber(next.radiusKm) > toNumber(largest.radiusKm) ? next : largest;
+  });
 }
 
 export function render(options = {}) {
   const timestamp = Number.isFinite(options.timestamp) ? options.timestamp : Date.now();
-  const sceneState = options.sceneState && typeof options.sceneState === "object" ? options.sceneState : {};
   const frameState = options.frameState && typeof options.frameState === "object" ? options.frameState : {};
+  const sceneState = options.sceneState && typeof options.sceneState === "object" ? options.sceneState : {};
 
   const viewport = sceneState.viewport || { width: 1280, height: 720, dpr: 1 };
-  const sun = getSunPacket(sceneState);
-  const planets = getPlanetPackets(sceneState);
-  const orbitRings = getOrbitPackets(sceneState);
-  const stars = getStarPackets(sceneState);
+  const sun = buildSunPacket(sceneState);
+  const planets = buildPlanetPackets(sceneState);
+  const orbitRings = buildOrbitPackets(sceneState);
+  const stars = buildStarPackets(sceneState);
   const labelPolicy = sceneState.labelPolicy || {};
   const worldScale = sceneState.worldScale || { kmPerPx: 0, pxPerKm: 0 };
+  const centerPx = sceneState.centerPx || { x: viewport.width * 0.5, y: viewport.height * 0.44 };
 
   const largestPlanet = getLargestPlanet(planets);
-  const fastestPlanet = getFastestPlanet(planets);
+  const solarCoverage = orbitRings.length
+    ? clamp01(Math.max(...orbitRings.map((ring) => ring.radiusPxX)) / Math.max(1, viewport.width * 0.5))
+    : 0;
 
-  const solarCoverage =
-    orbitRings.length > 0
-      ? clamp01(orbitRings[orbitRings.length - 1].radiusPxX / Math.max(1, viewport.width * 0.5))
-      : 0;
+  const sunDominance = largestPlanet
+    ? clamp01(sun.radiusPx / Math.max(1, largestPlanet.radiusPx))
+    : 1;
 
-  const sunDominance =
-    planets.length > 0
-      ? clamp01(
-          Number(sun.radiusPx || 0) /
-            Math.max(1, Number((largestPlanet || {}).radiusPx || 1))
-        )
-      : 1;
+  const motionMagnitude = frameState.reducedMotion === true
+    ? 0
+    : clamp01(
+        planets.reduce((sum, planet) => sum + Math.abs(planet.angle), 0) /
+          Math.max(1, planets.length * 6)
+      );
 
-  const motionDelta =
-    frameState.reducedMotion === true
-      ? 0
-      : clamp01(
-          planets.reduce((sum, planet) => sum + Math.abs(Number(planet.angle || 0)), 0) /
-            Math.max(1, planets.length * 6)
-        );
+  const visiblePacket = deepFreeze({
+    validatorStatus: {
+      ok: true,
+      checks: {
+        runtimeTraceability: true,
+        fieldCompleteness: true,
+        projectionConsistency: true,
+        determinism: true,
+        solarCenterReserved: true,
+        orbitCompleteness: orbitRings.length === planets.length,
+        bodyCountIntegrity: planets.length === 9
+      }
+    },
+    pageContext: {
+      shell: "richie_richs_manor",
+      animation: "demo_template_universe"
+    },
+    sceneContext: {
+      kind: "euclidean_solar_template",
+      centerBody: sun.label,
+      bodyCount: planets.length,
+      includePluto: planets.some((planet) => planet.key === "pluto"),
+      reducedMotion: frameState.reducedMotion === true
+    },
+    colorOutput: {
+      hue: clamp01(0.14 + solarCoverage * 0.06),
+      saturation: clamp01(0.60 + sunDominance * 0.08),
+      value: clamp01(0.64 + solarCoverage * 0.16)
+    },
+    luminanceOutput: clamp01(0.56 + solarCoverage * 0.14),
+    depthOutput: clamp01(0.48 + sunDominance * 0.18),
+    motionOutput: {
+      visible: motionMagnitude > 0.01,
+      delta: motionMagnitude
+    },
+    labelVisibility: {
+      attachedToPlanets: true,
+      centerReservedForSunOnly: labelPolicy.centerReservedForSunOnly === true,
+      hoverMeta: labelPolicy.showMetaOnHover === true,
+      preventCenterCollision: labelPolicy.preventCenterCollision === true
+    },
+    solarVisibility: {
+      centerPx: {
+        x: toNumber(centerPx.x),
+        y: toNumber(centerPx.y)
+      },
+      sun,
+      planets,
+      orbitRings,
+      stars
+    },
+    diagnostics: {
+      worldScale: {
+        kmPerPx: toNumber(worldScale.kmPerPx),
+        pxPerKm: toNumber(worldScale.pxPerKm)
+      },
+      largestPlanet: largestPlanet ? largestPlanet.key : null,
+      solarCoverage,
+      sunDominance
+    }
+  });
 
   return deepFreeze({
     meta: RENDER_META,
     timestamp,
-    visible: {
-      validatorStatus: {
-        ok: true,
-        checks: {
-          runtimeTraceability: true,
-          fieldCompleteness: true,
-          projectionConsistency: true,
-          determinism: true,
-          solarCenterReserved: true,
-          orbitCompleteness: orbitRings.length === planets.length,
-          bodyCountIntegrity: planets.length === 9
-        }
-      },
-      pageContext: {
-        shell: "richie_richs_manor",
-        animation: "demo_template_universe"
-      },
-      sceneContext: {
-        kind: "euclidean_solar_template",
-        centerBody: sun.label,
-        bodyCount: planets.length,
-        includePluto: planets.some((planet) => planet.key === "pluto")
-      },
-      colorOutput: {
-        hue: clamp01(0.12 + solarCoverage * 0.08),
-        saturation: clamp01(0.58 + sunDominance * 0.10),
-        value: clamp01(0.62 + solarCoverage * 0.18)
-      },
-      luminanceOutput: clamp01(0.54 + solarCoverage * 0.16),
-      depthOutput: clamp01(0.46 + sunDominance * 0.18),
-      motionOutput: {
-        visible: motionDelta > 0.01,
-        delta: motionDelta
-      },
-      emphasis: {
-        host: "solar_template_universe",
-        signal: "subordinate",
-        entry: "sun_centered_navigation"
-      },
-      labelVisibility: {
-        attachedToPlanets: true,
-        centerReservedForSunOnly: labelPolicy.centerReservedForSunOnly === true,
-        hoverMeta: labelPolicy.showMetaOnHover === true,
-        preventCenterCollision: labelPolicy.preventCenterCollision === true
-      },
-      solarVisibility: {
-        sun,
-        planets,
-        orbitRings,
-        stars
-      },
-      diagnostics: {
-        worldScale,
-        largestPlanet: largestPlanet ? largestPlanet.key : null,
-        fastestVisiblePlanet: fastestPlanet ? fastestPlanet.key : null,
-        solarCoverage,
-        sunDominance
-      }
-    },
+    visible: visiblePacket,
     projection: {
       selectedProjection: {
         kind: "euclidean_solar_template",
-        width: Number(viewport.width || 0),
-        height: Number(viewport.height || 0),
+        width: toNumber(viewport.width, 1280),
+        height: toNumber(viewport.height, 720),
         layers: 4
       }
     },
     successor: {
-      center: sun,
+      centerPx: visiblePacket.solarVisibility.centerPx,
+      sun,
       planets,
       orbitRings,
       stars

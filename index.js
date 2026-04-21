@@ -12,32 +12,40 @@
     MOBILE_BREAKPOINT: 760,
     REDUCE_MOTION_QUERY: "(prefers-reduced-motion: reduce)",
     DPR_CAP: 2,
+
     STAR_COUNT_DESKTOP: 180,
     STAR_COUNT_MOBILE: 110,
-    ORBIT_TILT_Y: 0.68,
-    POINTER_SHIFT_X: 8,
-    POINTER_SHIFT_Y: 6,
+
+    CENTER_Y_DESKTOP: 0.44,
+    CENTER_Y_MOBILE: 0.36,
+
     SUN_RADIUS_DESKTOP: 54,
     SUN_RADIUS_MOBILE: 42,
-    SUN_GLOW_DESKTOP: 156,
-    SUN_GLOW_MOBILE: 124,
-    CENTER_Y_DESKTOP: 0.28,
-    CENTER_Y_MOBILE: 0.19,
-    CHAMBER_PADDING_DESKTOP: 34,
-    CHAMBER_PADDING_MOBILE: 22,
-    META_ENABLED_ON_TOUCH: false
+    SUN_GLOW_DESKTOP: 160,
+    SUN_GLOW_MOBILE: 126,
+
+    CHAMBER_PADDING_DESKTOP: 28,
+    CHAMBER_PADDING_MOBILE: 18,
+
+    ORBIT_TILT_Y_DESKTOP: 0.72,
+    ORBIT_TILT_Y_MOBILE: 0.62,
+
+    POINTER_SHIFT_X: 6,
+    POINTER_SHIFT_Y: 4,
+
+    SHOW_META_ON_TOUCH: false
   };
 
   const SOLAR_MODEL = {
-    mercury: { order: 1, label: "Mercury", periodYears: 0.2408467, baseAngle: -1.42, orbitRatio: 0.14, sizeDesktop: 24, sizeMobile: 18, hasRing: false },
-    venus:   { order: 2, label: "Venus",   periodYears: 0.61519726, baseAngle: -0.54, orbitRatio: 0.22, sizeDesktop: 30, sizeMobile: 22, hasRing: false },
-    earth:   { order: 3, label: "Earth",   periodYears: 1.0,        baseAngle: 0.18,  orbitRatio: 0.30, sizeDesktop: 32, sizeMobile: 24, hasRing: false },
-    mars:    { order: 4, label: "Mars",    periodYears: 1.8808476,  baseAngle: 0.86,  orbitRatio: 0.39, sizeDesktop: 26, sizeMobile: 20, hasRing: false },
-    jupiter: { order: 5, label: "Jupiter", periodYears: 11.862615,  baseAngle: 1.48,  orbitRatio: 0.52, sizeDesktop: 48, sizeMobile: 34, hasRing: false },
-    saturn:  { order: 6, label: "Saturn",  periodYears: 29.447498,  baseAngle: 2.08,  orbitRatio: 0.64, sizeDesktop: 42, sizeMobile: 30, hasRing: true  },
-    uranus:  { order: 7, label: "Uranus",  periodYears: 84.016846,  baseAngle: 2.66,  orbitRatio: 0.76, sizeDesktop: 36, sizeMobile: 26, hasRing: false },
-    neptune: { order: 8, label: "Neptune", periodYears: 164.79132,  baseAngle: 3.18,  orbitRatio: 0.87, sizeDesktop: 34, sizeMobile: 24, hasRing: false },
-    pluto:   { order: 9, label: "Pluto",   periodYears: 248.0,      baseAngle: 3.62,  orbitRatio: 0.96, sizeDesktop: 16, sizeMobile: 12, hasRing: false }
+    mercury: { order: 1, label: "Mercury", periodYears: 0.2408467, baseAngle: -1.35, orbitRatio: 0.12, sizeDesktop: 28, sizeMobile: 22, hasRing: false },
+    venus:   { order: 2, label: "Venus",   periodYears: 0.61519726, baseAngle: -0.62, orbitRatio: 0.21, sizeDesktop: 36, sizeMobile: 28, hasRing: false },
+    earth:   { order: 3, label: "Earth",   periodYears: 1.0,        baseAngle: 0.12,  orbitRatio: 0.30, sizeDesktop: 38, sizeMobile: 30, hasRing: false },
+    mars:    { order: 4, label: "Mars",    periodYears: 1.8808476,  baseAngle: 0.82,  orbitRatio: 0.39, sizeDesktop: 32, sizeMobile: 24, hasRing: false },
+    jupiter: { order: 5, label: "Jupiter", periodYears: 11.862615,  baseAngle: 1.46,  orbitRatio: 0.53, sizeDesktop: 60, sizeMobile: 44, hasRing: false },
+    saturn:  { order: 6, label: "Saturn",  periodYears: 29.447498,  baseAngle: 2.08,  orbitRatio: 0.65, sizeDesktop: 54, sizeMobile: 40, hasRing: true  },
+    uranus:  { order: 7, label: "Uranus",  periodYears: 84.016846,  baseAngle: 2.70,  orbitRatio: 0.77, sizeDesktop: 46, sizeMobile: 34, hasRing: false },
+    neptune: { order: 8, label: "Neptune", periodYears: 164.79132,  baseAngle: 3.22,  orbitRatio: 0.88, sizeDesktop: 42, sizeMobile: 30, hasRing: false },
+    pluto:   { order: 9, label: "Pluto",   periodYears: 248.0,      baseAngle: 3.72,  orbitRatio: 0.97, sizeDesktop: 20, sizeMobile: 14, hasRing: false }
   };
 
   const frame = document.querySelector(SELECTORS.frame);
@@ -68,10 +76,9 @@
   resize();
   seedStars();
   bindEvents();
-  applyStaticLayout();
+  drawFrame(0);
 
   if (!state.reducedMotion) start();
-  else drawScene(0);
 
   function buildCanvas() {
     const canvas = document.createElement("canvas");
@@ -82,8 +89,10 @@
     canvas.style.height = "100%";
     canvas.style.display = "block";
     canvas.style.pointerEvents = "none";
+
     stage.innerHTML = "";
     stage.appendChild(canvas);
+
     state.canvas = canvas;
     state.ctx = canvas.getContext("2d", { alpha: true });
   }
@@ -131,8 +140,7 @@
       state.reducedMotion = event.matches;
       if (state.reducedMotion) {
         stop();
-        applyStaticLayout();
-        drawScene(0);
+        drawFrame(0);
       } else {
         start();
       }
@@ -144,10 +152,7 @@
   function handleResize() {
     resize();
     seedStars();
-    if (state.reducedMotion) {
-      applyStaticLayout();
-      drawScene(0);
-    }
+    drawFrame(getElapsedSeconds());
   }
 
   function handlePointerMove(event) {
@@ -169,8 +174,11 @@
   }
 
   function handleVisibilityChange() {
-    if (document.hidden) stop();
-    else if (!state.reducedMotion) start();
+    if (document.hidden) {
+      stop();
+    } else if (!state.reducedMotion) {
+      start();
+    }
   }
 
   function resize() {
@@ -200,16 +208,16 @@
     const height = state.viewport.height;
 
     state.stars = Array.from({ length: count }, (_, index) => {
-      const seed = pseudoRandom(index + 1);
-      const seed2 = pseudoRandom(index + 101);
-      const seed3 = pseudoRandom(index + 201);
-      const seed4 = pseudoRandom(index + 301);
+      const s1 = pseudoRandom(index + 1);
+      const s2 = pseudoRandom(index + 101);
+      const s3 = pseudoRandom(index + 201);
+      const s4 = pseudoRandom(index + 301);
 
       return {
-        x: seed * width,
-        y: seed2 * height,
-        size: 0.4 + seed3 * 1.4,
-        alpha: 0.12 + seed4 * 0.58
+        x: s1 * width,
+        y: s2 * height,
+        size: 0.4 + s3 * 1.5,
+        alpha: 0.10 + s4 * 0.56
       };
     });
   }
@@ -217,7 +225,7 @@
   function start() {
     if (state.mounted) return;
     state.mounted = true;
-    state.startTime = performance.now();
+    state.startTime = performance.now() - getElapsedSeconds() * 1000;
     state.rafId = requestAnimationFrame(tick);
   }
 
@@ -232,14 +240,18 @@
   function tick(now) {
     if (!state.mounted) return;
     const elapsedSeconds = Math.max(0, (now - state.startTime) / 1000);
-    drawScene(elapsedSeconds);
-    positionBodies(elapsedSeconds);
+    drawFrame(elapsedSeconds);
     state.rafId = requestAnimationFrame(tick);
   }
 
-  function applyStaticLayout() {
-    drawScene(0);
-    positionBodies(0);
+  function getElapsedSeconds() {
+    if (!state.mounted) return 0;
+    return Math.max(0, (performance.now() - state.startTime) / 1000);
+  }
+
+  function drawFrame(elapsedSeconds) {
+    drawScene(elapsedSeconds);
+    positionBodies(elapsedSeconds);
   }
 
   function drawScene(elapsedSeconds) {
@@ -285,7 +297,9 @@
     for (const entry of state.bodies) {
       const orbit = getOrbitFor(entry.model);
       ctx.beginPath();
-      ctx.strokeStyle = entry.model.order <= 4 ? "rgba(180,214,255,0.11)" : "rgba(180,214,255,0.08)";
+      ctx.strokeStyle = entry.model.order <= 4
+        ? "rgba(180,214,255,0.11)"
+        : "rgba(180,214,255,0.08)";
       ctx.ellipse(center.x, center.y, orbit.a, orbit.b, 0, 0, Math.PI * 2);
       ctx.stroke();
     }
@@ -326,8 +340,7 @@
       const { el, body, meta, model } = entry;
       const orbit = getOrbitFor(model);
       const size = state.viewport.mobile ? model.sizeMobile : model.sizeDesktop;
-      const speed = getAngularVelocity(model.periodYears);
-      const angle = model.baseAngle + elapsedSeconds * speed;
+      const angle = model.baseAngle + elapsedSeconds * getAngularVelocity(model.periodYears);
 
       let x = center.x + Math.cos(angle) * orbit.a;
       let y = center.y + Math.sin(angle) * orbit.b;
@@ -341,8 +354,8 @@
       y = clamp(y, bounds.top + size * 0.5, bounds.bottom - size * 0.5);
 
       const depth = (Math.sin(angle) + 1) * 0.5;
-      const scale = 0.88 + depth * 0.18;
-      const opacity = 0.84 + depth * 0.16;
+      const scale = 0.90 + depth * 0.16;
+      const opacity = 0.86 + depth * 0.14;
       const zIndex = Math.floor(10 + depth * 20);
 
       el.style.width = `${size}px`;
@@ -358,14 +371,13 @@
       }
 
       if (meta) {
-        meta.style.display = state.viewport.touch && !CONFIG.META_ENABLED_ON_TOUCH ? "none" : "";
+        meta.style.display = state.viewport.touch && !CONFIG.SHOW_META_ON_TOUCH ? "none" : "";
       }
     }
 
     if (centerLabel) {
       centerLabel.textContent = "Solar Center";
-      const offsetY = state.viewport.mobile ? 78 : 88;
-      centerLabel.style.transform = `translate(-50%, calc(-50% + ${offsetY}px))`;
+      centerLabel.style.transform = `translate(-50%, calc(-50% + ${state.viewport.mobile ? 74 : 88}px))`;
     }
   }
 
@@ -390,17 +402,19 @@
     const { width, height, mobile } = state.viewport;
     const pad = mobile ? CONFIG.CHAMBER_PADDING_MOBILE : CONFIG.CHAMBER_PADDING_DESKTOP;
     const sunRadius = mobile ? CONFIG.SUN_RADIUS_MOBILE : CONFIG.SUN_RADIUS_DESKTOP;
+    const tilt = mobile ? CONFIG.ORBIT_TILT_Y_MOBILE : CONFIG.ORBIT_TILT_Y_DESKTOP;
 
     const usableWidth = width - pad * 2;
     const usableHeight = height - pad * 2;
 
-    const maxA = usableWidth * (mobile ? 0.38 : 0.40);
-    const maxB = usableHeight * (mobile ? 0.33 : 0.36);
-    const minA = sunRadius + (mobile ? 24 : 30);
-    const minB = sunRadius + (mobile ? 16 : 22);
+    const minA = sunRadius + (mobile ? 26 : 34);
+    const maxA = usableWidth * (mobile ? 0.40 : 0.42);
+
+    const minB = sunRadius + (mobile ? 12 : 18);
+    const maxB = usableHeight * (mobile ? 0.22 : 0.30);
 
     const a = lerp(minA, maxA, model.orbitRatio);
-    const b = Math.min(lerp(minB, maxB, model.orbitRatio), a * CONFIG.ORBIT_TILT_Y);
+    const b = Math.min(lerp(minB, maxB, model.orbitRatio), a * tilt);
 
     return { a, b };
   }

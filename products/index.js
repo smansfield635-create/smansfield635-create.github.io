@@ -3,52 +3,60 @@
 
   const SELECTORS = {
     stage: "#products-hero-stage",
-    grid: "#products-lane-grid",
-    cards: ".lane-card"
+    grid: "#products-orbit-grid",
+    tokens: ".lane-token"
   };
 
   const CONFIG = {
-    MOBILE_BREAKPOINT: 760,
+    UNIVERSE_WIDTH_KM: 256000,
+    UNIVERSE_HEIGHT_KM: 256000,
     REDUCE_MOTION_QUERY: "(prefers-reduced-motion: reduce)",
+    MOBILE_BREAKPOINT: 760,
     DPR_CAP: 2,
-    STAR_COUNT: 150,
-    PARTICLE_COUNT: 20,
-    ORBIT_X_DESKTOP: 210,
-    ORBIT_Y_DESKTOP: 94,
-    ORBIT_X_MOBILE: 128,
-    ORBIT_Y_MOBILE: 188,
-    CARD_SCALE_MIN: 0.88,
-    CARD_SCALE_MAX: 1.08,
-    ROTATION_SPEED: 0.00048,
-    WOBBLE_X: 18,
-    WOBBLE_Y: 12,
-    POINTER_SHIFT_X: 18,
-    POINTER_SHIFT_Y: 14,
-    GRID_CENTER_Y_RATIO: 0.50,
-    GRID_CENTER_X_RATIO: 0.50
+    STAR_COUNT: 160,
+    PARTICLE_COUNT: 22,
+    BASE_ELLIPSE_WIDTH_KM: 148000,
+    BASE_ELLIPSE_HEIGHT_KM: 88000,
+    MOBILE_ELLIPSE_WIDTH_KM: 98000,
+    MOBILE_ELLIPSE_HEIGHT_KM: 136000,
+    TOKEN_SCALE_MIN: 0.76,
+    TOKEN_SCALE_MAX: 1.08,
+    TOKEN_OPACITY_MIN: 0.54,
+    TOKEN_OPACITY_MAX: 1,
+    ROTATION_SPEED_RAD_MS: 0.00034,
+    WOBBLE_KM_X: 6200,
+    WOBBLE_KM_Y: 4100,
+    POINTER_KM_X: 7600,
+    POINTER_KM_Y: 6200,
+    STAGE_CENTER_X_RATIO: 0.5,
+    STAGE_CENTER_Y_RATIO: 0.58,
+    GRID_CENTER_X_RATIO: 0.5,
+    GRID_CENTER_Y_RATIO: 0.56
   };
 
   const state = {
     mounted: false,
     reducedMotion: false,
     rafId: 0,
+    startTs: 0,
     width: 0,
     height: 0,
     dpr: 1,
-    startTs: 0,
     pointerX: 0,
     pointerY: 0,
     pointerActive: false,
     stars: [],
     particles: [],
-    cards: []
+    tokens: [],
+    canvas: null,
+    ctx: null
   };
 
   const stage = document.querySelector(SELECTORS.stage);
   const grid = document.querySelector(SELECTORS.grid);
-  const cards = Array.from(document.querySelectorAll(SELECTORS.cards));
+  const tokenElements = Array.from(document.querySelectorAll(SELECTORS.tokens));
 
-  if (!stage || !grid || cards.length === 0) {
+  if (!stage || !grid || tokenElements.length === 0) {
     return;
   }
 
@@ -56,46 +64,57 @@
   state.reducedMotion = reducedMotionMedia.matches;
 
   buildStage();
-  bindCards();
+  bindTokens();
   resize();
   seedStars();
   seedParticles();
   bindEvents();
 
   if (state.reducedMotion) {
-    applyReducedMotionLayout();
+    applyReducedMotionState();
   } else {
     start();
   }
 
   function buildStage() {
     stage.innerHTML = `
-      <canvas class="products-euclid-canvas"></canvas>
-      <div class="products-glow glow-a"></div>
-      <div class="products-glow glow-b"></div>
-      <div class="products-core"></div>
-      <div class="products-ring ring-a"></div>
-      <div class="products-ring ring-b"></div>
-      <div class="products-ring ring-c"></div>
+      <canvas class="products-universe-canvas"></canvas>
+      <div class="products-universe-glow glow-a"></div>
+      <div class="products-universe-glow glow-b"></div>
+      <div class="products-universe-core"></div>
+      <div class="products-universe-ring ring-a"></div>
+      <div class="products-universe-ring ring-b"></div>
+      <div class="products-universe-ring ring-c"></div>
     `;
 
-    injectStyles();
+    injectRuntimeStyles();
 
-    const canvas = stage.querySelector(".products-euclid-canvas");
-    state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", { alpha: true });
+    state.canvas = stage.querySelector(".products-universe-canvas");
+    state.ctx = state.canvas.getContext("2d", { alpha: true });
   }
 
-  function bindCards() {
-    const step = (Math.PI * 2) / cards.length;
+  function bindTokens() {
+    const step = (Math.PI * 2) / tokenElements.length;
 
-    state.cards = cards.map((card, index) => {
+    state.tokens = tokenElements.map((el, index) => {
       const baseAngle = step * index;
+      const phase = baseAngle + index * 0.43;
+
+      el.addEventListener("mouseenter", () => el.classList.add("is-active"));
+      el.addEventListener("mouseleave", () => el.classList.remove("is-active"));
+      el.addEventListener("focusin", () => el.classList.add("is-active"));
+      el.addEventListener("focusout", () => el.classList.remove("is-active"));
+
       return {
-        el: card,
-        anchor: card.querySelector("a"),
+        el,
         baseAngle,
-        phase: baseAngle + index * 0.37
+        phase,
+        universeXKm: 0,
+        universeYKm: 0,
+        projectedX: 0,
+        projectedY: 0,
+        scale: 1,
+        opacity: 1
       };
     });
   }
@@ -110,6 +129,7 @@
     state.canvas.height = Math.floor(state.height * state.dpr);
     state.canvas.style.width = `${state.width}px`;
     state.canvas.style.height = `${state.height}px`;
+
     state.ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
   }
 
@@ -117,21 +137,24 @@
     state.stars = Array.from({ length: CONFIG.STAR_COUNT }, () => ({
       x: Math.random() * state.width,
       y: Math.random() * state.height,
-      r: Math.random() * 1.4 + 0.3,
-      a: Math.random() * 0.7 + 0.15,
+      r: Math.random() * 1.5 + 0.25,
+      a: Math.random() * 0.7 + 0.14,
       tw: Math.random() * Math.PI * 2,
-      speed: 0.4 + Math.random() * 1.2
+      speed: 0.35 + Math.random() * 1.25
     }));
   }
 
   function seedParticles() {
+    const ellipseWidthKm = getEllipseWidthKm();
+    const ellipseHeightKm = getEllipseHeightKm();
+
     state.particles = Array.from({ length: CONFIG.PARTICLE_COUNT }, () => ({
       angle: Math.random() * Math.PI * 2,
-      radius: 28 + Math.random() * getOrbitX() * 0.95,
-      size: 1.8 + Math.random() * 3.2,
-      speed: 0.3 + Math.random() * 0.7,
-      drift: 0.4 + Math.random() * 1.2,
-      alpha: 0.12 + Math.random() * 0.28
+      radiusXKm: 18000 + Math.random() * ellipseWidthKm * 0.58,
+      radiusYKm: 14000 + Math.random() * ellipseHeightKm * 0.58,
+      size: 1.8 + Math.random() * 3,
+      speed: 0.28 + Math.random() * 0.74,
+      alpha: 0.10 + Math.random() * 0.22
     }));
   }
 
@@ -142,20 +165,9 @@
     document.addEventListener("visibilitychange", onVisibilityChange);
     reducedMotionMedia.addEventListener("change", onReducedMotionChange);
 
-    cards.forEach((card) => {
-      card.addEventListener("mouseenter", () => card.classList.add("is-hovered"));
-      card.addEventListener("mouseleave", () => card.classList.remove("is-hovered"));
-      card.addEventListener("focusin", () => card.classList.add("is-hovered"));
-      card.addEventListener("focusout", () => card.classList.remove("is-hovered"));
-    });
-
-    window.addEventListener(
-      "beforeunload",
-      () => {
-        stop();
-      },
-      { once: true }
-    );
+    window.addEventListener("beforeunload", () => {
+      stop();
+    }, { once: true });
   }
 
   function onResize() {
@@ -164,7 +176,7 @@
     seedParticles();
 
     if (state.reducedMotion) {
-      applyReducedMotionLayout();
+      applyReducedMotionState();
     }
   }
 
@@ -190,7 +202,7 @@
     state.reducedMotion = event.matches;
     if (state.reducedMotion) {
       stop();
-      applyReducedMotionLayout();
+      applyReducedMotionState();
     } else {
       start();
     }
@@ -220,23 +232,27 @@
     }
 
     const elapsed = ts - state.startTs;
-    drawStage(elapsed);
-    positionCards(elapsed);
-    moveRings(elapsed);
+
+    drawUniverse(elapsed);
+    positionTokens(elapsed);
+    moveShell(elapsed);
+
     state.rafId = requestAnimationFrame(tick);
   }
 
-  function drawStage(elapsed) {
+  function drawUniverse(elapsed) {
     const ctx = state.ctx;
-    const cx = state.width * 0.5;
-    const cy = state.height * 0.46;
+    const cx = state.width * CONFIG.STAGE_CENTER_X_RATIO;
+    const cy = state.height * CONFIG.STAGE_CENTER_Y_RATIO;
+    const ellipseWidthPx = universeKmToPxX(getEllipseWidthKm());
+    const ellipseHeightPx = universeKmToPxY(getEllipseHeightKm());
 
     ctx.clearRect(0, 0, state.width, state.height);
 
-    const gradient = ctx.createRadialGradient(cx, cy, 22, cx, cy, getOrbitX() * 1.7);
-    gradient.addColorStop(0, "rgba(191,230,255,0.16)");
-    gradient.addColorStop(0.26, "rgba(143,200,255,0.10)");
-    gradient.addColorStop(0.56, "rgba(112,164,255,0.05)");
+    const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, ellipseWidthPx * 1.35);
+    gradient.addColorStop(0, "rgba(191,230,255,0.18)");
+    gradient.addColorStop(0.28, "rgba(143,200,255,0.11)");
+    gradient.addColorStop(0.56, "rgba(108,156,255,0.06)");
     gradient.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = gradient;
@@ -252,127 +268,136 @@
 
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(elapsed * 0.00018);
-
-    ctx.strokeStyle = "rgba(170,210,255,0.07)";
+    ctx.rotate(elapsed * 0.00015);
+    ctx.strokeStyle = "rgba(170,210,255,0.08)";
     ctx.lineWidth = 1;
 
     for (let i = 1; i <= 4; i += 1) {
       ctx.beginPath();
-      ctx.ellipse(0, 0, getOrbitX() * (0.42 + i * 0.14), getOrbitY() * (0.46 + i * 0.12), 0, 0, Math.PI * 2);
+      ctx.ellipse(
+        0,
+        0,
+        ellipseWidthPx * (0.24 + i * 0.15),
+        ellipseHeightPx * (0.22 + i * 0.16),
+        0,
+        0,
+        Math.PI * 2
+      );
       ctx.stroke();
     }
 
     ctx.restore();
 
     state.particles.forEach((particle) => {
-      const angle = particle.angle + elapsed * 0.00034 * particle.speed;
-      const x = cx + Math.cos(angle) * particle.radius;
-      const y = cy + Math.sin(angle) * particle.radius * (getOrbitY() / Math.max(getOrbitX(), 1));
+      const angle = particle.angle + elapsed * 0.00028 * particle.speed;
+      const xPx = cx + universeKmToPxX(Math.cos(angle) * particle.radiusXKm);
+      const yPx = cy + universeKmToPxY(Math.sin(angle) * particle.radiusYKm);
 
       ctx.beginPath();
       ctx.fillStyle = `rgba(175,225,255,${particle.alpha})`;
-      ctx.arc(x, y, particle.size, 0, Math.PI * 2);
+      ctx.arc(xPx, yPx, particle.size, 0, Math.PI * 2);
       ctx.fill();
     });
   }
 
-  function positionCards(elapsed) {
-    const orbitX = getOrbitX();
-    const orbitY = getOrbitY();
-    const px = getPointerShiftX();
-    const py = getPointerShiftY();
+  function positionTokens(elapsed) {
+    const ellipseWidthKm = getEllipseWidthKm();
+    const ellipseHeightKm = getEllipseHeightKm();
+    const pointerShiftXKm = getPointerShiftXKm();
+    const pointerShiftYKm = getPointerShiftYKm();
 
-    state.cards.forEach((card, index) => {
-      const angle = card.baseAngle + elapsed * CONFIG.ROTATION_SPEED;
+    state.tokens.forEach((token, index) => {
+      const angle = token.baseAngle + elapsed * CONFIG.ROTATION_SPEED_RAD_MS;
       const depth = (Math.sin(angle) + 1) * 0.5;
-      const wobbleX = Math.sin(elapsed * 0.0014 + card.phase) * CONFIG.WOBBLE_X;
-      const wobbleY = Math.cos(elapsed * 0.0011 + card.phase) * CONFIG.WOBBLE_Y;
 
-      const x = Math.cos(angle) * orbitX + wobbleX + px * CONFIG.POINTER_SHIFT_X;
-      const y = Math.sin(angle) * orbitY + wobbleY + py * CONFIG.POINTER_SHIFT_Y;
+      const wobbleXKm = Math.sin(elapsed * 0.00115 + token.phase) * CONFIG.WOBBLE_KM_X;
+      const wobbleYKm = Math.cos(elapsed * 0.00105 + token.phase) * CONFIG.WOBBLE_KM_Y;
 
-      const scale = CONFIG.CARD_SCALE_MIN + depth * (CONFIG.CARD_SCALE_MAX - CONFIG.CARD_SCALE_MIN);
-      const opacity = 0.56 + depth * 0.44;
-      const tiltY = Math.cos(angle) * 10 + px * 10;
-      const tiltX = Math.sin(angle) * 7 + py * 8;
+      token.universeXKm = Math.cos(angle) * ellipseWidthKm * 0.5 + wobbleXKm + pointerShiftXKm;
+      token.universeYKm = Math.sin(angle) * ellipseHeightKm * 0.5 + wobbleYKm + pointerShiftYKm;
 
-      card.el.style.transform = `
-        translate3d(${x}px, ${y}px, 0)
-        scale(${scale})
+      token.projectedX = universeKmToPxX(token.universeXKm);
+      token.projectedY = universeKmToPxY(token.universeYKm);
+
+      token.scale = CONFIG.TOKEN_SCALE_MIN + depth * (CONFIG.TOKEN_SCALE_MAX - CONFIG.TOKEN_SCALE_MIN);
+      token.opacity = CONFIG.TOKEN_OPACITY_MIN + depth * (CONFIG.TOKEN_OPACITY_MAX - CONFIG.TOKEN_OPACITY_MIN);
+
+      const tiltY = Math.cos(angle) * 12 + normalizePointerX() * 8;
+      const tiltX = Math.sin(angle) * 8 + normalizePointerY() * 7;
+
+      token.el.style.transform = `
+        translate3d(${token.projectedX}px, ${token.projectedY}px, 0)
+        scale(${token.scale})
         rotateX(${tiltX}deg)
         rotateY(${tiltY}deg)
       `;
-      card.el.style.opacity = String(opacity);
-      card.el.style.zIndex = String(20 + Math.round(depth * 50));
-
-      if (card.anchor) {
-        card.anchor.style.boxShadow =
-          depth > 0.66
-            ? "0 12px 40px rgba(0,0,0,0.30), 0 0 0 1px rgba(191,230,255,0.08) inset"
-            : "0 8px 24px rgba(0,0,0,0.22), 0 0 0 1px rgba(191,230,255,0.05) inset";
-      }
+      token.el.style.opacity = String(token.opacity);
+      token.el.style.zIndex = String(20 + Math.round(depth * 50));
     });
 
-    state.cards
+    state.tokens
       .slice()
-      .sort((a, b) => {
-        const za = Number(a.el.style.zIndex || 0);
-        const zb = Number(b.el.style.zIndex || 0);
-        return za - zb;
-      })
-      .forEach((card) => {
-        grid.appendChild(card.el);
+      .sort((a, b) => Number(a.el.style.zIndex) - Number(b.el.style.zIndex))
+      .forEach((token) => {
+        grid.appendChild(token.el);
       });
   }
 
-  function moveRings(elapsed) {
+  function moveShell(elapsed) {
     const glowA = stage.querySelector(".glow-a");
     const glowB = stage.querySelector(".glow-b");
+    const core = stage.querySelector(".products-universe-core");
     const ringA = stage.querySelector(".ring-a");
     const ringB = stage.querySelector(".ring-b");
     const ringC = stage.querySelector(".ring-c");
-    const core = stage.querySelector(".products-core");
 
-    const px = getPointerShiftX();
-    const py = getPointerShiftY();
+    const px = normalizePointerX();
+    const py = normalizePointerY();
 
-    glowA.style.transform = `translate3d(${px * 22}px, ${py * 16}px, 0) scale(${1 + Math.sin(elapsed * 0.0011) * 0.05})`;
+    glowA.style.transform = `translate3d(${px * 22}px, ${py * 14}px, 0) scale(${1 + Math.sin(elapsed * 0.0011) * 0.05})`;
     glowB.style.transform = `translate3d(${px * -18}px, ${py * -12}px, 0) scale(${1 + Math.cos(elapsed * 0.0013) * 0.04})`;
     core.style.transform = `translate3d(${px * 16}px, ${py * 12}px, 0) scale(${1 + Math.sin(elapsed * 0.0012) * 0.03})`;
-
-    ringA.style.transform = `translate3d(${px * 10}px, ${py * 8}px, 0) rotate(${elapsed * 0.018}deg)`;
-    ringB.style.transform = `translate3d(${px * -8}px, ${py * 6}px, 0) rotate(${elapsed * -0.013}deg)`;
-    ringC.style.transform = `translate3d(${px * 12}px, ${py * -10}px, 0) rotate(${elapsed * 0.024}deg)`;
+    ringA.style.transform = `translate3d(${px * 8}px, ${py * 6}px, 0) rotate(${elapsed * 0.015}deg)`;
+    ringB.style.transform = `translate3d(${px * -7}px, ${py * 5}px, 0) rotate(${elapsed * -0.011}deg)`;
+    ringC.style.transform = `translate3d(${px * 10}px, ${py * -8}px, 0) rotate(${elapsed * 0.020}deg)`;
   }
 
-  function applyReducedMotionLayout() {
-    state.cards.forEach((card) => {
-      card.el.style.transform = "none";
-      card.el.style.opacity = "1";
-      card.el.style.zIndex = "1";
+  function applyReducedMotionState() {
+    drawUniverse(0);
+
+    state.tokens.forEach((token, index) => {
+      token.el.style.transform = "none";
+      token.el.style.opacity = "1";
+      token.el.style.zIndex = String(index + 1);
     });
 
-    stage.querySelectorAll(".products-glow,.products-core,.products-ring").forEach((node) => {
-      node.style.transform = "translate3d(0,0,0)";
-    });
-
-    drawStage(0);
+    stage.querySelectorAll(".products-universe-glow,.products-universe-core,.products-universe-ring")
+      .forEach((node) => {
+        node.style.transform = "translate3d(0,0,0)";
+      });
   }
 
-  function getOrbitX() {
+  function getEllipseWidthKm() {
     return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-      ? CONFIG.ORBIT_X_MOBILE
-      : CONFIG.ORBIT_X_DESKTOP;
+      ? CONFIG.MOBILE_ELLIPSE_WIDTH_KM
+      : CONFIG.BASE_ELLIPSE_WIDTH_KM;
   }
 
-  function getOrbitY() {
+  function getEllipseHeightKm() {
     return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-      ? CONFIG.ORBIT_Y_MOBILE
-      : CONFIG.ORBIT_Y_DESKTOP;
+      ? CONFIG.MOBILE_ELLIPSE_HEIGHT_KM
+      : CONFIG.BASE_ELLIPSE_HEIGHT_KM;
   }
 
-  function getPointerShiftX() {
+  function universeKmToPxX(km) {
+    return (km / CONFIG.UNIVERSE_WIDTH_KM) * state.width;
+  }
+
+  function universeKmToPxY(km) {
+    return (km / CONFIG.UNIVERSE_HEIGHT_KM) * state.height;
+  }
+
+  function normalizePointerX() {
     if (!state.pointerActive) {
       return 0;
     }
@@ -380,7 +405,7 @@
     return clamp(n, -1, 1);
   }
 
-  function getPointerShiftY() {
+  function normalizePointerY() {
     if (!state.pointerActive) {
       return 0;
     }
@@ -388,19 +413,27 @@
     return clamp(n, -1, 1);
   }
 
+  function getPointerShiftXKm() {
+    return normalizePointerX() * CONFIG.POINTER_KM_X;
+  }
+
+  function getPointerShiftYKm() {
+    return normalizePointerY() * CONFIG.POINTER_KM_Y;
+  }
+
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
   }
 
-  function injectStyles() {
-    if (document.getElementById("products-euclid-runtime-style")) {
+  function injectRuntimeStyles() {
+    if (document.getElementById("products-universe-runtime-style")) {
       return;
     }
 
     const style = document.createElement("style");
-    style.id = "products-euclid-runtime-style";
+    style.id = "products-universe-runtime-style";
     style.textContent = `
-      .products-euclid-canvas {
+      .products-universe-canvas {
         position: absolute;
         inset: 0;
         width: 100%;
@@ -408,44 +441,44 @@
         opacity: 0.96;
       }
 
-      .products-glow,
-      .products-core,
-      .products-ring {
+      .products-universe-glow,
+      .products-universe-core,
+      .products-universe-ring {
         position: absolute;
         left: 50%;
-        top: 46%;
+        top: 58%;
         transform: translate3d(0,0,0);
         will-change: transform, opacity;
       }
 
-      .products-glow {
+      .products-universe-glow {
         border-radius: 999px;
-        filter: blur(34px);
+        filter: blur(36px);
         opacity: 0.42;
       }
 
       .glow-a {
-        width: 340px;
-        height: 340px;
-        margin-left: -170px;
-        margin-top: -170px;
+        width: 360px;
+        height: 360px;
+        margin-left: -180px;
+        margin-top: -180px;
         background: radial-gradient(circle, rgba(143,200,255,0.24), rgba(143,200,255,0.06) 48%, transparent 72%);
       }
 
       .glow-b {
-        width: 430px;
-        height: 250px;
-        margin-left: -215px;
-        margin-top: -125px;
+        width: 460px;
+        height: 260px;
+        margin-left: -230px;
+        margin-top: -130px;
         background: radial-gradient(circle, rgba(108,132,255,0.16), rgba(108,132,255,0.05) 50%, transparent 76%);
         filter: blur(48px);
       }
 
-      .products-core {
-        width: 118px;
-        height: 118px;
-        margin-left: -59px;
-        margin-top: -59px;
+      .products-universe-core {
+        width: 120px;
+        height: 120px;
+        margin-left: -60px;
+        margin-top: -60px;
         border-radius: 50%;
         background:
           radial-gradient(circle at 45% 42%, rgba(248,252,255,0.96), rgba(188,228,255,0.78) 22%, rgba(123,178,255,0.24) 42%, transparent 72%);
@@ -455,64 +488,56 @@
         opacity: 0.9;
       }
 
-      .products-ring {
+      .products-universe-ring {
         border-radius: 50%;
-        border: 1px solid rgba(191,230,255,0.16);
+        border: 1px solid rgba(191,230,255,0.14);
         box-shadow: 0 0 24px rgba(143,200,255,0.08), inset 0 0 20px rgba(191,230,255,0.05);
       }
 
       .ring-a {
         width: 360px;
-        height: 160px;
+        height: 170px;
         margin-left: -180px;
-        margin-top: -80px;
+        margin-top: -85px;
       }
 
       .ring-b {
-        width: 248px;
-        height: 248px;
-        margin-left: -124px;
-        margin-top: -124px;
+        width: 250px;
+        height: 250px;
+        margin-left: -125px;
+        margin-top: -125px;
         border-color: rgba(160,205,255,0.10);
       }
 
       .ring-c {
-        width: 480px;
-        height: 200px;
-        margin-left: -240px;
-        margin-top: -100px;
+        width: 490px;
+        height: 210px;
+        margin-left: -245px;
+        margin-top: -105px;
         border-color: rgba(191,230,255,0.09);
-      }
-
-      .lane-card.is-hovered {
-        filter: brightness(1.06);
-      }
-
-      .lane-card.is-hovered a {
-        border-color: rgba(191,230,255,0.28);
       }
 
       @media (max-width: 900px) {
         .ring-a {
           width: 300px;
-          height: 134px;
+          height: 138px;
           margin-left: -150px;
-          margin-top: -67px;
+          margin-top: -69px;
         }
 
         .ring-c {
-          width: 390px;
-          height: 170px;
-          margin-left: -195px;
-          margin-top: -85px;
+          width: 400px;
+          height: 176px;
+          margin-left: -200px;
+          margin-top: -88px;
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .products-glow,
-        .products-core,
-        .products-ring,
-        .lane-card {
+        .products-universe-glow,
+        .products-universe-core,
+        .products-universe-ring,
+        .lane-token {
           transition: none !important;
           animation: none !important;
         }

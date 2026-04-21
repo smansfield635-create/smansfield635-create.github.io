@@ -6,7 +6,7 @@
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway with hard backlinks, static route safety, and bounded Euclidean universe motion."
+    content="Products gateway with hard backlinks, static route safety, and a dedicated bounded Euclidean universe chamber."
   />
   <style>
     :root {
@@ -153,7 +153,6 @@
       position: relative;
       overflow: hidden;
       isolation: isolate;
-      min-height: 700px;
       border-radius: 28px;
       border: 1px solid var(--line);
       background:
@@ -163,19 +162,17 @@
       padding: 30px;
     }
 
-    .hero-stage {
-      position: absolute;
-      inset: 0;
-      z-index: 1;
-      pointer-events: none;
-      overflow: hidden;
-      border-radius: inherit;
-    }
-
-    .hero-content {
+    .hero-layout {
       position: relative;
       z-index: 3;
-      max-width: 760px;
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 0.9fr);
+      gap: 28px;
+      align-items: start;
+    }
+
+    .hero-copy-column {
+      min-width: 0;
     }
 
     .eyebrow {
@@ -240,7 +237,7 @@
 
     .summary {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 22px;
     }
@@ -268,11 +265,76 @@
       font-size: 0.94rem;
     }
 
+    .universe-column {
+      min-width: 0;
+    }
+
+    .universe-frame {
+      position: relative;
+      min-height: 620px;
+      border-radius: 28px;
+      border: 1px solid rgba(191, 230, 255, 0.20);
+      background:
+        linear-gradient(180deg, rgba(6, 16, 31, 0.92), rgba(8, 18, 35, 0.98)),
+        radial-gradient(circle at 50% 50%, rgba(143, 200, 255, 0.05), transparent 52%);
+      box-shadow:
+        inset 0 0 0 1px rgba(191, 230, 255, 0.05),
+        inset 0 0 54px rgba(143, 200, 255, 0.04),
+        0 18px 52px rgba(0, 0, 0, 0.28);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .universe-frame-header {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px 0;
+    }
+
+    .universe-frame-header strong {
+      display: block;
+      font-size: 0.86rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .universe-frame-header span {
+      color: var(--muted);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .universe-frame-shell {
+      position: relative;
+      height: calc(100% - 56px);
+      min-height: 564px;
+      padding: 14px;
+    }
+
+    .hero-stage {
+      position: absolute;
+      inset: 14px;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
     .orbit-shell {
       position: absolute;
-      inset: 0;
-      z-index: 2;
+      inset: 14px;
+      z-index: 3;
+      perspective: 1600px;
+      transform-style: preserve-3d;
       pointer-events: none;
+      overflow: hidden;
+      border-radius: 22px;
     }
 
     .orbit-grid {
@@ -281,79 +343,120 @@
       transform-style: preserve-3d;
     }
 
+    .center-core-mask {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 160px;
+      height: 160px;
+      margin-left: -80px;
+      margin-top: -80px;
+      border-radius: 50%;
+      border: 1px solid rgba(191, 230, 255, 0.12);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.03), rgba(143, 200, 255, 0.02) 42%, transparent 76%);
+      box-shadow:
+        inset 0 0 36px rgba(143, 200, 255, 0.05),
+        0 0 30px rgba(143, 200, 255, 0.03);
+      z-index: 4;
+      pointer-events: none;
+    }
+
     .lane-token {
       position: absolute;
       left: 50%;
-      top: 56%;
-      width: 126px;
-      height: 126px;
+      top: 52%;
+      width: 92px;
+      height: 92px;
       margin: 0;
       transform-style: preserve-3d;
       will-change: transform, opacity;
       pointer-events: auto;
     }
 
-    .lane-token button,
     .lane-token a {
-      appearance: none;
-      -webkit-appearance: none;
-      border: 0;
-      cursor: pointer;
       display: block;
       width: 100%;
       height: 100%;
-      padding: 0;
-      background: transparent;
       color: inherit;
-      font: inherit;
-      text-align: inherit;
+      text-decoration: none;
     }
 
     .token-diamond {
       position: relative;
       width: 100%;
       height: 100%;
+      transform-style: preserve-3d;
+    }
+
+    .token-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 16px;
       transform: rotate(45deg);
-      border-radius: 20px;
-      border: 1px solid rgba(191, 230, 255, 0.26);
+      border: 1px solid rgba(191, 230, 255, 0.28);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03)),
-        linear-gradient(180deg, rgba(10, 23, 44, 0.92), rgba(8, 18, 34, 0.96));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+        linear-gradient(180deg, rgba(10, 23, 44, 0.94), rgba(8, 18, 34, 0.98));
       box-shadow:
-        0 12px 28px rgba(0, 0, 0, 0.24),
-        inset 0 0 28px rgba(196, 230, 255, 0.04),
-        0 0 32px rgba(143, 200, 255, 0.08);
+        0 10px 22px rgba(0, 0, 0, 0.24),
+        inset 0 0 24px rgba(196, 230, 255, 0.04),
+        0 0 26px rgba(143, 200, 255, 0.08);
       backdrop-filter: blur(10px);
       transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
     }
 
-    .lane-token:hover .token-diamond,
-    .lane-token:focus-within .token-diamond,
-    .lane-token.is-active .token-diamond {
+    .token-shadow {
+      position: absolute;
+      inset: 14px;
+      border-radius: 14px;
+      transform: translateZ(-14px) rotate(45deg);
+      background: rgba(0, 0, 0, 0.24);
+      filter: blur(10px);
+      opacity: 0.7;
+    }
+
+    .token-spine {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 56px;
+      height: 56px;
+      margin-left: -28px;
+      margin-top: -28px;
+      transform: rotate(45deg) translateZ(-8px);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(35, 57, 90, 0.82), rgba(17, 28, 48, 0.94));
+      border: 1px solid rgba(191, 230, 255, 0.10);
+      opacity: 0.85;
+    }
+
+    .lane-token:hover .token-face,
+    .lane-token:focus-within .token-face,
+    .lane-token.is-active .token-face {
       border-color: rgba(196, 230, 255, 0.42);
       box-shadow:
-        0 14px 34px rgba(0, 0, 0, 0.28),
-        inset 0 0 34px rgba(196, 230, 255, 0.06),
-        0 0 38px rgba(143, 200, 255, 0.14);
+        0 14px 28px rgba(0, 0, 0, 0.28),
+        inset 0 0 28px rgba(196, 230, 255, 0.06),
+        0 0 34px rgba(143, 200, 255, 0.15);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04)),
-        linear-gradient(180deg, rgba(12, 28, 52, 0.94), rgba(8, 18, 34, 0.98));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.04)),
+        linear-gradient(180deg, rgba(12, 28, 52, 0.96), rgba(8, 18, 34, 1));
     }
 
     .token-inner {
       position: absolute;
       inset: 0;
-      transform: rotate(-45deg);
+      transform-style: preserve-3d;
       display: grid;
       place-items: center;
-      padding: 14px;
-      text-align: center;
     }
 
     .token-compass {
       position: absolute;
       inset: 16px;
-      opacity: 0.44;
+      opacity: 0.46;
+      transform: translateZ(6px);
     }
 
     .token-compass::before,
@@ -362,7 +465,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      background: rgba(196, 230, 255, 0.20);
+      background: rgba(196, 230, 255, 0.22);
       transform: translate(-50%, -50%);
     }
 
@@ -380,34 +483,36 @@
       position: absolute;
       inset: 18%;
       border-radius: 50%;
-      border: 1px solid rgba(196, 230, 255, 0.16);
+      border: 1px solid rgba(196, 230, 255, 0.18);
     }
 
     .token-label {
       position: relative;
       z-index: 2;
-      max-width: 84px;
+      transform: translateZ(12px);
+      max-width: 66px;
       text-transform: uppercase;
       letter-spacing: 0.07em;
-      font-size: 0.82rem;
-      font-weight: 700;
-      line-height: 1.15;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+      font-size: 0.68rem;
+      font-weight: 800;
+      line-height: 1.12;
+      text-align: center;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.34);
     }
 
     .token-meta {
       position: absolute;
       left: 50%;
-      top: calc(100% + 14px);
+      top: calc(100% + 12px);
       transform: translateX(-50%);
-      min-width: 150px;
-      padding: 8px 12px;
+      min-width: 136px;
+      padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(191, 230, 255, 0.18);
-      background: rgba(6, 16, 32, 0.78);
+      background: rgba(6, 16, 32, 0.82);
       backdrop-filter: blur(8px);
       color: var(--accent);
-      font-size: 0.72rem;
+      font-size: 0.68rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       text-align: center;
@@ -549,15 +654,14 @@
       font-size: 0.95rem;
     }
 
-    @media (max-width: 980px) {
-      .summary,
-      .lane-list {
+    @media (max-width: 1080px) {
+      .hero-layout {
         grid-template-columns: 1fr;
       }
 
-      .section-head {
-        align-items: start;
-        flex-direction: column;
+      .summary,
+      .lane-list {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -572,30 +676,43 @@
       }
 
       .hero-panel {
-        min-height: 860px;
         padding: 22px;
       }
 
+      .universe-frame {
+        min-height: 560px;
+      }
+
+      .universe-frame-shell {
+        min-height: 504px;
+      }
+
       .lane-token {
-        width: 108px;
-        height: 108px;
-        top: 60%;
+        width: 78px;
+        height: 78px;
       }
 
       .token-label {
-        max-width: 72px;
-        font-size: 0.74rem;
+        max-width: 54px;
+        font-size: 0.60rem;
       }
 
       .token-meta {
-        min-width: 132px;
-        font-size: 0.68rem;
+        min-width: 122px;
+        font-size: 0.64rem;
+      }
+
+      .center-core-mask {
+        width: 132px;
+        height: 132px;
+        margin-left: -66px;
+        margin-top: -66px;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
       .lane-token,
-      .token-diamond,
+      .token-face,
       .token-meta {
         transition: none !important;
         animation: none !important;
@@ -603,10 +720,6 @@
 
       .orbit-shell {
         display: none;
-      }
-
-      .hero-panel {
-        min-height: auto;
       }
     }
   </style>
@@ -618,7 +731,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <strong>Diamond Gate Bridge</strong>
-          <span>Products gateway with bounded Euclidean universe motion</span>
+          <span>Products gateway with dedicated universe chamber</span>
         </span>
       </a>
 
@@ -636,137 +749,158 @@
     <section class="hero">
       <div class="shell">
         <div class="hero-panel">
-          <div class="hero-stage" id="products-hero-stage" aria-hidden="true"></div>
+          <div class="hero-layout">
+            <div class="hero-copy-column">
+              <p class="eyebrow">G2 Products Gateway · Universe Chamber Visible</p>
+              <h1>The animated products gateway.</h1>
 
-          <div class="hero-content">
-            <p class="eyebrow">G2 Products Gateway · Universe Domain Locked</p>
-            <h1>The animated products gateway.</h1>
+              <p class="hero-copy">
+                The Euclidean runtime now sits inside its own chamber instead of competing with the
+                copy layer. The moving diamonds are smaller, three-dimensional, and revolve around a
+                visible center focus so the geometry stays readable.
+              </p>
 
-            <p class="hero-copy">
-              Products remains structurally stable at the HTML layer while the runtime expresses a
-              bounded Euclidean universe. The moving layer is now compressed into compact
-              diamond-compass markers instead of oversized content blocks.
-            </p>
+              <div class="hero-actions">
+                <a class="button primary" href="#product-lanes">Open product lanes</a>
+                <a class="button" href="/explore/">Return to Explore</a>
+                <a class="button" href="/">Return Home</a>
+              </div>
 
-            <div class="hero-actions">
-              <a class="button primary" href="#product-lanes">Open product lanes</a>
-              <a class="button" href="/explore/">Return to Explore</a>
-              <a class="button" href="/">Return Home</a>
+              <div class="summary" aria-label="Products gateway summary">
+                <div class="summary-card">
+                  <strong>Universe</strong>
+                  <span>256000 km by 256000 km internal domain.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Frame</strong>
+                  <span>Dedicated visible chamber for the orbit layer.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Geometry</strong>
+                  <span>Smaller 3D diamonds with readable Euclidean spacing.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Backlinks</strong>
+                  <span>Remain hard HTML and untouched.</span>
+                </div>
+              </div>
+
+              <nav class="crumbs" aria-label="Products context links">
+                <a href="/">Home</a>
+                <a href="/explore/">Explore</a>
+                <a href="/gauges/">Gauges</a>
+                <a href="/platform/">Platform</a>
+                <a href="/products/">Products</a>
+              </nav>
             </div>
 
-            <div class="summary" aria-label="Products gateway summary">
-              <div class="summary-card">
-                <strong>Universe</strong>
-                <span>256000 km by 256000 km internal domain.</span>
+            <div class="universe-column">
+              <div class="universe-frame" id="products-universe-frame">
+                <div class="universe-frame-header">
+                  <strong>Universe Chamber</strong>
+                  <span>256000 × 256000 km</span>
+                </div>
+
+                <div class="universe-frame-shell">
+                  <div class="hero-stage" id="products-hero-stage" aria-hidden="true"></div>
+
+                  <div class="orbit-shell" aria-hidden="true">
+                    <div class="orbit-grid" id="products-orbit-grid">
+                      <article class="lane-token" data-label="ARCHCOIN" data-route="/products/archcoin/">
+                        <a href="/products/archcoin/" aria-label="ARCHCOIN">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <span class="token-label">ARCHCOIN</span>
+                            </div>
+                          </div>
+                          <span class="token-meta">/products/archcoin/</span>
+                        </a>
+                      </article>
+
+                      <article class="lane-token" data-label="FIVE FLAGS" data-route="/products/five-flags/">
+                        <a href="/products/five-flags/" aria-label="FIVE FLAGS">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <span class="token-label">FIVE FLAGS</span>
+                            </div>
+                          </div>
+                          <span class="token-meta">/products/five-flags/</span>
+                        </a>
+                      </article>
+
+                      <article class="lane-token" data-label="OUR AI" data-route="/products/ai/">
+                        <a href="/products/ai/" aria-label="OUR AI">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <span class="token-label">OUR AI</span>
+                            </div>
+                          </div>
+                          <span class="token-meta">/products/ai/</span>
+                        </a>
+                      </article>
+
+                      <article class="lane-token" data-label="WHAT'S MY THEME" data-route="/products/education/">
+                        <a href="/products/education/" aria-label="WHAT'S MY THEME">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <span class="token-label">WHAT'S MY THEME</span>
+                            </div>
+                          </div>
+                          <span class="token-meta">/products/education/</span>
+                        </a>
+                      </article>
+
+                      <article class="lane-token" data-label="NUTRITION" data-route="/products/nutrition/">
+                        <a href="/products/nutrition/" aria-label="NUTRITION">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <span class="token-label">NUTRITION</span>
+                            </div>
+                          </div>
+                          <span class="token-meta">/products/nutrition/</span>
+                        </a>
+                      </article>
+
+                      <article class="lane-token" data-label="ROOT" data-route="/products/">
+                        <a href="/products/" aria-label="ROOT">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <span class="token-label">ROOT</span>
+                            </div>
+                          </div>
+                          <span class="token-meta">/products/</span>
+                        </a>
+                      </article>
+                    </div>
+
+                    <div class="center-core-mask"></div>
+                  </div>
+                </div>
               </div>
-              <div class="summary-card">
-                <strong>HTML</strong>
-                <span>Owns structure and hard route safety.</span>
-              </div>
-              <div class="summary-card">
-                <strong>JS</strong>
-                <span>Owns Euclidean projection and motion only.</span>
-              </div>
-              <div class="summary-card">
-                <strong>Backlinks</strong>
-                <span>Remain visible and clickable without runtime dependency.</span>
-              </div>
-            </div>
-
-            <nav class="crumbs" aria-label="Products context links">
-              <a href="/">Home</a>
-              <a href="/explore/">Explore</a>
-              <a href="/gauges/">Gauges</a>
-              <a href="/platform/">Platform</a>
-              <a href="/products/">Products</a>
-            </nav>
-          </div>
-
-          <div class="orbit-shell" aria-hidden="true">
-            <div class="orbit-grid" id="products-orbit-grid">
-              <article class="lane-token" data-label="ARCHCOIN" data-route="/products/archcoin/">
-                <a href="/products/archcoin/" aria-label="ARCHCOIN">
-                  <div class="token-diamond">
-                    <div class="token-inner">
-                      <div class="token-compass">
-                        <span class="ring"></span>
-                      </div>
-                      <span class="token-label">ARCHCOIN</span>
-                    </div>
-                  </div>
-                  <span class="token-meta">/products/archcoin/</span>
-                </a>
-              </article>
-
-              <article class="lane-token" data-label="FIVE FLAGS" data-route="/products/five-flags/">
-                <a href="/products/five-flags/" aria-label="FIVE FLAGS">
-                  <div class="token-diamond">
-                    <div class="token-inner">
-                      <div class="token-compass">
-                        <span class="ring"></span>
-                      </div>
-                      <span class="token-label">FIVE FLAGS</span>
-                    </div>
-                  </div>
-                  <span class="token-meta">/products/five-flags/</span>
-                </a>
-              </article>
-
-              <article class="lane-token" data-label="OUR AI" data-route="/products/ai/">
-                <a href="/products/ai/" aria-label="OUR AI">
-                  <div class="token-diamond">
-                    <div class="token-inner">
-                      <div class="token-compass">
-                        <span class="ring"></span>
-                      </div>
-                      <span class="token-label">OUR AI</span>
-                    </div>
-                  </div>
-                  <span class="token-meta">/products/ai/</span>
-                </a>
-              </article>
-
-              <article class="lane-token" data-label="WHAT'S MY THEME" data-route="/products/education/">
-                <a href="/products/education/" aria-label="WHAT'S MY THEME">
-                  <div class="token-diamond">
-                    <div class="token-inner">
-                      <div class="token-compass">
-                        <span class="ring"></span>
-                      </div>
-                      <span class="token-label">WHAT'S MY THEME</span>
-                    </div>
-                  </div>
-                  <span class="token-meta">/products/education/</span>
-                </a>
-              </article>
-
-              <article class="lane-token" data-label="NUTRITION" data-route="/products/nutrition/">
-                <a href="/products/nutrition/" aria-label="NUTRITION">
-                  <div class="token-diamond">
-                    <div class="token-inner">
-                      <div class="token-compass">
-                        <span class="ring"></span>
-                      </div>
-                      <span class="token-label">NUTRITION</span>
-                    </div>
-                  </div>
-                  <span class="token-meta">/products/nutrition/</span>
-                </a>
-              </article>
-
-              <article class="lane-token" data-label="ROOT" data-route="/products/">
-                <a href="/products/" aria-label="ROOT">
-                  <div class="token-diamond">
-                    <div class="token-inner">
-                      <div class="token-compass">
-                        <span class="ring"></span>
-                      </div>
-                      <span class="token-label">ROOT</span>
-                    </div>
-                  </div>
-                  <span class="token-meta">/products/</span>
-                </a>
-              </article>
             </div>
           </div>
         </div>
@@ -780,9 +914,8 @@
             <h2>Static route surface</h2>
           </div>
           <p>
-            The orbit is now compressed for motion clarity. The route detail remains below as a
-            stable, readable HTML surface so the page keeps direct access and does not overextend the
-            moving layer.
+            The orbit remains visual. The route detail remains below as a stable HTML surface so the
+            moving layer stays clean and the navigation remains direct.
           </p>
         </div>
 
@@ -828,8 +961,7 @@
           <p>
             <strong>Backlink contract.</strong> Every child product destination should expose at
             least three hard HTML links at the top: <strong>Home</strong>, <strong>Explore</strong>,
-            and <strong>Return to Products</strong>. The products root keeps the route map visible
-            even when runtime is unavailable.
+            and <strong>Return to Products</strong>.
           </p>
 
           <div class="fallback-links" aria-label="Backfill links">
@@ -848,9 +980,9 @@
     <div class="shell">
       <div class="footer-panel">
         <p>
-          Runtime / Receipt: HTML=STRUCTURE | JS=EUCLIDEAN_PROJECTION |
-          UNIVERSE=256000x256000_KM | MOTION=COMPRESSED_DIAMOND_COMPASSES |
-          BACKLINKS=HARD_HTML | ROUTE_ACCESS=STATIC_SAFE
+          Result / Receipt: HTML=STRUCTURE | JS=EUCLIDEAN_PROJECTION |
+          UNIVERSE=256000x256000_KM | FRAME=VISIBLE_CHAMBER |
+          TOKENS=SMALL_3D_DIAMONDS | BACKLINKS=HARD_HTML
         </p>
       </div>
     </div>

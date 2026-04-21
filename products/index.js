@@ -14,26 +14,30 @@
     REDUCE_MOTION_QUERY: "(prefers-reduced-motion: reduce)",
     MOBILE_BREAKPOINT: 760,
     DPR_CAP: 2,
-    STAR_COUNT: 170,
-    PARTICLE_COUNT: 24,
-    DESKTOP_ORBIT_WIDTH_KM: 142000,
-    DESKTOP_ORBIT_HEIGHT_KM: 92000,
-    MOBILE_ORBIT_WIDTH_KM: 102000,
-    MOBILE_ORBIT_HEIGHT_KM: 126000,
-    TOKEN_SCALE_MIN: 0.72,
-    TOKEN_SCALE_MAX: 1.05,
-    TOKEN_OPACITY_MIN: 0.52,
+
+    STAR_COUNT: 135,
+    PARTICLE_COUNT: 16,
+
+    DESKTOP_ORBIT_WIDTH_KM: 136000,
+    DESKTOP_ORBIT_HEIGHT_KM: 86000,
+    MOBILE_ORBIT_WIDTH_KM: 98000,
+    MOBILE_ORBIT_HEIGHT_KM: 116000,
+
+    TOKEN_SCALE_MIN: 0.74,
+    TOKEN_SCALE_MAX: 1.02,
+    TOKEN_OPACITY_MIN: 0.56,
     TOKEN_OPACITY_MAX: 1,
-    ORBIT_SPEED_RAD_MS: 0.00028,
-    SELF_SPIN_DEG_MS: 0.028,
-    WOBBLE_KM_X: 5600,
-    WOBBLE_KM_Y: 3600,
-    POINTER_KM_X: 7000,
-    POINTER_KM_Y: 5600,
+
+    ORBIT_SPEED_RAD_MS: 0.00024,
+    BODY_SPIN_DEG_MS: 0.018,
+
+    WOBBLE_KM_X: 3200,
+    WOBBLE_KM_Y: 2400,
+    POINTER_KM_X: 4200,
+    POINTER_KM_Y: 3400,
+
     CENTER_X_RATIO: 0.5,
-    CENTER_Y_RATIO: 0.52,
-    FRONT_VISIBILITY_PUSH_PX: 20,
-    BACK_VISIBILITY_PUSH_PX: -8
+    CENTER_Y_RATIO: 0.52
   };
 
   const state = {
@@ -59,9 +63,7 @@
   const grid = document.querySelector(SELECTORS.grid);
   const tokenElements = Array.from(document.querySelectorAll(SELECTORS.tokens));
 
-  if (!frame || !stage || !grid || tokenElements.length === 0) {
-    return;
-  }
+  if (!frame || !stage || !grid || tokenElements.length === 0) return;
 
   const reducedMotionMedia = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
   state.reducedMotion = reducedMotionMedia.matches;
@@ -98,21 +100,21 @@
 
   function bindTokens() {
     const step = (Math.PI * 2) / tokenElements.length;
+    const laneBands = [1.00, 0.92, 1.06, 0.88, 1.10, 0.96];
 
     state.tokens = tokenElements.map((el, index) => {
       const baseAngle = step * index;
-      const phase = baseAngle + index * 0.47;
+      const phase = baseAngle + index * 0.41;
+      const laneBand = laneBands[index % laneBands.length];
+      const diamond = el.querySelector(".token-diamond");
+      const labelWrap = el.querySelector(".token-label-wrap");
 
       el.addEventListener("mouseenter", () => el.classList.add("is-active"));
       el.addEventListener("mouseleave", () => el.classList.remove("is-active"));
       el.addEventListener("focusin", () => el.classList.add("is-active"));
       el.addEventListener("focusout", () => el.classList.remove("is-active"));
 
-      return {
-        el,
-        baseAngle,
-        phase
-      };
+      return { el, diamond, labelWrap, baseAngle, phase, laneBand };
     });
   }
 
@@ -133,21 +135,21 @@
     state.stars = Array.from({ length: CONFIG.STAR_COUNT }, () => ({
       x: Math.random() * state.width,
       y: Math.random() * state.height,
-      r: Math.random() * 1.4 + 0.25,
+      r: Math.random() * 1.3 + 0.25,
       a: Math.random() * 0.7 + 0.14,
       tw: Math.random() * Math.PI * 2,
-      speed: 0.35 + Math.random() * 1.15
+      speed: 0.35 + Math.random() * 1.05
     }));
   }
 
   function seedParticles() {
     state.particles = Array.from({ length: CONFIG.PARTICLE_COUNT }, () => ({
       angle: Math.random() * Math.PI * 2,
-      radiusXKm: 16000 + Math.random() * getOrbitWidthKm() * 0.52,
-      radiusYKm: 12000 + Math.random() * getOrbitHeightKm() * 0.52,
-      size: 1.8 + Math.random() * 2.8,
-      speed: 0.26 + Math.random() * 0.72,
-      alpha: 0.09 + Math.random() * 0.22
+      radiusXKm: 16000 + Math.random() * getOrbitWidthKm() * 0.46,
+      radiusYKm: 12000 + Math.random() * getOrbitHeightKm() * 0.46,
+      size: 1.6 + Math.random() * 2.4,
+      speed: 0.24 + Math.random() * 0.58,
+      alpha: 0.08 + Math.random() * 0.16
     }));
   }
 
@@ -164,9 +166,7 @@
     resize();
     seedStars();
     seedParticles();
-    if (state.reducedMotion) {
-      applyReducedMotionState();
-    }
+    if (state.reducedMotion) applyReducedMotionState();
   }
 
   function onPointerMove(event) {
@@ -180,11 +180,8 @@
   }
 
   function onVisibilityChange() {
-    if (document.hidden) {
-      stop();
-    } else if (!state.reducedMotion) {
-      start();
-    }
+    if (document.hidden) stop();
+    else if (!state.reducedMotion) start();
   }
 
   function onReducedMotionChange(event) {
@@ -198,9 +195,7 @@
   }
 
   function start() {
-    if (state.mounted) {
-      return;
-    }
+    if (state.mounted) return;
     state.mounted = true;
     state.startTs = performance.now();
     state.rafId = requestAnimationFrame(tick);
@@ -208,19 +203,14 @@
 
   function stop() {
     state.mounted = false;
-    if (state.rafId) {
-      cancelAnimationFrame(state.rafId);
-      state.rafId = 0;
-    }
+    if (state.rafId) cancelAnimationFrame(state.rafId);
+    state.rafId = 0;
   }
 
   function tick(ts) {
-    if (!state.mounted || state.reducedMotion) {
-      return;
-    }
+    if (!state.mounted || state.reducedMotion) return;
 
     const elapsed = ts - state.startTs;
-
     drawUniverse(elapsed);
     moveShell(elapsed);
     positionTokens(elapsed);
@@ -237,10 +227,10 @@
 
     ctx.clearRect(0, 0, state.width, state.height);
 
-    const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, orbitWidthPx * 1.18);
-    gradient.addColorStop(0, "rgba(191,230,255,0.19)");
+    const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, orbitWidthPx * 1.06);
+    gradient.addColorStop(0, "rgba(191,230,255,0.20)");
     gradient.addColorStop(0.28, "rgba(143,200,255,0.11)");
-    gradient.addColorStop(0.56, "rgba(108,156,255,0.06)");
+    gradient.addColorStop(0.54, "rgba(108,156,255,0.05)");
     gradient.addColorStop(1, "rgba(0,0,0,0)");
 
     ctx.fillStyle = gradient;
@@ -254,30 +244,29 @@
       ctx.fill();
     });
 
+    // Reduced ring density: only 3 principal orbits
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(elapsed * 0.00014);
-    ctx.strokeStyle = "rgba(170,210,255,0.09)";
+    ctx.rotate(elapsed * 0.00012);
+    ctx.strokeStyle = "rgba(170,210,255,0.085)";
     ctx.lineWidth = 1;
 
-    for (let i = 1; i <= 4; i += 1) {
-      ctx.beginPath();
-      ctx.ellipse(
-        0,
-        0,
-        orbitWidthPx * (0.26 + i * 0.14),
-        orbitHeightPx * (0.24 + i * 0.15),
-        0,
-        0,
-        Math.PI * 2
-      );
-      ctx.stroke();
-    }
+    ctx.beginPath();
+    ctx.ellipse(0, 0, orbitWidthPx * 0.42, orbitHeightPx * 0.42, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, orbitWidthPx * 0.64, orbitHeightPx * 0.64, 0, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.ellipse(0, 0, orbitWidthPx * 0.84, orbitHeightPx * 0.84, 0, 0, Math.PI * 2);
+    ctx.stroke();
 
     ctx.restore();
 
     state.particles.forEach((particle) => {
-      const angle = particle.angle + elapsed * 0.00026 * particle.speed;
+      const angle = particle.angle + elapsed * 0.00022 * particle.speed;
       const x = cx + universeKmToPxX(Math.cos(angle) * particle.radiusXKm);
       const y = cy + universeKmToPxY(Math.sin(angle) * particle.radiusYKm);
 
@@ -299,12 +288,12 @@
     const px = normalizePointerX();
     const py = normalizePointerY();
 
-    glowA.style.transform = `translate3d(${px * 18}px, ${py * 12}px, 0) scale(${1 + Math.sin(elapsed * 0.0011) * 0.05})`;
-    glowB.style.transform = `translate3d(${px * -16}px, ${py * -10}px, 0) scale(${1 + Math.cos(elapsed * 0.0013) * 0.04})`;
-    core.style.transform = `translate3d(${px * 14}px, ${py * 10}px, 0) scale(${1 + Math.sin(elapsed * 0.0012) * 0.03})`;
-    ringA.style.transform = `translate3d(${px * 8}px, ${py * 6}px, 0) rotate(${elapsed * 0.014}deg)`;
-    ringB.style.transform = `translate3d(${px * -7}px, ${py * 5}px, 0) rotate(${elapsed * -0.010}deg)`;
-    ringC.style.transform = `translate3d(${px * 10}px, ${py * -8}px, 0) rotate(${elapsed * 0.018}deg)`;
+    glowA.style.transform = `translate3d(${px * 16}px, ${py * 10}px, 0) scale(${1 + Math.sin(elapsed * 0.0011) * 0.04})`;
+    glowB.style.transform = `translate3d(${px * -14}px, ${py * -9}px, 0) scale(${1 + Math.cos(elapsed * 0.0012) * 0.03})`;
+    core.style.transform = `translate3d(${px * 10}px, ${py * 8}px, 0) scale(${1 + Math.sin(elapsed * 0.001) * 0.02})`;
+    ringA.style.transform = `translate3d(${px * 7}px, ${py * 5}px, 0) rotate(${elapsed * 0.010}deg)`;
+    ringB.style.transform = `translate3d(${px * -5}px, ${py * 4}px, 0) rotate(${elapsed * -0.008}deg)`;
+    ringC.style.transform = `translate3d(${px * 8}px, ${py * -6}px, 0) rotate(${elapsed * 0.012}deg)`;
   }
 
   function positionTokens(elapsed) {
@@ -316,31 +305,51 @@
     state.tokens.forEach((token) => {
       const angle = token.baseAngle + elapsed * CONFIG.ORBIT_SPEED_RAD_MS;
       const depth = (Math.sin(angle) + 1) * 0.5;
-      const wobbleXKm = Math.sin(elapsed * 0.00108 + token.phase) * CONFIG.WOBBLE_KM_X;
-      const wobbleYKm = Math.cos(elapsed * 0.00102 + token.phase) * CONFIG.WOBBLE_KM_Y;
 
-      const worldXKm = Math.cos(angle) * orbitWidthKm * 0.5 + wobbleXKm + pointerShiftXKm;
-      const worldYKm = Math.sin(angle) * orbitHeightKm * 0.5 + wobbleYKm + pointerShiftYKm;
+      const frontBias = depth > 0.72 ? 1.08 : 1;
+      const band = token.laneBand * frontBias;
+
+      const wobbleXKm = Math.sin(elapsed * 0.0009 + token.phase) * CONFIG.WOBBLE_KM_X;
+      const wobbleYKm = Math.cos(elapsed * 0.00082 + token.phase) * CONFIG.WOBBLE_KM_Y;
+
+      const worldXKm = Math.cos(angle) * orbitWidthKm * 0.5 * band + wobbleXKm + pointerShiftXKm;
+      const worldYKm = Math.sin(angle) * orbitHeightKm * 0.5 * band + wobbleYKm + pointerShiftYKm;
 
       const projectedXPx = universeKmToPxX(worldXKm);
       const projectedYPx = universeKmToPxY(worldYKm);
 
       const scale = CONFIG.TOKEN_SCALE_MIN + depth * (CONFIG.TOKEN_SCALE_MAX - CONFIG.TOKEN_SCALE_MIN);
       const opacity = CONFIG.TOKEN_OPACITY_MIN + depth * (CONFIG.TOKEN_OPACITY_MAX - CONFIG.TOKEN_OPACITY_MIN);
-      const tiltY = Math.cos(angle) * 18 + normalizePointerX() * 8;
-      const tiltX = Math.sin(angle) * 14 + normalizePointerY() * 7;
-      const selfSpin = elapsed * CONFIG.SELF_SPIN_DEG_MS + token.baseAngle * 24;
-      const zPush = depth > 0.5 ? CONFIG.FRONT_VISIBILITY_PUSH_PX : CONFIG.BACK_VISIBILITY_PUSH_PX;
 
+      const tiltY = Math.cos(angle) * 15 + normalizePointerX() * 6;
+      const tiltX = Math.sin(angle) * 11 + normalizePointerY() * 5;
+      const bodySpin = elapsed * CONFIG.BODY_SPIN_DEG_MS + token.baseAngle * 16;
+
+      // Main orbital movement
       token.el.style.transform = `
-        translate3d(${projectedXPx}px, ${projectedYPx}px, ${zPush}px)
+        translate3d(${projectedXPx}px, ${projectedYPx}px, ${depth > 0.5 ? 14 : -6}px)
         scale(${scale})
         rotateX(${tiltX}deg)
         rotateY(${tiltY}deg)
-        rotateZ(${selfSpin}deg)
       `;
       token.el.style.opacity = String(opacity);
-      token.el.style.zIndex = String(20 + Math.round(depth * 50));
+      token.el.style.zIndex = String(20 + Math.round(depth * 60));
+
+      // Body spins slightly
+      if (token.diamond) {
+        token.diamond.style.transform = `rotateZ(${bodySpin}deg)`;
+      }
+
+      // Label stays face-forward / counter-rotated
+      if (token.labelWrap) {
+        token.labelWrap.style.transform = `rotateZ(${-bodySpin}deg) translateZ(12px)`;
+      }
+
+      // Depth lighting cue
+      const face = token.el.querySelector(".token-face");
+      if (face) {
+        face.style.filter = `brightness(${0.78 + depth * 0.34})`;
+      }
     });
 
     state.tokens
@@ -356,6 +365,8 @@
       token.el.style.transform = "translate3d(0,0,0)";
       token.el.style.opacity = "1";
       token.el.style.zIndex = String(index + 1);
+      if (token.diamond) token.diamond.style.transform = "rotateZ(0deg)";
+      if (token.labelWrap) token.labelWrap.style.transform = "translateZ(12px)";
     });
 
     stage.querySelectorAll(".products-universe-glow,.products-universe-core,.products-universe-ring")
@@ -385,17 +396,13 @@
   }
 
   function normalizePointerX() {
-    if (!state.pointerActive) {
-      return 0;
-    }
+    if (!state.pointerActive) return 0;
     const n = (state.pointerX / Math.max(window.innerWidth, 1)) * 2 - 1;
     return clamp(n, -1, 1);
   }
 
   function normalizePointerY() {
-    if (!state.pointerActive) {
-      return 0;
-    }
+    if (!state.pointerActive) return 0;
     const n = (state.pointerY / Math.max(window.innerHeight, 1)) * 2 - 1;
     return clamp(n, -1, 1);
   }
@@ -405,9 +412,7 @@
   }
 
   function injectRuntimeStyles() {
-    if (document.getElementById("products-universe-runtime-style")) {
-      return;
-    }
+    if (document.getElementById("products-universe-runtime-style")) return;
 
     const style = document.createElement("style");
     style.id = "products-universe-runtime-style";
@@ -433,110 +438,110 @@
       .products-universe-glow {
         border-radius: 999px;
         filter: blur(34px);
-        opacity: 0.40;
+        opacity: 0.38;
       }
 
       .glow-a {
-        width: 300px;
-        height: 300px;
-        margin-left: -150px;
-        margin-top: -150px;
+        width: 280px;
+        height: 280px;
+        margin-left: -140px;
+        margin-top: -140px;
         background: radial-gradient(circle, rgba(143,200,255,0.24), rgba(143,200,255,0.06) 48%, transparent 72%);
       }
 
       .glow-b {
-        width: 390px;
-        height: 220px;
-        margin-left: -195px;
-        margin-top: -110px;
+        width: 360px;
+        height: 210px;
+        margin-left: -180px;
+        margin-top: -105px;
         background: radial-gradient(circle, rgba(108,132,255,0.16), rgba(108,132,255,0.05) 50%, transparent 76%);
-        filter: blur(46px);
+        filter: blur(42px);
       }
 
       .products-universe-core {
-        width: 108px;
-        height: 108px;
-        margin-left: -54px;
-        margin-top: -54px;
+        width: 104px;
+        height: 104px;
+        margin-left: -52px;
+        margin-top: -52px;
         border-radius: 50%;
         background:
           radial-gradient(circle at 45% 42%, rgba(248,252,255,0.96), rgba(188,228,255,0.78) 22%, rgba(123,178,255,0.24) 42%, transparent 72%);
         box-shadow:
-          0 0 38px rgba(143,200,255,0.24),
-          inset 0 0 22px rgba(255,255,255,0.18);
+          0 0 34px rgba(143,200,255,0.24),
+          inset 0 0 18px rgba(255,255,255,0.18);
         opacity: 0.92;
       }
 
       .products-universe-ring {
         border-radius: 50%;
-        border: 1px solid rgba(191,230,255,0.14);
-        box-shadow: 0 0 24px rgba(143,200,255,0.08), inset 0 0 20px rgba(191,230,255,0.05);
+        border: 1px solid rgba(191,230,255,0.12);
+        box-shadow: 0 0 20px rgba(143,200,255,0.06), inset 0 0 16px rgba(191,230,255,0.04);
       }
 
       .ring-a {
-        width: 310px;
-        height: 150px;
-        margin-left: -155px;
-        margin-top: -75px;
+        width: 260px;
+        height: 126px;
+        margin-left: -130px;
+        margin-top: -63px;
       }
 
       .ring-b {
-        width: 212px;
-        height: 212px;
-        margin-left: -106px;
-        margin-top: -106px;
-        border-color: rgba(160,205,255,0.10);
+        width: 186px;
+        height: 186px;
+        margin-left: -93px;
+        margin-top: -93px;
+        border-color: rgba(160,205,255,0.09);
       }
 
       .ring-c {
-        width: 420px;
-        height: 180px;
-        margin-left: -210px;
-        margin-top: -90px;
-        border-color: rgba(191,230,255,0.09);
+        width: 340px;
+        height: 152px;
+        margin-left: -170px;
+        margin-top: -76px;
+        border-color: rgba(191,230,255,0.08);
       }
 
       @media (max-width: 760px) {
         .glow-a {
-          width: 250px;
-          height: 250px;
-          margin-left: -125px;
-          margin-top: -125px;
+          width: 230px;
+          height: 230px;
+          margin-left: -115px;
+          margin-top: -115px;
         }
 
         .glow-b {
-          width: 320px;
-          height: 190px;
-          margin-left: -160px;
-          margin-top: -95px;
+          width: 300px;
+          height: 176px;
+          margin-left: -150px;
+          margin-top: -88px;
         }
 
         .products-universe-core {
-          width: 94px;
-          height: 94px;
-          margin-left: -47px;
-          margin-top: -47px;
+          width: 92px;
+          height: 92px;
+          margin-left: -46px;
+          margin-top: -46px;
         }
 
         .ring-a {
-          width: 250px;
-          height: 122px;
-          margin-left: -125px;
-          margin-top: -61px;
+          width: 220px;
+          height: 108px;
+          margin-left: -110px;
+          margin-top: -54px;
         }
 
         .ring-b {
-          width: 180px;
-          height: 180px;
-          margin-left: -90px;
-          margin-top: -90px;
+          width: 168px;
+          height: 168px;
+          margin-left: -84px;
+          margin-top: -84px;
         }
 
         .ring-c {
-          width: 330px;
-          height: 150px;
-          margin-left: -165px;
-          margin-top: -75px;
+          width: 290px;
+          height: 132px;
+          margin-left: -145px;
+          margin-top: -66px;
         }
       }
 
@@ -550,7 +555,6 @@
         }
       }
     `;
-
     document.head.appendChild(style);
   }
 })();

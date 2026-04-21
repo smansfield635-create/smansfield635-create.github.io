@@ -6,22 +6,24 @@
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Animated gateway to the live product lanes with hard HTML backlinks and route-safe fallback access."
+    content="Products gateway with hard backlinks, static route safety, and bounded Euclidean universe motion."
   />
   <style>
     :root {
-      --bg: #07111f;
-      --bg2: #0b1730;
-      --panel: rgba(10, 22, 42, 0.72);
-      --panel-strong: rgba(12, 27, 53, 0.88);
-      --line: rgba(160, 205, 255, 0.22);
-      --text: #eef5ff;
-      --muted: #a9bedb;
-      --accent: #8fc8ff;
-      --accent-2: #bfe6ff;
-      --glow: rgba(143, 200, 255, 0.22);
-      --shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
-      --radius: 22px;
+      --bg-a: #030913;
+      --bg-b: #071427;
+      --bg-c: #0a1a31;
+      --panel: rgba(10, 22, 42, 0.74);
+      --panel-strong: rgba(9, 20, 39, 0.88);
+      --line: rgba(165, 208, 255, 0.18);
+      --line-strong: rgba(191, 230, 255, 0.28);
+      --text: #ecf4ff;
+      --muted: #a7bddb;
+      --accent: #c4e6ff;
+      --accent-soft: rgba(196, 230, 255, 0.16);
+      --glow: rgba(146, 202, 255, 0.20);
+      --shadow: 0 18px 52px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
       --max: 1180px;
     }
 
@@ -35,14 +37,14 @@
 
     body {
       margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 20% 15%, rgba(89, 140, 255, 0.14), transparent 28%),
-        radial-gradient(circle at 80% 20%, rgba(112, 224, 255, 0.09), transparent 22%),
-        radial-gradient(circle at 50% 75%, rgba(118, 142, 255, 0.08), transparent 34%),
-        linear-gradient(180deg, #040914 0%, #06101d 44%, #081526 100%);
       min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 16% 14%, rgba(82, 125, 255, 0.16), transparent 24%),
+        radial-gradient(circle at 82% 20%, rgba(96, 214, 255, 0.10), transparent 20%),
+        radial-gradient(circle at 50% 82%, rgba(118, 142, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
     }
 
     a {
@@ -58,9 +60,9 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 30;
+      z-index: 40;
       backdrop-filter: blur(14px);
-      background: rgba(5, 12, 24, 0.74);
+      background: rgba(5, 11, 22, 0.74);
       border-bottom: 1px solid rgba(160, 205, 255, 0.12);
     }
 
@@ -93,10 +95,6 @@
       flex: 0 0 auto;
     }
 
-    .brand-copy {
-      min-width: 0;
-    }
-
     .brand-copy strong {
       display: block;
       font-size: 0.95rem;
@@ -105,9 +103,9 @@
 
     .brand-copy span {
       display: block;
+      margin-top: 2px;
       color: var(--muted);
       font-size: 0.82rem;
-      margin-top: 2px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -127,9 +125,8 @@
       min-height: 40px;
       padding: 0 14px;
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(160, 205, 255, 0.14);
-      color: var(--text);
+      background: rgba(255, 255, 255, 0.03);
       font-size: 0.92rem;
       transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
@@ -155,15 +152,15 @@
     .hero-panel {
       position: relative;
       overflow: hidden;
+      isolation: isolate;
+      min-height: 700px;
       border-radius: 28px;
       border: 1px solid var(--line);
       background:
         radial-gradient(circle at 50% 18%, rgba(143, 200, 255, 0.10), transparent 30%),
-        linear-gradient(180deg, rgba(16, 34, 62, 0.92), rgba(8, 18, 35, 0.94));
+        linear-gradient(180deg, rgba(14, 29, 54, 0.92), rgba(8, 18, 35, 0.96));
       box-shadow: var(--shadow);
-      padding: 28px;
-      isolation: isolate;
-      min-height: 560px;
+      padding: 30px;
     }
 
     .hero-stage {
@@ -177,12 +174,13 @@
 
     .hero-content {
       position: relative;
-      z-index: 2;
+      z-index: 3;
+      max-width: 760px;
     }
 
     .eyebrow {
       margin: 0 0 10px;
-      color: var(--accent-2);
+      color: var(--accent);
       font-size: 0.84rem;
       letter-spacing: 0.16em;
       text-transform: uppercase;
@@ -190,18 +188,18 @@
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 5vw, 3.5rem);
+      font-size: clamp(2rem, 5vw, 3.45rem);
       line-height: 1.04;
       letter-spacing: -0.03em;
-      max-width: 11ch;
+      max-width: 12ch;
     }
 
     .hero-copy {
-      max-width: 72ch;
+      max-width: 68ch;
+      margin: 14px 0 0;
       color: var(--muted);
       font-size: 1.02rem;
       line-height: 1.7;
-      margin: 14px 0 0;
     }
 
     .hero-actions,
@@ -251,23 +249,179 @@
       border-radius: 18px;
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.03);
-      padding: 16px 16px 14px;
       backdrop-filter: blur(8px);
+      padding: 16px 16px 14px;
     }
 
     .summary-card strong {
       display: block;
+      margin-bottom: 8px;
       font-size: 0.86rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent-2);
-      margin-bottom: 8px;
+      color: var(--accent);
     }
 
     .summary-card span {
       color: var(--muted);
       line-height: 1.6;
       font-size: 0.94rem;
+    }
+
+    .orbit-shell {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .orbit-grid {
+      position: absolute;
+      inset: 0;
+      transform-style: preserve-3d;
+    }
+
+    .lane-token {
+      position: absolute;
+      left: 50%;
+      top: 56%;
+      width: 126px;
+      height: 126px;
+      margin: 0;
+      transform-style: preserve-3d;
+      will-change: transform, opacity;
+      pointer-events: auto;
+    }
+
+    .lane-token button,
+    .lane-token a {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      cursor: pointer;
+      display: block;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      text-align: inherit;
+    }
+
+    .token-diamond {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform: rotate(45deg);
+      border-radius: 20px;
+      border: 1px solid rgba(191, 230, 255, 0.26);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.03)),
+        linear-gradient(180deg, rgba(10, 23, 44, 0.92), rgba(8, 18, 34, 0.96));
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.24),
+        inset 0 0 28px rgba(196, 230, 255, 0.04),
+        0 0 32px rgba(143, 200, 255, 0.08);
+      backdrop-filter: blur(10px);
+      transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
+    }
+
+    .lane-token:hover .token-diamond,
+    .lane-token:focus-within .token-diamond,
+    .lane-token.is-active .token-diamond {
+      border-color: rgba(196, 230, 255, 0.42);
+      box-shadow:
+        0 14px 34px rgba(0, 0, 0, 0.28),
+        inset 0 0 34px rgba(196, 230, 255, 0.06),
+        0 0 38px rgba(143, 200, 255, 0.14);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.04)),
+        linear-gradient(180deg, rgba(12, 28, 52, 0.94), rgba(8, 18, 34, 0.98));
+    }
+
+    .token-inner {
+      position: absolute;
+      inset: 0;
+      transform: rotate(-45deg);
+      display: grid;
+      place-items: center;
+      padding: 14px;
+      text-align: center;
+    }
+
+    .token-compass {
+      position: absolute;
+      inset: 16px;
+      opacity: 0.44;
+    }
+
+    .token-compass::before,
+    .token-compass::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      background: rgba(196, 230, 255, 0.20);
+      transform: translate(-50%, -50%);
+    }
+
+    .token-compass::before {
+      width: 1px;
+      height: 100%;
+    }
+
+    .token-compass::after {
+      width: 100%;
+      height: 1px;
+    }
+
+    .token-compass .ring {
+      position: absolute;
+      inset: 18%;
+      border-radius: 50%;
+      border: 1px solid rgba(196, 230, 255, 0.16);
+    }
+
+    .token-label {
+      position: relative;
+      z-index: 2;
+      max-width: 84px;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.15;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.28);
+    }
+
+    .token-meta {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 14px);
+      transform: translateX(-50%);
+      min-width: 150px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 230, 255, 0.18);
+      background: rgba(6, 16, 32, 0.78);
+      backdrop-filter: blur(8px);
+      color: var(--accent);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 180ms ease, border-color 180ms ease;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .lane-token:hover .token-meta,
+    .lane-token:focus-within .token-meta,
+    .lane-token.is-active .token-meta {
+      opacity: 1;
+      border-color: rgba(196, 230, 255, 0.30);
     }
 
     .section {
@@ -295,72 +449,49 @@
       line-height: 1.7;
     }
 
-    .lane-field {
-      position: relative;
-      min-height: 620px;
-      perspective: 1400px;
-      transform-style: preserve-3d;
+    .lane-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
     }
 
-    .lane-grid {
-      position: absolute;
-      inset: 0;
-      display: block;
-      transform-style: preserve-3d;
-    }
-
-    .lane-card {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: min(44%, 420px);
-      max-width: 420px;
-      margin: 0;
+    .lane-list-card {
       border-radius: var(--radius);
       border: 1px solid var(--line);
       background:
         radial-gradient(circle at top right, rgba(143, 200, 255, 0.10), transparent 35%),
         linear-gradient(180deg, rgba(11, 23, 48, 0.88), rgba(8, 18, 35, 0.92));
       box-shadow: var(--shadow);
-      overflow: hidden;
-      transform-style: preserve-3d;
-      will-change: transform, opacity;
+      padding: 18px;
     }
 
-    .lane-card a {
+    .lane-list-card strong {
       display: block;
-      padding: 20px;
-      min-height: 100%;
-      backdrop-filter: blur(10px);
-      position: relative;
-      z-index: 2;
+      margin-bottom: 10px;
+      font-size: 0.96rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
     }
 
-    .lane-card h3 {
-      margin: 0 0 10px;
-      font-size: 1.1rem;
-      letter-spacing: -0.01em;
-    }
-
-    .lane-card p {
-      margin: 0;
+    .lane-list-card p {
+      margin: 0 0 14px;
       color: var(--muted);
-      line-height: 1.65;
-      font-size: 0.97rem;
+      line-height: 1.6;
+      font-size: 0.96rem;
     }
 
-    .route-chip {
+    .lane-list-card a {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 14px;
-      padding: 8px 10px;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
       border-radius: 999px;
-      border: 1px solid rgba(191, 230, 255, 0.16);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--accent-2);
-      font-size: 0.84rem;
-      letter-spacing: 0.05em;
+      border: 1px solid rgba(191, 230, 255, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.86rem;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
@@ -418,22 +549,15 @@
       font-size: 0.95rem;
     }
 
-    @media (max-width: 900px) {
-      .summary {
+    @media (max-width: 980px) {
+      .summary,
+      .lane-list {
         grid-template-columns: 1fr;
       }
 
       .section-head {
         align-items: start;
         flex-direction: column;
-      }
-
-      .lane-field {
-        min-height: 820px;
-      }
-
-      .lane-card {
-        width: min(78vw, 420px);
       }
     }
 
@@ -448,40 +572,41 @@
       }
 
       .hero-panel {
+        min-height: 860px;
         padding: 22px;
-        min-height: 520px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .lane-field {
-        min-height: 940px;
       }
 
-      .lane-card {
-        width: min(86vw, 360px);
+      .lane-token {
+        width: 108px;
+        height: 108px;
+        top: 60%;
+      }
+
+      .token-label {
+        max-width: 72px;
+        font-size: 0.74rem;
+      }
+
+      .token-meta {
+        min-width: 132px;
+        font-size: 0.68rem;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .lane-field {
+      .lane-token,
+      .token-diamond,
+      .token-meta {
+        transition: none !important;
+        animation: none !important;
+      }
+
+      .orbit-shell {
+        display: none;
+      }
+
+      .hero-panel {
         min-height: auto;
-        perspective: none;
-      }
-
-      .lane-grid {
-        position: static;
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-
-      .lane-card {
-        position: relative;
-        left: auto;
-        top: auto;
-        width: auto;
-        max-width: none;
       }
     }
   </style>
@@ -493,7 +618,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <strong>Diamond Gate Bridge</strong>
-          <span>Products gateway with Euclidean route motion</span>
+          <span>Products gateway with bounded Euclidean universe motion</span>
         </span>
       </a>
 
@@ -514,13 +639,13 @@
           <div class="hero-stage" id="products-hero-stage" aria-hidden="true"></div>
 
           <div class="hero-content">
-            <p class="eyebrow">G2 Products Gateway · Euclidean Motion Restored</p>
+            <p class="eyebrow">G2 Products Gateway · Universe Domain Locked</p>
             <h1>The animated products gateway.</h1>
 
             <p class="hero-copy">
-              Products is the entry surface for the live product lanes. This page keeps the hard
-              backlink contract intact while the hero runtime demonstrates bounded Euclidean motion
-              without pretending to own upstream kernels it does not own.
+              Products remains structurally stable at the HTML layer while the runtime expresses a
+              bounded Euclidean universe. The moving layer is now compressed into compact
+              diamond-compass markers instead of oversized content blocks.
             </p>
 
             <div class="hero-actions">
@@ -531,16 +656,16 @@
 
             <div class="summary" aria-label="Products gateway summary">
               <div class="summary-card">
+                <strong>Universe</strong>
+                <span>256000 km by 256000 km internal domain.</span>
+              </div>
+              <div class="summary-card">
                 <strong>HTML</strong>
                 <span>Owns structure and hard route safety.</span>
               </div>
               <div class="summary-card">
                 <strong>JS</strong>
-                <span>Owns Euclidean motion orchestration only.</span>
-              </div>
-              <div class="summary-card">
-                <strong>Hero Runtime</strong>
-                <span>Owns bounded planetary stage expression.</span>
+                <span>Owns Euclidean projection and motion only.</span>
               </div>
               <div class="summary-card">
                 <strong>Backlinks</strong>
@@ -556,6 +681,94 @@
               <a href="/products/">Products</a>
             </nav>
           </div>
+
+          <div class="orbit-shell" aria-hidden="true">
+            <div class="orbit-grid" id="products-orbit-grid">
+              <article class="lane-token" data-label="ARCHCOIN" data-route="/products/archcoin/">
+                <a href="/products/archcoin/" aria-label="ARCHCOIN">
+                  <div class="token-diamond">
+                    <div class="token-inner">
+                      <div class="token-compass">
+                        <span class="ring"></span>
+                      </div>
+                      <span class="token-label">ARCHCOIN</span>
+                    </div>
+                  </div>
+                  <span class="token-meta">/products/archcoin/</span>
+                </a>
+              </article>
+
+              <article class="lane-token" data-label="FIVE FLAGS" data-route="/products/five-flags/">
+                <a href="/products/five-flags/" aria-label="FIVE FLAGS">
+                  <div class="token-diamond">
+                    <div class="token-inner">
+                      <div class="token-compass">
+                        <span class="ring"></span>
+                      </div>
+                      <span class="token-label">FIVE FLAGS</span>
+                    </div>
+                  </div>
+                  <span class="token-meta">/products/five-flags/</span>
+                </a>
+              </article>
+
+              <article class="lane-token" data-label="OUR AI" data-route="/products/ai/">
+                <a href="/products/ai/" aria-label="OUR AI">
+                  <div class="token-diamond">
+                    <div class="token-inner">
+                      <div class="token-compass">
+                        <span class="ring"></span>
+                      </div>
+                      <span class="token-label">OUR AI</span>
+                    </div>
+                  </div>
+                  <span class="token-meta">/products/ai/</span>
+                </a>
+              </article>
+
+              <article class="lane-token" data-label="WHAT'S MY THEME" data-route="/products/education/">
+                <a href="/products/education/" aria-label="WHAT'S MY THEME">
+                  <div class="token-diamond">
+                    <div class="token-inner">
+                      <div class="token-compass">
+                        <span class="ring"></span>
+                      </div>
+                      <span class="token-label">WHAT'S MY THEME</span>
+                    </div>
+                  </div>
+                  <span class="token-meta">/products/education/</span>
+                </a>
+              </article>
+
+              <article class="lane-token" data-label="NUTRITION" data-route="/products/nutrition/">
+                <a href="/products/nutrition/" aria-label="NUTRITION">
+                  <div class="token-diamond">
+                    <div class="token-inner">
+                      <div class="token-compass">
+                        <span class="ring"></span>
+                      </div>
+                      <span class="token-label">NUTRITION</span>
+                    </div>
+                  </div>
+                  <span class="token-meta">/products/nutrition/</span>
+                </a>
+              </article>
+
+              <article class="lane-token" data-label="ROOT" data-route="/products/">
+                <a href="/products/" aria-label="ROOT">
+                  <div class="token-diamond">
+                    <div class="token-inner">
+                      <div class="token-compass">
+                        <span class="ring"></span>
+                      </div>
+                      <span class="token-label">ROOT</span>
+                    </div>
+                  </div>
+                  <span class="token-meta">/products/</span>
+                </a>
+              </article>
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -564,89 +777,59 @@
       <div class="shell">
         <div class="section-head">
           <div>
-            <h2>Russian-doll lane field</h2>
+            <h2>Static route surface</h2>
           </div>
           <p>
-            The cards below are hard HTML route anchors. The runtime may move them through a
-            Euclidean orbital field, but the route surface remains stable, direct, and readable even
-            when runtime is absent.
+            The orbit is now compressed for motion clarity. The route detail remains below as a
+            stable, readable HTML surface so the page keeps direct access and does not overextend the
+            moving layer.
           </p>
         </div>
 
-        <div class="lane-field">
-          <div class="lane-grid" id="products-lane-grid">
-            <article class="lane-card">
-              <a href="/products/nutrition/">
-                <h3>Baseline Nutrition</h3>
-                <p>
-                  Nutrition lane entry with direct path safety and return continuity back to the
-                  products root.
-                </p>
-                <span class="route-chip">/products/nutrition/</span>
-              </a>
-            </article>
+        <div class="lane-list">
+          <article class="lane-list-card">
+            <strong>ARCHCOIN</strong>
+            <p>Coin and extension lane with direct products-root return behavior.</p>
+            <a href="/products/archcoin/">Open lane</a>
+          </article>
 
-            <article class="lane-card">
-              <a href="/products/ai/">
-                <h3>On Your Side AI</h3>
-                <p>
-                  AI lane entry preserved as a hard route instead of runtime-only presentation.
-                </p>
-                <span class="route-chip">/products/ai/</span>
-              </a>
-            </article>
+          <article class="lane-list-card">
+            <strong>FIVE FLAGS</strong>
+            <p>Five Flags destination preserved as a direct route-safe lane.</p>
+            <a href="/products/five-flags/">Open lane</a>
+          </article>
 
-            <article class="lane-card">
-              <a href="/products/education/">
-                <h3>Education &amp; Language</h3>
-                <p>
-                  Education lane with direct anchor access and stable upstream return behavior.
-                </p>
-                <span class="route-chip">/products/education/</span>
-              </a>
-            </article>
+          <article class="lane-list-card">
+            <strong>OUR AI</strong>
+            <p>AI lane exposed through a stable HTML anchor, not runtime dependency.</p>
+            <a href="/products/ai/">Open lane</a>
+          </article>
 
-            <article class="lane-card">
-              <a href="/products/five-flags/">
-                <h3>Five Flags</h3>
-                <p>
-                  Five Flags lane restored as a route-safe product destination under the products
-                  path.
-                </p>
-                <span class="route-chip">/products/five-flags/</span>
-              </a>
-            </article>
+          <article class="lane-list-card">
+            <strong>WHAT'S MY THEME</strong>
+            <p>Education and theme lane represented with compressed orbit identity.</p>
+            <a href="/products/education/">Open lane</a>
+          </article>
 
-            <article class="lane-card">
-              <a href="/products/archcoin/">
-                <h3>ARCHCOIN</h3>
-                <p>
-                  ARCHCOIN destination with static path exposure and clean return-to-products
-                  behavior.
-                </p>
-                <span class="route-chip">/products/archcoin/</span>
-              </a>
-            </article>
+          <article class="lane-list-card">
+            <strong>NUTRITION</strong>
+            <p>Nutrition entry with direct path safety and root continuity.</p>
+            <a href="/products/nutrition/">Open lane</a>
+          </article>
 
-            <article class="lane-card">
-              <a href="/products/">
-                <h3>Products Root</h3>
-                <p>
-                  Self-anchor for route normalization, refresh safety, and root recovery from nested
-                  product destinations.
-                </p>
-                <span class="route-chip">/products/</span>
-              </a>
-            </article>
-          </div>
+          <article class="lane-list-card">
+            <strong>ROOT</strong>
+            <p>Products root for normalization, refresh safety, and route recovery.</p>
+            <a href="/products/">Open lane</a>
+          </article>
         </div>
 
         <div class="backfill">
           <p>
             <strong>Backlink contract.</strong> Every child product destination should expose at
             least three hard HTML links at the top: <strong>Home</strong>, <strong>Explore</strong>,
-            and <strong>Return to Products</strong>. The products root keeps the lane map above even
-            when runtime is unavailable.
+            and <strong>Return to Products</strong>. The products root keeps the route map visible
+            even when runtime is unavailable.
           </p>
 
           <div class="fallback-links" aria-label="Backfill links">
@@ -665,8 +848,9 @@
     <div class="shell">
       <div class="footer-panel">
         <p>
-          Runtime / Receipt: HTML=STRUCTURE | JS=EUCLIDEAN_ORCHESTRATION |
-          HERO_RUNTIME=BOUNDED | BACKLINKS=HARD_HTML | ROUTE_ACCESS=STATIC_SAFE
+          Runtime / Receipt: HTML=STRUCTURE | JS=EUCLIDEAN_PROJECTION |
+          UNIVERSE=256000x256000_KM | MOTION=COMPRESSED_DIAMOND_COMPASSES |
+          BACKLINKS=HARD_HTML | ROUTE_ACCESS=STATIC_SAFE
         </p>
       </div>
     </div>

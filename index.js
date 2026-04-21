@@ -4,9 +4,8 @@
   const SELECTORS = {
     frame: "#home-solar-frame",
     stage: "#home-hero-stage",
-    grid: "#home-orbit-grid",
-    centerLabel: ".solar-center-label",
-    bodies: ".route-body"
+    bodies: ".route-body",
+    centerLabel: ".solar-center-label"
   };
 
   const CONFIG = {
@@ -15,124 +14,47 @@
     DPR_CAP: 2,
     STAR_COUNT_DESKTOP: 180,
     STAR_COUNT_MOBILE: 110,
-    ORBIT_TILT_Y: 0.72,
-    POINTER_SHIFT_X: 10,
-    POINTER_SHIFT_Y: 8,
-    SUN_RADIUS_DESKTOP: 52,
+    ORBIT_TILT_Y: 0.68,
+    POINTER_SHIFT_X: 8,
+    POINTER_SHIFT_Y: 6,
+    SUN_RADIUS_DESKTOP: 54,
     SUN_RADIUS_MOBILE: 42,
-    SUN_GLOW_DESKTOP: 150,
-    SUN_GLOW_MOBILE: 120,
-    INNER_MARGIN_DESKTOP: 34,
-    INNER_MARGIN_MOBILE: 28
+    SUN_GLOW_DESKTOP: 156,
+    SUN_GLOW_MOBILE: 124,
+    CENTER_Y_DESKTOP: 0.28,
+    CENTER_Y_MOBILE: 0.19,
+    CHAMBER_PADDING_DESKTOP: 34,
+    CHAMBER_PADDING_MOBILE: 22,
+    META_ENABLED_ON_TOUCH: false
   };
 
   const SOLAR_MODEL = {
-    mercury: {
-      order: 1,
-      label: "Mercury",
-      periodYears: 0.2408467,
-      baseAngle: -1.45,
-      orbitRatio: 0.16,
-      sizeDesktop: 26,
-      sizeMobile: 20,
-      hasRing: false
-    },
-    venus: {
-      order: 2,
-      label: "Venus",
-      periodYears: 0.61519726,
-      baseAngle: -0.35,
-      orbitRatio: 0.23,
-      sizeDesktop: 34,
-      sizeMobile: 26,
-      hasRing: false
-    },
-    earth: {
-      order: 3,
-      label: "Earth",
-      periodYears: 1.0,
-      baseAngle: 0.78,
-      orbitRatio: 0.31,
-      sizeDesktop: 36,
-      sizeMobile: 28,
-      hasRing: false
-    },
-    mars: {
-      order: 4,
-      label: "Mars",
-      periodYears: 1.8808476,
-      baseAngle: 1.82,
-      orbitRatio: 0.40,
-      sizeDesktop: 30,
-      sizeMobile: 24,
-      hasRing: false
-    },
-    jupiter: {
-      order: 5,
-      label: "Jupiter",
-      periodYears: 11.862615,
-      baseAngle: 2.58,
-      orbitRatio: 0.54,
-      sizeDesktop: 58,
-      sizeMobile: 44,
-      hasRing: false
-    },
-    saturn: {
-      order: 6,
-      label: "Saturn",
-      periodYears: 29.447498,
-      baseAngle: -2.55,
-      orbitRatio: 0.67,
-      sizeDesktop: 50,
-      sizeMobile: 38,
-      hasRing: true
-    },
-    uranus: {
-      order: 7,
-      label: "Uranus",
-      periodYears: 84.016846,
-      baseAngle: -1.95,
-      orbitRatio: 0.79,
-      sizeDesktop: 42,
-      sizeMobile: 32,
-      hasRing: false
-    },
-    neptune: {
-      order: 8,
-      label: "Neptune",
-      periodYears: 164.79132,
-      baseAngle: -0.96,
-      orbitRatio: 0.90,
-      sizeDesktop: 40,
-      sizeMobile: 30,
-      hasRing: false
-    },
-    pluto: {
-      order: 9,
-      label: "Pluto",
-      periodYears: 248.0,
-      baseAngle: 0.22,
-      orbitRatio: 0.98,
-      sizeDesktop: 18,
-      sizeMobile: 14,
-      hasRing: false
-    }
+    mercury: { order: 1, label: "Mercury", periodYears: 0.2408467, baseAngle: -1.42, orbitRatio: 0.14, sizeDesktop: 24, sizeMobile: 18, hasRing: false },
+    venus:   { order: 2, label: "Venus",   periodYears: 0.61519726, baseAngle: -0.54, orbitRatio: 0.22, sizeDesktop: 30, sizeMobile: 22, hasRing: false },
+    earth:   { order: 3, label: "Earth",   periodYears: 1.0,        baseAngle: 0.18,  orbitRatio: 0.30, sizeDesktop: 32, sizeMobile: 24, hasRing: false },
+    mars:    { order: 4, label: "Mars",    periodYears: 1.8808476,  baseAngle: 0.86,  orbitRatio: 0.39, sizeDesktop: 26, sizeMobile: 20, hasRing: false },
+    jupiter: { order: 5, label: "Jupiter", periodYears: 11.862615,  baseAngle: 1.48,  orbitRatio: 0.52, sizeDesktop: 48, sizeMobile: 34, hasRing: false },
+    saturn:  { order: 6, label: "Saturn",  periodYears: 29.447498,  baseAngle: 2.08,  orbitRatio: 0.64, sizeDesktop: 42, sizeMobile: 30, hasRing: true  },
+    uranus:  { order: 7, label: "Uranus",  periodYears: 84.016846,  baseAngle: 2.66,  orbitRatio: 0.76, sizeDesktop: 36, sizeMobile: 26, hasRing: false },
+    neptune: { order: 8, label: "Neptune", periodYears: 164.79132,  baseAngle: 3.18,  orbitRatio: 0.87, sizeDesktop: 34, sizeMobile: 24, hasRing: false },
+    pluto:   { order: 9, label: "Pluto",   periodYears: 248.0,      baseAngle: 3.62,  orbitRatio: 0.96, sizeDesktop: 16, sizeMobile: 12, hasRing: false }
   };
 
   const frame = document.querySelector(SELECTORS.frame);
   const stage = document.querySelector(SELECTORS.stage);
-  const grid = document.querySelector(SELECTORS.grid);
-  const centerLabel = document.querySelector(SELECTORS.centerLabel);
   const bodyElements = Array.from(document.querySelectorAll(SELECTORS.bodies));
+  const centerLabel = document.querySelector(SELECTORS.centerLabel);
 
-  if (!frame || !stage || !grid || bodyElements.length === 0) return;
+  if (!frame || !stage || bodyElements.length === 0) return;
+
+  const reduceMotionMedia = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
 
   const state = {
     mounted: false,
     rafId: 0,
     startTime: 0,
-    reducedMotion: window.matchMedia(CONFIG.REDUCE_MOTION_QUERY).matches,
-    viewport: { width: 0, height: 0, dpr: 1, mobile: false },
+    reducedMotion: reduceMotionMedia.matches,
+    viewport: { width: 0, height: 0, dpr: 1, mobile: false, touch: false },
     pointer: { x: 0, y: 0, active: false },
     stars: [],
     canvas: null,
@@ -148,11 +70,8 @@
   bindEvents();
   applyStaticLayout();
 
-  if (!state.reducedMotion) {
-    start();
-  } else {
-    drawScene(0);
-  }
+  if (!state.reducedMotion) start();
+  else drawScene(0);
 
   function buildCanvas() {
     const canvas = document.createElement("canvas");
@@ -185,14 +104,16 @@
           body.appendChild(ring);
         }
 
-        el.addEventListener("mouseenter", () => el.classList.add("is-active"));
-        el.addEventListener("mouseleave", () => el.classList.remove("is-active"));
+        el.addEventListener("mouseenter", () => {
+          if (!state.viewport.touch) el.classList.add("is-active");
+        });
+        el.addEventListener("mouseleave", () => {
+          if (!state.viewport.touch) el.classList.remove("is-active");
+        });
         el.addEventListener("focusin", () => el.classList.add("is-active"));
         el.addEventListener("focusout", () => el.classList.remove("is-active"));
 
-        if (meta) {
-          meta.textContent = model.label;
-        }
+        if (meta) meta.textContent = model.label;
 
         return { key, el, body, meta, model };
       })
@@ -206,8 +127,7 @@
     frame.addEventListener("pointerleave", handlePointerLeave, { passive: true });
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
-    const media = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
-    media.addEventListener("change", (event) => {
+    reduceMotionMedia.addEventListener("change", (event) => {
       state.reducedMotion = event.matches;
       if (state.reducedMotion) {
         stop();
@@ -231,6 +151,8 @@
   }
 
   function handlePointerMove(event) {
+    if (state.viewport.touch) return;
+
     const rect = frame.getBoundingClientRect();
     const x = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1;
     const y = ((event.clientY - rect.top) / Math.max(1, rect.height)) * 2 - 1;
@@ -247,11 +169,8 @@
   }
 
   function handleVisibilityChange() {
-    if (document.hidden) {
-      stop();
-    } else if (!state.reducedMotion) {
-      start();
-    }
+    if (document.hidden) stop();
+    else if (!state.reducedMotion) start();
   }
 
   function resize() {
@@ -260,8 +179,9 @@
     const height = Math.max(420, Math.floor(rect.height));
     const dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
     const mobile = width <= CONFIG.MOBILE_BREAKPOINT;
+    const touch = matchMedia("(hover: none), (pointer: coarse)").matches;
 
-    state.viewport = { width, height, dpr, mobile };
+    state.viewport = { width, height, dpr, mobile, touch };
 
     if (state.canvas && state.ctx) {
       state.canvas.width = Math.floor(width * dpr);
@@ -270,6 +190,8 @@
       state.canvas.style.height = `${height}px`;
       state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
+
+    frame.classList.toggle("is-touch-device", touch);
   }
 
   function seedStars() {
@@ -398,9 +320,10 @@
 
   function positionBodies(elapsedSeconds) {
     const center = getCenter();
+    const bounds = getBounds();
 
     for (const entry of state.bodies) {
-      const { el, body, model } = entry;
+      const { el, body, meta, model } = entry;
       const orbit = getOrbitFor(model);
       const size = state.viewport.mobile ? model.sizeMobile : model.sizeDesktop;
       const speed = getAngularVelocity(model.periodYears);
@@ -414,9 +337,12 @@
         y += state.pointer.y * CONFIG.POINTER_SHIFT_Y;
       }
 
+      x = clamp(x, bounds.left + size * 0.5, bounds.right - size * 0.5);
+      y = clamp(y, bounds.top + size * 0.5, bounds.bottom - size * 0.5);
+
       const depth = (Math.sin(angle) + 1) * 0.5;
-      const scale = 0.82 + depth * 0.22;
-      const opacity = 0.68 + depth * 0.32;
+      const scale = 0.88 + depth * 0.18;
+      const opacity = 0.84 + depth * 0.16;
       const zIndex = Math.floor(10 + depth * 20);
 
       el.style.width = `${size}px`;
@@ -426,41 +352,61 @@
       el.style.zIndex = String(zIndex);
 
       if (body) {
-        const hoverBoost = el.classList.contains("is-active") ? 0.05 : 0;
+        const hoverBoost = !state.viewport.touch && el.classList.contains("is-active") ? 0.05 : 0;
         const spin = angle * 0.65;
         body.style.transform = `rotate(${spin.toFixed(3)}rad) scale(${(scale + hoverBoost).toFixed(3)})`;
+      }
+
+      if (meta) {
+        meta.style.display = state.viewport.touch && !CONFIG.META_ENABLED_ON_TOUCH ? "none" : "";
       }
     }
 
     if (centerLabel) {
       centerLabel.textContent = "Solar Center";
+      const offsetY = state.viewport.mobile ? 78 : 88;
+      centerLabel.style.transform = `translate(-50%, calc(-50% + ${offsetY}px))`;
     }
   }
 
   function getCenter() {
     return {
       x: state.viewport.width * 0.5,
-      y: state.viewport.height * (state.viewport.mobile ? 0.46 : 0.5)
+      y: state.viewport.height * (state.viewport.mobile ? CONFIG.CENTER_Y_MOBILE : CONFIG.CENTER_Y_DESKTOP)
+    };
+  }
+
+  function getBounds() {
+    const pad = state.viewport.mobile ? CONFIG.CHAMBER_PADDING_MOBILE : CONFIG.CHAMBER_PADDING_DESKTOP;
+    return {
+      left: pad,
+      right: state.viewport.width - pad,
+      top: pad,
+      bottom: state.viewport.height - pad
     };
   }
 
   function getOrbitFor(model) {
-    const mobile = state.viewport.mobile;
-    const width = state.viewport.width;
-    const height = state.viewport.height;
+    const { width, height, mobile } = state.viewport;
+    const pad = mobile ? CONFIG.CHAMBER_PADDING_MOBILE : CONFIG.CHAMBER_PADDING_DESKTOP;
+    const sunRadius = mobile ? CONFIG.SUN_RADIUS_MOBILE : CONFIG.SUN_RADIUS_DESKTOP;
 
-    const innerMargin = mobile ? CONFIG.INNER_MARGIN_MOBILE : CONFIG.INNER_MARGIN_DESKTOP;
-    const sunExclusion = (mobile ? CONFIG.SUN_RADIUS_MOBILE : CONFIG.SUN_RADIUS_DESKTOP) + innerMargin;
-    const maxA = Math.max(140, Math.min(width, height) * (mobile ? 0.43 : 0.46));
-    const minA = sunExclusion + 14;
+    const usableWidth = width - pad * 2;
+    const usableHeight = height - pad * 2;
+
+    const maxA = usableWidth * (mobile ? 0.38 : 0.40);
+    const maxB = usableHeight * (mobile ? 0.33 : 0.36);
+    const minA = sunRadius + (mobile ? 24 : 30);
+    const minB = sunRadius + (mobile ? 16 : 22);
+
     const a = lerp(minA, maxA, model.orbitRatio);
-    const b = a * CONFIG.ORBIT_TILT_Y;
+    const b = Math.min(lerp(minB, maxB, model.orbitRatio), a * CONFIG.ORBIT_TILT_Y);
 
     return { a, b };
   }
 
   function getAngularVelocity(periodYears) {
-    const base = 0.0012;
+    const base = state.viewport.mobile ? 0.00105 : 0.0012;
     return base / Math.sqrt(periodYears);
   }
 
@@ -499,6 +445,10 @@
       .route-body:hover .planet-meta {
         opacity: 1;
         border-color: rgba(240, 216, 154, 0.24);
+      }
+
+      #home-solar-frame.is-touch-device .planet-meta {
+        display: none !important;
       }
 
       .planet-ring {

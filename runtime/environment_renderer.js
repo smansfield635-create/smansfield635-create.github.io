@@ -10,12 +10,19 @@ const META = Object.freeze({
 export function renderEnvironmentLayer(ctx, snapshot, projection) {
   if (!ctx || !snapshot || !projection) return;
 
-  const stars = snapshot.projection.stars || [];
-  const markers = snapshot.projection.markers || [];
-  const renderPacket = snapshot.renderPacket || {};
-  const colorOutput = ((renderPacket.visible || {}).colorOutput) || {};
-  const depth = Number(((renderPacket.visible || {}).depthOutput) || 0.5);
-  const luminance = Number(((renderPacket.visible || {}).luminanceOutput) || 0.5);
+  const projectionPacket =
+    snapshot.projection && typeof snapshot.projection === "object" ? snapshot.projection : {};
+
+  const stars = Array.isArray(projectionPacket.stars) ? projectionPacket.stars : [];
+  const markers = Array.isArray(projectionPacket.markers) ? projectionPacket.markers : [];
+  const renderPacket = snapshot.renderPacket && typeof snapshot.renderPacket === "object"
+    ? snapshot.renderPacket
+    : {};
+
+  const visible = renderPacket.visible || {};
+  const colorOutput = visible.colorOutput || {};
+  const depth = Number(visible.depthOutput || 0.5);
+  const luminance = Number(visible.luminanceOutput || 0.5);
 
   ctx.save();
 
@@ -40,16 +47,17 @@ export function renderEnvironmentLayer(ctx, snapshot, projection) {
 
   stars.forEach((star) => {
     const p = projection.project(star);
-    const alpha = Math.max(0.08, Math.min(1, star.alpha * (0.65 + luminance * 0.35)));
+    const alpha = Math.max(0.08, Math.min(1, Number(star.alpha || 0.2) * (0.65 + luminance * 0.35)));
     ctx.fillStyle = "rgba(255,255,255," + alpha.toFixed(3) + ")";
     ctx.beginPath();
-    ctx.arc(p.x, p.y, Math.max(0.6, star.size), 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, Math.max(0.6, Number(star.size || 1)), 0, Math.PI * 2);
     ctx.fill();
   });
 
   markers.forEach((marker) => {
     const p = projection.project(marker);
-    const size = Math.max(3, marker.size || 4);
+    const size = Math.max(3, Number(marker.size || 4));
+
     ctx.beginPath();
     ctx.arc(p.x, p.y, size, 0, Math.PI * 2);
     ctx.fillStyle = "rgba(255,255,255,0.86)";
@@ -76,7 +84,9 @@ export function renderEnvironmentLayer(ctx, snapshot, projection) {
   ctx.restore();
 }
 
-export default {
+const ENVIRONMENT_RENDERER_API = Object.freeze({
   meta: META,
   renderEnvironmentLayer
-};
+});
+
+export default ENVIRONMENT_RENDERER_API;

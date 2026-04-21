@@ -3,24 +3,31 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge</title>
+  <title>Diamond Gate Bridge · Richie’s Manor</title>
   <meta
     name="description"
-    content="Public entry compass with a bounded Euclidean chamber, hard route safety, and direct access to the primary descendant surfaces."
+    content="Richie’s Manor is the root house surface for Diamond Gate Bridge, with hard HTML routes above and vault access beneath the house."
   />
   <style>
     :root {
-      --bg-a: #030913;
-      --bg-b: #071427;
-      --bg-c: #0a1a31;
-      --panel: rgba(10, 22, 42, 0.74);
-      --line: rgba(165, 208, 255, 0.18);
-      --text: #ecf4ff;
-      --muted: #a7bddb;
-      --accent: #c4e6ff;
-      --shadow: 0 18px 52px rgba(0, 0, 0, 0.34);
-      --radius: 24px;
-      --max: 1180px;
+      --bg-0: #030711;
+      --bg-1: #071221;
+      --bg-2: #0b1830;
+      --panel: rgba(9, 19, 36, 0.82);
+      --panel-soft: rgba(255, 255, 255, 0.04);
+      --line: rgba(177, 214, 255, 0.16);
+      --line-strong: rgba(196, 229, 255, 0.30);
+      --text: #eef5ff;
+      --muted: #abc0da;
+      --accent: #d7ecff;
+      --gold: #f0d89a;
+      --gold-soft: rgba(240, 216, 154, 0.18);
+      --shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
+      --radius-xl: 30px;
+      --radius-lg: 22px;
+      --radius-md: 16px;
+      --max: 1220px;
+      --focus: 0 0 0 3px rgba(196, 229, 255, 0.22);
     }
 
     * { box-sizing: border-box; }
@@ -32,13 +39,22 @@
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 16% 14%, rgba(82, 125, 255, 0.16), transparent 24%),
-        radial-gradient(circle at 82% 20%, rgba(96, 214, 255, 0.10), transparent 20%),
-        radial-gradient(circle at 50% 82%, rgba(118, 142, 255, 0.08), transparent 28%),
-        linear-gradient(180deg, var(--bg-a) 0%, var(--bg-b) 48%, var(--bg-c) 100%);
+        radial-gradient(circle at 14% 12%, rgba(110, 158, 255, 0.18), transparent 20%),
+        radial-gradient(circle at 82% 16%, rgba(106, 228, 255, 0.10), transparent 18%),
+        radial-gradient(circle at 50% 86%, rgba(129, 124, 255, 0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 44%, var(--bg-2) 100%);
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
+    }
 
     .shell {
       width: min(100% - 28px, var(--max));
@@ -48,17 +64,17 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 40;
-      backdrop-filter: blur(14px);
-      background: rgba(5, 11, 22, 0.74);
-      border-bottom: 1px solid rgba(160, 205, 255, 0.12);
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(4, 10, 20, 0.76);
+      border-bottom: 1px solid rgba(177, 214, 255, 0.12);
     }
 
     .topbar-inner {
       width: min(100% - 28px, var(--max));
       margin: 0 auto;
       display: flex;
-      gap: 12px;
+      gap: 14px;
       align-items: center;
       justify-content: space-between;
       padding: 14px 0;
@@ -66,26 +82,33 @@
 
     .brand {
       display: inline-flex;
-      gap: 12px;
       align-items: center;
+      gap: 12px;
       min-width: 0;
     }
 
     .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      border: 1px solid rgba(191, 230, 255, 0.28);
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(217, 236, 255, 0.24);
       background:
-        radial-gradient(circle at 50% 42%, rgba(191, 230, 255, 0.92), rgba(143, 200, 255, 0.18) 42%, transparent 62%),
-        radial-gradient(circle at 50% 50%, rgba(120, 164, 255, 0.18), transparent 70%);
-      box-shadow: inset 0 0 18px rgba(191, 230, 255, 0.16), 0 0 28px rgba(143, 200, 255, 0.12);
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)),
+        radial-gradient(circle at 50% 35%, rgba(255, 235, 184, 0.78), rgba(255, 218, 128, 0.12) 42%, transparent 68%),
+        linear-gradient(180deg, rgba(30, 46, 72, 0.96), rgba(12, 20, 35, 0.98));
+      box-shadow:
+        inset 0 0 22px rgba(255, 239, 198, 0.08),
+        0 0 24px rgba(148, 202, 255, 0.08);
       flex: 0 0 auto;
+    }
+
+    .brand-copy {
+      min-width: 0;
     }
 
     .brand-copy strong {
       display: block;
-      font-size: 0.95rem;
+      font-size: 0.96rem;
       letter-spacing: 0.04em;
     }
 
@@ -101,8 +124,8 @@
 
     .nav {
       display: flex;
-      gap: 10px;
       flex-wrap: wrap;
+      gap: 10px;
       justify-content: flex-end;
     }
 
@@ -113,7 +136,7 @@
       min-height: 40px;
       padding: 0 14px;
       border-radius: 999px;
-      border: 1px solid rgba(160, 205, 255, 0.14);
+      border: 1px solid rgba(177, 214, 255, 0.14);
       background: rgba(255, 255, 255, 0.03);
       font-size: 0.92rem;
       transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
@@ -122,37 +145,37 @@
     .nav a:hover,
     .nav a:focus-visible {
       transform: translateY(-1px);
-      border-color: rgba(191, 230, 255, 0.34);
+      border-color: rgba(217, 236, 255, 0.30);
       background: rgba(255, 255, 255, 0.06);
-      outline: none;
     }
 
     .nav a[aria-current="page"] {
       background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.08));
-      border-color: rgba(191, 230, 255, 0.34);
-      box-shadow: 0 0 0 1px rgba(191, 230, 255, 0.08) inset;
+      border-color: rgba(217, 236, 255, 0.30);
+      box-shadow: inset 0 0 0 1px rgba(217, 236, 255, 0.06);
     }
 
-    .hero { padding: 42px 0 24px; }
+    .hero {
+      padding: 42px 0 26px;
+    }
 
     .hero-panel {
       position: relative;
       overflow: hidden;
-      isolation: isolate;
-      border-radius: 28px;
+      border-radius: var(--radius-xl);
       border: 1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 18%, rgba(143, 200, 255, 0.10), transparent 30%),
-        linear-gradient(180deg, rgba(14, 29, 54, 0.92), rgba(8, 18, 35, 0.96));
+        radial-gradient(circle at 50% 12%, rgba(191, 225, 255, 0.10), transparent 28%),
+        linear-gradient(180deg, rgba(14, 28, 52, 0.94), rgba(7, 15, 29, 0.98));
       box-shadow: var(--shadow);
       padding: 30px;
     }
 
     .hero-layout {
       position: relative;
-      z-index: 3;
+      z-index: 2;
       display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(420px, 0.9fr);
+      grid-template-columns: minmax(0, 0.94fr) minmax(440px, 0.98fr);
       gap: 28px;
       align-items: start;
     }
@@ -168,7 +191,7 @@
     h1 {
       margin: 0;
       font-size: clamp(2rem, 5vw, 3.45rem);
-      line-height: 1.04;
+      line-height: 1.02;
       letter-spacing: -0.03em;
       max-width: 12ch;
     }
@@ -178,7 +201,7 @@
       margin: 14px 0 0;
       color: var(--muted);
       font-size: 1.02rem;
-      line-height: 1.7;
+      line-height: 1.72;
     }
 
     .hero-actions,
@@ -197,7 +220,7 @@
       min-height: 44px;
       padding: 0 16px;
       border-radius: 999px;
-      border: 1px solid rgba(191, 230, 255, 0.18);
+      border: 1px solid rgba(177, 214, 255, 0.16);
       background: rgba(255, 255, 255, 0.04);
       transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
@@ -207,14 +230,13 @@
     .crumbs a:hover,
     .crumbs a:focus-visible {
       transform: translateY(-1px);
-      border-color: rgba(191, 230, 255, 0.34);
-      background: rgba(255, 255, 255, 0.07);
-      outline: none;
+      border-color: rgba(217, 236, 255, 0.28);
+      background: rgba(255, 255, 255, 0.06);
     }
 
     .button.primary {
-      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.10));
-      border-color: rgba(191, 230, 255, 0.34);
+      border-color: rgba(240, 216, 154, 0.34);
+      background: linear-gradient(180deg, rgba(240, 216, 154, 0.24), rgba(240, 216, 154, 0.08));
     }
 
     .summary {
@@ -227,15 +249,15 @@
     .summary-card {
       border-radius: 18px;
       border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(8px);
+      background: var(--panel-soft);
       padding: 16px 16px 14px;
+      backdrop-filter: blur(8px);
     }
 
     .summary-card strong {
       display: block;
       margin-bottom: 8px;
-      font-size: 0.86rem;
+      font-size: 0.84rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--accent);
@@ -243,22 +265,22 @@
 
     .summary-card span {
       color: var(--muted);
+      font-size: 0.95rem;
       line-height: 1.6;
-      font-size: 0.94rem;
     }
 
     .compass-frame {
       position: relative;
-      min-height: 620px;
-      border-radius: 28px;
-      border: 1px solid rgba(191, 230, 255, 0.20);
+      min-height: 654px;
+      border-radius: 30px;
+      border: 1px solid rgba(217, 236, 255, 0.18);
       background:
-        linear-gradient(180deg, rgba(6, 16, 31, 0.92), rgba(8, 18, 35, 0.98)),
-        radial-gradient(circle at 50% 50%, rgba(143, 200, 255, 0.05), transparent 52%);
+        radial-gradient(circle at 50% 18%, rgba(240, 216, 154, 0.10), transparent 24%),
+        linear-gradient(180deg, rgba(9, 19, 36, 0.94), rgba(8, 17, 31, 0.98));
       box-shadow:
-        inset 0 0 0 1px rgba(191, 230, 255, 0.05),
-        inset 0 0 54px rgba(143, 200, 255, 0.04),
-        0 18px 52px rgba(0, 0, 0, 0.28);
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 0 60px rgba(143, 200, 255, 0.04),
+        0 22px 60px rgba(0, 0, 0, 0.30);
       overflow: hidden;
       isolation: isolate;
     }
@@ -275,7 +297,7 @@
 
     .compass-frame-header strong {
       display: block;
-      font-size: 0.86rem;
+      font-size: 0.84rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--accent);
@@ -283,15 +305,15 @@
 
     .compass-frame-header span {
       color: var(--muted);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
     .compass-frame-shell {
       position: relative;
-      height: calc(100% - 56px);
-      min-height: 564px;
+      height: calc(100% - 54px);
+      min-height: 594px;
       padding: 14px;
     }
 
@@ -321,31 +343,124 @@
       transform-style: preserve-3d;
     }
 
-    .center-core-mask {
+    .manor-core {
       position: absolute;
       left: 50%;
-      top: 52%;
-      width: 148px;
-      height: 148px;
-      margin-left: -74px;
-      margin-top: -74px;
-      border-radius: 50%;
-      border: 1px solid rgba(191, 230, 255, 0.12);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), rgba(143,200,255,0.03) 42%, transparent 76%);
-      box-shadow:
-        inset 0 0 36px rgba(143, 200, 255, 0.05),
-        0 0 30px rgba(143, 200, 255, 0.03);
-      z-index: 4;
+      top: 46%;
+      width: 210px;
+      height: 168px;
+      margin-left: -105px;
+      margin-top: -84px;
+      z-index: 5;
       pointer-events: none;
+      filter: drop-shadow(0 18px 26px rgba(0, 0, 0, 0.34));
+    }
+
+    .manor-house {
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      border: 1px solid rgba(228, 239, 255, 0.24);
+      background:
+        linear-gradient(180deg, rgba(30, 46, 73, 0.92), rgba(12, 22, 40, 0.98)),
+        radial-gradient(circle at 50% 26%, rgba(255, 231, 171, 0.14), transparent 38%);
+      box-shadow:
+        inset 0 0 34px rgba(255, 255, 255, 0.03),
+        inset 0 -20px 30px rgba(0, 0, 0, 0.18);
+    }
+
+    .manor-house::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: -36px;
+      width: 124px;
+      height: 72px;
+      margin-left: -62px;
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      background:
+        linear-gradient(180deg, rgba(250, 232, 177, 0.34), rgba(250, 232, 177, 0.08)),
+        linear-gradient(180deg, rgba(34, 52, 82, 0.96), rgba(17, 29, 48, 0.98));
+      border: 1px solid rgba(228, 239, 255, 0.18);
+      border-bottom: none;
+      border-top-left-radius: 14px;
+      border-top-right-radius: 14px;
+    }
+
+    .manor-house::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      width: 40px;
+      height: 64px;
+      margin-left: -20px;
+      border-radius: 12px 12px 6px 6px;
+      border: 1px solid rgba(240, 216, 154, 0.22);
+      background:
+        linear-gradient(180deg, rgba(240, 216, 154, 0.14), rgba(240, 216, 154, 0.03)),
+        linear-gradient(180deg, rgba(16, 27, 44, 0.98), rgba(8, 16, 30, 0.98));
+      box-shadow: inset 0 0 18px rgba(240, 216, 154, 0.04);
+    }
+
+    .manor-windows {
+      position: absolute;
+      inset: 38px 34px 42px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .manor-window {
+      border-radius: 10px;
+      border: 1px solid rgba(240, 216, 154, 0.16);
+      background:
+        linear-gradient(180deg, rgba(255, 240, 205, 0.18), rgba(255, 240, 205, 0.06)),
+        linear-gradient(180deg, rgba(25, 43, 66, 0.94), rgba(12, 23, 41, 0.96));
+      box-shadow: inset 0 0 14px rgba(255, 240, 205, 0.04);
+    }
+
+    .vault-access {
+      position: absolute;
+      left: 50%;
+      top: calc(46% + 126px);
+      transform: translateX(-50%);
+      z-index: 5;
+      width: 168px;
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .vault-shaft {
+      width: 2px;
+      height: 54px;
+      margin: 0 auto 10px;
+      background: linear-gradient(180deg, rgba(240, 216, 154, 0.38), rgba(240, 216, 154, 0.04));
+      box-shadow: 0 0 12px rgba(240, 216, 154, 0.10);
+    }
+
+    .vault-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(240, 216, 154, 0.26);
+      background: rgba(11, 19, 34, 0.88);
+      color: var(--gold);
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 0 24px rgba(240, 216, 154, 0.08);
     }
 
     .compass-token {
       position: absolute;
       left: 50%;
-      top: 52%;
-      width: 90px;
-      height: 90px;
+      top: 46%;
+      width: 96px;
+      height: 96px;
       margin: 0;
       transform-style: preserve-3d;
       will-change: transform, opacity;
@@ -367,54 +482,54 @@
 
     .token-shadow {
       position: absolute;
-      inset: 12px;
+      inset: 14px;
       border-radius: 12px;
       transform: translateZ(-18px) rotate(45deg);
-      background: rgba(0, 0, 0, 0.24);
+      background: rgba(0, 0, 0, 0.26);
       filter: blur(10px);
-      opacity: 0.68;
+      opacity: 0.72;
     }
 
     .token-spine {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 58px;
-      height: 58px;
-      margin-left: -29px;
-      margin-top: -29px;
+      width: 62px;
+      height: 62px;
+      margin-left: -31px;
+      margin-top: -31px;
       transform: rotate(45deg) translateZ(-8px);
       border-radius: 12px;
-      background: linear-gradient(180deg, rgba(33, 56, 88, 0.82), rgba(16, 27, 46, 0.94));
-      border: 1px solid rgba(191, 230, 255, 0.10);
-      opacity: 0.9;
+      background: linear-gradient(180deg, rgba(31, 54, 86, 0.84), rgba(16, 28, 47, 0.95));
+      border: 1px solid rgba(217, 236, 255, 0.10);
+      opacity: 0.92;
     }
 
     .token-face {
       position: absolute;
       inset: 0;
-      border-radius: 15px;
+      border-radius: 16px;
       transform: rotate(45deg);
-      border: 1px solid rgba(191, 230, 255, 0.28);
+      border: 1px solid rgba(217, 236, 255, 0.26);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03)),
-        linear-gradient(180deg, rgba(10, 23, 44, 0.94), rgba(8, 18, 34, 0.98));
+        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+        linear-gradient(180deg, rgba(10, 23, 44, 0.95), rgba(8, 18, 34, 0.99));
       box-shadow:
-        0 10px 22px rgba(0, 0, 0, 0.24),
-        inset 0 0 24px rgba(196, 230, 255, 0.04),
-        0 0 26px rgba(143, 200, 255, 0.08);
+        0 10px 24px rgba(0, 0, 0, 0.26),
+        inset 0 0 24px rgba(217, 236, 255, 0.04),
+        0 0 24px rgba(143, 200, 255, 0.08);
+      transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease, transform 180ms ease;
       backdrop-filter: blur(10px);
-      transition: border-color 180ms ease, box-shadow 180ms ease, background 180ms ease;
     }
 
     .compass-token:hover .token-face,
     .compass-token:focus-within .token-face,
     .compass-token.is-active .token-face {
-      border-color: rgba(196, 230, 255, 0.42);
+      border-color: rgba(240, 216, 154, 0.38);
       box-shadow:
-        0 14px 28px rgba(0, 0, 0, 0.28),
-        inset 0 0 28px rgba(196, 230, 255, 0.06),
-        0 0 34px rgba(143, 200, 255, 0.15);
+        0 14px 30px rgba(0, 0, 0, 0.30),
+        inset 0 0 28px rgba(240, 216, 154, 0.05),
+        0 0 34px rgba(240, 216, 154, 0.12);
     }
 
     .token-inner {
@@ -428,7 +543,7 @@
     .token-compass {
       position: absolute;
       inset: 14px;
-      opacity: 0.42;
+      opacity: 0.38;
       transform: translateZ(6px);
     }
 
@@ -438,7 +553,7 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      background: rgba(196, 230, 255, 0.20);
+      background: rgba(217, 236, 255, 0.18);
       transform: translate(-50%, -50%);
     }
 
@@ -449,7 +564,7 @@
       position: absolute;
       inset: 20%;
       border-radius: 50%;
-      border: 1px solid rgba(196, 230, 255, 0.17);
+      border: 1px solid rgba(217, 236, 255, 0.16);
     }
 
     .token-label-wrap {
@@ -465,14 +580,14 @@
 
     .token-label {
       transform: translateZ(12px);
-      max-width: 62px;
+      max-width: 66px;
       text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-size: 0.62rem;
+      letter-spacing: 0.08em;
+      font-size: 0.64rem;
       font-weight: 800;
-      line-height: 1.14;
+      line-height: 1.15;
       text-align: center;
-      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.34);
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.36);
     }
 
     .token-meta {
@@ -480,12 +595,11 @@
       left: 50%;
       top: calc(100% + 12px);
       transform: translateX(-50%);
-      min-width: 124px;
+      min-width: 132px;
       padding: 7px 10px;
       border-radius: 999px;
-      border: 1px solid rgba(191, 230, 255, 0.18);
-      background: rgba(6, 16, 32, 0.82);
-      backdrop-filter: blur(8px);
+      border: 1px solid rgba(217, 236, 255, 0.16);
+      background: rgba(6, 16, 32, 0.84);
       color: var(--accent);
       font-size: 0.64rem;
       letter-spacing: 0.08em;
@@ -495,16 +609,19 @@
       transition: opacity 180ms ease, border-color 180ms ease;
       pointer-events: none;
       white-space: nowrap;
+      backdrop-filter: blur(8px);
     }
 
     .compass-token:hover .token-meta,
     .compass-token:focus-within .token-meta,
     .compass-token.is-active .token-meta {
       opacity: 1;
-      border-color: rgba(196, 230, 255, 0.30);
+      border-color: rgba(240, 216, 154, 0.28);
     }
 
-    .section { padding: 18px 0 42px; }
+    .section {
+      padding: 18px 0 42px;
+    }
 
     .section-head {
       display: flex;
@@ -516,83 +633,186 @@
 
     .section-head h2 {
       margin: 0;
-      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-size: clamp(1.35rem, 3vw, 2rem);
       letter-spacing: -0.02em;
     }
 
     .section-head p {
       margin: 0;
-      max-width: 62ch;
+      max-width: 54ch;
       color: var(--muted);
-      line-height: 1.7;
+      line-height: 1.68;
     }
 
-    .route-list {
+    .route-list,
+    .surface-grid,
+    .governance-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 16px;
     }
 
-    .route-card {
-      border-radius: var(--radius);
+    .route-list,
+    .surface-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .governance-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .route-card,
+    .surface-card,
+    .governance-card,
+    .vault-panel {
+      border-radius: 22px;
       border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at top right, rgba(143, 200, 255, 0.10), transparent 35%),
-        linear-gradient(180deg, rgba(11, 23, 48, 0.88), rgba(8, 18, 35, 0.92));
+      background: var(--panel);
       box-shadow: var(--shadow);
+    }
+
+    .route-card,
+    .surface-card,
+    .governance-card {
       padding: 18px;
     }
 
-    .route-card strong {
+    .route-card strong,
+    .surface-card strong,
+    .governance-card strong {
       display: block;
       margin-bottom: 10px;
-      font-size: 0.96rem;
+      font-size: 0.86rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--accent);
     }
 
-    .route-card p {
-      margin: 0 0 14px;
+    .route-card p,
+    .surface-card p,
+    .governance-card p {
+      margin: 0;
       color: var(--muted);
-      line-height: 1.6;
-      font-size: 0.96rem;
+      line-height: 1.64;
+      font-size: 0.95rem;
     }
 
-    .route-card a {
+    .route-card a,
+    .surface-card a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      margin-top: 16px;
       min-height: 40px;
       padding: 0 14px;
       border-radius: 999px;
-      border: 1px solid rgba(191, 230, 255, 0.18);
-      background: rgba(255, 255, 255, 0.04);
-      font-size: 0.86rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      border: 1px solid rgba(177, 214, 255, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
-    .footer { padding: 20px 0 52px; }
+    .route-card a:hover,
+    .route-card a:focus-visible,
+    .surface-card a:hover,
+    .surface-card a:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(217, 236, 255, 0.28);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .vault-panel {
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(240, 216, 154, 0.10), transparent 34%),
+        linear-gradient(180deg, rgba(10, 18, 32, 0.96), rgba(6, 12, 24, 0.98));
+    }
+
+    .vault-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.08fr) minmax(260px, 0.92fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .vault-panel strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .vault-panel p,
+    .vault-panel li {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.97rem;
+    }
+
+    .vault-panel ul {
+      margin: 12px 0 0;
+      padding-left: 18px;
+    }
+
+    .vault-readout {
+      border-radius: 18px;
+      border: 1px solid rgba(240, 216, 154, 0.18);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px;
+    }
+
+    .vault-readout .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(240, 216, 154, 0.08);
+    }
+
+    .vault-readout .row:last-child {
+      border-bottom: none;
+    }
+
+    .vault-readout span:first-child {
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.72rem;
+    }
+
+    .vault-readout span:last-child {
+      color: var(--text);
+      font-size: 0.9rem;
+      text-align: right;
+    }
+
+    .footer {
+      padding: 10px 0 30px;
+    }
 
     .footer-panel {
-      border-radius: 22px;
+      border-radius: 18px;
       border: 1px solid var(--line);
-      background: var(--panel);
-      padding: 18px;
+      background: rgba(9, 18, 32, 0.82);
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
     }
 
     .footer-panel p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
+      line-height: 1.6;
     }
 
-    @media (max-width: 1080px) {
+    @media (max-width: 1120px) {
       .hero-layout,
-      .summary,
-      .route-list {
+      .vault-grid,
+      .route-list,
+      .surface-grid,
+      .governance-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -603,37 +823,65 @@
         align-items: stretch;
       }
 
-      .nav { justify-content: flex-start; }
-      .hero-panel { padding: 22px; }
-      .compass-frame { min-height: 560px; }
-      .compass-frame-shell { min-height: 504px; }
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero-panel {
+        padding: 22px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .compass-frame {
+        min-height: 740px;
+      }
+
+      .compass-frame-shell {
+        min-height: 674px;
+      }
+
+      .manor-core {
+        top: 42%;
+        width: 184px;
+        height: 148px;
+        margin-left: -92px;
+        margin-top: -74px;
+      }
+
+      .vault-access {
+        top: calc(42% + 120px);
+      }
 
       .compass-token {
-        width: 74px;
-        height: 74px;
+        width: 88px;
+        height: 88px;
       }
 
       .token-label {
-        max-width: 52px;
-        font-size: 0.56rem;
+        max-width: 58px;
+        font-size: 0.60rem;
       }
 
-      .center-core-mask {
-        width: 128px;
-        height: 128px;
-        margin-left: -64px;
-        margin-top: -64px;
+      .section-head {
+        align-items: start;
+        flex-direction: column;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .compass-token,
-      .token-face,
-      .token-meta {
-        transition: none !important;
-        animation: none !important;
+      html { scroll-behavior: auto; }
+
+      .nav a,
+      .button,
+      .crumbs a,
+      .route-card a,
+      .surface-card a,
+      .token-face {
+        transition: none;
       }
-      .orbit-shell { display: none; }
     }
   </style>
 </head>
@@ -644,7 +892,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <strong>Diamond Gate Bridge</strong>
-          <span>Public entry compass with bounded Euclidean chamber</span>
+          <span>Richie’s Manor · house above · vault beneath</span>
         </span>
       </a>
 
@@ -653,6 +901,7 @@
         <a href="/explore/">Explore</a>
         <a href="/products/">Products</a>
         <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
       </nav>
     </div>
   </header>
@@ -663,36 +912,36 @@
         <div class="hero-panel">
           <div class="hero-layout">
             <div>
-              <p class="eyebrow">Index · G1 External Expression · Compass First</p>
-              <h1>Enter through the compass.</h1>
+              <p class="eyebrow">Index · Richie’s Manor · Root House Contract</p>
+              <h1>Enter through Richie’s Manor.</h1>
               <p class="hero-copy">
-                The public entry is a governed compass, not a pending shell. The home page now
-                exposes direct descendant motion through a bounded Euclidean chamber while keeping
-                hard route access clear and readable.
+                The root page is no longer a generic compass shell. It is Richie’s Manor: the public
+                house surface above, hard HTML routes around it, and vault access beneath the house.
+                Motion remains bounded, Euclidean, readable, and subordinate to structure.
               </p>
 
               <div class="hero-actions">
                 <a class="button primary" href="#primary-routes">Open primary routes</a>
+                <a class="button" href="#vault-access">Open vault access</a>
                 <a class="button" href="/explore/">Go to Explore</a>
-                <a class="button" href="/products/">Go to Products</a>
               </div>
 
-              <div class="summary" aria-label="Home compass summary">
+              <div class="summary" aria-label="Root house summary">
                 <div class="summary-card">
-                  <strong>Entry</strong>
-                  <span>House-first public compass with direct descendant access.</span>
+                  <strong>House</strong>
+                  <span>Richie’s Manor is the readable root structure above the stack.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Universe</strong>
-                  <span>Bounded internal Euclidean field for visual discipline.</span>
+                  <strong>Vault</strong>
+                  <span>Vault access is explicit beneath the house rather than implied off-screen.</span>
                 </div>
                 <div class="summary-card">
-                  <strong>Structure</strong>
-                  <span>Hard HTML routes remain readable without runtime.</span>
+                  <strong>Routes</strong>
+                  <span>Hard HTML routes remain readable even without JavaScript motion.</span>
                 </div>
                 <div class="summary-card">
                   <strong>Motion</strong>
-                  <span>Compressed 3D compass objects around a single core.</span>
+                  <span>Bounded Euclidean motion supports the house and never owns the routes.</span>
                 </div>
               </div>
 
@@ -701,14 +950,16 @@
                 <a href="/explore/">Explore</a>
                 <a href="/products/">Products</a>
                 <a href="/gauges/">Gauges</a>
+                <a href="/laws/">Laws</a>
+                <a href="#vault-access">Vault Access</a>
               </nav>
             </div>
 
             <div>
               <div class="compass-frame" id="home-compass-frame">
                 <div class="compass-frame-header">
-                  <strong>Compass Chamber</strong>
-                  <span>Governed Entry Surface</span>
+                  <strong>Richie’s Manor</strong>
+                  <span>House Surface with Vault Beneath</span>
                 </div>
 
                 <div class="compass-frame-shell">
@@ -716,7 +967,7 @@
 
                   <div class="orbit-shell" aria-hidden="true">
                     <div class="orbit-grid" id="home-orbit-grid">
-                      <article class="compass-token">
+                      <article class="compass-token" data-anchor="explore">
                         <a href="/explore/" aria-label="Explore">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -731,7 +982,7 @@
                         </a>
                       </article>
 
-                      <article class="compass-token">
+                      <article class="compass-token" data-anchor="products">
                         <a href="/products/" aria-label="Products">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -746,7 +997,7 @@
                         </a>
                       </article>
 
-                      <article class="compass-token">
+                      <article class="compass-token" data-anchor="gauges">
                         <a href="/gauges/" aria-label="Gauges">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -761,7 +1012,7 @@
                         </a>
                       </article>
 
-                      <article class="compass-token">
+                      <article class="compass-token" data-anchor="laws">
                         <a href="/laws/" aria-label="Laws">
                           <div class="token-diamond">
                             <div class="token-shadow"></div>
@@ -775,9 +1026,37 @@
                           <span class="token-meta">Structural Surface</span>
                         </a>
                       </article>
+
+                      <article class="compass-token" data-anchor="vault">
+                        <a href="#vault-access" aria-label="Vault Access">
+                          <div class="token-diamond">
+                            <div class="token-shadow"></div>
+                            <div class="token-spine"></div>
+                            <div class="token-face"></div>
+                            <div class="token-inner">
+                              <div class="token-compass"><span class="ring"></span></div>
+                              <div class="token-label-wrap"><span class="token-label">Vault</span></div>
+                            </div>
+                          </div>
+                          <span class="token-meta">Below the House</span>
+                        </a>
+                      </article>
                     </div>
 
-                    <div class="center-core-mask"></div>
+                    <div class="manor-core" aria-hidden="true">
+                      <div class="manor-house"></div>
+                      <div class="manor-windows">
+                        <span class="manor-window"></span>
+                        <span class="manor-window"></span>
+                        <span class="manor-window"></span>
+                        <span class="manor-window"></span>
+                      </div>
+                    </div>
+
+                    <div class="vault-access" aria-hidden="true">
+                      <div class="vault-shaft"></div>
+                      <div class="vault-badge">Vault Access Beneath</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -792,7 +1071,8 @@
         <div class="section-head">
           <div><h2>Primary routes</h2></div>
           <p>
-            The chamber is visual. The route surface below remains the readable HTML layer for direct entry.
+            The animated house is visual support only. The readable route layer below remains plain,
+            direct, and hard-linked in HTML.
           </p>
         </div>
 
@@ -805,7 +1085,7 @@
 
           <article class="route-card">
             <strong>Products</strong>
-            <p>Animated product-universe gateway with route-safe backlinks.</p>
+            <p>Animated product-universe gateway with route-safe access.</p>
             <a href="/products/">Open route</a>
           </article>
 
@@ -823,14 +1103,120 @@
         </div>
       </div>
     </section>
+
+    <section id="vault-access" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Vault access beneath the house</h2></div>
+          <p>
+            This root page now expresses the lower entry clearly: the vault belongs beneath Richie’s
+            Manor, not as a competing surface and not as a missing placeholder.
+          </p>
+        </div>
+
+        <div class="vault-panel">
+          <div class="vault-grid">
+            <div>
+              <strong>Vault Access Read</strong>
+              <p>
+                The house remains the top readable surface. The vault is a subordinate lower chamber
+                directly under the manor. This page establishes that relationship openly so the root
+                contract does not rely on hidden runtime assumptions.
+              </p>
+              <ul>
+                <li>House above, vault beneath.</li>
+                <li>Readable routes stay in HTML.</li>
+                <li>Motion can suggest depth but cannot replace structure.</li>
+                <li>No placeholder public route is exposed here.</li>
+              </ul>
+            </div>
+
+            <div class="vault-readout" aria-label="Vault access receipt">
+              <div class="row"><span>Root Identity</span><span>Richie’s Manor</span></div>
+              <div class="row"><span>Substructure</span><span>Vault Access Beneath House</span></div>
+              <div class="row"><span>HTML Authority</span><span>Structure and Hard Routes</span></div>
+              <div class="row"><span>JS Authority</span><span>Motion and Orchestration Only</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Secondary public surfaces</h2></div>
+          <p>
+            These remain publicly readable descendants below the root contract and can be renewed
+            later under the same baseline.
+          </p>
+        </div>
+
+        <div class="surface-grid">
+          <article class="surface-card">
+            <strong>Governance</strong>
+            <p>Policy and deployment-facing public governance surface.</p>
+            <a href="/governance/">Open surface</a>
+          </article>
+
+          <article class="surface-card">
+            <strong>About</strong>
+            <p>Project identity, framing, and public orientation surface.</p>
+            <a href="/about/">Open surface</a>
+          </article>
+
+          <article class="surface-card">
+            <strong>Contact</strong>
+            <p>Direct public contact and communication surface.</p>
+            <a href="/contact/">Open surface</a>
+          </article>
+
+          <article class="surface-card">
+            <strong>Home</strong>
+            <p>Root house receipt and structured return point.</p>
+            <a href="/">Return home</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Execution governance</h2></div>
+          <p>
+            The root page advertises the contract directly so descendant chambers inherit from one
+            clear baseline instead of mixed public assumptions.
+          </p>
+        </div>
+
+        <div class="governance-grid">
+          <article class="governance-card">
+            <strong>Structure</strong>
+            <p>HTML owns the house identity, readable labels, and hard route safety.</p>
+          </article>
+
+          <article class="governance-card">
+            <strong>Motion</strong>
+            <p>JavaScript owns bounded Euclidean motion only and does not own routes.</p>
+          </article>
+
+          <article class="governance-card">
+            <strong>Inheritance</strong>
+            <p>Descendant surfaces renew beneath one root baseline rather than local drift contracts.</p>
+          </article>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
     <div class="shell">
       <div class="footer-panel">
         <p>
-          Result / Receipt: HTML=STRUCTURE | JS=HOME_COMPASS_PROJECTION |
-          ENTRY=COMPASS_FIRST | ROUTES=HARD_HTML | MOTION=BOUNDED_3D_COMPASSES
+          Result / Receipt: HTML=STRUCTURE | JS=RICHIES_MANOR_MOTION |
+          ENTRY=RICHIES_MANOR | SUBSTRUCTURE=VAULT_BENEATH_HOUSE |
+          ROUTES=HARD_HTML | MOTION=BOUNDED_EUCLIDEAN | LABELS=READABLE
         </p>
       </div>
     </div>

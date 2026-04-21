@@ -1,370 +1,960 @@
-import { createWorldRuntime } from "/runtime/world_runtime.js";
-
-(() => {
-  "use strict";
-
-  const SELECTORS = {
-    frame: "#home-solar-frame",
-    stage: "#home-hero-stage",
-    grid: "#home-orbit-grid",
-    bodies: ".route-body",
-    centerLabel: ".solar-center-label"
-  };
-
-  const CONFIG = {
-    REDUCE_MOTION_QUERY: "(prefers-reduced-motion: reduce)",
-    DPR_CAP: 2
-  };
-
-  const frame = document.querySelector(SELECTORS.frame);
-  const stage = document.querySelector(SELECTORS.stage);
-  const grid = document.querySelector(SELECTORS.grid);
-  const bodyElements = Array.from(document.querySelectorAll(SELECTORS.bodies));
-  const centerLabel = document.querySelector(SELECTORS.centerLabel);
-
-  if (!frame || !stage || !grid || bodyElements.length === 0) return;
-
-  const reducedMotionMedia = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
-
-  const state = {
-    mounted: false,
-    rafId: 0,
-    runtime: null,
-    viewport: null,
-    pointer: { x: 0, y: 0, active: false },
-    reducedMotion: reducedMotionMedia.matches,
-    canvas: null,
-    ctx: null,
-    bodyMap: new Map()
-  };
-
-  buildStageCanvas();
-  buildBodyMap();
-
-  state.runtime = createWorldRuntime({
-    sessionId: "SOLAR_INDEX_BOOTSTRAP_SESSION"
-  });
-
-  bindEvents();
-  resize();
-  start();
-
-  function buildStageCanvas() {
-    const existingCanvas = stage.querySelector(".home-solar-canvas");
-
-    if (existingCanvas) {
-      state.canvas = existingCanvas;
-      state.ctx = existingCanvas.getContext("2d", { alpha: true });
-      return;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diamond Gate Bridge · Solar Index</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge root index with hard HTML routes and a complete nine-planet solar-system navigation chamber."
+  />
+  <style>
+    :root {
+      --bg-0: #020711;
+      --bg-1: #071222;
+      --bg-2: #0b1830;
+      --panel: rgba(9, 19, 36, 0.84);
+      --panel-soft: rgba(255, 255, 255, 0.04);
+      --line: rgba(177, 214, 255, 0.16);
+      --text: #eef5ff;
+      --muted: #abc0da;
+      --accent: #d7ecff;
+      --gold: #f0d89a;
+      --shadow: 0 24px 56px rgba(0, 0, 0, 0.34);
+      --radius-xl: 30px;
+      --max: 1280px;
+      --focus: 0 0 0 3px rgba(196, 229, 255, 0.22);
     }
 
-    const canvas = document.createElement("canvas");
-    canvas.className = "home-solar-canvas";
-    canvas.style.position = "absolute";
-    canvas.style.inset = "0";
-    canvas.style.width = "100%";
-    canvas.style.height = "100%";
-    canvas.style.display = "block";
-    stage.prepend(canvas);
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
 
-    state.canvas = canvas;
-    state.ctx = canvas.getContext("2d", { alpha: true });
-  }
-
-  function buildBodyMap() {
-    bodyElements.forEach((el) => {
-      const key = String(el.dataset.planet || "").trim().toLowerCase();
-      if (!key) return;
-
-      const body = el.querySelector(".planet-body");
-      const label = el.querySelector(".planet-label");
-      const meta = el.querySelector(".planet-meta");
-
-      state.bodyMap.set(key, {
-        el,
-        body,
-        label,
-        meta
-      });
-
-      el.addEventListener("mouseenter", () => el.classList.add("is-active"));
-      el.addEventListener("mouseleave", () => el.classList.remove("is-active"));
-      el.addEventListener("focusin", () => el.classList.add("is-active"));
-      el.addEventListener("focusout", () => el.classList.remove("is-active"));
-    });
-  }
-
-  function bindEvents() {
-    window.addEventListener("resize", onResize, { passive: true });
-    frame.addEventListener("pointermove", onPointerMove, { passive: true });
-    frame.addEventListener("pointerleave", onPointerLeave, { passive: true });
-    reducedMotionMedia.addEventListener("change", onReducedMotionChange);
-    document.addEventListener("visibilitychange", onVisibilityChange);
-    window.addEventListener("beforeunload", destroy, { once: true });
-  }
-
-  function onResize() {
-    resize();
-    renderFrame();
-  }
-
-  function onPointerMove(event) {
-    const rect = frame.getBoundingClientRect();
-    const x = ((event.clientX - rect.left) / Math.max(1, rect.width)) * 2 - 1;
-    const y = ((event.clientY - rect.top) / Math.max(1, rect.height)) * 2 - 1;
-
-    state.pointer = {
-      x: clamp(x, -1, 1),
-      y: clamp(y, -1, 1),
-      active: true
-    };
-  }
-
-  function onPointerLeave() {
-    state.pointer = { x: 0, y: 0, active: false };
-  }
-
-  function onReducedMotionChange(event) {
-    state.reducedMotion = event.matches;
-    state.runtime.setReducedMotion(state.reducedMotion);
-
-    if (state.reducedMotion) {
-      stopLoop();
-      renderFrame();
-    } else {
-      startLoop();
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 14% 12%, rgba(110, 158, 255, 0.18), transparent 20%),
+        radial-gradient(circle at 82% 16%, rgba(106, 228, 255, 0.10), transparent 18%),
+        radial-gradient(circle at 50% 86%, rgba(129, 124, 255, 0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 44%, var(--bg-2) 100%);
     }
-  }
 
-  function onVisibilityChange() {
-    if (document.hidden) {
-      stopLoop();
-    } else if (!state.reducedMotion) {
-      startLoop();
+    a {
+      color: inherit;
+      text-decoration: none;
     }
-  }
 
-  function resize() {
-    const rect = stage.getBoundingClientRect();
-    const width = Math.max(320, Math.floor(rect.width));
-    const height = Math.max(420, Math.floor(rect.height));
-    const dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
-
-    state.viewport = { width, height, dpr };
-
-    if (state.canvas && state.ctx) {
-      state.canvas.width = Math.floor(width * dpr);
-      state.canvas.height = Math.floor(height * dpr);
-      state.canvas.style.width = `${width}px`;
-      state.canvas.style.height = `${height}px`;
-      state.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    a:focus-visible,
+    button:focus-visible {
+      outline: none;
+      box-shadow: var(--focus);
     }
-  }
 
-  function start() {
-    state.runtime.start(state.viewport, {
-      reducedMotion: state.reducedMotion,
-      pointer: state.pointer
-    });
-
-    renderFrame();
-
-    if (!state.reducedMotion) {
-      startLoop();
+    .shell {
+      width: min(100% - 28px, var(--max));
+      margin: 0 auto;
     }
-  }
 
-  function startLoop() {
-    if (state.mounted) return;
-    state.mounted = true;
-    state.rafId = requestAnimationFrame(loop);
-  }
-
-  function stopLoop() {
-    state.mounted = false;
-    if (state.rafId) {
-      cancelAnimationFrame(state.rafId);
-      state.rafId = 0;
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      background: rgba(4, 10, 20, 0.76);
+      border-bottom: 1px solid rgba(177, 214, 255, 0.12);
     }
-  }
 
-  function loop() {
-    if (!state.mounted) return;
-    renderFrame();
-    state.rafId = requestAnimationFrame(loop);
-  }
+    .topbar-inner {
+      width: min(100% - 28px, var(--max));
+      margin: 0 auto;
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 0;
+    }
 
-  function renderFrame() {
-    state.runtime.setPointer(state.pointer);
-    state.runtime.setReducedMotion(state.reducedMotion);
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
 
-    const snapshot = state.runtime.update(state.viewport, {
-      reducedMotion: state.reducedMotion,
-      pointer: state.pointer
-    });
+    .brand-mark {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      border: 1px solid rgba(217, 236, 255, 0.24);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)),
+        radial-gradient(circle at 50% 45%, rgba(255, 229, 157, 0.86), rgba(255, 180, 88, 0.18) 42%, transparent 68%),
+        linear-gradient(180deg, rgba(24, 40, 68, 0.96), rgba(11, 19, 34, 0.98));
+      box-shadow:
+        inset 0 0 22px rgba(255, 239, 198, 0.08),
+        0 0 24px rgba(148, 202, 255, 0.08);
+      flex: 0 0 auto;
+    }
 
-    if (!snapshot || !snapshot.sceneState) return;
+    .brand-copy {
+      min-width: 0;
+    }
 
-    drawCanvas(snapshot.sceneState);
-    applyPlanetState(snapshot.sceneState);
-    applyCenterLabel(snapshot.sceneState);
-  }
+    .brand-copy strong {
+      display: block;
+      font-size: 0.96rem;
+      letter-spacing: 0.04em;
+    }
 
-  function drawCanvas(sceneState) {
-    if (!state.ctx || !state.canvas) return;
+    .brand-copy span {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 0.82rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-    const ctx = state.ctx;
-    const width = state.viewport.width;
-    const height = state.viewport.height;
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
 
-    ctx.clearRect(0, 0, width, height);
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(177, 214, 255, 0.14);
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 0.92rem;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
 
-    drawBackgroundGlow(ctx, width, height, sceneState);
-    drawStars(ctx, sceneState.stars || []);
-    drawOrbitRings(ctx, sceneState.orbitRings || []);
-    drawSun(ctx, sceneState.sun);
-  }
+    .nav a:hover,
+    .nav a:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(217, 236, 255, 0.30);
+      background: rgba(255, 255, 255, 0.06);
+    }
 
-  function drawBackgroundGlow(ctx, width, height, sceneState) {
-    const sun = sceneState.sun || { viewport: { x: width * 0.5, y: height * 0.5 } };
-    const centerX = Number((sun.viewport || {}).x || width * 0.5);
-    const centerY = Number((sun.viewport || {}).y || height * 0.5);
+    .nav a[aria-current="page"] {
+      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.08));
+      border-color: rgba(217, 236, 255, 0.30);
+      box-shadow: inset 0 0 0 1px rgba(217, 236, 255, 0.06);
+    }
 
-    const glow = ctx.createRadialGradient(centerX, centerY, 6, centerX, centerY, 150);
-    glow.addColorStop(0, "rgba(255,250,224,0.98)");
-    glow.addColorStop(0.10, "rgba(255,232,170,0.94)");
-    glow.addColorStop(0.30, "rgba(255,196,98,0.58)");
-    glow.addColorStop(0.58, "rgba(255,160,74,0.18)");
-    glow.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = glow;
-    ctx.fillRect(0, 0, width, height);
-  }
+    .hero {
+      padding: 42px 0 26px;
+    }
 
-  function drawStars(ctx, stars) {
-    stars.forEach((star) => {
-      ctx.beginPath();
-      ctx.fillStyle = `rgba(232,242,255,${Number(star.alpha || 0)})`;
-      ctx.arc(
-        Number(star.x || 0),
-        Number(star.y || 0),
-        Number(star.size || 0),
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-    });
-  }
+    .hero-panel {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 12%, rgba(191, 225, 255, 0.10), transparent 28%),
+        linear-gradient(180deg, rgba(14, 28, 52, 0.94), rgba(7, 15, 29, 0.98));
+      box-shadow: var(--shadow);
+      padding: 30px;
+    }
 
-  function drawOrbitRings(ctx, rings) {
-    ctx.save();
-    ctx.lineWidth = 1;
+    .hero-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.88fr) minmax(480px, 1.12fr);
+      gap: 28px;
+      align-items: start;
+    }
 
-    rings.forEach((ring) => {
-      const center = ring.center || { x: 0, y: 0 };
-      ctx.beginPath();
-      ctx.strokeStyle = "rgba(180,214,255,0.10)";
-      ctx.ellipse(
-        Number(center.x || 0),
-        Number(center.y || 0),
-        Number(ring.radiusPxX || 0),
-        Number(ring.radiusPxY || 0),
-        0,
-        0,
-        Math.PI * 2
-      );
-      ctx.stroke();
-    });
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent);
+      font-size: 0.84rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
 
-    ctx.restore();
-  }
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.45rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      max-width: 12ch;
+    }
 
-  function drawSun(ctx, sun) {
-    if (!sun) return;
+    .hero-copy {
+      max-width: 68ch;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 1.02rem;
+      line-height: 1.72;
+    }
 
-    const viewport = sun.viewport || { x: 0, y: 0 };
-    const x = Number(viewport.x || 0);
-    const y = Number(viewport.y || 0);
-    const radiusPx = Number(sun.radiusPx || 0);
+    .hero-actions,
+    .crumbs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
 
-    const corona = ctx.createRadialGradient(x, y, 0, x, y, radiusPx * 1.45);
-    corona.addColorStop(0, "rgba(255,255,246,1)");
-    corona.addColorStop(0.20, "rgba(255,246,198,0.98)");
-    corona.addColorStop(0.52, "rgba(255,214,116,0.90)");
-    corona.addColorStop(1, "rgba(255,168,70,0)");
-    ctx.fillStyle = corona;
-    ctx.beginPath();
-    ctx.arc(x, y, radiusPx * 1.45, 0, Math.PI * 2);
-    ctx.fill();
+    .button,
+    .crumbs a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(177, 214, 255, 0.16);
+      background: rgba(255, 255, 255, 0.04);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
 
-    ctx.beginPath();
-    ctx.fillStyle = "rgba(255,244,204,0.98)";
-    ctx.arc(x, y, radiusPx * 0.62, 0, Math.PI * 2);
-    ctx.fill();
+    .button:hover,
+    .button:focus-visible,
+    .crumbs a:hover,
+    .crumbs a:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(217, 236, 255, 0.28);
+      background: rgba(255, 255, 255, 0.06);
+    }
 
-    ctx.beginPath();
-    ctx.strokeStyle = "rgba(255,216,132,0.22)";
-    ctx.lineWidth = 2;
-    ctx.arc(x, y, radiusPx * 1.88, 0, Math.PI * 2);
-    ctx.stroke();
-  }
+    .button.primary {
+      border-color: rgba(240, 216, 154, 0.34);
+      background: linear-gradient(180deg, rgba(240, 216, 154, 0.24), rgba(240, 216, 154, 0.08));
+    }
 
-  function applyPlanetState(sceneState) {
-    const planets = Array.isArray(sceneState.planets) ? sceneState.planets : [];
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
+    }
 
-    planets.forEach((planet) => {
-      const mapped = state.bodyMap.get(String(planet.key || "").toLowerCase());
-      if (!mapped) return;
+    .summary-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      padding: 16px 16px 14px;
+      backdrop-filter: blur(8px);
+    }
 
-      const el = mapped.el;
-      const body = mapped.body;
-      const meta = mapped.meta;
+    .summary-card strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.84rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
 
-      const radiusPx = Number(planet.radiusPx || 0);
-      const x = Number((planet.viewport || {}).x || 0);
-      const y = Number((planet.viewport || {}).y || 0);
-      const scale = Number(planet.scale || 1);
-      const opacity = Number(planet.opacity || 1);
-      const zIndex = Number(planet.zIndex || 1);
-      const angle = Number(planet.angle || 0);
+    .summary-card span {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
 
-      const diameter = radiusPx * 2;
+    .solar-frame {
+      position: relative;
+      min-height: 780px;
+      border-radius: 30px;
+      border: 1px solid rgba(217, 236, 255, 0.18);
+      background:
+        radial-gradient(circle at 50% 24%, rgba(240, 216, 154, 0.06), transparent 28%),
+        linear-gradient(180deg, rgba(9, 19, 36, 0.94), rgba(8, 17, 31, 0.98));
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.03),
+        inset 0 0 60px rgba(143, 200, 255, 0.04),
+        0 22px 60px rgba(0, 0, 0, 0.30);
+      overflow: hidden;
+      isolation: isolate;
+    }
 
-      el.style.width = `${diameter}px`;
-      el.style.height = `${diameter}px`;
-      el.style.transform = `translate3d(${(x - radiusPx).toFixed(2)}px, ${(y - radiusPx).toFixed(2)}px, 0)`;
-      el.style.opacity = opacity.toFixed(3);
-      el.style.zIndex = String(zIndex);
+    .solar-frame-header {
+      position: relative;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px 0;
+    }
 
-      if (body) {
-        const hoverBoost = el.classList.contains("is-active") ? 0.05 : 0;
-        const bodyScale = scale + hoverBoost;
-        const spin = angle * 0.65;
-        body.style.transform = `rotate(${spin.toFixed(3)}rad) scale(${bodyScale.toFixed(3)})`;
+    .solar-frame-header strong {
+      display: block;
+      font-size: 0.84rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .solar-frame-header span {
+      color: var(--muted);
+      font-size: 0.76rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .solar-frame-shell {
+      position: relative;
+      height: calc(100% - 54px);
+      min-height: 720px;
+      padding: 14px;
+    }
+
+    .hero-stage {
+      position: absolute;
+      inset: 14px;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
+    .solar-shell {
+      position: absolute;
+      inset: 14px;
+      z-index: 3;
+      overflow: hidden;
+      border-radius: 22px;
+    }
+
+    .solar-grid {
+      position: absolute;
+      inset: 0;
+    }
+
+    .solar-center-label {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, calc(-50% + 86px));
+      z-index: 6;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(240, 216, 154, 0.24);
+      background: rgba(7, 15, 28, 0.78);
+      color: var(--gold);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      pointer-events: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .route-body {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 96px;
+      height: 96px;
+      pointer-events: auto;
+    }
+
+    .route-body a {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .planet-body {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 1px solid rgba(217, 236, 255, 0.22);
+      box-shadow:
+        0 14px 34px rgba(0, 0, 0, 0.34),
+        inset -14px -18px 28px rgba(0, 0, 0, 0.28),
+        inset 8px 10px 16px rgba(255, 255, 255, 0.06),
+        0 0 28px rgba(143, 200, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .planet-body::before {
+      content: "";
+      position: absolute;
+      inset: 18% 56% 54% 14%;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      filter: blur(2px);
+    }
+
+    .planet-body::after {
+      content: "";
+      position: absolute;
+      inset: auto 14% 18% auto;
+      width: 18%;
+      height: 18%;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.12);
+      filter: blur(4px);
+    }
+
+    .planet-label-wrap {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+
+    .planet-label {
+      display: inline-block;
+      max-width: 68px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.62rem;
+      font-weight: 800;
+      line-height: 1.15;
+      text-align: center;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.36);
+    }
+
+    .planet-meta {
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 10px);
+      transform: translateX(-50%);
+      min-width: 110px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(217, 236, 255, 0.16);
+      background: rgba(6, 16, 32, 0.84);
+      color: var(--accent);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-align: center;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
+      pointer-events: none;
+    }
+
+    .planet-mercury .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(164, 170, 180, 0.24), rgba(20, 23, 31, 0.98) 68%);
+    }
+
+    .planet-venus .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(219, 176, 124, 0.28), rgba(36, 24, 16, 0.98) 68%);
+    }
+
+    .planet-earth .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.28), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(92, 156, 255, 0.28), rgba(10, 24, 42, 0.98) 68%);
+    }
+
+    .planet-mars .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(201, 111, 95, 0.28), rgba(34, 14, 14, 0.98) 68%);
+    }
+
+    .planet-jupiter .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.26), rgba(255,255,255,0.10) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), linear-gradient(180deg, rgba(203, 171, 141, 0.94), rgba(137, 104, 76, 0.94) 28%, rgba(183, 152, 120, 0.94) 52%, rgba(128, 90, 66, 0.94) 74%, rgba(88, 57, 43, 0.96));
+    }
+
+    .planet-saturn .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(217, 197, 145, 0.28), rgba(46, 36, 18, 0.98) 68%);
+    }
+
+    .planet-uranus .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(146, 216, 221, 0.28), rgba(16, 35, 42, 0.98) 68%);
+    }
+
+    .planet-neptune .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.24), rgba(255,255,255,0.08) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(88, 120, 255, 0.28), rgba(10, 18, 44, 0.98) 68%);
+    }
+
+    .planet-pluto .planet-body {
+      background: radial-gradient(circle at 34% 30%, rgba(255,255,255,0.22), rgba(255,255,255,0.06) 15%, rgba(12,25,45,0.18) 22%, rgba(12,25,45,0) 23%), radial-gradient(circle at 50% 50%, rgba(181, 165, 152, 0.22), rgba(20, 18, 18, 0.98) 68%);
+    }
+
+    .section {
+      padding: 18px 0 42px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 3vw, 2rem);
+      letter-spacing: -0.02em;
+    }
+
+    .section-head p {
+      margin: 0;
+      max-width: 54ch;
+      color: var(--muted);
+      line-height: 1.68;
+    }
+
+    .route-list,
+    .surface-grid,
+    .governance-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .route-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .surface-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .governance-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .route-card,
+    .surface-card,
+    .governance-card {
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .route-card strong,
+    .surface-card strong,
+    .governance-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .route-card p,
+    .surface-card p,
+    .governance-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.64;
+      font-size: 0.95rem;
+    }
+
+    .route-card a,
+    .surface-card a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 16px;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(177, 214, 255, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .footer {
+      padding: 10px 0 30px;
+    }
+
+    .footer-panel {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(9, 18, 32, 0.82);
+      padding: 14px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .footer-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 1180px) {
+      .hero-layout,
+      .route-list,
+      .surface-grid,
+      .governance-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .topbar-inner {
+        flex-direction: column;
+        align-items: stretch;
       }
 
-      if (meta) {
-        meta.style.transform = "translateX(-50%)";
+      .nav {
+        justify-content: flex-start;
       }
-    });
-  }
 
-  function applyCenterLabel(sceneState) {
-    if (!centerLabel || !sceneState || !sceneState.sun) return;
+      .hero-panel {
+        padding: 22px;
+      }
 
-    centerLabel.textContent = "Solar Center";
-  }
+      .summary {
+        grid-template-columns: 1fr;
+      }
 
-  function destroy() {
-    stopLoop();
-    if (state.runtime) {
-      state.runtime.destroy();
+      .solar-frame {
+        min-height: 840px;
+      }
+
+      .solar-frame-shell {
+        min-height: 780px;
+      }
+
+      .route-body {
+        width: 82px;
+        height: 82px;
+      }
+
+      .planet-label {
+        max-width: 56px;
+        font-size: 0.56rem;
+      }
+
+      .planet-meta {
+        min-width: 94px;
+        font-size: 0.52rem;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
+      }
     }
-  }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-copy">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Solar index · nine planets · one orbital template</span>
+        </span>
+      </a>
 
-  function clamp(value, min, max) {
-    if (!Number.isFinite(value)) return min;
-    if (value < min) return min;
-    if (value > max) return max;
-    return value;
-  }
-})();
+      <nav class="nav" aria-label="Primary">
+        <a href="/" aria-current="page">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-panel">
+          <div class="hero-layout">
+            <div>
+              <p class="eyebrow">Index · Complete Solar System Contract</p>
+              <h1>Complete the solar system.</h1>
+              <p class="hero-copy">
+                The index now uses the full nine-planet template. One sun sits at the center. Nine
+                route bodies inherit the same orbital system. This page does solar navigation only.
+              </p>
+
+              <div class="hero-actions">
+                <a class="button primary" href="#primary-routes">Open all nine items</a>
+                <a class="button" href="/explore/">Go to Explore</a>
+              </div>
+
+              <div class="summary" aria-label="Solar system summary">
+                <div class="summary-card">
+                  <strong>Center</strong>
+                  <span>The center object is the sun only.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Count</strong>
+                  <span>Nine route bodies now exist in the chamber.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Template</strong>
+                  <span>The solar system is the governing template.</span>
+                </div>
+                <div class="summary-card">
+                  <strong>Rule</strong>
+                  <span>All nine planets will follow the same orbital law in the runtime file.</span>
+                </div>
+              </div>
+
+              <nav class="crumbs" aria-label="Home context links">
+                <a href="/">Home</a>
+                <a href="/explore/">Explore</a>
+                <a href="/products/">Products</a>
+                <a href="/gauges/">Gauges</a>
+                <a href="/laws/">Laws</a>
+                <a href="/governance/">Governance</a>
+                <a href="/about/">About</a>
+                <a href="/contact/">Contact</a>
+                <a href="#primary-routes">Nine Planets</a>
+              </nav>
+            </div>
+
+            <div>
+              <div class="solar-frame" id="home-solar-frame">
+                <div class="solar-frame-header">
+                  <strong>Solar Navigation</strong>
+                  <span>Sun Center · Nine Planets</span>
+                </div>
+
+                <div class="solar-frame-shell">
+                  <div class="hero-stage" id="home-hero-stage" aria-hidden="true"></div>
+
+                  <div class="solar-shell" aria-hidden="true">
+                    <div class="solar-grid" id="home-orbit-grid">
+                      <article class="route-body planet-mercury" data-planet="mercury" data-route="/explore/">
+                        <a href="/explore/" aria-label="Mercury · Explore">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Explore</span></div>
+                          <span class="planet-meta">Mercury</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-venus" data-planet="venus" data-route="/products/">
+                        <a href="/products/" aria-label="Venus · Products">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Products</span></div>
+                          <span class="planet-meta">Venus</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-earth" data-planet="earth" data-route="/gauges/">
+                        <a href="/gauges/" aria-label="Earth · Gauges">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Gauges</span></div>
+                          <span class="planet-meta">Earth</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-mars" data-planet="mars" data-route="/laws/">
+                        <a href="/laws/" aria-label="Mars · Laws">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Laws</span></div>
+                          <span class="planet-meta">Mars</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-jupiter" data-planet="jupiter" data-route="/governance/">
+                        <a href="/governance/" aria-label="Jupiter · Governance">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Governance</span></div>
+                          <span class="planet-meta">Jupiter</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-saturn" data-planet="saturn" data-route="/about/">
+                        <a href="/about/" aria-label="Saturn · About">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">About</span></div>
+                          <span class="planet-meta">Saturn</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-uranus" data-planet="uranus" data-route="/contact/">
+                        <a href="/contact/" aria-label="Uranus · Contact">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Contact</span></div>
+                          <span class="planet-meta">Uranus</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-neptune" data-planet="neptune" data-route="/">
+                        <a href="/" aria-label="Neptune · Home">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Home</span></div>
+                          <span class="planet-meta">Neptune</span>
+                        </a>
+                      </article>
+
+                      <article class="route-body planet-pluto" data-planet="pluto" data-route="#primary-routes">
+                        <a href="#primary-routes" aria-label="Pluto · Nine Routes">
+                          <div class="planet-body"></div>
+                          <div class="planet-label-wrap"><span class="planet-label">Routes</span></div>
+                          <span class="planet-meta">Pluto</span>
+                        </a>
+                      </article>
+                    </div>
+
+                    <div class="solar-center-label">Solar Center</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="primary-routes" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Nine planetary items</h2></div>
+          <p>
+            These are the nine route bodies now present in the chamber. The next file will position
+            them on the shared orbital system.
+          </p>
+        </div>
+
+        <div class="route-list">
+          <article class="route-card">
+            <strong>Mercury · Explore</strong>
+            <p>Frontier and discovery surface.</p>
+            <a href="/explore/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Venus · Products</strong>
+            <p>Product page remains separate from the index chamber concept.</p>
+            <a href="/products/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Earth · Gauges</strong>
+            <p>Telemetry and stability read layer.</p>
+            <a href="/gauges/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Mars · Laws</strong>
+            <p>Constraint and admissibility layer.</p>
+            <a href="/laws/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Jupiter · Governance</strong>
+            <p>Deployment and governance surface.</p>
+            <a href="/governance/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Saturn · About</strong>
+            <p>Project identity and orientation layer.</p>
+            <a href="/about/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Uranus · Contact</strong>
+            <p>Direct communication surface.</p>
+            <a href="/contact/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Neptune · Home</strong>
+            <p>Root return path.</p>
+            <a href="/">Open route</a>
+          </article>
+
+          <article class="route-card">
+            <strong>Pluto · Routes</strong>
+            <p>Ninth item completing the chamber count.</p>
+            <a href="#primary-routes">Open item</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Secondary public surfaces</h2></div>
+          <p>
+            The chamber count is now complete. Motion is still pending until the next single-file runtime pass.
+          </p>
+        </div>
+
+        <div class="surface-grid">
+          <article class="surface-card">
+            <strong>Explore</strong>
+            <p>Discovery surface.</p>
+            <a href="/explore/">Open surface</a>
+          </article>
+
+          <article class="surface-card">
+            <strong>Products</strong>
+            <p>Products surface.</p>
+            <a href="/products/">Open surface</a>
+          </article>
+
+          <article class="surface-card">
+            <strong>Gauges</strong>
+            <p>Monitoring surface.</p>
+            <a href="/gauges/">Open surface</a>
+          </article>
+
+          <article class="surface-card">
+            <strong>Laws</strong>
+            <p>Law surface.</p>
+            <a href="/laws/">Open surface</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div><h2>Execution governance</h2></div>
+          <p>
+            This file now handles one thing only: the complete nine-planet HTML structure.
+          </p>
+        </div>
+
+        <div class="governance-grid">
+          <article class="governance-card">
+            <strong>Count</strong>
+            <p>Nine route bodies are now present in the markup.</p>
+          </article>
+
+          <article class="governance-card">
+            <strong>Center</strong>
+            <p>The center remains reserved for the sun only.</p>
+          </article>
+
+          <article class="governance-card">
+            <strong>Next File</strong>
+            <p>`/index.js` must now place all nine planets on the shared solar template.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">
+      <div class="footer-panel">
+        <p>
+          Result / Receipt: HTML=STRUCTURE | PAGE=SOLAR_INDEX |
+          CENTER=SUN | PLANET_COUNT=9 | TEMPLATE=SOLAR_SYSTEM |
+          MOTION_PENDING_IN_INDEX_JS=TRUE
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/index.js"></script>
+</body>
+</html>

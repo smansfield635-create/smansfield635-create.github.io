@@ -9,35 +9,31 @@
   };
 
   const CONFIG = {
-    UNIVERSE_WIDTH_KM: 256000,
-    UNIVERSE_HEIGHT_KM: 256000,
     REDUCE_MOTION_QUERY: "(prefers-reduced-motion: reduce)",
     MOBILE_BREAKPOINT: 760,
     DPR_CAP: 2,
 
     STAR_COUNT: 120,
-    PARTICLE_COUNT: 14,
+    DUST_COUNT: 16,
 
-    DESKTOP_ORBIT_WIDTH_KM: 124000,
-    DESKTOP_ORBIT_HEIGHT_KM: 84000,
-    MOBILE_ORBIT_WIDTH_KM: 92000,
-    MOBILE_ORBIT_HEIGHT_KM: 108000,
+    DESKTOP_ORBIT_WIDTH: 420,
+    DESKTOP_ORBIT_HEIGHT: 258,
+    MOBILE_ORBIT_WIDTH: 300,
+    MOBILE_ORBIT_HEIGHT: 226,
 
-    TOKEN_SCALE_MIN: 0.76,
+    ORBIT_SPEED_RAD_MS: 0.00018,
+    WOBBLE_PX_X: 8,
+    WOBBLE_PX_Y: 6,
+    POINTER_PX_X: 12,
+    POINTER_PX_Y: 10,
+
+    TOKEN_SCALE_MIN: 0.78,
     TOKEN_SCALE_MAX: 1.04,
-    TOKEN_OPACITY_MIN: 0.58,
-    TOKEN_OPACITY_MAX: 1,
-
-    ORBIT_SPEED_RAD_MS: 0.00022,
-    BODY_SPIN_DEG_MS: 0.014,
-
-    WOBBLE_KM_X: 2600,
-    WOBBLE_KM_Y: 1800,
-    POINTER_KM_X: 3600,
-    POINTER_KM_Y: 2800,
+    TOKEN_OPACITY_MIN: 0.56,
+    TOKEN_OPACITY_MAX: 1.0,
 
     CENTER_X_RATIO: 0.5,
-    CENTER_Y_RATIO: 0.52
+    CENTER_Y_RATIO: 0.46
   };
 
   const state = {
@@ -52,7 +48,7 @@
     pointerY: 0,
     pointerActive: false,
     stars: [],
-    particles: [],
+    dust: [],
     tokens: [],
     canvas: null,
     ctx: null
@@ -72,37 +68,44 @@
   bindTokens();
   resize();
   seedStars();
-  seedParticles();
+  seedDust();
   bindEvents();
 
-  if (state.reducedMotion) applyReducedMotionState();
-  else start();
+  if (state.reducedMotion) {
+    applyReducedMotionState();
+  } else {
+    start();
+  }
 
   function buildStage() {
     stage.innerHTML = `
-      <canvas class="home-compass-canvas"></canvas>
-      <div class="home-compass-glow glow-a"></div>
-      <div class="home-compass-glow glow-b"></div>
-      <div class="home-compass-core"></div>
-      <div class="home-compass-ring ring-a"></div>
-      <div class="home-compass-ring ring-b"></div>
-      <div class="home-compass-ring ring-c"></div>
+      <canvas class="home-manor-canvas"></canvas>
+      <div class="home-manor-glow glow-a"></div>
+      <div class="home-manor-glow glow-b"></div>
+      <div class="home-manor-atmosphere"></div>
     `;
 
     injectRuntimeStyles();
 
-    state.canvas = stage.querySelector(".home-compass-canvas");
+    state.canvas = stage.querySelector(".home-manor-canvas");
+    if (!state.canvas) return;
+
     state.ctx = state.canvas.getContext("2d", { alpha: true });
   }
 
   function bindTokens() {
-    const step = (Math.PI * 2) / tokenElements.length;
-    const laneBands = [1.00, 0.92, 1.08, 0.96];
+    const baseConfig = {
+      explore: { baseAngle: -Math.PI / 2, lane: 1.00 },
+      products: { baseAngle: -0.22, lane: 1.08 },
+      gauges: { baseAngle: 0.82, lane: 0.98 },
+      laws: { baseAngle: Math.PI + 0.35, lane: 0.94 },
+      vault: { baseAngle: Math.PI / 2, lane: 0.58, lockBelow: true }
+    };
 
     state.tokens = tokenElements.map((el, index) => {
-      const baseAngle = step * index - Math.PI / 2;
-      const phase = baseAngle + index * 0.37;
-      const laneBand = laneBands[index % laneBands.length];
+      const key = String(el.dataset.anchor || "").trim().toLowerCase();
+      const fallbackAngle = -Math.PI / 2 + index * ((Math.PI * 2) / Math.max(1, tokenElements.length));
+      const entry = baseConfig[key] || { baseAngle: fallbackAngle, lane: 1.0, lockBelow: false };
       const diamond = el.querySelector(".token-diamond");
       const labelWrap = el.querySelector(".token-label-wrap");
 
@@ -111,74 +114,57 @@
       el.addEventListener("focusin", () => el.classList.add("is-active"));
       el.addEventListener("focusout", () => el.classList.remove("is-active"));
 
-      return { el, diamond, labelWrap, baseAngle, phase, laneBand };
+      return {
+        key,
+        el,
+        diamond,
+        labelWrap,
+        baseAngle: entry.baseAngle,
+        lane: entry.lane,
+        lockBelow: entry.lockBelow === true
+      };
     });
-  }
-
-  function resize() {
-    const rect = stage.getBoundingClientRect();
-    state.width = Math.max(320, Math.floor(rect.width));
-    state.height = Math.max(320, Math.floor(rect.height));
-    state.dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
-
-    state.canvas.width = Math.floor(state.width * state.dpr);
-    state.canvas.height = Math.floor(state.height * state.dpr);
-    state.canvas.style.width = `${state.width}px`;
-    state.canvas.style.height = `${state.height}px`;
-    state.ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
-  }
-
-  function seedStars() {
-    state.stars = Array.from({ length: CONFIG.STAR_COUNT }, () => ({
-      x: Math.random() * state.width,
-      y: Math.random() * state.height,
-      r: Math.random() * 1.25 + 0.25,
-      a: Math.random() * 0.7 + 0.14,
-      tw: Math.random() * Math.PI * 2,
-      speed: 0.35 + Math.random()
-    }));
-  }
-
-  function seedParticles() {
-    state.particles = Array.from({ length: CONFIG.PARTICLE_COUNT }, () => ({
-      angle: Math.random() * Math.PI * 2,
-      radiusXKm: 14000 + Math.random() * getOrbitWidthKm() * 0.42,
-      radiusYKm: 11000 + Math.random() * getOrbitHeightKm() * 0.42,
-      size: 1.4 + Math.random() * 2.2,
-      speed: 0.22 + Math.random() * 0.48,
-      alpha: 0.08 + Math.random() * 0.14
-    }));
   }
 
   function bindEvents() {
     window.addEventListener("resize", onResize, { passive: true });
-    window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerleave", onPointerLeave, { passive: true });
+    frame.addEventListener("pointermove", onPointerMove, { passive: true });
+    frame.addEventListener("pointerleave", onPointerLeave, { passive: true });
     document.addEventListener("visibilitychange", onVisibilityChange);
     reducedMotionMedia.addEventListener("change", onReducedMotionChange);
-    window.addEventListener("beforeunload", () => stop(), { once: true });
+    window.addEventListener("beforeunload", stop, { once: true });
   }
 
   function onResize() {
     resize();
     seedStars();
-    seedParticles();
-    if (state.reducedMotion) applyReducedMotionState();
+    seedDust();
+    if (state.reducedMotion) {
+      applyReducedMotionState();
+    }
   }
 
   function onPointerMove(event) {
+    const rect = frame.getBoundingClientRect();
+    const localX = event.clientX - rect.left;
+    const localY = event.clientY - rect.top;
     state.pointerActive = true;
-    state.pointerX = event.clientX;
-    state.pointerY = event.clientY;
+    state.pointerX = clamp((localX / Math.max(1, rect.width)) * 2 - 1, -1, 1);
+    state.pointerY = clamp((localY / Math.max(1, rect.height)) * 2 - 1, -1, 1);
   }
 
   function onPointerLeave() {
     state.pointerActive = false;
+    state.pointerX = 0;
+    state.pointerY = 0;
   }
 
   function onVisibilityChange() {
-    if (document.hidden) stop();
-    else if (!state.reducedMotion) start();
+    if (document.hidden) {
+      stop();
+    } else if (!state.reducedMotion) {
+      start();
+    }
   }
 
   function onReducedMotionChange(event) {
@@ -200,7 +186,9 @@
 
   function stop() {
     state.mounted = false;
-    if (state.rafId) cancelAnimationFrame(state.rafId);
+    if (state.rafId) {
+      cancelAnimationFrame(state.rafId);
+    }
     state.rafId = 0;
   }
 
@@ -208,322 +196,266 @@
     if (!state.mounted || state.reducedMotion) return;
 
     const elapsed = ts - state.startTs;
-    drawUniverse(elapsed);
+    drawField(elapsed);
     moveShell(elapsed);
     positionTokens(elapsed);
 
     state.rafId = requestAnimationFrame(tick);
   }
 
-  function drawUniverse(elapsed) {
+  function resize() {
+    const rect = stage.getBoundingClientRect();
+    state.width = Math.max(320, Math.floor(rect.width));
+    state.height = Math.max(360, Math.floor(rect.height));
+    state.dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
+
+    if (!state.canvas || !state.ctx) return;
+
+    state.canvas.width = Math.floor(state.width * state.dpr);
+    state.canvas.height = Math.floor(state.height * state.dpr);
+    state.canvas.style.width = `${state.width}px`;
+    state.canvas.style.height = `${state.height}px`;
+    state.ctx.setTransform(state.dpr, 0, 0, state.dpr, 0, 0);
+  }
+
+  function seedStars() {
+    state.stars = Array.from({ length: CONFIG.STAR_COUNT }, () => ({
+      x: Math.random() * state.width,
+      y: Math.random() * state.height,
+      r: Math.random() * 1.3 + 0.25,
+      a: Math.random() * 0.58 + 0.12,
+      tw: Math.random() * Math.PI * 2,
+      speed: 0.35 + Math.random()
+    }));
+  }
+
+  function seedDust() {
+    const orbitWidth = getOrbitWidth();
+    const orbitHeight = getOrbitHeight();
+
+    state.dust = Array.from({ length: CONFIG.DUST_COUNT }, () => ({
+      angle: Math.random() * Math.PI * 2,
+      rx: 84 + Math.random() * orbitWidth * 0.42,
+      ry: 62 + Math.random() * orbitHeight * 0.42,
+      size: 1.3 + Math.random() * 2.4,
+      speed: 0.14 + Math.random() * 0.36,
+      alpha: 0.06 + Math.random() * 0.12
+    }));
+  }
+
+  function getOrbitWidth() {
+    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
+      ? CONFIG.MOBILE_ORBIT_WIDTH
+      : CONFIG.DESKTOP_ORBIT_WIDTH;
+  }
+
+  function getOrbitHeight() {
+    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
+      ? CONFIG.MOBILE_ORBIT_HEIGHT
+      : CONFIG.DESKTOP_ORBIT_HEIGHT;
+  }
+
+  function drawField(elapsed) {
+    if (!state.ctx) return;
+
     const ctx = state.ctx;
     const cx = state.width * CONFIG.CENTER_X_RATIO;
     const cy = state.height * CONFIG.CENTER_Y_RATIO;
-    const orbitWidthPx = universeKmToPxX(getOrbitWidthKm());
-    const orbitHeightPx = universeKmToPxY(getOrbitHeightKm());
+    const orbitWidth = getOrbitWidth();
+    const orbitHeight = getOrbitHeight();
 
     ctx.clearRect(0, 0, state.width, state.height);
 
-    const gradient = ctx.createRadialGradient(cx, cy, 18, cx, cy, orbitWidthPx * 1.02);
-    gradient.addColorStop(0, "rgba(191,230,255,0.20)");
-    gradient.addColorStop(0.28, "rgba(143,200,255,0.10)");
-    gradient.addColorStop(0.54, "rgba(108,156,255,0.05)");
-    gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-    ctx.fillStyle = gradient;
+    const halo = ctx.createRadialGradient(cx, cy, 20, cx, cy, orbitWidth * 0.9);
+    halo.addColorStop(0, "rgba(245,225,172,0.18)");
+    halo.addColorStop(0.22, "rgba(167,212,255,0.10)");
+    halo.addColorStop(0.5, "rgba(114,153,255,0.05)");
+    halo.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = halo;
     ctx.fillRect(0, 0, state.width, state.height);
 
     state.stars.forEach((star) => {
       const twinkle = 0.58 + Math.sin(elapsed * 0.001 * star.speed + star.tw) * 0.42;
       ctx.beginPath();
-      ctx.fillStyle = `rgba(224,240,255,${star.a * twinkle})`;
+      ctx.fillStyle = `rgba(232,242,255,${star.a * twinkle})`;
       ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
       ctx.fill();
     });
 
     ctx.save();
     ctx.translate(cx, cy);
-    ctx.rotate(elapsed * 0.0001);
-    ctx.strokeStyle = "rgba(170,210,255,0.085)";
+    ctx.rotate(elapsed * 0.00008);
+
+    ctx.strokeStyle = "rgba(180,214,255,0.08)";
     ctx.lineWidth = 1;
 
     ctx.beginPath();
-    ctx.ellipse(0, 0, orbitWidthPx * 0.48, orbitHeightPx * 0.48, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, orbitWidth * 0.46, orbitHeight * 0.46, 0, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.ellipse(0, 0, orbitWidthPx * 0.76, orbitHeightPx * 0.76, 0, 0, Math.PI * 2);
+    ctx.ellipse(0, 0, orbitWidth * 0.72, orbitHeight * 0.72, 0, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.restore();
 
-    state.particles.forEach((particle) => {
-      const angle = particle.angle + elapsed * 0.00018 * particle.speed;
-      const x = cx + universeKmToPxX(Math.cos(angle) * particle.radiusXKm);
-      const y = cy + universeKmToPxY(Math.sin(angle) * particle.radiusYKm);
+    state.dust.forEach((particle) => {
+      const angle = particle.angle + elapsed * 0.00012 * particle.speed;
+      const x = cx + Math.cos(angle) * particle.rx;
+      const y = cy + Math.sin(angle) * particle.ry;
 
       ctx.beginPath();
-      ctx.fillStyle = `rgba(175,225,255,${particle.alpha})`;
+      ctx.fillStyle = `rgba(240,216,154,${particle.alpha})`;
       ctx.arc(x, y, particle.size, 0, Math.PI * 2);
       ctx.fill();
     });
+
+    drawVaultGlow(ctx, cx, cy, elapsed);
+  }
+
+  function drawVaultGlow(ctx, cx, cy, elapsed) {
+    const pulse = 0.78 + Math.sin(elapsed * 0.0012) * 0.08;
+    const vaultY = cy + 176;
+    const glow = ctx.createRadialGradient(cx, vaultY, 0, cx, vaultY, 110);
+    glow.addColorStop(0, `rgba(240,216,154,${0.16 * pulse})`);
+    glow.addColorStop(0.45, `rgba(240,216,154,${0.08 * pulse})`);
+    glow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, state.width, state.height);
   }
 
   function moveShell(elapsed) {
-    const glowA = stage.querySelector(".glow-a");
-    const glowB = stage.querySelector(".glow-b");
-    const core = stage.querySelector(".home-compass-core");
-    const ringA = stage.querySelector(".ring-a");
-    const ringB = stage.querySelector(".ring-b");
-    const ringC = stage.querySelector(".ring-c");
+    const pointerX = state.pointerActive ? state.pointerX : 0;
+    const pointerY = state.pointerActive ? state.pointerY : 0;
 
-    const px = normalizePointerX();
-    const py = normalizePointerY();
+    const rotateY = pointerX * 2.8;
+    const rotateX = pointerY * -2.2;
+    const driftX = pointerX * 4;
+    const driftY = pointerY * 3;
 
-    glowA.style.transform = `translate3d(${px * 14}px, ${py * 10}px, 0) scale(${1 + Math.sin(elapsed * 0.0011) * 0.04})`;
-    glowB.style.transform = `translate3d(${px * -12}px, ${py * -8}px, 0) scale(${1 + Math.cos(elapsed * 0.0012) * 0.03})`;
-    core.style.transform = `translate3d(${px * 9}px, ${py * 7}px, 0) scale(${1 + Math.sin(elapsed * 0.001) * 0.02})`;
-    ringA.style.transform = `translate3d(${px * 6}px, ${py * 4}px, 0) rotate(${elapsed * 0.008}deg)`;
-    ringB.style.transform = `translate3d(${px * -5}px, ${py * 3}px, 0) rotate(${elapsed * -0.006}deg)`;
-    ringC.style.transform = `translate3d(${px * 6}px, ${py * -5}px, 0) rotate(${elapsed * 0.009}deg)`;
+    grid.style.transform = `translate3d(${driftX}px, ${driftY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
   }
 
   function positionTokens(elapsed) {
-    const orbitWidthKm = getOrbitWidthKm();
-    const orbitHeightKm = getOrbitHeightKm();
-    const pointerShiftXKm = normalizePointerX() * CONFIG.POINTER_KM_X;
-    const pointerShiftYKm = normalizePointerY() * CONFIG.POINTER_KM_Y;
+    const cx = state.width * CONFIG.CENTER_X_RATIO;
+    const cy = state.height * CONFIG.CENTER_Y_RATIO;
+    const orbitWidth = getOrbitWidth();
+    const orbitHeight = getOrbitHeight();
+
+    const pointerX = state.pointerActive ? state.pointerX : 0;
+    const pointerY = state.pointerActive ? state.pointerY : 0;
 
     state.tokens.forEach((token) => {
-      const angle = token.baseAngle + elapsed * CONFIG.ORBIT_SPEED_RAD_MS;
-      const depth = (Math.sin(angle) + 1) * 0.5;
-      const band = token.laneBand;
+      let angle = token.baseAngle;
 
-      const wobbleXKm = Math.sin(elapsed * 0.00082 + token.phase) * CONFIG.WOBBLE_KM_X;
-      const wobbleYKm = Math.cos(elapsed * 0.00076 + token.phase) * CONFIG.WOBBLE_KM_Y;
+      if (!token.lockBelow) {
+        angle += elapsed * CONFIG.ORBIT_SPEED_RAD_MS;
+        angle += Math.sin(elapsed * 0.00055 + token.baseAngle * 2) * 0.05;
+      }
 
-      const worldXKm = Math.cos(angle) * orbitWidthKm * 0.5 * band + wobbleXKm + pointerShiftXKm;
-      const worldYKm = Math.sin(angle) * orbitHeightKm * 0.5 * band + wobbleYKm + pointerShiftYKm;
+      const wobbleX = !token.lockBelow
+        ? Math.sin(elapsed * 0.0011 + token.baseAngle) * CONFIG.WOBBLE_PX_X
+        : 0;
 
-      const projectedXPx = universeKmToPxX(worldXKm);
-      const projectedYPx = universeKmToPxY(worldYKm);
+      const wobbleY = !token.lockBelow
+        ? Math.cos(elapsed * 0.0010 + token.baseAngle) * CONFIG.WOBBLE_PX_Y
+        : 0;
 
-      const scale = CONFIG.TOKEN_SCALE_MIN + depth * (CONFIG.TOKEN_SCALE_MAX - CONFIG.TOKEN_SCALE_MIN);
-      const opacity = CONFIG.TOKEN_OPACITY_MIN + depth * (CONFIG.TOKEN_OPACITY_MAX - CONFIG.TOKEN_OPACITY_MIN);
+      const px = !token.lockBelow
+        ? cx + Math.cos(angle) * (orbitWidth * 0.5 * token.lane) + wobbleX + pointerX * CONFIG.POINTER_PX_X
+        : cx + pointerX * (CONFIG.POINTER_PX_X * 0.2);
 
-      const tiltY = Math.cos(angle) * 13 + normalizePointerX() * 5;
-      const tiltX = Math.sin(angle) * 10 + normalizePointerY() * 4;
-      const bodySpin = elapsed * CONFIG.BODY_SPIN_DEG_MS + token.baseAngle * 10;
+      const py = !token.lockBelow
+        ? cy + Math.sin(angle) * (orbitHeight * 0.5 * token.lane) + wobbleY + pointerY * CONFIG.POINTER_PX_Y
+        : cy + orbitHeight * 0.68 + 76 + pointerY * (CONFIG.POINTER_PX_Y * 0.15);
 
-      token.el.style.transform = `
-        translate3d(${projectedXPx}px, ${projectedYPx}px, ${depth > 0.5 ? 12 : -4}px)
-        scale(${scale})
-        rotateX(${tiltX}deg)
-        rotateY(${tiltY}deg)
-      `;
-      token.el.style.opacity = String(opacity);
-      token.el.style.zIndex = String(20 + Math.round(depth * 60));
+      const depthRaw = !token.lockBelow
+        ? (Math.sin(angle) + 1) / 2
+        : 0.18;
 
-      if (token.diamond) token.diamond.style.transform = `rotateZ(${bodySpin}deg)`;
-      if (token.labelWrap) token.labelWrap.style.transform = `rotateZ(${-bodySpin}deg) translateZ(12px)`;
+      const scale = lerp(CONFIG.TOKEN_SCALE_MIN, CONFIG.TOKEN_SCALE_MAX, depthRaw);
+      const opacity = lerp(CONFIG.TOKEN_OPACITY_MIN, CONFIG.TOKEN_OPACITY_MAX, depthRaw);
 
-      const face = token.el.querySelector(".token-face");
-      if (face) face.style.filter = `brightness(${0.82 + depth * 0.28})`;
+      token.el.style.transform = `translate3d(${(px - 48).toFixed(2)}px, ${(py - 48).toFixed(2)}px, 0)`;
+      token.el.style.opacity = opacity.toFixed(3);
+      token.el.style.zIndex = String(token.lockBelow ? 4 : Math.floor(10 + depthRaw * 12));
+
+      if (token.diamond) {
+        const tilt = !token.lockBelow ? Math.cos(angle) * 8 : 0;
+        const spin = !token.lockBelow ? elapsed * 0.012 : 0;
+        token.diamond.style.transform = `translateZ(0) rotateX(${tilt * 0.35}deg) rotateY(${tilt * 0.45}deg) rotateZ(${spin}deg) scale(${scale.toFixed(3)})`;
+      }
+
+      if (token.labelWrap) {
+        token.labelWrap.style.transform = `translateZ(12px) rotateZ(${token.lockBelow ? 0 : spinCompensation(elapsed).toFixed(2)}deg)`;
+      }
     });
-
-    state.tokens
-      .slice()
-      .sort((a, b) => Number(a.el.style.zIndex) - Number(b.el.style.zIndex))
-      .forEach((token) => grid.appendChild(token.el));
   }
 
   function applyReducedMotionState() {
-    drawUniverse(0);
-
-    state.tokens.forEach((token, index) => {
-      token.el.style.transform = "translate3d(0,0,0)";
-      token.el.style.opacity = "1";
-      token.el.style.zIndex = String(index + 1);
-      if (token.diamond) token.diamond.style.transform = "rotateZ(0deg)";
-      if (token.labelWrap) token.labelWrap.style.transform = "translateZ(12px)";
-    });
-
-    stage.querySelectorAll(".home-compass-glow,.home-compass-core,.home-compass-ring")
-      .forEach((node) => {
-        node.style.transform = "translate3d(0,0,0)";
-      });
-  }
-
-  function getOrbitWidthKm() {
-    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-      ? CONFIG.MOBILE_ORBIT_WIDTH_KM
-      : CONFIG.DESKTOP_ORBIT_WIDTH_KM;
-  }
-
-  function getOrbitHeightKm() {
-    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-      ? CONFIG.MOBILE_ORBIT_HEIGHT_KM
-      : CONFIG.DESKTOP_ORBIT_HEIGHT_KM;
-  }
-
-  function universeKmToPxX(km) {
-    return (km / CONFIG.UNIVERSE_WIDTH_KM) * state.width;
-  }
-
-  function universeKmToPxY(km) {
-    return (km / CONFIG.UNIVERSE_HEIGHT_KM) * state.height;
-  }
-
-  function normalizePointerX() {
-    if (!state.pointerActive) return 0;
-    const n = (state.pointerX / Math.max(window.innerWidth, 1)) * 2 - 1;
-    return clamp(n, -1, 1);
-  }
-
-  function normalizePointerY() {
-    if (!state.pointerActive) return 0;
-    const n = (state.pointerY / Math.max(window.innerHeight, 1)) * 2 - 1;
-    return clamp(n, -1, 1);
-  }
-
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
+    drawField(0);
+    grid.style.transform = "translate3d(0,0,0)";
+    positionTokens(0);
   }
 
   function injectRuntimeStyles() {
-    if (document.getElementById("home-compass-runtime-style")) return;
+    if (document.getElementById("richies-manor-runtime-style")) return;
 
     const style = document.createElement("style");
-    style.id = "home-compass-runtime-style";
+    style.id = "richies-manor-runtime-style";
     style.textContent = `
-      .home-compass-canvas {
+      .home-manor-canvas {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
-        opacity: 0.96;
+        display: block;
       }
 
-      .home-compass-glow,
-      .home-compass-core,
-      .home-compass-ring {
+      .home-manor-glow,
+      .home-manor-atmosphere {
         position: absolute;
-        left: 50%;
-        top: 52%;
-        transform: translate3d(0,0,0);
-        will-change: transform, opacity;
+        inset: 0;
+        pointer-events: none;
       }
 
-      .home-compass-glow {
-        border-radius: 999px;
-        filter: blur(32px);
-        opacity: 0.38;
-      }
-
-      .glow-a {
-        width: 250px;
-        height: 250px;
-        margin-left: -125px;
-        margin-top: -125px;
-        background: radial-gradient(circle, rgba(143,200,255,0.24), rgba(143,200,255,0.06) 48%, transparent 72%);
-      }
-
-      .glow-b {
-        width: 320px;
-        height: 190px;
-        margin-left: -160px;
-        margin-top: -95px;
-        background: radial-gradient(circle, rgba(108,132,255,0.16), rgba(108,132,255,0.05) 50%, transparent 76%);
-        filter: blur(40px);
-      }
-
-      .home-compass-core {
-        width: 104px;
-        height: 104px;
-        margin-left: -52px;
-        margin-top: -52px;
-        border-radius: 50%;
+      .home-manor-glow.glow-a {
         background:
-          radial-gradient(circle at 45% 42%, rgba(248,252,255,0.96), rgba(188,228,255,0.78) 22%, rgba(123,178,255,0.24) 42%, transparent 72%);
-        box-shadow:
-          0 0 34px rgba(143,200,255,0.24),
-          inset 0 0 18px rgba(255,255,255,0.18);
-        opacity: 0.92;
+          radial-gradient(circle at 50% 36%, rgba(240,216,154,0.10), transparent 28%),
+          radial-gradient(circle at 50% 66%, rgba(143,200,255,0.06), transparent 34%);
+        filter: blur(28px);
+        opacity: 0.9;
       }
 
-      .home-compass-ring {
-        border-radius: 50%;
-        border: 1px solid rgba(191,230,255,0.12);
-        box-shadow: 0 0 20px rgba(143,200,255,0.06), inset 0 0 16px rgba(191,230,255,0.04);
+      .home-manor-glow.glow-b {
+        background:
+          radial-gradient(circle at 26% 26%, rgba(143,200,255,0.06), transparent 18%),
+          radial-gradient(circle at 76% 22%, rgba(143,200,255,0.05), transparent 18%);
+        filter: blur(34px);
+        opacity: 0.82;
       }
 
-      .ring-a {
-        width: 236px;
-        height: 116px;
-        margin-left: -118px;
-        margin-top: -58px;
-      }
-
-      .ring-b {
-        width: 174px;
-        height: 174px;
-        margin-left: -87px;
-        margin-top: -87px;
-        border-color: rgba(160,205,255,0.09);
-      }
-
-      .ring-c {
-        width: 304px;
-        height: 136px;
-        margin-left: -152px;
-        margin-top: -68px;
-        border-color: rgba(191,230,255,0.08);
-      }
-
-      @media (max-width: 760px) {
-        .glow-a {
-          width: 220px;
-          height: 220px;
-          margin-left: -110px;
-          margin-top: -110px;
-        }
-
-        .glow-b {
-          width: 280px;
-          height: 168px;
-          margin-left: -140px;
-          margin-top: -84px;
-        }
-
-        .home-compass-core {
-          width: 92px;
-          height: 92px;
-          margin-left: -46px;
-          margin-top: -46px;
-        }
-
-        .ring-a {
-          width: 206px;
-          height: 102px;
-          margin-left: -103px;
-          margin-top: -51px;
-        }
-
-        .ring-b {
-          width: 158px;
-          height: 158px;
-          margin-left: -79px;
-          margin-top: -79px;
-        }
-
-        .ring-c {
-          width: 270px;
-          height: 122px;
-          margin-left: -135px;
-          margin-top: -61px;
-        }
+      .home-manor-atmosphere {
+        background:
+          linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)),
+          linear-gradient(180deg, rgba(7,15,28,0), rgba(7,15,28,0.10));
       }
     `;
     document.head.appendChild(style);
+  }
+
+  function clamp(value, min, max) {
+    if (!Number.isFinite(value)) return min;
+    if (value < min) return min;
+    if (value > max) return max;
+    return value;
+  }
+
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function spinCompensation(elapsed) {
+    return Math.sin(elapsed * 0.0005) * -1.5;
   }
 })();

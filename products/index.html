@@ -6,55 +6,43 @@
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway for Diamond Gate Bridge. Cinematic motion, coherent navigation, and direct access to live product lanes."
+    content="Animated gateway to the live product lanes with hard HTML backlinks and route-safe fallback access."
   />
-  <meta name="theme-color" content="#050816" />
   <style>
     :root {
-      --bg-0: #050816;
-      --bg-1: #0a1026;
-      --bg-2: #101935;
-      --surface: rgba(255, 255, 255, 0.05);
-      --surface-2: rgba(255, 255, 255, 0.08);
-      --line: rgba(255, 255, 255, 0.1);
-      --text: #f5f7ff;
-      --muted: rgba(245, 247, 255, 0.72);
-      --soft: rgba(245, 247, 255, 0.5);
-      --shadow: 0 22px 60px rgba(0, 0, 0, 0.34);
-      --max: 1280px;
-      --nav-h: 74px;
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
+      --bg: #07111f;
+      --bg2: #0b1730;
+      --panel: rgba(10, 22, 42, 0.72);
+      --panel-strong: rgba(12, 27, 53, 0.88);
+      --line: rgba(160, 205, 255, 0.22);
+      --text: #eef5ff;
+      --muted: #a9bedb;
+      --accent: #8fc8ff;
+      --accent-2: #bfe6ff;
+      --glow: rgba(143, 200, 255, 0.22);
+      --shadow: 0 16px 48px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
+      --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
-      color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
       background:
-        radial-gradient(circle at 18% 12%, rgba(124,166,255,0.12), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(111,255,219,0.08), transparent 20%),
-        radial-gradient(circle at 50% 76%, rgba(124,166,255,0.12), transparent 28%),
-        linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 42%, #060913 100%);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 48px 48px;
-      mask-image: radial-gradient(circle at center, black 28%, transparent 85%);
-      opacity: 0.35;
-      z-index: 0;
+        radial-gradient(circle at 20% 15%, rgba(89, 140, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 80% 20%, rgba(112, 224, 255, 0.09), transparent 22%),
+        radial-gradient(circle at 50% 75%, rgba(118, 142, 255, 0.08), transparent 34%),
+        linear-gradient(180deg, #040914 0%, #06101d 44%, #081526 100%);
+      min-height: 100vh;
     }
 
     a {
@@ -62,361 +50,334 @@
       text-decoration: none;
     }
 
-    .page {
-      position: relative;
-      z-index: 1;
-    }
-
     .shell {
-      width: min(calc(100% - 24px), var(--max));
+      width: min(100% - 28px, var(--max));
       margin: 0 auto;
     }
 
-    .topbar-wrap {
+    .topbar {
       position: sticky;
       top: 0;
-      z-index: 50;
-      backdrop-filter: blur(16px);
-      background: linear-gradient(180deg, rgba(5,8,22,0.88), rgba(5,8,22,0.6));
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      z-index: 30;
+      backdrop-filter: blur(14px);
+      background: rgba(5, 12, 24, 0.74);
+      border-bottom: 1px solid rgba(160, 205, 255, 0.12);
     }
 
-    .topbar {
-      min-height: var(--nav-h);
+    .topbar-inner {
+      width: min(100% - 28px, var(--max));
+      margin: 0 auto;
       display: flex;
+      gap: 12px;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
       padding: 14px 0;
     }
 
     .brand {
       display: inline-flex;
-      align-items: center;
       gap: 12px;
+      align-items: center;
       min-width: 0;
     }
 
     .brand-mark {
-      width: 14px;
-      height: 14px;
-      transform: rotate(45deg);
-      border-radius: 2px;
-      background: linear-gradient(135deg, #dbe7ff, #7aaaff 55%, #68ffda);
-      box-shadow: 0 0 18px rgba(122,170,255,0.6);
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(191, 230, 255, 0.28);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(191, 230, 255, 0.92), rgba(143, 200, 255, 0.18) 42%, transparent 62%),
+        radial-gradient(circle at 50% 50%, rgba(120, 164, 255, 0.18), transparent 70%);
+      box-shadow: inset 0 0 18px rgba(191, 230, 255, 0.16), 0 0 28px rgba(143, 200, 255, 0.12);
       flex: 0 0 auto;
     }
 
-    .brand-copy { min-width: 0; }
-
-    .eyebrow {
-      margin: 0 0 4px;
-      font-size: 0.72rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--soft);
+    .brand-copy {
+      min-width: 0;
     }
 
-    .brand-title {
-      margin: 0;
-      font-size: 0.98rem;
-      line-height: 1.1;
-      font-weight: 700;
+    .brand-copy strong {
+      display: block;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+
+    .brand-copy span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-top: 2px;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .nav {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
+      flex-wrap: wrap;
       justify-content: flex-end;
     }
 
     .nav a {
-      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 0 14px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background: rgba(255,255,255,0.03);
-      color: var(--muted);
-      transition: 160ms ease;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(160, 205, 255, 0.14);
+      color: var(--text);
       font-size: 0.92rem;
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
     .nav a:hover,
     .nav a:focus-visible {
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.18);
-      color: var(--text);
-      outline: none;
       transform: translateY(-1px);
+      border-color: rgba(191, 230, 255, 0.34);
+      background: rgba(255, 255, 255, 0.06);
+      outline: none;
     }
 
     .nav a[aria-current="page"] {
-      color: var(--text);
-      background: linear-gradient(180deg, rgba(124,166,255,0.18), rgba(255,255,255,0.06));
-      border-color: rgba(124,166,255,0.4);
+      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.08));
+      border-color: rgba(191, 230, 255, 0.34);
+      box-shadow: 0 0 0 1px rgba(191, 230, 255, 0.08) inset;
     }
 
     .hero {
-      padding: 28px 0 20px;
+      padding: 42px 0 24px;
     }
 
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-      gap: 20px;
-      align-items: stretch;
-    }
-
-    .panel {
+    .hero-panel {
       position: relative;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025)),
-        rgba(255,255,255,0.02);
-      box-shadow: var(--shadow);
       overflow: hidden;
+      border-radius: 28px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(143, 200, 255, 0.10), transparent 30%),
+        linear-gradient(180deg, rgba(16, 34, 62, 0.92), rgba(8, 18, 35, 0.94));
+      box-shadow: var(--shadow);
+      padding: 28px;
     }
 
-    .hero-copy {
-      padding: 30px;
+    .eyebrow {
+      margin: 0 0 10px;
+      color: var(--accent-2);
+      font-size: 0.84rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
-    .hero-copy h1 {
-      margin: 0 0 12px;
-      font-size: clamp(2.1rem, 4vw, 4.2rem);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      line-height: 1.04;
+      letter-spacing: -0.03em;
       max-width: 11ch;
     }
 
-    .hero-copy p.lead {
-      margin: 0;
+    .hero-copy {
+      max-width: 72ch;
       color: var(--muted);
-      line-height: 1.7;
-      max-width: 62ch;
       font-size: 1.02rem;
+      line-height: 1.7;
+      margin: 14px 0 0;
     }
 
-    .hero-points {
-      list-style: none;
+    .hero-actions,
+    .crumbs {
       display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      padding: 0;
-      margin: 22px 0 0;
-    }
-
-    .hero-points li {
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
-      font-size: 0.9rem;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
       gap: 12px;
-      margin-top: 24px;
+      flex-wrap: wrap;
+      margin-top: 18px;
     }
 
-    .button {
+    .button,
+    .crumbs a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 46px;
-      padding: 0 18px;
+      min-height: 44px;
+      padding: 0 16px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--text);
-      font-weight: 600;
-      transition: 160ms ease;
+      border: 1px solid rgba(191, 230, 255, 0.18);
+      background: rgba(255, 255, 255, 0.04);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
     }
 
     .button:hover,
-    .button:focus-visible {
-      outline: none;
+    .button:focus-visible,
+    .crumbs a:hover,
+    .crumbs a:focus-visible {
       transform: translateY(-1px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.2);
+      border-color: rgba(191, 230, 255, 0.34);
+      background: rgba(255, 255, 255, 0.07);
+      outline: none;
     }
 
-    .button-primary {
-      background: linear-gradient(135deg, rgba(124,166,255,0.22), rgba(111,255,219,0.12));
-      border-color: rgba(124,166,255,0.4);
+    .button.primary {
+      background: linear-gradient(180deg, rgba(143, 200, 255, 0.18), rgba(143, 200, 255, 0.10));
+      border-color: rgba(191, 230, 255, 0.34);
     }
 
-    .hero-stage {
-      min-height: 560px;
-      padding: 14px;
-    }
-
-    .stage-frame {
-      position: relative;
-      min-height: 530px;
-      height: 100%;
-      border-radius: calc(var(--radius-xl) - 8px);
-      border: 1px solid rgba(255,255,255,0.08);
-      overflow: hidden;
-      background:
-        radial-gradient(circle at center, rgba(124,166,255,0.1), transparent 34%),
-        radial-gradient(circle at center, rgba(111,255,219,0.06), transparent 56%),
-        linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
-      isolation: isolate;
-    }
-
-    .stage-backdrop,
-    .stage-runtime,
-    .stage-core {
-      position: absolute;
-      inset: 0;
-    }
-
-    .stage-backdrop {
-      z-index: 1;
-      pointer-events: none;
-    }
-
-    .stage-backdrop::before,
-    .stage-backdrop::after {
-      content: "";
-      position: absolute;
-      inset: auto;
-      border-radius: 50%;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-    }
-
-    .stage-backdrop::before {
-      width: 74%;
-      aspect-ratio: 1 / 1;
-      background: radial-gradient(circle, rgba(124,166,255,0.12), transparent 68%);
-      filter: blur(18px);
-    }
-
-    .stage-backdrop::after {
-      width: 52%;
-      aspect-ratio: 1 / 1;
-      background: radial-gradient(circle, rgba(111,255,219,0.08), transparent 66%);
-      filter: blur(24px);
-    }
-
-    .stage-runtime {
-      z-index: 2;
-      overflow: hidden;
-    }
-
-    .stage-core {
-      z-index: 3;
+    .summary {
       display: grid;
-      place-items: center;
-      pointer-events: none;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 22px;
     }
 
-    .core-shell {
-      width: 176px;
-      height: 176px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background:
-        radial-gradient(circle at 35% 35%, rgba(255,255,255,0.18), rgba(124,166,255,0.12) 44%, rgba(5,8,22,0.9) 74%);
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow:
-        0 0 0 18px rgba(255,255,255,0.018),
-        0 0 40px rgba(124,166,255,0.22);
-      text-align: center;
-      padding: 18px;
-      backdrop-filter: blur(10px);
+    .summary-card {
+      border-radius: 18px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      padding: 16px 16px 14px;
     }
 
-    .core-shell strong {
+    .summary-card strong {
       display: block;
-      font-size: 1.08rem;
-      letter-spacing: 0.16em;
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      margin-bottom: 6px;
+      color: var(--accent-2);
+      margin-bottom: 8px;
     }
 
-    .core-shell span {
-      display: block;
+    .summary-card span {
       color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.45;
+      line-height: 1.6;
+      font-size: 0.94rem;
     }
 
     .section {
-      padding: 12px 0 22px;
+      padding: 18px 0 42px;
     }
 
     .section-head {
-      padding: 24px 24px 16px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
     }
 
     .section-head h2 {
-      margin: 0 0 8px;
-      font-size: clamp(1.45rem, 2vw, 2rem);
-      letter-spacing: -0.03em;
+      margin: 0;
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      letter-spacing: -0.02em;
     }
 
     .section-head p {
       margin: 0;
+      max-width: 62ch;
       color: var(--muted);
       line-height: 1.7;
-      max-width: 70ch;
     }
 
-    .bubble-wrap {
-      padding: 20px 24px 24px;
+    .lane-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
     }
 
-    .bubble-runtime {
-      min-height: 430px;
-      border-radius: calc(var(--radius-xl) - 8px);
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        radial-gradient(circle at 50% 0%, rgba(124,166,255,0.08), transparent 42%),
-        linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.02));
-      overflow: hidden;
+    .lane-card {
       position: relative;
-    }
-
-    .receipt {
-      margin: 0 0 44px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: var(--radius-xl);
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)),
-        rgba(255,255,255,0.02);
+        radial-gradient(circle at top right, rgba(143, 200, 255, 0.10), transparent 35%),
+        linear-gradient(180deg, rgba(11, 23, 48, 0.88), rgba(8, 18, 35, 0.92));
       box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .receipt-head {
-      padding: 18px 20px;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px 14px;
+    .lane-card a {
+      display: block;
+      padding: 20px;
+      min-height: 100%;
     }
 
-    .receipt-head strong {
-      font-size: 0.82rem;
-      letter-spacing: 0.14em;
+    .lane-card h3 {
+      margin: 0 0 10px;
+      font-size: 1.1rem;
+      letter-spacing: -0.01em;
+    }
+
+    .lane-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: 0.97rem;
+    }
+
+    .route-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(191, 230, 255, 0.16);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--accent-2);
+      font-size: 0.84rem;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
-    .receipt-body {
-      padding: 18px 20px 22px;
+    .backfill {
+      margin-top: 24px;
+      border-radius: 24px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+      padding: 20px;
+    }
+
+    .backfill p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .backfill strong {
+      color: var(--text);
+    }
+
+    .fallback-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .fallback-links a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 40px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(160, 205, 255, 0.14);
+    }
+
+    .footer {
+      padding: 20px 0 52px;
+    }
+
+    .footer-panel {
+      border-radius: 22px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      padding: 18px;
+    }
+
+    .footer-panel p {
+      margin: 0;
       color: var(--muted);
       line-height: 1.7;
       font-size: 0.95rem;
@@ -434,182 +395,210 @@
       border: 0;
     }
 
-    @media (max-width: 1100px) {
-      .hero-grid {
+    @media (max-width: 900px) {
+      .summary,
+      .lane-grid {
         grid-template-columns: 1fr;
+      }
+
+      .section-head {
+        align-items: start;
+        flex-direction: column;
       }
     }
 
     @media (max-width: 760px) {
-      .topbar {
+      .topbar-inner {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch;
       }
 
       .nav {
         justify-content: flex-start;
       }
 
-      .hero {
-        padding-top: 18px;
-      }
-
-      .hero-copy,
-      .section-head,
-      .bubble-wrap,
-      .receipt-head,
-      .receipt-body {
-        padding-left: 18px;
-        padding-right: 18px;
-      }
-
-      .hero-copy {
-        padding-top: 22px;
-        padding-bottom: 22px;
-      }
-
-      .hero-stage {
-        min-height: 520px;
-        padding: 10px;
-      }
-
-      .stage-frame {
-        min-height: 500px;
-      }
-
-      .core-shell {
-        width: 148px;
-        height: 148px;
-      }
-
-      .bubble-runtime {
-        min-height: 620px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      html { scroll-behavior: auto; }
-
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-      }
-
-      .button:hover,
-      .button:focus-visible,
-      .nav a:hover,
-      .nav a:focus-visible {
-        transform: none !important;
+      .hero-panel {
+        padding: 22px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="topbar-wrap">
-      <div class="shell topbar">
-        <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <span class="brand-copy">
-            <p class="eyebrow">Cinematic G2 · Products Gateway</p>
-            <p class="brand-title">Diamond Gate Bridge — Products</p>
-          </span>
-        </a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span class="brand-copy">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Products gateway with hard backlink recovery</span>
+        </span>
+      </a>
 
-        <nav class="nav" aria-label="Primary">
-          <a href="/home/">Home</a>
-          <a href="/explore/">Explore</a>
-          <a href="/gauges/">Gauges</a>
-          <a href="/platform/">Platform</a>
-          <a href="/products/" aria-current="page">Products</a>
-        </nav>
-      </div>
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/platform/">Platform</a>
+        <a href="/products/" aria-current="page">Products</a>
+      </nav>
     </div>
+  </header>
 
-    <header class="hero">
-      <div class="shell hero-grid">
-        <section class="panel hero-copy" aria-labelledby="products-title">
-          <p class="eyebrow">Extensive animation split three ways</p>
-          <h1 id="products-title">The animated products gateway.</h1>
-          <p class="lead">
-            Products is the entry surface for the live product lanes. HTML owns structure. Page JS
-            owns orchestration. Runtime JS owns the planetary construct. The lower surface is now
-            compressed into a Russian-doll bubble field instead of a long-scroll card wall.
+  <main>
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-panel">
+          <p class="eyebrow">Cinematic G2 · Products Gateway</p>
+          <h1>The animated products gateway.</h1>
+
+          <p class="hero-copy">
+            Products is the entry surface for the live product lanes. This version keeps the page
+            runtime-friendly while restoring hard HTML backlinks and route-safe lane anchors so the
+            page still works when animation or page orchestration is late, stale, or unavailable.
           </p>
 
-          <ul class="hero-points" aria-label="Page qualities">
-            <li>G2 Planetary Runtime</li>
-            <li>Russian-Doll Bubbles</li>
-            <li>Direct Route Access</li>
-            <li>Reduced-Motion Safe</li>
-          </ul>
-
           <div class="hero-actions">
-            <a class="button button-primary" href="#products-bubbles">Open product lanes</a>
+            <a class="button primary" href="#product-lanes">Open product lanes</a>
             <a class="button" href="/explore/">Return to Explore</a>
+            <a class="button" href="/">Return Home</a>
           </div>
-        </section>
 
-        <section class="panel hero-stage" aria-labelledby="motion-stage-title">
-          <div class="stage-frame" id="products-stage">
-            <h2 class="sr-only" id="motion-stage-title">Products planetary stage</h2>
-            <div class="stage-backdrop" aria-hidden="true"></div>
-            <div class="stage-runtime" id="products-stage-runtime" aria-hidden="true"></div>
-            <div class="stage-core" aria-hidden="true">
-              <div class="core-shell">
-                <div>
-                  <strong>Products</strong>
-                  <span>Generation 2 planetary gateway.</span>
-                </div>
-              </div>
+          <div class="summary" aria-label="Products gateway summary">
+            <div class="summary-card">
+              <strong>HTML</strong>
+              <span>Owns structure and hard route safety.</span>
+            </div>
+            <div class="summary-card">
+              <strong>Page JS</strong>
+              <span>Owns orchestration and page lifecycle only.</span>
+            </div>
+            <div class="summary-card">
+              <strong>Hero Runtime</strong>
+              <span>Owns the planetary stage when present.</span>
+            </div>
+            <div class="summary-card">
+              <strong>Backlinks</strong>
+              <span>Remain visible and clickable without runtime dependency.</span>
             </div>
           </div>
-        </section>
-      </div>
-    </header>
 
-    <main>
-      <section class="section">
-        <div class="shell panel" id="products-bubbles">
-          <div class="section-head">
-            <p class="eyebrow">Products</p>
-            <h2>Russian-doll lane field.</h2>
-            <p>
-              The lower surface is compressed. Each primary bubble represents a real route. Open a
-              bubble to reveal identity. Open deeper to reveal route, status, and purpose. Mobile
-              stays single-open to prevent clutter.
-            </p>
-          </div>
-
-          <div class="bubble-wrap">
-            <div
-              class="bubble-runtime"
-              id="products-bubbles-runtime"
-              aria-label="Compressed product lane field"
-            ></div>
-          </div>
-        </div>
-      </section>
-
-      <div class="shell receipt">
-        <div class="receipt-head">
-          <strong>Runtime / Receipt</strong>
-          <span>HTML=STRUCTURE | JS=ORCHESTRATION | HERO_RUNTIME=G2_PLANETARY | BUBBLE_RUNTIME=ACTIVE</span>
-        </div>
-        <div class="receipt-body">
-          The page is split correctly. HTML owns layout. Page JS owns lifecycle and runtime
-          mounting. Hero runtime owns the planetary stage. Bubble runtime owns the compressed lower
-          lane field.
+          <nav class="crumbs" aria-label="Products context links">
+            <a href="/">Home</a>
+            <a href="/explore/">Explore</a>
+            <a href="/gauges/">Gauges</a>
+            <a href="/platform/">Platform</a>
+            <a href="/products/">Products</a>
+          </nav>
         </div>
       </div>
-    </main>
-  </div>
+    </section>
 
-  <script src="./products_runtime.js" defer></script>
-  <script src="./products_bubbles_runtime.js" defer></script>
-  <script src="./products.js" defer></script>
+    <section id="product-lanes" class="section">
+      <div class="shell">
+        <div class="section-head">
+          <div>
+            <h2>Russian-doll lane field</h2>
+          </div>
+          <p>
+            The cards below are hard HTML route anchors. They are not hidden behind runtime. If the
+            animation mounts successfully, it enhances this surface. If runtime does not mount, these
+            links still preserve route access and backlink continuity.
+          </p>
+        </div>
+
+        <div class="lane-grid">
+          <article class="lane-card">
+            <a href="/products/nutrition/">
+              <h3>Baseline Nutrition</h3>
+              <p>
+                Nutrition lane entry with direct path safety and return continuity back to the
+                products root.
+              </p>
+              <span class="route-chip">/products/nutrition/</span>
+            </a>
+          </article>
+
+          <article class="lane-card">
+            <a href="/products/ai/">
+              <h3>On Your Side AI</h3>
+              <p>
+                AI lane entry preserved as a hard route instead of runtime-only presentation.
+              </p>
+              <span class="route-chip">/products/ai/</span>
+            </a>
+          </article>
+
+          <article class="lane-card">
+            <a href="/products/education/">
+              <h3>Education &amp; Language</h3>
+              <p>
+                Education lane with direct anchor access and stable upstream return behavior.
+              </p>
+              <span class="route-chip">/products/education/</span>
+            </a>
+          </article>
+
+          <article class="lane-card">
+            <a href="/products/five-flags/">
+              <h3>Five Flags</h3>
+              <p>
+                Five Flags lane restored as a route-safe product destination under the products path.
+              </p>
+              <span class="route-chip">/products/five-flags/</span>
+            </a>
+          </article>
+
+          <article class="lane-card">
+            <a href="/products/archcoin/">
+              <h3>ARCHCOIN</h3>
+              <p>
+                ARCHCOIN destination with static path exposure and clean return-to-products behavior.
+              </p>
+              <span class="route-chip">/products/archcoin/</span>
+            </a>
+          </article>
+
+          <article class="lane-card">
+            <a href="/products/">
+              <h3>Products Root</h3>
+              <p>
+                Self-anchor for route normalization, refresh safety, and root recovery from nested
+                product destinations.
+              </p>
+              <span class="route-chip">/products/</span>
+            </a>
+          </article>
+        </div>
+
+        <div class="backfill">
+          <p>
+            <strong>Backlink contract.</strong> Every child product destination should expose at least
+            three hard HTML links at the top: <strong>Home</strong>, <strong>Explore</strong>, and
+            <strong>Return to Products</strong>. The products root should expose the lane map above even
+            when runtime is unavailable.
+          </p>
+
+          <div class="fallback-links" aria-label="Backfill links">
+            <a href="/">Home</a>
+            <a href="/explore/">Explore</a>
+            <a href="/gauges/">Gauges</a>
+            <a href="/platform/">Platform</a>
+            <a href="/products/">Return to Products</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="shell">
+      <div class="footer-panel">
+        <p>
+          Runtime / Receipt: HTML=STRUCTURE | JS=ORCHESTRATION | HERO_RUNTIME=OPTIONAL |
+          BACKLINKS=HARD_HTML | ROUTE_ACCESS=STATIC_SAFE
+        </p>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>

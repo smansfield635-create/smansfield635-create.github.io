@@ -2,10 +2,10 @@
   "use strict";
 
   const SELECTORS = {
-    frame: "#home-compass-frame",
+    frame: "#home-solar-frame",
     stage: "#home-hero-stage",
     grid: "#home-orbit-grid",
-    tokens: ".compass-token"
+    bodies: ".route-body"
   };
 
   const CONFIG = {
@@ -13,27 +13,70 @@
     MOBILE_BREAKPOINT: 760,
     DPR_CAP: 2,
 
-    STAR_COUNT: 120,
-    DUST_COUNT: 16,
+    STAR_COUNT: 140,
+    DUST_COUNT: 20,
 
-    DESKTOP_ORBIT_WIDTH: 420,
-    DESKTOP_ORBIT_HEIGHT: 258,
-    MOBILE_ORBIT_WIDTH: 300,
-    MOBILE_ORBIT_HEIGHT: 226,
+    DESKTOP_CENTER_X_RATIO: 0.5,
+    DESKTOP_CENTER_Y_RATIO: 0.56,
+    MOBILE_CENTER_X_RATIO: 0.5,
+    MOBILE_CENTER_Y_RATIO: 0.53,
 
-    ORBIT_SPEED_RAD_MS: 0.00018,
-    WOBBLE_PX_X: 8,
-    WOBBLE_PX_Y: 6,
-    POINTER_PX_X: 12,
-    POINTER_PX_Y: 10,
+    DESKTOP_ORBIT_A_INNER: 108,
+    DESKTOP_ORBIT_B_INNER: 72,
+    DESKTOP_ORBIT_A_OUTER: 182,
+    DESKTOP_ORBIT_B_OUTER: 124,
+    MOBILE_ORBIT_A_INNER: 88,
+    MOBILE_ORBIT_B_INNER: 60,
+    MOBILE_ORBIT_A_OUTER: 142,
+    MOBILE_ORBIT_B_OUTER: 106,
 
-    TOKEN_SCALE_MIN: 0.78,
-    TOKEN_SCALE_MAX: 1.04,
-    TOKEN_OPACITY_MIN: 0.56,
-    TOKEN_OPACITY_MAX: 1.0,
+    PLANET_SCALE_MIN: 0.78,
+    PLANET_SCALE_MAX: 1.06,
+    PLANET_OPACITY_MIN: 0.58,
+    PLANET_OPACITY_MAX: 1.0,
 
-    CENTER_X_RATIO: 0.5,
-    CENTER_Y_RATIO: 0.46
+    ORBIT_SPEED_INNER: 0.00032,
+    ORBIT_SPEED_OUTER: 0.00018,
+    POINTER_SHIFT_X: 10,
+    POINTER_SHIFT_Y: 8
+  };
+
+  const PLANETS = {
+    explore: {
+      lane: "inner",
+      angle: -Math.PI / 2,
+      size: 70,
+      spin: 0.014,
+      labelColor: "#eef5ff"
+    },
+    products: {
+      lane: "inner",
+      angle: 0.88,
+      size: 84,
+      spin: 0.010,
+      labelColor: "#fff6eb"
+    },
+    gauges: {
+      lane: "outer",
+      angle: -0.18,
+      size: 92,
+      spin: 0.008,
+      labelColor: "#edf4ff"
+    },
+    laws: {
+      lane: "outer",
+      angle: 2.18,
+      size: 78,
+      spin: -0.009,
+      labelColor: "#fff0ef"
+    },
+    vault: {
+      lane: "vault",
+      angle: Math.PI / 2,
+      size: 68,
+      spin: 0.005,
+      labelColor: "#fff7da"
+    }
   };
 
   const state = {
@@ -49,7 +92,7 @@
     pointerActive: false,
     stars: [],
     dust: [],
-    tokens: [],
+    bodies: [],
     canvas: null,
     ctx: null
   };
@@ -57,15 +100,15 @@
   const frame = document.querySelector(SELECTORS.frame);
   const stage = document.querySelector(SELECTORS.stage);
   const grid = document.querySelector(SELECTORS.grid);
-  const tokenElements = Array.from(document.querySelectorAll(SELECTORS.tokens));
+  const bodyElements = Array.from(document.querySelectorAll(SELECTORS.bodies));
 
-  if (!frame || !stage || !grid || tokenElements.length === 0) return;
+  if (!frame || !stage || !grid || bodyElements.length === 0) return;
 
   const reducedMotionMedia = window.matchMedia(CONFIG.REDUCE_MOTION_QUERY);
   state.reducedMotion = reducedMotionMedia.matches;
 
   buildStage();
-  bindTokens();
+  bindBodies();
   resize();
   seedStars();
   seedDust();
@@ -79,35 +122,33 @@
 
   function buildStage() {
     stage.innerHTML = `
-      <canvas class="home-manor-canvas"></canvas>
-      <div class="home-manor-glow glow-a"></div>
-      <div class="home-manor-glow glow-b"></div>
-      <div class="home-manor-atmosphere"></div>
+      <canvas class="home-solar-canvas"></canvas>
+      <div class="home-solar-glow glow-a"></div>
+      <div class="home-solar-glow glow-b"></div>
+      <div class="home-solar-atmosphere"></div>
     `;
 
     injectRuntimeStyles();
 
-    state.canvas = stage.querySelector(".home-manor-canvas");
+    state.canvas = stage.querySelector(".home-solar-canvas");
     if (!state.canvas) return;
 
     state.ctx = state.canvas.getContext("2d", { alpha: true });
   }
 
-  function bindTokens() {
-    const baseConfig = {
-      explore: { baseAngle: -Math.PI / 2, lane: 1.00 },
-      products: { baseAngle: -0.22, lane: 1.08 },
-      gauges: { baseAngle: 0.82, lane: 0.98 },
-      laws: { baseAngle: Math.PI + 0.35, lane: 0.94 },
-      vault: { baseAngle: Math.PI / 2, lane: 0.58, lockBelow: true }
-    };
+  function bindBodies() {
+    state.bodies = bodyElements.map((el) => {
+      const key = String(el.dataset.planet || "").trim().toLowerCase();
+      const config = PLANETS[key];
 
-    state.tokens = tokenElements.map((el, index) => {
-      const key = String(el.dataset.anchor || "").trim().toLowerCase();
-      const fallbackAngle = -Math.PI / 2 + index * ((Math.PI * 2) / Math.max(1, tokenElements.length));
-      const entry = baseConfig[key] || { baseAngle: fallbackAngle, lane: 1.0, lockBelow: false };
-      const diamond = el.querySelector(".token-diamond");
-      const labelWrap = el.querySelector(".token-label-wrap");
+      if (!config) return null;
+
+      const body = el.querySelector(".planet-body");
+      const label = el.querySelector(".planet-label");
+
+      if (label) {
+        label.style.color = config.labelColor;
+      }
 
       el.addEventListener("mouseenter", () => el.classList.add("is-active"));
       el.addEventListener("mouseleave", () => el.classList.remove("is-active"));
@@ -117,13 +158,10 @@
       return {
         key,
         el,
-        diamond,
-        labelWrap,
-        baseAngle: entry.baseAngle,
-        lane: entry.lane,
-        lockBelow: entry.lockBelow === true
+        body,
+        config
       };
-    });
+    }).filter(Boolean);
   }
 
   function bindEvents() {
@@ -197,8 +235,7 @@
 
     const elapsed = ts - state.startTs;
     drawField(elapsed);
-    moveShell(elapsed);
-    positionTokens(elapsed);
+    positionBodies(elapsed);
 
     state.rafId = requestAnimationFrame(tick);
   }
@@ -206,7 +243,7 @@
   function resize() {
     const rect = stage.getBoundingClientRect();
     state.width = Math.max(320, Math.floor(rect.width));
-    state.height = Math.max(360, Math.floor(rect.height));
+    state.height = Math.max(420, Math.floor(rect.height));
     state.dpr = Math.min(window.devicePixelRatio || 1, CONFIG.DPR_CAP);
 
     if (!state.canvas || !state.ctx) return;
@@ -222,56 +259,53 @@
     state.stars = Array.from({ length: CONFIG.STAR_COUNT }, () => ({
       x: Math.random() * state.width,
       y: Math.random() * state.height,
-      r: Math.random() * 1.3 + 0.25,
+      r: Math.random() * 1.35 + 0.25,
       a: Math.random() * 0.58 + 0.12,
       tw: Math.random() * Math.PI * 2,
-      speed: 0.35 + Math.random()
+      speed: 0.25 + Math.random()
     }));
   }
 
   function seedDust() {
-    const orbitWidth = getOrbitWidth();
-    const orbitHeight = getOrbitHeight();
-
     state.dust = Array.from({ length: CONFIG.DUST_COUNT }, () => ({
       angle: Math.random() * Math.PI * 2,
-      rx: 84 + Math.random() * orbitWidth * 0.42,
-      ry: 62 + Math.random() * orbitHeight * 0.42,
-      size: 1.3 + Math.random() * 2.4,
-      speed: 0.14 + Math.random() * 0.36,
-      alpha: 0.06 + Math.random() * 0.12
+      radius: 52 + Math.random() * 210,
+      size: 1.2 + Math.random() * 2.4,
+      speed: 0.08 + Math.random() * 0.18,
+      alpha: 0.04 + Math.random() * 0.10
     }));
   }
 
-  function getOrbitWidth() {
-    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-      ? CONFIG.MOBILE_ORBIT_WIDTH
-      : CONFIG.DESKTOP_ORBIT_WIDTH;
-  }
+  function getLayout() {
+    const mobile = window.innerWidth <= CONFIG.MOBILE_BREAKPOINT;
 
-  function getOrbitHeight() {
-    return window.innerWidth <= CONFIG.MOBILE_BREAKPOINT
-      ? CONFIG.MOBILE_ORBIT_HEIGHT
-      : CONFIG.DESKTOP_ORBIT_HEIGHT;
+    return {
+      mobile,
+      centerX: state.width * (mobile ? CONFIG.MOBILE_CENTER_X_RATIO : CONFIG.DESKTOP_CENTER_X_RATIO),
+      centerY: state.height * (mobile ? CONFIG.MOBILE_CENTER_Y_RATIO : CONFIG.DESKTOP_CENTER_Y_RATIO),
+      innerA: mobile ? CONFIG.MOBILE_ORBIT_A_INNER : CONFIG.DESKTOP_ORBIT_A_INNER,
+      innerB: mobile ? CONFIG.MOBILE_ORBIT_B_INNER : CONFIG.DESKTOP_ORBIT_B_INNER,
+      outerA: mobile ? CONFIG.MOBILE_ORBIT_A_OUTER : CONFIG.DESKTOP_ORBIT_A_OUTER,
+      outerB: mobile ? CONFIG.MOBILE_ORBIT_B_OUTER : CONFIG.DESKTOP_ORBIT_B_OUTER
+    };
   }
 
   function drawField(elapsed) {
     if (!state.ctx) return;
 
     const ctx = state.ctx;
-    const cx = state.width * CONFIG.CENTER_X_RATIO;
-    const cy = state.height * CONFIG.CENTER_Y_RATIO;
-    const orbitWidth = getOrbitWidth();
-    const orbitHeight = getOrbitHeight();
+    const layout = getLayout();
+    const { centerX, centerY, innerA, innerB, outerA, outerB } = layout;
 
     ctx.clearRect(0, 0, state.width, state.height);
 
-    const halo = ctx.createRadialGradient(cx, cy, 20, cx, cy, orbitWidth * 0.9);
-    halo.addColorStop(0, "rgba(245,225,172,0.18)");
-    halo.addColorStop(0.22, "rgba(167,212,255,0.10)");
-    halo.addColorStop(0.5, "rgba(114,153,255,0.05)");
-    halo.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = halo;
+    const sunGlow = ctx.createRadialGradient(centerX, centerY, 6, centerX, centerY, 118);
+    sunGlow.addColorStop(0, "rgba(255,250,224,0.98)");
+    sunGlow.addColorStop(0.10, "rgba(255,232,170,0.92)");
+    sunGlow.addColorStop(0.30, "rgba(255,196,98,0.56)");
+    sunGlow.addColorStop(0.58, "rgba(255,160,74,0.18)");
+    sunGlow.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = sunGlow;
     ctx.fillRect(0, 0, state.width, state.height);
 
     state.stars.forEach((star) => {
@@ -283,26 +317,23 @@
     });
 
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(elapsed * 0.00008);
-
-    ctx.strokeStyle = "rgba(180,214,255,0.08)";
+    ctx.strokeStyle = "rgba(180,214,255,0.10)";
     ctx.lineWidth = 1;
 
     ctx.beginPath();
-    ctx.ellipse(0, 0, orbitWidth * 0.46, orbitHeight * 0.46, 0, 0, Math.PI * 2);
+    ctx.ellipse(centerX, centerY, innerA, innerB, 0, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.ellipse(0, 0, orbitWidth * 0.72, orbitHeight * 0.72, 0, 0, Math.PI * 2);
+    ctx.ellipse(centerX, centerY, outerA, outerB, 0, 0, Math.PI * 2);
     ctx.stroke();
 
     ctx.restore();
 
     state.dust.forEach((particle) => {
-      const angle = particle.angle + elapsed * 0.00012 * particle.speed;
-      const x = cx + Math.cos(angle) * particle.rx;
-      const y = cy + Math.sin(angle) * particle.ry;
+      const angle = particle.angle + elapsed * 0.00008 * particle.speed;
+      const x = centerX + Math.cos(angle) * particle.radius;
+      const y = centerY + Math.sin(angle) * (particle.radius * 0.68);
 
       ctx.beginPath();
       ctx.fillStyle = `rgba(240,216,154,${particle.alpha})`;
@@ -310,13 +341,32 @@
       ctx.fill();
     });
 
-    drawVaultGlow(ctx, cx, cy, elapsed);
+    drawSunCore(ctx, centerX, centerY, elapsed);
+    drawVaultGlow(ctx, centerX, state.height - 96, elapsed);
   }
 
-  function drawVaultGlow(ctx, cx, cy, elapsed) {
-    const pulse = 0.78 + Math.sin(elapsed * 0.0012) * 0.08;
-    const vaultY = cy + 176;
-    const glow = ctx.createRadialGradient(cx, vaultY, 0, cx, vaultY, 110);
+  function drawSunCore(ctx, x, y, elapsed) {
+    const pulse = 1 + Math.sin(elapsed * 0.0014) * 0.045;
+
+    const core = ctx.createRadialGradient(x, y, 0, x, y, 38 * pulse);
+    core.addColorStop(0, "rgba(255,255,246,1)");
+    core.addColorStop(0.20, "rgba(255,246,198,0.98)");
+    core.addColorStop(0.52, "rgba(255,214,116,0.88)");
+    core.addColorStop(1, "rgba(255,168,70,0)");
+    ctx.fillStyle = core;
+    ctx.beginPath();
+    ctx.arc(x, y, 38 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.beginPath();
+    ctx.fillStyle = "rgba(255,244,204,0.96)";
+    ctx.arc(x, y, 18 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawVaultGlow(ctx, x, y, elapsed) {
+    const pulse = 0.82 + Math.sin(elapsed * 0.0012) * 0.08;
+    const glow = ctx.createRadialGradient(x, y, 0, x, y, 110);
     glow.addColorStop(0, `rgba(240,216,154,${0.16 * pulse})`);
     glow.addColorStop(0.45, `rgba(240,216,154,${0.08 * pulse})`);
     glow.addColorStop(1, "rgba(0,0,0,0)");
@@ -324,87 +374,66 @@
     ctx.fillRect(0, 0, state.width, state.height);
   }
 
-  function moveShell(elapsed) {
+  function positionBodies(elapsed) {
+    const layout = getLayout();
+    const { centerX, centerY, innerA, innerB, outerA, outerB } = layout;
     const pointerX = state.pointerActive ? state.pointerX : 0;
     const pointerY = state.pointerActive ? state.pointerY : 0;
 
-    const rotateY = pointerX * 2.8;
-    const rotateX = pointerY * -2.2;
-    const driftX = pointerX * 4;
-    const driftY = pointerY * 3;
+    state.bodies.forEach((planet) => {
+      const { key, el, body, config } = planet;
+      const size = layout.mobile ? config.size * 0.88 : config.size;
 
-    grid.style.transform = `translate3d(${driftX}px, ${driftY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-  }
+      el.style.width = `${size}px`;
+      el.style.height = `${size}px`;
 
-  function positionTokens(elapsed) {
-    const cx = state.width * CONFIG.CENTER_X_RATIO;
-    const cy = state.height * CONFIG.CENTER_Y_RATIO;
-    const orbitWidth = getOrbitWidth();
-    const orbitHeight = getOrbitHeight();
+      let x = centerX;
+      let y = centerY;
+      let depth = 0.5;
+      let spin = elapsed * config.spin;
 
-    const pointerX = state.pointerActive ? state.pointerX : 0;
-    const pointerY = state.pointerActive ? state.pointerY : 0;
-
-    state.tokens.forEach((token) => {
-      let angle = token.baseAngle;
-
-      if (!token.lockBelow) {
-        angle += elapsed * CONFIG.ORBIT_SPEED_RAD_MS;
-        angle += Math.sin(elapsed * 0.00055 + token.baseAngle * 2) * 0.05;
+      if (config.lane === "inner") {
+        const angle = config.angle + elapsed * CONFIG.ORBIT_SPEED_INNER;
+        x = centerX + Math.cos(angle) * innerA + pointerX * CONFIG.POINTER_SHIFT_X;
+        y = centerY + Math.sin(angle) * innerB + pointerY * CONFIG.POINTER_SHIFT_Y;
+        depth = (Math.sin(angle) + 1) / 2;
+      } else if (config.lane === "outer") {
+        const angle = config.angle + elapsed * CONFIG.ORBIT_SPEED_OUTER;
+        x = centerX + Math.cos(angle) * outerA + pointerX * CONFIG.POINTER_SHIFT_X;
+        y = centerY + Math.sin(angle) * outerB + pointerY * CONFIG.POINTER_SHIFT_Y;
+        depth = (Math.sin(angle) + 1) / 2;
+      } else {
+        x = centerX + pointerX * (CONFIG.POINTER_SHIFT_X * 0.2);
+        y = state.height - 118 + pointerY * (CONFIG.POINTER_SHIFT_Y * 0.15);
+        depth = 0.2;
+        spin = elapsed * config.spin * 0.35;
       }
 
-      const wobbleX = !token.lockBelow
-        ? Math.sin(elapsed * 0.0011 + token.baseAngle) * CONFIG.WOBBLE_PX_X
-        : 0;
+      const scale = lerp(CONFIG.PLANET_SCALE_MIN, CONFIG.PLANET_SCALE_MAX, depth);
+      const opacity = lerp(CONFIG.PLANET_OPACITY_MIN, CONFIG.PLANET_OPACITY_MAX, depth);
 
-      const wobbleY = !token.lockBelow
-        ? Math.cos(elapsed * 0.0010 + token.baseAngle) * CONFIG.WOBBLE_PX_Y
-        : 0;
+      el.style.transform = `translate3d(${(x - size / 2).toFixed(2)}px, ${(y - size / 2).toFixed(2)}px, 0)`;
+      el.style.opacity = opacity.toFixed(3);
+      el.style.zIndex = String(key === "vault" ? 4 : Math.floor(10 + depth * 12));
 
-      const px = !token.lockBelow
-        ? cx + Math.cos(angle) * (orbitWidth * 0.5 * token.lane) + wobbleX + pointerX * CONFIG.POINTER_PX_X
-        : cx + pointerX * (CONFIG.POINTER_PX_X * 0.2);
-
-      const py = !token.lockBelow
-        ? cy + Math.sin(angle) * (orbitHeight * 0.5 * token.lane) + wobbleY + pointerY * CONFIG.POINTER_PX_Y
-        : cy + orbitHeight * 0.68 + 76 + pointerY * (CONFIG.POINTER_PX_Y * 0.15);
-
-      const depthRaw = !token.lockBelow
-        ? (Math.sin(angle) + 1) / 2
-        : 0.18;
-
-      const scale = lerp(CONFIG.TOKEN_SCALE_MIN, CONFIG.TOKEN_SCALE_MAX, depthRaw);
-      const opacity = lerp(CONFIG.TOKEN_OPACITY_MIN, CONFIG.TOKEN_OPACITY_MAX, depthRaw);
-
-      token.el.style.transform = `translate3d(${(px - 48).toFixed(2)}px, ${(py - 48).toFixed(2)}px, 0)`;
-      token.el.style.opacity = opacity.toFixed(3);
-      token.el.style.zIndex = String(token.lockBelow ? 4 : Math.floor(10 + depthRaw * 12));
-
-      if (token.diamond) {
-        const tilt = !token.lockBelow ? Math.cos(angle) * 8 : 0;
-        const spin = !token.lockBelow ? elapsed * 0.012 : 0;
-        token.diamond.style.transform = `translateZ(0) rotateX(${tilt * 0.35}deg) rotateY(${tilt * 0.45}deg) rotateZ(${spin}deg) scale(${scale.toFixed(3)})`;
-      }
-
-      if (token.labelWrap) {
-        token.labelWrap.style.transform = `translateZ(12px) rotateZ(${token.lockBelow ? 0 : spinCompensation(elapsed).toFixed(2)}deg)`;
+      if (body) {
+        body.style.transform = `rotate(${spin.toFixed(3)}deg) scale(${scale.toFixed(3)})`;
       }
     });
   }
 
   function applyReducedMotionState() {
     drawField(0);
-    grid.style.transform = "translate3d(0,0,0)";
-    positionTokens(0);
+    positionBodies(0);
   }
 
   function injectRuntimeStyles() {
-    if (document.getElementById("richies-manor-runtime-style")) return;
+    if (document.getElementById("richies-manor-solar-runtime-style")) return;
 
     const style = document.createElement("style");
-    style.id = "richies-manor-runtime-style";
+    style.id = "richies-manor-solar-runtime-style";
     style.textContent = `
-      .home-manor-canvas {
+      .home-solar-canvas {
         position: absolute;
         inset: 0;
         width: 100%;
@@ -412,33 +441,33 @@
         display: block;
       }
 
-      .home-manor-glow,
-      .home-manor-atmosphere {
+      .home-solar-glow,
+      .home-solar-atmosphere {
         position: absolute;
         inset: 0;
         pointer-events: none;
       }
 
-      .home-manor-glow.glow-a {
+      .home-solar-glow.glow-a {
         background:
-          radial-gradient(circle at 50% 36%, rgba(240,216,154,0.10), transparent 28%),
-          radial-gradient(circle at 50% 66%, rgba(143,200,255,0.06), transparent 34%);
-        filter: blur(28px);
+          radial-gradient(circle at 50% 46%, rgba(255, 214, 116, 0.10), transparent 20%),
+          radial-gradient(circle at 50% 46%, rgba(143,200,255,0.05), transparent 42%);
+        filter: blur(26px);
         opacity: 0.9;
       }
 
-      .home-manor-glow.glow-b {
+      .home-solar-glow.glow-b {
         background:
-          radial-gradient(circle at 26% 26%, rgba(143,200,255,0.06), transparent 18%),
-          radial-gradient(circle at 76% 22%, rgba(143,200,255,0.05), transparent 18%);
+          radial-gradient(circle at 24% 22%, rgba(143,200,255,0.05), transparent 18%),
+          radial-gradient(circle at 76% 18%, rgba(143,200,255,0.04), transparent 18%);
         filter: blur(34px);
         opacity: 0.82;
       }
 
-      .home-manor-atmosphere {
+      .home-solar-atmosphere {
         background:
-          linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0)),
-          linear-gradient(180deg, rgba(7,15,28,0), rgba(7,15,28,0.10));
+          linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0)),
+          linear-gradient(180deg, rgba(7,15,28,0), rgba(7,15,28,0.08));
       }
     `;
     document.head.appendChild(style);
@@ -453,9 +482,5 @@
 
   function lerp(a, b, t) {
     return a + (b - a) * t;
-  }
-
-  function spinCompensation(elapsed) {
-    return Math.sin(elapsed * 0.0005) * -1.5;
   }
 })();

@@ -1,21 +1,19 @@
-import {
-  getWorldDimensionsKm,
-  getUniverseBoundsKm,
-  getUniverseCenterKm,
-  getScaleMode,
-  getSolarPolicy,
-  getCameraFrame,
-  getSunExclusionRadiusKm,
-  radiusKmToPx
-} from "./control.js";
+import { createWorldKernel } from "./world_kernel.js";
 
 const PLANET_ENGINE_META = Object.freeze({
   name: "PLANET_ENGINE",
   version: "G2_SOLAR_TEMPLATE_BASELINE",
-  role: "solar_model_and_orbit_expression",
+  role: "solar_model_authority",
   contract: "PLANET_ENGINE_CONTRACT_G2_SOLAR_TEMPLATE",
   status: "ACTIVE",
   deterministic: true
+});
+
+const KERNEL = createWorldKernel();
+
+const WORLD_DIMENSIONS_KM = Object.freeze({
+  width: 256_000_000,
+  height: 256_000_000
 });
 
 const SOLAR_BODIES = Object.freeze({
@@ -24,11 +22,13 @@ const SOLAR_BODIES = Object.freeze({
     kind: "star",
     order: 0,
     label: "Sun",
+    route: null,
+    visibleColorClass: "sun",
     radiusKm: 696_340,
-    orbitRadiusKm: 0,
+    orbitalRadiusKm: 0,
     orbitalPeriodYears: 0,
-    axialSpinHours: 609.12,
-    visibleColorClass: "sun"
+    baseAngle: 0,
+    hasRing: false
   },
   mercury: {
     key: "mercury",
@@ -36,11 +36,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 1,
     label: "Mercury",
     route: "/explore/",
+    visibleColorClass: "planet-mercury",
     radiusKm: 2_439.7,
-    orbitRadiusKm: 57_909_227,
+    orbitalRadiusKm: 57_909_227,
     orbitalPeriodYears: 0.2408467,
-    axialSpinHours: 1_407.6,
-    visibleColorClass: "planet-mercury"
+    baseAngle: -1.35,
+    hasRing: false
   },
   venus: {
     key: "venus",
@@ -48,11 +49,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 2,
     label: "Venus",
     route: "/products/",
+    visibleColorClass: "planet-venus",
     radiusKm: 6_051.8,
-    orbitRadiusKm: 108_209_475,
+    orbitalRadiusKm: 108_209_475,
     orbitalPeriodYears: 0.61519726,
-    axialSpinHours: -5_832.5,
-    visibleColorClass: "planet-venus"
+    baseAngle: -0.62,
+    hasRing: false
   },
   earth: {
     key: "earth",
@@ -60,11 +62,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 3,
     label: "Earth",
     route: "/gauges/",
+    visibleColorClass: "planet-earth",
     radiusKm: 6_371,
-    orbitRadiusKm: 149_598_023,
+    orbitalRadiusKm: 149_598_023,
     orbitalPeriodYears: 1,
-    axialSpinHours: 23.934,
-    visibleColorClass: "planet-earth"
+    baseAngle: 0.12,
+    hasRing: false
   },
   mars: {
     key: "mars",
@@ -72,11 +75,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 4,
     label: "Mars",
     route: "/laws/",
+    visibleColorClass: "planet-mars",
     radiusKm: 3_389.5,
-    orbitRadiusKm: 227_939_200,
+    orbitalRadiusKm: 227_939_200,
     orbitalPeriodYears: 1.8808476,
-    axialSpinHours: 24.623,
-    visibleColorClass: "planet-mars"
+    baseAngle: 0.82,
+    hasRing: false
   },
   jupiter: {
     key: "jupiter",
@@ -84,11 +88,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 5,
     label: "Jupiter",
     route: "/governance/",
+    visibleColorClass: "planet-jupiter",
     radiusKm: 69_911,
-    orbitRadiusKm: 778_340_821,
+    orbitalRadiusKm: 778_340_821,
     orbitalPeriodYears: 11.862615,
-    axialSpinHours: 9.925,
-    visibleColorClass: "planet-jupiter"
+    baseAngle: 1.46,
+    hasRing: false
   },
   saturn: {
     key: "saturn",
@@ -96,11 +101,11 @@ const SOLAR_BODIES = Object.freeze({
     order: 6,
     label: "Saturn",
     route: "/about/",
-    radiusKm: 58_232,
-    orbitRadiusKm: 1_426_666_422,
-    orbitalPeriodYears: 29.447498,
-    axialSpinHours: 10.656,
     visibleColorClass: "planet-saturn",
+    radiusKm: 58_232,
+    orbitalRadiusKm: 1_426_666_422,
+    orbitalPeriodYears: 29.447498,
+    baseAngle: 2.08,
     hasRing: true
   },
   uranus: {
@@ -109,11 +114,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 7,
     label: "Uranus",
     route: "/contact/",
+    visibleColorClass: "planet-uranus",
     radiusKm: 25_362,
-    orbitRadiusKm: 2_870_658_186,
+    orbitalRadiusKm: 2_870_658_186,
     orbitalPeriodYears: 84.016846,
-    axialSpinHours: -17.24,
-    visibleColorClass: "planet-uranus"
+    baseAngle: 2.70,
+    hasRing: false
   },
   neptune: {
     key: "neptune",
@@ -121,11 +127,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 8,
     label: "Neptune",
     route: "/",
+    visibleColorClass: "planet-neptune",
     radiusKm: 24_622,
-    orbitRadiusKm: 4_498_396_441,
+    orbitalRadiusKm: 4_498_396_441,
     orbitalPeriodYears: 164.79132,
-    axialSpinHours: 16.11,
-    visibleColorClass: "planet-neptune"
+    baseAngle: 3.22,
+    hasRing: false
   },
   pluto: {
     key: "pluto",
@@ -133,11 +140,12 @@ const SOLAR_BODIES = Object.freeze({
     order: 9,
     label: "Pluto",
     route: "#primary-routes",
+    visibleColorClass: "planet-pluto",
     radiusKm: 1_188.3,
-    orbitRadiusKm: 5_906_376_272,
+    orbitalRadiusKm: 5_906_376_272,
     orbitalPeriodYears: 248,
-    axialSpinHours: -153.2928,
-    visibleColorClass: "planet-pluto"
+    baseAngle: 3.72,
+    hasRing: false
   }
 });
 
@@ -181,91 +189,118 @@ function isMobileViewport(viewport = {}) {
   return getViewport(viewport).width <= 760;
 }
 
+function getWorldBoundsKm() {
+  return deepFreeze({
+    width: WORLD_DIMENSIONS_KM.width,
+    height: WORLD_DIMENSIONS_KM.height,
+    minX: -WORLD_DIMENSIONS_KM.width * 0.5,
+    maxX: WORLD_DIMENSIONS_KM.width * 0.5,
+    minY: -WORLD_DIMENSIONS_KM.height * 0.5,
+    maxY: WORLD_DIMENSIONS_KM.height * 0.5
+  });
+}
+
 function getWorldRadiusKm() {
-  const dimensions = getWorldDimensionsKm();
-  return Math.min(dimensions.width, dimensions.height) * 0.5;
+  return Math.min(WORLD_DIMENSIONS_KM.width, WORLD_DIMENSIONS_KM.height) * 0.5;
 }
 
-function getCompressedOrbitRadiusKm(bodyKey) {
-  if (!PLANET_ORDER.includes(bodyKey)) return 0;
+function getScaledOrbitRadiusKm(key) {
+  const index = PLANET_ORDER.indexOf(key);
+  if (index === -1) return 0;
 
-  const index = PLANET_ORDER.indexOf(bodyKey);
-  const bodyCount = PLANET_ORDER.length;
   const worldRadius = getWorldRadiusKm();
-  const exclusion = getSunExclusionRadiusKm();
-
-  const innerOrbit = exclusion + 8_000_000;
-  const outerOrbit = worldRadius - 6_000_000;
-
-  const t = bodyCount === 1 ? 1 : index / (bodyCount - 1);
-  return lerp(innerOrbit, outerOrbit, t);
+  const inner = 18_000_000;
+  const outer = worldRadius - 8_000_000;
+  const t = PLANET_ORDER.length === 1 ? 1 : index / (PLANET_ORDER.length - 1);
+  return lerp(inner, outer, t);
 }
 
-function getCompressedBodyRadiusKm(bodyKey) {
-  const body = SOLAR_BODIES[bodyKey];
-  if (!body) return 0;
-  if (bodyKey === "sun") {
+function getScaledPlanetRadiusKm(key) {
+  if (key === "sun") {
     return 18_500_000;
   }
 
-  const rawRadii = PLANET_ORDER.map((key) => SOLAR_BODIES[key].radiusKm);
+  const rawRadii = PLANET_ORDER.map((planetKey) => SOLAR_BODIES[planetKey].radiusKm);
   const minRaw = Math.min(...rawRadii);
   const maxRaw = Math.max(...rawRadii);
-  const worldRadius = getWorldRadiusKm();
-  const minVisible = worldRadius * 0.012;
-  const maxVisible = worldRadius * 0.045;
+  const body = SOLAR_BODIES[key];
+  const t = (body.radiusKm - minRaw) / Math.max(1, maxRaw - minRaw);
 
-  const normalized = (body.radiusKm - minRaw) / (maxRaw - minRaw || 1);
-  return lerp(minVisible, maxVisible, normalized);
+  const minVisible = 1_200_000;
+  const maxVisible = 5_200_000;
+
+  return lerp(minVisible, maxVisible, t);
 }
 
-function getAngularVelocity(bodyKey) {
-  const body = SOLAR_BODIES[bodyKey];
-  if (!body || body.kind !== "planet") return 0;
-
-  /*
-    Ranking remains faithful to the real solar system.
-    Range is compressed for demo readability.
-  */
-  const base = 0.0012;
-  return base / Math.sqrt(body.orbitalPeriodYears);
+function getAngularVelocity(periodYears, viewport = {}) {
+  const mobile = isMobileViewport(viewport);
+  const base = mobile ? 0.00105 : 0.0012;
+  return base / Math.sqrt(periodYears);
 }
 
-function getBodyModel(bodyKey) {
-  const body = SOLAR_BODIES[bodyKey];
-  if (!body) return null;
+function getOrbitTilt(viewport = {}) {
+  return isMobileViewport(viewport) ? 0.62 : 0.72;
+}
 
-  const compressedOrbitRadiusKm = body.kind === "planet" ? getCompressedOrbitRadiusKm(bodyKey) : 0;
-  const compressedRadiusKm = getCompressedBodyRadiusKm(bodyKey);
+function getCamera(viewport = {}) {
+  const nextViewport = getViewport(viewport);
+  const mobile = isMobileViewport(nextViewport);
+  const insetRatio = mobile ? 0.10 : 0.08;
+
+  const drawableWidthPx = Math.max(1, nextViewport.width * (1 - insetRatio * 2));
+  const drawableHeightPx = Math.max(1, nextViewport.height * (1 - insetRatio * 2));
+
+  const kmPerPxX = WORLD_DIMENSIONS_KM.width / drawableWidthPx;
+  const kmPerPxY = WORLD_DIMENSIONS_KM.height / drawableHeightPx;
+  const kmPerPx = Math.max(kmPerPxX, kmPerPxY);
+  const pxPerKm = 1 / kmPerPx;
 
   return deepFreeze({
-    ...body,
-    compressedOrbitRadiusKm,
-    compressedRadiusKm,
-    angularVelocity: getAngularVelocity(bodyKey)
+    viewport: nextViewport,
+    insetRatio,
+    drawableWidthPx,
+    drawableHeightPx,
+    kmPerPx,
+    pxPerKm,
+    centerPx: {
+      x: nextViewport.width * 0.5,
+      y: nextViewport.height * (mobile ? 0.36 : 0.44)
+    }
   });
 }
 
-export function getSolarModel() {
-  const sun = getBodyModel("sun");
-  const planets = PLANET_ORDER.map((key) => getBodyModel(key));
+function projectWorldToViewport(pointKm = {}, viewport = {}) {
+  const camera = getCamera(viewport);
 
   return deepFreeze({
-    meta: PLANET_ENGINE_META,
-    scaleMode: getScaleMode(),
-    solarPolicy: getSolarPolicy(),
-    world: {
-      dimensionsKm: getWorldDimensionsKm(),
-      boundsKm: getUniverseBoundsKm(),
-      centerKm: getUniverseCenterKm()
-    },
-    sun,
-    planets
+    x: camera.centerPx.x + Number(pointKm.x || 0) * camera.pxPerKm,
+    y: camera.centerPx.y + Number(pointKm.y || 0) * camera.pxPerKm
   });
 }
 
-export function getBodyPositionKm(bodyKey, elapsedSeconds = 0) {
-  const body = getBodyModel(bodyKey);
+function projectRadiusKmToPx(radiusKm, viewport = {}) {
+  const camera = getCamera(viewport);
+  return Number(radiusKm || 0) * camera.pxPerKm;
+}
+
+function getBodyModel(key, viewport = {}) {
+  const base = SOLAR_BODIES[key];
+  if (!base) return null;
+
+  const scaledOrbitRadiusKm = key === "sun" ? 0 : getScaledOrbitRadiusKm(key);
+  const scaledRadiusKm = getScaledPlanetRadiusKm(key);
+  const angularVelocity = base.kind === "planet" ? getAngularVelocity(base.orbitalPeriodYears, viewport) : 0;
+
+  return deepFreeze({
+    ...base,
+    scaledOrbitRadiusKm,
+    scaledRadiusKm,
+    angularVelocity
+  });
+}
+
+function getBodyPositionKm(key, elapsedSeconds = 0, viewport = {}) {
+  const body = getBodyModel(key, viewport);
   if (!body) return null;
 
   if (body.kind !== "planet") {
@@ -278,9 +313,9 @@ export function getBodyPositionKm(bodyKey, elapsedSeconds = 0) {
     });
   }
 
-  const angle = body.angularVelocity * elapsedSeconds + body.order * 0.72;
-  const orbitRadiusKmX = body.compressedOrbitRadiusKm;
-  const orbitRadiusKmY = orbitRadiusKmX * 0.72;
+  const angle = body.baseAngle + elapsedSeconds * body.angularVelocity;
+  const orbitRadiusKmX = body.scaledOrbitRadiusKm;
+  const orbitRadiusKmY = orbitRadiusKmX * getOrbitTilt(viewport);
 
   return deepFreeze({
     x: Math.cos(angle) * orbitRadiusKmX,
@@ -291,108 +326,133 @@ export function getBodyPositionKm(bodyKey, elapsedSeconds = 0) {
   });
 }
 
-export function buildPlanetFrame(options = {}) {
-  const viewport = getViewport(options.viewport || {});
-  const camera = getCameraFrame(viewport);
-  const solar = getSolarModel();
-
-  const bodies = [solar.sun, ...solar.planets].map((body) => {
-    const positionKm = getBodyPositionKm(body.key, Number(options.elapsedSeconds) || 0);
-    return {
-      ...body,
-      positionKm
-    };
-  });
+export function getSolarModel(viewport = {}) {
+  const sun = getBodyModel("sun", viewport);
+  const planets = PLANET_ORDER.map((key) => getBodyModel(key, viewport));
 
   return deepFreeze({
     meta: PLANET_ENGINE_META,
-    kernel: {
-      name: "SOLAR_TEMPLATE_UNIVERSE",
-      version: PLANET_ENGINE_META.version,
-      posture: "SUN_CENTERED_DEMO_WORLD"
+    hostRead: KERNEL.getHostRead(),
+    world: {
+      dimensionsKm: WORLD_DIMENSIONS_KM,
+      boundsKm: getWorldBoundsKm()
     },
-    frame: {
-      type: "solar_template_universe",
-      radiusKm: getWorldRadiusKm(),
-      boundsKm: getUniverseBoundsKm(),
-      centerKm: getUniverseCenterKm()
-    },
+    sun,
+    planets
+  });
+}
+
+export function buildPlanetFrame(options = {}) {
+  const viewport = getViewport(options.viewport || {});
+  const elapsedSeconds = Number.isFinite(options.elapsedSeconds) ? options.elapsedSeconds : 0;
+  const camera = getCamera(viewport);
+  const solar = getSolarModel(viewport);
+
+  const sun = deepFreeze({
+    ...solar.sun,
+    positionKm: getBodyPositionKm("sun", elapsedSeconds, viewport)
+  });
+
+  const planets = solar.planets.map((planet) =>
+    deepFreeze({
+      ...planet,
+      positionKm: getBodyPositionKm(planet.key, elapsedSeconds, viewport)
+    })
+  );
+
+  return deepFreeze({
+    meta: PLANET_ENGINE_META,
+    hostRead: KERNEL.getHostRead(),
     camera,
-    solarPolicy: getSolarPolicy(),
-    scaleMode: getScaleMode(),
-    sun: bodies.find((body) => body.key === "sun"),
-    planets: bodies.filter((body) => body.kind === "planet")
+    world: {
+      dimensionsKm: WORLD_DIMENSIONS_KM,
+      boundsKm: getWorldBoundsKm()
+    },
+    sun,
+    planets
   });
 }
 
 export function getPlanetProjection(options = {}) {
   const viewport = getViewport(options.viewport || {});
-  const frame = buildPlanetFrame({
-    viewport,
-    elapsedSeconds: Number(options.elapsedSeconds) || 0
-  });
+  const elapsedSeconds = Number.isFinite(options.elapsedSeconds) ? options.elapsedSeconds : 0;
+  const frame = buildPlanetFrame({ viewport, elapsedSeconds });
 
-  const projectedSun = {
+  const projectedSun = deepFreeze({
     ...frame.sun,
-    viewport: {
-      x: viewport.width * 0.5,
-      y: viewport.height * 0.5
-    },
-    radiusPx: radiusKmToPx(frame.sun.compressedRadiusKm, viewport)
-  };
-
-  const projectedPlanets = frame.planets.map((planet) => {
-    const xPx = frame.camera.centerPx.x + planet.positionKm.x * frame.camera.pxPerKm;
-    const yPx = frame.camera.centerPx.y + planet.positionKm.y * frame.camera.pxPerKm;
-    const radiusPx = radiusKmToPx(planet.compressedRadiusKm, viewport);
-
-    return {
-      ...planet,
-      viewport: {
-        x: xPx,
-        y: yPx
-      },
-      radiusPx,
-      orbitPx: {
-        x: planet.positionKm.orbitRadiusKmX * frame.camera.pxPerKm,
-        y: planet.positionKm.orbitRadiusKmY * frame.camera.pxPerKm
-      }
-    };
+    viewport: projectWorldToViewport(frame.sun.positionKm, viewport),
+    radiusPx: clamp(projectRadiusKmToPx(frame.sun.scaledRadiusKm, viewport), 38, 58)
   });
+
+  const projectedPlanets = deepFreeze(
+    frame.planets.map((planet) => {
+      const viewportPoint = projectWorldToViewport(planet.positionKm, viewport);
+      const radiusPx = clamp(
+        projectRadiusKmToPx(planet.scaledRadiusKm, viewport),
+        isMobileViewport(viewport) ? 7 : 10,
+        isMobileViewport(viewport) ? 22 : 30
+      );
+
+      return deepFreeze({
+        ...planet,
+        viewport: viewportPoint,
+        radiusPx,
+        orbitPx: {
+          x: planet.positionKm.orbitRadiusKmX * frame.camera.pxPerKm,
+          y: planet.positionKm.orbitRadiusKmY * frame.camera.pxPerKm
+        }
+      });
+    })
+  );
+
+  const orbitRings = deepFreeze(
+    projectedPlanets.map((planet) =>
+      deepFreeze({
+        key: planet.key,
+        label: planet.label,
+        radiusPxX: planet.orbitPx.x,
+        radiusPxY: planet.orbitPx.y
+      })
+    )
+  );
+
+  const stars = buildStarField(viewport);
 
   return deepFreeze({
     meta: PLANET_ENGINE_META,
     projection: {
       kind: "euclidean_solar_template",
-      frameRadiusKm: frame.frame.radiusKm,
+      frameRadiusKm: getWorldRadiusKm(),
       frameRadiusPx: Math.min(frame.camera.drawableWidthPx, frame.camera.drawableHeightPx) * 0.5,
-      scaleMode: getScaleMode()
+      scaleMode: "COMPRESSED_PROPORTIONAL"
     },
     camera: frame.camera,
-    solarPolicy: frame.solarPolicy,
+    solarPolicy: {
+      bodyCount: 9,
+      includePluto: true,
+      centerBody: "sun",
+      orbitModel: "EUCLIDEAN_ELLIPTICAL_TEMPLATE"
+    },
     sun: projectedSun,
     planets: projectedPlanets,
-    stars: buildStarField(viewport),
-    orbitRings: projectedPlanets.map((planet) => ({
-      key: planet.key,
-      label: planet.label,
-      radiusPxX: planet.orbitPx.x,
-      radiusPxY: planet.orbitPx.y
-    }))
+    stars,
+    orbitRings
   });
 }
 
 export function getPlanetEngineReceipt(options = {}) {
-  const projection = getPlanetProjection(options);
+  const viewport = getViewport(options.viewport || {});
+  const elapsedSeconds = Number.isFinite(options.elapsedSeconds) ? options.elapsedSeconds : 0;
+  const projection = getPlanetProjection({ viewport, elapsedSeconds });
 
   return deepFreeze({
     meta: PLANET_ENGINE_META,
     verification: {
       pass: true,
       deterministic: true,
-      bodyCount: projection.planets.length,
       centerBody: projection.sun.label,
-      scaleMode: projection.projection.scaleMode
+      bodyCount: projection.planets.length,
+      includePluto: projection.planets.some((planet) => planet.key === "pluto")
     },
     projection: projection.projection,
     camera: {
@@ -400,29 +460,20 @@ export function getPlanetEngineReceipt(options = {}) {
       pxPerKm: projection.camera.pxPerKm
     },
     bodyCount: projection.planets.length,
-    centerBody: projection.sun.label,
     orbitCount: projection.orbitRings.length,
-    largestPlanet: getLargestPlanetKey(),
-    includePluto: getSolarPolicy().includePluto === true
+    largestPlanet: "jupiter"
   });
-}
-
-function getLargestPlanetKey() {
-  return PLANET_ORDER.reduce((largestKey, nextKey) => {
-    if (!largestKey) return nextKey;
-    return SOLAR_BODIES[nextKey].radiusKm > SOLAR_BODIES[largestKey].radiusKm ? nextKey : largestKey;
-  }, "");
 }
 
 function buildStarField(viewport = {}) {
   const nextViewport = getViewport(viewport);
   const mobile = isMobileViewport(nextViewport);
-  const starCount = mobile ? 110 : 180;
+  const count = mobile ? 110 : 180;
 
   const stars = [];
   let seed = 17;
 
-  for (let i = 0; i < starCount; i += 1) {
+  for (let i = 0; i < count; i += 1) {
     seed = (seed * 9301 + 49297) % 233280;
     const x = (seed / 233280) * nextViewport.width;
 
@@ -444,7 +495,6 @@ function buildStarField(viewport = {}) {
 export default deepFreeze({
   meta: PLANET_ENGINE_META,
   getSolarModel,
-  getBodyPositionKm,
   buildPlanetFrame,
   getPlanetProjection,
   getPlanetEngineReceipt

@@ -9,7 +9,7 @@
   <title>AAI · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="AAI — artificial agent intelligence. A distinct product-line object under the products gateway."
+    content="AAI — artificial agent intelligence. A distinct child extension under the products gateway."
   >
 
   <style>
@@ -19,21 +19,17 @@
       --panel: rgba(255,255,255,0.05);
       --panel-soft: rgba(255,255,255,0.025);
       --line: rgba(255,255,255,0.10);
-
       --text: #eef4ff;
       --muted: #9fb0cf;
       --gold: #f0c876;
       --gold-soft: #f6deb0;
       --blue-soft: #9dd1ff;
-
       --shadow: 0 24px 80px rgba(0,0,0,0.42);
       --radius: 28px;
-      --max: 1160px;
+      --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -67,12 +63,6 @@
       text-decoration: none;
     }
 
-    .page {
-      position: relative;
-      min-height: 100vh;
-      isolation: isolate;
-    }
-
     .stars {
       position: fixed;
       inset: 0;
@@ -80,12 +70,12 @@
       pointer-events: none;
       background-image:
         radial-gradient(circle at 15% 20%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
-        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 40%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 30% 55%, rgba(255,255,255,0.6) 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 62% 40%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 30% 55%, rgba(255,255,255,0.60) 0 1px, transparent 2px),
         radial-gradient(circle at 78% 72%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
         radial-gradient(circle at 12% 78%, rgba(255,255,255,0.65) 0 1px, transparent 2px);
-      opacity: 0.7;
+      opacity: 0.72;
     }
 
     .shell {
@@ -189,7 +179,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
       gap: 18px;
       padding: 18px 0 12px;
     }
@@ -241,7 +231,7 @@
     h1 {
       font-size: clamp(42px, 7vw, 78px);
       color: #f7f1df;
-      max-width: 10ch;
+      max-width: 9ch;
     }
 
     h2 {
@@ -293,8 +283,15 @@
       gap: 16px;
     }
 
+    .stack {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
     .card,
-    .focus-card {
+    .focus-card,
+    .nested-card {
       padding: 20px;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 22px;
@@ -305,16 +302,23 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      min-height: 220px;
     }
 
-    .focus-card {
-      min-height: auto;
+    .card,
+    .nested-card {
+      min-height: 220px;
     }
 
     .detail {
       margin: 0;
       flex: 1 1 auto;
+    }
+
+    .nested-shell {
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
     }
 
     .footer {
@@ -399,11 +403,11 @@
         <section class="panel hero" aria-labelledby="aai-title">
           <article class="hero-main">
             <p class="eyebrow">Intelligence object</p>
-            <h1 id="aai-title">AAI</h1>
+            <h1 id="aai-title">Artificial agent intelligence.</h1>
             <p class="lede">
-              Artificial agent intelligence is held here as its own extension under
-              the products gateway. This page is for the object itself, not a short
-              paragraph trapped on the parent shell.
+              AAI is a distinct intelligence object. This page holds the core object
+              cleanly and opens deeper descent only where the next layer has a real
+              visitor job.
             </p>
 
             <div class="actions">
@@ -414,7 +418,7 @@
 
           <aside class="panel hero-side">
             <div>
-              <p class="meta-label">Name</p>
+              <p class="meta-label">Identity</p>
               <p class="meta-value">Artificial agent intelligence</p>
             </div>
             <div>
@@ -423,7 +427,7 @@
             </div>
             <div>
               <p class="meta-label">Tone</p>
-              <p class="meta-value">Precise, clear, non-hype</p>
+              <p class="meta-value">Precise, clear, non-mystical, non-hype</p>
             </div>
             <div>
               <p class="meta-label">Parent shell</p>
@@ -432,17 +436,16 @@
           </aside>
         </section>
 
-        <section class="panel section" aria-labelledby="aai-structure-title">
-          <p class="eyebrow">Object structure</p>
-          <h2 id="aai-structure-title">What this page carries.</h2>
+        <section class="panel section" aria-labelledby="aai-core-title">
+          <p class="eyebrow">Core object</p>
+          <h2 id="aai-core-title">What belongs on this first layer.</h2>
 
           <div class="grid">
             <article class="card">
               <p class="kicker">Defined object</p>
-              <h3>Not generic AI copy</h3>
+              <h3>Not generic AI language</h3>
               <p class="detail">
-                AAI is treated as a named object with a specific role, not a vague
-                future-tech slogan.
+                AAI is not a catch-all label. It is a named object with a defined lane.
               </p>
             </article>
 
@@ -450,8 +453,7 @@
               <p class="kicker">Clear lane</p>
               <h3>Agent-facing intelligence</h3>
               <p class="detail">
-                This page exists to hold the intelligence lane cleanly as its own
-                offering under the larger products system.
+                The extension holds the intelligence lane cleanly instead of flattening it into trend language.
               </p>
             </article>
 
@@ -459,29 +461,55 @@
               <p class="kicker">Next step</p>
               <h3>Move into platform</h3>
               <p class="detail">
-                The next real visitor motion is platform-facing, not another round
-                of explanation on the parent shell.
+                The next real visitor motion is platform-facing, not another layer of vague explanation.
               </p>
             </article>
           </div>
         </section>
 
-        <section class="panel section" aria-labelledby="aai-focus-title">
-          <p class="eyebrow">Focus</p>
-          <h2 id="aai-focus-title">AAI stands on its own.</h2>
+        <section class="panel section" aria-labelledby="aai-russian-doll-title">
+          <p class="eyebrow">Russian-doll containment</p>
+          <h2 id="aai-russian-doll-title">Contained depth.</h2>
 
-          <article class="focus-card">
-            <p class="detail">
-              This extension page exists so the products gateway can remain a gateway.
-              The object detail lives here. The parent shell routes here. That is the
-              containment law now in force.
-            </p>
-          </article>
+          <div class="stack">
+            <div class="nested-shell">
+              <article class="nested-card">
+                <p class="kicker">Layer 1</p>
+                <h3>Core definition</h3>
+                <p class="detail">
+                  The first layer names the object and keeps the read exact.
+                </p>
+              </article>
+            </div>
+
+            <div class="nested-shell">
+              <article class="nested-card">
+                <p class="kicker">Layer 2</p>
+                <h3>Capability lane</h3>
+                <p class="detail">
+                  The second layer frames what kind of intelligence object this is without drifting into hype.
+                </p>
+              </article>
+            </div>
+
+            <div class="nested-shell">
+              <article class="nested-card">
+                <p class="kicker">Layer 3</p>
+                <h3>Application path</h3>
+                <p class="detail">
+                  The third layer opens the platform-facing next step because that is the first load-bearing descent.
+                </p>
+                <div class="actions">
+                  <a class="button button-primary" href="/platform/">Open platform</a>
+                </div>
+              </article>
+            </div>
+          </div>
         </section>
       </main>
 
       <footer class="footer">
-        <span>Result: PAGE=AAI | ROLE=CHILD_EXTENSION | PARENT=/products/</span>
+        <span>Result: PAGE=AAI | ROLE=CHILD_EXTENSION | DEPTH=RUSSIAN_DOLL</span>
         <span><a href="/products/">Return to products</a></span>
       </footer>
     </div>

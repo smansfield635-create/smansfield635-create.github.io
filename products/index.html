@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Products · Solar System Field · Diamond Gate Bridge</title>
+  <title>Products · Boot Diagnostic Surface · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway with protected header, separated map region, and runtime ownership bound to products_runtime.js."
+    content="Products gateway with protected header, separated map region, and explicit runtime boot receipts."
   >
   <style>
     :root{
@@ -16,14 +16,18 @@
       --panel:rgba(8,18,42,.84);
       --panel-soft:rgba(10,22,52,.64);
       --line:rgba(173,212,255,.16);
+      --line-strong:rgba(214,233,255,.28);
       --text:#eef6ff;
       --muted:#a9bad6;
       --accent:#f3d79c;
-      --sun-core:#fff8de;
-      --sun-mid:#ffd88a;
-      --sun-edge:#ff9c39;
+      --green:#8ff0c5;
+      --red:#ff8d9d;
+      --gold:#f1d28d;
+      --violet:#c7b3ff;
       --shadow-heavy:0 24px 60px rgba(0,0,0,.45);
       --radius-xl:30px;
+      --radius-lg:24px;
+      --radius-md:18px;
       --max-width:1240px;
       color-scheme:dark;
     }
@@ -57,6 +61,11 @@
     }
 
     a{color:inherit;text-decoration:none}
+
+    code{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.92em;
+    }
 
     .shell{
       width:min(100% - 28px,var(--max-width));
@@ -211,13 +220,63 @@
 
     .map-viewport{
       position:relative;
-      min-height:min(820px,74vh);
+      min-height:min(860px,76vh);
       border-radius:26px;
       overflow:hidden;
       background:
         linear-gradient(180deg,rgba(4,13,32,.54),rgba(4,13,32,.22)),
         radial-gradient(circle at 50% 50%,rgba(58,103,188,.18),transparent 54%);
     }
+
+    .planetary-stage{
+      position:absolute;
+      inset:0;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .diagnostic-stack{
+      position:absolute;
+      left:18px;
+      top:18px;
+      z-index:35;
+      width:min(360px,calc(100% - 36px));
+      display:grid;
+      gap:10px;
+    }
+
+    .diagnostic-card{
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid rgba(173,212,255,.12);
+      background:linear-gradient(180deg,rgba(8,17,38,.84),rgba(7,14,30,.78));
+      box-shadow:0 12px 24px rgba(0,0,0,.24);
+      backdrop-filter:blur(10px);
+    }
+
+    .diagnostic-card .label{
+      display:block;
+      margin-bottom:6px;
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .diagnostic-card .value{
+      display:block;
+      font-size:.98rem;
+      font-weight:800;
+      line-height:1.4;
+      color:var(--text);
+      word-break:break-word;
+    }
+
+    .value.ok{color:var(--green)}
+    .value.fail{color:var(--red)}
+    .value.warn{color:var(--gold)}
+    .value.note{color:var(--violet)}
 
     .map-overlay-copy{
       position:absolute;
@@ -244,13 +303,6 @@
       color:var(--muted);
       font-size:.94rem;
       line-height:1.55;
-    }
-
-    .planetary-stage{
-      position:absolute;
-      inset:0;
-      overflow:hidden;
-      isolation:isolate;
     }
 
     .runtime-status{
@@ -291,7 +343,7 @@
     }
 
     @media (max-width:980px){
-      .map-viewport{min-height:820px}
+      .map-viewport{min-height:860px}
       .map-overlay-copy{
         left:16px;
         right:16px;
@@ -305,7 +357,15 @@
         width:min(100% - 16px,var(--max-width));
         padding-top:10px;
       }
-      .map-viewport{min-height:760px}
+
+      .map-viewport{min-height:820px}
+
+      .diagnostic-stack{
+        width:calc(100% - 24px);
+        left:12px;
+        top:12px;
+      }
+
       .runtime-status{
         right:12px;
         bottom:12px;
@@ -321,7 +381,7 @@
         <div class="brand-orb" aria-hidden="true"></div>
         <div class="brand-copy">
           <h1>Diamond Gate Bridge</h1>
-          <p>Products gateway with protected header, separated map region, and runtime ownership bound to products_runtime.js.</p>
+          <p>Products gateway with protected header, separated map region, and explicit runtime boot receipts.</p>
         </div>
       </div>
 
@@ -337,10 +397,11 @@
     <main class="products-layout">
       <section class="header-region" aria-labelledby="products-heading">
         <div class="eyebrow">Products Gateway</div>
-        <h2 id="products-heading">Euclidean planetary map</h2>
+        <h2 id="products-heading">Boot diagnostic surface</h2>
         <p>
-          Runtime ownership is now explicit. The active lower map region is driven by
-          <code>products_runtime.js</code> only. Geometry is frozen here; this pass only rebinds control.
+          Boot truth is primary in this pass. The active lower map region now exposes runtime-file discovery,
+          global API registration, <code>create()</code> entry, visible mount status, and exact failure text
+          when a failure occurs.
         </p>
       </section>
 
@@ -348,11 +409,34 @@
         <div class="map-viewport" id="products-map-viewport">
           <div class="planetary-stage" id="planetary-stage"></div>
 
+          <div class="diagnostic-stack" id="products-diagnostic-stack" aria-live="polite">
+            <div class="diagnostic-card">
+              <span class="label">Runtime file</span>
+              <span class="value note" id="diag-runtime-file">requested</span>
+            </div>
+            <div class="diagnostic-card">
+              <span class="label">Global API</span>
+              <span class="value note" id="diag-global-api">awaiting</span>
+            </div>
+            <div class="diagnostic-card">
+              <span class="label">Create entry</span>
+              <span class="value note" id="diag-create-entry">awaiting</span>
+            </div>
+            <div class="diagnostic-card">
+              <span class="label">Mount result</span>
+              <span class="value note" id="diag-mount-result">awaiting</span>
+            </div>
+            <div class="diagnostic-card">
+              <span class="label">Error text</span>
+              <span class="value note" id="diag-error-text">none</span>
+            </div>
+          </div>
+
           <div class="map-overlay-copy">
-            <strong>Runtime ownership rebound</strong>
+            <strong>Boot truth first</strong>
             <p>
-              The live products field now boots from one authoritative runtime path.
-              Any old inline or competing planetary logic is retired in this pass.
+              This pass does not reopen geometry. It proves the file-load, handoff, and visible-mount chain
+              across <code>index.html</code>, <code>index.js</code>, and <code>products_runtime.js</code>.
             </p>
           </div>
 
@@ -361,10 +445,10 @@
 
         <div class="map-footer">
           <p>
-            <strong>Ownership law:</strong> <code>products_runtime.js</code> is now the sole planetary runtime authority for this surface.
+            <strong>Ownership law:</strong> <code>products_runtime.js</code> is the sole runtime authority for the stage.
           </p>
           <p>
-            <strong>Freeze law:</strong> this pass does not introduce new geometry rules. It only ensures the intended runtime is the one actually running.
+            <strong>Diagnostic law:</strong> the page now exposes each boot stage directly instead of hiding failure behind a blank standby state.
           </p>
         </div>
       </section>

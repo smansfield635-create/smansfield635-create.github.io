@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Products · Boot Diagnostic Surface · Diamond Gate Bridge</title>
+  <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway with protected header, separate receipt region, and isolated runtime stage region."
+    content="Products gateway with a protected host region, primary live experience stage, and secondary diagnostic support."
   >
   <style>
     :root{
@@ -14,6 +14,7 @@
       --bg1:#041126;
       --bg2:#071c3d;
       --line:rgba(173,212,255,.16);
+      --line-strong:rgba(173,212,255,.26);
       --text:#eef6ff;
       --muted:#a9bad6;
       --accent:#f3d79c;
@@ -23,6 +24,8 @@
       --violet:#c7b3ff;
       --shadow-heavy:0 24px 60px rgba(0,0,0,.45);
       --radius-xl:30px;
+      --radius-lg:24px;
+      --radius-md:18px;
       --max-width:1240px;
       color-scheme:dark;
     }
@@ -56,6 +59,14 @@
     }
 
     a{color:inherit;text-decoration:none}
+
+    button{
+      font:inherit;
+      color:inherit;
+      background:none;
+      border:0;
+      cursor:pointer;
+    }
 
     code{
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -114,6 +125,7 @@
       margin:4px 0 0;
       color:var(--muted);
       font-size:.98rem;
+      max-width:58ch;
     }
 
     .nav-pills{
@@ -155,10 +167,10 @@
       gap:18px;
     }
 
-    .header-region{
+    .hero{
       display:grid;
       gap:14px;
-      padding:24px 24px 20px;
+      padding:24px;
       border:1px solid rgba(173,212,255,.12);
       border-radius:var(--radius-xl);
       background:
@@ -175,23 +187,62 @@
       font-size:.84rem;
     }
 
-    .header-region h2{
+    .hero h2{
       margin:0;
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2.4rem,5vw,4.4rem);
-      line-height:.95;
+      font-size:clamp(2.6rem,5.2vw,5rem);
+      line-height:.94;
       color:var(--accent);
+      max-width:11ch;
     }
 
-    .header-region p{
+    .hero p{
       margin:0;
-      max-width:72ch;
+      max-width:68ch;
       color:var(--muted);
-      font-size:clamp(1rem,1.5vw,1.08rem);
-      line-height:1.7;
+      font-size:clamp(1rem,1.45vw,1.08rem);
+      line-height:1.72;
     }
 
-    .map-region{
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      padding-top:4px;
+    }
+
+    .hero-actions a,
+    .hero-actions button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:50px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.18);
+      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
+      box-shadow:0 12px 24px rgba(0,0,0,.2);
+      font-weight:700;
+      letter-spacing:.01em;
+      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease,background 180ms ease;
+    }
+
+    .hero-actions a:hover,
+    .hero-actions a:focus-visible,
+    .hero-actions button:hover,
+    .hero-actions button:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(214,233,255,.34);
+      box-shadow:0 0 0 1px rgba(214,233,255,.08),0 12px 22px rgba(0,0,0,.24);
+      outline:none;
+    }
+
+    .hero-actions .primary{
+      background:linear-gradient(180deg,rgba(58,96,182,.92),rgba(24,46,94,.92));
+      border-color:rgba(202,228,255,.3);
+    }
+
+    .experience-shell{
       border:1px solid rgba(173,212,255,.14);
       border-radius:34px;
       background:
@@ -204,7 +255,7 @@
       position:relative;
     }
 
-    .map-region::before{
+    .experience-shell::before{
       content:"";
       position:absolute;
       inset:18px;
@@ -213,10 +264,11 @@
       pointer-events:none;
     }
 
-    .map-surface{
-      position:relative;
+    .experience-surface{
       display:grid;
       gap:18px;
+      position:relative;
+      z-index:1;
     }
 
     .host-zone{
@@ -231,9 +283,75 @@
       box-shadow:0 12px 24px rgba(0,0,0,.24);
     }
 
-    .diagnostic-stack{
+    .host-zone-header{
       display:grid;
+      gap:8px;
+    }
+
+    .host-zone-header h3{
+      margin:0;
+      font-size:clamp(1.3rem,2.1vw,1.8rem);
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .host-zone-header p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+      max-width:62ch;
+    }
+
+    .host-chip-row{
+      display:flex;
+      flex-wrap:wrap;
       gap:10px;
+    }
+
+    .host-chip{
+      display:inline-flex;
+      align-items:center;
+      min-height:38px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.12);
+      background:linear-gradient(180deg,rgba(8,17,38,.8),rgba(7,14,30,.72));
+      color:var(--muted);
+      font-size:.8rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:700;
+    }
+
+    .runtime-status-row{
+      display:flex;
+      justify-content:flex-end;
+    }
+
+    .runtime-status{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.14);
+      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
+      color:rgba(238,246,255,.76);
+      font-size:.72rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      pointer-events:none;
+    }
+
+    .debug-panel{
+      display:none;
+      gap:10px;
+      padding-top:2px;
+    }
+
+    .debug-panel[data-open="true"]{
+      display:grid;
     }
 
     .diagnostic-card{
@@ -269,49 +387,6 @@
     .value.warn{color:var(--gold)}
     .value.note{color:var(--violet)}
 
-    .host-copy{
-      padding:16px 18px;
-      border:1px solid rgba(173,212,255,.1);
-      border-radius:22px;
-      background:linear-gradient(180deg,rgba(8,17,38,.68),rgba(7,14,30,.64));
-      box-shadow:0 12px 24px rgba(0,0,0,.18);
-    }
-
-    .host-copy strong{
-      display:block;
-      color:var(--text);
-      font-size:1rem;
-      margin-bottom:8px;
-    }
-
-    .host-copy p{
-      margin:0;
-      color:var(--muted);
-      font-size:.94rem;
-      line-height:1.6;
-    }
-
-    .runtime-status-row{
-      display:flex;
-      justify-content:flex-end;
-    }
-
-    .runtime-status{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:8px 14px;
-      border-radius:999px;
-      border:1px solid rgba(173,212,255,.14);
-      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
-      color:rgba(238,246,255,.76);
-      font-size:.72rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      pointer-events:none;
-    }
-
     .stage-zone{
       position:relative;
       z-index:1;
@@ -341,7 +416,7 @@
       isolation:isolate;
     }
 
-    .map-footer{
+    .footer-card{
       display:grid;
       gap:14px;
       margin-top:18px;
@@ -351,20 +426,20 @@
       background:linear-gradient(180deg,rgba(10,17,38,.74),rgba(8,15,32,.74));
     }
 
-    .map-footer strong{
+    .footer-card strong{
       color:var(--text);
       font-weight:800;
     }
 
-    .map-footer p{
+    .footer-card p{
       margin:0;
       color:var(--muted);
       line-height:1.7;
     }
 
-    @media (min-width:900px){
-      .map-surface{
-        grid-template-columns:minmax(320px,360px) minmax(0,1fr);
+    @media (min-width:960px){
+      .experience-surface{
+        grid-template-columns:minmax(300px,360px) minmax(0,1fr);
         align-items:start;
       }
 
@@ -382,6 +457,14 @@
       .shell{
         width:min(100% - 16px,var(--max-width));
         padding-top:10px;
+      }
+
+      .hero{
+        padding:22px 18px 18px;
+      }
+
+      .experience-shell{
+        padding:14px;
       }
 
       .stage-zone{
@@ -424,25 +507,38 @@
         }
       }
 
+      function queueOrRun(action) {
+        if (domReady) action();
+        else queue.push(action);
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
         domReady = true;
         flushQueue();
+
+        const toggle = document.getElementById("products-debug-toggle");
+        const panel = document.getElementById("products-debug-panel");
+
+        if (toggle && panel) {
+          toggle.addEventListener("click", function () {
+            const open = panel.getAttribute("data-open") === "true";
+            panel.setAttribute("data-open", open ? "false" : "true");
+            toggle.setAttribute("aria-expanded", open ? "false" : "true");
+            toggle.textContent = open ? "Show system receipts" : "Hide system receipts";
+          });
+        }
       }, { once: true });
 
       window.__productsDiag = {
         setValue(id, text, kind) {
-          const action = function () {
+          queueOrRun(function () {
             applyValue(id, text, kind);
-          };
-          if (domReady) action();
-          else queue.push(action);
+          });
         },
         setStatus(text) {
-          const action = function () {
+          queueOrRun(function () {
             applyStatus(text);
-          };
-          if (domReady) action();
-          else queue.push(action);
+          });
         },
         markBootstrapMissing() {
           this.setValue("diag-error-text", "bootstrap start function missing", "fail");
@@ -459,7 +555,7 @@
         <div class="brand-orb" aria-hidden="true"></div>
         <div class="brand-copy">
           <h1>Diamond Gate Bridge</h1>
-          <p>Products gateway with protected header, separate receipt region, and isolated runtime stage region.</p>
+          <p>Products gateway with a protected host region, primary live experience stage, and secondary diagnostic support.</p>
         </div>
       </div>
 
@@ -473,19 +569,44 @@
     </header>
 
     <main class="products-layout">
-      <section class="header-region" aria-labelledby="products-heading">
+      <section class="hero" aria-labelledby="products-heading">
         <div class="eyebrow">Products Gateway</div>
-        <h2 id="products-heading">Boot diagnostic surface</h2>
+        <h2 id="products-heading">Live products experience</h2>
         <p>
-          Boot truth is primary in this pass. The products surface now separates the protected host region
-          from the runtime stage region so successful mount cannot reabsorb the receipts and host copy.
+          The products surface now promotes the actual experience first. The runtime stage remains active,
+          the host and stage boundary remains protected, and system receipts remain available only as a
+          secondary support layer.
         </p>
+        <div class="hero-actions">
+          <a class="primary" href="/explore/">Enter the bridge</a>
+          <a href="/platform/">View platform</a>
+          <button id="products-debug-toggle" type="button" aria-expanded="false" aria-controls="products-debug-panel">Show system receipts</button>
+        </div>
       </section>
 
-      <section class="map-region" aria-label="Products runtime surface">
-        <div class="map-surface">
+      <section class="experience-shell" aria-label="Products live experience surface">
+        <div class="experience-surface">
           <div class="host-zone">
-            <div class="diagnostic-stack" id="products-diagnostic-stack" aria-live="polite">
+            <div class="host-zone-header">
+              <div class="eyebrow">Live stage ready</div>
+              <h3>Protected host. Primary experience. Secondary diagnostics.</h3>
+              <p>
+                The public surface now reads as a real products gateway. Bootchain truth and containment stay
+                preserved underneath, but they no longer dominate the public-facing view.
+              </p>
+            </div>
+
+            <div class="host-chip-row">
+              <div class="host-chip">Bootchain frozen: passed</div>
+              <div class="host-chip">Containment frozen: passed</div>
+              <div class="host-chip">Runtime file: frozen</div>
+            </div>
+
+            <div class="runtime-status-row">
+              <div class="runtime-status" id="products-runtime-status">runtime: standby</div>
+            </div>
+
+            <div class="debug-panel" id="products-debug-panel" data-open="false" aria-live="polite">
               <div class="diagnostic-card">
                 <span class="label">Runtime file</span>
                 <span class="value note" id="diag-runtime-file">requested</span>
@@ -507,18 +628,6 @@
                 <span class="value note" id="diag-error-text">none</span>
               </div>
             </div>
-
-            <div class="host-copy">
-              <strong>Boot truth first</strong>
-              <p>
-                This pass does not reopen the passed bootchain. It preserves the receipt surface in a protected
-                host region while constraining the mounted runtime content to the separate lower stage region only.
-              </p>
-            </div>
-
-            <div class="runtime-status-row">
-              <div class="runtime-status" id="products-runtime-status">runtime: standby</div>
-            </div>
           </div>
 
           <div class="stage-zone" id="products-stage-zone">
@@ -526,12 +635,12 @@
           </div>
         </div>
 
-        <div class="map-footer">
+        <div class="footer-card">
           <p>
-            <strong>Ownership law:</strong> <code>products_runtime.js</code> remains the sole runtime authority for the stage.
+            <strong>Execution law:</strong> the passed bootchain and passed host/stage containment remain frozen as the baseline.
           </p>
           <p>
-            <strong>Containment law:</strong> host copy and receipt nodes remain protected in the host region while mounted runtime content is constrained to the stage region.
+            <strong>Presentation law:</strong> the real products experience is now primary, while receipts remain available only as a secondary debug layer.
           </p>
         </div>
       </section>

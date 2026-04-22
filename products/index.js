@@ -1,168 +1,57 @@
 (() => {
   "use strict";
 
+  const GLOBAL_KEY = "ProductsPlanetRuntime";
   const viewport = document.getElementById("products-map-viewport");
   const stage = document.getElementById("planetary-stage");
-  const nodes = Array.from(document.querySelectorAll(".planet-node"));
-  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const status = document.getElementById("products-runtime-status");
 
-  if (!viewport || !stage || nodes.length === 0) {
+  if (!viewport || !stage) {
     return;
   }
 
-  const state = {
-    width: 0,
-    height: 0,
-    centerX: 0,
-    centerY: 0,
-    rafId: 0,
-    active: !reduceMotion.matches,
-  };
-
-  const orbiting = nodes
-    .map((node) => ({
-      node,
-      order: Number(node.dataset.order || 0),
-      orbitX: Number(node.dataset.orbitX || 0),
-      orbitY: Number(node.dataset.orbitY || 0),
-      angle: Number(node.dataset.angle || 0),
-      speed: Number(node.dataset.speed || 0),
-      depthBias: Number(node.dataset.depthBias || 0),
-      planetSize: parseFloat(
-        getComputedStyle(node).getPropertyValue("--planet-size")
-      ) || 64,
-    }))
-    .sort((a, b) => a.order - b.order);
-
-  function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
-  function syncViewport() {
-    const rect = viewport.getBoundingClientRect();
-    state.width = rect.width;
-    state.height = rect.height;
-    state.centerX = rect.width * 0.5;
-    state.centerY = rect.height * 0.5;
-  }
-
-  function getScaleFactor() {
-    const widthFactor = clamp(state.width / 1240, 0.54, 1);
-    const heightFactor = clamp(state.height / 820, 0.74, 1);
-    return Math.min(widthFactor, heightFactor);
-  }
-
-  function getResponsiveOrbit(item) {
-    const factor = getScaleFactor();
-
-    let orbitX = item.orbitX * factor;
-    let orbitY = item.orbitY * factor;
-    let size = item.planetSize * factor;
-
-    if (state.width <= 720) {
-      orbitX *= 0.68;
-      orbitY *= 0.76;
-      size *= 0.86;
-    } else if (state.width <= 980) {
-      orbitX *= 0.84;
-      orbitY *= 0.90;
-      size *= 0.94;
-    }
-
-    return { orbitX, orbitY, size };
-  }
-
-  function setPlanetScale(item, size) {
-    item.node.style.setProperty("--planet-size", `${size}px`);
-  }
-
-  function getNodeBox(node) {
-    const rect = node.getBoundingClientRect();
-    return {
-      width: rect.width || 180,
-      height: rect.height || 154,
-    };
-  }
-
-  function placeNode(item, time) {
-    const { orbitX, orbitY, size } = getResponsiveOrbit(item);
-    const theta = item.angle + time * item.speed;
-
-    const x = Math.cos(theta) * orbitX;
-    const y = Math.sin(theta) * orbitY;
-
-    const depth = (Math.sin(theta) + 1) * 0.5;
-    const scale = 0.82 + depth * 0.16;
-    const opacity = 0.78 + depth * 0.22;
-    const zIndex = Math.round(20 + depth * 80 + item.depthBias);
-
-    setPlanetScale(item, size);
-
-    const box = getNodeBox(item.node);
-    const safeTop = 14;
-    const safeBottom = state.height - box.height - 14;
-    const safeLeft = 10;
-    const safeRight = state.width - box.width - 10;
-
-    const left = clamp(state.centerX + x - box.width * 0.5, safeLeft, safeRight);
-    const top = clamp(state.centerY + y - box.height * 0.5, safeTop, safeBottom);
-
-    item.node.style.left = `${left}px`;
-    item.node.style.top = `${top}px`;
-    item.node.style.transform = `scale(${scale})`;
-    item.node.style.opacity = String(opacity);
-    item.node.style.zIndex = String(zIndex);
-  }
-
-  function render(time = 0) {
-    orbiting.forEach((item) => placeNode(item, time));
-  }
-
-  function animate(time) {
-    render(time);
-    if (state.active) {
-      state.rafId = window.requestAnimationFrame(animate);
+  function setStatus(message) {
+    if (status) {
+      status.textContent = `runtime: ${message}`;
     }
   }
 
-  function stop() {
-    if (state.rafId) {
-      window.cancelAnimationFrame(state.rafId);
-      state.rafId = 0;
+  function destroyExistingRuntime() {
+    const existing = window.__productsPlanetRuntimeInstance;
+    if (existing && typeof existing.destroy === "function") {
+      existing.destroy();
     }
+    window.__productsPlanetRuntimeInstance = null;
+    stage.innerHTML = "";
+    stage.removeAttribute("data-runtime");
   }
 
-  function start() {
-    stop();
-    syncViewport();
+  function bootRuntime() {
+    destroyExistingRuntime();
 
-    if (reduceMotion.matches) {
-      state.active = false;
-      render(0);
+    const runtimeApi = window[GLOBAL_KEY];
+    if (!runtimeApi || typeof runtimeApi.create !== "function") {
+      setStatus("missing");
       return;
     }
 
-    state.active = true;
-    state.rafId = window.requestAnimationFrame(animate);
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const instance = runtimeApi.create({
+      stage,
+      mount: stage,
+      reducedMotion,
+    });
+
+    window.__productsPlanetRuntimeInstance = instance;
+    setStatus("active");
   }
 
-  function handleResize() {
-    syncViewport();
-    render(performance.now());
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bootRuntime, { once: true });
+  } else {
+    bootRuntime();
   }
 
-  function handleVisibility() {
-    if (document.hidden) {
-      stop();
-      return;
-    }
-    start();
-  }
-
-  reduceMotion.addEventListener("change", start);
-  window.addEventListener("resize", handleResize, { passive: true });
-  window.addEventListener("orientationchange", handleResize, { passive: true });
-  document.addEventListener("visibilitychange", handleVisibility);
-
-  start();
+  window.addEventListener("pageshow", bootRuntime);
 })();

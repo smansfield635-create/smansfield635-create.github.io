@@ -3,7 +3,7 @@
 
   const SHOWROOM_META = Object.freeze({
     name: "PRODUCTS_SHOWROOM",
-    version: "V6",
+    version: "V7",
     contract: "PRODUCTS_SHOWROOM_V1",
     page: "products-showroom",
   });
@@ -23,7 +23,6 @@
       summary:
         "The main chamber now filters and routes. The deeper Russian doll structure belongs inside the opened ARCHCOIN path, not on the showroom surface.",
       accent: "#f1d28d",
-      scrollTarget: '[data-product-key="archcoin"]',
     },
     {
       key: "aai",
@@ -31,7 +30,6 @@
       summary:
         "The main chamber now filters and routes. The deeper Russian doll structure belongs inside the opened AAI path, not on the showroom surface.",
       accent: "#8ff0c5",
-      scrollTarget: '[data-product-key="aai"]',
     },
     {
       key: "baseline-nutrition-systems",
@@ -39,7 +37,6 @@
       summary:
         "This path is now visible as part of the filter layer and routes into the nutrition surface.",
       accent: "#9fc6ff",
-      scrollTarget: '[data-path-key="baseline-nutrition-systems"]',
     },
     {
       key: "five-flags-whats-my-scene",
@@ -47,7 +44,6 @@
       summary:
         "This path is now visible as part of the filter layer and routes into the five-flags surface.",
       accent: "#ffca80",
-      scrollTarget: '[data-path-key="five-flags-whats-my-scene"]',
     },
     {
       key: "esl-traversal-learning",
@@ -55,7 +51,6 @@
       summary:
         "This path is now visible as part of the filter layer and routes into the education surface.",
       accent: "#d7e4ff",
-      scrollTarget: '[data-path-key="esl-traversal-learning"]',
     },
   ]);
 
@@ -155,12 +150,13 @@
   function goToRoute(key) {
     const href = ROUTES[key];
     if (!href) return;
-    window.location.href = href;
+    window.location.assign(href);
   }
 
   function wireButtons() {
     qsa("[data-route-key]").forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
         const key = button.getAttribute("data-route-key");
         if (!ROUTES[key]) return;
         setActive(key);
@@ -169,7 +165,8 @@
     });
 
     qsa("[data-cta-key]").forEach((button) => {
-      button.addEventListener("click", () => {
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
         const key = button.getAttribute("data-cta-key");
         if (!ROUTES[key]) return;
         setActive(key);

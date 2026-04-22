@@ -6,10 +6,10 @@
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
   >
-  <title>Big Laughs / Speaking · Diamond Gate Bridge</title>
+  <title>Big Laughs Comedy · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Comedy, motivational speaking, public presence, and live engagement."
+    content="Big Laughs Comedy in Fort Worth. Sunday nights at 7:00 p.m. Tickets are $1 each."
   >
 
   <style>
@@ -27,11 +27,12 @@
       --gold-soft: #ffdca0;
       --blue: #58a6ff;
       --blue-soft: #9dd1ff;
+      --accent: #ffcf6b;
       --ok: #8fffb5;
 
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
       --radius: 24px;
-      --max: 1160px;
+      --max: 1180px;
     }
 
     * {
@@ -50,7 +51,7 @@
     body {
       overflow-x: hidden;
       font:
-        16px/1.55 Inter,
+        16px/1.6 Inter,
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
@@ -60,9 +61,9 @@
         Arial,
         sans-serif;
       background:
-        radial-gradient(circle at top, rgba(241, 195, 107, 0.10), transparent 24%),
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.12), transparent 24%),
         radial-gradient(circle at bottom, rgba(88, 166, 255, 0.08), transparent 28%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg-deep) 100%);
+        linear-gradient(180deg, #03050a 0%, #07111d 100%);
     }
 
     a {
@@ -70,7 +71,15 @@
       text-decoration: none;
     }
 
+    .page {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+    }
+
     .shell {
+      position: relative;
+      z-index: 1;
       width: min(100% - 24px, var(--max));
       margin: 0 auto;
       padding: 18px 0 44px;
@@ -128,11 +137,19 @@
       background: rgba(255, 255, 255, 0.03);
       color: var(--blue-soft);
       font-size: 14px;
+      transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        background 0.18s ease;
     }
 
+    .nav a:hover,
+    .nav a:focus-visible,
     .nav a[aria-current="page"] {
       border-color: rgba(255, 255, 255, 0.22);
       background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+      outline: none;
     }
 
     .panel {
@@ -145,7 +162,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
       gap: 18px;
       padding: 18px 0 12px;
     }
@@ -154,6 +171,12 @@
     .hero-side,
     .section {
       padding: 24px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      align-content: start;
     }
 
     .eyebrow {
@@ -173,9 +196,10 @@
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       margin: 0;
-      line-height: 1.03;
+      line-height: 1.04;
       letter-spacing: -0.04em;
       font-family:
         "Iowan Old Style",
@@ -188,49 +212,55 @@
     }
 
     h1 {
-      font-size: clamp(40px, 7vw, 76px);
+      font-size: clamp(42px, 7vw, 84px);
       color: var(--gold-soft);
-      max-width: 10ch;
+      max-width: 11ch;
     }
 
     h2 {
-      font-size: clamp(24px, 3.6vw, 42px);
+      font-size: clamp(26px, 3.8vw, 44px);
       color: var(--gold-soft);
     }
 
     h3 {
-      font-size: 26px;
+      font-size: 28px;
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 22px;
       color: #ffffff;
     }
 
     .lede,
     .copy,
-    .detail {
+    .detail,
+    .meta-value {
       color: var(--muted);
     }
 
     .lede {
       margin: 16px 0 0;
-      max-width: 38rem;
+      max-width: 40rem;
       font-size: 18px;
     }
 
-    .actions {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 46px;
+      min-height: 48px;
       padding: 0 18px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .button-primary {
@@ -247,15 +277,34 @@
       color: var(--blue-soft);
     }
 
+    .meta-label {
+      margin: 0;
+      color: var(--blue-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin: 6px 0 0;
+      font-size: 16px;
+    }
+
     .stack {
       display: grid;
       gap: 18px;
       margin-top: 18px;
     }
 
-    .grid {
+    .two-col {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 16px;
     }
 
@@ -263,14 +312,17 @@
       padding: 20px;
       border: 1px solid var(--line);
       border-radius: 22px;
-      background: rgba(255, 255, 255, 0.025);
-      min-height: 190px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+      min-height: 220px;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .kicker {
+    .card-kicker {
       color: var(--blue-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
@@ -280,6 +332,39 @@
     .detail {
       margin: 0;
       flex: 1 1 auto;
+    }
+
+    .price-panel {
+      border: 1px solid rgba(241, 195, 107, 0.22);
+      background:
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.16), transparent 44%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+    }
+
+    .price-line {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .price-amount {
+      font-size: clamp(52px, 8vw, 84px);
+      line-height: 0.9;
+      color: var(--gold-soft);
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+    }
+
+    .price-copy {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0;
     }
 
     .footer {
@@ -296,7 +381,8 @@
 
     @media (max-width: 980px) {
       .hero,
-      .grid {
+      .two-col,
+      .three-col {
         grid-template-columns: 1fr;
       }
     }
@@ -331,92 +417,156 @@
         width: 100%;
       }
 
-      .actions {
+      .hero-actions {
         flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar" aria-label="Primary">
-      <div class="brand">
-        <div class="brand-mark" aria-hidden="true"></div>
-        <div>
-          <p class="brand-title">Diamond Gate Bridge</p>
-          <p class="brand-sub">Public expression path · Big Laughs / Speaking</p>
-        </div>
-      </div>
-
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Root</a>
-        <a href="/home/">Home</a>
-        <a href="/prelude/">Prelude</a>
-        <a href="/about/">About</a>
-        <a href="/contact/">Contact</a>
-        <a href="/big-laughs/" aria-current="page">Big Laughs</a>
-      </nav>
-    </header>
-
-    <main class="stack">
-      <section class="panel hero">
-        <article class="hero-main">
-          <p class="eyebrow">Public expression path</p>
-          <h1>Big Laughs. Speaking. Presence.</h1>
-          <p class="lede">
-            A single path for comedy, motivational speaking, stage presence, and
-            live engagement.
-          </p>
-
-          <div class="actions">
-            <a class="button button-primary" href="/contact/">Book or inquire</a>
-            <a class="button button-secondary" href="/">Return to Root</a>
-          </div>
-        </article>
-
-        <aside class="panel hero-side">
+  <div class="page">
+    <div class="shell">
+      <header class="topbar" aria-label="Primary navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
           <div>
-            <p class="kicker">Path role</p>
-            <h3>Comedy + speaking</h3>
+            <p class="brand-title">Diamond Gate Bridge</p>
+            <p class="brand-sub">Public expression path · Big Laughs Comedy</p>
           </div>
-          <p class="copy">
-            This path holds outward-facing live work without competing with the
-            Nine Summits baseline on the root.
-          </p>
-        </aside>
-      </section>
-
-      <section class="panel section">
-        <p class="eyebrow">Current lanes</p>
-        <div class="grid">
-          <article class="card">
-            <p class="kicker">Comedy</p>
-            <h3>Big Laughs Comedy</h3>
-            <p class="detail">
-              Live sets, club presence, audience energy, and performance-facing
-              expression.
-            </p>
-          </article>
-
-          <article class="card">
-            <p class="kicker">Speaking</p>
-            <h3>Motivational speaking</h3>
-            <p class="detail">
-              Message-driven live presentation, personal voice, and public-facing
-              communication.
-            </p>
-          </article>
         </div>
-      </section>
-    </main>
 
-    <footer class="footer">
-      <span>
-        Receipt: PAGE=BIG_LAUGHS | ROLE=PUBLIC_EXPRESSION_PATH |
-        FAMILY=ROOT_GATE_DESCENDANT
-      </span>
-      <span><a href="/">Return to root</a></span>
-    </footer>
+        <nav class="nav" aria-label="Top navigation">
+          <a href="/">Root</a>
+          <a href="/gate/">Gate</a>
+          <a href="/home/">Home</a>
+          <a href="/prelude/">Prelude</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/big-laughs/" aria-current="page">Big Laughs</a>
+        </nav>
+      </header>
+
+      <main class="stack">
+        <section class="panel hero" aria-labelledby="big-laughs-title">
+          <article class="hero-main">
+            <p class="eyebrow">Sunday feature</p>
+            <h1 id="big-laughs-title">Big Laughs Comedy.</h1>
+            <p class="lede">
+              A Sunday-night Fort Worth comedy and motivational speaking event,
+              built as a live public-expression path under the larger Diamond Gate Bridge family.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="/contact/">Inquire / reserve</a>
+              <a class="button button-secondary" href="/gate/">Return to Gate</a>
+            </div>
+          </article>
+
+          <aside class="panel hero-side">
+            <div>
+              <p class="meta-label">Start time</p>
+              <p class="meta-value">Sunday nights · 7:00 p.m.</p>
+            </div>
+            <div>
+              <p class="meta-label">Ticket line</p>
+              <p class="meta-value">$1 per ticket</p>
+            </div>
+            <div>
+              <p class="meta-label">Venue context</p>
+              <p class="meta-value">Big Laugh Comedy Club · Downtown Fort Worth</p>
+            </div>
+            <div>
+              <p class="meta-label">Working event line</p>
+              <p class="meta-value">A Dollar a Day Keeps the Psychiatrist Away</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="panel section" aria-labelledby="event-title">
+          <p class="eyebrow">Live event</p>
+          <h2 id="event-title">A Dollar a Day Keeps the Psychiatrist Away.</h2>
+
+          <div class="two-col" style="margin-top:18px;">
+            <article class="card">
+              <p class="card-kicker">Event read</p>
+              <h3>Comedy + speaking in one room</h3>
+              <p class="detail">
+                This page holds the Big Laughs public-facing event line: live comedy,
+                motivational speaking, crowd energy, and a direct audience path for Sunday night.
+              </p>
+            </article>
+
+            <article class="card price-panel">
+              <p class="card-kicker">Ticket anchor</p>
+              <div class="price-line">
+                <span class="price-amount">$1</span>
+                <p class="price-copy">tickets</p>
+              </div>
+              <p class="detail">
+                Low-friction entry. Clear public offer. Easy first commitment.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" aria-labelledby="venue-title">
+          <p class="eyebrow">Fort Worth context</p>
+          <h2 id="venue-title">Venue grounding.</h2>
+
+          <div class="three-col" style="margin-top:18px;">
+            <article class="card">
+              <p class="card-kicker">Address</p>
+              <h4>604 Main St, Suite 100</h4>
+              <p class="detail">Fort Worth, TX 76102</p>
+            </article>
+
+            <article class="card">
+              <p class="card-kicker">Contact</p>
+              <h4>(512) 817-9535</h4>
+              <p class="detail">support@blcomedy.com</p>
+            </article>
+
+            <article class="card">
+              <p class="card-kicker">Venue type</p>
+              <h4>Active comedy venue</h4>
+              <p class="detail">
+                Big Laugh Fort Worth publicly lists active rooms and ongoing show programming.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" aria-labelledby="path-title">
+          <p class="eyebrow">Public expression path</p>
+          <h2 id="path-title">What this page does.</h2>
+
+          <div class="two-col" style="margin-top:18px;">
+            <article class="card">
+              <p class="card-kicker">Comedy</p>
+              <h3>Big Laughs</h3>
+              <p class="detail">
+                Carries the live-club energy, hosted-night identity, and audience-facing entertainment layer.
+              </p>
+            </article>
+
+            <article class="card">
+              <p class="card-kicker">Speaking</p>
+              <h3>Motivational speaking</h3>
+              <p class="detail">
+                Carries the message, the voice, and the public-speaking expression without splitting into a separate shell.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>
+          Receipt: PAGE=BIG_LAUGHS | EVENT=SUNDAY_7PM | TICKET=$1 | ROLE=PUBLIC_EXPRESSION_PATH
+        </span>
+        <span><a href="/gate/">Return to gate</a></span>
+      </footer>
+    </div>
   </div>
 </body>
 </html>

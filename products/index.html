@@ -6,7 +6,7 @@
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Flagship products built for the next intelligence economy."
+    content="Flagship products and five clear paths for the next intelligence economy."
   />
 
   <style>
@@ -16,18 +16,18 @@
       --bg1:#071427;
       --bg2:#0d2240;
       --panel:rgba(10,20,46,.72);
-      --panel-2:rgba(10,20,46,.52);
+      --panel2:rgba(10,20,46,.52);
       --line:rgba(173,212,255,.14);
-      --line-strong:rgba(241,210,141,.22);
+      --lineStrong:rgba(241,210,141,.22);
       --text:#edf5ff;
       --muted:#9fb2d2;
       --gold:#f1d28d;
       --mint:#8ff0c5;
       --blue:#9fc6ff;
       --shadow:0 24px 60px rgba(0,0,0,.42);
-      --radius-xl:30px;
-      --radius-lg:24px;
-      --radius-md:18px;
+      --radiusXl:30px;
+      --radiusLg:24px;
+      --radiusMd:18px;
       --max:1240px;
     }
 
@@ -69,7 +69,7 @@
         radial-gradient(1.5px 1.5px at 26% 72%, rgba(255,255,255,.78) 45%, transparent 55%),
         radial-gradient(2px 2px at 68% 26%, rgba(255,255,255,.86) 45%, transparent 55%),
         radial-gradient(1.5px 1.5px at 84% 64%, rgba(255,255,255,.72) 45%, transparent 55%);
-      animation:stars-a 26s linear infinite;
+      animation:starsA 26s linear infinite;
     }
 
     .stars::before{
@@ -78,7 +78,7 @@
         radial-gradient(2px 2px at 42% 14%, rgba(255,255,255,.86) 45%, transparent 55%),
         radial-gradient(1.5px 1.5px at 74% 44%, rgba(255,255,255,.68) 45%, transparent 55%),
         radial-gradient(2px 2px at 92% 18%, rgba(255,255,255,.94) 45%, transparent 55%);
-      animation:stars-b 38s linear infinite;
+      animation:starsB 38s linear infinite;
     }
 
     .stars::after{
@@ -87,20 +87,20 @@
         radial-gradient(1.5px 1.5px at 52% 56%, rgba(255,255,255,.84) 45%, transparent 55%),
         radial-gradient(2px 2px at 78% 82%, rgba(255,255,255,.68) 45%, transparent 55%),
         radial-gradient(1.5px 1.5px at 94% 40%, rgba(255,255,255,.82) 45%, transparent 55%);
-      animation:stars-c 44s linear infinite;
+      animation:starsC 44s linear infinite;
     }
 
-    @keyframes stars-a{
+    @keyframes starsA{
       from{transform:translate3d(0,0,0)}
       to{transform:translate3d(-16px,10px,0)}
     }
 
-    @keyframes stars-b{
+    @keyframes starsB{
       from{transform:translate3d(0,0,0)}
       to{transform:translate3d(20px,-12px,0)}
     }
 
-    @keyframes stars-c{
+    @keyframes starsC{
       from{transform:translate3d(0,0,0)}
       to{transform:translate3d(-10px,-16px,0)}
     }
@@ -134,7 +134,7 @@
       min-width:0;
     }
 
-    .brand-mark{
+    .brandMark{
       width:42px;
       height:42px;
       border-radius:14px;
@@ -145,9 +145,9 @@
       flex:0 0 auto;
     }
 
-    .brand-copy{min-width:0}
+    .brandCopy{min-width:0}
 
-    .brand-title{
+    .brandTitle{
       margin:0 0 3px;
       font-size:.96rem;
       font-weight:800;
@@ -158,7 +158,7 @@
       text-overflow:ellipsis;
     }
 
-    .brand-subtitle{
+    .brandSubtitle{
       margin:0;
       color:var(--muted);
       font-size:.82rem;
@@ -167,7 +167,7 @@
       text-overflow:ellipsis;
     }
 
-    .topbar-right{
+    .topbarRight{
       display:flex;
       align-items:center;
       gap:10px;
@@ -196,28 +196,36 @@
       text-transform:uppercase;
     }
 
-    .hero{
+    .hero,
+    .pathsSection,
+    .closing{
       position:relative;
       overflow:hidden;
       border:1px solid var(--line);
-      border-radius:var(--radius-xl);
-      background:linear-gradient(180deg,rgba(9,18,40,.86),rgba(10,20,46,.60));
+      border-radius:var(--radiusXl);
+      background:linear-gradient(180deg,rgba(9,18,40,.82),rgba(10,20,46,.54));
       box-shadow:var(--shadow);
+    }
+
+    .hero{
       padding:28px 24px 24px;
       margin-bottom:16px;
     }
 
-    .hero::before{
+    .hero::before,
+    .pathsSection::before,
+    .closing::before{
       content:"";
       position:absolute;
       inset:-1px;
+      pointer-events:none;
       background:
         radial-gradient(circle at 18% 0%, rgba(241,210,141,.08), transparent 24%),
         radial-gradient(circle at 84% 0%, rgba(143,240,197,.05), transparent 18%);
-      pointer-events:none;
     }
 
-    .eyebrow{
+    .eyebrow,
+    .sectionKicker{
       position:relative;
       z-index:1;
       margin:0 0 10px;
@@ -228,24 +236,36 @@
       text-transform:uppercase;
     }
 
-    .hero-title{
+    .heroTitle,
+    .sectionTitle,
+    .productTitle{
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    .heroTitle{
       position:relative;
       z-index:1;
       margin:0 0 12px;
       max-width:920px;
-      font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(2.5rem,7vw,5.5rem);
       line-height:.92;
     }
 
-    .hero-copy{
+    .heroCopy,
+    .sectionCopy,
+    .productCopy,
+    .supportCopy,
+    .closingCopy{
+      color:var(--muted);
+      line-height:1.72;
+    }
+
+    .heroCopy{
       position:relative;
       z-index:1;
       margin:0;
       max-width:780px;
-      color:var(--muted);
       font-size:1rem;
-      line-height:1.72;
     }
 
     .flagship{
@@ -255,11 +275,11 @@
       margin-bottom:16px;
     }
 
-    .product-card{
+    .productCard{
       position:relative;
       overflow:hidden;
       border:1px solid var(--line);
-      border-radius:var(--radius-xl);
+      border-radius:var(--radiusXl);
       background:linear-gradient(180deg,rgba(9,18,40,.82),rgba(10,20,46,.54));
       box-shadow:var(--shadow);
       padding:24px;
@@ -269,21 +289,21 @@
       justify-content:space-between;
       transform:translateY(18px);
       opacity:0;
-      transition:transform 520ms ease, opacity 520ms ease, border-color 220ms ease, box-shadow 220ms ease;
+      transition:transform 520ms ease,opacity 520ms ease,border-color 220ms ease,box-shadow 220ms ease;
     }
 
-    .product-card.is-visible{
+    .productCard.isVisible{
       transform:translateY(0);
       opacity:1;
     }
 
-    .product-card:hover{
-      border-color:var(--line-strong);
+    .productCard:hover{
+      border-color:var(--lineStrong);
       box-shadow:0 28px 66px rgba(0,0,0,.48);
     }
 
-    .product-card.archcoin::before,
-    .product-card.aai::before{
+    .productCard.archcoin::before,
+    .productCard.aai::before{
       content:"";
       position:absolute;
       inset:auto auto 0 0;
@@ -293,24 +313,24 @@
       opacity:.9;
     }
 
-    .product-card.archcoin::before{
+    .productCard.archcoin::before{
       background:
         radial-gradient(circle at 18% 80%, rgba(241,210,141,.10), transparent 22%),
         radial-gradient(circle at 80% 20%, rgba(255,240,193,.05), transparent 18%);
     }
 
-    .product-card.aai::before{
+    .productCard.aai::before{
       background:
         radial-gradient(circle at 14% 84%, rgba(143,240,197,.09), transparent 22%),
         radial-gradient(circle at 82% 18%, rgba(159,198,255,.06), transparent 18%);
     }
 
-    .product-head{
+    .productHead{
       position:relative;
       z-index:1;
     }
 
-    .product-label{
+    .productLabel{
       margin:0 0 10px;
       font-size:.76rem;
       font-weight:800;
@@ -318,17 +338,16 @@
       text-transform:uppercase;
     }
 
-    .archcoin .product-label{color:var(--gold)}
-    .aai .product-label{color:var(--mint)}
+    .archcoin .productLabel{color:var(--gold)}
+    .aai .productLabel{color:var(--mint)}
 
-    .product-title{
+    .productTitle{
       margin:0 0 8px;
-      font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(2rem,4vw,3.1rem);
       line-height:.95;
     }
 
-    .product-category{
+    .productCategory{
       margin:0 0 14px;
       color:var(--blue);
       font-weight:700;
@@ -336,15 +355,13 @@
       letter-spacing:.03em;
     }
 
-    .product-copy{
+    .productCopy{
       margin:0;
-      color:var(--muted);
       font-size:1rem;
-      line-height:1.72;
       max-width:520px;
     }
 
-    .product-visual{
+    .productVisual{
       position:relative;
       z-index:1;
       height:180px;
@@ -354,24 +371,22 @@
       justify-content:center;
     }
 
-    .coin-hero{
+    .coinHero{
       position:relative;
       width:168px;
       height:168px;
       border-radius:999px;
       background:
         radial-gradient(circle at 30% 28%, rgba(255,245,214,.94), transparent 18%),
-        linear-gradient(145deg, #f7e3a8, #d5a84f 56%, #9e6f1d);
+        linear-gradient(145deg,#f7e3a8,#d5a84f 56%,#9e6f1d);
       border:1px solid rgba(255,232,170,.40);
-      box-shadow:
-        0 18px 48px rgba(0,0,0,.42),
-        inset 0 0 30px rgba(255,255,255,.16);
+      box-shadow:0 18px 48px rgba(0,0,0,.42), inset 0 0 30px rgba(255,255,255,.16);
       display:grid;
       place-items:center;
       transition:transform 220ms ease;
     }
 
-    .coin-hero::before{
+    .coinHero::before{
       content:"";
       position:absolute;
       inset:14px;
@@ -379,7 +394,7 @@
       border:1px solid rgba(255,247,220,.34);
     }
 
-    .coin-hero span{
+    .coinHero span{
       position:relative;
       z-index:1;
       color:#1e1505;
@@ -391,7 +406,7 @@
       letter-spacing:.04em;
     }
 
-    .aai-mark{
+    .aaiMark{
       position:relative;
       width:142px;
       height:142px;
@@ -399,15 +414,13 @@
       transform:rotate(45deg);
       background:linear-gradient(180deg,rgba(18,54,66,.96),rgba(10,28,34,.90));
       border:1px solid rgba(143,240,197,.28);
-      box-shadow:
-        0 18px 44px rgba(0,0,0,.36),
-        inset 0 0 26px rgba(255,255,255,.04);
+      box-shadow:0 18px 44px rgba(0,0,0,.36), inset 0 0 26px rgba(255,255,255,.04);
       display:grid;
       place-items:center;
       transition:transform 220ms ease;
     }
 
-    .aai-mark::before{
+    .aaiMark::before{
       content:"";
       position:absolute;
       inset:14px;
@@ -415,7 +428,7 @@
       border:1px solid rgba(143,240,197,.20);
     }
 
-    .aai-mark span{
+    .aaiMark span{
       position:relative;
       z-index:1;
       transform:rotate(-45deg);
@@ -425,8 +438,8 @@
       letter-spacing:.16em;
     }
 
-    .product-card:hover .coin-hero{transform:scale(1.03)}
-    .product-card:hover .aai-mark{transform:rotate(45deg) scale(1.03)}
+    .productCard:hover .coinHero{transform:scale(1.03)}
+    .productCard:hover .aaiMark{transform:rotate(45deg) scale(1.03)}
 
     .capabilities{
       position:relative;
@@ -450,7 +463,7 @@
       line-height:1.55;
     }
 
-    .capability-dot{
+    .capabilityDot{
       width:10px;
       height:10px;
       margin-top:6px;
@@ -458,10 +471,7 @@
       box-shadow:0 0 0 4px rgba(255,255,255,.04);
     }
 
-    .archcoin .capability-dot{background:var(--gold)}
-    .aai .capability-dot{background:var(--mint)}
-
-    .cta-row{
+    .ctaRow{
       position:relative;
       z-index:1;
       display:flex;
@@ -471,13 +481,14 @@
       flex-wrap:wrap;
     }
 
-    .cta-meta{
+    .ctaMeta{
       color:var(--muted);
       font-size:.86rem;
       line-height:1.5;
     }
 
-    .cta-button{
+    .ctaButton,
+    .pathButton{
       appearance:none;
       border:1px solid rgba(241,210,141,.26);
       border-radius:999px;
@@ -489,163 +500,136 @@
       letter-spacing:.12em;
       text-transform:uppercase;
       cursor:pointer;
-      transition:transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
     }
 
-    .cta-button:hover{
+    .ctaButton:hover,
+    .pathButton:hover{
       transform:translateY(-1px);
       border-color:rgba(241,210,141,.42);
       box-shadow:0 12px 28px rgba(0,0,0,.28);
     }
 
-    .details{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
-      margin-bottom:16px;
-    }
-
-    .detail-card{
-      border:1px solid var(--line);
-      border-radius:var(--radius-lg);
-      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.44));
-      box-shadow:0 18px 44px rgba(0,0,0,.24);
-      padding:20px;
-      transform:translateY(18px);
-      opacity:0;
-      transition:transform 520ms ease, opacity 520ms ease;
-    }
-
-    .detail-card.is-visible{
-      transform:translateY(0);
-      opacity:1;
-    }
-
-    .detail-kicker{
-      margin:0 0 10px;
-      font-size:.74rem;
-      font-weight:800;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .detail-card.archcoin .detail-kicker{color:var(--gold)}
-    .detail-card.aai .detail-kicker{color:var(--mint)}
-
-    .detail-title{
-      margin:0 0 8px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:1.65rem;
-      line-height:1.08;
-    }
-
-    .detail-copy{
-      margin:0;
-      color:var(--muted);
-      font-size:.96rem;
-      line-height:1.68;
-    }
-
-    .supporting{
-      border:1px solid var(--line);
-      border-radius:var(--radius-xl);
-      background:linear-gradient(180deg,rgba(9,18,40,.70),rgba(10,20,46,.42));
-      box-shadow:0 18px 44px rgba(0,0,0,.22);
+    .pathsSection{
       padding:22px;
       margin-bottom:16px;
       transform:translateY(18px);
       opacity:0;
-      transition:transform 520ms ease, opacity 520ms ease;
+      transition:transform 520ms ease,opacity 520ms ease;
     }
 
-    .supporting.is-visible{
+    .pathsSection.isVisible{
       transform:translateY(0);
       opacity:1;
     }
 
-    .section-kicker{
-      margin:0 0 10px;
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:800;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-
-    .section-title{
+    .sectionTitle{
       margin:0 0 12px;
-      font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(1.7rem,4vw,2.5rem);
       line-height:1.02;
+      position:relative;
+      z-index:1;
     }
 
-    .section-copy{
+    .sectionCopy{
       margin:0 0 16px;
-      color:var(--muted);
-      font-size:.96rem;
-      line-height:1.7;
       max-width:760px;
+      font-size:.96rem;
+      position:relative;
+      z-index:1;
     }
 
-    .support-grid{
+    .pathsGrid{
+      position:relative;
+      z-index:1;
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
+      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
       gap:14px;
     }
 
-    .support-card{
+    .pathCard{
       border:1px solid rgba(173,212,255,.10);
       border-radius:20px;
       background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
       padding:18px;
+      display:grid;
+      gap:12px;
+      align-content:start;
+      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+      box-shadow:0 10px 24px rgba(0,0,0,.14);
     }
 
-    .support-title{
-      margin:0 0 8px;
+    .pathEyebrow{
+      font-size:.72rem;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .pathTitle{
+      margin:0;
       font-size:1.08rem;
       font-weight:800;
       line-height:1.2;
     }
 
-    .support-copy{
+    .pathCopy{
       margin:0;
       color:var(--muted);
       font-size:.92rem;
       line-height:1.62;
     }
 
+    .pathRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .pathPill{
+      display:inline-flex;
+      align-items:center;
+      padding:9px 12px;
+      border:1px solid rgba(173,212,255,.10);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      font-size:.76rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
     .closing{
-      border:1px solid var(--line);
-      border-radius:var(--radius-xl);
-      background:linear-gradient(180deg,rgba(9,18,40,.80),rgba(10,20,46,.54));
-      box-shadow:var(--shadow);
       padding:24px;
       transform:translateY(18px);
       opacity:0;
-      transition:transform 520ms ease, opacity 520ms ease;
+      transition:transform 520ms ease,opacity 520ms ease;
     }
 
-    .closing.is-visible{
+    .closing.isVisible{
       transform:translateY(0);
       opacity:1;
     }
 
-    .closing-grid{
+    .closingGrid{
+      position:relative;
+      z-index:1;
       display:grid;
       grid-template-columns:minmax(0,1fr) auto;
       gap:18px;
       align-items:end;
     }
 
-    .closing-copy{
+    .closingCopy{
       margin:0;
-      color:var(--muted);
-      font-size:1rem;
-      line-height:1.72;
       max-width:860px;
+      font-size:1rem;
     }
 
-    .closing-cta{
+    .closingCta{
       display:flex;
       align-items:center;
       gap:10px;
@@ -653,14 +637,14 @@
       justify-content:flex-end;
     }
 
-    .footer-chip{
+    .footerChip{
       display:inline-flex;
       align-items:center;
       padding:11px 14px;
       border:1px solid var(--line);
       border-radius:999px;
       background:rgba(255,255,255,.04);
-      color:var(--good);
+      color:var(--mint);
       font-size:.82rem;
       font-weight:800;
       letter-spacing:.1em;
@@ -668,11 +652,11 @@
       white-space:nowrap;
     }
 
-    .reveal-delay-1{transition-delay:90ms}
-    .reveal-delay-2{transition-delay:180ms}
-    .reveal-delay-3{transition-delay:260ms}
-    .reveal-delay-4{transition-delay:340ms}
-    .reveal-delay-5{transition-delay:420ms}
+    .revealDelay1{transition-delay:90ms}
+    .revealDelay2{transition-delay:180ms}
+    .revealDelay3{transition-delay:260ms}
+    .revealDelay4{transition-delay:340ms}
+    .revealDelay5{transition-delay:420ms}
 
     @media (max-width:960px){
       .page{padding:16px 14px 44px}
@@ -681,18 +665,16 @@
         align-items:flex-start;
         flex-direction:column;
       }
-      .topbar-right{justify-content:flex-start}
+      .topbarRight{justify-content:flex-start}
       .flagship,
-      .details,
-      .support-grid,
-      .closing-grid{
+      .closingGrid{
         grid-template-columns:1fr;
       }
-      .product-card{min-height:auto}
-      .product-visual{height:156px}
-      .coin-hero{width:148px;height:148px}
-      .aai-mark{width:128px;height:128px}
-      .closing-cta{justify-content:flex-start}
+      .productCard{min-height:auto}
+      .productVisual{height:156px}
+      .coinHero{width:148px;height:148px}
+      .aaiMark{width:128px;height:128px}
+      .closingCta{justify-content:flex-start}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -701,9 +683,8 @@
       .stars::after{
         animation:none;
       }
-      .product-card,
-      .detail-card,
-      .supporting,
+      .productCard,
+      .pathsSection,
       .closing{
         transition:none;
       }
@@ -721,118 +702,97 @@
   >
     <header class="topbar" aria-label="Products header">
       <div class="brand">
-        <div class="brand-mark" aria-hidden="true"></div>
-        <div class="brand-copy">
-          <p class="brand-title">Diamond Gate Bridge</p>
-          <p class="brand-subtitle">Flagship products chamber</p>
+        <div class="brandMark" aria-hidden="true"></div>
+        <div class="brandCopy">
+          <p class="brandTitle">Diamond Gate Bridge</p>
+          <p class="brandSubtitle">Flagship products chamber</p>
         </div>
       </div>
 
-      <div class="topbar-right">
+      <div class="topbarRight">
         <div class="chip"><strong>Flagship</strong> ARCHCOIN</div>
         <div class="chip"><strong>Flagship</strong> AAI</div>
         <div class="chip"><strong>House</strong> Premium intelligence</div>
       </div>
     </header>
 
-    <section class="hero reveal reveal-delay-1" aria-label="Products hero">
+    <section class="hero reveal revealDelay1" aria-label="Products hero">
       <p class="eyebrow">Products</p>
-      <h1 class="hero-title">Products built for the next intelligence economy.</h1>
-      <p class="hero-copy">
+      <h1 class="heroTitle">Products built for the next intelligence economy.</h1>
+      <p class="heroCopy">
         A premium product house for private value, intelligent execution, and refined release. ARCHCOIN and AAI lead the chamber as the first two flagship products.
       </p>
     </section>
 
     <section class="flagship" aria-label="Flagship products">
-      <article
-        class="product-card archcoin reveal reveal-delay-2"
-        data-product-key="archcoin"
-      >
-        <div class="product-head">
-          <p class="product-label">Flagship product</p>
-          <h2 class="product-title" data-field="title"></h2>
-          <p class="product-category" data-field="category"></p>
-          <p class="product-copy" data-field="description"></p>
+      <article class="productCard archcoin reveal revealDelay2" data-product-key="archcoin">
+        <div class="productHead">
+          <p class="productLabel">Flagship product</p>
+          <h2 class="productTitle" data-field="title"></h2>
+          <p class="productCategory" data-field="category"></p>
+          <p class="productCopy" data-field="description"></p>
         </div>
 
-        <div class="product-visual" aria-hidden="true">
-          <div class="coin-hero">
+        <div class="productVisual" aria-hidden="true">
+          <div class="coinHero">
             <span>ARCH<br />COIN</span>
           </div>
         </div>
 
         <div class="capabilities" data-field="capabilities"></div>
 
-        <div class="cta-row">
-          <div class="cta-meta" data-field="meta"></div>
-          <button class="cta-button" type="button" data-cta-key="archcoin"></button>
+        <div class="ctaRow">
+          <div class="ctaMeta" data-field="meta"></div>
+          <button class="ctaButton" type="button" data-cta-key="archcoin"></button>
         </div>
       </article>
 
-      <article
-        class="product-card aai reveal reveal-delay-3"
-        data-product-key="aai"
-      >
-        <div class="product-head">
-          <p class="product-label">Flagship product</p>
-          <h2 class="product-title" data-field="title"></h2>
-          <p class="product-category" data-field="category"></p>
-          <p class="product-copy" data-field="description"></p>
+      <article class="productCard aai reveal revealDelay3" data-product-key="aai">
+        <div class="productHead">
+          <p class="productLabel">Flagship product</p>
+          <h2 class="productTitle" data-field="title"></h2>
+          <p class="productCategory" data-field="category"></p>
+          <p class="productCopy" data-field="description"></p>
         </div>
 
-        <div class="product-visual" aria-hidden="true">
-          <div class="aai-mark">
+        <div class="productVisual" aria-hidden="true">
+          <div class="aaiMark">
             <span>AAI</span>
           </div>
         </div>
 
         <div class="capabilities" data-field="capabilities"></div>
 
-        <div class="cta-row">
-          <div class="cta-meta" data-field="meta"></div>
-          <button class="cta-button" type="button" data-cta-key="aai"></button>
+        <div class="ctaRow">
+          <div class="ctaMeta" data-field="meta"></div>
+          <button class="ctaButton" type="button" data-cta-key="aai"></button>
         </div>
       </article>
     </section>
 
-    <section class="details" aria-label="Product details">
-      <article class="detail-card archcoin reveal reveal-delay-3" data-detail-key="archcoin">
-        <p class="detail-kicker">ARCHCOIN</p>
-        <h3 class="detail-title" data-field="headline"></h3>
-        <p class="detail-copy" data-field="copy"></p>
-      </article>
-
-      <article class="detail-card aai reveal reveal-delay-4" data-detail-key="aai">
-        <p class="detail-kicker">AAI</p>
-        <h3 class="detail-title" data-field="headline"></h3>
-        <p class="detail-copy" data-field="copy"></p>
-      </article>
-    </section>
-
-    <section class="supporting reveal reveal-delay-4" aria-label="Additional products">
-      <p class="section-kicker">Additional products</p>
-      <h3 class="section-title">Extensions for release, intelligence, and continuity.</h3>
-      <p class="section-copy">
-        Supporting products remain available as secondary shelf presence beneath the flagship layer.
+    <section class="pathsSection reveal revealDelay4" aria-label="Product paths">
+      <p class="sectionKicker">Open a path</p>
+      <h3 class="sectionTitle">Five product paths. Brief, clear, and ready to open.</h3>
+      <p class="sectionCopy">
+        This chamber now acts as a premium filter. Each box gives a concise read and opens the next path without dragging the full Russian doll structure onto the main page.
       </p>
-
-      <div class="support-grid" id="support-grid"></div>
+      <div id="paths-grid" class="pathsGrid"></div>
     </section>
 
-    <section class="closing reveal reveal-delay-5" aria-label="Brand statement">
-      <div class="closing-grid">
+    <section class="closing reveal revealDelay5" aria-label="Brand statement">
+      <div class="closingGrid">
         <div>
-          <p class="section-kicker">The house</p>
-          <h3 class="section-title">Precision-built products. Released with discipline.</h3>
-          <p class="closing-copy">
-            Diamond Gate Bridge builds product surfaces with premium identity, intelligent control, and durable execution. The page should feel like a showroom, not a prototype.
+          <p class="sectionKicker">The house</p>
+          <h3 id="closing-title" class="sectionTitle">ARCHCOIN is selected.</h3>
+          <p id="closing-copy" class="closingCopy">
+            The main chamber now filters and routes. The deeper Russian doll structure belongs inside the opened path, not on the showroom surface.
           </p>
         </div>
 
-        <div class="closing-cta">
-          <button class="cta-button" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
-          <button class="cta-button" type="button" data-cta-key="aai">Explore AAI</button>
-          <div class="footer-chip">Flagship products live</div>
+        <div class="closingCta">
+          <button class="ctaButton" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
+          <button class="ctaButton" type="button" data-cta-key="aai">Explore AAI</button>
+          <div class="footerChip">Flagship products live</div>
         </div>
       </div>
     </section>

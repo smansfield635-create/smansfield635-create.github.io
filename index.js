@@ -1,8 +1,8 @@
 const HOME_RUNTIME_META = Object.freeze({
   name: "HOME_ENTRY_RUNTIME",
-  version: "V4",
+  version: "V5",
   role: "root_motion_and_orchestration_only",
-  contract: "HOME_ENTRY_RUNTIME_V4_FOUR_WAY_GATE_AMBIENT",
+  contract: "HOME_ENTRY_RUNTIME_V5_RUSSIAN_DOLL_GATE",
   status: "ACTIVE",
   deterministic: true,
   projectionModel: "AMBIENT_FIELD_ONLY",
@@ -24,6 +24,10 @@ function clamp(value, min, max) {
 
 function qs(id) {
   return document.getElementById(id);
+}
+
+function qsa(selector) {
+  return Array.from(document.querySelectorAll(selector));
 }
 
 function setText(id, value) {
@@ -131,7 +135,7 @@ function createRenderer(canvas) {
     const sky = context.createLinearGradient(0, 0, 0, viewport.height);
     sky.addColorStop(0, "rgba(6, 10, 18, 0.18)");
     sky.addColorStop(0.58, "rgba(8, 17, 29, 0.08)");
-    sky.addColorStop(1, "rgba(255, 179, 71, 0.035)");
+    sky.addColorStop(1, "rgba(241, 195, 107, 0.035)");
     context.fillStyle = sky;
     context.fillRect(0, 0, viewport.width, viewport.height);
 
@@ -144,8 +148,8 @@ function createRenderer(canvas) {
       viewport.width * 0.52
     );
     goldGlow.addColorStop(0, "rgba(241, 195, 107, 0.18)");
-    goldGlow.addColorStop(0.45, "rgba(255, 179, 71, 0.08)");
-    goldGlow.addColorStop(1, "rgba(255, 179, 71, 0)");
+    goldGlow.addColorStop(0.45, "rgba(241, 195, 107, 0.08)");
+    goldGlow.addColorStop(1, "rgba(241, 195, 107, 0)");
     context.fillStyle = goldGlow;
     context.fillRect(0, 0, viewport.width, viewport.height);
 
@@ -244,6 +248,47 @@ function updateProof(viewport, reducedMotion) {
   setText("footer-year", String(new Date().getFullYear()));
 }
 
+function updateBubbleState() {
+  const openCount = qsa("[data-bubble]").filter((bubble) =>
+    bubble.classList.contains("open")
+  ).length;
+
+  setText("bubble-state", `${openCount} open`);
+}
+
+function setupBubbles() {
+  const bubbles = qsa("[data-bubble]");
+
+  bubbles.forEach((bubble) => {
+    const trigger = bubble.querySelector(".bubble-trigger");
+    const body = bubble.querySelector(".bubble-body");
+
+    if (!trigger || !body) return;
+
+    trigger.addEventListener("click", () => {
+      const isOpen = bubble.classList.contains("open");
+
+      bubbles.forEach((item) => {
+        item.classList.remove("open");
+        item.classList.add("hidden");
+
+        const itemTrigger = item.querySelector(".bubble-trigger");
+        if (itemTrigger) itemTrigger.setAttribute("aria-expanded", "false");
+      });
+
+      if (!isOpen) {
+        bubble.classList.remove("hidden");
+        bubble.classList.add("open");
+        trigger.setAttribute("aria-expanded", "true");
+      }
+
+      updateBubbleState();
+    });
+  });
+
+  updateBubbleState();
+}
+
 function boot() {
   const canvas = qs("home-fx");
   const reducedMotion = getReducedMotion();
@@ -273,6 +318,8 @@ function boot() {
       rafId = window.requestAnimationFrame(frame);
     }
   }
+
+  setupBubbles();
 
   window.addEventListener(
     "resize",

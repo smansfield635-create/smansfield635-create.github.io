@@ -18,6 +18,10 @@
     rafId: 0,
   };
 
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
   function readNode(node) {
     return {
       node,
@@ -31,10 +35,6 @@
 
   const orbiting = nodes.map(readNode);
 
-  function clamp(value, min, max) {
-    return Math.min(Math.max(value, min), max);
-  }
-
   function syncStage() {
     const rect = stage.getBoundingClientRect();
     state.width = rect.width;
@@ -44,26 +44,56 @@
   }
 
   function getScaleFactor() {
-    const widthFactor = clamp(state.width / 1220, 0.68, 1);
-    const heightFactor = clamp(state.height / 980, 0.72, 1);
+    const widthFactor = clamp(state.width / 1220, 0.50, 1);
+    const heightFactor = clamp(state.height / 980, 0.58, 1);
     return Math.min(widthFactor, heightFactor);
   }
 
-  function placeNode(item, time) {
+  function getResponsiveOrbit(item) {
     const factor = getScaleFactor();
-    const orbitX = item.orbitX * factor;
-    const orbitY = item.orbitY * factor;
+
+    let orbitX = item.orbitX * factor;
+    let orbitY = item.orbitY * factor;
+
+    if (state.width <= 720) {
+      orbitX *= 0.78;
+      orbitY *= 0.86;
+    } else if (state.width <= 980) {
+      orbitX *= 0.88;
+      orbitY *= 0.92;
+    }
+
+    return { orbitX, orbitY };
+  }
+
+  function getNodeBox(node) {
+    const rect = node.getBoundingClientRect();
+    return {
+      width: rect.width || 154,
+      height: rect.height || 190,
+    };
+  }
+
+  function placeNode(item, time) {
+    const { orbitX, orbitY } = getResponsiveOrbit(item);
     const theta = item.angle + time * item.speed;
 
     const x = Math.cos(theta) * orbitX;
     const y = Math.sin(theta) * orbitY;
 
     const depth = (Math.sin(theta) + 1) * 0.5;
-    const scale = 0.84 + depth * 0.24;
-    const opacity = 0.74 + depth * 0.26;
+    const scale = 0.82 + depth * 0.18;
+    const opacity = 0.76 + depth * 0.24;
     const zIndex = Math.round(20 + depth * 80 + item.depthBias);
 
-    item.node.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+    const box = getNodeBox(item.node);
+
+    const left = state.centerX + x - box.width * 0.5;
+    const top = state.centerY + y - box.height * 0.5;
+
+    item.node.style.left = `${left}px`;
+    item.node.style.top = `${top}px`;
+    item.node.style.transform = `scale(${scale})`;
     item.node.style.opacity = String(opacity);
     item.node.style.zIndex = String(zIndex);
   }

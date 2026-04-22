@@ -4,62 +4,67 @@
   <meta charset="utf-8">
   <meta
     name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
   >
-  <title>Products · Diamond Gate Bridge</title>
+  <title>Products · Euclidean Planetary Map · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway with Euclidean-axis planetary routing."
+    content="Products gateway rendered as a Euclidean planetary map with a central sun, animated orbital motion, and direct routing to child product paths."
   >
-
   <style>
     :root {
-      --bg: #030711;
-      --bg-deep: #07152a;
-      --panel: rgba(255, 255, 255, 0.05);
-      --panel-soft: rgba(255, 255, 255, 0.025);
-      --line: rgba(255, 255, 255, 0.10);
-
-      --text: #eef4ff;
-      --muted: #9fb0cf;
-      --gold: #f0c876;
-      --gold-soft: #f6deb0;
-      --blue-soft: #9dd1ff;
-
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
-      --radius: 28px;
-      --max: 1200px;
+      --bg-0: #010510;
+      --bg-1: #041126;
+      --bg-2: #071c3d;
+      --panel: rgba(9, 20, 48, 0.82);
+      --panel-soft: rgba(12, 28, 64, 0.54);
+      --line: rgba(173, 212, 255, 0.18);
+      --line-strong: rgba(173, 212, 255, 0.38);
+      --text: #eef6ff;
+      --muted: #a9bad6;
+      --accent: #f3d79c;
+      --glow: rgba(123, 184, 255, 0.35);
+      --sun-core: #fff8de;
+      --sun-mid: #ffd88a;
+      --sun-edge: #ff9c39;
+      --button: rgba(14, 29, 62, 0.86);
+      --button-border: rgba(173, 212, 255, 0.18);
+      --shadow-heavy: 0 24px 60px rgba(0, 0, 0, 0.45);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --max-width: 1220px;
+      color-scheme: dark;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
-      padding: 0;
       min-height: 100%;
-      background: var(--bg);
+      background:
+        radial-gradient(circle at 50% 18%, rgba(36, 86, 170, 0.22), transparent 36%),
+        radial-gradient(circle at 50% 72%, rgba(15, 40, 110, 0.28), transparent 46%),
+        linear-gradient(180deg, var(--bg-0), var(--bg-1) 42%, var(--bg-0));
       color: var(--text);
-      font:
-        16px/1.55 Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    body {
-      overflow-x: hidden;
-      background:
-        radial-gradient(circle at 50% 10%, rgba(98, 158, 255, 0.12), transparent 24%),
-        radial-gradient(circle at 50% 85%, rgba(240, 200, 118, 0.08), transparent 28%),
-        linear-gradient(180deg, #02050d 0%, #041126 100%);
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 0 1px, transparent 2px),
+        radial-gradient(circle at 30% 60%, rgba(255,255,255,0.65) 0 1px, transparent 2px),
+        radial-gradient(circle at 60% 26%, rgba(255,255,255,0.8) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 78% 72%, rgba(255,255,255,0.6) 0 1px, transparent 2px),
+        radial-gradient(circle at 88% 18%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
+        radial-gradient(circle at 18% 80%, rgba(255,255,255,0.55) 0 1px, transparent 2px);
+      opacity: 0.55;
     }
 
     a {
@@ -67,43 +72,25 @@
       text-decoration: none;
     }
 
-    .page {
-      position: relative;
-      min-height: 100vh;
-      isolation: isolate;
-    }
-
-    .stars {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
-        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 40%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 30% 55%, rgba(255,255,255,0.6) 0 1px, transparent 2px),
-        radial-gradient(circle at 78% 72%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
-        radial-gradient(circle at 12% 78%, rgba(255,255,255,0.65) 0 1px, transparent 2px),
-        radial-gradient(circle at 48% 84%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 90% 58%, rgba(255,255,255,0.55) 0 1px, transparent 2px);
-      opacity: 0.7;
-    }
-
     .shell {
-      position: relative;
-      z-index: 1;
-      width: min(100% - 24px, var(--max));
+      width: min(100% - 28px, var(--max-width));
       margin: 0 auto;
-      padding: 18px 0 44px;
+      padding: 18px 0 48px;
     }
 
     .topbar {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 16px;
-      padding: 8px 0 18px;
+      gap: 18px;
+      margin-bottom: 18px;
+      padding: 18px 20px;
+      border: 1px solid rgba(173, 212, 255, 0.14);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(7, 16, 40, 0.86), rgba(7, 17, 38, 0.72));
+      box-shadow: var(--shadow-heavy);
+      backdrop-filter: blur(14px);
     }
 
     .brand {
@@ -114,597 +101,744 @@
     }
 
     .brand-orb {
-      width: 64px;
-      height: 64px;
+      width: 56px;
+      height: 56px;
+      flex: 0 0 56px;
       border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.16);
+      border: 1px solid rgba(188, 219, 255, 0.24);
       background:
-        radial-gradient(circle at 40% 36%, rgba(255,255,255,0.95), rgba(158,205,255,0.42) 28%, rgba(38,77,138,0.22) 55%, rgba(0,0,0,0) 72%);
+        radial-gradient(circle at 38% 32%, rgba(255,255,255,0.92), rgba(195, 223, 255, 0.72) 18%, rgba(90, 138, 220, 0.42) 42%, rgba(10, 24, 60, 0.18) 72%, transparent 100%);
       box-shadow:
-        0 0 40px rgba(122, 176, 255, 0.22),
-        inset 0 0 24px rgba(255,255,255,0.08);
-      flex: 0 0 auto;
+        0 0 26px rgba(143, 189, 255, 0.28),
+        inset 0 0 30px rgba(255,255,255,0.12);
     }
 
-    .brand-title {
+    .brand-copy h1 {
       margin: 0;
-      font-size: 18px;
-      font-weight: 700;
+      font-size: clamp(1.35rem, 2vw, 1.8rem);
+      font-weight: 800;
       letter-spacing: 0.01em;
     }
 
-    .brand-sub {
-      margin: 2px 0 0;
+    .brand-copy p {
+      margin: 4px 0 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 0.98rem;
     }
 
-    .nav {
+    .nav-pills {
       display: flex;
       flex-wrap: wrap;
-      justify-content: flex-end;
       gap: 12px;
     }
 
-    .nav a {
-      min-height: 54px;
-      padding: 0 22px;
+    .nav-pills a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--line);
+      min-height: 52px;
+      padding: 0 20px;
+      border: 1px solid rgba(173, 212, 255, 0.16);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.03);
+      background: linear-gradient(180deg, rgba(18, 30, 62, 0.84), rgba(9, 16, 34, 0.84));
       color: var(--text);
-      font-size: 15px;
-      transition:
-        transform 0.18s ease,
-        border-color 0.18s ease,
-        background 0.18s ease;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
 
-    .nav a:hover,
-    .nav a:focus-visible,
-    .nav a[aria-current="page"] {
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.06);
+    .nav-pills a:hover,
+    .nav-pills a:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(214, 233, 255, 0.34);
+      box-shadow: 0 0 0 1px rgba(214, 233, 255, 0.08), 0 12px 22px rgba(0, 0, 0, 0.24);
       outline: none;
     }
 
-    .panel {
-      background: linear-gradient(180deg, var(--panel), var(--panel-soft));
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
+    .nav-pills a[aria-current="page"] {
+      border-color: rgba(202, 228, 255, 0.4);
+      box-shadow:
+        0 0 0 1px rgba(202, 228, 255, 0.08),
+        0 0 24px rgba(94, 143, 255, 0.18);
     }
 
     .hero {
-      padding: 24px;
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
+      padding: 24px 24px 20px;
+      border: 1px solid rgba(173, 212, 255, 0.12);
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(10, 18, 42, 0.76), rgba(8, 18, 40, 0.58)),
+        radial-gradient(circle at 50% 0%, rgba(115, 170, 255, 0.12), transparent 46%);
+      box-shadow: var(--shadow-heavy);
     }
 
     .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 14px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
-      color: var(--gold);
-      font-size: 12px;
-      letter-spacing: 0.08em;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      font-size: 0.84rem;
     }
 
-    h1,
-    h2 {
+    .hero h2 {
       margin: 0;
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      font-family:
-        "Iowan Old Style",
-        "Palatino Linotype",
-        "Book Antiqua",
-        Palatino,
-        "Times New Roman",
-        serif;
-      font-weight: 600;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 5vw, 4.4rem);
+      line-height: 0.95;
+      color: var(--accent);
     }
 
-    h1 {
-      font-size: clamp(36px, 6vw, 64px);
-      color: #f7f1df;
-      max-width: 12ch;
-    }
-
-    h2 {
-      font-size: clamp(28px, 4vw, 42px);
-      color: #f3d79a;
-    }
-
-    .lede {
-      margin: 14px 0 0;
-      max-width: 44rem;
+    .hero p {
+      margin: 0;
+      max-width: 70ch;
       color: var(--muted);
-      font-size: 18px;
+      font-size: clamp(1rem, 1.5vw, 1.08rem);
+      line-height: 1.7;
     }
 
-    .system {
-      margin-top: 18px;
+    .map-shell {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(173, 212, 255, 0.14);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(29, 64, 137, 0.22), transparent 34%),
+        radial-gradient(circle at 50% 50%, rgba(78, 130, 255, 0.08), transparent 56%),
+        linear-gradient(180deg, rgba(7, 16, 40, 0.94), rgba(4, 14, 32, 0.96));
+      box-shadow: var(--shadow-heavy);
       padding: 18px;
     }
 
-    .axis-wrap {
-      position: relative;
-      min-height: 980px;
-      overflow: hidden;
-      border-radius: 32px;
-      border: 1px solid rgba(255,255,255,0.1);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(110, 178, 255, 0.16), transparent 12%),
-        linear-gradient(180deg, rgba(5,18,41,0.75), rgba(3,10,24,0.88));
-    }
-
-    .axis-wrap::before {
+    .map-shell::before {
       content: "";
       position: absolute;
       inset: 18px;
       border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
+      border: 1px solid rgba(173, 212, 255, 0.08);
       pointer-events: none;
     }
 
-    .axis-wrap::after {
-      content: "";
+    .map-frame {
+      position: relative;
+      min-height: min(1100px, 80vh);
+      border-radius: 26px;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(4, 13, 32, 0.54), rgba(4, 13, 32, 0.22)),
+        radial-gradient(circle at 50% 50%, rgba(58, 103, 188, 0.18), transparent 54%);
+    }
+
+    .map-title {
+      position: absolute;
+      top: 30px;
+      left: 34px;
+      z-index: 30;
+      max-width: min(80%, 640px);
+    }
+
+    .map-title h3 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.1rem, 4vw, 4.2rem);
+      line-height: 0.95;
+      color: var(--accent);
+    }
+
+    .map-title p {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.6;
+      max-width: 54ch;
+    }
+
+    .planetary-stage {
       position: absolute;
       inset: 0;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06) 0 1px, transparent 2px);
-      background-size: 180px 180px;
-      opacity: 0.18;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .axes {
+      position: absolute;
+      inset: 0;
       pointer-events: none;
+      z-index: 4;
     }
 
     .axis-x,
     .axis-y {
       position: absolute;
-      background: linear-gradient(180deg, rgba(157,209,255,0.15), rgba(157,209,255,0.6), rgba(157,209,255,0.15));
-      box-shadow: 0 0 18px rgba(122,176,255,0.18);
-      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(206, 228, 255, 0.44), transparent);
+      box-shadow: 0 0 18px rgba(141, 189, 255, 0.15);
     }
 
     .axis-x {
       top: 50%;
-      left: 60px;
-      right: 60px;
+      left: 8%;
+      width: 84%;
       height: 2px;
       transform: translateY(-50%);
     }
 
     .axis-y {
       left: 50%;
-      top: 60px;
-      bottom: 60px;
+      top: 11%;
       width: 2px;
+      height: 78%;
       transform: translateX(-50%);
+      background: linear-gradient(180deg, transparent, rgba(206, 228, 255, 0.44), transparent);
     }
 
     .axis-label {
       position: absolute;
-      color: rgba(200,220,255,0.8);
-      font-size: 18px;
+      color: rgba(225, 237, 255, 0.88);
+      font-weight: 800;
       letter-spacing: 0.04em;
-      pointer-events: none;
+      font-size: clamp(1.2rem, 2vw, 2rem);
+      text-shadow: 0 0 18px rgba(113, 165, 255, 0.28);
     }
 
-    .axis-label.x-pos { right: 28px; top: calc(50% - 16px); }
-    .axis-label.x-neg { left: 28px; top: calc(50% - 16px); }
-    .axis-label.y-pos { left: calc(50% - 15px); top: 22px; }
-    .axis-label.y-neg { left: calc(50% - 15px); bottom: 22px; }
+    .axis-label.plus-y { top: 9.2%; left: calc(50% - 28px); }
+    .axis-label.minus-y { bottom: 8.5%; left: calc(50% - 24px); }
+    .axis-label.minus-x { top: calc(50% - 20px); left: 8.2%; }
+    .axis-label.plus-x { top: calc(50% - 20px); right: 8.4%; }
 
-    .ring {
+    .orbit-rings {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      perspective: 1400px;
+    }
+
+    .orbit-ring {
       position: absolute;
       left: 50%;
       top: 50%;
-      border-radius: 50%;
-      border: 1px solid rgba(157,209,255,0.12);
+      width: var(--ring-w);
+      height: var(--ring-h);
       transform: translate(-50%, -50%);
-      pointer-events: none;
+      border: 1px solid rgba(173, 212, 255, 0.12);
+      border-radius: 50%;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02),
+        inset 0 0 24px rgba(140, 188, 255, 0.03);
+      opacity: 0.92;
     }
 
-    .ring.r1 { width: 140px; height: 140px; }
-    .ring.r2 { width: 280px; height: 280px; }
-    .ring.r3 { width: 420px; height: 420px; }
-    .ring.r4 { width: 560px; height: 560px; }
-    .ring.r5 { width: 700px; height: 700px; }
-
-    .sun {
+    .sun-system {
       position: absolute;
       left: 50%;
       top: 50%;
-      width: 92px;
-      height: 92px;
-      border-radius: 50%;
       transform: translate(-50%, -50%);
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .sun-halo {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 360px;
+      height: 360px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
       background:
-        radial-gradient(circle at 40% 35%, rgba(255,255,255,1), rgba(202,232,255,0.9) 22%, rgba(122,176,255,0.55) 45%, rgba(65,108,190,0.2) 65%, rgba(0,0,0,0) 78%);
-      box-shadow:
-        0 0 65px rgba(122,176,255,0.55),
-        0 0 120px rgba(122,176,255,0.18);
-      z-index: 2;
-      pointer-events: none;
+        radial-gradient(circle, rgba(255, 221, 135, 0.24), rgba(255, 187, 74, 0.16) 26%, rgba(70, 118, 215, 0.12) 48%, transparent 72%);
+      filter: blur(16px);
+      animation: haloPulse 5.8s ease-in-out infinite;
+      opacity: 0.95;
     }
 
-    .planet {
+    .sun-core {
       position: absolute;
-      width: 156px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 10px;
+      left: 50%;
+      top: 50%;
+      width: 154px;
+      height: 154px;
       transform: translate(-50%, -50%);
-      text-align: center;
-      z-index: 3;
-    }
-
-    .planet-orb {
-      width: 88px;
-      height: 88px;
       border-radius: 50%;
-      position: relative;
+      background:
+        radial-gradient(circle at 34% 32%, rgba(255,255,255,0.98), rgba(255,244,201,0.95) 16%, var(--sun-mid) 42%, var(--sun-edge) 72%, #7e3f10 100%);
       box-shadow:
-        0 0 24px rgba(140, 190, 255, 0.18),
-        inset -14px -18px 28px rgba(0, 0, 0, 0.28);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
+        0 0 28px rgba(255, 198, 102, 0.72),
+        0 0 72px rgba(255, 177, 73, 0.45),
+        0 0 120px rgba(114, 166, 255, 0.18);
+      overflow: visible;
+      animation: sunPulse 4.8s ease-in-out infinite;
     }
 
-    .planet:hover .planet-orb,
-    .planet:focus-within .planet-orb {
-      transform: scale(1.05);
-      box-shadow:
-        0 0 34px rgba(140, 190, 255, 0.32),
-        inset -14px -18px 28px rgba(0, 0, 0, 0.28);
-    }
-
-    .planet-orb::after {
+    .sun-core::before,
+    .sun-core::after {
       content: "";
       position: absolute;
-      inset: auto -10px 12px -10px;
-      height: 14px;
+      inset: -22px;
       border-radius: 50%;
-      border: 1px solid rgba(185, 220, 255, 0.28);
-      opacity: 0.42;
+      border: 2px solid rgba(255, 217, 142, 0.18);
+      animation: coronaSpin 16s linear infinite;
     }
 
-    .planet-label {
-      font-weight: 700;
-      font-size: 14px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #f3f7ff;
+    .sun-core::after {
+      inset: -38px;
+      border-width: 1px;
+      border-color: rgba(122, 179, 255, 0.16);
+      animation-duration: 22s;
+      animation-direction: reverse;
     }
 
-    .planet-copy {
-      font-size: 12px;
-      line-height: 1.35;
-      color: var(--muted);
-      max-width: 14ch;
+    .nodes-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
     }
 
-    .planet-1 .planet-orb {
-      background:
-        radial-gradient(circle at 35% 32%, #f2fbff, #8ec5ff 28%, #335ea8 60%, #15294e 80%);
-    }
-
-    .planet-2 .planet-orb {
-      background:
-        radial-gradient(circle at 35% 30%, #fff1d4, #f0c876 28%, #a46f1c 58%, #4a2c10 80%);
-    }
-
-    .planet-3 .planet-orb {
-      background:
-        radial-gradient(circle at 35% 30%, #e5fff7, #8ee2c8 28%, #327964 58%, #17352d 80%);
-    }
-
-    .planet-4 .planet-orb {
-      background:
-        radial-gradient(circle at 35% 30%, #fff7db, #f0c876 28%, #9e6b25 58%, #4a2d11 80%);
-    }
-
-    .planet-5 .planet-orb {
-      background:
-        radial-gradient(circle at 35% 30%, #e8f2ff, #7fa0ff 28%, #3c53a3 58%, #18224f 80%);
-    }
-
-    .planet-6 .planet-orb {
-      background:
-        radial-gradient(circle at 35% 30%, #ebf7ff, #6ac5ff 28%, #2b6fa0 58%, #16334a 80%);
+    .planet-node {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(0, 0);
+      width: 188px;
+      will-change: transform;
     }
 
     .planet-link {
+      display: grid;
+      gap: 10px;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .planet {
+      position: relative;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.12);
+      box-shadow:
+        0 20px 30px rgba(0, 0, 0, 0.28),
+        inset -16px -22px 24px rgba(0, 0, 0, 0.18),
+        inset 14px 18px 26px rgba(255, 255, 255, 0.18),
+        0 0 28px rgba(105, 162, 255, 0.16);
+      overflow: visible;
+    }
+
+    .planet::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 56%;
+      width: 126%;
+      height: 22px;
+      transform: translate(-50%, -50%) rotate(-5deg);
+      border: 1px solid rgba(209, 227, 255, 0.16);
+      border-radius: 50%;
+      box-shadow: 0 0 20px rgba(115, 169, 255, 0.08);
+      background: transparent;
+    }
+
+    .planet.aai {
+      background: radial-gradient(circle at 35% 30%, #ffffff, #a6cdfb 22%, #5b8fdc 52%, #183c89 76%, #09193d 100%);
+    }
+
+    .planet.nine-summits {
+      background: radial-gradient(circle at 35% 30%, #fff4d0, #ebcf85 22%, #bf8b1d 56%, #6a4410 78%, #281508 100%);
+    }
+
+    .planet.five-flags {
+      background: radial-gradient(circle at 35% 30%, #f2fbff, #87d1ff 26%, #3a90d1 56%, #14457f 78%, #081d37 100%);
+    }
+
+    .planet.nutrition {
+      background: radial-gradient(circle at 35% 30%, #f3fff9, #9be7c4 24%, #3ca26e 54%, #1d5a43 76%, #08261b 100%);
+    }
+
+    .planet.archcoin {
+      background: radial-gradient(circle at 35% 30%, #fff6df, #eecf77 22%, #c18b17 52%, #6f4706 78%, #261704 100%);
+    }
+
+    .planet.root {
+      background: radial-gradient(circle at 35% 30%, #f7f8ff, #aabfff 24%, #697fdd 54%, #31408b 76%, #111c49 100%);
+    }
+
+    .planet-node h4 {
+      margin: 0;
+      font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .planet-node p {
+      margin: 0;
+      min-height: 2.6em;
+      color: var(--muted);
+      font-size: 0.98rem;
+      line-height: 1.45;
+    }
+
+    .planet-node .open-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 42px;
-      padding: 0 14px;
+      min-height: 46px;
+      min-width: 108px;
+      padding: 0 18px;
       border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.12);
-      background: rgba(255,255,255,0.04);
-      color: var(--blue-soft);
-      font-size: 13px;
-      font-weight: 600;
-      transition:
-        transform 0.18s ease,
-        background 0.18s ease,
-        border-color 0.18s ease;
+      border: 1px solid var(--button-border);
+      background: linear-gradient(180deg, rgba(20, 36, 76, 0.88), var(--button));
+      color: #9fd0ff;
+      font-weight: 800;
+      font-size: 0.98rem;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
+      transition: transform 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
     }
 
-    .planet-link:hover,
+    .planet-link:hover .open-pill,
+    .planet-link:focus-visible .open-pill {
+      transform: translateY(-2px);
+      border-color: rgba(214, 233, 255, 0.34);
+      color: #d8ebff;
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.28);
+    }
+
     .planet-link:focus-visible {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.08);
-      border-color: rgba(255,255,255,0.24);
       outline: none;
     }
 
-    .legend {
-      margin-top: 18px;
-      padding: 20px;
+    .map-footer {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px;
+      margin-top: 18px;
+      padding: 18px 20px;
+      border: 1px solid rgba(173, 212, 255, 0.1);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(10, 17, 38, 0.74), rgba(8, 15, 32, 0.74));
     }
 
-    .legend-card {
-      padding: 18px;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 22px;
-      background: rgba(255,255,255,0.025);
+    .map-footer strong {
+      color: var(--text);
+      font-weight: 800;
     }
 
-    .legend-kicker {
-      margin: 0 0 8px;
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .legend-copy {
+    .map-footer p {
       margin: 0;
       color: var(--muted);
+      line-height: 1.7;
     }
 
-    .footer {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      padding: 4px 2px 0;
+    @keyframes haloPulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(0.98);
+        opacity: 0.9;
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.06);
+        opacity: 1;
+      }
+    }
+
+    @keyframes sunPulse {
+      0%, 100% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+      50% {
+        transform: translate(-50%, -50%) scale(1.04);
+      }
+    }
+
+    @keyframes coronaSpin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
     @media (max-width: 980px) {
-      .legend {
-        grid-template-columns: 1fr;
+      .map-frame {
+        min-height: 1080px;
       }
 
-      .axis-wrap {
-        min-height: 860px;
+      .planet-node {
+        width: 172px;
       }
 
       .planet {
-        width: 132px;
+        width: 108px;
+        height: 108px;
       }
 
-      .planet-orb {
-        width: 78px;
-        height: 78px;
+      .map-title {
+        top: 22px;
+        left: 24px;
+        right: 24px;
+      }
+
+      .map-title p {
+        max-width: 100%;
+      }
+
+      .axis-x {
+        left: 7%;
+        width: 86%;
+      }
+
+      .axis-y {
+        top: 14%;
+        height: 74%;
       }
     }
 
     @media (max-width: 720px) {
       .shell {
-        width: min(100% - 18px, var(--max));
-        padding-top: 14px;
+        width: min(100% - 16px, var(--max-width));
+        padding-top: 10px;
       }
 
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .nav a {
-        min-width: 0;
-      }
-
+      .topbar,
       .hero,
-      .system {
-        padding: 18px;
+      .map-shell,
+      .map-footer {
+        border-radius: 22px;
       }
 
-      .lede {
-        font-size: 16px;
+      .map-frame {
+        min-height: 1120px;
       }
 
-      .axis-wrap {
-        min-height: 760px;
+      .planet-node {
+        width: 154px;
       }
-
-      .axis-x {
-        left: 28px;
-        right: 28px;
-      }
-
-      .axis-y {
-        top: 40px;
-        bottom: 40px;
-      }
-
-      .ring.r4 { width: 470px; height: 470px; }
-      .ring.r5 { width: 590px; height: 590px; }
 
       .planet {
-        width: 116px;
+        width: 96px;
+        height: 96px;
       }
 
-      .planet-orb {
-        width: 68px;
-        height: 68px;
+      .planet::before {
+        height: 18px;
       }
 
-      .planet-label {
-        font-size: 12px;
+      .planet-node p {
+        font-size: 0.92rem;
       }
 
-      .planet-copy {
-        font-size: 11px;
+      .planet-node .open-pill {
+        min-height: 42px;
+        min-width: 96px;
+        font-size: 0.95rem;
       }
 
-      .planet-link {
-        min-height: 36px;
-        font-size: 12px;
-        padding: 0 10px;
+      .map-title h3 {
+        max-width: 10ch;
+      }
+
+      .map-title p {
+        font-size: 0.94rem;
+      }
+
+      .sun-halo {
+        width: 300px;
+        height: 300px;
+      }
+
+      .sun-core {
+        width: 132px;
+        height: 132px;
+      }
+
+      .axis-label.plus-y { top: 10%; }
+      .axis-label.minus-y { bottom: 9%; }
+      .axis-label.minus-x { left: 7%; }
+      .axis-label.plus-x { right: 7%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .sun-halo,
+      .sun-core,
+      .sun-core::before,
+      .sun-core::after {
+        animation: none !important;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="stars" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-orb" aria-hidden="true"></div>
+        <div class="brand-copy">
+          <h1>Diamond Gate Bridge</h1>
+          <p>Products gateway with a true solar core and animated Euclidean motion.</p>
+        </div>
+      </div>
 
-    <div class="shell">
-      <header class="topbar" aria-label="Primary navigation">
-        <div class="brand">
-          <div class="brand-orb" aria-hidden="true"></div>
-          <div>
-            <p class="brand-title">Diamond Gate Bridge</p>
-            <p class="brand-sub">Products gateway with Euclidean-axis planetary chamber</p>
-          </div>
+      <nav class="nav-pills" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/platform/">Platform</a>
+        <a href="/products/" aria-current="page">Products</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="products-heading">
+      <div class="eyebrow">Products Gateway</div>
+      <h2 id="products-heading">Euclidean planetary map</h2>
+      <p>
+        The center is now a real sun. The system runs on a visible horizontal Euclidean axis,
+        reinforced by a vertical axis, with live orbital motion rather than static two-dimensional circles.
+        Each product route reads as its own planet with its own position, role, and path.
+      </p>
+    </section>
+
+    <section class="map-shell" aria-label="Products planetary map">
+      <div class="map-frame">
+        <div class="map-title">
+          <h3>Euclidean planetary map</h3>
+          <p>
+            Central value field at the core. Distinct planets in motion around it.
+            Open a route directly from the map.
+          </p>
         </div>
 
-        <nav class="nav" aria-label="Top navigation">
-          <a href="/home/">Home</a>
-          <a href="/explore/">Explore</a>
-          <a href="/gauges/">Gauges</a>
-          <a href="/platform/">Platform</a>
-          <a href="/products/" aria-current="page">Products</a>
-        </nav>
-      </header>
-
-      <main>
-        <section class="panel hero" aria-labelledby="products-title">
-          <p class="eyebrow">Products chamber</p>
-          <h1 id="products-title">Products on a real axis.</h1>
-          <p class="lede">
-            The products page is now a routing shell. AAI and The Nine Summits of Love
-            open into their own child extensions instead of expanding on this page.
-          </p>
-        </section>
-
-        <section class="panel system" aria-labelledby="euclidean-title">
-          <h2 id="euclidean-title">Euclidean planetary map</h2>
-
-          <div class="axis-wrap">
-            <div class="axis-x" aria-hidden="true"></div>
-            <div class="axis-y" aria-hidden="true"></div>
-
-            <div class="axis-label x-neg" aria-hidden="true">-X</div>
-            <div class="axis-label x-pos" aria-hidden="true">+X</div>
-            <div class="axis-label y-pos" aria-hidden="true">+Y</div>
-            <div class="axis-label y-neg" aria-hidden="true">-Y</div>
-
-            <div class="ring r1" aria-hidden="true"></div>
-            <div class="ring r2" aria-hidden="true"></div>
-            <div class="ring r3" aria-hidden="true"></div>
-            <div class="ring r4" aria-hidden="true"></div>
-            <div class="ring r5" aria-hidden="true"></div>
-
-            <div class="sun" aria-hidden="true"></div>
-
-            <div class="planet planet-1" style="left:50%; top:20%;">
-              <div class="planet-orb" aria-hidden="true"></div>
-              <div class="planet-label">AAI</div>
-              <div class="planet-copy">Artificial agent intelligence</div>
-              <a class="planet-link" href="/products/aai/">Open</a>
-            </div>
-
-            <div class="planet planet-2" style="left:74%; top:34%;">
-              <div class="planet-orb" aria-hidden="true"></div>
-              <div class="planet-label">Nine Summits</div>
-              <div class="planet-copy">Book and launch path</div>
-              <a class="planet-link" href="/products/nine-summits/">Open</a>
-            </div>
-
-            <div class="planet planet-3" style="left:74%; top:56%;">
-              <div class="planet-orb" aria-hidden="true"></div>
-              <div class="planet-label">Nutrition</div>
-              <div class="planet-copy">Health-facing product line</div>
-              <a class="planet-link" href="/products/nutrition/">Open</a>
-            </div>
-
-            <div class="planet planet-4" style="left:36%; top:74%;">
-              <div class="planet-orb" aria-hidden="true"></div>
-              <div class="planet-label">ARCHCOIN</div>
-              <div class="planet-copy">Vault-bound protected value</div>
-              <a class="planet-link" href="/vault/#archcoin">Open</a>
-            </div>
-
-            <div class="planet planet-5" style="left:66%; top:74%;">
-              <div class="planet-orb" aria-hidden="true"></div>
-              <div class="planet-label">Root</div>
-              <div class="planet-copy">Return to primary entry</div>
-              <a class="planet-link" href="/">Open</a>
-            </div>
-
-            <div class="planet planet-6" style="left:20%; top:56%;">
-              <div class="planet-orb" aria-hidden="true"></div>
-              <div class="planet-label">Five Flags</div>
-              <div class="planet-copy">Additional route line</div>
-              <a class="planet-link" href="/products/five-flags/">Open</a>
-            </div>
+        <div class="planetary-stage" id="planetary-stage">
+          <div class="orbit-rings" aria-hidden="true">
+            <div class="orbit-ring" style="--ring-w: 86%; --ring-h: 68%;"></div>
+            <div class="orbit-ring" style="--ring-w: 72%; --ring-h: 54%;"></div>
+            <div class="orbit-ring" style="--ring-w: 58%; --ring-h: 40%;"></div>
+            <div class="orbit-ring" style="--ring-w: 44%; --ring-h: 28%;"></div>
           </div>
 
-          <div class="legend">
-            <article class="legend-card">
-              <p class="legend-kicker">AAI</p>
-              <p class="legend-copy">
-                Opens into its own child page at <code>/products/aai/</code>.
-              </p>
+          <div class="axes" aria-hidden="true">
+            <div class="axis-x"></div>
+            <div class="axis-y"></div>
+            <div class="axis-label plus-y">+Y</div>
+            <div class="axis-label minus-y">-Y</div>
+            <div class="axis-label minus-x">-X</div>
+            <div class="axis-label plus-x">+X</div>
+          </div>
+
+          <div class="sun-system" aria-hidden="true">
+            <div class="sun-halo"></div>
+            <div class="sun-core"></div>
+          </div>
+
+          <div class="nodes-layer">
+            <article
+              class="planet-node"
+              data-orbit-x="0"
+              data-orbit-y="312"
+              data-angle="-1.5708"
+              data-speed="0.00014"
+              data-depth-bias="12"
+            >
+              <a class="planet-link" href="/products/aai/">
+                <div class="planet aai" aria-hidden="true"></div>
+                <h4>AAI</h4>
+                <p>Artificial agent intelligence</p>
+                <span class="open-pill">Open</span>
+              </a>
             </article>
 
-            <article class="legend-card">
-              <p class="legend-kicker">Nine Summits</p>
-              <p class="legend-copy">
-                Opens into its own child page at <code>/products/nine-summits/</code>.
-              </p>
+            <article
+              class="planet-node"
+              data-orbit-x="212"
+              data-orbit-y="232"
+              data-angle="-0.58"
+              data-speed="0.00011"
+              data-depth-bias="8"
+            >
+              <a class="planet-link" href="/products/nine-summits/">
+                <div class="planet nine-summits" aria-hidden="true"></div>
+                <h4>Nine Summits</h4>
+                <p>Book and launch path</p>
+                <span class="open-pill">Open</span>
+              </a>
             </article>
 
-            <article class="legend-card">
-              <p class="legend-kicker">Gateway rule</p>
-              <p class="legend-copy">
-                The products page routes. The long-form object detail lives on the extension pages.
-              </p>
+            <article
+              class="planet-node"
+              data-orbit-x="264"
+              data-orbit-y="0"
+              data-angle="3.14159"
+              data-speed="0.000095"
+              data-depth-bias="4"
+            >
+              <a class="planet-link" href="/products/five-flags/">
+                <div class="planet five-flags" aria-hidden="true"></div>
+                <h4>Five Flags</h4>
+                <p>Additional route line</p>
+                <span class="open-pill">Open</span>
+              </a>
+            </article>
+
+            <article
+              class="planet-node"
+              data-orbit-x="264"
+              data-orbit-y="0"
+              data-angle="0"
+              data-speed="0.000095"
+              data-depth-bias="4"
+            >
+              <a class="planet-link" href="/products/nutrition/">
+                <div class="planet nutrition" aria-hidden="true"></div>
+                <h4>Nutrition</h4>
+                <p>Health-facing product line</p>
+                <span class="open-pill">Open</span>
+              </a>
+            </article>
+
+            <article
+              class="planet-node"
+              data-orbit-x="196"
+              data-orbit-y="246"
+              data-angle="2.28"
+              data-speed="0.00012"
+              data-depth-bias="6"
+            >
+              <a class="planet-link" href="/vault/">
+                <div class="planet archcoin" aria-hidden="true"></div>
+                <h4>ARCHCOIN</h4>
+                <p>Vault-bound protected value</p>
+                <span class="open-pill">Open</span>
+              </a>
+            </article>
+
+            <article
+              class="planet-node"
+              data-orbit-x="184"
+              data-orbit-y="252"
+              data-angle="0.94"
+              data-speed="0.00012"
+              data-depth-bias="6"
+            >
+              <a class="planet-link" href="/">
+                <div class="planet root" aria-hidden="true"></div>
+                <h4>Root</h4>
+                <p>Return to primary entry</p>
+                <span class="open-pill">Open</span>
+              </a>
             </article>
           </div>
-        </section>
-      </main>
+        </div>
+      </div>
 
-      <footer class="footer">
-        <span>Result: PAGE=PRODUCTS | ROLE=GATEWAY_SHELL | CHILD_ROUTES=ACTIVE</span>
-        <span><a href="/products/aai/">Open AAI</a></span>
-      </footer>
-    </div>
+      <div class="map-footer">
+        <p>
+          <strong>Core law:</strong> the center is the sun, not another planet.
+          The products now orbit a shared value field rather than floating as disconnected objects.
+        </p>
+        <p>
+          <strong>Routing law:</strong> AAI routes to <code>/products/aai/</code> and Nine Summits routes to
+          <code>/products/nine-summits/</code>. The remaining planets keep their own direct paths.
+        </p>
+      </div>
+    </section>
   </div>
+
+  <script src="./index.js"></script>
 </body>
 </html>

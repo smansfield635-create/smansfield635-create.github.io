@@ -19,22 +19,17 @@
       --panel: rgba(255,255,255,0.05);
       --panel-soft: rgba(255,255,255,0.025);
       --line: rgba(255,255,255,0.10);
-
       --text: #eef4ff;
       --muted: #9fb0cf;
       --gold: #f0c876;
       --gold-soft: #f6deb0;
       --blue-soft: #9dd1ff;
-      --green-soft: #9fe7c5;
-
       --shadow: 0 24px 80px rgba(0,0,0,0.42);
       --radius: 28px;
-      --max: 1160px;
+      --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -81,12 +76,12 @@
       pointer-events: none;
       background-image:
         radial-gradient(circle at 15% 20%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
-        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 40%, rgba(255,255,255,0.7) 0 1px, transparent 2px),
-        radial-gradient(circle at 30% 55%, rgba(255,255,255,0.6) 0 1px, transparent 2px),
+        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 62% 40%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 30% 55%, rgba(255,255,255,0.60) 0 1px, transparent 2px),
         radial-gradient(circle at 78% 72%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
         radial-gradient(circle at 12% 78%, rgba(255,255,255,0.65) 0 1px, transparent 2px);
-      opacity: 0.7;
+      opacity: 0.72;
     }
 
     .shell {
@@ -190,7 +185,7 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
       gap: 18px;
       padding: 18px 0 12px;
     }
@@ -294,28 +289,42 @@
       gap: 16px;
     }
 
+    .stack {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
     .card,
-    .focus-card {
+    .focus-card,
+    .nested-card {
       padding: 20px;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 22px;
       background:
         radial-gradient(circle at 18% 18%, rgba(240,200,118,0.10), transparent 28%),
-        radial-gradient(circle at 82% 24%, rgba(98,158,255,0.10), transparent 26%),
+        radial-gradient(circle at 82% 24%, rgba(98,158,255,0.08), transparent 26%),
         linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
       display: flex;
       flex-direction: column;
       gap: 10px;
-      min-height: 220px;
     }
 
-    .focus-card {
-      min-height: auto;
+    .card,
+    .nested-card {
+      min-height: 220px;
     }
 
     .detail {
       margin: 0;
       flex: 1 1 auto;
+    }
+
+    .nested-shell {
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.02);
     }
 
     .footer {
@@ -400,11 +409,10 @@
         <section class="panel hero" aria-labelledby="ns-title">
           <article class="hero-main">
             <p class="eyebrow">Book and launch object</p>
-            <h1 id="ns-title">The Nine Summits of Love</h1>
+            <h1 id="ns-title">The Nine Summits of Love.</h1>
             <p class="lede">
-              This is the child extension for the book and launch path. The products
-              shell routes here so the work can stand as its own object instead of
-              being compressed into a paragraph on the parent page.
+              This page holds the core book object cleanly and opens deeper descent
+              only where the next layer has a real visitor job.
             </p>
 
             <div class="actions">
@@ -427,23 +435,22 @@
               <p class="meta-value">Child extension under /products/</p>
             </div>
             <div>
-              <p class="meta-label">Next step</p>
-              <p class="meta-value">Prelude and deeper book-facing path</p>
+              <p class="meta-label">Parent shell</p>
+              <p class="meta-value">/products/</p>
             </div>
           </aside>
         </section>
 
-        <section class="panel section" aria-labelledby="ns-structure-title">
-          <p class="eyebrow">Object structure</p>
-          <h2 id="ns-structure-title">What this page carries.</h2>
+        <section class="panel section" aria-labelledby="ns-core-title">
+          <p class="eyebrow">Core object</p>
+          <h2 id="ns-core-title">What belongs on this first layer.</h2>
 
           <div class="grid">
             <article class="card">
               <p class="kicker">Guiding work</p>
               <h3>More than promotion</h3>
               <p class="detail">
-                The Nine Summits is presented here as a real work with direction and
-                weight, not as slogan-only promotion.
+                The work stands here as a real object, not as slogan-only promotion.
               </p>
             </article>
 
@@ -451,8 +458,7 @@
               <p class="kicker">Human lane</p>
               <h3>Value-centered</h3>
               <p class="detail">
-                The object remains centered on growth, discipline, patience, clarity,
-                and human movement rather than shallow launch hype.
+                The extension remains centered on growth, discipline, patience, clarity, and human movement.
               </p>
             </article>
 
@@ -460,29 +466,55 @@
               <p class="kicker">Next step</p>
               <h3>Move into Prelude</h3>
               <p class="detail">
-                The lawful next visitor motion is the threshold path where the work
-                opens more fully.
+                The lawful next visitor motion is the threshold path where the work opens more fully.
               </p>
             </article>
           </div>
         </section>
 
-        <section class="panel section" aria-labelledby="ns-focus-title">
-          <p class="eyebrow">Focus</p>
-          <h2 id="ns-focus-title">The object now has its own chamber.</h2>
+        <section class="panel section" aria-labelledby="ns-russian-doll-title">
+          <p class="eyebrow">Russian-doll containment</p>
+          <h2 id="ns-russian-doll-title">Contained depth.</h2>
 
-          <article class="focus-card">
-            <p class="detail">
-              This extension page exists so the products gateway can remain a gateway.
-              The book-facing object detail lives here. The parent shell routes here.
-              That is the containment law now in force.
-            </p>
-          </article>
+          <div class="stack">
+            <div class="nested-shell">
+              <article class="nested-card">
+                <p class="kicker">Layer 1</p>
+                <h3>Core work</h3>
+                <p class="detail">
+                  The first layer names the work and keeps the object weighted and readable.
+                </p>
+              </article>
+            </div>
+
+            <div class="nested-shell">
+              <article class="nested-card">
+                <p class="kicker">Layer 2</p>
+                <h3>Book path</h3>
+                <p class="detail">
+                  The second layer frames the work as a book object with a real human lane and real purpose.
+                </p>
+              </article>
+            </div>
+
+            <div class="nested-shell">
+              <article class="nested-card">
+                <p class="kicker">Layer 3</p>
+                <h3>Launch and threshold</h3>
+                <p class="detail">
+                  The third layer opens the next lawful descent because Prelude is the first load-bearing continuation.
+                </p>
+                <div class="actions">
+                  <a class="button button-primary" href="/prelude/">Open prelude</a>
+                </div>
+              </article>
+            </div>
+          </div>
         </section>
       </main>
 
       <footer class="footer">
-        <span>Result: PAGE=NINE_SUMMITS | ROLE=CHILD_EXTENSION | PARENT=/products/</span>
+        <span>Result: PAGE=NINE_SUMMITS | ROLE=CHILD_EXTENSION | DEPTH=RUSSIAN_DOLL</span>
         <span><a href="/products/">Return to products</a></span>
       </footer>
     </div>

@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Diagnostic Gauges · Diamond Gate Bridge</title>
+  <title>Gauges · Products Stage Ownership Audit · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diagnostic Gauges G5. Geometry-first host with direct status receipts, authority lanes, signal windows, and diagnostic surfaces."
+    content="Products stage-ownership audit surface for identifying redundant render ownership across host, bootstrap, and runtime layers."
   >
   <style>
     :root{
@@ -16,6 +16,7 @@
       --panel:rgba(9,18,40,.86);
       --panel-soft:rgba(10,20,46,.68);
       --line:rgba(173,212,255,.14);
+      --line-strong:rgba(173,212,255,.26);
       --text:#edf5ff;
       --muted:#9fb2d2;
       --gold:#f1d28d;
@@ -25,6 +26,8 @@
       --violet:#c7b3ff;
       --shadow:0 24px 60px rgba(0,0,0,.42);
       --radius-xl:30px;
+      --radius-lg:24px;
+      --radius-md:18px;
       --max:1260px;
       color-scheme:dark;
     }
@@ -58,6 +61,10 @@
     }
 
     a{color:inherit;text-decoration:none}
+    code{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.92em;
+    }
 
     .shell{
       width:min(100% - 28px,var(--max));
@@ -169,22 +176,23 @@
     .hero h2{
       margin:0;
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2.3rem,5vw,4.2rem);
+      font-size:clamp(2.4rem,5vw,4.4rem);
       line-height:.95;
       color:var(--gold);
+      max-width:12ch;
     }
 
     .hero p{
       margin:0;
-      max-width:72ch;
+      max-width:74ch;
       color:var(--muted);
       font-size:clamp(1rem,1.4vw,1.06rem);
-      line-height:1.7;
+      line-height:1.72;
     }
 
-    .layout{
+    .grid{
       display:grid;
-      grid-template-columns:1.02fr .98fr;
+      grid-template-columns:1.1fr .9fr;
       gap:18px;
       align-items:start;
     }
@@ -212,215 +220,133 @@
       color:var(--gold);
     }
 
-    .host{
-      position:relative;
-      min-height:620px;
-      overflow:hidden;
-      border-radius:24px;
-      background:
-        linear-gradient(180deg,rgba(4,13,32,.54),rgba(4,13,32,.22)),
-        radial-gradient(circle at 50% 50%,rgba(58,103,188,.16),transparent 54%);
+    .ownership-map{
+      display:grid;
+      gap:14px;
     }
 
-    .host::before{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:20px;
-      border:1px solid rgba(173,212,255,.08);
-      pointer-events:none;
+    .owner-card{
+      padding:18px;
+      border-radius:22px;
+      border:1px solid rgba(173,212,255,.12);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
     }
 
-    .axis-x,.axis-y,.ring,.core-node,.host-chip,.host-badge,.host-card{
-      position:absolute;
-    }
-
-    .axis-x{
-      left:9%;
-      top:50%;
-      width:82%;
-      height:2px;
-      transform:translateY(-50%);
-      background:linear-gradient(90deg,transparent,rgba(206,228,255,.34),transparent);
-      box-shadow:0 0 18px rgba(141,189,255,.12);
-    }
-
-    .axis-y{
-      left:50%;
-      top:10%;
-      width:2px;
-      height:80%;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,transparent,rgba(206,228,255,.24),transparent);
-      box-shadow:0 0 14px rgba(141,189,255,.08);
-    }
-
-    .axis-label{
-      position:absolute;
-      font-weight:800;
-      letter-spacing:.04em;
-      color:rgba(225,237,255,.88);
-      text-shadow:0 0 18px rgba(113,165,255,.24);
-      z-index:4;
-    }
-
-    .axis-label.plus-y{left:calc(50% - 22px);top:8%}
-    .axis-label.minus-y{left:calc(50% - 18px);bottom:8%}
-    .axis-label.minus-x{left:8.5%;top:calc(50% - 14px)}
-    .axis-label.plus-x{right:8.5%;top:calc(50% - 14px)}
-
-    .ring{
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(-20deg);
-      border-radius:50%;
-      border:1px solid rgba(173,212,255,.13);
-      box-shadow:0 0 0 1px rgba(255,255,255,.02), inset 0 0 24px rgba(140,188,255,.03);
-      opacity:.92;
-    }
-
-    .ring.r1{width:34%;height:12%}
-    .ring.r2{width:48%;height:18%}
-    .ring.r3{width:64%;height:24%}
-    .ring.r4{width:82%;height:30%}
-    .ring.r5{width:98%;height:36%}
-
-    .core-node{
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      width:146px;
-      height:146px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 32%,rgba(255,255,255,.98),rgba(255,244,201,.95) 16%,#ffd88a 42%,#ff9c39 72%,#7e3f10 100%);
-      box-shadow:
-        0 0 28px rgba(255,198,102,.72),
-        0 0 72px rgba(255,177,73,.45),
-        0 0 120px rgba(114,166,255,.18);
-      z-index:5;
-    }
-
-    .core-node::before{
-      content:"";
-      position:absolute;
-      inset:-34px;
-      border-radius:50%;
-      background:radial-gradient(circle,rgba(255,220,122,.22),rgba(255,177,73,.10) 38%,rgba(94,143,255,.06) 62%,transparent 76%);
-      filter:blur(14px);
-      z-index:-1;
-    }
-
-    .host-card{
-      width:132px;
-      min-height:72px;
-      padding:10px 12px;
-      border-radius:18px;
-      border:1px solid rgba(173,212,255,.14);
-      background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
-      box-shadow:0 12px 26px rgba(0,0,0,.22);
-      text-align:center;
-      z-index:6;
-    }
-
-    .host-card strong{
+    .owner-card strong{
       display:block;
-      font-size:.76rem;
+      margin-bottom:8px;
+      font-size:.88rem;
       letter-spacing:.08em;
       text-transform:uppercase;
-      margin-bottom:6px;
+      color:var(--gold);
     }
 
-    .host-card span{
-      display:block;
+    .owner-card p{
+      margin:0;
       color:var(--muted);
-      font-size:.74rem;
-      line-height:1.3;
+      line-height:1.6;
     }
 
-    .card-runtime{left:50%;top:12%;transform:translateX(-50%)}
-    .card-failure{left:50%;bottom:12%;transform:translateX(-50%)}
-    .card-render{right:11%;top:50%;transform:translateY(-50%)}
-    .card-instrument{left:11%;top:50%;transform:translateY(-50%)}
-    .card-motion{right:19%;top:24%}
-    .card-scope{left:19%;top:24%}
-    .card-projection{right:19%;bottom:24%}
-    .card-coherence{left:19%;bottom:24%}
-
-    .host-chip{
-      min-height:38px;
-      padding:0 12px;
+    .owner-state{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
+      min-height:30px;
+      padding:6px 10px;
+      margin-top:12px;
       border-radius:999px;
-      border:1px solid rgba(173,212,255,.16);
-      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
-      color:#d8ebff;
-      font-size:.76rem;
-      font-weight:700;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      box-shadow:0 8px 18px rgba(0,0,0,.18);
-    }
-
-    .chip-a{left:18px;top:18px}
-    .chip-b{right:18px;top:18px}
-    .chip-c{left:18px;bottom:18px}
-    .chip-d{right:18px;bottom:18px}
-
-    .host-badge{
-      right:18px;
-      bottom:18px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(173,212,255,.14);
-      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
-      color:rgba(238,246,255,.76);
-      font-size:.7rem;
+      border:1px solid rgba(173,212,255,.12);
+      background:rgba(255,255,255,.03);
+      font-size:.74rem;
+      font-weight:800;
       letter-spacing:.08em;
       text-transform:uppercase;
-      pointer-events:none;
-      z-index:7;
     }
 
-    .host-mobile-stack{
-      display:none;
+    .state-blue{color:var(--blue)}
+    .state-green{color:var(--green)}
+    .state-red{color:var(--red)}
+    .state-violet{color:var(--violet)}
+
+    .diagnostic-list{
+      display:grid;
+      gap:12px;
     }
 
-    .host-stack-card{
-      padding:14px;
+    .diagnostic-row{
+      display:grid;
+      grid-template-columns:170px 1fr;
+      gap:14px;
+      align-items:start;
+      padding:14px 16px;
       border-radius:18px;
-      border:1px solid rgba(173,212,255,.12);
-      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
     }
 
-    .host-stack-card strong{
-      display:block;
-      margin-bottom:6px;
+    .diagnostic-row strong{
       font-size:.78rem;
       letter-spacing:.08em;
       text-transform:uppercase;
       color:var(--gold);
     }
 
-    .host-stack-card span{
-      display:block;
+    .diagnostic-row span{
       color:var(--muted);
+      line-height:1.55;
       font-size:.92rem;
-      line-height:1.45;
+    }
+
+    .callout{
+      margin-top:18px;
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .callout strong{
+      color:var(--text);
+    }
+
+    .probe-grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .probe-card{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(173,212,255,.12);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+    }
+
+    .probe-card strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:.8rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .probe-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.55;
     }
 
     .status-grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-      margin-bottom:18px;
+      gap:12px;
+      margin-top:16px;
     }
 
     .status-card{
-      padding:16px;
-      border-radius:20px;
+      padding:14px;
+      border-radius:18px;
       border:1px solid rgba(173,212,255,.12);
       background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
     }
@@ -436,72 +362,9 @@
 
     .status-card .value{
       display:block;
-      font-size:1.1rem;
+      font-size:1rem;
       font-weight:800;
       color:var(--text);
-    }
-
-    .value.live{color:var(--green)}
-    .value.pending{color:var(--gold)}
-    .value.alert{color:var(--red)}
-    .value.unknown{color:var(--violet)}
-
-    .authority-list{
-      display:grid;
-      gap:12px;
-    }
-
-    .authority-row{
-      display:grid;
-      grid-template-columns:170px 1fr;
-      gap:14px;
-      align-items:start;
-      padding:14px 16px;
-      border-radius:18px;
-      border:1px solid rgba(173,212,255,.1);
-      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
-    }
-
-    .authority-row strong{
-      font-size:.78rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--gold);
-    }
-
-    .authority-row span{
-      color:var(--muted);
-      line-height:1.5;
-      font-size:.92rem;
-    }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-      margin-top:18px;
-    }
-
-    .mini-card{
-      padding:16px;
-      border-radius:18px;
-      border:1px solid rgba(173,212,255,.1);
-      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
-    }
-
-    .mini-card strong{
-      display:block;
-      margin-bottom:8px;
-      font-size:.76rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      color:var(--gold);
-    }
-
-    .mini-card span{
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.45;
     }
 
     .footer-note{
@@ -511,33 +374,17 @@
       border:1px solid rgba(173,212,255,.1);
       background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
       color:var(--muted);
-      line-height:1.6;
+      line-height:1.65;
     }
 
     @media (max-width:1080px){
-      .layout{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
     }
 
     @media (max-width:760px){
       .shell{width:min(100% - 16px,var(--max));padding-top:10px}
-      .status-grid,.mini-grid{grid-template-columns:1fr}
-      .authority-row{grid-template-columns:1fr}
-
-      .host{
-        min-height:auto;
-        padding:16px;
-      }
-
-      .axis-x,.axis-y,.axis-label,.ring,.core-node,.host-card,.host-chip,.host-badge{
-        display:none;
-      }
-
-      .host-mobile-stack{
-        display:grid;
-        gap:12px;
-      }
-
-      .map-overlay-copy{left:16px;right:16px;bottom:16px;max-width:none}
+      .diagnostic-row{grid-template-columns:1fr}
+      .status-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -548,231 +395,175 @@
         <div class="brand-orb" aria-hidden="true"></div>
         <div class="brand-copy">
           <h1>Diagnostic Gauges</h1>
-          <p>G5 · geometry-first host · signal windows · direct receipts</p>
+          <p>Products stage-ownership audit · redundancy finder · visible-output controller map</p>
         </div>
       </div>
 
       <nav class="nav" aria-label="Primary">
         <a href="/">Home</a>
-        <a href="/explore/">Explore</a>
         <a href="/products/">Products</a>
+        <a href="/explore/">Explore</a>
         <a href="/gauges/" aria-current="page">Gauges</a>
       </nav>
     </header>
 
     <section class="hero">
-      <div class="eyebrow">Structure before effects</div>
-      <h2>Euclidean host, signal windows, direct receipts.</h2>
+      <div class="eyebrow">Products problem isolation</div>
+      <h2>Find the visible stage owner.</h2>
       <p>
-        This gauges surface now reads as a real diagnostics host instead of a plain-text placeholder.
-        Geometry stays stable first. Status, receipts, authority lanes, and diagnostic windows sit on top
-        as readable signal layers.
+        This gauges pass is dedicated to one question only: which layer is actually producing the public-facing output on
+        <code>/products/</code>, and where redundancy is creating the blank blue field and blob behavior. The goal is to
+        isolate ownership, not decorate the surface.
       </p>
     </section>
 
-    <main class="layout">
+    <main class="grid">
       <section class="panel">
         <div class="panel-inner">
-          <h3 class="section-title">Gauge host</h3>
+          <h3 class="section-title">Stage ownership map</h3>
 
-          <div class="host" aria-label="Euclidean host">
-            <div class="axis-x" aria-hidden="true"></div>
-            <div class="axis-y" aria-hidden="true"></div>
-            <div class="axis-label plus-y">+Y</div>
-            <div class="axis-label minus-y">-Y</div>
-            <div class="axis-label minus-x">-X</div>
-            <div class="axis-label plus-x">+X</div>
-
-            <div class="ring r1" aria-hidden="true"></div>
-            <div class="ring r2" aria-hidden="true"></div>
-            <div class="ring r3" aria-hidden="true"></div>
-            <div class="ring r4" aria-hidden="true"></div>
-            <div class="ring r5" aria-hidden="true"></div>
-
-            <div class="core-node" aria-hidden="true"></div>
-
-            <div class="host-card card-runtime">
-              <strong>Runtime Receipt</strong>
-              <span>Authority chain and boot-state confirmation.</span>
+          <div class="ownership-map">
+            <div class="owner-card">
+              <strong>Host layer · /products/index.html</strong>
+              <p>
+                Owns protected host copy, gateway framing, status container, and any primary static presentation shell.
+                If this layer is also trying to present the actual product stage, it competes with downstream runtime ownership.
+              </p>
+              <div class="owner-state state-blue">Candidate owner</div>
             </div>
 
-            <div class="host-card card-failure">
-              <strong>Failure Source</strong>
-              <span>Break owner, active fault, and smallest true cause.</span>
+            <div class="owner-card">
+              <strong>Bootstrap layer · /products/index.js</strong>
+              <p>
+                Owns handoff, staging rules, mount targeting, and any injected presentation generated after boot.
+                If this layer is also rendering a visible products experience while the runtime mounts underneath, redundancy emerges.
+              </p>
+              <div class="owner-state state-green">Primary suspect</div>
             </div>
 
-            <div class="host-card card-render">
-              <strong>Render Window</strong>
-              <span>Visible state, field read, and output continuity.</span>
+            <div class="owner-card">
+              <strong>Runtime layer · /products/products_runtime.js</strong>
+              <p>
+                Owns mounted runtime output and any visual field it paints into the stage. If it is still rendering visible proof
+                or presentation while host/bootstrap render another surface, it creates stacked ownership.
+              </p>
+              <div class="owner-state state-red">Potential overlap</div>
             </div>
 
-            <div class="host-card card-instrument">
-              <strong>Instrument Window</strong>
-              <span>Diagnostic probes, direct receipts, and measure paths.</span>
-            </div>
-
-            <div class="host-card card-motion">
-              <strong>Motion / Force</strong>
-              <span>Velocity, drift, animation, and response pressure.</span>
-            </div>
-
-            <div class="host-card card-scope">
-              <strong>Scope / Traversal</strong>
-              <span>Target path, route law, and active execution scope.</span>
-            </div>
-
-            <div class="host-card card-projection">
-              <strong>Projection / Field</strong>
-              <span>Geometry host, masks, and signal distribution.</span>
-            </div>
-
-            <div class="host-card card-coherence">
-              <strong>Coherence / Stability</strong>
-              <span>Clarity, admissibility, and burden condition.</span>
-            </div>
-
-            <div class="host-chip chip-a">Geometry host</div>
-            <div class="host-chip chip-b">Direct receipts</div>
-            <div class="host-chip chip-c">Signal windows</div>
-            <div class="host-chip chip-d">Authority lanes</div>
-
-            <div class="host-badge">gauges: page-only renewal</div>
-
-            <div class="host-mobile-stack">
-              <div class="host-stack-card">
-                <strong>Runtime Receipt</strong>
-                <span>Authority chain and boot-state confirmation.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Failure Source</strong>
-                <span>Break owner, active fault, and smallest true cause.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Render Window</strong>
-                <span>Visible state, field read, and output continuity.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Instrument Window</strong>
-                <span>Diagnostic probes, direct receipts, and measure paths.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Motion / Force</strong>
-                <span>Velocity, drift, animation, and response pressure.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Scope / Traversal</strong>
-                <span>Target path, route law, and active execution scope.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Projection / Field</strong>
-                <span>Geometry host, masks, and signal distribution.</span>
-              </div>
-              <div class="host-stack-card">
-                <strong>Coherence / Stability</strong>
-                <span>Clarity, admissibility, and burden condition.</span>
-              </div>
+            <div class="owner-card">
+              <strong>Visible field result</strong>
+              <p>
+                The live browser only gets one true public-facing stage owner. If more than one layer believes it owns visible stage
+                output, the result collapses into blank backgrounds, residual blobs, or partially obscured surfaces.
+              </p>
+              <div class="owner-state state-violet">One owner only</div>
             </div>
           </div>
 
-          <div class="footer-note">
-            Current read: the gauges page is now a visual diagnostics surface. It can be used to reason about runtime authority,
-            render state, instrument state, motion burden, and failure ownership without relying on a plain-text scaffold.
+          <div class="callout">
+            <strong>Current controlling read:</strong> the likely redundancy is not extra random files. It is competing stage ownership
+            across <code>index.html</code>, <code>index.js</code>, and <code>products_runtime.js</code>.
           </div>
         </div>
       </section>
 
       <section class="panel">
         <div class="panel-inner">
-          <h3 class="section-title">State receipts</h3>
+          <h3 class="section-title">Problem classifier</h3>
+
+          <div class="diagnostic-list">
+            <div class="diagnostic-row">
+              <strong>Break class</strong>
+              <span>Competing visible-stage ownership rather than pure boot failure.</span>
+            </div>
+            <div class="diagnostic-row">
+              <strong>Most likely redundancy</strong>
+              <span><code>#products-live-stage</code>, <code>#planetary-stage</code>, and runtime-mounted visual output all claiming public visibility.</span>
+            </div>
+            <div class="diagnostic-row">
+              <strong>Corrective principle</strong>
+              <span>One thing owns boot authority. One thing owns visible presentation authority. Those must not be the same stack unless explicitly unified.</span>
+            </div>
+            <div class="diagnostic-row">
+              <strong>Deletion target class</strong>
+              <span>Delete or demote redundant presentation ownership, not the passed bootchain itself.</span>
+            </div>
+            <div class="diagnostic-row">
+              <strong>Safe freeze</strong>
+              <span>Keep passed bootchain logic frozen until the visible owner is isolated.</span>
+            </div>
+          </div>
 
           <div class="status-grid">
             <div class="status-card">
-              <span class="label">State</span>
-              <span class="value alert">Offline</span>
+              <span class="label">Boot authority</span>
+              <span class="value">Keep</span>
             </div>
             <div class="status-card">
-              <span class="label">Runtime</span>
-              <span class="value pending">Pending</span>
+              <span class="label">Visible stage authority</span>
+              <span class="value">Reduce to one</span>
             </div>
             <div class="status-card">
-              <span class="label">Render</span>
-              <span class="value pending">Pending</span>
+              <span class="label">Runtime proof layer</span>
+              <span class="value">Demote or hide</span>
             </div>
             <div class="status-card">
-              <span class="label">Instruments</span>
-              <span class="value pending">Pending</span>
+              <span class="label">Presentation duplication</span>
+              <span class="value">Delete</span>
             </div>
-            <div class="status-card">
-              <span class="label">Classified</span>
-              <span class="value unknown">—</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-inner">
+          <h3 class="section-title">Execution probes</h3>
+
+          <div class="probe-grid">
+            <div class="probe-card">
+              <strong>Probe 1</strong>
+              <p>Does <code>index.html</code> create a public-facing experience shell that already looks like the final product surface?</p>
             </div>
-            <div class="status-card">
-              <span class="label">Phase</span>
-              <span class="value unknown">—</span>
+            <div class="probe-card">
+              <strong>Probe 2</strong>
+              <p>Does <code>index.js</code> inject another full products experience on top of that shell after successful boot?</p>
             </div>
-            <div class="status-card">
-              <span class="label">Freshness</span>
-              <span class="value unknown">—</span>
+            <div class="probe-card">
+              <strong>Probe 3</strong>
+              <p>Does <code>products_runtime.js</code> still paint its own visual stage underneath, even though bootchain and containment are already passed?</p>
             </div>
-            <div class="status-card">
-              <span class="label">FPS</span>
-              <span class="value unknown">—</span>
+            <div class="probe-card">
+              <strong>Probe 4</strong>
+              <p>If the answer to more than one of the above is yes, the redundancy is proven and one visible-stage owner must be deleted or demoted.</p>
             </div>
           </div>
 
-          <h3 class="section-title">Module authority</h3>
-
-          <div class="authority-list">
-            <div class="authority-row">
-              <strong>Runtime receipt</strong>
-              <span>Boot path, ownership chain, and controlling module proof.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Render receipt</strong>
-              <span>Visible output, stage continuity, and geometry host condition.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Instrument / diagnostics</strong>
-              <span>Probe results, direct reads, and measured break reduction.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Motion / force</strong>
-              <span>Drift pressure, velocity history, and response burden.</span>
-            </div>
-            <div class="authority-row">
-              <strong>World / region / node</strong>
-              <span>Field position, local region state, and node-level evidence.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Scope / traversal</strong>
-              <span>Active target path, traversal route, and scope lock state.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Projection / field</strong>
-              <span>Host geometry, mask behavior, and signal distribution law.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Emission / masks</strong>
-              <span>What is visible, hidden, occluded, or still waiting on receipt.</span>
-            </div>
-            <div class="authority-row">
-              <strong>Failure / source</strong>
-              <span>Smallest true break, owner class, and correction traceability.</span>
-            </div>
+          <div class="footer-note">
+            <strong>Next lawful motion after this page:</strong> freeze products, identify the single visible stage owner, and remove redundant stage ownership cleanly instead of continuing to guess inside the products surface.
           </div>
+        </div>
+      </section>
 
-          <div class="mini-grid">
-            <div class="mini-card">
-              <strong>Velocity history</strong>
-              <span>Awaiting direct authority module receipts.</span>
+      <section class="panel">
+        <div class="panel-inner">
+          <h3 class="section-title">Direct audit lanes</h3>
+
+          <div class="diagnostic-list">
+            <div class="diagnostic-row">
+              <strong>Lane A</strong>
+              <span>Audit <code>/products/index.html</code> for host-owned visible stage markup that should remain shell-only.</span>
             </div>
-            <div class="mini-card">
-              <strong>Coherence / clarity / stability</strong>
-              <span>Awaiting direct authority module receipts.</span>
+            <div class="diagnostic-row">
+              <strong>Lane B</strong>
+              <span>Audit <code>/products/index.js</code> for secondary stage construction that duplicates what runtime is already mounting.</span>
             </div>
-            <div class="mini-card">
-              <strong>FPS / fresh / burden</strong>
-              <span>Awaiting direct authority module receipts.</span>
+            <div class="diagnostic-row">
+              <strong>Lane C</strong>
+              <span>Audit <code>/products/products_runtime.js</code> for any retained visible proof surface that should become hidden, toggled, or non-primary.</span>
+            </div>
+            <div class="diagnostic-row">
+              <strong>Lane D</strong>
+              <span>Choose one public-facing owner only, then delete the competing presentation layer rather than layering more containment around it.</span>
             </div>
           </div>
         </div>

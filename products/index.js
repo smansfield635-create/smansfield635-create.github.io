@@ -19,14 +19,20 @@
     active: !reduceMotion.matches,
   };
 
-  const orbiting = nodes.map((node) => ({
-    node,
-    orbitX: Number(node.dataset.orbitX || 0),
-    orbitY: Number(node.dataset.orbitY || 0),
-    angle: Number(node.dataset.angle || 0),
-    speed: Number(node.dataset.speed || 0),
-    depthBias: Number(node.dataset.depthBias || 0),
-  }));
+  const orbiting = nodes
+    .map((node) => ({
+      node,
+      order: Number(node.dataset.order || 0),
+      orbitX: Number(node.dataset.orbitX || 0),
+      orbitY: Number(node.dataset.orbitY || 0),
+      angle: Number(node.dataset.angle || 0),
+      speed: Number(node.dataset.speed || 0),
+      depthBias: Number(node.dataset.depthBias || 0),
+      planetSize: parseFloat(
+        getComputedStyle(node).getPropertyValue("--planet-size")
+      ) || 64,
+    }))
+    .sort((a, b) => a.order - b.order);
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
@@ -41,17 +47,9 @@
   }
 
   function getScaleFactor() {
-    const widthFactor = clamp(state.width / 1220, 0.54, 1);
-    const heightFactor = clamp(state.height / 760, 0.76, 1);
+    const widthFactor = clamp(state.width / 1240, 0.54, 1);
+    const heightFactor = clamp(state.height / 820, 0.74, 1);
     return Math.min(widthFactor, heightFactor);
-  }
-
-  function getNodeBox(node) {
-    const rect = node.getBoundingClientRect();
-    return {
-      width: rect.width || 156,
-      height: rect.height || 154,
-    };
   }
 
   function getResponsiveOrbit(item) {
@@ -59,36 +57,52 @@
 
     let orbitX = item.orbitX * factor;
     let orbitY = item.orbitY * factor;
+    let size = item.planetSize * factor;
 
     if (state.width <= 720) {
-      orbitX *= 0.72;
-      orbitY *= 0.78;
+      orbitX *= 0.68;
+      orbitY *= 0.76;
+      size *= 0.86;
     } else if (state.width <= 980) {
-      orbitX *= 0.86;
+      orbitX *= 0.84;
       orbitY *= 0.90;
+      size *= 0.94;
     }
 
-    return { orbitX, orbitY };
+    return { orbitX, orbitY, size };
+  }
+
+  function setPlanetScale(item, size) {
+    item.node.style.setProperty("--planet-size", `${size}px`);
+  }
+
+  function getNodeBox(node) {
+    const rect = node.getBoundingClientRect();
+    return {
+      width: rect.width || 180,
+      height: rect.height || 154,
+    };
   }
 
   function placeNode(item, time) {
-    const { orbitX, orbitY } = getResponsiveOrbit(item);
+    const { orbitX, orbitY, size } = getResponsiveOrbit(item);
     const theta = item.angle + time * item.speed;
 
     const x = Math.cos(theta) * orbitX;
     const y = Math.sin(theta) * orbitY;
 
     const depth = (Math.sin(theta) + 1) * 0.5;
-    const scale = 0.84 + depth * 0.16;
+    const scale = 0.82 + depth * 0.16;
     const opacity = 0.78 + depth * 0.22;
     const zIndex = Math.round(20 + depth * 80 + item.depthBias);
 
-    const box = getNodeBox(item.node);
+    setPlanetScale(item, size);
 
-    const safeTop = 18;
-    const safeBottom = state.height - box.height - 18;
-    const safeLeft = 12;
-    const safeRight = state.width - box.width - 12;
+    const box = getNodeBox(item.node);
+    const safeTop = 14;
+    const safeBottom = state.height - box.height - 14;
+    const safeLeft = 10;
+    const safeRight = state.width - box.width - 10;
 
     const left = clamp(state.centerX + x - box.width * 0.5, safeLeft, safeRight);
     const top = clamp(state.centerY + y - box.height * 0.5, safeTop, safeBottom);

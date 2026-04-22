@@ -38,6 +38,7 @@
       x: cx + x,
       y: cy + y,
       depth: (Math.sin(angle) + 1) * 0.5,
+      rawY,
     };
   }
 
@@ -77,16 +78,14 @@
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
 
-      // Order is scientific-style inner-to-outer.
-      // Distance law is compressed non-linearly for screen fit.
       this.planets = [
         {
           title: "Energy",
           href: "/energy/",
           kicker: "Output",
           orbitOrder: 1,
-          sizeDesktop: 30,
-          sizeMobile: 24,
+          sizeDesktop: 28,
+          sizeMobile: 22,
           speed: 0.030,
           angle: -92,
           labelDock: "top",
@@ -97,8 +96,8 @@
           href: "/platform/",
           kicker: "Core",
           orbitOrder: 2,
-          sizeDesktop: 38,
-          sizeMobile: 30,
+          sizeDesktop: 36,
+          sizeMobile: 28,
           speed: 0.024,
           angle: -18,
           labelDock: "right",
@@ -109,8 +108,8 @@
           href: "/software/",
           kicker: "Runtime",
           orbitOrder: 3,
-          sizeDesktop: 44,
-          sizeMobile: 34,
+          sizeDesktop: 42,
+          sizeMobile: 32,
           speed: 0.020,
           angle: 52,
           labelDock: "right",
@@ -133,7 +132,7 @@
           href: "/ai/",
           kicker: "Intelligence",
           orbitOrder: 5,
-          sizeDesktop: 62,
+          sizeDesktop: 64,
           sizeMobile: 48,
           speed: 0.014,
           angle: 176,
@@ -145,8 +144,8 @@
           href: "/agriculture/",
           kicker: "Applied",
           orbitOrder: 6,
-          sizeDesktop: 72,
-          sizeMobile: 56,
+          sizeDesktop: 76,
+          sizeMobile: 58,
           speed: 0.011,
           angle: 232,
           labelDock: "left",
@@ -157,8 +156,8 @@
           href: "/diagnostics/",
           kicker: "Measurement",
           orbitOrder: 7,
-          sizeDesktop: 82,
-          sizeMobile: 64,
+          sizeDesktop: 88,
+          sizeMobile: 68,
           speed: 0.009,
           angle: 286,
           labelDock: "top",
@@ -169,8 +168,8 @@
           href: "/education/",
           kicker: "Learning",
           orbitOrder: 8,
-          sizeDesktop: 94,
-          sizeMobile: 72,
+          sizeDesktop: 100,
+          sizeMobile: 76,
           speed: 0.007,
           angle: 336,
           labelDock: "top",
@@ -181,8 +180,8 @@
           href: "/domains/",
           kicker: "Identity",
           orbitOrder: 9,
-          sizeDesktop: 106,
-          sizeMobile: 82,
+          sizeDesktop: 112,
+          sizeMobile: 86,
           speed: 0.006,
           angle: 24,
           labelDock: "right",
@@ -193,8 +192,8 @@
           href: "/ssg/",
           kicker: "Language",
           orbitOrder: 10,
-          sizeDesktop: 118,
-          sizeMobile: 92,
+          sizeDesktop: 124,
+          sizeMobile: 96,
           speed: 0.005,
           angle: 92,
           labelDock: "bottom",
@@ -205,8 +204,8 @@
           href: "/games/",
           kicker: "Playable",
           orbitOrder: 11,
-          sizeDesktop: 132,
-          sizeMobile: 102,
+          sizeDesktop: 138,
+          sizeMobile: 106,
           speed: 0.0042,
           angle: 156,
           labelDock: "left",
@@ -217,8 +216,8 @@
           href: "/archcoin/",
           kicker: "Value",
           orbitOrder: 12,
-          sizeDesktop: 146,
-          sizeMobile: 112,
+          sizeDesktop: 152,
+          sizeMobile: 116,
           speed: 0.0036,
           angle: 220,
           labelDock: "left",
@@ -240,7 +239,7 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-solar-system-distance-law-v3");
+      this.mount.setAttribute("data-runtime", "products-solar-system-distance-law-v4");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -336,7 +335,7 @@
         display: "block",
         borderRadius: "50%",
         textDecoration: "none",
-        zIndex: "20",
+        zIndex: "40",
       });
 
       this.sunHalo = createElement("div", "products-sun-halo", this.sunAnchor);
@@ -344,6 +343,7 @@
       this.sunCore = createElement("div", "products-sun-core", this.sunAnchor);
       this.sunFlareA = createElement("div", "products-sun-flare flare-a", this.sunAnchor);
       this.sunFlareB = createElement("div", "products-sun-flare flare-b", this.sunAnchor);
+      this.sunOcclusion = createElement("div", "products-sun-occlusion-mask", this.sunLayer);
 
       [this.sunHalo, this.sunCorona, this.sunCore, this.sunFlareA, this.sunFlareB].forEach((node) => {
         setStyles(node, {
@@ -378,6 +378,18 @@
       setStyles(this.sunFlareB, {
         border: "1px solid rgba(255,217,142,0.14)",
       });
+
+      setStyles(this.sunOcclusion, {
+        position: "absolute",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        borderRadius: "50%",
+        pointerEvents: "none",
+        zIndex: "30",
+        background: "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.04), rgba(255,244,201,0.04) 12%, rgba(255,216,138,0.12) 34%, rgba(255,156,57,0.22) 66%, rgba(126,63,16,0.34) 100%)",
+        boxShadow: "0 0 18px rgba(255,177,73,0.12)",
+      });
     }
 
     buildOrbitRings() {
@@ -408,9 +420,11 @@
         const label = createElement("div", "products-planet-label", anchor);
         const kicker = createElement("span", "products-planet-kicker", label);
         const title = createElement("strong", "products-planet-title", label);
+        const open = createElement("span", "products-planet-open", label);
 
         kicker.textContent = planet.kicker;
         title.textContent = planet.title;
+        open.textContent = "Open";
 
         setStyles(anchor, {
           position: "absolute",
@@ -420,6 +434,7 @@
           height: "0",
           zIndex: "10",
           pointerEvents: "auto",
+          textDecoration: "none",
         });
 
         setStyles(orb, {
@@ -437,8 +452,8 @@
 
         setStyles(label, {
           position: "absolute",
-          minWidth: "104px",
-          maxWidth: "150px",
+          minWidth: "110px",
+          maxWidth: "156px",
           padding: "10px 10px 12px",
           borderRadius: "22px",
           border: "1px solid rgba(255,255,255,0.14)",
@@ -449,7 +464,7 @@
           textAlign: "center",
           fontSize: "0.74rem",
           lineHeight: "1.2",
-          transition: "transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease",
+          transition: "transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, opacity 160ms ease",
           transform: "translate(-50%, -50%)",
         });
 
@@ -466,6 +481,23 @@
           display: "block",
           fontSize: "0.76rem",
           fontWeight: "700",
+          marginBottom: "8px",
+        });
+
+        setStyles(open, {
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "28px",
+          minWidth: "70px",
+          padding: "0 10px",
+          borderRadius: "999px",
+          border: "1px solid rgba(173,212,255,0.18)",
+          background: "linear-gradient(180deg, rgba(20,36,76,0.88), rgba(14,29,62,0.86))",
+          color: "#9fd0ff",
+          fontWeight: "800",
+          fontSize: "0.78rem",
+          boxShadow: "0 8px 18px rgba(0,0,0,0.18)",
         });
 
         anchor.addEventListener("mouseenter", () => {
@@ -499,8 +531,8 @@
       const centerY = rect.height * 0.54;
 
       const sunSize = clamp(rect.width * (mobile ? 0.22 : 0.18), 130, mobile ? 168 : 196);
-      const horizontalRadiusBase = clamp(rect.width * (mobile ? 0.44 : 0.46), 170, mobile ? 270 : 430);
-      const verticalRadiusBase = clamp(horizontalRadiusBase * 0.34, 46, mobile ? 96 : 146);
+      const horizontalRadiusBase = clamp(rect.width * (mobile ? 0.52 : 0.54), 210, mobile ? 330 : 520);
+      const verticalRadiusBase = clamp(horizontalRadiusBase * 0.30, 54, mobile ? 112 : 156);
       const tiltDeg = mobile ? -18 : -22;
 
       return {
@@ -516,33 +548,26 @@
       };
     }
 
-    // Non-linear compressed physics:
-    // preserve order and strong spread without literal impossible screen distances.
     getOrbitRadius(order, m) {
       const n = this.planets.length;
       const t = (order - 1) / (n - 1);
-      const spread = Math.pow(t, 0.62);
+      const spread = Math.pow(t, 0.52);
 
       return {
-        x: m.horizontalRadiusBase * (0.18 + spread * 1.00),
-        y: m.verticalRadiusBase * (0.22 + spread * 0.94),
+        x: m.horizontalRadiusBase * (0.22 + spread * 1.18),
+        y: m.verticalRadiusBase * (0.22 + spread * 0.98),
       };
     }
 
-    getDockOffset(planet, size, mobile) {
-      const base = Math.max(size * 0.72, mobile ? 56 : 64);
+    getDockOffset(planet, size, mobile, point, m) {
+      const centerBiasX = point.x >= m.centerX ? 1 : -1;
+      const centerBiasY = point.y >= m.centerY ? 1 : -1;
+      const base = Math.max(size * 0.82, mobile ? 62 : 72);
 
-      if (mobile) {
-        if (planet.labelDock === "left") return { x: -(base + 18), y: 0 };
-        if (planet.labelDock === "right") return { x: base + 18, y: 0 };
-        if (planet.labelDock === "bottom") return { x: 0, y: base + 14 };
-        return { x: 0, y: -(base + 14) };
-      }
-
-      if (planet.labelDock === "left") return { x: -(base + 26), y: 0 };
-      if (planet.labelDock === "right") return { x: base + 26, y: 0 };
-      if (planet.labelDock === "bottom") return { x: 0, y: base + 18 };
-      return { x: 0, y: -(base + 18) };
+      if (planet.labelDock === "left") return { x: -(base + 22), y: centerBiasY * 4 };
+      if (planet.labelDock === "right") return { x: base + 22, y: centerBiasY * 4 };
+      if (planet.labelDock === "bottom") return { x: centerBiasX * 8, y: base + 18 };
+      return { x: centerBiasX * 8, y: -(base + 18) };
     }
 
     layoutStatic() {
@@ -559,15 +584,15 @@
       });
 
       setStyles(this.horizontalAxis, {
-        left: `${m.centerX - m.horizontalRadiusBase * 1.12}px`,
+        left: `${m.centerX - m.horizontalRadiusBase * 1.18}px`,
         top: `${m.centerY}px`,
-        width: `${m.horizontalRadiusBase * 2.24}px`,
+        width: `${m.horizontalRadiusBase * 2.36}px`,
       });
 
       setStyles(this.verticalAxis, {
         left: `${m.centerX}px`,
-        top: `${m.centerY - m.verticalRadiusBase * 3.0}px`,
-        height: `${m.verticalRadiusBase * 6.0}px`,
+        top: `${m.centerY - m.verticalRadiusBase * 3.15}px`,
+        height: `${m.verticalRadiusBase * 6.3}px`,
       });
 
       setStyles(this.sunAnchor, {
@@ -602,6 +627,13 @@
         height: `${m.sunSize * 1.9}px`,
       });
 
+      setStyles(this.sunOcclusion, {
+        width: `${m.sunSize * 1.10}px`,
+        height: `${m.sunSize * 1.10}px`,
+        left: `${m.centerX}px`,
+        top: `${m.centerY}px`,
+      });
+
       this.orbitRings.forEach((ring) => {
         const orbit = this.getOrbitRadius(ring.order, m);
 
@@ -627,6 +659,7 @@
 
     positionTokens(timeDeg) {
       const m = this.measure();
+      const sunRadius = m.sunSize * 0.55;
 
       this.tokens.forEach(({ planet, anchor, orb, label }) => {
         const orbit = this.getOrbitRadius(planet.orbitOrder, m);
@@ -642,15 +675,23 @@
         const depthScale = 0.86 + point.depth * 0.16;
         const depthOpacity = 0.78 + point.depth * 0.22;
         const size = m.mobile ? planet.sizeMobile : planet.sizeDesktop;
-        const dock = this.getDockOffset(planet, size, m.mobile);
+        const dock = this.getDockOffset(planet, size, m.mobile, point, m);
+
+        const centerDistance = Math.hypot(point.x - m.centerX, point.y - m.centerY);
+        const bodyBehindSun = point.rawY < 0 && centerDistance < sunRadius + size * 0.42;
+        const labelBehindSun = point.rawY < 0 && centerDistance < sunRadius + size * 1.15;
 
         anchor.style.left = `${point.x}px`;
         anchor.style.top = `${point.y}px`;
-        anchor.style.zIndex = `${10 + Math.round(point.depth * 20) + planet.orbitOrder}`;
-        anchor.style.opacity = `${depthOpacity}`;
+        anchor.style.zIndex = bodyBehindSun
+          ? `${8 + planet.orbitOrder}`
+          : `${42 + Math.round(point.depth * 20) + planet.orbitOrder}`;
+        anchor.style.opacity = bodyBehindSun ? "0.18" : `${depthOpacity}`;
 
         orb.style.transform = `translate(-50%, -50%) scale(${depthScale})`;
         label.style.transform = `translate(calc(-50% + ${dock.x}px), calc(-50% + ${dock.y}px)) scale(${0.96 + point.depth * 0.06})`;
+        label.style.opacity = labelBehindSun ? "0" : "1";
+        label.style.pointerEvents = labelBehindSun ? "none" : "auto";
       });
     }
 

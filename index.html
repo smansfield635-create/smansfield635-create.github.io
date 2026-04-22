@@ -9,7 +9,7 @@
   <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge. Meaning-first root entry."
+    content="Diamond Gate Bridge. A concrete entry page with real doors into the house, Big Laughs, Nine Summits, and the wider system."
   >
 
   <style>
@@ -27,10 +27,11 @@
       --gold-soft: #ffdca0;
       --blue: #58a6ff;
       --blue-soft: #9dd1ff;
+      --ok: #8fffb5;
 
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
       --radius: 24px;
-      --max: 1100px;
+      --max: 1180px;
     }
 
     * {
@@ -167,13 +168,14 @@
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
       gap: 18px;
       padding: 18px 0 12px;
     }
 
     .hero-main,
-    .hero-side {
+    .hero-side,
+    .section {
       padding: 24px;
     }
 
@@ -199,7 +201,8 @@
     }
 
     h1,
-    h2 {
+    h2,
+    h3 {
       margin: 0;
       line-height: 1.03;
       letter-spacing: -0.04em;
@@ -214,43 +217,50 @@
     }
 
     h1 {
-      font-size: clamp(40px, 7vw, 78px);
+      font-size: clamp(42px, 7vw, 82px);
       color: var(--gold-soft);
-      max-width: 9ch;
+      max-width: 11ch;
     }
 
     h2 {
-      font-size: clamp(22px, 3vw, 32px);
+      font-size: clamp(26px, 3.8vw, 44px);
+      color: var(--gold-soft);
+    }
+
+    h3 {
+      font-size: 28px;
       color: #ffffff;
     }
 
     .lede,
-    .copy {
+    .copy,
+    .detail,
+    .meta-value {
       color: var(--muted);
     }
 
     .lede {
       margin: 16px 0 0;
-      max-width: 34rem;
+      max-width: 38rem;
       font-size: 18px;
     }
 
-    .actions {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 46px;
+      min-height: 48px;
       padding: 0 18px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .button-primary {
@@ -267,29 +277,77 @@
       color: var(--blue-soft);
     }
 
-    .grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      margin-top: 18px;
-    }
-
-    .card {
-      padding: 20px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.025);
-      min-height: 190px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .kicker {
+    .meta-label,
+    .card-kicker {
       color: var(--blue-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin: 6px 0 0;
+      font-size: 16px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .door-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 16px;
+    }
+
+    .door-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .door-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+      min-height: 230px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .door-card.primary {
+      min-height: 100%;
+    }
+
+    .detail {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .support-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.025);
     }
 
     .footer {
@@ -306,7 +364,8 @@
 
     @media (max-width: 980px) {
       .hero,
-      .grid {
+      .door-grid,
+      .support-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -327,7 +386,8 @@
       }
 
       .hero-main,
-      .hero-side {
+      .hero-side,
+      .section {
         padding: 18px;
       }
 
@@ -340,6 +400,7 @@
         width: 100%;
       }
 
+      .hero-actions,
       .actions {
         flex-direction: column;
       }
@@ -360,7 +421,7 @@
           <div class="brand-mark" aria-hidden="true"></div>
           <div>
             <p class="brand-title">Diamond Gate Bridge</p>
-            <p class="brand-sub">Nine Summits spine · root entry</p>
+            <p class="brand-sub">Concrete entry · real doors first</p>
           </div>
         </div>
 
@@ -371,65 +432,130 @@
           <a href="/prelude/">Prelude</a>
           <a href="/about/">About</a>
           <a href="/contact/">Contact</a>
+          <a href="/big-laughs/">Big Laughs</a>
           <a href="/gauges/">Gauges</a>
           <a href="/laws/">Laws</a>
-          <a href="/big-laughs/">Big Laughs</a>
         </nav>
       </header>
 
-      <main>
-        <section class="hero" aria-labelledby="root-title">
-          <article class="panel hero-main">
-            <p class="eyebrow">Canonical entry</p>
-            <h1 id="root-title">Nine summits. Four directions.</h1>
+      <main class="stack">
+        <section class="panel hero" aria-labelledby="root-title">
+          <article class="hero-main">
+            <p class="eyebrow">Entry</p>
+            <h1 id="root-title">Enter through a real door.</h1>
             <p class="lede">
-              Meaning first. World second. The root stays light and opens the wider
-              gate from its own chamber.
+              Start with the house, the gate, the stage, or the structure. The
+              philosophy stays behind the doors. The root gives you something real
+              to enter first.
             </p>
 
-            <div class="actions">
-              <a class="button button-primary" href="/gate/">Open the gate stack</a>
-              <a class="button button-secondary" href="/prelude/">Begin with Prelude</a>
+            <div class="hero-actions">
+              <a class="button button-primary" href="/home/">Enter Richie’s house</a>
+              <a class="button button-secondary" href="/gate/">Open the gate</a>
             </div>
           </article>
 
           <aside class="panel hero-side">
             <div>
-              <p class="kicker">Entry logic</p>
-              <h2>Root stays light</h2>
+              <p class="meta-label">Root contract</p>
+              <p class="meta-value">CONCRETE ENTRY FIRST</p>
             </div>
-            <p class="copy">
-              The full Russian-doll gate no longer lives on this page. It now opens
-              in its own dedicated gate chamber.
-            </p>
+            <div>
+              <p class="meta-label">Primary behavior</p>
+              <p class="meta-value">REAL DOORS, NOT ABSTRACT FRAMES</p>
+            </div>
+            <div>
+              <p class="meta-label">Meaning rule</p>
+              <p class="meta-value">EMBEDDED DOWNSTREAM</p>
+            </div>
+            <div>
+              <p class="meta-label">Current state</p>
+              <p class="meta-value">WORLD BEFORE THEORY ON ROOT</p>
+            </div>
           </aside>
         </section>
 
-        <section class="grid" aria-label="Root directions">
-          <article class="card">
-            <p class="kicker">Primary path</p>
-            <h2>Nine Summits / 256 Carats</h2>
-            <p class="copy">
-              The governing value frame and the main human-potential path.
-            </p>
-            <a class="button button-secondary" href="/gate/">Open gate</a>
-          </article>
+        <section class="panel section" aria-labelledby="doors-title">
+          <p class="eyebrow">Doorways</p>
+          <h2 id="doors-title">Choose where you want to go.</h2>
 
-          <article class="card">
-            <p class="kicker">Threshold</p>
-            <h2>Prelude</h2>
-            <p class="copy">
-              The felt entry before deeper movement into the summit path.
-            </p>
-            <a class="button button-secondary" href="/prelude/">Open Prelude</a>
-          </article>
+          <div class="door-grid">
+            <div class="door-col">
+              <article class="door-card primary">
+                <p class="card-kicker">World entry</p>
+                <h3>Richie’s house</h3>
+                <p class="detail">
+                  Enter the house first. Move toward the chambers, the vault, the
+                  basement, and the wider world from a real place instead of a theory wall.
+                </p>
+                <div class="actions">
+                  <a class="button button-primary" href="/home/">Enter the house</a>
+                  <a class="button button-secondary" href="/gate/">Open the gate</a>
+                </div>
+              </article>
+            </div>
+
+            <div class="door-col">
+              <article class="door-card">
+                <p class="card-kicker">Public expression</p>
+                <h3>Big Laughs Comedy</h3>
+                <p class="detail">
+                  Live comedy, motivational speaking, and the Sunday night event path.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/big-laughs/">Open Big Laughs</a>
+                </div>
+              </article>
+
+              <article class="door-card">
+                <p class="card-kicker">Meaning path</p>
+                <h3>Nine Summits / 256 Carats</h3>
+                <p class="detail">
+                  The value structure, the book spine, and the human-potential path.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/prelude/">Open Prelude</a>
+                </div>
+              </article>
+
+              <article class="door-card">
+                <p class="card-kicker">System path</p>
+                <h3>About / Contact / Gauges / Laws</h3>
+                <p class="detail">
+                  Identity, direct contact, measurement, and governing structure.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/about/">About</a>
+                  <a class="button button-secondary" href="/contact/">Contact</a>
+                  <a class="button button-secondary" href="/gauges/">Gauges</a>
+                  <a class="button button-secondary" href="/laws/">Laws</a>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="support-grid">
+            <article class="support-card">
+              <p class="card-kicker">Root</p>
+              <p class="detail">A concrete invitation, not a lecture.</p>
+            </article>
+
+            <article class="support-card">
+              <p class="card-kicker">Gate</p>
+              <p class="detail">A sorting chamber for cleaner routing.</p>
+            </article>
+
+            <article class="support-card">
+              <p class="card-kicker">Destinations</p>
+              <p class="detail">The places where the deeper meaning actually lives.</p>
+            </article>
+          </div>
         </section>
       </main>
 
       <footer class="footer">
         <span>
-          Receipt: PAGE=ROOT | CONTRACT=ROOT_ENTRY_V7_LIGHT_GATE_FORWARD |
-          GATE_TARGET=/gate/
+          Result: PAGE=ROOT | CONTRACT=CONCRETE_ENTRY_FIRST_V1 | WORLD_BEFORE_THEORY=TRUE
         </span>
         <span id="footer-year">Year</span>
       </footer>

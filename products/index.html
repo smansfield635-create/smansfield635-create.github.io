@@ -374,17 +374,66 @@
     (function () {
       "use strict";
 
-      window.__productsDiag = {
-        setValue(id, text, kind) {
-          const node = document.getElementById(id);
-          if (!node) return;
+      const queue = [];
+      let domReady = false;
+
+      function withNode(id, fn) {
+        const node = document.getElementById(id);
+        if (!node) return false;
+        fn(node);
+        return true;
+      }
+
+      function applyValue(id, text, kind) {
+        return withNode(id, function (node) {
           node.textContent = text;
           node.className = "value " + kind;
+        });
+      }
+
+      function applyStatus(text) {
+        return withNode("products-runtime-status", function (node) {
+          node.textContent = "runtime: " + String(text || "").toUpperCase();
+        });
+      }
+
+      function flushQueue() {
+        if (!domReady) return;
+        while (queue.length) {
+          const action = queue.shift();
+          action();
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        domReady = true;
+        flushQueue();
+      }, { once: true });
+
+      window.__productsDiag = {
+        setValue(id, text, kind) {
+          const action = function () {
+            applyValue(id, text, kind);
+          };
+          if (domReady) {
+            action();
+          } else {
+            queue.push(action);
+          }
         },
         setStatus(text) {
-          const node = document.getElementById("products-runtime-status");
-          if (!node) return;
-          node.textContent = "runtime: " + String(text || "").toUpperCase();
+          const action = function () {
+            applyStatus(text);
+          };
+          if (domReady) {
+            action();
+          } else {
+            queue.push(action);
+          }
+        },
+        markBootstrapMissing() {
+          this.setValue("diag-error-text", "bootstrap start function missing", "fail");
+          this.setStatus("bootstrap-missing");
         }
       };
     })();
@@ -483,11 +532,8 @@
   ></script>
   <script>
     window.addEventListener("load", function () {
-      if (window.__productsBootstrapStart && typeof window.__productsBootstrapStart === "function") {
-        window.__productsBootstrapStart("window-load");
-      } else {
-        window.__productsDiag && window.__productsDiag.setValue("diag-error-text", "bootstrap start function missing", "fail");
-        window.__productsDiag && window.__productsDiag.setStatus("bootstrap-missing");
+      if (!window.__productsBootstrapStart || typeof window.__productsBootstrapStart !== "function") {
+        window.__productsDiag && window.__productsDiag.markBootstrapMissing();
       }
     }, { once: true });
   </script>

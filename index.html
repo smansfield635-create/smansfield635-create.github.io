@@ -9,7 +9,7 @@
   <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge. Nine Summits of Love baseline with four clear paths into the wider system."
+    content="Diamond Gate Bridge. A meaning-first four-way entry gate with expandable nested paths."
   >
 
   <style>
@@ -25,16 +25,13 @@
 
       --gold: #f1c36b;
       --gold-soft: #ffdca0;
-      --amber: #ffb347;
-
       --blue: #58a6ff;
       --blue-soft: #9dd1ff;
-
       --ok: #8fffb5;
 
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
-      --radius: 22px;
-      --max: 1240px;
+      --radius: 24px;
+      --max: 1160px;
     }
 
     * {
@@ -69,6 +66,10 @@
       text-decoration: none;
     }
 
+    button {
+      font: inherit;
+    }
+
     .page {
       position: relative;
       min-height: 100vh;
@@ -90,9 +91,9 @@
     .shell {
       position: relative;
       z-index: 1;
-      width: min(100% - 28px, var(--max));
+      width: min(100% - 24px, var(--max));
       margin: 0 auto;
-      padding: 20px 0 56px;
+      padding: 18px 0 44px;
     }
 
     .topbar {
@@ -100,7 +101,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 10px 0 22px;
+      padding: 8px 0 18px;
     }
 
     .brand {
@@ -158,8 +159,7 @@
     }
 
     .nav a:hover,
-    .nav a:focus-visible,
-    .nav a[aria-current="page"] {
+    .nav a:focus-visible {
       border-color: rgba(255, 255, 255, 0.22);
       background: rgba(255, 255, 255, 0.06);
       transform: translateY(-1px);
@@ -171,22 +171,22 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
     }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-      gap: 20px;
-      padding: 24px 0 18px;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 18px;
+      padding: 18px 0 12px;
     }
 
-    .hero-main {
-      padding: 34px;
+    .hero-main,
+    .hero-side {
+      padding: 24px;
     }
 
     .hero-side {
-      padding: 24px;
       display: grid;
       gap: 14px;
       align-content: start;
@@ -209,9 +209,10 @@
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       margin: 0;
-      line-height: 1.02;
+      line-height: 1.03;
       letter-spacing: -0.04em;
       font-family:
         "Iowan Old Style",
@@ -224,31 +225,37 @@
     }
 
     h1 {
-      font-size: clamp(42px, 7vw, 84px);
+      font-size: clamp(40px, 7vw, 78px);
       color: var(--gold-soft);
       max-width: 10ch;
     }
 
     h2 {
-      font-size: clamp(28px, 3.8vw, 48px);
+      font-size: clamp(24px, 3.6vw, 42px);
       color: var(--gold-soft);
     }
 
     h3 {
-      font-size: clamp(24px, 2.6vw, 32px);
-      color: var(--text);
+      font-size: clamp(22px, 3vw, 34px);
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 24px;
+      color: #ffffff;
     }
 
     .lede,
     .proof-value,
-    .gate-copy,
-    .micro-copy {
+    .bubble-copy,
+    .leaf-copy,
+    .mini-copy {
       color: var(--muted);
     }
 
     .lede {
-      margin: 18px 0 0;
-      max-width: 62ch;
+      margin: 16px 0 0;
+      max-width: 34rem;
       font-size: 18px;
     }
 
@@ -256,14 +263,14 @@
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
-      margin-top: 24px;
+      margin-top: 22px;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      min-height: 46px;
       padding: 0 18px;
       border-radius: 999px;
       border: 1px solid var(--line);
@@ -302,118 +309,116 @@
       color: var(--ok);
     }
 
-    .section {
-      margin-top: 20px;
+    .bubble-stack {
+      display: grid;
+      gap: 16px;
+      margin-top: 16px;
     }
 
-    .section-panel {
-      padding: 28px;
+    .bubble {
+      position: relative;
+      overflow: hidden;
+      border-radius: 30px;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
     }
 
-    .section-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: end;
-      justify-content: space-between;
+    .bubble-trigger {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      text-align: left;
+      padding: 22px 24px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
       gap: 14px;
-      margin-bottom: 18px;
+      align-items: center;
     }
 
-    .section-tag {
+    .bubble-trigger:focus-visible {
+      outline: 2px solid rgba(241, 195, 107, 0.55);
+      outline-offset: -2px;
+    }
+
+    .bubble-kicker {
+      margin: 0 0 8px;
       color: var(--gold-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .intro-band {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
-      gap: 18px;
-      margin-top: 18px;
+    .bubble-copy {
+      margin: 12px 0 0;
+      max-width: 44rem;
     }
 
-    .quote-block {
-      padding: 18px 20px;
-      border-left: 2px solid rgba(241, 195, 107, 0.42);
-      background: rgba(255, 255, 255, 0.02);
-      border-radius: 0 16px 16px 0;
-      color: var(--gold-soft);
-      font-size: 20px;
-      line-height: 1.45;
-      font-family:
-        "Iowan Old Style",
-        "Palatino Linotype",
-        "Book Antiqua",
-        Palatino,
-        "Times New Roman",
-        serif;
-    }
-
-    .micro-stack {
-      display: grid;
-      gap: 12px;
-    }
-
-    .micro-card {
-      padding: 14px 16px;
-      border-radius: 16px;
+    .bubble-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 44px;
+      border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.025);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--gold-soft);
+      font-size: 24px;
+      line-height: 1;
+      transition: transform 0.22s ease;
     }
 
-    .micro-kicker {
-      margin: 0 0 6px;
+    .bubble.open .bubble-badge {
+      transform: rotate(45deg);
+    }
+
+    .bubble-body {
+      display: grid;
+      gap: 16px;
+      padding: 0 24px 24px;
+    }
+
+    .bubble.hidden .bubble-body {
+      display: none;
+    }
+
+    .nested-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .leaf {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.025);
+      padding: 18px;
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .leaf-kicker {
       color: var(--blue-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .gate-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .gate-primary,
-    .gate-secondary {
-      display: grid;
-      gap: 16px;
-    }
-
-    .gate-card {
-      padding: 22px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: rgba(255, 255, 255, 0.025);
-      min-height: 210px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .gate-card.primary {
-      background:
-        radial-gradient(circle at top left, rgba(241, 195, 107, 0.12), transparent 32%),
-        rgba(255, 255, 255, 0.03);
-      min-height: 100%;
-    }
-
-    .gate-kicker {
-      color: var(--gold-soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .gate-copy {
+    .leaf-copy {
       margin: 0;
       flex: 1 1 auto;
     }
 
-    .gate-link {
+    .leaf-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -421,41 +426,36 @@
       font-weight: 600;
     }
 
-    .gate-secondary-grid {
+    .mini-proof-grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      gap: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .paths-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      margin-top: 18px;
-    }
-
-    .path-card {
-      padding: 18px;
-      border: 1px solid var(--line);
+    .mini-card {
+      padding: 14px 16px;
       border-radius: 18px;
+      border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.025);
-      min-height: 170px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
     }
 
-    .path-kicker {
+    .mini-kicker {
+      margin: 0 0 6px;
       color: var(--blue-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .path-copy {
-      margin: 0;
-      color: var(--muted);
-      flex: 1 1 auto;
+    .runtime {
+      margin-top: 18px;
+      padding: 22px 24px;
+    }
+
+    .runtime-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .footer {
@@ -465,26 +465,23 @@
       justify-content: space-between;
       gap: 12px;
       margin-top: 22px;
-      padding: 18px 4px 0;
+      padding: 12px 4px 0;
       color: var(--muted);
       font-size: 13px;
     }
 
-    @media (max-width: 1080px) {
+    @media (max-width: 980px) {
       .hero,
-      .intro-band,
-      .gate-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .paths-grid {
+      .nested-grid,
+      .mini-proof-grid,
+      .runtime-grid {
         grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 720px) {
       .shell {
-        width: min(100% - 20px, var(--max));
+        width: min(100% - 18px, var(--max));
         padding-top: 14px;
       }
 
@@ -499,8 +496,18 @@
 
       .hero-main,
       .hero-side,
-      .section-panel {
+      .runtime {
         padding: 18px;
+      }
+
+      .bubble-trigger,
+      .bubble-body {
+        padding-left: 18px;
+        padding-right: 18px;
+      }
+
+      .bubble-body {
+        padding-bottom: 18px;
       }
 
       .lede {
@@ -518,7 +525,8 @@
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .nav a {
+      .nav a,
+      .bubble-badge {
         transition: none;
       }
     }
@@ -543,7 +551,7 @@
         </div>
 
         <nav class="nav" aria-label="Primary navigation">
-          <a href="/" aria-current="page">Root</a>
+          <a href="/">Root</a>
           <a href="/home/">Home</a>
           <a href="/prelude/">Prelude</a>
           <a href="/about/">About</a>
@@ -558,15 +566,14 @@
           <article class="panel hero-main">
             <p class="eyebrow">Canonical entry</p>
             <h1 id="home-title">Nine summits. Four directions.</h1>
-
             <p class="lede">
-              A meaning-first entry into the wider world. The summit path leads.
-              The other paths remain open, clear, and subordinate to that spine.
+              Meaning first. World second. Open one sphere and go deeper instead
+              of scrolling through a flat stack.
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="#main-gates">
-                Enter the four-way gate
+              <a class="button button-primary" href="#gate-stack">
+                Open the gate stack
               </a>
               <a class="button button-secondary" href="/prelude/">
                 Begin with Prelude
@@ -574,15 +581,234 @@
             </div>
           </article>
 
-          <aside class="panel hero-side" aria-labelledby="runtime-proof-title">
+          <aside class="panel hero-side" aria-labelledby="entry-proof-title">
             <div>
-              <p class="proof-label" id="runtime-proof-title">Runtime proof</p>
+              <p class="proof-label" id="entry-proof-title">Entry logic</p>
+              <p class="proof-value proof-good">RUSSIAN DOLL GATE</p>
+            </div>
+            <div>
+              <p class="proof-label">Primary hierarchy</p>
+              <p class="proof-value">NINE SUMMITS FIRST</p>
+            </div>
+            <div>
+              <p class="proof-label">Structure</p>
+              <p class="proof-value">EXPANDABLE NESTED BUBBLES</p>
+            </div>
+            <div>
+              <p class="proof-label">Motion</p>
+              <p class="proof-value">AMBIENT FIELD ONLY</p>
+            </div>
+          </aside>
+        </section>
+
+        <section id="gate-stack" class="bubble-stack" aria-label="Four-way gate">
+          <article class="bubble open" data-bubble>
+            <button
+              class="bubble-trigger"
+              type="button"
+              aria-expanded="true"
+              aria-controls="bubble-summits"
+            >
+              <span>
+                <p class="bubble-kicker">Primary path</p>
+                <h2>Nine Summits / 256 Carats</h2>
+                <p class="bubble-copy">
+                  The governing path into the book, the summit structure, and the
+                  wider human-potential baseline.
+                </p>
+              </span>
+              <span class="bubble-badge" aria-hidden="true">+</span>
+            </button>
+
+            <div class="bubble-body" id="bubble-summits">
+              <div class="mini-proof-grid">
+                <article class="mini-card">
+                  <p class="mini-kicker">256 Carats</p>
+                  <p class="mini-copy">
+                    Human potential treated as ordered, developed, and refined.
+                  </p>
+                </article>
+
+                <article class="mini-card">
+                  <p class="mini-kicker">Metaverse Spine</p>
+                  <p class="mini-copy">
+                    World access remains downstream of the governing frame.
+                  </p>
+                </article>
+              </div>
+
+              <div class="nested-grid">
+                <article class="leaf">
+                  <p class="leaf-kicker">Threshold</p>
+                  <h3>Prelude</h3>
+                  <p class="leaf-copy">
+                    Felt entry before deeper movement into the summit path.
+                  </p>
+                  <a class="leaf-link" href="/prelude/">Open Prelude</a>
+                </article>
+
+                <article class="leaf">
+                  <p class="leaf-kicker">Chamber</p>
+                  <h3>Home</h3>
+                  <p class="leaf-copy">
+                    A deeper chamber under the same family, with more structural depth.
+                  </p>
+                  <a class="leaf-link" href="/home/">Open Home</a>
+                </article>
+
+                <article class="leaf">
+                  <p class="leaf-kicker">Book</p>
+                  <h3>The Nine Summits of Love</h3>
+                  <p class="leaf-copy">
+                    The visible articulation of the baseline and the summit structure.
+                  </p>
+                  <a class="leaf-link" href="/prelude/">Open the summit path</a>
+                </article>
+
+                <article class="leaf">
+                  <p class="leaf-kicker">World</p>
+                  <h3>Explore</h3>
+                  <p class="leaf-copy">
+                    The wider site beyond the entry gate, opened under the same order.
+                  </p>
+                  <a class="leaf-link" href="/explore/">Open Explore</a>
+                </article>
+              </div>
+            </div>
+          </article>
+
+          <article class="bubble hidden" data-bubble>
+            <button
+              class="bubble-trigger"
+              type="button"
+              aria-expanded="false"
+              aria-controls="bubble-about"
+            >
+              <span>
+                <p class="bubble-kicker">Institutional path</p>
+                <h2>About / Contact</h2>
+                <p class="bubble-copy">
+                  Identity, mission, legitimacy, and direct communication.
+                </p>
+              </span>
+              <span class="bubble-badge" aria-hidden="true">+</span>
+            </button>
+
+            <div class="bubble-body" id="bubble-about">
+              <div class="nested-grid">
+                <article class="leaf">
+                  <p class="leaf-kicker">Identity</p>
+                  <h3>About</h3>
+                  <p class="leaf-copy">
+                    The institutional read, the mission, and the public face.
+                  </p>
+                  <a class="leaf-link" href="/about/">Open About</a>
+                </article>
+
+                <article class="leaf">
+                  <p class="leaf-kicker">Direct line</p>
+                  <h3>Contact</h3>
+                  <p class="leaf-copy">
+                    Reach the project, the work, and the team through one direct path.
+                  </p>
+                  <a class="leaf-link" href="/contact/">Open Contact</a>
+                </article>
+              </div>
+            </div>
+          </article>
+
+          <article class="bubble hidden" data-bubble>
+            <button
+              class="bubble-trigger"
+              type="button"
+              aria-expanded="false"
+              aria-controls="bubble-public"
+            >
+              <span>
+                <p class="bubble-kicker">Public expression path</p>
+                <h2>Big Laughs / Speaking</h2>
+                <p class="bubble-copy">
+                  Comedy, motivational speaking, public presence, and live engagement.
+                </p>
+              </span>
+              <span class="bubble-badge" aria-hidden="true">+</span>
+            </button>
+
+            <div class="bubble-body" id="bubble-public">
+              <div class="nested-grid">
+                <article class="leaf">
+                  <p class="leaf-kicker">Comedy</p>
+                  <h3>Big Laughs</h3>
+                  <p class="leaf-copy">
+                    Stage work, live sets, and the comedy-facing path.
+                  </p>
+                  <a class="leaf-link" href="/home/">Open the path</a>
+                </article>
+
+                <article class="leaf">
+                  <p class="leaf-kicker">Speaking</p>
+                  <h3>Motivational speaking</h3>
+                  <p class="leaf-copy">
+                    Public-facing motivation, message, and live speaking presence.
+                  </p>
+                  <a class="leaf-link" href="/home/">Open the path</a>
+                </article>
+              </div>
+            </div>
+          </article>
+
+          <article class="bubble hidden" data-bubble>
+            <button
+              class="bubble-trigger"
+              type="button"
+              aria-expanded="false"
+              aria-controls="bubble-system"
+            >
+              <span>
+                <p class="bubble-kicker">System path</p>
+                <h2>Gauges / Laws</h2>
+                <p class="bubble-copy">
+                  Measurement, doctrine, calibration, and governing structure.
+                </p>
+              </span>
+              <span class="bubble-badge" aria-hidden="true">+</span>
+            </button>
+
+            <div class="bubble-body" id="bubble-system">
+              <div class="nested-grid">
+                <article class="leaf">
+                  <p class="leaf-kicker">Measurement</p>
+                  <h3>Gauges</h3>
+                  <p class="leaf-copy">
+                    Monitoring, readouts, and stability surfaces.
+                  </p>
+                  <a class="leaf-link" href="/gauges/">Open Gauges</a>
+                </article>
+
+                <article class="leaf">
+                  <p class="leaf-kicker">Doctrine</p>
+                  <h3>Laws</h3>
+                  <p class="leaf-copy">
+                    Constraints, admissibility, and governing structure.
+                  </p>
+                  <a class="leaf-link" href="/laws/">Open Laws</a>
+                </article>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel runtime" aria-labelledby="runtime-proof-title">
+          <h3 id="runtime-proof-title">Runtime proof</h3>
+          <div class="runtime-grid">
+            <div>
+              <p class="proof-label">Status</p>
               <p class="proof-value proof-good" id="runtime-status">READY</p>
             </div>
             <div>
               <p class="proof-label">Contract</p>
               <p class="proof-value" id="runtime-contract">
-                HOME_ENTRY_RUNTIME_V3_NINE_SUMMITS_METAVERSE
+                HOME_ENTRY_RUNTIME_V4_FOUR_WAY_GATE_AMBIENT
               </p>
             </div>
             <div>
@@ -598,151 +824,16 @@
               <p class="proof-value" id="runtime-updated">pending</p>
             </div>
             <div>
-              <p class="proof-label">Hierarchy</p>
-              <p class="proof-value">
-                SUMMITS → GATES → CHAMBERS → EXTENSIONS
-              </p>
+              <p class="proof-label">Bubble state</p>
+              <p class="proof-value" id="bubble-state">1 open</p>
             </div>
-          </aside>
-        </section>
-
-        <section class="section" aria-labelledby="baseline-title">
-          <article class="panel section-panel">
-            <div class="section-header">
-              <div>
-                <p class="section-tag">Governing baseline</p>
-                <h2 id="baseline-title">The Nine Summits of Love</h2>
-              </div>
-            </div>
-
-            <div class="intro-band">
-              <div class="quote-block">
-                Love, held as structure, opens the path to stable human potential.
-              </div>
-
-              <div class="micro-stack">
-                <div class="micro-card">
-                  <p class="micro-kicker">256 carats</p>
-                  <p class="micro-copy">
-                    Human potential treated as ordered, developed, and refined.
-                  </p>
-                </div>
-
-                <div class="micro-card">
-                  <p class="micro-kicker">Metaverse spine</p>
-                  <p class="micro-copy">
-                    World access remains downstream of the governing frame.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section
-          class="section"
-          id="main-gates"
-          aria-labelledby="gates-title"
-        >
-          <article class="panel section-panel">
-            <div class="section-header">
-              <div>
-                <p class="section-tag">Primary public routing</p>
-                <h2 id="gates-title">Choose a direction.</h2>
-              </div>
-            </div>
-
-            <div class="gate-grid">
-              <div class="gate-primary">
-                <article class="gate-card primary">
-                  <p class="gate-kicker">Primary path</p>
-                  <h3>Nine Summits / 256 Carats</h3>
-                  <p class="gate-copy">
-                    The central path into the book, the summit structure, and the
-                    wider human-potential baseline.
-                  </p>
-                  <a class="gate-link" href="/prelude/">Open the summit path</a>
-                </article>
-              </div>
-
-              <div class="gate-secondary">
-                <div class="gate-secondary-grid">
-                  <article class="gate-card">
-                    <p class="gate-kicker">Institutional path</p>
-                    <h3>About / Contact</h3>
-                    <p class="gate-copy">
-                      Identity, mission, legitimacy, and direct contact.
-                    </p>
-                    <a class="gate-link" href="/about/">Open the path</a>
-                  </article>
-
-                  <article class="gate-card">
-                    <p class="gate-kicker">Public expression path</p>
-                    <h3>Big Laughs / Speaking</h3>
-                    <p class="gate-copy">
-                      Comedy, motivational speaking, public presence, and live engagement.
-                    </p>
-                    <a class="gate-link" href="/home/">Open the path</a>
-                  </article>
-
-                  <article class="gate-card">
-                    <p class="gate-kicker">System path</p>
-                    <h3>Gauges / Laws</h3>
-                    <p class="gate-copy">
-                      Measurement, doctrine, calibration, and governing structure.
-                    </p>
-                    <a class="gate-link" href="/gauges/">Open the path</a>
-                  </article>
-                </div>
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section class="section" aria-labelledby="chambers-title">
-          <article class="panel section-panel">
-            <div class="section-header">
-              <div>
-                <p class="section-tag">World access beneath the gate</p>
-                <h2 id="chambers-title">Chambers and traversal</h2>
-              </div>
-            </div>
-
-            <div class="paths-grid">
-              <article class="path-card">
-                <p class="path-kicker">Threshold</p>
-                <h3>Prelude</h3>
-                <p class="path-copy">
-                  The felt entry before deeper movement.
-                </p>
-                <a class="gate-link" href="/prelude/">Open Prelude</a>
-              </article>
-
-              <article class="path-card">
-                <p class="path-kicker">Chamber</p>
-                <h3>Home</h3>
-                <p class="path-copy">
-                  The deeper read under the same family.
-                </p>
-                <a class="gate-link" href="/home/">Open Home</a>
-              </article>
-
-              <article class="path-card">
-                <p class="path-kicker">System</p>
-                <h3>Explore</h3>
-                <p class="path-copy">
-                  The wider site beyond the entry gate.
-                </p>
-                <a class="gate-link" href="/explore/">Open Explore</a>
-              </article>
-            </div>
-          </article>
+          </div>
         </section>
       </main>
 
       <footer class="footer">
         <span>
-          Receipt: PAGE=ROOT | CONTRACT=HOME_ENTRY_V5_FOUR_WAY_GATE |
+          Receipt: PAGE=ROOT | CONTRACT=HOME_ENTRY_V6_RUSSIAN_DOLL_GATE |
           HIERARCHY=SUMMITS_PRIMARY | ROOT_RUNTIME=index.js
         </span>
         <span id="footer-year">Year</span>

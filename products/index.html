@@ -2,29 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products surface for ARCHCOIN, AAI, and runtime-delivered product expression."
+    content="Flagship products built for the next intelligence economy."
   />
 
   <style>
     :root{
       color-scheme:dark;
-      --bg-0:#020612;
-      --bg-1:#071427;
-      --bg-2:#0d2240;
+      --bg0:#020612;
+      --bg1:#071427;
+      --bg2:#0d2240;
+      --panel:rgba(10,20,46,.72);
+      --panel-2:rgba(10,20,46,.52);
       --line:rgba(173,212,255,.14);
-      --line-strong:rgba(241,210,141,.24);
+      --line-strong:rgba(241,210,141,.22);
       --text:#edf5ff;
       --muted:#9fb2d2;
       --gold:#f1d28d;
-      --good:#8ff0c5;
-      --bad:#ff9b9b;
+      --mint:#8ff0c5;
+      --blue:#9fc6ff;
       --shadow:0 24px 60px rgba(0,0,0,.42);
       --radius-xl:30px;
       --radius-lg:24px;
@@ -39,9 +38,9 @@
       width:100%;
       min-height:100%;
       background:
-        radial-gradient(circle at 50% 18%, rgba(58,103,188,.16), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(241,210,141,.08), transparent 18%),
-        linear-gradient(180deg,var(--bg-1),var(--bg-0));
+        radial-gradient(circle at 16% 0%, rgba(58,103,188,.18), transparent 26%),
+        radial-gradient(circle at 84% 4%, rgba(241,210,141,.07), transparent 18%),
+        linear-gradient(180deg,var(--bg1),var(--bg0));
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
@@ -51,67 +50,62 @@
       overflow-x:hidden;
     }
 
-    #products-host{
-      position:relative;
-      min-height:100vh;
-      isolation:isolate;
-    }
-
-    .products-stars,
-    .products-stars::before,
-    .products-stars::after{
-      position:absolute;
+    .stars,
+    .stars::before,
+    .stars::after{
+      position:fixed;
       inset:0;
       pointer-events:none;
       content:"";
       display:block;
+      opacity:.88;
       background-repeat:repeat;
-      opacity:.9;
+      z-index:0;
     }
 
-    .products-stars{
+    .stars{
       background-image:
-        radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.95) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 28% 72%, rgba(255,255,255,.82) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 66% 28%, rgba(255,255,255,.88) 45%, transparent 55%),
-        radial-gradient(2px 2px at 82% 64%, rgba(255,255,255,.92) 45%, transparent 55%);
-      animation:stars-drift-1 24s linear infinite;
+        radial-gradient(2px 2px at 10% 18%, rgba(255,255,255,.94) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 26% 72%, rgba(255,255,255,.78) 45%, transparent 55%),
+        radial-gradient(2px 2px at 68% 26%, rgba(255,255,255,.86) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 84% 64%, rgba(255,255,255,.72) 45%, transparent 55%);
+      animation:stars-a 26s linear infinite;
     }
 
-    .products-stars::before{
+    .stars::before{
       background-image:
-        radial-gradient(1.5px 1.5px at 20% 40%, rgba(255,255,255,.78) 45%, transparent 55%),
-        radial-gradient(2px 2px at 44% 14%, rgba(255,255,255,.92) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 74% 44%, rgba(255,255,255,.72) 45%, transparent 55%),
-        radial-gradient(2px 2px at 90% 16%, rgba(255,255,255,.96) 45%, transparent 55%);
-      animation:stars-drift-2 36s linear infinite;
+        radial-gradient(1.5px 1.5px at 18% 40%, rgba(255,255,255,.72) 45%, transparent 55%),
+        radial-gradient(2px 2px at 42% 14%, rgba(255,255,255,.86) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 74% 44%, rgba(255,255,255,.68) 45%, transparent 55%),
+        radial-gradient(2px 2px at 92% 18%, rgba(255,255,255,.94) 45%, transparent 55%);
+      animation:stars-b 38s linear infinite;
     }
 
-    .products-stars::after{
+    .stars::after{
       background-image:
-        radial-gradient(2px 2px at 18% 84%, rgba(255,255,255,.76) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 52% 58%, rgba(255,255,255,.88) 45%, transparent 55%),
-        radial-gradient(2px 2px at 78% 84%, rgba(255,255,255,.70) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 94% 42%, rgba(255,255,255,.86) 45%, transparent 55%);
-      animation:stars-drift-3 44s linear infinite;
+        radial-gradient(2px 2px at 16% 84%, rgba(255,255,255,.76) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 52% 56%, rgba(255,255,255,.84) 45%, transparent 55%),
+        radial-gradient(2px 2px at 78% 82%, rgba(255,255,255,.68) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 94% 40%, rgba(255,255,255,.82) 45%, transparent 55%);
+      animation:stars-c 44s linear infinite;
     }
 
-    @keyframes stars-drift-1{
+    @keyframes stars-a{
       from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(-18px,10px,0)}
+      to{transform:translate3d(-16px,10px,0)}
     }
 
-    @keyframes stars-drift-2{
+    @keyframes stars-b{
       from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(22px,-14px,0)}
+      to{transform:translate3d(20px,-12px,0)}
     }
 
-    @keyframes stars-drift-3{
+    @keyframes stars-c{
       from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(-10px,-18px,0)}
+      to{transform:translate3d(-10px,-16px,0)}
     }
 
-    .products-shell{
+    .page{
       position:relative;
       z-index:1;
       max-width:var(--max);
@@ -119,7 +113,7 @@
       padding:20px 18px 56px;
     }
 
-    .products-topbar{
+    .topbar{
       display:flex;
       align-items:center;
       justify-content:space-between;
@@ -128,56 +122,52 @@
       margin-bottom:16px;
       border:1px solid var(--line);
       border-radius:999px;
-      background:linear-gradient(180deg,rgba(9,18,40,.76),rgba(10,20,46,.48));
+      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.48));
       box-shadow:0 14px 36px rgba(0,0,0,.22);
       backdrop-filter:blur(10px);
     }
 
-    .products-brand{
+    .brand{
       display:flex;
       align-items:center;
       gap:12px;
       min-width:0;
     }
 
-    .products-brand-mark{
+    .brand-mark{
       width:42px;
       height:42px;
       border-radius:14px;
       transform:rotate(45deg);
-      border:1px solid rgba(241,210,141,.26);
+      border:1px solid rgba(241,210,141,.24);
       background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
       box-shadow:0 12px 28px rgba(0,0,0,.24);
       flex:0 0 auto;
     }
 
-    .products-brand-copy{
-      min-width:0;
-    }
+    .brand-copy{min-width:0}
 
-    .products-brand-title{
+    .brand-title{
       margin:0 0 3px;
-      color:var(--text);
+      font-size:.96rem;
       font-weight:800;
-      font-size:.98rem;
-      letter-spacing:.06em;
+      letter-spacing:.08em;
       text-transform:uppercase;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
-    .products-brand-subtitle{
+    .brand-subtitle{
       margin:0;
       color:var(--muted);
       font-size:.82rem;
-      line-height:1.3;
       white-space:nowrap;
       overflow:hidden;
       text-overflow:ellipsis;
     }
 
-    .products-topbar-right{
+    .topbar-right{
       display:flex;
       align-items:center;
       gap:10px;
@@ -185,7 +175,7 @@
       justify-content:flex-end;
     }
 
-    .products-chip{
+    .chip{
       display:inline-flex;
       align-items:center;
       gap:8px;
@@ -195,299 +185,657 @@
       background:rgba(255,255,255,.04);
       color:var(--muted);
       font-size:.82rem;
-      line-height:1;
       white-space:nowrap;
     }
 
-    .products-chip strong{
+    .chip strong{
       color:var(--gold);
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
       font-size:.74rem;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
     }
 
-    .products-hero{
+    .hero{
       position:relative;
       overflow:hidden;
       border:1px solid var(--line);
       border-radius:var(--radius-xl);
-      background:linear-gradient(180deg,rgba(9,18,40,.86),rgba(10,20,46,.62));
+      background:linear-gradient(180deg,rgba(9,18,40,.86),rgba(10,20,46,.60));
       box-shadow:var(--shadow);
-      padding:24px 24px 22px;
+      padding:28px 24px 24px;
       margin-bottom:16px;
     }
 
-    .products-hero::before{
+    .hero::before{
       content:"";
       position:absolute;
       inset:-1px;
       background:
-        radial-gradient(circle at 16% 0%, rgba(241,210,141,.08), transparent 24%),
-        radial-gradient(circle at 84% 0%, rgba(143,240,197,.05), transparent 20%);
+        radial-gradient(circle at 18% 0%, rgba(241,210,141,.08), transparent 24%),
+        radial-gradient(circle at 84% 0%, rgba(143,240,197,.05), transparent 18%);
       pointer-events:none;
     }
 
-    .products-eyebrow{
+    .eyebrow{
       position:relative;
       z-index:1;
       margin:0 0 10px;
       color:var(--gold);
       font-size:.78rem;
       font-weight:800;
-      letter-spacing:.14em;
+      letter-spacing:.16em;
       text-transform:uppercase;
     }
 
-    .products-title{
+    .hero-title{
       position:relative;
       z-index:1;
       margin:0 0 12px;
+      max-width:920px;
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2.4rem,7vw,5.4rem);
+      font-size:clamp(2.5rem,7vw,5.5rem);
       line-height:.92;
-      color:var(--text);
-      max-width:900px;
     }
 
-    .products-summary{
+    .hero-copy{
       position:relative;
       z-index:1;
       margin:0;
-      max-width:840px;
+      max-width:780px;
       color:var(--muted);
       font-size:1rem;
       line-height:1.72;
     }
 
-    .products-stage-shell{
+    .flagship{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .product-card{
       position:relative;
+      overflow:hidden;
       border:1px solid var(--line);
       border-radius:var(--radius-xl);
-      overflow:hidden;
-      background:linear-gradient(180deg,rgba(9,18,40,.40),rgba(10,20,46,.18));
+      background:linear-gradient(180deg,rgba(9,18,40,.82),rgba(10,20,46,.54));
       box-shadow:var(--shadow);
-      min-height:640px;
+      padding:24px;
+      min-height:520px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      transform:translateY(18px);
+      opacity:0;
+      transition:transform 520ms ease, opacity 520ms ease, border-color 220ms ease, box-shadow 220ms ease;
     }
 
-    #products-stage{
-      position:relative;
-      min-height:640px;
+    .product-card.is-visible{
+      transform:translateY(0);
+      opacity:1;
     }
 
-    .products-loading,
-    .products-fault{
+    .product-card:hover{
+      border-color:var(--line-strong);
+      box-shadow:0 28px 66px rgba(0,0,0,.48);
+    }
+
+    .product-card.archcoin::before,
+    .product-card.aai::before{
+      content:"";
       position:absolute;
-      inset:0;
+      inset:auto auto 0 0;
+      width:100%;
+      height:220px;
+      pointer-events:none;
+      opacity:.9;
+    }
+
+    .product-card.archcoin::before{
+      background:
+        radial-gradient(circle at 18% 80%, rgba(241,210,141,.10), transparent 22%),
+        radial-gradient(circle at 80% 20%, rgba(255,240,193,.05), transparent 18%);
+    }
+
+    .product-card.aai::before{
+      background:
+        radial-gradient(circle at 14% 84%, rgba(143,240,197,.09), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(159,198,255,.06), transparent 18%);
+    }
+
+    .product-head{
+      position:relative;
+      z-index:1;
+    }
+
+    .product-label{
+      margin:0 0 10px;
+      font-size:.76rem;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .archcoin .product-label{color:var(--gold)}
+    .aai .product-label{color:var(--mint)}
+
+    .product-title{
+      margin:0 0 8px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2rem,4vw,3.1rem);
+      line-height:.95;
+    }
+
+    .product-category{
+      margin:0 0 14px;
+      color:var(--blue);
+      font-weight:700;
+      font-size:1rem;
+      letter-spacing:.03em;
+    }
+
+    .product-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.72;
+      max-width:520px;
+    }
+
+    .product-visual{
+      position:relative;
+      z-index:1;
+      height:180px;
+      margin:22px 0 18px;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding:24px;
-      z-index:3;
-      transition:opacity 220ms ease, visibility 220ms ease;
     }
 
-    .products-loading.is-hidden,
-    .products-fault.is-hidden{
-      opacity:0;
-      visibility:hidden;
-      pointer-events:none;
-    }
-
-    .products-loading{
-      background:
-        radial-gradient(circle at 50% 35%, rgba(58,103,188,.18), transparent 28%),
-        linear-gradient(180deg, rgba(4,13,32,.32), rgba(4,13,32,.18));
-      backdrop-filter:blur(6px);
-    }
-
-    .products-fault{
-      background:
-        linear-gradient(180deg, rgba(35,10,16,.74), rgba(20,6,10,.62));
-      backdrop-filter:blur(8px);
-    }
-
-    .products-overlay-card{
-      width:min(560px,100%);
-      padding:24px;
-      border-radius:28px;
-      border:1px solid rgba(173,212,255,.14);
-      background:linear-gradient(180deg,rgba(9,18,40,.92),rgba(10,20,46,.78));
-      box-shadow:0 24px 60px rgba(0,0,0,.36);
-      text-align:left;
-    }
-
-    .products-overlay-title{
-      margin:0 0 10px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(1.7rem,4vw,2.5rem);
-      line-height:1;
-      color:var(--gold);
-    }
-
-    .products-overlay-copy{
-      margin:0;
-      color:var(--muted);
-      font-size:.98rem;
-      line-height:1.7;
-    }
-
-    .products-loading-row{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:14px;
-    }
-
-    .products-spinner{
-      width:18px;
-      height:18px;
+    .coin-hero{
+      position:relative;
+      width:168px;
+      height:168px;
       border-radius:999px;
-      border:2px solid rgba(241,210,141,.24);
-      border-top-color:var(--gold);
-      animation:spin 1s linear infinite;
-      flex:0 0 auto;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,245,214,.94), transparent 18%),
+        linear-gradient(145deg, #f7e3a8, #d5a84f 56%, #9e6f1d);
+      border:1px solid rgba(255,232,170,.40);
+      box-shadow:
+        0 18px 48px rgba(0,0,0,.42),
+        inset 0 0 30px rgba(255,255,255,.16);
+      display:grid;
+      place-items:center;
+      transition:transform 220ms ease;
     }
 
-    @keyframes spin{
-      from{transform:rotate(0)}
-      to{transform:rotate(360deg)}
+    .coin-hero::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:999px;
+      border:1px solid rgba(255,247,220,.34);
     }
 
-    .products-footer{
+    .coin-hero span{
+      position:relative;
+      z-index:1;
+      color:#1e1505;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:1.28rem;
+      font-weight:700;
+      line-height:.96;
+      text-align:center;
+      letter-spacing:.04em;
+    }
+
+    .aai-mark{
+      position:relative;
+      width:142px;
+      height:142px;
+      border-radius:28px;
+      transform:rotate(45deg);
+      background:linear-gradient(180deg,rgba(18,54,66,.96),rgba(10,28,34,.90));
+      border:1px solid rgba(143,240,197,.28);
+      box-shadow:
+        0 18px 44px rgba(0,0,0,.36),
+        inset 0 0 26px rgba(255,255,255,.04);
+      display:grid;
+      place-items:center;
+      transition:transform 220ms ease;
+    }
+
+    .aai-mark::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:20px;
+      border:1px solid rgba(143,240,197,.20);
+    }
+
+    .aai-mark span{
+      position:relative;
+      z-index:1;
+      transform:rotate(-45deg);
+      color:var(--mint);
+      font-size:1.22rem;
+      font-weight:800;
+      letter-spacing:.16em;
+    }
+
+    .product-card:hover .coin-hero{transform:scale(1.03)}
+    .product-card:hover .aai-mark{transform:rotate(45deg) scale(1.03)}
+
+    .capabilities{
+      position:relative;
+      z-index:1;
+      display:grid;
+      gap:10px;
+      margin:0 0 18px;
+    }
+
+    .capability{
+      display:grid;
+      grid-template-columns:12px minmax(0,1fr);
+      gap:12px;
+      align-items:start;
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid rgba(173,212,255,.10);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      color:var(--text);
+      font-size:.95rem;
+      line-height:1.55;
+    }
+
+    .capability-dot{
+      width:10px;
+      height:10px;
+      margin-top:6px;
+      border-radius:999px;
+      box-shadow:0 0 0 4px rgba(255,255,255,.04);
+    }
+
+    .archcoin .capability-dot{background:var(--gold)}
+    .aai .capability-dot{background:var(--mint)}
+
+    .cta-row{
+      position:relative;
+      z-index:1;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
       flex-wrap:wrap;
-      margin-top:16px;
-      padding:14px 18px;
-      border:1px solid var(--line);
-      border-radius:22px;
-      background:linear-gradient(180deg,rgba(9,18,40,.62),rgba(10,20,46,.42));
-      box-shadow:0 14px 36px rgba(0,0,0,.18);
     }
 
-    .products-footer-copy{
+    .cta-meta{
       color:var(--muted);
-      font-size:.9rem;
-      line-height:1.6;
-      margin:0;
-      max-width:820px;
+      font-size:.86rem;
+      line-height:1.5;
     }
 
-    .products-footer-tag{
-      color:var(--good);
+    .cta-button{
+      appearance:none;
+      border:1px solid rgba(241,210,141,.26);
+      border-radius:999px;
+      padding:12px 18px;
+      background:linear-gradient(180deg,rgba(18,36,78,.92),rgba(10,22,48,.84));
+      color:var(--text);
+      font-size:.86rem;
       font-weight:800;
-      font-size:.84rem;
-      letter-spacing:.08em;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .cta-button:hover{
+      transform:translateY(-1px);
+      border-color:rgba(241,210,141,.42);
+      box-shadow:0 12px 28px rgba(0,0,0,.28);
+    }
+
+    .details{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .detail-card{
+      border:1px solid var(--line);
+      border-radius:var(--radius-lg);
+      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.44));
+      box-shadow:0 18px 44px rgba(0,0,0,.24);
+      padding:20px;
+      transform:translateY(18px);
+      opacity:0;
+      transition:transform 520ms ease, opacity 520ms ease;
+    }
+
+    .detail-card.is-visible{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .detail-kicker{
+      margin:0 0 10px;
+      font-size:.74rem;
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .detail-card.archcoin .detail-kicker{color:var(--gold)}
+    .detail-card.aai .detail-kicker{color:var(--mint)}
+
+    .detail-title{
+      margin:0 0 8px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:1.65rem;
+      line-height:1.08;
+    }
+
+    .detail-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:.96rem;
+      line-height:1.68;
+    }
+
+    .supporting{
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      background:linear-gradient(180deg,rgba(9,18,40,.70),rgba(10,20,46,.42));
+      box-shadow:0 18px 44px rgba(0,0,0,.22);
+      padding:22px;
+      margin-bottom:16px;
+      transform:translateY(18px);
+      opacity:0;
+      transition:transform 520ms ease, opacity 520ms ease;
+    }
+
+    .supporting.is-visible{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .section-kicker{
+      margin:0 0 10px;
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .section-title{
+      margin:0 0 12px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(1.7rem,4vw,2.5rem);
+      line-height:1.02;
+    }
+
+    .section-copy{
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:.96rem;
+      line-height:1.7;
+      max-width:760px;
+    }
+
+    .support-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .support-card{
+      border:1px solid rgba(173,212,255,.10);
+      border-radius:20px;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      padding:18px;
+    }
+
+    .support-title{
+      margin:0 0 8px;
+      font-size:1.08rem;
+      font-weight:800;
+      line-height:1.2;
+    }
+
+    .support-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.62;
+    }
+
+    .closing{
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      background:linear-gradient(180deg,rgba(9,18,40,.80),rgba(10,20,46,.54));
+      box-shadow:var(--shadow);
+      padding:24px;
+      transform:translateY(18px);
+      opacity:0;
+      transition:transform 520ms ease, opacity 520ms ease;
+    }
+
+    .closing.is-visible{
+      transform:translateY(0);
+      opacity:1;
+    }
+
+    .closing-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:18px;
+      align-items:end;
+    }
+
+    .closing-copy{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.72;
+      max-width:860px;
+    }
+
+    .closing-cta{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .footer-chip{
+      display:inline-flex;
+      align-items:center;
+      padding:11px 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--good);
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.1em;
       text-transform:uppercase;
       white-space:nowrap;
     }
 
-    @media (max-width:960px){
-      .products-shell{
-        padding:16px 14px 44px;
-      }
+    .reveal-delay-1{transition-delay:90ms}
+    .reveal-delay-2{transition-delay:180ms}
+    .reveal-delay-3{transition-delay:260ms}
+    .reveal-delay-4{transition-delay:340ms}
+    .reveal-delay-5{transition-delay:420ms}
 
-      .products-topbar{
+    @media (max-width:960px){
+      .page{padding:16px 14px 44px}
+      .topbar{
         border-radius:26px;
         align-items:flex-start;
         flex-direction:column;
       }
-
-      .products-topbar-right{
-        justify-content:flex-start;
+      .topbar-right{justify-content:flex-start}
+      .flagship,
+      .details,
+      .support-grid,
+      .closing-grid{
+        grid-template-columns:1fr;
       }
-
-      .products-stage-shell,
-      #products-stage{
-        min-height:720px;
-      }
+      .product-card{min-height:auto}
+      .product-visual{height:156px}
+      .coin-hero{width:148px;height:148px}
+      .aai-mark{width:128px;height:128px}
+      .closing-cta{justify-content:flex-start}
     }
 
     @media (prefers-reduced-motion:reduce){
-      .products-stars,
-      .products-stars::before,
-      .products-stars::after,
-      .products-spinner{
+      .stars,
+      .stars::before,
+      .stars::after{
         animation:none;
+      }
+      .product-card,
+      .detail-card,
+      .supporting,
+      .closing{
+        transition:none;
       }
     }
   </style>
 </head>
 <body>
+  <div class="stars" aria-hidden="true"></div>
+
   <main
     id="products-host"
-    data-host-contract="PRODUCTS_HOST_CONTRACT_V1"
-    data-stage-owner="runtime-only"
-    data-runtime-global="ProductsPlanetRuntime"
-    data-runtime-script="./products_runtime.js"
+    class="page"
+    data-page="products-showroom"
+    data-showroom-contract="PRODUCTS_SHOWROOM_V1"
   >
-    <div class="products-stars" aria-hidden="true"></div>
+    <header class="topbar" aria-label="Products header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div class="brand-copy">
+          <p class="brand-title">Diamond Gate Bridge</p>
+          <p class="brand-subtitle">Flagship products chamber</p>
+        </div>
+      </div>
 
-    <div class="products-shell">
-      <header class="products-topbar" aria-label="Products header">
-        <div class="products-brand">
-          <div class="products-brand-mark" aria-hidden="true"></div>
-          <div class="products-brand-copy">
-            <p class="products-brand-title">Diamond Gate Bridge</p>
-            <p class="products-brand-subtitle">Products expression surface</p>
+      <div class="topbar-right">
+        <div class="chip"><strong>Flagship</strong> ARCHCOIN</div>
+        <div class="chip"><strong>Flagship</strong> AAI</div>
+        <div class="chip"><strong>House</strong> Premium intelligence</div>
+      </div>
+    </header>
+
+    <section class="hero reveal reveal-delay-1" aria-label="Products hero">
+      <p class="eyebrow">Products</p>
+      <h1 class="hero-title">Products built for the next intelligence economy.</h1>
+      <p class="hero-copy">
+        A premium product house for private value, intelligent execution, and refined release. ARCHCOIN and AAI lead the chamber as the first two flagship products.
+      </p>
+    </section>
+
+    <section class="flagship" aria-label="Flagship products">
+      <article
+        class="product-card archcoin reveal reveal-delay-2"
+        data-product-key="archcoin"
+      >
+        <div class="product-head">
+          <p class="product-label">Flagship product</p>
+          <h2 class="product-title" data-field="title"></h2>
+          <p class="product-category" data-field="category"></p>
+          <p class="product-copy" data-field="description"></p>
+        </div>
+
+        <div class="product-visual" aria-hidden="true">
+          <div class="coin-hero">
+            <span>ARCH<br />COIN</span>
           </div>
         </div>
 
-        <div class="products-topbar-right">
-          <div class="products-chip"><strong>Primary</strong> ARCHCOIN</div>
-          <div class="products-chip"><strong>Primary</strong> AAI</div>
-          <div class="products-chip"><strong>Mode</strong> Runtime delivery</div>
+        <div class="capabilities" data-field="capabilities"></div>
+
+        <div class="cta-row">
+          <div class="cta-meta" data-field="meta"></div>
+          <button class="cta-button" type="button" data-cta-key="archcoin"></button>
         </div>
-      </header>
+      </article>
 
-      <section class="products-hero" aria-label="Products introduction">
-        <p class="products-eyebrow">Products</p>
-        <h1 class="products-title">Real product expression is now the priority.</h1>
-        <p class="products-summary">
-          The under-the-hood phase is complete. This page now exists to deliver product identity through visible expression rather than continuing to behave like a diagnostic or gauges surface.
-        </p>
-      </section>
+      <article
+        class="product-card aai reveal reveal-delay-3"
+        data-product-key="aai"
+      >
+        <div class="product-head">
+          <p class="product-label">Flagship product</p>
+          <h2 class="product-title" data-field="title"></h2>
+          <p class="product-category" data-field="category"></p>
+          <p class="product-copy" data-field="description"></p>
+        </div>
 
-      <section class="products-stage-shell" aria-label="Products stage container">
-        <div
-          id="products-stage"
-          data-visible-stage-owner="runtime"
-          aria-label="Products runtime stage"
-        ></div>
-
-        <div id="products-loading" class="products-loading" aria-live="polite">
-          <div class="products-overlay-card">
-            <div class="products-loading-row">
-              <div class="products-spinner" aria-hidden="true"></div>
-              <strong>Mounting products stage</strong>
-            </div>
-            <h2 class="products-overlay-title">Preparing product expression</h2>
-            <p class="products-overlay-copy">
-              The host shell is handing visible stage ownership to the products runtime now.
-            </p>
+        <div class="product-visual" aria-hidden="true">
+          <div class="aai-mark">
+            <span>AAI</span>
           </div>
         </div>
 
-        <div id="products-fault" class="products-fault is-hidden" role="alert" aria-live="assertive">
-          <div class="products-overlay-card">
-            <h2 class="products-overlay-title">Products stage fault surfaced</h2>
-            <p id="products-fault-text" class="products-overlay-copy">
-              The host could not complete runtime handoff.
-            </p>
-          </div>
-        </div>
-      </section>
+        <div class="capabilities" data-field="capabilities"></div>
 
-      <footer class="products-footer">
-        <p class="products-footer-copy">
-          Host shell simplified. Runtime owns the stage. Diagnostics are no longer the visible primary surface.
-        </p>
-        <div class="products-footer-tag">Products host live</div>
-      </footer>
-    </div>
+        <div class="cta-row">
+          <div class="cta-meta" data-field="meta"></div>
+          <button class="cta-button" type="button" data-cta-key="aai"></button>
+        </div>
+      </article>
+    </section>
+
+    <section class="details" aria-label="Product details">
+      <article class="detail-card archcoin reveal reveal-delay-3" data-detail-key="archcoin">
+        <p class="detail-kicker">ARCHCOIN</p>
+        <h3 class="detail-title" data-field="headline"></h3>
+        <p class="detail-copy" data-field="copy"></p>
+      </article>
+
+      <article class="detail-card aai reveal reveal-delay-4" data-detail-key="aai">
+        <p class="detail-kicker">AAI</p>
+        <h3 class="detail-title" data-field="headline"></h3>
+        <p class="detail-copy" data-field="copy"></p>
+      </article>
+    </section>
+
+    <section class="supporting reveal reveal-delay-4" aria-label="Additional products">
+      <p class="section-kicker">Additional products</p>
+      <h3 class="section-title">Extensions for release, intelligence, and continuity.</h3>
+      <p class="section-copy">
+        Supporting products remain available as secondary shelf presence beneath the flagship layer.
+      </p>
+
+      <div class="support-grid" id="support-grid"></div>
+    </section>
+
+    <section class="closing reveal reveal-delay-5" aria-label="Brand statement">
+      <div class="closing-grid">
+        <div>
+          <p class="section-kicker">The house</p>
+          <h3 class="section-title">Precision-built products. Released with discipline.</h3>
+          <p class="closing-copy">
+            Diamond Gate Bridge builds product surfaces with premium identity, intelligent control, and durable execution. The page should feel like a showroom, not a prototype.
+          </p>
+        </div>
+
+        <div class="closing-cta">
+          <button class="cta-button" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
+          <button class="cta-button" type="button" data-cta-key="aai">Explore AAI</button>
+          <div class="footer-chip">Flagship products live</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <script src="./index.js" defer></script>

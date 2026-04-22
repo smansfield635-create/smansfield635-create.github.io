@@ -1,30 +1,30 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta
     name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
   />
-  <title>Products | Diamond Gate Bridge</title>
+  <title>Products</title>
   <meta
     name="description"
-    content="Live products experience for Diamond Gate Bridge."
+    content="Products runtime host surface."
   />
-
   <style>
     :root {
       color-scheme: dark;
-      --bg-0: #05070d;
-      --bg-1: #0b1020;
-      --bg-2: #10182c;
-      --line: rgba(255, 255, 255, 0.12);
-      --text: #f5f7ff;
-      --muted: rgba(245, 247, 255, 0.72);
-      --accent: #8bb8ff;
-      --danger: #ff8f8f;
-      --ok: #8fffb3;
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.45);
+      --bg: #05070b;
+      --panel: rgba(255,255,255,0.06);
+      --panel-strong: rgba(255,255,255,0.1);
+      --border: rgba(255,255,255,0.12);
+      --text: #f5f7fb;
+      --muted: rgba(245,247,251,0.72);
+      --good: #5df2a2;
+      --warn: #ffd166;
+      --bad: #ff6b6b;
+      --info: #7cc7ff;
+      --shadow: 0 20px 60px rgba(0,0,0,0.35);
     }
 
     * {
@@ -33,276 +33,227 @@
 
     html,
     body {
-      margin: 0;
+      width: 100%;
       min-height: 100%;
-      background:
-        radial-gradient(circle at top, rgba(73, 107, 178, 0.22), transparent 30%),
-        radial-gradient(circle at bottom, rgba(94, 67, 160, 0.18), transparent 28%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+      margin: 0;
+      background: var(--bg);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
       min-height: 100vh;
+      overflow-x: hidden;
     }
 
-    .page-shell {
+    .products-host {
       position: relative;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at top, rgba(124,199,255,0.12), transparent 30%),
+        radial-gradient(circle at 20% 80%, rgba(93,242,162,0.08), transparent 24%),
+        radial-gradient(circle at 80% 20%, rgba(255,209,102,0.07), transparent 20%),
+        var(--bg);
     }
 
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 1rem;
-      background: rgba(5, 7, 13, 0.72);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(14px);
-    }
-
-    .brand {
-      font-size: 0.92rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      justify-content: flex-end;
-    }
-
-    .nav a {
-      color: var(--text);
-      text-decoration: none;
-      font-size: 0.84rem;
-      line-height: 1;
-      padding: 0.7rem 0.9rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .nav a[aria-current="page"] {
-      border-color: rgba(139, 184, 255, 0.45);
-      color: var(--accent);
-    }
-
-    .hero {
-      width: min(1100px, calc(100% - 2rem));
-      margin: 0 auto;
-      padding: 1.25rem 0 0.75rem;
-    }
-
-    .eyebrow {
-      display: inline-block;
-      margin: 0 0 0.6rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2rem, 3vw, 3.4rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-    }
-
-    .lede {
-      max-width: 70ch;
-      margin: 0.85rem 0 0;
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.6;
-    }
-
-    .stage-shell {
-      width: min(1100px, calc(100% - 2rem));
-      margin: 0 auto;
-      padding: 0.75rem 0 2rem;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+    .products-stage-shell {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
     }
 
     #products-stage {
       position: relative;
-      min-height: 68vh;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      overflow: clip;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(139, 184, 255, 0.12), transparent 24%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.015));
-      box-shadow: var(--shadow);
-      isolation: isolate;
+      min-height: 100vh;
+      width: 100%;
     }
 
-    #products-stage[data-ready="false"]::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 50% 35%, rgba(139, 184, 255, 0.08), transparent 18%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.035), transparent 26%);
+    .products-receipts {
+      position: fixed;
+      left: 16px;
+      right: 16px;
+      bottom: 16px;
+      z-index: 50;
       pointer-events: none;
+      display: grid;
+      gap: 10px;
+      max-width: 780px;
+      margin: 0 auto;
     }
 
-    .loading-copy {
-      position: absolute;
-      inset: auto 1rem 1rem 1rem;
-      z-index: 1;
-      padding: 0.9rem 1rem;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(8, 12, 22, 0.76);
-      color: var(--muted);
-      font-size: 0.9rem;
-      backdrop-filter: blur(12px);
-    }
-
-    .diagnostic-card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.03);
+    .products-receipt-card {
+      pointer-events: auto;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(180deg, rgba(12,15,22,0.88), rgba(7,10,16,0.92));
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
       overflow: hidden;
     }
 
-    .diagnostic-card summary {
-      cursor: pointer;
-      list-style: none;
-      padding: 0.95rem 1rem;
-      font-size: 0.85rem;
+    .products-receipt-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: var(--muted);
-      border-bottom: 1px solid transparent;
     }
 
-    .diagnostic-card[open] summary {
-      border-bottom-color: var(--line);
+    .products-receipt-body {
+      display: grid;
+      gap: 8px;
+      padding: 12px 14px 14px;
     }
 
-    .diagnostic-card summary::-webkit-details-marker {
+    .products-receipt-line {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      line-height: 1.45;
+      color: var(--text);
+      word-break: break-word;
+    }
+
+    .products-dot {
+      flex: 0 0 auto;
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      margin-top: 5px;
+      background: var(--info);
+      box-shadow: 0 0 0 4px rgba(124,199,255,0.12);
+    }
+
+    .products-dot.good {
+      background: var(--good);
+      box-shadow: 0 0 0 4px rgba(93,242,162,0.12);
+    }
+
+    .products-dot.warn {
+      background: var(--warn);
+      box-shadow: 0 0 0 4px rgba(255,209,102,0.12);
+    }
+
+    .products-dot.bad {
+      background: var(--bad);
+      box-shadow: 0 0 0 4px rgba(255,107,107,0.12);
+    }
+
+    .products-fallback {
+      position: fixed;
+      inset: 16px 16px auto 16px;
+      z-index: 60;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px 18px;
+      border: 1px solid rgba(255,107,107,0.28);
+      border-radius: 18px;
+      background: rgba(34,10,14,0.9);
+      color: var(--text);
+      box-shadow: var(--shadow);
       display: none;
     }
 
-    #products-diagnostics {
-      margin: 0;
-      padding: 1rem;
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: var(--text);
-      font: 0.84rem/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
-
-    .state-ok {
-      color: var(--ok);
-    }
-
-    .state-error {
-      color: var(--danger);
-    }
-
-    noscript {
+    .products-fallback.is-visible {
       display: block;
-      width: min(1100px, calc(100% - 2rem));
-      margin: 1rem auto 2rem;
-      padding: 1rem;
-      border: 1px solid rgba(255, 143, 143, 0.35);
-      border-radius: 18px;
-      background: rgba(255, 143, 143, 0.08);
-      color: var(--text);
     }
 
-    @media (max-width: 720px) {
-      .topbar {
-        align-items: flex-start;
-        flex-direction: column;
+    .products-fallback h1 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      line-height: 1.2;
+    }
+
+    .products-fallback p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+      font-size: 14px;
+    }
+
+    .products-noscript {
+      position: fixed;
+      inset: 16px;
+      z-index: 70;
+      padding: 16px 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(255,107,107,0.28);
+      background: rgba(34,10,14,0.95);
+      color: var(--text);
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 640px) {
+      .products-receipts {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      #products-stage {
-        min-height: 56vh;
+      .products-fallback {
+        inset: 12px 12px auto 12px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page-shell">
-    <header class="topbar">
-      <a class="brand" href="/home/">Diamond Gate Bridge</a>
-      <nav class="nav" aria-label="Products navigation">
-        <a href="/home/">Home</a>
-        <a href="/explore/">Explore</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/platform/">Platform</a>
-        <a href="/products/" aria-current="page">Products</a>
-      </nav>
-    </header>
-
-    <section class="hero" aria-label="Products introduction">
-      <div class="eyebrow">Live products experience</div>
-      <h1>Products</h1>
-      <p class="lede">
-        Protected host region, visible stage container, and runtime handoff through a single explicit host contract.
-      </p>
+  <main
+    id="products-host"
+    class="products-host"
+    data-host-contract="PRODUCTS_HOST_CONTRACT_V1"
+    data-stage-owner="runtime-only"
+    data-runtime-script="./products_runtime.js"
+    data-runtime-global="ProductsPlanetRuntime"
+  >
+    <section class="products-stage-shell" aria-label="Products stage shell">
+      <div
+        id="products-stage"
+        data-products-stage="true"
+        data-visible-stage-owner="runtime"
+        aria-live="polite"
+      ></div>
     </section>
 
-    <main class="stage-shell">
-      <section
-        id="products-stage"
-        data-stage-owner="products_runtime"
-        data-ready="false"
-        aria-label="Products stage"
-      >
-        <div class="loading-copy" id="products-loading-copy">
-          Loading products stage…
-        </div>
-      </section>
+    <section
+      id="products-receipts"
+      class="products-receipts"
+      aria-label="Products runtime receipts"
+    >
+      <article class="products-receipt-card">
+        <header class="products-receipt-head">
+          <span>Products Host Contract</span>
+          <span id="products-receipt-status">Booting</span>
+        </header>
+        <div id="products-receipt-body" class="products-receipt-body"></div>
+      </article>
+    </section>
 
-      <details class="diagnostic-card" id="products-diagnostic-card">
-        <summary>Runtime / Receipt</summary>
-        <pre id="products-diagnostics">Boot pending…</pre>
-      </details>
-    </main>
+    <section
+      id="products-fallback"
+      class="products-fallback"
+      role="alert"
+      aria-live="assertive"
+    >
+      <h1>Products host-side failure surfaced</h1>
+      <p id="products-fallback-text">
+        The host layer detected a runtime handoff failure before visible stage ownership was confirmed.
+      </p>
+    </section>
+  </main>
 
-    <noscript>
-      JavaScript is required to load the products stage.
-    </noscript>
-  </div>
+  <noscript>
+    <div class="products-noscript">
+      JavaScript is required to initialize the products runtime host surface.
+    </div>
+  </noscript>
 
-  <script>
-    window.__PRODUCTS_HOST_CONTRACT__ = Object.freeze({
-      page: "PRODUCTS",
-      version: "PRODUCTS_HOST_CONTRACT_V2",
-      stageId: "products-stage",
-      diagnosticsId: "products-diagnostics",
-      loadingCopyId: "products-loading-copy",
-      runtimeGlobalKey: "ProductsPlanetRuntime",
-      runtimeScript: "/products/products_runtime.js",
-      hostScript: "/products/index.js"
-    });
-  </script>
-
-  <script defer src="/products/products_runtime.js"></script>
-  <script defer src="/products/index.js"></script>
+  <script src="./index.js" defer></script>
 </body>
 </html>

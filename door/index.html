@@ -2,14 +2,11 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta
-    name="viewport"
-    content="width=device-width,initial-scale=1,viewport-fit=cover"
-  >
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <title>Door · Nine Summits</title>
   <meta
     name="description"
-    content="A multi-layer threshold for Nine Summits: world is flat, world is round, world is a globe."
+    content="Nine Summits door surface with flat, round, and globe layers held in one compact threshold."
   >
 
   <style>
@@ -19,14 +16,15 @@
       --panel: rgba(255,255,255,0.05);
       --panel-soft: rgba(255,255,255,0.025);
       --line: rgba(255,255,255,0.10);
+      --line-strong: rgba(255,255,255,0.18);
       --text: #eef4ff;
       --muted: #a7b8d8;
       --gold: #f0c876;
       --blue-soft: #9dd1ff;
-      --red-soft: rgba(255, 80, 80, 0.18);
+      --red-glow: rgba(255,80,80,0.20);
       --shadow: 0 24px 80px rgba(0,0,0,0.42);
       --radius: 28px;
-      --max: 1240px;
+      --max: 1320px;
     }
 
     * { box-sizing: border-box; }
@@ -39,7 +37,7 @@
       background: var(--bg);
       color: var(--text);
       font:
-        16px/1.58 Inter,
+        16px/1.55 Inter,
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
@@ -53,8 +51,8 @@
     body {
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 18% 10%, rgba(157,209,255,0.10), transparent 22%),
-        radial-gradient(circle at 82% 14%, rgba(240,200,118,0.08), transparent 24%),
+        radial-gradient(circle at 18% 10%, rgba(157,209,255,0.10), transparent 24%),
+        radial-gradient(circle at 82% 16%, rgba(240,200,118,0.08), transparent 24%),
         radial-gradient(circle at 50% 88%, rgba(157,209,255,0.08), transparent 28%),
         linear-gradient(180deg, #02050d 0%, #071120 50%, #0a1830 100%);
     }
@@ -84,45 +82,49 @@
     .shell {
       position: relative;
       z-index: 1;
-      width: min(100% - 24px, var(--max));
+      width: min(100% - 22px, var(--max));
       margin: 0 auto;
-      padding: 22px 0 46px;
+      padding: 20px 0 28px;
     }
 
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
+    .top-controls {
+      display: grid;
+      grid-template-columns: auto auto 1fr auto auto auto;
       gap: 12px;
+      align-items: center;
     }
 
-    .pill,
-    .button {
-      min-height: 56px;
-      padding: 0 22px;
+    .chip,
+    .button,
+    .mini-button {
+      min-height: 58px;
+      padding: 0 24px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--line);
       border-radius: 999px;
+      border: 1px solid var(--line);
       background:
         linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.10),
-        0 10px 30px rgba(0,0,0,0.18);
-      font-weight: 800;
+        0 10px 28px rgba(0,0,0,0.18);
+      color: #fff;
       font-size: 14px;
+      font-weight: 800;
       letter-spacing: 0.02em;
-      color: #ffffff;
       transition:
         transform 0.18s ease,
         border-color 0.18s ease,
         background 0.18s ease;
     }
 
-    .pill:hover,
-    .pill:focus-visible,
+    .chip:hover,
+    .chip:focus-visible,
     .button:hover,
-    .button:focus-visible {
+    .button:focus-visible,
+    .mini-button:hover,
+    .mini-button:focus-visible {
       transform: translateY(-1px);
       border-color: rgba(255,255,255,0.24);
       background:
@@ -130,76 +132,80 @@
       outline: none;
     }
 
-    .pill.active {
-      border-color: rgba(255, 80, 80, 0.34);
+    .chip.active {
+      border-color: rgba(255,80,80,0.34);
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.10),
         0 0 0 1px rgba(255,80,80,0.12),
         0 10px 30px rgba(0,0,0,0.20);
     }
 
+    .lang-group {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .lang-group .chip {
+      min-width: 86px;
+      padding-inline: 18px;
+    }
+
     .hero {
-      margin-top: 24px;
+      margin-top: 20px;
+      padding: 18px 6px 4px;
       text-align: center;
-      padding: 24px 12px 4px;
     }
 
     .eyebrow {
-      margin: 0 0 14px;
+      margin: 0 0 12px;
       color: rgba(255,255,255,0.82);
       font-size: 13px;
       letter-spacing: 0.38em;
       text-transform: uppercase;
     }
 
-    h1,
-    h2,
-    h3 {
+    .hero-title {
       margin: 0;
-      line-height: 1.02;
-      letter-spacing: -0.04em;
-      font-family:
-        "Iowan Old Style",
-        "Palatino Linotype",
-        "Book Antiqua",
-        Palatino,
-        "Times New Roman",
-        serif;
-      font-weight: 700;
-    }
-
-    h1 {
-      font-size: clamp(46px, 8vw, 96px);
       font-family: Inter, system-ui, sans-serif;
+      font-size: clamp(46px, 8vw, 94px);
       font-weight: 900;
-      color: #ffffff;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      color: #fff;
     }
 
     .hero-sub {
-      margin: 18px auto 0;
-      font-size: clamp(24px, 4vw, 44px);
-      font-weight: 800;
-      color: #ffffff;
-      max-width: 14ch;
+      margin: 16px 0 0;
+      font-size: clamp(24px, 4vw, 48px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: #fff;
     }
 
     .hero-copy {
-      margin: 16px auto 0;
-      max-width: 920px;
-      font-size: clamp(18px, 2.4vw, 26px);
+      margin: 14px auto 0;
+      max-width: 880px;
+      font-size: clamp(16px, 2.2vw, 22px);
       color: #dce8fb;
     }
 
     .hero-detail {
-      margin: 18px auto 0;
-      max-width: 980px;
-      font-size: 16px;
+      margin: 14px auto 0;
+      max-width: 960px;
+      font-size: 15px;
       color: var(--muted);
     }
 
-    .panel {
+    .main-grid {
       margin-top: 22px;
-      padding: 26px;
+      display: grid;
+      grid-template-columns: 1.12fr 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
       border: 1px solid var(--line);
       border-radius: 34px;
       background:
@@ -210,48 +216,18 @@
       backdrop-filter: blur(14px);
     }
 
-    .door-card {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
-      gap: 22px;
-      align-items: center;
+    .door-surface {
+      padding: 22px;
     }
 
-    .door-title {
-      font-size: clamp(30px, 5vw, 54px);
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: #ffffff;
-    }
-
-    .door-copy {
-      margin-top: 12px;
-      font-size: 18px;
-      color: #e5eefc;
-    }
-
-    .door-detail {
-      margin-top: 14px;
-      font-size: 16px;
-      color: var(--muted);
-    }
-
-    .door-actions {
+    .door-surface-header {
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 22px;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: start;
     }
 
-    .door-aside {
-      padding: 20px;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .aside-label {
+    .door-kicker {
       margin: 0;
       font-size: 12px;
       letter-spacing: 0.10em;
@@ -259,120 +235,212 @@
       color: var(--gold);
     }
 
-    .aside-value {
-      margin: 8px 0 0;
-      font-size: 16px;
-      color: var(--text);
+    .door-heading {
+      margin: 10px 0 0;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: clamp(28px, 4vw, 56px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: #fff;
+      max-width: 10ch;
     }
 
-    .aside-value + .aside-label {
-      margin-top: 18px;
-    }
-
-    .section-title {
-      font-size: clamp(30px, 4vw, 48px);
-      color: var(--gold);
-    }
-
-    .section-copy {
+    .door-copy {
       margin: 12px 0 0;
-      color: var(--muted);
-      font-size: 17px;
-      max-width: 820px;
+      font-size: 18px;
+      color: #e5eefc;
+      max-width: 34rem;
     }
 
-    .tri-grid {
-      margin-top: 20px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .layer-card {
-      min-height: 300px;
-      padding: 22px;
-      border-radius: 26px;
+    .door-meta {
+      margin: 0;
+      min-width: 220px;
+      padding: 18px;
+      border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.08);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(157,209,255,0.10), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+      background: rgba(255,255,255,0.03);
     }
 
-    .layer-card.round {
-      background:
-        radial-gradient(circle at 18% 18%, rgba(240,200,118,0.12), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-    }
-
-    .layer-card.globe {
-      background:
-        radial-gradient(circle at 18% 18%, rgba(200,180,255,0.12), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-    }
-
-    .layer-kicker {
-      font-size: 12px;
+    .door-meta dt {
+      margin: 0;
+      font-size: 11px;
       letter-spacing: 0.10em;
       text-transform: uppercase;
       color: var(--gold);
     }
 
-    .layer-title {
-      font-size: 28px;
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: -0.03em;
-    }
-
-    .layer-copy {
-      color: #e5eefc;
-      font-size: 18px;
-    }
-
-    .layer-detail {
-      color: var(--muted);
+    .door-meta dd {
+      margin: 6px 0 14px;
+      color: var(--text);
       font-size: 15px;
-      margin-top: auto;
     }
 
-    .route-grid {
-      margin-top: 20px;
+    .door-meta dd:last-child {
+      margin-bottom: 0;
+    }
+
+    .layer-bar {
+      margin-top: 18px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
+      gap: 14px;
     }
 
-    .route-card {
-      min-height: 220px;
-      padding: 20px;
+    .layer-pill {
+      padding: 16px 18px;
       border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.08);
       background:
-        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.06), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+    }
+
+    .layer-pill .mini-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .layer-pill strong {
+      display: block;
+      font-size: 26px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1.0;
+    }
+
+    .layer-pill p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .route-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .route-card {
+      min-height: 168px;
+      padding: 18px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.05), transparent 28%),
         linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .route-title {
-      font-size: 26px;
+    .route-card .mini-label {
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .route-card h3 {
+      margin: 0;
+      font-size: 28px;
       font-family: Inter, system-ui, sans-serif;
       font-weight: 900;
       letter-spacing: -0.03em;
+      color: #fff;
     }
 
-    .route-copy {
+    .route-card p {
+      margin: 0;
       color: var(--muted);
       flex: 1 1 auto;
+      font-size: 15px;
+    }
+
+    .button {
+      min-height: 46px;
+      padding-inline: 18px;
+    }
+
+    .button.primary {
+      background:
+        linear-gradient(135deg, rgba(240,200,118,0.20), rgba(255,255,255,0.06));
+    }
+
+    .control-panel {
+      padding: 22px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-size: clamp(28px, 3.4vw, 44px);
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--gold);
+      line-height: 1.0;
+    }
+
+    .section-copy {
+      margin: 12px 0 0;
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 42rem;
+    }
+
+    .compact-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .compact-card {
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(157,209,255,0.08), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+    }
+
+    .compact-card h4 {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: 24px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #fff;
+    }
+
+    .compact-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .mini-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mini-button {
+      min-height: 40px;
+      padding-inline: 14px;
+      font-size: 12px;
+      flex: 0 0 auto;
     }
 
     .footer {
-      margin-top: 24px;
+      margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
@@ -382,14 +450,35 @@
       padding: 4px 2px 0;
     }
 
-    @media (max-width: 1080px) {
-      .tri-grid,
-      .route-grid {
+    @media (max-width: 1160px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .top-controls {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .top-controls .spacer {
+        display: none;
+      }
+
+      .lang-group {
+        grid-column: 1 / -1;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .layer-bar,
+      .route-strip {
         grid-template-columns: 1fr;
       }
 
-      .door-card {
+      .door-surface-header {
         grid-template-columns: 1fr;
+        display: grid;
       }
     }
 
@@ -398,19 +487,14 @@
         width: min(100% - 18px, var(--max));
       }
 
-      .pill-row,
-      .door-actions,
-      .nav {
-        flex-direction: row;
-        flex-wrap: wrap;
+      .chip,
+      .button,
+      .mini-button {
+        width: 100%;
       }
 
-      .pill,
-      .button,
-      .nav a {
-        width: auto;
-        flex: 1 1 calc(50% - 8px);
-        min-width: 120px;
+      .mini-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -419,152 +503,143 @@
   <div class="stars" aria-hidden="true"></div>
 
   <div class="shell">
-    <div class="pill-row" aria-label="Top controls">
-      <a class="pill" href="/index.html">INDEX</a>
-      <a class="pill active" href="/door/index.html">COMPASS</a>
-      <a class="pill" href="/door/index.html?lang=en">EN</a>
-      <a class="pill" href="/door/index.html?lang=zh">中文</a>
-      <a class="pill" href="/door/index.html?lang=es">ES</a>
+    <div class="top-controls" aria-label="Door controls">
+      <a class="chip" href="/index.html">INDEX</a>
+      <a class="chip active" href="/door/index.html">COMPASS</a>
+      <div class="spacer"></div>
+      <div class="lang-group">
+        <a class="chip" href="/door/index.html?lang=en">EN</a>
+        <a class="chip" href="/door/index.html?lang=zh">中文</a>
+        <a class="chip" href="/door/index.html?lang=es">ES</a>
+      </div>
     </div>
 
     <header class="hero" aria-labelledby="door-title">
       <p class="eyebrow">Door</p>
-      <h1 id="door-title">NINE SUMMITS</h1>
-      <div class="hero-sub">One threshold. Three world reads.</div>
+      <h1 class="hero-title" id="door-title">NINE SUMMITS</h1>
+      <div class="hero-sub">Learn to live, to love.</div>
       <div class="hero-copy">
-        Enter simply. Turn with depth. Step into a world.
+        Enter simply. Discover power. Choose depth.
       </div>
       <div class="hero-detail">
-        The door now preserves the full context at once: the world is flat as the
-        immediate face, the world is round as the turning transition, and the world
-        is a globe as the fully embodied entry. This is not three unrelated ideas.
-        It is one threshold object with three lawful layers.
+        The threshold now holds all three reads at once: flat as the immediate face,
+        round as the turning transition, and globe as the fully embodied world-entry.
       </div>
     </header>
 
-    <section class="panel door-card" aria-labelledby="door-panel-title">
-      <div>
-        <h2 class="door-title" id="door-panel-title">The door is the compression point.</h2>
-        <div class="door-copy">
-          It keeps the flat read, the round read, and the globe read without losing continuity.
-        </div>
-        <div class="door-detail">
-          The face must remain clear. The turn must remain felt. The world beyond
-          must remain real. That is the new contract.
+    <section class="main-grid">
+      <div class="panel door-surface">
+        <div class="door-surface-header">
+          <div>
+            <p class="door-kicker">Threshold object</p>
+            <h2 class="door-heading">One door. Three lawful reads.</h2>
+            <p class="door-copy">
+              The face stays clear, the turn stays felt, and the world beyond stays real.
+            </p>
+          </div>
+
+          <dl class="door-meta">
+            <dt>Contract</dt>
+            <dd>Flat → Round → Globe</dd>
+
+            <dt>Role</dt>
+            <dd>Multi-layer threshold object</dd>
+
+            <dt>Result</dt>
+            <dd>The door keeps context instead of dropping it when depth increases</dd>
+          </dl>
         </div>
 
-        <div class="door-actions">
-          <a class="button button-primary" href="/prelude/">Prelude</a>
-          <a class="button" href="/products/">Products</a>
-          <a class="button" href="/explore/">Explore</a>
+        <div class="layer-bar" aria-label="World layers">
+          <article class="layer-pill">
+            <span class="mini-label">Layer 1</span>
+            <strong>WORLD IS FLAT</strong>
+            <p>Clear face. Fast entry. Low friction. Direct threshold.</p>
+          </article>
+
+          <article class="layer-pill">
+            <span class="mini-label">Layer 2</span>
+            <strong>WORLD IS ROUND</strong>
+            <p>Curvature, relation, turning, and the feeling that the surface wraps.</p>
+          </article>
+
+          <article class="layer-pill">
+            <span class="mini-label">Layer 3</span>
+            <strong>WORLD IS A GLOBE</strong>
+            <p>Embodied world-entry. Not just access, but immersion.</p>
+          </article>
+        </div>
+
+        <div class="route-strip" aria-label="Door routes">
+          <article class="route-card">
+            <span class="mini-label">Threshold path</span>
+            <h3>Prelude</h3>
+            <p>The first ordered entry. Meaning before deeper motion.</p>
+            <a class="button" href="/prelude/">Enter Flat</a>
+          </article>
+
+          <article class="route-card">
+            <span class="mini-label">Object field</span>
+            <h3>Products</h3>
+            <p>The routed object surface once the threshold starts to curve.</p>
+            <a class="button" href="/products/">Enter Round</a>
+          </article>
+
+          <article class="route-card">
+            <span class="mini-label">World path</span>
+            <h3>Explore</h3>
+            <p>The wider embodied world once entry resolves into a globe.</p>
+            <a class="button primary" href="/explore/">Enter Globe</a>
+          </article>
         </div>
       </div>
 
-      <aside class="door-aside">
-        <p class="aside-label">Threshold law</p>
-        <p class="aside-value">Flat → Round → Globe</p>
+      <aside class="panel control-panel">
+        <h2 class="section-title">Door posture restored.</h2>
+        <p class="section-copy">
+          This version keeps the old compact control-surface feel while preserving the new three-layer law.
+        </p>
 
-        <p class="aside-label">Job</p>
-        <p class="aside-value">Surface entry, turning transition, embodied world-entry</p>
+        <div class="compact-grid">
+          <article class="compact-card">
+            <p class="door-kicker">Flat read</p>
+            <h4>Immediate threshold</h4>
+            <p>
+              The visitor sees a clean face first. The threshold remains readable and simple.
+            </p>
+            <div class="mini-actions">
+              <a class="mini-button" href="/prelude/">Prelude</a>
+            </div>
+          </article>
 
-        <p class="aside-label">Result</p>
-        <p class="aside-value">The door no longer drops context when it changes depth</p>
+          <article class="compact-card">
+            <p class="door-kicker">Round read</p>
+            <h4>Turning transition</h4>
+            <p>
+              Entry begins to wrap. Relation appears. The user feels the structure bend into depth.
+            </p>
+            <div class="mini-actions">
+              <a class="mini-button" href="/home/">Home</a>
+              <a class="mini-button" href="/products/">Products</a>
+            </div>
+          </article>
+
+          <article class="compact-card">
+            <p class="door-kicker">Globe read</p>
+            <h4>Embodied world</h4>
+            <p>
+              The door stops being only a panel and becomes lawful world-entry.
+            </p>
+            <div class="mini-actions">
+              <a class="mini-button" href="/explore/">Explore</a>
+            </div>
+          </article>
+        </div>
       </aside>
     </section>
 
-    <section class="panel" aria-labelledby="layers-title">
-      <h2 class="section-title" id="layers-title">The three-layer read.</h2>
-      <p class="section-copy">
-        Each layer has its own job, but they belong to the same object. The door
-        should not discard the earlier layer when the deeper one appears.
-      </p>
-
-      <div class="tri-grid">
-        <article class="layer-card">
-          <div class="layer-kicker">Layer 1</div>
-          <div class="layer-title">WORLD IS FLAT</div>
-          <div class="layer-copy">
-            The immediate face. Clear. Direct. Fast. Low friction.
-          </div>
-          <div class="layer-detail">
-            This is the visible threshold panel: readable entry, simple selection,
-            clean structure, instant orientation.
-          </div>
-          <div class="door-actions">
-            <a class="button" href="/prelude/">Enter flat</a>
-          </div>
-        </article>
-
-        <article class="layer-card round">
-          <div class="layer-kicker">Layer 2</div>
-          <div class="layer-title">WORLD IS ROUND</div>
-          <div class="layer-copy">
-            The turn. The wrap. The realization that the surface is not the whole thing.
-          </div>
-          <div class="layer-detail">
-            This is where the threshold starts to curve, relation appears, and the
-            user feels that entry has depth instead of just access.
-          </div>
-          <div class="door-actions">
-            <a class="button" href="/home/">Enter round</a>
-          </div>
-        </article>
-
-        <article class="layer-card globe">
-          <div class="layer-kicker">Layer 3</div>
-          <div class="layer-title">WORLD IS A GLOBE</div>
-          <div class="layer-copy">
-            Full embodiment. A world you do not just select, but step into.
-          </div>
-          <div class="layer-detail">
-            This is where the door stops being only a panel and becomes a lawful
-            entry into a contained world with atmosphere, immersion, and route depth.
-          </div>
-          <div class="door-actions">
-            <a class="button button-primary" href="/explore/">Enter globe</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="routes-title">
-      <h2 class="section-title" id="routes-title">The next moves from the door.</h2>
-      <p class="section-copy">
-        The threshold now keeps its layers while still offering real onward motion.
-      </p>
-
-      <div class="route-grid">
-        <article class="route-card">
-          <div class="layer-kicker">Threshold path</div>
-          <div class="route-title">Prelude</div>
-          <div class="route-copy">
-            The first ordered entry. Meaning before depth.
-          </div>
-          <a class="button" href="/prelude/">Open Prelude</a>
-        </article>
-
-        <article class="route-card">
-          <div class="layer-kicker">Object field</div>
-          <div class="route-title">Products</div>
-          <div class="route-copy">
-            The routed object surface beyond the threshold.
-          </div>
-          <a class="button" href="/products/">Open Products</a>
-        </article>
-
-        <article class="route-card">
-          <div class="layer-kicker">World path</div>
-          <div class="route-title">Explore</div>
-          <div class="route-copy">
-            The wider embodied world once entry becomes globe-level.
-          </div>
-          <a class="button button-primary" href="/explore/">Open Explore</a>
-        </article>
-      </div>
-    </section>
-
     <footer class="footer">
-      <span>Result: PAGE=DOOR | CONTRACT=FLAT_ROUND_GLOBE | ROLE=MULTI_LAYER_THRESHOLD_OBJECT</span>
+      <span>Result: PAGE=DOOR | STYLE=COMPACT | CONTRACT=FLAT_ROUND_GLOBE</span>
       <span><a href="/index.html">Return to index</a></span>
     </footer>
   </div>

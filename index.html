@@ -6,10 +6,10 @@
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
   >
-  <title>Diamond Gate Bridge · Nine Summits Spine</title>
+  <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge homepage. Nine Summits of Love baseline first, metaverse spine second, chamber access beneath."
+    content="Diamond Gate Bridge. Nine Summits of Love baseline with four clear paths into the wider system."
   >
 
   <style>
@@ -26,7 +26,6 @@
       --gold: #f1c36b;
       --gold-soft: #ffdca0;
       --amber: #ffb347;
-      --sunset: #ff8a4c;
 
       --blue: #58a6ff;
       --blue-soft: #9dd1ff;
@@ -68,11 +67,6 @@
     a {
       color: inherit;
       text-decoration: none;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
     }
 
     .page {
@@ -180,6 +174,24 @@
       backdrop-filter: blur(10px);
     }
 
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 20px;
+      padding: 24px 0 18px;
+    }
+
+    .hero-main {
+      padding: 34px;
+    }
+
+    .hero-side {
+      padding: 24px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
     .eyebrow {
       display: inline-flex;
       align-items: center;
@@ -193,24 +205,6 @@
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-      gap: 20px;
-      padding: 24px 0 18px;
-    }
-
-    .hero-main {
-      padding: 32px;
-    }
-
-    .hero-side {
-      padding: 24px;
-      display: grid;
-      gap: 14px;
-      align-content: start;
     }
 
     h1,
@@ -230,8 +224,9 @@
     }
 
     h1 {
-      font-size: clamp(40px, 6.8vw, 78px);
+      font-size: clamp(42px, 7vw, 84px);
       color: var(--gold-soft);
+      max-width: 10ch;
     }
 
     h2 {
@@ -240,16 +235,14 @@
     }
 
     h3 {
-      font-size: clamp(22px, 2.8vw, 30px);
+      font-size: clamp(24px, 2.6vw, 32px);
       color: var(--text);
     }
 
     .lede,
-    .copy,
     .proof-value,
-    .card-copy,
-    .list-item-copy,
-    .route-copy {
+    .gate-copy,
+    .micro-copy {
       color: var(--muted);
     }
 
@@ -259,8 +252,7 @@
       font-size: 18px;
     }
 
-    .hero-actions,
-    .action-row {
+    .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -334,96 +326,11 @@
       text-transform: uppercase;
     }
 
-    .split {
+    .intro-band {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(280px, 0.95fr);
+      grid-template-columns: minmax(0, 1.3fr) minmax(260px, 0.7fr);
       gap: 18px;
-    }
-
-    .art-frame {
-      position: relative;
-      overflow: hidden;
-      border-radius: 20px;
-      border: 1px solid var(--line);
-      background:
-        radial-gradient(circle at bottom, rgba(255, 138, 76, 0.14), transparent 36%),
-        rgba(255, 255, 255, 0.02);
-      min-height: 100%;
-    }
-
-    .art-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0.94;
-    }
-
-    .art-overlay {
-      position: absolute;
-      inset: auto 0 0 0;
-      padding: 18px;
-      background: linear-gradient(180deg, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.72));
-    }
-
-    .art-caption {
-      margin: 0;
-      color: #ffffff;
-      font-size: 14px;
-    }
-
-    .summits-grid,
-    .chambers-grid,
-    .routes-grid {
-      display: grid;
-      gap: 16px;
-    }
-
-    .summits-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
       margin-top: 18px;
-    }
-
-    .chambers-grid,
-    .routes-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      margin-top: 18px;
-    }
-
-    .card {
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.025);
-      min-height: 170px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .card-kicker {
-      color: var(--blue-soft);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .card-copy,
-    .route-copy {
-      margin: 0;
-      flex: 1 1 auto;
-    }
-
-    .mini-proof {
-      display: grid;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .mini-proof div {
-      padding: 12px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.02);
     }
 
     .quote-block {
@@ -443,32 +350,112 @@
         serif;
     }
 
-    .path-list {
+    .micro-stack {
       display: grid;
       gap: 12px;
-      margin-top: 18px;
     }
 
-    .path-item {
-      display: grid;
-      gap: 6px;
+    .micro-card {
       padding: 14px 16px;
-      border: 1px solid var(--line);
       border-radius: 16px;
+      border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.025);
     }
 
-    .path-title {
-      color: #ffffff;
-      font-weight: 600;
+    .micro-kicker {
+      margin: 0 0 6px;
+      color: var(--blue-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
 
-    .route-link {
+    .gate-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .gate-primary,
+    .gate-secondary {
+      display: grid;
+      gap: 16px;
+    }
+
+    .gate-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.025);
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .gate-card.primary {
+      background:
+        radial-gradient(circle at top left, rgba(241, 195, 107, 0.12), transparent 32%),
+        rgba(255, 255, 255, 0.03);
+      min-height: 100%;
+    }
+
+    .gate-kicker {
+      color: var(--gold-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .gate-copy {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .gate-link {
       display: inline-flex;
       align-items: center;
       gap: 8px;
       color: #ffffff;
       font-weight: 600;
+    }
+
+    .gate-secondary-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .paths-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .path-card {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.025);
+      min-height: 170px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .path-kicker {
+      color: var(--blue-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .path-copy {
+      margin: 0;
+      color: var(--muted);
+      flex: 1 1 auto;
     }
 
     .footer {
@@ -485,14 +472,13 @@
 
     @media (max-width: 1080px) {
       .hero,
-      .split {
+      .intro-band,
+      .gate-grid {
         grid-template-columns: 1fr;
       }
 
-      .summits-grid,
-      .chambers-grid,
-      .routes-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+      .paths-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -517,12 +503,6 @@
         padding: 18px;
       }
 
-      .summits-grid,
-      .chambers-grid,
-      .routes-grid {
-        grid-template-columns: 1fr;
-      }
-
       .lede {
         font-size: 16px;
       }
@@ -532,8 +512,7 @@
         width: 100%;
       }
 
-      .hero-actions,
-      .action-row {
+      .hero-actions {
         flex-direction: column;
       }
     }
@@ -559,7 +538,7 @@
           <div class="brand-mark" aria-hidden="true"></div>
           <div class="brand-copy">
             <p class="brand-title">Diamond Gate Bridge</p>
-            <p class="brand-sub">Nine Summits baseline · metaverse spine · canonical entry</p>
+            <p class="brand-sub">Nine Summits spine · four-way public gate</p>
           </div>
         </div>
 
@@ -567,33 +546,30 @@
           <a href="/" aria-current="page">Root</a>
           <a href="/home/">Home</a>
           <a href="/prelude/">Prelude</a>
-          <a href="/explore/">Explore</a>
-          <a href="/products/">Products</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
           <a href="/gauges/">Gauges</a>
           <a href="/laws/">Laws</a>
-          <a href="/governance/">Governance</a>
         </nav>
       </header>
 
       <main>
         <section class="hero" aria-labelledby="home-title">
           <article class="panel hero-main">
-            <p class="eyebrow">Meaning first · world second</p>
-            <h1 id="home-title">The Nine Summits of Love is the spine.</h1>
+            <p class="eyebrow">Canonical entry</p>
+            <h1 id="home-title">Nine summits. Four directions.</h1>
 
             <p class="lede">
-              This homepage is the canonical spine. It establishes the Nine Summits
-              of Love baseline first, then opens the metaverse as a lawful spatial
-              embodiment of that frame. House, vault, and basement remain chambers
-              beneath that order.
+              A meaning-first entry into the wider world. The summit path leads.
+              The other paths remain open, clear, and subordinate to that spine.
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="#summits-baseline">
-                Open the baseline
+              <a class="button button-primary" href="#main-gates">
+                Enter the four-way gate
               </a>
-              <a class="button button-secondary" href="#metaverse-spine">
-                Enter the metaverse spine
+              <a class="button button-secondary" href="/prelude/">
+                Begin with Prelude
               </a>
             </div>
           </article>
@@ -624,158 +600,39 @@
             <div>
               <p class="proof-label">Hierarchy</p>
               <p class="proof-value">
-                BASELINE → METAVERSE → CHAMBERS → PROMOTION
+                SUMMITS → GATES → CHAMBERS → EXTENSIONS
               </p>
             </div>
           </aside>
         </section>
 
-        <section
-          class="section"
-          id="summits-baseline"
-          aria-labelledby="summits-title"
-        >
+        <section class="section" aria-labelledby="baseline-title">
           <article class="panel section-panel">
             <div class="section-header">
               <div>
-                <p class="section-tag">S1 · Governing title and baseline read</p>
-                <h2 id="summits-title">Nine Summits of Love baseline</h2>
+                <p class="section-tag">Governing baseline</p>
+                <h2 id="baseline-title">The Nine Summits of Love</h2>
               </div>
             </div>
 
-            <div class="split">
-              <div>
-                <p class="copy">
-                  The homepage begins here. Love is treated as structure, not loose
-                  sentiment. Character forms structure. Structure yields balance.
-                  Balance stabilizes. Stability opens the possibility of peace and joy.
-                </p>
-
-                <div class="quote-block">
-                  Love is often spoken of as a feeling. But what if love is actually
-                  a structure?
-                </div>
-
-                <div class="summits-grid">
-                  <article class="card">
-                    <p class="card-kicker">Summits 1–3</p>
-                    <h3>Gratitude · Generosity · Dependability</h3>
-                    <p class="card-copy">
-                      The opening triad anchors trust, contribution, and reliability.
-                    </p>
-                  </article>
-
-                  <article class="card">
-                    <p class="card-kicker">Summits 4–6</p>
-                    <h3>Accountability · Forgiveness · Humility</h3>
-                    <p class="card-copy">
-                      The middle triad stabilizes responsibility, repair, and truthful proportion.
-                    </p>
-                  </article>
-
-                  <article class="card">
-                    <p class="card-kicker">Summits 7–9</p>
-                    <h3>Self-Control · Patience · Purity</h3>
-                    <p class="card-copy">
-                      The closing triad holds disciplined continuity and clean intent.
-                    </p>
-                  </article>
-                </div>
-
-                <div class="mini-proof" aria-label="Baseline proof">
-                  <div>
-                    <strong>256-state lattice:</strong>
-                    <span class="copy">
-                      conditioning order, stability, and non-drift beneath the visible page.
-                    </span>
-                  </div>
-                  <div>
-                    <strong>16 Cardinal/Canopy derivatives:</strong>
-                    <span class="copy">
-                      shaping sectional relations, branching logic, and chamber adjacency.
-                    </span>
-                  </div>
-                </div>
+            <div class="intro-band">
+              <div class="quote-block">
+                Love, held as structure, opens the path to stable human potential.
               </div>
 
-              <figure class="art-frame">
-                <img
-                  src="/assets/the-nine-summits-love-cover.jpg"
-                  alt="The Nine Summits of Love cosmic heart cover art"
-                >
-                <figcaption class="art-overlay">
-                  <p class="art-caption">
-                    Governing visual baseline: cosmic horizon, luminous jewel forms,
-                    and gold-title philosophy language.
+              <div class="micro-stack">
+                <div class="micro-card">
+                  <p class="micro-kicker">256 carats</p>
+                  <p class="micro-copy">
+                    Human potential treated as ordered, developed, and refined.
                   </p>
-                </figcaption>
-              </figure>
-            </div>
-          </article>
-        </section>
+                </div>
 
-        <section
-          class="section"
-          id="metaverse-spine"
-          aria-labelledby="metaverse-title"
-        >
-          <article class="panel section-panel">
-            <div class="section-header">
-              <div>
-                <p class="section-tag">S2 · Metaverse spine and world-access read</p>
-                <h2 id="metaverse-title">Metaverse as embodiment, not competition</h2>
-              </div>
-            </div>
-
-            <div class="split">
-              <figure class="art-frame">
-                <img
-                  src="/assets/consider-the-energy-baseline.jpg"
-                  alt="Consider the Energy symbolic baseline graphic"
-                >
-                <figcaption class="art-overlay">
-                  <p class="art-caption">
-                    Spatial embodiment layer: the world read follows the baseline
-                    instead of replacing it.
+                <div class="micro-card">
+                  <p class="micro-kicker">Metaverse spine</p>
+                  <p class="micro-copy">
+                    World access remains downstream of the governing frame.
                   </p>
-                </figcaption>
-              </figure>
-
-              <div>
-                <p class="copy">
-                  The metaverse is secondary by design. It does not compete with the
-                  Nine Summits frame. It spatializes it. This is where navigation
-                  becomes chambered, embodied, and traversable.
-                </p>
-
-                <div class="path-list">
-                  <div class="path-item">
-                    <span class="path-title">Canonical spine</span>
-                    <span class="list-item-copy">
-                      The homepage is the lawful public gateway into the structured world.
-                    </span>
-                  </div>
-                  <div class="path-item">
-                    <span class="path-title">Orientation-first traversal</span>
-                    <span class="list-item-copy">
-                      Prelude and Home remain available as intermediate chambers, not hidden splits.
-                    </span>
-                  </div>
-                  <div class="path-item">
-                    <span class="path-title">Oblique linear-distance law</span>
-                    <span class="list-item-copy">
-                      Motion and projection remain aligned to the renewed visual family.
-                    </span>
-                  </div>
-                </div>
-
-                <div class="action-row">
-                  <a class="button button-primary" href="/prelude/">
-                    Start with Prelude
-                  </a>
-                  <a class="button button-secondary" href="/home/">
-                    Open Home Chamber
-                  </a>
                 </div>
               </div>
             </div>
@@ -784,91 +641,99 @@
 
         <section
           class="section"
-          id="chambers"
-          aria-labelledby="chambers-title"
+          id="main-gates"
+          aria-labelledby="gates-title"
         >
           <article class="panel section-panel">
             <div class="section-header">
               <div>
-                <p class="section-tag">S3 · Chamber access under the spine</p>
-                <h2 id="chambers-title">Richie’s house, vault, and basement</h2>
+                <p class="section-tag">Primary public routing</p>
+                <h2 id="gates-title">Choose a direction.</h2>
               </div>
             </div>
 
-            <div class="chambers-grid">
-              <article class="card">
-                <p class="card-kicker">House</p>
-                <h3>Richie’s house</h3>
-                <p class="card-copy">
-                  The public-facing mansion read: the primary chambered access object
-                  for the wider world surface.
-                </p>
-                <a class="route-link" href="/home/">Enter chamber</a>
-              </article>
+            <div class="gate-grid">
+              <div class="gate-primary">
+                <article class="gate-card primary">
+                  <p class="gate-kicker">Primary path</p>
+                  <h3>Nine Summits / 256 Carats</h3>
+                  <p class="gate-copy">
+                    The central path into the book, the summit structure, and the
+                    wider human-potential baseline.
+                  </p>
+                  <a class="gate-link" href="/prelude/">Open the summit path</a>
+                </article>
+              </div>
 
-              <article class="card">
-                <p class="card-kicker">Vault</p>
-                <h3>The vault</h3>
-                <p class="card-copy">
-                  Protected value surface beneath the house layer, subordinate to the
-                  metaverse spine.
-                </p>
-                <a class="route-link" href="/links/">Open path</a>
-              </article>
+              <div class="gate-secondary">
+                <div class="gate-secondary-grid">
+                  <article class="gate-card">
+                    <p class="gate-kicker">Institutional path</p>
+                    <h3>About / Contact</h3>
+                    <p class="gate-copy">
+                      Identity, mission, legitimacy, and direct contact.
+                    </p>
+                    <a class="gate-link" href="/about/">Open the path</a>
+                  </article>
 
-              <article class="card">
-                <p class="card-kicker">Basement</p>
-                <h3>The basement</h3>
-                <p class="card-copy">
-                  Lower chamber infrastructure and hidden systems layer beneath the
-                  public spine.
-                </p>
-                <a class="route-link" href="/_lab/">Open path</a>
-              </article>
+                  <article class="gate-card">
+                    <p class="gate-kicker">Public expression path</p>
+                    <h3>Big Laughs / Speaking</h3>
+                    <p class="gate-copy">
+                      Comedy, motivational speaking, public presence, and live engagement.
+                    </p>
+                    <a class="gate-link" href="/home/">Open the path</a>
+                  </article>
+
+                  <article class="gate-card">
+                    <p class="gate-kicker">System path</p>
+                    <h3>Gauges / Laws</h3>
+                    <p class="gate-copy">
+                      Measurement, doctrine, calibration, and governing structure.
+                    </p>
+                    <a class="gate-link" href="/gauges/">Open the path</a>
+                  </article>
+                </div>
+              </div>
             </div>
           </article>
         </section>
 
-        <section
-          class="section"
-          id="extensions"
-          aria-labelledby="extensions-title"
-        >
+        <section class="section" aria-labelledby="chambers-title">
           <article class="panel section-panel">
             <div class="section-header">
               <div>
-                <p class="section-tag">S4 · Downstream extensions only</p>
-                <h2 id="extensions-title">Book and outward-facing extensions</h2>
+                <p class="section-tag">World access beneath the gate</p>
+                <h2 id="chambers-title">Chambers and traversal</h2>
               </div>
             </div>
 
-            <div class="routes-grid">
-              <article class="card">
-                <p class="card-kicker">Book spine</p>
-                <h3>The Nine Summits of Love</h3>
-                <p class="card-copy">
-                  The book remains downstream of the governing frame, but already
-                  promoted as the public articulation of the baseline.
+            <div class="paths-grid">
+              <article class="path-card">
+                <p class="path-kicker">Threshold</p>
+                <h3>Prelude</h3>
+                <p class="path-copy">
+                  The felt entry before deeper movement.
                 </p>
-                <a class="route-link" href="/prelude/">Open prelude path</a>
+                <a class="gate-link" href="/prelude/">Open Prelude</a>
               </article>
 
-              <article class="card">
-                <p class="card-kicker">Explore</p>
-                <h3>World-facing traversal</h3>
-                <p class="card-copy">
-                  Explore opens the wider site without displacing the meaning-first spine.
+              <article class="path-card">
+                <p class="path-kicker">Chamber</p>
+                <h3>Home</h3>
+                <p class="path-copy">
+                  The deeper read under the same family.
                 </p>
-                <a class="route-link" href="/explore/">Open Explore</a>
+                <a class="gate-link" href="/home/">Open Home</a>
               </article>
 
-              <article class="card">
-                <p class="card-kicker">Products</p>
-                <h3>Campaign and merchandise later</h3>
-                <p class="card-copy">
-                  Product expression remains lawful but subordinate, never leading the homepage.
+              <article class="path-card">
+                <p class="path-kicker">System</p>
+                <h3>Explore</h3>
+                <p class="path-copy">
+                  The wider site beyond the entry gate.
                 </p>
-                <a class="route-link" href="/products/">Open Products</a>
+                <a class="gate-link" href="/explore/">Open Explore</a>
               </article>
             </div>
           </article>
@@ -877,8 +742,8 @@
 
       <footer class="footer">
         <span>
-          Receipt: PAGE=ROOT | CONTRACT=HOME_ENTRY_V4_NINE_SUMMITS_METAVERSE |
-          HIERARCHY=BASELINE_FIRST | FAMILY=ROOT_HOME_PRELUDE_VISIBLE
+          Receipt: PAGE=ROOT | CONTRACT=HOME_ENTRY_V5_FOUR_WAY_GATE |
+          HIERARCHY=SUMMITS_PRIMARY | ROOT_RUNTIME=index.js
         </span>
         <span id="footer-year">Year</span>
       </footer>

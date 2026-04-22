@@ -4,65 +4,27 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Products | Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Five product paths led by ARCHCOIN and AAI."
-  />
-
+  <meta name="description" content="Five product paths led by ARCHCOIN and AAI." />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#020612;
-      --bg1:#071427;
-      --bg2:#0d2240;
-      --line:rgba(173,212,255,.14);
-      --lineStrong:rgba(241,210,141,.22);
-      --text:#edf5ff;
-      --muted:#9fb2d2;
-      --gold:#f1d28d;
-      --mint:#8ff0c5;
-      --blue:#9fc6ff;
-      --amber:#ffca80;
-      --ice:#d7e4ff;
-      --shadow:0 24px 60px rgba(0,0,0,.42);
-      --radiusXl:30px;
-      --radiusLg:24px;
-      --radiusMd:18px;
-      --max:1240px;
+      --bg0:#020612;--bg1:#071427;--line:rgba(173,212,255,.14);--lineStrong:rgba(241,210,141,.22);
+      --text:#edf5ff;--muted:#9fb2d2;--gold:#f1d28d;--mint:#8ff0c5;--blue:#9fc6ff;--amber:#ffca80;--ice:#d7e4ff;
+      --shadow:0 24px 60px rgba(0,0,0,.42);--radiusXl:30px;--max:1240px;
     }
-
     *{box-sizing:border-box}
-
     html,body{
-      margin:0;
-      width:100%;
-      min-height:100%;
+      margin:0;width:100%;min-height:100%;
       background:
         radial-gradient(circle at 16% 0%, rgba(58,103,188,.18), transparent 26%),
         radial-gradient(circle at 84% 4%, rgba(241,210,141,.07), transparent 18%),
         linear-gradient(180deg,var(--bg1),var(--bg0));
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-
-    body{
-      min-height:100vh;
-      overflow-x:hidden;
+    body{min-height:100vh;overflow-x:hidden}
+    .stars,.stars::before,.stars::after{
+      position:fixed;inset:0;pointer-events:none;content:"";display:block;opacity:.88;background-repeat:repeat;z-index:0;
     }
-
-    .stars,
-    .stars::before,
-    .stars::after{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      content:"";
-      display:block;
-      opacity:.88;
-      background-repeat:repeat;
-      z-index:0;
-    }
-
     .stars{
       background-image:
         radial-gradient(2px 2px at 10% 18%, rgba(255,255,255,.94) 45%, transparent 55%),
@@ -71,7 +33,6 @@
         radial-gradient(1.5px 1.5px at 84% 64%, rgba(255,255,255,.72) 45%, transparent 55%);
       animation:starsA 26s linear infinite;
     }
-
     .stars::before{
       background-image:
         radial-gradient(1.5px 1.5px at 18% 40%, rgba(255,255,255,.72) 45%, transparent 55%),
@@ -80,7 +41,6 @@
         radial-gradient(2px 2px at 92% 18%, rgba(255,255,255,.94) 45%, transparent 55%);
       animation:starsB 38s linear infinite;
     }
-
     .stars::after{
       background-image:
         radial-gradient(2px 2px at 16% 84%, rgba(255,255,255,.76) 45%, transparent 55%),
@@ -89,582 +49,123 @@
         radial-gradient(1.5px 1.5px at 94% 40%, rgba(255,255,255,.82) 45%, transparent 55%);
       animation:starsC 44s linear infinite;
     }
-
-    @keyframes starsA{
-      from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(-16px,10px,0)}
+    @keyframes starsA{from{transform:translate3d(0,0,0)}to{transform:translate3d(-16px,10px,0)}}
+    @keyframes starsB{from{transform:translate3d(0,0,0)}to{transform:translate3d(20px,-12px,0)}}
+    @keyframes starsC{from{transform:translate3d(0,0,0)}to{transform:translate3d(-10px,-16px,0)}}
+    .page{position:relative;z-index:1;max-width:var(--max);margin:0 auto;padding:20px 18px 56px}
+    .topbar,.hero,.fivePaths,.closing,.productCard{
+      position:relative;overflow:hidden;border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,18,40,.82),rgba(10,20,46,.54));box-shadow:var(--shadow)
     }
-
-    @keyframes starsB{
-      from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(20px,-12px,0)}
-    }
-
-    @keyframes starsC{
-      from{transform:translate3d(0,0,0)}
-      to{transform:translate3d(-10px,-16px,0)}
-    }
-
-    .page{
-      position:relative;
-      z-index:1;
-      max-width:var(--max);
-      margin:0 auto;
-      padding:20px 18px 56px;
-    }
-
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      padding:14px 18px;
-      margin-bottom:16px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.48));
-      box-shadow:0 14px 36px rgba(0,0,0,.22);
-      backdrop-filter:blur(10px);
+      display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;margin-bottom:16px;
+      border-radius:999px;background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.48));backdrop-filter:blur(10px)
     }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
     .brandMark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      transform:rotate(45deg);
-      border:1px solid rgba(241,210,141,.24);
-      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
-      box-shadow:0 12px 28px rgba(0,0,0,.24);
-      flex:0 0 auto;
+      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);border:1px solid rgba(241,210,141,.24);
+      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));box-shadow:0 12px 28px rgba(0,0,0,.24);flex:0 0 auto
     }
-
-    .brandCopy{min-width:0}
-
-    .brandTitle{
-      margin:0 0 3px;
-      font-size:.96rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .brandSubtitle{
-      margin:0;
-      color:var(--muted);
-      font-size:.82rem;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .topbarRight{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
+    .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .brandSubtitle{margin:0;color:var(--muted);font-size:.82rem}
+    .topbarRight{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .chip{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:9px 12px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:.82rem;
-      white-space:nowrap;
+      display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;
+      background:rgba(255,255,255,.04);color:var(--muted);font-size:.82rem;white-space:nowrap
     }
-
-    .chip strong{
-      color:var(--gold);
-      font-size:.74rem;
-      font-weight:800;
-      letter-spacing:.1em;
-      text-transform:uppercase;
+    .chip strong{color:var(--gold);font-size:.74rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+    .hero,.fivePaths,.closing{border-radius:var(--radiusXl)}
+    .hero{padding:28px 24px 24px;margin-bottom:16px}
+    .fivePaths{padding:22px;margin-bottom:16px}
+    .closing{padding:24px}
+    .hero::before,.fivePaths::before,.closing::before{
+      content:"";position:absolute;inset:-1px;pointer-events:none;
+      background:radial-gradient(circle at 18% 0%, rgba(241,210,141,.08), transparent 24%),
+                 radial-gradient(circle at 84% 0%, rgba(143,240,197,.05), transparent 18%)
     }
-
-    .hero,
-    .fivePaths,
-    .closing{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:var(--radiusXl);
-      background:linear-gradient(180deg,rgba(9,18,40,.82),rgba(10,20,46,.54));
-      box-shadow:var(--shadow);
-    }
-
-    .hero{
-      padding:28px 24px 24px;
-      margin-bottom:16px;
-    }
-
-    .hero::before,
-    .fivePaths::before,
-    .closing::before{
-      content:"";
-      position:absolute;
-      inset:-1px;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 18% 0%, rgba(241,210,141,.08), transparent 24%),
-        radial-gradient(circle at 84% 0%, rgba(143,240,197,.05), transparent 18%);
-    }
-
-    .eyebrow,
-    .sectionKicker{
-      position:relative;
-      z-index:1;
-      margin:0 0 10px;
-      color:var(--gold);
-      font-size:.78rem;
-      font-weight:800;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-
-    .heroTitle,
-    .sectionTitle,
-    .productTitle,
-    .pathTitle{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    .heroTitle{
-      position:relative;
-      z-index:1;
-      margin:0 0 12px;
-      max-width:920px;
-      font-size:clamp(2.5rem,7vw,5.5rem);
-      line-height:.92;
-    }
-
-    .heroCopy,
-    .sectionCopy,
-    .productCopy,
-    .pathCopy,
-    .closingCopy{
-      color:var(--muted);
-      line-height:1.72;
-    }
-
-    .heroCopy{
-      position:relative;
-      z-index:1;
-      margin:0;
-      max-width:780px;
-      font-size:1rem;
-    }
-
-    .flagship{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
-      margin-bottom:16px;
-    }
-
+    .eyebrow,.sectionKicker{position:relative;z-index:1;margin:0 0 10px;color:var(--gold);font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+    .heroTitle,.sectionTitle,.productTitle,.pathTitle{font-family:Georgia,"Times New Roman",serif}
+    .heroTitle{position:relative;z-index:1;margin:0 0 12px;max-width:920px;font-size:clamp(2.5rem,7vw,5.5rem);line-height:.92}
+    .heroCopy,.sectionCopy,.productCopy,.pathCopy,.closingCopy{color:var(--muted);line-height:1.72}
+    .heroCopy{position:relative;z-index:1;margin:0;max-width:780px;font-size:1rem}
+    .flagship{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-bottom:16px}
     .productCard{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      border-radius:var(--radiusXl);
-      background:linear-gradient(180deg,rgba(9,18,40,.82),rgba(10,20,46,.54));
-      box-shadow:var(--shadow);
-      padding:24px;
-      min-height:520px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      transition:transform 220ms ease,border-color 220ms ease,box-shadow 220ms ease;
+      border-radius:var(--radiusXl);padding:24px;min-height:520px;display:flex;flex-direction:column;justify-content:space-between;
+      transition:transform 220ms ease,border-color 220ms ease,box-shadow 220ms ease
     }
-
-    .productCard:hover{
-      transform:translateY(-2px);
-      border-color:var(--lineStrong);
-      box-shadow:0 28px 66px rgba(0,0,0,.48);
-    }
-
-    .productCard.archcoin::before,
-    .productCard.aai::before{
-      content:"";
-      position:absolute;
-      inset:auto auto 0 0;
-      width:100%;
-      height:220px;
-      pointer-events:none;
-      opacity:.9;
-    }
-
-    .productCard.archcoin::before{
-      background:
-        radial-gradient(circle at 18% 80%, rgba(241,210,141,.10), transparent 22%),
-        radial-gradient(circle at 80% 20%, rgba(255,240,193,.05), transparent 18%);
-    }
-
-    .productCard.aai::before{
-      background:
-        radial-gradient(circle at 14% 84%, rgba(143,240,197,.09), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(159,198,255,.06), transparent 18%);
-    }
-
-    .productHead{
-      position:relative;
-      z-index:1;
-    }
-
-    .productLabel{
-      margin:0 0 10px;
-      font-size:.76rem;
-      font-weight:800;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
+    .productCard:hover{transform:translateY(-2px);border-color:var(--lineStrong);box-shadow:0 28px 66px rgba(0,0,0,.48)}
+    .productCard.archcoin::before,.productCard.aai::before{content:"";position:absolute;inset:auto auto 0 0;width:100%;height:220px;pointer-events:none;opacity:.9}
+    .productCard.archcoin::before{background:radial-gradient(circle at 18% 80%, rgba(241,210,141,.10), transparent 22%),radial-gradient(circle at 80% 20%, rgba(255,240,193,.05), transparent 18%)}
+    .productCard.aai::before{background:radial-gradient(circle at 14% 84%, rgba(143,240,197,.09), transparent 22%),radial-gradient(circle at 82% 18%, rgba(159,198,255,.06), transparent 18%)}
+    .productHead{position:relative;z-index:1}
+    .productLabel{margin:0 0 10px;font-size:.76rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase}
     .archcoin .productLabel{color:var(--gold)}
     .aai .productLabel{color:var(--mint)}
-
-    .productTitle{
-      margin:0 0 8px;
-      font-size:clamp(2rem,4vw,3.1rem);
-      line-height:.95;
-    }
-
-    .productCategory{
-      margin:0 0 14px;
-      color:var(--blue);
-      font-weight:700;
-      font-size:1rem;
-      letter-spacing:.03em;
-    }
-
-    .productCopy{
-      margin:0;
-      font-size:1rem;
-      max-width:520px;
-    }
-
-    .productVisual{
-      position:relative;
-      z-index:1;
-      height:180px;
-      margin:22px 0 18px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
-
+    .productTitle{margin:0 0 8px;font-size:clamp(2rem,4vw,3.1rem);line-height:.95}
+    .productCategory{margin:0 0 14px;color:var(--blue);font-weight:700;font-size:1rem;letter-spacing:.03em}
+    .productCopy{margin:0;font-size:1rem;max-width:520px}
+    .productVisual{position:relative;z-index:1;height:180px;margin:22px 0 18px;display:flex;align-items:center;justify-content:center}
     .coinHero{
-      position:relative;
-      width:168px;
-      height:168px;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 30% 28%, rgba(255,245,214,.94), transparent 18%),
-        linear-gradient(145deg,#f7e3a8,#d5a84f 56%,#9e6f1d);
-      border:1px solid rgba(255,232,170,.40);
-      box-shadow:0 18px 48px rgba(0,0,0,.42), inset 0 0 30px rgba(255,255,255,.16);
-      display:grid;
-      place-items:center;
+      position:relative;width:168px;height:168px;border-radius:999px;
+      background:radial-gradient(circle at 30% 28%, rgba(255,245,214,.94), transparent 18%),linear-gradient(145deg,#f7e3a8,#d5a84f 56%,#9e6f1d);
+      border:1px solid rgba(255,232,170,.40);box-shadow:0 18px 48px rgba(0,0,0,.42), inset 0 0 30px rgba(255,255,255,.16);display:grid;place-items:center
     }
-
-    .coinHero::before{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:999px;
-      border:1px solid rgba(255,247,220,.34);
-    }
-
-    .coinHero span{
-      position:relative;
-      z-index:1;
-      color:#1e1505;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:1.28rem;
-      font-weight:700;
-      line-height:.96;
-      text-align:center;
-      letter-spacing:.04em;
-    }
-
+    .coinHero::before{content:"";position:absolute;inset:14px;border-radius:999px;border:1px solid rgba(255,247,220,.34)}
+    .coinHero span{position:relative;z-index:1;color:#1e1505;font-family:Georgia,"Times New Roman",serif;font-size:1.28rem;font-weight:700;line-height:.96;text-align:center;letter-spacing:.04em}
     .aaiMark{
-      position:relative;
-      width:142px;
-      height:142px;
-      border-radius:28px;
-      transform:rotate(45deg);
-      background:linear-gradient(180deg,rgba(18,54,66,.96),rgba(10,28,34,.90));
-      border:1px solid rgba(143,240,197,.28);
-      box-shadow:0 18px 44px rgba(0,0,0,.36), inset 0 0 26px rgba(255,255,255,.04);
-      display:grid;
-      place-items:center;
+      position:relative;width:142px;height:142px;border-radius:28px;transform:rotate(45deg);
+      background:linear-gradient(180deg,rgba(18,54,66,.96),rgba(10,28,34,.90));border:1px solid rgba(143,240,197,.28);
+      box-shadow:0 18px 44px rgba(0,0,0,.36), inset 0 0 26px rgba(255,255,255,.04);display:grid;place-items:center
     }
-
-    .aaiMark::before{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:20px;
-      border:1px solid rgba(143,240,197,.20);
-    }
-
-    .aaiMark span{
-      position:relative;
-      z-index:1;
-      transform:rotate(-45deg);
-      color:var(--mint);
-      font-size:1.22rem;
-      font-weight:800;
-      letter-spacing:.16em;
-    }
-
-    .capabilities{
-      position:relative;
-      z-index:1;
-      display:grid;
-      gap:10px;
-      margin:0 0 18px;
-    }
-
+    .aaiMark::before{content:"";position:absolute;inset:14px;border-radius:20px;border:1px solid rgba(143,240,197,.20)}
+    .aaiMark span{position:relative;z-index:1;transform:rotate(-45deg);color:var(--mint);font-size:1.22rem;font-weight:800;letter-spacing:.16em}
+    .capabilities{position:relative;z-index:1;display:grid;gap:10px;margin:0 0 18px}
     .capability{
-      display:grid;
-      grid-template-columns:12px minmax(0,1fr);
-      gap:12px;
-      align-items:start;
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid rgba(173,212,255,.10);
-      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
-      color:var(--text);
-      font-size:.95rem;
-      line-height:1.55;
+      display:grid;grid-template-columns:12px minmax(0,1fr);gap:12px;align-items:start;padding:12px 14px;border-radius:16px;
+      border:1px solid rgba(173,212,255,.10);background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));color:var(--text);font-size:.95rem;line-height:1.55
     }
-
-    .capabilityDot{
-      width:10px;
-      height:10px;
-      margin-top:6px;
-      border-radius:999px;
-      box-shadow:0 0 0 4px rgba(255,255,255,.04);
+    .capabilityDot{width:10px;height:10px;margin-top:6px;border-radius:999px;box-shadow:0 0 0 4px rgba(255,255,255,.04)}
+    .ctaRow{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .ctaMeta{color:var(--muted);font-size:.86rem;line-height:1.5}
+    .ctaButton,.pathButton{
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid rgba(241,210,141,.26);border-radius:999px;
+      padding:12px 18px;background:linear-gradient(180deg,rgba(18,36,78,.92),rgba(10,22,48,.84));color:var(--text);font-size:.86rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
+      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease
     }
-
-    .ctaRow{
-      position:relative;
-      z-index:1;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .ctaMeta{
-      color:var(--muted);
-      font-size:.86rem;
-      line-height:1.5;
-    }
-
-    .ctaButton,
-    .pathButton{
-      appearance:none;
-      border:1px solid rgba(241,210,141,.26);
-      border-radius:999px;
-      padding:12px 18px;
-      background:linear-gradient(180deg,rgba(18,36,78,.92),rgba(10,22,48,.84));
-      color:var(--text);
-      font-size:.86rem;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      cursor:pointer;
-      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
-    }
-
-    .ctaButton:hover,
-    .pathButton:hover{
-      transform:translateY(-1px);
-      border-color:rgba(241,210,141,.42);
-      box-shadow:0 12px 28px rgba(0,0,0,.28);
-    }
-
-    .fivePaths{
-      padding:22px;
-      margin-bottom:16px;
-    }
-
-    .sectionTitle{
-      margin:0 0 12px;
-      position:relative;
-      z-index:1;
-      font-size:clamp(1.7rem,4vw,2.5rem);
-      line-height:1.02;
-    }
-
-    .sectionCopy{
-      margin:0 0 16px;
-      max-width:760px;
-      position:relative;
-      z-index:1;
-      font-size:.96rem;
-    }
-
-    .pathsGrid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-      gap:14px;
-    }
-
+    .ctaButton:hover,.pathButton:hover{transform:translateY(-1px);border-color:rgba(241,210,141,.42);box-shadow:0 12px 28px rgba(0,0,0,.28)}
+    .sectionTitle{margin:0 0 12px;position:relative;z-index:1;font-size:clamp(1.7rem,4vw,2.5rem);line-height:1.02}
+    .sectionCopy{margin:0 0 16px;max-width:760px;position:relative;z-index:1;font-size:.96rem}
+    .pathsGrid{position:relative;z-index:1;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
     .pathCard{
-      border:1px solid rgba(173,212,255,.10);
-      border-radius:20px;
-      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
-      padding:18px;
-      display:grid;
-      gap:12px;
-      align-content:start;
-      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
-      box-shadow:0 10px 24px rgba(0,0,0,.14);
+      border:1px solid rgba(173,212,255,.10);border-radius:20px;background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      padding:18px;display:grid;gap:12px;align-content:start;transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;box-shadow:0 10px 24px rgba(0,0,0,.14)
     }
-
-    .pathCard:hover{
-      transform:translateY(-2px);
-      box-shadow:0 18px 36px rgba(0,0,0,.24);
-    }
-
-    .pathEyebrow{
-      font-size:.72rem;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .pathTitle{
-      margin:0;
-      font-size:1.08rem;
-      line-height:1.18;
-    }
-
-    .pathCopy{
-      margin:0;
-      font-size:.92rem;
-    }
-
-    .pathRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
+    .pathCard:hover{transform:translateY(-2px);box-shadow:0 18px 36px rgba(0,0,0,.24)}
+    .pathEyebrow{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    .pathTitle{margin:0;font-size:1.08rem;line-height:1.18}
+    .pathCopy{margin:0;font-size:.92rem}
+    .pathRow{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
     .pathPill{
-      display:inline-flex;
-      align-items:center;
-      padding:9px 12px;
-      border:1px solid rgba(173,212,255,.10);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      font-size:.76rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
+      display:inline-flex;align-items:center;padding:9px 12px;border:1px solid rgba(173,212,255,.10);border-radius:999px;background:rgba(255,255,255,.035);
+      font-size:.76rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap
     }
-
-    .closing{
-      padding:24px;
-    }
-
-    .closingGrid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:minmax(0,1fr) auto;
-      gap:18px;
-      align-items:end;
-    }
-
-    .closingCopy{
-      margin:0;
-      max-width:860px;
-      font-size:1rem;
-    }
-
-    .closingCta{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-    }
-
+    .closingGrid{position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end}
+    .closingCopy{margin:0;max-width:860px;font-size:1rem}
+    .closingCta{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
     .footerChip{
-      display:inline-flex;
-      align-items:center;
-      padding:11px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--mint);
-      font-size:.82rem;
-      font-weight:800;
-      letter-spacing:.1em;
-      text-transform:uppercase;
-      white-space:nowrap;
+      display:inline-flex;align-items:center;padding:11px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.04);
+      color:var(--mint);font-size:.82rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;white-space:nowrap
     }
-
     @media (max-width:960px){
-      .page{padding:16px 14px 44px}
-      .topbar{
-        border-radius:26px;
-        align-items:flex-start;
-        flex-direction:column;
-      }
-      .topbarRight{justify-content:flex-start}
-      .flagship,
-      .closingGrid{
-        grid-template-columns:1fr;
-      }
-      .productCard{min-height:auto}
-      .productVisual{height:156px}
-      .coinHero{width:148px;height:148px}
-      .aaiMark{width:128px;height:128px}
-      .closingCta{justify-content:flex-start}
+      .page{padding:16px 14px 44px}.topbar{border-radius:26px;align-items:flex-start;flex-direction:column}.topbarRight{justify-content:flex-start}
+      .flagship,.closingGrid{grid-template-columns:1fr}.productCard{min-height:auto}.productVisual{height:156px}.coinHero{width:148px;height:148px}.aaiMark{width:128px;height:128px}.closingCta{justify-content:flex-start}
     }
-
-    @media (prefers-reduced-motion:reduce){
-      .stars,
-      .stars::before,
-      .stars::after{
-        animation:none;
-      }
-    }
+    @media (prefers-reduced-motion:reduce){.stars,.stars::before,.stars::after{animation:none}}
   </style>
 </head>
 <body>
   <div class="stars" aria-hidden="true"></div>
-
-  <main
-    id="products-host"
-    class="page"
-    data-page="products-showroom"
-    data-showroom-contract="PRODUCTS_SHOWROOM_V1"
-  >
+  <main id="products-host" class="page" data-page="products-showroom" data-showroom-contract="PRODUCTS_SHOWROOM_V1">
     <header class="topbar" aria-label="Products header">
       <div class="brand">
         <div class="brandMark" aria-hidden="true"></div>
@@ -673,7 +174,6 @@
           <p class="brandSubtitle">Flagship products chamber</p>
         </div>
       </div>
-
       <div class="topbarRight">
         <div class="chip"><strong>Flagship</strong> ARCHCOIN</div>
         <div class="chip"><strong>Flagship</strong> AAI</div>
@@ -684,83 +184,49 @@
     <section class="hero" aria-label="Products hero">
       <p class="eyebrow">Products</p>
       <h1 class="heroTitle">Five product paths. Front and center.</h1>
-      <p class="heroCopy">
-        ARCHCOIN and AAI lead the chamber. Beneath them, three additional paths stay visible, brief, and ready to open.
-      </p>
+      <p class="heroCopy">ARCHCOIN and AAI lead the chamber. Beneath them, three additional paths stay visible, brief, and ready to open.</p>
     </section>
 
     <section class="flagship" aria-label="Flagship products">
       <article class="productCard archcoin" data-product-key="archcoin">
         <div class="productHead">
           <p class="productLabel">Flagship product</p>
-          <h2 class="productTitle" data-field="title">ARCHCOIN</h2>
-          <p class="productCategory" data-field="category">Premium financial-intelligence asset</p>
-          <p class="productCopy" data-field="description">
-            A flagship value product built to hold identity, scarcity, and ownership with a sharper public presence.
-          </p>
+          <h2 class="productTitle">ARCHCOIN</h2>
+          <p class="productCategory">Premium financial-intelligence asset</p>
+          <p class="productCopy">A flagship value product built to hold identity, scarcity, and ownership with a sharper public presence.</p>
         </div>
-
         <div class="productVisual" aria-hidden="true">
-          <div class="coinHero">
-            <span>ARCH<br />COIN</span>
-          </div>
+          <div class="coinHero"><span>ARCH<br>COIN</span></div>
         </div>
-
         <div class="capabilities">
-          <div class="capability">
-            <span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span>
-            <div>Premium value surface</div>
-          </div>
-          <div class="capability">
-            <span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span>
-            <div>Private ownership signal</div>
-          </div>
-          <div class="capability">
-            <span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span>
-            <div>Brand-defining asset layer</div>
-          </div>
+          <div class="capability"><span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span><div>Premium value surface</div></div>
+          <div class="capability"><span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span><div>Private ownership signal</div></div>
+          <div class="capability"><span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span><div>Brand-defining asset layer</div></div>
         </div>
-
         <div class="ctaRow">
           <div class="ctaMeta">Signature asset · Private capital orientation</div>
-          <button class="ctaButton" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
+          <a class="ctaButton" href="/products/archcoin/">Explore ARCHCOIN</a>
         </div>
       </article>
 
       <article class="productCard aai" data-product-key="aai">
         <div class="productHead">
           <p class="productLabel">Flagship product</p>
-          <h2 class="productTitle" data-field="title">AAI</h2>
-          <p class="productCategory" data-field="category">Artificial Agent Intelligence</p>
-          <p class="productCopy" data-field="description">
-            A flagship intelligence product shaped for elegant execution, usable agency, and refined operational presence.
-          </p>
+          <h2 class="productTitle">AAI</h2>
+          <p class="productCategory">Artificial Agent Intelligence</p>
+          <p class="productCopy">A flagship intelligence product shaped for elegant execution, usable agency, and refined operational presence.</p>
         </div>
-
         <div class="productVisual" aria-hidden="true">
-          <div class="aaiMark">
-            <span>AAI</span>
-          </div>
+          <div class="aaiMark"><span>AAI</span></div>
         </div>
-
         <div class="capabilities">
-          <div class="capability">
-            <span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span>
-            <div>Agent intelligence layer</div>
-          </div>
-          <div class="capability">
-            <span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span>
-            <div>Precision-built orchestration</div>
-          </div>
-          <div class="capability">
-            <span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span>
-            <div>Elegant operational behavior</div>
-          </div>
+          <div class="capability"><span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span><div>Agent intelligence layer</div></div>
+          <div class="capability"><span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span><div>Precision-built orchestration</div></div>
+          <div class="capability"><span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span><div>Elegant operational behavior</div></div>
         </div>
-
         <div class="ctaRow">
           <div class="ctaMeta">Flagship intelligence · Product-first expression</div>
-          <button class="ctaButton" type="button" data-cta-key="aai">Explore AAI</button>
+          <a class="ctaButton" href="/products/aai/">Explore AAI</a>
         </div>
       </article>
     </section>
@@ -768,59 +234,42 @@
     <section class="fivePaths" aria-label="Five product paths">
       <p class="sectionKicker">Open a path</p>
       <h3 class="sectionTitle">The five products are visible now.</h3>
-      <p class="sectionCopy">
-        Brief explanation. One open path each. No hidden reconstruction layer.
-      </p>
+      <p class="sectionCopy">Brief explanation. One open path each. No hidden reconstruction layer.</p>
 
-      <div class="pathsGrid" id="paths-grid">
-        <article class="pathCard" data-path-key="archcoin">
+      <div class="pathsGrid">
+        <article class="pathCard">
           <div class="pathEyebrow" style="color:#f1d28d">Flagship path</div>
           <h4 class="pathTitle">ARCHCOIN</h4>
           <p class="pathCopy">Premium financial-intelligence asset with identity, scarcity, and ownership at the center.</p>
-          <div class="pathRow">
-            <div class="pathPill" style="color:#f1d28d">Front and center</div>
-            <button class="pathButton" type="button" data-route-key="archcoin">Open Path</button>
-          </div>
+          <div class="pathRow"><div class="pathPill" style="color:#f1d28d">Front and center</div><a class="pathButton" href="/products/archcoin/">Open Path</a></div>
         </article>
 
-        <article class="pathCard" data-path-key="aai">
+        <article class="pathCard">
           <div class="pathEyebrow" style="color:#8ff0c5">Flagship path</div>
           <h4 class="pathTitle">AAI</h4>
           <p class="pathCopy">Artificial agent intelligence expressed as a polished product line for elegant execution and agency.</p>
-          <div class="pathRow">
-            <div class="pathPill" style="color:#8ff0c5">Front and center</div>
-            <button class="pathButton" type="button" data-route-key="aai">Open Path</button>
-          </div>
+          <div class="pathRow"><div class="pathPill" style="color:#8ff0c5">Front and center</div><a class="pathButton" href="/products/aai/">Open Path</a></div>
         </article>
 
-        <article class="pathCard" data-path-key="baseline-nutrition-systems">
+        <article class="pathCard">
           <div class="pathEyebrow" style="color:#9fc6ff">Product path</div>
           <h4 class="pathTitle">Baseline Nutrition Systems</h4>
           <p class="pathCopy">Nutritional foundation products organized around daily stability, clarity, and baseline support.</p>
-          <div class="pathRow">
-            <div class="pathPill" style="color:#9fc6ff">Filter path</div>
-            <button class="pathButton" type="button" data-route-key="baseline-nutrition-systems">Open Path</button>
-          </div>
+          <div class="pathRow"><div class="pathPill" style="color:#9fc6ff">Filter path</div><a class="pathButton" href="/products/nutrition/">Open Path</a></div>
         </article>
 
-        <article class="pathCard" data-path-key="five-flags-whats-my-scene">
+        <article class="pathCard">
           <div class="pathEyebrow" style="color:#ffca80">Product path</div>
           <h4 class="pathTitle">Five Flags / What’s My Scene</h4>
           <p class="pathCopy">Scene-identification products built to help people understand where they are and what opens next.</p>
-          <div class="pathRow">
-            <div class="pathPill" style="color:#ffca80">Filter path</div>
-            <button class="pathButton" type="button" data-route-key="five-flags-whats-my-scene">Open Path</button>
-          </div>
+          <div class="pathRow"><div class="pathPill" style="color:#ffca80">Filter path</div><a class="pathButton" href="/products/five-flags/">Open Path</a></div>
         </article>
 
-        <article class="pathCard" data-path-key="esl-traversal-learning">
+        <article class="pathCard">
           <div class="pathEyebrow" style="color:#d7e4ff">Product path</div>
           <h4 class="pathTitle">ESL Traversal Learning</h4>
           <p class="pathCopy">Traversal-based English learning products designed around movement, comprehension, and structured progression.</p>
-          <div class="pathRow">
-            <div class="pathPill" style="color:#d7e4ff">Filter path</div>
-            <button class="pathButton" type="button" data-route-key="esl-traversal-learning">Open Path</button>
-          </div>
+          <div class="pathRow"><div class="pathPill" style="color:#d7e4ff">Filter path</div><a class="pathButton" href="/products/education/">Open Path</a></div>
         </article>
       </div>
     </section>
@@ -829,21 +278,17 @@
       <div class="closingGrid">
         <div>
           <p class="sectionKicker">The house</p>
-          <h3 id="closing-title" class="sectionTitle">ARCHCOIN is selected.</h3>
-          <p id="closing-copy" class="closingCopy">
-            The main chamber now filters and routes. The deeper Russian doll structure belongs inside the opened path, not on the showroom surface.
-          </p>
+          <h3 class="sectionTitle">The main chamber filters and routes.</h3>
+          <p class="closingCopy">The deeper Russian doll structure belongs inside each opened path, not on the showroom surface.</p>
         </div>
-
         <div class="closingCta">
-          <button class="ctaButton" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
-          <button class="ctaButton" type="button" data-cta-key="aai">Explore AAI</button>
-          <div class="footerChip">Five paths visible</div>
+          <a class="ctaButton" href="/products/archcoin/">Explore ARCHCOIN</a>
+          <a class="ctaButton" href="/products/aai/">Explore AAI</a>
+          <div class="footerChip">Five paths live</div>
         </div>
       </div>
     </section>
   </main>
-
   <script src="./index.js" defer></script>
 </body>
 </html>

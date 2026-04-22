@@ -9,7 +9,7 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway with Euclidean-axis planetary routing."
+    content="Products gateway with Euclidean-axis planetary routing, featuring AAI and The Nine Summits of Love."
   >
 
   <style>
@@ -18,12 +18,14 @@
       --bg-deep: #07152a;
       --panel: rgba(255, 255, 255, 0.05);
       --panel-soft: rgba(255, 255, 255, 0.025);
-      --line: rgba(255, 255, 255, 0.1);
+      --line: rgba(255, 255, 255, 0.10);
 
       --text: #eef4ff;
       --muted: #9fb0cf;
       --gold: #f0c876;
+      --gold-soft: #f6deb0;
       --blue-soft: #9dd1ff;
+      --green-soft: #9fe7c5;
 
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
       --radius: 28px;
@@ -199,7 +201,9 @@
     }
 
     h1,
-    h2 {
+    h2,
+    h3,
+    h4 {
       margin: 0;
       line-height: 1.02;
       letter-spacing: -0.04em;
@@ -224,10 +228,27 @@
       color: #f3d79a;
     }
 
-    .lede {
-      margin: 14px 0 0;
-      max-width: 44rem;
+    h3 {
+      font-size: clamp(24px, 3vw, 34px);
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 20px;
+      color: #ffffff;
+    }
+
+    .lede,
+    .copy,
+    .detail,
+    .meta {
+      margin: 0;
       color: var(--muted);
+    }
+
+    .lede {
+      margin-top: 14px;
+      max-width: 44rem;
       font-size: 18px;
     }
 
@@ -339,7 +360,7 @@
 
     .planet {
       position: absolute;
-      width: 148px;
+      width: 156px;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -384,6 +405,13 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #f3f7ff;
+    }
+
+    .planet-copy {
+      font-size: 12px;
+      line-height: 1.35;
+      color: var(--muted);
+      max-width: 14ch;
     }
 
     .planet-1 .planet-orb {
@@ -442,6 +470,61 @@
       outline: none;
     }
 
+    .feature-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 270px;
+    }
+
+    .feature-kicker {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .feature-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: auto;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      color: var(--blue-soft);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, rgba(240,200,118,0.18), rgba(255,255,255,0.06));
+      color: #ffffff;
+    }
+
     .legend {
       margin-top: 18px;
       padding: 20px;
@@ -483,6 +566,7 @@
     }
 
     @media (max-width: 980px) {
+      .feature-grid,
       .legend {
         grid-template-columns: 1fr;
       }
@@ -492,7 +576,7 @@
       }
 
       .planet {
-        width: 128px;
+        width: 132px;
       }
 
       .planet-orb {
@@ -530,7 +614,7 @@
       }
 
       .axis-wrap {
-        min-height: 720px;
+        min-height: 760px;
       }
 
       .axis-x {
@@ -547,7 +631,7 @@
       .ring.r5 { width: 590px; height: 590px; }
 
       .planet {
-        width: 110px;
+        width: 116px;
       }
 
       .planet-orb {
@@ -559,10 +643,22 @@
         font-size: 12px;
       }
 
+      .planet-copy {
+        font-size: 11px;
+      }
+
       .planet-link {
         min-height: 36px;
         font-size: 12px;
         padding: 0 10px;
+      }
+
+      .feature-actions {
+        flex-direction: column;
+      }
+
+      .button {
+        width: 100%;
       }
     }
   </style>
@@ -595,15 +691,15 @@
           <p class="eyebrow">Products chamber</p>
           <h1 id="products-title">Products on a real axis.</h1>
           <p class="lede">
-            The products routes now sit on a clean Euclidean field with the sun at
-            center, AAI replacing AI, and Nine Summits replacing the redundant theme route.
+            AAI and The Nine Summits of Love now sit as distinct load-bearing objects
+            on the products surface, each with its own role, path, and next step.
           </p>
         </section>
 
         <section class="panel system" aria-labelledby="euclidean-title">
           <h2 id="euclidean-title">Euclidean planetary map</h2>
 
-          <div class="axis-wrap" id="aai">
+          <div class="axis-wrap">
             <div class="axis-x" aria-hidden="true"></div>
             <div class="axis-y" aria-hidden="true"></div>
 
@@ -623,59 +719,97 @@
             <div class="planet planet-1" style="left:50%; top:20%;">
               <div class="planet-orb" aria-hidden="true"></div>
               <div class="planet-label">AAI</div>
-              <a class="planet-link" href="/products/#aai">Open</a>
+              <div class="planet-copy">Artificial agent intelligence</div>
+              <a class="planet-link" href="#aai">Open</a>
             </div>
 
             <div class="planet planet-2" style="left:74%; top:34%;">
               <div class="planet-orb" aria-hidden="true"></div>
               <div class="planet-label">Nine Summits</div>
-              <a class="planet-link" href="/prelude/">Open</a>
+              <div class="planet-copy">Book and launch path</div>
+              <a class="planet-link" href="#nine-summits">Open</a>
             </div>
 
             <div class="planet planet-3" style="left:74%; top:56%;">
               <div class="planet-orb" aria-hidden="true"></div>
               <div class="planet-label">Nutrition</div>
+              <div class="planet-copy">Health-facing product line</div>
               <a class="planet-link" href="/products/nutrition/">Open</a>
             </div>
 
             <div class="planet planet-4" style="left:36%; top:74%;">
               <div class="planet-orb" aria-hidden="true"></div>
               <div class="planet-label">ARCHCOIN</div>
+              <div class="planet-copy">Vault-bound protected value</div>
               <a class="planet-link" href="/vault/#archcoin">Open</a>
             </div>
 
             <div class="planet planet-5" style="left:66%; top:74%;">
               <div class="planet-orb" aria-hidden="true"></div>
               <div class="planet-label">Root</div>
+              <div class="planet-copy">Return to primary entry</div>
               <a class="planet-link" href="/">Open</a>
             </div>
 
             <div class="planet planet-6" style="left:20%; top:56%;">
               <div class="planet-orb" aria-hidden="true"></div>
               <div class="planet-label">Five Flags</div>
+              <div class="planet-copy">Additional route line</div>
               <a class="planet-link" href="/products/five-flags/">Open</a>
             </div>
+          </div>
+
+          <div class="feature-grid">
+            <article class="feature-card" id="aai">
+              <p class="feature-kicker">Intelligence object</p>
+              <h3>AAI</h3>
+              <p class="detail">
+                Artificial agent intelligence is presented here as its own defined
+                offering. It is not generic AI marketing language, and it is not
+                treated as hype. It reads as a distinct product-line object with its
+                own identity on the products surface.
+              </p>
+              <div class="feature-actions">
+                <a class="button button-primary" href="/platform/">Open platform</a>
+                <a class="button" href="/gate/">Return to gate</a>
+              </div>
+            </article>
+
+            <article class="feature-card" id="nine-summits">
+              <p class="feature-kicker">Book and launch object</p>
+              <h3>The Nine Summits of Love</h3>
+              <p class="detail">
+                The Nine Summits of Love is held here as a real guiding work and book
+                path. It is not random filler, and it is not reduced to slogan-only
+                promotion. It stands on the products surface with its own weight,
+                its own path, and its own launch-facing direction.
+              </p>
+              <div class="feature-actions">
+                <a class="button button-primary" href="/prelude/">Open prelude</a>
+                <a class="button" href="/home/">Enter the house</a>
+              </div>
+            </article>
           </div>
 
           <div class="legend">
             <article class="legend-card">
               <p class="legend-kicker">AAI</p>
               <p class="legend-copy">
-                Artificial agent intelligence replaces the old AI label and no longer points to a 404.
+                Artificial agent intelligence now appears as a distinct product-line object.
               </p>
             </article>
 
             <article class="legend-card">
-              <p class="legend-kicker">Book path</p>
+              <p class="legend-kicker">Nine Summits</p>
               <p class="legend-copy">
-                Nine Summits now replaces the redundant theme route and opens the book-facing threshold.
+                The book and launch path now appears as a distinct guiding-work object.
               </p>
             </article>
 
             <article class="legend-card">
-              <p class="legend-kicker">ARCHCOIN routing</p>
+              <p class="legend-kicker">ARCHCOIN</p>
               <p class="legend-copy">
-                ARCHCOIN still jumps directly into the vault layer at <code>/vault/#archcoin</code>.
+                ARCHCOIN remains bound directly into the vault layer.
               </p>
             </article>
           </div>
@@ -683,8 +817,8 @@
       </main>
 
       <footer class="footer">
-        <span>Result: PAGE=PRODUCTS | AAI=ACTIVE | NINE_SUMMITS=BOOK_ROUTE | ARCHCOIN_ROUTE=VAULT_HASH</span>
-        <span><a href="/vault/">Open vault</a></span>
+        <span>Result: PAGE=PRODUCTS | AAI_AND_NINE_SUMMITS=DISTINCT_LOAD_BEARING_OBJECTS</span>
+        <span><a href="/vault/#archcoin">Open ARCHCOIN</a></span>
       </footer>
     </div>
   </div>

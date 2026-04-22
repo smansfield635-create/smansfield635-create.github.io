@@ -28,7 +28,6 @@
       this.stage = options.stage;
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
-      this.destroyed = false;
       this.root = null;
     }
 
@@ -38,12 +37,12 @@
       }
 
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-runtime-boot-diagnostic-v1");
+      this.mount.setAttribute("data-runtime", "products-runtime-boot-diagnostic-v2");
 
       setStyles(this.mount, {
         position: "absolute",
         inset: "0",
-        overflow: "hidden",
+        overflow: "auto",
         pointerEvents: "auto",
       });
 
@@ -64,7 +63,7 @@
       const shell = createElement("div", "products-runtime-shell", this.root);
       setStyles(shell, {
         maxWidth: "860px",
-        margin: "0 auto",
+        margin: "140px auto 0",
         display: "grid",
         gap: "16px",
       });
@@ -78,7 +77,7 @@
         padding: "22px",
       });
 
-      const eyebrow = createElement("div", "products-runtime-eyebrow", hero, "Runtime diagnostic");
+      const eyebrow = createElement("div", "products-runtime-eyebrow", hero, "Visible mount receipt");
       setStyles(eyebrow, {
         color: "#f1d28d",
         fontWeight: "800",
@@ -88,7 +87,7 @@
         marginBottom: "10px",
       });
 
-      const title = createElement("h2", "products-runtime-title", hero, "Products runtime boot receipts");
+      const title = createElement("h2", "products-runtime-title", hero, "Products runtime mounted successfully");
       setStyles(title, {
         margin: "0 0 12px",
         fontFamily: 'Georgia, "Times New Roman", serif',
@@ -101,7 +100,7 @@
         "p",
         "products-runtime-summary",
         hero,
-        "Geometry remains frozen. This pass proves that the runtime file loaded, the global API registered, create() was entered, and visible mount succeeded."
+        "This visible stage is rendered from products_runtime.js. Runtime registration, create() entry, and stage mount are now proven from inside the runtime file itself."
       );
       setStyles(summary, {
         margin: "0",
@@ -178,12 +177,12 @@
       });
 
       [
-        "1. products_runtime.js evaluated at top level.",
+        "1. products_runtime.js evaluated successfully.",
         "2. window.ProductsPlanetRuntime was assigned.",
-        "3. index.js located the global API.",
+        "3. index.js discovered the global API.",
         "4. index.js entered create({ stage, mount, reducedMotion }).",
-        "5. create() mounted this visible diagnostic surface.",
-        `6. Boot timestamp: ${formatNow()}.`,
+        "5. create() mounted this visible stage.",
+        `6. Mount timestamp: ${formatNow()}.`,
       ].forEach((line) => {
         const row = createElement("div", "products-runtime-trace-row", traceList, line);
         setStyles(row, {
@@ -195,22 +194,9 @@
           border: "1px solid rgba(173,212,255,0.08)",
         });
       });
-
-      const footer = createElement("section", "products-runtime-footer", shell);
-      setStyles(footer, {
-        border: "1px solid rgba(173,212,255,0.1)",
-        borderRadius: "22px",
-        background: "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025))",
-        padding: "16px 18px",
-        color: "#9fb2d2",
-        lineHeight: "1.65",
-      });
-      footer.innerHTML =
-        "<strong style='color:#edf5ff'>Current read:</strong> runtime registration and visible mount are now proven from inside the runtime file itself. The next pass can resume products work from a real boot receipt instead of a blind standby state.";
     }
 
     destroy() {
-      this.destroyed = true;
       if (this.mount) {
         this.mount.innerHTML = "";
         this.mount.removeAttribute("data-runtime");

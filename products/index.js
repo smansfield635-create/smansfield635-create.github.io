@@ -19,6 +19,7 @@
 
   function getNodes() {
     return {
+      stageZone: document.getElementById("products-stage-zone"),
       stage: document.getElementById("planetary-stage"),
     };
   }
@@ -32,21 +33,35 @@
     if (stage) {
       stage.innerHTML = "";
       stage.removeAttribute("data-runtime");
+      stage.style.position = "absolute";
+      stage.style.inset = "0";
+      stage.style.overflow = "auto";
     }
   }
 
-  function runBootstrap(source) {
-    const { stage } = getNodes();
+  function enforceStageContainment(stageZone, stage) {
+    stageZone.style.position = "relative";
+    stageZone.style.overflow = "hidden";
+    stage.style.position = "absolute";
+    stage.style.inset = "0";
+    stage.style.overflow = "auto";
+    stage.style.maxWidth = "100%";
+    stage.style.maxHeight = "100%";
+  }
 
-    if (!stage) {
+  function runBootstrap(source) {
+    const { stageZone, stage } = getNodes();
+
+    if (!stageZone || !stage) {
       diag.setValue("diag-create-entry", "bootstrap called", "warn");
       diag.setValue("diag-mount-result", "blocked", "fail");
-      diag.setValue("diag-error-text", "required stage node missing", "fail");
+      diag.setValue("diag-error-text", "required stage nodes missing", "fail");
       diag.setStatus("host-nodes-missing");
       return;
     }
 
     destroyExistingRuntime(stage);
+    enforceStageContainment(stageZone, stage);
 
     diag.setValue("diag-create-entry", "bootstrap called (" + source + ")", "warn");
     diag.setValue("diag-mount-result", "boot in progress", "warn");
@@ -80,6 +95,8 @@
       });
 
       window.__productsPlanetRuntimeInstance = instance;
+      enforceStageContainment(stageZone, stage);
+
       diag.setValue("diag-mount-result", "succeeded", "ok");
       diag.setStatus("mount-succeeded");
     } catch (error) {

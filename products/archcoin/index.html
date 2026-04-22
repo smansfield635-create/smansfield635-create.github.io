@@ -4,24 +4,363 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>ARCHCOIN | Products</title>
+  <meta
+    name="description"
+    content="ARCHCOIN — a flagship financial-intelligence asset inside the Diamond Gate Bridge products chamber."
+  />
   <style>
-    :root{color-scheme:dark;--bg0:#020612;--bg1:#071427;--line:rgba(173,212,255,.14);--text:#edf5ff;--muted:#9fb2d2;--gold:#f1d28d}
-    *{box-sizing:border-box} html,body{margin:0;min-height:100%;background:linear-gradient(180deg,var(--bg1),var(--bg0));color:var(--text);font-family:Inter,system-ui,sans-serif}
-    .page{max-width:1080px;margin:0 auto;padding:24px 18px 56px}
-    .shell{border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(9,18,40,.86),rgba(10,20,46,.58));padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.42)}
-    .eyebrow{margin:0 0 10px;color:var(--gold);font-size:.78rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
-    h1{margin:0 0 12px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.4rem,6vw,4.8rem);line-height:.92}
-    p{margin:0;color:var(--muted);line-height:1.72;max-width:760px}
-    .cta{display:inline-flex;margin-top:20px;padding:12px 18px;border:1px solid rgba(241,210,141,.26);border-radius:999px;text-decoration:none;color:var(--text);font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:linear-gradient(180deg,rgba(18,36,78,.92),rgba(10,22,48,.84))}
+    :root{
+      color-scheme:dark;
+      --bg0:#020612;
+      --bg1:#071427;
+      --line:rgba(173,212,255,.14);
+      --lineStrong:rgba(241,210,141,.22);
+      --text:#edf5ff;
+      --muted:#9fb2d2;
+      --gold:#f1d28d;
+      --shadow:0 24px 60px rgba(0,0,0,.42);
+      --radiusXl:30px;
+      --radiusLg:24px;
+      --radiusMd:18px;
+      --max:1180px;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 16% 0%, rgba(58,103,188,.16), transparent 26%),
+        radial-gradient(circle at 84% 4%, rgba(241,210,141,.08), transparent 18%),
+        linear-gradient(180deg,var(--bg1),var(--bg0));
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    body{overflow-x:hidden}
+
+    .stars,.stars::before,.stars::after{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      content:"";
+      display:block;
+      opacity:.88;
+      background-repeat:repeat;
+      z-index:0;
+    }
+
+    .stars{
+      background-image:
+        radial-gradient(2px 2px at 10% 18%, rgba(255,255,255,.94) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 26% 72%, rgba(255,255,255,.78) 45%, transparent 55%),
+        radial-gradient(2px 2px at 68% 26%, rgba(255,255,255,.86) 45%, transparent 55%);
+      animation:starsA 28s linear infinite;
+    }
+
+    .stars::before{
+      background-image:
+        radial-gradient(1.5px 1.5px at 18% 40%, rgba(255,255,255,.72) 45%, transparent 55%),
+        radial-gradient(2px 2px at 42% 14%, rgba(255,255,255,.86) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 74% 44%, rgba(255,255,255,.68) 45%, transparent 55%);
+      animation:starsB 40s linear infinite;
+    }
+
+    .stars::after{
+      background-image:
+        radial-gradient(2px 2px at 16% 84%, rgba(255,255,255,.76) 45%, transparent 55%),
+        radial-gradient(1.5px 1.5px at 52% 56%, rgba(255,255,255,.84) 45%, transparent 55%),
+        radial-gradient(2px 2px at 78% 82%, rgba(255,255,255,.68) 45%, transparent 55%);
+      animation:starsC 46s linear infinite;
+    }
+
+    @keyframes starsA{from{transform:translate3d(0,0,0)}to{transform:translate3d(-16px,10px,0)}}
+    @keyframes starsB{from{transform:translate3d(0,0,0)}to{transform:translate3d(20px,-12px,0)}}
+    @keyframes starsC{from{transform:translate3d(0,0,0)}to{transform:translate3d(-10px,-16px,0)}}
+
+    .page{
+      position:relative;
+      z-index:1;
+      max-width:var(--max);
+      margin:0 auto;
+      padding:20px 18px 56px;
+    }
+
+    .topbar,.hero,.section{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:var(--radiusXl);
+      background:linear-gradient(180deg,rgba(9,18,40,.84),rgba(10,20,46,.56));
+      box-shadow:var(--shadow);
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      padding:14px 18px;
+      margin-bottom:16px;
+      border-radius:999px;
+      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(10,20,46,.48));
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .brandMark{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      transform:rotate(45deg);
+      border:1px solid rgba(241,210,141,.24);
+      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
+      box-shadow:0 12px 28px rgba(0,0,0,.24);
+      flex:0 0 auto;
+    }
+
+    .brandTitle{
+      margin:0 0 3px;
+      font-size:.96rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .brandSubtitle{
+      margin:0;
+      color:var(--muted);
+      font-size:.82rem;
+    }
+
+    .backLink{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      border:1px solid rgba(241,210,141,.26);
+      border-radius:999px;
+      padding:11px 16px;
+      background:linear-gradient(180deg,rgba(18,36,78,.92),rgba(10,22,48,.84));
+      color:var(--text);
+      font-size:.82rem;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .hero{
+      padding:30px 24px 24px;
+      margin-bottom:16px;
+    }
+
+    .hero::before,.section::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 18% 0%, rgba(241,210,141,.08), transparent 24%),
+        radial-gradient(circle at 84% 0%, rgba(255,240,193,.05), transparent 18%);
+    }
+
+    .eyebrow{
+      position:relative;
+      z-index:1;
+      margin:0 0 10px;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .heroGrid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(280px,.9fr);
+      gap:20px;
+      align-items:center;
+    }
+
+    .heroTitle{
+      margin:0 0 12px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2.5rem,7vw,5rem);
+      line-height:.92;
+    }
+
+    .heroCopy{
+      margin:0;
+      max-width:720px;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.72;
+    }
+
+    .coinWrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:260px;
+    }
+
+    .coin{
+      position:relative;
+      width:200px;
+      height:200px;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 30% 28%, rgba(255,245,214,.94), transparent 18%),
+        linear-gradient(145deg,#f7e3a8,#d5a84f 56%,#9e6f1d);
+      border:1px solid rgba(255,232,170,.40);
+      box-shadow:0 24px 60px rgba(0,0,0,.42), inset 0 0 34px rgba(255,255,255,.16);
+      display:grid;
+      place-items:center;
+    }
+
+    .coin::before{
+      content:"";
+      position:absolute;
+      inset:16px;
+      border-radius:999px;
+      border:1px solid rgba(255,247,220,.34);
+    }
+
+    .coin span{
+      position:relative;
+      z-index:1;
+      color:#1e1505;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:1.48rem;
+      font-weight:700;
+      line-height:.96;
+      text-align:center;
+      letter-spacing:.05em;
+    }
+
+    .section{
+      padding:22px;
+      margin-bottom:16px;
+    }
+
+    .sectionTitle{
+      position:relative;
+      z-index:1;
+      margin:0 0 12px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(1.6rem,4vw,2.4rem);
+      line-height:1.02;
+    }
+
+    .sectionCopy{
+      position:relative;
+      z-index:1;
+      margin:0 0 16px;
+      color:var(--muted);
+      font-size:.96rem;
+      line-height:1.7;
+      max-width:760px;
+    }
+
+    .grid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .card{
+      border:1px solid rgba(173,212,255,.10);
+      border-radius:20px;
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      padding:18px;
+    }
+
+    .cardTitle{
+      margin:0 0 8px;
+      font-size:1rem;
+      font-weight:800;
+      line-height:1.22;
+    }
+
+    .cardCopy{
+      margin:0;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.62;
+    }
+
+    @media (max-width:960px){
+      .heroGrid,.grid{grid-template-columns:1fr}
+      .topbar{flex-direction:column;align-items:flex-start;border-radius:26px}
+      .coin{width:170px;height:170px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .stars,.stars::before,.stars::after{animation:none}
+    }
   </style>
 </head>
 <body>
+  <div class="stars" aria-hidden="true"></div>
+
   <main class="page">
-    <section class="shell">
-      <p class="eyebrow">Products / ARCHCOIN</p>
-      <h1>ARCHCOIN</h1>
-      <p>Flagship financial-intelligence asset. This page is now the dedicated extension surface for ARCHCOIN under the products chamber.</p>
-      <a class="cta" href="/products/">Back to Products</a>
+    <header class="topbar" aria-label="ARCHCOIN page header">
+      <div class="brand">
+        <div class="brandMark" aria-hidden="true"></div>
+        <div>
+          <p class="brandTitle">Diamond Gate Bridge</p>
+          <p class="brandSubtitle">Products / ARCHCOIN</p>
+        </div>
+      </div>
+      <a class="backLink" href="/products/">Back to Products</a>
+    </header>
+
+    <section class="hero" aria-label="ARCHCOIN hero">
+      <p class="eyebrow">Flagship product</p>
+      <div class="heroGrid">
+        <div>
+          <h1 class="heroTitle">ARCHCOIN</h1>
+          <p class="heroCopy">
+            A premium financial-intelligence asset built to hold identity, scarcity, and ownership with a sharper public presence.
+          </p>
+        </div>
+        <div class="coinWrap" aria-hidden="true">
+          <div class="coin"><span>ARCH<br>COIN</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-label="ARCHCOIN opening extensions">
+      <p class="eyebrow">Initial extension blocks</p>
+      <h2 class="sectionTitle">Asset. Identity. Ownership.</h2>
+      <p class="sectionCopy">
+        This is the first extension surface for ARCHCOIN under the products chamber. It establishes the clean premium read now and leaves room for deeper Russian-doll expansion later.
+      </p>
+      <div class="grid">
+        <article class="card">
+          <h3 class="cardTitle">Value surface</h3>
+          <p class="cardCopy">ARCHCOIN should feel substantial on arrival, not like a hidden feature inside a larger stack.</p>
+        </article>
+        <article class="card">
+          <h3 class="cardTitle">Ownership signal</h3>
+          <p class="cardCopy">The product must present private ownership, scarcity, and identity with immediate clarity.</p>
+        </article>
+        <article class="card">
+          <h3 class="cardTitle">Brand anchor</h3>
+          <p class="cardCopy">ARCHCOIN remains one of the first visible truths in the products chamber and beyond it.</p>
+        </article>
+      </div>
     </section>
   </main>
 </body>

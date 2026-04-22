@@ -3,7 +3,7 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
 
-  function createElement(tag, className, parent, text) {
+  function el(tag, className, parent, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
     if (typeof text === "string") node.textContent = text;
@@ -11,96 +11,83 @@
     return node;
   }
 
-  function setStyles(node, styles) {
+  function css(node, styles) {
     Object.assign(node.style, styles);
   }
 
-  function formatMoney(value) {
+  function money(value) {
     return `$${Number(value).toLocaleString()}`;
-  }
-
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
   }
 
   class ProductsPlanetRuntime {
     constructor(options) {
-      this.stage = options.stage || null;
+      this.stage = options.stage || options.mount || null;
       this.mount = options.mount || options.stage || null;
       this.host = options.host || null;
-      this.contract = options.contract || "unknown-contract";
-      this.meta = options.meta || {};
-      this.reducedMotion = !!options.reducedMotion;
+      this.contract = options.contract || "PRODUCTS_HOST_CONTRACT_V1";
       this.receipts = options.receipts || null;
-      this.root = null;
-      this.frame = null;
-      this.orbiters = [];
+      this.reducedMotion = !!options.reducedMotion;
       this.cleanup = [];
-      this.cards = [];
-      this.activeIndex = 0;
-      this.activeCard = null;
       this.catalog = [
         {
           id: "architecture",
-          eyebrow: "North line",
+          lane: "North",
           title: "Architecture Systems",
-          blurb:
-            "Structured products for organizations that need a governing model, runtime order, and clean execution surfaces.",
-          metric: "Contract-first",
           price: 18000,
-          signal: "High structure",
+          signal: "Contract-first",
+          body:
+            "Execution architecture for products that need clean ownership, routing, and stable governing structure.",
           bullets: [
-            "Operating architecture",
-            "Decision and authority map",
+            "Authority and scope map",
+            "Contract and boundary design",
             "Execution-lane cleanup",
           ],
         },
         {
           id: "runtime",
-          eyebrow: "East line",
+          lane: "East",
           title: "Runtime Builds",
-          blurb:
-            "Interactive runtime surfaces that convert abstract structure into visible, working experiences.",
-          metric: "Stage-ready",
           price: 24000,
-          signal: "Live motion",
+          signal: "Live-stage",
+          body:
+            "Interactive product surfaces that move from proof-of-concept to visibly working runtime expression.",
           bullets: [
-            "Landing/runtime surfaces",
-            "Page-state orchestration",
-            "Visible stage ownership",
+            "Interactive page systems",
+            "Mounted visual stage",
+            "State and handoff flow",
           ],
         },
         {
           id: "instrumentation",
-          eyebrow: "West line",
+          lane: "West",
           title: "Instrumentation",
-          blurb:
-            "Audit and diagnostic products built to expose what is live, what is stale, and what is drifting.",
-          metric: "Evidence-first",
           price: 15000,
-          signal: "Audit depth",
+          signal: "Evidence-first",
+          body:
+            "Diagnostic products built to expose hidden breaks, stale layers, and failure surfaces before they spread.",
           bullets: [
+            "Audit and trace surfaces",
             "Break isolation",
-            "Behavior traces",
-            "Failure-surface reduction",
+            "Failure compression",
           ],
         },
         {
           id: "deployment",
-          eyebrow: "South line",
+          lane: "South",
           title: "Deployment Paths",
-          blurb:
-            "Practical release products for moving from proof to stable public delivery without losing the contract.",
-          metric: "Release-safe",
           price: 12000,
-          signal: "Stability",
+          signal: "Release-safe",
+          body:
+            "Stable release paths for moving from working code to public delivery without losing continuity.",
           bullets: [
-            "Publish flow cleanup",
+            "Publish hardening",
             "Surface continuity",
-            "Post-launch hardening",
+            "Post-launch stabilization",
           ],
         },
       ];
+      this.activeIndex = 0;
+      this.nodes = {};
     }
 
     write(level, text) {
@@ -116,354 +103,313 @@
         } catch (_) {}
       });
       this.cleanup = [];
-      this.orbiters = [];
-      this.cards = [];
-      this.activeCard = null;
       if (this.mount) {
         this.mount.innerHTML = "";
         this.mount.removeAttribute("data-runtime");
       }
     }
 
+    create(options) {
+      this.mountRuntime(options);
+      return this;
+    }
+
     mountRuntime() {
-      if (!this.mount) {
-        throw new Error("mount target missing");
-      }
+      if (!this.mount) throw new Error("mount target missing");
 
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-runtime-live-v1");
+      this.mount.setAttribute("data-runtime", "products-runtime-live-v2");
 
-      setStyles(this.mount, {
+      css(this.mount, {
         position: "relative",
         minHeight: "560px",
         overflow: "hidden",
         pointerEvents: "auto",
       });
 
-      this.root = createElement("div", "products-runtime-root", this.mount);
-      setStyles(this.root, {
+      const root = el("div", "products-live-root", this.mount);
+      css(root, {
         position: "relative",
         minHeight: "560px",
         overflow: "hidden",
-        padding: "24px",
-        background: [
-          "radial-gradient(circle at 50% 24%, rgba(58,103,188,0.22), transparent 26%)",
-          "radial-gradient(circle at 18% 82%, rgba(13, 110, 140, 0.16), transparent 22%)",
-          "linear-gradient(180deg, rgba(4,13,32,0.54), rgba(4,13,32,0.22))",
-        ].join(","),
+        padding: "20px",
         color: "#edf5ff",
         fontFamily:
           'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+        background: [
+          "radial-gradient(circle at 22% 30%, rgba(62,112,214,0.18), transparent 24%)",
+          "radial-gradient(circle at 80% 18%, rgba(241,210,141,0.08), transparent 16%)",
+          "radial-gradient(circle at 50% 100%, rgba(7,61,110,0.18), transparent 28%)",
+          "linear-gradient(180deg, rgba(4,13,32,0.20), rgba(4,13,32,0.04))",
+        ].join(","),
       });
 
-      this.buildRuntimeShell();
-      this.buildCosmicField();
-      this.buildHeroPanel();
-      this.buildCatalogRail();
-      this.buildActionFooter();
-      this.activateCard(0);
-      this.startMotion();
+      const stars = el("div", "", root);
+      css(stars, {
+        position: "absolute",
+        inset: "0",
+        pointerEvents: "none",
+        backgroundImage: [
+          "radial-gradient(2px 2px at 10% 20%, rgba(255,255,255,0.92) 40%, transparent 55%)",
+          "radial-gradient(2px 2px at 24% 78%, rgba(255,255,255,0.86) 40%, transparent 55%)",
+          "radial-gradient(1.5px 1.5px at 49% 36%, rgba(255,255,255,0.75) 40%, transparent 55%)",
+          "radial-gradient(2px 2px at 69% 22%, rgba(255,255,255,0.88) 40%, transparent 55%)",
+          "radial-gradient(2px 2px at 84% 72%, rgba(255,255,255,0.82) 40%, transparent 55%)",
+        ].join(","),
+        opacity: "0.9",
+      });
 
-      this.write("good", "Products live runtime entered.");
-      this.write("good", "Products showcase surface rendered.");
-      this.write("good", "Interactive products stage active.");
-    }
-
-    buildRuntimeShell() {
-      this.frame = createElement("div", "products-runtime-frame", this.root);
-      setStyles(this.frame, {
+      const grid = el("div", "", root);
+      css(grid, {
         position: "relative",
-        minHeight: "560px",
+        zIndex: "1",
         maxWidth: "1120px",
         margin: "0 auto",
         display: "grid",
-        gridTemplateColumns: "minmax(0, 1.1fr) minmax(300px, 0.9fr)",
+        gridTemplateColumns: window.innerWidth <= 920 ? "1fr" : "1.08fr 0.92fr",
         gap: "18px",
-        zIndex: "1",
+        alignItems: "stretch",
       });
 
-      if (window.innerWidth <= 920) {
-        this.frame.style.gridTemplateColumns = "1fr";
-      }
-
-      const resize = () => {
-        this.frame.style.gridTemplateColumns =
-          window.innerWidth <= 920
-            ? "1fr"
-            : "minmax(0, 1.1fr) minmax(300px, 0.9fr)";
+      const handleResize = () => {
+        grid.style.gridTemplateColumns =
+          window.innerWidth <= 920 ? "1fr" : "1.08fr 0.92fr";
       };
+      window.addEventListener("resize", handleResize);
+      this.cleanup.push(() => window.removeEventListener("resize", handleResize));
 
-      window.addEventListener("resize", resize);
-      this.cleanup.push(() => window.removeEventListener("resize", resize));
-    }
+      const stagePanel = el("section", "", grid);
+      css(stagePanel, {
+        position: "relative",
+        minHeight: "520px",
+        border: "1px solid rgba(173,212,255,0.14)",
+        borderRadius: "30px",
+        overflow: "hidden",
+        background:
+          "linear-gradient(180deg, rgba(9,18,40,0.62), rgba(10,20,46,0.34))",
+        boxShadow: "0 24px 60px rgba(0,0,0,0.34)",
+      });
 
-    buildCosmicField() {
-      const field = createElement("div", "products-cosmic-field", this.root);
-      setStyles(field, {
+      const veil = el("div", "", stagePanel);
+      css(veil, {
         position: "absolute",
         inset: "0",
-        overflow: "hidden",
+        background:
+          "linear-gradient(90deg, rgba(4,13,32,0.08), rgba(4,13,32,0.42) 38%, rgba(4,13,32,0.78) 70%, rgba(4,13,32,0.90))",
         pointerEvents: "none",
       });
 
-      const ring = createElement("div", "products-cosmic-ring", field);
-      setStyles(ring, {
+      const orbitWrap = el("div", "", stagePanel);
+      css(orbitWrap, {
         position: "absolute",
-        width: "420px",
-        height: "420px",
-        left: "23%",
-        top: "45%",
+        left: window.innerWidth <= 920 ? "50%" : "26%",
+        top: window.innerWidth <= 920 ? "27%" : "50%",
         transform: "translate(-50%, -50%)",
+        width: window.innerWidth <= 920 ? "220px" : "360px",
+        height: window.innerWidth <= 920 ? "220px" : "360px",
+        pointerEvents: "none",
+      });
+
+      const ring = el("div", "", orbitWrap);
+      css(ring, {
+        position: "absolute",
+        inset: "0",
         borderRadius: "999px",
         border: "1px solid rgba(173,212,255,0.10)",
         boxShadow:
-          "0 0 0 28px rgba(173,212,255,0.022), 0 0 0 56px rgba(173,212,255,0.012)",
-        opacity: "0.95",
+          "0 0 0 24px rgba(173,212,255,0.02),0 0 0 48px rgba(173,212,255,0.012)",
       });
 
-      const core = createElement("div", "products-cosmic-core", field);
-      setStyles(core, {
+      const diamond = el("div", "", orbitWrap);
+      css(diamond, {
         position: "absolute",
-        width: "164px",
-        height: "164px",
-        left: "23%",
-        top: "45%",
+        left: "50%",
+        top: "50%",
+        width: window.innerWidth <= 920 ? "118px" : "158px",
+        height: window.innerWidth <= 920 ? "118px" : "158px",
         transform: "translate(-50%, -50%) rotate(45deg)",
         borderRadius: "26px",
+        border: "1px solid rgba(241,210,141,0.22)",
         background:
-          "linear-gradient(180deg, rgba(18,36,78,0.95), rgba(10,22,48,0.86))",
-        border: "1px solid rgba(241,210,141,0.20)",
+          "linear-gradient(180deg, rgba(18,36,78,0.96), rgba(10,22,48,0.88))",
         boxShadow:
-          "0 24px 60px rgba(0,0,0,0.42), inset 0 0 34px rgba(255,255,255,0.03)",
+          "0 18px 44px rgba(0,0,0,0.40), inset 0 0 30px rgba(255,255,255,0.03)",
       });
 
-      const coreInner = createElement("div", "", core);
-      setStyles(coreInner, {
+      const diamondInner = el("div", "", diamond);
+      css(diamondInner, {
         position: "absolute",
-        inset: "16px",
-        transform: "rotate(-45deg)",
+        inset: "14px",
         borderRadius: "18px",
         border: "1px solid rgba(173,212,255,0.14)",
+        transform: "rotate(-45deg)",
         display: "grid",
         placeItems: "center",
         textAlign: "center",
         padding: "12px",
-      });
-
-      const coreTitle = createElement("div", "", coreInner, "Products");
-      setStyles(coreTitle, {
-        fontFamily: 'Georgia, "Times New Roman", serif',
         color: "#f1d28d",
-        fontSize: "1.75rem",
-        lineHeight: "1",
-        marginBottom: "6px",
+        fontFamily: 'Georgia, "Times New Roman", serif',
+        fontSize: window.innerWidth <= 920 ? "1.5rem" : "2rem",
+        lineHeight: "0.95",
       });
+      diamondInner.innerHTML = "Products";
 
-      const coreSub = createElement("div", "", coreInner, "Live stage");
-      setStyles(coreSub, {
-        color: "#9fb2d2",
-        fontSize: ".88rem",
-        lineHeight: "1.5",
-      });
-
-      const orbitSpecs = [
-        { angle: 0, label: "Architecture", x: 210, y: 0 },
-        { angle: 90, label: "Runtime", x: 0, y: 210 },
-        { angle: 180, label: "Instrumentation", x: -210, y: 0 },
-        { angle: 270, label: "Deployment", x: 0, y: -210 },
-      ];
-
-      orbitSpecs.forEach((spec, index) => {
-        const orbiter = createElement("button", "products-orbiter", field);
+      const orbiters = [];
+      this.catalog.forEach((item, index) => {
+        const orbiter = el("button", "", orbitWrap);
         orbiter.type = "button";
-        orbiter.setAttribute("aria-label", spec.label);
+        orbiter.setAttribute("aria-label", item.title);
         orbiter.textContent = String(index + 1);
-
-        setStyles(orbiter, {
+        css(orbiter, {
           position: "absolute",
-          width: "52px",
-          height: "52px",
-          left: "23%",
-          top: "45%",
+          left: "50%",
+          top: "50%",
+          width: "48px",
+          height: "48px",
           transform: "translate(-50%, -50%)",
           borderRadius: "999px",
-          border: "1px solid rgba(241,210,141,0.22)",
+          border: "1px solid rgba(241,210,141,0.24)",
           background:
             "linear-gradient(180deg, rgba(13,26,56,0.96), rgba(10,19,42,0.90))",
           color: "#f1d28d",
           fontWeight: "800",
           fontSize: "1rem",
-          boxShadow: "0 10px 24px rgba(0,0,0,0.32)",
-          pointerEvents: "auto",
           cursor: "pointer",
+          pointerEvents: "auto",
+          boxShadow: "0 10px 24px rgba(0,0,0,0.32)",
         });
-
-        orbiter.addEventListener("click", () => this.activateCard(index));
-        this.cleanup.push(() =>
-          orbiter.removeEventListener("click", () => this.activateCard(index))
-        );
-
-        this.orbiters.push({
-          node: orbiter,
-          radiusX: spec.x,
-          radiusY: spec.y,
-          phase: (Math.PI / 2) * index,
-          speed: 0.00075 + index * 0.00012,
-          label: spec.label,
-        });
-      });
-    }
-
-    buildHeroPanel() {
-      const left = createElement("section", "products-left-panel", this.frame);
-      setStyles(left, {
-        position: "relative",
-        minHeight: "560px",
-        border: "1px solid rgba(173,212,255,0.14)",
-        borderRadius: "30px",
-        background:
-          "linear-gradient(180deg, rgba(9,18,40,0.48), rgba(9,18,40,0.22))",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.34)",
-        overflow: "hidden",
+        const onClick = () => this.activate(index);
+        orbiter.addEventListener("click", onClick);
+        this.cleanup.push(() => orbiter.removeEventListener("click", onClick));
+        orbiters.push({ node: orbiter, phase: (Math.PI / 2) * index });
       });
 
-      const overlay = createElement("div", "", left);
-      setStyles(overlay, {
-        position: "absolute",
-        inset: "0",
-        background:
-          "linear-gradient(90deg, rgba(4,13,32,0.10) 0%, rgba(4,13,32,0.48) 28%, rgba(4,13,32,0.78) 56%, rgba(4,13,32,0.90) 100%)",
-        pointerEvents: "none",
-      });
-
-      const content = createElement("div", "", left);
-      setStyles(content, {
+      const hero = el("div", "", stagePanel);
+      css(hero, {
         position: "relative",
         zIndex: "1",
-        minHeight: "560px",
+        minHeight: "520px",
         display: "flex",
-        alignItems: "stretch",
         justifyContent: "flex-end",
+        alignItems: "stretch",
       });
 
-      this.heroCard = createElement("div", "products-hero-card", content);
-      setStyles(this.heroCard, {
-        width: "min(520px, 100%)",
+      const heroCard = el("div", "", hero);
+      css(heroCard, {
+        width: "min(520px,100%)",
         margin: "22px",
-        border: "1px solid rgba(173,212,255,0.14)",
-        borderRadius: "28px",
-        background:
-          "linear-gradient(180deg, rgba(9,18,40,0.90), rgba(10,20,46,0.72))",
-        boxShadow: "0 24px 60px rgba(0,0,0,0.36)",
         padding: "24px",
+        borderRadius: "28px",
+        border: "1px solid rgba(173,212,255,0.14)",
+        background:
+          "linear-gradient(180deg, rgba(9,18,40,0.90), rgba(10,20,46,0.74))",
+        boxShadow: "0 24px 60px rgba(0,0,0,0.36)",
         backdropFilter: "blur(8px)",
       });
 
-      this.heroEyebrow = createElement("div", "", this.heroCard);
-      setStyles(this.heroEyebrow, {
+      const eyebrow = el("div", "", heroCard);
+      css(eyebrow, {
         color: "#f1d28d",
         fontWeight: "800",
+        fontSize: ".78rem",
         letterSpacing: ".14em",
         textTransform: "uppercase",
-        fontSize: ".82rem",
         marginBottom: "12px",
       });
 
-      this.heroTitle = createElement("h2", "", this.heroCard);
-      setStyles(this.heroTitle, {
+      const title = el("h2", "", heroCard);
+      css(title, {
         margin: "0 0 12px",
-        fontFamily: 'Georgia, "Times New Roman", serif',
-        fontSize: "clamp(2rem, 4.2vw, 3.6rem)",
-        lineHeight: ".95",
         color: "#edf5ff",
+        fontFamily: 'Georgia, "Times New Roman", serif',
+        fontSize: "clamp(2rem,4.4vw,3.6rem)",
+        lineHeight: ".95",
       });
 
-      this.heroBlurb = createElement("p", "", this.heroCard);
-      setStyles(this.heroBlurb, {
+      const body = el("p", "", heroCard);
+      css(body, {
         margin: "0 0 18px",
         color: "#9fb2d2",
         fontSize: "1rem",
-        lineHeight: "1.7",
+        lineHeight: "1.72",
       });
 
-      this.heroMetaGrid = createElement("div", "", this.heroCard);
-      setStyles(this.heroMetaGrid, {
+      const metaGrid = el("div", "", heroCard);
+      css(metaGrid, {
         display: "grid",
-        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+        gridTemplateColumns: window.innerWidth <= 560 ? "1fr" : "repeat(3,minmax(0,1fr))",
         gap: "12px",
         marginBottom: "18px",
       });
 
-      const responsive = () => {
-        this.heroMetaGrid.style.gridTemplateColumns =
-          window.innerWidth <= 560 ? "1fr" : "repeat(3, minmax(0, 1fr))";
+      const resizeMeta = () => {
+        metaGrid.style.gridTemplateColumns =
+          window.innerWidth <= 560 ? "1fr" : "repeat(3,minmax(0,1fr))";
+        orbitWrap.style.left = window.innerWidth <= 920 ? "50%" : "26%";
+        orbitWrap.style.top = window.innerWidth <= 920 ? "27%" : "50%";
+        orbitWrap.style.width = window.innerWidth <= 920 ? "220px" : "360px";
+        orbitWrap.style.height = window.innerWidth <= 920 ? "220px" : "360px";
+        diamond.style.width = window.innerWidth <= 920 ? "118px" : "158px";
+        diamond.style.height = window.innerWidth <= 920 ? "118px" : "158px";
+        diamondInner.style.fontSize = window.innerWidth <= 920 ? "1.5rem" : "2rem";
       };
-      responsive();
-      window.addEventListener("resize", responsive);
-      this.cleanup.push(() => window.removeEventListener("resize", responsive));
+      window.addEventListener("resize", resizeMeta);
+      this.cleanup.push(() => window.removeEventListener("resize", resizeMeta));
 
-      this.heroMetaA = this.createMetaCard(this.heroMetaGrid, "Signal");
-      this.heroMetaB = this.createMetaCard(this.heroMetaGrid, "Price");
-      this.heroMetaC = this.createMetaCard(this.heroMetaGrid, "Contract");
+      const mkMeta = (label) => {
+        const card = el("div", "", metaGrid);
+        css(card, {
+          border: "1px solid rgba(173,212,255,0.12)",
+          borderRadius: "18px",
+          background:
+            "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))",
+          padding: "14px",
+        });
+        const k = el("div", "", card, label);
+        css(k, {
+          marginBottom: "8px",
+          color: "#9fb2d2",
+          fontWeight: "700",
+          fontSize: ".72rem",
+          letterSpacing: ".12em",
+          textTransform: "uppercase",
+        });
+        const v = el("div", "", card);
+        css(v, {
+          color: "#8ff0c5",
+          fontWeight: "800",
+          fontSize: "1rem",
+          lineHeight: "1.4",
+        });
+        return v;
+      };
 
-      const bulletTitle = createElement("div", "", this.heroCard, "Included lanes");
-      setStyles(bulletTitle, {
+      const signalValue = mkMeta("Signal");
+      const priceValue = mkMeta("Price");
+      const contractValue = mkMeta("Lane");
+
+      const bulletsTitle = el("div", "", heroCard, "Included lanes");
+      css(bulletsTitle, {
         color: "#f1d28d",
         fontWeight: "800",
+        fontSize: ".76rem",
         letterSpacing: ".12em",
         textTransform: "uppercase",
-        fontSize: ".76rem",
         marginBottom: "12px",
       });
 
-      this.heroBulletList = createElement("div", "", this.heroCard);
-      setStyles(this.heroBulletList, {
-        display: "grid",
-        gap: "10px",
-      });
-    }
+      const bullets = el("div", "", heroCard);
+      css(bullets, { display: "grid", gap: "10px" });
 
-    createMetaCard(parent, label) {
-      const card = createElement("div", "", parent);
-      setStyles(card, {
-        border: "1px solid rgba(173,212,255,0.12)",
-        borderRadius: "18px",
-        background:
-          "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))",
-        padding: "14px",
-      });
-
-      const k = createElement("div", "", card, label);
-      setStyles(k, {
-        marginBottom: "8px",
-        color: "#9fb2d2",
-        fontWeight: "700",
-        fontSize: ".72rem",
-        letterSpacing: ".12em",
-        textTransform: "uppercase",
-      });
-
-      const v = createElement("div", "", card, "");
-      setStyles(v, {
-        color: "#8ff0c5",
-        fontWeight: "800",
-        fontSize: "1rem",
-        lineHeight: "1.4",
-      });
-
-      return v;
-    }
-
-    buildCatalogRail() {
-      const right = createElement("section", "products-right-panel", this.frame);
-      setStyles(right, {
+      const side = el("section", "", grid);
+      css(side, {
         display: "grid",
         gap: "14px",
         alignContent: "start",
       });
 
-      const railHeader = createElement("div", "", right);
-      setStyles(railHeader, {
+      const sideHeader = el("div", "", side);
+      css(sideHeader, {
         border: "1px solid rgba(173,212,255,0.14)",
         borderRadius: "24px",
         background:
@@ -472,18 +418,18 @@
         boxShadow: "0 18px 42px rgba(0,0,0,0.28)",
       });
 
-      const railEyebrow = createElement("div", "", railHeader, "Products catalog");
-      setStyles(railEyebrow, {
+      const sideEyebrow = el("div", "", sideHeader, "Products catalog");
+      css(sideEyebrow, {
         color: "#f1d28d",
         fontWeight: "800",
+        fontSize: ".76rem",
         letterSpacing: ".14em",
         textTransform: "uppercase",
-        fontSize: ".76rem",
         marginBottom: "8px",
       });
 
-      const railTitle = createElement("div", "", railHeader, "Selectable product lanes");
-      setStyles(railTitle, {
+      const sideTitle = el("div", "", sideHeader, "Selectable product lanes");
+      css(sideTitle, {
         color: "#edf5ff",
         fontFamily: 'Georgia, "Times New Roman", serif',
         fontSize: "1.65rem",
@@ -491,31 +437,27 @@
         marginBottom: "8px",
       });
 
-      const railCopy = createElement(
+      const sideCopy = el(
         "div",
         "",
-        railHeader,
-        "The runtime is now stable enough to hold real product cards instead of a diagnostic shell."
+        sideHeader,
+        "The products stage is now alive. This runtime controls what the products page actually looks like."
       );
-      setStyles(railCopy, {
+      css(sideCopy, {
         color: "#9fb2d2",
         fontSize: ".96rem",
         lineHeight: "1.65",
       });
 
-      this.cardRail = createElement("div", "", right);
-      setStyles(this.cardRail, {
-        display: "grid",
-        gap: "12px",
-      });
+      const rail = el("div", "", side);
+      css(rail, { display: "grid", gap: "12px" });
 
-      this.catalog.forEach((item, index) => {
-        const card = createElement("button", "", this.cardRail);
+      const cards = this.catalog.map((item, index) => {
+        const card = el("button", "", rail);
         card.type = "button";
-
-        setStyles(card, {
-          textAlign: "left",
+        css(card, {
           width: "100%",
+          textAlign: "left",
           border: "1px solid rgba(173,212,255,0.12)",
           borderRadius: "22px",
           background:
@@ -524,25 +466,13 @@
           color: "#edf5ff",
           cursor: "pointer",
           boxShadow: "0 12px 30px rgba(0,0,0,0.22)",
-          transition: "transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease",
         });
+        const onClick = () => this.activate(index);
+        card.addEventListener("click", onClick);
+        this.cleanup.push(() => card.removeEventListener("click", onClick));
 
-        card.addEventListener("click", () => this.activateCard(index));
-        card.addEventListener("mouseenter", () => {
-          if (this.activeIndex !== index) {
-            card.style.transform = "translateY(-2px)";
-            card.style.borderColor = "rgba(241,210,141,0.24)";
-          }
-        });
-        card.addEventListener("mouseleave", () => {
-          if (this.activeIndex !== index) {
-            card.style.transform = "translateY(0)";
-            card.style.borderColor = "rgba(173,212,255,0.12)";
-          }
-        });
-
-        const eyebrow = createElement("div", "", card, item.eyebrow);
-        setStyles(eyebrow, {
+        const c1 = el("div", "", card, `${item.lane} line`);
+        css(c1, {
           color: "#f1d28d",
           fontWeight: "800",
           fontSize: ".72rem",
@@ -551,52 +481,50 @@
           marginBottom: "8px",
         });
 
-        const title = createElement("div", "", card, item.title);
-        setStyles(title, {
-          fontSize: "1.22rem",
+        const c2 = el("div", "", card, item.title);
+        css(c2, {
+          fontSize: "1.18rem",
           fontWeight: "800",
           lineHeight: "1.25",
           marginBottom: "8px",
         });
 
-        const blurb = createElement("div", "", card, item.blurb);
-        setStyles(blurb, {
+        const c3 = el("div", "", card, item.body);
+        css(c3, {
           color: "#9fb2d2",
           fontSize: ".92rem",
           lineHeight: "1.6",
           marginBottom: "12px",
         });
 
-        const meta = createElement("div", "", card);
-        setStyles(meta, {
+        const meta = el("div", "", card);
+        css(meta, {
           display: "flex",
-          alignItems: "center",
           justifyContent: "space-between",
+          alignItems: "center",
           gap: "12px",
           flexWrap: "wrap",
         });
 
-        const signal = createElement("div", "", meta, item.signal);
-        setStyles(signal, {
+        const m1 = el("div", "", meta, item.signal);
+        css(m1, {
           color: "#8ff0c5",
           fontWeight: "700",
           fontSize: ".9rem",
         });
 
-        const price = createElement("div", "", meta, formatMoney(item.price));
-        setStyles(price, {
+        const m2 = el("div", "", meta, money(item.price));
+        css(m2, {
           color: "#edf5ff",
           fontWeight: "800",
           fontSize: ".94rem",
         });
 
-        this.cards.push(card);
+        return card;
       });
-    }
 
-    buildActionFooter() {
-      this.footer = createElement("div", "", this.root);
-      setStyles(this.footer, {
+      const footer = el("div", "", root);
+      css(footer, {
         position: "relative",
         zIndex: "1",
         maxWidth: "1120px",
@@ -606,68 +534,107 @@
         background:
           "linear-gradient(180deg, rgba(9,18,40,0.78), rgba(10,20,46,0.58))",
         padding: "18px",
-        display: "grid",
-        gap: "12px",
         boxShadow: "0 18px 42px rgba(0,0,0,0.22)",
       });
 
-      const top = createElement("div", "", this.footer);
-      setStyles(top, {
+      const footerTop = el("div", "", footer);
+      css(footerTop, {
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         gap: "12px",
         flexWrap: "wrap",
+        marginBottom: "10px",
       });
 
-      const title = createElement("div", "", top, "Runtime status: products surface active");
-      setStyles(title, {
+      const footerA = el("div", "", footerTop, "Runtime status: products surface active");
+      css(footerA, {
         color: "#f1d28d",
         fontWeight: "800",
+        fontSize: ".78rem",
         letterSpacing: ".10em",
         textTransform: "uppercase",
-        fontSize: ".78rem",
       });
 
-      this.footerTag = createElement("div", "", top, this.contract);
-      setStyles(this.footerTag, {
+      const footerB = el("div", "", footerTop, this.contract);
+      css(footerB, {
         color: "#8ff0c5",
         fontWeight: "800",
         fontSize: ".84rem",
       });
 
-      this.footerCopy = createElement(
+      const footerCopy = el(
         "div",
         "",
-        this.footer,
-        "The runtime is now rendering the products experience rather than the boot proof card."
+        footer,
+        "Bootstrap is complete. The remaining work is now pure products design and catalog expression."
       );
-      setStyles(this.footerCopy, {
+      css(footerCopy, {
         color: "#9fb2d2",
         fontSize: ".95rem",
         lineHeight: "1.65",
       });
+
+      this.nodes = {
+        eyebrow,
+        title,
+        body,
+        signalValue,
+        priceValue,
+        contractValue,
+        bullets,
+        cards,
+        orbiters,
+        diamond,
+      };
+
+      this.activate(0);
+
+      if (!this.reducedMotion) {
+        let raf = 0;
+        const tick = (time) => {
+          const t = (time || 0) * 0.001;
+          const mobile = window.innerWidth <= 920;
+          const rx = mobile ? 78 : 128;
+          const ry = mobile ? 52 : 88;
+
+          orbiters.forEach((item, index) => {
+            const a = t * 0.55 + item.phase;
+            const x = Math.cos(a) * rx;
+            const y = Math.sin(a) * ry;
+            item.node.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
+          });
+
+          const spin = Math.sin(t * 0.8) * 10;
+          this.nodes.diamond.style.transform = `translate(-50%, -50%) rotate(${45 + spin}deg)`;
+          raf = window.requestAnimationFrame(tick);
+        };
+        raf = window.requestAnimationFrame(tick);
+        this.cleanup.push(() => window.cancelAnimationFrame(raf));
+      }
+
+      this.write("good", "Products live runtime entered.");
+      this.write("good", "Products catalog surface rendered.");
+      this.write("good", "Interactive products stage active.");
     }
 
-    activateCard(index) {
-      this.activeIndex = clamp(index, 0, this.catalog.length - 1);
+    activate(index) {
+      this.activeIndex = Math.max(0, Math.min(index, this.catalog.length - 1));
       const item = this.catalog[this.activeIndex];
-      this.activeCard = item;
 
-      this.heroEyebrow.textContent = item.eyebrow;
-      this.heroTitle.textContent = item.title;
-      this.heroBlurb.textContent = item.blurb;
+      this.nodes.eyebrow.textContent = `${item.lane} line`;
+      this.nodes.title.textContent = item.title;
+      this.nodes.body.textContent = item.body;
+      this.nodes.signalValue.textContent = item.signal;
+      this.nodes.priceValue.textContent = money(item.price);
+      this.nodes.contractValue.textContent = item.lane;
 
-      this.heroMetaA.textContent = item.signal;
-      this.heroMetaB.textContent = formatMoney(item.price);
-      this.heroMetaC.textContent = item.metric;
-
-      this.heroBulletList.innerHTML = "";
+      this.nodes.bullets.innerHTML = "";
       item.bullets.forEach((bullet) => {
-        const row = createElement("div", "", this.heroBulletList);
-        setStyles(row, {
+        const row = el("div", "", this.nodes.bullets);
+        css(row, {
           display: "grid",
-          gridTemplateColumns: "12px minmax(0, 1fr)",
+          gridTemplateColumns: "12px minmax(0,1fr)",
           gap: "12px",
           alignItems: "start",
           padding: "12px 14px",
@@ -677,8 +644,8 @@
             "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025))",
         });
 
-        const dot = createElement("span", "", row);
-        setStyles(dot, {
+        const dot = el("span", "", row);
+        css(dot, {
           width: "10px",
           height: "10px",
           borderRadius: "999px",
@@ -687,16 +654,16 @@
           boxShadow: "0 0 0 4px rgba(143,240,197,0.08)",
         });
 
-        const text = createElement("div", "", row, bullet);
-        setStyles(text, {
+        const text = el("div", "", row, bullet);
+        css(text, {
           color: "#edf5ff",
           lineHeight: "1.55",
           fontSize: ".95rem",
         });
       });
 
-      this.cards.forEach((card, cardIndex) => {
-        const active = cardIndex === this.activeIndex;
+      this.nodes.cards.forEach((card, i) => {
+        const active = i === this.activeIndex;
         card.style.transform = active ? "translateY(-2px)" : "translateY(0)";
         card.style.borderColor = active
           ? "rgba(241,210,141,0.28)"
@@ -705,44 +672,16 @@
           ? "0 18px 42px rgba(0,0,0,0.30)"
           : "0 12px 30px rgba(0,0,0,0.22)";
       });
-    }
 
-    startMotion() {
-      if (this.reducedMotion) {
-        this.positionOrbiters(0);
-        return;
-      }
-
-      let raf = 0;
-      const tick = (time) => {
-        this.positionOrbiters(time || 0);
-        raf = window.requestAnimationFrame(tick);
-      };
-      raf = window.requestAnimationFrame(tick);
-      this.cleanup.push(() => window.cancelAnimationFrame(raf));
-    }
-
-    positionOrbiters(time) {
-      const cx = this.root && window.innerWidth <= 920 ? 50 : 23;
-      const cy = this.root && window.innerWidth <= 920 ? 22 : 45;
-
-      this.orbiters.forEach((orbiter, index) => {
-        const t = time * orbiter.speed + orbiter.phase;
-        const x = Math.cos(t) * 118;
-        const y = Math.sin(t) * 118 * 0.68;
-
-        orbiter.node.style.left = `${cx}%`;
-        orbiter.node.style.top = `${cy}%`;
-        orbiter.node.style.transform = `translate(calc(-50% + ${x}px), calc(-50% + ${y}px))`;
-        orbiter.node.style.opacity = index === this.activeIndex ? "1" : "0.82";
-        orbiter.node.style.borderColor =
-          index === this.activeIndex
-            ? "rgba(241,210,141,0.36)"
-            : "rgba(241,210,141,0.22)";
-        orbiter.node.style.boxShadow =
-          index === this.activeIndex
-            ? "0 12px 30px rgba(0,0,0,0.34), 0 0 0 6px rgba(241,210,141,0.05)"
-            : "0 10px 24px rgba(0,0,0,0.32)";
+      this.nodes.orbiters.forEach((orbiter, i) => {
+        const active = i === this.activeIndex;
+        orbiter.node.style.opacity = active ? "1" : "0.82";
+        orbiter.node.style.borderColor = active
+          ? "rgba(241,210,141,0.36)"
+          : "rgba(241,210,141,0.24)";
+        orbiter.node.style.boxShadow = active
+          ? "0 12px 30px rgba(0,0,0,0.34),0 0 0 6px rgba(241,210,141,0.05)"
+          : "0 10px 24px rgba(0,0,0,0.32)";
       });
     }
   }

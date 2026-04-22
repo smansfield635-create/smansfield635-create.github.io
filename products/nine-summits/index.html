@@ -9,24 +9,26 @@
   <title>The Nine Summits of Love · Products</title>
   <meta
     name="description"
-    content="The Nine Summits of Love. Book and book-launch child extension under the products gateway."
+    content="The Nine Summits of Love paired with the metaverse. The full structural spine of the book presented as a living world."
   >
 
   <style>
     :root {
-      --bg: #030711;
-      --bg-deep: #07152a;
-      --panel: rgba(255,255,255,0.05);
-      --panel-soft: rgba(255,255,255,0.025);
+      --bg: #050914;
+      --bg-deep: #08182f;
+      --panel: rgba(255,255,255,0.06);
+      --panel-soft: rgba(255,255,255,0.03);
       --line: rgba(255,255,255,0.10);
       --text: #eef4ff;
-      --muted: #9fb0cf;
+      --muted: #a5b6d6;
       --gold: #f0c876;
-      --gold-soft: #f6deb0;
+      --gold-soft: #f8e0ab;
       --blue-soft: #9dd1ff;
+      --green-soft: #9fe7c5;
+      --violet-soft: #c8b4ff;
       --shadow: 0 24px 80px rgba(0,0,0,0.42);
       --radius: 28px;
-      --max: 1180px;
+      --max: 1240px;
     }
 
     * { box-sizing: border-box; }
@@ -53,20 +55,15 @@
     body {
       overflow-x: hidden;
       background:
-        radial-gradient(circle at top, rgba(240,200,118,0.12), transparent 24%),
-        radial-gradient(circle at bottom, rgba(98,158,255,0.08), transparent 28%),
-        linear-gradient(180deg, #02050d 0%, #041126 100%);
+        radial-gradient(circle at 18% 10%, rgba(240,200,118,0.14), transparent 24%),
+        radial-gradient(circle at 82% 16%, rgba(157,209,255,0.12), transparent 22%),
+        radial-gradient(circle at 50% 88%, rgba(159,231,197,0.08), transparent 26%),
+        linear-gradient(180deg, #030711 0%, #071120 45%, #0a1830 100%);
     }
 
     a {
       color: inherit;
       text-decoration: none;
-    }
-
-    .page {
-      position: relative;
-      min-height: 100vh;
-      isolation: isolate;
     }
 
     .stars {
@@ -75,13 +72,15 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle at 15% 20%, rgba(255,255,255,0.75) 0 1px, transparent 2px),
-        radial-gradient(circle at 80% 18%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 40%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
-        radial-gradient(circle at 30% 55%, rgba(255,255,255,0.60) 0 1px, transparent 2px),
-        radial-gradient(circle at 78% 72%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
-        radial-gradient(circle at 12% 78%, rgba(255,255,255,0.65) 0 1px, transparent 2px);
-      opacity: 0.72;
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
+        radial-gradient(circle at 24% 62%, rgba(255,255,255,0.62) 0 1px, transparent 2px),
+        radial-gradient(circle at 47% 20%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 66% 34%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 82% 18%, rgba(255,255,255,0.76) 0 1px, transparent 2px),
+        radial-gradient(circle at 74% 70%, rgba(255,255,255,0.64) 0 1px, transparent 2px),
+        radial-gradient(circle at 18% 82%, rgba(255,255,255,0.68) 0 1px, transparent 2px),
+        radial-gradient(circle at 56% 86%, rgba(255,255,255,0.58) 0 1px, transparent 2px);
+      opacity: 0.8;
     }
 
     .shell {
@@ -113,9 +112,10 @@
       border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.16);
       background:
-        radial-gradient(circle at 40% 36%, rgba(255,255,255,0.95), rgba(255,221,158,0.42) 28%, rgba(138,101,38,0.22) 55%, rgba(0,0,0,0) 72%);
+        radial-gradient(circle at 35% 30%, rgba(255,255,255,0.95), rgba(255,221,158,0.50) 28%, rgba(138,101,38,0.24) 56%, rgba(0,0,0,0) 74%);
       box-shadow:
-        0 0 40px rgba(240,200,118,0.22),
+        0 0 46px rgba(240,200,118,0.24),
+        0 0 80px rgba(157,209,255,0.10),
         inset 0 0 24px rgba(255,255,255,0.08);
       flex: 0 0 auto;
     }
@@ -156,7 +156,8 @@
       transition:
         transform 0.18s ease,
         border-color 0.18s ease,
-        background 0.18s ease;
+        background 0.18s ease,
+        box-shadow 0.18s ease;
     }
 
     .nav a:hover,
@@ -166,13 +167,18 @@
     .button:focus-visible {
       transform: translateY(-1px);
       border-color: rgba(255,255,255,0.22);
-      background: rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.18);
       outline: none;
     }
 
     .button-primary {
-      background: linear-gradient(135deg, rgba(240,200,118,0.18), rgba(255,255,255,0.06));
+      background: linear-gradient(135deg, rgba(240,200,118,0.20), rgba(255,255,255,0.06));
       color: #ffffff;
+    }
+
+    .button-secondary {
+      color: var(--blue-soft);
     }
 
     .panel {
@@ -180,12 +186,12 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
     }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
+      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
       gap: 18px;
       padding: 18px 0 12px;
     }
@@ -220,7 +226,8 @@
 
     h1,
     h2,
-    h3 {
+    h3,
+    h4 {
       margin: 0;
       line-height: 1.03;
       letter-spacing: -0.04em;
@@ -235,13 +242,13 @@
     }
 
     h1 {
-      font-size: clamp(42px, 7vw, 78px);
+      font-size: clamp(44px, 7vw, 84px);
       color: #f7f1df;
       max-width: 11ch;
     }
 
     h2 {
-      font-size: clamp(26px, 3.8vw, 42px);
+      font-size: clamp(28px, 4vw, 44px);
       color: var(--gold-soft);
     }
 
@@ -250,15 +257,21 @@
       color: #ffffff;
     }
 
+    h4 {
+      font-size: 22px;
+      color: #ffffff;
+    }
+
     .lede,
     .detail,
-    .meta-value {
+    .meta-value,
+    .mini-copy {
       color: var(--muted);
     }
 
     .lede {
       margin: 14px 0 0;
-      max-width: 40rem;
+      max-width: 46rem;
       font-size: 18px;
     }
 
@@ -282,27 +295,30 @@
       margin-top: 24px;
     }
 
-    .grid {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
+    .grid-2,
+    .grid-3,
+    .grid-4,
     .stack {
       margin-top: 18px;
       display: grid;
       gap: 16px;
     }
 
+    .grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .stack { grid-template-columns: 1fr; }
+
     .card,
+    .lane-card,
+    .nested-card,
     .focus-card,
-    .nested-card {
+    .summit-card {
       padding: 20px;
       border: 1px solid rgba(255,255,255,0.08);
       border-radius: 22px;
       background:
-        radial-gradient(circle at 18% 18%, rgba(240,200,118,0.10), transparent 28%),
+        radial-gradient(circle at 18% 18%, rgba(240,200,118,0.12), transparent 28%),
         radial-gradient(circle at 82% 24%, rgba(98,158,255,0.08), transparent 26%),
         linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
       display: flex;
@@ -311,13 +327,9 @@
     }
 
     .card,
-    .nested-card {
+    .lane-card,
+    .summit-card {
       min-height: 220px;
-    }
-
-    .detail {
-      margin: 0;
-      flex: 1 1 auto;
     }
 
     .nested-shell {
@@ -325,6 +337,48 @@
       border-radius: 24px;
       border: 1px solid rgba(255,255,255,0.08);
       background: rgba(255,255,255,0.02);
+    }
+
+    .spine-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .summit-number {
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .detail {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .mini-copy {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 6px;
+    }
+
+    .pill {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
     }
 
     .footer {
@@ -339,9 +393,23 @@
       padding: 4px 2px 0;
     }
 
+    @media (max-width: 1080px) {
+      .hero,
+      .grid-4,
+      .spine-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
     @media (max-width: 980px) {
       .hero,
-      .grid {
+      .grid-2,
+      .grid-4,
+      .spine-grid {
         grid-template-columns: 1fr;
       }
     }
@@ -396,7 +464,7 @@
           </div>
         </div>
 
-        <nav class="nav" aria-label="Top navigation">
+        <nav class="nav" aria-label="Primary navigation">
           <a href="/products/">Products</a>
           <a href="/products/aai/">AAI</a>
           <a href="/products/nine-summits/" aria-current="page">Nine Summits</a>
@@ -408,31 +476,33 @@
       <main>
         <section class="panel hero" aria-labelledby="ns-title">
           <article class="hero-main">
-            <p class="eyebrow">Book and launch object</p>
-            <h1 id="ns-title">The Nine Summits of Love.</h1>
+            <p class="eyebrow">Definitive value first</p>
+            <h1 id="ns-title">A book, a path, and a world you can enter.</h1>
             <p class="lede">
-              This page holds the core book object cleanly and opens deeper descent
-              only where the next layer has a real visitor job.
+              The Nine Summits of Love is not just a book title. It is the structural
+              spine of a human-development path and the value frame for the metaverse
+              that grows from it. The book carries the meaning. The metaverse carries
+              the embodiment. The visitor should feel both.
             </p>
 
             <div class="actions">
               <a class="button button-primary" href="/prelude/">Open prelude</a>
-              <a class="button" href="/products/">Back to products</a>
+              <a class="button button-secondary" href="/products/">Back to products</a>
             </div>
           </article>
 
           <aside class="panel hero-side">
             <div>
-              <p class="meta-label">Role</p>
-              <p class="meta-value">Book and book-launch object</p>
+              <p class="meta-label">Primary value</p>
+              <p class="meta-value">A guided path through love, character, discipline, and ascent</p>
             </div>
             <div>
-              <p class="meta-label">Tone</p>
-              <p class="meta-value">Weighted, human, value-centered</p>
+              <p class="meta-label">Book relation</p>
+              <p class="meta-value">The book is the structural spine</p>
             </div>
             <div>
-              <p class="meta-label">Containment</p>
-              <p class="meta-value">Child extension under /products/</p>
+              <p class="meta-label">Metaverse relation</p>
+              <p class="meta-value">The metaverse is the lived embodiment of that spine</p>
             </div>
             <div>
               <p class="meta-label">Parent shell</p>
@@ -441,48 +511,166 @@
           </aside>
         </section>
 
-        <section class="panel section" aria-labelledby="ns-core-title">
-          <p class="eyebrow">Core object</p>
-          <h2 id="ns-core-title">What belongs on this first layer.</h2>
+        <section class="panel section" aria-labelledby="value-title">
+          <p class="eyebrow">What you actually get</p>
+          <h2 id="value-title">The definitive value surface.</h2>
 
-          <div class="grid">
+          <div class="grid-4">
             <article class="card">
-              <p class="kicker">Guiding work</p>
-              <h3>More than promotion</h3>
+              <p class="kicker">Book</p>
+              <h3>A real guiding work</h3>
               <p class="detail">
-                The work stands here as a real object, not as slogan-only promotion.
+                The book gives language, order, ascent, and a coherent path instead of loose inspiration.
               </p>
             </article>
 
             <article class="card">
-              <p class="kicker">Human lane</p>
-              <h3>Value-centered</h3>
+              <p class="kicker">Structure</p>
+              <h3>A full spine</h3>
               <p class="detail">
-                The extension remains centered on growth, discipline, patience, clarity, and human movement.
+                The work is not a slogan. It has a sequence, a build, a progression, and a destination.
               </p>
             </article>
 
             <article class="card">
-              <p class="kicker">Next step</p>
-              <h3>Move into Prelude</h3>
+              <p class="kicker">Embodiment</p>
+              <h3>A world to step into</h3>
               <p class="detail">
-                The lawful next visitor motion is the threshold path where the work opens more fully.
+                The metaverse takes the value frame and turns it into atmosphere, rooms, movement, and felt entry.
+              </p>
+            </article>
+
+            <article class="card">
+              <p class="kicker">Visitor result</p>
+              <h3>Meaning with a place</h3>
+              <p class="detail">
+                The user does not just read the ascent. The user can eventually walk through it.
               </p>
             </article>
           </div>
         </section>
 
-        <section class="panel section" aria-labelledby="ns-russian-doll-title">
+        <section class="panel section" aria-labelledby="spine-title">
+          <p class="eyebrow">Structural spine</p>
+          <h2 id="spine-title">The book inside the example.</h2>
+
+          <div class="spine-grid">
+            <article class="summit-card">
+              <p class="summit-number">Summit 1</p>
+              <h4>Gratitude</h4>
+              <p class="detail">
+                The opening ground. The first clearing of vision. The place where the climb begins.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 2</p>
+              <h4>Generosity</h4>
+              <p class="detail">
+                Love begins to move outward. The self is no longer the only center.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 3</p>
+              <h4>Dependability</h4>
+              <p class="detail">
+                Stability enters. Love gains rhythm, pattern, and reliability.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 4</p>
+              <h4>Accountability</h4>
+              <p class="detail">
+                The climb stops lying to itself. Reality and responsibility tighten together.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 5</p>
+              <h4>Forgiveness</h4>
+              <p class="detail">
+                Weight is released without pretending harm was never real.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 6</p>
+              <h4>Humility</h4>
+              <p class="detail">
+                Elevation without arrogance. Height without distortion.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 7</p>
+              <h4>Self-control</h4>
+              <p class="detail">
+                Power becomes governed. Motion becomes deliberate.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 8</p>
+              <h4>Patience</h4>
+              <p class="detail">
+                The climb learns timing. Maturity holds its pace without panic.
+              </p>
+            </article>
+
+            <article class="summit-card">
+              <p class="summit-number">Summit 9</p>
+              <h4>Purity</h4>
+              <p class="detail">
+                The upper clearing. The horizon never fully ends, but the vision becomes cleaner.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" aria-labelledby="metaverse-title">
+          <p class="eyebrow">Paired with the metaverse</p>
+          <h2 id="metaverse-title">Meaning first. World second.</h2>
+
+          <div class="grid-2">
+            <article class="card">
+              <p class="kicker">Book first</p>
+              <h3>The structure gives the world its law</h3>
+              <p class="detail">
+                The metaverse does not invent the meaning. It inherits the order from the book.
+              </p>
+            </article>
+
+            <article class="card">
+              <p class="kicker">World second</p>
+              <h3>The metaverse gives the structure its atmosphere</h3>
+              <p class="detail">
+                Rooms, paths, chambers, movement, and world-entry turn the abstract climb into a place.
+              </p>
+            </article>
+          </div>
+
+          <div class="pill-row">
+            <span class="pill">Book spine</span>
+            <span class="pill">World embodiment</span>
+            <span class="pill">Threshold</span>
+            <span class="pill">Ascent</span>
+            <span class="pill">Chambers</span>
+          </div>
+        </section>
+
+        <section class="panel section" aria-labelledby="russian-title">
           <p class="eyebrow">Russian-doll containment</p>
-          <h2 id="ns-russian-doll-title">Contained depth.</h2>
+          <h2 id="russian-title">Depth with a real visitor job.</h2>
 
           <div class="stack">
             <div class="nested-shell">
               <article class="nested-card">
                 <p class="kicker">Layer 1</p>
-                <h3>Core work</h3>
+                <h3>Definitive value</h3>
                 <p class="detail">
-                  The first layer names the work and keeps the object weighted and readable.
+                  The first layer makes the offer clear: a real book spine paired with a real world path.
                 </p>
               </article>
             </div>
@@ -490,9 +678,9 @@
             <div class="nested-shell">
               <article class="nested-card">
                 <p class="kicker">Layer 2</p>
-                <h3>Book path</h3>
+                <h3>Structural spine</h3>
                 <p class="detail">
-                  The second layer frames the work as a book object with a real human lane and real purpose.
+                  The second layer shows the nine-summit ascent as an ordered sequence instead of flattening it into generic promotion.
                 </p>
               </article>
             </div>
@@ -500,21 +688,36 @@
             <div class="nested-shell">
               <article class="nested-card">
                 <p class="kicker">Layer 3</p>
-                <h3>Launch and threshold</h3>
+                <h3>World embodiment</h3>
                 <p class="detail">
-                  The third layer opens the next lawful descent because Prelude is the first load-bearing continuation.
+                  The third layer opens the metaverse relation so the visitor understands how the book becomes a place.
                 </p>
                 <div class="actions">
                   <a class="button button-primary" href="/prelude/">Open prelude</a>
+                  <a class="button button-secondary" href="/products/">Back to products</a>
                 </div>
               </article>
             </div>
           </div>
         </section>
+
+        <section class="panel section" aria-labelledby="promise-title">
+          <p class="eyebrow">Why this page exists</p>
+          <h2 id="promise-title">The spine should be visible.</h2>
+
+          <article class="focus-card">
+            <p class="detail">
+              This page exists to show the structural spine of the book inside the example. The visitor should see the ascent, the values, the order, and the world that can grow from it. The book gives the law. The metaverse gives the life around that law.
+            </p>
+            <p class="mini-copy">
+              The Nine Summits of Love is the frame. The metaverse is the embodiment.
+            </p>
+          </article>
+        </section>
       </main>
 
       <footer class="footer">
-        <span>Result: PAGE=NINE_SUMMITS | ROLE=CHILD_EXTENSION | DEPTH=RUSSIAN_DOLL</span>
+        <span>Result: PAGE=NINE_SUMMITS | STANDARD=BOOK_SPINE_PLUS_METAVERSE</span>
         <span><a href="/products/">Return to products</a></span>
       </footer>
     </div>

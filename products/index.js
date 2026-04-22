@@ -1,226 +1,308 @@
-(function productsHostBootstrap() {
+(() => {
   "use strict";
 
   const HOST_META = Object.freeze({
     name: "PRODUCTS_HOST_BOOTSTRAP",
-    version: "V2",
-    role: "host_orchestration_only",
-    contract: "PRODUCTS_HOST_CONTRACT_V2",
-    status: "ACTIVE",
-    runtime_owner: "products_runtime.js",
-    deterministic: true
+    version: "V1",
+    contract: "PRODUCTS_HOST_CONTRACT_V1",
+    stageOwner: "runtime-only",
+    runtimeGlobal: "ProductsPlanetRuntime",
+    runtimeScript: "./products_runtime.js",
   });
 
-  const contract = window.__PRODUCTS_HOST_CONTRACT__ || {};
-  const stageId = contract.stageId || "products-stage";
-  const diagnosticsId = contract.diagnosticsId || "products-diagnostics";
-  const loadingCopyId = contract.loadingCopyId || "products-loading-copy";
-  const runtimeGlobalKey = contract.runtimeGlobalKey || "ProductsPlanetRuntime";
-
-  const boot = {
-    host: HOST_META,
-    startedAt: new Date().toISOString(),
-    stageFound: false,
-    runtimeFound: false,
-    selectedEntrypoint: null,
-    mounted: false,
-    errors: []
-  };
+  const doc = document;
 
   function byId(id) {
-    return typeof id === "string" ? document.getElementById(id) : null;
+    return doc.getElementById(id);
   }
 
-  function writeDiagnostics(extra) {
-    const target = byId(diagnosticsId);
-    if (!target) return;
-
-    const snapshot = {
-      ...boot,
-      ...(extra || {})
-    };
-
-    target.textContent = JSON.stringify(snapshot, null, 2);
-  }
-
-  function setLoadingMessage(message, isError) {
-    const node = byId(loadingCopyId);
-    if (!node) return;
-    node.textContent = message;
-    node.className = isError ? "loading-copy state-error" : "loading-copy";
-  }
-
-  function markStageReady() {
-    const stage = byId(stageId);
-    if (stage) {
-      stage.setAttribute("data-ready", "true");
-    }
-
-    const loading = byId(loadingCopyId);
-    if (loading) {
-      loading.remove();
+  function nowIso() {
+    try {
+      return new Date().toISOString();
+    } catch (_) {
+      return "time-unavailable";
     }
   }
 
-  function normalizeRuntimeCandidate(candidate) {
-    if (!candidate) return null;
+  function createReceiptLine(level, text) {
+    const row = doc.createElement("div");
+    row.className = "products-receipt-line";
 
-    if (typeof candidate === "function") {
-      return {
-        name: "runtime_function",
-        invoke(root) {
-          return candidate(root);
-        }
-      };
-    }
+    const dot = doc.createElement("span");
+    dot.className = `products-dot ${level}`;
+    dot.setAttribute("aria-hidden", "true");
 
-    if (typeof candidate !== "object") {
-      return null;
-    }
+    const body = doc.createElement("div");
+    body.textContent = text;
 
-    const entrypoints = [
-      "start",
-      "boot",
-      "mount",
-      "render",
-      "init",
-      "attach"
-    ];
-
-    for (const key of entrypoints) {
-      if (typeof candidate[key] === "function") {
-        return {
-          name: key,
-          invoke(root) {
-            return candidate[key]({
-              root,
-              stage: root,
-              container: root,
-              host: HOST_META,
-              contract,
-              diagnosticsTargetId: diagnosticsId
-            });
-          }
-        };
-      }
-    }
-
-    return null;
+    row.appendChild(dot);
+    row.appendChild(body);
+    return row;
   }
 
-  function resolveRuntime() {
-    const direct = window[runtimeGlobalKey];
-    if (direct) return direct;
+  const ui = {
+    host: null,
+    stage: null,
+    receipts: null,
+    receiptStatus: null,
+    fallback: null,
+    fallbackText: null,
+  };
 
-    const aliases = [
-      "ProductsRuntime",
-      "ProductsPageRuntime",
-      "ProductsStageRuntime",
-      "ProductsRuntimeAPI"
-    ];
+  const state = {
+    lines: [],
+    failed: false,
+    mounted: false,
+  };
 
-    for (const key of aliases) {
-      if (window[key]) return window[key];
+  function syncStatusLabel() {
+    if (!ui.receiptStatus) return;
+    if (state.failed) {
+      ui.receiptStatus.textContent = "Fault surfaced";
+      return;
     }
-
-    return null;
+    if (state.mounted) {
+      ui.receiptStatus.textContent = "Runtime mounted";
+      return;
+    }
+    ui.receiptStatus.textContent = "Booting";
   }
 
-  function fail(message, detail) {
-    boot.errors.push({
-      message,
-      detail: detail ? String(detail) : null,
-      at: new Date().toISOString()
+  function renderReceipts() {
+    if (!ui.receipts) return;
+    ui.receipts.textContent = "";
+    for (const entry of state.lines) {
+      ui.receipts.appendChild(createReceiptLine(entry.level, entry.text));
+    }
+    syncStatusLabel();
+  }
+
+  function writeReceipt(level, text) {
+    state.lines.push({
+      level,
+      text: `[${nowIso()}] ${text}`,
     });
-
-    setLoadingMessage(message, true);
-    writeDiagnostics();
-
-    throw new Error(detail ? `${message}: ${detail}` : message);
+    renderReceipts();
   }
 
-  function bootstrap() {
-    const stage = byId(stageId);
-    boot.stageFound = Boolean(stage);
+  function showFallback(message) {
+    state.failed = true;
+    syncStatusLabel();
+    if (ui.fallbackText) {
+      ui.fallbackText.textContent = message;
+    }
+    if (ui.fallback) {
+      ui.fallback.classList.add("is-visible");
+    }
+  }
 
-    if (!stage) {
-      fail("Products host stage container missing", `Expected #${stageId}`);
-      return;
+  function hideFallback() {
+    if (ui.fallback) {
+      ui.fallback.classList.remove("is-visible");
+    }
+  }
+
+  function fail(message, error) {
+    const detail = error instanceof Error ? `${message} ${error.message}` : message;
+    writeReceipt("bad", detail);
+    showFallback(detail);
+  }
+
+  function assertHostContract() {
+    if (!ui.host) {
+      throw new Error("Missing #products-host.");
+    }
+    if (!ui.stage) {
+      throw new Error("Missing #products-stage.");
     }
 
-    const runtime = resolveRuntime();
-    boot.runtimeFound = Boolean(runtime);
-    writeDiagnostics();
+    const hostContract = ui.host.getAttribute("data-host-contract");
+    const stageOwner = ui.host.getAttribute("data-stage-owner");
+    const visibleStageOwner = ui.stage.getAttribute("data-visible-stage-owner");
+    const runtimeGlobal = ui.host.getAttribute("data-runtime-global");
+    const runtimeScript = ui.host.getAttribute("data-runtime-script");
 
-    if (!runtime) {
-      fail("Runtime global missing", `Expected window.${runtimeGlobalKey}`);
-      return;
+    if (hostContract !== HOST_META.contract) {
+      throw new Error(`Host contract mismatch. Expected ${HOST_META.contract}.`);
+    }
+    if (stageOwner !== HOST_META.stageOwner) {
+      throw new Error(`Stage owner mismatch. Expected ${HOST_META.stageOwner}.`);
+    }
+    if (visibleStageOwner !== "runtime") {
+      throw new Error("Visible stage owner must remain runtime.");
+    }
+    if (runtimeGlobal !== HOST_META.runtimeGlobal) {
+      throw new Error(`Runtime global mismatch. Expected ${HOST_META.runtimeGlobal}.`);
+    }
+    if (runtimeScript !== HOST_META.runtimeScript) {
+      throw new Error(`Runtime script path mismatch. Expected ${HOST_META.runtimeScript}.`);
     }
 
-    const candidate = normalizeRuntimeCandidate(runtime);
+    writeReceipt("good", "Host contract verified.");
+    writeReceipt("good", "Stage container verified.");
+    writeReceipt("good", "Single visible stage ownership reserved for runtime.");
+  }
 
-    if (!candidate) {
-      if (stage.children.length > 0 && stage.textContent.trim().length > 0) {
-        boot.selectedEntrypoint = "runtime_already_rendered";
-        boot.mounted = true;
-        markStageReady();
-        writeDiagnostics();
+  function getRuntimeGlobal() {
+    return window[HOST_META.runtimeGlobal];
+  }
+
+  function scriptAlreadyPresent(src) {
+    const scripts = Array.from(doc.scripts || []);
+    return scripts.some((script) => {
+      const value = script.getAttribute("src");
+      return typeof value === "string" && value.includes(src);
+    });
+  }
+
+  function loadRuntimeScript() {
+    return new Promise((resolve, reject) => {
+      if (getRuntimeGlobal()) {
+        writeReceipt("good", "Runtime global already present before script load.");
+        resolve();
         return;
       }
 
-      fail(
-        "Runtime entrypoint missing",
-        "No supported entrypoint found on resolved runtime object"
-      );
-      return;
+      if (scriptAlreadyPresent(HOST_META.runtimeScript)) {
+        writeReceipt("warn", "Runtime script tag already present but global not yet available. Waiting for handoff.");
+      } else {
+        writeReceipt("warn", `Injecting runtime script: ${HOST_META.runtimeScript}`);
+      }
+
+      const script = doc.createElement("script");
+      script.src = HOST_META.runtimeScript;
+      script.defer = true;
+      script.async = false;
+      script.setAttribute("data-products-runtime", "true");
+
+      script.onload = () => {
+        writeReceipt("good", "Runtime script loaded.");
+        resolve();
+      };
+
+      script.onerror = () => {
+        reject(new Error(`Runtime script failed to load from ${HOST_META.runtimeScript}.`));
+      };
+
+      doc.head.appendChild(script);
+    });
+  }
+
+  function resolveMountFunction(runtime) {
+    if (!runtime || typeof runtime !== "object") {
+      return null;
     }
 
-    boot.selectedEntrypoint = candidate.name;
-    writeDiagnostics();
+    const candidates = [
+      runtime.mount,
+      runtime.start,
+      runtime.bootstrap,
+      runtime.init,
+      runtime.initialize,
+      runtime.attach,
+    ];
+
+    for (const candidate of candidates) {
+      if (typeof candidate === "function") {
+        return candidate.bind(runtime);
+      }
+    }
+
+    return null;
+  }
+
+  function mountRuntime() {
+    const runtime = getRuntimeGlobal();
+
+    if (!runtime) {
+      throw new Error(`Runtime global ${HOST_META.runtimeGlobal} not found after script load.`);
+    }
+
+    writeReceipt("good", `Runtime global ${HOST_META.runtimeGlobal} resolved.`);
+
+    const mount = resolveMountFunction(runtime);
+    if (!mount) {
+      throw new Error("Runtime entry function not found on resolved global.");
+    }
+
+    const payload = {
+      stage: ui.stage,
+      root: ui.stage,
+      host: ui.host,
+      contract: HOST_META.contract,
+      meta: HOST_META,
+      receipts: {
+        write: writeReceipt,
+        fail,
+      },
+    };
+
+    writeReceipt("warn", "Attempting guarded runtime handoff.");
+
+    const result = mount(payload);
+
+    if (result && typeof result.then === "function") {
+      return result.then(() => {
+        state.mounted = true;
+        hideFallback();
+        writeReceipt("good", "Runtime mounted successfully.");
+        renderReceipts();
+      });
+    }
+
+    state.mounted = true;
+    hideFallback();
+    writeReceipt("good", "Runtime mounted successfully.");
+    renderReceipts();
+    return Promise.resolve();
+  }
+
+  function attachGlobalGuards() {
+    window.addEventListener("error", (event) => {
+      if (state.failed) return;
+      const message =
+        event && event.error instanceof Error
+          ? `Global error captured: ${event.error.message}`
+          : `Global error captured: ${event.message || "unknown error"}`;
+      fail(message, event && event.error);
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      if (state.failed) return;
+      const reason = event ? event.reason : null;
+      const message =
+        reason instanceof Error
+          ? `Unhandled rejection: ${reason.message}`
+          : `Unhandled rejection: ${String(reason)}`;
+      fail(message, reason instanceof Error ? reason : null);
+    });
+  }
+
+  async function bootstrap() {
+    ui.host = byId("products-host");
+    ui.stage = byId("products-stage");
+    ui.receipts = byId("products-receipt-body");
+    ui.receiptStatus = byId("products-receipt-status");
+    ui.fallback = byId("products-fallback");
+    ui.fallbackText = byId("products-fallback-text");
+
+    attachGlobalGuards();
+
+    writeReceipt("warn", `${HOST_META.name} ${HOST_META.version} starting.`);
+    writeReceipt("warn", "Host receipts initialized.");
 
     try {
-      const result = candidate.invoke(stage);
-      boot.mounted = true;
-      markStageReady();
-
-      if (result && typeof result.then === "function") {
-        result
-          .then(function onResolved() {
-            writeDiagnostics({ asyncResolved: true });
-          })
-          .catch(function onRejected(error) {
-            boot.errors.push({
-              message: "Async runtime rejection",
-              detail: String(error),
-              at: new Date().toISOString()
-            });
-            setLoadingMessage("Products stage failed after async handoff.", true);
-            writeDiagnostics();
-          });
-      } else {
-        writeDiagnostics();
-      }
+      assertHostContract();
+      await loadRuntimeScript();
+      await mountRuntime();
     } catch (error) {
-      fail("Runtime invocation failed", error && error.message ? error.message : error);
+      fail("Products bootstrap failed.", error);
     }
   }
 
-  function startWhenReady() {
-    writeDiagnostics();
-
-    if (document.readyState === "loading") {
-      document.addEventListener(
-        "DOMContentLoaded",
-        function onReady() {
-          bootstrap();
-        },
-        { once: true }
-      );
-      return;
-    }
-
+  if (doc.readyState === "loading") {
+    doc.addEventListener("DOMContentLoaded", bootstrap, { once: true });
+  } else {
     bootstrap();
   }
-
-  startWhenReady();
 })();

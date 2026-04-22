@@ -22,6 +22,7 @@
       --red:#ff8d9d;
       --gold:#f1d28d;
       --violet:#c7b3ff;
+      --blue:#84b7ff;
       --shadow-heavy:0 24px 60px rgba(0,0,0,.45);
       --radius-xl:30px;
       --radius-lg:24px;
@@ -59,15 +60,7 @@
     }
 
     a{color:inherit;text-decoration:none}
-
-    button{
-      font:inherit;
-      color:inherit;
-      background:none;
-      border:0;
-      cursor:pointer;
-    }
-
+    button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
     code{
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       font-size:.92em;
@@ -390,7 +383,7 @@
     .stage-zone{
       position:relative;
       z-index:1;
-      min-height:720px;
+      min-height:760px;
       border-radius:26px;
       border:1px solid rgba(173,212,255,.1);
       background:
@@ -407,13 +400,165 @@
         radial-gradient(circle at 50% 36%,rgba(94,143,255,.1),transparent 32%),
         linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,0));
       pointer-events:none;
+      z-index:0;
+    }
+
+    .live-experience-stage{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      overflow:auto;
+      padding:22px;
     }
 
     .planetary-stage{
       position:absolute;
       inset:0;
+      z-index:1;
       overflow:auto;
-      isolation:isolate;
+      opacity:0;
+      pointer-events:none;
+    }
+
+    .products-stage{
+      display:grid;
+      gap:18px;
+      min-height:100%;
+      align-content:start;
+    }
+
+    .products-stage-hero{
+      display:grid;
+      gap:12px;
+      padding:22px;
+      border-radius:24px;
+      border:1px solid rgba(173,212,255,.12);
+      background:
+        linear-gradient(180deg,rgba(7,18,44,.84),rgba(7,16,34,.74)),
+        radial-gradient(circle at 18% 20%,rgba(255,211,126,.18),transparent 26%),
+        radial-gradient(circle at 78% 24%,rgba(124,183,255,.18),transparent 28%);
+      box-shadow:0 18px 34px rgba(0,0,0,.24);
+    }
+
+    .products-stage-hero h4{
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      color:var(--accent);
+      font-size:clamp(2rem,4vw,3.8rem);
+      line-height:.94;
+      max-width:11ch;
+    }
+
+    .products-stage-hero p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.7;
+      max-width:60ch;
+    }
+
+    .products-core-grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .products-core-card{
+      position:relative;
+      padding:18px;
+      border-radius:22px;
+      border:1px solid rgba(173,212,255,.12);
+      background:linear-gradient(180deg,rgba(8,17,38,.84),rgba(7,14,30,.76));
+      box-shadow:0 16px 28px rgba(0,0,0,.2);
+      overflow:hidden;
+    }
+
+    .products-core-card::before{
+      content:"";
+      position:absolute;
+      right:-20px;
+      top:-20px;
+      width:110px;
+      height:110px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,.2),rgba(104,147,255,.08) 44%,transparent 68%);
+      pointer-events:none;
+    }
+
+    .products-core-card h5{
+      margin:0 0 8px;
+      font-size:1.16rem;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .products-core-card p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.6;
+      max-width:34ch;
+    }
+
+    .products-core-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-bottom:16px;
+    }
+
+    .products-core-meta span{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.12);
+      background:rgba(255,255,255,.03);
+      color:var(--muted);
+      font-size:.74rem;
+      font-weight:700;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+    }
+
+    .products-core-card a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.18);
+      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
+      font-weight:700;
+      box-shadow:0 12px 22px rgba(0,0,0,.16);
+    }
+
+    .products-stage-summary{
+      display:grid;
+      gap:14px;
+      padding:18px;
+      border-radius:22px;
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(9,18,40,.74),rgba(7,14,30,.72));
+    }
+
+    .products-stage-summary h5{
+      margin:0;
+      font-size:1.06rem;
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .products-stage-summary p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.65;
+    }
+
+    .products-stage-summary ul{
+      margin:0;
+      padding-left:18px;
+      color:var(--muted);
+      line-height:1.65;
     }
 
     .footer-card{
@@ -448,8 +593,12 @@
         top:18px;
       }
 
+      .products-core-grid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
       .stage-zone{
-        min-height:860px;
+        min-height:980px;
       }
     }
 
@@ -467,8 +616,12 @@
         padding:14px;
       }
 
+      .live-experience-stage{
+        padding:16px;
+      }
+
       .stage-zone{
-        min-height:620px;
+        min-height:760px;
       }
     }
   </style>
@@ -573,9 +726,8 @@
         <div class="eyebrow">Products Gateway</div>
         <h2 id="products-heading">Live products experience</h2>
         <p>
-          The products surface now promotes the actual experience first. The runtime stage remains active,
-          the host and stage boundary remains protected, and system receipts remain available only as a
-          secondary support layer.
+          The products surface now puts the real experience first. The host remains protected, the stage remains
+          lawful, and the system receipts stay available only as a support layer when needed.
         </p>
         <div class="hero-actions">
           <a class="primary" href="/explore/">Enter the bridge</a>
@@ -631,7 +783,8 @@
           </div>
 
           <div class="stage-zone" id="products-stage-zone">
-            <div class="planetary-stage" id="planetary-stage"></div>
+            <div class="live-experience-stage" id="products-live-stage" aria-live="polite"></div>
+            <div class="planetary-stage" id="planetary-stage" aria-hidden="true"></div>
           </div>
         </div>
 

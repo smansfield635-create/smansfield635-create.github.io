@@ -1,11 +1,12 @@
 (() => {
   "use strict";
 
+  const viewport = document.getElementById("products-map-viewport");
   const stage = document.getElementById("planetary-stage");
   const nodes = Array.from(document.querySelectorAll(".planet-node"));
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  if (!stage || nodes.length === 0) {
+  if (!viewport || !stage || nodes.length === 0) {
     return;
   }
 
@@ -14,29 +15,25 @@
     height: 0,
     centerX: 0,
     centerY: 0,
-    active: !reduceMotion.matches,
     rafId: 0,
+    active: !reduceMotion.matches,
   };
+
+  const orbiting = nodes.map((node) => ({
+    node,
+    orbitX: Number(node.dataset.orbitX || 0),
+    orbitY: Number(node.dataset.orbitY || 0),
+    angle: Number(node.dataset.angle || 0),
+    speed: Number(node.dataset.speed || 0),
+    depthBias: Number(node.dataset.depthBias || 0),
+  }));
 
   function clamp(value, min, max) {
     return Math.min(Math.max(value, min), max);
   }
 
-  function readNode(node) {
-    return {
-      node,
-      orbitX: Number(node.dataset.orbitX || 0),
-      orbitY: Number(node.dataset.orbitY || 0),
-      angle: Number(node.dataset.angle || 0),
-      speed: Number(node.dataset.speed || 0),
-      depthBias: Number(node.dataset.depthBias || 0),
-    };
-  }
-
-  const orbiting = nodes.map(readNode);
-
-  function syncStage() {
-    const rect = stage.getBoundingClientRect();
+  function syncViewport() {
+    const rect = viewport.getBoundingClientRect();
     state.width = rect.width;
     state.height = rect.height;
     state.centerX = rect.width * 0.5;
@@ -44,16 +41,16 @@
   }
 
   function getScaleFactor() {
-    const widthFactor = clamp(state.width / 1220, 0.52, 1);
-    const heightFactor = clamp(state.height / 900, 0.72, 1);
+    const widthFactor = clamp(state.width / 1220, 0.54, 1);
+    const heightFactor = clamp(state.height / 760, 0.76, 1);
     return Math.min(widthFactor, heightFactor);
   }
 
   function getNodeBox(node) {
     const rect = node.getBoundingClientRect();
     return {
-      width: rect.width || 168,
-      height: rect.height || 172,
+      width: rect.width || 156,
+      height: rect.height || 154,
     };
   }
 
@@ -87,8 +84,14 @@
     const zIndex = Math.round(20 + depth * 80 + item.depthBias);
 
     const box = getNodeBox(item.node);
-    const left = state.centerX + x - box.width * 0.5;
-    const top = state.centerY + y - box.height * 0.5;
+
+    const safeTop = 18;
+    const safeBottom = state.height - box.height - 18;
+    const safeLeft = 12;
+    const safeRight = state.width - box.width - 12;
+
+    const left = clamp(state.centerX + x - box.width * 0.5, safeLeft, safeRight);
+    const top = clamp(state.centerY + y - box.height * 0.5, safeTop, safeBottom);
 
     item.node.style.left = `${left}px`;
     item.node.style.top = `${top}px`;
@@ -103,7 +106,6 @@
 
   function animate(time) {
     render(time);
-
     if (state.active) {
       state.rafId = window.requestAnimationFrame(animate);
     }
@@ -118,7 +120,7 @@
 
   function start() {
     stop();
-    syncStage();
+    syncViewport();
 
     if (reduceMotion.matches) {
       state.active = false;
@@ -130,18 +132,17 @@
     state.rafId = window.requestAnimationFrame(animate);
   }
 
+  function handleResize() {
+    syncViewport();
+    render(performance.now());
+  }
+
   function handleVisibility() {
     if (document.hidden) {
       stop();
       return;
     }
-
     start();
-  }
-
-  function handleResize() {
-    syncStage();
-    render(performance.now());
   }
 
   reduceMotion.addEventListener("change", start);

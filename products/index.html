@@ -6,7 +6,7 @@
   <title>Products | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Flagship products and five clear paths for the next intelligence economy."
+    content="Five product paths led by ARCHCOIN and AAI."
   />
 
   <style>
@@ -15,8 +15,6 @@
       --bg0:#020612;
       --bg1:#071427;
       --bg2:#0d2240;
-      --panel:rgba(10,20,46,.72);
-      --panel2:rgba(10,20,46,.52);
       --line:rgba(173,212,255,.14);
       --lineStrong:rgba(241,210,141,.22);
       --text:#edf5ff;
@@ -24,6 +22,8 @@
       --gold:#f1d28d;
       --mint:#8ff0c5;
       --blue:#9fc6ff;
+      --amber:#ffca80;
+      --ice:#d7e4ff;
       --shadow:0 24px 60px rgba(0,0,0,.42);
       --radiusXl:30px;
       --radiusLg:24px;
@@ -197,7 +197,7 @@
     }
 
     .hero,
-    .pathsSection,
+    .fivePaths,
     .closing{
       position:relative;
       overflow:hidden;
@@ -213,7 +213,7 @@
     }
 
     .hero::before,
-    .pathsSection::before,
+    .fivePaths::before,
     .closing::before{
       content:"";
       position:absolute;
@@ -238,7 +238,8 @@
 
     .heroTitle,
     .sectionTitle,
-    .productTitle{
+    .productTitle,
+    .pathTitle{
       font-family:Georgia,"Times New Roman",serif;
     }
 
@@ -254,7 +255,7 @@
     .heroCopy,
     .sectionCopy,
     .productCopy,
-    .supportCopy,
+    .pathCopy,
     .closingCopy{
       color:var(--muted);
       line-height:1.72;
@@ -287,17 +288,11 @@
       display:flex;
       flex-direction:column;
       justify-content:space-between;
-      transform:translateY(18px);
-      opacity:0;
-      transition:transform 520ms ease,opacity 520ms ease,border-color 220ms ease,box-shadow 220ms ease;
-    }
-
-    .productCard.isVisible{
-      transform:translateY(0);
-      opacity:1;
+      transition:transform 220ms ease,border-color 220ms ease,box-shadow 220ms ease;
     }
 
     .productCard:hover{
+      transform:translateY(-2px);
       border-color:var(--lineStrong);
       box-shadow:0 28px 66px rgba(0,0,0,.48);
     }
@@ -383,7 +378,6 @@
       box-shadow:0 18px 48px rgba(0,0,0,.42), inset 0 0 30px rgba(255,255,255,.16);
       display:grid;
       place-items:center;
-      transition:transform 220ms ease;
     }
 
     .coinHero::before{
@@ -417,7 +411,6 @@
       box-shadow:0 18px 44px rgba(0,0,0,.36), inset 0 0 26px rgba(255,255,255,.04);
       display:grid;
       place-items:center;
-      transition:transform 220ms ease;
     }
 
     .aaiMark::before{
@@ -437,9 +430,6 @@
       font-weight:800;
       letter-spacing:.16em;
     }
-
-    .productCard:hover .coinHero{transform:scale(1.03)}
-    .productCard:hover .aaiMark{transform:rotate(45deg) scale(1.03)}
 
     .capabilities{
       position:relative;
@@ -510,33 +500,25 @@
       box-shadow:0 12px 28px rgba(0,0,0,.28);
     }
 
-    .pathsSection{
+    .fivePaths{
       padding:22px;
       margin-bottom:16px;
-      transform:translateY(18px);
-      opacity:0;
-      transition:transform 520ms ease,opacity 520ms ease;
-    }
-
-    .pathsSection.isVisible{
-      transform:translateY(0);
-      opacity:1;
     }
 
     .sectionTitle{
       margin:0 0 12px;
-      font-size:clamp(1.7rem,4vw,2.5rem);
-      line-height:1.02;
       position:relative;
       z-index:1;
+      font-size:clamp(1.7rem,4vw,2.5rem);
+      line-height:1.02;
     }
 
     .sectionCopy{
       margin:0 0 16px;
       max-width:760px;
-      font-size:.96rem;
       position:relative;
       z-index:1;
+      font-size:.96rem;
     }
 
     .pathsGrid{
@@ -559,6 +541,11 @@
       box-shadow:0 10px 24px rgba(0,0,0,.14);
     }
 
+    .pathCard:hover{
+      transform:translateY(-2px);
+      box-shadow:0 18px 36px rgba(0,0,0,.24);
+    }
+
     .pathEyebrow{
       font-size:.72rem;
       font-weight:800;
@@ -569,15 +556,12 @@
     .pathTitle{
       margin:0;
       font-size:1.08rem;
-      font-weight:800;
-      line-height:1.2;
+      line-height:1.18;
     }
 
     .pathCopy{
       margin:0;
-      color:var(--muted);
       font-size:.92rem;
-      line-height:1.62;
     }
 
     .pathRow{
@@ -604,14 +588,6 @@
 
     .closing{
       padding:24px;
-      transform:translateY(18px);
-      opacity:0;
-      transition:transform 520ms ease,opacity 520ms ease;
-    }
-
-    .closing.isVisible{
-      transform:translateY(0);
-      opacity:1;
     }
 
     .closingGrid{
@@ -652,12 +628,6 @@
       white-space:nowrap;
     }
 
-    .revealDelay1{transition-delay:90ms}
-    .revealDelay2{transition-delay:180ms}
-    .revealDelay3{transition-delay:260ms}
-    .revealDelay4{transition-delay:340ms}
-    .revealDelay5{transition-delay:420ms}
-
     @media (max-width:960px){
       .page{padding:16px 14px 44px}
       .topbar{
@@ -683,11 +653,6 @@
       .stars::after{
         animation:none;
       }
-      .productCard,
-      .pathsSection,
-      .closing{
-        transition:none;
-      }
     }
   </style>
 </head>
@@ -712,25 +677,27 @@
       <div class="topbarRight">
         <div class="chip"><strong>Flagship</strong> ARCHCOIN</div>
         <div class="chip"><strong>Flagship</strong> AAI</div>
-        <div class="chip"><strong>House</strong> Premium intelligence</div>
+        <div class="chip"><strong>Paths</strong> Five visible</div>
       </div>
     </header>
 
-    <section class="hero reveal revealDelay1" aria-label="Products hero">
+    <section class="hero" aria-label="Products hero">
       <p class="eyebrow">Products</p>
-      <h1 class="heroTitle">Products built for the next intelligence economy.</h1>
+      <h1 class="heroTitle">Five product paths. Front and center.</h1>
       <p class="heroCopy">
-        A premium product house for private value, intelligent execution, and refined release. ARCHCOIN and AAI lead the chamber as the first two flagship products.
+        ARCHCOIN and AAI lead the chamber. Beneath them, three additional paths stay visible, brief, and ready to open.
       </p>
     </section>
 
     <section class="flagship" aria-label="Flagship products">
-      <article class="productCard archcoin reveal revealDelay2" data-product-key="archcoin">
+      <article class="productCard archcoin" data-product-key="archcoin">
         <div class="productHead">
           <p class="productLabel">Flagship product</p>
-          <h2 class="productTitle" data-field="title"></h2>
-          <p class="productCategory" data-field="category"></p>
-          <p class="productCopy" data-field="description"></p>
+          <h2 class="productTitle" data-field="title">ARCHCOIN</h2>
+          <p class="productCategory" data-field="category">Premium financial-intelligence asset</p>
+          <p class="productCopy" data-field="description">
+            A flagship value product built to hold identity, scarcity, and ownership with a sharper public presence.
+          </p>
         </div>
 
         <div class="productVisual" aria-hidden="true">
@@ -739,20 +706,35 @@
           </div>
         </div>
 
-        <div class="capabilities" data-field="capabilities"></div>
+        <div class="capabilities">
+          <div class="capability">
+            <span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span>
+            <div>Premium value surface</div>
+          </div>
+          <div class="capability">
+            <span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span>
+            <div>Private ownership signal</div>
+          </div>
+          <div class="capability">
+            <span class="capabilityDot" style="background:#f1d28d;box-shadow:0 0 0 4px #f1d28d22"></span>
+            <div>Brand-defining asset layer</div>
+          </div>
+        </div>
 
         <div class="ctaRow">
-          <div class="ctaMeta" data-field="meta"></div>
-          <button class="ctaButton" type="button" data-cta-key="archcoin"></button>
+          <div class="ctaMeta">Signature asset · Private capital orientation</div>
+          <button class="ctaButton" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
         </div>
       </article>
 
-      <article class="productCard aai reveal revealDelay3" data-product-key="aai">
+      <article class="productCard aai" data-product-key="aai">
         <div class="productHead">
           <p class="productLabel">Flagship product</p>
-          <h2 class="productTitle" data-field="title"></h2>
-          <p class="productCategory" data-field="category"></p>
-          <p class="productCopy" data-field="description"></p>
+          <h2 class="productTitle" data-field="title">AAI</h2>
+          <p class="productCategory" data-field="category">Artificial Agent Intelligence</p>
+          <p class="productCopy" data-field="description">
+            A flagship intelligence product shaped for elegant execution, usable agency, and refined operational presence.
+          </p>
         </div>
 
         <div class="productVisual" aria-hidden="true">
@@ -761,25 +743,89 @@
           </div>
         </div>
 
-        <div class="capabilities" data-field="capabilities"></div>
+        <div class="capabilities">
+          <div class="capability">
+            <span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span>
+            <div>Agent intelligence layer</div>
+          </div>
+          <div class="capability">
+            <span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span>
+            <div>Precision-built orchestration</div>
+          </div>
+          <div class="capability">
+            <span class="capabilityDot" style="background:#8ff0c5;box-shadow:0 0 0 4px #8ff0c522"></span>
+            <div>Elegant operational behavior</div>
+          </div>
+        </div>
 
         <div class="ctaRow">
-          <div class="ctaMeta" data-field="meta"></div>
-          <button class="ctaButton" type="button" data-cta-key="aai"></button>
+          <div class="ctaMeta">Flagship intelligence · Product-first expression</div>
+          <button class="ctaButton" type="button" data-cta-key="aai">Explore AAI</button>
         </div>
       </article>
     </section>
 
-    <section class="pathsSection reveal revealDelay4" aria-label="Product paths">
+    <section class="fivePaths" aria-label="Five product paths">
       <p class="sectionKicker">Open a path</p>
-      <h3 class="sectionTitle">Five product paths. Brief, clear, and ready to open.</h3>
+      <h3 class="sectionTitle">The five products are visible now.</h3>
       <p class="sectionCopy">
-        This chamber now acts as a premium filter. Each box gives a concise read and opens the next path without dragging the full Russian doll structure onto the main page.
+        Brief explanation. One open path each. No hidden reconstruction layer.
       </p>
-      <div id="paths-grid" class="pathsGrid"></div>
+
+      <div class="pathsGrid" id="paths-grid">
+        <article class="pathCard" data-path-key="archcoin">
+          <div class="pathEyebrow" style="color:#f1d28d">Flagship path</div>
+          <h4 class="pathTitle">ARCHCOIN</h4>
+          <p class="pathCopy">Premium financial-intelligence asset with identity, scarcity, and ownership at the center.</p>
+          <div class="pathRow">
+            <div class="pathPill" style="color:#f1d28d">Front and center</div>
+            <button class="pathButton" type="button" data-route-key="archcoin">Open Path</button>
+          </div>
+        </article>
+
+        <article class="pathCard" data-path-key="aai">
+          <div class="pathEyebrow" style="color:#8ff0c5">Flagship path</div>
+          <h4 class="pathTitle">AAI</h4>
+          <p class="pathCopy">Artificial agent intelligence expressed as a polished product line for elegant execution and agency.</p>
+          <div class="pathRow">
+            <div class="pathPill" style="color:#8ff0c5">Front and center</div>
+            <button class="pathButton" type="button" data-route-key="aai">Open Path</button>
+          </div>
+        </article>
+
+        <article class="pathCard" data-path-key="baseline-nutrition-systems">
+          <div class="pathEyebrow" style="color:#9fc6ff">Product path</div>
+          <h4 class="pathTitle">Baseline Nutrition Systems</h4>
+          <p class="pathCopy">Nutritional foundation products organized around daily stability, clarity, and baseline support.</p>
+          <div class="pathRow">
+            <div class="pathPill" style="color:#9fc6ff">Filter path</div>
+            <button class="pathButton" type="button" data-route-key="baseline-nutrition-systems">Open Path</button>
+          </div>
+        </article>
+
+        <article class="pathCard" data-path-key="five-flags-whats-my-scene">
+          <div class="pathEyebrow" style="color:#ffca80">Product path</div>
+          <h4 class="pathTitle">Five Flags / What’s My Scene</h4>
+          <p class="pathCopy">Scene-identification products built to help people understand where they are and what opens next.</p>
+          <div class="pathRow">
+            <div class="pathPill" style="color:#ffca80">Filter path</div>
+            <button class="pathButton" type="button" data-route-key="five-flags-whats-my-scene">Open Path</button>
+          </div>
+        </article>
+
+        <article class="pathCard" data-path-key="esl-traversal-learning">
+          <div class="pathEyebrow" style="color:#d7e4ff">Product path</div>
+          <h4 class="pathTitle">ESL Traversal Learning</h4>
+          <p class="pathCopy">Traversal-based English learning products designed around movement, comprehension, and structured progression.</p>
+          <div class="pathRow">
+            <div class="pathPill" style="color:#d7e4ff">Filter path</div>
+            <button class="pathButton" type="button" data-route-key="esl-traversal-learning">Open Path</button>
+          </div>
+        </article>
+      </div>
     </section>
 
-    <section class="closing reveal revealDelay5" aria-label="Brand statement">
+    <section class="closing" aria-label="Brand statement">
       <div class="closingGrid">
         <div>
           <p class="sectionKicker">The house</p>
@@ -792,7 +838,7 @@
         <div class="closingCta">
           <button class="ctaButton" type="button" data-cta-key="archcoin">Explore ARCHCOIN</button>
           <button class="ctaButton" type="button" data-cta-key="aai">Explore AAI</button>
-          <div class="footerChip">Flagship products live</div>
+          <div class="footerChip">Five paths visible</div>
         </div>
       </div>
     </section>

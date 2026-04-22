@@ -6,26 +6,31 @@
     name="viewport"
     content="width=device-width,initial-scale=1,viewport-fit=cover"
   >
-  <title>Diamond Gate Bridge · Home Chamber</title>
+  <title>Richie’s House · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge formal home chamber. Expanded orientation under the renewed public surface family."
+    content="Enter Richie’s House. Move through the hall, the vault, the basement, and the wider house paths."
   >
 
   <style>
     :root {
-      --bg: #05070b;
-      --bg-2: #08101b;
-      --panel: rgba(255, 255, 255, 0.045);
-      --panel-2: rgba(255, 255, 255, 0.03);
+      --bg: #04060a;
+      --bg-deep: #08111d;
+      --panel: rgba(255, 255, 255, 0.05);
+      --panel-soft: rgba(255, 255, 255, 0.03);
+      --line: rgba(255, 255, 255, 0.10);
+
       --text: #eef4ff;
       --muted: #9fb0cf;
-      --line: rgba(255, 255, 255, 0.10);
-      --accent: #8ec5ff;
-      --accent-2: #d2e7ff;
+
+      --gold: #f1c36b;
+      --gold-soft: #ffdca0;
+      --blue: #58a6ff;
+      --blue-soft: #9dd1ff;
       --ok: #8fffb5;
+
       --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
-      --radius: 20px;
+      --radius: 24px;
       --max: 1180px;
     }
 
@@ -40,8 +45,12 @@
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
+    }
+
+    body {
+      overflow-x: hidden;
       font:
-        16px/1.5 Inter,
+        16px/1.58 Inter,
         system-ui,
         -apple-system,
         BlinkMacSystemFont,
@@ -50,10 +59,10 @@
         Helvetica,
         Arial,
         sans-serif;
-    }
-
-    body {
-      overflow-x: hidden;
+      background:
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.12), transparent 24%),
+        radial-gradient(circle at bottom, rgba(88, 166, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, #03050a 0%, #07111d 100%);
     }
 
     a {
@@ -65,25 +74,12 @@
       position: relative;
       min-height: 100vh;
       isolation: isolate;
-      background:
-        radial-gradient(circle at top, rgba(88, 124, 181, 0.18), transparent 30%),
-        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
-    }
-
-    .fx {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: 0.95;
     }
 
     .shell {
-      position: relative;
-      z-index: 1;
-      width: min(100% - 28px, var(--max));
+      width: min(100% - 24px, var(--max));
       margin: 0 auto;
-      padding: 20px 0 48px;
+      padding: 18px 0 44px;
     }
 
     .topbar {
@@ -91,7 +87,7 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 10px 0 20px;
+      padding: 8px 0 18px;
     }
 
     .brand {
@@ -105,13 +101,9 @@
       width: 14px;
       height: 14px;
       border-radius: 999px;
-      background: linear-gradient(135deg, var(--accent), #ffffff);
-      box-shadow: 0 0 28px rgba(142, 197, 255, 0.55);
+      background: linear-gradient(135deg, var(--gold), #ffffff);
+      box-shadow: 0 0 28px rgba(241, 195, 107, 0.45);
       flex: 0 0 auto;
-    }
-
-    .brand-copy {
-      min-width: 0;
     }
 
     .brand-title {
@@ -140,7 +132,7 @@
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.03);
-      color: var(--accent-2);
+      color: var(--blue-soft);
       font-size: 14px;
       transition:
         border-color 0.18s ease,
@@ -157,27 +149,28 @@
       outline: none;
     }
 
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.75fr);
-      gap: 20px;
-      padding: 24px 0 18px;
-    }
-
     .panel {
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      background: linear-gradient(180deg, var(--panel), var(--panel-soft));
       border: 1px solid var(--line);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
     }
 
-    .hero-main {
-      padding: 30px;
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+      gap: 18px;
+      padding: 18px 0 12px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .section {
+      padding: 24px;
     }
 
     .hero-side {
-      padding: 22px;
       display: grid;
       gap: 14px;
       align-content: start;
@@ -192,42 +185,65 @@
       border-radius: 999px;
       border: 1px solid var(--line);
       background: rgba(255, 255, 255, 0.03);
-      color: var(--accent-2);
+      color: var(--gold-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
     h1,
-    h2 {
+    h2,
+    h3,
+    h4 {
       margin: 0;
-      line-height: 1.05;
+      line-height: 1.04;
       letter-spacing: -0.04em;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+      font-weight: 600;
     }
 
     h1 {
-      font-size: clamp(34px, 6vw, 62px);
+      font-size: clamp(42px, 7vw, 82px);
+      color: var(--gold-soft);
+      max-width: 10ch;
     }
 
     h2 {
-      font-size: clamp(24px, 3vw, 34px);
+      font-size: clamp(26px, 3.8vw, 44px);
+      color: var(--gold-soft);
+    }
+
+    h3 {
+      font-size: 30px;
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 22px;
+      color: #ffffff;
     }
 
     .lede,
-    .body-copy,
-    .proof-value,
-    .section-copy,
-    .card-copy {
+    .copy,
+    .detail,
+    .meta-value {
       color: var(--muted);
     }
 
     .lede {
-      margin: 18px 0 0;
-      max-width: 62ch;
+      margin: 16px 0 0;
+      max-width: 38rem;
       font-size: 18px;
     }
 
-    .hero-actions {
+    .hero-actions,
+    .actions {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
@@ -242,13 +258,13 @@
       padding: 0 18px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .button-primary {
       background: linear-gradient(
         135deg,
-        rgba(142, 197, 255, 0.18),
+        rgba(241, 195, 107, 0.20),
         rgba(255, 255, 255, 0.08)
       );
       color: #ffffff;
@@ -256,76 +272,85 @@
 
     .button-secondary {
       background: rgba(255, 255, 255, 0.03);
-      color: var(--accent-2);
+      color: var(--blue-soft);
     }
 
-    .proof-label {
-      margin: 0;
-      color: var(--muted);
+    .meta-label,
+    .card-kicker {
+      color: var(--blue-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    .proof-value {
+    .meta-value {
       margin: 6px 0 0;
-      font-size: 15px;
-      word-break: break-word;
+      font-size: 16px;
     }
 
-    .proof-good {
-      color: var(--ok);
-    }
-
-    .grid-2 {
+    .stack {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      gap: 18px;
       margin-top: 18px;
     }
 
-    .card {
+    .door-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 16px;
+    }
+
+    .door-col {
+      display: grid;
+      gap: 16px;
+    }
+
+    .door-card,
+    .support-card {
       padding: 20px;
-      min-height: 180px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+      min-height: 220px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
 
-    .kicker {
-      color: var(--accent-2);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+    .door-card.primary {
+      min-height: 100%;
     }
 
-    .card-copy,
-    .section-copy {
+    .detail {
       margin: 0;
       flex: 1 1 auto;
     }
 
-    .section {
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
       margin-top: 18px;
     }
 
-    .section-panel {
-      padding: 24px;
-    }
-
-    .list {
-      display: grid;
-      gap: 12px;
-      margin: 18px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .list li {
-      padding: 14px 16px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(255, 255, 255, 0.025);
+    .quote {
+      padding: 18px 20px;
+      border-left: 2px solid rgba(241, 195, 107, 0.42);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0 16px 16px 0;
+      color: var(--gold-soft);
+      font-size: 22px;
+      line-height: 1.45;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
     }
 
     .footer {
@@ -334,21 +359,23 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      margin-top: 18px;
-      padding: 18px 4px 0;
+      margin-top: 22px;
+      padding: 12px 4px 0;
       color: var(--muted);
       font-size: 13px;
     }
 
     @media (max-width: 980px) {
-      .hero {
+      .hero,
+      .door-grid,
+      .support-grid {
         grid-template-columns: 1fr;
       }
     }
 
     @media (max-width: 720px) {
       .shell {
-        width: min(100% - 20px, var(--max));
+        width: min(100% - 18px, var(--max));
         padding-top: 14px;
       }
 
@@ -363,13 +390,8 @@
 
       .hero-main,
       .hero-side,
-      .card,
-      .section-panel {
+      .section {
         padding: 18px;
-      }
-
-      .grid-2 {
-        grid-template-columns: 1fr;
       }
 
       .lede {
@@ -381,129 +403,164 @@
         width: 100%;
       }
 
-      .hero-actions {
+      .hero-actions,
+      .actions {
         flex-direction: column;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .nav a {
-        transition: none;
       }
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <canvas class="fx" id="home-fx" aria-hidden="true"></canvas>
-
     <div class="shell">
-      <header class="topbar" aria-label="Primary">
+      <header class="topbar" aria-label="Primary navigation">
         <div class="brand">
           <div class="brand-mark" aria-hidden="true"></div>
-          <div class="brand-copy">
+          <div>
             <p class="brand-title">Diamond Gate Bridge</p>
-            <p class="brand-sub">Home chamber · formal depth under one family</p>
+            <p class="brand-sub">Richie’s House · interior entry</p>
           </div>
         </div>
 
-        <nav class="nav" aria-label="Primary navigation">
+        <nav class="nav" aria-label="Top navigation">
           <a href="/">Root</a>
+          <a href="/gate/">Gate</a>
           <a href="/home/" aria-current="page">Home</a>
           <a href="/prelude/">Prelude</a>
-          <a href="/explore/">Explore</a>
-          <a href="/products/">Products</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/big-laughs/">Big Laughs</a>
           <a href="/gauges/">Gauges</a>
           <a href="/laws/">Laws</a>
-          <a href="/governance/">Governance</a>
         </nav>
       </header>
 
-      <main>
-        <section class="hero" aria-labelledby="home-title">
-          <article class="panel hero-main">
-            <p class="eyebrow">Formal home chamber</p>
-            <h1 id="home-title">The same house, with more depth.</h1>
+      <main class="stack">
+        <section class="panel hero" aria-labelledby="home-title">
+          <article class="hero-main">
+            <p class="eyebrow">Richie’s House</p>
+            <h1 id="home-title">Step inside.</h1>
             <p class="lede">
-              This page extends the renewed root family without breaking it. Home
-              is the fuller chamber: more context, more structure, and a calmer
-              read of what the site is holding together.
+              This is the interior door. From here you move through the house,
+              toward the vault, down into the basement, or back out through the gate.
             </p>
 
             <div class="hero-actions">
-              <a class="button button-primary" href="/prelude/">Open Prelude</a>
-              <a class="button button-secondary" href="/explore/">Enter Explore</a>
+              <a class="button button-primary" href="#house-doors">Open the house</a>
+              <a class="button button-secondary" href="/gate/">Return to gate</a>
             </div>
           </article>
 
-          <aside class="panel hero-side" aria-labelledby="home-proof-title">
+          <aside class="panel hero-side">
             <div>
-              <p class="proof-label" id="home-proof-title">Family proof</p>
-              <p class="proof-value proof-good">BOUND</p>
+              <p class="meta-label">House role</p>
+              <p class="meta-value">INTERIOR ENTRY</p>
             </div>
             <div>
-              <p class="proof-label">Surface role</p>
-              <p class="proof-value">FORMAL_HOME_CHAMBER</p>
+              <p class="meta-label">Main object</p>
+              <p class="meta-value">RICHIE’S HOUSE</p>
             </div>
             <div>
-              <p class="proof-label">Generation</p>
-              <p class="proof-value">RENEWED_PUBLIC_SURFACE_FAMILY</p>
+              <p class="meta-label">Access line</p>
+              <p class="meta-value">HOUSE → VAULT → BASEMENT → WIDER WORLD</p>
             </div>
             <div>
-              <p class="proof-label">Visual law</p>
-              <p class="proof-value">OBLIQUE_LINEAR_DISTANCE</p>
+              <p class="meta-label">Rule</p>
+              <p class="meta-value">PLACE FIRST, EXPLANATION NEVER</p>
             </div>
           </aside>
         </section>
 
-        <section class="grid-2" aria-label="Home chamber sections">
-          <article class="panel card">
-            <p class="kicker">Identity</p>
-            <h2>One coherent public family.</h2>
-            <p class="card-copy">
-              Root, Home, and Prelude now belong to the same generation. This
-              page should feel like a deepened read, not a different era.
-            </p>
-          </article>
+        <section class="panel section" id="house-doors" aria-labelledby="doors-title">
+          <p class="eyebrow">Interior movement</p>
+          <h2 id="doors-title">Choose a room.</h2>
 
-          <article class="panel card">
-            <p class="kicker">Job</p>
-            <h2>Expanded orientation.</h2>
-            <p class="card-copy">
-              Home is where the public entry gains additional context without
-              inheriting the old compass shell or splitting into another runtime
-              lineage.
-            </p>
-          </article>
+          <div class="door-grid">
+            <div class="door-col">
+              <article class="door-card primary">
+                <p class="card-kicker">Main hall</p>
+                <h3>The house itself</h3>
+                <p class="detail">
+                  Start in the main hall and move from the public-facing house into
+                  the deeper internal chambers without flattening the house into commentary.
+                </p>
+                <div class="actions">
+                  <a class="button button-primary" href="/gate/">Back to the gate</a>
+                  <a class="button button-secondary" href="/prelude/">Open Prelude</a>
+                </div>
+              </article>
+            </div>
+
+            <div class="door-col">
+              <article class="door-card">
+                <p class="card-kicker">Protected chamber</p>
+                <h3>The vault</h3>
+                <p class="detail">
+                  The secured value chamber beneath the public-facing house.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/links/">Open vault path</a>
+                </div>
+              </article>
+
+              <article class="door-card">
+                <p class="card-kicker">Lower chamber</p>
+                <h3>The basement</h3>
+                <p class="detail">
+                  The lower systems layer, hidden infrastructure, and beneath-the-house access path.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/_lab/">Open basement path</a>
+                </div>
+              </article>
+
+              <article class="door-card">
+                <p class="card-kicker">Outbound movement</p>
+                <h3>The wider house</h3>
+                <p class="detail">
+                  Move outward into the larger system once the interior read is clear.
+                </p>
+                <div class="actions">
+                  <a class="button button-secondary" href="/explore/">Open Explore</a>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <div class="support-grid">
+            <article class="support-card">
+              <p class="card-kicker">House</p>
+              <p class="detail">The visible structure and public-facing place.</p>
+            </article>
+
+            <article class="support-card">
+              <p class="card-kicker">Vault</p>
+              <p class="detail">The protected chamber beneath the visible place.</p>
+            </article>
+
+            <article class="support-card">
+              <p class="card-kicker">Basement</p>
+              <p class="detail">The lower systems and hidden infrastructure layer.</p>
+            </article>
+          </div>
         </section>
 
-        <section class="section">
-          <article class="panel section-panel">
-            <p class="kicker">Chamber read</p>
-            <h2>What this page is supposed to hold.</h2>
-            <p class="section-copy">
-              A stable header, a shared panel language, and clear structural
-              continuity with the root surface. The page may deepen the read, but
-              it must not fork the system.
-            </p>
+        <section class="panel section" aria-labelledby="house-feel-title">
+          <p class="eyebrow">Interior tone</p>
+          <h2 id="house-feel-title">The house should feel like a place.</h2>
 
-            <ul class="list">
-              <li>Shared header language with the renewed root.</li>
-              <li>Shared typography, spacing, and panel system.</li>
-              <li>Shared motion family, without page-level reinvention.</li>
-              <li>Clean traversal into Prelude, Explore, and the wider site.</li>
-            </ul>
-          </article>
+          <div class="quote">
+            No abstract chamber language. No explanation about what the house represents.
+            The house is the explanation.
+          </div>
         </section>
       </main>
 
       <footer class="footer">
         <span>
-          Receipt: PAGE=HOME | ROLE=FORMAL_HOME_CHAMBER |
-          FAMILY=RENEWED_PUBLIC_SURFACE_FAMILY |
-          VISUAL_LAW=OBLIQUE_LINEAR_DISTANCE
+          Result: PAGE=HOME | CONTRACT=CONCRETE_INTERIOR_FIRST_V1 | HOUSE_IS_PLACE_NOT_COMMENTARY
         </span>
-        <span><a href="/">Return to root</a></span>
+        <span><a href="/gate/">Return to gate</a></span>
       </footer>
     </div>
   </div>

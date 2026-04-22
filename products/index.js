@@ -44,9 +44,17 @@
   }
 
   function getScaleFactor() {
-    const widthFactor = clamp(state.width / 1220, 0.50, 1);
-    const heightFactor = clamp(state.height / 980, 0.58, 1);
+    const widthFactor = clamp(state.width / 1220, 0.52, 1);
+    const heightFactor = clamp(state.height / 900, 0.72, 1);
     return Math.min(widthFactor, heightFactor);
+  }
+
+  function getNodeBox(node) {
+    const rect = node.getBoundingClientRect();
+    return {
+      width: rect.width || 168,
+      height: rect.height || 172,
+    };
   }
 
   function getResponsiveOrbit(item) {
@@ -56,22 +64,14 @@
     let orbitY = item.orbitY * factor;
 
     if (state.width <= 720) {
-      orbitX *= 0.78;
-      orbitY *= 0.86;
+      orbitX *= 0.72;
+      orbitY *= 0.78;
     } else if (state.width <= 980) {
-      orbitX *= 0.88;
-      orbitY *= 0.92;
+      orbitX *= 0.86;
+      orbitY *= 0.90;
     }
 
     return { orbitX, orbitY };
-  }
-
-  function getNodeBox(node) {
-    const rect = node.getBoundingClientRect();
-    return {
-      width: rect.width || 154,
-      height: rect.height || 190,
-    };
   }
 
   function placeNode(item, time) {
@@ -82,12 +82,11 @@
     const y = Math.sin(theta) * orbitY;
 
     const depth = (Math.sin(theta) + 1) * 0.5;
-    const scale = 0.82 + depth * 0.18;
-    const opacity = 0.76 + depth * 0.24;
+    const scale = 0.84 + depth * 0.16;
+    const opacity = 0.78 + depth * 0.22;
     const zIndex = Math.round(20 + depth * 80 + item.depthBias);
 
     const box = getNodeBox(item.node);
-
     const left = state.centerX + x - box.width * 0.5;
     const top = state.centerY + y - box.height * 0.5;
 

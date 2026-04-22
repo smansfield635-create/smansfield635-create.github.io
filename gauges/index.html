@@ -1,927 +1,714 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Diagnostic Gauges</title>
-<style>
-:root{
-  --bg:#05070b;
-  --bg2:#08101a;
-  --bg3:#0d1623;
-  --panel:#0b0f16;
-  --panel2:#101722;
-  --line:#1f2a36;
-  --line2:rgba(127,255,212,.16);
-  --text:#e8f6ff;
-  --muted:rgba(232,246,255,.68);
-  --muted2:rgba(232,246,255,.48);
-  --accent:#7fffd4;
-  --accent2:#6fe7ff;
-  --warn:#ffd27a;
-  --bad:#ff7a7a;
-  --good:#7fffd4;
-  --shadow:0 10px 30px rgba(0,0,0,.28);
-  --shadow2:0 18px 60px rgba(0,0,0,.34);
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-right:env(safe-area-inset-right,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-  --safe-left:env(safe-area-inset-left,0px);
-  --radius:14px;
-  --radius2:18px;
-}
-*{box-sizing:border-box}
-html,body{
-  margin:0;
-  min-height:100%;
-  background:
-    radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
-    radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
-    linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
-  color:var(--text);
-  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-}
-body{min-height:100vh;overflow-x:hidden}
-.hostGlow,
-.gridLines{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-}
-.hostGlow{
-  background:
-    radial-gradient(circle at 50% 12%, rgba(127,255,212,.045), transparent 18%),
-    radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
-    radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
-  filter:blur(10px);
-}
-.gridLines{
-  background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-  background-size:40px 40px;
-  mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
-}
-.wrap{
-  position:relative;
-  z-index:1;
-  max-width:1560px;
-  margin:0 auto;
-  padding:calc(12px + var(--safe-top)) calc(12px + var(--safe-right)) calc(12px + var(--safe-bottom)) calc(12px + var(--safe-left));
-}
-.hostbar{
-  display:grid;
-  grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);
-  gap:10px;
-  margin-bottom:10px;
-}
-.topline,
-.hostCard,
-.kpi,
-.panel,
-.chartCard,
-.footer{
-  border:1px solid var(--line);
-  background:linear-gradient(180deg,var(--panel),var(--panel2));
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-}
-.topline{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:10px;
-  padding:10px 12px;
-  min-height:62px;
-  background:
-    linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-    radial-gradient(circle at 18% 18%, rgba(127,255,212,.05), transparent 26%);
-}
-.topline .title{
-  margin:0;
-  padding:0;
-  border:0;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.10em;
-  text-transform:uppercase;
-  color:var(--accent);
-}
-.topline .stamp{
-  color:var(--muted);
-  font-size:11px;
-  white-space:nowrap;
-}
-.hostCard{
-  padding:12px 14px;
-  background:
-    linear-gradient(180deg,rgba(11,15,22,.94),rgba(16,23,34,.96)),
-    radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
-}
-.hostCard .eyebrow{
-  font-size:10px;
-  letter-spacing:.12em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:8px;
-}
-.hostCard .hostTitle{
-  font-size:20px;
-  font-weight:800;
-  line-height:1.1;
-  letter-spacing:.01em;
-  margin:0 0 8px 0;
-}
-.hostCard .hostText{
-  font-size:12px;
-  line-height:1.6;
-  color:var(--muted);
-  margin:0;
-}
-.topbar{
-  display:grid;
-  grid-template-columns:repeat(10,minmax(0,1fr));
-  gap:8px;
-  margin-bottom:10px;
-}
-.kpi{
-  padding:10px;
-  min-height:82px;
-  position:relative;
-  overflow:hidden;
-  background:
-    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-    radial-gradient(circle at 50% 0%, rgba(127,255,212,.04), transparent 48%);
-}
-.kpi::before{
-  content:"";
-  position:absolute;
-  left:10px;
-  right:10px;
-  top:0;
-  height:2px;
-  border-radius:999px;
-  background:linear-gradient(90deg, transparent, rgba(127,255,212,.36), transparent);
-  opacity:.9;
-}
-.k{
-  font-size:10px;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:8px;
-}
-.v{
-  font-size:18px;
-  font-weight:800;
-  line-height:1.1;
-  word-break:break-word;
-}
-.good{color:var(--good)}
-.warn{color:var(--warn)}
-.bad{color:var(--bad)}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-.panel{
-  padding:10px;
-  background:
-    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-    radial-gradient(circle at 50% 0%, rgba(111,231,255,.025), transparent 36%);
-}
-.title{
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:8px;
-  padding-bottom:8px;
-  border-bottom:1px solid var(--line);
-}
-.rows{display:grid;gap:4px}
-.row{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:10px;
-  align-items:start;
-  padding:4px 0;
-}
-.row .rk{
-  font-size:11px;
-  color:var(--muted);
-}
-.row .rv{
-  font-size:12px;
-  text-align:right;
-  word-break:break-word;
-  color:var(--text);
-}
-.chartGrid{
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  margin-top:10px;
-}
-.chartCard{
-  padding:10px;
-  background:
-    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-    radial-gradient(circle at 50% 0%, rgba(127,255,212,.03), transparent 40%);
-}
-.chartTitle{
-  font-size:11px;
-  font-weight:800;
-  letter-spacing:.08em;
-  text-transform:uppercase;
-  color:var(--accent);
-  margin-bottom:8px;
-}
-canvas{
-  display:block;
-  width:100%;
-  height:140px;
-  border:1px solid var(--line);
-  border-radius:10px;
-  background:
-    linear-gradient(180deg,#0a1019,#070b12);
-}
-.footer{
-  margin-top:10px;
-  padding:10px 12px;
-  font-size:11px;
-  color:var(--muted);
-  background:
-    linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-    radial-gradient(circle at 12% 18%, rgba(127,255,212,.025), transparent 18%);
-}
-.pre{white-space:pre-wrap;word-break:break-word}
-.bootFail{
-  margin-top:10px;
-  padding:12px 14px;
-  border:1px solid rgba(255,122,122,.28);
-  border-radius:12px;
-  background:rgba(40,10,10,.78);
-  color:#ffdada;
-  font-size:12px;
-  line-height:1.45;
-  white-space:pre-wrap;
-  display:none;
-}
-.bootFail.is-visible{display:block}
-@media (max-width:1280px){
-  .hostbar{grid-template-columns:1fr}
-  .topbar{grid-template-columns:repeat(5,minmax(0,1fr))}
-  .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .chartGrid{grid-template-columns:1fr}
-}
-@media (max-width:760px){
-  .topline{flex-direction:column;align-items:flex-start}
-  .topbar{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .grid{grid-template-columns:1fr}
-  .row{grid-template-columns:1fr}
-  .row .rv{text-align:left}
-}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Diagnostic Gauges · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Diagnostic Gauges G5. Geometry-first host with direct status receipts, authority lanes, signal windows, and diagnostic surfaces."
+  >
+  <style>
+    :root{
+      --bg0:#020611;
+      --bg1:#071326;
+      --bg2:#0a1d38;
+      --panel:rgba(9,18,40,.86);
+      --panel-soft:rgba(10,20,46,.68);
+      --line:rgba(173,212,255,.14);
+      --line-strong:rgba(173,212,255,.24);
+      --text:#edf5ff;
+      --muted:#9fb2d2;
+      --gold:#f1d28d;
+      --blue:#8dc5ff;
+      --green:#8ff0c5;
+      --red:#ff8d9d;
+      --violet:#c7b3ff;
+      --shadow:0 24px 60px rgba(0,0,0,.42);
+      --radius-xl:30px;
+      --radius-lg:24px;
+      --radius-md:18px;
+      --max:1260px;
+      color-scheme:dark;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(36,86,170,.18),transparent 34%),
+        radial-gradient(circle at 50% 74%,rgba(15,40,110,.22),transparent 44%),
+        linear-gradient(180deg,var(--bg0),var(--bg1) 42%,var(--bg0));
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle at 10% 20%,rgba(255,255,255,.88) 0 1px,transparent 2px),
+        radial-gradient(circle at 28% 62%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 60% 26%,rgba(255,255,255,.78) 0 1px,transparent 2px),
+        radial-gradient(circle at 78% 72%,rgba(255,255,255,.56) 0 1px,transparent 2px),
+        radial-gradient(circle at 88% 18%,rgba(255,255,255,.72) 0 1px,transparent 2px),
+        radial-gradient(circle at 18% 82%,rgba(255,255,255,.48) 0 1px,transparent 2px);
+      opacity:.52;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    .shell{
+      width:min(100% - 28px,var(--max));
+      margin:0 auto;
+      padding:18px 0 48px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:18px;
+      padding:18px 20px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(7,16,40,.86),rgba(7,17,38,.72));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(14px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      min-width:0;
+    }
+
+    .brand-orb{
+      width:56px;
+      height:56px;
+      flex:0 0 56px;
+      border-radius:50%;
+      border:1px solid rgba(188,219,255,.24);
+      background:
+        radial-gradient(circle at 38% 32%,rgba(255,255,255,.92),rgba(195,223,255,.72) 18%,rgba(90,138,220,.42) 42%,rgba(10,24,60,.18) 72%,transparent 100%);
+      box-shadow:0 0 26px rgba(143,189,255,.28),inset 0 0 30px rgba(255,255,255,.12);
+    }
+
+    .brand-copy h1{
+      margin:0;
+      font-size:clamp(1.35rem,2vw,1.9rem);
+      font-weight:800;
+      letter-spacing:.01em;
+    }
+
+    .brand-copy p{
+      margin:4px 0 0;
+      color:var(--muted);
+      font-size:.98rem;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .nav a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:50px;
+      padding:0 18px;
+      border:1px solid rgba(173,212,255,.16);
+      border-radius:999px;
+      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
+      font-weight:700;
+      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(214,233,255,.34);
+      box-shadow:0 0 0 1px rgba(214,233,255,.08),0 12px 22px rgba(0,0,0,.24);
+      outline:none;
+    }
+
+    .nav a[aria-current="page"]{
+      border-color:rgba(202,228,255,.4);
+      box-shadow:0 0 0 1px rgba(202,228,255,.08),0 0 24px rgba(94,143,255,.18);
+    }
+
+    .hero{
+      display:grid;
+      gap:14px;
+      margin-bottom:18px;
+      padding:24px;
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      background:
+        linear-gradient(180deg,rgba(10,18,42,.76),rgba(8,18,40,.58)),
+        radial-gradient(circle at 50% 0%,rgba(115,170,255,.12),transparent 46%);
+      box-shadow:var(--shadow);
+    }
+
+    .eyebrow{
+      color:var(--gold);
+      font-weight:800;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:.84rem;
+    }
+
+    .hero h2{
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2.3rem,5vw,4.2rem);
+      line-height:.95;
+      color:var(--gold);
+    }
+
+    .hero p{
+      margin:0;
+      max-width:72ch;
+      color:var(--muted);
+      font-size:clamp(1rem,1.4vw,1.06rem);
+      line-height:1.7;
+    }
+
+    .layout{
+      display:grid;
+      grid-template-columns:1.02fr .98fr;
+      gap:18px;
+      align-items:start;
+    }
+
+    .panel{
+      border:1px solid var(--line);
+      border-radius:var(--radius-xl);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(29,64,137,.18),transparent 34%),
+        linear-gradient(180deg,var(--panel),var(--panel-soft));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .panel-inner{
+      padding:22px;
+    }
+
+    .host{
+      position:relative;
+      min-height:620px;
+      overflow:hidden;
+      border-radius:24px;
+      background:
+        linear-gradient(180deg,rgba(4,13,32,.54),rgba(4,13,32,.22)),
+        radial-gradient(circle at 50% 50%,rgba(58,103,188,.16),transparent 54%);
+    }
+
+    .host::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:20px;
+      border:1px solid rgba(173,212,255,.08);
+      pointer-events:none;
+    }
+
+    .axis-x,.axis-y,.ring,.signal-window,.core-node,.host-chip,.host-badge{
+      position:absolute;
+    }
+
+    .axis-x{
+      left:9%;
+      top:50%;
+      width:82%;
+      height:2px;
+      transform:translateY(-50%);
+      background:linear-gradient(90deg,transparent,rgba(206,228,255,.34),transparent);
+      box-shadow:0 0 18px rgba(141,189,255,.12);
+    }
+
+    .axis-y{
+      left:50%;
+      top:10%;
+      width:2px;
+      height:80%;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,transparent,rgba(206,228,255,.24),transparent);
+      box-shadow:0 0 14px rgba(141,189,255,.08);
+    }
+
+    .axis-label{
+      position:absolute;
+      font-weight:800;
+      letter-spacing:.04em;
+      color:rgba(225,237,255,.88);
+      text-shadow:0 0 18px rgba(113,165,255,.24);
+      z-index:4;
+    }
+
+    .axis-label.plus-y{left:calc(50% - 22px);top:8%}
+    .axis-label.minus-y{left:calc(50% - 18px);bottom:8%}
+    .axis-label.minus-x{left:8.5%;top:calc(50% - 14px)}
+    .axis-label.plus-x{right:8.5%;top:calc(50% - 14px)}
+
+    .ring{
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-20deg);
+      border-radius:50%;
+      border:1px solid rgba(173,212,255,.13);
+      box-shadow:0 0 0 1px rgba(255,255,255,.02), inset 0 0 24px rgba(140,188,255,.03);
+      opacity:.92;
+    }
+
+    .ring.r1{width:34%;height:12%}
+    .ring.r2{width:48%;height:18%}
+    .ring.r3{width:64%;height:24%}
+    .ring.r4{width:82%;height:30%}
+    .ring.r5{width:98%;height:36%}
+
+    .core-node{
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:146px;
+      height:146px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 34% 32%,rgba(255,255,255,.98),rgba(255,244,201,.95) 16%,#ffd88a 42%,#ff9c39 72%,#7e3f10 100%);
+      box-shadow:
+        0 0 28px rgba(255,198,102,.72),
+        0 0 72px rgba(255,177,73,.45),
+        0 0 120px rgba(114,166,255,.18);
+      z-index:5;
+    }
+
+    .core-node::before{
+      content:"";
+      position:absolute;
+      inset:-34px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(255,220,122,.22),rgba(255,177,73,.10) 38%,rgba(94,143,255,.06) 62%,transparent 76%);
+      filter:blur(14px);
+      z-index:-1;
+    }
+
+    .signal-window{
+      width:128px;
+      min-height:72px;
+      padding:10px 12px;
+      border-radius:18px;
+      border:1px solid rgba(173,212,255,.14);
+      background:linear-gradient(180deg,rgba(255,255,255,.11),rgba(255,255,255,.05));
+      box-shadow:0 12px 26px rgba(0,0,0,.22);
+      text-align:center;
+      z-index:6;
+    }
+
+    .signal-window strong{
+      display:block;
+      font-size:.76rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-bottom:6px;
+    }
+
+    .signal-window span{
+      display:block;
+      color:var(--muted);
+      font-size:.74rem;
+      line-height:1.3;
+    }
+
+    .signal-window.n{left:50%;top:12%;transform:translateX(-50%)}
+    .signal-window.s{left:50%;bottom:12%;transform:translateX(-50%)}
+    .signal-window.e{right:9%;top:50%;transform:translateY(-50%)}
+    .signal-window.w{left:9%;top:50%;transform:translateY(-50%)}
+    .signal-window.ne{right:19%;top:24%}
+    .signal-window.nw{left:19%;top:24%}
+    .signal-window.se{right:19%;bottom:24%}
+    .signal-window.sw{left:19%;bottom:24%}
+
+    .host-chip{
+      min-height:38px;
+      padding:0 12px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.16);
+      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
+      color:#d8ebff;
+      font-size:.76rem;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      box-shadow:0 8px 18px rgba(0,0,0,.18);
+    }
+
+    .chip-a{left:18px;top:18px}
+    .chip-b{right:18px;top:18px}
+    .chip-c{left:18px;bottom:18px}
+    .chip-d{right:18px;bottom:18px}
+
+    .host-badge{
+      right:18px;
+      bottom:18px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(173,212,255,.14);
+      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
+      color:rgba(238,246,255,.76);
+      font-size:.7rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      pointer-events:none;
+      z-index:7;
+    }
+
+    .section-title{
+      margin:0 0 14px;
+      font-size:1.12rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .status-grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-bottom:18px;
+    }
+
+    .status-card{
+      padding:16px;
+      border-radius:20px;
+      border:1px solid rgba(173,212,255,.12);
+      background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.03));
+    }
+
+    .status-card .label{
+      display:block;
+      margin-bottom:8px;
+      font-size:.7rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--muted);
+    }
+
+    .status-card .value{
+      display:block;
+      font-size:1.1rem;
+      font-weight:800;
+      color:var(--text);
+    }
+
+    .value.live{color:var(--green)}
+    .value.pending{color:var(--gold)}
+    .value.alert{color:var(--red)}
+    .value.unknown{color:var(--violet)}
+
+    .authority-list{
+      display:grid;
+      gap:12px;
+    }
+
+    .authority-row{
+      display:grid;
+      grid-template-columns:170px 1fr;
+      gap:14px;
+      align-items:start;
+      padding:14px 16px;
+      border-radius:18px;
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+    }
+
+    .authority-row strong{
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .authority-row span{
+      color:var(--muted);
+      line-height:1.5;
+      font-size:.92rem;
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:18px;
+    }
+
+    .mini-card{
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+    }
+
+    .mini-card strong{
+      display:block;
+      margin-bottom:8px;
+      font-size:.76rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      color:var(--gold);
+    }
+
+    .mini-card span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
+    .footer-note{
+      margin-top:18px;
+      padding:16px 18px;
+      border-radius:18px;
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.025));
+      color:var(--muted);
+      line-height:1.6;
+    }
+
+    @media (max-width:1080px){
+      .layout{grid-template-columns:1fr}
+    }
+
+    @media (max-width:760px){
+      .shell{width:min(100% - 16px,var(--max));padding-top:10px}
+      .status-grid,.mini-grid{grid-template-columns:1fr}
+      .authority-row{grid-template-columns:1fr}
+      .map-overlay-copy{left:16px;right:16px;bottom:16px;max-width:none}
+      .signal-window{width:112px;min-height:66px;padding:9px 10px}
+      .signal-window.nw{left:12%;top:22%}
+      .signal-window.ne{right:12%;top:22%}
+      .signal-window.sw{left:12%;bottom:22%}
+      .signal-window.se{right:12%;bottom:22%}
+    }
+  </style>
 </head>
 <body>
-<div class="hostGlow" aria-hidden="true"></div>
-<div class="gridLines" aria-hidden="true"></div>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-orb" aria-hidden="true"></div>
+        <div class="brand-copy">
+          <h1>Diagnostic Gauges</h1>
+          <p>G5 · geometry-first host · signal windows · direct receipts</p>
+        </div>
+      </div>
 
-<div class="wrap">
-  <div class="hostbar">
-    <div class="topline">
-      <div class="title">Diagnostic Gauges</div>
-      <div class="stamp">GAUGES G5 · NEXT GENERATION HOST · DIRECT AUTHORITY</div>
-    </div>
-    <section class="hostCard" aria-label="Host read">
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/explore/">Explore</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/" aria-current="page">Gauges</a>
+      </nav>
+    </header>
+
+    <section class="hero">
       <div class="eyebrow">Structure before effects</div>
-      <h1 class="hostTitle">Euclidean host, signal windows, direct receipts.</h1>
-      <p class="hostText">This renewed gauges surface treats geometry as the stable host and charts, metrics, and classification as the signal layer. Runtime, render, and instruments remain explicit and separately diagnosable.</p>
+      <h2>Euclidean host, signal windows, direct receipts.</h2>
+      <p>
+        This gauges surface now reads as a real diagnostics host instead of a plain-text placeholder.
+        Geometry stays stable first. Status, receipts, authority lanes, and diagnostic windows sit on top
+        as readable signal layers.
+      </p>
     </section>
+
+    <main class="layout">
+      <section class="panel">
+        <div class="panel-inner">
+          <h3 class="section-title">Gauge host</h3>
+
+          <div class="host" aria-label="Euclidean host">
+            <div class="axis-x" aria-hidden="true"></div>
+            <div class="axis-y" aria-hidden="true"></div>
+            <div class="axis-label plus-y">+Y</div>
+            <div class="axis-label minus-y">-Y</div>
+            <div class="axis-label minus-x">-X</div>
+            <div class="axis-label plus-x">+X</div>
+
+            <div class="ring r1" aria-hidden="true"></div>
+            <div class="ring r2" aria-hidden="true"></div>
+            <div class="ring r3" aria-hidden="true"></div>
+            <div class="ring r4" aria-hidden="true"></div>
+            <div class="ring r5" aria-hidden="true"></div>
+
+            <div class="core-node" aria-hidden="true"></div>
+
+            <div class="signal-window n">
+              <strong>Runtime Receipt</strong>
+              <span>Authority chain and boot-state confirmation.</span>
+            </div>
+
+            <div class="signal-window s">
+              <strong>Failure Source</strong>
+              <span>Break owner, active fault, and smallest true cause.</span>
+            </div>
+
+            <div class="signal-window e">
+              <strong>Render Window</strong>
+              <span>Visible state, field read, and output continuity.</span>
+            </div>
+
+            <div class="signal-window w">
+              <strong>Instrument Window</strong>
+              <span>Diagnostic probes, direct receipts, and measure paths.</span>
+            </div>
+
+            <div class="signal-window ne">
+              <strong>Motion / Force</strong>
+              <span>Velocity, drift, animation, and response pressure.</span>
+            </div>
+
+            <div class="signal-window nw">
+              <strong>Scope / Traversal</strong>
+              <span>Target path, route law, and active execution scope.</span>
+            </div>
+
+            <div class="signal-window se">
+              <strong>Projection / Field</strong>
+              <span>Geometry host, masks, and signal distribution.</span>
+            </div>
+
+            <div class="signal-window sw">
+              <strong>Coherence / Stability</strong>
+              <span>Clarity, admissibility, and burden condition.</span>
+            </div>
+
+            <div class="host-chip chip-a">Geometry host</div>
+            <div class="host-chip chip-b">Direct receipts</div>
+            <div class="host-chip chip-c">Signal windows</div>
+            <div class="host-chip chip-d">Authority lanes</div>
+
+            <div class="host-badge">gauges: page-only renewal</div>
+          </div>
+
+          <div class="footer-note">
+            Current read: the gauges page is now a visual diagnostics surface. It can be used to reason about runtime authority,
+            render state, instrument state, motion burden, and failure ownership without relying on a plain-text scaffold.
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-inner">
+          <h3 class="section-title">State receipts</h3>
+
+          <div class="status-grid">
+            <div class="status-card">
+              <span class="label">State</span>
+              <span class="value alert">Offline</span>
+            </div>
+            <div class="status-card">
+              <span class="label">Runtime</span>
+              <span class="value pending">Pending</span>
+            </div>
+            <div class="status-card">
+              <span class="label">Render</span>
+              <span class="value pending">Pending</span>
+            </div>
+            <div class="status-card">
+              <span class="label">Instruments</span>
+              <span class="value pending">Pending</span>
+            </div>
+            <div class="status-card">
+              <span class="label">Classified</span>
+              <span class="value unknown">—</span>
+            </div>
+            <div class="status-card">
+              <span class="label">Phase</span>
+              <span class="value unknown">—</span>
+            </div>
+            <div class="status-card">
+              <span class="label">Freshness</span>
+              <span class="value unknown">—</span>
+            </div>
+            <div class="status-card">
+              <span class="label">FPS</span>
+              <span class="value unknown">—</span>
+            </div>
+          </div>
+
+          <h3 class="section-title">Module authority</h3>
+
+          <div class="authority-list">
+            <div class="authority-row">
+              <strong>Runtime receipt</strong>
+              <span>Boot path, ownership chain, and controlling module proof.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Render receipt</strong>
+              <span>Visible output, stage continuity, and geometry host condition.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Instrument / diagnostics</strong>
+              <span>Probe results, direct reads, and measured break reduction.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Motion / force</strong>
+              <span>Drift pressure, velocity history, and response burden.</span>
+            </div>
+            <div class="authority-row">
+              <strong>World / region / node</strong>
+              <span>Field position, local region state, and node-level evidence.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Scope / traversal</strong>
+              <span>Active target path, traversal route, and scope lock state.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Projection / field</strong>
+              <span>Host geometry, mask behavior, and signal distribution law.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Emission / masks</strong>
+              <span>What is visible, hidden, occluded, or still waiting on receipt.</span>
+            </div>
+            <div class="authority-row">
+              <strong>Failure / source</strong>
+              <span>Smallest true break, owner class, and correction traceability.</span>
+            </div>
+          </div>
+
+          <div class="mini-grid">
+            <div class="mini-card">
+              <strong>Velocity history</strong>
+              <span>Awaiting direct authority module receipts.</span>
+            </div>
+            <div class="mini-card">
+              <strong>Coherence / clarity / stability</strong>
+              <span>Awaiting direct authority module receipts.</span>
+            </div>
+            <div class="mini-card">
+              <strong>FPS / fresh / burden</strong>
+              <span>Awaiting direct authority module receipts.</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
-
-  <div class="topbar">
-    <div class="kpi"><div class="k">State</div><div id="k-state" class="v bad">OFFLINE</div></div>
-    <div class="kpi"><div class="k">Runtime</div><div id="k-runtime" class="v warn">PENDING</div></div>
-    <div class="kpi"><div class="k">Render</div><div id="k-render" class="v warn">PENDING</div></div>
-    <div class="kpi"><div class="k">Instruments</div><div id="k-instruments" class="v warn">PENDING</div></div>
-    <div class="kpi"><div class="k">Classified</div><div id="k-classified" class="v">—</div></div>
-    <div class="kpi"><div class="k">Phase</div><div id="k-phase" class="v">—</div></div>
-    <div class="kpi"><div class="k">Freshness</div><div id="k-fresh" class="v">—</div></div>
-    <div class="kpi"><div class="k">FPS</div><div id="k-fps" class="v">—</div></div>
-    <div class="kpi"><div class="k">Δt</div><div id="k-dt" class="v">—</div></div>
-    <div class="kpi"><div class="k">Age</div><div id="k-age" class="v">—</div></div>
-  </div>
-
-  <div class="grid">
-    <section class="panel">
-      <div class="title">Module Authority</div>
-      <div id="moduleRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Runtime Receipt</div>
-      <div id="runtimeRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Render Receipt</div>
-      <div id="renderRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Instrument / Diagnostics</div>
-      <div id="diagRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Motion / Force</div>
-      <div id="motionRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">World / Region / Node</div>
-      <div id="worldRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Scope / Traversal</div>
-      <div id="scopeRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Projection / Field</div>
-      <div id="projectionRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Emission / Masks</div>
-      <div id="emitRows" class="rows"></div>
-    </section>
-
-    <section class="panel">
-      <div class="title">Failure / Source</div>
-      <div id="failureRows" class="rows"></div>
-    </section>
-  </div>
-
-  <div class="chartGrid">
-    <section class="chartCard">
-      <div class="chartTitle">Velocity History</div>
-      <canvas id="velocityChart" width="480" height="140"></canvas>
-    </section>
-    <section class="chartCard">
-      <div class="chartTitle">Coherence / Clarity / Stability</div>
-      <canvas id="coherenceChart" width="480" height="140"></canvas>
-    </section>
-    <section class="chartCard">
-      <div class="chartTitle">FPS / Fresh / Burden</div>
-      <canvas id="miscChart" width="480" height="140"></canvas>
-    </section>
-  </div>
-
-  <div id="footer" class="footer pre">Awaiting direct authority module receipts.</div>
-  <div id="bootFail" class="bootFail"></div>
-</div>
-
-<script type="module">
-const BUILD_STAMP = "GAUGES_G5_NEXT_GENERATION_HOST";
-const HISTORY_MAX = 240;
-const REFRESH_MS = 250;
-const CACHE_BUST = "g5";
-const RUNTIME_MODULE_PATH = "/world/runtime.js?v=" + CACHE_BUST;
-const RENDER_MODULE_PATH = "/world/render.js?v=" + CACHE_BUST;
-const INSTRUMENTS_MODULE_PATH = "/assets/instruments.js?v=" + CACHE_BUST;
-
-const history = {
-  velocityA: [],
-  velocityB: [],
-  velocityC: [],
-  coherence: [],
-  clarity: [],
-  stability: [],
-  fps: [],
-  fresh: [],
-  burden: []
-};
-
-const moduleState = {
-  runtime: { status: "PENDING", error: null, source: RUNTIME_MODULE_PATH, loaded: false },
-  render: { status: "PENDING", error: null, source: RENDER_MODULE_PATH, loaded: false },
-  instruments: { status: "PENDING", error: null, source: INSTRUMENTS_MODULE_PATH, loaded: false }
-};
-
-let runtimeApi = null;
-let renderApi = null;
-let instrumentsApi = null;
-let timer = null;
-let lastTickMs = performance.now();
-
-function isFiniteNumber(v){return typeof v==="number"&&Number.isFinite(v);}
-function fmt(v,d=3){return isFiniteNumber(v)?v.toFixed(d):"—";}
-function intfmt(v){return isFiniteNumber(v)?String(Math.round(v)):"—";}
-function bool(v){return v===true?"true":v===false?"false":"—";}
-function safeObj(v){return v&&typeof v==="object"&&!Array.isArray(v)?v:{};}
-function push(arr,v){arr.push(v);if(arr.length>HISTORY_MAX)arr.shift();}
-function escapeHtml(v){return String(v ?? "—").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");}
-function row(k,v){return '<div class="row"><div class="rk">'+escapeHtml(k)+'</div><div class="rv">'+escapeHtml(v)+'</div></div>';}
-function showBootFail(message){
-  const node = document.getElementById("bootFail");
-  if(!node) return;
-  node.textContent = message;
-  node.classList.add("is-visible");
-}
-function hideBootFail(){
-  const node = document.getElementById("bootFail");
-  if(!node) return;
-  node.textContent = "";
-  node.classList.remove("is-visible");
-}
-function setText(id,text,cls=""){
-  const el=document.getElementById(id);
-  if(!el) return;
-  el.textContent=text;
-  el.className=('v '+cls).trim();
-}
-function kpiClass(v,type){
-  if(type==="state"){
-    if(v==="LIVE") return "good";
-    if(v==="STALE") return "warn";
-    return "bad";
-  }
-  if(type==="fresh") return v==="FRESH" ? "good" : "warn";
-  if(type==="module"){
-    if(v==="ONLINE") return "good";
-    if(v==="PENDING") return "warn";
-    return "bad";
-  }
-  return "";
-}
-function drawMulti(canvas, seriesDefs, minY=null, maxY=null){
-  const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
-  ctx.clearRect(0,0,w,h);
-  const grad = ctx.createLinearGradient(0,0,0,h);
-  grad.addColorStop(0,"#0a1019");
-  grad.addColorStop(1,"#070b12");
-  ctx.fillStyle=grad;
-  ctx.fillRect(0,0,w,h);
-  ctx.strokeStyle="#1f2a36";
-  ctx.lineWidth=1;
-  ctx.beginPath();
-  ctx.moveTo(0,h-12);
-  ctx.lineTo(w,h-12);
-  ctx.stroke();
-
-  let vals = [];
-  for (const def of seriesDefs) vals = vals.concat(def.data.filter(isFiniteNumber));
-
-  let lo=minY, hi=maxY;
-  if(lo===null || hi===null){
-    const absVals = vals.length ? vals : [0];
-    lo = Math.min(...absVals);
-    hi = Math.max(...absVals);
-    if(lo===hi){ lo -= 1; hi += 1; }
-  }
-  const span = (hi - lo) || 1;
-
-  for (const def of seriesDefs) {
-    ctx.strokeStyle = def.color;
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    def.data.forEach((v,i)=>{
-      const x = (i / Math.max(1, HISTORY_MAX - 1)) * w;
-      const y = (h - 12) - ((v - lo) / span) * (h - 24);
-      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
-    });
-    ctx.stroke();
-  }
-}
-function computePrimitiveMetrics(forceVector = {}) {
-  const N = Number(forceVector.N || 0);
-  const E = Number(forceVector.E || 0);
-  const S = Number(forceVector.S || 0);
-  const W = Number(forceVector.W || 0);
-  const B = Number(forceVector.B || 0);
-  const ew = Math.abs(E - W);
-  const ns = Math.abs(N - S);
-  const vertical = Math.abs(B);
-  const magnitude = Math.sqrt((E - W) ** 2 + (N - S) ** 2 + B ** 2);
-  const total = Math.abs(N) + Math.abs(E) + Math.abs(S) + Math.abs(W) + Math.abs(B);
-
-  return {
-    packetSeparationWeight: Math.min(1, magnitude / 10),
-    shadowDensity: Math.min(1, vertical / 10),
-    fragmentWeight: Math.min(1, total / 20),
-    asymmetryWeight: Math.min(1, Math.abs((N + E) - (S + W)) / 10),
-    directionalWeight: Math.min(1, (ew + ns + vertical) / 10),
-    directionalContrast: Math.min(1, Math.max(ew, ns, vertical) / 10),
-    magnitude
-  };
-}
-function classifyState(receipt, ageMs) {
-  if (!receipt || safeObj(receipt.verification).pass !== true) return "OFFLINE";
-  if (isFiniteNumber(ageMs) && ageMs > 2500) return "STALE";
-  return "LIVE";
-}
-
-async function loadModule(path, key) {
-  try {
-    const mod = await import(path);
-    moduleState[key].status = "ONLINE";
-    moduleState[key].error = null;
-    moduleState[key].loaded = true;
-    return mod;
-  } catch (error) {
-    moduleState[key].status = "FAIL";
-    moduleState[key].error = error instanceof Error ? (error.stack || error.message) : String(error);
-    moduleState[key].loaded = true;
-    return null;
-  }
-}
-
-async function bootModules() {
-  const [runtimeMod, renderMod, instrumentsMod] = await Promise.all([
-    loadModule(RUNTIME_MODULE_PATH, "runtime"),
-    loadModule(RENDER_MODULE_PATH, "render"),
-    loadModule(INSTRUMENTS_MODULE_PATH, "instruments")
-  ]);
-
-  runtimeApi = runtimeMod;
-  renderApi = renderMod;
-  instrumentsApi = instrumentsMod;
-}
-
-function renderModuleState() {
-  setText("k-runtime", moduleState.runtime.status, kpiClass(moduleState.runtime.status, "module"));
-  setText("k-render", moduleState.render.status, kpiClass(moduleState.render.status, "module"));
-  setText("k-instruments", moduleState.instruments.status, kpiClass(moduleState.instruments.status, "module"));
-
-  document.getElementById("moduleRows").innerHTML =
-    row("runtime status", moduleState.runtime.status) +
-    row("runtime source", moduleState.runtime.source) +
-    row("runtime error", moduleState.runtime.error || "none") +
-    row("render status", moduleState.render.status) +
-    row("render source", moduleState.render.source) +
-    row("render error", moduleState.render.error || "none") +
-    row("instruments status", moduleState.instruments.status) +
-    row("instruments source", moduleState.instruments.source) +
-    row("instruments error", moduleState.instruments.error || "none");
-}
-
-function getRuntimeReceipt(snapshotOptions) {
-  if (!runtimeApi || typeof runtimeApi.getRuntimeReceipt !== "function") return null;
-  try {
-    return runtimeApi.getRuntimeReceipt(snapshotOptions);
-  } catch (error) {
-    moduleState.runtime.status = "FAIL";
-    moduleState.runtime.error = error instanceof Error ? (error.stack || error.message) : String(error);
-    return null;
-  }
-}
-
-function getRenderPacket(snapshotOptions) {
-  if (!renderApi) return null;
-  try {
-    if (typeof renderApi.render === "function") return renderApi.render(snapshotOptions);
-    if (renderApi.default && typeof renderApi.default.render === "function") return renderApi.default.render(snapshotOptions);
-    return null;
-  } catch (error) {
-    moduleState.render.status = "FAIL";
-    moduleState.render.error = error instanceof Error ? (error.stack || error.message) : String(error);
-    return null;
-  }
-}
-
-function getInstrumentPacket(runtimeReceipt, renderPacket) {
-  if (!instrumentsApi) return null;
-  try {
-    const builder =
-      typeof instrumentsApi.buildInstrumentReceipt === "function"
-        ? instrumentsApi.buildInstrumentReceipt
-        : instrumentsApi.default && typeof instrumentsApi.default.buildInstrumentReceipt === "function"
-          ? instrumentsApi.default.buildInstrumentReceipt
-          : null;
-
-    if (!builder) return null;
-
-    const runtimeState =
-      runtimeReceipt
-        ? {
-            projectionState: runtimeReceipt.projection,
-            region: runtimeReceipt.region,
-            node: runtimeReceipt.node,
-            boundary: runtimeReceipt.boundary,
-            terrainClass: runtimeReceipt.terrainClass,
-            biomeType: runtimeReceipt.biomeType,
-            denseIndex: runtimeReceipt.denseIndex,
-            index: runtimeReceipt.state,
-            traversalStatus: runtimeReceipt.traversalStatus,
-            receipt: { timestamp: runtimeReceipt.timestamp },
-            forces: runtimeReceipt.forces
-          }
-        : null;
-
-    const renderState = renderPacket
-      ? {
-          visible: safeObj(renderPacket.visible),
-          projection: {
-            selectedProjection: safeObj(safeObj(renderPacket.projection).selectedProjection || safeObj(renderPacket.projection))
-          }
-        }
-      : null;
-
-    return builder({ runtimeState, renderState });
-  } catch (error) {
-    moduleState.instruments.status = "FAIL";
-    moduleState.instruments.error = error instanceof Error ? (error.stack || error.message) : String(error);
-    return null;
-  }
-}
-
-function renderOffline() {
-  setText("k-state","OFFLINE","bad");
-  setText("k-classified","—");
-  setText("k-phase","—");
-  setText("k-fresh","—");
-  setText("k-fps","—");
-  setText("k-dt","—");
-  setText("k-age","—");
-
-  document.getElementById("runtimeRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("renderRows").innerHTML = row("status","No render packet");
-  document.getElementById("diagRows").innerHTML = row("status","No diagnostics packet");
-  document.getElementById("motionRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("worldRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("scopeRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("projectionRows").innerHTML = row("status","No runtime/render receipt");
-  document.getElementById("emitRows").innerHTML = row("status","No runtime receipt");
-  document.getElementById("failureRows").innerHTML =
-    row("runtime", moduleState.runtime.error || "none") +
-    row("render", moduleState.render.error || "none") +
-    row("instruments", moduleState.instruments.error || "none");
-}
-
-function renderAll(runtimeReceipt, renderPacket, instrumentPacket, nowMs, dtMs) {
-  const state = safeObj(runtimeReceipt.state);
-  const denseIndex = safeObj(runtimeReceipt.denseIndex);
-  const region = safeObj(runtimeReceipt.region);
-  const node = safeObj(runtimeReceipt.node);
-  const boundary = safeObj(runtimeReceipt.boundary);
-  const threshold = safeObj(runtimeReceipt.threshold);
-  const forces = safeObj(runtimeReceipt.forces);
-  const traversalStatus = safeObj(runtimeReceipt.traversalStatus);
-  const selectedProjection = safeObj(runtimeReceipt.selectedProjection);
-  const fieldSummary = safeObj(runtimeReceipt.fieldSummary);
-
-  const renderVisible = safeObj(renderPacket.visible);
-  const renderProjection = safeObj(renderPacket.projection);
-  const renderSuccessor = safeObj(renderPacket.successor);
-  const validatorStatus = safeObj(renderVisible.validatorStatus);
-  const colorOutput = safeObj(renderVisible.colorOutput);
-  const motionOutput = safeObj(renderVisible.motionOutput);
-  const boundaryVisibility = safeObj(renderVisible.boundaryVisibility);
-  const nodeForceVisibility = safeObj(renderVisible.nodeForceVisibility);
-  const transitionVisibility = safeObj(renderVisible.transitionVisibility);
-
-  const diagnostics = safeObj(instrumentPacket && instrumentPacket.diagnosticsPayload);
-  const displayPayload = safeObj(instrumentPacket && instrumentPacket.displayPayload);
-  const displaySummary = safeObj(displayPayload.summary);
-  const classifiedStateFromInstrument = instrumentPacket && instrumentPacket.classifiedState
-    ? instrumentPacket.classifiedState
-    : "—";
-
-  const ageMs = isFiniteNumber(runtimeReceipt.timestamp) ? Math.max(0, nowMs - runtimeReceipt.timestamp) : null;
-  const fps = dtMs > 0 ? 1000 / dtMs : null;
-  const freshness = isFiniteNumber(ageMs) ? ageMs <= 2500 : false;
-  const classifiedState = classifyState(runtimeReceipt, ageMs);
-  const primitive = computePrimitiveMetrics(forces);
-
-  push(history.velocityA, primitive.packetSeparationWeight);
-  push(history.velocityB, primitive.shadowDensity);
-  push(history.velocityC, primitive.fragmentWeight);
-  push(history.coherence, primitive.directionalWeight);
-  push(history.clarity, primitive.directionalContrast);
-  push(history.stability, traversalStatus.admissible ? 1 : 0);
-  push(history.fps, fps ?? 0);
-  push(history.fresh, freshness ? 1 : 0);
-  push(history.burden, primitive.fragmentWeight);
-
-  setText("k-state", classifiedState, kpiClass(classifiedState, "state"));
-  setText("k-classified", classifiedStateFromInstrument);
-  setText("k-phase", runtimeReceipt.phase || "—");
-  setText("k-fresh", freshness ? "FRESH" : "STALE", kpiClass(freshness ? "FRESH" : "STALE", "fresh"));
-  setText("k-fps", intfmt(fps));
-  setText("k-dt", isFiniteNumber(dtMs) ? Math.round(dtMs) + "ms" : "—");
-  setText("k-age", isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—");
-
-  document.getElementById("runtimeRows").innerHTML =
-    row("source", runtimeReceipt.source || "—") +
-    row("contract", runtimeReceipt.contract || "—") +
-    row("verificationPass", bool(safeObj(runtimeReceipt.verification).pass)) +
-    row("deterministic", bool(safeObj(runtimeReceipt.verification).deterministic)) +
-    row("projection", runtimeReceipt.projection || "—") +
-    row("phase", runtimeReceipt.phase || "—") +
-    row("classifiedState", classifiedState) +
-    row("timestamp", String(runtimeReceipt.timestamp ?? "—"));
-
-  document.getElementById("renderRows").innerHTML =
-    row("render meta", safeObj(renderPacket.meta).contract || safeObj(renderPacket.meta).name || "—") +
-    row("validator ok", bool(validatorStatus.ok)) +
-    row("color hue", fmt(colorOutput.hue, 3)) +
-    row("color saturation", fmt(colorOutput.saturation, 3)) +
-    row("color value", fmt(colorOutput.value, 3)) +
-    row("luminance", fmt(renderVisible.luminanceOutput, 3)) +
-    row("depth", fmt(renderVisible.depthOutput, 3)) +
-    row("successor", Object.keys(renderSuccessor).length ? "present" : "none");
-
-  document.getElementById("diagRows").innerHTML =
-    row("instrument state", classifiedStateFromInstrument) +
-    row("summary state", displaySummary.state || "—") +
-    row("summary boundary", displaySummary.boundary || "—") +
-    row("summary projection", displaySummary.projection || "—") +
-    row("terrain", diagnostics.terrain || runtimeReceipt.terrainClass || "—") +
-    row("biome", diagnostics.biome || runtimeReceipt.biomeType || "—") +
-    row("traversal", diagnostics.traversal || "—") +
-    row("receipt", diagnostics.receipt || "—");
-
-  document.getElementById("motionRows").innerHTML =
-    row("packetSeparationWeight", fmt(primitive.packetSeparationWeight, 6)) +
-    row("shadowDensity", fmt(primitive.shadowDensity, 6)) +
-    row("fragmentWeight", fmt(primitive.fragmentWeight, 6)) +
-    row("asymmetryWeight", fmt(primitive.asymmetryWeight, 6)) +
-    row("directionalWeight", fmt(primitive.directionalWeight, 6)) +
-    row("directionalContrast", fmt(primitive.directionalContrast, 6)) +
-    row("motion visible", bool(motionOutput.visible)) +
-    row("motion delta", fmt(motionOutput.delta, 6)) +
-    row("force.N", fmt(forces.N, 3)) +
-    row("force.E", fmt(forces.E, 3)) +
-    row("force.S", fmt(forces.S, 3)) +
-    row("force.W", fmt(forces.W, 3)) +
-    row("force.B", fmt(forces.B, 3));
-
-  document.getElementById("worldRows").innerHTML =
-    row("regionId", region.regionId || "—") +
-    row("regionLabel", region.label || "—") +
-    row("nodeId", node.nodeId || "—") +
-    row("nodeLabel", node.label || "—") +
-    row("terrainClass", runtimeReceipt.terrainClass || "—") +
-    row("biomeType", runtimeReceipt.biomeType || "—") +
-    row("surfaceMaterial", runtimeReceipt.surfaceMaterial || "—") +
-    row("climateBand", runtimeReceipt.climateBand || "—") +
-    row("climate", runtimeReceipt.climate || "—") +
-    row("habitability", fmt(runtimeReceipt.habitability, 3)) +
-    row("traversalDifficulty", fmt(runtimeReceipt.traversalDifficulty, 3));
-
-  document.getElementById("scopeRows").innerHTML =
-    row("boundary.classification", boundary.classification || "—") +
-    row("threshold.action", threshold.action || "—") +
-    row("admissible", bool(traversalStatus.admissible)) +
-    row("targetExists", bool(traversalStatus.targetExists)) +
-    row("targetLawful", bool(traversalStatus.targetLawful)) +
-    row("thresholdPass", bool(traversalStatus.thresholdPass)) +
-    row("boundaryPass", bool(traversalStatus.boundaryPass)) +
-    row("boundary.OPEN", bool(boundaryVisibility.OPEN)) +
-    row("boundary.HOLD", bool(boundaryVisibility.HOLD)) +
-    row("boundary.GATE", bool(boundaryVisibility.GATE)) +
-    row("boundary.BRIDGE", bool(boundaryVisibility.BRIDGE)) +
-    row("boundary.BLOCK", bool(boundaryVisibility.BLOCK));
-
-  document.getElementById("projectionRows").innerHTML =
-    row("selectedProjection", Object.keys(selectedProjection).length ? "present" : "none") +
-    row("render projection kind", safeObj(renderProjection.selectedProjection).kind || "—") +
-    row("fieldWidth", fieldSummary.width ?? "—") +
-    row("fieldHeight", fieldSummary.height ?? "—") +
-    row("kernelI", state.i ?? "—") +
-    row("kernelJ", state.j ?? "—") +
-    row("denseX", denseIndex.x ?? "—") +
-    row("denseY", denseIndex.y ?? "—") +
-    row("dominantForce", nodeForceVisibility.dominantForce || "—") +
-    row("secondaryForce", nodeForceVisibility.secondaryForce || "—") +
-    row("transition visible", bool(transitionVisibility.visible)) +
-    row("transition lineage", bool(transitionVisibility.lineage));
-
-  document.getElementById("emitRows").innerHTML =
-    row("waterMask", fmt(runtimeReceipt.waterMask, 3)) +
-    row("landMask", fmt(runtimeReceipt.landMask, 3)) +
-    row("shorelineMask", fmt(runtimeReceipt.shorelineMask, 3)) +
-    row("moisture", fmt(runtimeReceipt.moisture, 3)) +
-    row("accumulation", fmt(runtimeReceipt.accumulation, 3)) +
-    row("validator runtimeTraceability", bool(safeObj(validatorStatus.checks).runtimeTraceability)) +
-    row("validator fieldCompleteness", bool(safeObj(validatorStatus.checks).fieldCompleteness)) +
-    row("validator projectionConsistency", bool(safeObj(validatorStatus.checks).projectionConsistency)) +
-    row("validator determinism", bool(safeObj(validatorStatus.checks).determinism)) +
-    row("validator artifactDrift", bool(safeObj(validatorStatus.checks).artifactDrift)) +
-    row("validator thresholdIntegrity", bool(safeObj(validatorStatus.checks).thresholdIntegrity)) +
-    row("validator successorProjectionCompleteness", bool(safeObj(validatorStatus.checks).successorProjectionCompleteness));
-
-  document.getElementById("failureRows").innerHTML =
-    row("runtimeError", moduleState.runtime.error || "none") +
-    row("renderError", moduleState.render.error || "none") +
-    row("instrumentError", moduleState.instruments.error || "none") +
-    row("runtimeSource", moduleState.runtime.source) +
-    row("renderSource", moduleState.render.source) +
-    row("instrumentSource", moduleState.instruments.source) +
-    row("build", BUILD_STAMP) +
-    row("status", "live direct authority");
-
-  drawMulti(document.getElementById("velocityChart"),[
-    {data:history.velocityA,color:"#6fe7ff"},
-    {data:history.velocityB,color:"#7fffd4"},
-    {data:history.velocityC,color:"#ffd27a"}
-  ],0,1);
-
-  drawMulti(document.getElementById("coherenceChart"),[
-    {data:history.coherence,color:"#7fffd4"},
-    {data:history.clarity,color:"#6fe7ff"},
-    {data:history.stability,color:"#ffd27a"}
-  ],0,1);
-
-  drawMulti(document.getElementById("miscChart"),[
-    {data:history.fps,color:"#7fffd4"},
-    {data:history.fresh,color:"#6fe7ff"},
-    {data:history.burden,color:"#ff7a7a"}
-  ],0,Math.max(60,...history.fps,1));
-
-  const summaryLine = Array.isArray(displayPayload.lines) && displayPayload.lines.length
-    ? displayPayload.lines[0]
-    : "—";
-
-  document.getElementById("footer").textContent =
-    "BUILD=" + BUILD_STAMP +
-    " | RUNTIME=" + moduleState.runtime.status +
-    " | RENDER=" + moduleState.render.status +
-    " | INSTRUMENTS=" + moduleState.instruments.status +
-    " | STATE=" + classifiedState +
-    " | INSTRUMENT=" + classifiedStateFromInstrument +
-    " | PHASE=" + (runtimeReceipt.phase || "—") +
-    " | AGE=" + (isFiniteNumber(ageMs) ? Math.round(ageMs) + "ms" : "—") +
-    " | SUMMARY=" + summaryLine;
-}
-
-async function boot() {
-  await bootModules();
-  renderModuleState();
-
-  if (!runtimeApi && !renderApi && !instrumentsApi) {
-    showBootFail(
-      "GAUGES BOOT FAILED\n" +
-      "Runtime: " + (moduleState.runtime.error || "missing") + "\n\n" +
-      "Render: " + (moduleState.render.error || "missing") + "\n\n" +
-      "Instruments: " + (moduleState.instruments.error || "missing")
-    );
-  } else {
-    hideBootFail();
-  }
-
-  tick();
-}
-
-function tick() {
-  const nowPerf = performance.now();
-  const dtMs = nowPerf - lastTickMs;
-  lastTickMs = nowPerf;
-
-  renderModuleState();
-
-  const snapshotOptions = {
-    frameState: { elapsedSeconds: nowPerf / 1000 },
-    timestamp: Date.now()
-  };
-
-  const runtimeReceipt = getRuntimeReceipt(snapshotOptions);
-  const renderPacket = getRenderPacket(snapshotOptions);
-  const instrumentPacket = getInstrumentPacket(runtimeReceipt, renderPacket);
-
-  if (!runtimeReceipt) {
-    renderOffline();
-    document.getElementById("footer").textContent =
-      "BUILD=" + BUILD_STAMP +
-      " | RUNTIME=" + moduleState.runtime.status +
-      " | RENDER=" + moduleState.render.status +
-      " | INSTRUMENTS=" + moduleState.instruments.status +
-      " | OFFLINE";
-    timer = window.setTimeout(tick, REFRESH_MS);
-    return;
-  }
-
-  renderAll(runtimeReceipt, renderPacket || {}, instrumentPacket || {}, Date.now(), dtMs);
-  timer = window.setTimeout(tick, REFRESH_MS);
-}
-
-window.addEventListener("beforeunload", () => {
-  if (timer) window.clearTimeout(timer);
-});
-
-boot().catch((error) => {
-  showBootFail("GAUGES BOOT FAILED\n" + (error instanceof Error ? (error.stack || error.message) : String(error)));
-  document.getElementById("footer").textContent = "BUILD=" + BUILD_STAMP + " | BOOT=FAIL";
-});
-</script>
 </body>
 </html>

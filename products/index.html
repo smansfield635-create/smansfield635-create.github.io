@@ -6,7 +6,7 @@
   <title>Products · Solar System Field · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway rendered as a true solar-system-style field with unique planet sizes, unique orbit radii, and ordered placement."
+    content="Products gateway with protected header, separated map region, and runtime ownership bound to products_runtime.js."
   >
   <style>
     :root{
@@ -16,18 +16,14 @@
       --panel:rgba(8,18,42,.84);
       --panel-soft:rgba(10,22,52,.64);
       --line:rgba(173,212,255,.16);
-      --line-strong:rgba(214,233,255,.28);
       --text:#eef6ff;
       --muted:#a9bad6;
       --accent:#f3d79c;
       --sun-core:#fff8de;
       --sun-mid:#ffd88a;
       --sun-edge:#ff9c39;
-      --pill-bg:rgba(14,29,62,.86);
-      --pill-border:rgba(173,212,255,.18);
       --shadow-heavy:0 24px 60px rgba(0,0,0,.45);
       --radius-xl:30px;
-      --radius-lg:24px;
       --max-width:1240px;
       color-scheme:dark;
     }
@@ -257,242 +253,21 @@
       isolation:isolate;
     }
 
-    .axes{
+    .runtime-status{
       position:absolute;
-      inset:0;
-      pointer-events:none;
-      z-index:4;
-    }
-
-    .axis-x,.axis-y{
-      position:absolute;
-      box-shadow:0 0 18px rgba(141,189,255,.15);
-    }
-
-    .axis-x{
-      top:50%;
-      left:6%;
-      width:88%;
-      height:2px;
-      transform:translateY(-50%);
-      background:linear-gradient(90deg,transparent,rgba(206,228,255,.44),transparent);
-    }
-
-    .axis-y{
-      left:50%;
-      top:12%;
-      width:2px;
-      height:76%;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,transparent,rgba(206,228,255,.18),transparent);
-    }
-
-    .axis-label{
-      position:absolute;
-      color:rgba(225,237,255,.88);
-      font-weight:800;
-      letter-spacing:.04em;
-      font-size:clamp(1.1rem,2vw,1.7rem);
-      text-shadow:0 0 18px rgba(113,165,255,.28);
-      z-index:5;
-    }
-
-    .axis-label.plus-y{top:10.5%;left:calc(50% - 24px)}
-    .axis-label.minus-y{bottom:10.5%;left:calc(50% - 20px)}
-    .axis-label.minus-x{top:calc(50% - 18px);left:6.2%}
-    .axis-label.plus-x{top:calc(50% - 18px);right:6.4%}
-
-    .orbit-rings{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      pointer-events:none;
-    }
-
-    .orbit-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:var(--ring-w);
-      height:var(--ring-h);
-      transform:translate(-50%,-50%) rotate(-22deg);
-      border:1px solid rgba(173,212,255,.13);
-      border-radius:50%;
-      box-shadow:0 0 0 1px rgba(255,255,255,.02),inset 0 0 24px rgba(140,188,255,.03);
-      opacity:.92;
-    }
-
-    .sun-system{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      z-index:8;
-      pointer-events:none;
-    }
-
-    .sun-halo{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:400px;
-      height:400px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle,rgba(255,221,135,.24),rgba(255,187,74,.16) 26%,rgba(70,118,215,.12) 48%,transparent 72%);
-      filter:blur(16px);
-      animation:haloPulse 5.8s ease-in-out infinite;
-      opacity:.95;
-    }
-
-    .sun-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:168px;
-      height:168px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 32%,rgba(255,255,255,.98),rgba(255,244,201,.95) 16%,var(--sun-mid) 42%,var(--sun-edge) 72%,#7e3f10 100%);
-      box-shadow:
-        0 0 28px rgba(255,198,102,.72),
-        0 0 72px rgba(255,177,73,.45),
-        0 0 120px rgba(114,166,255,.18);
-      overflow:visible;
-      animation:sunPulse 4.8s ease-in-out infinite;
-    }
-
-    .sun-core::before,
-    .sun-core::after{
-      content:"";
-      position:absolute;
-      inset:-22px;
-      border-radius:50%;
-      border:2px solid rgba(255,217,142,.18);
-      animation:coronaSpin 16s linear infinite;
-    }
-
-    .sun-core::after{
-      inset:-38px;
-      border-width:1px;
-      border-color:rgba(122,179,255,.16);
-      animation-duration:22s;
-      animation-direction:reverse;
-    }
-
-    .nodes-layer{
-      position:absolute;
-      inset:0;
-      z-index:10;
-    }
-
-    .planet-node{
-      position:absolute;
-      left:0;
-      top:0;
-      width:180px;
-      will-change:transform,left,top;
-      pointer-events:auto;
-    }
-
-    .planet-link{
-      display:grid;
-      gap:10px;
-      justify-items:center;
-      text-align:center;
-    }
-
-    .planet{
-      position:relative;
-      width:var(--planet-size);
-      height:var(--planet-size);
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:
-        0 18px 28px rgba(0,0,0,.28),
-        inset -14px -18px 22px rgba(0,0,0,.18),
-        inset 14px 18px 24px rgba(255,255,255,.18),
-        0 0 24px rgba(105,162,255,.16);
-      overflow:visible;
-    }
-
-    .planet::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:56%;
-      width:130%;
-      height:calc(var(--planet-size) * .18);
-      transform:translate(-50%,-50%) rotate(-9deg);
-      border:1px solid rgba(209,227,255,.16);
-      border-radius:50%;
-      box-shadow:0 0 20px rgba(115,169,255,.08);
-      background:transparent;
-    }
-
-    .planet.aai{
-      background:radial-gradient(circle at 35% 30%,#ffffff,#a6cdfb 22%,#5b8fdc 52%,#183c89 76%,#09193d 100%);
-    }
-    .planet.nine-summits{
-      background:radial-gradient(circle at 35% 30%,#fff4d0,#ebcf85 22%,#bf8b1d 56%,#6a4410 78%,#281508 100%);
-    }
-    .planet.five-flags{
-      background:radial-gradient(circle at 35% 30%,#f2fbff,#87d1ff 26%,#3a90d1 56%,#14457f 78%,#081d37 100%);
-    }
-    .planet.nutrition{
-      background:radial-gradient(circle at 35% 30%,#f3fff9,#9be7c4 24%,#3ca26e 54%,#1d5a43 76%,#08261b 100%);
-    }
-    .planet.archcoin{
-      background:radial-gradient(circle at 35% 30%,#fff6df,#eecf77 22%,#c18b17 52%,#6f4706 78%,#261704 100%);
-    }
-    .planet.root{
-      background:radial-gradient(circle at 35% 30%,#f7f8ff,#aabfff 24%,#697fdd 54%,#31408b 76%,#111c49 100%);
-    }
-
-    .planet-node h4{
-      margin:0;
-      font-size:.98rem;
-      font-weight:900;
-      letter-spacing:.03em;
-      text-transform:uppercase;
-    }
-
-    .planet-node p{
-      margin:0;
-      min-height:2.4em;
-      color:var(--muted);
-      font-size:.84rem;
-      line-height:1.35;
-    }
-
-    .open-pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      min-width:88px;
-      padding:0 14px;
+      right:18px;
+      bottom:18px;
+      z-index:26;
+      padding:8px 12px;
       border-radius:999px;
-      border:1px solid var(--pill-border);
-      background:linear-gradient(180deg,rgba(20,36,76,.88),var(--pill-bg));
-      color:#9fd0ff;
-      font-weight:800;
-      font-size:.88rem;
-      box-shadow:0 12px 24px rgba(0,0,0,.22);
-      transition:transform 160ms ease,border-color 160ms ease,color 160ms ease,box-shadow 160ms ease;
+      border:1px solid rgba(173,212,255,.14);
+      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
+      color:rgba(238,246,255,.76);
+      font-size:.72rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      pointer-events:none;
     }
-
-    .planet-link:hover .open-pill,
-    .planet-link:focus-visible .open-pill{
-      transform:translateY(-2px);
-      border-color:rgba(214,233,255,.34);
-      color:#d8ebff;
-      box-shadow:0 16px 28px rgba(0,0,0,.28);
-    }
-
-    .planet-link:focus-visible{outline:none}
 
     .map-footer{
       display:grid;
@@ -515,32 +290,14 @@
       line-height:1.7;
     }
 
-    @keyframes haloPulse{
-      0%,100%{transform:translate(-50%,-50%) scale(.98);opacity:.9}
-      50%{transform:translate(-50%,-50%) scale(1.06);opacity:1}
-    }
-
-    @keyframes sunPulse{
-      0%,100%{transform:translate(-50%,-50%) scale(1)}
-      50%{transform:translate(-50%,-50%) scale(1.04)}
-    }
-
-    @keyframes coronaSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
     @media (max-width:980px){
       .map-viewport{min-height:820px}
-      .planet-node{width:164px}
       .map-overlay-copy{
         left:16px;
         right:16px;
         bottom:16px;
         max-width:none;
       }
-      .axis-y{top:13%;height:70%}
-      .orbit-ring{transform:translate(-50%,-50%) rotate(-20deg)}
     }
 
     @media (max-width:720px){
@@ -549,24 +306,10 @@
         padding-top:10px;
       }
       .map-viewport{min-height:760px}
-      .planet-node{width:144px}
-      .planet-node h4{font-size:.88rem}
-      .planet-node p{font-size:.79rem}
-      .open-pill{
-        min-height:36px;
-        min-width:80px;
-        font-size:.84rem;
-      }
-      .sun-halo{width:300px;height:300px}
-      .sun-core{width:136px;height:136px}
-      .orbit-ring{transform:translate(-50%,-50%) rotate(-18deg)}
-      .axis-label.plus-y{top:12.5%}
-      .axis-label.minus-y{bottom:12.5%}
-    }
-
-    @media (prefers-reduced-motion: reduce){
-      .sun-halo,.sun-core,.sun-core::before,.sun-core::after{
-        animation:none !important;
+      .runtime-status{
+        right:12px;
+        bottom:12px;
+        font-size:.68rem;
       }
     }
   </style>
@@ -578,7 +321,7 @@
         <div class="brand-orb" aria-hidden="true"></div>
         <div class="brand-copy">
           <h1>Diamond Gate Bridge</h1>
-          <p>Products gateway with protected header, separated map region, and true solar-system scale law.</p>
+          <p>Products gateway with protected header, separated map region, and runtime ownership bound to products_runtime.js.</p>
         </div>
       </div>
 
@@ -596,118 +339,39 @@
         <div class="eyebrow">Products Gateway</div>
         <h2 id="products-heading">Euclidean planetary map</h2>
         <p>
-          The header stays protected. The lower map carries a solar-system-style field:
-          unique planet sizes, unique orbit distances, and ordered placement around a fixed sun.
+          Runtime ownership is now explicit. The active lower map region is driven by
+          <code>products_runtime.js</code> only. Geometry is frozen here; this pass only rebinds control.
         </p>
       </section>
 
       <section class="map-region" aria-label="Products planetary map">
         <div class="map-viewport" id="products-map-viewport">
-          <div class="planetary-stage" id="planetary-stage">
-            <div class="orbit-rings" aria-hidden="true">
-              <div class="orbit-ring" style="--ring-w:34%;--ring-h:12%;"></div>
-              <div class="orbit-ring" style="--ring-w:46%;--ring-h:16%;"></div>
-              <div class="orbit-ring" style="--ring-w:58%;--ring-h:20%;"></div>
-              <div class="orbit-ring" style="--ring-w:72%;--ring-h:26%;"></div>
-              <div class="orbit-ring" style="--ring-w:88%;--ring-h:32%;"></div>
-              <div class="orbit-ring" style="--ring-w:102%;--ring-h:38%;"></div>
-            </div>
-
-            <div class="axes" aria-hidden="true">
-              <div class="axis-x"></div>
-              <div class="axis-y"></div>
-              <div class="axis-label plus-y">+Y</div>
-              <div class="axis-label minus-y">-Y</div>
-              <div class="axis-label minus-x">-X</div>
-              <div class="axis-label plus-x">+X</div>
-            </div>
-
-            <div class="sun-system" aria-hidden="true">
-              <div class="sun-halo"></div>
-              <div class="sun-core"></div>
-            </div>
-
-            <div class="nodes-layer">
-              <article class="planet-node" data-order="1" data-orbit-x="126" data-orbit-y="44" data-angle="-1.30" data-speed="0.00016" data-depth-bias="10" style="--planet-size:34px;">
-                <a class="planet-link" href="/products/five-flags/">
-                  <div class="planet five-flags" aria-hidden="true"></div>
-                  <h4>Five Flags</h4>
-                  <p>Inner route line</p>
-                  <span class="open-pill">Open</span>
-                </a>
-              </article>
-
-              <article class="planet-node" data-order="2" data-orbit-x="172" data-orbit-y="58" data-angle="0.34" data-speed="0.000135" data-depth-bias="9" style="--planet-size:42px;">
-                <a class="planet-link" href="/products/nutrition/">
-                  <div class="planet nutrition" aria-hidden="true"></div>
-                  <h4>Nutrition</h4>
-                  <p>Health-facing product line</p>
-                  <span class="open-pill">Open</span>
-                </a>
-              </article>
-
-              <article class="planet-node" data-order="3" data-orbit-x="222" data-orbit-y="74" data-angle="2.38" data-speed="0.000112" data-depth-bias="8" style="--planet-size:54px;">
-                <a class="planet-link" href="/products/aai/">
-                  <div class="planet aai" aria-hidden="true"></div>
-                  <h4>AAI</h4>
-                  <p>Artificial agent intelligence</p>
-                  <span class="open-pill">Open</span>
-                </a>
-              </article>
-
-              <article class="planet-node" data-order="4" data-orbit-x="286" data-orbit-y="96" data-angle="-0.42" data-speed="0.000094" data-depth-bias="7" style="--planet-size:64px;">
-                <a class="planet-link" href="/products/nine-summits/">
-                  <div class="planet nine-summits" aria-hidden="true"></div>
-                  <h4>Nine Summits</h4>
-                  <p>Book and launch path</p>
-                  <span class="open-pill">Open</span>
-                </a>
-              </article>
-
-              <article class="planet-node" data-order="5" data-orbit-x="354" data-orbit-y="120" data-angle="1.08" data-speed="0.000074" data-depth-bias="6" style="--planet-size:76px;">
-                <a class="planet-link" href="/vault/">
-                  <div class="planet archcoin" aria-hidden="true"></div>
-                  <h4>ARCHCOIN</h4>
-                  <p>Vault-bound protected value</p>
-                  <span class="open-pill">Open</span>
-                </a>
-              </article>
-
-              <article class="planet-node" data-order="6" data-orbit-x="430" data-orbit-y="148" data-angle="3.44" data-speed="0.000052" data-depth-bias="5" style="--planet-size:88px;">
-                <a class="planet-link" href="/">
-                  <div class="planet root" aria-hidden="true"></div>
-                  <h4>Root</h4>
-                  <p>Return to primary entry</p>
-                  <span class="open-pill">Open</span>
-                </a>
-              </article>
-            </div>
-          </div>
+          <div class="planetary-stage" id="planetary-stage"></div>
 
           <div class="map-overlay-copy">
-            <strong>Scale correction</strong>
+            <strong>Runtime ownership rebound</strong>
             <p>
-              Equal-size rendering is retired. Each body now carries its own size,
-              orbit radius, and ordered placement under one solar-system-style field.
+              The live products field now boots from one authoritative runtime path.
+              Any old inline or competing planetary logic is retired in this pass.
             </p>
           </div>
+
+          <div class="runtime-status" id="products-runtime-status">runtime: standby</div>
         </div>
 
         <div class="map-footer">
           <p>
-            <strong>Scale law:</strong> every product body now has a unique visible size.
+            <strong>Ownership law:</strong> <code>products_runtime.js</code> is now the sole planetary runtime authority for this surface.
           </p>
           <p>
-            <strong>Distance law:</strong> every body now has a unique orbit distance inside the active map region.
-          </p>
-          <p>
-            <strong>Order law:</strong> the field reads as an ordered system around the sun instead of equal decorative planets.
+            <strong>Freeze law:</strong> this pass does not introduce new geometry rules. It only ensures the intended runtime is the one actually running.
           </p>
         </div>
       </section>
     </main>
   </div>
 
+  <script src="./products_runtime.js"></script>
   <script src="./index.js"></script>
 </body>
 </html>

@@ -1,654 +1,81 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>Products · Diamond Gate Bridge</title>
+  <meta charset="utf-8" />
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover"
+  />
+  <title>Products</title>
   <meta
     name="description"
-    content="Products gateway with a protected host shell, a single runtime-owned stage, and optional system receipts."
-  >
+    content="Products stage host shell."
+  />
   <style>
-    :root{
-      --bg0:#010510;
-      --bg1:#041126;
-      --bg2:#071c3d;
-      --line:rgba(173,212,255,.16);
-      --text:#eef6ff;
-      --muted:#a9bad6;
-      --accent:#f3d79c;
-      --green:#8ff0c5;
-      --red:#ff8d9d;
-      --gold:#f1d28d;
-      --violet:#c7b3ff;
-      --shadow-heavy:0 24px 60px rgba(0,0,0,.45);
-      --radius-xl:30px;
-      --max-width:1240px;
-      color-scheme:dark;
+    :root {
+      color-scheme: dark;
+      --products-bg: #02040a;
+      --products-fg: #f5f7fb;
+      --products-stage-min-height: 100svh;
     }
 
-    *{box-sizing:border-box}
-
-    html,body{
-      margin:0;
-      min-height:100%;
-      background:
-        radial-gradient(circle at 50% 18%,rgba(36,86,170,.22),transparent 36%),
-        radial-gradient(circle at 50% 72%,rgba(15,40,110,.28),transparent 46%),
-        linear-gradient(180deg,var(--bg0),var(--bg1) 42%,var(--bg0));
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    * {
+      box-sizing: border-box;
     }
 
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background-image:
-        radial-gradient(circle at 10% 20%,rgba(255,255,255,.9) 0 1px,transparent 2px),
-        radial-gradient(circle at 30% 60%,rgba(255,255,255,.65) 0 1px,transparent 2px),
-        radial-gradient(circle at 60% 26%,rgba(255,255,255,.8) 0 1.5px,transparent 2px),
-        radial-gradient(circle at 78% 72%,rgba(255,255,255,.6) 0 1px,transparent 2px),
-        radial-gradient(circle at 88% 18%,rgba(255,255,255,.75) 0 1px,transparent 2px),
-        radial-gradient(circle at 18% 80%,rgba(255,255,255,.55) 0 1px,transparent 2px);
-      opacity:.55;
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      padding: 0;
+      background: var(--products-bg);
+      color: var(--products-fg);
+      overflow-x: hidden;
     }
 
-    a{color:inherit;text-decoration:none}
-    button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-
-    .shell{
-      width:min(100% - 28px,var(--max-width));
-      margin:0 auto;
-      padding:18px 0 48px;
-      position:relative;
-      z-index:1;
+    body {
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .topbar{
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      gap:18px;
-      margin-bottom:18px;
-      padding:18px 20px;
-      border:1px solid rgba(173,212,255,.14);
-      border-radius:24px;
-      background:linear-gradient(180deg,rgba(7,16,40,.86),rgba(7,17,38,.72));
-      box-shadow:var(--shadow-heavy);
-      backdrop-filter:blur(14px);
+    #products-app {
+      position: relative;
+      width: 100%;
+      min-height: var(--products-stage-min-height);
+      isolation: isolate;
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:16px;
-      min-width:0;
+    #products-stage {
+      position: relative;
+      width: 100%;
+      min-height: var(--products-stage-min-height);
+      overflow: clip;
     }
 
-    .brand-orb{
-      width:56px;
-      height:56px;
-      flex:0 0 56px;
-      border-radius:50%;
-      border:1px solid rgba(188,219,255,.24);
-      background:
-        radial-gradient(circle at 38% 32%,rgba(255,255,255,.92),rgba(195,223,255,.72) 18%,rgba(90,138,220,.42) 42%,rgba(10,24,60,.18) 72%,transparent 100%);
-      box-shadow:0 0 26px rgba(143,189,255,.28),inset 0 0 30px rgba(255,255,255,.12);
+    #products-stage[hidden] {
+      display: block;
+      visibility: hidden;
     }
 
-    .brand-copy h1{
-      margin:0;
-      font-size:clamp(1.35rem,2vw,1.8rem);
-      font-weight:800;
-      letter-spacing:.01em;
-    }
-
-    .brand-copy p{
-      margin:4px 0 0;
-      color:var(--muted);
-      font-size:.98rem;
-      max-width:58ch;
-    }
-
-    .nav-pills{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .nav-pills a{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:52px;
-      padding:0 20px;
-      border:1px solid rgba(173,212,255,.16);
-      border-radius:999px;
-      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
-      color:var(--text);
-      font-weight:700;
-      letter-spacing:.01em;
-      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease;
-    }
-
-    .nav-pills a:hover,
-    .nav-pills a:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(214,233,255,.34);
-      box-shadow:0 0 0 1px rgba(214,233,255,.08),0 12px 22px rgba(0,0,0,.24);
-      outline:none;
-    }
-
-    .nav-pills a[aria-current="page"]{
-      border-color:rgba(202,228,255,.4);
-      box-shadow:0 0 0 1px rgba(202,228,255,.08),0 0 24px rgba(94,143,255,.18);
-    }
-
-    .products-layout{
-      display:grid;
-      gap:18px;
-    }
-
-    .hero{
-      display:grid;
-      gap:14px;
-      padding:24px;
-      border:1px solid rgba(173,212,255,.12);
-      border-radius:var(--radius-xl);
-      background:
-        linear-gradient(180deg,rgba(10,18,42,.76),rgba(8,18,40,.58)),
-        radial-gradient(circle at 50% 0%,rgba(115,170,255,.12),transparent 46%);
-      box-shadow:var(--shadow-heavy);
-    }
-
-    .eyebrow{
-      color:var(--accent);
-      font-weight:800;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-size:.84rem;
-    }
-
-    .hero h2{
-      margin:0;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2.6rem,5.2vw,5rem);
-      line-height:.94;
-      color:var(--accent);
-      max-width:11ch;
-    }
-
-    .hero p{
-      margin:0;
-      max-width:68ch;
-      color:var(--muted);
-      font-size:clamp(1rem,1.45vw,1.08rem);
-      line-height:1.72;
-    }
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      padding-top:4px;
-    }
-
-    .hero-actions a,
-    .hero-actions button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:50px;
-      padding:0 18px;
-      border-radius:999px;
-      border:1px solid rgba(173,212,255,.18);
-      background:linear-gradient(180deg,rgba(18,30,62,.84),rgba(9,16,34,.84));
-      box-shadow:0 12px 24px rgba(0,0,0,.2);
-      font-weight:700;
-      letter-spacing:.01em;
-      transition:transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease,background 180ms ease;
-    }
-
-    .hero-actions a:hover,
-    .hero-actions a:focus-visible,
-    .hero-actions button:hover,
-    .hero-actions button:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(214,233,255,.34);
-      box-shadow:0 0 0 1px rgba(214,233,255,.08),0 12px 22px rgba(0,0,0,.24);
-      outline:none;
-    }
-
-    .hero-actions .primary{
-      background:linear-gradient(180deg,rgba(58,96,182,.92),rgba(24,46,94,.92));
-      border-color:rgba(202,228,255,.3);
-    }
-
-    .experience-shell{
-      border:1px solid rgba(173,212,255,.14);
-      border-radius:34px;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(29,64,137,.22),transparent 34%),
-        radial-gradient(circle at 50% 50%,rgba(78,130,255,.08),transparent 56%),
-        linear-gradient(180deg,rgba(7,16,40,.94),rgba(4,14,32,.96));
-      box-shadow:var(--shadow-heavy);
-      padding:18px;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .experience-shell::before{
-      content:"";
-      position:absolute;
-      inset:18px;
-      border-radius:28px;
-      border:1px solid rgba(173,212,255,.08);
-      pointer-events:none;
-    }
-
-    .experience-surface{
-      display:grid;
-      gap:18px;
-      position:relative;
-      z-index:1;
-    }
-
-    .host-zone{
-      position:relative;
-      z-index:5;
-      display:grid;
-      gap:16px;
-      padding:18px;
-      border-radius:26px;
-      border:1px solid rgba(173,212,255,.1);
-      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
-      box-shadow:0 12px 24px rgba(0,0,0,.24);
-    }
-
-    .host-zone-header{
-      display:grid;
-      gap:8px;
-    }
-
-    .host-zone-header h3{
-      margin:0;
-      font-size:clamp(1.3rem,2.1vw,1.8rem);
-      font-weight:800;
-      letter-spacing:.01em;
-    }
-
-    .host-zone-header p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.65;
-      max-width:62ch;
-    }
-
-    .host-chip-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .host-chip{
-      display:inline-flex;
-      align-items:center;
-      min-height:38px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid rgba(173,212,255,.12);
-      background:linear-gradient(180deg,rgba(8,17,38,.8),rgba(7,14,30,.72));
-      color:var(--muted);
-      font-size:.8rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-weight:700;
-    }
-
-    .runtime-status-row{
-      display:flex;
-      justify-content:flex-end;
-    }
-
-    .runtime-status{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:8px 14px;
-      border-radius:999px;
-      border:1px solid rgba(173,212,255,.14);
-      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
-      color:rgba(238,246,255,.76);
-      font-size:.72rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      pointer-events:none;
-    }
-
-    .debug-panel{
-      display:none;
-      gap:10px;
-      padding-top:2px;
-    }
-
-    .debug-panel[data-open="true"]{
-      display:grid;
-    }
-
-    .diagnostic-card{
-      padding:12px 14px;
-      border-radius:18px;
-      border:1px solid rgba(173,212,255,.12);
-      background:linear-gradient(180deg,rgba(8,17,38,.84),rgba(7,14,30,.78));
-      box-shadow:0 12px 24px rgba(0,0,0,.18);
-      backdrop-filter:blur(10px);
-    }
-
-    .diagnostic-card .label{
-      display:block;
-      margin-bottom:6px;
-      font-size:.72rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .diagnostic-card .value{
-      display:block;
-      font-size:.98rem;
-      font-weight:800;
-      line-height:1.4;
-      color:var(--text);
-      word-break:break-word;
-    }
-
-    .value.ok{color:var(--green)}
-    .value.fail{color:var(--red)}
-    .value.warn{color:var(--gold)}
-    .value.note{color:var(--violet)}
-
-    .stage-zone{
-      position:relative;
-      z-index:1;
-      min-height:760px;
-      border-radius:26px;
-      border:1px solid rgba(173,212,255,.1);
-      background:
-        linear-gradient(180deg,rgba(4,13,32,.54),rgba(4,13,32,.22)),
-        radial-gradient(circle at 50% 50%,rgba(58,103,188,.18),transparent 54%);
-      overflow:hidden;
-    }
-
-    .stage-zone::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 50% 36%,rgba(94,143,255,.1),transparent 32%),
-        linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,0));
-      pointer-events:none;
-      z-index:0;
-    }
-
-    .planetary-stage{
-      position:absolute;
-      inset:0;
-      z-index:1;
-      overflow:auto;
-      isolation:isolate;
-    }
-
-    .footer-card{
-      display:grid;
-      gap:14px;
-      margin-top:18px;
-      padding:18px 20px;
-      border:1px solid rgba(173,212,255,.1);
-      border-radius:24px;
-      background:linear-gradient(180deg,rgba(10,17,38,.74),rgba(8,15,32,.74));
-    }
-
-    .footer-card strong{
-      color:var(--text);
-      font-weight:800;
-    }
-
-    .footer-card p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.7;
-    }
-
-    @media (min-width:960px){
-      .experience-surface{
-        grid-template-columns:minmax(300px,360px) minmax(0,1fr);
-        align-items:start;
-      }
-
-      .host-zone{
-        position:sticky;
-        top:18px;
-      }
-
-      .stage-zone{
-        min-height:980px;
-      }
-    }
-
-    @media (max-width:720px){
-      .shell{
-        width:min(100% - 16px,var(--max-width));
-        padding-top:10px;
-      }
-
-      .hero{
-        padding:22px 18px 18px;
-      }
-
-      .experience-shell{
-        padding:14px;
-      }
-
-      .stage-zone{
-        min-height:760px;
-      }
+    noscript {
+      display: block;
+      padding: 24px;
+      font-size: 14px;
+      line-height: 1.5;
     }
   </style>
-  <script>
-    (function () {
-      "use strict";
-
-      const queue = [];
-      let domReady = false;
-
-      function withNode(id, fn) {
-        const node = document.getElementById(id);
-        if (!node) return false;
-        fn(node);
-        return true;
-      }
-
-      function applyValue(id, text, kind) {
-        return withNode(id, function (node) {
-          node.textContent = text;
-          node.className = "value " + kind;
-        });
-      }
-
-      function applyStatus(text) {
-        return withNode("products-runtime-status", function (node) {
-          node.textContent = "runtime: " + String(text || "").toUpperCase();
-        });
-      }
-
-      function flushQueue() {
-        if (!domReady) return;
-        while (queue.length) {
-          const action = queue.shift();
-          action();
-        }
-      }
-
-      function queueOrRun(action) {
-        if (domReady) action();
-        else queue.push(action);
-      }
-
-      document.addEventListener("DOMContentLoaded", function () {
-        domReady = true;
-        flushQueue();
-
-        const toggle = document.getElementById("products-debug-toggle");
-        const panel = document.getElementById("products-debug-panel");
-
-        if (toggle && panel) {
-          toggle.addEventListener("click", function () {
-            const open = panel.getAttribute("data-open") === "true";
-            panel.setAttribute("data-open", open ? "false" : "true");
-            toggle.setAttribute("aria-expanded", open ? "false" : "true");
-            toggle.textContent = open ? "Show system receipts" : "Hide system receipts";
-          });
-        }
-      }, { once: true });
-
-      window.__productsDiag = {
-        setValue(id, text, kind) {
-          queueOrRun(function () {
-            applyValue(id, text, kind);
-          });
-        },
-        setStatus(text) {
-          queueOrRun(function () {
-            applyStatus(text);
-          });
-        },
-        markBootstrapMissing() {
-          this.setValue("diag-error-text", "bootstrap start function missing", "fail");
-          this.setStatus("bootstrap-missing");
-        }
-      };
-    })();
-  </script>
 </head>
 <body>
-  <div class="shell">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-orb" aria-hidden="true"></div>
-        <div class="brand-copy">
-          <h1>Diamond Gate Bridge</h1>
-          <p>Products gateway with a protected host region, a single runtime-owned stage, and secondary diagnostic support.</p>
-        </div>
-      </div>
-
-      <nav class="nav-pills" aria-label="Primary">
-        <a href="/">Home</a>
-        <a href="/explore/">Explore</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/platform/">Platform</a>
-        <a href="/products/" aria-current="page">Products</a>
-      </nav>
-    </header>
-
-    <main class="products-layout">
-      <section class="hero" aria-labelledby="products-heading">
-        <div class="eyebrow">Products Gateway</div>
-        <h2 id="products-heading">Live products experience</h2>
-        <p>
-          The products surface now leaves visible stage ownership to the runtime alone. The host remains a shell,
-          diagnostics remain secondary, and the mounted stage becomes the single public visual owner.
-        </p>
-        <div class="hero-actions">
-          <a class="primary" href="/explore/">Enter the bridge</a>
-          <a href="/platform/">View platform</a>
-          <button id="products-debug-toggle" type="button" aria-expanded="false" aria-controls="products-debug-panel">Show system receipts</button>
-        </div>
-      </section>
-
-      <section class="experience-shell" aria-label="Products live experience surface">
-        <div class="experience-surface">
-          <div class="host-zone">
-            <div class="host-zone-header">
-              <div class="eyebrow">Live stage ready</div>
-              <h3>Protected host. Single visible stage owner.</h3>
-              <p>
-                The host now provides boundary, context, and controls only. Bootchain truth and containment remain
-                preserved, but public-facing stage output belongs to the runtime alone.
-              </p>
-            </div>
-
-            <div class="host-chip-row">
-              <div class="host-chip">Bootchain frozen: passed</div>
-              <div class="host-chip">Containment frozen: passed</div>
-              <div class="host-chip">Visible owner: runtime</div>
-            </div>
-
-            <div class="runtime-status-row">
-              <div class="runtime-status" id="products-runtime-status">runtime: standby</div>
-            </div>
-
-            <div class="debug-panel" id="products-debug-panel" data-open="false" aria-live="polite">
-              <div class="diagnostic-card">
-                <span class="label">Runtime file</span>
-                <span class="value note" id="diag-runtime-file">requested</span>
-              </div>
-              <div class="diagnostic-card">
-                <span class="label">Global API</span>
-                <span class="value note" id="diag-global-api">awaiting</span>
-              </div>
-              <div class="diagnostic-card">
-                <span class="label">Create entry</span>
-                <span class="value note" id="diag-create-entry">awaiting</span>
-              </div>
-              <div class="diagnostic-card">
-                <span class="label">Mount result</span>
-                <span class="value note" id="diag-mount-result">awaiting</span>
-              </div>
-              <div class="diagnostic-card">
-                <span class="label">Error text</span>
-                <span class="value note" id="diag-error-text">none</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="stage-zone" id="products-stage-zone">
-            <div class="planetary-stage" id="planetary-stage"></div>
-          </div>
-        </div>
-
-        <div class="footer-card">
-          <p>
-            <strong>Execution law:</strong> the passed bootchain and passed host/stage containment remain frozen as the baseline.
-          </p>
-          <p>
-            <strong>Ownership law:</strong> the runtime is now the one true visible stage owner while the host stays shell-only.
-          </p>
-        </div>
-      </section>
-    </main>
+  <div id="products-app" data-products-host="true" data-products-shell="host-only">
+    <main
+      id="products-stage"
+      data-products-stage="true"
+      aria-label="Products Stage"
+    ></main>
   </div>
 
-  <script
-    src="./products_runtime.js"
-    onload="window.__productsDiag&&window.__productsDiag.setValue('diag-runtime-file','loaded','ok');window.__productsDiag&&window.__productsDiag.setStatus('runtime-file-loaded');"
-    onerror="window.__productsDiag&&window.__productsDiag.setValue('diag-runtime-file','failed to load','fail');window.__productsDiag&&window.__productsDiag.setValue('diag-error-text','products_runtime.js failed to load','fail');window.__productsDiag&&window.__productsDiag.setStatus('runtime-file-failed');"
-  ></script>
-  <script
-    src="./index.js"
-    onload="window.__productsDiag&&window.__productsDiag.setStatus('index-js-loaded');"
-    onerror="window.__productsDiag&&window.__productsDiag.setValue('diag-error-text','index.js failed to load','fail');window.__productsDiag&&window.__productsDiag.setStatus('index-js-failed');"
-  ></script>
-  <script>
-    window.addEventListener("load", function () {
-      if (!window.__productsBootstrapStart || typeof window.__productsBootstrapStart !== "function") {
-        window.__productsDiag && window.__productsDiag.markBootstrapMissing();
-      }
-    }, { once: true });
-  </script>
+  <noscript>JavaScript is required to load the products stage.</noscript>
+
+  <script type="module" src="./index.js"></script>
 </body>
 </html>

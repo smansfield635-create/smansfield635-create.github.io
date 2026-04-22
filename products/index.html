@@ -6,15 +6,13 @@
   <title>Products · Boot Diagnostic Surface · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway with protected header, separated map region, and explicit runtime boot receipts."
+    content="Products gateway with protected header, separate receipt region, and isolated runtime stage region."
   >
   <style>
     :root{
       --bg0:#010510;
       --bg1:#041126;
       --bg2:#071c3d;
-      --panel:rgba(8,18,42,.84);
-      --panel-soft:rgba(10,22,52,.64);
       --line:rgba(173,212,255,.16);
       --text:#eef6ff;
       --muted:#a9bad6;
@@ -215,29 +213,25 @@
       pointer-events:none;
     }
 
-    .map-viewport{
+    .map-surface{
       position:relative;
-      min-height:min(860px,76vh);
-      border-radius:26px;
-      overflow:hidden;
-      background:
-        linear-gradient(180deg,rgba(4,13,32,.54),rgba(4,13,32,.22)),
-        radial-gradient(circle at 50% 50%,rgba(58,103,188,.18),transparent 54%);
+      display:grid;
+      gap:18px;
     }
 
-    .planetary-stage{
-      position:absolute;
-      inset:0;
-      overflow:hidden;
-      isolation:isolate;
+    .host-zone{
+      position:relative;
+      z-index:5;
+      display:grid;
+      gap:16px;
+      padding:18px;
+      border-radius:26px;
+      border:1px solid rgba(173,212,255,.1);
+      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
+      box-shadow:0 12px 24px rgba(0,0,0,.24);
     }
 
     .diagnostic-stack{
-      position:absolute;
-      left:18px;
-      top:18px;
-      z-index:35;
-      width:min(360px,calc(100% - 36px));
       display:grid;
       gap:10px;
     }
@@ -247,7 +241,7 @@
       border-radius:18px;
       border:1px solid rgba(173,212,255,.12);
       background:linear-gradient(180deg,rgba(8,17,38,.84),rgba(7,14,30,.78));
-      box-shadow:0 12px 24px rgba(0,0,0,.24);
+      box-shadow:0 12px 24px rgba(0,0,0,.18);
       backdrop-filter:blur(10px);
     }
 
@@ -275,39 +269,39 @@
     .value.warn{color:var(--gold)}
     .value.note{color:var(--violet)}
 
-    .map-overlay-copy{
-      position:absolute;
-      left:24px;
-      bottom:22px;
-      z-index:25;
-      max-width:360px;
+    .host-copy{
       padding:16px 18px;
       border:1px solid rgba(173,212,255,.1);
       border-radius:22px;
-      background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
-      box-shadow:0 12px 24px rgba(0,0,0,.24);
+      background:linear-gradient(180deg,rgba(8,17,38,.68),rgba(7,14,30,.64));
+      box-shadow:0 12px 24px rgba(0,0,0,.18);
     }
 
-    .map-overlay-copy strong{
+    .host-copy strong{
       display:block;
       color:var(--text);
       font-size:1rem;
       margin-bottom:8px;
     }
 
-    .map-overlay-copy p{
+    .host-copy p{
       margin:0;
       color:var(--muted);
       font-size:.94rem;
-      line-height:1.55;
+      line-height:1.6;
+    }
+
+    .runtime-status-row{
+      display:flex;
+      justify-content:flex-end;
     }
 
     .runtime-status{
-      position:absolute;
-      right:18px;
-      bottom:18px;
-      z-index:26;
-      padding:8px 12px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:8px 14px;
       border-radius:999px;
       border:1px solid rgba(173,212,255,.14);
       background:linear-gradient(180deg,rgba(8,17,38,.78),rgba(7,14,30,.74));
@@ -316,6 +310,35 @@
       letter-spacing:.08em;
       text-transform:uppercase;
       pointer-events:none;
+    }
+
+    .stage-zone{
+      position:relative;
+      z-index:1;
+      min-height:720px;
+      border-radius:26px;
+      border:1px solid rgba(173,212,255,.1);
+      background:
+        linear-gradient(180deg,rgba(4,13,32,.54),rgba(4,13,32,.22)),
+        radial-gradient(circle at 50% 50%,rgba(58,103,188,.18),transparent 54%);
+      overflow:hidden;
+    }
+
+    .stage-zone::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 36%,rgba(94,143,255,.1),transparent 32%),
+        linear-gradient(180deg,rgba(255,255,255,.015),rgba(255,255,255,0));
+      pointer-events:none;
+    }
+
+    .planetary-stage{
+      position:absolute;
+      inset:0;
+      overflow:auto;
+      isolation:isolate;
     }
 
     .map-footer{
@@ -339,13 +362,19 @@
       line-height:1.7;
     }
 
-    @media (max-width:980px){
-      .map-viewport{min-height:860px}
-      .map-overlay-copy{
-        left:16px;
-        right:16px;
-        bottom:16px;
-        max-width:none;
+    @media (min-width:900px){
+      .map-surface{
+        grid-template-columns:minmax(320px,360px) minmax(0,1fr);
+        align-items:start;
+      }
+
+      .host-zone{
+        position:sticky;
+        top:18px;
+      }
+
+      .stage-zone{
+        min-height:860px;
       }
     }
 
@@ -355,18 +384,8 @@
         padding-top:10px;
       }
 
-      .map-viewport{min-height:820px}
-
-      .diagnostic-stack{
-        width:calc(100% - 24px);
-        left:12px;
-        top:12px;
-      }
-
-      .runtime-status{
-        right:12px;
-        bottom:12px;
-        font-size:.68rem;
+      .stage-zone{
+        min-height:620px;
       }
     }
   </style>
@@ -415,21 +434,15 @@
           const action = function () {
             applyValue(id, text, kind);
           };
-          if (domReady) {
-            action();
-          } else {
-            queue.push(action);
-          }
+          if (domReady) action();
+          else queue.push(action);
         },
         setStatus(text) {
           const action = function () {
             applyStatus(text);
           };
-          if (domReady) {
-            action();
-          } else {
-            queue.push(action);
-          }
+          if (domReady) action();
+          else queue.push(action);
         },
         markBootstrapMissing() {
           this.setValue("diag-error-text", "bootstrap start function missing", "fail");
@@ -446,7 +459,7 @@
         <div class="brand-orb" aria-hidden="true"></div>
         <div class="brand-copy">
           <h1>Diamond Gate Bridge</h1>
-          <p>Products gateway with protected header, separated map region, and explicit runtime boot receipts.</p>
+          <p>Products gateway with protected header, separate receipt region, and isolated runtime stage region.</p>
         </div>
       </div>
 
@@ -464,56 +477,61 @@
         <div class="eyebrow">Products Gateway</div>
         <h2 id="products-heading">Boot diagnostic surface</h2>
         <p>
-          Boot truth is primary in this pass. The active lower map region now exposes runtime-file discovery,
-          global API registration, <code>create()</code> entry, visible mount status, and exact failure text
-          when a failure occurs.
+          Boot truth is primary in this pass. The products surface now separates the protected host region
+          from the runtime stage region so successful mount cannot reabsorb the receipts and host copy.
         </p>
       </section>
 
-      <section class="map-region" aria-label="Products planetary map">
-        <div class="map-viewport" id="products-map-viewport">
-          <div class="planetary-stage" id="planetary-stage"></div>
+      <section class="map-region" aria-label="Products runtime surface">
+        <div class="map-surface">
+          <div class="host-zone">
+            <div class="diagnostic-stack" id="products-diagnostic-stack" aria-live="polite">
+              <div class="diagnostic-card">
+                <span class="label">Runtime file</span>
+                <span class="value note" id="diag-runtime-file">requested</span>
+              </div>
+              <div class="diagnostic-card">
+                <span class="label">Global API</span>
+                <span class="value note" id="diag-global-api">awaiting</span>
+              </div>
+              <div class="diagnostic-card">
+                <span class="label">Create entry</span>
+                <span class="value note" id="diag-create-entry">awaiting</span>
+              </div>
+              <div class="diagnostic-card">
+                <span class="label">Mount result</span>
+                <span class="value note" id="diag-mount-result">awaiting</span>
+              </div>
+              <div class="diagnostic-card">
+                <span class="label">Error text</span>
+                <span class="value note" id="diag-error-text">none</span>
+              </div>
+            </div>
 
-          <div class="diagnostic-stack" id="products-diagnostic-stack" aria-live="polite">
-            <div class="diagnostic-card">
-              <span class="label">Runtime file</span>
-              <span class="value note" id="diag-runtime-file">requested</span>
+            <div class="host-copy">
+              <strong>Boot truth first</strong>
+              <p>
+                This pass does not reopen the passed bootchain. It preserves the receipt surface in a protected
+                host region while constraining the mounted runtime content to the separate lower stage region only.
+              </p>
             </div>
-            <div class="diagnostic-card">
-              <span class="label">Global API</span>
-              <span class="value note" id="diag-global-api">awaiting</span>
-            </div>
-            <div class="diagnostic-card">
-              <span class="label">Create entry</span>
-              <span class="value note" id="diag-create-entry">awaiting</span>
-            </div>
-            <div class="diagnostic-card">
-              <span class="label">Mount result</span>
-              <span class="value note" id="diag-mount-result">awaiting</span>
-            </div>
-            <div class="diagnostic-card">
-              <span class="label">Error text</span>
-              <span class="value note" id="diag-error-text">none</span>
+
+            <div class="runtime-status-row">
+              <div class="runtime-status" id="products-runtime-status">runtime: standby</div>
             </div>
           </div>
 
-          <div class="map-overlay-copy">
-            <strong>Boot truth first</strong>
-            <p>
-              This pass does not reopen geometry. It proves the file-load, handoff, and visible-mount chain
-              across <code>index.html</code>, <code>index.js</code>, and <code>products_runtime.js</code>.
-            </p>
+          <div class="stage-zone" id="products-stage-zone">
+            <div class="planetary-stage" id="planetary-stage"></div>
           </div>
-
-          <div class="runtime-status" id="products-runtime-status">runtime: standby</div>
         </div>
 
         <div class="map-footer">
           <p>
-            <strong>Ownership law:</strong> <code>products_runtime.js</code> is the sole runtime authority for the stage.
+            <strong>Ownership law:</strong> <code>products_runtime.js</code> remains the sole runtime authority for the stage.
           </p>
           <p>
-            <strong>Diagnostic law:</strong> the page now exposes each boot stage directly instead of hiding failure behind a blank standby state.
+            <strong>Containment law:</strong> host copy and receipt nodes remain protected in the host region while mounted runtime content is constrained to the stage region.
           </p>
         </div>
       </section>

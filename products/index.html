@@ -9,7 +9,7 @@
   <title>Products · Euclidean Planetary Map · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products gateway rendered as a Euclidean planetary map with a central sun, animated orbital motion, and direct routing to child product paths."
+    content="Products gateway rendered as a Euclidean planetary map with a central sun, angled horizontal orbital motion, and direct routing to child product paths."
   >
   <style>
     :root {
@@ -19,20 +19,15 @@
       --panel: rgba(9, 20, 48, 0.82);
       --panel-soft: rgba(12, 28, 64, 0.54);
       --line: rgba(173, 212, 255, 0.18);
-      --line-strong: rgba(173, 212, 255, 0.38);
       --text: #eef6ff;
       --muted: #a9bad6;
       --accent: #f3d79c;
-      --glow: rgba(123, 184, 255, 0.35);
       --sun-core: #fff8de;
       --sun-mid: #ffd88a;
       --sun-edge: #ff9c39;
       --button: rgba(14, 29, 62, 0.86);
       --button-border: rgba(173, 212, 255, 0.18);
       --shadow-heavy: 0 24px 60px rgba(0, 0, 0, 0.45);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 18px;
       --max-width: 1220px;
       color-scheme: dark;
     }
@@ -223,7 +218,7 @@
 
     .map-frame {
       position: relative;
-      min-height: min(1100px, 80vh);
+      min-height: min(980px, 76vh);
       border-radius: 26px;
       overflow: hidden;
       background:
@@ -233,10 +228,10 @@
 
     .map-title {
       position: absolute;
-      top: 30px;
-      left: 34px;
+      top: 28px;
+      left: 30px;
       z-index: 30;
-      max-width: min(80%, 640px);
+      max-width: min(80%, 620px);
     }
 
     .map-title h3 {
@@ -272,7 +267,6 @@
     .axis-x,
     .axis-y {
       position: absolute;
-      background: linear-gradient(90deg, transparent, rgba(206, 228, 255, 0.44), transparent);
       box-shadow: 0 0 18px rgba(141, 189, 255, 0.15);
     }
 
@@ -282,15 +276,16 @@
       width: 84%;
       height: 2px;
       transform: translateY(-50%);
+      background: linear-gradient(90deg, transparent, rgba(206, 228, 255, 0.44), transparent);
     }
 
     .axis-y {
       left: 50%;
-      top: 11%;
+      top: 12%;
       width: 2px;
-      height: 78%;
+      height: 76%;
       transform: translateX(-50%);
-      background: linear-gradient(180deg, transparent, rgba(206, 228, 255, 0.44), transparent);
+      background: linear-gradient(180deg, transparent, rgba(206, 228, 255, 0.28), transparent);
     }
 
     .axis-label {
@@ -302,8 +297,8 @@
       text-shadow: 0 0 18px rgba(113, 165, 255, 0.28);
     }
 
-    .axis-label.plus-y { top: 9.2%; left: calc(50% - 28px); }
-    .axis-label.minus-y { bottom: 8.5%; left: calc(50% - 24px); }
+    .axis-label.plus-y { top: 10.2%; left: calc(50% - 28px); }
+    .axis-label.minus-y { bottom: 9%; left: calc(50% - 24px); }
     .axis-label.minus-x { top: calc(50% - 20px); left: 8.2%; }
     .axis-label.plus-x { top: calc(50% - 20px); right: 8.4%; }
 
@@ -312,7 +307,6 @@
       inset: 0;
       z-index: 1;
       pointer-events: none;
-      perspective: 1400px;
     }
 
     .orbit-ring {
@@ -321,8 +315,8 @@
       top: 50%;
       width: var(--ring-w);
       height: var(--ring-h);
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(173, 212, 255, 0.12);
+      transform: translate(-50%, -50%) rotate(-24deg);
+      border: 1px solid rgba(173, 212, 255, 0.13);
       border-radius: 50%;
       box-shadow:
         0 0 0 1px rgba(255,255,255,0.02),
@@ -398,11 +392,10 @@
 
     .planet-node {
       position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(0, 0);
-      width: 188px;
-      will-change: transform;
+      left: 0;
+      top: 0;
+      width: 168px;
+      will-change: transform, left, top;
     }
 
     .planet-link {
@@ -414,8 +407,8 @@
 
     .planet {
       position: relative;
-      width: 118px;
-      height: 118px;
+      width: 102px;
+      height: 102px;
       border-radius: 50%;
       border: 1px solid rgba(255,255,255,0.12);
       box-shadow:
@@ -431,9 +424,9 @@
       position: absolute;
       left: 50%;
       top: 56%;
-      width: 126%;
-      height: 22px;
-      transform: translate(-50%, -50%) rotate(-5deg);
+      width: 128%;
+      height: 20px;
+      transform: translate(-50%, -50%) rotate(-9deg);
       border: 1px solid rgba(209, 227, 255, 0.16);
       border-radius: 50%;
       box-shadow: 0 0 20px rgba(115, 169, 255, 0.08);
@@ -466,7 +459,7 @@
 
     .planet-node h4 {
       margin: 0;
-      font-size: clamp(1.05rem, 1.8vw, 1.2rem);
+      font-size: 1rem;
       font-weight: 900;
       letter-spacing: 0.03em;
       text-transform: uppercase;
@@ -476,23 +469,23 @@
       margin: 0;
       min-height: 2.6em;
       color: var(--muted);
-      font-size: 0.98rem;
-      line-height: 1.45;
+      font-size: 0.9rem;
+      line-height: 1.35;
     }
 
     .planet-node .open-pill {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 46px;
-      min-width: 108px;
-      padding: 0 18px;
+      min-height: 44px;
+      min-width: 96px;
+      padding: 0 16px;
       border-radius: 999px;
       border: 1px solid var(--button-border);
       background: linear-gradient(180deg, rgba(20, 36, 76, 0.88), var(--button));
       color: #9fd0ff;
       font-weight: 800;
-      font-size: 0.98rem;
+      font-size: 0.95rem;
       box-shadow: 0 12px 24px rgba(0, 0, 0, 0.22);
       transition: transform 160ms ease, border-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
     }
@@ -531,23 +524,13 @@
     }
 
     @keyframes haloPulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(0.98);
-        opacity: 0.9;
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.06);
-        opacity: 1;
-      }
+      0%, 100% { transform: translate(-50%, -50%) scale(0.98); opacity: 0.9; }
+      50% { transform: translate(-50%, -50%) scale(1.06); opacity: 1; }
     }
 
     @keyframes sunPulse {
-      0%, 100% {
-        transform: translate(-50%, -50%) scale(1);
-      }
-      50% {
-        transform: translate(-50%, -50%) scale(1.04);
-      }
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.04); }
     }
 
     @keyframes coronaSpin {
@@ -557,16 +540,16 @@
 
     @media (max-width: 980px) {
       .map-frame {
-        min-height: 1080px;
+        min-height: 980px;
       }
 
       .planet-node {
-        width: 172px;
+        width: 154px;
       }
 
       .planet {
-        width: 108px;
-        height: 108px;
+        width: 94px;
+        height: 94px;
       }
 
       .map-title {
@@ -575,18 +558,18 @@
         right: 24px;
       }
 
-      .map-title p {
-        max-width: 100%;
-      }
-
       .axis-x {
         left: 7%;
         width: 86%;
       }
 
       .axis-y {
-        top: 14%;
-        height: 74%;
+        top: 15%;
+        height: 72%;
+      }
+
+      .orbit-ring {
+        transform: translate(-50%, -50%) rotate(-20deg);
       }
     }
 
@@ -596,38 +579,35 @@
         padding-top: 10px;
       }
 
-      .topbar,
-      .hero,
-      .map-shell,
-      .map-footer {
-        border-radius: 22px;
-      }
-
       .map-frame {
-        min-height: 1120px;
+        min-height: 1020px;
       }
 
       .planet-node {
-        width: 154px;
+        width: 138px;
       }
 
       .planet {
-        width: 96px;
-        height: 96px;
+        width: 86px;
+        height: 86px;
       }
 
       .planet::before {
-        height: 18px;
+        height: 16px;
       }
 
-      .planet-node p {
+      .planet-node h4 {
         font-size: 0.92rem;
       }
 
+      .planet-node p {
+        font-size: 0.84rem;
+      }
+
       .planet-node .open-pill {
-        min-height: 42px;
-        min-width: 96px;
-        font-size: 0.95rem;
+        min-height: 40px;
+        min-width: 88px;
+        font-size: 0.88rem;
       }
 
       .map-title h3 {
@@ -635,7 +615,7 @@
       }
 
       .map-title p {
-        font-size: 0.94rem;
+        font-size: 0.92rem;
       }
 
       .sun-halo {
@@ -648,10 +628,9 @@
         height: 132px;
       }
 
-      .axis-label.plus-y { top: 10%; }
-      .axis-label.minus-y { bottom: 9%; }
-      .axis-label.minus-x { left: 7%; }
-      .axis-label.plus-x { right: 7%; }
+      .orbit-ring {
+        transform: translate(-50%, -50%) rotate(-16deg);
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -671,7 +650,7 @@
         <div class="brand-orb" aria-hidden="true"></div>
         <div class="brand-copy">
           <h1>Diamond Gate Bridge</h1>
-          <p>Products gateway with a true solar core and animated Euclidean motion.</p>
+          <p>Products gateway with a true solar core and angled Euclidean motion.</p>
         </div>
       </div>
 
@@ -688,9 +667,8 @@
       <div class="eyebrow">Products Gateway</div>
       <h2 id="products-heading">Euclidean planetary map</h2>
       <p>
-        The center is now a real sun. The system runs on a visible horizontal Euclidean axis,
-        reinforced by a vertical axis, with live orbital motion rather than static two-dimensional circles.
-        Each product route reads as its own planet with its own position, role, and path.
+        The middle core is now a real sun, and the orbital field is corrected to a
+        horizontal Euclidean read with angled motion rather than tall vertical capsules.
       </p>
     </section>
 
@@ -699,17 +677,16 @@
         <div class="map-title">
           <h3>Euclidean planetary map</h3>
           <p>
-            Central value field at the core. Distinct planets in motion around it.
-            Open a route directly from the map.
+            Central value field at the core. Distinct planets in angled horizontal motion around it.
           </p>
         </div>
 
         <div class="planetary-stage" id="planetary-stage">
           <div class="orbit-rings" aria-hidden="true">
-            <div class="orbit-ring" style="--ring-w: 86%; --ring-h: 68%;"></div>
-            <div class="orbit-ring" style="--ring-w: 72%; --ring-h: 54%;"></div>
-            <div class="orbit-ring" style="--ring-w: 58%; --ring-h: 40%;"></div>
-            <div class="orbit-ring" style="--ring-w: 44%; --ring-h: 28%;"></div>
+            <div class="orbit-ring" style="--ring-w: 90%; --ring-h: 42%;"></div>
+            <div class="orbit-ring" style="--ring-w: 74%; --ring-h: 32%;"></div>
+            <div class="orbit-ring" style="--ring-w: 58%; --ring-h: 24%;"></div>
+            <div class="orbit-ring" style="--ring-w: 42%; --ring-h: 18%;"></div>
           </div>
 
           <div class="axes" aria-hidden="true">
@@ -727,14 +704,7 @@
           </div>
 
           <div class="nodes-layer">
-            <article
-              class="planet-node"
-              data-orbit-x="0"
-              data-orbit-y="312"
-              data-angle="-1.5708"
-              data-speed="0.00014"
-              data-depth-bias="12"
-            >
+            <article class="planet-node" data-orbit-x="0" data-orbit-y="232" data-angle="-1.5708" data-speed="0.00011" data-depth-bias="10">
               <a class="planet-link" href="/products/aai/">
                 <div class="planet aai" aria-hidden="true"></div>
                 <h4>AAI</h4>
@@ -743,14 +713,7 @@
               </a>
             </article>
 
-            <article
-              class="planet-node"
-              data-orbit-x="212"
-              data-orbit-y="232"
-              data-angle="-0.58"
-              data-speed="0.00011"
-              data-depth-bias="8"
-            >
+            <article class="planet-node" data-orbit-x="286" data-orbit-y="104" data-angle="-0.56" data-speed="0.000085" data-depth-bias="8">
               <a class="planet-link" href="/products/nine-summits/">
                 <div class="planet nine-summits" aria-hidden="true"></div>
                 <h4>Nine Summits</h4>
@@ -759,14 +722,7 @@
               </a>
             </article>
 
-            <article
-              class="planet-node"
-              data-orbit-x="264"
-              data-orbit-y="0"
-              data-angle="3.14159"
-              data-speed="0.000095"
-              data-depth-bias="4"
-            >
+            <article class="planet-node" data-orbit-x="286" data-orbit-y="104" data-angle="3.70" data-speed="0.000085" data-depth-bias="8">
               <a class="planet-link" href="/products/five-flags/">
                 <div class="planet five-flags" aria-hidden="true"></div>
                 <h4>Five Flags</h4>
@@ -775,14 +731,7 @@
               </a>
             </article>
 
-            <article
-              class="planet-node"
-              data-orbit-x="264"
-              data-orbit-y="0"
-              data-angle="0"
-              data-speed="0.000095"
-              data-depth-bias="4"
-            >
+            <article class="planet-node" data-orbit-x="206" data-orbit-y="78" data-angle="0.18" data-speed="0.00012" data-depth-bias="6">
               <a class="planet-link" href="/products/nutrition/">
                 <div class="planet nutrition" aria-hidden="true"></div>
                 <h4>Nutrition</h4>
@@ -791,14 +740,7 @@
               </a>
             </article>
 
-            <article
-              class="planet-node"
-              data-orbit-x="196"
-              data-orbit-y="246"
-              data-angle="2.28"
-              data-speed="0.00012"
-              data-depth-bias="6"
-            >
+            <article class="planet-node" data-orbit-x="206" data-orbit-y="78" data-angle="2.32" data-speed="0.00012" data-depth-bias="6">
               <a class="planet-link" href="/vault/">
                 <div class="planet archcoin" aria-hidden="true"></div>
                 <h4>ARCHCOIN</h4>
@@ -807,14 +749,7 @@
               </a>
             </article>
 
-            <article
-              class="planet-node"
-              data-orbit-x="184"
-              data-orbit-y="252"
-              data-angle="0.94"
-              data-speed="0.00012"
-              data-depth-bias="6"
-            >
+            <article class="planet-node" data-orbit-x="344" data-orbit-y="128" data-angle="1.12" data-speed="0.00007" data-depth-bias="4">
               <a class="planet-link" href="/">
                 <div class="planet root" aria-hidden="true"></div>
                 <h4>Root</h4>
@@ -828,12 +763,10 @@
 
       <div class="map-footer">
         <p>
-          <strong>Core law:</strong> the center is the sun, not another planet.
-          The products now orbit a shared value field rather than floating as disconnected objects.
+          <strong>Geometry correction:</strong> the orbital field now reads horizontally with angled Euclidean motion rather than vertically stretched rings.
         </p>
         <p>
-          <strong>Routing law:</strong> AAI routes to <code>/products/aai/</code> and Nine Summits routes to
-          <code>/products/nine-summits/</code>. The remaining planets keep their own direct paths.
+          <strong>Runtime correction:</strong> planets are distributed around the sun across the horizontal field instead of collapsing into one vertical stack.
         </p>
       </div>
     </section>

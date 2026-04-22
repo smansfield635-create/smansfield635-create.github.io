@@ -1,366 +1,686 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Explore | Diamond Gate Bridge</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>Explore · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Structured expansion layer for Diamond Gate Bridge. Explore outward without breaking upstream order."
-  />
+    content="Explore the embodied world beyond the door. Thresholds, chambers, routes, and depth under one living field."
+  >
+
   <style>
-    :root{
-      --bg:#05070b;
-      --bg2:#08101a;
-      --bg3:#0d1623;
-      --panel:#0b0f16;
-      --panel2:#101722;
-      --line:#1f2a36;
-      --line2:rgba(127,255,212,.16);
-      --text:#e8f6ff;
-      --muted:rgba(232,246,255,.68);
-      --accent:#7fffd4;
-      --shadow:0 14px 40px rgba(0,0,0,.30);
-      --shadow2:0 20px 70px rgba(0,0,0,.38);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
-      --maxw:1460px;
+    :root {
+      --bg: #030711;
+      --bg-deep: #081427;
+      --panel: rgba(255,255,255,0.05);
+      --panel-soft: rgba(255,255,255,0.025);
+      --line: rgba(255,255,255,0.10);
+      --line-strong: rgba(255,255,255,0.18);
+      --text: #eef4ff;
+      --muted: #a7b8d8;
+      --gold: #f0c876;
+      --gold-soft: #f8e0ab;
+      --blue-soft: #9dd1ff;
+      --green-soft: #9fe7c5;
+      --violet-soft: #c8b4ff;
+      --shadow: 0 24px 80px rgba(0,0,0,0.42);
+      --radius: 28px;
+      --max: 1320px;
     }
 
-    *{box-sizing:border-box}
-    html,body{
-      margin:0;
-      min-height:100%;
+    * { box-sizing: border-box; }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font:
+        16px/1.55 Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
-        radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
-        linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+        radial-gradient(circle at 16% 12%, rgba(157,209,255,0.12), transparent 22%),
+        radial-gradient(circle at 84% 16%, rgba(240,200,118,0.08), transparent 24%),
+        radial-gradient(circle at 50% 88%, rgba(200,180,255,0.08), transparent 30%),
+        linear-gradient(180deg, #02050d 0%, #071120 44%, #0a1830 100%);
     }
 
-    body{min-height:100vh;overflow-x:hidden}
-
-    .hostGlow,.gridLines{
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      z-index:0;
+    a {
+      color: inherit;
+      text-decoration: none;
     }
 
-    .hostGlow{
-      background:
-        radial-gradient(circle at 50% 12%, rgba(127,255,212,.050), transparent 18%),
-        radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
-        radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
-      filter:blur(10px);
-    }
-
-    .gridLines{
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
       background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
+        radial-gradient(circle at 24% 62%, rgba(255,255,255,0.62) 0 1px, transparent 2px),
+        radial-gradient(circle at 47% 20%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 66% 34%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 82% 18%, rgba(255,255,255,0.76) 0 1px, transparent 2px),
+        radial-gradient(circle at 74% 70%, rgba(255,255,255,0.64) 0 1px, transparent 2px),
+        radial-gradient(circle at 18% 82%, rgba(255,255,255,0.68) 0 1px, transparent 2px),
+        radial-gradient(circle at 56% 86%, rgba(255,255,255,0.58) 0 1px, transparent 2px);
+      opacity: 0.82;
     }
 
-    .wrap{
-      position:relative;
-      z-index:1;
-      max-width:var(--maxw);
-      margin:0 auto;
-      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 22px, var(--max));
+      margin: 0 auto;
+      padding: 20px 0 30px;
     }
 
-    .topbar,.hero,.panel,.tile,.footer{
-      border:1px solid var(--line);
-      border-radius:22px;
+    .topbar {
+      display: grid;
+      grid-template-columns: auto auto auto auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .chip,
+    .button,
+    .mini-button {
+      min-height: 56px;
+      padding: 0 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      border: 1px solid var(--line);
       background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-        radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
-      box-shadow:var(--shadow2);
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 10px 28px rgba(0,0,0,0.18);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
     }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      padding:12px 14px;
-      margin-bottom:12px;
-      border-radius:14px;
-      box-shadow:var(--shadow);
-    }
-
-    .brand{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .stamp{
-      font-size:11px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-
-    .hero{
-      padding:22px 20px 20px;
-      margin-bottom:12px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
-
-    h1{
-      margin:0 0 14px;
-      font-size:clamp(36px,5vw,72px);
-      line-height:.96;
-      letter-spacing:-.06em;
-      max-width:10ch;
-    }
-
-    .heroText{
-      margin:0;
-      max-width:66ch;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.72;
-    }
-
-    .chipRow,.actionRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .chip,.action{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:10px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      text-decoration:none;
-    }
-
-    .chip{
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
-    }
-
-    .action.strong,.chip.strong{
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
-      color:var(--text);
-    }
-
-    .summaryGrid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .panel{
-      padding:16px;
-    }
-
-    .panelTitle{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .panelText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
-    }
-
-    .rows{
-      display:grid;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      align-items:start;
-    }
-
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.45;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .catalog{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .tile{
-      padding:14px;
-      border-radius:18px;
+    .chip:hover,
+    .chip:focus-visible,
+    .button:hover,
+    .button:focus-visible,
+    .mini-button:hover,
+    .mini-button:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.24);
       background:
-        linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-        radial-gradient(circle at 50% 0%, rgba(127,255,212,.03), transparent 40%);
+        linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      outline: none;
     }
 
-    .tileTitle{
-      margin:0 0 8px;
-      font-size:13px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--accent);
+    .chip.active {
+      border-color: rgba(157,209,255,0.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 0 0 1px rgba(157,209,255,0.14),
+        0 10px 30px rgba(0,0,0,0.20);
     }
 
-    .tileText{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.66;
-      min-height:66px;
+    .topbar .spacer {
+      min-width: 0;
     }
 
-    .footer{
-      padding:12px 14px;
-      color:var(--muted);
-      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
+    .hero {
+      margin-top: 20px;
+      padding: 16px 6px 4px;
+      text-align: center;
     }
 
-    @media (max-width:1180px){
-      .summaryGrid,.catalog{grid-template-columns:1fr 1fr}
-      h1{max-width:none}
+    .eyebrow {
+      margin: 0 0 12px;
+      color: rgba(255,255,255,0.82);
+      font-size: 13px;
+      letter-spacing: 0.32em;
+      text-transform: uppercase;
     }
 
-    @media (max-width:760px){
-      .topbar{flex-direction:column;align-items:flex-start}
-      .summaryGrid,.catalog{grid-template-columns:1fr}
-      .row{grid-template-columns:1fr}
-      .rv{text-align:left}
+    .hero-title {
+      margin: 0;
+      font-family: Inter, system-ui, sans-serif;
+      font-size: clamp(46px, 8vw, 94px);
+      font-weight: 900;
+      line-height: 0.98;
+      letter-spacing: -0.05em;
+      color: #fff;
+    }
+
+    .hero-sub {
+      margin: 16px 0 0;
+      font-size: clamp(22px, 4vw, 40px);
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      color: #fff;
+    }
+
+    .hero-copy {
+      margin: 14px auto 0;
+      max-width: 920px;
+      font-size: clamp(16px, 2.2vw, 22px);
+      color: #dce8fb;
+    }
+
+    .hero-detail {
+      margin: 14px auto 0;
+      max-width: 980px;
+      font-size: 15px;
+      color: var(--muted);
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(157,209,255,0.08), transparent 28%),
+        radial-gradient(circle at 80% 24%, rgba(240,200,118,0.08), transparent 24%),
+        linear-gradient(180deg, var(--panel), var(--panel-soft));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .main-grid {
+      margin-top: 22px;
+      display: grid;
+      grid-template-columns: 1.06fr 0.94fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .world-panel,
+    .control-panel,
+    .section-panel {
+      padding: 22px;
+    }
+
+    .section-kicker {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .section-title {
+      margin: 10px 0 0;
+      font-size: clamp(28px, 4vw, 54px);
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 1.0;
+      color: #fff;
+      max-width: 11ch;
+    }
+
+    .section-copy {
+      margin: 12px 0 0;
+      font-size: 17px;
+      color: #e5eefc;
+      max-width: 38rem;
+    }
+
+    .section-detail {
+      margin: 14px 0 0;
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 40rem;
+    }
+
+    .world-map {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .globe-frame {
+      min-height: 420px;
+      position: relative;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(98,158,255,0.20), transparent 18%),
+        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      overflow: hidden;
+    }
+
+    .orbit,
+    .orbit-2,
+    .orbit-3 {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      border: 1px solid rgba(157,209,255,0.14);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .orbit { width: 66%; height: 66%; }
+    .orbit-2 { width: 86%; height: 86%; }
+    .orbit-3 { width: 112%; height: 112%; }
+
+    .globe {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 180px;
+      height: 180px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.95), rgba(157,209,255,0.60) 28%, rgba(78,111,195,0.34) 58%, rgba(0,0,0,0.0) 78%);
+      box-shadow:
+        0 0 60px rgba(157,209,255,0.28),
+        0 0 110px rgba(157,209,255,0.12);
+    }
+
+    .node {
+      position: absolute;
+      min-width: 118px;
+      padding: 14px 16px;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
+      text-align: center;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: #fff;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+    }
+
+    .node.top { left: 50%; top: 10%; transform: translateX(-50%); }
+    .node.right { right: 8%; top: 38%; }
+    .node.bottom { left: 50%; bottom: 10%; transform: translateX(-50%); }
+    .node.left { left: 8%; top: 38%; }
+
+    .world-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .mini-card {
+      padding: 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.05), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+    }
+
+    .mini-card h3 {
+      margin: 0;
+      font-size: 24px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .mini-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .mini-actions {
+      margin-top: 14px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .mini-button {
+      min-height: 40px;
+      padding-inline: 14px;
+      font-size: 12px;
+      flex: 0 0 auto;
+    }
+
+    .meta-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .meta-box {
+      padding: 16px 18px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+    }
+
+    .meta-box .mini-label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .meta-box strong {
+      display: block;
+      font-size: 22px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #fff;
+      line-height: 1.02;
+    }
+
+    .meta-box p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section-grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .route-card {
+      min-height: 220px;
+      padding: 20px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.05), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .route-card h3 {
+      margin: 0;
+      font-size: 28px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #fff;
+    }
+
+    .route-card p {
+      margin: 0;
+      color: var(--muted);
+      flex: 1 1 auto;
+      font-size: 15px;
+    }
+
+    .button {
+      min-height: 46px;
+      padding-inline: 18px;
+    }
+
+    .button.primary {
+      background:
+        linear-gradient(135deg, rgba(240,200,118,0.20), rgba(255,255,255,0.06));
+    }
+
+    .footer {
+      margin-top: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 4px 2px 0;
+    }
+
+    @media (max-width: 1160px) {
+      .main-grid,
+      .world-map {
+        grid-template-columns: 1fr;
+      }
+
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .topbar .spacer {
+        display: none;
+      }
+
+      .meta-strip {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 18px, var(--max));
+      }
+
+      .chip,
+      .button,
+      .mini-button {
+        width: 100%;
+      }
+
+      .mini-actions {
+        flex-direction: column;
+      }
+
+      .globe-frame {
+        min-height: 360px;
+      }
+
+      .node {
+        min-width: 96px;
+        padding: 12px 12px;
+        font-size: 11px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="hostGlow" aria-hidden="true"></div>
-  <div class="gridLines" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
 
-  <main class="wrap">
-    <div class="topbar">
-      <div class="brand">Explore</div>
-      <div class="stamp">G1 EXTERNAL EXPRESSION · STRUCTURED EXPANSION</div>
+  <div class="shell">
+    <div class="topbar" aria-label="Explore controls">
+      <a class="chip" href="/door/index.html">DOOR</a>
+      <a class="chip active" href="/explore/index.html">EXPLORE</a>
+      <a class="chip" href="/products/">PRODUCTS</a>
+      <a class="chip" href="/prelude/">PRELUDE</a>
+      <div class="spacer"></div>
     </div>
 
-    <section class="hero">
-      <div class="eyebrow">Expansion under structure</div>
-      <h1>The expansion layer.</h1>
-      <p class="heroText">
-        Explore extends outward without breaking upstream order. Each surface below is a bounded entry point, not a mixed narrative pile.
+    <header class="hero" aria-labelledby="explore-title">
+      <p class="eyebrow">Explore</p>
+      <h1 class="hero-title" id="explore-title">Enter the world beyond the threshold.</h1>
+      <div class="hero-sub">Atmosphere, chambers, routes, and depth.</div>
+      <div class="hero-copy">
+        Explore is no longer a legacy placeholder. It is the embodied world layer
+        after the door, where selection becomes movement and meaning becomes place.
+      </div>
+      <div class="hero-detail">
+        The door remains the threshold. Explore is the world-facing descent after
+        the threshold has resolved into globe-level entry.
+      </div>
+    </header>
+
+    <section class="main-grid">
+      <div class="panel world-panel">
+        <p class="section-kicker">World field</p>
+        <h2 class="section-title">A navigable embodied surface.</h2>
+        <p class="section-copy">
+          Explore is where the system stops feeling like a menu and starts feeling
+          like a world. Chambers, paths, and objects live here under one field.
+        </p>
+
+        <div class="world-map" aria-label="Explore world map">
+          <div class="globe-frame">
+            <div class="orbit" aria-hidden="true"></div>
+            <div class="orbit-2" aria-hidden="true"></div>
+            <div class="orbit-3" aria-hidden="true"></div>
+            <div class="globe" aria-hidden="true"></div>
+
+            <div class="node top">Prelude</div>
+            <div class="node right">Products</div>
+            <div class="node bottom">House</div>
+            <div class="node left">Gauges</div>
+          </div>
+
+          <div class="world-list">
+            <article class="mini-card">
+              <h3>Threshold memory stays active</h3>
+              <p>
+                Explore is downstream of the door. It should still feel like it came
+                through a threshold, not like it spawned from nowhere.
+              </p>
+            </article>
+
+            <article class="mini-card">
+              <h3>Objects become places</h3>
+              <p>
+                Products, chambers, gauges, and routes are no longer just labels.
+                They are now positions within the world field.
+              </p>
+            </article>
+
+            <article class="mini-card">
+              <h3>World-facing motion</h3>
+              <p>
+                The visitor should feel motion, relation, and depth here instead of
+                the old legacy flatness.
+              </p>
+              <div class="mini-actions">
+                <a class="mini-button" href="/products/">Open Products</a>
+                <a class="mini-button" href="/door/index.html">Back to Door</a>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <div class="meta-strip">
+          <article class="meta-box">
+            <span class="mini-label">Role</span>
+            <strong>World layer</strong>
+            <p>The globe-facing field after threshold entry.</p>
+          </article>
+
+          <article class="meta-box">
+            <span class="mini-label">Continuity</span>
+            <strong>Door stays upstream</strong>
+            <p>Explore inherits threshold meaning instead of breaking from it.</p>
+          </article>
+
+          <article class="meta-box">
+            <span class="mini-label">Job</span>
+            <strong>Make depth navigable</strong>
+            <p>Chambers, paths, and object surfaces become spatially readable.</p>
+          </article>
+        </div>
+      </div>
+
+      <aside class="panel control-panel">
+        <p class="section-kicker">Explore posture</p>
+        <h2 class="section-title">Legacy removed.</h2>
+        <p class="section-copy">
+          The old legacy read is gone. This page now behaves like a compact world
+          dashboard instead of a placeholder.
+        </p>
+
+        <div class="section-grid" style="grid-template-columns:1fr;">
+          <article class="route-card">
+            <p class="section-kicker">Route 1</p>
+            <h3>Prelude</h3>
+            <p>The ordered entry path remains the first world-facing threshold route.</p>
+            <a class="button" href="/prelude/">Open Prelude</a>
+          </article>
+
+          <article class="route-card">
+            <p class="section-kicker">Route 2</p>
+            <h3>Products</h3>
+            <p>The object field where routed child surfaces open into their own depth.</p>
+            <a class="button primary" href="/products/">Open Products</a>
+          </article>
+
+          <article class="route-card">
+            <p class="section-kicker">Route 3</p>
+            <h3>Door</h3>
+            <p>Return to the multi-layer threshold without losing continuity.</p>
+            <a class="button" href="/door/index.html">Open Door</a>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="panel section-panel" aria-labelledby="routes-title">
+      <p class="section-kicker">World routes</p>
+      <h2 class="section-title" id="routes-title">Compact onward motion.</h2>
+      <p class="section-copy">
+        Explore should route quickly while still feeling like a world. The next moves
+        are visible, spatial, and coherent.
       </p>
-      <div class="chipRow">
-        <div class="chip strong">Prerequisite First</div>
-        <div class="chip">Bounded Entries</div>
-        <div class="chip">Frontier Without Drift</div>
-        <div class="chip">Products Connected</div>
+
+      <div class="section-grid">
+        <article class="route-card">
+          <p class="section-kicker">Meaning path</p>
+          <h3>Prelude</h3>
+          <p>The threshold world where ascent begins under ordered meaning.</p>
+          <a class="button" href="/prelude/">Enter Prelude</a>
+        </article>
+
+        <article class="route-card">
+          <p class="section-kicker">Object path</p>
+          <h3>Products</h3>
+          <p>The routed object surface with AAI, Nine Summits, and child extensions.</p>
+          <a class="button primary" href="/products/">Enter Products</a>
+        </article>
+
+        <article class="route-card">
+          <p class="section-kicker">Calibration path</p>
+          <h3>Gauges</h3>
+          <p>The measurement and structural read side of the wider field.</p>
+          <a class="button" href="/gauges/">Enter Gauges</a>
+        </article>
       </div>
-      <div class="actionRow">
-        <a class="action" href="/">Home</a>
-        <a class="action" href="/laws/">Laws</a>
-        <a class="action strong" href="/explore/frontier/">Frontier</a>
-        <a class="action" href="/products/">Products</a>
-        <a class="action" href="/gauges/">Gauges</a>
-      </div>
     </section>
 
-    <section class="summaryGrid">
-      <article class="panel">
-        <h2 class="panelTitle">Posture</h2>
-        <p class="panelText">Expansion under structure. The explore layer is downstream from the host and does not invent a new foundation for itself.</p>
-        <div class="rows">
-          <div class="row"><div class="rk">Host Relation</div><div class="rv">Descendant, not replacement</div></div>
-          <div class="row"><div class="rk">Expansion Rule</div><div class="rv">Outward without drift</div></div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2 class="panelTitle">Entry</h2>
-        <p class="panelText">Clean surfaces only. Each block below is a discrete entry path with measurable scope.</p>
-        <div class="rows">
-          <div class="row"><div class="rk">Surface Type</div><div class="rv">Bounded entry point</div></div>
-          <div class="row"><div class="rk">Narrative Load</div><div class="rv">Separated, not piled</div></div>
-        </div>
-      </article>
-
-      <article class="panel">
-        <h2 class="panelTitle">Products Access</h2>
-        <p class="panelText">The products root is now treated as a first-class descendant route from Explore and Frontier.</p>
-        <div class="rows">
-          <div class="row"><div class="rk">Products</div><div class="rv">/products/</div></div>
-          <div class="row"><div class="rk">Role</div><div class="rv">Animated gateway</div></div>
-        </div>
-      </article>
-    </section>
-
-    <section class="catalog">
-      <article class="tile"><h3 class="tileTitle">Frontier</h3><p class="tileText">Platform engineering and boundary discovery under governed scope.</p><div class="actionRow"><a class="action strong" href="/explore/frontier/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Products</h3><p class="tileText">Animated gateway to the live product routes and product lanes.</p><div class="actionRow"><a class="action strong" href="/products/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Economic</h3><p class="tileText">Economic exploration under structured entry and measurable constraint.</p><div class="actionRow"><a class="action" href="/explore/economic/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Finance</h3><p class="tileText">Flow, allocation, receipt, and accountability as governed value movement.</p><div class="actionRow"><a class="action" href="/explore/finance/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Infrastructure</h3><p class="tileText">Support continuity and durability without competing with the host itself.</p><div class="actionRow"><a class="action" href="/explore/infrastructure/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Systems</h3><p class="tileText">Whole-body relation, thresholds, inheritance, and interacting parts.</p><div class="actionRow"><a class="action" href="/explore/systems/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Science</h3><p class="tileText">Method, comparison, falsification pressure, and downstream consequence.</p><div class="actionRow"><a class="action" href="/explore/science/">Open</a></div></article>
-      <article class="tile"><h3 class="tileTitle">Trust</h3><p class="tileText">Trust as earned continuity under evidence, behavior, and receipt.</p><div class="actionRow"><a class="action" href="/explore/trust/">Open</a></div></article>
-    </section>
-
-    <div class="footer">BUILD=EXPLORE_G1_STRUCTURED_EXPANSION | ENTRY=CATALOG_ACTIVE | PRODUCTS=/products/ | STATUS=ACTIVE</div>
-  </main>
+    <footer class="footer">
+      <span>Result: PAGE=EXPLORE | STATUS=LEGACY_REMOVED | ROLE=WORLD_LAYER</span>
+      <span><a href="/door/index.html">Return to door</a></span>
+    </footer>
+  </div>
 </body>
 </html>

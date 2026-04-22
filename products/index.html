@@ -16,7 +16,6 @@
       --panel:rgba(8,18,42,.84);
       --panel-soft:rgba(10,22,52,.64);
       --line:rgba(173,212,255,.16);
-      --line-strong:rgba(214,233,255,.28);
       --text:#eef6ff;
       --muted:#a9bad6;
       --accent:#f3d79c;
@@ -26,8 +25,6 @@
       --violet:#c7b3ff;
       --shadow-heavy:0 24px 60px rgba(0,0,0,.45);
       --radius-xl:30px;
-      --radius-lg:24px;
-      --radius-md:18px;
       --max-width:1240px;
       color-scheme:dark;
     }
@@ -387,7 +384,7 @@
         setStatus(text) {
           const node = document.getElementById("products-runtime-status");
           if (!node) return;
-          node.textContent = "runtime: " + text;
+          node.textContent = "runtime: " + String(text || "").toUpperCase();
         }
       };
     })();
@@ -484,5 +481,15 @@
     onload="window.__productsDiag&&window.__productsDiag.setStatus('index-js-loaded');"
     onerror="window.__productsDiag&&window.__productsDiag.setValue('diag-error-text','index.js failed to load','fail');window.__productsDiag&&window.__productsDiag.setStatus('index-js-failed');"
   ></script>
+  <script>
+    window.addEventListener("load", function () {
+      if (window.__productsBootstrapStart && typeof window.__productsBootstrapStart === "function") {
+        window.__productsBootstrapStart("window-load");
+      } else {
+        window.__productsDiag && window.__productsDiag.setValue("diag-error-text", "bootstrap start function missing", "fail");
+        window.__productsDiag && window.__productsDiag.setStatus("bootstrap-missing");
+      }
+    }, { once: true });
+  </script>
 </body>
 </html>

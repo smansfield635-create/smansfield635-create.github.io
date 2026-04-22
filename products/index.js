@@ -3,49 +3,21 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
 
+  const diag = window.__productsDiag || {
+    setValue() {},
+    setStatus() {},
+  };
+
+  diag.setStatus("index-js-parsed");
+  diag.setValue("diag-create-entry", "index.js parsed", "warn");
+
   const viewport = document.getElementById("products-map-viewport");
   const stage = document.getElementById("planetary-stage");
-  const status = document.getElementById("products-runtime-status");
-
-  const diagRuntimeFile = document.getElementById("diag-runtime-file");
-  const diagGlobalApi = document.getElementById("diag-global-api");
-  const diagCreateEntry = document.getElementById("diag-create-entry");
-  const diagMountResult = document.getElementById("diag-mount-result");
-  const diagErrorText = document.getElementById("diag-error-text");
 
   if (!viewport || !stage) {
+    diag.setValue("diag-error-text", "required host nodes missing", "fail");
+    diag.setStatus("host-nodes-missing");
     return;
-  }
-
-  function setValue(node, text, kind) {
-    if (!node) return;
-    node.textContent = text;
-    node.className = `value ${kind}`;
-  }
-
-  function setStatus(message) {
-    if (status) {
-      status.textContent = `runtime: ${message}`;
-    }
-  }
-
-  function setBootStage(stageName, kind) {
-    setStatus(stageName);
-    if (stageName === "runtime-file-loaded") {
-      setValue(diagRuntimeFile, "loaded", kind);
-    }
-    if (stageName === "global-api-found") {
-      setValue(diagGlobalApi, "found", kind);
-    }
-    if (stageName === "global-api-missing") {
-      setValue(diagGlobalApi, "missing", kind);
-    }
-    if (stageName === "create-entered") {
-      setValue(diagCreateEntry, "entered", kind);
-    }
-    if (stageName === "mount-succeeded") {
-      setValue(diagMountResult, "succeeded", kind);
-    }
   }
 
   function destroyExistingRuntime() {
@@ -69,25 +41,28 @@
     }
   }
 
-  function bootRuntime() {
+  function bootRuntime(source) {
     destroyExistingRuntime();
 
-    setBootStage("runtime-file-loaded", "ok");
-    setValue(diagErrorText, "none", "note");
-    setValue(diagCreateEntry, "awaiting", "note");
-    setValue(diagMountResult, "awaiting", "note");
+    diag.setStatus("boot-started");
+    diag.setValue("diag-create-entry", `boot entered (${source})`, "warn");
+    diag.setValue("diag-mount-result", "boot in progress", "warn");
+    diag.setValue("diag-error-text", "none", "note");
 
     const runtimeApi = window[GLOBAL_KEY];
     if (!runtimeApi || typeof runtimeApi.create !== "function") {
-      setBootStage("global-api-missing", "fail");
-      setValue(diagErrorText, `window.${GLOBAL_KEY}.create not available`, "fail");
+      diag.setValue("diag-global-api", "missing", "fail");
+      diag.setValue("diag-mount-result", "blocked", "fail");
+      diag.setValue("diag-error-text", `window.${GLOBAL_KEY}.create not available`, "fail");
+      diag.setStatus("global-api-missing");
       return;
     }
 
-    setBootStage("global-api-found", "ok");
+    diag.setValue("diag-global-api", "found", "ok");
 
     try {
-      setBootStage("create-entered", "warn");
+      diag.setValue("diag-create-entry", `create() entered (${source})`, "ok");
+      diag.setStatus("create-entered");
 
       const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -98,19 +73,22 @@
       });
 
       window.__productsPlanetRuntimeInstance = instance;
-      setBootStage("mount-succeeded", "ok");
+      diag.setValue("diag-mount-result", "succeeded", "ok");
+      diag.setStatus("mount-succeeded");
     } catch (error) {
-      setStatus("create-failed");
-      setValue(diagMountResult, "failed", "fail");
-      setValue(diagErrorText, readErrorMessage(error), "fail");
+      diag.setValue("diag-mount-result", "failed", "fail");
+      diag.setValue("diag-error-text", readErrorMessage(error), "fail");
+      diag.setStatus("create-failed");
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", bootRuntime, { once: true });
-  } else {
-    bootRuntime();
-  }
+  document.addEventListener("DOMContentLoaded", () => {
+    diag.setStatus("dom-ready");
+    bootRuntime("dom-ready");
+  }, { once: true });
 
-  window.addEventListener("pageshow", bootRuntime);
+  window.addEventListener("pageshow", () => {
+    diag.setStatus("pageshow");
+    bootRuntime("pageshow");
+  });
 })();

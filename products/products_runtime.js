@@ -1,15 +1,3 @@
-/* TNT FULL-FILE REPLACEMENT
-   FILE: products/products_runtime.js
-
-   Result:
-   - Widens the exterior node shell materially.
-   - Makes the north-south vertical axis visually dominant.
-   - Keeps the globe as the sole Euclidean axial object.
-   - Rebuilds the exterior as a 2D snowflake shell with cardinal priority.
-   - Prevents the node field from crowding the globe.
-   - Keeps the globe linked to /products/ and the outer nodes linked to the same product lanes.
-*/
-
 (() => {
   const GLOBAL_KEY = "ProductsPlanetRuntime";
 
@@ -36,20 +24,31 @@
     };
   }
 
-  function polarToCartesian(cx, cy, radius, angleDeg) {
+  function polarToCartesian(cx, cy, radiusX, radiusY, angleDeg, tiltDeg) {
     const angle = (angleDeg * Math.PI) / 180;
+    const tilt = (tiltDeg * Math.PI) / 180;
+
+    const rawX = Math.cos(angle) * radiusX;
+    const rawY = Math.sin(angle) * radiusY;
+
+    const x = rawX * Math.cos(tilt) - rawY * Math.sin(tilt);
+    const y = rawX * Math.sin(tilt) + rawY * Math.cos(tilt);
+
     return {
-      x: cx + Math.cos(angle) * radius,
-      y: cy + Math.sin(angle) * radius,
+      x: cx + x,
+      y: cy + y,
+      depth: (Math.sin(angle) + 1) * 0.5,
     };
   }
 
   function createStarField(container, count) {
     const random = createSeededRandom(256451);
     const stars = [];
+
     for (let i = 0; i < count; i += 1) {
       const star = createElement("span", "products-star", container);
       const size = random() * 2 + 0.8;
+
       setStyles(star, {
         position: "absolute",
         left: `${random() * 100}%`,
@@ -61,12 +60,14 @@
         opacity: `${0.34 + random() * 0.44}`,
         boxShadow: "0 0 10px rgba(255,255,255,0.32)",
       });
+
       stars.push({
         el: star,
         drift: 0.15 + random() * 0.3,
         phase: random() * Math.PI * 2,
       });
     }
+
     return stars;
   }
 
@@ -76,30 +77,147 @@
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
 
-      // Cardinal first, then secondaries derived from those anchors.
-      this.nodes = [
-        { title: "Energy", href: "/energy/", kicker: "Output", angle: -90, tier: "cardinal" },          // N
-        { title: "On Your Side AI", href: "/ai/", kicker: "Intelligence", angle: 90, tier: "cardinal" }, // S
-        { title: "Platform", href: "/platform/", kicker: "Core", angle: 0, tier: "cardinal" },           // E
-        { title: "Agriculture", href: "/agriculture/", kicker: "Applied", angle: 180, tier: "cardinal" },// W
-
-        { title: "Diagnostics", href: "/diagnostics/", kicker: "Measurement", angle: -60, tier: "outer" },
-        { title: "Domains", href: "/domains/", kicker: "Identity", angle: -120, tier: "outer" },
-        { title: "Education", href: "/education/", kicker: "Learning", angle: 60, tier: "outer" },
-        { title: "Games", href: "/games/", kicker: "Playable", angle: 120, tier: "outer" },
-
-        { title: "Software", href: "/software/", kicker: "Runtime", angle: -30, tier: "inner" },
-        { title: "Syntax", href: "/ssg/", kicker: "Language", angle: -150, tier: "inner" },
-        { title: "ArchCoin", href: "/archcoin/", kicker: "Value", angle: 150, tier: "inner" },
-        { title: "Nutrition", href: "/nutrition/", kicker: "Baseline", angle: 30, tier: "inner" },
+      this.planets = [
+        {
+          title: "Energy",
+          href: "/energy/",
+          kicker: "Output",
+          orbitOrder: 1,
+          sizeDesktop: 30,
+          sizeMobile: 24,
+          speed: 0.030,
+          angle: -88,
+          color: "linear-gradient(145deg,#dff7ff 0%,#71d9ff 26%,#2d88d8 64%,#103667 100%)",
+        },
+        {
+          title: "Platform",
+          href: "/platform/",
+          kicker: "Core",
+          orbitOrder: 2,
+          sizeDesktop: 38,
+          sizeMobile: 30,
+          speed: 0.024,
+          angle: 8,
+          color: "linear-gradient(145deg,#fff4d9 0%,#ffd572 28%,#d38c1e 62%,#6b3f0e 100%)",
+        },
+        {
+          title: "Software",
+          href: "/software/",
+          kicker: "Runtime",
+          orbitOrder: 3,
+          sizeDesktop: 44,
+          sizeMobile: 34,
+          speed: 0.020,
+          angle: -38,
+          color: "linear-gradient(145deg,#f0f6ff 0%,#9ebcff 26%,#5c74da 60%,#27357b 100%)",
+        },
+        {
+          title: "Nutrition",
+          href: "/nutrition/",
+          kicker: "Baseline",
+          orbitOrder: 4,
+          sizeDesktop: 52,
+          sizeMobile: 40,
+          speed: 0.017,
+          angle: 28,
+          color: "linear-gradient(145deg,#effff7 0%,#8de7c3 26%,#2e9d70 62%,#14452f 100%)",
+        },
+        {
+          title: "On Your Side AI",
+          href: "/ai/",
+          kicker: "Intelligence",
+          orbitOrder: 5,
+          sizeDesktop: 62,
+          sizeMobile: 48,
+          speed: 0.014,
+          angle: 102,
+          color: "linear-gradient(145deg,#ffffff 0%,#b6d8ff 24%,#6fa1f2 58%,#234d93 100%)",
+        },
+        {
+          title: "Agriculture",
+          href: "/agriculture/",
+          kicker: "Applied",
+          orbitOrder: 6,
+          sizeDesktop: 72,
+          sizeMobile: 56,
+          speed: 0.011,
+          angle: 196,
+          color: "linear-gradient(145deg,#f6ffe8 0%,#c9f27d 26%,#6ea033 62%,#2f4b16 100%)",
+        },
+        {
+          title: "Diagnostics",
+          href: "/diagnostics/",
+          kicker: "Measurement",
+          orbitOrder: 7,
+          sizeDesktop: 82,
+          sizeMobile: 64,
+          speed: 0.009,
+          angle: -146,
+          color: "linear-gradient(145deg,#f8f8ff 0%,#d2d5ff 24%,#8b94f5 58%,#3b438f 100%)",
+        },
+        {
+          title: "Education",
+          href: "/education/",
+          kicker: "Learning",
+          orbitOrder: 8,
+          sizeDesktop: 94,
+          sizeMobile: 72,
+          speed: 0.007,
+          angle: 146,
+          color: "linear-gradient(145deg,#fff2fb 0%,#ffb8dd 26%,#d85da4 60%,#6d2450 100%)",
+        },
+        {
+          title: "Domains",
+          href: "/domains/",
+          kicker: "Identity",
+          orbitOrder: 9,
+          sizeDesktop: 106,
+          sizeMobile: 82,
+          speed: 0.006,
+          angle: -118,
+          color: "linear-gradient(145deg,#fff8df 0%,#f4d67d 26%,#c59321 62%,#6d4708 100%)",
+        },
+        {
+          title: "Syntax",
+          href: "/ssg/",
+          kicker: "Language",
+          orbitOrder: 10,
+          sizeDesktop: 118,
+          sizeMobile: 92,
+          speed: 0.005,
+          angle: 58,
+          color: "linear-gradient(145deg,#f2fbff 0%,#8ad0ff 26%,#3a8dcf 60%,#16416d 100%)",
+        },
+        {
+          title: "Games",
+          href: "/games/",
+          kicker: "Playable",
+          orbitOrder: 11,
+          sizeDesktop: 132,
+          sizeMobile: 102,
+          speed: 0.0042,
+          angle: 212,
+          color: "linear-gradient(145deg,#f5efff 0%,#c6a8ff 24%,#7b5de2 58%,#352267 100%)",
+        },
+        {
+          title: "ArchCoin",
+          href: "/archcoin/",
+          kicker: "Value",
+          orbitOrder: 12,
+          sizeDesktop: 146,
+          sizeMobile: 112,
+          speed: 0.0036,
+          angle: 18,
+          color: "linear-gradient(145deg,#fff9ea 0%,#ffd87a 24%,#d89519 58%,#6b4107 100%)",
+        },
       ];
 
       this.frame = 0;
       this.startTime = 0;
       this.resizeTimer = 0;
-      this.tokens = [];
-      this.spokes = [];
       this.stars = [];
+      this.tokens = [];
+      this.orbitRings = [];
       this.destroyed = false;
 
       this.onResize = this.onResize.bind(this);
@@ -108,7 +226,7 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-g2-axis-snowflake-wide");
+      this.mount.setAttribute("data-runtime", "products-solar-system-scale-law");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -127,11 +245,11 @@
       this.glowLayer = createElement("div", "products-glow-layer", this.root);
       this.starLayer = createElement("div", "products-star-layer", this.root);
       this.axisLayer = createElement("div", "products-axis-layer", this.root);
-      this.snowflakeLayer = createElement("div", "products-snowflake-layer", this.root);
+      this.ringLayer = createElement("div", "products-ring-layer", this.root);
       this.tokenLayer = createElement("div", "products-token-layer", this.root);
-      this.planetLayer = createElement("div", "products-planet-layer", this.root);
+      this.sunLayer = createElement("div", "products-sun-layer", this.root);
 
-      [this.glowLayer, this.starLayer, this.axisLayer, this.snowflakeLayer, this.tokenLayer, this.planetLayer].forEach((node) => {
+      [this.glowLayer, this.starLayer, this.axisLayer, this.ringLayer, this.tokenLayer, this.sunLayer].forEach((node) => {
         setStyles(node, {
           position: "absolute",
           inset: "0",
@@ -141,67 +259,46 @@
       setStyles(this.starLayer, { pointerEvents: "none" });
       setStyles(this.glowLayer, { pointerEvents: "none" });
       setStyles(this.axisLayer, { pointerEvents: "none" });
-      setStyles(this.snowflakeLayer, { pointerEvents: "none" });
+      setStyles(this.ringLayer, { pointerEvents: "none" });
       setStyles(this.tokenLayer, { pointerEvents: "auto" });
-      setStyles(this.planetLayer, { pointerEvents: "auto" });
+      setStyles(this.sunLayer, { pointerEvents: "auto" });
 
       this.glowA = createElement("div", "products-glow products-glow-a", this.glowLayer);
       this.glowB = createElement("div", "products-glow products-glow-b", this.glowLayer);
-      this.snowflakeShell = createElement("div", "products-snowflake-shell", this.snowflakeLayer);
-      this.verticalAxis = createElement("div", "products-vertical-axis", this.axisLayer);
-      this.axisHalo = createElement("div", "products-axis-halo", this.axisLayer);
-      this.axisCapTop = createElement("div", "products-axis-cap top", this.axisLayer);
-      this.axisCapBottom = createElement("div", "products-axis-cap bottom", this.axisLayer);
 
-      setStyles(this.glowA, { position: "absolute", inset: "0" });
-      setStyles(this.glowB, { position: "absolute", inset: "0" });
-
-      setStyles(this.snowflakeShell, {
+      setStyles(this.glowA, {
         position: "absolute",
-        left: "50%",
-        top: "56%",
-        transform: "translate(-50%, -50%)",
-        transformOrigin: "50% 50%",
+        inset: "0",
+      });
+
+      setStyles(this.glowB, {
+        position: "absolute",
+        inset: "0",
+      });
+
+      this.horizontalAxis = createElement("div", "products-horizontal-axis", this.axisLayer);
+      this.verticalAxis = createElement("div", "products-vertical-axis", this.axisLayer);
+
+      setStyles(this.horizontalAxis, {
+        position: "absolute",
+        height: "2px",
+        borderRadius: "999px",
+        background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.34), rgba(255,255,255,0))",
+        boxShadow: "0 0 18px rgba(124,166,255,0.18)",
       });
 
       setStyles(this.verticalAxis, {
         position: "absolute",
-        left: "50%",
-        top: "56%",
-        transform: "translate(-50%, -50%)",
-        width: "3px",
+        width: "2px",
         borderRadius: "999px",
-        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.34), rgba(255,255,255,0))",
-        boxShadow: "0 0 18px rgba(124,166,255,0.18)",
+        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.14), rgba(255,255,255,0))",
+        boxShadow: "0 0 12px rgba(124,166,255,0.08)",
       });
 
-      setStyles(this.axisHalo, {
-        position: "absolute",
-        left: "50%",
-        top: "56%",
-        transform: "translate(-50%, -50%)",
-        width: "18px",
-        borderRadius: "999px",
-        background: "linear-gradient(180deg, rgba(124,166,255,0), rgba(124,166,255,0.12), rgba(124,166,255,0))",
-        filter: "blur(10px)",
-      });
+      this.stars = createStarField(this.starLayer, 58);
 
-      [this.axisCapTop, this.axisCapBottom].forEach((cap) => {
-        setStyles(cap, {
-          position: "absolute",
-          left: "50%",
-          width: "14px",
-          height: "14px",
-          borderRadius: "50%",
-          transform: "translateX(-50%)",
-          background: "linear-gradient(135deg, rgba(124,166,255,0.6), rgba(111,255,219,0.28))",
-          boxShadow: "0 0 18px rgba(124,166,255,0.2)",
-        });
-      });
-
-      this.stars = createStarField(this.starLayer, 52);
-      this.buildPlanet();
-      this.buildSnowflake();
+      this.buildSun();
+      this.buildOrbitRings();
       this.buildTokens();
       this.layoutStatic();
 
@@ -212,244 +309,138 @@
       }
     }
 
-    buildPlanet() {
-      this.planetLink = createElement("a", "products-planet-link", this.planetLayer);
-      this.planetLink.href = "/products/";
-      this.planetLink.setAttribute("aria-label", "Open the Products core page");
+    buildSun() {
+      this.sunAnchor = createElement("a", "products-sun-anchor", this.sunLayer);
+      this.sunAnchor.href = "/products/";
+      this.sunAnchor.setAttribute("aria-label", "Open the Products core page");
 
-      setStyles(this.planetLink, {
+      setStyles(this.sunAnchor, {
         position: "absolute",
         left: "50%",
-        top: "56%",
+        top: "50%",
         transform: "translate(-50%, -50%)",
         display: "block",
         borderRadius: "50%",
         textDecoration: "none",
-        zIndex: "4",
+        zIndex: "20",
       });
 
-      this.planetShell = createElement("div", "products-planet-shell", this.planetLink);
-      this.planetAtmosphere = createElement("div", "products-planet-atmosphere", this.planetShell);
-      this.planetGlow = createElement("div", "products-planet-glow", this.planetShell);
-      this.planetShadow = createElement("div", "products-planet-shadow", this.planetShell);
-      this.planetBody = createElement("div", "products-planet-body", this.planetShell);
-      this.equatorBand = createElement("div", "products-equator-band", this.planetBody);
-      this.surfaceLayer = createElement("div", "products-surface-layer", this.planetBody);
+      this.sunHalo = createElement("div", "products-sun-halo", this.sunAnchor);
+      this.sunCorona = createElement("div", "products-sun-corona", this.sunAnchor);
+      this.sunCore = createElement("div", "products-sun-core", this.sunAnchor);
+      this.sunFlareA = createElement("div", "products-sun-flare flare-a", this.sunAnchor);
+      this.sunFlareB = createElement("div", "products-sun-flare flare-b", this.sunAnchor);
 
-      this.continentA = createElement("div", "products-continent continent-a", this.surfaceLayer);
-      this.continentB = createElement("div", "products-continent continent-b", this.surfaceLayer);
-      this.continentC = createElement("div", "products-continent continent-c", this.surfaceLayer);
-
-      [this.planetShell, this.planetAtmosphere, this.planetGlow, this.planetShadow, this.planetBody].forEach((node) => {
+      [this.sunHalo, this.sunCorona, this.sunCore, this.sunFlareA, this.sunFlareB].forEach((node) => {
         setStyles(node, {
           position: "absolute",
           left: "50%",
           top: "50%",
           transform: "translate(-50%, -50%)",
+          borderRadius: "50%",
         });
       });
 
-      setStyles(this.planetShell, {
-        borderRadius: "50%",
-        filter: "drop-shadow(0 24px 52px rgba(0,0,0,0.34))",
-      });
-
-      setStyles(this.planetAtmosphere, {
-        borderRadius: "50%",
-        background: "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.22), rgba(127,183,255,0.16) 28%, rgba(54,105,210,0.15) 54%, rgba(13,22,50,0.03) 76%, transparent 80%)",
-        boxShadow: "0 0 58px rgba(119,176,255,0.24)",
-      });
-
-      setStyles(this.planetGlow, {
-        borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(124,166,255,0.2), transparent 65%)",
+      setStyles(this.sunHalo, {
+        background: "radial-gradient(circle, rgba(255,220,122,0.26), rgba(255,177,73,0.12) 38%, rgba(94,143,255,0.08) 62%, transparent 76%)",
         filter: "blur(18px)",
       });
 
-      setStyles(this.planetShadow, {
-        borderRadius: "50%",
-        background: "radial-gradient(circle at 66% 66%, rgba(2,5,18,0.42), transparent 44%)",
-        mixBlendMode: "multiply",
-        opacity: "0.85",
+      setStyles(this.sunCorona, {
+        border: "2px solid rgba(255,217,142,0.18)",
+        boxShadow: "0 0 28px rgba(255,198,102,0.24)",
       });
 
-      setStyles(this.planetBody, {
+      setStyles(this.sunCore, {
         overflow: "hidden",
-        borderRadius: "50%",
-        border: "1px solid rgba(255,255,255,0.12)",
         background: [
-          "radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), transparent 18%)",
-          "radial-gradient(circle at 66% 72%, rgba(111,255,219,0.16), transparent 22%)",
-          "linear-gradient(145deg, #152d63 0%, #2352a8 30%, #1a7d9f 58%, #10284f 100%)",
+          "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.98), rgba(255,244,201,0.95) 16%, #ffd88a 42%, #ff9c39 72%, #7e3f10 100%)",
         ].join(","),
+        boxShadow: "0 0 28px rgba(255,198,102,0.72), 0 0 72px rgba(255,177,73,0.45), 0 0 120px rgba(114,166,255,0.18)",
       });
 
-      setStyles(this.equatorBand, {
-        position: "absolute",
-        left: "-10%",
-        top: "50%",
-        width: "120%",
-        height: "20%",
-        transform: "translateY(-50%)",
-        borderRadius: "999px",
-        background: "linear-gradient(180deg, rgba(93,198,255,0.06), rgba(255,255,255,0.18), rgba(41,111,255,0.08))",
-        boxShadow: "0 0 20px rgba(90,170,255,0.12)",
+      setStyles(this.sunFlareA, {
+        border: "1px solid rgba(122,179,255,0.16)",
       });
 
-      setStyles(this.surfaceLayer, {
-        position: "absolute",
-        inset: "0",
-        willChange: "transform",
+      setStyles(this.sunFlareB, {
+        border: "1px solid rgba(255,217,142,0.14)",
       });
 
-      const continentBase = {
-        position: "absolute",
-        background: "linear-gradient(145deg, rgba(111,255,219,0.42), rgba(127,208,255,0.14))",
-        border: "1px solid rgba(255,255,255,0.06)",
-      };
-
-      setStyles(this.continentA, {
-        ...continentBase,
-        left: "10%",
-        top: "22%",
-        width: "36%",
-        height: "24%",
-        borderRadius: "48% 52% 42% 58% / 52% 38% 62% 48%",
-        transform: "rotate(-18deg)",
+      this.sunAnchor.addEventListener("mouseenter", () => {
+        this.sunAnchor.style.filter = "brightness(1.06)";
       });
 
-      setStyles(this.continentB, {
-        ...continentBase,
-        right: "14%",
-        top: "34%",
-        width: "28%",
-        height: "18%",
-        borderRadius: "46% 54% 62% 38% / 45% 62% 38% 55%",
-        transform: "rotate(22deg)",
-      });
-
-      setStyles(this.continentC, {
-        ...continentBase,
-        left: "34%",
-        bottom: "18%",
-        width: "24%",
-        height: "17%",
-        borderRadius: "54% 46% 55% 45% / 52% 44% 56% 48%",
-        transform: "rotate(8deg)",
-      });
-
-      this.planetLink.addEventListener("mouseenter", () => {
-        this.planetLink.style.filter = "brightness(1.06)";
-      });
-
-      this.planetLink.addEventListener("mouseleave", () => {
-        this.planetLink.style.filter = "brightness(1)";
+      this.sunAnchor.addEventListener("mouseleave", () => {
+        this.sunAnchor.style.filter = "brightness(1)";
       });
     }
 
-    buildSnowflake() {
-      for (let i = 0; i < 6; i += 1) {
-        const spoke = createElement("div", "products-snowflake-spoke", this.snowflakeShell);
-        const branchA = createElement("div", "products-snowflake-branch branch-a", spoke);
-        const branchB = createElement("div", "products-snowflake-branch branch-b", spoke);
-        const crystal = createElement("div", "products-snowflake-crystal", spoke);
-
-        setStyles(spoke, {
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          width: "2px",
-          transformOrigin: "50% 0%",
-        });
-
-        setStyles(branchA, {
-          position: "absolute",
-          top: "28%",
-          left: "50%",
-          width: "2px",
-          transformOrigin: "50% 0%",
-        });
-
-        setStyles(branchB, {
-          position: "absolute",
-          top: "28%",
-          left: "50%",
-          width: "2px",
-          transformOrigin: "50% 0%",
-        });
-
-        setStyles(crystal, {
-          position: "absolute",
-          left: "50%",
-          top: "0",
-          transform: "translate(-50%, -50%) rotate(45deg)",
-          borderRadius: "4px",
-          background: "linear-gradient(135deg, rgba(124,166,255,0.42), rgba(111,255,219,0.22))",
-          boxShadow: "0 0 16px rgba(124,166,255,0.14)",
-        });
-
-        this.spokes.push({ spoke, branchA, branchB, crystal, rotation: i * 60 });
-      }
-
-      this.outerRing = createElement("div", "products-snowflake-ring outer", this.snowflakeShell);
-      this.innerRing = createElement("div", "products-snowflake-ring inner", this.snowflakeShell);
-      this.crossRing = createElement("div", "products-snowflake-ring cross", this.snowflakeShell);
-
-      [this.outerRing, this.innerRing, this.crossRing].forEach((ring, index) => {
+    buildOrbitRings() {
+      this.planets.forEach((planet) => {
+        const ring = createElement("div", "products-orbit-ring", this.ringLayer);
         setStyles(ring, {
           position: "absolute",
           left: "50%",
           top: "50%",
-          transform: "translate(-50%, -50%)",
+          transform: "translate(-50%, -50%) rotate(-22deg)",
           borderRadius: "50%",
-          border: index === 0
-            ? "1px solid rgba(124,166,255,0.2)"
-            : index === 1
-              ? "1px solid rgba(255,255,255,0.12)"
-              : "1px dashed rgba(111,255,219,0.16)",
-          boxShadow: index === 0 ? "0 0 20px rgba(124,166,255,0.1)" : "none",
+          border: "1px solid rgba(173,212,255,0.13)",
+          boxShadow: "0 0 0 1px rgba(255,255,255,0.02), inset 0 0 24px rgba(140,188,255,0.03)",
+          opacity: "0.92",
         });
+
+        this.orbitRings.push({ el: ring, order: planet.orbitOrder });
       });
     }
 
     buildTokens() {
-      this.tokens = this.nodes.map((item) => {
+      this.tokens = this.planets.map((planet) => {
         const token = document.createElement("a");
-        token.href = item.href;
+        token.href = planet.href;
         token.className = "products-orbit-token";
-        token.setAttribute("aria-label", item.title);
+        token.setAttribute("aria-label", planet.title);
 
         const kicker = document.createElement("span");
-        kicker.textContent = item.kicker;
-        const title = document.createElement("strong");
-        title.textContent = item.title;
+        kicker.textContent = planet.kicker;
 
+        const title = document.createElement("strong");
+        title.textContent = planet.title;
+
+        const orb = document.createElement("div");
+        orb.className = "products-planet-orb";
+
+        token.appendChild(orb);
         token.appendChild(kicker);
         token.appendChild(title);
         this.tokenLayer.appendChild(token);
 
-        const isCardinal = item.tier === "cardinal";
-
         setStyles(token, {
           position: "absolute",
-          minWidth: isCardinal ? "112px" : "104px",
-          maxWidth: isCardinal ? "152px" : "142px",
-          padding: isCardinal ? "11px 12px" : "10px 11px",
-          borderRadius: "999px",
-          border: isCardinal ? "1px solid rgba(124,166,255,0.3)" : "1px solid rgba(255,255,255,0.14)",
-          background: isCardinal
-            ? "linear-gradient(180deg, rgba(124,166,255,0.16), rgba(255,255,255,0.06))"
-            : "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))",
+          minWidth: "104px",
+          maxWidth: "150px",
+          padding: "10px 10px 12px",
+          borderRadius: "22px",
+          border: "1px solid rgba(255,255,255,0.14)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))",
           color: "#f5f7ff",
           backdropFilter: "blur(10px)",
-          boxShadow: isCardinal
-            ? "0 14px 34px rgba(0,0,0,0.26)"
-            : "0 12px 30px rgba(0,0,0,0.22)",
+          boxShadow: "0 12px 30px rgba(0,0,0,0.22)",
           textAlign: "center",
           fontSize: "0.74rem",
           lineHeight: "1.2",
           transition: "transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease",
-          zIndex: isCardinal ? "5" : "4",
+          zIndex: "10",
+        });
+
+        setStyles(orb, {
+          width: `${planet.sizeDesktop}px`,
+          height: `${planet.sizeDesktop}px`,
+          margin: "0 auto 8px",
+          borderRadius: "50%",
+          background: planet.color,
+          border: "1px solid rgba(255,255,255,0.12)",
+          boxShadow: "0 14px 24px rgba(0,0,0,0.22), inset -10px -12px 16px rgba(0,0,0,0.16), inset 10px 12px 14px rgba(255,255,255,0.16), 0 0 18px rgba(105,162,255,0.12)",
         });
 
         setStyles(kicker, {
@@ -458,12 +449,12 @@
           fontSize: "0.56rem",
           letterSpacing: "0.14em",
           textTransform: "uppercase",
-          color: isCardinal ? "rgba(245,247,255,0.72)" : "rgba(245,247,255,0.6)",
+          color: "rgba(245,247,255,0.6)",
         });
 
         setStyles(title, {
           display: "block",
-          fontSize: isCardinal ? "0.8rem" : "0.76rem",
+          fontSize: "0.76rem",
           fontWeight: "700",
         });
 
@@ -476,19 +467,15 @@
 
         token.addEventListener("mouseleave", () => {
           token.style.transform = token.dataset.transform || "";
-          token.style.borderColor = isCardinal ? "rgba(124,166,255,0.3)" : "rgba(255,255,255,0.14)";
-          token.style.background = isCardinal
-            ? "linear-gradient(180deg, rgba(124,166,255,0.16), rgba(255,255,255,0.06))"
-            : "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
-          token.style.boxShadow = isCardinal
-            ? "0 14px 34px rgba(0,0,0,0.26)"
-            : "0 12px 30px rgba(0,0,0,0.22)";
+          token.style.borderColor = "rgba(255,255,255,0.14)";
+          token.style.background = "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
+          token.style.boxShadow = "0 12px 30px rgba(0,0,0,0.22)";
         });
 
         return {
+          planet,
           el: token,
-          angle: item.angle,
-          tier: item.tier,
+          orb,
         };
       });
     }
@@ -499,31 +486,32 @@
       const small = rect.width <= 480;
 
       const centerX = rect.width * 0.5;
-      const centerY = rect.height * 0.56;
+      const centerY = rect.height * 0.54;
 
-      const planetSize = clamp(rect.width * (mobile ? 0.28 : 0.3), 154, mobile ? 206 : 238);
-
-      // Materially wider shell.
-      const outerRadius = clamp(rect.width * (mobile ? 0.44 : 0.47), 170, mobile ? 232 : 320);
-      const innerRadius = clamp(rect.width * (mobile ? 0.36 : 0.39), 138, mobile ? 188 : 260);
-
-      const shellRadius = outerRadius;
-      const spokeLength = outerRadius * 0.9;
-      const branchLength = outerRadius * 0.25;
+      const sunSize = clamp(rect.width * (mobile ? 0.22 : 0.18), 130, mobile ? 168 : 196);
+      const horizontalRadiusBase = clamp(rect.width * (mobile ? 0.40 : 0.43), 150, mobile ? 250 : 390);
+      const verticalRadiusBase = clamp(horizontalRadiusBase * 0.34, 44, mobile ? 92 : 140);
+      const tiltDeg = mobile ? -18 : -22;
 
       return {
         width: rect.width,
         height: rect.height,
         centerX,
         centerY,
-        planetSize,
-        outerRadius,
-        innerRadius,
-        shellRadius,
-        spokeLength,
-        branchLength,
+        sunSize,
+        horizontalRadiusBase,
+        verticalRadiusBase,
+        tiltDeg,
         mobile,
         small,
+      };
+    }
+
+    getOrbitRadius(order, m) {
+      const t = order / this.planets.length;
+      return {
+        x: m.horizontalRadiusBase * (0.22 + t * 0.88),
+        y: m.verticalRadiusBase * (0.28 + t * 0.82),
       };
     }
 
@@ -531,118 +519,115 @@
       const m = this.measure();
 
       setStyles(this.glowA, {
-        background: "radial-gradient(circle at 50% 58%, rgba(124,166,255,0.18), transparent 58%)",
+        background: "radial-gradient(circle at 50% 54%, rgba(124,166,255,0.18), transparent 58%)",
         filter: "blur(22px)",
       });
 
       setStyles(this.glowB, {
-        background: "radial-gradient(circle at 46% 54%, rgba(111,255,219,0.1), transparent 62%)",
+        background: "radial-gradient(circle at 46% 50%, rgba(111,255,219,0.1), transparent 62%)",
         filter: "blur(34px)",
+      });
+
+      setStyles(this.horizontalAxis, {
+        left: `${m.centerX - m.horizontalRadiusBase * 1.12}px`,
+        top: `${m.centerY}px`,
+        width: `${m.horizontalRadiusBase * 2.24}px`,
       });
 
       setStyles(this.verticalAxis, {
         left: `${m.centerX}px`,
-        top: `${m.centerY}px`,
-        height: `${m.outerRadius * 2.5}px`,
+        top: `${m.centerY - m.verticalRadiusBase * 2.9}px`,
+        height: `${m.verticalRadiusBase * 5.8}px`,
       });
 
-      setStyles(this.axisHalo, {
+      setStyles(this.sunAnchor, {
+        width: `${m.sunSize}px`,
+        height: `${m.sunSize}px`,
         left: `${m.centerX}px`,
         top: `${m.centerY}px`,
-        height: `${m.outerRadius * 2.5}px`,
       });
 
-      setStyles(this.axisCapTop, {
-        top: `${m.centerY - m.outerRadius - 26}px`,
+      setStyles(this.sunHalo, {
+        width: `${m.sunSize * 2.4}px`,
+        height: `${m.sunSize * 2.4}px`,
       });
 
-      setStyles(this.axisCapBottom, {
-        top: `${m.centerY + m.outerRadius + 12}px`,
+      setStyles(this.sunCorona, {
+        width: `${m.sunSize * 1.28}px`,
+        height: `${m.sunSize * 1.28}px`,
       });
 
-      setStyles(this.planetLink, {
-        width: `${m.planetSize}px`,
-        height: `${m.planetSize}px`,
+      setStyles(this.sunCore, {
+        width: `${m.sunSize}px`,
+        height: `${m.sunSize}px`,
       });
 
-      [this.planetShell, this.planetAtmosphere, this.planetGlow, this.planetShadow, this.planetBody].forEach((node) => {
-        setStyles(node, {
-          width: `${m.planetSize}px`,
-          height: `${m.planetSize}px`,
+      setStyles(this.sunFlareA, {
+        width: `${m.sunSize * 1.56}px`,
+        height: `${m.sunSize * 1.56}px`,
+      });
+
+      setStyles(this.sunFlareB, {
+        width: `${m.sunSize * 1.9}px`,
+        height: `${m.sunSize * 1.9}px`,
+      });
+
+      this.orbitRings.forEach((ring) => {
+        const orbit = this.getOrbitRadius(ring.order, m);
+
+        setStyles(ring.el, {
+          width: `${orbit.x * 2}px`,
+          height: `${orbit.y * 2}px`,
+          left: `${m.centerX}px`,
+          top: `${m.centerY}px`,
+          transform: `translate(-50%, -50%) rotate(${m.tiltDeg}deg)`,
         });
       });
 
-      setStyles(this.snowflakeShell, {
-        width: `${m.shellRadius * 2.55}px`,
-        height: `${m.shellRadius * 2.55}px`,
-      });
-
-      setStyles(this.outerRing, {
-        width: `${m.outerRadius * 2.02}px`,
-        height: `${m.outerRadius * 2.02}px`,
-      });
-
-      setStyles(this.innerRing, {
-        width: `${m.innerRadius * 2.02}px`,
-        height: `${m.innerRadius * 2.02}px`,
-      });
-
-      setStyles(this.crossRing, {
-        width: `${m.shellRadius * 1.72}px`,
-        height: `${m.shellRadius * 1.72}px`,
-      });
-
-      this.spokes.forEach(({ spoke, branchA, branchB, crystal, rotation }) => {
-        setStyles(spoke, {
-          height: `${m.spokeLength}px`,
-          transform: `translate(-50%, 0) rotate(${rotation}deg)`,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.24), rgba(124,166,255,0.1))",
-        });
-
-        setStyles(branchA, {
-          height: `${m.branchLength}px`,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(124,166,255,0.08))",
-          transform: "translate(-50%, 0) rotate(32deg)",
-        });
-
-        setStyles(branchB, {
-          height: `${m.branchLength}px`,
-          background: "linear-gradient(180deg, rgba(255,255,255,0.22), rgba(124,166,255,0.08))",
-          transform: "translate(-50%, 0) rotate(-32deg)",
-        });
-
-        setStyles(crystal, {
-          width: `${m.small ? 12 : 14}px`,
-          height: `${m.small ? 12 : 14}px`,
+      this.tokens.forEach(({ planet, orb }) => {
+        const size = m.mobile ? planet.sizeMobile : planet.sizeDesktop;
+        setStyles(orb, {
+          width: `${size}px`,
+          height: `${size}px`,
         });
       });
 
       this.positionTokens(0);
     }
 
-    positionTokens(shellRotationDeg) {
+    positionTokens(timeDeg) {
       const m = this.measure();
 
-      this.tokens.forEach((token) => {
-        const radius = token.tier === "cardinal"
-          ? m.outerRadius
-          : token.tier === "outer"
-            ? m.outerRadius * 0.92
-            : m.innerRadius;
+      this.tokens.forEach(({ planet, el }) => {
+        const orbit = this.getOrbitRadius(planet.orbitOrder, m);
+        const point = polarToCartesian(
+          m.centerX,
+          m.centerY,
+          orbit.x,
+          orbit.y,
+          planet.angle + timeDeg * planet.speed,
+          m.tiltDeg
+        );
 
-        const anchor = polarToCartesian(m.centerX, m.centerY, radius, token.angle + shellRotationDeg);
-        this.positionToken(token.el, anchor.x, anchor.y);
+        const width = el.offsetWidth || 120;
+        const height = el.offsetHeight || 120;
+
+        const safeLeft = 8;
+        const safeRight = this.stage.clientWidth - width - 8;
+        const safeTop = 8;
+        const safeBottom = this.stage.clientHeight - height - 8;
+
+        const left = clamp(point.x - width * 0.5, safeLeft, safeRight);
+        const top = clamp(point.y - height * 0.5, safeTop, safeBottom);
+
+        const scale = 0.86 + point.depth * 0.16;
+        const transform = `translate3d(${left}px, ${top}px, 0) scale(${scale})`;
+
+        el.dataset.transform = transform;
+        el.style.transform = transform;
+        el.style.opacity = `${0.78 + point.depth * 0.22}`;
+        el.style.zIndex = `${10 + Math.round(point.depth * 20) + planet.orbitOrder}`;
       });
-    }
-
-    positionToken(el, x, y) {
-      const width = el.offsetWidth || 122;
-      const height = el.offsetHeight || 50;
-      const left = clamp(x - width / 2, 8, this.stage.clientWidth - width - 8);
-      const top = clamp(y - height / 2, 8, this.stage.clientHeight - height - 8);
-      const transform = `translate3d(${left}px, ${top}px, 0)`;
-      el.dataset.transform = transform;
-      el.style.transform = transform;
     }
 
     animate(time) {
@@ -650,18 +635,17 @@
       if (!this.startTime) this.startTime = time;
 
       const elapsed = time - this.startTime;
-      const shellRotation = elapsed * 0.0016;
-      const globeSpin = elapsed * 0.009;
+      const timeDeg = elapsed * 0.06;
       const atmospherePulse = 1.038 + Math.sin(elapsed * 0.0011) * 0.008;
       const glowPulse = 1.16 + Math.cos(elapsed * 0.0008) * 0.02;
       const glowShiftA = Math.sin(elapsed * 0.00055) * 9;
       const glowShiftB = Math.cos(elapsed * 0.00042) * 7;
 
-      this.snowflakeShell.style.transform = `translate(-50%, -50%) rotate(${shellRotation}deg)`;
-      this.planetAtmosphere.style.transform = `translate(-50%, -50%) scale(${atmospherePulse})`;
-      this.planetGlow.style.transform = `translate(-50%, -50%) scale(${glowPulse})`;
-      this.surfaceLayer.style.transform = `translateX(${Math.sin(globeSpin * Math.PI / 180) * 10}px)`;
-      this.equatorBand.style.transform = `translateY(-50%) scaleX(${1 + Math.cos(globeSpin * Math.PI / 180) * 0.04})`;
+      this.sunHalo.style.transform = `translate(-50%, -50%) scale(${glowPulse})`;
+      this.sunCore.style.transform = `translate(-50%, -50%) scale(${atmospherePulse})`;
+      this.sunCorona.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.012}deg)`;
+      this.sunFlareA.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.008}deg)`;
+      this.sunFlareB.style.transform = `translate(-50%, -50%) rotate(${-elapsed * 0.006}deg)`;
 
       this.stars.forEach((star, index) => {
         const twinkle = 0.42 + (Math.sin(elapsed * 0.001 * star.drift + star.phase + index) + 1) * 0.2;
@@ -671,13 +655,7 @@
       this.glowA.style.transform = `translate(${glowShiftA}px, ${glowShiftB}px)`;
       this.glowB.style.transform = `translate(${-glowShiftB}px, ${glowShiftA * 0.6}px)`;
 
-      // Inner/outer breathing interchange without behind-the-planet drift.
-      const breathe = Math.sin(elapsed * 0.0012) * 0.5 + 0.5;
-      this.outerRing.style.opacity = `${0.68 + breathe * 0.2}`;
-      this.innerRing.style.opacity = `${0.9 - breathe * 0.18}`;
-      this.crossRing.style.opacity = `${0.38 + breathe * 0.16}`;
-
-      this.positionTokens(shellRotation);
+      this.positionTokens(timeDeg);
 
       this.frame = window.requestAnimationFrame(this.animate);
     }

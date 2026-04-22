@@ -77,6 +77,8 @@
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
 
+      // Order is scientific-style inner-to-outer.
+      // Distance law is compressed non-linearly for screen fit.
       this.planets = [
         {
           title: "Energy",
@@ -86,7 +88,7 @@
           sizeDesktop: 30,
           sizeMobile: 24,
           speed: 0.030,
-          angle: -88,
+          angle: -92,
           labelDock: "top",
           color: "linear-gradient(145deg,#dff7ff 0%,#71d9ff 26%,#2d88d8 64%,#103667 100%)",
         },
@@ -98,7 +100,7 @@
           sizeDesktop: 38,
           sizeMobile: 30,
           speed: 0.024,
-          angle: 8,
+          angle: -18,
           labelDock: "right",
           color: "linear-gradient(145deg,#fff4d9 0%,#ffd572 28%,#d38c1e 62%,#6b3f0e 100%)",
         },
@@ -110,8 +112,8 @@
           sizeDesktop: 44,
           sizeMobile: 34,
           speed: 0.020,
-          angle: -38,
-          labelDock: "top",
+          angle: 52,
+          labelDock: "right",
           color: "linear-gradient(145deg,#f0f6ff 0%,#9ebcff 26%,#5c74da 60%,#27357b 100%)",
         },
         {
@@ -122,8 +124,8 @@
           sizeDesktop: 52,
           sizeMobile: 40,
           speed: 0.017,
-          angle: 28,
-          labelDock: "right",
+          angle: 112,
+          labelDock: "bottom",
           color: "linear-gradient(145deg,#effff7 0%,#8de7c3 26%,#2e9d70 62%,#14452f 100%)",
         },
         {
@@ -134,7 +136,7 @@
           sizeDesktop: 62,
           sizeMobile: 48,
           speed: 0.014,
-          angle: 102,
+          angle: 176,
           labelDock: "left",
           color: "linear-gradient(145deg,#ffffff 0%,#b6d8ff 24%,#6fa1f2 58%,#234d93 100%)",
         },
@@ -146,7 +148,7 @@
           sizeDesktop: 72,
           sizeMobile: 56,
           speed: 0.011,
-          angle: 196,
+          angle: 232,
           labelDock: "left",
           color: "linear-gradient(145deg,#f6ffe8 0%,#c9f27d 26%,#6ea033 62%,#2f4b16 100%)",
         },
@@ -158,7 +160,7 @@
           sizeDesktop: 82,
           sizeMobile: 64,
           speed: 0.009,
-          angle: -146,
+          angle: 286,
           labelDock: "top",
           color: "linear-gradient(145deg,#f8f8ff 0%,#d2d5ff 24%,#8b94f5 58%,#3b438f 100%)",
         },
@@ -170,8 +172,8 @@
           sizeDesktop: 94,
           sizeMobile: 72,
           speed: 0.007,
-          angle: 146,
-          labelDock: "bottom",
+          angle: 336,
+          labelDock: "top",
           color: "linear-gradient(145deg,#fff2fb 0%,#ffb8dd 26%,#d85da4 60%,#6d2450 100%)",
         },
         {
@@ -182,8 +184,8 @@
           sizeDesktop: 106,
           sizeMobile: 82,
           speed: 0.006,
-          angle: -118,
-          labelDock: "left",
+          angle: 24,
+          labelDock: "right",
           color: "linear-gradient(145deg,#fff8df 0%,#f4d67d 26%,#c59321 62%,#6d4708 100%)",
         },
         {
@@ -194,8 +196,8 @@
           sizeDesktop: 118,
           sizeMobile: 92,
           speed: 0.005,
-          angle: 58,
-          labelDock: "right",
+          angle: 92,
+          labelDock: "bottom",
           color: "linear-gradient(145deg,#f2fbff 0%,#8ad0ff 26%,#3a8dcf 60%,#16416d 100%)",
         },
         {
@@ -206,8 +208,8 @@
           sizeDesktop: 132,
           sizeMobile: 102,
           speed: 0.0042,
-          angle: 212,
-          labelDock: "bottom",
+          angle: 156,
+          labelDock: "left",
           color: "linear-gradient(145deg,#f5efff 0%,#c6a8ff 24%,#7b5de2 58%,#352267 100%)",
         },
         {
@@ -218,8 +220,8 @@
           sizeDesktop: 146,
           sizeMobile: 112,
           speed: 0.0036,
-          angle: 18,
-          labelDock: "right",
+          angle: 220,
+          labelDock: "left",
           color: "linear-gradient(145deg,#fff9ea 0%,#ffd87a 24%,#d89519 58%,#6b4107 100%)",
         },
       ];
@@ -238,7 +240,7 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-solar-system-scale-law-v2");
+      this.mount.setAttribute("data-runtime", "products-solar-system-distance-law-v3");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -492,14 +494,13 @@
     measure() {
       const rect = this.stage.getBoundingClientRect();
       const mobile = rect.width <= 760;
-      const small = rect.width <= 480;
 
       const centerX = rect.width * 0.5;
       const centerY = rect.height * 0.54;
 
       const sunSize = clamp(rect.width * (mobile ? 0.22 : 0.18), 130, mobile ? 168 : 196);
-      const horizontalRadiusBase = clamp(rect.width * (mobile ? 0.40 : 0.43), 150, mobile ? 250 : 390);
-      const verticalRadiusBase = clamp(horizontalRadiusBase * 0.34, 44, mobile ? 92 : 140);
+      const horizontalRadiusBase = clamp(rect.width * (mobile ? 0.44 : 0.46), 170, mobile ? 270 : 430);
+      const verticalRadiusBase = clamp(horizontalRadiusBase * 0.34, 46, mobile ? 96 : 146);
       const tiltDeg = mobile ? -18 : -22;
 
       return {
@@ -512,30 +513,34 @@
         verticalRadiusBase,
         tiltDeg,
         mobile,
-        small,
       };
     }
 
+    // Non-linear compressed physics:
+    // preserve order and strong spread without literal impossible screen distances.
     getOrbitRadius(order, m) {
-      const t = order / this.planets.length;
+      const n = this.planets.length;
+      const t = (order - 1) / (n - 1);
+      const spread = Math.pow(t, 0.62);
+
       return {
-        x: m.horizontalRadiusBase * (0.22 + t * 0.88),
-        y: m.verticalRadiusBase * (0.28 + t * 0.82),
+        x: m.horizontalRadiusBase * (0.18 + spread * 1.00),
+        y: m.verticalRadiusBase * (0.22 + spread * 0.94),
       };
     }
 
     getDockOffset(planet, size, mobile) {
-      const base = Math.max(size * 0.72, mobile ? 54 : 62);
+      const base = Math.max(size * 0.72, mobile ? 56 : 64);
 
       if (mobile) {
         if (planet.labelDock === "left") return { x: -(base + 18), y: 0 };
         if (planet.labelDock === "right") return { x: base + 18, y: 0 };
-        if (planet.labelDock === "bottom") return { x: 0, y: base + 12 };
+        if (planet.labelDock === "bottom") return { x: 0, y: base + 14 };
         return { x: 0, y: -(base + 14) };
       }
 
-      if (planet.labelDock === "left") return { x: -(base + 24), y: 0 };
-      if (planet.labelDock === "right") return { x: base + 24, y: 0 };
+      if (planet.labelDock === "left") return { x: -(base + 26), y: 0 };
+      if (planet.labelDock === "right") return { x: base + 26, y: 0 };
       if (planet.labelDock === "bottom") return { x: 0, y: base + 18 };
       return { x: 0, y: -(base + 18) };
     }
@@ -561,8 +566,8 @@
 
       setStyles(this.verticalAxis, {
         left: `${m.centerX}px`,
-        top: `${m.centerY - m.verticalRadiusBase * 2.9}px`,
-        height: `${m.verticalRadiusBase * 5.8}px`,
+        top: `${m.centerY - m.verticalRadiusBase * 3.0}px`,
+        height: `${m.verticalRadiusBase * 6.0}px`,
       });
 
       setStyles(this.sunAnchor, {

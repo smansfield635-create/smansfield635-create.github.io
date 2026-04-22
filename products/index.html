@@ -373,6 +373,25 @@
       }
     }
   </style>
+  <script>
+    (function () {
+      "use strict";
+
+      window.__productsDiag = {
+        setValue(id, text, kind) {
+          const node = document.getElementById(id);
+          if (!node) return;
+          node.textContent = text;
+          node.className = "value " + kind;
+        },
+        setStatus(text) {
+          const node = document.getElementById("products-runtime-status");
+          if (!node) return;
+          node.textContent = "runtime: " + text;
+        }
+      };
+    })();
+  </script>
 </head>
 <body>
   <div class="shell">
@@ -455,7 +474,15 @@
     </main>
   </div>
 
-  <script src="./products_runtime.js"></script>
-  <script src="./index.js"></script>
+  <script
+    src="./products_runtime.js"
+    onload="window.__productsDiag&&window.__productsDiag.setValue('diag-runtime-file','loaded','ok');window.__productsDiag&&window.__productsDiag.setStatus('runtime-file-loaded');"
+    onerror="window.__productsDiag&&window.__productsDiag.setValue('diag-runtime-file','failed to load','fail');window.__productsDiag&&window.__productsDiag.setValue('diag-error-text','products_runtime.js failed to load','fail');window.__productsDiag&&window.__productsDiag.setStatus('runtime-file-failed');"
+  ></script>
+  <script
+    src="./index.js"
+    onload="window.__productsDiag&&window.__productsDiag.setStatus('index-js-loaded');"
+    onerror="window.__productsDiag&&window.__productsDiag.setValue('diag-error-text','index.js failed to load','fail');window.__productsDiag&&window.__productsDiag.setStatus('index-js-failed');"
+  ></script>
 </body>
 </html>

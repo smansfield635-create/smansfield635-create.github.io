@@ -1,9 +1,10 @@
+// /products/index.js
 (() => {
   "use strict";
 
   const HOST_META = Object.freeze({
     name: "PRODUCTS_HOST_BOOTSTRAP",
-    version: "V1",
+    version: "V2",
     contract: "PRODUCTS_HOST_CONTRACT_V1",
     stageOwner: "runtime-only",
     runtimeGlobal: "ProductsPlanetRuntime",
@@ -57,15 +58,21 @@
 
   function syncStatusLabel() {
     if (!ui.receiptStatus) return;
+
     if (state.failed) {
       ui.receiptStatus.textContent = "Fault surfaced";
+      ui.receiptStatus.style.color = "#ff9b9b";
       return;
     }
+
     if (state.mounted) {
       ui.receiptStatus.textContent = "Runtime mounted";
+      ui.receiptStatus.style.color = "#8ff0c5";
       return;
     }
+
     ui.receiptStatus.textContent = "Booting";
+    ui.receiptStatus.style.color = "#ffd27a";
   }
 
   function renderReceipts() {
@@ -88,9 +95,11 @@
   function showFallback(message) {
     state.failed = true;
     syncStatusLabel();
+
     if (ui.fallbackText) {
       ui.fallbackText.textContent = message;
     }
+
     if (ui.fallback) {
       ui.fallback.classList.add("is-visible");
     }
@@ -112,6 +121,7 @@
     if (!ui.host) {
       throw new Error("Missing #products-host.");
     }
+
     if (!ui.stage) {
       throw new Error("Missing #products-stage.");
     }
@@ -125,15 +135,19 @@
     if (hostContract !== HOST_META.contract) {
       throw new Error(`Host contract mismatch. Expected ${HOST_META.contract}.`);
     }
+
     if (stageOwner !== HOST_META.stageOwner) {
       throw new Error(`Stage owner mismatch. Expected ${HOST_META.stageOwner}.`);
     }
+
     if (visibleStageOwner !== "runtime") {
       throw new Error("Visible stage owner must remain runtime.");
     }
+
     if (runtimeGlobal !== HOST_META.runtimeGlobal) {
       throw new Error(`Runtime global mismatch. Expected ${HOST_META.runtimeGlobal}.`);
     }
+
     if (runtimeScript !== HOST_META.runtimeScript) {
       throw new Error(`Runtime script path mismatch. Expected ${HOST_META.runtimeScript}.`);
     }
@@ -147,15 +161,7 @@
     return window[HOST_META.runtimeGlobal];
   }
 
-  function scriptAlreadyPresent(src) {
-    const scripts = Array.from(doc.scripts || []);
-    return scripts.some((script) => {
-      const value = script.getAttribute("src");
-      return typeof value === "string" && value.includes(src);
-    });
-  }
-
-  function loadRuntimeScript() {
+  function ensureRuntimeScript() {
     return new Promise((resolve, reject) => {
       if (getRuntimeGlobal()) {
         writeReceipt("good", "Runtime global already present before script load.");
@@ -163,11 +169,19 @@
         return;
       }
 
-      if (scriptAlreadyPresent(HOST_META.runtimeScript)) {
-        writeReceipt("warn", "Runtime script tag already present but global not yet available. Waiting for handoff.");
-      } else {
-        writeReceipt("warn", `Injecting runtime script: ${HOST_META.runtimeScript}`);
+      const existing = doc.querySelector('script[data-products-runtime="true"]');
+      if (existing) {
+        writeReceipt("warn", "Runtime script tag already present. Waiting for load.");
+        existing.addEventListener("load", () => resolve(), { once: true });
+        existing.addEventListener(
+          "error",
+          () => reject(new Error(`Runtime script failed to load from ${HOST_META.runtimeScript}.`)),
+          { once: true }
+        );
+        return;
       }
+
+      writeReceipt("warn", `Injecting runtime script: ${HOST_META.runtimeScript}`);
 
       const script = doc.createElement("script");
       script.src = HOST_META.runtimeScript;
@@ -188,12 +202,16 @@
     });
   }
 
-  function resolveMountFunction(runtime) {
+  function resolveCreate(runtime) {
     if (!runtime || typeof runtime !== "object") {
       return null;
     }
 
-    const candidates = [
+    if (typeof runtime.create === "function") {
+      return runtime.create.bind(runtime);
+    }
+
+    const fallbackCandidates = [
       runtime.mount,
       runtime.start,
       runtime.bootstrap,
@@ -202,7 +220,7 @@
       runtime.attach,
     ];
 
-    for (const candidate of candidates) {
+    for (const candidate of fallbackCandidates) {
       if (typeof candidate === "function") {
         return candidate.bind(runtime);
       }
@@ -211,50 +229,44 @@
     return null;
   }
 
-  function mountRuntime() {
+  async function mountRuntime() {
     const runtime = getRuntimeGlobal();
-
     if (!runtime) {
       throw new Error(`Runtime global ${HOST_META.runtimeGlobal} not found after script load.`);
     }
 
     writeReceipt("good", `Runtime global ${HOST_META.runtimeGlobal} resolved.`);
 
-    const mount = resolveMountFunction(runtime);
-    if (!mount) {
+    const create = resolveCreate(runtime);
+    if (!create) {
       throw new Error("Runtime entry function not found on resolved global.");
     }
 
-    const payload = {
+    writeReceipt("warn", "Attempting guarded runtime handoff.");
+
+    const result = create({
       stage: ui.stage,
-      root: ui.stage,
+      mount: ui.stage,
       host: ui.host,
       contract: HOST_META.contract,
       meta: HOST_META,
+      reducedMotion:
+        !!window.matchMedia &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches,
       receipts: {
         write: writeReceipt,
         fail,
       },
-    };
-
-    writeReceipt("warn", "Attempting guarded runtime handoff.");
-
-    const result = mount(payload);
+    });
 
     if (result && typeof result.then === "function") {
-      return result.then(() => {
-        state.mounted = true;
-        hideFallback();
-        writeReceipt("good", "Runtime mounted successfully.");
-        renderReceipts();
-      });
+      await result;
     }
 
     state.mounted = true;
     hideFallback();
     writeReceipt("good", "Runtime mounted successfully.");
     renderReceipts();
-    return Promise.resolve();
   }
 
   function attachGlobalGuards() {
@@ -263,7 +275,7 @@
       const message =
         event && event.error instanceof Error
           ? `Global error captured: ${event.error.message}`
-          : `Global error captured: ${event.message || "unknown error"}`;
+          : `Global error captured: ${event?.message || "unknown error"}`;
       fail(message, event && event.error);
     });
 
@@ -293,7 +305,7 @@
 
     try {
       assertHostContract();
-      await loadRuntimeScript();
+      await ensureRuntimeScript();
       await mountRuntime();
     } catch (error) {
       fail("Products bootstrap failed.", error);

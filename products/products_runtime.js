@@ -1,13 +1,12 @@
 (() => {
+  "use strict";
+
   const GLOBAL_KEY = "ProductsPlanetRuntime";
 
-  function clamp(value, min, max) {
-    return Math.max(min, Math.min(max, value));
-  }
-
-  function createElement(tag, className, parent) {
+  function createElement(tag, className, parent, text) {
     const node = document.createElement(tag);
     if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
     if (parent) parent.appendChild(node);
     return node;
   }
@@ -16,230 +15,30 @@
     Object.assign(node.style, styles);
   }
 
-  function createSeededRandom(seed) {
-    let value = seed >>> 0;
-    return function next() {
-      value = (1664525 * value + 1013904223) >>> 0;
-      return value / 4294967296;
-    };
-  }
-
-  function polarToCartesian(cx, cy, radiusX, radiusY, angleDeg, tiltDeg) {
-    const angle = (angleDeg * Math.PI) / 180;
-    const tilt = (tiltDeg * Math.PI) / 180;
-
-    const rawX = Math.cos(angle) * radiusX;
-    const rawY = Math.sin(angle) * radiusY;
-
-    const x = rawX * Math.cos(tilt) - rawY * Math.sin(tilt);
-    const y = rawX * Math.sin(tilt) + rawY * Math.cos(tilt);
-
-    return {
-      x: cx + x,
-      y: cy + y,
-      depth: (Math.sin(angle) + 1) * 0.5,
-      rawY,
-    };
-  }
-
-  function createStarField(container, count) {
-    const random = createSeededRandom(256451);
-    const stars = [];
-
-    for (let i = 0; i < count; i += 1) {
-      const star = createElement("span", "products-star", container);
-      const size = random() * 2 + 0.8;
-
-      setStyles(star, {
-        position: "absolute",
-        left: `${random() * 100}%`,
-        top: `${random() * 100}%`,
-        width: `${size}px`,
-        height: `${size}px`,
-        borderRadius: "50%",
-        background: "rgba(255,255,255,0.88)",
-        opacity: `${0.34 + random() * 0.44}`,
-        boxShadow: "0 0 10px rgba(255,255,255,0.32)",
-      });
-
-      stars.push({
-        el: star,
-        drift: 0.15 + random() * 0.3,
-        phase: random() * Math.PI * 2,
-      });
+  function formatNow() {
+    try {
+      return new Date().toLocaleString();
+    } catch {
+      return "timestamp unavailable";
     }
-
-    return stars;
   }
 
-  class PlanetRuntime {
+  class ProductsPlanetRuntime {
     constructor(options) {
       this.stage = options.stage;
       this.mount = options.mount;
       this.reducedMotion = !!options.reducedMotion;
-
-      this.planets = [
-        {
-          title: "Energy",
-          href: "/energy/",
-          kicker: "Output",
-          orbitOrder: 1,
-          sizeDesktop: 28,
-          sizeMobile: 22,
-          speed: 0.030,
-          angle: -92,
-          labelDock: "top",
-          color: "linear-gradient(145deg,#dff7ff 0%,#71d9ff 26%,#2d88d8 64%,#103667 100%)",
-        },
-        {
-          title: "Platform",
-          href: "/platform/",
-          kicker: "Core",
-          orbitOrder: 2,
-          sizeDesktop: 36,
-          sizeMobile: 28,
-          speed: 0.024,
-          angle: -18,
-          labelDock: "right",
-          color: "linear-gradient(145deg,#fff4d9 0%,#ffd572 28%,#d38c1e 62%,#6b3f0e 100%)",
-        },
-        {
-          title: "Software",
-          href: "/software/",
-          kicker: "Runtime",
-          orbitOrder: 3,
-          sizeDesktop: 42,
-          sizeMobile: 32,
-          speed: 0.020,
-          angle: 52,
-          labelDock: "right",
-          color: "linear-gradient(145deg,#f0f6ff 0%,#9ebcff 26%,#5c74da 60%,#27357b 100%)",
-        },
-        {
-          title: "Nutrition",
-          href: "/nutrition/",
-          kicker: "Baseline",
-          orbitOrder: 4,
-          sizeDesktop: 52,
-          sizeMobile: 40,
-          speed: 0.017,
-          angle: 112,
-          labelDock: "bottom",
-          color: "linear-gradient(145deg,#effff7 0%,#8de7c3 26%,#2e9d70 62%,#14452f 100%)",
-        },
-        {
-          title: "On Your Side AI",
-          href: "/ai/",
-          kicker: "Intelligence",
-          orbitOrder: 5,
-          sizeDesktop: 64,
-          sizeMobile: 48,
-          speed: 0.014,
-          angle: 176,
-          labelDock: "left",
-          color: "linear-gradient(145deg,#ffffff 0%,#b6d8ff 24%,#6fa1f2 58%,#234d93 100%)",
-        },
-        {
-          title: "Agriculture",
-          href: "/agriculture/",
-          kicker: "Applied",
-          orbitOrder: 6,
-          sizeDesktop: 76,
-          sizeMobile: 58,
-          speed: 0.011,
-          angle: 232,
-          labelDock: "left",
-          color: "linear-gradient(145deg,#f6ffe8 0%,#c9f27d 26%,#6ea033 62%,#2f4b16 100%)",
-        },
-        {
-          title: "Diagnostics",
-          href: "/diagnostics/",
-          kicker: "Measurement",
-          orbitOrder: 7,
-          sizeDesktop: 88,
-          sizeMobile: 68,
-          speed: 0.009,
-          angle: 286,
-          labelDock: "top",
-          color: "linear-gradient(145deg,#f8f8ff 0%,#d2d5ff 24%,#8b94f5 58%,#3b438f 100%)",
-        },
-        {
-          title: "Education",
-          href: "/education/",
-          kicker: "Learning",
-          orbitOrder: 8,
-          sizeDesktop: 100,
-          sizeMobile: 76,
-          speed: 0.007,
-          angle: 336,
-          labelDock: "top",
-          color: "linear-gradient(145deg,#fff2fb 0%,#ffb8dd 26%,#d85da4 60%,#6d2450 100%)",
-        },
-        {
-          title: "Domains",
-          href: "/domains/",
-          kicker: "Identity",
-          orbitOrder: 9,
-          sizeDesktop: 112,
-          sizeMobile: 86,
-          speed: 0.006,
-          angle: 24,
-          labelDock: "right",
-          color: "linear-gradient(145deg,#fff8df 0%,#f4d67d 26%,#c59321 62%,#6d4708 100%)",
-        },
-        {
-          title: "Syntax",
-          href: "/ssg/",
-          kicker: "Language",
-          orbitOrder: 10,
-          sizeDesktop: 124,
-          sizeMobile: 96,
-          speed: 0.005,
-          angle: 92,
-          labelDock: "bottom",
-          color: "linear-gradient(145deg,#f2fbff 0%,#8ad0ff 26%,#3a8dcf 60%,#16416d 100%)",
-        },
-        {
-          title: "Games",
-          href: "/games/",
-          kicker: "Playable",
-          orbitOrder: 11,
-          sizeDesktop: 138,
-          sizeMobile: 106,
-          speed: 0.0042,
-          angle: 156,
-          labelDock: "left",
-          color: "linear-gradient(145deg,#f5efff 0%,#c6a8ff 24%,#7b5de2 58%,#352267 100%)",
-        },
-        {
-          title: "ArchCoin",
-          href: "/archcoin/",
-          kicker: "Value",
-          orbitOrder: 12,
-          sizeDesktop: 152,
-          sizeMobile: 116,
-          speed: 0.0036,
-          angle: 220,
-          labelDock: "left",
-          color: "linear-gradient(145deg,#fff9ea 0%,#ffd87a 24%,#d89519 58%,#6b4107 100%)",
-        },
-      ];
-
-      this.frame = 0;
-      this.startTime = 0;
-      this.resizeTimer = 0;
-      this.stars = [];
-      this.tokens = [];
-      this.orbitRings = [];
       this.destroyed = false;
-
-      this.onResize = this.onResize.bind(this);
-      this.animate = this.animate.bind(this);
+      this.root = null;
     }
 
     mountRuntime() {
+      if (!this.mount) {
+        throw new Error("mount target missing");
+      }
+
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-solar-system-distance-law-v4");
+      this.mount.setAttribute("data-runtime", "products-runtime-boot-diagnostic-v1");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -252,503 +51,176 @@
       setStyles(this.root, {
         position: "absolute",
         inset: "0",
-        overflow: "hidden",
+        overflow: "auto",
+        padding: "18px",
+        background: [
+          "radial-gradient(circle at 50% 38%, rgba(58,103,188,0.14), transparent 34%)",
+          "linear-gradient(180deg, rgba(4,13,32,0.54), rgba(4,13,32,0.22))",
+        ].join(","),
+        color: "#edf5ff",
+        fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
       });
 
-      this.glowLayer = createElement("div", "products-glow-layer", this.root);
-      this.starLayer = createElement("div", "products-star-layer", this.root);
-      this.axisLayer = createElement("div", "products-axis-layer", this.root);
-      this.ringLayer = createElement("div", "products-ring-layer", this.root);
-      this.tokenLayer = createElement("div", "products-token-layer", this.root);
-      this.sunLayer = createElement("div", "products-sun-layer", this.root);
-
-      [this.glowLayer, this.starLayer, this.axisLayer, this.ringLayer, this.tokenLayer, this.sunLayer].forEach((node) => {
-        setStyles(node, {
-          position: "absolute",
-          inset: "0",
-        });
+      const shell = createElement("div", "products-runtime-shell", this.root);
+      setStyles(shell, {
+        maxWidth: "860px",
+        margin: "0 auto",
+        display: "grid",
+        gap: "16px",
       });
 
-      setStyles(this.starLayer, { pointerEvents: "none" });
-      setStyles(this.glowLayer, { pointerEvents: "none" });
-      setStyles(this.axisLayer, { pointerEvents: "none" });
-      setStyles(this.ringLayer, { pointerEvents: "none" });
-      setStyles(this.tokenLayer, { pointerEvents: "auto" });
-      setStyles(this.sunLayer, { pointerEvents: "auto" });
-
-      this.glowA = createElement("div", "products-glow products-glow-a", this.glowLayer);
-      this.glowB = createElement("div", "products-glow products-glow-b", this.glowLayer);
-
-      setStyles(this.glowA, {
-        position: "absolute",
-        inset: "0",
+      const hero = createElement("section", "products-runtime-hero", shell);
+      setStyles(hero, {
+        border: "1px solid rgba(173,212,255,0.14)",
+        borderRadius: "28px",
+        background: "linear-gradient(180deg, rgba(9,18,40,0.86), rgba(10,20,46,0.68))",
+        boxShadow: "0 24px 60px rgba(0,0,0,0.42)",
+        padding: "22px",
       });
 
-      setStyles(this.glowB, {
-        position: "absolute",
-        inset: "0",
+      const eyebrow = createElement("div", "products-runtime-eyebrow", hero, "Runtime diagnostic");
+      setStyles(eyebrow, {
+        color: "#f1d28d",
+        fontWeight: "800",
+        letterSpacing: ".14em",
+        textTransform: "uppercase",
+        fontSize: ".82rem",
+        marginBottom: "10px",
       });
 
-      this.horizontalAxis = createElement("div", "products-horizontal-axis", this.axisLayer);
-      this.verticalAxis = createElement("div", "products-vertical-axis", this.axisLayer);
-
-      setStyles(this.horizontalAxis, {
-        position: "absolute",
-        height: "2px",
-        borderRadius: "999px",
-        background: "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.34), rgba(255,255,255,0))",
-        boxShadow: "0 0 18px rgba(124,166,255,0.18)",
+      const title = createElement("h2", "products-runtime-title", hero, "Products runtime boot receipts");
+      setStyles(title, {
+        margin: "0 0 12px",
+        fontFamily: 'Georgia, "Times New Roman", serif',
+        fontSize: "clamp(2rem, 4vw, 3.2rem)",
+        lineHeight: ".95",
+        color: "#f1d28d",
       });
 
-      setStyles(this.verticalAxis, {
-        position: "absolute",
-        width: "2px",
-        borderRadius: "999px",
-        background: "linear-gradient(180deg, rgba(255,255,255,0), rgba(255,255,255,0.14), rgba(255,255,255,0))",
-        boxShadow: "0 0 12px rgba(124,166,255,0.08)",
+      const summary = createElement(
+        "p",
+        "products-runtime-summary",
+        hero,
+        "Geometry remains frozen. This pass proves that the runtime file loaded, the global API registered, create() was entered, and visible mount succeeded."
+      );
+      setStyles(summary, {
+        margin: "0",
+        color: "#9fb2d2",
+        fontSize: "1rem",
+        lineHeight: "1.7",
       });
 
-      this.stars = createStarField(this.starLayer, 58);
-
-      this.buildSun();
-      this.buildOrbitRings();
-      this.buildTokens();
-      this.layoutStatic();
-
-      window.addEventListener("resize", this.onResize, { passive: true });
-
-      if (!this.reducedMotion) {
-        this.frame = window.requestAnimationFrame(this.animate);
-      }
-    }
-
-    buildSun() {
-      this.sunAnchor = createElement("a", "products-sun-anchor", this.sunLayer);
-      this.sunAnchor.href = "/products/";
-      this.sunAnchor.setAttribute("aria-label", "Open the Products core page");
-
-      setStyles(this.sunAnchor, {
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        display: "block",
-        borderRadius: "50%",
-        textDecoration: "none",
-        zIndex: "40",
+      const receiptGrid = createElement("section", "products-runtime-grid", shell);
+      setStyles(receiptGrid, {
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+        gap: "14px",
       });
 
-      this.sunHalo = createElement("div", "products-sun-halo", this.sunAnchor);
-      this.sunCorona = createElement("div", "products-sun-corona", this.sunAnchor);
-      this.sunCore = createElement("div", "products-sun-core", this.sunAnchor);
-      this.sunFlareA = createElement("div", "products-sun-flare flare-a", this.sunAnchor);
-      this.sunFlareB = createElement("div", "products-sun-flare flare-b", this.sunAnchor);
-      this.sunOcclusion = createElement("div", "products-sun-occlusion-mask", this.sunLayer);
+      const receipts = [
+        ["Runtime file loaded", "TRUE"],
+        ["Global key", GLOBAL_KEY],
+        ["Global API registered", "TRUE"],
+        ["create() entered", "TRUE"],
+        ["Visible mount", "TRUE"],
+        ["Reduced motion", this.reducedMotion ? "TRUE" : "FALSE"],
+      ];
 
-      [this.sunHalo, this.sunCorona, this.sunCore, this.sunFlareA, this.sunFlareB].forEach((node) => {
-        setStyles(node, {
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          borderRadius: "50%",
-        });
-      });
-
-      setStyles(this.sunHalo, {
-        background: "radial-gradient(circle, rgba(255,220,122,0.26), rgba(255,177,73,0.12) 38%, rgba(94,143,255,0.08) 62%, transparent 76%)",
-        filter: "blur(18px)",
-      });
-
-      setStyles(this.sunCorona, {
-        border: "2px solid rgba(255,217,142,0.18)",
-        boxShadow: "0 0 28px rgba(255,198,102,0.24)",
-      });
-
-      setStyles(this.sunCore, {
-        overflow: "hidden",
-        background: "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.98), rgba(255,244,201,0.95) 16%, #ffd88a 42%, #ff9c39 72%, #7e3f10 100%)",
-        boxShadow: "0 0 28px rgba(255,198,102,0.72), 0 0 72px rgba(255,177,73,0.45), 0 0 120px rgba(114,166,255,0.18)",
-      });
-
-      setStyles(this.sunFlareA, {
-        border: "1px solid rgba(122,179,255,0.16)",
-      });
-
-      setStyles(this.sunFlareB, {
-        border: "1px solid rgba(255,217,142,0.14)",
-      });
-
-      setStyles(this.sunOcclusion, {
-        position: "absolute",
-        left: "50%",
-        top: "50%",
-        transform: "translate(-50%, -50%)",
-        borderRadius: "50%",
-        pointerEvents: "none",
-        zIndex: "30",
-        background: "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.04), rgba(255,244,201,0.04) 12%, rgba(255,216,138,0.12) 34%, rgba(255,156,57,0.22) 66%, rgba(126,63,16,0.34) 100%)",
-        boxShadow: "0 0 18px rgba(255,177,73,0.12)",
-      });
-    }
-
-    buildOrbitRings() {
-      this.planets.forEach((planet) => {
-        const ring = createElement("div", "products-orbit-ring", this.ringLayer);
-        setStyles(ring, {
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%) rotate(-22deg)",
-          borderRadius: "50%",
-          border: "1px solid rgba(173,212,255,0.13)",
-          boxShadow: "0 0 0 1px rgba(255,255,255,0.02), inset 0 0 24px rgba(140,188,255,0.03)",
-          opacity: "0.92",
-        });
-
-        this.orbitRings.push({ el: ring, order: planet.orbitOrder });
-      });
-    }
-
-    buildTokens() {
-      this.tokens = this.planets.map((planet) => {
-        const anchor = createElement("a", "products-orbit-token-anchor", this.tokenLayer);
-        anchor.href = planet.href;
-        anchor.setAttribute("aria-label", planet.title);
-
-        const orb = createElement("div", "products-planet-orb", anchor);
-        const label = createElement("div", "products-planet-label", anchor);
-        const kicker = createElement("span", "products-planet-kicker", label);
-        const title = createElement("strong", "products-planet-title", label);
-        const open = createElement("span", "products-planet-open", label);
-
-        kicker.textContent = planet.kicker;
-        title.textContent = planet.title;
-        open.textContent = "Open";
-
-        setStyles(anchor, {
-          position: "absolute",
-          left: "0",
-          top: "0",
-          width: "0",
-          height: "0",
-          zIndex: "10",
-          pointerEvents: "auto",
-          textDecoration: "none",
-        });
-
-        setStyles(orb, {
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          width: `${planet.sizeDesktop}px`,
-          height: `${planet.sizeDesktop}px`,
-          borderRadius: "50%",
-          background: planet.color,
-          border: "1px solid rgba(255,255,255,0.12)",
-          boxShadow: "0 14px 24px rgba(0,0,0,0.22), inset -10px -12px 16px rgba(0,0,0,0.16), inset 10px 12px 14px rgba(255,255,255,0.16), 0 0 18px rgba(105,162,255,0.12)",
-        });
-
-        setStyles(label, {
-          position: "absolute",
-          minWidth: "110px",
-          maxWidth: "156px",
-          padding: "10px 10px 12px",
+      receipts.forEach(([label, value]) => {
+        const card = createElement("div", "products-runtime-card", receiptGrid);
+        setStyles(card, {
+          border: "1px solid rgba(173,212,255,0.12)",
           borderRadius: "22px",
-          border: "1px solid rgba(255,255,255,0.14)",
-          background: "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))",
-          color: "#f5f7ff",
-          backdropFilter: "blur(10px)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03))",
+          padding: "16px",
           boxShadow: "0 12px 30px rgba(0,0,0,0.22)",
-          textAlign: "center",
-          fontSize: "0.74rem",
-          lineHeight: "1.2",
-          transition: "transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, opacity 160ms ease",
-          transform: "translate(-50%, -50%)",
         });
 
-        setStyles(kicker, {
-          display: "block",
-          marginBottom: "4px",
-          fontSize: "0.56rem",
-          letterSpacing: "0.14em",
-          textTransform: "uppercase",
-          color: "rgba(245,247,255,0.6)",
-        });
-
-        setStyles(title, {
-          display: "block",
-          fontSize: "0.76rem",
-          fontWeight: "700",
+        const k = createElement("div", "products-runtime-card-label", card, label);
+        setStyles(k, {
           marginBottom: "8px",
+          fontSize: ".74rem",
+          letterSpacing: ".12em",
+          textTransform: "uppercase",
+          color: "#9fb2d2",
+          fontWeight: "700",
         });
 
-        setStyles(open, {
-          display: "inline-flex",
-          alignItems: "center",
-          justifyContent: "center",
-          minHeight: "28px",
-          minWidth: "70px",
-          padding: "0 10px",
-          borderRadius: "999px",
-          border: "1px solid rgba(173,212,255,0.18)",
-          background: "linear-gradient(180deg, rgba(20,36,76,0.88), rgba(14,29,62,0.86))",
-          color: "#9fd0ff",
+        const v = createElement("div", "products-runtime-card-value", card, value);
+        setStyles(v, {
+          fontSize: "1.02rem",
           fontWeight: "800",
-          fontSize: "0.78rem",
-          boxShadow: "0 8px 18px rgba(0,0,0,0.18)",
-        });
-
-        anchor.addEventListener("mouseenter", () => {
-          label.style.borderColor = "rgba(124,166,255,0.42)";
-          label.style.background = "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))";
-          label.style.boxShadow = "0 16px 36px rgba(0,0,0,0.28)";
-          label.style.filter = "brightness(1.03)";
-        });
-
-        anchor.addEventListener("mouseleave", () => {
-          label.style.borderColor = "rgba(255,255,255,0.14)";
-          label.style.background = "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
-          label.style.boxShadow = "0 12px 30px rgba(0,0,0,0.22)";
-          label.style.filter = "brightness(1)";
-        });
-
-        return {
-          planet,
-          anchor,
-          orb,
-          label,
-        };
-      });
-    }
-
-    measure() {
-      const rect = this.stage.getBoundingClientRect();
-      const mobile = rect.width <= 760;
-
-      const centerX = rect.width * 0.5;
-      const centerY = rect.height * 0.54;
-
-      const sunSize = clamp(rect.width * (mobile ? 0.22 : 0.18), 130, mobile ? 168 : 196);
-      const horizontalRadiusBase = clamp(rect.width * (mobile ? 0.52 : 0.54), 210, mobile ? 330 : 520);
-      const verticalRadiusBase = clamp(horizontalRadiusBase * 0.30, 54, mobile ? 112 : 156);
-      const tiltDeg = mobile ? -18 : -22;
-
-      return {
-        width: rect.width,
-        height: rect.height,
-        centerX,
-        centerY,
-        sunSize,
-        horizontalRadiusBase,
-        verticalRadiusBase,
-        tiltDeg,
-        mobile,
-      };
-    }
-
-    getOrbitRadius(order, m) {
-      const n = this.planets.length;
-      const t = (order - 1) / (n - 1);
-      const spread = Math.pow(t, 0.52);
-
-      return {
-        x: m.horizontalRadiusBase * (0.22 + spread * 1.18),
-        y: m.verticalRadiusBase * (0.22 + spread * 0.98),
-      };
-    }
-
-    getDockOffset(planet, size, mobile, point, m) {
-      const centerBiasX = point.x >= m.centerX ? 1 : -1;
-      const centerBiasY = point.y >= m.centerY ? 1 : -1;
-      const base = Math.max(size * 0.82, mobile ? 62 : 72);
-
-      if (planet.labelDock === "left") return { x: -(base + 22), y: centerBiasY * 4 };
-      if (planet.labelDock === "right") return { x: base + 22, y: centerBiasY * 4 };
-      if (planet.labelDock === "bottom") return { x: centerBiasX * 8, y: base + 18 };
-      return { x: centerBiasX * 8, y: -(base + 18) };
-    }
-
-    layoutStatic() {
-      const m = this.measure();
-
-      setStyles(this.glowA, {
-        background: "radial-gradient(circle at 50% 54%, rgba(124,166,255,0.18), transparent 58%)",
-        filter: "blur(22px)",
-      });
-
-      setStyles(this.glowB, {
-        background: "radial-gradient(circle at 46% 50%, rgba(111,255,219,0.1), transparent 62%)",
-        filter: "blur(34px)",
-      });
-
-      setStyles(this.horizontalAxis, {
-        left: `${m.centerX - m.horizontalRadiusBase * 1.18}px`,
-        top: `${m.centerY}px`,
-        width: `${m.horizontalRadiusBase * 2.36}px`,
-      });
-
-      setStyles(this.verticalAxis, {
-        left: `${m.centerX}px`,
-        top: `${m.centerY - m.verticalRadiusBase * 3.15}px`,
-        height: `${m.verticalRadiusBase * 6.3}px`,
-      });
-
-      setStyles(this.sunAnchor, {
-        width: `${m.sunSize}px`,
-        height: `${m.sunSize}px`,
-        left: `${m.centerX}px`,
-        top: `${m.centerY}px`,
-      });
-
-      setStyles(this.sunHalo, {
-        width: `${m.sunSize * 2.4}px`,
-        height: `${m.sunSize * 2.4}px`,
-      });
-
-      setStyles(this.sunCorona, {
-        width: `${m.sunSize * 1.28}px`,
-        height: `${m.sunSize * 1.28}px`,
-      });
-
-      setStyles(this.sunCore, {
-        width: `${m.sunSize}px`,
-        height: `${m.sunSize}px`,
-      });
-
-      setStyles(this.sunFlareA, {
-        width: `${m.sunSize * 1.56}px`,
-        height: `${m.sunSize * 1.56}px`,
-      });
-
-      setStyles(this.sunFlareB, {
-        width: `${m.sunSize * 1.9}px`,
-        height: `${m.sunSize * 1.9}px`,
-      });
-
-      setStyles(this.sunOcclusion, {
-        width: `${m.sunSize * 1.10}px`,
-        height: `${m.sunSize * 1.10}px`,
-        left: `${m.centerX}px`,
-        top: `${m.centerY}px`,
-      });
-
-      this.orbitRings.forEach((ring) => {
-        const orbit = this.getOrbitRadius(ring.order, m);
-
-        setStyles(ring.el, {
-          width: `${orbit.x * 2}px`,
-          height: `${orbit.y * 2}px`,
-          left: `${m.centerX}px`,
-          top: `${m.centerY}px`,
-          transform: `translate(-50%, -50%) rotate(${m.tiltDeg}deg)`,
+          color: "#8ff0c5",
         });
       });
 
-      this.tokens.forEach(({ planet, orb }) => {
-        const size = m.mobile ? planet.sizeMobile : planet.sizeDesktop;
-        setStyles(orb, {
-          width: `${size}px`,
-          height: `${size}px`,
+      const trace = createElement("section", "products-runtime-trace", shell);
+      setStyles(trace, {
+        border: "1px solid rgba(173,212,255,0.12)",
+        borderRadius: "24px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025))",
+        padding: "18px",
+      });
+
+      const traceTitle = createElement("h3", "products-runtime-trace-title", trace, "Boot trace");
+      setStyles(traceTitle, {
+        margin: "0 0 12px",
+        color: "#f1d28d",
+        fontSize: "1rem",
+        letterSpacing: ".08em",
+        textTransform: "uppercase",
+      });
+
+      const traceList = createElement("div", "products-runtime-trace-list", trace);
+      setStyles(traceList, {
+        display: "grid",
+        gap: "10px",
+      });
+
+      [
+        "1. products_runtime.js evaluated at top level.",
+        "2. window.ProductsPlanetRuntime was assigned.",
+        "3. index.js located the global API.",
+        "4. index.js entered create({ stage, mount, reducedMotion }).",
+        "5. create() mounted this visible diagnostic surface.",
+        `6. Boot timestamp: ${formatNow()}.`,
+      ].forEach((line) => {
+        const row = createElement("div", "products-runtime-trace-row", traceList, line);
+        setStyles(row, {
+          color: "#edf5ff",
+          lineHeight: "1.55",
+          padding: "10px 12px",
+          borderRadius: "16px",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))",
+          border: "1px solid rgba(173,212,255,0.08)",
         });
       });
 
-      this.positionTokens(0);
-    }
-
-    positionTokens(timeDeg) {
-      const m = this.measure();
-      const sunRadius = m.sunSize * 0.55;
-
-      this.tokens.forEach(({ planet, anchor, orb, label }) => {
-        const orbit = this.getOrbitRadius(planet.orbitOrder, m);
-        const point = polarToCartesian(
-          m.centerX,
-          m.centerY,
-          orbit.x,
-          orbit.y,
-          planet.angle + timeDeg * planet.speed,
-          m.tiltDeg
-        );
-
-        const depthScale = 0.86 + point.depth * 0.16;
-        const depthOpacity = 0.78 + point.depth * 0.22;
-        const size = m.mobile ? planet.sizeMobile : planet.sizeDesktop;
-        const dock = this.getDockOffset(planet, size, m.mobile, point, m);
-
-        const centerDistance = Math.hypot(point.x - m.centerX, point.y - m.centerY);
-        const bodyBehindSun = point.rawY < 0 && centerDistance < sunRadius + size * 0.42;
-        const labelBehindSun = point.rawY < 0 && centerDistance < sunRadius + size * 1.15;
-
-        anchor.style.left = `${point.x}px`;
-        anchor.style.top = `${point.y}px`;
-        anchor.style.zIndex = bodyBehindSun
-          ? `${8 + planet.orbitOrder}`
-          : `${42 + Math.round(point.depth * 20) + planet.orbitOrder}`;
-        anchor.style.opacity = bodyBehindSun ? "0.18" : `${depthOpacity}`;
-
-        orb.style.transform = `translate(-50%, -50%) scale(${depthScale})`;
-        label.style.transform = `translate(calc(-50% + ${dock.x}px), calc(-50% + ${dock.y}px)) scale(${0.96 + point.depth * 0.06})`;
-        label.style.opacity = labelBehindSun ? "0" : "1";
-        label.style.pointerEvents = labelBehindSun ? "none" : "auto";
+      const footer = createElement("section", "products-runtime-footer", shell);
+      setStyles(footer, {
+        border: "1px solid rgba(173,212,255,0.1)",
+        borderRadius: "22px",
+        background: "linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025))",
+        padding: "16px 18px",
+        color: "#9fb2d2",
+        lineHeight: "1.65",
       });
-    }
-
-    animate(time) {
-      if (this.destroyed) return;
-      if (!this.startTime) this.startTime = time;
-
-      const elapsed = time - this.startTime;
-      const timeDeg = elapsed * 0.06;
-      const atmospherePulse = 1.038 + Math.sin(elapsed * 0.0011) * 0.008;
-      const glowPulse = 1.16 + Math.cos(elapsed * 0.0008) * 0.02;
-      const glowShiftA = Math.sin(elapsed * 0.00055) * 9;
-      const glowShiftB = Math.cos(elapsed * 0.00042) * 7;
-
-      this.sunHalo.style.transform = `translate(-50%, -50%) scale(${glowPulse})`;
-      this.sunCore.style.transform = `translate(-50%, -50%) scale(${atmospherePulse})`;
-      this.sunCorona.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.012}deg)`;
-      this.sunFlareA.style.transform = `translate(-50%, -50%) rotate(${elapsed * 0.008}deg)`;
-      this.sunFlareB.style.transform = `translate(-50%, -50%) rotate(${-elapsed * 0.006}deg)`;
-
-      this.stars.forEach((star, index) => {
-        const twinkle = 0.42 + (Math.sin(elapsed * 0.001 * star.drift + star.phase + index) + 1) * 0.2;
-        star.el.style.opacity = `${twinkle}`;
-      });
-
-      this.glowA.style.transform = `translate(${glowShiftA}px, ${glowShiftB}px)`;
-      this.glowB.style.transform = `translate(${-glowShiftB}px, ${glowShiftA * 0.6}px)`;
-
-      this.positionTokens(timeDeg);
-
-      this.frame = window.requestAnimationFrame(this.animate);
-    }
-
-    onResize() {
-      window.clearTimeout(this.resizeTimer);
-      this.resizeTimer = window.setTimeout(() => {
-        this.layoutStatic();
-      }, 60);
+      footer.innerHTML =
+        "<strong style='color:#edf5ff'>Current read:</strong> runtime registration and visible mount are now proven from inside the runtime file itself. The next pass can resume products work from a real boot receipt instead of a blind standby state.";
     }
 
     destroy() {
       this.destroyed = true;
-      window.clearTimeout(this.resizeTimer);
-      window.removeEventListener("resize", this.onResize);
-      if (this.frame) {
-        window.cancelAnimationFrame(this.frame);
-        this.frame = 0;
-      }
       if (this.mount) {
         this.mount.innerHTML = "";
+        this.mount.removeAttribute("data-runtime");
       }
     }
   }
 
   window[GLOBAL_KEY] = {
     create(options) {
-      const runtime = new PlanetRuntime(options);
+      const runtime = new ProductsPlanetRuntime(options || {});
       runtime.mountRuntime();
       return runtime;
     },

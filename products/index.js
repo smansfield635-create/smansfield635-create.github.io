@@ -3,9 +3,17 @@
 
   const SHOWROOM_META = Object.freeze({
     name: "PRODUCTS_SHOWROOM",
-    version: "V5",
+    version: "V6",
     contract: "PRODUCTS_SHOWROOM_V1",
     page: "products-showroom",
+  });
+
+  const ROUTES = Object.freeze({
+    archcoin: "/archcoin/",
+    aai: "/aai/",
+    "baseline-nutrition-systems": "/nutrition/",
+    "five-flags-whats-my-scene": "/five-flags/",
+    "esl-traversal-learning": "/education/",
   });
 
   const PATHS = Object.freeze([
@@ -29,7 +37,7 @@
       key: "baseline-nutrition-systems",
       title: "Baseline Nutrition Systems",
       summary:
-        "This path is now visible as part of the filter layer and is ready for its own nested expansion surface.",
+        "This path is now visible as part of the filter layer and routes into the nutrition surface.",
       accent: "#9fc6ff",
       scrollTarget: '[data-path-key="baseline-nutrition-systems"]',
     },
@@ -37,7 +45,7 @@
       key: "five-flags-whats-my-scene",
       title: "Five Flags / What’s My Scene",
       summary:
-        "This path is now visible as part of the filter layer and is ready for its own nested expansion surface.",
+        "This path is now visible as part of the filter layer and routes into the five-flags surface.",
       accent: "#ffca80",
       scrollTarget: '[data-path-key="five-flags-whats-my-scene"]',
     },
@@ -45,7 +53,7 @@
       key: "esl-traversal-learning",
       title: "ESL Traversal Learning",
       summary:
-        "This path is now visible as part of the filter layer and is ready for its own nested expansion surface.",
+        "This path is now visible as part of the filter layer and routes into the education surface.",
       accent: "#d7e4ff",
       scrollTarget: '[data-path-key="esl-traversal-learning"]',
     },
@@ -144,30 +152,28 @@
     refreshClosing();
   }
 
+  function goToRoute(key) {
+    const href = ROUTES[key];
+    if (!href) return;
+    window.location.href = href;
+  }
+
   function wireButtons() {
     qsa("[data-route-key]").forEach((button) => {
       button.addEventListener("click", () => {
         const key = button.getAttribute("data-route-key");
-        const path = PATHS.find((item) => item.key === key);
-        if (!path) return;
-
+        if (!ROUTES[key]) return;
         setActive(key);
-
-        const target = qs(path.scrollTarget);
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+        goToRoute(key);
       });
     });
 
     qsa("[data-cta-key]").forEach((button) => {
       button.addEventListener("click", () => {
         const key = button.getAttribute("data-cta-key");
-        const target = qs(`[data-product-key="${key}"]`);
-        if (!target) return;
-
+        if (!ROUTES[key]) return;
         setActive(key);
-        target.scrollIntoView({ behavior: "smooth", block: "center" });
+        goToRoute(key);
       });
     });
   }

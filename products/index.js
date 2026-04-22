@@ -6,6 +6,51 @@
     setStatus() {},
   };
 
+  const PRODUCTS = [
+    {
+      title: "AAI",
+      kicker: "Artificial agent intelligence",
+      body: "Primary intelligence line for guided support, bounded presence, and agent-facing interface work.",
+      href: "/products/aai/",
+      tags: ["Agent layer", "Support logic", "Interface"]
+    },
+    {
+      title: "Nine Summits",
+      kicker: "Book and launch path",
+      body: "Narrative, philosophy, and publication pathway anchored to the Nine Summits line of work.",
+      href: "/products/nine-summits/",
+      tags: ["Book", "Launch path", "Long-form"]
+    },
+    {
+      title: "Five Flags",
+      kicker: "Game and teaching route",
+      body: "Structured interactive line for rules, learning, and public-facing social play architecture.",
+      href: "/products/five-flags/",
+      tags: ["Game", "Teaching", "Traversal"]
+    },
+    {
+      title: "Nutrition",
+      kicker: "Health-facing product line",
+      body: "Baseline wellness, intake, and applied health-facing product direction.",
+      href: "/products/nutrition/",
+      tags: ["Health", "Baseline", "Applied"]
+    },
+    {
+      title: "ArchCoin",
+      kicker: "Protected value line",
+      body: "Value-facing product track with protected infrastructure and receipt-led deployment discipline.",
+      href: "/archcoin/",
+      tags: ["Value", "Protected", "Infrastructure"]
+    },
+    {
+      title: "Root",
+      kicker: "Primary entry return",
+      body: "Return path into the larger platform stack, bridge surface, and root navigation layer.",
+      href: "/",
+      tags: ["Root", "Gateway", "Return"]
+    }
+  ];
+
   function readErrorMessage(error) {
     if (!error) return "unknown error";
     if (typeof error === "string") return error;
@@ -21,6 +66,7 @@
     return {
       stageZone: document.getElementById("products-stage-zone"),
       stage: document.getElementById("planetary-stage"),
+      liveStage: document.getElementById("products-live-stage")
     };
   }
 
@@ -38,6 +84,8 @@
       stage.style.overflow = "auto";
       stage.style.maxWidth = "100%";
       stage.style.maxHeight = "100%";
+      stage.style.opacity = "0";
+      stage.style.pointerEvents = "none";
     }
   }
 
@@ -49,16 +97,93 @@
     stage.style.overflow = "auto";
     stage.style.maxWidth = "100%";
     stage.style.maxHeight = "100%";
+    stage.style.opacity = "0";
+    stage.style.pointerEvents = "none";
   }
 
-  function applyLiveExperiencePriority(stage) {
-    stage.setAttribute("data-surface-priority", "live-experience");
+  function createElement(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (typeof text === "string") node.textContent = text;
+    return node;
+  }
+
+  function renderProductsExperience(liveStage) {
+    if (!liveStage) return;
+
+    liveStage.innerHTML = "";
+
+    const shell = createElement("div", "products-stage");
+    const hero = createElement("section", "products-stage-hero");
+    const eyebrow = createElement("div", "eyebrow", "Primary product lines");
+    const title = createElement("h4", "", "Choose a live product lane");
+    const body = createElement(
+      "p",
+      "",
+      "The stage now presents the actual product lines first. Diagnostic proof remains available only behind the support toggle, while this surface carries the public-facing products read."
+    );
+
+    hero.appendChild(eyebrow);
+    hero.appendChild(title);
+    hero.appendChild(body);
+
+    const grid = createElement("section", "products-core-grid");
+
+    PRODUCTS.forEach(function (item) {
+      const card = createElement("article", "products-core-card");
+      const heading = createElement("h5", "", item.title);
+      const kicker = createElement("p", "", item.kicker + ". " + item.body);
+      const meta = createElement("div", "products-core-meta");
+
+      item.tags.forEach(function (tag) {
+        meta.appendChild(createElement("span", "", tag));
+      });
+
+      const link = createElement("a", "", "Open lane");
+      link.href = item.href;
+      link.setAttribute("aria-label", "Open " + item.title);
+
+      card.appendChild(heading);
+      card.appendChild(kicker);
+      card.appendChild(meta);
+      card.appendChild(link);
+      grid.appendChild(card);
+    });
+
+    const summary = createElement("section", "products-stage-summary");
+    const summaryTitle = createElement("h5", "", "Stage guarantees");
+    const summaryBody = createElement(
+      "p",
+      "",
+      "The bootchain remains passed, containment remains passed, and the runtime file stays frozen. This pass only promotes the real products experience into primary view."
+    );
+    const summaryList = document.createElement("ul");
+
+    [
+      "Public-facing product lanes are primary.",
+      "Runtime receipts remain available through the support toggle.",
+      "The mounted runtime stays alive beneath the surface without dominating it.",
+      "Any further change should now target individual product expression rather than system proof."
+    ].forEach(function (line) {
+      const li = document.createElement("li");
+      li.textContent = line;
+      summaryList.appendChild(li);
+    });
+
+    summary.appendChild(summaryTitle);
+    summary.appendChild(summaryBody);
+    summary.appendChild(summaryList);
+
+    shell.appendChild(hero);
+    shell.appendChild(grid);
+    shell.appendChild(summary);
+    liveStage.appendChild(shell);
   }
 
   function runBootstrap(source) {
-    const { stageZone, stage } = getNodes();
+    const { stageZone, stage, liveStage } = getNodes();
 
-    if (!stageZone || !stage) {
+    if (!stageZone || !stage || !liveStage) {
       diag.setValue("diag-create-entry", "bootstrap called", "warn");
       diag.setValue("diag-mount-result", "blocked", "fail");
       diag.setValue("diag-error-text", "required stage nodes missing", "fail");
@@ -68,6 +193,7 @@
 
     destroyExistingRuntime(stage);
     enforceStageContainment(stageZone, stage);
+    renderProductsExperience(liveStage);
 
     diag.setValue("diag-create-entry", "bootstrap called (" + source + ")", "warn");
     diag.setValue("diag-mount-result", "boot in progress", "warn");
@@ -102,7 +228,7 @@
 
       window.__productsPlanetRuntimeInstance = instance;
       enforceStageContainment(stageZone, stage);
-      applyLiveExperiencePriority(stage);
+      renderProductsExperience(liveStage);
 
       diag.setValue("diag-mount-result", "succeeded", "ok");
       diag.setStatus("mount-succeeded");

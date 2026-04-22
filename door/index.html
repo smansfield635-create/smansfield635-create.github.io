@@ -1,676 +1,572 @@
 <!doctype html>
-<!-- TNT — /door/index.html
-     DOOR · AUTHORITY REWRITE + DISTANT LIVE WORLD BACKGROUND
-     PURPOSE:
-       - Door is selection, not simulation
-       - Globe appears behind the print as distant proof
-       - No canvas ownership on door
-       - No renderer ownership on door
-       - Reuses existing round index as a background presentation layer
-       - Clean state carry: gd_lang / gd_style / gd_time / gd_depth only
-       - lane=platform|engineering remains URL-only
-       - EN / 中文 / ES
-       - Mode choice routes into INDEX with mode query
-       - Uses /assets/ui.css + /assets/branch.css only
--->
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Nine Summits — Door</title>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+  <title>Door · Nine Summits</title>
+  <meta
+    name="description"
+    content="A multi-layer threshold for Nine Summits: world is flat, world is round, world is a globe."
+  >
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-
-<style>
-a{color:inherit;text-decoration:none}
-html,body{margin:0;min-height:100%;background:#06090d}
-body{
-  margin:0;
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-  color:#fff;
-  overflow-x:hidden;
-}
-body::before,body::after{pointer-events:none!important}
-
-:root{
-  --ink:rgba(255,255,255,.95);
-  --mut:rgba(255,255,255,.82);
-  --soft:rgba(255,255,255,.70);
-  --stroke:rgba(255,255,255,.12);
-  --shadowA:0 34px 120px rgba(0,0,0,.58);
-  --shadowB:0 20px 70px rgba(0,0,0,.62);
-  --shadowC:0 18px 60px rgba(0,0,0,.55);
-  --glow:rgba(212,175,55,.26);
-  --glowStrong:rgba(212,175,55,.34);
-  --dockH:116px;
-}
-
-/* DISTANT WORLD BACKGROUND */
-.bg-stage{
-  position:fixed;
-  inset:0;
-  z-index:0;
-  pointer-events:none;
-  overflow:hidden;
-  background:
-    radial-gradient(circle at 50% 42%, rgba(38,72,122,.18), transparent 28%),
-    radial-gradient(circle at 50% 52%, rgba(15,24,40,.34), transparent 58%),
-    linear-gradient(180deg, rgba(5,8,12,.96), rgba(5,8,12,.90));
-}
-.bg-stage::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 50% 48%, rgba(255,255,255,.04), transparent 24%),
-    radial-gradient(circle at 50% 45%, rgba(80,140,255,.10), transparent 18%),
-    linear-gradient(180deg, rgba(3,5,8,.92) 0%, rgba(3,5,8,.32) 28%, rgba(3,5,8,.18) 62%, rgba(3,5,8,.82) 100%);
-  z-index:2;
-}
-.bg-stage::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 50% 54%, rgba(0,0,0,0) 0 24%, rgba(0,0,0,.10) 42%, rgba(0,0,0,.44) 76%, rgba(0,0,0,.68) 100%);
-  z-index:3;
-}
-.bg-world{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:100vw;
-  height:100vh;
-  transform:translate(-50%,-50%);
-  z-index:1;
-  overflow:hidden;
-}
-.bg-world iframe{
-  position:absolute;
-  left:50%;
-  top:50%;
-  width:188vw;
-  height:188vh;
-  border:0;
-  pointer-events:none;
-  opacity:.78;
-  transform:translate(-50%,-44%) scale(1.28);
-  filter:blur(1.6px) saturate(.84) brightness(.70) contrast(.90);
-  transform-origin:center center;
-}
-.bg-veil-top,
-.bg-veil-bottom,
-.bg-veil-left,
-.bg-veil-right{
-  position:absolute;
-  pointer-events:none;
-  z-index:4;
-}
-.bg-veil-top{
-  top:0;left:0;right:0;height:24vh;
-  background:linear-gradient(180deg, rgba(3,5,8,.92), rgba(3,5,8,.54), rgba(3,5,8,0));
-}
-.bg-veil-bottom{
-  left:0;right:0;bottom:0;height:22vh;
-  background:linear-gradient(0deg, rgba(3,5,8,.95), rgba(3,5,8,.58), rgba(3,5,8,0));
-}
-.bg-veil-left{
-  top:0;bottom:0;left:0;width:14vw;
-  background:linear-gradient(90deg, rgba(3,5,8,.72), rgba(3,5,8,0));
-}
-.bg-veil-right{
-  top:0;bottom:0;right:0;width:14vw;
-  background:linear-gradient(-90deg, rgba(3,5,8,.72), rgba(3,5,8,0));
-}
-
-/* FOREGROUND ROOT */
-#root{
-  position:relative;
-  z-index:10;
-  min-height:100vh;
-}
-
-/* TOP */
-.top{
-  position:fixed;
-  top:16px;
-  left:0;
-  right:0;
-  padding:0 16px;
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
-}
-.top .left,.top .right{
-  display:flex;
-  gap:10px;
-  white-space:nowrap;
-  pointer-events:auto;
-  flex-wrap:wrap;
-  align-items:center;
-}
-
-/* BUTTONS */
-.btn{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-height:44px;
-  padding:10px 12px;
-  border-radius:16px;
-  border:1px solid rgba(255,255,255,.14);
-  background:
-    radial-gradient(circle at 20% 18%, rgba(255,255,255,.18), transparent 42%),
-    radial-gradient(circle at 78% 22%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
-    radial-gradient(circle at 28% 80%, rgba(120,0,22,.16), transparent 72%),
-    linear-gradient(160deg, rgba(17,22,28,.88), rgba(11,15,20,.94));
-  color:var(--ink);
-  font-weight:950;
-  font-size:14px;
-  letter-spacing:.2px;
-  -webkit-tap-highlight-color:transparent;
-  position:relative;
-  overflow:hidden;
-  touch-action:manipulation;
-  box-shadow:
-    var(--shadowC),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -26px 46px rgba(0,0,0,.55);
-  transform:none!important;
-  transition:border-color .16s ease, box-shadow .16s ease, filter .16s ease;
-  cursor:pointer;
-}
-.btn::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  background:
-    radial-gradient(130% 130% at 50% 50%, rgba(212,175,55,0) 58%, rgba(212,175,55,.18) 82%, rgba(212,175,55,0) 100%),
-    repeating-linear-gradient(45deg, rgba(201,162,74,.07) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-45deg, rgba(201,162,74,.05) 0 1px, transparent 1px 18px);
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 70%, #000 80% 100%),
-    linear-gradient(#000,#000);
-  opacity:.32;
-}
-.btn::after{
-  content:"";
-  position:absolute;
-  left:12%;
-  right:12%;
-  top:10%;
-  height:30%;
-  border-radius:999px;
-  background:linear-gradient(to bottom, rgba(255,255,255,.18), rgba(255,255,255,0));
-  transform:rotate(-12deg);
-  pointer-events:none;
-  opacity:.90;
-}
-.btn:hover{
-  border-color:rgba(212,175,55,.55);
-  box-shadow:
-    0 22px 72px rgba(0,0,0,.72),
-    0 0 22px var(--glow),
-    inset 0 2px 0 rgba(255,255,255,.12),
-    inset 0 -30px 54px rgba(0,0,0,.60);
-  filter:saturate(1.05);
-}
-.btn:active{
-  border-color:rgba(212,175,55,.62);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.65),
-    0 0 28px var(--glowStrong),
-    inset 0 0 0 2px rgba(255,255,255,.10),
-    inset 0 2px 0 rgba(255,255,255,.12),
-    inset 0 -30px 54px rgba(0,0,0,.62);
-}
-.btn.primary{
-  border-color:rgba(255,43,43,.22);
-  box-shadow:
-    var(--shadowC),
-    0 0 16px rgba(255,43,43,.12),
-    inset 0 2px 0 rgba(255,255,255,.10),
-    inset 0 -26px 46px rgba(0,0,0,.55);
-}
-.btn.is-active{
-  border-color:rgba(212,175,55,.62);
-  box-shadow:
-    0 18px 60px rgba(0,0,0,.65),
-    0 0 28px var(--glowStrong),
-    inset 0 0 0 2px rgba(255,255,255,.10),
-    inset 0 2px 0 rgba(255,255,255,.12),
-    inset 0 -30px 54px rgba(0,0,0,.62);
-}
-
-/* PAGE */
-.page{
-  width:min(1160px,94vw);
-  min-height:100vh;
-  margin:0 auto;
-  padding:92px 0 calc(var(--dockH) + 20px);
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-  gap:22px;
-  position:relative;
-}
-
-/* HERO */
-.hero{
-  width:min(980px,92vw);
-  margin:0 auto;
-  text-align:center;
-  position:relative;
-}
-.k{
-  margin:0 0 10px;
-  font-size:12px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.80;
-  color:var(--mut);
-}
-.h1{
-  margin:0;
-  font-weight:980;
-  font-size:clamp(40px,6vw,84px);
-  letter-spacing:1px;
-  line-height:1.02;
-  color:var(--ink);
-  text-shadow:0 10px 38px rgba(0,0,0,.62);
-}
-.h2{
-  margin:12px 0 0;
-  font-weight:900;
-  font-size:clamp(20px,2.7vw,34px);
-  line-height:1.18;
-  color:rgba(255,255,255,.92);
-  text-shadow:0 8px 26px rgba(0,0,0,.48);
-}
-.tag{
-  margin:12px auto 0;
-  max-width:940px;
-  font-size:clamp(15px,1.8vw,21px);
-  line-height:1.6;
-  color:rgba(255,255,255,.86);
-}
-.micro{
-  margin:10px auto 0;
-  max-width:900px;
-  font-size:clamp(12px,1.3vw,15px);
-  line-height:1.55;
-  color:rgba(255,255,255,.72);
-  letter-spacing:.02em;
-}
-
-/* MODE PANEL */
-.mode-shell{
-  width:min(1040px,94vw);
-  margin:0 auto;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:16px;
-}
-
-.mode-card{
-  position:relative;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:28px;
-  padding:22px 20px 20px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,255,255,.12), transparent 36%),
-    radial-gradient(circle at 78% 28%, rgba(255,43,43,.08), transparent 62%),
-    radial-gradient(circle at 76% 78%, rgba(90,40,120,.08), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.86));
-  box-shadow:var(--shadowB);
-  overflow:hidden;
-  backdrop-filter:blur(6px);
-}
-.mode-card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
-  opacity:.55;
-}
-.mode-card h3{
-  margin:0 0 10px;
-  font-size:18px;
-  line-height:1.2;
-  letter-spacing:.05em;
-  color:var(--ink);
-}
-.mode-card p{
-  margin:0;
-  font-size:14px;
-  line-height:1.65;
-  color:rgba(255,255,255,.80);
-}
-.mode-actions{
-  margin-top:16px;
-  display:flex;
-  justify-content:flex-end;
-}
-.mode-actions .btn{
-  min-width:148px;
-  border-radius:999px;
-}
-
-/* STATE PILL */
-.runtime-pill{
-  position:fixed;
-  left:16px;
-  bottom:calc(var(--dockH) + 18px);
-  z-index:230;
-  padding:8px 12px;
-  border-radius:999px;
-  background:rgba(0,0,0,.38);
-  border:1px solid rgba(255,255,255,.14);
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:.04em;
-  color:rgba(255,255,255,.86);
-  backdrop-filter:blur(8px);
-}
-
-/* DOCK */
-.dock{
-  position:fixed;
-  left:50%;
-  bottom:max(10px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  width:min(980px,94vw);
-  z-index:220;
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-  padding:12px;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 18% 18%, rgba(255,43,43,.10), transparent 62%),
-    radial-gradient(circle at 82% 70%, rgba(90,40,120,.10), transparent 64%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  backdrop-filter:blur(10px);
-  box-shadow:0 18px 60px rgba(0,0,0,.55);
-}
-.dock .btn{
-  width:100%;
-  padding:12px;
-  border-radius:999px;
-}
-
-@media (max-width:760px){
-  .bg-world iframe{
-    width:220vw;
-    height:220vh;
-    transform:translate(-50%,-43%) scale(1.34);
-  }
-  .mode-shell{
-    grid-template-columns:1fr;
-  }
-  :root{
-    --dockH:160px;
-  }
-}
-@media (max-width:520px){
-  .page{
-    padding-top:86px;
-  }
-  .micro{
-    font-size:12px;
-  }
-  :root{
-    --dockH:166px;
-  }
-}
-</style>
-</head>
-
-<body>
-
-<div class="bg-stage" aria-hidden="true">
-  <div class="bg-world">
-    <iframe
-      id="doorWorldBg"
-      title="Door background world"
-      loading="eager"
-      referrerpolicy="strict-origin-when-cross-origin"
-      tabindex="-1"></iframe>
-  </div>
-  <div class="bg-veil-top"></div>
-  <div class="bg-veil-bottom"></div>
-  <div class="bg-veil-left"></div>
-  <div class="bg-veil-right"></div>
-</div>
-
-<div id="root">
-
-  <div class="top" aria-label="Top controls">
-    <div class="left">
-      <a class="btn" id="btnIndex" href="/index.html" data-route="/index.html">INDEX</a>
-      <a class="btn primary" id="btnCompass" href="/index.html" data-route="/index.html">COMPASS</a>
-    </div>
-    <div class="right" aria-label="Language">
-      <button class="btn" id="btnEN" type="button">EN</button>
-      <button class="btn" id="btnZH" type="button">中文</button>
-      <button class="btn" id="btnES" type="button">ES</button>
-    </div>
-  </div>
-
-  <div class="page">
-    <section class="hero" aria-label="Door hero">
-      <p class="k" id="k0">DOOR</p>
-      <h1 class="h1" id="h0">NINE SUMMITS</h1>
-      <p class="h2" id="h1">Learn to live, to love.</p>
-      <p class="tag" id="tag0">Enter simply. Discover power. Choose depth.</p>
-      <p class="micro" id="micro0">An exclusive frontier system with a unique digital sign language shaped through directional selection, measurable structure, and immersive depth.</p>
-    </section>
-
-    <section class="mode-shell" aria-label="Mode selection">
-      <div class="mode-card">
-        <h3 id="flatTitle">WORLD IS FLAT</h3>
-        <p id="flatBody">Static, simplified, direct. No gesture depth. No orbital complexity. Clear structure, fast entry, low friction.</p>
-        <div class="mode-actions">
-          <button class="btn" id="btnFlat" type="button">ENTER FLAT</button>
-        </div>
-      </div>
-
-      <div class="mode-card">
-        <h3 id="roundTitle">WORLD IS ROUND</h3>
-        <p id="roundBody">Immersive, dynamic, gesture-driven. Planet as origin. Stars as options. Full-depth navigation through motion, relation, and convergence.</p>
-        <div class="mode-actions">
-          <button class="btn" id="btnRound" type="button">ENTER ROUND</button>
-        </div>
-      </div>
-    </section>
-  </div>
-
-  <div class="runtime-pill" id="runtimePill">ENTRY</div>
-
-  <nav class="dock" aria-label="Bottom navigation">
-    <a class="btn" id="dockPrelude" href="/prelude/" data-route="/prelude/">PRELUDE</a>
-    <a class="btn" id="dockProducts" href="/products/" data-route="/products/">PRODUCTS</a>
-    <a class="btn" id="dockExplore" href="/explore/" data-route="/explore/">EXPLORE</a>
-  </nav>
-
-</div>
-
-<script>
-(function(){
-  "use strict";
-
-  var qs = new URLSearchParams(location.search);
-  var LS = window.localStorage;
-
-  var lang  = qs.get("lang")  || LS.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || LS.getItem("gd_style") || "informal";
-  var time  = qs.get("time")  || LS.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || LS.getItem("gd_depth") || "1";
-  var lane  = qs.get("lane")  || "";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="informal" && style!=="formal") style="informal";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-
-  var d = parseInt(depth,10);
-  if(!isFinite(d)) d=1;
-  if(d<1) d=1;
-  if(d>9) d=9;
-  depth = String(d);
-
-  if(lane!=="platform" && lane!=="engineering") lane="";
-
-  try{
-    LS.setItem("gd_lang", lang);
-    LS.setItem("gd_style", style);
-    LS.setItem("gd_time", time);
-    LS.setItem("gd_depth", depth);
-  }catch(e){}
-
-  document.documentElement.lang = (lang==="zh") ? "zh" : (lang==="es" ? "es" : "en");
-
-  function buildQuery(extra){
-    var p = new URLSearchParams();
-    p.set("lang", (extra&&extra.lang)?extra.lang:lang);
-    p.set("style", (extra&&extra.style)?extra.style:style);
-    p.set("time", (extra&&extra.time)?extra.time:time);
-    p.set("depth", (extra&&extra.depth)?String(extra.depth):depth);
-    if(extra && extra.mode){
-      p.set("mode", extra.mode);
+  <style>
+    :root {
+      --bg: #030711;
+      --bg-deep: #081427;
+      --panel: rgba(255,255,255,0.05);
+      --panel-soft: rgba(255,255,255,0.025);
+      --line: rgba(255,255,255,0.10);
+      --text: #eef4ff;
+      --muted: #a7b8d8;
+      --gold: #f0c876;
+      --blue-soft: #9dd1ff;
+      --red-soft: rgba(255, 80, 80, 0.18);
+      --shadow: 0 24px 80px rgba(0,0,0,0.42);
+      --radius: 28px;
+      --max: 1240px;
     }
-    var L = (extra&&extra.lane)?extra.lane:lane;
-    if(L==="platform"||L==="engineering") p.set("lane", L);
-    return "?" + p.toString();
-  }
 
-  function route(path, extra){
-    location.href = path + buildQuery(extra);
-  }
+    * { box-sizing: border-box; }
 
-  function wireRoutes(){
-    var nodes = document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el = nodes[i];
-      var routePath = el.getAttribute("data-route") || "";
-      if(!routePath) continue;
-      if(el.tagName === "A"){
-        el.setAttribute("href", routePath + buildQuery());
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font:
+        16px/1.58 Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+    }
+
+    body {
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 18% 10%, rgba(157,209,255,0.10), transparent 22%),
+        radial-gradient(circle at 82% 14%, rgba(240,200,118,0.08), transparent 24%),
+        radial-gradient(circle at 50% 88%, rgba(157,209,255,0.08), transparent 28%),
+        linear-gradient(180deg, #02050d 0%, #071120 50%, #0a1830 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
+        radial-gradient(circle at 24% 62%, rgba(255,255,255,0.62) 0 1px, transparent 2px),
+        radial-gradient(circle at 47% 20%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+        radial-gradient(circle at 66% 34%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
+        radial-gradient(circle at 82% 18%, rgba(255,255,255,0.76) 0 1px, transparent 2px),
+        radial-gradient(circle at 74% 70%, rgba(255,255,255,0.64) 0 1px, transparent 2px),
+        radial-gradient(circle at 18% 82%, rgba(255,255,255,0.68) 0 1px, transparent 2px),
+        radial-gradient(circle at 56% 86%, rgba(255,255,255,0.58) 0 1px, transparent 2px);
+      opacity: 0.8;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 24px, var(--max));
+      margin: 0 auto;
+      padding: 22px 0 46px;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .pill,
+    .button {
+      min-height: 56px;
+      padding: 0 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 10px 30px rgba(0,0,0,0.18);
+      font-weight: 800;
+      font-size: 14px;
+      letter-spacing: 0.02em;
+      color: #ffffff;
+      transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .pill:hover,
+    .pill:focus-visible,
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(255,255,255,0.24);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
+      outline: none;
+    }
+
+    .pill.active {
+      border-color: rgba(255, 80, 80, 0.34);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.10),
+        0 0 0 1px rgba(255,80,80,0.12),
+        0 10px 30px rgba(0,0,0,0.20);
+    }
+
+    .hero {
+      margin-top: 24px;
+      text-align: center;
+      padding: 24px 12px 4px;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
+      color: rgba(255,255,255,0.82);
+      font-size: 13px;
+      letter-spacing: 0.38em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.02;
+      letter-spacing: -0.04em;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+      font-weight: 700;
+    }
+
+    h1 {
+      font-size: clamp(46px, 8vw, 96px);
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      color: #ffffff;
+    }
+
+    .hero-sub {
+      margin: 18px auto 0;
+      font-size: clamp(24px, 4vw, 44px);
+      font-weight: 800;
+      color: #ffffff;
+      max-width: 14ch;
+    }
+
+    .hero-copy {
+      margin: 16px auto 0;
+      max-width: 920px;
+      font-size: clamp(18px, 2.4vw, 26px);
+      color: #dce8fb;
+    }
+
+    .hero-detail {
+      margin: 18px auto 0;
+      max-width: 980px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .panel {
+      margin-top: 22px;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 34px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(157,209,255,0.08), transparent 28%),
+        radial-gradient(circle at 80% 24%, rgba(240,200,118,0.08), transparent 24%),
+        linear-gradient(180deg, var(--panel), var(--panel-soft));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .door-card {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    .door-title {
+      font-size: clamp(30px, 5vw, 54px);
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+    }
+
+    .door-copy {
+      margin-top: 12px;
+      font-size: 18px;
+      color: #e5eefc;
+    }
+
+    .door-detail {
+      margin-top: 14px;
+      font-size: 16px;
+      color: var(--muted);
+    }
+
+    .door-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .door-aside {
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .aside-label {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .aside-value {
+      margin: 8px 0 0;
+      font-size: 16px;
+      color: var(--text);
+    }
+
+    .aside-value + .aside-label {
+      margin-top: 18px;
+    }
+
+    .section-title {
+      font-size: clamp(30px, 4vw, 48px);
+      color: var(--gold);
+    }
+
+    .section-copy {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 17px;
+      max-width: 820px;
+    }
+
+    .tri-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .layer-card {
+      min-height: 300px;
+      padding: 22px;
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(157,209,255,0.10), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .layer-card.round {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(240,200,118,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+    }
+
+    .layer-card.globe {
+      background:
+        radial-gradient(circle at 18% 18%, rgba(200,180,255,0.12), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+    }
+
+    .layer-kicker {
+      font-size: 12px;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .layer-title {
+      font-size: 28px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+    }
+
+    .layer-copy {
+      color: #e5eefc;
+      font-size: 18px;
+    }
+
+    .layer-detail {
+      color: var(--muted);
+      font-size: 15px;
+      margin-top: auto;
+    }
+
+    .route-grid {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .route-card {
+      min-height: 220px;
+      padding: 20px;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.06), transparent 28%),
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .route-title {
+      font-size: 26px;
+      font-family: Inter, system-ui, sans-serif;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .route-copy {
+      color: var(--muted);
+      flex: 1 1 auto;
+    }
+
+    .footer {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      padding: 4px 2px 0;
+    }
+
+    @media (max-width: 1080px) {
+      .tri-grid,
+      .route-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .door-card {
+        grid-template-columns: 1fr;
       }
     }
-  }
 
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang = next;
-    try{ LS.setItem("gd_lang", lang); }catch(e){}
-    location.href = location.pathname + buildQuery({lang:lang});
-  }
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 18px, var(--max));
+      }
 
-  function P(en,zh,es){ return {en:en,zh:zh,es:es}; }
-  function pick(o){ return (lang==="zh") ? o.zh : (lang==="es" ? o.es : o.en); }
+      .pill-row,
+      .door-actions,
+      .nav {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
 
-  function setDoorWorldBackground(){
-    var frame = document.getElementById("doorWorldBg");
-    if(!frame) return;
+      .pill,
+      .button,
+      .nav a {
+        width: auto;
+        flex: 1 1 calc(50% - 8px);
+        min-width: 120px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="stars" aria-hidden="true"></div>
 
-    var p = new URLSearchParams();
-    p.set("lang", lang);
-    p.set("style", style);
-    p.set("time", time);
-    p.set("depth", depth);
-    p.set("mode", "round");
-    if(lane==="platform" || lane==="engineering") p.set("lane", lane);
-    p.set("doorbg", "1");
+  <div class="shell">
+    <div class="pill-row" aria-label="Top controls">
+      <a class="pill" href="/index.html">INDEX</a>
+      <a class="pill active" href="/door/index.html">COMPASS</a>
+      <a class="pill" href="/door/index.html?lang=en">EN</a>
+      <a class="pill" href="/door/index.html?lang=zh">中文</a>
+      <a class="pill" href="/door/index.html?lang=es">ES</a>
+    </div>
 
-    frame.src = "/index.html?" + p.toString();
-  }
+    <header class="hero" aria-labelledby="door-title">
+      <p class="eyebrow">Door</p>
+      <h1 id="door-title">NINE SUMMITS</h1>
+      <div class="hero-sub">One threshold. Three world reads.</div>
+      <div class="hero-copy">
+        Enter simply. Turn with depth. Step into a world.
+      </div>
+      <div class="hero-detail">
+        The door now preserves the full context at once: the world is flat as the
+        immediate face, the world is round as the turning transition, and the world
+        is a globe as the fully embodied entry. This is not three unrelated ideas.
+        It is one threshold object with three lawful layers.
+      </div>
+    </header>
 
-  var COPY = {
-    k: P("DOOR","门","PUERTA"),
-    h0: P("NINE SUMMITS","九峰","NUEVE CUMBRES"),
-    h1: P("Learn to live, to love.","学会去活，去爱。","Aprende a vivir, a amar."),
-    tag0: P(
-      "Enter simply. Discover power. Choose depth.",
-      "简单进入。发现力量。选择深度。",
-      "Entra con simplicidad. Descubre poder. Elige profundidad."
-    ),
-    micro0: P(
-      "An exclusive frontier system with a unique digital sign language shaped through directional selection, measurable structure, and immersive depth.",
-      "一个专属的前沿系统，以独特的数字符号语言为核心，由方向选择、可测结构与沉浸深度共同塑造。",
-      "Un sistema exclusivo de frontera con un lenguaje digital único, moldeado por selección direccional, estructura medible y profundidad inmersiva."
-    ),
-    flatTitle: P("WORLD IS FLAT","世界是平的","EL MUNDO ES PLANO"),
-    flatBody: P(
-      "Static, simplified, direct. No gesture depth. No orbital complexity. Clear structure, fast entry, low friction.",
-      "静态、简化、直接。没有手势深度，没有轨道复杂性。结构清晰、进入迅速、摩擦更低。",
-      "Estático, simplificado y directo. Sin profundidad gestual. Sin complejidad orbital. Estructura clara, entrada rápida y baja fricción."
-    ),
-    flatBtn: P("ENTER FLAT","进入平面","ENTRAR PLANO"),
-    roundTitle: P("WORLD IS ROUND","世界是圆的","EL MUNDO ES REDONDO"),
-    roundBody: P(
-      "Immersive, dynamic, gesture-driven. Planet as origin. Stars as options. Full-depth navigation through motion, relation, and convergence.",
-      "沉浸、动态、手势驱动。行星是原点，恒星是选项。通过运动、关系与汇聚实现全深度导航。",
-      "Inmersivo, dinámico y guiado por gestos. El planeta es el origen. Las estrellas son las opciones. Navegación de profundidad total por movimiento, relación y convergencia."
-    ),
-    roundBtn: P("ENTER ROUND","进入球面","ENTRAR REDONDO"),
-    index: P("INDEX","索引","ÍNDICE"),
-    compass: P("COMPASS","指南针","BRÚJULA"),
-    prelude: P("PRELUDE","前奏","PRELUDIO"),
-    products: P("PRODUCTS","产品","PRODUCTOS"),
-    explore: P("EXPLORE","探索","EXPLORAR"),
-    runtime: P("ENTRY","入口","ENTRADA")
-  };
+    <section class="panel door-card" aria-labelledby="door-panel-title">
+      <div>
+        <h2 class="door-title" id="door-panel-title">The door is the compression point.</h2>
+        <div class="door-copy">
+          It keeps the flat read, the round read, and the globe read without losing continuity.
+        </div>
+        <div class="door-detail">
+          The face must remain clear. The turn must remain felt. The world beyond
+          must remain real. That is the new contract.
+        </div>
 
-  document.getElementById("k0").textContent = pick(COPY.k);
-  document.getElementById("h0").textContent = pick(COPY.h0);
-  document.getElementById("h1").textContent = pick(COPY.h1);
-  document.getElementById("tag0").textContent = pick(COPY.tag0);
-  document.getElementById("micro0").textContent = pick(COPY.micro0);
+        <div class="door-actions">
+          <a class="button button-primary" href="/prelude/">Prelude</a>
+          <a class="button" href="/products/">Products</a>
+          <a class="button" href="/explore/">Explore</a>
+        </div>
+      </div>
 
-  document.getElementById("flatTitle").textContent = pick(COPY.flatTitle);
-  document.getElementById("flatBody").textContent = pick(COPY.flatBody);
-  document.getElementById("btnFlat").textContent = pick(COPY.flatBtn);
+      <aside class="door-aside">
+        <p class="aside-label">Threshold law</p>
+        <p class="aside-value">Flat → Round → Globe</p>
 
-  document.getElementById("roundTitle").textContent = pick(COPY.roundTitle);
-  document.getElementById("roundBody").textContent = pick(COPY.roundBody);
-  document.getElementById("btnRound").textContent = pick(COPY.roundBtn);
+        <p class="aside-label">Job</p>
+        <p class="aside-value">Surface entry, turning transition, embodied world-entry</p>
 
-  document.getElementById("btnIndex").textContent = pick(COPY.index);
-  document.getElementById("btnCompass").textContent = pick(COPY.compass);
-  document.getElementById("dockPrelude").textContent = pick(COPY.prelude);
-  document.getElementById("dockProducts").textContent = pick(COPY.products);
-  document.getElementById("dockExplore").textContent = pick(COPY.explore);
-  document.getElementById("runtimePill").textContent = pick(COPY.runtime);
+        <p class="aside-label">Result</p>
+        <p class="aside-value">The door no longer drops context when it changes depth</p>
+      </aside>
+    </section>
 
-  wireRoutes();
-  setDoorWorldBackground();
+    <section class="panel" aria-labelledby="layers-title">
+      <h2 class="section-title" id="layers-title">The three-layer read.</h2>
+      <p class="section-copy">
+        Each layer has its own job, but they belong to the same object. The door
+        should not discard the earlier layer when the deeper one appears.
+      </p>
 
-  document.getElementById("btnEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("btnZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("btnES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+      <div class="tri-grid">
+        <article class="layer-card">
+          <div class="layer-kicker">Layer 1</div>
+          <div class="layer-title">WORLD IS FLAT</div>
+          <div class="layer-copy">
+            The immediate face. Clear. Direct. Fast. Low friction.
+          </div>
+          <div class="layer-detail">
+            This is the visible threshold panel: readable entry, simple selection,
+            clean structure, instant orientation.
+          </div>
+          <div class="door-actions">
+            <a class="button" href="/prelude/">Enter flat</a>
+          </div>
+        </article>
 
-  document.getElementById("btnFlat").addEventListener("click", function(){
-    route("/index.html", { mode:"flat" });
-  }, {passive:true});
+        <article class="layer-card round">
+          <div class="layer-kicker">Layer 2</div>
+          <div class="layer-title">WORLD IS ROUND</div>
+          <div class="layer-copy">
+            The turn. The wrap. The realization that the surface is not the whole thing.
+          </div>
+          <div class="layer-detail">
+            This is where the threshold starts to curve, relation appears, and the
+            user feels that entry has depth instead of just access.
+          </div>
+          <div class="door-actions">
+            <a class="button" href="/home/">Enter round</a>
+          </div>
+        </article>
 
-  document.getElementById("btnRound").addEventListener("click", function(){
-    route("/index.html", { mode:"round" });
-  }, {passive:true});
-})();
-</script>
+        <article class="layer-card globe">
+          <div class="layer-kicker">Layer 3</div>
+          <div class="layer-title">WORLD IS A GLOBE</div>
+          <div class="layer-copy">
+            Full embodiment. A world you do not just select, but step into.
+          </div>
+          <div class="layer-detail">
+            This is where the door stops being only a panel and becomes a lawful
+            entry into a contained world with atmosphere, immersion, and route depth.
+          </div>
+          <div class="door-actions">
+            <a class="button button-primary" href="/explore/">Enter globe</a>
+          </div>
+        </article>
+      </div>
+    </section>
 
+    <section class="panel" aria-labelledby="routes-title">
+      <h2 class="section-title" id="routes-title">The next moves from the door.</h2>
+      <p class="section-copy">
+        The threshold now keeps its layers while still offering real onward motion.
+      </p>
+
+      <div class="route-grid">
+        <article class="route-card">
+          <div class="layer-kicker">Threshold path</div>
+          <div class="route-title">Prelude</div>
+          <div class="route-copy">
+            The first ordered entry. Meaning before depth.
+          </div>
+          <a class="button" href="/prelude/">Open Prelude</a>
+        </article>
+
+        <article class="route-card">
+          <div class="layer-kicker">Object field</div>
+          <div class="route-title">Products</div>
+          <div class="route-copy">
+            The routed object surface beyond the threshold.
+          </div>
+          <a class="button" href="/products/">Open Products</a>
+        </article>
+
+        <article class="route-card">
+          <div class="layer-kicker">World path</div>
+          <div class="route-title">Explore</div>
+          <div class="route-copy">
+            The wider embodied world once entry becomes globe-level.
+          </div>
+          <a class="button button-primary" href="/explore/">Open Explore</a>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Result: PAGE=DOOR | CONTRACT=FLAT_ROUND_GLOBE | ROLE=MULTI_LAYER_THRESHOLD_OBJECT</span>
+      <span><a href="/index.html">Return to index</a></span>
+    </footer>
+  </div>
 </body>
 </html>

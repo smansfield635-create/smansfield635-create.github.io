@@ -36,6 +36,8 @@
       stage.style.position = "absolute";
       stage.style.inset = "0";
       stage.style.overflow = "auto";
+      stage.style.maxWidth = "100%";
+      stage.style.maxHeight = "100%";
     }
   }
 
@@ -47,6 +49,10 @@
     stage.style.overflow = "auto";
     stage.style.maxWidth = "100%";
     stage.style.maxHeight = "100%";
+  }
+
+  function applyLiveExperiencePriority(stage) {
+    stage.setAttribute("data-surface-priority", "live-experience");
   }
 
   function runBootstrap(source) {
@@ -96,6 +102,7 @@
 
       window.__productsPlanetRuntimeInstance = instance;
       enforceStageContainment(stageZone, stage);
+      applyLiveExperiencePriority(stage);
 
       diag.setValue("diag-mount-result", "succeeded", "ok");
       diag.setStatus("mount-succeeded");

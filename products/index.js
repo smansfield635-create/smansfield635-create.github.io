@@ -3,7 +3,7 @@
 
   const SHOWROOM_META = Object.freeze({
     name: "PRODUCTS_SHOWROOM",
-    version: "V3",
+    version: "V4",
     contract: "PRODUCTS_SHOWROOM_V1",
     page: "products-showroom",
   });
@@ -21,9 +21,6 @@
       ],
       meta: "Signature asset · Private capital orientation",
       cta: "Explore ARCHCOIN",
-      detailHeadline: "Built to read like an asset, not a feature.",
-      detailCopy:
-        "ARCHCOIN should feel substantial on arrival: premium, finite, and deliberate. It presents value with gravity and identity instead of reading like a hidden module inside a broader stack.",
       accent: "#f1d28d",
     },
     aai: {
@@ -38,9 +35,6 @@
       ],
       meta: "Flagship intelligence · Product-first expression",
       cta: "Explore AAI",
-      detailHeadline: "Built to feel intelligent, polished, and real.",
-      detailCopy:
-        "AAI should present as a living product line for artificial agent intelligence: powerful, composed, and premium. It is not abstract intelligence talk. It is a product with form, presence, and purpose.",
       accent: "#8ff0c5",
     },
   });
@@ -53,7 +47,7 @@
       copy:
         "Premium financial-intelligence asset with identity, scarcity, and ownership at the center.",
       accent: "#f1d28d",
-      mode: "flagship",
+      mode: "Front and center",
     },
     {
       key: "aai",
@@ -62,7 +56,7 @@
       copy:
         "Artificial agent intelligence expressed as a polished product line for elegant execution and agency.",
       accent: "#8ff0c5",
-      mode: "flagship",
+      mode: "Front and center",
     },
     {
       key: "baseline-nutrition-systems",
@@ -71,16 +65,16 @@
       copy:
         "Nutritional foundation products organized around daily stability, clarity, and baseline support.",
       accent: "#9fc6ff",
-      mode: "path",
+      mode: "Filter path",
     },
     {
       key: "five-flags-whats-my-scene",
       title: "Five Flags / What’s My Scene",
       eyebrow: "Product path",
       copy:
-        "Scene-identification and interpretation products built to help people understand where they are and what opens next.",
+        "Scene-identification products built to help people understand where they are and what opens next.",
       accent: "#ffca80",
-      mode: "path",
+      mode: "Filter path",
     },
     {
       key: "esl-traversal-learning",
@@ -89,7 +83,7 @@
       copy:
         "Traversal-based English learning products designed around movement, comprehension, and structured progression.",
       accent: "#d7e4ff",
-      mode: "path",
+      mode: "Filter path",
     },
   ]);
 
@@ -102,11 +96,9 @@
   const ui = {
     host: null,
     cards: new Map(),
-    details: new Map(),
     ctas: [],
-    routeSection: null,
-    routeGrid: null,
-    routeCards: new Map(),
+    pathsGrid: null,
+    pathCards: new Map(),
     closingTitle: null,
     closingCopy: null,
   };
@@ -145,7 +137,7 @@
     row.className = "capability";
 
     const dot = document.createElement("span");
-    dot.className = "capability-dot";
+    dot.className = "capabilityDot";
     dot.style.background = toneColor;
     dot.style.boxShadow = `0 0 0 4px ${toneColor}22`;
 
@@ -187,126 +179,73 @@
     });
   }
 
-  function hideLegacyLowerSections() {
-    const details = qs(".details");
-    const supporting = qs(".supporting");
-
-    if (details) {
-      details.style.display = "none";
+  function buildPathCards() {
+    ui.pathsGrid = byId("paths-grid");
+    if (!ui.pathsGrid) {
+      throw new Error("Missing #paths-grid.");
     }
 
-    if (supporting) {
-      supporting.style.display = "none";
-    }
-  }
-
-  function buildRouteSection() {
-    const flagship = qs(".flagship");
-    if (!flagship || !flagship.parentNode) return;
-
-    const section = document.createElement("section");
-    section.className = "supporting reveal reveal-delay-4";
-    section.setAttribute("aria-label", "Product paths");
-
-    const kicker = document.createElement("p");
-    kicker.className = "section-kicker";
-    kicker.textContent = "Open a path";
-
-    const title = document.createElement("h3");
-    title.className = "section-title";
-    title.textContent = "Five product paths. Brief, clear, and ready to open.";
-
-    const copy = document.createElement("p");
-    copy.className = "section-copy";
-    copy.textContent =
-      "This chamber now acts as a premium filter. Each box gives a concise read and opens the next path without dragging the full Russian doll structure onto the main page.";
-
-    const grid = document.createElement("div");
-    grid.style.display = "grid";
-    grid.style.gridTemplateColumns = "repeat(auto-fit,minmax(240px,1fr))";
-    grid.style.gap = "14px";
+    ui.pathsGrid.textContent = "";
 
     PATHS.forEach((item) => {
       const card = document.createElement("article");
-      card.className = "support-card";
+      card.className = "pathCard";
       card.setAttribute("data-path-key", item.key);
-      card.style.display = "grid";
-      card.style.gap = "12px";
-      card.style.alignContent = "start";
-      card.style.borderColor = "rgba(173,212,255,.10)";
-      card.style.transition = "transform 180ms ease,border-color 180ms ease,box-shadow 180ms ease";
-      card.style.boxShadow = "0 10px 24px rgba(0,0,0,.14)";
 
       const eyebrow = document.createElement("div");
+      eyebrow.className = "pathEyebrow";
       eyebrow.textContent = item.eyebrow;
       eyebrow.style.color = item.accent;
-      eyebrow.style.fontSize = ".72rem";
-      eyebrow.style.fontWeight = "800";
-      eyebrow.style.letterSpacing = ".12em";
-      eyebrow.style.textTransform = "uppercase";
 
-      const titleNode = document.createElement("h4");
-      titleNode.className = "support-title";
-      titleNode.textContent = item.title;
+      const title = document.createElement("h4");
+      title.className = "pathTitle";
+      title.textContent = item.title;
 
-      const copyNode = document.createElement("p");
-      copyNode.className = "support-copy";
-      copyNode.textContent = item.copy;
+      const copy = document.createElement("p");
+      copy.className = "pathCopy";
+      copy.textContent = item.copy;
 
       const row = document.createElement("div");
-      row.style.display = "flex";
-      row.style.alignItems = "center";
-      row.style.justifyContent = "space-between";
-      row.style.gap = "10px";
-      row.style.flexWrap = "wrap";
+      row.className = "pathRow";
 
       const pill = document.createElement("div");
-      pill.textContent = item.mode === "flagship" ? "Front and center" : "Filter path";
-      pill.style.display = "inline-flex";
-      pill.style.alignItems = "center";
-      pill.style.padding = "9px 12px";
-      pill.style.border = "1px solid rgba(173,212,255,.10)";
-      pill.style.borderRadius = "999px";
-      pill.style.background = "rgba(255,255,255,.035)";
+      pill.className = "pathPill";
+      pill.textContent = item.mode;
       pill.style.color = item.accent;
-      pill.style.fontSize = ".76rem";
-      pill.style.fontWeight = "800";
-      pill.style.letterSpacing = ".08em";
-      pill.style.textTransform = "uppercase";
-      pill.style.whiteSpace = "nowrap";
 
       const button = document.createElement("button");
-      button.className = "cta-button";
+      button.className = "pathButton";
       button.type = "button";
       button.textContent = "Open Path";
       button.setAttribute("data-route-key", item.key);
-      button.style.marginLeft = "auto";
 
       row.appendChild(pill);
       row.appendChild(button);
 
       card.appendChild(eyebrow);
-      card.appendChild(titleNode);
-      card.appendChild(copyNode);
+      card.appendChild(title);
+      card.appendChild(copy);
       card.appendChild(row);
-      grid.appendChild(card);
 
-      ui.routeCards.set(item.key, { card, button, item });
+      ui.pathsGrid.appendChild(card);
+      ui.pathCards.set(item.key, { card, button, item });
     });
-
-    section.appendChild(kicker);
-    section.appendChild(title);
-    section.appendChild(copy);
-    section.appendChild(grid);
-
-    flagship.parentNode.insertBefore(section, flagship.nextSibling);
-
-    ui.routeSection = section;
-    ui.routeGrid = grid;
   }
 
-  function refreshRouteSelection() {
-    ui.routeCards.forEach(({ card, button, item }, key) => {
+  function refreshFlagshipSelection() {
+    ui.cards.forEach((card, key) => {
+      const active = key === state.activeKey;
+      card.style.borderColor = active
+        ? "rgba(241,210,141,.24)"
+        : "rgba(173,212,255,.14)";
+      card.style.boxShadow = active
+        ? "0 28px 66px rgba(0,0,0,.48)"
+        : "0 24px 60px rgba(0,0,0,.42)";
+    });
+  }
+
+  function refreshPathSelection() {
+    ui.pathCards.forEach(({ card, button, item }, key) => {
       const active = key === state.activeKey;
       card.style.transform = active ? "translateY(-2px)" : "translateY(0)";
       card.style.borderColor = active ? `${item.accent}55` : "rgba(173,212,255,.10)";
@@ -317,11 +256,10 @@
     });
   }
 
-  function setClosingCopy() {
+  function refreshClosingCopy() {
     if (!ui.closingTitle || !ui.closingCopy) return;
 
     const active = PATHS.find((item) => item.key === state.activeKey) || PATHS[0];
-
     ui.closingTitle.textContent = `${active.title} is selected.`;
     ui.closingCopy.textContent =
       "The main chamber now filters and routes. The deeper Russian doll structure belongs inside the opened path, not on the showroom surface.";
@@ -329,15 +267,9 @@
 
   function setActivePath(key) {
     state.activeKey = key;
-    refreshRouteSelection();
-    setClosingCopy();
-
-    if (key === "archcoin" || key === "aai") {
-      const card = ui.cards.get(key);
-      if (card) {
-        card.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }
+    refreshFlagshipSelection();
+    refreshPathSelection();
+    refreshClosingCopy();
   }
 
   function wireCtas() {
@@ -345,11 +277,15 @@
       const key = button.getAttribute("data-cta-key");
       button.addEventListener("click", () => {
         setActivePath(key);
+        const card = ui.cards.get(key);
+        if (card) {
+          card.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
       });
       return { key, button };
     });
 
-    ui.routeCards.forEach(({ button }, key) => {
+    ui.pathCards.forEach(({ button }, key) => {
       button.addEventListener("click", () => {
         setActivePath(key);
       });
@@ -357,17 +293,14 @@
   }
 
   function captureClosingNodes() {
-    const closing = qs(".closing");
-    if (!closing) return;
-
-    ui.closingTitle = qs(".section-title", closing);
-    ui.closingCopy = qs(".closing-copy", closing);
+    ui.closingTitle = byId("closing-title");
+    ui.closingCopy = byId("closing-copy");
   }
 
   function revealSections() {
     const elements = qsa(".reveal");
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      elements.forEach((el) => el.classList.add("is-visible"));
+      elements.forEach((el) => el.classList.add("isVisible"));
       return;
     }
 
@@ -375,7 +308,7 @@
       (entries) => {
         entries.forEach((entry) => {
           if (!entry.isIntersecting) return;
-          entry.target.classList.add("is-visible");
+          entry.target.classList.add("isVisible");
           state.revealObserver.unobserve(entry.target);
         });
       },
@@ -393,12 +326,10 @@
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const coin = qs(".coin-hero");
-    const aai = qs(".aai-mark");
+    const coin = qs(".coinHero");
+    const aai = qs(".aaiMark");
 
-    if (reduced) {
-      return;
-    }
+    if (reduced) return;
 
     const tick = (time) => {
       const t = (time || 0) * 0.001;
@@ -434,8 +365,7 @@
     ui.host = byId("products-host");
     assertShowroomContract(ui.host);
     hydrateFlagshipCards();
-    hideLegacyLowerSections();
-    buildRouteSection();
+    buildPathCards();
     captureClosingNodes();
     wireCtas();
     revealSections();

@@ -2,45 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <title>The Vault · Diamond Gate Bridge</title>
-  <meta name="description" content="The Vault. Protected value chamber beneath Richie’s House.">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+  <title>The Vault · ARCHCOIN</title>
+  <meta
+    name="description"
+    content="The Vault. Protected chamber beneath Richie’s House. Direct access to ARCHCOIN."
+  >
 
   <style>
     :root {
       --bg: #04060a;
       --bg-deep: #08111d;
-      --panel: rgba(255,255,255,0.05);
-      --panel-soft: rgba(255,255,255,0.03);
-      --line: rgba(255,255,255,0.10);
+      --panel: rgba(255, 255, 255, 0.05);
+      --panel-soft: rgba(255, 255, 255, 0.03);
+      --line: rgba(255, 255, 255, 0.10);
       --text: #eef4ff;
       --muted: #9fb0cf;
       --gold: #f1c36b;
       --gold-soft: #ffdca0;
       --blue-soft: #9dd1ff;
-      --shadow: 0 24px 80px rgba(0,0,0,0.38);
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
       --radius: 24px;
-      --max: 1120px;
+      --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
-    html, body {
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
       margin: 0;
       padding: 0;
       min-height: 100%;
       background: var(--bg);
       color: var(--text);
-      font: 16px/1.58 Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     body {
+      overflow-x: hidden;
+      font:
+        16px/1.58 Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
       background:
-        radial-gradient(circle at top, rgba(241,195,107,0.12), transparent 24%),
-        radial-gradient(circle at bottom, rgba(88,166,255,0.08), transparent 28%),
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.12), transparent 24%),
+        radial-gradient(circle at bottom, rgba(88, 166, 255, 0.08), transparent 28%),
         linear-gradient(180deg, #03050a 0%, #07111d 100%);
     }
 
-    a { color: inherit; text-decoration: none; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
     .shell {
       width: min(100% - 24px, var(--max));
@@ -48,7 +71,9 @@
       padding: 18px 0 44px;
     }
 
-    .topbar, .actions, .footer {
+    .topbar,
+    .actions,
+    .footer {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
@@ -56,13 +81,23 @@
       gap: 12px;
     }
 
-    .topbar { padding: 8px 0 18px; }
+    .topbar {
+      padding: 8px 0 18px;
+    }
 
-    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
     .brand-mark {
-      width: 14px; height: 14px; border-radius: 999px;
-      background: linear-gradient(135deg, var(--gold), #fff);
-      box-shadow: 0 0 28px rgba(241,195,107,0.45);
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), #ffffff);
+      box-shadow: 0 0 28px rgba(241, 195, 107, 0.45);
+      flex: 0 0 auto;
     }
 
     .brand-title {
@@ -73,7 +108,11 @@
       text-transform: uppercase;
     }
 
-    .brand-sub { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+    .brand-sub {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
 
     .nav {
       display: flex;
@@ -82,11 +121,12 @@
       gap: 10px;
     }
 
-    .nav a, .button {
+    .nav a,
+    .button {
       padding: 10px 14px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255,255,255,0.03);
+      background: rgba(255, 255, 255, 0.03);
       color: var(--blue-soft);
       font-size: 14px;
     }
@@ -100,8 +140,12 @@
     }
 
     .button-primary {
-      background: linear-gradient(135deg, rgba(241,195,107,0.20), rgba(255,255,255,0.08));
-      color: #fff;
+      background: linear-gradient(
+        135deg,
+        rgba(241, 195, 107, 0.20),
+        rgba(255, 255, 255, 0.08)
+      );
+      color: #ffffff;
     }
 
     .panel {
@@ -112,19 +156,37 @@
       backdrop-filter: blur(12px);
     }
 
-    .hero, .grid {
+    .hero,
+    .grid,
+    .split {
       display: grid;
       gap: 18px;
     }
 
     .hero {
-      grid-template-columns: minmax(0,1.15fr) minmax(280px,0.85fr);
+      grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
       padding: 18px 0 12px;
     }
 
-    .hero-main, .hero-side, .section { padding: 24px; }
+    .split {
+      grid-template-columns: 1.1fr 0.9fr;
+      margin-top: 18px;
+    }
 
-    .eyebrow, .kicker {
+    .hero-main,
+    .hero-side,
+    .section {
+      padding: 24px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .eyebrow,
+    .kicker {
       display: inline-flex;
       align-items: center;
       gap: 8px;
@@ -132,71 +194,191 @@
       padding: 8px 12px;
       border-radius: 999px;
       border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
+      background: rgba(255, 255, 255, 0.03);
       color: var(--gold-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
 
-    h1, h2, h3 {
+    h1,
+    h2,
+    h3,
+    h4 {
       margin: 0;
       line-height: 1.04;
       letter-spacing: -0.04em;
-      font-family: "Iowan Old Style","Palatino Linotype","Book Antiqua",Palatino,"Times New Roman",serif;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
       font-weight: 600;
     }
 
-    h1 { font-size: clamp(42px, 7vw, 82px); color: var(--gold-soft); max-width: 10ch; }
-    h2 { font-size: clamp(26px, 3.8vw, 44px); color: var(--gold-soft); }
-    h3 { font-size: 28px; color: #fff; }
+    h1 {
+      font-size: clamp(42px, 7vw, 82px);
+      color: var(--gold-soft);
+      max-width: 10ch;
+    }
 
-    .lede, .detail, .meta-value { color: var(--muted); }
-    .lede { margin: 16px 0 0; max-width: 38rem; font-size: 18px; }
-    .meta-label {
+    h2 {
+      font-size: clamp(26px, 3.8vw, 44px);
+      color: var(--gold-soft);
+    }
+
+    h3 {
+      font-size: 30px;
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 22px;
+      color: #ffffff;
+    }
+
+    .lede,
+    .detail,
+    .meta-value {
+      color: var(--muted);
+    }
+
+    .lede {
+      margin: 16px 0 0;
+      max-width: 38rem;
+      font-size: 18px;
+    }
+
+    .meta-label,
+    .card-kicker {
       color: var(--blue-soft);
       font-size: 12px;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       margin: 0;
     }
-    .meta-value { margin: 6px 0 0; }
+
+    .meta-value {
+      margin: 6px 0 0;
+      font-size: 16px;
+    }
+
+    .actions {
+      margin-top: 24px;
+    }
 
     .grid {
-      grid-template-columns: repeat(3, minmax(0,1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       margin-top: 18px;
     }
 
-    .card {
+    .card,
+    .feature,
+    .coin-panel {
       padding: 20px;
       border: 1px solid var(--line);
       border-radius: 22px;
       background:
-        radial-gradient(circle at 18% 18%, rgba(241,195,107,0.10), transparent 28%),
-        radial-gradient(circle at 82% 24%, rgba(88,166,255,0.10), transparent 26%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
       min-height: 210px;
       display: flex;
       flex-direction: column;
       gap: 10px;
     }
 
-    .detail { margin: 0; flex: 1 1 auto; }
+    .coin-panel {
+      min-height: 100%;
+      border-color: rgba(241, 195, 107, 0.20);
+    }
 
-    .footer { margin-top: 22px; padding: 12px 4px 0; color: var(--muted); font-size: 13px; }
+    .detail {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .coin-wordmark {
+      font-size: clamp(38px, 6vw, 64px);
+      line-height: 0.95;
+      color: var(--gold-soft);
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+      letter-spacing: -0.05em;
+    }
+
+    .quote {
+      padding: 18px 20px;
+      border-left: 2px solid rgba(241, 195, 107, 0.42);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0 16px 16px 0;
+      color: var(--gold-soft);
+      font-size: 22px;
+      line-height: 1.45;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+    }
+
+    .footer {
+      margin-top: 22px;
+      padding: 12px 4px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
 
     @media (max-width: 980px) {
-      .hero, .grid { grid-template-columns: 1fr; }
+      .hero,
+      .grid,
+      .split {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 720px) {
-      .shell { width: min(100% - 18px, var(--max)); padding-top: 14px; }
-      .topbar { align-items: flex-start; flex-direction: column; }
-      .nav { justify-content: flex-start; }
-      .hero-main, .hero-side, .section { padding: 18px; }
-      .nav a, .button { width: 100%; }
-      .actions { flex-direction: column; }
-      .lede { font-size: 16px; }
+      .shell {
+        width: min(100% - 18px, var(--max));
+        padding-top: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section {
+        padding: 18px;
+      }
+
+      .nav a,
+      .button {
+        width: 100%;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .lede {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
@@ -207,7 +389,7 @@
         <div class="brand-mark" aria-hidden="true"></div>
         <div>
           <p class="brand-title">Diamond Gate Bridge</p>
-          <p class="brand-sub">The Vault · protected chamber</p>
+          <p class="brand-sub">The Vault · ARCHCOIN chamber</p>
         </div>
       </div>
 
@@ -227,13 +409,13 @@
           <p class="eyebrow">Protected chamber</p>
           <h1 id="vault-title">The Vault</h1>
           <p class="lede">
-            This is the protected chamber beneath the house. Value is held here,
-            not displayed carelessly.
+            This is the protected chamber beneath the house. ARCHCOIN now lives
+            here as the direct extension of the vault path.
           </p>
 
           <div class="actions">
-            <a class="button button-primary" href="/home/">Return to the house</a>
-            <a class="button" href="/basement/">Go lower</a>
+            <a class="button button-primary" href="#archcoin">Open ARCHCOIN</a>
+            <a class="button" href="/home/">Return to the house</a>
           </div>
         </article>
 
@@ -243,14 +425,65 @@
             <p class="meta-value">Protected value chamber</p>
           </div>
           <div>
+            <p class="meta-label">Direct bind</p>
+            <p class="meta-value">ARCHCOIN</p>
+          </div>
+          <div>
             <p class="meta-label">Position</p>
             <p class="meta-value">Beneath the house, above the basement</p>
           </div>
           <div>
             <p class="meta-label">Behavior</p>
-            <p class="meta-value">Hold, secure, preserve</p>
+            <p class="meta-value">Hold, secure, preserve, extend</p>
           </div>
         </aside>
+      </section>
+
+      <section class="section panel" id="archcoin" aria-labelledby="archcoin-title">
+        <p class="eyebrow">Direct connection</p>
+        <h2 id="archcoin-title">ARCHCOIN is inside the vault.</h2>
+
+        <div class="split">
+          <article class="coin-panel">
+            <p class="card-kicker">Vault extension</p>
+            <div class="coin-wordmark">ARCHCOIN</div>
+            <p class="detail">
+              The coin layer belongs to the protected chamber. It does not sit out
+              in the open hall. It opens from the vault.
+            </p>
+            <div class="actions">
+              <a class="button button-primary" href="/home/">Back to house</a>
+              <a class="button" href="/gate/">Back to gate</a>
+            </div>
+          </article>
+
+          <div>
+            <div class="quote">
+              The vault is where protected value becomes deliberate. ARCHCOIN belongs
+              here because it is treated as extension, not decoration.
+            </div>
+
+            <div class="grid" style="grid-template-columns: 1fr; margin-top: 18px;">
+              <article class="card">
+                <p class="card-kicker">Containment</p>
+                <h3>Not public clutter</h3>
+                <p class="detail">
+                  ARCHCOIN should read like something held intentionally, not dropped
+                  into the open page as loose branding.
+                </p>
+              </article>
+
+              <article class="card">
+                <p class="card-kicker">Relationship</p>
+                <h3>Vault first, coin second</h3>
+                <p class="detail">
+                  The vault remains the chamber. ARCHCOIN is the direct extension
+                  that opens from it.
+                </p>
+              </article>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="section panel" aria-labelledby="vault-structure-title">
@@ -259,7 +492,7 @@
 
         <div class="grid">
           <article class="card">
-            <p class="kicker">Protected value</p>
+            <p class="card-kicker">Protected value</p>
             <h3>Core assets</h3>
             <p class="detail">
               The things that matter most should feel deliberate, contained, and guarded.
@@ -267,7 +500,7 @@
           </article>
 
           <article class="card">
-            <p class="kicker">Restricted access</p>
+            <p class="card-kicker">Restricted access</p>
             <h3>Intentional entry</h3>
             <p class="detail">
               Entry into this chamber should feel narrower and more deliberate than the main hall.
@@ -275,7 +508,7 @@
           </article>
 
           <article class="card">
-            <p class="kicker">Linkage</p>
+            <p class="card-kicker">Linkage</p>
             <h3>Part of the house</h3>
             <p class="detail">
               The vault is not a separate world. It is one protected chamber within the larger house.
@@ -286,7 +519,7 @@
     </main>
 
     <footer class="footer">
-      <span>Result: PAGE=VAULT | ROLE=PROTECTED_VALUE_CHAMBER</span>
+      <span>Result: PAGE=VAULT | ROLE=PROTECTED_VALUE_CHAMBER | DIRECT_BIND=ARCHCOIN</span>
       <span><a href="/home/">Return to house</a></span>
     </footer>
   </div>

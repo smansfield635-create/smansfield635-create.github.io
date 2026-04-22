@@ -87,6 +87,7 @@
           sizeMobile: 24,
           speed: 0.030,
           angle: -88,
+          labelDock: "top",
           color: "linear-gradient(145deg,#dff7ff 0%,#71d9ff 26%,#2d88d8 64%,#103667 100%)",
         },
         {
@@ -98,6 +99,7 @@
           sizeMobile: 30,
           speed: 0.024,
           angle: 8,
+          labelDock: "right",
           color: "linear-gradient(145deg,#fff4d9 0%,#ffd572 28%,#d38c1e 62%,#6b3f0e 100%)",
         },
         {
@@ -109,6 +111,7 @@
           sizeMobile: 34,
           speed: 0.020,
           angle: -38,
+          labelDock: "top",
           color: "linear-gradient(145deg,#f0f6ff 0%,#9ebcff 26%,#5c74da 60%,#27357b 100%)",
         },
         {
@@ -120,6 +123,7 @@
           sizeMobile: 40,
           speed: 0.017,
           angle: 28,
+          labelDock: "right",
           color: "linear-gradient(145deg,#effff7 0%,#8de7c3 26%,#2e9d70 62%,#14452f 100%)",
         },
         {
@@ -131,6 +135,7 @@
           sizeMobile: 48,
           speed: 0.014,
           angle: 102,
+          labelDock: "left",
           color: "linear-gradient(145deg,#ffffff 0%,#b6d8ff 24%,#6fa1f2 58%,#234d93 100%)",
         },
         {
@@ -142,6 +147,7 @@
           sizeMobile: 56,
           speed: 0.011,
           angle: 196,
+          labelDock: "left",
           color: "linear-gradient(145deg,#f6ffe8 0%,#c9f27d 26%,#6ea033 62%,#2f4b16 100%)",
         },
         {
@@ -153,6 +159,7 @@
           sizeMobile: 64,
           speed: 0.009,
           angle: -146,
+          labelDock: "top",
           color: "linear-gradient(145deg,#f8f8ff 0%,#d2d5ff 24%,#8b94f5 58%,#3b438f 100%)",
         },
         {
@@ -164,6 +171,7 @@
           sizeMobile: 72,
           speed: 0.007,
           angle: 146,
+          labelDock: "bottom",
           color: "linear-gradient(145deg,#fff2fb 0%,#ffb8dd 26%,#d85da4 60%,#6d2450 100%)",
         },
         {
@@ -175,6 +183,7 @@
           sizeMobile: 82,
           speed: 0.006,
           angle: -118,
+          labelDock: "left",
           color: "linear-gradient(145deg,#fff8df 0%,#f4d67d 26%,#c59321 62%,#6d4708 100%)",
         },
         {
@@ -186,6 +195,7 @@
           sizeMobile: 92,
           speed: 0.005,
           angle: 58,
+          labelDock: "right",
           color: "linear-gradient(145deg,#f2fbff 0%,#8ad0ff 26%,#3a8dcf 60%,#16416d 100%)",
         },
         {
@@ -197,6 +207,7 @@
           sizeMobile: 102,
           speed: 0.0042,
           angle: 212,
+          labelDock: "bottom",
           color: "linear-gradient(145deg,#f5efff 0%,#c6a8ff 24%,#7b5de2 58%,#352267 100%)",
         },
         {
@@ -208,6 +219,7 @@
           sizeMobile: 112,
           speed: 0.0036,
           angle: 18,
+          labelDock: "right",
           color: "linear-gradient(145deg,#fff9ea 0%,#ffd87a 24%,#d89519 58%,#6b4107 100%)",
         },
       ];
@@ -226,7 +238,7 @@
 
     mountRuntime() {
       this.mount.innerHTML = "";
-      this.mount.setAttribute("data-runtime", "products-solar-system-scale-law");
+      this.mount.setAttribute("data-runtime", "products-solar-system-scale-law-v2");
 
       setStyles(this.mount, {
         position: "absolute",
@@ -353,9 +365,7 @@
 
       setStyles(this.sunCore, {
         overflow: "hidden",
-        background: [
-          "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.98), rgba(255,244,201,0.95) 16%, #ffd88a 42%, #ff9c39 72%, #7e3f10 100%)",
-        ].join(","),
+        background: "radial-gradient(circle at 34% 32%, rgba(255,255,255,0.98), rgba(255,244,201,0.95) 16%, #ffd88a 42%, #ff9c39 72%, #7e3f10 100%)",
         boxShadow: "0 0 28px rgba(255,198,102,0.72), 0 0 72px rgba(255,177,73,0.45), 0 0 120px rgba(114,166,255,0.18)",
       });
 
@@ -365,14 +375,6 @@
 
       setStyles(this.sunFlareB, {
         border: "1px solid rgba(255,217,142,0.14)",
-      });
-
-      this.sunAnchor.addEventListener("mouseenter", () => {
-        this.sunAnchor.style.filter = "brightness(1.06)";
-      });
-
-      this.sunAnchor.addEventListener("mouseleave", () => {
-        this.sunAnchor.style.filter = "brightness(1)";
       });
     }
 
@@ -396,26 +398,42 @@
 
     buildTokens() {
       this.tokens = this.planets.map((planet) => {
-        const token = document.createElement("a");
-        token.href = planet.href;
-        token.className = "products-orbit-token";
-        token.setAttribute("aria-label", planet.title);
+        const anchor = createElement("a", "products-orbit-token-anchor", this.tokenLayer);
+        anchor.href = planet.href;
+        anchor.setAttribute("aria-label", planet.title);
 
-        const kicker = document.createElement("span");
+        const orb = createElement("div", "products-planet-orb", anchor);
+        const label = createElement("div", "products-planet-label", anchor);
+        const kicker = createElement("span", "products-planet-kicker", label);
+        const title = createElement("strong", "products-planet-title", label);
+
         kicker.textContent = planet.kicker;
-
-        const title = document.createElement("strong");
         title.textContent = planet.title;
 
-        const orb = document.createElement("div");
-        orb.className = "products-planet-orb";
+        setStyles(anchor, {
+          position: "absolute",
+          left: "0",
+          top: "0",
+          width: "0",
+          height: "0",
+          zIndex: "10",
+          pointerEvents: "auto",
+        });
 
-        token.appendChild(orb);
-        token.appendChild(kicker);
-        token.appendChild(title);
-        this.tokenLayer.appendChild(token);
+        setStyles(orb, {
+          position: "absolute",
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          width: `${planet.sizeDesktop}px`,
+          height: `${planet.sizeDesktop}px`,
+          borderRadius: "50%",
+          background: planet.color,
+          border: "1px solid rgba(255,255,255,0.12)",
+          boxShadow: "0 14px 24px rgba(0,0,0,0.22), inset -10px -12px 16px rgba(0,0,0,0.16), inset 10px 12px 14px rgba(255,255,255,0.16), 0 0 18px rgba(105,162,255,0.12)",
+        });
 
-        setStyles(token, {
+        setStyles(label, {
           position: "absolute",
           minWidth: "104px",
           maxWidth: "150px",
@@ -430,17 +448,7 @@
           fontSize: "0.74rem",
           lineHeight: "1.2",
           transition: "transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease",
-          zIndex: "10",
-        });
-
-        setStyles(orb, {
-          width: `${planet.sizeDesktop}px`,
-          height: `${planet.sizeDesktop}px`,
-          margin: "0 auto 8px",
-          borderRadius: "50%",
-          background: planet.color,
-          border: "1px solid rgba(255,255,255,0.12)",
-          boxShadow: "0 14px 24px rgba(0,0,0,0.22), inset -10px -12px 16px rgba(0,0,0,0.16), inset 10px 12px 14px rgba(255,255,255,0.16), 0 0 18px rgba(105,162,255,0.12)",
+          transform: "translate(-50%, -50%)",
         });
 
         setStyles(kicker, {
@@ -458,24 +466,25 @@
           fontWeight: "700",
         });
 
-        token.addEventListener("mouseenter", () => {
-          token.style.transform = `${token.dataset.transform || ""} translateY(-2px) scale(1.02)`;
-          token.style.borderColor = "rgba(124,166,255,0.42)";
-          token.style.background = "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))";
-          token.style.boxShadow = "0 16px 36px rgba(0,0,0,0.28)";
+        anchor.addEventListener("mouseenter", () => {
+          label.style.borderColor = "rgba(124,166,255,0.42)";
+          label.style.background = "linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))";
+          label.style.boxShadow = "0 16px 36px rgba(0,0,0,0.28)";
+          label.style.filter = "brightness(1.03)";
         });
 
-        token.addEventListener("mouseleave", () => {
-          token.style.transform = token.dataset.transform || "";
-          token.style.borderColor = "rgba(255,255,255,0.14)";
-          token.style.background = "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
-          token.style.boxShadow = "0 12px 30px rgba(0,0,0,0.22)";
+        anchor.addEventListener("mouseleave", () => {
+          label.style.borderColor = "rgba(255,255,255,0.14)";
+          label.style.background = "linear-gradient(180deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05))";
+          label.style.boxShadow = "0 12px 30px rgba(0,0,0,0.22)";
+          label.style.filter = "brightness(1)";
         });
 
         return {
           planet,
-          el: token,
+          anchor,
           orb,
+          label,
         };
       });
     }
@@ -513,6 +522,22 @@
         x: m.horizontalRadiusBase * (0.22 + t * 0.88),
         y: m.verticalRadiusBase * (0.28 + t * 0.82),
       };
+    }
+
+    getDockOffset(planet, size, mobile) {
+      const base = Math.max(size * 0.72, mobile ? 54 : 62);
+
+      if (mobile) {
+        if (planet.labelDock === "left") return { x: -(base + 18), y: 0 };
+        if (planet.labelDock === "right") return { x: base + 18, y: 0 };
+        if (planet.labelDock === "bottom") return { x: 0, y: base + 12 };
+        return { x: 0, y: -(base + 14) };
+      }
+
+      if (planet.labelDock === "left") return { x: -(base + 24), y: 0 };
+      if (planet.labelDock === "right") return { x: base + 24, y: 0 };
+      if (planet.labelDock === "bottom") return { x: 0, y: base + 18 };
+      return { x: 0, y: -(base + 18) };
     }
 
     layoutStatic() {
@@ -598,7 +623,7 @@
     positionTokens(timeDeg) {
       const m = this.measure();
 
-      this.tokens.forEach(({ planet, el }) => {
+      this.tokens.forEach(({ planet, anchor, orb, label }) => {
         const orbit = this.getOrbitRadius(planet.orbitOrder, m);
         const point = polarToCartesian(
           m.centerX,
@@ -609,24 +634,18 @@
           m.tiltDeg
         );
 
-        const width = el.offsetWidth || 120;
-        const height = el.offsetHeight || 120;
+        const depthScale = 0.86 + point.depth * 0.16;
+        const depthOpacity = 0.78 + point.depth * 0.22;
+        const size = m.mobile ? planet.sizeMobile : planet.sizeDesktop;
+        const dock = this.getDockOffset(planet, size, m.mobile);
 
-        const safeLeft = 8;
-        const safeRight = this.stage.clientWidth - width - 8;
-        const safeTop = 8;
-        const safeBottom = this.stage.clientHeight - height - 8;
+        anchor.style.left = `${point.x}px`;
+        anchor.style.top = `${point.y}px`;
+        anchor.style.zIndex = `${10 + Math.round(point.depth * 20) + planet.orbitOrder}`;
+        anchor.style.opacity = `${depthOpacity}`;
 
-        const left = clamp(point.x - width * 0.5, safeLeft, safeRight);
-        const top = clamp(point.y - height * 0.5, safeTop, safeBottom);
-
-        const scale = 0.86 + point.depth * 0.16;
-        const transform = `translate3d(${left}px, ${top}px, 0) scale(${scale})`;
-
-        el.dataset.transform = transform;
-        el.style.transform = transform;
-        el.style.opacity = `${0.78 + point.depth * 0.22}`;
-        el.style.zIndex = `${10 + Math.round(point.depth * 20) + planet.orbitOrder}`;
+        orb.style.transform = `translate(-50%, -50%) scale(${depthScale})`;
+        label.style.transform = `translate(calc(-50% + ${dock.x}px), calc(-50% + ${dock.y}px)) scale(${0.96 + point.depth * 0.06})`;
       });
     }
 

@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,viewport-fit=cover"
+  >
+  <title>Big Laughs Comedy · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Big Laughs Comedy in Fort Worth. Sunday nights at 7:00 p.m. Tickets are $1 each."
+  >
+
+  <style>
+    :root {
+      --bg: #04060a;
+      --bg-deep: #08111d;
+      --panel: rgba(255, 255, 255, 0.05);
+      --panel-soft: rgba(255, 255, 255, 0.03);
+      --line: rgba(255, 255, 255, 0.10);
+
+      --text: #eef4ff;
+      --muted: #9fb0cf;
+
+      --gold: #f1c36b;
+      --gold-soft: #ffdca0;
+      --blue: #58a6ff;
+      --blue-soft: #9dd1ff;
+      --accent: #ffcf6b;
+      --ok: #8fffb5;
+
+      --shadow: 0 24px 80px rgba(0, 0, 0, 0.38);
+      --radius: 24px;
+      --max: 1180px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    body {
+      overflow-x: hidden;
+      font:
+        16px/1.6 Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Helvetica,
+        Arial,
+        sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.12), transparent 24%),
+        radial-gradient(circle at bottom, rgba(88, 166, 255, 0.08), transparent 28%),
+        linear-gradient(180deg, #03050a 0%, #07111d 100%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      isolation: isolate;
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: min(100% - 24px, var(--max));
+      margin: 0 auto;
+      padding: 18px 0 44px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 8px 0 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      width: 14px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--gold), #ffffff);
+      box-shadow: 0 0 28px rgba(241, 195, 107, 0.45);
+      flex: 0 0 auto;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-sub {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--blue-soft);
+      font-size: 14px;
+      transition:
+        border-color 0.18s ease,
+        transform 0.18s ease,
+        background 0.18s ease;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .nav a[aria-current="page"] {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-1px);
+      outline: none;
+    }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-soft));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
+      gap: 18px;
+      padding: 18px 0 12px;
+    }
+
+    .hero-main,
+    .hero-side,
+    .section {
+      padding: 24px;
+    }
+
+    .hero-side {
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 14px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--gold-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+      margin: 0;
+      line-height: 1.04;
+      letter-spacing: -0.04em;
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+      font-weight: 600;
+    }
+
+    h1 {
+      font-size: clamp(42px, 7vw, 84px);
+      color: var(--gold-soft);
+      max-width: 11ch;
+    }
+
+    h2 {
+      font-size: clamp(26px, 3.8vw, 44px);
+      color: var(--gold-soft);
+    }
+
+    h3 {
+      font-size: 28px;
+      color: #ffffff;
+    }
+
+    h4 {
+      font-size: 22px;
+      color: #ffffff;
+    }
+
+    .lede,
+    .copy,
+    .detail,
+    .meta-value {
+      color: var(--muted);
+    }
+
+    .lede {
+      margin: 16px 0 0;
+      max-width: 40rem;
+      font-size: 18px;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      font-weight: 700;
+    }
+
+    .button-primary {
+      background: linear-gradient(
+        135deg,
+        rgba(241, 195, 107, 0.20),
+        rgba(255, 255, 255, 0.08)
+      );
+      color: #ffffff;
+    }
+
+    .button-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--blue-soft);
+    }
+
+    .meta-label {
+      margin: 0;
+      color: var(--blue-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .meta-value {
+      margin: 6px 0 0;
+      font-size: 16px;
+    }
+
+    .stack {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(241, 195, 107, 0.10), transparent 28%),
+        radial-gradient(circle at 82% 24%, rgba(88, 166, 255, 0.10), transparent 26%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .card-kicker {
+      color: var(--blue-soft);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .detail {
+      margin: 0;
+      flex: 1 1 auto;
+    }
+
+    .price-panel {
+      border: 1px solid rgba(241, 195, 107, 0.22);
+      background:
+        radial-gradient(circle at top, rgba(241, 195, 107, 0.16), transparent 44%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.025));
+    }
+
+    .price-line {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .price-amount {
+      font-size: clamp(52px, 8vw, 84px);
+      line-height: 0.9;
+      color: var(--gold-soft);
+      font-family:
+        "Iowan Old Style",
+        "Palatino Linotype",
+        "Book Antiqua",
+        Palatino,
+        "Times New Roman",
+        serif;
+    }
+
+    .price-copy {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0;
+    }
+
+    .footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 22px;
+      padding: 12px 4px 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .two-col,
+      .three-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .shell {
+        width: min(100% - 18px, var(--max));
+        padding-top: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .nav {
+        justify-content: flex-start;
+      }
+
+      .hero-main,
+      .hero-side,
+      .section {
+        padding: 18px;
+      }
+
+      .lede {
+        font-size: 16px;
+      }
+
+      .nav a,
+      .button {
+        width: 100%;
+      }
+
+      .hero-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="shell">
+      <header class="topbar" aria-label="Primary navigation">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true"></div>
+          <div>
+            <p class="brand-title">Diamond Gate Bridge</p>
+            <p class="brand-sub">Public expression path · Big Laughs Comedy</p>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="Top navigation">
+          <a href="/">Root</a>
+          <a href="/gate/">Gate</a>
+          <a href="/home/">Home</a>
+          <a href="/prelude/">Prelude</a>
+          <a href="/about/">About</a>
+          <a href="/contact/">Contact</a>
+          <a href="/big-laughs/" aria-current="page">Big Laughs</a>
+        </nav>
+      </header>
+
+      <main class="stack">
+        <section class="panel hero" aria-labelledby="big-laughs-title">
+          <article class="hero-main">
+            <p class="eyebrow">Sunday feature</p>
+            <h1 id="big-laughs-title">Big Laughs Comedy.</h1>
+            <p class="lede">
+              A Sunday-night Fort Worth comedy and motivational speaking event,
+              built as a live public-expression path under the larger Diamond Gate Bridge family.
+            </p>
+
+            <div class="hero-actions">
+              <a class="button button-primary" href="/contact/">Inquire / reserve</a>
+              <a class="button button-secondary" href="/gate/">Return to Gate</a>
+            </div>
+          </article>
+
+          <aside class="panel hero-side">
+            <div>
+              <p class="meta-label">Start time</p>
+              <p class="meta-value">Sunday nights · 7:00 p.m.</p>
+            </div>
+            <div>
+              <p class="meta-label">Ticket line</p>
+              <p class="meta-value">$1 per ticket</p>
+            </div>
+            <div>
+              <p class="meta-label">Venue context</p>
+              <p class="meta-value">Big Laugh Comedy Club · Downtown Fort Worth</p>
+            </div>
+            <div>
+              <p class="meta-label">Working event line</p>
+              <p class="meta-value">A Dollar a Day Keeps the Psychiatrist Away</p>
+            </div>
+          </aside>
+        </section>
+
+        <section class="panel section" aria-labelledby="event-title">
+          <p class="eyebrow">Live event</p>
+          <h2 id="event-title">A Dollar a Day Keeps the Psychiatrist Away.</h2>
+
+          <div class="two-col" style="margin-top:18px;">
+            <article class="card">
+              <p class="card-kicker">Event read</p>
+              <h3>Comedy + speaking in one room</h3>
+              <p class="detail">
+                This page holds the Big Laughs public-facing event line: live comedy,
+                motivational speaking, crowd energy, and a direct audience path for Sunday night.
+              </p>
+            </article>
+
+            <article class="card price-panel">
+              <p class="card-kicker">Ticket anchor</p>
+              <div class="price-line">
+                <span class="price-amount">$1</span>
+                <p class="price-copy">tickets</p>
+              </div>
+              <p class="detail">
+                Low-friction entry. Clear public offer. Easy first commitment.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" aria-labelledby="venue-title">
+          <p class="eyebrow">Fort Worth context</p>
+          <h2 id="venue-title">Venue grounding.</h2>
+
+          <div class="three-col" style="margin-top:18px;">
+            <article class="card">
+              <p class="card-kicker">Address</p>
+              <h4>604 Main St, Suite 100</h4>
+              <p class="detail">Fort Worth, TX 76102</p>
+            </article>
+
+            <article class="card">
+              <p class="card-kicker">Contact</p>
+              <h4>(512) 817-9535</h4>
+              <p class="detail">support@blcomedy.com</p>
+            </article>
+
+            <article class="card">
+              <p class="card-kicker">Venue type</p>
+              <h4>Active comedy venue</h4>
+              <p class="detail">
+                Big Laugh Fort Worth publicly lists active rooms and ongoing show programming.
+              </p>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel section" aria-labelledby="path-title">
+          <p class="eyebrow">Public expression path</p>
+          <h2 id="path-title">What this page does.</h2>
+
+          <div class="two-col" style="margin-top:18px;">
+            <article class="card">
+              <p class="card-kicker">Comedy</p>
+              <h3>Big Laughs</h3>
+              <p class="detail">
+                Carries the live-club energy, hosted-night identity, and audience-facing entertainment layer.
+              </p>
+            </article>
+
+            <article class="card">
+              <p class="card-kicker">Speaking</p>
+              <h3>Motivational speaking</h3>
+              <p class="detail">
+                Carries the message, the voice, and the public-speaking expression without splitting into a separate shell.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <span>
+          Receipt: PAGE=BIG_LAUGHS | EVENT=SUNDAY_7PM | TICKET=$1 | ROLE=PUBLIC_EXPRESSION_PATH
+        </span>
+        <span><a href="/gate/">Return to gate</a></span>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>

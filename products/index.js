@@ -2,10 +2,10 @@
   "use strict";
 
   const PRODUCTS_PAGE_META = Object.freeze({
-    name: "PRODUCTS_STORM_TREE_CHAMBER",
-    version: "V3",
+    name: "PRODUCTS_WINDOW_STORM_CHAMBER",
+    version: "V4",
     role: "presentation_and_navigation_only",
-    contract: "PRODUCTS_STORM_TREE_CHAMBER_V3",
+    contract: "PRODUCTS_WINDOW_STORM_CHAMBER_V4",
     status: "ACTIVE",
     deterministic: true
   });
@@ -73,16 +73,15 @@
       skyTop: "#0c1630",
       skyMid: "#16294d",
       skyBottom: "#0a111f",
-      glowA: "rgba(255,228,162,.16)",
+      glowA: "rgba(255,228,162,.18)",
       glowB: "rgba(126,156,255,.18)",
-      horizonGlow: "rgba(255,191,112,.24)",
-      rainOpacity: 0.34,
+      horizonGlow: "rgba(255,191,112,.22)",
+      rainOpacity: 0.26,
       rainAngle: 103,
-      lightning: [
+      lightningPaths: [
         "M66 4 57 28 72 26 49 66 58 43 45 45 66 4Z",
         "M78 12 70 34 82 33 63 58 71 43 59 44 78 12Z"
       ],
-      lightningOpacity: 0.92,
       lightningScale: 1.02,
       trunkX: 50,
       trunkHeight: 35,
@@ -90,52 +89,56 @@
       canopyColorA: "#d9ba76",
       canopyColorB: "#7f6840",
       leafType: "gold",
-      cityOpacity: 0.88
+      cityOpacity: 0.34,
+      mullionV: true,
+      mullionH: false
     },
     aai: {
       skyTop: "#091426",
       skyMid: "#132444",
       skyBottom: "#08111d",
-      glowA: "rgba(157,198,255,.16)",
-      glowB: "rgba(201,225,255,.14)",
-      horizonGlow: "rgba(116,154,255,.16)",
-      rainOpacity: 0.28,
+      glowA: "rgba(157,198,255,.18)",
+      glowB: "rgba(201,225,255,.12)",
+      horizonGlow: "rgba(116,154,255,.14)",
+      rainOpacity: 0.22,
       rainAngle: 102,
-      lightning: [
+      lightningPaths: [
         "M54 6 47 24 58 23 42 52 49 37 38 38 54 6Z",
         "M72 18 66 33 75 32 62 52 67 41 58 42 72 18Z"
       ],
-      lightningOpacity: 0.82,
       lightningScale: 0.9,
       trunkX: 52,
       trunkHeight: 33,
-      canopyScale: 0.9,
+      canopyScale: 0.92,
       canopyColorA: "#b6d6ff",
       canopyColorB: "#5679ab",
       leafType: "blue",
-      cityOpacity: 0.82
+      cityOpacity: 0.28,
+      mullionV: true,
+      mullionH: false
     },
     nutrition: {
       skyTop: "#101723",
       skyMid: "#213244",
       skyBottom: "#0f171f",
       glowA: "rgba(184,221,140,.12)",
-      glowB: "rgba(109,154,95,.12)",
-      horizonGlow: "rgba(187,168,112,.16)",
-      rainOpacity: 0.24,
+      glowB: "rgba(109,154,95,.10)",
+      horizonGlow: "rgba(187,168,112,.12)",
+      rainOpacity: 0.16,
       rainAngle: 101,
-      lightning: [
+      lightningPaths: [
         "M61 10 54 28 64 27 49 55 55 40 45 41 61 10Z"
       ],
-      lightningOpacity: 0.5,
-      lightningScale: 0.78,
+      lightningScale: 0.76,
       trunkX: 48,
       trunkHeight: 40,
       canopyScale: 1.08,
       canopyColorA: "#9ec77d",
       canopyColorB: "#4f7646",
       leafType: "green",
-      cityOpacity: 0.58
+      cityOpacity: 0.16,
+      mullionV: false,
+      mullionH: false
     },
     "five-flags": {
       skyTop: "#0e1322",
@@ -143,13 +146,12 @@
       skyBottom: "#09101a",
       glowA: "rgba(255,188,118,.12)",
       glowB: "rgba(168,126,255,.10)",
-      horizonGlow: "rgba(212,111,72,.16)",
-      rainOpacity: 0.26,
+      horizonGlow: "rgba(212,111,72,.12)",
+      rainOpacity: 0.18,
       rainAngle: 105,
-      lightning: [
+      lightningPaths: [
         "M70 8 62 29 75 28 57 58 64 43 52 44 70 8Z"
       ],
-      lightningOpacity: 0.62,
       lightningScale: 0.84,
       trunkX: 58,
       trunkHeight: 34,
@@ -157,7 +159,9 @@
       canopyColorA: "#d28b67",
       canopyColorB: "#7d4b37",
       leafType: "copper",
-      cityOpacity: 0.7
+      cityOpacity: 0.2,
+      mullionV: false,
+      mullionH: false
     },
     esl: {
       skyTop: "#0c1422",
@@ -165,13 +169,12 @@
       skyBottom: "#081019",
       glowA: "rgba(189,211,255,.10)",
       glowB: "rgba(255,214,132,.08)",
-      horizonGlow: "rgba(255,188,118,.14)",
-      rainOpacity: 0.22,
+      horizonGlow: "rgba(255,188,118,.10)",
+      rainOpacity: 0.14,
       rainAngle: 100,
-      lightning: [
+      lightningPaths: [
         "M48 10 42 24 51 24 39 45 44 33 35 34 48 10Z"
       ],
-      lightningOpacity: 0.42,
       lightningScale: 0.7,
       trunkX: 42,
       trunkHeight: 32,
@@ -179,7 +182,9 @@
       canopyColorA: "#b6c8de",
       canopyColorB: "#65768d",
       leafType: "silver",
-      cityOpacity: 0.62
+      cityOpacity: 0.14,
+      mullionV: false,
+      mullionH: false
     }
   });
 
@@ -207,19 +212,13 @@
       circle.setAttribute("cy", "32");
       circle.setAttribute("r", "25");
       circle.setAttribute("fill", "none");
-      circle.setAttribute(
-        "stroke",
-        kind === "archcoin" ? "rgba(242,211,145,.86)" : "rgba(189,215,255,.88)"
-      );
+      circle.setAttribute("stroke", kind === "archcoin" ? "rgba(242,211,145,.86)" : "rgba(189,215,255,.88)");
       circle.setAttribute("stroke-width", "1.8");
 
       const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path1.setAttribute("d", "M18 44 32 16 46 44");
       path1.setAttribute("fill", "none");
-      path1.setAttribute(
-        "stroke",
-        kind === "archcoin" ? "rgba(242,211,145,.96)" : "rgba(189,215,255,.96)"
-      );
+      path1.setAttribute("stroke", kind === "archcoin" ? "rgba(242,211,145,.96)" : "rgba(189,215,255,.96)");
       path1.setAttribute("stroke-width", "3.2");
       path1.setAttribute("stroke-linecap", "round");
       path1.setAttribute("stroke-linejoin", "round");
@@ -227,10 +226,7 @@
       const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
       path2.setAttribute("d", "M23 34h18");
       path2.setAttribute("fill", "none");
-      path2.setAttribute(
-        "stroke",
-        kind === "archcoin" ? "rgba(242,211,145,.96)" : "rgba(189,215,255,.96)"
-      );
+      path2.setAttribute("stroke", kind === "archcoin" ? "rgba(242,211,145,.96)" : "rgba(189,215,255,.96)");
       path2.setAttribute("stroke-width", "3.2");
       path2.setAttribute("stroke-linecap", "round");
 
@@ -252,14 +248,11 @@
     svg.setAttribute("aria-hidden", "true");
 
     if (kind === "leaf") {
-      svg.innerHTML =
-        '<path d="M18 3c-5.5 0-10 4.5-10 10v8"/><path d="M18 3c0 8-4 12-10 12"/><path d="M8 13c-2.8 0-5-2.2-5-5 2.8 0 5 2.2 5 5Z"/>';
+      svg.innerHTML = '<path d="M18 3c-5.5 0-10 4.5-10 10v8"/><path d="M18 3c0 8-4 12-10 12"/><path d="M8 13c-2.8 0-5-2.2-5-5 2.8 0 5 2.2 5 5Z"/>';
     } else if (kind === "flag") {
-      svg.innerHTML =
-        '<path d="M6 21V4"/><path d="M6 5c2-1 4-1 6 0s4 1 6 0v8c-2 1-4 1-6 0s-4-1-6 0"/>';
+      svg.innerHTML = '<path d="M6 21V4"/><path d="M6 5c2-1 4-1 6 0s4 1 6 0v8c-2 1-4 1-6 0s-4-1-6 0"/>';
     } else if (kind === "book") {
-      svg.innerHTML =
-        '<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v15.5a1.5 1.5 0 0 0-1.5-1.5H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M8 4v14"/>';
+      svg.innerHTML = '<path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H20v15.5a1.5 1.5 0 0 0-1.5-1.5H6.5A2.5 2.5 0 0 0 4 20.5Z"/><path d="M8 4v14"/>';
     }
 
     box.appendChild(svg);
@@ -292,18 +285,14 @@
     `;
   }
 
-  function buildLightning(paths, opacity, scale) {
-    const pathMarkup = paths
-      .map(
-        (d) =>
-          `<path d="${d}" fill="rgba(237,243,255,${opacity.toFixed(2)})"></path>`
-      )
+  function buildLightning(paths, scale) {
+    const markup = paths
+      .map((d) => `<path d="${d}" fill="rgba(237,243,255,.98)"></path>`)
       .join("");
 
     return `
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none"
-        style="position:absolute;inset:0;opacity:${opacity.toFixed(2)};transform:scale(${scale});transform-origin:center center;filter:drop-shadow(0 0 6px rgba(220,234,255,.34)) drop-shadow(0 0 16px rgba(159,190,255,.20));pointer-events:none;">
-        ${pathMarkup}
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="cardWindowLightning" style="transform:scale(${scale});transform-origin:center center;">
+        ${markup}
       </svg>
     `;
   }
@@ -311,49 +300,23 @@
   function buildLeaves(type, colorA, colorB, canopyScale) {
     const baseSets = {
       gold: [
-        [56, 124, 68, 68],
-        [18, 118, 62, 62],
-        [100, 118, 62, 62],
-        [38, 154, 54, 54],
-        [92, 154, 54, 54],
-        [66, 172, 48, 48]
+        [56,124,68,68],[18,118,62,62],[100,118,62,62],[38,154,54,54],[92,154,54,54],[66,172,48,48]
       ],
       blue: [
-        [58, 126, 64, 64],
-        [24, 122, 56, 56],
-        [102, 122, 56, 56],
-        [44, 156, 50, 50],
-        [92, 156, 50, 50],
-        [68, 176, 42, 42]
+        [58,126,64,64],[24,122,56,56],[102,122,56,56],[44,156,50,50],[92,156,50,50],[68,176,42,42]
       ],
       green: [
-        [54, 120, 74, 74],
-        [14, 116, 66, 66],
-        [106, 116, 66, 66],
-        [34, 156, 60, 60],
-        [96, 156, 60, 60],
-        [66, 182, 52, 52]
+        [54,120,74,74],[14,116,66,66],[106,116,66,66],[34,156,60,60],[96,156,60,60],[66,182,52,52]
       ],
       copper: [
-        [60, 128, 62, 62],
-        [24, 124, 56, 56],
-        [104, 124, 56, 56],
-        [44, 156, 50, 50],
-        [96, 156, 50, 50],
-        [70, 176, 42, 42]
+        [60,128,62,62],[24,124,56,56],[104,124,56,56],[44,156,50,50],[96,156,50,50],[70,176,42,42]
       ],
       silver: [
-        [60, 128, 58, 58],
-        [28, 124, 50, 50],
-        [102, 124, 50, 50],
-        [48, 156, 44, 44],
-        [94, 156, 44, 44],
-        [72, 176, 38, 38]
+        [60,128,58,58],[28,124,50,50],[102,124,50,50],[48,156,44,44],[94,156,44,44],[72,176,38,38]
       ]
     };
 
-    const shapes = baseSets[type] || baseSets.gold;
-    return shapes
+    return (baseSets[type] || baseSets.gold)
       .map(([x, y, w, h]) => {
         const sw = Math.round(w * canopyScale);
         const sh = Math.round(h * canopyScale);
@@ -379,128 +342,115 @@
     const view = PRODUCT_WINDOW_VIEWS[productKey] || PRODUCT_WINDOW_VIEWS.archcoin;
 
     return `
-      <div style="
-        position:absolute;
-        inset:0;
-        border-radius:22px;
-        overflow:hidden;
-        pointer-events:none;
-      ">
-        <div style="
-          position:absolute;
-          inset:0;
+      <div class="cardWindow">
+        <div class="cardWindowScene" style="
           background:
             radial-gradient(circle at 18% 18%, ${view.glowA}, transparent 28%),
             radial-gradient(circle at 82% 22%, ${view.glowB}, transparent 30%),
             linear-gradient(180deg, ${view.skyTop} 0%, ${view.skyMid} 48%, ${view.skyBottom} 100%);
-        "></div>
-
-        <div style="
-          position:absolute;
-          inset:-8%;
-          opacity:${view.rainOpacity};
-          background:
-            repeating-linear-gradient(
-              ${view.rainAngle}deg,
-              rgba(255,255,255,0) 0 14px,
-              rgba(194,214,255,.10) 14px 16px,
-              rgba(255,255,255,0) 16px 30px
-            );
-        "></div>
-
-        <div style="
-          position:absolute;
-          left:0;
-          right:0;
-          bottom:0;
-          height:34%;
-          background:
-            radial-gradient(circle at 50% 100%, ${view.horizonGlow}, transparent 32%),
-            linear-gradient(180deg, rgba(5,9,16,0) 0%, rgba(5,9,16,.24) 30%, rgba(5,9,16,.82) 100%);
-        "></div>
-
-        ${buildCityline(view.cityOpacity)}
-
-        <div style="
-          position:absolute;
-          left:${view.trunkX}%;
-          bottom:0;
-          width:156px;
-          height:210px;
-          transform:translateX(-50%);
         ">
           <div style="
             position:absolute;
-            left:50%;
+            inset:-8%;
+            opacity:${view.rainOpacity};
+            background:
+              repeating-linear-gradient(
+                ${view.rainAngle}deg,
+                rgba(255,255,255,0) 0 14px,
+                rgba(194,214,255,.10) 14px 16px,
+                rgba(255,255,255,0) 16px 30px
+              );
+          "></div>
+
+          <div style="
+            position:absolute;
+            inset:0;
+            background:
+              radial-gradient(circle at 50% 100%, ${view.horizonGlow}, transparent 32%),
+              linear-gradient(180deg, rgba(5,9,16,0) 0%, rgba(5,9,16,.24) 30%, rgba(5,9,16,.82) 100%);
+          "></div>
+
+          ${buildCityline(view.cityOpacity)}
+
+          <div style="
+            position:absolute;
+            left:${view.trunkX}%;
             bottom:0;
-            width:14px;
-            height:${view.trunkHeight}%;
+            width:156px;
+            height:210px;
             transform:translateX(-50%);
-            background:linear-gradient(180deg,#62503f,#342a22);
-            border-radius:10px;
-          "></div>
+          ">
+            <div style="
+              position:absolute;
+              left:50%;
+              bottom:0;
+              width:14px;
+              height:${view.trunkHeight}%;
+              transform:translateX(-50%);
+              background:linear-gradient(180deg,#62503f,#342a22);
+              border-radius:10px;
+            "></div>
 
-          <div style="
-            position:absolute;
-            width:10px;
-            height:86px;
-            left:60px;
-            bottom:66px;
-            transform:rotate(-34deg);
-            transform-origin:bottom center;
-            border-radius:999px;
-            background:linear-gradient(180deg,#6e5948,#342a22);
-          "></div>
+            <div style="
+              position:absolute;
+              width:10px;
+              height:86px;
+              left:60px;
+              bottom:66px;
+              transform:rotate(-34deg);
+              transform-origin:bottom center;
+              border-radius:999px;
+              background:linear-gradient(180deg,#6e5948,#342a22);
+            "></div>
 
-          <div style="
-            position:absolute;
-            width:10px;
-            height:90px;
-            left:86px;
-            bottom:68px;
-            transform:rotate(30deg);
-            transform-origin:bottom center;
-            border-radius:999px;
-            background:linear-gradient(180deg,#6e5948,#342a22);
-          "></div>
+            <div style="
+              position:absolute;
+              width:10px;
+              height:90px;
+              left:86px;
+              bottom:68px;
+              transform:rotate(30deg);
+              transform-origin:bottom center;
+              border-radius:999px;
+              background:linear-gradient(180deg,#6e5948,#342a22);
+            "></div>
 
-          <div style="
-            position:absolute;
-            width:8px;
-            height:58px;
-            left:48px;
-            bottom:106px;
-            transform:rotate(-56deg);
-            transform-origin:bottom center;
-            border-radius:999px;
-            background:linear-gradient(180deg,#6e5948,#342a22);
-          "></div>
+            <div style="
+              position:absolute;
+              width:8px;
+              height:58px;
+              left:48px;
+              bottom:106px;
+              transform:rotate(-56deg);
+              transform-origin:bottom center;
+              border-radius:999px;
+              background:linear-gradient(180deg,#6e5948,#342a22);
+            "></div>
 
-          <div style="
-            position:absolute;
-            width:8px;
-            height:60px;
-            left:98px;
-            bottom:108px;
-            transform:rotate(56deg);
-            transform-origin:bottom center;
-            border-radius:999px;
-            background:linear-gradient(180deg,#6e5948,#342a22);
-          "></div>
+            <div style="
+              position:absolute;
+              width:8px;
+              height:60px;
+              left:98px;
+              bottom:108px;
+              transform:rotate(56deg);
+              transform-origin:bottom center;
+              border-radius:999px;
+              background:linear-gradient(180deg,#6e5948,#342a22);
+            "></div>
 
-          ${buildLeaves(view.leafType, view.canopyColorA, view.canopyColorB, view.canopyScale)}
+            ${buildLeaves(view.leafType, view.canopyColorA, view.canopyColorB, view.canopyScale)}
+          </div>
+
+          ${buildLightning(view.lightningPaths, view.lightningScale)}
         </div>
 
-        ${buildLightning(view.lightning, view.lightningOpacity, view.lightningScale)}
+        <div class="windowSpill"></div>
 
-        <div style="
-          position:absolute;
-          inset:0;
-          background:
-            linear-gradient(102deg, rgba(255,255,255,.10), transparent 20%, transparent 58%, rgba(255,255,255,.05)),
-            linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,0));
-          mix-blend-mode:screen;
-        "></div>
+        <div class="cardWindowGlass"></div>
+        ${view.mullionV ? '<div class="cardWindowMullionV"></div>' : ''}
+        ${view.mullionH ? '<div class="cardWindowMullionH"></div>' : ''}
+        <div class="cardWindowFrame"></div>
       </div>
     `;
   }
@@ -517,10 +467,7 @@
     const card = createEl("article", classes.join(" "));
     card.insertAdjacentHTML("afterbegin", buildStormWindow(product.key));
 
-    const content = createEl("div");
-    content.style.position = "relative";
-    content.style.zIndex = "1";
-
+    const content = createEl("div", "cardContent");
     content.appendChild(createIcon(product.icon, product.theme));
 
     const tag = createEl("p", "tag", product.label);
@@ -533,17 +480,14 @@
     content.appendChild(desc);
 
     const ctaBar = createEl("div", "ctaBar");
-    ctaBar.style.position = "relative";
-    ctaBar.style.zIndex = "1";
-
     const link = createEl("a", "cardBtn");
     link.href = product.href;
     link.setAttribute("data-product-path", product.key);
     link.innerHTML = `<span>${product.button}</span><span aria-hidden="true">→</span>`;
-
     ctaBar.appendChild(link);
-    card.append(content, ctaBar);
 
+    content.appendChild(ctaBar);
+    card.appendChild(content);
     return card;
   }
 
@@ -572,7 +516,7 @@
       window.clearTimeout(flashTimeout);
       flashTimeout = window.setTimeout(() => {
         page.classList.remove("flash");
-      }, 850);
+      }, 240);
     }
 
     triggerFlash();

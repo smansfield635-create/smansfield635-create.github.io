@@ -5,16 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Prelude | Diamond Gate Bridge</title>
   <meta name="description" content="Prelude to The Nine Summits of Love." />
-  <link rel="stylesheet" href="/assets/room-seasons.css" />
   <style>
     :root{
       color-scheme:dark;
+      --bg0:#130f15;
+      --bg1:#23161c;
+      --bg2:#3f241b;
       --ink:#fff8ef;
       --mut:rgba(255,248,239,.84);
       --soft:rgba(255,248,239,.62);
-      --line:rgba(255,255,255,.12);
-      --lineStrong:var(--season-border-strong);
-      --shadow:var(--season-shadow);
+      --gold:#f5dda5;
+      --gold2:#ffeec8;
+      --amber:#ffbe73;
+      --sun:#ff9248;
+      --coral:#ff8d7c;
+      --violet:#d39bff;
+      --wood:#3a291f;
+      --wood2:#211710;
+      --line:rgba(255,255,255,.10);
+      --lineStrong:rgba(245,221,165,.24);
+      --panelTop:rgba(28,18,14,.76);
+      --panelBottom:rgba(12,10,8,.94);
+      --shadow:0 24px 76px rgba(0,0,0,.48);
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
       --safe-bottom:env(safe-area-inset-bottom,0px);
@@ -22,127 +34,470 @@
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,190,115,.10), transparent 26%),
+        radial-gradient(circle at 50% 84%, rgba(255,141,124,.06), transparent 30%),
+        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
+      color:var(--ink);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
     body{overflow-x:hidden}
     a{color:inherit;text-decoration:none}
 
-    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
+    .page{
+      position:relative;
+      min-height:100vh;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .aurora{
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+    }
+
+    .aurora::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 18% 24%, rgba(255,190,115,.14), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(255,141,124,.12), transparent 28%),
+        radial-gradient(circle at 64% 78%, rgba(211,155,255,.10), transparent 28%);
+      filter:blur(10px);
+    }
+
     .wrap{
-      position:relative;z-index:1;width:min(1220px,calc(100vw - 32px));margin:0 auto;
-      padding:calc(24px + var(--safe-top)) calc(16px + var(--safe-right)) calc(48px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      position:relative;
+      z-index:1;
+      width:min(1220px,calc(100vw - 32px));
+      margin:0 auto;
+      padding:
+        calc(24px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(48px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
 
-    .topbar,.hero,.movement,.dolls,.closeout{
-      border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);position:relative;overflow:hidden;
-      background:linear-gradient(180deg,var(--season-panel-top),var(--season-panel-bottom));
-      margin-bottom:18px;
+    .topbar,.hero,.dolls,.bridges,.closeout{
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
     }
 
-    .topbar::before,.hero::before,.movement::before,.dolls::before,.closeout::before{
-      content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);border-radius:inherit
+    .topbar::before,.hero::before,.dolls::before,.bridges::before,.closeout::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+      border-radius:inherit;
     }
 
     .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:14px 18px;
     }
 
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
     .brandMark{
-      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);border:1px solid var(--lineStrong);
-      background:linear-gradient(180deg,rgba(112,65,38,.96),rgba(26,18,12,.92));flex:0 0 auto
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      transform:rotate(45deg);
+      border:1px solid var(--lineStrong);
+      background:linear-gradient(180deg,#7b4d2d,#2c180f);
+      flex:0 0 auto;
     }
-    .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .brandSubtitle{margin:0;color:var(--soft);font-size:.82rem}
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
+
+    .brandTitle{
+      margin:0 0 3px;
+      font-size:.96rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .brandSubtitle{
+      margin:0;
+      color:var(--soft);
+      font-size:.82rem;
+    }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
     .nav a,.cta{
-      min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--lineStrong);background:rgba(255,255,255,.04);
-      color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;
-      display:inline-flex;align-items:center;justify-content:center
+      min-height:44px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid var(--lineStrong);
+      background:rgba(255,255,255,.04);
+      color:var(--gold2);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:transform 140ms ease, box-shadow 140ms ease;
     }
 
-    .hero,.movement,.dolls,.closeout{padding:28px 24px 24px}
-    .eyebrow{margin:0 0 10px;color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
-    h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
-    h1{margin:0 0 12px;font-size:clamp(44px,8vw,86px);line-height:.92}
-    h2{margin:0 0 12px;font-size:clamp(28px,4vw,44px);line-height:1.02;color:var(--season-accent-2)}
-    h3{margin:0 0 8px;font-size:22px;line-height:1.08;color:var(--season-accent-2)}
-    p{margin:0;color:var(--mut);font-size:16px;line-height:1.68;max-width:920px}
-    .lead{font-size:20px;font-weight:800;color:rgba(255,248,239,.96);margin:0 0 12px;max-width:980px}
-
-    .heroGrid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);gap:18px;align-items:stretch;margin-top:18px}
-    .panel,.dollCard,.closeCard{
-      border:1px solid rgba(255,255,255,.10);border-radius:26px;padding:20px;background:linear-gradient(180deg,rgba(28,18,14,.78),rgba(12,10,8,.92));
-      position:relative;overflow:hidden
+    .nav a:hover,.cta:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 34px rgba(0,0,0,.26);
     }
-    .panel::before,.dollCard::before,.closeCard::before{
-      content:"";position:absolute;inset:0;pointer-events:none;background:
-        radial-gradient(circle at 18% 18%, rgba(255,180,90,.14), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(255,108,82,.12), transparent 28%),
-        radial-gradient(circle at 50% 84%, rgba(255,227,166,.10), transparent 24%);
-      opacity:.95
-    }
-    .panel > *,.dollCard > *,.closeCard > *{position:relative;z-index:1}
 
-    .chipRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+    .hero,.dolls,.bridges,.closeout{
+      padding:28px 24px 24px;
+    }
+
+    .eyebrow{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    h1,h2,h3{
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(44px,8vw,86px);
+      line-height:.92;
+    }
+
+    h2{
+      margin:0 0 10px;
+      font-size:clamp(28px,4vw,44px);
+      line-height:1.02;
+      color:var(--gold2);
+    }
+
+    h3{
+      margin:0 0 8px;
+      font-size:22px;
+      line-height:1.08;
+      color:var(--gold2);
+    }
+
+    p{
+      margin:0;
+      color:var(--mut);
+      font-size:16px;
+      line-height:1.68;
+      max-width:920px;
+    }
+
+    .lead{
+      font-size:20px;
+      font-weight:800;
+      color:rgba(255,248,239,.96);
+      margin:0 0 12px;
+      max-width:980px;
+    }
+
+    .heroGrid{
+      display:grid;
+      grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
+      gap:18px;
+      align-items:stretch;
+      margin-top:18px;
+    }
+
+    .panel,
+    .windowPanel,
+    .dollCard,
+    .bridgeCard,
+    .closeCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:26px;
+      padding:20px;
+      background:linear-gradient(180deg,rgba(35,22,15,.78),rgba(14,10,8,.94));
+      position:relative;
+      overflow:hidden;
+    }
+
+    .panel::before,
+    .windowPanel::before,
+    .dollCard::before,
+    .bridgeCard::before,
+    .closeCard::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,190,115,.12), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(255,141,124,.10), transparent 26%),
+        radial-gradient(circle at 50% 84%, rgba(211,155,255,.08), transparent 24%);
+      opacity:.95;
+    }
+
+    .panel > *,
+    .windowPanel > *,
+    .dollCard > *,
+    .bridgeCard > *,
+    .closeCard > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .chipRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
     .chip{
-      min-height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--season-chip-border);background:var(--season-chip-bg);
-      color:var(--season-chip-text);font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center
+      min-height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
     }
 
-    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-    .movementGrid,.dollGrid,.closeGrid{display:grid;gap:14px;margin-top:16px}
-    .movementGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .dollGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .closeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-
-    .windowPanel{
-      min-height:100%;border:1px solid rgba(255,255,255,.10);border-radius:26px;padding:20px;position:relative;overflow:hidden;
-      background:linear-gradient(180deg,rgba(32,18,12,.78),rgba(14,10,8,.92))
+    .ctaRow{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
     }
+
+    .windowFrameOuter{
+      position:relative;
+      min-height:340px;
+      border-radius:18px;
+      padding:12px;
+      background:linear-gradient(180deg,var(--wood),var(--wood2));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+    }
+
     .window{
-      position:absolute;inset:18px 18px 56px;border-radius:22px;border:1px solid rgba(255,255,255,.08);overflow:hidden
+      position:relative;
+      width:100%;
+      min-height:316px;
+      height:100%;
+      border-radius:14px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,245,224,.16), rgba(255,245,224,.04));
     }
-    .windowGlow::before{
-      content:"";position:absolute;inset:0;background:
-        radial-gradient(circle at 50% 100%, rgba(255,190,115,.30), transparent 34%),
-        linear-gradient(180deg,rgba(255,232,178,.22),rgba(255,146,86,.08));
-    }
-    .windowFrame{position:absolute;inset:0;background:
-      linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
-      linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%)
-    }
-    .windowLabel{position:absolute;left:20px;right:20px;bottom:18px;color:var(--soft);font-size:13px;line-height:1.55}
 
-    .list{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
-    .list li{position:relative;padding-left:18px;color:var(--mut);font-size:15px;line-height:1.58}
+    .outside{
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(255,190,115,.36), transparent 26%),
+        linear-gradient(180deg, rgba(255,236,176,.20) 0%, rgba(255,165,94,.10) 42%, rgba(64,50,40,.18) 100%);
+    }
+
+    .tree{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:210px;
+      height:260px;
+      transform:translateX(-50%);
+    }
+
+    .trunk{
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:18px;
+      height:112px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,#6a4930,#3a2719);
+      border-radius:12px;
+    }
+
+    .branch{
+      position:absolute;
+      background:linear-gradient(180deg,#754f34,#3a2719);
+      border-radius:999px;
+      transform-origin:bottom center;
+    }
+
+    .b1{width:10px;height:96px;left:82px;bottom:84px;transform:rotate(-34deg)}
+    .b2{width:10px;height:98px;left:118px;bottom:86px;transform:rotate(30deg)}
+    .b3{width:8px;height:64px;left:66px;bottom:132px;transform:rotate(-58deg)}
+    .b4{width:8px;height:66px;left:136px;bottom:134px;transform:rotate(56deg)}
+
+    .leaf{
+      position:absolute;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 40% 40%, rgba(255,251,230,.84), transparent 16%),
+        radial-gradient(circle at 50% 50%, rgba(255,202,112,.90), rgba(255,142,86,.94));
+      box-shadow:0 0 18px rgba(255,182,94,.16);
+    }
+
+    .l1{width:74px;height:74px;left:66px;bottom:136px}
+    .l2{width:68px;height:68px;left:20px;bottom:128px}
+    .l3{width:68px;height:68px;left:122px;bottom:128px}
+    .l4{width:58px;height:58px;left:46px;bottom:176px}
+    .l5{width:58px;height:58px;left:110px;bottom:176px}
+    .l6{width:50px;height:50px;left:82px;bottom:198px}
+
+    .sunGlow{
+      position:absolute;
+      left:50%;
+      bottom:16px;
+      width:220px;
+      height:96px;
+      transform:translateX(-50%);
+      background:
+        radial-gradient(circle at 50% 100%, rgba(255,214,150,.42), transparent 36%),
+        radial-gradient(circle at 50% 100%, rgba(255,143,58,.26), transparent 54%);
+      filter:blur(8px);
+    }
+
+    .pane{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
+        linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
+      pointer-events:none;
+    }
+
+    .windowReflection{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(120deg, rgba(255,255,255,.12), transparent 28%, transparent 58%, rgba(255,255,255,.06));
+      pointer-events:none;
+      mix-blend-mode:screen;
+    }
+
+    .windowLabel{
+      margin-top:14px;
+      color:var(--soft);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .dollGrid,.bridgeGrid,.closeGrid{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .dollGrid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
+
+    .bridgeGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .closeGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .list{
+      margin:14px 0 0;
+      padding:0;
+      list-style:none;
+      display:grid;
+      gap:8px;
+    }
+
+    .list li{
+      position:relative;
+      padding-left:18px;
+      color:var(--mut);
+      font-size:15px;
+      line-height:1.58;
+    }
+
     .list li::before{
-      content:"";position:absolute;left:0;top:.58em;width:6px;height:6px;border-radius:999px;background:var(--season-accent);box-shadow:0 0 10px rgba(255,227,166,.18)
+      content:"";
+      position:absolute;
+      left:0;
+      top:.58em;
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:var(--gold);
+      box-shadow:0 0 10px rgba(245,221,165,.18);
     }
 
-    .footnote{margin-top:10px;color:var(--soft);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+    .footnote{
+      margin-top:10px;
+      color:var(--soft);
+      font-size:12px;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
 
     @media (max-width:1080px){
-      .heroGrid,.movementGrid,.dollGrid,.closeGrid{grid-template-columns:1fr}
+      .heroGrid,
+      .dollGrid,
+      .bridgeGrid,
+      .closeGrid{
+        grid-template-columns:1fr;
+      }
     }
 
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,1220px)}
       .topbar{align-items:flex-start}
-      .hero,.movement,.dolls,.closeout{padding:20px 18px 18px}
+      .hero,.dolls,.bridges,.closeout{padding:20px 18px 18px}
     }
   </style>
 </head>
 <body>
   <div class="page">
+    <div class="aurora" aria-hidden="true"></div>
+
     <main class="wrap">
       <header class="topbar">
         <div class="brand">
           <div class="brandMark" aria-hidden="true"></div>
           <div>
             <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Prelude · Summer</p>
+            <p class="brandSubtitle">Prelude · Summer bloom</p>
           </div>
         </div>
+
         <nav class="nav" aria-label="Prelude navigation">
           <a href="/door/">Door</a>
           <a href="/home/">Home</a>
@@ -150,23 +505,27 @@
         </nav>
       </header>
 
-      <section class="hero season-window">
+      <section class="hero">
         <p class="eyebrow">Prelude</p>
         <h1>The first bloom.</h1>
-        <p class="lead">Prelude is summer: vitality, warmth, and visible expansion into The Nine Summits of Love.</p>
+        <p class="lead">
+          Prelude is the first inward chamber. Summer lives outside the house, and its fullness is witnessed through the Tree of Life.
+        </p>
 
         <div class="heroGrid">
           <article class="panel">
-            <h2>The movement becomes explicit here.</h2>
+            <h2>Meaning warms here.</h2>
             <p>
-              The Prelude is where threshold turns into bloom. It introduces the movement, names the interior direction, and opens the first visible Russian dolls.
+              The Prelude is where threshold becomes bloom. The house stays interior, coherent, and sheltered. The summer world is visible beyond the glass, not flooding the room itself.
             </p>
+
             <div class="chipRow">
-              <div class="chip">Summer</div>
-              <div class="chip">Bloom</div>
-              <div class="chip">Warm light</div>
-              <div class="chip">Inward motion</div>
+              <div class="chip">Inside is stable</div>
+              <div class="chip">Summer is outside</div>
+              <div class="chip">Tree of Life visible</div>
+              <div class="chip">First inward bloom</div>
             </div>
+
             <div class="ctaRow">
               <a class="cta" href="/nine-summits/">Open Nine Summits</a>
               <a class="cta" href="/home/">Continue to Home</a>
@@ -174,62 +533,74 @@
           </article>
 
           <aside class="windowPanel">
-            <div class="window">
-              <div class="windowGlow"></div>
-              <div class="windowFrame"></div>
+            <div class="windowFrameOuter">
+              <div class="window">
+                <div class="outside"></div>
+                <div class="sunGlow"></div>
+                <div class="tree" aria-hidden="true">
+                  <div class="trunk"></div>
+                  <div class="branch b1"></div>
+                  <div class="branch b2"></div>
+                  <div class="branch b3"></div>
+                  <div class="branch b4"></div>
+                  <div class="leaf l1"></div>
+                  <div class="leaf l2"></div>
+                  <div class="leaf l3"></div>
+                  <div class="leaf l4"></div>
+                  <div class="leaf l5"></div>
+                  <div class="leaf l6"></div>
+                </div>
+                <div class="pane"></div>
+                <div class="windowReflection"></div>
+              </div>
             </div>
-            <p class="windowLabel">Long-day light. Fuller color. Active atmosphere. The house is warming up.</p>
+            <p class="windowLabel">Full canopy. Warm horizon. Summer is read through the Tree of Life.</p>
           </aside>
-        </div>
-      </section>
-
-      <section class="movement">
-        <p class="eyebrow">First read</p>
-        <h2>Three things become visible.</h2>
-        <div class="movementGrid">
-          <article class="panel">
-            <h3>The mantra</h3>
-            <p>The Nine Summits of Love is more than a title. It is the public mantra and directional center.</p>
-          </article>
-          <article class="panel">
-            <h3>The movement</h3>
-            <p>Prelude signals that a larger inner architecture exists and can now be entered intentionally.</p>
-          </article>
-          <article class="panel">
-            <h3>The bloom</h3>
-            <p>Summer allows the page to feel expanded, luminous, and visibly alive rather than flat or muted.</p>
-          </article>
         </div>
       </section>
 
       <section class="dolls">
         <p class="eyebrow">Visible dolls</p>
-        <h2>Nested chambers begin here.</h2>
+        <h2>The Russian dolls begin here.</h2>
+
         <div class="dollGrid">
           <article class="dollCard">
             <h3>Outer doll</h3>
-            <p>The threshold has been crossed. The user is now inside the first real interior layer.</p>
-            <ul class="list">
-              <li>Movement is named</li>
-              <li>Direction becomes explicit</li>
-            </ul>
+            <p>The threshold has already been crossed. You are inside the house now.</p>
           </article>
 
           <article class="dollCard">
             <h3>Middle doll</h3>
-            <p>The Nine Summits of Love starts to read as the guiding structure rather than a side note.</p>
-            <ul class="list">
-              <li>Summits are implied</li>
-              <li>Virtue architecture begins</li>
-            </ul>
+            <p>The movement becomes explicit. Meaning starts to organize itself inwardly.</p>
           </article>
 
           <article class="dollCard">
             <h3>Inner doll</h3>
-            <p>Home and the deeper chambers will continue inward from here without losing color and heat.</p>
+            <p>The Nine Summits of Love becomes the first deeper chamber ahead.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="bridges">
+        <p class="eyebrow">Two bridges</p>
+        <h2>The house opens in two directions.</h2>
+
+        <div class="bridgeGrid">
+          <article class="bridgeCard">
+            <h3>Toward the movement</h3>
             <ul class="list">
-              <li>Forward motion is clear</li>
-              <li>Atmosphere remains warm</li>
+              <li>The Nine Summits of Love</li>
+              <li>Character and virtue</li>
+              <li>Inward formation</li>
+            </ul>
+          </article>
+
+          <article class="bridgeCard">
+            <h3>Toward the house</h3>
+            <ul class="list">
+              <li>Home as stable sanctuary</li>
+              <li>The world remains outside</li>
+              <li>The interior deepens without drift</li>
             </ul>
           </article>
         </div>
@@ -237,21 +608,23 @@
 
       <section class="closeout">
         <p class="eyebrow">Transition</p>
-        <h2>Bloom now, stabilize next.</h2>
+        <h2>Bloom now. Stabilize next.</h2>
+
         <div class="closeGrid">
           <article class="closeCard">
             <h3>Prelude job</h3>
-            <p>Open the first real interior bloom and bind the user emotionally to the larger movement.</p>
+            <p>Open the inward bloom without collapsing the interior into raw atmosphere.</p>
           </article>
+
           <article class="closeCard">
             <h3>Next room</h3>
-            <p>Home should stabilize this energy without flattening it, carrying the house into an autumn read.</p>
+            <p>Home should hold the same window-law, but in a calmer and more centered form.</p>
           </article>
         </div>
-        <div class="footnote">Prelude remains summer-bound and movement-facing.</div>
+
+        <div class="footnote">Summer stays outside. Meaning deepens inside.</div>
       </section>
     </main>
   </div>
-  <script src="/assets/room-seasons.js"></script>
 </body>
 </html>

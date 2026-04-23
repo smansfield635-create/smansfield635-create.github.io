@@ -27,81 +27,61 @@
     `;
   }
 
-  function buildLightning(paths, opacity) {
-    const markup = paths
-      .map((d) => `<path d="${esc(d)}" fill="rgba(237,243,255,${opacity})"/>`)
-      .join("");
+  function buildStormFlash(opts) {
     return `
       <g class="pg-lightning" opacity="0">
-        ${markup}
+        <ellipse cx="${opts.flashCx}" cy="${opts.flashCy}" rx="${opts.flashRx}" ry="${opts.flashRy}" fill="${opts.flashCore}" opacity=".72"/>
+        <ellipse cx="${opts.flashCx}" cy="${opts.flashCy}" rx="${opts.flashRx * 1.8}" ry="${opts.flashRy * 1.6}" fill="${opts.flashGlow}" opacity=".30"/>
+        <ellipse cx="${opts.flashCx}" cy="${opts.flashCy}" rx="${opts.flashRx * 2.8}" ry="${opts.flashRy * 2.3}" fill="${opts.flashGlow}" opacity=".12"/>
+        <rect x="0" y="0" width="100" height="100" fill="url(#${opts.id}-flash-grad)" opacity=".34"/>
       </g>
     `;
   }
 
   function buildTree(opts) {
-    const blossom =
-      opts.canopyNodes
-        .map(
-          (node) => `
-        <ellipse
-          cx="${node.cx}"
-          cy="${node.cy}"
-          rx="${node.rx}"
-          ry="${node.ry}"
-          fill="url(#${opts.id}-leaf-grad)"
-          opacity="${node.opacity}"
-        />
-      `
-        )
-        .join("");
+    const blossom = opts.canopyNodes.map((node) => `
+      <ellipse
+        cx="${node.cx}"
+        cy="${node.cy}"
+        rx="${node.rx}"
+        ry="${node.ry}"
+        fill="url(#${opts.id}-leaf-grad)"
+        opacity="${node.opacity}"
+      />
+    `).join("");
 
-    const branchSet =
-      opts.branches
-        .map(
-          (d) => `
-        <path
-          d="${esc(d)}"
-          fill="none"
-          stroke="url(#${opts.id}-branch-grad)"
-          stroke-width="${opts.branchWidth}"
-          stroke-linecap="round"
-          opacity="${opts.branchOpacity}"
-        />
-      `
-        )
-        .join("");
+    const branchSet = opts.branches.map((d) => `
+      <path
+        d="${esc(d)}"
+        fill="none"
+        stroke="url(#${opts.id}-branch-grad)"
+        stroke-width="${opts.branchWidth}"
+        stroke-linecap="round"
+        opacity="${opts.branchOpacity}"
+      />
+    `).join("");
 
-    const fineBranchSet =
-      opts.fineBranches
-        .map(
-          (d) => `
-        <path
-          d="${esc(d)}"
-          fill="none"
-          stroke="${opts.fineBranchStroke}"
-          stroke-width="${opts.fineBranchWidth}"
-          stroke-linecap="round"
-          opacity="${opts.fineBranchOpacity}"
-        />
-      `
-        )
-        .join("");
+    const fineBranchSet = opts.fineBranches.map((d) => `
+      <path
+        d="${esc(d)}"
+        fill="none"
+        stroke="${opts.fineBranchStroke}"
+        stroke-width="${opts.fineBranchWidth}"
+        stroke-linecap="round"
+        opacity="${opts.fineBranchOpacity}"
+      />
+    `).join("");
 
-    const roots =
-      opts.roots
-        .map(
-          (d) => `
-        <path
-          d="${esc(d)}"
-          fill="none"
-          stroke="${opts.rootStroke}"
-          stroke-width="${opts.rootWidth}"
-          stroke-linecap="round"
-          opacity="${opts.rootOpacity}"
-        />
-      `
-        )
-        .join("");
+    const roots = opts.roots.map((d) => `
+      <path
+        d="${esc(d)}"
+        fill="none"
+        stroke="${opts.rootStroke}"
+        stroke-width="${opts.rootWidth}"
+        stroke-linecap="round"
+        opacity="${opts.rootOpacity}"
+      />
+    `).join("");
 
     return `
       <g
@@ -207,6 +187,11 @@
             <stop offset="100%" stop-color="${opts.leafTintB}"/>
           </radialGradient>
 
+          <radialGradient id="${opts.id}-flash-grad" cx="${opts.flashCx}%" cy="${opts.flashCy}%" r="46%">
+            <stop offset="0%" stop-color="${opts.flashGlow}"/>
+            <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
+          </radialGradient>
+
           <filter id="${opts.id}-tree-blur">
             <feGaussianBlur stdDeviation="${opts.treeBlur}"/>
           </filter>
@@ -221,7 +206,7 @@
         ${buildLandscape(opts)}
         ${buildGeometry(opts)}
         ${buildTree(opts)}
-        ${buildLightning(opts.lightningPaths, opts.lightningOpacity)}
+        ${buildStormFlash(opts)}
         ${buildFrameLines(opts)}
       </svg>
     `;
@@ -239,8 +224,12 @@
       horizonGlow: "rgba(232,181,104,.10)",
       rainOpacity: 0.14,
       rainAngle: 103,
-      lightningPaths: ["M68 6 60 28 73 27 53 61 61 42 49 43 68 6Z"],
-      lightningOpacity: 0.28,
+      flashCx: 62,
+      flashCy: 24,
+      flashRx: 7,
+      flashRy: 10,
+      flashCore: "rgba(241,246,255,.88)",
+      flashGlow: "rgba(203,219,255,.22)",
       treeTintA: "#c9b07a",
       treeTintB: "#6f5a40",
       leafTintA: "rgba(214,187,118,.28)",
@@ -312,11 +301,12 @@
       horizonGlow: "rgba(129,154,214,.08)",
       rainOpacity: 0.12,
       rainAngle: 102,
-      lightningPaths: [
-        "M56 8 49 24 59 24 45 49 51 36 41 37 56 8Z",
-        "M73 18 67 31 76 31 64 49 69 39 60 39 73 18Z"
-      ],
-      lightningOpacity: 0.24,
+      flashCx: 56,
+      flashCy: 22,
+      flashRx: 7,
+      flashRy: 9,
+      flashCore: "rgba(239,245,255,.84)",
+      flashGlow: "rgba(191,213,255,.20)",
       treeTintA: "#b4cceb",
       treeTintB: "#5c7599",
       leafTintA: "rgba(191,216,255,.22)",
@@ -386,8 +376,12 @@
       horizonGlow: "rgba(182,166,106,.08)",
       rainOpacity: 0.06,
       rainAngle: 101,
-      lightningPaths: ["M60 11 54 25 63 25 50 44 55 34 46 35 60 11Z"],
-      lightningOpacity: 0.12,
+      flashCx: 52,
+      flashCy: 25,
+      flashRx: 6,
+      flashRy: 8,
+      flashCore: "rgba(241,246,255,.74)",
+      flashGlow: "rgba(194,216,173,.14)",
       treeTintA: "#9dbc84",
       treeTintB: "#536d48",
       leafTintA: "rgba(176,207,150,.20)",
@@ -455,8 +449,12 @@
       horizonGlow: "rgba(193,126,88,.08)",
       rainOpacity: 0.07,
       rainAngle: 105,
-      lightningPaths: ["M67 9 60 28 72 27 56 54 62 41 51 42 67 9Z"],
-      lightningOpacity: 0.15,
+      flashCx: 58,
+      flashCy: 23,
+      flashRx: 6,
+      flashRy: 8,
+      flashCore: "rgba(242,244,255,.74)",
+      flashGlow: "rgba(214,168,144,.14)",
       treeTintA: "#bf8869",
       treeTintB: "#714b3d",
       leafTintA: "rgba(205,157,128,.22)",
@@ -524,8 +522,12 @@
       horizonGlow: "rgba(170,166,154,.07)",
       rainOpacity: 0.05,
       rainAngle: 100,
-      lightningPaths: ["M50 12 44 24 52 24 41 41 46 33 38 33 50 12Z"],
-      lightningOpacity: 0.12,
+      flashCx: 48,
+      flashCy: 24,
+      flashRx: 5,
+      flashRy: 7,
+      flashCore: "rgba(239,244,255,.68)",
+      flashGlow: "rgba(201,213,228,.12)",
       treeTintA: "#b0bdcb",
       treeTintB: "#63717f",
       leafTintA: "rgba(201,213,228,.18)",

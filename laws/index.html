@@ -3,37 +3,36 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Laws | Diamond Gate Bridge</title>
+  <title>Gauges | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Bright laws chamber for governing law, extensions, and processing."
+    content="Live calibration status for the website."
   />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#14061e;
-      --bg1:#112d66;
-      --bg2:#0a1538;
+      --bg0:#0b132c;
+      --bg1:#103067;
+      --bg2:#1a0f31;
 
-      --ink:#fffaf4;
-      --mut:rgba(255,250,244,.84);
-      --soft:rgba(255,250,244,.62);
+      --ink:#f8fbff;
+      --mut:rgba(248,251,255,.82);
+      --soft:rgba(248,251,255,.62);
 
-      --gold:#ffd84e;
-      --rose:#ff5fa8;
-      --sky:#66d7ff;
-      --violet:#b778ff;
-      --mint:#58f0be;
-      --coral:#ff8f6b;
+      --gold:#ffd76a;
+      --rose:#ff6fb0;
+      --sky:#7fd4ff;
+      --emerald:#7ef0c4;
+      --violet:#c28cff;
+      --amber:#ffb86b;
+      --red:#ff6b7a;
 
       --line:rgba(255,255,255,.14);
-      --lineStrong:rgba(255,216,78,.34);
+      --panel:rgba(11,16,36,.68);
+      --panelStrong:rgba(10,12,28,.86);
 
-      --panel:rgba(12,16,36,.64);
-      --panelStrong:rgba(10,12,28,.88);
-
-      --shadow:0 28px 90px rgba(0,0,0,.46);
-      --max:1260px;
+      --shadow:0 24px 84px rgba(0,0,0,.42);
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -44,13 +43,10 @@
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at 10% 14%, rgba(255,95,168,.28), transparent 18%),
-        radial-gradient(circle at 84% 16%, rgba(102,215,255,.24), transparent 20%),
-        radial-gradient(circle at 48% 22%, rgba(255,216,78,.18), transparent 14%),
-        radial-gradient(circle at 18% 74%, rgba(88,240,190,.20), transparent 20%),
-        radial-gradient(circle at 82% 78%, rgba(183,120,255,.20), transparent 22%),
-        radial-gradient(circle at 52% 88%, rgba(255,143,107,.16), transparent 16%),
-        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 44%,var(--bg2) 100%);
+        radial-gradient(circle at 18% 18%, rgba(127,212,255,.18), transparent 22%),
+        radial-gradient(circle at 82% 20%, rgba(255,111,176,.14), transparent 20%),
+        radial-gradient(circle at 50% 70%, rgba(126,240,196,.12), transparent 18%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 50%,var(--bg2) 100%);
     }
 
     body{overflow-x:hidden}
@@ -63,7 +59,7 @@
       isolation:isolate;
     }
 
-    .stars,.stars::before,.stars::after{
+    .stars,.stars::before{
       content:"";
       position:absolute;
       inset:0;
@@ -72,33 +68,21 @@
     }
 
     .stars{
-      opacity:.62;
+      opacity:.5;
       background-image:
-        radial-gradient(circle at 12% 22%, rgba(255,255,255,.94) 0 1px, transparent 2px),
-        radial-gradient(circle at 28% 58%, rgba(255,255,255,.82) 0 1px, transparent 2px),
-        radial-gradient(circle at 44% 34%, rgba(255,255,255,.78) 0 1px, transparent 2px),
-        radial-gradient(circle at 66% 18%, rgba(255,255,255,.92) 0 1px, transparent 2px),
-        radial-gradient(circle at 86% 74%, rgba(255,255,255,.82) 0 1px, transparent 2px);
+        radial-gradient(circle at 14% 20%, rgba(255,255,255,.92) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 66%, rgba(255,255,255,.82) 0 1px, transparent 2px),
+        radial-gradient(circle at 62% 22%, rgba(255,255,255,.88) 0 1px, transparent 2px),
+        radial-gradient(circle at 84% 72%, rgba(255,255,255,.82) 0 1px, transparent 2px);
     }
 
     .stars::before{
-      opacity:.58;
+      opacity:.4;
       background:
-        radial-gradient(circle at 14% 16%, rgba(255,95,168,.28), transparent 18%),
-        radial-gradient(circle at 78% 22%, rgba(102,215,255,.24), transparent 20%),
-        radial-gradient(circle at 50% 46%, rgba(255,216,78,.18), transparent 16%),
-        radial-gradient(circle at 54% 80%, rgba(88,240,190,.18), transparent 20%),
-        radial-gradient(circle at 82% 58%, rgba(183,120,255,.16), transparent 18%);
-      filter:blur(28px);
-    }
-
-    .stars::after{
-      opacity:.42;
-      background:
-        radial-gradient(circle at 34% 34%, rgba(183,120,255,.24), transparent 16%),
-        radial-gradient(circle at 66% 62%, rgba(255,143,107,.18), transparent 18%),
-        radial-gradient(circle at 48% 18%, rgba(255,216,78,.16), transparent 12%);
-      filter:blur(36px);
+        radial-gradient(circle at 20% 24%, rgba(127,212,255,.16), transparent 18%),
+        radial-gradient(circle at 80% 26%, rgba(255,111,176,.14), transparent 18%),
+        radial-gradient(circle at 52% 64%, rgba(126,240,196,.14), transparent 18%);
+      filter:blur(20px);
     }
 
     .wrap{
@@ -111,17 +95,16 @@
       gap:18px;
     }
 
-    .topbar,.hero,.layers,.extensions,.footerbox{
+    .topbar,.hero,.statusBoard,.lists,.footerbox{
       border:1px solid var(--line);
       background:
-        linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),
         linear-gradient(180deg,var(--panel),var(--panelStrong));
       box-shadow:var(--shadow);
-      backdrop-filter:blur(16px);
-      -webkit-backdrop-filter:blur(16px);
+      backdrop-filter:blur(14px);
+      -webkit-backdrop-filter:blur(14px);
       position:relative;
       overflow:hidden;
-      border-radius:36px;
     }
 
     .topbar{
@@ -134,23 +117,26 @@
       flex-wrap:wrap;
     }
 
+    .hero,.statusBoard,.lists,.footerbox{
+      border-radius:34px;
+      padding:22px 20px;
+    }
+
     .topbar::before,
     .hero::before,
-    .layers::before,
-    .extensions::before,
+    .statusBoard::before,
+    .lists::before,
     .footerbox::before{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 12% 14%, rgba(255,95,168,.22), transparent 22%),
-        radial-gradient(circle at 84% 16%, rgba(102,215,255,.18), transparent 22%),
-        radial-gradient(circle at 50% 22%, rgba(255,216,78,.18), transparent 16%),
-        radial-gradient(circle at 16% 82%, rgba(88,240,190,.16), transparent 20%),
-        radial-gradient(circle at 78% 80%, rgba(183,120,255,.18), transparent 22%),
-        radial-gradient(circle at 54% 72%, rgba(255,143,107,.12), transparent 18%);
-      opacity:.96;
+        radial-gradient(circle at 14% 14%, rgba(127,212,255,.16), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(255,111,176,.12), transparent 20%),
+        radial-gradient(circle at 50% 26%, rgba(255,215,106,.10), transparent 16%),
+        radial-gradient(circle at 22% 82%, rgba(126,240,196,.10), transparent 20%);
+      opacity:.9;
     }
 
     .brand{
@@ -166,17 +152,17 @@
       height:44px;
       border-radius:14px;
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold),var(--rose) 28%,var(--sky) 54%,var(--mint) 78%,var(--violet));
+      background:linear-gradient(135deg,var(--sky),var(--gold) 35%,var(--emerald) 70%,var(--violet));
       flex:0 0 auto;
-      box-shadow:0 0 34px rgba(255,95,168,.24);
     }
 
-    .brand h2{
+    .brand h1{
       margin:0;
-      font-size:.96rem;
+      font-size:.98rem;
       font-weight:900;
       letter-spacing:.08em;
       text-transform:uppercase;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
     }
 
     .brand p{
@@ -205,176 +191,141 @@
       font-weight:900;
       letter-spacing:.12em;
       text-transform:uppercase;
-      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
     }
 
-    .pill.strong{
-      border-color:var(--lineStrong);
-      color:#fff1a7;
-    }
-
-    .hero,.layers,.extensions,.footerbox{
-      padding:24px 22px;
-    }
+    .pill strong{color:#fff1b8}
 
     .eyebrow{
       position:relative;
       z-index:1;
-      margin:0 0 12px;
+      margin:0 0 10px;
       color:var(--gold);
-      font-size:.78rem;
+      font-size:.76rem;
       font-weight:900;
       letter-spacing:.18em;
       text-transform:uppercase;
     }
 
-    h1,h3,h4{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    h1{
+    .hero h2,.sectionTitle{
       position:relative;
       z-index:1;
       margin:0;
-      font-size:clamp(3rem,7vw,5.8rem);
-      line-height:.9;
-      letter-spacing:.04em;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2rem,4.8vw,3.8rem);
+      line-height:.94;
     }
 
-    .heroTag{
+    .hero p{
       position:relative;
       z-index:1;
-      margin:16px 0 0;
-      font-size:clamp(1.14rem,2vw,1.65rem);
-      line-height:1.45;
-      color:#fff0bc;
-      font-weight:800;
-      max-width:940px;
-    }
-
-    .heroCopy{
-      position:relative;
-      z-index:1;
-      margin:14px 0 0;
+      margin:12px 0 0;
       color:var(--mut);
-      line-height:1.7;
+      line-height:1.66;
       font-size:1rem;
-      max-width:940px;
+      max-width:760px;
     }
 
-    .heroActions{
+    .statusGrid{
       position:relative;
       z-index:1;
-      margin-top:22px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
     }
 
-    .btn{
-      min-height:52px;
-      padding:0 18px;
+    .statusCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:18px;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+      display:grid;
+      gap:10px;
+      min-height:150px;
+    }
+
+    .statusCard strong{
+      font-size:.82rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#fff2cb;
+    }
+
+    .statusCard h3{
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:1.3rem;
+      line-height:1.08;
+    }
+
+    .statusCard p{
+      margin:0;
+      color:var(--mut);
+      font-size:.92rem;
+      line-height:1.58;
+    }
+
+    .statusBadge{
+      margin-top:auto;
+      width:max-content;
+      min-height:36px;
+      padding:0 12px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      font-size:.78rem;
+      font-size:.72rem;
       font-weight:900;
       letter-spacing:.12em;
       text-transform:uppercase;
-      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
-      transition:transform .15s ease,border-color .15s ease;
+      background:rgba(255,255,255,.08);
     }
 
-    .btn:hover{transform:translateY(-2px)}
-    .btn.primary{border-color:rgba(255,216,78,.40);color:#fff1a7}
+    .green .statusBadge{color:#dfffe9;border-color:rgba(126,240,196,.32)}
+    .yellow .statusBadge{color:#fff1b8;border-color:rgba(255,215,106,.32)}
+    .red .statusBadge{color:#ffd2d7;border-color:rgba(255,107,122,.32)}
 
-    .sectionTitle{
-      position:relative;
-      z-index:1;
-      margin:0 0 8px;
-      font-size:clamp(1.6rem,3vw,2.4rem);
-      line-height:1.02;
-    }
+    .green{background:linear-gradient(180deg,rgba(126,240,196,.18),rgba(126,240,196,.06))}
+    .yellow{background:linear-gradient(180deg,rgba(255,215,106,.18),rgba(255,215,106,.06))}
+    .red{background:linear-gradient(180deg,rgba(255,107,122,.18),rgba(255,107,122,.06))}
 
-    .sectionCopy{
-      position:relative;
-      z-index:1;
-      margin:0 0 16px;
-      color:var(--mut);
-      line-height:1.65;
-      font-size:.98rem;
-      max-width:920px;
-    }
-
-    .layerGrid,.extensionGrid{
+    .listsGrid{
       position:relative;
       z-index:1;
       display:grid;
-      gap:16px;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
     }
 
-    .layerGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .extensionGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
-
-    .card{
-      border-radius:28px;
-      padding:20px;
-      border:1px solid rgba(255,255,255,.12);
+    .listCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:18px;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
       min-height:220px;
-      display:grid;
-      align-content:start;
-      gap:12px;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
     }
 
-    .card.law{background:linear-gradient(180deg,rgba(255,216,78,.24),rgba(255,216,78,.08))}
-    .card.extensionsLayer{background:linear-gradient(180deg,rgba(102,215,255,.24),rgba(102,215,255,.08))}
-    .card.cpu{background:linear-gradient(180deg,rgba(88,240,190,.24),rgba(88,240,190,.08))}
-
-    .card.core{background:linear-gradient(180deg,rgba(183,120,255,.22),rgba(183,120,255,.08))}
-    .card.fusion{background:linear-gradient(180deg,rgba(255,95,168,.22),rgba(255,95,168,.08))}
-    .card.industrial{background:linear-gradient(180deg,rgba(255,143,107,.22),rgba(255,143,107,.08))}
-    .card.frontier{background:linear-gradient(180deg,rgba(102,215,255,.22),rgba(102,215,255,.08))}
-
-    .card strong{
-      font-size:.86rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:#fff9e8;
+    .listCard h3{
+      margin:0 0 12px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:1.4rem;
+      line-height:1.08;
     }
 
-    .card h4{
+    .listCard ul{
       margin:0;
-      font-size:1.5rem;
-      line-height:1.1;
-    }
-
-    .card p{
-      margin:0;
+      padding-left:18px;
       color:var(--mut);
       line-height:1.62;
-      font-size:.95rem;
+      font-size:.94rem;
     }
 
-    .linkBtn{
-      margin-top:auto;
-      align-self:end;
-      display:inline-flex;
-      min-height:44px;
-      padding:0 16px;
-      border-radius:999px;
-      align-items:center;
-      justify-content:center;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      border:1px solid rgba(255,255,255,.12);
-      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
-      width:max-content;
-    }
+    .listCard li + li{margin-top:8px}
+
+    .broken{background:linear-gradient(180deg,rgba(255,107,122,.16),rgba(255,107,122,.05))}
+    .fixed{background:linear-gradient(180deg,rgba(102,215,255,.16),rgba(102,215,255,.05))}
+    .next{background:linear-gradient(180deg,rgba(255,215,106,.16),rgba(255,215,106,.05))}
 
     .footerbox p{
       position:relative;
@@ -386,15 +337,14 @@
       text-transform:uppercase;
     }
 
-    @media (max-width:1080px){
-      .layerGrid{grid-template-columns:1fr}
-      .extensionGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:980px){
+      .statusGrid,.listsGrid{grid-template-columns:1fr 1fr}
     }
 
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,var(--max))}
-      .hero,.layers,.extensions,.footerbox{padding:20px}
-      .extensionGrid{grid-template-columns:1fr}
+      .hero,.statusBoard,.lists,.footerbox{padding:18px}
+      .statusGrid,.listsGrid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -407,101 +357,105 @@
         <div class="brand">
           <div class="mark" aria-hidden="true"></div>
           <div>
-            <h2>Diamond Gate Bridge</h2>
-            <p>Laws chamber aligned to the bright nested premise</p>
+            <h1>Gauges</h1>
+            <p>Live calibration status for the website</p>
           </div>
         </div>
 
-        <div class="pills" aria-label="Laws status">
-          <div class="pill strong">Laws</div>
-          <div class="pill">Extensions</div>
-          <div class="pill">CPU</div>
+        <div class="pills" aria-label="Gauges status">
+          <div class="pill"><strong>Mode</strong>&nbsp;Calibrate</div>
+          <div class="pill"><strong>Phase</strong>&nbsp;Expansion</div>
+          <div class="pill"><strong>State</strong>&nbsp;Manual</div>
         </div>
       </div>
 
-      <header class="hero" aria-label="Laws hero">
-        <p class="eyebrow">Laws</p>
-        <h1>Law Before Noise.</h1>
-        <p class="heroTag">The laws page now reads like a bright governing chamber instead of a thin explanatory slab.</p>
-        <p class="heroCopy">
-          The page remains organized around the same governing sequence: law first, extensions second, processing third. What changes here is not the hierarchy, but the chamber quality, visual depth, and readability inside the larger bright Russian-doll house. 2
-        </p>
+      <section class="hero" aria-label="Gauges hero">
+        <p class="eyebrow">Calibration</p>
+        <h2>Short, scannable, decision-grade.</h2>
+        <p>This page exists to help calibrate and expand the website. It should show what is broken, what is live, what changed, and what matters next. Nothing else.</p>
+      </section>
 
-        <div class="heroActions">
-          <a class="btn primary" href="/home/">Back to Home</a>
-          <a class="btn" href="/gauges/">Open Gauges</a>
-          <a class="btn" href="/explore/frontier/">Open Frontier</a>
-        </div>
-      </header>
-
-      <section class="layers" aria-label="Three visible layers">
-        <p class="eyebrow">Visible Layers</p>
-        <h3 class="sectionTitle">Three governing layers, made visible.</h3>
-        <p class="sectionCopy">
-          The live page already frames itself as a three-layer laws surface: governing law, the extensions beneath it, and the CPU processing layer that turns lawful structure into visible execution. This rewrite preserves that exact order while making the layers feel like real chambers. 3
-        </p>
-
-        <div class="layerGrid">
-          <article class="card law">
-            <strong>Layer 1</strong>
-            <h4>Law</h4>
-            <p>Law remains the admissibility surface. Structure comes before effects, public entry stays clear, and the world must descend from governed form rather than visual noise. 4</p>
+      <section class="statusBoard" aria-label="Surface status">
+        <p class="eyebrow">Surface Status</p>
+        <div class="statusGrid">
+          <article class="statusCard green">
+            <strong>Root</strong>
+            <h3>Threshold live</h3>
+            <p>Root is currently serving as the bright entry authority surface.</p>
+            <div class="statusBadge">Green</div>
           </article>
 
-          <article class="card extensionsLayer">
-            <strong>Layer 2</strong>
-            <h4>Extensions</h4>
-            <p>The sealed interior still carries template, engine, routing logic, inheritance law, and platform structure. This layer shows what the laws support beneath the visible surface. 5</p>
+          <article class="statusCard yellow">
+            <strong>Door</strong>
+            <h3>Secondary threshold</h3>
+            <p>Exists, but root currently feels like the primary live door.</p>
+            <div class="statusBadge">Yellow</div>
           </article>
 
-          <article class="card cpu">
-            <strong>Layer 3</strong>
-            <h4>CPU Processing</h4>
-            <p>Processing remains sequence, evaluation, and execution: the place where admissibility becomes timing, inheritance becomes execution, and external behavior becomes measurable. 6</p>
+          <article class="statusCard yellow">
+            <strong>Prelude</strong>
+            <h3>Verify live owner</h3>
+            <p>Color adoption and ownership need explicit re-check after deployment.</p>
+            <div class="statusBadge">Yellow</div>
+          </article>
+
+          <article class="statusCard green">
+            <strong>Home</strong>
+            <h3>Usable destination</h3>
+            <p>Home is now working as a readable nested hub.</p>
+            <div class="statusBadge">Green</div>
+          </article>
+
+          <article class="statusCard green">
+            <strong>Products</strong>
+            <h3>Bright chamber</h3>
+            <p>Products is aligned to the upstream bright system.</p>
+            <div class="statusBadge">Green</div>
+          </article>
+
+          <article class="statusCard yellow">
+            <strong>Laws</strong>
+            <h3>Needs deployment check</h3>
+            <p>Renewed contract ready, but should be re-verified after publish.</p>
+            <div class="statusBadge">Yellow</div>
           </article>
         </div>
       </section>
 
-      <section class="extensions" aria-label="Connected surfaces">
-        <p class="eyebrow">Connected Surfaces</p>
-        <h3 class="sectionTitle">Extensions and frontier remain explicit.</h3>
-        <p class="sectionCopy">
-          The current page already includes explicit connected surfaces for Core Invariants, Fusion Readiness, Industrial Posture, and Frontier. Those remain the correct extension set here. 7
-        </p>
-
-        <div class="extensionGrid">
-          <article class="card core">
-            <strong>Extension</strong>
-            <h4>Core Invariants</h4>
-            <p>The invariant layer that tells the system what it must remain in order to stay lawful. 8</p>
-            <a class="linkBtn" href="/laws/core-invariants/">Open</a>
+      <section class="lists" aria-label="Operational lists">
+        <p class="eyebrow">Operational Read</p>
+        <div class="listsGrid">
+          <article class="listCard broken">
+            <h3>Broken Now</h3>
+            <ul>
+              <li>Prelude ownership and live color adoption need verification.</li>
+              <li>Any stale route still serving old root or old page state should be treated as broken.</li>
+              <li>Reference should stay monitored until fully confirmed on the public site.</li>
+            </ul>
           </article>
 
-          <article class="card fusion">
-            <strong>Extension</strong>
-            <h4>Fusion Readiness</h4>
-            <p>The readiness layer that tells the system when higher-order convergence becomes lawful. 9</p>
-            <a class="linkBtn" href="/laws/fusion-readiness/">Open</a>
+          <article class="listCard fixed">
+            <h3>Recently Fixed</h3>
+            <ul>
+              <li>Root threshold was renewed into a bright entry surface.</li>
+              <li>Home became a usable destination instead of a non-usable chamber.</li>
+              <li>Products shifted from muted chamber logic into the new bright system.</li>
+            </ul>
           </article>
 
-          <article class="card industrial">
-            <strong>Extension</strong>
-            <h4>Industrial Posture</h4>
-            <p>The posture layer for scale, seriousness, deployment discipline, and non-toy execution. 10</p>
-            <a class="linkBtn" href="/laws/industrial-posture/">Open</a>
-          </article>
-
-          <article class="card frontier">
-            <strong>Connected Surface</strong>
-            <h4>Frontier</h4>
-            <p>The direct bridge to the frontier catalog so the boundary of current capability remains visible. 11</p>
-            <a class="linkBtn" href="/explore/frontier/">Open Frontier</a>
+          <article class="listCard next">
+            <h3>Next Up</h3>
+            <ul>
+              <li>Re-verify Prelude on the live site.</li>
+              <li>Re-check Laws after deployment.</li>
+              <li>Keep Gauges compact and update only as surfaces change.</li>
+            </ul>
           </article>
         </div>
       </section>
 
-      <section class="footerbox" aria-label="Laws footer">
-        <p>The laws chamber now matches the same bright nested premise: governing first, vivid, layered, and structurally readable.</p>
+      <section class="footerbox" aria-label="Gauges footer">
+        <p>Last updated manually · Current phase: calibration and expansion · Gauges stays operational, not ceremonial.</p>
       </section>
     </div>
   </div>

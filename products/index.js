@@ -1,5 +1,5 @@
 (() => {
-  "use strict";
+  "use strict"; 
 
   const PRODUCTS_PAGE_META = Object.freeze({
     name: "PRODUCTS_WINDOW_STORM_CHAMBER",

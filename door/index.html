@@ -4,7 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Door | Diamond Gate Bridge</title>
-  <meta name="description" content="Threshold entry into Diamond Gate Bridge." />
+  <meta
+    name="description"
+    content="Threshold entry into Diamond Gate Bridge."
+  />
   <link rel="stylesheet" href="/assets/room-seasons.css" />
   <style>
     :root{
@@ -22,116 +25,329 @@
     }
 
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    body{overflow:hidden}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      color:var(--ink);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
+
+    body{
+      overflow-x:hidden;
+    }
+
     a{color:inherit;text-decoration:none}
 
-    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
+    .page{
+      position:relative;
+      min-height:100vh;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
     .wrap{
-      position:relative;z-index:1;width:min(1180px,calc(100vw - 32px));min-height:100vh;margin:0 auto;
-      padding:calc(24px + var(--safe-top)) calc(16px + var(--safe-right)) calc(40px + var(--safe-bottom)) calc(16px + var(--safe-left));
-      display:flex;flex-direction:column;justify-content:space-between;
+      position:relative;
+      z-index:1;
+      width:min(1180px,calc(100vw - 32px));
+      min-height:100vh;
+      margin:0 auto;
+      padding:
+        calc(24px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(40px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
+      display:flex;
+      flex-direction:column;
+      gap:18px;
     }
 
-    .topbar,.hero,.entryRow,.subnav{
-      border:1px solid var(--line);border-radius:28px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+    .topbar,
+    .hero,
+    .routes,
+    .footerBand{
+      border:1px solid var(--line);
+      border-radius:28px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(180deg,var(--season-panel-top),var(--season-panel-bottom));
     }
 
-    .topbar,.hero,.entryRow,.subnav{background:linear-gradient(180deg,var(--season-panel-top),var(--season-panel-bottom))}
-    .topbar::before,.hero::before,.entryRow::before,.subnav::before{
-      content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);border-radius:inherit
+    .topbar::before,
+    .hero::before,
+    .routes::before,
+    .footerBand::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+      border-radius:inherit;
     }
 
     .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;margin-bottom:18px
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      flex-wrap:wrap;
+      padding:14px 18px;
     }
 
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
     .brandMark{
-      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      transform:rotate(45deg);
       border:1px solid var(--lineStrong);
       background:linear-gradient(180deg,rgba(58,92,56,.96),rgba(17,35,20,.92));
-      flex:0 0 auto
-    }
-    .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .brandSubtitle{margin:0;color:var(--soft);font-size:.82rem}
-
-    .pillRow{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .pill{
-      min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--season-chip-border);background:var(--season-chip-bg);
-      color:var(--season-chip-text);font-size:12px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;
-      display:inline-flex;align-items:center;justify-content:center;white-space:nowrap
+      flex:0 0 auto;
     }
 
-    .hero{padding:30px 24px 24px;margin-bottom:18px}
-    .heroGrid{display:grid;grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);gap:18px;align-items:stretch}
-    .eyebrow{margin:0 0 12px;color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
-    h1{margin:0 0 12px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(46px,8vw,88px);line-height:.92;letter-spacing:.04em}
-    .heroTag{margin:0 0 12px;font-size:clamp(18px,2.2vw,26px);font-weight:800;color:var(--season-accent-2)}
-    .heroCopy{margin:0;color:var(--mut);font-size:17px;line-height:1.64;max-width:760px}
-
-    .heroActions{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-    .entryButton{
-      min-height:48px;padding:0 18px;border-radius:999px;border:1px solid var(--lineStrong);background:rgba(255,255,255,.04);
-      color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.08em;text-transform:uppercase;
-      display:inline-flex;align-items:center;justify-content:center
+    .brandTitle{
+      margin:0 0 3px;
+      font-size:.96rem;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
 
-    .heroSide{padding:0}
+    .brandSubtitle{
+      margin:0;
+      color:var(--soft);
+      font-size:.82rem;
+    }
+
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a,
+    .cta{
+      min-height:44px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid var(--lineStrong);
+      background:rgba(255,255,255,.04);
+      color:var(--season-accent);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:transform 140ms ease, box-shadow 140ms ease;
+    }
+
+    .nav a:hover,
+    .cta:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
+    }
+
+    .hero{
+      padding:28px 24px 24px;
+    }
+
+    .heroGrid{
+      display:grid;
+      grid-template-columns:minmax(0,1.12fr) minmax(280px,.88fr);
+      gap:18px;
+      align-items:stretch;
+    }
+
+    .eyebrow{
+      margin:0 0 12px;
+      color:var(--season-accent);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    h1,h2,h3{
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(46px,8vw,88px);
+      line-height:.92;
+      letter-spacing:.04em;
+    }
+
+    h2{
+      margin:0 0 10px;
+      font-size:clamp(24px,4vw,38px);
+      line-height:1.02;
+      color:var(--season-accent-2);
+    }
+
+    h3{
+      margin:0 0 8px;
+      font-size:22px;
+      line-height:1.08;
+      color:var(--season-accent-2);
+    }
+
+    p{
+      margin:0;
+      color:var(--mut);
+      font-size:16px;
+      line-height:1.66;
+      max-width:840px;
+    }
+
+    .heroTag{
+      margin:0 0 12px;
+      font-size:clamp(18px,2.2vw,26px);
+      font-weight:800;
+      color:var(--season-accent-2);
+    }
+
+    .heroCopy{
+      margin:0;
+      font-size:17px;
+    }
+
+    .heroActions{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:18px;
+    }
+
     .windowPanel{
-      height:100%;min-height:260px;border:1px solid rgba(255,255,255,.10);border-radius:24px;padding:20px;
-      background:linear-gradient(180deg,rgba(12,20,18,.78),rgba(8,14,12,.92));position:relative;overflow:hidden
+      min-height:260px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:20px;
+      background:linear-gradient(180deg,rgba(14,22,18,.78),rgba(8,14,12,.92));
+      position:relative;
+      overflow:hidden;
     }
-    .windowPanel::before{
-      content:"";position:absolute;inset:0;background:
-        radial-gradient(circle at 50% 75%, rgba(255,214,170,.20), transparent 24%),
-        radial-gradient(circle at 50% 28%, rgba(180,255,184,.18), transparent 34%);
-      pointer-events:none
-    }
+
     .window{
-      position:absolute;inset:18px 18px 56px;border-radius:20px;border:1px solid rgba(255,255,255,.08);overflow:hidden
+      position:absolute;
+      inset:18px 18px 56px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.08);
+      overflow:hidden;
     }
-    .windowGlow{position:absolute;inset:0}
+
     .windowGlow::before{
-      content:"";position:absolute;inset:0;background:
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
         radial-gradient(circle at 50% 100%, rgba(255,216,156,.26), transparent 36%),
         linear-gradient(180deg,rgba(226,255,214,.22),rgba(162,255,196,.06));
     }
+
     .windowFrame{
-      position:absolute;inset:0;
+      position:absolute;
+      inset:0;
       background:
         linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
         linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
     }
+
     .windowLabel{
-      position:absolute;left:20px;right:20px;bottom:18px;color:var(--soft);font-size:13px;line-height:1.55
+      position:absolute;
+      left:20px;
+      right:20px;
+      bottom:18px;
+      color:var(--soft);
+      font-size:13px;
+      line-height:1.55;
     }
 
-    .entryRow,.subnav{padding:20px;margin-bottom:18px}
-    .entryGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .entryCard,.subnavLink{
-      border:1px solid rgba(255,255,255,.10);border-radius:22px;background:linear-gradient(180deg,rgba(14,22,18,.78),rgba(8,14,12,.92));
-      padding:18px;display:block
+    .routes{
+      padding:20px;
     }
-    .entryCard h3,.subnavLink strong{
-      margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:20px;line-height:1.08;color:var(--season-accent-2)
-    }
-    .entryCard p,.subnavLink span{margin:0;color:var(--mut);font-size:15px;line-height:1.58}
-    .entryCard .entryButton{margin-top:14px}
 
-    .subnavTitle{margin:0 0 14px;color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
-    .subnavRow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .footnote{margin-top:12px;color:var(--soft);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
+    .routeGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .routeCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:linear-gradient(180deg,rgba(14,22,18,.78),rgba(8,14,12,.92));
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:14px;
+      min-height:220px;
+    }
+
+    .routeCard p{
+      font-size:15px;
+      line-height:1.58;
+      max-width:none;
+      flex:1 1 auto;
+    }
+
+    .pillRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .pill{
+      min-height:38px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid var(--season-chip-border);
+      background:var(--season-chip-bg);
+      color:var(--season-chip-text);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .footerBand{
+      padding:18px 20px;
+    }
+
+    .footnote{
+      margin-top:10px;
+      color:var(--soft);
+      font-size:12px;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+    }
 
     @media (max-width:980px){
-      .heroGrid,.entryGrid,.subnavRow{grid-template-columns:1fr}
-      .wrap{justify-content:flex-start}
+      .heroGrid,
+      .routeGrid{
+        grid-template-columns:1fr;
+      }
     }
 
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,1180px)}
       .topbar{align-items:flex-start}
-      .hero,.entryRow,.subnav{padding:18px}
+      .hero,
+      .routes,
+      .footerBand{padding:18px}
     }
   </style>
 </head>
@@ -143,76 +359,82 @@
           <div class="brandMark" aria-hidden="true"></div>
           <div>
             <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Threshold entry surface · Spring</p>
+            <p class="brandSubtitle">Door · Spring threshold</p>
           </div>
         </div>
-        <div class="pillRow" aria-label="Door status">
-          <div class="pill">Door</div>
-          <div class="pill">Spring</div>
-          <div class="pill">Threshold</div>
-        </div>
+
+        <nav class="nav" aria-label="Door navigation">
+          <a href="/index.html">Compass</a>
+          <a href="/home/">Home</a>
+        </nav>
       </header>
 
       <section class="hero season-window">
         <div class="heroGrid">
           <div>
             <p class="eyebrow">Threshold</p>
-            <h1>NINE SUMMITS</h1>
+            <h1>Nine Summits</h1>
             <p class="heroTag">Learn to live, to love.</p>
             <p class="heroCopy">
-              Spring belongs to the door. Arrival, emergence, first motion. The room should feel like something is beginning.
+              This is the first functional threshold. No layered routing gimmick, no frozen control surface. Just clear motion into the house.
             </p>
+
             <div class="heroActions">
-              <a class="entryButton" href="/prelude/">Enter Prelude</a>
-              <a class="entryButton" href="/home/">Enter Home</a>
+              <a class="cta" href="/prelude/">Enter Prelude</a>
+              <a class="cta" href="/home/">Enter Home</a>
             </div>
           </div>
 
-          <div class="heroSide">
-            <div class="windowPanel">
-              <div class="window">
-                <div class="windowGlow"></div>
-                <div class="windowFrame"></div>
-              </div>
-              <p class="windowLabel">Soft morning light. Fresh air. Quiet upward motion.</p>
+          <aside class="windowPanel">
+            <div class="window">
+              <div class="windowGlow"></div>
+              <div class="windowFrame"></div>
             </div>
-          </div>
+            <p class="windowLabel">Spring light. First movement. Threshold restored.</p>
+          </aside>
         </div>
       </section>
 
-      <section class="entryRow">
-        <p class="eyebrow">Entry modes</p>
-        <div class="entryGrid">
-          <article class="entryCard">
-            <h3>World Is Flat</h3>
-            <p>Direct threshold. Immediate forward motion into the house.</p>
-            <a class="entryButton" href="/prelude/">Open Flat Entry</a>
+      <section class="routes">
+        <p class="eyebrow">Live routes</p>
+        <h2>Three direct paths.</h2>
+
+        <div class="routeGrid">
+          <article class="routeCard">
+            <div>
+              <h3>Prelude</h3>
+              <p>The first inward bloom. Meaning before deeper motion.</p>
+            </div>
+            <a class="cta" href="/prelude/">Open Prelude</a>
           </article>
-          <article class="entryCard">
-            <h3>World Is Round</h3>
-            <p>More atmosphere, same lawful progression into the house.</p>
-            <a class="entryButton" href="/prelude/">Open Round Entry</a>
+
+          <article class="routeCard">
+            <div>
+              <h3>Home</h3>
+              <p>The stabilized chamber after entry. Warm depth and orientation.</p>
+            </div>
+            <a class="cta" href="/home/">Open Home</a>
           </article>
+
+          <article class="routeCard">
+            <div>
+              <h3>Products</h3>
+              <p>The products chamber and its nested extension surfaces.</p>
+            </div>
+            <a class="cta" href="/products/">Open Products</a>
+          </article>
+        </div>
+
+        <div class="pillRow" style="margin-top:16px;">
+          <div class="pill">HTML navigation</div>
+          <div class="pill">No dead paths</div>
+          <div class="pill">Threshold restored</div>
         </div>
       </section>
 
-      <section class="subnav">
-        <p class="subnavTitle">Secondary routes</p>
-        <div class="subnavRow">
-          <a class="subnavLink" href="/prelude/">
-            <strong>Prelude</strong>
-            <span>Move inward into the first bloom.</span>
-          </a>
-          <a class="subnavLink" href="/home/">
-            <strong>Home</strong>
-            <span>Move into the calmer hub after entry.</span>
-          </a>
-          <a class="subnavLink" href="/products/">
-            <strong>Products</strong>
-            <span>Move into the product chamber.</span>
-          </a>
-        </div>
-        <div class="footnote">Door stays threshold-only and spring-bound.</div>
+      <section class="footerBand">
+        <p>The door now does one job: move forward cleanly.</p>
+        <div class="footnote">Spring-bound threshold. Pure HTML routes. No frozen state.</div>
       </section>
     </main>
   </div>

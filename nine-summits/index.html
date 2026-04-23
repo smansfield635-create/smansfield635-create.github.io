@@ -5,164 +5,204 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>The Nine Summits of Love | Diamond Gate Bridge</title>
   <meta name="description" content="The Nine Summits of Love — movement, mantra, and structure." />
-  <link rel="stylesheet" href="/assets/room-seasons.css" />
   <style>
     :root{
       color-scheme:dark;
+      --bg0:#101520;
+      --bg1:#172338;
+      --bg2:#22344f;
       --ink:#f6fbff;
       --mut:rgba(246,251,255,.84);
       --soft:rgba(246,251,255,.62);
-      --line:rgba(255,255,255,.12);
-      --lineStrong:var(--season-border-strong);
-      --shadow:var(--season-shadow);
+      --gold:#e9f4ff;
+      --gold2:#ffffff;
+      --ice:#b9d7ff;
+      --ice2:#dcecff;
+      --silver:#d7e6ff;
+      --wood:#313847;
+      --wood2:#171c26;
+      --line:rgba(255,255,255,.10);
+      --lineStrong:rgba(233,244,255,.24);
+      --panelTop:rgba(18,22,34,.78);
+      --panelBottom:rgba(9,12,20,.94);
+      --shadow:0 24px 76px rgba(0,0,0,.50);
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
       --safe-bottom:env(safe-area-inset-bottom,0px);
       --safe-left:env(safe-area-inset-left,0px);
     }
-
     *{box-sizing:border-box}
-    html,body{margin:0;min-height:100%;color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    html,body{
+      margin:0;min-height:100%;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(194,223,255,.10), transparent 26%),
+        radial-gradient(circle at 50% 84%, rgba(154,181,255,.05), transparent 30%),
+        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
+      color:var(--ink);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    }
     body{overflow-x:hidden}
     a{color:inherit;text-decoration:none}
-
     .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
+    .glow{position:absolute;inset:0;pointer-events:none}
+    .glow::before{
+      content:"";position:absolute;inset:0;
+      background:
+        radial-gradient(circle at 18% 24%, rgba(220,236,255,.10), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(185,215,255,.10), transparent 28%),
+        radial-gradient(circle at 62% 78%, rgba(154,181,255,.08), transparent 26%);
+      filter:blur(8px);
+    }
     .wrap{
       position:relative;z-index:1;width:min(1240px,calc(100vw - 32px));margin:0 auto;
-      padding:calc(24px + var(--safe-top)) calc(16px + var(--safe-right)) calc(56px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      padding:
+        calc(24px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(56px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
+      display:flex;flex-direction:column;gap:18px;
     }
-
-    .topbar,.hero,.movement,.summits,.ninth,.closing{
-      border:1px solid var(--line);border-radius:30px;box-shadow:var(--shadow);position:relative;overflow:hidden;
-      background:linear-gradient(180deg,var(--season-panel-top),var(--season-panel-bottom));margin-bottom:18px
+    .topbar,.hero,.summits,.ninth,.closing{
+      border:1px solid var(--line);border-radius:30px;background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
+      box-shadow:var(--shadow);position:relative;overflow:hidden;
     }
-    .topbar::before,.hero::before,.movement::before,.summits::before,.ninth::before,.closing::before{
-      content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);border-radius:inherit
+    .topbar::before,.hero::before,.summits::before,.ninth::before,.closing::before{
+      content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);border-radius:inherit;
     }
-
     .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;
     }
     .brand{display:flex;align-items:center;gap:12px}
     .brandMark{
-      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);border:1px solid var(--lineStrong);
-      background:linear-gradient(180deg,rgba(37,59,99,.96),rgba(12,18,32,.92));flex:0 0 auto
+      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);
+      border:1px solid var(--lineStrong);background:linear-gradient(180deg,#4b5b7b,#1b2230);flex:0 0 auto;
     }
     .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
     .brandSubtitle{margin:0;color:var(--soft);font-size:.82rem}
     .nav{display:flex;gap:10px;flex-wrap:wrap}
     .nav a,.cta{
-      min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--lineStrong);background:rgba(255,255,255,.04);
-      color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center
+      min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--lineStrong);
+      background:rgba(255,255,255,.04);color:var(--gold2);font-size:12px;font-weight:900;letter-spacing:.06em;
+      text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;
+      transition:transform 140ms ease, box-shadow 140ms ease;
     }
-
-    .hero,.movement,.summits,.ninth,.closing{padding:26px 24px 24px}
-    .eyebrow{margin:0 0 10px;color:var(--season-accent);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
+    .nav a:hover,.cta:hover{transform:translateY(-1px);box-shadow:0 16px 34px rgba(0,0,0,.26)}
+    .hero,.summits,.ninth,.closing{padding:26px 24px 24px}
+    .eyebrow{margin:0 0 10px;color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
     h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
     h1{margin:0 0 12px;font-size:clamp(44px,8vw,92px);line-height:.92}
-    h2{margin:0 0 12px;font-size:clamp(28px,4.4vw,48px);line-height:1.02;color:var(--season-accent-2)}
-    h3{margin:0 0 8px;font-size:22px;line-height:1.08;color:var(--season-accent-2)}
+    h2{margin:0 0 12px;font-size:clamp(28px,4.4vw,48px);line-height:1.02;color:var(--ice2)}
+    h3{margin:0 0 8px;font-size:22px;line-height:1.08;color:var(--gold2)}
     p{margin:0;color:var(--mut);font-size:16px;line-height:1.68;max-width:940px}
     .lead{font-size:20px;font-weight:800;color:rgba(246,251,255,.96);margin:0 0 12px;max-width:980px}
-
-    .heroGrid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(300px,.94fr);gap:18px;margin-top:18px;align-items:stretch}
-    .movementGrid,.summitGrid,.ninthGrid,.closingGrid{display:grid;gap:14px;margin-top:16px}
-    .movementGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .summitGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .ninthGrid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr)}
-    .closingGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-
-    .panel,.heartPanel,.summitCard,.dollCard,.closingCard{
-      border:1px solid rgba(255,255,255,.10);border-radius:26px;padding:20px;background:linear-gradient(180deg,rgba(14,18,30,.78),rgba(8,10,20,.92));
-      position:relative;overflow:hidden
+    .heroGrid,.ninthGrid,.closingGrid,.summitGrid{display:grid;gap:14px}
+    .heroGrid{grid-template-columns:minmax(0,1.06fr) minmax(320px,.94fr);margin-top:18px}
+    .summitGrid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:16px}
+    .ninthGrid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);margin-top:16px}
+    .closingGrid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}
+    .panel,.windowPanel,.summitCard,.dollCard,.closingCard{
+      border:1px solid rgba(255,255,255,.10);border-radius:26px;padding:20px;
+      background:linear-gradient(180deg,rgba(18,22,34,.80),rgba(8,10,18,.94));position:relative;overflow:hidden;
     }
-    .panel::before,.heartPanel::before,.summitCard::before,.dollCard::before,.closingCard::before{
-      content:"";position:absolute;inset:0;pointer-events:none;background:
+    .panel::before,.windowPanel::before,.summitCard::before,.dollCard::before,.closingCard::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:
         radial-gradient(circle at 18% 18%, rgba(233,244,255,.10), transparent 28%),
         radial-gradient(circle at 82% 18%, rgba(185,215,255,.10), transparent 28%),
         radial-gradient(circle at 50% 84%, rgba(154,181,255,.06), transparent 24%);
-      opacity:.95
+      opacity:.95;
     }
-    .panel > *,.heartPanel > *,.summitCard > *,.dollCard > *,.closingCard > *{position:relative;z-index:1}
-
+    .panel > *,.windowPanel > *,.summitCard > *,.dollCard > *,.closingCard > *{position:relative;z-index:1}
     .chipRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .chip{
-      min-height:38px;padding:0 14px;border-radius:999px;border:1px solid var(--season-chip-border);background:var(--season-chip-bg);
-      color:var(--season-chip-text);font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center
+      min-height:38px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);
+      color:#fff;font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;
     }
     .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-
-    .heartWrap{
-      position:relative;width:min(100%,520px);aspect-ratio:1/1;margin:6px auto 0;display:flex;align-items:center;justify-content:center
+    .windowFrameOuter{
+      position:relative;min-height:340px;border-radius:18px;padding:12px;background:linear-gradient(180deg,var(--wood),var(--wood2));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
     }
-    .ring{
-      position:absolute;inset:50%;transform:translate(-50%,-50%);border-radius:50%;
-      border:1px solid rgba(233,244,255,.18);box-shadow:0 0 26px rgba(194,223,255,.10)
+    .window{
+      position:relative;width:100%;min-height:316px;height:100%;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(233,244,255,.18), rgba(170,203,255,.04));
     }
-    .ring.r1{width:92%;height:92%}
-    .ring.r2{width:72%;height:72%}
-    .ring.r3{width:52%;height:52%}
-
-    .heart{
-      position:absolute;inset:50%;transform:translate(-50%,-50%) rotate(-45deg);border-radius:24% 24% 8% 8%;
-      box-shadow:0 0 24px rgba(194,223,255,.24),0 0 54px rgba(154,181,255,.18),inset 0 0 22px rgba(255,255,255,.16);
-      background:linear-gradient(135deg, rgba(255,255,255,.92) 0%, rgba(217,233,255,.82) 30%, rgba(185,215,255,.76) 58%, rgba(255,255,255,.90) 100%);
-      overflow:hidden
+    .outside{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(233,244,255,.30), transparent 30%),
+        linear-gradient(180deg, rgba(233,244,255,.16) 0%, rgba(170,203,255,.08) 42%, rgba(42,52,76,.18) 100%);
     }
-    .heart::before,.heart::after{content:"";position:absolute;border-radius:50%;background:inherit;box-shadow:inherit}
-    .heart::before{width:100%;height:100%;top:-50%;left:0}
-    .heart::after{width:100%;height:100%;left:50%;top:0}
-    .heart.large{width:44%;height:44%}
-    .heart.medium{width:25%;height:25%;opacity:.92}
-    .heart.small{width:14%;height:14%;opacity:.9}
-    .heart.c1{top:16%;left:50%}
-    .heart.c2{top:32%;left:22%}
-    .heart.c3{top:32%;left:78%}
-    .heart.c4{top:50%;left:12%}
-    .heart.c5{top:50%;left:88%}
-    .heart.c6{top:72%;left:24%}
-    .heart.c7{top:72%;left:76%}
-    .heart.c8{top:86%;left:50%}
-
-    .spark{
-      position:absolute;width:7px;height:7px;background:rgba(245,251,255,.96);border-radius:999px;
-      box-shadow:0 0 10px rgba(245,251,255,.6),0 0 20px rgba(185,215,255,.28)
+    .tree{position:absolute;left:50%;bottom:0;width:200px;height:250px;transform:translateX(-50%)}
+    .trunk{position:absolute;left:50%;bottom:0;width:16px;height:104px;transform:translateX(-50%);background:linear-gradient(180deg,#5b6476,#2e3442);border-radius:10px}
+    .branch{position:absolute;background:linear-gradient(180deg,#677286,#2e3442);border-radius:999px;transform-origin:bottom center}
+    .b1{width:10px;height:92px;left:78px;bottom:78px;transform:rotate(-34deg)}
+    .b2{width:10px;height:94px;left:112px;bottom:80px;transform:rotate(30deg)}
+    .b3{width:8px;height:62px;left:62px;bottom:126px;transform:rotate(-58deg)}
+    .b4{width:8px;height:64px;left:128px;bottom:128px;transform:rotate(56deg)}
+    .frost{
+      position:absolute;border-radius:999px;
+      background:
+        radial-gradient(circle at 40% 40%, rgba(255,255,255,.92), transparent 18%),
+        radial-gradient(circle at 50% 50%, rgba(220,236,255,.90), rgba(176,201,235,.88));
+      box-shadow:0 0 20px rgba(220,236,255,.18);
     }
-    .s1{top:12%;left:50%}.s2{top:26%;left:34%}.s3{top:26%;left:66%}.s4{top:44%;left:22%}
-    .s5{top:44%;left:78%}.s6{top:66%;left:34%}.s7{top:66%;left:66%}.s8{top:82%;left:50%}
-
+    .f1{width:56px;height:56px;left:72px;bottom:142px}
+    .f2{width:50px;height:50px;left:32px;bottom:132px}
+    .f3{width:50px;height:50px;left:118px;bottom:132px}
+    .f4{width:42px;height:42px;left:52px;bottom:174px}
+    .f5{width:42px;height:42px;left:106px;bottom:174px}
+    .f6{width:36px;height:36px;left:82px;bottom:194px}
+    .snow1,.snow2,.snow3,.snow4,.snow5,.snow6{
+      position:absolute;width:6px;height:6px;border-radius:999px;background:rgba(245,251,255,.96);
+      box-shadow:0 0 10px rgba(245,251,255,.5),0 0 18px rgba(185,215,255,.22);
+    }
+    .snow1{left:34px;top:80px}.snow2{left:66px;top:124px}.snow3{left:102px;top:92px}
+    .snow4{right:34px;top:86px}.snow5{right:64px;top:126px}.snow6{left:50%;top:146px}
+    .pane{
+      position:absolute;inset:0;
+      background:
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
+        linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
+      pointer-events:none;
+    }
+    .windowReflection{
+      position:absolute;inset:0;
+      background:linear-gradient(120deg, rgba(255,255,255,.12), transparent 28%, transparent 58%, rgba(255,255,255,.06));
+      pointer-events:none;mix-blend-mode:screen;
+    }
+    .windowLabel{margin-top:14px;color:var(--soft);font-size:13px;line-height:1.55}
     .list{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
     .list li{position:relative;padding-left:18px;color:var(--mut);font-size:15px;line-height:1.58}
     .list li::before{
-      content:"";position:absolute;left:0;top:.58em;width:6px;height:6px;border-radius:999px;background:var(--season-accent);box-shadow:0 0 10px rgba(233,244,255,.18)
+      content:"";position:absolute;left:0;top:.58em;width:6px;height:6px;border-radius:999px;background:var(--ice2);box-shadow:0 0 10px rgba(233,244,255,.18);
     }
-
     .summitNum{
       display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:42px;border-radius:999px;border:1px solid rgba(233,244,255,.20);
-      background:rgba(255,255,255,.04);color:var(--season-accent-2);font-size:14px;font-weight:900;letter-spacing:.04em;margin-bottom:10px
+      background:rgba(255,255,255,.04);color:var(--ice2);font-size:14px;font-weight:900;letter-spacing:.04em;margin-bottom:10px;
     }
-
     .footnote{margin-top:10px;color:var(--soft);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
-
     @media (max-width:1080px){
-      .heroGrid,.movementGrid,.summitGrid,.ninthGrid,.closingGrid{grid-template-columns:1fr}
+      .heroGrid,.summitGrid,.ninthGrid,.closingGrid{grid-template-columns:1fr}
     }
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,1240px)}
       .topbar{align-items:flex-start}
-      .hero,.movement,.summits,.ninth,.closing{padding:20px 18px 18px}
+      .hero,.summits,.ninth,.closing{padding:20px 18px 18px}
     }
   </style>
 </head>
 <body>
   <div class="page">
+    <div class="glow" aria-hidden="true"></div>
+
     <main class="wrap">
       <header class="topbar">
         <div class="brand">
           <div class="brandMark" aria-hidden="true"></div>
           <div>
             <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">The Nine Summits of Love · Winter</p>
+            <p class="brandSubtitle">Nine Summits · Winter outside</p>
           </div>
         </div>
         <nav class="nav" aria-label="Nine Summits navigation">
@@ -172,21 +212,21 @@
         </nav>
       </header>
 
-      <section class="hero season-window">
+      <section class="hero">
         <p class="eyebrow">256 Karats of Human Potential</p>
         <h1>The Nine Summits of Love</h1>
-        <p class="lead">Winter belongs to the crown chamber: refinement, stillness, and purity.</p>
+        <p class="lead">Winter is outside the chamber. Purity is inside the doctrine. The Tree of Life shows the season without replacing the room.</p>
+
         <div class="heroGrid">
           <article class="panel">
-            <h2>The movement, clarified.</h2>
+            <h2>The movement stays interior.</h2>
             <p>
-              The Nine Summits of Love is the movement, the mantra, and the interior doctrine. Winter does not flatten it. Winter sharpens it.
+              This page is no longer a seasonal page-swap. It is an interior chamber of the house. Winter is seen through the glass, while the doctrine and the Ninth Summit remain the true interior focus.
             </p>
             <div class="chipRow">
-              <div class="chip">Winter</div>
-              <div class="chip">Purity</div>
-              <div class="chip">Refinement</div>
-              <div class="chip">Crown chamber</div>
+              <div class="chip">Doctrine inside</div>
+              <div class="chip">Winter outside</div>
+              <div class="chip">Purity featured</div>
             </div>
             <div class="ctaRow">
               <a class="cta" href="#summits">Open the nine summits</a>
@@ -194,44 +234,35 @@
             </div>
           </article>
 
-          <aside class="heartPanel">
-            <div class="heartWrap" aria-hidden="true">
-              <div class="ring r1"></div>
-              <div class="ring r2"></div>
-              <div class="ring r3"></div>
-              <div class="spark s1"></div><div class="spark s2"></div><div class="spark s3"></div><div class="spark s4"></div>
-              <div class="spark s5"></div><div class="spark s6"></div><div class="spark s7"></div><div class="spark s8"></div>
-              <div class="heart large"></div>
-              <div class="heart medium c1"></div>
-              <div class="heart medium c2"></div>
-              <div class="heart medium c3"></div>
-              <div class="heart small c4"></div>
-              <div class="heart small c5"></div>
-              <div class="heart medium c6"></div>
-              <div class="heart medium c7"></div>
-              <div class="heart medium c8"></div>
+          <aside class="windowPanel">
+            <div class="windowFrameOuter">
+              <div class="window">
+                <div class="outside"></div>
+                <div class="tree" aria-hidden="true">
+                  <div class="trunk"></div>
+                  <div class="branch b1"></div>
+                  <div class="branch b2"></div>
+                  <div class="branch b3"></div>
+                  <div class="branch b4"></div>
+                  <div class="frost f1"></div>
+                  <div class="frost f2"></div>
+                  <div class="frost f3"></div>
+                  <div class="frost f4"></div>
+                  <div class="frost f5"></div>
+                  <div class="frost f6"></div>
+                  <div class="snow1"></div>
+                  <div class="snow2"></div>
+                  <div class="snow3"></div>
+                  <div class="snow4"></div>
+                  <div class="snow5"></div>
+                  <div class="snow6"></div>
+                </div>
+                <div class="pane"></div>
+                <div class="windowReflection"></div>
+              </div>
             </div>
-            <p class="footnote">Crystalline heart geometry. Winter light. Highest refinement.</p>
+            <p class="windowLabel">Winter remains outside the chamber. The Tree of Life carries the signal.</p>
           </aside>
-        </div>
-      </section>
-
-      <section class="movement">
-        <p class="eyebrow">Movement</p>
-        <h2>One doctrine. Three claims.</h2>
-        <div class="movementGrid">
-          <article class="panel">
-            <h3>Free will matters.</h3>
-            <p>Human dignity begins with the freedom to choose which structure will be built inwardly.</p>
-          </article>
-          <article class="panel">
-            <h3>Love is structural.</h3>
-            <p>The summits make love legible through virtue instead of reducing it to sentiment alone.</p>
-          </article>
-          <article class="panel">
-            <h3>Structure can scale.</h3>
-            <p>What forms the person can also form relationships, communities, and civilization.</p>
-          </article>
         </div>
       </section>
 
@@ -255,32 +286,32 @@
         <p class="eyebrow">Featured crown chamber</p>
         <h2>The Ninth Summit — Purity</h2>
         <div class="ninthGrid">
-          <article class="heartPanel">
+          <article class="panel">
             <p>
-              Purity is the summit where the movement becomes most refined. Winter gives it the right read: crisp, luminous, disciplined, and still.
+              Purity remains the highest featured chamber, but winter no longer floods the page as a costume. It is a witnessed exterior condition seen through the Tree of Life beyond the window.
             </p>
             <ul class="list">
-              <li>Purity is the highest featured chamber.</li>
-              <li>It represents refinement, coherence, and highest-order alignment.</li>
-              <li>It should feel sacred, graphic, and crowned.</li>
-              <li>It is the winter room of the movement.</li>
+              <li>Purity is the crown chamber.</li>
+              <li>The doctrine remains interior and stable.</li>
+              <li>The season is visible, not invasive.</li>
+              <li>The Tree of Life remains the world-state instrument.</li>
             </ul>
           </article>
           <article class="dollCard">
             <h3>Nested winter read</h3>
             <ul class="list">
-              <li>Outer doll: movement</li>
-              <li>Middle doll: virtues</li>
+              <li>Outer doll: house chamber</li>
+              <li>Middle doll: doctrine</li>
               <li>Inner doll: purity</li>
             </ul>
-            <p style="margin-top:14px;">The season now makes that nesting visible before the outer world is built.</p>
+            <p style="margin-top:14px;">That is the new baseline across the house-facing pages.</p>
           </article>
         </div>
       </section>
 
       <section class="closing">
         <p class="eyebrow">Closing read</p>
-        <h2>Refinement without silence.</h2>
+        <h2>Winter is outside. Purity is inside.</h2>
         <div class="closingGrid">
           <article class="closingCard">
             <h3>Public face</h3>
@@ -288,13 +319,12 @@
           </article>
           <article class="closingCard">
             <h3>Inner crown</h3>
-            <p>The ninth summit remains the clearest and most refined chamber on the page.</p>
+            <p>The Ninth Summit remains the clearest and most refined chamber on the page.</p>
           </article>
         </div>
-        <div class="footnote">Winter sharpens the movement instead of muting it.</div>
+        <div class="footnote">House law preserved. World-state visible through glass.</div>
       </section>
     </main>
   </div>
-  <script src="/assets/room-seasons.js"></script>
 </body>
 </html>

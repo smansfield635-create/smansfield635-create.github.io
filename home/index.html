@@ -6,26 +6,31 @@
   <title>Home | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Stable nested hub after the Prelude bloom."
+    content="Home chamber with two primary paths: Nine Summits of Love and Big Laugh motivational comedy."
   />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#0b132c;
-      --bg1:#103067;
-      --bg2:#1b1033;
-      --ink:#f8fbff;
-      --mut:rgba(248,251,255,.82);
-      --soft:rgba(248,251,255,.62);
-      --gold:#ffd76a;
-      --rose:#ff6fb0;
-      --sky:#7fd4ff;
-      --emerald:#7ef0c4;
-      --violet:#c28cff;
-      --line:rgba(255,255,255,.14);
-      --panel:rgba(11,16,36,.68);
-      --panelStrong:rgba(10,12,28,.86);
-      --shadow:0 24px 84px rgba(0,0,0,.42);
+      --bg0:#07111f;
+      --bg1:#102344;
+      --bg2:#1a355f;
+      --ink:#f5f8ff;
+      --mut:rgba(245,248,255,.82);
+      --soft:rgba(245,248,255,.62);
+      --gold:#f4e2b0;
+      --rose:#ff8eb6;
+      --violet:#b694ff;
+      --cyan:#90dfff;
+      --mint:#93f0c7;
+      --line:rgba(255,255,255,.12);
+      --lineStrong:rgba(244,226,176,.24);
+      --panel:rgba(10,16,30,.74);
+      --panelStrong:rgba(8,14,26,.90);
+      --shadow:0 24px 76px rgba(0,0,0,.48);
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
     }
 
     *{box-sizing:border-box}
@@ -33,13 +38,9 @@
     html,body{
       margin:0;
       min-height:100%;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
       color:var(--ink);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(127,212,255,.18), transparent 22%),
-        radial-gradient(circle at 82% 20%, rgba(255,111,176,.14), transparent 20%),
-        radial-gradient(circle at 50% 70%, rgba(126,240,196,.12), transparent 18%),
-        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 50%,var(--bg2) 100%);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
 
     body{overflow-x:hidden}
@@ -52,272 +53,468 @@
       isolation:isolate;
     }
 
-    .stars,.stars::before{
-      content:"";
+    .env{
       position:absolute;
       inset:0;
       pointer-events:none;
-      display:block;
+      overflow:hidden;
     }
 
-    .stars{
-      opacity:.5;
-      background-image:
-        radial-gradient(circle at 14% 20%, rgba(255,255,255,.92) 0 1px, transparent 2px),
-        radial-gradient(circle at 28% 66%, rgba(255,255,255,.82) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 22%, rgba(255,255,255,.88) 0 1px, transparent 2px),
-        radial-gradient(circle at 84% 72%, rgba(255,255,255,.82) 0 1px, transparent 2px);
-    }
-
-    .stars::before{
-      opacity:.4;
+    .env::before{
+      content:"";
+      position:absolute;
+      inset:-10%;
       background:
-        radial-gradient(circle at 20% 24%, rgba(127,212,255,.16), transparent 18%),
-        radial-gradient(circle at 80% 26%, rgba(255,111,176,.14), transparent 18%),
-        radial-gradient(circle at 52% 64%, rgba(126,240,196,.14), transparent 18%);
-      filter:blur(20px);
+        radial-gradient(circle at 10% 20%, rgba(255,255,255,.94) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 18% 50%, rgba(255,255,255,.80) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 36% 16%, rgba(255,255,255,.84) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 58% 18%, rgba(255,255,255,.88) 0 1.1px, transparent 2px),
+        radial-gradient(circle at 74% 22%, rgba(255,255,255,.86) 0 1.1px, transparent 1.9px),
+        radial-gradient(circle at 20% 78%, rgba(255,255,255,.74) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 50% 82%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 86% 80%, rgba(255,255,255,.80) 0 1px, transparent 1.8px);
+      opacity:.46;
+      animation:starDrift 32s linear infinite;
+    }
+
+    .env::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(circle at 14% 24%, rgba(255,142,182,.24), transparent 28%),
+        radial-gradient(circle at 78% 20%, rgba(182,148,255,.22), transparent 28%),
+        radial-gradient(circle at 78% 74%, rgba(144,223,255,.18), transparent 30%),
+        radial-gradient(circle at 26% 76%, rgba(147,240,199,.14), transparent 26%),
+        radial-gradient(circle at 52% 36%, rgba(244,226,176,.10), transparent 22%);
+      filter:blur(8px);
+      opacity:.70;
     }
 
     .wrap{
       position:relative;
       z-index:1;
-      width:min(1200px,calc(100vw - 32px));
+      width:min(1180px,calc(100vw - 32px));
       margin:0 auto;
-      padding:24px 0 42px;
-      display:grid;
-      gap:18px;
+      padding:
+        calc(24px + var(--safe-top))
+        calc(16px + var(--safe-right))
+        calc(40px + var(--safe-bottom))
+        calc(16px + var(--safe-left));
     }
 
-    .topbar,.hero,.hub,.footerbox{
+    .topbar,
+    .hero,
+    .paths,
+    .footerBand{
       border:1px solid var(--line);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),
-        linear-gradient(180deg,var(--panel),var(--panelStrong));
+      border-radius:28px;
+      background:linear-gradient(180deg,var(--panel) 0%,var(--panelStrong) 100%);
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
       position:relative;
       overflow:hidden;
     }
 
     .topbar{
-      border-radius:999px;
-      padding:14px 18px;
       display:flex;
-      align-items:center;
       justify-content:space-between;
+      align-items:center;
       gap:12px;
       flex-wrap:wrap;
+      padding:14px 18px;
+      margin-bottom:18px;
     }
 
-    .brand{display:flex;align-items:center;gap:12px}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
 
-    .mark{
-      width:44px;
-      height:44px;
+    .brandMark{
+      width:42px;
+      height:42px;
       border-radius:14px;
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--sky),var(--gold) 35%,var(--emerald) 70%,var(--violet));
+      border:1px solid rgba(244,226,176,.24);
+      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
       flex:0 0 auto;
     }
 
-    .brand h2{
-      margin:0;
+    .brandTitle{
+      margin:0 0 3px;
       font-size:.96rem;
-      font-weight:900;
+      font-weight:800;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    .brand p{
-      margin:2px 0 0;
+    .brandSubtitle{
+      margin:0;
       color:var(--soft);
       font-size:.82rem;
     }
 
-    .pills{
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
+    .nav a{
+      min-height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid var(--lineStrong);
+      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
+      color:#fff3cf;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
+    }
+
+    .nav a:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
+    }
+
+    .hero,
+    .paths,
+    .footerBand{
+      padding:30px 24px 24px;
+      margin-bottom:18px;
+    }
+
+    .eyebrow{
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    h1,h2,h3{
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    h1{
+      margin:0 0 14px;
+      font-size:clamp(42px,8vw,84px);
+      line-height:.92;
+      letter-spacing:.03em;
+    }
+
+    h2{
+      margin:0 0 12px;
+      font-size:clamp(24px,4vw,36px);
+      line-height:1.02;
+    }
+
+    p{
+      margin:0;
+      color:var(--mut);
+      line-height:1.65;
+      font-size:16px;
+      max-width:860px;
+    }
+
+    .heroCopy{
+      font-size:18px;
+      max-width:900px;
+    }
+
+    .pathsGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:16px;
+      margin-top:18px;
+    }
+
+    .pathCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      padding:22px;
+      min-height:360px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 18px 56px rgba(0,0,0,.28);
+    }
+
+    .pathCard::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      opacity:.92;
+    }
+
+    .pathCard.love{
+      background:
+        linear-gradient(180deg, rgba(18,14,34,.80) 0%, rgba(12,10,26,.94) 100%);
+    }
+
+    .pathCard.love::before{
+      background:
+        radial-gradient(circle at 18% 22%, rgba(255,142,182,.22), transparent 34%),
+        radial-gradient(circle at 82% 18%, rgba(182,148,255,.20), transparent 34%),
+        radial-gradient(circle at 50% 72%, rgba(244,226,176,.12), transparent 26%);
+    }
+
+    .pathCard.comedy{
+      background:
+        linear-gradient(180deg, rgba(14,20,38,.80) 0%, rgba(10,14,28,.94) 100%);
+    }
+
+    .pathCard.comedy::before{
+      background:
+        radial-gradient(circle at 18% 22%, rgba(144,223,255,.22), transparent 34%),
+        radial-gradient(circle at 82% 18%, rgba(147,240,199,.18), transparent 34%),
+        radial-gradient(circle at 50% 72%, rgba(244,226,176,.12), transparent 26%);
+    }
+
+    .pathTop{
+      position:relative;
+      z-index:1;
+    }
+
+    .pathKicker{
+      margin:0 0 12px;
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    .love .pathKicker{color:var(--rose)}
+    .comedy .pathKicker{color:var(--cyan)}
+
+    .pathTitle{
+      margin:0 0 12px;
+      font-size:clamp(28px,4vw,46px);
+      line-height:.96;
+    }
+
+    .pathLine{
+      margin:0 0 14px;
+      font-size:18px;
+      font-weight:800;
+      color:rgba(255,255,255,.94);
+      line-height:1.4;
+    }
+
+    .pathCopy{
+      font-size:15px;
+      max-width:none;
+    }
+
+    .dolls{
+      position:relative;
+      z-index:1;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin:18px 0 0;
+      min-height:88px;
+    }
+
+    .doll{
+      border-radius:24px;
+      transform:rotate(8deg);
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow:0 14px 36px rgba(0,0,0,.24);
+      flex:0 0 auto;
+    }
+
+    .love .doll:nth-child(1){width:92px;height:92px;background:linear-gradient(180deg,rgba(255,142,182,.42),rgba(182,148,255,.24))}
+    .love .doll:nth-child(2){width:72px;height:72px;background:linear-gradient(180deg,rgba(255,170,196,.40),rgba(244,226,176,.22))}
+    .love .doll:nth-child(3){width:52px;height:52px;background:linear-gradient(180deg,rgba(244,226,176,.40),rgba(255,142,182,.20))}
+
+    .comedy .doll:nth-child(1){width:92px;height:92px;background:linear-gradient(180deg,rgba(144,223,255,.40),rgba(147,240,199,.22))}
+    .comedy .doll:nth-child(2){width:72px;height:72px;background:linear-gradient(180deg,rgba(147,240,199,.36),rgba(244,226,176,.20))}
+    .comedy .doll:nth-child(3){width:52px;height:52px;background:linear-gradient(180deg,rgba(244,226,176,.36),rgba(144,223,255,.20))}
+
+    .pathBottom{
+      position:relative;
+      z-index:1;
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    .pillRow{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
     }
 
     .pill{
-      min-height:40px;
+      min-height:38px;
       padding:0 14px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      color:#fff;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.05em;
+      text-transform:uppercase;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      font-size:.74rem;
+    }
+
+    .cta{
+      min-height:46px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid rgba(244,226,176,.26);
+      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
+      color:#fff3cf;
+      font-size:12px;
       font-weight:900;
-      letter-spacing:.12em;
+      letter-spacing:.06em;
       text-transform:uppercase;
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
     }
 
-    .hero,.hub,.footerbox{
-      border-radius:34px;
-      padding:24px 22px;
+    .cta:hover{
+      transform:translateY(-1px);
+      box-shadow:0 16px 34px rgba(0,0,0,.28);
     }
 
-    .hero::before,.hub::before,.footerbox::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 14% 14%, rgba(127,212,255,.16), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(255,111,176,.12), transparent 20%),
-        radial-gradient(circle at 50% 26%, rgba(255,215,106,.10), transparent 16%),
-        radial-gradient(circle at 22% 82%, rgba(126,240,196,.10), transparent 20%);
-      opacity:.9;
+    .footerBand p{
+      max-width:none;
     }
 
-    .eyebrow{
-      position:relative;
-      z-index:1;
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:.78rem;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
+    @keyframes starDrift{
+      from{transform:translate3d(-1.2%,-.8%,0)}
+      to{transform:translate3d(1.2%,.8%,0)}
     }
 
-    h1{
-      position:relative;
-      z-index:1;
-      margin:0;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2.8rem,6vw,5.2rem);
-      line-height:.92;
-    }
-
-    .copy{
-      position:relative;
-      z-index:1;
-      margin:14px 0 0;
-      color:var(--mut);
-      line-height:1.66;
-      font-size:1rem;
-      max-width:860px;
-    }
-
-    .hubGrid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-      margin-top:14px;
-    }
-
-    .card{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-      padding:18px;
-      transition:transform .15s ease,border-color .15s ease;
-    }
-
-    .card:hover{
-      transform:translateY(-2px);
-      border-color:rgba(255,215,106,.24);
-    }
-
-    .card strong{
-      display:block;
-      margin:0 0 8px;
-      font-size:.84rem;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:#fff2cb;
-    }
-
-    .card span{
-      display:block;
-      color:var(--mut);
-      line-height:1.58;
-      font-size:.94rem;
-    }
-
-    .footerbox p{
-      position:relative;
-      z-index:1;
-      margin:0;
-      color:var(--soft);
-      font-size:.78rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    @media (max-width:980px){
-      .hubGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:920px){
+      .pathsGrid{grid-template-columns:1fr}
     }
 
     @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1200px)}
-      .hero,.hub,.footerbox{padding:20px}
-      .hubGrid{grid-template-columns:1fr}
+      .wrap{width:min(100vw - 20px,1180px)}
+      .topbar{align-items:flex-start}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .env::before{animation:none !important}
+      .nav a,.cta{transition:none !important}
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="stars" aria-hidden="true"></div>
+    <div class="env" aria-hidden="true"></div>
 
-    <div class="wrap">
-      <div class="topbar">
+    <main class="wrap">
+      <header class="topbar">
         <div class="brand">
-          <div class="mark" aria-hidden="true"></div>
+          <div class="brandMark" aria-hidden="true"></div>
           <div>
-            <h2>Home</h2>
-            <p>Stable nested hub</p>
+            <p class="brandTitle">Diamond Gate Bridge</p>
+            <p class="brandSubtitle">Home chamber</p>
           </div>
         </div>
 
-        <div class="pills" aria-label="Home status">
-          <div class="pill">Home</div>
-          <div class="pill">Nested Hub</div>
-          <div class="pill">Calm + Bright</div>
-        </div>
-      </div>
-
-      <header class="hero" aria-label="Home hero">
-        <p class="eyebrow">Home</p>
-        <h1>The House After Entry</h1>
-        <p class="copy">
-          Home is now the stable hub after the Prelude bloom. It remains colorful and layered, but calmer. The purpose here is orientation without flattening the warmth and ceremonial depth established upstream.
-        </p>
+        <nav class="nav" aria-label="Home navigation">
+          <a href="/door/">Door</a>
+          <a href="/prelude/">Prelude</a>
+          <a href="/index.html">Compass</a>
+          <a href="/products/">Products</a>
+        </nav>
       </header>
 
-      <section class="hub" aria-label="Home routes">
-        <p class="eyebrow">Primary routes</p>
-        <div class="hubGrid">
-          <a class="card" href="/prelude/">
-            <strong>Prelude</strong>
-            <span>Return to the first major bloom and the Nine Summits of Love opening chamber.</span>
-          </a>
-          <a class="card" href="/products/">
-            <strong>Products</strong>
-            <span>Enter the product chamber with its flagship surfaces and nested product paths.</span>
-          </a>
-          <a class="card" href="/laws/">
-            <strong>Laws</strong>
-            <span>Move into doctrine and bounding structure from a warmer and clearer upstream hub.</span>
-          </a>
-          <a class="card" href="/gauges/">
-            <strong>Gauges</strong>
-            <span>Move into instrument surfaces without forcing the home hub into a utility-only read.</span>
-          </a>
+      <section class="hero">
+        <p class="eyebrow">Home</p>
+        <h1>Choose the chamber.</h1>
+        <p class="heroCopy">
+          The home page now opens into two primary paths: one for the deeper inward work of the Nine Summits of Love, and one for the live show path of Big Laughs — interactive motivational comedy.
+        </p>
+      </section>
+
+      <section class="paths">
+        <p class="eyebrow">Primary paths</p>
+        <h2>Two live options.</h2>
+
+        <div class="pathsGrid">
+          <article class="pathCard love">
+            <div class="pathTop">
+              <p class="pathKicker">Love path</p>
+              <h3 class="pathTitle">Nine Summits of Love</h3>
+              <p class="pathLine">Go deeper into the inner architecture of love.</p>
+              <p class="pathCopy">
+                This path opens the more detailed surface for the Nine Summits of Love — the inward work, the nested chambers, and the deeper structure beyond the threshold.
+              </p>
+              <div class="dolls" aria-hidden="true">
+                <div class="doll"></div>
+                <div class="doll"></div>
+                <div class="doll"></div>
+              </div>
+            </div>
+
+            <div class="pathBottom">
+              <div class="pillRow">
+                <div class="pill">Nested</div>
+                <div class="pill">Detailed</div>
+                <div class="pill">Inward</div>
+              </div>
+              <a class="cta" href="/nine-summits/">Open Nine Summits</a>
+            </div>
+          </article>
+
+          <article class="pathCard comedy">
+            <div class="pathTop">
+              <p class="pathKicker">Show path</p>
+              <h3 class="pathTitle">Big Laugh</h3>
+              <p class="pathLine">Interactive motivational comedy.</p>
+              <p class="pathCopy">
+                This path opens the show surface for <em>A Dollar a Day Keeps the Psychiatrist Away</em> — the motivational comedy line, the interactive energy, and the live performance branch.
+              </p>
+              <div class="dolls" aria-hidden="true">
+                <div class="doll"></div>
+                <div class="doll"></div>
+                <div class="doll"></div>
+              </div>
+            </div>
+
+            <div class="pathBottom">
+              <div class="pillRow">
+                <div class="pill">Comedy</div>
+                <div class="pill">Interactive</div>
+                <div class="pill">Motivational</div>
+              </div>
+              <a class="cta" href="/big-laugh/">Open Big Laugh</a>
+            </div>
+          </article>
         </div>
       </section>
 
-      <section class="footerbox" aria-label="Home footer">
-        <p>Home stabilizes the nested system after Prelude without losing color, warmth, or visible depth.</p>
+      <section class="footerBand">
+        <p class="eyebrow">Center read</p>
+        <p>
+          Home now acts as a clean splitter: love on one side, comedy on the other, with both held inside the same house.
+        </p>
       </section>
-    </div>
+    </main>
   </div>
 </body>
 </html>

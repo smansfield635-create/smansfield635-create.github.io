@@ -1,490 +1,200 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-season="autumn">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Big Laugh | Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Big Laugh — interactive motivational comedy. Coming soon Sundays at 7:00 PM, with Thursday expansion under consideration."
-  />
+  <meta name="description" content="Big Laugh — interactive motivational comedy. Coming soon Sundays at 7:00 PM, with Thursday expansion under consideration." />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#09111f;
-      --bg1:#13264b;
-      --bg2:#1d3970;
-      --ink:#f7f9ff;
-      --mut:rgba(247,249,255,.84);
-      --soft:rgba(247,249,255,.64);
-
-      --gold:#f4e2b0;
-      --cyan:#8fdfff;
-      --mint:#93f0c7;
-      --rose:#ff97bf;
-      --violet:#b694ff;
-      --amber:#ffcb82;
-
-      --line:rgba(255,255,255,.12);
-      --lineStrong:rgba(244,226,176,.24);
-
-      --panel:rgba(10,16,30,.74);
-      --panelStrong:rgba(8,14,26,.92);
-
+      --bg0:#15100d;
+      --bg1:#241915;
+      --bg2:#3b251e;
+      --ink:#fff7ef;
+      --mut:rgba(255,247,239,.84);
+      --soft:rgba(255,247,239,.62);
+      --gold:#f4dda7;
+      --gold2:#fff0c9;
+      --amber:#ffca86;
+      --copper:#d97d48;
+      --rust:#a14d2e;
+      --wood:#3c2b20;
+      --wood2:#211710;
+      --line:rgba(255,255,255,.10);
+      --lineStrong:rgba(244,221,167,.24);
+      --panelTop:rgba(31,21,16,.76);
+      --panelBottom:rgba(12,10,8,.94);
       --shadow:0 24px 76px rgba(0,0,0,.48);
-
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
       --safe-bottom:env(safe-area-inset-bottom,0px);
       --safe-left:env(safe-area-inset-left,0px);
     }
-
     *{box-sizing:border-box}
-
     html,body{
-      margin:0;
-      min-height:100%;
-      background:linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
+      margin:0;min-height:100%;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,202,134,.08), transparent 26%),
+        radial-gradient(circle at 50% 84%, rgba(162,77,46,.06), transparent 30%),
+        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
       color:var(--ink);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
     }
-
     body{overflow-x:hidden}
     a{color:inherit;text-decoration:none}
-
-    .page{
-      position:relative;
-      min-height:100vh;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .env{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      overflow:hidden;
-    }
-
-    .env::before{
-      content:"";
-      position:absolute;
-      inset:-10%;
+    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
+    .glow{position:absolute;inset:0;pointer-events:none}
+    .glow::before{
+      content:"";position:absolute;inset:0;
       background:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,.94) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 18% 50%, rgba(255,255,255,.80) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 36% 16%, rgba(255,255,255,.84) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 58% 18%, rgba(255,255,255,.88) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 74% 22%, rgba(255,255,255,.86) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 20% 78%, rgba(255,255,255,.74) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 50% 82%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 86% 80%, rgba(255,255,255,.80) 0 1px, transparent 1.8px);
-      opacity:.42;
-      animation:starDrift 32s linear infinite;
-    }
-
-    .env::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 14% 22%, rgba(255,151,191,.22), transparent 28%),
-        radial-gradient(circle at 78% 18%, rgba(143,223,255,.20), transparent 26%),
-        radial-gradient(circle at 76% 76%, rgba(147,240,199,.16), transparent 28%),
-        radial-gradient(circle at 32% 78%, rgba(182,148,255,.18), transparent 28%),
-        radial-gradient(circle at 52% 38%, rgba(255,203,130,.14), transparent 22%);
+        radial-gradient(circle at 18% 24%, rgba(255,202,134,.10), transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(217,125,72,.10), transparent 28%),
+        radial-gradient(circle at 62% 78%, rgba(161,77,46,.08), transparent 26%);
       filter:blur(8px);
-      opacity:.74;
     }
-
     .wrap{
-      position:relative;
-      z-index:1;
-      width:min(1180px,calc(100vw - 32px));
-      margin:0 auto;
+      position:relative;z-index:1;width:min(1180px,calc(100vw - 32px));margin:0 auto;
       padding:
         calc(24px + var(--safe-top))
         calc(16px + var(--safe-right))
         calc(40px + var(--safe-bottom))
         calc(16px + var(--safe-left));
+      display:flex;flex-direction:column;gap:18px;
     }
-
-    .topbar,
-    .hero,
-    .bubbles,
-    .details,
-    .sponsor{
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:linear-gradient(180deg,var(--panel) 0%,var(--panelStrong) 100%);
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
+    .topbar,.hero,.bubbles,.details,.sponsor{
+      border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
+      box-shadow:var(--shadow);position:relative;overflow:hidden;
     }
-
+    .topbar::before,.hero::before,.bubbles::before,.details::before,.sponsor::before{
+      content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);border-radius:inherit;
+    }
     .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      padding:14px 18px;
-      margin-bottom:18px;
+      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;
     }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
+    .brand{display:flex;align-items:center;gap:12px}
     .brandMark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      transform:rotate(45deg);
-      border:1px solid rgba(244,226,176,.24);
-      background:linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
-      flex:0 0 auto;
+      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);
+      border:1px solid var(--lineStrong);background:linear-gradient(180deg,#6a4529,#26170f);flex:0 0 auto;
     }
-
-    .brandTitle{
-      margin:0 0 3px;
-      font-size:.96rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .brandSubtitle{
-      margin:0;
-      color:var(--soft);
-      font-size:.82rem;
-    }
-
-    .nav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
+    .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+    .brandSubtitle{margin:0;color:var(--soft);font-size:.82rem}
+    .nav{display:flex;gap:10px;flex-wrap:wrap}
     .nav a,.cta{
-      min-height:44px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid var(--lineStrong);
-      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
-      color:#fff3cf;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
+      min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--lineStrong);
+      background:rgba(255,255,255,.04);color:var(--gold2);font-size:12px;font-weight:900;letter-spacing:.06em;
+      text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;
+      transition:transform 140ms ease, box-shadow 140ms ease;
     }
-
-    .nav a:hover,.cta:hover{
-      transform:translateY(-1px);
-      box-shadow:0 16px 34px rgba(0,0,0,.28);
-    }
-
-    .hero,.bubbles,.details,.sponsor{
-      padding:24px;
-      margin-bottom:18px;
-    }
-
-    .eyebrow{
-      margin:0 0 10px;
-      color:var(--gold);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
+    .nav a:hover,.cta:hover{transform:translateY(-1px);box-shadow:0 16px 34px rgba(0,0,0,.26)}
+    .hero,.bubbles,.details,.sponsor{padding:24px}
+    .eyebrow{margin:0 0 10px;color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
     .comingSoon{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,203,130,.30);
-      background:linear-gradient(145deg, rgba(28,22,16,.72), rgba(12,10,8,.80));
-      color:#fff0ce;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      margin-bottom:14px;
+      display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:0 14px;border-radius:999px;
+      border:1px solid rgba(255,202,134,.30);background:linear-gradient(145deg, rgba(42,25,16,.72), rgba(16,11,8,.84));
+      color:var(--gold2);font-size:11px;font-weight:900;letter-spacing:.10em;text-transform:uppercase;margin-bottom:14px;
     }
-
-    h1,h2,h3{
-      font-family:Georgia,"Times New Roman",serif;
+    h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
+    h1{margin:0 0 12px;font-size:clamp(44px,8vw,88px);line-height:.92}
+    h2{margin:0 0 12px;font-size:clamp(24px,4vw,38px);line-height:1.02;color:var(--gold2)}
+    h3{margin:0 0 8px;font-size:18px;line-height:1.1;color:var(--gold2)}
+    p{margin:0;color:var(--mut);line-height:1.66;font-size:16px;max-width:920px}
+    .heroLine{font-size:20px;font-weight:800;color:rgba(255,247,239,.95);margin:0 0 14px;max-width:960px}
+    .heroGrid,.detailsGrid,.bubbleGrid,.sponsorGrid{display:grid;gap:14px}
+    .heroGrid{grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);margin-top:18px}
+    .bubbleGrid{grid-template-columns:repeat(5,minmax(0,1fr));margin-top:18px}
+    .detailsGrid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}
+    .sponsorGrid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:16px}
+    .panel,.windowPanel,.bubble,.detailCard,.sponsorCard,.registerCard{
+      border:1px solid rgba(255,255,255,.10);border-radius:24px;padding:20px;
+      background:linear-gradient(180deg,rgba(34,24,18,.78),rgba(14,10,8,.94));position:relative;overflow:hidden;
     }
-
-    h1{
-      margin:0 0 12px;
-      font-size:clamp(44px,8vw,88px);
-      line-height:.92;
-      letter-spacing:.03em;
-    }
-
-    h2{
-      margin:0 0 12px;
-      font-size:clamp(24px,4vw,38px);
-      line-height:1.02;
-    }
-
-    h3{
-      margin:0 0 8px;
-      font-size:18px;
-      line-height:1.1;
-    }
-
-    p{
-      margin:0;
-      color:var(--mut);
-      line-height:1.68;
-      font-size:16px;
-      max-width:920px;
-    }
-
-    .heroLine{
-      font-size:20px;
-      font-weight:800;
-      color:rgba(255,255,255,.95);
-      margin:0 0 14px;
-      max-width:960px;
-    }
-
-    .heroGrid{
-      display:grid;
-      grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
-      gap:18px;
-      align-items:stretch;
-      margin-top:18px;
-    }
-
-    .heroPanel,
-    .heroSide,
-    .detailCard,
-    .bubble,
-    .registerCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      background:linear-gradient(180deg, rgba(12,18,34,.78) 0%, rgba(8,14,26,.92) 100%);
-      padding:20px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .heroPanel::before,
-    .heroSide::before,
-    .detailCard::before,
-    .bubble::before,
-    .registerCard::before,
-    .sponsor::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:.94;
-    }
-
-    .heroPanel::before{
+    .panel::before,.windowPanel::before,.bubble::before,.detailCard::before,.sponsorCard::before,.registerCard::before{
+      content:"";position:absolute;inset:0;pointer-events:none;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,151,191,.16), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(143,223,255,.14), transparent 28%),
-        radial-gradient(circle at 50% 82%, rgba(255,203,130,.10), transparent 24%);
+        radial-gradient(circle at 18% 18%, rgba(255,202,134,.12), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(217,125,72,.10), transparent 26%),
+        radial-gradient(circle at 50% 84%, rgba(161,77,46,.08), transparent 24%);
+      opacity:.95;
     }
-
-    .heroSide::before{
-      background:
-        radial-gradient(circle at 18% 20%, rgba(147,240,199,.14), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(182,148,255,.14), transparent 28%),
-        radial-gradient(circle at 50% 82%, rgba(143,223,255,.10), transparent 24%);
-    }
-
-    .registerCard::before{
-      background:
-        radial-gradient(circle at 18% 20%, rgba(255,203,130,.16), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(147,240,199,.12), transparent 28%),
-        radial-gradient(circle at 50% 82%, rgba(255,151,191,.10), transparent 24%);
-    }
-
-    .heroPanel > *,
-    .heroSide > *,
-    .detailCard > *,
-    .bubble > *,
-    .registerCard > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .chipRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-
+    .panel > *,.windowPanel > *,.bubble > *,.detailCard > *,.sponsorCard > *,.registerCard > *{position:relative;z-index:1}
+    .chipRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
     .chip{
-      min-height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:#fff;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
+      min-height:38px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);
+      color:#fff;font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;
     }
-
-    .ctaRow{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:20px;
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
+    .windowFrameOuter{
+      position:relative;min-height:300px;border-radius:18px;padding:12px;background:linear-gradient(180deg,var(--wood),var(--wood2));
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
     }
-
-    .bubbleGrid{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:14px;
-      margin-top:18px;
+    .window{
+      position:relative;width:100%;min-height:276px;height:100%;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(255,245,224,.14), rgba(255,245,224,.04));
     }
-
-    .bubble{
-      min-height:170px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-
-    .bubbleKicker{
-      margin:0 0 8px;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .bubble:nth-child(1) .bubbleKicker{color:var(--amber)}
-    .bubble:nth-child(2) .bubbleKicker{color:var(--rose)}
-    .bubble:nth-child(3) .bubbleKicker{color:var(--cyan)}
-    .bubble:nth-child(4) .bubbleKicker{color:var(--mint)}
-    .bubble:nth-child(5) .bubbleKicker{color:var(--violet)}
-
-    .bubbleTitle{
-      margin:0 0 8px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:22px;
-      line-height:1.06;
-    }
-
-    .bubbleCopy{
-      font-size:14px;
-      max-width:none;
-    }
-
-    .detailsGrid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-      margin-top:16px;
-    }
-
-    .detailCard ul,
-    .registerCard ul{
-      margin:14px 0 0;
-      padding-left:20px;
-      color:var(--mut);
-      line-height:1.7;
-      font-size:15px;
-    }
-
-    .detailCard li,
-    .registerCard li{
-      margin:0;
-    }
-
-    .registerCard{
-      margin-top:18px;
-    }
-
-    .registerLead{
-      font-size:18px;
-      font-weight:800;
-      color:rgba(255,255,255,.95);
-      margin:0 0 10px;
-      max-width:none;
-    }
-
-    .sponsor{
+    .outside{
+      position:absolute;inset:0;
       background:
-        linear-gradient(180deg, rgba(18,14,34,.86) 0%, rgba(8,14,26,.94) 100%);
+        radial-gradient(circle at 50% 100%, rgba(255,214,150,.28), transparent 30%),
+        linear-gradient(180deg, rgba(255,230,176,.16) 0%, rgba(255,164,96,.08) 42%, rgba(72,48,36,.18) 100%);
     }
-
-    .sponsor::before{
+    .tree{position:absolute;left:50%;bottom:0;width:190px;height:236px;transform:translateX(-50%)}
+    .trunk{position:absolute;left:50%;bottom:0;width:18px;height:104px;transform:translateX(-50%);background:linear-gradient(180deg,#674532,#38261b);border-radius:12px}
+    .branch{position:absolute;background:linear-gradient(180deg,#734e38,#38261b);border-radius:999px;transform-origin:bottom center}
+    .b1{width:10px;height:92px;left:74px;bottom:78px;transform:rotate(-34deg)}
+    .b2{width:10px;height:94px;left:106px;bottom:80px;transform:rotate(30deg)}
+    .b3{width:8px;height:62px;left:58px;bottom:126px;transform:rotate(-58deg)}
+    .b4{width:8px;height:64px;left:122px;bottom:128px;transform:rotate(56deg)}
+    .leaf{
+      position:absolute;width:16px;height:11px;border-radius:80% 10% 80% 10%;
+      background:linear-gradient(135deg, #ffd38f, #c35c33);box-shadow:0 0 10px rgba(255,164,96,.12);transform:rotate(-14deg);
+    }
+    .lf1{left:44px;bottom:168px}.lf2{left:62px;bottom:152px}.lf3{left:84px;bottom:178px}.lf4{left:112px;bottom:160px}
+    .lf5{left:130px;bottom:172px}.lf6{left:146px;bottom:150px}.lf7{left:72px;bottom:132px}.lf8{left:118px;bottom:134px}
+    .fall1,.fall2,.fall3{
+      position:absolute;width:14px;height:10px;border-radius:80% 10% 80% 10%;
+      background:linear-gradient(135deg, #ffd38f, #b8502b);box-shadow:0 0 8px rgba(255,164,96,.10);opacity:.92;
+    }
+    .fall1{left:30px;top:130px;transform:rotate(12deg)}
+    .fall2{right:38px;top:150px;transform:rotate(-18deg)}
+    .fall3{left:52%;top:174px;transform:rotate(20deg)}
+    .pane{
+      position:absolute;inset:0;
       background:
-        radial-gradient(circle at 18% 24%, rgba(255,151,191,.14), transparent 28%),
-        radial-gradient(circle at 50% 18%, rgba(244,226,176,.10), transparent 22%),
-        radial-gradient(circle at 82% 24%, rgba(143,223,255,.14), transparent 28%);
+        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
+        linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
+      pointer-events:none;
     }
-
-    .sponsor p,
-    .sponsor h2,
-    .sponsor .chipRow{
-      position:relative;
-      z-index:1;
+    .windowReflection{
+      position:absolute;inset:0;
+      background:linear-gradient(120deg, rgba(255,255,255,.10), transparent 28%, transparent 58%, rgba(255,255,255,.06));
+      pointer-events:none;mix-blend-mode:screen;
     }
-
-    .footnote{
-      margin-top:10px;
-      color:var(--soft);
-      font-size:12px;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-    }
-
-    @keyframes starDrift{
-      from{transform:translate3d(-1.2%,-.8%,0)}
-      to{transform:translate3d(1.2%,.8%,0)}
-    }
-
+    .windowLabel{margin-top:14px;color:var(--soft);font-size:13px;line-height:1.55}
+    .bubble{min-height:170px;display:flex;flex-direction:column;justify-content:space-between}
+    .bubbleKicker{margin:0 0 8px;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+    .bubbleTitle{margin:0 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:22px;line-height:1.06;color:var(--gold2)}
+    .bubbleCopy{font-size:14px;max-width:none}
+    .detailCard ul,.registerCard ul{margin:14px 0 0;padding-left:20px;color:var(--mut);line-height:1.7;font-size:15px}
+    .registerLead{font-size:18px;font-weight:800;color:rgba(255,247,239,.95);margin:0 0 10px;max-width:none}
+    .footnote{margin-top:10px;color:var(--soft);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
     @media (max-width:1120px){
       .bubbleGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
-
     @media (max-width:980px){
-      .heroGrid,
-      .detailsGrid{
-        grid-template-columns:1fr;
-      }
+      .heroGrid,.detailsGrid,.sponsorGrid{grid-template-columns:1fr}
     }
-
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,1180px)}
       .topbar{align-items:flex-start}
       .bubbleGrid{grid-template-columns:1fr}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      .env::before{animation:none !important}
-      .nav a,.cta{transition:none !important}
+      .hero,.bubbles,.details,.sponsor{padding:18px}
     }
   </style>
 </head>
 <body>
   <div class="page">
-    <div class="env" aria-hidden="true"></div>
+    <div class="glow" aria-hidden="true"></div>
 
     <main class="wrap">
       <header class="topbar">
@@ -492,7 +202,7 @@
           <div class="brandMark" aria-hidden="true"></div>
           <div>
             <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Big Laugh</p>
+            <p class="brandSubtitle">Big Laugh · Autumn outside</p>
           </div>
         </div>
 
@@ -509,15 +219,13 @@
         <h1>Big Laugh</h1>
         <p class="heroLine">A Dollar a Day Keeps the Psychiatrist Away.</p>
         <p>
-          Big Laugh is a live interactive motivational comedy show built around crowd participation, high energy, and emotional lift. It is designed to move the room, involve the room, and leave the room better than it found it.
+          Big Laugh is now held inside the house baseline. The show stays interior and public-facing. The season stays outside the window, with the Tree of Life carrying the world-state.
         </p>
 
-        <div class="registerCard">
+        <div class="registerCard" style="margin-top:18px;">
           <p class="eyebrow">Pre-register</p>
           <p class="registerLead">Pre-register for free tickets and be entered in a raffle.</p>
-          <p>
-            The first one hundred people to pre-register will automatically receive five tickets.
-          </p>
+          <p>The first one hundred people to pre-register will automatically receive five tickets.</p>
           <ul>
             <li>Free ticket pre-registration</li>
             <li>Automatic raffle entry</li>
@@ -529,37 +237,46 @@
         </div>
 
         <div class="heroGrid">
-          <div class="heroPanel">
+          <article class="panel">
             <p class="eyebrow">Show format</p>
-            <h2>Big energy. Live interaction. Real momentum.</h2>
+            <h2>Interactive, motivational, alive.</h2>
             <p>
-              The show blends motivational-stage force with fast audience interaction and comedy that stays public-facing, direct, and alive. It is not a flat lecture and not passive stand-up. It is interactive motivational comedy.
-            </p>
-
-            <div class="chipRow">
-              <div class="chip">Interactive</div>
-              <div class="chip">Motivational</div>
-              <div class="chip">Crowd participation</div>
-              <div class="chip">High energy</div>
-            </div>
-
-            <div class="ctaRow">
-              <a class="cta" href="/home/">Back to Home</a>
-              <a class="cta" href="/prelude/">Enter Prelude</a>
-            </div>
-          </div>
-
-          <aside class="heroSide">
-            <p class="eyebrow">Primary read</p>
-            <h2>Big Laugh moves the room.</h2>
-            <p>
-              The purpose is not only to get laughs. The purpose is to create release, momentum, clarity, and connection through a show that feels live in the moment.
+              The room energy belongs to the show. The outside season does not repaint the interior. It is witnessed through the window instead, which keeps the page aligned with the new house law.
             </p>
             <div class="chipRow">
-              <div class="chip">Live show</div>
-              <div class="chip">Audience-led moments</div>
-              <div class="chip">Emotional lift</div>
+              <div class="chip">Inside is stable</div>
+              <div class="chip">Autumn is outside</div>
+              <div class="chip">Show stays live</div>
             </div>
+          </article>
+
+          <aside class="windowPanel">
+            <div class="windowFrameOuter">
+              <div class="window">
+                <div class="outside"></div>
+                <div class="tree" aria-hidden="true">
+                  <div class="trunk"></div>
+                  <div class="branch b1"></div>
+                  <div class="branch b2"></div>
+                  <div class="branch b3"></div>
+                  <div class="branch b4"></div>
+                  <div class="leaf lf1"></div>
+                  <div class="leaf lf2"></div>
+                  <div class="leaf lf3"></div>
+                  <div class="leaf lf4"></div>
+                  <div class="leaf lf5"></div>
+                  <div class="leaf lf6"></div>
+                  <div class="leaf lf7"></div>
+                  <div class="leaf lf8"></div>
+                  <div class="fall1"></div>
+                  <div class="fall2"></div>
+                  <div class="fall3"></div>
+                </div>
+                <div class="pane"></div>
+                <div class="windowReflection"></div>
+              </div>
+            </div>
+            <p class="windowLabel">Autumn remains outside the show chamber. The Tree of Life carries the seasonal read.</p>
           </aside>
         </div>
       </section>
@@ -567,7 +284,6 @@
       <section class="bubbles">
         <p class="eyebrow">At a glance</p>
         <h2>Five quick bubbles.</h2>
-
         <div class="bubbleGrid">
           <article class="bubble">
             <div>
@@ -576,7 +292,6 @@
               <p class="bubbleCopy">Primary target night for the live show.</p>
             </div>
           </article>
-
           <article class="bubble">
             <div>
               <p class="bubbleKicker">Possible second night</p>
@@ -584,7 +299,6 @@
               <p class="bubbleCopy">Second live slot under consideration.</p>
             </div>
           </article>
-
           <article class="bubble">
             <div>
               <p class="bubbleKicker">Show type</p>
@@ -592,7 +306,6 @@
               <p class="bubbleCopy">Live crowd work, strong energy, and emotional lift.</p>
             </div>
           </article>
-
           <article class="bubble">
             <div>
               <p class="bubbleKicker">Live format</p>
@@ -600,7 +313,6 @@
               <p class="bubbleCopy">The room is part of the show, not just watching it.</p>
             </div>
           </article>
-
           <article class="bubble">
             <div>
               <p class="bubbleKicker">Official sponsor</p>
@@ -614,7 +326,6 @@
       <section class="details">
         <p class="eyebrow">Show details</p>
         <h2>Short, clear, promotable.</h2>
-
         <div class="detailsGrid">
           <article class="detailCard">
             <h3>What Big Laugh is</h3>
@@ -625,7 +336,6 @@
               <li>Emotional lift</li>
             </ul>
           </article>
-
           <article class="detailCard">
             <h3>Current timing</h3>
             <ul>
@@ -642,14 +352,23 @@
         <p class="eyebrow">Official sponsor</p>
         <h2>Big Laugh sponsors the deeper work.</h2>
         <p>
-          Big Laugh is the first official sponsor of <strong>Consider the Energy</strong> and <strong>The Nine Summits of Love</strong>. That sponsorship is public-facing and explicit: Big Laugh supports the deeper work while also standing as its own live show path.
+          Big Laugh is the first official sponsor of <strong>Consider the Energy</strong> and <strong>The Nine Summits of Love</strong>. The sponsorship is interior to the house. The season remains a world-state outside the glass.
         </p>
-        <div class="chipRow" style="margin-top:16px;">
-          <div class="chip">First official sponsor</div>
-          <div class="chip">Consider the Energy</div>
-          <div class="chip">Nine Summits of Love</div>
+        <div class="sponsorGrid">
+          <article class="sponsorCard">
+            <h3>Sponsored line one</h3>
+            <p>Consider the Energy</p>
+          </article>
+          <article class="sponsorCard">
+            <h3>Sponsored line two</h3>
+            <p>The Nine Summits of Love</p>
+          </article>
+          <article class="sponsorCard">
+            <h3>Sponsor identity</h3>
+            <p>Big Laugh</p>
+          </article>
         </div>
-        <p class="footnote">Big Laugh is interactive, motivational, live, sponsor-backed, and now pre-registration ready.</p>
+        <div class="footnote">House law preserved. Show energy preserved. Season outside.</div>
       </section>
     </main>
   </div>

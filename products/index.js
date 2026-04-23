@@ -1,11 +1,11 @@
 (() => {
-  "use strict"; 
+  "use strict";
 
   const PRODUCTS_PAGE_META = Object.freeze({
     name: "PRODUCTS_WINDOW_STORM_CHAMBER",
-    version: "V4",
+    version: "V5",
     role: "presentation_and_navigation_only",
-    contract: "PRODUCTS_WINDOW_STORM_CHAMBER_V4",
+    contract: "PRODUCTS_WINDOW_STORM_CHAMBER_V5",
     status: "ACTIVE",
     deterministic: true
   });
@@ -75,8 +75,8 @@
       skyBottom: "#0a111f",
       glowA: "rgba(255,228,162,.18)",
       glowB: "rgba(126,156,255,.18)",
-      horizonGlow: "rgba(255,191,112,.22)",
-      rainOpacity: 0.26,
+      horizonGlow: "rgba(255,191,112,.18)",
+      rainOpacity: 0.22,
       rainAngle: 103,
       lightningPaths: [
         "M66 4 57 28 72 26 49 66 58 43 45 45 66 4Z",
@@ -85,13 +85,17 @@
       lightningScale: 1.02,
       trunkX: 50,
       trunkHeight: 35,
-      canopyScale: 1.06,
+      canopyScale: 0.86,
       canopyColorA: "#d9ba76",
       canopyColorB: "#7f6840",
       leafType: "gold",
-      cityOpacity: 0.34,
+      cityOpacity: 0.22,
       mullionV: true,
-      mullionH: false
+      mullionH: false,
+      treeOpacity: 0.28,
+      treeBlur: 2.4,
+      treeScale: 0.82,
+      treeBottom: -8
     },
     aai: {
       skyTop: "#091426",
@@ -99,8 +103,8 @@
       skyBottom: "#08111d",
       glowA: "rgba(157,198,255,.18)",
       glowB: "rgba(201,225,255,.12)",
-      horizonGlow: "rgba(116,154,255,.14)",
-      rainOpacity: 0.22,
+      horizonGlow: "rgba(116,154,255,.12)",
+      rainOpacity: 0.18,
       rainAngle: 102,
       lightningPaths: [
         "M54 6 47 24 58 23 42 52 49 37 38 38 54 6Z",
@@ -109,22 +113,26 @@
       lightningScale: 0.9,
       trunkX: 52,
       trunkHeight: 33,
-      canopyScale: 0.92,
+      canopyScale: 0.78,
       canopyColorA: "#b6d6ff",
       canopyColorB: "#5679ab",
       leafType: "blue",
-      cityOpacity: 0.28,
+      cityOpacity: 0.18,
       mullionV: true,
-      mullionH: false
+      mullionH: false,
+      treeOpacity: 0.24,
+      treeBlur: 2.8,
+      treeScale: 0.76,
+      treeBottom: -10
     },
     nutrition: {
       skyTop: "#101723",
       skyMid: "#213244",
       skyBottom: "#0f171f",
-      glowA: "rgba(184,221,140,.12)",
-      glowB: "rgba(109,154,95,.10)",
-      horizonGlow: "rgba(187,168,112,.12)",
-      rainOpacity: 0.16,
+      glowA: "rgba(184,221,140,.10)",
+      glowB: "rgba(109,154,95,.08)",
+      horizonGlow: "rgba(187,168,112,.10)",
+      rainOpacity: 0.12,
       rainAngle: 101,
       lightningPaths: [
         "M61 10 54 28 64 27 49 55 55 40 45 41 61 10Z"
@@ -132,22 +140,26 @@
       lightningScale: 0.76,
       trunkX: 48,
       trunkHeight: 40,
-      canopyScale: 1.08,
+      canopyScale: 0.88,
       canopyColorA: "#9ec77d",
       canopyColorB: "#4f7646",
       leafType: "green",
-      cityOpacity: 0.16,
+      cityOpacity: 0.12,
       mullionV: false,
-      mullionH: false
+      mullionH: false,
+      treeOpacity: 0.22,
+      treeBlur: 3.2,
+      treeScale: 0.72,
+      treeBottom: -12
     },
     "five-flags": {
       skyTop: "#0e1322",
       skyMid: "#1d283f",
       skyBottom: "#09101a",
-      glowA: "rgba(255,188,118,.12)",
-      glowB: "rgba(168,126,255,.10)",
-      horizonGlow: "rgba(212,111,72,.12)",
-      rainOpacity: 0.18,
+      glowA: "rgba(255,188,118,.10)",
+      glowB: "rgba(168,126,255,.08)",
+      horizonGlow: "rgba(212,111,72,.10)",
+      rainOpacity: 0.14,
       rainAngle: 105,
       lightningPaths: [
         "M70 8 62 29 75 28 57 58 64 43 52 44 70 8Z"
@@ -155,22 +167,26 @@
       lightningScale: 0.84,
       trunkX: 58,
       trunkHeight: 34,
-      canopyScale: 0.92,
+      canopyScale: 0.8,
       canopyColorA: "#d28b67",
       canopyColorB: "#7d4b37",
       leafType: "copper",
-      cityOpacity: 0.2,
+      cityOpacity: 0.14,
       mullionV: false,
-      mullionH: false
+      mullionH: false,
+      treeOpacity: 0.22,
+      treeBlur: 3,
+      treeScale: 0.7,
+      treeBottom: -10
     },
     esl: {
       skyTop: "#0c1422",
       skyMid: "#1b2942",
       skyBottom: "#081019",
-      glowA: "rgba(189,211,255,.10)",
-      glowB: "rgba(255,214,132,.08)",
-      horizonGlow: "rgba(255,188,118,.10)",
-      rainOpacity: 0.14,
+      glowA: "rgba(189,211,255,.08)",
+      glowB: "rgba(255,214,132,.06)",
+      horizonGlow: "rgba(255,188,118,.08)",
+      rainOpacity: 0.1,
       rainAngle: 100,
       lightningPaths: [
         "M48 10 42 24 51 24 39 45 44 33 35 34 48 10Z"
@@ -178,13 +194,17 @@
       lightningScale: 0.7,
       trunkX: 42,
       trunkHeight: 32,
-      canopyScale: 0.82,
+      canopyScale: 0.72,
       canopyColorA: "#b6c8de",
       canopyColorB: "#65768d",
       leafType: "silver",
-      cityOpacity: 0.14,
+      cityOpacity: 0.1,
       mullionV: false,
-      mullionH: false
+      mullionH: false,
+      treeOpacity: 0.18,
+      treeBlur: 3.6,
+      treeScale: 0.66,
+      treeBottom: -14
     }
   });
 
@@ -299,21 +319,11 @@
 
   function buildLeaves(type, colorA, colorB, canopyScale) {
     const baseSets = {
-      gold: [
-        [56,124,68,68],[18,118,62,62],[100,118,62,62],[38,154,54,54],[92,154,54,54],[66,172,48,48]
-      ],
-      blue: [
-        [58,126,64,64],[24,122,56,56],[102,122,56,56],[44,156,50,50],[92,156,50,50],[68,176,42,42]
-      ],
-      green: [
-        [54,120,74,74],[14,116,66,66],[106,116,66,66],[34,156,60,60],[96,156,60,60],[66,182,52,52]
-      ],
-      copper: [
-        [60,128,62,62],[24,124,56,56],[104,124,56,56],[44,156,50,50],[96,156,50,50],[70,176,42,42]
-      ],
-      silver: [
-        [60,128,58,58],[28,124,50,50],[102,124,50,50],[48,156,44,44],[94,156,44,44],[72,176,38,38]
-      ]
+      gold: [[56,124,68,68],[18,118,62,62],[100,118,62,62],[38,154,54,54],[92,154,54,54],[66,172,48,48]],
+      blue: [[58,126,64,64],[24,122,56,56],[102,122,56,56],[44,156,50,50],[92,156,50,50],[68,176,42,42]],
+      green: [[54,120,74,74],[14,116,66,66],[106,116,66,66],[34,156,60,60],[96,156,60,60],[66,182,52,52]],
+      copper: [[60,128,62,62],[24,124,56,56],[104,124,56,56],[44,156,50,50],[96,156,50,50],[70,176,42,42]],
+      silver: [[60,128,58,58],[28,124,50,50],[102,124,50,50],[48,156,44,44],[94,156,44,44],[72,176,38,38]]
     };
 
     return (baseSets[type] || baseSets.gold)
@@ -329,9 +339,9 @@
             height:${sh}px;
             border-radius:999px;
             background:
-              radial-gradient(circle at 40% 40%, rgba(255,255,255,.26), transparent 16%),
+              radial-gradient(circle at 40% 40%, rgba(255,255,255,.18), transparent 16%),
               radial-gradient(circle at 50% 50%, ${colorA}, ${colorB});
-            box-shadow:0 0 18px rgba(255,255,255,.06);
+            box-shadow:0 0 12px rgba(255,255,255,.04);
           "></div>
         `;
       })
@@ -366,7 +376,7 @@
             position:absolute;
             inset:0;
             background:
-              radial-gradient(circle at 50% 100%, ${view.horizonGlow}, transparent 32%),
+              radial-gradient(circle at 50% 100%, ${view.horizonGlow}, transparent 34%),
               linear-gradient(180deg, rgba(5,9,16,0) 0%, rgba(5,9,16,.24) 30%, rgba(5,9,16,.82) 100%);
           "></div>
 
@@ -375,10 +385,13 @@
           <div style="
             position:absolute;
             left:${view.trunkX}%;
-            bottom:0;
+            bottom:${view.treeBottom}px;
             width:156px;
             height:210px;
-            transform:translateX(-50%);
+            transform:translateX(-50%) scale(${view.treeScale});
+            transform-origin:bottom center;
+            opacity:${view.treeOpacity};
+            filter:blur(${view.treeBlur}px);
           ">
             <div style="
               position:absolute;
@@ -446,7 +459,6 @@
         </div>
 
         <div class="windowSpill"></div>
-
         <div class="cardWindowGlass"></div>
         ${view.mullionV ? '<div class="cardWindowMullionV"></div>' : ''}
         ${view.mullionH ? '<div class="cardWindowMullionH"></div>' : ''}
@@ -456,11 +468,7 @@
   }
 
   function buildCard(product) {
-    const classes = [
-      "card",
-      product.tier === "flagship" ? "isFlagship" : "secondary"
-    ];
-
+    const classes = ["card", product.tier === "flagship" ? "isFlagship" : "secondary"];
     if (product.key === "archcoin") classes.push("archcoin");
     if (product.key === "aai") classes.push("aai");
 
@@ -516,7 +524,7 @@
       window.clearTimeout(flashTimeout);
       flashTimeout = window.setTimeout(() => {
         page.classList.remove("flash");
-      }, 240);
+      }, 220);
     }
 
     triggerFlash();

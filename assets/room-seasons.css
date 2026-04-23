@@ -1,0 +1,226 @@
+:root{
+  --season-bg-a:#0b1324;
+  --season-bg-b:#14284d;
+  --season-bg-c:#1f3d73;
+
+  --season-glow-1:rgba(255,255,255,.08);
+  --season-glow-2:rgba(255,255,255,.06);
+  --season-accent:#f4e2b0;
+  --season-accent-2:#ffffff;
+  --season-particle:#ffffff;
+
+  --season-panel-top:rgba(10,16,30,.78);
+  --season-panel-bottom:rgba(8,14,26,.92);
+  --season-window-top:rgba(255,255,255,.16);
+  --season-window-bottom:rgba(255,255,255,.04);
+
+  --season-shadow:0 24px 76px rgba(0,0,0,.48);
+  --season-border:rgba(255,255,255,.12);
+  --season-border-strong:rgba(244,226,176,.24);
+
+  --season-chip-bg:rgba(255,255,255,.05);
+  --season-chip-border:rgba(255,255,255,.12);
+  --season-chip-text:#ffffff;
+}
+
+html[data-season="spring"]{
+  --season-bg-a:#0d1918;
+  --season-bg-b:#18302a;
+  --season-bg-c:#2f5643;
+
+  --season-glow-1:rgba(180,255,184,.18);
+  --season-glow-2:rgba(255,218,170,.14);
+  --season-accent:#dff7a2;
+  --season-accent-2:#ffd7c2;
+  --season-particle:#f3ffd8;
+
+  --season-panel-top:rgba(12,20,18,.78);
+  --season-panel-bottom:rgba(8,14,12,.92);
+  --season-window-top:rgba(226,255,214,.22);
+  --season-window-bottom:rgba(162,255,196,.06);
+
+  --season-border-strong:rgba(223,247,162,.24);
+  --season-chip-bg:rgba(210,255,220,.05);
+  --season-chip-border:rgba(223,247,162,.14);
+}
+
+html[data-season="summer"]{
+  --season-bg-a:#1a1220;
+  --season-bg-b:#3a2130;
+  --season-bg-c:#704126;
+
+  --season-glow-1:rgba(255,180,90,.18);
+  --season-glow-2:rgba(255,108,82,.16);
+  --season-accent:#ffe3a6;
+  --season-accent-2:#ffb48b;
+  --season-particle:#fff0bf;
+
+  --season-panel-top:rgba(24,16,20,.78);
+  --season-panel-bottom:rgba(14,10,12,.92);
+  --season-window-top:rgba(255,232,178,.22);
+  --season-window-bottom:rgba(255,146,86,.08);
+
+  --season-border-strong:rgba(255,227,166,.24);
+  --season-chip-bg:rgba(255,210,120,.06);
+  --season-chip-border:rgba(255,227,166,.14);
+}
+
+html[data-season="autumn"]{
+  --season-bg-a:#1b1310;
+  --season-bg-b:#352016;
+  --season-bg-c:#5b3420;
+
+  --season-glow-1:rgba(255,168,94,.18);
+  --season-glow-2:rgba(188,86,45,.14);
+  --season-accent:#ffd29a;
+  --season-accent-2:#ff9b66;
+  --season-particle:#ffe1aa;
+
+  --season-panel-top:rgba(24,16,12,.78);
+  --season-panel-bottom:rgba(14,10,8,.92);
+  --season-window-top:rgba(255,216,156,.18);
+  --season-window-bottom:rgba(255,124,71,.07);
+
+  --season-border-strong:rgba(255,210,154,.24);
+  --season-chip-bg:rgba(255,170,108,.06);
+  --season-chip-border:rgba(255,210,154,.14);
+}
+
+html[data-season="winter"]{
+  --season-bg-a:#0c1220;
+  --season-bg-b:#162542;
+  --season-bg-c:#253b63;
+
+  --season-glow-1:rgba(194,223,255,.18);
+  --season-glow-2:rgba(154,181,255,.10);
+  --season-accent:#e9f4ff;
+  --season-accent-2:#b9d7ff;
+  --season-particle:#f5fbff;
+
+  --season-panel-top:rgba(12,16,28,.78);
+  --season-panel-bottom:rgba(8,10,20,.92);
+  --season-window-top:rgba(233,244,255,.22);
+  --season-window-bottom:rgba(170,203,255,.06);
+
+  --season-border-strong:rgba(233,244,255,.24);
+  --season-chip-bg:rgba(194,223,255,.05);
+  --season-chip-border:rgba(233,244,255,.14);
+}
+
+body{
+  background:
+    radial-gradient(circle at 50% 18%, var(--season-glow-1), transparent 26%),
+    radial-gradient(circle at 50% 84%, var(--season-glow-2), transparent 30%),
+    linear-gradient(180deg,var(--season-bg-c) 0%,var(--season-bg-b) 48%,var(--season-bg-a) 100%);
+}
+
+.season-window{
+  position:relative;
+  overflow:hidden;
+}
+
+.season-window::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    radial-gradient(circle at 50% 24%, var(--season-glow-1), transparent 34%),
+    linear-gradient(180deg,var(--season-window-top),var(--season-window-bottom));
+  pointer-events:none;
+}
+
+.season-panel{
+  background:
+    linear-gradient(180deg,var(--season-panel-top) 0%,var(--season-panel-bottom) 100%);
+}
+
+.season-panel::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+  border-radius:inherit;
+}
+
+.season-accent{color:var(--season-accent)}
+.season-accent-2{color:var(--season-accent-2)}
+
+.season-particles{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+
+.season-particles::before{
+  content:"";
+  position:absolute;
+  inset:-10%;
+  background:
+    radial-gradient(circle at 12% 18%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 28% 36%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 42% 22%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 58% 30%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 18%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 34%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 22% 72%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 46% 80%, var(--season-particle) 0 1px, transparent 2px),
+    radial-gradient(circle at 76% 74%, var(--season-particle) 0 1px, transparent 2px);
+  opacity:.42;
+  animation:seasonFloat 18s linear infinite;
+}
+
+html[data-season="spring"] .season-particles::before{animation-duration:14s}
+html[data-season="summer"] .season-particles::before{animation-duration:10s}
+html[data-season="autumn"] .season-particles::before{animation-duration:20s}
+html[data-season="winter"] .season-particles::before{animation-duration:24s;opacity:.34}
+
+.season-leaf,
+.season-bloom,
+.season-sunflare,
+.season-frost{
+  position:absolute;
+  pointer-events:none;
+  inset:auto;
+  z-index:0;
+  opacity:.36;
+  filter:blur(.2px);
+}
+
+html[data-season="spring"] .season-bloom{
+  width:110px;height:110px;border-radius:50%;
+  background:
+    radial-gradient(circle at 40% 40%, rgba(255,255,255,.78), transparent 22%),
+    radial-gradient(circle at 50% 50%, rgba(255,173,210,.38), transparent 58%);
+}
+
+html[data-season="summer"] .season-sunflare{
+  width:160px;height:160px;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,225,150,.26), transparent 36%),
+    radial-gradient(circle at 50% 50%, rgba(255,143,58,.18), transparent 62%);
+}
+
+html[data-season="autumn"] .season-leaf{
+  width:26px;height:16px;border-radius:80% 10% 80% 10%;
+  background:linear-gradient(135deg, rgba(255,187,120,.8), rgba(191,86,45,.82));
+  transform:rotate(-18deg);
+}
+
+html[data-season="winter"] .season-frost{
+  width:120px;height:120px;border-radius:50%;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(233,244,255,.10), transparent 50%),
+    repeating-conic-gradient(from 0deg, rgba(233,244,255,.18) 0deg 8deg, transparent 8deg 24deg);
+}
+
+@keyframes seasonFloat{
+  from{transform:translate3d(-.8%,-.6%,0)}
+  to{transform:translate3d(.8%,.6%,0)}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .season-particles::before{animation:none !important}
+}

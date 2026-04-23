@@ -4,28 +4,26 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Prelude | The Nine Summits of Love</title>
-  <meta
-    name="description"
-    content="Prelude bloom into the Nine Summits of Love."
-  />
+  <meta name="description" content="Prelude bloom into the Nine Summits of Love." />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#16061f;
-      --bg1:#1f2f68;
-      --bg2:#0c1638;
+      --bg0:#18061f;
+      --bg1:#1a2f67;
+      --bg2:#0b1538;
       --ink:#fffaf5;
       --mut:rgba(255,250,245,.84);
       --soft:rgba(255,250,245,.62);
-      --gold:#ffd96a;
-      --rose:#ff6fb1;
-      --sky:#7fd4ff;
-      --violet:#c58dff;
-      --mint:#7ef0c5;
+      --gold:#ffd84e;
+      --rose:#ff5fa8;
+      --sky:#66d7ff;
+      --violet:#b778ff;
+      --mint:#58f0be;
+      --coral:#ff8f6b;
       --line:rgba(255,255,255,.14);
-      --panel:rgba(11,15,34,.68);
-      --panelStrong:rgba(10,12,28,.88);
-      --shadow:0 28px 84px rgba(0,0,0,.44);
+      --panel:rgba(13,16,36,.62);
+      --panelStrong:rgba(10,12,28,.86);
+      --shadow:0 28px 90px rgba(0,0,0,.46);
     }
 
     *{box-sizing:border-box}
@@ -36,11 +34,12 @@
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at 12% 16%, rgba(255,111,177,.26), transparent 20%),
-        radial-gradient(circle at 84% 18%, rgba(127,212,255,.22), transparent 22%),
-        radial-gradient(circle at 50% 28%, rgba(255,217,106,.14), transparent 14%),
-        radial-gradient(circle at 18% 74%, rgba(126,240,197,.18), transparent 18%),
-        radial-gradient(circle at 80% 78%, rgba(197,141,255,.18), transparent 20%),
+        radial-gradient(circle at 10% 14%, rgba(255,95,168,.28), transparent 18%),
+        radial-gradient(circle at 84% 16%, rgba(102,215,255,.24), transparent 20%),
+        radial-gradient(circle at 48% 22%, rgba(255,216,78,.18), transparent 14%),
+        radial-gradient(circle at 18% 74%, rgba(88,240,190,.20), transparent 20%),
+        radial-gradient(circle at 82% 78%, rgba(183,120,255,.20), transparent 22%),
+        radial-gradient(circle at 52% 88%, rgba(255,143,107,.16), transparent 16%),
         linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 44%,var(--bg2) 100%);
     }
 
@@ -63,36 +62,39 @@
     }
 
     .stars{
-      opacity:.58;
+      opacity:.62;
       background-image:
         radial-gradient(circle at 12% 22%, rgba(255,255,255,.94) 0 1px, transparent 2px),
         radial-gradient(circle at 28% 58%, rgba(255,255,255,.82) 0 1px, transparent 2px),
+        radial-gradient(circle at 44% 34%, rgba(255,255,255,.78) 0 1px, transparent 2px),
         radial-gradient(circle at 66% 18%, rgba(255,255,255,.92) 0 1px, transparent 2px),
         radial-gradient(circle at 86% 74%, rgba(255,255,255,.82) 0 1px, transparent 2px);
     }
 
     .stars::before{
-      opacity:.52;
+      opacity:.58;
       background:
-        radial-gradient(circle at 18% 16%, rgba(255,111,177,.22), transparent 18%),
-        radial-gradient(circle at 78% 22%, rgba(127,212,255,.18), transparent 20%),
-        radial-gradient(circle at 50% 48%, rgba(255,217,106,.15), transparent 16%),
-        radial-gradient(circle at 52% 78%, rgba(126,240,197,.18), transparent 22%);
-      filter:blur(24px);
+        radial-gradient(circle at 14% 16%, rgba(255,95,168,.28), transparent 18%),
+        radial-gradient(circle at 78% 22%, rgba(102,215,255,.24), transparent 20%),
+        radial-gradient(circle at 50% 46%, rgba(255,216,78,.18), transparent 16%),
+        radial-gradient(circle at 54% 80%, rgba(88,240,190,.18), transparent 20%),
+        radial-gradient(circle at 82% 58%, rgba(183,120,255,.16), transparent 18%);
+      filter:blur(28px);
     }
 
     .stars::after{
-      opacity:.38;
+      opacity:.42;
       background:
-        radial-gradient(circle at 34% 36%, rgba(197,141,255,.20), transparent 16%),
-        radial-gradient(circle at 70% 60%, rgba(255,111,177,.14), transparent 18%);
-      filter:blur(32px);
+        radial-gradient(circle at 34% 34%, rgba(183,120,255,.24), transparent 16%),
+        radial-gradient(circle at 66% 62%, rgba(255,143,107,.18), transparent 18%),
+        radial-gradient(circle at 48% 18%, rgba(255,216,78,.16), transparent 12%);
+      filter:blur(36px);
     }
 
     .wrap{
       position:relative;
       z-index:1;
-      width:min(1220px,calc(100vw - 32px));
+      width:min(1240px,calc(100vw - 32px));
       margin:0 auto;
       padding:24px 0 42px;
       display:grid;
@@ -102,11 +104,11 @@
     .topbar,.hero,.dolls,.summits,.footerbox{
       border:1px solid var(--line);
       background:
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),
         linear-gradient(180deg,var(--panel),var(--panelStrong));
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
       position:relative;
       overflow:hidden;
     }
@@ -128,9 +130,9 @@
       height:44px;
       border-radius:14px;
       transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold),var(--rose) 35%,var(--sky) 68%,var(--mint));
+      background:linear-gradient(135deg,var(--gold),var(--rose) 28%,var(--sky) 54%,var(--mint) 78%,var(--violet));
       flex:0 0 auto;
-      box-shadow:0 0 28px rgba(255,111,177,.22);
+      box-shadow:0 0 34px rgba(255,95,168,.24);
     }
 
     .brand h2{
@@ -165,11 +167,11 @@
       font-weight:900;
       letter-spacing:.12em;
       text-transform:uppercase;
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
     }
 
     .hero,.dolls,.summits,.footerbox{
-      border-radius:34px;
+      border-radius:36px;
       padding:24px 22px;
     }
 
@@ -179,12 +181,13 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 14% 14%, rgba(255,111,177,.18), transparent 24%),
-        radial-gradient(circle at 82% 18%, rgba(127,212,255,.16), transparent 24%),
-        radial-gradient(circle at 50% 24%, rgba(255,217,106,.14), transparent 18%),
-        radial-gradient(circle at 18% 82%, rgba(126,240,197,.14), transparent 22%),
-        radial-gradient(circle at 76% 80%, rgba(197,141,255,.16), transparent 24%);
-      opacity:.95;
+        radial-gradient(circle at 12% 14%, rgba(255,95,168,.22), transparent 22%),
+        radial-gradient(circle at 84% 16%, rgba(102,215,255,.18), transparent 22%),
+        radial-gradient(circle at 50% 22%, rgba(255,216,78,.18), transparent 16%),
+        radial-gradient(circle at 16% 82%, rgba(88,240,190,.16), transparent 20%),
+        radial-gradient(circle at 78% 80%, rgba(183,120,255,.18), transparent 22%),
+        radial-gradient(circle at 54% 72%, rgba(255,143,107,.12), transparent 18%);
+      opacity:.96;
     }
 
     .eyebrow{
@@ -203,7 +206,7 @@
       z-index:1;
       margin:0;
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(3rem,7vw,5.8rem);
+      font-size:clamp(3.2rem,7.2vw,6.2rem);
       line-height:.9;
       letter-spacing:.04em;
     }
@@ -212,11 +215,11 @@
       position:relative;
       z-index:1;
       margin:16px 0 0;
-      font-size:clamp(1.15rem,2vw,1.6rem);
+      font-size:clamp(1.18rem,2.1vw,1.7rem);
       line-height:1.45;
-      color:#fff0c9;
+      color:#fff0bc;
       font-weight:800;
-      max-width:920px;
+      max-width:940px;
     }
 
     .copy{
@@ -224,9 +227,9 @@
       z-index:1;
       margin:14px 0 0;
       color:var(--mut);
-      line-height:1.68;
+      line-height:1.7;
       font-size:1rem;
-      max-width:920px;
+      max-width:940px;
     }
 
     .actions{
@@ -250,12 +253,12 @@
       font-weight:900;
       letter-spacing:.12em;
       text-transform:uppercase;
-      background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
+      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
       transition:transform .15s ease,border-color .15s ease;
     }
 
     .btn:hover{transform:translateY(-2px)}
-    .btn.primary{border-color:rgba(255,217,106,.34);color:#fff1b8}
+    .btn.primary{border-color:rgba(255,216,78,.40);color:#fff1a7}
 
     .dolls h3,.summits h3{
       position:relative;
@@ -277,23 +280,23 @@
     }
 
     .doll,.summit{
-      border-radius:26px;
+      border-radius:28px;
       padding:20px;
       border:1px solid rgba(255,255,255,.12);
-      min-height:220px;
+      min-height:230px;
       display:grid;
       align-content:start;
       gap:12px;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
     }
 
-    .doll.one{background:linear-gradient(180deg,rgba(255,111,177,.22),rgba(255,111,177,.07))}
-    .doll.two{background:linear-gradient(180deg,rgba(255,217,106,.22),rgba(255,217,106,.07))}
-    .doll.three{background:linear-gradient(180deg,rgba(127,212,255,.22),rgba(127,212,255,.07))}
+    .doll.one{background:linear-gradient(180deg,rgba(255,95,168,.28),rgba(255,95,168,.08))}
+    .doll.two{background:linear-gradient(180deg,rgba(255,216,78,.28),rgba(255,216,78,.08))}
+    .doll.three{background:linear-gradient(180deg,rgba(102,215,255,.28),rgba(102,215,255,.08))}
 
-    .summit.one{background:linear-gradient(180deg,rgba(126,240,197,.22),rgba(126,240,197,.07))}
-    .summit.two{background:linear-gradient(180deg,rgba(197,141,255,.22),rgba(197,141,255,.07))}
-    .summit.three{background:linear-gradient(180deg,rgba(255,111,177,.20),rgba(255,111,177,.06))}
+    .summit.one{background:linear-gradient(180deg,rgba(88,240,190,.26),rgba(88,240,190,.08))}
+    .summit.two{background:linear-gradient(180deg,rgba(183,120,255,.26),rgba(183,120,255,.08))}
+    .summit.three{background:linear-gradient(180deg,rgba(255,143,107,.24),rgba(255,143,107,.08))}
 
     .doll strong,.summit strong{
       font-size:.86rem;
@@ -305,14 +308,14 @@
     .doll h4,.summit h4{
       margin:0;
       font-family:Georgia,"Times New Roman",serif;
-      font-size:1.45rem;
+      font-size:1.5rem;
       line-height:1.1;
     }
 
     .doll p,.summit p{
       margin:0;
       color:var(--mut);
-      line-height:1.6;
+      line-height:1.62;
       font-size:.95rem;
     }
 
@@ -331,7 +334,7 @@
     }
 
     @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1220px)}
+      .wrap{width:min(100vw - 20px,1240px)}
       .hero,.dolls,.summits,.footerbox{padding:20px}
     }
   </style>
@@ -393,7 +396,7 @@
         </div>
       </section>
 
-      <section class="summits" aria-label="First summit chamber">
+      <section class="summits" aria-label="First summit chambers">
         <h3>First Summit Chambers</h3>
         <div class="summitGrid">
           <article class="summit one">

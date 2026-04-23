@@ -6,28 +6,33 @@
   <title>Big Laugh | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Big Laugh — interactive motivational comedy and sponsor of Consider the Energy and The Nine Summits of Love."
+    content="Big Laugh — interactive motivational comedy. Coming soon Sundays at 7:00 PM, with Thursday expansion under consideration."
   />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#08111f;
-      --bg1:#112347;
-      --bg2:#1b3463;
+      --bg0:#09111f;
+      --bg1:#13264b;
+      --bg2:#1d3970;
       --ink:#f7f9ff;
       --mut:rgba(247,249,255,.84);
-      --soft:rgba(247,249,255,.62);
+      --soft:rgba(247,249,255,.64);
+
       --gold:#f4e2b0;
-      --cyan:#90dfff;
+      --cyan:#8fdfff;
       --mint:#93f0c7;
-      --rose:#ff96be;
+      --rose:#ff97bf;
       --violet:#b694ff;
-      --amber:#ffca80;
+      --amber:#ffcb82;
+
       --line:rgba(255,255,255,.12);
       --lineStrong:rgba(244,226,176,.24);
+
       --panel:rgba(10,16,30,.74);
-      --panelStrong:rgba(8,14,26,.90);
+      --panelStrong:rgba(8,14,26,.92);
+
       --shadow:0 24px 76px rgba(0,0,0,.48);
+
       --safe-top:env(safe-area-inset-top,0px);
       --safe-right:env(safe-area-inset-right,0px);
       --safe-bottom:env(safe-area-inset-bottom,0px);
@@ -83,11 +88,11 @@
       position:absolute;
       inset:0;
       background:
-        radial-gradient(circle at 14% 22%, rgba(255,150,190,.22), transparent 28%),
-        radial-gradient(circle at 78% 18%, rgba(144,223,255,.20), transparent 26%),
+        radial-gradient(circle at 14% 22%, rgba(255,151,191,.22), transparent 28%),
+        radial-gradient(circle at 78% 18%, rgba(143,223,255,.20), transparent 26%),
         radial-gradient(circle at 76% 76%, rgba(147,240,199,.16), transparent 28%),
         radial-gradient(circle at 32% 78%, rgba(182,148,255,.18), transparent 28%),
-        radial-gradient(circle at 52% 38%, rgba(255,202,128,.12), transparent 22%);
+        radial-gradient(circle at 52% 38%, rgba(255,203,130,.14), transparent 22%);
       filter:blur(8px);
       opacity:.74;
     }
@@ -106,7 +111,8 @@
 
     .topbar,
     .hero,
-    .section,
+    .bubbles,
+    .details,
     .sponsor{
       border:1px solid var(--line);
       border-radius:28px;
@@ -162,8 +168,9 @@
       flex-wrap:wrap;
     }
 
-    .nav a{
-      min-height:42px;
+    .nav a,
+    .cta{
+      min-height:44px;
       padding:0 16px;
       border-radius:999px;
       border:1px solid var(--lineStrong);
@@ -186,7 +193,8 @@
     }
 
     .hero,
-    .section,
+    .bubbles,
+    .details,
     .sponsor{
       padding:30px 24px 24px;
       margin-bottom:18px;
@@ -201,13 +209,30 @@
       text-transform:uppercase;
     }
 
+    .comingSoon{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,203,130,.30);
+      background:linear-gradient(145deg, rgba(28,22,16,.72), rgba(12,10,8,.80));
+      color:#fff0ce;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      margin-bottom:14px;
+    }
+
     h1,h2,h3{
       font-family:Georgia,"Times New Roman",serif;
     }
 
     h1{
-      margin:0 0 14px;
-      font-size:clamp(44px,8vw,86px);
+      margin:0 0 12px;
+      font-size:clamp(44px,8vw,88px);
       line-height:.92;
       letter-spacing:.03em;
     }
@@ -229,7 +254,7 @@
       color:var(--mut);
       line-height:1.68;
       font-size:16px;
-      max-width:900px;
+      max-width:920px;
     }
 
     .heroLine{
@@ -237,7 +262,7 @@
       font-weight:800;
       color:rgba(255,255,255,.95);
       margin:0 0 14px;
-      max-width:920px;
+      max-width:960px;
     }
 
     .heroGrid{
@@ -250,8 +275,8 @@
 
     .heroPanel,
     .heroSide,
-    .card,
-    .quoteCard{
+    .detailCard,
+    .bubble{
       border:1px solid rgba(255,255,255,.10);
       border-radius:24px;
       background:linear-gradient(180deg, rgba(12,18,34,.78) 0%, rgba(8,14,26,.92) 100%);
@@ -262,8 +287,8 @@
 
     .heroPanel::before,
     .heroSide::before,
-    .card::before,
-    .quoteCard::before,
+    .detailCard::before,
+    .bubble::before,
     .sponsor::before{
       content:"";
       position:absolute;
@@ -274,34 +299,34 @@
 
     .heroPanel::before{
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,150,190,.16), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(144,223,255,.14), transparent 28%),
-        radial-gradient(circle at 50% 82%, rgba(255,202,128,.10), transparent 24%);
+        radial-gradient(circle at 18% 20%, rgba(255,151,191,.16), transparent 28%),
+        radial-gradient(circle at 82% 18%, rgba(143,223,255,.14), transparent 28%),
+        radial-gradient(circle at 50% 82%, rgba(255,203,130,.10), transparent 24%);
     }
 
     .heroSide::before{
       background:
         radial-gradient(circle at 18% 20%, rgba(147,240,199,.14), transparent 28%),
         radial-gradient(circle at 82% 18%, rgba(182,148,255,.14), transparent 28%),
-        radial-gradient(circle at 50% 82%, rgba(144,223,255,.10), transparent 24%);
+        radial-gradient(circle at 50% 82%, rgba(143,223,255,.10), transparent 24%);
     }
 
     .heroPanel > *,
     .heroSide > *,
-    .card > *,
-    .quoteCard > *{
+    .detailCard > *,
+    .bubble > *{
       position:relative;
       z-index:1;
     }
 
-    .signature{
+    .chipRow{
       display:flex;
       gap:10px;
       flex-wrap:wrap;
       margin-top:16px;
     }
 
-    .pill{
+    .chip{
       min-height:38px;
       padding:0 14px;
       border-radius:999px;
@@ -324,64 +349,63 @@
       margin-top:20px;
     }
 
-    .cta{
-      min-height:46px;
-      padding:0 18px;
-      border-radius:999px;
-      border:1px solid rgba(244,226,176,.26);
-      background:linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
-      color:#fff3cf;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
-    }
-
-    .grid{
+    .bubbleGrid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:14px;
-      margin-top:16px;
+      margin-top:18px;
     }
 
-    .card{
-      min-height:220px;
+    .bubble{
+      min-height:170px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
     }
 
-    .card p{
+    .bubbleKicker{
+      margin:0 0 8px;
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .bubble:nth-child(1) .bubbleKicker{color:var(--amber)}
+    .bubble:nth-child(2) .bubbleKicker{color:var(--rose)}
+    .bubble:nth-child(3) .bubbleKicker{color:var(--cyan)}
+    .bubble:nth-child(4) .bubbleKicker{color:var(--mint)}
+    .bubble:nth-child(5) .bubbleKicker{color:var(--violet)}
+
+    .bubbleTitle{
+      margin:0 0 8px;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:22px;
+      line-height:1.06;
+    }
+
+    .bubbleCopy{
       font-size:14px;
       max-width:none;
     }
 
-    .quoteGrid{
+    .detailsGrid{
       display:grid;
       grid-template-columns:repeat(2,minmax(0,1fr));
       gap:14px;
       margin-top:16px;
     }
 
-    .quoteCard{
-      min-height:180px;
+    .detailCard ul{
+      margin:0;
+      padding-left:20px;
+      color:var(--mut);
+      line-height:1.7;
+      font-size:15px;
     }
 
-    .quoteLead{
-      margin:0 0 10px;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      color:var(--gold);
-    }
-
-    .quoteText{
-      font-size:18px;
-      line-height:1.55;
-      color:rgba(255,255,255,.95);
-      max-width:none;
+    .detailCard li{
+      margin:0;
     }
 
     .sponsor{
@@ -391,13 +415,14 @@
 
     .sponsor::before{
       background:
-        radial-gradient(circle at 18% 24%, rgba(255,150,190,.14), transparent 28%),
+        radial-gradient(circle at 18% 24%, rgba(255,151,191,.14), transparent 28%),
         radial-gradient(circle at 50% 18%, rgba(244,226,176,.10), transparent 22%),
-        radial-gradient(circle at 82% 24%, rgba(144,223,255,.14), transparent 28%);
+        radial-gradient(circle at 82% 24%, rgba(143,223,255,.14), transparent 28%);
     }
 
     .sponsor p,
-    .sponsor h2{
+    .sponsor h2,
+    .sponsor .chipRow{
       position:relative;
       z-index:1;
     }
@@ -415,10 +440,13 @@
       to{transform:translate3d(1.2%,.8%,0)}
     }
 
+    @media (max-width:1120px){
+      .bubbleGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
     @media (max-width:980px){
       .heroGrid,
-      .grid,
-      .quoteGrid{
+      .detailsGrid{
         grid-template-columns:1fr;
       }
     }
@@ -426,6 +454,7 @@
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,1180px)}
       .topbar{align-items:flex-start}
+      .bubbleGrid{grid-template-columns:1fr}
     }
 
     @media (prefers-reduced-motion:reduce){
@@ -456,26 +485,27 @@
       </header>
 
       <section class="hero">
+        <div class="comingSoon">Coming Soon</div>
         <p class="eyebrow">Interactive motivational comedy</p>
         <h1>Big Laugh</h1>
         <p class="heroLine">A Dollar a Day Keeps the Psychiatrist Away.</p>
         <p>
-          Big Laugh is the live show path: interactive motivational comedy with high energy, crowd participation, and a strong public-facing voice. Under the hood, the lane blends motivational-stage force with fast interactive crowd work, but on the surface it stays simple: this is a show built to move people, involve people, and leave them lighter than they arrived.
+          Big Laugh is a live interactive motivational comedy show built around crowd participation, high energy, and emotional lift. It is designed to move the room, involve the room, and leave the room better than it found it.
         </p>
 
         <div class="heroGrid">
           <div class="heroPanel">
-            <p class="eyebrow">Show read</p>
-            <h2>Energy. Interaction. Release.</h2>
+            <p class="eyebrow">Show format</p>
+            <h2>Big energy. Live interaction. Real momentum.</h2>
             <p>
-              Big Laugh is not passive stand-up and not a flat speech. It is a live motivational-comedy format that uses audience interaction, sharp rhythm, emotional lift, and strong stage presence to create a room people can feel themselves inside.
+              The show blends motivational-stage force with fast audience interaction and comedy that stays public-facing, direct, and alive. It is not a flat lecture and not passive stand-up. It is interactive motivational comedy.
             </p>
 
-            <div class="signature">
-              <div class="pill">Interactive</div>
-              <div class="pill">Motivational</div>
-              <div class="pill">Crowd participation</div>
-              <div class="pill">High energy</div>
+            <div class="chipRow">
+              <div class="chip">Interactive</div>
+              <div class="chip">Motivational</div>
+              <div class="chip">Crowd participation</div>
+              <div class="chip">High energy</div>
             </div>
 
             <div class="ctaRow">
@@ -485,81 +515,106 @@
           </div>
 
           <aside class="heroSide">
-            <p class="eyebrow">Primary promise</p>
+            <p class="eyebrow">Primary read</p>
             <h2>Big Laugh moves the room.</h2>
             <p>
-              The purpose is not just to get laughs. The purpose is to create relief, momentum, clarity, and connection through a show that feels alive in the moment.
+              The purpose is not only to get laughs. The purpose is to create release, momentum, clarity, and connection through a show that feels live in the moment.
             </p>
-            <div class="signature">
-              <div class="pill">Live show</div>
-              <div class="pill">Audience-led moments</div>
-              <div class="pill">Motivational edge</div>
+            <div class="chipRow">
+              <div class="chip">Live show</div>
+              <div class="chip">Audience-led moments</div>
+              <div class="chip">Emotional lift</div>
             </div>
           </aside>
         </div>
       </section>
 
-      <section class="section">
-        <p class="eyebrow">What Big Laugh is</p>
-        <h2>Interactive motivational comedy.</h2>
+      <section class="bubbles">
+        <p class="eyebrow">At a glance</p>
+        <h2>Five quick bubbles.</h2>
 
-        <div class="grid">
-          <article class="card">
-            <h3>Stage energy</h3>
-            <p>
-              Big Laugh carries motivational-stage force. It should feel driven, direct, and alive rather than low-energy or observational-only.
-            </p>
+        <div class="bubbleGrid">
+          <article class="bubble">
+            <div>
+              <p class="bubbleKicker">Coming soon</p>
+              <h3 class="bubbleTitle">Sunday 7:00 PM</h3>
+              <p class="bubbleCopy">Primary target night for the live show.</p>
+            </div>
           </article>
 
-          <article class="card">
-            <h3>Crowd participation</h3>
-            <p>
-              The room matters. Audience interaction is not an extra feature; it is a core part of the show’s identity and rhythm.
-            </p>
+          <article class="bubble">
+            <div>
+              <p class="bubbleKicker">Possible second night</p>
+              <h3 class="bubbleTitle">Thursday 7:00 PM</h3>
+              <p class="bubbleCopy">Second live slot under consideration.</p>
+            </div>
           </article>
 
-          <article class="card">
-            <h3>Emotional lift</h3>
-            <p>
-              The comedy should do more than amuse. It should release tension, restore perspective, and leave people feeling better than when they walked in.
-            </p>
+          <article class="bubble">
+            <div>
+              <p class="bubbleKicker">Show type</p>
+              <h3 class="bubbleTitle">Interactive Motivational Comedy</h3>
+              <p class="bubbleCopy">Live crowd work, strong energy, and emotional lift.</p>
+            </div>
+          </article>
+
+          <article class="bubble">
+            <div>
+              <p class="bubbleKicker">Live format</p>
+              <h3 class="bubbleTitle">Crowd Participation</h3>
+              <p class="bubbleCopy">The room is part of the show, not just watching it.</p>
+            </div>
+          </article>
+
+          <article class="bubble">
+            <div>
+              <p class="bubbleKicker">Official sponsor</p>
+              <h3 class="bubbleTitle">First Sponsor</h3>
+              <p class="bubbleCopy">Consider the Energy + The Nine Summits of Love.</p>
+            </div>
           </article>
         </div>
       </section>
 
-      <section class="section">
-        <p class="eyebrow">Style and positioning</p>
-        <h2>Not a lecture. Not passive stand-up.</h2>
+      <section class="details">
+        <p class="eyebrow">Show details</p>
+        <h2>Short, clear, promotable.</h2>
 
-        <div class="quoteGrid">
-          <article class="quoteCard">
-            <p class="quoteLead">Energy lane</p>
-            <p class="quoteText">
-              Big Laugh takes motivational-stage momentum and turns it into something social, funny, and participatory.
-            </p>
+        <div class="detailsGrid">
+          <article class="detailCard">
+            <h3>What Big Laugh is</h3>
+            <ul>
+              <li>Live interactive comedy</li>
+              <li>Motivational energy</li>
+              <li>Audience participation</li>
+              <li>Emotional lift</li>
+            </ul>
           </article>
 
-          <article class="quoteCard">
-            <p class="quoteLead">Audience lane</p>
-            <p class="quoteText">
-              The crowd is part of the show. Big Laugh works because the room is not treated like a wall — it is treated like a live partner.
-            </p>
+          <article class="detailCard">
+            <h3>Current timing</h3>
+            <ul>
+              <li>Coming soon</li>
+              <li>Sundays at 7:00 PM</li>
+              <li>Thursday expansion possible</li>
+              <li>Built as a recurring live format</li>
+            </ul>
           </article>
         </div>
       </section>
 
       <section class="sponsor">
         <p class="eyebrow">Official sponsor</p>
-        <h2>Big Laugh is the first official sponsor.</h2>
+        <h2>Big Laugh sponsors the deeper work.</h2>
         <p>
-          Big Laugh is now the first official sponsor of <strong>Consider the Energy</strong> and <strong>The Nine Summits of Love</strong>. That sponsorship should be explicit and public-facing: Big Laugh is not just another branch in the house. It is the first sponsor helping support those lines.
+          Big Laugh is the first official sponsor of <strong>Consider the Energy</strong> and <strong>The Nine Summits of Love</strong>. That sponsorship is public-facing and explicit: Big Laugh supports the deeper work while also standing as its own live show path.
         </p>
-        <div class="signature" style="margin-top:16px; position:relative; z-index:1;">
-          <div class="pill">First official sponsor</div>
-          <div class="pill">Consider the Energy</div>
-          <div class="pill">Nine Summits of Love</div>
+        <div class="chipRow" style="margin-top:16px;">
+          <div class="chip">First official sponsor</div>
+          <div class="chip">Consider the Energy</div>
+          <div class="chip">Nine Summits of Love</div>
         </div>
-        <p class="footnote">Big Laugh sponsors the deeper work while also standing as its own live show path.</p>
+        <p class="footnote">Big Laugh is interactive, motivational, live, and sponsor-backed from day one.</p>
       </section>
     </main>
   </div>

@@ -1,727 +1,509 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Why the Metaverse Works | Under the Hood | CPU Processing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Laws | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="A visible three-layer laws page: why the metaverse works, what is actually under the hood, and laws with CPU processing, plus direct frontier access."
+    content="Bright laws chamber for governing law, extensions, and processing."
   />
   <style>
     :root{
-      --bg:#05070b;
-      --bg2:#08101a;
-      --bg3:#0d1623;
-      --panel:#0b0f16;
-      --panel2:#101722;
-      --line:#1f2a36;
-      --line2:rgba(127,255,212,.16);
-      --text:#e8f6ff;
-      --muted:rgba(232,246,255,.68);
-      --accent:#7fffd4;
-      --accent2:#6fe7ff;
-      --shadow:0 14px 40px rgba(0,0,0,.30);
-      --shadow2:0 20px 70px rgba(0,0,0,.38);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
-      --maxw:1460px;
-      --radius:16px;
-      --radius2:22px;
+      color-scheme:dark;
+      --bg0:#14061e;
+      --bg1:#112d66;
+      --bg2:#0a1538;
+
+      --ink:#fffaf4;
+      --mut:rgba(255,250,244,.84);
+      --soft:rgba(255,250,244,.62);
+
+      --gold:#ffd84e;
+      --rose:#ff5fa8;
+      --sky:#66d7ff;
+      --violet:#b778ff;
+      --mint:#58f0be;
+      --coral:#ff8f6b;
+
+      --line:rgba(255,255,255,.14);
+      --lineStrong:rgba(255,216,78,.34);
+
+      --panel:rgba(12,16,36,.64);
+      --panelStrong:rgba(10,12,28,.88);
+
+      --shadow:0 28px 90px rgba(0,0,0,.46);
+      --max:1260px;
     }
 
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       min-height:100%;
+      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:var(--ink);
       background:
-        radial-gradient(circle at 50% -10%, rgba(111,231,255,.08), transparent 28%),
-        radial-gradient(circle at 12% 18%, rgba(127,255,212,.04), transparent 22%),
-        linear-gradient(180deg,var(--bg3),var(--bg2) 36%,var(--bg));
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+        radial-gradient(circle at 10% 14%, rgba(255,95,168,.28), transparent 18%),
+        radial-gradient(circle at 84% 16%, rgba(102,215,255,.24), transparent 20%),
+        radial-gradient(circle at 48% 22%, rgba(255,216,78,.18), transparent 14%),
+        radial-gradient(circle at 18% 74%, rgba(88,240,190,.20), transparent 20%),
+        radial-gradient(circle at 82% 78%, rgba(183,120,255,.20), transparent 22%),
+        radial-gradient(circle at 52% 88%, rgba(255,143,107,.16), transparent 16%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 44%,var(--bg2) 100%);
     }
 
-    body{min-height:100vh;overflow-x:hidden}
+    body{overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
 
-    .hostGlow,.gridLines{
-      position:fixed;
+    .page{
+      position:relative;
+      min-height:100vh;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .stars,.stars::before,.stars::after{
+      content:"";
+      position:absolute;
       inset:0;
       pointer-events:none;
-      z-index:0;
+      display:block;
     }
 
-    .hostGlow{
-      background:
-        radial-gradient(circle at 50% 12%, rgba(127,255,212,.050), transparent 18%),
-        radial-gradient(circle at 50% 48%, rgba(111,231,255,.028), transparent 22%),
-        radial-gradient(circle at 50% 86%, rgba(255,210,122,.020), transparent 18%);
-      filter:blur(10px);
-    }
-
-    .gridLines{
+    .stars{
+      opacity:.62;
       background-image:
-        linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
-      background-size:40px 40px;
-      mask-image:linear-gradient(180deg,rgba(0,0,0,.28),rgba(0,0,0,.10));
+        radial-gradient(circle at 12% 22%, rgba(255,255,255,.94) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 58%, rgba(255,255,255,.82) 0 1px, transparent 2px),
+        radial-gradient(circle at 44% 34%, rgba(255,255,255,.78) 0 1px, transparent 2px),
+        radial-gradient(circle at 66% 18%, rgba(255,255,255,.92) 0 1px, transparent 2px),
+        radial-gradient(circle at 86% 74%, rgba(255,255,255,.82) 0 1px, transparent 2px);
+    }
+
+    .stars::before{
+      opacity:.58;
+      background:
+        radial-gradient(circle at 14% 16%, rgba(255,95,168,.28), transparent 18%),
+        radial-gradient(circle at 78% 22%, rgba(102,215,255,.24), transparent 20%),
+        radial-gradient(circle at 50% 46%, rgba(255,216,78,.18), transparent 16%),
+        radial-gradient(circle at 54% 80%, rgba(88,240,190,.18), transparent 20%),
+        radial-gradient(circle at 82% 58%, rgba(183,120,255,.16), transparent 18%);
+      filter:blur(28px);
+    }
+
+    .stars::after{
+      opacity:.42;
+      background:
+        radial-gradient(circle at 34% 34%, rgba(183,120,255,.24), transparent 16%),
+        radial-gradient(circle at 66% 62%, rgba(255,143,107,.18), transparent 18%),
+        radial-gradient(circle at 48% 18%, rgba(255,216,78,.16), transparent 12%);
+      filter:blur(36px);
     }
 
     .wrap{
       position:relative;
       z-index:1;
-      max-width:var(--maxw);
+      width:min(var(--max),calc(100vw - 32px));
       margin:0 auto;
-      padding:calc(16px + var(--safe-top)) calc(16px + var(--safe-right)) calc(28px + var(--safe-bottom)) calc(16px + var(--safe-left));
+      padding:24px 0 42px;
+      display:grid;
+      gap:18px;
+    }
+
+    .topbar,.hero,.layers,.extensions,.footerbox{
+      border:1px solid var(--line);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),
+        linear-gradient(180deg,var(--panel),var(--panelStrong));
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(16px);
+      -webkit-backdrop-filter:blur(16px);
+      position:relative;
+      overflow:hidden;
+      border-radius:36px;
     }
 
     .topbar{
+      border-radius:999px;
+      padding:14px 18px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
+      flex-wrap:wrap;
+    }
+
+    .topbar::before,
+    .hero::before,
+    .layers::before,
+    .extensions::before,
+    .footerbox::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
       background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-        radial-gradient(circle at 18% 18%, rgba(127,255,212,.05), transparent 26%);
-      box-shadow:var(--shadow);
-      margin-bottom:12px;
+        radial-gradient(circle at 12% 14%, rgba(255,95,168,.22), transparent 22%),
+        radial-gradient(circle at 84% 16%, rgba(102,215,255,.18), transparent 22%),
+        radial-gradient(circle at 50% 22%, rgba(255,216,78,.18), transparent 16%),
+        radial-gradient(circle at 16% 82%, rgba(88,240,190,.16), transparent 20%),
+        radial-gradient(circle at 78% 80%, rgba(183,120,255,.18), transparent 22%),
+        radial-gradient(circle at 54% 72%, rgba(255,143,107,.12), transparent 18%);
+      opacity:.96;
     }
 
     .brand{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .stamp{
-      font-size:11px;
-      color:var(--muted);
-      white-space:nowrap;
-    }
-
-    .hero{
-      display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(360px,.92fr);
-      gap:12px;
-      margin-bottom:12px;
-    }
-
-    .heroCard,.statusCard,.layerHero,.layerPanel,.footer{
-      border:1px solid var(--line);
-      border-radius:var(--radius2);
-      background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.96)),
-        radial-gradient(circle at 82% 18%, rgba(111,231,255,.05), transparent 24%);
-      box-shadow:var(--shadow2);
-    }
-
-    .heroCard{padding:22px 20px 20px}
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      min-height:34px;
-      padding:8px 12px;
-      border:1px solid var(--line2);
-      border-radius:999px;
-      background:rgba(255,255,255,.03);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      margin-bottom:14px;
-    }
-
-    h1{
-      margin:0 0 14px;
-      font-size:clamp(36px,5.4vw,74px);
-      line-height:.96;
-      letter-spacing:-.06em;
-      max-width:12ch;
-    }
-
-    .heroText{
-      margin:0;
-      max-width:64ch;
-      color:var(--muted);
-      font-size:17px;
-      line-height:1.72;
-    }
-
-    .chipRow{
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .chip{
-      display:inline-flex;
       align-items:center;
-      min-height:38px;
-      padding:9px 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.04);
-      color:var(--muted);
-      font-size:11px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
-
-    .chip.strong{
-      color:var(--text);
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
-    }
-
-    .statusCard{
-      padding:18px;
-      display:grid;
-      gap:10px;
-      align-content:start;
-    }
-
-    .statusTitle{
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      margin:0;
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .statusGrid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .stat{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:12px;
-      background:
-        linear-gradient(180deg,rgba(11,15,22,.98),rgba(16,23,34,.98)),
-        radial-gradient(circle at 50% 0%, rgba(127,255,212,.04), transparent 48%);
-      min-height:86px;
-    }
-
-    .statLabel{
-      font-size:10px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:var(--muted);
-      margin-bottom:8px;
-    }
-
-    .statValue{
-      font-size:18px;
-      font-weight:800;
-      line-height:1.15;
-      word-break:break-word;
-    }
-
-    .layerHero{
-      position:relative;
-      overflow:hidden;
-      padding:20px;
-      margin-bottom:12px;
-    }
-
-    .layerHero::before{
-      content:"";
-      position:absolute;
-      inset:-20% auto auto 50%;
-      width:520px;
-      height:520px;
-      transform:translateX(-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(127,255,212,.08), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(111,231,255,.05), transparent 64%);
-      pointer-events:none;
-      filter:blur(12px);
-    }
-
-    .layerHeroInner{
+      gap:12px;
       position:relative;
       z-index:1;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      align-items:stretch;
     }
 
-    .layerCard{
-      position:relative;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:20px;
-      min-height:360px;
-      padding:16px;
-      background:
-        linear-gradient(180deg,rgba(9,14,22,.88),rgba(12,18,28,.92)),
-        radial-gradient(circle at 50% 0%, rgba(127,255,212,.05), transparent 46%);
-      overflow:hidden;
-      transform-style:preserve-3d;
+    .mark{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold),var(--rose) 28%,var(--sky) 54%,var(--mint) 78%,var(--violet));
+      flex:0 0 auto;
+      box-shadow:0 0 34px rgba(255,95,168,.24);
     }
 
-    .layerCard::after{
-      content:"";
-      position:absolute;
-      inset:auto -10% -18% -10%;
-      height:120px;
-      background:radial-gradient(circle at 50% 50%, rgba(127,255,212,.08), transparent 62%);
-      filter:blur(18px);
-      pointer-events:none;
-    }
-
-    .layerNumber{
-      position:absolute;
-      top:12px;
-      right:12px;
-      min-width:34px;
-      min-height:34px;
-      display:grid;
-      place-items:center;
-      border-radius:999px;
-      border:1px solid rgba(127,255,212,.22);
-      background:rgba(127,255,212,.08);
-      color:var(--text);
-      font-size:12px;
-      font-weight:800;
+    .brand h2{
+      margin:0;
+      font-size:.96rem;
+      font-weight:900;
       letter-spacing:.08em;
-    }
-
-    .layerLabel{
-      font-size:11px;
-      letter-spacing:.12em;
       text-transform:uppercase;
-      color:var(--accent);
-      margin-bottom:10px;
     }
 
-    .layerTitle{
-      margin:0 0 12px;
-      font-size:28px;
-      line-height:1.02;
-      letter-spacing:-.04em;
-      max-width:12ch;
+    .brand p{
+      margin:2px 0 0;
+      color:var(--soft);
+      font-size:.82rem;
     }
 
-    .layerText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.72;
-      max-width:42ch;
-    }
-
-    .artWrap{
-      position:relative;
-      width:100%;
-      height:142px;
-      margin:16px 0 14px;
-      perspective:900px;
-    }
-
-    .artStack{
-      position:absolute;
-      inset:0;
-      display:grid;
-      place-items:center;
-      transform-style:preserve-3d;
-    }
-
-    .slab{
-      position:absolute;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:20px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02)),
-        radial-gradient(circle at 50% 10%, rgba(127,255,212,.08), transparent 48%);
-      box-shadow:0 18px 30px rgba(0,0,0,.22);
-    }
-
-    .slab.flat.a{width:210px;height:92px;transform:rotateX(68deg) translateZ(0)}
-    .slab.flat.b{width:176px;height:74px;transform:rotateX(68deg) translateZ(24px)}
-    .ring{
-      position:absolute;
-      width:148px;height:148px;
-      border-radius:50%;
-      border:1px solid rgba(111,231,255,.22);
-      transform:rotateX(66deg) rotateZ(18deg);
-      box-shadow:0 0 24px rgba(111,231,255,.08);
-    }
-    .sphere{
-      position:absolute;
-      width:108px;height:108px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,.22), transparent 18%),
-        radial-gradient(circle at 50% 50%, rgba(111,231,255,.18), rgba(127,255,212,.06) 58%, rgba(0,0,0,.10) 100%);
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:0 18px 30px rgba(0,0,0,.22), inset 0 0 24px rgba(111,231,255,.08);
-      transform:translateZ(8px);
-    }
-    .pillar{
-      position:absolute;
-      width:18px;
-      height:94px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg, rgba(127,255,212,.24), rgba(111,231,255,.08), rgba(255,255,255,.02));
-      box-shadow:0 12px 26px rgba(0,0,0,.18);
-    }
-    .pillar.p1{transform:translateX(-44px) rotateZ(-10deg)}
-    .pillar.p2{transform:translateX(0) rotateZ(0deg)}
-    .pillar.p3{transform:translateX(44px) rotateZ(10deg)}
-    .beam{
-      position:absolute;
-      width:184px;
-      height:14px;
-      border-radius:999px;
-      border:1px solid rgba(127,255,212,.16);
-      background:linear-gradient(90deg, rgba(127,255,212,.10), rgba(111,231,255,.22), rgba(127,255,212,.10));
-      box-shadow:0 0 18px rgba(111,231,255,.08);
-      transform:translateY(-10px);
-    }
-    .chipBlock{
-      position:absolute;
-      width:172px;
-      height:104px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        linear-gradient(180deg,rgba(11,15,22,.96),rgba(16,23,34,.98)),
-        radial-gradient(circle at 50% 10%, rgba(127,255,212,.06), transparent 48%);
-      box-shadow:0 18px 30px rgba(0,0,0,.22);
-      transform:rotateX(62deg);
-    }
-    .trace{
-      position:absolute;
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(111,231,255,.10), rgba(127,255,212,.34), rgba(111,231,255,.10));
-      box-shadow:0 0 12px rgba(127,255,212,.10);
-    }
-    .trace.t1{width:120px;height:3px;transform:translateY(-24px)}
-    .trace.t2{width:86px;height:3px;transform:translateY(0)}
-    .trace.t3{width:132px;height:3px;transform:translateY(24px)}
-    .trace.v1{width:3px;height:70px;transform:translateX(-42px)}
-    .trace.v2{width:3px;height:70px;transform:translateX(42px)}
-
-    .rows{
-      display:grid;
-      gap:8px;
-      margin-top:12px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-      gap:12px;
-      align-items:start;
-    }
-
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.45;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.45;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .layerPanel{
-      padding:16px;
-      margin-bottom:12px;
-    }
-
-    .panelTitle{
-      margin:0 0 12px;
-      font-size:12px;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-      padding-bottom:10px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .panelText{
-      margin:0;
-      color:var(--muted);
-      font-size:14px;
-      line-height:1.7;
-    }
-
-    .detailGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-
-    .detailCard{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:16px;
-      padding:14px;
-      background:rgba(255,255,255,.03);
-    }
-
-    .detailTitle{
-      margin:0 0 8px;
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:var(--accent);
-    }
-
-    .detailText{
-      margin:0;
-      color:var(--muted);
-      font-size:13px;
-      line-height:1.66;
-    }
-
-    .actionRow{
+    .pills{
       display:flex;
-      flex-wrap:wrap;
       gap:10px;
-      margin-top:14px;
+      flex-wrap:wrap;
+      position:relative;
+      z-index:1;
     }
 
-    .action{
+    .pill{
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:42px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:12px;
-      font-weight:700;
-      letter-spacing:.05em;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      text-decoration:none;
+      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
     }
 
-    .action.strong{
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
+    .pill.strong{
+      border-color:var(--lineStrong);
+      color:#fff1a7;
     }
 
-    .footer{
-      padding:12px 14px;
-      color:var(--muted);
-      font:12px/1.6 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      white-space:pre-wrap;
-      word-break:break-word;
+    .hero,.layers,.extensions,.footerbox{
+      padding:24px 22px;
     }
 
-    @media (max-width:1180px){
-      .hero,.layerHeroInner,.detailGrid{
-        grid-template-columns:1fr;
-      }
-
-      h1{max-width:none}
-      .layerTitle{max-width:none}
+    .eyebrow{
+      position:relative;
+      z-index:1;
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
     }
 
-    @media (max-width:760px){
-      .topbar{flex-direction:column;align-items:flex-start}
-      .statusGrid{grid-template-columns:1fr}
-      .row{grid-template-columns:1fr}
-      .rv{text-align:left}
-      .artWrap{height:120px}
-      .slab.flat.a{width:170px;height:78px}
-      .slab.flat.b{width:146px;height:62px}
-      .ring{width:122px;height:122px}
-      .sphere{width:92px;height:92px}
-      .chipBlock{width:150px;height:94px}
+    h1,h3,h4{
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    h1{
+      position:relative;
+      z-index:1;
+      margin:0;
+      font-size:clamp(3rem,7vw,5.8rem);
+      line-height:.9;
+      letter-spacing:.04em;
+    }
+
+    .heroTag{
+      position:relative;
+      z-index:1;
+      margin:16px 0 0;
+      font-size:clamp(1.14rem,2vw,1.65rem);
+      line-height:1.45;
+      color:#fff0bc;
+      font-weight:800;
+      max-width:940px;
+    }
+
+    .heroCopy{
+      position:relative;
+      z-index:1;
+      margin:14px 0 0;
+      color:var(--mut);
+      line-height:1.7;
+      font-size:1rem;
+      max-width:940px;
+    }
+
+    .heroActions{
+      position:relative;
+      z-index:1;
+      margin-top:22px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .btn{
+      min-height:52px;
+      padding:0 18px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+      transition:transform .15s ease,border-color .15s ease;
+    }
+
+    .btn:hover{transform:translateY(-2px)}
+    .btn.primary{border-color:rgba(255,216,78,.40);color:#fff1a7}
+
+    .sectionTitle{
+      position:relative;
+      z-index:1;
+      margin:0 0 8px;
+      font-size:clamp(1.6rem,3vw,2.4rem);
+      line-height:1.02;
+    }
+
+    .sectionCopy{
+      position:relative;
+      z-index:1;
+      margin:0 0 16px;
+      color:var(--mut);
+      line-height:1.65;
+      font-size:.98rem;
+      max-width:920px;
+    }
+
+    .layerGrid,.extensionGrid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      gap:16px;
+    }
+
+    .layerGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .extensionGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+    .card{
+      border-radius:28px;
+      padding:20px;
+      border:1px solid rgba(255,255,255,.12);
+      min-height:220px;
+      display:grid;
+      align-content:start;
+      gap:12px;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+
+    .card.law{background:linear-gradient(180deg,rgba(255,216,78,.24),rgba(255,216,78,.08))}
+    .card.extensionsLayer{background:linear-gradient(180deg,rgba(102,215,255,.24),rgba(102,215,255,.08))}
+    .card.cpu{background:linear-gradient(180deg,rgba(88,240,190,.24),rgba(88,240,190,.08))}
+
+    .card.core{background:linear-gradient(180deg,rgba(183,120,255,.22),rgba(183,120,255,.08))}
+    .card.fusion{background:linear-gradient(180deg,rgba(255,95,168,.22),rgba(255,95,168,.08))}
+    .card.industrial{background:linear-gradient(180deg,rgba(255,143,107,.22),rgba(255,143,107,.08))}
+    .card.frontier{background:linear-gradient(180deg,rgba(102,215,255,.22),rgba(102,215,255,.08))}
+
+    .card strong{
+      font-size:.86rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#fff9e8;
+    }
+
+    .card h4{
+      margin:0;
+      font-size:1.5rem;
+      line-height:1.1;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--mut);
+      line-height:1.62;
+      font-size:.95rem;
+    }
+
+    .linkBtn{
+      margin-top:auto;
+      align-self:end;
+      display:inline-flex;
+      min-height:44px;
+      padding:0 16px;
+      border-radius:999px;
+      align-items:center;
+      justify-content:center;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+      width:max-content;
+    }
+
+    .footerbox p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:var(--soft);
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    @media (max-width:1080px){
+      .layerGrid{grid-template-columns:1fr}
+      .extensionGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:720px){
+      .wrap{width:min(100vw - 20px,var(--max))}
+      .hero,.layers,.extensions,.footerbox{padding:20px}
+      .extensionGrid{grid-template-columns:1fr}
     }
   </style>
 </head>
 <body>
-  <div class="hostGlow" aria-hidden="true"></div>
-  <div class="gridLines" aria-hidden="true"></div>
+  <div class="page">
+    <div class="stars" aria-hidden="true"></div>
 
-  <main class="wrap">
-    <div class="topbar">
-      <div class="brand">Why the Metaverse Works</div>
-      <div class="stamp">LAWS · CPU PROCESSING · G1 EXTERNAL EXPRESSION</div>
-    </div>
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <h2>Diamond Gate Bridge</h2>
+            <p>Laws chamber aligned to the bright nested premise</p>
+          </div>
+        </div>
 
-    <section class="hero">
-      <article class="heroCard">
-        <div class="eyebrow">Visible three-layer laws surface</div>
-        <h1>See the laws, the extensions, and the processing layer.</h1>
-        <p class="heroText">
-          The laws page now visibly presents all three layers instead of merely naming them. It revolves around governing law first, then the extensions beneath it, then the CPU processing layer that turns lawful structure into visible execution.
+        <div class="pills" aria-label="Laws status">
+          <div class="pill strong">Laws</div>
+          <div class="pill">Extensions</div>
+          <div class="pill">CPU</div>
+        </div>
+      </div>
+
+      <header class="hero" aria-label="Laws hero">
+        <p class="eyebrow">Laws</p>
+        <h1>Law Before Noise.</h1>
+        <p class="heroTag">The laws page now reads like a bright governing chamber instead of a thin explanatory slab.</p>
+        <p class="heroCopy">
+          The page remains organized around the same governing sequence: law first, extensions second, processing third. What changes here is not the hierarchy, but the chamber quality, visual depth, and readability inside the larger bright Russian-doll house. 2
         </p>
-        <div class="chipRow">
-          <div class="chip strong">Layer 1 Visible</div>
-          <div class="chip strong">Layer 2 Visible</div>
-          <div class="chip strong">Layer 3 Visible</div>
-          <div class="chip">Frontier Connected</div>
+
+        <div class="heroActions">
+          <a class="btn primary" href="/home/">Back to Home</a>
+          <a class="btn" href="/gauges/">Open Gauges</a>
+          <a class="btn" href="/explore/frontier/">Open Frontier</a>
         </div>
-      </article>
+      </header>
 
-      <aside class="statusCard">
-        <h2 class="statusTitle">Capability Read</h2>
-        <div class="statusGrid">
-          <div class="stat">
-            <div class="statLabel">Laws</div>
-            <div class="statValue">Visible</div>
-          </div>
-          <div class="stat">
-            <div class="statLabel">Extensions</div>
-            <div class="statValue">Visible</div>
-          </div>
-          <div class="stat">
-            <div class="statLabel">CPU Processing</div>
-            <div class="statValue">Visible</div>
-          </div>
-          <div class="stat">
-            <div class="statLabel">Frontier</div>
-            <div class="statValue">Direct Access</div>
-          </div>
+      <section class="layers" aria-label="Three visible layers">
+        <p class="eyebrow">Visible Layers</p>
+        <h3 class="sectionTitle">Three governing layers, made visible.</h3>
+        <p class="sectionCopy">
+          The live page already frames itself as a three-layer laws surface: governing law, the extensions beneath it, and the CPU processing layer that turns lawful structure into visible execution. This rewrite preserves that exact order while making the layers feel like real chambers. 3
+        </p>
+
+        <div class="layerGrid">
+          <article class="card law">
+            <strong>Layer 1</strong>
+            <h4>Law</h4>
+            <p>Law remains the admissibility surface. Structure comes before effects, public entry stays clear, and the world must descend from governed form rather than visual noise. 4</p>
+          </article>
+
+          <article class="card extensionsLayer">
+            <strong>Layer 2</strong>
+            <h4>Extensions</h4>
+            <p>The sealed interior still carries template, engine, routing logic, inheritance law, and platform structure. This layer shows what the laws support beneath the visible surface. 5</p>
+          </article>
+
+          <article class="card cpu">
+            <strong>Layer 3</strong>
+            <h4>CPU Processing</h4>
+            <p>Processing remains sequence, evaluation, and execution: the place where admissibility becomes timing, inheritance becomes execution, and external behavior becomes measurable. 6</p>
+          </article>
         </div>
-      </aside>
-    </section>
+      </section>
 
-    <section class="layerHero">
-      <div class="layerHeroInner">
-        <article class="layerCard">
-          <div class="layerNumber">1</div>
-          <div class="layerLabel">Layer 1</div>
-          <h2 class="layerTitle">Why the Metaverse Works</h2>
-          <p class="layerText">
-            The metaverse works when the world descends from governed structure instead of visual noise carrying the burden. Law gives the world admissibility. Host geometry gives it stability. Only then can signal, motion, and extension appear without collapse.
-          </p>
-          <div class="artWrap" aria-hidden="true">
-            <div class="artStack">
-              <div class="slab flat a"></div>
-              <div class="slab flat b"></div>
-              <div class="ring"></div>
-              <div class="sphere"></div>
-            </div>
-          </div>
-          <div class="rows">
-            <div class="row"><div class="rk">Host Law</div><div class="rv">Structure before effects</div></div>
-            <div class="row"><div class="rk">Public Entry</div><div class="rv">House first</div></div>
-            <div class="row"><div class="rk">Metaverse Burden</div><div class="rv">Not required on first contact</div></div>
-          </div>
-        </article>
+      <section class="extensions" aria-label="Connected surfaces">
+        <p class="eyebrow">Connected Surfaces</p>
+        <h3 class="sectionTitle">Extensions and frontier remain explicit.</h3>
+        <p class="sectionCopy">
+          The current page already includes explicit connected surfaces for Core Invariants, Fusion Readiness, Industrial Posture, and Frontier. Those remain the correct extension set here. 7
+        </p>
 
-        <article class="layerCard">
-          <div class="layerNumber">2</div>
-          <div class="layerLabel">Layer 2</div>
-          <h2 class="layerTitle">What’s Actually Under the Hood</h2>
-          <p class="layerText">
-            Under the hood is the sealed interior: template, engine, routing logic, inheritance law, and the code-of-life platform structure. This layer shows that the metaverse is not magic. It is governed extension standing on an already-built machine.
-          </p>
-          <div class="artWrap" aria-hidden="true">
-            <div class="artStack">
-              <div class="beam"></div>
-              <div class="pillar p1"></div>
-              <div class="pillar p2"></div>
-              <div class="pillar p3"></div>
-            </div>
-          </div>
-          <div class="rows">
-            <div class="row"><div class="rk">Interior Status</div><div class="rv">Sealed</div></div>
-            <div class="row"><div class="rk">Template Status</div><div class="rv">Canonically bound</div></div>
-            <div class="row"><div class="rk">Active Domain</div><div class="rv">Frame-outward only</div></div>
-          </div>
-        </article>
+        <div class="extensionGrid">
+          <article class="card core">
+            <strong>Extension</strong>
+            <h4>Core Invariants</h4>
+            <p>The invariant layer that tells the system what it must remain in order to stay lawful. 8</p>
+            <a class="linkBtn" href="/laws/core-invariants/">Open</a>
+          </article>
 
-        <article class="layerCard">
-          <div class="layerNumber">3</div>
-          <div class="layerLabel">Layer 3</div>
-          <h2 class="layerTitle">Laws and CPU Processing</h2>
-          <p class="layerText">
-            Laws define what is admissible. CPU processing defines how those laws are sequenced, evaluated, and expressed. This is where rules become timing, inheritance becomes execution, and external behavior becomes measurable instead of theatrical.
-          </p>
-          <div class="artWrap" aria-hidden="true">
-            <div class="artStack">
-              <div class="chipBlock"></div>
-              <div class="trace t1"></div>
-              <div class="trace t2"></div>
-              <div class="trace t3"></div>
-              <div class="trace v1"></div>
-              <div class="trace v2"></div>
-            </div>
-          </div>
-          <div class="rows">
-            <div class="row"><div class="rk">Law</div><div class="rv">Admissibility / inheritance / bounds</div></div>
-            <div class="row"><div class="rk">CPU</div><div class="rv">Sequence / evaluation / execution</div></div>
-            <div class="row"><div class="rk">Failure Mode</div><div class="rv">Processing without lawful structure</div></div>
-          </div>
-        </article>
-      </div>
-    </section>
+          <article class="card fusion">
+            <strong>Extension</strong>
+            <h4>Fusion Readiness</h4>
+            <p>The readiness layer that tells the system when higher-order convergence becomes lawful. 9</p>
+            <a class="linkBtn" href="/laws/fusion-readiness/">Open</a>
+          </article>
 
-    <section class="layerPanel">
-      <h2 class="panelTitle">Extensions and Connected Surfaces</h2>
-      <p class="panelText">
-        The laws page is still about the laws, but now the extensions are explicit. The page shows what the laws support, what the sealed interior means, how CPU processing externalizes that law, and where the frontier sits in relation to all of it.
-      </p>
+          <article class="card industrial">
+            <strong>Extension</strong>
+            <h4>Industrial Posture</h4>
+            <p>The posture layer for scale, seriousness, deployment discipline, and non-toy execution. 10</p>
+            <a class="linkBtn" href="/laws/industrial-posture/">Open</a>
+          </article>
 
-      <div class="detailGrid">
-        <article class="detailCard">
-          <h3 class="detailTitle">Core Invariants</h3>
-          <p class="detailText">The invariant layer that tells the system what it must remain in order to stay lawful.</p>
-          <div class="actionRow">
-            <a class="action" href="/laws/core-invariants/">Open</a>
-          </div>
-        </article>
+          <article class="card frontier">
+            <strong>Connected Surface</strong>
+            <h4>Frontier</h4>
+            <p>The direct bridge to the frontier catalog so the boundary of current capability remains visible. 11</p>
+            <a class="linkBtn" href="/explore/frontier/">Open Frontier</a>
+          </article>
+        </div>
+      </section>
 
-        <article class="detailCard">
-          <h3 class="detailTitle">Fusion Readiness</h3>
-          <p class="detailText">The readiness layer that tells the system when higher-order convergence becomes lawful.</p>
-          <div class="actionRow">
-            <a class="action" href="/laws/fusion-readiness/">Open</a>
-          </div>
-        </article>
-
-        <article class="detailCard">
-          <h3 class="detailTitle">Industrial Posture</h3>
-          <p class="detailText">The posture layer for scale, seriousness, deployment discipline, and non-toy execution.</p>
-          <div class="actionRow">
-            <a class="action" href="/laws/industrial-posture/">Open</a>
-          </div>
-        </article>
-
-        <article class="detailCard">
-          <h3 class="detailTitle">Frontier</h3>
-          <p class="detailText">The direct bridge to the frontier catalog so the boundary of current capability remains visible.</p>
-          <div class="actionRow">
-            <a class="action strong" href="/explore/frontier/">Open Frontier</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <div class="footer">BUILD=LAWS_G1_VISIBLE_THREE_LAYER_SURFACE | ROLE=WHY_METAVERSE_WORKS_UNDER_THE_HOOD_CPU_PROCESSING | LAYERS=3_VISIBLE | FRONTIER=/explore/frontier/ | STATUS=ACTIVE</div>
-  </main>
+      <section class="footerbox" aria-label="Laws footer">
+        <p>The laws chamber now matches the same bright nested premise: governing first, vivid, layered, and structurally readable.</p>
+      </section>
+    </div>
+  </div>
 </body>
 </html>

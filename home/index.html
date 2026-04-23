@@ -4,13 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Home | Diamond Gate Bridge</title>
-  <meta name="description" content="Stable nested hub after the Prelude bloom." />
+  <meta
+    name="description"
+    content="Stable nested hub after the Prelude bloom."
+  />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#0c132d;
-      --bg1:#113068;
-      --bg2:#1a0f31;
+      --bg0:#0b132c;
+      --bg1:#103067;
+      --bg2:#1b1033;
       --ink:#f8fbff;
       --mut:rgba(248,251,255,.82);
       --soft:rgba(248,251,255,.62);
@@ -20,11 +23,13 @@
       --emerald:#7ef0c4;
       --violet:#c28cff;
       --line:rgba(255,255,255,.14);
-      --shadow:0 24px 84px rgba(0,0,0,.42);
       --panel:rgba(11,16,36,.68);
       --panelStrong:rgba(10,12,28,.86);
+      --shadow:0 24px 84px rgba(0,0,0,.42);
     }
+
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       min-height:100%;
@@ -36,21 +41,25 @@
         radial-gradient(circle at 50% 70%, rgba(126,240,196,.12), transparent 18%),
         linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 50%,var(--bg2) 100%);
     }
+
     body{overflow-x:hidden}
     a{color:inherit;text-decoration:none}
+
     .page{
       position:relative;
       min-height:100vh;
       overflow:hidden;
       isolation:isolate;
     }
-    .stars,.stars:before{
+
+    .stars,.stars::before{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
       display:block;
     }
+
     .stars{
       opacity:.5;
       background-image:
@@ -59,7 +68,8 @@
         radial-gradient(circle at 62% 22%, rgba(255,255,255,.88) 0 1px, transparent 2px),
         radial-gradient(circle at 84% 72%, rgba(255,255,255,.82) 0 1px, transparent 2px);
     }
-    .stars:before{
+
+    .stars::before{
       opacity:.4;
       background:
         radial-gradient(circle at 20% 24%, rgba(127,212,255,.16), transparent 18%),
@@ -67,6 +77,7 @@
         radial-gradient(circle at 52% 64%, rgba(126,240,196,.14), transparent 18%);
       filter:blur(20px);
     }
+
     .wrap{
       position:relative;
       z-index:1;
@@ -76,6 +87,7 @@
       display:grid;
       gap:18px;
     }
+
     .topbar,.hero,.hub,.footerbox{
       border:1px solid var(--line);
       background:
@@ -87,6 +99,7 @@
       position:relative;
       overflow:hidden;
     }
+
     .topbar{
       border-radius:999px;
       padding:14px 18px;
@@ -96,15 +109,215 @@
       gap:12px;
       flex-wrap:wrap;
     }
+
     .brand{display:flex;align-items:center;gap:12px}
+
     .mark{
-      width:44px;height:44px;border-radius:14px;transform:rotate(45deg);
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      transform:rotate(45deg);
       background:linear-gradient(135deg,var(--sky),var(--gold) 35%,var(--emerald) 70%,var(--violet));
       flex:0 0 auto;
     }
-    .brand h2{margin:0;font-size:.96rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-    .brand p{margin:2px 0 0;color:var(--soft);font-size:.82rem}
-    .pills{display:flex;gap:10px;flex-wrap:wrap}
+
+    .brand h2{
+      margin:0;
+      font-size:.96rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .brand p{
+      margin:2px 0 0;
+      color:var(--soft);
+      font-size:.82rem;
+    }
+
+    .pills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
     .pill{
-      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
-      display
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+    }
+
+    .hero,.hub,.footerbox{
+      border-radius:34px;
+      padding:24px 22px;
+    }
+
+    .hero::before,.hub::before,.footerbox::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 14% 14%, rgba(127,212,255,.16), transparent 22%),
+        radial-gradient(circle at 82% 18%, rgba(255,111,176,.12), transparent 20%),
+        radial-gradient(circle at 50% 26%, rgba(255,215,106,.10), transparent 16%),
+        radial-gradient(circle at 22% 82%, rgba(126,240,196,.10), transparent 20%);
+      opacity:.9;
+    }
+
+    .eyebrow{
+      position:relative;
+      z-index:1;
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+
+    h1{
+      position:relative;
+      z-index:1;
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2.8rem,6vw,5.2rem);
+      line-height:.92;
+    }
+
+    .copy{
+      position:relative;
+      z-index:1;
+      margin:14px 0 0;
+      color:var(--mut);
+      line-height:1.66;
+      font-size:1rem;
+      max-width:860px;
+    }
+
+    .hubGrid{
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .card{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
+      padding:18px;
+      transition:transform .15s ease,border-color .15s ease;
+    }
+
+    .card:hover{
+      transform:translateY(-2px);
+      border-color:rgba(255,215,106,.24);
+    }
+
+    .card strong{
+      display:block;
+      margin:0 0 8px;
+      font-size:.84rem;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+      color:#fff2cb;
+    }
+
+    .card span{
+      display:block;
+      color:var(--mut);
+      line-height:1.58;
+      font-size:.94rem;
+    }
+
+    .footerbox p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:var(--soft);
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    @media (max-width:980px){
+      .hubGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:720px){
+      .wrap{width:min(100vw - 20px,1200px)}
+      .hero,.hub,.footerbox{padding:20px}
+      .hubGrid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="stars" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <h2>Home</h2>
+            <p>Stable nested hub</p>
+          </div>
+        </div>
+
+        <div class="pills" aria-label="Home status">
+          <div class="pill">Home</div>
+          <div class="pill">Nested Hub</div>
+          <div class="pill">Calm + Bright</div>
+        </div>
+      </div>
+
+      <header class="hero" aria-label="Home hero">
+        <p class="eyebrow">Home</p>
+        <h1>The House After Entry</h1>
+        <p class="copy">
+          Home is now the stable hub after the Prelude bloom. It remains colorful and layered, but calmer. The purpose here is orientation without flattening the warmth and ceremonial depth established upstream.
+        </p>
+      </header>
+
+      <section class="hub" aria-label="Home routes">
+        <p class="eyebrow">Primary routes</p>
+        <div class="hubGrid">
+          <a class="card" href="/prelude/">
+            <strong>Prelude</strong>
+            <span>Return to the first major bloom and the Nine Summits of Love opening chamber.</span>
+          </a>
+          <a class="card" href="/products/">
+            <strong>Products</strong>
+            <span>Enter the product chamber with its flagship surfaces and nested product paths.</span>
+          </a>
+          <a class="card" href="/laws/">
+            <strong>Laws</strong>
+            <span>Move into doctrine and bounding structure from a warmer and clearer upstream hub.</span>
+          </a>
+          <a class="card" href="/gauges/">
+            <strong>Gauges</strong>
+            <span>Move into instrument surfaces without forcing the home hub into a utility-only read.</span>
+          </a>
+        </div>
+      </section>
+
+      <section class="footerbox" aria-label="Home footer">
+        <p>Home stabilizes the nested system after Prelude without losing color, warmth, or visible depth.</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

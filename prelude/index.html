@@ -4,55 +4,64 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>Prelude | The Nine Summits of Love</title>
-  <meta name="description" content="Prelude bloom into the Nine Summits of Love." />
+  <meta
+    name="description"
+    content="Prelude bloom into the Nine Summits of Love."
+  />
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#1a0822;
-      --bg1:#182f63;
-      --bg2:#0b1735;
-      --ink:#fff9f5;
-      --mut:rgba(255,249,245,.82);
-      --soft:rgba(255,249,245,.62);
-      --gold:#ffd76a;
-      --rose:#ff6fb0;
+      --bg0:#16061f;
+      --bg1:#1f2f68;
+      --bg2:#0c1638;
+      --ink:#fffaf5;
+      --mut:rgba(255,250,245,.84);
+      --soft:rgba(255,250,245,.62);
+      --gold:#ffd96a;
+      --rose:#ff6fb1;
       --sky:#7fd4ff;
-      --violet:#c28cff;
-      --emerald:#7ef0c4;
+      --violet:#c58dff;
+      --mint:#7ef0c5;
       --line:rgba(255,255,255,.14);
-      --shadow:0 24px 84px rgba(0,0,0,.44);
-      --panel:rgba(12,16,34,.66);
-      --panelStrong:rgba(10,12,28,.86);
+      --panel:rgba(11,15,34,.68);
+      --panelStrong:rgba(10,12,28,.88);
+      --shadow:0 28px 84px rgba(0,0,0,.44);
     }
+
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       min-height:100%;
       font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       color:var(--ink);
       background:
-        radial-gradient(circle at 12% 18%, rgba(255,111,176,.24), transparent 22%),
-        radial-gradient(circle at 84% 18%, rgba(127,212,255,.20), transparent 24%),
-        radial-gradient(circle at 50% 32%, rgba(255,215,106,.14), transparent 18%),
-        radial-gradient(circle at 20% 72%, rgba(126,240,196,.18), transparent 22%),
-        radial-gradient(circle at 78% 76%, rgba(194,140,255,.18), transparent 24%),
-        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 42%,var(--bg2) 100%);
+        radial-gradient(circle at 12% 16%, rgba(255,111,177,.26), transparent 20%),
+        radial-gradient(circle at 84% 18%, rgba(127,212,255,.22), transparent 22%),
+        radial-gradient(circle at 50% 28%, rgba(255,217,106,.14), transparent 14%),
+        radial-gradient(circle at 18% 74%, rgba(126,240,197,.18), transparent 18%),
+        radial-gradient(circle at 80% 78%, rgba(197,141,255,.18), transparent 20%),
+        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 44%,var(--bg2) 100%);
     }
+
     body{overflow-x:hidden}
     a{color:inherit;text-decoration:none}
+
     .page{
       position:relative;
       min-height:100vh;
       overflow:hidden;
       isolation:isolate;
     }
-    .stars,.stars:before,.stars:after{
+
+    .stars,.stars::before,.stars::after{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
       display:block;
     }
+
     .stars{
       opacity:.58;
       background-image:
@@ -61,15 +70,25 @@
         radial-gradient(circle at 66% 18%, rgba(255,255,255,.92) 0 1px, transparent 2px),
         radial-gradient(circle at 86% 74%, rgba(255,255,255,.82) 0 1px, transparent 2px);
     }
-    .stars:before{
-      opacity:.5;
+
+    .stars::before{
+      opacity:.52;
       background:
-        radial-gradient(circle at 18% 16%, rgba(255,111,176,.22), transparent 18%),
+        radial-gradient(circle at 18% 16%, rgba(255,111,177,.22), transparent 18%),
         radial-gradient(circle at 78% 22%, rgba(127,212,255,.18), transparent 20%),
-        radial-gradient(circle at 50% 48%, rgba(255,215,106,.14), transparent 16%),
-        radial-gradient(circle at 52% 78%, rgba(126,240,196,.18), transparent 22%);
+        radial-gradient(circle at 50% 48%, rgba(255,217,106,.15), transparent 16%),
+        radial-gradient(circle at 52% 78%, rgba(126,240,197,.18), transparent 22%);
       filter:blur(24px);
     }
+
+    .stars::after{
+      opacity:.38;
+      background:
+        radial-gradient(circle at 34% 36%, rgba(197,141,255,.20), transparent 16%),
+        radial-gradient(circle at 70% 60%, rgba(255,111,177,.14), transparent 18%);
+      filter:blur(32px);
+    }
+
     .wrap{
       position:relative;
       z-index:1;
@@ -79,7 +98,8 @@
       display:grid;
       gap:18px;
     }
-    .topbar,.hero,.dolls,.bridge,.footerbox{
+
+    .topbar,.hero,.dolls,.summits,.footerbox{
       border:1px solid var(--line);
       background:
         linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),
@@ -90,6 +110,7 @@
       position:relative;
       overflow:hidden;
     }
+
     .topbar{
       border-radius:999px;
       padding:14px 18px;
@@ -99,76 +120,124 @@
       gap:12px;
       flex-wrap:wrap;
     }
+
     .brand{display:flex;align-items:center;gap:12px}
+
     .mark{
-      width:44px;height:44px;border-radius:14px;transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--gold),var(--rose) 35%,var(--sky) 68%,var(--emerald));
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      transform:rotate(45deg);
+      background:linear-gradient(135deg,var(--gold),var(--rose) 35%,var(--sky) 68%,var(--mint));
       flex:0 0 auto;
-      box-shadow:0 0 28px rgba(255,111,176,.22);
+      box-shadow:0 0 28px rgba(255,111,177,.22);
     }
-    .brand h2{margin:0;font-size:.96rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
-    .brand p{margin:2px 0 0;color:var(--soft);font-size:.82rem}
-    .pills{display:flex;gap:10px;flex-wrap:wrap}
+
+    .brand h2{
+      margin:0;
+      font-size:.96rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .brand p{
+      margin:2px 0 0;
+      color:var(--soft);
+      font-size:.82rem;
+    }
+
+    .pills{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+
     .pill{
-      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
-      display:inline-flex;align-items:center;justify-content:center;
-      font-size:.74rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase;
       background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
     }
-    .hero{
+
+    .hero,.dolls,.summits,.footerbox{
       border-radius:34px;
-      padding:34px 30px;
+      padding:24px 22px;
     }
-    .hero:before,.dolls:before,.bridge:before,.footerbox:before{
+
+    .hero::before,.dolls::before,.summits::before,.footerbox::before{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 14% 14%, rgba(255,111,176,.18), transparent 24%),
+        radial-gradient(circle at 14% 14%, rgba(255,111,177,.18), transparent 24%),
         radial-gradient(circle at 82% 18%, rgba(127,212,255,.16), transparent 24%),
-        radial-gradient(circle at 50% 24%, rgba(255,215,106,.14), transparent 18%),
-        radial-gradient(circle at 18% 82%, rgba(126,240,196,.14), transparent 22%),
-        radial-gradient(circle at 76% 80%, rgba(194,140,255,.16), transparent 24%);
+        radial-gradient(circle at 50% 24%, rgba(255,217,106,.14), transparent 18%),
+        radial-gradient(circle at 18% 82%, rgba(126,240,197,.14), transparent 22%),
+        radial-gradient(circle at 76% 80%, rgba(197,141,255,.16), transparent 24%);
       opacity:.95;
     }
+
     .eyebrow{
-      position:relative;z-index:1;
-      margin:0 0 12px;color:var(--gold);
-      font-size:.78rem;font-weight:900;letter-spacing:.18em;text-transform:uppercase;
+      position:relative;
+      z-index:1;
+      margin:0 0 12px;
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
     }
+
     h1{
-      position:relative;z-index:1;
+      position:relative;
+      z-index:1;
       margin:0;
       font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(3rem,7vw,5.8rem);
       line-height:.9;
       letter-spacing:.04em;
     }
+
     .tag{
-      position:relative;z-index:1;
+      position:relative;
+      z-index:1;
       margin:16px 0 0;
       font-size:clamp(1.15rem,2vw,1.6rem);
       line-height:1.45;
       color:#fff0c9;
       font-weight:800;
-      max-width:900px;
+      max-width:920px;
     }
+
     .copy{
-      position:relative;z-index:1;
+      position:relative;
+      z-index:1;
       margin:14px 0 0;
       color:var(--mut);
       line-height:1.68;
       font-size:1rem;
-      max-width:900px;
+      max-width:920px;
     }
+
     .actions{
-      position:relative;z-index:1;
+      position:relative;
+      z-index:1;
       margin-top:22px;
       display:flex;
       flex-wrap:wrap;
       gap:12px;
     }
+
     .btn{
       min-height:50px;
       padding:0 18px;
@@ -184,14 +253,13 @@
       background:linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
       transition:transform .15s ease,border-color .15s ease;
     }
+
     .btn:hover{transform:translateY(-2px)}
-    .btn.primary{border-color:rgba(255,215,106,.34);color:#fff1b8}
-    .dolls{
-      border-radius:34px;
-      padding:22px;
-    }
-    .dolls h3,.bridge h3{
-      position:relative;z-index:1;
+    .btn.primary{border-color:rgba(255,217,106,.34);color:#fff1b8}
+
+    .dolls h3,.summits h3{
+      position:relative;
+      z-index:1;
       margin:0 0 14px;
       font-size:.84rem;
       font-weight:900;
@@ -199,13 +267,16 @@
       text-transform:uppercase;
       color:var(--gold);
     }
-    .dollGrid{
-      position:relative;z-index:1;
+
+    .dollGrid,.summitGrid{
+      position:relative;
+      z-index:1;
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:16px;
     }
-    .doll{
+
+    .doll,.summit{
       border-radius:26px;
       padding:20px;
       border:1px solid rgba(255,255,255,.12);
@@ -215,14 +286,138 @@
       gap:12px;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
     }
-    .doll.one{
-      background:linear-gradient(180deg,rgba(255,111,176,.22),rgba(255,111,176,.07));
+
+    .doll.one{background:linear-gradient(180deg,rgba(255,111,177,.22),rgba(255,111,177,.07))}
+    .doll.two{background:linear-gradient(180deg,rgba(255,217,106,.22),rgba(255,217,106,.07))}
+    .doll.three{background:linear-gradient(180deg,rgba(127,212,255,.22),rgba(127,212,255,.07))}
+
+    .summit.one{background:linear-gradient(180deg,rgba(126,240,197,.22),rgba(126,240,197,.07))}
+    .summit.two{background:linear-gradient(180deg,rgba(197,141,255,.22),rgba(197,141,255,.07))}
+    .summit.three{background:linear-gradient(180deg,rgba(255,111,177,.20),rgba(255,111,177,.06))}
+
+    .doll strong,.summit strong{
+      font-size:.86rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#fff9e8;
     }
-    .doll.two{
-      background:linear-gradient(180deg,rgba(255,215,106,.22),rgba(255,215,106,.07));
+
+    .doll h4,.summit h4{
+      margin:0;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:1.45rem;
+      line-height:1.1;
     }
-    .doll.three{
-      background:linear-gradient(180deg,rgba(127,212,255,.22),rgba(127,212,255,.07));
+
+    .doll p,.summit p{
+      margin:0;
+      color:var(--mut);
+      line-height:1.6;
+      font-size:.95rem;
     }
-    .doll strong{
-      font
+
+    .footerbox p{
+      position:relative;
+      z-index:1;
+      margin:0;
+      color:var(--soft);
+      font-size:.78rem;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    @media (max-width:980px){
+      .dollGrid,.summitGrid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:720px){
+      .wrap{width:min(100vw - 20px,1220px)}
+      .hero,.dolls,.summits,.footerbox{padding:20px}
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="stars" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <div class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true"></div>
+          <div>
+            <h2>Prelude</h2>
+            <p>The first major bloom</p>
+          </div>
+        </div>
+
+        <div class="pills" aria-label="Prelude status">
+          <div class="pill">Prelude</div>
+          <div class="pill">Major Bloom</div>
+          <div class="pill">Nine Summits</div>
+        </div>
+      </div>
+
+      <header class="hero" aria-label="Prelude hero">
+        <p class="eyebrow">Prelude / The Nine Summits of Love</p>
+        <h1>THE NINE SUMMITS OF LOVE</h1>
+        <p class="tag">Not a flat introduction. A living inward bloom. A first ceremonial opening into a nested system of love.</p>
+        <p class="copy">
+          Prelude now carries the first real inward expansion. The page should feel like chambers opening within chambers, each one warmer, brighter, and more intimate than the last. This is where the outer threshold becomes an explicit living structure.
+        </p>
+
+        <div class="actions">
+          <a class="btn primary" href="/home/">Continue to Home</a>
+          <a class="btn" href="/door/">Return to Door</a>
+          <a class="btn" href="/products/">Products</a>
+        </div>
+      </header>
+
+      <section class="dolls" aria-label="Visible Russian dolls">
+        <h3>Visible Russian Dolls</h3>
+        <div class="dollGrid">
+          <article class="doll one">
+            <strong>Outer Doll</strong>
+            <h4>Invitation</h4>
+            <p>The first layer welcomes the reader into love as a living path rather than a concept.</p>
+          </article>
+          <article class="doll two">
+            <strong>Second Doll</strong>
+            <h4>Recognition</h4>
+            <p>The next layer clarifies that love is structured, ascending, and capable of deeper chambers.</p>
+          </article>
+          <article class="doll three">
+            <strong>Third Doll</strong>
+            <h4>Movement</h4>
+            <p>The inward read becomes directional: each summit can open, deepen, and stabilize the journey.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="summits" aria-label="First summit chamber">
+        <h3>First Summit Chambers</h3>
+        <div class="summitGrid">
+          <article class="summit one">
+            <strong>Summit One</strong>
+            <h4>Gratitude</h4>
+            <p>The opening of love begins with recognition, humility, and a restored relationship to what has already been given.</p>
+          </article>
+          <article class="summit two">
+            <strong>Summit Two</strong>
+            <h4>Generosity</h4>
+            <p>The next chamber turns inward abundance outward and begins to radiate motion into the world beyond the self.</p>
+          </article>
+          <article class="summit three">
+            <strong>Summit Three</strong>
+            <h4>Dependability</h4>
+            <p>The structure of love stabilizes when what is offered can be trusted, returned to, and built upon.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="footerbox" aria-label="Prelude footer">
+        <p>Prelude remains luminous, nested, ceremonial, and explicitly tied to the Nine Summits of Love.</p>
+      </section>
+    </div>
+  </div>
+</body>
+</html>

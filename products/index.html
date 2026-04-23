@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Products | Diamond Gate Bridge</title>
+  <title>Gauges | Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Flagship products chamber aligned to the bright Russian-doll threshold system."
+    content="Bright diagnostic chamber for gauges, signals, receipts, and system clarity."
   />
   <style>
     :root{
@@ -33,9 +33,6 @@
       --panelStrong:rgba(10,12,28,.88);
 
       --shadow:0 28px 90px rgba(0,0,0,.46);
-      --radius:36px;
-      --radiusLg:28px;
-      --radiusMd:22px;
       --max:1260px;
     }
 
@@ -114,7 +111,7 @@
       gap:18px;
     }
 
-    .topbar,.hero,.flagships,.paths,.brandStrip{
+    .topbar,.hero,.statusBand,.receipts,.metrics,.history,.footerbox{
       border:1px solid var(--line);
       background:
         linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02)),
@@ -124,7 +121,7 @@
       -webkit-backdrop-filter:blur(16px);
       position:relative;
       overflow:hidden;
-      border-radius:var(--radius);
+      border-radius:36px;
     }
 
     .topbar{
@@ -139,9 +136,11 @@
 
     .topbar::before,
     .hero::before,
-    .flagships::before,
-    .paths::before,
-    .brandStrip::before{
+    .statusBand::before,
+    .receipts::before,
+    .metrics::before,
+    .history::before,
+    .footerbox::before{
       content:"";
       position:absolute;
       inset:0;
@@ -216,7 +215,7 @@
       color:#fff1a7;
     }
 
-    .hero,.flagships,.paths,.brandStrip{
+    .hero,.statusBand,.receipts,.metrics,.history,.footerbox{
       padding:24px 22px;
     }
 
@@ -231,7 +230,7 @@
       text-transform:uppercase;
     }
 
-    h1,h3,h4,.productTitle,.pathTitle{
+    h1,h3,h4{
       font-family:Georgia,"Times New Roman",serif;
     }
 
@@ -239,7 +238,7 @@
       position:relative;
       z-index:1;
       margin:0;
-      font-size:clamp(3.1rem,7vw,6rem);
+      font-size:clamp(3rem,7vw,5.8rem);
       line-height:.9;
       letter-spacing:.04em;
     }
@@ -308,294 +307,107 @@
       color:var(--mut);
       line-height:1.65;
       font-size:.98rem;
-      max-width:900px;
+      max-width:920px;
     }
 
-    .flagshipGrid{
+    .statusGrid,.receiptGrid,.metricGrid,.historyGrid{
       position:relative;
       z-index:1;
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
-    }
-
-    .productCard{
-      border-radius:30px;
-      padding:22px;
-      border:1px solid rgba(255,255,255,.12);
-      min-height:520px;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
-    }
-
-    .productCard.archcoin{
-      background:linear-gradient(180deg,rgba(255,216,78,.24),rgba(255,216,78,.07));
-    }
-
-    .productCard.aai{
-      background:linear-gradient(180deg,rgba(102,215,255,.24),rgba(102,215,255,.07));
-    }
-
-    .productLabel{
-      margin:0 0 10px;
-      font-size:.78rem;
-      font-weight:900;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:#fff2cb;
-    }
-
-    .productTitle{
-      margin:0 0 10px;
-      font-size:clamp(2rem,4vw,3.2rem);
-      line-height:.94;
-    }
-
-    .productCategory{
-      margin:0 0 14px;
-      color:var(--mut);
-      font-size:1rem;
-      font-weight:700;
-      letter-spacing:.03em;
-    }
-
-    .productCopy{
-      margin:0;
-      color:var(--mut);
-      font-size:1rem;
-      line-height:1.66;
-      max-width:560px;
-    }
-
-    .productVisual{
-      min-height:180px;
-      display:grid;
-      place-items:center;
-      margin:22px 0 18px;
-    }
-
-    .coinHero{
-      position:relative;
-      width:180px;
-      height:180px;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 30% 28%, rgba(255,250,214,.96), transparent 18%),
-        linear-gradient(145deg,#ffe88f,#d7a431 58%,#8e6112);
-      border:1px solid rgba(255,232,170,.44);
-      box-shadow:0 24px 54px rgba(0,0,0,.36), inset 0 0 34px rgba(255,255,255,.16);
-      display:grid;
-      place-items:center;
-    }
-
-    .coinHero::before{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:999px;
-      border:1px solid rgba(255,247,220,.34);
-    }
-
-    .coinHero span{
-      position:relative;
-      z-index:1;
-      color:#221603;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:1.4rem;
-      font-weight:700;
-      line-height:.95;
-      text-align:center;
-      letter-spacing:.05em;
-    }
-
-    .aaiMark{
-      position:relative;
-      width:154px;
-      height:154px;
-      border-radius:30px;
-      transform:rotate(45deg);
-      background:linear-gradient(180deg,rgba(18,56,72,.96),rgba(10,28,36,.90));
-      border:1px solid rgba(88,240,190,.34);
-      box-shadow:0 22px 48px rgba(0,0,0,.34), inset 0 0 30px rgba(255,255,255,.05);
-      display:grid;
-      place-items:center;
-    }
-
-    .aaiMark::before{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:22px;
-      border:1px solid rgba(88,240,190,.22);
-    }
-
-    .aaiMark span{
-      position:relative;
-      z-index:1;
-      transform:rotate(-45deg);
-      color:var(--mint);
-      font-size:1.4rem;
-      font-weight:900;
-      letter-spacing:.16em;
-    }
-
-    .capabilities{
-      display:grid;
-      gap:10px;
-      margin:0 0 18px;
-    }
-
-    .capability{
-      display:grid;
-      grid-template-columns:12px minmax(0,1fr);
-      gap:12px;
-      align-items:start;
-      padding:12px 14px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
-      color:var(--ink);
-      font-size:.95rem;
-      line-height:1.55;
-    }
-
-    .capabilityDot{
-      width:10px;
-      height:10px;
-      margin-top:6px;
-      border-radius:999px;
-      box-shadow:0 0 0 4px rgba(255,255,255,.05);
-    }
-
-    .ctaRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .ctaMeta{
-      color:var(--soft);
-      font-size:.86rem;
-      line-height:1.5;
-    }
-
-    .pathGrid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:14px;
     }
 
-    .pathCard{
-      border-radius:26px;
-      padding:18px;
+    .statusGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .receiptGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .metricGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .historyGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+    .card{
+      border-radius:28px;
+      padding:20px;
       border:1px solid rgba(255,255,255,.12);
-      min-height:250px;
+      min-height:180px;
       display:grid;
       align-content:start;
       gap:12px;
       box-shadow:inset 0 0 0 1px rgba(255,255,255,.03);
-      transition:transform .15s ease,border-color .15s ease;
+      background:linear-gradient(180deg,rgba(255,255,255,.10),rgba(255,255,255,.03));
     }
 
-    .pathCard:hover{
-      transform:translateY(-2px);
-      border-color:rgba(255,216,78,.24);
-    }
+    .card.runtime{background:linear-gradient(180deg,rgba(102,215,255,.24),rgba(102,215,255,.08))}
+    .card.render{background:linear-gradient(180deg,rgba(255,95,168,.24),rgba(255,95,168,.08))}
+    .card.instruments{background:linear-gradient(180deg,rgba(88,240,190,.24),rgba(88,240,190,.08))}
+    .card.classified{background:linear-gradient(180deg,rgba(183,120,255,.24),rgba(183,120,255,.08))}
 
-    .pathCard.archcoin{background:linear-gradient(180deg,rgba(255,216,78,.24),rgba(255,216,78,.08))}
-    .pathCard.aai{background:linear-gradient(180deg,rgba(88,240,190,.22),rgba(88,240,190,.08))}
-    .pathCard.nutrition{background:linear-gradient(180deg,rgba(102,215,255,.22),rgba(102,215,255,.08))}
-    .pathCard.flags{background:linear-gradient(180deg,rgba(255,95,168,.22),rgba(255,95,168,.08))}
-    .pathCard.education{background:linear-gradient(180deg,rgba(183,120,255,.22),rgba(183,120,255,.08))}
+    .card.receiptA{background:linear-gradient(180deg,rgba(255,216,78,.24),rgba(255,216,78,.08))}
+    .card.receiptB{background:linear-gradient(180deg,rgba(102,215,255,.24),rgba(102,215,255,.08))}
+    .card.receiptC{background:linear-gradient(180deg,rgba(255,143,107,.24),rgba(255,143,107,.08))}
 
-    .pathEyebrow{
-      font-size:.72rem;
-      font-weight:900;
+    .card.metricA{background:linear-gradient(180deg,rgba(88,240,190,.22),rgba(88,240,190,.08))}
+    .card.metricB{background:linear-gradient(180deg,rgba(183,120,255,.22),rgba(183,120,255,.08))}
+    .card.metricC{background:linear-gradient(180deg,rgba(255,95,168,.22),rgba(255,95,168,.08))}
+    .card.metricD{background:linear-gradient(180deg,rgba(102,215,255,.22),rgba(102,215,255,.08))}
+
+    .card.historyA{background:linear-gradient(180deg,rgba(255,216,78,.22),rgba(255,216,78,.08))}
+    .card.historyB{background:linear-gradient(180deg,rgba(102,215,255,.22),rgba(102,215,255,.08))}
+    .card.historyC{background:linear-gradient(180deg,rgba(183,120,255,.22),rgba(183,120,255,.08))}
+
+    .card strong{
+      font-size:.86rem;
       letter-spacing:.12em;
       text-transform:uppercase;
-      color:#fff2cb;
+      color:#fff9e8;
     }
 
-    .pathTitle{
+    .card h4{
       margin:0;
-      font-size:1.08rem;
-      line-height:1.18;
+      font-size:1.4rem;
+      line-height:1.1;
     }
 
-    .pathCopy{
+    .card p{
       margin:0;
       color:var(--mut);
-      font-size:.92rem;
-      line-height:1.6;
+      line-height:1.62;
+      font-size:.95rem;
     }
 
-    .pathRow{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:auto;
-    }
-
-    .pathPill{
-      display:inline-flex;
-      align-items:center;
-      padding:9px 12px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      background:rgba(255,255,255,.06);
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      white-space:nowrap;
-      color:var(--ink);
-    }
-
-    .pathButton{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
+    .value{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      font-size:.74rem;
+      min-height:42px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.08);
+      font-size:.82rem;
       font-weight:900;
       letter-spacing:.12em;
       text-transform:uppercase;
-      background:linear-gradient(135deg,rgba(255,255,255,.12),rgba(255,255,255,.03));
+      width:max-content;
+      color:#fff1a7;
     }
 
-    .brandStrip p{
+    .footerbox p{
       position:relative;
       z-index:1;
       margin:0;
       color:var(--soft);
-      font-size:.8rem;
+      font-size:.78rem;
       letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    @media (max-width:1160px){
-      .pathGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media (max-width:980px){
-      .flagshipGrid{grid-template-columns:1fr}
+    @media (max-width:1080px){
+      .statusGrid,.metricGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .receiptGrid,.historyGrid{grid-template-columns:1fr}
     }
 
     @media (max-width:720px){
       .wrap{width:min(100vw - 20px,var(--max))}
-      .hero,.flagships,.paths,.brandStrip{padding:20px}
-      .pathGrid{grid-template-columns:1fr}
+      .hero,.statusBand,.receipts,.metrics,.history,.footerbox{padding:20px}
+      .statusGrid,.metricGrid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -609,174 +421,162 @@
           <div class="mark" aria-hidden="true"></div>
           <div>
             <h2>Diamond Gate Bridge</h2>
-            <p>Products chamber aligned to the bright upstream system</p>
+            <p>Gauges chamber aligned to the bright nested premise</p>
           </div>
         </div>
 
-        <div class="pills" aria-label="Products status">
-          <div class="pill strong">Products</div>
-          <div class="pill">Flagship Chamber</div>
-          <div class="pill">Nested + Bright</div>
+        <div class="pills" aria-label="Gauges status">
+          <div class="pill strong">Gauges</div>
+          <div class="pill">Signals</div>
+          <div class="pill">Receipts</div>
         </div>
       </div>
 
-      <header class="hero" aria-label="Products hero">
-        <p class="eyebrow">Products</p>
-        <h1>Five Product Paths. Front and Center.</h1>
-        <p class="heroTag">The chamber now matches the bright threshold system. Strong color. Visible nesting. Clear flagship hierarchy.</p>
+      <header class="hero" aria-label="Gauges hero">
+        <p class="eyebrow">Gauges</p>
+        <h1>Signals Before Noise.</h1>
+        <p class="heroTag">The gauges page now lives inside the same bright Russian-doll house instead of reading like a cold utility slab.</p>
         <p class="heroCopy">
-          ARCHCOIN and AAI lead the chamber. Beneath them, three additional paths stay visible, brief, and ready to open. The products page should feel like a vivid Russian-doll chamber inside the same house, not a detached muted surface.
+          Geometry remains the stable host. Runtime, render, instruments, receipts, and metrics become the visible signal layers. The purpose is clarity, not clutter. This page should feel like an interior chamber for measurement rather than a flat diagnostic dump.
         </p>
 
         <div class="heroActions">
-          <a class="btn primary" href="/products/archcoin/">Open ARCHCOIN</a>
-          <a class="btn" href="/products/aai/">Open AAI</a>
-          <a class="btn" href="/home/">Back to Home</a>
+          <a class="btn primary" href="/home/">Back to Home</a>
+          <a class="btn" href="/laws/">Open Laws</a>
+          <a class="btn" href="/products/">Open Products</a>
         </div>
       </header>
 
-      <section class="flagships" aria-label="Flagship products">
-        <p class="eyebrow">Flagship Products</p>
-        <h3 class="sectionTitle">The first two truths in the chamber.</h3>
+      <section class="statusBand" aria-label="System state">
+        <p class="eyebrow">Primary State</p>
+        <h3 class="sectionTitle">Four visible gauge chambers.</h3>
         <p class="sectionCopy">
-          ARCHCOIN carries the premium financial-intelligence asset read. AAI carries the refined artificial agent intelligence read. Both should feel like bright interior chambers, not flat cards.
+          The first read should show the system layers clearly without burying the user in raw internals.
         </p>
 
-        <div class="flagshipGrid">
-          <article class="productCard archcoin" data-product-key="archcoin">
-            <div>
-              <p class="productLabel">Flagship asset</p>
-              <h4 class="productTitle">ARCHCOIN</h4>
-              <p class="productCategory">Premium financial-intelligence asset</p>
-              <p class="productCopy">
-                A flagship value product built to hold identity, scarcity, and ownership with a sharper public presence.
-              </p>
-            </div>
-
-            <div class="productVisual" aria-hidden="true">
-              <div class="coinHero"><span>ARCH<br>COIN</span></div>
-            </div>
-
-            <div class="capabilities">
-              <div class="capability">
-                <span class="capabilityDot" style="background:#ffd84e"></span>
-                <div>Premium value surface</div>
-              </div>
-              <div class="capability">
-                <span class="capabilityDot" style="background:#ff8f6b"></span>
-                <div>Private ownership signal</div>
-              </div>
-              <div class="capability">
-                <span class="capabilityDot" style="background:#ff5fa8"></span>
-                <div>Brand-defining asset layer</div>
-              </div>
-            </div>
-
-            <div class="ctaRow">
-              <div class="ctaMeta">Signature asset · Private capital orientation</div>
-              <a class="btn primary" href="/products/archcoin/">Explore ARCHCOIN</a>
-            </div>
+        <div class="statusGrid">
+          <article class="card runtime">
+            <strong>Runtime</strong>
+            <h4>PENDING</h4>
+            <p>The live runtime layer remains visible as its own signal chamber.</p>
+            <div class="value">State</div>
           </article>
 
-          <article class="productCard aai" data-product-key="aai">
-            <div>
-              <p class="productLabel">Flagship intelligence</p>
-              <h4 class="productTitle">AAI</h4>
-              <p class="productCategory">Artificial Agent Intelligence</p>
-              <p class="productCopy">
-                A flagship intelligence product shaped for elegant execution, usable agency, and refined operational presence.
-              </p>
-            </div>
+          <article class="card render">
+            <strong>Render</strong>
+            <h4>PENDING</h4>
+            <p>The visible expression layer stays distinct from runtime and instruments.</p>
+            <div class="value">State</div>
+          </article>
 
-            <div class="productVisual" aria-hidden="true">
-              <div class="aaiMark"><span>AAI</span></div>
-            </div>
+          <article class="card instruments">
+            <strong>Instruments</strong>
+            <h4>PENDING</h4>
+            <p>The diagnostic and instrument layer remains explicit and separately readable.</p>
+            <div class="value">State</div>
+          </article>
 
-            <div class="capabilities">
-              <div class="capability">
-                <span class="capabilityDot" style="background:#58f0be"></span>
-                <div>Agent intelligence layer</div>
-              </div>
-              <div class="capability">
-                <span class="capabilityDot" style="background:#66d7ff"></span>
-                <div>Precision-built orchestration</div>
-              </div>
-              <div class="capability">
-                <span class="capabilityDot" style="background:#b778ff"></span>
-                <div>Elegant operational behavior</div>
-              </div>
-            </div>
-
-            <div class="ctaRow">
-              <div class="ctaMeta">Flagship intelligence · Product-first expression</div>
-              <a class="btn" href="/products/aai/">Explore AAI</a>
-            </div>
+          <article class="card classified">
+            <strong>Classified</strong>
+            <h4>—</h4>
+            <p>Classification and phase reads can expand later without flattening the current chamber.</p>
+            <div class="value">Pending</div>
           </article>
         </div>
       </section>
 
-      <section class="paths" aria-label="Five product paths">
-        <p class="eyebrow">Visible Russian Dolls</p>
-        <h3 class="sectionTitle">Five paths, each with its own chamber color.</h3>
+      <section class="receipts" aria-label="Receipts">
+        <p class="eyebrow">Receipts</p>
+        <h3 class="sectionTitle">Authority surfaces stay separated.</h3>
         <p class="sectionCopy">
-          The products surface should now visually inherit the bright nested system from Root → Prelude → Home. Each path gets a distinct interior read without breaking chamber continuity.
+          Runtime, render, and diagnostic authority should each read as their own receipt path rather than collapsing into one blob.
         </p>
 
-        <div class="pathGrid">
-          <article class="pathCard archcoin">
-            <div class="pathEyebrow">Flagship path</div>
-            <h4 class="pathTitle">ARCHCOIN</h4>
-            <p class="pathCopy">Premium financial-intelligence asset with identity, scarcity, and ownership at the center.</p>
-            <div class="pathRow">
-              <div class="pathPill">Front and center</div>
-              <a class="pathButton" href="/products/archcoin/">Open Path</a>
-            </div>
+        <div class="receiptGrid">
+          <article class="card receiptA">
+            <strong>Runtime Receipt</strong>
+            <h4>Awaited</h4>
+            <p>The runtime receipt remains its own chamber and should not be confused with render proof.</p>
           </article>
 
-          <article class="pathCard aai">
-            <div class="pathEyebrow">Flagship path</div>
-            <h4 class="pathTitle">AAI</h4>
-            <p class="pathCopy">Artificial agent intelligence expressed as a polished product line for elegant execution and agency.</p>
-            <div class="pathRow">
-              <div class="pathPill">Front and center</div>
-              <a class="pathButton" href="/products/aai/">Open Path</a>
-            </div>
+          <article class="card receiptB">
+            <strong>Render Receipt</strong>
+            <h4>Awaited</h4>
+            <p>The render receipt holds visible expression truth and stays distinct from runtime ownership.</p>
           </article>
 
-          <article class="pathCard nutrition">
-            <div class="pathEyebrow">Product path</div>
-            <h4 class="pathTitle">Baseline Nutrition Systems</h4>
-            <p class="pathCopy">Nutritional foundation products organized around daily stability, clarity, and baseline support.</p>
-            <div class="pathRow">
-              <div class="pathPill">Foundation path</div>
-              <a class="pathButton" href="/products/nutrition/">Open Path</a>
-            </div>
-          </article>
-
-          <article class="pathCard flags">
-            <div class="pathEyebrow">Product path</div>
-            <h4 class="pathTitle">Five Flags / What’s My Scene</h4>
-            <p class="pathCopy">Scene-identification products built to help people understand where they are and what opens next.</p>
-            <div class="pathRow">
-              <div class="pathPill">Orientation path</div>
-              <a class="pathButton" href="/products/five-flags/">Open Path</a>
-            </div>
-          </article>
-
-          <article class="pathCard education">
-            <div class="pathEyebrow">Product path</div>
-            <h4 class="pathTitle">ESL Traversal Learning</h4>
-            <p class="pathCopy">Traversal-based English learning products designed around movement, comprehension, and structured progression.</p>
-            <div class="pathRow">
-              <div class="pathPill">Traversal path</div>
-              <a class="pathButton" href="/products/education/">Open Path</a>
-            </div>
+          <article class="card receiptC">
+            <strong>Instrument Receipt</strong>
+            <h4>Awaited</h4>
+            <p>Diagnostic and gauge-layer confirmation remains explicit and separately readable.</p>
           </article>
         </div>
       </section>
 
-      <section class="brandStrip" aria-label="Products footer">
-        <p>The chamber now matches the bright threshold system: vivid, nested, ceremonial, and product-first.</p>
+      <section class="metrics" aria-label="Metrics">
+        <p class="eyebrow">Metrics</p>
+        <h3 class="sectionTitle">Lightweight first-pass metrics.</h3>
+        <p class="sectionCopy">
+          This layer stays intentionally simple: enough to orient, not enough to overload.
+        </p>
+
+        <div class="metricGrid">
+          <article class="card metricA">
+            <strong>FPS</strong>
+            <h4>—</h4>
+            <p>Frame stability remains a visible chamber without becoming the whole page.</p>
+          </article>
+
+          <article class="card metricB">
+            <strong>Freshness</strong>
+            <h4>—</h4>
+            <p>Signal freshness can remain visible without drowning the user in instrumentation jargon.</p>
+          </article>
+
+          <article class="card metricC">
+            <strong>Δt</strong>
+            <h4>—</h4>
+            <p>Time-step awareness remains available for deeper reads later.</p>
+          </article>
+
+          <article class="card metricD">
+            <strong>Age</strong>
+            <h4>—</h4>
+            <p>Age and timing remain surfaced as simple truths rather than hidden internals.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="history" aria-label="History and coherence">
+        <p class="eyebrow">History + Clarity</p>
+        <h3 class="sectionTitle">Coherence comes last, not first.</h3>
+        <p class="sectionCopy">
+          The page should end with history and coherence surfaces so the user leaves with a stable read rather than raw fragments.
+        </p>
+
+        <div class="historyGrid">
+          <article class="card historyA">
+            <strong>Velocity History</strong>
+            <h4>Pending</h4>
+            <p>Motion history remains available as an extension surface when the page deepens later.</p>
+          </article>
+
+          <article class="card historyB">
+            <strong>Coherence</strong>
+            <h4>Pending</h4>
+            <p>Clarity and stability should read as integrated signal surfaces, not afterthoughts.</p>
+          </article>
+
+          <article class="card historyC">
+            <strong>Burden</strong>
+            <h4>Pending</h4>
+            <p>Freshness, burden, and signal weight can expand later without flattening the chamber now.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="footerbox" aria-label="Gauges footer">
+        <p>The gauges chamber now matches the same bright nested premise: vivid, structured, and readable without collapsing into bland diagnostics.</p>
       </section>
     </div>
   </div>

@@ -641,6 +641,7 @@
     ];
 
     for (const [tag, className] of fragments) {
+      if (core.querySelector("." + className.split(" ")[0])) continue;
       const node = document.createElement(tag);
       node.className = className;
       node.setAttribute("aria-hidden", "true");

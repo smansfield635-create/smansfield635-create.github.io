@@ -6,37 +6,41 @@
   <title>Laws · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Laws Chamber for Diamond Gate Bridge: the governing rule surface for interpretation, structure, and execution standards."
+    content="Diamond Gate Bridge Generation 2 Lawscape: Russian-doll authority chamber using diamond geometry, four master psalms, 16-point canopy, 32-state construct, and 256-state lattice."
   />
   <style>
     :root{
-      --bg:#040814;
-      --panel:rgba(8,14,28,.72);
-      --panel-strong:rgba(10,18,34,.86);
+      --bg:#020610;
       --line:rgba(164,188,255,.18);
-      --line-strong:rgba(210,223,255,.34);
+      --line-strong:rgba(210,223,255,.36);
       --text:#eef4ff;
       --muted:#9aabd0;
       --gold:#efd29a;
-      --blue:#91c7ff;
-      --mint:#99e5b6;
-      --rose:#f0bacb;
-      --violet:#caa9ff;
-      --shadow:0 24px 80px rgba(0,0,0,.46);
-      --max:1180px;
+      --blue:#6db8ff;
+      --green:#97e6b4;
+      --warn:#ffd58f;
+      --red:#ff9a9a;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1240px;
     }
 
     *{box-sizing:border-box}
-    html,body{min-height:100%}
+
+    html{
+      min-height:100%;
+      scroll-behavior:smooth;
+    }
+
     body{
+      min-height:100%;
       margin:0;
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
-        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
-        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
-        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+        radial-gradient(circle at 50% 7%, rgba(112,151,255,.22), transparent 22%),
+        radial-gradient(circle at 18% 28%, rgba(78,128,220,.12), transparent 24%),
+        radial-gradient(circle at 82% 34%, rgba(78,128,220,.10), transparent 24%),
+        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
       overflow-x:hidden;
     }
 
@@ -45,87 +49,132 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.18;
+      opacity:.2;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
-      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.17) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.14) 0 1px, transparent 1.6px);
+      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+      opacity:.32;
     }
 
     .page{
       width:min(var(--max), calc(100vw - 24px));
       margin:0 auto;
-      padding:18px 0 40px;
+      padding:18px 0 44px;
       position:relative;
       z-index:1;
+      overflow:hidden;
     }
 
-    .topbar,.hero,.section,.law-card{
+    .topbar,
+    .hero,
+    .lawscape-card,
+    .console,
+    .panel,
+    .readout,
+    .doll-shell,
+    .route-card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
+      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
     .topbar{
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:space-between;
       gap:16px;
       padding:14px 16px;
-      border-radius:20px;
-      background:rgba(7,13,26,.7);
+      border-radius:22px;
+      background:rgba(7,13,26,.74);
       backdrop-filter:blur(10px);
     }
 
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-mark{
-      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
-      color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
-    .brand-kicker{
-      margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
-    }
-    .brand-title{margin:0;font-size:1.05rem;font-weight:700}
-    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
 
-    .nav-link,.button,.accordion-toggle,.mode-btn{
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      flex:none;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(115,171,255,.24), transparent 42%),
+        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+      color:#f4f8ff;
+      font-weight:900;
+      letter-spacing:.08em;
+      box-shadow:0 0 22px rgba(109,184,255,.09);
+    }
+
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:800;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .nav-link,.button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
-    }
-
-    .nav-link,.mode-btn{
-      min-height:40px;
-      padding:0 14px;
+      min-height:42px;
+      padding:0 15px;
       border-radius:999px;
       border:1px solid var(--line);
       color:var(--text);
-      font-weight:700;
-      font-size:.92rem;
-      background:rgba(255,255,255,.03);
-      cursor:pointer;
+      font-weight:800;
+      background:rgba(255,255,255,.035);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
-    .nav-link:hover,.nav-link:focus-visible,
-    .button:hover,.button:focus-visible,
-    .mode-btn:hover,.mode-btn:focus-visible,
-    .accordion-toggle:hover,.accordion-toggle:focus-visible{
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
       transform:translateY(-1px);
       border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
+      background:rgba(255,255,255,.06);
       outline:none;
     }
 
     .hero{
       margin-top:16px;
       border-radius:34px;
-      padding:24px 20px 20px;
+      padding:24px 20px;
       position:relative;
       overflow:hidden;
     }
@@ -136,16 +185,16 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+        radial-gradient(circle at 50% 0%, rgba(132,164,255,.18), transparent 30%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
       mix-blend-mode:screen;
     }
 
     .hero-grid{
       display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
+      grid-template-columns:minmax(0,1fr) minmax(320px,.9fr);
       gap:20px;
-      align-items:start;
+      align-items:center;
       position:relative;
       z-index:1;
     }
@@ -157,133 +206,226 @@
       padding:8px 12px;
       border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.035);
       color:#d8e3ff;
       text-transform:uppercase;
       letter-spacing:.14em;
       font-size:.72rem;
-      margin-bottom:12px;
+      margin-bottom:14px;
     }
 
     .hero-tag::before{
       content:"";
-      width:9px;height:9px;border-radius:2px;transform:rotate(45deg);
-      background:#dce7ff;box-shadow:0 0 16px rgba(220,231,255,.52);
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.55);
     }
 
     h1{
-      margin:0 0 10px;
-      font-size:clamp(2.2rem, 4.8vw, 4rem);
-      line-height:.96;
-      letter-spacing:-.05em;
-      max-width:10ch;
+      margin:0 0 12px;
+      font-size:clamp(2.3rem, 5vw, 4.7rem);
+      line-height:.95;
+      letter-spacing:-.058em;
+      max-width:11ch;
     }
 
-    h1 .accent{color:var(--violet)}
+    h1 .accent{color:var(--gold)}
 
-    .hero p,.hero-side p,.section-note,.law-copy,.law-body,.host-line{
+    p{
       color:var(--muted);
       line-height:1.58;
     }
 
     .hero p{
       margin:0;
-      font-size:clamp(.98rem, 1.5vw, 1.1rem);
-      max-width:58ch;
+      font-size:clamp(1rem, 1.5vw, 1.12rem);
+      max-width:64ch;
     }
 
     .hero-actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:18px;
+      margin-top:20px;
     }
 
     .button{
-      min-height:44px;
-      padding:0 16px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      color:var(--text);
-      font-weight:800;
-      background:rgba(255,255,255,.03);
+      border-radius:18px;
+      min-height:46px;
+      padding:0 18px;
       white-space:nowrap;
     }
 
     .button.primary{
-      border-color:rgba(202,169,255,.30);
-      background:linear-gradient(180deg, rgba(202,169,255,.16), rgba(202,169,255,.06));
-      color:#f6efff;
+      border-color:rgba(239,210,154,.34);
+      background:
+        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
     }
 
-    .hero-side{
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:rgba(255,255,255,.03);
-      padding:18px;
+    .lawscape-card{
+      border-radius:30px;
+      padding:20px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(109,184,255,.14), transparent 30%),
+        linear-gradient(180deg, rgba(10,22,44,.94), rgba(4,10,20,.96));
+    }
+
+    .diamond-stage{
       position:relative;
+      min-height:390px;
+      border-radius:26px;
+      border:1px solid rgba(170,198,255,.20);
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(109,184,255,.15), transparent 28%),
+        linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
+      box-shadow:
+        inset 0 0 44px rgba(126,164,255,.10),
+        inset 0 -26px 70px rgba(0,0,0,.34);
+      isolation:isolate;
+    }
+
+    .diamond-stage::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:inset 0 0 28px rgba(92,184,255,.08);
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .diamond-grid{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
+      background-size:32px 32px;
+      opacity:.46;
       z-index:1;
     }
 
-    .hero-side h2,.law-title{
-      margin:0 0 10px;
-      font-size:1.08rem;
-      line-height:1.1;
-      letter-spacing:-.02em;
+    .diamond-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:236px;
+      height:236px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(239,210,154,.30);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 28%),
+        linear-gradient(135deg, rgba(109,184,255,.10), rgba(239,210,154,.08));
+      box-shadow:
+        0 0 34px rgba(109,184,255,.18),
+        inset 0 0 34px rgba(239,210,154,.08);
+      z-index:4;
     }
 
-    .hero-stats{
+    .diamond-core::before,
+    .diamond-core::after{
+      content:"";
+      position:absolute;
+      inset:28px;
+      border:1px solid rgba(109,184,255,.28);
+      box-shadow:0 0 20px rgba(109,184,255,.12);
+    }
+
+    .diamond-core::after{
+      inset:64px;
+      border-color:rgba(239,210,154,.30);
+    }
+
+    .diamond-node{
+      position:absolute;
+      width:56px;
+      height:56px;
       display:grid;
-      gap:10px;
-      margin-top:16px;
+      place-items:center;
+      border-radius:18px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.16), transparent 50%),
+        rgba(6,14,28,.78);
+      box-shadow:0 0 24px rgba(109,184,255,.16);
+      z-index:5;
     }
 
-    .stat{
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.025);
+    .diamond-node span{
+      transform:rotate(-45deg);
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.08em;
+      font-size:.86rem;
     }
 
-    .stat-label{
-      display:block;
-      margin-bottom:6px;
-      color:#90a3ce;
-      font-size:.72rem;
-      letter-spacing:.12em;
+    .diamond-node.north{left:50%;top:17%}
+    .diamond-node.east{left:78%;top:50%}
+    .diamond-node.south{left:50%;top:83%}
+    .diamond-node.west{left:22%;top:50%}
+
+    .canopy-ring{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:304px;
+      height:304px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:1px solid rgba(109,184,255,.22);
+      box-shadow:
+        0 0 26px rgba(109,184,255,.12),
+        inset 0 0 24px rgba(109,184,255,.08);
+      z-index:3;
+    }
+
+    .canopy-ring::before,
+    .canopy-ring::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      border:1px solid rgba(239,210,154,.20);
+    }
+
+    .canopy-ring::before{inset:38px}
+    .canopy-ring::after{inset:76px;border-color:rgba(109,184,255,.22)}
+
+    .lattice-caption{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      width:calc(100% - 42px);
+      max-width:600px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(140,168,240,.24);
+      background:rgba(6,14,28,.84);
+      text-align:center;
       text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      color:#dbe5ff;
+      z-index:8;
+      line-height:1.35;
     }
 
-    .stat-value{
-      color:#f4f7ff;
-      font-size:.98rem;
-      font-weight:700;
-    }
+    .lattice-caption strong{color:#fff}
 
-    .host-line{
-      margin-top:16px;
-      padding-top:14px;
-      border-top:1px solid rgba(255,255,255,.06);
-      font-size:.92rem;
-    }
-
-    .host-line strong{
-      color:var(--text);
-      font-weight:800;
-    }
-
-    .section{
+    .console,.panel{
       margin-top:18px;
       border-radius:30px;
-      padding:20px;
-    }
-
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:end;
-      gap:16px;
-      margin-bottom:16px;
+      padding:22px 20px;
+      overflow:hidden;
     }
 
     .section-kicker{
@@ -291,184 +433,283 @@
       font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
-      margin-bottom:6px;
+      margin-bottom:8px;
     }
 
-    .section h2{
-      margin:0;
-      font-size:1.45rem;
-      letter-spacing:-.03em;
-      line-height:1.06;
+    .console h2,.panel h2{
+      margin:0 0 10px;
+      font-size:clamp(1.7rem, 3vw, 2.7rem);
+      line-height:1;
+      letter-spacing:-.04em;
     }
 
-    .section-note{
-      font-size:.92rem;
-      max-width:42ch;
-      text-align:right;
-    }
-
-    .toolbar{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:14px;
-    }
-
-    .lang-group,.mode-group{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .mode-btn.is-active{
-      border-color:var(--line-strong);
-      background:linear-gradient(180deg, rgba(26,42,78,.96), rgba(12,24,46,.94));
-      box-shadow:0 10px 28px rgba(0,0,0,.28);
-    }
-
-    .laws{
+    .readout-grid{
       display:grid;
-      gap:14px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
     }
 
-    .law-card{
-      border-radius:24px;
+    .readout{
+      border-radius:22px;
+      padding:16px;
+      min-height:146px;
+      position:relative;
       overflow:hidden;
     }
 
-    .accordion-toggle{
-      width:100%;
-      min-height:72px;
-      justify-content:space-between;
-      gap:14px;
-      padding:18px;
-      border:0;
-      border-bottom:1px solid transparent;
-      background:transparent;
-      color:inherit;
-      cursor:pointer;
-      text-align:left;
+    .readout::after{
+      content:"";
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(109,184,255,.20), transparent 66%);
+      pointer-events:none;
     }
 
-    .law-left{
+    .readout small,
+    .doll-head small,
+    .route-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
+
+    .readout strong{
+      display:block;
+      color:#f4f7ff;
+      font-size:1.35rem;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      margin-bottom:10px;
+    }
+
+    .readout p,.route-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .bar{
+      height:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      overflow:hidden;
+      margin-top:14px;
+    }
+
+    .bar span{
+      display:block;
+      height:100%;
+      width:var(--value);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(109,184,255,.72), rgba(239,210,154,.72));
+      box-shadow:0 0 16px rgba(109,184,255,.22);
+    }
+
+    .russian-doll{
+      margin-top:18px;
       display:grid;
-      gap:4px;
+      gap:14px;
+    }
+
+    .doll-shell{
+      border-radius:26px;
+      overflow:hidden;
+    }
+
+    .doll-toggle{
+      width:100%;
+      border:0;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(109,184,255,.08), transparent 42%),
+        rgba(255,255,255,.02);
+      padding:18px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .doll-head{
       min-width:0;
     }
 
-    .law-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-
-    .law-title{
+    .doll-head h3{
       margin:0;
-      font-size:1.14rem;
-      color:var(--text);
+      font-size:1.15rem;
+      letter-spacing:-.02em;
+      line-height:1.15;
     }
 
-    .law-copy{
-      font-size:.94rem;
-    }
-
-    .law-index{
+    .doll-meta{
       flex:none;
-      min-width:44px;
-      height:44px;
-      padding:0 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      display:inline-flex;
+      display:flex;
       align-items:center;
-      justify-content:center;
-      color:#f6f9ff;
-      font-weight:800;
-      letter-spacing:.08em;
-      background:rgba(255,255,255,.03);
+      gap:10px;
+      color:#dbe5ff;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.7rem;
+      font-weight:900;
     }
 
-    .law-panel{
+    .doll-diamond{
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      transform:rotate(45deg);
+      border:1px solid rgba(239,210,154,.34);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),
+        rgba(6,14,28,.78);
+      box-shadow:0 0 18px rgba(109,184,255,.12);
+    }
+
+    .doll-panel{
       display:none;
       padding:0 18px 18px;
-      border-top:1px solid rgba(255,255,255,.04);
+      border-top:1px solid rgba(164,188,255,.12);
+      background:rgba(255,255,255,.018);
     }
 
-    .law-card.is-open .law-panel{
+    .doll-shell.is-open .doll-panel{
       display:block;
     }
 
-    .law-card.is-open .accordion-toggle{
-      border-bottom-color:rgba(255,255,255,.06);
-      background:rgba(255,255,255,.02);
+    .doll-copy{
+      margin:16px 0 0;
+      max-width:78ch;
     }
 
-    .law-body{
-      font-size:1rem;
-      line-height:1.7;
-      margin-top:14px;
-      white-space:pre-line;
-    }
-
-    .routes{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-    }
-
-    .route{
+    .inner-dolls{
       display:grid;
       gap:10px;
-      padding:18px;
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:inherit;
-      text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+      margin-top:16px;
     }
 
-    .route:hover,.route:focus-visible{
+    .inner-doll{
+      border:1px solid rgba(164,188,255,.14);
+      border-radius:20px;
+      overflow:hidden;
+      background:rgba(255,255,255,.022);
+    }
+
+    .inner-toggle{
+      width:100%;
+      border:0;
+      color:var(--text);
+      background:transparent;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:center;
+      text-align:left;
+      padding:14px;
+      cursor:pointer;
+    }
+
+    .inner-toggle strong{
+      font-size:.98rem;
+      letter-spacing:-.01em;
+    }
+
+    .inner-toggle span{
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.68rem;
+      font-weight:900;
+    }
+
+    .inner-panel{
+      display:none;
+      padding:0 14px 14px;
+      border-top:1px solid rgba(164,188,255,.10);
+    }
+
+    .inner-doll.is-open .inner-panel{
+      display:block;
+    }
+
+    .inner-panel p{
+      margin:12px 0 0;
+      font-size:.94rem;
+    }
+
+    .law-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .law-card{
+      border:1px solid rgba(164,188,255,.14);
+      border-radius:20px;
+      padding:14px;
+      background:rgba(255,255,255,.022);
+    }
+
+    .law-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.68rem;
+    }
+
+    .law-card strong{
+      display:block;
+      color:#fff;
+      line-height:1.25;
+      margin-bottom:8px;
+    }
+
+    .law-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .route-card{
+      display:block;
+      min-height:136px;
+      border-radius:22px;
+      padding:16px;
+      color:var(--text);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .route-card:hover,.route-card:focus-visible{
       transform:translateY(-2px);
       border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 16px 36px rgba(0,0,0,.18);
+      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
       outline:none;
     }
 
-    .route[data-tone="mint"]{color:var(--mint)}
-    .route[data-tone="gold"]{color:var(--gold)}
-    .route[data-tone="blue"]{color:var(--blue)}
-    .route[data-tone="rose"]{color:var(--rose)}
-
-    .route-mark{
-      width:40px;height:40px;border-radius:14px;display:grid;place-items:center;
-      border:1px solid currentColor;background:rgba(255,255,255,.03);
-      font-weight:800;letter-spacing:.08em;
-    }
-
-    .route-title{
-      margin:0;
-      color:var(--text);
-      font-size:1.14rem;
-      font-weight:800;
-      letter-spacing:-.02em;
-    }
-
-    .route-copy{
-      color:var(--muted);
-      line-height:1.58;
-      font-size:.95rem;
-    }
-
-    .route-meta{
-      color:#dce7ff;
-      font-size:.78rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .route-card h3{
+      margin:0 0 8px;
+      font-size:1.05rem;
     }
 
     .footer{
@@ -477,7 +718,7 @@
       align-items:center;
       gap:16px;
       color:var(--muted);
-      padding:12px 4px 0;
+      padding:14px 4px 0;
       font-size:.92rem;
     }
 
@@ -497,16 +738,15 @@
       outline:none;
     }
 
-    @media (max-width: 980px){
-      .hero-grid,.routes{
-        grid-template-columns:1fr;
-      }
+    @media (max-width:980px){
+      .hero-grid{grid-template-columns:1fr}
+      .readout-grid,.law-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width: 720px){
+    @media (max-width:720px){
       .page{
         width:min(100vw - 16px, var(--max));
-        padding:14px 0 28px;
+        padding:14px 0 32px;
       }
 
       .topbar{
@@ -519,23 +759,19 @@
         justify-content:flex-start;
       }
 
-      .hero,.section{
+      .hero,.lawscape-card,.console,.panel{
         padding:18px 16px;
       }
 
-      .hero-grid{
-        gap:14px;
-      }
-
-      .hero h1{
+      h1{
         font-size:clamp(2rem, 11vw, 3.4rem);
       }
 
-      .hero-actions,.toolbar,.lang-group,.mode-group{
+      .hero-actions{
         gap:8px;
       }
 
-      .button,.mode-btn{
+      .button{
         flex:1 1 calc(50% - 8px);
       }
 
@@ -543,17 +779,85 @@
         flex-basis:100%;
       }
 
-      .section-head,.footer{
+      .diamond-stage{
+        min-height:340px;
+      }
+
+      .diamond-core{
+        width:176px;
+        height:176px;
+      }
+
+      .canopy-ring{
+        width:238px;
+        height:238px;
+      }
+
+      .diamond-node{
+        width:46px;
+        height:46px;
+        border-radius:14px;
+      }
+
+      .lattice-caption{
+        width:calc(100% - 28px);
+        border-radius:24px;
+        font-size:.58rem;
+        letter-spacing:.10em;
+      }
+
+      .readout-grid,.law-grid,.route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .doll-toggle{
+        align-items:flex-start;
+      }
+
+      .doll-meta{
+        display:grid;
+        justify-items:end;
+      }
+
+      .footer{
         display:grid;
         gap:8px;
       }
+    }
 
-      .section-note{
-        text-align:left;
+    @media (prefers-reduced-motion:no-preference){
+      .diamond-core{
+        animation:diamondPulse 5.8s ease-in-out infinite;
       }
 
-      .routes{
-        grid-template-columns:1fr;
+      .canopy-ring{
+        animation:slowSpin 42s linear infinite;
+      }
+
+      .diamond-node{
+        animation:nodePulse 6.2s ease-in-out infinite;
+      }
+
+      @keyframes diamondPulse{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.14)}
+      }
+
+      @keyframes slowSpin{
+        from{transform:translate(-50%,-50%) rotate(0deg)}
+        to{transform:translate(-50%,-50%) rotate(360deg)}
+      }
+
+      @keyframes nodePulse{
+        0%,100%{box-shadow:0 0 20px rgba(109,184,255,.12)}
+        50%{box-shadow:0 0 34px rgba(239,210,154,.18)}
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{
+        animation:none !important;
+        scroll-behavior:auto !important;
       }
     }
   </style>
@@ -564,375 +868,431 @@
       <div class="brand">
         <div class="brand-mark">DG</div>
         <div>
-          <p class="brand-kicker">Rule Surface</p>
+          <p class="brand-kicker">Generation 2 Lawscape</p>
           <p class="brand-title">Laws · Diamond Gate Bridge</p>
         </div>
       </div>
 
       <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/">Door</a>
         <a class="nav-link" href="/products/">Products</a>
         <a class="nav-link" href="/gauges/">Gauges</a>
+        <a class="nav-link" href="/about/">About</a>
       </nav>
     </header>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Laws chamber · write contract</span>
-          <h1>The governing <span class="accent">rule surface</span>.</h1>
+          <span class="hero-tag">Generation 2 · Russian-doll lawscape</span>
+          <h1>Open the <span class="accent">law chamber</span>.</h1>
           <p>
-            The Laws Chamber is the rule layer. It is where interpretation becomes structured, where standards become visible,
-            and where the public surface can read the governing logic without collapsing into noise.
+            The Lawscape now uses Russian-doll compression instead of endless scroll. The surface opens from four Master Psalms
+            into the 16-point canopy, then into the 32-state construct, then into the 256-state lattice.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#laws">Read the laws</a>
-            <a class="button" href="#routes">Next routes</a>
+            <a class="button primary" href="#lawDolls">Open law dolls</a>
+            <a class="button" href="/gauges/">Gauge authority</a>
             <a class="button" href="/">Back to door</a>
           </div>
         </div>
 
-        <aside class="hero-side">
-          <h2>Laws job</h2>
-          <p>
-            Provide the governing read of the system: not every detail, but the essential laws that stabilize interpretation,
-            execution, and route discipline.
-          </p>
+        <aside class="lawscape-card">
+          <div class="diamond-stage" aria-label="Diamond geometry lawscape instrument">
+            <div class="diamond-grid"></div>
+            <div class="canopy-ring"></div>
+            <div class="diamond-core"></div>
 
-          <div class="hero-stats">
-            <div class="stat">
-              <span class="stat-label">Purpose</span>
-              <span class="stat-value">Rule and interpretation</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Read class</span>
-              <span class="stat-value">Single-open law chamber</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Contract</span>
-              <span class="stat-value">New write contract</span>
-            </div>
-          </div>
+            <div class="diamond-node north"><span>MP</span></div>
+            <div class="diamond-node east"><span>16</span></div>
+            <div class="diamond-node south"><span>32</span></div>
+            <div class="diamond-node west"><span>256</span></div>
 
-          <div class="host-line">
-            <strong>Hosted by This Underdog featuring Shannon.</strong>
+            <div class="lattice-caption">
+              <strong>Lawscape G2</strong> · 4 master psalms → 16 canopy → 32 construct → 256 lattice
+            </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="laws">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Rule layer</div>
-          <h2>Read one law at a time</h2>
+    <section class="console">
+      <div class="section-kicker">Authority readouts</div>
+      <h2>Law chamber status</h2>
+      <p>
+        This page is not a long document. It is a nested authority instrument. Each layer opens only when needed.
+      </p>
+
+      <div class="readout-grid">
+        <div class="readout">
+          <small>Root structure</small>
+          <strong>4 Master Psalms</strong>
+          <p>Top law containers for the chamber.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
         </div>
-        <div class="section-note">
-          Single-open discipline keeps the chamber readable and prevents interpretive pileup.
+
+        <div class="readout">
+          <small>Canopy</small>
+          <strong>16 Points</strong>
+          <p>Four canopy points under each Master Psalm.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
+        </div>
+
+        <div class="readout">
+          <small>Construct</small>
+          <strong>32 States</strong>
+          <p>Two-state expansion beneath each canopy point.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
+        </div>
+
+        <div class="readout">
+          <small>Lattice</small>
+          <strong>256 States</strong>
+          <p>Eightfold refinement below the 32-state construct.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
         </div>
       </div>
-
-      <div class="toolbar" aria-label="Laws controls">
-        <div class="lang-group" role="group" aria-label="Language">
-          <button class="mode-btn is-active" type="button" data-lang="en">EN</button>
-          <button class="mode-btn" type="button" data-lang="zh">中文</button>
-          <button class="mode-btn" type="button" data-lang="es">ES</button>
-        </div>
-
-        <div class="mode-group" role="group" aria-label="Lens">
-          <button class="mode-btn is-active" type="button" data-lens="formal">Formal</button>
-          <button class="mode-btn" type="button" data-lens="informal">Informal</button>
-        </div>
-      </div>
-
-      <div class="laws" id="lawsContainer"></div>
     </section>
 
-    <section class="section" id="routes">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Next routes</div>
-          <h2>Move from law into the right chamber</h2>
-        </div>
-        <div class="section-note">
-          Law should clarify the next move, not trap the visitor in abstraction.
-        </div>
+    <section class="panel" id="lawDolls">
+      <div class="section-kicker">Russian-doll authority</div>
+      <h2>Open one law container at a time</h2>
+      <p>
+        This format prevents endless scroll. The page compresses the whole lawscape into nested containers:
+        Master Psalm → Canopy → Construct → Lattice.
+      </p>
+
+      <div class="russian-doll">
+        <article class="doll-shell is-open" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="true">
+            <div class="doll-head">
+              <small>Master Psalm 1</small>
+              <h3>Root Authority</h3>
+            </div>
+            <div class="doll-meta"><span>MP1</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Root Authority governs entry, ownership, and the first lawful surface. It decides what owns the stage before any child chamber expands.
+            </p>
+
+            <div class="inner-dolls">
+              <div class="inner-doll is-open" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="true">
+                  <strong>Canopy 1 · Stage Ownership</strong>
+                  <span>4 → 16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>The visible stage must have one owner. Duplicate stage ownership is a break class, not a design preference.</p>
+                  <div class="law-grid">
+                    <div class="law-card">
+                      <small>32-state construct</small>
+                      <strong>Owner present / owner absent</strong>
+                      <p>Every chamber first proves whether its stage owner exists.</p>
+                    </div>
+                    <div class="law-card">
+                      <small>256 lattice</small>
+                      <strong>Eight checks per state</strong>
+                      <p>Mount, bridge, runtime, cache, visual, route, mobile, and fallback.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 2 · Route Authority</strong>
+                  <span>4 → 16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Route surfaces must lead to the intended chamber without collapsing root identity into child identity.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 3 · Entry Control</strong>
+                  <span>4 → 16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>The door remains above the chambers. Chamber routes descend from it; they do not replace it.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 4 · Baseline Lock</strong>
+                  <span>4 → 16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Generation Baseline 1 remains the comparison anchor while Generation 2 supersedes it deliberately.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Master Psalm 2</small>
+              <h3>Instrument Authority</h3>
+            </div>
+            <div class="doll-meta"><span>MP2</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Instrument Authority governs gauges, readouts, diagnostics, and visible status. It requires status before ornament.
+            </p>
+
+            <div class="inner-dolls">
+              <div class="inner-doll is-open" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="true">
+                  <strong>Canopy 5 · Gauge Authority</strong>
+                  <span>16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Gauges define the master instrument language: dark glass, blue/gold trim, hierarchy, diagnostics, and route authority.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 6 · Problem Classifier</strong>
+                  <span>32</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Every visible break must be classified before rewriting: missing mount, loaded not injected, competing stage, or visual containment.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 7 · Execution Probe</strong>
+                  <span>32</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Probe first: which file owns the surface, is the mount present, is the runtime root present, and is there more than one owner?</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 8 · Readout Law</strong>
+                  <span>256</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Readouts must be clear, bounded, and chamber-specific. Decoration cannot hide state.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Master Psalm 3</small>
+              <h3>Runtime Authority</h3>
+            </div>
+            <div class="doll-meta"><span>MP3</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Runtime Authority governs mounted motion, seasonal molecules, animation ownership, and visual containment.
+            </p>
+
+            <div class="inner-dolls">
+              <div class="inner-doll is-open" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="true">
+                  <strong>Canopy 9 · Runtime Mount</strong>
+                  <span>16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>The shell provides the mount. The bridge loads the runtime. The runtime owns the animated visual object.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 10 · Seasonal Motion</strong>
+                  <span>32</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Winter/Spring and Fall/Summer form opposing figure-eights in front of the stained-glass vessel.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 11 · Floating Layer</strong>
+                  <span>32</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Motion floats in front. Glass stays behind. The vessel does not become the object.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 12 · Containment</strong>
+                  <span>256</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Runtime animation must stay inside the chamber, remain readable on mobile, and avoid horizontal overflow.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Master Psalm 4</small>
+              <h3>Generation Authority</h3>
+            </div>
+            <div class="doll-meta"><span>MP4</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Generation Authority governs baseline freezing, supersession, and expansion from G1 into G2 without accidental regression.
+            </p>
+
+            <div class="inner-dolls">
+              <div class="inner-doll is-open" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="true">
+                  <strong>Canopy 13 · G1 Lock</strong>
+                  <span>16</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Generation Baseline 1 is frozen as the comparison anchor.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 14 · G2 Expansion</strong>
+                  <span>32</span>
+                </button>
+                <div class="inner-panel">
+                  <p>Generation 2 upgrades root, instruments, laws, products, and orientation surfaces in a controlled order.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 15 · TNT Law</strong>
+                  <span>32</span>
+                </button>
+                <div class="inner-panel">
+                  <p>All page upgrades are complete file replacements. No partial patches. No invisible rewrites.</p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>Canopy 16 · Next Route</strong>
+                  <span>256</span>
+                </button>
+                <div class="inner-panel">
+                  <p>After Laws, refine Products instruments, then root route instruments, then About and Prelude orientation instruments.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
+    </section>
 
-      <div class="routes">
-        <a class="route" data-tone="mint" href="/products/">
-          <div class="route-mark">P</div>
-          <h3 class="route-title">Products</h3>
-          <div class="route-copy">
-            Move into the public chamber once the rule layer is clear enough to support action and route selection.
-          </div>
-          <div class="route-meta">Chamber · Build</div>
+    <section class="console">
+      <div class="section-kicker">Route authority</div>
+      <h2>Move to the next chamber</h2>
+      <p>
+        The Lawscape now establishes the Russian-doll format. Next expansion should propagate this compression rule to Products, Root, About, and Prelude.
+      </p>
+
+      <div class="route-grid">
+        <a class="route-card" href="/">
+          <small>Root</small>
+          <h3>Door</h3>
+          <p>Return to the Generation 2 root threshold.</p>
         </a>
 
-        <a class="route" data-tone="blue" href="/gauges/">
-          <div class="route-mark">G</div>
-          <h3 class="route-title">Gauges</h3>
-          <div class="route-copy">
-            Read the signal and measurement surface once the laws point toward state, movement, and comparison.
-          </div>
-          <div class="route-meta">Signal · Measurement</div>
+        <a class="route-card" href="/gauges/">
+          <small>Instrument</small>
+          <h3>Gauges</h3>
+          <p>Review the Gauge Authority Hub.</p>
         </a>
 
-        <a class="route" data-tone="gold" href="/nine-summits/">
-          <div class="route-mark">N</div>
-          <h3 class="route-title">Nine Summits</h3>
-          <div class="route-copy">
-            Return to the value spine when the governing read points back toward baseline alignment and human potential.
-          </div>
-          <div class="route-meta">Baseline · Spine</div>
+        <a class="route-card" href="/products/">
+          <small>Runtime</small>
+          <h3>Products</h3>
+          <p>Apply Russian-doll compression to the seasonal runtime readouts next.</p>
         </a>
 
-        <a class="route" data-tone="rose" href="/about/">
-          <div class="route-mark">A</div>
-          <h3 class="route-title">About</h3>
-          <div class="route-copy">
-            Use the orientation surface when the visitor needs a simpler public read before moving deeper again.
-          </div>
-          <div class="route-meta">Identity · Orientation</div>
+        <a class="route-card" href="/about/">
+          <small>Orientation</small>
+          <h3>About</h3>
+          <p>Prepare the user guidance layer for nested orientation.</p>
         </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Laws · write contract chamber</span>
+      <span>Laws · Generation 2 Russian-doll Lawscape</span>
       <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
-        <a href="/products/">Products</a>
+        <a href="/">Door</a>
         <a href="/gauges/">Gauges</a>
+        <a href="/products/">Products</a>
+        <a href="/about/">About</a>
       </div>
     </footer>
   </main>
 
   <script>
-    const LAW_DATA = [
-      {
-        id: "law-01",
-        kicker: "Law 01",
-        title: {
-          en: { formal: "Clarity Before Volume", informal: "Make it clear before you make it bigger" },
-          zh: { formal: "清晰先于体量", informal: "先讲清楚，再做大" },
-          es: { formal: "Claridad antes que volumen", informal: "Primero que quede claro, luego lo haces grande" }
-        },
-        summary: {
-          en: { formal: "Interpretation should become sharper as the surface grows.", informal: "If it gets bigger and harder to read, it got worse." },
-          zh: { formal: "表面扩大时，解释应更清晰而非更混乱。", informal: "越做越大却越难懂，就是退步。" },
-          es: { formal: "La interpretación debe hacerse más nítida a medida que la superficie crece.", informal: "Si crece y se vuelve más confuso, empeoró." }
-        },
-        body: {
-          en: {
-            formal: "A lawful surface does not hide behind density. Expansion is admissible only when the reader gains clearer structure, stronger orientation, and lower ambiguity.",
-            informal: "More pages, more buttons, and more words do not count as progress if people lose the thread. Make the read cleaner first."
-          },
-          zh: {
-            formal: "合格的表面不会躲在密度后面。只有当读者获得更清晰的结构、更稳的定位、更低的歧义时，扩展才成立。",
-            informal: "页面更多、按钮更多、文字更多，并不等于进步。先把阅读路径理清。"
-          },
-          es: {
-            formal: "Una superficie válida no se esconde detrás de la densidad. La expansión solo es admisible cuando el lector gana estructura más clara, mejor orientación y menos ambigüedad.",
-            informal: "Más páginas, más botones y más texto no significan progreso si la gente pierde el hilo. Primero limpia la lectura."
-          }
-        }
-      },
-      {
-        id: "law-02",
-        kicker: "Law 02",
-        title: {
-          en: { formal: "Source Before Conclusion", informal: "Look first. Decide second." },
-          zh: { formal: "先看源头，再下结论", informal: "先看，再判定" },
-          es: { formal: "Fuente antes que conclusión", informal: "Primero mira. Después decides." }
-        },
-        summary: {
-          en: { formal: "A stable read begins with the real object in front of you.", informal: "Do not guess when the thing can be checked." },
-          zh: { formal: "稳定的判断必须从眼前真实对象开始。", informal: "能查就别猜。" },
-          es: { formal: "Una lectura estable empieza con el objeto real delante de ti.", informal: "No adivines cuando se puede revisar." }
-        },
-        body: {
-          en: {
-            formal: "Interpretation that outruns evidence destabilizes the chamber. The lawful sequence is object, break, scope, then conclusion.",
-            informal: "If the page, file, or surface can be seen, inspect it. Do not invent confidence where proof is still available."
-          },
-          zh: {
-            formal: "跑在证据前面的解释会让整个房间失稳。合法顺序是：对象、断点、范围，然后结论。",
-            informal: "页面、文件、表面能看见，就先看，不要用臆测冒充把握。"
-          },
-          es: {
-            formal: "La interpretación que corre más rápido que la evidencia desestabiliza la cámara. La secuencia válida es objeto, quiebre, alcance y luego conclusión.",
-            informal: "Si la página, el archivo o la superficie se pueden revisar, revísalos. No inventes seguridad donde aún hay prueba disponible."
-          }
-        }
-      },
-      {
-        id: "law-03",
-        kicker: "Law 03",
-        title: {
-          en: { formal: "One Live Object", informal: "Do one real thing at a time" },
-          zh: { formal: "一次只保留一个活对象", informal: "一次只做一件真的事" },
-          es: { formal: "Un objeto activo", informal: "Haz una cosa real a la vez" }
-        },
-        summary: {
-          en: { formal: "A chamber becomes unstable when too many active problems compete at once.", informal: "If everything is live, nothing is controlled." },
-          zh: { formal: "当太多问题同时活跃时，房间会失稳。", informal: "什么都同时开着，就等于什么都没控住。" },
-          es: { formal: "Una cámara se vuelve inestable cuando demasiados problemas activos compiten al mismo tiempo.", informal: "Si todo está activo, nada está controlado." }
-        },
-        body: {
-          en: {
-            formal: "Compression is not reduction for its own sake. It is the discipline of making the true active object visible so motion can actually occur.",
-            informal: "Name the real thing. Work that. Stop multiplying tasks just to feel busy."
-          },
-          zh: {
-            formal: "压缩并不是为了压缩而压缩，而是为了让真正活跃的对象显形，从而真正产生前进。",
-            informal: "把真正的问题点出来，就处理它。别为了显得忙而制造更多任务。"
-          },
-          es: {
-            formal: "La compresión no es reducción por sí misma. Es la disciplina de volver visible el objeto realmente activo para que el movimiento ocurra.",
-            informal: "Nombra la cosa real. Trabaja eso. No multipliques tareas solo para sentirte ocupado."
-          }
-        }
-      },
-      {
-        id: "law-04",
-        kicker: "Law 04",
-        title: {
-          en: { formal: "Form Must Match Function", informal: "The page should look like its job" },
-          zh: { formal: "形式必须匹配功能", informal: "页面长相要配得上它的工作" },
-          es: { formal: "La forma debe corresponder a la función", informal: "La página debe parecerse a su trabajo" }
-        },
-        summary: {
-          en: { formal: "A route, a door, a chamber, and a law page should not all look the same.", informal: "If every page wears the same costume, the system blurs." },
-          zh: { formal: "路径、门、房间、法则页不应该长得一样。", informal: "如果每页都穿同一套衣服，系统就糊了。" },
-          es: { formal: "Una ruta, una puerta, una cámara y una página de leyes no deberían verse iguales.", informal: "Si todas las páginas usan el mismo disfraz, el sistema se borra." }
-        },
-        body: {
-          en: {
-            formal: "Structural identity is part of truth. A root route should feel like entry. A law chamber should feel like governance. Function should be visible in silhouette.",
-            informal: "Do not make the homepage look like products or the law page look like a dashboard. Let the page show its role."
-          },
-          zh: {
-            formal: "结构身份本身就是真实的一部分。根路径要像入口，法则页要像治理层。功能应在轮廓上可见。",
-            informal: "别把首页做成产品页，也别把法则页做成仪表盘。让页面自己显出角色。"
-          },
-          es: {
-            formal: "La identidad estructural es parte de la verdad. La ruta raíz debe sentirse como entrada. La cámara de leyes debe sentirse como gobernanza. La función debe verse en la silueta.",
-            informal: "No hagas que la página principal parezca productos ni que la página de leyes parezca un tablero. Deja que la página muestre su papel."
-          }
-        }
-      },
-      {
-        id: "law-05",
-        kicker: "Law 05",
-        title: {
-          en: { formal: "Stop When Truth Is Stable", informal: "Do not keep decorating after it works" },
-          zh: { formal: "真实稳定时就该停下", informal: "能用了就别继续乱加" },
-          es: { formal: "Detente cuando la verdad esté estable", informal: "No sigas decorando después de que ya funciona" }
-        },
-        summary: {
-          en: { formal: "Refinement is lawful. Endless embellishment is drift.", informal: "More is not better once the truth is already there." },
-          zh: { formal: "精修是合法的，无止境装饰则是漂移。", informal: "真实已经到位了，再加不一定更好。" },
-          es: { formal: "Refinar es válido. Embellecer sin fin es deriva.", informal: "Más no es mejor cuando la verdad ya está presente." }
-        },
-        body: {
-          en: {
-            formal: "A chamber needs a stop condition. Once the governing read is stable, further additions must justify themselves against clarity, coherence, and route value.",
-            informal: "Know when to stop. If the page is already saying the right thing clearly, extra flourish can only make it worse."
-          },
-          zh: {
-            formal: "一个房间必须有停止条件。一旦 governing read 稳定，后续增加必须在清晰度、连贯性与路径价值上自证。",
-            informal: "要知道什么时候该停。页面已经讲清楚了，再加花样往往只会变差。"
-          },
-          es: {
-            formal: "Una cámara necesita una condición de cierre. Cuando la lectura gobernante ya es estable, cualquier añadido debe justificarse frente a claridad, coherencia y valor de ruta.",
-            informal: "Hay que saber parar. Si la página ya dice lo correcto con claridad, el adorno extra suele empeorarla."
-          }
-        }
+    (() => {
+      function closeSiblings(shell) {
+        const parent = shell.parentElement;
+        if (!parent) return;
+
+        parent.querySelectorAll(":scope > [data-doll], :scope > [data-inner-doll]").forEach((item) => {
+          if (item === shell) return;
+          item.classList.remove("is-open");
+          const btn = item.querySelector("button");
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        });
       }
-    ];
 
-    const state = {
-      lang: "en",
-      lens: "formal",
-      openId: "law-01"
-    };
-
-    const lawsContainer = document.getElementById("lawsContainer");
-    const langButtons = [...document.querySelectorAll("[data-lang]")];
-    const lensButtons = [...document.querySelectorAll("[data-lens]")];
-
-    function renderControls() {
-      langButtons.forEach((button) => {
-        button.classList.toggle("is-active", button.dataset.lang === state.lang);
-      });
-
-      lensButtons.forEach((button) => {
-        button.classList.toggle("is-active", button.dataset.lens === state.lens);
-      });
-    }
-
-    function lawContent(law) {
-      return {
-        title: law.title[state.lang][state.lens],
-        summary: law.summary[state.lang][state.lens],
-        body: law.body[state.lang][state.lens]
-      };
-    }
-
-    function renderLaws() {
-      lawsContainer.innerHTML = LAW_DATA.map((law, index) => {
-        const content = lawContent(law);
-        const open = law.id === state.openId;
-
-        return `
-          <article class="law-card ${open ? "is-open" : ""}" data-law-id="${law.id}">
-            <button class="accordion-toggle" type="button" aria-expanded="${open ? "true" : "false"}">
-              <div class="law-left">
-                <div class="law-kicker">${law.kicker}</div>
-                <h3 class="law-title">${content.title}</h3>
-                <div class="law-copy">${content.summary}</div>
-              </div>
-              <div class="law-index">${String(index + 1).padStart(2, "0")}</div>
-            </button>
-            <div class="law-panel">
-              <div class="law-body">${content.body}</div>
-            </div>
-          </article>
-        `;
-      }).join("");
-
-      lawsContainer.querySelectorAll(".accordion-toggle").forEach((button) => {
+      document.querySelectorAll("[data-doll] > .doll-toggle").forEach((button) => {
         button.addEventListener("click", () => {
-          const lawCard = button.closest(".law-card");
-          const { lawId } = lawCard.dataset;
-          state.openId = lawId;
-          renderLaws();
+          const shell = button.closest("[data-doll]");
+          if (!shell) return;
+
+          const willOpen = !shell.classList.contains("is-open");
+          closeSiblings(shell);
+          shell.classList.toggle("is-open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
         });
       });
-    }
 
-    langButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        state.lang = button.dataset.lang;
-        renderControls();
-        renderLaws();
+      document.querySelectorAll("[data-inner-doll] > .inner-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+          const shell = button.closest("[data-inner-doll]");
+          if (!shell) return;
+
+          const willOpen = !shell.classList.contains("is-open");
+          closeSiblings(shell);
+          shell.classList.toggle("is-open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
+        });
       });
-    });
-
-    lensButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        state.lens = button.dataset.lens;
-        renderControls();
-        renderLaws();
-      });
-    });
-
-    renderControls();
-    renderLaws();
+    })();
   </script>
 </body>
 </html>

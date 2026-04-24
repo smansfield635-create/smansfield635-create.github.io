@@ -1,594 +1,786 @@
 (() => {
-  'use strict';
+  "use strict";
 
-  const STYLE_ID = 'dgb-root-door-generation-3-styles';
+  const STYLE_ID = "gauges-seasonal-monarch-fairies-v1";
 
-  const SELECTORS = {
-    doorCard: [
-      '[data-root-door]',
-      '.root-door',
-      '.door-root',
-      '.root-entry-door',
-      '.canonical-root-door',
-      '.canonical-door',
-      '.entry-door',
-      '.door-panel',
-      '.door-shell'
-    ],
-    doorCore: [
-      '[data-door-core]',
-      '.door-core',
-      '.door-button',
-      '.door-label',
-      '.door-center',
-      '.door-trigger',
-      '.door-hit',
-      '.door-plate'
-    ],
-    topGem: [
-      '[data-door-gem="top"]',
-      '.door-gem-top',
-      '.door-top-gem',
-      '.door-diamond-top'
-    ],
-    bottomGem: [
-      '[data-door-gem="bottom"]',
-      '.door-gem-bottom',
-      '.door-bottom-gem',
-      '.door-diamond-bottom'
-    ]
-  };
-
-  function first(root, selectors) {
-    for (const selector of selectors) {
-      const node = root.querySelector(selector);
-      if (node) return node;
-    }
-    return null;
-  }
-
-  function findDoorCard() {
-    for (const selector of SELECTORS.doorCard) {
-      const node = document.querySelector(selector);
-      if (node) return node;
-    }
-
-    const fallback = Array.from(document.querySelectorAll('section, div, article')).find((node) => {
-      const text = (node.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
-      return text.includes('DOOR') && text.includes('ENTRY');
-    });
-
-    return fallback || null;
-  }
-
-  function findDoorCore(doorCard) {
-    let node = first(doorCard, SELECTORS.doorCore);
-    if (node) return node;
-
-    const exactDoorText = Array.from(doorCard.querySelectorAll('button, a, div, span')).find((candidate) => {
-      const text = (candidate.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
-      return text === 'DOOR';
-    });
-
-    return exactDoorText || null;
-  }
-
-  function ensureStyle() {
+  function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
 
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      .dgb-door-ready {
-        position: relative;
-        overflow: hidden;
-        isolation: isolate;
-        --dgb-touch-x: 50%;
-        --dgb-touch-y: 38%;
-        --dgb-press-scale: 1;
-        --dgb-core-glow: 0.38;
-        --dgb-card-glow: 0.18;
-        --dgb-ring-opacity: 0.14;
-        --dgb-beam-opacity: 0.16;
-        --dgb-spark-opacity: 0.18;
+      :root {
+        --line: rgba(164,188,255,.18);
+        --strong: rgba(210,223,255,.36);
+        --text: #eef4ff;
+        --muted: #9aabd0;
+        --gold: #efd29a;
+        --green: #92e7ba;
+        --blue: #8ec5ff;
+        --shadow: 0 24px 80px rgba(0,0,0,.52);
+        --max: 1180px;
       }
 
-      .dgb-door-layer,
-      .dgb-door-energy,
-      .dgb-door-aura,
-      .dgb-door-orbit,
-      .dgb-door-beams,
-      .dgb-door-sparks,
-      .dgb-door-hit {
-        pointer-events: none;
-        position: absolute;
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        color: var(--text);
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at 50% 8%, rgba(112,151,255,.22), transparent 22%),
+          radial-gradient(circle at 18% 34%, rgba(239,210,154,.10), transparent 24%),
+          linear-gradient(180deg, #020610 0%, #071225 48%, #020610 100%);
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
         inset: 0;
-        z-index: 0;
-      }
-
-      .dgb-door-energy {
-        background:
-          radial-gradient(circle at var(--dgb-touch-x) var(--dgb-touch-y),
-            rgba(175, 220, 255, calc(0.34 + var(--dgb-card-glow))) 0%,
-            rgba(125, 188, 255, calc(0.20 + var(--dgb-card-glow))) 10%,
-            rgba(56, 112, 225, calc(0.10 + var(--dgb-card-glow))) 24%,
-            rgba(10, 32, 82, 0) 58%
-          );
-        opacity: 0.95;
-        mix-blend-mode: screen;
-        transition: opacity 220ms ease, transform 220ms ease, filter 220ms ease;
-        transform: scale(1);
-        filter: blur(0px);
-      }
-
-      .dgb-door-aura {
-        background:
-          radial-gradient(circle at 50% 50%,
-            rgba(153, 214, 255, var(--dgb-ring-opacity)) 0%,
-            rgba(103, 172, 255, calc(var(--dgb-ring-opacity) * 0.85)) 22%,
-            rgba(62, 109, 212, calc(var(--dgb-ring-opacity) * 0.5)) 40%,
-            rgba(0, 0, 0, 0) 72%
-          );
-        animation: dgb-door-breathe 5s ease-in-out infinite;
-        opacity: 1;
-      }
-
-      .dgb-door-orbit::before,
-      .dgb-door-orbit::after {
-        content: '';
-        position: absolute;
-        inset: 12% 16%;
-        border-radius: 999px;
-        border: 1px solid rgba(182, 223, 255, 0.12);
-        transform-origin: center;
-        mix-blend-mode: screen;
-      }
-
-      .dgb-door-orbit::before {
-        animation: dgb-door-orbit-1 16s linear infinite;
-      }
-
-      .dgb-door-orbit::after {
-        inset: 19% 24%;
-        animation: dgb-door-orbit-2 12s linear infinite reverse;
-      }
-
-      .dgb-door-beams {
-        background:
-          linear-gradient(180deg,
-            rgba(175, 225, 255, 0) 0%,
-            rgba(175, 225, 255, var(--dgb-beam-opacity)) 28%,
-            rgba(175, 225, 255, calc(var(--dgb-beam-opacity) * 1.15)) 48%,
-            rgba(175, 225, 255, var(--dgb-beam-opacity)) 58%,
-            rgba(175, 225, 255, 0) 100%
-          );
-        mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 82%, transparent 100%);
-        -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 82%, transparent 100%);
-        opacity: 0.7;
-        transition: opacity 220ms ease;
-      }
-
-      .dgb-door-sparks::before,
-      .dgb-door-sparks::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        top: 42%;
-        width: 52%;
-        height: 52%;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background:
-          conic-gradient(
-            from 0deg,
-            rgba(180, 225, 255, 0) 0deg,
-            rgba(180, 225, 255, var(--dgb-spark-opacity)) 28deg,
-            rgba(180, 225, 255, 0) 58deg,
-            rgba(180, 225, 255, 0) 118deg,
-            rgba(180, 225, 255, calc(var(--dgb-spark-opacity) * 0.85)) 152deg,
-            rgba(180, 225, 255, 0) 182deg,
-            rgba(180, 225, 255, 0) 240deg,
-            rgba(180, 225, 255, calc(var(--dgb-spark-opacity) * 0.8)) 270deg,
-            rgba(180, 225, 255, 0) 300deg,
-            rgba(180, 225, 255, 0) 360deg
-          );
-        mix-blend-mode: screen;
-        opacity: 0.9;
-      }
-
-      .dgb-door-sparks::before {
-        animation: dgb-door-spin 10s linear infinite;
-      }
-
-      .dgb-door-sparks::after {
-        width: 72%;
-        height: 72%;
-        animation: dgb-door-spin 16s linear infinite reverse;
-      }
-
-      .dgb-door-hit {
-        background:
-          radial-gradient(circle at var(--dgb-touch-x) var(--dgb-touch-y),
-            rgba(245, 251, 255, 0.72) 0%,
-            rgba(212, 238, 255, 0.42) 6%,
-            rgba(119, 185, 255, 0.18) 12%,
-            rgba(0, 0, 0, 0) 26%
-          );
-        opacity: 0;
-        transform: scale(0.8);
-      }
-
-      .dgb-door-core {
-        position: relative;
-        z-index: 2;
-        cursor: pointer;
-        touch-action: manipulation;
-        transform: translateZ(0) scale(var(--dgb-press-scale));
-        transition:
-          transform 140ms ease,
-          filter 180ms ease,
-          box-shadow 180ms ease,
-          background 180ms ease,
-          color 180ms ease;
-        box-shadow:
-          0 0 0 1px rgba(180, 220, 255, 0.12),
-          0 0 16px rgba(35, 105, 215, 0.18),
-          0 0 48px rgba(40, 95, 200, calc(0.18 + var(--dgb-core-glow)));
-        filter:
-          brightness(calc(1 + var(--dgb-core-glow) * 0.24))
-          saturate(calc(1 + var(--dgb-core-glow) * 0.38));
-      }
-
-      .dgb-door-core::before {
-        content: '';
-        position: absolute;
-        inset: -14%;
-        border-radius: inherit;
-        background:
-          radial-gradient(circle at center,
-            rgba(220, 241, 255, calc(0.16 + var(--dgb-core-glow))) 0%,
-            rgba(120, 187, 255, calc(0.12 + var(--dgb-core-glow))) 34%,
-            rgba(15, 42, 112, 0) 76%
-          );
-        z-index: -1;
-        opacity: 0.95;
-        transition: opacity 180ms ease, transform 180ms ease;
-      }
-
-      .dgb-door-core .dgb-door-core-label,
-      .dgb-door-core-label {
-        position: relative;
-        z-index: 2;
-        letter-spacing: 0.22em;
-        text-shadow:
-          0 0 8px rgba(255, 255, 255, 0.22),
-          0 0 24px rgba(165, 219, 255, 0.20);
-        transition: text-shadow 180ms ease, color 180ms ease;
-      }
-
-      .dgb-door-gem {
-        position: relative;
-        z-index: 2;
-        transition:
-          transform 180ms ease,
-          filter 180ms ease,
-          opacity 180ms ease,
-          box-shadow 180ms ease;
-        filter:
-          brightness(1.05)
-          saturate(1.05);
-        box-shadow:
-          0 0 14px rgba(95, 180, 255, 0.14),
-          0 0 42px rgba(95, 180, 255, 0.08);
-      }
-
-      .dgb-door-ready.is-primed {
-        --dgb-core-glow: 0.62;
-        --dgb-card-glow: 0.24;
-        --dgb-ring-opacity: 0.18;
-        --dgb-beam-opacity: 0.22;
-        --dgb-spark-opacity: 0.24;
-      }
-
-      .dgb-door-ready.is-pressed {
-        --dgb-press-scale: 0.965;
-        --dgb-core-glow: 0.88;
-        --dgb-card-glow: 0.34;
-        --dgb-ring-opacity: 0.24;
-        --dgb-beam-opacity: 0.28;
-        --dgb-spark-opacity: 0.34;
-      }
-
-      .dgb-door-ready.is-pressed .dgb-door-hit {
-        opacity: 1;
-        transform: scale(1.08);
-        transition: opacity 90ms linear, transform 140ms ease;
-      }
-
-      .dgb-door-ready.is-energized {
-        --dgb-core-glow: 1.18;
-        --dgb-card-glow: 0.52;
-        --dgb-ring-opacity: 0.32;
-        --dgb-beam-opacity: 0.34;
-        --dgb-spark-opacity: 0.42;
-      }
-
-      .dgb-door-ready.is-energized .dgb-door-energy {
-        transform: scale(1.05);
-        filter: saturate(1.2) brightness(1.08);
-      }
-
-      .dgb-door-ready.is-energized .dgb-door-hit {
-        opacity: 1;
-        transform: scale(1.24);
-        transition:
-          opacity 220ms ease,
-          transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
-      }
-
-      .dgb-door-ready.is-energized .dgb-door-core {
-        box-shadow:
-          0 0 0 1px rgba(218, 240, 255, 0.28),
-          0 0 24px rgba(115, 200, 255, 0.42),
-          0 0 64px rgba(45, 122, 255, 0.52),
-          0 0 120px rgba(45, 122, 255, 0.28);
-        filter: brightness(1.18) saturate(1.18);
-      }
-
-      .dgb-door-ready.is-energized .dgb-door-core::before {
-        transform: scale(1.12);
-      }
-
-      .dgb-door-ready.is-energized .dgb-door-core .dgb-door-core-label,
-      .dgb-door-ready.is-energized .dgb-door-core-label {
-        text-shadow:
-          0 0 10px rgba(255, 255, 255, 0.34),
-          0 0 32px rgba(195, 232, 255, 0.34),
-          0 0 66px rgba(120, 200, 255, 0.28);
-      }
-
-      .dgb-door-ready.is-energized .dgb-door-gem {
-        filter: brightness(1.28) saturate(1.16);
-        box-shadow:
-          0 0 24px rgba(120, 200, 255, 0.32),
-          0 0 64px rgba(120, 200, 255, 0.18);
-        transform: translateZ(0) scale(1.04);
-      }
-
-      .dgb-door-ready.is-energized::after {
-        content: '';
-        position: absolute;
-        inset: 16%;
-        border-radius: 999px;
-        border: 1px solid rgba(188, 226, 255, 0.22);
-        box-shadow:
-          0 0 0 1px rgba(160, 210, 255, 0.08) inset,
-          0 0 24px rgba(85, 162, 255, 0.18);
-        animation: dgb-door-shock 700ms ease-out 1;
         pointer-events: none;
+        opacity: .22;
+        background:
+          linear-gradient(90deg, rgba(164,188,255,.08) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(164,188,255,.045) 1px, transparent 1px);
+        background-size: 52px 52px;
+        mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
+      }
+
+      .gauge-page {
+        width: min(var(--max), calc(100vw - 24px));
+        margin: 0 auto;
+        padding: 18px 0 44px;
+        position: relative;
         z-index: 1;
       }
 
-      @keyframes dgb-door-breathe {
-        0%, 100% {
-          transform: scale(0.985);
-          opacity: 0.92;
-        }
-        50% {
-          transform: scale(1.02);
-          opacity: 1;
-        }
+      .topbar,
+      .hero,
+      .section,
+      .card,
+      .doll {
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+        box-shadow: var(--shadow);
       }
 
-      @keyframes dgb-door-orbit-1 {
-        from { transform: rotate(0deg) scaleX(1); }
-        to { transform: rotate(360deg) scaleX(1); }
+      .topbar {
+        border-radius: 22px;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
       }
 
-      @keyframes dgb-door-orbit-2 {
-        from { transform: rotate(0deg) scaleX(0.78); }
-        to { transform: rotate(360deg) scaleX(0.78); }
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
       }
 
-      @keyframes dgb-door-spin {
-        from { transform: translate(-50%, -50%) rotate(0deg); }
-        to { transform: translate(-50%, -50%) rotate(360deg); }
+      .mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 50% 28%, rgba(239,210,154,.22), transparent 42%),
+          linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+        font-weight: 900;
+        letter-spacing: .08em;
       }
 
-      @keyframes dgb-door-shock {
-        0% {
-          opacity: 0.54;
-          transform: scale(0.72);
-        }
-        100% {
-          opacity: 0;
-          transform: scale(1.3);
-        }
+      .kicker {
+        margin: 0 0 4px;
+        color: #c8d7ff;
+        font-size: .72rem;
+        text-transform: uppercase;
+        letter-spacing: .16em;
+      }
+
+      .brand-title {
+        margin: 0;
+        font-weight: 850;
+        font-size: 1.05rem;
+      }
+
+      .nav,
+      .actions,
+      .footer-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .nav {
+        justify-content: flex-end;
+      }
+
+      .nav a,
+      .button {
+        min-height: 42px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 15px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--text);
+        background: rgba(255,255,255,.035);
+        text-decoration: none;
+        font-weight: 800;
+      }
+
+      .nav a:hover,
+      .nav a:focus-visible,
+      .button:hover,
+      .button:focus-visible {
+        border-color: var(--strong);
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .hero {
+        border-radius: 34px;
+        padding: 24px 20px;
+        margin-bottom: 18px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, .85fr);
+        gap: 20px;
+        align-items: center;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255,255,255,.035);
+        color: #d8e3ff;
+        text-transform: uppercase;
+        letter-spacing: .14em;
+        font-size: .72rem;
+        margin-bottom: 14px;
+      }
+
+      .pill::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        transform: rotate(45deg);
+        background: var(--gold);
+        box-shadow: 0 0 18px rgba(239,210,154,.50);
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        max-width: 12ch;
+        font-size: clamp(2.35rem, 5vw, 5rem);
+        line-height: .95;
+        letter-spacing: -.06em;
+      }
+
+      h1 span {
+        color: var(--gold);
+      }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.62;
+      }
+
+      .lead {
+        max-width: 68ch;
+        font-size: clamp(1rem, 1.45vw, 1.14rem);
+      }
+
+      .actions {
+        margin-top: 20px;
+      }
+
+      .button {
+        border-radius: 18px;
+        min-height: 48px;
+        padding: 0 18px;
+      }
+
+      .button.primary {
+        border-color: rgba(239,210,154,.34);
+        background:
+          linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+          rgba(255,255,255,.035);
+        color: #fff8ea;
+      }
+
+      .instrument-window {
+        min-height: 430px;
+        border-radius: 30px;
+        border: 1px solid rgba(170,198,255,.18);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(239,210,154,.14), transparent 24%),
+          linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
+        position: relative;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        isolation: isolate;
+      }
+
+      .instrument-window::before {
+        content: "";
+        position: absolute;
+        inset: 10%;
+        border-radius: 38px;
+        border: 1px solid rgba(255,255,255,.10);
+        box-shadow: inset 0 0 30px rgba(126,164,255,.12);
+      }
+
+      .butterfly {
+        position: relative;
+        width: 250px;
+        height: 250px;
+        z-index: 2;
+        filter:
+          drop-shadow(0 0 24px rgba(239,210,154,.20))
+          drop-shadow(0 0 42px rgba(142,197,255,.16));
+      }
+
+      .butterfly::before,
+      .butterfly::after {
+        content: "";
+        position: absolute;
+        top: 44px;
+        width: 128px;
+        height: 148px;
+        border-radius: 76% 24% 68% 32%;
+        background:
+          radial-gradient(circle at 60% 42%, rgba(255,238,180,.90), transparent 10%),
+          radial-gradient(circle at 42% 54%, rgba(255,214,124,.82), transparent 22%),
+          linear-gradient(135deg, #27130d 0%, #f5a33a 44%, #8f3819 72%, #080b14 100%);
+        border: 2px solid rgba(10,12,22,.78);
+        box-shadow: inset 0 0 26px rgba(255,255,255,.12);
+        transform-origin: 100% 72%;
+        animation: leftWing 5.4s ease-in-out infinite;
+      }
+
+      .butterfly::before {
+        left: 4px;
+        transform: rotate(-22deg);
+      }
+
+      .butterfly::after {
+        right: 4px;
+        transform: scaleX(-1) rotate(-22deg);
+        transform-origin: 0% 72%;
+        animation: rightWing 5.4s ease-in-out infinite;
+      }
+
+      .body {
+        position: absolute;
+        left: 50%;
+        top: 43%;
+        width: 34px;
+        height: 142px;
+        transform: translate(-50%, -50%);
+        border-radius: 999px;
+        background: linear-gradient(180deg, #1b130e, #050811);
+        border: 1px solid rgba(239,210,154,.24);
+        z-index: 3;
+      }
+
+      .fairy {
+        position: absolute;
+        width: 34px;
+        height: 38px;
+        z-index: 4;
+        filter:
+          drop-shadow(0 0 10px var(--c))
+          drop-shadow(0 0 26px rgba(210,240,255,.26));
+        animation: fairyPath 6s ease-in-out infinite;
+        animation-delay: var(--d);
+      }
+
+      .fairy::before,
+      .fairy::after {
+        content: "";
+        position: absolute;
+        top: 3px;
+        width: 15px;
+        height: 24px;
+        border-radius: 80% 20% 80% 20%;
+        background: radial-gradient(circle at 42% 42%, rgba(255,255,255,.92), rgba(255,255,255,.34) 26%, var(--c) 56%, rgba(255,255,255,0) 82%);
+        border: 1px solid rgba(255,255,255,.62);
+        transform-origin: 50% 80%;
+        animation: wingFlutter .62s ease-in-out infinite;
+      }
+
+      .fairy::before {
+        left: 1px;
+        transform: rotate(-28deg);
+      }
+
+      .fairy::after {
+        right: 1px;
+        transform: scaleX(-1) rotate(-28deg);
+        animation-delay: -.31s;
+      }
+
+      .fairy span {
+        position: absolute;
+        left: 50%;
+        top: 48%;
+        width: 12px;
+        height: 19px;
+        transform: translate(-50%, -50%);
+        border-radius: 999px;
+        background: radial-gradient(circle at 50% 28%, #fff, var(--c) 50%, rgba(4,10,22,.88) 100%);
+        border: 1px solid rgba(255,255,255,.72);
+        box-shadow: 0 0 18px var(--c);
+      }
+
+      .fairy.one { --c: var(--green); left: 28%; top: 34%; --d: 0s; }
+      .fairy.two { --c: var(--blue); right: 28%; top: 34%; --d: -1s; }
+      .fairy.three { --c: var(--blue); left: 28%; bottom: 25%; --d: -2s; }
+      .fairy.four { --c: var(--green); right: 28%; bottom: 25%; --d: -3s; }
+      .fairy.five { --c: var(--green); left: 49%; top: 47%; --d: -4s; }
+
+      .center-glow {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 118px;
+        height: 118px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(circle, #fff 0 8%, rgba(236,247,255,.72) 12%, rgba(127,197,255,.22) 38%, transparent 72%);
+        filter: drop-shadow(0 0 28px rgba(255,255,255,.42));
+        z-index: 3;
+        animation: centerPulse 4.2s ease-in-out infinite;
+      }
+
+      .section {
+        margin-top: 18px;
+        border-radius: 30px;
+        padding: 22px 20px;
+        overflow: hidden;
+      }
+
+      .section h2 {
+        margin: 0 0 10px;
+        font-size: clamp(1.7rem, 3vw, 2.7rem);
+        line-height: 1;
+        letter-spacing: -.04em;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .card {
+        display: block;
+        border-radius: 22px;
+        padding: 16px;
+        min-height: 142px;
+        color: var(--text);
+        text-decoration: none;
+        border-color: rgba(164,188,255,.14);
+      }
+
+      .card small {
+        display: block;
+        color: #90a3ce;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        margin-bottom: 8px;
+        font-weight: 800;
+        font-size: .72rem;
+      }
+
+      .card strong {
+        display: block;
+        color: #f4f7ff;
+        font-size: 1.22rem;
+        line-height: 1.08;
+        margin-bottom: 10px;
+      }
+
+      .card p {
+        font-size: .92rem;
+      }
+
+      .doll-list {
+        display: grid;
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .doll {
+        border-radius: 26px;
+        overflow: hidden;
+      }
+
+      .doll button {
+        width: 100%;
+        border: 0;
+        color: var(--text);
+        background:
+          radial-gradient(circle at 100% 100%, rgba(239,210,154,.08), transparent 42%),
+          rgba(255,255,255,.02);
+        padding: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .doll button small {
+        display: block;
+        color: #90a3ce;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        margin-bottom: 8px;
+        font-weight: 800;
+        font-size: .72rem;
+      }
+
+      .doll button strong {
+        font-size: 1.15rem;
+      }
+
+      .diamond {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        transform: rotate(45deg);
+        border: 1px solid rgba(239,210,154,.34);
+        background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%), rgba(6,14,28,.78);
+        flex: none;
+      }
+
+      .doll-panel {
+        display: none;
+        padding: 0 18px 18px;
+        border-top: 1px solid rgba(164,188,255,.12);
+        background: rgba(255,255,255,.018);
+      }
+
+      .doll.is-open .doll-panel {
+        display: block;
+      }
+
+      .footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--muted);
+        padding: 14px 4px 0;
+      }
+
+      .footer a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 12px;
+      }
+
+      @keyframes leftWing {
+        0%, 100% { transform: rotate(-22deg) scaleY(1); }
+        50% { transform: rotate(-17deg) scaleY(.96); }
+      }
+
+      @keyframes rightWing {
+        0%, 100% { transform: scaleX(-1) rotate(-22deg) scaleY(1); }
+        50% { transform: scaleX(-1) rotate(-17deg) scaleY(.96); }
+      }
+
+      @keyframes fairyPath {
+        0%, 100% { transform: translate(-50%, -50%) translate(0, 0) scale(.94); }
+        25% { transform: translate(-50%, -50%) translate(18px, -18px) scale(1.05); }
+        50% { transform: translate(-50%, -50%) translate(0, -34px) scale(1.1); }
+        75% { transform: translate(-50%, -50%) translate(-18px, -18px) scale(1.05); }
+      }
+
+      @keyframes wingFlutter {
+        0%, 100% { opacity: .74; transform: rotate(-28deg) scaleY(.88); }
+        50% { opacity: 1; transform: rotate(-42deg) scaleY(1.12); }
+      }
+
+      @keyframes centerPulse {
+        0%, 100% { opacity: .72; transform: translate(-50%, -50%) scale(.95); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
+      }
+
+      @media (max-width: 900px) {
+        .hero-grid { grid-template-columns: 1fr; }
+        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      @media (max-width: 720px) {
+        .gauge-page { width: min(100vw - 16px, var(--max)); padding: 14px 0 32px; }
+        .topbar { flex-wrap: wrap; }
+        .nav { width: 100%; justify-content: flex-start; }
+        .hero, .section { padding: 18px 16px; }
+        h1 { font-size: clamp(2rem, 11vw, 3.4rem); }
+        .instrument-window { min-height: 390px; }
+        .butterfly { width: 220px; height: 220px; }
+        .grid { grid-template-columns: 1fr; }
+        .footer { display: grid; }
+        .footer a { margin-left: 0; margin-right: 12px; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .dgb-door-aura,
-        .dgb-door-orbit::before,
-        .dgb-door-orbit::after,
-        .dgb-door-sparks::before,
-        .dgb-door-sparks::after {
-          animation: none !important;
-        }
+        * { animation: none !important; scroll-behavior: auto !important; }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function ensureLayer(doorCard, className) {
-    let node = doorCard.querySelector(`:scope > .${className}`);
-    if (!node) {
-      node = document.createElement('div');
-      node.className = className;
-      doorCard.insertBefore(node, doorCard.firstChild);
-    }
-    return node;
+  function html() {
+    return `
+      <main class="gauge-page">
+        <header class="topbar">
+          <div class="brand">
+            <div class="mark">DG</div>
+            <div>
+              <p class="kicker">Gauges</p>
+              <p class="brand-title">Seasonal Monarch Fairies</p>
+            </div>
+          </div>
+
+          <nav class="nav" aria-label="Primary">
+            <a href="/">Home</a>
+            <a href="/products/">Products</a>
+            <a href="/laws/">Laws</a>
+            <a href="/about/">About</a>
+          </nav>
+        </header>
+
+        <section class="hero">
+          <div class="hero-grid">
+            <div>
+              <span class="pill">Monarch vessel · fairy paths · four seasons</span>
+              <h1>The gauges now read the <span>living picture.</span></h1>
+              <p class="lead">
+                Products has moved from a diagnostic chamber into a public image: a monarch butterfly holding the seasonal field while fairies cross the center on mirrored figure-eight paths.
+              </p>
+
+              <div class="actions">
+                <a class="button primary" href="/products/">Open Products</a>
+                <a class="button" href="#reading">Read the gauges</a>
+              </div>
+            </div>
+
+            <div class="instrument-window" aria-label="Seasonal Monarch Fairies gauge visual">
+              <div class="center-glow"></div>
+              <div class="butterfly">
+                <div class="body"></div>
+              </div>
+              <div class="fairy one"><span></span></div>
+              <div class="fairy two"><span></span></div>
+              <div class="fairy three"><span></span></div>
+              <div class="fairy four"><span></span></div>
+              <div class="fairy five"><span></span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" id="reading">
+          <p class="kicker">Current reading</p>
+          <h2>The butterfly is the vessel. The fairies carry the motion.</h2>
+          <p>
+            The public-facing read is now simple: stained glass behind, fairies in front, monarch at center, four seasons held in one living field.
+          </p>
+
+          <div class="grid">
+            <article class="card">
+              <small>Vessel</small>
+              <strong>Monarch butterfly</strong>
+              <p>The image is recognizable, emotional, and stable enough to hold the seasonal field.</p>
+            </article>
+
+            <article class="card">
+              <small>Motion</small>
+              <strong>Fairy paths</strong>
+              <p>The former bubbles now read as fairies moving through the visual space.</p>
+            </article>
+
+            <article class="card">
+              <small>Pattern</small>
+              <strong>Two figure-eights</strong>
+              <p>The fairies still cross through mirrored loops and meet at the center.</p>
+            </article>
+
+            <article class="card">
+              <small>Seasons</small>
+              <strong>Winter, Summer, Fall, Spring</strong>
+              <p>The four seasonal corners remain visible without overpowering the art.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <p class="kicker">Open only what you need</p>
+          <h2>Instrument layers</h2>
+
+          <div class="doll-list">
+            <article class="doll is-open" data-doll>
+              <button type="button" aria-expanded="true">
+                <span>
+                  <small>First layer</small>
+                  <strong>What changed?</strong>
+                </span>
+                <span class="diamond"></span>
+              </button>
+              <div class="doll-panel">
+                <p>The products visual no longer reads as a mechanical molecule window. It now reads as a living stained-glass monarch scene with fairies moving in front.</p>
+              </div>
+            </article>
+
+            <article class="doll" data-doll>
+              <button type="button" aria-expanded="false">
+                <span>
+                  <small>Second layer</small>
+                  <strong>Why fairies?</strong>
+                </span>
+                <span class="diamond"></span>
+              </button>
+              <div class="doll-panel">
+                <p>Fairies preserve the small moving-point behavior but give the motion character. The movement feels intentional instead of abstract.</p>
+              </div>
+            </article>
+
+            <article class="doll" data-doll>
+              <button type="button" aria-expanded="false">
+                <span>
+                  <small>Third layer</small>
+                  <strong>Why the monarch?</strong>
+                </span>
+                <span class="diamond"></span>
+              </button>
+              <div class="doll-panel">
+                <p>The monarch gives the whole page a single readable image. It turns the seasonal field into something visitors can understand immediately.</p>
+              </div>
+            </article>
+
+            <article class="doll" data-doll>
+              <button type="button" aria-expanded="false">
+                <span>
+                  <small>Fourth layer</small>
+                  <strong>What remains intact?</strong>
+                </span>
+                <span class="diamond"></span>
+              </button>
+              <div class="doll-panel">
+                <p>The four seasons, center crossing, and two figure-eight motion remain intact. The presentation is upgraded; the underlying movement is preserved.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section">
+          <p class="kicker">Next public move</p>
+          <h2>Align the rest of the site to the same language.</h2>
+          <div class="grid">
+            <a class="card" href="/products/">
+              <small>Products</small>
+              <strong>Open the live visual</strong>
+              <p>Return to the active Seasonal Monarch Fairies page.</p>
+            </a>
+
+            <a class="card" href="/laws/">
+              <small>Laws</small>
+              <strong>Connect the story</strong>
+              <p>Make the laws page read as visitor-facing, not internal documentation.</p>
+            </a>
+
+            <a class="card" href="/">
+              <small>Door</small>
+              <strong>Return to the entry</strong>
+              <p>Use the root door as the entrance to the current experience.</p>
+            </a>
+
+            <a class="card" href="/about/">
+              <small>About</small>
+              <strong>Explain the mission</strong>
+              <p>Translate the system into human terms.</p>
+            </a>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span>Gauges · Seasonal Monarch Fairies</span>
+          <span class="footer-links">
+            <a href="/">Home</a>
+            <a href="/products/">Products</a>
+            <a href="/laws/">Laws</a>
+          </span>
+        </footer>
+      </main>
+    `;
   }
 
-  function enhanceDoorMarkup(doorCard, doorCore) {
-    doorCard.classList.add('dgb-door-ready');
+  function closeSiblings(shell) {
+    const parent = shell.parentElement;
+    if (!parent) return;
 
-    ensureLayer(doorCard, 'dgb-door-layer');
-    ensureLayer(doorCard, 'dgb-door-energy');
-    ensureLayer(doorCard, 'dgb-door-aura');
-    ensureLayer(doorCard, 'dgb-door-orbit');
-    ensureLayer(doorCard, 'dgb-door-beams');
-    ensureLayer(doorCard, 'dgb-door-sparks');
-    ensureLayer(doorCard, 'dgb-door-hit');
-
-    doorCore.classList.add('dgb-door-core');
-
-    const label = Array.from(doorCore.querySelectorAll('span, strong, div')).find((node) => {
-      const text = (node.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
-      return text === 'DOOR';
+    parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
+      if (item === shell) return;
+      item.classList.remove("is-open");
+      const btn = item.querySelector("button");
+      if (btn) btn.setAttribute("aria-expanded", "false");
     });
-
-    if (label) {
-      label.classList.add('dgb-door-core-label');
-    } else {
-      const text = (doorCore.textContent || '').replace(/\s+/g, ' ').trim();
-      if (text.toUpperCase() === 'DOOR') {
-        const span = document.createElement('span');
-        span.className = 'dgb-door-core-label';
-        span.textContent = text;
-        doorCore.textContent = '';
-        doorCore.appendChild(span);
-      }
-    }
-
-    const topGem = first(doorCard, SELECTORS.topGem);
-    const bottomGem = first(doorCard, SELECTORS.bottomGem);
-
-    if (topGem) topGem.classList.add('dgb-door-gem');
-    if (bottomGem) bottomGem.classList.add('dgb-door-gem');
   }
 
-  function setTouchPoint(doorCard, clientX, clientY) {
-    const rect = doorCard.getBoundingClientRect();
-    const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
-    const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
-    doorCard.style.setProperty('--dgb-touch-x', `${x}%`);
-    doorCard.style.setProperty('--dgb-touch-y', `${y}%`);
-  }
+  function wireDolls() {
+    document.querySelectorAll("[data-doll] > button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const shell = button.closest("[data-doll]");
+        if (!shell) return;
 
-  function arm(doorCard) {
-    doorCard.classList.add('is-primed');
-  }
-
-  function disarm(doorCard) {
-    if (!doorCard.classList.contains('is-pressed') && !doorCard.classList.contains('is-energized')) {
-      doorCard.classList.remove('is-primed');
-    }
-  }
-
-  function press(doorCard) {
-    doorCard.classList.add('is-pressed');
-    doorCard.classList.add('is-primed');
-  }
-
-  function release(doorCard) {
-    doorCard.classList.remove('is-pressed');
-  }
-
-  function energize(doorCard) {
-    doorCard.classList.remove('is-pressed');
-    doorCard.classList.add('is-energized');
-    doorCard.classList.add('is-primed');
-
-    window.clearTimeout(doorCard.__dgbEnergizeTimer);
-    doorCard.__dgbEnergizeTimer = window.setTimeout(() => {
-      doorCard.classList.remove('is-energized');
-      doorCard.classList.remove('is-primed');
-    }, 1300);
-  }
-
-  function wireDoor(doorCard, doorCore) {
-    const updateFromEvent = (event) => {
-      if (typeof event.clientX === 'number' && typeof event.clientY === 'number') {
-        setTouchPoint(doorCard, event.clientX, event.clientY);
-      }
-    };
-
-    doorCard.addEventListener('pointerenter', (event) => {
-      updateFromEvent(event);
-      arm(doorCard);
+        const willOpen = !shell.classList.contains("is-open");
+        closeSiblings(shell);
+        shell.classList.toggle("is-open", willOpen);
+        button.setAttribute("aria-expanded", String(willOpen));
+      });
     });
-
-    doorCard.addEventListener('pointermove', updateFromEvent);
-
-    doorCard.addEventListener('pointerleave', () => {
-      if (!doorCard.classList.contains('is-pressed')) {
-        disarm(doorCard);
-      }
-    });
-
-    doorCore.addEventListener('pointerdown', (event) => {
-      updateFromEvent(event);
-      press(doorCard);
-    });
-
-    const finishPointer = (event) => {
-      updateFromEvent(event);
-      release(doorCard);
-      energize(doorCard);
-    };
-
-    doorCore.addEventListener('pointerup', finishPointer);
-    doorCore.addEventListener('click', (event) => {
-      updateFromEvent(event);
-      energize(doorCard);
-    });
-
-    doorCore.addEventListener('focus', () => arm(doorCard));
-    doorCore.addEventListener('blur', () => {
-      release(doorCard);
-      disarm(doorCard);
-    });
-
-    doorCore.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        press(doorCard);
-      }
-    });
-
-    doorCore.addEventListener('keyup', (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        release(doorCard);
-        energize(doorCard);
-      }
-    });
-
-    doorCore.setAttribute('tabindex', doorCore.getAttribute('tabindex') || '0');
-    doorCore.setAttribute('aria-label', doorCore.getAttribute('aria-label') || 'Open the door');
-    doorCore.setAttribute('role', doorCore.getAttribute('role') || 'button');
   }
 
-  function initRootDoorUpgrade() {
-    ensureStyle();
+  function mount() {
+    injectStyle();
 
-    const doorCard = findDoorCard();
-    if (!doorCard) {
-      console.warn('[DGB] Root door card not found.');
-      return;
-    }
+    const target =
+      document.getElementById("gaugesPage") ||
+      document.getElementById("gaugesRoot") ||
+      document.querySelector("main") ||
+      document.body;
 
-    const doorCore = findDoorCore(doorCard);
-    if (!doorCore) {
-      console.warn('[DGB] Door core not found.');
-      return;
-    }
+    target.innerHTML = html();
+    target.setAttribute("data-gauges-owner", "gauges/index.js");
+    target.setAttribute("data-gauges-state", "seasonal-monarch-fairies");
 
-    enhanceDoorMarkup(doorCard, doorCore);
-    wireDoor(doorCard, doorCore);
+    wireDolls();
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initRootDoorUpgrade, { once: true });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", mount, { once: true });
   } else {
-    initRootDoorUpgrade();
+    mount();
   }
 })();

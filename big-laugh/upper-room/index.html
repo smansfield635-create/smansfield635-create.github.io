@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>The Upper Room Presents: A Dollar a Day Keeps the Psychiatrist Away</title>
-  <meta name="description" content="The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away, a coming-soon motivational crowd-interaction show upstairs at Big Laughs." />
+  <meta name="description" content="The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away, a coming-soon upstairs crowd-interaction show at Big Laughs." />
   <style>
     :root{
       --line:rgba(164,188,255,.18);
@@ -13,6 +13,7 @@
       --muted:#9aabd0;
       --gold:#efd29a;
       --pink:#ff9fd6;
+      --blue:#8ec5ff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1240px;
     }
@@ -69,7 +70,7 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card,.prize-card,.notice-card{
+    .topbar,.hero,.stage-card,.section,.card,.doll-shell,.prize-card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
@@ -130,6 +131,10 @@
     }
 
     .topnav{justify-content:flex-end}
+
+    a{
+      color:inherit;
+    }
 
     .nav-link,.button{
       display:inline-flex;
@@ -235,7 +240,9 @@
       max-width:22ch;
     }
 
-    .hero-actions{margin-top:20px}
+    .hero-actions{
+      margin-top:20px;
+    }
 
     .button{
       border-radius:18px;
@@ -344,7 +351,7 @@
 
     .stage-label strong{color:#fff}
 
-    .console,.panel{
+    .section{
       margin-top:18px;
       border-radius:30px;
       padding:22px 20px;
@@ -359,23 +366,25 @@
       margin-bottom:8px;
     }
 
-    .console h2,.panel h2{
+    .section h2{
       margin:0 0 10px;
       font-size:clamp(1.7rem,3vw,2.7rem);
       line-height:1;
       letter-spacing:-.04em;
     }
 
-    .readout-grid,.route-grid,.notice-grid,.info-grid{
+    .card-grid,.notice-grid,.info-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       margin-top:18px;
     }
 
-    .notice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .notice-grid{
+      grid-template-columns:repeat(3,minmax(0,1fr));
+    }
 
-    .readout,.route-card,.notice-card,.info-card{
+    .card,.info-card{
       border:1px solid rgba(164,188,255,.14);
       border-radius:22px;
       padding:16px;
@@ -388,7 +397,7 @@
       background:radial-gradient(circle at 100% 100%, rgba(239,210,154,.10), transparent 44%),linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
-    .readout small,.route-card small,.notice-card small,.info-card small,.prize-card small{
+    .card small,.info-card small,.prize-card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -398,7 +407,7 @@
       font-size:.72rem;
     }
 
-    .readout strong,.notice-card strong,.info-card strong{
+    .card strong,.info-card strong{
       display:block;
       color:#f4f7ff;
       font-size:1.25rem;
@@ -407,7 +416,10 @@
       margin-bottom:10px;
     }
 
-    .readout p,.route-card p,.notice-card p,.info-card p,.prize-card p{margin:0;font-size:.9rem}
+    .card p,.info-card p,.prize-card p{
+      margin:0;
+      font-size:.9rem;
+    }
 
     .prize-grid{
       display:grid;
@@ -433,10 +445,23 @@
       background:radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 44%),linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
-    .prize-card h3{margin:0 0 8px;font-size:1.35rem;letter-spacing:-.03em;line-height:1.1}
+    .prize-card h3{
+      margin:0 0 8px;
+      font-size:1.35rem;
+      letter-spacing:-.03em;
+      line-height:1.1;
+    }
 
-    .russian-doll{margin-top:18px;display:grid;gap:14px}
-    .doll-shell{border-radius:26px;overflow:hidden}
+    .russian-doll{
+      margin-top:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .doll-shell{
+      border-radius:26px;
+      overflow:hidden;
+    }
 
     .doll-toggle{
       width:100%;
@@ -462,7 +487,12 @@
       font-size:.72rem;
     }
 
-    .doll-head h3{margin:0;font-size:1.15rem;letter-spacing:-.02em;line-height:1.15}
+    .doll-head h3{
+      margin:0;
+      font-size:1.15rem;
+      letter-spacing:-.02em;
+      line-height:1.15;
+    }
 
     .doll-meta{
       flex:none;
@@ -492,16 +522,14 @@
       background:rgba(255,255,255,.018);
     }
 
-    .doll-shell.is-open .doll-panel{display:block}
-    .doll-copy{margin:16px 0 0;max-width:78ch}
-
-    .route-card{
+    .doll-shell.is-open .doll-panel{
       display:block;
-      color:var(--text);
-      text-decoration:none;
     }
 
-    .route-card h3{margin:0 0 8px;font-size:1.08rem}
+    .doll-copy{
+      margin:16px 0 0;
+      max-width:78ch;
+    }
 
     .footer{
       display:flex;
@@ -513,12 +541,19 @@
       font-size:.92rem;
     }
 
-    .footer-links a{color:var(--muted);text-decoration:none}
-    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,.footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
 
     @media (max-width:980px){
       .hero-grid{grid-template-columns:1fr}
-      .readout-grid,.info-grid,.route-grid,.notice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .card-grid,.info-grid,.notice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .prize-grid{grid-template-columns:1fr}
     }
 
@@ -526,7 +561,7 @@
       .page{width:min(100vw - 16px,var(--max));padding:14px 0 32px}
       .topbar{flex-wrap:wrap;padding:12px 14px}
       .topnav{width:100%;justify-content:flex-start}
-      .hero,.stage-card,.console,.panel{padding:18px 16px}
+      .hero,.stage-card,.section{padding:18px 16px}
       h1{font-size:clamp(2rem,11vw,3.4rem)}
       .show-title{font-size:clamp(1.15rem,7vw,1.7rem)}
       .hero-actions{gap:8px}
@@ -536,7 +571,7 @@
       .pendulum-frame{inset:10px}
       .pendulum-asset{transform:scale(1.08)}
       .stage-label{width:calc(100% - 28px);border-radius:24px;font-size:.58rem;letter-spacing:.10em}
-      .readout-grid,.info-grid,.route-grid,.notice-grid{grid-template-columns:1fr}
+      .card-grid,.info-grid,.notice-grid{grid-template-columns:1fr}
       .doll-toggle{align-items:flex-start}
       .doll-meta{display:grid;justify-items:end}
       .footer{display:grid;gap:8px}
@@ -571,9 +606,8 @@
           <h1>The <span class="accent">Upper Room</span> presents</h1>
           <h2 class="show-title"><span>A Dollar a Day</span> Keeps the Psychiatrist Away</h2>
           <p>
-            The Upper Room is a motivational crowd-interaction show hosted upstairs at Big Laughs. The downstairs comedy room is separate.
-            This upstairs room is built for direct audience engagement, energy, pressure release, forward motion, comedy inside the room,
-            and a four-show raffle cycle.
+            There are rooms where people sit down, laugh, and leave exactly the same. This is not being built for that.
+            The Upper Room is an upstairs crowd-interaction show at Big Laughs where comedy opens the door, the crowd becomes part of the night, and the point is to walk out lighter, sharper, and moving.
           </p>
 
           <div class="hero-actions">
@@ -591,93 +625,93 @@
               <object
                 class="pendulum-asset"
                 type="image/svg+xml"
-                data="/assets/upper-room-pendulum.svg?v=4"
+                data="/assets/upper-room-pendulum.svg?v=5"
                 aria-label="Animated pendulum for The Upper Room coming soon status"
               >
                 <img
                   class="pendulum-asset"
-                  src="/assets/upper-room-pendulum.svg?v=4"
+                  src="/assets/upper-room-pendulum.svg?v=5"
                   alt="Animated pendulum for The Upper Room coming soon status"
                 />
               </object>
             </div>
             <div class="stage-label">
-              <strong>Time is moving</strong> · The Upper Room is being set
+              <strong>Time is moving</strong> · The room is being set
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="console" id="status">
+    <section class="section" id="status">
       <div class="section-kicker">Current status</div>
       <h2>Coming soon, not officially on the calendar yet</h2>
       <p>
-        This page is a preview and registration-interest surface. The event is not officially posted on the venue calendar yet.
-        Final dates, ticket purchase links, and official calendar placement should be confirmed before public launch.
+        This is the preview page. The show is being prepared, but it is not officially listed on the Big Laughs calendar yet.
+        Final date, purchase link, and official listing details will be added when the room is ready.
       </p>
 
       <div class="notice-grid">
-        <div class="notice-card">
+        <div class="card notice-card">
           <small>Status</small>
           <strong>Coming soon</strong>
-          <p>The show is being prepared and is not yet officially listed.</p>
+          <p>The room is being set before the public launch.</p>
         </div>
 
-        <div class="notice-card">
+        <div class="card notice-card">
           <small>Calendar</small>
-          <strong>Not posted yet</strong>
-          <p>Final schedule information will be added after official calendar confirmation.</p>
+          <strong>Not listed yet</strong>
+          <p>The show is not officially on the venue calendar yet.</p>
         </div>
 
-        <div class="notice-card">
-          <small>Public action</small>
-          <strong>Register interest</strong>
-          <p>Visitors can learn the format and prepare to pre-register when the official link opens.</p>
+        <div class="card notice-card">
+          <small>Best next move</small>
+          <strong>Watch this space</strong>
+          <p>Registration and ticket details will be posted when the listing opens.</p>
         </div>
       </div>
     </section>
 
-    <section class="console" id="pricing">
+    <section class="section" id="pricing">
       <div class="section-kicker">Pricing and registration</div>
-      <h2>Pricing details</h2>
+      <h2>The title is the hook. The room is the payoff.</h2>
       <p>
-        The final ticket price and official checkout link will be posted once the show is placed on the calendar.
-        The working public hook is simple: the show title is <em>A Dollar a Day Keeps the Psychiatrist Away</em>,
-        and pre-registration will be the best way to start the raffle cycle.
+        The planned ticket line is simple: <strong>$1 per ticket</strong>, pending the official event listing. Pre-registration will be the strongest way to enter the raffle once registration opens.
       </p>
 
-      <div class="readout-grid">
-        <div class="readout">
-          <small>Official ticket price</small>
-          <strong>Coming soon</strong>
-          <p>Final pricing is not live until the official event listing is posted.</p>
+      <div class="card-grid">
+        <div class="card">
+          <small>Planned ticket line</small>
+          <strong>$1 per ticket</strong>
+          <p>Final purchase details will be confirmed when the official listing opens.</p>
         </div>
 
-        <div class="readout">
+        <div class="card">
           <small>Pre-registration</small>
           <strong>5 raffle tickets</strong>
-          <p>Each pre-registration earns five raffle tickets once registration opens.</p>
+          <p>Every pre-registration earns five raffle tickets once registration opens.</p>
         </div>
 
-        <div class="readout">
+        <div class="card">
           <small>Attendance</small>
           <strong>+1 ticket</strong>
-          <p>Each show attended earns one additional raffle ticket.</p>
+          <p>Every show attended earns one additional raffle ticket.</p>
         </div>
 
-        <div class="readout">
-          <small>Show cycle</small>
-          <strong>4 shows</strong>
+        <div class="card">
+          <small>Reveal</small>
+          <strong>Show 4</strong>
           <p>Winners are revealed at the fourth show.</p>
         </div>
       </div>
     </section>
 
-    <section class="console" id="raffle">
+    <section class="section" id="raffle">
       <div class="section-kicker">Raffle prizes</div>
-      <h2>Grand prize and runner-up</h2>
-      <p>The raffle gives the room another reason to build momentum across all four shows.</p>
+      <h2>Come for the room. Stay for the raffle.</h2>
+      <p>
+        The raffle gives the night a running pulse across all four shows.
+      </p>
 
       <div class="prize-grid">
         <article class="prize-card grand">
@@ -694,7 +728,7 @@
       </div>
     </section>
 
-    <section class="panel" id="showInfo">
+    <section class="section" id="showInfo">
       <div class="section-kicker">Show details</div>
       <h2>Open only what you need</h2>
 
@@ -702,7 +736,7 @@
         <article class="doll-shell is-open" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="true">
             <div class="doll-head">
-              <small>Container 1</small>
+              <small>First layer</small>
               <h3>What is the show?</h3>
             </div>
             <div class="doll-meta"><span>Title</span><span class="doll-diamond"></span></div>
@@ -710,8 +744,7 @@
           <div class="doll-panel">
             <p class="doll-copy">
               The full show identity is: <strong>The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away.</strong>
-              The Upper Room is the upstairs event space at Big Laughs. The show is motivational crowd interaction first,
-              with comedy present as part of the room’s engine.
+              It is a live upstairs room where comedy breaks the ice, the crowd gets involved, and the night turns toward motivation without pretending to be a lecture.
             </p>
           </div>
         </article>
@@ -719,32 +752,48 @@
         <article class="doll-shell" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 2</small>
-              <h3>How the raffle works</h3>
+              <small>Second layer</small>
+              <h3>Why upstairs?</h3>
+            </div>
+            <div class="doll-meta"><span>Room</span><span class="doll-diamond"></span></div>
+          </button>
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Big Laughs has the downstairs comedy room and the upstairs area. This show belongs upstairs. That separation matters:
+              the comedy room stays the comedy room, and The Upper Room becomes its own experience.
+            </p>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Third layer</small>
+              <h3>How does the raffle work?</h3>
             </div>
             <div class="doll-meta"><span>Raffle</span><span class="doll-diamond"></span></div>
           </button>
           <div class="doll-panel">
             <p class="doll-copy">
-              Pre-registering gives you five raffle tickets. Every show you attend gives you one additional raffle ticket.
-              The raffle cycle runs across four shows, and winners are revealed at the fourth show.
+              Pre-registering gives you five raffle tickets. Every show attended adds one more. The raffle runs across four shows,
+              and the winners are revealed at the fourth show.
             </p>
 
             <div class="info-grid">
               <div class="info-card">
                 <small>Pre-register</small>
                 <strong>5 raffle tickets</strong>
-                <p>Every pre-registration earns five raffle tickets.</p>
+                <p>Start ahead when registration opens.</p>
               </div>
               <div class="info-card">
                 <small>Attend</small>
                 <strong>1 raffle ticket</strong>
-                <p>Every show attended earns one additional raffle ticket.</p>
+                <p>Each show attended adds one entry.</p>
               </div>
               <div class="info-card">
                 <small>Cycle</small>
                 <strong>4 shows</strong>
-                <p>The raffle runs across four Upper Room shows.</p>
+                <p>The raffle builds across the full run.</p>
               </div>
               <div class="info-card">
                 <small>Reveal</small>
@@ -758,63 +807,47 @@
         <article class="doll-shell" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 3</small>
+              <small>Fourth layer</small>
               <h3>What should people expect?</h3>
             </div>
             <div class="doll-meta"><span>Energy</span><span class="doll-diamond"></span></div>
           </button>
           <div class="doll-panel">
             <p class="doll-copy">
-              Expect a room that talks back, reacts, laughs, gets pushed, gets pulled forward, and becomes part of the event.
-              The tone is high-energy, direct, funny, motivational, and intentionally interactive.
-            </p>
-          </div>
-        </article>
-
-        <article class="doll-shell" data-doll>
-          <button class="doll-toggle" type="button" aria-expanded="false">
-            <div class="doll-head">
-              <small>Container 4</small>
-              <h3>Venue clarification</h3>
-            </div>
-            <div class="doll-meta"><span>Big Laughs</span><span class="doll-diamond"></span></div>
-          </button>
-          <div class="doll-panel">
-            <p class="doll-copy">
-              Big Laughs has the downstairs comedy room and the upstairs area. The Upper Room happens upstairs.
-              The downstairs comedy show remains separate from this event.
+              Expect a room that talks back, laughs, gets challenged, and becomes part of the event. The tone is funny, direct,
+              motivational, interactive, and built for people who know they need a reset but do not want another boring speech.
             </p>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="console">
-      <div class="section-kicker">Final route</div>
-      <h2>Ready for The Upper Room</h2>
+    <section class="section">
+      <div class="section-kicker">Final invitation</div>
+      <h2>When the room opens, be early</h2>
 
-      <div class="route-grid">
-        <a class="route-card" href="#status">
+      <div class="card-grid">
+        <a class="card" href="#status">
           <small>Status</small>
-          <h3>Coming soon</h3>
-          <p>Confirm that the show is not officially on the calendar yet.</p>
+          <strong>Coming soon</strong>
+          <p>Confirm that the show is not officially listed yet.</p>
         </a>
 
-        <a class="route-card" href="#pricing">
+        <a class="card" href="#pricing">
           <small>Pricing</small>
-          <h3>Ticket details</h3>
-          <p>Review pricing status and registration-entry logic.</p>
+          <strong>$1 planned line</strong>
+          <p>Review the planned ticket line and registration logic.</p>
         </a>
 
-        <a class="route-card" href="#raffle">
+        <a class="card" href="#raffle">
           <small>Raffle</small>
-          <h3>Prize details</h3>
+          <strong>Prize details</strong>
           <p>Review the grand prize and runner-up prize.</p>
         </a>
 
-        <a class="route-card" href="/big-laugh/">
+        <a class="card" href="/big-laugh/">
           <small>Big Laugh</small>
-          <h3>Show umbrella</h3>
+          <strong>Show umbrella</strong>
           <p>Return to the larger public-expression page.</p>
         </a>
       </div>

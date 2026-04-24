@@ -1,6 +1,6 @@
 (() => {
-  const RUNTIME_ID = "products-runtime-four-lobed-breathing-room-v1";
-  const STYLE_ID = "products-runtime-four-lobed-breathing-room-style";
+  const RUNTIME_ID = "products-runtime-floating-molecule-stained-glass-v1";
+  const STYLE_ID = "products-runtime-floating-molecule-stained-glass-style";
   const RECEIPT_FLAG = "productsRuntimeMounted";
 
   const CARDINALS = {
@@ -9,7 +9,7 @@
       atomLabel: "White",
       pairKey: "white-green",
       color: "var(--north)",
-      glow: "rgba(223,233,255,.72)",
+      glow: "rgba(223,233,255,.78)",
       role: "Framekeeping · threshold · classification",
       href: "/laws/",
       phaseBase: Math.PI * 1.25
@@ -19,7 +19,7 @@
       atomLabel: "Green",
       pairKey: "white-green",
       color: "var(--south)",
-      glow: "rgba(142,227,172,.72)",
+      glow: "rgba(142,227,172,.78)",
       role: "Continuity · care · restoration",
       href: "/gauges/",
       phaseBase: Math.PI * 0.25
@@ -29,7 +29,7 @@
       atomLabel: "Yellow",
       pairKey: "yellow-blue",
       color: "var(--west)",
-      glow: "rgba(255,213,138,.72)",
+      glow: "rgba(255,213,138,.78)",
       role: "Pressure-test · audit · contradiction",
       href: "/about/",
       phaseBase: Math.PI * 0.75
@@ -39,7 +39,7 @@
       atomLabel: "Blue",
       pairKey: "yellow-blue",
       color: "var(--east)",
-      glow: "rgba(142,197,255,.72)",
+      glow: "rgba(142,197,255,.78)",
       role: "Signal · build-line · formation",
       href: "/products/",
       phaseBase: Math.PI * 1.75
@@ -150,7 +150,7 @@
         overflow: hidden;
         background:
           radial-gradient(circle at 50% 50%, rgba(135,164,255,.13), transparent 24%),
-          linear-gradient(180deg, rgba(4,10,22,.92), rgba(2,8,18,.98));
+          linear-gradient(180deg, rgba(4,10,22,.94), rgba(2,8,18,.98));
         isolation: isolate;
       }
 
@@ -160,9 +160,11 @@
         inset: 0;
         pointer-events: none;
         background:
+          radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 20%),
           linear-gradient(135deg, rgba(255,255,255,.04), transparent 38%),
           linear-gradient(225deg, rgba(255,255,255,.03), transparent 34%);
-        opacity: .8;
+        opacity: .85;
+        z-index: 1;
       }
 
       [data-products-runtime-root] .window-title {
@@ -173,210 +175,276 @@
         padding: 8px 14px;
         border-radius: 999px;
         border: 1px solid rgba(140,168,240,.22);
-        background: rgba(6,14,28,.82);
+        background: rgba(6,14,28,.86);
         color: #dbe5ff;
         font-size: .72rem;
         letter-spacing: .14em;
         text-transform: uppercase;
-        z-index: 12;
+        z-index: 18;
         max-width: calc(100% - 32px);
         white-space: normal;
         text-align: center;
         line-height: 1.35;
       }
 
-      [data-products-runtime-root] .glass-panel {
+      [data-products-runtime-root] .glass-window {
         position: absolute;
-        inset: 12px;
-        border-radius: 22px;
+        inset: 52px 18px 82px;
+        border-radius: 28px;
         overflow: hidden;
-        z-index: 1;
+        z-index: 2;
+        border: 1px solid rgba(255,255,255,.12);
+        box-shadow:
+          inset 0 0 32px rgba(255,255,255,.05),
+          inset 0 -18px 42px rgba(0,0,0,.20),
+          0 22px 60px rgba(0,0,0,.28);
+        background: rgba(5,12,24,.58);
+      }
+
+      [data-products-runtime-root] .glass-window::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 24% 24%, rgba(245,248,255,.16), transparent 20%),
+          radial-gradient(circle at 76% 24%, rgba(120,200,255,.16), transparent 22%),
+          radial-gradient(circle at 24% 76%, rgba(255,205,110,.14), transparent 22%),
+          radial-gradient(circle at 76% 76%, rgba(110,230,165,.14), transparent 22%);
+        z-index: 2;
       }
 
       [data-products-runtime-root] .glass-pane {
         position: absolute;
-        border: 1px solid rgba(255,255,255,.08);
+        overflow: hidden;
+        border: 1px solid rgba(255,255,255,.075);
         box-shadow:
-          inset 0 0 22px rgba(255,255,255,.04),
-          inset 0 -10px 24px rgba(0,0,0,.16);
-        backdrop-filter: blur(1px);
+          inset 0 0 34px rgba(255,255,255,.06),
+          inset 0 -20px 38px rgba(0,0,0,.18);
+      }
+
+      [data-products-runtime-root] .glass-pane::before,
+      [data-products-runtime-root] .glass-pane::after {
+        content: "";
+        position: absolute;
+        inset: -20%;
+        border-radius: 50%;
+        border: 2px solid rgba(5,10,22,.58);
+        box-shadow:
+          0 0 0 1px rgba(255,255,255,.035),
+          inset 0 0 18px rgba(255,255,255,.035);
+        transform: rotate(var(--arc-rotation));
+        opacity: .78;
+      }
+
+      [data-products-runtime-root] .glass-pane::after {
+        inset: 14%;
+        transform: rotate(calc(var(--arc-rotation) * -1));
+        opacity: .48;
       }
 
       [data-products-runtime-root] .glass-pane.white {
-        left: 7%;
-        top: 7%;
-        width: 40%;
-        height: 35%;
-        border-radius: 42px 26px 58px 30px;
+        left: 0;
+        top: 0;
+        width: 50%;
+        height: 50%;
+        border-radius: 24px 0 0 0;
+        --arc-rotation: -24deg;
         background:
-          radial-gradient(circle at 62% 40%, rgba(240,246,255,.24), transparent 40%),
-          linear-gradient(135deg, rgba(221,232,255,.18), rgba(123,146,214,.12));
+          radial-gradient(circle at 58% 50%, rgba(245,248,255,.24), transparent 48%),
+          linear-gradient(135deg, rgba(232,238,255,.24), rgba(108,126,190,.12));
       }
 
       [data-products-runtime-root] .glass-pane.blue {
-        right: 7%;
-        top: 7%;
-        width: 40%;
-        height: 35%;
-        border-radius: 26px 42px 30px 58px;
+        right: 0;
+        top: 0;
+        width: 50%;
+        height: 50%;
+        border-radius: 0 24px 0 0;
+        --arc-rotation: 28deg;
         background:
-          radial-gradient(circle at 36% 40%, rgba(188,224,255,.22), transparent 42%),
-          linear-gradient(135deg, rgba(143,201,255,.18), rgba(67,111,190,.12));
+          radial-gradient(circle at 40% 50%, rgba(175,222,255,.24), transparent 48%),
+          linear-gradient(135deg, rgba(90,180,255,.22), rgba(22,74,140,.16));
       }
 
       [data-products-runtime-root] .glass-pane.yellow {
-        left: 7%;
-        bottom: 7%;
-        width: 40%;
-        height: 35%;
-        border-radius: 30px 58px 26px 42px;
+        left: 0;
+        bottom: 0;
+        width: 50%;
+        height: 50%;
+        border-radius: 0 0 0 24px;
+        --arc-rotation: 28deg;
         background:
-          radial-gradient(circle at 60% 44%, rgba(255,222,170,.20), transparent 42%),
-          linear-gradient(135deg, rgba(255,213,143,.18), rgba(147,107,46,.12));
+          radial-gradient(circle at 58% 46%, rgba(255,225,150,.24), transparent 48%),
+          linear-gradient(135deg, rgba(255,205,84,.22), rgba(130,82,18,.18));
       }
 
       [data-products-runtime-root] .glass-pane.green {
-        right: 7%;
-        bottom: 7%;
-        width: 40%;
-        height: 35%;
-        border-radius: 58px 30px 42px 26px;
+        right: 0;
+        bottom: 0;
+        width: 50%;
+        height: 50%;
+        border-radius: 0 0 24px 0;
+        --arc-rotation: -26deg;
         background:
-          radial-gradient(circle at 40% 44%, rgba(177,245,196,.20), transparent 42%),
-          linear-gradient(135deg, rgba(151,230,180,.18), rgba(47,113,74,.12));
+          radial-gradient(circle at 40% 46%, rgba(150,255,188,.24), transparent 48%),
+          linear-gradient(135deg, rgba(78,220,135,.22), rgba(24,96,58,.18));
       }
 
-      [data-products-runtime-root] .lead-came {
+      [data-products-runtime-root] .leadline {
         position: absolute;
-        background: linear-gradient(180deg, rgba(226,231,241,.50), rgba(86,96,120,.64));
+        pointer-events: none;
+        z-index: 5;
+        background: linear-gradient(180deg, rgba(9,13,26,.72), rgba(0,0,0,.56));
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.20),
-          inset 0 -1px 0 rgba(0,0,0,.24),
-          0 0 10px rgba(0,0,0,.12);
-        z-index: 3;
+          inset 0 1px 0 rgba(255,255,255,.12),
+          0 0 14px rgba(0,0,0,.28);
+      }
+
+      [data-products-runtime-root] .leadline.vertical {
+        left: 50%;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        transform: translateX(-50%);
+      }
+
+      [data-products-runtime-root] .leadline.horizontal {
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 3px;
+        transform: translateY(-50%);
+      }
+
+      [data-products-runtime-root] .leadline.arc {
+        background: transparent;
+        border: 3px solid rgba(4,8,18,.64);
+        box-shadow:
+          inset 0 0 10px rgba(255,255,255,.04),
+          0 0 12px rgba(0,0,0,.26);
+        border-radius: 50%;
+        opacity: .66;
+      }
+
+      [data-products-runtime-root] .leadline.arc.one {
+        left: 6%;
+        top: 5%;
+        width: 48%;
+        height: 44%;
+        transform: rotate(-24deg);
+      }
+
+      [data-products-runtime-root] .leadline.arc.two {
+        right: 6%;
+        top: 5%;
+        width: 48%;
+        height: 44%;
+        transform: rotate(24deg);
+      }
+
+      [data-products-runtime-root] .leadline.arc.three {
+        left: 6%;
+        bottom: 5%;
+        width: 48%;
+        height: 44%;
+        transform: rotate(24deg);
+      }
+
+      [data-products-runtime-root] .leadline.arc.four {
+        right: 6%;
+        bottom: 5%;
+        width: 48%;
+        height: 44%;
+        transform: rotate(-24deg);
+      }
+
+      [data-products-runtime-root] .molecule-layer {
+        position: absolute;
+        inset: 52px 18px 82px;
+        z-index: 12;
         pointer-events: none;
       }
 
-      [data-products-runtime-root] .lead-came.v {
-        width: 8px;
-        top: 0;
-        bottom: 0;
-        border-radius: 999px;
-      }
-
-      [data-products-runtime-root] .lead-came.h {
-        height: 8px;
-        left: 0;
-        right: 0;
-        border-radius: 999px;
-      }
-
-      [data-products-runtime-root] .lead-came.diag {
-        width: 8px;
-        height: 255px;
+      [data-products-runtime-root] .molecule-layer::before {
+        content: "";
+        position: absolute;
         left: 50%;
         top: 50%;
-        transform-origin: center center;
-        border-radius: 999px;
-        opacity: .68;
+        width: 118px;
+        height: 118px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background:
+          radial-gradient(circle, rgba(255,255,255,.96) 0 4%, rgba(210,228,255,.42) 12%, rgba(140,178,255,.16) 34%, transparent 68%);
+        filter: blur(.2px);
+        box-shadow:
+          0 0 22px rgba(255,255,255,.44),
+          0 0 50px rgba(130,170,255,.24);
+        opacity: .92;
+        z-index: 2;
       }
 
-      [data-products-runtime-root] .flower-window {
-        position: absolute;
-        inset: 46px 18px 82px;
-        border-radius: 26px;
-        overflow: hidden;
-        z-index: 5;
-      }
-
-      [data-products-runtime-root] .flower-path {
+      [data-products-runtime-root] .molecule-trail {
         position: absolute;
         inset: 0;
         width: 100%;
         height: 100%;
         overflow: visible;
-        z-index: 2;
+        z-index: 3;
         pointer-events: none;
       }
 
-      [data-products-runtime-root] .flower-path path {
+      [data-products-runtime-root] .molecule-trail path {
         fill: none;
-        stroke-width: 1.6;
         stroke-linecap: round;
         stroke-linejoin: round;
-        opacity: .52;
+        stroke-width: 5.5;
+        opacity: .46;
       }
 
-      [data-products-runtime-root] .path-white-green {
-        stroke: rgba(194,245,214,.46);
-        filter: drop-shadow(0 0 10px rgba(142,227,172,.16));
+      [data-products-runtime-root] .trail-white-green {
+        stroke: rgba(176, 245, 205, .38);
+        filter: drop-shadow(0 0 10px rgba(142,227,172,.20));
       }
 
-      [data-products-runtime-root] .path-yellow-blue {
-        stroke: rgba(185,217,255,.42);
-        filter: drop-shadow(0 0 10px rgba(142,197,255,.16));
-      }
-
-      [data-products-runtime-root] .flower-center {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 82px;
-        height: 82px;
-        transform: translate(-50%, -50%) rotate(45deg);
-        border-radius: 18px;
-        border: 1px solid rgba(214,226,255,.20);
-        background:
-          radial-gradient(circle, rgba(247,250,255,.64) 0%, rgba(149,188,255,.20) 36%, rgba(92,130,216,.06) 70%, transparent 84%);
-        box-shadow:
-          0 0 30px rgba(144,182,255,.18),
-          inset 0 0 22px rgba(255,255,255,.06);
-        z-index: 4;
-        pointer-events: none;
-        animation: flowerCenterPulse 4.8s ease-in-out infinite;
-      }
-
-      @keyframes flowerCenterPulse {
-        0%, 100% {
-          opacity: .58;
-          transform: translate(-50%, -50%) rotate(45deg) scale(.94);
-        }
-        50% {
-          opacity: .86;
-          transform: translate(-50%, -50%) rotate(45deg) scale(1.04);
-        }
+      [data-products-runtime-root] .trail-yellow-blue {
+        stroke: rgba(185, 217, 255, .34);
+        filter: drop-shadow(0 0 10px rgba(142,197,255,.20));
       }
 
       [data-products-runtime-root] .petal-label {
         position: absolute;
         transform: translate(-50%, -50%);
-        min-width: 88px;
-        height: 32px;
+        min-width: 82px;
+        height: 30px;
         padding: 0 12px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         border-radius: 999px;
-        border: 1px solid rgba(255,255,255,.14);
-        background: rgba(6,14,28,.74);
+        border: 1px solid rgba(255,255,255,.12);
+        background: rgba(6,14,28,.76);
         color: #f7fbff;
-        font-size: .68rem;
+        font-size: .62rem;
         font-weight: 800;
-        letter-spacing: .14em;
+        letter-spacing: .13em;
         text-transform: uppercase;
-        z-index: 7;
+        z-index: 10;
         pointer-events: none;
+        box-shadow: 0 12px 32px rgba(0,0,0,.28);
       }
 
-      [data-products-runtime-root] .petal-label.white { left: 26%; top: 27%; }
-      [data-products-runtime-root] .petal-label.blue { left: 74%; top: 27%; }
-      [data-products-runtime-root] .petal-label.yellow { left: 26%; top: 73%; }
-      [data-products-runtime-root] .petal-label.green { left: 74%; top: 73%; }
+      [data-products-runtime-root] .petal-label.white { left: 25%; top: 28%; }
+      [data-products-runtime-root] .petal-label.blue { left: 75%; top: 28%; }
+      [data-products-runtime-root] .petal-label.yellow { left: 25%; top: 72%; }
+      [data-products-runtime-root] .petal-label.green { left: 75%; top: 72%; }
 
       [data-products-runtime-root] .node-layer {
         position: absolute;
         inset: 0;
-        z-index: 8;
+        z-index: 16;
+        pointer-events: none;
       }
 
       [data-products-runtime-root] .node {
@@ -387,15 +455,16 @@
         height: 15px;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        border: 1px solid rgba(255,255,255,.76);
+        border: 1px solid rgba(255,255,255,.84);
         background: var(--color);
         box-shadow:
-          0 0 0 5px rgba(255,255,255,.04),
+          0 0 0 5px rgba(255,255,255,.05),
           0 0 18px var(--glow),
-          0 0 36px var(--glow);
+          0 0 38px var(--glow);
         cursor: pointer;
         transition: transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;
         z-index: 9;
+        pointer-events: auto;
       }
 
       [data-products-runtime-root] .node::after {
@@ -409,7 +478,7 @@
         text-transform: uppercase;
         color: #d9e5ff;
         white-space: nowrap;
-        opacity: .62;
+        opacity: .0;
         pointer-events: none;
       }
 
@@ -438,14 +507,14 @@
         padding: 12px 16px;
         border-radius: 999px;
         border: 1px solid rgba(140,168,240,.24);
-        background: rgba(6,14,28,.80);
+        background: rgba(6,14,28,.82);
         text-align: center;
         text-transform: uppercase;
         letter-spacing: .14em;
         font-size: .72rem;
         color: #dbe5ff;
         box-shadow: 0 12px 32px rgba(0,0,0,.28);
-        z-index: 10;
+        z-index: 18;
         white-space: normal;
         line-height: 1.35;
       }
@@ -540,28 +609,27 @@
           height: 600px;
         }
 
-        [data-products-runtime-root] .flower-window {
+        [data-products-runtime-root] .glass-window,
+        [data-products-runtime-root] .molecule-layer {
           inset: 54px 6px 76px;
         }
 
-        [data-products-runtime-root] .lead-came.v {
-          width: 7px;
+        [data-products-runtime-root] .window-title {
+          font-size: .60rem;
         }
 
-        [data-products-runtime-root] .lead-came.h {
-          height: 7px;
+        [data-products-runtime-root] .leadline.arc {
+          border-width: 2px;
         }
 
-        [data-products-runtime-root] .lead-came.diag {
-          width: 7px;
-          height: 190px;
-          opacity: .54;
+        [data-products-runtime-root] .molecule-layer::before {
+          width: 82px;
+          height: 82px;
         }
 
-        [data-products-runtime-root] .flower-center {
-          width: 54px;
-          height: 54px;
-          border-radius: 12px;
+        [data-products-runtime-root] .molecule-trail path {
+          stroke-width: 4.2;
+          opacity: .38;
         }
 
         [data-products-runtime-root] .petal-label {
@@ -672,7 +740,7 @@
           role: cardinal.role,
           href: cardinal.href,
           description:
-            `${title} is a ${cardinal.atomLabel.toLowerCase()} point on the four-lobed molecular flower. ` +
+            `${title} is a ${cardinal.atomLabel.toLowerCase()} point floating in front of the stained-glass window. ` +
             `${pair.description} It participates as ${cardinal.role.toLowerCase()}.`
         });
       });
@@ -705,31 +773,27 @@
           </div>
 
           <div class="flower-stage">
-            <div class="window-title">shared-center stained-glass viewport</div>
+            <div class="window-title">floating molecule · leaded stained glass</div>
 
-            <div class="glass-panel">
+            <div class="glass-window" aria-hidden="true">
               <div class="glass-pane white"></div>
               <div class="glass-pane blue"></div>
               <div class="glass-pane yellow"></div>
               <div class="glass-pane green"></div>
+
+              <div class="leadline vertical"></div>
+              <div class="leadline horizontal"></div>
+              <div class="leadline arc one"></div>
+              <div class="leadline arc two"></div>
+              <div class="leadline arc three"></div>
+              <div class="leadline arc four"></div>
             </div>
 
-            <div class="lead-came h" style="top:12px;"></div>
-            <div class="lead-came h" style="bottom:12px;"></div>
-            <div class="lead-came v" style="left:12px;"></div>
-            <div class="lead-came v" style="right:12px;"></div>
-            <div class="lead-came v" style="left:50%;transform:translateX(-50%);top:14%;bottom:14%;"></div>
-            <div class="lead-came h" style="top:50%;transform:translateY(-50%);left:14%;right:14%;"></div>
-            <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(45deg);"></div>
-            <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(-45deg);"></div>
-
-            <div class="flower-window">
-              <svg class="flower-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <path class="path-white-green" d="M50 50 C17 7, 4 32, 50 50 C96 68, 83 93, 50 50" />
-                <path class="path-yellow-blue" d="M50 50 C7 83, 32 96, 50 50 C68 4, 93 17, 50 50" />
+            <div class="molecule-layer">
+              <svg class="molecule-trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                <path class="trail-white-green" d="M50 50 C17 7, 4 32, 50 50 C96 68, 83 93, 50 50" />
+                <path class="trail-yellow-blue" d="M50 50 C7 83, 32 96, 50 50 C68 4, 93 17, 50 50" />
               </svg>
-
-              <div class="flower-center"></div>
 
               <div class="petal-label white">White</div>
               <div class="petal-label blue">Blue</div>
@@ -740,7 +804,7 @@
             </div>
 
             <div class="flower-copy">
-              <strong>Four-lobed molecular flower</strong> · two figure-eights crossing one shared throat
+              <strong>Floating molecule</strong> · stained glass behind it, motion in front
             </div>
           </div>
         </div>
@@ -769,12 +833,12 @@
             </div>
             <div class="stat">
               <span class="stat-label">Motion read</span>
-              <span class="stat-value" data-detail-route>Shared-center torsion</span>
+              <span class="stat-value" data-detail-route>Floating molecule</span>
             </div>
           </div>
 
           <div class="motion-readout" data-motion-readout>
-            <strong>Motion:</strong> two figure-eights overlap into one four-lobed compound.
+            <strong>Motion:</strong> the molecule floats in front of the stained-glass window.
           </div>
 
           <div class="hero-actions">
@@ -880,7 +944,7 @@
     function animate() {
       const now = performance.now();
       const elapsed = (now - state.startedAt) / 1000;
-      const speed = 0.44;
+      const speed = 0.42;
       const isMobile = window.matchMedia("(max-width: 720px)").matches;
       const scaleX = isMobile ? 34 : 36;
       const scaleY = isMobile ? 25 : 27;

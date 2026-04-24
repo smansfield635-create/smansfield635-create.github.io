@@ -3,11 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>The Upper Room Presents: A Dollar a Day Keeps the Psychiatrist Away · Big Laugh</title>
-  <meta
-    name="description"
-    content="The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away, a coming-soon motivational crowd-interaction show upstairs at Big Laughs. Not officially on the calendar yet."
-  />
+  <title>The Upper Room Presents: A Dollar a Day Keeps the Psychiatrist Away</title>
+  <meta name="description" content="The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away, a coming-soon motivational crowd-interaction show upstairs at Big Laughs." />
   <style>
     :root{
       --line:rgba(164,188,255,.18);
@@ -110,7 +107,6 @@
       color:#f4f8ff;
       font-weight:900;
       letter-spacing:.08em;
-      box-shadow:0 0 22px rgba(255,159,214,.09);
     }
 
     .brand-kicker{
@@ -127,12 +123,13 @@
       font-weight:800;
     }
 
-    .topnav{
+    .topnav,.hero-actions,.footer-links{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      justify-content:flex-end;
     }
+
+    .topnav{justify-content:flex-end}
 
     .nav-link,.button{
       display:inline-flex;
@@ -146,7 +143,6 @@
       font-weight:800;
       background:rgba(255,255,255,.035);
       text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
     .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
@@ -217,7 +213,7 @@
       max-width:13ch;
     }
 
-    h1 .accent{color:var(--gold)}
+    h1 .accent,.show-title span{color:var(--gold)}
 
     p{
       color:var(--muted);
@@ -239,14 +235,7 @@
       max-width:22ch;
     }
 
-    .show-title span{color:var(--gold)}
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:20px;
-    }
+    .hero-actions{margin-top:20px}
 
     .button{
       border-radius:18px;
@@ -257,17 +246,13 @@
 
     .button.primary{
       border-color:rgba(239,210,154,.34);
-      background:
-        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
-        rgba(255,255,255,.035);
+      background:linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),rgba(255,255,255,.035);
       color:#fff8ea;
     }
 
     .button.raffle{
       border-color:rgba(255,159,214,.40);
-      background:
-        linear-gradient(180deg, rgba(255,159,214,.18), rgba(255,159,214,.06)),
-        rgba(255,255,255,.035);
+      background:linear-gradient(180deg, rgba(255,159,214,.18), rgba(255,159,214,.06)),rgba(255,255,255,.035);
       color:#fff5fb;
     }
 
@@ -289,9 +274,7 @@
       background:
         radial-gradient(circle at 50% 50%, rgba(255,159,214,.12), transparent 28%),
         linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
-      box-shadow:
-        inset 0 0 44px rgba(126,164,255,.10),
-        inset 0 -26px 70px rgba(0,0,0,.34);
+      box-shadow:inset 0 0 44px rgba(126,164,255,.10), inset 0 -26px 70px rgba(0,0,0,.34);
       isolation:isolate;
     }
 
@@ -334,9 +317,7 @@
       border:0;
       object-fit:cover;
       object-position:center;
-      filter:
-        drop-shadow(0 0 18px rgba(239,210,154,.13))
-        drop-shadow(0 0 34px rgba(109,184,255,.10));
+      filter:drop-shadow(0 0 18px rgba(239,210,154,.13)) drop-shadow(0 0 34px rgba(109,184,255,.10));
       transform:scale(1.02);
     }
 
@@ -385,22 +366,29 @@
       letter-spacing:-.04em;
     }
 
-    .readout-grid,.route-grid{
+    .readout-grid,.route-grid,.notice-grid,.info-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       margin-top:18px;
     }
 
-    .readout,.route-card,.notice-card{
+    .notice-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+
+    .readout,.route-card,.notice-card,.info-card{
+      border:1px solid rgba(164,188,255,.14);
       border-radius:22px;
       padding:16px;
       min-height:146px;
-      position:relative;
-      overflow:hidden;
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.78));
     }
 
-    .readout small,.route-card small,.prize-card small,.notice-card small{
+    .notice-card{
+      border-color:rgba(239,210,154,.24);
+      background:radial-gradient(circle at 100% 100%, rgba(239,210,154,.10), transparent 44%),linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .readout small,.route-card small,.notice-card small,.info-card small,.prize-card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -410,33 +398,16 @@
       font-size:.72rem;
     }
 
-    .readout strong,.notice-card strong{
+    .readout strong,.notice-card strong,.info-card strong{
       display:block;
       color:#f4f7ff;
-      font-size:1.35rem;
+      font-size:1.25rem;
       line-height:1.05;
       letter-spacing:-.03em;
       margin-bottom:10px;
     }
 
-    .readout p,.route-card p,.prize-card p,.notice-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .notice-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .notice-card{
-      border-color:rgba(239,210,154,.24);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(239,210,154,.10), transparent 44%),
-        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
-    }
+    .readout p,.route-card p,.notice-card p,.info-card p,.prize-card p{margin:0;font-size:.9rem}
 
     .prize-grid{
       display:grid;
@@ -454,43 +425,24 @@
 
     .prize-card.grand{
       border-color:rgba(239,210,154,.34);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(239,210,154,.14), transparent 44%),
-        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+      background:radial-gradient(circle at 100% 100%, rgba(239,210,154,.14), transparent 44%),linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
     .prize-card.runner{
       border-color:rgba(109,184,255,.30);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 44%),
-        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+      background:radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 44%),linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
-    .prize-card h3{
-      margin:0 0 8px;
-      font-size:1.35rem;
-      letter-spacing:-.03em;
-      line-height:1.1;
-    }
+    .prize-card h3{margin:0 0 8px;font-size:1.35rem;letter-spacing:-.03em;line-height:1.1}
 
-    .russian-doll{
-      margin-top:18px;
-      display:grid;
-      gap:14px;
-    }
-
-    .doll-shell{
-      border-radius:26px;
-      overflow:hidden;
-    }
+    .russian-doll{margin-top:18px;display:grid;gap:14px}
+    .doll-shell{border-radius:26px;overflow:hidden}
 
     .doll-toggle{
       width:100%;
       border:0;
       color:var(--text);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(255,159,214,.08), transparent 42%),
-        rgba(255,255,255,.02);
+      background:radial-gradient(circle at 100% 100%, rgba(255,159,214,.08), transparent 42%),rgba(255,255,255,.02);
       padding:18px;
       display:flex;
       align-items:center;
@@ -510,12 +462,7 @@
       font-size:.72rem;
     }
 
-    .doll-head h3{
-      margin:0;
-      font-size:1.15rem;
-      letter-spacing:-.02em;
-      line-height:1.15;
-    }
+    .doll-head h3{margin:0;font-size:1.15rem;letter-spacing:-.02em;line-height:1.15}
 
     .doll-meta{
       flex:none;
@@ -535,10 +482,7 @@
       border-radius:8px;
       transform:rotate(45deg);
       border:1px solid rgba(239,210,154,.34);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),
-        rgba(6,14,28,.78);
-      box-shadow:0 0 18px rgba(255,159,214,.12);
+      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),rgba(6,14,28,.78);
     }
 
     .doll-panel{
@@ -549,66 +493,15 @@
     }
 
     .doll-shell.is-open .doll-panel{display:block}
-
-    .doll-copy{
-      margin:16px 0 0;
-      max-width:78ch;
-    }
-
-    .info-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .info-card{
-      border:1px solid rgba(164,188,255,.14);
-      border-radius:20px;
-      padding:14px;
-      background:rgba(255,255,255,.022);
-    }
-
-    .info-card small{
-      display:block;
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:8px;
-      font-weight:800;
-      font-size:.68rem;
-    }
-
-    .info-card strong{
-      display:block;
-      color:#fff;
-      line-height:1.25;
-      margin-bottom:8px;
-    }
-
-    .info-card p{
-      margin:0;
-      font-size:.9rem;
-    }
+    .doll-copy{margin:16px 0 0;max-width:78ch}
 
     .route-card{
       display:block;
       color:var(--text);
       text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
-    .route-card:hover,.route-card:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
-      outline:none;
-    }
-
-    .route-card h3{
-      margin:0 0 8px;
-      font-size:1.08rem;
-    }
+    .route-card h3{margin:0 0 8px;font-size:1.08rem}
 
     .footer{
       display:flex;
@@ -620,21 +513,8 @@
       font-size:.92rem;
     }
 
-    .footer-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .footer-links a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .footer-links a:hover,.footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
-    }
+    .footer-links a{color:var(--muted);text-decoration:none}
+    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
 
     @media (max-width:980px){
       .hero-grid{grid-template-columns:1fr}
@@ -660,10 +540,6 @@
       .doll-toggle{align-items:flex-start}
       .doll-meta{display:grid;justify-items:end}
       .footer{display:grid;gap:8px}
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *{animation:none !important;scroll-behavior:auto !important}
     }
   </style>
 </head>
@@ -704,7 +580,7 @@
             <a class="button primary" href="#status">Coming soon status</a>
             <a class="button" href="#pricing">Pricing details</a>
             <a class="button raffle" href="#raffle">Raffle prizes</a>
-            <a class="button" href="/big-laugh/">Parent chamber</a>
+            <a class="button" href="/big-laugh/">Big Laugh</a>
           </div>
         </div>
 
@@ -715,12 +591,12 @@
               <object
                 class="pendulum-asset"
                 type="image/svg+xml"
-                data="/assets/upper-room-pendulum.svg?v=3"
+                data="/assets/upper-room-pendulum.svg?v=4"
                 aria-label="Animated pendulum for The Upper Room coming soon status"
               >
                 <img
                   class="pendulum-asset"
-                  src="/assets/upper-room-pendulum.svg?v=3"
+                  src="/assets/upper-room-pendulum.svg?v=4"
                   alt="Animated pendulum for The Upper Room coming soon status"
                 />
               </object>
@@ -801,31 +677,25 @@
     <section class="console" id="raffle">
       <div class="section-kicker">Raffle prizes</div>
       <h2>Grand prize and runner-up</h2>
-      <p>
-        The raffle gives the room another reason to build momentum across all four shows.
-      </p>
+      <p>The raffle gives the room another reason to build momentum across all four shows.</p>
 
       <div class="prize-grid">
         <article class="prize-card grand">
           <small>Grand prize</small>
           <h3>Dallas Cowboys-signed Troy Aikman jersey from the 1995 season</h3>
-          <p>
-            The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Upper Room show.
-          </p>
+          <p>The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Upper Room show.</p>
         </article>
 
         <article class="prize-card runner">
           <small>Runner-up prize</small>
           <h3>55-inch LG 4K TV</h3>
-          <p>
-            The runner-up winner receives the 55-inch LG 4K TV.
-          </p>
+          <p>The runner-up winner receives the 55-inch LG 4K TV.</p>
         </article>
       </div>
     </section>
 
     <section class="panel" id="showInfo">
-      <div class="section-kicker">Russian-doll show page</div>
+      <div class="section-kicker">Show details</div>
       <h2>Open only what you need</h2>
 
       <div class="russian-doll">
@@ -943,9 +813,9 @@
         </a>
 
         <a class="route-card" href="/big-laugh/">
-          <small>Parent</small>
-          <h3>Big Laugh</h3>
-          <p>Return to the motivational crowd-interaction parent chamber.</p>
+          <small>Big Laugh</small>
+          <h3>Show umbrella</h3>
+          <p>Return to the larger public-expression page.</p>
         </a>
       </div>
     </section>

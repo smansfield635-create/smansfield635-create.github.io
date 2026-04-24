@@ -1,13 +1,42 @@
 const PRODUCTS_RUNTIME_SRC = "./products_runtime.js";
 const PRODUCTS_RUNTIME_FLAG = "productsRuntimeBridgeLoaded";
 const PRODUCTS_RUNTIME_RECEIPT = "productsRuntimeMounted";
-const PRODUCTS_RUNTIME_VERSION = "four-lobed-molecular-flower-v2";
+const PRODUCTS_RUNTIME_VERSION = "four-lobed-molecular-flower-open-focus-v1";
 
 function getMount() {
   return (
     document.getElementById("productsRuntimeMount") ||
     document.querySelector("[data-products-runtime-mount]")
   );
+}
+
+function getFocusTarget() {
+  return getMount();
+}
+
+function focusMoleculeWindow() {
+  const target = getFocusTarget();
+  if (!target) return;
+
+  target.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+    inline: "nearest"
+  });
+
+  window.setTimeout(() => {
+    target.focus({ preventScroll: true });
+  }, 350);
+}
+
+function bindOpenMolecule() {
+  document.querySelectorAll("[data-open-molecule]").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      history.replaceState(null, "", "#productsRuntimeMount");
+      focusMoleculeWindow();
+    });
+  });
 }
 
 function setRuntimeStatus(status, detail) {
@@ -26,10 +55,10 @@ function renderBootReceipt(status, message) {
   if (!mount) return;
 
   mount.innerHTML = `
-    <div class="hero-side" style="margin:0;">
+    <div class="runtime-fallback">
       <h2>Products runtime ${status}</h2>
       <p>${message}</p>
-      <div class="hero-stats">
+      <div class="runtime-receipt">
         <div class="stat">
           <span class="stat-label">Expected file</span>
           <span class="stat-value">/products/products_runtime.js</span>
@@ -63,6 +92,11 @@ function checkMountedAfterLoad() {
   window.setTimeout(() => {
     if (runtimeAlreadyMounted()) {
       markMounted();
+
+      if (window.location.hash === "#productsRuntimeMount") {
+        focusMoleculeWindow();
+      }
+
       return;
     }
 
@@ -82,6 +116,8 @@ function loadProductsRuntime() {
     return;
   }
 
+  bindOpenMolecule();
+
   if (window[PRODUCTS_RUNTIME_FLAG]) {
     if (!runtimeAlreadyMounted()) {
       renderBootReceipt(
@@ -89,6 +125,7 @@ function loadProductsRuntime() {
         "The bridge already requested the runtime. Waiting for /products/products_runtime.js to mount the four-lobed molecular flower."
       );
     }
+
     return;
   }
 
@@ -130,6 +167,11 @@ function loadProductsRuntime() {
   window.setTimeout(() => {
     if (runtimeAlreadyMounted()) {
       markMounted();
+
+      if (window.location.hash === "#productsRuntimeMount") {
+        focusMoleculeWindow();
+      }
+
       return;
     }
 
@@ -156,13 +198,19 @@ window.addEventListener("error", (event) => {
   );
 });
 
-window.addEventListener("unhandledrejection", (event) => {
+window.addEventListener("unhandledrejection", () => {
   setRuntimeStatus("runtime-promise-error", "unhandled promise rejection");
 
   renderBootReceipt(
     "promise error",
     "The runtime hit an unhandled promise rejection before mounting. Check /products/products_runtime.js."
   );
+});
+
+window.addEventListener("hashchange", () => {
+  if (window.location.hash === "#productsRuntimeMount") {
+    focusMoleculeWindow();
+  }
 });
 
 if (document.readyState === "loading") {

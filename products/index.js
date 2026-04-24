@@ -1,234 +1,172 @@
-const filterButtons = [...document.querySelectorAll("#cardinalFilters [data-filter]")];
-const nodeLayer = document.getElementById("nodeLayer");
-const detailCode = document.getElementById("detailCode");
-const detailFamily = document.getElementById("detailFamily");
-const detailTitle = document.getElementById("detailTitle");
-const detailCopy = document.getElementById("detailCopy");
-const detailCardinal = document.getElementById("detailCardinal");
-const detailVisible = document.getElementById("detailVisible");
-const detailCount = document.getElementById("detailCount");
-const detailRoute = document.getElementById("detailRoute");
-const detailHref = document.getElementById("detailHref");
+const PRODUCTS_RUNTIME_SRC = "./products_runtime.js";
+const PRODUCTS_RUNTIME_FLAG = "productsRuntimeBridgeLoaded";
+const PRODUCTS_RUNTIME_RECEIPT = "productsRuntimeMounted";
+const PRODUCTS_RUNTIME_VERSION = "four-lobed-molecular-flower-v2";
 
-const bondNorth = document.getElementById("bondNorth");
-const bondSouth = document.getElementById("bondSouth");
-const bondEast = document.getElementById("bondEast");
-const bondWest = document.getElementById("bondWest");
+function getMount() {
+  return (
+    document.getElementById("productsRuntimeMount") ||
+    document.querySelector("[data-products-runtime-mount]")
+  );
+}
 
-const CARDINALS = {
-  north: {
-    label: "North",
-    color: "var(--north)",
-    glow: "rgba(223,233,255,.72)",
-    role: "Framekeeping · threshold · classification",
-    summary: "North stabilizes frame, threshold, and admissible classification inside the stained-glass molecular chamber.",
-    href: "/laws/",
-    atomX: 34,
-    atomY: 34
-  },
-  east: {
-    label: "East",
-    color: "var(--east)",
-    glow: "rgba(142,197,255,.72)",
-    role: "Signal · build-line · formation",
-    summary: "East carries emergence, build-line motion, and lawful formation inside the stained-glass molecular chamber.",
-    href: "/products/",
-    atomX: 66,
-    atomY: 34
-  },
-  west: {
-    label: "West",
-    color: "var(--west)",
-    glow: "rgba(255,213,138,.72)",
-    role: "Pressure-test · audit · contradiction",
-    summary: "West provides stress test, audit, and contradiction pressure inside the stained-glass molecular chamber.",
-    href: "/about/",
-    atomX: 34,
-    atomY: 66
-  },
-  south: {
-    label: "South",
-    color: "var(--south)",
-    glow: "rgba(142,227,172,.72)",
-    role: "Continuity · care · restoration",
-    summary: "South stabilizes continuity, care, and restoration inside the stained-glass molecular chamber.",
-    href: "/gauges/",
-    atomX: 66,
-    atomY: 66
+function setRuntimeStatus(status, detail) {
+  const mount = getMount();
+  if (!mount) return;
+
+  mount.dataset.runtimeStatus = status;
+
+  if (detail) {
+    mount.dataset.runtimeDetail = detail;
   }
-};
-
-const TITLES = {
-  north: ["Threshold", "Keystone", "Vector", "Atlas", "Compass", "Gate", "Apex", "Frame"],
-  east: ["Signal", "Pattern", "Forge", "Bloom", "Spark", "Loom", "Meridian", "Rise"],
-  west: ["Audit", "Fracture", "Mirror", "Proof", "Fault", "Cipher", "Tension", "Sentinel"],
-  south: ["Harbor", "Root", "Hearth", "Current", "Shelter", "Orchard", "Rhythm", "Restore"]
-};
-
-const ORBITS = [
-  { dx: 0, dy: -8.5 },
-  { dx: 6, dy: -5.5 },
-  { dx: 8.5, dy: -0.5 },
-  { dx: 5.5, dy: 6 },
-  { dx: 0, dy: 8.5 },
-  { dx: -6, dy: 5.5 },
-  { dx: -8.5, dy: 0.5 },
-  { dx: -5.5, dy: -6 }
-];
-
-function buildProducts() {
-  const items = [];
-
-  Object.keys(CARDINALS).forEach((cardinalKey) => {
-    const cardinal = CARDINALS[cardinalKey];
-
-    ORBITS.forEach((orbit, index) => {
-      const n = index + 1;
-      const title = TITLES[cardinalKey][index];
-      const code = `${cardinal.label[0]}${String(n).padStart(2, "0")}`;
-
-      items.push({
-        id: `${cardinalKey}-${String(n).padStart(2, "0")}`,
-        code,
-        title,
-        cardinalKey,
-        cardinalLabel: cardinal.label,
-        color: cardinal.color,
-        glow: cardinal.glow,
-        role: cardinal.role,
-        summary: cardinal.summary,
-        href: cardinal.href,
-        x: cardinal.atomX + orbit.dx,
-        y: cardinal.atomY + orbit.dy,
-        description:
-          `${title} is a ${cardinal.label.toLowerCase()} atomic point inside the stained-glass products window. ` +
-          `It belongs to the ${cardinal.label.toLowerCase()} body of eight and participates in the twisted figure-eight chamber as ${cardinal.role.toLowerCase()}.`
-      });
-    });
-  });
-
-  return items;
 }
 
-const PRODUCTS = buildProducts();
+function renderBootReceipt(status, message) {
+  const mount = getMount();
+  if (!mount) return;
 
-const state = {
-  filter: "all",
-  activeId: PRODUCTS[0]?.id ?? null
-};
-
-function visibleProducts() {
-  return state.filter === "all"
-    ? PRODUCTS
-    : PRODUCTS.filter((item) => item.cardinalKey === state.filter);
+  mount.innerHTML = `
+    <div class="hero-side" style="margin:0;">
+      <h2>Products runtime ${status}</h2>
+      <p>${message}</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-label">Expected file</span>
+          <span class="stat-value">/products/products_runtime.js</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Bridge file</span>
+          <span class="stat-value">/products/index.js</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Contract</span>
+          <span class="stat-value">four-lobed molecular flower</span>
+        </div>
+      </div>
+    </div>
+  `;
 }
 
-function currentActive(list) {
-  const explicit = PRODUCTS.find((item) => item.id === state.activeId);
-  if (explicit && list.some((item) => item.id === explicit.id)) return explicit;
-  return list[0] ?? null;
+function runtimeAlreadyMounted() {
+  return Boolean(
+    document.querySelector("[data-products-runtime-root]") ||
+    window[PRODUCTS_RUNTIME_RECEIPT] === true
+  );
 }
 
-function renderFilters() {
-  filterButtons.forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.filter === state.filter);
-  });
+function markMounted() {
+  window[PRODUCTS_RUNTIME_RECEIPT] = true;
+  setRuntimeStatus("mounted", "runtime root detected");
 }
 
-function setBond(el, x2, y2) {
-  const x1 = 50;
-  const y1 = 50;
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const distance = Math.sqrt(dx * dx + dy * dy);
+function checkMountedAfterLoad() {
+  window.setTimeout(() => {
+    if (runtimeAlreadyMounted()) {
+      markMounted();
+      return;
+    }
 
-  el.style.height = `${distance}%`;
-  el.style.left = `${x1}%`;
-  el.style.top = `${y1}%`;
-  el.style.transform = `translate(-50%, -50%) rotate(${Math.atan2(dy, dx) * 180 / Math.PI + 90}deg)`;
+    setRuntimeStatus("loaded-but-not-mounted", "script loaded but no runtime root appeared");
+    renderBootReceipt(
+      "loaded but did not mount",
+      "The runtime script loaded, but it did not inject the four-lobed molecular flower. Check /products/products_runtime.js for a JavaScript error before mount."
+    );
+  }, 900);
 }
 
-function renderBonds() {
-  setBond(bondNorth, CARDINALS.north.atomX, CARDINALS.north.atomY);
-  setBond(bondSouth, CARDINALS.south.atomX, CARDINALS.south.atomY);
-  setBond(bondEast, CARDINALS.east.atomX, CARDINALS.east.atomY);
-  setBond(bondWest, CARDINALS.west.atomX, CARDINALS.west.atomY);
+function loadProductsRuntime() {
+  const mount = getMount();
+
+  if (!mount) {
+    console.error("[Products Runtime Bridge] Missing mount target: #productsRuntimeMount");
+    return;
+  }
+
+  if (window[PRODUCTS_RUNTIME_FLAG]) {
+    if (!runtimeAlreadyMounted()) {
+      renderBootReceipt(
+        "waiting",
+        "The bridge already requested the runtime. Waiting for /products/products_runtime.js to mount the four-lobed molecular flower."
+      );
+    }
+    return;
+  }
+
+  window[PRODUCTS_RUNTIME_FLAG] = true;
+  setRuntimeStatus("loading", "requesting runtime script");
+
+  renderBootReceipt(
+    "loading",
+    "Loading /products/products_runtime.js. If the molecule does not appear, this receipt will identify the failure."
+  );
+
+  const existingRuntimeScript = document.querySelector('script[data-products-runtime-script="true"]');
+  if (existingRuntimeScript) {
+    existingRuntimeScript.remove();
+  }
+
+  const script = document.createElement("script");
+  script.src = `${PRODUCTS_RUNTIME_SRC}?v=${encodeURIComponent(PRODUCTS_RUNTIME_VERSION)}&t=${Date.now()}`;
+  script.defer = true;
+  script.dataset.productsRuntimeScript = "true";
+
+  script.onload = () => {
+    setRuntimeStatus("script-loaded", "runtime script loaded");
+    checkMountedAfterLoad();
+  };
+
+  script.onerror = () => {
+    window[PRODUCTS_RUNTIME_FLAG] = false;
+    setRuntimeStatus("failed", "script failed to load");
+
+    renderBootReceipt(
+      "failed",
+      "The products shell loaded, but /products/products_runtime.js failed to load. Confirm the file exists at /products/products_runtime.js and is deployed beside /products/index.js."
+    );
+  };
+
+  document.body.appendChild(script);
+
+  window.setTimeout(() => {
+    if (runtimeAlreadyMounted()) {
+      markMounted();
+      return;
+    }
+
+    if (mount.dataset.runtimeStatus === "loading") {
+      setRuntimeStatus("timeout", "runtime did not respond before timeout");
+      renderBootReceipt(
+        "timed out",
+        "The bridge requested /products/products_runtime.js, but no runtime root appeared. This usually means the runtime file is missing, cached incorrectly, or throwing before mount."
+      );
+    }
+  }, 3000);
 }
 
-function renderNodes() {
-  const active = currentActive(visibleProducts());
+window.addEventListener("error", (event) => {
+  const source = String(event.filename || "");
 
-  nodeLayer.innerHTML = PRODUCTS.map((item) => {
-    const isVisible = state.filter === "all" || item.cardinalKey === state.filter;
-    const isActive = active && active.id === item.id;
+  if (!source.includes("products_runtime.js")) return;
 
-    const classes = [
-      "node",
-      isActive ? "is-active" : "",
-      !isVisible ? "is-muted" : ""
-    ].filter(Boolean).join(" ");
+  setRuntimeStatus("runtime-error", event.message || "runtime error");
 
-    return `
-      <button
-        type="button"
-        class="${classes}"
-        data-id="${item.id}"
-        data-short="${item.code}"
-        style="--x:${item.x}%;--y:${item.y}%;--color:${item.color};--glow:${item.glow};"
-        aria-label="${item.cardinalLabel} ${item.code}: ${item.title}"
-        title="${item.cardinalLabel} ${item.code}: ${item.title}"
-      ></button>
-    `;
-  }).join("");
-
-  nodeLayer.querySelectorAll("[data-id]").forEach((button) => {
-    button.addEventListener("click", () => {
-      state.activeId = button.dataset.id;
-      render();
-    });
-
-    button.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
-        state.activeId = button.dataset.id;
-        render();
-      }
-    });
-  });
-}
-
-function renderDetail() {
-  const list = visibleProducts();
-  const active = currentActive(list);
-
-  if (!active) return;
-
-  const familyCount = PRODUCTS.filter((item) => item.cardinalKey === active.cardinalKey).length;
-
-  detailCode.textContent = active.code;
-  detailFamily.textContent = `${active.cardinalLabel} · atom`;
-  detailTitle.textContent = active.title;
-  detailCopy.textContent = active.description;
-  detailCardinal.textContent = active.cardinalLabel;
-  detailVisible.textContent = String(list.length);
-  detailCount.textContent = String(familyCount);
-  detailRoute.textContent = active.role;
-  detailHref.href = active.href;
-  detailHref.textContent = `Open ${active.cardinalLabel} body`;
-}
-
-function render() {
-  renderFilters();
-  renderBonds();
-  renderNodes();
-  renderDetail();
-}
-
-filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    state.filter = button.dataset.filter;
-    render();
-  });
+  renderBootReceipt(
+    "error",
+    `The runtime file loaded, but threw an error before mounting: ${event.message || "unknown runtime error"}.`
+  );
 });
 
-render();
+window.addEventListener("unhandledrejection", (event) => {
+  setRuntimeStatus("runtime-promise-error", "unhandled promise rejection");
+
+  renderBootReceipt(
+    "promise error",
+    "The runtime hit an unhandled promise rejection before mounting. Check /products/products_runtime.js."
+  );
+});
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", loadProductsRuntime, { once: true });
+} else {
+  loadProductsRuntime();
+}

@@ -1,845 +1,821 @@
-(() => {
-  "use strict";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gauges · Second Generation Live Feed</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge second-generation diagnostic gauges: live route, source, runtime, and next-action feed."
+  />
 
-  const STYLE_ID = "gauges-seasonal-vine-fairies-v1";
+  <style>
+    :root {
+      --bg: #01040b;
+      --panel: rgba(4, 10, 22, 0.94);
+      --panel-2: rgba(8, 16, 32, 0.92);
+      --line: rgba(147, 183, 255, 0.18);
+      --line-strong: rgba(226, 238, 255, 0.42);
+      --text: #eaf2ff;
+      --muted: #8fa2c8;
+      --gold: #f0d79c;
+      --green: #82f0b2;
+      --red: #ff6f89;
+      --blue: #89c8ff;
+      --violet: #c4b4ff;
+      --shadow: 0 24px 90px rgba(0, 0, 0, 0.58);
+      --max: 1220px;
+    }
 
-  function injectStyle() {
-    if (document.getElementById(STYLE_ID)) return;
+    * {
+      box-sizing: border-box;
+    }
 
-    const style = document.createElement("style");
-    style.id = STYLE_ID;
-    style.textContent = `
-      :root {
-        --line: rgba(164,188,255,.18);
-        --strong: rgba(210,223,255,.36);
-        --text: #eef4ff;
-        --muted: #9aabd0;
-        --gold: #efd29a;
-        --green: #92e7ba;
-        --blue: #8ec5ff;
-        --amber: #f4a340;
-        --shadow: 0 24px 80px rgba(0,0,0,.52);
-        --max: 1180px;
-      }
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      scroll-behavior: smooth;
+    }
 
-      * {
-        box-sizing: border-box;
-      }
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background:
+        radial-gradient(circle at 50% 6%, rgba(137, 200, 255, 0.18), transparent 24%),
+        radial-gradient(circle at 18% 30%, rgba(240, 215, 156, 0.09), transparent 28%),
+        linear-gradient(180deg, #01040b 0%, #061022 58%, #01040b 100%);
+      overflow-x: hidden;
+    }
 
-      body {
-        margin: 0;
-        color: var(--text);
-        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        background:
-          radial-gradient(circle at 50% 8%, rgba(112,151,255,.22), transparent 22%),
-          radial-gradient(circle at 18% 34%, rgba(239,210,154,.10), transparent 24%),
-          linear-gradient(180deg, #020610 0%, #071225 48%, #020610 100%);
-      }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.28;
+      background:
+        linear-gradient(90deg, rgba(137, 200, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(137, 200, 255, 0.045) 1px, transparent 1px);
+      background-size: 31px 31px;
+      mask-image: radial-gradient(circle at 50% 30%, black, transparent 78%);
+    }
 
-      body::before {
-        content: "";
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        opacity: .22;
-        background:
-          linear-gradient(90deg, rgba(164,188,255,.08) 1px, transparent 1px),
-          linear-gradient(180deg, rgba(164,188,255,.045) 1px, transparent 1px);
-        background-size: 52px 52px;
-        mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
-      }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
 
-      .gauge-page {
-        width: min(var(--max), calc(100vw - 24px));
-        margin: 0 auto;
-        padding: 18px 0 44px;
-        position: relative;
-        z-index: 1;
-      }
+    .gauge-root {
+      width: min(var(--max), calc(100vw - 20px));
+      margin: 0 auto;
+      padding: 14px 0 28px;
+      position: relative;
+      z-index: 1;
+    }
 
-      .topbar,
-      .hero,
-      .section,
-      .card,
-      .doll {
-        border: 1px solid var(--line);
-        background: linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
-        box-shadow: var(--shadow);
-      }
+    .bar,
+    .console,
+    .panel,
+    .feed,
+    .route,
+    .cell {
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(137, 200, 255, 0.11), transparent 38%),
+        linear-gradient(180deg, var(--panel-2), var(--panel));
+      box-shadow: var(--shadow);
+    }
 
-      .topbar {
-        border-radius: 22px;
-        padding: 14px 16px;
-        display: flex;
-        justify-content: space-between;
+    .bar {
+      min-height: 72px;
+      margin-bottom: 12px;
+      border-radius: 24px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 46px;
+      height: 46px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(240, 215, 156, 0.26);
+      border-radius: 15px;
+      background:
+        radial-gradient(circle at 50% 32%, rgba(240, 215, 156, 0.28), transparent 45%),
+        rgba(255, 255, 255, 0.035);
+      color: var(--gold);
+      font-weight: 950;
+      letter-spacing: 0.06em;
+    }
+
+    .kicker {
+      display: block;
+      margin: 0 0 5px;
+      color: #b8c8ef;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .title {
+      display: block;
+      margin: 0;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .nav a,
+    .btn {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 0 12px;
+      background: rgba(255, 255, 255, 0.035);
+      color: #dce8ff;
+      font-size: 0.75rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .nav a:focus-visible,
+    .btn:focus-visible {
+      outline: 2px solid rgba(240, 215, 156, 0.7);
+      outline-offset: 3px;
+    }
+
+    .console {
+      border-radius: 28px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+
+    .machine-window {
+      min-height: 470px;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 50% 48%, rgba(240, 215, 156, 0.08), transparent 20%),
+        radial-gradient(circle at 50% 52%, rgba(137, 200, 255, 0.13), transparent 32%),
+        linear-gradient(180deg, rgba(2, 7, 16, 0.98), rgba(0, 2, 8, 0.99));
+    }
+
+    .machine-window::before {
+      content: "";
+      position: absolute;
+      inset: 4%;
+      border: 1px solid rgba(226, 238, 255, 0.11);
+      border-radius: 30px;
+      box-shadow: inset 0 0 55px rgba(137, 200, 255, 0.11);
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .unreadable-matrix {
+      position: absolute;
+      inset: -18%;
+      z-index: 1;
+      color: rgba(137, 200, 255, 0.18);
+      font-size: clamp(8px, 1.3vw, 13px);
+      line-height: 0.92;
+      letter-spacing: 0.18em;
+      white-space: pre-wrap;
+      word-break: break-all;
+      transform: rotate(-7deg);
+      filter: blur(0.15px);
+      opacity: 0.78;
+      user-select: text;
+    }
+
+    .matrix-mask {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 0 32%, rgba(1, 4, 11, 0.52) 58%, rgba(1, 4, 11, 0.94) 100%),
+        linear-gradient(180deg, transparent, rgba(1, 4, 11, 0.34));
+      pointer-events: none;
+    }
+
+    .core-readout {
+      position: relative;
+      z-index: 4;
+      min-height: 470px;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+    }
+
+    .core-orb {
+      width: min(66vw, 350px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      position: relative;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(226, 238, 255, 0.26);
+      background:
+        radial-gradient(circle at 36% 26%, rgba(255, 255, 255, 0.26), transparent 12%),
+        radial-gradient(circle at 50% 50%, rgba(137, 200, 255, 0.20), transparent 31%),
+        linear-gradient(135deg, rgba(15, 73, 130, 0.58), rgba(3, 12, 34, 0.94));
+      box-shadow:
+        inset -34px -30px 58px rgba(0, 0, 0, 0.58),
+        0 0 48px rgba(137, 200, 255, 0.26),
+        0 0 140px rgba(240, 215, 156, 0.13);
+    }
+
+    .core-orb::before,
+    .core-orb::after {
+      content: "";
+      position: absolute;
+      inset: 12%;
+      border-radius: 50%;
+      border: 1px solid rgba(240, 215, 156, 0.20);
+      transform: rotate(45deg) scaleX(0.38);
+    }
+
+    .core-orb::after {
+      transform: rotate(-45deg) scaleX(0.38);
+      border-color: rgba(137, 200, 255, 0.22);
+    }
+
+    .core-label {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 8px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .core-label strong {
+      color: #fff;
+      font-size: clamp(1rem, 4vw, 1.7rem);
+      letter-spacing: 0.20em;
+      text-transform: uppercase;
+    }
+
+    .core-label span {
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .live-strip {
+      position: absolute;
+      left: 50%;
+      bottom: 24px;
+      z-index: 5;
+      width: min(92%, 820px);
+      transform: translateX(-50%);
+      border: 1px solid rgba(226, 238, 255, 0.18);
+      border-radius: 999px;
+      background: rgba(4, 10, 22, 0.86);
+      padding: 11px 14px;
+      display: grid;
+      gap: 4px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .live-strip strong {
+      color: #fff;
+      font-size: 0.74rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .live-strip code {
+      color: var(--gold);
+      font-size: 0.68rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .feed {
+      border-radius: 24px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    .feed h2,
+    .panel h2 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: clamp(1.2rem, 5vw, 2rem);
+      line-height: 1;
+      letter-spacing: -0.04em;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .feed p,
+    .panel p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .live-output {
+      margin: 14px 0 0;
+      min-height: 260px;
+      max-height: 520px;
+      overflow: auto;
+      border: 1px solid rgba(226, 238, 255, 0.14);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(0, 0, 0, 0.28);
+      color: #dce8ff;
+      font-size: 0.78rem;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .route {
+      border-radius: 24px;
+      padding: 14px;
+    }
+
+    .route-grid {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .cell {
+      border-radius: 16px;
+      padding: 12px;
+      min-height: 86px;
+    }
+
+    .cell small {
+      display: block;
+      margin-bottom: 7px;
+      color: #91a6cf;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.66rem;
+      font-weight: 850;
+    }
+
+    .cell strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 7px;
+      font-size: 0.95rem;
+    }
+
+    .cell code {
+      display: block;
+      color: var(--muted);
+      font-size: 0.72rem;
+      line-height: 1.35;
+      word-break: break-word;
+    }
+
+    .ok {
+      border-color: rgba(130, 240, 178, 0.28);
+    }
+
+    .warn {
+      border-color: rgba(240, 215, 156, 0.34);
+    }
+
+    .block {
+      border-color: rgba(255, 111, 137, 0.34);
+    }
+
+    .footer {
+      padding: 14px 4px 0;
+      color: #91a6cf;
+      font-size: 0.78rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    @media (min-width: 860px) {
+      .bar {
+        grid-template-columns: 1fr auto;
         align-items: center;
-        gap: 16px;
-        margin-bottom: 16px;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .mark {
-        width: 46px;
-        height: 46px;
-        border-radius: 16px;
-        display: grid;
-        place-items: center;
-        border: 1px solid var(--line);
-        background:
-          radial-gradient(circle at 50% 28%, rgba(239,210,154,.22), transparent 42%),
-          linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
-        font-weight: 900;
-        letter-spacing: .08em;
-      }
-
-      .kicker {
-        margin: 0 0 4px;
-        color: #c8d7ff;
-        font-size: .72rem;
-        text-transform: uppercase;
-        letter-spacing: .16em;
-      }
-
-      .brand-title {
-        margin: 0;
-        font-weight: 850;
-        font-size: 1.05rem;
-      }
-
-      .nav,
-      .actions,
-      .footer-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
       }
 
       .nav {
-        justify-content: flex-end;
-      }
-
-      .nav a,
-      .button {
-        min-height: 42px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 15px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        color: var(--text);
-        background: rgba(255,255,255,.035);
-        text-decoration: none;
-        font-weight: 800;
-      }
-
-      .nav a:hover,
-      .nav a:focus-visible,
-      .button:hover,
-      .button:focus-visible {
-        border-color: var(--strong);
-        transform: translateY(-1px);
-        outline: none;
-      }
-
-      .hero {
-        border-radius: 34px;
-        padding: 24px 20px;
-        margin-bottom: 18px;
-        overflow: hidden;
-        position: relative;
-      }
-
-      .hero-grid {
-        display: grid;
-        grid-template-columns: minmax(0, 1fr) minmax(320px, .85fr);
-        gap: 20px;
-        align-items: center;
-      }
-
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        gap: 10px;
-        padding: 8px 12px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-        background: rgba(255,255,255,.035);
-        color: #d8e3ff;
-        text-transform: uppercase;
-        letter-spacing: .14em;
-        font-size: .72rem;
-        margin-bottom: 14px;
-      }
-
-      .pill::before {
-        content: "";
-        width: 9px;
-        height: 9px;
-        border-radius: 2px;
-        transform: rotate(45deg);
-        background: var(--gold);
-        box-shadow: 0 0 18px rgba(239,210,154,.50);
-      }
-
-      h1 {
-        margin: 0 0 12px;
-        max-width: 12ch;
-        font-size: clamp(2.35rem, 5vw, 5rem);
-        line-height: .95;
-        letter-spacing: -.06em;
-      }
-
-      h1 span {
-        color: var(--gold);
-      }
-
-      p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.62;
-      }
-
-      .lead {
-        max-width: 68ch;
-        font-size: clamp(1rem, 1.45vw, 1.14rem);
-      }
-
-      .actions {
-        margin-top: 20px;
-      }
-
-      .button {
-        border-radius: 18px;
-        min-height: 48px;
-        padding: 0 18px;
-      }
-
-      .button.primary {
-        border-color: rgba(239,210,154,.34);
-        background:
-          linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
-          rgba(255,255,255,.035);
-        color: #fff8ea;
-      }
-
-      .instrument-window {
-        min-height: 430px;
-        border-radius: 30px;
-        border: 1px solid rgba(170,198,255,.18);
-        background:
-          radial-gradient(circle at 50% 50%, rgba(239,210,154,.14), transparent 24%),
-          linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
-        position: relative;
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-        isolation: isolate;
-      }
-
-      .instrument-window::before {
-        content: "";
-        position: absolute;
-        inset: 10%;
-        border-radius: 38px;
-        border: 1px solid rgba(255,255,255,.10);
-        box-shadow: inset 0 0 30px rgba(126,164,255,.12);
-      }
-
-      .vine-vessel {
-        position: relative;
-        width: 260px;
-        height: 260px;
-        z-index: 2;
-        filter:
-          drop-shadow(0 0 24px rgba(239,210,154,.20))
-          drop-shadow(0 0 42px rgba(142,197,255,.16));
-      }
-
-      .vine-stem {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 34px;
-        height: 178px;
-        transform: translate(-50%, -50%);
-        border-radius: 999px;
-        background:
-          linear-gradient(180deg, rgba(255,229,154,.20), transparent 18%),
-          linear-gradient(180deg, #1b130e, #050811);
-        border: 1px solid rgba(239,210,154,.24);
-        z-index: 4;
-        box-shadow:
-          0 0 22px rgba(239,210,154,.12),
-          inset 0 0 24px rgba(255,255,255,.08);
-      }
-
-      .fruit {
-        position: absolute;
-        border-radius: 68% 32% 72% 28%;
-        background:
-          radial-gradient(circle at 38% 28%, rgba(255,239,184,.92), transparent 10%),
-          radial-gradient(circle at 50% 48%, rgba(255,208,102,.62), transparent 31%),
-          linear-gradient(135deg, #27130d 0%, #f4a340 44%, #a8481b 74%, #080b14 100%);
-        border: 2px solid rgba(10,12,22,.72);
-        box-shadow:
-          inset 0 0 30px rgba(255,255,255,.10),
-          0 0 30px rgba(244,163,64,.18);
-        z-index: 2;
-        animation: fruitBreathe 5.8s ease-in-out infinite;
-      }
-
-      .fruit.left-top {
-        width: 150px;
-        height: 158px;
-        left: 15px;
-        top: 42px;
-        transform: rotate(-34deg);
-      }
-
-      .fruit.left-bottom {
-        width: 136px;
-        height: 150px;
-        left: 55px;
-        bottom: 24px;
-        transform: rotate(34deg);
-        animation-delay: -1.4s;
-      }
-
-      .fruit.right-top {
-        width: 150px;
-        height: 158px;
-        right: 15px;
-        top: 42px;
-        transform: scaleX(-1) rotate(-34deg);
-        animation-delay: -.8s;
-      }
-
-      .fruit.right-bottom {
-        width: 136px;
-        height: 150px;
-        right: 55px;
-        bottom: 24px;
-        transform: scaleX(-1) rotate(34deg);
-        animation-delay: -2.1s;
-      }
-
-      .vine-arc {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 240px;
-        height: 240px;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        border: 1px solid rgba(239,210,154,.16);
-        z-index: 1;
-      }
-
-      .vine-arc::before,
-      .vine-arc::after {
-        content: "";
-        position: absolute;
-        inset: 18px;
-        border-radius: 50%;
-        border: 1px solid rgba(146,231,186,.12);
-      }
-
-      .center-glow {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 118px;
-        height: 118px;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(circle, #fff 0 8%, rgba(236,247,255,.72) 12%, rgba(127,197,255,.22) 38%, transparent 72%);
-        filter: drop-shadow(0 0 28px rgba(255,255,255,.42));
-        z-index: 3;
-        animation: centerPulse 4.2s ease-in-out infinite;
-      }
-
-      .fairy {
-        position: absolute;
-        width: 34px;
-        height: 38px;
-        z-index: 5;
-        filter:
-          drop-shadow(0 0 10px var(--c))
-          drop-shadow(0 0 26px rgba(210,240,255,.26));
-        animation: fairyPath 6s ease-in-out infinite;
-        animation-delay: var(--d);
-      }
-
-      .fairy::before,
-      .fairy::after {
-        content: "";
-        position: absolute;
-        top: 3px;
-        width: 15px;
-        height: 24px;
-        border-radius: 80% 20% 80% 20%;
-        background: radial-gradient(circle at 42% 42%, rgba(255,255,255,.92), rgba(255,255,255,.34) 26%, var(--c) 56%, rgba(255,255,255,0) 82%);
-        border: 1px solid rgba(255,255,255,.62);
-        transform-origin: 50% 80%;
-        animation: wingFlutter .62s ease-in-out infinite;
-      }
-
-      .fairy::before {
-        left: 1px;
-        transform: rotate(-28deg);
-      }
-
-      .fairy::after {
-        right: 1px;
-        transform: scaleX(-1) rotate(-28deg);
-        animation-delay: -.31s;
-      }
-
-      .fairy span {
-        position: absolute;
-        left: 50%;
-        top: 48%;
-        width: 12px;
-        height: 19px;
-        transform: translate(-50%, -50%);
-        border-radius: 999px;
-        background: radial-gradient(circle at 50% 28%, #fff, var(--c) 50%, rgba(4,10,22,.88) 100%);
-        border: 1px solid rgba(255,255,255,.72);
-        box-shadow: 0 0 18px var(--c);
-      }
-
-      .fairy.one { --c: var(--green); left: 28%; top: 34%; --d: 0s; }
-      .fairy.two { --c: var(--blue); right: 28%; top: 34%; --d: -1s; }
-      .fairy.three { --c: var(--blue); left: 28%; bottom: 25%; --d: -2s; }
-      .fairy.four { --c: var(--green); right: 28%; bottom: 25%; --d: -3s; }
-      .fairy.five { --c: var(--green); left: 49%; top: 47%; --d: -4s; }
-
-      .section {
-        margin-top: 18px;
-        border-radius: 30px;
-        padding: 22px 20px;
-        overflow: hidden;
-      }
-
-      .section h2 {
-        margin: 0 0 10px;
-        font-size: clamp(1.7rem, 3vw, 2.7rem);
-        line-height: 1;
-        letter-spacing: -.04em;
+        grid-template-columns: repeat(5, auto);
       }
 
       .grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 18px;
+        grid-template-columns: 1.1fr 0.9fr;
       }
 
-      .card {
-        display: block;
-        border-radius: 22px;
-        padding: 16px;
-        min-height: 142px;
-        color: var(--text);
-        text-decoration: none;
-        border-color: rgba(164,188,255,.14);
+      .route-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 560px) {
+      .gauge-root {
+        width: min(100vw - 12px, var(--max));
+        padding-top: 10px;
       }
 
-      .card small {
-        display: block;
-        color: #90a3ce;
-        text-transform: uppercase;
-        letter-spacing: .12em;
-        margin-bottom: 8px;
-        font-weight: 800;
-        font-size: .72rem;
+      .bar,
+      .feed,
+      .route {
+        border-radius: 20px;
       }
 
-      .card strong {
-        display: block;
-        color: #f4f7ff;
-        font-size: 1.22rem;
-        line-height: 1.08;
-        margin-bottom: 10px;
+      .machine-window,
+      .core-readout {
+        min-height: 430px;
       }
 
-      .card p {
-        font-size: .92rem;
+      .core-orb {
+        width: min(72vw, 280px);
       }
 
-      .doll-list {
-        display: grid;
-        gap: 14px;
-        margin-top: 18px;
+      .live-strip {
+        border-radius: 20px;
       }
+    }
 
-      .doll {
-        border-radius: 26px;
-        overflow: hidden;
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        scroll-behavior: auto !important;
       }
+    }
+  </style>
+</head>
 
-      .doll button {
-        width: 100%;
-        border: 0;
-        color: var(--text);
-        background:
-          radial-gradient(circle at 100% 100%, rgba(239,210,154,.08), transparent 42%),
-          rgba(255,255,255,.02);
-        padding: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        text-align: left;
-        cursor: pointer;
-      }
+<body>
+  <main id="gaugeRoot" class="gauge-root" data-gauge-generation="second-generation-renewal">
+    <header class="bar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge root">
+        <span class="mark" aria-hidden="true">DG</span>
+        <span>
+          <span class="kicker">Gauge Authority · Second Generation Renewal</span>
+          <span class="title">Live Feed Instrument Surface</span>
+        </span>
+      </a>
 
-      .doll button small {
-        display: block;
-        color: #90a3ce;
-        text-transform: uppercase;
-        letter-spacing: .12em;
-        margin-bottom: 8px;
-        font-weight: 800;
-        font-size: .72rem;
-      }
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Door</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/about/">About</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-      .doll button strong {
-        font-size: 1.15rem;
-      }
+    <section class="console" aria-label="Machine diagnostic console">
+      <div class="machine-window">
+        <pre id="matrix" class="unreadable-matrix" aria-hidden="true"></pre>
+        <div class="matrix-mask" aria-hidden="true"></div>
 
-      .diamond {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        transform: rotate(45deg);
-        border: 1px solid rgba(239,210,154,.34);
-        background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%), rgba(6,14,28,.78);
-        flex: none;
-      }
+        <div class="core-readout">
+          <div class="core-orb" aria-hidden="true">
+            <div class="core-label">
+              <strong>LIVE FEED</strong>
+              <span>machine surface / human summary below</span>
+            </div>
+          </div>
+        </div>
 
-      .doll-panel {
-        display: none;
-        padding: 0 18px 18px;
-        border-top: 1px solid rgba(164,188,255,.12);
-        background: rgba(255,255,255,.018);
-      }
+        <div class="live-strip" aria-live="polite">
+          <strong id="stripStatus">STATUS: BOOTING</strong>
+          <code id="stripAction">NEXT_ACTION=RUN_DIAGNOSTIC_FEED</code>
+        </div>
+      </div>
+    </section>
 
-      .doll.is-open .doll-panel {
-        display: block;
-      }
+    <section class="grid">
+      <article class="feed">
+        <h2>Readable live feed.</h2>
+        <p>
+          The top surface is intentionally machine-dense. This panel is the operator feed. After deployment it inspects live public files and states the next required move.
+        </p>
+        <pre id="liveOutput" class="live-output">BOOT_STATE=WAITING_FOR_DIAGNOSTICS</pre>
+      </article>
 
-      .footer {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        color: var(--muted);
-        padding: 14px 4px 0;
-      }
+      <aside class="route">
+        <h2>Route probes.</h2>
+        <p>Each cell is generated from live route/source inspection.</p>
 
-      .footer a {
-        color: var(--muted);
-        text-decoration: none;
-        margin-left: 12px;
-      }
+        <div id="routeGrid" class="route-grid">
+          <div class="cell warn">
+            <small>BOOT</small>
+            <strong>Diagnostics pending</strong>
+            <code>AWAITING_CLIENT_RUNTIME</code>
+          </div>
+        </div>
+      </aside>
+    </section>
 
-      @keyframes fruitBreathe {
-        0%, 100% { filter: brightness(1) saturate(1); }
-        50% { filter: brightness(1.12) saturate(1.12); }
-      }
+    <footer class="footer">
+      <span>Diamond Gate Bridge · Gauges · Second Generation Renewal</span>
+      <span>MODE=LIVE_FEED_DIAGNOSTIC_SURFACE</span>
+    </footer>
+  </main>
 
-      @keyframes fairyPath {
-        0%, 100% { transform: translate(-50%, -50%) translate(0, 0) scale(.94); }
-        25% { transform: translate(-50%, -50%) translate(18px, -18px) scale(1.05); }
-        50% { transform: translate(-50%, -50%) translate(0, -34px) scale(1.1); }
-        75% { transform: translate(-50%, -50%) translate(-18px, -18px) scale(1.05); }
-      }
+  <script>
+    (() => {
+      "use strict";
 
-      @keyframes wingFlutter {
-        0%, 100% { opacity: .74; transform: rotate(-28deg) scaleY(.88); }
-        50% { opacity: 1; transform: rotate(-42deg) scaleY(1.12); }
-      }
+      const FILES = [
+        { key: "ROOT_HTML", path: "/index.html" },
+        { key: "ROOT_JS", path: "/index.js" },
+        { key: "PRODUCTS_HTML", path: "/products/index.html" },
+        { key: "PRODUCTS_BRIDGE", path: "/products/index.js" },
+        { key: "PRODUCTS_RUNTIME", path: "/products/products_runtime.js" },
+        { key: "LAWS_HTML", path: "/laws/index.html" },
+        { key: "ABOUT_HTML", path: "/about/index.html" },
+        { key: "GAUGES_HTML", path: "/gauges/index.html" }
+      ];
 
-      @keyframes centerPulse {
-        0%, 100% { opacity: .72; transform: translate(-50%, -50%) scale(.95); }
-        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
-      }
+      const liveOutput = document.getElementById("liveOutput");
+      const stripStatus = document.getElementById("stripStatus");
+      const stripAction = document.getElementById("stripAction");
+      const routeGrid = document.getElementById("routeGrid");
+      const matrix = document.getElementById("matrix");
 
-      @media (max-width: 900px) {
-        .hero-grid { grid-template-columns: 1fr; }
-        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      }
+      function writeMatrix() {
+        const alphabet = "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_061_451_DGB_GEN2_DEMO_UNIVERSE_KERNEL_FEED_";
+        let out = "";
 
-      @media (max-width: 720px) {
-        .gauge-page { width: min(100vw - 16px, var(--max)); padding: 14px 0 32px; }
-        .topbar { flex-wrap: wrap; }
-        .nav { width: 100%; justify-content: flex-start; }
-        .hero, .section { padding: 18px 16px; }
-        h1 { font-size: clamp(2rem, 11vw, 3.4rem); }
-        .instrument-window { min-height: 390px; }
-        .vine-vessel { width: 220px; height: 220px; }
-        .fruit.left-top,
-        .fruit.right-top {
-          width: 128px;
-          height: 136px;
+        for (let i = 0; i < 5200; i += 1) {
+          const ch = alphabet[(i * 17 + 11) % alphabet.length];
+          out += ch;
+          if (i % 97 === 0) out += "\n";
         }
-        .fruit.left-bottom,
-        .fruit.right-bottom {
-          width: 118px;
-          height: 128px;
+
+        matrix.textContent = out;
+      }
+
+      function nowStamp() {
+        return new Date().toISOString();
+      }
+
+      async function fetchText(path) {
+        const url = path + (path.includes("?") ? "&" : "?") + "gauge=" + Date.now();
+
+        try {
+          const response = await fetch(url, {
+            method: "GET",
+            cache: "no-store",
+            headers: { "Accept": "text/html,text/javascript,text/plain,*/*" }
+          });
+
+          const text = await response.text();
+
+          return {
+            path,
+            ok: response.ok,
+            status: response.status,
+            length: text.length,
+            text
+          };
+        } catch (error) {
+          return {
+            path,
+            ok: false,
+            status: "FETCH_ERROR",
+            length: 0,
+            text: "",
+            error: String(error && error.message ? error.message : error)
+          };
         }
-        .grid { grid-template-columns: 1fr; }
-        .footer { display: grid; }
-        .footer a { margin-left: 0; margin-right: 12px; }
       }
 
-      @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; scroll-behavior: auto !important; }
+      function includesAny(text, terms) {
+        return terms.some((term) => text.includes(term));
       }
-    `;
-    document.head.appendChild(style);
-  }
 
-  function html() {
-    return `
-      <main class="gauge-page">
-        <header class="topbar">
-          <div class="brand">
-            <div class="mark">DG</div>
-            <div>
-              <p class="kicker">Gauges</p>
-              <p class="brand-title">Seasonal Vine Fairies</p>
+      function classify(results) {
+        const byKey = Object.fromEntries(results.map((item) => [item.key, item]));
+
+        const rootHtml = byKey.ROOT_HTML?.text || "";
+        const rootJs = byKey.ROOT_JS?.text || "";
+        const productsHtml = byKey.PRODUCTS_HTML?.text || "";
+        const productsBridge = byKey.PRODUCTS_BRIDGE?.text || "";
+        const productsRuntime = byKey.PRODUCTS_RUNTIME?.text || "";
+        const lawsHtml = byKey.LAWS_HTML?.text || "";
+        const aboutHtml = byKey.ABOUT_HTML?.text || "";
+        const gaugesHtml = byKey.GAUGES_HTML?.text || "";
+
+        const checks = [
+          {
+            key: "ROOT_LITERAL_LOVE",
+            pass: !rootHtml.includes(">LOVE<") && !rootHtml.includes("LOVE</div>"),
+            fail: "Root HTML still contains literal LOVE object.",
+            next: "REPLACE_/index.html_WITH_SECOND_GENERATION_ROOT"
+          },
+          {
+            key: "ROOT_JS_OLD_CORE",
+            pass: !includesAny(rootJs, ["border-radius: 34px", "letter-spacing: .18em", "home-russian-doll"]),
+            fail: "Root JS still carries old .home-core / Generation 1 surface styling.",
+            next: "REPLACE_/index.js_WITH_SECOND_GENERATION_ROOT_RUNTIME"
+          },
+          {
+            key: "ROOT_GEN2_MARKER",
+            pass: rootHtml.includes("second-generation-renewal") || rootJs.includes("second-generation-renewal"),
+            fail: "Root does not expose second-generation-renewal marker.",
+            next: "ADD_GEN2_MARKER_TO_ROOT_HTML_AND_JS"
+          },
+          {
+            key: "PRODUCTS_BRIDGE_PRESENT",
+            pass: productsBridge.includes("products_runtime.js") || productsBridge.includes("ProductsPlanetRuntime"),
+            fail: "Products bridge does not clearly route to runtime.",
+            next: "INSPECT_/products/index.js_BRIDGE"
+          },
+          {
+            key: "PRODUCTS_RUNTIME_RECEIPT",
+            pass: productsRuntime.includes("productsRuntimeMounted") && productsRuntime.includes("data-products-runtime-root"),
+            fail: "Products runtime lacks bridge receipt or runtime root marker.",
+            next: "RENEW_/products/products_runtime.js_RECEIPT_CONTRACT"
+          },
+          {
+            key: "PRODUCTS_FALLBACK",
+            pass: !productsHtml.includes("Waiting for /products/index.js to load") || productsRuntime.includes("productsRuntimeMounted"),
+            fail: "Products shell fallback is still relevant; runtime proof must be verified.",
+            next: "VERIFY_PRODUCTS_RUNTIME_MOUNT_ON_LIVE_PAGE"
+          },
+          {
+            key: "LAWS_G1",
+            pass: !lawsHtml.includes("G1 External Expression") && !lawsHtml.includes("LAWS_G1_VISIBLE_THREE_LAYER_SURFACE"),
+            fail: "Laws page still exposes G1 language.",
+            next: "RENEW_/laws/index.html_AS_G2_AUTHORITY_INSTRUMENT"
+          },
+          {
+            key: "ABOUT_IDENTITY",
+            pass: !aboutHtml.includes("Geodiametrics") && !aboutHtml.includes(""),
+            fail: "About page still has identity drift or visible artifact.",
+            next: "RENEW_/about/index.html_FOR_DGB_IDENTITY"
+          },
+          {
+            key: "GAUGES_GEN2_LIVE",
+            pass: gaugesHtml.includes("Second Generation Renewal") && gaugesHtml.includes("LIVE_FEED_DIAGNOSTIC_SURFACE"),
+            fail: "Gauges page is not yet this live-feed diagnostic surface.",
+            next: "DEPLOY_THIS_/gauges/index.html_FILE"
+          }
+        ];
+
+        const failed = checks.filter((check) => !check.pass);
+        const passed = checks.filter((check) => check.pass);
+
+        let nextAction = "NO_ACTION_REQUIRED";
+        let priority = "CLEAR";
+
+        if (failed.length > 0) {
+          priority = "BLOCKED";
+          nextAction = failed[0].next;
+        }
+
+        return {
+          stamp: nowStamp(),
+          priority,
+          nextAction,
+          passed,
+          failed,
+          files: results
+        };
+      }
+
+      function renderRoutes(diagnostic) {
+        routeGrid.innerHTML = "";
+
+        const rows = diagnostic.files.map((file) => {
+          const statusClass = file.ok ? "ok" : "block";
+          const title = file.ok ? "reachable" : "blocked";
+          const detail = "STATUS=" + file.status + " LENGTH=" + file.length;
+
+          return `
+            <div class="cell ${statusClass}">
+              <small>${escapeHtml(file.key)}</small>
+              <strong>${escapeHtml(title)}</strong>
+              <code>${escapeHtml(file.path)}<br>${escapeHtml(detail)}</code>
             </div>
-          </div>
+          `;
+        });
 
-          <nav class="nav" aria-label="Primary">
-            <a href="/">Home</a>
-            <a href="/products/">Products</a>
-            <a href="/laws/">Laws</a>
-            <a href="/about/">About</a>
-          </nav>
-        </header>
+        routeGrid.innerHTML = rows.join("");
+      }
 
-        <section class="hero">
-          <div class="hero-grid">
-            <div>
-              <span class="pill">Vine vessel · fairy paths · four seasons</span>
-              <h1>The gauges now read the <span>living vine.</span></h1>
-              <p class="lead">
-                Products has moved from a diagnostic chamber into a public image: seasonal fruit held on a central vine while fairies cross the center on mirrored figure-eight paths.
-              </p>
+      function renderFeed(diagnostic) {
+        const lines = [];
 
-              <div class="actions">
-                <a class="button primary" href="/products/">Open Products</a>
-                <a class="button" href="#reading">Read the gauges</a>
-              </div>
-            </div>
+        lines.push("GAUGE_LIVE_FEED_V2");
+        lines.push("STAMP=" + diagnostic.stamp);
+        lines.push("PHASE=SECOND_GENERATION_RENEWAL");
+        lines.push("PRIORITY=" + diagnostic.priority);
+        lines.push("NEXT_ACTION=" + diagnostic.nextAction);
+        lines.push("");
 
-            <div class="instrument-window" aria-label="Seasonal Vine Fairies gauge visual">
-              <div class="center-glow"></div>
-              <div class="vine-vessel">
-                <div class="vine-arc"></div>
-                <div class="fruit left-top"></div>
-                <div class="fruit right-top"></div>
-                <div class="fruit left-bottom"></div>
-                <div class="fruit right-bottom"></div>
-                <div class="vine-stem"></div>
-              </div>
-              <div class="fairy one"><span></span></div>
-              <div class="fairy two"><span></span></div>
-              <div class="fairy three"><span></span></div>
-              <div class="fairy four"><span></span></div>
-              <div class="fairy five"><span></span></div>
-            </div>
-          </div>
-        </section>
+        lines.push("FAILED_CHECKS=[");
+        if (diagnostic.failed.length === 0) {
+          lines.push("  NONE");
+        } else {
+          for (const item of diagnostic.failed) {
+            lines.push("  {");
+            lines.push("    CHECK=" + item.key);
+            lines.push("    FINDING=" + item.fail);
+            lines.push("    NEXT=" + item.next);
+            lines.push("  }");
+          }
+        }
+        lines.push("]");
+        lines.push("");
 
-        <section class="section" id="reading">
-          <p class="kicker">Current reading</p>
-          <h2>The vine is the vessel. The fairies carry the motion.</h2>
-          <p>
-            The public-facing read is now simple: seasonal fruit on a central vine, fairies in front, four seasons held in one living field.
-          </p>
+        lines.push("PASSED_CHECKS=[");
+        if (diagnostic.passed.length === 0) {
+          lines.push("  NONE");
+        } else {
+          for (const item of diagnostic.passed) {
+            lines.push("  " + item.key);
+          }
+        }
+        lines.push("]");
+        lines.push("");
 
-          <div class="grid">
-            <article class="card">
-              <small>Vessel</small>
-              <strong>Seasonal vine</strong>
-              <p>The image reads as fruit held around a central stalk, which matches the current visual better than butterfly language.</p>
-            </article>
+        lines.push("FILE_PROBES=[");
+        for (const file of diagnostic.files) {
+          lines.push("  " + file.key + " => " + file.path + " :: STATUS=" + file.status + " LENGTH=" + file.length);
+        }
+        lines.push("]");
 
-            <article class="card">
-              <small>Motion</small>
-              <strong>Fairy paths</strong>
-              <p>The former bubbles now read as fairies moving through the visual space.</p>
-            </article>
+        liveOutput.textContent = lines.join("\n");
+        stripStatus.textContent = "STATUS: " + diagnostic.priority;
+        stripAction.textContent = "NEXT_ACTION=" + diagnostic.nextAction;
+      }
 
-            <article class="card">
-              <small>Pattern</small>
-              <strong>Two figure-eights</strong>
-              <p>The fairies still cross through mirrored loops and meet at the center.</p>
-            </article>
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&#039;");
+      }
 
-            <article class="card">
-              <small>Seasons</small>
-              <strong>Winter, Summer, Fall, Spring</strong>
-              <p>The four seasonal corners remain visible without overpowering the art.</p>
-            </article>
-          </div>
-        </section>
+      async function run() {
+        writeMatrix();
 
-        <section class="section">
-          <p class="kicker">Open only what you need</p>
-          <h2>Instrument layers</h2>
+        stripStatus.textContent = "STATUS: RUNNING";
+        stripAction.textContent = "NEXT_ACTION=FETCH_PUBLIC_SOURCE_FILES";
+        liveOutput.textContent = "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE";
 
-          <div class="doll-list">
-            <article class="doll is-open" data-doll>
-              <button type="button" aria-expanded="true">
-                <span>
-                  <small>First layer</small>
-                  <strong>What changed?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>The visual now reads as a living seasonal vine scene with fairies moving in front. The language matches the image.</p>
-              </div>
-            </article>
+        const results = [];
 
-            <article class="doll" data-doll>
-              <button type="button" aria-expanded="false">
-                <span>
-                  <small>Second layer</small>
-                  <strong>Why fairies?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>Fairies preserve the small moving-point behavior but give the motion character. The movement feels intentional instead of abstract.</p>
-              </div>
-            </article>
+        for (const file of FILES) {
+          const fetched = await fetchText(file.path);
+          results.push({ key: file.key, ...fetched });
+        }
 
-            <article class="doll" data-doll>
-              <button type="button" aria-expanded="false">
-                <span>
-                  <small>Third layer</small>
-                  <strong>Why vine?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>The vine interpretation matches the visible shape: fruit-like seasonal forms held around a central living stalk.</p>
-              </div>
-            </article>
+        const diagnostic = classify(results);
 
-            <article class="doll" data-doll>
-              <button type="button" aria-expanded="false">
-                <span>
-                  <small>Fourth layer</small>
-                  <strong>What remains intact?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>The four seasons, center crossing, and two figure-eight motion remain intact. The naming is renewed so the page reads cleanly.</p>
-              </div>
-            </article>
-          </div>
-        </section>
+        renderRoutes(diagnostic);
+        renderFeed(diagnostic);
 
-        <section class="section">
-          <p class="kicker">Next public move</p>
-          <h2>Align Products to the same language.</h2>
-          <div class="grid">
-            <a class="card" href="/products/">
-              <small>Products</small>
-              <strong>Open the live visual</strong>
-              <p>Return to the active seasonal vine fairies page.</p>
-            </a>
+        document.documentElement.setAttribute("data-gauge-priority", diagnostic.priority.toLowerCase());
+        document.getElementById("gaugeRoot").setAttribute("data-next-action", diagnostic.nextAction);
+      }
 
-            <a class="card" href="/laws/">
-              <small>Laws</small>
-              <strong>Connect the story</strong>
-              <p>Make the laws page read as visitor-facing, not internal documentation.</p>
-            </a>
-
-            <a class="card" href="/">
-              <small>Door</small>
-              <strong>Return to the entry</strong>
-              <p>Use the root door as the entrance to the current experience.</p>
-            </a>
-
-            <a class="card" href="/about/">
-              <small>About</small>
-              <strong>Explain the mission</strong>
-              <p>Translate the system into human terms.</p>
-            </a>
-          </div>
-        </section>
-
-        <footer class="footer">
-          <span>Gauges · Seasonal Vine Fairies</span>
-          <span class="footer-links">
-            <a href="/">Home</a>
-            <a href="/products/">Products</a>
-            <a href="/laws/">Laws</a>
-          </span>
-        </footer>
-      </main>
-    `;
-  }
-
-  function closeSiblings(shell) {
-    const parent = shell.parentElement;
-    if (!parent) return;
-
-    parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
-      if (item === shell) return;
-      item.classList.remove("is-open");
-      const btn = item.querySelector("button");
-      if (btn) btn.setAttribute("aria-expanded", "false");
-    });
-  }
-
-  function wireDolls() {
-    document.querySelectorAll("[data-doll] > button").forEach((button) => {
-      button.addEventListener("click", () => {
-        const shell = button.closest("[data-doll]");
-        if (!shell) return;
-
-        const willOpen = !shell.classList.contains("is-open");
-        closeSiblings(shell);
-        shell.classList.toggle("is-open", willOpen);
-        button.setAttribute("aria-expanded", String(willOpen));
-      });
-    });
-  }
-
-  function mount() {
-    injectStyle();
-
-    const target =
-      document.getElementById("gaugesPage") ||
-      document.getElementById("gaugesRoot") ||
-      document.querySelector("main") ||
-      document.body;
-
-    target.innerHTML = html();
-    target.setAttribute("data-gauges-owner", "gauges/index.js");
-    target.setAttribute("data-gauges-state", "seasonal-vine-fairies");
-
-    wireDolls();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mount, { once: true });
-  } else {
-    mount();
-  }
-})();
+      run();
+    })();
+  </script>
+</body>
+</html>

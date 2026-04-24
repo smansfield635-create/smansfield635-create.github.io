@@ -6,37 +6,42 @@
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Generation 1 gauges surface for Diamond Gate Bridge: signal, measurement, and comparative read."
+    content="Diamond Gate Bridge Generation 2 instrument chamber: gauges, readouts, diagnostic panels, and system measurement surfaces."
   />
   <style>
     :root{
-      --bg:#040814;
-      --panel:rgba(8,14,28,.72);
+      --bg:#020610;
       --line:rgba(164,188,255,.18);
       --line-strong:rgba(210,223,255,.34);
       --text:#eef4ff;
       --muted:#9aabd0;
       --gold:#efd29a;
-      --blue:#91c7ff;
-      --mint:#99e5b6;
-      --rose:#f0bacb;
-      --ok:#97e6b4;
-      --warn:#f2d18a;
-      --shadow:0 24px 80px rgba(0,0,0,.46);
-      --max:1180px;
+      --gold-strong:#ffd98f;
+      --blue:#6db8ff;
+      --blue-strong:#7ad5ff;
+      --green:#97e6b4;
+      --warn:#ffd58f;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1240px;
     }
 
     *{box-sizing:border-box}
-    html,body{min-height:100%}
+
+    html{
+      min-height:100%;
+      scroll-behavior:smooth;
+    }
+
     body{
+      min-height:100%;
       margin:0;
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
-        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
-        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
-        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+        radial-gradient(circle at 50% 7%, rgba(112,151,255,.22), transparent 22%),
+        radial-gradient(circle at 18% 28%, rgba(78,128,220,.12), transparent 24%),
+        radial-gradient(circle at 82% 34%, rgba(78,128,220,.10), transparent 24%),
+        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
       overflow-x:hidden;
     }
 
@@ -45,191 +50,703 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.18;
+      opacity:.2;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
-      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.17) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.14) 0 1px, transparent 1.6px);
+      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+      opacity:.32;
     }
 
     .page{
       width:min(var(--max), calc(100vw - 24px));
       margin:0 auto;
-      padding:18px 0 40px;
+      padding:18px 0 44px;
+      position:relative;
+      z-index:1;
+      overflow:hidden;
+    }
+
+    .topbar,.hero,.instrument-card,.console,.panel,.readout,.gauge-card,.route-card{
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 16px;
+      border-radius:22px;
+      background:rgba(7,13,26,.74);
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      flex:none;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(115,171,255,.24), transparent 42%),
+        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+      color:#f4f8ff;
+      font-weight:900;
+      letter-spacing:.08em;
+      box-shadow:0 0 22px rgba(109,184,255,.09);
+    }
+
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:800;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .nav-link,.button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      text-decoration:none;
+      min-height:42px;
+      padding:0 15px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      font-weight:800;
+      background:rgba(255,255,255,.035);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.06);
+      outline:none;
+    }
+
+    .hero{
+      margin-top:16px;
+      border-radius:34px;
+      padding:24px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(132,164,255,.18), transparent 30%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
+      mix-blend-mode:screen;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,.88fr);
+      gap:20px;
+      align-items:center;
       position:relative;
       z-index:1;
     }
 
-    .topbar,.hero,.section{
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
-    }
-
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:16px;
-      padding:14px 16px;border-radius:20px;background:rgba(7,13,26,.7);backdrop-filter:blur(10px);
-    }
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-mark{
-      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
-    }
-    .brand-kicker{margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
-    .brand-title{margin:0;font-size:1.05rem;font-weight:700}
-    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
-    .nav-link,.button{
-      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-    .nav-link{
-      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
-      color:var(--text);font-weight:700;font-size:.92rem;background:rgba(255,255,255,.03);
-    }
-    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
-      transform:translateY(-1px);border-color:var(--line-strong);background:rgba(255,255,255,.05);outline:none;
-    }
-
-    .hero{
-      margin-top:16px;border-radius:34px;padding:24px 20px 20px;position:relative;overflow:hidden;
-    }
-    .hero::after{
-      content:"";position:absolute;inset:0;pointer-events:none;
-      background:radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
-      linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
-      mix-blend-mode:screen;
-    }
-    .hero-grid{
-      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:20px;align-items:start;position:relative;z-index:1;
-    }
     .hero-tag{
-      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);color:#d8e3ff;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;margin-bottom:12px;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:14px;
     }
+
     .hero-tag::before{
-      content:"";width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 16px rgba(145,199,255,.52);
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.55);
     }
+
     h1{
-      margin:0 0 10px;font-size:clamp(2.2rem, 4.8vw, 4rem);line-height:.96;letter-spacing:-.05em;max-width:10ch;
+      margin:0 0 12px;
+      font-size:clamp(2.3rem, 5vw, 4.7rem);
+      line-height:.95;
+      letter-spacing:-.058em;
+      max-width:11ch;
     }
-    h1 .accent{color:var(--blue)}
-    .hero p,.card p,.hero-side p,.section-note,.gauge-copy{
-      color:var(--muted);line-height:1.58;
+
+    h1 .accent{color:var(--gold)}
+
+    p{
+      color:var(--muted);
+      line-height:1.58;
     }
-    .hero p{margin:0;font-size:clamp(.98rem, 1.5vw, 1.1rem);max-width:58ch}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+
+    .hero p{
+      margin:0;
+      font-size:clamp(1rem, 1.5vw, 1.12rem);
+      max-width:64ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+
     .button{
-      min-height:44px;padding:0 16px;border-radius:16px;border:1px solid var(--line);color:var(--text);font-weight:800;background:rgba(255,255,255,.03);white-space:nowrap;
+      border-radius:18px;
+      min-height:46px;
+      padding:0 18px;
+      white-space:nowrap;
     }
+
     .button.primary{
-      border-color:rgba(145,199,255,.3);
-      background:linear-gradient(180deg, rgba(145,199,255,.16), rgba(145,199,255,.06));
-      color:#eff8ff;
+      border-color:rgba(239,210,154,.34);
+      background:
+        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
     }
 
-    .hero-side,.card,.gauge{
-      border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.03);
+    .instrument-card{
+      border-radius:30px;
+      padding:20px;
+      overflow:hidden;
+      position:relative;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(109,184,255,.14), transparent 30%),
+        linear-gradient(180deg, rgba(10,22,44,.94), rgba(4,10,20,.96));
     }
-    .hero-side,.card,.gauge{padding:18px}
-    .hero-side h2,.card h3,.gauge-title{margin:0 0 10px;font-size:1.08rem;line-height:1.1;letter-spacing:-.02em}
-    .hero-stats{display:grid;gap:10px;margin-top:16px}
-    .stat{
-      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);
-    }
-    .stat-label{
-      display:block;margin-bottom:6px;color:#90a3ce;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-    }
-    .stat-value{color:#f4f7ff;font-size:.98rem;font-weight:700}
 
-    .section{margin-top:18px;border-radius:30px;padding:20px}
-    .section-head{
-      display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px;
+    .instrument-face{
+      position:relative;
+      min-height:360px;
+      border-radius:26px;
+      border:1px solid rgba(170,198,255,.20);
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(109,184,255,.15), transparent 28%),
+        linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
+      box-shadow:
+        inset 0 0 44px rgba(126,164,255,.10),
+        inset 0 -26px 70px rgba(0,0,0,.34);
+      isolation:isolate;
     }
+
+    .instrument-face::before{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:inset 0 0 28px rgba(92,184,255,.08);
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .instrument-grid{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
+      background-size:34px 34px;
+      opacity:.46;
+      z-index:1;
+    }
+
+    .instrument-ring{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      width:238px;
+      height:238px;
+      border-radius:50%;
+      border:1px solid rgba(109,184,255,.30);
+      box-shadow:
+        0 0 28px rgba(109,184,255,.14),
+        inset 0 0 34px rgba(109,184,255,.10);
+      z-index:4;
+    }
+
+    .instrument-ring::before,
+    .instrument-ring::after{
+      content:"";
+      position:absolute;
+      border-radius:50%;
+      border:1px solid rgba(239,210,154,.24);
+    }
+
+    .instrument-ring::before{
+      inset:20px;
+    }
+
+    .instrument-ring::after{
+      inset:52px;
+      border-color:rgba(109,184,255,.28);
+      box-shadow:0 0 20px rgba(109,184,255,.14);
+    }
+
+    .needle{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:3px;
+      height:100px;
+      transform-origin:50% 100%;
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(239,210,154,.54), transparent);
+      box-shadow:0 0 16px rgba(239,210,154,.34);
+      z-index:5;
+    }
+
+    .needle.one{transform:translate(-50%,-100%) rotate(-38deg)}
+    .needle.two{transform:translate(-50%,-100%) rotate(42deg);opacity:.62}
+    .needle.three{transform:translate(-50%,-100%) rotate(0deg);opacity:.48}
+
+    .instrument-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:84px;
+      height:84px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,.74), rgba(109,184,255,.20) 22%, rgba(5,12,24,.88) 62%);
+      box-shadow:
+        0 0 24px rgba(109,184,255,.28),
+        0 0 62px rgba(239,210,154,.10);
+      z-index:6;
+    }
+
+    .instrument-status{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      width:calc(100% - 42px);
+      max-width:520px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(140,168,240,.24);
+      background:rgba(6,14,28,.84);
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      color:#dbe5ff;
+      z-index:8;
+      line-height:1.35;
+    }
+
+    .instrument-status strong{
+      color:#fff;
+    }
+
+    .console{
+      margin-top:18px;
+      border-radius:30px;
+      padding:22px 20px;
+      overflow:hidden;
+    }
+
     .section-kicker{
-      color:#c8d7ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:8px;
     }
-    .section h2{margin:0;font-size:1.45rem;letter-spacing:-.03em;line-height:1.06}
-    .section-note{font-size:.92rem;max-width:42ch;text-align:right}
 
-    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .console h2{
+      margin:0 0 10px;
+      font-size:clamp(1.7rem, 3vw, 2.7rem);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
 
-    .gauge-head{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;
+    .readout-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
     }
-    .gauge-value{
-      font-size:1.4rem;font-weight:800;letter-spacing:-.03em;color:var(--text);
+
+    .readout{
+      border-radius:22px;
+      padding:16px;
+      min-height:150px;
+      position:relative;
+      overflow:hidden;
     }
-    .gauge-status{
-      display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:0 10px;border-radius:999px;
-      font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1px solid currentColor;
+
+    .readout::after{
+      content:"";
+      position:absolute;
+      right:12px;
+      bottom:12px;
+      width:48px;
+      height:48px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(109,184,255,.20), transparent 66%);
+      pointer-events:none;
     }
-    .gauge-status.ok{color:var(--ok);background:rgba(151,230,180,.08)}
-    .gauge-status.warn{color:var(--warn);background:rgba(242,209,138,.08)}
+
+    .readout small,.gauge-card small,.route-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
+
+    .readout strong{
+      display:block;
+      color:#f4f7ff;
+      font-size:1.55rem;
+      line-height:1;
+      letter-spacing:-.04em;
+      margin-bottom:10px;
+    }
+
+    .readout p{
+      margin:0;
+      font-size:.9rem;
+    }
 
     .bar{
-      height:12px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid var(--line);
-      margin:12px 0 10px;
-    }
-    .bar-fill{
-      height:100%;border-radius:999px;
-      background:linear-gradient(90deg, rgba(145,199,255,.85), rgba(153,229,182,.85));
-      width:var(--fill);
+      height:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(255,255,255,.04);
+      overflow:hidden;
+      margin-top:14px;
     }
 
-    .routes{
-      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+    .bar span{
+      display:block;
+      height:100%;
+      width:var(--value);
+      border-radius:999px;
+      background:linear-gradient(90deg, rgba(109,184,255,.72), rgba(239,210,154,.72));
+      box-shadow:0 0 16px rgba(109,184,255,.22);
     }
-    .route{
-      display:grid;gap:10px;padding:18px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.03);
-      color:inherit;text-decoration:none;transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+
+    .gauge-layout{
+      display:grid;
+      grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);
+      gap:18px;
+      margin-top:18px;
+      align-items:start;
     }
-    .route:hover,.route:focus-visible{
-      transform:translateY(-2px);border-color:var(--line-strong);background:rgba(255,255,255,.05);box-shadow:0 16px 36px rgba(0,0,0,.18);outline:none;
+
+    .panel{
+      border-radius:30px;
+      padding:22px 20px;
+      overflow:hidden;
     }
-    .route[data-tone="mint"]{color:var(--mint)}
-    .route[data-tone="gold"]{color:var(--gold)}
-    .route[data-tone="blue"]{color:var(--blue)}
-    .route[data-tone="rose"]{color:var(--rose)}
-    .route-mark{
-      width:40px;height:40px;border-radius:14px;display:grid;place-items:center;border:1px solid currentColor;background:rgba(255,255,255,.03);
-      font-weight:800;letter-spacing:.08em;
+
+    .gauge-list{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
     }
-    .route-title{
-      margin:0;color:var(--text);font-size:1.14rem;font-weight:800;letter-spacing:-.02em;
+
+    .gauge-card{
+      border-radius:20px;
+      padding:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+      display:grid;
+      grid-template-columns:auto 1fr auto;
+      gap:14px;
+      align-items:center;
     }
-    .route-copy{
-      color:var(--muted);line-height:1.58;font-size:.95rem;
+
+    .lamp{
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
+      background:radial-gradient(circle at 50% 40%, var(--lamp), rgba(5,12,24,.92) 70%);
+      box-shadow:0 0 18px var(--lamp-glow);
     }
-    .route-meta{
-      color:#dce7ff;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+
+    .gauge-card h3{
+      margin:0 0 5px;
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
+    .gauge-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .gauge-value{
+      color:#fff;
+      font-weight:900;
+      letter-spacing:.08em;
+      font-size:.86rem;
+      text-transform:uppercase;
+      text-align:right;
+    }
+
+    .route-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .route-card{
+      display:block;
+      min-height:136px;
+      border-radius:22px;
+      padding:16px;
+      color:var(--text);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .route-card:hover,.route-card:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
+      outline:none;
+    }
+
+    .route-card h3{
+      margin:0 0 8px;
+      font-size:1.05rem;
+    }
+
+    .route-card p{
+      margin:0;
+      font-size:.9rem;
     }
 
     .footer{
-      display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);padding:12px 4px 0;font-size:.92rem;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:14px 4px 0;
+      font-size:.92rem;
     }
-    .footer-links{display:flex;flex-wrap:wrap;gap:12px}
-    .footer-links a{color:var(--muted);text-decoration:none}
-    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
 
-    @media (max-width: 980px){
-      .hero-grid,.cards,.gauges,.routes{grid-template-columns:1fr}
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
     }
 
-    @media (max-width: 720px){
-      .page{width:min(100vw - 16px, var(--max));padding:14px 0 28px}
-      .topbar{flex-wrap:wrap;padding:12px 14px}
-      .topnav{width:100%;justify-content:flex-start}
-      .hero,.section{padding:18px 16px}
-      .hero-grid{gap:14px}
-      .hero h1{font-size:clamp(2rem, 11vw, 3.4rem)}
-      .hero-actions{gap:8px}
-      .button{flex:1 1 calc(50% - 8px)}
-      .button.primary{flex-basis:100%}
-      .section-head,.footer{display:grid;gap:8px}
-      .section-note{text-align:left}
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,.footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width:980px){
+      .hero-grid,.gauge-layout{grid-template-columns:1fr}
+      .readout-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
+    @media (max-width:720px){
+      .page{
+        width:min(100vw - 16px, var(--max));
+        padding:14px 0 32px;
+      }
+
+      .topbar{
+        flex-wrap:wrap;
+        padding:12px 14px;
+      }
+
+      .topnav{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .hero,.instrument-card,.console,.panel{
+        padding:18px 16px;
+      }
+
+      h1{
+        font-size:clamp(2rem, 11vw, 3.4rem);
+      }
+
+      .hero-actions{
+        gap:8px;
+      }
+
+      .button{
+        flex:1 1 calc(50% - 8px);
+      }
+
+      .button.primary{
+        flex-basis:100%;
+      }
+
+      .instrument-face{
+        min-height:330px;
+      }
+
+      .instrument-ring{
+        width:198px;
+        height:198px;
+      }
+
+      .needle{
+        height:82px;
+      }
+
+      .instrument-core{
+        width:68px;
+        height:68px;
+      }
+
+      .instrument-status{
+        width:calc(100% - 28px);
+        border-radius:24px;
+        font-size:.60rem;
+        letter-spacing:.10em;
+      }
+
+      .readout-grid,.route-grid{
+        grid-template-columns:1fr;
+      }
+
+      .gauge-card{
+        grid-template-columns:auto 1fr;
+      }
+
+      .gauge-value{
+        grid-column:1 / -1;
+        text-align:left;
+      }
+
+      .footer{
+        display:grid;
+        gap:8px;
+      }
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .instrument-ring{
+        animation:slowSpin 32s linear infinite;
+      }
+
+      .instrument-core{
+        animation:corePulse 4.8s ease-in-out infinite;
+      }
+
+      .needle.one{
+        animation:needleSweepOne 8s ease-in-out infinite;
+      }
+
+      .needle.two{
+        animation:needleSweepTwo 10s ease-in-out infinite;
+      }
+
+      .needle.three{
+        animation:needleSweepThree 12s ease-in-out infinite;
+      }
+
+      @keyframes slowSpin{
+        from{transform:translate(-50%,-50%) rotate(0deg)}
+        to{transform:translate(-50%,-50%) rotate(360deg)}
+      }
+
+      @keyframes corePulse{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.18)}
+      }
+
+      @keyframes needleSweepOne{
+        0%,100%{transform:translate(-50%,-100%) rotate(-44deg)}
+        50%{transform:translate(-50%,-100%) rotate(-24deg)}
+      }
+
+      @keyframes needleSweepTwo{
+        0%,100%{transform:translate(-50%,-100%) rotate(34deg)}
+        50%{transform:translate(-50%,-100%) rotate(52deg)}
+      }
+
+      @keyframes needleSweepThree{
+        0%,100%{transform:translate(-50%,-100%) rotate(-6deg)}
+        50%{transform:translate(-50%,-100%) rotate(8deg)}
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{
+        animation:none !important;
+        scroll-behavior:auto !important;
+      }
     }
   </style>
 </head>
@@ -239,189 +756,226 @@
       <div class="brand">
         <div class="brand-mark">DG</div>
         <div>
-          <p class="brand-kicker">Signal Surface</p>
+          <p class="brand-kicker">Generation 2 Instruments</p>
           <p class="brand-title">Gauges · Diamond Gate Bridge</p>
         </div>
       </div>
 
       <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/">Door</a>
         <a class="nav-link" href="/products/">Products</a>
         <a class="nav-link" href="/laws/">Laws</a>
+        <a class="nav-link" href="/about/">About</a>
       </nav>
     </header>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Generation 1 · gauges renewal</span>
-          <h1>Signal, state, and <span class="accent">movement</span>.</h1>
+          <span class="hero-tag">Generation 2 · master instrument chamber</span>
+          <h1>Read the <span class="accent">instruments</span>.</h1>
           <p>
-            Gauges is the measurement surface. It provides fast comparative reads of system state without
-            turning the page into a technical dump. The goal is to make movement legible at a glance.
+            Gauges now defines the Generation 2 instrument language for the site. This chamber holds the system readouts:
+            status, route health, coherence, seasonal runtime, diagnostic pressure, and live chamber alignment.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#live-gauges">Read gauges</a>
-            <a class="button" href="/products/">Products</a>
+            <a class="button primary" href="#instrumentConsole">Open console</a>
             <a class="button" href="/">Back to door</a>
+            <a class="button" href="/products/">Products runtime</a>
           </div>
         </div>
 
-        <aside class="hero-side">
-          <h2>Gauge job</h2>
-          <p>
-            Show what is moving, what is stable, and what needs attention. Gauges should compress signal into
-            readable form instead of burying it inside paragraphs.
-          </p>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <span class="stat-label">Purpose</span>
-              <span class="stat-value">Signal and measurement</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Read class</span>
-              <span class="stat-value">Fast comparative surface</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Contract</span>
-              <span class="stat-value">Generation 1 gauges chamber</span>
+        <aside class="instrument-card">
+          <div class="instrument-face" aria-label="Generation 2 master gauge">
+            <div class="instrument-grid"></div>
+            <div class="instrument-ring"></div>
+            <div class="needle one"></div>
+            <div class="needle two"></div>
+            <div class="needle three"></div>
+            <div class="instrument-core"></div>
+            <div class="instrument-status">
+              <strong>Master gauge</strong> · root door language applied to instruments
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">What gauges do</div>
-          <h2>Compress complexity into a readable surface</h2>
-        </div>
-        <div class="section-note">
-          Measurement should clarify the system, not overload it.
-        </div>
-      </div>
+    <section class="console" id="instrumentConsole">
+      <div class="section-kicker">Primary readouts</div>
+      <h2>System instrument panel</h2>
+      <p>
+        This page is the source pattern for the rest of the Generation 2 readout surfaces. Every future instrument should read
+        as dark glass, blue/gold trim, clear status hierarchy, and chamber-specific diagnostic meaning.
+      </p>
 
-      <div class="cards">
-        <div class="card">
-          <h3>State</h3>
-          <p>Gauge surfaces show the current read of the chamber without requiring deep interpretation first.</p>
-        </div>
-        <div class="card">
-          <h3>Motion</h3>
-          <p>They make movement visible: what is rising, stabilizing, narrowing, or falling out of alignment.</p>
-        </div>
-        <div class="card">
-          <h3>Comparison</h3>
-          <p>They allow one surface to be read against another so the whole system stays coherent.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="live-gauges">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Live read</div>
-          <h2>Core gauges</h2>
-        </div>
-        <div class="section-note">
-          These are public-facing compressed reads, not full internal diagnostics.
-        </div>
-      </div>
-
-      <div class="gauges">
-        <div class="gauge">
-          <div class="gauge-head">
-            <div class="gauge-title">Coherence</div>
-            <div class="gauge-status ok">Stable</div>
-          </div>
-          <div class="gauge-value">82%</div>
-          <div class="bar" aria-hidden="true"><div class="bar-fill" style="--fill:82%"></div></div>
-          <div class="gauge-copy">How well the visible surfaces are reading as one system instead of disconnected pages.</div>
+      <div class="readout-grid">
+        <div class="readout">
+          <small>Root door</small>
+          <strong>Live</strong>
+          <p>Generation 2 root threshold is the visual authority.</p>
+          <div class="bar"><span style="--value:96%"></span></div>
         </div>
 
-        <div class="gauge">
-          <div class="gauge-head">
-            <div class="gauge-title">Execution</div>
-            <div class="gauge-status warn">Active</div>
-          </div>
-          <div class="gauge-value">68%</div>
-          <div class="bar" aria-hidden="true"><div class="bar-fill" style="--fill:68%"></div></div>
-          <div class="gauge-copy">How much of the visible system is already converted into actual working surfaces and usable chambers.</div>
+        <div class="readout">
+          <small>Products</small>
+          <strong>Live</strong>
+          <p>Seasonal molecule runtime is mounted as the G1 product baseline.</p>
+          <div class="bar"><span style="--value:92%"></span></div>
         </div>
 
-        <div class="gauge">
-          <div class="gauge-head">
-            <div class="gauge-title">Signal Clarity</div>
-            <div class="gauge-status ok">Readable</div>
-          </div>
-          <div class="gauge-value">76%</div>
-          <div class="bar" aria-hidden="true"><div class="bar-fill" style="--fill:76%"></div></div>
-          <div class="gauge-copy">How clearly the pages communicate their job without collapsing into noise, drift, or overlap.</div>
+        <div class="readout">
+          <small>Gauges</small>
+          <strong>G2</strong>
+          <p>Instrument chamber is now the master readout pattern.</p>
+          <div class="bar"><span style="--value:88%"></span></div>
+        </div>
+
+        <div class="readout">
+          <small>Next pass</small>
+          <strong>Laws</strong>
+          <p>Authority chamber should inherit this instrument language next.</p>
+          <div class="bar"><span style="--value:64%"></span></div>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Next routes</div>
-          <h2>Move from measurement into the right chamber</h2>
-        </div>
-        <div class="section-note">
-          Gauges should point you forward, not trap you in endless reading.
+    <section class="gauge-layout">
+      <div class="panel">
+        <div class="section-kicker">Diagnostic hierarchy</div>
+        <h2>Chamber status</h2>
+        <p>
+          These are not decorative cards. They are the first Generation 2 instrument standard:
+          each line gives a chamber, a status, and the current read.
+        </p>
+
+        <div class="gauge-list">
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(151,230,180,.95);--lamp-glow:rgba(151,230,180,.35)"></div>
+            <div>
+              <small>Root</small>
+              <h3>Door baseline active</h3>
+              <p>Root page now owns the Generation 2 visual direction.</p>
+            </div>
+            <div class="gauge-value">PASS</div>
+          </div>
+
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(109,184,255,.95);--lamp-glow:rgba(109,184,255,.35)"></div>
+            <div>
+              <small>Products</small>
+              <h3>Seasonal molecule stable</h3>
+              <p>Winter/Spring and Fall/Summer loops remain the accepted products baseline.</p>
+            </div>
+            <div class="gauge-value">LIVE</div>
+          </div>
+
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(255,217,143,.95);--lamp-glow:rgba(255,217,143,.35)"></div>
+            <div>
+              <small>Laws</small>
+              <h3>Awaiting G2 chamber upgrade</h3>
+              <p>Laws should be upgraded after the master instrument language is accepted.</p>
+            </div>
+            <div class="gauge-value">NEXT</div>
+          </div>
+
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(210,223,255,.95);--lamp-glow:rgba(210,223,255,.35)"></div>
+            <div>
+              <small>About / Prelude</small>
+              <h3>Orientation layer pending</h3>
+              <p>Orientation pages should inherit the same readout structure after Laws.</p>
+            </div>
+            <div class="gauge-value">QUEUE</div>
+          </div>
         </div>
       </div>
 
-      <div class="routes">
-        <a class="route" data-tone="mint" href="/products/">
-          <div class="route-mark">P</div>
-          <h3 class="route-title">Products</h3>
-          <div class="route-copy">
-            Move from signal into the public build-facing chamber once the system read is clear enough to act on.
+      <div class="panel">
+        <div class="section-kicker">Instrument law</div>
+        <h2>G2 standard</h2>
+        <p>
+          Every instrument surface must be readable first, beautiful second, and decorative only after meaning is stable.
+          The page should tell the user what is live, what is next, and where to go.
+        </p>
+
+        <div class="gauge-list">
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(109,184,255,.95);--lamp-glow:rgba(109,184,255,.35)"></div>
+            <div>
+              <small>Visual law</small>
+              <h3>Dark glass · blue/gold trim</h3>
+              <p>The root door language now governs instruments.</p>
+            </div>
+            <div class="gauge-value">G2</div>
           </div>
-          <div class="route-meta">Chamber · Build</div>
+
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(151,230,180,.95);--lamp-glow:rgba(151,230,180,.35)"></div>
+            <div>
+              <small>Readout law</small>
+              <h3>Status before ornament</h3>
+              <p>Each surface must communicate state before detail density.</p>
+            </div>
+            <div class="gauge-value">LOCK</div>
+          </div>
+
+          <div class="gauge-card">
+            <div class="lamp" style="--lamp:rgba(255,217,143,.95);--lamp-glow:rgba(255,217,143,.35)"></div>
+            <div>
+              <small>Execution law</small>
+              <h3>TNT only</h3>
+              <p>Generation 2 upgrades move by complete file replacements.</p>
+            </div>
+            <div class="gauge-value">HARD</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="console">
+      <div class="section-kicker">Route instruments</div>
+      <h2>Move to the next chamber</h2>
+      <p>
+        Gauges now acts as the master instrument chamber. The next lawful move is to propagate this standard outward.
+      </p>
+
+      <div class="route-grid">
+        <a class="route-card" href="/">
+          <small>Root</small>
+          <h3>Door</h3>
+          <p>Return to the Generation 2 root threshold.</p>
         </a>
 
-        <a class="route" data-tone="gold" href="/nine-summits/">
-          <div class="route-mark">N</div>
-          <h3 class="route-title">Nine Summits</h3>
-          <div class="route-copy">
-            Follow the value spine if the measurement surface points back toward baseline alignment and human potential.
-          </div>
-          <div class="route-meta">Baseline · Spine</div>
+        <a class="route-card" href="/products/">
+          <small>Runtime</small>
+          <h3>Products</h3>
+          <p>Review the seasonal stained-glass molecule.</p>
         </a>
 
-        <a class="route" data-tone="blue" href="/about/">
-          <div class="route-mark">A</div>
-          <h3 class="route-title">About</h3>
-          <div class="route-copy">
-            Return to the orientation surface if the system needs a plainer read of what is live and how it should be used.
-          </div>
-          <div class="route-meta">Identity · Orientation</div>
+        <a class="route-card" href="/laws/">
+          <small>Next upgrade</small>
+          <h3>Laws</h3>
+          <p>Convert authority surfaces into G2 instruments.</p>
         </a>
 
-        <a class="route" data-tone="rose" href="/laws/">
-          <div class="route-mark">L</div>
-          <h3 class="route-title">Laws</h3>
-          <div class="route-copy">
-            Step into the governing rule layer once the signal requires structural interpretation and standards.
-          </div>
-          <div class="route-meta">Rule · Structure</div>
+        <a class="route-card" href="/about/">
+          <small>Orientation</small>
+          <h3>About</h3>
+          <p>Prepare the user guidance layer for G2 inheritance.</p>
         </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Gauges · Generation 1 signal contract</span>
+      <span>Gauges · Generation 2 master instrument chamber</span>
       <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
+        <a href="/">Door</a>
         <a href="/products/">Products</a>
         <a href="/laws/">Laws</a>
+        <a href="/about/">About</a>
       </div>
     </footer>
   </main>

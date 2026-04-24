@@ -2,14 +2,14 @@
   "use strict";
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
-  const STYLE_ID = "products-monarch-fairy-runtime-v1-style";
-  const ASSET_URL = "/assets/seasonal-monarch-butterfly.svg?v=7";
+  const STYLE_ID = "products-micro-world-runtime-v1-style";
+  const ASSET_URL = "/assets/seasonal-monarch-butterfly.svg?v=8";
 
   const seasons = [
-    { key: "winter", label: "Winter" },
-    { key: "summer", label: "Summer" },
-    { key: "fall", label: "Fall" },
-    { key: "spring", label: "Spring" }
+    { key: "winter", label: "Winter", squad: "North" },
+    { key: "summer", label: "Summer", squad: "East" },
+    { key: "fall", label: "Fall", squad: "West" },
+    { key: "spring", label: "Spring", squad: "South" }
   ];
 
   const fairies = [
@@ -35,10 +35,31 @@
     { type: "green", path: "center-b", x: 50, y: 45, d: "-3.5s" }
   ];
 
-  function writeReceipt(receipts, level, text) {
-    if (receipts && typeof receipts.write === "function") {
-      receipts.write(level, text);
+  const squads = [
+    {
+      key: "north",
+      label: "North Squad",
+      duty: "Terrain, mountains, boundary, high ground, map stability."
+    },
+    {
+      key: "south",
+      label: "South Squad",
+      duty: "Grass, vines, fruit, ecology, restoration, local life systems."
+    },
+    {
+      key: "east",
+      label: "East Squad",
+      duty: "Motion, insects, fairies, traversal paths, growth movement."
+    },
+    {
+      key: "west",
+      label: "West Squad",
+      duty: "Friction, shadow, breaks, edge conditions, pressure testing."
     }
+  ];
+
+  function writeReceipt(receipts, level, text) {
+    if (receipts && typeof receipts.write === "function") receipts.write(level, text);
   }
 
   function injectStyle() {
@@ -48,23 +69,22 @@
     style.id = STYLE_ID;
     style.textContent = `
       :root {
-        --products-line: rgba(164,188,255,.18);
-        --products-line-strong: rgba(210,223,255,.36);
-        --products-text: #eef4ff;
-        --products-muted: #9aabd0;
-        --products-gold: #efd29a;
-        --products-blue: #8ec5ff;
-        --products-green: #92e7ba;
-        --products-shadow: 0 24px 80px rgba(0,0,0,.52);
+        --line: rgba(164,188,255,.18);
+        --line-strong: rgba(210,223,255,.36);
+        --text: #eef4ff;
+        --muted: #9aabd0;
+        --gold: #efd29a;
+        --blue: #8ec5ff;
+        --green: #92e7ba;
+        --amber: #f4a340;
+        --shadow: 0 24px 80px rgba(0,0,0,.52);
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
-        color: var(--products-text);
+        color: var(--text);
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background:
           radial-gradient(circle at 50% 8%, rgba(112,151,255,.22), transparent 22%),
@@ -93,17 +113,18 @@
         z-index: 1;
       }
 
-      .products-topbar,
-      .products-hero,
-      .products-window,
-      .products-panel,
-      .products-card {
-        border: 1px solid var(--products-line);
+      .topbar,
+      .hero,
+      .window,
+      .panel,
+      .card,
+      .command-card {
+        border: 1px solid var(--line);
         background: linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
-        box-shadow: var(--products-shadow);
+        box-shadow: var(--shadow);
       }
 
-      .products-topbar {
+      .topbar {
         border-radius: 22px;
         padding: 14px 16px;
         display: flex;
@@ -113,19 +134,19 @@
         margin-bottom: 16px;
       }
 
-      .products-brand {
+      .brand {
         display: flex;
         align-items: center;
         gap: 12px;
       }
 
-      .products-mark {
+      .mark {
         width: 46px;
         height: 46px;
         border-radius: 16px;
         display: grid;
         place-items: center;
-        border: 1px solid var(--products-line);
+        border: 1px solid var(--line);
         background:
           radial-gradient(circle at 50% 28%, rgba(239,210,154,.22), transparent 42%),
           linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
@@ -133,7 +154,7 @@
         letter-spacing: .08em;
       }
 
-      .products-kicker {
+      .kicker {
         margin: 0 0 4px;
         color: #c8d7ff;
         font-size: .72rem;
@@ -141,54 +162,66 @@
         letter-spacing: .16em;
       }
 
-      .products-title {
+      .brand-title {
         margin: 0;
         font-weight: 850;
         font-size: 1.05rem;
       }
 
-      .products-nav {
+      .nav,
+      .actions,
+      .footer-links {
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;
         gap: 10px;
       }
 
-      .products-nav a,
-      .products-button {
+      .nav a,
+      .button {
         min-height: 42px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         padding: 0 15px;
-        border: 1px solid var(--products-line);
+        border: 1px solid var(--line);
         border-radius: 999px;
-        color: var(--products-text);
+        color: var(--text);
         background: rgba(255,255,255,.035);
         text-decoration: none;
         font-weight: 800;
       }
 
-      .products-hero {
+      .nav a:hover,
+      .nav a:focus-visible,
+      .button:hover,
+      .button:focus-visible {
+        border-color: var(--line-strong);
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .hero {
         border-radius: 34px;
         padding: 24px 20px;
         margin-bottom: 18px;
+        overflow: hidden;
       }
 
-      .products-hero-grid {
+      .hero-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(320px, .95fr);
         gap: 20px;
         align-items: center;
       }
 
-      .products-pill {
+      .pill {
         display: inline-flex;
         align-items: center;
         gap: 10px;
         padding: 8px 12px;
         border-radius: 999px;
-        border: 1px solid var(--products-line);
+        border: 1px solid var(--line);
         background: rgba(255,255,255,.035);
         color: #d8e3ff;
         text-transform: uppercase;
@@ -197,17 +230,17 @@
         margin-bottom: 14px;
       }
 
-      .products-pill::before {
+      .pill::before {
         content: "";
         width: 9px;
         height: 9px;
         border-radius: 2px;
         transform: rotate(45deg);
-        background: var(--products-gold);
+        background: var(--gold);
         box-shadow: 0 0 18px rgba(239,210,154,.50);
       }
 
-      .products-hero h1 {
+      h1 {
         margin: 0 0 12px;
         max-width: 12ch;
         font-size: clamp(2.35rem, 5vw, 5rem);
@@ -215,32 +248,31 @@
         letter-spacing: -.06em;
       }
 
-      .products-hero h1 span {
-        color: var(--products-gold);
+      h1 span { color: var(--gold); }
+
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.62;
       }
 
-      .products-hero p {
-        margin: 0;
+      .lead {
         max-width: 68ch;
-        color: var(--products-muted);
-        line-height: 1.62;
         font-size: clamp(1rem, 1.45vw, 1.14rem);
       }
 
-      .products-actions {
+      .actions {
         margin-top: 20px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
+        justify-content: flex-start;
       }
 
-      .products-button {
+      .button {
         border-radius: 18px;
         min-height: 48px;
         padding: 0 18px;
       }
 
-      .products-button.primary {
+      .button.primary {
         border-color: rgba(239,210,154,.34);
         background:
           linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
@@ -248,13 +280,13 @@
         color: #fff8ea;
       }
 
-      .products-window {
+      .window {
         border-radius: 34px;
         padding: 22px;
         overflow: hidden;
       }
 
-      .molecule-stage {
+      .micro-stage {
         position: relative;
         min-height: 760px;
         border-radius: 30px;
@@ -266,7 +298,7 @@
         isolation: isolate;
       }
 
-      .molecule-stage::before {
+      .micro-stage::before {
         content: "";
         position: absolute;
         inset: 18px;
@@ -277,7 +309,7 @@
         pointer-events: none;
       }
 
-      .season-grid {
+      .terrain-grid {
         position: absolute;
         inset: 6%;
         z-index: 1;
@@ -289,28 +321,36 @@
         opacity: .58;
       }
 
-      .season-cell {
+      .terrain-cell {
         border: 1px solid rgba(255,255,255,.10);
         background: rgba(255,255,255,.02);
       }
 
-      .season-cell.winter {
-        background: linear-gradient(135deg, rgba(230,240,255,.20), rgba(88,118,165,.05));
+      .terrain-cell.north {
+        background:
+          radial-gradient(circle at 20% 20%, rgba(235,245,255,.18), transparent 30%),
+          linear-gradient(135deg, rgba(230,240,255,.20), rgba(88,118,165,.05));
       }
 
-      .season-cell.summer {
-        background: linear-gradient(135deg, rgba(91,190,255,.16), rgba(20,66,110,.05));
+      .terrain-cell.east {
+        background:
+          radial-gradient(circle at 80% 24%, rgba(142,197,255,.18), transparent 30%),
+          linear-gradient(135deg, rgba(91,190,255,.16), rgba(20,66,110,.05));
       }
 
-      .season-cell.fall {
-        background: linear-gradient(135deg, rgba(239,178,84,.18), rgba(95,49,18,.06));
+      .terrain-cell.west {
+        background:
+          radial-gradient(circle at 28% 82%, rgba(244,163,64,.16), transparent 30%),
+          linear-gradient(135deg, rgba(239,178,84,.18), rgba(95,49,18,.06));
       }
 
-      .season-cell.spring {
-        background: linear-gradient(135deg, rgba(105,229,162,.18), rgba(20,92,66,.06));
+      .terrain-cell.south {
+        background:
+          radial-gradient(circle at 76% 82%, rgba(146,231,186,.18), transparent 30%),
+          linear-gradient(135deg, rgba(105,229,162,.18), rgba(20,92,66,.06));
       }
 
-      .butterfly-layer {
+      .landscape-layer {
         position: absolute;
         inset: 0;
         z-index: 2;
@@ -319,27 +359,27 @@
         pointer-events: none;
       }
 
-      .butterfly-layer object,
-      .butterfly-layer img {
+      .landscape-layer object,
+      .landscape-layer img {
         width: 112%;
         height: 112%;
         display: block;
         border: 0;
         object-fit: cover;
-        opacity: .92;
+        opacity: .90;
         filter:
           drop-shadow(0 0 26px rgba(239,210,154,.16))
           drop-shadow(0 0 48px rgba(112,151,255,.10));
       }
 
-      .transversal-layer {
+      .field-layer {
         position: absolute;
         inset: 0;
         z-index: 5;
         pointer-events: none;
       }
 
-      .transversal-path {
+      .traverse-path {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -352,32 +392,32 @@
         opacity: .58;
       }
 
-      .transversal-path.one {
+      .traverse-path.one {
         transform: translate(-50%, -50%) rotate(45deg) scaleX(.42);
         animation: orbitBreathA 6s ease-in-out infinite;
       }
 
-      .transversal-path.two {
+      .traverse-path.two {
         transform: translate(-50%, -50%) rotate(-45deg) scaleX(.42);
         animation: orbitBreathB 6s ease-in-out infinite;
       }
 
-      .fairy {
+      .field-unit {
         position: absolute;
         left: calc(var(--x) * 1%);
         top: calc(var(--y) * 1%);
         width: 38px;
         height: 42px;
         transform: translate(-50%, -50%);
-        animation: fairyTravel 5.8s ease-in-out infinite;
+        animation: fieldUnitA 5.8s ease-in-out infinite;
         animation-delay: var(--delay);
         filter:
-          drop-shadow(0 0 10px var(--fairy-color))
+          drop-shadow(0 0 10px var(--unit-color))
           drop-shadow(0 0 26px rgba(210,240,255,.26));
       }
 
-      .fairy::before,
-      .fairy::after {
+      .field-unit::before,
+      .field-unit::after {
         content: "";
         position: absolute;
         top: 5px;
@@ -385,25 +425,25 @@
         height: 27px;
         border-radius: 80% 20% 80% 20%;
         background:
-          radial-gradient(circle at 42% 42%, rgba(255,255,255,.92), rgba(255,255,255,.34) 26%, var(--fairy-color) 56%, rgba(255,255,255,0) 82%);
+          radial-gradient(circle at 42% 42%, rgba(255,255,255,.92), rgba(255,255,255,.34) 26%, var(--unit-color) 56%, rgba(255,255,255,0) 82%);
         border: 1px solid rgba(255,255,255,.62);
         opacity: .88;
         transform-origin: 50% 80%;
         animation: wingFlutter .62s ease-in-out infinite;
       }
 
-      .fairy::before {
+      .field-unit::before {
         left: 1px;
         transform: rotate(-28deg);
       }
 
-      .fairy::after {
+      .field-unit::after {
         right: 1px;
         transform: scaleX(-1) rotate(-28deg);
         animation-delay: -.31s;
       }
 
-      .fairy-core {
+      .unit-core {
         position: absolute;
         left: 50%;
         top: 48%;
@@ -412,14 +452,14 @@
         transform: translate(-50%, -50%);
         border-radius: 999px;
         background:
-          radial-gradient(circle at 50% 28%, #fff, var(--fairy-color) 50%, rgba(4,10,22,.88) 100%);
+          radial-gradient(circle at 50% 28%, #fff, var(--unit-color) 50%, rgba(4,10,22,.88) 100%);
         border: 1px solid rgba(255,255,255,.72);
         box-shadow:
-          0 0 18px var(--fairy-color),
+          0 0 18px var(--unit-color),
           0 0 42px rgba(210,240,255,.25);
       }
 
-      .fairy-trail {
+      .unit-trail {
         position: absolute;
         left: 50%;
         top: 52%;
@@ -427,37 +467,23 @@
         height: 58px;
         transform: translate(-50%, 0);
         border-radius: 999px;
-        background: linear-gradient(180deg, var(--fairy-color), rgba(255,255,255,0));
+        background: linear-gradient(180deg, var(--unit-color), rgba(255,255,255,0));
         opacity: .38;
       }
 
-      .fairy.green {
-        --fairy-color: #92e7ba;
-      }
+      .field-unit.green { --unit-color: var(--green); }
+      .field-unit.blue { --unit-color: var(--blue); }
 
-      .fairy.blue {
-        --fairy-color: #8ec5ff;
-      }
+      .field-unit.nw,
+      .field-unit.se { animation-name: fieldUnitA; }
 
-      .fairy.nw,
-      .fairy.se {
-        animation-name: fairyFigureEightA;
-      }
+      .field-unit.ne,
+      .field-unit.sw { animation-name: fieldUnitB; }
 
-      .fairy.ne,
-      .fairy.sw {
-        animation-name: fairyFigureEightB;
-      }
+      .field-unit.center-a { animation-name: centerUnitA; }
+      .field-unit.center-b { animation-name: centerUnitB; }
 
-      .fairy.center-a {
-        animation-name: fairyCenterA;
-      }
-
-      .fairy.center-b {
-        animation-name: fairyCenterB;
-      }
-
-      .molecule-center {
+      .center-node {
         position: absolute;
         left: 50%;
         top: 50%;
@@ -471,7 +497,7 @@
         animation: centerPulse 4.2s ease-in-out infinite;
       }
 
-      .season-label {
+      .region-label {
         position: absolute;
         z-index: 7;
         min-width: 132px;
@@ -482,32 +508,17 @@
         border: 1px solid rgba(164,188,255,.24);
         background: rgba(5,12,26,.82);
         color: #fff;
-        font-size: .78rem;
+        font-size: .74rem;
         font-weight: 900;
         text-transform: uppercase;
-        letter-spacing: .16em;
+        letter-spacing: .14em;
         backdrop-filter: blur(10px);
       }
 
-      .season-label.winter {
-        left: 22%;
-        top: 26%;
-      }
-
-      .season-label.summer {
-        right: 22%;
-        top: 26%;
-      }
-
-      .season-label.fall {
-        left: 22%;
-        bottom: 17%;
-      }
-
-      .season-label.spring {
-        right: 22%;
-        bottom: 17%;
-      }
+      .region-label.winter { left: 20%; top: 26%; }
+      .region-label.summer { right: 20%; top: 26%; }
+      .region-label.fall { left: 20%; bottom: 17%; }
+      .region-label.spring { right: 20%; bottom: 17%; }
 
       .stage-badge {
         position: absolute;
@@ -515,7 +526,7 @@
         top: 5%;
         transform: translateX(-50%);
         z-index: 8;
-        width: min(430px, 80%);
+        width: min(470px, 82%);
         padding: 18px;
         border-radius: 999px;
         text-align: center;
@@ -523,7 +534,7 @@
         background: rgba(5,12,26,.84);
         color: #dce7ff;
         text-transform: uppercase;
-        letter-spacing: .16em;
+        letter-spacing: .14em;
         line-height: 1.5;
         font-weight: 800;
         backdrop-filter: blur(10px);
@@ -535,7 +546,7 @@
         bottom: 5%;
         transform: translateX(-50%);
         z-index: 8;
-        width: min(760px, 84%);
+        width: min(820px, 86%);
         padding: 16px 18px;
         border-radius: 999px;
         text-align: center;
@@ -543,50 +554,51 @@
         background: rgba(5,12,26,.84);
         color: #dce7ff;
         text-transform: uppercase;
-        letter-spacing: .14em;
+        letter-spacing: .12em;
         line-height: 1.45;
         font-weight: 800;
         backdrop-filter: blur(10px);
       }
 
-      .stage-footer strong {
-        color: #fff;
-      }
+      .stage-footer strong { color: #fff; }
 
-      .products-panel {
+      .panel {
         margin-top: 18px;
         border-radius: 30px;
         padding: 22px 20px;
       }
 
-      .products-panel h2 {
+      .panel h2 {
         margin: 0 0 10px;
         font-size: clamp(1.7rem, 3vw, 2.7rem);
         line-height: 1;
         letter-spacing: -.04em;
       }
 
-      .products-panel p {
+      .panel p {
         margin: 0;
-        color: var(--products-muted);
+        color: var(--muted);
         line-height: 1.6;
       }
 
-      .products-card-grid {
+      .card-grid,
+      .command-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
         margin-top: 18px;
       }
 
-      .products-card {
+      .card,
+      .command-card {
         border-radius: 22px;
         padding: 16px;
         min-height: 140px;
         border-color: rgba(164,188,255,.14);
       }
 
-      .products-card small {
+      .card small,
+      .command-card small {
         display: block;
         color: #90a3ce;
         text-transform: uppercase;
@@ -596,7 +608,8 @@
         font-size: .72rem;
       }
 
-      .products-card strong {
+      .card strong,
+      .command-card strong {
         display: block;
         color: #f4f7ff;
         font-size: 1.2rem;
@@ -604,124 +617,104 @@
         margin-bottom: 10px;
       }
 
-      .products-card p {
+      .card p,
+      .command-card p {
         font-size: .92rem;
       }
 
-      .products-footer {
+      .chain {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 18px;
+      }
+
+      .chain-node {
+        border: 1px solid rgba(164,188,255,.14);
+        border-radius: 20px;
+        padding: 14px;
+        background: rgba(255,255,255,.03);
+        text-align: center;
+      }
+
+      .chain-node small {
+        display: block;
+        color: #90a3ce;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        margin-bottom: 8px;
+        font-weight: 800;
+        font-size: .68rem;
+      }
+
+      .chain-node strong {
+        display: block;
+        color: #fff;
+      }
+
+      .footer {
         display: flex;
         justify-content: space-between;
         gap: 16px;
-        color: var(--products-muted);
+        color: var(--muted);
         padding: 14px 4px 0;
       }
 
-      .products-footer a {
-        color: var(--products-muted);
+      .footer a {
+        color: var(--muted);
         text-decoration: none;
         margin-left: 12px;
       }
 
-      @keyframes fairyFigureEightA {
-        0%, 100% {
-          transform: translate(-50%, -50%) translate(0, 0) rotate(-8deg) scale(.96);
-        }
-        25% {
-          transform: translate(-50%, -50%) translate(22px, -18px) rotate(10deg) scale(1.05);
-        }
-        50% {
-          transform: translate(-50%, -50%) translate(0, -34px) rotate(0deg) scale(1.1);
-        }
-        75% {
-          transform: translate(-50%, -50%) translate(-22px, -18px) rotate(-10deg) scale(1.05);
-        }
+      @keyframes fieldUnitA {
+        0%, 100% { transform: translate(-50%, -50%) translate(0, 0) rotate(-8deg) scale(.96); }
+        25% { transform: translate(-50%, -50%) translate(22px, -18px) rotate(10deg) scale(1.05); }
+        50% { transform: translate(-50%, -50%) translate(0, -34px) rotate(0deg) scale(1.1); }
+        75% { transform: translate(-50%, -50%) translate(-22px, -18px) rotate(-10deg) scale(1.05); }
       }
 
-      @keyframes fairyFigureEightB {
-        0%, 100% {
-          transform: translate(-50%, -50%) translate(0, 0) rotate(8deg) scale(.96);
-        }
-        25% {
-          transform: translate(-50%, -50%) translate(-22px, -18px) rotate(-10deg) scale(1.05);
-        }
-        50% {
-          transform: translate(-50%, -50%) translate(0, -34px) rotate(0deg) scale(1.1);
-        }
-        75% {
-          transform: translate(-50%, -50%) translate(22px, -18px) rotate(10deg) scale(1.05);
-        }
+      @keyframes fieldUnitB {
+        0%, 100% { transform: translate(-50%, -50%) translate(0, 0) rotate(8deg) scale(.96); }
+        25% { transform: translate(-50%, -50%) translate(-22px, -18px) rotate(-10deg) scale(1.05); }
+        50% { transform: translate(-50%, -50%) translate(0, -34px) rotate(0deg) scale(1.1); }
+        75% { transform: translate(-50%, -50%) translate(22px, -18px) rotate(10deg) scale(1.05); }
       }
 
-      @keyframes fairyCenterA {
-        0%, 100% {
-          transform: translate(-50%, -50%) translate(-8px, 0) scale(.92);
-        }
-        50% {
-          transform: translate(-50%, -50%) translate(8px, -18px) scale(1.08);
-        }
+      @keyframes centerUnitA {
+        0%, 100% { transform: translate(-50%, -50%) translate(-8px, 0) scale(.92); }
+        50% { transform: translate(-50%, -50%) translate(8px, -18px) scale(1.08); }
       }
 
-      @keyframes fairyCenterB {
-        0%, 100% {
-          transform: translate(-50%, -50%) translate(8px, 0) scale(.92);
-        }
-        50% {
-          transform: translate(-50%, -50%) translate(-8px, -18px) scale(1.08);
-        }
+      @keyframes centerUnitB {
+        0%, 100% { transform: translate(-50%, -50%) translate(8px, 0) scale(.92); }
+        50% { transform: translate(-50%, -50%) translate(-8px, -18px) scale(1.08); }
       }
 
       @keyframes wingFlutter {
-        0%, 100% {
-          opacity: .74;
-          transform: rotate(-28deg) scaleY(.88);
-        }
-        50% {
-          opacity: 1;
-          transform: rotate(-42deg) scaleY(1.12);
-        }
+        0%, 100% { opacity: .74; transform: rotate(-28deg) scaleY(.88); }
+        50% { opacity: 1; transform: rotate(-42deg) scaleY(1.12); }
       }
 
       @keyframes centerPulse {
-        0%, 100% {
-          opacity: .72;
-          transform: translate(-50%, -50%) scale(.95);
-        }
-        50% {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1.08);
-        }
+        0%, 100% { opacity: .72; transform: translate(-50%, -50%) scale(.95); }
+        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
       }
 
       @keyframes orbitBreathA {
-        0%, 100% {
-          transform: translate(-50%, -50%) rotate(45deg) scaleX(.42);
-          opacity: .50;
-        }
-        50% {
-          transform: translate(-50%, -50%) rotate(48deg) scaleX(.48);
-          opacity: .74;
-        }
+        0%, 100% { transform: translate(-50%, -50%) rotate(45deg) scaleX(.42); opacity: .50; }
+        50% { transform: translate(-50%, -50%) rotate(48deg) scaleX(.48); opacity: .74; }
       }
 
       @keyframes orbitBreathB {
-        0%, 100% {
-          transform: translate(-50%, -50%) rotate(-45deg) scaleX(.42);
-          opacity: .50;
-        }
-        50% {
-          transform: translate(-50%, -50%) rotate(-48deg) scaleX(.48);
-          opacity: .74;
-        }
+        0%, 100% { transform: translate(-50%, -50%) rotate(-45deg) scaleX(.42); opacity: .50; }
+        50% { transform: translate(-50%, -50%) rotate(-48deg) scaleX(.48); opacity: .74; }
       }
 
-      @media (max-width: 900px) {
-        .products-hero-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .products-card-grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
+      @media (max-width: 980px) {
+        .hero-grid { grid-template-columns: 1fr; }
+        .card-grid,
+        .command-grid,
+        .chain { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
 
       @media (max-width: 720px) {
@@ -730,91 +723,60 @@
           padding: 14px 0 32px;
         }
 
-        .products-topbar {
-          flex-wrap: wrap;
-        }
+        .topbar { flex-wrap: wrap; }
+        .nav { width: 100%; justify-content: flex-start; }
+        .hero,
+        .window,
+        .panel { padding: 18px 16px; }
 
-        .products-nav {
-          width: 100%;
-          justify-content: flex-start;
-        }
+        h1 { font-size: clamp(2rem, 11vw, 3.4rem); }
+        .micro-stage { min-height: 720px; }
 
-        .products-hero,
-        .products-window,
-        .products-panel {
-          padding: 18px 16px;
-        }
-
-        .products-hero h1 {
-          font-size: clamp(2rem, 11vw, 3.4rem);
-        }
-
-        .molecule-stage {
-          min-height: 720px;
-        }
-
-        .fairy {
+        .field-unit {
           width: 32px;
           height: 36px;
         }
 
-        .fairy::before,
-        .fairy::after {
+        .field-unit::before,
+        .field-unit::after {
           width: 15px;
           height: 23px;
         }
 
-        .fairy-core {
+        .unit-core {
           width: 12px;
           height: 19px;
         }
 
-        .season-label {
-          min-width: 108px;
-          font-size: .68rem;
+        .region-label {
+          min-width: 110px;
+          font-size: .62rem;
         }
 
-        .season-label.winter {
-          left: 21%;
-          top: 27%;
-        }
-
-        .season-label.summer {
-          right: 21%;
-          top: 27%;
-        }
-
-        .season-label.fall {
-          left: 21%;
-          bottom: 17%;
-        }
-
-        .season-label.spring {
-          right: 21%;
-          bottom: 17%;
-        }
+        .region-label.winter { left: 19%; top: 27%; }
+        .region-label.summer { right: 19%; top: 27%; }
+        .region-label.fall { left: 19%; bottom: 17%; }
+        .region-label.spring { right: 19%; bottom: 17%; }
 
         .stage-badge {
-          font-size: .70rem;
-          width: 76%;
+          font-size: .68rem;
+          width: 78%;
           top: 5%;
         }
 
         .stage-footer {
-          font-size: .66rem;
-          width: 82%;
+          font-size: .62rem;
+          width: 86%;
           bottom: 5%;
         }
 
-        .products-card-grid {
-          grid-template-columns: 1fr;
-        }
+        .card-grid,
+        .command-grid,
+        .chain { grid-template-columns: 1fr; }
 
-        .products-footer {
-          display: grid;
-        }
+        .footer { display: grid; }
 
-        .products-footer a {
+        .footer a {
           margin-left: 0;
           margin-right: 12px;
         }
@@ -833,118 +795,167 @@
   function html() {
     return `
       <main class="products-page">
-        <header class="products-topbar">
-          <div class="products-brand">
-            <div class="products-mark">DG</div>
+        <header class="topbar">
+          <div class="brand">
+            <div class="mark">DG</div>
             <div>
-              <p class="products-kicker">Products</p>
-              <p class="products-title">Seasonal Monarch Fairies</p>
+              <p class="kicker">Products</p>
+              <p class="brand-title">Micro-World Ground Map</p>
             </div>
           </div>
 
-          <nav class="products-nav" aria-label="Products navigation">
+          <nav class="nav" aria-label="Products navigation">
             <a href="/">Home</a>
-            <a href="/about/">About</a>
             <a href="/gauges/">Gauges</a>
             <a href="/laws/">Laws</a>
+            <a href="/about/">About</a>
           </nav>
         </header>
 
-        <section class="products-hero">
-          <div class="products-hero-grid">
+        <section class="hero">
+          <div class="hero-grid">
             <div>
-              <span class="products-pill">2 figure-eights · 4 seasons · fairy paths</span>
-              <h1>A monarch vessel with <span>fairies in motion.</span></h1>
-              <p>
-                The butterfly holds the seasonal field. The fairies move in front of it, crossing the bilateral and quadrilateral paths of the two figure-eights.
+              <span class="pill">2D baseline · local ecology · squad-mapped terrain</span>
+              <h1>The first ground-level <span>world map.</span></h1>
+              <p class="lead">
+                This is the plain baseline of the micro-world: trees, fruit, insects, grass, bushes, mountains, fairy paths, seasonal regions, and the center crossing where movement meets.
               </p>
 
-              <div class="products-actions">
-                <a class="products-button primary" href="#molecule">Open molecule</a>
-                <a class="products-button" href="/gauges/">Gauges</a>
-                <a class="products-button" href="/">Back to door</a>
+              <div class="actions">
+                <a class="button primary" href="#groundMap">Open ground map</a>
+                <a class="button" href="#squads">Squad mapping</a>
+                <a class="button" href="/gauges/">Gauges</a>
               </div>
             </div>
 
-            <section class="products-window" id="molecule" aria-label="Floating seasonal monarch fairy chamber">
-              <div class="molecule-stage">
-                <div class="season-grid" aria-hidden="true">
-                  <div class="season-cell winter"></div>
-                  <div class="season-cell summer"></div>
-                  <div class="season-cell fall"></div>
-                  <div class="season-cell spring"></div>
+            <section class="window" id="groundMap" aria-label="Micro-world ground map">
+              <div class="micro-stage">
+                <div class="terrain-grid" aria-hidden="true">
+                  <div class="terrain-cell north"></div>
+                  <div class="terrain-cell east"></div>
+                  <div class="terrain-cell west"></div>
+                  <div class="terrain-cell south"></div>
                 </div>
 
-                <div class="butterfly-layer" aria-hidden="true">
+                <div class="landscape-layer" aria-hidden="true">
                   <object type="image/svg+xml" data="${ASSET_URL}">
                     <img src="${ASSET_URL}" alt="" />
                   </object>
                 </div>
 
-                <div class="transversal-layer" aria-hidden="true">
-                  <div class="transversal-path one"></div>
-                  <div class="transversal-path two"></div>
-                  <div class="molecule-center"></div>
+                <div class="field-layer" aria-hidden="true">
+                  <div class="traverse-path one"></div>
+                  <div class="traverse-path two"></div>
+                  <div class="center-node"></div>
 
-                  ${fairies.map((fairy) => `
+                  ${fairies.map((unit) => `
                     <span
-                      class="fairy ${fairy.type} ${fairy.path}"
-                      style="--x:${fairy.x};--y:${fairy.y};--delay:${fairy.d}"
+                      class="field-unit ${unit.type} ${unit.path}"
+                      style="--x:${unit.x};--y:${unit.y};--delay:${unit.d}"
                     >
-                      <span class="fairy-trail"></span>
-                      <span class="fairy-core"></span>
+                      <span class="unit-trail"></span>
+                      <span class="unit-core"></span>
                     </span>
                   `).join("")}
                 </div>
 
                 ${seasons.map((season) => `
-                  <div class="season-label ${season.key}">${season.label}</div>
+                  <div class="region-label ${season.key}">${season.squad} · ${season.label}</div>
                 `).join("")}
 
-                <div class="stage-badge">Floating seasonal fairies · monarch stained glass</div>
-                <div class="stage-footer"><strong>Fairies in front</strong> · stained glass behind them, motion crossing through the center</div>
+                <div class="stage-badge">Micro-world baseline · local landscape field</div>
+                <div class="stage-footer"><strong>2D ground map</strong> · terrain behind, field units in front, motion crossing through the center</div>
               </div>
             </section>
           </div>
         </section>
 
-        <section class="products-panel">
-          <p class="products-kicker">Generation 4 visual logic</p>
-          <h2>The bubbles become fairies.</h2>
+        <section class="panel">
+          <p class="kicker">Command hierarchy</p>
+          <h2>Sean directs. The House contains. The Lab operates.</h2>
           <p>
-            The seasonal molecule now reads as a living monarch field. The fairies carry the motion, crossing the bilateral and quadrilateral paths while the butterfly remains the vessel behind them.
+            The micro-world is mapped from command down to field squads. The visual is not decoration; it is the first readable ground-level ecology map.
           </p>
 
-          <div class="products-card-grid">
-            <article class="products-card">
-              <small>Vessel</small>
-              <strong>Monarch butterfly</strong>
-              <p>The background gives the seasonal field an emotional body.</p>
+          <div class="chain">
+            <div class="chain-node">
+              <small>Command</small>
+              <strong>Sean</strong>
+            </div>
+            <div class="chain-node">
+              <small>Headquarters</small>
+              <strong>House</strong>
+            </div>
+            <div class="chain-node">
+              <small>Operations</small>
+              <strong>Lab</strong>
+            </div>
+            <div class="chain-node">
+              <small>Command staff</small>
+              <strong>Sheldon + Dexter</strong>
+            </div>
+            <div class="chain-node">
+              <small>Field layer</small>
+              <strong>Four Squads</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="squads">
+          <p class="kicker">Field squads</p>
+          <h2>Four squads map the ground.</h2>
+          <p>
+            Each squad owns a different layer of the micro-world. Together they turn the 2D baseline into a full terrain grammar.
+          </p>
+
+          <div class="command-grid">
+            ${squads.map((squad) => `
+              <article class="command-card">
+                <small>${squad.key}</small>
+                <strong>${squad.label}</strong>
+                <p>${squad.duty}</p>
+              </article>
+            `).join("")}
+          </div>
+        </section>
+
+        <section class="panel">
+          <p class="kicker">Baseline read</p>
+          <h2>This is as regular as the world gets.</h2>
+          <p>
+            The later version can become 3D, interactive, and explorable. This layer defines the ordinary ground: fruit, vines, insects, grass, bushes, mountains, seasons, paths, and center crossing.
+          </p>
+
+          <div class="card-grid">
+            <article class="card">
+              <small>Terrain</small>
+              <strong>Ground and mountains</strong>
+              <p>The stable base of the local field.</p>
             </article>
 
-            <article class="products-card">
-              <small>Motion</small>
-              <strong>Fairy paths</strong>
-              <p>The former globes now move as winged fairies.</p>
+            <article class="card">
+              <small>Ecology</small>
+              <strong>Fruit, vines, grass</strong>
+              <p>The living material of the micro-world.</p>
             </article>
 
-            <article class="products-card">
-              <small>Pattern</small>
-              <strong>Two figure-eights</strong>
-              <p>The motion still crosses the center through mirrored loops.</p>
+            <article class="card">
+              <small>Movement</small>
+              <strong>Fairies and insects</strong>
+              <p>The active units crossing the field.</p>
             </article>
 
-            <article class="products-card">
-              <small>Read</small>
-              <strong>Glass behind, fairies in front</strong>
-              <p>The vessel, path, and motion are now visually separate.</p>
+            <article class="card">
+              <small>Path</small>
+              <strong>Dual figure-eight</strong>
+              <p>The traversal pattern through the shared center.</p>
             </article>
           </div>
         </section>
 
-        <footer class="products-footer">
-          <span>Products · seasonal monarch fairies</span>
-          <span>
+        <footer class="footer">
+          <span>Products · Micro-World Ground Map</span>
+          <span class="footer-links">
             <a href="/">Home</a>
             <a href="/gauges/">Gauges</a>
             <a href="/laws/">Laws</a>
@@ -961,7 +972,7 @@
       this.host = options.host || null;
       this.receipts = options.receipts || null;
       this.reducedMotion = !!options.reducedMotion;
-      this.contract = "PRODUCTS_RUNTIME_MONARCH_FAIRY_GENERATION_4";
+      this.contract = "PRODUCTS_RUNTIME_MICRO_WORLD_GROUND_MAP_V1";
       this.status = "IDLE";
     }
 
@@ -997,14 +1008,14 @@
       const target = this.resolveTarget();
 
       if (target && target instanceof HTMLElement) {
-        target.setAttribute("data-runtime", "products-monarch-fairy-generation-4");
+        target.setAttribute("data-runtime", "products-micro-world-ground-map");
         target.setAttribute("data-runtime-contract", this.contract);
         target.setAttribute("data-runtime-owner", "products_runtime.js");
         target.innerHTML = html();
       }
 
       this.status = "MOUNTED";
-      this.write("info", "products monarch fairy generation 4 mounted by products_runtime.js");
+      this.write("info", "products micro-world ground map mounted by products_runtime.js");
 
       return {
         status: this.status,
@@ -1019,8 +1030,7 @@
 
     if (!root) return;
 
-    const alreadyMounted = root.getAttribute("data-runtime") === "products-monarch-fairy-generation-4";
-
+    const alreadyMounted = root.getAttribute("data-runtime") === "products-micro-world-ground-map";
     if (alreadyMounted) return;
 
     const runtime = new ProductsPlanetRuntime({ mount: root });

@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-second-generation-root-proof-v1";
+  const STYLE_ID = "dgb-second-generation-root-proof-v2-demo-universe-upgrade";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -20,6 +20,8 @@
         --gold:#efd29a;
         --blue:#8ec5ff;
         --green:#92e7ba;
+        --teal:#66f0d1;
+        --violet:#b9a8ff;
         --shadow:0 24px 80px rgba(0,0,0,.50);
         --max:1120px;
       }
@@ -260,44 +262,47 @@
 
       .home-orbit {
         position:absolute;
-        width:58%;
-        height:58%;
+        width:68%;
+        height:68%;
         border-radius:50%;
-        border:1px solid rgba(239,210,154,.20);
-        opacity:.72;
+        border:1px solid rgba(239,210,154,.26);
+        opacity:.78;
+        filter:drop-shadow(0 0 16px rgba(239,210,154,.12));
       }
 
       .home-orbit.one {
-        transform:rotate(45deg) scaleX(.45);
-        animation:orbitOne 16s linear infinite;
+        transform:rotate(43deg) scaleX(.38);
+        animation:orbitOne 18s linear infinite;
       }
 
       .home-orbit.two {
-        transform:rotate(-45deg) scaleX(.45);
-        animation:orbitTwo 18s linear infinite reverse;
+        transform:rotate(-43deg) scaleX(.38);
+        border-color:rgba(142,197,255,.28);
+        animation:orbitTwo 21s linear infinite reverse;
       }
 
       .home-core {
         position:relative;
         z-index:3;
-        width:146px;
-        height:146px;
+        width:172px;
+        height:172px;
         border-radius:50%;
         display:block;
         overflow:hidden;
-        border:1px solid rgba(226,240,255,.50);
+        border:1px solid rgba(226,240,255,.56);
         color:transparent;
         font-size:0;
         background:
-          radial-gradient(circle at 34% 25%,rgba(255,255,255,.62),transparent 10%),
-          radial-gradient(circle at 44% 40%,rgba(184,220,255,.26),transparent 28%),
-          radial-gradient(circle at 62% 66%,rgba(239,210,154,.14),transparent 30%),
-          linear-gradient(135deg,#0d4b86 0%,#0b2c68 42%,#050d24 100%);
+          radial-gradient(circle at 33% 23%,rgba(255,255,255,.74),transparent 9%),
+          radial-gradient(circle at 42% 35%,rgba(184,220,255,.32),transparent 29%),
+          radial-gradient(circle at 61% 66%,rgba(239,210,154,.18),transparent 31%),
+          radial-gradient(circle at 50% 52%,rgba(102,240,209,.12),transparent 43%),
+          linear-gradient(135deg,#0f5c9d 0%,#0a2d6d 45%,#040b22 100%);
         box-shadow:
-          inset -24px -22px 36px rgba(0,0,0,.50),
-          inset 14px 10px 24px rgba(255,255,255,.20),
-          0 0 38px rgba(142,197,255,.38),
-          0 0 108px rgba(239,210,154,.18);
+          inset -30px -28px 44px rgba(0,0,0,.56),
+          inset 16px 12px 28px rgba(255,255,255,.22),
+          0 0 44px rgba(142,197,255,.44),
+          0 0 124px rgba(239,210,154,.22);
         animation:demoUniverseFloat 7s ease-in-out infinite;
       }
 
@@ -306,64 +311,121 @@
         inset:0;
         border-radius:inherit;
         background:
-          radial-gradient(circle at 50% 50%,rgba(255,255,255,.08),transparent 34%),
-          linear-gradient(90deg,rgba(255,255,255,.16),transparent 38%,rgba(0,0,0,.32) 100%);
+          radial-gradient(circle at 50% 50%,rgba(255,255,255,.10),transparent 30%),
+          radial-gradient(circle at 53% 52%,transparent 0 39%,rgba(255,255,255,.10) 40%,transparent 42%),
+          linear-gradient(90deg,rgba(255,255,255,.18),transparent 38%,rgba(0,0,0,.36) 100%);
         pointer-events:none;
       }
 
       .demo-globe-field {
         position:absolute;
         border-radius:999px;
-        filter:blur(.1px) drop-shadow(0 1px 2px rgba(0,0,0,.28));
-        opacity:.86;
+        filter:blur(.15px) drop-shadow(0 1px 2px rgba(0,0,0,.34));
+        opacity:.91;
         pointer-events:none;
       }
 
       .field-a {
-        left:21%;
-        top:28%;
-        width:35%;
-        height:22%;
-        background:linear-gradient(135deg,var(--green),rgba(146,231,186,.42));
-        transform:rotate(-12deg);
+        left:18%;
+        top:27%;
+        width:38%;
+        height:20%;
+        background:linear-gradient(135deg,var(--green),rgba(102,240,209,.44));
+        transform:rotate(-13deg);
       }
 
       .field-b {
-        right:20%;
-        top:31%;
-        width:35%;
+        right:17%;
+        top:30%;
+        width:36%;
         height:24%;
-        background:linear-gradient(135deg,var(--gold),rgba(239,210,154,.40));
-        transform:rotate(23deg);
+        background:linear-gradient(135deg,var(--gold),rgba(239,210,154,.42));
+        transform:rotate(22deg);
       }
 
       .field-c {
-        left:35%;
-        bottom:24%;
-        width:24%;
-        height:34%;
-        background:linear-gradient(135deg,#72e0a8,rgba(146,231,186,.36));
+        left:34%;
+        bottom:22%;
+        width:25%;
+        height:36%;
+        background:linear-gradient(135deg,#72e0a8,rgba(146,231,186,.38));
         transform:rotate(7deg);
       }
 
       .field-d {
-        right:24%;
-        bottom:22%;
-        width:31%;
-        height:25%;
-        background:linear-gradient(135deg,rgba(239,210,154,.78),rgba(239,210,154,.34));
-        transform:rotate(-7deg);
+        right:20%;
+        bottom:20%;
+        width:34%;
+        height:24%;
+        background:linear-gradient(135deg,rgba(239,210,154,.84),rgba(239,210,154,.36));
+        transform:rotate(-8deg);
+      }
+
+      .demo-globe-ring,
+      .demo-globe-axis,
+      .demo-globe-grid,
+      .demo-globe-core {
+        position:absolute;
+        pointer-events:none;
       }
 
       .demo-globe-ring {
-        position:absolute;
-        inset:16%;
+        inset:14%;
         border-radius:50%;
-        border:1px solid rgba(255,255,255,.18);
+        border:1px solid rgba(255,255,255,.20);
         box-shadow:
-          inset 0 0 18px rgba(142,197,255,.18),
-          0 0 18px rgba(239,210,154,.10);
+          inset 0 0 22px rgba(142,197,255,.18),
+          0 0 20px rgba(239,210,154,.12);
+      }
+
+      .demo-globe-axis {
+        left:50%;
+        top:50%;
+        width:78%;
+        height:78%;
+        border-radius:50%;
+        border:1px solid rgba(102,240,209,.18);
+        transform:translate(-50%,-50%) rotate(64deg) scaleX(.32);
+        box-shadow:0 0 18px rgba(102,240,209,.10);
+      }
+
+      .demo-globe-grid {
+        inset:23%;
+        border-radius:50%;
+        border-top:1px solid rgba(255,255,255,.14);
+        border-bottom:1px solid rgba(255,255,255,.10);
+        transform:rotate(-18deg);
+      }
+
+      .demo-globe-core {
+        left:50%;
+        top:50%;
+        width:34px;
+        height:34px;
+        transform:translate(-50%,-50%) rotate(45deg);
+        border:1px solid rgba(239,210,154,.62);
+        border-radius:8px;
+        background:
+          radial-gradient(circle at 50% 50%,rgba(255,255,255,.82),rgba(239,210,154,.30) 38%,transparent 70%);
+        box-shadow:
+          0 0 16px rgba(239,210,154,.44),
+          0 0 34px rgba(142,197,255,.20);
+        opacity:.92;
+      }
+
+      .home-core::before {
+        content:"";
+        position:absolute;
+        inset:7%;
+        border-radius:inherit;
+        background:
+          radial-gradient(circle at 28% 36%,rgba(255,255,255,.34) 0 4%,transparent 5%),
+          radial-gradient(circle at 70% 38%,rgba(239,210,154,.44) 0 3%,transparent 4%),
+          radial-gradient(circle at 60% 74%,rgba(102,240,209,.38) 0 3%,transparent 4%),
+          radial-gradient(circle at 38% 68%,rgba(142,197,255,.30) 0 3%,transparent 4%);
+        opacity:.88;
         pointer-events:none;
+        z-index:2;
       }
 
       .home-core::after {
@@ -372,14 +434,15 @@
         inset:-2px;
         border-radius:inherit;
         background:
-          radial-gradient(ellipse at 30% 48%,rgba(255,255,255,.56) 0 7%,transparent 8%),
-          radial-gradient(ellipse at 56% 26%,rgba(255,255,255,.42) 0 8%,transparent 9%),
-          radial-gradient(ellipse at 67% 48%,rgba(255,255,255,.32) 0 7%,transparent 8%),
-          radial-gradient(ellipse at 50% 72%,rgba(255,255,255,.26) 0 10%,transparent 11%),
-          radial-gradient(circle at 30% 25%,rgba(255,255,255,.34),transparent 18%);
+          radial-gradient(ellipse at 30% 48%,rgba(255,255,255,.58) 0 7%,transparent 8%),
+          radial-gradient(ellipse at 56% 26%,rgba(255,255,255,.44) 0 8%,transparent 9%),
+          radial-gradient(ellipse at 67% 48%,rgba(255,255,255,.34) 0 7%,transparent 8%),
+          radial-gradient(ellipse at 50% 72%,rgba(255,255,255,.28) 0 10%,transparent 11%),
+          radial-gradient(circle at 30% 25%,rgba(255,255,255,.36),transparent 18%);
         mix-blend-mode:screen;
-        opacity:.70;
+        opacity:.72;
         pointer-events:none;
+        z-index:5;
       }
 
       .home-caption {
@@ -511,13 +574,13 @@
       .home-footer a { color:#d6e2ff; }
 
       @keyframes orbitOne {
-        from { transform:rotate(45deg) scaleX(.45); }
-        to { transform:rotate(405deg) scaleX(.45); }
+        from { transform:rotate(43deg) scaleX(.38); }
+        to { transform:rotate(403deg) scaleX(.38); }
       }
 
       @keyframes orbitTwo {
-        from { transform:rotate(-45deg) scaleX(.45); }
-        to { transform:rotate(315deg) scaleX(.45); }
+        from { transform:rotate(-43deg) scaleX(.38); }
+        to { transform:rotate(317deg) scaleX(.38); }
       }
 
       @keyframes demoUniverseFloat {
@@ -577,8 +640,8 @@
         }
 
         .home-core {
-          width:132px;
-          height:132px;
+          width:154px;
+          height:154px;
         }
 
         .home-caption {
@@ -616,7 +679,10 @@
       ["span", "demo-globe-field field-b"],
       ["span", "demo-globe-field field-c"],
       ["span", "demo-globe-field field-d"],
-      ["span", "demo-globe-ring"]
+      ["span", "demo-globe-ring"],
+      ["span", "demo-globe-axis"],
+      ["span", "demo-globe-grid"],
+      ["span", "demo-globe-core"]
     ];
 
     for (const [tag, className] of fragments) {
@@ -639,6 +705,7 @@
     root.setAttribute("data-home-root-proof", "true");
     root.setAttribute("data-home-not-gauges", "true");
     root.setAttribute("data-home-not-earth", "true");
+    root.setAttribute("data-home-demo-universe-quality", "second-generation-upgraded");
   }
 
   function mount() {

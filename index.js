@@ -1,411 +1,594 @@
 (() => {
-  const DOOR_RUNTIME_ID = "root-door-detail-runtime-v1";
-  const STYLE_ID = "root-door-detail-runtime-style";
+  'use strict';
 
-  function injectStyle() {
+  const STYLE_ID = 'dgb-root-door-generation-3-styles';
+
+  const SELECTORS = {
+    doorCard: [
+      '[data-root-door]',
+      '.root-door',
+      '.door-root',
+      '.root-entry-door',
+      '.canonical-root-door',
+      '.canonical-door',
+      '.entry-door',
+      '.door-panel',
+      '.door-shell'
+    ],
+    doorCore: [
+      '[data-door-core]',
+      '.door-core',
+      '.door-button',
+      '.door-label',
+      '.door-center',
+      '.door-trigger',
+      '.door-hit',
+      '.door-plate'
+    ],
+    topGem: [
+      '[data-door-gem="top"]',
+      '.door-gem-top',
+      '.door-top-gem',
+      '.door-diamond-top'
+    ],
+    bottomGem: [
+      '[data-door-gem="bottom"]',
+      '.door-gem-bottom',
+      '.door-bottom-gem',
+      '.door-diamond-bottom'
+    ]
+  };
+
+  function first(root, selectors) {
+    for (const selector of selectors) {
+      const node = root.querySelector(selector);
+      if (node) return node;
+    }
+    return null;
+  }
+
+  function findDoorCard() {
+    for (const selector of SELECTORS.doorCard) {
+      const node = document.querySelector(selector);
+      if (node) return node;
+    }
+
+    const fallback = Array.from(document.querySelectorAll('section, div, article')).find((node) => {
+      const text = (node.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
+      return text.includes('DOOR') && text.includes('ENTRY');
+    });
+
+    return fallback || null;
+  }
+
+  function findDoorCore(doorCard) {
+    let node = first(doorCard, SELECTORS.doorCore);
+    if (node) return node;
+
+    const exactDoorText = Array.from(doorCard.querySelectorAll('button, a, div, span')).find((candidate) => {
+      const text = (candidate.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
+      return text === 'DOOR';
+    });
+
+    return exactDoorText || null;
+  }
+
+  function ensureStyle() {
     if (document.getElementById(STYLE_ID)) return;
 
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.id = STYLE_ID;
     style.textContent = `
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-shell {
-        cursor: pointer;
+      .dgb-door-ready {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        --dgb-touch-x: 50%;
+        --dgb-touch-y: 38%;
+        --dgb-press-scale: 1;
+        --dgb-core-glow: 0.38;
+        --dgb-card-glow: 0.18;
+        --dgb-ring-opacity: 0.14;
+        --dgb-beam-opacity: 0.16;
+        --dgb-spark-opacity: 0.18;
       }
 
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-shell.is-awake {
-        box-shadow:
-          inset 0 0 56px rgba(126,164,255,.16),
-          inset 0 -28px 70px rgba(0,0,0,.34),
-          0 0 46px rgba(92,184,255,.14);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-aura {
-        position: absolute;
-        inset: 8%;
-        border-radius: 50% 50% 8% 8% / 34% 34% 8% 8%;
+      .dgb-door-layer,
+      .dgb-door-energy,
+      .dgb-door-aura,
+      .dgb-door-orbit,
+      .dgb-door-beams,
+      .dgb-door-sparks,
+      .dgb-door-hit {
         pointer-events: none;
-        z-index: 1;
-        background:
-          radial-gradient(circle at 50% 18%, rgba(116,190,255,.24), transparent 18%),
-          radial-gradient(circle at 50% 44%, rgba(92,184,255,.18), transparent 32%),
-          linear-gradient(180deg, transparent, rgba(92,184,255,.05), transparent);
-        filter: blur(2px);
-        opacity: .64;
-        animation: doorAuraBreath 6.8s ease-in-out infinite;
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-starfield {
-        position: absolute;
-        inset: 7% 9% 13%;
-        border-radius: 50% 50% 10% 10% / 28% 28% 10% 10%;
-        pointer-events: none;
-        z-index: 3;
-        opacity: .42;
-        background:
-          radial-gradient(circle at 18% 22%, rgba(255,255,255,.68) 0 1px, transparent 1.5px),
-          radial-gradient(circle at 72% 18%, rgba(255,255,255,.42) 0 1px, transparent 1.5px),
-          radial-gradient(circle at 62% 72%, rgba(255,255,255,.32) 0 1px, transparent 1.5px),
-          radial-gradient(circle at 28% 78%, rgba(255,255,255,.40) 0 1px, transparent 1.5px);
-        background-size: 130px 130px, 170px 170px, 220px 220px, 260px 260px;
-        animation: doorStarsDrift 18s linear infinite;
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-energy-ring {
-        position: absolute;
-        left: 50%;
-        top: 42%;
-        width: 230px;
-        height: 230px;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 6;
-        border: 1px solid rgba(92,184,255,.22);
-        box-shadow:
-          0 0 22px rgba(92,184,255,.12),
-          inset 0 0 30px rgba(92,184,255,.08);
-        opacity: .72;
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-energy-ring::before,
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-energy-ring::after {
-        content: "";
-        position: absolute;
-        inset: 18%;
-        border-radius: 50%;
-        border: 1px solid rgba(239,210,154,.22);
-        transform: rotate(18deg);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-energy-ring::after {
-        inset: 34%;
-        border-color: rgba(92,184,255,.28);
-        transform: rotate(-28deg);
-        box-shadow: 0 0 20px rgba(92,184,255,.14);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil {
-        position: absolute;
-        left: 50%;
-        top: 42%;
-        width: 280px;
-        height: 280px;
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-        z-index: 6;
-        opacity: .72;
-        animation: doorSigilRotate 36s linear infinite;
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 48%;
-        height: 1px;
-        transform-origin: 0 50%;
-        background: linear-gradient(90deg, rgba(239,210,154,.42), transparent);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(1) { transform: rotate(0deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(2) { transform: rotate(45deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(3) { transform: rotate(90deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(4) { transform: rotate(135deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(5) { transform: rotate(180deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(6) { transform: rotate(225deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(7) { transform: rotate(270deg); }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil span:nth-child(8) { transform: rotate(315deg); }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-blue-rim {
-        position: absolute;
-        left: 50%;
-        top: 7%;
-        width: 82%;
-        height: 87%;
-        transform: translateX(-50%);
-        border-radius: 50% 50% 8% 8% / 34% 34% 8% 8%;
-        pointer-events: none;
-        z-index: 4;
-        border: 1px solid rgba(92,184,255,.28);
-        box-shadow:
-          inset 0 0 18px rgba(92,184,255,.12),
-          0 0 18px rgba(92,184,255,.10);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-gold-rim {
-        position: absolute;
-        left: 50%;
-        top: 12%;
-        width: 70%;
-        height: 78%;
-        transform: translateX(-50%);
-        border-radius: 50% 50% 10% 10% / 30% 30% 10% 10%;
-        pointer-events: none;
-        z-index: 4;
-        border: 1px solid rgba(239,210,154,.32);
-        box-shadow:
-          inset 0 0 16px rgba(239,210,154,.08),
-          0 0 14px rgba(239,210,154,.08);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-lights {
         position: absolute;
         inset: 0;
-        pointer-events: none;
-        z-index: 11;
+        z-index: 0;
       }
 
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light {
+      .dgb-door-energy {
+        background:
+          radial-gradient(circle at var(--dgb-touch-x) var(--dgb-touch-y),
+            rgba(175, 220, 255, calc(0.34 + var(--dgb-card-glow))) 0%,
+            rgba(125, 188, 255, calc(0.20 + var(--dgb-card-glow))) 10%,
+            rgba(56, 112, 225, calc(0.10 + var(--dgb-card-glow))) 24%,
+            rgba(10, 32, 82, 0) 58%
+          );
+        opacity: 0.95;
+        mix-blend-mode: screen;
+        transition: opacity 220ms ease, transform 220ms ease, filter 220ms ease;
+        transform: scale(1);
+        filter: blur(0px);
+      }
+
+      .dgb-door-aura {
+        background:
+          radial-gradient(circle at 50% 50%,
+            rgba(153, 214, 255, var(--dgb-ring-opacity)) 0%,
+            rgba(103, 172, 255, calc(var(--dgb-ring-opacity) * 0.85)) 22%,
+            rgba(62, 109, 212, calc(var(--dgb-ring-opacity) * 0.5)) 40%,
+            rgba(0, 0, 0, 0) 72%
+          );
+        animation: dgb-door-breathe 5s ease-in-out infinite;
+        opacity: 1;
+      }
+
+      .dgb-door-orbit::before,
+      .dgb-door-orbit::after {
+        content: '';
         position: absolute;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: rgba(239,210,154,.92);
-        box-shadow:
-          0 0 8px rgba(239,210,154,.55),
-          0 0 22px rgba(92,184,255,.22);
-        opacity: .72;
-        animation: doorLightPulse 4.2s ease-in-out infinite;
+        inset: 12% 16%;
+        border-radius: 999px;
+        border: 1px solid rgba(182, 223, 255, 0.12);
+        transform-origin: center;
+        mix-blend-mode: screen;
       }
 
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light:nth-child(1) { left: 18%; bottom: 13%; animation-delay: .1s; }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light:nth-child(2) { left: 34%; bottom: 9%; animation-delay: .5s; }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light:nth-child(3) { right: 34%; bottom: 9%; animation-delay: .9s; }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light:nth-child(4) { right: 18%; bottom: 13%; animation-delay: 1.3s; }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light:nth-child(5) { left: 13%; top: 52%; animation-delay: 1.7s; }
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light:nth-child(6) { right: 13%; top: 52%; animation-delay: 2.1s; }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-seam-glow {
-        position: absolute;
-        left: 50%;
-        top: 22%;
-        bottom: 15%;
-        width: 2px;
-        transform: translateX(-50%);
-        pointer-events: none;
-        z-index: 12;
-        background: linear-gradient(180deg, transparent, rgba(174,214,255,.76), rgba(239,210,154,.24), transparent);
-        box-shadow: 0 0 18px rgba(92,184,255,.36);
-        opacity: .64;
-        animation: doorSeamPulse 5.4s ease-in-out infinite;
+      .dgb-door-orbit::before {
+        animation: dgb-door-orbit-1 16s linear infinite;
       }
 
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-open-glow {
+      .dgb-door-orbit::after {
+        inset: 19% 24%;
+        animation: dgb-door-orbit-2 12s linear infinite reverse;
+      }
+
+      .dgb-door-beams {
+        background:
+          linear-gradient(180deg,
+            rgba(175, 225, 255, 0) 0%,
+            rgba(175, 225, 255, var(--dgb-beam-opacity)) 28%,
+            rgba(175, 225, 255, calc(var(--dgb-beam-opacity) * 1.15)) 48%,
+            rgba(175, 225, 255, var(--dgb-beam-opacity)) 58%,
+            rgba(175, 225, 255, 0) 100%
+          );
+        mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 82%, transparent 100%);
+        -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 22%, #000 82%, transparent 100%);
+        opacity: 0.7;
+        transition: opacity 220ms ease;
+      }
+
+      .dgb-door-sparks::before,
+      .dgb-door-sparks::after {
+        content: '';
         position: absolute;
         left: 50%;
         top: 42%;
-        width: 150px;
-        height: 150px;
-        transform: translate(-50%, -50%) scale(.8);
+        width: 52%;
+        height: 52%;
+        transform: translate(-50%, -50%);
         border-radius: 50%;
-        pointer-events: none;
-        z-index: 13;
-        background: radial-gradient(circle, rgba(255,255,255,.88), rgba(92,184,255,.22) 30%, transparent 68%);
+        background:
+          conic-gradient(
+            from 0deg,
+            rgba(180, 225, 255, 0) 0deg,
+            rgba(180, 225, 255, var(--dgb-spark-opacity)) 28deg,
+            rgba(180, 225, 255, 0) 58deg,
+            rgba(180, 225, 255, 0) 118deg,
+            rgba(180, 225, 255, calc(var(--dgb-spark-opacity) * 0.85)) 152deg,
+            rgba(180, 225, 255, 0) 182deg,
+            rgba(180, 225, 255, 0) 240deg,
+            rgba(180, 225, 255, calc(var(--dgb-spark-opacity) * 0.8)) 270deg,
+            rgba(180, 225, 255, 0) 300deg,
+            rgba(180, 225, 255, 0) 360deg
+          );
+        mix-blend-mode: screen;
+        opacity: 0.9;
+      }
+
+      .dgb-door-sparks::before {
+        animation: dgb-door-spin 10s linear infinite;
+      }
+
+      .dgb-door-sparks::after {
+        width: 72%;
+        height: 72%;
+        animation: dgb-door-spin 16s linear infinite reverse;
+      }
+
+      .dgb-door-hit {
+        background:
+          radial-gradient(circle at var(--dgb-touch-x) var(--dgb-touch-y),
+            rgba(245, 251, 255, 0.72) 0%,
+            rgba(212, 238, 255, 0.42) 6%,
+            rgba(119, 185, 255, 0.18) 12%,
+            rgba(0, 0, 0, 0) 26%
+          );
         opacity: 0;
-        transition: opacity .5s ease, transform .5s ease;
+        transform: scale(0.8);
       }
 
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-shell.is-open .door-open-glow {
-        opacity: .82;
-        transform: translate(-50%, -50%) scale(1.18);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-shell.is-open .door-panel {
+      .dgb-door-core {
+        position: relative;
+        z-index: 2;
+        cursor: pointer;
+        touch-action: manipulation;
+        transform: translateZ(0) scale(var(--dgb-press-scale));
+        transition:
+          transform 140ms ease,
+          filter 180ms ease,
+          box-shadow 180ms ease,
+          background 180ms ease,
+          color 180ms ease;
         box-shadow:
-          inset 0 0 0 1px rgba(255,255,255,.035),
-          inset 0 0 58px rgba(76,132,230,.18),
-          0 0 46px rgba(92,184,255,.20);
+          0 0 0 1px rgba(180, 220, 255, 0.12),
+          0 0 16px rgba(35, 105, 215, 0.18),
+          0 0 48px rgba(40, 95, 200, calc(0.18 + var(--dgb-core-glow)));
+        filter:
+          brightness(calc(1 + var(--dgb-core-glow) * 0.24))
+          saturate(calc(1 + var(--dgb-core-glow) * 0.38));
       }
 
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-shell.is-open .door-label {
-        box-shadow:
-          0 0 44px rgba(97,154,255,.34),
-          0 0 82px rgba(239,210,154,.12);
-      }
-
-      [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-detail-chip {
+      .dgb-door-core::before {
+        content: '';
         position: absolute;
-        left: 50%;
-        top: 15%;
-        transform: translateX(-50%);
-        min-width: 180px;
-        max-width: calc(100% - 48px);
-        padding: 10px 16px;
+        inset: -14%;
+        border-radius: inherit;
+        background:
+          radial-gradient(circle at center,
+            rgba(220, 241, 255, calc(0.16 + var(--dgb-core-glow))) 0%,
+            rgba(120, 187, 255, calc(0.12 + var(--dgb-core-glow))) 34%,
+            rgba(15, 42, 112, 0) 76%
+          );
+        z-index: -1;
+        opacity: 0.95;
+        transition: opacity 180ms ease, transform 180ms ease;
+      }
+
+      .dgb-door-core .dgb-door-core-label,
+      .dgb-door-core-label {
+        position: relative;
+        z-index: 2;
+        letter-spacing: 0.22em;
+        text-shadow:
+          0 0 8px rgba(255, 255, 255, 0.22),
+          0 0 24px rgba(165, 219, 255, 0.20);
+        transition: text-shadow 180ms ease, color 180ms ease;
+      }
+
+      .dgb-door-gem {
+        position: relative;
+        z-index: 2;
+        transition:
+          transform 180ms ease,
+          filter 180ms ease,
+          opacity 180ms ease,
+          box-shadow 180ms ease;
+        filter:
+          brightness(1.05)
+          saturate(1.05);
+        box-shadow:
+          0 0 14px rgba(95, 180, 255, 0.14),
+          0 0 42px rgba(95, 180, 255, 0.08);
+      }
+
+      .dgb-door-ready.is-primed {
+        --dgb-core-glow: 0.62;
+        --dgb-card-glow: 0.24;
+        --dgb-ring-opacity: 0.18;
+        --dgb-beam-opacity: 0.22;
+        --dgb-spark-opacity: 0.24;
+      }
+
+      .dgb-door-ready.is-pressed {
+        --dgb-press-scale: 0.965;
+        --dgb-core-glow: 0.88;
+        --dgb-card-glow: 0.34;
+        --dgb-ring-opacity: 0.24;
+        --dgb-beam-opacity: 0.28;
+        --dgb-spark-opacity: 0.34;
+      }
+
+      .dgb-door-ready.is-pressed .dgb-door-hit {
+        opacity: 1;
+        transform: scale(1.08);
+        transition: opacity 90ms linear, transform 140ms ease;
+      }
+
+      .dgb-door-ready.is-energized {
+        --dgb-core-glow: 1.18;
+        --dgb-card-glow: 0.52;
+        --dgb-ring-opacity: 0.32;
+        --dgb-beam-opacity: 0.34;
+        --dgb-spark-opacity: 0.42;
+      }
+
+      .dgb-door-ready.is-energized .dgb-door-energy {
+        transform: scale(1.05);
+        filter: saturate(1.2) brightness(1.08);
+      }
+
+      .dgb-door-ready.is-energized .dgb-door-hit {
+        opacity: 1;
+        transform: scale(1.24);
+        transition:
+          opacity 220ms ease,
+          transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .dgb-door-ready.is-energized .dgb-door-core {
+        box-shadow:
+          0 0 0 1px rgba(218, 240, 255, 0.28),
+          0 0 24px rgba(115, 200, 255, 0.42),
+          0 0 64px rgba(45, 122, 255, 0.52),
+          0 0 120px rgba(45, 122, 255, 0.28);
+        filter: brightness(1.18) saturate(1.18);
+      }
+
+      .dgb-door-ready.is-energized .dgb-door-core::before {
+        transform: scale(1.12);
+      }
+
+      .dgb-door-ready.is-energized .dgb-door-core .dgb-door-core-label,
+      .dgb-door-ready.is-energized .dgb-door-core-label {
+        text-shadow:
+          0 0 10px rgba(255, 255, 255, 0.34),
+          0 0 32px rgba(195, 232, 255, 0.34),
+          0 0 66px rgba(120, 200, 255, 0.28);
+      }
+
+      .dgb-door-ready.is-energized .dgb-door-gem {
+        filter: brightness(1.28) saturate(1.16);
+        box-shadow:
+          0 0 24px rgba(120, 200, 255, 0.32),
+          0 0 64px rgba(120, 200, 255, 0.18);
+        transform: translateZ(0) scale(1.04);
+      }
+
+      .dgb-door-ready.is-energized::after {
+        content: '';
+        position: absolute;
+        inset: 16%;
         border-radius: 999px;
-        border: 1px solid rgba(239,210,154,.24);
-        background: rgba(6,14,28,.72);
-        color: #dbe5ff;
-        text-align: center;
-        text-transform: uppercase;
-        letter-spacing: .13em;
-        font-size: .66rem;
-        line-height: 1.35;
+        border: 1px solid rgba(188, 226, 255, 0.22);
+        box-shadow:
+          0 0 0 1px rgba(160, 210, 255, 0.08) inset,
+          0 0 24px rgba(85, 162, 255, 0.18);
+        animation: dgb-door-shock 700ms ease-out 1;
         pointer-events: none;
-        z-index: 14;
-        box-shadow: 0 12px 30px rgba(0,0,0,.26);
+        z-index: 1;
       }
 
-      @keyframes doorAuraBreath {
-        0%,100% { opacity: .46; transform: scale(.985); }
-        50% { opacity: .82; transform: scale(1.015); }
+      @keyframes dgb-door-breathe {
+        0%, 100% {
+          transform: scale(0.985);
+          opacity: 0.92;
+        }
+        50% {
+          transform: scale(1.02);
+          opacity: 1;
+        }
       }
 
-      @keyframes doorStarsDrift {
-        0% { background-position: 0 0, 0 0, 0 0, 0 0; }
-        100% { background-position: 130px 130px, -170px 170px, 220px -220px, -260px -260px; }
+      @keyframes dgb-door-orbit-1 {
+        from { transform: rotate(0deg) scaleX(1); }
+        to { transform: rotate(360deg) scaleX(1); }
       }
 
-      @keyframes doorSigilRotate {
+      @keyframes dgb-door-orbit-2 {
+        from { transform: rotate(0deg) scaleX(0.78); }
+        to { transform: rotate(360deg) scaleX(0.78); }
+      }
+
+      @keyframes dgb-door-spin {
         from { transform: translate(-50%, -50%) rotate(0deg); }
         to { transform: translate(-50%, -50%) rotate(360deg); }
       }
 
-      @keyframes doorLightPulse {
-        0%,100% { opacity: .42; transform: scale(.84); }
-        50% { opacity: 1; transform: scale(1.15); }
-      }
-
-      @keyframes doorSeamPulse {
-        0%,100% { opacity: .38; }
-        50% { opacity: .88; }
-      }
-
-      @media (max-width: 720px) {
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-energy-ring {
-          width: 176px;
-          height: 176px;
+      @keyframes dgb-door-shock {
+        0% {
+          opacity: 0.54;
+          transform: scale(0.72);
         }
-
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil {
-          width: 218px;
-          height: 218px;
-        }
-
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-detail-chip {
-          top: 14%;
-          font-size: .56rem;
-          padding: 9px 12px;
+        100% {
+          opacity: 0;
+          transform: scale(1.3);
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-aura,
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-starfield,
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-sigil,
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-light,
-        [data-door-runtime="${DOOR_RUNTIME_ID}"] .door-seam-glow {
-          animation: none;
+        .dgb-door-aura,
+        .dgb-door-orbit::before,
+        .dgb-door-orbit::after,
+        .dgb-door-sparks::before,
+        .dgb-door-sparks::after {
+          animation: none !important;
         }
       }
     `;
-
     document.head.appendChild(style);
   }
 
-  function createElement(className, children = []) {
-    const node = document.createElement("div");
-    node.className = className;
-
-    children.forEach((child) => {
-      if (typeof child === "string") {
-        const span = document.createElement("span");
-        span.textContent = child;
-        node.appendChild(span);
-      } else {
-        node.appendChild(child);
-      }
-    });
-
+  function ensureLayer(doorCard, className) {
+    let node = doorCard.querySelector(`:scope > .${className}`);
+    if (!node) {
+      node = document.createElement('div');
+      node.className = className;
+      doorCard.insertBefore(node, doorCard.firstChild);
+    }
     return node;
   }
 
-  function createSigil() {
-    const sigil = createElement("door-sigil");
-    for (let i = 0; i < 8; i += 1) {
-      sigil.appendChild(document.createElement("span"));
+  function enhanceDoorMarkup(doorCard, doorCore) {
+    doorCard.classList.add('dgb-door-ready');
+
+    ensureLayer(doorCard, 'dgb-door-layer');
+    ensureLayer(doorCard, 'dgb-door-energy');
+    ensureLayer(doorCard, 'dgb-door-aura');
+    ensureLayer(doorCard, 'dgb-door-orbit');
+    ensureLayer(doorCard, 'dgb-door-beams');
+    ensureLayer(doorCard, 'dgb-door-sparks');
+    ensureLayer(doorCard, 'dgb-door-hit');
+
+    doorCore.classList.add('dgb-door-core');
+
+    const label = Array.from(doorCore.querySelectorAll('span, strong, div')).find((node) => {
+      const text = (node.textContent || '').replace(/\s+/g, ' ').trim().toUpperCase();
+      return text === 'DOOR';
+    });
+
+    if (label) {
+      label.classList.add('dgb-door-core-label');
+    } else {
+      const text = (doorCore.textContent || '').replace(/\s+/g, ' ').trim();
+      if (text.toUpperCase() === 'DOOR') {
+        const span = document.createElement('span');
+        span.className = 'dgb-door-core-label';
+        span.textContent = text;
+        doorCore.textContent = '';
+        doorCore.appendChild(span);
+      }
     }
-    return sigil;
+
+    const topGem = first(doorCard, SELECTORS.topGem);
+    const bottomGem = first(doorCard, SELECTORS.bottomGem);
+
+    if (topGem) topGem.classList.add('dgb-door-gem');
+    if (bottomGem) bottomGem.classList.add('dgb-door-gem');
   }
 
-  function createLights() {
-    const lights = createElement("door-lights");
-    for (let i = 0; i < 6; i += 1) {
-      lights.appendChild(createElement("door-light"));
+  function setTouchPoint(doorCard, clientX, clientY) {
+    const rect = doorCard.getBoundingClientRect();
+    const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
+    doorCard.style.setProperty('--dgb-touch-x', `${x}%`);
+    doorCard.style.setProperty('--dgb-touch-y', `${y}%`);
+  }
+
+  function arm(doorCard) {
+    doorCard.classList.add('is-primed');
+  }
+
+  function disarm(doorCard) {
+    if (!doorCard.classList.contains('is-pressed') && !doorCard.classList.contains('is-energized')) {
+      doorCard.classList.remove('is-primed');
     }
-    return lights;
   }
 
-  function enhanceDoor() {
-    const doorShell = document.querySelector(".door-shell");
-    if (!doorShell || doorShell.dataset.detailRuntime === DOOR_RUNTIME_ID) return;
+  function press(doorCard) {
+    doorCard.classList.add('is-pressed');
+    doorCard.classList.add('is-primed');
+  }
 
-    doorShell.dataset.detailRuntime = DOOR_RUNTIME_ID;
-    doorShell.classList.add("is-awake");
+  function release(doorCard) {
+    doorCard.classList.remove('is-pressed');
+  }
 
-    const root = document.querySelector(".page") || document.body;
-    root.setAttribute("data-door-runtime", DOOR_RUNTIME_ID);
+  function energize(doorCard) {
+    doorCard.classList.remove('is-pressed');
+    doorCard.classList.add('is-energized');
+    doorCard.classList.add('is-primed');
 
-    doorShell.prepend(createElement("door-aura"));
-    doorShell.appendChild(createElement("door-starfield"));
-    doorShell.appendChild(createElement("door-blue-rim"));
-    doorShell.appendChild(createElement("door-gold-rim"));
-    doorShell.appendChild(createElement("door-energy-ring"));
-    doorShell.appendChild(createSigil());
-    doorShell.appendChild(createLights());
-    doorShell.appendChild(createElement("door-seam-glow"));
-    doorShell.appendChild(createElement("door-open-glow"));
+    window.clearTimeout(doorCard.__dgbEnergizeTimer);
+    doorCard.__dgbEnergizeTimer = window.setTimeout(() => {
+      doorCard.classList.remove('is-energized');
+      doorCard.classList.remove('is-primed');
+    }, 1300);
+  }
 
-    const chip = createElement("door-detail-chip");
-    chip.textContent = "Extravagant root gate · live detail layer";
-    doorShell.appendChild(chip);
+  function wireDoor(doorCard, doorCore) {
+    const updateFromEvent = (event) => {
+      if (typeof event.clientX === 'number' && typeof event.clientY === 'number') {
+        setTouchPoint(doorCard, event.clientX, event.clientY);
+      }
+    };
 
-    doorShell.addEventListener("click", () => {
-      doorShell.classList.toggle("is-open");
+    doorCard.addEventListener('pointerenter', (event) => {
+      updateFromEvent(event);
+      arm(doorCard);
     });
 
-    doorShell.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-      event.preventDefault();
-      doorShell.classList.toggle("is-open");
+    doorCard.addEventListener('pointermove', updateFromEvent);
+
+    doorCard.addEventListener('pointerleave', () => {
+      if (!doorCard.classList.contains('is-pressed')) {
+        disarm(doorCard);
+      }
     });
 
-    doorShell.setAttribute("tabindex", "0");
-    doorShell.setAttribute("role", "button");
-    doorShell.setAttribute("aria-label", "Activate the Diamond Gate Bridge door detail layer");
-  }
-
-  function bindGateButton() {
-    const gateButton = document.querySelector('a[href="#door"]');
-    const doorShell = document.querySelector(".door-shell");
-
-    if (!gateButton || !doorShell) return;
-
-    gateButton.addEventListener("click", (event) => {
-      event.preventDefault();
-
-      const target = document.getElementById("door") || doorShell;
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-        inline: "nearest"
-      });
-
-      window.setTimeout(() => {
-        doorShell.classList.add("is-open");
-        doorShell.focus({ preventScroll: true });
-      }, 420);
+    doorCore.addEventListener('pointerdown', (event) => {
+      updateFromEvent(event);
+      press(doorCard);
     });
+
+    const finishPointer = (event) => {
+      updateFromEvent(event);
+      release(doorCard);
+      energize(doorCard);
+    };
+
+    doorCore.addEventListener('pointerup', finishPointer);
+    doorCore.addEventListener('click', (event) => {
+      updateFromEvent(event);
+      energize(doorCard);
+    });
+
+    doorCore.addEventListener('focus', () => arm(doorCard));
+    doorCore.addEventListener('blur', () => {
+      release(doorCard);
+      disarm(doorCard);
+    });
+
+    doorCore.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        press(doorCard);
+      }
+    });
+
+    doorCore.addEventListener('keyup', (event) => {
+      if (event.key === 'Enter' || event.key === ' ') {
+        release(doorCard);
+        energize(doorCard);
+      }
+    });
+
+    doorCore.setAttribute('tabindex', doorCore.getAttribute('tabindex') || '0');
+    doorCore.setAttribute('aria-label', doorCore.getAttribute('aria-label') || 'Open the door');
+    doorCore.setAttribute('role', doorCore.getAttribute('role') || 'button');
   }
 
-  function boot() {
-    injectStyle();
-    enhanceDoor();
-    bindGateButton();
+  function initRootDoorUpgrade() {
+    ensureStyle();
+
+    const doorCard = findDoorCard();
+    if (!doorCard) {
+      console.warn('[DGB] Root door card not found.');
+      return;
+    }
+
+    const doorCore = findDoorCore(doorCard);
+    if (!doorCore) {
+      console.warn('[DGB] Door core not found.');
+      return;
+    }
+
+    enhanceDoorMarkup(doorCard, doorCore);
+    wireDoor(doorCard, doorCore);
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRootDoorUpgrade, { once: true });
   } else {
-    boot();
+    initRootDoorUpgrade();
   }
 })();

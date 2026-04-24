@@ -299,21 +299,63 @@
       .home-core {
         position: relative;
         z-index: 3;
-        width: 132px;
-        height: 132px;
-        border-radius: 34px;
+        width: 142px;
+        height: 142px;
+        border-radius: 50%;
         display: grid;
         place-items: center;
+        overflow: hidden;
+        border: 1px solid rgba(226,240,255,.48);
+        color: transparent;
+        font-size: 0;
+        letter-spacing: 0;
         background:
-          radial-gradient(circle at 50% 38%, rgba(255,255,255,.34), transparent 34%),
-          linear-gradient(180deg, rgba(18,35,62,.94), rgba(4,9,18,.98));
-        border: 1px solid rgba(239,210,154,.30);
-        color: #fff;
-        font-weight: 950;
-        letter-spacing: .22em;
+          radial-gradient(circle at 31% 26%, rgba(255,255,255,.58), transparent 10%),
+          radial-gradient(circle at 42% 36%, rgba(168,218,255,.30), transparent 29%),
+          linear-gradient(135deg, #0f64b8 0%, #0a3a89 42%, #041434 100%);
         box-shadow:
-          0 0 28px rgba(239,210,154,.22),
-          0 0 88px rgba(142,197,255,.18);
+          inset -22px -20px 34px rgba(0,0,0,.48),
+          inset 13px 10px 23px rgba(255,255,255,.19),
+          0 0 36px rgba(142,197,255,.38),
+          0 0 104px rgba(239,210,154,.18);
+        animation: earthFloat 7s ease-in-out infinite;
+      }
+
+      .home-core::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          radial-gradient(ellipse at 34% 30%, #42b979 0 12%, transparent 13%),
+          radial-gradient(ellipse at 42% 46%, #bbae64 0 9%, transparent 10%),
+          radial-gradient(ellipse at 58% 34%, #3fac72 0 11%, transparent 12%),
+          radial-gradient(ellipse at 65% 58%, #b9ad62 0 10%, transparent 11%),
+          radial-gradient(ellipse at 38% 68%, #38a86a 0 13%, transparent 14%),
+          radial-gradient(ellipse at 70% 76%, #3eb36f 0 8%, transparent 9%),
+          linear-gradient(90deg, rgba(255,255,255,.18), transparent 36%, rgba(0,0,0,.30) 100%);
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,.34));
+        pointer-events: none;
+      }
+
+      .home-core::after {
+        content: "";
+        position: absolute;
+        inset: -2px;
+        border-radius: inherit;
+        background:
+          radial-gradient(ellipse at 30% 42%, rgba(255,255,255,.60) 0 7%, transparent 8%),
+          radial-gradient(ellipse at 53% 23%, rgba(255,255,255,.45) 0 8%, transparent 9%),
+          radial-gradient(ellipse at 68% 47%, rgba(255,255,255,.34) 0 7%, transparent 8%),
+          radial-gradient(ellipse at 51% 72%, rgba(255,255,255,.28) 0 10%, transparent 11%),
+          radial-gradient(circle at 30% 25%, rgba(255,255,255,.34), transparent 18%);
+        mix-blend-mode: screen;
+        opacity: .74;
+        pointer-events: none;
+      }
+
+      .home-core[aria-label]::after {
+        pointer-events: none;
       }
 
       .home-caption {
@@ -509,6 +551,11 @@
         to { transform: rotate(315deg) scaleX(.45); }
       }
 
+      @keyframes earthFloat {
+        0%, 100% { transform: translateY(0) scale(.98); }
+        50% { transform: translateY(-6px) scale(1.03); }
+      }
+
       @media (max-width: 980px) {
         .home-hero {
           grid-template-columns: 1fr;
@@ -552,6 +599,11 @@
           min-height: 390px;
         }
 
+        .home-core {
+          width: 132px;
+          height: 132px;
+        }
+
         .feature-grid,
         .support-grid {
           grid-template-columns: 1fr;
@@ -583,7 +635,18 @@
         }
       }
     `;
+
     document.head.appendChild(style);
+  }
+
+  function normalizeEarthCore(root) {
+    const core = root.querySelector(".home-core");
+    if (!core) return;
+
+    core.textContent = "";
+    core.setAttribute("role", "img");
+    core.setAttribute("aria-label", "Planet Earth");
+    core.setAttribute("data-home-earth-core", "true");
   }
 
   function mount() {
@@ -595,6 +658,9 @@
     root.setAttribute("data-home-state", "coming-attractions");
     root.setAttribute("data-home-priority", "nine-summits-love-metaverse-show");
     root.setAttribute("data-home-js-owner", "index.js");
+    root.setAttribute("data-home-earth-runtime", "mounted");
+
+    normalizeEarthCore(root);
   }
 
   if (document.readyState === "loading") {

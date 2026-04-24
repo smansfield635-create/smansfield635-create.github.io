@@ -4,6 +4,7 @@
   const FILES = [
     { key: "ROOT_HTML", path: "/index.html" },
     { key: "ROOT_JS", path: "/index.js" },
+    { key: "SHARED_EARTH_GLOBE", path: "/shared/earth_globe.js" },
     { key: "PRODUCTS_HTML", path: "/products/index.html" },
     { key: "PRODUCTS_BRIDGE", path: "/products/index.js" },
     { key: "PRODUCTS_RUNTIME", path: "/products/products_runtime.js" },
@@ -26,7 +27,7 @@
   function writeMatrix() {
     if (!matrix) return;
 
-    const alphabet = "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_061_451_DGB_GEN2_DEMO_UNIVERSE_KERNEL_FEED_";
+    const alphabet = "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_DGB_GEN2_SHARED_EARTH_GLOBE_AFRICA_SEVEN_CONTINENTS_";
     let out = "";
 
     for (let i = 0; i < 5200; i += 1) {
@@ -35,6 +36,54 @@
     }
 
     matrix.textContent = out;
+  }
+
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (window.DGBEarthGlobe) {
+        resolve();
+        return;
+      }
+
+      const existing = document.querySelector(`script[data-dgb-loader="${src}"]`);
+      if (existing) {
+        existing.addEventListener("load", () => resolve(), { once: true });
+        existing.addEventListener("error", () => reject(new Error("Failed to load " + src)), { once: true });
+        return;
+      }
+
+      const script = document.createElement("script");
+      script.src = src + "?v=shared-earth-globe-v1";
+      script.defer = true;
+      script.dataset.dgbLoader = src;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error("Failed to load " + src));
+      document.head.appendChild(script);
+    });
+  }
+
+  async function mountProofGlobe() {
+    const orb = document.querySelector(".orb");
+    if (!orb) return;
+
+    try {
+      await loadScript("/shared/earth_globe.js");
+
+      if (!window.DGBEarthGlobe) {
+        orb.setAttribute("data-dgb-earth-proof", "missing-shared-source");
+        return;
+      }
+
+      window.DGBEarthGlobe.mount(orb, {
+        mode: "proof",
+        ariaLabel: "Planet Earth proof globe with Africa and seven-continent read"
+      });
+
+      orb.setAttribute("data-dgb-earth-proof", "mounted");
+    } catch (error) {
+      orb.setAttribute("data-dgb-earth-proof", "load-failed");
+      orb.setAttribute("data-dgb-earth-proof-error", String(error && error.message ? error.message : error));
+    }
   }
 
   async function fetchText(path) {
@@ -75,6 +124,7 @@
 
     const rootHtml = byKey.ROOT_HTML?.text || "";
     const rootJs = byKey.ROOT_JS?.text || "";
+    const sharedEarth = byKey.SHARED_EARTH_GLOBE?.text || "";
     const productsHtml = byKey.PRODUCTS_HTML?.text || "";
     const productsBridge = byKey.PRODUCTS_BRIDGE?.text || "";
     const productsRuntime = byKey.PRODUCTS_RUNTIME?.text || "";
@@ -107,6 +157,33 @@
         pass: !any(rootJs, ["border-radius: 34px", "letter-spacing: .18em", "home-russian-doll"]),
         fail: "Root JS still carries old .home-core / Generation 1 styling.",
         next: "REPLACE_/index.js_WITH_SECOND_GENERATION_HOME_RUNTIME"
+      },
+      {
+        key: "SHARED_EARTH_GLOBE_SOURCE",
+        pass:
+          sharedEarth.includes("shared-earth-globe-v1") &&
+          sharedEarth.includes("Africa · Seven Continents") &&
+          sharedEarth.includes("data-dgb-africa-visible"),
+        fail: "Shared Earth globe source is missing or incomplete.",
+        next: "CREATE_/shared/earth_globe.js"
+      },
+      {
+        key: "ROOT_USES_SHARED_EARTH_GLOBE",
+        pass:
+          rootJs.includes("/shared/earth_globe.js") &&
+          rootJs.includes("DGBEarthGlobe") &&
+          rootJs.includes("data-home-earth-read"),
+        fail: "Root does not use the shared Earth globe source.",
+        next: "UPDATE_/index.js_TO_MOUNT_SHARED_EARTH_GLOBE"
+      },
+      {
+        key: "GAUGES_USES_SHARED_EARTH_GLOBE",
+        pass:
+          gaugesJs.includes("/shared/earth_globe.js") &&
+          gaugesJs.includes("DGBEarthGlobe") &&
+          gaugesJs.includes("mountProofGlobe"),
+        fail: "Gauges does not use the shared Earth globe source.",
+        next: "UPDATE_/gauges/index.js_TO_MOUNT_SHARED_EARTH_GLOBE"
       },
       {
         key: "GAUGES_HTML_LIVE_FEED",
@@ -197,6 +274,7 @@
     lines.push("GAUGE_LIVE_FEED_V2");
     lines.push("STAMP=" + diagnostic.stamp);
     lines.push("PHASE=SECOND_GENERATION_RENEWAL");
+    lines.push("SHARED_GLOBE_SOURCE=/shared/earth_globe.js");
     lines.push("PRIORITY=" + diagnostic.priority);
     lines.push("NEXT_ACTION=" + diagnostic.nextAction);
     lines.push("");
@@ -232,10 +310,11 @@
 
   async function run() {
     writeMatrix();
+    mountProofGlobe();
 
     setText(stripStatus, "STATUS: RUNNING");
     setText(stripAction, "NEXT_ACTION=FETCH_PUBLIC_SOURCE_FILES");
-    setText(liveOutput, "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE");
+    setText(liveOutput, "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE\nSHARED_GLOBE_SOURCE=/shared/earth_globe.js");
 
     const results = [];
 
@@ -255,6 +334,7 @@
     if (root) {
       root.setAttribute("data-next-action", diagnostic.nextAction);
       root.setAttribute("data-gauge-runtime", "mounted");
+      root.setAttribute("data-shared-earth-globe-source", "/shared/earth_globe.js");
     }
   }
 

@@ -3,1152 +3,171 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge</title>
+  <title>Diamond Gate Bridge · Public Entry</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Generation 2 root door with Coming Soon opt-in for Laws, Big Laughs, Nine Summits, and the Metaverse."
+    content="Diamond Gate Bridge public entry: The Upper Room, Nine Summits of Love, Laws, and the Micro-World."
   />
-  <style>
-    :root{
-      --bg:#020610;
-      --line:rgba(164,188,255,.18);
-      --line-strong:rgba(210,223,255,.36);
-      --text:#eef4ff;
-      --muted:#9aabd0;
-      --gold:#efd29a;
-      --blue:#6db8ff;
-      --pink:#ff9fd6;
-      --green:#97e6b4;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1240px;
-    }
-
-    *{box-sizing:border-box}
-
-    html{min-height:100%;scroll-behavior:smooth}
-
-    body{
-      min-height:100%;
-      margin:0;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 6%, rgba(112,151,255,.24), transparent 22%),
-        radial-gradient(circle at 18% 28%, rgba(78,128,220,.13), transparent 24%),
-        radial-gradient(circle at 82% 34%, rgba(78,128,220,.11), transparent 24%),
-        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
-      overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.2;
-      background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.17) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.14) 0 1px, transparent 1.6px);
-      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
-      opacity:.32;
-    }
-
-    .page{
-      width:min(var(--max), calc(100vw - 24px));
-      margin:0 auto;
-      padding:18px 0 44px;
-      position:relative;
-      z-index:1;
-      overflow:hidden;
-    }
-
-    .topbar,.hero,.door-card,.entry-card,.route-card,.coming-soon-panel,.coming-card,.signal-card{
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
-    }
-
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 16px;
-      border-radius:22px;
-      background:rgba(7,13,26,.74);
-      backdrop-filter:blur(10px);
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
-    }
-
-    .brand-mark{
-      width:46px;
-      height:46px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      flex:none;
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 28%, rgba(115,171,255,.24), transparent 42%),
-        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
-      color:#f4f8ff;
-      font-weight:900;
-      letter-spacing:.08em;
-      box-shadow:0 0 22px rgba(109,184,255,.09);
-    }
-
-    .brand-kicker{
-      margin:0 0 4px;
-      color:#c8d7ff;
-      font-size:.72rem;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-    }
-
-    .brand-title{
-      margin:0;
-      font-size:1.05rem;
-      font-weight:800;
-    }
-
-    .topnav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:flex-end;
-    }
-
-    .nav-link,.button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-decoration:none;
-      min-height:42px;
-      padding:0 15px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--text);
-      font-weight:800;
-      background:rgba(255,255,255,.035);
-      transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
-      cursor:pointer;
-    }
-
-    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.06);
-      outline:none;
-    }
-
-    .button.primary{
-      border-color:rgba(239,210,154,.34);
-      background:
-        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .button.coming{
-      border-color:rgba(109,184,255,.42);
-      background:
-        linear-gradient(180deg, rgba(109,184,255,.20), rgba(109,184,255,.06)),
-        rgba(255,255,255,.035);
-      color:#f4fbff;
-    }
-
-    .hero{
-      margin-top:16px;
-      border-radius:34px;
-      padding:24px 20px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(132,164,255,.18), transparent 30%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
-      mix-blend-mode:screen;
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(320px,.86fr);
-      gap:20px;
-      align-items:center;
-      position:relative;
-      z-index:1;
-    }
-
-    .hero-tag{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-      color:#d8e3ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.72rem;
-      margin-bottom:14px;
-    }
-
-    .hero-tag::before{
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
-      transform:rotate(45deg);
-      background:#dce7ff;
-      box-shadow:0 0 16px rgba(220,231,255,.55);
-    }
-
-    h1{
-      margin:0 0 12px;
-      font-size:clamp(2.3rem, 5vw, 4.85rem);
-      line-height:.95;
-      letter-spacing:-.058em;
-      max-width:11ch;
-    }
-
-    h1 .accent{color:var(--gold)}
-
-    p{
-      color:var(--muted);
-      line-height:1.58;
-    }
-
-    .hero p{
-      margin:0;
-      font-size:clamp(1rem, 1.5vw, 1.12rem);
-      max-width:64ch;
-    }
-
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:20px;
-    }
-
-    .button{
-      border-radius:18px;
-      min-height:46px;
-      padding:0 18px;
-      white-space:nowrap;
-    }
-
-    .door-card{
-      border-radius:34px;
-      padding:22px;
-      position:relative;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(72,132,232,.20), transparent 36%),
-        linear-gradient(180deg, rgba(12,24,48,.92), rgba(5,12,24,.94));
-    }
-
-    .door-shell{
-      position:relative;
-      width:100%;
-      aspect-ratio:.72 / 1;
-      min-height:630px;
-      max-height:860px;
-      border-radius:40px;
-      overflow:hidden;
-      border:1px solid rgba(170,198,255,.24);
-      background:
-        radial-gradient(circle at 50% 39%, rgba(120,190,255,.20), transparent 28%),
-        radial-gradient(circle at 50% 78%, rgba(239,210,154,.09), transparent 34%),
-        linear-gradient(180deg, rgba(10,23,48,.97), rgba(3,9,20,.99));
-      box-shadow:
-        inset 0 0 64px rgba(126,164,255,.13),
-        inset 0 -36px 86px rgba(0,0,0,.38),
-        0 0 48px rgba(92,184,255,.09);
-      isolation:isolate;
-    }
-
-    .door-shell::before{
-      content:"";
-      position:absolute;
-      inset:12px;
-      border-radius:34px;
-      border:1px solid rgba(180,202,255,.15);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.035),
-        inset 0 0 38px rgba(80,132,230,.1);
-      pointer-events:none;
-      z-index:9;
-    }
-
-    .door-shell::after{
-      content:"";
-      position:absolute;
-      inset:5%;
-      border-radius:50% 50% 9% 9% / 34% 34% 9% 9%;
-      border:1px solid rgba(92,184,255,.17);
-      pointer-events:none;
-      z-index:4;
-      box-shadow:
-        inset 0 0 48px rgba(92,184,255,.065),
-        0 0 20px rgba(92,184,255,.065);
-    }
-
-    .door-aura-static{
-      position:absolute;
-      inset:9%;
-      border-radius:50% 50% 9% 9% / 34% 34% 9% 9%;
-      pointer-events:none;
-      z-index:1;
-      background:
-        radial-gradient(circle at 50% 20%, rgba(116,190,255,.26), transparent 18%),
-        radial-gradient(circle at 50% 45%, rgba(92,184,255,.17), transparent 34%),
-        linear-gradient(180deg, transparent, rgba(92,184,255,.055), transparent);
-      filter:blur(2px);
-      opacity:.7;
-    }
-
-    .door-starfield-static{
-      position:absolute;
-      inset:7% 9% 13%;
-      border-radius:50% 50% 10% 10% / 28% 28% 10% 10%;
-      pointer-events:none;
-      z-index:3;
-      opacity:.48;
-      background:
-        radial-gradient(circle at 18% 22%, rgba(255,255,255,.64) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 72% 18%, rgba(255,255,255,.40) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 62% 72%, rgba(255,255,255,.30) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 28% 78%, rgba(255,255,255,.38) 0 1px, transparent 1.5px);
-      background-size:130px 130px,170px 170px,220px 220px,260px 260px;
-    }
-
-    .threshold-field{
-      position:absolute;
-      left:50%;
-      top:45%;
-      width:82%;
-      height:68%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      pointer-events:none;
-      z-index:3;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 18%),
-        conic-gradient(from 90deg, transparent, rgba(122,213,255,.10), transparent, rgba(239,210,154,.09), transparent);
-      mask-image:radial-gradient(circle, black 0 56%, transparent 72%);
-      opacity:.72;
-    }
-
-    .door-arch{
-      position:absolute;
-      left:50%;
-      top:5%;
-      width:88%;
-      height:91%;
-      transform:translateX(-50%);
-      border-radius:50% 50% 8% 8% / 34% 34% 8% 8%;
-      border:1px solid rgba(150,180,245,.25);
-      background:
-        radial-gradient(circle at 50% 42%, rgba(100,158,255,.20), transparent 30%),
-        linear-gradient(180deg, rgba(13,30,64,.88), rgba(3,9,20,.93));
-      box-shadow:
-        inset 0 0 0 10px rgba(42,75,132,.10),
-        inset 0 0 0 24px rgba(105,146,238,.045),
-        inset 0 0 86px rgba(8,20,44,.78);
-      z-index:2;
-    }
-
-    .door-rim-blue,.door-rim-gold,.door-rim-inner{
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%);
-      pointer-events:none;
-      z-index:5;
-      border-radius:50% 50% 9% 9% / 34% 34% 9% 9%;
-    }
-
-    .door-rim-blue{
-      top:7%;
-      width:82%;
-      height:87%;
-      border:1px solid rgba(92,184,255,.32);
-      box-shadow:inset 0 0 20px rgba(92,184,255,.13),0 0 20px rgba(92,184,255,.11);
-    }
-
-    .door-rim-gold{
-      top:12%;
-      width:70%;
-      height:78%;
-      border:1px solid rgba(239,210,154,.36);
-      box-shadow:inset 0 0 18px rgba(239,210,154,.09),0 0 16px rgba(239,210,154,.09);
-    }
-
-    .door-rim-inner{
-      top:18%;
-      width:50%;
-      height:66%;
-      border:1px solid rgba(255,255,255,.13);
-      box-shadow:inset 0 0 22px rgba(255,255,255,.035),0 0 18px rgba(92,184,255,.08);
-    }
-
-    .door-panel{
-      position:absolute;
-      left:50%;
-      top:24%;
-      bottom:13%;
-      width:47%;
-      transform:translateX(-50%);
-      border-radius:50% 50% 14px 14px / 22% 22% 14px 14px;
-      border:1px solid rgba(196,217,255,.24);
-      background:
-        radial-gradient(circle at 50% 38%, rgba(110,170,255,.21), transparent 36%),
-        linear-gradient(90deg, rgba(255,255,255,.045), transparent 50%, rgba(255,255,255,.04)),
-        linear-gradient(180deg, rgba(9,20,42,.97), rgba(2,7,16,.99));
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.04),
-        inset 0 0 46px rgba(76,132,230,.12),
-        0 18px 44px rgba(0,0,0,.26);
-      z-index:7;
-      overflow:hidden;
-    }
-
-    .door-panel::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:0;
-      bottom:0;
-      width:2px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg, rgba(255,255,255,.48), rgba(118,153,222,.18), rgba(255,255,255,.24));
-      box-shadow:0 0 20px rgba(118,170,255,.30);
-    }
-
-    .door-energy-ring{
-      position:absolute;
-      left:50%;
-      top:42%;
-      width:238px;
-      height:238px;
-      transform:translate(-50%, -50%);
-      border-radius:50%;
-      pointer-events:none;
-      z-index:8;
-      border:1px solid rgba(92,184,255,.24);
-      box-shadow:0 0 24px rgba(92,184,255,.13),inset 0 0 34px rgba(92,184,255,.09);
-      opacity:.74;
-    }
-
-    .door-sigil{
-      position:absolute;
-      left:50%;
-      top:42%;
-      width:292px;
-      height:292px;
-      transform:translate(-50%, -50%);
-      pointer-events:none;
-      z-index:8;
-      opacity:.74;
-    }
-
-    .door-sigil span{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:48%;
-      height:1px;
-      transform-origin:0 50%;
-      background:linear-gradient(90deg, rgba(239,210,154,.44), transparent);
-    }
-
-    .door-sigil span:nth-child(1){transform:rotate(0deg)}
-    .door-sigil span:nth-child(2){transform:rotate(45deg)}
-    .door-sigil span:nth-child(3){transform:rotate(90deg)}
-    .door-sigil span:nth-child(4){transform:rotate(135deg)}
-    .door-sigil span:nth-child(5){transform:rotate(180deg)}
-    .door-sigil span:nth-child(6){transform:rotate(225deg)}
-    .door-sigil span:nth-child(7){transform:rotate(270deg)}
-    .door-sigil span:nth-child(8){transform:rotate(315deg)}
-
-    .threshold-glyph{
-      position:absolute;
-      left:50%;
-      top:42%;
-      width:340px;
-      height:340px;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      z-index:6;
-      opacity:.42;
-      border-radius:50%;
-      background:conic-gradient(from 45deg, transparent, rgba(239,210,154,.16), transparent, rgba(92,184,255,.15), transparent);
-      mask-image:radial-gradient(circle, transparent 0 37%, black 38% 41%, transparent 42% 100%);
-    }
-
-    .ornament{
-      position:absolute;
-      left:50%;
-      transform:translateX(-50%);
-      z-index:10;
-      display:grid;
-      place-items:center;
-      pointer-events:none;
-    }
-
-    .ornament.top{top:7%;width:76px;height:108px}
-    .ornament.center{top:42%;width:188px;height:188px;transform:translate(-50%,-50%)}
-    .ornament.floor{bottom:5%;width:96px;height:62px}
-
-    .gem{
-      width:42px;
-      height:58px;
-      transform:rotate(45deg);
-      border-radius:12px 2px 12px 2px;
-      border:1px solid rgba(239,210,154,.58);
-      background:
-        radial-gradient(circle at 32% 28%, rgba(255,255,255,.90), transparent 16%),
-        linear-gradient(135deg, rgba(115,214,255,.98), rgba(22,92,190,.74) 48%, rgba(8,20,50,.92));
-      box-shadow:0 0 20px rgba(92,184,255,.52),0 0 48px rgba(92,184,255,.20);
-    }
-
-    .center-ring{
-      width:176px;
-      height:176px;
-      border-radius:50%;
-      border:1px solid rgba(239,210,154,.40);
-      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 34%),rgba(5,10,22,.72);
-      box-shadow:0 0 24px rgba(92,184,255,.24),inset 0 0 0 12px rgba(55,122,220,.09),inset 0 0 0 28px rgba(239,210,154,.05);
-      display:grid;
-      place-items:center;
-      position:relative;
-    }
-
-    .door-label{
-      position:relative;
-      z-index:2;
-      min-width:94px;
-      height:60px;
-      padding:0 18px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,.15);
-      background:radial-gradient(circle at 50% 35%, rgba(145,184,255,.20), transparent 52%),rgba(6,12,24,.84);
-      color:#fff;
-      font-weight:900;
-      letter-spacing:.22em;
-      text-transform:uppercase;
-      box-shadow:0 0 38px rgba(97,154,255,.28);
-    }
-
-    .door-open-glow{
-      position:absolute;
-      left:50%;
-      top:42%;
-      width:160px;
-      height:160px;
-      transform:translate(-50%,-50%) scale(.82);
-      border-radius:50%;
-      pointer-events:none;
-      z-index:15;
-      background:radial-gradient(circle, rgba(255,255,255,.86), rgba(92,184,255,.24) 30%, transparent 68%);
-      opacity:0;
-      transition:opacity .5s ease,transform .5s ease;
-    }
-
-    .door-shell.is-open .door-open-glow{
-      opacity:.82;
-      transform:translate(-50%,-50%) scale(1.18);
-    }
-
-    .floor-light{
-      position:absolute;
-      left:50%;
-      bottom:5%;
-      width:72%;
-      height:12%;
-      transform:translateX(-50%);
-      border-radius:50%;
-      background:radial-gradient(ellipse at center, rgba(89,167,255,.26), transparent 66%);
-      z-index:4;
-      pointer-events:none;
-    }
-
-    .door-detail-chip{
-      position:absolute;
-      left:50%;
-      top:15%;
-      transform:translateX(-50%);
-      min-width:188px;
-      max-width:calc(100% - 48px);
-      padding:10px 16px;
-      border-radius:999px;
-      border:1px solid rgba(239,210,154,.25);
-      background:rgba(6,14,28,.74);
-      color:#dbe5ff;
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
-      line-height:1.35;
-      pointer-events:none;
-      z-index:16;
-      box-shadow:0 12px 30px rgba(0,0,0,.28);
-    }
-
-    .door-caption{
-      position:absolute;
-      left:50%;
-      bottom:4%;
-      transform:translateX(-50%);
-      width:min(82%, 620px);
-      padding:13px 18px;
-      border-radius:999px;
-      border:1px solid rgba(140,168,240,.25);
-      background:rgba(6,14,28,.84);
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:.15em;
-      font-size:.76rem;
-      color:#dbe5ff;
-      box-shadow:0 12px 32px rgba(0,0,0,.32);
-      z-index:16;
-      line-height:1.35;
-    }
-
-    .door-caption strong{color:#fff}
-
-    .coming-soon-panel,.entry-card,.signal-card{
-      margin-top:18px;
-      border-radius:30px;
-      padding:24px 20px;
-      overflow:hidden;
-    }
-
-    .section-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:8px;
-    }
-
-    .coming-soon-panel h2,.entry-card h2,.signal-card h2{
-      margin:0 0 10px;
-      font-size:clamp(1.7rem, 3vw, 2.7rem);
-      line-height:1;
-      letter-spacing:-.04em;
-    }
-
-    .coming-toggle{
-      width:100%;
-      border:1px solid rgba(109,184,255,.36);
-      color:var(--text);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 42%),
-        rgba(255,255,255,.025);
-      border-radius:24px;
-      padding:18px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      cursor:pointer;
-      text-align:left;
-    }
-
-    .coming-toggle small{
-      display:block;
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:8px;
-      font-weight:800;
-      font-size:.72rem;
-    }
-
-    .coming-toggle strong{
-      display:block;
-      color:#fff;
-      font-size:1.25rem;
-      letter-spacing:-.02em;
-    }
-
-    .coming-toggle span:last-child{
-      display:inline-grid;
-      place-items:center;
-      width:36px;
-      height:36px;
-      border-radius:12px;
-      border:1px solid rgba(239,210,154,.34);
-      color:var(--gold);
-      font-weight:900;
-      flex:none;
-    }
-
-    .coming-options{
-      display:none;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .coming-soon-panel.is-open .coming-options{
-      display:grid;
-    }
-
-    .coming-card{
-      display:block;
-      min-height:160px;
-      border-radius:22px;
-      padding:16px;
-      text-decoration:none;
-      color:var(--text);
-      position:relative;
-      overflow:hidden;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-
-    .coming-card:hover,.coming-card:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      outline:none;
-      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
-    }
-
-    .coming-card small{
-      display:block;
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:8px;
-      font-weight:800;
-      font-size:.72rem;
-    }
-
-    .coming-card h3{
-      margin:0 0 8px;
-      font-size:1.08rem;
-    }
-
-    .coming-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .routes{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
-    }
-
-    .route-card{
-      min-height:154px;
-      border-radius:22px;
-      padding:16px;
-      text-decoration:none;
-      color:var(--text);
-      position:relative;
-      overflow:hidden;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-
-    .route-card:hover,.route-card:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      outline:none;
-      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
-    }
-
-    .route-card span{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:34px;
-      height:34px;
-      border-radius:12px;
-      border:1px solid var(--line);
-      margin-bottom:12px;
-      background:rgba(255,255,255,.04);
-      color:var(--gold);
-      font-weight:900;
-    }
-
-    .route-card h3{
-      margin:0 0 8px;
-      font-size:1.05rem;
-      letter-spacing:-.02em;
-    }
-
-    .route-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .signal-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .signal-item{
-      padding:14px;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.025);
-    }
-
-    .signal-item small{
-      display:block;
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:7px;
-      font-weight:800;
-    }
-
-    .signal-item strong{
-      display:block;
-      color:#f4f7ff;
-      line-height:1.35;
-    }
-
-    .footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      color:var(--muted);
-      padding:14px 4px 0;
-      font-size:.92rem;
-    }
-
-    .footer-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .footer-links a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .footer-links a:hover,.footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
-    }
-
-    @media (max-width:980px){
-      .hero-grid{grid-template-columns:1fr}
-      .routes,.coming-options{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .signal-grid{grid-template-columns:1fr}
-      .door-shell{aspect-ratio:auto;min-height:700px}
-    }
-
-    @media (max-width:720px){
-      .page{width:min(100vw - 16px, var(--max));padding:14px 0 32px}
-      .topbar{flex-wrap:wrap;padding:12px 14px}
-      .topnav{width:100%;justify-content:flex-start}
-      .hero,.door-card,.entry-card,.signal-card,.coming-soon-panel{padding:18px 16px}
-      .hero h1{font-size:clamp(2rem, 11vw, 3.4rem)}
-      .hero-actions{gap:8px}
-      .button{flex:1 1 calc(50% - 8px)}
-      .button.primary,.button.coming{flex-basis:100%}
-      .door-shell{min-height:670px;border-radius:30px}
-      .door-panel{width:52%;top:25%;bottom:13%}
-      .door-energy-ring{width:178px;height:178px}
-      .door-sigil{width:222px;height:222px}
-      .threshold-glyph{width:250px;height:250px}
-      .ornament.center{width:140px;height:140px}
-      .center-ring{width:140px;height:140px}
-      .door-label{min-width:80px;height:52px;font-size:.82rem}
-      .door-caption{width:calc(100% - 28px);border-radius:24px;font-size:.62rem;letter-spacing:.11em;padding:11px 12px}
-      .routes,.coming-options{grid-template-columns:1fr}
-      .footer{display:grid;gap:8px}
-    }
-
-    @media (prefers-reduced-motion:no-preference){
-      .gem,.center-ring,.door-label{animation:gatePulse 5.8s ease-in-out infinite}
-      .door-sigil{animation:doorSigilRotate 36s linear infinite}
-      .threshold-glyph{animation:doorSigilRotate 54s linear reverse infinite}
-
-      @keyframes gatePulse{
-        0%,100%{filter:brightness(1)}
-        50%{filter:brightness(1.12)}
-      }
-
-      @keyframes doorSigilRotate{
-        from{transform:translate(-50%, -50%) rotate(0deg)}
-        to{transform:translate(-50%, -50%) rotate(360deg)}
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *{animation:none !important;scroll-behavior:auto !important}
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/ui.css" />
+  <script src="/index.js?v=public-priority-1" defer></script>
 </head>
 <body>
-  <main class="page">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">DG</div>
+  <main id="rootPortal" class="root-portal" data-root-owner="index.html">
+    <header class="root-topbar">
+      <div class="root-brand">
+        <div class="root-mark">DG</div>
         <div>
-          <p class="brand-kicker">Generation 2 Root</p>
-          <p class="brand-title">Diamond Gate Bridge</p>
+          <p class="root-kicker">Diamond Gate Bridge</p>
+          <p class="root-title">Public Entry</p>
         </div>
       </div>
 
-      <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="#comingSoon">Coming Soon</a>
-        <a class="nav-link" href="/products/">Products</a>
-        <a class="nav-link" href="/gauges/">Gauges</a>
-        <a class="nav-link" href="/about/">About</a>
+      <nav class="root-nav" aria-label="Primary">
+        <a href="/big-laugh/upper-room/">The Upper Room</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/laws/">Laws</a>
+        <a href="/products/">Micro-World</a>
+        <a href="/about/">About</a>
       </nav>
     </header>
 
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <span class="hero-tag">Generation 2 · canonical root threshold</span>
-          <h1>Enter through the <span class="accent">living door</span>.</h1>
+    <section class="root-hero">
+      <div class="root-hero-copy">
+        <span class="root-pill">Public priority · show first · summits second</span>
+        <h1>The front door opens with the <span>living work.</span></h1>
+        <p>
+          Start with what people can enter: the live show, the Nine Summits of Love, the laws, and the first micro-world landscape map.
+          The deeper architecture stays behind the doors until someone chooses to go farther.
+        </p>
+
+        <div class="root-actions">
+          <a class="root-button primary" href="/big-laugh/upper-room/">Open The Upper Room</a>
+          <a class="root-button summit" href="/nine-summits/">Open Nine Summits of Love</a>
+        </div>
+      </div>
+
+      <aside class="root-door-card" data-root-door>
+        <div class="root-door-arch">
+          <div class="root-door-gem top"></div>
+          <button class="root-door-core" data-door-core type="button" aria-label="Open the public entry door">
+            <span>DOOR</span>
+          </button>
+          <div class="root-door-gem bottom"></div>
+          <div class="root-door-caption">
+            <strong>Public entry</strong> · Show, Summits, Laws, Micro-World
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="root-priority">
+      <p class="root-kicker">Top of page</p>
+      <h2>First: the show. Second: the Summits.</h2>
+
+      <div class="root-priority-grid">
+        <a class="priority-card feature" href="/big-laugh/upper-room/">
+          <small>Live public event</small>
+          <strong>The Upper Room</strong>
           <p>
-            This is the Generation 2 root threshold for Diamond Gate Bridge. The homepage remains the door.
-            The public opt-in is Coming Soon, which opens four clear paths: Laws, Big Laughs, Nine Summits, and the Metaverse.
+            The Upper Room presents <em>A Dollar a Day Keeps the Psychiatrist Away</em>.
+            A coming-soon upstairs crowd-interaction show with comedy, motivation, and live audience energy.
           </p>
-
-          <div class="hero-actions">
-            <a class="button primary" href="#door">Open the gates</a>
-            <button class="button coming" type="button" data-open-coming>Coming Soon</button>
-            <a class="button" href="/products/">Products chamber</a>
-            <a class="button" href="/gauges/">Gauges</a>
-          </div>
-        </div>
-
-        <aside class="door-card" id="door">
-          <div class="door-shell" aria-label="Generation 2 canonical root door" tabindex="0" role="button">
-            <div class="door-aura-static"></div>
-            <div class="door-starfield-static"></div>
-            <div class="threshold-field"></div>
-            <div class="door-arch"></div>
-            <div class="door-rim-blue"></div>
-            <div class="door-rim-gold"></div>
-            <div class="door-rim-inner"></div>
-            <div class="door-panel"></div>
-            <div class="door-energy-ring"></div>
-
-            <div class="door-sigil" aria-hidden="true">
-              <span></span><span></span><span></span><span></span>
-              <span></span><span></span><span></span><span></span>
-            </div>
-
-            <div class="threshold-glyph" aria-hidden="true"></div>
-
-            <div class="ornament top"><div class="gem"></div></div>
-
-            <div class="ornament center">
-              <div class="center-ring">
-                <span class="door-label">Door</span>
-              </div>
-            </div>
-
-            <div class="ornament floor"><div class="gem"></div></div>
-            <div class="door-open-glow"></div>
-            <div class="floor-light"></div>
-
-            <div class="door-detail-chip">Generation 2 root gate · coming soon opt-in active</div>
-
-            <div class="door-caption">
-              <strong>Second generation baseline</strong> · canonical world entry surface
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="coming-soon-panel" id="comingSoon">
-      <div class="section-kicker">Public opt-in</div>
-      <h2>Coming Soon</h2>
-      <p>
-        This is the visible public option from the index page. Open it to choose one of the four upcoming worlds.
-      </p>
-
-      <button class="coming-toggle" type="button" data-coming-toggle aria-expanded="false">
-        <span>
-          <small>Open the four upcoming chambers</small>
-          <strong>Coming Soon</strong>
-        </span>
-        <span>+</span>
-      </button>
-
-      <div class="coming-options" data-coming-options>
-        <a class="coming-card" href="/laws/">
-          <small>Authority chamber</small>
-          <h3>Laws</h3>
-          <p>Russian-doll Lawscape with four Master Psalms, 16 canopy points, 32-state construct, and 256-state lattice.</p>
         </a>
 
-        <a class="coming-card" href="/big-laughs/">
-          <small>Comedy chamber</small>
-          <h3>Big Laughs</h3>
-          <p>Public live-show page for ticket buyers, show information, host, feature, and FAQ.</p>
-        </a>
-
-        <a class="coming-card" href="/nine-summits/">
-          <small>Ascent chamber</small>
-          <h3>Nine Summits</h3>
-          <p>The transformational summit path, built to open one summit at a time instead of endless scroll.</p>
-        </a>
-
-        <a class="coming-card" href="/metaverse/">
-          <small>World chamber</small>
-          <h3>Metaverse</h3>
-          <p>The future world layer for the larger interactive environment and portal expansion.</p>
+        <a class="priority-card feature" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits of Love</strong>
+          <p>
+            The value spine, love path, and human-potential structure. This belongs at the top, not buried under instruments.
+          </p>
         </a>
       </div>
     </section>
 
-    <section class="entry-card">
-      <div class="section-kicker">Current chambers</div>
-      <h2>Available now</h2>
-      <p>
-        These routes remain available beneath the root door while Coming Soon holds the four public upcoming worlds.
-      </p>
+    <section class="root-section">
+      <p class="root-kicker">Core public routes</p>
+      <h2>Then the laws and the world.</h2>
 
-      <div class="routes">
-        <a class="route-card" href="/products/">
-          <span>P</span>
-          <h3>Products</h3>
-          <p>Seasonal stained-glass molecule and product chamber.</p>
+      <div class="root-grid">
+        <a class="root-card" href="/laws/">
+          <small>Law layer</small>
+          <strong>Laws</strong>
+          <p>The authority surface for the public structure.</p>
         </a>
 
-        <a class="route-card" href="/gauges/">
-          <span>G</span>
-          <h3>Gauges</h3>
-          <p>Instrument and authority-gauge chamber.</p>
+        <a class="root-card" href="/products/">
+          <small>Micro-world</small>
+          <strong>Ground Map</strong>
+          <p>The first 2D landscape baseline for the micro-metaverse.</p>
         </a>
 
-        <a class="route-card" href="/about/">
-          <span>A</span>
-          <h3>About</h3>
-          <p>Purpose, usage, structure, and orientation.</p>
+        <a class="root-card" href="/gauges/">
+          <small>Instrument</small>
+          <strong>Gauges</strong>
+          <p>Read the current state of the visible systems.</p>
         </a>
 
-        <a class="route-card" href="/prelude/">
-          <span>Pr</span>
-          <h3>Prelude</h3>
-          <p>Opening frame and introductory chamber.</p>
+        <a class="root-card" href="/prelude/">
+          <small>Entry story</small>
+          <strong>Prelude</strong>
+          <p>The introduction path for deeper context.</p>
         </a>
       </div>
     </section>
 
-    <section class="signal-card">
-      <div class="section-kicker">Root contract</div>
-      <h2>The correct public label is Coming Soon</h2>
-      <p>
-        The index page now exposes Coming Soon directly. Clicking it reveals exactly four options:
-        Laws, Big Laughs, Nine Summits, and the Metaverse.
-      </p>
+    <section class="root-section">
+      <p class="root-kicker">Support routes</p>
+      <h2>Everything else supports the entry.</h2>
 
-      <div class="signal-grid">
-        <div class="signal-item">
-          <small>Visible option</small>
-          <strong>Coming Soon appears on the index page.</strong>
-        </div>
-        <div class="signal-item">
-          <small>Click behavior</small>
-          <strong>Coming Soon opens the four-option panel.</strong>
-        </div>
-        <div class="signal-item">
-          <small>Four options</small>
-          <strong>Laws, Big Laughs, Nine Summits, and Metaverse.</strong>
-        </div>
+      <div class="root-grid">
+        <a class="root-card" href="/about/">
+          <small>Orientation</small>
+          <strong>About</strong>
+          <p>Explain the mission in human terms.</p>
+        </a>
+
+        <a class="root-card" href="/contact/">
+          <small>Connection</small>
+          <strong>Contact</strong>
+          <p>Direct contact and public inquiry route.</p>
+        </a>
+
+        <a class="root-card" href="/governance/">
+          <small>Governance</small>
+          <strong>Governance</strong>
+          <p>Policy, compliance, and decision structure.</p>
+        </a>
+
+        <a class="root-card" href="/research/">
+          <small>Research</small>
+          <strong>Research</strong>
+          <p>Supporting work, documents, and deeper proof surfaces.</p>
+        </a>
       </div>
     </section>
 
-    <footer class="footer">
-      <span>Diamond Gate Bridge · Generation 2 canonical root door</span>
-      <div class="footer-links">
-        <a href="#comingSoon">Coming Soon</a>
-        <a href="/laws/">Laws</a>
-        <a href="/big-laughs/">Big Laughs</a>
+    <section class="root-section">
+      <p class="root-kicker">Micro-world command</p>
+      <h2>The ground map now has command structure.</h2>
+
+      <div class="root-chain">
+        <div><small>Command</small><strong>Sean</strong></div>
+        <div><small>Headquarters</small><strong>House</strong></div>
+        <div><small>Operations</small><strong>Lab</strong></div>
+        <div><small>Command staff</small><strong>Sheldon + Dexter</strong></div>
+        <div><small>Field layer</small><strong>North · South · East · West Squads</strong></div>
+      </div>
+    </section>
+
+    <footer class="root-footer">
+      <span>Diamond Gate Bridge · Public Entry</span>
+      <span>
+        <a href="/big-laugh/upper-room/">Upper Room</a>
         <a href="/nine-summits/">Nine Summits</a>
-        <a href="/metaverse/">Metaverse</a>
-      </div>
+        <a href="/laws/">Laws</a>
+        <a href="/products/">Micro-World</a>
+      </span>
     </footer>
   </main>
-
-  <script>
-    (() => {
-      const panel = document.querySelector("#comingSoon");
-      const toggle = document.querySelector("[data-coming-toggle]");
-      const openButtons = document.querySelectorAll("[data-open-coming]");
-
-      function setComingSoon(open) {
-        if (!panel || !toggle) return;
-        panel.classList.toggle("is-open", open);
-        toggle.setAttribute("aria-expanded", String(open));
-        const symbol = toggle.querySelector("span:last-child");
-        if (symbol) symbol.textContent = open ? "−" : "+";
-      }
-
-      function openComingSoon() {
-        setComingSoon(true);
-        panel?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-
-      toggle?.addEventListener("click", () => {
-        const willOpen = !panel.classList.contains("is-open");
-        setComingSoon(willOpen);
-      });
-
-      openButtons.forEach((button) => {
-        button.addEventListener("click", openComingSoon);
-      });
-
-      const door = document.querySelector(".door-shell");
-      door?.addEventListener("click", () => {
-        door.classList.toggle("is-open");
-      });
-
-      door?.addEventListener("keydown", (event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-        event.preventDefault();
-        door.classList.toggle("is-open");
-      });
-    })();
-  </script>
 </body>
 </html>

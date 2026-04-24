@@ -1,51 +1,64 @@
 (() => {
-  const RUNTIME_ID = "products-runtime-dual-figure-eight-stained-glass-v1";
-  const STYLE_ID = "products-runtime-dual-figure-eight-style";
+  const RUNTIME_ID = "products-runtime-four-lobed-molecular-flower-v1";
+  const STYLE_ID = "products-runtime-four-lobed-molecular-flower-style";
 
   const CARDINALS = {
     north: {
       label: "North",
-      pair: "white-green",
+      atomLabel: "White",
+      pairKey: "white-green",
       color: "var(--north)",
       glow: "rgba(223,233,255,.72)",
       role: "Framekeeping · threshold · classification",
       href: "/laws/",
-      atomLabel: "WHITE",
-      atomX: 36,
-      atomY: 34
+      lobe: "upper-left",
+      phaseBase: Math.PI * 1.25
     },
     south: {
       label: "South",
-      pair: "white-green",
+      atomLabel: "Green",
+      pairKey: "white-green",
       color: "var(--south)",
       glow: "rgba(142,227,172,.72)",
       role: "Continuity · care · restoration",
       href: "/gauges/",
-      atomLabel: "GREEN",
-      atomX: 64,
-      atomY: 66
+      lobe: "lower-right",
+      phaseBase: Math.PI * 0.25
     },
     west: {
       label: "West",
-      pair: "yellow-blue",
+      atomLabel: "Yellow",
+      pairKey: "yellow-blue",
       color: "var(--west)",
       glow: "rgba(255,213,138,.72)",
       role: "Pressure-test · audit · contradiction",
       href: "/about/",
-      atomLabel: "YELLOW",
-      atomX: 36,
-      atomY: 66
+      lobe: "lower-left",
+      phaseBase: Math.PI * 0.75
     },
     east: {
       label: "East",
-      pair: "yellow-blue",
+      atomLabel: "Blue",
+      pairKey: "yellow-blue",
       color: "var(--east)",
       glow: "rgba(142,197,255,.72)",
       role: "Signal · build-line · formation",
       href: "/products/",
-      atomLabel: "BLUE",
-      atomX: 64,
-      atomY: 34
+      lobe: "upper-right",
+      phaseBase: Math.PI * 1.75
+    }
+  };
+
+  const PAIRS = {
+    "white-green": {
+      label: "White · Green",
+      description: "White and green form one diagonal figure-eight through the shared center throat.",
+      angle: 45
+    },
+    "yellow-blue": {
+      label: "Yellow · Blue",
+      description: "Yellow and blue form the opposing diagonal figure-eight through the same center throat.",
+      angle: -45
     }
   };
 
@@ -54,25 +67,6 @@
     south: ["Harbor", "Root", "Hearth", "Current", "Shelter", "Orchard", "Rhythm", "Restore"],
     west: ["Audit", "Fracture", "Mirror", "Proof", "Fault", "Cipher", "Tension", "Sentinel"],
     east: ["Signal", "Pattern", "Forge", "Bloom", "Spark", "Loom", "Meridian", "Rise"]
-  };
-
-  const PAIRS = {
-    "white-green": {
-      label: "White · Green loop",
-      axis: "North/South",
-      pathClass: "loop-white-green",
-      angle: 54,
-      phase: 0,
-      description: "White and green move as one interlocked figure-eight loop through the shared center throat."
-    },
-    "yellow-blue": {
-      label: "Yellow · Blue loop",
-      axis: "West/East",
-      pathClass: "loop-yellow-blue",
-      angle: -54,
-      phase: Math.PI,
-      description: "Yellow and blue move as the second figure-eight loop, crossing the same throat from the opposite torsion."
-    }
   };
 
   function injectStyle() {
@@ -88,106 +82,305 @@
         overflow: hidden;
       }
 
-      [data-products-runtime-root] .runtime-loop-track {
+      [data-products-runtime-root] .flower-stage {
+        position: relative;
+        height: 620px;
+        width: 100%;
+        max-width: 100%;
+        border: 1px solid rgba(113,141,224,.14);
+        border-radius: 28px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(135,164,255,.13), transparent 22%),
+          linear-gradient(180deg, rgba(4,10,22,.92), rgba(2,8,18,.98));
+        isolation: isolate;
+      }
+
+      [data-products-runtime-root] .flower-stage::before {
+        content: "";
         position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(135deg, rgba(255,255,255,.04), transparent 38%),
+          linear-gradient(225deg, rgba(255,255,255,.03), transparent 34%);
+        opacity: .8;
+      }
+
+      [data-products-runtime-root] .glass-panel {
+        position: absolute;
+        inset: 12px;
+        border-radius: 22px;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      [data-products-runtime-root] .glass-pane {
+        position: absolute;
+        border: 1px solid rgba(255,255,255,.08);
+        box-shadow:
+          inset 0 0 22px rgba(255,255,255,.04),
+          inset 0 -10px 24px rgba(0,0,0,.16);
+        backdrop-filter: blur(1px);
+      }
+
+      [data-products-runtime-root] .glass-pane.white {
+        left: 8%;
+        top: 8%;
+        width: 38%;
+        height: 34%;
+        border-radius: 36px 24px 52px 28px;
+        background:
+          radial-gradient(circle at 62% 40%, rgba(240,246,255,.22), transparent 40%),
+          linear-gradient(135deg, rgba(221,232,255,.18), rgba(123,146,214,.12));
+      }
+
+      [data-products-runtime-root] .glass-pane.blue {
+        right: 8%;
+        top: 8%;
+        width: 38%;
+        height: 34%;
+        border-radius: 24px 36px 28px 52px;
+        background:
+          radial-gradient(circle at 36% 40%, rgba(188,224,255,.20), transparent 42%),
+          linear-gradient(135deg, rgba(143,201,255,.18), rgba(67,111,190,.12));
+      }
+
+      [data-products-runtime-root] .glass-pane.yellow {
+        left: 8%;
+        bottom: 8%;
+        width: 38%;
+        height: 34%;
+        border-radius: 28px 52px 24px 36px;
+        background:
+          radial-gradient(circle at 60% 44%, rgba(255,222,170,.18), transparent 42%),
+          linear-gradient(135deg, rgba(255,213,143,.18), rgba(147,107,46,.12));
+      }
+
+      [data-products-runtime-root] .glass-pane.green {
+        right: 8%;
+        bottom: 8%;
+        width: 38%;
+        height: 34%;
+        border-radius: 52px 28px 36px 24px;
+        background:
+          radial-gradient(circle at 40% 44%, rgba(177,245,196,.18), transparent 42%),
+          linear-gradient(135deg, rgba(151,230,180,.18), rgba(47,113,74,.12));
+      }
+
+      [data-products-runtime-root] .lead-came {
+        position: absolute;
+        background: linear-gradient(180deg, rgba(226,231,241,.56), rgba(86,96,120,.72));
+        box-shadow:
+          inset 0 1px 0 rgba(255,255,255,.22),
+          inset 0 -1px 0 rgba(0,0,0,.24),
+          0 0 10px rgba(0,0,0,.12);
+        z-index: 3;
+        pointer-events: none;
+      }
+
+      [data-products-runtime-root] .lead-came.v {
+        width: 10px;
+        top: 0;
+        bottom: 0;
+        border-radius: 999px;
+      }
+
+      [data-products-runtime-root] .lead-came.h {
+        height: 10px;
+        left: 0;
+        right: 0;
+        border-radius: 999px;
+      }
+
+      [data-products-runtime-root] .lead-came.diag {
+        width: 10px;
+        height: 260px;
         left: 50%;
         top: 50%;
-        width: 72%;
-        height: 44%;
-        transform: translate(-50%, -50%) rotate(var(--loop-angle));
-        border-radius: 50%;
-        border: 1px solid rgba(214,226,255,.16);
-        opacity: .34;
+        transform-origin: center center;
+        border-radius: 999px;
+      }
+
+      [data-products-runtime-root] .flower-window {
+        position: absolute;
+        inset: 28px 18px 74px;
+        border-radius: 26px;
+        overflow: hidden;
+        z-index: 5;
+      }
+
+      [data-products-runtime-root] .flower-path {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
         z-index: 2;
         pointer-events: none;
       }
 
-      [data-products-runtime-root] .runtime-loop-track::before,
-      [data-products-runtime-root] .runtime-loop-track::after {
-        content: "";
-        position: absolute;
-        top: 8%;
-        width: 48%;
-        height: 84%;
-        border-radius: 50%;
-        border: 1px solid currentColor;
-        opacity: .62;
-        box-shadow: 0 0 22px currentColor;
+      [data-products-runtime-root] .flower-path path {
+        fill: none;
+        stroke-width: 1.8;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        opacity: .46;
       }
 
-      [data-products-runtime-root] .runtime-loop-track::before {
-        left: 4%;
+      [data-products-runtime-root] .path-white-green {
+        stroke: rgba(194,245,214,.42);
+        filter: drop-shadow(0 0 10px rgba(142,227,172,.14));
       }
 
-      [data-products-runtime-root] .runtime-loop-track::after {
-        right: 4%;
+      [data-products-runtime-root] .path-yellow-blue {
+        stroke: rgba(185,217,255,.38);
+        filter: drop-shadow(0 0 10px rgba(142,197,255,.14));
       }
 
-      [data-products-runtime-root] .loop-white-green {
-        color: rgba(190, 245, 215, .22);
-      }
-
-      [data-products-runtime-root] .loop-yellow-blue {
-        color: rgba(180, 214, 255, .20);
-      }
-
-      [data-products-runtime-root] .runtime-throat-pulse {
+      [data-products-runtime-root] .flower-center {
         position: absolute;
         left: 50%;
         top: 50%;
-        width: 104px;
-        height: 104px;
+        width: 92px;
+        height: 92px;
         transform: translate(-50%, -50%) rotate(45deg);
         border-radius: 18px;
-        border: 1px solid rgba(214,226,255,.18);
+        border: 1px solid rgba(214,226,255,.20);
         background:
-          radial-gradient(circle, rgba(247,250,255,.58) 0%, rgba(149,188,255,.20) 34%, rgba(92,130,216,.06) 68%, transparent 82%);
+          radial-gradient(circle, rgba(247,250,255,.64) 0%, rgba(149,188,255,.20) 36%, rgba(92,130,216,.06) 70%, transparent 84%);
         box-shadow:
-          0 0 24px rgba(144,182,255,.14),
-          inset 0 0 22px rgba(255,255,255,.05);
+          0 0 30px rgba(144,182,255,.18),
+          inset 0 0 22px rgba(255,255,255,.06);
         z-index: 4;
         pointer-events: none;
-        animation: runtimeThroatPulse 4.8s ease-in-out infinite;
+        animation: flowerCenterPulse 4.8s ease-in-out infinite;
       }
 
-      @keyframes runtimeThroatPulse {
-        0%, 100% { opacity: .52; transform: translate(-50%, -50%) rotate(45deg) scale(.96); }
-        50% { opacity: .84; transform: translate(-50%, -50%) rotate(45deg) scale(1.06); }
+      @keyframes flowerCenterPulse {
+        0%, 100% {
+          opacity: .62;
+          transform: translate(-50%, -50%) rotate(45deg) scale(.96);
+        }
+        50% {
+          opacity: .88;
+          transform: translate(-50%, -50%) rotate(45deg) scale(1.06);
+        }
       }
 
-      [data-products-runtime-root] .atom {
-        transition: opacity .2s ease, filter .2s ease, transform .2s ease;
+      [data-products-runtime-root] .petal-label {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        min-width: 84px;
+        height: 32px;
+        padding: 0 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 999px;
+        border: 1px solid rgba(255,255,255,.14);
+        background: rgba(6,14,28,.66);
+        color: #f7fbff;
+        font-size: .68rem;
+        font-weight: 800;
+        letter-spacing: .14em;
+        text-transform: uppercase;
+        z-index: 7;
+        pointer-events: none;
       }
 
-      [data-products-runtime-root] .atom.is-muted {
-        opacity: .18;
-        filter: saturate(.35);
-      }
+      [data-products-runtime-root] .petal-label.white { left: 31%; top: 31%; }
+      [data-products-runtime-root] .petal-label.blue { left: 69%; top: 31%; }
+      [data-products-runtime-root] .petal-label.yellow { left: 31%; top: 69%; }
+      [data-products-runtime-root] .petal-label.green { left: 69%; top: 69%; }
 
-      [data-products-runtime-root] .atom-label {
-        min-width: 88px;
+      [data-products-runtime-root] .node-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 8;
       }
 
       [data-products-runtime-root] .node {
-        will-change: left, top, transform, opacity;
+        position: absolute;
+        left: var(--x);
+        top: var(--y);
+        width: 16px;
+        height: 16px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,.76);
+        background: var(--color);
+        box-shadow:
+          0 0 0 5px rgba(255,255,255,.04),
+          0 0 18px var(--glow),
+          0 0 36px var(--glow);
+        cursor: pointer;
+        transition: transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;
+        z-index: 9;
       }
 
-      [data-products-runtime-root] .node[data-pair="white-green"] {
-        animation: whiteGreenPulse 3.8s ease-in-out infinite;
+      [data-products-runtime-root] .node::after {
+        content: attr(data-short);
+        position: absolute;
+        top: calc(100% + 7px);
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: .54rem;
+        letter-spacing: .12em;
+        text-transform: uppercase;
+        color: #d9e5ff;
+        white-space: nowrap;
+        opacity: .82;
+        pointer-events: none;
       }
 
-      [data-products-runtime-root] .node[data-pair="yellow-blue"] {
-        animation: yellowBluePulse 3.8s ease-in-out infinite;
+      [data-products-runtime-root] .node:hover,
+      [data-products-runtime-root] .node:focus-visible {
+        transform: translate(-50%, -50%) scale(1.18);
+        outline: none;
+        box-shadow:
+          0 0 0 6px rgba(255,255,255,.06),
+          0 0 20px var(--glow),
+          0 0 54px var(--glow);
       }
 
-      @keyframes whiteGreenPulse {
-        0%,100% { filter: saturate(1) brightness(1); }
-        50% { filter: saturate(1.16) brightness(1.1); }
+      [data-products-runtime-root] .node.is-active {
+        transform: translate(-50%, -50%) scale(1.26);
+        box-shadow:
+          0 0 0 7px rgba(255,255,255,.08),
+          0 0 26px var(--glow),
+          0 0 72px var(--glow);
       }
 
-      @keyframes yellowBluePulse {
-        0%,100% { filter: saturate(1) brightness(1); }
-        50% { filter: saturate(1.12) brightness(1.08); }
+      [data-products-runtime-root] .node.is-muted {
+        opacity: .14;
+        filter: saturate(.28);
+      }
+
+      [data-products-runtime-root] .flower-copy {
+        position: absolute;
+        left: 50%;
+        bottom: 18px;
+        transform: translateX(-50%);
+        width: calc(100% - 32px);
+        max-width: 620px;
+        padding: 12px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(140,168,240,.24);
+        background: rgba(6,14,28,.76);
+        text-align: center;
+        text-transform: uppercase;
+        letter-spacing: .14em;
+        font-size: .72rem;
+        color: #dbe5ff;
+        box-shadow: 0 12px 32px rgba(0,0,0,.28);
+        z-index: 10;
+        white-space: normal;
+        line-height: 1.35;
+      }
+
+      [data-products-runtime-root] .flower-copy strong {
+        color: #fff;
       }
 
       [data-products-runtime-root] .motion-readout {
@@ -206,19 +399,59 @@
       }
 
       @media (max-width: 720px) {
-        [data-products-runtime-root] .runtime-loop-track {
-          width: 84%;
-          height: 42%;
+        [data-products-runtime-root] .flower-stage {
+          height: 520px;
         }
 
-        [data-products-runtime-root] .runtime-throat-pulse {
-          width: 70px;
-          height: 70px;
+        [data-products-runtime-root] .flower-window {
+          inset: 24px 10px 72px;
+        }
+
+        [data-products-runtime-root] .lead-came.v {
+          width: 8px;
+        }
+
+        [data-products-runtime-root] .lead-came.h {
+          height: 8px;
+        }
+
+        [data-products-runtime-root] .lead-came.diag {
+          width: 8px;
+          height: 200px;
+        }
+
+        [data-products-runtime-root] .flower-center {
+          width: 66px;
+          height: 66px;
           border-radius: 14px;
         }
 
-        [data-products-runtime-root] .atom-label {
-          min-width: 66px;
+        [data-products-runtime-root] .petal-label {
+          min-width: 62px;
+          height: 27px;
+          padding: 0 8px;
+          font-size: .54rem;
+          letter-spacing: .11em;
+        }
+
+        [data-products-runtime-root] .node {
+          width: 13px;
+          height: 13px;
+        }
+
+        [data-products-runtime-root] .node::after {
+          font-size: .44rem;
+          top: calc(100% + 5px);
+        }
+
+        [data-products-runtime-root] .flower-copy {
+          width: calc(100% - 24px);
+          max-width: none;
+          font-size: .54rem;
+          line-height: 1.35;
+          letter-spacing: .10em;
+          border-radius: 22px;
+          padding: 10px 12px;
         }
 
         [data-products-runtime-root] .motion-readout {
@@ -251,16 +484,21 @@
     qsa(target, `[data-products-runtime-root]`).forEach((node) => node.remove());
   }
 
-  function lemniscatePoint(t, angleDeg, scaleX = 28, scaleY = 20) {
+  function rotatePoint(x, y, angleDeg) {
+    const angle = angleDeg * Math.PI / 180;
+    return {
+      x: x * Math.cos(angle) - y * Math.sin(angle),
+      y: x * Math.sin(angle) + y * Math.cos(angle)
+    };
+  }
+
+  function lemniscatePoint(t, angleDeg, scaleX = 24, scaleY = 18) {
     const x = scaleX * Math.sin(t);
     const y = scaleY * Math.sin(t) * Math.cos(t);
-    const angle = angleDeg * Math.PI / 180;
-    const rx = x * Math.cos(angle) - y * Math.sin(angle);
-    const ry = x * Math.sin(angle) + y * Math.cos(angle);
-
+    const rotated = rotatePoint(x, y, angleDeg);
     return {
-      x: 50 + rx,
-      y: 50 + ry
+      x: 50 + rotated.x,
+      y: 50 + rotated.y
     };
   }
 
@@ -270,21 +508,20 @@
 
     order.forEach((cardinalKey) => {
       const cardinal = CARDINALS[cardinalKey];
-      const pair = PAIRS[cardinal.pair];
+      const pair = PAIRS[cardinal.pairKey];
 
       TITLES[cardinalKey].forEach((title, index) => {
         const n = index + 1;
         const code = `${cardinal.label[0]}${String(n).padStart(2, "0")}`;
-        const basePhase = (Math.PI * 2 / 8) * index;
-        const sideShift = cardinalKey === "north" || cardinalKey === "west" ? 0 : Math.PI;
+        const phase = cardinal.phaseBase + (Math.PI * 2 / 8) * index;
 
         items.push({
           id: `${cardinalKey}-${String(n).padStart(2, "0")}`,
           code,
           title,
           index,
-          phase: basePhase + sideShift + pair.phase,
-          pairKey: cardinal.pair,
+          phase,
+          pairKey: cardinal.pairKey,
           pairLabel: pair.label,
           cardinalKey,
           cardinalLabel: cardinal.label,
@@ -293,11 +530,9 @@
           glow: cardinal.glow,
           role: cardinal.role,
           href: cardinal.href,
-          x: cardinal.atomX,
-          y: cardinal.atomY,
           description:
-            `${title} is a ${cardinal.label.toLowerCase()} atomic point inside the stained-glass molecule. ` +
-            `It belongs to the ${cardinal.atomLabel.toLowerCase()} body and moves on the ${pair.label.toLowerCase()}, crossing the shared throat as ${cardinal.role.toLowerCase()}.`
+            `${title} is a ${cardinal.atomLabel.toLowerCase()} point on the four-lobed molecular flower. ` +
+            `${pair.description} It participates as ${cardinal.role.toLowerCase()}.`
         });
       });
     });
@@ -331,70 +566,58 @@
       <section class="section" data-products-runtime-root="${RUNTIME_ID}" aria-live="polite">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Contained molecular field</div>
-            <h2>Choose a bonded point inside the stained-glass window</h2>
+            <div class="section-kicker">Four-lobed molecular field</div>
+            <h2>Choose a point inside the shared-center flower</h2>
           </div>
           <div class="section-note">
-            White and green now form one figure-eight. Yellow and blue form the second. Both overlap through one shared center.
+            White/green form one diagonal figure-eight. Yellow/blue form the opposing figure-eight. Both share one center.
           </div>
         </div>
 
         <div class="shell">
           <div class="window-panel">
             <div class="window-head">
-              <h2>Stained-glass window</h2>
-              <div class="window-meta">2 figure-eights · 4 atoms · 32 points</div>
+              <h2>Stained-glass molecular flower</h2>
+              <div class="window-meta">2 figure-eights · 4 lobes · 32 points</div>
             </div>
 
-            <div class="window-stage">
-              <div class="window-title">dual-loop stained-glass viewport</div>
+            <div class="flower-stage">
+              <div class="window-title">shared-center stained-glass viewport</div>
 
               <div class="glass-panel">
-                <div class="glass-pane north"></div>
-                <div class="glass-pane east"></div>
-                <div class="glass-pane west"></div>
-                <div class="glass-pane south"></div>
-                <div class="glass-pane center"></div>
+                <div class="glass-pane white"></div>
+                <div class="glass-pane blue"></div>
+                <div class="glass-pane yellow"></div>
+                <div class="glass-pane green"></div>
               </div>
 
               <div class="lead-came h" style="top:12px;"></div>
               <div class="lead-came h" style="bottom:12px;"></div>
               <div class="lead-came v" style="left:12px;"></div>
               <div class="lead-came v" style="right:12px;"></div>
-
               <div class="lead-came v" style="left:50%;transform:translateX(-50%);top:14%;bottom:14%;"></div>
               <div class="lead-came h" style="top:50%;transform:translateY(-50%);left:14%;right:14%;"></div>
-              <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(35deg);"></div>
-              <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(-35deg);"></div>
+              <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(45deg);"></div>
+              <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(-45deg);"></div>
 
-              <div class="window-frame">
-                <div class="runtime-loop-track loop-white-green" style="--loop-angle:54deg;"></div>
-                <div class="runtime-loop-track loop-yellow-blue" style="--loop-angle:-54deg;"></div>
-                <div class="runtime-throat-pulse"></div>
+              <div class="flower-window">
+                <svg class="flower-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="path-white-green" d="M50 50 C18 10, 8 34, 50 50 C92 66, 82 90, 50 50" />
+                  <path class="path-yellow-blue" d="M50 50 C10 82, 34 92, 50 50 C66 8, 90 18, 50 50" />
+                </svg>
 
-                <div class="bond" data-bond="north"></div>
-                <div class="bond" data-bond="south"></div>
-                <div class="bond" data-bond="east"></div>
-                <div class="bond" data-bond="west"></div>
+                <div class="flower-center"></div>
 
-                <div class="atom" data-atom="north" style="--x:36%;--y:34%;">
-                  <div class="atom-label">White</div>
-                </div>
-                <div class="atom" data-atom="east" style="--x:64%;--y:34%;">
-                  <div class="atom-label">Blue</div>
-                </div>
-                <div class="atom" data-atom="west" style="--x:36%;--y:66%;">
-                  <div class="atom-label">Yellow</div>
-                </div>
-                <div class="atom" data-atom="south" style="--x:64%;--y:66%;">
-                  <div class="atom-label">Green</div>
-                </div>
+                <div class="petal-label white">White</div>
+                <div class="petal-label blue">Blue</div>
+                <div class="petal-label yellow">Yellow</div>
+                <div class="petal-label green">Green</div>
 
                 <div class="node-layer" data-node-layer></div>
               </div>
 
-              <div class="window-copy">
-                <strong>Dual figure-eight molecular chamber</strong> · white/green and yellow/blue overlap through one throat
+              <div class="flower-copy">
+                <strong>Four-lobed molecular flower</strong> · two figure-eights crossing one shared throat
               </div>
             </div>
           </div>
@@ -402,7 +625,7 @@
           <aside class="detail-panel">
             <div class="detail-kicker">
               <span class="badge" data-detail-code>N01</span>
-              <span data-detail-family>White · atom</span>
+              <span data-detail-family>White · White/Green loop</span>
             </div>
 
             <h3 class="detail-title" data-detail-title>Threshold</h3>
@@ -423,37 +646,22 @@
               </div>
               <div class="stat">
                 <span class="stat-label">Motion read</span>
-                <span class="stat-value" data-detail-route>Dual-loop torsion</span>
+                <span class="stat-value" data-detail-route>Shared-center torsion</span>
               </div>
             </div>
 
             <div class="motion-readout" data-motion-readout>
-              <strong>Motion:</strong> white and green share one figure-eight; yellow and blue share the second figure-eight.
+              <strong>Motion:</strong> two figure-eights overlap into one four-lobed compound.
             </div>
 
             <div class="hero-actions">
-              <a class="button primary" data-detail-href href="/laws/">Open North body</a>
+              <a class="button primary" data-detail-href href="/laws/">Open White body</a>
               <a class="button" href="/gauges/">Read gauges</a>
             </div>
           </aside>
         </div>
       </section>
     `;
-  }
-
-  function setBond(el, x2, y2) {
-    if (!el) return;
-
-    const x1 = 50;
-    const y1 = 50;
-    const dx = x2 - x1;
-    const dy = y2 - y1;
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    el.style.height = `${distance}%`;
-    el.style.left = `${x1}%`;
-    el.style.top = `${y1}%`;
-    el.style.transform = `translate(-50%, -50%) rotate(${Math.atan2(dy, dx) * 180 / Math.PI + 90}deg)`;
   }
 
   function bind(root) {
@@ -470,38 +678,9 @@
     const detailHref = qs(root, "[data-detail-href]");
     const motionReadout = qs(root, "[data-motion-readout]");
 
-    const bonds = {
-      north: qs(root, '[data-bond="north"]'),
-      south: qs(root, '[data-bond="south"]'),
-      east: qs(root, '[data-bond="east"]'),
-      west: qs(root, '[data-bond="west"]')
-    };
-
-    const atoms = {
-      north: qs(root, '[data-atom="north"]'),
-      south: qs(root, '[data-atom="south"]'),
-      east: qs(root, '[data-atom="east"]'),
-      west: qs(root, '[data-atom="west"]')
-    };
-
     function renderFilters() {
       filterButtons.forEach((button) => {
         button.classList.toggle("is-active", button.dataset.filter === state.filter);
-      });
-    }
-
-    function renderBonds() {
-      setBond(bonds.north, CARDINALS.north.atomX, CARDINALS.north.atomY);
-      setBond(bonds.south, CARDINALS.south.atomX, CARDINALS.south.atomY);
-      setBond(bonds.east, CARDINALS.east.atomX, CARDINALS.east.atomY);
-      setBond(bonds.west, CARDINALS.west.atomX, CARDINALS.west.atomY);
-    }
-
-    function renderAtomFilters() {
-      Object.keys(atoms).forEach((key) => {
-        if (!atoms[key]) return;
-        const muted = state.filter !== "all" && state.filter !== key;
-        atoms[key].classList.toggle("is-muted", muted);
       });
     }
 
@@ -527,9 +706,9 @@
             data-pair="${item.pairKey}"
             data-phase="${item.phase}"
             data-short="${item.code}"
-            style="--x:${item.x}%;--y:${item.y}%;--color:${item.color};--glow:${item.glow};"
-            aria-label="${item.cardinalLabel} ${item.code}: ${item.title}"
-            title="${item.cardinalLabel} ${item.code}: ${item.title}"
+            style="--x:50%;--y:50%;--color:${item.color};--glow:${item.glow};"
+            aria-label="${item.atomLabel} ${item.code}: ${item.title}"
+            title="${item.atomLabel} ${item.code}: ${item.title}"
           ></button>
         `;
       }).join("");
@@ -560,24 +739,22 @@
       const pair = PAIRS[active.pairKey];
 
       detailCode.textContent = active.code;
-      detailFamily.textContent = `${active.atomLabel} · ${active.pairLabel}`;
+      detailFamily.textContent = `${active.atomLabel} · ${pair.label} loop`;
       detailTitle.textContent = active.title;
       detailCopy.textContent = active.description;
       detailCardinal.textContent = active.cardinalLabel;
       detailVisible.textContent = String(list.length);
-      detailCount.textContent = pair.label.replace(" loop", "");
+      detailCount.textContent = pair.label;
       detailRoute.textContent = active.role;
       detailHref.href = active.href;
       detailHref.textContent = `Open ${active.atomLabel} body`;
-
-      motionReadout.innerHTML =
-        `<strong>Motion:</strong> ${pair.description}`;
+      motionReadout.innerHTML = `<strong>Motion:</strong> ${pair.description}`;
     }
 
     function animate() {
       const now = performance.now();
       const elapsed = (now - state.startedAt) / 1000;
-      const speed = 0.62;
+      const speed = 0.52;
 
       qsa(nodeLayer, "[data-id]").forEach((button) => {
         const item = PRODUCTS.find((entry) => entry.id === button.dataset.id);
@@ -585,7 +762,7 @@
 
         const pair = PAIRS[item.pairKey];
         const t = elapsed * speed + item.phase;
-        const point = lemniscatePoint(t, pair.angle, 28, 20);
+        const point = lemniscatePoint(t, pair.angle, 26, 20);
 
         button.style.left = `${point.x}%`;
         button.style.top = `${point.y}%`;
@@ -596,8 +773,6 @@
 
     function render() {
       renderFilters();
-      renderBonds();
-      renderAtomFilters();
       renderNodes();
       renderDetail();
 
@@ -625,7 +800,6 @@
     clearPriorRuntime(target);
 
     const wrapper = document.createElement("div");
-    wrapper.setAttribute("data-products-runtime-shell", RUNTIME_ID);
     wrapper.innerHTML = renderTemplate();
 
     target.appendChild(wrapper.firstElementChild);

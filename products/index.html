@@ -3,28 +3,29 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Diamond Gate Bridge</title>
+  <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The canonical gateway: Nine Summits baseline, world access, and structured paths into the wider house."
+    content="Generation 1 products chamber for Diamond Gate Bridge."
   />
   <style>
     :root{
-      --bg:#030815;
-      --bg-2:#071224;
-      --panel:rgba(10,18,36,.82);
-      --panel-2:rgba(8,15,30,.72);
-      --line:rgba(145,171,255,.18);
-      --line-strong:rgba(196,212,255,.34);
-      --text:#edf3ff;
-      --muted:#9caed4;
-      --gold:#f2d18a;
-      --blue:#8fc8ff;
-      --mint:#98e4b5;
-      --rose:#f2b8cc;
-      --shadow:0 24px 72px rgba(0,0,0,.42);
-      --radius:28px;
-      --max:1240px;
+      --bg:#040814;
+      --panel:rgba(8,14,28,.72);
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.34);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --blue:#91c7ff;
+      --mint:#99e5b6;
+      --rose:#f0bacb;
+      --north:#dde8ff;
+      --south:#97e6b4;
+      --east:#8fc9ff;
+      --west:#ffd58f;
+      --shadow:0 24px 80px rgba(0,0,0,.46);
+      --max:1220px;
     }
 
     *{box-sizing:border-box}
@@ -34,9 +35,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 10%, rgba(92,126,210,.18), transparent 18%),
-        radial-gradient(circle at 50% 42%, rgba(64,96,176,.10), transparent 24%),
-        linear-gradient(180deg, #020611 0%, #051022 45%, #020611 100%);
+        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
+        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
+        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
       overflow-x:hidden;
     }
 
@@ -47,9 +49,9 @@
       pointer-events:none;
       opacity:.18;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
         radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.20) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
         radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
       background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
     }
@@ -57,460 +59,248 @@
     .page{
       width:min(var(--max), calc(100vw - 24px));
       margin:0 auto;
-      padding:20px 0 44px;
+      padding:18px 0 40px;
       position:relative;
       z-index:1;
     }
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      padding:14px 16px;
+    .topbar,.hero,.section,.door-panel,.detail-panel{
       border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(7,14,28,.72);
       box-shadow:var(--shadow);
-      margin-bottom:18px;
-      backdrop-filter:blur(10px);
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      min-width:0;
+    .topbar{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      padding:14px 16px;border-radius:20px;background:rgba(7,13,26,.7);backdrop-filter:blur(10px);
     }
-
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
     .brand-mark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      border:1px solid var(--line);
-      display:grid;
-      place-items:center;
-      background:linear-gradient(180deg, rgba(28,48,87,.8), rgba(10,18,32,.9));
-      box-shadow:inset 0 0 28px rgba(126,160,255,.12);
-      color:#eef4ff;
-      font-weight:800;
-      letter-spacing:.08em;
+      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
     }
-
-    .brand-copy{
-      min-width:0;
+    .brand-kicker{margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+    .brand-title{margin:0;font-size:1.05rem;font-weight:700}
+    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .nav-link,.button,.filter-chip{
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
     }
-
-    .brand-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:4px;
+    .nav-link{
+      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
+      color:var(--text);font-weight:700;font-size:.92rem;background:rgba(255,255,255,.03);
     }
-
-    .brand-title{
-      margin:0;
-      font-size:1.05rem;
-      font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .top-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:var(--text);
-      text-decoration:none;
-      font-weight:700;
-      font-size:.92rem;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-      white-space:nowrap;
-    }
-
-    .pill:hover,
-    .pill:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      outline:none;
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible,.filter-chip:hover,.filter-chip:focus-visible{
+      transform:translateY(-1px);border-color:var(--line-strong);background:rgba(255,255,255,.05);outline:none;
     }
 
     .hero{
-      position:relative;
-      border:1px solid var(--line);
-      border-radius:34px;
-      background:linear-gradient(180deg, rgba(9,18,36,.88), rgba(6,13,26,.82));
-      box-shadow:var(--shadow);
-      padding:28px 22px 24px;
-      overflow:hidden;
-      margin-bottom:18px;
+      margin-top:16px;border-radius:34px;padding:24px 20px 20px;position:relative;overflow:hidden;
     }
-
     .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(126,160,255,.16), transparent 28%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
+      linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
       mix-blend-mode:screen;
     }
-
-    .hero-tag{
-      display:inline-flex;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:#d7e3ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.72rem;
-      margin-bottom:14px;
-    }
-
-    .hero-tag::before{
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
-      transform:rotate(45deg);
-      background:#dce7ff;
-      box-shadow:0 0 16px rgba(220,231,255,.6);
-    }
-
     .hero-grid{
-      display:grid;
-      grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);
-      gap:20px;
-      align-items:start;
+      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:20px;align-items:start;position:relative;z-index:1;
     }
-
-    .hero h1{
-      margin:0 0 12px;
-      font-size:clamp(2.4rem, 5.5vw, 4.6rem);
-      line-height:.98;
-      letter-spacing:-.045em;
-      max-width:12ch;
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:#d8e3ff;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;margin-bottom:12px;
     }
-
-    .hero h1 .accent{
-      color:var(--gold);
+    .hero-tag::before{
+      content:"";width:9px;height:9px;border-radius:2px;transform:rotate(45deg);background:#dce7ff;box-shadow:0 0 16px rgba(220,231,255,.52);
     }
-
-    .hero p{
-      margin:0;
-      max-width:800px;
-      color:var(--muted);
-      font-size:clamp(1rem, 1.8vw, 1.18rem);
-      line-height:1.64;
+    h1{
+      margin:0 0 10px;font-size:clamp(2.2rem, 4.8vw, 4rem);line-height:.96;letter-spacing:-.05em;max-width:10ch;
     }
-
-    .hero-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:22px;
+    h1 .accent{color:var(--gold)}
+    .hero p,.hero-side p,.section-note,.detail-copy{
+      color:var(--muted);line-height:1.58;
     }
-
+    .hero p{margin:0;font-size:clamp(.98rem, 1.5vw, 1.1rem);max-width:58ch}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
     .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:48px;
-      padding:0 18px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      color:var(--text);
-      background:rgba(255,255,255,.03);
-      text-decoration:none;
-      font-weight:800;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      min-height:44px;padding:0 16px;border-radius:16px;border:1px solid var(--line);color:var(--text);font-weight:800;background:rgba(255,255,255,.03);white-space:nowrap;
     }
-
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      outline:none;
-    }
-
     .button.primary{
-      border-color:rgba(242,209,138,.28);
-      background:linear-gradient(180deg, rgba(242,209,138,.16), rgba(242,209,138,.06));
+      border-color:rgba(239,210,154,.3);
+      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
       color:#fff8ea;
     }
 
-    .hero-side{
-      border:1px solid var(--line);
+    .hero-side,.section,.door-panel,.detail-panel{
       border-radius:24px;
-      background:var(--panel-2);
-      padding:18px;
     }
-
-    .hero-side h2{
-      margin:0 0 10px;
-      font-size:1.2rem;
-      letter-spacing:-.02em;
-    }
-
-    .hero-side p{
-      margin:0;
-      font-size:.98rem;
-    }
-
-    .hero-stats{
-      display:grid;
-      gap:10px;
-      margin-top:16px;
-    }
-
+    .hero-side{padding:18px}
+    .hero-side h2,.detail-title{margin:0 0 10px;font-size:1.08rem;line-height:1.1;letter-spacing:-.02em}
+    .hero-stats{display:grid;gap:10px;margin-top:16px}
     .stat{
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.025);
+      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);
     }
-
     .stat-label{
-      display:block;
-      margin-bottom:6px;
-      color:#90a3ce;
-      font-size:.72rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+      display:block;margin-bottom:6px;color:#90a3ce;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
     }
+    .stat-value{color:#f4f7ff;font-size:.98rem;font-weight:700}
 
-    .stat-value{
-      color:#f4f7ff;
-      font-size:.98rem;
-      font-weight:700;
+    .filters{
+      display:flex;flex-wrap:wrap;gap:12px;margin-top:20px;
+    }
+    .filter-chip{
+      appearance:none;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--line);
+      color:#dce7ff;font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:rgba(10,20,40,.78);cursor:pointer;
+    }
+    .filter-chip.is-active{
+      border-color:var(--line-strong);
+      background:linear-gradient(180deg, rgba(26,42,78,.96), rgba(12,24,46,.94));
+      box-shadow:0 10px 28px rgba(0,0,0,.28);
+    }
+    .filter-dot{
+      display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:10px;vertical-align:-1px;box-shadow:0 0 14px currentColor;
     }
 
     .section{
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
-      box-shadow:var(--shadow);
-      padding:20px;
-      margin-bottom:18px;
+      margin-top:18px;padding:20px;border-radius:30px;
     }
-
     .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:end;
-      gap:16px;
-      margin-bottom:16px;
+      display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px;
     }
-
     .section-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:6px;
+      color:#c8d7ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px;
+    }
+    .section h2{margin:0;font-size:1.45rem;letter-spacing:-.03em;line-height:1.06}
+    .section-note{font-size:.92rem;max-width:42ch;text-align:right}
+
+    .shell{
+      display:grid;grid-template-columns:minmax(0,1.4fr) minmax(320px,.8fr);gap:18px;
     }
 
-    .section h2{
-      margin:0;
-      font-size:1.5rem;
-      line-height:1.05;
-      letter-spacing:-.03em;
+    .door-panel{padding:16px}
+    .door-head{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;padding:4px 6px 2px;
+    }
+    .door-head h2{
+      margin:0;font-size:1rem;text-transform:uppercase;letter-spacing:.16em;color:#d7e2ff;
+    }
+    .door-meta{
+      color:var(--muted);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;
     }
 
-    .section-note{
-      color:var(--muted);
-      font-size:.92rem;
-      max-width:40ch;
-      text-align:right;
+    .door-stage{
+      position:relative;min-height:min(76vw, 980px);border:1px solid rgba(113,141,224,.14);border-radius:32px;overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 43%, rgba(84,118,206,.18), transparent 16%),
+        linear-gradient(180deg, rgba(4,10,22,.88), rgba(2,8,18,.98));
+      isolation:isolate;
     }
-
-    .gateway-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
+    .door-stage::before{
+      content:"";position:absolute;inset:0;pointer-events:none;opacity:.28;
+      background:
+        linear-gradient(180deg, transparent, rgba(255,255,255,.02), transparent),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 76px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 76px);
     }
-
-    .gateway{
-      display:grid;
-      gap:10px;
-      padding:18px;
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      text-decoration:none;
-      color:inherit;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
-      min-height:210px;
+    .door-frame{
+      position:relative;width:min(100%, 760px);margin:18px auto 82px;aspect-ratio:5 / 7.35;filter:drop-shadow(0 32px 60px rgba(0,0,0,.48));
     }
-
-    .gateway:hover,
-    .gateway:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 16px 36px rgba(0,0,0,.18);
-      outline:none;
+    .door-outline{
+      position:absolute;inset:0;border-radius:360px 360px 42px 42px / 300px 300px 42px 42px;border:1px solid rgba(157,181,255,.28);
+      background:
+        linear-gradient(180deg, rgba(15,28,58,.82), rgba(6,14,28,.9)),
+        radial-gradient(circle at 50% 26%, rgba(111,149,255,.12), transparent 34%);
+      overflow:hidden;
     }
-
-    .gateway-mark{
-      width:40px;
-      height:40px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      font-weight:800;
-      letter-spacing:.08em;
-      border:1px solid currentColor;
-      background:rgba(255,255,255,.03);
+    .door-outline::before{
+      content:"";position:absolute;inset:22px;border-radius:320px 320px 32px 32px / 260px 260px 32px 32px;border:1px solid rgba(156,180,255,.20);
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,.02), inset 0 -24px 48px rgba(0,0,0,.22), 0 0 80px rgba(67,106,206,.10);
     }
-
-    .gateway[data-tone="blue"]{color:var(--blue)}
-    .gateway[data-tone="gold"]{color:var(--gold)}
-    .gateway[data-tone="mint"]{color:var(--mint)}
-    .gateway[data-tone="rose"]{color:var(--rose)}
-
-    .gateway-title{
-      margin:2px 0 0;
-      font-size:1.18rem;
-      font-weight:800;
-      letter-spacing:-.02em;
-      color:var(--text);
+    .door-outline::after{
+      content:"";position:absolute;inset:54px 17%;border-radius:280px 280px 28px 28px / 240px 240px 28px 28px;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(109,143,232,.22), transparent 30%),
+        linear-gradient(180deg, rgba(9,19,38,.34), rgba(4,9,18,.48));
+      box-shadow:inset 0 0 0 1px rgba(198,213,255,.13), inset 0 0 72px rgba(74,111,209,.15);
     }
-
-    .gateway-copy{
-      color:var(--muted);
-      line-height:1.58;
-      font-size:.95rem;
+    .door-seam{
+      position:absolute;top:8.4%;bottom:6.7%;left:50%;width:1px;transform:translateX(-50%);
+      background:linear-gradient(180deg, transparent, rgba(224,233,255,.58), transparent);opacity:.84;z-index:2;
     }
-
-    .gateway-meta{
-      margin-top:auto;
-      color:#dce7ff;
-      font-size:.78rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
+    .node-layer{position:absolute;inset:0;z-index:3}
+    .door-node{
+      position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,-50%);
+      width:18px;height:18px;border-radius:50%;border:1px solid rgba(255,255,255,.74);
+      background:var(--color);box-shadow:0 0 0 5px rgba(255,255,255,.04), 0 0 18px var(--glow), 0 0 36px var(--glow);
+      cursor:pointer;transition:transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;z-index:4;
     }
-
-    .world-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
+    .door-node::after{
+      content:attr(data-short);position:absolute;top:calc(100% + 10px);left:50%;transform:translateX(-50%);
+      font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#d9e5ff;white-space:nowrap;opacity:.78;pointer-events:none;
     }
-
-    .world-card{
-      padding:18px;
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+    .door-node:hover,.door-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.16);outline:none;
+      box-shadow:0 0 0 6px rgba(255,255,255,.06), 0 0 20px var(--glow), 0 0 54px var(--glow);
     }
-
-    .world-card h3{
-      margin:0 0 10px;
-      font-size:1.06rem;
-      letter-spacing:-.02em;
+    .door-node.is-active{
+      transform:translate(-50%,-50%) scale(1.24);
+      box-shadow:0 0 0 7px rgba(255,255,255,.08), 0 0 26px var(--glow), 0 0 72px var(--glow);
     }
+    .door-node.is-muted{
+      opacity:.16;filter:saturate(.35);
+    }
+    .door-copy{
+      position:absolute;left:50%;bottom:20px;transform:translateX(-50%);width:min(82%, 410px);padding:12px 16px;border-radius:999px;
+      border:1px solid rgba(140,168,240,.24);background:rgba(6,14,28,.76);text-align:center;text-transform:uppercase;letter-spacing:.15em;font-size:.76rem;
+      color:#dbe5ff;box-shadow:0 12px 32px rgba(0,0,0,.28);z-index:4;
+    }
+    .door-copy strong{color:#fff}
 
-    .world-card p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.58;
-      font-size:.95rem;
+    .detail-panel{padding:22px}
+    .detail-kicker{
+      display:flex;align-items:center;gap:10px;margin-bottom:10px;color:#d7e3ff;letter-spacing:.14em;text-transform:uppercase;font-size:.74rem;
+    }
+    .badge{
+      display:inline-flex;align-items:center;justify-content:center;min-width:38px;height:24px;padding:0 10px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);color:#fff;
+    }
+    .detail-title{
+      font-size:1.5rem;line-height:1.08;letter-spacing:-.02em;
+    }
+    .detail-stats{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px;
     }
 
     .footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      color:var(--muted);
-      padding:6px 4px 0;
-      font-size:.92rem;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);padding:12px 4px 0;font-size:.92rem;
     }
+    .footer-links{display:flex;flex-wrap:wrap;gap:12px}
+    .footer-links a{color:var(--muted);text-decoration:none}
+    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
 
-    .footer-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .footer-links a{
-      color:var(--muted);
-      text-decoration:none;
-    }
-
-    .footer-links a:hover,
-    .footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
-    }
-
-    @media (max-width: 1040px){
-      .hero-grid,
-      .gateway-grid,
-      .world-grid{
-        grid-template-columns:1fr 1fr;
-      }
-
-      .gateway-grid .gateway:first-child{
-        grid-column:span 2;
-      }
+    @media (max-width: 980px){
+      .hero-grid,.shell{grid-template-columns:1fr}
+      .detail-panel{position:static}
     }
 
     @media (max-width: 720px){
-      .page{
-        width:min(100vw - 16px, var(--max));
-        padding:14px 0 28px;
-      }
-
-      .topbar{
-        flex-wrap:wrap;
-        padding:12px 14px;
-      }
-
-      .hero,
-      .section{
-        padding:18px 16px;
-      }
-
-      .hero-grid,
-      .gateway-grid,
-      .world-grid{
-        grid-template-columns:1fr;
-      }
-
-      .gateway-grid .gateway:first-child{
-        grid-column:auto;
-      }
-
-      .section-head,
-      .footer{
-        display:grid;
-        gap:8px;
-      }
-
-      .section-note{
-        text-align:left;
-      }
+      .page{width:min(100vw - 16px, var(--max));padding:14px 0 28px}
+      .topbar{flex-wrap:wrap;padding:12px 14px}
+      .topnav{width:100%;justify-content:flex-start}
+      .hero,.section,.door-panel,.detail-panel{padding:18px 16px}
+      .hero-grid{gap:14px}
+      .hero h1{font-size:clamp(2rem, 11vw, 3.4rem)}
+      .hero-actions,.filters{gap:8px}
+      .button{flex:1 1 calc(50% - 8px)}
+      .button.primary{flex-basis:100%}
+      .filter-chip{padding:0 14px}
+      .door-stage{min-height:720px}
+      .door-frame{width:100%}
+      .door-node{width:15px;height:15px}
+      .door-node::after{font-size:.56rem}
+      .detail-stats{grid-template-columns:1fr}
+      .section-head,.footer{display:grid;gap:8px}
+      .section-note{text-align:left}
     }
   </style>
 </head>
@@ -519,156 +309,157 @@
     <header class="topbar">
       <div class="brand">
         <div class="brand-mark">DG</div>
-        <div class="brand-copy">
-          <div class="brand-kicker">Canonical Gateway</div>
-          <p class="brand-title">Diamond Gate Bridge</p>
+        <div>
+          <p class="brand-kicker">Products Chamber</p>
+          <p class="brand-title">Products · Diamond Gate Bridge</p>
         </div>
       </div>
 
-      <div class="top-actions">
-        <a class="pill" href="/products/">Products</a>
-        <a class="pill" href="/gauges/">Gauges</a>
-        <a class="pill" href="/laws/">Laws</a>
-      </div>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/gauges/">Gauges</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+      </nav>
     </header>
 
     <section class="hero">
-      <span class="hero-tag">Nine Summits baseline · world access · public spine</span>
-
       <div class="hero-grid">
         <div>
-          <h1>One spine. <span class="accent">Four gates.</span> One coherent world.</h1>
+          <span class="hero-tag">Generation 1 · products renewal</span>
+          <h1>Public chamber for <span class="accent">routes and build</span>.</h1>
           <p>
-            This homepage is the canonical public gateway. It establishes the Nine Summits baseline,
-            routes visitors into the wider house, and opens lawful paths into the system without
-            explaining itself through meta-copy. The structure is the explanation.
+            Products is the public-facing chamber for structured offerings, routes, and system-facing entry points.
+            It is no longer a boot surface. It is a usable chamber with clear selection and coherent pathways.
           </p>
 
-          <div class="hero-links">
-            <a class="button primary" href="#gateway">Enter gateway</a>
-            <a class="button" href="/products/">Open products</a>
-            <a class="button" href="/prelude/">Read prelude</a>
+          <div class="hero-actions">
+            <a class="button primary" href="#productsGrid">Open chamber</a>
+            <a class="button" href="/gauges/">Gauges</a>
+            <a class="button" href="/">Back to door</a>
+          </div>
+
+          <div class="filters" id="cardinalFilters" aria-label="Filter products by cardinal direction">
+            <button class="filter-chip is-active" type="button" data-filter="all">
+              <span class="filter-dot" style="color:#dce7ff;background:#dce7ff;"></span>All
+            </button>
+            <button class="filter-chip" type="button" data-filter="north">
+              <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>North
+            </button>
+            <button class="filter-chip" type="button" data-filter="south">
+              <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>South
+            </button>
+            <button class="filter-chip" type="button" data-filter="east">
+              <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>East
+            </button>
+            <button class="filter-chip" type="button" data-filter="west">
+              <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>West
+            </button>
           </div>
         </div>
 
         <aside class="hero-side">
-          <h2>Current order</h2>
+          <h2>Products job</h2>
           <p>
-            Primary: Nine Summits frame.<br />
-            Secondary: access into the larger world.<br />
-            Tertiary: outward-facing promotion only after the spine is coherent.
+            Give the visitor a coherent public chamber where routes, offerings, and lanes can be selected
+            without collapsing the whole surface into legacy diagnostics or runtime confusion.
           </p>
 
           <div class="hero-stats">
             <div class="stat">
-              <span class="stat-label">Baseline</span>
-              <span class="stat-value">Nine Summits of Love</span>
+              <span class="stat-label">Purpose</span>
+              <span class="stat-value">Public products chamber</span>
             </div>
             <div class="stat">
-              <span class="stat-label">World class</span>
-              <span class="stat-value">House · vault · basement access</span>
+              <span class="stat-label">Structure</span>
+              <span class="stat-value">32-point symmetric field</span>
             </div>
             <div class="stat">
-              <span class="stat-label">Read mode</span>
-              <span class="stat-value">Show the meaning, do not narrate it</span>
+              <span class="stat-label">Contract</span>
+              <span class="stat-value">Generation 1 chamber surface</span>
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="gateway">
+    <section class="section" id="productsGrid" aria-live="polite">
       <div class="section-head">
         <div>
-          <div class="section-kicker">Four-way entry</div>
-          <h2>Choose a lawful path</h2>
+          <div class="section-kicker">Products field</div>
+          <h2>Choose a route inside the chamber</h2>
         </div>
         <div class="section-note">
-          The homepage acts as gateway, not explanation surface.
+          Selection is live. The chamber should read immediately as a working public surface.
         </div>
       </div>
 
-      <div class="gateway-grid">
-        <a class="gateway" data-tone="blue" href="/about/">
-          <div class="gateway-mark">A</div>
-          <div class="gateway-title">About · Contact</div>
-          <div class="gateway-copy">
-            Public orientation, contact path, and the plain-language read of what this work is trying to hold together.
+      <div class="shell">
+        <div class="door-panel">
+          <div class="door-head">
+            <h2>Door field</h2>
+            <div class="door-meta">32 points · balanced symmetry</div>
           </div>
-          <div class="gateway-meta">Identity · Contact</div>
-        </a>
 
-        <a class="gateway" data-tone="gold" href="/nine-summits/">
-          <div class="gateway-mark">N</div>
-          <div class="gateway-title">Nine Summits · Human Potential</div>
-          <div class="gateway-copy">
-            The value spine. Human growth, summit structure, and the book-facing path through the core baseline.
+          <div class="door-stage">
+            <div class="door-frame">
+              <div class="door-outline"></div>
+              <div class="door-seam"></div>
+              <div class="node-layer" id="nodeLayer"></div>
+            </div>
+            <div class="door-copy"><strong>Generation 1 chamber</strong> · select any point</div>
           </div>
-          <div class="gateway-meta">Baseline · Book</div>
-        </a>
-
-        <a class="gateway" data-tone="mint" href="/products/">
-          <div class="gateway-mark">P</div>
-          <div class="gateway-title">Products · Systems</div>
-          <div class="gateway-copy">
-            Structured product surfaces, gauges, and executable public-facing chambers for the working system.
-          </div>
-          <div class="gateway-meta">Build · Route</div>
-        </a>
-
-        <a class="gateway" data-tone="rose" href="/laws/">
-          <div class="gateway-mark">L</div>
-          <div class="gateway-title">Gauges · Laws</div>
-          <div class="gateway-copy">
-            The rule layer, the signal layer, and the measurement layer that keep the wider system legible.
-          </div>
-          <div class="gateway-meta">Rule · Signal</div>
-        </a>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">World access</div>
-          <h2>The larger house</h2>
         </div>
-        <div class="section-note">
-          Secondary job: spatial embodiment without gimmick.
-        </div>
-      </div>
 
-      <div class="world-grid">
-        <div class="world-card">
-          <h3>House</h3>
-          <p>
-            The outer container. Rooms, identities, and public-facing surfaces descend from here rather than floating as disconnected pages.
+        <aside class="detail-panel">
+          <div class="detail-kicker">
+            <span class="badge" id="detailCode">N01</span>
+            <span id="detailFamily">North · left</span>
+          </div>
+
+          <h3 class="detail-title" id="detailTitle">Threshold</h3>
+          <p class="detail-copy" id="detailCopy">
+            Product detail surface.
           </p>
-        </div>
-        <div class="world-card">
-          <h3>Vault</h3>
-          <p>
-            Protected storage, deeper logic, and the sealed interior layers that are not meant to flatten into ordinary public read.
-          </p>
-        </div>
-        <div class="world-card">
-          <h3>Basement</h3>
-          <p>
-            The deeper working chambers: lab, concealed execution, and the lower structural tiers that support the visible world above.
-          </p>
-        </div>
+
+          <div class="detail-stats">
+            <div class="stat">
+              <span class="stat-label">Cardinal</span>
+              <span class="stat-value" id="detailCardinal">North</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Visible points</span>
+              <span class="stat-value" id="detailVisible">32</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Lane count</span>
+              <span class="stat-value" id="detailCount">8</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Route class</span>
+              <span class="stat-value" id="detailRoute">Public route</span>
+            </div>
+          </div>
+
+          <div class="hero-actions">
+            <a class="button primary" id="detailHref" href="/products/">Open lane</a>
+            <a class="button" href="/gauges/">Read gauges</a>
+          </div>
+        </aside>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · canonical homepage gateway</span>
+      <span>Products · Generation 1 chamber contract</span>
       <div class="footer-links">
-        <a href="/prelude/">Prelude</a>
-        <a href="/products/">Products</a>
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
         <a href="/gauges/">Gauges</a>
         <a href="/laws/">Laws</a>
       </div>
     </footer>
   </main>
+
+  <script type="module" src="./index.js"></script>
 </body>
 </html>

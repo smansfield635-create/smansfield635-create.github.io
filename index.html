@@ -1,377 +1,769 @@
-<!-- /products/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-  <title>Products</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products runtime host surface."
+    content="Canonical door gateway for Diamond Gate Bridge."
   />
-
   <style>
-    :root {
-      color-scheme: dark;
-      --bg-0: #020612;
-      --bg-1: #071427;
-      --bg-2: #0d2240;
-      --line: rgba(173, 212, 255, 0.16);
-      --line-strong: rgba(241, 210, 141, 0.28);
-      --text: #edf5ff;
-      --muted: #9fb2d2;
-      --gold: #f1d28d;
-      --good: #8ff0c5;
-      --warn: #ffd27a;
-      --bad: #ff9b9b;
-      --shadow: 0 24px 60px rgba(0, 0, 0, 0.42);
-      --radius-xl: 28px;
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --max: 1120px;
+    :root{
+      --bg:#040814;
+      --bg2:#091327;
+      --panel:rgba(8,14,28,.72);
+      --panel-strong:rgba(10,18,34,.86);
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.34);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --blue:#91c7ff;
+      --mint:#99e5b6;
+      --rose:#f0bacb;
+      --shadow:0 24px 80px rgba(0,0,0,.46);
+      --radius:26px;
+      --max:1280px;
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      width: 100%;
-      min-height: 100%;
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 18%, rgba(58, 103, 188, 0.18), transparent 28%),
-        radial-gradient(circle at 80% 22%, rgba(255, 215, 112, 0.08), transparent 20%),
-        linear-gradient(180deg, var(--bg-1), var(--bg-0));
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
+        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
+        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+      overflow-x:hidden;
     }
 
-    body {
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    #products-host {
-      position: relative;
-      min-height: 100vh;
-      isolation: isolate;
-    }
-
-    .products-stars,
-    .products-stars::before,
-    .products-stars::after {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      content: "";
-      display: block;
-      background-repeat: repeat;
-      opacity: 0.9;
-    }
-
-    .products-stars {
-      background-image:
-        radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,0.95) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 28% 72%, rgba(255,255,255,0.82) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 66% 28%, rgba(255,255,255,0.88) 45%, transparent 55%),
-        radial-gradient(2px 2px at 82% 64%, rgba(255,255,255,0.92) 45%, transparent 55%);
-      animation: stars-drift-1 24s linear infinite;
-    }
-
-    .products-stars::before {
-      background-image:
-        radial-gradient(1.5px 1.5px at 20% 40%, rgba(255,255,255,0.78) 45%, transparent 55%),
-        radial-gradient(2px 2px at 44% 14%, rgba(255,255,255,0.92) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 74% 44%, rgba(255,255,255,0.72) 45%, transparent 55%),
-        radial-gradient(2px 2px at 90% 16%, rgba(255,255,255,0.96) 45%, transparent 55%);
-      animation: stars-drift-2 36s linear infinite;
-    }
-
-    .products-stars::after {
-      background-image:
-        radial-gradient(2px 2px at 18% 84%, rgba(255,255,255,0.76) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 52% 58%, rgba(255,255,255,0.88) 45%, transparent 55%),
-        radial-gradient(2px 2px at 78% 84%, rgba(255,255,255,0.70) 45%, transparent 55%),
-        radial-gradient(1.5px 1.5px at 94% 42%, rgba(255,255,255,0.86) 45%, transparent 55%);
-      animation: stars-drift-3 44s linear infinite;
-    }
-
-    @keyframes stars-drift-1 {
-      from { transform: translate3d(0, 0, 0); }
-      to   { transform: translate3d(-18px, 10px, 0); }
-    }
-
-    @keyframes stars-drift-2 {
-      from { transform: translate3d(0, 0, 0); }
-      to   { transform: translate3d(22px, -14px, 0); }
-    }
-
-    @keyframes stars-drift-3 {
-      from { transform: translate3d(0, 0, 0); }
-      to   { transform: translate3d(-10px, -18px, 0); }
-    }
-
-    .products-shell {
-      position: relative;
-      z-index: 1;
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 28px 20px 56px;
-    }
-
-    .products-hero {
-      position: relative;
-      overflow: hidden;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-xl);
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
       background:
-        linear-gradient(180deg, rgba(9,18,40,0.88), rgba(10,20,46,0.68));
-      box-shadow: var(--shadow);
-      padding: 24px;
-      margin-bottom: 18px;
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
+      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
     }
 
-    .products-hero::before {
-      content: "";
-      position: absolute;
-      inset: -1px;
+    .page{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:20px 0 42px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(7,13,26,.7);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
+      color:#f4f8ff;
+      font-weight:800;
+      letter-spacing:.08em;
+      box-shadow:inset 0 0 26px rgba(126,160,255,.1);
+    }
+
+    .brand-copy{min-width:0}
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .nav-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:700;
+      font-size:.92rem;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      white-space:nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
+    .hero{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:34px;
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 50% 0%, rgba(241,210,141,0.09), transparent 28%);
-      pointer-events: none;
+        radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+      mix-blend-mode:screen;
     }
 
-    .products-eyebrow {
-      position: relative;
-      z-index: 1;
-      margin: 0 0 10px;
-      color: var(--gold);
-      font-size: 0.78rem;
-      font-weight: 800;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0, 1.02fr) minmax(420px, .98fr);
+      gap:26px;
+      padding:28px 22px 26px;
+      align-items:center;
     }
 
-    .products-title {
-      position: relative;
-      z-index: 1;
-      margin: 0 0 14px;
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2.4rem, 7vw, 5rem);
-      line-height: 0.94;
-      color: var(--text);
+    .hero-copy{
+      min-width:0;
+      position:relative;
+      z-index:1;
     }
 
-    .products-summary {
-      position: relative;
-      z-index: 1;
-      margin: 0;
-      max-width: 720px;
-      color: var(--muted);
-      font-size: 1rem;
-      line-height: 1.7;
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:14px;
     }
 
-    .products-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
-      gap: 18px;
-      align-items: start;
+    .hero-tag::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.52);
     }
 
-    .products-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
+    .hero h1{
+      margin:0 0 12px;
+      font-size:clamp(2.5rem, 5.8vw, 5rem);
+      line-height:.95;
+      letter-spacing:-.05em;
+      max-width:10ch;
+    }
+
+    .hero h1 .accent{color:var(--gold)}
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem, 1.7vw, 1.18rem);
+      line-height:1.66;
+      max-width:62ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:22px;
+    }
+
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
+    .button.primary{
+      border-color:rgba(239,210,154,.3);
+      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
+      color:#fff8ea;
+    }
+
+    .door-wrap{
+      position:relative;
+      min-height:760px;
+      display:grid;
+      place-items:center;
+      z-index:1;
+    }
+
+    .door-stage{
+      position:relative;
+      width:min(100%, 560px);
+      aspect-ratio:5 / 7.4;
+      filter:drop-shadow(0 34px 68px rgba(0,0,0,.5));
+    }
+
+    .door-outer{
+      position:absolute;
+      inset:0;
+      border-radius:360px 360px 42px 42px / 300px 300px 42px 42px;
+      border:1px solid rgba(182,201,255,.28);
       background:
-        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      box-shadow: 0 12px 30px rgba(0,0,0,0.22);
+        linear-gradient(180deg, rgba(16,28,56,.82), rgba(6,14,28,.92)),
+        radial-gradient(circle at 50% 26%, rgba(115,152,255,.14), transparent 34%);
+      overflow:hidden;
     }
 
-    .products-panel {
-      padding: 18px;
+    .door-outer::before{
+      content:"";
+      position:absolute;
+      inset:22px;
+      border-radius:320px 320px 32px 32px / 260px 260px 32px 32px;
+      border:1px solid rgba(183,202,255,.18);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.02),
+        inset 0 -24px 48px rgba(0,0,0,.22),
+        0 0 86px rgba(84,118,206,.12);
     }
 
-    .products-panel-title {
-      margin: 0 0 12px;
-      color: var(--gold);
-      font-size: 0.9rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .products-status-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 16px;
-      padding: 12px 14px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius-md);
-      background: rgba(255,255,255,0.03);
-    }
-
-    .products-status-label {
-      font-size: 0.82rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .products-status-value {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--warn);
-    }
-
-    .products-receipts {
-      display: grid;
-      gap: 10px;
-      min-height: 96px;
-    }
-
-    .products-receipt-line {
-      display: grid;
-      grid-template-columns: 12px minmax(0, 1fr);
-      gap: 12px;
-      align-items: start;
-      padding: 12px 14px;
-      border: 1px solid rgba(173, 212, 255, 0.08);
-      border-radius: var(--radius-md);
-      background: rgba(255,255,255,0.028);
-      color: var(--text);
-      line-height: 1.55;
-      word-break: break-word;
-    }
-
-    .products-dot {
-      width: 10px;
-      height: 10px;
-      margin-top: 6px;
-      border-radius: 999px;
-      box-shadow: 0 0 0 4px rgba(255,255,255,0.04);
-    }
-
-    .products-dot.good { background: var(--good); }
-    .products-dot.warn { background: var(--warn); }
-    .products-dot.bad  { background: var(--bad); }
-
-    .products-stage-card {
-      position: relative;
-      min-height: 560px;
-      overflow: hidden;
-    }
-
-    #products-stage {
-      position: relative;
-      min-height: 560px;
-      border-radius: var(--radius-lg);
-      overflow: hidden;
+    .door-inner{
+      position:absolute;
+      inset:54px 17%;
+      border-radius:280px 280px 28px 28px / 240px 240px 28px 28px;
       background:
-        radial-gradient(circle at 50% 32%, rgba(70, 130, 220, 0.18), transparent 28%),
-        linear-gradient(180deg, rgba(4,13,32,0.42), rgba(4,13,32,0.18));
+        radial-gradient(circle at 50% 38%, rgba(109,143,232,.22), transparent 30%),
+        linear-gradient(180deg, rgba(9,19,38,.34), rgba(4,9,18,.48));
+      box-shadow:
+        inset 0 0 0 1px rgba(198,213,255,.13),
+        inset 0 0 72px rgba(74,111,209,.15);
+      overflow:hidden;
     }
 
-    .products-fallback {
-      display: none;
-      margin-top: 16px;
-      padding: 14px 16px;
-      border: 1px solid rgba(255, 155, 155, 0.18);
-      border-radius: var(--radius-md);
-      background: rgba(255, 155, 155, 0.07);
-      color: #ffd2d2;
-      line-height: 1.55;
+    .door-seam{
+      position:absolute;
+      top:8.4%;
+      bottom:6.7%;
+      left:50%;
+      width:1px;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg, transparent, rgba(224,233,255,.58), transparent);
+      opacity:.84;
+      z-index:2;
     }
 
-    .products-fallback.is-visible {
-      display: block;
+    .door-core{
+      position:absolute;
+      inset:0;
+      display:grid;
+      place-items:center;
+      z-index:3;
+      pointer-events:none;
     }
 
-    .products-footer-note {
-      margin-top: 16px;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.65;
+    .core-glow{
+      width:38%;
+      aspect-ratio:1;
+      border-radius:50%;
+      background:
+        radial-gradient(circle, rgba(245,250,255,.9) 0%, rgba(157,196,255,.62) 22%, rgba(118,154,240,.18) 54%, transparent 76%);
+      filter:blur(2px);
+      box-shadow:0 0 90px rgba(123,160,255,.28);
     }
 
-    @media (max-width: 920px) {
-      .products-grid {
-        grid-template-columns: 1fr;
+    .core-mark{
+      position:absolute;
+      display:grid;
+      place-items:center;
+      width:78px;
+      height:78px;
+      border-radius:22px;
+      border:1px solid rgba(225,234,255,.22);
+      background:rgba(7,14,28,.56);
+      box-shadow:0 0 24px rgba(132,164,255,.18);
+      font-size:1rem;
+      font-weight:800;
+      letter-spacing:.16em;
+      color:#f7fbff;
+    }
+
+    .door-copy{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      width:min(84%, 430px);
+      padding:14px 18px;
+      border-radius:999px;
+      border:1px solid rgba(140,168,240,.24);
+      background:rgba(6,14,28,.76);
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:.8rem;
+      color:#dbe5ff;
+      box-shadow:0 12px 32px rgba(0,0,0,.28);
+      z-index:4;
+    }
+
+    .door-copy strong{color:#fff}
+
+    .gates{
+      margin-top:18px;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .gate{
+      display:grid;
+      gap:10px;
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:inherit;
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+      min-height:220px;
+    }
+
+    .gate:hover,
+    .gate:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 16px 36px rgba(0,0,0,.18);
+      outline:none;
+    }
+
+    .gate[data-tone="blue"]{color:var(--blue)}
+    .gate[data-tone="gold"]{color:var(--gold)}
+    .gate[data-tone="mint"]{color:var(--mint)}
+    .gate[data-tone="rose"]{color:var(--rose)}
+
+    .gate-mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      border:1px solid currentColor;
+      background:rgba(255,255,255,.03);
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .gate-title{
+      margin:0;
+      color:var(--text);
+      font-size:1.18rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .gate-copy{
+      color:var(--muted);
+      line-height:1.58;
+      font-size:.95rem;
+    }
+
+    .gate-meta{
+      margin-top:auto;
+      color:#dce7ff;
+      font-size:.78rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .subsection{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .subsection-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .subsection-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:6px;
+    }
+
+    .subsection h2{
+      margin:0;
+      font-size:1.45rem;
+      letter-spacing:-.03em;
+      line-height:1.06;
+    }
+
+    .subsection-note{
+      color:var(--muted);
+      font-size:.92rem;
+      max-width:42ch;
+      text-align:right;
+    }
+
+    .world-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .world-card{
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .world-card h3{
+      margin:0 0 10px;
+      font-size:1.06rem;
+      letter-spacing:-.02em;
+    }
+
+    .world-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.58;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:12px 4px 0;
+      font-size:.92rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width: 1120px){
+      .hero-grid{
+        grid-template-columns:1fr;
       }
 
-      .products-stage-card,
-      #products-stage {
-        min-height: 480px;
+      .door-wrap{
+        min-height:680px;
+      }
+
+      .gates,
+      .world-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .gates .gate:first-child{
+        grid-column:span 2;
       }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      .products-stars,
-      .products-stars::before,
-      .products-stars::after {
-        animation: none;
+    @media (max-width: 720px){
+      .page{
+        width:min(100vw - 16px, var(--max));
+        padding:14px 0 28px;
+      }
+
+      .topbar{
+        flex-wrap:wrap;
+        padding:12px 14px;
+      }
+
+      .hero{
+        padding:20px 16px 18px;
+      }
+
+      .hero-grid{
+        gap:18px;
+      }
+
+      .door-wrap{
+        min-height:560px;
+      }
+
+      .door-stage{
+        width:min(100%, 440px);
+      }
+
+      .core-mark{
+        width:62px;
+        height:62px;
+        font-size:.88rem;
+      }
+
+      .gates,
+      .world-grid{
+        grid-template-columns:1fr;
+      }
+
+      .gates .gate:first-child{
+        grid-column:auto;
+      }
+
+      .subsection,
+      .footer{
+        display:block;
+      }
+
+      .subsection{
+        padding:18px 16px;
+      }
+
+      .subsection-head{
+        display:grid;
+        gap:8px;
+      }
+
+      .subsection-note{
+        text-align:left;
       }
     }
   </style>
 </head>
 <body>
-  <main
-    id="products-host"
-    data-host-contract="PRODUCTS_HOST_CONTRACT_V1"
-    data-stage-owner="runtime-only"
-    data-runtime-global="ProductsPlanetRuntime"
-    data-runtime-script="./products_runtime.js"
-  >
-    <div class="products-stars" aria-hidden="true"></div>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DG</div>
+        <div class="brand-copy">
+          <p class="brand-kicker">Canonical Door</p>
+          <p class="brand-title">Diamond Gate Bridge</p>
+        </div>
+      </div>
 
-    <div class="products-shell">
-      <section class="products-hero">
-        <p class="products-eyebrow">Products runtime host surface</p>
-        <h1 class="products-title">Products</h1>
-        <p class="products-summary">
-          This page uses a host bootstrap that verifies the contract, loads the products runtime,
-          and mounts the visible stage from the runtime layer.
-        </p>
-      </section>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/products/">Products</a>
+        <a class="nav-link" href="/gauges/">Gauges</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+      </nav>
+    </header>
 
-      <section class="products-grid">
-        <aside class="products-card products-panel">
-          <h2 class="products-panel-title">Boot receipts</h2>
-
-          <div class="products-status-row">
-            <div class="products-status-label">Status</div>
-            <div id="products-receipt-status" class="products-status-value">Booting</div>
-          </div>
-
-          <div id="products-receipt-body" class="products-receipts" aria-live="polite"></div>
-
-          <div id="products-fallback" class="products-fallback" role="alert">
-            <strong>Host-side failure surfaced.</strong>
-            <div id="products-fallback-text">
-              The host layer detected a runtime handoff failure before visible stage ownership was confirmed.
-            </div>
-          </div>
-
-          <p class="products-footer-note">
-            If the runtime mounts successfully, the visible stage on the right will take ownership and this status
-            will change from Booting to Runtime mounted.
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="hero-tag">Door contract · root route · world entry</span>
+          <h1>Enter through the <span class="accent">door</span>.</h1>
+          <p>
+            This is the root gateway for Diamond Gate Bridge. It is not the products chamber.
+            It is the canonical entry surface: broad, foundational, and world-facing. From here,
+            the paths descend into products, laws, gauges, and the wider house without collapsing
+            the homepage into a product page.
           </p>
-        </aside>
 
-        <section class="products-card products-stage-card">
-          <div
-            id="products-stage"
-            data-visible-stage-owner="runtime"
-            aria-label="Products runtime stage"
-          ></div>
-        </section>
-      </section>
-    </div>
+          <div class="hero-actions">
+            <a class="button primary" href="#gates">Open the gates</a>
+            <a class="button" href="/prelude/">Prelude</a>
+            <a class="button" href="/products/">Products chamber</a>
+          </div>
+        </div>
+
+        <div class="door-wrap" aria-hidden="true">
+          <div class="door-stage">
+            <div class="door-outer"></div>
+            <div class="door-inner"></div>
+            <div class="door-seam"></div>
+            <div class="door-core">
+              <div class="core-glow"></div>
+              <div class="core-mark">DOOR</div>
+            </div>
+            <div class="door-copy"><strong>Canonical root</strong> · world entry surface</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="subsection" id="gates">
+      <div class="subsection-head">
+        <div>
+          <div class="subsection-kicker">Four-way entry</div>
+          <h2>Choose a lawful path</h2>
+        </div>
+        <div class="subsection-note">
+          The domain resolves here first. Products is a child chamber, not the root identity.
+        </div>
+      </div>
+
+      <div class="gates">
+        <a class="gate" data-tone="blue" href="/about/">
+          <div class="gate-mark">A</div>
+          <h3 class="gate-title">About · Contact</h3>
+          <div class="gate-copy">
+            Public identity, direct contact, and plain-language orientation into the work.
+          </div>
+          <div class="gate-meta">Identity · Contact</div>
+        </a>
+
+        <a class="gate" data-tone="gold" href="/nine-summits/">
+          <div class="gate-mark">N</div>
+          <h3 class="gate-title">Nine Summits</h3>
+          <div class="gate-copy">
+            The baseline value spine: human potential, summit structure, and book-facing entry.
+          </div>
+          <div class="gate-meta">Baseline · Book</div>
+        </a>
+
+        <a class="gate" data-tone="mint" href="/products/">
+          <div class="gate-mark">P</div>
+          <h3 class="gate-title">Products</h3>
+          <div class="gate-copy">
+            The products chamber, system surfaces, and structured build-facing routes.
+          </div>
+          <div class="gate-meta">Chamber · Build</div>
+        </a>
+
+        <a class="gate" data-tone="rose" href="/laws/">
+          <div class="gate-mark">L</div>
+          <h3 class="gate-title">Gauges · Laws</h3>
+          <div class="gate-copy">
+            Signal, law, and measurement layers that govern the wider architecture.
+          </div>
+          <div class="gate-meta">Rule · Signal</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="subsection">
+      <div class="subsection-head">
+        <div>
+          <div class="subsection-kicker">World access</div>
+          <h2>The larger house</h2>
+        </div>
+        <div class="subsection-note">
+          The homepage is a foyer. It opens the world without becoming one of its child chambers.
+        </div>
+      </div>
+
+      <div class="world-grid">
+        <div class="world-card">
+          <h3>House</h3>
+          <p>
+            The outer container: identity, rooms, and world logic descend from here rather than floating as disconnected pages.
+          </p>
+        </div>
+        <div class="world-card">
+          <h3>Vault</h3>
+          <p>
+            Protected storage, deeper logic, and the interior layers that should not flatten into ordinary public read.
+          </p>
+        </div>
+        <div class="world-card">
+          <h3>Basement</h3>
+          <p>
+            The lower chambers: lab, concealed execution, and the deeper working tiers beneath the public surface.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Diamond Gate Bridge · root door contract</span>
+      <div class="footer-links">
+        <a href="/prelude/">Prelude</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+      </div>
+    </footer>
   </main>
-
-  <script src="./index.js" defer></script>
 </body>
 </html>

@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-root-earth-read-v6-force-visible-change";
+  const STYLE_ID = "dgb-root-shared-earth-globe-consumer-v1";
+  const SHARED_GLOBE_SRC = "/shared/earth_globe.js";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -328,91 +329,19 @@
       .home-core {
         position:relative;
         z-index:5;
-        width:222px;
-        height:222px;
+        width:230px;
+        height:230px;
         border-radius:50%;
         display:grid;
         place-items:center;
-        overflow:hidden;
-        border:1px solid rgba(226,240,255,.78);
-        background:#0b58a8;
-        box-shadow:
-          inset -40px -34px 58px rgba(0,0,0,.58),
-          inset 22px 16px 34px rgba(255,255,255,.25),
-          0 0 52px rgba(142,197,255,.54),
-          0 0 142px rgba(239,210,154,.24);
-        animation:demoUniverseFloat 7s ease-in-out infinite;
+        overflow:visible;
+        color:transparent;
+        font-size:0;
+        background:transparent;
       }
 
-      .home-core::before {
-        content:"";
-        position:absolute;
-        inset:0;
-        z-index:4;
-        border-radius:50%;
-        background:
-          radial-gradient(circle at 31% 23%,rgba(255,255,255,.68),transparent 10%),
-          linear-gradient(90deg,rgba(255,255,255,.16),transparent 38%,rgba(0,0,0,.34) 100%);
-        pointer-events:none;
-        mix-blend-mode:screen;
-      }
-
-      .home-core::after {
-        content:"";
-        position:absolute;
-        inset:-1px;
-        z-index:5;
-        border-radius:50%;
-        background:
-          radial-gradient(circle at 35% 24%,rgba(255,255,255,.34),transparent 16%),
-          radial-gradient(circle at 78% 74%,rgba(0,0,0,.32),transparent 36%);
-        pointer-events:none;
-      }
-
-      .earth-svg {
-        position:absolute;
-        inset:0;
-        z-index:3;
-        width:100%;
-        height:100%;
-        display:block;
-      }
-
-      .earth-ocean {
-        fill:#0b63b5;
-      }
-
-      .earth-ocean-deep {
-        fill:#06386f;
-        opacity:.44;
-      }
-
-      .earth-land {
-        fill:#3fb56b;
-        stroke:rgba(255,255,255,.18);
-        stroke-width:.8;
-      }
-
-      .earth-land-warm {
-        fill:#b9a76a;
-        stroke:rgba(255,255,255,.16);
-        stroke-width:.7;
-      }
-
-      .earth-cloud {
-        fill:rgba(255,255,255,.72);
-      }
-
-      .earth-grid {
-        fill:none;
-        stroke:rgba(255,255,255,.18);
-        stroke-width:.7;
-      }
-
-      .earth-atmosphere {
-        fill:none;
-        stroke:rgba(181,226,255,.72);
-        stroke-width:2.2;
+      .home-core > .dgb-earth-globe {
+        width:220px;
       }
 
       .home-caption {
@@ -557,11 +486,6 @@
         to { transform:rotate(317deg) scaleX(.35); }
       }
 
-      @keyframes demoUniverseFloat {
-        0%,100% { transform:translateY(0) scale(.98); }
-        50% { transform:translateY(-6px) scale(1.03); }
-      }
-
       @media (min-width:820px) {
         .home-topbar {
           grid-template-columns:1fr auto;
@@ -614,8 +538,12 @@
         }
 
         .home-core {
-          width:196px;
-          height:196px;
+          width:212px;
+          height:212px;
+        }
+
+        .home-core > .dgb-earth-globe {
+          width:204px;
         }
 
         .home-caption {
@@ -638,61 +566,57 @@
     document.head.appendChild(style);
   }
 
-  function buildEarthSvg() {
-    const ns = "http://www.w3.org/2000/svg";
-    const svg = document.createElementNS(ns, "svg");
+  function loadScript(src) {
+    return new Promise((resolve, reject) => {
+      if (window.DGBEarthGlobe) {
+        resolve();
+        return;
+      }
 
-    svg.setAttribute("class", "earth-svg");
-    svg.setAttribute("viewBox", "0 0 240 240");
-    svg.setAttribute("aria-hidden", "true");
-    svg.setAttribute("focusable", "false");
+      const existing = document.querySelector(`script[data-dgb-loader="${src}"]`);
+      if (existing) {
+        existing.addEventListener("load", () => resolve(), { once: true });
+        existing.addEventListener("error", () => reject(new Error("Failed to load " + src)), { once: true });
+        return;
+      }
 
-    svg.innerHTML = `
-      <defs>
-        <clipPath id="earthClipDgbV6">
-          <circle cx="120" cy="120" r="108"></circle>
-        </clipPath>
-      </defs>
-
-      <circle class="earth-ocean" cx="120" cy="120" r="108"></circle>
-      <circle class="earth-ocean-deep" cx="146" cy="144" r="90"></circle>
-
-      <g clip-path="url(#earthClipDgbV6)">
-        <path class="earth-grid" d="M12 120 H228"></path>
-        <path class="earth-grid" d="M120 12 V228"></path>
-        <ellipse class="earth-grid" cx="120" cy="120" rx="74" ry="108"></ellipse>
-        <ellipse class="earth-grid" cx="120" cy="120" rx="108" ry="44"></ellipse>
-        <ellipse class="earth-grid" cx="120" cy="120" rx="108" ry="76"></ellipse>
-
-        <path class="earth-land" d="M39 58 C54 35 91 30 108 49 C119 62 107 78 88 79 C75 80 72 97 55 95 C35 92 25 76 39 58 Z"></path>
-        <path class="earth-land" d="M78 100 C97 96 113 113 106 137 C101 154 92 177 75 190 C66 174 55 157 57 137 C59 119 63 106 78 100 Z"></path>
-        <path class="earth-land-warm" d="M127 43 C151 27 185 35 202 58 C217 80 201 102 177 96 C158 91 155 73 134 71 C119 70 116 51 127 43 Z"></path>
-        <path class="earth-land-warm" d="M137 103 C160 92 198 107 207 134 C217 165 185 185 157 176 C136 169 121 149 124 127 C125 115 128 108 137 103 Z"></path>
-        <path class="earth-land" d="M176 187 C194 179 214 187 226 204 C206 222 177 222 161 205 C163 196 167 191 176 187 Z"></path>
-        <path class="earth-land" d="M20 148 C34 139 49 144 54 158 C61 177 39 185 25 172 C17 164 14 154 20 148 Z"></path>
-
-        <path class="earth-cloud" d="M25 82 C49 69 77 71 100 84 C73 90 48 91 25 82 Z"></path>
-        <path class="earth-cloud" d="M93 35 C125 24 162 30 190 47 C157 52 121 51 93 35 Z"></path>
-        <path class="earth-cloud" d="M103 158 C136 146 174 153 205 173 C166 177 132 176 103 158 Z"></path>
-        <path class="earth-cloud" d="M39 125 C68 116 91 121 112 136 C82 140 58 139 39 125 Z"></path>
-      </g>
-
-      <circle class="earth-atmosphere" cx="120" cy="120" r="108"></circle>
-    `;
-
-    return svg;
+      const script = document.createElement("script");
+      script.src = src + "?v=shared-earth-globe-v1";
+      script.defer = true;
+      script.dataset.dgbLoader = src;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error("Failed to load " + src));
+      document.head.appendChild(script);
+    });
   }
 
-  function normalizeEarthCore(root) {
+  async function mountSharedEarthGlobe(root) {
     const core = root.querySelector(".home-core");
     if (!core) return;
-
-    core.replaceChildren(buildEarthSvg());
 
     core.setAttribute("role", "img");
     core.setAttribute("aria-label", "Planet Earth");
     core.setAttribute("data-home-earth-core", "true");
-    core.setAttribute("data-home-demo-universe-core", "earth-read-v6");
+    core.setAttribute("data-home-demo-universe-core", "shared-earth-globe");
+
+    try {
+      await loadScript(SHARED_GLOBE_SRC);
+
+      if (!window.DGBEarthGlobe) {
+        core.setAttribute("data-home-earth-load", "missing-shared-source");
+        return;
+      }
+
+      window.DGBEarthGlobe.mount(core, {
+        mode: "hero",
+        ariaLabel: "Planet Earth with Africa and seven-continent read"
+      });
+
+      core.setAttribute("data-home-earth-load", "mounted");
+    } catch (error) {
+      core.setAttribute("data-home-earth-load", "failed");
+      core.setAttribute("data-home-earth-error", String(error && error.message ? error.message : error));
+    }
   }
 
   function markRootProof(root) {
@@ -704,7 +628,7 @@
     root.setAttribute("data-home-root-proof", "true");
     root.setAttribute("data-home-not-gauges", "true");
     root.setAttribute("data-home-earth-read", "true");
-    root.setAttribute("data-home-visual-change", "earth-svg-v6-force-visible");
+    root.setAttribute("data-home-shared-globe-source", SHARED_GLOBE_SRC);
   }
 
   function mount() {
@@ -714,7 +638,7 @@
     if (!root) return;
 
     markRootProof(root);
-    normalizeEarthCore(root);
+    mountSharedEarthGlobe(root);
   }
 
   if (document.readyState === "loading") {

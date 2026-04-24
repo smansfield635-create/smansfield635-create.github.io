@@ -1,42 +1,41 @@
-<!-- /products/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Products Field</title>
+  <title>Products · Generation 2</title>
   <meta
     name="description"
-    content="Thirty-two points distributed by Fibonacci growth, rotated into a diamond-relative field, grouped by North, South, East, and West."
+    content="Generation 2 products chamber: a balanced symmetric door with 32 points grouped by North, South, East, and West."
   />
   <style>
     :root{
-      --bg:#030814;
-      --bg-2:#071224;
-      --panel:#0a1528cc;
-      --line:rgba(138,166,255,.18);
-      --line-strong:rgba(168,196,255,.32);
-      --text:#eaf1ff;
-      --muted:#9fb0d6;
-      --north:#dfe9ff;
-      --south:#8ee3ac;
-      --east:#8ec5ff;
-      --west:#ffd58a;
-      --danger:#ff7d7d;
-      --shadow:0 18px 64px rgba(0,0,0,.45);
+      --bg:#030815;
+      --bg2:#071225;
+      --panel:rgba(9,18,36,.84);
+      --panel-2:rgba(8,16,30,.74);
+      --line:rgba(145,171,255,.18);
+      --line-strong:rgba(190,210,255,.34);
+      --text:#edf3ff;
+      --muted:#9aadd4;
+      --north:#dde8ff;
+      --south:#97e6b4;
+      --east:#8fc9ff;
+      --west:#ffd58f;
       --radius:28px;
+      --shadow:0 22px 70px rgba(0,0,0,.42);
     }
 
     *{box-sizing:border-box}
-    html,body{height:100%}
+    html,body{min-height:100%}
     body{
       margin:0;
       color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 24%, rgba(68,106,196,.22), transparent 24%),
-        radial-gradient(circle at 50% 48%, rgba(38,74,154,.14), transparent 28%),
-        linear-gradient(180deg, #020611 0%, #051022 45%, #020611 100%);
+        radial-gradient(circle at 50% 14%, rgba(92,126,210,.18), transparent 20%),
+        radial-gradient(circle at 50% 42%, rgba(64,96,176,.12), transparent 24%),
+        linear-gradient(180deg, #020611 0%, #051022 48%, #020611 100%);
       overflow-x:hidden;
     }
 
@@ -45,29 +44,111 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.16;
+      opacity:.18;
       background:
-        radial-gradient(circle at 20% 20%, rgba(255,255,255,.35) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 72% 30%, rgba(255,255,255,.22) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 38% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 84%, rgba(255,255,255,.18) 0 1px, transparent 1.5px);
-      background-size: 260px 260px, 340px 340px, 420px 420px, 560px 560px;
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.20) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
+      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
     }
 
-    #productsPage{
-      width:min(1180px,calc(100vw - 28px));
+    .page{
+      width:min(1200px, calc(100vw - 24px));
       margin:0 auto;
-      padding:28px 0 44px;
+      padding:20px 0 40px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(7,14,28,.72);
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      display:grid;
+      place-items:center;
+      background:linear-gradient(180deg, rgba(28,48,87,.8), rgba(10,18,32,.9));
+      box-shadow:inset 0 0 28px rgba(126,160,255,.12);
+      color:#eef4ff;
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .brand-copy{
+      min-width:0;
+    }
+
+    .eyebrow{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:4px;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .backlink{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:700;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease, border-color .16s ease, background .16s ease;
+      white-space:nowrap;
+    }
+
+    .backlink:hover,
+    .backlink:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
     }
 
     .hero{
-      position:relative;
-      padding:26px 22px 22px;
       border:1px solid var(--line);
-      border-radius:calc(var(--radius) + 4px);
-      background:linear-gradient(180deg, rgba(8,18,38,.86), rgba(6,13,26,.78));
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(9,18,36,.88), rgba(6,13,26,.82));
       box-shadow:var(--shadow);
+      padding:24px 20px 22px;
       overflow:hidden;
+      position:relative;
     }
 
     .hero::after{
@@ -76,85 +157,95 @@
       inset:0;
       pointer-events:none;
       background:
-        linear-gradient(90deg, transparent, rgba(255,255,255,.04), transparent),
-        radial-gradient(circle at 50% 0%, rgba(126,160,255,.15), transparent 34%);
+        radial-gradient(circle at 50% 0%, rgba(126,160,255,.16), transparent 28%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
       mix-blend-mode:screen;
     }
 
-    .eyebrow{
+    .hero-tag{
       display:inline-flex;
       align-items:center;
-      gap:8px;
+      gap:10px;
       padding:8px 12px;
-      border:1px solid var(--line);
       border-radius:999px;
-      color:#c8d8ff;
-      letter-spacing:.12em;
-      font-size:.72rem;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:#d7e3ff;
       text-transform:uppercase;
-      background:rgba(11,23,44,.65);
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:14px;
+    }
+
+    .hero-tag::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.6);
     }
 
     .hero h1{
-      margin:14px 0 10px;
-      font-size:clamp(2rem,4.4vw,3.35rem);
-      line-height:1.02;
-      letter-spacing:-.03em;
+      margin:0 0 10px;
+      font-size:clamp(2.2rem, 5vw, 4rem);
+      line-height:1;
+      letter-spacing:-.04em;
     }
 
     .hero p{
-      max-width:760px;
       margin:0;
+      max-width:860px;
       color:var(--muted);
-      font-size:clamp(1rem,2vw,1.28rem);
-      line-height:1.55;
+      font-size:clamp(1rem, 1.8vw, 1.2rem);
+      line-height:1.62;
     }
 
     .filters{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
-      margin:22px 0 0;
+      margin-top:22px;
     }
 
     .filter-chip{
       appearance:none;
       border:1px solid var(--line);
-      background:rgba(9,18,36,.72);
-      color:#d7e3ff;
       border-radius:999px;
-      padding:12px 18px;
-      min-width:122px;
-      font-weight:700;
-      letter-spacing:.1em;
+      background:rgba(10,20,40,.78);
+      color:#dce7ff;
+      padding:12px 16px;
+      min-width:118px;
+      font-weight:800;
       text-transform:uppercase;
+      letter-spacing:.12em;
       cursor:pointer;
-      transition:transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
-      box-shadow:0 8px 24px rgba(0,0,0,.22), inset 0 0 0 1px rgba(255,255,255,.02);
+      transition:transform .16s ease, border-color .16s ease, background .16s ease, opacity .16s ease;
     }
 
     .filter-chip:hover,
     .filter-chip:focus-visible{
       transform:translateY(-1px);
-      outline:none;
       border-color:var(--line-strong);
-      background:rgba(13,26,50,.9);
+      outline:none;
+      background:rgba(15,28,56,.92);
     }
 
     .filter-chip.is-active{
-      border-color:rgba(205,220,255,.42);
-      background:linear-gradient(180deg, rgba(24,40,74,.94), rgba(12,24,46,.94));
-      box-shadow:0 0 0 1px rgba(188,210,255,.1), 0 10px 28px rgba(0,0,0,.28);
+      border-color:rgba(224,234,255,.42);
+      background:linear-gradient(180deg, rgba(26,42,78,.96), rgba(12,24,46,.94));
+      box-shadow:0 10px 28px rgba(0,0,0,.28);
     }
 
-    .filter-chip .dot{
+    .filter-dot{
       display:inline-block;
-      inline-size:12px;
-      block-size:12px;
+      width:11px;
+      height:11px;
       border-radius:50%;
       margin-right:10px;
-      box-shadow:0 0 14px currentColor;
       vertical-align:-1px;
+      box-shadow:0 0 14px currentColor;
     }
 
     #productsGrid{
@@ -163,17 +254,17 @@
 
     #productsEmptyState{
       display:none;
-      margin-top:18px;
+      margin-top:16px;
       padding:16px 18px;
       border:1px dashed var(--line);
       border-radius:18px;
-      background:rgba(8,16,30,.6);
       color:var(--muted);
+      background:rgba(8,16,30,.6);
     }
 
-    .products-shell{
+    .shell{
       display:grid;
-      grid-template-columns:minmax(0,1.45fr) minmax(300px,.85fr);
+      grid-template-columns:minmax(0, 1.45fr) minmax(320px, .8fr);
       gap:20px;
       align-items:start;
     }
@@ -187,50 +278,43 @@
       overflow:hidden;
     }
 
-    .door-panel{
-      padding:16px;
-    }
-
-    .detail-panel{
-      padding:22px;
-      position:sticky;
-      top:18px;
-    }
+    .door-panel{padding:16px}
+    .detail-panel{padding:22px; position:sticky; top:18px}
 
     .section-header{
       display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:18px;
+      align-items:center;
+      gap:16px;
       margin-bottom:14px;
-      padding:6px 6px 2px;
+      padding:4px 6px 2px;
     }
 
     .section-title{
       margin:0;
-      font-size:1.02rem;
-      letter-spacing:.14em;
+      font-size:1rem;
       text-transform:uppercase;
+      letter-spacing:.16em;
       color:#d7e2ff;
     }
 
     .section-meta{
       color:var(--muted);
-      font-size:.88rem;
-      text-transform:uppercase;
+      font-size:.82rem;
       letter-spacing:.12em;
+      text-transform:uppercase;
       white-space:nowrap;
     }
 
     .door-stage{
       position:relative;
-      min-height:min(76vw,980px);
+      min-height:min(76vw, 980px);
       border:1px solid rgba(113,141,224,.14);
       border-radius:32px;
-      background:
-        radial-gradient(circle at 50% 44%, rgba(88,123,216,.2), transparent 18%),
-        linear-gradient(180deg, rgba(4,10,22,.86), rgba(2,8,18,.96));
       overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 43%, rgba(84,118,206,.18), transparent 16%),
+        linear-gradient(180deg, rgba(4,10,22,.88), rgba(2,8,18,.98));
       isolation:isolate;
     }
 
@@ -238,72 +322,71 @@
       content:"";
       position:absolute;
       inset:0;
+      pointer-events:none;
+      opacity:.28;
       background:
         linear-gradient(180deg, transparent, rgba(255,255,255,.02), transparent),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 78px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 78px);
-      opacity:.3;
-      pointer-events:none;
+        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 76px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 76px);
     }
 
     .door-frame{
       position:relative;
-      width:min(100%,760px);
+      width:min(100%, 760px);
       margin:18px auto 82px;
-      aspect-ratio:5/7.4;
+      aspect-ratio:5/7.35;
       filter:drop-shadow(0 32px 60px rgba(0,0,0,.48));
     }
 
-    .door-arch{
+    .door-outline{
       position:absolute;
       inset:0;
       border-radius:360px 360px 42px 42px / 300px 300px 42px 42px;
-      border:1px solid rgba(157,181,255,.3);
+      border:1px solid rgba(157,181,255,.28);
       background:
-        linear-gradient(180deg, rgba(15,28,58,.82), rgba(6,14,28,.88)),
+        linear-gradient(180deg, rgba(15,28,58,.82), rgba(6,14,28,.9)),
         radial-gradient(circle at 50% 26%, rgba(111,149,255,.12), transparent 34%);
       overflow:hidden;
     }
 
-    .door-arch::before{
+    .door-outline::before{
       content:"";
       position:absolute;
       inset:22px;
       border-radius:320px 320px 32px 32px / 260px 260px 32px 32px;
-      border:1px solid rgba(156,180,255,.22);
+      border:1px solid rgba(156,180,255,.20);
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.02),
         inset 0 -24px 48px rgba(0,0,0,.22),
-        0 0 80px rgba(67,106,206,.12);
+        0 0 80px rgba(67,106,206,.10);
     }
 
-    .door-arch::after{
+    .door-outline::after{
       content:"";
       position:absolute;
-      inset:52px 18%;
+      inset:54px 17%;
       border-radius:280px 280px 28px 28px / 240px 240px 28px 28px;
       background:
-        radial-gradient(circle at 50% 40%, rgba(87,120,208,.28), transparent 28%),
-        linear-gradient(180deg, rgba(8,20,40,.2), rgba(5,9,18,.4));
+        radial-gradient(circle at 50% 38%, rgba(87,120,208,.22), transparent 30%),
+        linear-gradient(180deg, rgba(8,20,40,.22), rgba(5,9,18,.42));
       box-shadow:
-        inset 0 0 0 1px rgba(177,196,255,.14),
-        inset 0 0 72px rgba(74,111,209,.16);
+        inset 0 0 0 1px rgba(177,196,255,.12),
+        inset 0 0 72px rgba(74,111,209,.14);
     }
 
     .door-seam{
       position:absolute;
-      top:8.5%;
-      bottom:7%;
+      top:8.3%;
+      bottom:6.8%;
       left:50%;
       width:1px;
       transform:translateX(-50%);
-      background:
-        linear-gradient(180deg, transparent, rgba(220,230,255,.55), transparent);
-      opacity:.82;
+      background:linear-gradient(180deg, transparent, rgba(220,230,255,.56), transparent);
+      opacity:.86;
       z-index:2;
     }
 
-    .door-points{
+    .node-layer{
       position:absolute;
       inset:0;
       z-index:3;
@@ -317,7 +400,7 @@
       width:18px;
       height:18px;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.74);
       background:var(--color);
       box-shadow:
         0 0 0 5px rgba(255,255,255,.04),
@@ -339,7 +422,7 @@
       text-transform:uppercase;
       color:#d9e5ff;
       white-space:nowrap;
-      opacity:.72;
+      opacity:.78;
       pointer-events:none;
     }
 
@@ -362,8 +445,8 @@
     }
 
     .door-node.is-muted{
-      opacity:.18;
-      filter:saturate(.4);
+      opacity:.16;
+      filter:saturate(.35);
     }
 
     .door-footer{
@@ -371,11 +454,11 @@
       left:50%;
       bottom:24px;
       transform:translateX(-50%);
-      width:min(84%,500px);
+      width:min(84%, 520px);
       padding:16px 22px;
       border-radius:999px;
       border:1px solid rgba(130,160,240,.24);
-      background:rgba(6,14,28,.76);
+      background:rgba(6,14,28,.78);
       text-align:center;
       letter-spacing:.16em;
       text-transform:uppercase;
@@ -384,23 +467,7 @@
       z-index:5;
     }
 
-    .door-footer strong{
-      font-weight:800;
-      color:#ffffff;
-    }
-
-    .detail-panel h2{
-      margin:0 0 10px;
-      font-size:1.4rem;
-      line-height:1.08;
-      letter-spacing:-.02em;
-    }
-
-    .detail-panel p{
-      margin:0 0 16px;
-      color:var(--muted);
-      line-height:1.6;
-    }
+    .door-footer strong{color:#fff}
 
     .detail-kicker{
       display:flex;
@@ -413,17 +480,30 @@
       font-size:.74rem;
     }
 
-    .detail-kicker .badge{
+    .badge{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-width:36px;
+      min-width:38px;
       height:24px;
       padding:0 10px;
       border-radius:999px;
       border:1px solid rgba(255,255,255,.14);
       background:rgba(255,255,255,.04);
-      color:#ffffff;
+      color:#fff;
+    }
+
+    .detail-panel h2{
+      margin:0 0 10px;
+      font-size:1.5rem;
+      line-height:1.08;
+      letter-spacing:-.02em;
+    }
+
+    .detail-panel p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.62;
     }
 
     .detail-stats{
@@ -434,7 +514,7 @@
     }
 
     .stat{
-      padding:14px 14px 13px;
+      padding:14px;
       border-radius:18px;
       border:1px solid var(--line);
       background:rgba(8,18,34,.62);
@@ -466,7 +546,7 @@
       display:flex;
       align-items:center;
       gap:10px;
-      padding:12px 12px;
+      padding:12px;
       border-radius:16px;
       border:1px solid var(--line);
       background:rgba(8,18,34,.5);
@@ -482,6 +562,36 @@
       box-shadow:0 0 14px currentColor;
     }
 
+    .detail-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .action-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:0 16px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:700;
+      transition:transform .16s ease, border-color .16s ease, background .16s ease;
+    }
+
+    .action-link:hover,
+    .action-link:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
     .subtle{
       margin-top:16px;
       font-size:.88rem;
@@ -489,37 +599,28 @@
     }
 
     @media (max-width: 980px){
-      .products-shell{
-        grid-template-columns:1fr;
-      }
-
-      .detail-panel{
-        position:static;
-      }
-
-      .door-stage{
-        min-height:860px;
-      }
+      .shell{grid-template-columns:1fr}
+      .detail-panel{position:static}
+      .door-stage{min-height:860px}
     }
 
     @media (max-width: 680px){
-      #productsPage{
-        width:min(100vw - 18px, 1180px);
-        padding:18px 0 28px;
+      .page{
+        width:min(100vw - 16px, 1200px);
+        padding:14px 0 28px;
+      }
+
+      .topbar{
+        padding:12px 14px;
+        flex-wrap:wrap;
       }
 
       .hero{
         padding:20px 16px 18px;
       }
 
-      .door-panel{
-        padding:10px;
-      }
-
-      .door-stage{
-        min-height:720px;
-      }
-
+      .door-panel{padding:10px}
+      .door-stage{min-height:720px}
       .door-frame{
         margin:14px auto 76px;
         width:100%;
@@ -548,31 +649,42 @@
   </style>
 </head>
 <body>
-  <main id="productsPage">
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">G2</div>
+        <div class="brand-copy">
+          <div class="eyebrow">Products Chamber</div>
+          <p class="brand-title">Generation 2 · Symmetric Door Contract</p>
+        </div>
+      </div>
+      <a class="backlink" href="/">Back to Home</a>
+    </header>
+
     <section class="hero" aria-labelledby="productsTitle">
-      <span class="eyebrow">Products Chamber · Symmetric Door</span>
+      <span class="hero-tag">New Contract · Generation 2</span>
       <h1 id="productsTitle">Products field</h1>
       <p>
-        Thirty-two points distributed by Fibonacci growth, rotated into a diamond-relative field,
-        grouped by North, South, East, and West — now expressed as an elegant balanced door rather
-        than a collapsed window.
+        Thirty-two points distributed into a balanced symmetric door. North, South, East, and West
+        remain distinct, but the chamber now reads as one elegant entry surface instead of a collapsed
+        central mass.
       </p>
 
       <div class="filters" id="cardinalFilters" aria-label="Filter products by cardinal direction">
         <button class="filter-chip is-active" type="button" data-filter="all">
-          <span class="dot" style="color:#cdd8f5;background:#cdd8f5;"></span>All
+          <span class="filter-dot" style="color:#dce7ff;background:#dce7ff;"></span>All
         </button>
         <button class="filter-chip" type="button" data-filter="north">
-          <span class="dot" style="color:var(--north);background:var(--north);"></span>North
+          <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>North
         </button>
         <button class="filter-chip" type="button" data-filter="south">
-          <span class="dot" style="color:var(--south);background:var(--south);"></span>South
+          <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>South
         </button>
         <button class="filter-chip" type="button" data-filter="east">
-          <span class="dot" style="color:var(--east);background:var(--east);"></span>East
+          <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>East
         </button>
         <button class="filter-chip" type="button" data-filter="west">
-          <span class="dot" style="color:var(--west);background:var(--west);"></span>West
+          <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>West
         </button>
       </div>
     </section>

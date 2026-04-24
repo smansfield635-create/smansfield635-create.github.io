@@ -1,630 +1,774 @@
 <!DOCTYPE html>
-<html lang="en" data-season="summer">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Prelude | Diamond Gate Bridge</title>
-  <meta name="description" content="Prelude to The Nine Summits of Love." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prelude · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Generation 1 prelude for Diamond Gate Bridge: the opening surface before the deeper routes."
+  />
   <style>
     :root{
-      color-scheme:dark;
-      --bg0:#130f15;
-      --bg1:#23161c;
-      --bg2:#3f241b;
-      --ink:#fff8ef;
-      --mut:rgba(255,248,239,.84);
-      --soft:rgba(255,248,239,.62);
-      --gold:#f5dda5;
-      --gold2:#ffeec8;
-      --amber:#ffbe73;
-      --sun:#ff9248;
-      --coral:#ff8d7c;
-      --violet:#d39bff;
-      --wood:#3a291f;
-      --wood2:#211710;
-      --line:rgba(255,255,255,.10);
-      --lineStrong:rgba(245,221,165,.24);
-      --panelTop:rgba(28,18,14,.76);
-      --panelBottom:rgba(12,10,8,.94);
-      --shadow:0 24px 76px rgba(0,0,0,.48);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
+      --bg:#040814;
+      --bg2:#091327;
+      --panel:rgba(8,14,28,.72);
+      --panel-strong:rgba(10,18,34,.86);
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.34);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --blue:#91c7ff;
+      --mint:#99e5b6;
+      --rose:#f0bacb;
+      --shadow:0 24px 80px rgba(0,0,0,.46);
+      --radius:26px;
+      --max:1160px;
     }
 
     *{box-sizing:border-box}
-    html,body{
+    html,body{min-height:100%}
+    body{
       margin:0;
-      min-height:100%;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(255,190,115,.10), transparent 26%),
-        radial-gradient(circle at 50% 84%, rgba(255,141,124,.06), transparent 30%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
-      color:var(--ink);
+      color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
+        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
+        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+      overflow-x:hidden;
     }
-    body{overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
+      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+    }
 
     .page{
-      position:relative;
-      min-height:100vh;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .aurora{
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-    }
-
-    .aurora::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 18% 24%, rgba(255,190,115,.14), transparent 30%),
-        radial-gradient(circle at 82% 18%, rgba(255,141,124,.12), transparent 28%),
-        radial-gradient(circle at 64% 78%, rgba(211,155,255,.10), transparent 28%);
-      filter:blur(10px);
-    }
-
-    .wrap{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:18px 0 40px;
       position:relative;
       z-index:1;
-      width:min(1220px,calc(100vw - 32px));
-      margin:0 auto;
-      padding:
-        calc(24px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(48px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .topbar,.hero,.dolls,.bridges,.closeout{
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .topbar::before,.hero::before,.dolls::before,.bridges::before,.closeout::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-      border-radius:inherit;
     }
 
     .topbar{
       display:flex;
       justify-content:space-between;
       align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      padding:14px 18px;
+      gap:16px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(7,13,26,.7);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
+      min-width:0;
     }
 
-    .brandMark{
+    .brand-mark{
       width:42px;
       height:42px;
       border-radius:14px;
-      transform:rotate(45deg);
-      border:1px solid var(--lineStrong);
-      background:linear-gradient(180deg,#7b4d2d,#2c180f);
-      flex:0 0 auto;
-    }
-
-    .brandTitle{
-      margin:0 0 3px;
-      font-size:.96rem;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
+      color:#f4f8ff;
       font-weight:800;
       letter-spacing:.08em;
+      box-shadow:inset 0 0 26px rgba(126,160,255,.1);
+      flex:none;
+    }
+
+    .brand-copy{min-width:0}
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
       text-transform:uppercase;
     }
 
-    .brandSubtitle{
+    .brand-title{
       margin:0;
-      color:var(--soft);
-      font-size:.82rem;
+      font-size:1.05rem;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
     }
 
-    .nav{
+    .topnav{
       display:flex;
-      gap:10px;
       flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
     }
 
-    .nav a,.cta{
-      min-height:44px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid var(--lineStrong);
-      background:rgba(255,255,255,.04);
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
+    .nav-link{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      transition:transform 140ms ease, box-shadow 140ms ease;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:700;
+      font-size:.92rem;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      white-space:nowrap;
     }
 
-    .nav a:hover,.cta:hover{
+    .nav-link:hover,
+    .nav-link:focus-visible{
       transform:translateY(-1px);
-      box-shadow:0 16px 34px rgba(0,0,0,.26);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
     }
 
-    .hero,.dolls,.bridges,.closeout{
-      padding:28px 24px 24px;
-    }
-
-    .eyebrow{
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    h1,h2,h3{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    h1{
-      margin:0 0 12px;
-      font-size:clamp(44px,8vw,86px);
-      line-height:.92;
-    }
-
-    h2{
-      margin:0 0 10px;
-      font-size:clamp(28px,4vw,44px);
-      line-height:1.02;
-      color:var(--gold2);
-    }
-
-    h3{
-      margin:0 0 8px;
-      font-size:22px;
-      line-height:1.08;
-      color:var(--gold2);
-    }
-
-    p{
-      margin:0;
-      color:var(--mut);
-      font-size:16px;
-      line-height:1.68;
-      max-width:920px;
-    }
-
-    .lead{
-      font-size:20px;
-      font-weight:800;
-      color:rgba(255,248,239,.96);
-      margin:0 0 12px;
-      max-width:980px;
-    }
-
-    .heroGrid{
-      display:grid;
-      grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
-      gap:18px;
-      align-items:stretch;
-      margin-top:18px;
-    }
-
-    .panel,
-    .windowPanel,
-    .dollCard,
-    .bridgeCard,
-    .closeCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:26px;
-      padding:20px;
-      background:linear-gradient(180deg,rgba(35,22,15,.78),rgba(14,10,8,.94));
-      position:relative;
+    .hero{
+      margin-top:16px;
+      border:1px solid var(--line);
+      border-radius:34px;
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
+      box-shadow:var(--shadow);
       overflow:hidden;
+      position:relative;
     }
 
-    .panel::before,
-    .windowPanel::before,
-    .dollCard::before,
-    .bridgeCard::before,
-    .closeCard::before{
+    .hero::after{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 18% 18%, rgba(255,190,115,.12), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(255,141,124,.10), transparent 26%),
-        radial-gradient(circle at 50% 84%, rgba(211,155,255,.08), transparent 24%);
-      opacity:.95;
+        radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+      mix-blend-mode:screen;
     }
 
-    .panel > *,
-    .windowPanel > *,
-    .dollCard > *,
-    .bridgeCard > *,
-    .closeCard > *{
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0, 1.1fr) minmax(300px, .9fr);
+      gap:20px;
+      padding:24px 20px 20px;
+      align-items:start;
+    }
+
+    .hero-copy{
+      min-width:0;
       position:relative;
       z-index:1;
     }
 
-    .chipRow{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-
-    .chip{
-      min-height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:#fff;
-      font-size:11px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
+    .hero-tag{
       display:inline-flex;
       align-items:center;
-      justify-content:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:12px;
     }
 
-    .ctaRow{
+    .hero-tag::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.52);
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(2.2rem, 4.8vw, 4rem);
+      line-height:.96;
+      letter-spacing:-.05em;
+      max-width:10ch;
+    }
+
+    .hero h1 .accent{color:var(--gold)}
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem, 1.5vw, 1.1rem);
+      line-height:1.58;
+      max-width:58ch;
+    }
+
+    .hero-actions{
       display:flex;
-      gap:12px;
       flex-wrap:wrap;
+      gap:10px;
       margin-top:18px;
     }
 
-    .windowFrameOuter{
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:0 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      white-space:nowrap;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
+    .button.primary{
+      border-color:rgba(239,210,154,.3);
+      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
+      color:#fff8ea;
+    }
+
+    .hero-side{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:rgba(255,255,255,.03);
+      padding:18px;
       position:relative;
-      min-height:340px;
-      border-radius:18px;
-      padding:12px;
-      background:linear-gradient(180deg,var(--wood),var(--wood2));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
+      z-index:1;
     }
 
-    .window{
-      position:relative;
-      width:100%;
-      min-height:316px;
-      height:100%;
-      border-radius:14px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(255,245,224,.16), rgba(255,245,224,.04));
+    .hero-side h2{
+      margin:0 0 10px;
+      font-size:1.08rem;
+      line-height:1.1;
+      letter-spacing:-.02em;
     }
 
-    .outside{
-      position:absolute;
-      inset:0;
-      background:
-        radial-gradient(circle at 50% 100%, rgba(255,190,115,.36), transparent 26%),
-        linear-gradient(180deg, rgba(255,236,176,.20) 0%, rgba(255,165,94,.10) 42%, rgba(64,50,40,.18) 100%);
-    }
-
-    .tree{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:210px;
-      height:260px;
-      transform:translateX(-50%);
-    }
-
-    .trunk{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:18px;
-      height:112px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,#6a4930,#3a2719);
-      border-radius:12px;
-    }
-
-    .branch{
-      position:absolute;
-      background:linear-gradient(180deg,#754f34,#3a2719);
-      border-radius:999px;
-      transform-origin:bottom center;
-    }
-
-    .b1{width:10px;height:96px;left:82px;bottom:84px;transform:rotate(-34deg)}
-    .b2{width:10px;height:98px;left:118px;bottom:86px;transform:rotate(30deg)}
-    .b3{width:8px;height:64px;left:66px;bottom:132px;transform:rotate(-58deg)}
-    .b4{width:8px;height:66px;left:136px;bottom:134px;transform:rotate(56deg)}
-
-    .leaf{
-      position:absolute;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 40% 40%, rgba(255,251,230,.84), transparent 16%),
-        radial-gradient(circle at 50% 50%, rgba(255,202,112,.90), rgba(255,142,86,.94));
-      box-shadow:0 0 18px rgba(255,182,94,.16);
-    }
-
-    .l1{width:74px;height:74px;left:66px;bottom:136px}
-    .l2{width:68px;height:68px;left:20px;bottom:128px}
-    .l3{width:68px;height:68px;left:122px;bottom:128px}
-    .l4{width:58px;height:58px;left:46px;bottom:176px}
-    .l5{width:58px;height:58px;left:110px;bottom:176px}
-    .l6{width:50px;height:50px;left:82px;bottom:198px}
-
-    .sunGlow{
-      position:absolute;
-      left:50%;
-      bottom:16px;
-      width:220px;
-      height:96px;
-      transform:translateX(-50%);
-      background:
-        radial-gradient(circle at 50% 100%, rgba(255,214,150,.42), transparent 36%),
-        radial-gradient(circle at 50% 100%, rgba(255,143,58,.26), transparent 54%);
-      filter:blur(8px);
-    }
-
-    .pane{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
-        linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
-      pointer-events:none;
-    }
-
-    .windowReflection{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(120deg, rgba(255,255,255,.12), transparent 28%, transparent 58%, rgba(255,255,255,.06));
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-
-    .windowLabel{
-      margin-top:14px;
-      color:var(--soft);
-      font-size:13px;
-      line-height:1.55;
-    }
-
-    .dollGrid,.bridgeGrid,.closeGrid{
-      display:grid;
-      gap:14px;
-      margin-top:16px;
-    }
-
-    .dollGrid{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
-
-    .bridgeGrid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .closeGrid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .list{
-      margin:14px 0 0;
-      padding:0;
-      list-style:none;
-      display:grid;
-      gap:8px;
-    }
-
-    .list li{
-      position:relative;
-      padding-left:18px;
-      color:var(--mut);
-      font-size:15px;
+    .hero-side p{
+      margin:0;
+      color:var(--muted);
+      font-size:.96rem;
       line-height:1.58;
     }
 
-    .list li::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:.58em;
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:var(--gold);
-      box-shadow:0 0 10px rgba(245,221,165,.18);
+    .hero-stats{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
     }
 
-    .footnote{
-      margin-top:10px;
-      color:var(--soft);
-      font-size:12px;
-      letter-spacing:.05em;
+    .stat{
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+    }
+
+    .stat-label{
+      display:block;
+      margin-bottom:6px;
+      color:#90a3ce;
+      font-size:.72rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    @media (max-width:1080px){
-      .heroGrid,
-      .dollGrid,
-      .bridgeGrid,
-      .closeGrid{
+    .stat-value{
+      color:#f4f7ff;
+      font-size:.98rem;
+      font-weight:700;
+    }
+
+    .section{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .section-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:6px;
+    }
+
+    .section h2{
+      margin:0;
+      font-size:1.45rem;
+      letter-spacing:-.03em;
+      line-height:1.06;
+    }
+
+    .section-note{
+      color:var(--muted);
+      font-size:.92rem;
+      max-width:42ch;
+      text-align:right;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .card{
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.58;
+    }
+
+    .steps{
+      display:grid;
+      grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .step{
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .step-number{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(239,210,154,.28);
+      background:rgba(239,210,154,.08);
+      color:#fff2d5;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .step h3{
+      margin:0 0 8px;
+      font-size:1.02rem;
+      letter-spacing:-.02em;
+    }
+
+    .step p{
+      margin:0;
+      color:var(--muted);
+      font-size:.94rem;
+      line-height:1.58;
+    }
+
+    .routes{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .route{
+      display:grid;
+      gap:10px;
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:inherit;
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+    }
+
+    .route:hover,
+    .route:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 16px 36px rgba(0,0,0,.18);
+      outline:none;
+    }
+
+    .route[data-tone="blue"]{color:var(--blue)}
+    .route[data-tone="gold"]{color:var(--gold)}
+    .route[data-tone="mint"]{color:var(--mint)}
+    .route[data-tone="rose"]{color:var(--rose)}
+
+    .route-mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      border:1px solid currentColor;
+      background:rgba(255,255,255,.03);
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .route-title{
+      margin:0;
+      color:var(--text);
+      font-size:1.14rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .route-copy{
+      color:var(--muted);
+      line-height:1.58;
+      font-size:.95rem;
+    }
+
+    .route-meta{
+      color:#dce7ff;
+      font-size:.78rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:12px 4px 0;
+      font-size:.92rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,
+      .cards,
+      .steps,
+      .routes{
         grid-template-columns:1fr;
       }
     }
 
-    @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1220px)}
-      .topbar{align-items:flex-start}
-      .hero,.dolls,.bridges,.closeout{padding:20px 18px 18px}
+    @media (max-width: 720px){
+      .page{
+        width:min(100vw - 16px, var(--max));
+        padding:14px 0 28px;
+      }
+
+      .topbar{
+        flex-wrap:wrap;
+        padding:12px 14px;
+      }
+
+      .topnav{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .hero-grid,
+      .section{
+        padding:18px 16px;
+      }
+
+      .hero-grid{
+        gap:14px;
+      }
+
+      .hero h1{
+        font-size:clamp(2rem, 11vw, 3.4rem);
+      }
+
+      .hero-actions{
+        gap:8px;
+      }
+
+      .button{
+        flex:1 1 calc(50% - 8px);
+      }
+
+      .button.primary{
+        flex-basis:100%;
+      }
+
+      .section-head,
+      .footer{
+        display:grid;
+        gap:8px;
+      }
+
+      .section-note{
+        text-align:left;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="aurora" aria-hidden="true"></div>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DG</div>
+        <div class="brand-copy">
+          <p class="brand-kicker">Opening Surface</p>
+          <p class="brand-title">Prelude · Diamond Gate Bridge</p>
+        </div>
+      </div>
 
-    <main class="wrap">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brandMark" aria-hidden="true"></div>
-          <div>
-            <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Prelude · Summer bloom</p>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/products/">Products</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="hero-tag">Generation 1 · prelude renewal</span>
+          <h1>The opening read <span class="accent">before descent</span>.</h1>
+          <p>
+            The Prelude is the clean opening layer. It does not try to explain everything. It sets the tone,
+            establishes the broad read, and prepares the visitor to enter the deeper chambers without confusion.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#how">How to use it</a>
+            <a class="button" href="/about/">About</a>
+            <a class="button" href="/">Back to door</a>
           </div>
         </div>
 
-        <nav class="nav" aria-label="Prelude navigation">
-          <a href="/door/">Door</a>
-          <a href="/home/">Home</a>
-          <a href="/nine-summits/">Nine Summits</a>
-        </nav>
-      </header>
+        <aside class="hero-side">
+          <h2>Prelude job</h2>
+          <p>
+            Orient the visitor, set the opening cadence, and move them toward the right surface without turning
+            the prelude into a law page, product page, or dense explanation block.
+          </p>
 
-      <section class="hero">
-        <p class="eyebrow">Prelude</p>
-        <h1>The first bloom.</h1>
-        <p class="lead">
-          Prelude is the first inward chamber. Summer lives outside the house, and its fullness is witnessed through the Tree of Life.
-        </p>
-
-        <div class="heroGrid">
-          <article class="panel">
-            <h2>Meaning warms here.</h2>
-            <p>
-              The Prelude is where threshold becomes bloom. The house stays interior, coherent, and sheltered. The summer world is visible beyond the glass, not flooding the room itself.
-            </p>
-
-            <div class="chipRow">
-              <div class="chip">Inside is stable</div>
-              <div class="chip">Summer is outside</div>
-              <div class="chip">Tree of Life visible</div>
-              <div class="chip">First inward bloom</div>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-label">Purpose</span>
+              <span class="stat-value">Opening orientation and tone</span>
             </div>
-
-            <div class="ctaRow">
-              <a class="cta" href="/nine-summits/">Open Nine Summits</a>
-              <a class="cta" href="/home/">Continue to Home</a>
+            <div class="stat">
+              <span class="stat-label">Position</span>
+              <span class="stat-value">Before deeper route selection</span>
             </div>
-          </article>
-
-          <aside class="windowPanel">
-            <div class="windowFrameOuter">
-              <div class="window">
-                <div class="outside"></div>
-                <div class="sunGlow"></div>
-                <div class="tree" aria-hidden="true">
-                  <div class="trunk"></div>
-                  <div class="branch b1"></div>
-                  <div class="branch b2"></div>
-                  <div class="branch b3"></div>
-                  <div class="branch b4"></div>
-                  <div class="leaf l1"></div>
-                  <div class="leaf l2"></div>
-                  <div class="leaf l3"></div>
-                  <div class="leaf l4"></div>
-                  <div class="leaf l5"></div>
-                  <div class="leaf l6"></div>
-                </div>
-                <div class="pane"></div>
-                <div class="windowReflection"></div>
-              </div>
+            <div class="stat">
+              <span class="stat-label">Contract</span>
+              <span class="stat-value">Generation 1 Prelude surface</span>
             </div>
-            <p class="windowLabel">Full canopy. Warm horizon. Summer is read through the Tree of Life.</p>
-          </aside>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What the prelude does</div>
+          <h2>Set the frame without overload</h2>
         </div>
-      </section>
-
-      <section class="dolls">
-        <p class="eyebrow">Visible dolls</p>
-        <h2>The Russian dolls begin here.</h2>
-
-        <div class="dollGrid">
-          <article class="dollCard">
-            <h3>Outer doll</h3>
-            <p>The threshold has already been crossed. You are inside the house now.</p>
-          </article>
-
-          <article class="dollCard">
-            <h3>Middle doll</h3>
-            <p>The movement becomes explicit. Meaning starts to organize itself inwardly.</p>
-          </article>
-
-          <article class="dollCard">
-            <h3>Inner doll</h3>
-            <p>The Nine Summits of Love becomes the first deeper chamber ahead.</p>
-          </article>
+        <div class="section-note">
+          This is an opening layer, not a terminal explanation surface.
         </div>
-      </section>
+      </div>
 
-      <section class="bridges">
-        <p class="eyebrow">Two bridges</p>
-        <h2>The house opens in two directions.</h2>
-
-        <div class="bridgeGrid">
-          <article class="bridgeCard">
-            <h3>Toward the movement</h3>
-            <ul class="list">
-              <li>The Nine Summits of Love</li>
-              <li>Character and virtue</li>
-              <li>Inward formation</li>
-            </ul>
-          </article>
-
-          <article class="bridgeCard">
-            <h3>Toward the house</h3>
-            <ul class="list">
-              <li>Home as stable sanctuary</li>
-              <li>The world remains outside</li>
-              <li>The interior deepens without drift</li>
-            </ul>
-          </article>
+      <div class="cards">
+        <div class="card">
+          <h3>Orientation</h3>
+          <p>
+            The Prelude gives the visitor a first stable read so they know what kind of place they have entered.
+          </p>
         </div>
-      </section>
-
-      <section class="closeout">
-        <p class="eyebrow">Transition</p>
-        <h2>Bloom now. Stabilize next.</h2>
-
-        <div class="closeGrid">
-          <article class="closeCard">
-            <h3>Prelude job</h3>
-            <p>Open the inward bloom without collapsing the interior into raw atmosphere.</p>
-          </article>
-
-          <article class="closeCard">
-            <h3>Next room</h3>
-            <p>Home should hold the same window-law, but in a calmer and more centered form.</p>
-          </article>
+        <div class="card">
+          <h3>Tone</h3>
+          <p>
+            It establishes cadence and seriousness without collapsing into doctrine, pitch language, or clutter.
+          </p>
         </div>
+        <div class="card">
+          <h3>Transition</h3>
+          <p>
+            It prepares lawful descent into the right route, chamber, or surface once the opening frame is stable.
+          </p>
+        </div>
+      </div>
+    </section>
 
-        <div class="footnote">Summer stays outside. Meaning deepens inside.</div>
-      </section>
-    </main>
-  </div>
+    <section class="section" id="how">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">How to use it</div>
+          <h2>Read broad first, then go where the route asks</h2>
+        </div>
+        <div class="section-note">
+          The prelude should reduce confusion, not create more of it.
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Enter cleanly</h3>
+          <p>
+            Take the opening read at face value. The Prelude is meant to steady the frame before deeper exploration.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Let the tone settle</h3>
+          <p>
+            Read the surface as an opening instrument, not as a total encyclopedia of the entire project.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Choose the next route</h3>
+          <p>
+            Move from Prelude into About, Products, Laws, or the root door only after the basic orientation is clear.
+          </p>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <h3>Continue by fit</h3>
+          <p>
+            Follow the chamber that matches the job instead of trying to flatten all layers into one page.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Next routes</div>
+          <h2>Move deeper from here</h2>
+        </div>
+        <div class="section-note">
+          Prelude opens the path. It does not need to contain the whole world.
+        </div>
+      </div>
+
+      <div class="routes">
+        <a class="route" data-tone="blue" href="/">
+          <div class="route-mark">D</div>
+          <h3 class="route-title">Door</h3>
+          <div class="route-copy">
+            Return to the root gateway and choose a broad entry into the wider house.
+          </div>
+          <div class="route-meta">Root · Entry</div>
+        </a>
+
+        <a class="route" data-tone="gold" href="/about/">
+          <div class="route-mark">A</div>
+          <h3 class="route-title">About</h3>
+          <div class="route-copy">
+            Read the orientation surface that explains what the site is, how to use it, and what is live now.
+          </div>
+          <div class="route-meta">Identity · Orientation</div>
+        </a>
+
+        <a class="route" data-tone="mint" href="/products/">
+          <div class="route-mark">P</div>
+          <h3 class="route-title">Products</h3>
+          <div class="route-copy">
+            Enter the products chamber and move from orientation into build-facing public surfaces.
+          </div>
+          <div class="route-meta">Chamber · Build</div>
+        </a>
+
+        <a class="route" data-tone="rose" href="/laws/">
+          <div class="route-mark">L</div>
+          <h3 class="route-title">Laws</h3>
+          <div class="route-copy">
+            Step into the governing rule layer once you need the structural and interpretive standards.
+          </div>
+          <div class="route-meta">Rule · Structure</div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Prelude · Generation 1 opening contract</span>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>

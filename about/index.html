@@ -1,119 +1,724 @@
-<!-- TNT FILE: /about/index.html -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>About · Geodiametrics</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="About Diamond Gate Bridge: what it is, how to use it, and what is live now."
+  />
+  <style>
+    :root{
+      --bg:#040814;
+      --bg2:#091327;
+      --panel:rgba(8,14,28,.72);
+      --panel-strong:rgba(10,18,34,.86);
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.34);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --blue:#91c7ff;
+      --mint:#99e5b6;
+      --rose:#f0bacb;
+      --shadow:0 24px 80px rgba(0,0,0,.46);
+      --radius:26px;
+      --max:1160px;
+    }
 
-  <link rel="stylesheet" href="/assets/ui.css?v=9300"/>
-  <link rel="stylesheet" href="/assets/branch.css?v=9300"/>
-  <script defer src="/assets/instrument.js?v=9300"></script>
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
+        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
+        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.18;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
+      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+    }
+
+    .page{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:18px 0 40px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px 16px;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(7,13,26,.7);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
+      color:#f4f8ff;
+      font-weight:800;
+      letter-spacing:.08em;
+      box-shadow:inset 0 0 26px rgba(126,160,255,.1);
+      flex:none;
+    }
+
+    .brand-copy{min-width:0}
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:700;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .nav-link{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:0 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:700;
+      font-size:.92rem;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      white-space:nowrap;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
+    .hero{
+      margin-top:16px;
+      border:1px solid var(--line);
+      border-radius:34px;
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      position:relative;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+      mix-blend-mode:screen;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0, 1.05fr) minmax(320px, .95fr);
+      gap:20px;
+      padding:24px 20px 20px;
+      align-items:start;
+    }
+
+    .hero-copy{
+      min-width:0;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:12px;
+    }
+
+    .hero-tag::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.52);
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(2.2rem, 4.8vw, 4rem);
+      line-height:.96;
+      letter-spacing:-.05em;
+      max-width:9ch;
+    }
+
+    .hero h1 .accent{color:var(--gold)}
+
+    .hero p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem, 1.5vw, 1.1rem);
+      line-height:1.58;
+      max-width:56ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:44px;
+      padding:0 16px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      color:var(--text);
+      text-decoration:none;
+      font-weight:800;
+      background:rgba(255,255,255,.03);
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      white-space:nowrap;
+    }
+
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
+    .button.primary{
+      border-color:rgba(239,210,154,.3);
+      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
+      color:#fff8ea;
+    }
+
+    .hero-side{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:rgba(255,255,255,.03);
+      padding:18px;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-side h2{
+      margin:0 0 10px;
+      font-size:1.08rem;
+      line-height:1.1;
+      letter-spacing:-.02em;
+    }
+
+    .hero-side p{
+      margin:0;
+      color:var(--muted);
+      font-size:.96rem;
+      line-height:1.58;
+    }
+
+    .hero-stats{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
+    .stat{
+      padding:12px 14px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.025);
+    }
+
+    .stat-label{
+      display:block;
+      margin-bottom:6px;
+      color:#90a3ce;
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .stat-value{
+      color:#f4f7ff;
+      font-size:.98rem;
+      font-weight:700;
+    }
+
+    .section{
+      margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .section-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .section-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:6px;
+    }
+
+    .section h2{
+      margin:0;
+      font-size:1.45rem;
+      letter-spacing:-.03em;
+      line-height:1.06;
+    }
+
+    .section-note{
+      color:var(--muted);
+      font-size:.92rem;
+      max-width:42ch;
+      text-align:right;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .card{
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .card h3{
+      margin:0 0 10px;
+      font-size:1.08rem;
+      letter-spacing:-.02em;
+    }
+
+    .card p{
+      margin:0;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.58;
+    }
+
+    .routes{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .route{
+      display:grid;
+      gap:10px;
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+      color:inherit;
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+    }
+
+    .route:hover,
+    .route:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      box-shadow:0 16px 36px rgba(0,0,0,.18);
+      outline:none;
+    }
+
+    .route[data-tone="blue"]{color:var(--blue)}
+    .route[data-tone="gold"]{color:var(--gold)}
+    .route[data-tone="mint"]{color:var(--mint)}
+    .route[data-tone="rose"]{color:var(--rose)}
+
+    .route-mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      border:1px solid currentColor;
+      background:rgba(255,255,255,.03);
+      font-weight:800;
+      letter-spacing:.08em;
+    }
+
+    .route-title{
+      margin:0;
+      color:var(--text);
+      font-size:1.14rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+
+    .route-copy{
+      color:var(--muted);
+      line-height:1.58;
+      font-size:.95rem;
+    }
+
+    .route-meta{
+      color:#dce7ff;
+      font-size:.78rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:12px 4px 0;
+      font-size:.92rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width: 980px){
+      .hero-grid,
+      .cards,
+      .routes{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 720px){
+      .page{
+        width:min(100vw - 16px, var(--max));
+        padding:14px 0 28px;
+      }
+
+      .topbar{
+        flex-wrap:wrap;
+        padding:12px 14px;
+      }
+
+      .topnav{
+        width:100%;
+        justify-content:flex-start;
+      }
+
+      .hero-grid,
+      .section{
+        padding:18px 16px;
+      }
+
+      .hero-grid{
+        gap:14px;
+      }
+
+      .hero h1{
+        font-size:clamp(2rem, 11vw, 3.4rem);
+      }
+
+      .hero-actions{
+        gap:8px;
+      }
+
+      .button{
+        flex:1 1 calc(50% - 8px);
+      }
+
+      .button.primary{
+        flex-basis:100%;
+      }
+
+      .section-head,
+      .footer{
+        display:grid;
+        gap:8px;
+      }
+
+      .section-note{
+        text-align:left;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<div class="page">
-  <div class="wrap">
-
-    <div class="hero" style="text-align:center">
-      <h1>ABOUT</h1>
-      <p>What this is · how to use it · what’s live now.</p>
-
-      <div class="pills" style="justify-content:center;margin-top:12px">
-        <a class="pill btn" href="/door/">TERMINAL</a>
-        <a class="pill btn" href="/home/">COMPASS</a>
-        <a class="pill btn" href="/explore/">EXPLORE</a>
-        <a class="pill btn" href="/links/">LINKS</a>
-      </div>
-    </div>
-
-    <div class="panel" style="padding:18px">
-      <div class="section-title" style="margin-top:0">Purpose</div>
-      <p style="margin-top:10px;line-height:1.75;opacity:.86">
-        Geodiametrics is a structured navigation system for coherence, execution, and verification.
-        It’s built as a traversal instrument: you move through quadrants, select a path, and end with a usable resolution output.
-      </p>
-
-      <hr class="sep"/>
-
-      <div class="section-title">How to use</div>
-      <div class="bubble-row" style="margin-top:12px">
-        <div class="bubble-btn" style="cursor:default">
-          <div class="lbl">
-            <b>1) Choose a route</b>
-            <i>Terminal decides surface vs deep.</i>
-          </div>
-          <div class="go">•</div>
-        </div>
-
-        <div class="bubble-btn" style="cursor:default">
-          <div class="lbl">
-            <b>2) Explore</b>
-            <i>Surface map. Fast orientation.</i>
-          </div>
-          <div class="go">•</div>
-        </div>
-
-        <div class="bubble-btn" style="cursor:default">
-          <div class="lbl">
-            <b>3) Compass</b>
-            <i>Deep drill-down: vine → fruit → resolution.</i>
-          </div>
-          <div class="go">•</div>
-        </div>
-
-        <div class="bubble-btn" style="cursor:default">
-          <div class="lbl">
-            <b>4) Verify</b>
-            <i>Consistency via repeatable structure.</i>
-          </div>
-          <div class="go">•</div>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DG</div>
+        <div class="brand-copy">
+          <p class="brand-kicker">Orientation Surface</p>
+          <p class="brand-title">About · Diamond Gate Bridge</p>
         </div>
       </div>
 
-      <hr class="sep"/>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/products/">Products</a>
+        <a class="nav-link" href="/gauges/">Gauges</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+      </nav>
+    </header>
 
-      <div class="section-title">What’s live</div>
-      <div class="bubble-row" style="margin-top:12px">
-        <a class="bubble-btn" href="/home/">
-          <div class="lbl">
-            <b>COMPASS HUB</b>
-            <i>Quadrant → vine → fruit → resolution</i>
+    <section class="hero">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <span class="hero-tag">Generation 1 · out with legacy</span>
+          <h1>What this is, <span class="accent">how to use it</span>, and what is live.</h1>
+          <p>
+            Diamond Gate Bridge is a structured public gateway for coherence, execution, and verification.
+            It is designed as an entry surface: orient first, choose a lawful route, then move deeper only
+            when the path is clear.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#live">See what is live</a>
+            <a class="button" href="/products/">Open products</a>
+            <a class="button" href="/">Back to door</a>
           </div>
-          <div class="go">▶</div>
+        </div>
+
+        <aside class="hero-side">
+          <h2>Fast read</h2>
+          <p>
+            This page is for orientation. It explains the purpose of the site, the basic traversal method,
+            and the live public routes without falling back into the old editorial legacy page.
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-label">Purpose</span>
+              <span class="stat-value">Structured navigation and coherence</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Use pattern</span>
+              <span class="stat-value">Route → explore → verify → resolve</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Current contract</span>
+              <span class="stat-value">Generation 1 orientation surface</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Purpose</div>
+          <h2>Why this exists</h2>
+        </div>
+        <div class="section-note">
+          The site is a traversal instrument, not a pile of disconnected pages.
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>Coherence</h3>
+          <p>
+            It gives structure to movement. You do not enter randomly. You orient first, then proceed by route.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Execution</h3>
+          <p>
+            Each chamber is meant to produce usable movement, not just commentary. The public surface should support that.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Verification</h3>
+          <p>
+            The architecture is repeatable. You should be able to follow a path and reach a stable result without losing the frame.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">How to use</div>
+          <h2>Move through the site cleanly</h2>
+        </div>
+        <div class="section-note">
+          Start broad, then descend only where the route lawfully takes you.
+        </div>
+      </div>
+
+      <div class="cards">
+        <div class="card">
+          <h3>1. Choose a route</h3>
+          <p>
+            Start at the door or this orientation surface. Pick the route that matches the job instead of opening everything at once.
+          </p>
+        </div>
+        <div class="card">
+          <h3>2. Explore the surface</h3>
+          <p>
+            Use the public chamber to get a fast read. That is where products, gauges, and law become visible enough to navigate.
+          </p>
+        </div>
+        <div class="card">
+          <h3>3. Verify the structure</h3>
+          <p>
+            A good route should stay coherent under repetition. The same path should keep producing the same class of usable output.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="live">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What is live</div>
+          <h2>Current public routes</h2>
+        </div>
+        <div class="section-note">
+          These are the active public-facing surfaces that matter right now.
+        </div>
+      </div>
+
+      <div class="routes">
+        <a class="route" data-tone="blue" href="/">
+          <div class="route-mark">D</div>
+          <h3 class="route-title">Door</h3>
+          <div class="route-copy">
+            The canonical homepage gateway. This is the root entry surface for the wider house.
+          </div>
+          <div class="route-meta">Root · World entry</div>
         </a>
 
-        <a class="bubble-btn" href="/hip-demo/">
-          <div class="lbl">
-            <b>HIP DEMO</b>
-            <i>Blast radius suppression simulator</i>
+        <a class="route" data-tone="mint" href="/products/">
+          <div class="route-mark">P</div>
+          <h3 class="route-title">Products</h3>
+          <div class="route-copy">
+            The products chamber and system-facing public route for structured surfaces and offerings.
           </div>
-          <div class="go">▶</div>
+          <div class="route-meta">Chamber · Build</div>
         </a>
 
-        <a class="bubble-btn" href="/links/">
-          <div class="lbl">
-            <b>ANCHORS</b>
-            <i>ORCID · OSF · references</i>
+        <a class="route" data-tone="gold" href="/gauges/">
+          <div class="route-mark">G</div>
+          <h3 class="route-title">Gauges</h3>
+          <div class="route-copy">
+            The signal and measurement layer for reading system state and movement.
           </div>
-          <div class="go">▶</div>
+          <div class="route-meta">Signal · Measurement</div>
         </a>
 
-        <a class="bubble-btn" href="/door/">
-          <div class="lbl">
-            <b>ROUTE SELECT</b>
-            <i>Pick depth and direction</i>
+        <a class="route" data-tone="rose" href="/laws/">
+          <div class="route-mark">L</div>
+          <h3 class="route-title">Laws</h3>
+          <div class="route-copy">
+            The governing rule layer for the larger architecture and its working standards.
           </div>
-          <div class="go">▶</div>
+          <div class="route-meta">Rule · Structure</div>
         </a>
       </div>
-    </div>
+    </section>
 
-    <footer>CANONICAL · STABLE · © GEODIAMETRICS</footer>
-    <div class="ink">GEODIAMETRICS</div>
-
-  </div>
-</div>
+    <footer class="footer">
+      <span>About · Generation 1 orientation contract</span>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>
-```0

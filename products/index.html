@@ -59,6 +59,7 @@
       padding:18px 0 40px;
       position:relative;
       z-index:1;
+      overflow:hidden;
     }
 
     .topbar,.hero,.section,.window-panel,.detail-panel,.hero-side{
@@ -76,6 +77,7 @@
       border-radius:20px;
       background:rgba(7,13,26,.7);
       backdrop-filter:blur(10px);
+      overflow:hidden;
     }
 
     .brand{display:flex;align-items:center;gap:12px;min-width:0}
@@ -216,6 +218,7 @@
     .hero-side{
       border-radius:24px;
       padding:18px;
+      overflow:hidden;
     }
 
     .hero-side h2,.detail-title{
@@ -292,6 +295,7 @@
       margin-top:18px;
       border-radius:30px;
       padding:20px;
+      overflow:hidden;
     }
 
     .section-head{
@@ -300,6 +304,7 @@
       align-items:end;
       gap:16px;
       margin-bottom:16px;
+      min-width:0;
     }
 
     .section-kicker{
@@ -328,10 +333,13 @@
       grid-template-columns:minmax(0,1.35fr) minmax(320px,.8fr);
       gap:18px;
       align-items:start;
+      min-width:0;
     }
 
     .window-panel,.detail-panel{
       border-radius:24px;
+      min-width:0;
+      overflow:hidden;
     }
 
     .window-panel{padding:16px}
@@ -340,10 +348,11 @@
     .window-head{
       display:flex;
       justify-content:space-between;
-      align-items:center;
+      align-items:flex-start;
       gap:12px;
       margin-bottom:14px;
       padding:4px 6px 2px;
+      min-width:0;
     }
 
     .window-head h2{
@@ -352,6 +361,7 @@
       text-transform:uppercase;
       letter-spacing:.16em;
       color:#d7e2ff;
+      min-width:0;
     }
 
     .window-meta{
@@ -359,13 +369,17 @@
       font-size:.82rem;
       letter-spacing:.12em;
       text-transform:uppercase;
-      white-space:nowrap;
+      white-space:normal;
+      text-align:right;
+      max-width:52%;
+      line-height:1.35;
     }
 
     .window-stage{
       position:relative;
       height:640px;
-      max-width:860px;
+      width:100%;
+      max-width:100%;
       margin:0 auto;
       border:1px solid rgba(113,141,224,.14);
       border-radius:28px;
@@ -498,7 +512,11 @@
 
     .window-frame{
       position:absolute;
-      inset:28px 22px 76px;
+      top:28px;
+      bottom:76px;
+      left:22px;
+      right:22px;
+      width:auto;
       border-radius:26px;
       overflow:hidden;
       z-index:2;
@@ -518,6 +536,10 @@
       letter-spacing:.14em;
       text-transform:uppercase;
       z-index:7;
+      max-width:calc(100% - 32px);
+      white-space:normal;
+      text-align:center;
+      line-height:1.35;
     }
 
     .eight-track{
@@ -678,7 +700,8 @@
       left:50%;
       bottom:20px;
       transform:translateX(-50%);
-      width:min(86%, 560px);
+      width:calc(100% - 32px);
+      max-width:560px;
       padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(140,168,240,.24);
@@ -690,6 +713,8 @@
       color:#dbe5ff;
       box-shadow:0 12px 32px rgba(0,0,0,.28);
       z-index:7;
+      white-space:normal;
+      line-height:1.35;
     }
 
     .window-copy strong{color:#fff}
@@ -703,6 +728,7 @@
       letter-spacing:.14em;
       text-transform:uppercase;
       font-size:.74rem;
+      flex-wrap:wrap;
     }
 
     .badge{
@@ -733,6 +759,7 @@
       color:var(--muted);
       padding:12px 4px 0;
       font-size:.92rem;
+      overflow:hidden;
     }
 
     .footer-links{
@@ -801,47 +828,110 @@
         padding:0 14px;
       }
 
-      .window-stage{
-        height:560px;
-      }
-
-      .window-frame{
-        inset:24px 12px 76px;
-      }
-
-      .atom{
-        width:122px;
-        height:122px;
-      }
-
-      .atom::before{
-        inset:10px;
-      }
-
-      .throat{
-        width:72px;
-        height:72px;
-      }
-
-      .node{
-        width:14px;height:14px;
-      }
-
-      .node::after{
-        font-size:.5rem;
-      }
-
-      .detail-stats{
-        grid-template-columns:1fr;
-      }
-
-      .section-head,.footer{
+      .section-head{
         display:grid;
         gap:8px;
       }
 
       .section-note{
         text-align:left;
+      }
+
+      .window-head{
+        display:grid;
+        gap:8px;
+      }
+
+      .window-meta{
+        max-width:none;
+        text-align:left;
+        font-size:.68rem;
+        line-height:1.35;
+      }
+
+      .window-stage{
+        height:520px;
+        width:100%;
+        max-width:100%;
+        overflow:hidden;
+      }
+
+      .window-frame{
+        top:24px;
+        bottom:74px;
+        left:12px;
+        right:12px;
+        width:auto;
+      }
+
+      .window-title{
+        max-width:78%;
+        white-space:normal;
+        text-align:center;
+        font-size:.62rem;
+      }
+
+      .lead-came.v{
+        width:8px;
+      }
+
+      .lead-came.h{
+        height:8px;
+      }
+
+      .lead-came.diag{
+        width:8px;
+        height:190px;
+      }
+
+      .atom{
+        width:112px;
+        height:112px;
+      }
+
+      .atom::before{
+        inset:10px;
+      }
+
+      .atom-label{
+        min-width:62px;
+        height:28px;
+        padding:0 10px;
+        font-size:.58rem;
+      }
+
+      .throat{
+        width:66px;
+        height:66px;
+      }
+
+      .node{
+        width:13px;height:13px;
+      }
+
+      .node::after{
+        font-size:.46rem;
+        top:calc(100% + 6px);
+      }
+
+      .window-copy{
+        width:calc(100% - 24px);
+        max-width:none;
+        font-size:.56rem;
+        line-height:1.35;
+        letter-spacing:.11em;
+        border-radius:22px;
+        padding:10px 12px;
+        white-space:normal;
+      }
+
+      .detail-stats{
+        grid-template-columns:1fr;
+      }
+
+      .footer{
+        display:grid;
+        gap:8px;
       }
     }
   </style>
@@ -903,7 +993,7 @@
         <aside class="hero-side">
           <h2>Window job</h2>
           <p>
-            Seat the molecular object inside a true window surface. The stained-glass frame should own the chamber expression
+            Seat the molecular object inside a true window surface. The stained-glass frame owns the chamber expression
             so the page reads as host, the window reads as vessel, and the molecule reads as content.
           </p>
 

@@ -1,6 +1,14 @@
-const productsGrid = document.getElementById("productsGrid");
-const productsEmptyState = document.getElementById("productsEmptyState");
 const filterButtons = [...document.querySelectorAll("#cardinalFilters [data-filter]")];
+const nodeLayer = document.getElementById("nodeLayer");
+const detailCode = document.getElementById("detailCode");
+const detailFamily = document.getElementById("detailFamily");
+const detailTitle = document.getElementById("detailTitle");
+const detailCopy = document.getElementById("detailCopy");
+const detailCardinal = document.getElementById("detailCardinal");
+const detailVisible = document.getElementById("detailVisible");
+const detailCount = document.getElementById("detailCount");
+const detailRoute = document.getElementById("detailRoute");
+const detailHref = document.getElementById("detailHref");
 
 const CARDINALS = {
   north: {
@@ -103,8 +111,8 @@ function buildProducts() {
         x: sideConfig.x,
         y: pair.y,
         description:
-          `${title} is a ${cardinal.label.toLowerCase()}-lane point in the Generation 2 products door. ` +
-          `It lives on the ${sideConfig.side} leaf of the symmetric chamber and expresses ${cardinal.role.toLowerCase()}.`
+          `${title} is a ${cardinal.label.toLowerCase()}-lane point in the Generation 1 products chamber. ` +
+          `It lives on the ${sideConfig.side} leaf of the symmetric field and expresses ${cardinal.role.toLowerCase()}.`
       });
     });
   });
@@ -137,10 +145,13 @@ function renderFilters() {
   });
 }
 
-function renderDoor(active) {
-  const nodes = PRODUCTS.map((item) => {
+function renderNodes() {
+  const active = currentActive(visibleProducts());
+
+  nodeLayer.innerHTML = PRODUCTS.map((item) => {
     const isVisible = state.filter === "all" || item.cardinalKey === state.filter;
     const isActive = active && active.id === item.id;
+
     const classes = [
       "door-node",
       isActive ? "is-active" : "",
@@ -160,96 +171,7 @@ function renderDoor(active) {
     `;
   }).join("");
 
-  return `
-    <section class="door-panel">
-      <div class="section-header">
-        <h2 class="section-title">Door field</h2>
-        <div class="section-meta">32 points · balanced symmetry</div>
-      </div>
-
-      <div class="door-stage">
-        <div class="door-frame">
-          <div class="door-outline"></div>
-          <div class="door-seam" aria-hidden="true"></div>
-          <div class="node-layer">${nodes}</div>
-        </div>
-
-        <div class="door-footer">
-          <strong>Generation 2</strong> · symmetric products door
-        </div>
-      </div>
-    </section>
-  `;
-}
-
-function renderDetail(active, list) {
-  if (!active) {
-    return `
-      <aside class="detail-panel">
-        <div class="detail-kicker">
-          <span class="badge">0</span>
-          <span>No active point</span>
-        </div>
-        <h2>Nothing selected</h2>
-        <p>Select any point in the door to inspect its lane.</p>
-      </aside>
-    `;
-  }
-
-  const cardinal = CARDINALS[active.cardinalKey];
-  const visibleCount = list.length;
-  const familyCount = PRODUCTS.filter((item) => item.cardinalKey === active.cardinalKey).length;
-
-  return `
-    <aside class="detail-panel">
-      <div class="detail-kicker">
-        <span class="badge" style="border-color:${cardinal.glow};color:${cardinal.color};">${active.code}</span>
-        <span>${active.cardinalLabel} · ${active.side}</span>
-      </div>
-
-      <h2>${active.title}</h2>
-      <p>${active.description}</p>
-
-      <div class="detail-stats">
-        <div class="stat">
-          <span class="stat-label">Cardinal</span>
-          <span class="stat-value">${active.cardinalLabel}</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Visible Points</span>
-          <span class="stat-value">${visibleCount}</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Family Count</span>
-          <span class="stat-value">${familyCount}</span>
-        </div>
-        <div class="stat">
-          <span class="stat-label">Contract</span>
-          <span class="stat-value">Generation 2</span>
-        </div>
-      </div>
-
-      <div class="legend">
-        ${Object.entries(CARDINALS).map(([key, value]) => `
-          <div class="legend-item">
-            <span class="legend-dot" style="color:${value.color};background:${value.color};"></span>
-            <span>${value.label} · ${PRODUCTS.filter((item) => item.cardinalKey === key).length}</span>
-          </div>
-        `).join("")}
-      </div>
-
-      <div class="detail-actions">
-        <a class="action-link" href="${active.href}">Open lane</a>
-        <a class="action-link" href="/">Back home</a>
-      </div>
-
-      <p class="subtle">${cardinal.summary}</p>
-    </aside>
-  `;
-}
-
-function bindNodes() {
-  productsGrid.querySelectorAll("[data-id]").forEach((button) => {
+  nodeLayer.querySelectorAll("[data-id]").forEach((button) => {
     button.addEventListener("click", () => {
       state.activeId = button.dataset.id;
       render();
@@ -265,30 +187,37 @@ function bindNodes() {
   });
 }
 
-function render() {
+function renderDetail() {
   const list = visibleProducts();
   const active = currentActive(list);
 
-  if (active) state.activeId = active.id;
+  if (!active) return;
 
-  productsGrid.innerHTML = `
-    <div class="shell">
-      ${renderDoor(active)}
-      ${renderDetail(active, list)}
-    </div>
-  `;
+  const familyCount = PRODUCTS.filter((item) => item.cardinalKey === active.cardinalKey).length;
 
-  productsEmptyState.style.display = list.length ? "none" : "block";
-  bindNodes();
+  detailCode.textContent = active.code;
+  detailFamily.textContent = `${active.cardinalLabel} · ${active.side}`;
+  detailTitle.textContent = active.title;
+  detailCopy.textContent = active.description;
+  detailCardinal.textContent = active.cardinalLabel;
+  detailVisible.textContent = String(list.length);
+  detailCount.textContent = String(familyCount);
+  detailRoute.textContent = active.role;
+  detailHref.href = active.href;
+  detailHref.textContent = `Open ${active.cardinalLabel} lane`;
+}
+
+function render() {
+  renderFilters();
+  renderNodes();
+  renderDetail();
 }
 
 filterButtons.forEach((button) => {
   button.addEventListener("click", () => {
     state.filter = button.dataset.filter;
-    renderFilters();
     render();
   });
 });
 
-renderFilters();
 render();

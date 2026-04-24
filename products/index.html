@@ -3,27 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Products · Generation 2</title>
+  <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Generation 2 products chamber: a balanced symmetric door with 32 points grouped by North, South, East, and West."
+    content="The canonical gateway: Nine Summits baseline, world access, and structured paths into the wider house."
   />
   <style>
     :root{
       --bg:#030815;
-      --bg2:#071225;
-      --panel:rgba(9,18,36,.84);
-      --panel-2:rgba(8,16,30,.74);
+      --bg-2:#071224;
+      --panel:rgba(10,18,36,.82);
+      --panel-2:rgba(8,15,30,.72);
       --line:rgba(145,171,255,.18);
-      --line-strong:rgba(190,210,255,.34);
+      --line-strong:rgba(196,212,255,.34);
       --text:#edf3ff;
-      --muted:#9aadd4;
-      --north:#dde8ff;
-      --south:#97e6b4;
-      --east:#8fc9ff;
-      --west:#ffd58f;
+      --muted:#9caed4;
+      --gold:#f2d18a;
+      --blue:#8fc8ff;
+      --mint:#98e4b5;
+      --rose:#f2b8cc;
+      --shadow:0 24px 72px rgba(0,0,0,.42);
       --radius:28px;
-      --shadow:0 22px 70px rgba(0,0,0,.42);
+      --max:1240px;
     }
 
     *{box-sizing:border-box}
@@ -33,9 +34,9 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 14%, rgba(92,126,210,.18), transparent 20%),
-        radial-gradient(circle at 50% 42%, rgba(64,96,176,.12), transparent 24%),
-        linear-gradient(180deg, #020611 0%, #051022 48%, #020611 100%);
+        radial-gradient(circle at 50% 10%, rgba(92,126,210,.18), transparent 18%),
+        radial-gradient(circle at 50% 42%, rgba(64,96,176,.10), transparent 24%),
+        linear-gradient(180deg, #020611 0%, #051022 45%, #020611 100%);
       overflow-x:hidden;
     }
 
@@ -54,9 +55,9 @@
     }
 
     .page{
-      width:min(1200px, calc(100vw - 24px));
+      width:min(var(--max), calc(100vw - 24px));
       margin:0 auto;
-      padding:20px 0 40px;
+      padding:20px 0 44px;
       position:relative;
       z-index:1;
     }
@@ -83,8 +84,8 @@
     }
 
     .brand-mark{
-      width:40px;
-      height:40px;
+      width:42px;
+      height:42px;
       border-radius:14px;
       border:1px solid var(--line);
       display:grid;
@@ -100,7 +101,7 @@
       min-width:0;
     }
 
-    .eyebrow{
+    .brand-kicker{
       color:#c8d7ff;
       font-size:.72rem;
       text-transform:uppercase;
@@ -117,24 +118,31 @@
       text-overflow:ellipsis;
     }
 
-    .backlink{
+    .top-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .pill{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:42px;
-      padding:0 16px;
+      min-height:40px;
+      padding:0 14px;
       border-radius:999px;
       border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
       color:var(--text);
       text-decoration:none;
       font-weight:700;
-      background:rgba(255,255,255,.03);
-      transition:transform .16s ease, border-color .16s ease, background .16s ease;
+      font-size:.92rem;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
       white-space:nowrap;
     }
 
-    .backlink:hover,
-    .backlink:focus-visible{
+    .pill:hover,
+    .pill:focus-visible{
       transform:translateY(-1px);
       border-color:var(--line-strong);
       background:rgba(255,255,255,.05);
@@ -142,13 +150,14 @@
     }
 
     .hero{
+      position:relative;
       border:1px solid var(--line);
-      border-radius:32px;
+      border-radius:34px;
       background:linear-gradient(180deg, rgba(9,18,36,.88), rgba(6,13,26,.82));
       box-shadow:var(--shadow);
-      padding:24px 20px 22px;
+      padding:28px 22px 24px;
       overflow:hidden;
-      position:relative;
+      margin-bottom:18px;
     }
 
     .hero::after{
@@ -187,337 +196,98 @@
       box-shadow:0 0 16px rgba(220,231,255,.6);
     }
 
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1.45fr) minmax(280px,.8fr);
+      gap:20px;
+      align-items:start;
+    }
+
     .hero h1{
-      margin:0 0 10px;
-      font-size:clamp(2.2rem, 5vw, 4rem);
-      line-height:1;
-      letter-spacing:-.04em;
+      margin:0 0 12px;
+      font-size:clamp(2.4rem, 5.5vw, 4.6rem);
+      line-height:.98;
+      letter-spacing:-.045em;
+      max-width:12ch;
+    }
+
+    .hero h1 .accent{
+      color:var(--gold);
     }
 
     .hero p{
       margin:0;
-      max-width:860px;
+      max-width:800px;
       color:var(--muted);
-      font-size:clamp(1rem, 1.8vw, 1.2rem);
-      line-height:1.62;
+      font-size:clamp(1rem, 1.8vw, 1.18rem);
+      line-height:1.64;
     }
 
-    .filters{
+    .hero-links{
       display:flex;
       flex-wrap:wrap;
       gap:12px;
       margin-top:22px;
     }
 
-    .filter-chip{
-      appearance:none;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(10,20,40,.78);
-      color:#dce7ff;
-      padding:12px 16px;
-      min-width:118px;
-      font-weight:800;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      cursor:pointer;
-      transition:transform .16s ease, border-color .16s ease, background .16s ease, opacity .16s ease;
-    }
-
-    .filter-chip:hover,
-    .filter-chip:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      outline:none;
-      background:rgba(15,28,56,.92);
-    }
-
-    .filter-chip.is-active{
-      border-color:rgba(224,234,255,.42);
-      background:linear-gradient(180deg, rgba(26,42,78,.96), rgba(12,24,46,.94));
-      box-shadow:0 10px 28px rgba(0,0,0,.28);
-    }
-
-    .filter-dot{
-      display:inline-block;
-      width:11px;
-      height:11px;
-      border-radius:50%;
-      margin-right:10px;
-      vertical-align:-1px;
-      box-shadow:0 0 14px currentColor;
-    }
-
-    #productsGrid{
-      margin-top:20px;
-    }
-
-    #productsEmptyState{
-      display:none;
-      margin-top:16px;
-      padding:16px 18px;
-      border:1px dashed var(--line);
-      border-radius:18px;
-      color:var(--muted);
-      background:rgba(8,16,30,.6);
-    }
-
-    .shell{
-      display:grid;
-      grid-template-columns:minmax(0, 1.45fr) minmax(320px, .8fr);
-      gap:20px;
-      align-items:start;
-    }
-
-    .door-panel,
-    .detail-panel{
-      border:1px solid var(--line);
-      border-radius:32px;
-      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
-      box-shadow:var(--shadow);
-      overflow:hidden;
-    }
-
-    .door-panel{padding:16px}
-    .detail-panel{padding:22px; position:sticky; top:18px}
-
-    .section-header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      margin-bottom:14px;
-      padding:4px 6px 2px;
-    }
-
-    .section-title{
-      margin:0;
-      font-size:1rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      color:#d7e2ff;
-    }
-
-    .section-meta{
-      color:var(--muted);
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      white-space:nowrap;
-    }
-
-    .door-stage{
-      position:relative;
-      min-height:min(76vw, 980px);
-      border:1px solid rgba(113,141,224,.14);
-      border-radius:32px;
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 43%, rgba(84,118,206,.18), transparent 16%),
-        linear-gradient(180deg, rgba(4,10,22,.88), rgba(2,8,18,.98));
-      isolation:isolate;
-    }
-
-    .door-stage::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      opacity:.28;
-      background:
-        linear-gradient(180deg, transparent, rgba(255,255,255,.02), transparent),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 76px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 76px);
-    }
-
-    .door-frame{
-      position:relative;
-      width:min(100%, 760px);
-      margin:18px auto 82px;
-      aspect-ratio:5/7.35;
-      filter:drop-shadow(0 32px 60px rgba(0,0,0,.48));
-    }
-
-    .door-outline{
-      position:absolute;
-      inset:0;
-      border-radius:360px 360px 42px 42px / 300px 300px 42px 42px;
-      border:1px solid rgba(157,181,255,.28);
-      background:
-        linear-gradient(180deg, rgba(15,28,58,.82), rgba(6,14,28,.9)),
-        radial-gradient(circle at 50% 26%, rgba(111,149,255,.12), transparent 34%);
-      overflow:hidden;
-    }
-
-    .door-outline::before{
-      content:"";
-      position:absolute;
-      inset:22px;
-      border-radius:320px 320px 32px 32px / 260px 260px 32px 32px;
-      border:1px solid rgba(156,180,255,.20);
-      box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.02),
-        inset 0 -24px 48px rgba(0,0,0,.22),
-        0 0 80px rgba(67,106,206,.10);
-    }
-
-    .door-outline::after{
-      content:"";
-      position:absolute;
-      inset:54px 17%;
-      border-radius:280px 280px 28px 28px / 240px 240px 28px 28px;
-      background:
-        radial-gradient(circle at 50% 38%, rgba(87,120,208,.22), transparent 30%),
-        linear-gradient(180deg, rgba(8,20,40,.22), rgba(5,9,18,.42));
-      box-shadow:
-        inset 0 0 0 1px rgba(177,196,255,.12),
-        inset 0 0 72px rgba(74,111,209,.14);
-    }
-
-    .door-seam{
-      position:absolute;
-      top:8.3%;
-      bottom:6.8%;
-      left:50%;
-      width:1px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg, transparent, rgba(220,230,255,.56), transparent);
-      opacity:.86;
-      z-index:2;
-    }
-
-    .node-layer{
-      position:absolute;
-      inset:0;
-      z-index:3;
-    }
-
-    .door-node{
-      position:absolute;
-      left:var(--x);
-      top:var(--y);
-      transform:translate(-50%,-50%);
-      width:18px;
-      height:18px;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.74);
-      background:var(--color);
-      box-shadow:
-        0 0 0 5px rgba(255,255,255,.04),
-        0 0 18px var(--glow),
-        0 0 36px var(--glow);
-      cursor:pointer;
-      transition:transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;
-      z-index:4;
-    }
-
-    .door-node::after{
-      content:attr(data-short);
-      position:absolute;
-      top:calc(100% + 10px);
-      left:50%;
-      transform:translateX(-50%);
-      font-size:.64rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:#d9e5ff;
-      white-space:nowrap;
-      opacity:.78;
-      pointer-events:none;
-    }
-
-    .door-node:hover,
-    .door-node:focus-visible{
-      transform:translate(-50%,-50%) scale(1.16);
-      outline:none;
-      box-shadow:
-        0 0 0 6px rgba(255,255,255,.06),
-        0 0 20px var(--glow),
-        0 0 54px var(--glow);
-    }
-
-    .door-node.is-active{
-      transform:translate(-50%,-50%) scale(1.24);
-      box-shadow:
-        0 0 0 7px rgba(255,255,255,.08),
-        0 0 26px var(--glow),
-        0 0 72px var(--glow);
-    }
-
-    .door-node.is-muted{
-      opacity:.16;
-      filter:saturate(.35);
-    }
-
-    .door-footer{
-      position:absolute;
-      left:50%;
-      bottom:24px;
-      transform:translateX(-50%);
-      width:min(84%, 520px);
-      padding:16px 22px;
-      border-radius:999px;
-      border:1px solid rgba(130,160,240,.24);
-      background:rgba(6,14,28,.78);
-      text-align:center;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      color:#d9e3ff;
-      box-shadow:0 12px 32px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.02);
-      z-index:5;
-    }
-
-    .door-footer strong{color:#fff}
-
-    .detail-kicker{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:10px;
-      color:#d7e3ff;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-size:.74rem;
-    }
-
-    .badge{
+    .button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-width:38px;
-      height:24px;
-      padding:0 10px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.04);
-      color:#fff;
+      min-height:48px;
+      padding:0 18px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      color:var(--text);
+      background:rgba(255,255,255,.03);
+      text-decoration:none;
+      font-weight:800;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
-    .detail-panel h2{
+    .button:hover,
+    .button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.05);
+      outline:none;
+    }
+
+    .button.primary{
+      border-color:rgba(242,209,138,.28);
+      background:linear-gradient(180deg, rgba(242,209,138,.16), rgba(242,209,138,.06));
+      color:#fff8ea;
+    }
+
+    .hero-side{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:var(--panel-2);
+      padding:18px;
+    }
+
+    .hero-side h2{
       margin:0 0 10px;
-      font-size:1.5rem;
-      line-height:1.08;
+      font-size:1.2rem;
       letter-spacing:-.02em;
     }
 
-    .detail-panel p{
-      margin:0 0 16px;
-      color:var(--muted);
-      line-height:1.62;
+    .hero-side p{
+      margin:0;
+      font-size:.98rem;
     }
 
-    .detail-stats{
+    .hero-stats{
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-      margin-top:18px;
+      gap:10px;
+      margin-top:16px;
     }
 
     .stat{
-      padding:14px;
-      border-radius:18px;
+      padding:12px 14px;
+      border-radius:16px;
       border:1px solid var(--line);
-      background:rgba(8,18,34,.62);
+      background:rgba(255,255,255,.025);
     }
 
     .stat-label{
@@ -531,119 +301,215 @@
 
     .stat-value{
       color:#f4f7ff;
-      font-size:1rem;
+      font-size:.98rem;
       font-weight:700;
     }
 
-    .legend{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .legend-item{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:12px;
-      border-radius:16px;
+    .section{
       border:1px solid var(--line);
-      background:rgba(8,18,34,.5);
-      color:#cbd8f7;
-      font-size:.9rem;
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
+      box-shadow:var(--shadow);
+      padding:20px;
+      margin-bottom:18px;
     }
 
-    .legend-dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      flex:none;
-      box-shadow:0 0 14px currentColor;
-    }
-
-    .detail-actions{
+    .section-head{
       display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:18px;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      margin-bottom:16px;
     }
 
-    .action-link{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:0 16px;
-      border-radius:999px;
+    .section-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:6px;
+    }
+
+    .section h2{
+      margin:0;
+      font-size:1.5rem;
+      line-height:1.05;
+      letter-spacing:-.03em;
+    }
+
+    .section-note{
+      color:var(--muted);
+      font-size:.92rem;
+      max-width:40ch;
+      text-align:right;
+    }
+
+    .gateway-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .gateway{
+      display:grid;
+      gap:10px;
+      padding:18px;
+      border-radius:24px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.03);
-      color:var(--text);
       text-decoration:none;
-      font-weight:700;
-      transition:transform .16s ease, border-color .16s ease, background .16s ease;
+      color:inherit;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+      min-height:210px;
     }
 
-    .action-link:hover,
-    .action-link:focus-visible{
-      transform:translateY(-1px);
+    .gateway:hover,
+    .gateway:focus-visible{
+      transform:translateY(-2px);
       border-color:var(--line-strong);
       background:rgba(255,255,255,.05);
+      box-shadow:0 16px 36px rgba(0,0,0,.18);
       outline:none;
     }
 
-    .subtle{
-      margin-top:16px;
-      font-size:.88rem;
-      color:#8fa2cf;
+    .gateway-mark{
+      width:40px;
+      height:40px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      font-weight:800;
+      letter-spacing:.08em;
+      border:1px solid currentColor;
+      background:rgba(255,255,255,.03);
     }
 
-    @media (max-width: 980px){
-      .shell{grid-template-columns:1fr}
-      .detail-panel{position:static}
-      .door-stage{min-height:860px}
+    .gateway[data-tone="blue"]{color:var(--blue)}
+    .gateway[data-tone="gold"]{color:var(--gold)}
+    .gateway[data-tone="mint"]{color:var(--mint)}
+    .gateway[data-tone="rose"]{color:var(--rose)}
+
+    .gateway-title{
+      margin:2px 0 0;
+      font-size:1.18rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+      color:var(--text);
     }
 
-    @media (max-width: 680px){
+    .gateway-copy{
+      color:var(--muted);
+      line-height:1.58;
+      font-size:.95rem;
+    }
+
+    .gateway-meta{
+      margin-top:auto;
+      color:#dce7ff;
+      font-size:.78rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+    }
+
+    .world-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .world-card{
+      padding:18px;
+      border-radius:24px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.03);
+    }
+
+    .world-card h3{
+      margin:0 0 10px;
+      font-size:1.06rem;
+      letter-spacing:-.02em;
+    }
+
+    .world-card p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:.95rem;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:6px 4px 0;
+      font-size:.92rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width: 1040px){
+      .hero-grid,
+      .gateway-grid,
+      .world-grid{
+        grid-template-columns:1fr 1fr;
+      }
+
+      .gateway-grid .gateway:first-child{
+        grid-column:span 2;
+      }
+    }
+
+    @media (max-width: 720px){
       .page{
-        width:min(100vw - 16px, 1200px);
+        width:min(100vw - 16px, var(--max));
         padding:14px 0 28px;
       }
 
       .topbar{
-        padding:12px 14px;
         flex-wrap:wrap;
+        padding:12px 14px;
       }
 
-      .hero{
-        padding:20px 16px 18px;
+      .hero,
+      .section{
+        padding:18px 16px;
       }
 
-      .door-panel{padding:10px}
-      .door-stage{min-height:720px}
-      .door-frame{
-        margin:14px auto 76px;
-        width:100%;
-      }
-
-      .door-node{
-        width:15px;
-        height:15px;
-      }
-
-      .door-node::after{
-        font-size:.56rem;
-      }
-
-      .door-footer{
-        width:min(90%, 420px);
-        padding:14px 18px;
-        font-size:.8rem;
-      }
-
-      .detail-stats,
-      .legend{
+      .hero-grid,
+      .gateway-grid,
+      .world-grid{
         grid-template-columns:1fr;
+      }
+
+      .gateway-grid .gateway:first-child{
+        grid-column:auto;
+      }
+
+      .section-head,
+      .footer{
+        display:grid;
+        gap:8px;
+      }
+
+      .section-note{
+        text-align:left;
       }
     }
   </style>
@@ -652,47 +518,157 @@
   <main class="page">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">G2</div>
+        <div class="brand-mark">DG</div>
         <div class="brand-copy">
-          <div class="eyebrow">Products Chamber</div>
-          <p class="brand-title">Generation 2 · Symmetric Door Contract</p>
+          <div class="brand-kicker">Canonical Gateway</div>
+          <p class="brand-title">Diamond Gate Bridge</p>
         </div>
       </div>
-      <a class="backlink" href="/">Back to Home</a>
+
+      <div class="top-actions">
+        <a class="pill" href="/products/">Products</a>
+        <a class="pill" href="/gauges/">Gauges</a>
+        <a class="pill" href="/laws/">Laws</a>
+      </div>
     </header>
 
-    <section class="hero" aria-labelledby="productsTitle">
-      <span class="hero-tag">New Contract · Generation 2</span>
-      <h1 id="productsTitle">Products field</h1>
-      <p>
-        Thirty-two points distributed into a balanced symmetric door. North, South, East, and West
-        remain distinct, but the chamber now reads as one elegant entry surface instead of a collapsed
-        central mass.
-      </p>
+    <section class="hero">
+      <span class="hero-tag">Nine Summits baseline · world access · public spine</span>
 
-      <div class="filters" id="cardinalFilters" aria-label="Filter products by cardinal direction">
-        <button class="filter-chip is-active" type="button" data-filter="all">
-          <span class="filter-dot" style="color:#dce7ff;background:#dce7ff;"></span>All
-        </button>
-        <button class="filter-chip" type="button" data-filter="north">
-          <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>North
-        </button>
-        <button class="filter-chip" type="button" data-filter="south">
-          <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>South
-        </button>
-        <button class="filter-chip" type="button" data-filter="east">
-          <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>East
-        </button>
-        <button class="filter-chip" type="button" data-filter="west">
-          <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>West
-        </button>
+      <div class="hero-grid">
+        <div>
+          <h1>One spine. <span class="accent">Four gates.</span> One coherent world.</h1>
+          <p>
+            This homepage is the canonical public gateway. It establishes the Nine Summits baseline,
+            routes visitors into the wider house, and opens lawful paths into the system without
+            explaining itself through meta-copy. The structure is the explanation.
+          </p>
+
+          <div class="hero-links">
+            <a class="button primary" href="#gateway">Enter gateway</a>
+            <a class="button" href="/products/">Open products</a>
+            <a class="button" href="/prelude/">Read prelude</a>
+          </div>
+        </div>
+
+        <aside class="hero-side">
+          <h2>Current order</h2>
+          <p>
+            Primary: Nine Summits frame.<br />
+            Secondary: access into the larger world.<br />
+            Tertiary: outward-facing promotion only after the spine is coherent.
+          </p>
+
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-label">Baseline</span>
+              <span class="stat-value">Nine Summits of Love</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">World class</span>
+              <span class="stat-value">House · vault · basement access</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Read mode</span>
+              <span class="stat-value">Show the meaning, do not narrate it</span>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
 
-    <section id="productsGrid" aria-live="polite"></section>
-    <div id="productsEmptyState">No points are visible for this filter.</div>
-  </main>
+    <section class="section" id="gateway">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Four-way entry</div>
+          <h2>Choose a lawful path</h2>
+        </div>
+        <div class="section-note">
+          The homepage acts as gateway, not explanation surface.
+        </div>
+      </div>
 
-  <script type="module" src="./index.js"></script>
+      <div class="gateway-grid">
+        <a class="gateway" data-tone="blue" href="/about/">
+          <div class="gateway-mark">A</div>
+          <div class="gateway-title">About · Contact</div>
+          <div class="gateway-copy">
+            Public orientation, contact path, and the plain-language read of what this work is trying to hold together.
+          </div>
+          <div class="gateway-meta">Identity · Contact</div>
+        </a>
+
+        <a class="gateway" data-tone="gold" href="/nine-summits/">
+          <div class="gateway-mark">N</div>
+          <div class="gateway-title">Nine Summits · Human Potential</div>
+          <div class="gateway-copy">
+            The value spine. Human growth, summit structure, and the book-facing path through the core baseline.
+          </div>
+          <div class="gateway-meta">Baseline · Book</div>
+        </a>
+
+        <a class="gateway" data-tone="mint" href="/products/">
+          <div class="gateway-mark">P</div>
+          <div class="gateway-title">Products · Systems</div>
+          <div class="gateway-copy">
+            Structured product surfaces, gauges, and executable public-facing chambers for the working system.
+          </div>
+          <div class="gateway-meta">Build · Route</div>
+        </a>
+
+        <a class="gateway" data-tone="rose" href="/laws/">
+          <div class="gateway-mark">L</div>
+          <div class="gateway-title">Gauges · Laws</div>
+          <div class="gateway-copy">
+            The rule layer, the signal layer, and the measurement layer that keep the wider system legible.
+          </div>
+          <div class="gateway-meta">Rule · Signal</div>
+        </a>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">World access</div>
+          <h2>The larger house</h2>
+        </div>
+        <div class="section-note">
+          Secondary job: spatial embodiment without gimmick.
+        </div>
+      </div>
+
+      <div class="world-grid">
+        <div class="world-card">
+          <h3>House</h3>
+          <p>
+            The outer container. Rooms, identities, and public-facing surfaces descend from here rather than floating as disconnected pages.
+          </p>
+        </div>
+        <div class="world-card">
+          <h3>Vault</h3>
+          <p>
+            Protected storage, deeper logic, and the sealed interior layers that are not meant to flatten into ordinary public read.
+          </p>
+        </div>
+        <div class="world-card">
+          <h3>Basement</h3>
+          <p>
+            The deeper working chambers: lab, concealed execution, and the lower structural tiers that support the visible world above.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Diamond Gate Bridge · canonical homepage gateway</span>
+      <div class="footer-links">
+        <a href="/prelude/">Prelude</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>

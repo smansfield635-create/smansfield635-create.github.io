@@ -6,7 +6,7 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products Chamber for Diamond Gate Bridge: a stained-glass four-lobed molecular flower with two overlapping figure-eight loops."
+    content="Products Chamber for Diamond Gate Bridge: a stained-glass four-season molecular flower with two overlapping figure-eight loops."
   />
   <style>
     :root{
@@ -25,10 +25,7 @@
     }
 
     *{box-sizing:border-box}
-    html{
-      min-height:100%;
-      scroll-behavior:smooth;
-    }
+    html{min-height:100%;scroll-behavior:smooth}
 
     body{
       min-height:100%;
@@ -381,9 +378,7 @@
       scroll-margin-top:14px;
     }
 
-    #productsRuntimeMount:focus{
-      outline:none;
-    }
+    #productsRuntimeMount:focus{outline:none}
 
     #productsRuntimeMount:focus-visible{
       outline:1px solid var(--line-strong);
@@ -400,9 +395,7 @@
       align-content:center;
     }
 
-    .runtime-fallback p{
-      margin:0;
-    }
+    .runtime-fallback p{margin:0}
 
     .runtime-receipt{
       display:grid;
@@ -469,26 +462,17 @@
 
       .hero-actions,.filters{gap:8px}
 
-      .button{
-        flex:1 1 calc(50% - 8px);
-      }
+      .button{flex:1 1 calc(50% - 8px)}
+      .button.primary{flex-basis:100%}
 
-      .button.primary{
-        flex-basis:100%;
-      }
-
-      .filter-chip{
-        padding:0 14px;
-      }
+      .filter-chip{padding:0 14px}
 
       .section-head{
         display:grid;
         gap:8px;
       }
 
-      .section-note{
-        text-align:left;
-      }
+      .section-note{text-align:left}
 
       .section.focus-section{
         min-height:calc(100svh - 28px);
@@ -523,11 +507,11 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Products chamber · four-lobed molecular flower contract</span>
-          <h1>Public chamber for a <span class="accent">shared-center molecule</span>.</h1>
+          <span class="hero-tag">Products chamber · four-season molecular flower contract</span>
+          <h1>Public chamber for a <span class="accent">seasonal molecule</span>.</h1>
           <p>
-            Products now uses one stained-glass vessel with a four-lobed molecular flower inside it.
-            White and green form one diagonal figure-eight. Yellow and blue form the opposing figure-eight.
+            Products now uses one stained-glass vessel with a four-season molecular flower inside it.
+            Winter and Spring form one diagonal figure-eight. Fall and Summer form the opposing figure-eight.
             Both loops cross through one shared center throat.
           </p>
 
@@ -537,21 +521,21 @@
             <a class="button" href="/">Back to door</a>
           </div>
 
-          <div class="filters" id="cardinalFilters" aria-label="Filter products by molecular body">
+          <div class="filters" id="cardinalFilters" aria-label="Filter products by seasonal body">
             <button class="filter-chip is-active" type="button" data-filter="all">
               <span class="filter-dot" style="color:#dce7ff;background:#dce7ff;"></span>All
             </button>
             <button class="filter-chip" type="button" data-filter="north">
-              <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>White
+              <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>Winter
             </button>
             <button class="filter-chip" type="button" data-filter="south">
-              <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>Green
+              <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>Spring
             </button>
             <button class="filter-chip" type="button" data-filter="east">
-              <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>Blue
+              <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>Summer
             </button>
             <button class="filter-chip" type="button" data-filter="west">
-              <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>Yellow
+              <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>Fall
             </button>
           </div>
         </div>
@@ -559,14 +543,14 @@
         <aside class="hero-side">
           <h2>Runtime contract</h2>
           <p>
-            The page now opens the molecule directly into its runtime window. The explanatory shell stays above it,
-            while the runtime viewport receives focus so the motion can be seen without competing page material.
+            The public labels now use seasons instead of raw colors. The color remains visual support;
+            the seasonal language carries the user-facing meaning.
           </p>
 
           <div class="hero-stats">
             <div class="stat">
               <span class="stat-label">Structure</span>
-              <span class="stat-value">4 lobes · 32 points</span>
+              <span class="stat-value">4 seasons · 32 points</span>
             </div>
             <div class="stat">
               <span class="stat-label">Motion</span>
@@ -588,7 +572,7 @@
           <h2>Motion viewport</h2>
         </div>
         <div class="section-note">
-          Open Molecule now lands here, giving the animation visual priority.
+          Open Molecule lands here, giving the animation visual priority.
         </div>
       </div>
 
@@ -597,7 +581,7 @@
           <h2>Waiting for /products/index.js to load...</h2>
           <p>
             This is the HTML fallback. If this message remains visible, the bridge file is not executing.
-            If /products/index.js executes, it will replace this message with a runtime boot receipt or the four-lobed molecular flower.
+            If /products/index.js executes, it will replace this message with a runtime boot receipt or the four-season molecular flower.
           </p>
 
           <div class="runtime-receipt">
@@ -619,7 +603,7 @@
     </section>
 
     <footer class="footer">
-      <span>Products · four-lobed molecular flower contract</span>
+      <span>Products · four-season molecular flower contract</span>
       <div class="footer-links">
         <a href="/">Home</a>
         <a href="/about/">About</a>
@@ -629,6 +613,6 @@
     </footer>
   </main>
 
-  <script type="module" src="./index.js?v=open-molecule-focus"></script>
+  <script type="module" src="./index.js?v=seasonal-molecule-labels-v1"></script>
 </body>
 </html>

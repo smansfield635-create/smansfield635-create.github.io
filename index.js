@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-second-generation-root-proof-v4-demo-universe-visual-strength";
+  const STYLE_ID = "dgb-root-earth-read-v6-force-visible-change";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -21,14 +21,18 @@
         --blue:#8ec5ff;
         --green:#92e7ba;
         --teal:#66f0d1;
-        --violet:#b9a8ff;
         --shadow:0 24px 80px rgba(0,0,0,.50);
         --max:1120px;
       }
 
-      * { box-sizing:border-box; }
+      * {
+        box-sizing:border-box;
+      }
 
-      html { min-height:100%; scroll-behavior:smooth; }
+      html {
+        min-height:100%;
+        scroll-behavior:smooth;
+      }
 
       body {
         min-height:100%;
@@ -55,7 +59,10 @@
         mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
       }
 
-      a { color:inherit; text-decoration:none; }
+      a {
+        color:inherit;
+        text-decoration:none;
+      }
 
       .home-page {
         width:min(100vw - 20px,var(--max));
@@ -251,8 +258,8 @@
         border-radius:30px;
         border:1px solid rgba(170,198,255,.18);
         background:
-          radial-gradient(circle at 50% 42%,rgba(102,240,209,.12),transparent 18%),
-          radial-gradient(circle at 50% 48%,rgba(239,210,154,.18),transparent 25%),
+          radial-gradient(circle at 50% 42%,rgba(102,240,209,.10),transparent 18%),
+          radial-gradient(circle at 50% 48%,rgba(239,210,154,.16),transparent 25%),
           radial-gradient(circle at 50% 56%,rgba(142,197,255,.20),transparent 38%),
           linear-gradient(180deg,rgba(7,17,36,.98),rgba(2,7,16,.99));
         overflow:hidden;
@@ -283,11 +290,11 @@
         transform:translateX(-50%);
         border-radius:50%;
         background:
-          radial-gradient(ellipse at 50% 50%,rgba(102,240,209,.34),transparent 42%),
-          radial-gradient(ellipse at 50% 50%,rgba(239,210,154,.22),transparent 64%);
-        border:1px solid rgba(239,210,154,.18);
+          radial-gradient(ellipse at 50% 50%,rgba(102,240,209,.28),transparent 42%),
+          radial-gradient(ellipse at 50% 50%,rgba(239,210,154,.20),transparent 64%);
+        border:1px solid rgba(239,210,154,.16);
         box-shadow:
-          0 0 34px rgba(102,240,209,.20),
+          0 0 34px rgba(102,240,209,.18),
           inset 0 0 20px rgba(142,197,255,.18);
         z-index:1;
         pointer-events:none;
@@ -298,10 +305,10 @@
         width:82%;
         height:82%;
         border-radius:50%;
-        border:1px solid rgba(239,210,154,.40);
-        opacity:.92;
+        border:1px solid rgba(239,210,154,.36);
+        opacity:.88;
         filter:
-          drop-shadow(0 0 16px rgba(239,210,154,.22))
+          drop-shadow(0 0 16px rgba(239,210,154,.20))
           drop-shadow(0 0 24px rgba(142,197,255,.10));
         z-index:4;
         pointer-events:none;
@@ -314,219 +321,98 @@
 
       .home-orbit.two {
         transform:rotate(-43deg) scaleX(.35);
-        border-color:rgba(142,197,255,.44);
+        border-color:rgba(142,197,255,.42);
         animation:orbitTwo 21s linear infinite reverse;
       }
 
       .home-core {
         position:relative;
         z-index:5;
-        width:214px;
-        height:214px;
+        width:222px;
+        height:222px;
         border-radius:50%;
-        display:block;
+        display:grid;
+        place-items:center;
         overflow:hidden;
-        border:1px solid rgba(226,240,255,.72);
-        color:transparent;
-        font-size:0;
-        background:
-          radial-gradient(circle at 33% 22%,rgba(255,255,255,.80),transparent 8%),
-          radial-gradient(circle at 38% 34%,rgba(184,220,255,.38),transparent 26%),
-          radial-gradient(circle at 62% 66%,rgba(239,210,154,.20),transparent 32%),
-          radial-gradient(circle at 50% 52%,rgba(102,240,209,.16),transparent 45%),
-          linear-gradient(135deg,#1268aa 0%,#0a2c6d 44%,#03091f 100%);
+        border:1px solid rgba(226,240,255,.78);
+        background:#0b58a8;
         box-shadow:
-          inset -38px -34px 54px rgba(0,0,0,.62),
-          inset 20px 15px 34px rgba(255,255,255,.24),
-          0 0 52px rgba(142,197,255,.52),
-          0 0 142px rgba(239,210,154,.26);
+          inset -40px -34px 58px rgba(0,0,0,.58),
+          inset 22px 16px 34px rgba(255,255,255,.25),
+          0 0 52px rgba(142,197,255,.54),
+          0 0 142px rgba(239,210,154,.24);
         animation:demoUniverseFloat 7s ease-in-out infinite;
-      }
-
-      .demo-globe-shell {
-        position:absolute;
-        inset:0;
-        z-index:1;
-        border-radius:inherit;
-        background:
-          radial-gradient(circle at 50% 50%,rgba(255,255,255,.12),transparent 28%),
-          radial-gradient(circle at 53% 52%,transparent 0 38%,rgba(255,255,255,.15) 39%,transparent 42%),
-          repeating-linear-gradient(28deg,rgba(255,255,255,.08) 0 1px,transparent 1px 14px),
-          linear-gradient(90deg,rgba(255,255,255,.18),transparent 38%,rgba(0,0,0,.38) 100%);
-        pointer-events:none;
-      }
-
-      .demo-globe-field {
-        position:absolute;
-        z-index:3;
-        border-radius:999px;
-        filter:blur(.05px) drop-shadow(0 2px 4px rgba(0,0,0,.40));
-        opacity:.96;
-        pointer-events:none;
-      }
-
-      .field-a {
-        left:14%;
-        top:28%;
-        width:42%;
-        height:20%;
-        background:
-          radial-gradient(circle at 28% 34%,rgba(255,255,255,.46),transparent 19%),
-          linear-gradient(135deg,#8df6c7,rgba(102,240,209,.56));
-        transform:rotate(-12deg);
-      }
-
-      .field-b {
-        right:12%;
-        top:29%;
-        width:39%;
-        height:24%;
-        background:
-          radial-gradient(circle at 24% 30%,rgba(255,255,255,.26),transparent 18%),
-          linear-gradient(135deg,var(--gold),rgba(239,210,154,.44));
-        transform:rotate(22deg);
-      }
-
-      .field-c {
-        left:34%;
-        bottom:17%;
-        width:24%;
-        height:38%;
-        background:linear-gradient(135deg,#72e0a8,rgba(146,231,186,.44));
-        transform:rotate(5deg);
-      }
-
-      .field-d {
-        right:15%;
-        bottom:18%;
-        width:36%;
-        height:24%;
-        background:linear-gradient(135deg,rgba(239,210,154,.92),rgba(239,210,154,.42));
-        transform:rotate(-7deg);
-      }
-
-      .demo-globe-ring,
-      .demo-globe-axis,
-      .demo-globe-grid,
-      .demo-globe-meridian,
-      .demo-globe-cross,
-      .demo-globe-core {
-        position:absolute;
-        pointer-events:none;
-      }
-
-      .demo-globe-ring {
-        z-index:4;
-        inset:11%;
-        border-radius:50%;
-        border:1px solid rgba(255,255,255,.30);
-        box-shadow:
-          inset 0 0 28px rgba(142,197,255,.25),
-          0 0 26px rgba(239,210,154,.16);
-      }
-
-      .demo-globe-axis {
-        z-index:5;
-        left:50%;
-        top:50%;
-        width:86%;
-        height:86%;
-        border-radius:50%;
-        border:1px solid rgba(102,240,209,.36);
-        transform:translate(-50%,-50%) rotate(64deg) scaleX(.30);
-        box-shadow:0 0 18px rgba(102,240,209,.18);
-      }
-
-      .demo-globe-grid {
-        z-index:5;
-        inset:22%;
-        border-radius:50%;
-        border-top:1px solid rgba(255,255,255,.32);
-        border-bottom:1px solid rgba(255,255,255,.20);
-        transform:rotate(-18deg);
-      }
-
-      .demo-globe-meridian {
-        z-index:5;
-        left:50%;
-        top:50%;
-        width:76%;
-        height:76%;
-        border-radius:50%;
-        border-left:1px solid rgba(142,197,255,.34);
-        border-right:1px solid rgba(142,197,255,.16);
-        transform:translate(-50%,-50%) rotate(-18deg);
-      }
-
-      .demo-globe-cross {
-        z-index:6;
-        left:50%;
-        top:50%;
-        width:2px;
-        height:78%;
-        transform:translate(-50%,-50%);
-        background:linear-gradient(180deg,transparent,rgba(142,197,255,.72),transparent);
-        box-shadow:0 0 16px rgba(142,197,255,.32);
-      }
-
-      .demo-globe-cross::after {
-        content:"";
-        position:absolute;
-        left:50%;
-        top:50%;
-        width:78px;
-        height:2px;
-        transform:translate(-50%,-50%);
-        background:linear-gradient(90deg,transparent,rgba(239,210,154,.72),transparent);
-        box-shadow:0 0 16px rgba(239,210,154,.30);
-      }
-
-      .demo-globe-core {
-        z-index:7;
-        left:50%;
-        top:50%;
-        width:48px;
-        height:48px;
-        transform:translate(-50%,-50%) rotate(45deg);
-        border:1px solid rgba(239,210,154,.86);
-        border-radius:10px;
-        background:
-          linear-gradient(135deg,rgba(255,255,255,.84),rgba(239,210,154,.28) 42%,rgba(142,197,255,.10));
-        box-shadow:
-          0 0 20px rgba(239,210,154,.58),
-          0 0 42px rgba(142,197,255,.28),
-          inset 0 0 12px rgba(255,255,255,.24);
-        opacity:1;
       }
 
       .home-core::before {
         content:"";
         position:absolute;
-        inset:6%;
-        z-index:6;
-        border-radius:inherit;
+        inset:0;
+        z-index:4;
+        border-radius:50%;
         background:
-          radial-gradient(circle at 28% 36%,rgba(255,255,255,.44) 0 3%,transparent 4%),
-          radial-gradient(circle at 70% 38%,rgba(239,210,154,.64) 0 2.5%,transparent 3.5%),
-          radial-gradient(circle at 60% 74%,rgba(102,240,209,.54) 0 2.5%,transparent 3.5%),
-          radial-gradient(circle at 38% 68%,rgba(142,197,255,.44) 0 2.5%,transparent 3.5%);
-        opacity:.96;
+          radial-gradient(circle at 31% 23%,rgba(255,255,255,.68),transparent 10%),
+          linear-gradient(90deg,rgba(255,255,255,.16),transparent 38%,rgba(0,0,0,.34) 100%);
         pointer-events:none;
+        mix-blend-mode:screen;
       }
 
       .home-core::after {
         content:"";
         position:absolute;
-        inset:-2px;
-        z-index:8;
-        border-radius:inherit;
+        inset:-1px;
+        z-index:5;
+        border-radius:50%;
         background:
-          radial-gradient(ellipse at 30% 48%,rgba(255,255,255,.40) 0 6%,transparent 7%),
-          radial-gradient(ellipse at 56% 26%,rgba(255,255,255,.32) 0 7%,transparent 8%),
-          radial-gradient(circle at 30% 25%,rgba(255,255,255,.26),transparent 18%);
-        mix-blend-mode:screen;
-        opacity:.50;
+          radial-gradient(circle at 35% 24%,rgba(255,255,255,.34),transparent 16%),
+          radial-gradient(circle at 78% 74%,rgba(0,0,0,.32),transparent 36%);
         pointer-events:none;
+      }
+
+      .earth-svg {
+        position:absolute;
+        inset:0;
+        z-index:3;
+        width:100%;
+        height:100%;
+        display:block;
+      }
+
+      .earth-ocean {
+        fill:#0b63b5;
+      }
+
+      .earth-ocean-deep {
+        fill:#06386f;
+        opacity:.44;
+      }
+
+      .earth-land {
+        fill:#3fb56b;
+        stroke:rgba(255,255,255,.18);
+        stroke-width:.8;
+      }
+
+      .earth-land-warm {
+        fill:#b9a76a;
+        stroke:rgba(255,255,255,.16);
+        stroke-width:.7;
+      }
+
+      .earth-cloud {
+        fill:rgba(255,255,255,.72);
+      }
+
+      .earth-grid {
+        fill:none;
+        stroke:rgba(255,255,255,.18);
+        stroke-width:.7;
+      }
+
+      .earth-atmosphere {
+        fill:none;
+        stroke:rgba(181,226,255,.72);
+        stroke-width:2.2;
       }
 
       .home-caption {
@@ -582,7 +468,9 @@
         align-items:center;
       }
 
-      .doll summary::-webkit-details-marker { display:none; }
+      .doll summary::-webkit-details-marker {
+        display:none;
+      }
 
       .number {
         width:42px;
@@ -655,7 +543,9 @@
         gap:10px;
       }
 
-      .home-footer a { color:#d6e2ff; }
+      .home-footer a {
+        color:#d6e2ff;
+      }
 
       @keyframes orbitOne {
         from { transform:rotate(43deg) scaleX(.35); }
@@ -724,8 +614,8 @@
         }
 
         .home-core {
-          width:188px;
-          height:188px;
+          width:196px;
+          height:196px;
         }
 
         .home-caption {
@@ -748,48 +638,73 @@
     document.head.appendChild(style);
   }
 
-  function normalizeDemoUniverseCore(root) {
+  function buildEarthSvg() {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
+
+    svg.setAttribute("class", "earth-svg");
+    svg.setAttribute("viewBox", "0 0 240 240");
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
+
+    svg.innerHTML = `
+      <defs>
+        <clipPath id="earthClipDgbV6">
+          <circle cx="120" cy="120" r="108"></circle>
+        </clipPath>
+      </defs>
+
+      <circle class="earth-ocean" cx="120" cy="120" r="108"></circle>
+      <circle class="earth-ocean-deep" cx="146" cy="144" r="90"></circle>
+
+      <g clip-path="url(#earthClipDgbV6)">
+        <path class="earth-grid" d="M12 120 H228"></path>
+        <path class="earth-grid" d="M120 12 V228"></path>
+        <ellipse class="earth-grid" cx="120" cy="120" rx="74" ry="108"></ellipse>
+        <ellipse class="earth-grid" cx="120" cy="120" rx="108" ry="44"></ellipse>
+        <ellipse class="earth-grid" cx="120" cy="120" rx="108" ry="76"></ellipse>
+
+        <path class="earth-land" d="M39 58 C54 35 91 30 108 49 C119 62 107 78 88 79 C75 80 72 97 55 95 C35 92 25 76 39 58 Z"></path>
+        <path class="earth-land" d="M78 100 C97 96 113 113 106 137 C101 154 92 177 75 190 C66 174 55 157 57 137 C59 119 63 106 78 100 Z"></path>
+        <path class="earth-land-warm" d="M127 43 C151 27 185 35 202 58 C217 80 201 102 177 96 C158 91 155 73 134 71 C119 70 116 51 127 43 Z"></path>
+        <path class="earth-land-warm" d="M137 103 C160 92 198 107 207 134 C217 165 185 185 157 176 C136 169 121 149 124 127 C125 115 128 108 137 103 Z"></path>
+        <path class="earth-land" d="M176 187 C194 179 214 187 226 204 C206 222 177 222 161 205 C163 196 167 191 176 187 Z"></path>
+        <path class="earth-land" d="M20 148 C34 139 49 144 54 158 C61 177 39 185 25 172 C17 164 14 154 20 148 Z"></path>
+
+        <path class="earth-cloud" d="M25 82 C49 69 77 71 100 84 C73 90 48 91 25 82 Z"></path>
+        <path class="earth-cloud" d="M93 35 C125 24 162 30 190 47 C157 52 121 51 93 35 Z"></path>
+        <path class="earth-cloud" d="M103 158 C136 146 174 153 205 173 C166 177 132 176 103 158 Z"></path>
+        <path class="earth-cloud" d="M39 125 C68 116 91 121 112 136 C82 140 58 139 39 125 Z"></path>
+      </g>
+
+      <circle class="earth-atmosphere" cx="120" cy="120" r="108"></circle>
+    `;
+
+    return svg;
+  }
+
+  function normalizeEarthCore(root) {
     const core = root.querySelector(".home-core");
     if (!core) return;
 
-    core.replaceChildren();
+    core.replaceChildren(buildEarthSvg());
 
     core.setAttribute("role", "img");
-    core.setAttribute("aria-label", "Demo Universe globe");
-    core.setAttribute("data-home-demo-universe-core", "true");
-
-    const fragments = [
-      ["span", "demo-globe-shell"],
-      ["span", "demo-globe-field field-a"],
-      ["span", "demo-globe-field field-b"],
-      ["span", "demo-globe-field field-c"],
-      ["span", "demo-globe-field field-d"],
-      ["span", "demo-globe-ring"],
-      ["span", "demo-globe-axis"],
-      ["span", "demo-globe-grid"],
-      ["span", "demo-globe-meridian"],
-      ["span", "demo-globe-cross"],
-      ["span", "demo-globe-core"]
-    ];
-
-    for (const [tag, className] of fragments) {
-      const node = document.createElement(tag);
-      node.className = className;
-      node.setAttribute("aria-hidden", "true");
-      core.appendChild(node);
-    }
+    core.setAttribute("aria-label", "Planet Earth");
+    core.setAttribute("data-home-earth-core", "true");
+    core.setAttribute("data-home-demo-universe-core", "earth-read-v6");
   }
 
   function markRootProof(root) {
     root.setAttribute("data-home-state", "second-generation-renewal");
-    root.setAttribute("data-home-priority", "nine-summits-demo-universe-upper-room");
+    root.setAttribute("data-home-priority", "nine-summits-earth-demo-universe-upper-room");
     root.setAttribute("data-home-js-owner", "index.js");
     root.setAttribute("data-home-runtime", "mounted");
     root.setAttribute("data-home-demo-universe-runtime", "mounted");
     root.setAttribute("data-home-root-proof", "true");
     root.setAttribute("data-home-not-gauges", "true");
-    root.setAttribute("data-home-not-earth", "true");
-    root.setAttribute("data-home-demo-universe-quality", "second-generation-visual-strength-pass");
+    root.setAttribute("data-home-earth-read", "true");
+    root.setAttribute("data-home-visual-change", "earth-svg-v6-force-visible");
   }
 
   function mount() {
@@ -799,7 +714,7 @@
     if (!root) return;
 
     markRootProof(root);
-    normalizeDemoUniverseCore(root);
+    normalizeEarthCore(root);
   }
 
   if (document.readyState === "loading") {

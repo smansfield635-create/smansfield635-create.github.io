@@ -2,462 +2,428 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Gauges | Diamond Gate Bridge</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Live calibration status for the website."
+    content="Generation 1 gauges surface for Diamond Gate Bridge: signal, measurement, and comparative read."
   />
   <style>
     :root{
-      color-scheme:dark;
-      --bg0:#0b132c;
-      --bg1:#103067;
-      --bg2:#1a0f31;
-
-      --ink:#f8fbff;
-      --mut:rgba(248,251,255,.82);
-      --soft:rgba(248,251,255,.62);
-
-      --gold:#ffd76a;
-      --rose:#ff6fb0;
-      --sky:#7fd4ff;
-      --emerald:#7ef0c4;
-      --violet:#c28cff;
-      --amber:#ffb86b;
-      --red:#ff6b7a;
-
-      --line:rgba(255,255,255,.14);
-      --panel:rgba(11,16,36,.68);
-      --panelStrong:rgba(10,12,28,.86);
-
-      --shadow:0 24px 84px rgba(0,0,0,.42);
+      --bg:#040814;
+      --panel:rgba(8,14,28,.72);
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.34);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --blue:#91c7ff;
+      --mint:#99e5b6;
+      --rose:#f0bacb;
+      --ok:#97e6b4;
+      --warn:#f2d18a;
+      --shadow:0 24px 80px rgba(0,0,0,.46);
       --max:1180px;
     }
 
     *{box-sizing:border-box}
-
-    html,body{
+    html,body{min-height:100%}
+    body{
       margin:0;
-      min-height:100%;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      color:var(--ink);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 18% 18%, rgba(127,212,255,.18), transparent 22%),
-        radial-gradient(circle at 82% 20%, rgba(255,111,176,.14), transparent 20%),
-        radial-gradient(circle at 50% 70%, rgba(126,240,196,.12), transparent 18%),
-        linear-gradient(180deg,var(--bg1) 0%,var(--bg0) 50%,var(--bg2) 100%);
+        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
+        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
+        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+      overflow-x:hidden;
     }
 
-    body{overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-
-    .page{
-      position:relative;
-      min-height:100vh;
-      overflow:hidden;
-      isolation:isolate;
-    }
-
-    .stars,.stars::before{
+    body::before{
       content:"";
-      position:absolute;
+      position:fixed;
       inset:0;
       pointer-events:none;
-      display:block;
-    }
-
-    .stars{
-      opacity:.5;
-      background-image:
-        radial-gradient(circle at 14% 20%, rgba(255,255,255,.92) 0 1px, transparent 2px),
-        radial-gradient(circle at 28% 66%, rgba(255,255,255,.82) 0 1px, transparent 2px),
-        radial-gradient(circle at 62% 22%, rgba(255,255,255,.88) 0 1px, transparent 2px),
-        radial-gradient(circle at 84% 72%, rgba(255,255,255,.82) 0 1px, transparent 2px);
-    }
-
-    .stars::before{
-      opacity:.4;
+      opacity:.18;
       background:
-        radial-gradient(circle at 20% 24%, rgba(127,212,255,.16), transparent 18%),
-        radial-gradient(circle at 80% 26%, rgba(255,111,176,.14), transparent 18%),
-        radial-gradient(circle at 52% 64%, rgba(126,240,196,.14), transparent 18%);
-      filter:blur(20px);
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
+      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
     }
 
-    .wrap{
+    .page{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:18px 0 40px;
       position:relative;
       z-index:1;
-      width:min(var(--max),calc(100vw - 32px));
-      margin:0 auto;
-      padding:24px 0 42px;
-      display:grid;
-      gap:18px;
     }
 
-    .topbar,.hero,.statusBoard,.lists,.footerbox{
+    .topbar,.hero,.section{
       border:1px solid var(--line);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02)),
-        linear-gradient(180deg,var(--panel),var(--panelStrong));
       box-shadow:var(--shadow);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
-      position:relative;
-      overflow:hidden;
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
     }
 
     .topbar{
-      border-radius:999px;
-      padding:14px 18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
+      display:flex;justify-content:space-between;align-items:center;gap:16px;
+      padding:14px 16px;border-radius:20px;background:rgba(7,13,26,.7);backdrop-filter:blur(10px);
+    }
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-mark{
+      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
+    }
+    .brand-kicker{margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase}
+    .brand-title{margin:0;font-size:1.05rem;font-weight:700}
+    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .nav-link,.button{
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+    .nav-link{
+      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
+      color:var(--text);font-weight:700;font-size:.92rem;background:rgba(255,255,255,.03);
+    }
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
+      transform:translateY(-1px);border-color:var(--line-strong);background:rgba(255,255,255,.05);outline:none;
     }
 
-    .hero,.statusBoard,.lists,.footerbox{
-      border-radius:34px;
-      padding:22px 20px;
+    .hero{
+      margin-top:16px;border-radius:34px;padding:24px 20px 20px;position:relative;overflow:hidden;
+    }
+    .hero::after{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
+      linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+      mix-blend-mode:screen;
+    }
+    .hero-grid{
+      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:20px;align-items:start;position:relative;z-index:1;
+    }
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:#d8e3ff;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;margin-bottom:12px;
+    }
+    .hero-tag::before{
+      content:"";width:9px;height:9px;border-radius:50%;background:var(--blue);box-shadow:0 0 16px rgba(145,199,255,.52);
+    }
+    h1{
+      margin:0 0 10px;font-size:clamp(2.2rem, 4.8vw, 4rem);line-height:.96;letter-spacing:-.05em;max-width:10ch;
+    }
+    h1 .accent{color:var(--blue)}
+    .hero p,.card p,.hero-side p,.section-note,.gauge-copy{
+      color:var(--muted);line-height:1.58;
+    }
+    .hero p{margin:0;font-size:clamp(.98rem, 1.5vw, 1.1rem);max-width:58ch}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .button{
+      min-height:44px;padding:0 16px;border-radius:16px;border:1px solid var(--line);color:var(--text);font-weight:800;background:rgba(255,255,255,.03);white-space:nowrap;
+    }
+    .button.primary{
+      border-color:rgba(145,199,255,.3);
+      background:linear-gradient(180deg, rgba(145,199,255,.16), rgba(145,199,255,.06));
+      color:#eff8ff;
     }
 
-    .topbar::before,
-    .hero::before,
-    .statusBoard::before,
-    .lists::before,
-    .footerbox::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 14% 14%, rgba(127,212,255,.16), transparent 22%),
-        radial-gradient(circle at 82% 18%, rgba(255,111,176,.12), transparent 20%),
-        radial-gradient(circle at 50% 26%, rgba(255,215,106,.10), transparent 16%),
-        radial-gradient(circle at 22% 82%, rgba(126,240,196,.10), transparent 20%);
-      opacity:.9;
+    .hero-side,.card,.gauge{
+      border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.03);
+    }
+    .hero-side,.card,.gauge{padding:18px}
+    .hero-side h2,.card h3,.gauge-title{margin:0 0 10px;font-size:1.08rem;line-height:1.1;letter-spacing:-.02em}
+    .hero-stats{display:grid;gap:10px;margin-top:16px}
+    .stat{
+      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);
+    }
+    .stat-label{
+      display:block;margin-bottom:6px;color:#90a3ce;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+    }
+    .stat-value{color:#f4f7ff;font-size:.98rem;font-weight:700}
+
+    .section{margin-top:18px;border-radius:30px;padding:20px}
+    .section-head{
+      display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px;
+    }
+    .section-kicker{
+      color:#c8d7ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px;
+    }
+    .section h2{margin:0;font-size:1.45rem;letter-spacing:-.03em;line-height:1.06}
+    .section-note{font-size:.92rem;max-width:42ch;text-align:right}
+
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .gauges{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+
+    .gauge-head{
+      display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;
+    }
+    .gauge-value{
+      font-size:1.4rem;font-weight:800;letter-spacing:-.03em;color:var(--text);
+    }
+    .gauge-status{
+      display:inline-flex;align-items:center;justify-content:center;min-height:28px;padding:0 10px;border-radius:999px;
+      font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;border:1px solid currentColor;
+    }
+    .gauge-status.ok{color:var(--ok);background:rgba(151,230,180,.08)}
+    .gauge-status.warn{color:var(--warn);background:rgba(242,209,138,.08)}
+
+    .bar{
+      height:12px;border-radius:999px;background:rgba(255,255,255,.06);overflow:hidden;border:1px solid var(--line);
+      margin:12px 0 10px;
+    }
+    .bar-fill{
+      height:100%;border-radius:999px;
+      background:linear-gradient(90deg, rgba(145,199,255,.85), rgba(153,229,182,.85));
+      width:var(--fill);
     }
 
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      position:relative;
-      z-index:1;
+    .routes{
+      display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;
+    }
+    .route{
+      display:grid;gap:10px;padding:18px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+      color:inherit;text-decoration:none;transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+    }
+    .route:hover,.route:focus-visible{
+      transform:translateY(-2px);border-color:var(--line-strong);background:rgba(255,255,255,.05);box-shadow:0 16px 36px rgba(0,0,0,.18);outline:none;
+    }
+    .route[data-tone="mint"]{color:var(--mint)}
+    .route[data-tone="gold"]{color:var(--gold)}
+    .route[data-tone="blue"]{color:var(--blue)}
+    .route[data-tone="rose"]{color:var(--rose)}
+    .route-mark{
+      width:40px;height:40px;border-radius:14px;display:grid;place-items:center;border:1px solid currentColor;background:rgba(255,255,255,.03);
+      font-weight:800;letter-spacing:.08em;
+    }
+    .route-title{
+      margin:0;color:var(--text);font-size:1.14rem;font-weight:800;letter-spacing:-.02em;
+    }
+    .route-copy{
+      color:var(--muted);line-height:1.58;font-size:.95rem;
+    }
+    .route-meta{
+      color:#dce7ff;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
     }
 
-    .mark{
-      width:44px;
-      height:44px;
-      border-radius:14px;
-      transform:rotate(45deg);
-      background:linear-gradient(135deg,var(--sky),var(--gold) 35%,var(--emerald) 70%,var(--violet));
-      flex:0 0 auto;
+    .footer{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);padding:12px 4px 0;font-size:.92rem;
+    }
+    .footer-links{display:flex;flex-wrap:wrap;gap:12px}
+    .footer-links a{color:var(--muted);text-decoration:none}
+    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
+
+    @media (max-width: 980px){
+      .hero-grid,.cards,.gauges,.routes{grid-template-columns:1fr}
     }
 
-    .brand h1{
-      margin:0;
-      font-size:.98rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    }
-
-    .brand p{
-      margin:2px 0 0;
-      color:var(--soft);
-      font-size:.82rem;
-    }
-
-    .pills{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      position:relative;
-      z-index:1;
-    }
-
-    .pill{
-      min-height:40px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-    }
-
-    .pill strong{color:#fff1b8}
-
-    .eyebrow{
-      position:relative;
-      z-index:1;
-      margin:0 0 10px;
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    .hero h2,.sectionTitle{
-      position:relative;
-      z-index:1;
-      margin:0;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2rem,4.8vw,3.8rem);
-      line-height:.94;
-    }
-
-    .hero p{
-      position:relative;
-      z-index:1;
-      margin:12px 0 0;
-      color:var(--mut);
-      line-height:1.66;
-      font-size:1rem;
-      max-width:760px;
-    }
-
-    .statusGrid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-    }
-
-    .statusCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      padding:18px;
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-      display:grid;
-      gap:10px;
-      min-height:150px;
-    }
-
-    .statusCard strong{
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:#fff2cb;
-    }
-
-    .statusCard h3{
-      margin:0;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:1.3rem;
-      line-height:1.08;
-    }
-
-    .statusCard p{
-      margin:0;
-      color:var(--mut);
-      font-size:.92rem;
-      line-height:1.58;
-    }
-
-    .statusBadge{
-      margin-top:auto;
-      width:max-content;
-      min-height:36px;
-      padding:0 12px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      font-size:.72rem;
-      font-weight:900;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:rgba(255,255,255,.08);
-    }
-
-    .green .statusBadge{color:#dfffe9;border-color:rgba(126,240,196,.32)}
-    .yellow .statusBadge{color:#fff1b8;border-color:rgba(255,215,106,.32)}
-    .red .statusBadge{color:#ffd2d7;border-color:rgba(255,107,122,.32)}
-
-    .green{background:linear-gradient(180deg,rgba(126,240,196,.18),rgba(126,240,196,.06))}
-    .yellow{background:linear-gradient(180deg,rgba(255,215,106,.18),rgba(255,215,106,.06))}
-    .red{background:linear-gradient(180deg,rgba(255,107,122,.18),rgba(255,107,122,.06))}
-
-    .listsGrid{
-      position:relative;
-      z-index:1;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:14px;
-    }
-
-    .listCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      padding:18px;
-      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.02));
-      min-height:220px;
-    }
-
-    .listCard h3{
-      margin:0 0 12px;
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:1.4rem;
-      line-height:1.08;
-    }
-
-    .listCard ul{
-      margin:0;
-      padding-left:18px;
-      color:var(--mut);
-      line-height:1.62;
-      font-size:.94rem;
-    }
-
-    .listCard li + li{margin-top:8px}
-
-    .broken{background:linear-gradient(180deg,rgba(255,107,122,.16),rgba(255,107,122,.05))}
-    .fixed{background:linear-gradient(180deg,rgba(102,215,255,.16),rgba(102,215,255,.05))}
-    .next{background:linear-gradient(180deg,rgba(255,215,106,.16),rgba(255,215,106,.05))}
-
-    .footerbox p{
-      position:relative;
-      z-index:1;
-      margin:0;
-      color:var(--soft);
-      font-size:.78rem;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    @media (max-width:980px){
-      .statusGrid,.listsGrid{grid-template-columns:1fr 1fr}
-    }
-
-    @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,var(--max))}
-      .hero,.statusBoard,.lists,.footerbox{padding:18px}
-      .statusGrid,.listsGrid{grid-template-columns:1fr}
+    @media (max-width: 720px){
+      .page{width:min(100vw - 16px, var(--max));padding:14px 0 28px}
+      .topbar{flex-wrap:wrap;padding:12px 14px}
+      .topnav{width:100%;justify-content:flex-start}
+      .hero,.section{padding:18px 16px}
+      .hero-grid{gap:14px}
+      .hero h1{font-size:clamp(2rem, 11vw, 3.4rem)}
+      .hero-actions{gap:8px}
+      .button{flex:1 1 calc(50% - 8px)}
+      .button.primary{flex-basis:100%}
+      .section-head,.footer{display:grid;gap:8px}
+      .section-note{text-align:left}
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="stars" aria-hidden="true"></div>
-
-    <div class="wrap">
-      <div class="topbar">
-        <div class="brand">
-          <div class="mark" aria-hidden="true"></div>
-          <div>
-            <h1>Gauges</h1>
-            <p>Live calibration status for the website</p>
-          </div>
-        </div>
-
-        <div class="pills" aria-label="Gauges status">
-          <div class="pill"><strong>Mode</strong>&nbsp;Calibrate</div>
-          <div class="pill"><strong>Phase</strong>&nbsp;Expansion</div>
-          <div class="pill"><strong>State</strong>&nbsp;Manual</div>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DG</div>
+        <div>
+          <p class="brand-kicker">Signal Surface</p>
+          <p class="brand-title">Gauges · Diamond Gate Bridge</p>
         </div>
       </div>
 
-      <section class="hero" aria-label="Gauges hero">
-        <p class="eyebrow">Calibration</p>
-        <h2>Short, scannable, decision-grade.</h2>
-        <p>This page exists to help calibrate and expand the website. It should show what is broken, what is live, what changed, and what matters next. Nothing else.</p>
-      </section>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/products/">Products</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+      </nav>
+    </header>
 
-      <section class="statusBoard" aria-label="Surface status">
-        <p class="eyebrow">Surface Status</p>
-        <div class="statusGrid">
-          <article class="statusCard green">
-            <strong>Root</strong>
-            <h3>Threshold live</h3>
-            <p>Root is currently serving as the bright entry authority surface.</p>
-            <div class="statusBadge">Green</div>
-          </article>
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="hero-tag">Generation 1 · gauges renewal</span>
+          <h1>Signal, state, and <span class="accent">movement</span>.</h1>
+          <p>
+            Gauges is the measurement surface. It provides fast comparative reads of system state without
+            turning the page into a technical dump. The goal is to make movement legible at a glance.
+          </p>
 
-          <article class="statusCard yellow">
-            <strong>Door</strong>
-            <h3>Secondary threshold</h3>
-            <p>Exists, but root currently feels like the primary live door.</p>
-            <div class="statusBadge">Yellow</div>
-          </article>
-
-          <article class="statusCard yellow">
-            <strong>Prelude</strong>
-            <h3>Verify live owner</h3>
-            <p>Color adoption and ownership need explicit re-check after deployment.</p>
-            <div class="statusBadge">Yellow</div>
-          </article>
-
-          <article class="statusCard green">
-            <strong>Home</strong>
-            <h3>Usable destination</h3>
-            <p>Home is now working as a readable nested hub.</p>
-            <div class="statusBadge">Green</div>
-          </article>
-
-          <article class="statusCard green">
-            <strong>Products</strong>
-            <h3>Bright chamber</h3>
-            <p>Products is aligned to the upstream bright system.</p>
-            <div class="statusBadge">Green</div>
-          </article>
-
-          <article class="statusCard yellow">
-            <strong>Laws</strong>
-            <h3>Needs deployment check</h3>
-            <p>Renewed contract ready, but should be re-verified after publish.</p>
-            <div class="statusBadge">Yellow</div>
-          </article>
+          <div class="hero-actions">
+            <a class="button primary" href="#live-gauges">Read gauges</a>
+            <a class="button" href="/products/">Products</a>
+            <a class="button" href="/">Back to door</a>
+          </div>
         </div>
-      </section>
 
-      <section class="lists" aria-label="Operational lists">
-        <p class="eyebrow">Operational Read</p>
-        <div class="listsGrid">
-          <article class="listCard broken">
-            <h3>Broken Now</h3>
-            <ul>
-              <li>Prelude ownership and live color adoption need verification.</li>
-              <li>Any stale route still serving old root or old page state should be treated as broken.</li>
-              <li>Reference should stay monitored until fully confirmed on the public site.</li>
-            </ul>
-          </article>
+        <aside class="hero-side">
+          <h2>Gauge job</h2>
+          <p>
+            Show what is moving, what is stable, and what needs attention. Gauges should compress signal into
+            readable form instead of burying it inside paragraphs.
+          </p>
 
-          <article class="listCard fixed">
-            <h3>Recently Fixed</h3>
-            <ul>
-              <li>Root threshold was renewed into a bright entry surface.</li>
-              <li>Home became a usable destination instead of a non-usable chamber.</li>
-              <li>Products shifted from muted chamber logic into the new bright system.</li>
-            </ul>
-          </article>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-label">Purpose</span>
+              <span class="stat-value">Signal and measurement</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Read class</span>
+              <span class="stat-value">Fast comparative surface</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Contract</span>
+              <span class="stat-value">Generation 1 gauges chamber</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
 
-          <article class="listCard next">
-            <h3>Next Up</h3>
-            <ul>
-              <li>Re-verify Prelude on the live site.</li>
-              <li>Re-check Laws after deployment.</li>
-              <li>Keep Gauges compact and update only as surfaces change.</li>
-            </ul>
-          </article>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What gauges do</div>
+          <h2>Compress complexity into a readable surface</h2>
         </div>
-      </section>
+        <div class="section-note">
+          Measurement should clarify the system, not overload it.
+        </div>
+      </div>
 
-      <section class="footerbox" aria-label="Gauges footer">
-        <p>Last updated manually · Current phase: calibration and expansion · Gauges stays operational, not ceremonial.</p>
-      </section>
-    </div>
-  </div>
+      <div class="cards">
+        <div class="card">
+          <h3>State</h3>
+          <p>Gauge surfaces show the current read of the chamber without requiring deep interpretation first.</p>
+        </div>
+        <div class="card">
+          <h3>Motion</h3>
+          <p>They make movement visible: what is rising, stabilizing, narrowing, or falling out of alignment.</p>
+        </div>
+        <div class="card">
+          <h3>Comparison</h3>
+          <p>They allow one surface to be read against another so the whole system stays coherent.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="live-gauges">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Live read</div>
+          <h2>Core gauges</h2>
+        </div>
+        <div class="section-note">
+          These are public-facing compressed reads, not full internal diagnostics.
+        </div>
+      </div>
+
+      <div class="gauges">
+        <div class="gauge">
+          <div class="gauge-head">
+            <div class="gauge-title">Coherence</div>
+            <div class="gauge-status ok">Stable</div>
+          </div>
+          <div class="gauge-value">82%</div>
+          <div class="bar" aria-hidden="true"><div class="bar-fill" style="--fill:82%"></div></div>
+          <div class="gauge-copy">How well the visible surfaces are reading as one system instead of disconnected pages.</div>
+        </div>
+
+        <div class="gauge">
+          <div class="gauge-head">
+            <div class="gauge-title">Execution</div>
+            <div class="gauge-status warn">Active</div>
+          </div>
+          <div class="gauge-value">68%</div>
+          <div class="bar" aria-hidden="true"><div class="bar-fill" style="--fill:68%"></div></div>
+          <div class="gauge-copy">How much of the visible system is already converted into actual working surfaces and usable chambers.</div>
+        </div>
+
+        <div class="gauge">
+          <div class="gauge-head">
+            <div class="gauge-title">Signal Clarity</div>
+            <div class="gauge-status ok">Readable</div>
+          </div>
+          <div class="gauge-value">76%</div>
+          <div class="bar" aria-hidden="true"><div class="bar-fill" style="--fill:76%"></div></div>
+          <div class="gauge-copy">How clearly the pages communicate their job without collapsing into noise, drift, or overlap.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Next routes</div>
+          <h2>Move from measurement into the right chamber</h2>
+        </div>
+        <div class="section-note">
+          Gauges should point you forward, not trap you in endless reading.
+        </div>
+      </div>
+
+      <div class="routes">
+        <a class="route" data-tone="mint" href="/products/">
+          <div class="route-mark">P</div>
+          <h3 class="route-title">Products</h3>
+          <div class="route-copy">
+            Move from signal into the public build-facing chamber once the system read is clear enough to act on.
+          </div>
+          <div class="route-meta">Chamber · Build</div>
+        </a>
+
+        <a class="route" data-tone="gold" href="/nine-summits/">
+          <div class="route-mark">N</div>
+          <h3 class="route-title">Nine Summits</h3>
+          <div class="route-copy">
+            Follow the value spine if the measurement surface points back toward baseline alignment and human potential.
+          </div>
+          <div class="route-meta">Baseline · Spine</div>
+        </a>
+
+        <a class="route" data-tone="blue" href="/about/">
+          <div class="route-mark">A</div>
+          <h3 class="route-title">About</h3>
+          <div class="route-copy">
+            Return to the orientation surface if the system needs a plainer read of what is live and how it should be used.
+          </div>
+          <div class="route-meta">Identity · Orientation</div>
+        </a>
+
+        <a class="route" data-tone="rose" href="/laws/">
+          <div class="route-mark">L</div>
+          <h3 class="route-title">Laws</h3>
+          <div class="route-copy">
+            Step into the governing rule layer once the signal requires structural interpretation and standards.
+          </div>
+          <div class="route-meta">Rule · Structure</div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Gauges · Generation 1 signal contract</span>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>

@@ -1,12 +1,13 @@
+<!-- /big-laugh/big-laughs/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Big Laughs Comedy · Big Laugh</title>
+  <title>Big Laughs · Big Laugh</title>
   <meta
     name="description"
-    content="Big Laughs Comedy is the first live-show sub-tier under Big Laugh. Pre-register for five raffle tickets, attend shows for extra entries, and win prizes revealed at the fourth show."
+    content="Big Laughs is a motivational crowd-interaction show under Big Laugh, with comedy, raffle entries, live participation, and winners revealed at the fourth show."
   />
   <style>
     :root{
@@ -217,7 +218,7 @@
       font-size:clamp(2.45rem,5.4vw,5.2rem);
       line-height:.94;
       letter-spacing:-.06em;
-      max-width:11ch;
+      max-width:12ch;
     }
 
     h1 .accent{color:var(--gold)}
@@ -230,7 +231,7 @@
     .hero p{
       margin:0;
       font-size:clamp(1rem,1.5vw,1.12rem);
-      max-width:66ch;
+      max-width:68ch;
     }
 
     .hero-actions{
@@ -376,7 +377,7 @@
       bottom:24px;
       transform:translateX(-50%);
       width:calc(100% - 42px);
-      max-width:620px;
+      max-width:650px;
       padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(140,168,240,.24);
@@ -486,23 +487,6 @@
     .prize-card p,.readout p,.route-card p{
       margin:0;
       font-size:.9rem;
-    }
-
-    .prize-badge{
-      display:inline-flex;
-      min-height:30px;
-      padding:0 12px;
-      align-items:center;
-      justify-content:center;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      color:#fff;
-      background:rgba(255,255,255,.045);
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-weight:900;
-      margin-top:14px;
     }
 
     .russian-doll{
@@ -692,31 +676,6 @@
       .doll-meta{display:grid;justify-items:end}
       .footer{display:grid;gap:8px}
     }
-
-    @media (prefers-reduced-motion:no-preference){
-      .stage-diamond{animation:stagePulse 5.8s ease-in-out infinite}
-      .spotlight{animation:slowSpin 42s linear infinite}
-      .mic{animation:micGlow 4.8s ease-in-out infinite}
-
-      @keyframes stagePulse{
-        0%,100%{filter:brightness(1)}
-        50%{filter:brightness(1.14)}
-      }
-
-      @keyframes slowSpin{
-        from{transform:translate(-50%,-50%) rotate(0deg)}
-        to{transform:translate(-50%,-50%) rotate(360deg)}
-      }
-
-      @keyframes micGlow{
-        0%,100%{filter:brightness(1)}
-        50%{filter:brightness(1.16)}
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce){
-      *{animation:none !important;scroll-behavior:auto !important}
-    }
   </style>
 </head>
 <body>
@@ -726,14 +685,14 @@
         <div class="brand-mark">BL</div>
         <div>
           <p class="brand-kicker">Big Laugh Sub-tier</p>
-          <p class="brand-title">Big Laughs Comedy</p>
+          <p class="brand-title">Big Laughs</p>
         </div>
       </div>
 
       <nav class="topnav" aria-label="Primary">
         <a class="nav-link" href="/big-laugh/">Big Laugh</a>
         <a class="nav-link" href="#raffle">Raffle</a>
-        <a class="nav-link" href="#tickets">Tickets</a>
+        <a class="nav-link" href="#tickets">Register</a>
         <a class="nav-link" href="#showInfo">Show Info</a>
         <a class="nav-link" href="/">Home</a>
       </nav>
@@ -742,29 +701,29 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Sunday feature · Fort Worth comedy · raffle event</span>
-          <h1>Big Laughs, <span class="accent">big raffle</span>.</h1>
+          <span class="hero-tag">Motivational crowd interaction · comedy in the room · raffle event</span>
+          <h1>Big Laughs is <span class="accent">not passive</span>.</h1>
           <p>
-            Big Laughs Comedy is the first live-show sub-tier under Big Laugh. Pre-register and receive five raffle tickets.
-            Show up to each show and receive one additional ticket. Winners are revealed at the fourth show.
+            Big Laughs is a motivational crowd-interaction show under Big Laugh. Comedy is part of the engine,
+            but the main event is the room: participation, energy, direct audience engagement, and people leaving with more momentum than they walked in with.
           </p>
 
           <div class="hero-actions">
             <a class="button primary" href="#tickets">Pre-register</a>
             <a class="button raffle" href="#raffle">Raffle prizes</a>
-            <a class="button" href="#showInfo">Show info</a>
+            <a class="button" href="#showInfo">How the room works</a>
             <a class="button" href="/big-laugh/">Parent chamber</a>
           </div>
         </div>
 
         <aside class="stage-card">
-          <div class="stage-window" aria-label="Big Laughs Comedy stage">
+          <div class="stage-window" aria-label="Big Laughs motivational crowd-interaction stage">
             <div class="stage-grid"></div>
             <div class="spotlight"></div>
             <div class="stage-diamond"></div>
             <div class="mic"></div>
             <div class="stage-label">
-              <strong>Big Laughs Comedy</strong> · four-show raffle · winners revealed at show four
+              <strong>Big Laughs</strong> · motivational crowd interaction first, comedy present, winners revealed at show four
             </div>
           </div>
         </aside>
@@ -773,13 +732,13 @@
 
     <section class="console" id="tickets">
       <div class="section-kicker">Fast answers</div>
-      <h2>Pre-register, attend, stack entries</h2>
+      <h2>Pre-register, show up, enter the room</h2>
 
       <div class="readout-grid">
         <div class="readout">
-          <small>Show</small>
-          <strong>Big Laughs Comedy</strong>
-          <p>Sunday-night Fort Worth comedy under the Big Laugh parent chamber.</p>
+          <small>Primary promise</small>
+          <strong>Crowd interaction</strong>
+          <p>The audience is part of the event, not background noise.</p>
         </div>
 
         <div class="readout">
@@ -806,7 +765,7 @@
       <div class="section-kicker">Raffle prizes</div>
       <h2>Grand prize and runner-up</h2>
       <p>
-        The raffle runs across four shows. Pre-registering gives the strongest starting position, and attendance adds more entries.
+        The raffle gives the room another reason to build momentum across all four shows.
       </p>
 
       <div class="prize-grid">
@@ -839,12 +798,12 @@
               <small>Container 1</small>
               <h3>What is Big Laughs?</h3>
             </div>
-            <div class="doll-meta"><span>Show</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Room</span><span class="doll-diamond"></span></div>
           </button>
           <div class="doll-panel">
             <p class="doll-copy">
-              Big Laughs is a live comedy show designed to be simple before you arrive and energetic once you are in the room.
-              It sits under Big Laugh as the first event sub-tier.
+              Big Laughs is a live-room experience. The structure uses humor, direct talk, audience response, and motivational pressure
+              to make the room feel awake. It is not just a comedy show; comedy is one of the tools.
             </p>
           </div>
         </article>
@@ -892,13 +851,14 @@
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
               <small>Container 3</small>
-              <h3>Show details</h3>
+              <h3>What should people expect?</h3>
             </div>
-            <div class="doll-meta"><span>Info</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Energy</span><span class="doll-diamond"></span></div>
           </button>
           <div class="doll-panel">
             <p class="doll-copy">
-              Sunday-night Fort Worth comedy. Keep official ticket price, venue address, and exact showtime current on the final reservation or ticket link.
+              Expect a room that talks back, reacts, laughs, gets pushed, gets pulled forward, and becomes part of the event.
+              The tone is high-energy, direct, funny, and motivational.
             </p>
           </div>
         </article>
@@ -923,7 +883,7 @@
 
     <section class="console">
       <div class="section-kicker">Final route</div>
-      <h2>Ready for the show</h2>
+      <h2>Ready for the room</h2>
 
       <div class="route-grid">
         <a class="route-card" href="#tickets">
@@ -941,7 +901,7 @@
         <a class="route-card" href="/big-laugh/">
           <small>Parent</small>
           <h3>Big Laugh</h3>
-          <p>Return to the parent comedy chamber.</p>
+          <p>Return to the motivational crowd-interaction parent chamber.</p>
         </a>
 
         <a class="route-card" href="/">
@@ -953,7 +913,7 @@
     </section>
 
     <footer class="footer">
-      <span>Big Laughs Comedy · Big Laugh sub-tier</span>
+      <span>Big Laughs · motivational crowd-interaction show under Big Laugh</span>
       <div class="footer-links">
         <a href="/big-laugh/">Big Laugh</a>
         <a href="#raffle">Raffle</a>

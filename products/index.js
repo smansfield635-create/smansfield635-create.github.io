@@ -21,40 +21,40 @@ const CARDINALS = {
     color: "var(--north)",
     glow: "rgba(223,233,255,.72)",
     role: "Framekeeping · threshold · classification",
-    summary: "North stabilizes frame, threshold, and admissible classification inside the compound.",
+    summary: "North stabilizes frame, threshold, and admissible classification inside the confined compound window.",
     href: "/laws/",
-    atomX: 50,
-    atomY: 22
+    atomX: 34,
+    atomY: 34
   },
   east: {
     label: "East",
     color: "var(--east)",
     glow: "rgba(142,197,255,.72)",
     role: "Signal · build-line · formation",
-    summary: "East carries emergence, build-line motion, and lawful formation inside the compound.",
+    summary: "East carries emergence, build-line motion, and lawful formation inside the confined compound window.",
     href: "/products/",
-    atomX: 78,
-    atomY: 50
-  },
-  south: {
-    label: "South",
-    color: "var(--south)",
-    glow: "rgba(142,227,172,.72)",
-    role: "Continuity · care · restoration",
-    summary: "South stabilizes continuity, care, and restoration inside the compound.",
-    href: "/gauges/",
-    atomX: 50,
-    atomY: 78
+    atomX: 66,
+    atomY: 34
   },
   west: {
     label: "West",
     color: "var(--west)",
     glow: "rgba(255,213,138,.72)",
     role: "Pressure-test · audit · contradiction",
-    summary: "West provides stress test, audit, and contradiction pressure inside the compound.",
+    summary: "West provides stress test, audit, and contradiction pressure inside the confined compound window.",
     href: "/about/",
-    atomX: 22,
-    atomY: 50
+    atomX: 34,
+    atomY: 66
+  },
+  south: {
+    label: "South",
+    color: "var(--south)",
+    glow: "rgba(142,227,172,.72)",
+    role: "Continuity · care · restoration",
+    summary: "South stabilizes continuity, care, and restoration inside the confined compound window.",
+    href: "/gauges/",
+    atomX: 66,
+    atomY: 66
   }
 };
 
@@ -65,16 +65,17 @@ const TITLES = {
   south: ["Harbor", "Root", "Hearth", "Current", "Shelter", "Orchard", "Rhythm", "Restore"]
 };
 
-// 8 orbital positions per atom, centered around each cardinal atom.
+// Twisted orbital offsets around each atom.
+// Read as mini torsion around a larger figure-eight.
 const ORBITS = [
-  { dx: 0, dy: -10 },
-  { dx: 7, dy: -7 },
-  { dx: 10, dy: 0 },
-  { dx: 7, dy: 7 },
-  { dx: 0, dy: 10 },
-  { dx: -7, dy: 7 },
-  { dx: -10, dy: 0 },
-  { dx: -7, dy: -7 }
+  { dx: 0, dy: -8.5 },
+  { dx: 6, dy: -5.5 },
+  { dx: 8.5, dy: -0.5 },
+  { dx: 5.5, dy: 6 },
+  { dx: 0, dy: 8.5 },
+  { dx: -6, dy: 5.5 },
+  { dx: -8.5, dy: 0.5 },
+  { dx: -5.5, dy: -6 }
 ];
 
 function buildProducts() {
@@ -102,8 +103,8 @@ function buildProducts() {
         x: cardinal.atomX + orbit.dx,
         y: cardinal.atomY + orbit.dy,
         description:
-          `${title} is a ${cardinal.label.toLowerCase()} atomic point inside the molecular products compound. ` +
-          `It belongs to the ${cardinal.label.toLowerCase()} body of eight and expresses ${cardinal.role.toLowerCase()}.`
+          `${title} is a ${cardinal.label.toLowerCase()} atomic point inside the confined products window. ` +
+          `It belongs to the ${cardinal.label.toLowerCase()} body of eight and participates in the twisted figure-eight compound as ${cardinal.role.toLowerCase()}.`
       });
     });
   });
@@ -164,7 +165,7 @@ function renderNodes() {
     const isActive = active && active.id === item.id;
 
     const classes = [
-      "door-node",
+      "node",
       isActive ? "is-active" : "",
       !isVisible ? "is-muted" : ""
     ].filter(Boolean).join(" ");

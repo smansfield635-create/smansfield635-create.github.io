@@ -58,7 +58,7 @@
     .page{
       width:min(var(--max), calc(100vw - 24px));
       margin:0 auto;
-      padding:20px 0 42px;
+      padding:18px 0 40px;
       position:relative;
       z-index:1;
     }
@@ -73,7 +73,6 @@
       border-radius:20px;
       background:rgba(7,13,26,.7);
       box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
     }
 
     .brand{
@@ -95,6 +94,7 @@
       font-weight:800;
       letter-spacing:.08em;
       box-shadow:inset 0 0 26px rgba(126,160,255,.1);
+      flex:none;
     }
 
     .brand-copy{min-width:0}
@@ -119,6 +119,7 @@
       display:flex;
       flex-wrap:wrap;
       gap:10px;
+      justify-content:flex-end;
     }
 
     .nav-link{
@@ -147,7 +148,7 @@
     }
 
     .hero{
-      margin-top:18px;
+      margin-top:16px;
       border:1px solid var(--line);
       border-radius:34px;
       background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
@@ -169,9 +170,9 @@
 
     .hero-grid{
       display:grid;
-      grid-template-columns:minmax(0, 1.02fr) minmax(420px, .98fr);
-      gap:26px;
-      padding:28px 22px 26px;
+      grid-template-columns:minmax(0, .92fr) minmax(360px, 1.08fr);
+      gap:18px;
+      padding:22px 20px 18px;
       align-items:center;
     }
 
@@ -179,6 +180,7 @@
       min-width:0;
       position:relative;
       z-index:1;
+      padding-right:4px;
     }
 
     .hero-tag{
@@ -193,7 +195,7 @@
       text-transform:uppercase;
       letter-spacing:.14em;
       font-size:.72rem;
-      margin-bottom:14px;
+      margin-bottom:12px;
     }
 
     .hero-tag::before{
@@ -207,11 +209,11 @@
     }
 
     .hero h1{
-      margin:0 0 12px;
-      font-size:clamp(2.5rem, 5.8vw, 5rem);
+      margin:0 0 10px;
+      font-size:clamp(2.3rem, 5vw, 4.4rem);
       line-height:.95;
       letter-spacing:-.05em;
-      max-width:10ch;
+      max-width:9ch;
     }
 
     .hero h1 .accent{color:var(--gold)}
@@ -219,24 +221,24 @@
     .hero p{
       margin:0;
       color:var(--muted);
-      font-size:clamp(1rem, 1.7vw, 1.18rem);
-      line-height:1.66;
-      max-width:62ch;
+      font-size:clamp(.98rem, 1.5vw, 1.1rem);
+      line-height:1.56;
+      max-width:52ch;
     }
 
     .hero-actions{
       display:flex;
       flex-wrap:wrap;
-      gap:12px;
-      margin-top:22px;
+      gap:10px;
+      margin-top:18px;
     }
 
     .button{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      min-height:48px;
-      padding:0 18px;
+      min-height:44px;
+      padding:0 16px;
       border-radius:16px;
       border:1px solid var(--line);
       color:var(--text);
@@ -244,6 +246,7 @@
       font-weight:800;
       background:rgba(255,255,255,.03);
       transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      white-space:nowrap;
     }
 
     .button:hover,
@@ -262,16 +265,17 @@
 
     .door-wrap{
       position:relative;
-      min-height:760px;
+      min-height:560px;
       display:grid;
       place-items:center;
       z-index:1;
+      margin-top:-8px;
     }
 
     .door-stage{
       position:relative;
       width:min(100%, 560px);
-      aspect-ratio:5 / 7.4;
+      aspect-ratio:5 / 7.25;
       filter:drop-shadow(0 34px 68px rgba(0,0,0,.5));
     }
 
@@ -361,17 +365,17 @@
     .door-copy{
       position:absolute;
       left:50%;
-      bottom:24px;
+      bottom:20px;
       transform:translateX(-50%);
-      width:min(84%, 430px);
-      padding:14px 18px;
+      width:min(82%, 410px);
+      padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(140,168,240,.24);
       background:rgba(6,14,28,.76);
       text-align:center;
       text-transform:uppercase;
-      letter-spacing:.16em;
-      font-size:.8rem;
+      letter-spacing:.15em;
+      font-size:.76rem;
       color:#dbe5ff;
       box-shadow:0 12px 32px rgba(0,0,0,.28);
       z-index:4;
@@ -379,8 +383,46 @@
 
     .door-copy strong{color:#fff}
 
-    .gates{
+    .subsection{
       margin-top:18px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
+      box-shadow:var(--shadow);
+      padding:20px;
+    }
+
+    .subsection-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:end;
+      gap:16px;
+      margin-bottom:16px;
+    }
+
+    .subsection-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:6px;
+    }
+
+    .subsection h2{
+      margin:0;
+      font-size:1.45rem;
+      letter-spacing:-.03em;
+      line-height:1.06;
+    }
+
+    .subsection-note{
+      color:var(--muted);
+      font-size:.92rem;
+      max-width:42ch;
+      text-align:right;
+    }
+
+    .gates{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:14px;
@@ -396,7 +438,7 @@
       color:inherit;
       text-decoration:none;
       transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
-      min-height:220px;
+      min-height:210px;
     }
 
     .gate:hover,
@@ -445,45 +487,6 @@
       font-size:.78rem;
       letter-spacing:.14em;
       text-transform:uppercase;
-    }
-
-    .subsection{
-      margin-top:18px;
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
-      box-shadow:var(--shadow);
-      padding:20px;
-    }
-
-    .subsection-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:end;
-      gap:16px;
-      margin-bottom:16px;
-    }
-
-    .subsection-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:6px;
-    }
-
-    .subsection h2{
-      margin:0;
-      font-size:1.45rem;
-      letter-spacing:-.03em;
-      line-height:1.06;
-    }
-
-    .subsection-note{
-      color:var(--muted);
-      font-size:.92rem;
-      max-width:42ch;
-      text-align:right;
     }
 
     .world-grid{
@@ -542,10 +545,12 @@
     @media (max-width: 1120px){
       .hero-grid{
         grid-template-columns:1fr;
+        gap:8px;
       }
 
       .door-wrap{
-        min-height:680px;
+        min-height:500px;
+        margin-top:2px;
       }
 
       .gates,
@@ -569,26 +574,70 @@
         padding:12px 14px;
       }
 
+      .topnav{
+        width:100%;
+        justify-content:flex-start;
+      }
+
       .hero{
-        padding:20px 16px 18px;
+        padding:0;
       }
 
       .hero-grid{
-        gap:18px;
+        padding:18px 16px 8px;
+        gap:6px;
+      }
+
+      .hero-copy{
+        padding-right:0;
+      }
+
+      .hero h1{
+        font-size:clamp(2.1rem, 12vw, 3.6rem);
+        max-width:8ch;
+      }
+
+      .hero p{
+        font-size:1rem;
+        line-height:1.5;
+      }
+
+      .hero-actions{
+        margin-top:14px;
+        gap:8px;
+      }
+
+      .button{
+        min-height:42px;
+        padding:0 14px;
+        flex:1 1 calc(50% - 8px);
+      }
+
+      .button.primary{
+        flex-basis:100%;
       }
 
       .door-wrap{
-        min-height:560px;
+        min-height:420px;
+        margin-top:-8px;
       }
 
       .door-stage{
-        width:min(100%, 440px);
+        width:min(100%, 360px);
       }
 
       .core-mark{
-        width:62px;
-        height:62px;
-        font-size:.88rem;
+        width:58px;
+        height:58px;
+        font-size:.82rem;
+        border-radius:18px;
+      }
+
+      .door-copy{
+        width:min(88%, 320px);
+        font-size:.68rem;
+        line-height:1.25;
+        padding:11px 14px;
       }
 
       .gates,
@@ -600,16 +649,12 @@
         grid-column:auto;
       }
 
-      .subsection,
-      .footer{
-        display:block;
-      }
-
       .subsection{
         padding:18px 16px;
       }
 
-      .subsection-head{
+      .subsection-head,
+      .footer{
         display:grid;
         gap:8px;
       }
@@ -646,8 +691,7 @@
           <p>
             This is the root gateway for Diamond Gate Bridge. It is not the products chamber.
             It is the canonical entry surface: broad, foundational, and world-facing. From here,
-            the paths descend into products, laws, gauges, and the wider house without collapsing
-            the homepage into a product page.
+            the paths descend into products, laws, gauges, and the wider house.
           </p>
 
           <div class="hero-actions">

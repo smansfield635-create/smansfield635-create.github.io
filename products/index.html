@@ -11,7 +11,6 @@
   <style>
     :root{
       --bg:#040814;
-      --panel:rgba(8,14,28,.72);
       --line:rgba(164,188,255,.18);
       --line-strong:rgba(210,223,255,.34);
       --text:#eef4ff;
@@ -26,7 +25,6 @@
     }
 
     *{box-sizing:border-box}
-
     html,body{min-height:100%}
 
     body{
@@ -64,7 +62,7 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.section,.hero-side{
+    .topbar,.hero,.section,.hero-side,.runtime-fallback{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
@@ -215,7 +213,7 @@
 
     h1 .accent{color:var(--gold)}
 
-    .hero p,.hero-side p,.section-note{
+    .hero p,.hero-side p,.section-note,.runtime-fallback p{
       color:var(--muted);
       line-height:1.58;
     }
@@ -256,7 +254,7 @@
       overflow:hidden;
     }
 
-    .hero-side h2{
+    .hero-side h2,.runtime-fallback h2{
       margin:0 0 10px;
       font-size:1.08rem;
       line-height:1.1;
@@ -289,6 +287,7 @@
       color:#f4f7ff;
       font-size:.98rem;
       font-weight:700;
+      overflow-wrap:anywhere;
     }
 
     .filters{
@@ -372,6 +371,25 @@
       overflow:hidden;
     }
 
+    .runtime-fallback{
+      border-radius:24px;
+      padding:22px;
+      margin:0;
+      min-height:220px;
+      display:grid;
+      align-content:center;
+    }
+
+    .runtime-fallback p{
+      margin:0;
+    }
+
+    .runtime-receipt{
+      display:grid;
+      gap:10px;
+      margin-top:16px;
+    }
+
     .footer{
       display:flex;
       justify-content:space-between;
@@ -419,7 +437,7 @@
         justify-content:flex-start;
       }
 
-      .hero,.section,.hero-side{
+      .hero,.section,.hero-side,.runtime-fallback{
         padding:18px 16px;
       }
 
@@ -540,7 +558,40 @@
     </section>
 
     <section class="section" id="productsGrid">
-      <div id="productsRuntimeMount" data-products-runtime-mount></div>
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Runtime mount proof</div>
+          <h2>Products runtime chamber</h2>
+        </div>
+        <div class="section-note">
+          This fallback proves whether /products/index.js is loading before the runtime replaces it.
+        </div>
+      </div>
+
+      <div id="productsRuntimeMount" data-products-runtime-mount data-runtime-status="html-fallback-visible">
+        <div class="runtime-fallback">
+          <h2>Waiting for /products/index.js to load...</h2>
+          <p>
+            This is the HTML fallback. If this message remains visible, the bridge file is not executing.
+            If /products/index.js executes, it will replace this message with a runtime boot receipt or the four-lobed molecular flower.
+          </p>
+
+          <div class="runtime-receipt">
+            <div class="stat">
+              <span class="stat-label">HTML file</span>
+              <span class="stat-value">/products/index.html loaded</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Waiting for</span>
+              <span class="stat-value">/products/index.js</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Then runtime file</span>
+              <span class="stat-value">/products/products_runtime.js</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <footer class="footer">
@@ -554,6 +605,6 @@
     </footer>
   </main>
 
-  <script type="module" src="./index.js"></script>
+  <script type="module" src="./index.js?v=runtime-bridge-proof"></script>
 </body>
 </html>

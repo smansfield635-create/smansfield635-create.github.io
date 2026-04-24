@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Big Laugh Comedy · Diamond Gate Bridge</title>
+  <title>Big Laugh · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Big Laugh Comedy: a Sunday-night Fort Worth comedy show hosted by This Underdog featuring Shannon, with pre-registration raffle entries and prizes."
+    content="Big Laugh is the parent comedy and public-expression chamber for Diamond Gate Bridge, with Big Laughs Comedy as its first event sub-tier."
   />
   <style>
     :root{
@@ -16,9 +16,8 @@
       --text:#eef4ff;
       --muted:#9aabd0;
       --gold:#efd29a;
-      --blue:#6db8ff;
       --pink:#ff9fd6;
-      --green:#97e6b4;
+      --blue:#6db8ff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1240px;
     }
@@ -45,7 +44,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.20;
+      opacity:.2;
       background:
         radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
         radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
@@ -76,7 +75,7 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card,.prize-card{
+    .topbar,.hero,.stage-card,.panel,.doll-shell,.route-card,.readout{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
@@ -142,7 +141,6 @@
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      text-decoration:none;
       min-height:42px;
       padding:0 15px;
       border-radius:999px;
@@ -150,6 +148,7 @@
       color:var(--text);
       font-weight:800;
       background:rgba(255,255,255,.035);
+      text-decoration:none;
       transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
@@ -223,7 +222,10 @@
 
     h1 .accent{color:var(--gold)}
 
-    p{color:var(--muted);line-height:1.58}
+    p{
+      color:var(--muted);
+      line-height:1.58;
+    }
 
     .hero p{
       margin:0;
@@ -253,14 +255,6 @@
       color:#fff8ea;
     }
 
-    .button.raffle{
-      border-color:rgba(255,159,214,.40);
-      background:
-        linear-gradient(180deg, rgba(255,159,214,.18), rgba(255,159,214,.06)),
-        rgba(255,255,255,.035);
-      color:#fff5fb;
-    }
-
     .stage-card{
       border-radius:30px;
       padding:20px;
@@ -283,17 +277,6 @@
         inset 0 0 44px rgba(126,164,255,.10),
         inset 0 -26px 70px rgba(0,0,0,.34);
       isolation:isolate;
-    }
-
-    .stage-window::before{
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:inset 0 0 28px rgba(255,159,214,.08);
-      pointer-events:none;
-      z-index:3;
     }
 
     .stage-grid{
@@ -338,20 +321,6 @@
         0 0 34px rgba(255,159,214,.18),
         inset 0 0 34px rgba(239,210,154,.08);
       z-index:4;
-    }
-
-    .stage-diamond::before,
-    .stage-diamond::after{
-      content:"";
-      position:absolute;
-      inset:28px;
-      border:1px solid rgba(109,184,255,.26);
-      box-shadow:0 0 20px rgba(109,184,255,.10);
-    }
-
-    .stage-diamond::after{
-      inset:64px;
-      border-color:rgba(239,210,154,.28);
     }
 
     .mic{
@@ -415,7 +384,7 @@
 
     .stage-label strong{color:#fff}
 
-    .console,.panel{
+    .panel{
       margin-top:18px;
       border-radius:30px;
       padding:22px 20px;
@@ -430,21 +399,21 @@
       margin-bottom:8px;
     }
 
-    .console h2,.panel h2{
+    .panel h2{
       margin:0 0 10px;
       font-size:clamp(1.7rem,3vw,2.7rem);
       line-height:1;
       letter-spacing:-.04em;
     }
 
-    .readout-grid{
+    .readout-grid,.route-grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       margin-top:18px;
     }
 
-    .readout{
+    .readout,.route-card{
       border-radius:22px;
       padding:16px;
       min-height:146px;
@@ -452,19 +421,7 @@
       overflow:hidden;
     }
 
-    .readout::after{
-      content:"";
-      position:absolute;
-      right:12px;
-      bottom:12px;
-      width:48px;
-      height:48px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(255,159,214,.18), transparent 66%);
-      pointer-events:none;
-    }
-
-    .readout small,.doll-head small,.route-card small,.prize-card small{
+    .readout small,.route-card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -483,79 +440,23 @@
       margin-bottom:10px;
     }
 
-    .readout p,.route-card p,.prize-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .bar{
-      height:8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      overflow:hidden;
-      margin-top:14px;
-    }
-
-    .bar span{
+    .route-card{
       display:block;
-      height:100%;
-      width:var(--value);
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(255,159,214,.68), rgba(239,210,154,.72));
-      box-shadow:0 0 16px rgba(255,159,214,.18);
+      color:var(--text);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
-    .prize-grid{
-      display:grid;
-      grid-template-columns:1.05fr .95fr;
-      gap:12px;
-      margin-top:16px;
+    .route-card:hover,.route-card:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
+      outline:none;
     }
 
-    .prize-card{
-      border-radius:24px;
-      padding:18px;
-      overflow:hidden;
-      position:relative;
-    }
-
-    .prize-card.grand{
-      border-color:rgba(239,210,154,.34);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(239,210,154,.14), transparent 44%),
-        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
-    }
-
-    .prize-card.runner{
-      border-color:rgba(109,184,255,.30);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 44%),
-        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
-    }
-
-    .prize-card h3{
+    .route-card h3{
       margin:0 0 8px;
-      font-size:1.35rem;
-      letter-spacing:-.03em;
-      line-height:1.1;
-    }
-
-    .prize-badge{
-      display:inline-flex;
-      min-height:30px;
-      padding:0 12px;
-      align-items:center;
-      justify-content:center;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      color:#fff;
-      background:rgba(255,255,255,.045);
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-weight:900;
-      margin-top:14px;
+      font-size:1.08rem;
     }
 
     .russian-doll{
@@ -585,7 +486,15 @@
       cursor:pointer;
     }
 
-    .doll-head{min-width:0}
+    .doll-head small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
 
     .doll-head h3{
       margin:0;
@@ -632,124 +541,6 @@
       max-width:78ch;
     }
 
-    .inner-dolls{
-      display:grid;
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .inner-doll{
-      border:1px solid rgba(164,188,255,.14);
-      border-radius:20px;
-      overflow:hidden;
-      background:rgba(255,255,255,.022);
-    }
-
-    .inner-toggle{
-      width:100%;
-      border:0;
-      color:var(--text);
-      background:transparent;
-      display:flex;
-      justify-content:space-between;
-      gap:12px;
-      align-items:center;
-      text-align:left;
-      padding:14px;
-      cursor:pointer;
-    }
-
-    .inner-toggle strong{
-      font-size:.98rem;
-      letter-spacing:-.01em;
-    }
-
-    .inner-toggle span{
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.68rem;
-      font-weight:900;
-    }
-
-    .inner-panel{
-      display:none;
-      padding:0 14px 14px;
-      border-top:1px solid rgba(164,188,255,.10);
-    }
-
-    .inner-doll.is-open .inner-panel{display:block}
-
-    .inner-panel p{
-      margin:12px 0 0;
-      font-size:.94rem;
-    }
-
-    .info-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .info-card{
-      border:1px solid rgba(164,188,255,.14);
-      border-radius:20px;
-      padding:14px;
-      background:rgba(255,255,255,.022);
-    }
-
-    .info-card small{
-      display:block;
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:8px;
-      font-weight:800;
-      font-size:.68rem;
-    }
-
-    .info-card strong{
-      display:block;
-      color:#fff;
-      line-height:1.25;
-      margin-bottom:8px;
-    }
-
-    .info-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .route-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .route-card{
-      display:block;
-      min-height:136px;
-      border-radius:22px;
-      padding:16px;
-      color:var(--text);
-      text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-
-    .route-card:hover,.route-card:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
-      outline:none;
-    }
-
-    .route-card h3{
-      margin:0 0 8px;
-      font-size:1.05rem;
-    }
-
     .footer{
       display:flex;
       justify-content:space-between;
@@ -778,24 +569,23 @@
 
     @media (max-width:980px){
       .hero-grid{grid-template-columns:1fr}
-      .readout-grid,.info-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .prize-grid{grid-template-columns:1fr}
+      .readout-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:720px){
       .page{width:min(100vw - 16px,var(--max));padding:14px 0 32px}
       .topbar{flex-wrap:wrap;padding:12px 14px}
       .topnav{width:100%;justify-content:flex-start}
-      .hero,.stage-card,.console,.panel{padding:18px 16px}
+      .hero,.stage-card,.panel{padding:18px 16px}
       h1{font-size:clamp(2rem,11vw,3.4rem)}
       .hero-actions{gap:8px}
       .button{flex:1 1 calc(50% - 8px)}
-      .button.primary,.button.raffle{flex-basis:100%}
+      .button.primary{flex-basis:100%}
       .stage-window{min-height:340px}
       .stage-diamond{width:176px;height:176px}
       .mic{transform:translate(-50%,-50%) scale(.86)}
       .stage-label{width:calc(100% - 28px);border-radius:24px;font-size:.58rem;letter-spacing:.10em}
-      .readout-grid,.info-grid,.route-grid{grid-template-columns:1fr}
+      .readout-grid,.route-grid{grid-template-columns:1fr}
       .doll-toggle{align-items:flex-start}
       .doll-meta{display:grid;justify-items:end}
       .footer{display:grid;gap:8px}
@@ -833,139 +623,104 @@
       <div class="brand">
         <div class="brand-mark">BL</div>
         <div>
-          <p class="brand-kicker">Sunday Feature</p>
-          <p class="brand-title">Big Laugh Comedy</p>
+          <p class="brand-kicker">Parent Chamber</p>
+          <p class="brand-title">Big Laugh · Diamond Gate Bridge</p>
         </div>
       </div>
 
       <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="#showInfo">Show Info</a>
-        <a class="nav-link" href="#raffle">Raffle</a>
-        <a class="nav-link" href="#tickets">Pre-register</a>
-        <a class="nav-link" href="#faq">FAQ</a>
         <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/big-laugh/big-laughs/">Big Laughs</a>
+        <a class="nav-link" href="#tiers">Sub-tiers</a>
+        <a class="nav-link" href="/contact/">Contact</a>
       </nav>
     </header>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Sunday night · Fort Worth · hosted by This Underdog · featuring Shannon</span>
-          <h1>Big Laugh <span class="accent">Comedy</span>.</h1>
+          <span class="hero-tag">Comedy · public expression · live events</span>
+          <h1>Big Laugh is the <span class="accent">parent stage</span>.</h1>
           <p>
-            A Sunday-night Fort Worth comedy show built for a clear night out. Pre-register for the show and receive
-            five raffle tickets. Show up to each show and receive one additional ticket. Winners are revealed at the fourth show.
+            Big Laugh is the umbrella chamber for comedy, public expression, motivational speaking, and live event experiments
+            inside Diamond Gate Bridge. Big Laughs Comedy now belongs under it as a sub-tier event chamber.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#tickets">Pre-register</a>
-            <a class="button raffle" href="#raffle">Raffle details</a>
-            <a class="button" href="#showInfo">What to expect</a>
+            <a class="button primary" href="/big-laugh/big-laughs/">Open Big Laughs Comedy</a>
+            <a class="button" href="#tiers">View sub-tiers</a>
             <a class="button" href="/">Return to Gate</a>
           </div>
         </div>
 
         <aside class="stage-card">
-          <div class="stage-window" aria-label="Big Laugh comedy stage">
+          <div class="stage-window" aria-label="Big Laugh parent stage">
             <div class="stage-grid"></div>
             <div class="spotlight"></div>
             <div class="stage-diamond"></div>
             <div class="mic"></div>
             <div class="stage-label">
-              <strong>Big Laugh Comedy</strong> · four-show raffle · grand prize reveal at show four
+              <strong>Big Laugh</strong> · parent chamber for live comedy and public-expression branches
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="console" id="tickets">
-      <div class="section-kicker">Fast answers</div>
-      <h2>Show and raffle basics</h2>
+    <section class="panel">
+      <div class="section-kicker">Parent readout</div>
+      <h2>What Big Laugh controls</h2>
       <p>
-        Pre-registering gives the strongest raffle position. Attendance adds additional entries.
+        The parent chamber keeps the public-facing comedy lane organized without forcing each show to compete as a standalone root page.
       </p>
 
       <div class="readout-grid">
         <div class="readout">
-          <small>Start time</small>
-          <strong>Sunday nights · 7:00 p.m.</strong>
-          <p>Sunday-night Fort Worth comedy event.</p>
-          <div class="bar"><span style="--value:100%"></span></div>
+          <small>Parent</small>
+          <strong>Big Laugh</strong>
+          <p>The umbrella for comedy and public expression.</p>
         </div>
 
         <div class="readout">
-          <small>Pre-register</small>
-          <strong>5 Tickets</strong>
-          <p>Each pre-registration earns five raffle tickets.</p>
-          <div class="bar"><span style="--value:100%"></span></div>
+          <small>Sub-tier</small>
+          <strong>Big Laughs</strong>
+          <p>The Sunday comedy show and raffle event branch.</p>
         </div>
 
         <div class="readout">
-          <small>Show attendance</small>
-          <strong>+1 Ticket</strong>
-          <p>Each time you show up to a show, you earn one additional raffle ticket.</p>
-          <div class="bar"><span style="--value:100%"></span></div>
+          <small>Format</small>
+          <strong>Russian doll</strong>
+          <p>Each event opens only the details the visitor needs.</p>
         </div>
 
         <div class="readout">
-          <small>Winner reveal</small>
-          <strong>Show 4</strong>
-          <p>The raffle winners are revealed at the fourth show.</p>
-          <div class="bar"><span style="--value:100%"></span></div>
+          <small>Route</small>
+          <strong>Clean hierarchy</strong>
+          <p>Parent chamber first, show page second.</p>
         </div>
       </div>
     </section>
 
-    <section class="console" id="raffle">
-      <div class="section-kicker">Raffle prizes</div>
-      <h2>Grand prize and runner-up</h2>
-      <p>
-        The raffle runs across four shows. Pre-registering gets five entries, and every attended show adds one entry.
-      </p>
-
-      <div class="prize-grid">
-        <article class="prize-card grand">
-          <small>Grand prize</small>
-          <h3>Dallas Cowboys-signed Troy Aikman jersey from the 1995 season</h3>
-          <p>
-            The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Big Laugh show.
-          </p>
-          <span class="prize-badge">Grand prize</span>
-        </article>
-
-        <article class="prize-card runner">
-          <small>Runner-up prize</small>
-          <h3>55-inch LG 4K TV</h3>
-          <p>
-            The runner-up winner receives the 55-inch LG 4K TV.
-          </p>
-          <span class="prize-badge">Runner-up</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" id="showInfo">
-      <div class="section-kicker">Russian-doll show page</div>
-      <h2>Open only what you need</h2>
-      <p>
-        The page avoids endless-scroll confusion by nesting information: show purpose, raffle rules, tickets, schedule, lineup, and FAQ.
-      </p>
+    <section class="panel" id="tiers">
+      <div class="section-kicker">Russian-doll sub-tiers</div>
+      <h2>Open one branch at a time</h2>
 
       <div class="russian-doll">
         <article class="doll-shell is-open" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="true">
             <div class="doll-head">
-              <small>Container 1</small>
-              <h3>What is Big Laugh?</h3>
+              <small>Sub-tier 1</small>
+              <h3>Big Laughs Comedy</h3>
             </div>
-            <div class="doll-meta"><span>SHOW</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Live show</span><span class="doll-diamond"></span></div>
           </button>
-
           <div class="doll-panel">
             <p class="doll-copy">
-              Big Laugh is a Sunday-night Fort Worth comedy event designed to feel easy to understand before you arrive
-              and fun once you are in the room. It is built around stand-up, live room energy, and clear public promotion.
+              Big Laughs Comedy is the first live show branch under Big Laugh. It contains show details, ticket information,
+              raffle rules, prize information, and visitor FAQs.
+            </p>
+            <p class="doll-copy">
+              <a class="button primary" href="/big-laugh/big-laughs/">Open Big Laughs Comedy</a>
             </p>
           </div>
         </article>
@@ -973,227 +728,88 @@
         <article class="doll-shell" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 2</small>
-              <h3>How the raffle works</h3>
+              <small>Sub-tier 2</small>
+              <h3>Public Speaking</h3>
             </div>
-            <div class="doll-meta"><span>RAFFLE</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Future</span><span class="doll-diamond"></span></div>
           </button>
-
           <div class="doll-panel">
             <p class="doll-copy">
-              The raffle rewards people who commit early and people who keep showing up. Pre-registration gets the biggest entry boost.
-              Attendance adds one ticket each time.
+              This branch can hold motivational speaking, structured talks, guest presentations, and public-expression formats
+              that are adjacent to comedy but not identical to the show.
             </p>
-
-            <div class="info-grid">
-              <div class="info-card">
-                <small>Pre-register</small>
-                <strong>5 raffle tickets</strong>
-                <p>Every pre-registration earns five raffle tickets.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Attend a show</small>
-                <strong>1 raffle ticket</strong>
-                <p>Every time you show up to a show, you earn one additional ticket.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Show cycle</small>
-                <strong>4 shows</strong>
-                <p>The raffle runs across four Big Laugh shows.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Reveal</small>
-                <strong>Show 4</strong>
-                <p>Winners are revealed at the fourth show.</p>
-              </div>
-            </div>
           </div>
         </article>
 
         <article class="doll-shell" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 3</small>
-              <h3>Tickets, time, and arrival</h3>
+              <small>Sub-tier 3</small>
+              <h3>Community Nights</h3>
             </div>
-            <div class="doll-meta"><span>INFO</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Future</span><span class="doll-diamond"></span></div>
           </button>
-
           <div class="doll-panel">
             <p class="doll-copy">
-              Start time is Sunday nights at 7:00 p.m. Ticket price, venue address, and pre-registration details
-              should stay current wherever the official reservation line is posted.
+              This branch can hold themed nights, local partnerships, charity-style events, and audience-building experiments.
             </p>
-
-            <div class="info-grid">
-              <div class="info-card">
-                <small>Ticket line</small>
-                <strong>$1 per ticket</strong>
-                <p>Keep the ticket price visible and easy to understand.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Start time</small>
-                <strong>Sunday nights · 7:00 p.m.</strong>
-                <p>The show is framed as a Sunday-night Fort Worth event.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Arrival</small>
-                <strong>Arrive early</strong>
-                <p>Give yourself time to park, check in, get seated, and settle into the room.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Groups</small>
-                <strong>Bring people</strong>
-                <p>Comedy works better with a table, a friend, or someone who needs a night out.</p>
-              </div>
-            </div>
           </div>
         </article>
 
         <article class="doll-shell" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 4</small>
-              <h3>Who is on the show?</h3>
+              <small>Sub-tier 4</small>
+              <h3>Performer Development</h3>
             </div>
-            <div class="doll-meta"><span>CAST</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Future</span><span class="doll-diamond"></span></div>
           </button>
-
           <div class="doll-panel">
             <p class="doll-copy">
-              The show is hosted by This Underdog and features Shannon. The host sets the pace, welcomes the room,
-              and keeps the night moving with a self-aware underdog edge.
+              This branch can hold open mic structures, workshops, performance tools, color-script development, and stage-practice assets.
             </p>
-
-            <div class="info-grid">
-              <div class="info-card">
-                <small>Host</small>
-                <strong>This Underdog</strong>
-                <p>Host and public-facing show guide.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Feature</small>
-                <strong>Shannon</strong>
-                <p>Featured performer for the Big Laugh show.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Event line</small>
-                <strong>Comedy first</strong>
-                <p>The promotion should stay clear and show-facing.</p>
-              </div>
-
-              <div class="info-card">
-                <small>Lineup</small>
-                <strong>Expandable</strong>
-                <p>Add confirmed performers here when the lineup is finalized.</p>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <article class="doll-shell" id="faq" data-doll>
-          <button class="doll-toggle" type="button" aria-expanded="false">
-            <div class="doll-head">
-              <small>Container 5</small>
-              <h3>Common questions</h3>
-            </div>
-            <div class="doll-meta"><span>FAQ</span><span class="doll-diamond"></span></div>
-          </button>
-
-          <div class="doll-panel">
-            <div class="inner-dolls">
-              <div class="inner-doll is-open" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="true">
-                  <strong>How do I get raffle tickets?</strong>
-                  <span>Entry</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Pre-registering gets you five raffle tickets. Each time you attend a show, you get one additional raffle ticket.
-                  </p>
-                </div>
-              </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>When are winners announced?</strong>
-                  <span>Show 4</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Winners are revealed at the fourth Big Laugh show.
-                  </p>
-                </div>
-              </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>What are the prizes?</strong>
-                  <span>Prizes</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Grand prize: a Dallas Cowboys-signed Troy Aikman jersey from the 1995 season.
-                    Runner-up: a 55-inch LG 4K TV.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </article>
       </div>
     </section>
 
-    <section class="console">
-      <div class="section-kicker">Final route</div>
-      <h2>Ready for the show</h2>
-      <p>
-        Pre-register first to lock in five raffle tickets, then show up to each show for additional entries.
-      </p>
+    <section class="panel">
+      <div class="section-kicker">Route map</div>
+      <h2>Choose the active branch</h2>
 
       <div class="route-grid">
-        <a class="route-card" href="#tickets">
-          <small>Primary</small>
-          <h3>Pre-register</h3>
-          <p>Start with five raffle tickets.</p>
-        </a>
-
-        <a class="route-card" href="#raffle">
-          <small>Raffle</small>
-          <h3>Prize details</h3>
-          <p>Review the grand prize and runner-up prize.</p>
-        </a>
-
-        <a class="route-card" href="#showInfo">
-          <small>Context</small>
-          <h3>Show info</h3>
-          <p>Open the Russian-doll show explanation.</p>
+        <a class="route-card" href="/big-laugh/big-laughs/">
+          <small>Active sub-tier</small>
+          <h3>Big Laughs Comedy</h3>
+          <p>Open the show page with raffle details and prize information.</p>
         </a>
 
         <a class="route-card" href="/">
-          <small>Site</small>
-          <h3>Home</h3>
-          <p>Return to the Diamond Gate Bridge root door.</p>
+          <small>Root</small>
+          <h3>Return to Gate</h3>
+          <p>Go back to the Diamond Gate Bridge root door.</p>
+        </a>
+
+        <a class="route-card" href="/contact/">
+          <small>Inquiry</small>
+          <h3>Contact</h3>
+          <p>Use the contact route for event questions and reservations.</p>
+        </a>
+
+        <a class="route-card" href="/coming-soon/">
+          <small>Expansion</small>
+          <h3>Coming Soon</h3>
+          <p>Return to the broader upcoming-worlds structure.</p>
         </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Big Laugh Comedy · hosted by This Underdog · featuring Shannon</span>
+      <span>Big Laugh · parent chamber</span>
       <div class="footer-links">
-        <a href="#tickets">Pre-register</a>
-        <a href="#raffle">Raffle</a>
-        <a href="#showInfo">Show Info</a>
-        <a href="#faq">FAQ</a>
+        <a href="/big-laugh/big-laughs/">Big Laughs</a>
         <a href="/">Home</a>
+        <a href="/contact/">Contact</a>
       </div>
     </footer>
   </main>
@@ -1204,7 +820,7 @@
         const parent = shell.parentElement;
         if (!parent) return;
 
-        parent.querySelectorAll(":scope > [data-doll], :scope > [data-inner-doll]").forEach((item) => {
+        parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
           if (item === shell) return;
           item.classList.remove("is-open");
           const btn = item.querySelector("button");
@@ -1215,18 +831,6 @@
       document.querySelectorAll("[data-doll] > .doll-toggle").forEach((button) => {
         button.addEventListener("click", () => {
           const shell = button.closest("[data-doll]");
-          if (!shell) return;
-
-          const willOpen = !shell.classList.contains("is-open");
-          closeSiblings(shell);
-          shell.classList.toggle("is-open", willOpen);
-          button.setAttribute("aria-expanded", String(willOpen));
-        });
-      });
-
-      document.querySelectorAll("[data-inner-doll] > .inner-toggle").forEach((button) => {
-        button.addEventListener("click", () => {
-          const shell = button.closest("[data-inner-doll]");
           if (!shell) return;
 
           const willOpen = !shell.classList.contains("is-open");

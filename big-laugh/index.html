@@ -6,7 +6,7 @@
   <title>Big Laughs Comedy · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Big Laughs Comedy Show: hosted by This Underdog, featuring Shannon. Ticket, showtime, lineup, and show-experience information in a Russian-doll format."
+    content="Big Laughs Comedy Show: hosted by This Underdog, featuring Shannon. Includes raffle details, pre-registration tickets, show attendance tickets, and prize information."
   />
   <style>
     :root{
@@ -79,7 +79,7 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card{
+    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card,.prize-card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
@@ -257,6 +257,14 @@
         linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
         rgba(255,255,255,.035);
       color:#fff8ea;
+    }
+
+    .button.raffle{
+      border-color:rgba(255,159,214,.40);
+      background:
+        linear-gradient(180deg, rgba(255,159,214,.18), rgba(255,159,214,.06)),
+        rgba(255,255,255,.035);
+      color:#fff5fb;
     }
 
     .stage-card{
@@ -462,7 +470,7 @@
       pointer-events:none;
     }
 
-    .readout small,.doll-head small,.route-card small{
+    .readout small,.doll-head small,.route-card small,.prize-card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -481,7 +489,7 @@
       margin-bottom:10px;
     }
 
-    .readout p,.route-card p{
+    .readout p,.route-card p,.prize-card p{
       margin:0;
       font-size:.9rem;
     }
@@ -502,6 +510,58 @@
       border-radius:999px;
       background:linear-gradient(90deg, rgba(255,159,214,.68), rgba(239,210,154,.72));
       box-shadow:0 0 16px rgba(255,159,214,.18);
+    }
+
+    .prize-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .prize-card{
+      border-radius:24px;
+      padding:18px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .prize-card.grand{
+      border-color:rgba(239,210,154,.34);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(239,210,154,.14), transparent 44%),
+        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .prize-card.runner{
+      border-color:rgba(109,184,255,.30);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 44%),
+        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .prize-card h3{
+      margin:0 0 8px;
+      font-size:1.35rem;
+      letter-spacing:-.03em;
+      line-height:1.1;
+    }
+
+    .prize-badge{
+      display:inline-flex;
+      min-height:30px;
+      padding:0 12px;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      background:rgba(255,255,255,.045);
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:900;
+      margin-top:14px;
     }
 
     .russian-doll{
@@ -725,6 +785,7 @@
     @media (max-width:980px){
       .hero-grid{grid-template-columns:1fr}
       .readout-grid,.info-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .prize-grid{grid-template-columns:1fr}
     }
 
     @media (max-width:720px){
@@ -757,7 +818,7 @@
         flex:1 1 calc(50% - 8px);
       }
 
-      .button.primary{flex-basis:100%}
+      .button.primary,.button.raffle{flex-basis:100%}
 
       .stage-window{min-height:340px}
 
@@ -844,6 +905,7 @@
 
       <nav class="topnav" aria-label="Primary">
         <a class="nav-link" href="#showInfo">Show Info</a>
+        <a class="nav-link" href="#raffle">Raffle</a>
         <a class="nav-link" href="#tickets">Tickets</a>
         <a class="nav-link" href="#faq">FAQ</a>
         <a class="nav-link" href="/">Home</a>
@@ -854,15 +916,15 @@
       <div class="hero-grid">
         <div>
           <span class="hero-tag">Live comedy · hosted by This Underdog · featuring Shannon</span>
-          <h1>Big Laughs, <span class="accent">small ego</span>.</h1>
+          <h1>Big Laughs, <span class="accent">big raffle</span>.</h1>
           <p>
-            Big Laughs Comedy is a live stand-up show built for people who want a clear plan, a real night out,
-            and a room that feels easy to walk into. The page is organized like a Russian doll: the most important
-            answers stay visible, and the details open only when needed.
+            Big Laughs Comedy is a live stand-up show built for a clear night out. Pre-register for the show and receive
+            five raffle tickets. Show up to each show and receive one additional ticket. Winners are revealed at the fourth show.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#tickets">Get tickets</a>
+            <a class="button primary" href="#tickets">Pre-register</a>
+            <a class="button raffle" href="#raffle">Raffle details</a>
             <a class="button" href="#showInfo">What to expect</a>
             <a class="button" href="#faq">Questions</a>
           </div>
@@ -875,7 +937,7 @@
             <div class="stage-diamond"></div>
             <div class="mic"></div>
             <div class="stage-label">
-              <strong>Big Laughs Comedy</strong> · clear info, easy tickets, live stand-up
+              <strong>Big Laughs Comedy</strong> · four-show raffle · grand prize reveal at show four
             </div>
           </div>
         </aside>
@@ -886,7 +948,7 @@
       <div class="section-kicker">Fast answers</div>
       <h2>What people need first</h2>
       <p>
-        Ticket buyers should not have to scroll forever. These are the primary answers before they open deeper details.
+        Ticket buyers should see the show, the raffle, and the reason to pre-register immediately.
       </p>
 
       <div class="readout-grid">
@@ -898,25 +960,53 @@
         </div>
 
         <div class="readout">
-          <small>Host</small>
-          <strong>This Underdog</strong>
-          <p>Hosted with a direct, self-aware, crowd-friendly underdog frame.</p>
+          <small>Pre-register</small>
+          <strong>5 Tickets</strong>
+          <p>Each pre-registration earns five raffle tickets.</p>
           <div class="bar"><span style="--value:100%"></span></div>
         </div>
 
         <div class="readout">
-          <small>Featuring</small>
-          <strong>Shannon</strong>
-          <p>Featured performance support for the Big Laughs show.</p>
+          <small>Show attendance</small>
+          <strong>+1 Ticket</strong>
+          <p>Each time you show up to a show, you earn one additional raffle ticket.</p>
           <div class="bar"><span style="--value:100%"></span></div>
         </div>
 
         <div class="readout">
-          <small>Tickets</small>
-          <strong>Available</strong>
-          <p>Use the ticket button or official event link for current price and availability.</p>
-          <div class="bar"><span style="--value:92%"></span></div>
+          <small>Winner reveal</small>
+          <strong>Show 4</strong>
+          <p>The raffle winners are revealed at the fourth show.</p>
+          <div class="bar"><span style="--value:100%"></span></div>
         </div>
+      </div>
+    </section>
+
+    <section class="console" id="raffle">
+      <div class="section-kicker">Raffle prizes</div>
+      <h2>Grand prize and runner-up</h2>
+      <p>
+        The raffle runs across four shows. Pre-registering gives the strongest starting position, and attendance adds more entries.
+      </p>
+
+      <div class="prize-grid">
+        <article class="prize-card grand">
+          <small>Grand prize</small>
+          <h3>Dallas Cowboys-signed Troy Aikman jersey from the 1995 season</h3>
+          <p>
+            The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Big Laughs show.
+          </p>
+          <span class="prize-badge">Grand prize</span>
+        </article>
+
+        <article class="prize-card runner">
+          <small>Runner-up prize</small>
+          <h3>55-inch LG 4K TV</h3>
+          <p>
+            The runner-up winner receives the 55-inch LG 4K TV.
+          </p>
+          <span class="prize-badge">Runner-up</span>
+        </article>
       </div>
     </section>
 
@@ -924,7 +1014,7 @@
       <div class="section-kicker">Russian-doll show page</div>
       <h2>Open only what you need</h2>
       <p>
-        The page avoids endless-scroll confusion by nesting information: show purpose, tickets, schedule, experience, and FAQ.
+        The page avoids endless-scroll confusion by nesting information: show purpose, raffle rules, tickets, schedule, lineup, and FAQ.
       </p>
 
       <div class="russian-doll">
@@ -976,7 +1066,7 @@
                 </button>
                 <div class="inner-panel">
                   <p>
-                    Because the night is simple: get a ticket, show up, laugh, and be part of a room that feels more alive than another night at home.
+                    Because the night is simple: pre-register, show up, laugh, and earn raffle entries along the way.
                   </p>
                 </div>
               </div>
@@ -988,6 +1078,49 @@
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
               <small>Container 2</small>
+              <h3>How the raffle works</h3>
+            </div>
+            <div class="doll-meta"><span>RAFFLE</span><span class="doll-diamond"></span></div>
+          </button>
+
+          <div class="doll-panel">
+            <p class="doll-copy">
+              The raffle rewards people who commit early and people who keep showing up. Pre-registration gets the biggest entry boost.
+              Attendance adds one ticket each time.
+            </p>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <small>Pre-register</small>
+                <strong>5 raffle tickets</strong>
+                <p>Every pre-registration earns five raffle tickets.</p>
+              </div>
+
+              <div class="info-card">
+                <small>Attend a show</small>
+                <strong>1 raffle ticket</strong>
+                <p>Every time you show up to a show, you earn one additional ticket.</p>
+              </div>
+
+              <div class="info-card">
+                <small>Show cycle</small>
+                <strong>4 shows</strong>
+                <p>The raffle runs across four Big Laughs shows.</p>
+              </div>
+
+              <div class="info-card">
+                <small>Reveal</small>
+                <strong>Show 4</strong>
+                <p>Winners are revealed at the fourth show.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Container 3</small>
               <h3>Tickets, time, and arrival</h3>
             </div>
             <div class="doll-meta"><span>INFO</span><span class="doll-diamond"></span></div>
@@ -1030,7 +1163,7 @@
         <article class="doll-shell" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 3</small>
+              <small>Container 4</small>
               <h3>Who is on the show?</h3>
             </div>
             <div class="doll-meta"><span>CAST</span><span class="doll-diamond"></span></div>
@@ -1085,7 +1218,7 @@
         <article class="doll-shell" id="faq" data-doll>
           <button class="doll-toggle" type="button" aria-expanded="false">
             <div class="doll-head">
-              <small>Container 4</small>
+              <small>Container 5</small>
               <h3>Common questions</h3>
             </div>
             <div class="doll-meta"><span>FAQ</span><span class="doll-diamond"></span></div>
@@ -1099,12 +1232,36 @@
             <div class="inner-dolls">
               <div class="inner-doll is-open" data-inner-doll>
                 <button class="inner-toggle" type="button" aria-expanded="true">
-                  <strong>Is this a good date night?</strong>
-                  <span>Yes</span>
+                  <strong>How do I get raffle tickets?</strong>
+                  <span>Entry</span>
                 </button>
                 <div class="inner-panel">
                   <p>
-                    Yes. It works for date night, friend groups, coworkers, and people who want something more memorable than dinner alone.
+                    Pre-registering gets you five raffle tickets. Each time you attend a show, you get one additional raffle ticket.
+                  </p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>When are winners announced?</strong>
+                  <span>Show 4</span>
+                </button>
+                <div class="inner-panel">
+                  <p>
+                    Winners are revealed at the fourth Big Laughs show.
+                  </p>
+                </div>
+              </div>
+
+              <div class="inner-doll" data-inner-doll>
+                <button class="inner-toggle" type="button" aria-expanded="false">
+                  <strong>What are the prizes?</strong>
+                  <span>Prizes</span>
+                </button>
+                <div class="inner-panel">
+                  <p>
+                    Grand prize: a Dallas Cowboys-signed Troy Aikman jersey from the 1995 season. Runner-up: a 55-inch LG 4K TV.
                   </p>
                 </div>
               </div>
@@ -1120,30 +1277,6 @@
                   </p>
                 </div>
               </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>Where do I find the price?</strong>
-                  <span>Tickets</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Ticket price should be shown on the official ticket link or event checkout page so it stays accurate.
-                  </p>
-                </div>
-              </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>What should I do now?</strong>
-                  <span>Buy</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Open the ticket link, confirm the date and price, and reserve your spot before the room fills.
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </article>
@@ -1154,26 +1287,26 @@
       <div class="section-kicker">Final route</div>
       <h2>Ready for the show</h2>
       <p>
-        This page should make the ticket path obvious while keeping deeper information neatly nested.
+        Pre-register first to lock in five raffle tickets, then show up to each show for additional entries.
       </p>
 
       <div class="route-grid">
         <a class="route-card" href="#tickets">
           <small>Primary</small>
-          <h3>Tickets</h3>
-          <p>Go to the ticket and fast-answer section.</p>
+          <h3>Pre-register</h3>
+          <p>Start with five raffle tickets.</p>
+        </a>
+
+        <a class="route-card" href="#raffle">
+          <small>Raffle</small>
+          <h3>Prize details</h3>
+          <p>Review the grand prize and runner-up prize.</p>
         </a>
 
         <a class="route-card" href="#showInfo">
           <small>Context</small>
           <h3>Show info</h3>
           <p>Open the Russian-doll show explanation.</p>
-        </a>
-
-        <a class="route-card" href="#faq">
-          <small>Questions</small>
-          <h3>FAQ</h3>
-          <p>Answer practical concerns before purchase.</p>
         </a>
 
         <a class="route-card" href="/">
@@ -1187,7 +1320,8 @@
     <footer class="footer">
       <span>Big Laughs Comedy · hosted by This Underdog · featuring Shannon</span>
       <div class="footer-links">
-        <a href="#tickets">Tickets</a>
+        <a href="#tickets">Pre-register</a>
+        <a href="#raffle">Raffle</a>
         <a href="#showInfo">Show Info</a>
         <a href="#faq">FAQ</a>
         <a href="/">Home</a>

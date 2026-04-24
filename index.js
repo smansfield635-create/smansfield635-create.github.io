@@ -305,20 +305,21 @@
         display: grid;
         place-items: center;
         overflow: hidden;
-        border: 1px solid rgba(226,240,255,.48);
+        border: 1px solid rgba(226,240,255,.50);
         color: transparent;
         font-size: 0;
         letter-spacing: 0;
         background:
-          radial-gradient(circle at 31% 26%, rgba(255,255,255,.58), transparent 10%),
-          radial-gradient(circle at 42% 36%, rgba(168,218,255,.30), transparent 29%),
-          linear-gradient(135deg, #0f64b8 0%, #0a3a89 42%, #041434 100%);
+          radial-gradient(circle at 34% 25%, rgba(255,255,255,.62), transparent 10%),
+          radial-gradient(circle at 42% 38%, rgba(184,220,255,.28), transparent 28%),
+          radial-gradient(circle at 62% 66%, rgba(239,210,154,.16), transparent 30%),
+          linear-gradient(135deg, #0d4b86 0%, #0b2c68 42%, #050d24 100%);
         box-shadow:
-          inset -22px -20px 34px rgba(0,0,0,.48),
-          inset 13px 10px 23px rgba(255,255,255,.19),
-          0 0 36px rgba(142,197,255,.38),
-          0 0 104px rgba(239,210,154,.18);
-        animation: earthFloat 7s ease-in-out infinite;
+          inset -24px -22px 36px rgba(0,0,0,.50),
+          inset 14px 10px 24px rgba(255,255,255,.20),
+          0 0 38px rgba(142,197,255,.38),
+          0 0 108px rgba(239,210,154,.18);
+        animation: demoUniverseFloat 7s ease-in-out infinite;
       }
 
       .home-core::before {
@@ -327,14 +328,14 @@
         inset: 0;
         border-radius: inherit;
         background:
-          radial-gradient(ellipse at 34% 30%, #42b979 0 12%, transparent 13%),
-          radial-gradient(ellipse at 42% 46%, #bbae64 0 9%, transparent 10%),
-          radial-gradient(ellipse at 58% 34%, #3fac72 0 11%, transparent 12%),
-          radial-gradient(ellipse at 65% 58%, #b9ad62 0 10%, transparent 11%),
-          radial-gradient(ellipse at 38% 68%, #38a86a 0 13%, transparent 14%),
-          radial-gradient(ellipse at 70% 76%, #3eb36f 0 8%, transparent 9%),
-          linear-gradient(90deg, rgba(255,255,255,.18), transparent 36%, rgba(0,0,0,.30) 100%);
-        filter: drop-shadow(0 1px 2px rgba(0,0,0,.34));
+          radial-gradient(ellipse at 34% 34%, rgba(110,212,159,.82) 0 13%, transparent 14%),
+          radial-gradient(ellipse at 63% 34%, rgba(239,210,154,.72) 0 12%, transparent 13%),
+          radial-gradient(ellipse at 42% 62%, rgba(110,212,159,.80) 0 14%, transparent 15%),
+          radial-gradient(ellipse at 66% 64%, rgba(239,210,154,.68) 0 13%, transparent 14%),
+          radial-gradient(ellipse at 72% 82%, rgba(110,212,159,.78) 0 7%, transparent 8%),
+          radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 34%),
+          linear-gradient(90deg, rgba(255,255,255,.16), transparent 38%, rgba(0,0,0,.32) 100%);
+        filter: drop-shadow(0 1px 2px rgba(0,0,0,.32));
         pointer-events: none;
       }
 
@@ -344,17 +345,24 @@
         inset: -2px;
         border-radius: inherit;
         background:
-          radial-gradient(ellipse at 30% 42%, rgba(255,255,255,.60) 0 7%, transparent 8%),
-          radial-gradient(ellipse at 53% 23%, rgba(255,255,255,.45) 0 8%, transparent 9%),
-          radial-gradient(ellipse at 68% 47%, rgba(255,255,255,.34) 0 7%, transparent 8%),
-          radial-gradient(ellipse at 51% 72%, rgba(255,255,255,.28) 0 10%, transparent 11%),
+          radial-gradient(ellipse at 30% 48%, rgba(255,255,255,.56) 0 7%, transparent 8%),
+          radial-gradient(ellipse at 56% 26%, rgba(255,255,255,.42) 0 8%, transparent 9%),
+          radial-gradient(ellipse at 67% 48%, rgba(255,255,255,.32) 0 7%, transparent 8%),
+          radial-gradient(ellipse at 50% 72%, rgba(255,255,255,.26) 0 10%, transparent 11%),
           radial-gradient(circle at 30% 25%, rgba(255,255,255,.34), transparent 18%);
         mix-blend-mode: screen;
-        opacity: .74;
+        opacity: .70;
         pointer-events: none;
       }
 
-      .home-core[aria-label]::after {
+      .home-core .demo-universe-ring {
+        position: absolute;
+        inset: 16%;
+        border-radius: 50%;
+        border: 1px solid rgba(255,255,255,.18);
+        box-shadow:
+          inset 0 0 18px rgba(142,197,255,.18),
+          0 0 18px rgba(239,210,154,.10);
         pointer-events: none;
       }
 
@@ -551,7 +559,7 @@
         to { transform: rotate(315deg) scaleX(.45); }
       }
 
-      @keyframes earthFloat {
+      @keyframes demoUniverseFloat {
         0%, 100% { transform: translateY(0) scale(.98); }
         50% { transform: translateY(-6px) scale(1.03); }
       }
@@ -639,14 +647,21 @@
     document.head.appendChild(style);
   }
 
-  function normalizeEarthCore(root) {
+  function normalizeDemoUniverseCore(root) {
     const core = root.querySelector(".home-core");
     if (!core) return;
 
     core.textContent = "";
     core.setAttribute("role", "img");
-    core.setAttribute("aria-label", "Planet Earth");
-    core.setAttribute("data-home-earth-core", "true");
+    core.setAttribute("aria-label", "Demo universe globe");
+    core.setAttribute("data-home-demo-universe-core", "true");
+
+    if (!core.querySelector(".demo-universe-ring")) {
+      const ring = document.createElement("span");
+      ring.className = "demo-universe-ring";
+      ring.setAttribute("aria-hidden", "true");
+      core.appendChild(ring);
+    }
   }
 
   function mount() {
@@ -658,9 +673,9 @@
     root.setAttribute("data-home-state", "coming-attractions");
     root.setAttribute("data-home-priority", "nine-summits-love-metaverse-show");
     root.setAttribute("data-home-js-owner", "index.js");
-    root.setAttribute("data-home-earth-runtime", "mounted");
+    root.setAttribute("data-home-demo-universe-runtime", "mounted");
 
-    normalizeEarthCore(root);
+    normalizeDemoUniverseCore(root);
   }
 
   if (document.readyState === "loading") {

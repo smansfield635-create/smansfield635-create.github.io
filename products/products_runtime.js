@@ -1,13 +1,14 @@
 (() => {
-  const RUNTIME_ID = "products-runtime-floating-molecule-stained-glass-v1";
-  const STYLE_ID = "products-runtime-floating-molecule-stained-glass-style";
+  const RUNTIME_ID = "products-runtime-seasonal-floating-molecule-v1";
+  const STYLE_ID = "products-runtime-seasonal-floating-molecule-style";
   const RECEIPT_FLAG = "productsRuntimeMounted";
 
   const CARDINALS = {
     north: {
       label: "North",
-      atomLabel: "White",
-      pairKey: "white-green",
+      seasonLabel: "Winter",
+      colorLabel: "White",
+      pairKey: "winter-spring",
       color: "var(--north)",
       glow: "rgba(223,233,255,.78)",
       role: "Framekeeping · threshold · classification",
@@ -16,45 +17,48 @@
     },
     south: {
       label: "South",
-      atomLabel: "Green",
-      pairKey: "white-green",
+      seasonLabel: "Spring",
+      colorLabel: "Green",
+      pairKey: "winter-spring",
       color: "var(--south)",
       glow: "rgba(142,227,172,.78)",
-      role: "Continuity · care · restoration",
+      role: "Continuity · growth · restoration",
       href: "/gauges/",
       phaseBase: Math.PI * 0.25
     },
     west: {
       label: "West",
-      atomLabel: "Yellow",
-      pairKey: "yellow-blue",
+      seasonLabel: "Fall",
+      colorLabel: "Yellow",
+      pairKey: "fall-summer",
       color: "var(--west)",
       glow: "rgba(255,213,138,.78)",
-      role: "Pressure-test · audit · contradiction",
+      role: "Harvest · audit · refinement",
       href: "/about/",
       phaseBase: Math.PI * 0.75
     },
     east: {
       label: "East",
-      atomLabel: "Blue",
-      pairKey: "yellow-blue",
+      seasonLabel: "Summer",
+      colorLabel: "Blue",
+      pairKey: "fall-summer",
       color: "var(--east)",
       glow: "rgba(142,197,255,.78)",
-      role: "Signal · build-line · formation",
+      role: "Signal · expansion · formation",
       href: "/products/",
       phaseBase: Math.PI * 1.75
     }
   };
 
   const PAIRS = {
-    "white-green": {
-      label: "White · Green",
-      description: "White and green form one diagonal figure-eight through the shared center throat.",
+    "winter-spring": {
+      label: "Winter · Spring",
+      description: "Winter and Spring form one diagonal figure-eight through the shared center throat.",
       angle: 45
     },
-    "yellow-blue": {
-      label: "Yellow · Blue",
-      description: "Yellow and blue form the opposing diagonal figure-eight through the same center throat.",
+    "fall-summer": {
+      label: "Fall · Summer",
+      description: "Fall and Summer form the opposing diagonal figure-eight through the same center throat.",
       angle: -45
     }
   };
@@ -104,13 +108,8 @@
         overflow: hidden;
       }
 
-      [data-products-runtime-root] .window-panel {
-        padding: 16px;
-      }
-
-      [data-products-runtime-root] .detail-panel {
-        padding: 22px;
-      }
+      [data-products-runtime-root] .window-panel { padding: 16px; }
+      [data-products-runtime-root] .detail-panel { padding: 22px; }
 
       [data-products-runtime-root] .window-head {
         display: flex;
@@ -243,7 +242,7 @@
         opacity: .48;
       }
 
-      [data-products-runtime-root] .glass-pane.white {
+      [data-products-runtime-root] .glass-pane.winter {
         left: 0;
         top: 0;
         width: 50%;
@@ -255,7 +254,7 @@
           linear-gradient(135deg, rgba(232,238,255,.24), rgba(108,126,190,.12));
       }
 
-      [data-products-runtime-root] .glass-pane.blue {
+      [data-products-runtime-root] .glass-pane.summer {
         right: 0;
         top: 0;
         width: 50%;
@@ -267,7 +266,7 @@
           linear-gradient(135deg, rgba(90,180,255,.22), rgba(22,74,140,.16));
       }
 
-      [data-products-runtime-root] .glass-pane.yellow {
+      [data-products-runtime-root] .glass-pane.fall {
         left: 0;
         bottom: 0;
         width: 50%;
@@ -279,7 +278,7 @@
           linear-gradient(135deg, rgba(255,205,84,.22), rgba(130,82,18,.18));
       }
 
-      [data-products-runtime-root] .glass-pane.green {
+      [data-products-runtime-root] .glass-pane.spring {
         right: 0;
         bottom: 0;
         width: 50%;
@@ -403,12 +402,12 @@
         opacity: .46;
       }
 
-      [data-products-runtime-root] .trail-white-green {
+      [data-products-runtime-root] .trail-winter-spring {
         stroke: rgba(176, 245, 205, .38);
         filter: drop-shadow(0 0 10px rgba(142,227,172,.20));
       }
 
-      [data-products-runtime-root] .trail-yellow-blue {
+      [data-products-runtime-root] .trail-fall-summer {
         stroke: rgba(185, 217, 255, .34);
         filter: drop-shadow(0 0 10px rgba(142,197,255,.20));
       }
@@ -416,7 +415,7 @@
       [data-products-runtime-root] .petal-label {
         position: absolute;
         transform: translate(-50%, -50%);
-        min-width: 82px;
+        min-width: 86px;
         height: 30px;
         padding: 0 12px;
         display: inline-flex;
@@ -435,10 +434,10 @@
         box-shadow: 0 12px 32px rgba(0,0,0,.28);
       }
 
-      [data-products-runtime-root] .petal-label.white { left: 25%; top: 28%; }
-      [data-products-runtime-root] .petal-label.blue { left: 75%; top: 28%; }
-      [data-products-runtime-root] .petal-label.yellow { left: 25%; top: 72%; }
-      [data-products-runtime-root] .petal-label.green { left: 75%; top: 72%; }
+      [data-products-runtime-root] .petal-label.winter { left: 25%; top: 28%; }
+      [data-products-runtime-root] .petal-label.summer { left: 75%; top: 28%; }
+      [data-products-runtime-root] .petal-label.fall { left: 25%; top: 72%; }
+      [data-products-runtime-root] .petal-label.spring { left: 75%; top: 72%; }
 
       [data-products-runtime-root] .node-layer {
         position: absolute;
@@ -468,18 +467,8 @@
       }
 
       [data-products-runtime-root] .node::after {
-        content: attr(data-short);
-        position: absolute;
-        top: calc(100% + 7px);
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: .46rem;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        color: #d9e5ff;
-        white-space: nowrap;
-        opacity: .0;
-        pointer-events: none;
+        content: "";
+        display: none;
       }
 
       [data-products-runtime-root] .node:hover,
@@ -633,26 +622,21 @@
         }
 
         [data-products-runtime-root] .petal-label {
-          min-width: 58px;
+          min-width: 62px;
           height: 26px;
           padding: 0 8px;
           font-size: .50rem;
           letter-spacing: .10em;
         }
 
-        [data-products-runtime-root] .petal-label.white { left: 24%; top: 24%; }
-        [data-products-runtime-root] .petal-label.blue { left: 76%; top: 24%; }
-        [data-products-runtime-root] .petal-label.yellow { left: 24%; top: 76%; }
-        [data-products-runtime-root] .petal-label.green { left: 76%; top: 76%; }
+        [data-products-runtime-root] .petal-label.winter { left: 24%; top: 24%; }
+        [data-products-runtime-root] .petal-label.summer { left: 76%; top: 24%; }
+        [data-products-runtime-root] .petal-label.fall { left: 24%; top: 76%; }
+        [data-products-runtime-root] .petal-label.spring { left: 76%; top: 76%; }
 
         [data-products-runtime-root] .node {
           width: 12px;
           height: 12px;
-        }
-
-        [data-products-runtime-root] .node::after {
-          content: "";
-          display: none;
         }
 
         [data-products-runtime-root] .flower-copy {
@@ -734,13 +718,14 @@
           pairLabel: pair.label,
           cardinalKey,
           cardinalLabel: cardinal.label,
-          atomLabel: cardinal.atomLabel,
+          seasonLabel: cardinal.seasonLabel,
+          colorLabel: cardinal.colorLabel,
           color: cardinal.color,
           glow: cardinal.glow,
           role: cardinal.role,
           href: cardinal.href,
           description:
-            `${title} is a ${cardinal.atomLabel.toLowerCase()} point floating in front of the stained-glass window. ` +
+            `${title} is a ${cardinal.seasonLabel.toLowerCase()} point floating in front of the stained-glass window. ` +
             `${pair.description} It participates as ${cardinal.role.toLowerCase()}.`
         });
       });
@@ -768,18 +753,18 @@
       <div class="runtime-shell">
         <div class="window-panel">
           <div class="window-head">
-            <h2>Stained-glass molecular flower</h2>
-            <div class="window-meta">2 figure-eights · 4 lobes · 32 points</div>
+            <h2>Stained-glass seasonal flower</h2>
+            <div class="window-meta">2 figure-eights · 4 seasons · 32 points</div>
           </div>
 
           <div class="flower-stage">
-            <div class="window-title">floating molecule · leaded stained glass</div>
+            <div class="window-title">floating seasonal molecule · leaded stained glass</div>
 
             <div class="glass-window" aria-hidden="true">
-              <div class="glass-pane white"></div>
-              <div class="glass-pane blue"></div>
-              <div class="glass-pane yellow"></div>
-              <div class="glass-pane green"></div>
+              <div class="glass-pane winter"></div>
+              <div class="glass-pane summer"></div>
+              <div class="glass-pane fall"></div>
+              <div class="glass-pane spring"></div>
 
               <div class="leadline vertical"></div>
               <div class="leadline horizontal"></div>
@@ -791,20 +776,20 @@
 
             <div class="molecule-layer">
               <svg class="molecule-trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <path class="trail-white-green" d="M50 50 C17 7, 4 32, 50 50 C96 68, 83 93, 50 50" />
-                <path class="trail-yellow-blue" d="M50 50 C7 83, 32 96, 50 50 C68 4, 93 17, 50 50" />
+                <path class="trail-winter-spring" d="M50 50 C17 7, 4 32, 50 50 C96 68, 83 93, 50 50" />
+                <path class="trail-fall-summer" d="M50 50 C7 83, 32 96, 50 50 C68 4, 93 17, 50 50" />
               </svg>
 
-              <div class="petal-label white">White</div>
-              <div class="petal-label blue">Blue</div>
-              <div class="petal-label yellow">Yellow</div>
-              <div class="petal-label green">Green</div>
+              <div class="petal-label winter">Winter</div>
+              <div class="petal-label summer">Summer</div>
+              <div class="petal-label fall">Fall</div>
+              <div class="petal-label spring">Spring</div>
 
               <div class="node-layer" data-node-layer></div>
             </div>
 
             <div class="flower-copy">
-              <strong>Floating molecule</strong> · stained glass behind it, motion in front
+              <strong>Floating seasonal molecule</strong> · stained glass behind it, motion in front
             </div>
           </div>
         </div>
@@ -812,7 +797,7 @@
         <aside class="detail-panel">
           <div class="detail-kicker">
             <span class="badge" data-detail-code>N01</span>
-            <span data-detail-family>White · White/Green loop</span>
+            <span data-detail-family>Winter · Winter/Spring loop</span>
           </div>
 
           <h3 class="detail-title" data-detail-title>Threshold</h3>
@@ -828,21 +813,21 @@
               <span class="stat-value" data-detail-visible>32</span>
             </div>
             <div class="stat">
-              <span class="stat-label">Loop pair</span>
-              <span class="stat-value" data-detail-count>White · Green</span>
+              <span class="stat-label">Season pair</span>
+              <span class="stat-value" data-detail-count>Winter · Spring</span>
             </div>
             <div class="stat">
               <span class="stat-label">Motion read</span>
-              <span class="stat-value" data-detail-route>Floating molecule</span>
+              <span class="stat-value" data-detail-route>Floating seasonal molecule</span>
             </div>
           </div>
 
           <div class="motion-readout" data-motion-readout>
-            <strong>Motion:</strong> the molecule floats in front of the stained-glass window.
+            <strong>Motion:</strong> the seasonal molecule floats in front of the stained-glass window.
           </div>
 
           <div class="hero-actions">
-            <a class="button primary" data-detail-href href="/laws/">Open White body</a>
+            <a class="button primary" data-detail-href href="/laws/">Open Winter body</a>
             <a class="button" href="/gauges/">Read gauges</a>
           </div>
         </aside>
@@ -897,8 +882,8 @@
             data-phase="${item.phase}"
             data-short="${item.code}"
             style="--x:50%;--y:50%;--color:${item.color};--glow:${item.glow};"
-            aria-label="${item.atomLabel} ${item.code}: ${item.title}"
-            title="${item.atomLabel} ${item.code}: ${item.title}"
+            aria-label="${item.seasonLabel} ${item.code}: ${item.title}"
+            title="${item.seasonLabel} ${item.code}: ${item.title}"
           ></button>
         `;
       }).join("");
@@ -929,7 +914,7 @@
       const pair = PAIRS[active.pairKey];
 
       detailCode.textContent = active.code;
-      detailFamily.textContent = `${active.atomLabel} · ${pair.label} loop`;
+      detailFamily.textContent = `${active.seasonLabel} · ${pair.label} loop`;
       detailTitle.textContent = active.title;
       detailCopy.textContent = active.description;
       detailCardinal.textContent = active.cardinalLabel;
@@ -937,7 +922,7 @@
       detailCount.textContent = pair.label;
       detailRoute.textContent = active.role;
       detailHref.href = active.href;
-      detailHref.textContent = `Open ${active.atomLabel} body`;
+      detailHref.textContent = `Open ${active.seasonLabel} body`;
       motionReadout.innerHTML = `<strong>Motion:</strong> ${pair.description}`;
     }
 

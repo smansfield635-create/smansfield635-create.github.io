@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-second-generation-renewal-root-stretch-v1";
+  const STYLE_ID = "dgb-second-generation-root-proof-v1";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -630,17 +630,24 @@
     }
   }
 
+  function markRootProof(root) {
+    root.setAttribute("data-home-state", "second-generation-renewal");
+    root.setAttribute("data-home-priority", "nine-summits-demo-universe-upper-room");
+    root.setAttribute("data-home-js-owner", "index.js");
+    root.setAttribute("data-home-runtime", "mounted");
+    root.setAttribute("data-home-demo-universe-runtime", "mounted");
+    root.setAttribute("data-home-root-proof", "true");
+    root.setAttribute("data-home-not-gauges", "true");
+    root.setAttribute("data-home-not-earth", "true");
+  }
+
   function mount() {
     injectStyle();
 
     const root = document.getElementById("homePage");
     if (!root) return;
 
-    root.setAttribute("data-home-state", "second-generation-renewal");
-    root.setAttribute("data-home-priority", "nine-summits-demo-universe-upper-room");
-    root.setAttribute("data-home-js-owner", "index.js");
-    root.setAttribute("data-home-demo-universe-runtime", "mounted");
-
+    markRootProof(root);
     normalizeDemoUniverseCore(root);
   }
 

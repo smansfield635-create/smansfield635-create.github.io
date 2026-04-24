@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>The Upper Room · Big Laugh</title>
+  <title>The Upper Room Presents: A Dollar a Day Keeps the Psychiatrist Away · Big Laugh</title>
   <meta
     name="description"
-    content="The Upper Room is an upstairs motivational crowd-interaction show at Big Laughs, with comedy present, audience participation, raffle entries, and winners revealed at the fourth show."
+    content="The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away, a coming-soon motivational crowd-interaction show upstairs at Big Laughs. Not officially on the calendar yet."
   />
   <style>
     :root{
@@ -18,6 +18,7 @@
       --gold:#efd29a;
       --pink:#ff9fd6;
       --blue:#6db8ff;
+      --green:#97e6b4;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1240px;
     }
@@ -74,7 +75,7 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card,.prize-card{
+    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card,.prize-card,.notice-card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
@@ -213,10 +214,10 @@
 
     h1{
       margin:0 0 12px;
-      font-size:clamp(2.45rem,5.4vw,5.2rem);
-      line-height:.94;
+      font-size:clamp(2.25rem,5.2vw,5rem);
+      line-height:.95;
       letter-spacing:-.06em;
-      max-width:12ch;
+      max-width:13ch;
     }
 
     h1 .accent{color:var(--gold)}
@@ -229,7 +230,20 @@
     .hero p{
       margin:0;
       font-size:clamp(1rem,1.5vw,1.12rem);
-      max-width:68ch;
+      max-width:70ch;
+    }
+
+    .show-title{
+      margin:0 0 14px;
+      color:#fff;
+      font-size:clamp(1.25rem,2.6vw,2.1rem);
+      line-height:1.08;
+      letter-spacing:-.035em;
+      max-width:22ch;
+    }
+
+    .show-title span{
+      color:var(--gold);
     }
 
     .hero-actions{
@@ -375,7 +389,7 @@
       bottom:24px;
       transform:translateX(-50%);
       width:calc(100% - 42px);
-      max-width:680px;
+      max-width:720px;
       padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(140,168,240,.24);
@@ -420,7 +434,7 @@
       margin-top:18px;
     }
 
-    .readout,.route-card{
+    .readout,.route-card,.notice-card{
       border-radius:22px;
       padding:16px;
       min-height:146px;
@@ -428,7 +442,7 @@
       overflow:hidden;
     }
 
-    .readout small,.route-card small,.prize-card small{
+    .readout small,.route-card small,.prize-card small,.notice-card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -438,7 +452,7 @@
       font-size:.72rem;
     }
 
-    .readout strong{
+    .readout strong,.notice-card strong{
       display:block;
       color:#f4f7ff;
       font-size:1.35rem;
@@ -447,9 +461,23 @@
       margin-bottom:10px;
     }
 
-    .readout p,.route-card p,.prize-card p{
+    .readout p,.route-card p,.prize-card p,.notice-card p{
       margin:0;
       font-size:.9rem;
+    }
+
+    .notice-grid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .notice-card{
+      border-color:rgba(239,210,154,.24);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(239,210,154,.10), transparent 44%),
+        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
     .prize-grid{
@@ -652,7 +680,7 @@
 
     @media (max-width:980px){
       .hero-grid{grid-template-columns:1fr}
-      .readout-grid,.info-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .readout-grid,.info-grid,.route-grid,.notice-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .prize-grid{grid-template-columns:1fr}
     }
 
@@ -662,6 +690,7 @@
       .topnav{width:100%;justify-content:flex-start}
       .hero,.stage-card,.console,.panel{padding:18px 16px}
       h1{font-size:clamp(2rem,11vw,3.4rem)}
+      .show-title{font-size:clamp(1.15rem,7vw,1.7rem)}
       .hero-actions{gap:8px}
       .button{flex:1 1 calc(50% - 8px)}
       .button.primary,.button.raffle{flex-basis:100%}
@@ -669,10 +698,35 @@
       .stage-diamond{width:176px;height:176px}
       .mic{transform:translate(-50%,-50%) scale(.86)}
       .stage-label{width:calc(100% - 28px);border-radius:24px;font-size:.58rem;letter-spacing:.10em}
-      .readout-grid,.info-grid,.route-grid{grid-template-columns:1fr}
+      .readout-grid,.info-grid,.route-grid,.notice-grid{grid-template-columns:1fr}
       .doll-toggle{align-items:flex-start}
       .doll-meta{display:grid;justify-items:end}
       .footer{display:grid;gap:8px}
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .stage-diamond{animation:stagePulse 5.8s ease-in-out infinite}
+      .spotlight{animation:slowSpin 42s linear infinite}
+      .mic{animation:micGlow 4.8s ease-in-out infinite}
+
+      @keyframes stagePulse{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.14)}
+      }
+
+      @keyframes slowSpin{
+        from{transform:translate(-50%,-50%) rotate(0deg)}
+        to{transform:translate(-50%,-50%) rotate(360deg)}
+      }
+
+      @keyframes micGlow{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.16)}
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none !important;scroll-behavior:auto !important}
     }
   </style>
 </head>
@@ -689,8 +743,9 @@
 
       <nav class="topnav" aria-label="Primary">
         <a class="nav-link" href="/big-laugh/">Big Laugh</a>
+        <a class="nav-link" href="#status">Coming Soon</a>
+        <a class="nav-link" href="#pricing">Pricing</a>
         <a class="nav-link" href="#raffle">Raffle</a>
-        <a class="nav-link" href="#register">Register</a>
         <a class="nav-link" href="#showInfo">Show Info</a>
         <a class="nav-link" href="/">Home</a>
       </nav>
@@ -699,62 +754,98 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">The Upper Room · upstairs at Big Laughs · motivational crowd interaction</span>
-          <h1>The <span class="accent">Upper Room</span> is open.</h1>
+          <span class="hero-tag">Coming soon · not officially on the calendar yet</span>
+          <h1>The <span class="accent">Upper Room</span> presents</h1>
+          <h2 class="show-title"><span>A Dollar a Day</span> Keeps the Psychiatrist Away</h2>
           <p>
             The Upper Room is a motivational crowd-interaction show hosted upstairs at Big Laughs. The downstairs comedy room is separate.
-            This room is built for direct audience engagement, energy, pressure release, forward motion, comedy inside the room, and a four-show raffle cycle.
+            This upstairs room is built for direct audience engagement, energy, pressure release, forward motion, comedy inside the room,
+            and a four-show raffle cycle.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#register">Pre-register</a>
+            <a class="button primary" href="#status">Coming soon status</a>
+            <a class="button" href="#pricing">Pricing details</a>
             <a class="button raffle" href="#raffle">Raffle prizes</a>
-            <a class="button" href="#showInfo">How the room works</a>
             <a class="button" href="/big-laugh/">Parent chamber</a>
           </div>
         </div>
 
         <aside class="stage-card">
-          <div class="stage-window" aria-label="The Upper Room motivational crowd-interaction stage">
+          <div class="stage-window" aria-label="The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away">
             <div class="stage-grid"></div>
             <div class="spotlight"></div>
             <div class="stage-diamond"></div>
             <div class="mic"></div>
             <div class="stage-label">
-              <strong>The Upper Room</strong> · upstairs at Big Laughs · crowd interaction first
+              <strong>The Upper Room presents</strong> · A Dollar a Day Keeps the Psychiatrist Away
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="console" id="register">
-      <div class="section-kicker">Fast answers</div>
-      <h2>Pre-register, show up, enter the room</h2>
+    <section class="console" id="status">
+      <div class="section-kicker">Current status</div>
+      <h2>Coming soon, not officially on the calendar yet</h2>
+      <p>
+        This page is a preview and registration-interest surface. The event is not officially posted on the venue calendar yet.
+        Final dates, ticket purchase links, and official calendar placement should be confirmed before public launch.
+      </p>
+
+      <div class="notice-grid">
+        <div class="notice-card">
+          <small>Status</small>
+          <strong>Coming soon</strong>
+          <p>The show is being prepared and is not yet officially listed.</p>
+        </div>
+
+        <div class="notice-card">
+          <small>Calendar</small>
+          <strong>Not posted yet</strong>
+          <p>Final schedule information will be added after official calendar confirmation.</p>
+        </div>
+
+        <div class="notice-card">
+          <small>Public action</small>
+          <strong>Register interest</strong>
+          <p>Visitors can learn the format and prepare to pre-register when the official link opens.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="console" id="pricing">
+      <div class="section-kicker">Pricing and registration</div>
+      <h2>Pricing details</h2>
+      <p>
+        The final ticket price and official checkout link will be posted once the show is placed on the calendar.
+        The working public hook is simple: the show title is <em>A Dollar a Day Keeps the Psychiatrist Away</em>,
+        and pre-registration will be the best way to start the raffle cycle.
+      </p>
 
       <div class="readout-grid">
         <div class="readout">
-          <small>Room</small>
-          <strong>Upper Room</strong>
-          <p>The upstairs event space at Big Laughs.</p>
+          <small>Official ticket price</small>
+          <strong>Coming soon</strong>
+          <p>Final pricing is not live until the official event listing is posted.</p>
         </div>
 
         <div class="readout">
-          <small>Pre-register</small>
-          <strong>5 Tickets</strong>
-          <p>Each pre-registration earns five raffle tickets.</p>
+          <small>Pre-registration</small>
+          <strong>5 raffle tickets</strong>
+          <p>Each pre-registration earns five raffle tickets once registration opens.</p>
         </div>
 
         <div class="readout">
-          <small>Attend</small>
-          <strong>+1 Ticket</strong>
-          <p>Each time you show up to a show, you earn one additional raffle ticket.</p>
+          <small>Attendance</small>
+          <strong>+1 ticket</strong>
+          <p>Each show attended earns one additional raffle ticket.</p>
         </div>
 
         <div class="readout">
-          <small>Reveal</small>
-          <strong>Show 4</strong>
-          <p>Raffle winners are revealed at the fourth show.</p>
+          <small>Show cycle</small>
+          <strong>4 shows</strong>
+          <p>Winners are revealed at the fourth show.</p>
         </div>
       </div>
     </section>
@@ -794,14 +885,15 @@
           <button class="doll-toggle" type="button" aria-expanded="true">
             <div class="doll-head">
               <small>Container 1</small>
-              <h3>What is The Upper Room?</h3>
+              <h3>What is the show?</h3>
             </div>
-            <div class="doll-meta"><span>Room</span><span class="doll-diamond"></span></div>
+            <div class="doll-meta"><span>Title</span><span class="doll-diamond"></span></div>
           </button>
           <div class="doll-panel">
             <p class="doll-copy">
-              The Upper Room is the upstairs live-room show at Big Laughs. It is not claiming the whole venue.
-              Comedy is in the building, but this upstairs room is built around motivational crowd interaction, direct audience engagement, and forward motion.
+              The full show identity is: <strong>The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away.</strong>
+              The Upper Room is the upstairs event space at Big Laughs. The show is motivational crowd interaction first,
+              with comedy present as part of the room’s engine.
             </p>
           </div>
         </article>
@@ -884,10 +976,16 @@
       <h2>Ready for The Upper Room</h2>
 
       <div class="route-grid">
-        <a class="route-card" href="#register">
-          <small>Primary</small>
-          <h3>Pre-register</h3>
-          <p>Start with five raffle tickets.</p>
+        <a class="route-card" href="#status">
+          <small>Status</small>
+          <h3>Coming soon</h3>
+          <p>Confirm that the show is not officially on the calendar yet.</p>
+        </a>
+
+        <a class="route-card" href="#pricing">
+          <small>Pricing</small>
+          <h3>Ticket details</h3>
+          <p>Review pricing status and registration-entry logic.</p>
         </a>
 
         <a class="route-card" href="#raffle">
@@ -901,21 +999,16 @@
           <h3>Big Laugh</h3>
           <p>Return to the motivational crowd-interaction parent chamber.</p>
         </a>
-
-        <a class="route-card" href="/">
-          <small>Root</small>
-          <h3>Home</h3>
-          <p>Return to the Diamond Gate Bridge root door.</p>
-        </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>The Upper Room · upstairs at Big Laughs · under Big Laugh</span>
+      <span>The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away</span>
       <div class="footer-links">
         <a href="/big-laugh/">Big Laugh</a>
+        <a href="#status">Coming Soon</a>
+        <a href="#pricing">Pricing</a>
         <a href="#raffle">Raffle</a>
-        <a href="#register">Pre-register</a>
         <a href="/">Home</a>
       </div>
     </footer>

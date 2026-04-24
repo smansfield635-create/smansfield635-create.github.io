@@ -1,55 +1,48 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1400" role="img" aria-labelledby="title desc">
-  <title id="title">Upper Room Pendulum</title>
-  <desc id="desc">Animated pendulum status graphic for The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away.</desc>
+  <title id="title">The Upper Room Pendulum</title>
+  <desc id="desc">Animated coming-soon pendulum for The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away.</desc>
 
   <defs>
-    <linearGradient id="bgGradient" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#020816"/>
-      <stop offset="45%" stop-color="#031233"/>
-      <stop offset="100%" stop-color="#010713"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#020714"/>
+      <stop offset="48%" stop-color="#061631"/>
+      <stop offset="100%" stop-color="#010611"/>
     </linearGradient>
 
-    <radialGradient id="haloGradient" cx="50%" cy="42%" r="50%">
-      <stop offset="0%" stop-color="#f7d688" stop-opacity="0.30"/>
-      <stop offset="35%" stop-color="#88b9ff" stop-opacity="0.18"/>
-      <stop offset="70%" stop-color="#5b73c9" stop-opacity="0.08"/>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#f2cf86"/>
+      <stop offset="52%" stop-color="#fff0bd"/>
+      <stop offset="100%" stop-color="#d6aa55"/>
+    </linearGradient>
+
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1a2a4f" stop-opacity=".82"/>
+      <stop offset="48%" stop-color="#223c72" stop-opacity=".58"/>
+      <stop offset="100%" stop-color="#0b1731" stop-opacity=".90"/>
+    </linearGradient>
+
+    <linearGradient id="rod" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4f8ff"/>
+      <stop offset="50%" stop-color="#cbdcff"/>
+      <stop offset="100%" stop-color="#7993d1"/>
+    </linearGradient>
+
+    <linearGradient id="bob" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#18213f"/>
+      <stop offset="100%" stop-color="#0b1228"/>
+    </linearGradient>
+
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffe6a2" stop-opacity=".48"/>
+      <stop offset="44%" stop-color="#8dbaff" stop-opacity=".17"/>
       <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
     </radialGradient>
 
-    <linearGradient id="glassGradient" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#243152" stop-opacity="0.30"/>
-      <stop offset="50%" stop-color="#4b5f8e" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#14203d" stop-opacity="0.26"/>
-    </linearGradient>
-
-    <linearGradient id="diamondFill" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#201b2f" stop-opacity="0.82"/>
-      <stop offset="45%" stop-color="#213766" stop-opacity="0.58"/>
-      <stop offset="100%" stop-color="#121f40" stop-opacity="0.80"/>
-    </linearGradient>
-
-    <radialGradient id="pendulumGlow" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ffe7a7" stop-opacity="0.95"/>
-      <stop offset="50%" stop-color="#f2c86c" stop-opacity="0.55"/>
-      <stop offset="100%" stop-color="#f2c86c" stop-opacity="0"/>
+    <radialGradient id="bobGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffe6a2" stop-opacity=".9"/>
+      <stop offset="58%" stop-color="#f1c96c" stop-opacity=".34"/>
+      <stop offset="100%" stop-color="#f1c96c" stop-opacity="0"/>
     </radialGradient>
-
-    <linearGradient id="pendulumRod" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#eef4ff" stop-opacity="0.95"/>
-      <stop offset="50%" stop-color="#c6d8ff" stop-opacity="0.90"/>
-      <stop offset="100%" stop-color="#7f98d8" stop-opacity="0.95"/>
-    </linearGradient>
-
-    <linearGradient id="bobFill" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#0f1731"/>
-      <stop offset="100%" stop-color="#182750"/>
-    </linearGradient>
-
-    <linearGradient id="goldText" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#f4d38c"/>
-      <stop offset="50%" stop-color="#f7e8b5"/>
-      <stop offset="100%" stop-color="#dfb35d"/>
-    </linearGradient>
 
     <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
       <feGaussianBlur stdDeviation="18" result="blur"/>
@@ -59,131 +52,89 @@
       </feMerge>
     </filter>
 
-    <filter id="sharpGlow" x="-60%" y="-60%" width="220%" height="220%">
-      <feGaussianBlur stdDeviation="8" result="blur"/>
+    <filter id="tightGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="7" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
 
-    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M40 0 L0 0 0 40" fill="none" stroke="#6d86bb" stroke-opacity="0.08" stroke-width="1"/>
+    <pattern id="grid" width="44" height="44" patternUnits="userSpaceOnUse">
+      <path d="M44 0 L0 0 0 44" fill="none" stroke="#7c93c8" stroke-opacity=".07" stroke-width="1"/>
     </pattern>
 
-    <clipPath id="cardClip">
-      <rect x="110" y="210" width="980" height="1080" rx="56"/>
-    </clipPath>
-
-    <clipPath id="diamondClip">
-      <polygon points="600,370 930,700 600,1030 270,700"/>
+    <clipPath id="windowClip">
+      <rect x="110" y="120" width="980" height="1160" rx="60"/>
     </clipPath>
 
     <style>
-      text{
-        font-family:Inter,Arial,sans-serif;
-        letter-spacing:.02em;
-      }
+      text{font-family:Inter,Arial,sans-serif}
+      .small{letter-spacing:.18em}
+      .muted{fill:#b5c5ec}
+      .white{fill:#eef4ff}
+      .gold{fill:url(#gold)}
+      .tick-left{animation:leftTick 2.8s ease-in-out infinite}
+      .tick-right{animation:rightTick 2.8s ease-in-out infinite}
+      .sweep{animation:sweep 5.6s linear infinite}
 
-      .mono{
-        font-family:Arial,sans-serif;
-        letter-spacing:.18em;
-      }
-
-      .fine{fill:#d9e3ff}
-      .muted{fill:#b3c1ea}
-      .gold{fill:url(#goldText)}
-
-      .pill{
-        fill:#040c1d;
-        fill-opacity:.88;
-        stroke:#87a5e6;
-        stroke-opacity:.22;
-        stroke-width:2;
-      }
-
-      .swing-left{
-        animation:pulseLeft 2.8s ease-in-out infinite;
-      }
-
-      .swing-right{
-        animation:pulseRight 2.8s ease-in-out infinite;
-      }
-
-      .sweep{
-        animation:sweep 5.6s linear infinite;
-      }
-
-      @keyframes pulseLeft{
+      @keyframes leftTick{
         0%,18%,52%,100%{opacity:.12}
-        68%,82%{opacity:1}
+        66%,82%{opacity:1}
       }
 
-      @keyframes pulseRight{
+      @keyframes rightTick{
         0%,16%{opacity:1}
         32%,48%,100%{opacity:.12}
       }
 
       @keyframes sweep{
         0%{transform:translateX(-260px);opacity:0}
-        15%{opacity:.18}
-        50%{opacity:.10}
-        85%{opacity:.18}
+        16%{opacity:.16}
+        50%{opacity:.08}
+        84%{opacity:.16}
         100%{transform:translateX(260px);opacity:0}
       }
     </style>
   </defs>
 
-  <rect width="1200" height="1400" fill="url(#bgGradient)"/>
+  <rect width="1200" height="1400" fill="url(#bg)"/>
+  <rect width="1200" height="1400" fill="url(#grid)" opacity=".85"/>
+  <ellipse cx="600" cy="710" rx="350" ry="350" fill="url(#halo)" filter="url(#softGlow)"/>
 
-  <rect x="0" y="0" width="1200" height="1400" fill="url(#grid)" opacity=".85"/>
-  <path d="M600 0 V1400" stroke="#7c93c8" stroke-opacity=".10" stroke-width="2"/>
-  <path d="M0 700 H1200" stroke="#7c93c8" stroke-opacity=".08" stroke-width="2"/>
+  <g clip-path="url(#windowClip)">
+    <rect x="110" y="120" width="980" height="1160" rx="60" fill="#061022" fill-opacity=".72"/>
+    <rect x="155" y="165" width="890" height="1070" rx="48" fill="none" stroke="#334b7f" stroke-opacity=".5" stroke-width="3"/>
+    <rect x="205" y="215" width="790" height="970" rx="40" fill="none" stroke="#7893cf" stroke-opacity=".16" stroke-width="2"/>
 
-  <ellipse cx="600" cy="640" rx="260" ry="260" fill="url(#haloGradient)" filter="url(#softGlow)"/>
-
-  <rect x="70" y="160" width="1060" height="1160" rx="72" fill="none" stroke="#1b315d" stroke-width="3"/>
-  <rect x="110" y="210" width="980" height="1080" rx="56" fill="none" stroke="#243f72" stroke-opacity=".95" stroke-width="3"/>
-  <rect x="150" y="250" width="900" height="1000" rx="44" fill="none" stroke="#1a2f56" stroke-opacity=".90" stroke-width="2"/>
-
-  <g clip-path="url(#cardClip)">
-    <rect x="110" y="210" width="980" height="1080" rx="56" fill="#040b1c" fill-opacity=".42"/>
-
-    <polygon points="600,370 930,700 600,1030 270,700" fill="url(#diamondFill)" stroke="#cfae66" stroke-opacity=".42" stroke-width="2"/>
-    <polygon points="600,420 880,700 600,980 320,700" fill="none" stroke="#8aa7ea" stroke-opacity=".10" stroke-width="2"/>
-    <polygon points="600,470 830,700 600,930 370,700" fill="none" stroke="#b99856" stroke-opacity=".18" stroke-width="1.5"/>
-
-    <g clip-path="url(#diamondClip)">
-      <rect x="250" y="350" width="700" height="700" fill="url(#glassGradient)"/>
-      <path d="M260 560 Q600 440 940 560" fill="none" stroke="#8fa8db" stroke-opacity=".12" stroke-width="4"/>
-      <path d="M260 840 Q600 960 940 840" fill="none" stroke="#8fa8db" stroke-opacity=".10" stroke-width="4"/>
-      <path d="M410 350 Q600 700 410 1050" fill="none" stroke="#7b95cf" stroke-opacity=".10" stroke-width="4"/>
-      <path d="M790 350 Q600 700 790 1050" fill="none" stroke="#7b95cf" stroke-opacity=".10" stroke-width="4"/>
-
-      <g class="sweep">
-        <rect x="520" y="280" width="140" height="900" rx="70" fill="#ffffff" opacity=".08" transform="rotate(24 590 730)"/>
-      </g>
+    <g>
+      <polygon points="600,385 930,715 600,1045 270,715" fill="url(#glass)" stroke="#f0d28e" stroke-opacity=".34" stroke-width="2"/>
+      <polygon points="600,450 865,715 600,980 335,715" fill="none" stroke="#9cb6ec" stroke-opacity=".16" stroke-width="2"/>
+      <polygon points="600,520 795,715 600,910 405,715" fill="none" stroke="#f0d28e" stroke-opacity=".16" stroke-width="1.5"/>
+      <path d="M600 385 V1045" stroke="#d8e4ff" stroke-opacity=".12" stroke-width="3"/>
+      <path d="M270 715 H930" stroke="#d8e4ff" stroke-opacity=".12" stroke-width="3"/>
     </g>
 
-    <path d="M600 370 V1030" stroke="#7a96d7" stroke-opacity=".28" stroke-width="3"/>
-    <path d="M270 700 H930" stroke="#7a96d7" stroke-opacity=".24" stroke-width="3"/>
-
-    <g class="swing-left" filter="url(#sharpGlow)">
-      <circle cx="420" cy="840" r="20" fill="#f1d084"/>
-      <circle cx="420" cy="840" r="42" fill="#f1d084" opacity=".14"/>
+    <g class="sweep">
+      <rect x="530" y="280" width="140" height="900" rx="70" fill="#ffffff" opacity=".075" transform="rotate(24 600 730)"/>
     </g>
 
-    <g class="swing-right" filter="url(#sharpGlow)">
-      <circle cx="780" cy="840" r="20" fill="#f1d084"/>
-      <circle cx="780" cy="840" r="42" fill="#f1d084" opacity=".14"/>
+    <circle cx="600" cy="715" r="105" fill="#cfe0ff" opacity=".10"/>
+    <circle cx="600" cy="715" r="30" fill="#f4f8ff" opacity=".94" filter="url(#tightGlow)"/>
+
+    <g class="tick-left" filter="url(#tightGlow)">
+      <circle cx="425" cy="850" r="22" fill="#f1d084"/>
+      <circle cx="425" cy="850" r="50" fill="#f1d084" opacity=".14"/>
     </g>
 
-    <circle cx="600" cy="700" r="22" fill="#eff7ff" filter="url(#softGlow)"/>
-    <circle cx="600" cy="700" r="90" fill="#d6e7ff" opacity=".18"/>
+    <g class="tick-right" filter="url(#tightGlow)">
+      <circle cx="775" cy="850" r="22" fill="#f1d084"/>
+      <circle cx="775" cy="850" r="50" fill="#f1d084" opacity=".14"/>
+    </g>
 
-    <g id="pendulum">
-      <circle cx="600" cy="520" r="14" fill="#eef3ff" opacity=".95" filter="url(#sharpGlow)"/>
-      <circle cx="600" cy="520" r="28" fill="#c4dbff" opacity=".16"/>
+    <g>
+      <circle cx="600" cy="520" r="15" fill="#eef4ff" filter="url(#tightGlow)"/>
+      <circle cx="600" cy="520" r="34" fill="#c4dbff" opacity=".16"/>
 
       <g>
         <animateTransform
@@ -195,29 +146,23 @@
           calcMode="spline"
           keyTimes="0;0.5;1"
           keySplines="0.42 0 0.58 1;0.42 0 0.58 1"/>
-        <rect x="592" y="520" width="16" height="280" rx="8" fill="url(#pendulumRod)" opacity=".94"/>
-        <rect x="570" y="780" width="60" height="84" rx="30" fill="url(#bobFill)" stroke="#d8e5ff" stroke-opacity=".18" stroke-width="2"/>
-        <circle cx="600" cy="820" r="82" fill="url(#pendulumGlow)" opacity=".58"/>
-        <circle cx="600" cy="814" r="10" fill="#fff8dc" opacity=".96"/>
+        <rect x="591" y="520" width="18" height="300" rx="9" fill="url(#rod)" opacity=".96"/>
+        <rect x="566" y="800" width="68" height="90" rx="34" fill="url(#bob)" stroke="#dbe8ff" stroke-opacity=".20" stroke-width="2"/>
+        <circle cx="600" cy="846" r="90" fill="url(#bobGlow)" opacity=".62"/>
+        <circle cx="600" cy="840" r="10" fill="#fff8dc"/>
       </g>
     </g>
   </g>
 
-  <rect class="pill" x="385" y="274" width="430" height="136" rx="68"/>
-  <text x="600" y="315" text-anchor="middle" class="mono muted" font-size="20">UPPER ROOM STATUS</text>
-  <text x="600" y="350" text-anchor="middle" class="gold" font-size="36" font-weight="700">COMING SOON</text>
-  <text x="600" y="382" text-anchor="middle" class="muted" font-size="18">Time is moving · registration interest open</text>
+  <rect x="120" y="82" width="960" height="132" rx="46" fill="#040c1d" fill-opacity=".72" stroke="#87a5e6" stroke-opacity=".20" stroke-width="2"/>
+  <text x="600" y="132" text-anchor="middle" class="small muted" font-size="22" font-weight="700">THE UPPER ROOM PRESENTS</text>
+  <text x="600" y="180" text-anchor="middle" class="gold" font-size="42" font-weight="850">A Dollar a Day Keeps the Psychiatrist Away</text>
 
-  <text x="150" y="124" class="mono fine" font-size="26" font-weight="700">THE UPPER ROOM</text>
-  <text x="150" y="160" class="gold" font-size="72" font-weight="800">A Dollar a Day Keeps</text>
-  <text x="150" y="230" class="gold" font-size="72" font-weight="800">the Psychiatrist Away</text>
-  <text x="150" y="274" class="mono muted" font-size="24">MOTIVATIONAL CROWD INTERACTION · SUNDAY FEATURE · PREVIEW SURFACE</text>
+  <rect x="350" y="252" width="500" height="105" rx="52" fill="#040c1d" fill-opacity=".82" stroke="#87a5e6" stroke-opacity=".22" stroke-width="2"/>
+  <text x="600" y="294" text-anchor="middle" class="small muted" font-size="18" font-weight="700">COMING SOON</text>
+  <text x="600" y="326" text-anchor="middle" class="white" font-size="20">Time is moving. The room is being set.</text>
 
-  <rect class="pill" x="205" y="1120" width="790" height="104" rx="52"/>
-  <text x="600" y="1164" text-anchor="middle" class="mono fine" font-size="20" font-weight="700">THE UPPER ROOM PRESENTS</text>
-  <text x="600" y="1196" text-anchor="middle" class="muted" font-size="24">A Dollar a Day Keeps the Psychiatrist Away</text>
-
-  <text x="150" y="1328" class="mono muted" font-size="18">ASSET</text>
-  <text x="225" y="1328" class="fine" font-size="18">assets/upper-room-pendulum.svg</text>
-  <text x="1048" y="1328" text-anchor="end" class="muted" font-size="18">animated pendulum · reusable chamber visual</text>
+  <rect x="190" y="1190" width="820" height="110" rx="55" fill="#040c1d" fill-opacity=".86" stroke="#87a5e6" stroke-opacity=".22" stroke-width="2"/>
+  <text x="600" y="1236" text-anchor="middle" class="small white" font-size="20" font-weight="800">UPSTAIRS AT BIG LAUGHS</text>
+  <text x="600" y="1274" text-anchor="middle" class="muted" font-size="24">Motivational crowd interaction · comedy present</text>
 </svg>

@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1500" role="img" aria-labelledby="title desc">
+  <title id="title">Floating Seasonal Monarch Butterfly</title>
+  <desc id="desc">A stained-glass monarch butterfly background for the seasonal molecule animation.</desc>
+
+  <defs>
+    <linearGradient id="wingOrange" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd88a"/>
+      <stop offset="42%" stop-color="#f59a37"/>
+      <stop offset="72%" stop-color="#b9501f"/>
+      <stop offset="100%" stop-color="#27130d"/>
+    </linearGradient>
+
+    <linearGradient id="wingBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#9ed2ff" stop-opacity=".26"/>
+      <stop offset="58%" stop-color="#285681" stop-opacity=".12"/>
+      <stop offset="100%" stop-color="#05101f" stop-opacity=".44"/>
+    </linearGradient>
+
+    <radialGradient id="centerGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#fff6d8" stop-opacity=".95"/>
+      <stop offset="28%" stop-color="#ffd27d" stop-opacity=".42"/>
+      <stop offset="68%" stop-color="#7dc7ff" stop-opacity=".18"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="softGlow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="16" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <filter id="wingShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#000000" flood-opacity=".48"/>
+    </filter>
+
+    <style>
+      .left-wing{
+        transform-origin:600px 760px;
+        animation:leftWing 5.4s ease-in-out infinite;
+      }
+
+      .right-wing{
+        transform-origin:600px 760px;
+        animation:rightWing 5.4s ease-in-out infinite;
+      }
+
+      .glass-shimmer{
+        animation:shimmer 8s ease-in-out infinite;
+      }
+
+      .center-pulse{
+        animation:centerPulse 4.4s ease-in-out infinite;
+      }
+
+      @keyframes leftWing{
+        0%,100%{transform:rotateY(0deg) rotateZ(0deg)}
+        50%{transform:rotateY(18deg) rotateZ(-1.8deg)}
+      }
+
+      @keyframes rightWing{
+        0%,100%{transform:rotateY(0deg) rotateZ(0deg)}
+        50%{transform:rotateY(-18deg) rotateZ(1.8deg)}
+      }
+
+      @keyframes shimmer{
+        0%,100%{opacity:.14}
+        50%{opacity:.32}
+      }
+
+      @keyframes centerPulse{
+        0%,100%{opacity:.58;transform:scale(.96)}
+        50%{opacity:.92;transform:scale(1.05)}
+      }
+
+      @media (prefers-reduced-motion:reduce){
+        .left-wing,.right-wing,.glass-shimmer,.center-pulse{animation:none}
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="1500" fill="#020713"/>
+
+  <g opacity=".42">
+    <path d="M600 130 V1370" stroke="#c7d8ff" stroke-opacity=".16" stroke-width="3"/>
+    <path d="M160 750 H1040" stroke="#c7d8ff" stroke-opacity=".12" stroke-width="3"/>
+    <rect x="120" y="170" width="960" height="1160" rx="58" fill="none" stroke="#9eb8ff" stroke-opacity=".16" stroke-width="3"/>
+    <rect x="165" y="220" width="870" height="1060" rx="46" fill="none" stroke="#9eb8ff" stroke-opacity=".10" stroke-width="2"/>
+  </g>
+
+  <g filter="url(#wingShadow)">
+    <g class="left-wing">
+      <path d="M594 736 C480 600 326 410 174 454 C64 486 76 682 198 808 C291 904 420 932 565 804 Z"
+            fill="url(#wingOrange)" opacity=".88"/>
+      <path d="M575 782 C438 788 252 865 230 1036 C212 1176 356 1265 504 1168 C596 1108 625 961 600 812 Z"
+            fill="url(#wingOrange)" opacity=".78"/>
+
+      <path d="M594 736 C480 600 326 410 174 454 C64 486 76 682 198 808 C291 904 420 932 565 804 Z"
+            fill="url(#wingBlue)" opacity=".52"/>
+      <path d="M575 782 C438 788 252 865 230 1036 C212 1176 356 1265 504 1168 C596 1108 625 961 600 812 Z"
+            fill="url(#wingBlue)" opacity=".42"/>
+
+      <path d="M188 462 C260 525 336 588 580 760" fill="none" stroke="#080b14" stroke-opacity=".70" stroke-width="9"/>
+      <path d="M146 576 C270 610 390 658 574 778" fill="none" stroke="#080b14" stroke-opacity=".58" stroke-width="7"/>
+      <path d="M166 706 C310 724 446 754 580 802" fill="none" stroke="#080b14" stroke-opacity=".56" stroke-width="7"/>
+      <path d="M270 1044 C390 982 484 906 590 800" fill="none" stroke="#080b14" stroke-opacity=".62" stroke-width="8"/>
+      <path d="M390 1190 C440 1032 504 914 600 804" fill="none" stroke="#080b14" stroke-opacity=".56" stroke-width="7"/>
+
+      <g fill="#f4e5b7" opacity=".58">
+        <circle cx="182" cy="514" r="12"/>
+        <circle cx="226" cy="560" r="10"/>
+        <circle cx="162" cy="632" r="9"/>
+        <circle cx="218" cy="748" r="10"/>
+        <circle cx="288" cy="486" r="13"/>
+        <circle cx="326" cy="1132" r="11"/>
+        <circle cx="278" cy="1016" r="9"/>
+        <circle cx="420" cy="1150" r="8"/>
+      </g>
+    </g>
+
+    <g class="right-wing">
+      <path d="M606 736 C720 600 874 410 1026 454 C1136 486 1124 682 1002 808 C909 904 780 932 635 804 Z"
+            fill="url(#wingOrange)" opacity=".88"/>
+      <path d="M625 782 C762 788 948 865 970 1036 C988 1176 844 1265 696 1168 C604 1108 575 961 600 812 Z"
+            fill="url(#wingOrange)" opacity=".78"/>
+
+      <path d="M606 736 C720 600 874 410 1026 454 C1136 486 1124 682 1002 808 C909 904 780 932 635 804 Z"
+            fill="url(#wingBlue)" opacity=".52"/>
+      <path d="M625 782 C762 788 948 865 970 1036 C988 1176 844 1265 696 1168 C604 1108 575 961 600 812 Z"
+            fill="url(#wingBlue)" opacity=".42"/>
+
+      <path d="M1012 462 C940 525 864 588 620 760" fill="none" stroke="#080b14" stroke-opacity=".70" stroke-width="9"/>
+      <path d="M1054 576 C930 610 810 658 626 778" fill="none" stroke="#080b14" stroke-opacity=".58" stroke-width="7"/>
+      <path d="M1034 706 C890 724 754 754 620 802" fill="none" stroke="#080b14" stroke-opacity=".56" stroke-width="7"/>
+      <path d="M930 1044 C810 982 716 906 610 800" fill="none" stroke="#080b14" stroke-opacity=".62" stroke-width="8"/>
+      <path d="M810 1190 C760 1032 696 914 600 804" fill="none" stroke="#080b14" stroke-opacity=".56" stroke-width="7"/>
+
+      <g fill="#f4e5b7" opacity=".58">
+        <circle cx="1018" cy="514" r="12"/>
+        <circle cx="974" cy="560" r="10"/>
+        <circle cx="1038" cy="632" r="9"/>
+        <circle cx="982" cy="748" r="10"/>
+        <circle cx="912" cy="486" r="13"/>
+        <circle cx="874" cy="1132" r="11"/>
+        <circle cx="922" cy="1016" r="9"/>
+        <circle cx="780" cy="1150" r="8"/>
+      </g>
+    </g>
+  </g>
+
+  <g>
+    <path d="M600 552 C556 628 552 724 594 846 C550 942 552 1056 600 1195 C648 1056 650 942 606 846 C648 724 644 628 600 552 Z"
+          fill="#060a12" opacity=".88" stroke="#d8e6ff" stroke-opacity=".18" stroke-width="3"/>
+    <ellipse cx="600" cy="735" rx="42" ry="112" fill="#0b1220" stroke="#f7d999" stroke-opacity=".20" stroke-width="3"/>
+    <circle cx="600" cy="640" r="34" fill="#050911" stroke="#f7d999" stroke-opacity=".24" stroke-width="3"/>
+    <path d="M586 610 C534 542 498 492 458 452" fill="none" stroke="#080b14" stroke-width="7" stroke-linecap="round"/>
+    <path d="M614 610 C666 542 702 492 742 452" fill="none" stroke="#080b14" stroke-width="7" stroke-linecap="round"/>
+    <circle cx="600" cy="770" r="96" fill="url(#centerGlow)" class="center-pulse" filter="url(#softGlow)"/>
+  </g>
+
+  <g class="glass-shimmer">
+    <path d="M202 470 C412 598 456 842 260 1180" fill="none" stroke="#ffffff" stroke-opacity=".20" stroke-width="18" stroke-linecap="round"/>
+    <path d="M998 470 C788 598 744 842 940 1180" fill="none" stroke="#ffffff" stroke-opacity=".20" stroke-width="18" stroke-linecap="round"/>
+    <path d="M450 330 C530 620 520 926 384 1270" fill="none" stroke="#9fd0ff" stroke-opacity=".14" stroke-width="10" stroke-linecap="round"/>
+    <path d="M750 330 C670 620 680 926 816 1270" fill="none" stroke="#9fd0ff" stroke-opacity=".14" stroke-width="10" stroke-linecap="round"/>
+  </g>
+</svg>

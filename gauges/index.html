@@ -3,25 +3,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Diamond Gate Bridge</title>
+  <title>Gauges · Seasonal Monarch Fairies</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Generation 2 Gauge Authority Hub: master instruments, stage ownership audit, problem classifier, probes, and audit lanes."
+    content="Gauges for the Seasonal Monarch Fairies visual: monarch vessel, fairies in motion, four seasons, two figure-eights, and shared center crossing."
   />
   <style>
     :root{
-      --bg:#020610;
       --line:rgba(164,188,255,.18);
-      --line-strong:rgba(210,223,255,.34);
+      --line-strong:rgba(210,223,255,.36);
       --text:#eef4ff;
       --muted:#9aabd0;
       --gold:#efd29a;
-      --blue:#6db8ff;
-      --green:#97e6b4;
-      --warn:#ffd58f;
-      --red:#ff9a9a;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1240px;
+      --green:#92e7ba;
+      --blue:#8ec5ff;
+      --shadow:0 24px 80px rgba(0,0,0,.52);
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -37,10 +34,9 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 7%, rgba(112,151,255,.22), transparent 22%),
-        radial-gradient(circle at 18% 28%, rgba(78,128,220,.12), transparent 24%),
-        radial-gradient(circle at 82% 34%, rgba(78,128,220,.10), transparent 24%),
-        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
+        radial-gradient(circle at 50% 8%,rgba(112,151,255,.22),transparent 22%),
+        radial-gradient(circle at 18% 34%,rgba(239,210,154,.10),transparent 24%),
+        linear-gradient(180deg,#020610 0%,#071225 48%,#020610 100%);
       overflow-x:hidden;
     }
 
@@ -49,136 +45,105 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.2;
+      opacity:.22;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.17) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.14) 0 1px, transparent 1.6px);
-      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
+        linear-gradient(90deg,rgba(164,188,255,.08) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.045) 1px,transparent 1px);
       background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
-      opacity:.32;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
     .page{
-      width:min(var(--max), calc(100vw - 24px));
+      width:min(var(--max),calc(100vw - 24px));
       margin:0 auto;
       padding:18px 0 44px;
       position:relative;
       z-index:1;
-      overflow:hidden;
     }
 
-    .topbar,
-    .hero,
-    .instrument-card,
-    .console,
-    .panel,
-    .readout,
-    .audit-card,
-    .lane-card,
-    .probe-card,
-    .route-card{
+    .topbar,.hero,.section,.card,.doll{
       border:1px solid var(--line);
+      background:linear-gradient(180deg,rgba(9,17,33,.92),rgba(6,12,24,.86));
       box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      padding:14px 16px;
       border-radius:22px;
-      background:rgba(7,13,26,.74);
-      backdrop-filter:blur(10px);
+      padding:14px 16px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      margin-bottom:16px;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:0;
     }
 
-    .brand-mark{
+    .mark{
       width:46px;
       height:46px;
       border-radius:16px;
       display:grid;
       place-items:center;
-      flex:none;
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 28%, rgba(115,171,255,.24), transparent 42%),
-        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
-      color:#f4f8ff;
+        radial-gradient(circle at 50% 28%,rgba(239,210,154,.22),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
       font-weight:900;
       letter-spacing:.08em;
-      box-shadow:0 0 22px rgba(109,184,255,.09);
     }
 
-    .brand-kicker{
+    .kicker{
       margin:0 0 4px;
       color:#c8d7ff;
       font-size:.72rem;
-      letter-spacing:.16em;
       text-transform:uppercase;
+      letter-spacing:.16em;
     }
 
     .brand-title{
       margin:0;
+      font-weight:850;
       font-size:1.05rem;
-      font-weight:800;
     }
 
-    .topnav{
+    .nav{
       display:flex;
       flex-wrap:wrap;
-      gap:10px;
       justify-content:flex-end;
+      gap:10px;
     }
 
-    .nav-link,.button{
+    .nav a,.button{
+      min-height:42px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      text-decoration:none;
-      min-height:42px;
       padding:0 15px;
-      border-radius:999px;
       border:1px solid var(--line);
+      border-radius:999px;
       color:var(--text);
-      font-weight:800;
       background:rgba(255,255,255,.035);
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+      text-decoration:none;
+      font-weight:800;
     }
 
-    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
-      transform:translateY(-1px);
+    .nav a:hover,.nav a:focus-visible,.button:hover,.button:focus-visible{
       border-color:var(--line-strong);
-      background:rgba(255,255,255,.06);
+      transform:translateY(-1px);
       outline:none;
     }
 
     .hero{
-      margin-top:16px;
       border-radius:34px;
       padding:24px 20px;
-      position:relative;
+      margin-bottom:18px;
       overflow:hidden;
+      position:relative;
     }
 
     .hero::after{
@@ -187,21 +152,21 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 50% 0%, rgba(132,164,255,.18), transparent 30%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
+        radial-gradient(circle at 78% 18%,rgba(239,210,154,.14),transparent 26%),
+        radial-gradient(circle at 28% 72%,rgba(146,231,186,.10),transparent 28%);
       mix-blend-mode:screen;
     }
 
     .hero-grid{
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(320px,.88fr);
+      grid-template-columns:minmax(0,1fr) minmax(320px,.85fr);
       gap:20px;
       align-items:center;
       position:relative;
       z-index:1;
     }
 
-    .hero-tag{
+    .pill{
       display:inline-flex;
       align-items:center;
       gap:10px;
@@ -216,242 +181,239 @@
       margin-bottom:14px;
     }
 
-    .hero-tag::before{
+    .pill::before{
       content:"";
       width:9px;
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:#dce7ff;
-      box-shadow:0 0 16px rgba(220,231,255,.55);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(239,210,154,.50);
     }
 
     h1{
       margin:0 0 12px;
-      font-size:clamp(2.3rem, 5vw, 4.7rem);
+      max-width:12ch;
+      font-size:clamp(2.35rem,5vw,5rem);
       line-height:.95;
-      letter-spacing:-.058em;
-      max-width:11ch;
+      letter-spacing:-.06em;
     }
 
-    h1 .accent{color:var(--gold)}
+    h1 span{
+      color:var(--gold);
+    }
 
     p{
-      color:var(--muted);
-      line-height:1.58;
-    }
-
-    .hero p{
       margin:0;
-      font-size:clamp(1rem, 1.5vw, 1.12rem);
-      max-width:64ch;
+      color:var(--muted);
+      line-height:1.62;
     }
 
-    .hero-actions{
+    .lead{
+      max-width:68ch;
+      font-size:clamp(1rem,1.45vw,1.14rem);
+    }
+
+    .actions{
+      margin-top:20px;
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:20px;
     }
 
     .button{
       border-radius:18px;
-      min-height:46px;
+      min-height:48px;
       padding:0 18px;
-      white-space:nowrap;
     }
 
     .button.primary{
       border-color:rgba(239,210,154,.34);
       background:
-        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+        linear-gradient(180deg,rgba(239,210,154,.20),rgba(239,210,154,.06)),
         rgba(255,255,255,.035);
       color:#fff8ea;
     }
 
-    .instrument-card{
+    .instrument-window{
+      min-height:430px;
       border-radius:30px;
-      padding:20px;
-      overflow:hidden;
-      position:relative;
+      border:1px solid rgba(170,198,255,.18);
       background:
-        radial-gradient(circle at 50% 26%, rgba(109,184,255,.14), transparent 30%),
-        linear-gradient(180deg, rgba(10,22,44,.94), rgba(4,10,20,.96));
-    }
-
-    .instrument-face{
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.14),transparent 24%),
+        linear-gradient(180deg,rgba(5,12,26,.98),rgba(2,7,16,.99));
       position:relative;
-      min-height:360px;
-      border-radius:26px;
-      border:1px solid rgba(170,198,255,.20);
       overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(109,184,255,.15), transparent 28%),
-        linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
-      box-shadow:
-        inset 0 0 44px rgba(126,164,255,.10),
-        inset 0 -26px 70px rgba(0,0,0,.34);
+      display:grid;
+      place-items:center;
       isolation:isolate;
     }
 
-    .instrument-face::before{
+    .instrument-window::before{
       content:"";
       position:absolute;
-      inset:14px;
-      border-radius:22px;
+      inset:10%;
+      border-radius:38px;
       border:1px solid rgba(255,255,255,.10);
-      box-shadow:inset 0 0 28px rgba(92,184,255,.08);
-      pointer-events:none;
-      z-index:3;
-    }
-
-    .instrument-grid{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
-      background-size:34px 34px;
-      opacity:.46;
+      box-shadow:inset 0 0 30px rgba(126,164,255,.12);
       z-index:1;
     }
 
-    .authority-ring{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:252px;
-      height:252px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      border:1px solid rgba(109,184,255,.30);
-      box-shadow:
-        0 0 28px rgba(109,184,255,.14),
-        inset 0 0 34px rgba(109,184,255,.10);
-      z-index:4;
+    .butterfly{
+      position:relative;
+      width:250px;
+      height:250px;
+      z-index:2;
+      filter:
+        drop-shadow(0 0 24px rgba(239,210,154,.20))
+        drop-shadow(0 0 42px rgba(142,197,255,.16));
     }
 
-    .authority-ring::before,
-    .authority-ring::after{
+    .butterfly::before,
+    .butterfly::after{
       content:"";
       position:absolute;
-      border-radius:50%;
-      border:1px solid rgba(239,210,154,.24);
-    }
-
-    .authority-ring::before{inset:22px}
-    .authority-ring::after{
-      inset:56px;
-      border-color:rgba(109,184,255,.28);
-      box-shadow:0 0 20px rgba(109,184,255,.14);
-    }
-
-    .ownership-line{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:3px;
-      height:112px;
-      transform-origin:50% 100%;
-      border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(239,210,154,.54), transparent);
-      box-shadow:0 0 16px rgba(239,210,154,.34);
-      z-index:5;
-    }
-
-    .ownership-line.one{transform:translate(-50%,-100%) rotate(-46deg)}
-    .ownership-line.two{transform:translate(-50%,-100%) rotate(0deg);opacity:.62}
-    .ownership-line.three{transform:translate(-50%,-100%) rotate(46deg);opacity:.50}
-
-    .authority-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:90px;
-      height:90px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.14);
+      top:44px;
+      width:128px;
+      height:148px;
+      border-radius:76% 24% 68% 32%;
       background:
-        radial-gradient(circle at 50% 42%, rgba(255,255,255,.74), rgba(109,184,255,.20) 22%, rgba(5,12,24,.88) 62%);
-      box-shadow:
-        0 0 24px rgba(109,184,255,.28),
-        0 0 62px rgba(239,210,154,.10);
-      z-index:6;
+        radial-gradient(circle at 60% 42%,rgba(255,238,180,.90),transparent 10%),
+        radial-gradient(circle at 42% 54%,rgba(255,214,124,.82),transparent 22%),
+        linear-gradient(135deg,#27130d 0%,#f5a33a 44%,#8f3819 72%,#080b14 100%);
+      border:2px solid rgba(10,12,22,.78);
+      box-shadow:inset 0 0 26px rgba(255,255,255,.12);
+      transform-origin:100% 72%;
+      animation:leftWing 5.4s ease-in-out infinite;
     }
 
-    .instrument-status{
+    .butterfly::before{
+      left:4px;
+      transform:rotate(-22deg);
+    }
+
+    .butterfly::after{
+      right:4px;
+      transform:scaleX(-1) rotate(-22deg);
+      transform-origin:0% 72%;
+      animation:rightWing 5.4s ease-in-out infinite;
+    }
+
+    .body{
       position:absolute;
       left:50%;
-      bottom:24px;
-      transform:translateX(-50%);
-      width:calc(100% - 42px);
-      max-width:560px;
-      padding:12px 16px;
+      top:43%;
+      width:34px;
+      height:142px;
+      transform:translate(-50%,-50%);
       border-radius:999px;
-      border:1px solid rgba(140,168,240,.24);
-      background:rgba(6,14,28,.84);
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.72rem;
-      color:#dbe5ff;
-      z-index:8;
-      line-height:1.35;
+      background:linear-gradient(180deg,#1b130e,#050811);
+      border:1px solid rgba(239,210,154,.24);
+      z-index:3;
     }
 
-    .instrument-status strong{color:#fff}
+    .fairy{
+      position:absolute;
+      width:34px;
+      height:38px;
+      z-index:4;
+      filter:
+        drop-shadow(0 0 10px var(--c))
+        drop-shadow(0 0 26px rgba(210,240,255,.26));
+      animation:fairyPath 6s ease-in-out infinite;
+      animation-delay:var(--d);
+    }
 
-    .console,.panel{
+    .fairy::before,
+    .fairy::after{
+      content:"";
+      position:absolute;
+      top:3px;
+      width:15px;
+      height:24px;
+      border-radius:80% 20% 80% 20%;
+      background:radial-gradient(circle at 42% 42%,rgba(255,255,255,.92),rgba(255,255,255,.34) 26%,var(--c) 56%,rgba(255,255,255,0) 82%);
+      border:1px solid rgba(255,255,255,.62);
+      transform-origin:50% 80%;
+      animation:wingFlutter .62s ease-in-out infinite;
+    }
+
+    .fairy::before{
+      left:1px;
+      transform:rotate(-28deg);
+    }
+
+    .fairy::after{
+      right:1px;
+      transform:scaleX(-1) rotate(-28deg);
+      animation-delay:-.31s;
+    }
+
+    .fairy span{
+      position:absolute;
+      left:50%;
+      top:48%;
+      width:12px;
+      height:19px;
+      transform:translate(-50%,-50%);
+      border-radius:999px;
+      background:radial-gradient(circle at 50% 28%,#fff,var(--c) 50%,rgba(4,10,22,.88) 100%);
+      border:1px solid rgba(255,255,255,.72);
+      box-shadow:0 0 18px var(--c);
+    }
+
+    .fairy.one{--c:var(--green);left:28%;top:34%;--d:0s}
+    .fairy.two{--c:var(--blue);right:28%;top:34%;--d:-1s}
+    .fairy.three{--c:var(--blue);left:28%;bottom:25%;--d:-2s}
+    .fairy.four{--c:var(--green);right:28%;bottom:25%;--d:-3s}
+    .fairy.five{--c:var(--green);left:49%;top:47%;--d:-4s}
+
+    .center-glow{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:118px;
+      height:118px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:radial-gradient(circle,#fff 0 8%,rgba(236,247,255,.72) 12%,rgba(127,197,255,.22) 38%,transparent 72%);
+      filter:drop-shadow(0 0 28px rgba(255,255,255,.42));
+      z-index:3;
+      animation:centerPulse 4.2s ease-in-out infinite;
+    }
+
+    .section{
       margin-top:18px;
       border-radius:30px;
       padding:22px 20px;
       overflow:hidden;
     }
 
-    .section-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:8px;
-    }
-
-    .console h2,.panel h2{
+    .section h2{
       margin:0 0 10px;
-      font-size:clamp(1.7rem, 3vw, 2.7rem);
+      font-size:clamp(1.7rem,3vw,2.7rem);
       line-height:1;
       letter-spacing:-.04em;
     }
 
-    .readout-grid{
+    .grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       margin-top:18px;
     }
 
-    .readout{
+    .card{
+      display:block;
       border-radius:22px;
       padding:16px;
-      min-height:150px;
-      position:relative;
-      overflow:hidden;
+      min-height:142px;
+      color:var(--text);
+      text-decoration:none;
+      border-color:rgba(164,188,255,.14);
     }
 
-    .readout::after{
-      content:"";
-      position:absolute;
-      right:12px;
-      bottom:12px;
-      width:48px;
-      height:48px;
-      border-radius:50%;
-      background:radial-gradient(circle, rgba(109,184,255,.20), transparent 66%);
-      pointer-events:none;
-    }
-
-    .readout small,.audit-card small,.lane-card small,.probe-card small,.route-card small{
+    .card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -461,107 +423,46 @@
       font-size:.72rem;
     }
 
-    .readout strong{
+    .card strong{
       display:block;
       color:#f4f7ff;
-      font-size:1.45rem;
-      line-height:1;
-      letter-spacing:-.04em;
+      font-size:1.22rem;
+      line-height:1.08;
       margin-bottom:10px;
     }
 
-    .readout p,.audit-card p,.lane-card p,.probe-card p,.route-card p{
-      margin:0;
-      font-size:.9rem;
+    .card p{
+      font-size:.92rem;
     }
 
-    .bar{
-      height:8px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(255,255,255,.04);
-      overflow:hidden;
-      margin-top:14px;
-    }
-
-    .bar span{
-      display:block;
-      height:100%;
-      width:var(--value);
-      border-radius:999px;
-      background:linear-gradient(90deg, rgba(109,184,255,.72), rgba(239,210,154,.72));
-      box-shadow:0 0 16px rgba(109,184,255,.22);
-    }
-
-    .authority-layout{
+    .doll-list{
       display:grid;
-      grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
-      gap:18px;
-      margin-top:18px;
-      align-items:start;
-    }
-
-    .audit-list,.probe-list,.lane-grid{
-      display:grid;
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .audit-card,.probe-card,.lane-card{
-      border-radius:20px;
-      padding:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.025);
-    }
-
-    .audit-card{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
       gap:14px;
-      align-items:center;
+      margin-top:18px;
     }
 
-    .lamp{
-      width:34px;
-      height:34px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.12);
-      background:radial-gradient(circle at 50% 40%, var(--lamp), rgba(5,12,24,.92) 70%);
-      box-shadow:0 0 18px var(--lamp-glow);
+    .doll{
+      border-radius:26px;
+      overflow:hidden;
     }
 
-    .audit-card h3,.probe-card h3,.lane-card h3,.route-card h3{
-      margin:0 0 6px;
-      font-size:1rem;
-      letter-spacing:-.02em;
-    }
-
-    .audit-value{
-      color:#fff;
-      font-weight:900;
-      letter-spacing:.08em;
-      font-size:.86rem;
-      text-transform:uppercase;
-      text-align:right;
-    }
-
-    .classifier-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .classifier-card{
-      border-radius:20px;
-      padding:16px;
-      border:1px solid var(--line);
+    .doll button{
+      width:100%;
+      border:0;
+      color:var(--text);
       background:
-        radial-gradient(circle at 100% 100%, rgba(109,184,255,.08), transparent 42%),
-        rgba(255,255,255,.025);
+        radial-gradient(circle at 100% 100%,rgba(239,210,154,.08),transparent 42%),
+        rgba(255,255,255,.02);
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      text-align:left;
+      cursor:pointer;
     }
 
-    .classifier-card small{
+    .doll button small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -571,213 +472,92 @@
       font-size:.72rem;
     }
 
-    .classifier-card strong{
+    .doll button strong{
+      font-size:1.15rem;
+    }
+
+    .diamond{
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      transform:rotate(45deg);
+      border:1px solid rgba(239,210,154,.34);
+      background:radial-gradient(circle at 50% 50%,rgba(255,255,255,.16),transparent 48%),rgba(6,14,28,.78);
+      flex:none;
+    }
+
+    .doll-panel{
+      display:none;
+      padding:0 18px 18px;
+      border-top:1px solid rgba(164,188,255,.12);
+      background:rgba(255,255,255,.018);
+    }
+
+    .doll.is-open .doll-panel{
       display:block;
-      color:#fff;
-      line-height:1.25;
-      margin-bottom:8px;
-    }
-
-    .classifier-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .lane-grid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .lane-card{
-      min-height:158px;
-    }
-
-    .route-grid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      margin-top:16px;
-    }
-
-    .route-card{
-      display:block;
-      min-height:136px;
-      border-radius:22px;
-      padding:16px;
-      color:var(--text);
-      text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-
-    .route-card:hover,.route-card:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
-      outline:none;
     }
 
     .footer{
       display:flex;
       justify-content:space-between;
-      align-items:center;
       gap:16px;
       color:var(--muted);
       padding:14px 4px 0;
-      font-size:.92rem;
     }
 
-    .footer-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .footer-links a{
+    .footer a{
       color:var(--muted);
       text-decoration:none;
+      margin-left:12px;
     }
 
-    .footer-links a:hover,.footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
+    @keyframes leftWing{
+      0%,100%{transform:rotate(-22deg) scaleY(1)}
+      50%{transform:rotate(-17deg) scaleY(.96)}
     }
 
-    @media (max-width:980px){
-      .hero-grid,.authority-layout{grid-template-columns:1fr}
-      .readout-grid,.classifier-grid,.lane-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @keyframes rightWing{
+      0%,100%{transform:scaleX(-1) rotate(-22deg) scaleY(1)}
+      50%{transform:scaleX(-1) rotate(-17deg) scaleY(.96)}
+    }
+
+    @keyframes fairyPath{
+      0%,100%{transform:translate(-50%,-50%) translate(0,0) scale(.94)}
+      25%{transform:translate(-50%,-50%) translate(18px,-18px) scale(1.05)}
+      50%{transform:translate(-50%,-50%) translate(0,-34px) scale(1.1)}
+      75%{transform:translate(-50%,-50%) translate(-18px,-18px) scale(1.05)}
+    }
+
+    @keyframes wingFlutter{
+      0%,100%{opacity:.74;transform:rotate(-28deg) scaleY(.88)}
+      50%{opacity:1;transform:rotate(-42deg) scaleY(1.12)}
+    }
+
+    @keyframes centerPulse{
+      0%,100%{opacity:.72;transform:translate(-50%,-50%) scale(.95)}
+      50%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+    }
+
+    @media (max-width:900px){
+      .hero-grid{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:720px){
-      .page{
-        width:min(100vw - 16px, var(--max));
-        padding:14px 0 32px;
-      }
-
-      .topbar{
-        flex-wrap:wrap;
-        padding:12px 14px;
-      }
-
-      .topnav{
-        width:100%;
-        justify-content:flex-start;
-      }
-
-      .hero,.instrument-card,.console,.panel{
-        padding:18px 16px;
-      }
-
-      h1{
-        font-size:clamp(2rem, 11vw, 3.4rem);
-      }
-
-      .hero-actions{
-        gap:8px;
-      }
-
-      .button{
-        flex:1 1 calc(50% - 8px);
-      }
-
-      .button.primary{
-        flex-basis:100%;
-      }
-
-      .instrument-face{
-        min-height:330px;
-      }
-
-      .authority-ring{
-        width:204px;
-        height:204px;
-      }
-
-      .ownership-line{
-        height:86px;
-      }
-
-      .authority-core{
-        width:70px;
-        height:70px;
-      }
-
-      .instrument-status{
-        width:calc(100% - 28px);
-        border-radius:24px;
-        font-size:.60rem;
-        letter-spacing:.10em;
-      }
-
-      .readout-grid,.classifier-grid,.lane-grid,.route-grid{
-        grid-template-columns:1fr;
-      }
-
-      .audit-card{
-        grid-template-columns:auto 1fr;
-      }
-
-      .audit-value{
-        grid-column:1 / -1;
-        text-align:left;
-      }
-
-      .footer{
-        display:grid;
-        gap:8px;
-      }
-    }
-
-    @media (prefers-reduced-motion:no-preference){
-      .authority-ring{
-        animation:slowSpin 32s linear infinite;
-      }
-
-      .authority-core{
-        animation:corePulse 4.8s ease-in-out infinite;
-      }
-
-      .ownership-line.one{
-        animation:needleSweepOne 8s ease-in-out infinite;
-      }
-
-      .ownership-line.two{
-        animation:needleSweepTwo 10s ease-in-out infinite;
-      }
-
-      .ownership-line.three{
-        animation:needleSweepThree 12s ease-in-out infinite;
-      }
-
-      @keyframes slowSpin{
-        from{transform:translate(-50%,-50%) rotate(0deg)}
-        to{transform:translate(-50%,-50%) rotate(360deg)}
-      }
-
-      @keyframes corePulse{
-        0%,100%{filter:brightness(1)}
-        50%{filter:brightness(1.18)}
-      }
-
-      @keyframes needleSweepOne{
-        0%,100%{transform:translate(-50%,-100%) rotate(-52deg)}
-        50%{transform:translate(-50%,-100%) rotate(-34deg)}
-      }
-
-      @keyframes needleSweepTwo{
-        0%,100%{transform:translate(-50%,-100%) rotate(-8deg)}
-        50%{transform:translate(-50%,-100%) rotate(8deg)}
-      }
-
-      @keyframes needleSweepThree{
-        0%,100%{transform:translate(-50%,-100%) rotate(34deg)}
-        50%{transform:translate(-50%,-100%) rotate(54deg)}
-      }
+      .page{width:min(100vw - 16px,var(--max));padding:14px 0 32px}
+      .topbar{flex-wrap:wrap}
+      .nav{width:100%;justify-content:flex-start}
+      .hero,.section{padding:18px 16px}
+      h1{font-size:clamp(2rem,11vw,3.4rem)}
+      .instrument-window{min-height:390px}
+      .butterfly{width:220px;height:220px}
+      .grid{grid-template-columns:1fr}
+      .footer{display:grid}
+      .footer a{margin-left:0;margin-right:12px}
     }
 
     @media (prefers-reduced-motion:reduce){
-      *{
-        animation:none !important;
-        scroll-behavior:auto !important;
-      }
+      *{animation:none!important;scroll-behavior:auto!important}
     }
   </style>
 </head>
@@ -785,292 +565,217 @@
   <main class="page">
     <header class="topbar">
       <div class="brand">
-        <div class="brand-mark">DG</div>
+        <div class="mark">DG</div>
         <div>
-          <p class="brand-kicker">Generation 2 Instruments</p>
-          <p class="brand-title">Gauge Authority · Diamond Gate Bridge</p>
+          <p class="kicker">Gauges</p>
+          <p class="brand-title">Seasonal Monarch Fairies</p>
         </div>
       </div>
 
-      <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Door</a>
-        <a class="nav-link" href="/products/">Products</a>
-        <a class="nav-link" href="/laws/">Laws</a>
-        <a class="nav-link" href="/about/">About</a>
+      <nav class="nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/about/">About</a>
       </nav>
     </header>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Generation 2 · gauge authority hub</span>
-          <h1>Read the <span class="accent">authority instruments</span>.</h1>
-          <p>
-            Gauges is now the master instrument hub. It preserves the stage-ownership audit logic and upgrades it into
-            the Generation 2 visual language: dark glass, blue/gold trim, diagnostic hierarchy, execution probes, and route authority.
+          <span class="pill">Monarch vessel · fairy paths · four seasons</span>
+          <h1>The gauges now read the <span>living picture.</span></h1>
+          <p class="lead">
+            Products has moved from a technical chamber into a public image: a monarch butterfly holding the seasonal field while fairies cross the center on mirrored figure-eight paths.
           </p>
 
-          <div class="hero-actions">
-            <a class="button primary" href="#stageOwnership">Open stage audit</a>
-            <a class="button" href="/">Back to door</a>
-            <a class="button" href="/products/">Products runtime</a>
+          <div class="actions">
+            <a class="button primary" href="/products/">Open Products</a>
+            <a class="button" href="#reading">Read the gauges</a>
           </div>
         </div>
 
-        <aside class="instrument-card">
-          <div class="instrument-face" aria-label="Gauge authority master instrument">
-            <div class="instrument-grid"></div>
-            <div class="authority-ring"></div>
-            <div class="ownership-line one"></div>
-            <div class="ownership-line two"></div>
-            <div class="ownership-line three"></div>
-            <div class="authority-core"></div>
-            <div class="instrument-status">
-              <strong>Gauge authority hub</strong> · stage ownership audit preserved and upgraded
-            </div>
+        <div class="instrument-window" aria-label="Seasonal Monarch Fairies gauge visual">
+          <div class="center-glow"></div>
+          <div class="butterfly">
+            <div class="body"></div>
           </div>
-        </aside>
+          <div class="fairy one"><span></span></div>
+          <div class="fairy two"><span></span></div>
+          <div class="fairy three"><span></span></div>
+          <div class="fairy four"><span></span></div>
+          <div class="fairy five"><span></span></div>
+        </div>
       </div>
     </section>
 
-    <section class="console" id="instrumentConsole">
-      <div class="section-kicker">Master console</div>
-      <h2>Instrument authority panel</h2>
+    <section class="section" id="reading">
+      <p class="kicker">Current reading</p>
+      <h2>The butterfly is the vessel. The fairies carry the motion.</h2>
       <p>
-        This chamber does not replace the existing audit function. It promotes it. The original purpose remains:
-        identify ownership, isolate the visible-stage controller, classify the break, and prevent duplicate stage authority.
+        The public-facing read is now simple: stained glass behind, fairies in front, monarch at center, four seasons held in one living field.
       </p>
 
-      <div class="readout-grid">
-        <div class="readout">
-          <small>Gauge role</small>
-          <strong>Authority</strong>
-          <p>Gauges acts as the master instrument surface for Generation 2.</p>
-          <div class="bar"><span style="--value:96%"></span></div>
-        </div>
+      <div class="grid">
+        <article class="card">
+          <small>Vessel</small>
+          <strong>Monarch butterfly</strong>
+          <p>The image is recognizable, emotional, and stable enough to hold the seasonal field.</p>
+        </article>
 
-        <div class="readout">
-          <small>Stage rule</small>
-          <strong>One owner</strong>
-          <p>Only one visible-stage owner should control a chamber at a time.</p>
-          <div class="bar"><span style="--value:94%"></span></div>
-        </div>
+        <article class="card">
+          <small>Motion</small>
+          <strong>Fairy paths</strong>
+          <p>The former bubbles now read as fairies moving through the visual space.</p>
+        </article>
 
-        <div class="readout">
-          <small>Audit value</small>
-          <strong>Preserved</strong>
-          <p>The products stage ownership audit remains part of the gauge system.</p>
-          <div class="bar"><span style="--value:90%"></span></div>
-        </div>
+        <article class="card">
+          <small>Pattern</small>
+          <strong>Two figure-eights</strong>
+          <p>The fairies still cross through mirrored loops and meet at the center.</p>
+        </article>
 
-        <div class="readout">
-          <small>Next pass</small>
-          <strong>Laws</strong>
-          <p>Authority chamber should inherit this instrument language next.</p>
-          <div class="bar"><span style="--value:68%"></span></div>
-        </div>
+        <article class="card">
+          <small>Seasons</small>
+          <strong>Winter, Summer, Fall, Spring</strong>
+          <p>The four seasonal corners remain visible without overpowering the art.</p>
+        </article>
       </div>
     </section>
 
-    <section class="authority-layout" id="stageOwnership">
-      <div class="panel">
-        <div class="section-kicker">Stage ownership authority</div>
-        <h2>Products stage ownership audit</h2>
-        <p>
-          The live diagnostic logic is retained here as a first-class instrument module. Its job is to prevent stage collision,
-          identify the active owner, and classify whether a failure belongs to HTML, bridge, runtime, cache, or visual layout.
-        </p>
+    <section class="section">
+      <p class="kicker">Open only what you need</p>
+      <h2>Instrument layers</h2>
 
-        <div class="audit-list">
-          <div class="audit-card">
-            <div class="lamp" style="--lamp:rgba(151,230,180,.95);--lamp-glow:rgba(151,230,180,.35)"></div>
-            <div>
-              <small>Stage owner</small>
-              <h3>Visible-stage owner must be singular</h3>
-              <p>One chamber surface should own the mounted visual stage at a time.</p>
-            </div>
-            <div class="audit-value">LAW</div>
+      <div class="doll-list">
+        <article class="doll is-open" data-doll>
+          <button type="button" aria-expanded="true">
+            <span>
+              <small>First layer</small>
+              <strong>What changed?</strong>
+            </span>
+            <span class="diamond"></span>
+          </button>
+          <div class="doll-panel">
+            <p>
+              The products visual no longer reads as a mechanical molecule window. It now reads as a living stained-glass monarch scene with fairies moving in front.
+            </p>
           </div>
+        </article>
 
-          <div class="audit-card">
-            <div class="lamp" style="--lamp:rgba(109,184,255,.95);--lamp-glow:rgba(109,184,255,.35)"></div>
-            <div>
-              <small>Products shell</small>
-              <h3>HTML shell owns route, copy, and mount point</h3>
-              <p>The shell should not compete with the runtime for molecule geometry.</p>
-            </div>
-            <div class="audit-value">SHELL</div>
+        <article class="doll" data-doll>
+          <button type="button" aria-expanded="false">
+            <span>
+              <small>Second layer</small>
+              <strong>Why fairies?</strong>
+            </span>
+            <span class="diamond"></span>
+          </button>
+          <div class="doll-panel">
+            <p>
+              Fairies preserve the small moving-point behavior but give the motion character. The movement feels intentional instead of abstract.
+            </p>
           </div>
+        </article>
 
-          <div class="audit-card">
-            <div class="lamp" style="--lamp:rgba(255,217,143,.95);--lamp-glow:rgba(255,217,143,.35)"></div>
-            <div>
-              <small>Runtime</small>
-              <h3>Runtime owns molecule animation</h3>
-              <p>The animated seasonal molecule belongs to the runtime, not the static shell.</p>
-            </div>
-            <div class="audit-value">RUNTIME</div>
+        <article class="doll" data-doll>
+          <button type="button" aria-expanded="false">
+            <span>
+              <small>Third layer</small>
+              <strong>Why the monarch?</strong>
+            </span>
+            <span class="diamond"></span>
+          </button>
+          <div class="doll-panel">
+            <p>
+              The monarch gives the whole page a single readable image. It turns the seasonal field into something visitors can understand immediately.
+            </p>
           </div>
+        </article>
 
-          <div class="audit-card">
-            <div class="lamp" style="--lamp:rgba(255,154,154,.95);--lamp-glow:rgba(255,154,154,.35)"></div>
-            <div>
-              <small>Collision class</small>
-              <h3>Duplicate stage owners are the danger</h3>
-              <p>If old and new surfaces both render, the failure is ownership collision, not design drift.</p>
-            </div>
-            <div class="audit-value">BLOCK</div>
+        <article class="doll" data-doll>
+          <button type="button" aria-expanded="false">
+            <span>
+              <small>Fourth layer</small>
+              <strong>What remains intact?</strong>
+            </span>
+            <span class="diamond"></span>
+          </button>
+          <div class="doll-panel">
+            <p>
+              The four seasons, center crossing, and two figure-eight motion remain intact. The presentation is upgraded; the underlying movement is preserved.
+            </p>
           </div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="section-kicker">Problem classifier</div>
-        <h2>Break classification</h2>
-        <p>
-          The classifier turns visual confusion into a controlled diagnostic. The question is not “what do we like?”
-          The question is “which owner is emitting the visible break?”
-        </p>
-
-        <div class="classifier-grid">
-          <div class="classifier-card">
-            <small>Class A</small>
-            <strong>Missing mount</strong>
-            <p>HTML loaded, but bridge or runtime did not mount.</p>
-          </div>
-
-          <div class="classifier-card">
-            <small>Class B</small>
-            <strong>Loaded, not injected</strong>
-            <p>Runtime file loaded, but no runtime root appeared.</p>
-          </div>
-
-          <div class="classifier-card">
-            <small>Class C</small>
-            <strong>Competing stage</strong>
-            <p>Old shell and new runtime both produce visible chamber output.</p>
-          </div>
-
-          <div class="classifier-card">
-            <small>Class D</small>
-            <strong>Visual containment</strong>
-            <p>The owner is correct, but spacing, motion, or clipping needs adjustment.</p>
-          </div>
-        </div>
+        </article>
       </div>
     </section>
 
-    <section class="console">
-      <div class="section-kicker">Execution probes</div>
-      <h2>Four questions before any file move</h2>
-      <p>
-        These probes prevent false fixes. A TNT should only be written after the active owner and break class are named.
-      </p>
-
-      <div class="probe-list">
-        <div class="probe-card">
-          <small>Probe 1</small>
-          <h3>Which file owns the visible stage?</h3>
-          <p>Identify whether the visible output comes from HTML, bridge JS, runtime JS, or cache.</p>
-        </div>
-
-        <div class="probe-card">
-          <small>Probe 2</small>
-          <h3>Is the mount present?</h3>
-          <p>If the mount is absent, the shell owns the failure. If the mount exists, inspect bridge/runtime.</p>
-        </div>
-
-        <div class="probe-card">
-          <small>Probe 3</small>
-          <h3>Is the runtime root present?</h3>
-          <p>If the runtime root exists, the issue is visual/layout. If it does not, the issue is load/injection.</p>
-        </div>
-
-        <div class="probe-card">
-          <small>Probe 4</small>
-          <h3>Is there more than one stage owner?</h3>
-          <p>If two generations render at once, remove competition before adding new features.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="console">
-      <div class="section-kicker">Direct audit lanes</div>
-      <h2>Lane-based inspection</h2>
-      <p>
-        The lanes keep the diagnostic sequence clean. Do not skip from a visible symptom to a design rewrite.
-      </p>
-
-      <div class="lane-grid">
-        <div class="lane-card">
-          <small>Lane A</small>
-          <h3>Shell lane</h3>
-          <p>Inspect `/products/index.html` for mount point, page copy, filters, and static fallback.</p>
-        </div>
-
-        <div class="lane-card">
-          <small>Lane B</small>
-          <h3>Bridge lane</h3>
-          <p>Inspect `/products/index.js` for boot receipt, runtime request, cache-bust, and error handling.</p>
-        </div>
-
-        <div class="lane-card">
-          <small>Lane C</small>
-          <h3>Runtime lane</h3>
-          <p>Inspect `/products/products_runtime.js` for injected root, animation ownership, and layout control.</p>
-        </div>
-
-        <div class="lane-card">
-          <small>Lane D</small>
-          <h3>Visual lane</h3>
-          <p>Inspect containment, spacing, labels, glass depth, motion speed, and mobile readability.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="console">
-      <div class="section-kicker">Next chamber routing</div>
-      <h2>Move to the next instrument surface</h2>
-      <p>
-        Gauge Authority is now the master instrument hub. The next best move is Laws, because Laws should become the authority instrument chamber.
-      </p>
-
-      <div class="route-grid">
-        <a class="route-card" href="/">
-          <small>Root</small>
-          <h3>Door</h3>
-          <p>Return to the Generation 2 root threshold.</p>
+    <section class="section">
+      <p class="kicker">Next public move</p>
+      <h2>Align the rest of the site to the same language.</h2>
+      <div class="grid">
+        <a class="card" href="/products/">
+          <small>Products</small>
+          <strong>Open the live visual</strong>
+          <p>Return to the active Seasonal Monarch Fairies page.</p>
         </a>
 
-        <a class="route-card" href="/products/">
-          <small>Runtime</small>
-          <h3>Products</h3>
-          <p>Review the seasonal stained-glass molecule.</p>
+        <a class="card" href="/laws/">
+          <small>Laws</small>
+          <strong>Connect the story</strong>
+          <p>Make the laws page read as visitor-facing, not internal documentation.</p>
         </a>
 
-        <a class="route-card" href="/laws/">
-          <small>Next upgrade</small>
-          <h3>Laws</h3>
-          <p>Convert authority surfaces into G2 instruments.</p>
+        <a class="card" href="/">
+          <small>Door</small>
+          <strong>Return to the entry</strong>
+          <p>Use the root door as the entrance to the current experience.</p>
         </a>
 
-        <a class="route-card" href="/about/">
-          <small>Orientation</small>
-          <h3>About</h3>
-          <p>Prepare user guidance for G2 inheritance.</p>
+        <a class="card" href="/about/">
+          <small>About</small>
+          <strong>Explain the mission</strong>
+          <p>Translate the system into human terms.</p>
         </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Gauges · Generation 2 Gauge Authority Hub</span>
-      <div class="footer-links">
-        <a href="/">Door</a>
+      <span>Gauges · Seasonal Monarch Fairies</span>
+      <span>
+        <a href="/">Home</a>
         <a href="/products/">Products</a>
         <a href="/laws/">Laws</a>
-        <a href="/about/">About</a>
-      </div>
+      </span>
     </footer>
   </main>
+
+  <script>
+    (() => {
+      function closeSiblings(shell) {
+        const parent = shell.parentElement;
+        if (!parent) return;
+
+        parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
+          if (item === shell) return;
+          item.classList.remove("is-open");
+          const btn = item.querySelector("button");
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      document.querySelectorAll("[data-doll] > button").forEach((button) => {
+        button.addEventListener("click", () => {
+          const shell = button.closest("[data-doll]");
+          if (!shell) return;
+
+          const willOpen = !shell.classList.contains("is-open");
+          closeSiblings(shell);
+          shell.classList.toggle("is-open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

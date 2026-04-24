@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "gauges-seasonal-monarch-fairies-v1";
+  const STYLE_ID = "dgb-root-public-priority-v1";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -15,22 +15,33 @@
         --text: #eef4ff;
         --muted: #9aabd0;
         --gold: #efd29a;
-        --green: #92e7ba;
+        --pink: #ff9fd6;
         --blue: #8ec5ff;
+        --green: #92e7ba;
         --shadow: 0 24px 80px rgba(0,0,0,.52);
         --max: 1180px;
       }
 
-      * { box-sizing: border-box; }
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        min-height: 100%;
+        scroll-behavior: smooth;
+      }
 
       body {
+        min-height: 100%;
         margin: 0;
         color: var(--text);
         font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background:
-          radial-gradient(circle at 50% 8%, rgba(112,151,255,.22), transparent 22%),
-          radial-gradient(circle at 18% 34%, rgba(239,210,154,.10), transparent 24%),
-          linear-gradient(180deg, #020610 0%, #071225 48%, #020610 100%);
+          radial-gradient(circle at 50% 7%, rgba(112,151,255,.22), transparent 22%),
+          radial-gradient(circle at 18% 28%, rgba(255,159,214,.10), transparent 24%),
+          radial-gradient(circle at 82% 34%, rgba(239,210,154,.10), transparent 24%),
+          linear-gradient(180deg, #020610 0%, #071225 52%, #020610 100%);
+        overflow-x: hidden;
       }
 
       body::before {
@@ -46,7 +57,7 @@
         mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
       }
 
-      .gauge-page {
+      .root-portal {
         width: min(var(--max), calc(100vw - 24px));
         margin: 0 auto;
         padding: 18px 0 44px;
@@ -54,17 +65,19 @@
         z-index: 1;
       }
 
-      .topbar,
-      .hero,
-      .section,
-      .card,
-      .doll {
+      .root-topbar,
+      .root-hero,
+      .root-priority,
+      .root-section,
+      .root-card,
+      .priority-card,
+      .root-door-card {
         border: 1px solid var(--line);
         background: linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
         box-shadow: var(--shadow);
       }
 
-      .topbar {
+      .root-topbar {
         border-radius: 22px;
         padding: 14px 16px;
         display: flex;
@@ -74,13 +87,13 @@
         margin-bottom: 16px;
       }
 
-      .brand {
+      .root-brand {
         display: flex;
         align-items: center;
         gap: 12px;
       }
 
-      .mark {
+      .root-mark {
         width: 46px;
         height: 46px;
         border-radius: 16px;
@@ -94,7 +107,7 @@
         letter-spacing: .08em;
       }
 
-      .kicker {
+      .root-kicker {
         margin: 0 0 4px;
         color: #c8d7ff;
         font-size: .72rem;
@@ -102,26 +115,23 @@
         letter-spacing: .16em;
       }
 
-      .brand-title {
+      .root-title {
         margin: 0;
         font-weight: 850;
         font-size: 1.05rem;
       }
 
-      .nav,
-      .actions,
-      .footer-links {
+      .root-nav,
+      .root-actions,
+      .root-footer span:last-child {
         display: flex;
         flex-wrap: wrap;
+        justify-content: flex-end;
         gap: 10px;
       }
 
-      .nav {
-        justify-content: flex-end;
-      }
-
-      .nav a,
-      .button {
+      .root-nav a,
+      .root-button {
         min-height: 42px;
         display: inline-flex;
         align-items: center;
@@ -135,31 +145,31 @@
         font-weight: 800;
       }
 
-      .nav a:hover,
-      .nav a:focus-visible,
-      .button:hover,
-      .button:focus-visible {
+      .root-nav a:hover,
+      .root-nav a:focus-visible,
+      .root-button:hover,
+      .root-button:focus-visible,
+      .root-card:hover,
+      .root-card:focus-visible,
+      .priority-card:hover,
+      .priority-card:focus-visible {
         border-color: var(--strong);
         transform: translateY(-1px);
         outline: none;
       }
 
-      .hero {
+      .root-hero {
         border-radius: 34px;
         padding: 24px 20px;
         margin-bottom: 18px;
-        overflow: hidden;
-        position: relative;
-      }
-
-      .hero-grid {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(320px, .85fr);
         gap: 20px;
         align-items: center;
+        overflow: hidden;
       }
 
-      .pill {
+      .root-pill {
         display: inline-flex;
         align-items: center;
         gap: 10px;
@@ -174,7 +184,7 @@
         margin-bottom: 14px;
       }
 
-      .pill::before {
+      .root-pill::before {
         content: "";
         width: 9px;
         height: 9px;
@@ -186,7 +196,7 @@
 
       h1 {
         margin: 0 0 12px;
-        max-width: 12ch;
+        max-width: 13ch;
         font-size: clamp(2.35rem, 5vw, 5rem);
         line-height: .95;
         letter-spacing: -.06em;
@@ -196,213 +206,220 @@
         color: var(--gold);
       }
 
-      p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.62;
-      }
-
-      .lead {
-        max-width: 68ch;
-        font-size: clamp(1rem, 1.45vw, 1.14rem);
-      }
-
-      .actions {
-        margin-top: 20px;
-      }
-
-      .button {
-        border-radius: 18px;
-        min-height: 48px;
-        padding: 0 18px;
-      }
-
-      .button.primary {
-        border-color: rgba(239,210,154,.34);
-        background:
-          linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
-          rgba(255,255,255,.035);
-        color: #fff8ea;
-      }
-
-      .instrument-window {
-        min-height: 430px;
-        border-radius: 30px;
-        border: 1px solid rgba(170,198,255,.18);
-        background:
-          radial-gradient(circle at 50% 50%, rgba(239,210,154,.14), transparent 24%),
-          linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
-        position: relative;
-        overflow: hidden;
-        display: grid;
-        place-items: center;
-        isolation: isolate;
-      }
-
-      .instrument-window::before {
-        content: "";
-        position: absolute;
-        inset: 10%;
-        border-radius: 38px;
-        border: 1px solid rgba(255,255,255,.10);
-        box-shadow: inset 0 0 30px rgba(126,164,255,.12);
-      }
-
-      .butterfly {
-        position: relative;
-        width: 250px;
-        height: 250px;
-        z-index: 2;
-        filter:
-          drop-shadow(0 0 24px rgba(239,210,154,.20))
-          drop-shadow(0 0 42px rgba(142,197,255,.16));
-      }
-
-      .butterfly::before,
-      .butterfly::after {
-        content: "";
-        position: absolute;
-        top: 44px;
-        width: 128px;
-        height: 148px;
-        border-radius: 76% 24% 68% 32%;
-        background:
-          radial-gradient(circle at 60% 42%, rgba(255,238,180,.90), transparent 10%),
-          radial-gradient(circle at 42% 54%, rgba(255,214,124,.82), transparent 22%),
-          linear-gradient(135deg, #27130d 0%, #f5a33a 44%, #8f3819 72%, #080b14 100%);
-        border: 2px solid rgba(10,12,22,.78);
-        box-shadow: inset 0 0 26px rgba(255,255,255,.12);
-        transform-origin: 100% 72%;
-        animation: leftWing 5.4s ease-in-out infinite;
-      }
-
-      .butterfly::before {
-        left: 4px;
-        transform: rotate(-22deg);
-      }
-
-      .butterfly::after {
-        right: 4px;
-        transform: scaleX(-1) rotate(-22deg);
-        transform-origin: 0% 72%;
-        animation: rightWing 5.4s ease-in-out infinite;
-      }
-
-      .body {
-        position: absolute;
-        left: 50%;
-        top: 43%;
-        width: 34px;
-        height: 142px;
-        transform: translate(-50%, -50%);
-        border-radius: 999px;
-        background: linear-gradient(180deg, #1b130e, #050811);
-        border: 1px solid rgba(239,210,154,.24);
-        z-index: 3;
-      }
-
-      .fairy {
-        position: absolute;
-        width: 34px;
-        height: 38px;
-        z-index: 4;
-        filter:
-          drop-shadow(0 0 10px var(--c))
-          drop-shadow(0 0 26px rgba(210,240,255,.26));
-        animation: fairyPath 6s ease-in-out infinite;
-        animation-delay: var(--d);
-      }
-
-      .fairy::before,
-      .fairy::after {
-        content: "";
-        position: absolute;
-        top: 3px;
-        width: 15px;
-        height: 24px;
-        border-radius: 80% 20% 80% 20%;
-        background: radial-gradient(circle at 42% 42%, rgba(255,255,255,.92), rgba(255,255,255,.34) 26%, var(--c) 56%, rgba(255,255,255,0) 82%);
-        border: 1px solid rgba(255,255,255,.62);
-        transform-origin: 50% 80%;
-        animation: wingFlutter .62s ease-in-out infinite;
-      }
-
-      .fairy::before {
-        left: 1px;
-        transform: rotate(-28deg);
-      }
-
-      .fairy::after {
-        right: 1px;
-        transform: scaleX(-1) rotate(-28deg);
-        animation-delay: -.31s;
-      }
-
-      .fairy span {
-        position: absolute;
-        left: 50%;
-        top: 48%;
-        width: 12px;
-        height: 19px;
-        transform: translate(-50%, -50%);
-        border-radius: 999px;
-        background: radial-gradient(circle at 50% 28%, #fff, var(--c) 50%, rgba(4,10,22,.88) 100%);
-        border: 1px solid rgba(255,255,255,.72);
-        box-shadow: 0 0 18px var(--c);
-      }
-
-      .fairy.one { --c: var(--green); left: 28%; top: 34%; --d: 0s; }
-      .fairy.two { --c: var(--blue); right: 28%; top: 34%; --d: -1s; }
-      .fairy.three { --c: var(--blue); left: 28%; bottom: 25%; --d: -2s; }
-      .fairy.four { --c: var(--green); right: 28%; bottom: 25%; --d: -3s; }
-      .fairy.five { --c: var(--green); left: 49%; top: 47%; --d: -4s; }
-
-      .center-glow {
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 118px;
-        height: 118px;
-        border-radius: 50%;
-        transform: translate(-50%, -50%);
-        background: radial-gradient(circle, #fff 0 8%, rgba(236,247,255,.72) 12%, rgba(127,197,255,.22) 38%, transparent 72%);
-        filter: drop-shadow(0 0 28px rgba(255,255,255,.42));
-        z-index: 3;
-        animation: centerPulse 4.2s ease-in-out infinite;
-      }
-
-      .section {
-        margin-top: 18px;
-        border-radius: 30px;
-        padding: 22px 20px;
-        overflow: hidden;
-      }
-
-      .section h2 {
+      h2 {
         margin: 0 0 10px;
         font-size: clamp(1.7rem, 3vw, 2.7rem);
         line-height: 1;
         letter-spacing: -.04em;
       }
 
-      .grid {
+      p {
+        margin: 0;
+        color: var(--muted);
+        line-height: 1.62;
+      }
+
+      .root-hero-copy p {
+        max-width: 68ch;
+        font-size: clamp(1rem, 1.45vw, 1.14rem);
+      }
+
+      .root-actions {
+        justify-content: flex-start;
+        margin-top: 20px;
+      }
+
+      .root-button {
+        border-radius: 18px;
+        min-height: 48px;
+        padding: 0 18px;
+      }
+
+      .root-button.primary {
+        border-color: rgba(239,210,154,.34);
+        background:
+          linear-gradient(180deg, rgba(239,210,154,.22), rgba(239,210,154,.07)),
+          rgba(255,255,255,.035);
+        color: #fff8ea;
+      }
+
+      .root-button.summit {
+        border-color: rgba(255,159,214,.34);
+        background:
+          linear-gradient(180deg, rgba(255,159,214,.18), rgba(255,159,214,.06)),
+          rgba(255,255,255,.035);
+        color: #fff5fb;
+      }
+
+      .root-door-card {
+        border-radius: 30px;
+        padding: 20px;
+      }
+
+      .root-door-arch {
+        min-height: 430px;
+        position: relative;
+        border-radius: 30px 30px 22px 22px;
+        border: 1px solid rgba(170,198,255,.18);
+        background:
+          radial-gradient(circle at 50% 45%, rgba(142,197,255,.18), transparent 28%),
+          linear-gradient(180deg, rgba(7,17,36,.98), rgba(2,7,16,.99));
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        isolation: isolate;
+      }
+
+      .root-door-arch::before {
+        content: "";
+        position: absolute;
+        inset: 10% 10% 8%;
+        border-radius: 999px 999px 32px 32px;
+        border: 1px solid rgba(210,223,255,.18);
+        box-shadow: inset 0 0 42px rgba(126,164,255,.12);
+      }
+
+      .root-door-arch::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        top: 13%;
+        width: 1px;
+        height: 74%;
+        background: linear-gradient(180deg, transparent, rgba(225,240,255,.44), transparent);
+        opacity: .54;
+      }
+
+      .root-door-core {
+        position: relative;
+        z-index: 3;
+        border: 1px solid rgba(210,223,255,.22);
+        border-radius: 24px;
+        min-width: 142px;
+        min-height: 92px;
+        background:
+          radial-gradient(circle at 50% 40%, rgba(255,255,255,.26), transparent 32%),
+          linear-gradient(180deg, rgba(18,35,62,.94), rgba(4,9,18,.98));
+        color: #fff;
+        font-weight: 900;
+        letter-spacing: .24em;
+        box-shadow:
+          0 0 24px rgba(142,197,255,.22),
+          0 0 72px rgba(142,197,255,.14);
+        cursor: pointer;
+        transition: transform 160ms ease, filter 160ms ease, box-shadow 160ms ease;
+      }
+
+      .root-door-card.is-lit .root-door-core,
+      .root-door-core:hover,
+      .root-door-core:focus-visible {
+        transform: scale(.98);
+        filter: brightness(1.22);
+        box-shadow:
+          0 0 28px rgba(255,255,255,.34),
+          0 0 88px rgba(142,197,255,.30),
+          0 0 132px rgba(239,210,154,.18);
+        outline: none;
+      }
+
+      .root-door-gem {
+        position: absolute;
+        left: 50%;
+        width: 82px;
+        height: 82px;
+        border-radius: 18px;
+        transform: translateX(-50%) rotate(45deg);
+        background:
+          radial-gradient(circle at 36% 28%, rgba(255,255,255,.82), transparent 12%),
+          linear-gradient(135deg, rgba(142,197,255,.96), rgba(18,69,146,.78));
+        border: 1px solid rgba(210,223,255,.22);
+        box-shadow: 0 0 30px rgba(142,197,255,.28);
+        z-index: 2;
+      }
+
+      .root-door-gem.top {
+        top: 11%;
+      }
+
+      .root-door-gem.bottom {
+        bottom: 10%;
+      }
+
+      .root-door-caption {
+        position: absolute;
+        left: 50%;
+        bottom: 24px;
+        transform: translateX(-50%);
+        z-index: 4;
+        width: min(92%, 620px);
+        padding: 14px 16px;
+        border-radius: 999px;
+        border: 1px solid rgba(164,188,255,.24);
+        background: rgba(5,12,26,.84);
+        text-align: center;
+        color: #dce7ff;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        font-size: .72rem;
+        line-height: 1.4;
+        backdrop-filter: blur(10px);
+      }
+
+      .root-door-caption strong {
+        color: #fff;
+      }
+
+      .root-priority,
+      .root-section {
+        margin-top: 18px;
+        border-radius: 30px;
+        padding: 22px 20px;
+        overflow: hidden;
+      }
+
+      .root-priority-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+      }
+
+      .root-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 12px;
         margin-top: 18px;
       }
 
-      .card {
+      .priority-card,
+      .root-card {
         display: block;
-        border-radius: 22px;
-        padding: 16px;
-        min-height: 142px;
         color: var(--text);
         text-decoration: none;
+        border-radius: 22px;
+        padding: 18px;
+        min-height: 164px;
         border-color: rgba(164,188,255,.14);
+        transition: transform 160ms ease, border-color 160ms ease;
       }
 
-      .card small {
+      .priority-card.feature {
+        min-height: 230px;
+        border-color: rgba(239,210,154,.24);
+        background:
+          radial-gradient(circle at 100% 100%, rgba(239,210,154,.12), transparent 44%),
+          linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+      }
+
+      .priority-card:nth-child(2).feature {
+        border-color: rgba(255,159,214,.24);
+        background:
+          radial-gradient(circle at 100% 100%, rgba(255,159,214,.12), transparent 44%),
+          linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+      }
+
+      .priority-card small,
+      .root-card small {
         display: block;
         color: #90a3ce;
         text-transform: uppercase;
@@ -412,81 +429,51 @@
         font-size: .72rem;
       }
 
-      .card strong {
+      .priority-card strong,
+      .root-card strong {
         display: block;
         color: #f4f7ff;
-        font-size: 1.22rem;
+        font-size: 1.35rem;
         line-height: 1.08;
         margin-bottom: 10px;
       }
 
-      .card p {
-        font-size: .92rem;
+      .priority-card p,
+      .root-card p {
+        font-size: .94rem;
       }
 
-      .doll-list {
+      .root-chain {
         display: grid;
-        gap: 14px;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 10px;
         margin-top: 18px;
       }
 
-      .doll {
-        border-radius: 26px;
-        overflow: hidden;
+      .root-chain div {
+        border: 1px solid rgba(164,188,255,.14);
+        border-radius: 20px;
+        padding: 14px;
+        background: rgba(255,255,255,.03);
+        text-align: center;
       }
 
-      .doll button {
-        width: 100%;
-        border: 0;
-        color: var(--text);
-        background:
-          radial-gradient(circle at 100% 100%, rgba(239,210,154,.08), transparent 42%),
-          rgba(255,255,255,.02);
-        padding: 18px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        text-align: left;
-        cursor: pointer;
-      }
-
-      .doll button small {
+      .root-chain small {
         display: block;
         color: #90a3ce;
         text-transform: uppercase;
         letter-spacing: .12em;
         margin-bottom: 8px;
         font-weight: 800;
-        font-size: .72rem;
+        font-size: .68rem;
       }
 
-      .doll button strong {
-        font-size: 1.15rem;
-      }
-
-      .diamond {
-        width: 28px;
-        height: 28px;
-        border-radius: 8px;
-        transform: rotate(45deg);
-        border: 1px solid rgba(239,210,154,.34);
-        background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%), rgba(6,14,28,.78);
-        flex: none;
-      }
-
-      .doll-panel {
-        display: none;
-        padding: 0 18px 18px;
-        border-top: 1px solid rgba(164,188,255,.12);
-        background: rgba(255,255,255,.018);
-      }
-
-      .doll.is-open .doll-panel {
+      .root-chain strong {
         display: block;
+        color: #fff;
       }
 
-      .footer {
+      .root-footer {
         display: flex;
         justify-content: space-between;
         gap: 16px;
@@ -494,288 +481,110 @@
         padding: 14px 4px 0;
       }
 
-      .footer a {
+      .root-footer a {
         color: var(--muted);
         text-decoration: none;
-        margin-left: 12px;
       }
 
-      @keyframes leftWing {
-        0%, 100% { transform: rotate(-22deg) scaleY(1); }
-        50% { transform: rotate(-17deg) scaleY(.96); }
-      }
+      @media (max-width: 980px) {
+        .root-hero {
+          grid-template-columns: 1fr;
+        }
 
-      @keyframes rightWing {
-        0%, 100% { transform: scaleX(-1) rotate(-22deg) scaleY(1); }
-        50% { transform: scaleX(-1) rotate(-17deg) scaleY(.96); }
-      }
-
-      @keyframes fairyPath {
-        0%, 100% { transform: translate(-50%, -50%) translate(0, 0) scale(.94); }
-        25% { transform: translate(-50%, -50%) translate(18px, -18px) scale(1.05); }
-        50% { transform: translate(-50%, -50%) translate(0, -34px) scale(1.1); }
-        75% { transform: translate(-50%, -50%) translate(-18px, -18px) scale(1.05); }
-      }
-
-      @keyframes wingFlutter {
-        0%, 100% { opacity: .74; transform: rotate(-28deg) scaleY(.88); }
-        50% { opacity: 1; transform: rotate(-42deg) scaleY(1.12); }
-      }
-
-      @keyframes centerPulse {
-        0%, 100% { opacity: .72; transform: translate(-50%, -50%) scale(.95); }
-        50% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); }
-      }
-
-      @media (max-width: 900px) {
-        .hero-grid { grid-template-columns: 1fr; }
-        .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .root-grid,
+        .root-chain {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
       }
 
       @media (max-width: 720px) {
-        .gauge-page { width: min(100vw - 16px, var(--max)); padding: 14px 0 32px; }
-        .topbar { flex-wrap: wrap; }
-        .nav { width: 100%; justify-content: flex-start; }
-        .hero, .section { padding: 18px 16px; }
-        h1 { font-size: clamp(2rem, 11vw, 3.4rem); }
-        .instrument-window { min-height: 390px; }
-        .butterfly { width: 220px; height: 220px; }
-        .grid { grid-template-columns: 1fr; }
-        .footer { display: grid; }
-        .footer a { margin-left: 0; margin-right: 12px; }
+        .root-portal {
+          width: min(100vw - 16px, var(--max));
+          padding: 14px 0 32px;
+        }
+
+        .root-topbar {
+          flex-wrap: wrap;
+        }
+
+        .root-nav {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .root-hero,
+        .root-priority,
+        .root-section {
+          padding: 18px 16px;
+        }
+
+        h1 {
+          font-size: clamp(2rem, 11vw, 3.4rem);
+        }
+
+        .root-priority-grid,
+        .root-grid,
+        .root-chain {
+          grid-template-columns: 1fr;
+        }
+
+        .root-door-arch {
+          min-height: 390px;
+        }
+
+        .root-footer {
+          display: grid;
+        }
+
+        .root-footer span:last-child {
+          justify-content: flex-start;
+        }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        * { animation: none !important; scroll-behavior: auto !important; }
+        * {
+          animation: none !important;
+          scroll-behavior: auto !important;
+        }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function html() {
-    return `
-      <main class="gauge-page">
-        <header class="topbar">
-          <div class="brand">
-            <div class="mark">DG</div>
-            <div>
-              <p class="kicker">Gauges</p>
-              <p class="brand-title">Seasonal Monarch Fairies</p>
-            </div>
-          </div>
+  function wireDoor() {
+    const card = document.querySelector("[data-root-door]");
+    const core = document.querySelector("[data-door-core]");
 
-          <nav class="nav" aria-label="Primary">
-            <a href="/">Home</a>
-            <a href="/products/">Products</a>
-            <a href="/laws/">Laws</a>
-            <a href="/about/">About</a>
-          </nav>
-        </header>
+    if (!card || !core) return;
 
-        <section class="hero">
-          <div class="hero-grid">
-            <div>
-              <span class="pill">Monarch vessel · fairy paths · four seasons</span>
-              <h1>The gauges now read the <span>living picture.</span></h1>
-              <p class="lead">
-                Products has moved from a diagnostic chamber into a public image: a monarch butterfly holding the seasonal field while fairies cross the center on mirrored figure-eight paths.
-              </p>
+    const light = () => {
+      card.classList.add("is-lit");
+      window.clearTimeout(card.__lightTimer);
+      card.__lightTimer = window.setTimeout(() => {
+        card.classList.remove("is-lit");
+      }, 900);
+    };
 
-              <div class="actions">
-                <a class="button primary" href="/products/">Open Products</a>
-                <a class="button" href="#reading">Read the gauges</a>
-              </div>
-            </div>
+    core.addEventListener("pointerdown", light);
+    core.addEventListener("click", light);
+    core.addEventListener("focus", () => card.classList.add("is-lit"));
+    core.addEventListener("blur", () => card.classList.remove("is-lit"));
 
-            <div class="instrument-window" aria-label="Seasonal Monarch Fairies gauge visual">
-              <div class="center-glow"></div>
-              <div class="butterfly">
-                <div class="body"></div>
-              </div>
-              <div class="fairy one"><span></span></div>
-              <div class="fairy two"><span></span></div>
-              <div class="fairy three"><span></span></div>
-              <div class="fairy four"><span></span></div>
-              <div class="fairy five"><span></span></div>
-            </div>
-          </div>
-        </section>
-
-        <section class="section" id="reading">
-          <p class="kicker">Current reading</p>
-          <h2>The butterfly is the vessel. The fairies carry the motion.</h2>
-          <p>
-            The public-facing read is now simple: stained glass behind, fairies in front, monarch at center, four seasons held in one living field.
-          </p>
-
-          <div class="grid">
-            <article class="card">
-              <small>Vessel</small>
-              <strong>Monarch butterfly</strong>
-              <p>The image is recognizable, emotional, and stable enough to hold the seasonal field.</p>
-            </article>
-
-            <article class="card">
-              <small>Motion</small>
-              <strong>Fairy paths</strong>
-              <p>The former bubbles now read as fairies moving through the visual space.</p>
-            </article>
-
-            <article class="card">
-              <small>Pattern</small>
-              <strong>Two figure-eights</strong>
-              <p>The fairies still cross through mirrored loops and meet at the center.</p>
-            </article>
-
-            <article class="card">
-              <small>Seasons</small>
-              <strong>Winter, Summer, Fall, Spring</strong>
-              <p>The four seasonal corners remain visible without overpowering the art.</p>
-            </article>
-          </div>
-        </section>
-
-        <section class="section">
-          <p class="kicker">Open only what you need</p>
-          <h2>Instrument layers</h2>
-
-          <div class="doll-list">
-            <article class="doll is-open" data-doll>
-              <button type="button" aria-expanded="true">
-                <span>
-                  <small>First layer</small>
-                  <strong>What changed?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>The products visual no longer reads as a mechanical molecule window. It now reads as a living stained-glass monarch scene with fairies moving in front.</p>
-              </div>
-            </article>
-
-            <article class="doll" data-doll>
-              <button type="button" aria-expanded="false">
-                <span>
-                  <small>Second layer</small>
-                  <strong>Why fairies?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>Fairies preserve the small moving-point behavior but give the motion character. The movement feels intentional instead of abstract.</p>
-              </div>
-            </article>
-
-            <article class="doll" data-doll>
-              <button type="button" aria-expanded="false">
-                <span>
-                  <small>Third layer</small>
-                  <strong>Why the monarch?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>The monarch gives the whole page a single readable image. It turns the seasonal field into something visitors can understand immediately.</p>
-              </div>
-            </article>
-
-            <article class="doll" data-doll>
-              <button type="button" aria-expanded="false">
-                <span>
-                  <small>Fourth layer</small>
-                  <strong>What remains intact?</strong>
-                </span>
-                <span class="diamond"></span>
-              </button>
-              <div class="doll-panel">
-                <p>The four seasons, center crossing, and two figure-eight motion remain intact. The presentation is upgraded; the underlying movement is preserved.</p>
-              </div>
-            </article>
-          </div>
-        </section>
-
-        <section class="section">
-          <p class="kicker">Next public move</p>
-          <h2>Align the rest of the site to the same language.</h2>
-          <div class="grid">
-            <a class="card" href="/products/">
-              <small>Products</small>
-              <strong>Open the live visual</strong>
-              <p>Return to the active Seasonal Monarch Fairies page.</p>
-            </a>
-
-            <a class="card" href="/laws/">
-              <small>Laws</small>
-              <strong>Connect the story</strong>
-              <p>Make the laws page read as visitor-facing, not internal documentation.</p>
-            </a>
-
-            <a class="card" href="/">
-              <small>Door</small>
-              <strong>Return to the entry</strong>
-              <p>Use the root door as the entrance to the current experience.</p>
-            </a>
-
-            <a class="card" href="/about/">
-              <small>About</small>
-              <strong>Explain the mission</strong>
-              <p>Translate the system into human terms.</p>
-            </a>
-          </div>
-        </section>
-
-        <footer class="footer">
-          <span>Gauges · Seasonal Monarch Fairies</span>
-          <span class="footer-links">
-            <a href="/">Home</a>
-            <a href="/products/">Products</a>
-            <a href="/laws/">Laws</a>
-          </span>
-        </footer>
-      </main>
-    `;
-  }
-
-  function closeSiblings(shell) {
-    const parent = shell.parentElement;
-    if (!parent) return;
-
-    parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
-      if (item === shell) return;
-      item.classList.remove("is-open");
-      const btn = item.querySelector("button");
-      if (btn) btn.setAttribute("aria-expanded", "false");
-    });
-  }
-
-  function wireDolls() {
-    document.querySelectorAll("[data-doll] > button").forEach((button) => {
-      button.addEventListener("click", () => {
-        const shell = button.closest("[data-doll]");
-        if (!shell) return;
-
-        const willOpen = !shell.classList.contains("is-open");
-        closeSiblings(shell);
-        shell.classList.toggle("is-open", willOpen);
-        button.setAttribute("aria-expanded", String(willOpen));
-      });
+    core.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") light();
     });
   }
 
   function mount() {
     injectStyle();
+    wireDoor();
 
-    const target =
-      document.getElementById("gaugesPage") ||
-      document.getElementById("gaugesRoot") ||
-      document.querySelector("main") ||
-      document.body;
-
-    target.innerHTML = html();
-    target.setAttribute("data-gauges-owner", "gauges/index.js");
-    target.setAttribute("data-gauges-state", "seasonal-monarch-fairies");
-
-    wireDolls();
+    const root = document.getElementById("rootPortal");
+    if (root) {
+      root.setAttribute("data-root-state", "public-priority");
+      root.setAttribute("data-root-priority", "upper-room-nine-summits-laws-micro-world");
+      root.setAttribute("data-root-js-owner", "index.js");
+    }
   }
 
   if (document.readyState === "loading") {

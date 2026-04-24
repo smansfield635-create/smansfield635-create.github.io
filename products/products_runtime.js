@@ -1,81 +1,45 @@
 (() => {
-  const RUNTIME_ID = "products-runtime-seasonal-floating-molecule-v1";
-  const STYLE_ID = "products-runtime-seasonal-floating-molecule-style";
-  const RECEIPT_FLAG = "productsRuntimeMounted";
+  "use strict";
 
-  const CARDINALS = {
-    north: {
-      label: "North",
-      seasonLabel: "Winter",
-      colorLabel: "White",
-      pairKey: "winter-spring",
-      color: "var(--north)",
-      glow: "rgba(223,233,255,.78)",
-      role: "Framekeeping · threshold · classification",
-      href: "/laws/",
-      phaseBase: Math.PI * 1.25
-    },
-    south: {
-      label: "South",
-      seasonLabel: "Spring",
-      colorLabel: "Green",
-      pairKey: "winter-spring",
-      color: "var(--south)",
-      glow: "rgba(142,227,172,.78)",
-      role: "Continuity · growth · restoration",
-      href: "/gauges/",
-      phaseBase: Math.PI * 0.25
-    },
-    west: {
-      label: "West",
-      seasonLabel: "Fall",
-      colorLabel: "Yellow",
-      pairKey: "fall-summer",
-      color: "var(--west)",
-      glow: "rgba(255,213,138,.78)",
-      role: "Harvest · audit · refinement",
-      href: "/about/",
-      phaseBase: Math.PI * 0.75
-    },
-    east: {
-      label: "East",
-      seasonLabel: "Summer",
-      colorLabel: "Blue",
-      pairKey: "fall-summer",
-      color: "var(--east)",
-      glow: "rgba(142,197,255,.78)",
-      role: "Signal · expansion · formation",
-      href: "/products/",
-      phaseBase: Math.PI * 1.75
+  const GLOBAL_KEY = "ProductsPlanetRuntime";
+  const STYLE_ID = "products-monarch-runtime-v1-style";
+  const ASSET_URL = "/assets/seasonal-monarch-butterfly.svg?v=6";
+
+  const seasons = [
+    { key: "winter", label: "Winter" },
+    { key: "summer", label: "Summer" },
+    { key: "fall", label: "Fall" },
+    { key: "spring", label: "Spring" }
+  ];
+
+  const points = [
+    { type: "green", x: 37, y: 30, d: "0s" },
+    { type: "green", x: 30, y: 38, d: "-1.1s" },
+    { type: "green", x: 39, y: 50, d: "-2.2s" },
+
+    { type: "blue", x: 63, y: 30, d: "-.35s" },
+    { type: "blue", x: 70, y: 38, d: "-1.45s" },
+    { type: "blue", x: 61, y: 50, d: "-2.55s" },
+
+    { type: "blue", x: 34, y: 67, d: "-.7s" },
+    { type: "blue", x: 42, y: 76, d: "-1.8s" },
+    { type: "blue", x: 30, y: 82, d: "-2.9s" },
+
+    { type: "green", x: 66, y: 67, d: "-.95s" },
+    { type: "green", x: 58, y: 76, d: "-2.05s" },
+    { type: "green", x: 70, y: 82, d: "-3.15s" },
+
+    { type: "green", x: 49, y: 51, d: "-.2s" },
+    { type: "blue", x: 51, y: 51, d: "-1.3s" },
+    { type: "blue", x: 50, y: 57, d: "-2.4s" },
+    { type: "green", x: 50, y: 45, d: "-3.5s" }
+  ];
+
+  function writeReceipt(receipts, level, text) {
+    if (receipts && typeof receipts.write === "function") {
+      receipts.write(level, text);
     }
-  };
-
-  const PAIRS = {
-    "winter-spring": {
-      label: "Winter · Spring",
-      description: "Winter and Spring form one diagonal figure-eight through the shared center throat.",
-      angle: 45
-    },
-    "fall-summer": {
-      label: "Fall · Summer",
-      description: "Fall and Summer form the opposing diagonal figure-eight through the same center throat.",
-      angle: -45
-    }
-  };
-
-  const TITLES = {
-    north: ["Threshold", "Keystone", "Vector", "Atlas", "Compass", "Gate", "Apex", "Frame"],
-    south: ["Harbor", "Root", "Hearth", "Current", "Shelter", "Orchard", "Rhythm", "Restore"],
-    west: ["Audit", "Fracture", "Mirror", "Proof", "Fault", "Cipher", "Tension", "Sentinel"],
-    east: ["Signal", "Pattern", "Forge", "Bloom", "Spark", "Loom", "Meridian", "Rise"]
-  };
-
-  const state = {
-    filter: "all",
-    activeId: null,
-    animationFrame: null,
-    startedAt: performance.now()
-  };
+  }
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -83,925 +47,883 @@
     const style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent = `
-      [data-products-runtime-root] {
-        display: block;
-        width: 100%;
-        max-width: 100%;
-        overflow: hidden;
+      :root {
+        --products-bg: #020610;
+        --products-line: rgba(164,188,255,.18);
+        --products-line-strong: rgba(210,223,255,.36);
+        --products-text: #eef4ff;
+        --products-muted: #9aabd0;
+        --products-gold: #efd29a;
+        --products-blue: #8ec5ff;
+        --products-green: #92e7ba;
+        --products-shadow: 0 24px 80px rgba(0,0,0,.52);
       }
 
-      [data-products-runtime-root] .runtime-shell {
-        display: grid;
-        grid-template-columns: minmax(0, 1.35fr) minmax(320px, .8fr);
-        gap: 18px;
-        align-items: start;
-        min-width: 0;
+      * {
+        box-sizing: border-box;
       }
 
-      [data-products-runtime-root] .window-panel,
-      [data-products-runtime-root] .detail-panel {
-        border: 1px solid var(--line);
-        box-shadow: var(--shadow);
-        background: linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
-        border-radius: 24px;
-        min-width: 0;
-        overflow: hidden;
-      }
-
-      [data-products-runtime-root] .window-panel { padding: 16px; }
-      [data-products-runtime-root] .detail-panel { padding: 22px; }
-
-      [data-products-runtime-root] .window-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-        gap: 12px;
-        margin-bottom: 14px;
-        padding: 4px 6px 2px;
-      }
-
-      [data-products-runtime-root] .window-head h2 {
+      body {
         margin: 0;
-        font-size: 1rem;
-        text-transform: uppercase;
-        letter-spacing: .16em;
-        color: #d7e2ff;
-      }
-
-      [data-products-runtime-root] .window-meta {
-        color: var(--muted);
-        font-size: .82rem;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        white-space: normal;
-        text-align: right;
-        max-width: 52%;
-        line-height: 1.35;
-      }
-
-      [data-products-runtime-root] .flower-stage {
-        position: relative;
-        height: 680px;
-        width: 100%;
-        max-width: 100%;
-        border: 1px solid rgba(113,141,224,.14);
-        border-radius: 28px;
-        overflow: hidden;
+        color: var(--products-text);
+        font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
         background:
-          radial-gradient(circle at 50% 50%, rgba(135,164,255,.13), transparent 24%),
-          linear-gradient(180deg, rgba(4,10,22,.94), rgba(2,8,18,.98));
-        isolation: isolate;
+          radial-gradient(circle at 50% 8%, rgba(112,151,255,.22), transparent 22%),
+          radial-gradient(circle at 18% 34%, rgba(239,210,154,.10), transparent 24%),
+          linear-gradient(180deg, #020610 0%, #071225 48%, #020610 100%);
       }
 
-      [data-products-runtime-root] .flower-stage::before {
+      body::before {
         content: "";
-        position: absolute;
+        position: fixed;
         inset: 0;
         pointer-events: none;
+        opacity: .22;
         background:
-          radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 20%),
-          linear-gradient(135deg, rgba(255,255,255,.04), transparent 38%),
-          linear-gradient(225deg, rgba(255,255,255,.03), transparent 34%);
-        opacity: .85;
+          linear-gradient(90deg, rgba(164,188,255,.08) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(164,188,255,.045) 1px, transparent 1px);
+        background-size: 52px 52px;
+        mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
+      }
+
+      .products-page {
+        width: min(1180px, calc(100vw - 24px));
+        margin: 0 auto;
+        padding: 18px 0 44px;
+        position: relative;
         z-index: 1;
       }
 
-      [data-products-runtime-root] .window-title {
-        position: absolute;
-        left: 50%;
-        top: 14px;
-        transform: translateX(-50%);
-        padding: 8px 14px;
-        border-radius: 999px;
-        border: 1px solid rgba(140,168,240,.22);
-        background: rgba(6,14,28,.86);
-        color: #dbe5ff;
+      .products-topbar,
+      .products-hero,
+      .products-window,
+      .products-panel,
+      .products-card {
+        border: 1px solid var(--products-line);
+        background: linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+        box-shadow: var(--products-shadow);
+      }
+
+      .products-topbar {
+        border-radius: 22px;
+        padding: 14px 16px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 16px;
+      }
+
+      .products-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .products-mark {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        border: 1px solid var(--products-line);
+        background:
+          radial-gradient(circle at 50% 28%, rgba(239,210,154,.22), transparent 42%),
+          linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+        font-weight: 900;
+        letter-spacing: .08em;
+      }
+
+      .products-kicker {
+        margin: 0 0 4px;
+        color: #c8d7ff;
         font-size: .72rem;
-        letter-spacing: .14em;
         text-transform: uppercase;
-        z-index: 18;
-        max-width: calc(100% - 32px);
-        white-space: normal;
-        text-align: center;
-        line-height: 1.35;
+        letter-spacing: .16em;
       }
 
-      [data-products-runtime-root] .glass-window {
-        position: absolute;
-        inset: 52px 18px 82px;
-        border-radius: 28px;
-        overflow: hidden;
-        z-index: 2;
-        border: 1px solid rgba(255,255,255,.12);
-        box-shadow:
-          inset 0 0 32px rgba(255,255,255,.05),
-          inset 0 -18px 42px rgba(0,0,0,.20),
-          0 22px 60px rgba(0,0,0,.28);
-        background: rgba(5,12,24,.58);
+      .products-title {
+        margin: 0;
+        font-weight: 850;
+        font-size: 1.05rem;
       }
 
-      [data-products-runtime-root] .glass-window::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        background:
-          radial-gradient(circle at 24% 24%, rgba(245,248,255,.16), transparent 20%),
-          radial-gradient(circle at 76% 24%, rgba(120,200,255,.16), transparent 22%),
-          radial-gradient(circle at 24% 76%, rgba(255,205,110,.14), transparent 22%),
-          radial-gradient(circle at 76% 76%, rgba(110,230,165,.14), transparent 22%);
-        z-index: 2;
+      .products-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
       }
 
-      [data-products-runtime-root] .glass-pane {
-        position: absolute;
-        overflow: hidden;
-        border: 1px solid rgba(255,255,255,.075);
-        box-shadow:
-          inset 0 0 34px rgba(255,255,255,.06),
-          inset 0 -20px 38px rgba(0,0,0,.18);
-      }
-
-      [data-products-runtime-root] .glass-pane::before,
-      [data-products-runtime-root] .glass-pane::after {
-        content: "";
-        position: absolute;
-        inset: -20%;
-        border-radius: 50%;
-        border: 2px solid rgba(5,10,22,.58);
-        box-shadow:
-          0 0 0 1px rgba(255,255,255,.035),
-          inset 0 0 18px rgba(255,255,255,.035);
-        transform: rotate(var(--arc-rotation));
-        opacity: .78;
-      }
-
-      [data-products-runtime-root] .glass-pane::after {
-        inset: 14%;
-        transform: rotate(calc(var(--arc-rotation) * -1));
-        opacity: .48;
-      }
-
-      [data-products-runtime-root] .glass-pane.winter {
-        left: 0;
-        top: 0;
-        width: 50%;
-        height: 50%;
-        border-radius: 24px 0 0 0;
-        --arc-rotation: -24deg;
-        background:
-          radial-gradient(circle at 58% 50%, rgba(245,248,255,.24), transparent 48%),
-          linear-gradient(135deg, rgba(232,238,255,.24), rgba(108,126,190,.12));
-      }
-
-      [data-products-runtime-root] .glass-pane.summer {
-        right: 0;
-        top: 0;
-        width: 50%;
-        height: 50%;
-        border-radius: 0 24px 0 0;
-        --arc-rotation: 28deg;
-        background:
-          radial-gradient(circle at 40% 50%, rgba(175,222,255,.24), transparent 48%),
-          linear-gradient(135deg, rgba(90,180,255,.22), rgba(22,74,140,.16));
-      }
-
-      [data-products-runtime-root] .glass-pane.fall {
-        left: 0;
-        bottom: 0;
-        width: 50%;
-        height: 50%;
-        border-radius: 0 0 0 24px;
-        --arc-rotation: 28deg;
-        background:
-          radial-gradient(circle at 58% 46%, rgba(255,225,150,.24), transparent 48%),
-          linear-gradient(135deg, rgba(255,205,84,.22), rgba(130,82,18,.18));
-      }
-
-      [data-products-runtime-root] .glass-pane.spring {
-        right: 0;
-        bottom: 0;
-        width: 50%;
-        height: 50%;
-        border-radius: 0 0 24px 0;
-        --arc-rotation: -26deg;
-        background:
-          radial-gradient(circle at 40% 46%, rgba(150,255,188,.24), transparent 48%),
-          linear-gradient(135deg, rgba(78,220,135,.22), rgba(24,96,58,.18));
-      }
-
-      [data-products-runtime-root] .leadline {
-        position: absolute;
-        pointer-events: none;
-        z-index: 5;
-        background: linear-gradient(180deg, rgba(9,13,26,.72), rgba(0,0,0,.56));
-        box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.12),
-          0 0 14px rgba(0,0,0,.28);
-      }
-
-      [data-products-runtime-root] .leadline.vertical {
-        left: 50%;
-        top: 0;
-        bottom: 0;
-        width: 3px;
-        transform: translateX(-50%);
-      }
-
-      [data-products-runtime-root] .leadline.horizontal {
-        top: 50%;
-        left: 0;
-        right: 0;
-        height: 3px;
-        transform: translateY(-50%);
-      }
-
-      [data-products-runtime-root] .leadline.arc {
-        background: transparent;
-        border: 3px solid rgba(4,8,18,.64);
-        box-shadow:
-          inset 0 0 10px rgba(255,255,255,.04),
-          0 0 12px rgba(0,0,0,.26);
-        border-radius: 50%;
-        opacity: .66;
-      }
-
-      [data-products-runtime-root] .leadline.arc.one {
-        left: 6%;
-        top: 5%;
-        width: 48%;
-        height: 44%;
-        transform: rotate(-24deg);
-      }
-
-      [data-products-runtime-root] .leadline.arc.two {
-        right: 6%;
-        top: 5%;
-        width: 48%;
-        height: 44%;
-        transform: rotate(24deg);
-      }
-
-      [data-products-runtime-root] .leadline.arc.three {
-        left: 6%;
-        bottom: 5%;
-        width: 48%;
-        height: 44%;
-        transform: rotate(24deg);
-      }
-
-      [data-products-runtime-root] .leadline.arc.four {
-        right: 6%;
-        bottom: 5%;
-        width: 48%;
-        height: 44%;
-        transform: rotate(-24deg);
-      }
-
-      [data-products-runtime-root] .molecule-layer {
-        position: absolute;
-        inset: 52px 18px 82px;
-        z-index: 12;
-        pointer-events: none;
-      }
-
-      [data-products-runtime-root] .molecule-layer::before {
-        content: "";
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        width: 118px;
-        height: 118px;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        background:
-          radial-gradient(circle, rgba(255,255,255,.96) 0 4%, rgba(210,228,255,.42) 12%, rgba(140,178,255,.16) 34%, transparent 68%);
-        filter: blur(.2px);
-        box-shadow:
-          0 0 22px rgba(255,255,255,.44),
-          0 0 50px rgba(130,170,255,.24);
-        opacity: .92;
-        z-index: 2;
-      }
-
-      [data-products-runtime-root] .molecule-trail {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        overflow: visible;
-        z-index: 3;
-        pointer-events: none;
-      }
-
-      [data-products-runtime-root] .molecule-trail path {
-        fill: none;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 5.5;
-        opacity: .46;
-      }
-
-      [data-products-runtime-root] .trail-winter-spring {
-        stroke: rgba(176, 245, 205, .38);
-        filter: drop-shadow(0 0 10px rgba(142,227,172,.20));
-      }
-
-      [data-products-runtime-root] .trail-fall-summer {
-        stroke: rgba(185, 217, 255, .34);
-        filter: drop-shadow(0 0 10px rgba(142,197,255,.20));
-      }
-
-      [data-products-runtime-root] .petal-label {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        min-width: 86px;
-        height: 30px;
-        padding: 0 12px;
+      .products-nav a,
+      .products-button {
+        min-height: 42px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
+        padding: 0 15px;
+        border: 1px solid var(--products-line);
         border-radius: 999px;
-        border: 1px solid rgba(255,255,255,.12);
-        background: rgba(6,14,28,.76);
-        color: #f7fbff;
-        font-size: .62rem;
+        color: var(--products-text);
+        background: rgba(255,255,255,.035);
+        text-decoration: none;
         font-weight: 800;
-        letter-spacing: .13em;
-        text-transform: uppercase;
-        z-index: 10;
-        pointer-events: none;
-        box-shadow: 0 12px 32px rgba(0,0,0,.28);
       }
 
-      [data-products-runtime-root] .petal-label.winter { left: 25%; top: 28%; }
-      [data-products-runtime-root] .petal-label.summer { left: 75%; top: 28%; }
-      [data-products-runtime-root] .petal-label.fall { left: 25%; top: 72%; }
-      [data-products-runtime-root] .petal-label.spring { left: 75%; top: 72%; }
-
-      [data-products-runtime-root] .node-layer {
-        position: absolute;
-        inset: 0;
-        z-index: 16;
-        pointer-events: none;
-      }
-
-      [data-products-runtime-root] .node {
-        position: absolute;
-        left: var(--x);
-        top: var(--y);
-        width: 15px;
-        height: 15px;
-        transform: translate(-50%, -50%);
-        border-radius: 50%;
-        border: 1px solid rgba(255,255,255,.84);
-        background: var(--color);
-        box-shadow:
-          0 0 0 5px rgba(255,255,255,.05),
-          0 0 18px var(--glow),
-          0 0 38px var(--glow);
-        cursor: pointer;
-        transition: transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;
-        z-index: 9;
-        pointer-events: auto;
-      }
-
-      [data-products-runtime-root] .node::after {
-        content: "";
-        display: none;
-      }
-
-      [data-products-runtime-root] .node:hover,
-      [data-products-runtime-root] .node:focus-visible {
-        transform: translate(-50%, -50%) scale(1.18);
+      .products-nav a:hover,
+      .products-nav a:focus-visible,
+      .products-button:hover,
+      .products-button:focus-visible {
+        transform: translateY(-1px);
+        border-color: var(--products-line-strong);
         outline: none;
       }
 
-      [data-products-runtime-root] .node.is-active {
-        transform: translate(-50%, -50%) scale(1.26);
+      .products-hero {
+        border-radius: 34px;
+        padding: 24px 20px;
+        margin-bottom: 18px;
       }
 
-      [data-products-runtime-root] .node.is-muted {
-        opacity: .12;
-        filter: saturate(.28);
+      .products-hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(320px, .95fr);
+        gap: 20px;
+        align-items: center;
       }
 
-      [data-products-runtime-root] .flower-copy {
-        position: absolute;
-        left: 50%;
-        bottom: 18px;
-        transform: translateX(-50%);
-        width: calc(100% - 32px);
-        max-width: 620px;
-        padding: 12px 16px;
+      .products-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 12px;
         border-radius: 999px;
-        border: 1px solid rgba(140,168,240,.24);
-        background: rgba(6,14,28,.82);
-        text-align: center;
+        border: 1px solid var(--products-line);
+        background: rgba(255,255,255,.035);
+        color: #d8e3ff;
         text-transform: uppercase;
         letter-spacing: .14em;
         font-size: .72rem;
-        color: #dbe5ff;
-        box-shadow: 0 12px 32px rgba(0,0,0,.28);
-        z-index: 18;
-        white-space: normal;
-        line-height: 1.35;
+        margin-bottom: 14px;
       }
 
-      [data-products-runtime-root] .flower-copy strong {
-        color: #fff;
+      .products-pill::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        border-radius: 2px;
+        transform: rotate(45deg);
+        background: var(--products-gold);
+        box-shadow: 0 0 18px rgba(239,210,154,.50);
       }
 
-      [data-products-runtime-root] .detail-kicker {
+      .products-hero h1 {
+        margin: 0 0 12px;
+        max-width: 12ch;
+        font-size: clamp(2.35rem, 5vw, 5rem);
+        line-height: .95;
+        letter-spacing: -.06em;
+      }
+
+      .products-hero h1 span {
+        color: var(--products-gold);
+      }
+
+      .products-hero p {
+        margin: 0;
+        max-width: 68ch;
+        color: var(--products-muted);
+        line-height: 1.62;
+        font-size: clamp(1rem, 1.45vw, 1.14rem);
+      }
+
+      .products-actions {
+        margin-top: 20px;
         display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 10px;
-        color: #d7e3ff;
-        letter-spacing: .14em;
-        text-transform: uppercase;
-        font-size: .74rem;
         flex-wrap: wrap;
+        gap: 10px;
       }
 
-      [data-products-runtime-root] .badge {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 38px;
-        height: 24px;
-        padding: 0 10px;
+      .products-button {
+        border-radius: 18px;
+        min-height: 48px;
+        padding: 0 18px;
+      }
+
+      .products-button.primary {
+        border-color: rgba(239,210,154,.34);
+        background:
+          linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+          rgba(255,255,255,.035);
+        color: #fff8ea;
+      }
+
+      .products-window {
+        border-radius: 34px;
+        padding: 22px;
+        overflow: hidden;
+      }
+
+      .molecule-stage {
+        position: relative;
+        min-height: 760px;
+        border-radius: 30px;
+        overflow: hidden;
+        border: 1px solid rgba(170,198,255,.18);
+        background:
+          radial-gradient(circle at 50% 50%, rgba(239,210,154,.10), transparent 26%),
+          linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
+        isolation: isolate;
+      }
+
+      .molecule-stage::before {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        border-radius: 26px;
+        border: 1px solid rgba(255,255,255,.10);
+        box-shadow: inset 0 0 30px rgba(126,164,255,.12);
+        z-index: 4;
+        pointer-events: none;
+      }
+
+      .season-grid {
+        position: absolute;
+        inset: 6%;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        border-radius: 28px;
+        overflow: hidden;
+        opacity: .64;
+      }
+
+      .season-cell {
+        border: 1px solid rgba(255,255,255,.10);
+        background: rgba(255,255,255,.02);
+      }
+
+      .season-cell.winter {
+        background: linear-gradient(135deg, rgba(230,240,255,.22), rgba(88,118,165,.06));
+      }
+
+      .season-cell.summer {
+        background: linear-gradient(135deg, rgba(91,190,255,.18), rgba(20,66,110,.06));
+      }
+
+      .season-cell.fall {
+        background: linear-gradient(135deg, rgba(239,178,84,.20), rgba(95,49,18,.07));
+      }
+
+      .season-cell.spring {
+        background: linear-gradient(135deg, rgba(105,229,162,.20), rgba(20,92,66,.07));
+      }
+
+      .butterfly-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+      }
+
+      .butterfly-layer object,
+      .butterfly-layer img {
+        width: 112%;
+        height: 112%;
+        display: block;
+        border: 0;
+        object-fit: cover;
+        opacity: .92;
+        filter:
+          drop-shadow(0 0 26px rgba(239,210,154,.16))
+          drop-shadow(0 0 48px rgba(112,151,255,.10));
+      }
+
+      .orbit-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 5;
+        pointer-events: none;
+      }
+
+      .orbit-path {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 62%;
+        height: 62%;
+        border-radius: 50%;
+        border: 10px solid rgba(210,238,255,.20);
+        filter: blur(.1px) drop-shadow(0 0 18px rgba(190,230,255,.12));
+        transform-origin: center;
+        opacity: .78;
+      }
+
+      .orbit-path.one {
+        transform: translate(-50%, -50%) rotate(45deg) scaleX(.42);
+        animation: orbitBreathA 6s ease-in-out infinite;
+      }
+
+      .orbit-path.two {
+        transform: translate(-50%, -50%) rotate(-45deg) scaleX(.42);
+        animation: orbitBreathB 6s ease-in-out infinite;
+      }
+
+      .point {
+        position: absolute;
+        left: calc(var(--x) * 1%);
+        top: calc(var(--y) * 1%);
+        width: 30px;
+        height: 30px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        border: 3px solid rgba(255,255,255,.82);
+        background: var(--point-color);
+        box-shadow:
+          0 0 16px var(--point-color),
+          0 0 42px rgba(142,197,255,.30);
+        animation: pointFloat 4.6s ease-in-out infinite;
+        animation-delay: var(--delay);
+      }
+
+      .point::after {
+        content: "";
+        position: absolute;
+        inset: -18px;
+        border-radius: 50%;
+        background: radial-gradient(circle, var(--point-color), transparent 66%);
+        opacity: .22;
+      }
+
+      .point.green {
+        --point-color: #92e7ba;
+      }
+
+      .point.blue {
+        --point-color: #8ec5ff;
+      }
+
+      .season-label {
+        position: absolute;
+        z-index: 7;
+        min-width: 132px;
+        min-height: 46px;
+        display: grid;
+        place-items: center;
         border-radius: 999px;
-        border: 1px solid rgba(255,255,255,.14);
-        background: rgba(255,255,255,.04);
+        border: 1px solid rgba(164,188,255,.24);
+        background: rgba(5,12,26,.82);
+        color: #fff;
+        font-size: .78rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .16em;
+        backdrop-filter: blur(10px);
+      }
+
+      .season-label.winter {
+        left: 22%;
+        top: 26%;
+      }
+
+      .season-label.summer {
+        right: 22%;
+        top: 26%;
+      }
+
+      .season-label.fall {
+        left: 22%;
+        bottom: 17%;
+      }
+
+      .season-label.spring {
+        right: 22%;
+        bottom: 17%;
+      }
+
+      .molecule-center {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 104px;
+        height: 104px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        z-index: 6;
+        background: radial-gradient(circle, #fff 0 8%, rgba(236,247,255,.72) 12%, rgba(127,197,255,.22) 38%, transparent 72%);
+        filter: drop-shadow(0 0 28px rgba(255,255,255,.42));
+        animation: centerPulse 4.2s ease-in-out infinite;
+      }
+
+      .stage-badge {
+        position: absolute;
+        left: 50%;
+        top: 5%;
+        transform: translateX(-50%);
+        z-index: 8;
+        width: min(420px, 80%);
+        padding: 18px;
+        border-radius: 999px;
+        text-align: center;
+        border: 1px solid rgba(164,188,255,.24);
+        background: rgba(5,12,26,.84);
+        color: #dce7ff;
+        text-transform: uppercase;
+        letter-spacing: .16em;
+        line-height: 1.5;
+        font-weight: 800;
+        backdrop-filter: blur(10px);
+      }
+
+      .stage-footer {
+        position: absolute;
+        left: 50%;
+        bottom: 5%;
+        transform: translateX(-50%);
+        z-index: 8;
+        width: min(760px, 84%);
+        padding: 16px 18px;
+        border-radius: 999px;
+        text-align: center;
+        border: 1px solid rgba(164,188,255,.24);
+        background: rgba(5,12,26,.84);
+        color: #dce7ff;
+        text-transform: uppercase;
+        letter-spacing: .14em;
+        line-height: 1.45;
+        font-weight: 800;
+        backdrop-filter: blur(10px);
+      }
+
+      .stage-footer strong {
         color: #fff;
       }
 
-      [data-products-runtime-root] .detail-title {
+      .products-panel {
+        margin-top: 18px;
+        border-radius: 30px;
+        padding: 22px 20px;
+      }
+
+      .products-panel h2 {
         margin: 0 0 10px;
-        font-size: 1.5rem;
-        line-height: 1.08;
-        letter-spacing: -.02em;
+        font-size: clamp(1.7rem, 3vw, 2.7rem);
+        line-height: 1;
+        letter-spacing: -.04em;
       }
 
-      [data-products-runtime-root] .detail-copy {
-        color: var(--muted);
-        line-height: 1.58;
+      .products-panel p {
+        margin: 0;
+        color: var(--products-muted);
+        line-height: 1.6;
       }
 
-      [data-products-runtime-root] .detail-stats {
+      .products-card-grid {
         display: grid;
-        grid-template-columns: repeat(2,minmax(0,1fr));
-        gap: 10px;
-        margin-top: 16px;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
       }
 
-      [data-products-runtime-root] .motion-readout {
-        margin-top: 14px;
-        padding: 12px 14px;
-        border: 1px solid rgba(164,188,255,.18);
-        border-radius: 16px;
-        background: rgba(255,255,255,.025);
-        color: var(--muted);
-        line-height: 1.55;
+      .products-card {
+        border-radius: 22px;
+        padding: 16px;
+        min-height: 140px;
+        border-color: rgba(164,188,255,.14);
+      }
+
+      .products-card small {
+        display: block;
+        color: #90a3ce;
+        text-transform: uppercase;
+        letter-spacing: .12em;
+        margin-bottom: 8px;
+        font-weight: 800;
+        font-size: .72rem;
+      }
+
+      .products-card strong {
+        display: block;
+        color: #f4f7ff;
+        font-size: 1.2rem;
+        line-height: 1.08;
+        margin-bottom: 10px;
+      }
+
+      .products-card p {
         font-size: .92rem;
       }
 
-      [data-products-runtime-root] .motion-readout strong {
-        color: var(--text);
+      .products-footer {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        color: var(--products-muted);
+        padding: 14px 4px 0;
       }
 
-      @media (max-width: 980px) {
-        [data-products-runtime-root] .runtime-shell {
+      .products-footer a {
+        color: var(--products-muted);
+        text-decoration: none;
+        margin-left: 12px;
+      }
+
+      @keyframes pointFloat {
+        0%, 100% {
+          transform: translate(-50%, -50%) scale(.96);
+          filter: brightness(1);
+        }
+
+        50% {
+          transform: translate(-50%, -62%) scale(1.08);
+          filter: brightness(1.22);
+        }
+      }
+
+      @keyframes centerPulse {
+        0%, 100% {
+          opacity: .72;
+          transform: translate(-50%, -50%) scale(.95);
+        }
+
+        50% {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1.08);
+        }
+      }
+
+      @keyframes orbitBreathA {
+        0%, 100% {
+          transform: translate(-50%, -50%) rotate(45deg) scaleX(.42);
+          opacity: .56;
+        }
+
+        50% {
+          transform: translate(-50%, -50%) rotate(48deg) scaleX(.48);
+          opacity: .82;
+        }
+      }
+
+      @keyframes orbitBreathB {
+        0%, 100% {
+          transform: translate(-50%, -50%) rotate(-45deg) scaleX(.42);
+          opacity: .56;
+        }
+
+        50% {
+          transform: translate(-50%, -50%) rotate(-48deg) scaleX(.48);
+          opacity: .82;
+        }
+      }
+
+      @media (max-width: 900px) {
+        .products-hero-grid {
           grid-template-columns: 1fr;
+        }
+
+        .products-card-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
         }
       }
 
       @media (max-width: 720px) {
-        [data-products-runtime-root] .window-panel,
-        [data-products-runtime-root] .detail-panel {
+        .products-page {
+          width: min(100vw - 16px, 1180px);
+          padding: 14px 0 32px;
+        }
+
+        .products-topbar {
+          flex-wrap: wrap;
+        }
+
+        .products-nav {
+          width: 100%;
+          justify-content: flex-start;
+        }
+
+        .products-hero,
+        .products-window,
+        .products-panel {
           padding: 18px 16px;
         }
 
-        [data-products-runtime-root] .window-head {
-          display: grid;
-          gap: 8px;
+        .products-hero h1 {
+          font-size: clamp(2rem, 11vw, 3.4rem);
         }
 
-        [data-products-runtime-root] .window-meta {
-          max-width: none;
-          text-align: left;
+        .molecule-stage {
+          min-height: 720px;
+        }
+
+        .season-label {
+          min-width: 108px;
           font-size: .68rem;
         }
 
-        [data-products-runtime-root] .flower-stage {
-          height: 600px;
+        .season-label.winter {
+          left: 23%;
+          top: 27%;
         }
 
-        [data-products-runtime-root] .glass-window,
-        [data-products-runtime-root] .molecule-layer {
-          inset: 54px 6px 76px;
+        .season-label.summer {
+          right: 23%;
+          top: 27%;
         }
 
-        [data-products-runtime-root] .window-title {
-          font-size: .60rem;
+        .season-label.fall {
+          left: 23%;
+          bottom: 17%;
         }
 
-        [data-products-runtime-root] .leadline.arc {
-          border-width: 2px;
+        .season-label.spring {
+          right: 23%;
+          bottom: 17%;
         }
 
-        [data-products-runtime-root] .molecule-layer::before {
-          width: 82px;
-          height: 82px;
-        }
-
-        [data-products-runtime-root] .molecule-trail path {
-          stroke-width: 4.2;
-          opacity: .38;
-        }
-
-        [data-products-runtime-root] .petal-label {
-          min-width: 62px;
+        .point {
+          width: 26px;
           height: 26px;
-          padding: 0 8px;
-          font-size: .50rem;
-          letter-spacing: .10em;
         }
 
-        [data-products-runtime-root] .petal-label.winter { left: 24%; top: 24%; }
-        [data-products-runtime-root] .petal-label.summer { left: 76%; top: 24%; }
-        [data-products-runtime-root] .petal-label.fall { left: 24%; top: 76%; }
-        [data-products-runtime-root] .petal-label.spring { left: 76%; top: 76%; }
-
-        [data-products-runtime-root] .node {
-          width: 12px;
-          height: 12px;
+        .stage-badge {
+          font-size: .74rem;
+          width: 76%;
+          top: 5%;
         }
 
-        [data-products-runtime-root] .flower-copy {
-          width: calc(100% - 24px);
-          max-width: none;
-          font-size: .54rem;
-          line-height: 1.35;
-          letter-spacing: .10em;
-          border-radius: 22px;
-          padding: 10px 12px;
+        .stage-footer {
+          font-size: .68rem;
+          width: 82%;
+          bottom: 5%;
         }
 
-        [data-products-runtime-root] .detail-stats {
+        .products-card-grid {
           grid-template-columns: 1fr;
         }
 
-        [data-products-runtime-root] .motion-readout {
-          font-size: .84rem;
+        .products-footer {
+          display: grid;
+        }
+
+        .products-footer a {
+          margin-left: 0;
+          margin-right: 12px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          scroll-behavior: auto !important;
         }
       }
     `;
     document.head.appendChild(style);
   }
 
-  function qs(root, selector) {
-    return root.querySelector(selector);
-  }
-
-  function qsa(root, selector) {
-    return Array.from(root.querySelectorAll(selector));
-  }
-
-  function getMountTarget() {
-    return (
-      document.getElementById("productsRuntimeMount") ||
-      document.querySelector("[data-products-runtime-mount]")
-    );
-  }
-
-  function rotatePoint(x, y, angleDeg) {
-    const angle = angleDeg * Math.PI / 180;
-    return {
-      x: x * Math.cos(angle) - y * Math.sin(angle),
-      y: x * Math.sin(angle) + y * Math.cos(angle)
-    };
-  }
-
-  function lemniscatePoint(t, angleDeg, scaleX, scaleY) {
-    const x = scaleX * Math.sin(t);
-    const y = scaleY * Math.sin(t) * Math.cos(t);
-    const rotated = rotatePoint(x, y, angleDeg);
-
-    return {
-      x: 50 + rotated.x,
-      y: 50 + rotated.y
-    };
-  }
-
-  function buildProducts() {
-    const items = [];
-    const order = ["north", "south", "west", "east"];
-
-    order.forEach((cardinalKey) => {
-      const cardinal = CARDINALS[cardinalKey];
-      const pair = PAIRS[cardinal.pairKey];
-
-      TITLES[cardinalKey].forEach((title, index) => {
-        const number = index + 1;
-        const code = `${cardinal.label.charAt(0)}${String(number).padStart(2, "0")}`;
-        const phase = cardinal.phaseBase + (Math.PI * 2 / 8) * index;
-
-        items.push({
-          id: `${cardinalKey}-${String(number).padStart(2, "0")}`,
-          code,
-          title,
-          index,
-          phase,
-          pairKey: cardinal.pairKey,
-          pairLabel: pair.label,
-          cardinalKey,
-          cardinalLabel: cardinal.label,
-          seasonLabel: cardinal.seasonLabel,
-          colorLabel: cardinal.colorLabel,
-          color: cardinal.color,
-          glow: cardinal.glow,
-          role: cardinal.role,
-          href: cardinal.href,
-          description:
-            `${title} is a ${cardinal.seasonLabel.toLowerCase()} point floating in front of the stained-glass window. ` +
-            `${pair.description} It participates as ${cardinal.role.toLowerCase()}.`
-        });
-      });
-    });
-
-    return items;
-  }
-
-  const PRODUCTS = buildProducts();
-  state.activeId = PRODUCTS[0]?.id || null;
-
-  function visibleProducts() {
-    if (state.filter === "all") return PRODUCTS;
-    return PRODUCTS.filter((item) => item.cardinalKey === state.filter);
-  }
-
-  function currentActive(list) {
-    const explicit = PRODUCTS.find((item) => item.id === state.activeId);
-    if (explicit && list.some((item) => item.id === explicit.id)) return explicit;
-    return list[0] || PRODUCTS[0];
-  }
-
-  function renderTemplate() {
+  function html() {
     return `
-      <div class="runtime-shell">
-        <div class="window-panel">
-          <div class="window-head">
-            <h2>Stained-glass seasonal flower</h2>
-            <div class="window-meta">2 figure-eights · 4 seasons · 32 points</div>
-          </div>
-
-          <div class="flower-stage">
-            <div class="window-title">floating seasonal molecule · leaded stained glass</div>
-
-            <div class="glass-window" aria-hidden="true">
-              <div class="glass-pane winter"></div>
-              <div class="glass-pane summer"></div>
-              <div class="glass-pane fall"></div>
-              <div class="glass-pane spring"></div>
-
-              <div class="leadline vertical"></div>
-              <div class="leadline horizontal"></div>
-              <div class="leadline arc one"></div>
-              <div class="leadline arc two"></div>
-              <div class="leadline arc three"></div>
-              <div class="leadline arc four"></div>
-            </div>
-
-            <div class="molecule-layer">
-              <svg class="molecule-trail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <path class="trail-winter-spring" d="M50 50 C17 7, 4 32, 50 50 C96 68, 83 93, 50 50" />
-                <path class="trail-fall-summer" d="M50 50 C7 83, 32 96, 50 50 C68 4, 93 17, 50 50" />
-              </svg>
-
-              <div class="petal-label winter">Winter</div>
-              <div class="petal-label summer">Summer</div>
-              <div class="petal-label fall">Fall</div>
-              <div class="petal-label spring">Spring</div>
-
-              <div class="node-layer" data-node-layer></div>
-            </div>
-
-            <div class="flower-copy">
-              <strong>Floating seasonal molecule</strong> · stained glass behind it, motion in front
-            </div>
-          </div>
-        </div>
-
-        <aside class="detail-panel">
-          <div class="detail-kicker">
-            <span class="badge" data-detail-code>N01</span>
-            <span data-detail-family>Winter · Winter/Spring loop</span>
-          </div>
-
-          <h3 class="detail-title" data-detail-title>Threshold</h3>
-          <p class="detail-copy" data-detail-copy>Product detail surface.</p>
-
-          <div class="detail-stats">
-            <div class="stat">
-              <span class="stat-label">Cardinal</span>
-              <span class="stat-value" data-detail-cardinal>North</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Visible points</span>
-              <span class="stat-value" data-detail-visible>32</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Season pair</span>
-              <span class="stat-value" data-detail-count>Winter · Spring</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Motion read</span>
-              <span class="stat-value" data-detail-route>Floating seasonal molecule</span>
+      <main class="products-page">
+        <header class="products-topbar">
+          <div class="products-brand">
+            <div class="products-mark">DG</div>
+            <div>
+              <p class="products-kicker">Products</p>
+              <p class="products-title">Seasonal Monarch Molecule</p>
             </div>
           </div>
 
-          <div class="motion-readout" data-motion-readout>
-            <strong>Motion:</strong> the seasonal molecule floats in front of the stained-glass window.
-          </div>
+          <nav class="products-nav" aria-label="Products navigation">
+            <a href="/">Home</a>
+            <a href="/about/">About</a>
+            <a href="/gauges/">Gauges</a>
+            <a href="/laws/">Laws</a>
+          </nav>
+        </header>
 
-          <div class="hero-actions">
-            <a class="button primary" data-detail-href href="/laws/">Open Winter body</a>
-            <a class="button" href="/gauges/">Read gauges</a>
+        <section class="products-hero">
+          <div class="products-hero-grid">
+            <div>
+              <span class="products-pill">2 figure-eights · 4 seasons · 32 points</span>
+              <h1>A monarch body for a <span>seasonal molecule.</span></h1>
+              <p>
+                The old window proved the motion. The butterfly gives it life. Winter, Summer, Fall, and Spring now sit behind a stained-glass monarch form while the floating points continue their path in front.
+              </p>
+
+              <div class="products-actions">
+                <a class="products-button primary" href="#molecule">Open molecule</a>
+                <a class="products-button" href="/gauges/">Gauges</a>
+                <a class="products-button" href="/">Back to door</a>
+              </div>
+            </div>
+
+            <section class="products-window" id="molecule" aria-label="Floating seasonal monarch molecule">
+              <div class="molecule-stage">
+                <div class="season-grid" aria-hidden="true">
+                  <div class="season-cell winter"></div>
+                  <div class="season-cell summer"></div>
+                  <div class="season-cell fall"></div>
+                  <div class="season-cell spring"></div>
+                </div>
+
+                <div class="butterfly-layer" aria-hidden="true">
+                  <object type="image/svg+xml" data="${ASSET_URL}">
+                    <img src="${ASSET_URL}" alt="" />
+                  </object>
+                </div>
+
+                <div class="orbit-layer" aria-hidden="true">
+                  <div class="orbit-path one"></div>
+                  <div class="orbit-path two"></div>
+                  <div class="molecule-center"></div>
+
+                  ${points.map((point) => `
+                    <span
+                      class="point ${point.type}"
+                      style="--x:${point.x};--y:${point.y};--delay:${point.d}"
+                    ></span>
+                  `).join("")}
+                </div>
+
+                ${seasons.map((season) => `
+                  <div class="season-label ${season.key}">${season.label}</div>
+                `).join("")}
+
+                <div class="stage-badge">Floating seasonal molecule · monarch stained glass</div>
+                <div class="stage-footer"><strong>Floating seasonal molecule</strong> · stained glass behind it, motion in front</div>
+              </div>
+            </section>
           </div>
-        </aside>
-      </div>
+        </section>
+
+        <section class="products-panel">
+          <p class="products-kicker">Generation 3 visual logic</p>
+          <h2>The butterfly is the vessel.</h2>
+          <p>
+            The seasonal molecule now reads as a living stained-glass form. The monarch background carries the emotional image, while the globes keep the original figure-eight rhythm alive.
+          </p>
+
+          <div class="products-card-grid">
+            <article class="products-card">
+              <small>Vessel</small>
+              <strong>Monarch butterfly</strong>
+              <p>The background becomes recognizable and emotionally stronger.</p>
+            </article>
+
+            <article class="products-card">
+              <small>Motion</small>
+              <strong>Two figure-eights</strong>
+              <p>The floating points continue their seasonal crossing paths.</p>
+            </article>
+
+            <article class="products-card">
+              <small>Seasons</small>
+              <strong>Winter, Summer, Fall, Spring</strong>
+              <p>The four quadrants stay legible without dominating the art.</p>
+            </article>
+
+            <article class="products-card">
+              <small>Read</small>
+              <strong>Glass behind, motion in front</strong>
+              <p>The visual separates image, vessel, and animation cleanly.</p>
+            </article>
+          </div>
+        </section>
+
+        <footer class="products-footer">
+          <span>Products · seasonal monarch molecule</span>
+          <span>
+            <a href="/">Home</a>
+            <a href="/gauges/">Gauges</a>
+            <a href="/laws/">Laws</a>
+          </span>
+        </footer>
+      </main>
     `;
   }
 
-  function bind(root) {
-    const filterButtons = qsa(document, "#cardinalFilters [data-filter]");
-    const nodeLayer = qs(root, "[data-node-layer]");
-    const detailCode = qs(root, "[data-detail-code]");
-    const detailFamily = qs(root, "[data-detail-family]");
-    const detailTitle = qs(root, "[data-detail-title]");
-    const detailCopy = qs(root, "[data-detail-copy]");
-    const detailCardinal = qs(root, "[data-detail-cardinal]");
-    const detailVisible = qs(root, "[data-detail-visible]");
-    const detailCount = qs(root, "[data-detail-count]");
-    const detailRoute = qs(root, "[data-detail-route]");
-    const detailHref = qs(root, "[data-detail-href]");
-    const motionReadout = qs(root, "[data-motion-readout]");
-
-    if (!nodeLayer) {
-      throw new Error("Products runtime mount failed: node layer missing.");
+  class ProductsPlanetRuntime {
+    constructor(options = {}) {
+      this.stage = options.stage || options.mount || null;
+      this.mount = options.mount || options.stage || null;
+      this.host = options.host || null;
+      this.receipts = options.receipts || null;
+      this.reducedMotion = !!options.reducedMotion;
+      this.contract = "PRODUCTS_RUNTIME_MONARCH_GENERATION_3";
+      this.status = "IDLE";
     }
 
-    function renderFilters() {
-      filterButtons.forEach((button) => {
-        button.classList.toggle("is-active", button.dataset.filter === state.filter);
-      });
+    write(level, text) {
+      writeReceipt(this.receipts, level, text);
     }
 
-    function renderNodes() {
-      const active = currentActive(visibleProducts());
-
-      nodeLayer.innerHTML = PRODUCTS.map((item) => {
-        const isVisible = state.filter === "all" || item.cardinalKey === state.filter;
-        const isActive = active && active.id === item.id;
-
-        const classes = [
-          "node",
-          isActive ? "is-active" : "",
-          !isVisible ? "is-muted" : ""
-        ].filter(Boolean).join(" ");
-
-        return `
-          <button
-            type="button"
-            class="${classes}"
-            data-id="${item.id}"
-            data-cardinal="${item.cardinalKey}"
-            data-pair="${item.pairKey}"
-            data-phase="${item.phase}"
-            data-short="${item.code}"
-            style="--x:50%;--y:50%;--color:${item.color};--glow:${item.glow};"
-            aria-label="${item.seasonLabel} ${item.code}: ${item.title}"
-            title="${item.seasonLabel} ${item.code}: ${item.title}"
-          ></button>
-        `;
-      }).join("");
-
-      qsa(nodeLayer, "[data-id]").forEach((button) => {
-        button.addEventListener("click", () => {
-          state.activeId = button.dataset.id;
-          renderDetail();
-          renderNodes();
-        });
-
-        button.addEventListener("keydown", (event) => {
-          if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            state.activeId = button.dataset.id;
-            renderDetail();
-            renderNodes();
-          }
-        });
-      });
+    resolveTarget() {
+      return (
+        document.getElementById("productsPage") ||
+        document.getElementById("productsGrid") ||
+        this.mount ||
+        this.stage ||
+        document.body
+      );
     }
 
-    function renderDetail() {
-      const list = visibleProducts();
-      const active = currentActive(list);
-      if (!active) return;
+    destroy() {
+      const target = this.resolveTarget();
 
-      const pair = PAIRS[active.pairKey];
-
-      detailCode.textContent = active.code;
-      detailFamily.textContent = `${active.seasonLabel} · ${pair.label} loop`;
-      detailTitle.textContent = active.title;
-      detailCopy.textContent = active.description;
-      detailCardinal.textContent = active.cardinalLabel;
-      detailVisible.textContent = String(list.length);
-      detailCount.textContent = pair.label;
-      detailRoute.textContent = active.role;
-      detailHref.href = active.href;
-      detailHref.textContent = `Open ${active.seasonLabel} body`;
-      motionReadout.innerHTML = `<strong>Motion:</strong> ${pair.description}`;
-    }
-
-    function animate() {
-      const now = performance.now();
-      const elapsed = (now - state.startedAt) / 1000;
-      const speed = 0.42;
-      const isMobile = window.matchMedia("(max-width: 720px)").matches;
-      const scaleX = isMobile ? 34 : 36;
-      const scaleY = isMobile ? 25 : 27;
-
-      qsa(nodeLayer, "[data-id]").forEach((button) => {
-        const item = PRODUCTS.find((entry) => entry.id === button.dataset.id);
-        if (!item) return;
-
-        const pair = PAIRS[item.pairKey];
-        const point = lemniscatePoint(elapsed * speed + item.phase, pair.angle, scaleX, scaleY);
-
-        button.style.left = `${point.x}%`;
-        button.style.top = `${point.y}%`;
-      });
-
-      state.animationFrame = requestAnimationFrame(animate);
-    }
-
-    function render() {
-      renderFilters();
-      renderNodes();
-      renderDetail();
-
-      if (state.animationFrame) {
-        cancelAnimationFrame(state.animationFrame);
+      if (target && target instanceof HTMLElement) {
+        target.removeAttribute("data-runtime");
+        target.removeAttribute("data-runtime-contract");
+        target.removeAttribute("data-runtime-owner");
       }
 
-      animate();
+      this.status = "DESTROYED";
     }
 
-    filterButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        state.filter = button.dataset.filter;
-        render();
-      });
-    });
+    async mountRuntime() {
+      injectStyle();
 
-    render();
+      const target = this.resolveTarget();
+
+      if (target && target instanceof HTMLElement) {
+        target.setAttribute("data-runtime", "products-monarch-generation-3");
+        target.setAttribute("data-runtime-contract", this.contract);
+        target.setAttribute("data-runtime-owner", "products_runtime.js");
+        target.innerHTML = html();
+      }
+
+      this.status = "MOUNTED";
+      this.write("info", "products monarch generation 3 mounted by products_runtime.js");
+
+      return {
+        status: this.status,
+        contract: this.contract,
+        owner: "products_runtime.js"
+      };
+    }
   }
 
-  function mount() {
-    injectStyle();
+  function autoMountIfNeeded() {
+    const root = document.getElementById("productsPage") || document.getElementById("productsGrid");
 
-    const mountTarget = getMountTarget();
+    if (!root) return;
 
-    if (!mountTarget) {
-      throw new Error("Products runtime mount failed: #productsRuntimeMount not found.");
-    }
+    const alreadyMounted = root.getAttribute("data-runtime") === "products-monarch-generation-3";
 
-    if (state.animationFrame) {
-      cancelAnimationFrame(state.animationFrame);
-      state.animationFrame = null;
-    }
+    if (alreadyMounted) return;
 
-    mountTarget.innerHTML = "";
-
-    const root = document.createElement("section");
-    root.className = "section";
-    root.setAttribute("data-products-runtime-root", RUNTIME_ID);
-    root.setAttribute("aria-live", "polite");
-    root.innerHTML = renderTemplate();
-
-    mountTarget.appendChild(root);
-    window[RECEIPT_FLAG] = true;
-    mountTarget.dataset.runtimeStatus = "mounted";
-
-    bind(root);
+    const runtime = new ProductsPlanetRuntime({ mount: root });
+    runtime.mountRuntime();
   }
+
+  window[GLOBAL_KEY] = ProductsPlanetRuntime;
+  window.ProductsPlanetRuntime = ProductsPlanetRuntime;
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", mount, { once: true });
+    document.addEventListener("DOMContentLoaded", autoMountIfNeeded, { once: true });
   } else {
-    mount();
+    autoMountIfNeeded();
   }
 })();

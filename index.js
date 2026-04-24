@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-second-generation-root-proof-v2-demo-universe-upgrade";
+  const STYLE_ID = "dgb-second-generation-root-proof-v3-demo-universe-visual-strength";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -237,13 +237,14 @@
       }
 
       .home-door {
-        min-height:420px;
+        min-height:460px;
         position:relative;
         border-radius:30px;
         border:1px solid rgba(170,198,255,.18);
         background:
-          radial-gradient(circle at 50% 45%,rgba(239,210,154,.14),transparent 24%),
-          radial-gradient(circle at 50% 54%,rgba(142,197,255,.15),transparent 34%),
+          radial-gradient(circle at 50% 42%,rgba(102,240,209,.12),transparent 18%),
+          radial-gradient(circle at 50% 48%,rgba(239,210,154,.18),transparent 25%),
+          radial-gradient(circle at 50% 56%,rgba(142,197,255,.20),transparent 38%),
           linear-gradient(180deg,rgba(7,17,36,.98),rgba(2,7,16,.99));
         overflow:hidden;
         display:grid;
@@ -254,195 +255,268 @@
       .home-door::before {
         content:"";
         position:absolute;
-        inset:10%;
-        border-radius:999px 999px 32px 32px;
-        border:1px solid rgba(210,223,255,.18);
-        box-shadow:inset 0 0 42px rgba(126,164,255,.12);
+        inset:8%;
+        border-radius:999px 999px 34px 34px;
+        border:1px solid rgba(210,223,255,.22);
+        box-shadow:
+          inset 0 0 52px rgba(126,164,255,.16),
+          0 0 40px rgba(102,240,209,.06);
+      }
+
+      .home-door::after {
+        content:"";
+        position:absolute;
+        left:50%;
+        top:69%;
+        width:230px;
+        height:54px;
+        transform:translateX(-50%);
+        border-radius:50%;
+        background:
+          radial-gradient(ellipse at 50% 50%,rgba(102,240,209,.34),transparent 42%),
+          radial-gradient(ellipse at 50% 50%,rgba(239,210,154,.22),transparent 64%);
+        border:1px solid rgba(239,210,154,.18);
+        box-shadow:
+          0 0 34px rgba(102,240,209,.20),
+          inset 0 0 20px rgba(142,197,255,.18);
+        z-index:1;
+        pointer-events:none;
       }
 
       .home-orbit {
         position:absolute;
-        width:68%;
-        height:68%;
+        width:82%;
+        height:82%;
         border-radius:50%;
-        border:1px solid rgba(239,210,154,.26);
-        opacity:.78;
-        filter:drop-shadow(0 0 16px rgba(239,210,154,.12));
+        border:1px solid rgba(239,210,154,.40);
+        opacity:.90;
+        filter:
+          drop-shadow(0 0 16px rgba(239,210,154,.22))
+          drop-shadow(0 0 24px rgba(142,197,255,.10));
+        z-index:4;
+        pointer-events:none;
       }
 
       .home-orbit.one {
-        transform:rotate(43deg) scaleX(.38);
+        transform:rotate(43deg) scaleX(.35);
         animation:orbitOne 18s linear infinite;
       }
 
       .home-orbit.two {
-        transform:rotate(-43deg) scaleX(.38);
-        border-color:rgba(142,197,255,.28);
+        transform:rotate(-43deg) scaleX(.35);
+        border-color:rgba(142,197,255,.44);
         animation:orbitTwo 21s linear infinite reverse;
       }
 
       .home-core {
         position:relative;
-        z-index:3;
-        width:172px;
-        height:172px;
+        z-index:5;
+        width:214px;
+        height:214px;
         border-radius:50%;
         display:block;
         overflow:hidden;
-        border:1px solid rgba(226,240,255,.56);
+        border:1px solid rgba(226,240,255,.72);
         color:transparent;
         font-size:0;
         background:
-          radial-gradient(circle at 33% 23%,rgba(255,255,255,.74),transparent 9%),
-          radial-gradient(circle at 42% 35%,rgba(184,220,255,.32),transparent 29%),
-          radial-gradient(circle at 61% 66%,rgba(239,210,154,.18),transparent 31%),
-          radial-gradient(circle at 50% 52%,rgba(102,240,209,.12),transparent 43%),
-          linear-gradient(135deg,#0f5c9d 0%,#0a2d6d 45%,#040b22 100%);
+          radial-gradient(circle at 33% 22%,rgba(255,255,255,.80),transparent 8%),
+          radial-gradient(circle at 38% 34%,rgba(184,220,255,.38),transparent 26%),
+          radial-gradient(circle at 62% 66%,rgba(239,210,154,.20),transparent 32%),
+          radial-gradient(circle at 50% 52%,rgba(102,240,209,.16),transparent 45%),
+          linear-gradient(135deg,#1268aa 0%,#0a2c6d 44%,#03091f 100%);
         box-shadow:
-          inset -30px -28px 44px rgba(0,0,0,.56),
-          inset 16px 12px 28px rgba(255,255,255,.22),
-          0 0 44px rgba(142,197,255,.44),
-          0 0 124px rgba(239,210,154,.22);
+          inset -38px -34px 54px rgba(0,0,0,.62),
+          inset 20px 15px 34px rgba(255,255,255,.24),
+          0 0 52px rgba(142,197,255,.52),
+          0 0 142px rgba(239,210,154,.26);
         animation:demoUniverseFloat 7s ease-in-out infinite;
       }
 
       .demo-globe-shell {
         position:absolute;
         inset:0;
+        z-index:1;
         border-radius:inherit;
         background:
-          radial-gradient(circle at 50% 50%,rgba(255,255,255,.10),transparent 30%),
-          radial-gradient(circle at 53% 52%,transparent 0 39%,rgba(255,255,255,.10) 40%,transparent 42%),
-          linear-gradient(90deg,rgba(255,255,255,.18),transparent 38%,rgba(0,0,0,.36) 100%);
+          radial-gradient(circle at 50% 50%,rgba(255,255,255,.12),transparent 28%),
+          radial-gradient(circle at 53% 52%,transparent 0 38%,rgba(255,255,255,.15) 39%,transparent 42%),
+          repeating-linear-gradient(28deg,rgba(255,255,255,.08) 0 1px,transparent 1px 14px),
+          linear-gradient(90deg,rgba(255,255,255,.18),transparent 38%,rgba(0,0,0,.38) 100%);
         pointer-events:none;
       }
 
       .demo-globe-field {
         position:absolute;
+        z-index:3;
         border-radius:999px;
-        filter:blur(.15px) drop-shadow(0 1px 2px rgba(0,0,0,.34));
-        opacity:.91;
+        filter:blur(.05px) drop-shadow(0 2px 4px rgba(0,0,0,.40));
+        opacity:.96;
         pointer-events:none;
       }
 
       .field-a {
-        left:18%;
-        top:27%;
-        width:38%;
+        left:14%;
+        top:28%;
+        width:42%;
         height:20%;
-        background:linear-gradient(135deg,var(--green),rgba(102,240,209,.44));
-        transform:rotate(-13deg);
+        background:
+          radial-gradient(circle at 28% 34%,rgba(255,255,255,.46),transparent 19%),
+          linear-gradient(135deg,#8df6c7,rgba(102,240,209,.56));
+        transform:rotate(-12deg);
       }
 
       .field-b {
-        right:17%;
-        top:30%;
-        width:36%;
+        right:12%;
+        top:29%;
+        width:39%;
         height:24%;
-        background:linear-gradient(135deg,var(--gold),rgba(239,210,154,.42));
+        background:
+          radial-gradient(circle at 24% 30%,rgba(255,255,255,.26),transparent 18%),
+          linear-gradient(135deg,var(--gold),rgba(239,210,154,.44));
         transform:rotate(22deg);
       }
 
       .field-c {
         left:34%;
-        bottom:22%;
-        width:25%;
-        height:36%;
-        background:linear-gradient(135deg,#72e0a8,rgba(146,231,186,.38));
-        transform:rotate(7deg);
+        bottom:17%;
+        width:24%;
+        height:38%;
+        background:linear-gradient(135deg,#72e0a8,rgba(146,231,186,.44));
+        transform:rotate(5deg);
       }
 
       .field-d {
-        right:20%;
-        bottom:20%;
-        width:34%;
+        right:15%;
+        bottom:18%;
+        width:36%;
         height:24%;
-        background:linear-gradient(135deg,rgba(239,210,154,.84),rgba(239,210,154,.36));
-        transform:rotate(-8deg);
+        background:linear-gradient(135deg,rgba(239,210,154,.92),rgba(239,210,154,.42));
+        transform:rotate(-7deg);
       }
 
       .demo-globe-ring,
       .demo-globe-axis,
       .demo-globe-grid,
-      .demo-globe-core {
+      .demo-globe-core,
+      .demo-globe-cross,
+      .demo-globe-meridian {
         position:absolute;
         pointer-events:none;
       }
 
       .demo-globe-ring {
-        inset:14%;
+        z-index:4;
+        inset:11%;
         border-radius:50%;
-        border:1px solid rgba(255,255,255,.20);
+        border:1px solid rgba(255,255,255,.30);
         box-shadow:
-          inset 0 0 22px rgba(142,197,255,.18),
-          0 0 20px rgba(239,210,154,.12);
+          inset 0 0 28px rgba(142,197,255,.25),
+          0 0 26px rgba(239,210,154,.16);
       }
 
       .demo-globe-axis {
+        z-index:5;
         left:50%;
         top:50%;
-        width:78%;
-        height:78%;
+        width:86%;
+        height:86%;
         border-radius:50%;
-        border:1px solid rgba(102,240,209,.18);
-        transform:translate(-50%,-50%) rotate(64deg) scaleX(.32);
-        box-shadow:0 0 18px rgba(102,240,209,.10);
+        border:1px solid rgba(102,240,209,.36);
+        transform:translate(-50%,-50%) rotate(64deg) scaleX(.30);
+        box-shadow:0 0 18px rgba(102,240,209,.18);
       }
 
       .demo-globe-grid {
-        inset:23%;
+        z-index:5;
+        inset:22%;
         border-radius:50%;
-        border-top:1px solid rgba(255,255,255,.14);
-        border-bottom:1px solid rgba(255,255,255,.10);
+        border-top:1px solid rgba(255,255,255,.32);
+        border-bottom:1px solid rgba(255,255,255,.20);
         transform:rotate(-18deg);
       }
 
-      .demo-globe-core {
+      .demo-globe-meridian {
+        z-index:5;
         left:50%;
         top:50%;
-        width:34px;
-        height:34px;
+        width:76%;
+        height:76%;
+        border-radius:50%;
+        border-left:1px solid rgba(142,197,255,.34);
+        border-right:1px solid rgba(142,197,255,.16);
+        transform:translate(-50%,-50%) rotate(-18deg);
+      }
+
+      .demo-globe-cross {
+        z-index:6;
+        left:50%;
+        top:50%;
+        width:2px;
+        height:78%;
+        transform:translate(-50%,-50%);
+        background:linear-gradient(180deg,transparent,rgba(142,197,255,.72),transparent);
+        box-shadow:0 0 16px rgba(142,197,255,.32);
+      }
+
+      .demo-globe-cross::after {
+        content:"";
+        position:absolute;
+        left:50%;
+        top:50%;
+        width:78px;
+        height:2px;
+        transform:translate(-50%,-50%);
+        background:linear-gradient(90deg,transparent,rgba(239,210,154,.72),transparent);
+        box-shadow:0 0 16px rgba(239,210,154,.30);
+      }
+
+      .demo-globe-core {
+        z-index:7;
+        left:50%;
+        top:50%;
+        width:48px;
+        height:48px;
         transform:translate(-50%,-50%) rotate(45deg);
-        border:1px solid rgba(239,210,154,.62);
-        border-radius:8px;
+        border:1px solid rgba(239,210,154,.86);
+        border-radius:10px;
         background:
-          radial-gradient(circle at 50% 50%,rgba(255,255,255,.82),rgba(239,210,154,.30) 38%,transparent 70%);
+          linear-gradient(135deg,rgba(255,255,255,.84),rgba(239,210,154,.28) 42%,rgba(142,197,255,.10));
         box-shadow:
-          0 0 16px rgba(239,210,154,.44),
-          0 0 34px rgba(142,197,255,.20);
-        opacity:.92;
+          0 0 20px rgba(239,210,154,.58),
+          0 0 42px rgba(142,197,255,.28),
+          inset 0 0 12px rgba(255,255,255,.24);
+        opacity:1;
       }
 
       .home-core::before {
         content:"";
         position:absolute;
-        inset:7%;
+        inset:6%;
+        z-index:6;
         border-radius:inherit;
         background:
-          radial-gradient(circle at 28% 36%,rgba(255,255,255,.34) 0 4%,transparent 5%),
-          radial-gradient(circle at 70% 38%,rgba(239,210,154,.44) 0 3%,transparent 4%),
-          radial-gradient(circle at 60% 74%,rgba(102,240,209,.38) 0 3%,transparent 4%),
-          radial-gradient(circle at 38% 68%,rgba(142,197,255,.30) 0 3%,transparent 4%);
-        opacity:.88;
+          radial-gradient(circle at 28% 36%,rgba(255,255,255,.44) 0 3%,transparent 4%),
+          radial-gradient(circle at 70% 38%,rgba(239,210,154,.64) 0 2.5%,transparent 3.5%),
+          radial-gradient(circle at 60% 74%,rgba(102,240,209,.54) 0 2.5%,transparent 3.5%),
+          radial-gradient(circle at 38% 68%,rgba(142,197,255,.44) 0 2.5%,transparent 3.5%);
+        opacity:.96;
         pointer-events:none;
-        z-index:2;
       }
 
       .home-core::after {
         content:"";
         position:absolute;
         inset:-2px;
+        z-index:8;
         border-radius:inherit;
         background:
-          radial-gradient(ellipse at 30% 48%,rgba(255,255,255,.58) 0 7%,transparent 8%),
-          radial-gradient(ellipse at 56% 26%,rgba(255,255,255,.44) 0 8%,transparent 9%),
-          radial-gradient(ellipse at 67% 48%,rgba(255,255,255,.34) 0 7%,transparent 8%),
-          radial-gradient(ellipse at 50% 72%,rgba(255,255,255,.28) 0 10%,transparent 11%),
-          radial-gradient(circle at 30% 25%,rgba(255,255,255,.36),transparent 18%);
+          radial-gradient(ellipse at 30% 48%,rgba(255,255,255,.40) 0 6%,transparent 7%),
+          radial-gradient(ellipse at 56% 26%,rgba(255,255,255,.32) 0 7%,transparent 8%),
+          radial-gradient(circle at 30% 25%,rgba(255,255,255,.26),transparent 18%);
         mix-blend-mode:screen;
-        opacity:.72;
+        opacity:.50;
         pointer-events:none;
-        z-index:5;
       }
 
       .home-caption {
@@ -450,7 +524,7 @@
         left:50%;
         bottom:24px;
         transform:translateX(-50%);
-        z-index:4;
+        z-index:9;
         width:min(92%,620px);
         padding:14px 16px;
         border-radius:999px;
@@ -574,13 +648,13 @@
       .home-footer a { color:#d6e2ff; }
 
       @keyframes orbitOne {
-        from { transform:rotate(43deg) scaleX(.38); }
-        to { transform:rotate(403deg) scaleX(.38); }
+        from { transform:rotate(43deg) scaleX(.35); }
+        to { transform:rotate(403deg) scaleX(.35); }
       }
 
       @keyframes orbitTwo {
-        from { transform:rotate(-43deg) scaleX(.38); }
-        to { transform:rotate(317deg) scaleX(.38); }
+        from { transform:rotate(-43deg) scaleX(.35); }
+        to { transform:rotate(317deg) scaleX(.35); }
       }
 
       @keyframes demoUniverseFloat {
@@ -636,12 +710,12 @@
         }
 
         .home-door {
-          min-height:390px;
+          min-height:430px;
         }
 
         .home-core {
-          width:154px;
-          height:154px;
+          width:188px;
+          height:188px;
         }
 
         .home-caption {
@@ -682,6 +756,8 @@
       ["span", "demo-globe-ring"],
       ["span", "demo-globe-axis"],
       ["span", "demo-globe-grid"],
+      ["span", "demo-globe-meridian"],
+      ["span", "demo-globe-cross"],
       ["span", "demo-globe-core"]
     ];
 
@@ -705,7 +781,7 @@
     root.setAttribute("data-home-root-proof", "true");
     root.setAttribute("data-home-not-gauges", "true");
     root.setAttribute("data-home-not-earth", "true");
-    root.setAttribute("data-home-demo-universe-quality", "second-generation-upgraded");
+    root.setAttribute("data-home-demo-universe-quality", "second-generation-visual-strength-pass");
   }
 
   function mount() {

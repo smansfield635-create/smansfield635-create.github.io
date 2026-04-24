@@ -6,7 +6,7 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products Chamber for Diamond Gate Bridge: a stained-glass molecular window with a contained 32-point compound."
+    content="Products Chamber for Diamond Gate Bridge: a stained-glass four-lobed molecular flower with two overlapping figure-eight loops."
   />
   <style>
     :root{
@@ -26,7 +26,9 @@
     }
 
     *{box-sizing:border-box}
+
     html,body{min-height:100%}
+
     body{
       margin:0;
       color:var(--text);
@@ -50,7 +52,7 @@
         radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
         radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
         radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
-      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
     }
 
     .page{
@@ -62,7 +64,7 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.section,.window-panel,.detail-panel,.hero-side{
+    .topbar,.hero,.section,.hero-side{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
@@ -80,25 +82,54 @@
       overflow:hidden;
     }
 
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
     .brand-mark{
-      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
       border:1px solid var(--line);
       background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
-      color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
+      color:#f4f8ff;
+      font-weight:800;
+      letter-spacing:.08em;
+      flex:none;
     }
+
     .brand-kicker{
-      margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
     }
-    .brand-title{margin:0;font-size:1.05rem;font-weight:700}
-    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:700;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
 
     .nav-link,.button,.filter-chip{
       display:inline-flex;
       align-items:center;
       justify-content:center;
       text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
     }
 
     .nav-link{
@@ -166,28 +197,32 @@
 
     .hero-tag::before{
       content:"";
-      width:9px;height:9px;border-radius:2px;transform:rotate(45deg);
-      background:#dce7ff;box-shadow:0 0 16px rgba(220,231,255,.52);
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.52);
     }
 
     h1{
       margin:0 0 10px;
-      font-size:clamp(2.2rem, 4.8vw, 4rem);
+      font-size:clamp(2.2rem,4.8vw,4rem);
       line-height:.96;
       letter-spacing:-.05em;
-      max-width:10ch;
+      max-width:11ch;
     }
 
     h1 .accent{color:var(--gold)}
 
-    .hero p,.hero-side p,.section-note,.detail-copy{
+    .hero p,.hero-side p,.section-note{
       color:var(--muted);
       line-height:1.58;
     }
 
     .hero p{
       margin:0;
-      font-size:clamp(.98rem, 1.5vw, 1.1rem);
+      font-size:clamp(.98rem,1.5vw,1.1rem);
       max-width:60ch;
     }
 
@@ -221,14 +256,14 @@
       overflow:hidden;
     }
 
-    .hero-side h2,.detail-title{
+    .hero-side h2{
       margin:0 0 10px;
       font-size:1.08rem;
       line-height:1.1;
       letter-spacing:-.02em;
     }
 
-    .hero-stats,.detail-stats{
+    .hero-stats{
       display:grid;
       gap:10px;
       margin-top:16px;
@@ -285,7 +320,9 @@
 
     .filter-dot{
       display:inline-block;
-      width:11px;height:11px;border-radius:50%;
+      width:11px;
+      height:11px;
+      border-radius:50%;
       margin-right:10px;
       vertical-align:-1px;
       box-shadow:0 0 14px currentColor;
@@ -328,427 +365,11 @@
       text-align:right;
     }
 
-    .shell{
-      display:grid;
-      grid-template-columns:minmax(0,1.35fr) minmax(320px,.8fr);
-      gap:18px;
-      align-items:start;
+    #productsRuntimeMount{
       min-width:0;
-    }
-
-    .window-panel,.detail-panel{
-      border-radius:24px;
-      min-width:0;
-      overflow:hidden;
-    }
-
-    .window-panel{padding:16px}
-    .detail-panel{padding:22px}
-
-    .window-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:flex-start;
-      gap:12px;
-      margin-bottom:14px;
-      padding:4px 6px 2px;
-      min-width:0;
-    }
-
-    .window-head h2{
-      margin:0;
-      font-size:1rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      color:#d7e2ff;
-      min-width:0;
-    }
-
-    .window-meta{
-      color:var(--muted);
-      font-size:.82rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      white-space:normal;
-      text-align:right;
-      max-width:52%;
-      line-height:1.35;
-    }
-
-    .window-stage{
-      position:relative;
-      height:640px;
       width:100%;
       max-width:100%;
-      margin:0 auto;
-      border:1px solid rgba(113,141,224,.14);
-      border-radius:28px;
       overflow:hidden;
-      background:
-        linear-gradient(180deg, rgba(4,10,22,.92), rgba(2,8,18,.98));
-      isolation:isolate;
-    }
-
-    .window-stage::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.04), transparent 38%),
-        linear-gradient(225deg, rgba(255,255,255,.03), transparent 34%);
-      opacity:.8;
-    }
-
-    .lead-came{
-      position:absolute;
-      background:linear-gradient(180deg, rgba(226,231,241,.56), rgba(86,96,120,.72));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,.22),
-        inset 0 -1px 0 rgba(0,0,0,.24),
-        0 0 10px rgba(0,0,0,.12);
-      z-index:3;
-      pointer-events:none;
-    }
-
-    .lead-came.v{
-      width:10px;
-      top:0;
-      bottom:0;
-      border-radius:999px;
-    }
-
-    .lead-came.h{
-      height:10px;
-      left:0;
-      right:0;
-      border-radius:999px;
-    }
-
-    .lead-came.diag{
-      width:10px;
-      height:240px;
-      left:50%;
-      top:50%;
-      transform-origin:center center;
-      border-radius:999px;
-    }
-
-    .glass-panel{
-      position:absolute;
-      inset:12px;
-      border-radius:22px;
-      overflow:hidden;
-      z-index:1;
-    }
-
-    .glass-pane{
-      position:absolute;
-      border:1px solid rgba(255,255,255,.08);
-      box-shadow:
-        inset 0 0 22px rgba(255,255,255,.04),
-        inset 0 -10px 24px rgba(0,0,0,.16);
-      backdrop-filter:blur(1px);
-    }
-
-    .glass-pane.north{
-      left:6%;
-      top:6%;
-      width:38%;
-      height:32%;
-      border-radius:22px 18px 30px 26px;
-      background:
-        radial-gradient(circle at 62% 40%, rgba(240,246,255,.22), transparent 40%),
-        linear-gradient(135deg, rgba(221,232,255,.18), rgba(123,146,214,.12));
-    }
-
-    .glass-pane.east{
-      right:6%;
-      top:8%;
-      width:38%;
-      height:30%;
-      border-radius:24px 22px 26px 32px;
-      background:
-        radial-gradient(circle at 36% 40%, rgba(188,224,255,.20), transparent 42%),
-        linear-gradient(135deg, rgba(143,201,255,.18), rgba(67,111,190,.12));
-    }
-
-    .glass-pane.west{
-      left:7%;
-      bottom:9%;
-      width:36%;
-      height:30%;
-      border-radius:30px 26px 22px 26px;
-      background:
-        radial-gradient(circle at 60% 44%, rgba(255,222,170,.18), transparent 42%),
-        linear-gradient(135deg, rgba(255,213,143,.18), rgba(147,107,46,.12));
-    }
-
-    .glass-pane.south{
-      right:7%;
-      bottom:7%;
-      width:36%;
-      height:32%;
-      border-radius:28px 30px 24px 22px;
-      background:
-        radial-gradient(circle at 40% 44%, rgba(177,245,196,.18), transparent 42%),
-        linear-gradient(135deg, rgba(151,230,180,.18), rgba(47,113,74,.12));
-    }
-
-    .glass-pane.center{
-      left:37%;
-      top:37%;
-      width:26%;
-      height:26%;
-      border-radius:18px;
-      transform:rotate(45deg);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(232,240,255,.18), transparent 46%),
-        linear-gradient(135deg, rgba(191,207,255,.12), rgba(92,130,216,.10));
-      box-shadow:
-        inset 0 0 20px rgba(255,255,255,.04),
-        0 0 24px rgba(110,144,230,.10);
-    }
-
-    .window-frame{
-      position:absolute;
-      top:28px;
-      bottom:76px;
-      left:22px;
-      right:22px;
-      width:auto;
-      border-radius:26px;
-      overflow:hidden;
-      z-index:2;
-    }
-
-    .window-title{
-      position:absolute;
-      left:50%;
-      top:14px;
-      transform:translateX(-50%);
-      padding:8px 14px;
-      border-radius:999px;
-      border:1px solid rgba(140,168,240,.22);
-      background:rgba(6,14,28,.78);
-      color:#dbe5ff;
-      font-size:.72rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      z-index:7;
-      max-width:calc(100% - 32px);
-      white-space:normal;
-      text-align:center;
-      line-height:1.35;
-    }
-
-    .eight-track{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:74%;
-      height:54%;
-      transform:translate(-50%,-50%);
-      z-index:2;
-      opacity:.42;
-    }
-
-    .eight-loop{
-      position:absolute;
-      width:46%;
-      height:72%;
-      top:14%;
-      border-radius:50%;
-      border:1px solid rgba(214,226,255,.18);
-      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.02), transparent 64%);
-    }
-
-    .eight-loop.left{
-      left:7%;
-      transform:rotate(-18deg);
-    }
-
-    .eight-loop.right{
-      right:7%;
-      transform:rotate(18deg);
-    }
-
-    .throat{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:96px;
-      height:96px;
-      transform:translate(-50%,-50%) rotate(45deg);
-      border-radius:18px;
-      border:1px solid rgba(214,226,255,.18);
-      background:
-        radial-gradient(circle, rgba(247,250,255,.62) 0%, rgba(149,188,255,.18) 34%, rgba(92,130,216,.05) 68%, transparent 82%);
-      box-shadow:0 0 24px rgba(144,182,255,.12);
-      z-index:4;
-    }
-
-    .bond{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:2px;
-      transform-origin:center center;
-      background:linear-gradient(180deg, transparent, rgba(228,236,255,.52), transparent);
-      opacity:.56;
-      z-index:3;
-      border-radius:999px;
-    }
-
-    .atom{
-      position:absolute;
-      left:var(--x);
-      top:var(--y);
-      width:168px;
-      height:168px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      border:1px solid rgba(178,196,255,.16);
-      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-      box-shadow:inset 0 0 26px rgba(255,255,255,.02);
-      z-index:4;
-    }
-
-    .atom::before{
-      content:"";
-      position:absolute;
-      inset:16px;
-      border-radius:50%;
-      border:1px solid rgba(178,196,255,.10);
-    }
-
-    .atom-label{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:78px;
-      height:34px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(6,14,28,.64);
-      color:#f7fbff;
-      font-size:.72rem;
-      font-weight:800;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      pointer-events:none;
-    }
-
-    .node-layer{
-      position:absolute;
-      inset:0;
-      z-index:6;
-    }
-
-    .node{
-      position:absolute;
-      left:var(--x);
-      top:var(--y);
-      transform:translate(-50%,-50%);
-      width:17px;height:17px;border-radius:50%;
-      border:1px solid rgba(255,255,255,.74);
-      background:var(--color);
-      box-shadow:0 0 0 5px rgba(255,255,255,.04), 0 0 18px var(--glow), 0 0 36px var(--glow);
-      cursor:pointer;
-      transition:transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;
-      z-index:7;
-    }
-
-    .node::after{
-      content:attr(data-short);
-      position:absolute;
-      top:calc(100% + 8px);
-      left:50%;
-      transform:translateX(-50%);
-      font-size:.58rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      color:#d9e5ff;
-      white-space:nowrap;
-      opacity:.82;
-      pointer-events:none;
-    }
-
-    .node:hover,.node:focus-visible{
-      transform:translate(-50%,-50%) scale(1.16);
-      outline:none;
-      box-shadow:0 0 0 6px rgba(255,255,255,.06), 0 0 20px var(--glow), 0 0 54px var(--glow);
-    }
-
-    .node.is-active{
-      transform:translate(-50%,-50%) scale(1.24);
-      box-shadow:0 0 0 7px rgba(255,255,255,.08), 0 0 26px var(--glow), 0 0 72px var(--glow);
-    }
-
-    .node.is-muted{
-      opacity:.14;
-      filter:saturate(.28);
-    }
-
-    .window-copy{
-      position:absolute;
-      left:50%;
-      bottom:20px;
-      transform:translateX(-50%);
-      width:calc(100% - 32px);
-      max-width:560px;
-      padding:12px 16px;
-      border-radius:999px;
-      border:1px solid rgba(140,168,240,.24);
-      background:rgba(6,14,28,.76);
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:.15em;
-      font-size:.76rem;
-      color:#dbe5ff;
-      box-shadow:0 12px 32px rgba(0,0,0,.28);
-      z-index:7;
-      white-space:normal;
-      line-height:1.35;
-    }
-
-    .window-copy strong{color:#fff}
-
-    .detail-kicker{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:10px;
-      color:#d7e3ff;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      font-size:.74rem;
-      flex-wrap:wrap;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-width:38px;height:24px;padding:0 10px;border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(255,255,255,.04);
-      color:#fff;
-    }
-
-    .detail-title{
-      font-size:1.5rem;
-      line-height:1.08;
-      letter-spacing:-.02em;
-    }
-
-    .detail-stats{
-      grid-template-columns:repeat(2,minmax(0,1fr));
     }
 
     .footer{
@@ -778,13 +399,11 @@
       outline:none;
     }
 
-    @media (max-width: 980px){
-      .hero-grid,.shell{
-        grid-template-columns:1fr;
-      }
+    @media (max-width:980px){
+      .hero-grid{grid-template-columns:1fr}
     }
 
-    @media (max-width: 720px){
+    @media (max-width:720px){
       .page{
         width:min(100vw - 16px, var(--max));
         padding:14px 0 28px;
@@ -800,21 +419,17 @@
         justify-content:flex-start;
       }
 
-      .hero,.section,.window-panel,.detail-panel,.hero-side{
+      .hero,.section,.hero-side{
         padding:18px 16px;
       }
 
-      .hero-grid{
-        gap:14px;
-      }
+      .hero-grid{gap:14px}
 
       .hero h1{
-        font-size:clamp(2rem, 11vw, 3.4rem);
+        font-size:clamp(2rem,11vw,3.4rem);
       }
 
-      .hero-actions,.filters{
-        gap:8px;
-      }
+      .hero-actions,.filters{gap:8px}
 
       .button{
         flex:1 1 calc(50% - 8px);
@@ -835,98 +450,6 @@
 
       .section-note{
         text-align:left;
-      }
-
-      .window-head{
-        display:grid;
-        gap:8px;
-      }
-
-      .window-meta{
-        max-width:none;
-        text-align:left;
-        font-size:.68rem;
-        line-height:1.35;
-      }
-
-      .window-stage{
-        height:520px;
-        width:100%;
-        max-width:100%;
-        overflow:hidden;
-      }
-
-      .window-frame{
-        top:24px;
-        bottom:74px;
-        left:12px;
-        right:12px;
-        width:auto;
-      }
-
-      .window-title{
-        max-width:78%;
-        white-space:normal;
-        text-align:center;
-        font-size:.62rem;
-      }
-
-      .lead-came.v{
-        width:8px;
-      }
-
-      .lead-came.h{
-        height:8px;
-      }
-
-      .lead-came.diag{
-        width:8px;
-        height:190px;
-      }
-
-      .atom{
-        width:112px;
-        height:112px;
-      }
-
-      .atom::before{
-        inset:10px;
-      }
-
-      .atom-label{
-        min-width:62px;
-        height:28px;
-        padding:0 10px;
-        font-size:.58rem;
-      }
-
-      .throat{
-        width:66px;
-        height:66px;
-      }
-
-      .node{
-        width:13px;height:13px;
-      }
-
-      .node::after{
-        font-size:.46rem;
-        top:calc(100% + 6px);
-      }
-
-      .window-copy{
-        width:calc(100% - 24px);
-        max-width:none;
-        font-size:.56rem;
-        line-height:1.35;
-        letter-spacing:.11em;
-        border-radius:22px;
-        padding:10px 12px;
-        white-space:normal;
-      }
-
-      .detail-stats{
-        grid-template-columns:1fr;
       }
 
       .footer{
@@ -958,175 +481,70 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Products chamber · stained-glass window contract</span>
-          <h1>Public chamber for a <span class="accent">stained-glass molecule</span>.</h1>
+          <span class="hero-tag">Products chamber · four-lobed molecular flower contract</span>
+          <h1>Public chamber for a <span class="accent">shared-center molecule</span>.</h1>
           <p>
-            The compound is now seated inside a stained-glass window. The page hosts one owned viewport, the window holds the object,
-            and the 32 bonded points live inside that window as a twisted figure-eight molecular expression.
+            Products now uses one stained-glass vessel with a four-lobed molecular flower inside it.
+            White and green form one diagonal figure-eight. Yellow and blue form the opposing figure-eight.
+            Both loops cross through one shared center throat.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#productsGrid">Open window</a>
+            <a class="button primary" href="#productsGrid">Open molecule</a>
             <a class="button" href="/gauges/">Gauges</a>
             <a class="button" href="/">Back to door</a>
           </div>
 
-          <div class="filters" id="cardinalFilters" aria-label="Filter products by cardinal direction">
+          <div class="filters" id="cardinalFilters" aria-label="Filter products by molecular body">
             <button class="filter-chip is-active" type="button" data-filter="all">
               <span class="filter-dot" style="color:#dce7ff;background:#dce7ff;"></span>All
             </button>
             <button class="filter-chip" type="button" data-filter="north">
-              <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>North
+              <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>White
             </button>
             <button class="filter-chip" type="button" data-filter="south">
-              <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>South
+              <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>Green
             </button>
             <button class="filter-chip" type="button" data-filter="east">
-              <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>East
+              <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>Blue
             </button>
             <button class="filter-chip" type="button" data-filter="west">
-              <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>West
+              <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>Yellow
             </button>
           </div>
         </div>
 
         <aside class="hero-side">
-          <h2>Window job</h2>
+          <h2>Runtime contract</h2>
           <p>
-            Seat the molecular object inside a true window surface. The stained-glass frame owns the chamber expression
-            so the page reads as host, the window reads as vessel, and the molecule reads as content.
+            The HTML shell now delegates the chamber body to the products runtime. The shell owns navigation,
+            public copy, filters, and the mount point. The runtime owns the stained-glass molecular flower.
           </p>
 
           <div class="hero-stats">
             <div class="stat">
-              <span class="stat-label">Purpose</span>
-              <span class="stat-value">Contained stained-glass chamber</span>
+              <span class="stat-label">Structure</span>
+              <span class="stat-value">4 lobes · 32 points</span>
             </div>
             <div class="stat">
-              <span class="stat-label">Geometry</span>
-              <span class="stat-value">Twisted figure-eight</span>
+              <span class="stat-label">Motion</span>
+              <span class="stat-value">2 overlapping figure-eights</span>
             </div>
             <div class="stat">
-              <span class="stat-label">Coherence</span>
-              <span class="stat-value">Point → atom → stained-glass compound</span>
+              <span class="stat-label">Center</span>
+              <span class="stat-value">One shared throat</span>
             </div>
           </div>
         </aside>
       </div>
     </section>
 
-    <section class="section" id="productsGrid" aria-live="polite">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Contained molecular field</div>
-          <h2>Choose a bonded point inside the stained-glass window</h2>
-        </div>
-        <div class="section-note">
-          The molecule is no longer the page body. It is now seated inside one stained-glass chamber viewport.
-        </div>
-      </div>
-
-      <div class="shell">
-        <div class="window-panel">
-          <div class="window-head">
-            <h2>Stained-glass window</h2>
-            <div class="window-meta">4 atoms · 32 points · windowed molecule</div>
-          </div>
-
-          <div class="window-stage">
-            <div class="window-title">owned stained-glass viewport</div>
-
-            <div class="glass-panel">
-              <div class="glass-pane north"></div>
-              <div class="glass-pane east"></div>
-              <div class="glass-pane west"></div>
-              <div class="glass-pane south"></div>
-              <div class="glass-pane center"></div>
-            </div>
-
-            <div class="lead-came h" style="top:12px;"></div>
-            <div class="lead-came h" style="bottom:12px;"></div>
-            <div class="lead-came v" style="left:12px;"></div>
-            <div class="lead-came v" style="right:12px;"></div>
-
-            <div class="lead-came v" style="left:50%;transform:translateX(-50%);top:14%;bottom:14%;"></div>
-            <div class="lead-came h" style="top:50%;transform:translateY(-50%);left:14%;right:14%;"></div>
-            <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(35deg);"></div>
-            <div class="lead-came diag" style="transform:translate(-50%,-50%) rotate(-35deg);"></div>
-
-            <div class="window-frame">
-              <div class="eight-track">
-                <div class="eight-loop left"></div>
-                <div class="eight-loop right"></div>
-              </div>
-
-              <div class="throat"></div>
-
-              <div class="bond" id="bondNorth"></div>
-              <div class="bond" id="bondSouth"></div>
-              <div class="bond" id="bondEast"></div>
-              <div class="bond" id="bondWest"></div>
-
-              <div class="atom" style="--x:34%;--y:34%;">
-                <div class="atom-label">North</div>
-              </div>
-              <div class="atom" style="--x:66%;--y:34%;">
-                <div class="atom-label">East</div>
-              </div>
-              <div class="atom" style="--x:34%;--y:66%;">
-                <div class="atom-label">West</div>
-              </div>
-              <div class="atom" style="--x:66%;--y:66%;">
-                <div class="atom-label">South</div>
-              </div>
-
-              <div class="node-layer" id="nodeLayer"></div>
-            </div>
-
-            <div class="window-copy"><strong>Stained-glass molecular chamber</strong> · bonded inside one window</div>
-          </div>
-        </div>
-
-        <aside class="detail-panel">
-          <div class="detail-kicker">
-            <span class="badge" id="detailCode">N01</span>
-            <span id="detailFamily">North · atom</span>
-          </div>
-
-          <h3 class="detail-title" id="detailTitle">Threshold</h3>
-          <p class="detail-copy" id="detailCopy">
-            Product detail surface.
-          </p>
-
-          <div class="detail-stats">
-            <div class="stat">
-              <span class="stat-label">Cardinal</span>
-              <span class="stat-value" id="detailCardinal">North</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Visible points</span>
-              <span class="stat-value" id="detailVisible">32</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Atomic count</span>
-              <span class="stat-value" id="detailCount">8</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Compound read</span>
-              <span class="stat-value" id="detailRoute">Windowed route</span>
-            </div>
-          </div>
-
-          <div class="hero-actions">
-            <a class="button primary" id="detailHref" href="/products/">Open lane</a>
-            <a class="button" href="/gauges/">Read gauges</a>
-          </div>
-        </aside>
-      </div>
+    <section class="section" id="productsGrid">
+      <div id="productsRuntimeMount" data-products-runtime-mount></div>
     </section>
 
     <footer class="footer">
-      <span>Products · stained-glass window contract</span>
+      <span>Products · four-lobed molecular flower contract</span>
       <div class="footer-links">
         <a href="/">Home</a>
         <a href="/about/">About</a>

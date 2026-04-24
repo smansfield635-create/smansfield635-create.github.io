@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Big Laughs Comedy · Big Laugh</title>
+  <meta
+    name="description"
+    content="Big Laughs Comedy is the first live-show sub-tier under Big Laugh. Pre-register for five raffle tickets, attend shows for extra entries, and win prizes revealed at the fourth show."
+  />
+  <style>
+    :root{
+      --bg:#020610;
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.36);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --pink:#ff9fd6;
+      --blue:#6db8ff;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1240px;
+    }
+
+    *{box-sizing:border-box}
+
+    html{min-height:100%;scroll-behavior:smooth}
+
+    body{
+      min-height:100%;
+      margin:0;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 7%, rgba(112,151,255,.20), transparent 22%),
+        radial-gradient(circle at 18% 28%, rgba(255,159,214,.10), transparent 24%),
+        radial-gradient(circle at 82% 34%, rgba(239,210,154,.10), transparent 24%),
+        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.2;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.17) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.14) 0 1px, transparent 1.6px);
+      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
+      opacity:.28;
+    }
+
+    .page{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:18px 0 44px;
+      position:relative;
+      z-index:1;
+      overflow:hidden;
+    }
+
+    .topbar,.hero,.stage-card,.console,.panel,.readout,.doll-shell,.route-card,.prize-card{
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      padding:14px 16px;
+      border-radius:22px;
+      background:rgba(7,13,26,.74);
+      backdrop-filter:blur(10px);
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .brand-mark{
+      width:46px;
+      height:46px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      flex:none;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(255,159,214,.22), transparent 42%),
+        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+      color:#f4f8ff;
+      font-weight:900;
+      letter-spacing:.08em;
+      box-shadow:0 0 22px rgba(255,159,214,.09);
+    }
+
+    .brand-kicker{
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+    }
+
+    .brand-title{
+      margin:0;
+      font-size:1.05rem;
+      font-weight:800;
+    }
+
+    .topnav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      justify-content:flex-end;
+    }
+
+    .nav-link,.button{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:42px;
+      padding:0 15px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      color:var(--text);
+      font-weight:800;
+      background:rgba(255,255,255,.035);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
+      transform:translateY(-1px);
+      border-color:var(--line-strong);
+      background:rgba(255,255,255,.06);
+      outline:none;
+    }
+
+    .hero{
+      margin-top:16px;
+      border-radius:34px;
+      padding:24px 20px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,159,214,.13), transparent 30%),
+        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
+      mix-blend-mode:screen;
+    }
+
+    .hero-grid{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(320px,.9fr);
+      gap:20px;
+      align-items:center;
+      position:relative;
+      z-index:1;
+    }
+
+    .hero-tag{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      margin-bottom:14px;
+    }
+
+    .hero-tag::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--pink);
+      box-shadow:0 0 16px rgba(255,159,214,.55);
+    }
+
+    h1{
+      margin:0 0 12px;
+      font-size:clamp(2.45rem,5.4vw,5.2rem);
+      line-height:.94;
+      letter-spacing:-.06em;
+      max-width:11ch;
+    }
+
+    h1 .accent{color:var(--gold)}
+
+    p{
+      color:var(--muted);
+      line-height:1.58;
+    }
+
+    .hero p{
+      margin:0;
+      font-size:clamp(1rem,1.5vw,1.12rem);
+      max-width:66ch;
+    }
+
+    .hero-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:20px;
+    }
+
+    .button{
+      border-radius:18px;
+      min-height:46px;
+      padding:0 18px;
+      white-space:nowrap;
+    }
+
+    .button.primary{
+      border-color:rgba(239,210,154,.34);
+      background:
+        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+    }
+
+    .button.raffle{
+      border-color:rgba(255,159,214,.40);
+      background:
+        linear-gradient(180deg, rgba(255,159,214,.18), rgba(255,159,214,.06)),
+        rgba(255,255,255,.035);
+      color:#fff5fb;
+    }
+
+    .stage-card{
+      border-radius:30px;
+      padding:20px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 26%, rgba(255,159,214,.13), transparent 30%),
+        linear-gradient(180deg, rgba(10,22,44,.94), rgba(4,10,20,.96));
+    }
+
+    .stage-window{
+      position:relative;
+      min-height:390px;
+      border-radius:26px;
+      border:1px solid rgba(170,198,255,.20);
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,159,214,.12), transparent 28%),
+        linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
+      box-shadow:
+        inset 0 0 44px rgba(126,164,255,.10),
+        inset 0 -26px 70px rgba(0,0,0,.34);
+      isolation:isolate;
+    }
+
+    .stage-grid{
+      position:absolute;
+      inset:0;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
+      background-size:32px 32px;
+      opacity:.42;
+      z-index:1;
+    }
+
+    .spotlight{
+      position:absolute;
+      left:50%;
+      top:52%;
+      width:72%;
+      height:72%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), transparent 18%),
+        conic-gradient(from 90deg, transparent, rgba(255,159,214,.12), transparent, rgba(239,210,154,.12), transparent);
+      mask-image:radial-gradient(circle, black 0 56%, transparent 72%);
+      opacity:.76;
+      z-index:2;
+    }
+
+    .stage-diamond{
+      position:absolute;
+      left:50%;
+      top:48%;
+      width:236px;
+      height:236px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border:1px solid rgba(239,210,154,.30);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 28%),
+        linear-gradient(135deg, rgba(255,159,214,.10), rgba(239,210,154,.08));
+      box-shadow:
+        0 0 34px rgba(255,159,214,.18),
+        inset 0 0 34px rgba(239,210,154,.08);
+      z-index:4;
+    }
+
+    .mic{
+      position:absolute;
+      left:50%;
+      top:44%;
+      width:54px;
+      height:104px;
+      transform:translate(-50%,-50%);
+      z-index:7;
+    }
+
+    .mic::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:0;
+      width:44px;
+      height:58px;
+      transform:translateX(-50%);
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.10), transparent 50%, rgba(255,255,255,.08)),
+        linear-gradient(180deg, rgba(239,210,154,.34), rgba(6,14,28,.90));
+      box-shadow:0 0 26px rgba(239,210,154,.18);
+    }
+
+    .mic::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:56px;
+      width:4px;
+      height:48px;
+      transform:translateX(-50%);
+      border-radius:999px;
+      background:linear-gradient(180deg, rgba(255,255,255,.62), rgba(239,210,154,.22));
+      box-shadow:0 0 14px rgba(239,210,154,.18);
+    }
+
+    .stage-label{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      width:calc(100% - 42px);
+      max-width:620px;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(140,168,240,.24);
+      background:rgba(6,14,28,.84);
+      text-align:center;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.72rem;
+      color:#dbe5ff;
+      z-index:8;
+      line-height:1.35;
+    }
+
+    .stage-label strong{color:#fff}
+
+    .console,.panel{
+      margin-top:18px;
+      border-radius:30px;
+      padding:22px 20px;
+      overflow:hidden;
+    }
+
+    .section-kicker{
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      margin-bottom:8px;
+    }
+
+    .console h2,.panel h2{
+      margin:0 0 10px;
+      font-size:clamp(1.7rem,3vw,2.7rem);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    .readout-grid,.route-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .readout,.route-card{
+      border-radius:22px;
+      padding:16px;
+      min-height:146px;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .readout small,.route-card small,.prize-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
+
+    .readout strong{
+      display:block;
+      color:#f4f7ff;
+      font-size:1.35rem;
+      line-height:1.05;
+      letter-spacing:-.03em;
+      margin-bottom:10px;
+    }
+
+    .prize-grid{
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .prize-card{
+      border-radius:24px;
+      padding:18px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .prize-card.grand{
+      border-color:rgba(239,210,154,.34);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(239,210,154,.14), transparent 44%),
+        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .prize-card.runner{
+      border-color:rgba(109,184,255,.30);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(109,184,255,.13), transparent 44%),
+        linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
+    }
+
+    .prize-card h3{
+      margin:0 0 8px;
+      font-size:1.35rem;
+      letter-spacing:-.03em;
+      line-height:1.1;
+    }
+
+    .prize-card p,.readout p,.route-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .prize-badge{
+      display:inline-flex;
+      min-height:30px;
+      padding:0 12px;
+      align-items:center;
+      justify-content:center;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      color:#fff;
+      background:rgba(255,255,255,.045);
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-weight:900;
+      margin-top:14px;
+    }
+
+    .russian-doll{
+      margin-top:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .doll-shell{
+      border-radius:26px;
+      overflow:hidden;
+    }
+
+    .doll-toggle{
+      width:100%;
+      border:0;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(255,159,214,.08), transparent 42%),
+        rgba(255,255,255,.02);
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      text-align:left;
+      cursor:pointer;
+    }
+
+    .doll-head small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
+
+    .doll-head h3{
+      margin:0;
+      font-size:1.15rem;
+      letter-spacing:-.02em;
+      line-height:1.15;
+    }
+
+    .doll-meta{
+      flex:none;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:#dbe5ff;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.7rem;
+      font-weight:900;
+    }
+
+    .doll-diamond{
+      width:28px;
+      height:28px;
+      border-radius:8px;
+      transform:rotate(45deg);
+      border:1px solid rgba(239,210,154,.34);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),
+        rgba(6,14,28,.78);
+      box-shadow:0 0 18px rgba(255,159,214,.12);
+    }
+
+    .doll-panel{
+      display:none;
+      padding:0 18px 18px;
+      border-top:1px solid rgba(164,188,255,.12);
+      background:rgba(255,255,255,.018);
+    }
+
+    .doll-shell.is-open .doll-panel{display:block}
+
+    .doll-copy{
+      margin:16px 0 0;
+      max-width:78ch;
+    }
+
+    .info-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .info-card{
+      border:1px solid rgba(164,188,255,.14);
+      border-radius:20px;
+      padding:14px;
+      background:rgba(255,255,255,.022);
+    }
+
+    .info-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.68rem;
+    }
+
+    .info-card strong{
+      display:block;
+      color:#fff;
+      line-height:1.25;
+      margin-bottom:8px;
+    }
+
+    .info-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .route-card{
+      display:block;
+      color:var(--text);
+      text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+
+    .route-card:hover,.route-card:focus-visible{
+      transform:translateY(-2px);
+      border-color:var(--line-strong);
+      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
+      outline:none;
+    }
+
+    .route-card h3{
+      margin:0 0 8px;
+      font-size:1.08rem;
+    }
+
+    .footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      color:var(--muted);
+      padding:14px 4px 0;
+      font-size:.92rem;
+    }
+
+    .footer-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+    }
+
+    .footer-links a{
+      color:var(--muted);
+      text-decoration:none;
+    }
+
+    .footer-links a:hover,.footer-links a:focus-visible{
+      color:var(--text);
+      outline:none;
+    }
+
+    @media (max-width:980px){
+      .hero-grid{grid-template-columns:1fr}
+      .readout-grid,.info-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .prize-grid{grid-template-columns:1fr}
+    }
+
+    @media (max-width:720px){
+      .page{width:min(100vw - 16px,var(--max));padding:14px 0 32px}
+      .topbar{flex-wrap:wrap;padding:12px 14px}
+      .topnav{width:100%;justify-content:flex-start}
+      .hero,.stage-card,.console,.panel{padding:18px 16px}
+      h1{font-size:clamp(2rem,11vw,3.4rem)}
+      .hero-actions{gap:8px}
+      .button{flex:1 1 calc(50% - 8px)}
+      .button.primary,.button.raffle{flex-basis:100%}
+      .stage-window{min-height:340px}
+      .stage-diamond{width:176px;height:176px}
+      .mic{transform:translate(-50%,-50%) scale(.86)}
+      .stage-label{width:calc(100% - 28px);border-radius:24px;font-size:.58rem;letter-spacing:.10em}
+      .readout-grid,.info-grid,.route-grid{grid-template-columns:1fr}
+      .doll-toggle{align-items:flex-start}
+      .doll-meta{display:grid;justify-items:end}
+      .footer{display:grid;gap:8px}
+    }
+
+    @media (prefers-reduced-motion:no-preference){
+      .stage-diamond{animation:stagePulse 5.8s ease-in-out infinite}
+      .spotlight{animation:slowSpin 42s linear infinite}
+      .mic{animation:micGlow 4.8s ease-in-out infinite}
+
+      @keyframes stagePulse{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.14)}
+      }
+
+      @keyframes slowSpin{
+        from{transform:translate(-50%,-50%) rotate(0deg)}
+        to{transform:translate(-50%,-50%) rotate(360deg)}
+      }
+
+      @keyframes micGlow{
+        0%,100%{filter:brightness(1)}
+        50%{filter:brightness(1.16)}
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none !important;scroll-behavior:auto !important}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">BL</div>
+        <div>
+          <p class="brand-kicker">Big Laugh Sub-tier</p>
+          <p class="brand-title">Big Laughs Comedy</p>
+        </div>
+      </div>
+
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/big-laugh/">Big Laugh</a>
+        <a class="nav-link" href="#raffle">Raffle</a>
+        <a class="nav-link" href="#tickets">Tickets</a>
+        <a class="nav-link" href="#showInfo">Show Info</a>
+        <a class="nav-link" href="/">Home</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="hero-tag">Sunday feature · Fort Worth comedy · raffle event</span>
+          <h1>Big Laughs, <span class="accent">big raffle</span>.</h1>
+          <p>
+            Big Laughs Comedy is the first live-show sub-tier under Big Laugh. Pre-register and receive five raffle tickets.
+            Show up to each show and receive one additional ticket. Winners are revealed at the fourth show.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#tickets">Pre-register</a>
+            <a class="button raffle" href="#raffle">Raffle prizes</a>
+            <a class="button" href="#showInfo">Show info</a>
+            <a class="button" href="/big-laugh/">Parent chamber</a>
+          </div>
+        </div>
+
+        <aside class="stage-card">
+          <div class="stage-window" aria-label="Big Laughs Comedy stage">
+            <div class="stage-grid"></div>
+            <div class="spotlight"></div>
+            <div class="stage-diamond"></div>
+            <div class="mic"></div>
+            <div class="stage-label">
+              <strong>Big Laughs Comedy</strong> · four-show raffle · winners revealed at show four
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="console" id="tickets">
+      <div class="section-kicker">Fast answers</div>
+      <h2>Pre-register, attend, stack entries</h2>
+
+      <div class="readout-grid">
+        <div class="readout">
+          <small>Show</small>
+          <strong>Big Laughs Comedy</strong>
+          <p>Sunday-night Fort Worth comedy under the Big Laugh parent chamber.</p>
+        </div>
+
+        <div class="readout">
+          <small>Pre-register</small>
+          <strong>5 Tickets</strong>
+          <p>Each pre-registration earns five raffle tickets.</p>
+        </div>
+
+        <div class="readout">
+          <small>Attend</small>
+          <strong>+1 Ticket</strong>
+          <p>Each time you show up to a show, you earn one additional raffle ticket.</p>
+        </div>
+
+        <div class="readout">
+          <small>Reveal</small>
+          <strong>Show 4</strong>
+          <p>Raffle winners are revealed at the fourth show.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="console" id="raffle">
+      <div class="section-kicker">Raffle prizes</div>
+      <h2>Grand prize and runner-up</h2>
+      <p>
+        The raffle runs across four shows. Pre-registering gives the strongest starting position, and attendance adds more entries.
+      </p>
+
+      <div class="prize-grid">
+        <article class="prize-card grand">
+          <small>Grand prize</small>
+          <h3>Dallas Cowboys-signed Troy Aikman jersey from the 1995 season</h3>
+          <p>
+            The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Big Laughs show.
+          </p>
+        </article>
+
+        <article class="prize-card runner">
+          <small>Runner-up prize</small>
+          <h3>55-inch LG 4K TV</h3>
+          <p>
+            The runner-up winner receives the 55-inch LG 4K TV.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" id="showInfo">
+      <div class="section-kicker">Russian-doll show page</div>
+      <h2>Open only what you need</h2>
+
+      <div class="russian-doll">
+        <article class="doll-shell is-open" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="true">
+            <div class="doll-head">
+              <small>Container 1</small>
+              <h3>What is Big Laughs?</h3>
+            </div>
+            <div class="doll-meta"><span>Show</span><span class="doll-diamond"></span></div>
+          </button>
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Big Laughs is a live comedy show designed to be simple before you arrive and energetic once you are in the room.
+              It sits under Big Laugh as the first event sub-tier.
+            </p>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Container 2</small>
+              <h3>How the raffle works</h3>
+            </div>
+            <div class="doll-meta"><span>Raffle</span><span class="doll-diamond"></span></div>
+          </button>
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Pre-registering gives you five raffle tickets. Every show you attend gives you one additional raffle ticket.
+              The raffle cycle runs across four shows, and winners are revealed at the fourth show.
+            </p>
+
+            <div class="info-grid">
+              <div class="info-card">
+                <small>Pre-register</small>
+                <strong>5 raffle tickets</strong>
+                <p>Every pre-registration earns five raffle tickets.</p>
+              </div>
+              <div class="info-card">
+                <small>Attend</small>
+                <strong>1 raffle ticket</strong>
+                <p>Every show attended earns one additional raffle ticket.</p>
+              </div>
+              <div class="info-card">
+                <small>Cycle</small>
+                <strong>4 shows</strong>
+                <p>The raffle runs across four Big Laughs shows.</p>
+              </div>
+              <div class="info-card">
+                <small>Reveal</small>
+                <strong>Show 4</strong>
+                <p>Winners are revealed at the fourth show.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Container 3</small>
+              <h3>Show details</h3>
+            </div>
+            <div class="doll-meta"><span>Info</span><span class="doll-diamond"></span></div>
+          </button>
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Sunday-night Fort Worth comedy. Keep official ticket price, venue address, and exact showtime current on the final reservation or ticket link.
+            </p>
+          </div>
+        </article>
+
+        <article class="doll-shell" data-doll>
+          <button class="doll-toggle" type="button" aria-expanded="false">
+            <div class="doll-head">
+              <small>Container 4</small>
+              <h3>Common questions</h3>
+            </div>
+            <div class="doll-meta"><span>FAQ</span><span class="doll-diamond"></span></div>
+          </button>
+          <div class="doll-panel">
+            <p class="doll-copy">
+              Prizes: grand prize is a Dallas Cowboys-signed Troy Aikman jersey from the 1995 season. Runner-up prize is a 55-inch LG 4K TV.
+              Pre-register for five raffle tickets, then attend shows for additional entries.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="console">
+      <div class="section-kicker">Final route</div>
+      <h2>Ready for the show</h2>
+
+      <div class="route-grid">
+        <a class="route-card" href="#tickets">
+          <small>Primary</small>
+          <h3>Pre-register</h3>
+          <p>Start with five raffle tickets.</p>
+        </a>
+
+        <a class="route-card" href="#raffle">
+          <small>Raffle</small>
+          <h3>Prize details</h3>
+          <p>Review the grand prize and runner-up prize.</p>
+        </a>
+
+        <a class="route-card" href="/big-laugh/">
+          <small>Parent</small>
+          <h3>Big Laugh</h3>
+          <p>Return to the parent comedy chamber.</p>
+        </a>
+
+        <a class="route-card" href="/">
+          <small>Root</small>
+          <h3>Home</h3>
+          <p>Return to the Diamond Gate Bridge root door.</p>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Big Laughs Comedy · Big Laugh sub-tier</span>
+      <div class="footer-links">
+        <a href="/big-laugh/">Big Laugh</a>
+        <a href="#raffle">Raffle</a>
+        <a href="#tickets">Pre-register</a>
+        <a href="/">Home</a>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      function closeSiblings(shell) {
+        const parent = shell.parentElement;
+        if (!parent) return;
+
+        parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
+          if (item === shell) return;
+          item.classList.remove("is-open");
+          const btn = item.querySelector("button");
+          if (btn) btn.setAttribute("aria-expanded", "false");
+        });
+      }
+
+      document.querySelectorAll("[data-doll] > .doll-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+          const shell = button.closest("[data-doll]");
+          if (!shell) return;
+
+          const willOpen = !shell.classList.contains("is-open");
+          closeSiblings(shell);
+          shell.classList.toggle("is-open", willOpen);
+          button.setAttribute("aria-expanded", String(willOpen));
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

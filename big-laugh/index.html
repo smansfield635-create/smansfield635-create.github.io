@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Big Laughs Comedy · Diamond Gate Bridge</title>
+  <title>Big Laugh Comedy · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Big Laughs Comedy Show: hosted by This Underdog, featuring Shannon. Includes raffle details, pre-registration tickets, show attendance tickets, and prize information."
+    content="Big Laugh Comedy: a Sunday-night Fort Worth comedy show hosted by This Underdog featuring Shannon, with pre-registration raffle entries and prizes."
   />
   <style>
     :root{
@@ -25,10 +25,7 @@
 
     *{box-sizing:border-box}
 
-    html{
-      min-height:100%;
-      scroll-behavior:smooth;
-    }
+    html{min-height:100%;scroll-behavior:smooth}
 
     body{
       min-height:100%;
@@ -226,10 +223,7 @@
 
     h1 .accent{color:var(--gold)}
 
-    p{
-      color:var(--muted);
-      line-height:1.58;
-    }
+    p{color:var(--muted);line-height:1.58}
 
     .hero p{
       margin:0;
@@ -789,84 +783,28 @@
     }
 
     @media (max-width:720px){
-      .page{
-        width:min(100vw - 16px,var(--max));
-        padding:14px 0 32px;
-      }
-
-      .topbar{
-        flex-wrap:wrap;
-        padding:12px 14px;
-      }
-
-      .topnav{
-        width:100%;
-        justify-content:flex-start;
-      }
-
-      .hero,.stage-card,.console,.panel{
-        padding:18px 16px;
-      }
-
-      h1{
-        font-size:clamp(2rem,11vw,3.4rem);
-      }
-
+      .page{width:min(100vw - 16px,var(--max));padding:14px 0 32px}
+      .topbar{flex-wrap:wrap;padding:12px 14px}
+      .topnav{width:100%;justify-content:flex-start}
+      .hero,.stage-card,.console,.panel{padding:18px 16px}
+      h1{font-size:clamp(2rem,11vw,3.4rem)}
       .hero-actions{gap:8px}
-
-      .button{
-        flex:1 1 calc(50% - 8px);
-      }
-
+      .button{flex:1 1 calc(50% - 8px)}
       .button.primary,.button.raffle{flex-basis:100%}
-
       .stage-window{min-height:340px}
-
-      .stage-diamond{
-        width:176px;
-        height:176px;
-      }
-
-      .mic{
-        transform:translate(-50%,-50%) scale(.86);
-      }
-
-      .stage-label{
-        width:calc(100% - 28px);
-        border-radius:24px;
-        font-size:.58rem;
-        letter-spacing:.10em;
-      }
-
-      .readout-grid,.info-grid,.route-grid{
-        grid-template-columns:1fr;
-      }
-
+      .stage-diamond{width:176px;height:176px}
+      .mic{transform:translate(-50%,-50%) scale(.86)}
+      .stage-label{width:calc(100% - 28px);border-radius:24px;font-size:.58rem;letter-spacing:.10em}
+      .readout-grid,.info-grid,.route-grid{grid-template-columns:1fr}
       .doll-toggle{align-items:flex-start}
-
-      .doll-meta{
-        display:grid;
-        justify-items:end;
-      }
-
-      .footer{
-        display:grid;
-        gap:8px;
-      }
+      .doll-meta{display:grid;justify-items:end}
+      .footer{display:grid;gap:8px}
     }
 
     @media (prefers-reduced-motion:no-preference){
-      .stage-diamond{
-        animation:stagePulse 5.8s ease-in-out infinite;
-      }
-
-      .spotlight{
-        animation:slowSpin 42s linear infinite;
-      }
-
-      .mic{
-        animation:micGlow 4.8s ease-in-out infinite;
-      }
+      .stage-diamond{animation:stagePulse 5.8s ease-in-out infinite}
+      .spotlight{animation:slowSpin 42s linear infinite}
+      .mic{animation:micGlow 4.8s ease-in-out infinite}
 
       @keyframes stagePulse{
         0%,100%{filter:brightness(1)}
@@ -885,10 +823,7 @@
     }
 
     @media (prefers-reduced-motion:reduce){
-      *{
-        animation:none !important;
-        scroll-behavior:auto !important;
-      }
+      *{animation:none !important;scroll-behavior:auto !important}
     }
   </style>
 </head>
@@ -898,15 +833,15 @@
       <div class="brand">
         <div class="brand-mark">BL</div>
         <div>
-          <p class="brand-kicker">Comedy Event</p>
-          <p class="brand-title">Big Laughs Comedy</p>
+          <p class="brand-kicker">Sunday Feature</p>
+          <p class="brand-title">Big Laugh Comedy</p>
         </div>
       </div>
 
       <nav class="topnav" aria-label="Primary">
         <a class="nav-link" href="#showInfo">Show Info</a>
         <a class="nav-link" href="#raffle">Raffle</a>
-        <a class="nav-link" href="#tickets">Tickets</a>
+        <a class="nav-link" href="#tickets">Pre-register</a>
         <a class="nav-link" href="#faq">FAQ</a>
         <a class="nav-link" href="/">Home</a>
       </nav>
@@ -915,10 +850,10 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Live comedy · hosted by This Underdog · featuring Shannon</span>
-          <h1>Big Laughs, <span class="accent">big raffle</span>.</h1>
+          <span class="hero-tag">Sunday night · Fort Worth · hosted by This Underdog · featuring Shannon</span>
+          <h1>Big Laugh <span class="accent">Comedy</span>.</h1>
           <p>
-            Big Laughs Comedy is a live stand-up show built for a clear night out. Pre-register for the show and receive
+            A Sunday-night Fort Worth comedy show built for a clear night out. Pre-register for the show and receive
             five raffle tickets. Show up to each show and receive one additional ticket. Winners are revealed at the fourth show.
           </p>
 
@@ -926,18 +861,18 @@
             <a class="button primary" href="#tickets">Pre-register</a>
             <a class="button raffle" href="#raffle">Raffle details</a>
             <a class="button" href="#showInfo">What to expect</a>
-            <a class="button" href="#faq">Questions</a>
+            <a class="button" href="/">Return to Gate</a>
           </div>
         </div>
 
         <aside class="stage-card">
-          <div class="stage-window" aria-label="Big Laughs comedy stage">
+          <div class="stage-window" aria-label="Big Laugh comedy stage">
             <div class="stage-grid"></div>
             <div class="spotlight"></div>
             <div class="stage-diamond"></div>
             <div class="mic"></div>
             <div class="stage-label">
-              <strong>Big Laughs Comedy</strong> · four-show raffle · grand prize reveal at show four
+              <strong>Big Laugh Comedy</strong> · four-show raffle · grand prize reveal at show four
             </div>
           </div>
         </aside>
@@ -946,16 +881,16 @@
 
     <section class="console" id="tickets">
       <div class="section-kicker">Fast answers</div>
-      <h2>What people need first</h2>
+      <h2>Show and raffle basics</h2>
       <p>
-        Ticket buyers should see the show, the raffle, and the reason to pre-register immediately.
+        Pre-registering gives the strongest raffle position. Attendance adds additional entries.
       </p>
 
       <div class="readout-grid">
         <div class="readout">
-          <small>Show</small>
-          <strong>Big Laughs Comedy</strong>
-          <p>A live stand-up comedy show with a welcoming, high-energy room.</p>
+          <small>Start time</small>
+          <strong>Sunday nights · 7:00 p.m.</strong>
+          <p>Sunday-night Fort Worth comedy event.</p>
           <div class="bar"><span style="--value:100%"></span></div>
         </div>
 
@@ -986,7 +921,7 @@
       <div class="section-kicker">Raffle prizes</div>
       <h2>Grand prize and runner-up</h2>
       <p>
-        The raffle runs across four shows. Pre-registering gives the strongest starting position, and attendance adds more entries.
+        The raffle runs across four shows. Pre-registering gets five entries, and every attended show adds one entry.
       </p>
 
       <div class="prize-grid">
@@ -994,7 +929,7 @@
           <small>Grand prize</small>
           <h3>Dallas Cowboys-signed Troy Aikman jersey from the 1995 season</h3>
           <p>
-            The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Big Laughs show.
+            The grand prize is the signed Aikman jersey. Winners will be revealed at the fourth Big Laugh show.
           </p>
           <span class="prize-badge">Grand prize</span>
         </article>
@@ -1022,55 +957,16 @@
           <button class="doll-toggle" type="button" aria-expanded="true">
             <div class="doll-head">
               <small>Container 1</small>
-              <h3>What is Big Laughs?</h3>
+              <h3>What is Big Laugh?</h3>
             </div>
             <div class="doll-meta"><span>SHOW</span><span class="doll-diamond"></span></div>
           </button>
 
           <div class="doll-panel">
             <p class="doll-copy">
-              Big Laughs is a live comedy show designed to feel easy to understand before you arrive and fun once you are in the room.
-              It is built around stand-up, audience energy, and a clear show flow.
+              Big Laugh is a Sunday-night Fort Worth comedy event designed to feel easy to understand before you arrive
+              and fun once you are in the room. It is built around stand-up, live room energy, and clear public promotion.
             </p>
-
-            <div class="inner-dolls">
-              <div class="inner-doll is-open" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="true">
-                  <strong>Who is the show for?</strong>
-                  <span>Audience</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    People who want a real comedy night without needing inside-baseball comedy knowledge. Come for jokes,
-                    stay for the room, and leave with an actual story from the night.
-                  </p>
-                </div>
-              </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>What kind of comedy is it?</strong>
-                  <span>Tone</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Stand-up first. The tone is direct, self-aware, social, and built for a live room rather than a passive scroll.
-                  </p>
-                </div>
-              </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>Why should someone come?</strong>
-                  <span>Reason</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Because the night is simple: pre-register, show up, laugh, and earn raffle entries along the way.
-                  </p>
-                </div>
-              </div>
-            </div>
           </div>
         </article>
 
@@ -1105,7 +1001,7 @@
               <div class="info-card">
                 <small>Show cycle</small>
                 <strong>4 shows</strong>
-                <p>The raffle runs across four Big Laughs shows.</p>
+                <p>The raffle runs across four Big Laugh shows.</p>
               </div>
 
               <div class="info-card">
@@ -1128,21 +1024,21 @@
 
           <div class="doll-panel">
             <p class="doll-copy">
-              Ticket price, venue address, and exact showtime should be kept current on the official ticket link.
-              This page should make the buying path obvious without burying people in details.
+              Start time is Sunday nights at 7:00 p.m. Ticket price, venue address, and pre-registration details
+              should stay current wherever the official reservation line is posted.
             </p>
 
             <div class="info-grid">
               <div class="info-card">
-                <small>Tickets</small>
-                <strong>Use the official ticket link</strong>
-                <p>Current price and seat availability should be confirmed at checkout.</p>
+                <small>Ticket line</small>
+                <strong>$1 per ticket</strong>
+                <p>Keep the ticket price visible and easy to understand.</p>
               </div>
 
               <div class="info-card">
-                <small>Showtime</small>
-                <strong>Check the event listing</strong>
-                <p>Doors and showtime should be listed clearly wherever tickets are sold.</p>
+                <small>Start time</small>
+                <strong>Sunday nights · 7:00 p.m.</strong>
+                <p>The show is framed as a Sunday-night Fort Worth event.</p>
               </div>
 
               <div class="info-card">
@@ -1171,45 +1067,33 @@
 
           <div class="doll-panel">
             <p class="doll-copy">
-              The show is hosted by This Underdog and features Shannon. The page keeps the cast explanation simple:
-              who is guiding the night, who is featured, and what the audience should expect from the show energy.
+              The show is hosted by This Underdog and features Shannon. The host sets the pace, welcomes the room,
+              and keeps the night moving with a self-aware underdog edge.
             </p>
 
-            <div class="inner-dolls">
-              <div class="inner-doll is-open" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="true">
-                  <strong>This Underdog</strong>
-                  <span>Host</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    The host sets the pace, welcomes the room, and keeps the night moving with a self-aware underdog edge.
-                  </p>
-                </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <small>Host</small>
+                <strong>This Underdog</strong>
+                <p>Host and public-facing show guide.</p>
               </div>
 
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>Shannon</strong>
-                  <span>Feature</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Shannon is featured as part of the night’s comedy draw and should be presented clearly in the promotion.
-                  </p>
-                </div>
+              <div class="info-card">
+                <small>Feature</small>
+                <strong>Shannon</strong>
+                <p>Featured performer for the Big Laugh show.</p>
               </div>
 
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>Full lineup</strong>
-                  <span>Update</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    Add confirmed performers here when the lineup is finalized. Keep names clear and avoid overexplaining.
-                  </p>
-                </div>
+              <div class="info-card">
+                <small>Event line</small>
+                <strong>Comedy first</strong>
+                <p>The promotion should stay clear and show-facing.</p>
+              </div>
+
+              <div class="info-card">
+                <small>Lineup</small>
+                <strong>Expandable</strong>
+                <p>Add confirmed performers here when the lineup is finalized.</p>
               </div>
             </div>
           </div>
@@ -1225,10 +1109,6 @@
           </button>
 
           <div class="doll-panel">
-            <p class="doll-copy">
-              These answers are designed for people who are interested but need practical clarity before buying.
-            </p>
-
             <div class="inner-dolls">
               <div class="inner-doll is-open" data-inner-doll>
                 <button class="inner-toggle" type="button" aria-expanded="true">
@@ -1249,7 +1129,7 @@
                 </button>
                 <div class="inner-panel">
                   <p>
-                    Winners are revealed at the fourth Big Laughs show.
+                    Winners are revealed at the fourth Big Laugh show.
                   </p>
                 </div>
               </div>
@@ -1261,19 +1141,8 @@
                 </button>
                 <div class="inner-panel">
                   <p>
-                    Grand prize: a Dallas Cowboys-signed Troy Aikman jersey from the 1995 season. Runner-up: a 55-inch LG 4K TV.
-                  </p>
-                </div>
-              </div>
-
-              <div class="inner-doll" data-inner-doll>
-                <button class="inner-toggle" type="button" aria-expanded="false">
-                  <strong>Do I need to know the comedians already?</strong>
-                  <span>No</span>
-                </button>
-                <div class="inner-panel">
-                  <p>
-                    No. The page and the host should make the night easy to understand even if someone is coming in cold.
+                    Grand prize: a Dallas Cowboys-signed Troy Aikman jersey from the 1995 season.
+                    Runner-up: a 55-inch LG 4K TV.
                   </p>
                 </div>
               </div>
@@ -1318,7 +1187,7 @@
     </section>
 
     <footer class="footer">
-      <span>Big Laughs Comedy · hosted by This Underdog · featuring Shannon</span>
+      <span>Big Laugh Comedy · hosted by This Underdog · featuring Shannon</span>
       <div class="footer-links">
         <a href="#tickets">Pre-register</a>
         <a href="#raffle">Raffle</a>

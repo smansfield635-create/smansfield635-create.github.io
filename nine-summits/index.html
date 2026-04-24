@@ -1,330 +1,434 @@
 <!DOCTYPE html>
-<html lang="en" data-season="winter">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>The Nine Summits of Love | Diamond Gate Bridge</title>
-  <meta name="description" content="The Nine Summits of Love — movement, mantra, and structure." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nine Summits · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Generation 1 Nine Summits surface for Diamond Gate Bridge."
+  />
   <style>
     :root{
-      color-scheme:dark;
-      --bg0:#101520;
-      --bg1:#172338;
-      --bg2:#22344f;
-      --ink:#f6fbff;
-      --mut:rgba(246,251,255,.84);
-      --soft:rgba(246,251,255,.62);
-      --gold:#e9f4ff;
-      --gold2:#ffffff;
-      --ice:#b9d7ff;
-      --ice2:#dcecff;
-      --silver:#d7e6ff;
-      --wood:#313847;
-      --wood2:#171c26;
-      --line:rgba(255,255,255,.10);
-      --lineStrong:rgba(233,244,255,.24);
-      --panelTop:rgba(18,22,34,.78);
-      --panelBottom:rgba(9,12,20,.94);
-      --shadow:0 24px 76px rgba(0,0,0,.50);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
+      --bg:#040814;
+      --bg2:#091327;
+      --panel:rgba(8,14,28,.72);
+      --line:rgba(164,188,255,.18);
+      --line-strong:rgba(210,223,255,.34);
+      --text:#eef4ff;
+      --muted:#9aabd0;
+      --gold:#efd29a;
+      --mint:#99e5b6;
+      --blue:#91c7ff;
+      --rose:#f0bacb;
+      --shadow:0 24px 80px rgba(0,0,0,.46);
+      --max:1160px;
     }
+
     *{box-sizing:border-box}
-    html,body{
-      margin:0;min-height:100%;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(194,223,255,.10), transparent 26%),
-        radial-gradient(circle at 50% 84%, rgba(154,181,255,.05), transparent 30%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
-      color:var(--ink);
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-    body{overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
-    .glow{position:absolute;inset:0;pointer-events:none}
-    .glow::before{
-      content:"";position:absolute;inset:0;
       background:
-        radial-gradient(circle at 18% 24%, rgba(220,236,255,.10), transparent 30%),
-        radial-gradient(circle at 82% 18%, rgba(185,215,255,.10), transparent 28%),
-        radial-gradient(circle at 62% 78%, rgba(154,181,255,.08), transparent 26%);
-      filter:blur(8px);
+        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
+        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
+        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
+        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+      overflow-x:hidden;
     }
-    .wrap{
-      position:relative;z-index:1;width:min(1240px,calc(100vw - 32px));margin:0 auto;
-      padding:
-        calc(24px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(56px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
-      display:flex;flex-direction:column;gap:18px;
-    }
-    .topbar,.hero,.summits,.ninth,.closing{
-      border:1px solid var(--line);border-radius:30px;background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
-      box-shadow:var(--shadow);position:relative;overflow:hidden;
-    }
-    .topbar::before,.hero::before,.summits::before,.ninth::before,.closing::before{
-      content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);border-radius:inherit;
-    }
-    .topbar{
-      display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 18px;
-    }
-    .brand{display:flex;align-items:center;gap:12px}
-    .brandMark{
-      width:42px;height:42px;border-radius:14px;transform:rotate(45deg);
-      border:1px solid var(--lineStrong);background:linear-gradient(180deg,#4b5b7b,#1b2230);flex:0 0 auto;
-    }
-    .brandTitle{margin:0 0 3px;font-size:.96rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
-    .brandSubtitle{margin:0;color:var(--soft);font-size:.82rem}
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
-    .nav a,.cta{
-      min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--lineStrong);
-      background:rgba(255,255,255,.04);color:var(--gold2);font-size:12px;font-weight:900;letter-spacing:.06em;
-      text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;
-      transition:transform 140ms ease, box-shadow 140ms ease;
-    }
-    .nav a:hover,.cta:hover{transform:translateY(-1px);box-shadow:0 16px 34px rgba(0,0,0,.26)}
-    .hero,.summits,.ninth,.closing{padding:26px 24px 24px}
-    .eyebrow{margin:0 0 10px;color:var(--gold);font-size:12px;font-weight:900;letter-spacing:.18em;text-transform:uppercase}
-    h1,h2,h3{font-family:Georgia,"Times New Roman",serif}
-    h1{margin:0 0 12px;font-size:clamp(44px,8vw,92px);line-height:.92}
-    h2{margin:0 0 12px;font-size:clamp(28px,4.4vw,48px);line-height:1.02;color:var(--ice2)}
-    h3{margin:0 0 8px;font-size:22px;line-height:1.08;color:var(--gold2)}
-    p{margin:0;color:var(--mut);font-size:16px;line-height:1.68;max-width:940px}
-    .lead{font-size:20px;font-weight:800;color:rgba(246,251,255,.96);margin:0 0 12px;max-width:980px}
-    .heroGrid,.ninthGrid,.closingGrid,.summitGrid{display:grid;gap:14px}
-    .heroGrid{grid-template-columns:minmax(0,1.06fr) minmax(320px,.94fr);margin-top:18px}
-    .summitGrid{grid-template-columns:repeat(3,minmax(0,1fr));margin-top:16px}
-    .ninthGrid{grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);margin-top:16px}
-    .closingGrid{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:16px}
-    .panel,.windowPanel,.summitCard,.dollCard,.closingCard{
-      border:1px solid rgba(255,255,255,.10);border-radius:26px;padding:20px;
-      background:linear-gradient(180deg,rgba(18,22,34,.80),rgba(8,10,18,.94));position:relative;overflow:hidden;
-    }
-    .panel::before,.windowPanel::before,.summitCard::before,.dollCard::before,.closingCard::before{
-      content:"";position:absolute;inset:0;pointer-events:none;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(233,244,255,.10), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(185,215,255,.10), transparent 28%),
-        radial-gradient(circle at 50% 84%, rgba(154,181,255,.06), transparent 24%);
-      opacity:.95;
-    }
-    .panel > *,.windowPanel > *,.summitCard > *,.dollCard > *,.closingCard > *{position:relative;z-index:1}
-    .chipRow{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-    .chip{
-      min-height:38px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);
-      color:#fff;font-size:11px;font-weight:900;letter-spacing:.05em;text-transform:uppercase;display:inline-flex;align-items:center;justify-content:center;
-    }
-    .ctaRow{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px}
-    .windowFrameOuter{
-      position:relative;min-height:340px;border-radius:18px;padding:12px;background:linear-gradient(180deg,var(--wood),var(--wood2));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-    }
-    .window{
-      position:relative;width:100%;min-height:316px;height:100%;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(233,244,255,.18), rgba(170,203,255,.04));
-    }
-    .outside{
-      position:absolute;inset:0;
-      background:
-        radial-gradient(circle at 50% 100%, rgba(233,244,255,.30), transparent 30%),
-        linear-gradient(180deg, rgba(233,244,255,.16) 0%, rgba(170,203,255,.08) 42%, rgba(42,52,76,.18) 100%);
-    }
-    .tree{position:absolute;left:50%;bottom:0;width:200px;height:250px;transform:translateX(-50%)}
-    .trunk{position:absolute;left:50%;bottom:0;width:16px;height:104px;transform:translateX(-50%);background:linear-gradient(180deg,#5b6476,#2e3442);border-radius:10px}
-    .branch{position:absolute;background:linear-gradient(180deg,#677286,#2e3442);border-radius:999px;transform-origin:bottom center}
-    .b1{width:10px;height:92px;left:78px;bottom:78px;transform:rotate(-34deg)}
-    .b2{width:10px;height:94px;left:112px;bottom:80px;transform:rotate(30deg)}
-    .b3{width:8px;height:62px;left:62px;bottom:126px;transform:rotate(-58deg)}
-    .b4{width:8px;height:64px;left:128px;bottom:128px;transform:rotate(56deg)}
-    .frost{
-      position:absolute;border-radius:999px;
-      background:
-        radial-gradient(circle at 40% 40%, rgba(255,255,255,.92), transparent 18%),
-        radial-gradient(circle at 50% 50%, rgba(220,236,255,.90), rgba(176,201,235,.88));
-      box-shadow:0 0 20px rgba(220,236,255,.18);
-    }
-    .f1{width:56px;height:56px;left:72px;bottom:142px}
-    .f2{width:50px;height:50px;left:32px;bottom:132px}
-    .f3{width:50px;height:50px;left:118px;bottom:132px}
-    .f4{width:42px;height:42px;left:52px;bottom:174px}
-    .f5{width:42px;height:42px;left:106px;bottom:174px}
-    .f6{width:36px;height:36px;left:82px;bottom:194px}
-    .snow1,.snow2,.snow3,.snow4,.snow5,.snow6{
-      position:absolute;width:6px;height:6px;border-radius:999px;background:rgba(245,251,255,.96);
-      box-shadow:0 0 10px rgba(245,251,255,.5),0 0 18px rgba(185,215,255,.22);
-    }
-    .snow1{left:34px;top:80px}.snow2{left:66px;top:124px}.snow3{left:102px;top:92px}
-    .snow4{right:34px;top:86px}.snow5{right:64px;top:126px}.snow6{left:50%;top:146px}
-    .pane{
-      position:absolute;inset:0;
-      background:
-        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
-        linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
       pointer-events:none;
+      opacity:.18;
+      background:
+        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
+      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
     }
-    .windowReflection{
-      position:absolute;inset:0;
-      background:linear-gradient(120deg, rgba(255,255,255,.12), transparent 28%, transparent 58%, rgba(255,255,255,.06));
-      pointer-events:none;mix-blend-mode:screen;
+
+    .page{
+      width:min(var(--max), calc(100vw - 24px));
+      margin:0 auto;
+      padding:18px 0 40px;
+      position:relative;
+      z-index:1;
     }
-    .windowLabel{margin-top:14px;color:var(--soft);font-size:13px;line-height:1.55}
-    .list{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:8px}
-    .list li{position:relative;padding-left:18px;color:var(--mut);font-size:15px;line-height:1.58}
-    .list li::before{
-      content:"";position:absolute;left:0;top:.58em;width:6px;height:6px;border-radius:999px;background:var(--ice2);box-shadow:0 0 10px rgba(233,244,255,.18);
+
+    .topbar,.section,.hero{
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
     }
-    .summitNum{
-      display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:42px;border-radius:999px;border:1px solid rgba(233,244,255,.20);
-      background:rgba(255,255,255,.04);color:var(--ice2);font-size:14px;font-weight:900;letter-spacing:.04em;margin-bottom:10px;
+
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      padding:14px 16px;
+      border-radius:20px;
+      background:rgba(7,13,26,.7);
+      backdrop-filter:blur(10px);
     }
-    .footnote{margin-top:10px;color:var(--soft);font-size:12px;letter-spacing:.05em;text-transform:uppercase}
-    @media (max-width:1080px){
-      .heroGrid,.summitGrid,.ninthGrid,.closingGrid{grid-template-columns:1fr}
+
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-mark{
+      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
+      color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
     }
-    @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1240px)}
-      .topbar{align-items:flex-start}
-      .hero,.summits,.ninth,.closing{padding:20px 18px 18px}
+    .brand-kicker{
+      margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
+    }
+    .brand-title{
+      margin:0;font-size:1.05rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    }
+    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
+    .nav-link,.button,.summit-link{
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+      transition:transform .16s ease,border-color .16s ease,background .16s ease;
+    }
+    .nav-link{
+      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
+      color:var(--text);font-weight:700;font-size:.92rem;background:rgba(255,255,255,.03);
+    }
+    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible,.summit-link:hover,.summit-link:focus-visible{
+      transform:translateY(-1px);border-color:var(--line-strong);background:rgba(255,255,255,.05);outline:none;
+    }
+
+    .hero{
+      margin-top:16px;border-radius:34px;padding:24px 20px 20px;position:relative;overflow:hidden;
+    }
+    .hero::after{
+      content:"";position:absolute;inset:0;pointer-events:none;
+      background:radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
+      linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
+      mix-blend-mode:screen;
+    }
+    .hero-grid{
+      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:20px;align-items:start;position:relative;z-index:1;
+    }
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);
+      background:rgba(255,255,255,.03);color:#d8e3ff;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;margin-bottom:12px;
+    }
+    .hero-tag::before{
+      content:"";width:9px;height:9px;border-radius:2px;transform:rotate(45deg);background:#dce7ff;
+      box-shadow:0 0 16px rgba(220,231,255,.52);
+    }
+    h1{
+      margin:0 0 10px;font-size:clamp(2.2rem, 4.8vw, 4rem);line-height:.96;letter-spacing:-.05em;max-width:10ch;
+    }
+    h1 .accent{color:var(--gold)}
+    .hero p,.card p,.hero-side p,.step p,.section-note{
+      color:var(--muted);line-height:1.58;
+    }
+    .hero p{margin:0;font-size:clamp(.98rem, 1.5vw, 1.1rem);max-width:58ch}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .button{
+      min-height:44px;padding:0 16px;border-radius:16px;border:1px solid var(--line);color:var(--text);font-weight:800;background:rgba(255,255,255,.03);white-space:nowrap;
+    }
+    .button.primary{
+      border-color:rgba(239,210,154,.3);
+      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
+      color:#fff8ea;
+    }
+
+    .hero-side,.card,.step,.summit-link{
+      border:1px solid var(--line);
+      border-radius:24px;
+      background:rgba(255,255,255,.03);
+    }
+    .hero-side,.card,.step{padding:18px}
+    .hero-side h2,.card h3,.step h3{margin:0 0 10px;font-size:1.08rem;line-height:1.1;letter-spacing:-.02em}
+    .hero-stats{display:grid;gap:10px;margin-top:16px}
+    .stat{
+      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);
+    }
+    .stat-label{
+      display:block;margin-bottom:6px;color:#90a3ce;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+    }
+    .stat-value{color:#f4f7ff;font-size:.98rem;font-weight:700}
+
+    .section{margin-top:18px;border-radius:30px;padding:20px}
+    .section-head{
+      display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px;
+    }
+    .section-kicker{
+      color:#c8d7ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px;
+    }
+    .section h2{margin:0;font-size:1.45rem;letter-spacing:-.03em;line-height:1.06}
+    .section-note{font-size:.92rem;max-width:42ch;text-align:right}
+
+    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .step-number{
+      display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;
+      border:1px solid rgba(239,210,154,.28);background:rgba(239,210,154,.08);color:#fff2d5;font-weight:800;margin-bottom:12px;
+    }
+
+    .summits{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:14px;
+    }
+    .summit-link{
+      padding:18px;display:grid;gap:10px;color:inherit;
+      min-height:190px;
+    }
+    .summit-link[data-tone="gold"]{color:var(--gold)}
+    .summit-link[data-tone="mint"]{color:var(--mint)}
+    .summit-link[data-tone="blue"]{color:var(--blue)}
+    .summit-link[data-tone="rose"]{color:var(--rose)}
+    .summit-mark{
+      width:40px;height:40px;border-radius:14px;display:grid;place-items:center;border:1px solid currentColor;background:rgba(255,255,255,.03);
+      font-weight:800;letter-spacing:.08em;
+    }
+    .summit-title{
+      margin:0;color:var(--text);font-size:1.14rem;font-weight:800;letter-spacing:-.02em;
+    }
+    .summit-copy{
+      color:var(--muted);line-height:1.58;font-size:.95rem;
+    }
+    .summit-meta{
+      color:#dce7ff;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;margin-top:auto;
+    }
+
+    .footer{
+      display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);padding:12px 4px 0;font-size:.92rem;
+    }
+    .footer-links{display:flex;flex-wrap:wrap;gap:12px}
+    .footer-links a{color:var(--muted);text-decoration:none}
+    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
+
+    @media (max-width: 980px){
+      .hero-grid,.cards,.steps,.summits{grid-template-columns:1fr}
+    }
+
+    @media (max-width: 720px){
+      .page{width:min(100vw - 16px, var(--max));padding:14px 0 28px}
+      .topbar{flex-wrap:wrap;padding:12px 14px}
+      .topnav{width:100%;justify-content:flex-start}
+      .hero,.section{padding:18px 16px}
+      .hero-grid{gap:14px}
+      .hero h1{font-size:clamp(2rem, 11vw, 3.4rem)}
+      .hero-actions{gap:8px}
+      .button{flex:1 1 calc(50% - 8px)}
+      .button.primary{flex-basis:100%}
+      .section-head,.footer{display:grid;gap:8px}
+      .section-note{text-align:left}
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <div class="glow" aria-hidden="true"></div>
+  <main class="page">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">DG</div>
+        <div>
+          <p class="brand-kicker">Opening Surface</p>
+          <p class="brand-title">Prelude · Diamond Gate Bridge</p>
+        </div>
+      </div>
 
-    <main class="wrap">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brandMark" aria-hidden="true"></div>
-          <div>
-            <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Nine Summits · Winter outside</p>
+      <nav class="topnav" aria-label="Primary">
+        <a class="nav-link" href="/">Home</a>
+        <a class="nav-link" href="/about/">About</a>
+        <a class="nav-link" href="/products/">Products</a>
+        <a class="nav-link" href="/laws/">Laws</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <span class="hero-tag">Generation 1 · prelude renewal</span>
+          <h1>The opening read <span class="accent">before descent</span>.</h1>
+          <p>
+            The Prelude is the first calming surface. It is not the deep chamber and not the final explanation.
+            Its job is to set tone, establish the broad read, and prepare the visitor to move deeper without confusion.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button primary" href="#summits">Open the summits</a>
+            <a class="button" href="/about/">About</a>
+            <a class="button" href="/">Back to door</a>
           </div>
         </div>
-        <nav class="nav" aria-label="Nine Summits navigation">
-          <a href="/home/">Home</a>
-          <a href="/prelude/">Prelude</a>
-          <a href="/products/">Products</a>
-        </nav>
-      </header>
 
-      <section class="hero">
-        <p class="eyebrow">256 Karats of Human Potential</p>
-        <h1>The Nine Summits of Love</h1>
-        <p class="lead">Winter is outside the chamber. Purity is inside the doctrine. The Tree of Life shows the season without replacing the room.</p>
+        <aside class="hero-side">
+          <h2>Prelude job</h2>
+          <p>
+            Orient the visitor, set cadence, and move them toward the right surface without turning the prelude
+            into a law page, product page, or dense explanation block.
+          </p>
 
-        <div class="heroGrid">
-          <article class="panel">
-            <h2>The movement stays interior.</h2>
-            <p>
-              This page is no longer a seasonal page-swap. It is an interior chamber of the house. Winter is seen through the glass, while the doctrine and the Ninth Summit remain the true interior focus.
-            </p>
-            <div class="chipRow">
-              <div class="chip">Doctrine inside</div>
-              <div class="chip">Winter outside</div>
-              <div class="chip">Purity featured</div>
+          <div class="hero-stats">
+            <div class="stat">
+              <span class="stat-label">Purpose</span>
+              <span class="stat-value">Opening orientation and tone</span>
             </div>
-            <div class="ctaRow">
-              <a class="cta" href="#summits">Open the nine summits</a>
-              <a class="cta" href="#ninth-summit">Enter the ninth summit</a>
+            <div class="stat">
+              <span class="stat-label">Position</span>
+              <span class="stat-value">Before deeper route selection</span>
             </div>
-          </article>
-
-          <aside class="windowPanel">
-            <div class="windowFrameOuter">
-              <div class="window">
-                <div class="outside"></div>
-                <div class="tree" aria-hidden="true">
-                  <div class="trunk"></div>
-                  <div class="branch b1"></div>
-                  <div class="branch b2"></div>
-                  <div class="branch b3"></div>
-                  <div class="branch b4"></div>
-                  <div class="frost f1"></div>
-                  <div class="frost f2"></div>
-                  <div class="frost f3"></div>
-                  <div class="frost f4"></div>
-                  <div class="frost f5"></div>
-                  <div class="frost f6"></div>
-                  <div class="snow1"></div>
-                  <div class="snow2"></div>
-                  <div class="snow3"></div>
-                  <div class="snow4"></div>
-                  <div class="snow5"></div>
-                  <div class="snow6"></div>
-                </div>
-                <div class="pane"></div>
-                <div class="windowReflection"></div>
-              </div>
+            <div class="stat">
+              <span class="stat-label">Contract</span>
+              <span class="stat-value">Generation 1 Prelude surface</span>
             </div>
-            <p class="windowLabel">Winter remains outside the chamber. The Tree of Life carries the signal.</p>
-          </aside>
-        </div>
-      </section>
+          </div>
+        </aside>
+      </div>
+    </section>
 
-      <section class="summits" id="summits">
-        <p class="eyebrow">The nine summits</p>
-        <h2>Nine essential virtues.</h2>
-        <div class="summitGrid">
-          <article class="summitCard"><div class="summitNum">1</div><h3>Gratitude</h3><p>Recognition replaces lack as the primary lens.</p></article>
-          <article class="summitCard"><div class="summitNum">2</div><h3>Generosity</h3><p>Value begins to move outward visibly.</p></article>
-          <article class="summitCard"><div class="summitNum">3</div><h3>Dependability</h3><p>Consistency becomes trustworthy structure.</p></article>
-          <article class="summitCard"><div class="summitNum">4</div><h3>Accountability</h3><p>Character takes consequence seriously.</p></article>
-          <article class="summitCard"><div class="summitNum">5</div><h3>Forgiveness</h3><p>Release enters the system without erasing truth.</p></article>
-          <article class="summitCard"><div class="summitNum">6</div><h3>Humility</h3><p>Power becomes proportionate and clear.</p></article>
-          <article class="summitCard"><div class="summitNum">7</div><h3>Self-Control</h3><p>Impulse becomes governable rather than sovereign.</p></article>
-          <article class="summitCard"><div class="summitNum">8</div><h3>Patience</h3><p>Time is allowed to mature the structure lawfully.</p></article>
-          <article class="summitCard"><div class="summitNum">9</div><h3>Purity</h3><p>The crown chamber where refinement and coherence converge.</p></article>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">What the prelude does</div>
+          <h2>Set the frame without overload</h2>
         </div>
-      </section>
+        <div class="section-note">
+          This is an opening layer, not a terminal explanation surface.
+        </div>
+      </div>
 
-      <section class="ninth" id="ninth-summit">
-        <p class="eyebrow">Featured crown chamber</p>
-        <h2>The Ninth Summit — Purity</h2>
-        <div class="ninthGrid">
-          <article class="panel">
-            <p>
-              Purity remains the highest featured chamber, but winter no longer floods the page as a costume. It is a witnessed exterior condition seen through the Tree of Life beyond the window.
-            </p>
-            <ul class="list">
-              <li>Purity is the crown chamber.</li>
-              <li>The doctrine remains interior and stable.</li>
-              <li>The season is visible, not invasive.</li>
-              <li>The Tree of Life remains the world-state instrument.</li>
-            </ul>
-          </article>
-          <article class="dollCard">
-            <h3>Nested winter read</h3>
-            <ul class="list">
-              <li>Outer doll: house chamber</li>
-              <li>Middle doll: doctrine</li>
-              <li>Inner doll: purity</li>
-            </ul>
-            <p style="margin-top:14px;">That is the new baseline across the house-facing pages.</p>
-          </article>
+      <div class="cards">
+        <div class="card">
+          <h3>Orientation</h3>
+          <p>
+            The Prelude gives the visitor a first stable read so they know what kind of place they have entered.
+          </p>
         </div>
-      </section>
+        <div class="card">
+          <h3>Tone</h3>
+          <p>
+            It establishes cadence and seriousness without collapsing into doctrine, pitch language, or clutter.
+          </p>
+        </div>
+        <div class="card">
+          <h3>Transition</h3>
+          <p>
+            It prepares lawful descent into the right route, chamber, or surface once the opening frame is stable.
+          </p>
+        </div>
+      </div>
+    </section>
 
-      <section class="closing">
-        <p class="eyebrow">Closing read</p>
-        <h2>Winter is outside. Purity is inside.</h2>
-        <div class="closingGrid">
-          <article class="closingCard">
-            <h3>Public face</h3>
-            <p>The movement remains public, speakable, and expandable.</p>
-          </article>
-          <article class="closingCard">
-            <h3>Inner crown</h3>
-            <p>The Ninth Summit remains the clearest and most refined chamber on the page.</p>
-          </article>
+    <section class="section">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Use pattern</div>
+          <h2>Read broad first, then go where the route asks</h2>
         </div>
-        <div class="footnote">House law preserved. World-state visible through glass.</div>
-      </section>
-    </main>
-  </div>
+        <div class="section-note">
+          The prelude should reduce confusion, not create more of it.
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <h3>Enter cleanly</h3>
+          <p>Take the opening read at face value. Prelude steadies the frame before deeper exploration.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <h3>Let the tone settle</h3>
+          <p>Read it as an opening instrument, not as a total encyclopedia of the entire project.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <h3>Choose the next route</h3>
+          <p>Move from Prelude into Nine Summits, About, Products, or Laws only after orientation is clear.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="summits">
+      <div class="section-head">
+        <div>
+          <div class="section-kicker">Summit descent</div>
+          <h2>Nine summits opening map</h2>
+        </div>
+        <div class="section-note">
+          Prelude should point toward the value spine, not compete with it.
+        </div>
+      </div>
+
+      <div class="summits">
+        <a class="summit-link" data-tone="gold" href="/nine-summits/">
+          <div class="summit-mark">N</div>
+          <h3 class="summit-title">Nine Summits</h3>
+          <div class="summit-copy">
+            Enter the full value spine and move from the opening read into the summit structure itself.
+          </div>
+          <div class="summit-meta">Baseline · Spine</div>
+        </a>
+
+        <a class="summit-link" data-tone="mint" href="/products/">
+          <div class="summit-mark">P</div>
+          <h3 class="summit-title">Products</h3>
+          <div class="summit-copy">
+            Step from orientation into the products chamber once the opening frame is stable enough to build from.
+          </div>
+          <div class="summit-meta">Chamber · Build</div>
+        </a>
+
+        <a class="summit-link" data-tone="blue" href="/about/">
+          <div class="summit-mark">A</div>
+          <h3 class="summit-title">About</h3>
+          <div class="summit-copy">
+            Read the plain-language orientation surface that explains what the site is and how to use it.
+          </div>
+          <div class="summit-meta">Identity · Orientation</div>
+        </a>
+
+        <a class="summit-link" data-tone="rose" href="/laws/">
+          <div class="summit-mark">L</div>
+          <h3 class="summit-title">Laws</h3>
+          <div class="summit-copy">
+            Move into the governing rule layer once you need structure, interpretation, and standards.
+          </div>
+          <div class="summit-meta">Rule · Structure</div>
+        </a>
+
+        <a class="summit-link" data-tone="gold" href="/">
+          <div class="summit-mark">D</div>
+          <h3 class="summit-title">Door</h3>
+          <div class="summit-copy">
+            Return to the root gateway and choose a broader entry into the larger house.
+          </div>
+          <div class="summit-meta">Root · Entry</div>
+        </a>
+
+        <a class="summit-link" data-tone="mint" href="/gauges/">
+          <div class="summit-mark">G</div>
+          <h3 class="summit-title">Gauges</h3>
+          <div class="summit-copy">
+            Read the signal and measurement layer once you need movement, state, and comparative surfaces.
+          </div>
+          <div class="summit-meta">Signal · Measurement</div>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Prelude · Generation 1 opening contract</span>
+      <div class="footer-links">
+        <a href="/">Home</a>
+        <a href="/about/">About</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+      </div>
+    </footer>
+  </main>
 </body>
 </html>

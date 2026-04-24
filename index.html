@@ -6,13 +6,13 @@
   <title>Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge canonical root door: an extravagant world-entry surface with lawful paths into Prelude, Products, Gauges, Laws, and About."
+    content="Diamond Gate Bridge Generation 2 root door: an immersive canonical entry threshold with lawful routes into Products, Gauges, Laws, About, and Prelude."
   />
   <style>
     :root{
-      --bg:#030711;
-      --panel:rgba(8,15,30,.82);
-      --panel-strong:rgba(12,22,42,.92);
+      --bg:#020610;
+      --panel:rgba(8,15,30,.84);
+      --panel-strong:rgba(12,22,42,.94);
       --line:rgba(164,188,255,.18);
       --line-strong:rgba(210,223,255,.34);
       --text:#eef4ff;
@@ -21,8 +21,8 @@
       --gold-strong:#ffd98f;
       --blue:#6db8ff;
       --blue-strong:#7ad5ff;
-      --deep-blue:#0b1f42;
-      --shadow:0 24px 80px rgba(0,0,0,.48);
+      --deep-blue:#071a38;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1240px;
     }
 
@@ -39,10 +39,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 8%, rgba(112,151,255,.22), transparent 22%),
-        radial-gradient(circle at 18% 28%, rgba(78,128,220,.12), transparent 24%),
-        radial-gradient(circle at 82% 34%, rgba(78,128,220,.10), transparent 24%),
-        linear-gradient(180deg,#030711 0%,#071225 52%,#030711 100%);
+        radial-gradient(circle at 50% 6%, rgba(112,151,255,.24), transparent 22%),
+        radial-gradient(circle at 18% 28%, rgba(78,128,220,.13), transparent 24%),
+        radial-gradient(circle at 82% 34%, rgba(78,128,220,.11), transparent 24%),
+        linear-gradient(180deg,#020610 0%,#071225 52%,#020610 100%);
       overflow-x:hidden;
     }
 
@@ -51,7 +51,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.19;
+      opacity:.2;
       background:
         radial-gradient(circle at 18% 20%, rgba(255,255,255,.42) 0 1px, transparent 1.7px),
         radial-gradient(circle at 78% 28%, rgba(255,255,255,.22) 0 1px, transparent 1.7px),
@@ -82,10 +82,10 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.door-card,.entry-card,.route-card,.signal-card{
+    .topbar,.hero,.door-card,.entry-card,.route-card,.signal-card,.generation-card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.90), rgba(6,12,24,.84));
+      background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
     }
 
     .topbar{
@@ -95,7 +95,7 @@
       gap:16px;
       padding:14px 16px;
       border-radius:22px;
-      background:rgba(7,13,26,.72);
+      background:rgba(7,13,26,.74);
       backdrop-filter:blur(10px);
     }
 
@@ -115,12 +115,12 @@
       flex:none;
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 28%, rgba(115,171,255,.22), transparent 42%),
-        linear-gradient(180deg, rgba(26,43,78,.88), rgba(10,18,32,.96));
+        radial-gradient(circle at 50% 28%, rgba(115,171,255,.24), transparent 42%),
+        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
       color:#f4f8ff;
       font-weight:900;
       letter-spacing:.08em;
-      box-shadow:0 0 22px rgba(109,184,255,.08);
+      box-shadow:0 0 22px rgba(109,184,255,.09);
     }
 
     .brand-kicker{
@@ -221,15 +221,15 @@
 
     h1{
       margin:0 0 12px;
-      font-size:clamp(2.3rem, 5vw, 4.7rem);
-      line-height:.96;
-      letter-spacing:-.055em;
+      font-size:clamp(2.3rem, 5vw, 4.85rem);
+      line-height:.95;
+      letter-spacing:-.058em;
       max-width:11ch;
     }
 
     h1 .accent{color:var(--gold)}
 
-    .hero p,.entry-card p,.route-card p,.signal-card p{
+    .hero p,.entry-card p,.route-card p,.signal-card p,.generation-card p{
       color:var(--muted);
       line-height:1.58;
     }
@@ -268,39 +268,40 @@
       position:relative;
       overflow:hidden;
       background:
-        radial-gradient(circle at 50% 20%, rgba(72,132,232,.19), transparent 36%),
-        linear-gradient(180deg, rgba(12,24,48,.90), rgba(5,12,24,.92));
+        radial-gradient(circle at 50% 20%, rgba(72,132,232,.20), transparent 36%),
+        linear-gradient(180deg, rgba(12,24,48,.92), rgba(5,12,24,.94));
     }
 
     .door-shell{
       position:relative;
       width:100%;
       aspect-ratio:.72 / 1;
-      min-height:600px;
-      max-height:820px;
-      border-radius:38px;
+      min-height:630px;
+      max-height:860px;
+      border-radius:40px;
       overflow:hidden;
-      border:1px solid rgba(170,198,255,.22);
+      border:1px solid rgba(170,198,255,.24);
       background:
-        radial-gradient(circle at 50% 42%, rgba(120,190,255,.18), transparent 28%),
-        radial-gradient(circle at 50% 76%, rgba(239,210,154,.08), transparent 34%),
-        linear-gradient(180deg, rgba(10,23,48,.96), rgba(3,9,20,.98));
+        radial-gradient(circle at 50% 39%, rgba(120,190,255,.20), transparent 28%),
+        radial-gradient(circle at 50% 78%, rgba(239,210,154,.09), transparent 34%),
+        linear-gradient(180deg, rgba(10,23,48,.97), rgba(3,9,20,.99));
       box-shadow:
-        inset 0 0 56px rgba(126,164,255,.12),
-        inset 0 -32px 76px rgba(0,0,0,.36),
-        0 0 42px rgba(92,184,255,.08);
+        inset 0 0 64px rgba(126,164,255,.13),
+        inset 0 -36px 86px rgba(0,0,0,.38),
+        0 0 48px rgba(92,184,255,.09);
       isolation:isolate;
+      cursor:pointer;
     }
 
     .door-shell::before{
       content:"";
       position:absolute;
       inset:12px;
-      border-radius:32px;
-      border:1px solid rgba(180,202,255,.14);
+      border-radius:34px;
+      border:1px solid rgba(180,202,255,.15);
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.035),
-        inset 0 0 34px rgba(80,132,230,.09);
+        inset 0 0 38px rgba(80,132,230,.1);
       pointer-events:none;
       z-index:9;
     }
@@ -310,12 +311,12 @@
       position:absolute;
       inset:5%;
       border-radius:50% 50% 9% 9% / 34% 34% 9% 9%;
-      border:1px solid rgba(92,184,255,.16);
+      border:1px solid rgba(92,184,255,.17);
       pointer-events:none;
       z-index:4;
       box-shadow:
-        inset 0 0 44px rgba(92,184,255,.06),
-        0 0 20px rgba(92,184,255,.06);
+        inset 0 0 48px rgba(92,184,255,.065),
+        0 0 20px rgba(92,184,255,.065);
     }
 
     .door-aura-static{
@@ -325,11 +326,11 @@
       pointer-events:none;
       z-index:1;
       background:
-        radial-gradient(circle at 50% 20%, rgba(116,190,255,.24), transparent 18%),
-        radial-gradient(circle at 50% 45%, rgba(92,184,255,.16), transparent 34%),
-        linear-gradient(180deg, transparent, rgba(92,184,255,.05), transparent);
+        radial-gradient(circle at 50% 20%, rgba(116,190,255,.26), transparent 18%),
+        radial-gradient(circle at 50% 45%, rgba(92,184,255,.17), transparent 34%),
+        linear-gradient(180deg, transparent, rgba(92,184,255,.055), transparent);
       filter:blur(2px);
-      opacity:.68;
+      opacity:.7;
     }
 
     .door-starfield-static{
@@ -338,13 +339,30 @@
       border-radius:50% 50% 10% 10% / 28% 28% 10% 10%;
       pointer-events:none;
       z-index:3;
-      opacity:.45;
+      opacity:.48;
       background:
         radial-gradient(circle at 18% 22%, rgba(255,255,255,.64) 0 1px, transparent 1.5px),
         radial-gradient(circle at 72% 18%, rgba(255,255,255,.40) 0 1px, transparent 1.5px),
         radial-gradient(circle at 62% 72%, rgba(255,255,255,.30) 0 1px, transparent 1.5px),
         radial-gradient(circle at 28% 78%, rgba(255,255,255,.38) 0 1px, transparent 1.5px);
       background-size:130px 130px,170px 170px,220px 220px,260px 260px;
+    }
+
+    .threshold-field{
+      position:absolute;
+      left:50%;
+      top:45%;
+      width:82%;
+      height:68%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      pointer-events:none;
+      z-index:3;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 18%),
+        conic-gradient(from 90deg, transparent, rgba(122,213,255,.10), transparent, rgba(239,210,154,.09), transparent);
+      mask-image:radial-gradient(circle, black 0 56%, transparent 72%);
+      opacity:.72;
     }
 
     .door-arch{
@@ -357,12 +375,12 @@
       border-radius:50% 50% 8% 8% / 34% 34% 8% 8%;
       border:1px solid rgba(150,180,245,.25);
       background:
-        radial-gradient(circle at 50% 42%, rgba(100,158,255,.19), transparent 30%),
-        linear-gradient(180deg, rgba(13,30,64,.86), rgba(3,9,20,.92));
+        radial-gradient(circle at 50% 42%, rgba(100,158,255,.20), transparent 30%),
+        linear-gradient(180deg, rgba(13,30,64,.88), rgba(3,9,20,.93));
       box-shadow:
         inset 0 0 0 10px rgba(42,75,132,.10),
         inset 0 0 0 24px rgba(105,146,238,.045),
-        inset 0 0 80px rgba(8,20,44,.76);
+        inset 0 0 86px rgba(8,20,44,.78);
       z-index:2;
     }
 
@@ -380,24 +398,25 @@
       top:6%;
       width:80%;
       height:88%;
-      border:2px solid rgba(92,154,255,.28);
+      border:2px solid rgba(92,154,255,.30);
       box-shadow:
-        0 0 16px rgba(74,148,255,.22),
-        inset 0 0 24px rgba(74,148,255,.12);
+        0 0 18px rgba(74,148,255,.24),
+        inset 0 0 26px rgba(74,148,255,.13);
     }
 
     .door-arch::after{
       top:14%;
       width:60%;
       height:74%;
-      border:1px solid rgba(239,210,154,.34);
+      border:1px solid rgba(239,210,154,.36);
       box-shadow:
-        0 0 14px rgba(239,210,154,.10),
-        inset 0 0 18px rgba(239,210,154,.08);
+        0 0 16px rgba(239,210,154,.12),
+        inset 0 0 20px rgba(239,210,154,.09);
     }
 
     .door-rim-blue,
-    .door-rim-gold{
+    .door-rim-gold,
+    .door-rim-inner{
       position:absolute;
       left:50%;
       transform:translateX(-50%);
@@ -410,20 +429,30 @@
       top:7%;
       width:82%;
       height:87%;
-      border:1px solid rgba(92,184,255,.30);
+      border:1px solid rgba(92,184,255,.32);
       box-shadow:
-        inset 0 0 18px rgba(92,184,255,.12),
-        0 0 18px rgba(92,184,255,.10);
+        inset 0 0 20px rgba(92,184,255,.13),
+        0 0 20px rgba(92,184,255,.11);
     }
 
     .door-rim-gold{
       top:12%;
       width:70%;
       height:78%;
-      border:1px solid rgba(239,210,154,.34);
+      border:1px solid rgba(239,210,154,.36);
       box-shadow:
-        inset 0 0 16px rgba(239,210,154,.08),
-        0 0 14px rgba(239,210,154,.08);
+        inset 0 0 18px rgba(239,210,154,.09),
+        0 0 16px rgba(239,210,154,.09);
+    }
+
+    .door-rim-inner{
+      top:18%;
+      width:50%;
+      height:66%;
+      border:1px solid rgba(255,255,255,.13);
+      box-shadow:
+        inset 0 0 22px rgba(255,255,255,.035),
+        0 0 18px rgba(92,184,255,.08);
     }
 
     .door-pillars{
@@ -440,12 +469,12 @@
       width:10%;
       border-radius:999px 999px 12px 12px;
       background:
-        linear-gradient(90deg, rgba(239,210,154,.16), rgba(61,105,172,.14), rgba(239,210,154,.12)),
-        linear-gradient(180deg, rgba(12,25,52,.92), rgba(4,9,19,.95));
-      border:1px solid rgba(239,210,154,.22);
+        linear-gradient(90deg, rgba(239,210,154,.17), rgba(61,105,172,.15), rgba(239,210,154,.13)),
+        linear-gradient(180deg, rgba(12,25,52,.93), rgba(4,9,19,.96));
+      border:1px solid rgba(239,210,154,.23);
       box-shadow:
-        inset 0 0 18px rgba(255,255,255,.05),
-        0 16px 32px rgba(0,0,0,.28);
+        inset 0 0 20px rgba(255,255,255,.055),
+        0 16px 32px rgba(0,0,0,.30);
     }
 
     .pillar.left{left:0}
@@ -460,8 +489,8 @@
       width:135%;
       height:7%;
       border-radius:12px;
-      border:1px solid rgba(239,210,154,.22);
-      background:linear-gradient(180deg, rgba(239,210,154,.18), rgba(9,18,36,.92));
+      border:1px solid rgba(239,210,154,.24);
+      background:linear-gradient(180deg, rgba(239,210,154,.19), rgba(9,18,36,.93));
     }
 
     .pillar::before{top:-4%}
@@ -474,9 +503,9 @@
       width:34%;
       height:78%;
       transform:translateX(-50%);
-      border-left:1px solid rgba(239,210,154,.28);
+      border-left:1px solid rgba(239,210,154,.30);
       border-radius:50%;
-      opacity:.76;
+      opacity:.78;
     }
 
     .pillar-vine::before,
@@ -485,7 +514,7 @@
       position:absolute;
       width:18px;
       height:32px;
-      border:1px solid rgba(239,210,154,.22);
+      border:1px solid rgba(239,210,154,.24);
       border-radius:50%;
     }
 
@@ -509,15 +538,15 @@
       width:47%;
       transform:translateX(-50%);
       border-radius:50% 50% 14px 14px / 22% 22% 14px 14px;
-      border:1px solid rgba(196,217,255,.22);
+      border:1px solid rgba(196,217,255,.24);
       background:
-        radial-gradient(circle at 50% 38%, rgba(110,170,255,.19), transparent 36%),
-        linear-gradient(90deg, rgba(255,255,255,.04), transparent 50%, rgba(255,255,255,.035)),
-        linear-gradient(180deg, rgba(9,20,42,.96), rgba(2,7,16,.98));
+        radial-gradient(circle at 50% 38%, rgba(110,170,255,.21), transparent 36%),
+        linear-gradient(90deg, rgba(255,255,255,.045), transparent 50%, rgba(255,255,255,.04)),
+        linear-gradient(180deg, rgba(9,20,42,.97), rgba(2,7,16,.99));
       box-shadow:
-        inset 0 0 0 1px rgba(255,255,255,.035),
-        inset 0 0 42px rgba(76,132,230,.11),
-        0 18px 42px rgba(0,0,0,.24);
+        inset 0 0 0 1px rgba(255,255,255,.04),
+        inset 0 0 46px rgba(76,132,230,.12),
+        0 18px 44px rgba(0,0,0,.26);
       z-index:7;
       overflow:hidden;
     }
@@ -530,8 +559,8 @@
       bottom:0;
       width:2px;
       transform:translateX(-50%);
-      background:linear-gradient(180deg, rgba(255,255,255,.44), rgba(118,153,222,.16), rgba(255,255,255,.22));
-      box-shadow:0 0 18px rgba(118,170,255,.28);
+      background:linear-gradient(180deg, rgba(255,255,255,.48), rgba(118,153,222,.18), rgba(255,255,255,.24));
+      box-shadow:0 0 20px rgba(118,170,255,.30);
     }
 
     .door-panel::after{
@@ -539,27 +568,27 @@
       position:absolute;
       inset:12% 10% 8%;
       border-radius:50% 50% 12px 12px / 20% 20% 12px 12px;
-      border:1px solid rgba(239,210,154,.26);
+      border:1px solid rgba(239,210,154,.28);
       box-shadow:
-        inset 0 0 0 14px rgba(92,154,255,.045),
-        inset 0 0 28px rgba(0,0,0,.18);
+        inset 0 0 0 14px rgba(92,154,255,.05),
+        inset 0 0 30px rgba(0,0,0,.19);
     }
 
     .door-energy-ring{
       position:absolute;
       left:50%;
       top:42%;
-      width:230px;
-      height:230px;
+      width:238px;
+      height:238px;
       transform:translate(-50%, -50%);
       border-radius:50%;
       pointer-events:none;
       z-index:8;
-      border:1px solid rgba(92,184,255,.22);
+      border:1px solid rgba(92,184,255,.24);
       box-shadow:
-        0 0 22px rgba(92,184,255,.12),
-        inset 0 0 30px rgba(92,184,255,.08);
-      opacity:.72;
+        0 0 24px rgba(92,184,255,.13),
+        inset 0 0 34px rgba(92,184,255,.09);
+      opacity:.74;
     }
 
     .door-energy-ring::before,
@@ -568,27 +597,27 @@
       position:absolute;
       inset:18%;
       border-radius:50%;
-      border:1px solid rgba(239,210,154,.22);
+      border:1px solid rgba(239,210,154,.24);
       transform:rotate(18deg);
     }
 
     .door-energy-ring::after{
       inset:34%;
-      border-color:rgba(92,184,255,.28);
+      border-color:rgba(92,184,255,.30);
       transform:rotate(-28deg);
-      box-shadow:0 0 20px rgba(92,184,255,.14);
+      box-shadow:0 0 22px rgba(92,184,255,.15);
     }
 
     .door-sigil{
       position:absolute;
       left:50%;
       top:42%;
-      width:280px;
-      height:280px;
+      width:292px;
+      height:292px;
       transform:translate(-50%, -50%);
       pointer-events:none;
       z-index:8;
-      opacity:.72;
+      opacity:.74;
     }
 
     .door-sigil span{
@@ -598,7 +627,7 @@
       width:48%;
       height:1px;
       transform-origin:0 50%;
-      background:linear-gradient(90deg, rgba(239,210,154,.42), transparent);
+      background:linear-gradient(90deg, rgba(239,210,154,.44), transparent);
     }
 
     .door-sigil span:nth-child(1){transform:rotate(0deg)}
@@ -609,6 +638,22 @@
     .door-sigil span:nth-child(6){transform:rotate(225deg)}
     .door-sigil span:nth-child(7){transform:rotate(270deg)}
     .door-sigil span:nth-child(8){transform:rotate(315deg)}
+
+    .threshold-glyph{
+      position:absolute;
+      left:50%;
+      top:42%;
+      width:340px;
+      height:340px;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      z-index:6;
+      opacity:.42;
+      border-radius:50%;
+      background:
+        conic-gradient(from 45deg, transparent, rgba(239,210,154,.16), transparent, rgba(92,184,255,.15), transparent);
+      mask-image:radial-gradient(circle, transparent 0 37%, black 38% 41%, transparent 42% 100%);
+    }
 
     .ornament{
       position:absolute;
@@ -644,27 +689,27 @@
       height:58px;
       transform:rotate(45deg);
       border-radius:12px 2px 12px 2px;
-      border:1px solid rgba(239,210,154,.55);
+      border:1px solid rgba(239,210,154,.58);
       background:
-        radial-gradient(circle at 32% 28%, rgba(255,255,255,.86), transparent 16%),
-        linear-gradient(135deg, rgba(115,214,255,.96), rgba(22,92,190,.72) 48%, rgba(8,20,50,.90));
+        radial-gradient(circle at 32% 28%, rgba(255,255,255,.90), transparent 16%),
+        linear-gradient(135deg, rgba(115,214,255,.98), rgba(22,92,190,.74) 48%, rgba(8,20,50,.92));
       box-shadow:
-        0 0 18px rgba(92,184,255,.48),
-        0 0 44px rgba(92,184,255,.18);
+        0 0 20px rgba(92,184,255,.52),
+        0 0 48px rgba(92,184,255,.20);
     }
 
     .center-ring{
-      width:172px;
-      height:172px;
+      width:176px;
+      height:176px;
       border-radius:50%;
-      border:1px solid rgba(239,210,154,.38);
+      border:1px solid rgba(239,210,154,.40);
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.07), transparent 34%),
-        rgba(5,10,22,.70);
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 34%),
+        rgba(5,10,22,.72);
       box-shadow:
-        0 0 22px rgba(92,184,255,.22),
-        inset 0 0 0 12px rgba(55,122,220,.08),
-        inset 0 0 0 28px rgba(239,210,154,.045);
+        0 0 24px rgba(92,184,255,.24),
+        inset 0 0 0 12px rgba(55,122,220,.09),
+        inset 0 0 0 28px rgba(239,210,154,.05);
       display:grid;
       place-items:center;
       position:relative;
@@ -674,36 +719,36 @@
     .center-ring::after{
       content:"";
       position:absolute;
-      border:1px solid rgba(239,210,154,.30);
+      border:1px solid rgba(239,210,154,.32);
       border-radius:50%;
       inset:20px;
     }
 
     .center-ring::after{
       inset:42px;
-      border-color:rgba(92,184,255,.30);
-      box-shadow:0 0 24px rgba(92,184,255,.18);
+      border-color:rgba(92,184,255,.32);
+      box-shadow:0 0 24px rgba(92,184,255,.20);
     }
 
     .door-label{
       position:relative;
       z-index:2;
-      min-width:92px;
-      height:58px;
+      min-width:94px;
+      height:60px;
       padding:0 18px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
       border-radius:24px;
-      border:1px solid rgba(255,255,255,.14);
+      border:1px solid rgba(255,255,255,.15);
       background:
-        radial-gradient(circle at 50% 35%, rgba(145,184,255,.18), transparent 52%),
-        rgba(6,12,24,.82);
+        radial-gradient(circle at 50% 35%, rgba(145,184,255,.20), transparent 52%),
+        rgba(6,12,24,.84);
       color:#fff;
       font-weight:900;
       letter-spacing:.22em;
       text-transform:uppercase;
-      box-shadow:0 0 36px rgba(97,154,255,.25);
+      box-shadow:0 0 38px rgba(97,154,255,.28);
     }
 
     .side-gem{
@@ -713,9 +758,9 @@
       height:24px;
       transform:translateY(-50%) rotate(45deg);
       border-radius:10px 2px;
-      border:1px solid rgba(239,210,154,.42);
-      background:linear-gradient(135deg, rgba(111,200,255,.88), rgba(14,52,110,.86));
-      box-shadow:0 0 18px rgba(92,184,255,.22);
+      border:1px solid rgba(239,210,154,.44);
+      background:linear-gradient(135deg, rgba(111,200,255,.90), rgba(14,52,110,.88));
+      box-shadow:0 0 18px rgba(92,184,255,.24);
     }
 
     .side-gem.left{left:-8px}
@@ -726,12 +771,12 @@
       inset:0;
       pointer-events:none;
       z-index:9;
-      opacity:.82;
+      opacity:.84;
     }
 
     .gold-trace .line{
       position:absolute;
-      background:linear-gradient(90deg, transparent, rgba(239,210,154,.58), transparent);
+      background:linear-gradient(90deg, transparent, rgba(239,210,154,.62), transparent);
       height:1px;
       transform-origin:center;
     }
@@ -768,11 +813,11 @@
       width:7px;
       height:7px;
       border-radius:50%;
-      background:rgba(239,210,154,.92);
+      background:rgba(239,210,154,.94);
       box-shadow:
-        0 0 8px rgba(239,210,154,.55),
-        0 0 22px rgba(92,184,255,.22);
-      opacity:.72;
+        0 0 8px rgba(239,210,154,.58),
+        0 0 22px rgba(92,184,255,.24);
+      opacity:.74;
     }
 
     .door-light:nth-child(1){left:18%;bottom:13%}
@@ -781,6 +826,8 @@
     .door-light:nth-child(4){right:18%;bottom:13%}
     .door-light:nth-child(5){left:13%;top:52%}
     .door-light:nth-child(6){right:13%;top:52%}
+    .door-light:nth-child(7){left:25%;top:23%}
+    .door-light:nth-child(8){right:25%;top:23%}
 
     .door-seam-glow{
       position:absolute;
@@ -791,20 +838,40 @@
       transform:translateX(-50%);
       pointer-events:none;
       z-index:14;
-      background:linear-gradient(180deg, transparent, rgba(174,214,255,.76), rgba(239,210,154,.24), transparent);
-      box-shadow:0 0 18px rgba(92,184,255,.36);
-      opacity:.64;
+      background:linear-gradient(180deg, transparent, rgba(174,214,255,.82), rgba(239,210,154,.28), transparent);
+      box-shadow:0 0 20px rgba(92,184,255,.40);
+      opacity:.68;
+    }
+
+    .door-open-glow{
+      position:absolute;
+      left:50%;
+      top:42%;
+      width:160px;
+      height:160px;
+      transform:translate(-50%,-50%) scale(.82);
+      border-radius:50%;
+      pointer-events:none;
+      z-index:15;
+      background:radial-gradient(circle, rgba(255,255,255,.86), rgba(92,184,255,.24) 30%, transparent 68%);
+      opacity:0;
+      transition:opacity .5s ease,transform .5s ease;
+    }
+
+    .door-shell.is-open .door-open-glow{
+      opacity:.82;
+      transform:translate(-50%,-50%) scale(1.18);
     }
 
     .floor-light{
       position:absolute;
       left:50%;
       bottom:5%;
-      width:70%;
+      width:72%;
       height:12%;
       transform:translateX(-50%);
       border-radius:50%;
-      background:radial-gradient(ellipse at center, rgba(89,167,255,.24), transparent 66%);
+      background:radial-gradient(ellipse at center, rgba(89,167,255,.26), transparent 66%);
       z-index:4;
       pointer-events:none;
     }
@@ -814,12 +881,12 @@
       left:50%;
       top:15%;
       transform:translateX(-50%);
-      min-width:180px;
+      min-width:188px;
       max-width:calc(100% - 48px);
       padding:10px 16px;
       border-radius:999px;
-      border:1px solid rgba(239,210,154,.24);
-      background:rgba(6,14,28,.72);
+      border:1px solid rgba(239,210,154,.25);
+      background:rgba(6,14,28,.74);
       color:#dbe5ff;
       text-align:center;
       text-transform:uppercase;
@@ -827,8 +894,8 @@
       font-size:.66rem;
       line-height:1.35;
       pointer-events:none;
-      z-index:15;
-      box-shadow:0 12px 30px rgba(0,0,0,.26);
+      z-index:16;
+      box-shadow:0 12px 30px rgba(0,0,0,.28);
     }
 
     .door-caption{
@@ -839,28 +906,28 @@
       width:min(82%, 620px);
       padding:13px 18px;
       border-radius:999px;
-      border:1px solid rgba(140,168,240,.24);
-      background:rgba(6,14,28,.82);
+      border:1px solid rgba(140,168,240,.25);
+      background:rgba(6,14,28,.84);
       text-align:center;
       text-transform:uppercase;
       letter-spacing:.15em;
       font-size:.76rem;
       color:#dbe5ff;
-      box-shadow:0 12px 32px rgba(0,0,0,.30);
+      box-shadow:0 12px 32px rgba(0,0,0,.32);
       z-index:16;
       line-height:1.35;
     }
 
     .door-caption strong{color:#fff}
 
-    .entry-card{
+    .entry-card,.signal-card,.generation-card{
       margin-top:18px;
       border-radius:30px;
       padding:24px 20px;
       overflow:hidden;
     }
 
-    .entry-kicker,.signal-kicker{
+    .entry-kicker,.signal-kicker,.generation-kicker{
       color:#c8d7ff;
       font-size:.72rem;
       text-transform:uppercase;
@@ -868,7 +935,7 @@
       margin-bottom:8px;
     }
 
-    .entry-card h2,.signal-card h2{
+    .entry-card h2,.signal-card h2,.generation-card h2{
       margin:0 0 10px;
       font-size:clamp(1.7rem, 3vw, 2.7rem);
       line-height:1;
@@ -936,28 +1003,21 @@
       font-size:.9rem;
     }
 
-    .signal-card{
-      margin-top:18px;
-      border-radius:30px;
-      padding:22px 20px;
-      overflow:hidden;
-    }
-
-    .signal-grid{
+    .signal-grid,.generation-grid{
       display:grid;
       grid-template-columns:repeat(3,minmax(0,1fr));
       gap:12px;
       margin-top:16px;
     }
 
-    .signal-item{
+    .signal-item,.generation-item{
       padding:14px;
       border-radius:18px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.025);
     }
 
-    .signal-item small{
+    .signal-item small,.generation-item small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -966,7 +1026,7 @@
       font-weight:800;
     }
 
-    .signal-item strong{
+    .signal-item strong,.generation-item strong{
       display:block;
       color:#f4f7ff;
       line-height:1.35;
@@ -1001,10 +1061,10 @@
     @media (max-width:980px){
       .hero-grid{grid-template-columns:1fr}
       .routes{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .signal-grid{grid-template-columns:1fr}
+      .signal-grid,.generation-grid{grid-template-columns:1fr}
       .door-shell{
         aspect-ratio:auto;
-        min-height:680px;
+        min-height:700px;
       }
     }
 
@@ -1024,7 +1084,7 @@
         justify-content:flex-start;
       }
 
-      .hero,.door-card,.entry-card,.signal-card{
+      .hero,.door-card,.entry-card,.signal-card,.generation-card{
         padding:18px 16px;
       }
 
@@ -1045,7 +1105,7 @@
       }
 
       .door-shell{
-        min-height:650px;
+        min-height:670px;
         border-radius:30px;
       }
 
@@ -1066,13 +1126,18 @@
       }
 
       .door-energy-ring{
-        width:176px;
-        height:176px;
+        width:178px;
+        height:178px;
       }
 
       .door-sigil{
-        width:218px;
-        height:218px;
+        width:222px;
+        height:222px;
+      }
+
+      .threshold-glyph{
+        width:250px;
+        height:250px;
       }
 
       .door-detail-chip{
@@ -1093,13 +1158,13 @@
       }
 
       .ornament.center{
-        width:138px;
-        height:138px;
+        width:140px;
+        height:140px;
       }
 
       .center-ring{
-        width:138px;
-        height:138px;
+        width:140px;
+        height:140px;
       }
 
       .door-label{
@@ -1152,12 +1217,20 @@
         animation:doorSigilRotate 36s linear infinite;
       }
 
+      .threshold-glyph{
+        animation:doorSigilRotate 54s linear reverse infinite;
+      }
+
       .door-light{
         animation:doorLightPulse 4.2s ease-in-out infinite;
       }
 
       .door-seam-glow{
         animation:doorSeamPulse 5.4s ease-in-out infinite;
+      }
+
+      .door-open-glow{
+        transition:opacity .5s ease,transform .5s ease;
       }
 
       @keyframes gatePulse{
@@ -1171,8 +1244,8 @@
       }
 
       @keyframes doorAuraBreath{
-        0%,100%{opacity:.46;transform:scale(.985)}
-        50%{opacity:.82;transform:scale(1.015)}
+        0%,100%{opacity:.48;transform:scale(.985)}
+        50%{opacity:.84;transform:scale(1.015)}
       }
 
       @keyframes doorStarsDrift{
@@ -1191,8 +1264,8 @@
       }
 
       @keyframes doorSeamPulse{
-        0%,100%{opacity:.38}
-        50%{opacity:.88}
+        0%,100%{opacity:.40}
+        50%{opacity:.92}
       }
     }
 
@@ -1210,7 +1283,7 @@
       <div class="brand">
         <div class="brand-mark">DG</div>
         <div>
-          <p class="brand-kicker">Canonical Door</p>
+          <p class="brand-kicker">Generation 2 Root</p>
           <p class="brand-title">Diamond Gate Bridge</p>
         </div>
       </div>
@@ -1226,12 +1299,11 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Door contract · root route · world entry</span>
-          <h1>Enter through the <span class="accent">door</span>.</h1>
+          <span class="hero-tag">Generation 2 · canonical root threshold</span>
+          <h1>Enter through the <span class="accent">living door</span>.</h1>
           <p>
-            This is the root gateway for Diamond Gate Bridge. It is not the products chamber.
-            It is the canonical entry surface: broad, foundational, and world-facing.
-            From here, paths descend into products, laws, gauges, and the wider house without collapsing the homepage into a child page.
+            This is the Generation 2 root threshold for Diamond Gate Bridge. The door is no longer only a visual marker.
+            It is the governing entry surface: immersive, detailed, route-bearing, and visually sovereign above every child chamber.
           </p>
 
           <div class="hero-actions">
@@ -1242,13 +1314,15 @@
         </div>
 
         <aside class="door-card" id="door">
-          <div class="door-shell" aria-label="Extravagant canonical root door" tabindex="0" role="button">
+          <div class="door-shell" aria-label="Generation 2 canonical root door" tabindex="0" role="button">
             <div class="door-aura-static"></div>
             <div class="door-starfield-static"></div>
+            <div class="threshold-field"></div>
 
             <div class="door-arch"></div>
             <div class="door-rim-blue"></div>
             <div class="door-rim-gold"></div>
+            <div class="door-rim-inner"></div>
 
             <div class="door-pillars">
               <div class="pillar left"><div class="pillar-vine"></div></div>
@@ -1263,6 +1337,8 @@
               <span></span><span></span><span></span><span></span>
               <span></span><span></span><span></span><span></span>
             </div>
+
+            <div class="threshold-glyph" aria-hidden="true"></div>
 
             <div class="ornament top">
               <div class="gem"></div>
@@ -1293,18 +1369,45 @@
               <span class="door-light"></span>
               <span class="door-light"></span>
               <span class="door-light"></span>
+              <span class="door-light"></span>
+              <span class="door-light"></span>
             </div>
 
             <div class="door-seam-glow"></div>
+            <div class="door-open-glow"></div>
             <div class="floor-light"></div>
 
-            <div class="door-detail-chip">Extravagant root gate · live detail layer</div>
+            <div class="door-detail-chip">Generation 2 root gate · active threshold</div>
 
             <div class="door-caption">
-              <strong>Canonical root</strong> · world entry surface
+              <strong>Second generation baseline</strong> · canonical world entry surface
             </div>
           </div>
         </aside>
+      </div>
+    </section>
+
+    <section class="generation-card">
+      <div class="generation-kicker">Second generation baseline</div>
+      <h2>Root door now sets the visual law</h2>
+      <p>
+        Generation 1 proved the site could hold a canonical door and a seasonal products chamber.
+        Generation 2 begins by making the root door the visual authority for the next upgrade pass.
+      </p>
+
+      <div class="generation-grid">
+        <div class="generation-item">
+          <small>Baseline</small>
+          <strong>Generation Baseline 1 remains frozen as the comparison anchor.</strong>
+        </div>
+        <div class="generation-item">
+          <small>Upgrade</small>
+          <strong>Generation 2 adds stronger threshold behavior, detail density, and route presence.</strong>
+        </div>
+        <div class="generation-item">
+          <small>Inheritance</small>
+          <strong>Products, Gauges, Laws, About, and Prelude should now inherit the G2 door language.</strong>
+        </div>
       </div>
     </section>
 
@@ -1320,7 +1423,7 @@
         <a class="route-card" href="/products/">
           <span>P</span>
           <h3>Products</h3>
-          <p>Public chamber, routes, offerings, and the stained-glass molecular product field.</p>
+          <p>Public chamber, routes, offerings, and the stained-glass seasonal product field.</p>
         </a>
 
         <a class="route-card" href="/gauges/">
@@ -1362,13 +1465,13 @@
         </div>
         <div class="signal-item">
           <small>Visual order</small>
-          <strong>Door detail, blue/gold architecture, gems, sigil, and live threshold light.</strong>
+          <strong>Door detail, blue/gold architecture, gems, sigil, active seam, and threshold light.</strong>
         </div>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · canonical root door</span>
+      <span>Diamond Gate Bridge · Generation 2 canonical root door</span>
       <div class="footer-links">
         <a href="/prelude/">Prelude</a>
         <a href="/products/">Products</a>
@@ -1378,6 +1481,6 @@
     </footer>
   </main>
 
-  <script src="./index.js?v=root-door-detail-runtime-v1" defer></script>
+  <script src="./index.js?v=root-door-g2-threshold" defer></script>
 </body>
 </html>

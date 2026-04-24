@@ -1,6 +1,6 @@
 (() => {
-  const RUNTIME_ID = "products-runtime-four-lobed-direct-root-v1";
-  const STYLE_ID = "products-runtime-four-lobed-direct-root-style";
+  const RUNTIME_ID = "products-runtime-four-lobed-breathing-room-v1";
+  const STYLE_ID = "products-runtime-four-lobed-breathing-room-style";
   const RECEIPT_FLAG = "productsRuntimeMounted";
 
   const CARDINALS = {
@@ -142,14 +142,14 @@
 
       [data-products-runtime-root] .flower-stage {
         position: relative;
-        height: 620px;
+        height: 680px;
         width: 100%;
         max-width: 100%;
         border: 1px solid rgba(113,141,224,.14);
         border-radius: 28px;
         overflow: hidden;
         background:
-          radial-gradient(circle at 50% 50%, rgba(135,164,255,.13), transparent 22%),
+          radial-gradient(circle at 50% 50%, rgba(135,164,255,.13), transparent 24%),
           linear-gradient(180deg, rgba(4,10,22,.92), rgba(2,8,18,.98));
         isolation: isolate;
       }
@@ -173,7 +173,7 @@
         padding: 8px 14px;
         border-radius: 999px;
         border: 1px solid rgba(140,168,240,.22);
-        background: rgba(6,14,28,.78);
+        background: rgba(6,14,28,.82);
         color: #dbe5ff;
         font-size: .72rem;
         letter-spacing: .14em;
@@ -203,54 +203,54 @@
       }
 
       [data-products-runtime-root] .glass-pane.white {
-        left: 8%;
-        top: 8%;
-        width: 38%;
-        height: 34%;
-        border-radius: 36px 24px 52px 28px;
+        left: 7%;
+        top: 7%;
+        width: 40%;
+        height: 35%;
+        border-radius: 42px 26px 58px 30px;
         background:
-          radial-gradient(circle at 62% 40%, rgba(240,246,255,.22), transparent 40%),
+          radial-gradient(circle at 62% 40%, rgba(240,246,255,.24), transparent 40%),
           linear-gradient(135deg, rgba(221,232,255,.18), rgba(123,146,214,.12));
       }
 
       [data-products-runtime-root] .glass-pane.blue {
-        right: 8%;
-        top: 8%;
-        width: 38%;
-        height: 34%;
-        border-radius: 24px 36px 28px 52px;
+        right: 7%;
+        top: 7%;
+        width: 40%;
+        height: 35%;
+        border-radius: 26px 42px 30px 58px;
         background:
-          radial-gradient(circle at 36% 40%, rgba(188,224,255,.20), transparent 42%),
+          radial-gradient(circle at 36% 40%, rgba(188,224,255,.22), transparent 42%),
           linear-gradient(135deg, rgba(143,201,255,.18), rgba(67,111,190,.12));
       }
 
       [data-products-runtime-root] .glass-pane.yellow {
-        left: 8%;
-        bottom: 8%;
-        width: 38%;
-        height: 34%;
-        border-radius: 28px 52px 24px 36px;
+        left: 7%;
+        bottom: 7%;
+        width: 40%;
+        height: 35%;
+        border-radius: 30px 58px 26px 42px;
         background:
-          radial-gradient(circle at 60% 44%, rgba(255,222,170,.18), transparent 42%),
+          radial-gradient(circle at 60% 44%, rgba(255,222,170,.20), transparent 42%),
           linear-gradient(135deg, rgba(255,213,143,.18), rgba(147,107,46,.12));
       }
 
       [data-products-runtime-root] .glass-pane.green {
-        right: 8%;
-        bottom: 8%;
-        width: 38%;
-        height: 34%;
-        border-radius: 52px 28px 36px 24px;
+        right: 7%;
+        bottom: 7%;
+        width: 40%;
+        height: 35%;
+        border-radius: 58px 30px 42px 26px;
         background:
-          radial-gradient(circle at 40% 44%, rgba(177,245,196,.18), transparent 42%),
+          radial-gradient(circle at 40% 44%, rgba(177,245,196,.20), transparent 42%),
           linear-gradient(135deg, rgba(151,230,180,.18), rgba(47,113,74,.12));
       }
 
       [data-products-runtime-root] .lead-came {
         position: absolute;
-        background: linear-gradient(180deg, rgba(226,231,241,.56), rgba(86,96,120,.72));
+        background: linear-gradient(180deg, rgba(226,231,241,.50), rgba(86,96,120,.64));
         box-shadow:
-          inset 0 1px 0 rgba(255,255,255,.22),
+          inset 0 1px 0 rgba(255,255,255,.20),
           inset 0 -1px 0 rgba(0,0,0,.24),
           0 0 10px rgba(0,0,0,.12);
         z-index: 3;
@@ -258,31 +258,32 @@
       }
 
       [data-products-runtime-root] .lead-came.v {
-        width: 10px;
+        width: 8px;
         top: 0;
         bottom: 0;
         border-radius: 999px;
       }
 
       [data-products-runtime-root] .lead-came.h {
-        height: 10px;
+        height: 8px;
         left: 0;
         right: 0;
         border-radius: 999px;
       }
 
       [data-products-runtime-root] .lead-came.diag {
-        width: 10px;
-        height: 260px;
+        width: 8px;
+        height: 255px;
         left: 50%;
         top: 50%;
         transform-origin: center center;
         border-radius: 999px;
+        opacity: .68;
       }
 
       [data-products-runtime-root] .flower-window {
         position: absolute;
-        inset: 28px 18px 74px;
+        inset: 46px 18px 82px;
         border-radius: 26px;
         overflow: hidden;
         z-index: 5;
@@ -300,7 +301,7 @@
 
       [data-products-runtime-root] .flower-path path {
         fill: none;
-        stroke-width: 1.8;
+        stroke-width: 1.6;
         stroke-linecap: round;
         stroke-linejoin: round;
         opacity: .52;
@@ -320,8 +321,8 @@
         position: absolute;
         left: 50%;
         top: 50%;
-        width: 92px;
-        height: 92px;
+        width: 82px;
+        height: 82px;
         transform: translate(-50%, -50%) rotate(45deg);
         border-radius: 18px;
         border: 1px solid rgba(214,226,255,.20);
@@ -337,19 +338,19 @@
 
       @keyframes flowerCenterPulse {
         0%, 100% {
-          opacity: .62;
-          transform: translate(-50%, -50%) rotate(45deg) scale(.96);
+          opacity: .58;
+          transform: translate(-50%, -50%) rotate(45deg) scale(.94);
         }
         50% {
-          opacity: .88;
-          transform: translate(-50%, -50%) rotate(45deg) scale(1.06);
+          opacity: .86;
+          transform: translate(-50%, -50%) rotate(45deg) scale(1.04);
         }
       }
 
       [data-products-runtime-root] .petal-label {
         position: absolute;
         transform: translate(-50%, -50%);
-        min-width: 84px;
+        min-width: 88px;
         height: 32px;
         padding: 0 12px;
         display: inline-flex;
@@ -357,7 +358,7 @@
         justify-content: center;
         border-radius: 999px;
         border: 1px solid rgba(255,255,255,.14);
-        background: rgba(6,14,28,.66);
+        background: rgba(6,14,28,.74);
         color: #f7fbff;
         font-size: .68rem;
         font-weight: 800;
@@ -367,10 +368,10 @@
         pointer-events: none;
       }
 
-      [data-products-runtime-root] .petal-label.white { left: 31%; top: 31%; }
-      [data-products-runtime-root] .petal-label.blue { left: 69%; top: 31%; }
-      [data-products-runtime-root] .petal-label.yellow { left: 31%; top: 69%; }
-      [data-products-runtime-root] .petal-label.green { left: 69%; top: 69%; }
+      [data-products-runtime-root] .petal-label.white { left: 26%; top: 27%; }
+      [data-products-runtime-root] .petal-label.blue { left: 74%; top: 27%; }
+      [data-products-runtime-root] .petal-label.yellow { left: 26%; top: 73%; }
+      [data-products-runtime-root] .petal-label.green { left: 74%; top: 73%; }
 
       [data-products-runtime-root] .node-layer {
         position: absolute;
@@ -382,8 +383,8 @@
         position: absolute;
         left: var(--x);
         top: var(--y);
-        width: 16px;
-        height: 16px;
+        width: 15px;
+        height: 15px;
         transform: translate(-50%, -50%);
         border-radius: 50%;
         border: 1px solid rgba(255,255,255,.76);
@@ -403,12 +404,12 @@
         top: calc(100% + 7px);
         left: 50%;
         transform: translateX(-50%);
-        font-size: .54rem;
-        letter-spacing: .12em;
+        font-size: .46rem;
+        letter-spacing: .1em;
         text-transform: uppercase;
         color: #d9e5ff;
         white-space: nowrap;
-        opacity: .82;
+        opacity: .62;
         pointer-events: none;
       }
 
@@ -423,7 +424,7 @@
       }
 
       [data-products-runtime-root] .node.is-muted {
-        opacity: .14;
+        opacity: .12;
         filter: saturate(.28);
       }
 
@@ -437,7 +438,7 @@
         padding: 12px 16px;
         border-radius: 999px;
         border: 1px solid rgba(140,168,240,.24);
-        background: rgba(6,14,28,.76);
+        background: rgba(6,14,28,.80);
         text-align: center;
         text-transform: uppercase;
         letter-spacing: .14em;
@@ -536,48 +537,54 @@
         }
 
         [data-products-runtime-root] .flower-stage {
-          height: 520px;
+          height: 600px;
         }
 
         [data-products-runtime-root] .flower-window {
-          inset: 24px 10px 72px;
+          inset: 54px 6px 76px;
         }
 
         [data-products-runtime-root] .lead-came.v {
-          width: 8px;
+          width: 7px;
         }
 
         [data-products-runtime-root] .lead-came.h {
-          height: 8px;
+          height: 7px;
         }
 
         [data-products-runtime-root] .lead-came.diag {
-          width: 8px;
-          height: 200px;
+          width: 7px;
+          height: 190px;
+          opacity: .54;
         }
 
         [data-products-runtime-root] .flower-center {
-          width: 66px;
-          height: 66px;
-          border-radius: 14px;
+          width: 54px;
+          height: 54px;
+          border-radius: 12px;
         }
 
         [data-products-runtime-root] .petal-label {
-          min-width: 62px;
-          height: 27px;
+          min-width: 58px;
+          height: 26px;
           padding: 0 8px;
-          font-size: .54rem;
-          letter-spacing: .11em;
+          font-size: .50rem;
+          letter-spacing: .10em;
         }
 
+        [data-products-runtime-root] .petal-label.white { left: 24%; top: 24%; }
+        [data-products-runtime-root] .petal-label.blue { left: 76%; top: 24%; }
+        [data-products-runtime-root] .petal-label.yellow { left: 24%; top: 76%; }
+        [data-products-runtime-root] .petal-label.green { left: 76%; top: 76%; }
+
         [data-products-runtime-root] .node {
-          width: 13px;
-          height: 13px;
+          width: 12px;
+          height: 12px;
         }
 
         [data-products-runtime-root] .node::after {
-          font-size: .44rem;
-          top: calc(100% + 5px);
+          content: "";
+          display: none;
         }
 
         [data-products-runtime-root] .flower-copy {
@@ -629,6 +636,7 @@
     const x = scaleX * Math.sin(t);
     const y = scaleY * Math.sin(t) * Math.cos(t);
     const rotated = rotatePoint(x, y, angleDeg);
+
     return {
       x: 50 + rotated.x,
       y: 50 + rotated.y
@@ -717,8 +725,8 @@
 
             <div class="flower-window">
               <svg class="flower-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                <path class="path-white-green" d="M50 50 C20 9, 8 34, 50 50 C92 66, 80 91, 50 50" />
-                <path class="path-yellow-blue" d="M50 50 C9 80, 34 92, 50 50 C66 8, 91 20, 50 50" />
+                <path class="path-white-green" d="M50 50 C17 7, 4 32, 50 50 C96 68, 83 93, 50 50" />
+                <path class="path-yellow-blue" d="M50 50 C7 83, 32 96, 50 50 C68 4, 93 17, 50 50" />
               </svg>
 
               <div class="flower-center"></div>
@@ -872,14 +880,17 @@
     function animate() {
       const now = performance.now();
       const elapsed = (now - state.startedAt) / 1000;
-      const speed = 0.52;
+      const speed = 0.44;
+      const isMobile = window.matchMedia("(max-width: 720px)").matches;
+      const scaleX = isMobile ? 34 : 36;
+      const scaleY = isMobile ? 25 : 27;
 
       qsa(nodeLayer, "[data-id]").forEach((button) => {
         const item = PRODUCTS.find((entry) => entry.id === button.dataset.id);
         if (!item) return;
 
         const pair = PAIRS[item.pairKey];
-        const point = lemniscatePoint(elapsed * speed + item.phase, pair.angle, 26, 20);
+        const point = lemniscatePoint(elapsed * speed + item.phase, pair.angle, scaleX, scaleY);
 
         button.style.left = `${point.x}%`;
         button.style.top = `${point.y}%`;

@@ -19,16 +19,14 @@
   const routeGrid = document.getElementById("routeGrid");
   const matrix = document.getElementById("matrix");
 
-  function safeSet(node, value) {
+  function setText(node, value) {
     if (node) node.textContent = value;
   }
 
   function writeMatrix() {
     if (!matrix) return;
 
-    const alphabet =
-      "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_061_451_DGB_GEN2_DEMO_UNIVERSE_KERNEL_FEED_";
-
+    const alphabet = "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_061_451_DGB_GEN2_DEMO_UNIVERSE_KERNEL_FEED_";
     let out = "";
 
     for (let i = 0; i < 5200; i += 1) {
@@ -44,9 +42,7 @@
       const response = await fetch(path + "?gauge=" + Date.now(), {
         method: "GET",
         cache: "no-store",
-        headers: {
-          Accept: "text/html,text/javascript,text/plain,*/*"
-        }
+        headers: { Accept: "text/html,text/javascript,text/plain,*/*" }
       });
 
       const text = await response.text();
@@ -89,82 +85,70 @@
 
     const checks = [
       {
-        key: "ROOT_LITERAL_LOVE",
-        pass: !rootHtml.includes(">LOVE<") && !rootHtml.includes("LOVE</div>"),
-        fail: "Root HTML still contains literal LOVE object.",
-        next: "REPLACE_/index.html_WITH_SECOND_GENERATION_ROOT"
-      },
-      {
-        key: "ROOT_JS_OLD_CORE",
-        pass: !any(rootJs, [
-          "border-radius: 34px",
-          "letter-spacing: .18em",
-          "home-russian-doll"
-        ]),
-        fail: "Root JS still carries old .home-core / Generation 1 surface styling.",
-        next: "REPLACE_/index.js_WITH_SECOND_GENERATION_ROOT_RUNTIME"
+        key: "ROOT_NOT_GAUGES",
+        pass: !rootHtml.includes("Gauge Authority") && !rootHtml.includes("LIVE_FEED_DIAGNOSTIC_SURFACE"),
+        fail: "Root is still carrying gauges content.",
+        next: "RESTORE_/index.html_AND_/index.js_AS_HOME_FILES"
       },
       {
         key: "ROOT_GEN2_MARKER",
-        pass:
-          rootHtml.includes("second-generation-renewal") ||
-          rootJs.includes("second-generation-renewal"),
+        pass: rootHtml.includes("second-generation-renewal") || rootJs.includes("second-generation-renewal"),
         fail: "Root does not expose second-generation-renewal marker.",
-        next: "ADD_GEN2_MARKER_TO_ROOT_HTML_AND_JS"
+        next: "REPLACE_/index.html_AND_/index.js_WITH_GEN2_HOME"
+      },
+      {
+        key: "ROOT_LITERAL_LOVE",
+        pass: !rootHtml.includes(">LOVE<") && !rootHtml.includes("LOVE</div>"),
+        fail: "Root HTML still contains literal LOVE object.",
+        next: "REPLACE_/index.html_WITH_SECOND_GENERATION_HOME"
+      },
+      {
+        key: "ROOT_JS_OLD_CORE",
+        pass: !any(rootJs, ["border-radius: 34px", "letter-spacing: .18em", "home-russian-doll"]),
+        fail: "Root JS still carries old .home-core / Generation 1 styling.",
+        next: "REPLACE_/index.js_WITH_SECOND_GENERATION_HOME_RUNTIME"
+      },
+      {
+        key: "GAUGES_HTML_LIVE_FEED",
+        pass: gaugesHtml.includes("LIVE_FEED_DIAGNOSTIC_SURFACE") && gaugesHtml.includes("/gauges/index.js"),
+        fail: "Gauges HTML is not the live-feed diagnostic surface.",
+        next: "REPLACE_/gauges/index.html_WITH_LIVE_FEED_SURFACE"
+      },
+      {
+        key: "GAUGES_JS_LIVE_FEED",
+        pass: gaugesJs.includes("GAUGE_LIVE_FEED_V2") && gaugesJs.includes("ROOT_NOT_GAUGES"),
+        fail: "Gauges JS is missing the live-feed diagnostic runtime.",
+        next: "REPLACE_/gauges/index.js_WITH_LIVE_FEED_RUNTIME"
       },
       {
         key: "PRODUCTS_BRIDGE_PRESENT",
-        pass:
-          productsBridge.includes("products_runtime.js") ||
-          productsBridge.includes("ProductsPlanetRuntime"),
+        pass: productsBridge.includes("products_runtime.js") || productsBridge.includes("ProductsPlanetRuntime"),
         fail: "Products bridge does not clearly route to runtime.",
         next: "INSPECT_/products/index.js_BRIDGE"
       },
       {
         key: "PRODUCTS_RUNTIME_RECEIPT",
-        pass:
-          productsRuntime.includes("productsRuntimeMounted") &&
-          productsRuntime.includes("data-products-runtime-root"),
+        pass: productsRuntime.includes("productsRuntimeMounted") && productsRuntime.includes("data-products-runtime-root"),
         fail: "Products runtime lacks bridge receipt or runtime root marker.",
         next: "RENEW_/products/products_runtime.js_RECEIPT_CONTRACT"
       },
       {
-        key: "PRODUCTS_FALLBACK",
-        pass:
-          !productsHtml.includes("Waiting for /products/index.js to load") ||
-          productsRuntime.includes("productsRuntimeMounted"),
+        key: "PRODUCTS_FALLBACK_RELEVANT",
+        pass: !productsHtml.includes("Waiting for /products/index.js to load") || productsRuntime.includes("productsRuntimeMounted"),
         fail: "Products shell fallback is still relevant; runtime proof must be verified.",
         next: "VERIFY_PRODUCTS_RUNTIME_MOUNT_ON_LIVE_PAGE"
       },
       {
-        key: "LAWS_G1",
-        pass:
-          !lawsHtml.includes("G1 External Expression") &&
-          !lawsHtml.includes("LAWS_G1_VISIBLE_THREE_LAYER_SURFACE"),
+        key: "LAWS_G1_RETIRED",
+        pass: !lawsHtml.includes("G1 External Expression") && !lawsHtml.includes("LAWS_G1_VISIBLE_THREE_LAYER_SURFACE"),
         fail: "Laws page still exposes G1 language.",
         next: "RENEW_/laws/index.html_AS_G2_AUTHORITY_INSTRUMENT"
       },
       {
-        key: "ABOUT_IDENTITY",
+        key: "ABOUT_IDENTITY_CLEAN",
         pass: !aboutHtml.includes("Geodiametrics") && !aboutHtml.includes(""),
         fail: "About page still has identity drift or visible artifact.",
         next: "RENEW_/about/index.html_FOR_DGB_IDENTITY"
-      },
-      {
-        key: "GAUGES_GEN2_LIVE",
-        pass:
-          gaugesHtml.includes("Second Generation Renewal") &&
-          gaugesHtml.includes("LIVE_FEED_DIAGNOSTIC_SURFACE"),
-        fail: "Gauges page is not yet the second-generation live-feed diagnostic surface.",
-        next: "DEPLOY_/gauges/index.html_SECOND_GENERATION_LIVE_FEED"
-      },
-      {
-        key: "GAUGES_JS_PRESENT",
-        pass:
-          gaugesJs.includes("GAUGE_LIVE_FEED_V2") ||
-          gaugesJs.includes("SECOND_GENERATION_RENEWAL"),
-        fail: "Gauges JS is missing or not carrying the live-feed diagnostic runtime.",
-        next: "DEPLOY_/gauges/index.js_LIVE_FEED_RUNTIME"
       }
     ];
 
@@ -193,20 +177,18 @@
   function renderRoutes(diagnostic) {
     if (!routeGrid) return;
 
-    routeGrid.innerHTML = diagnostic.files
-      .map((file) => {
-        const cls = file.ok ? "ok" : "block";
-        const title = file.ok ? "reachable" : "blocked";
+    routeGrid.innerHTML = diagnostic.files.map((file) => {
+      const cls = file.ok ? "ok" : "block";
+      const title = file.ok ? "reachable" : "blocked";
 
-        return `
-          <div class="cell ${cls}">
-            <small>${escapeHtml(file.key)}</small>
-            <strong>${escapeHtml(title)}</strong>
-            <code>${escapeHtml(file.path)}<br>STATUS=${escapeHtml(file.status)} LENGTH=${escapeHtml(file.length)}</code>
-          </div>
-        `;
-      })
-      .join("");
+      return `
+        <div class="cell ${cls}">
+          <small>${escapeHtml(file.key)}</small>
+          <strong>${escapeHtml(title)}</strong>
+          <code>${escapeHtml(file.path)}<br>STATUS=${escapeHtml(file.status)} LENGTH=${escapeHtml(file.length)}</code>
+        </div>
+      `;
+    }).join("");
   }
 
   function renderFeed(diagnostic) {
@@ -221,7 +203,6 @@
 
     lines.push("FAILED_CHECKS=[");
     if (!diagnostic.failed.length) lines.push("  NONE");
-
     for (const item of diagnostic.failed) {
       lines.push("  {");
       lines.push("    CHECK=" + item.key);
@@ -229,7 +210,6 @@
       lines.push("    NEXT=" + item.next);
       lines.push("  }");
     }
-
     lines.push("]");
     lines.push("");
 
@@ -241,30 +221,21 @@
 
     lines.push("FILE_PROBES=[");
     for (const file of diagnostic.files) {
-      lines.push(
-        "  " +
-          file.key +
-          " => " +
-          file.path +
-          " :: STATUS=" +
-          file.status +
-          " LENGTH=" +
-          file.length
-      );
+      lines.push("  " + file.key + " => " + file.path + " :: STATUS=" + file.status + " LENGTH=" + file.length);
     }
     lines.push("]");
 
-    safeSet(liveOutput, lines.join("\n"));
-    safeSet(stripStatus, "STATUS: " + diagnostic.priority);
-    safeSet(stripAction, "NEXT_ACTION=" + diagnostic.nextAction);
+    setText(liveOutput, lines.join("\n"));
+    setText(stripStatus, "STATUS: " + diagnostic.priority);
+    setText(stripAction, "NEXT_ACTION=" + diagnostic.nextAction);
   }
 
   async function run() {
     writeMatrix();
 
-    safeSet(stripStatus, "STATUS: RUNNING");
-    safeSet(stripAction, "NEXT_ACTION=FETCH_PUBLIC_SOURCE_FILES");
-    safeSet(liveOutput, "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE");
+    setText(stripStatus, "STATUS: RUNNING");
+    setText(stripAction, "NEXT_ACTION=FETCH_PUBLIC_SOURCE_FILES");
+    setText(liveOutput, "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE");
 
     const results = [];
 
@@ -278,10 +249,7 @@
     renderRoutes(diagnostic);
     renderFeed(diagnostic);
 
-    document.documentElement.setAttribute(
-      "data-gauge-priority",
-      diagnostic.priority.toLowerCase()
-    );
+    document.documentElement.setAttribute("data-gauge-priority", diagnostic.priority.toLowerCase());
 
     const root = document.getElementById("gaugeRoot");
     if (root) {

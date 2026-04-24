@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-second-generation-renewal-root-v3";
+  const STYLE_ID = "dgb-second-generation-renewal-root-stretch-v1";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;

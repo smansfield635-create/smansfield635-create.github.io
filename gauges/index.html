@@ -6,7 +6,7 @@
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Generation 2 instrument chamber: gauges, readouts, diagnostic panels, and system measurement surfaces."
+    content="Diamond Gate Bridge Generation 2 Gauge Authority Hub: master instruments, stage ownership audit, problem classifier, probes, and audit lanes."
   />
   <style>
     :root{
@@ -16,11 +16,10 @@
       --text:#eef4ff;
       --muted:#9aabd0;
       --gold:#efd29a;
-      --gold-strong:#ffd98f;
       --blue:#6db8ff;
-      --blue-strong:#7ad5ff;
       --green:#97e6b4;
       --warn:#ffd58f;
+      --red:#ff9a9a;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1240px;
     }
@@ -81,7 +80,16 @@
       overflow:hidden;
     }
 
-    .topbar,.hero,.instrument-card,.console,.panel,.readout,.gauge-card,.route-card{
+    .topbar,
+    .hero,
+    .instrument-card,
+    .console,
+    .panel,
+    .readout,
+    .audit-card,
+    .lane-card,
+    .probe-card,
+    .route-card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
@@ -308,13 +316,13 @@
       z-index:1;
     }
 
-    .instrument-ring{
+    .authority-ring{
       position:absolute;
       left:50%;
       top:50%;
+      width:252px;
+      height:252px;
       transform:translate(-50%,-50%);
-      width:238px;
-      height:238px;
       border-radius:50%;
       border:1px solid rgba(109,184,255,.30);
       box-shadow:
@@ -323,30 +331,27 @@
       z-index:4;
     }
 
-    .instrument-ring::before,
-    .instrument-ring::after{
+    .authority-ring::before,
+    .authority-ring::after{
       content:"";
       position:absolute;
       border-radius:50%;
       border:1px solid rgba(239,210,154,.24);
     }
 
-    .instrument-ring::before{
-      inset:20px;
-    }
-
-    .instrument-ring::after{
-      inset:52px;
+    .authority-ring::before{inset:22px}
+    .authority-ring::after{
+      inset:56px;
       border-color:rgba(109,184,255,.28);
       box-shadow:0 0 20px rgba(109,184,255,.14);
     }
 
-    .needle{
+    .ownership-line{
       position:absolute;
       left:50%;
       top:50%;
       width:3px;
-      height:100px;
+      height:112px;
       transform-origin:50% 100%;
       border-radius:999px;
       background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(239,210,154,.54), transparent);
@@ -354,16 +359,16 @@
       z-index:5;
     }
 
-    .needle.one{transform:translate(-50%,-100%) rotate(-38deg)}
-    .needle.two{transform:translate(-50%,-100%) rotate(42deg);opacity:.62}
-    .needle.three{transform:translate(-50%,-100%) rotate(0deg);opacity:.48}
+    .ownership-line.one{transform:translate(-50%,-100%) rotate(-46deg)}
+    .ownership-line.two{transform:translate(-50%,-100%) rotate(0deg);opacity:.62}
+    .ownership-line.three{transform:translate(-50%,-100%) rotate(46deg);opacity:.50}
 
-    .instrument-core{
+    .authority-core{
       position:absolute;
       left:50%;
       top:50%;
-      width:84px;
-      height:84px;
+      width:90px;
+      height:90px;
       transform:translate(-50%,-50%);
       border-radius:50%;
       border:1px solid rgba(255,255,255,.14);
@@ -381,7 +386,7 @@
       bottom:24px;
       transform:translateX(-50%);
       width:calc(100% - 42px);
-      max-width:520px;
+      max-width:560px;
       padding:12px 16px;
       border-radius:999px;
       border:1px solid rgba(140,168,240,.24);
@@ -395,11 +400,9 @@
       line-height:1.35;
     }
 
-    .instrument-status strong{
-      color:#fff;
-    }
+    .instrument-status strong{color:#fff}
 
-    .console{
+    .console,.panel{
       margin-top:18px;
       border-radius:30px;
       padding:22px 20px;
@@ -414,7 +417,7 @@
       margin-bottom:8px;
     }
 
-    .console h2{
+    .console h2,.panel h2{
       margin:0 0 10px;
       font-size:clamp(1.7rem, 3vw, 2.7rem);
       line-height:1;
@@ -448,7 +451,7 @@
       pointer-events:none;
     }
 
-    .readout small,.gauge-card small,.route-card small{
+    .readout small,.audit-card small,.lane-card small,.probe-card small,.route-card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -461,13 +464,13 @@
     .readout strong{
       display:block;
       color:#f4f7ff;
-      font-size:1.55rem;
+      font-size:1.45rem;
       line-height:1;
       letter-spacing:-.04em;
       margin-bottom:10px;
     }
 
-    .readout p{
+    .readout p,.audit-card p,.lane-card p,.probe-card p,.route-card p{
       margin:0;
       font-size:.9rem;
     }
@@ -490,31 +493,28 @@
       box-shadow:0 0 16px rgba(109,184,255,.22);
     }
 
-    .gauge-layout{
+    .authority-layout{
       display:grid;
-      grid-template-columns:minmax(0,1.1fr) minmax(320px,.9fr);
+      grid-template-columns:minmax(0,1.05fr) minmax(320px,.95fr);
       gap:18px;
       margin-top:18px;
       align-items:start;
     }
 
-    .panel{
-      border-radius:30px;
-      padding:22px 20px;
-      overflow:hidden;
-    }
-
-    .gauge-list{
+    .audit-list,.probe-list,.lane-grid{
       display:grid;
       gap:12px;
       margin-top:16px;
     }
 
-    .gauge-card{
+    .audit-card,.probe-card,.lane-card{
       border-radius:20px;
       padding:16px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.025);
+    }
+
+    .audit-card{
       display:grid;
       grid-template-columns:auto 1fr auto;
       gap:14px;
@@ -530,24 +530,65 @@
       box-shadow:0 0 18px var(--lamp-glow);
     }
 
-    .gauge-card h3{
-      margin:0 0 5px;
+    .audit-card h3,.probe-card h3,.lane-card h3,.route-card h3{
+      margin:0 0 6px;
       font-size:1rem;
       letter-spacing:-.02em;
     }
 
-    .gauge-card p{
-      margin:0;
-      font-size:.9rem;
-    }
-
-    .gauge-value{
+    .audit-value{
       color:#fff;
       font-weight:900;
       letter-spacing:.08em;
       font-size:.86rem;
       text-transform:uppercase;
       text-align:right;
+    }
+
+    .classifier-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .classifier-card{
+      border-radius:20px;
+      padding:16px;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(109,184,255,.08), transparent 42%),
+        rgba(255,255,255,.025);
+    }
+
+    .classifier-card small{
+      display:block;
+      color:#90a3ce;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      margin-bottom:8px;
+      font-weight:800;
+      font-size:.72rem;
+    }
+
+    .classifier-card strong{
+      display:block;
+      color:#fff;
+      line-height:1.25;
+      margin-bottom:8px;
+    }
+
+    .classifier-card p{
+      margin:0;
+      font-size:.9rem;
+    }
+
+    .lane-grid{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+    }
+
+    .lane-card{
+      min-height:158px;
     }
 
     .route-grid{
@@ -572,16 +613,6 @@
       border-color:var(--line-strong);
       background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
       outline:none;
-    }
-
-    .route-card h3{
-      margin:0 0 8px;
-      font-size:1.05rem;
-    }
-
-    .route-card p{
-      margin:0;
-      font-size:.9rem;
     }
 
     .footer{
@@ -611,8 +642,8 @@
     }
 
     @media (max-width:980px){
-      .hero-grid,.gauge-layout{grid-template-columns:1fr}
-      .readout-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .hero-grid,.authority-layout{grid-template-columns:1fr}
+      .readout-grid,.classifier-grid,.lane-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media (max-width:720px){
@@ -655,18 +686,18 @@
         min-height:330px;
       }
 
-      .instrument-ring{
-        width:198px;
-        height:198px;
+      .authority-ring{
+        width:204px;
+        height:204px;
       }
 
-      .needle{
-        height:82px;
+      .ownership-line{
+        height:86px;
       }
 
-      .instrument-core{
-        width:68px;
-        height:68px;
+      .authority-core{
+        width:70px;
+        height:70px;
       }
 
       .instrument-status{
@@ -676,15 +707,15 @@
         letter-spacing:.10em;
       }
 
-      .readout-grid,.route-grid{
+      .readout-grid,.classifier-grid,.lane-grid,.route-grid{
         grid-template-columns:1fr;
       }
 
-      .gauge-card{
+      .audit-card{
         grid-template-columns:auto 1fr;
       }
 
-      .gauge-value{
+      .audit-value{
         grid-column:1 / -1;
         text-align:left;
       }
@@ -696,23 +727,23 @@
     }
 
     @media (prefers-reduced-motion:no-preference){
-      .instrument-ring{
+      .authority-ring{
         animation:slowSpin 32s linear infinite;
       }
 
-      .instrument-core{
+      .authority-core{
         animation:corePulse 4.8s ease-in-out infinite;
       }
 
-      .needle.one{
+      .ownership-line.one{
         animation:needleSweepOne 8s ease-in-out infinite;
       }
 
-      .needle.two{
+      .ownership-line.two{
         animation:needleSweepTwo 10s ease-in-out infinite;
       }
 
-      .needle.three{
+      .ownership-line.three{
         animation:needleSweepThree 12s ease-in-out infinite;
       }
 
@@ -727,18 +758,18 @@
       }
 
       @keyframes needleSweepOne{
-        0%,100%{transform:translate(-50%,-100%) rotate(-44deg)}
-        50%{transform:translate(-50%,-100%) rotate(-24deg)}
+        0%,100%{transform:translate(-50%,-100%) rotate(-52deg)}
+        50%{transform:translate(-50%,-100%) rotate(-34deg)}
       }
 
       @keyframes needleSweepTwo{
-        0%,100%{transform:translate(-50%,-100%) rotate(34deg)}
-        50%{transform:translate(-50%,-100%) rotate(52deg)}
+        0%,100%{transform:translate(-50%,-100%) rotate(-8deg)}
+        50%{transform:translate(-50%,-100%) rotate(8deg)}
       }
 
       @keyframes needleSweepThree{
-        0%,100%{transform:translate(-50%,-100%) rotate(-6deg)}
-        50%{transform:translate(-50%,-100%) rotate(8deg)}
+        0%,100%{transform:translate(-50%,-100%) rotate(34deg)}
+        50%{transform:translate(-50%,-100%) rotate(54deg)}
       }
     }
 
@@ -757,7 +788,7 @@
         <div class="brand-mark">DG</div>
         <div>
           <p class="brand-kicker">Generation 2 Instruments</p>
-          <p class="brand-title">Gauges · Diamond Gate Bridge</p>
+          <p class="brand-title">Gauge Authority · Diamond Gate Bridge</p>
         </div>
       </div>
 
@@ -772,30 +803,30 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Generation 2 · master instrument chamber</span>
-          <h1>Read the <span class="accent">instruments</span>.</h1>
+          <span class="hero-tag">Generation 2 · gauge authority hub</span>
+          <h1>Read the <span class="accent">authority instruments</span>.</h1>
           <p>
-            Gauges now defines the Generation 2 instrument language for the site. This chamber holds the system readouts:
-            status, route health, coherence, seasonal runtime, diagnostic pressure, and live chamber alignment.
+            Gauges is now the master instrument hub. It preserves the stage-ownership audit logic and upgrades it into
+            the Generation 2 visual language: dark glass, blue/gold trim, diagnostic hierarchy, execution probes, and route authority.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#instrumentConsole">Open console</a>
+            <a class="button primary" href="#stageOwnership">Open stage audit</a>
             <a class="button" href="/">Back to door</a>
             <a class="button" href="/products/">Products runtime</a>
           </div>
         </div>
 
         <aside class="instrument-card">
-          <div class="instrument-face" aria-label="Generation 2 master gauge">
+          <div class="instrument-face" aria-label="Gauge authority master instrument">
             <div class="instrument-grid"></div>
-            <div class="instrument-ring"></div>
-            <div class="needle one"></div>
-            <div class="needle two"></div>
-            <div class="needle three"></div>
-            <div class="instrument-core"></div>
+            <div class="authority-ring"></div>
+            <div class="ownership-line one"></div>
+            <div class="ownership-line two"></div>
+            <div class="ownership-line three"></div>
+            <div class="authority-core"></div>
             <div class="instrument-status">
-              <strong>Master gauge</strong> · root door language applied to instruments
+              <strong>Gauge authority hub</strong> · stage ownership audit preserved and upgraded
             </div>
           </div>
         </aside>
@@ -803,143 +834,205 @@
     </section>
 
     <section class="console" id="instrumentConsole">
-      <div class="section-kicker">Primary readouts</div>
-      <h2>System instrument panel</h2>
+      <div class="section-kicker">Master console</div>
+      <h2>Instrument authority panel</h2>
       <p>
-        This page is the source pattern for the rest of the Generation 2 readout surfaces. Every future instrument should read
-        as dark glass, blue/gold trim, clear status hierarchy, and chamber-specific diagnostic meaning.
+        This chamber does not replace the existing audit function. It promotes it. The original purpose remains:
+        identify ownership, isolate the visible-stage controller, classify the break, and prevent duplicate stage authority.
       </p>
 
       <div class="readout-grid">
         <div class="readout">
-          <small>Root door</small>
-          <strong>Live</strong>
-          <p>Generation 2 root threshold is the visual authority.</p>
+          <small>Gauge role</small>
+          <strong>Authority</strong>
+          <p>Gauges acts as the master instrument surface for Generation 2.</p>
           <div class="bar"><span style="--value:96%"></span></div>
         </div>
 
         <div class="readout">
-          <small>Products</small>
-          <strong>Live</strong>
-          <p>Seasonal molecule runtime is mounted as the G1 product baseline.</p>
-          <div class="bar"><span style="--value:92%"></span></div>
+          <small>Stage rule</small>
+          <strong>One owner</strong>
+          <p>Only one visible-stage owner should control a chamber at a time.</p>
+          <div class="bar"><span style="--value:94%"></span></div>
         </div>
 
         <div class="readout">
-          <small>Gauges</small>
-          <strong>G2</strong>
-          <p>Instrument chamber is now the master readout pattern.</p>
-          <div class="bar"><span style="--value:88%"></span></div>
+          <small>Audit value</small>
+          <strong>Preserved</strong>
+          <p>The products stage ownership audit remains part of the gauge system.</p>
+          <div class="bar"><span style="--value:90%"></span></div>
         </div>
 
         <div class="readout">
           <small>Next pass</small>
           <strong>Laws</strong>
           <p>Authority chamber should inherit this instrument language next.</p>
-          <div class="bar"><span style="--value:64%"></span></div>
+          <div class="bar"><span style="--value:68%"></span></div>
         </div>
       </div>
     </section>
 
-    <section class="gauge-layout">
+    <section class="authority-layout" id="stageOwnership">
       <div class="panel">
-        <div class="section-kicker">Diagnostic hierarchy</div>
-        <h2>Chamber status</h2>
+        <div class="section-kicker">Stage ownership authority</div>
+        <h2>Products stage ownership audit</h2>
         <p>
-          These are not decorative cards. They are the first Generation 2 instrument standard:
-          each line gives a chamber, a status, and the current read.
+          The live diagnostic logic is retained here as a first-class instrument module. Its job is to prevent stage collision,
+          identify the active owner, and classify whether a failure belongs to HTML, bridge, runtime, cache, or visual layout.
         </p>
 
-        <div class="gauge-list">
-          <div class="gauge-card">
+        <div class="audit-list">
+          <div class="audit-card">
             <div class="lamp" style="--lamp:rgba(151,230,180,.95);--lamp-glow:rgba(151,230,180,.35)"></div>
             <div>
-              <small>Root</small>
-              <h3>Door baseline active</h3>
-              <p>Root page now owns the Generation 2 visual direction.</p>
+              <small>Stage owner</small>
+              <h3>Visible-stage owner must be singular</h3>
+              <p>One chamber surface should own the mounted visual stage at a time.</p>
             </div>
-            <div class="gauge-value">PASS</div>
+            <div class="audit-value">LAW</div>
           </div>
 
-          <div class="gauge-card">
+          <div class="audit-card">
             <div class="lamp" style="--lamp:rgba(109,184,255,.95);--lamp-glow:rgba(109,184,255,.35)"></div>
             <div>
-              <small>Products</small>
-              <h3>Seasonal molecule stable</h3>
-              <p>Winter/Spring and Fall/Summer loops remain the accepted products baseline.</p>
+              <small>Products shell</small>
+              <h3>HTML shell owns route, copy, and mount point</h3>
+              <p>The shell should not compete with the runtime for molecule geometry.</p>
             </div>
-            <div class="gauge-value">LIVE</div>
+            <div class="audit-value">SHELL</div>
           </div>
 
-          <div class="gauge-card">
+          <div class="audit-card">
             <div class="lamp" style="--lamp:rgba(255,217,143,.95);--lamp-glow:rgba(255,217,143,.35)"></div>
             <div>
-              <small>Laws</small>
-              <h3>Awaiting G2 chamber upgrade</h3>
-              <p>Laws should be upgraded after the master instrument language is accepted.</p>
+              <small>Runtime</small>
+              <h3>Runtime owns molecule animation</h3>
+              <p>The animated seasonal molecule belongs to the runtime, not the static shell.</p>
             </div>
-            <div class="gauge-value">NEXT</div>
+            <div class="audit-value">RUNTIME</div>
           </div>
 
-          <div class="gauge-card">
-            <div class="lamp" style="--lamp:rgba(210,223,255,.95);--lamp-glow:rgba(210,223,255,.35)"></div>
+          <div class="audit-card">
+            <div class="lamp" style="--lamp:rgba(255,154,154,.95);--lamp-glow:rgba(255,154,154,.35)"></div>
             <div>
-              <small>About / Prelude</small>
-              <h3>Orientation layer pending</h3>
-              <p>Orientation pages should inherit the same readout structure after Laws.</p>
+              <small>Collision class</small>
+              <h3>Duplicate stage owners are the danger</h3>
+              <p>If old and new surfaces both render, the failure is ownership collision, not design drift.</p>
             </div>
-            <div class="gauge-value">QUEUE</div>
+            <div class="audit-value">BLOCK</div>
           </div>
         </div>
       </div>
 
       <div class="panel">
-        <div class="section-kicker">Instrument law</div>
-        <h2>G2 standard</h2>
+        <div class="section-kicker">Problem classifier</div>
+        <h2>Break classification</h2>
         <p>
-          Every instrument surface must be readable first, beautiful second, and decorative only after meaning is stable.
-          The page should tell the user what is live, what is next, and where to go.
+          The classifier turns visual confusion into a controlled diagnostic. The question is not “what do we like?”
+          The question is “which owner is emitting the visible break?”
         </p>
 
-        <div class="gauge-list">
-          <div class="gauge-card">
-            <div class="lamp" style="--lamp:rgba(109,184,255,.95);--lamp-glow:rgba(109,184,255,.35)"></div>
-            <div>
-              <small>Visual law</small>
-              <h3>Dark glass · blue/gold trim</h3>
-              <p>The root door language now governs instruments.</p>
-            </div>
-            <div class="gauge-value">G2</div>
+        <div class="classifier-grid">
+          <div class="classifier-card">
+            <small>Class A</small>
+            <strong>Missing mount</strong>
+            <p>HTML loaded, but bridge or runtime did not mount.</p>
           </div>
 
-          <div class="gauge-card">
-            <div class="lamp" style="--lamp:rgba(151,230,180,.95);--lamp-glow:rgba(151,230,180,.35)"></div>
-            <div>
-              <small>Readout law</small>
-              <h3>Status before ornament</h3>
-              <p>Each surface must communicate state before detail density.</p>
-            </div>
-            <div class="gauge-value">LOCK</div>
+          <div class="classifier-card">
+            <small>Class B</small>
+            <strong>Loaded, not injected</strong>
+            <p>Runtime file loaded, but no runtime root appeared.</p>
           </div>
 
-          <div class="gauge-card">
-            <div class="lamp" style="--lamp:rgba(255,217,143,.95);--lamp-glow:rgba(255,217,143,.35)"></div>
-            <div>
-              <small>Execution law</small>
-              <h3>TNT only</h3>
-              <p>Generation 2 upgrades move by complete file replacements.</p>
-            </div>
-            <div class="gauge-value">HARD</div>
+          <div class="classifier-card">
+            <small>Class C</small>
+            <strong>Competing stage</strong>
+            <p>Old shell and new runtime both produce visible chamber output.</p>
+          </div>
+
+          <div class="classifier-card">
+            <small>Class D</small>
+            <strong>Visual containment</strong>
+            <p>The owner is correct, but spacing, motion, or clipping needs adjustment.</p>
           </div>
         </div>
       </div>
     </section>
 
     <section class="console">
-      <div class="section-kicker">Route instruments</div>
-      <h2>Move to the next chamber</h2>
+      <div class="section-kicker">Execution probes</div>
+      <h2>Four questions before any file move</h2>
       <p>
-        Gauges now acts as the master instrument chamber. The next lawful move is to propagate this standard outward.
+        These probes prevent false fixes. A TNT should only be written after the active owner and break class are named.
+      </p>
+
+      <div class="probe-list">
+        <div class="probe-card">
+          <small>Probe 1</small>
+          <h3>Which file owns the visible stage?</h3>
+          <p>Identify whether the visible output comes from HTML, bridge JS, runtime JS, or cache.</p>
+        </div>
+
+        <div class="probe-card">
+          <small>Probe 2</small>
+          <h3>Is the mount present?</h3>
+          <p>If the mount is absent, the shell owns the failure. If the mount exists, inspect bridge/runtime.</p>
+        </div>
+
+        <div class="probe-card">
+          <small>Probe 3</small>
+          <h3>Is the runtime root present?</h3>
+          <p>If the runtime root exists, the issue is visual/layout. If it does not, the issue is load/injection.</p>
+        </div>
+
+        <div class="probe-card">
+          <small>Probe 4</small>
+          <h3>Is there more than one stage owner?</h3>
+          <p>If two generations render at once, remove competition before adding new features.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="console">
+      <div class="section-kicker">Direct audit lanes</div>
+      <h2>Lane-based inspection</h2>
+      <p>
+        The lanes keep the diagnostic sequence clean. Do not skip from a visible symptom to a design rewrite.
+      </p>
+
+      <div class="lane-grid">
+        <div class="lane-card">
+          <small>Lane A</small>
+          <h3>Shell lane</h3>
+          <p>Inspect `/products/index.html` for mount point, page copy, filters, and static fallback.</p>
+        </div>
+
+        <div class="lane-card">
+          <small>Lane B</small>
+          <h3>Bridge lane</h3>
+          <p>Inspect `/products/index.js` for boot receipt, runtime request, cache-bust, and error handling.</p>
+        </div>
+
+        <div class="lane-card">
+          <small>Lane C</small>
+          <h3>Runtime lane</h3>
+          <p>Inspect `/products/products_runtime.js` for injected root, animation ownership, and layout control.</p>
+        </div>
+
+        <div class="lane-card">
+          <small>Lane D</small>
+          <h3>Visual lane</h3>
+          <p>Inspect containment, spacing, labels, glass depth, motion speed, and mobile readability.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="console">
+      <div class="section-kicker">Next chamber routing</div>
+      <h2>Move to the next instrument surface</h2>
+      <p>
+        Gauge Authority is now the master instrument hub. The next best move is Laws, because Laws should become the authority instrument chamber.
       </p>
 
       <div class="route-grid">
@@ -964,13 +1057,13 @@
         <a class="route-card" href="/about/">
           <small>Orientation</small>
           <h3>About</h3>
-          <p>Prepare the user guidance layer for G2 inheritance.</p>
+          <p>Prepare user guidance for G2 inheritance.</p>
         </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Gauges · Generation 2 master instrument chamber</span>
+      <span>Gauges · Generation 2 Gauge Authority Hub</span>
       <div class="footer-links">
         <a href="/">Door</a>
         <a href="/products/">Products</a>

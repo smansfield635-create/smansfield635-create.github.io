@@ -6,22 +6,564 @@
   <title>Diamond Gate Bridge · Coming Attractions</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge homepage: Nine Summits of Love, Learn to Live to Love, the Metaverse, and upcoming public show attractions."
+    content="Diamond Gate Bridge homepage: Nine Summits of Love, Learn to Live to Love, the Metaverse, and The Upper Room upcoming show."
   />
-  <script src="/index.js?v=home-coming-attractions-1" defer></script>
+  <style>
+    :root {
+      --bg: #020610;
+      --panel: rgba(7, 14, 28, .92);
+      --panel-2: rgba(10, 19, 37, .88);
+      --line: rgba(170, 198, 255, .18);
+      --line-strong: rgba(224, 238, 255, .34);
+      --text: #eef4ff;
+      --muted: #aab8d8;
+      --soft: #d7e2ff;
+      --gold: #efd29a;
+      --shadow: 0 24px 80px rgba(0, 0, 0, .50);
+      --radius-xl: 32px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --max: 1120px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(114, 151, 255, .18), transparent 24%),
+        radial-gradient(circle at 18% 28%, rgba(239, 210, 154, .10), transparent 28%),
+        linear-gradient(180deg, #020610 0%, #071225 52%, #020610 100%);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .22;
+      background:
+        linear-gradient(90deg, rgba(164,188,255,.07) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
+      background-size: 52px 52px;
+      mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .home-page {
+      width: min(var(--max), calc(100vw - 24px));
+      margin: 0 auto;
+      padding: 16px 0 44px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .shell {
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      background: linear-gradient(180deg, var(--panel), rgba(4, 9, 19, .92));
+      box-shadow: var(--shadow);
+    }
+
+    .topbar {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%, rgba(239,210,154,.24), transparent 42%),
+        linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
+      font-weight: 900;
+      letter-spacing: .08em;
+    }
+
+    .kicker {
+      margin: 0 0 4px;
+      color: #c8d7ff;
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    .brand-title {
+      margin: 0;
+      font-weight: 850;
+      font-size: 1.05rem;
+    }
+
+    .nav {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .nav a,
+    .button,
+    .row-link {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .035);
+      color: var(--soft);
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .nav a:focus-visible,
+    .button:focus-visible,
+    .row-link:focus-visible,
+    .doll-toggle:focus-visible {
+      outline: 2px solid rgba(239, 210, 154, .62);
+      outline-offset: 3px;
+    }
+
+    .hero {
+      padding: 18px;
+      margin-bottom: 14px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.035);
+      color: #d8e3ff;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-size: .70rem;
+      margin-bottom: 12px;
+    }
+
+    .pill::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      transform: rotate(45deg);
+      background: var(--gold);
+      box-shadow: 0 0 18px rgba(239,210,154,.50);
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 11ch;
+      font-size: clamp(2.5rem, 12vw, 5.4rem);
+      line-height: .9;
+      letter-spacing: -.07em;
+      color: #fff;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: var(--gold);
+      font-size: clamp(1.55rem, 7vw, 2.9rem);
+      line-height: .98;
+      letter-spacing: -.04em;
+      font-weight: 900;
+    }
+
+    p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.62;
+      font-size: 1rem;
+    }
+
+    .lead {
+      margin-top: 14px;
+      max-width: 68ch;
+      font-size: clamp(1rem, 1.45vw, 1.14rem);
+    }
+
+    .actions {
+      display: grid;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .button.primary {
+      border-color: rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg, rgba(239,210,154,.24), rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color: #fff8ea;
+    }
+
+    .love-window {
+      min-height: 280px;
+      border-radius: 28px;
+      border: 1px solid rgba(170,198,255,.18);
+      background:
+        radial-gradient(circle at 50% 45%, rgba(239,210,154,.18), transparent 24%),
+        radial-gradient(circle at 50% 54%, rgba(142,197,255,.16), transparent 34%),
+        linear-gradient(180deg, rgba(7,17,36,.98), rgba(2,7,16,.99));
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+      isolation: isolate;
+    }
+
+    .love-window::before {
+      content: "";
+      position: absolute;
+      inset: 10%;
+      border-radius: 999px 999px 32px 32px;
+      border: 1px solid rgba(210,223,255,.18);
+      box-shadow: inset 0 0 42px rgba(126,164,255,.12);
+    }
+
+    .orbit {
+      position: absolute;
+      width: 58%;
+      height: 58%;
+      border-radius: 50%;
+      border: 1px solid rgba(239,210,154,.20);
+      opacity: .7;
+    }
+
+    .orbit.one {
+      transform: rotate(45deg) scaleX(.45);
+      animation: orbitOne 16s linear infinite;
+    }
+
+    .orbit.two {
+      transform: rotate(-45deg) scaleX(.45);
+      animation: orbitTwo 18s linear infinite reverse;
+    }
+
+    .core {
+      position: relative;
+      z-index: 3;
+      width: 124px;
+      height: 124px;
+      border-radius: 32px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 38%, rgba(255,255,255,.34), transparent 34%),
+        linear-gradient(180deg, rgba(18,35,62,.94), rgba(4,9,18,.98));
+      border: 1px solid rgba(239,210,154,.30);
+      color: #fff;
+      font-weight: 950;
+      letter-spacing: .20em;
+      box-shadow:
+        0 0 28px rgba(239,210,154,.22),
+        0 0 88px rgba(142,197,255,.18);
+    }
+
+    .caption {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      z-index: 4;
+      width: min(92%, 620px);
+      padding: 12px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(164,188,255,.24);
+      background: rgba(5,12,26,.84);
+      text-align: center;
+      color: #dce7ff;
+      text-transform: uppercase;
+      letter-spacing: .09em;
+      font-size: .64rem;
+      line-height: 1.45;
+      backdrop-filter: blur(10px);
+    }
+
+    .caption strong {
+      display: block;
+      color: #fff;
+      margin-bottom: 3px;
+    }
+
+    .section {
+      padding: 18px;
+      margin-top: 14px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      color: #fff;
+      font-size: clamp(1.65rem, 8vw, 2.7rem);
+      line-height: 1;
+      letter-spacing: -.04em;
+    }
+
+    .doll-stack {
+      display: grid;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .doll {
+      border: 1px solid rgba(164,188,255,.15);
+      border-radius: var(--radius-lg);
+      background:
+        radial-gradient(circle at 100% 100%, rgba(239,210,154,.08), transparent 42%),
+        rgba(255,255,255,.025);
+      overflow: hidden;
+    }
+
+    .doll-toggle {
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 16px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 12px;
+      align-items: center;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .number {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: var(--gold);
+      background: rgba(239,210,154,.08);
+      border: 1px solid rgba(239,210,154,.18);
+      font-weight: 950;
+      flex: none;
+    }
+
+    .doll-title small {
+      display: block;
+      color: #90a3ce;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 6px;
+      font-weight: 850;
+      font-size: .68rem;
+    }
+
+    .doll-title strong {
+      display: block;
+      color: #fff;
+      font-size: 1.18rem;
+      line-height: 1.1;
+    }
+
+    .diamond {
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      transform: rotate(45deg);
+      border: 1px solid rgba(239,210,154,.34);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),
+        rgba(6,14,28,.78);
+      transition: transform .18s ease;
+    }
+
+    .doll[open] .diamond {
+      transform: rotate(135deg);
+    }
+
+    .doll-body {
+      padding: 0 16px 16px 70px;
+    }
+
+    .doll-body p {
+      max-width: 70ch;
+    }
+
+    .doll-body .row-link {
+      margin-top: 12px;
+      justify-content: center;
+      width: fit-content;
+      min-width: 132px;
+      color: #fff8ea;
+      border-color: rgba(239,210,154,.28);
+      background: rgba(239,210,154,.08);
+    }
+
+    .support-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .support-card {
+      border: 1px solid rgba(164,188,255,.14);
+      border-radius: var(--radius-md);
+      padding: 14px;
+      background: rgba(255,255,255,.025);
+    }
+
+    .support-card small {
+      display: block;
+      color: #90a3ce;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 6px;
+      font-weight: 850;
+      font-size: .68rem;
+    }
+
+    .support-card strong {
+      display: block;
+      color: #fff;
+      line-height: 1.15;
+    }
+
+    .footer {
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      padding: 14px 4px 0;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    @keyframes orbitOne {
+      from { transform: rotate(45deg) scaleX(.45); }
+      to { transform: rotate(405deg) scaleX(.45); }
+    }
+
+    @keyframes orbitTwo {
+      from { transform: rotate(-45deg) scaleX(.45); }
+      to { transform: rotate(315deg) scaleX(.45); }
+    }
+
+    @media (min-width: 760px) {
+      .topbar {
+        grid-template-columns: auto 1fr;
+        align-items: center;
+      }
+
+      .nav {
+        grid-template-columns: repeat(5, auto);
+        justify-content: end;
+      }
+
+      .hero {
+        grid-template-columns: minmax(0, 1fr) minmax(320px, .78fr);
+        align-items: center;
+      }
+
+      .actions {
+        grid-template-columns: repeat(3, auto);
+        justify-content: start;
+      }
+
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .support-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .footer {
+        grid-template-columns: 1fr auto;
+        align-items: center;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .home-page {
+        width: min(100vw - 12px, var(--max));
+        padding-top: 10px;
+      }
+
+      .topbar,
+      .hero,
+      .section {
+        padding: 14px;
+        border-radius: 24px;
+      }
+
+      .nav {
+        grid-template-columns: 1fr;
+      }
+
+      .doll-body {
+        padding-left: 16px;
+      }
+
+      .love-window {
+        min-height: 250px;
+      }
+
+      .caption {
+        font-size: .58rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
   <main id="homePage" class="home-page" data-home-owner="index.html">
-    <header class="home-topbar">
-      <div class="home-brand">
-        <div class="home-mark">DG</div>
+    <header class="topbar shell">
+      <div class="brand">
+        <div class="mark">DG</div>
         <div>
-          <p class="home-kicker">Diamond Gate Bridge</p>
-          <p class="home-title">Coming Attractions</p>
+          <p class="kicker">Diamond Gate Bridge</p>
+          <p class="brand-title">Coming Attractions</p>
         </div>
       </div>
 
-      <nav class="home-nav" aria-label="Primary">
+      <nav class="nav" aria-label="Primary">
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/big-laugh/upper-room/">Upcoming Show</a>
         <a href="/products/">Metaverse</a>
@@ -30,145 +572,130 @@
       </nav>
     </header>
 
-    <section class="home-hero">
-      <div class="home-copy">
-        <span class="home-pill">Coming attractions · public front door</span>
+    <section class="hero shell">
+      <div>
+        <span class="pill">Coming attractions · public front door</span>
         <h1>Nine Summits of Love</h1>
-        <h2>Learn to Live to Love</h2>
-        <p>
+        <div class="subtitle">Learn to Live to Love</div>
+        <p class="lead">
           Diamond Gate Bridge opens with the human path first: love, growth, public expression, and the world being built around it.
-          The instruments stay behind the curtain. The homepage shows what people are invited to enter.
         </p>
 
-        <div class="home-actions">
-          <a class="home-button primary" href="/nine-summits/">Open Nine Summits</a>
-          <a class="home-button" href="/big-laugh/upper-room/">Upcoming Show</a>
-          <a class="home-button" href="/products/">Enter Metaverse</a>
+        <div class="actions">
+          <a class="button primary" href="/nine-summits/">Open Nine Summits</a>
+          <a class="button" href="/big-laugh/upper-room/">Upcoming Show</a>
+          <a class="button" href="/products/">Enter Metaverse</a>
         </div>
       </div>
 
-      <aside class="home-attraction-window" aria-label="Diamond Gate Bridge coming attractions">
-        <div class="home-door">
-          <div class="home-orbit one"></div>
-          <div class="home-orbit two"></div>
-          <div class="home-core">LOVE</div>
-          <div class="home-caption">
-            <strong>Learn to Live to Love</strong>
-            <span>Nine Summits · Metaverse · Upper Room</span>
-          </div>
+      <aside class="love-window" aria-label="Diamond Gate Bridge coming attractions">
+        <div class="orbit one"></div>
+        <div class="orbit two"></div>
+        <div class="core">LOVE</div>
+        <div class="caption">
+          <strong>Learn to Live to Love</strong>
+          <span>Nine Summits · Metaverse · Upper Room</span>
         </div>
       </aside>
     </section>
 
-    <section class="home-section top-attractions">
-      <p class="home-kicker">Top of page</p>
-      <h2>The attractions come first.</h2>
+    <section class="section shell">
+      <p class="kicker">Russian doll priority</p>
+      <h2>Open only what matters next.</h2>
+      <p>
+        The homepage now compresses into nested attractions. The top layer stays clean; each attraction opens only when the visitor asks for more.
+      </p>
 
-      <div class="feature-grid">
-        <a class="feature-card summit" href="/nine-summits/">
-          <small>Main attraction</small>
-          <strong>Nine Summits of Love</strong>
-          <p>
-            The human path, the value spine, and the central public invitation.
-          </p>
-        </a>
+      <div class="doll-stack">
+        <details class="doll" open>
+          <summary class="doll-toggle">
+            <span class="number">01</span>
+            <span class="doll-title">
+              <small>Main attraction</small>
+              <strong>Nine Summits of Love</strong>
+            </span>
+            <span class="diamond" aria-hidden="true"></span>
+          </summary>
+          <div class="doll-body">
+            <p>The main human-development path. This is the first public pillar and the top homepage attraction.</p>
+            <a class="row-link" href="/nine-summits/">Open</a>
+          </div>
+        </details>
 
-        <a class="feature-card love" href="/nine-summits/">
-          <small>Core phrase</small>
-          <strong>Learn to Live to Love</strong>
-          <p>
-            The plain-language doorway into the deeper work.
-          </p>
-        </a>
+        <details class="doll">
+          <summary class="doll-toggle">
+            <span class="number">02</span>
+            <span class="doll-title">
+              <small>Core phrase</small>
+              <strong>Learn to Live to Love</strong>
+            </span>
+            <span class="diamond" aria-hidden="true"></span>
+          </summary>
+          <div class="doll-body">
+            <p>The plain-language doorway into the deeper work. This phrase carries the human-facing meaning.</p>
+            <a class="row-link" href="/nine-summits/">Enter</a>
+          </div>
+        </details>
 
-        <a class="feature-card metaverse" href="/products/">
-          <small>World attraction</small>
-          <strong>Metaverse</strong>
-          <p>
-            The first ground-level world map and interactive landscape direction.
-          </p>
-        </a>
+        <details class="doll">
+          <summary class="doll-toggle">
+            <span class="number">03</span>
+            <span class="doll-title">
+              <small>World attraction</small>
+              <strong>Metaverse</strong>
+            </span>
+            <span class="diamond" aria-hidden="true"></span>
+          </summary>
+          <div class="doll-body">
+            <p>The world layer: micro-landscape, ecology, motion, interactive terrain, and the first readable 2D ground map.</p>
+            <a class="row-link" href="/products/">Explore</a>
+          </div>
+        </details>
 
-        <a class="feature-card show" href="/big-laugh/upper-room/">
-          <small>Upcoming show</small>
-          <strong>The Upper Room</strong>
-          <p>
-            A coming-soon public event: comedy, motivation, crowd interaction, and live expression.
-          </p>
-        </a>
+        <details class="doll">
+          <summary class="doll-toggle">
+            <span class="number">04</span>
+            <span class="doll-title">
+              <small>Upcoming show</small>
+              <strong>The Upper Room</strong>
+            </span>
+            <span class="diamond" aria-hidden="true"></span>
+          </summary>
+          <div class="doll-body">
+            <p>The upcoming show: <em>A Dollar a Day Keeps the Psychiatrist Away</em>. Comedy, motivation, crowd interaction, and live expression.</p>
+            <a class="row-link" href="/big-laugh/upper-room/">Preview</a>
+          </div>
+        </details>
       </div>
     </section>
 
-    <section class="home-section">
-      <p class="home-kicker">Coming attractions</p>
-      <h2>What is being opened?</h2>
-
-      <div class="attraction-list">
-        <article class="attraction-row">
-          <span>01</span>
-          <div>
-            <strong>Nine Summits of Love</strong>
-            <p>The main human-development path. This is the first public pillar.</p>
-          </div>
-          <a href="/nine-summits/">Open</a>
-        </article>
-
-        <article class="attraction-row">
-          <span>02</span>
-          <div>
-            <strong>Learn to Live to Love</strong>
-            <p>The simple public phrase that carries the deeper structure.</p>
-          </div>
-          <a href="/nine-summits/">Enter</a>
-        </article>
-
-        <article class="attraction-row">
-          <span>03</span>
-          <div>
-            <strong>Metaverse</strong>
-            <p>The world layer: micro-landscape, ecology, motion, and interactive terrain.</p>
-          </div>
-          <a href="/products/">Explore</a>
-        </article>
-
-        <article class="attraction-row">
-          <span>04</span>
-          <div>
-            <strong>The Upper Room</strong>
-            <p>The upcoming show: A Dollar a Day Keeps the Psychiatrist Away.</p>
-          </div>
-          <a href="/big-laugh/upper-room/">Preview</a>
-        </article>
-      </div>
-    </section>
-
-    <section class="home-section support">
-      <p class="home-kicker">Support routes</p>
+    <section class="section shell">
+      <p class="kicker">Support routes</p>
       <h2>Everything else supports the attractions.</h2>
 
       <div class="support-grid">
-        <a href="/laws/">
+        <a class="support-card" href="/laws/">
           <small>Laws</small>
-          <strong>Read the governing layer</strong>
+          <strong>Governing layer</strong>
         </a>
-        <a href="/about/">
+        <a class="support-card" href="/about/">
           <small>About</small>
-          <strong>Understand the mission</strong>
+          <strong>Mission context</strong>
         </a>
-        <a href="/contact/">
+        <a class="support-card" href="/contact/">
           <small>Contact</small>
           <strong>Reach the project</strong>
         </a>
-        <a href="/gauges/">
+        <a class="support-card" href="/gauges/">
           <small>Gauges</small>
           <strong>Inspect instruments</strong>
         </a>
       </div>
     </section>
 
-    <footer class="home-footer">
+    <footer class="footer">
       <span>Diamond Gate Bridge · Coming Attractions</span>
-      <span>
+      <span class="footer-links">
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/products/">Metaverse</a>
         <a href="/big-laugh/upper-room/">Upcoming Show</a>
@@ -176,5 +703,7 @@
       </span>
     </footer>
   </main>
+
+  <script src="/index.js?v=home-russian-doll-1" defer></script>
 </body>
 </html>

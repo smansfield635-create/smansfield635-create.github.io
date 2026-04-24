@@ -2,1062 +2,582 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Products | Diamond Topography 32</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Products Field</title>
   <meta
     name="description"
-    content="Interactive 32-point diamond topography for products, built on Fibonacci distribution and cardinal structure."
+    content="Thirty-two points distributed by Fibonacci growth, rotated into a diamond-relative field, grouped by North, South, East, and West."
   />
   <style>
-    :root {
-      --bg: #050816;
-      --bg-2: #0a1021;
-      --panel: rgba(13, 20, 39, 0.82);
-      --panel-2: rgba(8, 13, 26, 0.68);
-      --line: rgba(161, 196, 255, 0.16);
-      --line-strong: rgba(161, 196, 255, 0.34);
-      --text: #eef4ff;
-      --muted: #a8b7d6;
-      --accent: #8ec5ff;
-      --accent-2: #d4e7ff;
-      --glow: rgba(142, 197, 255, 0.28);
-      --ok: #9fe6b1;
-      --warn: #ffd28a;
-      --danger: #ff9f9f;
-      --radius: 24px;
-      --shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
-      --max: 1500px;
+    :root{
+      --bg:#030814;
+      --bg-2:#071224;
+      --panel:#0a1528cc;
+      --line:rgba(138,166,255,.18);
+      --line-strong:rgba(168,196,255,.32);
+      --text:#eaf1ff;
+      --muted:#9fb0d6;
+      --north:#dfe9ff;
+      --south:#8ee3ac;
+      --east:#8ec5ff;
+      --west:#ffd58a;
+      --danger:#ff7d7d;
+      --shadow:0 18px 64px rgba(0,0,0,.45);
+      --radius:28px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html,
-    body {
-      margin: 0;
-      min-height: 100%;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 20% 20%, rgba(88, 132, 214, 0.12), transparent 28%),
-        radial-gradient(circle at 80% 15%, rgba(142, 197, 255, 0.1), transparent 24%),
-        radial-gradient(circle at 50% 100%, rgba(44, 72, 124, 0.16), transparent 40%),
-        linear-gradient(180deg, #060a18 0%, #04070f 100%);
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        radial-gradient(circle at 50% 24%, rgba(68,106,196,.22), transparent 24%),
+        radial-gradient(circle at 50% 48%, rgba(38,74,154,.14), transparent 28%),
+        linear-gradient(180deg, #020611 0%, #051022 45%, #020611 100%);
+      overflow-x:hidden;
     }
 
-    body {
-      overflow-x: hidden;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      position: relative;
-      width: min(100%, var(--max));
-      margin: 0 auto;
-      padding: 24px 16px 48px;
-    }
-
-    .stars,
-    .stars::before,
-    .stars::after {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      content: "";
-      background-repeat: repeat;
-      opacity: 0.75;
-    }
-
-    .stars {
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(255,255,255,0.95) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 72% 22%, rgba(255,255,255,0.85) 0 1px, transparent 1.35px),
-        radial-gradient(circle at 40% 78%, rgba(255,255,255,0.9) 0 1px, transparent 1.45px),
-        radial-gradient(circle at 85% 64%, rgba(255,255,255,0.7) 0 1px, transparent 1.3px);
-      background-size: 240px 240px, 320px 320px, 280px 280px, 360px 360px;
-    }
-
-    .stars::before {
-      background-image:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,0.9) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 66% 54%, rgba(255,255,255,0.75) 0 1px, transparent 1.3px),
-        radial-gradient(circle at 30% 85%, rgba(255,255,255,0.7) 0 1px, transparent 1.3px);
-      background-size: 260px 260px, 310px 310px, 340px 340px;
-      opacity: 0.45;
-      animation: drift-a 24s linear infinite;
-    }
-
-    .stars::after {
-      background-image:
-        radial-gradient(circle at 35% 10%, rgba(255,255,255,0.9) 0 1px, transparent 1.3px),
-        radial-gradient(circle at 80% 30%, rgba(255,255,255,0.65) 0 1px, transparent 1.3px),
-        radial-gradient(circle at 22% 62%, rgba(255,255,255,0.7) 0 1px, transparent 1.25px);
-      background-size: 300px 300px, 340px 340px, 390px 390px;
-      opacity: 0.3;
-      animation: drift-b 32s linear infinite reverse;
-    }
-
-    @keyframes drift-a {
-      from { transform: translate3d(0, 0, 0); }
-      to { transform: translate3d(-18px, 12px, 0); }
-    }
-
-    @keyframes drift-b {
-      from { transform: translate3d(0, 0, 0); }
-      to { transform: translate3d(14px, -10px, 0); }
-    }
-
-    .shell {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      gap: 18px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 18px;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      background: rgba(6, 10, 24, 0.72);
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-mark {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
-      border: 1px solid rgba(142, 197, 255, 0.34);
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.16;
       background:
-        linear-gradient(135deg, rgba(142, 197, 255, 0.24), rgba(142, 197, 255, 0.04)),
-        rgba(255, 255, 255, 0.02);
-      display: grid;
-      place-items: center;
-      box-shadow: inset 0 0 24px rgba(142, 197, 255, 0.08), 0 0 24px rgba(142, 197, 255, 0.12);
+        radial-gradient(circle at 20% 20%, rgba(255,255,255,.35) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 72% 30%, rgba(255,255,255,.22) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 38% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 84% 84%, rgba(255,255,255,.18) 0 1px, transparent 1.5px);
+      background-size: 260px 260px, 340px 340px, 420px 420px, 560px 560px;
     }
 
-    .brand-mark svg {
-      width: 20px;
-      height: 20px;
-      fill: var(--accent-2);
-      opacity: 0.95;
+    #productsPage{
+      width:min(1180px,calc(100vw - 28px));
+      margin:0 auto;
+      padding:28px 0 44px;
     }
 
-    .brand-copy {
-      min-width: 0;
+    .hero{
+      position:relative;
+      padding:26px 22px 22px;
+      border:1px solid var(--line);
+      border-radius:calc(var(--radius) + 4px);
+      background:linear-gradient(180deg, rgba(8,18,38,.86), rgba(6,13,26,.78));
+      box-shadow:var(--shadow);
+      overflow:hidden;
     }
 
-    .brand-kicker {
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 4px;
-    }
-
-    .brand-title {
-      font-size: clamp(18px, 3vw, 24px);
-      font-weight: 700;
-      line-height: 1.1;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .status-pill {
-      flex: 0 0 auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(159, 230, 177, 0.22);
-      background: rgba(8, 20, 12, 0.38);
-      color: var(--ok);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .status-pill::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: currentColor;
-      box-shadow: 0 0 14px currentColor;
-    }
-
-    .hero {
-      display: grid;
-      gap: 18px;
-      grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.9fr);
-      align-items: stretch;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, rgba(14, 21, 39, 0.78), rgba(8, 13, 24, 0.84));
-      backdrop-filter: blur(10px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      min-width: 0;
-    }
-
-    .hero-copy {
-      padding: clamp(22px, 4vw, 34px);
-      display: grid;
-      gap: 18px;
-      min-width: 0;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      width: fit-content;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(142, 197, 255, 0.18);
-      background: rgba(142, 197, 255, 0.08);
-      color: var(--accent-2);
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .eyebrow::before {
-      content: "";
-      width: 8px;
-      height: 8px;
-      transform: rotate(45deg);
-      border-radius: 2px;
-      background: var(--accent);
-      box-shadow: 0 0 12px var(--glow);
-    }
-
-    .headline {
-      margin: 0;
-      font-size: clamp(34px, 7vw, 62px);
-      line-height: 0.95;
-      letter-spacing: -0.04em;
-      max-width: 12ch;
-    }
-
-    .headline .accent {
-      color: var(--accent-2);
-      text-shadow: 0 0 28px rgba(142, 197, 255, 0.18);
-    }
-
-    .hero-body {
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(16px, 2vw, 18px);
-      line-height: 1.7;
-      max-width: 66ch;
-    }
-
-    .hero-meta {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-    }
-
-    .meta-card {
-      padding: 14px 16px;
-      border-radius: 18px;
-      border: 1px solid rgba(142, 197, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      min-width: 0;
-    }
-
-    .meta-label {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .meta-value {
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .hero-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      min-height: 48px;
-      padding: 0 18px;
-      border-radius: 16px;
-      border: 1px solid rgba(142, 197, 255, 0.18);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text);
-      font-weight: 700;
-      letter-spacing: 0.02em;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-1px);
-      border-color: rgba(142, 197, 255, 0.34);
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .btn.primary {
-      background: linear-gradient(180deg, rgba(142, 197, 255, 0.22), rgba(142, 197, 255, 0.08));
-      border-color: rgba(142, 197, 255, 0.28);
-      color: #f7fbff;
-    }
-
-    .hero-side {
-      display: grid;
-      gap: 14px;
-      padding: 18px;
-      min-width: 0;
-    }
-
-    .mini-kicker {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .mission {
-      margin: 0;
-      font-size: 28px;
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-      max-width: 11ch;
-    }
-
-    .mission-body {
-      color: var(--muted);
-      margin: 0;
-      line-height: 1.65;
-    }
-
-    .receipt-grid {
-      display: grid;
-      gap: 10px;
-    }
-
-    .receipt-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(142, 197, 255, 0.12);
-      background: var(--panel-2);
-      min-width: 0;
-    }
-
-    .receipt-name {
-      color: var(--muted);
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      min-width: 0;
-    }
-
-    .receipt-value {
-      color: var(--accent-2);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      text-align: right;
-    }
-
-    .surface {
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.88fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .stage-panel {
-      position: relative;
-      overflow: hidden;
-    }
-
-    .stage-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 18px 20px 0;
-      position: relative;
-      z-index: 2;
-    }
-
-    .stage-title-wrap {
-      min-width: 0;
-    }
-
-    .stage-title {
-      margin: 0 0 6px;
-      font-size: clamp(22px, 4vw, 32px);
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    .stage-subtitle {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      max-width: 60ch;
-    }
-
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      justify-content: flex-end;
-    }
-
-    .legend-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      border: 1px solid rgba(142, 197, 255, 0.14);
-      background: rgba(255, 255, 255, 0.03);
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .legend-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 999px;
-      box-shadow: 0 0 14px currentColor;
-      background: currentColor;
-    }
-
-    .stage-shell {
-      position: relative;
-      padding: 12px 18px 18px;
-      min-height: 640px;
-    }
-
-    .stage-frame {
-      position: relative;
-      min-height: 610px;
-      height: min(72vh, 760px);
-      border-radius: 28px;
-      border: 1px solid rgba(142, 197, 255, 0.14);
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 50% 48%, rgba(50, 78, 124, 0.28), transparent 28%),
-        radial-gradient(circle at 50% 50%, rgba(19, 29, 54, 0.42), transparent 62%),
-        linear-gradient(180deg, rgba(7, 11, 24, 0.72), rgba(5, 9, 18, 0.92));
-      box-shadow: inset 0 0 80px rgba(6, 10, 22, 0.8), 0 30px 70px rgba(0, 0, 0, 0.28);
-      overflow: hidden;
+        linear-gradient(90deg, transparent, rgba(255,255,255,.04), transparent),
+        radial-gradient(circle at 50% 0%, rgba(126,160,255,.15), transparent 34%);
+      mix-blend-mode:screen;
     }
 
-    .stage-grid {
-      position: absolute;
-      inset: 0;
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      color:#c8d8ff;
+      letter-spacing:.12em;
+      font-size:.72rem;
+      text-transform:uppercase;
+      background:rgba(11,23,44,.65);
+    }
+
+    .hero h1{
+      margin:14px 0 10px;
+      font-size:clamp(2rem,4.4vw,3.35rem);
+      line-height:1.02;
+      letter-spacing:-.03em;
+    }
+
+    .hero p{
+      max-width:760px;
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(1rem,2vw,1.28rem);
+      line-height:1.55;
+    }
+
+    .filters{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin:22px 0 0;
+    }
+
+    .filter-chip{
+      appearance:none;
+      border:1px solid var(--line);
+      background:rgba(9,18,36,.72);
+      color:#d7e3ff;
+      border-radius:999px;
+      padding:12px 18px;
+      min-width:122px;
+      font-weight:700;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:transform .16s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+      box-shadow:0 8px 24px rgba(0,0,0,.22), inset 0 0 0 1px rgba(255,255,255,.02);
+    }
+
+    .filter-chip:hover,
+    .filter-chip:focus-visible{
+      transform:translateY(-1px);
+      outline:none;
+      border-color:var(--line-strong);
+      background:rgba(13,26,50,.9);
+    }
+
+    .filter-chip.is-active{
+      border-color:rgba(205,220,255,.42);
+      background:linear-gradient(180deg, rgba(24,40,74,.94), rgba(12,24,46,.94));
+      box-shadow:0 0 0 1px rgba(188,210,255,.1), 0 10px 28px rgba(0,0,0,.28);
+    }
+
+    .filter-chip .dot{
+      display:inline-block;
+      inline-size:12px;
+      block-size:12px;
+      border-radius:50%;
+      margin-right:10px;
+      box-shadow:0 0 14px currentColor;
+      vertical-align:-1px;
+    }
+
+    #productsGrid{
+      margin-top:20px;
+    }
+
+    #productsEmptyState{
+      display:none;
+      margin-top:18px;
+      padding:16px 18px;
+      border:1px dashed var(--line);
+      border-radius:18px;
+      background:rgba(8,16,30,.6);
+      color:var(--muted);
+    }
+
+    .products-shell{
+      display:grid;
+      grid-template-columns:minmax(0,1.45fr) minmax(300px,.85fr);
+      gap:20px;
+      align-items:start;
+    }
+
+    .door-panel,
+    .detail-panel{
+      border:1px solid var(--line);
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .door-panel{
+      padding:16px;
+    }
+
+    .detail-panel{
+      padding:22px;
+      position:sticky;
+      top:18px;
+    }
+
+    .section-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      margin-bottom:14px;
+      padding:6px 6px 2px;
+    }
+
+    .section-title{
+      margin:0;
+      font-size:1.02rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      color:#d7e2ff;
+    }
+
+    .section-meta{
+      color:var(--muted);
+      font-size:.88rem;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      white-space:nowrap;
+    }
+
+    .door-stage{
+      position:relative;
+      min-height:min(76vw,980px);
+      border:1px solid rgba(113,141,224,.14);
+      border-radius:32px;
       background:
-        linear-gradient(rgba(161, 196, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(161, 196, 255, 0.05) 1px, transparent 1px);
-      background-size: 40px 40px;
-      mask-image: radial-gradient(circle at center, black 24%, transparent 82%);
-      opacity: 0.4;
-      pointer-events: none;
+        radial-gradient(circle at 50% 44%, rgba(88,123,216,.2), transparent 18%),
+        linear-gradient(180deg, rgba(4,10,22,.86), rgba(2,8,18,.96));
+      overflow:hidden;
+      isolation:isolate;
     }
 
-    .stage-glow {
-      position: absolute;
-      inset: 12% 20%;
-      border-radius: 999px;
-      filter: blur(60px);
+    .door-stage::before{
+      content:"";
+      position:absolute;
+      inset:0;
       background:
-        radial-gradient(circle at 50% 50%, rgba(142, 197, 255, 0.16), transparent 60%),
-        radial-gradient(circle at 62% 40%, rgba(212, 231, 255, 0.1), transparent 52%);
-      pointer-events: none;
+        linear-gradient(180deg, transparent, rgba(255,255,255,.02), transparent),
+        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 78px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 78px);
+      opacity:.3;
+      pointer-events:none;
     }
 
-    #productsStage {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      overflow: visible;
-      display: block;
+    .door-frame{
+      position:relative;
+      width:min(100%,760px);
+      margin:18px auto 82px;
+      aspect-ratio:5/7.4;
+      filter:drop-shadow(0 32px 60px rgba(0,0,0,.48));
     }
 
-    .stage-overlay {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      bottom: 18px;
-      z-index: 2;
-      display: flex;
-      justify-content: center;
-      pointer-events: none;
+    .door-arch{
+      position:absolute;
+      inset:0;
+      border-radius:360px 360px 42px 42px / 300px 300px 42px 42px;
+      border:1px solid rgba(157,181,255,.3);
+      background:
+        linear-gradient(180deg, rgba(15,28,58,.82), rgba(6,14,28,.88)),
+        radial-gradient(circle at 50% 26%, rgba(111,149,255,.12), transparent 34%);
+      overflow:hidden;
     }
 
-    .overlay-chip {
-      pointer-events: auto;
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(142, 197, 255, 0.14);
-      background: rgba(8, 13, 25, 0.78);
-      color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      backdrop-filter: blur(10px);
+    .door-arch::before{
+      content:"";
+      position:absolute;
+      inset:22px;
+      border-radius:320px 320px 32px 32px / 260px 260px 32px 32px;
+      border:1px solid rgba(156,180,255,.22);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,.02),
+        inset 0 -24px 48px rgba(0,0,0,.22),
+        0 0 80px rgba(67,106,206,.12);
     }
 
-    .details-panel {
-      display: grid;
-      gap: 14px;
-      padding: 18px;
-      min-width: 0;
+    .door-arch::after{
+      content:"";
+      position:absolute;
+      inset:52px 18%;
+      border-radius:280px 280px 28px 28px / 240px 240px 28px 28px;
+      background:
+        radial-gradient(circle at 50% 40%, rgba(87,120,208,.28), transparent 28%),
+        linear-gradient(180deg, rgba(8,20,40,.2), rgba(5,9,18,.4));
+      box-shadow:
+        inset 0 0 0 1px rgba(177,196,255,.14),
+        inset 0 0 72px rgba(74,111,209,.16);
     }
 
-    .card {
-      border-radius: 22px;
-      border: 1px solid rgba(142, 197, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      padding: 16px;
-      min-width: 0;
+    .door-seam{
+      position:absolute;
+      top:8.5%;
+      bottom:7%;
+      left:50%;
+      width:1px;
+      transform:translateX(-50%);
+      background:
+        linear-gradient(180deg, transparent, rgba(220,230,255,.55), transparent);
+      opacity:.82;
+      z-index:2;
     }
 
-    .detail-heading {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 12px;
-      min-width: 0;
+    .door-points{
+      position:absolute;
+      inset:0;
+      z-index:3;
     }
 
-    .detail-kicker {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    .door-node{
+      position:absolute;
+      left:var(--x);
+      top:var(--y);
+      transform:translate(-50%,-50%);
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.72);
+      background:var(--color);
+      box-shadow:
+        0 0 0 5px rgba(255,255,255,.04),
+        0 0 18px var(--glow),
+        0 0 36px var(--glow);
+      cursor:pointer;
+      transition:transform .16s ease, opacity .16s ease, box-shadow .16s ease, filter .16s ease;
+      z-index:4;
     }
 
-    .detail-title {
-      margin: 0;
-      font-size: clamp(24px, 4vw, 34px);
-      line-height: 0.98;
-      letter-spacing: -0.04em;
+    .door-node::after{
+      content:attr(data-short);
+      position:absolute;
+      top:calc(100% + 10px);
+      left:50%;
+      transform:translateX(-50%);
+      font-size:.64rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:#d9e5ff;
+      white-space:nowrap;
+      opacity:.72;
+      pointer-events:none;
     }
 
-    .detail-code {
-      padding: 8px 10px;
-      border-radius: 12px;
-      border: 1px solid rgba(142, 197, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      color: var(--accent-2);
-      font-size: 12px;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      white-space: nowrap;
+    .door-node:hover,
+    .door-node:focus-visible{
+      transform:translate(-50%,-50%) scale(1.16);
+      outline:none;
+      box-shadow:
+        0 0 0 6px rgba(255,255,255,.06),
+        0 0 20px var(--glow),
+        0 0 54px var(--glow);
     }
 
-    .detail-body {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
+    .door-node.is-active{
+      transform:translate(-50%,-50%) scale(1.24);
+      box-shadow:
+        0 0 0 7px rgba(255,255,255,.08),
+        0 0 26px var(--glow),
+        0 0 72px var(--glow);
     }
 
-    .detail-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+    .door-node.is-muted{
+      opacity:.18;
+      filter:saturate(.4);
     }
 
-    .detail-metric {
-      padding: 12px 14px;
-      border-radius: 16px;
-      border: 1px solid rgba(142, 197, 255, 0.1);
-      background: rgba(255, 255, 255, 0.025);
-      min-width: 0;
+    .door-footer{
+      position:absolute;
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+      width:min(84%,500px);
+      padding:16px 22px;
+      border-radius:999px;
+      border:1px solid rgba(130,160,240,.24);
+      background:rgba(6,14,28,.76);
+      text-align:center;
+      letter-spacing:.16em;
+      text-transform:uppercase;
+      color:#d9e3ff;
+      box-shadow:0 12px 32px rgba(0,0,0,.28), inset 0 0 0 1px rgba(255,255,255,.02);
+      z-index:5;
     }
 
-    .detail-metric span {
-      display: block;
+    .door-footer strong{
+      font-weight:800;
+      color:#ffffff;
     }
 
-    .detail-metric .metric-label {
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
+    .detail-panel h2{
+      margin:0 0 10px;
+      font-size:1.4rem;
+      line-height:1.08;
+      letter-spacing:-.02em;
     }
 
-    .detail-metric .metric-value {
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 700;
-      word-break: break-word;
+    .detail-panel p{
+      margin:0 0 16px;
+      color:var(--muted);
+      line-height:1.6;
     }
 
-    .detail-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
+    .detail-kicker{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+      color:#d7e3ff;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      font-size:.74rem;
     }
 
-    .nav-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
+    .detail-kicker .badge{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-width:36px;
+      height:24px;
+      padding:0 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.04);
+      color:#ffffff;
     }
 
-    .nav-card {
-      display: grid;
-      gap: 8px;
-      padding: 14px;
-      border-radius: 18px;
-      border: 1px solid rgba(142, 197, 255, 0.1);
-      background: rgba(255, 255, 255, 0.025);
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+    .detail-stats{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
     }
 
-    .nav-card:hover {
-      transform: translateY(-1px);
-      border-color: rgba(142, 197, 255, 0.24);
-      background: rgba(255, 255, 255, 0.04);
+    .stat{
+      padding:14px 14px 13px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(8,18,34,.62);
     }
 
-    .nav-card .nav-title {
-      font-size: 15px;
-      font-weight: 700;
-      color: var(--text);
+    .stat-label{
+      display:block;
+      margin-bottom:6px;
+      color:#90a3ce;
+      font-size:.72rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
-    .nav-card .nav-copy {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.55;
+    .stat-value{
+      color:#f4f7ff;
+      font-size:1rem;
+      font-weight:700;
     }
 
-    .debug {
-      padding: 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(142, 197, 255, 0.12);
-      background: rgba(8, 12, 22, 0.62);
-      display: none;
-      gap: 12px;
+    .legend{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      margin-top:18px;
     }
 
-    .debug.is-open {
-      display: grid;
+    .legend-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid var(--line);
+      background:rgba(8,18,34,.5);
+      color:#cbd8f7;
+      font-size:.9rem;
     }
 
-    .debug-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+    .legend-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      flex:none;
+      box-shadow:0 0 14px currentColor;
     }
 
-    .debug-title {
-      margin: 0;
-      font-size: 16px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+    .subtle{
+      margin-top:16px;
+      font-size:.88rem;
+      color:#8fa2cf;
     }
 
-    .debug-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .debug-item {
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(142, 197, 255, 0.1);
-      background: rgba(255, 255, 255, 0.03);
-      min-width: 0;
-    }
-
-    .debug-item .label {
-      display: block;
-      color: var(--muted);
-      font-size: 11px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .debug-item .value {
-      display: block;
-      color: var(--accent-2);
-      font-size: 13px;
-      font-weight: 700;
-      word-break: break-word;
-    }
-
-    .footer {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 14px 6px 0;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-
-    .footer-links a {
-      color: var(--muted);
-    }
-
-    .footer-links a:hover {
-      color: var(--accent-2);
-    }
-
-    @media (max-width: 1080px) {
-      .hero,
-      .surface {
-        grid-template-columns: 1fr;
+    @media (max-width: 980px){
+      .products-shell{
+        grid-template-columns:1fr;
       }
 
-      .stage-shell {
-        min-height: 580px;
+      .detail-panel{
+        position:static;
       }
 
-      .stage-frame {
-        height: min(68vh, 680px);
+      .door-stage{
+        min-height:860px;
       }
     }
 
-    @media (max-width: 760px) {
-      .page {
-        padding: 16px 12px 28px;
+    @media (max-width: 680px){
+      #productsPage{
+        width:min(100vw - 18px, 1180px);
+        padding:18px 0 28px;
       }
 
-      .topbar {
-        padding: 12px 14px;
+      .hero{
+        padding:20px 16px 18px;
       }
 
-      .status-pill {
-        width: 100%;
-        justify-content: center;
+      .door-panel{
+        padding:10px;
       }
 
-      .hero-copy,
-      .hero-side,
-      .details-panel,
-      .stage-shell {
-        padding-left: 14px;
-        padding-right: 14px;
+      .door-stage{
+        min-height:720px;
       }
 
-      .hero-meta,
-      .detail-grid,
-      .nav-grid,
-      .debug-grid {
-        grid-template-columns: 1fr;
+      .door-frame{
+        margin:14px auto 76px;
+        width:100%;
       }
 
-      .stage-header {
-        padding: 14px 14px 0;
+      .door-node{
+        width:15px;
+        height:15px;
       }
 
-      .legend {
-        justify-content: flex-start;
+      .door-node::after{
+        font-size:.56rem;
       }
 
-      .stage-shell {
-        min-height: 520px;
+      .door-footer{
+        width:min(90%, 420px);
+        padding:14px 18px;
+        font-size:.8rem;
       }
 
-      .stage-frame {
-        min-height: 500px;
-        height: min(72vh, 560px);
-        border-radius: 22px;
-      }
-
-      .overlay-chip {
-        font-size: 11px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .stars::before,
-      .stars::after,
-      .btn,
-      .nav-card {
-        animation: none !important;
-        transition: none !important;
+      .detail-stats,
+      .legend{
+        grid-template-columns:1fr;
       }
     }
   </style>
 </head>
 <body>
-  <div class="stars" aria-hidden="true"></div>
+  <main id="productsPage">
+    <section class="hero" aria-labelledby="productsTitle">
+      <span class="eyebrow">Products Chamber · Symmetric Door</span>
+      <h1 id="productsTitle">Products field</h1>
+      <p>
+        Thirty-two points distributed by Fibonacci growth, rotated into a diamond-relative field,
+        grouped by North, South, East, and West — now expressed as an elegant balanced door rather
+        than a collapsed window.
+      </p>
 
-  <main class="page">
-    <div class="shell">
-      <header class="topbar" aria-label="Products top bar">
-        <div class="brand">
-          <div class="brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 24 24" role="presentation">
-              <path d="M12 2 3 12l9 10 9-10-9-10Zm0 3.1 6.1 6.9-6.1 6.9-6.1-6.9L12 5.1Z"></path>
-            </svg>
-          </div>
-          <div class="brand-copy">
-            <div class="brand-kicker">Products Surface</div>
-            <div class="brand-title">Diamond Topography 32</div>
-          </div>
-        </div>
+      <div class="filters" id="cardinalFilters" aria-label="Filter products by cardinal direction">
+        <button class="filter-chip is-active" type="button" data-filter="all">
+          <span class="dot" style="color:#cdd8f5;background:#cdd8f5;"></span>All
+        </button>
+        <button class="filter-chip" type="button" data-filter="north">
+          <span class="dot" style="color:var(--north);background:var(--north);"></span>North
+        </button>
+        <button class="filter-chip" type="button" data-filter="south">
+          <span class="dot" style="color:var(--south);background:var(--south);"></span>South
+        </button>
+        <button class="filter-chip" type="button" data-filter="east">
+          <span class="dot" style="color:var(--east);background:var(--east);"></span>East
+        </button>
+        <button class="filter-chip" type="button" data-filter="west">
+          <span class="dot" style="color:var(--west);background:var(--west);"></span>West
+        </button>
+      </div>
+    </section>
 
-        <div class="status-pill" id="surfaceStatus">Live Experience</div>
-      </header>
-
-      <section class="hero" aria-labelledby="heroHeadline">
-        <article class="panel hero-copy">
-          <div class="eyebrow">Cardinal structure · Fibonacci field · Diamond geometry</div>
-          <h1 class="headline" id="heroHeadline">
-            One surface. <span class="accent">Thirty-two points.</span> Four cardinal families.
-          </h1>
-          <p class="hero-body">
-            This products chamber is now a live topographic field instead of a flat list. The stage reads
-            as one coherent system: cardinally grouped, Fibonacci distributed, and diamond-relative from the
-            center outward. Select a point to inspect its family, scope, route, and role.
-          </p>
-
-          <div class="hero-meta" aria-label="Key surface metrics">
-            <div class="meta-card">
-              <span class="meta-label">Visible topology</span>
-              <span class="meta-value">32-point diamond field</span>
-            </div>
-            <div class="meta-card">
-              <span class="meta-label">Cardinal grouping</span>
-              <span class="meta-value">8 per family</span>
-            </div>
-            <div class="meta-card">
-              <span class="meta-label">Distribution law</span>
-              <span class="meta-value">Fibonacci / golden angle</span>
-            </div>
-          </div>
-
-          <div class="hero-links">
-            <a class="btn primary" href="#productsStagePanel">Enter stage</a>
-            <a class="btn" href="#debugToggle" id="debugToggleBtn">Diagnostics</a>
-            <a class="btn" href="/gauges/">Gauges</a>
-            <a class="btn" href="/laws/">Laws</a>
-          </div>
-        </article>
-
-        <aside class="panel hero-side" aria-label="Surface summary">
-          <div class="mini-kicker">Mission</div>
-          <h2 class="mission">Products as a navigable field, not a dead stack.</h2>
-          <p class="mission-body">
-            The public surface now privileges coherence, spatial relation, and route clarity. Each point
-            lives in a family, occupies lawful territory, and opens into a next step without collapsing the
-            whole chamber into list-like noise.
-          </p>
-
-          <div class="receipt-grid" aria-label="Runtime and structure receipts">
-            <div class="receipt-row">
-              <span class="receipt-name">Geometry</span>
-              <span class="receipt-value" id="receiptGeometry">Diamond / Fibonacci</span>
-            </div>
-            <div class="receipt-row">
-              <span class="receipt-name">Node count</span>
-              <span class="receipt-value" id="receiptCount">32</span>
-            </div>
-            <div class="receipt-row">
-              <span class="receipt-name">Cardinal map</span>
-              <span class="receipt-value" id="receiptCardinality">4 × 8</span>
-            </div>
-            <div class="receipt-row">
-              <span class="receipt-name">Selection</span>
-              <span class="receipt-value" id="receiptSelection">North / Threshold 01</span>
-            </div>
-          </div>
-        </aside>
-      </section>
-
-      <section class="surface" id="productsStagePanel" aria-label="Interactive products surface">
-        <article class="panel stage-panel">
-          <div class="stage-header">
-            <div class="stage-title-wrap">
-              <h2 class="stage-title">Products field</h2>
-              <p class="stage-subtitle">
-                Thirty-two points distributed by Fibonacci growth, rotated into a diamond-relative field,
-                grouped by North, South, East, and West.
-              </p>
-            </div>
-
-            <div class="legend" aria-label="Cardinal legend">
-              <div class="legend-chip"><span class="legend-dot" style="color:#d6e8ff"></span>North</div>
-              <div class="legend-chip"><span class="legend-dot" style="color:#9fe6b1"></span>South</div>
-              <div class="legend-chip"><span class="legend-dot" style="color:#8ec5ff"></span>East</div>
-              <div class="legend-chip"><span class="legend-dot" style="color:#ffd28a"></span>West</div>
-            </div>
-          </div>
-
-          <div class="stage-shell">
-            <div class="stage-frame">
-              <div class="stage-grid" aria-hidden="true"></div>
-              <div class="stage-glow" aria-hidden="true"></div>
-              <svg id="productsStage" viewBox="0 0 1200 900" aria-label="Products topography"></svg>
-              <div class="stage-overlay">
-                <div class="overlay-chip" id="fieldReadout">32-point field · select any point</div>
-              </div>
-            </div>
-          </div>
-        </article>
-
-        <aside class="panel details-panel" aria-live="polite">
-          <section class="card">
-            <div class="detail-heading">
-              <div>
-                <div class="detail-kicker" id="detailFamily">North family</div>
-                <h3 class="detail-title" id="detailTitle">Threshold 01</h3>
-              </div>
-              <div class="detail-code" id="detailCode">N-01</div>
-            </div>
-
-            <p class="detail-body" id="detailBody">
-              Northern points govern frame, threshold, boundary, and admissibility. This point is designed
-              to hold entry law and route clarity at the top of the field.
-            </p>
-
-            <div class="detail-grid">
-              <div class="detail-metric">
-                <span class="metric-label">Family</span>
-                <span class="metric-value" id="metricFamily">North</span>
-              </div>
-              <div class="detail-metric">
-                <span class="metric-label">Vector</span>
-                <span class="metric-value" id="metricVector">Frame / threshold</span>
-              </div>
-              <div class="detail-metric">
-                <span class="metric-label">Topographic rank</span>
-                <span class="metric-value" id="metricRank">01 / 32</span>
-              </div>
-              <div class="detail-metric">
-                <span class="metric-label">Route class</span>
-                <span class="metric-value" id="metricRoute">Primary gateway</span>
-              </div>
-            </div>
-
-            <div class="detail-actions">
-              <a class="btn primary" id="detailLink" href="/products/">Open route</a>
-              <button class="btn" type="button" id="nextPointBtn">Next point</button>
-            </div>
-          </section>
-
-          <section class="card">
-            <div class="detail-kicker">Linked routes</div>
-            <div class="nav-grid" id="linkedRoutes">
-              <a class="nav-card" href="/products/">
-                <span class="nav-title">Products home</span>
-                <span class="nav-copy">Return to the parent products surface.</span>
-              </a>
-              <a class="nav-card" href="/gauges/">
-                <span class="nav-title">Gauges</span>
-                <span class="nav-copy">Read the system through live gauges and summary surfaces.</span>
-              </a>
-              <a class="nav-card" href="/laws/">
-                <span class="nav-title">Laws</span>
-                <span class="nav-copy">Inspect the rule layer that governs the larger system.</span>
-              </a>
-              <a class="nav-card" href="/about/">
-                <span class="nav-title">About</span>
-                <span class="nav-copy">Read the public structural overview and mission line.</span>
-              </a>
-            </div>
-          </section>
-
-          <section class="debug" id="debugPanel" aria-label="Diagnostics panel">
-            <div class="debug-header">
-              <h4 class="debug-title">Diagnostics</h4>
-              <button class="btn" type="button" id="debugCloseBtn">Close</button>
-            </div>
-            <div class="debug-grid">
-              <div class="debug-item">
-                <span class="label">Node count</span>
-                <span class="value" id="debugNodeCount">32</span>
-              </div>
-              <div class="debug-item">
-                <span class="label">Viewport</span>
-                <span class="value" id="debugViewport">pending</span>
-              </div>
-              <div class="debug-item">
-                <span class="label">Selected point</span>
-                <span class="value" id="debugSelected">N-01</span>
-              </div>
-              <div class="debug-item">
-                <span class="label">Geometry</span>
-                <span class="value" id="debugGeometry">diamond-fibonacci</span>
-              </div>
-            </div>
-          </section>
-        </aside>
-      </section>
-
-      <footer class="footer">
-        <span>Products field powered by Fibonacci spacing and diamond-relative routing.</span>
-        <div class="footer-links">
-          <a href="/products/">Products</a>
-          <a href="/gauges/">Gauges</a>
-          <a href="/laws/">Laws</a>
-        </div>
-      </footer>
-    </div>
+    <section id="productsGrid" aria-live="polite"></section>
+    <div id="productsEmptyState">No points are visible for this filter.</div>
   </main>
 
   <script type="module" src="./index.js"></script>

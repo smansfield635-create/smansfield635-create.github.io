@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-second-generation-root-proof-v3-demo-universe-visual-strength";
+  const STYLE_ID = "dgb-second-generation-root-proof-v4-demo-universe-visual-strength";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -145,6 +145,15 @@
         text-align:center;
       }
 
+      .home-nav a:focus-visible,
+      .home-button:focus-visible,
+      .doll summary:focus-visible,
+      .doll-body a:focus-visible,
+      .support-grid a:focus-visible {
+        outline:2px solid rgba(239,210,154,.62);
+        outline-offset:3px;
+      }
+
       .home-hero {
         padding:18px;
         margin-bottom:14px;
@@ -261,6 +270,7 @@
         box-shadow:
           inset 0 0 52px rgba(126,164,255,.16),
           0 0 40px rgba(102,240,209,.06);
+        pointer-events:none;
       }
 
       .home-door::after {
@@ -289,7 +299,7 @@
         height:82%;
         border-radius:50%;
         border:1px solid rgba(239,210,154,.40);
-        opacity:.90;
+        opacity:.92;
         filter:
           drop-shadow(0 0 16px rgba(239,210,154,.22))
           drop-shadow(0 0 24px rgba(142,197,255,.10));
@@ -398,9 +408,9 @@
       .demo-globe-ring,
       .demo-globe-axis,
       .demo-globe-grid,
-      .demo-globe-core,
+      .demo-globe-meridian,
       .demo-globe-cross,
-      .demo-globe-meridian {
+      .demo-globe-core {
         position:absolute;
         pointer-events:none;
       }
@@ -742,7 +752,8 @@
     const core = root.querySelector(".home-core");
     if (!core) return;
 
-    core.textContent = "";
+    core.replaceChildren();
+
     core.setAttribute("role", "img");
     core.setAttribute("aria-label", "Demo Universe globe");
     core.setAttribute("data-home-demo-universe-core", "true");
@@ -762,9 +773,6 @@
     ];
 
     for (const [tag, className] of fragments) {
-      const firstClass = className.split(" ")[0];
-      if (core.querySelector("." + firstClass)) continue;
-
       const node = document.createElement(tag);
       node.className = className;
       node.setAttribute("aria-hidden", "true");

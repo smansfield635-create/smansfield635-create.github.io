@@ -3,14 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Big Laugh · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Big Laugh is the parent motivational crowd-interaction chamber. The Upper Room at Big Laughs is the active upstairs show."
-  />
+  <title>Big Laugh · The Room Before the Room</title>
+  <meta name="description" content="Big Laugh introduces The Upper Room, a coming-soon upstairs crowd-interaction show at Big Laughs." />
   <style>
     :root{
-      --bg:#020610;
       --line:rgba(164,188,255,.18);
       --line-strong:rgba(210,223,255,.36);
       --text:#eef4ff;
@@ -18,7 +14,7 @@
       --gold:#efd29a;
       --pink:#ff9fd6;
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1240px;
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -51,29 +47,15 @@
       background-size:260px 260px,340px 340px,420px 420px,560px 560px;
     }
 
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.035) 1px, transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 30%, black, transparent 75%);
-      opacity:.28;
-    }
-
     .page{
       width:min(var(--max), calc(100vw - 24px));
       margin:0 auto;
       padding:18px 0 44px;
       position:relative;
       z-index:1;
-      overflow:hidden;
     }
 
-    .topbar,.hero,.stage-card,.panel,.doll-shell,.route-card,.readout{
+    .topbar,.hero,.section,.card{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.92), rgba(6,12,24,.86));
@@ -94,7 +76,6 @@
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:0;
     }
 
     .brand-mark{
@@ -103,15 +84,11 @@
       border-radius:16px;
       display:grid;
       place-items:center;
-      flex:none;
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 28%, rgba(255,159,214,.22), transparent 42%),
         linear-gradient(180deg, rgba(26,43,78,.9), rgba(10,18,32,.97));
-      color:#f4f8ff;
       font-weight:900;
-      letter-spacing:.08em;
-      box-shadow:0 0 22px rgba(255,159,214,.09);
     }
 
     .brand-kicker{
@@ -128,11 +105,10 @@
       font-weight:800;
     }
 
-    .topnav{
+    .topnav,.actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      justify-content:flex-end;
     }
 
     .nav-link,.button{
@@ -147,249 +123,125 @@
       font-weight:800;
       background:rgba(255,255,255,.035);
       text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
     }
 
-    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.06);
-      outline:none;
+    .button{
+      min-height:48px;
+      border-radius:18px;
+      padding:0 18px;
+    }
+
+    .button.primary{
+      border-color:rgba(239,210,154,.34);
+      background:linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),rgba(255,255,255,.035);
+      color:#fff8ea;
     }
 
     .hero{
       margin-top:16px;
       border-radius:34px;
-      padding:24px 20px;
-      position:relative;
+      padding:28px 22px;
       overflow:hidden;
-    }
-
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,159,214,.13), transparent 30%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.035), transparent);
-      mix-blend-mode:screen;
+      position:relative;
     }
 
     .hero-grid{
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(320px,.9fr);
+      grid-template-columns:minmax(0,1.05fr) minmax(280px,.75fr);
       gap:20px;
       align-items:center;
-      position:relative;
-      z-index:1;
     }
 
-    .hero-tag{
+    .tag{
       display:inline-flex;
       align-items:center;
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
       color:#d8e3ff;
+      background:rgba(255,255,255,.035);
       text-transform:uppercase;
       letter-spacing:.14em;
       font-size:.72rem;
       margin-bottom:14px;
     }
 
-    .hero-tag::before{
+    .tag::before{
       content:"";
       width:9px;
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
       background:var(--pink);
-      box-shadow:0 0 16px rgba(255,159,214,.55);
     }
 
     h1{
       margin:0 0 12px;
-      font-size:clamp(2.45rem,5.4vw,5.2rem);
+      font-size:clamp(2.4rem,5.2vw,5.1rem);
       line-height:.94;
       letter-spacing:-.06em;
       max-width:12ch;
     }
 
-    h1 .accent{color:var(--gold)}
+    h1 span{color:var(--gold)}
 
     p{
       color:var(--muted);
-      line-height:1.58;
-    }
-
-    .hero p{
+      line-height:1.6;
       margin:0;
-      font-size:clamp(1rem,1.5vw,1.12rem);
-      max-width:68ch;
     }
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
+    .lead{
+      font-size:clamp(1rem,1.45vw,1.16rem);
+      max-width:70ch;
+    }
+
+    .actions{
       margin-top:20px;
     }
 
-    .button{
-      border-radius:18px;
-      min-height:46px;
-      padding:0 18px;
-      white-space:nowrap;
-    }
-
-    .button.primary{
-      border-color:rgba(239,210,154,.34);
+    .visual{
+      border:1px solid rgba(164,188,255,.16);
+      border-radius:28px;
+      min-height:360px;
+      display:grid;
+      place-items:center;
       background:
-        linear-gradient(180deg, rgba(239,210,154,.20), rgba(239,210,154,.06)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .stage-card{
-      border-radius:30px;
-      padding:20px;
+        radial-gradient(circle at 50% 45%, rgba(239,210,154,.16), transparent 26%),
+        radial-gradient(circle at 50% 52%, rgba(112,151,255,.14), transparent 40%),
+        linear-gradient(180deg, rgba(4,12,28,.95), rgba(3,8,18,.98));
       overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 26%, rgba(255,159,214,.13), transparent 30%),
-        linear-gradient(180deg, rgba(10,22,44,.94), rgba(4,10,20,.96));
-    }
-
-    .stage-window{
       position:relative;
-      min-height:390px;
-      border-radius:26px;
-      border:1px solid rgba(170,198,255,.20);
-      overflow:hidden;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,159,214,.12), transparent 28%),
-        linear-gradient(180deg, rgba(5,12,26,.98), rgba(2,7,16,.99));
-      box-shadow:
-        inset 0 0 44px rgba(126,164,255,.10),
-        inset 0 -26px 70px rgba(0,0,0,.34);
-      isolation:isolate;
     }
 
-    .stage-grid{
+    .visual::before{
+      content:"";
       position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, rgba(164,188,255,.06) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
-      background-size:32px 32px;
-      opacity:.42;
-      z-index:1;
-    }
-
-    .spotlight{
-      position:absolute;
-      left:50%;
-      top:52%;
-      width:72%;
-      height:72%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.10), transparent 18%),
-        conic-gradient(from 90deg, transparent, rgba(255,159,214,.12), transparent, rgba(239,210,154,.12), transparent);
-      mask-image:radial-gradient(circle, black 0 56%, transparent 72%);
-      opacity:.76;
-      z-index:2;
-    }
-
-    .stage-diamond{
-      position:absolute;
-      left:50%;
-      top:48%;
-      width:236px;
-      height:236px;
-      transform:translate(-50%,-50%) rotate(45deg);
+      width:220px;
+      height:220px;
       border:1px solid rgba(239,210,154,.30);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.08), transparent 28%),
-        linear-gradient(135deg, rgba(255,159,214,.10), rgba(239,210,154,.08));
-      box-shadow:
-        0 0 34px rgba(255,159,214,.18),
-        inset 0 0 34px rgba(239,210,154,.08);
-      z-index:4;
+      transform:rotate(45deg);
+      background:rgba(255,255,255,.025);
     }
 
-    .mic{
-      position:absolute;
-      left:50%;
-      top:44%;
-      width:54px;
-      height:104px;
-      transform:translate(-50%,-50%);
-      z-index:7;
+    .visual::after{
+      content:"UPPER ROOM";
+      position:relative;
+      z-index:1;
+      letter-spacing:.18em;
+      font-weight:900;
+      color:#fff;
+      font-size:1rem;
     }
 
-    .mic::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:0;
-      width:44px;
-      height:58px;
-      transform:translateX(-50%);
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,.18);
-      background:
-        linear-gradient(90deg, rgba(255,255,255,.10), transparent 50%, rgba(255,255,255,.08)),
-        linear-gradient(180deg, rgba(239,210,154,.34), rgba(6,14,28,.90));
-      box-shadow:0 0 26px rgba(239,210,154,.18);
-    }
-
-    .mic::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:56px;
-      width:4px;
-      height:48px;
-      transform:translateX(-50%);
-      border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.62), rgba(239,210,154,.22));
-      box-shadow:0 0 14px rgba(239,210,154,.18);
-    }
-
-    .stage-label{
-      position:absolute;
-      left:50%;
-      bottom:24px;
-      transform:translateX(-50%);
-      width:calc(100% - 42px);
-      max-width:650px;
-      padding:12px 16px;
-      border-radius:999px;
-      border:1px solid rgba(140,168,240,.24);
-      background:rgba(6,14,28,.84);
-      text-align:center;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.72rem;
-      color:#dbe5ff;
-      z-index:8;
-      line-height:1.35;
-    }
-
-    .stage-label strong{color:#fff}
-
-    .panel{
+    .section{
       margin-top:18px;
       border-radius:30px;
       padding:22px 20px;
-      overflow:hidden;
     }
 
-    .section-kicker{
+    .kicker{
       color:#c8d7ff;
       font-size:.72rem;
       text-transform:uppercase;
@@ -397,29 +249,32 @@
       margin-bottom:8px;
     }
 
-    .panel h2{
+    .section h2{
       margin:0 0 10px;
       font-size:clamp(1.7rem,3vw,2.7rem);
       line-height:1;
       letter-spacing:-.04em;
     }
 
-    .readout-grid,.route-grid{
+    .grid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
       margin-top:18px;
     }
 
-    .readout,.route-card{
+    .card{
+      display:block;
+      color:var(--text);
+      text-decoration:none;
       border-radius:22px;
       padding:16px;
       min-height:146px;
-      position:relative;
-      overflow:hidden;
+      border-color:rgba(164,188,255,.14);
+      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.78));
     }
 
-    .readout small,.route-card small{
+    .card small{
       display:block;
       color:#90a3ce;
       text-transform:uppercase;
@@ -429,169 +284,49 @@
       font-size:.72rem;
     }
 
-    .readout strong{
+    .card strong{
       display:block;
       color:#f4f7ff;
-      font-size:1.35rem;
+      font-size:1.25rem;
       line-height:1.05;
       letter-spacing:-.03em;
       margin-bottom:10px;
     }
 
-    .readout p,.route-card p{
+    .card p{
       margin:0;
       font-size:.9rem;
-    }
-
-    .route-card{
-      display:block;
-      color:var(--text);
-      text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-
-    .route-card:hover,.route-card:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      background:linear-gradient(180deg, rgba(13,24,46,.94), rgba(8,16,31,.90));
-      outline:none;
-    }
-
-    .route-card h3{
-      margin:0 0 8px;
-      font-size:1.08rem;
-    }
-
-    .russian-doll{
-      margin-top:18px;
-      display:grid;
-      gap:14px;
-    }
-
-    .doll-shell{
-      border-radius:26px;
-      overflow:hidden;
-    }
-
-    .doll-toggle{
-      width:100%;
-      border:0;
-      color:var(--text);
-      background:
-        radial-gradient(circle at 100% 100%, rgba(255,159,214,.08), transparent 42%),
-        rgba(255,255,255,.02);
-      padding:18px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:16px;
-      text-align:left;
-      cursor:pointer;
-    }
-
-    .doll-head small{
-      display:block;
-      color:#90a3ce;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      margin-bottom:8px;
-      font-weight:800;
-      font-size:.72rem;
-    }
-
-    .doll-head h3{
-      margin:0;
-      font-size:1.15rem;
-      letter-spacing:-.02em;
-      line-height:1.15;
-    }
-
-    .doll-meta{
-      flex:none;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      color:#dbe5ff;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.7rem;
-      font-weight:900;
-    }
-
-    .doll-diamond{
-      width:28px;
-      height:28px;
-      border-radius:8px;
-      transform:rotate(45deg);
-      border:1px solid rgba(239,210,154,.34);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), transparent 48%),
-        rgba(6,14,28,.78);
-      box-shadow:0 0 18px rgba(255,159,214,.12);
-    }
-
-    .doll-panel{
-      display:none;
-      padding:0 18px 18px;
-      border-top:1px solid rgba(164,188,255,.12);
-      background:rgba(255,255,255,.018);
-    }
-
-    .doll-shell.is-open .doll-panel{display:block}
-
-    .doll-copy{
-      margin:16px 0 0;
-      max-width:78ch;
     }
 
     .footer{
       display:flex;
       justify-content:space-between;
-      align-items:center;
       gap:16px;
       color:var(--muted);
       padding:14px 4px 0;
       font-size:.92rem;
     }
 
-    .footer-links{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-
-    .footer-links a{
+    .footer a{
       color:var(--muted);
       text-decoration:none;
+      margin-left:12px;
     }
 
-    .footer-links a:hover,.footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
-    }
-
-    @media (max-width:980px){
+    @media (max-width:900px){
       .hero-grid{grid-template-columns:1fr}
-      .readout-grid,.route-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
-    @media (max-width:720px){
-      .page{width:min(100vw - 16px,var(--max));padding:14px 0 32px}
-      .topbar{flex-wrap:wrap;padding:12px 14px}
-      .topnav{width:100%;justify-content:flex-start}
-      .hero,.stage-card,.panel{padding:18px 16px}
+    @media (max-width:640px){
+      .page{width:min(100vw - 16px,var(--max))}
+      .topbar{flex-wrap:wrap}
+      .topnav{width:100%}
+      .hero,.section{padding:18px 16px}
       h1{font-size:clamp(2rem,11vw,3.4rem)}
-      .hero-actions{gap:8px}
-      .button{flex:1 1 calc(50% - 8px)}
-      .button.primary{flex-basis:100%}
-      .stage-window{min-height:340px}
-      .stage-diamond{width:176px;height:176px}
-      .mic{transform:translate(-50%,-50%) scale(.86)}
-      .stage-label{width:calc(100% - 28px);border-radius:24px;font-size:.58rem;letter-spacing:.10em}
-      .readout-grid,.route-grid{grid-template-columns:1fr}
-      .doll-toggle{align-items:flex-start}
-      .doll-meta{display:grid;justify-items:end}
-      .footer{display:grid;gap:8px}
+      .grid{grid-template-columns:1fr}
+      .footer{display:grid}
+      .footer a{margin-left:0;margin-right:12px}
     }
   </style>
 </head>
@@ -601,226 +336,89 @@
       <div class="brand">
         <div class="brand-mark">BL</div>
         <div>
-          <p class="brand-kicker">Parent Chamber</p>
-          <p class="brand-title">Big Laugh · Diamond Gate Bridge</p>
+          <p class="brand-kicker">Big Laugh</p>
+          <p class="brand-title">The room before the room</p>
         </div>
       </div>
 
       <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
         <a class="nav-link" href="/big-laugh/upper-room/">Upper Room</a>
-        <a class="nav-link" href="#tiers">Sub-tiers</a>
-        <a class="nav-link" href="/contact/">Contact</a>
+        <a class="nav-link" href="/big-laugh/big-laughs/">Big Laughs</a>
+        <a class="nav-link" href="/">Home</a>
       </nav>
     </header>
 
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Motivational crowd interaction · comedy present · upstairs at Big Laughs</span>
-          <h1>Big Laugh is the <span class="accent">crowd engine</span>.</h1>
-          <p>
-            Big Laugh is not the venue and it does not claim the whole Big Laughs name. Big Laugh is the public-expression umbrella.
-            The active show is The Upper Room, an upstairs motivational crowd-interaction event hosted at Big Laughs.
+          <span class="tag">Comedy opens the door · the room does the work</span>
+          <h1>Not a speech. Not just a show. <span>A reset.</span></h1>
+          <p class="lead">
+            Big Laugh is the doorway into The Upper Room: an upstairs crowd-interaction show at Big Laughs where humor makes people comfortable,
+            honesty makes the room quiet, and the right kind of pressure gets people moving again.
           </p>
 
-          <div class="hero-actions">
+          <div class="actions">
             <a class="button primary" href="/big-laugh/upper-room/">Open The Upper Room</a>
-            <a class="button" href="#tiers">View sub-tiers</a>
-            <a class="button" href="/">Return to Gate</a>
+            <a class="button" href="/big-laugh/big-laughs/">Why Big Laughs?</a>
           </div>
         </div>
 
-        <aside class="stage-card">
-          <div class="stage-window" aria-label="Big Laugh motivational crowd-interaction stage">
-            <div class="stage-grid"></div>
-            <div class="spotlight"></div>
-            <div class="stage-diamond"></div>
-            <div class="mic"></div>
-            <div class="stage-label">
-              <strong>Big Laugh</strong> · parent chamber for The Upper Room at Big Laughs
-            </div>
-          </div>
-        </aside>
+        <div class="visual" aria-label="Upper Room visual"></div>
       </div>
     </section>
 
-    <section class="panel">
-      <div class="section-kicker">Hierarchy readout</div>
-      <h2>Venue, parent chamber, and show identity</h2>
+    <section class="section">
+      <div class="kicker">The active show</div>
+      <h2>The Upper Room presents A Dollar a Day Keeps the Psychiatrist Away</h2>
       <p>
-        The structure is now clean: Big Laughs is the venue context, Big Laugh is the umbrella, and The Upper Room is the actual upstairs show.
+        A coming-soon upstairs show built around crowd interaction, comedy, motivation, and a four-show raffle.
+        It is not officially on the calendar yet.
       </p>
 
-      <div class="readout-grid">
-        <div class="readout">
-          <small>Venue context</small>
+      <div class="grid">
+        <a class="card" href="/big-laugh/upper-room/#status">
+          <small>Status</small>
+          <strong>Coming soon</strong>
+          <p>The room is being set before the public listing opens.</p>
+        </a>
+
+        <a class="card" href="/big-laugh/upper-room/#pricing">
+          <small>Pricing</small>
+          <strong>$1 planned line</strong>
+          <p>Final ticket details will be confirmed when listed.</p>
+        </a>
+
+        <a class="card" href="/big-laugh/upper-room/#raffle">
+          <small>Raffle</small>
+          <strong>Prize run</strong>
+          <p>Pre-register, show up, and build entries across four shows.</p>
+        </a>
+
+        <a class="card" href="/big-laugh/big-laughs/">
+          <small>Venue</small>
           <strong>Big Laughs</strong>
-          <p>The building has the downstairs comedy room and the upstairs deck.</p>
-        </div>
-
-        <div class="readout">
-          <small>Show room</small>
-          <strong>Upper Room</strong>
-          <p>The upstairs room where this event happens.</p>
-        </div>
-
-        <div class="readout">
-          <small>Parent chamber</small>
-          <strong>Big Laugh</strong>
-          <p>The umbrella for motivational crowd interaction and public expression.</p>
-        </div>
-
-        <div class="readout">
-          <small>Primary promise</small>
-          <strong>Crowd interaction</strong>
-          <p>Comedy is present, but activation and participation lead.</p>
-        </div>
+          <p>The show belongs upstairs; the downstairs comedy room stays separate.</p>
+        </a>
       </div>
     </section>
 
-    <section class="panel" id="tiers">
-      <div class="section-kicker">Russian-doll sub-tiers</div>
-      <h2>Open one branch at a time</h2>
-
-      <div class="russian-doll">
-        <article class="doll-shell is-open" data-doll>
-          <button class="doll-toggle" type="button" aria-expanded="true">
-            <div class="doll-head">
-              <small>Active sub-tier</small>
-              <h3>The Upper Room</h3>
-            </div>
-            <div class="doll-meta"><span>Upstairs</span><span class="doll-diamond"></span></div>
-          </button>
-          <div class="doll-panel">
-            <p class="doll-copy">
-              The Upper Room is the active upstairs show at Big Laughs. It carries motivational crowd interaction first,
-              comedy inside the room, and raffle-driven participation across the four-show cycle.
-            </p>
-            <p class="doll-copy">
-              <a class="button primary" href="/big-laugh/upper-room/">Open The Upper Room</a>
-            </p>
-          </div>
-        </article>
-
-        <article class="doll-shell" data-doll>
-          <button class="doll-toggle" type="button" aria-expanded="false">
-            <div class="doll-head">
-              <small>Venue bridge</small>
-              <h3>Big Laughs Context</h3>
-            </div>
-            <div class="doll-meta"><span>Bridge</span><span class="doll-diamond"></span></div>
-          </button>
-          <div class="doll-panel">
-            <p class="doll-copy">
-              Big Laughs remains the venue context. The downstairs comedy show is separate. This event belongs upstairs in The Upper Room.
-            </p>
-            <p class="doll-copy">
-              <a class="button" href="/big-laugh/big-laughs/">Open venue bridge</a>
-            </p>
-          </div>
-        </article>
-
-        <article class="doll-shell" data-doll>
-          <button class="doll-toggle" type="button" aria-expanded="false">
-            <div class="doll-head">
-              <small>Future branch</small>
-              <h3>Public Speaking</h3>
-            </div>
-            <div class="doll-meta"><span>Future</span><span class="doll-diamond"></span></div>
-          </button>
-          <div class="doll-panel">
-            <p class="doll-copy">
-              This branch can hold structured talks, leadership rooms, high-energy speaking formats, and public-expression events.
-            </p>
-          </div>
-        </article>
-
-        <article class="doll-shell" data-doll>
-          <button class="doll-toggle" type="button" aria-expanded="false">
-            <div class="doll-head">
-              <small>Future branch</small>
-              <h3>Performer Development</h3>
-            </div>
-            <div class="doll-meta"><span>Future</span><span class="doll-diamond"></span></div>
-          </button>
-          <div class="doll-panel">
-            <p class="doll-copy">
-              This branch can hold stage practice, crowd-work training, open-room experiments, and performance development tools.
-            </p>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="section-kicker">Route map</div>
-      <h2>Choose the active branch</h2>
-
-      <div class="route-grid">
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Active show</small>
-          <h3>The Upper Room</h3>
-          <p>Open the upstairs live-room show with raffle details and event structure.</p>
-        </a>
-
-        <a class="route-card" href="/big-laugh/big-laughs/">
-          <small>Venue bridge</small>
-          <h3>Big Laughs Context</h3>
-          <p>Clarify the difference between the venue and the upstairs show.</p>
-        </a>
-
-        <a class="route-card" href="/">
-          <small>Root</small>
-          <h3>Return to Gate</h3>
-          <p>Go back to the Diamond Gate Bridge root door.</p>
-        </a>
-
-        <a class="route-card" href="/contact/">
-          <small>Inquiry</small>
-          <h3>Contact</h3>
-          <p>Use the contact route for event questions and reservations.</p>
-        </a>
-      </div>
+    <section class="section">
+      <div class="kicker">The promise</div>
+      <h2>Funny enough to laugh. Direct enough to move.</h2>
+      <p>
+        The point is not to bury people in information. The point is to invite them into a room that feels alive:
+        a little funny, a little uncomfortable, and useful enough to remember Monday morning.
+      </p>
     </section>
 
     <footer class="footer">
-      <span>Big Laugh · parent chamber for The Upper Room</span>
-      <div class="footer-links">
+      <span>Big Laugh · The Upper Room</span>
+      <span>
         <a href="/big-laugh/upper-room/">Upper Room</a>
-        <a href="/big-laugh/big-laughs/">Big Laughs Context</a>
         <a href="/">Home</a>
-        <a href="/contact/">Contact</a>
-      </div>
+      </span>
     </footer>
   </main>
-
-  <script>
-    (() => {
-      function closeSiblings(shell) {
-        const parent = shell.parentElement;
-        if (!parent) return;
-
-        parent.querySelectorAll(":scope > [data-doll]").forEach((item) => {
-          if (item === shell) return;
-          item.classList.remove("is-open");
-          const btn = item.querySelector("button");
-          if (btn) btn.setAttribute("aria-expanded", "false");
-        });
-      }
-
-      document.querySelectorAll("[data-doll] > .doll-toggle").forEach((button) => {
-        button.addEventListener("click", () => {
-          const shell = button.closest("[data-doll]");
-          if (!shell) return;
-
-          const willOpen = !shell.classList.contains("is-open");
-          closeSiblings(shell);
-          shell.classList.toggle("is-open", willOpen);
-          button.setAttribute("aria-expanded", String(willOpen));
-        });
-      });
-    })();
-  </script>
 </body>
 </html>

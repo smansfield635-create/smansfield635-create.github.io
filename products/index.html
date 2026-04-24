@@ -6,21 +6,17 @@
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products Chamber for Diamond Gate Bridge: a molecular 32-point compound organized through four coherent atomic bodies."
+    content="Products Chamber for Diamond Gate Bridge: a confined molecular window with a twisted figure-eight compound."
   />
   <style>
     :root{
       --bg:#040814;
       --panel:rgba(8,14,28,.72);
-      --panel-strong:rgba(10,18,34,.86);
       --line:rgba(164,188,255,.18);
       --line-strong:rgba(210,223,255,.34);
       --text:#eef4ff;
       --muted:#9aabd0;
       --gold:#efd29a;
-      --blue:#91c7ff;
-      --mint:#99e5b6;
-      --rose:#f0bacb;
       --north:#dde8ff;
       --south:#97e6b4;
       --east:#8fc9ff;
@@ -65,7 +61,7 @@
       z-index:1;
     }
 
-    .topbar,.hero,.section,.compound-panel,.detail-panel,.hero-side{
+    .topbar,.hero,.section,.window-panel,.detail-panel,.hero-side{
       border:1px solid var(--line);
       box-shadow:var(--shadow);
       background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
@@ -329,18 +325,19 @@
 
     .shell{
       display:grid;
-      grid-template-columns:minmax(0,1.45fr) minmax(320px,.78fr);
+      grid-template-columns:minmax(0,1.35fr) minmax(320px,.8fr);
       gap:18px;
+      align-items:start;
     }
 
-    .compound-panel,.detail-panel{
+    .window-panel,.detail-panel{
       border-radius:24px;
     }
 
-    .compound-panel{padding:16px}
+    .window-panel{padding:16px}
     .detail-panel{padding:22px}
 
-    .compound-head{
+    .window-head{
       display:flex;
       justify-content:space-between;
       align-items:center;
@@ -349,7 +346,7 @@
       padding:4px 6px 2px;
     }
 
-    .compound-head h2{
+    .window-head h2{
       margin:0;
       font-size:1rem;
       text-transform:uppercase;
@@ -357,7 +354,7 @@
       color:#d7e2ff;
     }
 
-    .compound-meta{
+    .window-meta{
       color:var(--muted);
       font-size:.82rem;
       letter-spacing:.12em;
@@ -365,35 +362,93 @@
       white-space:nowrap;
     }
 
-    .compound-stage{
+    .window-stage{
       position:relative;
-      min-height:min(76vw, 980px);
+      height:640px;
+      max-width:860px;
+      margin:0 auto;
       border:1px solid rgba(113,141,224,.14);
-      border-radius:32px;
+      border-radius:28px;
       overflow:hidden;
       background:
-        radial-gradient(circle at 50% 50%, rgba(84,118,206,.14), transparent 18%),
+        radial-gradient(circle at 50% 50%, rgba(84,118,206,.14), transparent 20%),
         linear-gradient(180deg, rgba(4,10,22,.88), rgba(2,8,18,.98));
       isolation:isolate;
     }
 
-    .compound-stage::before{
+    .window-stage::before{
       content:"";
       position:absolute;
       inset:0;
       pointer-events:none;
-      opacity:.24;
+      opacity:.22;
       background:
         linear-gradient(180deg, transparent, rgba(255,255,255,.02), transparent),
-        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 76px),
-        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 76px);
+        repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0 1px, transparent 1px 64px),
+        repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 1px, transparent 1px 64px);
     }
 
-    .molecule-frame{
-      position:relative;
-      width:min(100%, 820px);
-      margin:18px auto 92px;
-      aspect-ratio:1 / 1.05;
+    .window-frame{
+      position:absolute;
+      inset:26px 22px 76px;
+      border-radius:26px;
+      border:1px solid rgba(181,199,255,.16);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,.02), transparent 64%);
+      box-shadow:inset 0 0 32px rgba(255,255,255,.02);
+      overflow:hidden;
+    }
+
+    .window-title{
+      position:absolute;
+      left:50%;
+      top:14px;
+      transform:translateX(-50%);
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(140,168,240,.22);
+      background:rgba(6,14,28,.78);
+      color:#dbe5ff;
+      font-size:.72rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      z-index:7;
+    }
+
+    .eight-loop{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:68%;
+      height:50%;
+      transform:translate(-50%,-50%) rotate(-10deg);
+      border-radius:50%;
+      border:1px solid rgba(210,224,255,.14);
+      opacity:.42;
+      z-index:1;
+    }
+
+    .eight-loop.right{
+      transform:translate(-50%,-50%) translateX(34%) rotate(10deg);
+    }
+
+    .eight-loop.left{
+      transform:translate(-50%,-50%) translateX(-34%) rotate(-10deg);
+    }
+
+    .throat{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:110px;
+      height:110px;
+      transform:translate(-50%,-50%) rotate(45deg);
+      border-radius:18px;
+      border:1px solid rgba(214,226,255,.16);
+      background:
+        radial-gradient(circle, rgba(247,250,255,.78) 0%, rgba(149,188,255,.28) 34%, rgba(92,130,216,.08) 68%, transparent 82%);
+      box-shadow:0 0 30px rgba(144,182,255,.16);
+      z-index:3;
     }
 
     .bond{
@@ -403,70 +458,31 @@
       width:2px;
       transform-origin:center center;
       background:linear-gradient(180deg, transparent, rgba(228,236,255,.52), transparent);
-      opacity:.6;
+      opacity:.56;
       z-index:1;
       border-radius:999px;
-    }
-
-    .center-core{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:110px;
-      height:110px;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      border:1px solid rgba(214,226,255,.20);
-      background:
-        radial-gradient(circle, rgba(247,250,255,.88) 0%, rgba(149,188,255,.52) 26%, rgba(92,130,216,.12) 58%, transparent 80%);
-      box-shadow:
-        0 0 36px rgba(144,182,255,.22),
-        inset 0 0 30px rgba(255,255,255,.08);
-      z-index:3;
-    }
-
-    .core-label{
-      position:absolute;
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      z-index:4;
-      font-size:.78rem;
-      font-weight:800;
-      letter-spacing:.16em;
-      text-transform:uppercase;
-      color:#f7fbff;
-      text-align:center;
-      pointer-events:none;
     }
 
     .atom{
       position:absolute;
       left:var(--x);
       top:var(--y);
-      width:230px;
-      height:230px;
+      width:180px;
+      height:180px;
       transform:translate(-50%,-50%);
       border-radius:50%;
       border:1px solid rgba(178,196,255,.16);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-      box-shadow:inset 0 0 40px rgba(255,255,255,.02);
+      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+      box-shadow:inset 0 0 30px rgba(255,255,255,.02);
       z-index:2;
     }
 
-    .atom::before,
-    .atom::after{
+    .atom::before{
       content:"";
       position:absolute;
+      inset:18px;
       border-radius:50%;
-      inset:22px;
-      border:1px solid rgba(178,196,255,.11);
-    }
-
-    .atom::after{
-      inset:52px;
-      border-color:rgba(178,196,255,.08);
+      border:1px solid rgba(178,196,255,.10);
     }
 
     .atom-label{
@@ -489,7 +505,6 @@
       letter-spacing:.14em;
       text-transform:uppercase;
       pointer-events:none;
-      z-index:1;
     }
 
     .node-layer{
@@ -498,12 +513,12 @@
       z-index:5;
     }
 
-    .door-node{
+    .node{
       position:absolute;
       left:var(--x);
       top:var(--y);
       transform:translate(-50%,-50%);
-      width:18px;height:18px;border-radius:50%;
+      width:17px;height:17px;border-radius:50%;
       border:1px solid rgba(255,255,255,.74);
       background:var(--color);
       box-shadow:0 0 0 5px rgba(255,255,255,.04), 0 0 18px var(--glow), 0 0 36px var(--glow);
@@ -512,13 +527,13 @@
       z-index:6;
     }
 
-    .door-node::after{
+    .node::after{
       content:attr(data-short);
       position:absolute;
-      top:calc(100% + 9px);
+      top:calc(100% + 8px);
       left:50%;
       transform:translateX(-50%);
-      font-size:.6rem;
+      font-size:.58rem;
       letter-spacing:.12em;
       text-transform:uppercase;
       color:#d9e5ff;
@@ -527,23 +542,23 @@
       pointer-events:none;
     }
 
-    .door-node:hover,.door-node:focus-visible{
+    .node:hover,.node:focus-visible{
       transform:translate(-50%,-50%) scale(1.16);
       outline:none;
       box-shadow:0 0 0 6px rgba(255,255,255,.06), 0 0 20px var(--glow), 0 0 54px var(--glow);
     }
 
-    .door-node.is-active{
+    .node.is-active{
       transform:translate(-50%,-50%) scale(1.24);
       box-shadow:0 0 0 7px rgba(255,255,255,.08), 0 0 26px var(--glow), 0 0 72px var(--glow);
     }
 
-    .door-node.is-muted{
+    .node.is-muted{
       opacity:.14;
       filter:saturate(.28);
     }
 
-    .compound-copy{
+    .window-copy{
       position:absolute;
       left:50%;
       bottom:20px;
@@ -562,7 +577,7 @@
       z-index:7;
     }
 
-    .compound-copy strong{color:#fff}
+    .window-copy strong{color:#fff}
 
     .detail-kicker{
       display:flex;
@@ -643,7 +658,7 @@
         justify-content:flex-start;
       }
 
-      .hero,.section,.compound-panel,.detail-panel,.hero-side{
+      .hero,.section,.window-panel,.detail-panel,.hero-side{
         padding:18px 16px;
       }
 
@@ -671,34 +686,34 @@
         padding:0 14px;
       }
 
-      .compound-stage{
-        min-height:820px;
+      .window-stage{
+        height:560px;
       }
 
-      .molecule-frame{
-        width:100%;
-        aspect-ratio:1 / 1.45;
+      .window-frame{
+        inset:22px 14px 74px;
       }
 
       .atom{
-        width:170px;
-        height:170px;
+        width:126px;
+        height:126px;
       }
 
-      .atom::before{inset:18px}
-      .atom::after{inset:40px}
-
-      .center-core{
-        width:92px;
-        height:92px;
+      .atom::before{
+        inset:12px;
       }
 
-      .door-node{
-        width:15px;height:15px;
+      .throat{
+        width:78px;
+        height:78px;
       }
 
-      .door-node::after{
-        font-size:.54rem;
+      .node{
+        width:14px;height:14px;
+      }
+
+      .node::after{
+        font-size:.5rem;
       }
 
       .detail-stats{
@@ -738,15 +753,15 @@
     <section class="hero">
       <div class="hero-grid">
         <div>
-          <span class="hero-tag">Products chamber · molecular compound contract</span>
-          <h1>Public chamber for <span class="accent">compound structure</span>.</h1>
+          <span class="hero-tag">Products chamber · confined twisted window</span>
+          <h1>Public chamber for a <span class="accent">twisted compound</span>.</h1>
           <p>
-            The 32-point field now reads as one molecular compound. Four atomic bodies carry the cardinal lanes,
-            each holding eight points, so the chamber can be read at point scale, atomic scale, and whole-compound scale.
+            The molecular expression is now confined to a single chamber window. The 32 points remain bonded through four atomic bodies,
+            but the whole object now twists into a figure-eight form inside one owned viewport.
           </p>
 
           <div class="hero-actions">
-            <a class="button primary" href="#productsGrid">Open compound</a>
+            <a class="button primary" href="#productsGrid">Open window</a>
             <a class="button" href="/gauges/">Gauges</a>
             <a class="button" href="/">Back to door</a>
           </div>
@@ -771,24 +786,24 @@
         </div>
 
         <aside class="hero-side">
-          <h2>Compound job</h2>
+          <h2>Window job</h2>
           <p>
-            Give the visitor a coherent public chamber where the 32 no longer read as a flat spread.
-            They now read as bonded structure: four atomic bodies, one compound, one lawful expression.
+            Keep the compound inside one owned viewport. The page should host the chamber, not become the chamber.
+            The object lives inside the window and twists there lawfully.
           </p>
 
           <div class="hero-stats">
             <div class="stat">
               <span class="stat-label">Purpose</span>
-              <span class="stat-value">Public products chamber</span>
+              <span class="stat-value">Contained public chamber</span>
             </div>
             <div class="stat">
-              <span class="stat-label">Structure</span>
-              <span class="stat-value">4 atoms · 32 points</span>
+              <span class="stat-label">Geometry</span>
+              <span class="stat-value">Twisted figure-eight</span>
             </div>
             <div class="stat">
               <span class="stat-label">Coherence</span>
-              <span class="stat-value">Point → atom → compound</span>
+              <span class="stat-value">Point → atom → windowed compound</span>
             </div>
           </div>
         </aside>
@@ -798,48 +813,51 @@
     <section class="section" id="productsGrid" aria-live="polite">
       <div class="section-head">
         <div>
-          <div class="section-kicker">Molecular field</div>
-          <h2>Choose a point inside the compound</h2>
+          <div class="section-kicker">Contained molecular field</div>
+          <h2>Choose a bonded point inside the window</h2>
         </div>
         <div class="section-note">
-          The chamber is now organized by bonded atomic bodies rather than a flat symmetric door alone.
+          The compound is now bounded by one chamber viewport and twisted into a figure-eight inside that boundary.
         </div>
       </div>
 
       <div class="shell">
-        <div class="compound-panel">
-          <div class="compound-head">
-            <h2>Compound map</h2>
-            <div class="compound-meta">4 atoms · 32 points · 1 compound</div>
+        <div class="window-panel">
+          <div class="window-head">
+            <h2>Compound window</h2>
+            <div class="window-meta">4 atoms · 32 points · twisted figure-eight</div>
           </div>
 
-          <div class="compound-stage">
-            <div class="molecule-frame">
+          <div class="window-stage">
+            <div class="window-title">owned chamber viewport</div>
+
+            <div class="window-frame">
+              <div class="eight-loop left"></div>
+              <div class="eight-loop right"></div>
+              <div class="throat"></div>
+
               <div class="bond" id="bondNorth"></div>
               <div class="bond" id="bondSouth"></div>
               <div class="bond" id="bondEast"></div>
               <div class="bond" id="bondWest"></div>
 
-              <div class="center-core"></div>
-              <div class="core-label">Core<br />32</div>
-
-              <div class="atom" style="--x:50%;--y:22%;">
+              <div class="atom" style="--x:34%;--y:34%;">
                 <div class="atom-label">North</div>
               </div>
-              <div class="atom" style="--x:78%;--y:50%;">
+              <div class="atom" style="--x:66%;--y:34%;">
                 <div class="atom-label">East</div>
               </div>
-              <div class="atom" style="--x:50%;--y:78%;">
-                <div class="atom-label">South</div>
-              </div>
-              <div class="atom" style="--x:22%;--y:50%;">
+              <div class="atom" style="--x:34%;--y:66%;">
                 <div class="atom-label">West</div>
+              </div>
+              <div class="atom" style="--x:66%;--y:66%;">
+                <div class="atom-label">South</div>
               </div>
 
               <div class="node-layer" id="nodeLayer"></div>
             </div>
 
-            <div class="compound-copy"><strong>Molecular products compound</strong> · select any bonded point</div>
+            <div class="window-copy"><strong>Windowed molecular compound</strong> · bonded inside one chamber</div>
           </div>
         </div>
 
@@ -869,7 +887,7 @@
             </div>
             <div class="stat">
               <span class="stat-label">Compound read</span>
-              <span class="stat-value" id="detailRoute">Atomic route</span>
+              <span class="stat-value" id="detailRoute">Windowed route</span>
             </div>
           </div>
 
@@ -882,7 +900,7 @@
     </section>
 
     <footer class="footer">
-      <span>Products · molecular compound contract</span>
+      <span>Products · confined twisted window contract</span>
       <div class="footer-links">
         <a href="/">Home</a>
         <a href="/about/">About</a>

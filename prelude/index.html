@@ -6,7 +6,7 @@
   <title>Prelude · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Prelude: Generation 2 opening orientation surface before deeper route selection."
+    content="Prelude to Diamond Gate Bridge: a clean public threshold into the human path, world path, product path, and project chambers."
   />
 
   <style>
@@ -20,11 +20,14 @@
       --gold:#efd29a;
       --blue:#8ec5ff;
       --green:#93efbd;
+      --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1120px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
@@ -33,8 +36,8 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 6%,rgba(239,210,154,.16),transparent 25%),
-        radial-gradient(circle at 18% 28%,rgba(142,197,255,.10),transparent 30%),
+        radial-gradient(circle at 50% 6%,rgba(239,210,154,.18),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(142,197,255,.12),transparent 30%),
         radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
@@ -53,7 +56,10 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a { color:inherit; text-decoration:none; }
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -66,7 +72,7 @@
     .topbar,
     .hero,
     .panel,
-    .card,
+    .path-card,
     .route-card {
       border:1px solid var(--line);
       background:
@@ -122,9 +128,8 @@
 
     .nav,
     .actions,
-    .grid,
-    .route-grid,
-    .steps {
+    .path-grid,
+    .route-grid {
       display:grid;
       gap:10px;
     }
@@ -145,6 +150,13 @@
       text-align:center;
     }
 
+    .nav a:focus-visible,
+    .button:focus-visible,
+    .route-card:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
+    }
+
     .button.primary {
       border-color:rgba(239,210,154,.38);
       background:
@@ -155,11 +167,47 @@
 
     .hero {
       border-radius:34px;
-      padding:clamp(20px,3.5vw,38px);
+      padding:clamp(22px,4vw,46px);
       margin-bottom:14px;
+      min-height:clamp(430px,58vw,620px);
       display:grid;
-      gap:18px;
+      align-items:center;
       overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(560px,78vw);
+      height:min(560px,78vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.18),transparent 24%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.13),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 68%);
+      filter:blur(4px);
+      z-index:-2;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(680px,86vw);
+      height:min(330px,42vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-8deg);
+      border:1px solid rgba(239,210,154,.18);
+      border-radius:50%;
+      z-index:-1;
+      box-shadow:
+        0 0 38px rgba(239,210,154,.08),
+        inset 0 0 38px rgba(142,197,255,.06);
     }
 
     .pill {
@@ -191,15 +239,15 @@
     h1 {
       margin:0;
       color:#fff;
-      font-size:clamp(3rem,11vw,6.4rem);
-      line-height:.9;
-      letter-spacing:-.075em;
+      font-size:clamp(3.2rem,13vw,7.4rem);
+      line-height:.86;
+      letter-spacing:-.08em;
     }
 
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.5rem,5vw,3rem);
+      font-size:clamp(1.55rem,5vw,3.1rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -212,12 +260,18 @@
     }
 
     .hero p {
-      max-width:76ch;
+      max-width:72ch;
       margin-top:14px;
+      font-size:clamp(1rem,1.8vw,1.18rem);
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
     }
 
     .actions {
-      margin-top:18px;
+      margin-top:10px;
     }
 
     .panel {
@@ -233,18 +287,18 @@
       gap:8px;
     }
 
-    .card,
+    .path-card,
     .route-card {
       border-radius:22px;
       padding:16px;
-      min-height:122px;
+      min-height:136px;
       align-items:flex-start;
       justify-content:flex-start;
       flex-direction:column;
       text-align:left;
     }
 
-    .card small,
+    .path-card small,
     .route-card small {
       display:block;
       margin-bottom:8px;
@@ -255,7 +309,7 @@
       font-weight:850;
     }
 
-    .card strong,
+    .path-card strong,
     .route-card strong {
       display:block;
       color:#fff;
@@ -263,35 +317,33 @@
       line-height:1.12;
     }
 
-    .card p {
+    .path-card p {
       margin-top:8px;
       font-size:.92rem;
       line-height:1.42;
     }
 
-    .step {
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:10px;
-      align-items:start;
-      padding:12px;
-      border:1px solid rgba(170,198,255,.15);
-      border-radius:18px;
-      background:rgba(255,255,255,.035);
-      color:var(--muted);
-      line-height:1.42;
+    .human {
+      border-color:rgba(239,210,154,.25);
     }
 
-    .step b {
-      min-width:34px;
-      height:34px;
-      border-radius:999px;
-      display:grid;
-      place-items:center;
-      color:#fff;
-      border:1px solid rgba(239,210,154,.30);
-      background:rgba(239,210,154,.08);
-      font-size:.82rem;
+    .world {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .product {
+      border-color:rgba(147,239,189,.25);
+    }
+
+    .closing-read {
+      max-width:82ch;
+      padding:18px;
+      border:1px solid rgba(239,210,154,.18);
+      border-radius:24px;
+      background:rgba(255,255,255,.035);
+      color:#dfe8ff;
+      font-size:1.04rem;
+      line-height:1.65;
     }
 
     .footer {
@@ -304,21 +356,65 @@
       font-size:.86rem;
     }
 
-    .footer a { color:#d6e2ff; }
+    .footer a {
+      color:#d6e2ff;
+    }
 
     @media (min-width:820px) {
-      .topbar { grid-template-columns:1fr auto; align-items:center; }
-      .nav { grid-template-columns:repeat(5,auto); }
-      .actions { grid-template-columns:repeat(4,auto); justify-content:start; }
-      .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-      .steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .route-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .nav {
+        grid-template-columns:repeat(5,auto);
+      }
+
+      .actions {
+        grid-template-columns:repeat(4,auto);
+        justify-content:start;
+      }
+
+      .path-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
     }
 
     @media (max-width:640px) {
-      .page { width:min(100vw - 12px,var(--max)); padding-top:10px; }
-      .topbar, .hero, .panel { border-radius:24px; }
-      .nav, .actions, .grid, .steps, .route-grid { grid-template-columns:1fr; }
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .hero,
+      .panel {
+        border-radius:24px;
+      }
+
+      .nav,
+      .actions,
+      .path-grid,
+      .route-grid {
+        grid-template-columns:1fr;
+      }
+
+      .hero {
+        min-height:520px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+      }
     }
   </style>
 </head>
@@ -328,20 +424,20 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="prelude"
-    data-surface="opening-orientation-surface"
+    data-surface="active-public-threshold"
   >
     <header class="topbar">
       <a class="brand" href="/home/" aria-label="Home">
         <span class="mark" aria-hidden="true">PR</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Prelude · Generation 2</strong>
+          <strong class="title">Prelude</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/about/">About</a>
         <a href="/products/">Products</a>
         <a href="/metaverse/">Metaverse</a>
         <a href="/laws/">Laws</a>
@@ -349,92 +445,59 @@
     </header>
 
     <section class="hero" aria-labelledby="preludeTitle">
-      <div>
-        <span class="pill">Second-generation prelude</span>
+      <div class="hero-copy">
+        <span class="pill">Before the path opens</span>
         <h1 id="preludeTitle">Prelude</h1>
-        <h2>The opening read before deeper movement.</h2>
+        <h2>Take one breath at the gate.</h2>
         <p>
-          Prelude is the clean orientation layer. It sets tone, reduces confusion,
-          and prepares the visitor to choose the correct next surface without turning
-          the opening page into a law page, product page, or dense explanation block.
+          Diamond Gate Bridge is built from paths, products, ideas, and public work.
+          Start with the direction that feels closest to why you came.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="/home/">Back to Home</a>
-          <a class="button" href="/about/">About</a>
-          <a class="button" href="/products/">Products</a>
-          <a class="button" href="/metaverse/">Metaverse</a>
+          <a class="button primary" href="/nine-summits/">Human Path</a>
+          <a class="button" href="/metaverse/">World Path</a>
+          <a class="button" href="/products/">Product Path</a>
+          <a class="button" href="/home/">Home</a>
         </div>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="jobTitle">
+    <section class="panel" aria-labelledby="pathsTitle">
       <div class="panel-head">
-        <span class="pill">Prelude job</span>
-        <h2 id="jobTitle">Set the frame without overload.</h2>
+        <span class="pill">Choose by fit</span>
+        <h2 id="pathsTitle">Three doors open first.</h2>
         <p>
-          The Prelude gives the visitor a stable first read, establishes cadence,
-          and moves them toward the right public surface by fit.
+          You do not have to understand the whole structure before moving.
+          Choose the path that matches your reason for entering.
         </p>
       </div>
 
-      <div class="grid">
-        <article class="card">
-          <small>Purpose</small>
-          <strong>Opening orientation</strong>
-          <p>Give the visitor a clean first read before deeper route selection.</p>
-        </article>
+      <div class="path-grid">
+        <a class="path-card human" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits of Love</strong>
+          <p>Begin with the human-development path and the invitation to learn to live to love.</p>
+        </a>
 
-        <article class="card">
-          <small>Position</small>
-          <strong>Before descent</strong>
-          <p>Prelude sits between Home-level orientation and deeper chamber movement.</p>
-        </article>
+        <a class="path-card world" href="/metaverse/">
+          <small>World path</small>
+          <strong>Metaverse</strong>
+          <p>Enter the broader world surface where chambers, routes, and systems connect.</p>
+        </a>
 
-        <article class="card">
-          <small>Contract</small>
-          <strong>Generation 2 surface</strong>
-          <p>No retired Generation 1 language, no clutter, no false terminal explanation.</p>
-        </article>
+        <a class="path-card product" href="/products/">
+          <small>Product path</small>
+          <strong>Products</strong>
+          <p>Open the product chamber and move toward the current public product lines.</p>
+        </a>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="useTitle">
+    <section class="panel" aria-labelledby="nextTitle">
       <div class="panel-head">
-        <span class="pill">How to use it</span>
-        <h2 id="useTitle">Read broad first, then move by fit.</h2>
-      </div>
-
-      <div class="steps">
-        <div class="step">
-          <b>1</b>
-          <span><strong>Enter cleanly.</strong> Let the opening read steady the frame.</span>
-        </div>
-
-        <div class="step">
-          <b>2</b>
-          <span><strong>Let the tone settle.</strong> Treat Prelude as orientation, not the whole encyclopedia.</span>
-        </div>
-
-        <div class="step">
-          <b>3</b>
-          <span><strong>Choose the next route.</strong> Move into About, Products, Metaverse, Laws, or Home by fit.</span>
-        </div>
-
-        <div class="step">
-          <b>4</b>
-          <span><strong>Continue by purpose.</strong> Follow the chamber that matches the job.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="routesTitle">
-      <div class="panel-head">
-        <span class="pill">Next routes</span>
-        <h2 id="routesTitle">Move deeper from here.</h2>
-        <p>
-          Prelude opens the path. It does not need to contain the whole world.
-        </p>
+        <span class="pill">Next motion</span>
+        <h2 id="nextTitle">Move only as far as the next right surface.</h2>
       </div>
 
       <div class="route-grid">
@@ -443,14 +506,9 @@
           <strong>Home</strong>
         </a>
 
-        <a class="route-card" href="/about/">
-          <small>Orientation</small>
-          <strong>About</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Product chamber</small>
-          <strong>Products</strong>
+        <a class="route-card" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits</strong>
         </a>
 
         <a class="route-card" href="/metaverse/">
@@ -458,9 +516,9 @@
           <strong>Metaverse</strong>
         </a>
 
-        <a class="route-card" href="/nine-summits/">
-          <small>Human path</small>
-          <strong>Nine Summits</strong>
+        <a class="route-card" href="/products/">
+          <small>Product chamber</small>
+          <strong>Products</strong>
         </a>
 
         <a class="route-card" href="/big-laugh/upper-room/">
@@ -473,6 +531,11 @@
           <strong>Laws</strong>
         </a>
 
+        <a class="route-card" href="/about/">
+          <small>Orientation</small>
+          <strong>About</strong>
+        </a>
+
         <a class="route-card" href="/gauges/">
           <small>Inspection</small>
           <strong>Gauges</strong>
@@ -480,9 +543,50 @@
       </div>
     </section>
 
+    <section class="panel" aria-labelledby="closingTitle">
+      <div class="panel-head">
+        <span class="pill">Opening read</span>
+        <h2 id="closingTitle">The gate does not need the whole map.</h2>
+      </div>
+
+      <p class="closing-read">
+        Begin with the path that feels alive enough to follow. The deeper structure
+        will reveal itself as you move.
+      </p>
+    </section>
+
+    <section class="panel" aria-labelledby="backlinksTitle">
+      <div class="panel-head">
+        <span class="pill">Backlinks</span>
+        <h2 id="backlinksTitle">Return without losing the thread.</h2>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/">
+          <small>Access</small>
+          <strong>Door</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <small>Interior</small>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <small>Product chamber</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
+      </div>
+    </section>
+
     <footer class="footer">
-      <span>Prelude · Generation 2 Opening Orientation Surface</span>
-      <span><a href="/home/">Home</a> · <a href="/products/">Products</a> · <a href="/metaverse/">Metaverse</a></span>
+      <span>Prelude · Active Public Threshold</span>
+      <span><a href="/">Door</a> · <a href="/home/">Home</a> · <a href="/products/">Products</a></span>
     </footer>
   </main>
 </body>

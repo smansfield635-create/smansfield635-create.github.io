@@ -6,7 +6,7 @@
   <title>Diamond Gate Bridge · Door</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Door: a concise Generation 2 public entry surface with compact mobile route bubbles."
+    content="Diamond Gate Bridge Door: a compact Generation 2 public entry surface with Upcoming Show access at the top."
   />
 
   <style>
@@ -27,9 +27,7 @@
       --max:1180px;
     }
 
-    * {
-      box-sizing:border-box;
-    }
+    * { box-sizing:border-box; }
 
     html,
     body {
@@ -56,19 +54,6 @@
         linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
       background-size:52px 52px;
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
-    }
-
-    body::after {
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.28;
-      background:
-        radial-gradient(circle at 14% 18%,rgba(255,255,255,.34) 0 1px,transparent 2px),
-        radial-gradient(circle at 72% 22%,rgba(255,255,255,.24) 0 1px,transparent 2px),
-        radial-gradient(circle at 44% 72%,rgba(255,255,255,.20) 0 1px,transparent 2px),
-        radial-gradient(circle at 86% 76%,rgba(255,255,255,.30) 0 1px,transparent 2px);
     }
 
     a {
@@ -152,22 +137,32 @@
     .route-grid,
     .steps {
       display:grid;
-      gap:10px;
+      gap:8px;
     }
 
     .nav a,
     .route-card {
-      min-height:44px;
+      min-height:36px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      padding:0 14px;
+      padding:0 10px;
       border:1px solid var(--line);
       border-radius:999px;
       background:rgba(255,255,255,.035);
       color:#d7e2ff;
+      font-size:.88rem;
+      line-height:1.05;
       font-weight:850;
       text-align:center;
+    }
+
+    .nav a.featured {
+      border-color:rgba(239,210,154,.40);
+      color:#fff8ea;
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.18),rgba(239,210,154,.05)),
+        rgba(255,255,255,.035);
     }
 
     .nav a:focus-visible,
@@ -181,7 +176,7 @@
       border-radius:34px;
       padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(430px,56vw,660px);
+      min-height:clamp(390px,52vw,620px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -343,11 +338,11 @@
 
     .step-card,
     .route-card {
-      border-radius:22px;
-      padding:16px;
-      min-height:136px;
+      border-radius:18px;
+      padding:12px;
+      min-height:96px;
       align-items:flex-start;
-      justify-content:flex-start;
+      justify-content:center;
       flex-direction:column;
       text-align:left;
       color:inherit;
@@ -356,11 +351,11 @@
     .step-card small,
     .route-card small {
       display:block;
-      margin-bottom:8px;
+      margin-bottom:6px;
       color:#91a6cf;
       text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
+      letter-spacing:.12em;
+      font-size:.58rem;
       font-weight:850;
     }
 
@@ -368,67 +363,37 @@
     .route-card strong {
       display:block;
       color:#fff;
-      font-size:1.08rem;
-      line-height:1.12;
+      font-size:.98rem;
+      line-height:1.1;
     }
 
     .step-card p {
-      margin-top:8px;
+      margin-top:7px;
       color:var(--muted);
-      font-size:.92rem;
-      line-height:1.42;
+      font-size:.86rem;
+      line-height:1.38;
     }
 
-    .step-card.arrive {
-      border-color:rgba(239,210,154,.25);
-    }
+    .step-card.arrive { border-color:rgba(239,210,154,.25); }
+    .step-card.choose { border-color:rgba(142,197,255,.25); }
+    .step-card.continue { border-color:rgba(147,239,189,.25); }
 
-    .step-card.choose {
-      border-color:rgba(142,197,255,.25);
-    }
-
-    .step-card.continue {
-      border-color:rgba(147,239,189,.25);
-    }
-
-    .route-card {
-      min-height:112px;
-      justify-content:center;
-    }
-
-    .route-card.prelude {
-      border-color:rgba(239,210,154,.25);
-    }
-
-    .route-card.explore {
-      border-color:rgba(142,197,255,.25);
-    }
-
-    .route-card.frontier {
-      border-color:rgba(200,156,255,.25);
-    }
-
-    .route-card.product {
-      border-color:rgba(147,239,189,.25);
-    }
-
-    .route-card.human {
-      border-color:rgba(255,154,184,.25);
-    }
-
-    .route-card.world {
-      border-color:rgba(142,197,255,.25);
-    }
+    .route-card.prelude { border-color:rgba(239,210,154,.25); }
+    .route-card.explore { border-color:rgba(142,197,255,.25); }
+    .route-card.frontier { border-color:rgba(200,156,255,.25); }
+    .route-card.product { border-color:rgba(147,239,189,.25); }
+    .route-card.human { border-color:rgba(255,154,184,.25); }
+    .route-card.world { border-color:rgba(142,197,255,.25); }
 
     .closing-read {
       max-width:82ch;
-      padding:18px;
+      padding:16px;
       border:1px solid rgba(142,197,255,.18);
-      border-radius:24px;
+      border-radius:20px;
       background:rgba(255,255,255,.035);
       color:#dfe8ff;
-      font-size:1.04rem;
-      line-height:1.65;
+      font-size:1rem;
+      line-height:1.55;
     }
 
     .footer {
@@ -441,9 +406,7 @@
       font-size:.86rem;
     }
 
-    .footer a {
-      color:#d6e2ff;
-    }
+    .footer a { color:#d6e2ff; }
 
     @media (min-width:820px) {
       .topbar {
@@ -452,7 +415,7 @@
       }
 
       .nav {
-        grid-template-columns:repeat(6,auto);
+        grid-template-columns:repeat(7,auto);
       }
 
       .steps {
@@ -492,18 +455,18 @@
 
       .nav {
         grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
+        gap:7px;
       }
 
       .nav a {
-        min-height:38px;
-        padding:0 9px;
-        font-size:.88rem;
-        line-height:1.05;
+        min-height:34px;
+        padding:0 7px;
+        font-size:.78rem;
+        line-height:1.04;
       }
 
       .hero {
-        min-height:430px;
+        min-height:410px;
         padding:22px;
       }
 
@@ -519,33 +482,43 @@
 
       .route-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
-        gap:8px;
+        gap:7px;
       }
 
       .route-card {
-        min-height:86px;
-        padding:12px;
+        min-height:68px;
+        padding:9px;
+        border-radius:16px;
       }
 
       .route-card small {
-        font-size:.58rem;
+        font-size:.50rem;
+        margin-bottom:4px;
       }
 
       .route-card strong {
-        font-size:.96rem;
+        font-size:.84rem;
+      }
+
+      .step-card {
+        min-height:96px;
       }
     }
 
     @media (max-width:360px) {
       .nav a {
-        font-size:.80rem;
-        min-height:36px;
-        padding:0 7px;
+        font-size:.72rem;
+        min-height:32px;
+        padding:0 6px;
       }
 
       .route-card {
-        min-height:78px;
-        padding:10px;
+        min-height:64px;
+        padding:8px;
+      }
+
+      .route-card strong {
+        font-size:.78rem;
       }
     }
 
@@ -565,7 +538,7 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="door"
-    data-surface="generation-2-public-door"
+    data-surface="generation-2-public-door-compact"
     data-frontier-target-route="/explore/frontier/"
   >
     <header class="topbar">
@@ -583,6 +556,7 @@
         <a href="/explore/">Explore</a>
         <a href="/explore/frontier/">Frontier</a>
         <a href="/products/">Products</a>
+        <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
@@ -615,25 +589,19 @@
         <article class="step-card arrive">
           <small>Arrive</small>
           <strong>See the house.</strong>
-          <p>
-            The Door names Diamond Gate Bridge and creates a stable first surface.
-          </p>
+          <p>The Door names Diamond Gate Bridge and creates a stable first surface.</p>
         </article>
 
         <article class="step-card choose">
           <small>Choose</small>
           <strong>Pick the next route.</strong>
-          <p>
-            Prelude, Explore, Frontier, and Products are enough for the first move.
-          </p>
+          <p>Prelude, Explore, Frontier, Products, and Upcoming Show are enough for the first move.</p>
         </article>
 
         <article class="step-card continue">
           <small>Continue</small>
           <strong>Open the next room.</strong>
-          <p>
-            Each deeper page can carry its own work without crowding the Door.
-          </p>
+          <p>Each deeper page carries its own work without crowding the Door.</p>
         </article>
       </div>
     </section>
@@ -641,7 +609,7 @@
     <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
         <span class="pill">Choose the path</span>
-        <h2 id="routesTitle">Four doors are enough.</h2>
+        <h2 id="routesTitle">Start with the right door.</h2>
       </div>
 
       <div class="route-grid">
@@ -664,16 +632,12 @@
           <small>Product chamber</small>
           <strong>Products</strong>
         </a>
-      </div>
-    </section>
 
-    <section class="panel" aria-labelledby="publicTitle">
-      <div class="panel-head">
-        <span class="pill">Public path</span>
-        <h2 id="publicTitle">The main work remains visible.</h2>
-      </div>
+        <a class="route-card human" href="/big-laugh/upper-room/">
+          <small>Upcoming show</small>
+          <strong>The Upper Room</strong>
+        </a>
 
-      <div class="route-grid">
         <a class="route-card human" href="/nine-summits/">
           <small>Human path</small>
           <strong>Nine Summits</strong>
@@ -682,11 +646,6 @@
         <a class="route-card world" href="/metaverse/">
           <small>World surface</small>
           <strong>Metaverse</strong>
-        </a>
-
-        <a class="route-card human" href="/big-laugh/upper-room/">
-          <small>Upcoming show</small>
-          <strong>The Upper Room</strong>
         </a>
 
         <a class="route-card world" href="/laws/">
@@ -715,7 +674,7 @@
         <a href="/prelude/">Prelude</a> ·
         <a href="/explore/">Explore</a> ·
         <a href="/explore/frontier/">Frontier</a> ·
-        <a href="/products/">Products</a>
+        <a href="/big-laugh/upper-room/">Upcoming Show</a>
       </span>
     </footer>
   </main>

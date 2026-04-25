@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-gen2-product-first-runtime-v2-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_PRODUCT_FIRST_CONTROL_SECOND_v2";
+  const STYLE_ID = "products-gen2-actual-products-runtime-v3-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_ACTUAL_PRODUCTS_SURFACE_v3";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -17,28 +17,46 @@
 
   const products = [
     {
-      key: "winter",
-      code: "NORTH",
-      title: "Boundary Instruments",
-      line: "Map, threshold, containment, and admissible-motion products."
+      key: "ai",
+      focus: "summer",
+      code: "AI",
+      title: "AI",
+      line: "Public AI tools, assistants, and execution surfaces."
     },
     {
-      key: "spring",
-      code: "SOUTH",
-      title: "Continuity Instruments",
-      line: "Repair, sequence, restoration, and living-system stability products."
+      key: "five-flags",
+      focus: "winter",
+      code: "FLAGS",
+      title: "Five Flags",
+      line: "A flag-based identity, signal, and orientation product."
     },
     {
-      key: "summer",
-      code: "EAST",
-      title: "Signal Instruments",
-      line: "Launch, learning, motion, traversal, and public-expression products."
+      key: "whats-my-favorite",
+      focus: "spring",
+      code: "FAVORITE",
+      title: "What’s My Favorite?",
+      line: "A preference, choice, and discovery product."
     },
     {
-      key: "fall",
-      code: "WEST",
-      title: "Pressure Instruments",
-      line: "Audit, contradiction, friction, edge-case, and false-close products."
+      key: "same-flag-project",
+      focus: "fall",
+      code: "SAME FLAG",
+      title: "The Same Flag Project",
+      line: "A shared-symbol product built around alignment and public signal."
+    },
+    {
+      key: "esl-learning",
+      focus: "spring",
+      code: "ESL",
+      title: "ESL Learning",
+      line: "Language learning, translation support, and education surfaces."
+    },
+    {
+      key: "next-product",
+      focus: "all",
+      code: "NEXT",
+      title: "Next Product Slot",
+      line: "Reserved for the next official product added to the site."
     }
   ];
 
@@ -85,7 +103,6 @@
       .products-product-first,
       .products-gen2-stage,
       .products-gen2-controls,
-      .products-gen2-card,
       .products-product-tile {
         border:1px solid var(--products-line);
         background:
@@ -127,18 +144,21 @@
 
       .products-product-grid {
         display:grid;
-        grid-template-columns:repeat(4,minmax(0,1fr));
+        grid-template-columns:repeat(3,minmax(0,1fr));
         gap:10px;
       }
 
       .products-product-tile {
-        min-height:142px;
+        min-height:138px;
         border-radius:22px;
         padding:15px;
         display:grid;
         align-content:space-between;
         gap:10px;
         cursor:pointer;
+        text-align:left;
+        color:inherit;
+        font:inherit;
         transition:
           transform .22s ease,
           border-color .22s ease,
@@ -219,7 +239,7 @@
         left:50%;
         top:5%;
         z-index:12;
-        width:min(420px,78%);
+        width:min(440px,78%);
         transform:translateX(-50%);
         padding:10px 13px;
         border:1px solid var(--products-line);
@@ -631,7 +651,8 @@
         <button
           class="products-product-tile"
           type="button"
-          data-product-focus="${product.key}"
+          data-product-key="${product.key}"
+          data-product-focus="${product.focus}"
           aria-label="Focus ${product.title}"
         >
           <small>${product.code}</small>
@@ -673,13 +694,13 @@
         class="products-gen2-shell"
         data-products-runtime-root="true"
         data-products-generation="2"
-        data-products-product-first="true"
+        data-products-actual-products="true"
         data-products-control-surface="true"
       >
-        <section class="products-product-first" aria-label="Products first">
+        <section class="products-product-first" aria-label="Products list">
           <div class="products-product-head">
             <h3>Products.</h3>
-            <span>Generation 2 · product first</span>
+            <span>Generation 2 · actual site products</span>
           </div>
 
           <div class="products-product-grid">
@@ -750,7 +771,7 @@
 
           <div class="products-bubble-row" aria-label="Runtime receipts">
             <span>G2 active</span>
-            <span>Products first</span>
+            <span>Actual products</span>
             <span>Globe online</span>
             <span>Controls below</span>
           </div>
@@ -831,9 +852,9 @@
     });
   }
 
-  function updateProductTiles(value) {
-    document.querySelectorAll("[data-product-focus]").forEach((tile) => {
-      tile.classList.toggle("active", tile.dataset.productFocus === value);
+  function updateProductTiles(productKey) {
+    document.querySelectorAll("[data-product-key]").forEach((tile) => {
+      tile.classList.toggle("active", tile.dataset.productKey === productKey);
     });
   }
 
@@ -845,13 +866,13 @@
       `Spin: ${stage.dataset.spin} · Speed: ${stage.dataset.speed} · Focus: ${stage.dataset.focus} · Density: ${stage.dataset.density}`;
   }
 
-  function setFocus(value) {
+  function setFocus(value, productKey = "") {
     const stage = document.getElementById("productsGen2Stage");
     if (!stage) return;
 
     stage.dataset.focus = value;
     updatePressedStates("focus", value);
-    updateProductTiles(value);
+    updateProductTiles(productKey);
     updateReceipt(stage);
 
     if (value !== "all") {
@@ -862,9 +883,9 @@
   function bindProductTiles() {
     document.querySelectorAll("[data-product-focus]").forEach((tile) => {
       tile.addEventListener("click", () => {
-        const value = tile.dataset.productFocus;
-        if (!value) return;
-        setFocus(value);
+        const value = tile.dataset.productFocus || "all";
+        const productKey = tile.dataset.productKey || "";
+        setFocus(value, productKey);
       });
     });
   }
@@ -885,7 +906,7 @@
 
         if (control === "speed") setSharedEarthSpeed(value);
         if (control === "spin") setSharedEarthSpin(value);
-        if (control === "focus") updateProductTiles(value);
+        if (control === "focus") updateProductTiles("");
 
         updateReceipt(stage);
       });
@@ -973,7 +994,7 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-gen2-product-first-v2");
+      target.setAttribute("data-products-runtime-version", "products-g2-actual-products-v3");
 
       target.innerHTML = buildHTML();
 
@@ -987,7 +1008,7 @@
       target.setAttribute("data-runtime-status", "mounted");
       target.setAttribute("data-products-shared-earth", sharedEarthMounted ? "mounted" : "unavailable");
       target.setAttribute("data-products-gen2-controls", "active");
-      target.setAttribute("data-products-order", "product-first-control-second");
+      target.setAttribute("data-products-order", "actual-products-first");
 
       window[RECEIPT_KEY] = true;
       this.status = "MOUNTED";
@@ -1000,7 +1021,7 @@
             owner: "products_runtime.js",
             sharedEarthMounted,
             controls: "active",
-            order: "product-first-control-second"
+            order: "actual-products-first"
           }
         })
       );

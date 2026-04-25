@@ -6,12 +6,11 @@
   <title>Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier at Diamond Gate Bridge: the active Generation 2 edge route for new paths, public experiments, future chambers, and next territories."
+    content="Frontier at Diamond Gate Bridge: the Generation 2 edge surface for new paths, public experiments, future chambers, and next territories."
   />
 
   <style>
     :root {
-      --bg:#020610;
       --panel:rgba(7,14,28,.92);
       --panel-strong:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
@@ -27,7 +26,9 @@
       --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
@@ -165,13 +166,6 @@
       background:
         linear-gradient(180deg,rgba(200,156,255,.18),rgba(200,156,255,.05)),
         rgba(255,255,255,.035);
-    }
-
-    .nav a:focus-visible,
-    .route-card:focus-visible,
-    .step-card:focus-visible {
-      outline:2px solid rgba(200,156,255,.62);
-      outline-offset:3px;
     }
 
     .hero {
@@ -335,10 +329,6 @@
       gap:8px;
     }
 
-    .steps {
-      grid-template-columns:1fr;
-    }
-
     .step-card,
     .route-card,
     .signal-card {
@@ -416,7 +406,9 @@
       font-size:.86rem;
     }
 
-    .footer a { color:#d6e2ff; }
+    .footer a {
+      color:#d6e2ff;
+    }
 
     @media (min-width:820px) {
       .topbar {
@@ -551,7 +543,6 @@
     data-generation="second-generation-renewal"
     data-page="frontier"
     data-surface="generation-2-frontier-edge-surface"
-    data-explore-public-status="retired-for-now"
   >
     <header class="topbar">
       <a class="brand" href="/frontier/" aria-label="Frontier">
@@ -566,7 +557,7 @@
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/prelude/">Prelude</a>
-        <a href="/products/">Products</a>
+        <a href="/explore/">Explore</a>
         <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
         <a href="/gauges/">Gauges</a>
       </nav>
@@ -719,9 +710,9 @@
       <span>Frontier · Generation 2 Edge Surface</span>
       <span>
         <a href="/door/">Door</a> ·
+        <a href="/explore/">Explore</a> ·
         <a href="/products/">Products</a> ·
-        <a href="/metaverse/">Metaverse</a> ·
-        <a href="/big-laugh/upper-room/">Upcoming Show</a>
+        <a href="/metaverse/">Metaverse</a>
       </span>
     </footer>
   </main>

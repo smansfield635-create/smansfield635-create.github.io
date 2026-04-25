@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-g2-official-products-runtime-v5-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v5";
+  const STYLE_ID = "products-g2-official-products-runtime-v6-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v6";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -33,20 +33,28 @@
       line: "Structural language, code-law, and geometric syntax systems."
     },
     {
-      key: "being-blind-systems",
+      key: "baseline-nutrition-systems",
       focus: "winter",
-      code: "BLIND",
-      title: "Being Blind Systems",
-      href: "/products/being-blind-systems/",
-      line: "Accessibility, perception, navigation, and lived-interface systems."
+      code: "BASELINE",
+      title: "Baseline Nutrition Systems",
+      href: "/products/baseline-nutrition-systems/",
+      line: "Nutrition, baseline health structure, habit support, and body-system stability."
     },
     {
-      key: "five-flags-with-my-team",
+      key: "five-flags",
       focus: "spring",
       code: "FLAGS",
-      title: "Five Flags With My Team",
+      title: "Five Flags",
       href: "/products/five-flags/",
-      line: "Team identity, alignment, signal, and shared-orientation product."
+      line: "Identity, alignment, signal, and shared-orientation product."
+    },
+    {
+      key: "whats-my-scene",
+      focus: "summer",
+      code: "SCENE",
+      title: "What’s My Scene?",
+      href: "/products/whats-my-scene/",
+      line: "Scene discovery, preference mapping, social fit, and audience-facing choice support."
     }
   ];
 
@@ -134,12 +142,12 @@
 
       .products-product-grid {
         display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:repeat(5,minmax(0,1fr));
         gap:10px;
       }
 
       .products-product-tile {
-        min-height:148px;
+        min-height:154px;
         border-radius:22px;
         padding:16px;
         display:grid;
@@ -169,22 +177,22 @@
         color:#91a6cf;
         text-transform:uppercase;
         letter-spacing:.13em;
-        font-size:.64rem;
+        font-size:.62rem;
         font-weight:850;
       }
 
       .products-product-tile strong {
         display:block;
         color:#fff;
-        font-size:1.16rem;
+        font-size:1.06rem;
         line-height:1.05;
       }
 
       .products-product-tile p {
         margin:0;
         color:var(--products-muted);
-        font-size:.84rem;
-        line-height:1.36;
+        font-size:.80rem;
+        line-height:1.34;
       }
 
       .products-product-tile em {
@@ -196,7 +204,7 @@
         border-radius:999px;
         color:#fff8ea;
         font-style:normal;
-        font-size:.68rem;
+        font-size:.66rem;
         font-weight:850;
         text-transform:uppercase;
         letter-spacing:.10em;
@@ -559,6 +567,12 @@
         }
         50% {
           transform:translate(-50%,-50%) translateY(-16px) scale(1.08);
+        }
+      }
+
+      @media (max-width:1120px) {
+        .products-product-grid {
+          grid-template-columns:repeat(3,minmax(0,1fr));
         }
       }
 
@@ -1010,7 +1024,7 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v5");
+      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v6");
 
       target.innerHTML = buildHTML();
 

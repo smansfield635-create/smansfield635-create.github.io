@@ -1,24 +1,25 @@
 <!doctype html>
-<html lang="en" data-page-generation="gauges-g1-opaque-space-earth">
+<html lang="en" data-page-generation="gauges-g1-physics-universe-runtime">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Gauges: Generation 1 readable baseline with an opaque outer-space Earth view, compact context, and diamond route controls." />
+  <meta name="description" content="Diamond Gate Bridge Gauges: physics-derived universe runtime with Sun-centered solar projection, Earth orbit, staged zoom, and Generation 1 readable baseline." />
 
   <style>
     :root {
-      --panel: rgba(7, 14, 28, .92);
-      --panel2: rgba(10, 20, 42, .96);
+      --panel: rgba(7, 14, 28, .94);
+      --panel2: rgba(10, 20, 42, .97);
       --line: rgba(170, 198, 255, .18);
-      --line2: rgba(142, 197, 255, .34);
+      --line2: rgba(239, 210, 154, .36);
       --text: #eef4ff;
       --muted: #aab8d8;
       --gold: #efd29a;
       --blue: #8ec5ff;
-      --shadow: 0 24px 80px rgba(0,0,0,.50);
+      --green: #93efbd;
+      --shadow: 0 24px 80px rgba(0,0,0,.52);
       --max: 1180px;
-      --earth-texture: url("https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg");
+      --scene-size: min(86vw, 720px);
     }
 
     * {
@@ -44,7 +45,7 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: .24;
+      opacity: .26;
       background:
         radial-gradient(circle at 8% 16%, rgba(255,255,255,.78) 0 1px, transparent 1.4px),
         radial-gradient(circle at 22% 78%, rgba(255,255,255,.58) 0 1px, transparent 1.6px),
@@ -59,9 +60,19 @@
       z-index: 0;
     }
 
-    a {
+    a,
+    button {
       color: inherit;
+      font: inherit;
+    }
+
+    a {
       text-decoration: none;
+    }
+
+    button {
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .page {
@@ -76,7 +87,8 @@
     .hero,
     .panel,
     .route-card,
-    .status-strip {
+    .status-strip,
+    .control-card {
       border: 1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%, rgba(142,197,255,.10), transparent 42%),
@@ -107,8 +119,8 @@
       place-items: center;
       border: 1px solid var(--line2);
       background:
-        radial-gradient(circle at 50% 28%, rgba(142,197,255,.34), transparent 44%),
-        linear-gradient(180deg, rgba(26,43,78,.92), rgba(10,18,32,.98));
+        radial-gradient(circle at 50% 28%, rgba(239,210,154,.34), transparent 44%),
+        linear-gradient(180deg, rgba(42,34,20,.92), rgba(10,18,32,.98));
       font-weight: 950;
       letter-spacing: .08em;
       flex: 0 0 auto;
@@ -229,21 +241,10 @@
       isolation: isolate;
     }
 
-    .hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 58%, rgba(142,197,255,.12), transparent 38%),
-        radial-gradient(circle at 50% 58%, rgba(255,255,255,.05), transparent 52%);
-      z-index: -1;
-    }
-
     .hero-copy {
       display: grid;
       gap: 14px;
-      max-width: 860px;
+      max-width: 900px;
       position: relative;
       z-index: 2;
     }
@@ -270,8 +271,8 @@
       height: 9px;
       border-radius: 2px;
       transform: rotate(45deg);
-      background: var(--blue);
-      box-shadow: 0 0 18px rgba(142,197,255,.50);
+      background: var(--gold);
+      box-shadow: 0 0 18px rgba(239,210,154,.50);
     }
 
     h1 {
@@ -297,31 +298,32 @@
       font-size: 1rem;
     }
 
-    .earth-panel {
+    .universe-panel {
       border: 1px solid rgba(170,198,255,.22);
       border-radius: 28px;
       padding: clamp(14px, 3vw, 28px);
       background:
-        radial-gradient(circle at 50% 45%, rgba(142,197,255,.10), transparent 38%),
-        radial-gradient(circle at 50% 50%, rgba(0,0,0,.38), transparent 62%),
-        linear-gradient(180deg, rgba(3,8,19,.96), rgba(1,4,12,.99));
+        radial-gradient(circle at 50% 45%, rgba(239,210,154,.10), transparent 26%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.36), transparent 62%),
+        linear-gradient(180deg, rgba(3,8,19,.97), rgba(1,4,12,.99));
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.025),
         0 28px 90px rgba(0,0,0,.42);
       display: grid;
+      gap: 14px;
       place-items: center;
       overflow: hidden;
-      min-height: clamp(420px, 64vw, 720px);
+      min-height: clamp(470px, 70vw, 760px);
       position: relative;
       isolation: isolate;
     }
 
-    .earth-panel::before {
+    .universe-panel::before {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
-      opacity: .45;
+      opacity: .50;
       background:
         radial-gradient(circle at 13% 26%, rgba(255,255,255,.72) 0 1px, transparent 1.5px),
         radial-gradient(circle at 78% 18%, rgba(255,255,255,.56) 0 1px, transparent 1.5px),
@@ -332,136 +334,187 @@
       z-index: 0;
     }
 
-    .earth-shell {
-      position: relative;
-      width: min(86vw, 620px);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
-      z-index: 2;
-    }
-
-    .earth-glow {
-      position: absolute;
-      inset: -6%;
-      border-radius: 50%;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(142,197,255,.16), transparent 48%),
-        radial-gradient(circle at 50% 50%, rgba(142,197,255,.08), transparent 62%);
-      filter: blur(12px);
-      opacity: .9;
-      z-index: 0;
-    }
-
-    .earth {
-      position: relative;
-      width: 100%;
+    .universe-scene {
+      width: var(--scene-size);
       aspect-ratio: 1 / 1;
       border-radius: 50%;
-      overflow: hidden;
+      position: relative;
       isolation: isolate;
-      background:
-        radial-gradient(circle at 34% 30%, rgba(41,143,190,1), rgba(9,34,84,1) 48%, rgba(0,8,26,1) 72%, rgba(0,0,0,1) 100%);
-      box-shadow:
-        inset -62px -24px 88px rgba(0,0,0,.86),
-        inset 38px 26px 88px rgba(255,255,255,.10),
-        inset 0 0 32px rgba(142,197,255,.22),
-        0 0 0 1px rgba(210,232,255,.34),
-        0 0 42px rgba(142,197,255,.30),
-        0 0 118px rgba(142,197,255,.18),
-        0 32px 80px rgba(0,0,0,.55);
-      transform: rotate(-8deg) translateZ(0);
-      opacity: 1;
-      mix-blend-mode: normal;
+      overflow: visible;
       z-index: 2;
+      transition: transform 600ms ease;
     }
 
-    .earth__surface {
+    .universe-scene[data-zoom="earth"] {
+      transform: scale(1.42);
+    }
+
+    .universe-scene[data-zoom="solar"] {
+      transform: scale(1);
+    }
+
+    .universe-scene[data-zoom="system"] {
+      transform: scale(.78);
+    }
+
+    .universe-scene[data-zoom="universe"] {
+      transform: scale(.62);
+    }
+
+    .orbit {
       position: absolute;
-      inset: -2%;
+      left: 50%;
+      top: 50%;
       border-radius: 50%;
-      background-image: var(--earth-texture);
-      background-size: 220% 110%;
-      background-position: 0% 50%;
-      background-repeat: repeat-x;
-      transform: scale(1.06) rotate(8deg);
-      animation: earthDrift 56s linear infinite;
-      filter: saturate(1.10) contrast(1.06) brightness(.95);
-      opacity: 1;
-      mix-blend-mode: normal;
-      z-index: 1;
+      border: 1px solid rgba(170,198,255,.16);
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      opacity: .78;
     }
 
-    .earth__surface::after {
+    .orbit::after {
       content: "";
       position: absolute;
-      inset: 0;
+      inset: -1px;
       border-radius: 50%;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,.08), transparent 18%),
-        linear-gradient(112deg, rgba(255,255,255,.04) 0%, transparent 34%, rgba(0,0,0,.38) 62%, rgba(0,0,0,.82) 100%),
-        radial-gradient(circle at 50% 50%, transparent 38%, rgba(0,0,0,.16) 62%, rgba(0,0,0,.44) 100%);
-      z-index: 2;
+      border: 1px solid rgba(239,210,154,.05);
     }
 
-    .earth__clouds {
+    .body {
       position: absolute;
-      inset: -3%;
       border-radius: 50%;
-      background:
-        radial-gradient(ellipse at 34% 28%, rgba(255,255,255,.15), transparent 22%),
-        radial-gradient(ellipse at 62% 45%, rgba(255,255,255,.08), transparent 26%),
-        radial-gradient(ellipse at 42% 70%, rgba(255,255,255,.06), transparent 30%);
-      mix-blend-mode: screen;
-      filter: blur(2px);
-      opacity: .62;
-      z-index: 3;
-      animation: cloudDrift 78s linear infinite;
+      transform: translate(-50%, -50%);
+      isolation: isolate;
+      overflow: hidden;
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,.16);
+      transition:
+        transform 360ms ease,
+        filter 360ms ease,
+        box-shadow 360ms ease;
     }
 
-    .earth__terminator {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 28% 26%, rgba(255,255,255,.16), transparent 18%),
-        linear-gradient(102deg, rgba(255,255,255,.03) 0%, transparent 26%, rgba(0,0,0,.10) 42%, rgba(0,0,0,.34) 58%, rgba(0,0,0,.72) 78%, rgba(0,0,0,.92) 100%);
-      z-index: 4;
+    .body:hover,
+    .body:focus-visible {
+      transform: translate(-50%, -50%) scale(1.08);
+      filter: brightness(1.14);
+      outline: none;
     }
 
-    .earth__rim {
-      position: absolute;
-      inset: 0;
-      border-radius: 50%;
-      pointer-events: none;
+    .body.sun {
+      left: 50%;
+      top: 50%;
+      width: var(--sun-size, 128px);
+      height: var(--sun-size, 128px);
+      background:
+        radial-gradient(circle at 36% 30%, #fff7c8 0 9%, #ffe784 16%, #ffbd36 38%, #f36b17 66%, #9e260b 100%);
       box-shadow:
-        inset 0 0 0 2px rgba(210,232,255,.22),
-        inset 0 0 18px rgba(255,255,255,.08),
-        inset -42px -12px 70px rgba(0,0,0,.82),
-        inset 26px 14px 42px rgba(142,197,255,.12);
-      z-index: 5;
+        0 0 22px rgba(255,231,132,.88),
+        0 0 66px rgba(255,167,47,.56),
+        0 0 140px rgba(255,110,24,.26);
+      z-index: 8;
+      animation: sunPulse 5.8s ease-in-out infinite;
     }
 
-    .earth__atmosphere {
+    .body.sun::before {
+      content: "";
       position: absolute;
-      inset: -4%;
+      inset: -32%;
       border-radius: 50%;
-      pointer-events: none;
       background:
-        radial-gradient(circle at 42% 34%, transparent 58%, rgba(142,197,255,.10) 68%, rgba(142,197,255,.24) 78%, transparent 84%),
-        radial-gradient(circle at 50% 50%, transparent 66%, rgba(210,232,255,.16) 78%, transparent 88%);
-      filter: blur(.6px);
-      z-index: 6;
+        radial-gradient(circle at 50% 50%, rgba(255,205,82,.35), transparent 56%),
+        radial-gradient(circle at 50% 50%, rgba(255,120,32,.16), transparent 72%);
+      z-index: -1;
+      filter: blur(7px);
     }
 
-    .earth-caption {
+    .body.planet {
+      width: var(--body-size, 32px);
+      height: var(--body-size, 32px);
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.18), transparent 18%),
+        radial-gradient(circle at 34% 30%, var(--body-hi, #8ec5ff), var(--body-mid, #0b4b8c) 48%, var(--body-low, #031236) 72%, rgba(0,0,0,1) 100%);
+      box-shadow:
+        inset -10px -4px 18px rgba(0,0,0,.64),
+        inset 7px 5px 16px rgba(255,255,255,.12),
+        0 0 20px var(--body-glow, rgba(142,197,255,.22));
+      z-index: 10;
+    }
+
+    .body.earth {
+      --body-hi: #9fe7ff;
+      --body-mid: #0d6faa;
+      --body-low: #041738;
+      --body-glow: rgba(142,197,255,.34);
+    }
+
+    .body.mercury {
+      --body-hi: #c9c1aa;
+      --body-mid: #8c826f;
+      --body-low: #2d2a25;
+      --body-glow: rgba(220,210,188,.18);
+    }
+
+    .body.venus {
+      --body-hi: #ffe4a3;
+      --body-mid: #c88435;
+      --body-low: #42210d;
+      --body-glow: rgba(239,210,154,.22);
+    }
+
+    .body.mars {
+      --body-hi: #ffb083;
+      --body-mid: #b94b28;
+      --body-low: #36120d;
+      --body-glow: rgba(255,98,98,.20);
+    }
+
+    .body.jupiter {
+      --body-hi: #fff0c8;
+      --body-mid: #b88758;
+      --body-low: #422819;
+      --body-glow: rgba(239,210,154,.24);
+    }
+
+    .body.saturn {
+      --body-hi: #fff0bd;
+      --body-mid: #b99b61;
+      --body-low: #3c2f1a;
+      --body-glow: rgba(239,210,154,.22);
+    }
+
+    .body.uranus {
+      --body-hi: #c8fbff;
+      --body-mid: #4aa1ad;
+      --body-low: #103848;
+      --body-glow: rgba(142,197,255,.22);
+    }
+
+    .body.neptune {
+      --body-hi: #9dc4ff;
+      --body-mid: #3553b5;
+      --body-low: #101a4c;
+      --body-glow: rgba(142,197,255,.22);
+    }
+
+    .body-label {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      color: rgba(232,240,255,.92);
+      font-size: .70rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      pointer-events: none;
+      text-shadow: 0 1px 0 rgba(0,0,0,.8), 0 0 10px rgba(0,0,0,.8);
+      z-index: 20;
+      white-space: nowrap;
+    }
+
+    .scene-caption {
       position: relative;
       z-index: 3;
-      width: min(700px, 92%);
-      margin-top: 16px;
+      width: min(760px, 94%);
       text-align: center;
       color: #dce8ff;
       font-weight: 850;
@@ -469,6 +522,37 @@
       letter-spacing: .10em;
       text-transform: uppercase;
       opacity: .86;
+    }
+
+    .control-row {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      width: min(760px, 94%);
+    }
+
+    .control-row button {
+      appearance: none;
+      border: 1px solid rgba(170,198,255,.18);
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: #dce8ff;
+      background: rgba(255,255,255,.035);
+      font-weight: 900;
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    .control-row button[aria-pressed="true"] {
+      color: #fff8ea;
+      border-color: rgba(239,210,154,.46);
+      background:
+        radial-gradient(circle at 50% 120%, rgba(239,210,154,.22), transparent 62%),
+        rgba(239,210,154,.08);
     }
 
     .panel {
@@ -508,6 +592,17 @@
       line-height: 1.55;
     }
 
+    .route-card small,
+    .route-card strong {
+      position: relative;
+      z-index: 3;
+      max-width: 76%;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+      text-wrap: balance;
+    }
+
     .route-card small {
       display: block;
       color: #91a6cf;
@@ -515,12 +610,6 @@
       letter-spacing: .12em;
       font-size: .54rem;
       font-weight: 850;
-      position: relative;
-      z-index: 3;
-      max-width: 76%;
-      margin: auto;
-      text-align: center;
-      text-wrap: balance;
     }
 
     .route-card strong {
@@ -529,13 +618,6 @@
       font-size: .72rem;
       line-height: 1.06;
       margin-top: 4px;
-      position: relative;
-      z-index: 3;
-      max-width: 76%;
-      margin-left: auto;
-      margin-right: auto;
-      text-align: center;
-      text-wrap: balance;
     }
 
     .status-strip {
@@ -565,14 +647,16 @@
       color: #d6e2ff;
     }
 
-    @keyframes earthDrift {
-      0% { background-position: 0% 50%; }
-      100% { background-position: -220% 50%; }
-    }
+    @keyframes sunPulse {
+      0%, 100% {
+        filter: brightness(1);
+        transform: translate(-50%, -50%) scale(1);
+      }
 
-    @keyframes cloudDrift {
-      0% { transform: translateX(0) rotate(0deg); }
-      100% { transform: translateX(-4%) rotate(360deg); }
+      50% {
+        filter: brightness(1.12);
+        transform: translate(-50%, -50%) scale(1.03);
+      }
     }
 
     @keyframes diamondFloat {
@@ -642,16 +726,12 @@
         font-size: .55rem;
       }
 
-      .earth-panel {
-        min-height: 390px;
+      .universe-panel {
+        min-height: 420px;
         padding: 14px 8px;
       }
 
-      .earth-shell {
-        width: min(92vw, 520px);
-      }
-
-      .earth-caption {
+      .scene-caption {
         font-size: .72rem;
         letter-spacing: .08em;
       }
@@ -683,7 +763,7 @@
         <span class="mark">DG</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Gauges · Opaque Space Earth</strong>
+          <strong class="title">Gauges · Universe Runtime</strong>
         </span>
       </a>
 
@@ -701,51 +781,50 @@
 
     <section class="hero">
       <div class="hero-copy">
-        <span class="pill">Outer-space Earth view</span>
+        <span class="pill">Physics-derived universe view</span>
         <h1>Gauges</h1>
-        <h2>The Earth is opaque.</h2>
+        <h2>The relationships come from physics.</h2>
         <p>
-          Generation 1 keeps the page readable and compressed. The Earth view is not a classroom globe; it is an opaque outer-space instrument surface.
+          The website does not pre-design the universe. Physical constants define the bodies and relationships; the page only projects them into a readable inspection surface.
         </p>
       </div>
 
-      <div class="earth-panel" aria-label="Opaque outer-space Earth gauge view">
-        <div class="earth-shell">
-          <div class="earth-glow" aria-hidden="true"></div>
+      <div class="universe-panel" aria-label="Physics-derived Sun-centered universe gauge">
+        <div class="universe-scene" id="universeScene" data-zoom="solar" aria-label="Sun-centered solar projection"></div>
 
-          <div class="earth" role="img" aria-label="Opaque outer-space Earth view with atmosphere, shadow limb, and no reverse-side bleed">
-            <div class="earth__surface"></div>
-            <div class="earth__clouds" aria-hidden="true"></div>
-            <div class="earth__terminator" aria-hidden="true"></div>
-            <div class="earth__rim" aria-hidden="true"></div>
-            <div class="earth__atmosphere" aria-hidden="true"></div>
-          </div>
+        <div class="scene-caption" id="sceneCaption">
+          Physics-derived projection · Sun center · Earth orbit · compressed scale
         </div>
 
-        <div class="earth-caption">Earth standard · outer-space view · live gauge</div>
+        <div class="control-row" aria-label="Universe zoom controls">
+          <button type="button" data-zoom="earth" aria-pressed="false">Earth</button>
+          <button type="button" data-zoom="solar" aria-pressed="true">Solar</button>
+          <button type="button" data-zoom="system" aria-pressed="false">System</button>
+          <button type="button" data-zoom="universe" aria-pressed="false">Universe</button>
+        </div>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-head">
         <span class="pill">Generation 1 baseline</span>
-        <h2>Context stays flat. The planet stays real.</h2>
+        <h2>Context stays flat. Scale becomes navigable.</h2>
       </div>
 
       <div class="label-grid">
         <div class="label-card">
-          <strong>Baseline</strong>
-          <span>Minimum animation, maximum context, compact labels, and old-school website clarity.</span>
+          <strong>Reality layer</strong>
+          <span>Bodies have physical radius, orbital distance, orbital period, rotation period, and axial properties where relevant.</span>
         </div>
 
         <div class="label-card">
-          <strong>Object class</strong>
-          <span>The gauge surface is an outer-space Earth view, not a classroom globe and not a transparent shell.</span>
+          <strong>Projection layer</strong>
+          <span>Real distances are too large for direct page rendering, so distances are compressed while physical order and relation are preserved.</span>
         </div>
 
         <div class="label-card">
-          <strong>Correction</strong>
-          <span>No grid, no meridian stand, no axis line, no text on the sphere, and no reverse-side show-through.</span>
+          <strong>Runtime rule</strong>
+          <span>Physics determines relationships. The website determines projection. No decorative universe pre-design is required.</span>
         </div>
       </div>
     </section>
@@ -771,31 +850,27 @@
     <section class="panel">
       <div class="panel-head">
         <span class="pill">Status receipt</span>
-        <h2>Opaque Earth correction is active.</h2>
+        <h2>Gauges universe runtime is active.</h2>
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_G1_OPAQUE_SPACE_EARTH_STATUS=ACTIVE
+        <code>GAUGES_G1_UNIVERSE_RUNTIME_STATUS=ACTIVE
 PAGE=/gauges/index.html
 BASELINE=THE_WORLD_IS_FLAT_GENERATION_1
-PAGE_CONTEXT=FLAT_READABLE_COMPRESSED
-REQUESTED_OBJECT=OPAQUE_OUTER_SPACE_EARTH_VIEW
-REMOVED_OBJECT_CLASS=CLASSROOM_GLOBE
-GRID_OVERLAY=REMOVED
-LATITUDE_LONGITUDE_GRID=REMOVED
-MERIDIAN_STAND=REMOVED
-AXIS_LINE=REMOVED
-TEXT_ON_PLANET=REMOVED
-REVERSE_SIDE_BLEED=REMOVED
-EARTH_OBJECT=SPHERICAL_DIMENSIONAL_OPAQUE_SPACE_VIEW
-CURVATURE_CUES=RIM_FALLOFF,LIGHTING,ATMOSPHERE,TERMINATOR,CLOUD_LAYER
-SPIN_DIRECTION=SUBTLE_SURFACE_DRIFT
-NEXT_ACTION=REPLACE_LIVE_GAUGES_INDEX_WITH_THIS_FILE</code>
+MODEL=PHYSICS_DERIVED
+CENTER_BODY=SUN
+EARTH_ROLE=ORBITING_BODY
+DISTANCE_MODEL=COMPRESSED_SCALE_PROJECTION
+RADIUS_MODEL=VISUALLY_PROTECTED_RADIUS
+ZOOM_STATES=EARTH,SOLAR,SYSTEM,UNIVERSE
+GRAPHIC_BOX=FORBIDDEN
+IMAGE_GENERATION=FORBIDDEN
+RULE=PHYSICS_DETERMINES_RELATIONSHIPS_WEBSITE_DETERMINES_PROJECTION</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · Opaque Space Earth</span>
+      <span>Diamond Gate Bridge · Gauges · Physics Universe Runtime</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·
@@ -804,5 +879,182 @@ NEXT_ACTION=REPLACE_LIVE_GAUGES_INDEX_WITH_THIS_FILE</code>
       </span>
     </footer>
   </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      var AU_KM = 149597870.7;
+
+      var BODIES = [
+        { key: "sun", name: "Sun", radiusKm: 696340, distanceAU: 0, orbitalDays: 0, className: "sun" },
+        { key: "mercury", name: "Mercury", radiusKm: 2439.7, distanceAU: 0.387, orbitalDays: 87.969, className: "mercury" },
+        { key: "venus", name: "Venus", radiusKm: 6051.8, distanceAU: 0.723, orbitalDays: 224.701, className: "venus" },
+        { key: "earth", name: "Earth", radiusKm: 6371, distanceAU: 1, orbitalDays: 365.256, className: "earth" },
+        { key: "mars", name: "Mars", radiusKm: 3389.5, distanceAU: 1.524, orbitalDays: 686.98, className: "mars" },
+        { key: "jupiter", name: "Jupiter", radiusKm: 69911, distanceAU: 5.203, orbitalDays: 4332.59, className: "jupiter" },
+        { key: "saturn", name: "Saturn", radiusKm: 58232, distanceAU: 9.537, orbitalDays: 10759.22, className: "saturn" },
+        { key: "uranus", name: "Uranus", radiusKm: 25362, distanceAU: 19.191, orbitalDays: 30688.5, className: "uranus" },
+        { key: "neptune", name: "Neptune", radiusKm: 24622, distanceAU: 30.07, orbitalDays: 60182, className: "neptune" }
+      ];
+
+      var ZOOM = {
+        earth: { orbitMin: 96, orbitMax: 300, sunSize: 76, label: "Earth emphasis · compressed solar projection" },
+        solar: { orbitMin: 72, orbitMax: 330, sunSize: 116, label: "Solar view · Sun center · Earth orbit" },
+        system: { orbitMin: 50, orbitMax: 346, sunSize: 92, label: "System view · compressed planetary order" },
+        universe: { orbitMin: 34, orbitMax: 356, sunSize: 64, label: "Universe view · larger field · same physics relation" }
+      };
+
+      var scene = document.getElementById("universeScene");
+      var caption = document.getElementById("sceneCaption");
+      var zoomButtons = Array.prototype.slice.call(document.querySelectorAll("[data-zoom]"));
+
+      function compressedDistanceAU(au, zoom) {
+        if (au === 0) return 0;
+        var min = ZOOM[zoom].orbitMin;
+        var max = ZOOM[zoom].orbitMax;
+        var maxAU = 30.07;
+        var t = Math.log(1 + au) / Math.log(1 + maxAU);
+        return min + (max - min) * t;
+      }
+
+      function protectedRadiusPx(body) {
+        if (body.key === "sun") return ZOOM[getZoom()].sunSize;
+
+        var min = 10;
+        var max = 48;
+        var maxRadius = 69911;
+        var t = Math.sqrt(body.radiusKm / maxRadius);
+        return Math.max(min, Math.min(max, min + (max - min) * t));
+      }
+
+      function orbitalAngle(body) {
+        if (!body.orbitalDays) return 0;
+
+        var nowDays = Date.now() / 86400000;
+        var base = (nowDays % body.orbitalDays) / body.orbitalDays;
+        var offset = {
+          mercury: .02,
+          venus: .18,
+          earth: .37,
+          mars: .53,
+          jupiter: .68,
+          saturn: .75,
+          uranus: .84,
+          neptune: .92
+        }[body.key] || 0;
+
+        return (base + offset) * Math.PI * 2;
+      }
+
+      function getZoom() {
+        return scene.getAttribute("data-zoom") || "solar";
+      }
+
+      function clearScene() {
+        while (scene.firstChild) {
+          scene.removeChild(scene.firstChild);
+        }
+      }
+
+      function addOrbit(body, distance) {
+        if (body.key === "sun") return;
+
+        var orbit = document.createElement("div");
+        orbit.className = "orbit";
+        orbit.style.width = (distance * 2) + "px";
+        orbit.style.height = (distance * 2) + "px";
+        orbit.setAttribute("aria-hidden", "true");
+        scene.appendChild(orbit);
+      }
+
+      function addBody(body, distance, zoom) {
+        var el = document.createElement("button");
+        el.type = "button";
+        el.className = "body " + (body.key === "sun" ? "sun" : "planet " + body.className);
+        el.setAttribute("aria-label", body.name + " physical body");
+
+        var size = protectedRadiusPx(body);
+        var left = 50;
+        var top = 50;
+
+        if (body.key !== "sun") {
+          var angle = orbitalAngle(body);
+          var x = Math.cos(angle) * distance;
+          var y = Math.sin(angle) * distance * .72;
+          left = "calc(50% + " + x.toFixed(2) + "px)";
+          top = "calc(50% + " + y.toFixed(2) + "px)";
+          el.style.setProperty("--body-size", size + "px");
+        } else {
+          el.style.setProperty("--sun-size", ZOOM[zoom].sunSize + "px");
+        }
+
+        el.style.left = left;
+        el.style.top = top;
+
+        el.addEventListener("click", function () {
+          if (body.key === "earth") setZoom("earth");
+          if (body.key === "sun") setZoom("solar");
+        });
+
+        scene.appendChild(el);
+
+        if (body.key !== "sun") {
+          var label = document.createElement("div");
+          label.className = "body-label";
+          label.textContent = body.name;
+          label.style.left = left;
+          label.style.top = "calc(" + top + " + " + Math.max(18, size * .9) + "px)";
+          scene.appendChild(label);
+        }
+      }
+
+      function renderScene() {
+        var zoom = getZoom();
+
+        clearScene();
+
+        BODIES.forEach(function (body) {
+          var distance = compressedDistanceAU(body.distanceAU, zoom);
+          addOrbit(body, distance);
+        });
+
+        BODIES.forEach(function (body) {
+          var distance = compressedDistanceAU(body.distanceAU, zoom);
+          addBody(body, distance, zoom);
+        });
+
+        caption.textContent = ZOOM[zoom].label + " · physics-derived / display-compressed";
+      }
+
+      function setZoom(zoom) {
+        if (!ZOOM[zoom]) zoom = "solar";
+
+        scene.setAttribute("data-zoom", zoom);
+
+        zoomButtons.forEach(function (button) {
+          button.setAttribute("aria-pressed", button.getAttribute("data-zoom") === zoom ? "true" : "false");
+        });
+
+        renderScene();
+      }
+
+      zoomButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          setZoom(button.getAttribute("data-zoom"));
+        });
+      });
+
+      renderScene();
+
+      window.DGBGaugesUniverseRuntime = Object.freeze({
+        version: "GAUGES_G1_PHYSICS_UNIVERSE_RUNTIME_v1",
+        auKm: AU_KM,
+        bodies: BODIES.slice(),
+        zoomStates: Object.assign({}, ZOOM),
+        rule: "Physics determines relationships. Website determines projection."
+      });
+    })();
+  </script>
 </body>
 </html>

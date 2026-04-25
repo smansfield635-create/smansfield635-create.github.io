@@ -1,38 +1,27 @@
 <!DOCTYPE html>
-<html lang="en" data-products-generation="second-generation-renewal">
+<html lang="en" data-products-generation="world-is-flat-generation-1-lock">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge Products Chamber: a self-contained Generation 2 product surface with V9 compact rotating diamond controls and readable product context."
-  />
+  <meta name="description" content="Diamond Gate Bridge Products: Generation 1 Lock, Russian-doll label compression, product chamber context on request." />
 
   <style>
     :root {
-      --bg:#020610;
       --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
+      --panel2:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
-      --line-strong:rgba(147,239,189,.34);
+      --line2:rgba(147,239,189,.34);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
-      --blue:#8ec5ff;
       --green:#93efbd;
-      --purple:#c89cff;
-      --rose:#ff9ab8;
+      --blue:#8ec5ff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
-      --diamond-spin:18s;
-      --diamond-float:7s;
-      --diamond-breathe:5.8s;
     }
 
-    * {
-      box-sizing:border-box;
-    }
+    * { box-sizing:border-box; }
 
     html,
     body {
@@ -53,7 +42,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.22;
+      opacity:.20;
       background:
         linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
         linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
@@ -61,10 +50,7 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
+    a { color:inherit; text-decoration:none; }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -77,15 +63,13 @@
     .topbar,
     .hero,
     .panel,
-    .read-card,
+    .label-card,
     .route-card,
-    .product-card,
-    .signal-card,
     .status-strip {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
+        linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
     }
 
@@ -110,7 +94,7 @@
       border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line-strong);
+      border:1px solid var(--line2);
       background:
         radial-gradient(circle at 50% 28%,rgba(147,239,189,.34),transparent 44%),
         linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
@@ -121,10 +105,7 @@
       box-shadow:0 0 22px rgba(147,239,189,.14);
     }
 
-    .brand-text {
-      display:grid;
-      gap:3px;
-    }
+    .brand-text { display:grid; gap:3px; }
 
     .kicker {
       display:block;
@@ -147,9 +128,7 @@
 
     .nav,
     .route-grid,
-    .read-grid,
-    .signal-grid,
-    .product-grid {
+    .label-grid {
       display:grid;
       gap:10px;
     }
@@ -182,7 +161,7 @@
 
     .route-card {
       width:min(100%,150px);
-      font-size:.80rem;
+      font-size:.78rem;
     }
 
     .nav a::before,
@@ -202,9 +181,7 @@
         inset 0 0 26px rgba(255,255,255,.035);
       z-index:-1;
       transform-origin:50% 50%;
-      animation:
-        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
-        diamondPulse var(--diamond-breathe) ease-in-out infinite;
+      animation:diamondFloat 7s ease-in-out infinite, diamondPulse 5.8s ease-in-out infinite;
     }
 
     .nav a::after,
@@ -220,23 +197,20 @@
       opacity:.72;
       z-index:-1;
       transform-origin:50% 50%;
-      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
+      animation:innerSpin 18s linear infinite;
     }
 
-    .nav a.featured {
-      color:#fff8ea;
-    }
+    .nav a.featured,
+    .route-card.featured { color:#fff8ea; }
 
-    .nav a.featured::before {
-      border-color:rgba(239,210,154,.44);
+    .nav a.featured::before,
+    .route-card.featured::before {
+      border-color:rgba(239,210,154,.46);
       background:
         radial-gradient(circle at 50% 50%,rgba(239,210,154,.34),transparent 34%),
         radial-gradient(circle at 50% 72%,rgba(147,239,189,.12),transparent 34%),
-        linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
         linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
-      box-shadow:
-        0 0 38px rgba(239,210,154,.24),
-        inset 0 0 30px rgba(255,255,255,.04);
     }
 
     .nav a:hover,
@@ -252,7 +226,7 @@
       border-radius:34px;
       padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(390px,52vw,620px);
+      min-height:clamp(360px,44vw,540px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -277,22 +251,6 @@
       z-index:-3;
     }
 
-    .hero::after {
-      content:"";
-      position:absolute;
-      width:min(900px,98vw);
-      height:min(430px,52vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(-10deg);
-      border:1px solid rgba(147,239,189,.24);
-      border-radius:50%;
-      z-index:-2;
-      box-shadow:
-        0 0 38px rgba(147,239,189,.08),
-        inset 0 0 38px rgba(142,197,255,.06);
-    }
-
     .product-chamber {
       position:absolute;
       right:clamp(20px,6vw,90px);
@@ -309,7 +267,7 @@
       box-shadow:
         inset 0 0 44px rgba(147,239,189,.07),
         0 0 74px rgba(142,197,255,.10);
-      opacity:.82;
+      opacity:.70;
       z-index:-1;
       animation:slowTurn 34s linear infinite;
     }
@@ -338,7 +296,7 @@
     .hero-copy {
       display:grid;
       gap:14px;
-      max-width:760px;
+      max-width:780px;
       position:relative;
       z-index:2;
     }
@@ -392,12 +350,6 @@
       font-size:1rem;
     }
 
-    .hero p {
-      max-width:66ch;
-      margin-top:6px;
-      font-size:clamp(1.04rem,1.9vw,1.22rem);
-    }
-
     .panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
@@ -411,44 +363,51 @@
       gap:8px;
     }
 
-    .read-card,
-    .signal-card,
-    .product-card {
-      position:relative;
-      isolation:isolate;
+    .label-card {
       border-radius:18px;
-      padding:14px;
-      color:inherit;
       overflow:hidden;
     }
 
-    .product-card {
-      min-height:170px;
+    details.label-card {
+      padding:0;
     }
 
-    .product-card::before {
-      content:"";
+    summary {
+      cursor:pointer;
+      list-style:none;
+      min-height:74px;
+      display:grid;
+      align-content:center;
+      gap:5px;
+      padding:14px;
+      position:relative;
+      color:#fff;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    summary::-webkit-details-marker { display:none; }
+
+    summary::after {
+      content:"+";
       position:absolute;
-      right:-40px;
-      top:-40px;
-      width:110px;
-      height:110px;
-      transform:rotate(45deg);
-      border:1px solid rgba(147,239,189,.16);
-      border-radius:26px;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.10),transparent 45%),
-        rgba(255,255,255,.02);
-      z-index:-1;
-      animation:smallChamberTurn 28s linear infinite;
+      right:14px;
+      top:50%;
+      transform:translateY(-50%);
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      border:1px solid rgba(147,239,189,.28);
+      display:grid;
+      place-items:center;
+      color:var(--green);
+      font-weight:900;
     }
 
-    .read-card small,
-    .signal-card small,
-    .product-card small,
-    .route-card small {
+    details[open] summary::after { content:"–"; }
+
+    summary small {
       display:block;
-      margin-bottom:6px;
       color:#91a6cf;
       text-transform:uppercase;
       letter-spacing:.12em;
@@ -456,58 +415,14 @@
       font-weight:850;
     }
 
-    .read-card strong,
-    .signal-card strong,
-    .product-card strong,
-    .route-card strong {
-      display:block;
-      color:#fff;
-      font-size:1rem;
-      line-height:1.1;
-    }
-
-    .read-card p,
-    .signal-card p,
-    .product-card p {
-      margin-top:8px;
+    .label-body {
+      padding:0 14px 14px;
       color:var(--muted);
-      font-size:.88rem;
-      line-height:1.42;
+      font-size:.92rem;
+      line-height:1.48;
     }
 
-    .route-card small,
-    .route-card strong {
-      position:relative;
-      z-index:3;
-      max-width:70%;
-      margin-left:auto;
-      margin-right:auto;
-      text-align:center;
-      text-wrap:balance;
-    }
-
-    .route-card small {
-      font-size:.48rem;
-    }
-
-    .route-card strong {
-      font-size:.80rem;
-    }
-
-    .product-tag {
-      display:inline-flex;
-      width:fit-content;
-      margin-top:12px;
-      padding:6px 9px;
-      border:1px solid rgba(147,239,189,.20);
-      border-radius:999px;
-      background:rgba(147,239,189,.055);
-      color:#c9ffdf;
-      font-size:.62rem;
-      font-weight:900;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-    }
+    .label-body p + p { margin-top:8px; }
 
     .status-strip {
       display:grid;
@@ -535,68 +450,26 @@
       font-size:.86rem;
     }
 
-    .footer a {
-      color:#d6e2ff;
-    }
+    .footer a { color:#d6e2ff; }
 
-    @keyframes diamondBodyWobble {
-      0%,100% {
-        transform:translateY(0) rotate(0deg) scale(1);
-      }
-
-      25% {
-        transform:translateY(-2px) rotate(1.4deg) scale(1.015);
-      }
-
-      50% {
-        transform:translateY(-4px) rotate(0deg) scale(1.025);
-      }
-
-      75% {
-        transform:translateY(-2px) rotate(-1.4deg) scale(1.015);
-      }
+    @keyframes diamondFloat {
+      0%,100% { transform:translateY(0) rotate(0deg) scale(1); }
+      50% { transform:translateY(-4px) rotate(0deg) scale(1.025); }
     }
 
     @keyframes diamondPulse {
-      0%,100% {
-        opacity:.82;
-        filter:brightness(1);
-      }
-
-      50% {
-        opacity:1;
-        filter:brightness(1.18);
-      }
+      0%,100% { opacity:.82; filter:brightness(1); }
+      50% { opacity:1; filter:brightness(1.18); }
     }
 
-    @keyframes innerDiamondSpin {
-      0% {
-        transform:rotate(0deg) scale(.96);
-      }
-
-      100% {
-        transform:rotate(360deg) scale(.96);
-      }
+    @keyframes innerSpin {
+      0% { transform:rotate(0deg) scale(.96); }
+      100% { transform:rotate(360deg) scale(.96); }
     }
 
     @keyframes slowTurn {
-      0% {
-        transform:translateY(-50%) rotate(45deg);
-      }
-
-      100% {
-        transform:translateY(-50%) rotate(405deg);
-      }
-    }
-
-    @keyframes smallChamberTurn {
-      0% {
-        transform:rotate(45deg);
-      }
-
-      100% {
-        transform:rotate(405deg);
-      }
+      0% { transform:translateY(-50%) rotate(45deg); }
+      100% { transform:translateY(-50%) rotate(405deg); }
     }
 
     @media (min-width:820px) {
@@ -610,12 +483,7 @@
         justify-content:end;
       }
 
-      .read-grid,
-      .signal-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-
-      .product-grid {
+      .label-grid {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
@@ -636,13 +504,8 @@
         border-radius:24px;
       }
 
-      .topbar {
-        padding:12px;
-      }
-
-      .brand {
-        gap:10px;
-      }
+      .topbar { padding:12px; }
+      .brand { gap:10px; }
 
       .mark {
         width:44px;
@@ -661,7 +524,7 @@
       }
 
       .hero {
-        min-height:420px;
+        min-height:390px;
         padding:22px;
       }
 
@@ -672,7 +535,7 @@
         width:118px;
         height:118px;
         transform:rotate(45deg);
-        opacity:.42;
+        opacity:.36;
       }
 
       .route-grid {
@@ -683,28 +546,8 @@
         width:min(100%,132px);
       }
 
-      .route-card small {
-        font-size:.42rem;
-      }
-
-      .route-card strong {
-        font-size:.70rem;
-      }
-
-      .product-card {
-        min-height:138px;
-      }
-    }
-
-    @media (max-width:360px) {
-      .nav a {
-        width:min(100%,62px);
-        font-size:.48rem;
-      }
-
-      .route-card {
-        width:min(100%,122px);
-      }
+      .route-card small { font-size:.42rem; }
+      .route-card strong { font-size:.70rem; }
     }
 
     @media (prefers-reduced-motion:reduce) {
@@ -720,18 +563,13 @@
 </head>
 
 <body>
-  <main
-    class="page"
-    data-generation="second-generation-renewal"
-    data-page="products"
-    data-surface="generation-2-self-contained-products-chamber"
-  >
+  <main class="page" data-page="products" data-baseline="world-is-flat-generation-1-lock" data-pass="russian-doll-label-compression">
     <header class="topbar">
       <a class="brand" href="/products/" aria-label="Diamond Gate Bridge Products">
         <span class="mark" aria-hidden="true">PR</span>
         <span class="brand-text">
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Products Chamber · V9</strong>
+          <strong class="title">Products · Generation 1</strong>
         </span>
       </a>
 
@@ -741,7 +579,7 @@
         <a href="/prelude/">Prelude</a>
         <a href="/explore/">Explore</a>
         <a href="/frontier/">Frontier</a>
-        <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
+        <a class="featured" href="/big-laugh/upper-room/">Show</a>
         <a href="/gauges/">Gauges</a>
         <a href="/about/">About</a>
       </nav>
@@ -753,194 +591,123 @@
       <div class="hero-copy">
         <span class="pill">Product chamber</span>
         <h1 id="productsTitle">Products</h1>
-        <h2>The chamber where ideas become usable surfaces.</h2>
-        <p>
-          Products is the public chamber for packaged work. It presents usable
-          product paths without forcing the visitor to understand the full internal
-          structure first.
-        </p>
+        <h2>Ideas become usable surfaces here.</h2>
+        <p>Choose a product label. The chamber opens only as far as requested.</p>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="contextTitle">
+    <section class="panel" aria-labelledby="labelsTitle">
       <div class="panel-head">
-        <span class="pill">Generation 2 baseline</span>
-        <h2 id="contextTitle">Products should clarify what can be used.</h2>
-        <p>
-          V9 keeps the Products Chamber self-contained, compact, and readable. The
-          chamber now separates active product categories from general route navigation.
-        </p>
+        <span class="pill">Russian-doll labels</span>
+        <h2 id="labelsTitle">Products stay categorized until touched.</h2>
       </div>
 
-      <div class="read-grid">
-        <article class="read-card">
-          <small>Package</small>
-          <strong>Make the work usable.</strong>
-          <p>Products translates deeper system work into public-facing surfaces.</p>
-        </article>
+      <div class="label-grid">
+        <details class="label-card">
+          <summary><small>Package</small>Make the work usable.</summary>
+          <div class="label-body">
+            <p>Products translates deeper system work into public-facing surfaces.</p>
+            <p>The chamber does not need to explain the whole machine before showing what can be used.</p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Separate</small>
-          <strong>Keep categories clean.</strong>
-          <p>The chamber avoids crowding every possible idea into one surface.</p>
-        </article>
+        <details class="label-card">
+          <summary><small>Categories</small>Keep product paths clean.</summary>
+          <div class="label-body">
+            <p>Each category should remain clear enough to understand at a glance.</p>
+            <p>More context opens only when the label is selected.</p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Route</small>
-          <strong>Send visitors forward.</strong>
-          <p>Each product path should lead to a clear next page or next action.</p>
-        </article>
-      </div>
-    </section>
+        <details class="label-card">
+          <summary><small>Human path</small>Nine Summits.</summary>
+          <div class="label-body">
+            <p>A human-facing path for truth, growth, discipline, and community orientation.</p>
+          </div>
+        </details>
 
-    <section class="panel" aria-labelledby="activeProductsTitle">
-      <div class="panel-head">
-        <span class="pill">Active product surfaces</span>
-        <h2 id="activeProductsTitle">Start with the clearest chambers.</h2>
-      </div>
+        <details class="label-card">
+          <summary><small>Show surface</small>The Upper Room.</summary>
+          <div class="label-body">
+            <p>The public performance surface for upcoming show movement and comedy-facing traffic.</p>
+          </div>
+        </details>
 
-      <div class="product-grid">
-        <article class="product-card">
-          <small>Public framework</small>
-          <strong>Nine Summits</strong>
-          <p>A human-facing path for truth, growth, discipline, and community orientation.</p>
-          <span class="product-tag">Human path</span>
-        </article>
+        <details class="label-card">
+          <summary><small>Instrument</small>Gauges.</summary>
+          <div class="label-body">
+            <p>The inspection room for visible route status, baseline state, and public diagnostics.</p>
+          </div>
+        </details>
 
-        <article class="product-card">
-          <small>Live performance</small>
-          <strong>The Upper Room</strong>
-          <p>The upcoming show surface for public comedy, performance, and event movement.</p>
-          <span class="product-tag">Upcoming show</span>
-        </article>
+        <details class="label-card">
+          <summary><small>Rule layer</small>Laws.</summary>
+          <div class="label-body">
+            <p>The law chamber holds visible rules, boundaries, and stability standards for the public site.</p>
+          </div>
+        </details>
 
-        <article class="product-card">
-          <small>Instrument layer</small>
-          <strong>Gauges</strong>
-          <p>The public inspection room for routes, baseline status, and visible system state.</p>
-          <span class="product-tag">Inspection</span>
-        </article>
+        <details class="label-card">
+          <summary><small>World surface</small>Metaverse.</summary>
+          <div class="label-body">
+            <p>The broader world-building surface for the larger Diamond Gate Bridge environment.</p>
+          </div>
+        </details>
 
-        <article class="product-card">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
-          <p>The broader world-building surface for the larger Diamond Gate Bridge environment.</p>
-          <span class="product-tag">World layer</span>
-        </article>
+        <details class="label-card">
+          <summary><small>Edge route</small>Frontier.</summary>
+          <div class="label-body">
+            <p>The active edge where new public directions become visible.</p>
+          </div>
+        </details>
 
-        <article class="product-card">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-          <p>The public rule layer for structural principles and operating standards.</p>
-          <span class="product-tag">Rule surface</span>
-        </article>
-
-        <article class="product-card">
-          <small>Edge route</small>
-          <strong>Frontier</strong>
-          <p>The active edge surface where new public directions become visible.</p>
-          <span class="product-tag">Active edge</span>
-        </article>
+        <details class="label-card">
+          <summary><small>Baseline</small>World is Flat.</summary>
+          <div class="label-body">
+            <p>Generation 1 means products are visible as labels first, with deeper meaning folded underneath.</p>
+          </div>
+        </details>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Chamber routes</span>
-        <h2 id="routesTitle">Move from product view to the right surface.</h2>
+        <span class="pill">Route labels</span>
+        <h2 id="routesTitle">Move from the product chamber.</h2>
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/door/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/explore/">
-          <small>Route map</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card" href="/frontier/">
-          <small>Edge</small>
-          <strong>Frontier</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Upcoming show</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-
-        <a class="route-card" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="signalsTitle">
-      <div class="panel-head">
-        <span class="pill">Products read</span>
-        <h2 id="signalsTitle">What this page confirms.</h2>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card">
-          <small>Density</small>
-          <strong>Controls are compact.</strong>
-          <p>The old oversized bubbles are replaced with rotating diamond controls.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Function</small>
-          <strong>Products is a chamber.</strong>
-          <p>The page now has its own product-organizing role instead of acting as a generic route dump.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Baseline</small>
-          <strong>Products V9 is self-contained.</strong>
-          <p>The page does not depend on shared asset loading to render its core shape and motion.</p>
-        </article>
+        <a class="route-card" href="/door/"><small>Access</small><strong>Door</strong></a>
+        <a class="route-card" href="/home/"><small>Interior</small><strong>Home</strong></a>
+        <a class="route-card" href="/explore/"><small>Route map</small><strong>Explore</strong></a>
+        <a class="route-card" href="/frontier/"><small>Edge</small><strong>Frontier</strong></a>
+        <a class="route-card featured" href="/big-laugh/upper-room/"><small>Show</small><strong>Upper Room</strong></a>
+        <a class="route-card" href="/gauges/"><small>Inspection</small><strong>Gauges</strong></a>
+        <a class="route-card" href="/laws/"><small>Rule layer</small><strong>Laws</strong></a>
+        <a class="route-card" href="/about/"><small>Identity</small><strong>About</strong></a>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="statusTitle">
       <div class="panel-head">
-        <span class="pill">Status receipt</span>
-        <h2 id="statusTitle">Generation 2 Products baseline is active.</h2>
+        <span class="pill">Status label</span>
+        <h2 id="statusTitle">Generation 1 Products compression active.</h2>
       </div>
 
       <div class="status-strip">
-        <code>PRODUCTS_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
+        <code>PRODUCTS_GENERATION_1_LABEL_COMPRESSION=ACTIVE
 PAGE=/products/index.html
-NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
+BASELINE=THE_WORLD_IS_FLAT
+VISIBLE_DEFAULT=TITLE_CORE_LINE_LABELS
+CONTEXT=HIDDEN_UNTIL_LABEL_CLICK
+METHOD=DETAILS_SUMMARY_RUSSIAN_DOLL
 PRODUCT_CHAMBER_ROLE=ACTIVE
-ACTIVE_PRODUCT_SURFACES=VISIBLE
-CONTEXT=READABLE_FIRST
-LEGACY_LONG_BUBBLES=REMOVED
-ASSET_DEPENDENCY=REMOVED_FOR_PRODUCTS_PAGE
-NEXT_ACTION=USE_THIS_AS_THE_STABLE_PRODUCTS_BASELINE</code>
+LEGACY_OVEREXPRESSION=REDUCED</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Products Chamber · Self-Contained Generation 2 Baseline</span>
+      <span>Diamond Gate Bridge · Products · World is Flat Generation 1</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

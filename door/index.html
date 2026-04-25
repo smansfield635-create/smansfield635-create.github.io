@@ -6,7 +6,7 @@
   <title>Door · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Door: a compact Generation 2 public entry surface with Upcoming Show access at the top."
+    content="Diamond Gate Bridge Door: a compact Generation 2 public entry surface with Frontier and Upcoming Show access at the top."
   />
 
   <style>
@@ -378,8 +378,8 @@
     .step-card.choose { border-color:rgba(142,197,255,.25); }
     .step-card.continue { border-color:rgba(147,239,189,.25); }
 
+    .route-card.home { border-color:rgba(142,197,255,.25); }
     .route-card.prelude { border-color:rgba(239,210,154,.25); }
-    .route-card.explore { border-color:rgba(142,197,255,.25); }
     .route-card.frontier { border-color:rgba(200,156,255,.25); }
     .route-card.product { border-color:rgba(147,239,189,.25); }
     .route-card.human { border-color:rgba(255,154,184,.25); }
@@ -539,7 +539,8 @@
     data-generation="second-generation-renewal"
     data-page="door"
     data-surface="generation-2-public-door-compact"
-    data-frontier-target-route="/explore/frontier/"
+    data-frontier-target-route="/frontier/"
+    data-explore-public-status="retired-for-now"
   >
     <header class="topbar">
       <a class="brand" href="/door/" aria-label="Diamond Gate Bridge Door">
@@ -554,7 +555,7 @@
         <a href="/">Site Root</a>
         <a href="/home/">Home</a>
         <a href="/prelude/">Prelude</a>
-        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/products/">Products</a>
         <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
         <a href="/gauges/">Gauges</a>
@@ -595,7 +596,7 @@
         <article class="step-card choose">
           <small>Choose</small>
           <strong>Pick the next route.</strong>
-          <p>Home, Prelude, Explore, Products, and Upcoming Show are enough for the first move.</p>
+          <p>Home, Prelude, Frontier, Products, and Upcoming Show are enough for the first move.</p>
         </article>
 
         <article class="step-card continue">
@@ -613,7 +614,7 @@
       </div>
 
       <div class="route-grid">
-        <a class="route-card prelude" href="/home/">
+        <a class="route-card home" href="/home/">
           <small>Interior</small>
           <strong>Home</strong>
         </a>
@@ -623,13 +624,8 @@
           <strong>Prelude</strong>
         </a>
 
-        <a class="route-card explore" href="/explore/">
-          <small>Route map</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card frontier" href="/explore/frontier/">
-          <small>Explore child</small>
+        <a class="route-card frontier" href="/frontier/">
+          <small>Active edge route</small>
           <strong>Frontier</strong>
         </a>
 
@@ -652,6 +648,11 @@
           <small>World surface</small>
           <strong>Metaverse</strong>
         </a>
+
+        <a class="route-card world" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
       </div>
     </section>
 
@@ -673,7 +674,7 @@
         <a href="/">Site Root</a> ·
         <a href="/home/">Home</a> ·
         <a href="/prelude/">Prelude</a> ·
-        <a href="/explore/">Explore</a> ·
+        <a href="/frontier/">Frontier</a> ·
         <a href="/big-laugh/upper-room/">Upcoming Show</a>
       </span>
     </footer>

@@ -1,608 +1,432 @@
 <!DOCTYPE html>
-<html lang="en" data-season="autumn">
+<html lang="en" data-home-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Home | Diamond Gate Bridge</title>
-  <meta name="description" content="Home chamber with two primary paths." />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Home · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Home: Generation 2 interior surface routing visitors to Prelude, Nine Summits, Metaverse, Products, Big Laugh, and Gauges."
+  />
+
   <style>
-    :root{
-      color-scheme:dark;
-      --bg0:#15100d;
-      --bg1:#241915;
-      --bg2:#3b251e;
-      --ink:#fff7ef;
-      --mut:rgba(255,247,239,.84);
-      --soft:rgba(255,247,239,.62);
-      --gold:#f4dda7;
-      --gold2:#fff0c9;
-      --amber:#ffca86;
-      --copper:#d97d48;
-      --rust:#a14d2e;
-      --wood:#3c2b20;
-      --wood2:#211710;
-      --line:rgba(255,255,255,.10);
-      --lineStrong:rgba(244,221,167,.24);
-      --panelTop:rgba(31,21,16,.76);
-      --panelBottom:rgba(12,10,8,.94);
-      --shadow:0 24px 76px rgba(0,0,0,.48);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --pink:#ff8fb8;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
     }
 
-    *{box-sizing:border-box}
-    html,body{
+    * { box-sizing:border-box; }
+
+    html,
+    body {
       margin:0;
       min-height:100%;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(255,202,134,.08), transparent 26%),
-        radial-gradient(circle at 50% 84%, rgba(162,77,46,.06), transparent 30%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
-      color:var(--ink);
+      color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-    }
-    body{overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-
-    .page{
-      position:relative;
-      min-height:100vh;
-      overflow:hidden;
-      isolation:isolate;
+      background:
+        radial-gradient(circle at 50% 6%,rgba(142,197,255,.16),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      overflow-x:hidden;
     }
 
-    .glow{
-      position:absolute;
+    body::before {
+      content:"";
+      position:fixed;
       inset:0;
       pointer-events:none;
-    }
-
-    .glow::before{
-      content:"";
-      position:absolute;
-      inset:0;
+      opacity:.20;
       background:
-        radial-gradient(circle at 18% 24%, rgba(255,202,134,.10), transparent 30%),
-        radial-gradient(circle at 82% 18%, rgba(217,125,72,.10), transparent 28%),
-        radial-gradient(circle at 62% 78%, rgba(161,77,46,.08), transparent 26%);
-      filter:blur(8px);
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    .wrap{
-      position:relative;
-      z-index:1;
-      width:min(1180px,calc(100vw - 32px));
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
-      padding:
-        calc(24px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(48px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-    }
-
-    .topbar,.hero,.seasonBand,.paths,.footerBand{
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:linear-gradient(180deg,var(--panelTop),var(--panelBottom));
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .topbar::before,.hero::before,.seasonBand::before,.paths::before,.footerBand::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-      border-radius:inherit;
-    }
-
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      flex-wrap:wrap;
-      padding:14px 18px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brandMark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      transform:rotate(45deg);
-      border:1px solid var(--lineStrong);
-      background:linear-gradient(180deg,#6a4529,#26170f);
-      flex:0 0 auto;
-    }
-
-    .brandTitle{
-      margin:0 0 3px;
-      font-size:.96rem;
-      font-weight:800;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .brandSubtitle{
-      margin:0;
-      color:var(--soft);
-      font-size:.82rem;
-    }
-
-    .nav{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-    }
-
-    .nav a,.cta{
-      min-height:44px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid var(--lineStrong);
-      background:rgba(255,255,255,.04);
-      color:var(--gold2);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      transition:transform 140ms ease, box-shadow 140ms ease;
-    }
-
-    .nav a:hover,.cta:hover{
-      transform:translateY(-1px);
-      box-shadow:0 16px 34px rgba(0,0,0,.26);
-    }
-
-    .hero,.seasonBand,.paths,.footerBand{
-      padding:24px;
-    }
-
-    .eyebrow{
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-
-    h1,h2,h3{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    h1{
-      margin:0 0 12px;
-      font-size:clamp(42px,8vw,84px);
-      line-height:.92;
-    }
-
-    h2{
-      margin:0 0 10px;
-      font-size:clamp(26px,4vw,40px);
-      line-height:1.02;
-      color:var(--gold2);
-    }
-
-    h3{
-      margin:0 0 10px;
-      font-size:28px;
-      line-height:.96;
-      color:var(--gold2);
-    }
-
-    p{
-      margin:0;
-      color:var(--mut);
-      font-size:16px;
-      line-height:1.66;
-      max-width:920px;
-    }
-
-    .heroCopy{
-      font-size:19px;
-      color:rgba(255,247,239,.95);
-      max-width:980px;
-    }
-
-    .seasonGrid{
-      display:grid;
-      grid-template-columns:minmax(0,1.06fr) minmax(320px,.94fr);
-      gap:18px;
-      align-items:stretch;
-      margin-top:16px;
-    }
-
-    .panel,
-    .windowPanel,
-    .pathCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      padding:20px;
-      background:linear-gradient(180deg,rgba(34,24,18,.78),rgba(14,10,8,.94));
-      position:relative;
-      overflow:hidden;
-    }
-
-    .panel::before,
-    .windowPanel::before,
-    .pathCard::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(255,202,134,.12), transparent 28%),
-        radial-gradient(circle at 82% 18%, rgba(217,125,72,.10), transparent 26%),
-        radial-gradient(circle at 50% 84%, rgba(161,77,46,.08), transparent 24%);
-      opacity:.95;
-    }
-
-    .panel > *,
-    .windowPanel > *,
-    .pathCard > *{
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
     }
 
-    .windowFrameOuter{
-      position:relative;
-      min-height:290px;
-      border-radius:18px;
-      padding:12px;
-      background:linear-gradient(180deg,var(--wood),var(--wood2));
-      box-shadow:inset 0 0 0 1px rgba(255,255,255,.04);
-    }
-
-    .window{
-      position:relative;
-      width:100%;
-      min-height:266px;
-      height:100%;
-      border-radius:14px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.08);
-      background:linear-gradient(180deg, rgba(255,245,224,.14), rgba(255,245,224,.04));
-    }
-
-    .outside{
-      position:absolute;
-      inset:0;
+    .topbar,
+    .hero,
+    .panel,
+    .card,
+    .route-card {
+      border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 100%, rgba(255,214,150,.28), transparent 30%),
-        linear-gradient(180deg, rgba(255,230,176,.16) 0%, rgba(255,164,96,.08) 42%, rgba(72,48,36,.18) 100%);
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
+      box-shadow:var(--shadow);
     }
 
-    .tree{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:200px;
-      height:246px;
-      transform:translateX(-50%);
-    }
-
-    .trunk{
-      position:absolute;
-      left:50%;
-      bottom:0;
-      width:18px;
-      height:110px;
-      transform:translateX(-50%);
-      background:linear-gradient(180deg,#674532,#38261b);
-      border-radius:12px;
-    }
-
-    .branch{
-      position:absolute;
-      background:linear-gradient(180deg,#734e38,#38261b);
-      border-radius:999px;
-      transform-origin:bottom center;
-    }
-
-    .b1{width:10px;height:96px;left:78px;bottom:80px;transform:rotate(-34deg)}
-    .b2{width:10px;height:98px;left:112px;bottom:82px;transform:rotate(30deg)}
-    .b3{width:8px;height:64px;left:62px;bottom:128px;transform:rotate(-58deg)}
-    .b4{width:8px;height:66px;left:128px;bottom:130px;transform:rotate(56deg)}
-
-    .leaf{
-      position:absolute;
-      width:16px;
-      height:11px;
-      border-radius:80% 10% 80% 10%;
-      background:linear-gradient(135deg, #ffd38f, #c35c33);
-      box-shadow:0 0 10px rgba(255,164,96,.12);
-      transform:rotate(-14deg);
-    }
-
-    .lf1{left:44px;bottom:172px}
-    .lf2{left:62px;bottom:156px}
-    .lf3{left:86px;bottom:182px}
-    .lf4{left:116px;bottom:164px}
-    .lf5{left:136px;bottom:176px}
-    .lf6{left:154px;bottom:154px}
-    .lf7{left:74px;bottom:136px}
-    .lf8{left:124px;bottom:138px}
-
-    .fall1,.fall2,.fall3{
-      position:absolute;
-      width:14px;
-      height:10px;
-      border-radius:80% 10% 80% 10%;
-      background:linear-gradient(135deg, #ffd38f, #b8502b);
-      box-shadow:0 0 8px rgba(255,164,96,.10);
-      opacity:.92;
-    }
-
-    .fall1{left:30px;top:132px;transform:rotate(12deg)}
-    .fall2{right:38px;top:152px;transform:rotate(-18deg)}
-    .fall3{left:52%;top:176px;transform:rotate(20deg)}
-
-    .pane{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(90deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%),
-        linear-gradient(180deg, transparent 49%, rgba(255,255,255,.10) 49%, rgba(255,255,255,.10) 51%, transparent 51%);
-      pointer-events:none;
-    }
-
-    .windowReflection{
-      position:absolute;
-      inset:0;
-      background:
-        linear-gradient(120deg, rgba(255,255,255,.10), transparent 28%, transparent 58%, rgba(255,255,255,.06));
-      pointer-events:none;
-      mix-blend-mode:screen;
-    }
-
-    .windowLabel{
-      margin-top:14px;
-      color:var(--soft);
-      font-size:13px;
-      line-height:1.55;
-    }
-
-    .pathsGrid{
+    .topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
-      margin-top:18px;
-    }
-
-    .pathLine{
-      margin:0 0 12px;
-      font-size:18px;
-      font-weight:800;
-      color:rgba(255,247,239,.95);
-    }
-
-    .pathCopy{
-      font-size:15px;
-      max-width:none;
-    }
-
-    .dolls{
-      display:flex;
       gap:12px;
-      align-items:center;
-      margin-top:18px;
-      min-height:90px;
     }
 
-    .doll{
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 14px 36px rgba(0,0,0,.24);
-      flex:0 0 auto;
-    }
-
-    .love .doll:nth-child(1){width:92px;height:92px;background:linear-gradient(180deg,rgba(255,184,132,.42),rgba(255,216,156,.22))}
-    .love .doll:nth-child(2){width:72px;height:72px;background:linear-gradient(180deg,rgba(255,216,156,.36),rgba(191,86,45,.20))}
-    .love .doll:nth-child(3){width:52px;height:52px;background:linear-gradient(180deg,rgba(255,140,100,.34),rgba(255,216,156,.18))}
-
-    .comedy .doll:nth-child(1){width:92px;height:92px;background:linear-gradient(180deg,rgba(255,168,94,.40),rgba(217,125,72,.22))}
-    .comedy .doll:nth-child(2){width:72px;height:72px;background:linear-gradient(180deg,rgba(255,216,156,.36),rgba(161,77,46,.18))}
-    .comedy .doll:nth-child(3){width:52px;height:52px;background:linear-gradient(180deg,rgba(217,125,72,.34),rgba(255,216,156,.16))}
-
-    .pillRow{
+    .brand {
       display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
+      align-items:center;
+      gap:12px;
     }
 
-    .pill{
-      min-height:38px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.05);
-      color:#fff;
-      font-size:11px;
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
       font-weight:900;
-      letter-spacing:.05em;
+      letter-spacing:.08em;
+    }
+
+    .kicker {
+      display:block;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
       text-transform:uppercase;
+      letter-spacing:.16em;
+    }
+
+    .title {
+      display:block;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .nav,
+    .actions,
+    .grid,
+    .route-grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .nav a,
+    .button,
+    .route-card {
+      min-height:44px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
+      text-align:center;
     }
 
-    .footnote{
-      margin-top:10px;
-      color:var(--soft);
-      font-size:12px;
-      letter-spacing:.05em;
+    .button.primary {
+      border-color:rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(20px,3.5vw,38px);
+      margin-bottom:14px;
+      display:grid;
+      gap:18px;
+      overflow:hidden;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
       text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
     }
 
-    @media (max-width:980px){
-      .seasonGrid,
-      .pathsGrid{
-        grid-template-columns:1fr;
-      }
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(239,210,154,.50);
     }
 
-    @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1180px)}
-      .topbar{align-items:flex-start}
-      .hero,.seasonBand,.paths,.footerBand{padding:18px}
+    h1 {
+      margin:0;
+      color:#fff;
+      font-size:clamp(3rem,11vw,6.4rem);
+      line-height:.9;
+      letter-spacing:-.075em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.5rem,5vw,3rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
+    }
+
+    .hero p {
+      max-width:76ch;
+      margin-top:14px;
+    }
+
+    .actions {
+      margin-top:18px;
+    }
+
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:16px;
+    }
+
+    .panel-head {
+      display:grid;
+      gap:8px;
+    }
+
+    .card,
+    .route-card {
+      border-radius:22px;
+      padding:16px;
+      min-height:122px;
+      align-items:flex-start;
+      justify-content:flex-start;
+      flex-direction:column;
+      text-align:left;
+    }
+
+    .card small,
+    .route-card small {
+      display:block;
+      margin-bottom:8px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:.66rem;
+      font-weight:850;
+    }
+
+    .card strong,
+    .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:1.08rem;
+      line-height:1.12;
+    }
+
+    .card p {
+      margin-top:8px;
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
+    }
+
+    .footer a { color:#d6e2ff; }
+
+    @media (min-width:820px) {
+      .topbar { grid-template-columns:1fr auto; align-items:center; }
+      .nav { grid-template-columns:repeat(6,auto); }
+      .actions { grid-template-columns:repeat(4,auto); justify-content:start; }
+      .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .route-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    }
+
+    @media (max-width:640px) {
+      .page { width:min(100vw - 12px,var(--max)); padding-top:10px; }
+      .topbar, .hero, .panel { border-radius:24px; }
+      .nav, .actions, .grid, .route-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="glow" aria-hidden="true"></div>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-page="home"
+    data-surface="interior-routing-surface"
+  >
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge door">
+        <span class="mark" aria-hidden="true">DG</span>
+        <span>
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Home · Generation 2</strong>
+        </span>
+      </a>
 
-    <main class="wrap">
-      <header class="topbar">
-        <div class="brand">
-          <div class="brandMark" aria-hidden="true"></div>
-          <div>
-            <p class="brandTitle">Diamond Gate Bridge</p>
-            <p class="brandSubtitle">Home · Autumn sanctuary</p>
-          </div>
-        </div>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/metaverse/">Metaverse</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-        <nav class="nav" aria-label="Home navigation">
-          <a href="/door/">Door</a>
-          <a href="/prelude/">Prelude</a>
-          <a href="/nine-summits/">Nine Summits</a>
-          <a href="/big-laugh/">Big Laugh</a>
-        </nav>
-      </header>
-
-      <section class="hero">
-        <p class="eyebrow">Home</p>
-        <h1>Choose the chamber.</h1>
-        <p class="heroCopy">
-          Home is the stable house interior. Autumn belongs outside the glass. The Tree of Life tells you what world-state you are in while the room stays a sanctuary.
+    <section class="hero" aria-labelledby="homeTitle">
+      <div>
+        <span class="pill">Second-generation home surface</span>
+        <h1 id="homeTitle">Home</h1>
+        <h2>The stable interior route.</h2>
+        <p>
+          Home is the calm interior surface. It does not replace the Door, and it does
+          not behave like the Prelude. It receives the visitor after entry and routes
+          them toward the active public chambers without overloading the page.
         </p>
-      </section>
 
-      <section class="seasonBand">
-        <p class="eyebrow">Season window</p>
-        <h2>The world is outside. The house is inside.</h2>
-
-        <div class="seasonGrid">
-          <article class="panel">
-            <p>
-              This is the calmer, centered version of the same law. The interior remains coherent. The season is read through the window. The Tree of Life carries the signal.
-            </p>
-            <div class="pillRow">
-              <div class="pill">Autumn outside</div>
-              <div class="pill">Interior protected</div>
-              <div class="pill">Tree of Life active</div>
-            </div>
-          </article>
-
-          <aside class="windowPanel">
-            <div class="windowFrameOuter">
-              <div class="window">
-                <div class="outside"></div>
-                <div class="tree" aria-hidden="true">
-                  <div class="trunk"></div>
-                  <div class="branch b1"></div>
-                  <div class="branch b2"></div>
-                  <div class="branch b3"></div>
-                  <div class="branch b4"></div>
-                  <div class="leaf lf1"></div>
-                  <div class="leaf lf2"></div>
-                  <div class="leaf lf3"></div>
-                  <div class="leaf lf4"></div>
-                  <div class="leaf lf5"></div>
-                  <div class="leaf lf6"></div>
-                  <div class="leaf lf7"></div>
-                  <div class="leaf lf8"></div>
-                  <div class="fall1"></div>
-                  <div class="fall2"></div>
-                  <div class="fall3"></div>
-                </div>
-                <div class="pane"></div>
-                <div class="windowReflection"></div>
-              </div>
-            </div>
-            <p class="windowLabel">Amber canopy, falling leaves, late-season light. Autumn is outside the home.</p>
-          </aside>
+        <div class="actions">
+          <a class="button primary" href="/prelude/">Open Prelude</a>
+          <a class="button" href="/nine-summits/">Nine Summits</a>
+          <a class="button" href="/metaverse/">Metaverse</a>
+          <a class="button" href="/products/">Products</a>
         </div>
-      </section>
+      </div>
+    </section>
 
-      <section class="paths">
-        <p class="eyebrow">Primary paths</p>
-        <h2>Two live options.</h2>
+    <section class="panel" aria-labelledby="homeJobTitle">
+      <div class="panel-head">
+        <span class="pill">Home job</span>
+        <h2 id="homeJobTitle">Route without clutter.</h2>
+        <p>
+          The Home page is a stable chamber selector. It keeps the public surface
+          readable and routes visitors by intent.
+        </p>
+      </div>
 
-        <div class="pathsGrid">
-          <article class="pathCard love">
-            <div>
-              <p class="eyebrow">Love path</p>
-              <h3>Nine Summits of Love</h3>
-              <p class="pathLine">Go deeper into the inner architecture of love.</p>
-              <p class="pathCopy">
-                The movement, the mantra, and the inward structure. Home holds this path without losing calm.
-              </p>
-              <div class="dolls" aria-hidden="true">
-                <div class="doll"></div>
-                <div class="doll"></div>
-                <div class="doll"></div>
-              </div>
-            </div>
-            <div class="pillRow">
-              <div class="pill">Nested</div>
-              <div class="pill">Detailed</div>
-              <div class="pill">Inward</div>
-            </div>
-            <div style="margin-top:18px;">
-              <a class="cta" href="/nine-summits/">Open Nine Summits</a>
-            </div>
-          </article>
+      <div class="grid">
+        <article class="card">
+          <small>Position</small>
+          <strong>Interior surface</strong>
+          <p>Home sits after the Door and before deeper chamber selection.</p>
+        </article>
 
-          <article class="pathCard comedy">
-            <div>
-              <p class="eyebrow">Show path</p>
-              <h3>Big Laugh</h3>
-              <p class="pathLine">Interactive motivational comedy.</p>
-              <p class="pathCopy">
-                A public-facing live show path. The house contains it, while the world remains outside the glass.
-              </p>
-              <div class="dolls" aria-hidden="true">
-                <div class="doll"></div>
-                <div class="doll"></div>
-                <div class="doll"></div>
-              </div>
-            </div>
-            <div class="pillRow">
-              <div class="pill">Comedy</div>
-              <div class="pill">Interactive</div>
-              <div class="pill">Motivational</div>
-            </div>
-            <div style="margin-top:18px;">
-              <a class="cta" href="/big-laugh/">Open Big Laugh</a>
-            </div>
-          </article>
-        </div>
-      </section>
+        <article class="card">
+          <small>Function</small>
+          <strong>Route selection</strong>
+          <p>It directs visitors to the active public surfaces without becoming a total explanation.</p>
+        </article>
 
-      <section class="footerBand">
-        <p>Home now behaves like a sanctuary with windows, not a seasonal paint swap.</p>
-        <div class="footnote">Autumn outside. Stability inside. Tree of Life visible.</div>
-      </section>
-    </main>
-  </div>
+        <article class="card">
+          <small>Standard</small>
+          <strong>Generation 2</strong>
+          <p>Clean public copy, clear movement, and no retired Generation 1 language.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="routesTitle">
+      <div class="panel-head">
+        <span class="pill">Primary routes</span>
+        <h2 id="routesTitle">Choose the next chamber.</h2>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/prelude/">
+          <small>Opening layer</small>
+          <strong>Prelude</strong>
+        </a>
+
+        <a class="route-card" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits of Love</strong>
+        </a>
+
+        <a class="route-card" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
+
+        <a class="route-card" href="/big-laugh/upper-room/">
+          <small>Show path</small>
+          <strong>The Upper Room</strong>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <small>Product chamber</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
+
+        <a class="route-card" href="/about/">
+          <small>Orientation</small>
+          <strong>About</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <small>Inspection</small>
+          <strong>Gauges</strong>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Home · Generation 2 Interior Routing Surface</span>
+      <span><a href="/">Door</a> · <a href="/prelude/">Prelude</a> · <a href="/products/">Products</a></span>
+    </footer>
+  </main>
 </body>
 </html>

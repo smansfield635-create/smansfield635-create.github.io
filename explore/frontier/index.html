@@ -1,5 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-redirect-route="explore-frontier">
+<html
+  lang="en"
+  data-redirect-route="explore-frontier"
+  data-sending-room="explore"
+  data-receiving-room="explore-frontier"
+>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -8,7 +13,7 @@
 
   <meta
     name="description"
-    content="Frontier has moved under Explore. Redirecting to Explore Frontier at Diamond Gate Bridge."
+    content="Frontier is routed by Explore. Redirecting from the old Frontier route to Explore Frontier."
   />
 
   <meta http-equiv="refresh" content="0; url=/explore/frontier/" />
@@ -50,7 +55,7 @@
     }
 
     .redirect-card {
-      width:min(720px,100%);
+      width:min(760px,100%);
       border:1px solid var(--line);
       border-radius:30px;
       padding:clamp(22px,5vw,42px);
@@ -109,6 +114,20 @@
       font-weight:850;
     }
 
+    .route-receipt {
+      display:grid;
+      gap:8px;
+      margin-top:18px;
+      padding:14px;
+      border:1px solid rgba(170,198,255,.16);
+      border-radius:18px;
+      background:rgba(255,255,255,.035);
+      color:#dce7ff;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      font-size:.82rem;
+      line-height:1.45;
+    }
+
     .actions {
       display:flex;
       flex-wrap:wrap;
@@ -134,14 +153,29 @@
 </head>
 
 <body>
-  <main class="redirect-card" data-route-bridge="frontier-to-explore-frontier">
-    <span class="pill">Route bridge</span>
+  <main
+    class="redirect-card"
+    data-route-bridge="frontier-to-explore-frontier"
+    data-sending-room="explore"
+    data-receiving-room="explore-frontier"
+    data-source-route="/frontier/"
+    data-target-route="/explore/frontier/"
+  >
+    <span class="pill">Explore sends Frontier</span>
     <h1>Explore Frontier</h1>
 
     <p>
-      Frontier now lives under Explore. Redirecting to
+      Frontier is not a top-level room. Explore sends it. Redirecting to
       <a href="/explore/frontier/">/explore/frontier/</a>.
     </p>
+
+    <div class="route-receipt" aria-label="Route receipt">
+      <span>SENDING_ROOM=Explore</span>
+      <span>RECEIVING_ROOM=Explore Frontier</span>
+      <span>SOURCE_ROUTE=/frontier/</span>
+      <span>TARGET_ROUTE=/explore/frontier/</span>
+      <span>STATUS=ROUTE_BRIDGE_ACTIVE</span>
+    </div>
 
     <div class="actions">
       <a class="button" href="/explore/frontier/">Open Explore Frontier</a>

@@ -6,7 +6,7 @@
   <title>Home · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Home: a clean Generation 2 interior route into Prelude, Nine Summits, Metaverse, Products, and Gauges."
+    content="Diamond Gate Bridge Home: a concise Generation 2 interior route surface written as a public-facing opening."
   />
 
   <style>
@@ -21,7 +21,6 @@
       --blue:#8ec5ff;
       --green:#93efbd;
       --rose:#ff9ab8;
-      --orange:#f1a45b;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
     }
@@ -73,8 +72,8 @@
     .topbar,
     .hero,
     .panel,
-    .path-card,
-    .quiet-card {
+    .step-card,
+    .route-card {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
@@ -129,15 +128,14 @@
     }
 
     .nav,
-    .actions,
-    .path-grid,
-    .quiet-grid {
+    .route-grid,
+    .steps {
       display:grid;
       gap:10px;
     }
 
     .nav a,
-    .button {
+    .route-card {
       min-height:44px;
       display:inline-flex;
       align-items:center;
@@ -152,25 +150,17 @@
     }
 
     .nav a:focus-visible,
-    .button:focus-visible,
-    .path-card:focus-visible {
+    .route-card:focus-visible,
+    .step-card:focus-visible {
       outline:2px solid rgba(239,210,154,.62);
       outline-offset:3px;
     }
 
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
     .hero {
       border-radius:34px;
-      padding:clamp(22px,4vw,46px);
+      padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(360px,48vw,560px);
+      min-height:clamp(340px,46vw,520px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -211,6 +201,12 @@
         inset 0 0 38px rgba(239,210,154,.06);
     }
 
+    .hero-copy {
+      display:grid;
+      gap:14px;
+      max-width:850px;
+    }
+
     .pill {
       display:inline-flex;
       width:fit-content;
@@ -240,7 +236,7 @@
     h1 {
       margin:0;
       color:#fff;
-      font-size:clamp(3.4rem,13vw,7.2rem);
+      font-size:clamp(3.5rem,13vw,7.4rem);
       line-height:.86;
       letter-spacing:-.08em;
     }
@@ -248,7 +244,7 @@
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.55rem,5vw,3.05rem);
+      font-size:clamp(1.6rem,5vw,3.15rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -261,18 +257,9 @@
     }
 
     .hero p {
-      max-width:74ch;
-      margin-top:14px;
-      font-size:clamp(1rem,1.8vw,1.18rem);
-    }
-
-    .hero-copy {
-      display:grid;
-      gap:14px;
-    }
-
-    .actions {
-      margin-top:10px;
+      max-width:70ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
     .panel {
@@ -288,8 +275,12 @@
       gap:8px;
     }
 
-    .path-card,
-    .quiet-card {
+    .steps {
+      grid-template-columns:1fr;
+    }
+
+    .step-card,
+    .route-card {
       border-radius:22px;
       padding:16px;
       min-height:136px;
@@ -297,10 +288,11 @@
       justify-content:flex-start;
       flex-direction:column;
       text-align:left;
+      color:inherit;
     }
 
-    .path-card small,
-    .quiet-card small {
+    .step-card small,
+    .route-card small {
       display:block;
       margin-bottom:8px;
       color:#91a6cf;
@@ -310,34 +302,51 @@
       font-weight:850;
     }
 
-    .path-card strong,
-    .quiet-card strong {
+    .step-card strong,
+    .route-card strong {
       display:block;
       color:#fff;
       font-size:1.08rem;
       line-height:1.12;
     }
 
-    .path-card p,
-    .quiet-card p {
+    .step-card p {
       margin-top:8px;
+      color:var(--muted);
       font-size:.92rem;
       line-height:1.42;
     }
 
-    .prelude {
+    .step-card.begin {
       border-color:rgba(239,210,154,.25);
     }
 
-    .human {
-      border-color:rgba(255,154,184,.25);
+    .step-card.build {
+      border-color:rgba(147,239,189,.25);
     }
 
-    .world {
+    .step-card.expand {
       border-color:rgba(142,197,255,.25);
     }
 
-    .product {
+    .route-card {
+      min-height:112px;
+      justify-content:center;
+    }
+
+    .route-card.prelude {
+      border-color:rgba(239,210,154,.25);
+    }
+
+    .route-card.human {
+      border-color:rgba(255,154,184,.25);
+    }
+
+    .route-card.world {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .route-card.product {
       border-color:rgba(147,239,189,.25);
     }
 
@@ -376,17 +385,12 @@
         grid-template-columns:repeat(6,auto);
       }
 
-      .actions {
-        grid-template-columns:repeat(4,auto);
-        justify-content:start;
-      }
-
-      .path-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
-      .quiet-grid {
+      .steps {
         grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
       }
     }
 
@@ -428,34 +432,40 @@
         line-height:1.05;
       }
 
-      .actions {
+      .hero {
+        min-height:390px;
+        padding:22px;
+      }
+
+      .route-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
         gap:8px;
       }
 
-      .button {
-        min-height:38px;
-        padding:0 9px;
-        font-size:.88rem;
-        line-height:1.05;
+      .route-card {
+        min-height:86px;
+        padding:12px;
       }
 
-      .path-grid,
-      .quiet-grid {
-        grid-template-columns:1fr;
+      .route-card small {
+        font-size:.58rem;
       }
 
-      .hero {
-        min-height:430px;
+      .route-card strong {
+        font-size:.96rem;
       }
     }
 
     @media (max-width:360px) {
-      .nav a,
-      .button {
+      .nav a {
         font-size:.80rem;
         min-height:36px;
         padding:0 7px;
+      }
+
+      .route-card {
+        min-height:78px;
+        padding:10px;
       }
     }
 
@@ -475,7 +485,7 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="home"
-    data-surface="active-interior-routing-condensed"
+    data-surface="ted-style-home-opening"
   >
     <header class="topbar">
       <a class="brand" href="/" aria-label="Door">
@@ -498,100 +508,99 @@
 
     <section class="hero" aria-labelledby="homeTitle">
       <div class="hero-copy">
-        <span class="pill">Choose where to begin</span>
+        <span class="pill">Interior opening</span>
         <h1 id="homeTitle">Home</h1>
         <h2>The house opens by path.</h2>
         <p>
-          Start with the doorway that matches your reason for entering. Move toward
-          the human path, the world surface, or the product chamber.
+          Every strong system needs a clean first room. This page does not ask you
+          to understand everything at once. It asks you to choose the path closest
+          to why you came.
         </p>
-
-        <div class="actions">
-          <a class="button primary" href="/prelude/">Prelude</a>
-          <a class="button" href="/nine-summits/">Nine Summits</a>
-          <a class="button" href="/metaverse/">Metaverse</a>
-          <a class="button" href="/products/">Products</a>
-        </div>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="startTitle">
+    <section class="panel" aria-labelledby="talkTitle">
       <div class="panel-head">
-        <span class="pill">Start by purpose</span>
-        <h2 id="startTitle">Four clean openings.</h2>
+        <span class="pill">The opening idea</span>
+        <h2 id="talkTitle">A good entrance does three things.</h2>
         <p>
-          Pick the surface closest to the work you came to see.
+          It slows the room down, gives the visitor a usable choice, and keeps the
+          larger structure from arriving all at once.
         </p>
       </div>
 
-      <div class="path-grid">
-        <a class="path-card prelude" href="/prelude/">
-          <small>Opening read</small>
-          <strong>Prelude</strong>
-          <p>Take the first breath at the gate before choosing a deeper route.</p>
-        </a>
+      <div class="steps">
+        <article class="step-card begin">
+          <small>Begin</small>
+          <strong>Start with a threshold.</strong>
+          <p>
+            Use Prelude when you want the clean first breath before entering the
+            deeper structure.
+          </p>
+        </article>
 
-        <a class="path-card human" href="/nine-summits/">
-          <small>Human path</small>
-          <strong>Nine Summits of Love</strong>
-          <p>Begin with love, growth, and the invitation to learn to live to love.</p>
-        </a>
+        <article class="step-card build">
+          <small>Build</small>
+          <strong>Move toward the work.</strong>
+          <p>
+            Use Products when you want the active public lines and what is being
+            built now.
+          </p>
+        </article>
 
-        <a class="path-card world" href="/metaverse/">
-          <small>World path</small>
-          <strong>Metaverse</strong>
-          <p>Enter the connected world surface where chambers and systems meet.</p>
-        </a>
-
-        <a class="path-card product" href="/products/">
-          <small>Product path</small>
-          <strong>Products</strong>
-          <p>Open the current product chamber and its official public product lines.</p>
-        </a>
+        <article class="step-card expand">
+          <small>Expand</small>
+          <strong>Open the world surface.</strong>
+          <p>
+            Use Metaverse when you want the broader connected object and its
+            larger field.
+          </p>
+        </article>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="quietTitle">
+    <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Quick read</span>
-        <h2 id="quietTitle">The house does not force one entrance.</h2>
+        <span class="pill">Choose the path</span>
+        <h2 id="routesTitle">Four doors are enough.</h2>
       </div>
 
-      <div class="quiet-grid">
-        <article class="quiet-card">
-          <small>Need the opening?</small>
-          <strong>Go to Prelude.</strong>
-          <p>Use the threshold when you want the clean first read.</p>
-        </article>
+      <div class="route-grid">
+        <a class="route-card prelude" href="/prelude/">
+          <small>Threshold</small>
+          <strong>Prelude</strong>
+        </a>
 
-        <article class="quiet-card">
-          <small>Need the work?</small>
-          <strong>Go to Products.</strong>
-          <p>Use the product chamber when you want what is being built.</p>
-        </article>
+        <a class="route-card human" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits</strong>
+        </a>
 
-        <article class="quiet-card">
-          <small>Need the world?</small>
-          <strong>Go to Metaverse.</strong>
-          <p>Use the world surface when you want the broader connected object.</p>
-        </article>
+        <a class="route-card world" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
+
+        <a class="route-card product" href="/products/">
+          <small>Product chamber</small>
+          <strong>Products</strong>
+        </a>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="closingTitle">
       <div class="panel-head">
         <span class="pill">Home read</span>
-        <h2 id="closingTitle">Choose the next right room.</h2>
+        <h2 id="closingTitle">The right entrance is the one that matches the reason.</h2>
       </div>
 
       <p class="closing-read">
-        The right entrance is the one that matches the reason you came. Start there,
-        then let the next surface open.
+        Start there. The next surface can open after the first path is chosen.
       </p>
     </section>
 
     <footer class="footer">
-      <span>Home · Active Interior Routing Surface</span>
+      <span>Home · Concise Interior Route Surface</span>
       <span>
         <a href="/">Door</a> ·
         <a href="/prelude/">Prelude</a> ·

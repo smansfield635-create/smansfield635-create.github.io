@@ -1,433 +1,514 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-nine-summits-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Nine Summits · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Generation 1 Nine Summits surface for Diamond Gate Bridge."
+    content="Nine Summits of Love: the second-generation value spine for Diamond Gate Bridge."
   />
+
   <style>
-    :root{
-      --bg:#040814;
-      --bg2:#091327;
-      --panel:rgba(8,14,28,.72);
-      --line:rgba(164,188,255,.18);
-      --line-strong:rgba(210,223,255,.34);
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
       --text:#eef4ff;
-      --muted:#9aabd0;
+      --muted:#aab8d8;
       --gold:#efd29a;
-      --mint:#99e5b6;
-      --blue:#91c7ff;
-      --rose:#f0bacb;
-      --shadow:0 24px 80px rgba(0,0,0,.46);
-      --max:1160px;
+      --blue:#8ec5ff;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
     }
 
-    *{box-sizing:border-box}
-    html,body{min-height:100%}
-    body{
+    * { box-sizing:border-box; }
+
+    html,
+    body {
       margin:0;
+      min-height:100%;
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
-        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
-        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
-        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
 
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.18;
+      opacity:.20;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
-      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    .page{
-      width:min(var(--max), calc(100vw - 24px));
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
-      padding:18px 0 40px;
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
     }
 
-    .topbar,.section,.hero{
+    .topbar,
+    .hero,
+    .summit-map,
+    .summit-card,
+    .route-panel {
       border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
     }
 
-    .topbar{
+    .topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:12px;
+    }
+
+    .brand {
       display:flex;
-      justify-content:space-between;
       align-items:center;
-      gap:16px;
-      padding:14px 16px;
-      border-radius:20px;
-      background:rgba(7,13,26,.7);
-      backdrop-filter:blur(10px);
+      gap:12px;
     }
 
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-mark{
-      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
       border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
-      color:#f4f8ff;font-weight:800;letter-spacing:.08em;flex:none;
-    }
-    .brand-kicker{
-      margin:0 0 4px;color:#c8d7ff;font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;
-    }
-    .brand-title{
-      margin:0;font-size:1.05rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-    .topnav{display:flex;flex-wrap:wrap;gap:10px;justify-content:flex-end}
-    .nav-link,.button,.summit-link{
-      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-    }
-    .nav-link{
-      min-height:40px;padding:0 14px;border-radius:999px;border:1px solid var(--line);
-      color:var(--text);font-weight:700;font-size:.92rem;background:rgba(255,255,255,.03);
-    }
-    .nav-link:hover,.nav-link:focus-visible,.button:hover,.button:focus-visible,.summit-link:hover,.summit-link:focus-visible{
-      transform:translateY(-1px);border-color:var(--line-strong);background:rgba(255,255,255,.05);outline:none;
+      background:
+        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
+      font-weight:900;
+      letter-spacing:.08em;
     }
 
-    .hero{
-      margin-top:16px;border-radius:34px;padding:24px 20px 20px;position:relative;overflow:hidden;
+    .kicker {
+      display:block;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
     }
-    .hero::after{
-      content:"";position:absolute;inset:0;pointer-events:none;
-      background:radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
-      linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
-      mix-blend-mode:screen;
+
+    .title {
+      display:block;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
     }
-    .hero-grid{
-      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(300px,.9fr);gap:20px;align-items:start;position:relative;z-index:1;
+
+    .nav {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
     }
-    .hero-tag{
-      display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);
-      background:rgba(255,255,255,.03);color:#d8e3ff;text-transform:uppercase;letter-spacing:.14em;font-size:.72rem;margin-bottom:12px;
+
+    .nav a,
+    .button,
+    .route-panel a {
+      min-height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
+      text-align:center;
     }
-    .hero-tag::before{
-      content:"";width:9px;height:9px;border-radius:2px;transform:rotate(45deg);background:#dce7ff;
-      box-shadow:0 0 16px rgba(220,231,255,.52);
+
+    .nav a:focus-visible,
+    .button:focus-visible,
+    .route-panel a:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
     }
-    h1{
-      margin:0 0 10px;font-size:clamp(2.2rem, 4.8vw, 4rem);line-height:.96;letter-spacing:-.05em;max-width:10ch;
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(20px,3.5vw,38px);
+      margin-bottom:14px;
+      overflow:hidden;
+      display:grid;
+      gap:18px;
     }
-    h1 .accent{color:var(--gold)}
-    .hero p,.card p,.hero-side p,.step p,.section-note{
-      color:var(--muted);line-height:1.58;
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
     }
-    .hero p{margin:0;font-size:clamp(.98rem, 1.5vw, 1.1rem);max-width:58ch}
-    .hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .button{
-      min-height:44px;padding:0 16px;border-radius:16px;border:1px solid var(--line);color:var(--text);font-weight:800;background:rgba(255,255,255,.03);white-space:nowrap;
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(239,210,154,.50);
     }
-    .button.primary{
-      border-color:rgba(239,210,154,.3);
-      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
+
+    h1 {
+      margin:0;
+      max-width:11ch;
+      color:#fff;
+      font-size:clamp(2.8rem,11vw,6rem);
+      line-height:.90;
+      letter-spacing:-.07em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.6rem,5.4vw,3.3rem);
+      line-height:1;
+      letter-spacing:-.05em;
+    }
+
+    .hero p,
+    .summit-map p,
+    .route-panel p {
+      margin:0;
+      max-width:72ch;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
+    }
+
+    .actions {
+      display:grid;
+      gap:8px;
+      margin-top:2px;
+    }
+
+    .button.primary {
+      border-color:rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
       color:#fff8ea;
     }
 
-    .hero-side,.card,.step,.summit-link{
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:rgba(255,255,255,.03);
-    }
-    .hero-side,.card,.step{padding:18px}
-    .hero-side h2,.card h3,.step h3{margin:0 0 10px;font-size:1.08rem;line-height:1.1;letter-spacing:-.02em}
-    .hero-stats{display:grid;gap:10px;margin-top:16px}
-    .stat{
-      padding:12px 14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);
-    }
-    .stat-label{
-      display:block;margin-bottom:6px;color:#90a3ce;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-    }
-    .stat-value{color:#f4f7ff;font-size:.98rem;font-weight:700}
-
-    .section{margin-top:18px;border-radius:30px;padding:20px}
-    .section-head{
-      display:flex;justify-content:space-between;align-items:end;gap:16px;margin-bottom:16px;
-    }
-    .section-kicker{
-      color:#c8d7ff;font-size:.72rem;text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px;
-    }
-    .section h2{margin:0;font-size:1.45rem;letter-spacing:-.03em;line-height:1.06}
-    .section-note{font-size:.92rem;max-width:42ch;text-align:right}
-
-    .cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-    .step-number{
-      display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:999px;
-      border:1px solid rgba(239,210,154,.28);background:rgba(239,210,154,.08);color:#fff2d5;font-weight:800;margin-bottom:12px;
+    .summit-map {
+      border-radius:34px;
+      padding:clamp(16px,2.6vw,28px);
+      margin-bottom:14px;
+      overflow:hidden;
     }
 
-    .summits{
+    .map-head {
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:8px;
+      margin-bottom:18px;
+    }
+
+    .map-head h2 {
+      color:#fff;
+      font-size:clamp(1.8rem,6vw,3.6rem);
+    }
+
+    .summit-grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .summit-card {
+      min-height:132px;
+      border-radius:24px;
+      padding:16px;
+      position:relative;
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    .summit-card::before {
+      content:"";
+      position:absolute;
+      inset:auto -10% -40% auto;
+      width:160px;
+      height:160px;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(239,210,154,.18),transparent 64%);
+      pointer-events:none;
+      z-index:-1;
+    }
+
+    .summit-card small {
+      display:block;
+      margin-bottom:8px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.68rem;
+      font-weight:850;
+    }
+
+    .summit-card strong {
+      display:block;
+      margin-bottom:8px;
+      color:#fff;
+      font-size:1.18rem;
+      line-height:1.08;
+    }
+
+    .summit-card p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.42;
+      font-size:.92rem;
+    }
+
+    .route-panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
       gap:14px;
     }
-    .summit-link{
-      padding:18px;display:grid;gap:10px;color:inherit;
-      min-height:190px;
-    }
-    .summit-link[data-tone="gold"]{color:var(--gold)}
-    .summit-link[data-tone="mint"]{color:var(--mint)}
-    .summit-link[data-tone="blue"]{color:var(--blue)}
-    .summit-link[data-tone="rose"]{color:var(--rose)}
-    .summit-mark{
-      width:40px;height:40px;border-radius:14px;display:grid;place-items:center;border:1px solid currentColor;background:rgba(255,255,255,.03);
-      font-weight:800;letter-spacing:.08em;
-    }
-    .summit-title{
-      margin:0;color:var(--text);font-size:1.14rem;font-weight:800;letter-spacing:-.02em;
-    }
-    .summit-copy{
-      color:var(--muted);line-height:1.58;font-size:.95rem;
-    }
-    .summit-meta{
-      color:#dce7ff;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;margin-top:auto;
+
+    .route-panel h2 {
+      color:#fff;
+      font-size:clamp(1.5rem,5vw,2.8rem);
     }
 
-    .footer{
-      display:flex;justify-content:space-between;align-items:center;gap:16px;color:var(--muted);padding:12px 4px 0;font-size:.92rem;
-    }
-    .footer-links{display:flex;flex-wrap:wrap;gap:12px}
-    .footer-links a{color:var(--muted);text-decoration:none}
-    .footer-links a:hover,.footer-links a:focus-visible{color:var(--text);outline:none}
-
-    @media (max-width: 980px){
-      .hero-grid,.cards,.steps,.summits{grid-template-columns:1fr}
+    .route-grid {
+      display:grid;
+      gap:8px;
     }
 
-    @media (max-width: 720px){
-      .page{width:min(100vw - 16px, var(--max));padding:14px 0 28px}
-      .topbar{flex-wrap:wrap;padding:12px 14px}
-      .topnav{width:100%;justify-content:flex-start}
-      .hero,.section{padding:18px 16px}
-      .hero-grid{gap:14px}
-      .hero h1{font-size:clamp(2rem, 11vw, 3.4rem)}
-      .hero-actions{gap:8px}
-      .button{flex:1 1 calc(50% - 8px)}
-      .button.primary{flex-basis:100%}
-      .section-head,.footer{display:grid;gap:8px}
-      .section-note{text-align:left}
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
+    }
+
+    .footer a { color:#d6e2ff; }
+
+    @media (min-width:820px) {
+      .topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .nav {
+        grid-template-columns:repeat(5,auto);
+      }
+
+      .hero {
+        grid-template-columns:1fr .72fr;
+        align-items:center;
+      }
+
+      .actions {
+        grid-template-columns:repeat(3,auto);
+        justify-content:start;
+      }
+
+      .summit-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:560px) {
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .hero,
+      .summit-map,
+      .route-panel {
+        border-radius:24px;
+      }
+
+      .nav {
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
-<body>
-  <main class="page">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">DG</div>
-        <div>
-          <p class="brand-kicker">Opening Surface</p>
-          <p class="brand-title">Prelude · Diamond Gate Bridge</p>
-        </div>
-      </div>
 
-      <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/about/">About</a>
-        <a class="nav-link" href="/products/">Products</a>
-        <a class="nav-link" href="/laws/">Laws</a>
+<body>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-generation-contract="generation-2-value-spine-filled"
+    data-page="nine-summits"
+    data-surface="value-spine"
+  >
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="mark" aria-hidden="true">DG</span>
+        <span>
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Nine Summits</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/products/">Products</a>
+        <a href="/big-laugh/">Big Laugh</a>
+        <a href="/laws/">Laws</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <span class="hero-tag">Generation 1 · prelude renewal</span>
-          <h1>The opening read <span class="accent">before descent</span>.</h1>
-          <p>
-            The Prelude is the first calming surface. It is not the deep chamber and not the final explanation.
-            Its job is to set tone, establish the broad read, and prepare the visitor to move deeper without confusion.
-          </p>
-
-          <div class="hero-actions">
-            <a class="button primary" href="#summits">Open the summits</a>
-            <a class="button" href="/about/">About</a>
-            <a class="button" href="/">Back to door</a>
-          </div>
-        </div>
-
-        <aside class="hero-side">
-          <h2>Prelude job</h2>
-          <p>
-            Orient the visitor, set cadence, and move them toward the right surface without turning the prelude
-            into a law page, product page, or dense explanation block.
-          </p>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <span class="stat-label">Purpose</span>
-              <span class="stat-value">Opening orientation and tone</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Position</span>
-              <span class="stat-value">Before deeper route selection</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Contract</span>
-              <span class="stat-value">Generation 1 Prelude surface</span>
-            </div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">What the prelude does</div>
-          <h2>Set the frame without overload</h2>
-        </div>
-        <div class="section-note">
-          This is an opening layer, not a terminal explanation surface.
-        </div>
+    <section class="hero" aria-labelledby="summitsTitle">
+      <div>
+        <span class="pill">Generation 2 · value spine</span>
+        <h1 id="summitsTitle">Nine Summits of Love</h1>
       </div>
 
-      <div class="cards">
-        <div class="card">
-          <h3>Orientation</h3>
-          <p>
-            The Prelude gives the visitor a first stable read so they know what kind of place they have entered.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Tone</h3>
-          <p>
-            It establishes cadence and seriousness without collapsing into doctrine, pitch language, or clutter.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Transition</h3>
-          <p>
-            It prepares lawful descent into the right route, chamber, or surface once the opening frame is stable.
-          </p>
+      <div>
+        <h2>Learn to Live to Love.</h2>
+        <p>
+          The Nine Summits are the human-facing ascent path. This surface is now
+          the second-generation value spine, replacing the old prelude contract.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="#summitMap">Open the map</a>
+          <a class="button" href="/products/">Enter products</a>
+          <a class="button" href="/">Back to door</a>
         </div>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Use pattern</div>
-          <h2>Read broad first, then go where the route asks</h2>
-        </div>
-        <div class="section-note">
-          The prelude should reduce confusion, not create more of it.
-        </div>
+    <section id="summitMap" class="summit-map" aria-labelledby="mapTitle">
+      <div class="map-head">
+        <span class="pill">Summit map</span>
+        <h2 id="mapTitle">Nine clean thresholds.</h2>
+        <p>
+          Each summit is a compact public-facing threshold. The deeper doctrine stays
+          out of the way; the path remains readable.
+        </p>
       </div>
 
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <h3>Enter cleanly</h3>
-          <p>Take the opening read at face value. Prelude steadies the frame before deeper exploration.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">2</div>
-          <h3>Let the tone settle</h3>
-          <p>Read it as an opening instrument, not as a total encyclopedia of the entire project.</p>
-        </div>
-        <div class="step">
-          <div class="step-number">3</div>
-          <h3>Choose the next route</h3>
-          <p>Move from Prelude into Nine Summits, About, Products, or Laws only after orientation is clear.</p>
-        </div>
+      <div class="summit-grid">
+        <article class="summit-card">
+          <small>Summit 01</small>
+          <strong>Orientation</strong>
+          <p>Enter cleanly. Know what surface you are standing on.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 02</small>
+          <strong>Attention</strong>
+          <p>Look at what matters next instead of everything at once.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 03</small>
+          <strong>Responsibility</strong>
+          <p>Own the next move before asking the system to carry more.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 04</small>
+          <strong>Discipline</strong>
+          <p>Keep the line stable long enough for the pattern to appear.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 05</small>
+          <strong>Repair</strong>
+          <p>Correct the fracture without turning correction into collapse.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 06</small>
+          <strong>Growth</strong>
+          <p>Let stability become expansion only when the base can hold it.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 07</small>
+          <strong>Service</strong>
+          <p>Move outward without making the outward motion selfish.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 08</small>
+          <strong>Integration</strong>
+          <p>Bring the parts back together without forcing a false close.</p>
+        </article>
+
+        <article class="summit-card">
+          <small>Summit 09</small>
+          <strong>Love in Motion</strong>
+          <p>Live the path plainly enough that another person can follow it.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="summits">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Summit descent</div>
-          <h2>Nine summits opening map</h2>
-        </div>
-        <div class="section-note">
-          Prelude should point toward the value spine, not compete with it.
-        </div>
-      </div>
+    <section class="route-panel" aria-labelledby="routeTitle">
+      <span class="pill">Next routes</span>
+      <h2 id="routeTitle">The summit path now connects to the house.</h2>
+      <p>
+        Generation 2 keeps this page readable and routes the visitor to the correct
+        next chamber instead of overloading the value spine.
+      </p>
 
-      <div class="summits">
-        <a class="summit-link" data-tone="gold" href="/nine-summits/">
-          <div class="summit-mark">N</div>
-          <h3 class="summit-title">Nine Summits</h3>
-          <div class="summit-copy">
-            Enter the full value spine and move from the opening read into the summit structure itself.
-          </div>
-          <div class="summit-meta">Baseline · Spine</div>
-        </a>
-
-        <a class="summit-link" data-tone="mint" href="/products/">
-          <div class="summit-mark">P</div>
-          <h3 class="summit-title">Products</h3>
-          <div class="summit-copy">
-            Step from orientation into the products chamber once the opening frame is stable enough to build from.
-          </div>
-          <div class="summit-meta">Chamber · Build</div>
-        </a>
-
-        <a class="summit-link" data-tone="blue" href="/about/">
-          <div class="summit-mark">A</div>
-          <h3 class="summit-title">About</h3>
-          <div class="summit-copy">
-            Read the plain-language orientation surface that explains what the site is and how to use it.
-          </div>
-          <div class="summit-meta">Identity · Orientation</div>
-        </a>
-
-        <a class="summit-link" data-tone="rose" href="/laws/">
-          <div class="summit-mark">L</div>
-          <h3 class="summit-title">Laws</h3>
-          <div class="summit-copy">
-            Move into the governing rule layer once you need structure, interpretation, and standards.
-          </div>
-          <div class="summit-meta">Rule · Structure</div>
-        </a>
-
-        <a class="summit-link" data-tone="gold" href="/">
-          <div class="summit-mark">D</div>
-          <h3 class="summit-title">Door</h3>
-          <div class="summit-copy">
-            Return to the root gateway and choose a broader entry into the larger house.
-          </div>
-          <div class="summit-meta">Root · Entry</div>
-        </a>
-
-        <a class="summit-link" data-tone="mint" href="/gauges/">
-          <div class="summit-mark">G</div>
-          <h3 class="summit-title">Gauges</h3>
-          <div class="summit-copy">
-            Read the signal and measurement layer once you need movement, state, and comparative surfaces.
-          </div>
-          <div class="summit-meta">Signal · Measurement</div>
-        </a>
+      <div class="route-grid">
+        <a href="/products/">Products</a>
+        <a href="/big-laugh/">Big Laugh</a>
+        <a href="/laws/">Laws</a>
+        <a href="/gauges/">Gauges</a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Prelude · Generation 1 opening contract</span>
-      <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
+      <span>Nine Summits · Generation 2 Value Spine</span>
+      <span>
+        <a href="/">Door</a>
+        ·
         <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-      </div>
+        ·
+        <a href="/big-laugh/">Big Laugh</a>
+      </span>
     </footer>
   </main>
 </body>

@@ -1,38 +1,29 @@
 <!DOCTYPE html>
-<html lang="en" data-door-generation="second-generation-renewal">
+<html lang="en" data-door-generation="world-is-flat-generation-1-lock">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Door · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge Door: a self-contained Generation 2 public entrance surface with V9 compact diamond controls, restored context, and no asset dependency."
-  />
+  <meta name="description" content="Diamond Gate Bridge Door: Generation 1 Lock, Russian-doll label compression, readable-first public entrance." />
 
   <style>
     :root {
       --bg:#020610;
       --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
+      --panel2:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
-      --line-strong:rgba(239,210,154,.34);
+      --line2:rgba(239,210,154,.34);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
       --blue:#8ec5ff;
       --green:#93efbd;
-      --purple:#c89cff;
       --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
-      --diamond-spin:18s;
-      --diamond-float:7s;
-      --diamond-breathe:5.8s;
     }
 
-    * {
-      box-sizing:border-box;
-    }
+    * { box-sizing:border-box; }
 
     html,
     body {
@@ -53,7 +44,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.22;
+      opacity:.20;
       background:
         linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
         linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
@@ -61,10 +52,7 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
+    a { color:inherit; text-decoration:none; }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -77,14 +65,13 @@
     .topbar,
     .hero,
     .panel,
-    .read-card,
+    .label-card,
     .route-card,
-    .signal-card,
     .status-strip {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(239,210,154,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
+        linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
     }
 
@@ -109,7 +96,7 @@
       border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line-strong);
+      border:1px solid var(--line2);
       background:
         radial-gradient(circle at 50% 28%,rgba(239,210,154,.34),transparent 44%),
         linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
@@ -120,10 +107,7 @@
       box-shadow:0 0 22px rgba(239,210,154,.14);
     }
 
-    .brand-text {
-      display:grid;
-      gap:3px;
-    }
+    .brand-text { display:grid; gap:3px; }
 
     .kicker {
       display:block;
@@ -146,8 +130,7 @@
 
     .nav,
     .route-grid,
-    .read-grid,
-    .signal-grid {
+    .label-grid {
       display:grid;
       gap:10px;
     }
@@ -180,7 +163,7 @@
 
     .route-card {
       width:min(100%,150px);
-      font-size:.80rem;
+      font-size:.78rem;
     }
 
     .nav a::before,
@@ -200,9 +183,7 @@
         inset 0 0 26px rgba(255,255,255,.035);
       z-index:-1;
       transform-origin:50% 50%;
-      animation:
-        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
-        diamondPulse var(--diamond-breathe) ease-in-out infinite;
+      animation:diamondFloat 7s ease-in-out infinite, diamondPulse 5.8s ease-in-out infinite;
     }
 
     .nav a::after,
@@ -218,23 +199,20 @@
       opacity:.72;
       z-index:-1;
       transform-origin:50% 50%;
-      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
+      animation:innerSpin 18s linear infinite;
     }
 
-    .nav a.featured {
-      color:#fff8ea;
-    }
+    .nav a.featured,
+    .route-card.featured { color:#fff8ea; }
 
-    .nav a.featured::before {
-      border-color:rgba(239,210,154,.44);
+    .nav a.featured::before,
+    .route-card.featured::before {
+      border-color:rgba(239,210,154,.46);
       background:
         radial-gradient(circle at 50% 50%,rgba(239,210,154,.34),transparent 34%),
         radial-gradient(circle at 50% 72%,rgba(142,197,255,.12),transparent 34%),
-        linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
         linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
-      box-shadow:
-        0 0 38px rgba(239,210,154,.24),
-        inset 0 0 30px rgba(255,255,255,.04);
     }
 
     .nav a:hover,
@@ -250,7 +228,7 @@
       border-radius:34px;
       padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(390px,52vw,620px);
+      min-height:clamp(360px,44vw,540px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -275,22 +253,6 @@
       z-index:-3;
     }
 
-    .hero::after {
-      content:"";
-      position:absolute;
-      width:min(860px,96vw);
-      height:min(410px,50vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(7deg);
-      border:1px solid rgba(239,210,154,.22);
-      border-radius:50%;
-      z-index:-2;
-      box-shadow:
-        0 0 38px rgba(239,210,154,.08),
-        inset 0 0 38px rgba(142,197,255,.06);
-    }
-
     .door-frame {
       position:absolute;
       right:clamp(20px,6vw,90px);
@@ -306,7 +268,7 @@
       box-shadow:
         inset 0 0 44px rgba(239,210,154,.06),
         0 0 64px rgba(142,197,255,.08);
-      opacity:.84;
+      opacity:.72;
       z-index:-1;
     }
 
@@ -333,7 +295,7 @@
     .hero-copy {
       display:grid;
       gap:14px;
-      max-width:760px;
+      max-width:780px;
       position:relative;
       z-index:2;
     }
@@ -387,12 +349,6 @@
       font-size:1rem;
     }
 
-    .hero p {
-      max-width:66ch;
-      margin-top:6px;
-      font-size:clamp(1.04rem,1.9vw,1.22rem);
-    }
-
     .panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
@@ -406,21 +362,53 @@
       gap:8px;
     }
 
-    .read-card,
-    .signal-card {
-      position:relative;
-      isolation:isolate;
+    .label-card {
       border-radius:18px;
-      padding:14px;
-      color:inherit;
       overflow:hidden;
     }
 
-    .read-card small,
-    .signal-card small,
-    .route-card small {
+    details.label-card {
+      padding:0;
+    }
+
+    summary {
+      cursor:pointer;
+      list-style:none;
+      min-height:74px;
+      display:grid;
+      align-content:center;
+      gap:5px;
+      padding:14px;
+      position:relative;
+      color:#fff;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    summary::-webkit-details-marker { display:none; }
+
+    summary::after {
+      content:"+";
+      position:absolute;
+      right:14px;
+      top:50%;
+      transform:translateY(-50%);
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      border:1px solid rgba(239,210,154,.26);
+      display:grid;
+      place-items:center;
+      color:var(--gold);
+      font-weight:900;
+    }
+
+    details[open] summary::after {
+      content:"–";
+    }
+
+    summary small {
       display:block;
-      margin-bottom:6px;
       color:#91a6cf;
       text-transform:uppercase;
       letter-spacing:.12em;
@@ -428,41 +416,14 @@
       font-weight:850;
     }
 
-    .read-card strong,
-    .signal-card strong,
-    .route-card strong {
-      display:block;
-      color:#fff;
-      font-size:1rem;
-      line-height:1.1;
-    }
-
-    .read-card p,
-    .signal-card p {
-      margin-top:8px;
+    .label-body {
+      padding:0 14px 14px;
       color:var(--muted);
-      font-size:.88rem;
-      line-height:1.42;
+      font-size:.92rem;
+      line-height:1.48;
     }
 
-    .route-card small,
-    .route-card strong {
-      position:relative;
-      z-index:3;
-      max-width:70%;
-      margin-left:auto;
-      margin-right:auto;
-      text-align:center;
-      text-wrap:balance;
-    }
-
-    .route-card small {
-      font-size:.48rem;
-    }
-
-    .route-card strong {
-      font-size:.80rem;
-    }
+    .label-body p + p { margin-top:8px; }
 
     .status-strip {
       display:grid;
@@ -490,48 +451,21 @@
       font-size:.86rem;
     }
 
-    .footer a {
-      color:#d6e2ff;
-    }
+    .footer a { color:#d6e2ff; }
 
-    @keyframes diamondBodyWobble {
-      0%,100% {
-        transform:translateY(0) rotate(0deg) scale(1);
-      }
-
-      25% {
-        transform:translateY(-2px) rotate(1.4deg) scale(1.015);
-      }
-
-      50% {
-        transform:translateY(-4px) rotate(0deg) scale(1.025);
-      }
-
-      75% {
-        transform:translateY(-2px) rotate(-1.4deg) scale(1.015);
-      }
+    @keyframes diamondFloat {
+      0%,100% { transform:translateY(0) rotate(0deg) scale(1); }
+      50% { transform:translateY(-4px) rotate(0deg) scale(1.025); }
     }
 
     @keyframes diamondPulse {
-      0%,100% {
-        opacity:.82;
-        filter:brightness(1);
-      }
-
-      50% {
-        opacity:1;
-        filter:brightness(1.18);
-      }
+      0%,100% { opacity:.82; filter:brightness(1); }
+      50% { opacity:1; filter:brightness(1.18); }
     }
 
-    @keyframes innerDiamondSpin {
-      0% {
-        transform:rotate(0deg) scale(.96);
-      }
-
-      100% {
-        transform:rotate(360deg) scale(.96);
-      }
+    @keyframes innerSpin {
+      0% { transform:rotate(0deg) scale(.96); }
+      100% { transform:rotate(360deg) scale(.96); }
     }
 
     @media (min-width:820px) {
@@ -545,8 +479,7 @@
         justify-content:end;
       }
 
-      .read-grid,
-      .signal-grid {
+      .label-grid {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
@@ -571,9 +504,7 @@
         padding:12px;
       }
 
-      .brand {
-        gap:10px;
-      }
+      .brand { gap:10px; }
 
       .mark {
         width:44px;
@@ -592,7 +523,7 @@
       }
 
       .hero {
-        min-height:410px;
+        min-height:390px;
         padding:22px;
       }
 
@@ -603,7 +534,7 @@
         width:112px;
         height:172px;
         transform:none;
-        opacity:.45;
+        opacity:.36;
       }
 
       .route-grid {
@@ -614,24 +545,8 @@
         width:min(100%,132px);
       }
 
-      .route-card small {
-        font-size:.42rem;
-      }
-
-      .route-card strong {
-        font-size:.70rem;
-      }
-    }
-
-    @media (max-width:360px) {
-      .nav a {
-        width:min(100%,62px);
-        font-size:.48rem;
-      }
-
-      .route-card {
-        width:min(100%,122px);
-      }
+      .route-card small { font-size:.42rem; }
+      .route-card strong { font-size:.70rem; }
     }
 
     @media (prefers-reduced-motion:reduce) {
@@ -647,19 +562,13 @@
 </head>
 
 <body>
-  <main
-    class="page"
-    data-generation="second-generation-renewal"
-    data-page="door"
-    data-surface="generation-2-self-contained-door"
-    data-explore-route="active"
-  >
+  <main class="page" data-page="door" data-baseline="world-is-flat-generation-1-lock" data-pass="russian-doll-label-compression">
     <header class="topbar">
       <a class="brand" href="/door/" aria-label="Diamond Gate Bridge Door">
         <span class="mark" aria-hidden="true">DG</span>
         <span class="brand-text">
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Public Door · V9</strong>
+          <strong class="title">Public Door · Generation 1</strong>
         </span>
       </a>
 
@@ -669,7 +578,7 @@
         <a href="/explore/">Explore</a>
         <a href="/frontier/">Frontier</a>
         <a href="/products/">Products</a>
-        <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
+        <a class="featured" href="/big-laugh/upper-room/">Show</a>
         <a href="/gauges/">Gauges</a>
         <a href="/about/">About</a>
       </nav>
@@ -682,151 +591,104 @@
         <span class="pill">Public front door</span>
         <h1 id="doorTitle">Diamond Gate Bridge</h1>
         <h2>Learn to Live to Love.</h2>
-        <p>
-          This is the entrance. Not the full map. Not every room. Just the first
-          clean doorway into the public surface.
-        </p>
+        <p>Choose a label. The context opens only when requested.</p>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="doorContextTitle">
+    <section class="panel" aria-labelledby="labelsTitle">
       <div class="panel-head">
-        <span class="pill">Generation 2 baseline</span>
-        <h2 id="doorContextTitle">A door should orient before it explains.</h2>
-        <p>
-          V9 keeps the Door compact, readable, and self-contained. It gives the
-          visitor a small set of routes without forcing the entire system onto the
-          entrance page.
-        </p>
+        <span class="pill">Russian-doll labels</span>
+        <h2 id="labelsTitle">The Door stays simple until touched.</h2>
       </div>
 
-      <div class="read-grid">
-        <article class="read-card">
-          <small>Arrive</small>
-          <strong>See the entrance.</strong>
-          <p>The page names Diamond Gate Bridge and establishes the public front surface.</p>
-        </article>
+      <div class="label-grid">
+        <details class="label-card">
+          <summary><small>Arrival</small>See the entrance.</summary>
+          <div class="label-body">
+            <p>The Door names Diamond Gate Bridge and gives the visitor one stable public entry point.</p>
+            <p>It does not explain the whole house. It shows where to begin.</p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Choose</small>
-          <strong>Select the next route.</strong>
-          <p>Explore, Frontier, Products, Gauges, and Upcoming Show are available without clutter.</p>
-        </article>
+        <details class="label-card">
+          <summary><small>Choice</small>Pick a route.</summary>
+          <div class="label-body">
+            <p>The route diamonds let the visitor move without reading the whole system first.</p>
+            <p>Each chamber carries its own context when selected.</p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Continue</small>
-          <strong>Move into the right room.</strong>
-          <p>Each deeper surface carries its own context instead of overloading the Door.</p>
-        </article>
+        <details class="label-card">
+          <summary><small>Continuation</small>Open the next room.</summary>
+          <div class="label-body">
+            <p>Home stabilizes, Prelude prepares, Explore routes, Frontier carries the edge, Products packages, Gauges inspects, and Laws bounds.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Baseline</small>World is Flat.</summary>
+          <div class="label-body">
+            <p>Generation 1 Lock means minimum animation, maximum context, old-school clarity, and a new-school vibe.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Motion</small>Signal, not spectacle.</summary>
+          <div class="label-body">
+            <p>Diamonds move lightly to show life, but the motion must never compete with readability.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Rule</small>Labels first.</summary>
+          <div class="label-body">
+            <p>Meaning is preserved, but visible text is compressed. The visitor opens only the context they want.</p>
+          </div>
+        </details>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Route controls</span>
-        <h2 id="routesTitle">Compact rotating diamonds.</h2>
-        <p>
-          The oversized route bubbles are replaced with self-contained diamond
-          controls so more routes fit on the screen without losing visibility.
-        </p>
+        <span class="pill">Route labels</span>
+        <h2 id="routesTitle">Touch the next surface.</h2>
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/prelude/">
-          <small>Threshold</small>
-          <strong>Prelude</strong>
-        </a>
-
-        <a class="route-card" href="/explore/">
-          <small>Route map</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card" href="/frontier/">
-          <small>Edge</small>
-          <strong>Frontier</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Chamber</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Upcoming show</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="signalsTitle">
-      <div class="panel-head">
-        <span class="pill">Door read</span>
-        <h2 id="signalsTitle">What this page confirms.</h2>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card">
-          <small>Density</small>
-          <strong>Bubbles are reduced.</strong>
-          <p>The old long pills are replaced by compact diamond controls.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Route</small>
-          <strong>Explore stays functional.</strong>
-          <p>Explore remains visible and routes to the real Explore page instead of being suppressed.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Baseline</small>
-          <strong>Door V9 is self-contained.</strong>
-          <p>The Door does not depend on shared asset loading to render its core shape and motion.</p>
-        </article>
+        <a class="route-card" href="/home/"><small>Interior</small><strong>Home</strong></a>
+        <a class="route-card" href="/prelude/"><small>Threshold</small><strong>Prelude</strong></a>
+        <a class="route-card" href="/explore/"><small>Route map</small><strong>Explore</strong></a>
+        <a class="route-card" href="/frontier/"><small>Edge</small><strong>Frontier</strong></a>
+        <a class="route-card" href="/products/"><small>Chamber</small><strong>Products</strong></a>
+        <a class="route-card featured" href="/big-laugh/upper-room/"><small>Show</small><strong>Upper Room</strong></a>
+        <a class="route-card" href="/gauges/"><small>Inspection</small><strong>Gauges</strong></a>
+        <a class="route-card" href="/laws/"><small>Rule layer</small><strong>Laws</strong></a>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="statusTitle">
       <div class="panel-head">
-        <span class="pill">Status receipt</span>
-        <h2 id="statusTitle">Generation 2 Door baseline is active.</h2>
+        <span class="pill">Status label</span>
+        <h2 id="statusTitle">Generation 1 Door compression active.</h2>
       </div>
 
       <div class="status-strip">
-        <code>DOOR_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
+        <code>DOOR_GENERATION_1_LABEL_COMPRESSION=ACTIVE
 PAGE=/door/index.html
-NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
-EXPLORE_ROUTE=ACTIVE
-FRONTIER_ROUTE=ACTIVE
-UPCOMING_SHOW=VISIBLE
-ASSET_DEPENDENCY=REMOVED_FOR_DOOR_PAGE
-LEGACY_LONG_BUBBLES=REMOVED
-CONTEXT=READABLE_FIRST
-NEXT_ACTION=USE_THIS_AS_THE_STABLE_DOOR_BASELINE</code>
+BASELINE=THE_WORLD_IS_FLAT
+VISIBLE_DEFAULT=TITLE_CORE_LINE_LABELS
+CONTEXT=HIDDEN_UNTIL_LABEL_CLICK
+METHOD=DETAILS_SUMMARY_RUSSIAN_DOLL
+LEGACY_OVEREXPRESSION=REDUCED</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Door · Self-Contained Generation 2 Baseline</span>
+      <span>Diamond Gate Bridge · Door · World is Flat Generation 1</span>
       <span>
         <a href="/home/">Home</a> ·
+        <a href="/prelude/">Prelude</a> ·
         <a href="/explore/">Explore</a> ·
-        <a href="/frontier/">Frontier</a> ·
         <a href="/products/">Products</a>
       </span>
     </footer>

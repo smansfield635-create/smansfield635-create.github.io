@@ -1,22 +1,15 @@
 <!DOCTYPE html>
-<html
-  lang="en"
-  data-frontier-generation="second-generation-renewal"
-  data-sending-room="door"
-  data-receiving-room="explore-frontier"
->
+<html lang="en" data-frontier-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-
   <title>Frontier · Diamond Gate Bridge</title>
-
   <meta
     name="description"
-    content="Frontier at Diamond Gate Bridge: a Generation 2 public surface that opens the edge path into Explore Frontier."
+    content="Frontier at Diamond Gate Bridge: a Generation 2 route surface that sends visitors into Explore Frontier."
   />
-
   <link rel="canonical" href="/explore/frontier/" />
+  <meta http-equiv="refresh" content="2; url=/explore/frontier/" />
 
   <style>
     :root {
@@ -27,19 +20,12 @@
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
-      --blue:#8ec5ff;
-      --green:#93efbd;
-      --purple:#c89cff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1180px;
     }
 
-    * {
-      box-sizing:border-box;
-    }
+    * { box-sizing:border-box; }
 
-    html,
-    body {
+    html, body {
       margin:0;
       min-height:100%;
       color:var(--text);
@@ -47,174 +33,24 @@
       background:
         radial-gradient(circle at 50% 6%,rgba(239,210,154,.16),transparent 25%),
         radial-gradient(circle at 16% 32%,rgba(142,197,255,.12),transparent 30%),
-        radial-gradient(circle at 84% 44%,rgba(200,156,255,.12),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
-      overflow-x:hidden;
     }
 
-    body::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.20;
-      background:
-        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+    body {
+      display:grid;
+      place-items:center;
+      padding:18px;
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
-
-    .page {
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
-      position:relative;
-      z-index:1;
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .frontier-card,
-    .route-card {
+    .card {
+      width:min(760px,100%);
       border:1px solid var(--line);
+      border-radius:30px;
+      padding:clamp(22px,5vw,42px);
       background:
         radial-gradient(circle at 50% 0%,rgba(239,210,154,.10),transparent 42%),
         linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
-    }
-
-    .topbar {
-      min-height:76px;
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:28px;
-      display:grid;
-      gap:12px;
-    }
-
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
-      letter-spacing:.08em;
-    }
-
-    .kicker {
-      display:block;
-      margin:0 0 4px;
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-
-    .title {
-      display:block;
-      margin:0;
-      font-weight:850;
-      font-size:1.05rem;
-    }
-
-    .nav,
-    .actions,
-    .frontier-grid,
-    .route-grid {
-      display:grid;
-      gap:10px;
-    }
-
-    .nav a,
-    .button,
-    .route-card {
-      min-height:44px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:0 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      color:#d7e2ff;
-      font-weight:850;
-      text-align:center;
-    }
-
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .hero {
-      border-radius:34px;
-      padding:clamp(22px,4vw,46px);
-      margin-bottom:14px;
-      min-height:clamp(430px,56vw,640px);
-      display:grid;
-      align-items:center;
-      overflow:hidden;
-      position:relative;
-      isolation:isolate;
-    }
-
-    .hero::before {
-      content:"";
-      position:absolute;
-      width:min(680px,84vw);
-      height:min(680px,84vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.18),transparent 24%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(200,156,255,.10),transparent 70%);
-      filter:blur(5px);
-      z-index:-2;
-    }
-
-    .hero::after {
-      content:"";
-      position:absolute;
-      width:min(820px,94vw);
-      height:min(380px,46vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(-12deg);
-      border:1px solid rgba(239,210,154,.18);
-      border-radius:50%;
-      z-index:-1;
-      box-shadow:
-        0 0 38px rgba(239,210,154,.08),
-        inset 0 0 38px rgba(142,197,255,.06);
-    }
-
-    .hero-copy {
-      display:grid;
-      gap:14px;
     }
 
     .pill {
@@ -223,6 +59,7 @@
       align-items:center;
       gap:10px;
       padding:8px 12px;
+      margin-bottom:16px;
       border-radius:999px;
       border:1px solid var(--line);
       background:rgba(255,255,255,.035);
@@ -246,306 +83,84 @@
     h1 {
       margin:0;
       color:#fff;
-      font-size:clamp(3.4rem,13vw,7.2rem);
-      line-height:.86;
-      letter-spacing:-.08em;
+      font-size:clamp(2.6rem,9vw,5.2rem);
+      line-height:.9;
+      letter-spacing:-.07em;
     }
 
     h2 {
-      margin:0;
+      margin:12px 0 0;
       color:var(--gold);
-      font-size:clamp(1.55rem,5vw,3.05rem);
+      font-size:clamp(1.4rem,4.5vw,2.6rem);
       line-height:1;
-      letter-spacing:-.045em;
+      letter-spacing:-.04em;
     }
 
     p {
-      margin:0;
+      margin:16px 0 0;
       color:var(--muted);
       line-height:1.58;
       font-size:1rem;
     }
 
-    .hero p {
-      max-width:76ch;
-      margin-top:14px;
-      font-size:clamp(1rem,1.8vw,1.18rem);
-    }
-
     .actions {
-      margin-top:10px;
-    }
-
-    .panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      margin-bottom:14px;
-      display:grid;
-      gap:16px;
-    }
-
-    .panel-head {
-      display:grid;
-      gap:8px;
-    }
-
-    .frontier-card,
-    .route-card {
-      border-radius:22px;
-      padding:16px;
-      min-height:136px;
-      align-items:flex-start;
-      justify-content:flex-start;
-      flex-direction:column;
-      text-align:left;
-    }
-
-    .frontier-card small,
-    .route-card small {
-      display:block;
-      margin-bottom:8px;
-      color:#91a6cf;
-      text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
-      font-weight:850;
-    }
-
-    .frontier-card strong,
-    .route-card strong {
-      display:block;
-      color:#fff;
-      font-size:1.08rem;
-      line-height:1.12;
-    }
-
-    .frontier-card p {
-      margin-top:8px;
-      font-size:.92rem;
-      line-height:1.42;
-    }
-
-    .edge {
-      border-color:rgba(239,210,154,.25);
-    }
-
-    .experiment {
-      border-color:rgba(142,197,255,.25);
-    }
-
-    .expansion {
-      border-color:rgba(147,239,189,.25);
-    }
-
-    .signal {
-      border-color:rgba(200,156,255,.25);
-    }
-
-    .closing-read {
-      max-width:84ch;
-      padding:18px;
-      border:1px solid rgba(239,210,154,.18);
-      border-radius:24px;
-      background:rgba(255,255,255,.035);
-      color:#dfe8ff;
-      font-size:1.04rem;
-      line-height:1.65;
-    }
-
-    .footer {
       display:flex;
       flex-wrap:wrap;
-      justify-content:space-between;
       gap:10px;
-      padding:14px 4px 0;
-      color:#9db0d4;
-      font-size:.86rem;
+      margin-top:22px;
     }
 
-    .footer a {
-      color:#d6e2ff;
+    a {
+      color:inherit;
+      text-decoration:none;
     }
 
-    @media (min-width:820px) {
-      .topbar {
-        grid-template-columns:1fr auto;
-        align-items:center;
-      }
-
-      .nav {
-        grid-template-columns:repeat(6,auto);
-      }
-
-      .actions {
-        grid-template-columns:repeat(4,auto);
-        justify-content:start;
-      }
-
-      .frontier-grid,
-      .route-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-    }
-
-    @media (max-width:640px) {
-      .page {
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-      }
-
-      .topbar,
-      .hero,
-      .panel {
-        border-radius:24px;
-      }
-
-      .nav,
-      .actions,
-      .frontier-grid,
-      .route-grid {
-        grid-template-columns:1fr;
-      }
-
-      .hero {
-        min-height:520px;
-      }
+    .button {
+      min-height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 14px;
+      border:1px solid rgba(239,210,154,.38);
+      border-radius:999px;
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+      font-weight:850;
     }
   </style>
 </head>
 
 <body>
   <main
-    class="page"
+    class="card"
     data-generation="second-generation-renewal"
     data-page="frontier"
     data-sending-room="door"
     data-receiving-room="explore-frontier"
     data-target-route="/explore/frontier/"
   >
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="Door">
-        <span class="mark" aria-hidden="true">FR</span>
-        <span>
-          <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Frontier</strong>
-        </span>
-      </a>
+    <span class="pill">Door sends Frontier</span>
+    <h1>Frontier</h1>
+    <h2>Explore receives the edge.</h2>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Door</a>
-        <a href="/home/">Home</a>
-        <a href="/prelude/">Prelude</a>
-        <a href="/explore/">Explore</a>
-        <a href="/explore/frontier/">Explore Frontier</a>
-        <a href="/products/">Products</a>
-      </nav>
-    </header>
+    <p>
+      Frontier now opens through Explore. Continue to the active Generation 2 surface:
+      Explore Frontier.
+    </p>
 
-    <section class="hero" aria-labelledby="frontierTitle">
-      <div class="hero-copy">
-        <span class="pill">Frontier opens through Explore</span>
-        <h1 id="frontierTitle">Frontier</h1>
-        <h2>The edge has a route now.</h2>
-        <p>
-          Frontier is the edge-facing public surface. It gives new paths, public experiments,
-          future chambers, and next territories a clean entry point while keeping the core pages stable.
-        </p>
-
-        <div class="actions">
-          <a class="button primary" href="/explore/frontier/">Open Explore Frontier</a>
-          <a class="button" href="/explore/">Back to Explore</a>
-          <a class="button" href="/metaverse/">Metaverse</a>
-          <a class="button" href="/products/">Products</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="frontierUseTitle">
-      <div class="panel-head">
-        <span class="pill">Generation 2 frontier</span>
-        <h2 id="frontierUseTitle">The edge is for expansion, not clutter.</h2>
-        <p>
-          Frontier holds what is opening next. When a surface becomes stable enough,
-          it can move inward. Until then, it has a clean edge room.
-        </p>
-      </div>
-
-      <div class="frontier-grid">
-        <article class="frontier-card edge">
-          <small>Edge</small>
-          <strong>New public paths</strong>
-          <p>Use Frontier for directions that are visible but not yet core chambers.</p>
-        </article>
-
-        <article class="frontier-card experiment">
-          <small>Experiment</small>
-          <strong>Testable surfaces</strong>
-          <p>Hold experiments here before they become permanent site architecture.</p>
-        </article>
-
-        <article class="frontier-card expansion">
-          <small>Expansion</small>
-          <strong>Future territories</strong>
-          <p>Give new worlds, products, programs, and public branches a place to breathe.</p>
-        </article>
-
-        <article class="frontier-card signal">
-          <small>Signal</small>
-          <strong>Next movement</strong>
-          <p>Show what is opening next without crowding the Door, Home, or Explore.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="routesTitle">
-      <div class="panel-head">
-        <span class="pill">Route pair</span>
-        <h2 id="routesTitle">Door sends. Explore receives.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/">
-          <small>Sender</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/explore/">
-          <small>Parent</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card" href="/explore/frontier/">
-          <small>Receiver</small>
-          <strong>Explore Frontier</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="closingTitle">
-      <div class="panel-head">
-        <span class="pill">Frontier read</span>
-        <h2 id="closingTitle">The frontier is no longer a dead route.</h2>
-      </div>
-
-      <p class="closing-read">
-        The old top-level route now carries a real Generation 2 surface and points forward
-        into Explore Frontier. The visitor is not stranded at a 404 or a receipt page.
-      </p>
-    </section>
-
-    <footer class="footer">
-      <span>Frontier · Generation 2 Route Surface</span>
-      <span>
-        <a href="/">Door</a> ·
-        <a href="/explore/">Explore</a> ·
-        <a href="/explore/frontier/">Explore Frontier</a>
-      </span>
-    </footer>
+    <div class="actions">
+      <a class="button" href="/explore/frontier/">Open Explore Frontier</a>
+      <a class="button" href="/explore/">Back to Explore</a>
+      <a class="button" href="/">Door</a>
+    </div>
   </main>
+
+  <script>
+    window.setTimeout(function () {
+      window.location.replace("/explore/frontier/");
+    }, 700);
+  </script>
 </body>
 </html>

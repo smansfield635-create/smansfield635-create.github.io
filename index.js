@@ -1,8 +1,10 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-root-shared-earth-globe-consumer-v1";
-  const SHARED_GLOBE_SRC = "/shared/earth_globe.js";
+  const STYLE_ID = "dgb-root-home-axis-spin-earth-v1";
+
+  const EARTH_TEXTURE_URL =
+    "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg";
 
   function injectStyle() {
     if (document.getElementById(STYLE_ID)) return;
@@ -329,8 +331,8 @@
       .home-core {
         position:relative;
         z-index:5;
-        width:230px;
-        height:230px;
+        width:232px;
+        height:232px;
         border-radius:50%;
         display:grid;
         place-items:center;
@@ -340,8 +342,199 @@
         background:transparent;
       }
 
-      .home-core > .dgb-earth-globe {
+      .earth-home-globe {
+        position:relative;
+        z-index:3;
         width:220px;
+        height:220px;
+        border-radius:50%;
+        overflow:visible;
+        isolation:isolate;
+        transform:rotate(-23.5deg);
+        transform-origin:50% 50%;
+        filter:drop-shadow(0 0 28px rgba(120,205,255,.24));
+      }
+
+      .earth-home-globe__axis {
+        position:absolute;
+        left:50%;
+        top:50%;
+        z-index:1;
+        width:2px;
+        height:124%;
+        transform:translate(-50%,-50%);
+        border-radius:999px;
+        background:linear-gradient(
+          180deg,
+          transparent,
+          rgba(240,215,156,.22),
+          rgba(184,228,255,.58),
+          rgba(240,215,156,.22),
+          transparent
+        );
+        box-shadow:0 0 20px rgba(184,228,255,.24);
+        pointer-events:none;
+      }
+
+      .earth-home-globe__sphere {
+        position:absolute;
+        inset:0;
+        z-index:3;
+        border-radius:50%;
+        overflow:hidden;
+        isolation:isolate;
+        border:1px solid rgba(218,239,255,.84);
+        background:
+          radial-gradient(circle at 50% 50%,#0b63b5 0%,#073f86 48%,#031b42 100%);
+        box-shadow:
+          inset -50px -40px 70px rgba(0,0,0,.66),
+          inset 22px 17px 38px rgba(255,255,255,.24),
+          0 0 60px rgba(142,197,255,.56),
+          0 0 150px rgba(239,210,154,.20);
+      }
+
+      .earth-home-globe__texture {
+        position:absolute;
+        inset:-1.5%;
+        z-index:2;
+        border-radius:50%;
+        background-image:var(--earth-texture-url);
+        background-repeat:repeat-x;
+        background-size:245% 124%;
+        background-position:58% 46%;
+        filter:saturate(1.16) contrast(1.14) brightness(.96);
+        transform:scale(1.08);
+        animation:earthHomeTextureSpin 44s linear infinite;
+      }
+
+      .earth-home-globe__texture::before {
+        content:"";
+        position:absolute;
+        inset:0;
+        border-radius:inherit;
+        pointer-events:none;
+        background:
+          radial-gradient(circle at 31% 22%,rgba(255,255,255,.30),transparent 13%),
+          radial-gradient(circle at 42% 36%,rgba(255,255,255,.13),transparent 24%),
+          linear-gradient(90deg,rgba(255,255,255,.10),transparent 42%,rgba(0,0,0,.34) 100%);
+        mix-blend-mode:screen;
+      }
+
+      .earth-home-globe__texture::after {
+        content:"";
+        position:absolute;
+        inset:0;
+        border-radius:inherit;
+        pointer-events:none;
+        background:
+          radial-gradient(circle at 78% 72%,rgba(0,0,0,.48),transparent 40%),
+          radial-gradient(circle at 96% 50%,rgba(0,0,0,.48),transparent 28%),
+          radial-gradient(circle at 3% 50%,rgba(255,255,255,.08),transparent 24%),
+          linear-gradient(105deg,transparent 0 57%,rgba(0,0,0,.28) 76%,rgba(0,0,0,.54) 100%);
+      }
+
+      .earth-home-globe__projection-mask {
+        position:absolute;
+        inset:0;
+        z-index:3;
+        border-radius:50%;
+        pointer-events:none;
+        background:
+          radial-gradient(circle at 50% 50%,transparent 0 61%,rgba(0,0,0,.16) 72%,rgba(0,0,0,.54) 100%),
+          linear-gradient(90deg,rgba(0,0,0,.10),transparent 20%,transparent 78%,rgba(0,0,0,.35));
+        mix-blend-mode:multiply;
+      }
+
+      .earth-home-globe__cloud-layer {
+        position:absolute;
+        inset:-2%;
+        z-index:4;
+        border-radius:50%;
+        pointer-events:none;
+        filter:blur(1.8px);
+        opacity:.62;
+        background:
+          radial-gradient(ellipse at 30% 30%,rgba(255,255,255,.34) 0 8%,transparent 18%),
+          radial-gradient(ellipse at 58% 25%,rgba(255,255,255,.26) 0 6%,transparent 18%),
+          radial-gradient(ellipse at 69% 63%,rgba(255,255,255,.24) 0 7%,transparent 21%),
+          radial-gradient(ellipse at 36% 70%,rgba(255,255,255,.18) 0 8%,transparent 21%),
+          repeating-linear-gradient(18deg,transparent 0 25px,rgba(255,255,255,.10) 26px 30px,transparent 31px 60px);
+        mask-image:radial-gradient(circle at 50% 50%,black 0 66%,rgba(0,0,0,.55) 78%,transparent 100%);
+        animation:earthHomeCloudDrift 68s linear infinite;
+      }
+
+      .earth-home-globe__cloud-layer::before {
+        content:"";
+        position:absolute;
+        inset:0;
+        border-radius:inherit;
+        background:
+          linear-gradient(15deg,transparent 0 24%,rgba(255,255,255,.16) 28%,transparent 36%),
+          linear-gradient(-12deg,transparent 0 46%,rgba(255,255,255,.13) 50%,transparent 59%),
+          linear-gradient(22deg,transparent 0 66%,rgba(255,255,255,.12) 70%,transparent 78%);
+        opacity:.84;
+      }
+
+      .earth-home-globe__grid {
+        position:absolute;
+        inset:0;
+        z-index:5;
+        width:100%;
+        height:100%;
+        display:block;
+        pointer-events:none;
+        opacity:.38;
+      }
+
+      .earth-home-globe__grid-line {
+        fill:none;
+        stroke:rgba(255,255,255,.14);
+        stroke-width:.58;
+      }
+
+      .earth-home-globe__rim {
+        position:absolute;
+        inset:-1px;
+        z-index:8;
+        border-radius:50%;
+        pointer-events:none;
+        box-shadow:
+          inset 0 0 18px rgba(255,255,255,.20),
+          inset 0 0 48px rgba(100,180,255,.18),
+          0 0 26px rgba(120,205,255,.48),
+          0 0 66px rgba(120,205,255,.22);
+      }
+
+      .earth-home-globe__atmosphere {
+        position:absolute;
+        inset:-4%;
+        z-index:1;
+        border-radius:50%;
+        pointer-events:none;
+        background:
+          radial-gradient(circle at 50% 50%,rgba(120,205,255,.18),transparent 63%);
+        filter:blur(10px);
+      }
+
+      .earth-home-globe__axis-cap {
+        position:absolute;
+        left:50%;
+        width:8px;
+        height:8px;
+        border-radius:50%;
+        transform:translateX(-50%);
+        z-index:9;
+        background:rgba(240,215,156,.78);
+        box-shadow:0 0 16px rgba(240,215,156,.40);
+        pointer-events:none;
+      }
+
+      .earth-home-globe__axis-cap--north {
+        top:-5px;
+      }
+
+      .earth-home-globe__axis-cap--south {
+        bottom:-5px;
       }
 
       .home-caption {
@@ -486,6 +679,16 @@
         to { transform:rotate(317deg) scaleX(.35); }
       }
 
+      @keyframes earthHomeTextureSpin {
+        from { background-position:58% 46%; }
+        to { background-position:-187% 46%; }
+      }
+
+      @keyframes earthHomeCloudDrift {
+        from { transform:translateX(0) scale(1.02); }
+        to { transform:translateX(-18%) scale(1.02); }
+      }
+
       @media (min-width:820px) {
         .home-topbar {
           grid-template-columns:1fr auto;
@@ -538,12 +741,13 @@
         }
 
         .home-core {
-          width:212px;
-          height:212px;
+          width:218px;
+          height:218px;
         }
 
-        .home-core > .dgb-earth-globe {
+        .earth-home-globe {
           width:204px;
+          height:204px;
         }
 
         .home-caption {
@@ -566,57 +770,119 @@
     document.head.appendChild(style);
   }
 
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      if (window.DGBEarthGlobe) {
-        resolve();
-        return;
-      }
+  function createSvgElement(className, viewBox = "0 0 240 240") {
+    const ns = "http://www.w3.org/2000/svg";
+    const svg = document.createElementNS(ns, "svg");
 
-      const existing = document.querySelector(`script[data-dgb-loader="${src}"]`);
-      if (existing) {
-        existing.addEventListener("load", () => resolve(), { once: true });
-        existing.addEventListener("error", () => reject(new Error("Failed to load " + src)), { once: true });
-        return;
-      }
+    svg.setAttribute("class", className);
+    svg.setAttribute("viewBox", viewBox);
+    svg.setAttribute("aria-hidden", "true");
+    svg.setAttribute("focusable", "false");
 
-      const script = document.createElement("script");
-      script.src = src + "?v=shared-earth-globe-v1";
-      script.defer = true;
-      script.dataset.dgbLoader = src;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error("Failed to load " + src));
-      document.head.appendChild(script);
-    });
+    return svg;
   }
 
-  async function mountSharedEarthGlobe(root) {
+  function createGridSvg() {
+    const svg = createSvgElement("earth-home-globe__grid");
+
+    svg.innerHTML = `
+      <defs>
+        <clipPath id="earthHomeAxisSpinGridClipDgbV1">
+          <circle cx="120" cy="120" r="108"></circle>
+        </clipPath>
+      </defs>
+
+      <g clip-path="url(#earthHomeAxisSpinGridClipDgbV1)">
+        <path class="earth-home-globe__grid-line" d="M12 120 H228"></path>
+        <path class="earth-home-globe__grid-line" d="M120 12 V228"></path>
+        <ellipse class="earth-home-globe__grid-line" cx="120" cy="120" rx="108" ry="34"></ellipse>
+        <ellipse class="earth-home-globe__grid-line" cx="120" cy="120" rx="108" ry="66"></ellipse>
+        <ellipse class="earth-home-globe__grid-line" cx="120" cy="120" rx="82" ry="108"></ellipse>
+        <ellipse class="earth-home-globe__grid-line" cx="120" cy="120" rx="45" ry="108"></ellipse>
+        <ellipse class="earth-home-globe__grid-line" cx="120" cy="120" rx="18" ry="108"></ellipse>
+      </g>
+    `;
+
+    return svg;
+  }
+
+  function createHomeEarthGlobe() {
+    const globe = document.createElement("div");
+    globe.className = "earth-home-globe";
+    globe.setAttribute("role", "img");
+    globe.setAttribute("aria-label", "Planet Earth Demo Universe on a tilted axis with natural spin");
+    globe.setAttribute("data-home-earth-globe", "axis-spin-pass");
+    globe.setAttribute("data-earth-texture-source", "NASA Blue Marble");
+    globe.setAttribute("data-axis-degrees", "23.5");
+    globe.setAttribute("data-spin-system", "texture-drift-natural");
+
+    globe.style.setProperty("--earth-texture-url", `url("${EARTH_TEXTURE_URL}")`);
+
+    const axis = document.createElement("span");
+    axis.className = "earth-home-globe__axis";
+    axis.setAttribute("aria-hidden", "true");
+
+    const atmosphere = document.createElement("span");
+    atmosphere.className = "earth-home-globe__atmosphere";
+    atmosphere.setAttribute("aria-hidden", "true");
+
+    const sphere = document.createElement("span");
+    sphere.className = "earth-home-globe__sphere";
+    sphere.setAttribute("aria-hidden", "true");
+
+    const texture = document.createElement("span");
+    texture.className = "earth-home-globe__texture";
+    texture.setAttribute("aria-hidden", "true");
+
+    const projectionMask = document.createElement("span");
+    projectionMask.className = "earth-home-globe__projection-mask";
+    projectionMask.setAttribute("aria-hidden", "true");
+
+    const cloudLayer = document.createElement("span");
+    cloudLayer.className = "earth-home-globe__cloud-layer";
+    cloudLayer.setAttribute("aria-hidden", "true");
+
+    const rim = document.createElement("span");
+    rim.className = "earth-home-globe__rim";
+    rim.setAttribute("aria-hidden", "true");
+
+    const northCap = document.createElement("span");
+    northCap.className = "earth-home-globe__axis-cap earth-home-globe__axis-cap--north";
+    northCap.setAttribute("aria-hidden", "true");
+
+    const southCap = document.createElement("span");
+    southCap.className = "earth-home-globe__axis-cap earth-home-globe__axis-cap--south";
+    southCap.setAttribute("aria-hidden", "true");
+
+    sphere.append(
+      texture,
+      projectionMask,
+      createGridSvg(),
+      cloudLayer,
+      rim
+    );
+
+    globe.append(
+      axis,
+      atmosphere,
+      sphere,
+      northCap,
+      southCap
+    );
+
+    return globe;
+  }
+
+  function mountHomeEarthGlobe(root) {
     const core = root.querySelector(".home-core");
     if (!core) return;
 
+    core.replaceChildren(createHomeEarthGlobe());
+
     core.setAttribute("role", "img");
-    core.setAttribute("aria-label", "Planet Earth");
+    core.setAttribute("aria-label", "Planet Earth Demo Universe");
     core.setAttribute("data-home-earth-core", "true");
-    core.setAttribute("data-home-demo-universe-core", "shared-earth-globe");
-
-    try {
-      await loadScript(SHARED_GLOBE_SRC);
-
-      if (!window.DGBEarthGlobe) {
-        core.setAttribute("data-home-earth-load", "missing-shared-source");
-        return;
-      }
-
-      window.DGBEarthGlobe.mount(core, {
-        mode: "hero",
-        ariaLabel: "Planet Earth with Africa and seven-continent read"
-      });
-
-      core.setAttribute("data-home-earth-load", "mounted");
-    } catch (error) {
-      core.setAttribute("data-home-earth-load", "failed");
-      core.setAttribute("data-home-earth-error", String(error && error.message ? error.message : error));
-    }
+    core.setAttribute("data-home-demo-universe-core", "axis-spin-earth");
   }
 
   function markRootProof(root) {
@@ -628,7 +894,8 @@
     root.setAttribute("data-home-root-proof", "true");
     root.setAttribute("data-home-not-gauges", "true");
     root.setAttribute("data-home-earth-read", "true");
-    root.setAttribute("data-home-shared-globe-source", SHARED_GLOBE_SRC);
+    root.setAttribute("data-home-earth-standard", "axis-spin-projection-realism");
+    root.setAttribute("data-root-script-version", "home-axis-spin-earth-v1");
   }
 
   function mount() {
@@ -638,7 +905,7 @@
     if (!root) return;
 
     markRootProof(root);
-    mountSharedEarthGlobe(root);
+    mountHomeEarthGlobe(root);
   }
 
   if (document.readyState === "loading") {

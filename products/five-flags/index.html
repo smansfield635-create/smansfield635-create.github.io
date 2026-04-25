@@ -4,7 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Five Flags: What’s My Scene? · Products · Diamond Gate Bridge</title>
-  <meta name="description" content="Five Flags: What’s My Scene?: a Generation 2 product surface for scene discovery, orientation, alignment, and shared signal." />
+  <meta
+    name="description"
+    content="Five Flags: What’s My Scene? is a family-friendly classification game where the room figures out what something is, then figures out what comes next."
+  />
 
   <style>
     :root {
@@ -15,14 +18,22 @@
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
-      --spring:#93efbd;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --yellow:#f2df8a;
+      --orange:#f1a45b;
+      --red:#ff7a7a;
+      --purple:#c89cff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1120px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
-    html, body {
+    html,
+    body {
       margin:0;
       min-height:100%;
       color:var(--text);
@@ -30,6 +41,7 @@
       background:
         radial-gradient(circle at 50% 6%,rgba(147,239,189,.16),transparent 25%),
         radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(142,197,255,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
@@ -47,7 +59,10 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a { color:inherit; text-decoration:none; }
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -57,7 +72,13 @@
       z-index:1;
     }
 
-    .topbar, .hero, .panel, .card, .route-panel {
+    .topbar,
+    .hero,
+    .panel,
+    .card,
+    .flag,
+    .route-panel,
+    .example {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
@@ -110,12 +131,20 @@
       font-size:1.05rem;
     }
 
-    .nav, .actions, .route-grid {
+    .nav,
+    .actions,
+    .route-grid,
+    .grid,
+    .flag-grid,
+    .steps,
+    .color-grid {
       display:grid;
-      gap:8px;
+      gap:10px;
     }
 
-    .nav a, .button, .route-card {
+    .nav a,
+    .button,
+    .route-card {
       min-height:44px;
       display:inline-flex;
       align-items:center;
@@ -127,6 +156,13 @@
       color:#d7e2ff;
       font-weight:850;
       text-align:center;
+    }
+
+    .nav a:focus-visible,
+    .button:focus-visible,
+    .route-card:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
     }
 
     .button.primary {
@@ -168,7 +204,7 @@
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--spring);
+      background:var(--green);
       box-shadow:0 0 18px rgba(147,239,189,.50);
     }
 
@@ -188,6 +224,13 @@
       letter-spacing:-.04em;
     }
 
+    h3 {
+      margin:0;
+      color:#fff;
+      font-size:1.08rem;
+      line-height:1.12;
+    }
+
     p {
       margin:0;
       color:var(--muted);
@@ -196,7 +239,7 @@
     }
 
     .hero p {
-      max-width:70ch;
+      max-width:74ch;
       margin-top:14px;
     }
 
@@ -204,26 +247,33 @@
       margin-top:18px;
     }
 
-    .panel, .route-panel {
+    .panel,
+    .route-panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
       margin-bottom:14px;
       display:grid;
-      gap:14px;
+      gap:16px;
     }
 
-    .grid {
+    .panel-head {
       display:grid;
-      gap:10px;
+      gap:8px;
     }
 
-    .card {
+    .card,
+    .flag,
+    .route-card,
+    .example {
       border-radius:22px;
       padding:16px;
       min-height:120px;
     }
 
-    .card small, .route-card small {
+    .card small,
+    .flag small,
+    .route-card small,
+    .example small {
       display:block;
       margin-bottom:8px;
       color:#91a6cf;
@@ -233,26 +283,125 @@
       font-weight:850;
     }
 
-    .card strong, .route-card strong {
+    .card strong,
+    .flag strong,
+    .route-card strong,
+    .example strong {
       display:block;
       color:#fff;
       font-size:1.06rem;
       line-height:1.12;
     }
 
-    .card p {
+    .card p,
+    .flag p,
+    .example p {
       margin-top:8px;
       font-size:.92rem;
       line-height:1.42;
     }
 
+    .step-list {
+      display:grid;
+      gap:8px;
+      margin:0;
+      padding:0;
+      list-style:none;
+    }
+
+    .step-list li {
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border:1px solid rgba(170,198,255,.15);
+      border-radius:18px;
+      background:rgba(255,255,255,.035);
+      color:var(--muted);
+      line-height:1.42;
+    }
+
+    .step-list b {
+      min-width:34px;
+      height:34px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      color:#fff;
+      border:1px solid rgba(239,210,154,.30);
+      background:rgba(239,210,154,.08);
+      font-size:.82rem;
+    }
+
+    .flag:nth-child(1) { border-color:rgba(239,210,154,.28); }
+    .flag:nth-child(2) { border-color:rgba(147,239,189,.25); }
+    .flag:nth-child(3) { border-color:rgba(142,197,255,.25); }
+    .flag:nth-child(4) { border-color:rgba(241,164,91,.25); }
+    .flag:nth-child(5) { border-color:rgba(255,122,122,.25); }
+
+    .color-card {
+      min-height:96px;
+      padding:14px;
+      border:1px solid rgba(170,198,255,.16);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .color-card small {
+      display:block;
+      margin-bottom:7px;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:.62rem;
+      font-weight:900;
+    }
+
+    .color-card strong {
+      display:block;
+      color:#fff;
+      font-size:.98rem;
+      line-height:1.1;
+    }
+
+    .color-card p {
+      margin-top:6px;
+      font-size:.84rem;
+      line-height:1.34;
+    }
+
+    .color-card.blue small { color:var(--blue); }
+    .color-card.green small { color:var(--green); }
+    .color-card.yellow small { color:var(--yellow); }
+    .color-card.orange small { color:var(--orange); }
+    .color-card.red small { color:var(--red); }
+    .color-card.purple small { color:var(--purple); }
+
+    .example-path {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:12px;
+    }
+
+    .example-path span {
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:0 11px;
+      border:1px solid rgba(170,198,255,.16);
+      border-radius:999px;
+      color:#e8f0ff;
+      background:rgba(255,255,255,.035);
+      font-weight:800;
+      font-size:.82rem;
+    }
+
     .route-card {
       min-height:112px;
-      border-radius:22px;
       flex-direction:column;
       align-items:flex-start;
       text-align:left;
-      padding:16px;
     }
 
     .footer {
@@ -265,24 +414,80 @@
       font-size:.86rem;
     }
 
+    .footer a {
+      color:#d6e2ff;
+    }
+
     @media (min-width:820px) {
-      .topbar { grid-template-columns:1fr auto; align-items:center; }
-      .nav { grid-template-columns:repeat(5,auto); }
-      .actions { grid-template-columns:repeat(4,auto); justify-content:start; }
-      .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-      .route-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+      .topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .nav {
+        grid-template-columns:repeat(5,auto);
+      }
+
+      .actions {
+        grid-template-columns:repeat(4,auto);
+        justify-content:start;
+      }
+
+      .grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .flag-grid {
+        grid-template-columns:repeat(5,minmax(0,1fr));
+      }
+
+      .steps {
+        grid-template-columns:1fr 1fr;
+      }
+
+      .color-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
     }
 
     @media (max-width:640px) {
-      .page { width:min(100vw - 12px,var(--max)); padding-top:10px; }
-      .topbar, .hero, .panel, .route-panel { border-radius:24px; }
-      .nav, .actions, .grid, .route-grid { grid-template-columns:1fr; }
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .hero,
+      .panel,
+      .route-panel {
+        border-radius:24px;
+      }
+
+      .nav,
+      .actions,
+      .grid,
+      .flag-grid,
+      .steps,
+      .color-grid,
+      .route-grid {
+        grid-template-columns:1fr;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="page" data-generation="second-generation-renewal" data-product="five-flags-whats-my-scene">
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-product="five-flags-whats-my-scene"
+    data-product-class="family-friendly-classification-game"
+    data-adult-stage-layer="excluded"
+  >
     <header class="topbar">
       <a class="brand" href="/products/" aria-label="Products home">
         <span class="mark" aria-hidden="true">FF</span>
@@ -303,44 +508,286 @@
 
     <section class="hero" aria-labelledby="productTitle">
       <div>
-        <span class="pill">Official product surface</span>
+        <span class="pill">Family-friendly game</span>
         <h1 id="productTitle">Five Flags: What’s My Scene?</h1>
-        <h2>Know the scene first.</h2>
+        <h2>Find the category. Find what comes next.</h2>
         <p>
-          Five Flags: What’s My Scene? is one product. It helps identify the scene,
-          clarify position, read signal, and understand what opens next.
+          Five Flags: What’s My Scene? is a family-friendly classification game.
+          The room figures out what something is, then figures out what comes next.
+          Players raise possible flags, the host narrows the field, and the best
+          answer lands clearly.
         </p>
 
         <div class="actions">
           <a class="button primary" href="/products/">Back to Products</a>
+          <a class="button" href="#howToPlay">How to Play</a>
+          <a class="button" href="#scoring">Scoring</a>
           <a class="button" href="/metaverse/">Metaverse</a>
-          <a class="button" href="/products/on-your-side-ai/">AI On Your Side</a>
-          <a class="button" href="/products/nutrition/">Baseline Nutrition</a>
         </div>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="readTitle">
-      <span class="pill">Product read</span>
-      <h2 id="readTitle">Scene before motion.</h2>
+    <section class="panel" aria-labelledby="premiseTitle">
+      <div class="panel-head">
+        <span class="pill">Premise</span>
+        <h2 id="premiseTitle">A playful classification game.</h2>
+        <p>
+          A player, host, or performer presents a person, object, idea, or situation.
+          The group raises possible categories until the strongest fit appears.
+          Then the group asks what comes next.
+        </p>
+      </div>
 
       <div class="grid">
         <article class="card">
-          <small>Scene</small>
-          <strong>Identify where you are</strong>
-          <p>Clarifies the environment before multiplying possible choices.</p>
+          <small>Question one</small>
+          <strong>What’s My Scene?</strong>
+          <p>Find the best category, lane, or scene for the object.</p>
         </article>
 
         <article class="card">
-          <small>Position</small>
-          <strong>Read your place</strong>
-          <p>Supports orientation before reaction or premature movement.</p>
+          <small>Question two</small>
+          <strong>What’s Next?</strong>
+          <p>Once the scene is clear, find the next form, step, or position.</p>
         </article>
 
         <article class="card">
-          <small>Opening</small>
-          <strong>See what opens next</strong>
-          <p>Helps separate available paths from false or noisy options.</p>
+          <small>Game law</small>
+          <strong>Funny without being harsh</strong>
+          <p>The game stays clean, inclusive, specific, and easy to understand.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="howToPlay" class="panel" aria-labelledby="howTitle">
+      <div class="panel-head">
+        <span class="pill">How to play</span>
+        <h2 id="howTitle">Present, classify, narrow, land, advance.</h2>
+      </div>
+
+      <ol class="step-list">
+        <li><b>1</b><span><strong>Present the object.</strong> A player gives the room something to classify.</span></li>
+        <li><b>2</b><span><strong>Ask the first question.</strong> The room answers: What’s my scene?</span></li>
+        <li><b>3</b><span><strong>Raise flags.</strong> Players offer possible categories.</span></li>
+        <li><b>4</b><span><strong>Narrow.</strong> The host rejects weak fits and rewards closer fits.</span></li>
+        <li><b>5</b><span><strong>Find the scene.</strong> One category becomes the strongest match.</span></li>
+        <li><b>6</b><span><strong>Ask what’s next.</strong> Players move the scene forward one step.</span></li>
+        <li><b>7</b><span><strong>Advance.</strong> The round lands on a clear, specific, satisfying answer.</span></li>
+      </ol>
+    </section>
+
+    <section class="panel" aria-labelledby="flagsTitle">
+      <div class="panel-head">
+        <span class="pill">Five Flags model</span>
+        <h2 id="flagsTitle">Flags are guesses. Scene is the match.</h2>
+      </div>
+
+      <div class="flag-grid">
+        <article class="flag">
+          <small>Flag 1</small>
+          <strong>High / Ideal</strong>
+          <p>The impressive or flattering guess.</p>
+        </article>
+
+        <article class="flag">
+          <small>Flag 2</small>
+          <strong>Respectable / Solid</strong>
+          <p>A good but less glamorous guess.</p>
+        </article>
+
+        <article class="flag">
+          <small>Flag 3</small>
+          <strong>General Category</strong>
+          <p>A broader, more neutral classification.</p>
+        </article>
+
+        <article class="flag">
+          <small>Flag 4</small>
+          <strong>Practical / Ordinary</strong>
+          <p>A common, everyday fit.</p>
+        </article>
+
+        <article class="flag">
+          <small>Flag 5</small>
+          <strong>True Fit</strong>
+          <p>The most accurate and specific answer.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="jobsTitle">
+      <div class="panel-head">
+        <span class="pill">Room jobs</span>
+        <h2 id="jobsTitle">The room guesses. The host steers.</h2>
+      </div>
+
+      <div class="steps">
+        <article class="card">
+          <small>Host job</small>
+          <strong>Guide and referee</strong>
+          <p>
+            Present a clear object, keep the room inside the category, reject answers
+            that do not fit, reward closer answers, and land the strongest final answer.
+          </p>
+        </article>
+
+        <article class="card">
+          <small>Player job</small>
+          <strong>Guess clearly and specifically</strong>
+          <p>
+            Suggest possible scenes, suggest what comes next, and keep every answer
+            connected to the original object.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section id="scoring" class="panel" aria-labelledby="scoringTitle">
+      <div class="panel-head">
+        <span class="pill">Scoring</span>
+        <h2 id="scoringTitle">Clarity, fit, specificity, lift.</h2>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <small>1 point</small>
+          <strong>Clear answer</strong>
+          <p>The answer makes sense and can be understood by the room.</p>
+        </article>
+
+        <article class="card">
+          <small>2 points</small>
+          <strong>Category-true answer</strong>
+          <p>The answer clearly belongs to the object’s scene.</p>
+        </article>
+
+        <article class="card">
+          <small>3 points</small>
+          <strong>Specific answer</strong>
+          <p>The answer improves the round and gives the room a sharper picture.</p>
+        </article>
+
+        <article class="card">
+          <small>4 points</small>
+          <strong>Best-in-round answer</strong>
+          <p>The answer feels exact, satisfying, and easy to build on.</p>
+        </article>
+
+        <article class="card">
+          <small>Bonus</small>
+          <strong>Host builds on it</strong>
+          <p>The host immediately turns the answer into a stronger moment.</p>
+        </article>
+
+        <article class="card">
+          <small>Win condition</small>
+          <strong>The best answer feels right</strong>
+          <p>A round wins when the final answer is specific, easy to picture, clearly connected, and satisfying.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="colorTitle">
+      <div class="panel-head">
+        <span class="pill">Color engine</span>
+        <h2 id="colorTitle">Color organizes the rhythm.</h2>
+        <p>
+          In the family-friendly version, “diamond” means strongest payoff, not harshest hit.
+        </p>
+      </div>
+
+      <div class="color-grid">
+        <article class="color-card blue">
+          <small>Blue</small>
+          <strong>Context</strong>
+          <p>Where we are.</p>
+        </article>
+
+        <article class="color-card green">
+          <small>Green</small>
+          <strong>Platform</strong>
+          <p>What we are building.</p>
+        </article>
+
+        <article class="color-card yellow">
+          <small>Yellow</small>
+          <strong>Transition</strong>
+          <p>Where we are moving.</p>
+        </article>
+
+        <article class="color-card orange">
+          <small>Orange</small>
+          <strong>Turn</strong>
+          <p>What changed.</p>
+        </article>
+
+        <article class="color-card red">
+          <small>Red</small>
+          <strong>Diamond</strong>
+          <p>What lands.</p>
+        </article>
+
+        <article class="color-card purple">
+          <small>Purple</small>
+          <strong>Side Diamond</strong>
+          <p>What expands.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="exampleTitle">
+      <div class="panel-head">
+        <span class="pill">Example round</span>
+        <h2 id="exampleTitle">Specific, visual, connected.</h2>
+      </div>
+
+      <article class="example">
+        <small>Object</small>
+        <strong>“I’m not a diamond, but I’m not coal either.”</strong>
+        <p>
+          The room raises flags, narrows the category, finds a scene, then advances it.
+        </p>
+
+        <div class="example-path" aria-label="Example path">
+          <span>Gem</span>
+          <span>Stone</span>
+          <span>Rock</span>
+          <span>Pebble</span>
+          <span>Gravel</span>
+          <span>Driveway</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" aria-labelledby="modesTitle">
+      <div class="panel-head">
+        <span class="pill">Play modes</span>
+        <h2 id="modesTitle">Same kernel. Different setting.</h2>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <small>Mode 1</small>
+          <strong>Stage / Hosted Room</strong>
+          <p>One person leads and the audience answers.</p>
+        </article>
+
+        <article class="card">
+          <small>Mode 2</small>
+          <strong>Party Game</strong>
+          <p>Players take turns presenting their object.</p>
+        </article>
+
+        <article class="card">
+          <small>Mode 3</small>
+          <strong>Classroom / Family Table</strong>
+          <p>The game uses cleaner objects and simpler categories.</p>
+        </article>
+
+        <article class="card">
+          <small>Mode 4</small>
+          <strong>Team Mode</strong>
+          <p>Two teams compete to find the best scene and best next step.</p>
         </article>
       </div>
     </section>
@@ -365,15 +812,15 @@
           <strong>AI On Your Side</strong>
         </a>
 
-        <a class="route-card" href="/products/ssg/">
+        <a class="route-card" href="/products/nutrition/">
           <small>Related</small>
-          <strong>Syntax Geometry</strong>
+          <strong>Baseline Nutrition Systems</strong>
         </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Five Flags: What’s My Scene? · Generation 2 Product Surface</span>
+      <span>Five Flags: What’s My Scene? · Family-Friendly Game · Generation 2 Product Surface</span>
       <span><a href="/products/">Products</a> · <a href="/metaverse/">Metaverse</a> · <a href="/">Door</a></span>
     </footer>
   </main>

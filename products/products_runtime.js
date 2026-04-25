@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-gen2-globe-controls-runtime-v1-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_GLOBE_CONTROL_SURFACE_v1";
+  const STYLE_ID = "products-gen2-product-first-runtime-v2-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_PRODUCT_FIRST_CONTROL_SECOND_v2";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -15,11 +15,31 @@
     { key: "fall", label: "Fall", squad: "West", short: "Pressure" }
   ];
 
-  const productLines = [
-    ["winter", "Boundary Instruments"],
-    ["spring", "Continuity Instruments"],
-    ["summer", "Signal Instruments"],
-    ["fall", "Pressure Instruments"]
+  const products = [
+    {
+      key: "winter",
+      code: "NORTH",
+      title: "Boundary Instruments",
+      line: "Map, threshold, containment, and admissible-motion products."
+    },
+    {
+      key: "spring",
+      code: "SOUTH",
+      title: "Continuity Instruments",
+      line: "Repair, sequence, restoration, and living-system stability products."
+    },
+    {
+      key: "summer",
+      code: "EAST",
+      title: "Signal Instruments",
+      line: "Launch, learning, motion, traversal, and public-expression products."
+    },
+    {
+      key: "fall",
+      code: "WEST",
+      title: "Pressure Instruments",
+      line: "Audit, contradiction, friction, edge-case, and false-close products."
+    }
   ];
 
   function getRuntimeMount() {
@@ -62,14 +82,98 @@
         gap:14px;
       }
 
+      .products-product-first,
       .products-gen2-stage,
       .products-gen2-controls,
-      .products-gen2-card {
+      .products-gen2-card,
+      .products-product-tile {
         border:1px solid var(--products-line);
         background:
           radial-gradient(circle at 50% 0%,rgba(145,201,255,.12),transparent 34%),
           linear-gradient(180deg,var(--products-panel-strong),var(--products-panel));
         box-shadow:var(--products-shadow);
+      }
+
+      .products-product-first {
+        border-radius:30px;
+        padding:clamp(16px,2.5vw,24px);
+        display:grid;
+        gap:14px;
+      }
+
+      .products-product-head {
+        display:flex;
+        flex-wrap:wrap;
+        align-items:end;
+        justify-content:space-between;
+        gap:10px;
+      }
+
+      .products-product-head h3 {
+        margin:0;
+        color:#fff;
+        font-size:clamp(1.6rem,4vw,2.8rem);
+        line-height:.95;
+        letter-spacing:-.05em;
+      }
+
+      .products-product-head span {
+        color:var(--products-muted);
+        text-transform:uppercase;
+        letter-spacing:.12em;
+        font-size:.66rem;
+        font-weight:850;
+      }
+
+      .products-product-grid {
+        display:grid;
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:10px;
+      }
+
+      .products-product-tile {
+        min-height:142px;
+        border-radius:22px;
+        padding:15px;
+        display:grid;
+        align-content:space-between;
+        gap:10px;
+        cursor:pointer;
+        transition:
+          transform .22s ease,
+          border-color .22s ease,
+          box-shadow .22s ease,
+          opacity .22s ease;
+      }
+
+      .products-product-tile:hover,
+      .products-product-tile.active {
+        transform:translateY(-3px);
+        border-color:rgba(240,213,155,.42);
+        box-shadow:0 24px 72px rgba(0,0,0,.45),0 0 28px rgba(240,213,155,.12);
+      }
+
+      .products-product-tile small {
+        display:block;
+        color:#91a6cf;
+        text-transform:uppercase;
+        letter-spacing:.13em;
+        font-size:.64rem;
+        font-weight:850;
+      }
+
+      .products-product-tile strong {
+        display:block;
+        color:#fff;
+        font-size:1.08rem;
+        line-height:1.05;
+      }
+
+      .products-product-tile p {
+        margin:0;
+        color:var(--products-muted);
+        font-size:.82rem;
+        line-height:1.36;
       }
 
       .products-gen2-stage {
@@ -306,18 +410,6 @@
         animation-play-state:paused;
       }
 
-      .products-gen2-stage[data-speed="slow"] {
-        --products-speed-scale:1.25;
-      }
-
-      .products-gen2-stage[data-speed="normal"] {
-        --products-speed-scale:1;
-      }
-
-      .products-gen2-stage[data-speed="fast"] {
-        --products-speed-scale:.65;
-      }
-
       .products-gen2-controls {
         border-radius:28px;
         padding:clamp(14px,2vw,20px);
@@ -391,42 +483,13 @@
         color:#fff8ea;
       }
 
-      .products-card-grid {
-        display:grid;
-        grid-template-columns:repeat(4,minmax(0,1fr));
-        gap:10px;
-      }
-
-      .products-gen2-card {
-        min-height:86px;
-        border-radius:20px;
-        padding:14px;
-      }
-
-      .products-gen2-card small {
-        display:block;
-        margin-bottom:7px;
-        color:#91a6cf;
-        text-transform:uppercase;
-        letter-spacing:.12em;
-        font-size:.66rem;
-        font-weight:850;
-      }
-
-      .products-gen2-card strong {
-        display:block;
-        color:#fff;
-        font-size:1rem;
-        line-height:1.15;
-      }
-
-      .products-receipt {
+      .products-bubble-row {
         display:flex;
         flex-wrap:wrap;
         gap:8px;
       }
 
-      .products-receipt span {
+      .products-bubble-row span {
         border:1px solid rgba(177,199,255,.15);
         border-radius:999px;
         padding:8px 10px;
@@ -468,8 +531,8 @@
       }
 
       @media (max-width:900px) {
-        .products-control-grid,
-        .products-card-grid {
+        .products-product-grid,
+        .products-control-grid {
           grid-template-columns:repeat(2,minmax(0,1fr));
         }
 
@@ -485,6 +548,11 @@
       }
 
       @media (max-width:640px) {
+        .products-product-grid,
+        .products-control-grid {
+          grid-template-columns:1fr;
+        }
+
         .products-gen2-stage {
           min-height:680px;
         }
@@ -517,11 +585,6 @@
 
         .products-season-node p {
           font-size:.50rem;
-        }
-
-        .products-control-grid,
-        .products-card-grid {
-          grid-template-columns:1fr;
         }
       }
 
@@ -562,6 +625,23 @@
     ];
   }
 
+  function buildProducts() {
+    return products
+      .map((product) => `
+        <button
+          class="products-product-tile"
+          type="button"
+          data-product-focus="${product.key}"
+          aria-label="Focus ${product.title}"
+        >
+          <small>${product.code}</small>
+          <strong>${product.title}</strong>
+          <p>${product.line}</p>
+        </button>
+      `)
+      .join("");
+  }
+
   function buildMoleculePoints() {
     return pointCoordinates()
       .map((point, index) => `
@@ -587,25 +667,26 @@
       .join("");
   }
 
-  function buildProductCards() {
-    return productLines
-      .map(([key, title]) => `
-        <article class="products-gen2-card" data-season="${key}">
-          <small>${key}</small>
-          <strong>${title}</strong>
-        </article>
-      `)
-      .join("");
-  }
-
   function buildHTML() {
     return `
       <section
         class="products-gen2-shell"
         data-products-runtime-root="true"
         data-products-generation="2"
+        data-products-product-first="true"
         data-products-control-surface="true"
       >
+        <section class="products-product-first" aria-label="Products first">
+          <div class="products-product-head">
+            <h3>Products.</h3>
+            <span>Generation 2 · product first</span>
+          </div>
+
+          <div class="products-product-grid">
+            ${buildProducts()}
+          </div>
+        </section>
+
         <section
           id="productsGen2Stage"
           class="products-gen2-stage"
@@ -613,9 +694,9 @@
           data-density="clean"
           data-spin="playing"
           data-speed="normal"
-          aria-label="Products Generation 2 globe control surface"
+          aria-label="Products Generation 2 globe surface"
         >
-          <div class="products-gen2-title">Products G2 · globe control surface</div>
+          <div class="products-gen2-title">Products G2 · shared Earth chamber</div>
 
           <span class="products-gen2-orbit winter-spring" aria-hidden="true"></span>
           <span class="products-gen2-orbit summer-fall" aria-hidden="true"></span>
@@ -631,7 +712,7 @@
           ${buildSeasonNodes()}
         </section>
 
-        <section class="products-gen2-controls" aria-label="Products globe controls">
+        <section class="products-gen2-controls" aria-label="Products operator controls">
           <div class="products-control-head">
             <h3>Controls.</h3>
             <span id="productsControlReceipt">Spin: playing · Speed: normal · Focus: all · Density: clean</span>
@@ -667,15 +748,11 @@
             </div>
           </div>
 
-          <div class="products-card-grid">
-            ${buildProductCards()}
-          </div>
-
-          <div class="products-receipt" aria-label="Runtime receipts">
+          <div class="products-bubble-row" aria-label="Runtime receipts">
             <span>G2 active</span>
+            <span>Products first</span>
             <span>Globe online</span>
-            <span>Controls live</span>
-            <span>Content minimal</span>
+            <span>Controls below</span>
           </div>
         </section>
       </section>
@@ -754,12 +831,42 @@
     });
   }
 
+  function updateProductTiles(value) {
+    document.querySelectorAll("[data-product-focus]").forEach((tile) => {
+      tile.classList.toggle("active", tile.dataset.productFocus === value);
+    });
+  }
+
   function updateReceipt(stage) {
     const receipt = document.getElementById("productsControlReceipt");
     if (!receipt || !stage) return;
 
     receipt.textContent =
       `Spin: ${stage.dataset.spin} · Speed: ${stage.dataset.speed} · Focus: ${stage.dataset.focus} · Density: ${stage.dataset.density}`;
+  }
+
+  function setFocus(value) {
+    const stage = document.getElementById("productsGen2Stage");
+    if (!stage) return;
+
+    stage.dataset.focus = value;
+    updatePressedStates("focus", value);
+    updateProductTiles(value);
+    updateReceipt(stage);
+
+    if (value !== "all") {
+      stage.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }
+
+  function bindProductTiles() {
+    document.querySelectorAll("[data-product-focus]").forEach((tile) => {
+      tile.addEventListener("click", () => {
+        const value = tile.dataset.productFocus;
+        if (!value) return;
+        setFocus(value);
+      });
+    });
   }
 
   function bindControls() {
@@ -778,6 +885,7 @@
 
         if (control === "speed") setSharedEarthSpeed(value);
         if (control === "spin") setSharedEarthSpin(value);
+        if (control === "focus") updateProductTiles(value);
 
         updateReceipt(stage);
       });
@@ -865,12 +973,13 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-gen2-globe-controls-v1");
+      target.setAttribute("data-products-runtime-version", "products-gen2-product-first-v2");
 
       target.innerHTML = buildHTML();
 
       const sharedEarthMounted = await mountSharedEarth();
 
+      bindProductTiles();
       bindControls();
       setSharedEarthSpeed("normal");
       setSharedEarthSpin("playing");
@@ -878,7 +987,7 @@
       target.setAttribute("data-runtime-status", "mounted");
       target.setAttribute("data-products-shared-earth", sharedEarthMounted ? "mounted" : "unavailable");
       target.setAttribute("data-products-gen2-controls", "active");
-      target.setAttribute("data-products-content-density", "minimal");
+      target.setAttribute("data-products-order", "product-first-control-second");
 
       window[RECEIPT_KEY] = true;
       this.status = "MOUNTED";
@@ -891,7 +1000,7 @@
             owner: "products_runtime.js",
             sharedEarthMounted,
             controls: "active",
-            density: "minimal"
+            order: "product-first-control-second"
           }
         })
       );

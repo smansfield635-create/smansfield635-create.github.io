@@ -6,7 +6,7 @@
   <title>Explore · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Explore at Diamond Gate Bridge: a compact Generation 2 route-map surface that sends visitors to the correct next chamber."
+    content="Explore at Diamond Gate Bridge: a Generation 2 route-map surface paired with the Explore diamond-motion instrument."
   />
 
   <style>
@@ -164,6 +164,13 @@
       background:
         linear-gradient(180deg,rgba(239,210,154,.18),rgba(239,210,154,.05)),
         rgba(255,255,255,.035);
+    }
+
+    .nav a:focus-visible,
+    .route-card:focus-visible,
+    .step-card:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
     }
 
     .hero {
@@ -524,6 +531,8 @@
       }
     }
   </style>
+
+  <script src="/explore/index.js" defer></script>
 </head>
 
 <body>
@@ -532,6 +541,7 @@
     data-generation="second-generation-renewal"
     data-page="explore"
     data-surface="generation-2-route-map"
+    data-motion-instrument="/explore/index.js"
   >
     <header class="topbar">
       <a class="brand" href="/explore/" aria-label="Explore">
@@ -611,7 +621,7 @@
         <h2 id="routesTitle">Start with the right destination.</h2>
       </div>
 
-      <div class="route-grid">
+      <div class="route-grid" data-diamond-motion-grid="explore-routes">
         <a class="route-card frontier" href="/frontier/">
           <small>Active edge route</small>
           <strong>Frontier</strong>
@@ -667,7 +677,7 @@
     </section>
 
     <footer class="footer">
-      <span>Explore · Generation 2 Route Map</span>
+      <span>Explore · Generation 2 Route Map · Diamond Motion Paired</span>
       <span>
         <a href="/frontier/">Frontier</a> ·
         <a href="/products/">Products</a> ·

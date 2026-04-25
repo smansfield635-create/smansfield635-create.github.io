@@ -1,636 +1,238 @@
 <!DOCTYPE html>
-<html lang="en" data-explore-generation="second-generation-renewal">
+<html lang="en" data-root-script-version="root-door-axis-spin-earth-v5-clean-door-hierarchy">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Explore · Diamond Gate Bridge</title>
+  <title>Diamond Gate Bridge · Second Generation Renewal</title>
   <meta
     name="description"
-    content="Explore Diamond Gate Bridge: a Generation 2 world-facing route surface for Prelude, Home, Metaverse, Products, Nine Summits, Big Laugh, Laws, and Gauges."
+    content="Diamond Gate Bridge Second Generation Renewal: clean Door access to Home, Prelude, Explore, Frontier, Nine Summits of Love, Metaverse, Products, Upper Room, Laws, About, Contact, and Gauges."
   />
-
-  <style>
-    :root {
-      --bg:#020610;
-      --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
-      --line:rgba(170,198,255,.18);
-      --text:#eef4ff;
-      --muted:#aab8d8;
-      --gold:#efd29a;
-      --blue:#8ec5ff;
-      --green:#93efbd;
-      --rose:#ff9ab8;
-      --orange:#f1a45b;
-      --purple:#c89cff;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1180px;
-    }
-
-    * {
-      box-sizing:border-box;
-    }
-
-    html,
-    body {
-      margin:0;
-      min-height:100%;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
-        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
-        radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
-        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
-      overflow-x:hidden;
-    }
-
-    body::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.20;
-      background:
-        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
-    }
-
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
-
-    .page {
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
-      position:relative;
-      z-index:1;
-    }
-
-    .topbar,
-    .hero,
-    .panel,
-    .route-card,
-    .path-card,
-    .quiet-card {
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
-      box-shadow:var(--shadow);
-    }
-
-    .topbar {
-      min-height:76px;
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:28px;
-      display:grid;
-      gap:12px;
-    }
-
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 28%,rgba(142,197,255,.26),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
-      letter-spacing:.08em;
-    }
-
-    .kicker {
-      display:block;
-      margin:0 0 4px;
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-
-    .title {
-      display:block;
-      margin:0;
-      font-weight:850;
-      font-size:1.05rem;
-    }
-
-    .nav,
-    .actions,
-    .route-grid,
-    .path-grid,
-    .quiet-grid {
-      display:grid;
-      gap:10px;
-    }
-
-    .nav a,
-    .button,
-    .route-card {
-      min-height:44px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:0 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      color:#d7e2ff;
-      font-weight:850;
-      text-align:center;
-    }
-
-    .nav a:focus-visible,
-    .button:focus-visible,
-    .route-card:focus-visible,
-    .path-card:focus-visible {
-      outline:2px solid rgba(239,210,154,.62);
-      outline-offset:3px;
-    }
-
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .hero {
-      border-radius:34px;
-      padding:clamp(22px,4vw,46px);
-      margin-bottom:14px;
-      min-height:clamp(430px,56vw,640px);
-      display:grid;
-      align-items:center;
-      overflow:hidden;
-      position:relative;
-      isolation:isolate;
-    }
-
-    .hero::before {
-      content:"";
-      position:absolute;
-      width:min(640px,82vw);
-      height:min(640px,82vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 24%),
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.08),transparent 70%);
-      filter:blur(5px);
-      z-index:-2;
-    }
-
-    .hero::after {
-      content:"";
-      position:absolute;
-      width:min(780px,92vw);
-      height:min(370px,44vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(-9deg);
-      border:1px solid rgba(142,197,255,.18);
-      border-radius:50%;
-      z-index:-1;
-      box-shadow:
-        0 0 38px rgba(142,197,255,.08),
-        inset 0 0 38px rgba(239,210,154,.06);
-    }
-
-    .hero-copy {
-      display:grid;
-      gap:14px;
-    }
-
-    .pill {
-      display:inline-flex;
-      width:fit-content;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-      color:#d8e3ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.70rem;
-      font-weight:850;
-    }
-
-    .pill::before {
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
-      transform:rotate(45deg);
-      background:var(--blue);
-      box-shadow:0 0 18px rgba(142,197,255,.50);
-    }
-
-    h1 {
-      margin:0;
-      color:#fff;
-      font-size:clamp(3.4rem,13vw,7.2rem);
-      line-height:.86;
-      letter-spacing:-.08em;
-    }
-
-    h2 {
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.55rem,5vw,3.05rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.58;
-      font-size:1rem;
-    }
-
-    .hero p {
-      max-width:76ch;
-      margin-top:14px;
-      font-size:clamp(1rem,1.8vw,1.18rem);
-    }
-
-    .actions {
-      margin-top:10px;
-    }
-
-    .panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      margin-bottom:14px;
-      display:grid;
-      gap:16px;
-    }
-
-    .panel-head {
-      display:grid;
-      gap:8px;
-    }
-
-    .path-card,
-    .route-card,
-    .quiet-card {
-      border-radius:22px;
-      padding:16px;
-      min-height:136px;
-      align-items:flex-start;
-      justify-content:flex-start;
-      flex-direction:column;
-      text-align:left;
-    }
-
-    .path-card small,
-    .route-card small,
-    .quiet-card small {
-      display:block;
-      margin-bottom:8px;
-      color:#91a6cf;
-      text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
-      font-weight:850;
-    }
-
-    .path-card strong,
-    .route-card strong,
-    .quiet-card strong {
-      display:block;
-      color:#fff;
-      font-size:1.08rem;
-      line-height:1.12;
-    }
-
-    .path-card p,
-    .quiet-card p {
-      margin-top:8px;
-      font-size:.92rem;
-      line-height:1.42;
-    }
-
-    .threshold { border-color:rgba(239,210,154,.25); }
-    .human { border-color:rgba(255,154,184,.25); }
-    .world { border-color:rgba(142,197,255,.25); }
-    .product { border-color:rgba(147,239,189,.25); }
-    .show { border-color:rgba(241,164,91,.25); }
-    .law { border-color:rgba(200,156,255,.25); }
-
-    .closing-read {
-      max-width:84ch;
-      padding:18px;
-      border:1px solid rgba(142,197,255,.18);
-      border-radius:24px;
-      background:rgba(255,255,255,.035);
-      color:#dfe8ff;
-      font-size:1.04rem;
-      line-height:1.65;
-    }
-
-    .footer {
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:14px 4px 0;
-      color:#9db0d4;
-      font-size:.86rem;
-    }
-
-    .footer a {
-      color:#d6e2ff;
-    }
-
-    @media (min-width:820px) {
-      .topbar {
-        grid-template-columns:1fr auto;
-        align-items:center;
-      }
-
-      .nav {
-        grid-template-columns:repeat(6,auto);
-      }
-
-      .actions {
-        grid-template-columns:repeat(4,auto);
-        justify-content:start;
-      }
-
-      .path-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
-      .route-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
-      .quiet-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
-    }
-
-    @media (max-width:640px) {
-      .page {
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-      }
-
-      .topbar,
-      .hero,
-      .panel {
-        border-radius:24px;
-      }
-
-      .nav,
-      .actions,
-      .path-grid,
-      .route-grid,
-      .quiet-grid {
-        grid-template-columns:1fr;
-      }
-
-      .hero {
-        min-height:520px;
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce) {
-      *,
-      *::before,
-      *::after {
-        animation:none !important;
-        scroll-behavior:auto !important;
-      }
-    }
-  </style>
+  <meta name="dgb-root-script-version" content="root-door-axis-spin-earth-v5-clean-door-hierarchy" />
 </head>
 
 <body>
   <main
-    class="page"
-    data-generation="second-generation-renewal"
-    data-page="explore"
-    data-surface="active-world-facing-explore"
+    id="homePage"
+    class="home-page"
+    data-home-generation="second-generation-renewal"
+    data-home-role="public-root-door"
+    data-home-earth-standard="axis-spin-projection-realism"
+    data-root-script-version="root-door-axis-spin-earth-v5-clean-door-hierarchy"
   >
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="Door">
-        <span class="mark" aria-hidden="true">EX</span>
+    <header class="home-topbar">
+      <a class="home-brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="home-mark" aria-hidden="true">DG</span>
         <span>
-          <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Explore</strong>
+          <span class="home-kicker">Diamond Gate Bridge</span>
+          <strong class="home-title">Second Generation Renewal</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Door</a>
+      <nav class="home-nav" aria-label="Primary navigation">
         <a href="/home/">Home</a>
         <a href="/prelude/">Prelude</a>
-        <a href="/metaverse/">Metaverse</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="exploreTitle">
-      <div class="hero-copy">
-        <span class="pill">Choose the field</span>
-        <h1 id="exploreTitle">Explore</h1>
-        <h2>Find the surface that opens next.</h2>
+    <section class="home-hero" aria-labelledby="homeTitle">
+      <div class="home-copy">
+        <span class="home-pill">Second generation · public front door</span>
+        <h1 id="homeTitle">Nine Summits of Love</h1>
+        <h2>Learn to Live to Love</h2>
+
         <p>
-          Move through Diamond Gate Bridge by direction. Start with the threshold,
-          the house, the world, the products, the show, or the instruments.
+          Diamond Gate Bridge opens with the human path first: love, growth,
+          public expression, and the Demo Universe as the clean model object.
         </p>
 
-        <div class="actions">
-          <a class="button primary" href="/metaverse/">Metaverse</a>
-          <a class="button" href="/products/">Products</a>
-          <a class="button" href="/nine-summits/">Nine Summits</a>
-          <a class="button" href="/prelude/">Prelude</a>
+        <div class="home-actions">
+          <a class="home-button primary" href="/nine-summits/">Open Nine Summits</a>
+          <a class="home-button" href="/prelude/">Open Prelude</a>
+          <a class="home-button" href="/explore/">Explore</a>
+          <a class="home-button" href="/frontier/">Frontier</a>
         </div>
       </div>
+
+      <aside class="home-attraction-window" aria-label="Demo Universe preview">
+        <div class="home-door">
+          <span class="home-orbit home-orbit-one" aria-hidden="true"></span>
+          <span class="home-orbit home-orbit-two" aria-hidden="true"></span>
+
+          <div
+            id="homeEarthCore"
+            class="home-core"
+            role="img"
+            aria-label="Planet Earth Demo Universe"
+            data-home-earth-core="pending"
+          ></div>
+
+          <div class="home-caption">
+            <strong>Learn to Live to Love</strong>
+            <span>Nine Summits · Metaverse · Upper Room</span>
+          </div>
+        </div>
+      </aside>
     </section>
 
-    <section class="panel" aria-labelledby="mainRoutesTitle">
-      <div class="panel-head">
-        <span class="pill">Main routes</span>
-        <h2 id="mainRoutesTitle">Pick the world-facing route.</h2>
-        <p>
-          Explore keeps the major surfaces close together so the visitor can move
-          without hunting for the next door.
-        </p>
-      </div>
-
-      <div class="path-grid">
-        <a class="path-card threshold" href="/prelude/">
-          <small>Threshold</small>
-          <strong>Prelude</strong>
-          <p>Take the opening read before choosing a deeper surface.</p>
-        </a>
-
-        <a class="path-card human" href="/nine-summits/">
-          <small>Human path</small>
-          <strong>Nine Summits of Love</strong>
-          <p>Move toward the human-development path and Learn to Live to Love.</p>
-        </a>
-
-        <a class="path-card world" href="/metaverse/">
-          <small>World path</small>
-          <strong>Metaverse</strong>
-          <p>Enter the broader connected world surface.</p>
-        </a>
-
-        <a class="path-card product" href="/products/">
-          <small>Product path</small>
-          <strong>Products</strong>
-          <p>Open the current product chamber and official public products.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="activeTitle">
-      <div class="panel-head">
-        <span class="pill">Active surfaces</span>
-        <h2 id="activeTitle">Move by what you came for.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Show path</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/products/on-your-side-ai/">
-          <small>Product</small>
-          <strong>AI On Your Side</strong>
-        </a>
-
-        <a class="route-card" href="/products/five-flags/">
-          <small>Family game</small>
-          <strong>Five Flags: What’s My Scene?</strong>
-        </a>
-
-        <a class="route-card" href="/products/nutrition/">
-          <small>Product</small>
-          <strong>Baseline Nutrition Systems</strong>
-        </a>
-
-        <a class="route-card" href="/products/ssg/">
-          <small>Product</small>
-          <strong>Syntax Geometry</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="guideTitle">
-      <div class="panel-head">
-        <span class="pill">Quick guide</span>
-        <h2 id="guideTitle">The next surface should match the reason.</h2>
-      </div>
-
-      <div class="quiet-grid">
-        <article class="quiet-card">
-          <small>Need orientation?</small>
-          <strong>Start with Prelude.</strong>
-          <p>Use the threshold when the first step needs to be clean.</p>
-        </article>
-
-        <article class="quiet-card">
-          <small>Need structure?</small>
-          <strong>Open Metaverse.</strong>
-          <p>Use the world surface when the broader object matters.</p>
-        </article>
-
-        <article class="quiet-card">
-          <small>Need output?</small>
-          <strong>Open Products.</strong>
-          <p>Use the product chamber when you want what is being built.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="closingTitle">
-      <div class="panel-head">
-        <span class="pill">Explore read</span>
-        <h2 id="closingTitle">The map is useful only when it moves.</h2>
-      </div>
-
-      <p class="closing-read">
-        Choose the next surface by purpose. The deeper path can open after the first
-        route is chosen.
+    <section class="home-section" aria-labelledby="doorOptionsTitle">
+      <p class="home-kicker">Door options</p>
+      <h2 id="doorOptionsTitle">Choose the first surface.</h2>
+      <p>
+        The Door stays clean. Start with the route that matches why you came in.
       </p>
-    </section>
 
-    <section class="panel" aria-labelledby="backlinksTitle">
-      <div class="panel-head">
-        <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">Return without losing the route.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
+      <div class="support-grid">
+        <a href="/home/">
           <small>Interior</small>
           <strong>Home</strong>
         </a>
 
-        <a class="route-card" href="/prelude/">
+        <a href="/prelude/">
           <small>Threshold</small>
           <strong>Prelude</strong>
         </a>
 
-        <a class="route-card" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
+        <a href="/explore/">
+          <small>Route map</small>
+          <strong>Explore</strong>
+        </a>
+
+        <a href="/frontier/">
+          <small>Expansion</small>
+          <strong>Frontier</strong>
         </a>
       </div>
     </section>
 
-    <footer class="footer">
-      <span>Explore · Active World-Facing Route Surface</span>
-      <span><a href="/">Door</a> · <a href="/home/">Home</a> · <a href="/products/">Products</a></span>
+    <section class="home-section">
+      <p class="home-kicker">Russian doll priority</p>
+      <h2>Open only what matters next.</h2>
+      <p>
+        The homepage compresses into nested attractions. The top layer stays clean;
+        each attraction opens only when the visitor asks for more.
+      </p>
+
+      <div class="doll-stack">
+        <details class="doll" open>
+          <summary>
+            <span class="number">01</span>
+            <span>
+              <small>Main attraction</small>
+              <strong>Nine Summits of Love</strong>
+            </span>
+          </summary>
+          <div class="doll-body">
+            <p>The main human-development path and first public pillar.</p>
+            <a href="/nine-summits/">Open</a>
+          </div>
+        </details>
+
+        <details class="doll">
+          <summary>
+            <span class="number">02</span>
+            <span>
+              <small>Core phrase</small>
+              <strong>Learn to Live to Love</strong>
+            </span>
+          </summary>
+          <div class="doll-body">
+            <p>The plain-language doorway into the deeper work.</p>
+            <a href="/nine-summits/">Enter</a>
+          </div>
+        </details>
+
+        <details class="doll">
+          <summary>
+            <span class="number">03</span>
+            <span>
+              <small>World attraction</small>
+              <strong>Demo Universe</strong>
+            </span>
+          </summary>
+          <div class="doll-body">
+            <p>
+              The Demo Universe routes to the official Generation 2 Metaverse
+              surface.
+            </p>
+            <a href="/metaverse/">Explore Metaverse</a>
+          </div>
+        </details>
+
+        <details class="doll">
+          <summary>
+            <span class="number">04</span>
+            <span>
+              <small>Upcoming show</small>
+              <strong>The Upper Room</strong>
+            </span>
+          </summary>
+          <div class="doll-body">
+            <p>The upcoming show: <em>A Dollar a Day Keeps the Psychiatrist Away</em>.</p>
+            <a href="/big-laugh/upper-room/">Preview</a>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="home-section" aria-labelledby="supportRoutesTitle">
+      <p class="home-kicker">More routes</p>
+      <h2 id="supportRoutesTitle">Secondary doors stay below the fold.</h2>
+
+      <div class="support-grid">
+        <a href="/products/">
+          <small>Products</small>
+          <strong>Product chamber</strong>
+        </a>
+
+        <a href="/laws/">
+          <small>Laws</small>
+          <strong>Governing layer</strong>
+        </a>
+
+        <a href="/about/">
+          <small>About</small>
+          <strong>Mission context</strong>
+        </a>
+
+        <a href="/contact/">
+          <small>Contact</small>
+          <strong>Reach the project</strong>
+        </a>
+
+        <a href="/gauges/">
+          <small>Gauges</small>
+          <strong>Inspect instruments</strong>
+        </a>
+
+        <a href="/metaverse/">
+          <small>Metaverse</small>
+          <strong>World surface</strong>
+        </a>
+      </div>
+    </section>
+
+    <footer class="home-footer">
+      <span>Diamond Gate Bridge · Second Generation Renewal</span>
+      <span>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/metaverse/">Metaverse</a>
+        <a href="/products/">Products</a>
+        <a href="/big-laugh/upper-room/">Upcoming Show</a>
+      </span>
     </footer>
   </main>
+
+  <script
+    src="/index.js?v=root-door-axis-spin-earth-v5-clean-door-hierarchy"
+    defer
+    data-root-script-version="root-door-axis-spin-earth-v5-clean-door-hierarchy"
+  ></script>
 </body>
 </html>

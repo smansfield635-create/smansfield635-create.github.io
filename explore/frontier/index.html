@@ -1,3 +1,6 @@
+mkdir -p frontier
+
+cat > frontier/index.html <<'EOF'
 <!DOCTYPE html>
 <html lang="en" data-frontier-generation="second-generation-renewal">
 <head>
@@ -6,7 +9,7 @@
   <title>Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier at Diamond Gate Bridge: a Generation 2 edge-facing page for new paths, public expansion, experiments, and next territories."
+    content="Frontier at Diamond Gate Bridge: a Generation 2 expansion surface for new paths, public experiments, future chambers, and next territories."
   />
 
   <style>
@@ -20,15 +23,12 @@
       --gold:#efd29a;
       --blue:#8ec5ff;
       --green:#93efbd;
-      --orange:#f1a45b;
       --purple:#c89cff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
     }
 
-    * {
-      box-sizing:border-box;
-    }
+    * { box-sizing:border-box; }
 
     html,
     body {
@@ -57,10 +57,7 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
+    a { color:inherit; text-decoration:none; }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -149,14 +146,6 @@
       color:#d7e2ff;
       font-weight:850;
       text-align:center;
-    }
-
-    .nav a:focus-visible,
-    .button:focus-visible,
-    .route-card:focus-visible,
-    .frontier-card:focus-visible {
-      outline:2px solid rgba(239,210,154,.62);
-      outline-offset:3px;
     }
 
     .button.primary {
@@ -272,9 +261,7 @@
       font-size:clamp(1rem,1.8vw,1.18rem);
     }
 
-    .actions {
-      margin-top:10px;
-    }
+    .actions { margin-top:10px; }
 
     .panel {
       border-radius:30px;
@@ -351,9 +338,7 @@
       font-size:.86rem;
     }
 
-    .footer a {
-      color:#d6e2ff;
-    }
+    .footer a { color:#d6e2ff; }
 
     @media (min-width:820px) {
       .topbar {
@@ -395,18 +380,7 @@
         grid-template-columns:1fr;
       }
 
-      .hero {
-        min-height:520px;
-      }
-    }
-
-    @media (prefers-reduced-motion:reduce) {
-      *,
-      *::before,
-      *::after {
-        animation:none !important;
-        scroll-behavior:auto !important;
-      }
+      .hero { min-height:520px; }
     }
   </style>
 </head>
@@ -443,9 +417,8 @@
         <h1 id="frontierTitle">Frontier</h1>
         <h2>The edge opens after the core is stable.</h2>
         <p>
-          Frontier is the outward-facing expansion surface. It holds new paths,
-          public experiments, future chambers, and next territories without
-          disturbing the stable core pages.
+          Frontier holds new paths, public experiments, future chambers, and next
+          territories without disturbing the stable core pages.
         </p>
 
         <div class="actions">
@@ -591,3 +564,4 @@
   </main>
 </body>
 </html>
+EOF

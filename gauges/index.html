@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-page-generation="gauges-g1-cinematic-solar-host">
+<html lang="en" data-page-generation="gauges-g1-cinematic-celestial-detail-host">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Gauges: Generation 1 cinematic solar host shell powered by physics-derived /gauges/index.js runtime." />
+  <meta name="description" content="Diamond Gate Bridge Gauges: Generation 1 cinematic solar host shell powered by physics-derived /gauges/index.js runtime with coded celestial-body detail." />
 
   <style>
     :root {
@@ -354,7 +354,7 @@
       height: 120%;
       pointer-events: none;
       background:
-        radial-gradient(ellipse at 0% 50%, rgba(255,95,18,.32), transparent 56%),
+        radial-gradient(ellipse at 0% 50%, rgba(255,95,18,.34), transparent 56%),
         linear-gradient(90deg, rgba(255,88,18,.18), transparent 64%);
       filter: blur(8px);
       z-index: 1;
@@ -492,6 +492,83 @@
       line-height: 1.55;
     }
 
+    .definition-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    details.definition-card {
+      border: 1px solid rgba(170,198,255,.18);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 0% 0%, rgba(239,210,154,.08), transparent 42%),
+        rgba(255,255,255,.025);
+      overflow: hidden;
+    }
+
+    details.definition-card summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 42px 14px 14px;
+      position: relative;
+      display: grid;
+      gap: 4px;
+    }
+
+    details.definition-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    details.definition-card summary::after {
+      content: "+";
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--gold);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    details.definition-card[open] summary::after {
+      content: "–";
+    }
+
+    details.definition-card summary strong {
+      color: #fff;
+      font-size: .94rem;
+    }
+
+    details.definition-card summary span {
+      color: #91a6cf;
+      line-height: 1.45;
+      font-size: .84rem;
+    }
+
+    .definition-body {
+      border-top: 1px solid rgba(170,198,255,.12);
+      padding: 0 14px 14px;
+      display: grid;
+      gap: 10px;
+    }
+
+    .definition-body p {
+      font-size: .92rem;
+    }
+
+    .definition-body code {
+      display: block;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #dfe8ff;
+      font-size: .82rem;
+      line-height: 1.5;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(170,198,255,.12);
+      background: rgba(0,0,0,.18);
+    }
+
     .route-card small,
     .route-card strong {
       position: relative;
@@ -580,6 +657,10 @@
       .route-grid {
         grid-template-columns: repeat(4, minmax(132px, 1fr));
       }
+
+      .definition-stack {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 640px) {
@@ -657,7 +738,7 @@
         <span class="mark">DG</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Gauges · Cinematic Solar Runtime</strong>
+          <strong class="title">Gauges · Celestial Detail Runtime</strong>
         </span>
       </a>
 
@@ -677,17 +758,17 @@
       <div class="hero-copy">
         <span class="pill">Physics-derived cinematic projection</span>
         <h1>Gauges</h1>
-        <h2>The Sun anchors the view. Physics keeps the order.</h2>
+        <h2>The Sun anchors the view. Detail comes from coded body layers.</h2>
         <p>
-          This page does not use a static space graphic. Physical constants define the bodies and relationships; the runtime projects them into a readable solar sweep.
+          The runtime preserves the physics-derived spread and orbital order while adding coded celestial detail: solar turbulence, planetary surface bands, Earth land and cloud cues, Saturn ring depth, and atmospheric rim logic.
         </p>
       </div>
 
-      <div class="universe-panel" aria-label="Physics-derived cinematic solar projection">
+      <div class="universe-panel" aria-label="Physics-derived cinematic solar projection with coded celestial-body detail">
         <div class="universe-scene" id="universeScene" data-zoom="solar" aria-label="Sun-left cinematic solar projection"></div>
 
         <div class="scene-caption" id="sceneCaption">
-          Solar view · left-edge Sun · diagonal orbital plane · physics-derived / display-compressed
+          Solar view · left-edge Sun · diagonal orbital plane · coded celestial detail · physics-derived / display-compressed
         </div>
 
         <div class="control-row" aria-label="Universe zoom controls">
@@ -699,8 +780,8 @@
 
         <div class="physics-info" id="physicsInfo" aria-live="polite">
           <strong>Sun · star</strong>
-          <span>Runtime loading physical relationship data from /gauges/index.js.</span>
-          <span>Projection rule: physical order is preserved; display distance is compressed for readability.</span>
+          <span>Runtime loading physical relationship data and coded surface detail from /gauges/index.js.</span>
+          <span>Projection rule: physical order is preserved; display distance is compressed for readability; visual detail is code-rendered.</span>
         </div>
       </div>
     </section>
@@ -708,13 +789,13 @@
     <section class="panel">
       <div class="panel-head">
         <span class="pill">Generation 1 baseline</span>
-        <h2>Context stays flat. Scale becomes navigable.</h2>
+        <h2>Context stays flat. Celestial bodies gain detail.</h2>
       </div>
 
       <div class="label-grid">
         <div class="label-card">
           <strong>Reality layer</strong>
-          <span>Bodies have physical radius, orbital distance, orbital period, rotation period, and axial properties where relevant.</span>
+          <span>Bodies retain physical radius, orbital distance, orbital period, rotation period, and axial properties where relevant.</span>
         </div>
 
         <div class="label-card">
@@ -723,9 +804,89 @@
         </div>
 
         <div class="label-card">
-          <strong>Cinematic layer</strong>
-          <span>The Sun is camera-framed on the left, orbital lanes sweep diagonally, and the planets remain spread by the physics-derived runtime.</span>
+          <strong>Detail layer</strong>
+          <span>Surface detail is generated through CSS/JS body-specific layers, not a GraphicBox, not image generation, and not a static picture.</span>
         </div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <span class="pill">Definition layer</span>
+        <h2>Runtime definitions are now explicit.</h2>
+      </div>
+
+      <div class="definition-stack">
+        <details class="definition-card" open>
+          <summary>
+            <strong>Physics model</strong>
+            <span>The runtime does not hand-design planetary order.</span>
+          </summary>
+          <div class="definition-body">
+            <p>
+              Physical constants define the relationship field: radius, orbital distance, orbital period, rotation period, and axial tilt. The website only translates those relationships into a readable inspection plane.
+            </p>
+            <code>PHYSICS_MODEL=RELATIONSHIP_SOURCE
+BODY_FIELDS=RADIUS_KM,DISTANCE_AU,ORBITAL_DAYS,ROTATION_DAYS,AXIAL_TILT_DEG
+ORDER=PHYSICAL_ORDER_PRESERVED
+DESIGN=PROJECTION_NOT_PREMADE_UNIVERSE</code>
+          </div>
+        </details>
+
+        <details class="definition-card">
+          <summary>
+            <strong>Projection model</strong>
+            <span>The spread stays; the camera becomes cinematic.</span>
+          </summary>
+          <div class="definition-body">
+            <p>
+              The Sun is anchored on the left edge. Orbital lanes sweep diagonally across the scene. Distance is logarithmically compressed so the system remains visible without collapsing the planet spread.
+            </p>
+            <code>PROJECTION_MODEL=CINEMATIC_SOLAR_SWEEP
+SUN_ANCHOR=LEFT_EDGE
+ORBIT_PLANE=DIAGONAL
+DISTANCE_MODEL=LOG_COMPRESSED
+SPREAD=KEEP
+COLLAPSE_PLANETS=FALSE</code>
+          </div>
+        </details>
+
+        <details class="definition-card">
+          <summary>
+            <strong>Celestial detail model</strong>
+            <span>Detail is coded into the bodies.</span>
+          </summary>
+          <div class="definition-body">
+            <p>
+              The runtime now adds surface detail directly to each body: solar turbulence, Mercury crater cues, Venus cloud bands, Earth land/cloud cues, Mars surface variation, Jupiter bands, Saturn rings, and outer-planet atmospheric shading.
+            </p>
+            <code>DETAIL_MODEL=CODE_RENDERED
+SUN=CORONA,TURBULENCE,RADIAL_BANDING
+EARTH=LAND_CUES,CLOUD_CUES,RIM_SHADING
+JUPITER=BANDS,STORM_CUE
+SATURN=RING_DEPTH,BANDS
+MARS=SURFACE_VARIATION
+OUTER_PLANETS=ATMOSPHERIC_GRADIENTS</code>
+          </div>
+        </details>
+
+        <details class="definition-card">
+          <summary>
+            <strong>Protection rules</strong>
+            <span>No generated graphic path is allowed here.</span>
+          </summary>
+          <div class="definition-body">
+            <p>
+              The page remains a live coded runtime. It does not use GraphicBox, image generation, or static replacement art. The detail upgrade is handled through `/gauges/index.js`.
+            </p>
+            <code>GRAPHIC_BOX=FORBIDDEN
+IMAGE_GENERATION=FORBIDDEN
+STATIC_IMAGE=FORBIDDEN
+RUNTIME=/gauges/index.js
+HOST=/gauges/index.html
+DETAIL_SOURCE=CSS_JS_ONLY</code>
+          </div>
+        </details>
       </div>
     </section>
 
@@ -750,21 +911,23 @@
     <section class="panel">
       <div class="panel-head">
         <span class="pill">Status receipt</span>
-        <h2>Gauges host shell is active.</h2>
+        <h2>Gauges detail host shell is active.</h2>
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_G1_CINEMATIC_SOLAR_HOST_STATUS=ACTIVE
+        <code>GAUGES_G1_CELESTIAL_DETAIL_HOST_STATUS=ACTIVE
 PAGE=/gauges/index.html
 RUNTIME=/gauges/index.js
 BASELINE=THE_WORLD_IS_FLAT_GENERATION_1
 MODEL=PHYSICS_DERIVED
 VISUAL_LAYER=CINEMATIC_SOLAR_PROJECTION
+DETAIL_LAYER=CODE_RENDERED_CELESTIAL_BODY_SURFACES
 CENTER_BODY=SUN_LEFT_EDGE
 ORBIT_PLANE=DIAGONAL_SOLAR_SWEEP
 DISTANCE_MODEL=COMPRESSED_SCALE_PROJECTION
 RADIUS_MODEL=VISUALLY_PROTECTED_RADIUS
 ZOOM_STATES=EARTH,SOLAR,SYSTEM,UNIVERSE
+ADDED_DETAIL=SUN_TURBULENCE,PLANET_SURFACE_LAYERS,EARTH_LAND_CLOUD_CUES,JUPITER_BANDS,SATURN_RING_DEPTH,MARS_TEXTURE,MERCURY_CRATERS,VENUS_CLOUD_BANDS,URANUS_NEPTUNE_ATMOSPHERE
 GRAPHIC_BOX=FORBIDDEN
 IMAGE_GENERATION=FORBIDDEN
 STATIC_IMAGE=FORBIDDEN
@@ -773,7 +936,7 @@ RULE=PHYSICS_DETERMINES_RELATIONSHIPS_WEBSITE_DETERMINES_PROJECTION</code>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · Cinematic Solar Runtime</span>
+      <span>Diamond Gate Bridge · Gauges · Celestial Detail Runtime</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

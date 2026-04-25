@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-page-generation="world-is-flat-g1-globe-wrap">
+<html lang="en" data-page-generation="world-is-flat-g1-globe-wrap-gridless">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Gauges: self-contained Earth instrument with spherical texture wrap, corrected spin, compact context, and Generation 1 readable baseline." />
+  <meta name="description" content="Diamond Gate Bridge Gauges: self-contained Earth instrument with gridless spherical texture wrap, corrected spin, compact context, and Generation 1 readable baseline." />
 
   <style>
     :root {
@@ -18,7 +18,13 @@
       --blue: #8ec5ff;
       --shadow: 0 24px 80px rgba(0,0,0,.50);
       --max: 1180px;
-      --earth-texture: url("https://upload.wikimedia.org/wikipedia/commons/8/83/Equirectangular_projection_SW.jpg");
+
+      /*
+        GRIDLESS TEXTURE SOURCE.
+        Prior texture had latitude/longitude lines baked into the image.
+        This source is a clean Earth texture used as a material layer.
+      */
+      --earth-texture: url("https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg");
     }
 
     * { box-sizing: border-box; }
@@ -341,11 +347,12 @@
       border-radius: 50%;
       overflow: hidden;
       isolation: isolate;
-      background: #06112a;
+      background:
+        radial-gradient(circle at 38% 30%, rgba(47,139,176,.88), rgba(3,12,35,.96) 62%, rgba(0,0,0,1) 100%);
       border: 1px solid rgba(210,232,255,.32);
       box-shadow:
-        inset -42px -20px 70px rgba(0,0,0,.62),
-        inset 32px 26px 74px rgba(255,255,255,.11),
+        inset -46px -22px 74px rgba(0,0,0,.66),
+        inset 34px 24px 74px rgba(255,255,255,.11),
         inset 0 0 32px rgba(142,197,255,.22),
         0 0 0 18px rgba(142,197,255,.10),
         0 0 88px rgba(142,197,255,.24);
@@ -354,18 +361,18 @@
 
     .earth-map {
       position: absolute;
-      inset: -1.4%;
+      inset: -1.8%;
       border-radius: 50%;
       background-image: var(--earth-texture);
-      background-size: 210% 105%;
-      background-position: 18% 50%;
+      background-size: 220% 110%;
+      background-position: 0% 50%;
       background-repeat: repeat-x;
-      transform: rotate(23.5deg) scale(1.04);
-      animation: earthTextureWrap 42s linear infinite;
+      transform: rotate(23.5deg) scale(1.045);
+      animation: earthTextureWrap 52s linear infinite;
       filter:
-        saturate(1.12)
-        contrast(1.08)
-        brightness(.90);
+        saturate(1.10)
+        contrast(1.06)
+        brightness(.94);
       z-index: 1;
     }
 
@@ -375,12 +382,37 @@
       inset: 0;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 38% 30%, rgba(255,255,255,.20), transparent 18%),
-        radial-gradient(circle at 50% 50%, transparent 42%, rgba(0,0,0,.20) 64%, rgba(0,0,0,.74) 100%),
-        linear-gradient(110deg, rgba(255,255,255,.08) 0%, transparent 34%, rgba(0,0,0,.38) 73%, rgba(0,0,0,.70) 100%);
+        radial-gradient(circle at 38% 30%, rgba(255,255,255,.17), transparent 18%),
+        radial-gradient(circle at 50% 50%, transparent 43%, rgba(0,0,0,.22) 66%, rgba(0,0,0,.76) 100%),
+        linear-gradient(110deg, rgba(255,255,255,.08) 0%, transparent 34%, rgba(0,0,0,.38) 73%, rgba(0,0,0,.72) 100%);
       mix-blend-mode: multiply;
       pointer-events: none;
       z-index: 2;
+    }
+
+    /*
+      SEAM MASK:
+      The prior visible vertical stripe was a texture-repeat boundary.
+      This layer hides the repeat seam with a thin moving-safe shadow band,
+      while keeping the land texture visible and gridless.
+    */
+    .earth-seam-mask {
+      position: absolute;
+      top: -3%;
+      bottom: -3%;
+      left: -4%;
+      width: 9%;
+      border-radius: 50%;
+      background:
+        linear-gradient(90deg,
+          rgba(0,0,0,.54),
+          rgba(0,0,0,.22) 42%,
+          rgba(0,0,0,0) 100%);
+      filter: blur(3px);
+      opacity: .58;
+      z-index: 3;
+      pointer-events: none;
+      transform: rotate(23.5deg);
     }
 
     .earth-terminator {
@@ -388,9 +420,9 @@
       inset: -2%;
       border-radius: 50%;
       background:
-        radial-gradient(circle at 28% 22%, rgba(255,255,255,.22), transparent 16%),
-        radial-gradient(circle at 36% 32%, rgba(142,197,255,.15), transparent 28%),
-        linear-gradient(105deg, transparent 0 41%, rgba(1,5,15,.20) 56%, rgba(0,0,0,.76) 100%);
+        radial-gradient(circle at 28% 22%, rgba(255,255,255,.20), transparent 16%),
+        radial-gradient(circle at 36% 32%, rgba(142,197,255,.14), transparent 28%),
+        linear-gradient(105deg, transparent 0 41%, rgba(1,5,15,.22) 56%, rgba(0,0,0,.78) 100%);
       z-index: 4;
       pointer-events: none;
       mix-blend-mode: normal;
@@ -403,7 +435,7 @@
       box-shadow:
         inset 0 0 0 2px rgba(210,232,255,.20),
         inset 0 0 18px rgba(255,255,255,.10),
-        inset -34px -10px 64px rgba(0,0,0,.60),
+        inset -34px -10px 64px rgba(0,0,0,.62),
         inset 34px 18px 54px rgba(142,197,255,.16);
       z-index: 5;
       pointer-events: none;
@@ -552,8 +584,8 @@
     }
 
     @keyframes earthTextureWrap {
-      0% { background-position: 18% 50%; }
-      100% { background-position: -182% 50%; }
+      0% { background-position: 0% 50%; }
+      100% { background-position: -220% 50%; }
     }
 
     @keyframes diamondFloat {
@@ -665,7 +697,7 @@
         <span class="mark">DG</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Gauges · G1 Globe Wrap</strong>
+          <strong class="title">Gauges · G1 Gridless Globe</strong>
         </span>
       </a>
 
@@ -687,7 +719,7 @@
         <h1>Gauges</h1>
         <h2>The globe stays dimensional.</h2>
         <p>
-          Generation 1 keeps the page readable and compressed. The globe is the exception: it remains spherical, wrapped, and instrument-grade.
+          Generation 1 keeps the page readable and compressed. The globe is the exception: it remains spherical, wrapped, gridless, and instrument-grade.
         </p>
       </div>
 
@@ -695,8 +727,9 @@
         <div class="earth-wrap">
           <div class="earth-orbit" aria-hidden="true"></div>
 
-          <div class="earth-sphere" role="img" aria-label="Dimensional Earth globe with wrapped land texture and tilted axis">
+          <div class="earth-sphere" role="img" aria-label="Dimensional Earth globe with gridless wrapped land texture and tilted axis">
             <div class="earth-map"></div>
+            <div class="earth-seam-mask" aria-hidden="true"></div>
             <div class="earth-terminator" aria-hidden="true"></div>
             <div class="earth-rim" aria-hidden="true"></div>
             <div class="earth-atmosphere" aria-hidden="true"></div>
@@ -726,7 +759,7 @@
 
         <div class="label-card">
           <strong>Correction</strong>
-          <span>The map-grid overlay has been removed. The land now depends on texture wrap, rim falloff, lighting, atmosphere, and drift.</span>
+          <span>The grid-baked texture has been replaced. The globe now uses a gridless Earth material with seam suppression, rim falloff, lighting, atmosphere, and drift.</span>
         </div>
       </div>
     </section>
@@ -756,14 +789,17 @@
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_G1_GLOBE_WRAP_STATUS=ACTIVE
+        <code>GAUGES_G1_GRIDLESS_GLOBE_STATUS=ACTIVE
 PAGE=/gauges/index.html
 BASELINE=THE_WORLD_IS_FLAT_GENERATION_1
 PAGE_CONTEXT=FLAT_READABLE_COMPRESSED
 GLOBE_EXCEPTION=TRUE
 GLOBE_OBJECT=SPHERICAL_DIMENSIONAL_INSTRUMENT
-LAND_TEXTURE_RULE=WRAPPED_NOT_OVERLAID
+LAND_TEXTURE_RULE=GRIDLESS_WRAPPED_NOT_OVERLAID
 GRID_OVERLAY=REMOVED
+GRID_BAKED_TEXTURE=REPLACED
+TEXTURE_SOURCE=GRIDLESS_EARTH_MATERIAL
+SEAM_MASK=ACTIVE
 CURVATURE_CUES=RIM_FALLOFF,LIGHTING,TERMINATOR,ATMOSPHERE,EDGE_SHADOW
 SPIN_DIRECTION=CORRECTED_TEXTURE_DRIFT
 NEXT_ACTION=REPLACE_LIVE_GAUGES_INDEX_WITH_THIS_FILE</code>
@@ -771,7 +807,7 @@ NEXT_ACTION=REPLACE_LIVE_GAUGES_INDEX_WITH_THIS_FILE</code>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · G1 Globe Wrap</span>
+      <span>Diamond Gate Bridge · Gauges · G1 Gridless Globe</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

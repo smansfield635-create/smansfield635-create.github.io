@@ -1,16 +1,12 @@
 <!DOCTYPE html>
-<html
-  lang="en"
-  data-door-generation="second-generation-renewal"
-  data-root-script-version="root-door-g2-condensed-standalone-v10"
->
+<html lang="en" data-door-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Door</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Door: a concise Generation 2 public entry surface for Home, Prelude, Explore, Frontier, Products, Metaverse, Nine Summits, and Gauges."
+    content="Diamond Gate Bridge Door: a concise Generation 2 public entry surface with compact mobile route bubbles."
   />
 
   <style>
@@ -19,13 +15,14 @@
       --panel:rgba(7,14,28,.92);
       --panel-strong:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
+      --line-strong:rgba(239,210,154,.32);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
       --blue:#8ec5ff;
       --green:#93efbd;
-      --rose:#ff9ab8;
       --purple:#c89cff;
+      --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
     }
@@ -41,8 +38,8 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
-        radial-gradient(circle at 18% 28%,rgba(239,210,154,.12),transparent 30%),
+        radial-gradient(circle at 50% 4%,rgba(239,210,154,.18),transparent 22%),
+        radial-gradient(circle at 18% 28%,rgba(142,197,255,.14),transparent 30%),
         radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
@@ -53,12 +50,25 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.20;
+      opacity:.22;
       background:
         linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
         linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
       background-size:52px 52px;
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+    }
+
+    body::after {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.28;
+      background:
+        radial-gradient(circle at 14% 18%,rgba(255,255,255,.34) 0 1px,transparent 2px),
+        radial-gradient(circle at 72% 22%,rgba(255,255,255,.24) 0 1px,transparent 2px),
+        radial-gradient(circle at 44% 72%,rgba(255,255,255,.20) 0 1px,transparent 2px),
+        radial-gradient(circle at 86% 76%,rgba(255,255,255,.30) 0 1px,transparent 2px);
     }
 
     a {
@@ -81,7 +91,7 @@
     .route-card {
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(239,210,154,.10),transparent 42%),
         linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
     }
@@ -99,21 +109,24 @@
       display:flex;
       align-items:center;
       gap:12px;
+      min-width:0;
     }
 
     .mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
+      width:50px;
+      height:50px;
+      border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line);
+      border:1px solid var(--line-strong);
       background:
-        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
+        radial-gradient(circle at 50% 28%,rgba(239,210,154,.32),transparent 44%),
+        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
+      color:#fff8ea;
+      font-weight:950;
       letter-spacing:.08em;
       flex:0 0 auto;
+      box-shadow:0 0 22px rgba(239,210,154,.12);
     }
 
     .kicker {
@@ -123,13 +136,16 @@
       font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
+      font-weight:850;
     }
 
     .title {
       display:block;
       margin:0;
-      font-weight:850;
-      font-size:1.05rem;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
     }
 
     .nav,
@@ -165,7 +181,7 @@
       border-radius:34px;
       padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(370px,50vw,590px);
+      min-height:clamp(430px,56vw,660px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -176,40 +192,81 @@
     .hero::before {
       content:"";
       position:absolute;
-      width:min(700px,86vw);
-      height:min(700px,86vw);
+      width:min(760px,90vw);
+      height:min(760px,90vw);
       left:50%;
       top:50%;
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.16),transparent 24%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.08),transparent 70%);
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.20),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 70%);
       filter:blur(5px);
-      z-index:-2;
+      z-index:-3;
     }
 
     .hero::after {
       content:"";
       position:absolute;
-      width:min(820px,94vw);
-      height:min(390px,48vw);
+      width:min(860px,96vw);
+      height:min(410px,50vw);
       left:50%;
       top:50%;
       transform:translate(-50%,-50%) rotate(7deg);
-      border:1px solid rgba(142,197,255,.18);
+      border:1px solid rgba(239,210,154,.22);
       border-radius:50%;
-      z-index:-1;
+      z-index:-2;
       box-shadow:
-        0 0 38px rgba(142,197,255,.08),
-        inset 0 0 38px rgba(239,210,154,.06);
+        0 0 38px rgba(239,210,154,.08),
+        inset 0 0 38px rgba(142,197,255,.06);
+    }
+
+    .door-frame {
+      position:absolute;
+      right:clamp(20px,6vw,90px);
+      top:50%;
+      width:min(220px,27vw);
+      height:min(360px,44vw);
+      transform:translateY(-50%);
+      border:1px solid rgba(239,210,154,.26);
+      border-radius:34px 34px 18px 18px;
+      background:
+        radial-gradient(circle at 50% 22%,rgba(239,210,154,.20),transparent 28%),
+        linear-gradient(180deg,rgba(12,24,48,.62),rgba(2,6,14,.86));
+      box-shadow:
+        inset 0 0 40px rgba(239,210,154,.05),
+        0 0 60px rgba(142,197,255,.08);
+      opacity:.82;
+      z-index:-1;
+    }
+
+    .door-frame::before {
+      content:"";
+      position:absolute;
+      inset:16px;
+      border:1px solid rgba(170,198,255,.18);
+      border-radius:26px 26px 14px 14px;
+    }
+
+    .door-frame::after {
+      content:"";
+      position:absolute;
+      right:24px;
+      top:50%;
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(239,210,154,.58);
     }
 
     .hero-copy {
       display:grid;
       gap:14px;
-      max-width:870px;
+      max-width:760px;
+      position:relative;
+      z-index:2;
     }
 
     .pill {
@@ -241,15 +298,15 @@
     h1 {
       margin:0;
       color:#fff;
-      font-size:clamp(3.4rem,12vw,7.2rem);
-      line-height:.86;
-      letter-spacing:-.08em;
+      font-size:clamp(3.6rem,12vw,7.8rem);
+      line-height:.84;
+      letter-spacing:-.085em;
     }
 
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.6rem,5vw,3.15rem);
+      font-size:clamp(1.65rem,5vw,3.2rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -262,7 +319,7 @@
     }
 
     .hero p {
-      max-width:70ch;
+      max-width:66ch;
       margin-top:6px;
       font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
@@ -446,8 +503,18 @@
       }
 
       .hero {
-        min-height:400px;
+        min-height:430px;
         padding:22px;
+      }
+
+      .door-frame {
+        right:18px;
+        top:auto;
+        bottom:18px;
+        width:112px;
+        height:172px;
+        transform:none;
+        opacity:.45;
       }
 
       .route-grid {
@@ -498,7 +565,7 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="door"
-    data-surface="ted-style-public-door"
+    data-surface="generation-2-public-door"
     data-frontier-target-route="/explore/frontier/"
   >
     <header class="topbar">
@@ -506,7 +573,7 @@
         <span class="mark" aria-hidden="true">DG</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Door</strong>
+          <strong class="title">Public Door</strong>
         </span>
       </a>
 
@@ -521,14 +588,15 @@
     </header>
 
     <section class="hero" aria-labelledby="doorTitle">
+      <div class="door-frame" aria-hidden="true"></div>
+
       <div class="hero-copy">
         <span class="pill">Public front door</span>
         <h1 id="doorTitle">Diamond Gate Bridge</h1>
         <h2>Learn to Live to Love.</h2>
         <p>
-          A doorway should not explain the whole house. It should orient the visitor,
-          present the next clean choice, and let the deeper structure open only after
-          the first path is selected.
+          This is the entry point. Not the whole map. Not the full system. Just the
+          first clean door into the house.
         </p>
       </div>
     </section>
@@ -538,33 +606,33 @@
         <span class="pill">The opening idea</span>
         <h2 id="talkTitle">A good door does three things.</h2>
         <p>
-          It gives orientation without turning the first page into the entire map.
+          It tells you where you are, gives you a small number of usable choices,
+          and lets the deeper structure open in order.
         </p>
       </div>
 
       <div class="steps">
         <article class="step-card arrive">
           <small>Arrive</small>
-          <strong>See where you are.</strong>
+          <strong>See the house.</strong>
           <p>
-            The Door names the house and gives the visitor a stable first surface.
+            The Door names Diamond Gate Bridge and creates a stable first surface.
           </p>
         </article>
 
         <article class="step-card choose">
           <small>Choose</small>
-          <strong>Pick the next path.</strong>
+          <strong>Pick the next route.</strong>
           <p>
-            The first choice should be simple: orientation, exploration, product,
-            or inspection.
+            Prelude, Explore, Frontier, and Products are enough for the first move.
           </p>
         </article>
 
         <article class="step-card continue">
           <small>Continue</small>
-          <strong>Let the system open in order.</strong>
+          <strong>Open the next room.</strong>
           <p>
-            The deeper pages can carry the heavier work after the first route is selected.
+            Each deeper page can carry its own work without crowding the Door.
           </p>
         </article>
       </div>
@@ -631,16 +699,17 @@
     <section class="panel" aria-labelledby="closingTitle">
       <div class="panel-head">
         <span class="pill">Door read</span>
-        <h2 id="closingTitle">The Door does not need to explain the whole house.</h2>
+        <h2 id="closingTitle">The Door should feel like an entrance.</h2>
       </div>
 
       <p class="closing-read">
-        It only needs to help the visitor choose the next right surface.
+        It does not need to explain the whole house. It needs to help the visitor
+        choose the next right surface.
       </p>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Condensed Public Door</span>
+      <span>Diamond Gate Bridge · Generation 2 Public Door</span>
       <span>
         <a href="/home/">Home</a> ·
         <a href="/prelude/">Prelude</a> ·

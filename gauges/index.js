@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  var VERSION = "GAUGES_INDEX_JS_PHYSICS_UNIVERSE_RUNTIME_G1_v1";
+  var VERSION = "GAUGES_INDEX_JS_PHYSICS_UNIVERSE_RUNTIME_G1_CINEMATIC_SOLAR_v2";
 
   var AU_KM = 149597870.7;
   var DAY_MS = 86400000;
@@ -10,37 +10,41 @@
   var ZOOM_STATES = {
     earth: {
       label: "Earth emphasis · compressed solar projection",
-      orbitMin: 112,
-      orbitMax: 315,
-      sunPx: 76,
-      sceneScale: 1.42,
+      orbitMin: 148,
+      orbitMax: 430,
+      sunPx: 360,
+      sceneScale: 1.16,
+      camera: "cinematic",
       showOuterLabels: false,
       showMinorBodies: false
     },
     solar: {
-      label: "Solar view · Sun center · planetary order",
-      orbitMin: 78,
-      orbitMax: 338,
-      sunPx: 114,
+      label: "Solar view · left-edge Sun · diagonal orbital plane",
+      orbitMin: 124,
+      orbitMax: 520,
+      sunPx: 430,
       sceneScale: 1,
+      camera: "cinematic",
       showOuterLabels: true,
       showMinorBodies: false
     },
     system: {
-      label: "System view · compressed planetary order",
-      orbitMin: 54,
-      orbitMax: 356,
-      sunPx: 92,
-      sceneScale: 0.78,
+      label: "System view · wide solar sweep · compressed planetary order",
+      orbitMin: 92,
+      orbitMax: 610,
+      sunPx: 390,
+      sceneScale: 0.86,
+      camera: "cinematic",
       showOuterLabels: true,
       showMinorBodies: true
     },
     universe: {
       label: "Universe view · larger field · same physics relation",
-      orbitMin: 38,
-      orbitMax: 366,
-      sunPx: 66,
-      sceneScale: 0.62,
+      orbitMin: 72,
+      orbitMax: 680,
+      sunPx: 350,
+      sceneScale: 0.76,
+      camera: "cinematic",
       showOuterLabels: true,
       showMinorBodies: true
     }
@@ -193,38 +197,43 @@
   }
 
   function injectStyles() {
-    if (document.getElementById("gauges-index-js-universe-runtime-style")) return;
+    if (document.getElementById("gauges-index-js-cinematic-solar-runtime-style")) return;
 
     var style = document.createElement("style");
-    style.id = "gauges-index-js-universe-runtime-style";
+    style.id = "gauges-index-js-cinematic-solar-runtime-style";
     style.textContent = [
-      ".universe-panel{position:relative;isolation:isolate;}",
-      ".universe-scene{position:relative;width:min(86vw,720px);aspect-ratio:1/1;border-radius:50%;isolation:isolate;overflow:visible;z-index:2;transform-origin:50% 50%;transition:transform 520ms ease;}",
-      ".universe-scene[data-zoom='earth']{transform:scale(1.42);}",
+      ".universe-panel{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(circle at 0% 42%,rgba(255,118,25,.20),transparent 28%),radial-gradient(circle at 72% 38%,rgba(142,197,255,.11),transparent 34%),linear-gradient(180deg,rgba(3,8,19,.98),rgba(1,4,12,.99))!important;}",
+      ".universe-panel:before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.52;background:radial-gradient(circle at 13% 26%,rgba(255,255,255,.72) 0 1px,transparent 1.5px),radial-gradient(circle at 78% 18%,rgba(255,255,255,.56) 0 1px,transparent 1.5px),radial-gradient(circle at 86% 76%,rgba(255,255,255,.46) 0 1px,transparent 1.5px),radial-gradient(circle at 32% 82%,rgba(255,255,255,.54) 0 1px,transparent 1.5px),radial-gradient(circle at 52% 36%,rgba(255,255,255,.42) 0 1px,transparent 1.5px);background-size:280px 280px,330px 330px,310px 310px,360px 360px,300px 300px;z-index:0;}",
+      ".universe-panel:after{content:'';position:absolute;left:-22%;top:-12%;width:70%;height:120%;pointer-events:none;background:radial-gradient(ellipse at 0% 50%,rgba(255,95,18,.32),transparent 56%),linear-gradient(90deg,rgba(255,88,18,.18),transparent 64%);filter:blur(8px);z-index:1;}",
+      ".universe-scene{position:relative;width:min(96vw,880px);aspect-ratio:1.62/1;border-radius:28px;isolation:isolate;overflow:visible;z-index:2;transform-origin:24% 50%;transition:transform 520ms ease;}",
+      ".universe-scene[data-zoom='earth']{transform:scale(1.16);}",
       ".universe-scene[data-zoom='solar']{transform:scale(1);}",
-      ".universe-scene[data-zoom='system']{transform:scale(.78);}",
-      ".universe-scene[data-zoom='universe']{transform:scale(.62);}",
-      ".orbit{position:absolute;left:50%;top:50%;border-radius:50%;border:1px solid rgba(170,198,255,.15);transform:translate(-50%,-50%);pointer-events:none;}",
-      ".orbit.is-selected{border-color:rgba(239,210,154,.46);box-shadow:0 0 18px rgba(239,210,154,.14);}",
-      ".orbit-belt{position:absolute;left:50%;top:50%;border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;border:1px dashed rgba(170,198,255,.13);box-shadow:inset 0 0 24px rgba(170,198,255,.045),0 0 18px rgba(170,198,255,.035);}",
+      ".universe-scene[data-zoom='system']{transform:scale(.86);}",
+      ".universe-scene[data-zoom='universe']{transform:scale(.76);}",
+      ".orbit{position:absolute;left:var(--sun-x,7%);top:var(--sun-y,50%);border-radius:50%;border:2px solid rgba(220,232,255,.24);transform:translate(-50%,-50%) rotate(-13deg);pointer-events:none;box-shadow:0 0 10px rgba(142,197,255,.055),inset 0 0 24px rgba(142,197,255,.035);}",
+      ".orbit.is-selected{border-color:rgba(239,210,154,.62);box-shadow:0 0 22px rgba(239,210,154,.18),inset 0 0 22px rgba(239,210,154,.08);}",
+      ".orbit-belt{position:absolute;left:var(--sun-x,7%);top:var(--sun-y,50%);border-radius:50%;transform:translate(-50%,-50%) rotate(-13deg);pointer-events:none;border:1px dashed rgba(170,198,255,.20);box-shadow:inset 0 0 24px rgba(170,198,255,.055),0 0 18px rgba(170,198,255,.04);}",
       ".body{position:absolute;border-radius:50%;transform:translate(-50%,-50%);isolation:isolate;overflow:visible;cursor:pointer;border:1px solid rgba(255,255,255,.16);transition:transform 260ms ease,filter 260ms ease,box-shadow 260ms ease;}",
       ".body:focus-visible{outline:2px solid rgba(239,210,154,.7);outline-offset:4px;}",
       ".body:hover{transform:translate(-50%,-50%) scale(1.08);filter:brightness(1.14);}",
       ".body.is-selected{box-shadow:0 0 0 2px rgba(239,210,154,.62),0 0 24px rgba(239,210,154,.32)!important;}",
-      ".body.sun{background:radial-gradient(circle at 36% 30%,#fff7c8 0 9%,#ffe784 16%,#ffbd36 38%,#f36b17 66%,#9e260b 100%);box-shadow:0 0 22px rgba(255,231,132,.88),0 0 66px rgba(255,167,47,.56),0 0 140px rgba(255,110,24,.26);z-index:8;animation:sunPulse 5.8s ease-in-out infinite;}",
-      ".body.sun:before{content:'';position:absolute;inset:-32%;border-radius:50%;background:radial-gradient(circle at 50% 50%,rgba(255,205,82,.35),transparent 56%),radial-gradient(circle at 50% 50%,rgba(255,120,32,.16),transparent 72%);z-index:-1;filter:blur(7px);}",
-      ".body.planet{background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.18),transparent 18%),radial-gradient(circle at 34% 30%,var(--body-hi,#8ec5ff),var(--body-mid,#0b4b8c) 48%,var(--body-low,#031236) 72%,rgba(0,0,0,1) 100%);box-shadow:inset -10px -4px 18px rgba(0,0,0,.64),inset 7px 5px 16px rgba(255,255,255,.12),0 0 20px var(--body-glow,rgba(142,197,255,.22));z-index:10;}",
-      ".body.mercury{--body-hi:#c9c1aa;--body-mid:#8c826f;--body-low:#2d2a25;--body-glow:rgba(220,210,188,.18);}",
+      ".body.sun{background:radial-gradient(circle at 64% 35%,#fff7c8 0 5%,#ffe784 10%,#ffbd36 30%,#f36b17 58%,#8e1607 100%);box-shadow:0 0 24px rgba(255,231,132,.92),0 0 82px rgba(255,112,24,.72),0 0 180px rgba(255,64,14,.36);z-index:8;animation:sunPulse 5.8s ease-in-out infinite;}",
+      ".body.sun:before{content:'';position:absolute;inset:-24%;border-radius:50%;background:radial-gradient(circle at 58% 50%,rgba(255,235,140,.38),transparent 50%),radial-gradient(circle at 52% 50%,rgba(255,120,32,.26),transparent 68%);z-index:-1;filter:blur(9px);}",
+      ".body.sun:after{content:'';position:absolute;inset:0;border-radius:50%;background:repeating-radial-gradient(circle at 48% 48%,rgba(255,255,255,.08) 0 2px,transparent 2px 11px),linear-gradient(90deg,rgba(255,255,255,.18),transparent 30%,rgba(0,0,0,.18));mix-blend-mode:screen;opacity:.42;pointer-events:none;}",
+      ".body.planet{background:radial-gradient(circle at 34% 28%,rgba(255,255,255,.22),transparent 18%),radial-gradient(circle at 34% 30%,var(--body-hi,#8ec5ff),var(--body-mid,#0b4b8c) 48%,var(--body-low,#031236) 72%,rgba(0,0,0,1) 100%);box-shadow:inset -10px -4px 18px rgba(0,0,0,.64),inset 7px 5px 16px rgba(255,255,255,.14),0 0 24px var(--body-glow,rgba(142,197,255,.22));z-index:10;}",
+      ".body.planet:after{content:'';position:absolute;inset:0;border-radius:50%;background:linear-gradient(110deg,rgba(255,255,255,.10),transparent 34%,rgba(0,0,0,.48) 76%,rgba(0,0,0,.76));pointer-events:none;}",
+      ".body.mercury{--body-hi:#d6c6a9;--body-mid:#8c826f;--body-low:#2d2a25;--body-glow:rgba(220,210,188,.18);}",
       ".body.venus{--body-hi:#ffe4a3;--body-mid:#c88435;--body-low:#42210d;--body-glow:rgba(239,210,154,.22);}",
-      ".body.earth{--body-hi:#9fe7ff;--body-mid:#0d6faa;--body-low:#041738;--body-glow:rgba(142,197,255,.34);}",
-      ".body.mars{--body-hi:#ffb083;--body-mid:#b94b28;--body-low:#36120d;--body-glow:rgba(255,98,98,.20);}",
-      ".body.jupiter{--body-hi:#fff0c8;--body-mid:#b88758;--body-low:#422819;--body-glow:rgba(239,210,154,.24);}",
-      ".body.saturn{--body-hi:#fff0bd;--body-mid:#b99b61;--body-low:#3c2f1a;--body-glow:rgba(239,210,154,.22);}",
-      ".body.uranus{--body-hi:#c8fbff;--body-mid:#4aa1ad;--body-low:#103848;--body-glow:rgba(142,197,255,.22);}",
-      ".body.neptune{--body-hi:#9dc4ff;--body-mid:#3553b5;--body-low:#101a4c;--body-glow:rgba(142,197,255,.22);}",
-      ".ring-system{position:absolute;left:50%;top:50%;width:210%;height:74%;border:2px solid rgba(239,210,154,.35);border-left-color:rgba(239,210,154,.15);border-right-color:rgba(239,210,154,.15);border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg);pointer-events:none;z-index:-1;box-shadow:0 0 10px rgba(239,210,154,.14);}",
+      ".body.earth{--body-hi:#d9fbff;--body-mid:#187bc2;--body-low:#041738;--body-glow:rgba(142,197,255,.42);}",
+      ".body.mars{--body-hi:#ffb083;--body-mid:#b94b28;--body-low:#36120d;--body-glow:rgba(255,98,98,.22);}",
+      ".body.jupiter{--body-hi:#fff0c8;--body-mid:#b88758;--body-low:#422819;--body-glow:rgba(239,210,154,.28);}",
+      ".body.jupiter:before{content:'';position:absolute;left:5%;right:5%;top:34%;height:7%;border-radius:999px;background:rgba(120,62,32,.34);box-shadow:0 9px 0 rgba(255,240,200,.12),0 -10px 0 rgba(90,42,24,.18);z-index:2;pointer-events:none;}",
+      ".body.saturn{--body-hi:#fff0bd;--body-mid:#b99b61;--body-low:#3c2f1a;--body-glow:rgba(239,210,154,.26);}",
+      ".body.uranus{--body-hi:#d6ffff;--body-mid:#62b8c5;--body-low:#103848;--body-glow:rgba(142,197,255,.26);}",
+      ".body.neptune{--body-hi:#b7ceff;--body-mid:#3b5fd0;--body-low:#101a4c;--body-glow:rgba(142,197,255,.24);}",
+      ".ring-system{position:absolute;left:50%;top:50%;width:230%;height:78%;border:2px solid rgba(239,210,154,.44);border-left-color:rgba(239,210,154,.18);border-right-color:rgba(239,210,154,.18);border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg);pointer-events:none;z-index:-1;box-shadow:0 0 14px rgba(239,210,154,.18);}",
       ".moon{position:absolute;border-radius:50%;background:radial-gradient(circle at 34% 28%,#fff,#aeb8c8 42%,#394354 100%);box-shadow:inset -3px -2px 5px rgba(0,0,0,.55),0 0 8px rgba(210,232,255,.26);z-index:12;pointer-events:none;}",
-      ".body-label{position:absolute;transform:translate(-50%,-50%);color:rgba(232,240,255,.92);font-size:.70rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;text-shadow:0 1px 0 rgba(0,0,0,.8),0 0 10px rgba(0,0,0,.8);z-index:20;white-space:nowrap;}",
+      ".body-label{position:absolute;transform:translate(-50%,-50%);color:rgba(232,240,255,.95);font-size:.70rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;text-shadow:0 1px 0 rgba(0,0,0,.9),0 0 12px rgba(0,0,0,.9);z-index:20;white-space:nowrap;}",
       ".physics-info{position:relative;z-index:3;width:min(760px,94%);display:grid;gap:8px;border:1px solid rgba(170,198,255,.14);border-radius:18px;padding:12px 14px;background:rgba(255,255,255,.025);}",
       ".physics-info strong{color:#fff;font-size:.9rem;}",
       ".physics-info span{color:#aab8d8;line-height:1.45;font-size:.84rem;}",
@@ -233,8 +242,9 @@
       ".control-row button[aria-pressed='true']{color:#fff8ea;border-color:rgba(239,210,154,.46);background:radial-gradient(circle at 50% 120%,rgba(239,210,154,.22),transparent 62%),rgba(239,210,154,.08);}",
       ".runtime-pause{border-color:rgba(147,239,189,.36)!important;}",
       ".scene-caption{position:relative;z-index:3;width:min(760px,94%);text-align:center;color:#dce8ff;font-weight:850;font-size:.86rem;letter-spacing:.10em;text-transform:uppercase;opacity:.86;}",
-      "@keyframes sunPulse{0%,100%{filter:brightness(1);transform:translate(-50%,-50%) scale(1)}50%{filter:brightness(1.12);transform:translate(-50%,-50%) scale(1.03)}}",
-      "@media(max-width:640px){.body-label{font-size:.56rem}.physics-info{font-size:.8rem}.universe-scene{width:min(92vw,620px)}}"
+      ".cinematic-lens{position:absolute;inset:0;pointer-events:none;z-index:4;background:radial-gradient(circle at 20% 36%,rgba(255,255,255,.12),transparent 6%),radial-gradient(circle at 42% 66%,rgba(142,197,255,.12),transparent 8%),radial-gradient(circle at 70% 20%,rgba(142,197,255,.10),transparent 10%),linear-gradient(90deg,rgba(255,85,18,.08),transparent 42%,rgba(142,197,255,.04));mix-blend-mode:screen;opacity:.72;}",
+      "@keyframes sunPulse{0%,100%{filter:brightness(1);transform:translate(-50%,-50%) scale(1)}50%{filter:brightness(1.12);transform:translate(-50%,-50%) scale(1.025)}}",
+      "@media(max-width:640px){.universe-scene{width:min(100vw,760px);aspect-ratio:1.16/1;transform-origin:10% 50%;}.body-label{font-size:.56rem}.physics-info{font-size:.8rem}.universe-panel{min-height:620px!important;}}"
     ].join("\n");
 
     document.head.appendChild(style);
@@ -256,6 +266,8 @@
     }
 
     scene.classList.add("runtime-mounted");
+    scene.style.setProperty("--sun-x", "7%");
+    scene.style.setProperty("--sun-y", "50%");
 
     caption = document.getElementById("sceneCaption");
 
@@ -354,7 +366,7 @@
     if (body.key === "sun") return zoom.sunPx;
 
     var min = zoomKey === "earth" ? 13 : 10;
-    var max = zoomKey === "earth" ? 56 : 48;
+    var max = zoomKey === "earth" ? 58 : 54;
     var maxRadius = 69911;
     var normalized = Math.sqrt(body.radiusKm / maxRadius);
 
@@ -376,11 +388,9 @@
   }
 
   function positionFor(body, zoomKey) {
-    var distance = compressedDistanceAU(body.distanceAU, zoomKey);
-
     if (body.key === "sun") {
       return {
-        left: "50%",
+        left: "7%",
         top: "50%",
         x: 0,
         y: 0,
@@ -388,12 +398,25 @@
       };
     }
 
+    var distance = compressedDistanceAU(body.distanceAU, zoomKey);
     var angle = orbitalAngle(body);
-    var x = Math.cos(angle) * distance;
-    var y = Math.sin(angle) * distance * 0.72;
+
+    /*
+      Cinematic projection:
+      - Same physics order and compressed distances.
+      - Camera plane is shifted so the Sun sits off-frame left.
+      - Orbit lane is diagonally tilted like the reference target.
+    */
+    var rawX = Math.cos(angle) * distance;
+    var rawY = Math.sin(angle) * distance * 0.44;
+
+    var tiltDeg = -13;
+    var tilt = tiltDeg * Math.PI / 180;
+    var x = rawX * Math.cos(tilt) - rawY * Math.sin(tilt);
+    var y = rawX * Math.sin(tilt) + rawY * Math.cos(tilt);
 
     return {
-      left: "calc(50% + " + x.toFixed(2) + "px)",
+      left: "calc(7% + " + x.toFixed(2) + "px)",
       top: "calc(50% + " + y.toFixed(2) + "px)",
       x: x,
       y: y,
@@ -417,7 +440,7 @@
     if (body.key === state.selectedKey) orbit.classList.add("is-selected");
 
     orbit.style.width = (distance * 2) + "px";
-    orbit.style.height = (distance * 2 * 0.72) + "px";
+    orbit.style.height = (distance * 2 * 0.44) + "px";
     orbit.setAttribute("aria-hidden", "true");
 
     scene.appendChild(orbit);
@@ -434,7 +457,7 @@
     var belt = document.createElement("div");
     belt.className = "orbit-belt";
     belt.style.width = (mid * 2) + "px";
-    belt.style.height = (mid * 2 * 0.72) + "px";
+    belt.style.height = (mid * 2 * 0.44) + "px";
     belt.setAttribute("aria-hidden", "true");
 
     scene.appendChild(belt);
@@ -504,8 +527,8 @@
   function addLabel(body, pos, size, labelPositions) {
     var zoom = ZOOM_STATES[state.zoom] || ZOOM_STATES.solar;
 
-    if (body.key === "sun" && state.zoom !== "earth") return;
-    if (state.zoom === "earth" && body.key !== "earth" && body.key !== "sun") return;
+    if (body.key === "sun") return;
+    if (state.zoom === "earth" && body.key !== "earth") return;
     if (!zoom.showOuterLabels && body.distanceAU > 1.7) return;
 
     var label = document.createElement("div");
@@ -513,11 +536,11 @@
     label.textContent = body.name;
 
     var labelX = pos.x;
-    var labelY = pos.y + Math.max(18, size * 0.9);
+    var labelY = pos.y + Math.max(18, size * 0.95);
 
     var adjusted = avoidCollision(labelX, labelY, labelPositions);
 
-    label.style.left = "calc(50% + " + adjusted.x.toFixed(2) + "px)";
+    label.style.left = "calc(7% + " + adjusted.x.toFixed(2) + "px)";
     label.style.top = "calc(50% + " + adjusted.y.toFixed(2) + "px)";
 
     scene.appendChild(label);
@@ -530,7 +553,7 @@
     while (
       attempt < 8 &&
       used.some(function (point) {
-        return Math.abs(point.x - x) < 54 && Math.abs(point.y - nextY) < LABEL_MIN_GAP;
+        return Math.abs(point.x - x) < 58 && Math.abs(point.y - nextY) < LABEL_MIN_GAP;
       })
     ) {
       nextY += LABEL_MIN_GAP;
@@ -542,6 +565,13 @@
     return { x: x, y: nextY };
   }
 
+  function addCinematicLens() {
+    var lens = document.createElement("div");
+    lens.className = "cinematic-lens";
+    lens.setAttribute("aria-hidden", "true");
+    scene.appendChild(lens);
+  }
+
   function updateInfo() {
     var selected = getBody(state.selectedKey) || getBody("sun");
 
@@ -550,7 +580,7 @@
     info.innerHTML = [
       "<strong>" + selected.name + " · " + selected.type + "</strong>",
       "<span>Radius: " + formatKm(selected.radiusKm) + " km · Orbit: " + formatAU(selected.distanceAU) + " AU · Orbital period: " + formatDays(selected.orbitalDays) + " · Axial tilt: " + formatDeg(selected.axialTiltDeg) + "</span>",
-      "<span>Projection rule: physical order is preserved; distance is logarithmically compressed so the page remains readable.</span>"
+      "<span>Projection rule: physical order and relationships are preserved; distance is logarithmically compressed and camera-framed into a cinematic solar sweep.</span>"
     ].join("");
   }
 
@@ -593,7 +623,6 @@
     if (!scene) return;
 
     scene.setAttribute("data-zoom", state.zoom);
-    scene.style.transform = "scale(" + ZOOM_STATES[state.zoom].sceneScale + ")";
 
     clearScene();
 
@@ -608,6 +637,8 @@
     BODIES.forEach(function (body) {
       addBody(body, state.zoom, labelPositions);
     });
+
+    addCinematicLens();
 
     if (caption) {
       caption.textContent = ZOOM_STATES[state.zoom].label + " · physics-derived / display-compressed";
@@ -657,7 +688,7 @@
         }
       },
       render: render,
-      rule: "Physics determines relationships. Website determines projection."
+      rule: "Physics determines relationships. Website determines cinematic projection."
     });
   }
 

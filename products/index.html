@@ -1,25 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" data-products-page-version="products-clean-runtime-shell-v1">
+<html lang="en" data-products-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Products chamber: four-season product engine and second-generation runtime surface."
+    content="Diamond Gate Bridge Products Chamber: a self-contained Generation 2 product surface with V9 compact rotating diamond controls and readable product context."
   />
 
   <style>
     :root {
       --bg:#020610;
       --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
+      --line-strong:rgba(147,239,189,.34);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
       --blue:#8ec5ff;
+      --green:#93efbd;
+      --purple:#c89cff;
+      --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
+      --diamond-spin:18s;
+      --diamond-float:7s;
+      --diamond-breathe:5.8s;
     }
 
     * {
@@ -33,8 +41,9 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
-        radial-gradient(circle at 20% 32%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 50% 4%,rgba(147,239,189,.16),transparent 22%),
+        radial-gradient(circle at 18% 28%,rgba(142,197,255,.12),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(239,210,154,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
@@ -44,7 +53,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.20;
+      opacity:.22;
       background:
         linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
         linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
@@ -57,7 +66,7 @@
       text-decoration:none;
     }
 
-    .products-page {
+    .page {
       width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
       padding:14px 0 30px;
@@ -65,98 +74,276 @@
       z-index:1;
     }
 
-    .products-topbar,
-    .products-shell,
-    .products-runtime-mount {
+    .topbar,
+    .hero,
+    .panel,
+    .read-card,
+    .route-card,
+    .product-card,
+    .signal-card,
+    .status-strip {
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel),rgba(3,9,20,.92));
+        radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
     }
 
-    .products-topbar {
-      min-height:76px;
+    .topbar {
       margin-bottom:14px;
       padding:14px;
       border-radius:28px;
       display:grid;
-      gap:12px;
+      gap:14px;
     }
 
-    .products-brand {
+    .brand {
       display:flex;
       align-items:center;
       gap:12px;
+      min-width:0;
     }
 
-    .products-mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
+    .mark {
+      width:50px;
+      height:50px;
+      border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line);
+      border:1px solid var(--line-strong);
       background:
-        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
+        radial-gradient(circle at 50% 28%,rgba(147,239,189,.34),transparent 44%),
+        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
+      color:#effff5;
+      font-weight:950;
       letter-spacing:.08em;
+      flex:0 0 auto;
+      box-shadow:0 0 22px rgba(147,239,189,.14);
     }
 
-    .products-kicker {
+    .brand-text {
+      display:grid;
+      gap:3px;
+    }
+
+    .kicker {
       display:block;
-      margin:0 0 4px;
+      margin:0;
       color:#c8d7ff;
       font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
+      font-weight:850;
     }
 
-    .products-title {
+    .title {
       display:block;
       margin:0;
-      font-weight:850;
-      font-size:1.05rem;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
     }
 
-    .products-nav {
+    .nav,
+    .route-grid,
+    .read-grid,
+    .signal-grid,
+    .product-grid {
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
+      gap:10px;
     }
 
-    .products-nav a,
-    .products-action {
-      min-height:44px;
-      display:inline-flex;
+    .nav,
+    .route-grid {
+      perspective:1000px;
       align-items:center;
-      justify-content:center;
-      padding:0 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      color:#d7e2ff;
-      font-weight:850;
+      justify-items:center;
+    }
+
+    .nav a,
+    .route-card {
+      position:relative;
+      isolation:isolate;
+      width:min(100%,94px);
+      aspect-ratio:1 / 1;
+      display:grid;
+      place-items:center;
+      padding:0;
+      color:#e7eeff;
+      font-size:.70rem;
+      line-height:1.02;
+      font-weight:900;
       text-align:center;
+      transform-style:preserve-3d;
+      transition:transform 420ms ease, filter 420ms ease;
+      will-change:transform,filter;
     }
 
-    .products-nav a:focus-visible,
-    .products-action:focus-visible,
-    .products-runtime-mount:focus-visible {
-      outline:2px solid rgba(239,210,154,.62);
-      outline-offset:3px;
+    .route-card {
+      width:min(100%,150px);
+      font-size:.80rem;
     }
 
-    .products-shell {
-      border-radius:32px;
-      padding:clamp(18px,3vw,30px);
+    .nav a::before,
+    .route-card::before {
+      content:"";
+      position:absolute;
+      inset:10%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(170,198,255,.24);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.25),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(142,197,255,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+        linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+      box-shadow:
+        0 0 30px rgba(147,239,189,.18),
+        inset 0 0 26px rgba(255,255,255,.035);
+      z-index:-1;
+      transform-origin:50% 50%;
+      animation:
+        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
+        diamondPulse var(--diamond-breathe) ease-in-out infinite;
+    }
+
+    .nav a::after,
+    .route-card::after {
+      content:"";
+      position:absolute;
+      inset:25%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%),
+        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+      opacity:.72;
+      z-index:-1;
+      transform-origin:50% 50%;
+      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
+    }
+
+    .nav a.featured {
+      color:#fff8ea;
+    }
+
+    .nav a.featured::before {
+      border-color:rgba(239,210,154,.44);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.34),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(147,239,189,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
+      box-shadow:
+        0 0 38px rgba(239,210,154,.24),
+        inset 0 0 30px rgba(255,255,255,.04);
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .route-card:hover,
+    .route-card:focus-visible {
+      transform:translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045);
+      filter:brightness(1.16) saturate(1.08);
+      outline:none;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
+      min-height:clamp(390px,52vw,620px);
+      display:grid;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(780px,92vw);
+      height:min(780px,92vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.22),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.08),transparent 70%);
+      filter:blur(5px);
+      z-index:-3;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(900px,98vw);
+      height:min(430px,52vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-10deg);
+      border:1px solid rgba(147,239,189,.24);
+      border-radius:50%;
+      z-index:-2;
+      box-shadow:
+        0 0 38px rgba(147,239,189,.08),
+        inset 0 0 38px rgba(142,197,255,.06);
+    }
+
+    .product-chamber {
+      position:absolute;
+      right:clamp(20px,6vw,90px);
+      top:50%;
+      width:min(270px,32vw);
+      height:min(270px,32vw);
+      transform:translateY(-50%) rotate(45deg);
+      border:1px solid rgba(147,239,189,.34);
+      border-radius:38px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.22),transparent 38%),
+        radial-gradient(circle at 50% 72%,rgba(142,197,255,.12),transparent 34%),
+        linear-gradient(180deg,rgba(12,24,48,.62),rgba(2,6,14,.86));
+      box-shadow:
+        inset 0 0 44px rgba(147,239,189,.07),
+        0 0 74px rgba(142,197,255,.10);
+      opacity:.82;
+      z-index:-1;
+      animation:slowTurn 34s linear infinite;
+    }
+
+    .product-chamber::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(170,198,255,.18);
+      border-radius:26px;
+    }
+
+    .product-chamber::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:var(--green);
+      box-shadow:0 0 22px rgba(147,239,189,.68);
+    }
+
+    .hero-copy {
       display:grid;
       gap:14px;
+      max-width:760px;
+      position:relative;
+      z-index:2;
     }
 
-    .products-pill {
+    .pill {
       display:inline-flex;
       width:fit-content;
       align-items:center;
@@ -172,85 +359,173 @@
       font-weight:850;
     }
 
-    .products-pill::before {
+    .pill::before {
       content:"";
       width:9px;
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--gold);
-      box-shadow:0 0 18px rgba(239,210,154,.50);
+      background:var(--green);
+      box-shadow:0 0 18px rgba(147,239,189,.50);
     }
 
     h1 {
       margin:0;
-      max-width:12ch;
       color:#fff;
-      font-size:clamp(2.4rem,10vw,5.2rem);
-      line-height:.92;
-      letter-spacing:-.065em;
+      font-size:clamp(3.6rem,12vw,7.8rem);
+      line-height:.84;
+      letter-spacing:-.085em;
     }
 
-    .products-shell p {
+    h2 {
       margin:0;
-      max-width:68ch;
+      color:var(--gold);
+      font-size:clamp(1.65rem,5vw,3.2rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    p {
+      margin:0;
       color:var(--muted);
-      line-height:1.55;
+      line-height:1.58;
       font-size:1rem;
     }
 
-    .products-actions {
+    .hero p {
+      max-width:66ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
+    }
+
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:16px;
+    }
+
+    .panel-head {
       display:grid;
       gap:8px;
-      margin-top:4px;
     }
 
-    .products-action.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .products-runtime-mount {
-      border-radius:32px;
-      min-height:520px;
-      padding:0;
+    .read-card,
+    .signal-card,
+    .product-card {
+      position:relative;
+      isolation:isolate;
+      border-radius:18px;
+      padding:14px;
+      color:inherit;
       overflow:hidden;
     }
 
-    .products-boot {
-      min-height:520px;
-      display:grid;
-      place-items:center;
-      padding:24px;
-      text-align:center;
+    .product-card {
+      min-height:170px;
     }
 
-    .products-boot-inner {
-      width:min(640px,100%);
-      padding:22px;
-      border:1px solid rgba(170,198,255,.18);
-      border-radius:28px;
-      background:rgba(0,0,0,.22);
+    .product-card::before {
+      content:"";
+      position:absolute;
+      right:-40px;
+      top:-40px;
+      width:110px;
+      height:110px;
+      transform:rotate(45deg);
+      border:1px solid rgba(147,239,189,.16);
+      border-radius:26px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.10),transparent 45%),
+        rgba(255,255,255,.02);
+      z-index:-1;
+      animation:smallChamberTurn 28s linear infinite;
     }
 
-    .products-boot h2 {
-      margin:0 0 10px;
+    .read-card small,
+    .signal-card small,
+    .product-card small,
+    .route-card small {
+      display:block;
+      margin-bottom:6px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:850;
+    }
+
+    .read-card strong,
+    .signal-card strong,
+    .product-card strong,
+    .route-card strong {
+      display:block;
       color:#fff;
-      font-size:clamp(1.6rem,6vw,3rem);
-      letter-spacing:-.05em;
-      line-height:1;
+      font-size:1rem;
+      line-height:1.1;
     }
 
-    .products-boot p {
-      margin:0;
+    .read-card p,
+    .signal-card p,
+    .product-card p {
+      margin-top:8px;
       color:var(--muted);
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
+    .route-card small,
+    .route-card strong {
+      position:relative;
+      z-index:3;
+      max-width:70%;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:center;
+      text-wrap:balance;
+    }
+
+    .route-card small {
+      font-size:.48rem;
+    }
+
+    .route-card strong {
+      font-size:.80rem;
+    }
+
+    .product-tag {
+      display:inline-flex;
+      width:fit-content;
+      margin-top:12px;
+      padding:6px 9px;
+      border:1px solid rgba(147,239,189,.20);
+      border-radius:999px;
+      background:rgba(147,239,189,.055);
+      color:#c9ffdf;
+      font-size:.62rem;
+      font-weight:900;
+      letter-spacing:.10em;
+      text-transform:uppercase;
+    }
+
+    .status-strip {
+      display:grid;
+      gap:8px;
+      padding:16px;
+      border-radius:20px;
+    }
+
+    .status-strip code {
+      display:block;
+      white-space:pre-wrap;
+      word-break:break-word;
+      color:#dfe8ff;
+      font-size:.84rem;
       line-height:1.55;
     }
 
-    .products-footer {
+    .footer {
       display:flex;
       flex-wrap:wrap;
       justify-content:space-between;
@@ -260,40 +535,185 @@
       font-size:.86rem;
     }
 
-    .products-footer a {
+    .footer a {
       color:#d6e2ff;
     }
 
+    @keyframes diamondBodyWobble {
+      0%,100% {
+        transform:translateY(0) rotate(0deg) scale(1);
+      }
+
+      25% {
+        transform:translateY(-2px) rotate(1.4deg) scale(1.015);
+      }
+
+      50% {
+        transform:translateY(-4px) rotate(0deg) scale(1.025);
+      }
+
+      75% {
+        transform:translateY(-2px) rotate(-1.4deg) scale(1.015);
+      }
+    }
+
+    @keyframes diamondPulse {
+      0%,100% {
+        opacity:.82;
+        filter:brightness(1);
+      }
+
+      50% {
+        opacity:1;
+        filter:brightness(1.18);
+      }
+    }
+
+    @keyframes innerDiamondSpin {
+      0% {
+        transform:rotate(0deg) scale(.96);
+      }
+
+      100% {
+        transform:rotate(360deg) scale(.96);
+      }
+    }
+
+    @keyframes slowTurn {
+      0% {
+        transform:translateY(-50%) rotate(45deg);
+      }
+
+      100% {
+        transform:translateY(-50%) rotate(405deg);
+      }
+    }
+
+    @keyframes smallChamberTurn {
+      0% {
+        transform:rotate(45deg);
+      }
+
+      100% {
+        transform:rotate(405deg);
+      }
+    }
+
     @media (min-width:820px) {
-      .products-topbar {
+      .topbar {
         grid-template-columns:1fr auto;
         align-items:center;
       }
 
-      .products-nav {
-        grid-template-columns:repeat(5,auto);
+      .nav {
+        grid-template-columns:repeat(8,minmax(80px,94px));
+        justify-content:end;
       }
 
-      .products-actions {
-        grid-template-columns:repeat(2,auto);
-        justify-content:start;
+      .read-grid,
+      .signal-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .product-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(132px,1fr));
       }
     }
 
-    @media (max-width:560px) {
-      .products-page {
+    @media (max-width:640px) {
+      .page {
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
-      .products-topbar,
-      .products-shell,
-      .products-runtime-mount {
+      .topbar,
+      .hero,
+      .panel {
         border-radius:24px;
       }
 
-      .products-nav {
-        grid-template-columns:1fr;
+      .topbar {
+        padding:12px;
+      }
+
+      .brand {
+        gap:10px;
+      }
+
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:6px;
+      }
+
+      .nav a {
+        width:min(100%,70px);
+        font-size:.55rem;
+      }
+
+      .hero {
+        min-height:420px;
+        padding:22px;
+      }
+
+      .product-chamber {
+        right:18px;
+        top:auto;
+        bottom:18px;
+        width:118px;
+        height:118px;
+        transform:rotate(45deg);
+        opacity:.42;
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .route-card {
+        width:min(100%,132px);
+      }
+
+      .route-card small {
+        font-size:.42rem;
+      }
+
+      .route-card strong {
+        font-size:.70rem;
+      }
+
+      .product-card {
+        min-height:138px;
+      }
+    }
+
+    @media (max-width:360px) {
+      .nav a {
+        width:min(100%,62px);
+        font-size:.48rem;
+      }
+
+      .route-card {
+        width:min(100%,122px);
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
       }
     }
   </style>
@@ -301,67 +721,233 @@
 
 <body>
   <main
-    id="productsPage"
-    class="products-page"
-    data-products-page="second-generation-clean-shell"
-    data-products-html-version="products-clean-runtime-shell-v1"
+    class="page"
+    data-generation="second-generation-renewal"
+    data-page="products"
+    data-surface="generation-2-self-contained-products-chamber"
   >
-    <header class="products-topbar">
-      <a class="products-brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="products-mark" aria-hidden="true">DG</span>
-        <span>
-          <span class="products-kicker">Diamond Gate Bridge</span>
-          <strong class="products-title">Products Chamber</strong>
+    <header class="topbar">
+      <a class="brand" href="/products/" aria-label="Diamond Gate Bridge Products">
+        <span class="mark" aria-hidden="true">PR</span>
+        <span class="brand-text">
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Products Chamber · V9</strong>
         </span>
       </a>
 
-      <nav class="products-nav" aria-label="Primary navigation">
-        <a href="/">Door</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/about/">About</a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
         <a href="/gauges/">Gauges</a>
+        <a href="/about/">About</a>
       </nav>
     </header>
 
-    <section class="products-shell" aria-labelledby="productsTitle">
-      <span class="products-pill">Second generation · products</span>
-      <h1 id="productsTitle">Product engine.</h1>
-      <p>
-        Four seasonal product families orbit one shared Earth throat. The chamber
-        is visual first; details stay compact until expansion is needed.
-      </p>
+    <section class="hero" aria-labelledby="productsTitle">
+      <div class="product-chamber" aria-hidden="true"></div>
 
-      <div class="products-actions">
-        <a class="products-action primary" href="#productsRuntimeMount" data-open-molecule="true">Open chamber</a>
-        <a class="products-action" href="/gauges/">Inspect gauges</a>
+      <div class="hero-copy">
+        <span class="pill">Product chamber</span>
+        <h1 id="productsTitle">Products</h1>
+        <h2>The chamber where ideas become usable surfaces.</h2>
+        <p>
+          Products is the public chamber for packaged work. It presents usable
+          product paths without forcing the visitor to understand the full internal
+          structure first.
+        </p>
       </div>
     </section>
 
-    <section
-      id="productsRuntimeMount"
-      class="products-runtime-mount"
-      data-products-runtime-mount="true"
-      aria-label="Products runtime chamber"
-      tabindex="-1"
-    >
-      <div class="products-boot">
-        <div class="products-boot-inner">
-          <h2>Products runtime loading.</h2>
-          <p>The chamber will mount from /products/products_runtime.js.</p>
-        </div>
+    <section class="panel" aria-labelledby="contextTitle">
+      <div class="panel-head">
+        <span class="pill">Generation 2 baseline</span>
+        <h2 id="contextTitle">Products should clarify what can be used.</h2>
+        <p>
+          V9 keeps the Products Chamber self-contained, compact, and readable. The
+          chamber now separates active product categories from general route navigation.
+        </p>
+      </div>
+
+      <div class="read-grid">
+        <article class="read-card">
+          <small>Package</small>
+          <strong>Make the work usable.</strong>
+          <p>Products translates deeper system work into public-facing surfaces.</p>
+        </article>
+
+        <article class="read-card">
+          <small>Separate</small>
+          <strong>Keep categories clean.</strong>
+          <p>The chamber avoids crowding every possible idea into one surface.</p>
+        </article>
+
+        <article class="read-card">
+          <small>Route</small>
+          <strong>Send visitors forward.</strong>
+          <p>Each product path should lead to a clear next page or next action.</p>
+        </article>
       </div>
     </section>
 
-    <footer class="products-footer">
-      <span>Diamond Gate Bridge · Products · Second Generation Renewal</span>
+    <section class="panel" aria-labelledby="activeProductsTitle">
+      <div class="panel-head">
+        <span class="pill">Active product surfaces</span>
+        <h2 id="activeProductsTitle">Start with the clearest chambers.</h2>
+      </div>
+
+      <div class="product-grid">
+        <article class="product-card">
+          <small>Public framework</small>
+          <strong>Nine Summits</strong>
+          <p>A human-facing path for truth, growth, discipline, and community orientation.</p>
+          <span class="product-tag">Human path</span>
+        </article>
+
+        <article class="product-card">
+          <small>Live performance</small>
+          <strong>The Upper Room</strong>
+          <p>The upcoming show surface for public comedy, performance, and event movement.</p>
+          <span class="product-tag">Upcoming show</span>
+        </article>
+
+        <article class="product-card">
+          <small>Instrument layer</small>
+          <strong>Gauges</strong>
+          <p>The public inspection room for routes, baseline status, and visible system state.</p>
+          <span class="product-tag">Inspection</span>
+        </article>
+
+        <article class="product-card">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+          <p>The broader world-building surface for the larger Diamond Gate Bridge environment.</p>
+          <span class="product-tag">World layer</span>
+        </article>
+
+        <article class="product-card">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+          <p>The public rule layer for structural principles and operating standards.</p>
+          <span class="product-tag">Rule surface</span>
+        </article>
+
+        <article class="product-card">
+          <small>Edge route</small>
+          <strong>Frontier</strong>
+          <p>The active edge surface where new public directions become visible.</p>
+          <span class="product-tag">Active edge</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="routesTitle">
+      <div class="panel-head">
+        <span class="pill">Chamber routes</span>
+        <h2 id="routesTitle">Move from product view to the right surface.</h2>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/door/">
+          <small>Access</small>
+          <strong>Door</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <small>Interior</small>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/explore/">
+          <small>Route map</small>
+          <strong>Explore</strong>
+        </a>
+
+        <a class="route-card" href="/frontier/">
+          <small>Edge</small>
+          <strong>Frontier</strong>
+        </a>
+
+        <a class="route-card" href="/big-laugh/upper-room/">
+          <small>Upcoming show</small>
+          <strong>The Upper Room</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <small>Inspection</small>
+          <strong>Gauges</strong>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
+
+        <a class="route-card" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="signalsTitle">
+      <div class="panel-head">
+        <span class="pill">Products read</span>
+        <h2 id="signalsTitle">What this page confirms.</h2>
+      </div>
+
+      <div class="signal-grid">
+        <article class="signal-card">
+          <small>Density</small>
+          <strong>Controls are compact.</strong>
+          <p>The old oversized bubbles are replaced with rotating diamond controls.</p>
+        </article>
+
+        <article class="signal-card">
+          <small>Function</small>
+          <strong>Products is a chamber.</strong>
+          <p>The page now has its own product-organizing role instead of acting as a generic route dump.</p>
+        </article>
+
+        <article class="signal-card">
+          <small>Baseline</small>
+          <strong>Products V9 is self-contained.</strong>
+          <p>The page does not depend on shared asset loading to render its core shape and motion.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="statusTitle">
+      <div class="panel-head">
+        <span class="pill">Status receipt</span>
+        <h2 id="statusTitle">Generation 2 Products baseline is active.</h2>
+      </div>
+
+      <div class="status-strip">
+        <code>PRODUCTS_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
+PAGE=/products/index.html
+NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
+PRODUCT_CHAMBER_ROLE=ACTIVE
+ACTIVE_PRODUCT_SURFACES=VISIBLE
+CONTEXT=READABLE_FIRST
+LEGACY_LONG_BUBBLES=REMOVED
+ASSET_DEPENDENCY=REMOVED_FOR_PRODUCTS_PAGE
+NEXT_ACTION=USE_THIS_AS_THE_STABLE_PRODUCTS_BASELINE</code>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Diamond Gate Bridge · Products Chamber · Self-Contained Generation 2 Baseline</span>
       <span>
-        <a href="/">Door</a>
+        <a href="/door/">Door</a> ·
+        <a href="/explore/">Explore</a> ·
+        <a href="/frontier/">Frontier</a> ·
         <a href="/gauges/">Gauges</a>
       </span>
     </footer>
   </main>
-
-  <script src="/products/index.js?v=products-clean-runtime-shell-v1" defer></script>
 </body>
 </html>

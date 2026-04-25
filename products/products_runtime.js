@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-g2-official-products-runtime-v6-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v6";
+  const STYLE_ID = "products-g2-official-products-runtime-v7-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v7";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -41,20 +41,12 @@
       line: "Nutrition, baseline health structure, habit support, and body-system stability."
     },
     {
-      key: "five-flags",
+      key: "five-flags-whats-my-scene",
       focus: "spring",
       code: "FLAGS",
-      title: "Five Flags",
+      title: "Five Flags: What’s My Scene?",
       href: "/products/five-flags/",
-      line: "Identity, alignment, signal, and shared-orientation product."
-    },
-    {
-      key: "whats-my-scene",
-      focus: "summer",
-      code: "SCENE",
-      title: "What’s My Scene?",
-      href: "/products/whats-my-scene/",
-      line: "Scene discovery, preference mapping, social fit, and audience-facing choice support."
+      line: "Identity, scene discovery, alignment, signal, and shared-orientation product."
     }
   ];
 
@@ -142,7 +134,7 @@
 
       .products-product-grid {
         display:grid;
-        grid-template-columns:repeat(5,minmax(0,1fr));
+        grid-template-columns:repeat(4,minmax(0,1fr));
         gap:10px;
       }
 
@@ -156,11 +148,7 @@
         text-align:left;
         color:inherit;
         text-decoration:none;
-        transition:
-          transform .22s ease,
-          border-color .22s ease,
-          box-shadow .22s ease,
-          opacity .22s ease;
+        transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease,opacity .22s ease;
       }
 
       .products-product-tile:hover,
@@ -332,11 +320,7 @@
         display:grid;
         align-content:center;
         gap:3px;
-        transition:
-          opacity .22s ease,
-          transform .22s ease,
-          border-color .22s ease,
-          box-shadow .22s ease;
+        transition:opacity .22s ease,transform .22s ease,border-color .22s ease,box-shadow .22s ease;
       }
 
       .products-season-node small {
@@ -368,29 +352,10 @@
         font-weight:800;
       }
 
-      .products-season-node.winter {
-        left:8%;
-        top:18%;
-        border-color:rgba(207,231,255,.38);
-      }
-
-      .products-season-node.spring {
-        right:8%;
-        bottom:16%;
-        border-color:rgba(147,239,189,.38);
-      }
-
-      .products-season-node.summer {
-        right:8%;
-        top:18%;
-        border-color:rgba(145,201,255,.38);
-      }
-
-      .products-season-node.fall {
-        left:8%;
-        bottom:16%;
-        border-color:rgba(241,164,91,.38);
-      }
+      .products-season-node.winter { left:8%; top:18%; border-color:rgba(207,231,255,.38); }
+      .products-season-node.spring { right:8%; bottom:16%; border-color:rgba(147,239,189,.38); }
+      .products-season-node.summer { right:8%; top:18%; border-color:rgba(145,201,255,.38); }
+      .products-season-node.fall { left:8%; bottom:16%; border-color:rgba(241,164,91,.38); }
 
       .products-point {
         position:absolute;
@@ -432,13 +397,8 @@
         box-shadow:0 0 28px rgba(255,255,255,.14);
       }
 
-      .products-gen2-stage[data-density="clean"] .products-season-node p {
-        display:none;
-      }
-
-      .products-gen2-stage[data-density="detail"] .products-season-node p {
-        display:block;
-      }
+      .products-gen2-stage[data-density="clean"] .products-season-node p { display:none; }
+      .products-gen2-stage[data-density="detail"] .products-season-node p { display:block; }
 
       .products-gen2-stage[data-spin="paused"] .products-gen2-orbit,
       .products-gen2-stage[data-spin="paused"] .products-point {
@@ -540,40 +500,18 @@
       }
 
       @keyframes productsOrbitA {
-        0%,100% {
-          transform:translate(-50%,-50%) rotate(45deg) scaleX(1);
-          opacity:.56;
-        }
-        50% {
-          transform:translate(-50%,-50%) rotate(48deg) scaleX(1.06);
-          opacity:.80;
-        }
+        0%,100% { transform:translate(-50%,-50%) rotate(45deg) scaleX(1); opacity:.56; }
+        50% { transform:translate(-50%,-50%) rotate(48deg) scaleX(1.06); opacity:.80; }
       }
 
       @keyframes productsOrbitB {
-        0%,100% {
-          transform:translate(-50%,-50%) rotate(-45deg) scaleX(1);
-          opacity:.56;
-        }
-        50% {
-          transform:translate(-50%,-50%) rotate(-48deg) scaleX(1.06);
-          opacity:.80;
-        }
+        0%,100% { transform:translate(-50%,-50%) rotate(-45deg) scaleX(1); opacity:.56; }
+        50% { transform:translate(-50%,-50%) rotate(-48deg) scaleX(1.06); opacity:.80; }
       }
 
       @keyframes productsPointFloat {
-        0%,100% {
-          transform:translate(-50%,-50%) translateY(0) scale(.94);
-        }
-        50% {
-          transform:translate(-50%,-50%) translateY(-16px) scale(1.08);
-        }
-      }
-
-      @media (max-width:1120px) {
-        .products-product-grid {
-          grid-template-columns:repeat(3,minmax(0,1fr));
-        }
+        0%,100% { transform:translate(-50%,-50%) translateY(0) scale(.94); }
+        50% { transform:translate(-50%,-50%) translateY(-16px) scale(1.08); }
       }
 
       @media (max-width:900px) {
@@ -621,17 +559,9 @@
           border-radius:18px;
         }
 
-        .products-season-node small {
-          font-size:.44rem;
-        }
-
-        .products-season-node strong {
-          font-size:.76rem;
-        }
-
-        .products-season-node p {
-          font-size:.50rem;
-        }
+        .products-season-node small { font-size:.44rem; }
+        .products-season-node strong { font-size:.76rem; }
+        .products-season-node p { font-size:.50rem; }
       }
 
       @media (prefers-reduced-motion:reduce) {
@@ -653,17 +583,14 @@
       { season: "winter", x: 43, y: 27 }, { season: "winter", x: 39, y: 35 },
       { season: "winter", x: 34, y: 41 }, { season: "winter", x: 45, y: 43 },
       { season: "winter", x: 48, y: 48 }, { season: "winter", x: 50, y: 50 },
-
       { season: "spring", x: 50, y: 50 }, { season: "spring", x: 53, y: 56 },
       { season: "spring", x: 60, y: 61 }, { season: "spring", x: 66, y: 66 },
       { season: "spring", x: 62, y: 73 }, { season: "spring", x: 68, y: 77 },
       { season: "spring", x: 73, y: 72 }, { season: "spring", x: 69, y: 62 },
-
       { season: "summer", x: 69, y: 29 }, { season: "summer", x: 63, y: 24 },
       { season: "summer", x: 57, y: 27 }, { season: "summer", x: 61, y: 35 },
       { season: "summer", x: 66, y: 41 }, { season: "summer", x: 55, y: 43 },
       { season: "summer", x: 52, y: 48 }, { season: "summer", x: 50, y: 50 },
-
       { season: "fall", x: 50, y: 50 }, { season: "fall", x: 47, y: 56 },
       { season: "fall", x: 40, y: 61 }, { season: "fall", x: 34, y: 66 },
       { season: "fall", x: 38, y: 73 }, { season: "fall", x: 32, y: 77 },
@@ -672,51 +599,45 @@
   }
 
   function buildProducts() {
-    return products
-      .map((product) => `
-        <a
-          class="products-product-tile"
-          href="${product.href}"
-          data-product-key="${product.key}"
-          data-product-focus="${product.focus}"
-          aria-label="Open ${product.title}"
-        >
-          <span>
-            <small>${product.code}</small>
-            <strong>${product.title}</strong>
-          </span>
-          <span>
-            <p>${product.line}</p>
-            <em>Open product</em>
-          </span>
-        </a>
-      `)
-      .join("");
+    return products.map((product) => `
+      <a
+        class="products-product-tile"
+        href="${product.href}"
+        data-product-key="${product.key}"
+        data-product-focus="${product.focus}"
+        aria-label="Open ${product.title}"
+      >
+        <span>
+          <small>${product.code}</small>
+          <strong>${product.title}</strong>
+        </span>
+        <span>
+          <p>${product.line}</p>
+          <em>Open product</em>
+        </span>
+      </a>
+    `).join("");
   }
 
   function buildMoleculePoints() {
-    return pointCoordinates()
-      .map((point, index) => `
-        <span
-          class="products-point ${point.season}"
-          data-season="${point.season}"
-          style="--x:${point.x};--y:${point.y};--delay:${(index % 8) * -0.22}s"
-          aria-hidden="true"
-        ></span>
-      `)
-      .join("");
+    return pointCoordinates().map((point, index) => `
+      <span
+        class="products-point ${point.season}"
+        data-season="${point.season}"
+        style="--x:${point.x};--y:${point.y};--delay:${(index % 8) * -0.22}s"
+        aria-hidden="true"
+      ></span>
+    `).join("");
   }
 
   function buildSeasonNodes() {
-    return seasons
-      .map((season) => `
-        <article class="products-season-node ${season.key}" data-season="${season.key}">
-          <small>${season.squad}</small>
-          <strong>${season.label}</strong>
-          <p>${season.short}</p>
-        </article>
-      `)
-      .join("");
+    return seasons.map((season) => `
+      <article class="products-season-node ${season.key}" data-season="${season.key}">
+        <small>${season.squad}</small>
+        <strong>${season.label}</strong>
+        <p>${season.short}</p>
+      </article>
+    `).join("");
   }
 
   function buildHTML() {
@@ -804,7 +725,7 @@
           <div class="products-bubble-row" aria-label="Runtime receipts">
             <span>G2 active</span>
             <span>Official products</span>
-            <span>Routes linked</span>
+            <span>Five Flags merged</span>
             <span>Globe online</span>
           </div>
         </section>
@@ -838,10 +759,8 @@
       script.src = `${src}?v=${encodeURIComponent(SHARED_EARTH_VERSION)}`;
       script.defer = true;
       script.dataset.productsSharedEarth = "true";
-
       script.addEventListener("load", () => resolve(), { once: true });
       script.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once: true });
-
       document.head.appendChild(script);
     });
   }
@@ -1024,7 +943,7 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v6");
+      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v7");
 
       target.innerHTML = buildHTML();
 

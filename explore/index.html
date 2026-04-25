@@ -1,21 +1,20 @@
 <!DOCTYPE html>
-<html lang="en" data-explore-frontier-generation="second-generation-renewal">
+<html lang="en" data-explore-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Explore Frontier · Diamond Gate Bridge</title>
+  <title>Explore · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Explore Frontier at Diamond Gate Bridge: a Generation 2 edge surface for new paths, public experiments, future chambers, and next territories."
+    content="Explore at Diamond Gate Bridge: a compact Generation 2 route-map surface that sends visitors to the correct next chamber."
   />
 
   <style>
     :root {
-      --bg:#020610;
       --panel:rgba(7,14,28,.92);
       --panel-strong:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
-      --line-strong:rgba(200,156,255,.34);
+      --line-strong:rgba(142,197,255,.34);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
@@ -27,7 +26,9 @@
       --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
@@ -36,9 +37,9 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 4%,rgba(200,156,255,.18),transparent 22%),
-        radial-gradient(circle at 18% 28%,rgba(142,197,255,.14),transparent 30%),
-        radial-gradient(circle at 82% 42%,rgba(239,210,154,.10),transparent 28%),
+        radial-gradient(circle at 50% 4%,rgba(142,197,255,.18),transparent 22%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(200,156,255,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
@@ -73,11 +74,10 @@
     .hero,
     .panel,
     .step-card,
-    .route-card,
-    .signal-card {
+    .route-card {
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(200,156,255,.11),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
         linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
     }
@@ -106,13 +106,13 @@
       place-items:center;
       border:1px solid var(--line-strong);
       background:
-        radial-gradient(circle at 50% 28%,rgba(200,156,255,.34),transparent 44%),
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.34),transparent 44%),
         linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
       color:#fff;
       font-weight:950;
       letter-spacing:.08em;
       flex:0 0 auto;
-      box-shadow:0 0 22px rgba(200,156,255,.14);
+      box-shadow:0 0 22px rgba(142,197,255,.14);
     }
 
     .kicker {
@@ -136,8 +136,7 @@
 
     .nav,
     .route-grid,
-    .steps,
-    .signal-grid {
+    .steps {
       display:grid;
       gap:8px;
     }
@@ -160,18 +159,11 @@
     }
 
     .nav a.featured {
-      border-color:rgba(200,156,255,.42);
-      color:#f3eaff;
+      border-color:rgba(239,210,154,.40);
+      color:#fff8ea;
       background:
-        linear-gradient(180deg,rgba(200,156,255,.18),rgba(200,156,255,.05)),
+        linear-gradient(180deg,rgba(239,210,154,.18),rgba(239,210,154,.05)),
         rgba(255,255,255,.035);
-    }
-
-    .nav a:focus-visible,
-    .route-card:focus-visible,
-    .step-card:focus-visible {
-      outline:2px solid rgba(200,156,255,.62);
-      outline-offset:3px;
     }
 
     .hero {
@@ -196,9 +188,9 @@
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(200,156,255,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.09),transparent 70%);
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(200,156,255,.09),transparent 70%);
       filter:blur(5px);
       z-index:-3;
     }
@@ -210,35 +202,35 @@
       height:min(410px,50vw);
       left:50%;
       top:50%;
-      transform:translate(-50%,-50%) rotate(-11deg);
-      border:1px solid rgba(200,156,255,.24);
+      transform:translate(-50%,-50%) rotate(-8deg);
+      border:1px solid rgba(142,197,255,.24);
       border-radius:50%;
       z-index:-2;
       box-shadow:
-        0 0 38px rgba(200,156,255,.08),
-        inset 0 0 38px rgba(142,197,255,.06);
+        0 0 38px rgba(142,197,255,.08),
+        inset 0 0 38px rgba(239,210,154,.06);
     }
 
-    .frontier-arc {
+    .explore-compass {
       position:absolute;
       right:clamp(20px,6vw,90px);
       top:50%;
       width:min(250px,30vw);
       height:min(250px,30vw);
       transform:translateY(-50%) rotate(45deg);
-      border:1px solid rgba(200,156,255,.30);
+      border:1px solid rgba(142,197,255,.30);
       border-radius:36px;
       background:
-        radial-gradient(circle at 50% 50%,rgba(200,156,255,.18),transparent 38%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 38%),
         linear-gradient(180deg,rgba(12,24,48,.62),rgba(2,6,14,.86));
       box-shadow:
-        inset 0 0 40px rgba(200,156,255,.06),
-        0 0 70px rgba(142,197,255,.10);
+        inset 0 0 40px rgba(142,197,255,.06),
+        0 0 70px rgba(200,156,255,.10);
       opacity:.78;
       z-index:-1;
     }
 
-    .frontier-arc::before {
+    .explore-compass::before {
       content:"";
       position:absolute;
       inset:18px;
@@ -246,7 +238,7 @@
       border-radius:26px;
     }
 
-    .frontier-arc::after {
+    .explore-compass::after {
       content:"";
       position:absolute;
       left:50%;
@@ -255,8 +247,8 @@
       height:10px;
       border-radius:50%;
       transform:translate(-50%,-50%);
-      background:var(--purple);
-      box-shadow:0 0 22px rgba(200,156,255,.68);
+      background:var(--blue);
+      box-shadow:0 0 22px rgba(142,197,255,.68);
     }
 
     .hero-copy {
@@ -289,8 +281,8 @@
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--purple);
-      box-shadow:0 0 18px rgba(200,156,255,.50);
+      background:var(--blue);
+      box-shadow:0 0 18px rgba(142,197,255,.50);
     }
 
     h1 {
@@ -335,13 +327,8 @@
       gap:8px;
     }
 
-    .steps {
-      grid-template-columns:1fr;
-    }
-
     .step-card,
-    .route-card,
-    .signal-card {
+    .route-card {
       border-radius:18px;
       padding:12px;
       min-height:96px;
@@ -353,8 +340,7 @@
     }
 
     .step-card small,
-    .route-card small,
-    .signal-card small {
+    .route-card small {
       display:block;
       margin-bottom:6px;
       color:#91a6cf;
@@ -365,41 +351,35 @@
     }
 
     .step-card strong,
-    .route-card strong,
-    .signal-card strong {
+    .route-card strong {
       display:block;
       color:#fff;
       font-size:.98rem;
       line-height:1.1;
     }
 
-    .step-card p,
-    .signal-card p {
+    .step-card p {
       margin-top:7px;
       color:var(--muted);
       font-size:.86rem;
       line-height:1.38;
     }
 
-    .step-card.edge { border-color:rgba(200,156,255,.25); }
-    .step-card.test { border-color:rgba(142,197,255,.25); }
-    .step-card.graduate { border-color:rgba(147,239,189,.25); }
+    .step-card.map { border-color:rgba(142,197,255,.25); }
+    .step-card.sort { border-color:rgba(239,210,154,.25); }
+    .step-card.send { border-color:rgba(147,239,189,.25); }
 
-    .route-card.explore { border-color:rgba(142,197,255,.25); }
-    .route-card.metaverse { border-color:rgba(200,156,255,.25); }
+    .route-card.door { border-color:rgba(239,210,154,.25); }
+    .route-card.frontier { border-color:rgba(200,156,255,.25); }
     .route-card.product { border-color:rgba(147,239,189,.25); }
+    .route-card.metaverse { border-color:rgba(142,197,255,.25); }
     .route-card.show { border-color:rgba(255,154,184,.25); }
     .route-card.gauge { border-color:rgba(142,197,255,.25); }
-    .route-card.door { border-color:rgba(239,210,154,.25); }
-
-    .signal-card.emerging { border-color:rgba(200,156,255,.25); }
-    .signal-card.public { border-color:rgba(142,197,255,.25); }
-    .signal-card.future { border-color:rgba(239,210,154,.25); }
 
     .closing-read {
       max-width:82ch;
       padding:16px;
-      border:1px solid rgba(200,156,255,.20);
+      border:1px solid rgba(142,197,255,.18);
       border-radius:20px;
       background:rgba(255,255,255,.035);
       color:#dfe8ff;
@@ -417,7 +397,9 @@
       font-size:.86rem;
     }
 
-    .footer a { color:#d6e2ff; }
+    .footer a {
+      color:#d6e2ff;
+    }
 
     @media (min-width:820px) {
       .topbar {
@@ -426,11 +408,10 @@
       }
 
       .nav {
-        grid-template-columns:repeat(7,auto);
+        grid-template-columns:repeat(6,auto);
       }
 
-      .steps,
-      .signal-grid {
+      .steps {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
@@ -482,7 +463,7 @@
         padding:22px;
       }
 
-      .frontier-arc {
+      .explore-compass {
         right:18px;
         top:auto;
         bottom:18px;
@@ -512,8 +493,7 @@
         font-size:.84rem;
       }
 
-      .step-card,
-      .signal-card {
+      .step-card {
         min-height:96px;
       }
     }
@@ -550,16 +530,15 @@
   <main
     class="page"
     data-generation="second-generation-renewal"
-    data-page="explore-frontier"
-    data-parent-page="explore"
-    data-surface="generation-2-frontier-edge-surface"
+    data-page="explore"
+    data-surface="generation-2-route-map"
   >
     <header class="topbar">
       <a class="brand" href="/explore/" aria-label="Explore">
-        <span class="mark" aria-hidden="true">FR</span>
+        <span class="mark" aria-hidden="true">EX</span>
         <span>
-          <span class="kicker">Diamond Gate Bridge · Explore</span>
-          <strong class="title">Frontier</strong>
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Explore</strong>
         </span>
       </a>
 
@@ -567,115 +546,85 @@
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/prelude/">Prelude</a>
-        <a href="/explore/">Explore</a>
-        <a href="/metaverse/">Metaverse</a>
+        <a href="/frontier/">Frontier</a>
         <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="frontierTitle">
-      <div class="frontier-arc" aria-hidden="true"></div>
+    <section class="hero" aria-labelledby="exploreTitle">
+      <div class="explore-compass" aria-hidden="true"></div>
 
       <div class="hero-copy">
-        <span class="pill">Explore child surface</span>
-        <h1 id="frontierTitle">Frontier</h1>
-        <h2>The edge has room to breathe.</h2>
+        <span class="pill">Route map</span>
+        <h1 id="exploreTitle">Explore</h1>
+        <h2>Choose the next surface without losing the thread.</h2>
         <p>
-          Frontier is where new paths can appear without crowding the Door, Home,
-          or Products. It holds the edge until the work is stable enough to move
-          deeper into the house.
+          Explore is the route-map page. It does not replace Frontier, Products,
+          Metaverse, or the Door. It helps visitors choose which surface should
+          open next.
         </p>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="talkTitle">
       <div class="panel-head">
-        <span class="pill">The frontier idea</span>
-        <h2 id="talkTitle">A frontier page has three jobs.</h2>
+        <span class="pill">The explore idea</span>
+        <h2 id="talkTitle">A route map has three jobs.</h2>
         <p>
-          It gives emerging work a visible edge, keeps unstable ideas out of the
-          core routes, and creates a clean path for future chambers.
+          It keeps the visitor oriented, separates destinations by purpose, and
+          sends each person to the right next room.
         </p>
       </div>
 
       <div class="steps">
-        <article class="step-card edge">
-          <small>Edge</small>
-          <strong>Hold new territory.</strong>
+        <article class="step-card map">
+          <small>Map</small>
+          <strong>Show the available paths.</strong>
           <p>
-            Frontier is the place for routes that are real enough to show, but not
-            settled enough to become core.
+            Explore gives the visitor a clean view of the main public surfaces.
           </p>
         </article>
 
-        <article class="step-card test">
-          <small>Test</small>
-          <strong>Let experiments breathe.</strong>
+        <article class="step-card sort">
+          <small>Sort</small>
+          <strong>Separate purpose from noise.</strong>
           <p>
-            Public experiments can live here while the rest of the site stays clear
-            and stable.
+            Frontier is for the edge, Products is for the work, and Metaverse is
+            for the world surface.
           </p>
         </article>
 
-        <article class="step-card graduate">
-          <small>Graduate</small>
-          <strong>Move inward when ready.</strong>
+        <article class="step-card send">
+          <small>Send</small>
+          <strong>Move the visitor forward.</strong>
           <p>
-            Once a surface matures, it can become a proper chamber with its own
-            route and identity.
+            The point is not to keep people here. The point is to send them clearly.
           </p>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="signalsTitle">
-      <div class="panel-head">
-        <span class="pill">Frontier signals</span>
-        <h2 id="signalsTitle">What belongs here?</h2>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card emerging">
-          <small>Emerging paths</small>
-          <strong>New routes before they become rooms.</strong>
-          <p>Use Frontier for surfaces that need public visibility without full chamber weight.</p>
-        </article>
-
-        <article class="signal-card public">
-          <small>Public experiments</small>
-          <strong>Testable ideas with visible edges.</strong>
-          <p>Use Frontier to show experiments without letting them overload the main map.</p>
-        </article>
-
-        <article class="signal-card future">
-          <small>Future chambers</small>
-          <strong>Next territories waiting for form.</strong>
-          <p>Use Frontier to stage future work until it is ready to receive a stable page.</p>
         </article>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Move from the edge</span>
-        <h2 id="routesTitle">Four doors are enough.</h2>
+        <span class="pill">Choose the surface</span>
+        <h2 id="routesTitle">Start with the right destination.</h2>
       </div>
 
       <div class="route-grid">
-        <a class="route-card explore" href="/explore/">
-          <small>Parent</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card metaverse" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
+        <a class="route-card frontier" href="/frontier/">
+          <small>Active edge route</small>
+          <strong>Frontier</strong>
         </a>
 
         <a class="route-card product" href="/products/">
           <small>Product chamber</small>
           <strong>Products</strong>
+        </a>
+
+        <a class="route-card metaverse" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
         </a>
 
         <a class="route-card show" href="/big-laugh/upper-room/">
@@ -707,22 +656,22 @@
 
     <section class="panel" aria-labelledby="closingTitle">
       <div class="panel-head">
-        <span class="pill">Frontier read</span>
-        <h2 id="closingTitle">The edge should not feel unfinished.</h2>
+        <span class="pill">Explore read</span>
+        <h2 id="closingTitle">Explore should send, not trap.</h2>
       </div>
 
       <p class="closing-read">
-        Frontier is not a placeholder. It is the lawful edge of Explore: the place
-        where new public paths can appear before they become permanent chambers.
+        This page is the route map. Choose the surface that matches the reason
+        you came, then let that room carry the work.
       </p>
     </section>
 
     <footer class="footer">
-      <span>Explore Frontier · Generation 2 Edge Surface</span>
+      <span>Explore · Generation 2 Route Map</span>
       <span>
-        <a href="/explore/">Explore</a> ·
-        <a href="/metaverse/">Metaverse</a> ·
+        <a href="/frontier/">Frontier</a> ·
         <a href="/products/">Products</a> ·
+        <a href="/metaverse/">Metaverse</a> ·
         <a href="/big-laugh/upper-room/">Upcoming Show</a>
       </span>
     </footer>

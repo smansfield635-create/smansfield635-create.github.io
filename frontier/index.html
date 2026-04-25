@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Frontier · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Frontier: G1 Russian Doll V10 route restoration with label-first expandable context." />
+  <meta name="description" content="Diamond Gate Bridge Frontier: G1 Russian Doll V10 nested route restoration with label-first expandable context." />
 
   <style>
     :root {
@@ -358,10 +358,7 @@
       gap:16px;
     }
 
-    .panel-head {
-      display:grid;
-      gap:8px;
-    }
+    .panel-head { display:grid; gap:8px; }
 
     .label-card {
       border-radius:18px;
@@ -498,9 +495,7 @@
 
       .topbar,
       .hero,
-      .panel {
-        border-radius:24px;
-      }
+      .panel { border-radius:24px; }
 
       .topbar { padding:12px; }
       .brand { gap:10px; }
@@ -536,14 +531,9 @@
         opacity:.36;
       }
 
-      .route-grid {
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
+      .route-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 
-      .route-card {
-        width:min(100%,132px);
-      }
-
+      .route-card { width:min(100%,132px); }
       .route-card small { font-size:.42rem; }
       .route-card strong { font-size:.70rem; }
     }
@@ -564,13 +554,13 @@
   <main
     class="page"
     data-page="frontier"
-    data-route="/frontier/"
-    data-file="/frontier/index.html"
+    data-route="/explore/frontier/"
+    data-file="/explore/frontier/index.html"
     data-baseline="g1-russian-doll-v10"
-    data-pass="route-restoration-label-compression"
+    data-pass="nested-route-restoration-label-compression"
   >
     <header class="topbar">
-      <a class="brand" href="/frontier/" aria-label="Diamond Gate Bridge Frontier">
+      <a class="brand" href="/explore/frontier/" aria-label="Diamond Gate Bridge Frontier">
         <span class="mark" aria-hidden="true">FR</span>
         <span class="brand-text">
           <span class="kicker">Diamond Gate Bridge</span>
@@ -604,15 +594,15 @@
     <section class="panel" aria-labelledby="labelsTitle">
       <div class="panel-head">
         <span class="pill">Russian-doll labels</span>
-        <h2 id="labelsTitle">Frontier restored under G1 V10.</h2>
+        <h2 id="labelsTitle">Frontier restored at the nested Explore route.</h2>
       </div>
 
       <div class="label-grid">
         <details class="label-card">
-          <summary><small>Route</small>Frontier is restored.</summary>
+          <summary><small>Route</small>Nested route restored.</summary>
           <div class="label-body">
-            <p>This file belongs at <strong>/frontier/index.html</strong>.</p>
-            <p>That path restores <strong>https://diamondgatebridge.com/frontier/</strong>.</p>
+            <p>This file belongs at <strong>/explore/frontier/index.html</strong>.</p>
+            <p>That path restores <strong>https://diamondgatebridge.com/explore/frontier/</strong>.</p>
           </div>
         </details>
 
@@ -634,7 +624,7 @@
         <details class="label-card">
           <summary><small>Separation</small>Keep Explore distinct.</summary>
           <div class="label-body">
-            <p>Explore routes. Frontier carries the active edge. They are not the same page.</p>
+            <p>Explore routes. Frontier carries the active edge. This nested route keeps that relationship explicit.</p>
           </div>
         </details>
 
@@ -656,13 +646,6 @@
           <summary><small>Russian Doll</small>Expand only on touch.</summary>
           <div class="label-body">
             <p>All core context is preserved, but it stays folded under labels until the visitor opens it.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Rule</small>Forward, not crowded.</summary>
-          <div class="label-body">
-            <p>The page should point toward the next surface, not become a crowded archive of every possible direction.</p>
           </div>
         </details>
 
@@ -696,27 +679,27 @@
     <section class="panel" aria-labelledby="statusTitle">
       <div class="panel-head">
         <span class="pill">Status label</span>
-        <h2 id="statusTitle">Frontier route restored with G1 V10.</h2>
+        <h2 id="statusTitle">Explore Frontier route restored with G1 V10.</h2>
       </div>
 
       <div class="status-strip">
-        <code>FRONTIER_G1_V10_ROUTE_RESTORATION=ACTIVE
-PAGE=/frontier/index.html
-ROUTE=/frontier/
+        <code>EXPLORE_FRONTIER_G1_V10_ROUTE_RESTORATION=ACTIVE
+PAGE=/explore/frontier/index.html
+ROUTE=/explore/frontier/
 BASELINE=THE_WORLD_IS_FLAT
 VERSION=G1_RUSSIAN_DOLL_V10
 VISIBLE_DEFAULT=TITLE_CORE_LINE_LABELS
 CONTEXT=HIDDEN_UNTIL_LABEL_CLICK
 METHOD=DETAILS_SUMMARY_RUSSIAN_DOLL
 EDGE_ROLE=ACTIVE
-EXPLORE_ROUTE=SEPARATE
+EXPLORE_ROUTE=EXPLICIT_PARENT
 LEGACY_OVEREXPRESSION=REDUCED
-404_FIX=CREATE_OR_REPLACE_THIS_FILE_AT_/frontier/index.html</code>
+404_FIX=CREATE_OR_REPLACE_THIS_FILE_AT_/explore/frontier/index.html</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Frontier · G1 Russian Doll V10</span>
+      <span>Diamond Gate Bridge · Explore / Frontier · G1 Russian Doll V10</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/home/">Home</a> ·

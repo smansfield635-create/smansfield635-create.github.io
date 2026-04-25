@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-script-version="axis-spin-pass-v1-script-binding-proof">
+<html lang="en" data-gauge-generation="second-generation-renewal" data-gauge-version="GAUGE_LIVE_FEED_V3">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Second Generation Live Feed</title>
-  <meta name="description" content="Diamond Gate Bridge second-generation diagnostic gauges." />
-  <meta name="dgb-gauges-script-version" content="axis-spin-pass-v1-script-binding-proof" />
+  <title>DGGauge Authority · Second Generation Renewal</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Gauge Authority: Generation 2 live diagnostic instrument surface with expanded front-route probes."
+  />
 
   <style>
     :root {
-      --bg:#01040b;
-      --panel:rgba(5,12,25,.94);
-      --line:rgba(150,185,255,.18);
-      --text:#edf4ff;
-      --muted:#91a6cf;
-      --gold:#f0d79c;
-      --green:#82f0b2;
-      --red:#ff6f89;
-      --blue:#89c8ff;
-      --shadow:0 24px 90px rgba(0,0,0,.58);
-      --max:1220px;
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --red:#ff7a7a;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1240px;
     }
 
     * { box-sizing:border-box; }
@@ -28,58 +31,45 @@
     body {
       margin:0;
       min-height:100%;
-      background:var(--bg);
       color:var(--text);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-    }
-
-    body {
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 5%,rgba(137,200,255,.18),transparent 26%),
-        radial-gradient(circle at 20% 30%,rgba(240,215,156,.09),transparent 30%),
-        linear-gradient(180deg,#01040b 0%,#061022 58%,#01040b 100%);
+        radial-gradient(circle at 50% 6%,rgba(142,197,255,.16),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
 
-    body::before {
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.24;
-      background:
-        linear-gradient(90deg,rgba(137,200,255,.08) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(137,200,255,.045) 1px,transparent 1px);
-      background-size:31px 31px;
-      mask-image:radial-gradient(circle at 50% 30%,black,transparent 78%);
+    a {
+      color:inherit;
+      text-decoration:none;
     }
 
-    a { color:inherit; text-decoration:none; }
-
-    .root {
+    .gauge-page {
       width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
-      padding:14px 0 28px;
-      position:relative;
-      z-index:1;
+      padding:14px 0 30px;
     }
 
-    .bar,
-    .console,
-    .feed,
-    .route,
-    .cell {
+    .topbar,
+    .panel,
+    .orb-panel,
+    .feed-panel,
+    .route-panel {
       border:1px solid var(--line);
-      background:linear-gradient(180deg,rgba(8,16,32,.94),var(--panel));
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
     }
 
-    .bar {
-      border-radius:24px;
-      padding:12px;
-      margin-bottom:12px;
+    .topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
       display:grid;
-      gap:10px;
+      gap:12px;
     }
 
     .brand {
@@ -89,322 +79,270 @@
     }
 
     .mark {
-      width:46px;
-      height:46px;
-      border-radius:15px;
+      width:48px;
+      height:48px;
+      border-radius:16px;
       display:grid;
       place-items:center;
-      border:1px solid rgba(240,215,156,.26);
-      color:var(--gold);
-      font-weight:950;
-      background:rgba(255,255,255,.035);
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.26),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
+      font-weight:900;
+      letter-spacing:.08em;
     }
 
     .kicker {
       display:block;
-      color:#b8c8ef;
-      font-size:.68rem;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
-      margin-bottom:5px;
     }
 
     .title {
       display:block;
-      color:#fff;
-      font-weight:900;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
     }
 
-    .nav {
+    .nav,
+    .status-strip,
+    .route-grid {
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
+      gap:10px;
     }
 
     .nav a {
-      min-height:42px;
-      display:flex;
+      min-height:44px;
+      display:inline-flex;
       align-items:center;
       justify-content:center;
+      padding:0 14px;
       border:1px solid var(--line);
       border-radius:999px;
-      padding:0 12px;
       background:rgba(255,255,255,.035);
-      color:#dce8ff;
-      font-size:.75rem;
+      color:#d7e2ff;
       font-weight:850;
+      text-align:center;
     }
 
-    .console {
-      border-radius:28px;
-      overflow:hidden;
-      margin-bottom:12px;
-    }
-
-    .machine {
-      min-height:470px;
-      position:relative;
-      overflow:hidden;
-      isolation:isolate;
-      background:
-        radial-gradient(circle at 50% 48%,rgba(240,215,156,.08),transparent 20%),
-        radial-gradient(circle at 50% 52%,rgba(137,200,255,.13),transparent 32%),
-        linear-gradient(180deg,rgba(2,7,16,.98),rgba(0,2,8,.99));
-    }
-
-    .matrix {
-      position:absolute;
-      inset:-18%;
-      z-index:1;
-      color:rgba(137,200,255,.18);
-      font-size:clamp(8px,1.3vw,13px);
-      line-height:.92;
-      letter-spacing:.18em;
-      white-space:pre-wrap;
-      word-break:break-all;
-      transform:rotate(-7deg);
-      filter:blur(.15px);
-      opacity:.78;
-      user-select:text;
-    }
-
-    .mask {
-      position:absolute;
-      inset:0;
-      z-index:2;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 50%,transparent 0 32%,rgba(1,4,11,.52) 58%,rgba(1,4,11,.94) 100%),
-        linear-gradient(180deg,transparent,rgba(1,4,11,.34));
-    }
-
-    .core {
-      position:relative;
-      z-index:4;
-      min-height:470px;
+    .layout {
       display:grid;
-      place-items:center;
-      padding:20px;
+      gap:14px;
+    }
+
+    .orb-panel {
+      border-radius:34px;
+      padding:clamp(18px,3vw,32px);
+      display:grid;
+      gap:18px;
+      justify-items:center;
+      overflow:hidden;
     }
 
     .orb {
-      width:min(66vw,350px);
+      width:min(82vw,470px);
       aspect-ratio:1;
       border-radius:50%;
-      position:relative;
       display:grid;
       place-items:center;
-      border:1px solid rgba(226,238,255,.26);
+      border:1px solid rgba(226,238,255,.30);
       background:
-        radial-gradient(circle at 36% 26%,rgba(255,255,255,.26),transparent 12%),
-        radial-gradient(circle at 50% 50%,rgba(137,200,255,.20),transparent 31%),
-        linear-gradient(135deg,rgba(15,73,130,.58),rgba(3,12,34,.94));
+        radial-gradient(circle at 50% 50%,rgba(137,200,255,.14),transparent 46%),
+        linear-gradient(180deg,rgba(5,14,31,.78),rgba(1,4,11,.96));
       box-shadow:
         inset -34px -30px 58px rgba(0,0,0,.58),
         0 0 48px rgba(137,200,255,.26),
         0 0 140px rgba(240,215,156,.13);
     }
 
-    .orb::before,
-    .orb::after {
-      content:"";
-      position:absolute;
-      inset:12%;
-      border-radius:50%;
-      border:1px solid rgba(240,215,156,.20);
-      transform:rotate(45deg) scaleX(.38);
-    }
-
-    .orb::after {
-      transform:rotate(-45deg) scaleX(.38);
-      border-color:rgba(137,200,255,.22);
-    }
-
     .orb-label {
-      position:relative;
-      z-index:2;
-      display:grid;
-      gap:8px;
-      text-align:center;
-      padding:20px;
-    }
-
-    .orb-label strong {
-      color:#fff;
-      font-size:clamp(1rem,4vw,1.7rem);
-      letter-spacing:.20em;
+      color:#dfe8ff;
+      font-weight:900;
       text-transform:uppercase;
+      letter-spacing:.16em;
+      font-size:.78rem;
     }
 
-    .orb-label span {
-      color:var(--muted);
-      font-size:.72rem;
-      letter-spacing:.15em;
-      text-transform:uppercase;
+    .status-strip {
+      width:100%;
     }
 
-    .strip {
-      position:absolute;
-      left:50%;
-      bottom:24px;
-      z-index:5;
-      width:min(92%,820px);
-      transform:translateX(-50%);
-      border:1px solid rgba(226,238,255,.18);
-      border-radius:999px;
-      background:rgba(4,10,22,.86);
-      padding:11px 14px;
-      display:grid;
-      gap:4px;
-      text-align:center;
-      backdrop-filter:blur(10px);
-    }
-
-    .strip strong {
-      color:#fff;
-      font-size:.74rem;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-    }
-
-    .strip code {
-      color:var(--gold);
-      font-size:.68rem;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
-    }
-
-    .grid {
-      display:grid;
-      gap:12px;
-    }
-
-    .feed,
-    .route {
-      border-radius:24px;
+    .status-card {
       padding:14px;
-      overflow:hidden;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .status-card small {
+      display:block;
+      margin-bottom:6px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:.66rem;
+      font-weight:850;
+    }
+
+    .status-card strong,
+    .status-card code {
+      color:#fff;
+      font-weight:900;
+      overflow-wrap:anywhere;
+    }
+
+    .feed-panel,
+    .route-panel,
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
+      gap:14px;
+    }
+
+    h1,
+    h2 {
+      margin:0;
+      color:var(--gold);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    h1 {
+      color:#fff;
+      font-size:clamp(2.3rem,8vw,4.8rem);
+      letter-spacing:-.07em;
     }
 
     h2 {
-      margin:0 0 10px;
-      color:#fff;
-      font-family:Inter,system-ui,sans-serif;
-      font-size:clamp(1.2rem,5vw,2rem);
-      line-height:1;
-      letter-spacing:-.04em;
+      font-size:clamp(1.4rem,4vw,2.4rem);
     }
 
     p {
       margin:0;
       color:var(--muted);
-      line-height:1.55;
-      font-family:Inter,system-ui,sans-serif;
+      line-height:1.58;
     }
 
-    .output {
-      margin:14px 0 0;
-      min-height:260px;
-      max-height:520px;
+    .matrix {
+      min-height:220px;
+      max-height:420px;
       overflow:auto;
-      border:1px solid rgba(226,238,255,.14);
-      border-radius:18px;
-      padding:12px;
+      padding:14px;
+      border:1px solid rgba(170,198,255,.14);
+      border-radius:22px;
       background:rgba(0,0,0,.28);
-      color:#dce8ff;
-      font-size:.78rem;
-      line-height:1.45;
+      color:#dbe7ff;
       white-space:pre-wrap;
+      overflow-wrap:anywhere;
+      font:700 .78rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
     }
 
-    .route-grid {
-      display:grid;
-      gap:8px;
-      margin-top:12px;
+    .live-output {
+      min-height:360px;
+      overflow:auto;
+      padding:14px;
+      border:1px solid rgba(170,198,255,.14);
+      border-radius:22px;
+      background:rgba(0,0,0,.35);
+      color:#e9f2ff;
+      white-space:pre-wrap;
+      font:700 .82rem/1.52 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
     }
 
-    .cell {
-      border-radius:16px;
-      padding:12px;
-      min-height:86px;
+    .route-grid article {
+      min-height:112px;
+      padding:14px;
+      border:1px solid rgba(170,198,255,.16);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
     }
 
-    .cell small {
-      display:block;
-      margin-bottom:7px;
-      color:#91a6cf;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.66rem;
-      font-weight:850;
+    .route-grid article.ok {
+      border-color:rgba(147,239,189,.24);
     }
 
-    .cell strong {
+    .route-grid article.block {
+      border-color:rgba(255,122,122,.30);
+    }
+
+    .route-grid strong {
       display:block;
       color:#fff;
-      margin-bottom:7px;
-      font-size:.95rem;
+      margin-bottom:6px;
     }
 
-    .cell code {
+    .route-grid span {
       display:block;
       color:var(--muted);
-      font-size:.72rem;
-      line-height:1.35;
-      word-break:break-word;
+      margin-bottom:8px;
+      text-transform:uppercase;
+      letter-spacing:.10em;
+      font-size:.70rem;
+      font-weight:900;
     }
 
-    .ok { border-color:rgba(130,240,178,.28); }
-    .warn { border-color:rgba(240,215,156,.34); }
-    .block { border-color:rgba(255,111,137,.34); }
+    .route-grid code {
+      color:#dfe8ff;
+      font:700 .76rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+      overflow-wrap:anywhere;
+    }
 
     .footer {
-      padding:14px 4px 0;
-      color:#91a6cf;
-      font-size:.78rem;
       display:flex;
       flex-wrap:wrap;
       justify-content:space-between;
       gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
     }
 
     @media (min-width:860px) {
-      .bar {
+      .topbar {
         grid-template-columns:1fr auto;
         align-items:center;
       }
 
       .nav {
-        grid-template-columns:repeat(5,auto);
+        grid-template-columns:repeat(8,auto);
       }
 
-      .grid {
-        grid-template-columns:1.1fr .9fr;
+      .layout {
+        grid-template-columns:minmax(320px,.9fr) minmax(0,1.1fr);
+        align-items:start;
+      }
+
+      .status-strip {
+        grid-template-columns:1fr;
       }
 
       .route-grid {
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
 
-    @media (max-width:560px) {
-      .root {
+    @media (max-width:640px) {
+      .gauge-page {
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
-      .machine,
-      .core {
-        min-height:430px;
+      .topbar,
+      .panel,
+      .orb-panel,
+      .feed-panel,
+      .route-panel {
+        border-radius:24px;
       }
 
-      .orb {
-        width:min(72vw,280px);
-      }
-
-      .strip {
-        border-radius:20px;
+      .nav,
+      .route-grid {
+        grid-template-columns:1fr;
       }
     }
   </style>
@@ -413,82 +351,94 @@
 <body>
   <main
     id="gaugeRoot"
-    class="root"
-    data-gauge-generation="second-generation-renewal"
-    data-gauges-script-version="axis-spin-pass-v1-script-binding-proof"
+    class="gauge-page"
+    data-generation="second-generation-renewal"
+    data-gauge-runtime="booting"
+    data-gauge-version="GAUGE_LIVE_FEED_V3"
+    data-probe-set="expanded-front-routes"
+    data-gauges-earth-proof="axis-spin-pass-v3"
   >
-    <header class="bar">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge root">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Door">
         <span class="mark" aria-hidden="true">DG</span>
         <span>
           <span class="kicker">Gauge Authority · Second Generation Renewal</span>
-          <span class="title">Live Feed Instrument Surface</span>
+          <strong class="title">Live Feed Instrument Surface · V3</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/explore/frontier/">Frontier</a>
         <a href="/products/">Products</a>
         <a href="/laws/">Laws</a>
         <a href="/about/">About</a>
-        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="console" aria-label="Machine diagnostic console">
-      <div class="machine">
-        <pre id="matrix" class="matrix" aria-hidden="true"></pre>
-        <div class="mask" aria-hidden="true"></div>
+    <section class="layout" aria-label="Gauge live diagnostic layout">
+      <aside class="orb-panel">
+        <h1>DGGauge</h1>
+        <p>Expanded live route inspection for Generation 2 public surfaces.</p>
 
-        <div class="core">
-          <div class="orb" aria-hidden="true">
-            <div class="orb-label">
-              <strong>LIVE FEED</strong>
-              <span>machine surface / human summary below</span>
-            </div>
+        <div class="orb" aria-label="Gauge Earth proof mount">
+          <span class="orb-label">Axis · Natural Spin</span>
+        </div>
+
+        <div class="status-strip">
+          <div class="status-card">
+            <small>Status</small>
+            <strong id="stripStatus">STATUS: BOOTING</strong>
           </div>
-        </div>
 
-        <div class="strip" aria-live="polite">
-          <strong id="stripStatus">STATUS: BOOTING</strong>
-          <code id="stripAction">NEXT_ACTION=RUN_DIAGNOSTIC_FEED</code>
-        </div>
-      </div>
-    </section>
-
-    <section class="grid">
-      <article class="feed">
-        <h2>Readable live feed.</h2>
-        <p>
-          The top surface is intentionally machine-dense. This panel is the operator feed.
-          It inspects live public files and states the next required move.
-        </p>
-        <pre id="liveOutput" class="output">BOOT_STATE=WAITING_FOR_DIAGNOSTICS</pre>
-      </article>
-
-      <aside class="route">
-        <h2>Route probes.</h2>
-        <p>Each cell is generated from live route/source inspection.</p>
-        <div id="routeGrid" class="route-grid">
-          <div class="cell warn">
-            <small>BOOT</small>
-            <strong>Diagnostics pending</strong>
-            <code>AWAITING_CLIENT_RUNTIME</code>
+          <div class="status-card">
+            <small>Next action</small>
+            <code id="stripAction">NEXT_ACTION=RUN_EXPANDED_DIAGNOSTIC_FEED</code>
           </div>
         </div>
       </aside>
+
+      <section class="feed-panel" aria-labelledby="feedTitle">
+        <h2 id="feedTitle">Readable live feed.</h2>
+        <p>
+          This instrument now probes the front route family, including Home, Prelude,
+          Explore, Explore Frontier, and Frontier.
+        </p>
+
+        <pre id="liveOutput" class="live-output">GAUGE_BOOT=WAITING_FOR_V3_RUNTIME
+PROBE_SET=EXPANDED_FRONT_ROUTES
+EXPECTED_RUNTIME=GAUGE_LIVE_FEED_V3</pre>
+      </section>
+    </section>
+
+    <section class="route-panel" aria-labelledby="routesTitle">
+      <h2 id="routesTitle">Route probes.</h2>
+      <p>Each cell is generated from live route/source inspection.</p>
+
+      <div id="routeGrid" class="route-grid">
+        <article class="block">
+          <strong>BOOT</strong>
+          <span>pending</span>
+          <code>AWAITING_CLIENT_RUNTIME</code>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="machineTitle">
+      <h2 id="machineTitle">Machine surface.</h2>
+      <p>The dense layer remains available for runtime signal inspection.</p>
+      <pre id="matrix" class="matrix">BOOT_MATRIX=WAITING</pre>
     </section>
 
     <footer class="footer">
       <span>Diamond Gate Bridge · Gauges · Second Generation Renewal</span>
-      <span>MODE=LIVE_FEED_DIAGNOSTIC_SURFACE</span>
+      <span>MODE=LIVE_FEED_DIAGNOSTIC_SURFACE · VERSION=GAUGE_LIVE_FEED_V3</span>
     </footer>
   </main>
 
-  <script
-    src="/gauges/index.js?v=axis-spin-pass-v1-script-binding-proof"
-    defer
-    data-gauges-script-version="axis-spin-pass-v1-script-binding-proof"
-  ></script>
+  <script src="/gauges/index.js?v=GAUGE_LIVE_FEED_V3_EXPANDED_FRONT_ROUTES" defer></script>
 </body>
 </html>

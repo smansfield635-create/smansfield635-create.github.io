@@ -1,6 +1,6 @@
 /* ==========================================================================
    DGB UI · Second Generation Renewal
-   Shared interface, instrument, route, and bubble-density controls.
+   Shared interface, instrument, route, and diamond-bubble controls.
    ========================================================================== */
 
 :root {
@@ -17,10 +17,13 @@
   --ui-good:#93efbd;
   --ui-warn:#f1a45b;
   --ui-bad:#ff7a7a;
+  --ui-purple:#c89cff;
   --ui-shadow:0 24px 80px rgba(0,0,0,.50);
   --ui-radius:24px;
   --ui-radius-lg:32px;
   --ui-max:1180px;
+  --ui-diamond-spin:28s;
+  --ui-diamond-float:7s;
 }
 
 /* --------------------------------------------------------------------------
@@ -88,6 +91,7 @@ a {
   display:inline-flex;
   width:fit-content;
   align-items:center;
+  justify-content:center;
   gap:10px;
   padding:8px 12px;
   border-radius:999px;
@@ -113,57 +117,7 @@ a {
 }
 
 /* --------------------------------------------------------------------------
-   Retired route instrument · Explore public suppression
-   -------------------------------------------------------------------------- */
-
-a[href="/explore/"],
-a[href="/explore"],
-a[href^="/explore/"],
-a[href*="/explore"],
-button[href="/explore/"],
-button[href="/explore"],
-button[data-href="/explore/"],
-button[data-href="/explore"],
-button[data-route="/explore/"],
-button[data-route="/explore"],
-button[data-route*="explore"],
-[data-href="/explore/"],
-[data-href="/explore"],
-[data-href*="/explore"],
-[data-route="/explore/"],
-[data-route="/explore"],
-[data-route*="explore"],
-[data-path="/explore/"],
-[data-path="/explore"],
-[data-path*="/explore"],
-[data-target="/explore/"],
-[data-target="/explore"],
-[data-target*="/explore"],
-.route-card.explore,
-.nav-explore,
-.explore-route,
-.explore-link,
-.explore-card {
-  display:none !important;
-  visibility:hidden !important;
-  pointer-events:none !important;
-  position:absolute !important;
-  width:0 !important;
-  height:0 !important;
-  min-width:0 !important;
-  min-height:0 !important;
-  max-width:0 !important;
-  max-height:0 !important;
-  margin:0 !important;
-  padding:0 !important;
-  border:0 !important;
-  opacity:0 !important;
-  overflow:hidden !important;
-  clip-path:inset(50%) !important;
-}
-
-/* --------------------------------------------------------------------------
-   Universal route bubbles
+   Universal diamond route grids
    -------------------------------------------------------------------------- */
 
 .home-nav,
@@ -176,8 +130,20 @@ button[data-route*="explore"],
 .quiet-grid,
 .dgb-route-grid {
   display:grid;
-  gap:10px;
+  gap:12px;
+  perspective:1000px;
+  align-items:center;
+  justify-items:center;
 }
+
+.home-nav,
+.nav {
+  align-items:center;
+}
+
+/* --------------------------------------------------------------------------
+   Diamond bubbles: nav, buttons, route pills, support links
+   -------------------------------------------------------------------------- */
 
 .home-nav a,
 .nav a,
@@ -187,83 +153,266 @@ button[data-route*="explore"],
 .route-pill,
 .dgb-route-pill,
 .support-grid a {
-  min-height:44px;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  padding:0 14px;
-  border:1px solid var(--ui-line);
-  border-radius:999px;
-  background:rgba(255,255,255,.035);
-  color:#d7e2ff;
-  font-weight:850;
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+  width:min(100%,112px);
+  aspect-ratio:1 / 1;
+  min-height:0 !important;
+  display:grid;
+  place-items:center;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  color:#e7eeff;
+  font-size:.78rem;
+  line-height:1.04;
+  font-weight:900;
   text-align:center;
   text-decoration:none;
+  transform-style:preserve-3d;
+  transition:
+    transform 420ms ease,
+    filter 420ms ease;
+  will-change:transform,filter;
 }
 
-.home-button.primary,
-.button.primary,
-.dgb-button.primary {
-  border-color:rgba(239,210,154,.38);
+.home-nav a::before,
+.nav a::before,
+.home-button::before,
+.button::before,
+.dgb-button::before,
+.route-pill::before,
+.dgb-route-pill::before,
+.support-grid a::before {
+  content:"";
+  position:absolute;
+  inset:10%;
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  border:1px solid rgba(170,198,255,.24);
   background:
-    linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-    rgba(255,255,255,.035);
-  color:#fff8ea;
+    radial-gradient(circle at 50% 50%,rgba(142,197,255,.20),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+  box-shadow:
+    0 0 30px rgba(142,197,255,.18),
+    inset 0 0 26px rgba(255,255,255,.035);
+  z-index:-1;
+  animation:
+    dgbDiamondFloat var(--ui-diamond-float) ease-in-out infinite,
+    dgbDiamondPulse 5.8s ease-in-out infinite;
+  pointer-events:none;
 }
 
+.home-nav a::after,
+.nav a::after,
+.home-button::after,
+.button::after,
+.dgb-button::after,
+.route-pill::after,
+.dgb-route-pill::after,
+.support-grid a::after {
+  content:"";
+  position:absolute;
+  inset:25%;
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%),
+    linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+  opacity:.72;
+  z-index:-1;
+  animation:dgbInnerDiamondSpin var(--ui-diamond-spin) linear infinite;
+  pointer-events:none;
+}
+
+.home-nav a:hover,
+.nav a:hover,
+.home-button:hover,
+.button:hover,
+.dgb-button:hover,
+.route-pill:hover,
+.dgb-route-pill:hover,
+.support-grid a:hover,
 .home-nav a:focus-visible,
 .nav a:focus-visible,
 .home-button:focus-visible,
 .button:focus-visible,
 .dgb-button:focus-visible,
-.support-grid a:focus-visible,
-.route-card:focus-visible,
-.path-card:focus-visible {
-  outline:2px solid rgba(239,210,154,.62);
-  outline-offset:3px;
+.route-pill:focus-visible,
+.dgb-route-pill:focus-visible,
+.support-grid a:focus-visible {
+  transform:translateY(-4px) rotateX(4deg) rotateY(-4deg) scale(1.035);
+  filter:brightness(1.12);
+  outline:none;
+}
+
+.home-nav a:hover::before,
+.nav a:hover::before,
+.home-button:hover::before,
+.button:hover::before,
+.dgb-button:hover::before,
+.route-pill:hover::before,
+.dgb-route-pill:hover::before,
+.support-grid a:hover::before,
+.home-nav a:focus-visible::before,
+.nav a:focus-visible::before,
+.home-button:focus-visible::before,
+.button:focus-visible::before,
+.dgb-button:focus-visible::before,
+.route-pill:focus-visible::before,
+.dgb-route-pill:focus-visible::before,
+.support-grid a:focus-visible::before {
+  border-color:rgba(239,210,154,.42);
+  box-shadow:
+    0 0 42px rgba(239,210,154,.22),
+    0 0 76px rgba(142,197,255,.18),
+    inset 0 0 32px rgba(255,255,255,.055);
+}
+
+.home-button.primary::before,
+.button.primary::before,
+.dgb-button.primary::before,
+.nav a.featured::before,
+.home-nav a.featured::before {
+  border-color:rgba(239,210,154,.44);
+  background:
+    radial-gradient(circle at 50% 50%,rgba(239,210,154,.28),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(142,197,255,.12),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+    linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
+  box-shadow:
+    0 0 38px rgba(239,210,154,.20),
+    inset 0 0 30px rgba(255,255,255,.04);
+}
+
+.home-button.primary,
+.button.primary,
+.dgb-button.primary,
+.nav a.featured,
+.home-nav a.featured {
+  color:#fff8ea;
 }
 
 /* --------------------------------------------------------------------------
-   Card surfaces
+   Diamond card surfaces
    -------------------------------------------------------------------------- */
 
 .path-card,
 .route-card,
 .quiet-card,
 .dgb-card {
-  border:1px solid var(--ui-line);
-  border-radius:22px;
-  padding:16px;
-  min-height:136px;
-  background:
-    radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
-    linear-gradient(180deg,var(--ui-panel2),var(--ui-panel));
-  box-shadow:var(--ui-shadow);
+  position:relative;
+  isolation:isolate;
+  overflow:visible;
+  width:min(100%,220px);
+  aspect-ratio:1 / 1;
+  min-height:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  background:transparent !important;
+  box-shadow:none !important;
   color:inherit;
   text-decoration:none;
+  transform-style:preserve-3d;
+  transition:
+    transform 420ms ease,
+    filter 420ms ease;
+  will-change:transform,filter;
+}
+
+.path-card::before,
+.route-card::before,
+.quiet-card::before,
+.dgb-card::before {
+  content:"";
+  position:absolute;
+  inset:10%;
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  border:1px solid rgba(170,198,255,.24);
+  background:
+    radial-gradient(circle at 50% 50%,rgba(142,197,255,.20),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+  box-shadow:
+    0 0 34px rgba(142,197,255,.18),
+    inset 0 0 30px rgba(255,255,255,.035);
+  z-index:0;
+  animation:
+    dgbDiamondFloat var(--ui-diamond-float) ease-in-out infinite,
+    dgbDiamondPulse 5.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+.path-card::after,
+.route-card::after,
+.quiet-card::after,
+.dgb-card::after {
+  content:"";
+  position:absolute;
+  inset:22%;
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  border:1px solid rgba(255,255,255,.08);
+  background:
+    radial-gradient(circle at 38% 28%,rgba(255,255,255,.13),transparent 24%),
+    linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+  opacity:.72;
+  z-index:1;
+  animation:dgbInnerDiamondSpin var(--ui-diamond-spin) linear infinite;
+  pointer-events:none;
+}
+
+.path-card small,
+.route-card small,
+.quiet-card small,
+.dgb-card small,
+.path-card strong,
+.route-card strong,
+.quiet-card strong,
+.dgb-card strong,
+.path-card p,
+.route-card p,
+.quiet-card p,
+.dgb-card p {
+  position:relative;
+  z-index:3;
+  display:block;
+  max-width:68%;
+  margin-left:auto;
+  margin-right:auto;
+  text-align:center;
+  text-wrap:balance;
 }
 
 .path-card small,
 .route-card small,
 .quiet-card small,
 .dgb-card small {
-  display:block;
   margin-bottom:8px;
-  color:#91a6cf;
+  color:#a8bbeb;
   text-transform:uppercase;
-  letter-spacing:.13em;
-  font-size:.66rem;
-  font-weight:850;
+  letter-spacing:.12em;
+  font-size:.56rem;
+  line-height:1.12;
+  font-weight:900;
 }
 
 .path-card strong,
 .route-card strong,
 .quiet-card strong,
 .dgb-card strong {
-  display:block;
   color:#fff;
-  font-size:1.08rem;
-  line-height:1.12;
+  font-size:clamp(.90rem,2.6vw,1.1rem);
+  line-height:1.02;
+  font-weight:900;
+  letter-spacing:-.025em;
 }
 
 .path-card p,
@@ -271,8 +420,105 @@ button[data-route*="explore"],
 .dgb-card p {
   margin-top:8px;
   color:var(--ui-muted);
-  font-size:.92rem;
-  line-height:1.42;
+  font-size:.78rem;
+  line-height:1.28;
+}
+
+.path-card:hover,
+.route-card:hover,
+.quiet-card:hover,
+.dgb-card:hover,
+.path-card:focus-visible,
+.route-card:focus-visible,
+.quiet-card:focus-visible,
+.dgb-card:focus-visible {
+  transform:translateY(-6px) rotateX(4deg) rotateY(-4deg) scale(1.035);
+  filter:brightness(1.12);
+  outline:none;
+}
+
+.path-card:hover::before,
+.route-card:hover::before,
+.quiet-card:hover::before,
+.dgb-card:hover::before,
+.path-card:focus-visible::before,
+.route-card:focus-visible::before,
+.quiet-card:focus-visible::before,
+.dgb-card:focus-visible::before {
+  border-color:rgba(239,210,154,.42);
+  box-shadow:
+    0 0 42px rgba(239,210,154,.22),
+    0 0 76px rgba(142,197,255,.18),
+    inset 0 0 32px rgba(255,255,255,.055);
+}
+
+/* --------------------------------------------------------------------------
+   Route color accents
+   -------------------------------------------------------------------------- */
+
+.route-card.frontier::before,
+.path-card.frontier::before,
+.dgb-card.frontier::before {
+  background:
+    radial-gradient(circle at 50% 50%,rgba(200,156,255,.34),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+}
+
+.route-card.product::before,
+.path-card.product::before,
+.dgb-card.product::before {
+  background:
+    radial-gradient(circle at 50% 50%,rgba(147,239,189,.25),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(239,210,154,.10),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+}
+
+.route-card.metaverse::before,
+.path-card.metaverse::before,
+.dgb-card.metaverse::before {
+  background:
+    radial-gradient(circle at 50% 50%,rgba(142,197,255,.32),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(200,156,255,.12),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+}
+
+.route-card.show::before,
+.path-card.show::before,
+.dgb-card.show::before,
+.route-card.human::before,
+.path-card.human::before,
+.dgb-card.human::before {
+  background:
+    radial-gradient(circle at 50% 50%,rgba(255,154,184,.24),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+}
+
+.route-card.door::before,
+.route-card.home::before,
+.route-card.prelude::before,
+.route-card.gauge::before,
+.route-card.world::before,
+.path-card.door::before,
+.path-card.home::before,
+.path-card.prelude::before,
+.path-card.gauge::before,
+.path-card.world::before,
+.dgb-card.door::before,
+.dgb-card.home::before,
+.dgb-card.prelude::before,
+.dgb-card.gauge::before,
+.dgb-card.world::before {
+  background:
+    radial-gradient(circle at 50% 50%,rgba(239,210,154,.23),transparent 34%),
+    radial-gradient(circle at 50% 72%,rgba(142,197,255,.11),transparent 34%),
+    linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
 }
 
 /* --------------------------------------------------------------------------
@@ -416,38 +662,94 @@ button[data-route*="explore"],
 .branch-pill-row {
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:12px;
   margin-top:12px;
 }
 
 .branch-pill {
-  display:inline-flex;
-  align-items:center;
-  min-height:36px;
-  padding:8px 12px;
-  border:1px solid var(--ui-line);
-  border-radius:999px;
-  background:rgba(255,255,255,.04);
+  position:relative;
+  isolation:isolate;
+  display:grid;
+  place-items:center;
+  width:96px;
+  aspect-ratio:1 / 1;
+  padding:0;
+  border:0;
+  border-radius:0;
+  background:transparent;
   color:var(--ui-text);
-  font-size:11px;
-  font-weight:800;
+  font-size:10px;
+  font-weight:850;
   letter-spacing:.08em;
+  text-align:center;
   text-transform:uppercase;
 }
 
+.branch-pill::before {
+  content:"";
+  position:absolute;
+  inset:10%;
+  clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+  border:1px solid var(--ui-line);
+  background:
+    radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 34%),
+    linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+  z-index:-1;
+  animation:
+    dgbDiamondFloat var(--ui-diamond-float) ease-in-out infinite,
+    dgbDiamondPulse 5.8s ease-in-out infinite;
+}
+
 /* --------------------------------------------------------------------------
-   Generation 2 mobile density controls
+   Diamond animation
+   -------------------------------------------------------------------------- */
+
+@keyframes dgbDiamondFloat {
+  0%,100% {
+    transform:translateY(0) rotate(0deg);
+  }
+
+  50% {
+    transform:translateY(-5px) rotate(1.5deg);
+  }
+}
+
+@keyframes dgbDiamondPulse {
+  0%,100% {
+    opacity:.96;
+    filter:brightness(1);
+  }
+
+  50% {
+    opacity:1;
+    filter:brightness(1.14);
+  }
+}
+
+@keyframes dgbInnerDiamondSpin {
+  0% {
+    transform:rotate(0deg) scale(.96);
+  }
+
+  100% {
+    transform:rotate(360deg) scale(.96);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   Generation 2 responsive diamond layout
    -------------------------------------------------------------------------- */
 
 @media (min-width:820px) {
   .home-nav,
   .nav {
-    grid-template-columns:repeat(6,auto);
+    grid-template-columns:repeat(6,minmax(96px,112px));
+    justify-content:end;
   }
 
   .home-actions,
   .actions {
-    grid-template-columns:repeat(4,auto);
+    grid-template-columns:repeat(4,minmax(96px,112px));
     justify-content:start;
   }
 
@@ -455,11 +757,11 @@ button[data-route*="explore"],
   .route-grid,
   .path-grid,
   .dgb-route-grid {
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(4,minmax(150px,1fr));
   }
 
   .quiet-grid {
-    grid-template-columns:repeat(3,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(150px,1fr));
   }
 }
 
@@ -502,7 +804,7 @@ button[data-route*="explore"],
   .home-actions,
   .actions {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:8px !important;
+    gap:10px !important;
   }
 
   .home-nav a,
@@ -511,32 +813,55 @@ button[data-route*="explore"],
   .button,
   .dgb-button,
   .route-pill,
-  .dgb-route-pill {
-    min-height:38px !important;
-    padding:0 9px !important;
-    font-size:.88rem !important;
-    line-height:1.08 !important;
-    border-radius:999px !important;
+  .dgb-route-pill,
+  .support-grid a {
+    width:min(100%,98px) !important;
+    font-size:.68rem !important;
+    line-height:1.02 !important;
+    justify-self:center;
   }
 
   .support-grid {
     grid-template-columns:repeat(2,minmax(0,1fr)) !important;
-    gap:8px !important;
-  }
-
-  .support-grid a {
-    min-height:38px !important;
-    padding:10px 9px !important;
-    border-radius:18px !important;
-    font-size:.88rem !important;
-    line-height:1.08 !important;
+    gap:10px !important;
   }
 
   .path-grid,
   .route-grid,
   .quiet-grid,
   .dgb-route-grid {
-    grid-template-columns:1fr;
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:10px !important;
+  }
+
+  .path-card,
+  .route-card,
+  .quiet-card,
+  .dgb-card {
+    width:min(100%,150px);
+  }
+
+  .path-card small,
+  .route-card small,
+  .quiet-card small,
+  .dgb-card small {
+    max-width:70%;
+    font-size:.46rem;
+    margin-bottom:5px;
+  }
+
+  .path-card strong,
+  .route-card strong,
+  .quiet-card strong,
+  .dgb-card strong {
+    max-width:72%;
+    font-size:.76rem;
+  }
+
+  .path-card p,
+  .quiet-card p,
+  .dgb-card p {
+    display:none;
   }
 }
 
@@ -549,10 +874,29 @@ button[data-route*="explore"],
   .route-pill,
   .dgb-route-pill,
   .support-grid a {
-    min-height:36px !important;
-    padding-left:7px !important;
-    padding-right:7px !important;
-    font-size:.80rem !important;
+    width:min(100%,88px) !important;
+    font-size:.62rem !important;
+  }
+
+  .path-card,
+  .route-card,
+  .quiet-card,
+  .dgb-card {
+    width:min(100%,136px);
+  }
+
+  .path-card small,
+  .route-card small,
+  .quiet-card small,
+  .dgb-card small {
+    font-size:.40rem;
+  }
+
+  .path-card strong,
+  .route-card strong,
+  .quiet-card strong,
+  .dgb-card strong {
+    font-size:.68rem;
   }
 }
 
@@ -562,5 +906,6 @@ button[data-route*="explore"],
   *::after {
     animation:none !important;
     scroll-behavior:auto !important;
+    transition:none !important;
   }
 }

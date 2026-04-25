@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-g2-linked-products-runtime-v4-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_LINKED_PRODUCTS_SURFACE_v4";
+  const STYLE_ID = "products-g2-official-products-runtime-v5-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v5";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -17,52 +17,36 @@
 
   const products = [
     {
-      key: "ai",
+      key: "ai-on-your-side",
       focus: "summer",
       code: "AI",
-      title: "AI",
-      href: "/products/aai/",
-      line: "AI product surface."
-    },
-    {
-      key: "five-flags",
-      focus: "winter",
-      code: "FLAGS",
-      title: "Five Flags",
-      href: "/products/five-flags/",
-      line: "Flag-based identity, signal, and orientation."
-    },
-    {
-      key: "whats-my-favorite",
-      focus: "spring",
-      code: "FAVORITE",
-      title: "What’s My Favorite?",
-      href: "/products/whats-my-favorite/",
-      line: "Preference, choice, and discovery product."
-    },
-    {
-      key: "same-flag-project",
-      focus: "fall",
-      code: "SAME FLAG",
-      title: "The Same Flag Project",
-      href: "/products/ssg/",
-      line: "Shared-symbol alignment and public signal."
-    },
-    {
-      key: "esl-learning",
-      focus: "spring",
-      code: "ESL",
-      title: "ESL Learning",
-      href: "/products/education/",
-      line: "Language learning and education surface."
-    },
-    {
-      key: "on-your-side-ai",
-      focus: "summer",
-      code: "OYS AI",
-      title: "On Your Side AI",
+      title: "AI On Your Side",
       href: "/products/on-your-side-ai/",
-      line: "Public AI assistant and support product."
+      line: "AI support, practical guidance, and public-facing assistant tools."
+    },
+    {
+      key: "syntax-geometry",
+      focus: "fall",
+      code: "SYNTAX",
+      title: "Syntax Geometry",
+      href: "/products/ssg/",
+      line: "Structural language, code-law, and geometric syntax systems."
+    },
+    {
+      key: "being-blind-systems",
+      focus: "winter",
+      code: "BLIND",
+      title: "Being Blind Systems",
+      href: "/products/being-blind-systems/",
+      line: "Accessibility, perception, navigation, and lived-interface systems."
+    },
+    {
+      key: "five-flags-with-my-team",
+      focus: "spring",
+      code: "FLAGS",
+      title: "Five Flags With My Team",
+      href: "/products/five-flags/",
+      line: "Team identity, alignment, signal, and shared-orientation product."
     }
   ];
 
@@ -150,17 +134,17 @@
 
       .products-product-grid {
         display:grid;
-        grid-template-columns:repeat(3,minmax(0,1fr));
+        grid-template-columns:repeat(2,minmax(0,1fr));
         gap:10px;
       }
 
       .products-product-tile {
-        min-height:138px;
+        min-height:148px;
         border-radius:22px;
-        padding:15px;
+        padding:16px;
         display:grid;
         align-content:space-between;
-        gap:10px;
+        gap:12px;
         text-align:left;
         color:inherit;
         text-decoration:none;
@@ -192,14 +176,14 @@
       .products-product-tile strong {
         display:block;
         color:#fff;
-        font-size:1.08rem;
+        font-size:1.16rem;
         line-height:1.05;
       }
 
       .products-product-tile p {
         margin:0;
         color:var(--products-muted);
-        font-size:.82rem;
+        font-size:.84rem;
         line-height:1.36;
       }
 
@@ -727,14 +711,14 @@
         class="products-gen2-shell"
         data-products-runtime-root="true"
         data-products-generation="2"
-        data-products-actual-products="true"
+        data-products-official-products="true"
         data-products-linked-products="true"
         data-products-control-surface="true"
       >
-        <section class="products-product-first" aria-label="Products list">
+        <section class="products-product-first" aria-label="Official products list">
           <div class="products-product-head">
             <h3>Products.</h3>
-            <span>Generation 2 · linked product routes</span>
+            <span>Generation 2 · official product routes</span>
           </div>
 
           <div class="products-product-grid">
@@ -805,7 +789,7 @@
 
           <div class="products-bubble-row" aria-label="Runtime receipts">
             <span>G2 active</span>
-            <span>Actual products</span>
+            <span>Official products</span>
             <span>Routes linked</span>
             <span>Globe online</span>
           </div>
@@ -1026,7 +1010,7 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-g2-linked-products-v4");
+      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v5");
 
       target.innerHTML = buildHTML();
 
@@ -1040,7 +1024,7 @@
       target.setAttribute("data-runtime-status", "mounted");
       target.setAttribute("data-products-shared-earth", sharedEarthMounted ? "mounted" : "unavailable");
       target.setAttribute("data-products-gen2-controls", "active");
-      target.setAttribute("data-products-routes", "linked");
+      target.setAttribute("data-products-routes", "official-linked");
 
       window[RECEIPT_KEY] = true;
       this.status = "MOUNTED";
@@ -1053,7 +1037,7 @@
             owner: "products_runtime.js",
             sharedEarthMounted,
             controls: "active",
-            routes: "linked"
+            routes: "official-linked"
           }
         })
       );
@@ -1064,7 +1048,7 @@
         owner: "products_runtime.js",
         sharedEarthMounted,
         controls: "active",
-        routes: "linked"
+        routes: "official-linked"
       };
     }
   }

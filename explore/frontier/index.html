@@ -1,15 +1,15 @@
-mkdir -p frontier
+mkdir -p explore/frontier
 
-cat > frontier/index.html <<'EOF'
+cat > explore/frontier/index.html <<'EOF'
 <!DOCTYPE html>
-<html lang="en" data-frontier-generation="second-generation-renewal">
+<html lang="en" data-explore-frontier-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Frontier · Diamond Gate Bridge</title>
+  <title>Explore Frontier · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Frontier at Diamond Gate Bridge: a Generation 2 expansion surface for new paths, public experiments, future chambers, and next territories."
+    content="Explore Frontier at Diamond Gate Bridge: a Generation 2 expansion surface under Explore for new paths, public experiments, future chambers, and next territories."
   />
 
   <style>
@@ -389,14 +389,15 @@ cat > frontier/index.html <<'EOF'
   <main
     class="page"
     data-generation="second-generation-renewal"
-    data-page="frontier"
-    data-surface="frontier-expansion-route"
+    data-page="explore-frontier"
+    data-parent-page="explore"
+    data-surface="explore-frontier-expansion-route"
   >
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Door">
+      <a class="brand" href="/explore/" aria-label="Explore">
         <span class="mark" aria-hidden="true">FR</span>
         <span>
-          <span class="kicker">Diamond Gate Bridge</span>
+          <span class="kicker">Diamond Gate Bridge · Explore</span>
           <strong class="title">Frontier</strong>
         </span>
       </a>
@@ -413,16 +414,17 @@ cat > frontier/index.html <<'EOF'
 
     <section class="hero" aria-labelledby="frontierTitle">
       <div class="hero-copy">
-        <span class="pill">Next territory</span>
+        <span class="pill">Explore frontier</span>
         <h1 id="frontierTitle">Frontier</h1>
-        <h2>The edge opens after the core is stable.</h2>
+        <h2>The edge opens inside Explore.</h2>
         <p>
-          Frontier holds new paths, public experiments, future chambers, and next
-          territories without disturbing the stable core pages.
+          Frontier belongs under Explore. It holds new paths, public experiments,
+          future chambers, and next territories without creating a separate top-level
+          Door route.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="/explore/">Explore</a>
+          <a class="button primary" href="/explore/">Back to Explore</a>
           <a class="button" href="/metaverse/">Metaverse</a>
           <a class="button" href="/products/">Products</a>
           <a class="button" href="/home/">Home</a>
@@ -474,45 +476,14 @@ cat > frontier/index.html <<'EOF'
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/explore/">
-          <small>Map</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card" href="/metaverse/">
-          <small>World</small>
-          <strong>Metaverse</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Products</small>
-          <strong>Product Chamber</strong>
-        </a>
-
-        <a class="route-card" href="/nine-summits/">
-          <small>Human path</small>
-          <strong>Nine Summits</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Show path</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
-        </a>
-
-        <a class="route-card" href="/about/">
-          <small>Orientation</small>
-          <strong>About</strong>
-        </a>
+        <a class="route-card" href="/explore/"><small>Map</small><strong>Explore</strong></a>
+        <a class="route-card" href="/metaverse/"><small>World</small><strong>Metaverse</strong></a>
+        <a class="route-card" href="/products/"><small>Products</small><strong>Product Chamber</strong></a>
+        <a class="route-card" href="/nine-summits/"><small>Human path</small><strong>Nine Summits</strong></a>
+        <a class="route-card" href="/big-laugh/upper-room/"><small>Show path</small><strong>The Upper Room</strong></a>
+        <a class="route-card" href="/laws/"><small>Rule layer</small><strong>Laws</strong></a>
+        <a class="route-card" href="/gauges/"><small>Inspection</small><strong>Gauges</strong></a>
+        <a class="route-card" href="/about/"><small>Orientation</small><strong>About</strong></a>
       </div>
     </section>
 
@@ -523,8 +494,8 @@ cat > frontier/index.html <<'EOF'
       </div>
 
       <p class="closing-read">
-        The core pages stay clean. Frontier gives the next territory a place to breathe
-        until it is ready to become a permanent chamber.
+        The core pages stay clean. Explore Frontier gives the next territory a place
+        to breathe until it is ready to become a permanent chamber.
       </p>
     </section>
 
@@ -535,33 +506,32 @@ cat > frontier/index.html <<'EOF'
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/prelude/">
-          <small>Threshold</small>
-          <strong>Prelude</strong>
-        </a>
-
-        <a class="route-card" href="/explore/">
-          <small>Map</small>
-          <strong>Explore</strong>
-        </a>
+        <a class="route-card" href="/"><small>Access</small><strong>Door</strong></a>
+        <a class="route-card" href="/home/"><small>Interior</small><strong>Home</strong></a>
+        <a class="route-card" href="/prelude/"><small>Threshold</small><strong>Prelude</strong></a>
+        <a class="route-card" href="/explore/"><small>Parent</small><strong>Explore</strong></a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Frontier · Generation 2 Expansion Surface</span>
+      <span>Explore Frontier · Generation 2 Expansion Surface</span>
       <span><a href="/">Door</a> · <a href="/home/">Home</a> · <a href="/explore/">Explore</a></span>
     </footer>
   </main>
 </body>
 </html>
 EOF
+
+python - <<'PY'
+from pathlib import Path
+
+for file_path in ["index.html", "explore/index.html", "home/index.html", "prelude/index.html"]:
+    p = Path(file_path)
+    if not p.exists():
+        continue
+    s = p.read_text(encoding="utf-8")
+    s = s.replace('href="/frontier/"', 'href="/explore/frontier/"')
+    s = s.replace("href='/frontier/'", "href='/explore/frontier/'")
+    s = s.replace(">Frontier</a>", ">Frontier</a>")
+    p.write_text(s, encoding="utf-8")
+PY

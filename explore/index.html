@@ -1,686 +1,636 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-explore-generation="second-generation-renewal">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Explore · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Explore the embodied world beyond the door. Thresholds, chambers, routes, and depth under one living field."
-  >
+    content="Explore Diamond Gate Bridge: a Generation 2 world-facing route surface for Prelude, Home, Metaverse, Products, Nine Summits, Big Laugh, Laws, and Gauges."
+  />
 
   <style>
     :root {
-      --bg: #030711;
-      --bg-deep: #081427;
-      --panel: rgba(255,255,255,0.05);
-      --panel-soft: rgba(255,255,255,0.025);
-      --line: rgba(255,255,255,0.10);
-      --line-strong: rgba(255,255,255,0.18);
-      --text: #eef4ff;
-      --muted: #a7b8d8;
-      --gold: #f0c876;
-      --gold-soft: #f8e0ab;
-      --blue-soft: #9dd1ff;
-      --green-soft: #9fe7c5;
-      --violet-soft: #c8b4ff;
-      --shadow: 0 24px 80px rgba(0,0,0,0.42);
-      --radius: 28px;
-      --max: 1320px;
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --rose:#ff9ab8;
+      --orange:#f1a45b;
+      --purple:#c89cff;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
-      margin: 0;
-      padding: 0;
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font:
-        16px/1.55 Inter,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Helvetica,
-        Arial,
-        sans-serif;
+      margin:0;
+      min-height:100%;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      overflow-x:hidden;
     }
 
-    body {
-      overflow-x: hidden;
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.20;
       background:
-        radial-gradient(circle at 16% 12%, rgba(157,209,255,0.12), transparent 22%),
-        radial-gradient(circle at 84% 16%, rgba(240,200,118,0.08), transparent 24%),
-        radial-gradient(circle at 50% 88%, rgba(200,180,255,0.08), transparent 30%),
-        linear-gradient(180deg, #02050d 0%, #071120 44%, #0a1830 100%);
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
     a {
-      color: inherit;
-      text-decoration: none;
+      color:inherit;
+      text-decoration:none;
     }
 
-    .stars {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle at 12% 18%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
-        radial-gradient(circle at 24% 62%, rgba(255,255,255,0.62) 0 1px, transparent 2px),
-        radial-gradient(circle at 47% 20%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
-        radial-gradient(circle at 66% 34%, rgba(255,255,255,0.55) 0 1px, transparent 2px),
-        radial-gradient(circle at 82% 18%, rgba(255,255,255,0.76) 0 1px, transparent 2px),
-        radial-gradient(circle at 74% 70%, rgba(255,255,255,0.64) 0 1px, transparent 2px),
-        radial-gradient(circle at 18% 82%, rgba(255,255,255,0.68) 0 1px, transparent 2px),
-        radial-gradient(circle at 56% 86%, rgba(255,255,255,0.58) 0 1px, transparent 2px);
-      opacity: 0.82;
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
+      position:relative;
+      z-index:1;
     }
 
-    .shell {
-      position: relative;
-      z-index: 1;
-      width: min(100% - 22px, var(--max));
-      margin: 0 auto;
-      padding: 20px 0 30px;
+    .topbar,
+    .hero,
+    .panel,
+    .route-card,
+    .path-card,
+    .quiet-card {
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
+      box-shadow:var(--shadow);
     }
 
     .topbar {
-      display: grid;
-      grid-template-columns: auto auto auto auto 1fr;
-      gap: 12px;
-      align-items: center;
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:12px;
     }
 
-    .chip,
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.26),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
+      font-weight:900;
+      letter-spacing:.08em;
+    }
+
+    .kicker {
+      display:block;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
+
+    .title {
+      display:block;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .nav,
+    .actions,
+    .route-grid,
+    .path-grid,
+    .quiet-grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .nav a,
     .button,
-    .mini-button {
-      min-height: 56px;
-      padding: 0 22px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 999px;
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03));
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.10),
-        0 10px 28px rgba(0,0,0,0.18);
-      color: #fff;
-      font-size: 14px;
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      transition:
-        transform 0.18s ease,
-        border-color 0.18s ease,
-        background 0.18s ease;
-    }
-
-    .chip:hover,
-    .chip:focus-visible,
-    .button:hover,
-    .button:focus-visible,
-    .mini-button:hover,
-    .mini-button:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(255,255,255,0.24);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.05));
-      outline: none;
-    }
-
-    .chip.active {
-      border-color: rgba(157,209,255,0.34);
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.10),
-        0 0 0 1px rgba(157,209,255,0.14),
-        0 10px 30px rgba(0,0,0,0.20);
-    }
-
-    .topbar .spacer {
-      min-width: 0;
-    }
-
-    .hero {
-      margin-top: 20px;
-      padding: 16px 6px 4px;
-      text-align: center;
-    }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      color: rgba(255,255,255,0.82);
-      font-size: 13px;
-      letter-spacing: 0.32em;
-      text-transform: uppercase;
-    }
-
-    .hero-title {
-      margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      font-size: clamp(46px, 8vw, 94px);
-      font-weight: 900;
-      line-height: 0.98;
-      letter-spacing: -0.05em;
-      color: #fff;
-    }
-
-    .hero-sub {
-      margin: 16px 0 0;
-      font-size: clamp(22px, 4vw, 40px);
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      color: #fff;
-    }
-
-    .hero-copy {
-      margin: 14px auto 0;
-      max-width: 920px;
-      font-size: clamp(16px, 2.2vw, 22px);
-      color: #dce8fb;
-    }
-
-    .hero-detail {
-      margin: 14px auto 0;
-      max-width: 980px;
-      font-size: 15px;
-      color: var(--muted);
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      background:
-        radial-gradient(circle at 20% 20%, rgba(157,209,255,0.08), transparent 28%),
-        radial-gradient(circle at 80% 24%, rgba(240,200,118,0.08), transparent 24%),
-        linear-gradient(180deg, var(--panel), var(--panel-soft));
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .main-grid {
-      margin-top: 22px;
-      display: grid;
-      grid-template-columns: 1.06fr 0.94fr;
-      gap: 18px;
-      align-items: start;
-    }
-
-    .world-panel,
-    .control-panel,
-    .section-panel {
-      padding: 22px;
-    }
-
-    .section-kicker {
-      margin: 0;
-      font-size: 12px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .section-title {
-      margin: 10px 0 0;
-      font-size: clamp(28px, 4vw, 54px);
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      line-height: 1.0;
-      color: #fff;
-      max-width: 11ch;
-    }
-
-    .section-copy {
-      margin: 12px 0 0;
-      font-size: 17px;
-      color: #e5eefc;
-      max-width: 38rem;
-    }
-
-    .section-detail {
-      margin: 14px 0 0;
-      font-size: 15px;
-      color: var(--muted);
-      max-width: 40rem;
-    }
-
-    .world-map {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: 1.1fr 1fr;
-      gap: 14px;
-      align-items: stretch;
-    }
-
-    .globe-frame {
-      min-height: 420px;
-      position: relative;
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(98,158,255,0.20), transparent 18%),
-        linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-      overflow: hidden;
-    }
-
-    .orbit,
-    .orbit-2,
-    .orbit-3 {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      border: 1px solid rgba(157,209,255,0.14);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-    }
-
-    .orbit { width: 66%; height: 66%; }
-    .orbit-2 { width: 86%; height: 86%; }
-    .orbit-3 { width: 112%; height: 112%; }
-
-    .globe {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 180px;
-      height: 180px;
-      transform: translate(-50%, -50%);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.95), rgba(157,209,255,0.60) 28%, rgba(78,111,195,0.34) 58%, rgba(0,0,0,0.0) 78%);
-      box-shadow:
-        0 0 60px rgba(157,209,255,0.28),
-        0 0 110px rgba(157,209,255,0.12);
-    }
-
-    .node {
-      position: absolute;
-      min-width: 118px;
-      padding: 14px 16px;
-      border-radius: 22px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.07), rgba(255,255,255,0.03));
-      text-align: center;
-      font-size: 13px;
-      font-weight: 800;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: #fff;
-      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
-    }
-
-    .node.top { left: 50%; top: 10%; transform: translateX(-50%); }
-    .node.right { right: 8%; top: 38%; }
-    .node.bottom { left: 50%; bottom: 10%; transform: translateX(-50%); }
-    .node.left { left: 8%; top: 38%; }
-
-    .world-list {
-      display: grid;
-      gap: 14px;
-    }
-
-    .mini-card {
-      padding: 18px;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.05), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-    }
-
-    .mini-card h3 {
-      margin: 0;
-      font-size: 24px;
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-    }
-
-    .mini-card p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 15px;
-    }
-
-    .mini-actions {
-      margin-top: 14px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .mini-button {
-      min-height: 40px;
-      padding-inline: 14px;
-      font-size: 12px;
-      flex: 0 0 auto;
-    }
-
-    .meta-strip {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .meta-box {
-      padding: 16px 18px;
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-    }
-
-    .meta-box .mini-label {
-      display: block;
-      font-size: 11px;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 8px;
-    }
-
-    .meta-box strong {
-      display: block;
-      font-size: 22px;
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: #fff;
-      line-height: 1.02;
-    }
-
-    .meta-box p {
-      margin: 10px 0 0;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .section-grid {
-      margin-top: 18px;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
     .route-card {
-      min-height: 220px;
-      padding: 20px;
-      border-radius: 26px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background:
-        radial-gradient(circle at 18% 18%, rgba(255,255,255,0.05), transparent 28%),
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
+      min-height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
+      text-align:center;
     }
 
-    .route-card h3 {
-      margin: 0;
-      font-size: 28px;
-      font-family: Inter, system-ui, sans-serif;
-      font-weight: 900;
-      letter-spacing: -0.03em;
-      color: #fff;
-    }
-
-    .route-card p {
-      margin: 0;
-      color: var(--muted);
-      flex: 1 1 auto;
-      font-size: 15px;
-    }
-
-    .button {
-      min-height: 46px;
-      padding-inline: 18px;
+    .nav a:focus-visible,
+    .button:focus-visible,
+    .route-card:focus-visible,
+    .path-card:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
     }
 
     .button.primary {
+      border-color:rgba(239,210,154,.38);
       background:
-        linear-gradient(135deg, rgba(240,200,118,0.20), rgba(255,255,255,0.06));
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(22px,4vw,46px);
+      margin-bottom:14px;
+      min-height:clamp(430px,56vw,640px);
+      display:grid;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(640px,82vw);
+      height:min(640px,82vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 24%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.08),transparent 70%);
+      filter:blur(5px);
+      z-index:-2;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(780px,92vw);
+      height:min(370px,44vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-9deg);
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:50%;
+      z-index:-1;
+      box-shadow:
+        0 0 38px rgba(142,197,255,.08),
+        inset 0 0 38px rgba(239,210,154,.06);
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--blue);
+      box-shadow:0 0 18px rgba(142,197,255,.50);
+    }
+
+    h1 {
+      margin:0;
+      color:#fff;
+      font-size:clamp(3.4rem,13vw,7.2rem);
+      line-height:.86;
+      letter-spacing:-.08em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.55rem,5vw,3.05rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
+    }
+
+    .hero p {
+      max-width:76ch;
+      margin-top:14px;
+      font-size:clamp(1rem,1.8vw,1.18rem);
+    }
+
+    .actions {
+      margin-top:10px;
+    }
+
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:16px;
+    }
+
+    .panel-head {
+      display:grid;
+      gap:8px;
+    }
+
+    .path-card,
+    .route-card,
+    .quiet-card {
+      border-radius:22px;
+      padding:16px;
+      min-height:136px;
+      align-items:flex-start;
+      justify-content:flex-start;
+      flex-direction:column;
+      text-align:left;
+    }
+
+    .path-card small,
+    .route-card small,
+    .quiet-card small {
+      display:block;
+      margin-bottom:8px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:.66rem;
+      font-weight:850;
+    }
+
+    .path-card strong,
+    .route-card strong,
+    .quiet-card strong {
+      display:block;
+      color:#fff;
+      font-size:1.08rem;
+      line-height:1.12;
+    }
+
+    .path-card p,
+    .quiet-card p {
+      margin-top:8px;
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .threshold { border-color:rgba(239,210,154,.25); }
+    .human { border-color:rgba(255,154,184,.25); }
+    .world { border-color:rgba(142,197,255,.25); }
+    .product { border-color:rgba(147,239,189,.25); }
+    .show { border-color:rgba(241,164,91,.25); }
+    .law { border-color:rgba(200,156,255,.25); }
+
+    .closing-read {
+      max-width:84ch;
+      padding:18px;
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:24px;
+      background:rgba(255,255,255,.035);
+      color:#dfe8ff;
+      font-size:1.04rem;
+      line-height:1.65;
     }
 
     .footer {
-      margin-top: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      padding: 4px 2px 0;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
     }
 
-    @media (max-width: 1160px) {
-      .main-grid,
-      .world-map {
-        grid-template-columns: 1fr;
-      }
-
-      .section-grid {
-        grid-template-columns: 1fr;
-      }
+    .footer a {
+      color:#d6e2ff;
     }
 
-    @media (max-width: 900px) {
+    @media (min-width:820px) {
       .topbar {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns:1fr auto;
+        align-items:center;
       }
 
-      .topbar .spacer {
-        display: none;
+      .nav {
+        grid-template-columns:repeat(6,auto);
       }
 
-      .meta-strip {
-        grid-template-columns: 1fr;
+      .actions {
+        grid-template-columns:repeat(4,auto);
+        justify-content:start;
+      }
+
+      .path-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+
+      .quiet-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
 
-    @media (max-width: 720px) {
-      .shell {
-        width: min(100% - 18px, var(--max));
+    @media (max-width:640px) {
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
       }
 
-      .chip,
-      .button,
-      .mini-button {
-        width: 100%;
+      .topbar,
+      .hero,
+      .panel {
+        border-radius:24px;
       }
 
-      .mini-actions {
-        flex-direction: column;
+      .nav,
+      .actions,
+      .path-grid,
+      .route-grid,
+      .quiet-grid {
+        grid-template-columns:1fr;
       }
 
-      .globe-frame {
-        min-height: 360px;
+      .hero {
+        min-height:520px;
       }
+    }
 
-      .node {
-        min-width: 96px;
-        padding: 12px 12px;
-        font-size: 11px;
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
       }
     }
   </style>
 </head>
+
 <body>
-  <div class="stars" aria-hidden="true"></div>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-page="explore"
+    data-surface="active-world-facing-explore"
+  >
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Door">
+        <span class="mark" aria-hidden="true">EX</span>
+        <span>
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Explore</strong>
+        </span>
+      </a>
 
-  <div class="shell">
-    <div class="topbar" aria-label="Explore controls">
-      <a class="chip" href="/door/index.html">DOOR</a>
-      <a class="chip active" href="/explore/index.html">EXPLORE</a>
-      <a class="chip" href="/products/">PRODUCTS</a>
-      <a class="chip" href="/prelude/">PRELUDE</a>
-      <div class="spacer"></div>
-    </div>
-
-    <header class="hero" aria-labelledby="explore-title">
-      <p class="eyebrow">Explore</p>
-      <h1 class="hero-title" id="explore-title">Enter the world beyond the threshold.</h1>
-      <div class="hero-sub">Atmosphere, chambers, routes, and depth.</div>
-      <div class="hero-copy">
-        Explore is no longer a legacy placeholder. It is the embodied world layer
-        after the door, where selection becomes movement and meaning becomes place.
-      </div>
-      <div class="hero-detail">
-        The door remains the threshold. Explore is the world-facing descent after
-        the threshold has resolved into globe-level entry.
-      </div>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/metaverse/">Metaverse</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
     </header>
 
-    <section class="main-grid">
-      <div class="panel world-panel">
-        <p class="section-kicker">World field</p>
-        <h2 class="section-title">A navigable embodied surface.</h2>
-        <p class="section-copy">
-          Explore is where the system stops feeling like a menu and starts feeling
-          like a world. Chambers, paths, and objects live here under one field.
+    <section class="hero" aria-labelledby="exploreTitle">
+      <div class="hero-copy">
+        <span class="pill">Choose the field</span>
+        <h1 id="exploreTitle">Explore</h1>
+        <h2>Find the surface that opens next.</h2>
+        <p>
+          Move through Diamond Gate Bridge by direction. Start with the threshold,
+          the house, the world, the products, the show, or the instruments.
         </p>
 
-        <div class="world-map" aria-label="Explore world map">
-          <div class="globe-frame">
-            <div class="orbit" aria-hidden="true"></div>
-            <div class="orbit-2" aria-hidden="true"></div>
-            <div class="orbit-3" aria-hidden="true"></div>
-            <div class="globe" aria-hidden="true"></div>
-
-            <div class="node top">Prelude</div>
-            <div class="node right">Products</div>
-            <div class="node bottom">House</div>
-            <div class="node left">Gauges</div>
-          </div>
-
-          <div class="world-list">
-            <article class="mini-card">
-              <h3>Threshold memory stays active</h3>
-              <p>
-                Explore is downstream of the door. It should still feel like it came
-                through a threshold, not like it spawned from nowhere.
-              </p>
-            </article>
-
-            <article class="mini-card">
-              <h3>Objects become places</h3>
-              <p>
-                Products, chambers, gauges, and routes are no longer just labels.
-                They are now positions within the world field.
-              </p>
-            </article>
-
-            <article class="mini-card">
-              <h3>World-facing motion</h3>
-              <p>
-                The visitor should feel motion, relation, and depth here instead of
-                the old legacy flatness.
-              </p>
-              <div class="mini-actions">
-                <a class="mini-button" href="/products/">Open Products</a>
-                <a class="mini-button" href="/door/index.html">Back to Door</a>
-              </div>
-            </article>
-          </div>
-        </div>
-
-        <div class="meta-strip">
-          <article class="meta-box">
-            <span class="mini-label">Role</span>
-            <strong>World layer</strong>
-            <p>The globe-facing field after threshold entry.</p>
-          </article>
-
-          <article class="meta-box">
-            <span class="mini-label">Continuity</span>
-            <strong>Door stays upstream</strong>
-            <p>Explore inherits threshold meaning instead of breaking from it.</p>
-          </article>
-
-          <article class="meta-box">
-            <span class="mini-label">Job</span>
-            <strong>Make depth navigable</strong>
-            <p>Chambers, paths, and object surfaces become spatially readable.</p>
-          </article>
+        <div class="actions">
+          <a class="button primary" href="/metaverse/">Metaverse</a>
+          <a class="button" href="/products/">Products</a>
+          <a class="button" href="/nine-summits/">Nine Summits</a>
+          <a class="button" href="/prelude/">Prelude</a>
         </div>
       </div>
-
-      <aside class="panel control-panel">
-        <p class="section-kicker">Explore posture</p>
-        <h2 class="section-title">Legacy removed.</h2>
-        <p class="section-copy">
-          The old legacy read is gone. This page now behaves like a compact world
-          dashboard instead of a placeholder.
-        </p>
-
-        <div class="section-grid" style="grid-template-columns:1fr;">
-          <article class="route-card">
-            <p class="section-kicker">Route 1</p>
-            <h3>Prelude</h3>
-            <p>The ordered entry path remains the first world-facing threshold route.</p>
-            <a class="button" href="/prelude/">Open Prelude</a>
-          </article>
-
-          <article class="route-card">
-            <p class="section-kicker">Route 2</p>
-            <h3>Products</h3>
-            <p>The object field where routed child surfaces open into their own depth.</p>
-            <a class="button primary" href="/products/">Open Products</a>
-          </article>
-
-          <article class="route-card">
-            <p class="section-kicker">Route 3</p>
-            <h3>Door</h3>
-            <p>Return to the multi-layer threshold without losing continuity.</p>
-            <a class="button" href="/door/index.html">Open Door</a>
-          </article>
-        </div>
-      </aside>
     </section>
 
-    <section class="panel section-panel" aria-labelledby="routes-title">
-      <p class="section-kicker">World routes</p>
-      <h2 class="section-title" id="routes-title">Compact onward motion.</h2>
-      <p class="section-copy">
-        Explore should route quickly while still feeling like a world. The next moves
-        are visible, spatial, and coherent.
+    <section class="panel" aria-labelledby="mainRoutesTitle">
+      <div class="panel-head">
+        <span class="pill">Main routes</span>
+        <h2 id="mainRoutesTitle">Pick the world-facing route.</h2>
+        <p>
+          Explore keeps the major surfaces close together so the visitor can move
+          without hunting for the next door.
+        </p>
+      </div>
+
+      <div class="path-grid">
+        <a class="path-card threshold" href="/prelude/">
+          <small>Threshold</small>
+          <strong>Prelude</strong>
+          <p>Take the opening read before choosing a deeper surface.</p>
+        </a>
+
+        <a class="path-card human" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits of Love</strong>
+          <p>Move toward the human-development path and Learn to Live to Love.</p>
+        </a>
+
+        <a class="path-card world" href="/metaverse/">
+          <small>World path</small>
+          <strong>Metaverse</strong>
+          <p>Enter the broader connected world surface.</p>
+        </a>
+
+        <a class="path-card product" href="/products/">
+          <small>Product path</small>
+          <strong>Products</strong>
+          <p>Open the current product chamber and official public products.</p>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="activeTitle">
+      <div class="panel-head">
+        <span class="pill">Active surfaces</span>
+        <h2 id="activeTitle">Move by what you came for.</h2>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/home/">
+          <small>Interior</small>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/big-laugh/upper-room/">
+          <small>Show path</small>
+          <strong>The Upper Room</strong>
+        </a>
+
+        <a class="route-card" href="/products/on-your-side-ai/">
+          <small>Product</small>
+          <strong>AI On Your Side</strong>
+        </a>
+
+        <a class="route-card" href="/products/five-flags/">
+          <small>Family game</small>
+          <strong>Five Flags: What’s My Scene?</strong>
+        </a>
+
+        <a class="route-card" href="/products/nutrition/">
+          <small>Product</small>
+          <strong>Baseline Nutrition Systems</strong>
+        </a>
+
+        <a class="route-card" href="/products/ssg/">
+          <small>Product</small>
+          <strong>Syntax Geometry</strong>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <small>Inspection</small>
+          <strong>Gauges</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="guideTitle">
+      <div class="panel-head">
+        <span class="pill">Quick guide</span>
+        <h2 id="guideTitle">The next surface should match the reason.</h2>
+      </div>
+
+      <div class="quiet-grid">
+        <article class="quiet-card">
+          <small>Need orientation?</small>
+          <strong>Start with Prelude.</strong>
+          <p>Use the threshold when the first step needs to be clean.</p>
+        </article>
+
+        <article class="quiet-card">
+          <small>Need structure?</small>
+          <strong>Open Metaverse.</strong>
+          <p>Use the world surface when the broader object matters.</p>
+        </article>
+
+        <article class="quiet-card">
+          <small>Need output?</small>
+          <strong>Open Products.</strong>
+          <p>Use the product chamber when you want what is being built.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="closingTitle">
+      <div class="panel-head">
+        <span class="pill">Explore read</span>
+        <h2 id="closingTitle">The map is useful only when it moves.</h2>
+      </div>
+
+      <p class="closing-read">
+        Choose the next surface by purpose. The deeper path can open after the first
+        route is chosen.
       </p>
+    </section>
 
-      <div class="section-grid">
-        <article class="route-card">
-          <p class="section-kicker">Meaning path</p>
-          <h3>Prelude</h3>
-          <p>The threshold world where ascent begins under ordered meaning.</p>
-          <a class="button" href="/prelude/">Enter Prelude</a>
-        </article>
+    <section class="panel" aria-labelledby="backlinksTitle">
+      <div class="panel-head">
+        <span class="pill">Backlinks</span>
+        <h2 id="backlinksTitle">Return without losing the route.</h2>
+      </div>
 
-        <article class="route-card">
-          <p class="section-kicker">Object path</p>
-          <h3>Products</h3>
-          <p>The routed object surface with AAI, Nine Summits, and child extensions.</p>
-          <a class="button primary" href="/products/">Enter Products</a>
-        </article>
+      <div class="route-grid">
+        <a class="route-card" href="/">
+          <small>Access</small>
+          <strong>Door</strong>
+        </a>
 
-        <article class="route-card">
-          <p class="section-kicker">Calibration path</p>
-          <h3>Gauges</h3>
-          <p>The measurement and structural read side of the wider field.</p>
-          <a class="button" href="/gauges/">Enter Gauges</a>
-        </article>
+        <a class="route-card" href="/home/">
+          <small>Interior</small>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/prelude/">
+          <small>Threshold</small>
+          <strong>Prelude</strong>
+        </a>
+
+        <a class="route-card" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Result: PAGE=EXPLORE | STATUS=LEGACY_REMOVED | ROLE=WORLD_LAYER</span>
-      <span><a href="/door/index.html">Return to door</a></span>
+      <span>Explore · Active World-Facing Route Surface</span>
+      <span><a href="/">Door</a> · <a href="/home/">Home</a> · <a href="/products/">Products</a></span>
     </footer>
-  </div>
+  </main>
 </body>
 </html>

@@ -1,241 +1,137 @@
-/* TNT — /gauges/gauges-runtime.js
-   GAUGES · SUN MATERIAL RUNTIME v1
-   SCOPE=SUN_ONLY
-   PURPOSE=Upgrade existing Sun from flat gradient to coded material body.
-   KEEP=layout, orbit system, scale model, controls, projection
-   FORBIDDEN=GraphicBox, image generation, static image
+/* TNT — GAUGES SUN MATERIAL (BOUND TO #universeScene)
+   PURPOSE=Attach sun material to runtime-generated Sun inside #universeScene
+   KEEP=ALL EXISTING SYSTEMS
 */
 
 (function () {
   "use strict";
 
-  function ready(fn) {
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", fn, { once: true });
-    } else {
-      fn();
-    }
-  }
+  function inject() {
+    if (document.getElementById("dg-sun-style")) return;
 
-  function injectSunMaterialStyles() {
-    var prior = document.getElementById("gauges-sun-material-runtime-style");
-    if (prior) prior.remove();
-
-    var style = document.createElement("style");
-    style.id = "gauges-sun-material-runtime-style";
+    const style = document.createElement("style");
+    style.id = "dg-sun-style";
 
     style.textContent = `
-      .solar-sun,
-      .body.sun {
-        overflow: visible !important;
-        isolation: isolate !important;
-        background:
-          radial-gradient(circle at 62% 36%,
-            #fffbd2 0%,
-            #fff1a8 7%,
-            #ffd24c 22%,
-            #ff9a1f 46%,
-            #f45a12 68%,
-            #8f1806 100%) !important;
-        box-shadow:
-          0 0 36px rgba(255,235,150,.95),
-          0 0 96px rgba(255,132,32,.78),
-          0 0 190px rgba(255,70,18,.44),
-          0 0 290px rgba(255,48,10,.22) !important;
+      .dg-sun {
+        position: relative !important;
+        isolation: isolate;
+        overflow: visible;
       }
 
-      .solar-sun::before,
-      .body.sun::before {
+      .dg-sun::before {
         content: "";
         position: absolute;
-        inset: -26%;
+        inset: -28%;
         border-radius: 50%;
-        pointer-events: none;
         background:
-          radial-gradient(circle at 52% 48%,
-            rgba(255,238,150,.46),
-            rgba(255,126,34,.22) 42%,
-            transparent 70%),
-          radial-gradient(circle at 40% 56%,
-            rgba(255,80,16,.24),
-            transparent 54%);
-        filter: blur(12px);
-        z-index: -2;
+          radial-gradient(circle,
+            rgba(255,220,120,.45),
+            rgba(255,120,40,.2),
+            transparent 70%);
+        filter: blur(14px);
+        z-index: -1;
       }
 
-      .solar-sun::after,
-      .body.sun::after {
+      .dg-sun::after {
         content: "";
         position: absolute;
         inset: 0;
         border-radius: 50%;
-        pointer-events: none;
-        z-index: 4;
-        opacity: .72;
-        mix-blend-mode: screen;
         background:
-          repeating-radial-gradient(circle at 47% 50%,
-            rgba(255,255,255,.10) 0 2px,
-            rgba(255,206,82,.06) 2px 9px,
-            transparent 9px 17px),
-          radial-gradient(circle at 34% 32%,
-            rgba(255,255,255,.38),
-            transparent 12%),
-          radial-gradient(circle at 58% 64%,
-            rgba(255,105,20,.20),
-            transparent 28%),
-          linear-gradient(110deg,
-            rgba(255,255,255,.16),
-            transparent 34%,
-            rgba(120,20,0,.22) 78%);
+          repeating-radial-gradient(circle,
+            rgba(255,255,255,.06) 0 2px,
+            transparent 2px 10px),
+          radial-gradient(circle at 35% 30%,
+            rgba(255,255,255,.25),
+            transparent 15%);
+        mix-blend-mode: screen;
+        opacity: .7;
       }
 
-      .sun-material-layer {
+      .dg-sun-layer {
         position: absolute;
         inset: 0;
         border-radius: 50%;
         pointer-events: none;
       }
 
-      .sun-material-granulation {
-        z-index: 2;
-        opacity: .34;
-        mix-blend-mode: overlay;
+      .dg-sun-turbulence {
         background:
-          radial-gradient(circle at 24% 32%, rgba(255,255,255,.20) 0 2%, transparent 3%),
-          radial-gradient(circle at 38% 58%, rgba(255,255,255,.16) 0 2%, transparent 3%),
-          radial-gradient(circle at 66% 44%, rgba(255,210,80,.20) 0 2%, transparent 3%),
-          radial-gradient(circle at 72% 70%, rgba(255,95,20,.16) 0 3%, transparent 4%),
-          repeating-radial-gradient(circle at 50% 50%,
-            rgba(255,255,255,.08) 0 1px,
-            transparent 1px 8px);
-        filter: blur(.2px);
-      }
-
-      .sun-material-turbulence {
-        z-index: 3;
-        opacity: .42;
+          conic-gradient(from 0deg,
+            rgba(255,255,255,.08),
+            rgba(255,200,80,.18),
+            rgba(255,90,20,.12),
+            transparent 40%);
         mix-blend-mode: screen;
-        background:
-          conic-gradient(from 18deg at 52% 50%,
-            rgba(255,255,255,.10),
-            rgba(255,193,60,.18),
-            rgba(255,88,16,.12),
-            transparent 34%,
-            rgba(255,234,120,.18),
-            rgba(255,80,12,.12),
-            rgba(255,255,255,.08)),
-          repeating-conic-gradient(from 0deg at 50% 50%,
-            rgba(255,255,255,.06) 0deg 3deg,
-            transparent 3deg 9deg);
-        animation: sunMaterialTurn 42s linear infinite;
+        animation: dgSunSpin 38s linear infinite;
       }
 
-      .sun-material-limb {
-        z-index: 5;
-        opacity: .90;
+      .dg-sun-limb {
         background:
-          radial-gradient(circle at 42% 38%,
-            transparent 0%,
-            transparent 48%,
-            rgba(255,140,26,.22) 64%,
-            rgba(96,12,2,.52) 100%);
+          radial-gradient(circle,
+            transparent 50%,
+            rgba(0,0,0,.85) 100%);
         mix-blend-mode: multiply;
       }
 
-      .sun-material-corona {
-        position: absolute;
-        inset: -18%;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: -1;
-        opacity: .72;
-        background:
-          radial-gradient(circle at 50% 50%,
-            rgba(255,226,120,.34),
-            rgba(255,120,32,.18) 46%,
-            transparent 72%),
-          conic-gradient(from 0deg at 50% 50%,
-            transparent,
-            rgba(255,180,80,.16),
-            transparent 18%,
-            rgba(255,90,18,.14),
-            transparent 38%,
-            rgba(255,225,130,.13),
-            transparent 62%,
-            rgba(255,90,20,.12),
-            transparent);
-        filter: blur(7px);
-        animation: sunCoronaPulse 7s ease-in-out infinite;
-      }
-
-      @keyframes sunMaterialTurn {
-        0% { transform: rotate(0deg) scale(1.01); }
-        100% { transform: rotate(360deg) scale(1.01); }
-      }
-
-      @keyframes sunCoronaPulse {
-        0%, 100% { opacity: .58; transform: scale(1); }
-        50% { opacity: .86; transform: scale(1.035); }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        .sun-material-turbulence,
-        .sun-material-corona {
-          animation: none !important;
-        }
+      @keyframes dgSunSpin {
+        to { transform: rotate(360deg); }
       }
     `;
 
     document.head.appendChild(style);
   }
 
-  function addSunLayers() {
-    var suns = document.querySelectorAll(".solar-sun, .body.sun");
+  function findSun(scene) {
+    // Heuristic: largest glowing body near left side
+    const candidates = [...scene.children];
 
-    suns.forEach(function (sun) {
-      if (sun.dataset.sunMaterialRuntime === "active") return;
-      sun.dataset.sunMaterialRuntime = "active";
+    return candidates
+      .filter(el => {
+        const rect = el.getBoundingClientRect();
+        return rect.width > 40 && rect.height > 40;
+      })
+      .sort((a, b) => b.getBoundingClientRect().width - a.getBoundingClientRect().width)[0];
+  }
 
-      var corona = document.createElement("span");
-      corona.className = "sun-material-corona";
+  function attachSunMaterial(sun) {
+    if (!sun || sun.dataset.dgSun === "1") return;
 
-      var granulation = document.createElement("span");
-      granulation.className = "sun-material-layer sun-material-granulation";
+    sun.dataset.dgSun = "1";
+    sun.classList.add("dg-sun");
 
-      var turbulence = document.createElement("span");
-      turbulence.className = "sun-material-layer sun-material-turbulence";
+    const turbulence = document.createElement("div");
+    turbulence.className = "dg-sun-layer dg-sun-turbulence";
 
-      var limb = document.createElement("span");
-      limb.className = "sun-material-layer sun-material-limb";
+    const limb = document.createElement("div");
+    limb.className = "dg-sun-layer dg-sun-limb";
 
-      sun.appendChild(corona);
-      sun.appendChild(granulation);
-      sun.appendChild(turbulence);
-      sun.appendChild(limb);
-    });
+    sun.appendChild(turbulence);
+    sun.appendChild(limb);
   }
 
   function boot() {
-    injectSunMaterialStyles();
-    addSunLayers();
+    inject();
 
-    var observer = new MutationObserver(function () {
-      addSunLayers();
-    });
+    const scene = document.getElementById("universeScene");
+    if (!scene) return;
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+    function apply() {
+      const sun = findSun(scene);
+      attachSunMaterial(sun);
+    }
 
-    window.DGBGaugesSunMaterialRuntime = Object.freeze({
-      version: "GAUGES_SUN_MATERIAL_RUNTIME_v1",
-      scope: "SUN_ONLY",
-      forbidden: ["GraphicBox", "image_generation", "static_image"],
-      rule: "Upgrade material detail without changing layout, orbit system, scale model, controls, or projection."
-    });
+    apply();
+
+    const observer = new MutationObserver(apply);
+    observer.observe(scene, { childList: true, subtree: true });
   }
 
-  ready(boot);
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
+  } else {
+    boot();
+  }
+
 })();

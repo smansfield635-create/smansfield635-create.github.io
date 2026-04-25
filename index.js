@@ -1,7 +1,8 @@
 (() => {
   "use strict";
 
-  const STYLE_ID = "dgb-root-home-axis-spin-earth-v1";
+  const STYLE_ID = "dgb-root-door-axis-spin-earth-v3";
+  const SCRIPT_VERSION = "root-door-axis-spin-earth-v3";
 
   const EARTH_TEXTURE_URL =
     "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg";
@@ -16,14 +17,12 @@
         --bg:#020610;
         --panel:rgba(7,14,28,.92);
         --line:rgba(170,198,255,.18);
-        --line-strong:rgba(224,238,255,.34);
         --text:#eef4ff;
         --muted:#aab8d8;
         --soft:#d7e2ff;
         --gold:#efd29a;
         --blue:#8ec5ff;
         --green:#92e7ba;
-        --teal:#66f0d1;
         --shadow:0 24px 80px rgba(0,0,0,.50);
         --max:1120px;
       }
@@ -317,12 +316,12 @@
         pointer-events:none;
       }
 
-      .home-orbit.one {
+      .home-orbit-one {
         transform:rotate(43deg) scaleX(.35);
         animation:orbitOne 18s linear infinite;
       }
 
-      .home-orbit.two {
+      .home-orbit-two {
         transform:rotate(-43deg) scaleX(.35);
         border-color:rgba(142,197,255,.42);
         animation:orbitTwo 21s linear infinite reverse;
@@ -770,12 +769,12 @@
     document.head.appendChild(style);
   }
 
-  function createSvgElement(className, viewBox = "0 0 240 240") {
+  function createSvgElement(className) {
     const ns = "http://www.w3.org/2000/svg";
     const svg = document.createElementNS(ns, "svg");
 
     svg.setAttribute("class", className);
-    svg.setAttribute("viewBox", viewBox);
+    svg.setAttribute("viewBox", "0 0 240 240");
     svg.setAttribute("aria-hidden", "true");
     svg.setAttribute("focusable", "false");
 
@@ -787,12 +786,12 @@
 
     svg.innerHTML = `
       <defs>
-        <clipPath id="earthHomeAxisSpinGridClipDgbV1">
+        <clipPath id="earthHomeGridClipV3">
           <circle cx="120" cy="120" r="108"></circle>
         </clipPath>
       </defs>
 
-      <g clip-path="url(#earthHomeAxisSpinGridClipDgbV1)">
+      <g clip-path="url(#earthHomeGridClipV3)">
         <path class="earth-home-globe__grid-line" d="M12 120 H228"></path>
         <path class="earth-home-globe__grid-line" d="M120 12 V228"></path>
         <ellipse class="earth-home-globe__grid-line" cx="120" cy="120" rx="108" ry="34"></ellipse>
@@ -874,14 +873,16 @@
   }
 
   function mountHomeEarthGlobe(root) {
-    const core = root.querySelector(".home-core");
+    const core =
+      root.querySelector("#homeEarthCore") ||
+      root.querySelector(".home-core");
+
     if (!core) return;
 
     core.replaceChildren(createHomeEarthGlobe());
-
     core.setAttribute("role", "img");
     core.setAttribute("aria-label", "Planet Earth Demo Universe");
-    core.setAttribute("data-home-earth-core", "true");
+    core.setAttribute("data-home-earth-core", "mounted");
     core.setAttribute("data-home-demo-universe-core", "axis-spin-earth");
   }
 
@@ -895,7 +896,7 @@
     root.setAttribute("data-home-not-gauges", "true");
     root.setAttribute("data-home-earth-read", "true");
     root.setAttribute("data-home-earth-standard", "axis-spin-projection-realism");
-    root.setAttribute("data-root-script-version", "home-axis-spin-earth-v1");
+    root.setAttribute("data-root-script-version", SCRIPT_VERSION);
   }
 
   function mount() {

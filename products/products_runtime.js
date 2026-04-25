@@ -3,16 +3,16 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-clean-second-generation-runtime-v2-style";
-  const CONTRACT = "PRODUCTS_RUNTIME_CLEAN_SECOND_GENERATION_CHAMBER_v2";
+  const STYLE_ID = "products-visual-first-runtime-v3-style";
+  const CONTRACT = "PRODUCTS_RUNTIME_VISUAL_FIRST_CHAMBER_v3";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
   const seasons = [
-    { key: "winter", label: "Winter", squad: "North", short: "Boundary", color: "winter" },
-    { key: "spring", label: "Spring", squad: "South", short: "Continuity", color: "spring" },
-    { key: "summer", label: "Summer", squad: "East", short: "Signal", color: "summer" },
-    { key: "fall", label: "Fall", squad: "West", short: "Pressure", color: "fall" }
+    { key: "winter", label: "Winter", squad: "North", short: "Boundary" },
+    { key: "spring", label: "Spring", squad: "South", short: "Continuity" },
+    { key: "summer", label: "Summer", squad: "East", short: "Signal" },
+    { key: "fall", label: "Fall", squad: "West", short: "Pressure" }
   ];
 
   const productLines = [
@@ -122,18 +122,18 @@
         left:50%;
         top:5%;
         z-index:12;
-        width:min(560px,82%);
+        width:min(360px,70%);
         transform:translateX(-50%);
-        padding:12px 15px;
+        padding:10px 13px;
         border:1px solid var(--products-line);
         border-radius:999px;
-        background:rgba(5,12,26,.84);
+        background:rgba(5,12,26,.78);
         text-align:center;
         color:#e8f0ff;
         text-transform:uppercase;
         letter-spacing:.12em;
-        line-height:1.35;
-        font-size:.66rem;
+        line-height:1.25;
+        font-size:.58rem;
         font-weight:850;
         backdrop-filter:blur(12px);
       }
@@ -143,18 +143,18 @@
         left:50%;
         bottom:5%;
         z-index:12;
-        width:min(660px,84%);
+        width:min(430px,76%);
         transform:translateX(-50%);
-        padding:12px 15px;
+        padding:10px 13px;
         border:1px solid var(--products-line);
         border-radius:999px;
-        background:rgba(5,12,26,.84);
+        background:rgba(5,12,26,.78);
         text-align:center;
         color:#dce7ff;
         text-transform:uppercase;
         letter-spacing:.11em;
-        line-height:1.35;
-        font-size:.64rem;
+        line-height:1.25;
+        font-size:.56rem;
         font-weight:850;
         backdrop-filter:blur(12px);
       }
@@ -187,8 +187,8 @@
         left:50%;
         top:50%;
         z-index:8;
-        width:205px;
-        height:205px;
+        width:215px;
+        height:215px;
         transform:translate(-50%,-50%);
         display:grid;
         place-items:center;
@@ -211,60 +211,68 @@
       .products-season-lobe {
         position:absolute;
         z-index:10;
-        width:min(202px,29vw);
-        min-height:104px;
-        padding:14px;
+        width:min(150px,25vw);
+        min-height:74px;
+        padding:11px 12px;
         border:1px solid var(--products-line);
-        border-radius:24px;
-        background:rgba(5,12,26,.80);
+        border-radius:22px;
+        background:rgba(5,12,26,.74);
         backdrop-filter:blur(12px);
+        display:grid;
+        align-content:center;
+        gap:3px;
       }
 
       .products-season-lobe small {
         display:block;
-        margin-bottom:6px;
+        margin:0;
         color:var(--products-muted);
         text-transform:uppercase;
         letter-spacing:.12em;
-        font-size:.62rem;
+        font-size:.54rem;
         font-weight:850;
+        line-height:1.15;
       }
 
       .products-season-lobe strong {
         display:block;
-        margin-bottom:6px;
+        margin:0;
         color:#fff;
-        font-size:1.02rem;
+        font-size:.98rem;
+        line-height:1.05;
       }
 
       .products-season-lobe p {
         margin:0;
         color:var(--products-muted);
-        font-size:.82rem;
-        line-height:1.38;
+        font-size:.66rem;
+        line-height:1.18;
+        text-transform:uppercase;
+        letter-spacing:.08em;
+        font-weight:800;
       }
 
       .products-season-lobe.winter {
         left:8%;
-        top:17%;
+        top:18%;
         border-color:rgba(207,231,255,.38);
       }
 
       .products-season-lobe.spring {
         right:8%;
-        bottom:15%;
+        bottom:16%;
         border-color:rgba(147,239,189,.38);
       }
 
       .products-season-lobe.summer {
         right:8%;
-        top:17%;
+        top:18%;
         border-color:rgba(145,201,255,.38);
       }
 
       .products-season-lobe.fall {
         left:8%;
-        bottom:15%;
+        bottom:16%;
         border-color:rgba(241,164,91,.38);
       }
 
@@ -392,43 +400,51 @@
         }
 
         .products-season-lobe {
-          width:min(182px,36vw);
-          padding:12px;
+          width:min(136px,31vw);
+          min-height:66px;
+          padding:10px;
         }
 
-        .products-season-lobe.winter { left:5%; top:16%; }
-        .products-season-lobe.summer { right:5%; top:16%; }
-        .products-season-lobe.fall { left:5%; bottom:13%; }
-        .products-season-lobe.spring { right:5%; bottom:13%; }
+        .products-season-lobe.winter { left:5%; top:17%; }
+        .products-season-lobe.summer { right:5%; top:17%; }
+        .products-season-lobe.fall { left:5%; bottom:15%; }
+        .products-season-lobe.spring { right:5%; bottom:15%; }
       }
 
       @media (max-width:640px) {
         .products-molecule-stage {
-          min-height:710px;
+          min-height:680px;
         }
 
         .products-stage-title,
         .products-stage-footer {
           border-radius:22px;
-          font-size:.58rem;
+          font-size:.50rem;
+          width:min(360px,72%);
         }
 
         .products-earth-throat {
-          width:172px;
-          height:172px;
+          width:178px;
+          height:178px;
         }
 
         .products-season-lobe {
-          width:min(152px,42vw);
-          min-height:92px;
+          width:min(118px,34vw);
+          min-height:58px;
+          padding:9px;
+          border-radius:18px;
+        }
+
+        .products-season-lobe small {
+          font-size:.46rem;
         }
 
         .products-season-lobe strong {
-          font-size:.9rem;
+          font-size:.78rem;
         }
 
         .products-season-lobe p {
-          font-size:.74rem;
+          font-size:.52rem;
         }
 
         .products-chip-grid {
@@ -489,7 +505,7 @@
     return seasons
       .map((season) => `
         <article class="products-season-lobe ${season.key}">
-          <small>${season.squad} Squad</small>
+          <small>${season.squad}</small>
           <strong>${season.label}</strong>
           <p>${season.short}</p>
         </article>
@@ -513,9 +529,7 @@
       <section class="products-runtime-shell" data-products-runtime-root="true">
         <section class="products-runtime-window" aria-label="Four-season molecular product chamber">
           <div class="products-molecule-stage">
-            <div class="products-stage-title">
-              Four seasons · thirty-two points · shared Earth throat
-            </div>
+            <div class="products-stage-title">Four seasons · one product engine</div>
 
             <span class="products-orbit winter-spring" aria-hidden="true"></span>
             <span class="products-orbit summer-fall" aria-hidden="true"></span>
@@ -530,17 +544,14 @@
             ${buildMoleculePoints()}
             ${buildSeasonLobes()}
 
-            <div class="products-stage-footer">
-              Two crossing loops. One center. Four product families.
-            </div>
+            <div class="products-stage-footer">Two loops · one center · four families</div>
           </div>
         </section>
 
         <section class="products-runtime-panel">
           <h3>Product families.</h3>
           <p>
-            The chamber holds the visual structure first. Product detail expands from
-            the four directional families without crowding the page.
+            Product detail expands from the four directional families without crowding the chamber.
           </p>
 
           <div class="products-chip-grid">
@@ -551,7 +562,7 @@
             <span>Bridge loaded</span>
             <span>Runtime mounted</span>
             <span>Shared Earth online</span>
-            <span>Products chamber ready</span>
+            <span>Products ready</span>
           </div>
         </section>
       </section>
@@ -671,7 +682,7 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-clean-runtime-v2");
+      target.setAttribute("data-products-runtime-version", "products-visual-first-runtime-v3");
 
       target.innerHTML = buildHTML();
 

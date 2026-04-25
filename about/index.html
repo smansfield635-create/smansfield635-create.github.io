@@ -1,723 +1,917 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-about-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>About · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="About Diamond Gate Bridge: what it is, how to use it, and what is live now."
+    content="Diamond Gate Bridge About Chamber: the self-contained Generation 2 identity surface with V9 compact rotating diamond controls and readable public context."
   />
+
   <style>
-    :root{
-      --bg:#040814;
-      --bg2:#091327;
-      --panel:rgba(8,14,28,.72);
-      --panel-strong:rgba(10,18,34,.86);
-      --line:rgba(164,188,255,.18);
-      --line-strong:rgba(210,223,255,.34);
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --line-strong:rgba(142,197,255,.36);
       --text:#eef4ff;
-      --muted:#9aabd0;
+      --muted:#aab8d8;
       --gold:#efd29a;
-      --blue:#91c7ff;
-      --mint:#99e5b6;
-      --rose:#f0bacb;
-      --shadow:0 24px 80px rgba(0,0,0,.46);
-      --radius:26px;
-      --max:1160px;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --purple:#c89cff;
+      --rose:#ff9ab8;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
+      --diamond-spin:18s;
+      --diamond-float:7s;
+      --diamond-breathe:5.8s;
     }
 
-    *{box-sizing:border-box}
-    html,body{min-height:100%}
-    body{
+    * {
+      box-sizing:border-box;
+    }
+
+    html,
+    body {
       margin:0;
+      min-height:100%;
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
-        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
-        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
-        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+        radial-gradient(circle at 50% 4%,rgba(142,197,255,.18),transparent 22%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
 
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.18;
+      opacity:.22;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
-      background-size:260px 260px, 340px 340px, 420px 420px, 560px 560px;
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    .page{
-      width:min(var(--max), calc(100vw - 24px));
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
-      padding:18px 0 40px;
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
     }
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      padding:14px 16px;
+    .topbar,
+    .hero,
+    .panel,
+    .read-card,
+    .route-card,
+    .identity-card,
+    .signal-card,
+    .status-strip {
       border:1px solid var(--line);
-      border-radius:20px;
-      background:rgba(7,13,26,.7);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
     }
 
-    .brand{
+    .topbar {
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:14px;
+    }
+
+    .brand {
       display:flex;
       align-items:center;
       gap:12px;
       min-width:0;
     }
 
-    .brand-mark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
+    .mark {
+      width:50px;
+      height:50px;
+      border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
-      color:#f4f8ff;
-      font-weight:800;
+      border:1px solid var(--line-strong);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.36),transparent 44%),
+        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
+      color:#fff;
+      font-weight:950;
       letter-spacing:.08em;
-      box-shadow:inset 0 0 26px rgba(126,160,255,.1);
-      flex:none;
+      flex:0 0 auto;
+      box-shadow:0 0 22px rgba(142,197,255,.16);
     }
 
-    .brand-copy{min-width:0}
-    .brand-kicker{
-      margin:0 0 4px;
+    .brand-text {
+      display:grid;
+      gap:3px;
+    }
+
+    .kicker {
+      display:block;
+      margin:0;
       color:#c8d7ff;
       font-size:.72rem;
-      letter-spacing:.16em;
       text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:850;
     }
 
-    .brand-title{
+    .title {
+      display:block;
       margin:0;
-      font-size:1.05rem;
-      font-weight:700;
-      white-space:nowrap;
-      overflow:hidden;
-      text-overflow:ellipsis;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
     }
 
-    .topnav{
-      display:flex;
-      flex-wrap:wrap;
+    .nav,
+    .route-grid,
+    .read-grid,
+    .signal-grid,
+    .identity-grid {
+      display:grid;
       gap:10px;
-      justify-content:flex-end;
     }
 
-    .nav-link{
-      display:inline-flex;
+    .nav,
+    .route-grid {
+      perspective:1000px;
       align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:0 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:var(--text);
-      text-decoration:none;
-      font-weight:700;
-      font-size:.92rem;
-      background:rgba(255,255,255,.03);
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-      white-space:nowrap;
+      justify-items:center;
     }
 
-    .nav-link:hover,
-    .nav-link:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
+    .nav a,
+    .route-card {
+      position:relative;
+      isolation:isolate;
+      width:min(100%,94px);
+      aspect-ratio:1 / 1;
+      display:grid;
+      place-items:center;
+      padding:0;
+      color:#e7eeff;
+      font-size:.70rem;
+      line-height:1.02;
+      font-weight:900;
+      text-align:center;
+      transform-style:preserve-3d;
+      transition:transform 420ms ease, filter 420ms ease;
+      will-change:transform,filter;
+    }
+
+    .route-card {
+      width:min(100%,150px);
+      font-size:.80rem;
+    }
+
+    .nav a::before,
+    .route-card::before {
+      content:"";
+      position:absolute;
+      inset:10%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(170,198,255,.24);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.28),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+        linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+      box-shadow:
+        0 0 30px rgba(142,197,255,.18),
+        inset 0 0 26px rgba(255,255,255,.035);
+      z-index:-1;
+      transform-origin:50% 50%;
+      animation:
+        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
+        diamondPulse var(--diamond-breathe) ease-in-out infinite;
+    }
+
+    .nav a::after,
+    .route-card::after {
+      content:"";
+      position:absolute;
+      inset:25%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%),
+        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+      opacity:.72;
+      z-index:-1;
+      transform-origin:50% 50%;
+      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
+    }
+
+    .nav a.featured {
+      color:#fff8ea;
+    }
+
+    .nav a.featured::before {
+      border-color:rgba(239,210,154,.48);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.36),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(142,197,255,.14),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
+      box-shadow:
+        0 0 40px rgba(239,210,154,.26),
+        inset 0 0 30px rgba(255,255,255,.04);
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .route-card:hover,
+    .route-card:focus-visible {
+      transform:translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045);
+      filter:brightness(1.16) saturate(1.08);
       outline:none;
     }
 
-    .hero{
-      margin-top:16px;
-      border:1px solid var(--line);
+    .hero {
       border-radius:34px;
-      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
-      box-shadow:var(--shadow);
+      padding:clamp(24px,5vw,52px);
+      margin-bottom:14px;
+      min-height:clamp(400px,54vw,640px);
+      display:grid;
+      align-items:center;
       overflow:hidden;
       position:relative;
+      isolation:isolate;
     }
 
-    .hero::after{
+    .hero::before {
       content:"";
       position:absolute;
-      inset:0;
-      pointer-events:none;
+      width:min(800px,94vw);
+      height:min(800px,94vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
       background:
-        radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
-      mix-blend-mode:screen;
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.14),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 70%);
+      filter:blur(5px);
+      z-index:-3;
     }
 
-    .hero-grid{
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(920px,98vw);
+      height:min(440px,52vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-9deg);
+      border:1px solid rgba(142,197,255,.24);
+      border-radius:50%;
+      z-index:-2;
+      box-shadow:
+        0 0 38px rgba(142,197,255,.08),
+        inset 0 0 38px rgba(239,210,154,.06);
+    }
+
+    .identity-diamond {
+      position:absolute;
+      right:clamp(20px,6vw,90px);
+      top:50%;
+      width:min(280px,33vw);
+      height:min(280px,33vw);
+      transform:translateY(-50%) rotate(45deg);
+      border:1px solid rgba(142,197,255,.36);
+      border-radius:40px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 38%),
+        radial-gradient(circle at 50% 72%,rgba(239,210,154,.14),transparent 34%),
+        linear-gradient(180deg,rgba(26,43,78,.58),rgba(2,6,14,.88));
+      box-shadow:
+        inset 0 0 46px rgba(142,197,255,.07),
+        0 0 78px rgba(239,210,154,.10);
+      opacity:.84;
+      z-index:-1;
+      animation:slowTurn 34s linear infinite;
+    }
+
+    .identity-diamond::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(170,198,255,.18);
+      border-radius:28px;
+    }
+
+    .identity-diamond::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:var(--blue);
+      box-shadow:0 0 22px rgba(142,197,255,.70);
+    }
+
+    .hero-copy {
       display:grid;
-      grid-template-columns:minmax(0, 1.05fr) minmax(320px, .95fr);
-      gap:20px;
-      padding:24px 20px 20px;
-      align-items:start;
-    }
-
-    .hero-copy{
-      min-width:0;
+      gap:14px;
+      max-width:760px;
       position:relative;
-      z-index:1;
+      z-index:2;
     }
 
-    .hero-tag{
+    .pill {
       display:inline-flex;
+      width:fit-content;
       align-items:center;
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.035);
       color:#d8e3ff;
       text-transform:uppercase;
       letter-spacing:.14em;
-      font-size:.72rem;
-      margin-bottom:12px;
+      font-size:.70rem;
+      font-weight:850;
     }
 
-    .hero-tag::before{
+    .pill::before {
       content:"";
       width:9px;
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:#dce7ff;
-      box-shadow:0 0 16px rgba(220,231,255,.52);
+      background:var(--blue);
+      box-shadow:0 0 18px rgba(142,197,255,.50);
     }
 
-    .hero h1{
-      margin:0 0 10px;
-      font-size:clamp(2.2rem, 4.8vw, 4rem);
-      line-height:.96;
-      letter-spacing:-.05em;
-      max-width:9ch;
+    h1 {
+      margin:0;
+      color:#fff;
+      font-size:clamp(3.2rem,11vw,7.4rem);
+      line-height:.84;
+      letter-spacing:-.085em;
     }
 
-    .hero h1 .accent{color:var(--gold)}
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.55rem,5vw,3rem);
+      line-height:1;
+      letter-spacing:-.045em;
+    }
 
-    .hero p{
+    p {
       margin:0;
       color:var(--muted);
-      font-size:clamp(.98rem, 1.5vw, 1.1rem);
       line-height:1.58;
-      max-width:56ch;
+      font-size:1rem;
     }
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+    .hero p {
+      max-width:66ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
-    .button{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      min-height:44px;
-      padding:0 16px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      color:var(--text);
-      text-decoration:none;
-      font-weight:800;
-      background:rgba(255,255,255,.03);
-      transition:transform .16s ease,border-color .16s ease,background .16s ease;
-      white-space:nowrap;
-    }
-
-    .button:hover,
-    .button:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      outline:none;
-    }
-
-    .button.primary{
-      border-color:rgba(239,210,154,.3);
-      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
-      color:#fff8ea;
-    }
-
-    .hero-side{
-      border:1px solid var(--line);
-      border-radius:24px;
-      background:rgba(255,255,255,.03);
-      padding:18px;
-      position:relative;
-      z-index:1;
-    }
-
-    .hero-side h2{
-      margin:0 0 10px;
-      font-size:1.08rem;
-      line-height:1.1;
-      letter-spacing:-.02em;
-    }
-
-    .hero-side p{
-      margin:0;
-      color:var(--muted);
-      font-size:.96rem;
-      line-height:1.58;
-    }
-
-    .hero-stats{
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
       display:grid;
-      gap:10px;
-      margin-top:16px;
+      gap:16px;
     }
 
-    .stat{
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.025);
+    .panel-head {
+      display:grid;
+      gap:8px;
     }
 
-    .stat-label{
+    .read-card,
+    .signal-card,
+    .identity-card {
+      position:relative;
+      isolation:isolate;
+      border-radius:18px;
+      padding:14px;
+      color:inherit;
+      overflow:hidden;
+    }
+
+    .identity-card {
+      min-height:168px;
+    }
+
+    .identity-card::before {
+      content:"";
+      position:absolute;
+      right:-40px;
+      top:-40px;
+      width:110px;
+      height:110px;
+      transform:rotate(45deg);
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:26px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.10),transparent 45%),
+        rgba(255,255,255,.02);
+      z-index:-1;
+      animation:smallTurn 28s linear infinite;
+    }
+
+    .read-card small,
+    .signal-card small,
+    .identity-card small,
+    .route-card small {
       display:block;
       margin-bottom:6px;
-      color:#90a3ce;
-      font-size:.72rem;
+      color:#91a6cf;
+      text-transform:uppercase;
       letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:850;
+    }
+
+    .read-card strong,
+    .signal-card strong,
+    .identity-card strong,
+    .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:1rem;
+      line-height:1.1;
+    }
+
+    .read-card p,
+    .signal-card p,
+    .identity-card p {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
+    .route-card small,
+    .route-card strong {
+      position:relative;
+      z-index:3;
+      max-width:70%;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:center;
+      text-wrap:balance;
+    }
+
+    .route-card small {
+      font-size:.48rem;
+    }
+
+    .route-card strong {
+      font-size:.80rem;
+    }
+
+    .identity-tag {
+      display:inline-flex;
+      width:fit-content;
+      margin-top:12px;
+      padding:6px 9px;
+      border:1px solid rgba(142,197,255,.22);
+      border-radius:999px;
+      background:rgba(142,197,255,.055);
+      color:#d8ecff;
+      font-size:.62rem;
+      font-weight:900;
+      letter-spacing:.10em;
       text-transform:uppercase;
     }
 
-    .stat-value{
-      color:#f4f7ff;
-      font-size:.98rem;
-      font-weight:700;
-    }
-
-    .section{
-      margin-top:18px;
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:linear-gradient(180deg, rgba(8,18,38,.88), rgba(5,12,24,.86));
-      box-shadow:var(--shadow);
-      padding:20px;
-    }
-
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:end;
-      gap:16px;
-      margin-bottom:16px;
-    }
-
-    .section-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:6px;
-    }
-
-    .section h2{
-      margin:0;
-      font-size:1.45rem;
-      letter-spacing:-.03em;
-      line-height:1.06;
-    }
-
-    .section-note{
-      color:var(--muted);
-      font-size:.92rem;
-      max-width:42ch;
-      text-align:right;
-    }
-
-    .cards{
+    .status-strip {
       display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:14px;
+      gap:8px;
+      padding:16px;
+      border-radius:20px;
     }
 
-    .card{
-      padding:18px;
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+    .status-strip code {
+      display:block;
+      white-space:pre-wrap;
+      word-break:break-word;
+      color:#dfe8ff;
+      font-size:.84rem;
+      line-height:1.55;
     }
 
-    .card h3{
-      margin:0 0 10px;
-      font-size:1.08rem;
-      letter-spacing:-.02em;
-    }
-
-    .card p{
-      margin:0;
-      color:var(--muted);
-      font-size:.95rem;
-      line-height:1.58;
-    }
-
-    .routes{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:14px;
-    }
-
-    .route{
-      display:grid;
-      gap:10px;
-      padding:18px;
-      border-radius:24px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
-      color:inherit;
-      text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease, box-shadow .16s ease;
-    }
-
-    .route:hover,
-    .route:focus-visible{
-      transform:translateY(-2px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      box-shadow:0 16px 36px rgba(0,0,0,.18);
-      outline:none;
-    }
-
-    .route[data-tone="blue"]{color:var(--blue)}
-    .route[data-tone="gold"]{color:var(--gold)}
-    .route[data-tone="mint"]{color:var(--mint)}
-    .route[data-tone="rose"]{color:var(--rose)}
-
-    .route-mark{
-      width:40px;
-      height:40px;
-      border-radius:14px;
-      display:grid;
-      place-items:center;
-      border:1px solid currentColor;
-      background:rgba(255,255,255,.03);
-      font-weight:800;
-      letter-spacing:.08em;
-    }
-
-    .route-title{
-      margin:0;
-      color:var(--text);
-      font-size:1.14rem;
-      font-weight:800;
-      letter-spacing:-.02em;
-    }
-
-    .route-copy{
-      color:var(--muted);
-      line-height:1.58;
-      font-size:.95rem;
-    }
-
-    .route-meta{
-      color:#dce7ff;
-      font-size:.78rem;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-
-    .footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      color:var(--muted);
-      padding:12px 4px 0;
-      font-size:.92rem;
-    }
-
-    .footer-links{
+    .footer {
       display:flex;
       flex-wrap:wrap;
-      gap:12px;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
     }
 
-    .footer-links a{
-      color:var(--muted);
-      text-decoration:none;
+    .footer a {
+      color:#d6e2ff;
     }
 
-    .footer-links a:hover,
-    .footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
+    @keyframes diamondBodyWobble {
+      0%,100% { transform:translateY(0) rotate(0deg) scale(1); }
+      25% { transform:translateY(-2px) rotate(1.4deg) scale(1.015); }
+      50% { transform:translateY(-4px) rotate(0deg) scale(1.025); }
+      75% { transform:translateY(-2px) rotate(-1.4deg) scale(1.015); }
     }
 
-    @media (max-width: 980px){
-      .hero-grid,
-      .cards,
-      .routes{
-        grid-template-columns:1fr;
+    @keyframes diamondPulse {
+      0%,100% { opacity:.82; filter:brightness(1); }
+      50% { opacity:1; filter:brightness(1.18); }
+    }
+
+    @keyframes innerDiamondSpin {
+      0% { transform:rotate(0deg) scale(.96); }
+      100% { transform:rotate(360deg) scale(.96); }
+    }
+
+    @keyframes slowTurn {
+      0% { transform:translateY(-50%) rotate(45deg); }
+      100% { transform:translateY(-50%) rotate(405deg); }
+    }
+
+    @keyframes smallTurn {
+      0% { transform:rotate(45deg); }
+      100% { transform:rotate(405deg); }
+    }
+
+    @media (min-width:820px) {
+      .topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .nav {
+        grid-template-columns:repeat(8,minmax(80px,94px));
+        justify-content:end;
+      }
+
+      .read-grid,
+      .signal-grid,
+      .identity-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(132px,1fr));
       }
     }
 
-    @media (max-width: 720px){
-      .page{
-        width:min(100vw - 16px, var(--max));
-        padding:14px 0 28px;
+    @media (max-width:640px) {
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
       }
 
-      .topbar{
-        flex-wrap:wrap;
-        padding:12px 14px;
+      .topbar,
+      .hero,
+      .panel {
+        border-radius:24px;
       }
 
-      .topnav{
-        width:100%;
-        justify-content:flex-start;
+      .topbar {
+        padding:12px;
       }
 
-      .hero-grid,
-      .section{
-        padding:18px 16px;
+      .brand {
+        gap:10px;
       }
 
-      .hero-grid{
-        gap:14px;
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
       }
 
-      .hero h1{
-        font-size:clamp(2rem, 11vw, 3.4rem);
+      .nav {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:6px;
       }
 
-      .hero-actions{
-        gap:8px;
+      .nav a {
+        width:min(100%,70px);
+        font-size:.55rem;
       }
 
-      .button{
-        flex:1 1 calc(50% - 8px);
+      .hero {
+        min-height:420px;
+        padding:22px;
       }
 
-      .button.primary{
-        flex-basis:100%;
+      .identity-diamond {
+        right:18px;
+        top:auto;
+        bottom:18px;
+        width:118px;
+        height:118px;
+        transform:rotate(45deg);
+        opacity:.42;
       }
 
-      .section-head,
-      .footer{
-        display:grid;
-        gap:8px;
+      .route-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .section-note{
-        text-align:left;
+      .route-card {
+        width:min(100%,132px);
+      }
+
+      .route-card small {
+        font-size:.42rem;
+      }
+
+      .route-card strong {
+        font-size:.70rem;
+      }
+
+      .identity-card {
+        min-height:138px;
+      }
+    }
+
+    @media (max-width:360px) {
+      .nav a {
+        width:min(100%,62px);
+        font-size:.48rem;
+      }
+
+      .route-card {
+        width:min(100%,122px);
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
       }
     }
   </style>
 </head>
-<body>
-  <main class="page">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">DG</div>
-        <div class="brand-copy">
-          <p class="brand-kicker">Orientation Surface</p>
-          <p class="brand-title">About · Diamond Gate Bridge</p>
-        </div>
-      </div>
 
-      <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/products/">Products</a>
-        <a class="nav-link" href="/gauges/">Gauges</a>
-        <a class="nav-link" href="/laws/">Laws</a>
+<body>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-page="about"
+    data-surface="generation-2-self-contained-about-chamber"
+  >
+    <header class="topbar">
+      <a class="brand" href="/about/" aria-label="Diamond Gate Bridge About">
+        <span class="mark" aria-hidden="true">AB</span>
+        <span class="brand-text">
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">About Chamber · V9</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a class="featured" href="/big-laugh/upper-room/">Show</a>
       </nav>
     </header>
 
-    <section class="hero">
-      <div class="hero-grid">
-        <div class="hero-copy">
-          <span class="hero-tag">Generation 1 · out with legacy</span>
-          <h1>What this is, <span class="accent">how to use it</span>, and what is live.</h1>
-          <p>
-            Diamond Gate Bridge is a structured public gateway for coherence, execution, and verification.
-            It is designed as an entry surface: orient first, choose a lawful route, then move deeper only
-            when the path is clear.
-          </p>
+    <section class="hero" aria-labelledby="aboutTitle">
+      <div class="identity-diamond" aria-hidden="true"></div>
 
-          <div class="hero-actions">
-            <a class="button primary" href="#live">See what is live</a>
-            <a class="button" href="/products/">Open products</a>
-            <a class="button" href="/">Back to door</a>
-          </div>
-        </div>
-
-        <aside class="hero-side">
-          <h2>Fast read</h2>
-          <p>
-            This page is for orientation. It explains the purpose of the site, the basic traversal method,
-            and the live public routes without falling back into the old editorial legacy page.
-          </p>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <span class="stat-label">Purpose</span>
-              <span class="stat-value">Structured navigation and coherence</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Use pattern</span>
-              <span class="stat-value">Route → explore → verify → resolve</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Current contract</span>
-              <span class="stat-value">Generation 1 orientation surface</span>
-            </div>
-          </div>
-        </aside>
+      <div class="hero-copy">
+        <span class="pill">Identity surface</span>
+        <h1 id="aboutTitle">About</h1>
+        <h2>The chamber that names what this is.</h2>
+        <p>
+          About is the public identity surface for Diamond Gate Bridge. It gives the
+          visitor a clean explanation of the project’s role without forcing them to
+          read every chamber first.
+        </p>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Purpose</div>
-          <h2>Why this exists</h2>
-        </div>
-        <div class="section-note">
-          The site is a traversal instrument, not a pile of disconnected pages.
-        </div>
+    <section class="panel" aria-labelledby="contextTitle">
+      <div class="panel-head">
+        <span class="pill">Generation 2 baseline</span>
+        <h2 id="contextTitle">About should identify, not overload.</h2>
+        <p>
+          V9 keeps the About Chamber compact, self-contained, and readable. It
+          establishes identity first, then routes visitors to the active public surfaces.
+        </p>
       </div>
 
-      <div class="cards">
-        <div class="card">
-          <h3>Coherence</h3>
-          <p>
-            It gives structure to movement. You do not enter randomly. You orient first, then proceed by route.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Execution</h3>
-          <p>
-            Each chamber is meant to produce usable movement, not just commentary. The public surface should support that.
-          </p>
-        </div>
-        <div class="card">
-          <h3>Verification</h3>
-          <p>
-            The architecture is repeatable. You should be able to follow a path and reach a stable result without losing the frame.
-          </p>
-        </div>
+      <div class="read-grid">
+        <article class="read-card">
+          <small>Identity</small>
+          <strong>Name the project.</strong>
+          <p>About gives the visitor a clear public read of Diamond Gate Bridge.</p>
+        </article>
+
+        <article class="read-card">
+          <small>Purpose</small>
+          <strong>Explain the role.</strong>
+          <p>The chamber clarifies why the site has doors, routes, chambers, gauges, and laws.</p>
+        </article>
+
+        <article class="read-card">
+          <small>Route</small>
+          <strong>Send visitors into the system.</strong>
+          <p>After identity is clear, visitors can move to Door, Explore, Products, Gauges, or Laws.</p>
+        </article>
       </div>
     </section>
 
-    <section class="section">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">How to use</div>
-          <h2>Move through the site cleanly</h2>
-        </div>
-        <div class="section-note">
-          Start broad, then descend only where the route lawfully takes you.
-        </div>
+    <section class="panel" aria-labelledby="identityTitle">
+      <div class="panel-head">
+        <span class="pill">Identity cards</span>
+        <h2 id="identityTitle">What the visitor should understand first.</h2>
       </div>
 
-      <div class="cards">
-        <div class="card">
-          <h3>1. Choose a route</h3>
-          <p>
-            Start at the door or this orientation surface. Pick the route that matches the job instead of opening everything at once.
-          </p>
-        </div>
-        <div class="card">
-          <h3>2. Explore the surface</h3>
-          <p>
-            Use the public chamber to get a fast read. That is where products, gauges, and law become visible enough to navigate.
-          </p>
-        </div>
-        <div class="card">
-          <h3>3. Verify the structure</h3>
-          <p>
-            A good route should stay coherent under repetition. The same path should keep producing the same class of usable output.
-          </p>
-        </div>
+      <div class="identity-grid">
+        <article class="identity-card">
+          <small>Project</small>
+          <strong>Diamond Gate Bridge</strong>
+          <p>A public system of surfaces, chambers, and routes designed to make deeper structure usable.</p>
+          <span class="identity-tag">Project identity</span>
+        </article>
+
+        <article class="identity-card">
+          <small>Surface</small>
+          <strong>Readable first</strong>
+          <p>The site should orient visitors before asking them to understand the larger architecture.</p>
+          <span class="identity-tag">Public read</span>
+        </article>
+
+        <article class="identity-card">
+          <small>Method</small>
+          <strong>Chambers by role</strong>
+          <p>Door opens, Home stabilizes, Explore routes, Frontier carries the edge, Products package, Gauges inspect, Laws bound.</p>
+          <span class="identity-tag">Chamber system</span>
+        </article>
+
+        <article class="identity-card">
+          <small>Baseline</small>
+          <strong>V9 self-contained</strong>
+          <p>The current public page standard uses compact rotating diamonds and page-local rendering stability.</p>
+          <span class="identity-tag">V9 baseline</span>
+        </article>
+
+        <article class="identity-card">
+          <small>Motion</small>
+          <strong>Living interface</strong>
+          <p>Subtle motion shows the system is active without turning the page into a visual distraction.</p>
+          <span class="identity-tag">Motion layer</span>
+        </article>
+
+        <article class="identity-card">
+          <small>Visitor path</small>
+          <strong>Choose the next surface</strong>
+          <p>The visitor should always know where they are and what the next meaningful route is.</p>
+          <span class="identity-tag">Navigation</span>
+        </article>
       </div>
     </section>
 
-    <section class="section" id="live">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">What is live</div>
-          <h2>Current public routes</h2>
-        </div>
-        <div class="section-note">
-          These are the active public-facing surfaces that matter right now.
-        </div>
+    <section class="panel" aria-labelledby="routesTitle">
+      <div class="panel-head">
+        <span class="pill">About chamber routes</span>
+        <h2 id="routesTitle">Move from identity to the right surface.</h2>
       </div>
 
-      <div class="routes">
-        <a class="route" data-tone="blue" href="/">
-          <div class="route-mark">D</div>
-          <h3 class="route-title">Door</h3>
-          <div class="route-copy">
-            The canonical homepage gateway. This is the root entry surface for the wider house.
-          </div>
-          <div class="route-meta">Root · World entry</div>
+      <div class="route-grid">
+        <a class="route-card" href="/door/">
+          <small>Access</small>
+          <strong>Door</strong>
         </a>
 
-        <a class="route" data-tone="mint" href="/products/">
-          <div class="route-mark">P</div>
-          <h3 class="route-title">Products</h3>
-          <div class="route-copy">
-            The products chamber and system-facing public route for structured surfaces and offerings.
-          </div>
-          <div class="route-meta">Chamber · Build</div>
+        <a class="route-card" href="/home/">
+          <small>Interior</small>
+          <strong>Home</strong>
         </a>
 
-        <a class="route" data-tone="gold" href="/gauges/">
-          <div class="route-mark">G</div>
-          <h3 class="route-title">Gauges</h3>
-          <div class="route-copy">
-            The signal and measurement layer for reading system state and movement.
-          </div>
-          <div class="route-meta">Signal · Measurement</div>
+        <a class="route-card" href="/explore/">
+          <small>Route map</small>
+          <strong>Explore</strong>
         </a>
 
-        <a class="route" data-tone="rose" href="/laws/">
-          <div class="route-mark">L</div>
-          <h3 class="route-title">Laws</h3>
-          <div class="route-copy">
-            The governing rule layer for the larger architecture and its working standards.
-          </div>
-          <div class="route-meta">Rule · Structure</div>
+        <a class="route-card" href="/frontier/">
+          <small>Edge</small>
+          <strong>Frontier</strong>
         </a>
+
+        <a class="route-card" href="/products/">
+          <small>Chamber</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/big-laugh/upper-room/">
+          <small>Upcoming show</small>
+          <strong>The Upper Room</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <small>Inspection</small>
+          <strong>Gauges</strong>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="signalsTitle">
+      <div class="panel-head">
+        <span class="pill">About read</span>
+        <h2 id="signalsTitle">What this page confirms.</h2>
+      </div>
+
+      <div class="signal-grid">
+        <article class="signal-card">
+          <small>Density</small>
+          <strong>Controls are compact.</strong>
+          <p>The old oversized bubbles are replaced with rotating diamond controls.</p>
+        </article>
+
+        <article class="signal-card">
+          <small>Function</small>
+          <strong>About is the identity chamber.</strong>
+          <p>The page now has its own public explanation role instead of acting as a generic text page.</p>
+        </article>
+
+        <article class="signal-card">
+          <small>Baseline</small>
+          <strong>About V9 is self-contained.</strong>
+          <p>The page does not depend on shared asset loading to render its core shape and motion.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="statusTitle">
+      <div class="panel-head">
+        <span class="pill">Status receipt</span>
+        <h2 id="statusTitle">Generation 2 About baseline is active.</h2>
+      </div>
+
+      <div class="status-strip">
+        <code>ABOUT_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
+PAGE=/about/index.html
+ROUTE=/about/
+NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
+ABOUT_CHAMBER_ROLE=ACTIVE
+IDENTITY_LAYER=VISIBLE
+CONTEXT=READABLE_FIRST
+LEGACY_LONG_BUBBLES=REMOVED
+ASSET_DEPENDENCY=REMOVED_FOR_ABOUT_PAGE
+OFFICIAL_V9_BASELINE=COMPLETE_WITH_DOOR_HOME_PRELUDE_EXPLORE_FRONTIER_PRODUCTS_UPPER_ROOM_GAUGES_LAWS_ABOUT</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>About · Generation 1 orientation contract</span>
-      <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
+      <span>Diamond Gate Bridge · About Chamber · Self-Contained Generation 2 Baseline</span>
+      <span>
+        <a href="/door/">Door</a> ·
+        <a href="/home/">Home</a> ·
+        <a href="/explore/">Explore</a> ·
         <a href="/laws/">Laws</a>
-      </div>
+      </span>
     </footer>
   </main>
 </body>

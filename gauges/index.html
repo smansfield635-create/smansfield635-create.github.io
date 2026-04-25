@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en" data-page-generation="world-is-flat-g1-globe-wrap-gridless">
+<html lang="en" data-page-generation="world-is-flat-g1-space-earth">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Gauges: self-contained Earth instrument with gridless spherical texture wrap, corrected spin, compact context, and Generation 1 readable baseline." />
+  <meta name="description" content="Diamond Gate Bridge Gauges: Generation 1 readable baseline with an outer-space Earth view, compact context, and diamond route controls." />
 
   <style>
     :root {
@@ -20,14 +20,15 @@
       --max: 1180px;
 
       /*
-        GRIDLESS TEXTURE SOURCE.
-        Prior texture had latitude/longitude lines baked into the image.
-        This source is a clean Earth texture used as a material layer.
+        Outer-space Earth material.
+        No grid, no classroom meridian, no school-globe overlay.
       */
       --earth-texture: url("https://threejs.org/examples/textures/land_ocean_ice_cloud_2048.jpg");
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
@@ -36,10 +37,10 @@
       color: var(--text);
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 50% 4%, rgba(142,197,255,.16), transparent 22%),
-        radial-gradient(circle at 18% 28%, rgba(239,210,154,.10), transparent 30%),
-        radial-gradient(circle at 82% 42%, rgba(142,197,255,.08), transparent 28%),
-        linear-gradient(180deg, #020610 0%, #071225 55%, #020610 100%);
+        radial-gradient(circle at 50% 4%, rgba(142,197,255,.14), transparent 22%),
+        radial-gradient(circle at 18% 28%, rgba(239,210,154,.08), transparent 30%),
+        radial-gradient(circle at 82% 42%, rgba(142,197,255,.07), transparent 28%),
+        linear-gradient(180deg, #01040c 0%, #071225 55%, #01040c 100%);
       overflow-x: hidden;
     }
 
@@ -48,12 +49,17 @@
       position: fixed;
       inset: 0;
       pointer-events: none;
-      opacity: .20;
+      opacity: .26;
       background:
-        linear-gradient(90deg, rgba(164,188,255,.07) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(164,188,255,.04) 1px, transparent 1px);
-      background-size: 52px 52px;
-      mask-image: radial-gradient(circle at 50% 32%, black, transparent 78%);
+        radial-gradient(circle at 8% 16%, rgba(255,255,255,.78) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 22% 78%, rgba(255,255,255,.58) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 71% 18%, rgba(255,255,255,.70) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 86% 66%, rgba(255,255,255,.46) 0 1px, transparent 1.4px),
+        radial-gradient(circle at 42% 36%, rgba(255,255,255,.50) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 58% 88%, rgba(255,255,255,.44) 0 1px, transparent 1.5px);
+      background-size: 260px 260px, 310px 310px, 340px 340px, 290px 290px, 360px 360px, 320px 320px;
+      background-position: 0 0, 80px 30px, 30px 110px, 120px 80px, 200px 30px, 40px 200px;
+      mask-image: radial-gradient(circle at 50% 36%, black, transparent 82%);
     }
 
     a {
@@ -226,6 +232,17 @@
       isolation: isolate;
     }
 
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 58%, rgba(142,197,255,.12), transparent 38%),
+        radial-gradient(circle at 50% 58%, rgba(255,255,255,.05), transparent 52%);
+      z-index: -1;
+    }
+
     .hero-copy {
       display: grid;
       gap: 14px;
@@ -283,13 +300,14 @@
       font-size: 1rem;
     }
 
-    .globe-panel {
+    .space-earth-panel {
       border: 1px solid rgba(170,198,255,.22);
       border-radius: 28px;
       padding: clamp(14px, 3vw, 28px);
       background:
-        radial-gradient(circle at 50% 45%, rgba(142,197,255,.14), transparent 42%),
-        linear-gradient(180deg, rgba(9,20,42,.90), rgba(4,9,20,.96));
+        radial-gradient(circle at 50% 45%, rgba(142,197,255,.12), transparent 38%),
+        radial-gradient(circle at 50% 50%, rgba(0,0,0,.38), transparent 62%),
+        linear-gradient(180deg, rgba(3,8,19,.94), rgba(1,4,12,.98));
       box-shadow:
         inset 0 0 0 1px rgba(255,255,255,.025),
         0 28px 90px rgba(0,0,0,.42);
@@ -297,196 +315,165 @@
       place-items: center;
       overflow: hidden;
       min-height: clamp(420px, 64vw, 720px);
-    }
-
-    .earth-wrap {
       position: relative;
-      width: min(86vw, 620px);
-      aspect-ratio: 1 / 1;
-      display: grid;
-      place-items: center;
       isolation: isolate;
-      transform: rotate(-23.5deg);
-      filter:
-        drop-shadow(0 28px 44px rgba(0,0,0,.48))
-        drop-shadow(0 0 42px rgba(142,197,255,.20));
     }
 
-    .earth-orbit {
-      position: absolute;
-      inset: -5%;
-      border-radius: 50%;
-      border: 1px solid rgba(142,197,255,.20);
-      transform: rotate(25deg) scaleX(1.18);
-      opacity: .56;
-      z-index: 0;
-    }
-
-    .earth-orbit::before,
-    .earth-orbit::after {
+    .space-earth-panel::before {
       content: "";
       position: absolute;
-      inset: 8%;
+      inset: 0;
+      pointer-events: none;
+      opacity: .52;
+      background:
+        radial-gradient(circle at 13% 26%, rgba(255,255,255,.72) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,.56) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 86% 76%, rgba(255,255,255,.46) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 32% 82%, rgba(255,255,255,.54) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 52% 36%, rgba(255,255,255,.42) 0 1px, transparent 1.5px);
+      background-size: 280px 280px, 330px 330px, 310px 310px, 360px 360px, 300px 300px;
+    }
+
+    .space-earth-panel::after {
+      content: "";
+      position: absolute;
+      width: min(92vw, 760px);
+      aspect-ratio: 1 / 1;
       border-radius: 50%;
-      border: 1px solid rgba(142,197,255,.14);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(142,197,255,.18), transparent 47%),
+        radial-gradient(circle at 50% 50%, rgba(142,197,255,.10), transparent 61%),
+        transparent;
+      filter: blur(10px);
+      opacity: .82;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    .earth-orbit::before {
-      transform: rotate(58deg) scaleX(1.08);
-    }
-
-    .earth-orbit::after {
-      transform: rotate(-64deg) scaleX(1.14);
-      opacity: .72;
-    }
-
-    .earth-sphere {
+    /*
+      OUTER-SPACE EARTH VIEW
+      Not a classroom globe.
+      Not a map globe.
+      No latitude/longitude grid.
+      No meridian stand.
+      No text stamped over the planet.
+    */
+    .space-earth {
       position: relative;
-      width: 100%;
+      width: min(86vw, 620px);
       aspect-ratio: 1 / 1;
       border-radius: 50%;
       overflow: hidden;
       isolation: isolate;
       background:
-        radial-gradient(circle at 38% 30%, rgba(47,139,176,.88), rgba(3,12,35,.96) 62%, rgba(0,0,0,1) 100%);
-      border: 1px solid rgba(210,232,255,.32);
+        radial-gradient(circle at 34% 30%, rgba(41,143,190,.92), rgba(9,34,84,.98) 48%, rgba(0,8,26,1) 72%, rgba(0,0,0,1) 100%);
       box-shadow:
-        inset -46px -22px 74px rgba(0,0,0,.66),
-        inset 34px 24px 74px rgba(255,255,255,.11),
-        inset 0 0 32px rgba(142,197,255,.22),
-        0 0 0 18px rgba(142,197,255,.10),
-        0 0 88px rgba(142,197,255,.24);
+        inset -62px -24px 88px rgba(0,0,0,.72),
+        inset 38px 26px 88px rgba(255,255,255,.12),
+        inset 0 0 32px rgba(142,197,255,.26),
+        0 0 0 1px rgba(210,232,255,.32),
+        0 0 42px rgba(142,197,255,.36),
+        0 0 118px rgba(142,197,255,.20),
+        0 32px 80px rgba(0,0,0,.52);
       z-index: 2;
+      transform: rotate(-8deg);
     }
 
-    .earth-map {
+    .space-earth__texture {
       position: absolute;
-      inset: -1.8%;
+      inset: -2%;
       border-radius: 50%;
       background-image: var(--earth-texture);
       background-size: 220% 110%;
       background-position: 0% 50%;
       background-repeat: repeat-x;
-      transform: rotate(23.5deg) scale(1.045);
-      animation: earthTextureWrap 52s linear infinite;
+      transform: scale(1.06) rotate(8deg);
+      animation: spaceEarthDrift 56s linear infinite;
       filter:
-        saturate(1.10)
-        contrast(1.06)
-        brightness(.94);
+        saturate(1.14)
+        contrast(1.08)
+        brightness(.96);
       z-index: 1;
     }
 
-    .earth-map::after {
+    .space-earth__texture::after {
       content: "";
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background:
-        radial-gradient(circle at 38% 30%, rgba(255,255,255,.17), transparent 18%),
-        radial-gradient(circle at 50% 50%, transparent 43%, rgba(0,0,0,.22) 66%, rgba(0,0,0,.76) 100%),
-        linear-gradient(110deg, rgba(255,255,255,.08) 0%, transparent 34%, rgba(0,0,0,.38) 73%, rgba(0,0,0,.72) 100%);
-      mix-blend-mode: multiply;
       pointer-events: none;
+      background:
+        radial-gradient(circle at 34% 28%, rgba(255,255,255,.16), transparent 18%),
+        radial-gradient(circle at 48% 48%, transparent 44%, rgba(0,0,0,.20) 64%, rgba(0,0,0,.78) 100%),
+        linear-gradient(112deg, rgba(255,255,255,.07) 0%, transparent 35%, rgba(0,0,0,.42) 72%, rgba(0,0,0,.78) 100%);
+      mix-blend-mode: multiply;
       z-index: 2;
     }
 
-    /*
-      SEAM MASK:
-      The prior visible vertical stripe was a texture-repeat boundary.
-      This layer hides the repeat seam with a thin moving-safe shadow band,
-      while keeping the land texture visible and gridless.
-    */
-    .earth-seam-mask {
+    .space-earth__clouds {
       position: absolute;
-      top: -3%;
-      bottom: -3%;
-      left: -4%;
-      width: 9%;
+      inset: -3%;
       border-radius: 50%;
       background:
-        linear-gradient(90deg,
-          rgba(0,0,0,.54),
-          rgba(0,0,0,.22) 42%,
-          rgba(0,0,0,0) 100%);
-      filter: blur(3px);
-      opacity: .58;
-      z-index: 3;
-      pointer-events: none;
-      transform: rotate(23.5deg);
+        radial-gradient(ellipse at 34% 28%, rgba(255,255,255,.18), transparent 22%),
+        radial-gradient(ellipse at 62% 45%, rgba(255,255,255,.10), transparent 26%),
+        radial-gradient(ellipse at 42% 70%, rgba(255,255,255,.08), transparent 30%);
+      mix-blend-mode: screen;
+      filter: blur(2px);
+      opacity: .72;
+      z-index: 2;
+      animation: cloudDrift 78s linear infinite;
     }
 
-    .earth-terminator {
+    .space-earth__limb {
       position: absolute;
       inset: -2%;
       border-radius: 50%;
-      background:
-        radial-gradient(circle at 28% 22%, rgba(255,255,255,.20), transparent 16%),
-        radial-gradient(circle at 36% 32%, rgba(142,197,255,.14), transparent 28%),
-        linear-gradient(105deg, transparent 0 41%, rgba(1,5,15,.22) 56%, rgba(0,0,0,.78) 100%);
-      z-index: 4;
       pointer-events: none;
-      mix-blend-mode: normal;
+      background:
+        radial-gradient(circle at 29% 23%, rgba(255,255,255,.20), transparent 14%),
+        radial-gradient(circle at 36% 31%, rgba(142,197,255,.16), transparent 28%),
+        linear-gradient(105deg, transparent 0 40%, rgba(2,8,20,.24) 56%, rgba(0,0,0,.84) 100%);
+      z-index: 4;
     }
 
-    .earth-rim {
+    .space-earth__rim {
       position: absolute;
       inset: 0;
       border-radius: 50%;
+      pointer-events: none;
       box-shadow:
         inset 0 0 0 2px rgba(210,232,255,.20),
-        inset 0 0 18px rgba(255,255,255,.10),
-        inset -34px -10px 64px rgba(0,0,0,.62),
-        inset 34px 18px 54px rgba(142,197,255,.16);
+        inset 0 0 20px rgba(255,255,255,.11),
+        inset -42px -12px 70px rgba(0,0,0,.70),
+        inset 34px 18px 58px rgba(142,197,255,.18);
       z-index: 5;
-      pointer-events: none;
     }
 
-    .earth-atmosphere {
+    .space-earth__atmosphere {
       position: absolute;
-      inset: -5.2%;
+      inset: -5%;
       border-radius: 50%;
+      pointer-events: none;
       background:
-        radial-gradient(circle at 42% 34%, transparent 55%, rgba(142,197,255,.10) 66%, rgba(142,197,255,.25) 78%, transparent 83%),
-        radial-gradient(circle at 50% 50%, transparent 62%, rgba(210,232,255,.20) 76%, transparent 88%);
-      filter: blur(.4px);
+        radial-gradient(circle at 42% 34%, transparent 56%, rgba(142,197,255,.12) 66%, rgba(142,197,255,.32) 78%, transparent 84%),
+        radial-gradient(circle at 50% 50%, transparent 63%, rgba(210,232,255,.23) 76%, transparent 89%);
+      filter: blur(.5px);
       z-index: 6;
-      pointer-events: none;
     }
 
-    .earth-axis {
-      position: absolute;
-      top: 4%;
-      bottom: 4%;
-      left: 50%;
-      width: 3px;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background:
-        linear-gradient(180deg, transparent, rgba(239,210,154,.72) 22%, rgba(255,255,255,.58) 50%, rgba(239,210,154,.72) 78%, transparent);
-      box-shadow: 0 0 16px rgba(239,210,154,.35);
-      opacity: .66;
-      z-index: 7;
-      pointer-events: none;
-    }
-
-    .earth-label {
-      position: absolute;
-      left: 50%;
-      bottom: 5.6%;
-      transform: translateX(-50%) rotate(23.5deg);
-      width: 84%;
+    .space-caption {
+      position: relative;
+      z-index: 3;
+      width: min(700px, 92%);
+      margin-top: 16px;
       text-align: center;
-      color: rgba(245,249,255,.96);
-      font-weight: 950;
+      color: #dce8ff;
+      font-weight: 850;
+      font-size: .86rem;
+      letter-spacing: .10em;
       text-transform: uppercase;
-      letter-spacing: .16em;
-      font-size: clamp(.82rem, 3vw, 1.25rem);
-      line-height: 1.15;
-      text-shadow:
-        0 2px 0 rgba(0,0,0,.50),
-        0 0 14px rgba(0,0,0,.72);
-      z-index: 8;
-      pointer-events: none;
+      opacity: .86;
     }
 
     .panel {
@@ -583,9 +570,14 @@
       color: #d6e2ff;
     }
 
-    @keyframes earthTextureWrap {
+    @keyframes spaceEarthDrift {
       0% { background-position: 0% 50%; }
       100% { background-position: -220% 50%; }
+    }
+
+    @keyframes cloudDrift {
+      0% { transform: translateX(0) rotate(0deg); }
+      100% { transform: translateX(-4%) rotate(360deg); }
     }
 
     @keyframes diamondFloat {
@@ -655,19 +647,18 @@
         font-size: .55rem;
       }
 
-      .globe-panel {
+      .space-earth-panel {
         min-height: 390px;
         padding: 14px 8px;
       }
 
-      .earth-wrap {
+      .space-earth {
         width: min(92vw, 520px);
       }
 
-      .earth-label {
-        bottom: 5.8%;
-        font-size: .78rem;
-        letter-spacing: .14em;
+      .space-caption {
+        font-size: .72rem;
+        letter-spacing: .08em;
       }
 
       .route-grid {
@@ -697,7 +688,7 @@
         <span class="mark">DG</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Gauges · G1 Gridless Globe</strong>
+          <strong class="title">Gauges · Outer Space Earth</strong>
         </span>
       </a>
 
@@ -715,35 +706,31 @@
 
     <section class="hero">
       <div class="hero-copy">
-        <span class="pill">Earth instrument</span>
+        <span class="pill">Outer-space Earth view</span>
         <h1>Gauges</h1>
-        <h2>The globe stays dimensional.</h2>
+        <h2>The page is flat. The Earth is not.</h2>
         <p>
-          Generation 1 keeps the page readable and compressed. The globe is the exception: it remains spherical, wrapped, gridless, and instrument-grade.
+          Generation 1 keeps the interface readable and compressed. The Earth view is not a classroom globe; it is a space-facing instrument surface.
         </p>
       </div>
 
-      <div class="globe-panel" aria-label="Earth standard tilted axis live gauge">
-        <div class="earth-wrap">
-          <div class="earth-orbit" aria-hidden="true"></div>
-
-          <div class="earth-sphere" role="img" aria-label="Dimensional Earth globe with gridless wrapped land texture and tilted axis">
-            <div class="earth-map"></div>
-            <div class="earth-seam-mask" aria-hidden="true"></div>
-            <div class="earth-terminator" aria-hidden="true"></div>
-            <div class="earth-rim" aria-hidden="true"></div>
-            <div class="earth-atmosphere" aria-hidden="true"></div>
-            <div class="earth-axis" aria-hidden="true"></div>
-            <div class="earth-label">Earth Standard · Tilted Axis · Live Gauge</div>
-          </div>
+      <div class="space-earth-panel" aria-label="Outer-space Earth gauge view">
+        <div class="space-earth" role="img" aria-label="Outer-space Earth view with atmosphere, shadow limb, and gridless surface texture">
+          <div class="space-earth__texture"></div>
+          <div class="space-earth__clouds" aria-hidden="true"></div>
+          <div class="space-earth__limb" aria-hidden="true"></div>
+          <div class="space-earth__rim" aria-hidden="true"></div>
+          <div class="space-earth__atmosphere" aria-hidden="true"></div>
         </div>
+
+        <div class="space-caption">Earth standard · outer-space view · live gauge</div>
       </div>
     </section>
 
     <section class="panel">
       <div class="panel-head">
         <span class="pill">Generation 1 baseline</span>
-        <h2>Context stays flat. The instrument does not.</h2>
+        <h2>Context stays flat. The planet stays real.</h2>
       </div>
 
       <div class="label-grid">
@@ -753,13 +740,13 @@
         </div>
 
         <div class="label-card">
-          <strong>Globe exception</strong>
-          <span>The Earth object remains spherical, dimensional, wrapped, and materially believable.</span>
+          <strong>Correct object class</strong>
+          <span>The visual anchor is now an outer-space Earth view, not a schoolroom globe.</span>
         </div>
 
         <div class="label-card">
           <strong>Correction</strong>
-          <span>The grid-baked texture has been replaced. The globe now uses a gridless Earth material with seam suppression, rim falloff, lighting, atmosphere, and drift.</span>
+          <span>No latitude grid, no meridian stand, no text stamped over the planet, and no classroom-globe visual language.</span>
         </div>
       </div>
     </section>
@@ -785,29 +772,29 @@
     <section class="panel">
       <div class="panel-head">
         <span class="pill">Status receipt</span>
-        <h2>Gauge material renewal is active.</h2>
+        <h2>Gauge object-class correction is active.</h2>
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_G1_GRIDLESS_GLOBE_STATUS=ACTIVE
+        <code>GAUGES_G1_SPACE_EARTH_STATUS=ACTIVE
 PAGE=/gauges/index.html
 BASELINE=THE_WORLD_IS_FLAT_GENERATION_1
 PAGE_CONTEXT=FLAT_READABLE_COMPRESSED
-GLOBE_EXCEPTION=TRUE
-GLOBE_OBJECT=SPHERICAL_DIMENSIONAL_INSTRUMENT
-LAND_TEXTURE_RULE=GRIDLESS_WRAPPED_NOT_OVERLAID
+REQUESTED_OBJECT=OUTER_SPACE_EARTH_VIEW
+REMOVED_OBJECT_CLASS=CLASSROOM_GLOBE
 GRID_OVERLAY=REMOVED
-GRID_BAKED_TEXTURE=REPLACED
-TEXTURE_SOURCE=GRIDLESS_EARTH_MATERIAL
-SEAM_MASK=ACTIVE
-CURVATURE_CUES=RIM_FALLOFF,LIGHTING,TERMINATOR,ATMOSPHERE,EDGE_SHADOW
-SPIN_DIRECTION=CORRECTED_TEXTURE_DRIFT
+LATITUDE_LONGITUDE_GRID=REMOVED
+MERIDIAN_STAND=REMOVED
+TEXT_ON_PLANET=REMOVED
+EARTH_OBJECT=SPHERICAL_DIMENSIONAL_SPACE_VIEW
+CURVATURE_CUES=RIM_FALLOFF,LIGHTING,ATMOSPHERE,SHADOW_LIMB,CLOUD_LAYER
+SPIN_DIRECTION=SUBTLE_TEXTURE_DRIFT
 NEXT_ACTION=REPLACE_LIVE_GAUGES_INDEX_WITH_THIS_FILE</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · G1 Gridless Globe</span>
+      <span>Diamond Gate Bridge · Gauges · Outer Space Earth</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

@@ -1,6 +1,3 @@
-mkdir -p explore/frontier
-
-cat > explore/frontier/index.html <<'EOF'
 <!DOCTYPE html>
 <html lang="en" data-explore-frontier-generation="second-generation-renewal">
 <head>
@@ -28,7 +25,9 @@ cat > explore/frontier/index.html <<'EOF'
       --max:1180px;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
@@ -57,7 +56,10 @@ cat > explore/frontier/index.html <<'EOF'
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a { color:inherit; text-decoration:none; }
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -261,7 +263,9 @@ cat > explore/frontier/index.html <<'EOF'
       font-size:clamp(1rem,1.8vw,1.18rem);
     }
 
-    .actions { margin-top:10px; }
+    .actions {
+      margin-top:10px;
+    }
 
     .panel {
       border-radius:30px;
@@ -312,10 +316,21 @@ cat > explore/frontier/index.html <<'EOF'
       line-height:1.42;
     }
 
-    .edge { border-color:rgba(239,210,154,.25); }
-    .experiment { border-color:rgba(142,197,255,.25); }
-    .expansion { border-color:rgba(147,239,189,.25); }
-    .signal { border-color:rgba(200,156,255,.25); }
+    .edge {
+      border-color:rgba(239,210,154,.25);
+    }
+
+    .experiment {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .expansion {
+      border-color:rgba(147,239,189,.25);
+    }
+
+    .signal {
+      border-color:rgba(200,156,255,.25);
+    }
 
     .closing-read {
       max-width:84ch;
@@ -338,7 +353,9 @@ cat > explore/frontier/index.html <<'EOF'
       font-size:.86rem;
     }
 
-    .footer a { color:#d6e2ff; }
+    .footer a {
+      color:#d6e2ff;
+    }
 
     @media (min-width:820px) {
       .topbar {
@@ -380,7 +397,9 @@ cat > explore/frontier/index.html <<'EOF'
         grid-template-columns:1fr;
       }
 
-      .hero { min-height:520px; }
+      .hero {
+        min-height:520px;
+      }
     }
   </style>
 </head>
@@ -520,18 +539,3 @@ cat > explore/frontier/index.html <<'EOF'
   </main>
 </body>
 </html>
-EOF
-
-python - <<'PY'
-from pathlib import Path
-
-for file_path in ["index.html", "explore/index.html", "home/index.html", "prelude/index.html"]:
-    p = Path(file_path)
-    if not p.exists():
-        continue
-    s = p.read_text(encoding="utf-8")
-    s = s.replace('href="/frontier/"', 'href="/explore/frontier/"')
-    s = s.replace("href='/frontier/'", "href='/explore/frontier/'")
-    s = s.replace(">Frontier</a>", ">Frontier</a>")
-    p.write_text(s, encoding="utf-8")
-PY

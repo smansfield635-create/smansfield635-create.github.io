@@ -1,709 +1,381 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-product-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Five Flags / What’s My Scene | Products</title>
-  <meta
-    name="description"
-    content="Five Flags / What’s My Scene — a scene-identification product path inside the Diamond Gate Bridge products chamber."
-  />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Five Flags: What’s My Scene? · Products · Diamond Gate Bridge</title>
+  <meta name="description" content="Five Flags: What’s My Scene?: a Generation 2 product surface for scene discovery, orientation, alignment, and shared signal." />
+
   <style>
-    :root{
-      color-scheme:dark;
-      --bg0:#041124;
-      --bg1:#07203d;
-      --bg2:#0b2f58;
-      --ink:rgba(255,255,255,.97);
-      --mut:rgba(255,255,255,.84);
-      --soft:rgba(255,255,255,.66);
-      --amber:rgba(255,202,128,.96);
-      --line:rgba(255,255,255,.12);
-      --lineStrong:rgba(255,202,128,.26);
-      --panel:rgba(8,14,24,.78);
-      --panelStrong:rgba(8,14,24,.90);
-      --crimson:rgba(120,0,22,.26);
-      --opalV:rgba(90,40,120,.18);
-      --blueField:rgba(18,58,140,.12);
-      --amberField:rgba(255,202,128,.10);
-      --shadow:0 18px 54px rgba(0,0,0,.42);
-      --shadowStrong:0 24px 76px rgba(0,0,0,.48);
-      --safe-top:env(safe-area-inset-top,0px);
-      --safe-right:env(safe-area-inset-right,0px);
-      --safe-bottom:env(safe-area-inset-bottom,0px);
-      --safe-left:env(safe-area-inset-left,0px);
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --spring:#93efbd;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1120px;
     }
 
-    *{box-sizing:border-box}
-    html,body{
+    * { box-sizing:border-box; }
+
+    html, body {
       margin:0;
-      width:100%;
       min-height:100%;
-      background:var(--bg0);
-      color:var(--ink);
-      font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    }
-    body{
-      min-height:100vh;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 6%,rgba(147,239,189,.16),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(125,180,255,.08), transparent 26%),
-        radial-gradient(circle at 50% 82%, rgba(125,180,255,.05), transparent 30%),
-        linear-gradient(180deg,var(--bg2) 0%,var(--bg1) 48%,var(--bg0) 100%);
     }
-    a{color:inherit;text-decoration:none}
-    .page{position:relative;min-height:100vh;overflow:hidden;isolation:isolate}
-    .env{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-    .env::before{
+
+    body::before {
       content:"";
-      position:absolute;
-      inset:-10%;
-      background:
-        radial-gradient(circle at 10% 20%, rgba(255,255,255,.92) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 18% 50%, rgba(255,255,255,.78) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 36% 16%, rgba(255,255,255,.82) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 58% 18%, rgba(255,255,255,.86) 0 1.1px, transparent 2px),
-        radial-gradient(circle at 74% 22%, rgba(255,255,255,.84) 0 1.1px, transparent 1.9px),
-        radial-gradient(circle at 20% 78%, rgba(255,255,255,.72) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 50% 82%, rgba(255,255,255,.76) 0 1px, transparent 1.8px),
-        radial-gradient(circle at 86% 80%, rgba(255,255,255,.78) 0 1px, transparent 1.8px);
-      opacity:.42;
-      animation:starDrift 32s linear infinite;
-    }
-    .env::after{
-      content:"";
-      position:absolute;
+      position:fixed;
       inset:0;
+      pointer-events:none;
+      opacity:.20;
       background:
-        radial-gradient(circle at 12% 22%, var(--crimson), transparent 34%),
-        radial-gradient(circle at 82% 24%, var(--opalV), transparent 38%),
-        radial-gradient(circle at 60% 26%, var(--blueField), transparent 34%),
-        radial-gradient(circle at 50% 30%, var(--amberField), transparent 24%),
-        linear-gradient(180deg, transparent 0%, rgba(255,255,255,.01) 50%, transparent 100%);
-      filter:blur(5px);
-      opacity:.42;
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
-    .wrap{
+
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
-      width:min(1180px,calc(100vw - 32px));
-      margin:0 auto;
-      padding:
-        calc(24px + var(--safe-top))
-        calc(16px + var(--safe-right))
-        calc(40px + var(--safe-bottom))
-        calc(16px + var(--safe-left));
     }
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:30px;
-      flex-wrap:wrap;
-    }
-    .nav{display:flex;gap:10px;flex-wrap:wrap}
-    .nav a{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(255,202,128,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,20,.62), rgba(4,6,10,.78));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      overflow:hidden;
-    }
-    .nav a::after,
-    .statusPill::after,
-    .actionBtn::after{
-      content:"";
-      position:absolute;
-      left:10px;
-      right:10px;
-      bottom:-12px;
-      height:28px;
-      background:radial-gradient(circle at 50% 0%, rgba(255,202,128,.30), transparent 72%);
-      opacity:.50;
-      pointer-events:none;
-    }
-    .statusStack{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-    .statusPill{
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(255,202,128,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,20,.50), rgba(4,6,10,.66));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      white-space:nowrap;
-      position:relative;
-      overflow:hidden;
-    }
-    .statusPill--strong{
-      border-color:var(--lineStrong);
-      color:#fff2df;
-      box-shadow:var(--shadow),0 0 0 1px rgba(255,202,128,.08),0 0 18px rgba(255,202,128,.10);
-    }
-    .hero{
-      display:grid;
-      grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);
-      gap:22px;
-      align-items:stretch;
-      margin-bottom:22px;
-    }
-    .heroMain,.heroSide,.section,.quickCard,.card,.faqItem{
+
+    .topbar, .hero, .panel, .card, .route-panel {
       border:1px solid var(--line);
-      border-radius:28px;
       background:
-        radial-gradient(circle at 14% 18%, rgba(255,202,128,.08), transparent 58%),
-        radial-gradient(circle at 84% 24%, rgba(90,40,120,.14), transparent 66%),
-        radial-gradient(circle at 64% 24%, rgba(18,58,140,.10), transparent 68%),
-        linear-gradient(180deg, var(--panel) 0%, var(--panelStrong) 100%);
-      box-shadow:var(--shadowStrong);
-      backdrop-filter:blur(12px);
-      -webkit-backdrop-filter:blur(12px);
-      position:relative;
-      overflow:hidden;
-    }
-    .heroMain::before,
-    .heroSide::before,
-    .section::before,
-    .quickCard::before,
-    .card::before,
-    .faqItem::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      box-shadow:inset 0 0 0 1px rgba(255,202,128,.12);
-      opacity:.55;
-      border-radius:inherit;
-    }
-    .heroMain{padding:30px 28px 26px}
-    .heroMain::after{
-      content:"";
-      position:absolute;
-      right:-34px;
-      top:-24px;
-      width:170px;
-      height:170px;
-      border-radius:22px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,202,128,.10);
-      background:
-        linear-gradient(135deg, rgba(255,255,255,.05), rgba(255,255,255,0)),
-        radial-gradient(circle at 50% 50%, rgba(255,202,128,.05), transparent 64%);
-      opacity:.9;
-      pointer-events:none;
-    }
-    .eyebrow{
-      margin:0 0 12px;
-      color:var(--amber);
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.18em;
-      text-transform:uppercase;
-    }
-    h1{
-      margin:0;
-      font-size:clamp(40px,6.5vw,74px);
-      line-height:.94;
-      letter-spacing:.05em;
-      font-weight:950;
-      text-shadow:0 10px 38px rgba(0,0,0,.58);
-    }
-    .heroIdentity{
-      margin:16px 0 0;
-      font-size:clamp(18px,2vw,23px);
-      line-height:1.38;
-      font-weight:800;
-      color:rgba(255,255,255,.94);
-    }
-    .heroBoundary{
-      margin:14px 0 0;
-      color:var(--amber);
-      font-size:15px;
-      font-weight:900;
-      letter-spacing:.06em;
-      text-transform:uppercase;
-    }
-    .heroSub{
-      margin:14px 0 0;
-      max-width:760px;
-      color:var(--mut);
-      font-size:clamp(15px,1.8vw,19px);
-      line-height:1.58;
-    }
-    .heroActions{
-      margin-top:22px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-    }
-    .actionBtn{
-      min-height:48px;
-      padding:0 18px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 120%, rgba(255,202,128,.16), transparent 64%),
-        linear-gradient(145deg, rgba(10,12,20,.54), rgba(4,6,10,.70));
-      color:#fff;
-      font-size:12px;
-      font-weight:900;
-      letter-spacing:.05em;
-      text-transform:uppercase;
+        radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
       box-shadow:var(--shadow);
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      transition:transform 140ms ease,border-color 140ms ease,box-shadow 140ms ease;
-      position:relative;
-      overflow:hidden;
     }
-    .actionBtn:hover{transform:scale(1.02)}
-    .actionBtn:active{transform:scale(.98)}
-    .actionBtn--primary{
-      border-color:var(--lineStrong);
-      color:#fff2df;
-      box-shadow:var(--shadow),0 0 0 1px rgba(255,202,128,.08),0 0 18px rgba(255,202,128,.10);
-    }
-    .heroFacts{
-      margin-top:18px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-    }
-    .heroSide{
-      padding:24px 22px;
-      display:flex;
-      flex-direction:column;
-      gap:18px;
-      justify-content:space-between;
-    }
-    .heroSide h2,.sectionTitle{
-      margin:0;
-      font-size:13px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--amber);
-    }
-    .heroSide p{
-      margin:8px 0 0;
-      color:var(--mut);
-      line-height:1.58;
-      font-size:15px;
-    }
-    .diagnosticCard{
-      border:1px dashed rgba(255,202,128,.22);
-      border-radius:22px;
-      min-height:220px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      padding:22px;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(255,202,128,.08), transparent 58%),
-        radial-gradient(circle at 82% 24%, rgba(90,40,120,.14), transparent 66%),
-        radial-gradient(circle at 62% 24%, rgba(18,58,140,.10), transparent 68%),
-        linear-gradient(180deg, rgba(10,16,30,.74) 0%, rgba(8,14,26,.90) 100%);
-    }
-    .diagnosticCard strong{
-      display:block;
-      font-size:14px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      color:#fff2df;
-    }
-    .diagnosticCard span{
-      display:block;
-      margin-top:10px;
-      color:var(--soft);
-      font-size:13px;
-      line-height:1.5;
-      text-transform:uppercase;
-      letter-spacing:.05em;
-    }
-    .quickRow{
+
+    .topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:14px;
-      margin:22px 0;
-    }
-    .quickCard{padding:18px 18px 16px;min-width:0}
-    .quickCard h3{
-      margin:0;
-      font-size:13px;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-      color:var(--amber);
-    }
-    .quickCard p{
-      margin:10px 0 0;
-      color:var(--mut);
-      font-size:15px;
-      line-height:1.55;
-    }
-    .section{padding:24px;margin-top:18px}
-    .sectionHeader{
-      display:flex;
-      align-items:flex-end;
-      justify-content:space-between;
       gap:12px;
-      flex-wrap:wrap;
-      margin-bottom:18px;
     }
-    .sectionIntro{
-      color:var(--mut);
-      line-height:1.55;
-      font-size:16px;
-      max-width:760px;
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
     }
-    .grid2,.grid4{display:grid;gap:14px}
-    .grid2{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .grid4{grid-template-columns:repeat(4,minmax(0,1fr))}
-    .card{padding:18px;min-width:0}
-    .card h4{
-      margin:0;
-      font-size:16px;
-      line-height:1.2;
-      letter-spacing:.03em;
+
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(147,239,189,.25),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
       font-weight:900;
+      letter-spacing:.08em;
     }
-    .card p{
-      margin:10px 0 0;
-      color:var(--mut);
-      font-size:15px;
-      line-height:1.58;
+
+    .kicker {
+      display:block;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
     }
-    .miniList{
-      list-style:none;
-      padding:0;
-      margin:12px 0 0;
+
+    .title {
+      display:block;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .nav, .actions, .route-grid {
       display:grid;
       gap:8px;
     }
-    .miniList li{
-      position:relative;
-      padding-left:16px;
-      color:var(--mut);
-      font-size:14px;
-      line-height:1.5;
-    }
-    .miniList li::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:.56em;
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:rgba(255,202,128,.86);
-      box-shadow:0 0 8px rgba(255,202,128,.10);
-    }
-    .faqList{display:grid;gap:12px;margin-top:10px}
-    .faqToggle{
-      width:100%;
-      border:0;
-      background:transparent;
-      color:var(--ink);
-      padding:18px 18px 16px;
-      text-align:left;
-      display:flex;
+
+    .nav a, .button, .route-card {
+      min-height:44px;
+      display:inline-flex;
       align-items:center;
-      justify-content:space-between;
-      gap:14px;
-      font-size:14px;
-      font-weight:900;
-      letter-spacing:.04em;
-      text-transform:uppercase;
-      cursor:pointer;
-    }
-    .faqToggle span:last-child{
-      color:var(--amber);
-      font-size:18px;
-      line-height:1;
-      min-width:18px;
+      justify-content:center;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
       text-align:center;
-      transition:transform 160ms ease;
     }
-    .faqBody{
-      padding:0 18px 18px;
-      color:var(--mut);
-      font-size:15px;
-      line-height:1.6;
-      display:none;
-      border-top:1px solid rgba(255,255,255,.08);
+
+    .button.primary {
+      border-color:rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
     }
-    .faqItem.isOpen .faqBody{display:block}
-    .faqItem.isOpen .faqToggle span:last-child{transform:rotate(45deg)}
-    .footnote{
-      margin-top:12px;
-      color:var(--soft);
-      font-size:12px;
-      letter-spacing:.05em;
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(20px,3.5vw,38px);
+      margin-bottom:14px;
+      display:grid;
+      gap:18px;
+      overflow:hidden;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
       text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
     }
-    @keyframes starDrift{
-      from{transform:translate3d(-1.2%,-.8%,0)}
-      to{transform:translate3d(1.2%,.8%,0)}
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--spring);
+      box-shadow:0 0 18px rgba(147,239,189,.50);
     }
-    @media (max-width:1080px){
-      .hero{grid-template-columns:minmax(0,1fr)}
-      .quickRow{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .grid4{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+    h1 {
+      margin:0;
+      color:#fff;
+      font-size:clamp(2.8rem,10vw,6rem);
+      line-height:.9;
+      letter-spacing:-.07em;
     }
-    @media (max-width:800px){
-      .grid2,.grid4{grid-template-columns:minmax(0,1fr)}
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.8vw,2.8rem);
+      line-height:1;
+      letter-spacing:-.04em;
     }
-    @media (max-width:720px){
-      .wrap{width:min(100vw - 20px,1180px)}
-      .heroMain,.heroSide,.section{padding:20px;border-radius:24px}
-      .topbar{align-items:flex-start}
-      .nav{width:100%}
-      .quickRow{grid-template-columns:minmax(0,1fr)}
+
+    p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
     }
-    @media (prefers-reduced-motion:reduce){
-      .actionBtn,
-      .faqToggle span:last-child{transition:none !important}
-      .env::before{animation:none !important}
+
+    .hero p {
+      max-width:70ch;
+      margin-top:14px;
+    }
+
+    .actions {
+      margin-top:18px;
+    }
+
+    .panel, .route-panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:14px;
+    }
+
+    .grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .card {
+      border-radius:22px;
+      padding:16px;
+      min-height:120px;
+    }
+
+    .card small, .route-card small {
+      display:block;
+      margin-bottom:8px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:.66rem;
+      font-weight:850;
+    }
+
+    .card strong, .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:1.06rem;
+      line-height:1.12;
+    }
+
+    .card p {
+      margin-top:8px;
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .route-card {
+      min-height:112px;
+      border-radius:22px;
+      flex-direction:column;
+      align-items:flex-start;
+      text-align:left;
+      padding:16px;
+    }
+
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
+    }
+
+    @media (min-width:820px) {
+      .topbar { grid-template-columns:1fr auto; align-items:center; }
+      .nav { grid-template-columns:repeat(5,auto); }
+      .actions { grid-template-columns:repeat(4,auto); justify-content:start; }
+      .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .route-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    }
+
+    @media (max-width:640px) {
+      .page { width:min(100vw - 12px,var(--max)); padding-top:10px; }
+      .topbar, .hero, .panel, .route-panel { border-radius:24px; }
+      .nav, .actions, .grid, .route-grid { grid-template-columns:1fr; }
     }
   </style>
 </head>
+
 <body>
-  <div class="page">
-    <div class="env" aria-hidden="true"></div>
+  <main class="page" data-generation="second-generation-renewal" data-product="five-flags-whats-my-scene">
+    <header class="topbar">
+      <a class="brand" href="/products/" aria-label="Products home">
+        <span class="mark" aria-hidden="true">FF</span>
+        <span>
+          <span class="kicker">Products · Generation 2</span>
+          <strong class="title">Five Flags: What’s My Scene?</strong>
+        </span>
+      </a>
 
-    <div class="wrap">
-      <div class="topbar">
-        <nav class="nav" aria-label="Page navigation">
-          <a href="/products/">Back</a>
-          <a href="/products/">Products</a>
-          <a href="/index.html">Compass</a>
-          <a href="/explore/">Explore</a>
-        </nav>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/metaverse/">Metaverse</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+      </nav>
+    </header>
 
-        <div class="statusStack" aria-label="Five Flags status">
-          <div class="statusPill statusPill--strong">Scene Product</div>
-          <div class="statusPill">Position Read</div>
-          <div class="statusPill">Opening Signal</div>
+    <section class="hero" aria-labelledby="productTitle">
+      <div>
+        <span class="pill">Official product surface</span>
+        <h1 id="productTitle">Five Flags: What’s My Scene?</h1>
+        <h2>Know the scene first.</h2>
+        <p>
+          Five Flags: What’s My Scene? is one product. It helps identify the scene,
+          clarify position, read signal, and understand what opens next.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="/products/">Back to Products</a>
+          <a class="button" href="/metaverse/">Metaverse</a>
+          <a class="button" href="/products/on-your-side-ai/">AI On Your Side</a>
+          <a class="button" href="/products/nutrition/">Baseline Nutrition</a>
         </div>
       </div>
+    </section>
 
-      <header class="hero" aria-label="Five Flags hero">
-        <section class="heroMain">
-          <p class="eyebrow">Products / Five Flags</p>
-          <h1>FIVE FLAGS / WHAT’S MY SCENE</h1>
-          <p class="heroIdentity">A scene-identification product path built to help the user understand where they are and what opens next.</p>
-          <p class="heroBoundary">It clarifies the scene before it multiplies the decision tree.</p>
-          <p class="heroSub">This page presents Five Flags / What’s My Scene as a product-first orientation surface. The goal is cleaner situational reading, clearer positioning, and a more lawful opening into the next layer without flooding the user too early.</p>
+    <section class="panel" aria-labelledby="readTitle">
+      <span class="pill">Product read</span>
+      <h2 id="readTitle">Scene before motion.</h2>
 
-          <div class="heroActions">
-            <a class="actionBtn actionBtn--primary" href="#scene-structure">See scene structure</a>
-            <a class="actionBtn" href="#faq">Read FAQ</a>
-          </div>
-
-          <div class="heroFacts" aria-label="Five Flags summary">
-            <div class="statusPill statusPill--strong">Scene Read</div>
-            <div class="statusPill">Position Signal</div>
-            <div class="statusPill">Orientation First</div>
-            <div class="statusPill">Opening Ready</div>
-          </div>
-        </section>
-
-        <aside class="heroSide" aria-label="Five Flags position">
-          <div>
-            <h2>Primary Read</h2>
-            <div class="diagnosticCard" aria-label="Five Flags card">
-              <div>
-                <strong>Know The Scene First</strong>
-                <span>Orientation over panic. Position over noise. Opening over confusion.</span>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <h2>Long-Range Goal</h2>
-            <p>The strongest outcome is cleaner situational awareness that helps the user understand the scene they are in before they commit to the next movement.</p>
-          </div>
-        </aside>
-      </header>
-
-      <section class="quickRow" aria-label="Quick Five Flags truths">
-        <article class="quickCard">
-          <h3>What It Is</h3>
-          <p>A scene-identification product path.</p>
+      <div class="grid">
+        <article class="card">
+          <small>Scene</small>
+          <strong>Identify where you are</strong>
+          <p>Clarifies the environment before multiplying possible choices.</p>
         </article>
-        <article class="quickCard">
-          <h3>What It Supports</h3>
-          <p>Orientation, positioning, and next openings.</p>
+
+        <article class="card">
+          <small>Position</small>
+          <strong>Read your place</strong>
+          <p>Supports orientation before reaction or premature movement.</p>
         </article>
-        <article class="quickCard">
-          <h3>What It Preserves</h3>
-          <p>A clean read before deeper traversal expands.</p>
+
+        <article class="card">
+          <small>Opening</small>
+          <strong>See what opens next</strong>
+          <p>Helps separate available paths from false or noisy options.</p>
         </article>
-        <article class="quickCard">
-          <h3>What It Avoids</h3>
-          <p>Premature complexity and confused scene reading.</p>
-        </article>
-      </section>
+      </div>
+    </section>
 
-      <section class="section" id="scene-structure" aria-label="Five Flags scene structure">
-        <div class="sectionHeader">
-          <div>
-            <h2 class="sectionTitle">Scene Structure</h2>
-            <p class="sectionIntro">The opening layer stays clean. It helps the user identify the scene, understand position, and see what legitimately opens next before deeper nested movement is added.</p>
-          </div>
-        </div>
+    <section class="route-panel" aria-labelledby="backlinksTitle">
+      <span class="pill">Second-generation backlinks</span>
+      <h2 id="backlinksTitle">Product route stays connected.</h2>
 
-        <div class="grid4">
-          <article class="card">
-            <h4>Scene Identification</h4>
-            <p>Clarify what kind of scene the user is actually in before treating everything as the same problem.</p>
-          </article>
-          <article class="card">
-            <h4>Position Read</h4>
-            <p>Help the user understand their current place within that scene rather than reacting blindly.</p>
-          </article>
-          <article class="card">
-            <h4>Opening Detection</h4>
-            <p>Surface the next lawful opening without pretending every path is available at once.</p>
-          </article>
-          <article class="card">
-            <h4>Traversal Readiness</h4>
-            <p>Prepare the page for later Russian-doll expansion into deeper scene logic and traversal layers.</p>
-          </article>
-        </div>
-      </section>
+      <div class="route-grid">
+        <a class="route-card" href="/products/">
+          <small>Parent</small>
+          <strong>Products</strong>
+        </a>
 
-      <section class="section" aria-label="Five Flags product law">
-        <div class="sectionHeader">
-          <div>
-            <h2 class="sectionTitle">Product Law</h2>
-            <p class="sectionIntro">This section protects the scene-identification path from collapsing into vague abstraction or overbuilt interpretation too early.</p>
-          </div>
-        </div>
+        <a class="route-card" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
 
-        <div class="grid2">
-          <article class="card">
-            <h4>Always Preserved</h4>
-            <ul class="miniList">
-              <li>Scene clarity</li>
-              <li>Position awareness</li>
-              <li>Opening logic</li>
-              <li>Expandable traversal later</li>
-            </ul>
-          </article>
+        <a class="route-card" href="/products/on-your-side-ai/">
+          <small>Related</small>
+          <strong>AI On Your Side</strong>
+        </a>
 
-          <article class="card">
-            <h4>Never Reduced To</h4>
-            <ul class="miniList">
-              <li>Random scene guessing</li>
-              <li>Premature over-interpretation</li>
-              <li>Vague conceptual fog</li>
-              <li>False pathway inflation</li>
-            </ul>
-          </article>
-        </div>
-      </section>
+        <a class="route-card" href="/products/ssg/">
+          <small>Related</small>
+          <strong>Syntax Geometry</strong>
+        </a>
+      </div>
+    </section>
 
-      <section class="section" id="faq" aria-label="Five Flags FAQ">
-        <div class="sectionHeader">
-          <div>
-            <h2 class="sectionTitle">FAQ</h2>
-            <p class="sectionIntro">These answers keep the Five Flags path clear, practical, and ready for deeper traversal later without overloading the opening layer.</p>
-          </div>
-        </div>
-
-        <div class="faqList">
-          <article class="faqItem isOpen">
-            <button class="faqToggle" type="button" aria-expanded="true">
-              <span>Why start with scene reading?</span>
-              <span>+</span>
-            </button>
-            <div class="faqBody">
-              Because the user needs orientation first. A cleaner scene read prevents premature or misaligned movement.
-            </div>
-          </article>
-
-          <article class="faqItem">
-            <button class="faqToggle" type="button" aria-expanded="false">
-              <span>Is this already the full traversal system?</span>
-              <span>+</span>
-            </button>
-            <div class="faqBody">
-              No. This is the opening extension surface. It sets the first structure cleanly before deeper nested traversal layers are added.
-            </div>
-          </article>
-
-          <article class="faqItem">
-            <button class="faqToggle" type="button" aria-expanded="false">
-              <span>What is the strongest first-pass read?</span>
-              <span>+</span>
-            </button>
-            <div class="faqBody">
-              The user should leave knowing the page helps identify the scene, understand their position, and see what opens next.
-            </div>
-          </article>
-        </div>
-
-        <div class="footnote">Five Flags / What’s My Scene remains orientation-first and traversal-ready.</div>
-      </section>
-    </div>
-  </div>
-
-  <script>
-    (() => {
-      "use strict";
-      const faqToggles = Array.from(document.querySelectorAll(".faqToggle"));
-      function closeFaq(item, toggle) {
-        item.classList.remove("isOpen");
-        toggle.setAttribute("aria-expanded", "false");
-      }
-      function openFaq(item, toggle) {
-        item.classList.add("isOpen");
-        toggle.setAttribute("aria-expanded", "true");
-      }
-      faqToggles.forEach((toggle) => {
-        toggle.addEventListener("click", () => {
-          const item = toggle.closest(".faqItem");
-          if (!item) return;
-          const isOpen = item.classList.contains("isOpen");
-          faqToggles.forEach((otherToggle) => {
-            const otherItem = otherToggle.closest(".faqItem");
-            if (!otherItem || otherItem === item) return;
-            closeFaq(otherItem, otherToggle);
-          });
-          if (isOpen) closeFaq(item, toggle);
-          else openFaq(item, toggle);
-        });
-      });
-    })();
-  </script>
+    <footer class="footer">
+      <span>Five Flags: What’s My Scene? · Generation 2 Product Surface</span>
+      <span><a href="/products/">Products</a> · <a href="/metaverse/">Metaverse</a> · <a href="/">Door</a></span>
+    </footer>
+  </main>
 </body>
 </html>

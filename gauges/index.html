@@ -10,6 +10,7 @@
   />
 
   <link rel="stylesheet" href="/assets/ui.css" />
+  <script src="/assets/universe_ui.js" defer></script>
 
   <style>
     :root {
@@ -25,6 +26,11 @@
       --green:#93efbd;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
+      --earth-texture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg");
+    }
+
+    * {
+      box-sizing:border-box;
     }
 
     html,
@@ -54,6 +60,11 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
     .page {
       width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
@@ -67,7 +78,8 @@
     .panel,
     .read-card,
     .signal-card,
-    .status-strip {
+    .status-strip,
+    .globe-panel {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
@@ -131,12 +143,102 @@
       line-height:1.05;
     }
 
-    .nav {
+    .nav,
+    .route-grid,
+    .read-grid,
+    .signal-grid {
       display:grid;
       gap:10px;
+    }
+
+    .nav {
       perspective:1000px;
       align-items:center;
       justify-items:center;
+    }
+
+    .nav a,
+    .route-card {
+      position:relative;
+      isolation:isolate;
+      width:min(100%,94px);
+      aspect-ratio:1 / 1;
+      display:grid;
+      place-items:center;
+      padding:0;
+      color:#e7eeff;
+      font-size:.70rem;
+      line-height:1.02;
+      font-weight:900;
+      text-align:center;
+      transform-style:preserve-3d;
+      transition:transform 420ms ease, filter 420ms ease;
+    }
+
+    .route-card {
+      width:min(100%,150px);
+      font-size:.80rem;
+    }
+
+    .nav a::before,
+    .route-card::before {
+      content:"";
+      position:absolute;
+      inset:10%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(170,198,255,.24);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+        linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+      box-shadow:
+        0 0 30px rgba(142,197,255,.18),
+        inset 0 0 26px rgba(255,255,255,.035);
+      z-index:-1;
+      animation:
+        diamondFloat 7s ease-in-out infinite,
+        diamondPulse 5.8s ease-in-out infinite;
+    }
+
+    .nav a::after,
+    .route-card::after {
+      content:"";
+      position:absolute;
+      inset:25%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%),
+        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+      opacity:.72;
+      z-index:-1;
+      animation:innerDiamondSpin 18s linear infinite;
+    }
+
+    .nav a.featured {
+      color:#fff8ea;
+    }
+
+    .nav a.featured::before {
+      border-color:rgba(239,210,154,.44);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.28),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(142,197,255,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
+      box-shadow:
+        0 0 38px rgba(239,210,154,.20),
+        inset 0 0 30px rgba(255,255,255,.04);
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible,
+    .route-card:hover,
+    .route-card:focus-visible {
+      transform:translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045);
+      filter:brightness(1.16) saturate(1.08);
+      outline:none;
     }
 
     .hero {
@@ -256,7 +358,8 @@
       font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
-    .panel {
+    .panel,
+    .globe-panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
       margin-bottom:14px;
@@ -267,13 +370,6 @@
     .panel-head {
       display:grid;
       gap:8px;
-    }
-
-    .read-grid,
-    .signal-grid,
-    .route-grid {
-      display:grid;
-      gap:12px;
     }
 
     .read-card,
@@ -287,7 +383,8 @@
     }
 
     .read-card small,
-    .signal-card small {
+    .signal-card small,
+    .route-card small {
       display:block;
       margin-bottom:6px;
       color:#91a6cf;
@@ -298,7 +395,8 @@
     }
 
     .read-card strong,
-    .signal-card strong {
+    .signal-card strong,
+    .route-card strong {
       display:block;
       color:#fff;
       font-size:1rem;
@@ -313,12 +411,189 @@
       line-height:1.42;
     }
 
-    .globe-panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      margin-bottom:14px;
+    .route-card small,
+    .route-card strong {
+      position:relative;
+      z-index:3;
+      max-width:70%;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:center;
+      text-wrap:balance;
+    }
+
+    .route-card small {
+      font-size:.48rem;
+    }
+
+    .route-card strong {
+      font-size:.80rem;
+    }
+
+    .dgb-globe-stage,
+    .globe-stage {
+      min-height:clamp(410px,58vw,650px);
       display:grid;
-      gap:16px;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 50% 42%,rgba(142,197,255,.12),transparent 26%),
+        radial-gradient(circle at 50% 52%,rgba(239,210,154,.08),transparent 52%),
+        rgba(255,255,255,.025);
+    }
+
+    .dgb-globe-stage::before,
+    .globe-stage::before {
+      content:"";
+      position:absolute;
+      width:min(720px,94vw);
+      height:min(300px,42vw);
+      left:50%;
+      top:54%;
+      transform:translate(-50%,-50%) rotate(-9deg);
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:50%;
+      box-shadow:
+        0 0 42px rgba(142,197,255,.08),
+        inset 0 0 42px rgba(239,210,154,.04);
+    }
+
+    [data-dgb-globe="earth"] {
+      --globe-size:min(380px,74vw);
+      --globe-glow:rgba(142,197,255,.28);
+      --globe-accent:rgba(239,210,154,.50);
+      position:relative;
+      width:var(--globe-size);
+      aspect-ratio:1 / 1;
+      isolation:isolate;
+      display:block;
+      filter:
+        drop-shadow(0 0 34px var(--globe-glow))
+        drop-shadow(0 0 74px rgba(147,239,189,.08));
+      z-index:2;
+    }
+
+    [data-dgb-globe-size="hero"] {
+      --globe-size:min(270px,34vw);
+    }
+
+    .dgb-globe-box__tilt {
+      position:absolute;
+      inset:0;
+      transform:rotate(-23.5deg);
+      transform-origin:50% 50%;
+    }
+
+    .dgb-globe-box__tilt::before {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-8%;
+      width:2px;
+      height:116%;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,transparent,var(--globe-accent),transparent);
+      box-shadow:0 0 18px rgba(239,210,154,.24);
+      z-index:8;
+    }
+
+    .dgb-globe-box__earth {
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 33% 24%,rgba(255,255,255,.30),transparent 12%),
+        radial-gradient(circle at 75% 72%,rgba(0,0,0,.42),transparent 34%),
+        #081d45;
+      box-shadow:
+        inset -42px -18px 54px rgba(0,0,0,.58),
+        inset 20px 10px 36px rgba(255,255,255,.10),
+        0 0 0 1px rgba(170,198,255,.22),
+        0 0 62px var(--globe-glow);
+    }
+
+    .dgb-globe-box__map {
+      position:absolute;
+      inset:-2%;
+      border-radius:50%;
+      background-image:var(--earth-texture);
+      background-size:220% 100%;
+      background-position:220% 50%;
+      background-repeat:repeat-x;
+      filter:saturate(1.22) contrast(1.08) brightness(.92);
+      transform:scale(1.02);
+      animation:earthTextureDriftCorrect 64s linear infinite;
+      z-index:1;
+    }
+
+    .dgb-globe-box__map::before {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+        repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 22px),
+        repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 24px);
+      mix-blend-mode:screen;
+      opacity:.42;
+      pointer-events:none;
+    }
+
+    .dgb-globe-box__map::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.28),transparent 14%),
+        linear-gradient(90deg,rgba(255,255,255,.16),transparent 34%,rgba(0,0,0,.28) 76%,rgba(0,0,0,.58));
+      pointer-events:none;
+    }
+
+    .dgb-globe-box__clouds {
+      position:absolute;
+      inset:-1%;
+      border-radius:50%;
+      background:
+        radial-gradient(ellipse at 28% 28%,rgba(255,255,255,.22),transparent 10%),
+        radial-gradient(ellipse at 54% 42%,rgba(255,255,255,.16),transparent 12%),
+        radial-gradient(ellipse at 72% 64%,rgba(255,255,255,.16),transparent 14%),
+        radial-gradient(ellipse at 38% 72%,rgba(255,255,255,.13),transparent 13%);
+      mix-blend-mode:screen;
+      opacity:.60;
+      animation:cloudDriftCorrect 72s linear infinite;
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .dgb-globe-box__atmosphere {
+      position:absolute;
+      inset:-5%;
+      border-radius:50%;
+      border:1px solid rgba(142,197,255,.30);
+      background:radial-gradient(circle at 50% 50%,transparent 62%,rgba(142,197,255,.18) 74%,transparent 78%);
+      animation:atmospherePulse 6s ease-in-out infinite;
+      pointer-events:none;
+      z-index:4;
+    }
+
+    .dgb-globe-box__label {
+      position:absolute;
+      left:50%;
+      bottom:-42px;
+      transform:translateX(-50%) rotate(23.5deg);
+      min-width:260px;
+      text-align:center;
+      color:#dfe8ff;
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      z-index:9;
     }
 
     .status-strip {
@@ -349,6 +624,36 @@
 
     .footer a {
       color:#d6e2ff;
+    }
+
+    @keyframes diamondFloat {
+      0%,100% { transform:translateY(0) rotate(0deg); }
+      50% { transform:translateY(-5px) rotate(1.5deg); }
+    }
+
+    @keyframes diamondPulse {
+      0%,100% { opacity:.82; filter:brightness(1); }
+      50% { opacity:1; filter:brightness(1.18); }
+    }
+
+    @keyframes innerDiamondSpin {
+      0% { transform:rotate(0deg) scale(.96); }
+      100% { transform:rotate(360deg) scale(.96); }
+    }
+
+    @keyframes earthTextureDriftCorrect {
+      0% { background-position:220% 50%; }
+      100% { background-position:0% 50%; }
+    }
+
+    @keyframes cloudDriftCorrect {
+      0% { transform:translateX(8%) rotate(360deg); }
+      100% { transform:translateX(-8%) rotate(0deg); }
+    }
+
+    @keyframes atmospherePulse {
+      0%,100% { opacity:.62; transform:scale(1); }
+      50% { opacity:.95; transform:scale(1.018); }
     }
 
     @media (min-width:820px) {
@@ -405,8 +710,8 @@
       }
 
       .nav a {
-        width:min(100%,70px) !important;
-        font-size:.55rem !important;
+        width:min(100%,70px);
+        font-size:.55rem;
       }
 
       .hero {
@@ -422,28 +727,65 @@
         opacity:.46;
       }
 
+      [data-dgb-globe="earth"] {
+        --globe-size:min(300px,76vw);
+      }
+
+      [data-dgb-globe-size="hero"] {
+        --globe-size:126px;
+      }
+
+      .dgb-globe-stage,
+      .globe-stage {
+        min-height:420px;
+      }
+
       .route-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
       .route-card {
-        width:min(100%,132px) !important;
+        width:min(100%,132px);
+      }
+
+      .route-card small {
+        font-size:.42rem;
+      }
+
+      .route-card strong {
+        font-size:.70rem;
       }
     }
 
     @media (max-width:360px) {
       .nav a {
-        width:min(100%,62px) !important;
-        font-size:.48rem !important;
+        width:min(100%,62px);
+        font-size:.48rem;
       }
 
       .route-card {
-        width:min(100%,122px) !important;
+        width:min(100%,122px);
+      }
+
+      [data-dgb-globe="earth"] {
+        --globe-size:min(270px,74vw);
+      }
+
+      [data-dgb-globe-size="hero"] {
+        --globe-size:112px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
       }
     }
   </style>
-
-  <script src="/assets/universe_ui.js" defer></script>
 </head>
 
 <body>
@@ -459,7 +801,7 @@
         <span class="mark" aria-hidden="true">DG</span>
         <span class="brand-text">
           <span class="kicker">Gauge Authority · Second Generation Renewal</span>
-          <strong class="title">Live Feed Instrument Surface · V7</strong>
+          <strong class="title">Live Feed Instrument Surface · V8</strong>
         </span>
       </a>
 
@@ -482,7 +824,16 @@
           data-dgb-globe-size="hero"
           data-dgb-globe-theme="blue"
           data-dgb-globe-label="Earth standard · tilted axis · live gauge"
-        ></div>
+        >
+          <div class="dgb-globe-box__tilt">
+            <div class="dgb-globe-box__earth">
+              <div class="dgb-globe-box__map"></div>
+              <div class="dgb-globe-box__clouds"></div>
+            </div>
+            <div class="dgb-globe-box__atmosphere"></div>
+            <div class="dgb-globe-box__label">Earth standard · tilted axis · live gauge</div>
+          </div>
+        </div>
       </div>
 
       <div class="hero-copy">
@@ -491,8 +842,8 @@
         <h2>The shared Earth globe is restored.</h2>
         <p>
           Gauges is the public inspection room. The globe now comes from the shared
-          asset system, so every page can reuse the same real-Earth instrument with
-          corrected spin direction.
+          asset system, while this page includes a defensive inline fallback so the
+          instrument never collapses into plain text.
         </p>
       </div>
     </section>
@@ -502,19 +853,35 @@
         <span class="pill">Shared globe asset</span>
         <h2 id="globeTitle">Axis · natural spin · public inspection.</h2>
         <p>
-          The globe is no longer rebuilt locally on this page. The shared asset
-          system owns the Earth texture, tilt, atmosphere, and corrected direction.
+          The globe is owned by the shared asset system. The fallback markup below
+          preserves the real-Earth globe even if the asset runtime is delayed.
         </p>
       </div>
 
       <div
-        class="dgb-globe-stage"
+        class="dgb-globe-stage globe-stage"
         data-dgb-globe-stage
         data-dgb-globe-size="panel"
         data-dgb-globe-theme="blue"
         data-dgb-globe-label="Earth standard · tilted axis · live gauge"
         aria-label="Shared real Earth globe instrument"
-      ></div>
+      >
+        <div
+          data-dgb-globe="earth"
+          data-dgb-globe-size="panel"
+          data-dgb-globe-theme="blue"
+          data-dgb-globe-label="Earth standard · tilted axis · live gauge"
+        >
+          <div class="dgb-globe-box__tilt">
+            <div class="dgb-globe-box__earth">
+              <div class="dgb-globe-box__map"></div>
+              <div class="dgb-globe-box__clouds"></div>
+            </div>
+            <div class="dgb-globe-box__atmosphere"></div>
+            <div class="dgb-globe-box__label">Earth standard · tilted axis · live gauge</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="panel" aria-labelledby="contextTitle">
@@ -611,13 +978,13 @@
         <article class="signal-card">
           <small>Globe</small>
           <strong>Shared Earth restored.</strong>
-          <p>The globe is now mounted through the reusable asset runtime.</p>
+          <p>The globe is mounted through the reusable asset runtime and protected by inline fallback markup.</p>
         </article>
 
         <article class="signal-card">
           <small>Direction</small>
           <strong>Spin corrected globally.</strong>
-          <p>The corrected spin direction lives in the shared asset CSS and runtime.</p>
+          <p>The corrected spin direction lives in the shared asset CSS, runtime, and fallback keyframes.</p>
         </article>
 
         <article class="signal-card">
@@ -635,15 +1002,15 @@
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_V7_STATUS=GENERATION_2_BASELINE_ACTIVE
-GLOBE=SHARED_REAL_EARTH_ASSET
+        <code>GAUGES_V8_STATUS=GENERATION_2_BASELINE_ACTIVE
+GLOBE=SHARED_REAL_EARTH_ASSET_WITH_INLINE_FALLBACK
 GLOBE_RUNTIME=/assets/universe_ui.js
 GLOBE_CSS=/assets/ui.css
 SPIN_DIRECTION=CORRECTED_GLOBAL_DEFAULT
 LOCAL_FAKE_GLOBE=REMOVED
 NAVIGATION=COMPACT_DIAMOND_CONTROLS
 CONTEXT=READABLE_FIRST
-NEXT_ACTION=REUSE_SHARED_GLOBE_ON_OTHER_PAGES</code>
+NEXT_ACTION=REPLACE_LIVE_/gauges/index.html_WITH_THIS_FILE</code>
       </div>
     </section>
 

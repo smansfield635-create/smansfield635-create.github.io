@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Frontier · Diamond Gate Bridge</title>
-  <meta name="description" content="Canonical Frontier route at /explore/frontier/ under G1 Russian Doll V10." />
+  <meta name="description" content="Canonical Frontier route at /explore/frontier/ with G1 Russian Doll labels and backlinks to all Frontier back pages." />
 
   <style>
     :root {
@@ -128,13 +128,15 @@
 
     .nav,
     .route-grid,
-    .label-grid {
+    .label-grid,
+    .backpage-grid {
       display:grid;
       gap:10px;
     }
 
     .nav,
-    .route-grid {
+    .route-grid,
+    .backpage-grid {
       perspective:1000px;
       align-items:center;
       justify-items:center;
@@ -161,7 +163,7 @@
 
     .route-card {
       width:min(100%,150px);
-      font-size:.78rem;
+      font-size:.76rem;
     }
 
     .nav a::before,
@@ -401,13 +403,33 @@
 
     details[open] summary::after { content:"–"; }
 
-    summary small {
+    summary small,
+    .route-card small {
       display:block;
       color:#91a6cf;
       text-transform:uppercase;
       letter-spacing:.12em;
-      font-size:.58rem;
+      font-size:.56rem;
       font-weight:850;
+    }
+
+    .route-card small,
+    .route-card strong {
+      position:relative;
+      z-index:3;
+      max-width:76%;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:center;
+      text-wrap:balance;
+    }
+
+    .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:.74rem;
+      line-height:1.06;
+      margin-top:4px;
     }
 
     .label-body {
@@ -485,6 +507,10 @@
       .route-grid {
         grid-template-columns:repeat(4,minmax(132px,1fr));
       }
+
+      .backpage-grid {
+        grid-template-columns:repeat(4,minmax(132px,1fr));
+      }
     }
 
     @media (max-width:640px) {
@@ -531,11 +557,12 @@
         opacity:.36;
       }
 
-      .route-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .route-grid,
+      .backpage-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
 
       .route-card { width:min(100%,132px); }
-      .route-card small { font-size:.42rem; }
-      .route-card strong { font-size:.70rem; }
+      .route-card small { font-size:.40rem; }
+      .route-card strong { font-size:.66rem; }
     }
 
     @media (prefers-reduced-motion:reduce) {
@@ -557,14 +584,14 @@
     data-route="/explore/frontier/"
     data-file="/explore/frontier/index.html"
     data-baseline="g1-russian-doll-v10"
-    data-pass="canonical-frontier-label-compression"
+    data-pass="frontier-backpage-access-contract"
   >
     <header class="topbar">
       <a class="brand" href="/explore/frontier/" aria-label="Diamond Gate Bridge Frontier">
         <span class="mark" aria-hidden="true">FR</span>
         <span class="brand-text">
-          <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Frontier · G1 V10</strong>
+          <span class="kicker">Diamond Gate Bridge · Explore</span>
+          <strong class="title">Frontier · Back Page Access · G1 V10</strong>
         </span>
       </a>
 
@@ -584,17 +611,17 @@
       <div class="frontier-edge" aria-hidden="true"></div>
 
       <div class="hero-copy">
-        <span class="pill">Active edge route</span>
+        <span class="pill">Frontier access chamber</span>
         <h1 id="frontierTitle">Frontier</h1>
-        <h2>The edge where the next surface becomes visible.</h2>
-        <p>Choose an edge label. The forward context opens only when touched.</p>
+        <h2>Open the back pages by category.</h2>
+        <p>Choose a label or diamond. The deeper Frontier pages stay folded until selected.</p>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="labelsTitle">
       <div class="panel-head">
         <span class="pill">Russian-doll labels</span>
-        <h2 id="labelsTitle">Frontier is nested under Explore.</h2>
+        <h2 id="labelsTitle">Frontier now carries the back-page map.</h2>
       </div>
 
       <div class="label-grid">
@@ -602,82 +629,61 @@
           <summary><small>Canonical path</small>Explore / Frontier.</summary>
           <div class="label-body">
             <p>This is the canonical Frontier path: <strong>/explore/frontier/</strong>.</p>
-            <p>The file must live at <strong>/explore/frontier/index.html</strong>.</p>
+            <p>The file lives at <strong>/explore/frontier/index.html</strong>.</p>
           </div>
         </details>
 
         <details class="label-card">
-          <summary><small>Edge</small>Hold the forward boundary.</summary>
+          <summary><small>Back pages</small>All folders are accessible.</summary>
           <div class="label-body">
-            <p>Frontier names the next visible surface without collapsing into the whole system.</p>
-            <p>It is where forward motion becomes public-facing.</p>
+            <p>The visible page now links to closed-loop, energy, infrastructure, lattice, manual, shimmer, trajectory, urban, vision-remote, vision, waste, and water.</p>
           </div>
         </details>
 
         <details class="label-card">
-          <summary><small>Movement</small>Show where motion points.</summary>
+          <summary><small>Rule</small>Labels first.</summary>
           <div class="label-body">
-            <p>The page directs attention toward active development, public movement, and the next boundary.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Parent</small>Explore routes it.</summary>
-          <div class="label-body">
-            <p>Explore is the route map. Frontier is the active edge selected from that route map.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Baseline</small>World is Flat.</summary>
-          <div class="label-body">
-            <p>Generation 1 keeps the edge readable: label first, context on request, minimal motion, maximum clarity.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Russian Doll</small>Expand only on touch.</summary>
-          <div class="label-body">
-            <p>All core context is preserved, but it stays folded under labels until the visitor opens it.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Rule</small>Forward, not crowded.</summary>
-          <div class="label-body">
-            <p>The page should point toward the next surface, not become a crowded archive of every possible direction.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Status</small>G1 V10 active.</summary>
-          <div class="label-body">
-            <p>This is the Russian-doll expansion baseline: visible labels first, nested context second.</p>
-          </div>
-        </details>
-
-        <details class="label-card">
-          <summary><small>Old path</small>/frontier/ is secondary.</summary>
-          <div class="label-body">
-            <p>If kept, /frontier/ should redirect here or remain only as a secondary compatibility path.</p>
+            <p>The Frontier page stays clean. The back pages are available as diamonds without overloading the surface.</p>
           </div>
         </details>
       </div>
     </section>
 
+    <section class="panel" aria-labelledby="backPagesTitle">
+      <div class="panel-head">
+        <span class="pill">Back-page access</span>
+        <h2 id="backPagesTitle">Choose the Frontier category.</h2>
+      </div>
+
+      <div class="backpage-grid">
+        <a class="route-card" href="/explore/frontier/closed-loop/"><small>Loop</small><strong>Closed Loop</strong></a>
+        <a class="route-card" href="/explore/frontier/energy/"><small>Power</small><strong>Energy</strong></a>
+        <a class="route-card" href="/explore/frontier/infrastructure/"><small>Build</small><strong>Infrastructure</strong></a>
+        <a class="route-card" href="/explore/frontier/lattice/"><small>Grid</small><strong>Lattice</strong></a>
+        <a class="route-card" href="/explore/frontier/manual/"><small>Guide</small><strong>Manual</strong></a>
+        <a class="route-card" href="/explore/frontier/shimmer/"><small>Signal</small><strong>Shimmer</strong></a>
+        <a class="route-card" href="/explore/frontier/trajectory/"><small>Motion</small><strong>Trajectory</strong></a>
+        <a class="route-card" href="/explore/frontier/urban/"><small>City</small><strong>Urban</strong></a>
+        <a class="route-card" href="/explore/frontier/vision-remote/"><small>Remote</small><strong>Vision Remote</strong></a>
+        <a class="route-card" href="/explore/frontier/vision/"><small>View</small><strong>Vision</strong></a>
+        <a class="route-card" href="/explore/frontier/waste/"><small>Reuse</small><strong>Waste</strong></a>
+        <a class="route-card" href="/explore/frontier/water/"><small>Flow</small><strong>Water</strong></a>
+      </div>
+    </section>
+
     <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Route labels</span>
-        <h2 id="routesTitle">Move from the edge.</h2>
+        <span class="pill">Main route labels</span>
+        <h2 id="routesTitle">Move from the Frontier map.</h2>
       </div>
 
       <div class="route-grid">
         <a class="route-card" href="/door/"><small>Access</small><strong>Door</strong></a>
         <a class="route-card" href="/home/"><small>Interior</small><strong>Home</strong></a>
         <a class="route-card" href="/prelude/"><small>Threshold</small><strong>Prelude</strong></a>
-        <a class="route-card" href="/explore/"><small>Parent</small><strong>Explore</strong></a>
+        <a class="route-card featured" href="/explore/"><small>Parent</small><strong>Explore</strong></a>
         <a class="route-card" href="/products/"><small>Chamber</small><strong>Products</strong></a>
-        <a class="route-card featured" href="/big-laugh/upper-room/"><small>Show</small><strong>Upper Room</strong></a>
+        <a class="route-card" href="/big-laugh/upper-room/"><small>Show</small><strong>Upper Room</strong></a>
         <a class="route-card" href="/gauges/"><small>Inspection</small><strong>Gauges</strong></a>
         <a class="route-card" href="/laws/"><small>Rule layer</small><strong>Laws</strong></a>
       </div>
@@ -686,31 +692,28 @@
     <section class="panel" aria-labelledby="statusTitle">
       <div class="panel-head">
         <span class="pill">Status label</span>
-        <h2 id="statusTitle">Canonical Frontier is active here.</h2>
+        <h2 id="statusTitle">Frontier contract renewed.</h2>
       </div>
 
       <div class="status-strip">
-        <code>FRONTIER_G1_V10_CANONICAL=ACTIVE
+        <code>FRONTIER_G1_V10_BACKPAGE_CONTRACT=ACTIVE
 PAGE=/explore/frontier/index.html
 ROUTE=/explore/frontier/
 BASELINE=THE_WORLD_IS_FLAT
-VERSION=G1_RUSSIAN_DOLL_V10
-VISIBLE_DEFAULT=TITLE_CORE_LINE_LABELS
+METHOD=RUSSIAN_DOLL_LABEL_EXPANSION
+BACKPAGES=closed-loop,energy,infrastructure,lattice,manual,shimmer,trajectory,urban,vision-remote,vision,waste,water
+VISIBLE_DEFAULT=TITLE_CORE_LINE_LABELS_BACKPAGE_DIAMONDS
 CONTEXT=HIDDEN_UNTIL_LABEL_CLICK
-METHOD=DETAILS_SUMMARY_RUSSIAN_DOLL
-OLD_ROUTE=/frontier/
-OLD_ROUTE_STATUS=SECONDARY_OR_REDIRECT_ONLY
 LEGACY_OVEREXPRESSION=REDUCED</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Explore / Frontier · G1 Russian Doll V10</span>
+      <span>Diamond Gate Bridge · Explore / Frontier · Back Page Access · G1 V10</span>
       <span>
-        <a href="/door/">Door</a> ·
-        <a href="/home/">Home</a> ·
         <a href="/explore/">Explore</a> ·
-        <a href="/products/">Products</a>
+        <a href="/products/">Products</a> ·
+        <a href="/gauges/">Gauges</a>
       </span>
     </footer>
   </main>

@@ -6,7 +6,7 @@
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Gauges: a Generation 2 public instrument surface with restored globe, compact context, and diamond route controls."
+    content="Diamond Gate Bridge Gauges: a Generation 2 public instrument surface with a restored real-Earth globe, compact context, and diamond route controls."
   />
 
   <style>
@@ -27,7 +27,8 @@
       --max:1180px;
       --spin:26s;
       --float:7s;
-      --earth-spin:42s;
+      --earth-spin:64s;
+      --earth-texture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg");
     }
 
     * {
@@ -280,12 +281,12 @@
       height:min(270px,34vw);
       transform:translateY(-50%);
       border-radius:50%;
-      opacity:.86;
+      opacity:.88;
       z-index:-1;
       filter:drop-shadow(0 0 42px rgba(142,197,255,.18));
     }
 
-    .hero-globe .earth {
+    .hero-globe .earth-wrap {
       width:100%;
       height:100%;
     }
@@ -508,7 +509,7 @@
     }
 
     .globe-stage {
-      min-height:clamp(360px,56vw,620px);
+      min-height:clamp(410px,58vw,650px);
       display:grid;
       place-items:center;
       position:relative;
@@ -547,7 +548,7 @@
     }
 
     .earth-wrap {
-      width:min(360px,74vw);
+      width:min(380px,74vw);
       aspect-ratio:1 / 1;
       position:relative;
       transform:rotate(-23.5deg);
@@ -567,7 +568,7 @@
       transform:translateX(-50%);
       background:linear-gradient(180deg,transparent,rgba(239,210,154,.50),transparent);
       box-shadow:0 0 18px rgba(239,210,154,.24);
-      z-index:5;
+      z-index:8;
     }
 
     .earth {
@@ -576,47 +577,67 @@
       border-radius:50%;
       overflow:hidden;
       background:
-        radial-gradient(circle at 35% 24%,rgba(255,255,255,.34),transparent 12%),
-        radial-gradient(circle at 70% 72%,rgba(0,0,0,.36),transparent 31%),
-        radial-gradient(circle at 50% 50%,rgba(28,112,175,.95),rgba(8,34,82,.98) 56%,rgba(2,10,28,1) 100%);
+        radial-gradient(circle at 33% 24%,rgba(255,255,255,.30),transparent 12%),
+        radial-gradient(circle at 75% 72%,rgba(0,0,0,.42),transparent 34%),
+        #081d45;
       box-shadow:
-        inset -34px -18px 48px rgba(0,0,0,.50),
-        inset 18px 10px 36px rgba(255,255,255,.08),
-        0 0 0 1px rgba(170,198,255,.20),
-        0 0 58px rgba(142,197,255,.22);
+        inset -42px -18px 54px rgba(0,0,0,.58),
+        inset 20px 10px 36px rgba(255,255,255,.10),
+        0 0 0 1px rgba(170,198,255,.22),
+        0 0 62px rgba(142,197,255,.24);
     }
 
-    .earth::before {
-      content:"";
+    .earth-map {
       position:absolute;
       inset:-2%;
       border-radius:50%;
-      background:
-        radial-gradient(ellipse at 34% 30%,rgba(147,239,189,.82) 0 8%,transparent 9%),
-        radial-gradient(ellipse at 42% 46%,rgba(147,239,189,.78) 0 11%,transparent 12%),
-        radial-gradient(ellipse at 60% 35%,rgba(147,239,189,.72) 0 12%,transparent 13%),
-        radial-gradient(ellipse at 64% 64%,rgba(147,239,189,.62) 0 9%,transparent 10%),
-        radial-gradient(ellipse at 28% 68%,rgba(239,210,154,.42) 0 8%,transparent 9%),
-        repeating-linear-gradient(90deg,
-          rgba(255,255,255,.08) 0 1px,
-          transparent 1px 18px),
-        repeating-linear-gradient(0deg,
-          rgba(255,255,255,.04) 0 1px,
-          transparent 1px 22px);
-      mix-blend-mode:screen;
-      opacity:.78;
+      background-image:var(--earth-texture);
+      background-size:220% 100%;
+      background-position:0% 50%;
+      background-repeat:repeat-x;
       animation:earthTextureDrift var(--earth-spin) linear infinite;
+      filter:saturate(1.22) contrast(1.08) brightness(.92);
+      transform:scale(1.02);
     }
 
-    .earth::after {
+    .earth-map::before {
       content:"";
       position:absolute;
       inset:0;
       border-radius:50%;
       background:
-        radial-gradient(circle at 28% 22%,rgba(255,255,255,.25),transparent 14%),
-        linear-gradient(90deg,rgba(255,255,255,.12),transparent 34%,rgba(0,0,0,.28) 76%,rgba(0,0,0,.52));
+        repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 22px),
+        repeating-linear-gradient(0deg,rgba(255,255,255,.045) 0 1px,transparent 1px 24px);
+      mix-blend-mode:screen;
+      opacity:.42;
       pointer-events:none;
+    }
+
+    .earth-map::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.28),transparent 14%),
+        linear-gradient(90deg,rgba(255,255,255,.16),transparent 34%,rgba(0,0,0,.28) 76%,rgba(0,0,0,.58));
+      pointer-events:none;
+    }
+
+    .earth-clouds {
+      position:absolute;
+      inset:-1%;
+      border-radius:50%;
+      background:
+        radial-gradient(ellipse at 28% 28%,rgba(255,255,255,.22),transparent 10%),
+        radial-gradient(ellipse at 54% 42%,rgba(255,255,255,.16),transparent 12%),
+        radial-gradient(ellipse at 72% 64%,rgba(255,255,255,.16),transparent 14%),
+        radial-gradient(ellipse at 38% 72%,rgba(255,255,255,.13),transparent 13%);
+      mix-blend-mode:screen;
+      opacity:.60;
+      animation:cloudDrift 72s linear infinite;
+      pointer-events:none;
+      z-index:3;
     }
 
     .earth-atmosphere {
@@ -627,7 +648,7 @@
       background:radial-gradient(circle at 50% 50%,transparent 62%,rgba(142,197,255,.18) 74%,transparent 78%);
       animation:atmospherePulse 6s ease-in-out infinite;
       pointer-events:none;
-      z-index:3;
+      z-index:4;
     }
 
     .earth-label {
@@ -635,7 +656,7 @@
       left:50%;
       bottom:-42px;
       transform:translateX(-50%) rotate(23.5deg);
-      min-width:230px;
+      min-width:260px;
       text-align:center;
       color:#dfe8ff;
       font-size:.78rem;
@@ -710,11 +731,21 @@
 
     @keyframes earthTextureDrift {
       0% {
-        transform:translateX(-18%) scale(1.08);
+        background-position:0% 50%;
       }
 
       100% {
-        transform:translateX(18%) scale(1.08);
+        background-position:220% 50%;
+      }
+    }
+
+    @keyframes cloudDrift {
+      0% {
+        transform:translateX(-8%) rotate(0deg);
+      }
+
+      100% {
+        transform:translateX(8%) rotate(360deg);
       }
     }
 
@@ -800,7 +831,7 @@
         width:126px;
         height:126px;
         transform:none;
-        opacity:.42;
+        opacity:.46;
       }
 
       .route-grid {
@@ -821,11 +852,11 @@
       }
 
       .globe-stage {
-        min-height:390px;
+        min-height:420px;
       }
 
       .earth-wrap {
-        width:min(280px,76vw);
+        width:min(300px,76vw);
       }
     }
 
@@ -840,7 +871,7 @@
       }
 
       .earth-wrap {
-        width:min(250px,74vw);
+        width:min(270px,74vw);
       }
     }
 
@@ -862,14 +893,14 @@
     data-generation="second-generation-renewal"
     data-page="gauges"
     data-surface="generation-2-live-instrument-baseline"
-    data-globe="restored"
+    data-globe="real-earth-restored"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Diamond Gate Bridge Gauges">
         <span class="mark" aria-hidden="true">DG</span>
         <span>
           <span class="kicker">Gauge Authority · Second Generation Renewal</span>
-          <strong class="title">Live Feed Instrument Surface · V5</strong>
+          <strong class="title">Live Feed Instrument Surface · V6</strong>
         </span>
       </a>
 
@@ -888,7 +919,10 @@
     <section class="hero" aria-labelledby="gaugesTitle">
       <div class="hero-globe" aria-hidden="true">
         <div class="earth-wrap">
-          <div class="earth"></div>
+          <div class="earth">
+            <div class="earth-map"></div>
+            <div class="earth-clouds"></div>
+          </div>
           <div class="earth-atmosphere"></div>
         </div>
       </div>
@@ -896,10 +930,10 @@
       <div class="hero-copy">
         <span class="pill">Readable instrument surface</span>
         <h1 id="gaugesTitle">Gauges</h1>
-        <h2>The globe stays. The route controls become diamonds.</h2>
+        <h2>The real Earth globe is restored.</h2>
         <p>
-          Gauges is the public inspection room. It restores the globe as the core
-          instrument while keeping the route controls compact, diamond-shaped, and readable.
+          Gauges is the public inspection room. The globe is the core visual
+          instrument; diamond controls support routing without replacing Earth.
         </p>
       </div>
     </section>
@@ -909,14 +943,17 @@
         <span class="pill">Restored globe</span>
         <h2 id="globeTitle">Axis · natural spin · public inspection.</h2>
         <p>
-          The globe is the center instrument for Gauges. Diamonds can support route
-          movement, but they do not replace the globe.
+          The restored globe uses a real Earth texture layer instead of fake CSS
+          blob continents. The tilted axis and natural drift remain active.
         </p>
       </div>
 
-      <div class="globe-stage" aria-label="Restored rotating globe instrument">
+      <div class="globe-stage" aria-label="Restored real Earth globe instrument">
         <div class="earth-wrap">
-          <div class="earth"></div>
+          <div class="earth">
+            <div class="earth-map"></div>
+            <div class="earth-clouds"></div>
+          </div>
           <div class="earth-atmosphere"></div>
           <div class="earth-label">Earth standard · tilted axis · live gauge</div>
         </div>
@@ -928,9 +965,8 @@
         <span class="pill">Generation 2 baseline</span>
         <h2 id="contextTitle">Context comes first.</h2>
         <p>
-          The old version exposed too much raw instrument density before explaining
-          the surface. This version starts with meaning, restores the globe, then
-          gives route status.
+          The page starts with meaning, restores the real globe, then gives route
+          status through compact diamond controls.
         </p>
       </div>
 
@@ -1017,8 +1053,8 @@
       <div class="signal-grid">
         <article class="signal-card">
           <small>Globe</small>
-          <strong>Core instrument restored.</strong>
-          <p>The globe is visible as the main Gauges object and is not replaced by route diamonds.</p>
+          <strong>Real Earth restored.</strong>
+          <p>The globe uses an actual Earth texture layer, not abstract CSS blob continents.</p>
         </article>
 
         <article class="signal-card">
@@ -1042,8 +1078,9 @@
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_V5_STATUS=GENERATION_2_BASELINE_ACTIVE
-GLOBE=RESTORED
+        <code>GAUGES_V6_STATUS=GENERATION_2_BASELINE_ACTIVE
+GLOBE=REAL_EARTH_TEXTURE_RESTORED
+FAKE_BLOB_CONTINENTS=REMOVED
 NAVIGATION=COMPACT_DIAMOND_CONTROLS
 MOTION=CSS_ROTATION_AND_FLOAT
 CONTEXT=READABLE_FIRST
@@ -1053,7 +1090,7 @@ NEXT_ACTION=USE_GAUGES_AS_PUBLIC_INSPECTION_SURFACE</code>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · Globe Restored · Generation 2 Baseline</span>
+      <span>Diamond Gate Bridge · Gauges · Real Earth Restored · Generation 2 Baseline</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

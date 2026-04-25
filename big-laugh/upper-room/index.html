@@ -6,7 +6,7 @@
   <title>The Upper Room · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="The Upper Room: a self-contained Generation 2 upcoming show surface for Diamond Gate Bridge with V9 compact rotating diamond controls and readable event context."
+    content="The Upper Room: a self-contained Generation 2 upcoming show surface for Diamond Gate Bridge with V9 compact rotating diamond controls, readable event context, and an About This Underdog preface route."
   />
 
   <style>
@@ -224,11 +224,13 @@
       animation:innerDiamondSpin var(--diamond-spin) linear infinite;
     }
 
-    .nav a.featured {
+    .nav a.featured,
+    .route-card.featured {
       color:#fff8ea;
     }
 
-    .nav a.featured::before {
+    .nav a.featured::before,
+    .route-card.featured::before {
       border-color:rgba(239,210,154,.48);
       background:
         radial-gradient(circle at 50% 50%,rgba(239,210,154,.36),transparent 34%),
@@ -237,6 +239,24 @@
         linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
       box-shadow:
         0 0 40px rgba(239,210,154,.26),
+        inset 0 0 30px rgba(255,255,255,.04);
+    }
+
+    .nav a.underdog,
+    .route-card.underdog {
+      color:#fff1c7;
+    }
+
+    .nav a.underdog::before,
+    .route-card.underdog::before {
+      border-color:rgba(255,154,184,.44);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,154,184,.26),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(239,210,154,.18),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(42,20,32,.96),rgba(10,18,32,.92));
+      box-shadow:
+        0 0 40px rgba(255,154,184,.22),
         inset 0 0 30px rgba(255,255,255,.04);
     }
 
@@ -444,6 +464,13 @@
       animation:smallStageTurn 28s linear infinite;
     }
 
+    .show-card.underdog-card::before {
+      border-color:rgba(255,154,184,.20);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,154,184,.12),transparent 45%),
+        rgba(255,255,255,.02);
+    }
+
     .read-card small,
     .signal-card small,
     .show-card small,
@@ -480,7 +507,7 @@
     .route-card strong {
       position:relative;
       z-index:3;
-      max-width:70%;
+      max-width:72%;
       margin-left:auto;
       margin-right:auto;
       text-align:center;
@@ -492,7 +519,7 @@
     }
 
     .route-card strong {
-      font-size:.80rem;
+      font-size:.76rem;
     }
 
     .show-tag {
@@ -508,6 +535,12 @@
       font-weight:900;
       letter-spacing:.10em;
       text-transform:uppercase;
+    }
+
+    .show-tag.underdog-tag {
+      border-color:rgba(255,154,184,.24);
+      background:rgba(255,154,184,.060);
+      color:#ffdbe6;
     }
 
     .status-strip {
@@ -607,7 +640,7 @@
       }
 
       .nav {
-        grid-template-columns:repeat(8,minmax(80px,94px));
+        grid-template-columns:repeat(9,minmax(74px,90px));
         justify-content:end;
       }
 
@@ -617,11 +650,11 @@
       }
 
       .show-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
+        grid-template-columns:repeat(4,minmax(0,1fr));
       }
 
       .route-grid {
-        grid-template-columns:repeat(4,minmax(132px,1fr));
+        grid-template-columns:repeat(5,minmax(118px,1fr));
       }
     }
 
@@ -652,13 +685,13 @@
       }
 
       .nav {
-        grid-template-columns:repeat(4,minmax(0,1fr));
+        grid-template-columns:repeat(3,minmax(0,1fr));
         gap:6px;
       }
 
       .nav a {
         width:min(100%,70px);
-        font-size:.55rem;
+        font-size:.50rem;
       }
 
       .hero {
@@ -685,11 +718,11 @@
       }
 
       .route-card small {
-        font-size:.42rem;
+        font-size:.40rem;
       }
 
       .route-card strong {
-        font-size:.70rem;
+        font-size:.66rem;
       }
 
       .show-card {
@@ -700,7 +733,7 @@
     @media (max-width:360px) {
       .nav a {
         width:min(100%,62px);
-        font-size:.48rem;
+        font-size:.45rem;
       }
 
       .route-card {
@@ -726,6 +759,7 @@
     data-generation="second-generation-renewal"
     data-page="upper-room"
     data-surface="generation-2-self-contained-upper-room"
+    data-underdog-preface-route="/big-laugh/about-this-underdog/"
   >
     <header class="topbar">
       <a class="brand" href="/big-laugh/upper-room/" aria-label="The Upper Room">
@@ -744,6 +778,7 @@
         <a href="/frontier/">Frontier</a>
         <a href="/products/">Products</a>
         <a href="/gauges/">Gauges</a>
+        <a class="underdog" href="/big-laugh/about-this-underdog/">Underdog</a>
         <a class="featured" href="/about/">About</a>
       </nav>
     </header>
@@ -789,7 +824,7 @@
         <article class="read-card">
           <small>Route</small>
           <strong>Send traffic cleanly.</strong>
-          <p>Visitors can move to Products, Gauges, Explore, Frontier, or Home from here.</p>
+          <p>Visitors can move to Products, Gauges, Explore, Frontier, About, or About This Underdog from here.</p>
         </article>
       </div>
     </section>
@@ -821,6 +856,47 @@
           <p>The show remains connected to Diamond Gate Bridge without becoming the full system.</p>
           <span class="show-tag">Connected chamber</span>
         </article>
+
+        <article class="show-card underdog-card">
+          <small>Preface route</small>
+          <strong>About This Underdog.</strong>
+          <p>This new route prepares the personal/comedy identity layer before the destination page is built.</p>
+          <span class="show-tag underdog-tag">Preface active</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="underdogTitle">
+      <div class="panel-head">
+        <span class="pill">New preface</span>
+        <h2 id="underdogTitle">About This Underdog now has a forward route.</h2>
+        <p>
+          This is the preface step only. The Upper Room now points to the future
+          About This Underdog page. The destination page and backlink can be created
+          next without disturbing the V9 baseline.
+        </p>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card featured underdog" href="/big-laugh/about-this-underdog/">
+          <small>Preface</small>
+          <strong>About This Underdog</strong>
+        </a>
+
+        <a class="route-card" href="/big-laugh/upper-room/">
+          <small>Show hub</small>
+          <strong>The Upper Room</strong>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <small>Chamber</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/about/">
+          <small>Identity</small>
+          <strong>About</strong>
+        </a>
       </div>
     </section>
 
@@ -856,6 +932,11 @@
           <strong>Products</strong>
         </a>
 
+        <a class="route-card featured underdog" href="/big-laugh/about-this-underdog/">
+          <small>Identity</small>
+          <strong>About This Underdog</strong>
+        </a>
+
         <a class="route-card" href="/gauges/">
           <small>Inspection</small>
           <strong>Gauges</strong>
@@ -867,7 +948,7 @@
         </a>
 
         <a class="route-card" href="/about/">
-          <small>Identity</small>
+          <small>Site identity</small>
           <strong>About</strong>
         </a>
       </div>
@@ -889,13 +970,13 @@
         <article class="signal-card">
           <small>Function</small>
           <strong>The page is a show chamber.</strong>
-          <p>The Upper Room now has a clear public event role instead of acting as a loose route page.</p>
+          <p>The Upper Room has a clear public event role and now includes the Underdog preface route.</p>
         </article>
 
         <article class="signal-card">
           <small>Baseline</small>
-          <strong>Upper Room V9 is self-contained.</strong>
-          <p>The page does not depend on shared asset loading to render its core shape and motion.</p>
+          <strong>Upper Room V9 remains self-contained.</strong>
+          <p>The added route does not depend on shared asset loading and does not break the V9 baseline.</p>
         </article>
       </div>
     </section>
@@ -913,10 +994,13 @@ ROUTE=/big-laugh/upper-room/
 NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
 SHOW_CHAMBER_ROLE=ACTIVE
 UPCOMING_SHOW_SURFACE=VISIBLE
+ABOUT_THIS_UNDERDOG_PREFACE=ACTIVE
+ABOUT_THIS_UNDERDOG_ROUTE=/big-laugh/about-this-underdog/
+BACKLINK_STATUS=NEXT_FILE_NOT_CREATED_YET
 CONTEXT=READABLE_FIRST
 LEGACY_LONG_BUBBLES=REMOVED
 ASSET_DEPENDENCY=REMOVED_FOR_UPPER_ROOM_PAGE
-NEXT_ACTION=USE_THIS_AS_THE_STABLE_UPPER_ROOM_BASELINE</code>
+NEXT_ACTION=CREATE_/big-laugh/about-this-underdog/index.html_WITH_BACKLINK_TO_UPPER_ROOM</code>
       </div>
     </section>
 
@@ -925,7 +1009,7 @@ NEXT_ACTION=USE_THIS_AS_THE_STABLE_UPPER_ROOM_BASELINE</code>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/home/">Home</a> ·
-        <a href="/explore/">Explore</a> ·
+        <a href="/big-laugh/about-this-underdog/">About This Underdog</a> ·
         <a href="/products/">Products</a>
       </span>
     </footer>

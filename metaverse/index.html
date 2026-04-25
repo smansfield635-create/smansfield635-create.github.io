@@ -6,7 +6,7 @@
   <title>Metaverse · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Metaverse: Generation 2 public world surface with shared Earth, products, gauges, and runtime routes."
+    content="Metaverse at Diamond Gate Bridge: a concise Generation 2 world-surface page that separates the Metaverse from the product engine."
   />
 
   <style>
@@ -19,7 +19,9 @@
       --muted:#aab8d8;
       --gold:#efd29a;
       --blue:#8ec5ff;
-      --green:#92e7ba;
+      --green:#93efbd;
+      --rose:#ff9ab8;
+      --purple:#c89cff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
     }
@@ -37,7 +39,7 @@
       background:
         radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
         radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
-        radial-gradient(circle at 82% 42%,rgba(146,231,186,.10),transparent 28%),
+        radial-gradient(circle at 82% 42%,rgba(200,156,255,.12),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
@@ -70,10 +72,9 @@
 
     .topbar,
     .hero,
-    .stage,
-    .route-panel,
-    .route-card,
-    .control-panel {
+    .panel,
+    .step-card,
+    .route-card {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
@@ -104,10 +105,11 @@
       place-items:center;
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.26),transparent 42%),
         linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
       font-weight:900;
       letter-spacing:.08em;
+      flex:0 0 auto;
     }
 
     .kicker {
@@ -126,16 +128,15 @@
       font-size:1.05rem;
     }
 
-    .nav {
+    .nav,
+    .route-grid,
+    .steps {
       display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
+      gap:10px;
     }
 
     .nav a,
-    .button,
-    .route-card,
-    .control-panel button {
+    .route-card {
       min-height:44px;
       display:inline-flex;
       align-items:center;
@@ -150,21 +151,61 @@
     }
 
     .nav a:focus-visible,
-    .button:focus-visible,
     .route-card:focus-visible,
-    .control-panel button:focus-visible {
+    .step-card:focus-visible {
       outline:2px solid rgba(239,210,154,.62);
       outline-offset:3px;
     }
 
     .hero {
       border-radius:34px;
-      padding:clamp(20px,3.5vw,38px);
+      padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      overflow:hidden;
+      min-height:clamp(360px,48vw,560px);
       display:grid;
-      gap:18px;
       align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(660px,84vw);
+      height:min(660px,84vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.20),transparent 24%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(200,156,255,.10),transparent 70%);
+      filter:blur(5px);
+      z-index:-2;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(800px,92vw);
+      height:min(380px,46vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-10deg);
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:50%;
+      z-index:-1;
+      box-shadow:
+        0 0 38px rgba(142,197,255,.08),
+        inset 0 0 38px rgba(239,210,154,.06);
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
+      max-width:850px;
     }
 
     .pill {
@@ -189,25 +230,24 @@
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--gold);
-      box-shadow:0 0 18px rgba(239,210,154,.50);
+      background:var(--blue);
+      box-shadow:0 0 18px rgba(142,197,255,.50);
     }
 
     h1 {
       margin:0;
-      max-width:10ch;
       color:#fff;
-      font-size:clamp(3rem,12vw,6.8rem);
-      line-height:.88;
-      letter-spacing:-.075em;
+      font-size:clamp(3.4rem,12vw,7.2rem);
+      line-height:.86;
+      letter-spacing:-.08em;
     }
 
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.55rem,5vw,3rem);
+      font-size:clamp(1.6rem,5vw,3.15rem);
       line-height:1;
-      letter-spacing:-.05em;
+      letter-spacing:-.045em;
     }
 
     p {
@@ -218,284 +258,116 @@
     }
 
     .hero p {
-      max-width:62ch;
-      margin-top:14px;
+      max-width:70ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
-    .actions {
-      display:grid;
-      gap:8px;
-      margin-top:18px;
-    }
-
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .stage {
-      position:relative;
-      min-height:clamp(460px,64vw,680px);
-      border-radius:32px;
-      overflow:hidden;
-      isolation:isolate;
-      display:grid;
-      place-items:center;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.13),transparent 22%),
-        radial-gradient(circle at 30% 30%,rgba(142,197,255,.13),transparent 24%),
-        radial-gradient(circle at 70% 70%,rgba(146,231,186,.10),transparent 26%),
-        linear-gradient(180deg,#050b18,#02050d);
-    }
-
-    .stage::before {
-      content:"";
-      position:absolute;
-      inset:18px;
-      z-index:8;
-      border-radius:26px;
-      border:1px solid rgba(255,255,255,.10);
-      box-shadow:inset 0 0 36px rgba(145,201,255,.12);
-      pointer-events:none;
-    }
-
-    .stage::after {
-      content:"";
-      position:absolute;
-      inset:-20%;
-      z-index:1;
-      opacity:.18;
-      background:
-        linear-gradient(90deg,rgba(145,201,255,.10) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(145,201,255,.06) 1px,transparent 1px);
-      background-size:48px 48px;
-      transform:rotate(-7deg);
-      pointer-events:none;
-    }
-
-    .stage-title {
-      position:absolute;
-      left:50%;
-      top:5%;
-      z-index:12;
-      width:min(460px,78%);
-      transform:translateX(-50%);
-      padding:10px 13px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(5,12,26,.78);
-      text-align:center;
-      color:#e8f0ff;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      line-height:1.25;
-      font-size:.58rem;
-      font-weight:850;
-      backdrop-filter:blur(12px);
-    }
-
-    .orbit {
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:74%;
-      height:42%;
-      border:5px solid rgba(220,235,255,.16);
-      border-radius:50%;
-      transform-origin:center;
-      z-index:3;
-      filter:drop-shadow(0 0 20px rgba(145,201,255,.14));
-      pointer-events:none;
-    }
-
-    .orbit.one {
-      transform:translate(-50%,-50%) rotate(45deg);
-      animation:orbitOne 9s ease-in-out infinite;
-    }
-
-    .orbit.two {
-      transform:translate(-50%,-50%) rotate(-45deg);
-      animation:orbitTwo 9s ease-in-out infinite;
-    }
-
-    .earth-core {
-      position:relative;
-      z-index:7;
-      width:230px;
-      height:230px;
-      display:grid;
-      place-items:center;
-      border-radius:50%;
-      filter:drop-shadow(0 0 34px rgba(255,255,255,.20));
-    }
-
-    .earth-core::before {
-      content:"";
-      position:absolute;
-      inset:-28px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(240,213,155,.26),transparent 56%),
-        radial-gradient(circle at 50% 50%,rgba(145,201,255,.20),transparent 70%);
-      filter:blur(10px);
-      z-index:-1;
-    }
-
-    .node {
-      position:absolute;
-      z-index:9;
-      min-width:132px;
-      padding:10px 12px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(5,12,26,.78);
-      backdrop-filter:blur(12px);
-      color:#fff;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.62rem;
-      font-weight:900;
-      text-align:center;
-      transition:opacity .22s ease,transform .22s ease,border-color .22s ease;
-    }
-
-    .node.products { left:8%; top:20%; border-color:rgba(239,210,154,.38); }
-    .node.world { right:8%; top:20%; border-color:rgba(142,197,255,.38); }
-    .node.gauges { right:8%; bottom:18%; border-color:rgba(146,231,186,.38); }
-    .node.runtime { left:8%; bottom:18%; border-color:rgba(255,255,255,.25); }
-
-    .stage[data-focus="products"] .node:not(.products),
-    .stage[data-focus="world"] .node:not(.world),
-    .stage[data-focus="gauges"] .node:not(.gauges),
-    .stage[data-focus="runtime"] .node:not(.runtime) {
-      opacity:.22;
-    }
-
-    .stage[data-focus="products"] .node.products,
-    .stage[data-focus="world"] .node.world,
-    .stage[data-focus="gauges"] .node.gauges,
-    .stage[data-focus="runtime"] .node.runtime {
-      transform:scale(1.08);
-      border-color:rgba(239,210,154,.62);
-    }
-
-    .stage[data-spin="paused"] .orbit {
-      animation-play-state:paused;
-    }
-
-    .control-panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,24px);
-      margin:14px 0;
-      display:grid;
-      gap:14px;
-    }
-
-    .control-head {
-      display:flex;
-      flex-wrap:wrap;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-
-    .control-head h2 {
-      color:#fff;
-      font-size:clamp(1.45rem,4vw,2.5rem);
-    }
-
-    .control-head span {
-      color:var(--muted);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.64rem;
-      font-weight:850;
-    }
-
-    .control-grid {
-      display:grid;
-      gap:10px;
-    }
-
-    .control-group {
-      display:grid;
-      gap:8px;
-      padding:12px;
-      border:1px solid rgba(177,199,255,.15);
-      border-radius:20px;
-      background:rgba(255,255,255,.035);
-    }
-
-    .control-group small {
-      color:#91a6cf;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.62rem;
-      font-weight:850;
-    }
-
-    .control-panel button {
-      cursor:pointer;
-      font:inherit;
-      font-size:.78rem;
-    }
-
-    .control-panel button[aria-pressed="true"],
-    .control-panel button.active {
-      border-color:rgba(239,210,154,.42);
-      background:rgba(239,210,154,.14);
-      color:#fff8ea;
-    }
-
-    .route-panel {
+    .panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
       display:grid;
-      gap:14px;
+      gap:16px;
     }
 
-    .route-head {
+    .panel-head {
       display:grid;
       gap:8px;
     }
 
-    .route-head h2 {
-      color:#fff;
-      font-size:clamp(1.65rem,5vw,3rem);
+    .steps {
+      grid-template-columns:1fr;
     }
 
-    .route-grid {
-      display:grid;
-      gap:10px;
-    }
-
+    .step-card,
     .route-card {
-      min-height:116px;
       border-radius:22px;
-      flex-direction:column;
-      align-items:flex-start;
-      text-align:left;
       padding:16px;
+      min-height:136px;
+      align-items:flex-start;
+      justify-content:flex-start;
+      flex-direction:column;
+      text-align:left;
+      color:inherit;
     }
 
+    .step-card small,
     .route-card small {
       display:block;
       margin-bottom:8px;
       color:#91a6cf;
       text-transform:uppercase;
-      letter-spacing:.12em;
+      letter-spacing:.13em;
       font-size:.66rem;
       font-weight:850;
     }
 
+    .step-card strong,
     .route-card strong {
       display:block;
       color:#fff;
       font-size:1.08rem;
-      line-height:1.1;
+      line-height:1.12;
+    }
+
+    .step-card p {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .step-card.separate {
+      border-color:rgba(239,210,154,.25);
+    }
+
+    .step-card.connect {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .step-card.expand {
+      border-color:rgba(200,156,255,.25);
+    }
+
+    .route-card {
+      min-height:112px;
+      justify-content:center;
+    }
+
+    .route-card.door {
+      border-color:rgba(239,210,154,.25);
+    }
+
+    .route-card.explore {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .route-card.frontier {
+      border-color:rgba(200,156,255,.25);
+    }
+
+    .route-card.product {
+      border-color:rgba(147,239,189,.25);
+    }
+
+    .route-card.human {
+      border-color:rgba(255,154,184,.25);
+    }
+
+    .route-card.gauge {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .closing-read {
+      max-width:82ch;
+      padding:18px;
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:24px;
+      background:rgba(255,255,255,.035);
+      color:#dfe8ff;
+      font-size:1.04rem;
+      line-height:1.65;
     }
 
     .footer {
@@ -512,28 +384,6 @@
       color:#d6e2ff;
     }
 
-    @keyframes orbitOne {
-      0%,100% {
-        transform:translate(-50%,-50%) rotate(45deg) scaleX(1);
-        opacity:.56;
-      }
-      50% {
-        transform:translate(-50%,-50%) rotate(48deg) scaleX(1.06);
-        opacity:.80;
-      }
-    }
-
-    @keyframes orbitTwo {
-      0%,100% {
-        transform:translate(-50%,-50%) rotate(-45deg) scaleX(1);
-        opacity:.56;
-      }
-      50% {
-        transform:translate(-50%,-50%) rotate(-48deg) scaleX(1.06);
-        opacity:.80;
-      }
-    }
-
     @media (min-width:820px) {
       .topbar {
         grid-template-columns:1fr auto;
@@ -541,19 +391,10 @@
       }
 
       .nav {
-        grid-template-columns:repeat(5,auto);
+        grid-template-columns:repeat(6,auto);
       }
 
-      .hero {
-        grid-template-columns:1fr .88fr;
-      }
-
-      .actions {
-        grid-template-columns:repeat(3,auto);
-        justify-content:start;
-      }
-
-      .control-grid {
+      .steps {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
@@ -570,36 +411,71 @@
 
       .topbar,
       .hero,
-      .stage,
-      .control-panel,
-      .route-panel {
+      .panel {
         border-radius:24px;
       }
 
-      .nav,
-      .control-grid,
+      .topbar {
+        padding:12px;
+      }
+
+      .brand {
+        gap:10px;
+      }
+
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+
+      .nav a {
+        min-height:38px;
+        padding:0 9px;
+        font-size:.88rem;
+        line-height:1.05;
+      }
+
+      .hero {
+        min-height:390px;
+        padding:22px;
+      }
+
       .route-grid {
-        grid-template-columns:1fr;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
       }
 
-      .stage {
-        min-height:620px;
+      .route-card {
+        min-height:86px;
+        padding:12px;
       }
 
-      .earth-core {
-        width:188px;
-        height:188px;
+      .route-card small {
+        font-size:.58rem;
       }
 
-      .node {
-        min-width:108px;
-        font-size:.54rem;
+      .route-card strong {
+        font-size:.96rem;
+      }
+    }
+
+    @media (max-width:360px) {
+      .nav a {
+        font-size:.80rem;
+        min-height:36px;
+        padding:0 7px;
       }
 
-      .node.products { left:5%; top:18%; }
-      .node.world { right:5%; top:18%; }
-      .node.gauges { right:5%; bottom:18%; }
-      .node.runtime { left:5%; bottom:18%; }
+      .route-card {
+        min-height:78px;
+        padding:10px;
+      }
     }
 
     @media (prefers-reduced-motion:reduce) {
@@ -618,11 +494,11 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="metaverse"
-    data-metaverse-official="true"
-    data-shared-earth="pending"
+    data-surface="ted-style-world-surface"
+    data-metaverse-separate-from-products="true"
   >
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+      <a class="brand" href="/" aria-label="Door">
         <span class="mark" aria-hidden="true">MV</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
@@ -632,268 +508,145 @@
 
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Door</a>
-        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
         <a href="/products/">Products</a>
-        <a href="/big-laugh/">Big Laugh</a>
         <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <section class="hero" aria-labelledby="metaverseTitle">
-      <div>
-        <span class="pill">Generation 2 · official metaverse surface</span>
+      <div class="hero-copy">
+        <span class="pill">World surface</span>
         <h1 id="metaverseTitle">Metaverse</h1>
-        <h2>One world. Multiple chambers.</h2>
+        <h2>The world is separate from the product engine.</h2>
         <p>
-          The Metaverse is now its own Generation 2 route. It connects the shared Earth,
-          Products, World, Gauges, and Runtime while keeping the Product Engine separate.
+          The Metaverse is the connected world surface. Products may live inside
+          the larger system, but the Metaverse is not the product chamber. It is the
+          broader field where rooms, paths, and public worlds can connect.
         </p>
-
-        <div class="actions">
-          <a class="button primary" href="/metaverse/">Stay in Metaverse</a>
-          <a class="button" href="/products/">Open Products</a>
-          <a class="button" href="/gauges/">Inspect Gauges</a>
-        </div>
-      </div>
-
-      <section
-        id="metaverseStage"
-        class="stage"
-        data-focus="all"
-        data-spin="playing"
-        aria-label="Metaverse Generation 2 control surface"
-      >
-        <div class="stage-title">Metaverse G2 · shared Earth control surface</div>
-
-        <span class="orbit one" aria-hidden="true"></span>
-        <span class="orbit two" aria-hidden="true"></span>
-
-        <div id="metaverseEarthCore" class="earth-core" aria-label="Shared Earth core"></div>
-
-        <span class="node products">Products</span>
-        <span class="node world">World</span>
-        <span class="node gauges">Gauges</span>
-        <span class="node runtime">Runtime</span>
-      </section>
-    </section>
-
-    <section class="control-panel" aria-label="Metaverse controls">
-      <div class="control-head">
-        <h2>Controls.</h2>
-        <span id="metaverseReceipt">Spin: playing · Focus: all · Earth: loading</span>
-      </div>
-
-      <div class="control-grid">
-        <div class="control-group">
-          <small>Spin</small>
-          <button type="button" data-control="spin" data-value="playing" aria-pressed="true">Play</button>
-          <button type="button" data-control="spin" data-value="paused" aria-pressed="false">Pause</button>
-        </div>
-
-        <div class="control-group">
-          <small>Focus</small>
-          <button type="button" data-control="focus" data-value="all" aria-pressed="true">All</button>
-          <button type="button" data-control="focus" data-value="products" aria-pressed="false">Products</button>
-          <button type="button" data-control="focus" data-value="world" aria-pressed="false">World</button>
-          <button type="button" data-control="focus" data-value="gauges" aria-pressed="false">Gauges</button>
-          <button type="button" data-control="focus" data-value="runtime" aria-pressed="false">Runtime</button>
-        </div>
-
-        <div class="control-group">
-          <small>Routes</small>
-          <a class="button" href="/products/">Products</a>
-          <a class="button" href="/world/">World</a>
-          <a class="button" href="/gauges/">Gauges</a>
-        </div>
       </div>
     </section>
 
-    <section class="route-panel" aria-labelledby="routeTitle">
-      <div class="route-head">
-        <span class="pill">Core chambers</span>
-        <h2 id="routeTitle">Official Generation 2 routes.</h2>
+    <section class="panel" aria-labelledby="talkTitle">
+      <div class="panel-head">
+        <span class="pill">The world idea</span>
+        <h2 id="talkTitle">A world surface has three jobs.</h2>
         <p>
-          This surface keeps the Metaverse readable. Products is a connected chamber,
-          not the Metaverse itself.
+          It separates the map from the merchandise, connects public paths, and
+          gives future rooms a place to emerge without crowding the Door.
         </p>
+      </div>
+
+      <div class="steps">
+        <article class="step-card separate">
+          <small>Separate</small>
+          <strong>Keep products in Products.</strong>
+          <p>
+            The product engine has its own chamber. The Metaverse is the surrounding
+            world, not a product list.
+          </p>
+        </article>
+
+        <article class="step-card connect">
+          <small>Connect</small>
+          <strong>Let paths meet cleanly.</strong>
+          <p>
+            Human paths, product paths, exploration paths, and future spaces can
+            connect here without collapsing into one page.
+          </p>
+        </article>
+
+        <article class="step-card expand">
+          <small>Expand</small>
+          <strong>Hold future rooms without clutter.</strong>
+          <p>
+            The world surface can grow after the core routes are stable.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="routesTitle">
+      <div class="panel-head">
+        <span class="pill">Choose the path</span>
+        <h2 id="routesTitle">Four doors are enough.</h2>
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/products/">
-          <small>Connected chamber</small>
+        <a class="route-card door" href="/">
+          <small>Access</small>
+          <strong>Door</strong>
+        </a>
+
+        <a class="route-card explore" href="/explore/">
+          <small>Route map</small>
+          <strong>Explore</strong>
+        </a>
+
+        <a class="route-card frontier" href="/explore/frontier/">
+          <small>Explore child</small>
+          <strong>Frontier</strong>
+        </a>
+
+        <a class="route-card product" href="/products/">
+          <small>Product chamber</small>
           <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/world/">
-          <small>World layer</small>
-          <strong>World</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Diagnostic layer</small>
-          <strong>Gauges</strong>
-        </a>
-
-        <a class="route-card" href="/runtime/">
-          <small>Runtime layer</small>
-          <strong>Runtime</strong>
         </a>
       </div>
     </section>
 
+    <section class="panel" aria-labelledby="supportTitle">
+      <div class="panel-head">
+        <span class="pill">Related surfaces</span>
+        <h2 id="supportTitle">The world remains connected.</h2>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card human" href="/nine-summits/">
+          <small>Human path</small>
+          <strong>Nine Summits</strong>
+        </a>
+
+        <a class="route-card human" href="/big-laugh/upper-room/">
+          <small>Upcoming show</small>
+          <strong>The Upper Room</strong>
+        </a>
+
+        <a class="route-card gauge" href="/gauges/">
+          <small>Inspection</small>
+          <strong>Gauges</strong>
+        </a>
+
+        <a class="route-card door" href="/prelude/">
+          <small>Threshold</small>
+          <strong>Prelude</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="closingTitle">
+      <div class="panel-head">
+        <span class="pill">Metaverse read</span>
+        <h2 id="closingTitle">The world should not become a route dump.</h2>
+      </div>
+
+      <p class="closing-read">
+        The Metaverse gives the system a broader field. It stays useful by keeping
+        the product chamber separate and letting each path keep its own doorway.
+      </p>
+    </section>
+
     <footer class="footer">
-      <span>Metaverse · Generation 2 Official Surface</span>
+      <span>Metaverse · Generation 2 World Surface</span>
       <span>
-        <a href="/">Door</a>
-        ·
+        <a href="/">Door</a> ·
+        <a href="/explore/">Explore</a> ·
+        <a href="/explore/frontier/">Frontier</a> ·
         <a href="/products/">Products</a>
-        ·
-        <a href="/gauges/">Gauges</a>
       </span>
     </footer>
   </main>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const SHARED_EARTH_SRC = "/shared/earth_globe.js";
-      const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
-
-      const page = document.querySelector("[data-page='metaverse']");
-      const stage = document.getElementById("metaverseStage");
-      const receipt = document.getElementById("metaverseReceipt");
-      const earthCore = document.getElementById("metaverseEarthCore");
-
-      function setReceipt() {
-        if (!receipt || !stage) return;
-
-        const earthState = page?.dataset.sharedEarth || "pending";
-        receipt.textContent = `Spin: ${stage.dataset.spin} · Focus: ${stage.dataset.focus} · Earth: ${earthState}`;
-      }
-
-      function updatePressedStates(control, value) {
-        document.querySelectorAll(`[data-control="${control}"]`).forEach((button) => {
-          const active = button.dataset.value === value;
-          button.setAttribute("aria-pressed", active ? "true" : "false");
-          button.classList.toggle("active", active);
-        });
-      }
-
-      function setSharedEarthSpin(spin) {
-        if (!earthCore) return;
-
-        const globe = earthCore.querySelector(".dgb-earth-globe");
-        if (!globe) return;
-
-        globe.querySelectorAll(".dgb-earth-globe__texture, .dgb-earth-globe__cloud-layer").forEach((node) => {
-          node.style.animationPlayState = spin === "paused" ? "paused" : "running";
-        });
-      }
-
-      function bindControls() {
-        document.querySelectorAll("[data-control]").forEach((button) => {
-          button.addEventListener("click", () => {
-            const control = button.dataset.control;
-            const value = button.dataset.value;
-
-            if (!control || !value || !stage) return;
-
-            stage.dataset[control] = value;
-            updatePressedStates(control, value);
-
-            if (control === "spin") {
-              setSharedEarthSpin(value);
-            }
-
-            setReceipt();
-          });
-        });
-      }
-
-      function loadScriptOnce(src, globalCheck) {
-        return new Promise((resolve, reject) => {
-          if (typeof globalCheck === "function" && globalCheck()) {
-            resolve();
-            return;
-          }
-
-          const existing = Array.from(document.scripts).find((script) => script.src.includes(src));
-
-          if (existing) {
-            existing.addEventListener("load", () => resolve(), { once:true });
-            existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once:true });
-
-            window.setTimeout(() => {
-              if (typeof globalCheck === "function" && globalCheck()) resolve();
-            }, 60);
-
-            return;
-          }
-
-          const script = document.createElement("script");
-          script.src = `${src}?v=${encodeURIComponent(SHARED_EARTH_VERSION)}`;
-          script.defer = true;
-          script.dataset.metaverseSharedEarth = "true";
-
-          script.addEventListener("load", () => resolve(), { once:true });
-          script.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once:true });
-
-          document.head.appendChild(script);
-        });
-      }
-
-      async function mountSharedEarth() {
-        if (!earthCore) return false;
-
-        try {
-          await loadScriptOnce(SHARED_EARTH_SRC, () => Boolean(window.DGBEarthGlobe));
-
-          if (!window.DGBEarthGlobe || typeof window.DGBEarthGlobe.mount !== "function") {
-            if (page) page.dataset.sharedEarth = "unavailable";
-            setReceipt();
-            return false;
-          }
-
-          window.DGBEarthGlobe.mount(earthCore, {
-            mode: "proof",
-            textureDuration: "56s",
-            cloudDuration: "84s",
-            texturePositionX: "58%",
-            texturePositionY: "46%"
-          });
-
-          if (page) {
-            page.dataset.sharedEarth = "online";
-            page.dataset.sharedEarthVersion = window.DGBEarthGlobe.version || SHARED_EARTH_VERSION;
-          }
-
-          setSharedEarthSpin(stage?.dataset.spin || "playing");
-          setReceipt();
-          return true;
-        } catch (error) {
-          if (page) {
-            page.dataset.sharedEarth = "failed";
-            page.dataset.sharedEarthError = String(error && error.message ? error.message : error);
-          }
-
-          setReceipt();
-          return false;
-        }
-      }
-
-      function boot() {
-        bindControls();
-        setReceipt();
-        mountSharedEarth();
-      }
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", boot, { once:true });
-      } else {
-        boot();
-      }
-    })();
-  </script>
 </body>
 </html>

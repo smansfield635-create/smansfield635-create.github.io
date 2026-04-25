@@ -1,618 +1,367 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-products-page-version="products-clean-runtime-shell-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Products Chamber for Diamond Gate Bridge: a stained-glass four-season molecular flower with two overlapping figure-eight loops."
+    content="Diamond Gate Bridge Products chamber: four-season product engine and second-generation runtime surface."
   />
+
   <style>
-    :root{
-      --bg:#040814;
-      --line:rgba(164,188,255,.18);
-      --line-strong:rgba(210,223,255,.34);
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --line:rgba(170,198,255,.18);
       --text:#eef4ff;
-      --muted:#9aabd0;
+      --muted:#aab8d8;
       --gold:#efd29a;
-      --north:#dde8ff;
-      --south:#97e6b4;
-      --east:#8fc9ff;
-      --west:#ffd58f;
-      --shadow:0 24px 80px rgba(0,0,0,.46);
-      --max:1240px;
+      --blue:#8ec5ff;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
     }
 
-    *{box-sizing:border-box}
-    html{min-height:100%;scroll-behavior:smooth}
+    * {
+      box-sizing:border-box;
+    }
 
-    body{
-      min-height:100%;
+    html,
+    body {
       margin:0;
+      min-height:100%;
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 12%, rgba(107,137,217,.18), transparent 18%),
-        radial-gradient(circle at 22% 24%, rgba(79,109,184,.08), transparent 20%),
-        radial-gradient(circle at 78% 28%, rgba(79,109,184,.08), transparent 20%),
-        linear-gradient(180deg,#030611 0%,#061020 48%,#030611 100%);
+        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
+        radial-gradient(circle at 20% 32%,rgba(239,210,154,.10),transparent 30%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
     }
 
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.18;
+      opacity:.20;
       background:
-        radial-gradient(circle at 18% 20%, rgba(255,255,255,.46) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 78% 28%, rgba(255,255,255,.24) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 32% 72%, rgba(255,255,255,.2) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 84% 82%, rgba(255,255,255,.16) 0 1px, transparent 1.5px);
-      background-size:260px 260px,340px 340px,420px 420px,560px 560px;
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    .page{
-      width:min(var(--max), calc(100vw - 24px));
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .products-page {
+      width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
-      padding:18px 0 40px;
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
-      overflow:hidden;
     }
 
-    .topbar,.hero,.section,.hero-side,.runtime-fallback{
+    .products-topbar,
+    .products-shell,
+    .products-runtime-mount {
       border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel),rgba(3,9,20,.92));
       box-shadow:var(--shadow);
-      background:linear-gradient(180deg, rgba(9,17,33,.88), rgba(6,12,24,.82));
     }
 
-    .topbar{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
-      padding:14px 16px;
-      border-radius:20px;
-      background:rgba(7,13,26,.7);
-      backdrop-filter:blur(10px);
-      overflow:hidden;
+    .products-topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:12px;
     }
 
-    .brand{
+    .products-brand {
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:0;
     }
 
-    .brand-mark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
+    .products-mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
       display:grid;
       place-items:center;
       border:1px solid var(--line);
-      background:linear-gradient(180deg, rgba(26,43,78,.82), rgba(10,18,32,.92));
-      color:#f4f8ff;
-      font-weight:800;
+      background:
+        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
+      font-weight:900;
       letter-spacing:.08em;
-      flex:none;
     }
 
-    .brand-kicker{
+    .products-kicker {
+      display:block;
       margin:0 0 4px;
       color:#c8d7ff;
       font-size:.72rem;
-      letter-spacing:.16em;
       text-transform:uppercase;
+      letter-spacing:.16em;
     }
 
-    .brand-title{
+    .products-title {
+      display:block;
       margin:0;
+      font-weight:850;
       font-size:1.05rem;
-      font-weight:700;
     }
 
-    .topnav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      justify-content:flex-end;
+    .products-nav {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
     }
 
-    .nav-link,.button,.filter-chip{
+    .products-nav a,
+    .products-action {
+      min-height:44px;
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      text-decoration:none;
-      transition:transform .16s ease,border-color .16s ease,background .16s ease,box-shadow .16s ease;
-    }
-
-    .nav-link{
-      min-height:40px;
       padding:0 14px;
-      border-radius:999px;
       border:1px solid var(--line);
-      color:var(--text);
-      font-weight:700;
-      font-size:.92rem;
-      background:rgba(255,255,255,.03);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
+      text-align:center;
     }
 
-    .nav-link:hover,.nav-link:focus-visible,
-    .button:hover,.button:focus-visible,
-    .filter-chip:hover,.filter-chip:focus-visible{
-      transform:translateY(-1px);
-      border-color:var(--line-strong);
-      background:rgba(255,255,255,.05);
-      outline:none;
+    .products-nav a:focus-visible,
+    .products-action:focus-visible,
+    .products-runtime-mount:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
     }
 
-    .hero{
-      margin-top:16px;
-      border-radius:34px;
-      padding:24px 20px 20px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .hero::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(132,164,255,.14), transparent 28%),
-        linear-gradient(90deg, transparent, rgba(255,255,255,.03), transparent);
-      mix-blend-mode:screen;
-    }
-
-    .hero-grid{
+    .products-shell {
+      border-radius:32px;
+      padding:clamp(18px,3vw,30px);
+      margin-bottom:14px;
       display:grid;
-      grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);
-      gap:20px;
-      align-items:start;
-      position:relative;
-      z-index:1;
+      gap:14px;
     }
 
-    .hero-tag{
+    .products-pill {
       display:inline-flex;
+      width:fit-content;
       align-items:center;
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
       border:1px solid var(--line);
-      background:rgba(255,255,255,.03);
+      background:rgba(255,255,255,.035);
       color:#d8e3ff;
       text-transform:uppercase;
       letter-spacing:.14em;
-      font-size:.72rem;
-      margin-bottom:12px;
+      font-size:.70rem;
+      font-weight:850;
     }
 
-    .hero-tag::before{
+    .products-pill::before {
       content:"";
       width:9px;
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:#dce7ff;
-      box-shadow:0 0 16px rgba(220,231,255,.52);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(239,210,154,.50);
     }
 
-    h1{
-      margin:0 0 10px;
-      font-size:clamp(2.2rem,4.8vw,4rem);
-      line-height:.96;
-      letter-spacing:-.05em;
-      max-width:11ch;
-    }
-
-    h1 .accent{color:var(--gold)}
-
-    .hero p,.hero-side p,.section-note,.runtime-fallback p{
-      color:var(--muted);
-      line-height:1.58;
-    }
-
-    .hero p{
+    h1 {
       margin:0;
-      font-size:clamp(.98rem,1.5vw,1.1rem);
-      max-width:60ch;
+      max-width:12ch;
+      color:#fff;
+      font-size:clamp(2.4rem,10vw,5.2rem);
+      line-height:.92;
+      letter-spacing:-.065em;
     }
 
-    .hero-actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
+    .products-shell p {
+      margin:0;
+      max-width:68ch;
+      color:var(--muted);
+      line-height:1.55;
+      font-size:1rem;
     }
 
-    .button{
-      min-height:44px;
-      padding:0 16px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      color:var(--text);
-      font-weight:800;
-      background:rgba(255,255,255,.03);
-      white-space:nowrap;
+    .products-actions {
+      display:grid;
+      gap:8px;
+      margin-top:4px;
     }
 
-    .button.primary{
-      border-color:rgba(239,210,154,.3);
-      background:linear-gradient(180deg, rgba(239,210,154,.16), rgba(239,210,154,.06));
+    .products-action.primary {
+      border-color:rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
       color:#fff8ea;
     }
 
-    .hero-side{
-      border-radius:24px;
-      padding:18px;
+    .products-runtime-mount {
+      border-radius:32px;
+      min-height:520px;
+      padding:0;
       overflow:hidden;
     }
 
-    .hero-side h2,.runtime-fallback h2{
-      margin:0 0 10px;
-      font-size:1.08rem;
-      line-height:1.1;
-      letter-spacing:-.02em;
-    }
-
-    .hero-stats{
+    .products-boot {
+      min-height:520px;
       display:grid;
-      gap:10px;
-      margin-top:16px;
+      place-items:center;
+      padding:24px;
+      text-align:center;
     }
 
-    .stat{
-      padding:12px 14px;
-      border-radius:16px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.025);
-    }
-
-    .stat-label{
-      display:block;
-      margin-bottom:6px;
-      color:#90a3ce;
-      font-size:.72rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .stat-value{
-      color:#f4f7ff;
-      font-size:.98rem;
-      font-weight:700;
-      overflow-wrap:anywhere;
-    }
-
-    .filters{
-      display:flex;
-      flex-wrap:wrap;
-      gap:12px;
-      margin-top:20px;
-    }
-
-    .filter-chip{
-      appearance:none;
-      min-height:42px;
-      padding:0 16px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      color:#dce7ff;
-      font-weight:800;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-      background:rgba(10,20,40,.78);
-      cursor:pointer;
-    }
-
-    .filter-chip.is-active{
-      border-color:var(--line-strong);
-      background:linear-gradient(180deg, rgba(26,42,78,.96), rgba(12,24,46,.94));
-      box-shadow:0 10px 28px rgba(0,0,0,.28);
-    }
-
-    .filter-dot{
-      display:inline-block;
-      width:11px;
-      height:11px;
-      border-radius:50%;
-      margin-right:10px;
-      vertical-align:-1px;
-      box-shadow:0 0 14px currentColor;
-    }
-
-    .section{
-      margin-top:18px;
-      border-radius:30px;
-      padding:20px;
-      overflow:hidden;
-    }
-
-    .section.focus-section{
-      min-height:calc(100svh - 36px);
-      scroll-margin-top:12px;
-    }
-
-    .section-head{
-      display:flex;
-      justify-content:space-between;
-      align-items:end;
-      gap:16px;
-      margin-bottom:16px;
-      min-width:0;
-    }
-
-    .section-kicker{
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      margin-bottom:6px;
-    }
-
-    .section h2{
-      margin:0;
-      font-size:1.45rem;
-      letter-spacing:-.03em;
-      line-height:1.06;
-    }
-
-    .section-note{
-      font-size:.92rem;
-      max-width:42ch;
-      text-align:right;
-    }
-
-    #productsRuntimeMount{
-      min-width:0;
-      width:100%;
-      max-width:100%;
-      overflow:hidden;
-      scroll-margin-top:14px;
-    }
-
-    #productsRuntimeMount:focus{outline:none}
-
-    #productsRuntimeMount:focus-visible{
-      outline:1px solid var(--line-strong);
-      outline-offset:6px;
-      border-radius:24px;
-    }
-
-    .runtime-fallback{
-      border-radius:24px;
+    .products-boot-inner {
+      width:min(640px,100%);
       padding:22px;
+      border:1px solid rgba(170,198,255,.18);
+      border-radius:28px;
+      background:rgba(0,0,0,.22);
+    }
+
+    .products-boot h2 {
+      margin:0 0 10px;
+      color:#fff;
+      font-size:clamp(1.6rem,6vw,3rem);
+      letter-spacing:-.05em;
+      line-height:1;
+    }
+
+    .products-boot p {
       margin:0;
-      min-height:220px;
-      display:grid;
-      align-content:center;
-    }
-
-    .runtime-fallback p{margin:0}
-
-    .runtime-receipt{
-      display:grid;
-      gap:10px;
-      margin-top:16px;
-    }
-
-    .footer{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:16px;
       color:var(--muted);
-      padding:12px 4px 0;
-      font-size:.92rem;
-      overflow:hidden;
+      line-height:1.55;
     }
 
-    .footer-links{
+    .products-footer {
       display:flex;
       flex-wrap:wrap;
-      gap:12px;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
     }
 
-    .footer-links a{
-      color:var(--muted);
-      text-decoration:none;
+    .products-footer a {
+      color:#d6e2ff;
     }
 
-    .footer-links a:hover,.footer-links a:focus-visible{
-      color:var(--text);
-      outline:none;
+    @media (min-width:820px) {
+      .products-topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .products-nav {
+        grid-template-columns:repeat(5,auto);
+      }
+
+      .products-actions {
+        grid-template-columns:repeat(2,auto);
+        justify-content:start;
+      }
     }
 
-    @media (max-width:980px){
-      .hero-grid{grid-template-columns:1fr}
-    }
-
-    @media (max-width:720px){
-      .page{
-        width:min(100vw - 16px, var(--max));
-        padding:14px 0 28px;
+    @media (max-width:560px) {
+      .products-page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
       }
 
-      .topbar{
-        flex-wrap:wrap;
-        padding:12px 14px;
+      .products-topbar,
+      .products-shell,
+      .products-runtime-mount {
+        border-radius:24px;
       }
 
-      .topnav{
-        width:100%;
-        justify-content:flex-start;
-      }
-
-      .hero,.section,.hero-side,.runtime-fallback{
-        padding:18px 16px;
-      }
-
-      .hero-grid{gap:14px}
-
-      .hero h1{
-        font-size:clamp(2rem,11vw,3.4rem);
-      }
-
-      .hero-actions,.filters{gap:8px}
-
-      .button{flex:1 1 calc(50% - 8px)}
-      .button.primary{flex-basis:100%}
-
-      .filter-chip{padding:0 14px}
-
-      .section-head{
-        display:grid;
-        gap:8px;
-      }
-
-      .section-note{text-align:left}
-
-      .section.focus-section{
-        min-height:calc(100svh - 28px);
-      }
-
-      .footer{
-        display:grid;
-        gap:8px;
+      .products-nav {
+        grid-template-columns:1fr;
       }
     }
   </style>
 </head>
-<body>
-  <main class="page">
-    <header class="topbar">
-      <div class="brand">
-        <div class="brand-mark">DG</div>
-        <div>
-          <p class="brand-kicker">Products Chamber</p>
-          <p class="brand-title">Products · Diamond Gate Bridge</p>
-        </div>
-      </div>
 
-      <nav class="topnav" aria-label="Primary">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/about/">About</a>
-        <a class="nav-link" href="/gauges/">Gauges</a>
-        <a class="nav-link" href="/laws/">Laws</a>
+<body>
+  <main
+    id="productsPage"
+    class="products-page"
+    data-products-page="second-generation-clean-shell"
+    data-products-html-version="products-clean-runtime-shell-v1"
+  >
+    <header class="products-topbar">
+      <a class="products-brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="products-mark" aria-hidden="true">DG</span>
+        <span>
+          <span class="products-kicker">Diamond Gate Bridge</span>
+          <strong class="products-title">Products Chamber</strong>
+        </span>
+      </a>
+
+      <nav class="products-nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/about/">About</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <span class="hero-tag">Products chamber · four-season molecular flower contract</span>
-          <h1>Public chamber for a <span class="accent">seasonal molecule</span>.</h1>
-          <p>
-            Products now uses one stained-glass vessel with a four-season molecular flower inside it.
-            Winter and Spring form one diagonal figure-eight. Fall and Summer form the opposing figure-eight.
-            Both loops cross through one shared center throat.
-          </p>
+    <section class="products-shell" aria-labelledby="productsTitle">
+      <span class="products-pill">Second generation · products</span>
+      <h1 id="productsTitle">Product engine.</h1>
+      <p>
+        Four seasonal product families orbit one shared Earth throat. The chamber
+        is visual first; details stay compact until expansion is needed.
+      </p>
 
-          <div class="hero-actions">
-            <a class="button primary" href="#productsRuntimeMount" data-open-molecule>Open molecule</a>
-            <a class="button" href="/gauges/">Gauges</a>
-            <a class="button" href="/">Back to door</a>
-          </div>
-
-          <div class="filters" id="cardinalFilters" aria-label="Filter products by seasonal body">
-            <button class="filter-chip is-active" type="button" data-filter="all">
-              <span class="filter-dot" style="color:#dce7ff;background:#dce7ff;"></span>All
-            </button>
-            <button class="filter-chip" type="button" data-filter="north">
-              <span class="filter-dot" style="color:var(--north);background:var(--north);"></span>Winter
-            </button>
-            <button class="filter-chip" type="button" data-filter="south">
-              <span class="filter-dot" style="color:var(--south);background:var(--south);"></span>Spring
-            </button>
-            <button class="filter-chip" type="button" data-filter="east">
-              <span class="filter-dot" style="color:var(--east);background:var(--east);"></span>Summer
-            </button>
-            <button class="filter-chip" type="button" data-filter="west">
-              <span class="filter-dot" style="color:var(--west);background:var(--west);"></span>Fall
-            </button>
-          </div>
-        </div>
-
-        <aside class="hero-side">
-          <h2>Runtime contract</h2>
-          <p>
-            The public labels now use seasons instead of raw colors. The color remains visual support;
-            the seasonal language carries the user-facing meaning.
-          </p>
-
-          <div class="hero-stats">
-            <div class="stat">
-              <span class="stat-label">Structure</span>
-              <span class="stat-value">4 seasons · 32 points</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Motion</span>
-              <span class="stat-value">2 overlapping figure-eights</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Open molecule</span>
-              <span class="stat-value">Scrolls to runtime window</span>
-            </div>
-          </div>
-        </aside>
+      <div class="products-actions">
+        <a class="products-action primary" href="#productsRuntimeMount" data-open-molecule="true">Open chamber</a>
+        <a class="products-action" href="/gauges/">Inspect gauges</a>
       </div>
     </section>
 
-    <section class="section focus-section" id="productsGrid">
-      <div class="section-head">
-        <div>
-          <div class="section-kicker">Runtime molecule window</div>
-          <h2>Motion viewport</h2>
-        </div>
-        <div class="section-note">
-          Open Molecule lands here, giving the animation visual priority.
-        </div>
-      </div>
-
-      <div id="productsRuntimeMount" data-products-runtime-mount data-runtime-status="html-fallback-visible" tabindex="-1">
-        <div class="runtime-fallback">
-          <h2>Waiting for /products/index.js to load...</h2>
-          <p>
-            This is the HTML fallback. If this message remains visible, the bridge file is not executing.
-            If /products/index.js executes, it will replace this message with a runtime boot receipt or the four-season molecular flower.
-          </p>
-
-          <div class="runtime-receipt">
-            <div class="stat">
-              <span class="stat-label">HTML file</span>
-              <span class="stat-value">/products/index.html loaded</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Waiting for</span>
-              <span class="stat-value">/products/index.js</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Then runtime file</span>
-              <span class="stat-value">/products/products_runtime.js</span>
-            </div>
-          </div>
+    <section
+      id="productsRuntimeMount"
+      class="products-runtime-mount"
+      data-products-runtime-mount="true"
+      aria-label="Products runtime chamber"
+      tabindex="-1"
+    >
+      <div class="products-boot">
+        <div class="products-boot-inner">
+          <h2>Products runtime loading.</h2>
+          <p>The chamber will mount from /products/products_runtime.js.</p>
         </div>
       </div>
     </section>
 
-    <footer class="footer">
-      <span>Products · four-season molecular flower contract</span>
-      <div class="footer-links">
-        <a href="/">Home</a>
-        <a href="/about/">About</a>
+    <footer class="products-footer">
+      <span>Diamond Gate Bridge · Products · Second Generation Renewal</span>
+      <span>
+        <a href="/">Door</a>
         <a href="/gauges/">Gauges</a>
-        <a href="/laws/">Laws</a>
-      </div>
+      </span>
     </footer>
   </main>
 
-  <script type="module" src="./index.js?v=seasonal-molecule-labels-v1"></script>
+  <script src="/products/index.js?v=products-clean-runtime-shell-v1" defer></script>
 </body>
 </html>

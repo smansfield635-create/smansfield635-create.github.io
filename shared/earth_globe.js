@@ -57,8 +57,8 @@
       }
 
       .dgb-earth-globe--hero {
-        width: 220px;
-        max-width: min(72vw, 220px);
+        width: 190px;
+        max-width: min(64vw, 190px);
       }
 
       .dgb-earth-globe--proof {
@@ -296,8 +296,8 @@
 
       @media (max-width: 560px) {
         .dgb-earth-globe--hero {
-          width: 204px;
-          max-width: min(72vw, 204px);
+          width: 184px;
+          max-width: min(62vw, 184px);
         }
 
         .dgb-earth-globe--proof {

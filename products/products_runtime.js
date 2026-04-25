@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-g2-official-products-runtime-v7-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v7";
+  const STYLE_ID = "products-g2-official-products-runtime-v8-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_OFFICIAL_PRODUCTS_SURFACE_v8";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -37,7 +37,7 @@
       focus: "winter",
       code: "BASELINE",
       title: "Baseline Nutrition Systems",
-      href: "/products/baseline-nutrition-systems/",
+      href: "/products/nutrition/",
       line: "Nutrition, baseline health structure, habit support, and body-system stability."
     },
     {
@@ -725,7 +725,7 @@
           <div class="products-bubble-row" aria-label="Runtime receipts">
             <span>G2 active</span>
             <span>Official products</span>
-            <span>Five Flags merged</span>
+            <span>Backlinks fixed</span>
             <span>Globe online</span>
           </div>
         </section>
@@ -943,7 +943,7 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v7");
+      target.setAttribute("data-products-runtime-version", "products-g2-official-products-v8");
 
       target.innerHTML = buildHTML();
 

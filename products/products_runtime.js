@@ -3,8 +3,8 @@
 
   const GLOBAL_KEY = "ProductsPlanetRuntime";
   const RECEIPT_KEY = "productsRuntimeMounted";
-  const STYLE_ID = "products-gen2-actual-products-runtime-v3-style";
-  const CONTRACT = "PRODUCTS_GENERATION_2_ACTUAL_PRODUCTS_SURFACE_v3";
+  const STYLE_ID = "products-g2-linked-products-runtime-v4-style";
+  const CONTRACT = "PRODUCTS_GENERATION_2_LINKED_PRODUCTS_SURFACE_v4";
   const SHARED_EARTH_SRC = "/shared/earth_globe.js";
   const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
 
@@ -21,42 +21,48 @@
       focus: "summer",
       code: "AI",
       title: "AI",
-      line: "Public AI tools, assistants, and execution surfaces."
+      href: "/products/aai/",
+      line: "AI product surface."
     },
     {
       key: "five-flags",
       focus: "winter",
       code: "FLAGS",
       title: "Five Flags",
-      line: "A flag-based identity, signal, and orientation product."
+      href: "/products/five-flags/",
+      line: "Flag-based identity, signal, and orientation."
     },
     {
       key: "whats-my-favorite",
       focus: "spring",
       code: "FAVORITE",
       title: "What’s My Favorite?",
-      line: "A preference, choice, and discovery product."
+      href: "/products/whats-my-favorite/",
+      line: "Preference, choice, and discovery product."
     },
     {
       key: "same-flag-project",
       focus: "fall",
       code: "SAME FLAG",
       title: "The Same Flag Project",
-      line: "A shared-symbol product built around alignment and public signal."
+      href: "/products/ssg/",
+      line: "Shared-symbol alignment and public signal."
     },
     {
       key: "esl-learning",
       focus: "spring",
       code: "ESL",
       title: "ESL Learning",
-      line: "Language learning, translation support, and education surfaces."
+      href: "/products/education/",
+      line: "Language learning and education surface."
     },
     {
-      key: "next-product",
-      focus: "all",
-      code: "NEXT",
-      title: "Next Product Slot",
-      line: "Reserved for the next official product added to the site."
+      key: "on-your-side-ai",
+      focus: "summer",
+      code: "OYS AI",
+      title: "On Your Side AI",
+      href: "/products/on-your-side-ai/",
+      line: "Public AI assistant and support product."
     }
   ];
 
@@ -155,10 +161,9 @@
         display:grid;
         align-content:space-between;
         gap:10px;
-        cursor:pointer;
         text-align:left;
         color:inherit;
-        font:inherit;
+        text-decoration:none;
         transition:
           transform .22s ease,
           border-color .22s ease,
@@ -167,10 +172,12 @@
       }
 
       .products-product-tile:hover,
+      .products-product-tile:focus-visible,
       .products-product-tile.active {
         transform:translateY(-3px);
         border-color:rgba(240,213,155,.42);
         box-shadow:0 24px 72px rgba(0,0,0,.45),0 0 28px rgba(240,213,155,.12);
+        outline:none;
       }
 
       .products-product-tile small {
@@ -194,6 +201,22 @@
         color:var(--products-muted);
         font-size:.82rem;
         line-height:1.36;
+      }
+
+      .products-product-tile em {
+        display:inline-flex;
+        width:fit-content;
+        margin-top:8px;
+        padding:6px 9px;
+        border:1px solid rgba(240,213,155,.22);
+        border-radius:999px;
+        color:#fff8ea;
+        font-style:normal;
+        font-size:.68rem;
+        font-weight:850;
+        text-transform:uppercase;
+        letter-spacing:.10em;
+        background:rgba(240,213,155,.08);
       }
 
       .products-gen2-stage {
@@ -431,10 +454,15 @@
       }
 
       .products-gen2-controls {
+        border:1px solid var(--products-line);
         border-radius:28px;
         padding:clamp(14px,2vw,20px);
         display:grid;
         gap:14px;
+        background:
+          radial-gradient(circle at 50% 0%,rgba(145,201,255,.12),transparent 34%),
+          linear-gradient(180deg,var(--products-panel-strong),var(--products-panel));
+        box-shadow:var(--products-shadow);
       }
 
       .products-control-head {
@@ -648,17 +676,22 @@
   function buildProducts() {
     return products
       .map((product) => `
-        <button
+        <a
           class="products-product-tile"
-          type="button"
+          href="${product.href}"
           data-product-key="${product.key}"
           data-product-focus="${product.focus}"
-          aria-label="Focus ${product.title}"
+          aria-label="Open ${product.title}"
         >
-          <small>${product.code}</small>
-          <strong>${product.title}</strong>
-          <p>${product.line}</p>
-        </button>
+          <span>
+            <small>${product.code}</small>
+            <strong>${product.title}</strong>
+          </span>
+          <span>
+            <p>${product.line}</p>
+            <em>Open product</em>
+          </span>
+        </a>
       `)
       .join("");
   }
@@ -695,12 +728,13 @@
         data-products-runtime-root="true"
         data-products-generation="2"
         data-products-actual-products="true"
+        data-products-linked-products="true"
         data-products-control-surface="true"
       >
         <section class="products-product-first" aria-label="Products list">
           <div class="products-product-head">
             <h3>Products.</h3>
-            <span>Generation 2 · actual site products</span>
+            <span>Generation 2 · linked product routes</span>
           </div>
 
           <div class="products-product-grid">
@@ -772,8 +806,8 @@
           <div class="products-bubble-row" aria-label="Runtime receipts">
             <span>G2 active</span>
             <span>Actual products</span>
+            <span>Routes linked</span>
             <span>Globe online</span>
-            <span>Controls below</span>
           </div>
         </section>
       </section>
@@ -852,12 +886,6 @@
     });
   }
 
-  function updateProductTiles(productKey) {
-    document.querySelectorAll("[data-product-key]").forEach((tile) => {
-      tile.classList.toggle("active", tile.dataset.productKey === productKey);
-    });
-  }
-
   function updateReceipt(stage) {
     const receipt = document.getElementById("productsControlReceipt");
     if (!receipt || !stage) return;
@@ -866,26 +894,31 @@
       `Spin: ${stage.dataset.spin} · Speed: ${stage.dataset.speed} · Focus: ${stage.dataset.focus} · Density: ${stage.dataset.density}`;
   }
 
-  function setFocus(value, productKey = "") {
+  function bindProductHoverFocus() {
     const stage = document.getElementById("productsGen2Stage");
     if (!stage) return;
 
-    stage.dataset.focus = value;
-    updatePressedStates("focus", value);
-    updateProductTiles(productKey);
-    updateReceipt(stage);
-
-    if (value !== "all") {
-      stage.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }
-
-  function bindProductTiles() {
     document.querySelectorAll("[data-product-focus]").forEach((tile) => {
-      tile.addEventListener("click", () => {
-        const value = tile.dataset.productFocus || "all";
-        const productKey = tile.dataset.productKey || "";
-        setFocus(value, productKey);
+      const focus = tile.dataset.productFocus || "all";
+
+      tile.addEventListener("mouseenter", () => {
+        stage.dataset.focus = focus;
+        updateReceipt(stage);
+      });
+
+      tile.addEventListener("focus", () => {
+        stage.dataset.focus = focus;
+        updateReceipt(stage);
+      });
+
+      tile.addEventListener("mouseleave", () => {
+        stage.dataset.focus = "all";
+        updateReceipt(stage);
+      });
+
+      tile.addEventListener("blur", () => {
+        stage.dataset.focus = "all";
+        updateReceipt(stage);
       });
     });
   }
@@ -906,7 +939,6 @@
 
         if (control === "speed") setSharedEarthSpeed(value);
         if (control === "spin") setSharedEarthSpin(value);
-        if (control === "focus") updateProductTiles("");
 
         updateReceipt(stage);
       });
@@ -994,13 +1026,13 @@
       target.setAttribute("data-runtime-status", "mounting");
       target.setAttribute("data-runtime-contract", this.contract);
       target.setAttribute("data-runtime-owner", "products_runtime.js");
-      target.setAttribute("data-products-runtime-version", "products-g2-actual-products-v3");
+      target.setAttribute("data-products-runtime-version", "products-g2-linked-products-v4");
 
       target.innerHTML = buildHTML();
 
       const sharedEarthMounted = await mountSharedEarth();
 
-      bindProductTiles();
+      bindProductHoverFocus();
       bindControls();
       setSharedEarthSpeed("normal");
       setSharedEarthSpin("playing");
@@ -1008,7 +1040,7 @@
       target.setAttribute("data-runtime-status", "mounted");
       target.setAttribute("data-products-shared-earth", sharedEarthMounted ? "mounted" : "unavailable");
       target.setAttribute("data-products-gen2-controls", "active");
-      target.setAttribute("data-products-order", "actual-products-first");
+      target.setAttribute("data-products-routes", "linked");
 
       window[RECEIPT_KEY] = true;
       this.status = "MOUNTED";
@@ -1021,7 +1053,7 @@
             owner: "products_runtime.js",
             sharedEarthMounted,
             controls: "active",
-            order: "actual-products-first"
+            routes: "linked"
           }
         })
       );
@@ -1031,7 +1063,8 @@
         contract: this.contract,
         owner: "products_runtime.js",
         sharedEarthMounted,
-        controls: "active"
+        controls: "active",
+        routes: "linked"
       };
     }
   }

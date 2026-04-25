@@ -1,11 +1,11 @@
 (function () {
   "use strict";
 
-  var VERSION = "GAUGES_PHYSICS_UNIVERSE_RUNTIME_G1_v2";
+  var VERSION = "GAUGES_INDEX_JS_PHYSICS_UNIVERSE_RUNTIME_G1_v1";
 
   var AU_KM = 149597870.7;
   var DAY_MS = 86400000;
-  var BODY_LABEL_MIN_GAP = 18;
+  var LABEL_MIN_GAP = 18;
 
   var ZOOM_STATES = {
     earth: {
@@ -177,28 +177,29 @@
     lastRender: 0
   };
 
-  var scene;
-  var caption;
-  var info;
-  var controls;
-  var timer;
+  var scene = null;
+  var caption = null;
+  var controls = null;
+  var info = null;
+  var timer = null;
 
-  function ready(callback) {
+  function onReady(callback) {
     if (document.readyState === "loading") {
       document.addEventListener("DOMContentLoaded", callback, { once: true });
-    } else {
-      callback();
+      return;
     }
+
+    callback();
   }
 
   function injectStyles() {
-    if (document.getElementById("gauges-universe-runtime-style")) return;
+    if (document.getElementById("gauges-index-js-universe-runtime-style")) return;
 
     var style = document.createElement("style");
-    style.id = "gauges-universe-runtime-style";
+    style.id = "gauges-index-js-universe-runtime-style";
     style.textContent = [
-      ".universe-scene{transform-origin:50% 50%;}",
-      ".universe-scene.runtime-mounted{transition:transform 520ms ease;}",
+      ".universe-panel{position:relative;isolation:isolate;}",
+      ".universe-scene{position:relative;width:min(86vw,720px);aspect-ratio:1/1;border-radius:50%;isolation:isolate;overflow:visible;z-index:2;transform-origin:50% 50%;transition:transform 520ms ease;}",
       ".universe-scene[data-zoom='earth']{transform:scale(1.42);}",
       ".universe-scene[data-zoom='solar']{transform:scale(1);}",
       ".universe-scene[data-zoom='system']{transform:scale(.78);}",
@@ -222,14 +223,18 @@
       ".body.uranus{--body-hi:#c8fbff;--body-mid:#4aa1ad;--body-low:#103848;--body-glow:rgba(142,197,255,.22);}",
       ".body.neptune{--body-hi:#9dc4ff;--body-mid:#3553b5;--body-low:#101a4c;--body-glow:rgba(142,197,255,.22);}",
       ".ring-system{position:absolute;left:50%;top:50%;width:210%;height:74%;border:2px solid rgba(239,210,154,.35);border-left-color:rgba(239,210,154,.15);border-right-color:rgba(239,210,154,.15);border-radius:50%;transform:translate(-50%,-50%) rotate(-18deg);pointer-events:none;z-index:-1;box-shadow:0 0 10px rgba(239,210,154,.14);}",
-      ".moon{position:absolute;border-radius:50%;background:radial-gradient(circle at 34% 28%,#fff, #aeb8c8 42%, #394354 100%);box-shadow:inset -3px -2px 5px rgba(0,0,0,.55),0 0 8px rgba(210,232,255,.26);z-index:12;pointer-events:none;}",
+      ".moon{position:absolute;border-radius:50%;background:radial-gradient(circle at 34% 28%,#fff,#aeb8c8 42%,#394354 100%);box-shadow:inset -3px -2px 5px rgba(0,0,0,.55),0 0 8px rgba(210,232,255,.26);z-index:12;pointer-events:none;}",
       ".body-label{position:absolute;transform:translate(-50%,-50%);color:rgba(232,240,255,.92);font-size:.70rem;font-weight:850;letter-spacing:.08em;text-transform:uppercase;pointer-events:none;text-shadow:0 1px 0 rgba(0,0,0,.8),0 0 10px rgba(0,0,0,.8);z-index:20;white-space:nowrap;}",
-      ".body-label.is-hidden{display:none;}",
       ".physics-info{position:relative;z-index:3;width:min(760px,94%);display:grid;gap:8px;border:1px solid rgba(170,198,255,.14);border-radius:18px;padding:12px 14px;background:rgba(255,255,255,.025);}",
       ".physics-info strong{color:#fff;font-size:.9rem;}",
       ".physics-info span{color:#aab8d8;line-height:1.45;font-size:.84rem;}",
-      ".control-row .runtime-pause{border-color:rgba(147,239,189,.36);}",
-      "@media(max-width:640px){.body-label{font-size:.56rem}.physics-info{font-size:.8rem}}"
+      ".control-row{position:relative;z-index:3;display:flex;flex-wrap:wrap;justify-content:center;gap:8px;width:min(760px,94%);}",
+      ".control-row button{appearance:none;border:1px solid rgba(170,198,255,.18);border-radius:999px;padding:9px 12px;color:#dce8ff;background:rgba(255,255,255,.035);font-weight:900;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;}",
+      ".control-row button[aria-pressed='true']{color:#fff8ea;border-color:rgba(239,210,154,.46);background:radial-gradient(circle at 50% 120%,rgba(239,210,154,.22),transparent 62%),rgba(239,210,154,.08);}",
+      ".runtime-pause{border-color:rgba(147,239,189,.36)!important;}",
+      ".scene-caption{position:relative;z-index:3;width:min(760px,94%);text-align:center;color:#dce8ff;font-weight:850;font-size:.86rem;letter-spacing:.10em;text-transform:uppercase;opacity:.86;}",
+      "@keyframes sunPulse{0%,100%{filter:brightness(1);transform:translate(-50%,-50%) scale(1)}50%{filter:brightness(1.12);transform:translate(-50%,-50%) scale(1.03)}}",
+      "@media(max-width:640px){.body-label{font-size:.56rem}.physics-info{font-size:.8rem}.universe-scene{width:min(92vw,620px)}}"
     ].join("\n");
 
     document.head.appendChild(style);
@@ -239,12 +244,14 @@
     scene = document.getElementById("universeScene");
 
     if (!scene) {
-      var panel = document.querySelector(".universe-panel") || document.querySelector(".hero");
+      var panel = document.querySelector(".universe-panel") || document.querySelector(".earth-panel") || document.querySelector(".hero");
       if (!panel) return false;
 
       scene = document.createElement("div");
       scene.id = "universeScene";
       scene.className = "universe-scene";
+      scene.setAttribute("data-zoom", "solar");
+
       panel.appendChild(scene);
     }
 
@@ -274,12 +281,14 @@
   }
 
   function ensureControls() {
-    var existing = controls.querySelector("[data-zoom]");
-    if (!existing) {
+    var existingZoom = controls.querySelector("[data-zoom]");
+
+    if (!existingZoom) {
       ["earth", "solar", "system", "universe"].forEach(function (zoom) {
         var button = document.createElement("button");
         button.type = "button";
         button.setAttribute("data-zoom", zoom);
+        button.setAttribute("aria-pressed", zoom === state.zoom ? "true" : "false");
         button.textContent = zoom;
         controls.appendChild(button);
       });
@@ -291,11 +300,14 @@
       pause.className = "runtime-pause";
       pause.textContent = "Pause";
       pause.setAttribute("aria-pressed", "false");
+
       pause.addEventListener("click", function () {
         state.paused = !state.paused;
         pause.setAttribute("aria-pressed", state.paused ? "true" : "false");
         pause.textContent = state.paused ? "Resume" : "Pause";
+        render();
       });
+
       controls.appendChild(pause);
     }
 
@@ -315,11 +327,15 @@
     info.className = "physics-info";
     info.setAttribute("aria-live", "polite");
 
-    if (controls && controls.parentNode) {
-      controls.insertAdjacentElement("afterend", info);
-    } else if (caption && caption.parentNode) {
-      caption.insertAdjacentElement("afterend", info);
+    controls.insertAdjacentElement("afterend", info);
+  }
+
+  function getBody(key) {
+    for (var i = 0; i < BODIES.length; i += 1) {
+      if (BODIES[i].key === key) return BODIES[i];
     }
+
+    return null;
   }
 
   function compressedDistanceAU(au, zoomKey) {
@@ -349,7 +365,7 @@
     if (!body.orbitalDays) return 0;
 
     if (state.paused) {
-      return ((body.phaseOffset || 0) * Math.PI * 2);
+      return (body.phaseOffset || 0) * Math.PI * 2;
     }
 
     var nowDays = Date.now() / DAY_MS;
@@ -420,6 +436,7 @@
     belt.style.width = (mid * 2) + "px";
     belt.style.height = (mid * 2 * 0.72) + "px";
     belt.setAttribute("aria-hidden", "true");
+
     scene.appendChild(belt);
   }
 
@@ -434,18 +451,14 @@
 
     el.style.left = pos.left;
     el.style.top = pos.top;
+    el.style.width = size + "px";
+    el.style.height = size + "px";
 
-    if (body.key === "sun") {
-      el.style.width = size + "px";
-      el.style.height = size + "px";
-      el.style.setProperty("--sun-size", size + "px");
-    } else {
-      el.style.width = size + "px";
-      el.style.height = size + "px";
-      el.style.setProperty("--body-size", size + "px");
-    }
+    el.setAttribute(
+      "aria-label",
+      body.name + " · " + body.type + " · distance " + formatAU(body.distanceAU) + " AU"
+    );
 
-    el.setAttribute("aria-label", body.name + " · " + body.type + " · distance " + formatAU(body.distanceAU) + " AU");
     el.addEventListener("click", function () {
       state.selectedKey = body.key;
       if (body.key === "earth") state.zoom = "earth";
@@ -461,18 +474,7 @@
     }
 
     if (body.moon && (state.zoom === "earth" || state.selectedKey === "earth")) {
-      var moon = document.createElement("span");
-      var moonSize = Math.max(5, size * 0.28);
-      var moonDistance = Math.max(18, size * 1.08);
-      var moonAngle = state.paused ? 0.72 * Math.PI * 2 : ((Date.now() / DAY_MS) % body.moon.orbitalDays) / body.moon.orbitalDays * Math.PI * 2;
-
-      moon.className = "moon";
-      moon.style.width = moonSize + "px";
-      moon.style.height = moonSize + "px";
-      moon.style.left = "calc(50% + " + (Math.cos(moonAngle) * moonDistance).toFixed(1) + "px)";
-      moon.style.top = "calc(50% + " + (Math.sin(moonAngle) * moonDistance * 0.72).toFixed(1) + "px)";
-      moon.setAttribute("aria-hidden", "true");
-      el.appendChild(moon);
+      addMoon(el, body, size);
     }
 
     scene.appendChild(el);
@@ -480,10 +482,31 @@
     addLabel(body, pos, size, labelPositions);
   }
 
+  function addMoon(parent, body, size) {
+    var moon = document.createElement("span");
+    var moonSize = Math.max(5, size * 0.28);
+    var moonDistance = Math.max(18, size * 1.08);
+
+    var moonAngle = state.paused
+      ? 0.72 * Math.PI * 2
+      : ((Date.now() / DAY_MS) % body.moon.orbitalDays) / body.moon.orbitalDays * Math.PI * 2;
+
+    moon.className = "moon";
+    moon.style.width = moonSize + "px";
+    moon.style.height = moonSize + "px";
+    moon.style.left = "calc(50% + " + (Math.cos(moonAngle) * moonDistance).toFixed(1) + "px)";
+    moon.style.top = "calc(50% + " + (Math.sin(moonAngle) * moonDistance * 0.72).toFixed(1) + "px)";
+    moon.setAttribute("aria-hidden", "true");
+
+    parent.appendChild(moon);
+  }
+
   function addLabel(body, pos, size, labelPositions) {
+    var zoom = ZOOM_STATES[state.zoom] || ZOOM_STATES.solar;
+
     if (body.key === "sun" && state.zoom !== "earth") return;
     if (state.zoom === "earth" && body.key !== "earth" && body.key !== "sun") return;
-    if (!ZOOM_STATES[state.zoom].showOuterLabels && body.distanceAU > 1.7) return;
+    if (!zoom.showOuterLabels && body.distanceAU > 1.7) return;
 
     var label = document.createElement("div");
     label.className = "body-label";
@@ -504,10 +527,13 @@
     var nextY = y;
     var attempt = 0;
 
-    while (attempt < 8 && used.some(function (p) {
-      return Math.abs(p.x - x) < 54 && Math.abs(p.y - nextY) < BODY_LABEL_MIN_GAP;
-    })) {
-      nextY += BODY_LABEL_MIN_GAP;
+    while (
+      attempt < 8 &&
+      used.some(function (point) {
+        return Math.abs(point.x - x) < 54 && Math.abs(point.y - nextY) < LABEL_MIN_GAP;
+      })
+    ) {
+      nextY += LABEL_MIN_GAP;
       attempt += 1;
     }
 
@@ -519,17 +545,13 @@
   function updateInfo() {
     var selected = getBody(state.selectedKey) || getBody("sun");
 
+    if (!info || !selected) return;
+
     info.innerHTML = [
       "<strong>" + selected.name + " · " + selected.type + "</strong>",
       "<span>Radius: " + formatKm(selected.radiusKm) + " km · Orbit: " + formatAU(selected.distanceAU) + " AU · Orbital period: " + formatDays(selected.orbitalDays) + " · Axial tilt: " + formatDeg(selected.axialTiltDeg) + "</span>",
       "<span>Projection rule: physical order is preserved; distance is logarithmically compressed so the page remains readable.</span>"
     ].join("");
-  }
-
-  function getBody(key) {
-    return BODIES.find(function (body) {
-      return body.key === key;
-    });
   }
 
   function formatKm(value) {
@@ -560,7 +582,10 @@
 
   function updateControls() {
     Array.prototype.slice.call(document.querySelectorAll("[data-zoom]")).forEach(function (button) {
-      button.setAttribute("aria-pressed", button.getAttribute("data-zoom") === state.zoom ? "true" : "false");
+      button.setAttribute(
+        "aria-pressed",
+        button.getAttribute("data-zoom") === state.zoom ? "true" : "false"
+      );
     });
   }
 
@@ -584,7 +609,9 @@
       addBody(body, state.zoom, labelPositions);
     });
 
-    caption.textContent = ZOOM_STATES[state.zoom].label + " · physics-derived / display-compressed";
+    if (caption) {
+      caption.textContent = ZOOM_STATES[state.zoom].label + " · physics-derived / display-compressed";
+    }
 
     updateControls();
     updateInfo();
@@ -605,7 +632,9 @@
     if (!ensureMounts()) return;
 
     var currentZoom = scene.getAttribute("data-zoom");
-    if (currentZoom && ZOOM_STATES[currentZoom]) state.zoom = currentZoom;
+    if (currentZoom && ZOOM_STATES[currentZoom]) {
+      state.zoom = currentZoom;
+    }
 
     render();
 
@@ -632,5 +661,5 @@
     });
   }
 
-  ready(init);
+  onReady(init);
 })();

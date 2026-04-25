@@ -13,7 +13,7 @@
     { key: "GAUGES_JS", path: "/gauges/index.js" }
   ];
 
-  const EARTH_STYLE_ID = "dgb-gauges-real-earth-texture-proof-v1";
+  const EARTH_STYLE_ID = "dgb-gauges-earth-projection-realism-pass-v1";
 
   const EARTH_TEXTURE_URL =
     "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg";
@@ -61,15 +61,15 @@
         width: 122% !important;
         height: 122% !important;
         border-radius: 50% !important;
-        border: 1px solid rgba(240,215,156,.24) !important;
+        border: 1px solid rgba(240,215,156,.22) !important;
         transform: translate(-50%,-50%) rotate(42deg) scaleX(.34) !important;
         pointer-events: none !important;
         z-index: 1 !important;
-        opacity: .82 !important;
+        opacity: .72 !important;
       }
 
       .orb::after {
-        border-color: rgba(137,200,255,.28) !important;
+        border-color: rgba(137,200,255,.25) !important;
         transform: translate(-50%,-50%) rotate(-38deg) scaleX(.34) !important;
       }
 
@@ -85,26 +85,27 @@
         border-radius: 50%;
         overflow: hidden;
         isolation: isolate;
-        border: 1px solid rgba(218,239,255,.80);
-        background: #07396f;
+        border: 1px solid rgba(218,239,255,.84);
+        background:
+          radial-gradient(circle at 50% 50%, #0b63b5 0%, #073f86 48%, #031b42 100%);
         box-shadow:
-          inset -46px -38px 66px rgba(0,0,0,.64),
-          inset 22px 17px 36px rgba(255,255,255,.25),
-          0 0 58px rgba(142,197,255,.56),
-          0 0 148px rgba(239,210,154,.20);
+          inset -50px -40px 70px rgba(0,0,0,.66),
+          inset 22px 17px 38px rgba(255,255,255,.24),
+          0 0 60px rgba(142,197,255,.56),
+          0 0 150px rgba(239,210,154,.20);
       }
 
       .earth-proof-globe__texture {
         position: absolute;
-        inset: 0;
+        inset: -1.5%;
         z-index: 2;
         border-radius: 50%;
         background-image: var(--earth-texture-url);
         background-repeat: no-repeat;
-        background-size: 245% 122%;
-        background-position: 56% 47%;
-        filter: saturate(1.18) contrast(1.10) brightness(.98);
-        transform: scale(1.055);
+        background-size: 245% 124%;
+        background-position: 58% 46%;
+        filter: saturate(1.16) contrast(1.14) brightness(.96);
+        transform: scale(1.08);
       }
 
       .earth-proof-globe__texture::before {
@@ -112,11 +113,12 @@
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        background:
-          radial-gradient(circle at 31% 22%, rgba(255,255,255,.32), transparent 12%),
-          linear-gradient(90deg, rgba(255,255,255,.10), transparent 38%, rgba(0,0,0,.42) 100%);
-        mix-blend-mode: screen;
         pointer-events: none;
+        background:
+          radial-gradient(circle at 31% 22%, rgba(255,255,255,.30), transparent 13%),
+          radial-gradient(circle at 42% 36%, rgba(255,255,255,.13), transparent 24%),
+          linear-gradient(90deg, rgba(255,255,255,.10), transparent 42%, rgba(0,0,0,.34) 100%);
+        mix-blend-mode: screen;
       }
 
       .earth-proof-globe__texture::after {
@@ -124,59 +126,132 @@
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        background:
-          radial-gradient(circle at 77% 73%, rgba(0,0,0,.48), transparent 39%),
-          linear-gradient(105deg, transparent 0 58%, rgba(0,0,0,.30) 78%, rgba(0,0,0,.54) 100%);
         pointer-events: none;
+        background:
+          radial-gradient(circle at 78% 72%, rgba(0,0,0,.48), transparent 40%),
+          radial-gradient(circle at 96% 50%, rgba(0,0,0,.48), transparent 28%),
+          radial-gradient(circle at 3% 50%, rgba(255,255,255,.08), transparent 24%),
+          linear-gradient(105deg, transparent 0 57%, rgba(0,0,0,.28) 76%, rgba(0,0,0,.54) 100%);
       }
 
-      .earth-proof-globe__boundaries,
-      .earth-proof-globe__clouds,
+      .earth-proof-globe__projection-mask {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        border-radius: 50%;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 50% 50%, transparent 0 61%, rgba(0,0,0,.16) 72%, rgba(0,0,0,.54) 100%),
+          linear-gradient(90deg, rgba(0,0,0,.10), transparent 20%, transparent 78%, rgba(0,0,0,.35));
+        mix-blend-mode: multiply;
+      }
+
+      .earth-proof-globe__cloud-layer {
+        position: absolute;
+        inset: -2%;
+        z-index: 4;
+        border-radius: 50%;
+        pointer-events: none;
+        filter: blur(1.8px);
+        opacity: .62;
+        background:
+          radial-gradient(ellipse at 30% 30%, rgba(255,255,255,.34) 0 8%, transparent 18%),
+          radial-gradient(ellipse at 58% 25%, rgba(255,255,255,.26) 0 6%, transparent 18%),
+          radial-gradient(ellipse at 69% 63%, rgba(255,255,255,.24) 0 7%, transparent 21%),
+          radial-gradient(ellipse at 36% 70%, rgba(255,255,255,.18) 0 8%, transparent 21%),
+          repeating-linear-gradient(18deg, transparent 0 25px, rgba(255,255,255,.10) 26px 30px, transparent 31px 60px);
+        mask-image: radial-gradient(circle at 50% 50%, black 0 66%, rgba(0,0,0,.55) 78%, transparent 100%);
+      }
+
+      .earth-proof-globe__cloud-layer::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          linear-gradient(15deg, transparent 0 24%, rgba(255,255,255,.16) 28%, transparent 36%),
+          linear-gradient(-12deg, transparent 0 46%, rgba(255,255,255,.13) 50%, transparent 59%),
+          linear-gradient(22deg, transparent 0 66%, rgba(255,255,255,.12) 70%, transparent 78%);
+        opacity: .84;
+      }
+
+      .earth-proof-globe__cloud-layer::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background:
+          radial-gradient(ellipse at 43% 48%, rgba(255,255,255,.18) 0 7%, transparent 18%),
+          radial-gradient(ellipse at 66% 42%, rgba(255,255,255,.14) 0 8%, transparent 20%),
+          radial-gradient(ellipse at 25% 58%, rgba(255,255,255,.12) 0 9%, transparent 22%);
+        opacity: .78;
+      }
+
       .earth-proof-globe__grid {
         position: absolute;
         inset: 0;
-        z-index: 4;
+        z-index: 5;
         width: 100%;
         height: 100%;
         display: block;
         pointer-events: none;
+        opacity: .48;
       }
 
       .earth-proof-globe__grid-line {
         fill: none;
-        stroke: rgba(255,255,255,.15);
-        stroke-width: .6;
+        stroke: rgba(255,255,255,.14);
+        stroke-width: .58;
       }
 
-      .earth-proof-globe__country-line {
-        fill: none;
-        stroke: rgba(245,242,220,.50);
-        stroke-width: .55;
-        vector-effect: non-scaling-stroke;
+      .earth-proof-globe__boundary-layer {
+        position: absolute;
+        inset: 0;
+        z-index: 6;
+        width: 100%;
+        height: 100%;
+        display: block;
+        pointer-events: none;
+        opacity: .34;
+        filter: blur(.18px);
       }
 
       .earth-proof-globe__coast-line {
         fill: none;
-        stroke: rgba(255,255,255,.60);
-        stroke-width: .85;
+        stroke: rgba(255,255,255,.44);
+        stroke-width: .72;
         vector-effect: non-scaling-stroke;
       }
 
-      .earth-proof-globe__cloud {
-        fill: rgba(255,255,255,.36);
+      .earth-proof-globe__country-line {
+        fill: none;
+        stroke: rgba(245,242,220,.28);
+        stroke-width: .42;
+        vector-effect: non-scaling-stroke;
       }
 
       .earth-proof-globe__rim {
         position: absolute;
         inset: -1px;
-        z-index: 7;
+        z-index: 8;
         border-radius: 50%;
         pointer-events: none;
         box-shadow:
-          inset 0 0 18px rgba(255,255,255,.22),
-          inset 0 0 44px rgba(100,180,255,.18),
+          inset 0 0 18px rgba(255,255,255,.20),
+          inset 0 0 48px rgba(100,180,255,.18),
           0 0 26px rgba(120,205,255,.48),
           0 0 66px rgba(120,205,255,.22);
+      }
+
+      .earth-proof-globe__atmosphere {
+        position: absolute;
+        inset: -4%;
+        z-index: 1;
+        border-radius: 50%;
+        pointer-events: none;
+        background:
+          radial-gradient(circle at 50% 50%, rgba(120,205,255,.18), transparent 63%);
+        filter: blur(10px);
       }
 
       .earth-proof-globe__tag {
@@ -228,17 +303,19 @@
 
     svg.innerHTML = `
       <defs>
-        <clipPath id="earthGridClipDgbV1">
+        <clipPath id="earthProjectionGridClipDgbV1">
           <circle cx="120" cy="120" r="108"></circle>
         </clipPath>
       </defs>
-      <g clip-path="url(#earthGridClipDgbV1)">
+
+      <g clip-path="url(#earthProjectionGridClipDgbV1)">
         <path class="earth-proof-globe__grid-line" d="M12 120 H228"></path>
         <path class="earth-proof-globe__grid-line" d="M120 12 V228"></path>
-        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="108" ry="38"></ellipse>
-        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="108" ry="70"></ellipse>
-        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="72" ry="108"></ellipse>
-        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="36" ry="108"></ellipse>
+        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="108" ry="34"></ellipse>
+        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="108" ry="66"></ellipse>
+        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="82" ry="108"></ellipse>
+        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="45" ry="108"></ellipse>
+        <ellipse class="earth-proof-globe__grid-line" cx="120" cy="120" rx="18" ry="108"></ellipse>
       </g>
     `;
 
@@ -246,40 +323,36 @@
   }
 
   function createBoundarySvg() {
-    const svg = createSvgElement("earth-proof-globe__boundaries");
+    const svg = createSvgElement("earth-proof-globe__boundary-layer");
 
     svg.innerHTML = `
       <defs>
-        <clipPath id="earthBoundaryClipDgbV1">
-          <circle cx="120" cy="120" r="108"></circle>
+        <clipPath id="earthProjectionBoundaryClipDgbV1">
+          <circle cx="120" cy="120" r="107"></circle>
         </clipPath>
       </defs>
 
-      <g clip-path="url(#earthBoundaryClipDgbV1)">
-        <!-- Coast / continental mass guides, aligned to Africa-Europe-Asia texture view -->
-        <path class="earth-proof-globe__coast-line" d="M38 71 C52 54 80 48 102 55 C121 61 132 75 143 83 C160 96 180 96 197 109 C214 122 224 144 219 166"></path>
-        <path class="earth-proof-globe__coast-line" d="M71 124 C83 112 98 105 114 111 C130 117 142 133 145 153 C148 176 136 196 119 204 C101 194 88 177 83 157 C80 144 76 134 71 124 Z"></path>
-        <path class="earth-proof-globe__coast-line" d="M118 79 C137 65 166 63 193 75 C216 85 230 103 235 124"></path>
-        <path class="earth-proof-globe__coast-line" d="M158 157 C179 151 204 161 217 181 C202 207 171 213 148 193"></path>
-        <path class="earth-proof-globe__coast-line" d="M23 93 C45 83 64 86 78 101"></path>
+      <g clip-path="url(#earthProjectionBoundaryClipDgbV1)">
+        <path class="earth-proof-globe__coast-line" d="M40 72 C56 54 83 49 106 56 C127 63 135 78 149 87 C163 96 180 97 198 110 C214 123 221 143 218 163"></path>
+        <path class="earth-proof-globe__coast-line" d="M74 123 C88 109 104 106 118 114 C134 123 143 140 145 158 C147 180 135 198 120 204 C104 195 91 180 84 158 C80 144 78 132 74 123 Z"></path>
+        <path class="earth-proof-globe__coast-line" d="M120 80 C138 64 168 62 195 75 C217 86 229 104 234 124"></path>
+        <path class="earth-proof-globe__coast-line" d="M159 157 C180 152 204 162 216 181 C201 206 173 213 149 193"></path>
+        <path class="earth-proof-globe__coast-line" d="M23 94 C45 84 64 87 78 102"></path>
         <path class="earth-proof-globe__coast-line" d="M45 182 C67 199 96 208 124 207"></path>
 
-        <!-- Africa country-style boundaries -->
-        <path class="earth-proof-globe__country-line" d="M98 112 C111 120 127 121 143 116"></path>
-        <path class="earth-proof-globe__country-line" d="M91 132 C107 137 124 137 144 133"></path>
-        <path class="earth-proof-globe__country-line" d="M91 151 C108 154 128 153 147 148"></path>
-        <path class="earth-proof-globe__country-line" d="M99 173 C115 173 132 170 145 164"></path>
-        <path class="earth-proof-globe__country-line" d="M113 109 C111 130 109 152 113 184"></path>
+        <path class="earth-proof-globe__country-line" d="M99 113 C112 120 127 121 143 116"></path>
+        <path class="earth-proof-globe__country-line" d="M92 133 C108 137 124 137 144 133"></path>
+        <path class="earth-proof-globe__country-line" d="M92 151 C109 154 128 153 147 148"></path>
+        <path class="earth-proof-globe__country-line" d="M100 172 C116 173 132 170 145 164"></path>
+        <path class="earth-proof-globe__country-line" d="M113 110 C111 130 110 152 113 183"></path>
         <path class="earth-proof-globe__country-line" d="M128 112 C126 132 127 153 134 176"></path>
         <path class="earth-proof-globe__country-line" d="M143 119 C142 139 144 155 153 169"></path>
 
-        <!-- Europe boundaries -->
         <path class="earth-proof-globe__country-line" d="M82 69 C96 75 111 77 126 73"></path>
         <path class="earth-proof-globe__country-line" d="M91 83 C105 89 119 90 135 84"></path>
         <path class="earth-proof-globe__country-line" d="M105 60 C106 74 106 87 103 99"></path>
         <path class="earth-proof-globe__country-line" d="M121 62 C120 76 122 89 129 100"></path>
 
-        <!-- Asia boundaries -->
         <path class="earth-proof-globe__country-line" d="M142 82 C161 89 181 90 202 84"></path>
         <path class="earth-proof-globe__country-line" d="M151 101 C171 106 193 107 214 100"></path>
         <path class="earth-proof-globe__country-line" d="M164 119 C183 123 203 124 222 118"></path>
@@ -287,36 +360,9 @@
         <path class="earth-proof-globe__country-line" d="M184 86 C181 108 181 130 187 151"></path>
         <path class="earth-proof-globe__country-line" d="M206 96 C203 118 204 139 213 158"></path>
 
-        <!-- Middle East / India / SE Asia guides -->
         <path class="earth-proof-globe__country-line" d="M139 96 C150 106 157 118 158 134"></path>
         <path class="earth-proof-globe__country-line" d="M151 138 C162 151 174 160 189 165"></path>
         <path class="earth-proof-globe__country-line" d="M184 153 C198 161 211 169 223 182"></path>
-
-        <!-- South America and North America edge hints if visible on texture edge -->
-        <path class="earth-proof-globe__country-line" d="M36 96 C48 104 56 118 57 135"></path>
-        <path class="earth-proof-globe__country-line" d="M51 143 C60 158 66 174 68 190"></path>
-      </g>
-    `;
-
-    return svg;
-  }
-
-  function createCloudSvg() {
-    const svg = createSvgElement("earth-proof-globe__clouds");
-
-    svg.innerHTML = `
-      <defs>
-        <clipPath id="earthCloudClipDgbV1">
-          <circle cx="120" cy="120" r="108"></circle>
-        </clipPath>
-      </defs>
-
-      <g clip-path="url(#earthCloudClipDgbV1)">
-        <path class="earth-proof-globe__cloud" d="M19 82 C50 67 83 69 112 84 C80 94 49 93 19 82 Z"></path>
-        <path class="earth-proof-globe__cloud" d="M91 39 C126 27 166 31 199 50 C160 57 121 54 91 39 Z"></path>
-        <path class="earth-proof-globe__cloud" d="M91 161 C130 147 178 153 215 176 C172 181 130 178 91 161 Z"></path>
-        <path class="earth-proof-globe__cloud" d="M38 127 C69 116 96 120 121 137 C88 143 61 140 38 127 Z"></path>
-        <path class="earth-proof-globe__cloud" d="M135 67 C164 59 191 65 214 81 C181 88 156 84 135 67 Z"></path>
       </g>
     `;
 
@@ -332,17 +378,30 @@
     const globe = document.createElement("div");
     globe.className = "earth-proof-globe";
     globe.setAttribute("role", "img");
-    globe.setAttribute("aria-label", "Real Earth texture proof globe with Africa, continents, and country-boundary overlay");
+    globe.setAttribute("aria-label", "Real Earth projection proof globe with natural clouds, wrapped continents, and subtle country overlay");
     globe.setAttribute("data-gauges-earth-proof-globe", "true");
     globe.setAttribute("data-earth-texture-source", "NASA Blue Marble");
-    globe.setAttribute("data-africa-visible", "true");
-    globe.setAttribute("data-country-boundary-overlay", "true");
+    globe.setAttribute("data-projection-realism-pass", "true");
+    globe.setAttribute("data-cloud-layer", "soft-atmospheric");
+    globe.setAttribute("data-continent-wrap", "texture-primary");
 
     globe.style.setProperty("--earth-texture-url", `url("${EARTH_TEXTURE_URL}")`);
+
+    const atmosphere = document.createElement("span");
+    atmosphere.className = "earth-proof-globe__atmosphere";
+    atmosphere.setAttribute("aria-hidden", "true");
 
     const texture = document.createElement("span");
     texture.className = "earth-proof-globe__texture";
     texture.setAttribute("aria-hidden", "true");
+
+    const projectionMask = document.createElement("span");
+    projectionMask.className = "earth-proof-globe__projection-mask";
+    projectionMask.setAttribute("aria-hidden", "true");
+
+    const cloudLayer = document.createElement("span");
+    cloudLayer.className = "earth-proof-globe__cloud-layer";
+    cloudLayer.setAttribute("aria-hidden", "true");
 
     const rim = document.createElement("span");
     rim.className = "earth-proof-globe__rim";
@@ -350,13 +409,15 @@
 
     const tag = document.createElement("span");
     tag.className = "earth-proof-globe__tag";
-    tag.textContent = "Earth Texture · Country Overlay";
+    tag.textContent = "Earth Projection · Texture Primary";
 
     globe.append(
+      atmosphere,
       texture,
+      projectionMask,
       createGridSvg(),
       createBoundarySvg(),
-      createCloudSvg(),
+      cloudLayer,
       rim,
       tag
     );
@@ -364,13 +425,13 @@
     orb.replaceChildren(globe);
 
     orb.setAttribute("data-gauges-earth-proof-mounted", "true");
-    orb.setAttribute("data-gauges-earth-proof-type", "real-texture-country-overlay");
+    orb.setAttribute("data-gauges-earth-proof-type", "projection-realism-pass");
   }
 
   function writeMatrix() {
     if (!matrix) return;
 
-    const alphabet = "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_DGB_GEN2_REAL_EARTH_TEXTURE_COUNTRY_BOUNDARY_OVERLAY_AFRICA_CONTINENTS_GLOBE_PROOF_";
+    const alphabet = "01_ACK_ST_SCOPE_ROUTE_SOURCE_RUNTIME_VISIBLE_ACCEPTANCE_256_DGB_GEN2_REAL_EARTH_TEXTURE_PROJECTION_REALISM_NATURAL_CLOUDS_CONTINENT_WRAP_";
     let out = "";
 
     for (let i = 0; i < 5200; i += 1) {
@@ -429,13 +490,13 @@
 
     const checks = [
       {
-        key: "GAUGES_REAL_EARTH_TEXTURE_GLOBE",
+        key: "GAUGES_EARTH_PROJECTION_REALISM_PASS",
         pass:
-          gaugesJs.includes("NASA Blue Marble") &&
-          gaugesJs.includes("EARTH_TEXTURE_URL") &&
-          gaugesJs.includes("data-country-boundary-overlay"),
-        fail: "Gauges Earth globe is not using real Earth texture and country overlay.",
-        next: "INSTALL_REAL_EARTH_TEXTURE_GLOBE_IN_/gauges/index.js"
+          gaugesJs.includes("dgb-gauges-earth-projection-realism-pass-v1") &&
+          gaugesJs.includes("data-projection-realism-pass") &&
+          gaugesJs.includes("Earth Projection · Texture Primary"),
+        fail: "Gauges Earth globe has not received the projection realism pass.",
+        next: "INSTALL_PROJECTION_REALISM_PASS_IN_/gauges/index.js"
       },
       {
         key: "ROOT_NOT_GAUGES",
@@ -551,8 +612,10 @@
     lines.push("STAMP=" + diagnostic.stamp);
     lines.push("PHASE=SECOND_GENERATION_RENEWAL");
     lines.push("GAUGES_EARTH_PROOF=ACTIVE");
-    lines.push("EARTH_STANDARD=NASA_BLUE_MARBLE_TEXTURE_WITH_COUNTRY_OVERLAY");
+    lines.push("EARTH_STANDARD=PROJECTION_REALISM_TEXTURE_PRIMARY");
     lines.push("TEXTURE_SOURCE=NASA_BLUE_MARBLE_PUBLIC_SOURCE");
+    lines.push("CLOUD_STANDARD=SOFT_ATMOSPHERIC_BANDS");
+    lines.push("CONTINENT_STANDARD=TEXTURE_WRAP_PRIMARY");
     lines.push("PRIORITY=" + diagnostic.priority);
     lines.push("NEXT_ACTION=" + diagnostic.nextAction);
     lines.push("");
@@ -594,7 +657,7 @@
     setText(stripAction, "NEXT_ACTION=FETCH_PUBLIC_SOURCE_FILES");
     setText(
       liveOutput,
-      "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE\nGAUGES_EARTH_PROOF=ACTIVE\nEARTH_STANDARD=NASA_BLUE_MARBLE_TEXTURE_WITH_COUNTRY_OVERLAY"
+      "GAUGE_BOOT=RUNNING\nFETCHING_PUBLIC_SOURCE_FILES=TRUE\nGAUGES_EARTH_PROOF=ACTIVE\nEARTH_STANDARD=PROJECTION_REALISM_TEXTURE_PRIMARY"
     );
 
     const results = [];
@@ -615,8 +678,8 @@
     if (root) {
       root.setAttribute("data-next-action", diagnostic.nextAction);
       root.setAttribute("data-gauge-runtime", "mounted");
-      root.setAttribute("data-gauges-earth-proof", "real-texture-country-overlay");
-      root.setAttribute("data-earth-standard", "nasa-blue-marble-country-overlay");
+      root.setAttribute("data-gauges-earth-proof", "projection-realism-pass");
+      root.setAttribute("data-earth-standard", "texture-primary-soft-clouds-continent-wrap");
     }
   }
 

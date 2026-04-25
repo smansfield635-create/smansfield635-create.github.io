@@ -6,11 +6,8 @@
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Gauges: a Generation 2 public instrument surface using the shared Earth globe asset, compact context, and diamond route controls."
+    content="Diamond Gate Bridge Gauges: a self-contained Generation 2 public instrument surface with restored Earth globe, corrected spin, compact context, and diamond route controls."
   />
-
-  <link rel="stylesheet" href="/assets/ui.css" />
-  <script src="/assets/universe_ui.js" defer></script>
 
   <style>
     :root {
@@ -24,9 +21,15 @@
       --gold:#efd29a;
       --blue:#8ec5ff;
       --green:#93efbd;
+      --purple:#c89cff;
+      --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
       --earth-texture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg");
+      --earth-spin:64s;
+      --diamond-spin:18s;
+      --diamond-float:7s;
+      --diamond-breathe:5.8s;
     }
 
     * {
@@ -151,7 +154,8 @@
       gap:10px;
     }
 
-    .nav {
+    .nav,
+    .route-grid {
       perspective:1000px;
       align-items:center;
       justify-items:center;
@@ -173,6 +177,7 @@
       text-align:center;
       transform-style:preserve-3d;
       transition:transform 420ms ease, filter 420ms ease;
+      will-change:transform,filter;
     }
 
     .route-card {
@@ -196,9 +201,10 @@
         0 0 30px rgba(142,197,255,.18),
         inset 0 0 26px rgba(255,255,255,.035);
       z-index:-1;
+      transform-origin:50% 50%;
       animation:
-        diamondFloat 7s ease-in-out infinite,
-        diamondPulse 5.8s ease-in-out infinite;
+        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
+        diamondPulse var(--diamond-breathe) ease-in-out infinite;
     }
 
     .nav a::after,
@@ -213,7 +219,8 @@
         linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
       opacity:.72;
       z-index:-1;
-      animation:innerDiamondSpin 18s linear infinite;
+      transform-origin:50% 50%;
+      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
     }
 
     .nav a.featured {
@@ -430,7 +437,6 @@
       font-size:.80rem;
     }
 
-    .dgb-globe-stage,
     .globe-stage {
       min-height:clamp(410px,58vw,650px);
       display:grid;
@@ -445,7 +451,6 @@
         rgba(255,255,255,.025);
     }
 
-    .dgb-globe-stage::before,
     .globe-stage::before {
       content:"";
       position:absolute;
@@ -461,7 +466,17 @@
         inset 0 0 42px rgba(239,210,154,.04);
     }
 
-    [data-dgb-globe="earth"] {
+    .globe-stage::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 36%,rgba(255,255,255,.07),transparent 16%),
+        linear-gradient(180deg,transparent,rgba(2,6,16,.38));
+    }
+
+    .earth-box {
       --globe-size:min(380px,74vw);
       --globe-glow:rgba(142,197,255,.28);
       --globe-accent:rgba(239,210,154,.50);
@@ -476,18 +491,18 @@
       z-index:2;
     }
 
-    [data-dgb-globe-size="hero"] {
+    .earth-box.hero-earth {
       --globe-size:min(270px,34vw);
     }
 
-    .dgb-globe-box__tilt {
+    .earth-tilt {
       position:absolute;
       inset:0;
       transform:rotate(-23.5deg);
       transform-origin:50% 50%;
     }
 
-    .dgb-globe-box__tilt::before {
+    .earth-tilt::before {
       content:"";
       position:absolute;
       left:50%;
@@ -500,7 +515,7 @@
       z-index:8;
     }
 
-    .dgb-globe-box__earth {
+    .earth-sphere {
       position:absolute;
       inset:0;
       border-radius:50%;
@@ -516,7 +531,7 @@
         0 0 62px var(--globe-glow);
     }
 
-    .dgb-globe-box__map {
+    .earth-map {
       position:absolute;
       inset:-2%;
       border-radius:50%;
@@ -526,11 +541,11 @@
       background-repeat:repeat-x;
       filter:saturate(1.22) contrast(1.08) brightness(.92);
       transform:scale(1.02);
-      animation:earthTextureDriftCorrect 64s linear infinite;
+      animation:earthTextureDriftCorrect var(--earth-spin) linear infinite;
       z-index:1;
     }
 
-    .dgb-globe-box__map::before {
+    .earth-map::before {
       content:"";
       position:absolute;
       inset:0;
@@ -543,7 +558,7 @@
       pointer-events:none;
     }
 
-    .dgb-globe-box__map::after {
+    .earth-map::after {
       content:"";
       position:absolute;
       inset:0;
@@ -554,7 +569,7 @@
       pointer-events:none;
     }
 
-    .dgb-globe-box__clouds {
+    .earth-clouds {
       position:absolute;
       inset:-1%;
       border-radius:50%;
@@ -570,7 +585,7 @@
       z-index:3;
     }
 
-    .dgb-globe-box__atmosphere {
+    .earth-atmosphere {
       position:absolute;
       inset:-5%;
       border-radius:50%;
@@ -581,7 +596,7 @@
       z-index:4;
     }
 
-    .dgb-globe-box__label {
+    .earth-label {
       position:absolute;
       left:50%;
       bottom:-42px;
@@ -626,34 +641,76 @@
       color:#d6e2ff;
     }
 
-    @keyframes diamondFloat {
-      0%,100% { transform:translateY(0) rotate(0deg); }
-      50% { transform:translateY(-5px) rotate(1.5deg); }
+    @keyframes diamondBodyWobble {
+      0%,100% {
+        transform:translateY(0) rotate(0deg) scale(1);
+      }
+
+      25% {
+        transform:translateY(-2px) rotate(1.4deg) scale(1.015);
+      }
+
+      50% {
+        transform:translateY(-4px) rotate(0deg) scale(1.025);
+      }
+
+      75% {
+        transform:translateY(-2px) rotate(-1.4deg) scale(1.015);
+      }
     }
 
     @keyframes diamondPulse {
-      0%,100% { opacity:.82; filter:brightness(1); }
-      50% { opacity:1; filter:brightness(1.18); }
+      0%,100% {
+        opacity:.82;
+        filter:brightness(1);
+      }
+
+      50% {
+        opacity:1;
+        filter:brightness(1.18);
+      }
     }
 
     @keyframes innerDiamondSpin {
-      0% { transform:rotate(0deg) scale(.96); }
-      100% { transform:rotate(360deg) scale(.96); }
+      0% {
+        transform:rotate(0deg) scale(.96);
+      }
+
+      100% {
+        transform:rotate(360deg) scale(.96);
+      }
     }
 
     @keyframes earthTextureDriftCorrect {
-      0% { background-position:220% 50%; }
-      100% { background-position:0% 50%; }
+      0% {
+        background-position:220% 50%;
+      }
+
+      100% {
+        background-position:0% 50%;
+      }
     }
 
     @keyframes cloudDriftCorrect {
-      0% { transform:translateX(8%) rotate(360deg); }
-      100% { transform:translateX(-8%) rotate(0deg); }
+      0% {
+        transform:translateX(8%) rotate(360deg);
+      }
+
+      100% {
+        transform:translateX(-8%) rotate(0deg);
+      }
     }
 
     @keyframes atmospherePulse {
-      0%,100% { opacity:.62; transform:scale(1); }
-      50% { opacity:.95; transform:scale(1.018); }
+      0%,100% {
+        opacity:.62;
+        transform:scale(1);
+      }
+
+      50% {
+        opacity:.95;
+        transform:scale(1.018);
+      }
     }
 
     @media (min-width:820px) {
@@ -727,15 +784,14 @@
         opacity:.46;
       }
 
-      [data-dgb-globe="earth"] {
+      .earth-box {
         --globe-size:min(300px,76vw);
       }
 
-      [data-dgb-globe-size="hero"] {
+      .earth-box.hero-earth {
         --globe-size:126px;
       }
 
-      .dgb-globe-stage,
       .globe-stage {
         min-height:420px;
       }
@@ -767,11 +823,11 @@
         width:min(100%,122px);
       }
 
-      [data-dgb-globe="earth"] {
+      .earth-box {
         --globe-size:min(270px,74vw);
       }
 
-      [data-dgb-globe-size="hero"] {
+      .earth-box.hero-earth {
         --globe-size:112px;
       }
     }
@@ -793,15 +849,15 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="gauges"
-    data-surface="generation-2-live-instrument-baseline"
-    data-globe="shared-real-earth"
+    data-surface="generation-2-self-contained-live-instrument"
+    data-globe="self-contained-real-earth"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Diamond Gate Bridge Gauges">
         <span class="mark" aria-hidden="true">DG</span>
         <span class="brand-text">
           <span class="kicker">Gauge Authority · Second Generation Renewal</span>
-          <strong class="title">Live Feed Instrument Surface · V8</strong>
+          <strong class="title">Live Feed Instrument Surface · V9</strong>
         </span>
       </a>
 
@@ -819,19 +875,14 @@
 
     <section class="hero" aria-labelledby="gaugesTitle">
       <div class="hero-globe" aria-hidden="true">
-        <div
-          data-dgb-globe="earth"
-          data-dgb-globe-size="hero"
-          data-dgb-globe-theme="blue"
-          data-dgb-globe-label="Earth standard · tilted axis · live gauge"
-        >
-          <div class="dgb-globe-box__tilt">
-            <div class="dgb-globe-box__earth">
-              <div class="dgb-globe-box__map"></div>
-              <div class="dgb-globe-box__clouds"></div>
+        <div class="earth-box hero-earth">
+          <div class="earth-tilt">
+            <div class="earth-sphere">
+              <div class="earth-map"></div>
+              <div class="earth-clouds"></div>
             </div>
-            <div class="dgb-globe-box__atmosphere"></div>
-            <div class="dgb-globe-box__label">Earth standard · tilted axis · live gauge</div>
+            <div class="earth-atmosphere"></div>
+            <div class="earth-label">Earth standard · tilted axis · live gauge</div>
           </div>
         </div>
       </div>
@@ -839,46 +890,34 @@
       <div class="hero-copy">
         <span class="pill">Readable instrument surface</span>
         <h1 id="gaugesTitle">Gauges</h1>
-        <h2>The shared Earth globe is restored.</h2>
+        <h2>The Earth globe is restored directly.</h2>
         <p>
-          Gauges is the public inspection room. The globe now comes from the shared
-          asset system, while this page includes a defensive inline fallback so the
-          instrument never collapses into plain text.
+          Gauges is the public inspection room. This version is self-contained:
+          the real-Earth globe, corrected spin direction, compact context, and
+          diamond route controls all live inside this file.
         </p>
       </div>
     </section>
 
     <section class="globe-panel" aria-labelledby="globeTitle">
       <div class="panel-head">
-        <span class="pill">Shared globe asset</span>
-        <h2 id="globeTitle">Axis · natural spin · public inspection.</h2>
+        <span class="pill">Self-contained globe</span>
+        <h2 id="globeTitle">Axis · corrected spin · public inspection.</h2>
         <p>
-          The globe is owned by the shared asset system. The fallback markup below
-          preserves the real-Earth globe even if the asset runtime is delayed.
+          The globe no longer depends on external asset loading. It uses an actual
+          Earth texture layer, a tilted axis, atmosphere, and corrected texture drift.
         </p>
       </div>
 
-      <div
-        class="dgb-globe-stage globe-stage"
-        data-dgb-globe-stage
-        data-dgb-globe-size="panel"
-        data-dgb-globe-theme="blue"
-        data-dgb-globe-label="Earth standard · tilted axis · live gauge"
-        aria-label="Shared real Earth globe instrument"
-      >
-        <div
-          data-dgb-globe="earth"
-          data-dgb-globe-size="panel"
-          data-dgb-globe-theme="blue"
-          data-dgb-globe-label="Earth standard · tilted axis · live gauge"
-        >
-          <div class="dgb-globe-box__tilt">
-            <div class="dgb-globe-box__earth">
-              <div class="dgb-globe-box__map"></div>
-              <div class="dgb-globe-box__clouds"></div>
+      <div class="globe-stage" aria-label="Self-contained real Earth globe instrument">
+        <div class="earth-box">
+          <div class="earth-tilt">
+            <div class="earth-sphere">
+              <div class="earth-map"></div>
+              <div class="earth-clouds"></div>
             </div>
-            <div class="dgb-globe-box__atmosphere"></div>
-            <div class="dgb-globe-box__label">Earth standard · tilted axis · live gauge</div>
+            <div class="earth-atmosphere"></div>
+            <div class="earth-label">Earth standard · tilted axis · live gauge</div>
           </div>
         </div>
       </div>
@@ -889,8 +928,8 @@
         <span class="pill">Generation 2 baseline</span>
         <h2 id="contextTitle">Context comes first.</h2>
         <p>
-          Gauges begins with public meaning, then shows the shared globe, then gives
-          route status through compact diamond controls.
+          Gauges begins with public meaning, then shows the globe, then gives route
+          status through compact diamond controls.
         </p>
       </div>
 
@@ -910,7 +949,7 @@
         <article class="read-card">
           <small>Baseline</small>
           <strong>Hold Generation 2.</strong>
-          <p>The page favors clear context, compact navigation, shared globe, and visible inspection order.</p>
+          <p>The page favors clear context, compact navigation, restored globe, and visible inspection order.</p>
         </article>
       </div>
     </section>
@@ -977,20 +1016,20 @@
       <div class="signal-grid">
         <article class="signal-card">
           <small>Globe</small>
-          <strong>Shared Earth restored.</strong>
-          <p>The globe is mounted through the reusable asset runtime and protected by inline fallback markup.</p>
+          <strong>Real Earth restored.</strong>
+          <p>The globe uses an actual Earth texture layer, not abstract CSS blob continents.</p>
         </article>
 
         <article class="signal-card">
           <small>Direction</small>
-          <strong>Spin corrected globally.</strong>
-          <p>The corrected spin direction lives in the shared asset CSS, runtime, and fallback keyframes.</p>
+          <strong>Spin corrected.</strong>
+          <p>The texture drift moves in the corrected direction inside this file.</p>
         </article>
 
         <article class="signal-card">
-          <small>Reuse</small>
-          <strong>Every page can use it.</strong>
-          <p>Any page can mount a globe through <code>data-dgb-globe="earth"</code>.</p>
+          <small>Self-contained</small>
+          <strong>No asset dependency.</strong>
+          <p>This page renders the globe and diamond controls even if shared assets fail to load.</p>
         </article>
       </div>
     </section>
@@ -1002,20 +1041,19 @@
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_V8_STATUS=GENERATION_2_BASELINE_ACTIVE
-GLOBE=SHARED_REAL_EARTH_ASSET_WITH_INLINE_FALLBACK
-GLOBE_RUNTIME=/assets/universe_ui.js
-GLOBE_CSS=/assets/ui.css
-SPIN_DIRECTION=CORRECTED_GLOBAL_DEFAULT
+        <code>GAUGES_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
+GLOBE=REAL_EARTH_TEXTURE_RESTORED
+SPIN_DIRECTION=CORRECTED
+ASSET_DEPENDENCY=REMOVED_FOR_GAUGES_PAGE
 LOCAL_FAKE_GLOBE=REMOVED
-NAVIGATION=COMPACT_DIAMOND_CONTROLS
+NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
 CONTEXT=READABLE_FIRST
-NEXT_ACTION=REPLACE_LIVE_/gauges/index.html_WITH_THIS_FILE</code>
+NEXT_ACTION=USE_THIS_AS_THE_STABLE_GAUGES_BASELINE</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · Shared Globe · Generation 2 Baseline</span>
+      <span>Diamond Gate Bridge · Gauges · Self-Contained Generation 2 Baseline</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

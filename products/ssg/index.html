@@ -1,507 +1,382 @@
-<!-- TNT — /products/ssg/index.html
-     PRODUCTS · SSG (ROOT GEOMETRY) · VARIANTS APPEND (MSSG/BSSG)
-     UPGRADE (NO DRIFT / NO PRIMITIVE CHANGES):
-       - Adds diamond-color markers next to section headers (visual parity with other hubs)
-       - Converts long sections into accordion panels (no wall-of-text)
-       - Keeps the MSSG/BSSG canonical text EXACT (unchanged)
-       - Tap-safe (no inline onclick)
-       - EN/中文/ES + canonical state carry (lang/style/time/depth) URL + LS
-     LOCKS:
-       - Uses /assets/ui.css + /assets/branch.css + /assets/instruments.js
-       - ui.css owns html/body background (no overrides)
-       - No new primitives introduced
-       - SSG remains single root geometry
--->
-
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-product-generation="second-generation-renewal">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>SSG · Simplified Syntax Geometry</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Syntax Geometry · Products · Diamond Gate Bridge</title>
+  <meta name="description" content="Syntax Geometry: a Generation 2 product surface for structural language, code-law, and geometric syntax systems." />
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+  <style>
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --fall:#f1a45b;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1120px;
+    }
 
-<style>
-a{color:inherit;text-decoration:none}
-body::before,body::after{pointer-events:none!important}
+    * { box-sizing:border-box; }
 
-/* Top controls */
-.top-left{
-  position:fixed;left:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
-}
-.top-right{
-  position:fixed;right:16px;top:16px;z-index:140;
-  display:flex;gap:10px;flex-wrap:nowrap;align-items:center;white-space:nowrap;
-}
-.top-left .btn,.top-right .btn{white-space:nowrap}
+    html, body {
+      margin:0;
+      min-height:100%;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 6%,rgba(241,164,91,.16),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      overflow-x:hidden;
+    }
 
-/* Header pill */
-.brand{
-  position:fixed;left:50%;top:16px;transform:translateX(-50%);
-  z-index:120;text-align:center;
-  padding:10px 18px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
-  pointer-events:none;
-}
-.brand .t{margin:0;font-weight:950;font-size:20px;letter-spacing:.2px;line-height:1.1}
-.brand .s{margin:6px 0 0;opacity:.82;font-size:12.75px;line-height:1.25}
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.20;
+      background:
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+    }
 
-/* Page layout */
-:root{--dockH:88px}
-.page{
-  width:min(1100px,94vw);
-  margin:0 auto;
-  padding:92px 0 calc(var(--dockH) + 28px);
-  position:relative;
-  z-index:10;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
+    a { color:inherit; text-decoration:none; }
 
-/* Panel shell (opal/pearl) */
-.panel{
-  position:relative;
-  border-radius:22px;
-  border:1px solid rgba(255,255,255,.12);
-  background:
-    radial-gradient(circle at 28% 22%, rgba(255,255,255,.10), transparent 56%),
-    radial-gradient(circle at 78% 30%, rgba(160,120,255,.12), transparent 62%),
-    radial-gradient(circle at 62% 86%, rgba(110,230,255,.10), transparent 72%),
-    rgba(0,0,0,.16);
-  backdrop-filter:blur(10px);
-  box-shadow:0 26px 90px rgba(0,0,0,.55);
-  overflow:hidden;
-}
-.panel::before{
-  content:"";
-  position:absolute;inset:0;border-radius:inherit;padding:1px;
-  background:linear-gradient(120deg, transparent 0%, rgba(212,175,55,.22) 50%, transparent 100%);
-  opacity:.42;
-  -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite:xor;
-  mask-composite:exclude;
-  pointer-events:none;
-}
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
+      position:relative;
+      z-index:1;
+    }
 
-/* Accordion head */
-.acHead{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:12px;
-  padding:16px 16px 14px;
-  cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-}
-.acLeft{min-width:0}
-.acTitleRow{display:flex;align-items:center;gap:10px;min-width:0}
-.dmark{
-  width:10px;height:10px;border-radius:3px;
-  transform:rotate(45deg);
-  background:var(--c, rgba(212,175,55,.45));
-  box-shadow:0 0 0 1px rgba(255,255,255,.12), 0 0 14px rgba(0,0,0,.30);
-  flex:0 0 auto;
-}
-.k{
-  margin:0;
-  font-size:11px;
-  letter-spacing:4px;
-  text-transform:uppercase;
-  opacity:.78;
-}
-.h1{
-  margin:8px 0 0;
-  font-weight:950;
-  font-size:22px;
-  letter-spacing:.2px;
-  line-height:1.15;
-}
-.sub{
-  margin-top:8px;
-  color:rgba(255,255,255,.82);
-  line-height:1.55;
-  font-size:13.5px;
-  max-width:96ch;
-}
-.chev{
-  font-size:16px;
-  opacity:.78;
-  flex:0 0 auto;
-  margin-top:2px;
-}
+    .topbar, .hero, .panel, .card, .route-panel {
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(241,164,91,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
+      box-shadow:var(--shadow);
+    }
 
-/* Accordion body */
-.acBody{
-  display:none;
-  padding:14px 16px 16px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(12,22,38,.82), rgba(7,11,18,.90));
-}
-.panel.open .acBody{display:block}
+    .topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:12px;
+    }
 
-/* Inner blocks */
-.rulebox{
-  margin-top:12px;
-  border-radius:18px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.14);
-  padding:14px 14px 12px;
-}
-.rulebox .title{
-  margin:0 0 8px;
-  font-weight:950;
-  letter-spacing:.2px;
-}
-.ul{
-  margin:0 0 0 18px;
-  padding:0;
-  color:rgba(255,255,255,.80);
-}
-.ul li{margin:6px 0; line-height:1.45}
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
 
-/* Markdown-like content formatting (no new framework) */
-.md h2{margin:0 0 10px;font-weight:950;font-size:18px;letter-spacing:.2px}
-.md h3{margin:18px 0 8px;font-weight:950;font-size:15px;letter-spacing:.2px;opacity:.96}
-.md h4{margin:16px 0 8px;font-weight:950;font-size:13.5px;letter-spacing:.2px;opacity:.96}
-.md p{margin:8px 0 0;color:rgba(255,255,255,.86);line-height:1.55;font-size:13.5px}
-.hr{margin:14px 0;height:1px;background:rgba(255,255,255,.10)}
-.codeblock{
-  margin-top:10px;border-radius:18px;border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);padding:12px 14px;
-  font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-  font-size:12.5px;line-height:1.5;color:rgba(255,255,255,.86);white-space:pre-wrap;
-}
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(241,164,91,.25),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
+      font-weight:900;
+      letter-spacing:.08em;
+    }
 
-/* Dock */
-.dock{
-  position:fixed;left:50%;
-  bottom:max(12px, env(safe-area-inset-bottom));
-  transform:translateX(-50%);
-  z-index:120;width:min(980px,94vw);
-  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;
-  padding:10px 12px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(0,0,0,.18);
-  backdrop-filter:blur(8px);
-  pointer-events:none;
-}
-.dock .btn{pointer-events:auto}
+    .kicker {
+      display:block;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
 
-/* Mobile */
-@media (max-width:520px){
-  :root{--dockH:98px}
-  .h1{font-size:20px}
-}
-</style>
+    .title {
+      display:block;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .nav, .actions, .route-grid {
+      display:grid;
+      gap:8px;
+    }
+
+    .nav a, .button, .route-card {
+      min-height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
+      text-align:center;
+    }
+
+    .button.primary {
+      border-color:rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(20px,3.5vw,38px);
+      margin-bottom:14px;
+      display:grid;
+      gap:18px;
+      overflow:hidden;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--fall);
+      box-shadow:0 0 18px rgba(241,164,91,.50);
+    }
+
+    h1 {
+      margin:0;
+      color:#fff;
+      font-size:clamp(2.8rem,10vw,6rem);
+      line-height:.9;
+      letter-spacing:-.07em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.8vw,2.8rem);
+      line-height:1;
+      letter-spacing:-.04em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
+    }
+
+    .hero p {
+      max-width:70ch;
+      margin-top:14px;
+    }
+
+    .actions {
+      margin-top:18px;
+    }
+
+    .panel, .route-panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:14px;
+    }
+
+    .grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .card {
+      border-radius:22px;
+      padding:16px;
+      min-height:120px;
+    }
+
+    .card small, .route-card small {
+      display:block;
+      margin-bottom:8px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.13em;
+      font-size:.66rem;
+      font-weight:850;
+    }
+
+    .card strong, .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:1.06rem;
+      line-height:1.12;
+    }
+
+    .card p {
+      margin-top:8px;
+      font-size:.92rem;
+      line-height:1.42;
+    }
+
+    .route-card {
+      min-height:112px;
+      border-radius:22px;
+      flex-direction:column;
+      align-items:flex-start;
+      text-align:left;
+      padding:16px;
+    }
+
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
+    }
+
+    @media (min-width:820px) {
+      .topbar { grid-template-columns:1fr auto; align-items:center; }
+      .nav { grid-template-columns:repeat(5,auto); }
+      .actions { grid-template-columns:repeat(4,auto); justify-content:start; }
+      .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+      .route-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    }
+
+    @media (max-width:640px) {
+      .page { width:min(100vw - 12px,var(--max)); padding-top:10px; }
+      .topbar, .hero, .panel, .route-panel { border-radius:24px; }
+      .nav, .actions, .grid, .route-grid { grid-template-columns:1fr; }
+    }
+  </style>
 </head>
 
 <body>
+  <main class="page" data-generation="second-generation-renewal" data-product="syntax-geometry">
+    <header class="topbar">
+      <a class="brand" href="/products/" aria-label="Products home">
+        <span class="mark" aria-hidden="true">SG</span>
+        <span>
+          <span class="kicker">Products · Generation 2</span>
+          <strong class="title">Syntax Geometry</strong>
+        </span>
+      </a>
 
-<div class="top-left">
-  <a class="btn" id="btnBack" href="/products/">BACK</a>
-  <a class="btn" id="btnExit" href="/index.html">EXIT</a>
-</div>
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/metaverse/">Metaverse</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+      </nav>
+    </header>
 
-<div class="top-right" aria-label="Language">
-  <button class="btn" id="btnEN" type="button">EN</button>
-  <button class="btn" id="btnZH" type="button">中文</button>
-  <button class="btn" id="btnES" type="button">ES</button>
-</div>
+    <section class="hero" aria-labelledby="productTitle">
+      <div>
+        <span class="pill">Official product surface</span>
+        <h1 id="productTitle">Syntax Geometry</h1>
+        <h2>Structure before expression.</h2>
+        <p>
+          Syntax Geometry is the structural language product. It expresses system
+          behavior through stable constraints, admissible movement, and clean
+          syntax-law instead of loose explanation.
+        </p>
 
-<div class="brand" aria-hidden="true">
-  <p class="t" id="hdrT">SSG</p>
-  <p class="s" id="hdrS">Simplified Syntax Geometry · Root</p>
-</div>
-
-<div class="page">
-
-  <!-- PANEL 1: CORE -->
-  <section class="panel open" id="pCore" style="--c:#A3A3A3">
-    <div class="acHead" role="button" tabindex="0" aria-label="Toggle: SSG core">
-      <div class="acLeft">
-        <div class="acTitleRow">
-          <span class="dmark"></span>
-          <p class="k" id="kCore">ROOT GEOMETRY</p>
+        <div class="actions">
+          <a class="button primary" href="/products/">Back to Products</a>
+          <a class="button" href="/metaverse/">Metaverse</a>
+          <a class="button" href="/products/nutrition/">Next: Baseline Nutrition</a>
+          <a class="button" href="/products/on-your-side-ai/">AI On Your Side</a>
         </div>
-        <h1 class="h1" id="tCore">Simplified Syntax Geometry (SSG)</h1>
-        <div class="sub" id="pCoreLead">
-          SSG is a constraint-based structural encoding system that expresses system behavior using five primitives:
-          <strong>Resources · Stores · Constraints · Goals · Guards</strong>
-        </div>
       </div>
-      <div class="chev" id="chevCore">▾</div>
-    </div>
+    </section>
 
-    <div class="acBody">
-      <div class="rulebox" aria-label="SSG preserves">
-        <p class="title" id="corePresTitle">SSG preserves:</p>
-        <ul class="ul" id="corePres">
-          <li>Non-circularity</li>
-          <li>Deterministic admissibility under declared rules</li>
-          <li>Receipt-gated progression</li>
-          <li>No timers as gates</li>
-          <li>Atomic state transitions</li>
-        </ul>
+    <section class="panel" aria-labelledby="readTitle">
+      <span class="pill">Product read</span>
+      <h2 id="readTitle">Constraint-based structure.</h2>
+
+      <div class="grid">
+        <article class="card">
+          <small>Root</small>
+          <strong>Syntax law</strong>
+          <p>Defines structural expression through declared rules and stable primitives.</p>
+        </article>
+
+        <article class="card">
+          <small>Use</small>
+          <strong>Admissible movement</strong>
+          <p>Supports cleaner system behavior by separating valid paths from unstable ones.</p>
+        </article>
+
+        <article class="card">
+          <small>Boundary</small>
+          <strong>No loose geometry</strong>
+          <p>Compression and expression remain subordinate to structure.</p>
+        </article>
       </div>
+    </section>
 
-      <div class="rulebox" aria-label="SSG notes">
-        <p class="title" id="coreNotesTitle">Notes:</p>
-        <ul class="ul" id="coreNotes">
-          <li>SSG is language-agnostic and substrate-independent.</li>
-          <li>SSG defines geometry. It does not define linguistic encoding or compression style.</li>
-          <li>Status: ROOT · CANONICAL · INDEPENDENT</li>
-        </ul>
+    <section class="route-panel" aria-labelledby="backlinksTitle">
+      <span class="pill">Second-generation backlinks</span>
+      <h2 id="backlinksTitle">Product route stays connected.</h2>
+
+      <div class="route-grid">
+        <a class="route-card" href="/products/">
+          <small>Parent</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/metaverse/">
+          <small>World surface</small>
+          <strong>Metaverse</strong>
+        </a>
+
+        <a class="route-card" href="/products/on-your-side-ai/">
+          <small>Related</small>
+          <strong>AI On Your Side</strong>
+        </a>
+
+        <a class="route-card" href="/products/nutrition/">
+          <small>Related</small>
+          <strong>Baseline Nutrition Systems</strong>
+        </a>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PANEL 2: VARIANTS (TEXT LOCKED) -->
-  <section class="panel" id="pVar" style="--c:#D4AF37">
-    <div class="acHead" role="button" tabindex="0" aria-label="Toggle: SSG variants">
-      <div class="acLeft">
-        <div class="acTitleRow">
-          <span class="dmark"></span>
-          <p class="k">CANONICAL LAYERS</p>
-        </div>
-        <h1 class="h1">SSG Variants (Canonical Layers)</h1>
-        <div class="sub" id="varSub">MSSG and BSSG are dependent layers that route through SSG.</div>
-      </div>
-      <div class="chev" id="chevVar">▸</div>
-    </div>
-
-    <div class="acBody md" id="ssgVariants">
-
-      <!-- EXACT TEXT — NO MODIFICATION (as provided) -->
-      <h2>SSG Variants (Canonical Layers)</h2>
-
-      <p>SSG is the single root geometry. MSSG and BSSG are dependent execution layers that preserve SSG invariants and introduce zero new primitives.</p>
-
-      <div class="hr"></div>
-
-      <h4>SSG — Simplified Syntax Geometry (Root)</h4>
-
-      <p>SSG is a constraint-based structural encoding system that expresses system behavior using five primitives:</p>
-
-      <p><strong>Resources · Stores · Constraints · Goals · Guards</strong></p>
-
-      <p>SSG preserves:</p>
-      <p>• Non-circularity<br/>
-      • Deterministic admissibility under declared rules<br/>
-      • Receipt-gated progression<br/>
-      • No timers as gates<br/>
-      • Atomic state transitions</p>
-
-      <p>SSG is language-agnostic and substrate-independent.<br/>
-      SSG defines geometry. It does not define linguistic encoding or compression style.</p>
-
-      <p><strong>Status:</strong> ROOT · CANONICAL · INDEPENDENT</p>
-
-      <div class="hr"></div>
-
-      <h4>MSSG — Mandarin Simplified Syntax Geometry (Encoding Layer)</h4>
-
-      <p>MSSG is SSG expressed through a Mandarin linguistic compression surface. It is an encoding layer only.</p>
-
-      <p>MSSG:<br/>
-      • Preserves all SSG invariants<br/>
-      • Introduces zero new primitives<br/>
-      • Does not alter constraint logic<br/>
-      • Does not alter admissibility rules<br/>
-      • Exists to improve compression and transfer density</p>
-
-      <p><strong>Dependency:</strong> MSSG requires SSG.</p>
-
-      <p><strong>Status:</strong> DEPENDENT · EXECUTION ENCODING LAYER</p>
-
-      <div class="hr"></div>
-
-      <h4>BSSG — Binary Simplified Syntax Geometry (Admissibility Layer)</h4>
-
-      <p>BSSG is a binary admissibility projection of SSG states into:</p>
-
-      <p><strong>Admissible / Inadmissible</strong></p>
-
-      <p>under declared measurement rules.</p>
-
-      <p>BSSG:<br/>
-      • Preserves all SSG invariants<br/>
-      • Introduces zero new primitives<br/>
-      • Does not alter constraint logic<br/>
-      • Collapses multi-state structures into binary gate classifications for validation and stress testing</p>
-
-      <p><strong>Dependency:</strong> BSSG requires SSG.</p>
-
-      <p><strong>Status:</strong> DEPENDENT · BINARY ADMISSIBILITY LAYER</p>
-
-      <div class="hr"></div>
-
-      <h4>Dependency Graph</h4>
-
-      <div class="codeblock">SSG (Root Geometry)
-├─ MSSG (Encoding Layer)
-└─ BSSG (Admissibility Layer)</div>
-
-      <p>MSSG and BSSG are not separate geometries.<br/>
-      They are dependent layers that route through SSG.</p>
-    </div>
-  </section>
-
-</div>
-
-<nav class="dock" aria-label="Bottom navigation">
-  <a class="btn" id="dockPrelude" href="/prelude/">PRELUDE</a>
-  <a class="btn" id="dockExplore" href="/explore/">EXPLORE</a>
-  <a class="btn active" id="dockProducts" href="/products/">PRODUCTS</a>
-  <a class="btn" id="dockLaws" href="/laws/">LAWS</a>
-  <a class="btn" id="dockGauges" href="/gauges/">GAUGES</a>
-</nav>
-
-<script>
-(function(){
-  // ===== canonical state carry =====
-  var qs=new URLSearchParams(location.search);
-  var lang  = qs.get("lang")  || localStorage.getItem("gd_lang")  || "en";
-  var style = qs.get("style") || localStorage.getItem("gd_style") || "formal";
-  var time  = qs.get("time")  || localStorage.getItem("gd_time")  || "now";
-  var depth = qs.get("depth") || localStorage.getItem("gd_depth") || "explore";
-
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
-  if(style!=="formal" && style!=="informal") style="formal";
-  if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(depth!=="explore" && depth!=="learn") depth="explore";
-
-  try{
-    localStorage.setItem("gd_lang",lang);
-    localStorage.setItem("gd_style",style);
-    localStorage.setItem("gd_time",time);
-    localStorage.setItem("gd_depth",depth);
-  }catch(e){}
-
-  document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-
-  function q(over){
-    var L=(over&&over.lang)?over.lang:lang;
-    var S=(over&&over.style)?over.style:style;
-    var T=(over&&over.time)?over.time:time;
-    var D=(over&&over.depth)?over.depth:depth;
-    return "?lang="+encodeURIComponent(L)+
-           "&style="+encodeURIComponent(S)+
-           "&time="+encodeURIComponent(T)+
-           "&depth="+encodeURIComponent(D);
-  }
-
-  // wire nav
-  function wire(id,path){
-    var el=document.getElementById(id);
-    if(el) el.href = path + q();
-  }
-  wire("btnBack","/products/");
-  wire("btnExit","/index.html");
-  wire("dockPrelude","/prelude/");
-  wire("dockExplore","/explore/");
-  wire("dockProducts","/products/");
-  wire("dockLaws","/laws/");
-  wire("dockGauges","/gauges/");
-
-  // language buttons
-  var btnEN=document.getElementById("btnEN");
-  var btnZH=document.getElementById("btnZH");
-  var btnES=document.getElementById("btnES");
-
-  function paintLang(){
-    btnEN.classList.toggle("active", lang==="en");
-    btnZH.classList.toggle("active", lang==="zh");
-    btnES.classList.toggle("active", lang==="es");
-  }
-  paintLang();
-
-  function setLang(next){
-    if(next!=="en" && next!=="zh" && next!=="es") next="en";
-    lang=next;
-    try{ localStorage.setItem("gd_lang",lang); }catch(e){}
-    window.location.href = window.location.pathname + q({lang:lang});
-  }
-  btnEN.addEventListener("click", function(){ setLang("en"); });
-  btnZH.addEventListener("click", function(){ setLang("zh"); });
-  btnES.addEventListener("click", function(){ setLang("es"); });
-
-  // i18n (only for the CORE panel + small subtitle; canonical variants text stays as-is)
-  var I18N = {
-    en:{
-      hdrT:"SSG",
-      hdrS:"Simplified Syntax Geometry · Root",
-      kCore:"ROOT GEOMETRY",
-      tCore:"Simplified Syntax Geometry (SSG)",
-      pCoreLead:"SSG is a constraint-based structural encoding system that expresses system behavior using five primitives: Resources · Stores · Constraints · Goals · Guards",
-      corePresTitle:"SSG preserves:",
-      coreNotesTitle:"Notes:",
-      varSub:"MSSG and BSSG are dependent layers that route through SSG."
-    },
-    zh:{
-      hdrT:"SSG",
-      hdrS:"简化语法几何 · 根层",
-      kCore:"根几何",
-      tCore:"简化语法几何（SSG）",
-      pCoreLead:"SSG 是基于约束的结构编码系统，用五个原语表达系统行为：Resources · Stores · Constraints · Goals · Guards",
-      corePresTitle:"SSG 保持：",
-      coreNotesTitle:"备注：",
-      varSub:"MSSG 与 BSSG 为依赖层，均通过 SSG 路由。"
-    },
-    es:{
-      hdrT:"SSG",
-      hdrS:"Geometría de Sintaxis Simplificada · Raíz",
-      kCore:"GEOMETRÍA RAÍZ",
-      tCore:"Geometría de Sintaxis Simplificada (SSG)",
-      pCoreLead:"SSG es un sistema estructural basado en restricciones que expresa comportamiento con cinco primitivas: Resources · Stores · Constraints · Goals · Guards",
-      corePresTitle:"SSG preserva:",
-      coreNotesTitle:"Notas:",
-      varSub:"MSSG y BSSG son capas dependientes que se enrutan a través de SSG."
-    }
-  };
-  var T = (lang==="zh") ? I18N.zh : (lang==="es") ? I18N.es : I18N.en;
-
-  document.getElementById("hdrT").textContent=T.hdrT;
-  document.getElementById("hdrS").textContent=T.hdrS;
-  document.getElementById("kCore").textContent=T.kCore;
-  document.getElementById("tCore").textContent=T.tCore;
-
-  // keep primitives EXACT, only wrap bold
-  var lead = T.pCoreLead;
-  lead = lead.replace("Resources · Stores · Constraints · Goals · Guards","<strong>Resources · Stores · Constraints · Goals · Guards</strong>");
-  document.getElementById("pCoreLead").innerHTML = lead;
-
-  document.getElementById("corePresTitle").textContent=T.corePresTitle;
-  document.getElementById("coreNotesTitle").textContent=T.coreNotesTitle;
-  document.getElementById("varSub").textContent=T.varSub;
-
-  // accordion behavior (multi-open allowed; chevrons update)
-  function bindPanel(panelId, chevId){
-    var panel=document.getElementById(panelId);
-    var head=panel.querySelector(".acHead");
-    var chev=document.getElementById(chevId);
-    function act(){
-      var open=!panel.classList.contains("open");
-      panel.classList.toggle("open", open);
-      if(chev) chev.textContent = open ? "▾" : "▸";
-    }
-    head.addEventListener("click", act);
-    head.addEventListener("keydown", function(e){
-      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }
-    });
-  }
-  bindPanel("pCore","chevCore");
-  bindPanel("pVar","chevVar");
-})();
-</script>
-
+    <footer class="footer">
+      <span>Syntax Geometry · Generation 2 Product Surface</span>
+      <span><a href="/products/">Products</a> · <a href="/metaverse/">Metaverse</a> · <a href="/">Door</a></span>
+    </footer>
+  </main>
 </body>
 </html>

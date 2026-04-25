@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en" data-metaverse-generation="second-generation-renewal">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Metaverse · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Metaverse: Generation 2 public world surface with shared Earth, product engine, gauges, and runtime routes."
+  />
+
+  <style>
+    :root {
+      --bg:#020610;
+      --panel:rgba(7,14,28,.92);
+      --panel-strong:rgba(10,20,42,.96);
+      --line:rgba(170,198,255,.18);
+      --text:#eef4ff;
+      --muted:#aab8d8;
+      --gold:#efd29a;
+      --blue:#8ec5ff;
+      --green:#92e7ba;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
+    }
+
+    * {
+      box-sizing:border-box;
+    }
+
+    html,
+    body {
+      margin:0;
+      min-height:100%;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 6%,rgba(142,197,255,.18),transparent 25%),
+        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(146,231,186,.10),transparent 28%),
+        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.20;
+      background:
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+    }
+
+    a {
+      color:inherit;
+      text-decoration:none;
+    }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
+      position:relative;
+      z-index:1;
+    }
+
+    .topbar,
+    .hero,
+    .stage,
+    .route-panel,
+    .route-card,
+    .control-panel {
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
+        linear-gradient(180deg,var(--panel-strong),var(--panel));
+      box-shadow:var(--shadow);
+    }
+
+    .topbar {
+      min-height:76px;
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:28px;
+      display:grid;
+      gap:12px;
+    }
+
+    .brand {
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .mark {
+      width:48px;
+      height:48px;
+      border-radius:16px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(239,210,154,.24),transparent 42%),
+        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
+      font-weight:900;
+      letter-spacing:.08em;
+    }
+
+    .kicker {
+      display:block;
+      margin:0 0 4px;
+      color:#c8d7ff;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+    }
+
+    .title {
+      display:block;
+      margin:0;
+      font-weight:850;
+      font-size:1.05rem;
+    }
+
+    .nav {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .nav a,
+    .button,
+    .route-card,
+    .control-panel button {
+      min-height:44px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:0 14px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:#d7e2ff;
+      font-weight:850;
+      text-align:center;
+    }
+
+    .nav a:focus-visible,
+    .button:focus-visible,
+    .route-card:focus-visible,
+    .control-panel button:focus-visible {
+      outline:2px solid rgba(239,210,154,.62);
+      outline-offset:3px;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(20px,3.5vw,38px);
+      margin-bottom:14px;
+      overflow:hidden;
+      display:grid;
+      gap:18px;
+      align-items:center;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      color:#d8e3ff;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(239,210,154,.50);
+    }
+
+    h1 {
+      margin:0;
+      max-width:10ch;
+      color:#fff;
+      font-size:clamp(3rem,12vw,6.8rem);
+      line-height:.88;
+      letter-spacing:-.075em;
+    }
+
+    h2 {
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.55rem,5vw,3rem);
+      line-height:1;
+      letter-spacing:-.05em;
+    }
+
+    p {
+      margin:0;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
+    }
+
+    .hero p {
+      max-width:62ch;
+      margin-top:14px;
+    }
+
+    .actions {
+      display:grid;
+      gap:8px;
+      margin-top:18px;
+    }
+
+    .button.primary {
+      border-color:rgba(239,210,154,.38);
+      background:
+        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
+        rgba(255,255,255,.035);
+      color:#fff8ea;
+    }
+
+    .stage {
+      position:relative;
+      min-height:clamp(460px,64vw,680px);
+      border-radius:32px;
+      overflow:hidden;
+      isolation:isolate;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.13),transparent 22%),
+        radial-gradient(circle at 30% 30%,rgba(142,197,255,.13),transparent 24%),
+        radial-gradient(circle at 70% 70%,rgba(146,231,186,.10),transparent 26%),
+        linear-gradient(180deg,#050b18,#02050d);
+    }
+
+    .stage::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      z-index:8;
+      border-radius:26px;
+      border:1px solid rgba(255,255,255,.10);
+      box-shadow:inset 0 0 36px rgba(145,201,255,.12);
+      pointer-events:none;
+    }
+
+    .stage::after {
+      content:"";
+      position:absolute;
+      inset:-20%;
+      z-index:1;
+      opacity:.18;
+      background:
+        linear-gradient(90deg,rgba(145,201,255,.10) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(145,201,255,.06) 1px,transparent 1px);
+      background-size:48px 48px;
+      transform:rotate(-7deg);
+      pointer-events:none;
+    }
+
+    .stage-title {
+      position:absolute;
+      left:50%;
+      top:5%;
+      z-index:12;
+      width:min(460px,78%);
+      transform:translateX(-50%);
+      padding:10px 13px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(5,12,26,.78);
+      text-align:center;
+      color:#e8f0ff;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      line-height:1.25;
+      font-size:.58rem;
+      font-weight:850;
+      backdrop-filter:blur(12px);
+    }
+
+    .orbit {
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:74%;
+      height:42%;
+      border:5px solid rgba(220,235,255,.16);
+      border-radius:50%;
+      transform-origin:center;
+      z-index:3;
+      filter:drop-shadow(0 0 20px rgba(145,201,255,.14));
+      pointer-events:none;
+    }
+
+    .orbit.one {
+      transform:translate(-50%,-50%) rotate(45deg);
+      animation:orbitOne 9s ease-in-out infinite;
+    }
+
+    .orbit.two {
+      transform:translate(-50%,-50%) rotate(-45deg);
+      animation:orbitTwo 9s ease-in-out infinite;
+    }
+
+    .earth-core {
+      position:relative;
+      z-index:7;
+      width:230px;
+      height:230px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      filter:drop-shadow(0 0 34px rgba(255,255,255,.20));
+    }
+
+    .earth-core::before {
+      content:"";
+      position:absolute;
+      inset:-28px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(240,213,155,.26),transparent 56%),
+        radial-gradient(circle at 50% 50%,rgba(145,201,255,.20),transparent 70%);
+      filter:blur(10px);
+      z-index:-1;
+    }
+
+    .node {
+      position:absolute;
+      z-index:9;
+      min-width:132px;
+      padding:10px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(5,12,26,.78);
+      backdrop-filter:blur(12px);
+      color:#fff;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.62rem;
+      font-weight:900;
+      text-align:center;
+      transition:opacity .22s ease,transform .22s ease,border-color .22s ease;
+    }
+
+    .node.products { left:8%; top:20%; border-color:rgba(239,210,154,.38); }
+    .node.world { right:8%; top:20%; border-color:rgba(142,197,255,.38); }
+    .node.gauges { right:8%; bottom:18%; border-color:rgba(146,231,186,.38); }
+    .node.runtime { left:8%; bottom:18%; border-color:rgba(255,255,255,.25); }
+
+    .stage[data-focus="products"] .node:not(.products),
+    .stage[data-focus="world"] .node:not(.world),
+    .stage[data-focus="gauges"] .node:not(.gauges),
+    .stage[data-focus="runtime"] .node:not(.runtime) {
+      opacity:.22;
+    }
+
+    .stage[data-focus="products"] .node.products,
+    .stage[data-focus="world"] .node.world,
+    .stage[data-focus="gauges"] .node.gauges,
+    .stage[data-focus="runtime"] .node.runtime {
+      transform:scale(1.08);
+      border-color:rgba(239,210,154,.62);
+    }
+
+    .stage[data-spin="paused"] .orbit {
+      animation-play-state:paused;
+    }
+
+    .control-panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,24px);
+      margin:14px 0;
+      display:grid;
+      gap:14px;
+    }
+
+    .control-head {
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+
+    .control-head h2 {
+      color:#fff;
+      font-size:clamp(1.45rem,4vw,2.5rem);
+    }
+
+    .control-head span {
+      color:var(--muted);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.64rem;
+      font-weight:850;
+    }
+
+    .control-grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .control-group {
+      display:grid;
+      gap:8px;
+      padding:12px;
+      border:1px solid rgba(177,199,255,.15);
+      border-radius:20px;
+      background:rgba(255,255,255,.035);
+    }
+
+    .control-group small {
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.62rem;
+      font-weight:850;
+    }
+
+    .control-panel button {
+      cursor:pointer;
+      font:inherit;
+      font-size:.78rem;
+    }
+
+    .control-panel button[aria-pressed="true"],
+    .control-panel button.active {
+      border-color:rgba(239,210,154,.42);
+      background:rgba(239,210,154,.14);
+      color:#fff8ea;
+    }
+
+    .route-panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
+      gap:14px;
+    }
+
+    .route-head {
+      display:grid;
+      gap:8px;
+    }
+
+    .route-head h2 {
+      color:#fff;
+      font-size:clamp(1.65rem,5vw,3rem);
+    }
+
+    .route-grid {
+      display:grid;
+      gap:10px;
+    }
+
+    .route-card {
+      min-height:116px;
+      border-radius:22px;
+      flex-direction:column;
+      align-items:flex-start;
+      text-align:left;
+      padding:16px;
+    }
+
+    .route-card small {
+      display:block;
+      margin-bottom:8px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.66rem;
+      font-weight:850;
+    }
+
+    .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:1.08rem;
+      line-height:1.1;
+    }
+
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:14px 4px 0;
+      color:#9db0d4;
+      font-size:.86rem;
+    }
+
+    .footer a {
+      color:#d6e2ff;
+    }
+
+    @keyframes orbitOne {
+      0%,100% {
+        transform:translate(-50%,-50%) rotate(45deg) scaleX(1);
+        opacity:.56;
+      }
+      50% {
+        transform:translate(-50%,-50%) rotate(48deg) scaleX(1.06);
+        opacity:.80;
+      }
+    }
+
+    @keyframes orbitTwo {
+      0%,100% {
+        transform:translate(-50%,-50%) rotate(-45deg) scaleX(1);
+        opacity:.56;
+      }
+      50% {
+        transform:translate(-50%,-50%) rotate(-48deg) scaleX(1.06);
+        opacity:.80;
+      }
+    }
+
+    @media (min-width:820px) {
+      .topbar {
+        grid-template-columns:1fr auto;
+        align-items:center;
+      }
+
+      .nav {
+        grid-template-columns:repeat(5,auto);
+      }
+
+      .hero {
+        grid-template-columns:1fr .88fr;
+      }
+
+      .actions {
+        grid-template-columns:repeat(3,auto);
+        justify-content:start;
+      }
+
+      .control-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+      }
+    }
+
+    @media (max-width:640px) {
+      .page {
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .hero,
+      .stage,
+      .control-panel,
+      .route-panel {
+        border-radius:24px;
+      }
+
+      .nav,
+      .control-grid,
+      .route-grid {
+        grid-template-columns:1fr;
+      }
+
+      .stage {
+        min-height:620px;
+      }
+
+      .earth-core {
+        width:188px;
+        height:188px;
+      }
+
+      .node {
+        min-width:108px;
+        font-size:.54rem;
+      }
+
+      .node.products { left:5%; top:18%; }
+      .node.world { right:5%; top:18%; }
+      .node.gauges { right:5%; bottom:18%; }
+      .node.runtime { left:5%; bottom:18%; }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main
+    class="page"
+    data-generation="second-generation-renewal"
+    data-page="metaverse"
+    data-metaverse-official="true"
+    data-shared-earth="pending"
+  >
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+        <span class="mark" aria-hidden="true">MV</span>
+        <span>
+          <span class="kicker">Diamond Gate Bridge</span>
+          <strong class="title">Metaverse</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Door</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/products/">Products</a>
+        <a href="/big-laugh/">Big Laugh</a>
+        <a href="/gauges/">Gauges</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="metaverseTitle">
+      <div>
+        <span class="pill">Generation 2 · official metaverse surface</span>
+        <h1 id="metaverseTitle">Metaverse</h1>
+        <h2>One world. Multiple chambers.</h2>
+        <p>
+          The Metaverse is now its own Generation 2 route. It connects the shared Earth,
+          the product engine, the world runtime, and the diagnostic gauges without turning
+          the page into a contract wall.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="/products/">Open products</a>
+          <a class="button" href="/world/">Open world</a>
+          <a class="button" href="/gauges/">Inspect gauges</a>
+        </div>
+      </div>
+
+      <section
+        id="metaverseStage"
+        class="stage"
+        data-focus="all"
+        data-spin="playing"
+        aria-label="Metaverse Generation 2 control surface"
+      >
+        <div class="stage-title">Metaverse G2 · shared Earth control surface</div>
+
+        <span class="orbit one" aria-hidden="true"></span>
+        <span class="orbit two" aria-hidden="true"></span>
+
+        <div id="metaverseEarthCore" class="earth-core" aria-label="Shared Earth core"></div>
+
+        <span class="node products">Products</span>
+        <span class="node world">World</span>
+        <span class="node gauges">Gauges</span>
+        <span class="node runtime">Runtime</span>
+      </section>
+    </section>
+
+    <section class="control-panel" aria-label="Metaverse controls">
+      <div class="control-head">
+        <h2>Controls.</h2>
+        <span id="metaverseReceipt">Spin: playing · Focus: all · Earth: loading</span>
+      </div>
+
+      <div class="control-grid">
+        <div class="control-group">
+          <small>Spin</small>
+          <button type="button" data-control="spin" data-value="playing" aria-pressed="true">Play</button>
+          <button type="button" data-control="spin" data-value="paused" aria-pressed="false">Pause</button>
+        </div>
+
+        <div class="control-group">
+          <small>Focus</small>
+          <button type="button" data-control="focus" data-value="all" aria-pressed="true">All</button>
+          <button type="button" data-control="focus" data-value="products" aria-pressed="false">Products</button>
+          <button type="button" data-control="focus" data-value="world" aria-pressed="false">World</button>
+          <button type="button" data-control="focus" data-value="gauges" aria-pressed="false">Gauges</button>
+          <button type="button" data-control="focus" data-value="runtime" aria-pressed="false">Runtime</button>
+        </div>
+
+        <div class="control-group">
+          <small>Routes</small>
+          <a class="button" href="/products/">Products</a>
+          <a class="button" href="/world/">World</a>
+          <a class="button" href="/gauges/">Gauges</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="route-panel" aria-labelledby="routeTitle">
+      <div class="route-head">
+        <span class="pill">Core chambers</span>
+        <h2 id="routeTitle">Official Generation 2 routes.</h2>
+        <p>
+          This surface keeps the Metaverse readable: products, world, gauges, and runtime
+          stay separated but visibly connected through one shared Earth.
+        </p>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/products/">
+          <small>Product engine</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/world/">
+          <small>World layer</small>
+          <strong>World</strong>
+        </a>
+
+        <a class="route-card" href="/gauges/">
+          <small>Diagnostic layer</small>
+          <strong>Gauges</strong>
+        </a>
+
+        <a class="route-card" href="/runtime/">
+          <small>Runtime layer</small>
+          <strong>Runtime</strong>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Metaverse · Generation 2 Official Surface</span>
+      <span>
+        <a href="/">Door</a>
+        ·
+        <a href="/products/">Products</a>
+        ·
+        <a href="/gauges/">Gauges</a>
+      </span>
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const SHARED_EARTH_SRC = "/shared/earth_globe.js";
+      const SHARED_EARTH_VERSION = "shared-earth-globe-axis-spin-v2";
+
+      const page = document.querySelector("[data-page='metaverse']");
+      const stage = document.getElementById("metaverseStage");
+      const receipt = document.getElementById("metaverseReceipt");
+      const earthCore = document.getElementById("metaverseEarthCore");
+
+      function setReceipt() {
+        if (!receipt || !stage) return;
+
+        const earthState = page?.dataset.sharedEarth || "pending";
+        receipt.textContent = `Spin: ${stage.dataset.spin} · Focus: ${stage.dataset.focus} · Earth: ${earthState}`;
+      }
+
+      function updatePressedStates(control, value) {
+        document.querySelectorAll(`[data-control="${control}"]`).forEach((button) => {
+          const active = button.dataset.value === value;
+          button.setAttribute("aria-pressed", active ? "true" : "false");
+          button.classList.toggle("active", active);
+        });
+      }
+
+      function setSharedEarthSpin(spin) {
+        if (!earthCore) return;
+
+        const globe = earthCore.querySelector(".dgb-earth-globe");
+        if (!globe) return;
+
+        globe.querySelectorAll(".dgb-earth-globe__texture, .dgb-earth-globe__cloud-layer").forEach((node) => {
+          node.style.animationPlayState = spin === "paused" ? "paused" : "running";
+        });
+      }
+
+      function bindControls() {
+        document.querySelectorAll("[data-control]").forEach((button) => {
+          button.addEventListener("click", () => {
+            const control = button.dataset.control;
+            const value = button.dataset.value;
+
+            if (!control || !value || !stage) return;
+
+            stage.dataset[control] = value;
+            updatePressedStates(control, value);
+
+            if (control === "spin") {
+              setSharedEarthSpin(value);
+            }
+
+            setReceipt();
+          });
+        });
+      }
+
+      function loadScriptOnce(src, globalCheck) {
+        return new Promise((resolve, reject) => {
+          if (typeof globalCheck === "function" && globalCheck()) {
+            resolve();
+            return;
+          }
+
+          const existing = Array.from(document.scripts).find((script) => script.src.includes(src));
+
+          if (existing) {
+            existing.addEventListener("load", () => resolve(), { once:true });
+            existing.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once:true });
+
+            window.setTimeout(() => {
+              if (typeof globalCheck === "function" && globalCheck()) resolve();
+            }, 60);
+
+            return;
+          }
+
+          const script = document.createElement("script");
+          script.src = `${src}?v=${encodeURIComponent(SHARED_EARTH_VERSION)}`;
+          script.defer = true;
+          script.dataset.metaverseSharedEarth = "true";
+
+          script.addEventListener("load", () => resolve(), { once:true });
+          script.addEventListener("error", () => reject(new Error(`Failed to load ${src}`)), { once:true });
+
+          document.head.appendChild(script);
+        });
+      }
+
+      async function mountSharedEarth() {
+        if (!earthCore) return false;
+
+        try {
+          await loadScriptOnce(SHARED_EARTH_SRC, () => Boolean(window.DGBEarthGlobe));
+
+          if (!window.DGBEarthGlobe || typeof window.DGBEarthGlobe.mount !== "function") {
+            if (page) page.dataset.sharedEarth = "unavailable";
+            setReceipt();
+            return false;
+          }
+
+          window.DGBEarthGlobe.mount(earthCore, {
+            mode: "proof",
+            textureDuration: "56s",
+            cloudDuration: "84s",
+            texturePositionX: "58%",
+            texturePositionY: "46%"
+          });
+
+          if (page) {
+            page.dataset.sharedEarth = "online";
+            page.dataset.sharedEarthVersion = window.DGBEarthGlobe.version || SHARED_EARTH_VERSION;
+          }
+
+          setSharedEarthSpin(stage?.dataset.spin || "playing");
+          setReceipt();
+          return true;
+        } catch (error) {
+          if (page) {
+            page.dataset.sharedEarth = "failed";
+            page.dataset.sharedEarthError = String(error && error.message ? error.message : error);
+          }
+
+          setReceipt();
+          return false;
+        }
+      }
+
+      function boot() {
+        bindControls();
+        setReceipt();
+        mountSharedEarth();
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", boot, { once:true });
+      } else {
+        boot();
+      }
+    })();
+  </script>
+</body>
+</html>

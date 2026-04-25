@@ -10,6 +10,7 @@
     generation: "second-generation-renewal",
     runtime: "assets-universe-ui",
     globe: "shared-real-earth-box",
+    diamonds: "shared-diamond-motion",
     mounted: false
   };
 
@@ -18,11 +19,34 @@
 
   const STYLE_ID = "dgb-universe-ui-runtime-style";
 
+  const DIAMOND_SELECTORS = [
+    ".nav a",
+    ".home-nav a",
+    ".route-card",
+    ".path-card",
+    ".quiet-card",
+    ".dgb-card",
+    ".home-button",
+    ".button",
+    ".dgb-button",
+    ".route-pill",
+    ".dgb-route-pill",
+    ".support-grid a",
+    ".branch-pill"
+  ].join(",");
+
   const runtimeCSS = `
     :root {
       --dgb-earth-texture:url("${EARTH_TEXTURE}");
       --dgb-earth-spin:64s;
+      --dgb-diamond-live-spin:18s;
+      --dgb-diamond-live-breathe:5.5s;
+      --dgb-diamond-live-wobble:8s;
     }
+
+    /* ----------------------------------------------------------------------
+       Shared globe instrument
+       ---------------------------------------------------------------------- */
 
     [data-dgb-globe="earth"] {
       --globe-size:min(380px,74vw);
@@ -230,6 +254,114 @@
         linear-gradient(180deg,transparent,rgba(2,6,16,.38));
     }
 
+    /* ----------------------------------------------------------------------
+       Shared live diamond motion
+       ---------------------------------------------------------------------- */
+
+    ${DIAMOND_SELECTORS} {
+      transform-style:preserve-3d !important;
+      will-change:transform,filter !important;
+    }
+
+    ${DIAMOND_SELECTORS}::before {
+      animation:
+        dgbDiamondBodyWobble var(--dgb-diamond-live-wobble) ease-in-out infinite,
+        dgbDiamondBodyPulse var(--dgb-diamond-live-breathe) ease-in-out infinite !important;
+      transform-origin:50% 50% !important;
+    }
+
+    ${DIAMOND_SELECTORS}::after {
+      animation:
+        dgbDiamondCoreSpin var(--dgb-diamond-live-spin) linear infinite,
+        dgbDiamondCoreShine 4.8s ease-in-out infinite !important;
+      transform-origin:50% 50% !important;
+    }
+
+    ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"] {
+      animation:dgbDiamondNodeFloat var(--dgb-diamond-node-float, 7s) ease-in-out infinite !important;
+    }
+
+    ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"]:hover,
+    ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"]:focus-visible,
+    ${DIAMOND_SELECTORS}.is-dgb-diamond-active {
+      transform:translateY(-5px) rotateX(5deg) rotateY(-5deg) scale(1.045) !important;
+      filter:brightness(1.16) saturate(1.08) !important;
+    }
+
+    ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"]:hover::before,
+    ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"]:focus-visible::before,
+    ${DIAMOND_SELECTORS}.is-dgb-diamond-active::before {
+      border-color:rgba(239,210,154,.46) !important;
+      box-shadow:
+        0 0 44px rgba(239,210,154,.24),
+        0 0 82px rgba(142,197,255,.20),
+        inset 0 0 34px rgba(255,255,255,.06) !important;
+    }
+
+    @keyframes dgbDiamondNodeFloat {
+      0%,100% {
+        translate:0 0;
+      }
+
+      50% {
+        translate:0 -4px;
+      }
+    }
+
+    @keyframes dgbDiamondBodyWobble {
+      0%,100% {
+        transform:translateY(0) rotate(0deg) scale(1);
+      }
+
+      25% {
+        transform:translateY(-2px) rotate(1.4deg) scale(1.015);
+      }
+
+      50% {
+        transform:translateY(-4px) rotate(0deg) scale(1.025);
+      }
+
+      75% {
+        transform:translateY(-2px) rotate(-1.4deg) scale(1.015);
+      }
+    }
+
+    @keyframes dgbDiamondBodyPulse {
+      0%,100% {
+        opacity:.82;
+        filter:brightness(1);
+      }
+
+      50% {
+        opacity:1;
+        filter:brightness(1.18);
+      }
+    }
+
+    @keyframes dgbDiamondCoreSpin {
+      0% {
+        transform:rotate(0deg) scale(.96);
+      }
+
+      100% {
+        transform:rotate(360deg) scale(.96);
+      }
+    }
+
+    @keyframes dgbDiamondCoreShine {
+      0%,100% {
+        opacity:.56;
+      }
+
+      50% {
+        opacity:.92;
+      }
+    }
+
+    /* ----------------------------------------------------------------------
+       Shared globe keyframes
+       ---------------------------------------------------------------------- */
+
     @keyframes dgbUniverseEarthTextureDriftCorrect {
       0% { background-position:220% 50%; }
       100% { background-position:0% 50%; }
@@ -257,6 +389,12 @@
       .dgb-globe-stage {
         min-height:420px;
       }
+
+      ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"]:hover,
+      ${DIAMOND_SELECTORS}[data-dgb-diamond-motion="live"]:focus-visible,
+      ${DIAMOND_SELECTORS}.is-dgb-diamond-active {
+        transform:translateY(-3px) scale(1.025) !important;
+      }
     }
 
     @media (max-width:360px) {
@@ -272,7 +410,10 @@
     @media (prefers-reduced-motion:reduce) {
       [data-dgb-globe="earth"] *,
       [data-dgb-globe="earth"] *::before,
-      [data-dgb-globe="earth"] *::after {
+      [data-dgb-globe="earth"] *::after,
+      ${DIAMOND_SELECTORS},
+      ${DIAMOND_SELECTORS}::before,
+      ${DIAMOND_SELECTORS}::after {
         animation:none !important;
         transition:none !important;
       }
@@ -357,9 +498,39 @@
     });
   }
 
+  function activateDiamondMotion() {
+    document.querySelectorAll(DIAMOND_SELECTORS).forEach((node, index) => {
+      node.dataset.dgbDiamondMotion = "live";
+      node.style.setProperty("--dgb-diamond-node-float", `${6.4 + (index % 5) * 0.45}s`);
+      node.style.setProperty("--dgb-diamond-live-spin", `${15 + (index % 6) * 1.25}s`);
+      node.style.setProperty("--dgb-diamond-live-wobble", `${7 + (index % 4) * 0.55}s`);
+
+      if (node.dataset.dgbDiamondListeners === "bound") return;
+
+      node.addEventListener("pointerenter", () => {
+        node.classList.add("is-dgb-diamond-active");
+      });
+
+      node.addEventListener("pointerleave", () => {
+        node.classList.remove("is-dgb-diamond-active");
+      });
+
+      node.addEventListener("focus", () => {
+        node.classList.add("is-dgb-diamond-active");
+      });
+
+      node.addEventListener("blur", () => {
+        node.classList.remove("is-dgb-diamond-active");
+      });
+
+      node.dataset.dgbDiamondListeners = "bound";
+    });
+  }
+
   function markRuntime() {
     document.documentElement.dataset.dgbUniverseUi = "active";
     document.documentElement.dataset.dgbUniverseGlobe = "shared-real-earth";
+    document.documentElement.dataset.dgbUniverseDiamonds = "live-motion";
     document.documentElement.dataset.dgbUniverseGeneration = DGB_UI.generation;
   }
 
@@ -367,6 +538,7 @@
     installRuntimeStyle();
     bindGlobeStages();
     mountGlobes();
+    activateDiamondMotion();
     markRuntime();
     DGB_UI.mounted = true;
   }
@@ -380,6 +552,8 @@
           buildGlobe(globe);
         }
       });
+
+      activateDiamondMotion();
     });
 
     observer.observe(document.documentElement, {

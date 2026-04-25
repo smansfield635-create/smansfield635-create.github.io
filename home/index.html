@@ -6,7 +6,7 @@
   <title>Home · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Home: a clean Generation 2 interior route into Prelude, Nine Summits, Metaverse, Products, Big Laugh, Laws, About, and Gauges."
+    content="Diamond Gate Bridge Home: a clean Generation 2 interior route into Prelude, Nine Summits, Metaverse, Products, and Gauges."
   />
 
   <style>
@@ -74,7 +74,6 @@
     .hero,
     .panel,
     .path-card,
-    .route-card,
     .quiet-card {
       border:1px solid var(--line);
       background:
@@ -132,15 +131,13 @@
     .nav,
     .actions,
     .path-grid,
-    .route-grid,
     .quiet-grid {
       display:grid;
       gap:10px;
     }
 
     .nav a,
-    .button,
-    .route-card {
+    .button {
       min-height:44px;
       display:inline-flex;
       align-items:center;
@@ -156,7 +153,6 @@
 
     .nav a:focus-visible,
     .button:focus-visible,
-    .route-card:focus-visible,
     .path-card:focus-visible {
       outline:2px solid rgba(239,210,154,.62);
       outline-offset:3px;
@@ -174,7 +170,7 @@
       border-radius:34px;
       padding:clamp(22px,4vw,46px);
       margin-bottom:14px;
-      min-height:clamp(420px,55vw,620px);
+      min-height:clamp(360px,48vw,560px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -293,7 +289,6 @@
     }
 
     .path-card,
-    .route-card,
     .quiet-card {
       border-radius:22px;
       padding:16px;
@@ -305,7 +300,6 @@
     }
 
     .path-card small,
-    .route-card small,
     .quiet-card small {
       display:block;
       margin-bottom:8px;
@@ -317,7 +311,6 @@
     }
 
     .path-card strong,
-    .route-card strong,
     .quiet-card strong {
       display:block;
       color:#fff;
@@ -346,10 +339,6 @@
 
     .product {
       border-color:rgba(147,239,189,.25);
-    }
-
-    .show {
-      border-color:rgba(241,164,91,.25);
     }
 
     .closing-read {
@@ -396,10 +385,6 @@
         grid-template-columns:repeat(4,minmax(0,1fr));
       }
 
-      .route-grid {
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
       .quiet-grid {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
@@ -441,7 +426,6 @@
         padding:0 9px;
         font-size:.88rem;
         line-height:1.05;
-        border-radius:999px;
       }
 
       .actions {
@@ -457,13 +441,12 @@
       }
 
       .path-grid,
-      .route-grid,
       .quiet-grid {
         grid-template-columns:1fr;
       }
 
       .hero {
-        min-height:500px;
+        min-height:430px;
       }
     }
 
@@ -492,7 +475,7 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="home"
-    data-surface="active-interior-routing"
+    data-surface="active-interior-routing-condensed"
   >
     <header class="topbar">
       <a class="brand" href="/" aria-label="Door">
@@ -519,8 +502,8 @@
         <h1 id="homeTitle">Home</h1>
         <h2>The house opens by path.</h2>
         <p>
-          Start with the doorway that matches your reason for entering. You can move
-          toward the human path, the world surface, the product chamber, or the show path.
+          Start with the doorway that matches your reason for entering. Move toward
+          the human path, the world surface, or the product chamber.
         </p>
 
         <div class="actions">
@@ -537,7 +520,7 @@
         <span class="pill">Start by purpose</span>
         <h2 id="startTitle">Four clean openings.</h2>
         <p>
-          No full map required. Pick the surface closest to the work you came to see.
+          Pick the surface closest to the work you came to see.
         </p>
       </div>
 
@@ -564,55 +547,6 @@
           <small>Product path</small>
           <strong>Products</strong>
           <p>Open the current product chamber and its official public product lines.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="featureTitle">
-      <div class="panel-head">
-        <span class="pill">Current public surfaces</span>
-        <h2 id="featureTitle">Move to the active chamber.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Show path</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/products/on-your-side-ai/">
-          <small>Product</small>
-          <strong>AI On Your Side</strong>
-        </a>
-
-        <a class="route-card" href="/products/five-flags/">
-          <small>Game</small>
-          <strong>Five Flags: What’s My Scene?</strong>
-        </a>
-
-        <a class="route-card" href="/products/nutrition/">
-          <small>Product</small>
-          <strong>Baseline Nutrition Systems</strong>
-        </a>
-
-        <a class="route-card" href="/products/ssg/">
-          <small>Product</small>
-          <strong>Syntax Geometry</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-
-        <a class="route-card" href="/about/">
-          <small>Orientation</small>
-          <strong>About</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
         </a>
       </div>
     </section>
@@ -656,38 +590,15 @@
       </p>
     </section>
 
-    <section class="panel" aria-labelledby="backlinksTitle">
-      <div class="panel-head">
-        <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">Return without losing the house.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/prelude/">
-          <small>Threshold</small>
-          <strong>Prelude</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Product chamber</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
-        </a>
-      </div>
-    </section>
-
     <footer class="footer">
       <span>Home · Active Interior Routing Surface</span>
-      <span><a href="/">Door</a> · <a href="/prelude/">Prelude</a> · <a href="/products/">Products</a></span>
+      <span>
+        <a href="/">Door</a> ·
+        <a href="/prelude/">Prelude</a> ·
+        <a href="/nine-summits/">Nine Summits</a> ·
+        <a href="/metaverse/">Metaverse</a> ·
+        <a href="/products/">Products</a>
+      </span>
     </footer>
   </main>
 </body>

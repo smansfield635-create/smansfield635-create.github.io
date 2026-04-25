@@ -6,7 +6,7 @@
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Gauges: a Generation 2 public instrument surface for route inspection, live context, and system clarity."
+    content="Diamond Gate Bridge Gauges: a Generation 2 public instrument surface with restored globe, compact context, and diamond route controls."
   />
 
   <style>
@@ -27,6 +27,7 @@
       --max:1180px;
       --spin:26s;
       --float:7s;
+      --earth-spin:42s;
     }
 
     * {
@@ -78,7 +79,8 @@
     .panel,
     .read-card,
     .route-card,
-    .signal-card {
+    .signal-card,
+    .globe-panel {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
@@ -270,45 +272,22 @@
         inset 0 0 38px rgba(239,210,154,.06);
     }
 
-    .gauge-orb {
+    .hero-globe {
       position:absolute;
       right:clamp(20px,6vw,90px);
       top:50%;
-      width:min(250px,30vw);
-      height:min(250px,30vw);
-      transform:translateY(-50%) rotate(45deg);
-      border:1px solid rgba(142,197,255,.30);
-      border-radius:36px;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 38%),
-        linear-gradient(180deg,rgba(12,24,48,.62),rgba(2,6,14,.86));
-      box-shadow:
-        inset 0 0 40px rgba(142,197,255,.06),
-        0 0 70px rgba(147,239,189,.10);
-      opacity:.78;
-      z-index:-1;
-      animation:gaugeSlowTurn 32s linear infinite;
-    }
-
-    .gauge-orb::before {
-      content:"";
-      position:absolute;
-      inset:18px;
-      border:1px solid rgba(170,198,255,.18);
-      border-radius:26px;
-    }
-
-    .gauge-orb::after {
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:10px;
-      height:10px;
+      width:min(270px,34vw);
+      height:min(270px,34vw);
+      transform:translateY(-50%);
       border-radius:50%;
-      transform:translate(-50%,-50%);
-      background:var(--blue);
-      box-shadow:0 0 22px rgba(142,197,255,.68);
+      opacity:.86;
+      z-index:-1;
+      filter:drop-shadow(0 0 42px rgba(142,197,255,.18));
+    }
+
+    .hero-globe .earth {
+      width:100%;
+      height:100%;
     }
 
     .hero-copy {
@@ -374,7 +353,8 @@
       font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
-    .panel {
+    .panel,
+    .globe-panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
       margin-bottom:14px;
@@ -388,8 +368,7 @@
     }
 
     .read-card,
-    .signal-card,
-    .route-card {
+    .signal-card {
       position:relative;
       isolation:isolate;
       border-radius:18px;
@@ -399,8 +378,7 @@
     }
 
     .read-card small,
-    .signal-card small,
-    .route-card small {
+    .signal-card small {
       display:block;
       margin-bottom:6px;
       color:#91a6cf;
@@ -411,8 +389,7 @@
     }
 
     .read-card strong,
-    .signal-card strong,
-    .route-card strong {
+    .signal-card strong {
       display:block;
       color:#fff;
       font-size:1rem;
@@ -434,7 +411,9 @@
     }
 
     .route-card {
-      width:min(100%,170px);
+      position:relative;
+      isolation:isolate;
+      width:min(100%,150px);
       aspect-ratio:1 / 1;
       display:grid;
       place-items:center;
@@ -495,6 +474,23 @@
       text-wrap:balance;
     }
 
+    .route-card small {
+      display:block;
+      margin-bottom:6px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.48rem;
+      font-weight:850;
+    }
+
+    .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:.80rem;
+      line-height:1.05;
+    }
+
     .route-card:hover,
     .route-card:focus-visible {
       transform:translateY(-6px) rotateX(4deg) rotateY(-4deg) scale(1.035);
@@ -509,6 +505,143 @@
         0 0 42px rgba(239,210,154,.22),
         0 0 76px rgba(142,197,255,.18),
         inset 0 0 32px rgba(255,255,255,.055);
+    }
+
+    .globe-stage {
+      min-height:clamp(360px,56vw,620px);
+      display:grid;
+      place-items:center;
+      position:relative;
+      overflow:hidden;
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:28px;
+      background:
+        radial-gradient(circle at 50% 42%,rgba(142,197,255,.12),transparent 26%),
+        radial-gradient(circle at 50% 52%,rgba(239,210,154,.08),transparent 52%),
+        rgba(255,255,255,.025);
+    }
+
+    .globe-stage::before {
+      content:"";
+      position:absolute;
+      width:min(720px,94vw);
+      height:min(300px,42vw);
+      left:50%;
+      top:54%;
+      transform:translate(-50%,-50%) rotate(-9deg);
+      border:1px solid rgba(142,197,255,.18);
+      border-radius:50%;
+      box-shadow:
+        0 0 42px rgba(142,197,255,.08),
+        inset 0 0 42px rgba(239,210,154,.04);
+    }
+
+    .globe-stage::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 36%,rgba(255,255,255,.07),transparent 16%),
+        linear-gradient(180deg,transparent,rgba(2,6,16,.38));
+    }
+
+    .earth-wrap {
+      width:min(360px,74vw);
+      aspect-ratio:1 / 1;
+      position:relative;
+      transform:rotate(-23.5deg);
+      filter:
+        drop-shadow(0 0 34px rgba(142,197,255,.28))
+        drop-shadow(0 0 74px rgba(147,239,189,.08));
+      z-index:2;
+    }
+
+    .earth-wrap::before {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-8%;
+      width:2px;
+      height:116%;
+      transform:translateX(-50%);
+      background:linear-gradient(180deg,transparent,rgba(239,210,154,.50),transparent);
+      box-shadow:0 0 18px rgba(239,210,154,.24);
+      z-index:5;
+    }
+
+    .earth {
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 35% 24%,rgba(255,255,255,.34),transparent 12%),
+        radial-gradient(circle at 70% 72%,rgba(0,0,0,.36),transparent 31%),
+        radial-gradient(circle at 50% 50%,rgba(28,112,175,.95),rgba(8,34,82,.98) 56%,rgba(2,10,28,1) 100%);
+      box-shadow:
+        inset -34px -18px 48px rgba(0,0,0,.50),
+        inset 18px 10px 36px rgba(255,255,255,.08),
+        0 0 0 1px rgba(170,198,255,.20),
+        0 0 58px rgba(142,197,255,.22);
+    }
+
+    .earth::before {
+      content:"";
+      position:absolute;
+      inset:-2%;
+      border-radius:50%;
+      background:
+        radial-gradient(ellipse at 34% 30%,rgba(147,239,189,.82) 0 8%,transparent 9%),
+        radial-gradient(ellipse at 42% 46%,rgba(147,239,189,.78) 0 11%,transparent 12%),
+        radial-gradient(ellipse at 60% 35%,rgba(147,239,189,.72) 0 12%,transparent 13%),
+        radial-gradient(ellipse at 64% 64%,rgba(147,239,189,.62) 0 9%,transparent 10%),
+        radial-gradient(ellipse at 28% 68%,rgba(239,210,154,.42) 0 8%,transparent 9%),
+        repeating-linear-gradient(90deg,
+          rgba(255,255,255,.08) 0 1px,
+          transparent 1px 18px),
+        repeating-linear-gradient(0deg,
+          rgba(255,255,255,.04) 0 1px,
+          transparent 1px 22px);
+      mix-blend-mode:screen;
+      opacity:.78;
+      animation:earthTextureDrift var(--earth-spin) linear infinite;
+    }
+
+    .earth::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 28% 22%,rgba(255,255,255,.25),transparent 14%),
+        linear-gradient(90deg,rgba(255,255,255,.12),transparent 34%,rgba(0,0,0,.28) 76%,rgba(0,0,0,.52));
+      pointer-events:none;
+    }
+
+    .earth-atmosphere {
+      position:absolute;
+      inset:-5%;
+      border-radius:50%;
+      border:1px solid rgba(142,197,255,.30);
+      background:radial-gradient(circle at 50% 50%,transparent 62%,rgba(142,197,255,.18) 74%,transparent 78%);
+      animation:atmospherePulse 6s ease-in-out infinite;
+      pointer-events:none;
+      z-index:3;
+    }
+
+    .earth-label {
+      position:absolute;
+      left:50%;
+      bottom:-42px;
+      transform:translateX(-50%) rotate(23.5deg);
+      min-width:230px;
+      text-align:center;
+      color:#dfe8ff;
+      font-size:.78rem;
+      font-weight:850;
+      letter-spacing:.12em;
+      text-transform:uppercase;
     }
 
     .status-strip {
@@ -575,13 +708,25 @@
       }
     }
 
-    @keyframes gaugeSlowTurn {
+    @keyframes earthTextureDrift {
       0% {
-        transform:translateY(-50%) rotate(45deg);
+        transform:translateX(-18%) scale(1.08);
       }
 
       100% {
-        transform:translateY(-50%) rotate(405deg);
+        transform:translateX(18%) scale(1.08);
+      }
+    }
+
+    @keyframes atmospherePulse {
+      0%,100% {
+        opacity:.62;
+        transform:scale(1);
+      }
+
+      50% {
+        opacity:.95;
+        transform:scale(1.018);
       }
     }
 
@@ -602,7 +747,7 @@
       }
 
       .route-grid {
-        grid-template-columns:repeat(4,minmax(140px,1fr));
+        grid-template-columns:repeat(4,minmax(132px,1fr));
       }
     }
 
@@ -614,7 +759,8 @@
 
       .topbar,
       .hero,
-      .panel {
+      .panel,
+      .globe-panel {
         border-radius:24px;
       }
 
@@ -647,13 +793,13 @@
         padding:22px;
       }
 
-      .gauge-orb {
+      .hero-globe {
         right:18px;
         top:auto;
         bottom:18px;
-        width:118px;
-        height:118px;
-        transform:rotate(45deg);
+        width:126px;
+        height:126px;
+        transform:none;
         opacity:.42;
       }
 
@@ -663,15 +809,23 @@
       }
 
       .route-card {
-        width:min(100%,142px);
+        width:min(100%,132px);
       }
 
       .route-card small {
-        font-size:.45rem;
+        font-size:.42rem;
       }
 
       .route-card strong {
-        font-size:.74rem;
+        font-size:.70rem;
+      }
+
+      .globe-stage {
+        min-height:390px;
+      }
+
+      .earth-wrap {
+        width:min(280px,76vw);
       }
     }
 
@@ -682,7 +836,11 @@
       }
 
       .route-card {
-        width:min(100%,128px);
+        width:min(100%,122px);
+      }
+
+      .earth-wrap {
+        width:min(250px,74vw);
       }
     }
 
@@ -704,13 +862,14 @@
     data-generation="second-generation-renewal"
     data-page="gauges"
     data-surface="generation-2-live-instrument-baseline"
+    data-globe="restored"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Diamond Gate Bridge Gauges">
         <span class="mark" aria-hidden="true">DG</span>
         <span>
           <span class="kicker">Gauge Authority · Second Generation Renewal</span>
-          <strong class="title">Live Feed Instrument Surface · V4</strong>
+          <strong class="title">Live Feed Instrument Surface · V5</strong>
         </span>
       </a>
 
@@ -727,17 +886,40 @@
     </header>
 
     <section class="hero" aria-labelledby="gaugesTitle">
-      <div class="gauge-orb" aria-hidden="true"></div>
+      <div class="hero-globe" aria-hidden="true">
+        <div class="earth-wrap">
+          <div class="earth"></div>
+          <div class="earth-atmosphere"></div>
+        </div>
+      </div>
 
       <div class="hero-copy">
         <span class="pill">Readable instrument surface</span>
         <h1 id="gaugesTitle">Gauges</h1>
-        <h2>The site needs a dashboard that explains what is live.</h2>
+        <h2>The globe stays. The route controls become diamonds.</h2>
         <p>
-          Gauges is the public inspection room. It shows the major routes, names
-          the current baseline, and keeps the system readable before deeper
-          technical instruments appear.
+          Gauges is the public inspection room. It restores the globe as the core
+          instrument while keeping the route controls compact, diamond-shaped, and readable.
         </p>
+      </div>
+    </section>
+
+    <section class="globe-panel" aria-labelledby="globeTitle">
+      <div class="panel-head">
+        <span class="pill">Restored globe</span>
+        <h2 id="globeTitle">Axis · natural spin · public inspection.</h2>
+        <p>
+          The globe is the center instrument for Gauges. Diamonds can support route
+          movement, but they do not replace the globe.
+        </p>
+      </div>
+
+      <div class="globe-stage" aria-label="Restored rotating globe instrument">
+        <div class="earth-wrap">
+          <div class="earth"></div>
+          <div class="earth-atmosphere"></div>
+          <div class="earth-label">Earth standard · tilted axis · live gauge</div>
+        </div>
       </div>
     </section>
 
@@ -747,7 +929,8 @@
         <h2 id="contextTitle">Context comes first.</h2>
         <p>
           The old version exposed too much raw instrument density before explaining
-          the surface. This version starts with meaning, then gives route status.
+          the surface. This version starts with meaning, restores the globe, then
+          gives route status.
         </p>
       </div>
 
@@ -761,13 +944,13 @@
         <article class="read-card">
           <small>Function</small>
           <strong>Reduce confusion.</strong>
-          <p>Visitors should understand the role of the page before seeing any diagnostic language.</p>
+          <p>Visitors should understand the role of the page before seeing diagnostic language.</p>
         </article>
 
         <article class="read-card">
           <small>Baseline</small>
           <strong>Hold Generation 2.</strong>
-          <p>The surface favors clear context, compact navigation, and visible inspection order.</p>
+          <p>The surface favors clear context, compact navigation, restored globe, and visible inspection order.</p>
         </article>
       </div>
     </section>
@@ -777,8 +960,8 @@
         <span class="pill">Live route surfaces</span>
         <h2 id="routesTitle">Diamond route controls.</h2>
         <p>
-          Each route is shown as a compact rotating diamond so the navigation reads
-          as an instrument instead of a stack of oversized pills.
+          Route controls use compact rotating diamonds. The globe remains the primary
+          Gauges instrument.
         </p>
       </div>
 
@@ -833,9 +1016,9 @@
 
       <div class="signal-grid">
         <article class="signal-card">
-          <small>Navigation</small>
-          <strong>Route access is visible.</strong>
-          <p>The top route system is compact enough to fit above the fold on mobile.</p>
+          <small>Globe</small>
+          <strong>Core instrument restored.</strong>
+          <p>The globe is visible as the main Gauges object and is not replaced by route diamonds.</p>
         </article>
 
         <article class="signal-card">
@@ -859,7 +1042,8 @@
       </div>
 
       <div class="status-strip">
-        <code>GAUGES_V4_STATUS=GENERATION_2_BASELINE_ACTIVE
+        <code>GAUGES_V5_STATUS=GENERATION_2_BASELINE_ACTIVE
+GLOBE=RESTORED
 NAVIGATION=COMPACT_DIAMOND_CONTROLS
 MOTION=CSS_ROTATION_AND_FLOAT
 CONTEXT=READABLE_FIRST
@@ -869,7 +1053,7 @@ NEXT_ACTION=USE_GAUGES_AS_PUBLIC_INSPECTION_SURFACE</code>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · Generation 2 Baseline</span>
+      <span>Diamond Gate Bridge · Gauges · Globe Restored · Generation 2 Baseline</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/explore/">Explore</a> ·

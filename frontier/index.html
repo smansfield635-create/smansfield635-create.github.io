@@ -1,33 +1,24 @@
 <!DOCTYPE html>
-<html lang="en" data-frontier-generation="second-generation-renewal">
+<html lang="en" data-frontier-generation="g1-russian-doll-v10">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Frontier · Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge Frontier: a self-contained Generation 2 edge-route surface with V9 compact rotating diamond controls and readable context."
-  />
+  <meta name="description" content="Diamond Gate Bridge Frontier: G1 Russian Doll V10 route restoration with label-first expandable context." />
 
   <style>
     :root {
-      --bg:#020610;
       --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
+      --panel2:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
-      --line-strong:rgba(200,156,255,.34);
+      --line2:rgba(200,156,255,.34);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
-      --blue:#8ec5ff;
-      --green:#93efbd;
       --purple:#c89cff;
-      --rose:#ff9ab8;
+      --blue:#8ec5ff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
-      --diamond-spin:18s;
-      --diamond-float:7s;
-      --diamond-breathe:5.8s;
     }
 
     * { box-sizing:border-box; }
@@ -51,7 +42,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.22;
+      opacity:.20;
       background:
         linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
         linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
@@ -59,10 +50,7 @@
       mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
-    a {
-      color:inherit;
-      text-decoration:none;
-    }
+    a { color:inherit; text-decoration:none; }
 
     .page {
       width:min(var(--max),calc(100vw - 20px));
@@ -75,14 +63,13 @@
     .topbar,
     .hero,
     .panel,
-    .read-card,
+    .label-card,
     .route-card,
-    .signal-card,
     .status-strip {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(200,156,255,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
+        linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
     }
 
@@ -107,7 +94,7 @@
       border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line-strong);
+      border:1px solid var(--line2);
       background:
         radial-gradient(circle at 50% 28%,rgba(200,156,255,.34),transparent 44%),
         linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
@@ -118,10 +105,7 @@
       box-shadow:0 0 22px rgba(200,156,255,.14);
     }
 
-    .brand-text {
-      display:grid;
-      gap:3px;
-    }
+    .brand-text { display:grid; gap:3px; }
 
     .kicker {
       display:block;
@@ -144,8 +128,7 @@
 
     .nav,
     .route-grid,
-    .read-grid,
-    .signal-grid {
+    .label-grid {
       display:grid;
       gap:10px;
     }
@@ -178,7 +161,7 @@
 
     .route-card {
       width:min(100%,150px);
-      font-size:.80rem;
+      font-size:.78rem;
     }
 
     .nav a::before,
@@ -198,9 +181,7 @@
         inset 0 0 26px rgba(255,255,255,.035);
       z-index:-1;
       transform-origin:50% 50%;
-      animation:
-        diamondBodyWobble var(--diamond-float) ease-in-out infinite,
-        diamondPulse var(--diamond-breathe) ease-in-out infinite;
+      animation:diamondFloat 7s ease-in-out infinite, diamondPulse 5.8s ease-in-out infinite;
     }
 
     .nav a::after,
@@ -216,23 +197,20 @@
       opacity:.72;
       z-index:-1;
       transform-origin:50% 50%;
-      animation:innerDiamondSpin var(--diamond-spin) linear infinite;
+      animation:innerSpin 18s linear infinite;
     }
 
-    .nav a.featured {
-      color:#fff8ea;
-    }
+    .nav a.featured,
+    .route-card.featured { color:#fff8ea; }
 
-    .nav a.featured::before {
-      border-color:rgba(239,210,154,.44);
+    .nav a.featured::before,
+    .route-card.featured::before {
+      border-color:rgba(239,210,154,.46);
       background:
         radial-gradient(circle at 50% 50%,rgba(239,210,154,.34),transparent 34%),
         radial-gradient(circle at 50% 72%,rgba(200,156,255,.12),transparent 34%),
-        linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02)),
         linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
-      box-shadow:
-        0 0 38px rgba(239,210,154,.24),
-        inset 0 0 30px rgba(255,255,255,.04);
     }
 
     .nav a:hover,
@@ -248,7 +226,7 @@
       border-radius:34px;
       padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(390px,52vw,620px);
+      min-height:clamp(360px,44vw,540px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -273,22 +251,6 @@
       z-index:-3;
     }
 
-    .hero::after {
-      content:"";
-      position:absolute;
-      width:min(900px,98vw);
-      height:min(430px,52vw);
-      left:50%;
-      top:50%;
-      transform:translate(-50%,-50%) rotate(10deg);
-      border:1px solid rgba(200,156,255,.24);
-      border-radius:50%;
-      z-index:-2;
-      box-shadow:
-        0 0 38px rgba(200,156,255,.08),
-        inset 0 0 38px rgba(142,197,255,.06);
-    }
-
     .frontier-edge {
       position:absolute;
       right:clamp(20px,6vw,90px);
@@ -305,7 +267,7 @@
       box-shadow:
         inset 0 0 44px rgba(200,156,255,.07),
         0 0 74px rgba(142,197,255,.10);
-      opacity:.82;
+      opacity:.70;
       z-index:-1;
       animation:slowTurn 34s linear infinite;
     }
@@ -334,7 +296,7 @@
     .hero-copy {
       display:grid;
       gap:14px;
-      max-width:760px;
+      max-width:780px;
       position:relative;
       z-index:2;
     }
@@ -388,12 +350,6 @@
       font-size:1rem;
     }
 
-    .hero p {
-      max-width:66ch;
-      margin-top:6px;
-      font-size:clamp(1.04rem,1.9vw,1.22rem);
-    }
-
     .panel {
       border-radius:30px;
       padding:clamp(16px,2.6vw,26px);
@@ -407,21 +363,49 @@
       gap:8px;
     }
 
-    .read-card,
-    .signal-card {
-      position:relative;
-      isolation:isolate;
+    .label-card {
       border-radius:18px;
-      padding:14px;
-      color:inherit;
       overflow:hidden;
     }
 
-    .read-card small,
-    .signal-card small,
-    .route-card small {
+    details.label-card { padding:0; }
+
+    summary {
+      cursor:pointer;
+      list-style:none;
+      min-height:74px;
+      display:grid;
+      align-content:center;
+      gap:5px;
+      padding:14px;
+      position:relative;
+      color:#fff;
+      font-weight:900;
+      letter-spacing:-.02em;
+    }
+
+    summary::-webkit-details-marker { display:none; }
+
+    summary::after {
+      content:"+";
+      position:absolute;
+      right:14px;
+      top:50%;
+      transform:translateY(-50%);
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      border:1px solid rgba(200,156,255,.28);
+      display:grid;
+      place-items:center;
+      color:var(--purple);
+      font-weight:900;
+    }
+
+    details[open] summary::after { content:"–"; }
+
+    summary small {
       display:block;
-      margin-bottom:6px;
       color:#91a6cf;
       text-transform:uppercase;
       letter-spacing:.12em;
@@ -429,36 +413,14 @@
       font-weight:850;
     }
 
-    .read-card strong,
-    .signal-card strong,
-    .route-card strong {
-      display:block;
-      color:#fff;
-      font-size:1rem;
-      line-height:1.1;
-    }
-
-    .read-card p,
-    .signal-card p {
-      margin-top:8px;
+    .label-body {
+      padding:0 14px 14px;
       color:var(--muted);
-      font-size:.88rem;
-      line-height:1.42;
+      font-size:.92rem;
+      line-height:1.48;
     }
 
-    .route-card small,
-    .route-card strong {
-      position:relative;
-      z-index:3;
-      max-width:70%;
-      margin-left:auto;
-      margin-right:auto;
-      text-align:center;
-      text-wrap:balance;
-    }
-
-    .route-card small { font-size:.48rem; }
-    .route-card strong { font-size:.80rem; }
+    .label-body p + p { margin-top:8px; }
 
     .status-strip {
       display:grid;
@@ -488,11 +450,9 @@
 
     .footer a { color:#d6e2ff; }
 
-    @keyframes diamondBodyWobble {
+    @keyframes diamondFloat {
       0%,100% { transform:translateY(0) rotate(0deg) scale(1); }
-      25% { transform:translateY(-2px) rotate(1.4deg) scale(1.015); }
       50% { transform:translateY(-4px) rotate(0deg) scale(1.025); }
-      75% { transform:translateY(-2px) rotate(-1.4deg) scale(1.015); }
     }
 
     @keyframes diamondPulse {
@@ -500,7 +460,7 @@
       50% { opacity:1; filter:brightness(1.18); }
     }
 
-    @keyframes innerDiamondSpin {
+    @keyframes innerSpin {
       0% { transform:rotate(0deg) scale(.96); }
       100% { transform:rotate(360deg) scale(.96); }
     }
@@ -521,8 +481,7 @@
         justify-content:end;
       }
 
-      .read-grid,
-      .signal-grid {
+      .label-grid {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
@@ -563,7 +522,7 @@
       }
 
       .hero {
-        min-height:420px;
+        min-height:390px;
         padding:22px;
       }
 
@@ -574,7 +533,7 @@
         width:118px;
         height:118px;
         transform:rotate(45deg);
-        opacity:.42;
+        opacity:.36;
       }
 
       .route-grid {
@@ -587,17 +546,6 @@
 
       .route-card small { font-size:.42rem; }
       .route-card strong { font-size:.70rem; }
-    }
-
-    @media (max-width:360px) {
-      .nav a {
-        width:min(100%,62px);
-        font-size:.48rem;
-      }
-
-      .route-card {
-        width:min(100%,122px);
-      }
     }
 
     @media (prefers-reduced-motion:reduce) {
@@ -615,16 +563,18 @@
 <body>
   <main
     class="page"
-    data-generation="second-generation-renewal"
     data-page="frontier"
-    data-surface="generation-2-self-contained-frontier"
+    data-route="/frontier/"
+    data-file="/frontier/index.html"
+    data-baseline="g1-russian-doll-v10"
+    data-pass="route-restoration-label-compression"
   >
     <header class="topbar">
       <a class="brand" href="/frontier/" aria-label="Diamond Gate Bridge Frontier">
         <span class="mark" aria-hidden="true">FR</span>
         <span class="brand-text">
           <span class="kicker">Diamond Gate Bridge</span>
-          <strong class="title">Frontier · V9</strong>
+          <strong class="title">Frontier · G1 V10</strong>
         </span>
       </a>
 
@@ -634,7 +584,7 @@
         <a href="/prelude/">Prelude</a>
         <a href="/explore/">Explore</a>
         <a href="/products/">Products</a>
-        <a class="featured" href="/big-laugh/upper-room/">Upcoming Show</a>
+        <a class="featured" href="/big-laugh/upper-room/">Show</a>
         <a href="/gauges/">Gauges</a>
         <a href="/about/">About</a>
       </nav>
@@ -647,143 +597,126 @@
         <span class="pill">Active edge route</span>
         <h1 id="frontierTitle">Frontier</h1>
         <h2>The edge where the next surface becomes visible.</h2>
-        <p>
-          Frontier is the active edge route. It carries the forward-facing surface:
-          new directions, public movement, and the next visible boundary of the system.
-        </p>
+        <p>Choose an edge label. The forward context opens only when touched.</p>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="contextTitle">
+    <section class="panel" aria-labelledby="labelsTitle">
       <div class="panel-head">
-        <span class="pill">Generation 2 baseline</span>
-        <h2 id="contextTitle">Frontier should show the edge clearly.</h2>
-        <p>
-          V9 makes Frontier self-contained and stable. It separates the route-map job
-          of Explore from the active-edge job of Frontier.
-        </p>
+        <span class="pill">Russian-doll labels</span>
+        <h2 id="labelsTitle">Frontier restored under G1 V10.</h2>
       </div>
 
-      <div class="read-grid">
-        <article class="read-card">
-          <small>Edge</small>
-          <strong>Hold the forward boundary.</strong>
-          <p>Frontier names the next visible surface without collapsing into the whole system.</p>
-        </article>
+      <div class="label-grid">
+        <details class="label-card">
+          <summary><small>Route</small>Frontier is restored.</summary>
+          <div class="label-body">
+            <p>This file belongs at <strong>/frontier/index.html</strong>.</p>
+            <p>That path restores <strong>https://diamondgatebridge.com/frontier/</strong>.</p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Movement</small>
-          <strong>Show where motion points.</strong>
-          <p>The page directs attention toward forward-facing work and active development.</p>
-        </article>
+        <details class="label-card">
+          <summary><small>Edge</small>Hold the forward boundary.</summary>
+          <div class="label-body">
+            <p>Frontier names the next visible surface without collapsing into the whole system.</p>
+            <p>It is where forward motion becomes public-facing.</p>
+          </div>
+        </details>
 
-        <article class="read-card">
-          <small>Separation</small>
-          <strong>Keep Explore distinct.</strong>
-          <p>Explore routes. Frontier carries the active edge. They are not the same page.</p>
-        </article>
+        <details class="label-card">
+          <summary><small>Movement</small>Show where motion points.</summary>
+          <div class="label-body">
+            <p>The page directs attention toward active development, public movement, and the next boundary.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Separation</small>Keep Explore distinct.</summary>
+          <div class="label-body">
+            <p>Explore routes. Frontier carries the active edge. They are not the same page.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Signal</small>New direction visible.</summary>
+          <div class="label-body">
+            <p>Frontier should reveal that something is moving forward without dumping every detail at once.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Baseline</small>World is Flat.</summary>
+          <div class="label-body">
+            <p>Generation 1 keeps the edge readable: label first, context on request, minimal motion, maximum clarity.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Russian Doll</small>Expand only on touch.</summary>
+          <div class="label-body">
+            <p>All core context is preserved, but it stays folded under labels until the visitor opens it.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Rule</small>Forward, not crowded.</summary>
+          <div class="label-body">
+            <p>The page should point toward the next surface, not become a crowded archive of every possible direction.</p>
+          </div>
+        </details>
+
+        <details class="label-card">
+          <summary><small>Status</small>G1 V10 active.</summary>
+          <div class="label-body">
+            <p>This is the Russian-doll expansion baseline: visible labels first, nested context second.</p>
+          </div>
+        </details>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Frontier routes</span>
-        <h2 id="routesTitle">Move from the edge to the right chamber.</h2>
+        <span class="pill">Route labels</span>
+        <h2 id="routesTitle">Move from the edge.</h2>
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/door/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/prelude/">
-          <small>Threshold</small>
-          <strong>Prelude</strong>
-        </a>
-
-        <a class="route-card" href="/explore/">
-          <small>Route map</small>
-          <strong>Explore</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Chamber</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Upcoming show</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="signalsTitle">
-      <div class="panel-head">
-        <span class="pill">Frontier read</span>
-        <h2 id="signalsTitle">What this page confirms.</h2>
-      </div>
-
-      <div class="signal-grid">
-        <article class="signal-card">
-          <small>Density</small>
-          <strong>Controls are compact.</strong>
-          <p>The old oversized bubbles are replaced with rotating diamond controls.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Function</small>
-          <strong>Frontier is the edge.</strong>
-          <p>The page now has its own role instead of absorbing Explore or acting as a placeholder.</p>
-        </article>
-
-        <article class="signal-card">
-          <small>Baseline</small>
-          <strong>Frontier V9 is self-contained.</strong>
-          <p>The page does not depend on shared asset loading to render its core shape and motion.</p>
-        </article>
+        <a class="route-card" href="/door/"><small>Access</small><strong>Door</strong></a>
+        <a class="route-card" href="/home/"><small>Interior</small><strong>Home</strong></a>
+        <a class="route-card" href="/prelude/"><small>Threshold</small><strong>Prelude</strong></a>
+        <a class="route-card" href="/explore/"><small>Route map</small><strong>Explore</strong></a>
+        <a class="route-card" href="/products/"><small>Chamber</small><strong>Products</strong></a>
+        <a class="route-card featured" href="/big-laugh/upper-room/"><small>Show</small><strong>Upper Room</strong></a>
+        <a class="route-card" href="/gauges/"><small>Inspection</small><strong>Gauges</strong></a>
+        <a class="route-card" href="/laws/"><small>Rule layer</small><strong>Laws</strong></a>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="statusTitle">
       <div class="panel-head">
-        <span class="pill">Status receipt</span>
-        <h2 id="statusTitle">Generation 2 Frontier baseline is active.</h2>
+        <span class="pill">Status label</span>
+        <h2 id="statusTitle">Frontier route restored with G1 V10.</h2>
       </div>
 
       <div class="status-strip">
-        <code>FRONTIER_V9_STATUS=GENERATION_2_SELF_CONTAINED_ACTIVE
+        <code>FRONTIER_G1_V10_ROUTE_RESTORATION=ACTIVE
 PAGE=/frontier/index.html
 ROUTE=/frontier/
-NAVIGATION=COMPACT_ROTATING_DIAMOND_CONTROLS
-FRONTIER_ROUTE=ACTIVE
-EXPLORE_ROUTE=SEPARATE
+BASELINE=THE_WORLD_IS_FLAT
+VERSION=G1_RUSSIAN_DOLL_V10
+VISIBLE_DEFAULT=TITLE_CORE_LINE_LABELS
+CONTEXT=HIDDEN_UNTIL_LABEL_CLICK
+METHOD=DETAILS_SUMMARY_RUSSIAN_DOLL
 EDGE_ROLE=ACTIVE
-CONTEXT=READABLE_FIRST
-LEGACY_LONG_BUBBLES=REMOVED
-ASSET_DEPENDENCY=REMOVED_FOR_FRONTIER_PAGE
-NEXT_ACTION=USE_THIS_AS_THE_STABLE_FRONTIER_BASELINE</code>
+EXPLORE_ROUTE=SEPARATE
+LEGACY_OVEREXPRESSION=REDUCED
+404_FIX=CREATE_OR_REPLACE_THIS_FILE_AT_/frontier/index.html</code>
       </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Frontier · Self-Contained Generation 2 Baseline</span>
+      <span>Diamond Gate Bridge · Frontier · G1 Russian Doll V10</span>
       <span>
         <a href="/door/">Door</a> ·
         <a href="/home/">Home</a> ·

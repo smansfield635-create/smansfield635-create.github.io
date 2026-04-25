@@ -6,7 +6,7 @@
   <title>Prelude · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Prelude to Diamond Gate Bridge: a clean public threshold into the human path, world path, product path, and project chambers."
+    content="Prelude to Diamond Gate Bridge: a concise Generation 2 threshold page that prepares the visitor for the next path."
   />
 
   <style>
@@ -22,7 +22,7 @@
       --green:#93efbd;
       --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
+      --max:1180px;
     }
 
     * {
@@ -36,7 +36,7 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 6%,rgba(239,210,154,.18),transparent 25%),
+        radial-gradient(circle at 50% 6%,rgba(239,210,154,.16),transparent 25%),
         radial-gradient(circle at 18% 28%,rgba(142,197,255,.12),transparent 30%),
         radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
@@ -72,7 +72,7 @@
     .topbar,
     .hero,
     .panel,
-    .path-card,
+    .step-card,
     .route-card {
       border:1px solid var(--line);
       background:
@@ -108,6 +108,7 @@
         linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
       font-weight:900;
       letter-spacing:.08em;
+      flex:0 0 auto;
     }
 
     .kicker {
@@ -127,15 +128,13 @@
     }
 
     .nav,
-    .actions,
-    .path-grid,
-    .route-grid {
+    .route-grid,
+    .steps {
       display:grid;
       gap:10px;
     }
 
     .nav a,
-    .button,
     .route-card {
       min-height:44px;
       display:inline-flex;
@@ -151,25 +150,17 @@
     }
 
     .nav a:focus-visible,
-    .button:focus-visible,
-    .route-card:focus-visible {
+    .route-card:focus-visible,
+    .step-card:focus-visible {
       outline:2px solid rgba(239,210,154,.62);
       outline-offset:3px;
     }
 
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
     .hero {
       border-radius:34px;
-      padding:clamp(22px,4vw,46px);
+      padding:clamp(24px,5vw,52px);
       margin-bottom:14px;
-      min-height:clamp(430px,58vw,620px);
+      min-height:clamp(340px,46vw,520px);
       display:grid;
       align-items:center;
       overflow:hidden;
@@ -180,25 +171,25 @@
     .hero::before {
       content:"";
       position:absolute;
-      width:min(560px,78vw);
-      height:min(560px,78vw);
+      width:min(620px,82vw);
+      height:min(620px,82vw);
       left:50%;
       top:50%;
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
         radial-gradient(circle at 50% 50%,rgba(239,210,154,.18),transparent 24%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.13),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 68%);
-      filter:blur(4px);
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.12),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.08),transparent 70%);
+      filter:blur(5px);
       z-index:-2;
     }
 
     .hero::after {
       content:"";
       position:absolute;
-      width:min(680px,86vw);
-      height:min(330px,42vw);
+      width:min(760px,90vw);
+      height:min(360px,44vw);
       left:50%;
       top:50%;
       transform:translate(-50%,-50%) rotate(-8deg);
@@ -208,6 +199,12 @@
       box-shadow:
         0 0 38px rgba(239,210,154,.08),
         inset 0 0 38px rgba(142,197,255,.06);
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
+      max-width:850px;
     }
 
     .pill {
@@ -239,7 +236,7 @@
     h1 {
       margin:0;
       color:#fff;
-      font-size:clamp(3.2rem,13vw,7.4rem);
+      font-size:clamp(3.5rem,13vw,7.4rem);
       line-height:.86;
       letter-spacing:-.08em;
     }
@@ -247,7 +244,7 @@
     h2 {
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.55rem,5vw,3.1rem);
+      font-size:clamp(1.6rem,5vw,3.15rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -260,18 +257,9 @@
     }
 
     .hero p {
-      max-width:72ch;
-      margin-top:14px;
-      font-size:clamp(1rem,1.8vw,1.18rem);
-    }
-
-    .hero-copy {
-      display:grid;
-      gap:14px;
-    }
-
-    .actions {
-      margin-top:10px;
+      max-width:70ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
     .panel {
@@ -287,7 +275,11 @@
       gap:8px;
     }
 
-    .path-card,
+    .steps {
+      grid-template-columns:1fr;
+    }
+
+    .step-card,
     .route-card {
       border-radius:22px;
       padding:16px;
@@ -296,9 +288,10 @@
       justify-content:flex-start;
       flex-direction:column;
       text-align:left;
+      color:inherit;
     }
 
-    .path-card small,
+    .step-card small,
     .route-card small {
       display:block;
       margin-bottom:8px;
@@ -309,7 +302,7 @@
       font-weight:850;
     }
 
-    .path-card strong,
+    .step-card strong,
     .route-card strong {
       display:block;
       color:#fff;
@@ -317,21 +310,43 @@
       line-height:1.12;
     }
 
-    .path-card p {
+    .step-card p {
       margin-top:8px;
+      color:var(--muted);
       font-size:.92rem;
       line-height:1.42;
     }
 
-    .human {
+    .step-card.listen {
       border-color:rgba(239,210,154,.25);
     }
 
-    .world {
+    .step-card.choose {
       border-color:rgba(142,197,255,.25);
     }
 
-    .product {
+    .step-card.enter {
+      border-color:rgba(147,239,189,.25);
+    }
+
+    .route-card {
+      min-height:112px;
+      justify-content:center;
+    }
+
+    .route-card.home {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .route-card.human {
+      border-color:rgba(255,154,184,.25);
+    }
+
+    .route-card.world {
+      border-color:rgba(142,197,255,.25);
+    }
+
+    .route-card.product {
       border-color:rgba(147,239,189,.25);
     }
 
@@ -367,15 +382,10 @@
       }
 
       .nav {
-        grid-template-columns:repeat(5,auto);
+        grid-template-columns:repeat(6,auto);
       }
 
-      .actions {
-        grid-template-columns:repeat(4,auto);
-        justify-content:start;
-      }
-
-      .path-grid {
+      .steps {
         grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
@@ -396,15 +406,66 @@
         border-radius:24px;
       }
 
-      .nav,
-      .actions,
-      .path-grid,
-      .route-grid {
-        grid-template-columns:1fr;
+      .topbar {
+        padding:12px;
+      }
+
+      .brand {
+        gap:10px;
+      }
+
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+
+      .nav a {
+        min-height:38px;
+        padding:0 9px;
+        font-size:.88rem;
+        line-height:1.05;
       }
 
       .hero {
-        min-height:520px;
+        min-height:390px;
+        padding:22px;
+      }
+
+      .route-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
+      }
+
+      .route-card {
+        min-height:86px;
+        padding:12px;
+      }
+
+      .route-card small {
+        font-size:.58rem;
+      }
+
+      .route-card strong {
+        font-size:.96rem;
+      }
+    }
+
+    @media (max-width:360px) {
+      .nav a {
+        font-size:.80rem;
+        min-height:36px;
+        padding:0 7px;
+      }
+
+      .route-card {
+        min-height:78px;
+        padding:10px;
       }
     }
 
@@ -424,10 +485,10 @@
     class="page"
     data-generation="second-generation-renewal"
     data-page="prelude"
-    data-surface="active-public-threshold"
+    data-surface="ted-style-threshold-opening"
   >
     <header class="topbar">
-      <a class="brand" href="/home/" aria-label="Home">
+      <a class="brand" href="/" aria-label="Door">
         <span class="mark" aria-hidden="true">PR</span>
         <span>
           <span class="kicker">Diamond Gate Bridge</span>
@@ -438,155 +499,113 @@
       <nav class="nav" aria-label="Primary navigation">
         <a href="/">Door</a>
         <a href="/home/">Home</a>
-        <a href="/products/">Products</a>
+        <a href="/nine-summits/">Nine Summits</a>
         <a href="/metaverse/">Metaverse</a>
-        <a href="/laws/">Laws</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
     <section class="hero" aria-labelledby="preludeTitle">
       <div class="hero-copy">
-        <span class="pill">Before the path opens</span>
+        <span class="pill">Threshold opening</span>
         <h1 id="preludeTitle">Prelude</h1>
-        <h2>Take one breath at the gate.</h2>
+        <h2>Before the path opens, take one breath.</h2>
         <p>
-          Diamond Gate Bridge is built from paths, products, ideas, and public work.
-          Start with the direction that feels closest to why you came.
+          A strong beginning does not rush the visitor into the whole system.
+          It gives the first clear frame, then lets the right next door become visible.
         </p>
-
-        <div class="actions">
-          <a class="button primary" href="/nine-summits/">Human Path</a>
-          <a class="button" href="/metaverse/">World Path</a>
-          <a class="button" href="/products/">Product Path</a>
-          <a class="button" href="/home/">Home</a>
-        </div>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="pathsTitle">
+    <section class="panel" aria-labelledby="talkTitle">
       <div class="panel-head">
-        <span class="pill">Choose by fit</span>
-        <h2 id="pathsTitle">Three doors open first.</h2>
+        <span class="pill">The opening idea</span>
+        <h2 id="talkTitle">Prelude has one job: prepare the first choice.</h2>
         <p>
-          You do not have to understand the whole structure before moving.
-          Choose the path that matches your reason for entering.
+          It is not the whole map. It is the pause before movement.
         </p>
       </div>
 
-      <div class="path-grid">
-        <a class="path-card human" href="/nine-summits/">
-          <small>Human path</small>
-          <strong>Nine Summits of Love</strong>
-          <p>Begin with the human-development path and the invitation to learn to live to love.</p>
-        </a>
+      <div class="steps">
+        <article class="step-card listen">
+          <small>Listen</small>
+          <strong>Notice why you came.</strong>
+          <p>
+            Some visitors need orientation. Some need the work. Some need the world.
+            The first move depends on the reason.
+          </p>
+        </article>
 
-        <a class="path-card world" href="/metaverse/">
-          <small>World path</small>
-          <strong>Metaverse</strong>
-          <p>Enter the broader world surface where chambers, routes, and systems connect.</p>
-        </a>
+        <article class="step-card choose">
+          <small>Choose</small>
+          <strong>Pick the closest door.</strong>
+          <p>
+            The path does not need to be perfect. It only needs to be close enough
+            to open the next surface.
+          </p>
+        </article>
 
-        <a class="path-card product" href="/products/">
-          <small>Product path</small>
-          <strong>Products</strong>
-          <p>Open the product chamber and move toward the current public product lines.</p>
-        </a>
+        <article class="step-card enter">
+          <small>Enter</small>
+          <strong>Let the structure reveal itself.</strong>
+          <p>
+            Once the first route is chosen, the deeper system can appear in the
+            right order.
+          </p>
+        </article>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="nextTitle">
+    <section class="panel" aria-labelledby="routesTitle">
       <div class="panel-head">
-        <span class="pill">Next motion</span>
-        <h2 id="nextTitle">Move only as far as the next right surface.</h2>
+        <span class="pill">Choose the path</span>
+        <h2 id="routesTitle">Four doors are enough.</h2>
       </div>
 
       <div class="route-grid">
-        <a class="route-card" href="/home/">
+        <a class="route-card home" href="/home/">
           <small>Interior</small>
           <strong>Home</strong>
         </a>
 
-        <a class="route-card" href="/nine-summits/">
+        <a class="route-card human" href="/nine-summits/">
           <small>Human path</small>
           <strong>Nine Summits</strong>
         </a>
 
-        <a class="route-card" href="/metaverse/">
+        <a class="route-card world" href="/metaverse/">
           <small>World surface</small>
           <strong>Metaverse</strong>
         </a>
 
-        <a class="route-card" href="/products/">
+        <a class="route-card product" href="/products/">
           <small>Product chamber</small>
           <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/big-laugh/upper-room/">
-          <small>Show path</small>
-          <strong>The Upper Room</strong>
-        </a>
-
-        <a class="route-card" href="/laws/">
-          <small>Rule layer</small>
-          <strong>Laws</strong>
-        </a>
-
-        <a class="route-card" href="/about/">
-          <small>Orientation</small>
-          <strong>About</strong>
-        </a>
-
-        <a class="route-card" href="/gauges/">
-          <small>Inspection</small>
-          <strong>Gauges</strong>
         </a>
       </div>
     </section>
 
     <section class="panel" aria-labelledby="closingTitle">
       <div class="panel-head">
-        <span class="pill">Opening read</span>
-        <h2 id="closingTitle">The gate does not need the whole map.</h2>
+        <span class="pill">Prelude read</span>
+        <h2 id="closingTitle">The first door does not need to explain the whole house.</h2>
       </div>
 
       <p class="closing-read">
-        Begin with the path that feels alive enough to follow. The deeper structure
-        will reveal itself as you move.
+        It only needs to help the visitor enter cleanly.
       </p>
     </section>
 
-    <section class="panel" aria-labelledby="backlinksTitle">
-      <div class="panel-head">
-        <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">Return without losing the thread.</h2>
-      </div>
-
-      <div class="route-grid">
-        <a class="route-card" href="/">
-          <small>Access</small>
-          <strong>Door</strong>
-        </a>
-
-        <a class="route-card" href="/home/">
-          <small>Interior</small>
-          <strong>Home</strong>
-        </a>
-
-        <a class="route-card" href="/products/">
-          <small>Product chamber</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
-        </a>
-      </div>
-    </section>
-
     <footer class="footer">
-      <span>Prelude · Active Public Threshold</span>
-      <span><a href="/">Door</a> · <a href="/home/">Home</a> · <a href="/products/">Products</a></span>
+      <span>Prelude · Concise Threshold Route Surface</span>
+      <span>
+        <a href="/">Door</a> ·
+        <a href="/home/">Home</a> ·
+        <a href="/nine-summits/">Nine Summits</a> ·
+        <a href="/metaverse/">Metaverse</a> ·
+        <a href="/products/">Products</a>
+      </span>
     </footer>
   </main>
 </body>

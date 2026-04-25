@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-gauge-generation="second-generation-renewal" data-gauge-version="GAUGE_LIVE_FEED_V3">
+<html lang="en" data-gauges-generation="second-generation-renewal">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DGGauge Authority · Second Generation Renewal</title>
+  <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Gauge Authority: Generation 2 live diagnostic instrument surface with expanded front-route probes."
+    content="Diamond Gate Bridge Gauges: a Generation 2 public instrument surface for route inspection, live context, and system clarity."
   />
 
   <style>
@@ -15,17 +15,23 @@
       --panel:rgba(7,14,28,.92);
       --panel-strong:rgba(10,20,42,.96);
       --line:rgba(170,198,255,.18);
+      --line-strong:rgba(142,197,255,.34);
       --text:#eef4ff;
       --muted:#aab8d8;
       --gold:#efd29a;
       --blue:#8ec5ff;
       --green:#93efbd;
-      --red:#ff7a7a;
+      --purple:#c89cff;
+      --rose:#ff9ab8;
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1240px;
+      --max:1180px;
+      --spin:26s;
+      --float:7s;
     }
 
-    * { box-sizing:border-box; }
+    * {
+      box-sizing:border-box;
+    }
 
     html,
     body {
@@ -34,10 +40,24 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 6%,rgba(142,197,255,.16),transparent 25%),
+        radial-gradient(circle at 50% 4%,rgba(142,197,255,.18),transparent 22%),
         radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
+        radial-gradient(circle at 82% 42%,rgba(147,239,189,.10),transparent 28%),
         linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
       overflow-x:hidden;
+    }
+
+    body::before {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.22;
+      background:
+        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
+      background-size:52px 52px;
+      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
     }
 
     a {
@@ -45,17 +65,20 @@
       text-decoration:none;
     }
 
-    .gauge-page {
+    .page {
       width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
       padding:14px 0 30px;
+      position:relative;
+      z-index:1;
     }
 
     .topbar,
+    .hero,
     .panel,
-    .orb-panel,
-    .feed-panel,
-    .route-panel {
+    .read-card,
+    .route-card,
+    .signal-card {
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 42%),
@@ -64,32 +87,35 @@
     }
 
     .topbar {
-      min-height:76px;
       margin-bottom:14px;
       padding:14px;
       border-radius:28px;
       display:grid;
-      gap:12px;
+      gap:14px;
     }
 
     .brand {
       display:flex;
       align-items:center;
       gap:12px;
+      min-width:0;
     }
 
     .mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
+      width:50px;
+      height:50px;
+      border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line);
+      border:1px solid var(--line-strong);
       background:
-        radial-gradient(circle at 50% 28%,rgba(142,197,255,.26),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
+        radial-gradient(circle at 50% 28%,rgba(142,197,255,.34),transparent 44%),
+        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
+      color:#fff;
+      font-weight:950;
       letter-spacing:.08em;
+      flex:0 0 auto;
+      box-shadow:0 0 22px rgba(142,197,255,.14);
     }
 
     .kicker {
@@ -99,197 +125,408 @@
       font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
+      font-weight:850;
     }
 
     .title {
       display:block;
       margin:0;
-      font-weight:850;
-      font-size:1.05rem;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
     }
 
     .nav,
-    .status-strip,
-    .route-grid {
+    .route-grid,
+    .signal-grid,
+    .read-grid {
       display:grid;
       gap:10px;
     }
 
-    .nav a {
-      min-height:44px;
-      display:inline-flex;
+    .nav {
+      perspective:1000px;
       align-items:center;
-      justify-content:center;
-      padding:0 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      color:#d7e2ff;
-      font-weight:850;
-      text-align:center;
-    }
-
-    .layout {
-      display:grid;
-      gap:14px;
-    }
-
-    .orb-panel {
-      border-radius:34px;
-      padding:clamp(18px,3vw,32px);
-      display:grid;
-      gap:18px;
       justify-items:center;
-      overflow:hidden;
     }
 
-    .orb {
-      width:min(82vw,470px);
-      aspect-ratio:1;
-      border-radius:50%;
+    .nav a {
+      position:relative;
+      isolation:isolate;
+      width:min(100%,94px);
+      aspect-ratio:1 / 1;
       display:grid;
       place-items:center;
-      border:1px solid rgba(226,238,255,.30);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(137,200,255,.14),transparent 46%),
-        linear-gradient(180deg,rgba(5,14,31,.78),rgba(1,4,11,.96));
-      box-shadow:
-        inset -34px -30px 58px rgba(0,0,0,.58),
-        0 0 48px rgba(137,200,255,.26),
-        0 0 140px rgba(240,215,156,.13);
-    }
-
-    .orb-label {
-      color:#dfe8ff;
+      padding:0;
+      color:#e7eeff;
+      font-size:.70rem;
+      line-height:1.02;
       font-weight:900;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-      font-size:.78rem;
+      text-align:center;
+      transform-style:preserve-3d;
+      transition:transform 420ms ease, filter 420ms ease;
     }
 
-    .status-strip {
-      width:100%;
+    .nav a::before {
+      content:"";
+      position:absolute;
+      inset:10%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(170,198,255,.24);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+        linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+      box-shadow:
+        0 0 30px rgba(142,197,255,.18),
+        inset 0 0 26px rgba(255,255,255,.035);
+      z-index:-1;
+      animation:
+        diamondFloat var(--float) ease-in-out infinite,
+        diamondPulse 5.8s ease-in-out infinite;
     }
 
-    .status-card {
-      padding:14px;
+    .nav a::after {
+      content:"";
+      position:absolute;
+      inset:25%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 38% 28%,rgba(255,255,255,.12),transparent 24%),
+        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+      opacity:.72;
+      z-index:-1;
+      animation:innerDiamondSpin var(--spin) linear infinite;
+    }
+
+    .nav a.featured {
+      color:#fff8ea;
+    }
+
+    .nav a.featured::before {
+      border-color:rgba(239,210,154,.44);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.28),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(142,197,255,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02)),
+        linear-gradient(180deg,rgba(42,34,20,.96),rgba(10,18,32,.92));
+      box-shadow:
+        0 0 38px rgba(239,210,154,.20),
+        inset 0 0 30px rgba(255,255,255,.04);
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      transform:translateY(-4px) rotateX(4deg) rotateY(-4deg) scale(1.035);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(24px,5vw,52px);
+      margin-bottom:14px;
+      min-height:clamp(360px,46vw,560px);
+      display:grid;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(760px,90vw);
+      height:min(760px,90vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(239,210,154,.12),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 70%);
+      filter:blur(5px);
+      z-index:-3;
+    }
+
+    .hero::after {
+      content:"";
+      position:absolute;
+      width:min(860px,96vw);
+      height:min(410px,50vw);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) rotate(-8deg);
+      border:1px solid rgba(142,197,255,.24);
+      border-radius:50%;
+      z-index:-2;
+      box-shadow:
+        0 0 38px rgba(142,197,255,.08),
+        inset 0 0 38px rgba(239,210,154,.06);
+    }
+
+    .gauge-orb {
+      position:absolute;
+      right:clamp(20px,6vw,90px);
+      top:50%;
+      width:min(250px,30vw);
+      height:min(250px,30vw);
+      transform:translateY(-50%) rotate(45deg);
+      border:1px solid rgba(142,197,255,.30);
+      border-radius:36px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.18),transparent 38%),
+        linear-gradient(180deg,rgba(12,24,48,.62),rgba(2,6,14,.86));
+      box-shadow:
+        inset 0 0 40px rgba(142,197,255,.06),
+        0 0 70px rgba(147,239,189,.10);
+      opacity:.78;
+      z-index:-1;
+      animation:gaugeSlowTurn 32s linear infinite;
+    }
+
+    .gauge-orb::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      border:1px solid rgba(170,198,255,.18);
+      border-radius:26px;
+    }
+
+    .gauge-orb::after {
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:var(--blue);
+      box-shadow:0 0 22px rgba(142,197,255,.68);
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
+      max-width:760px;
+      position:relative;
+      z-index:2;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
       border:1px solid var(--line);
-      border-radius:20px;
       background:rgba(255,255,255,.035);
-    }
-
-    .status-card small {
-      display:block;
-      margin-bottom:6px;
-      color:#91a6cf;
+      color:#d8e3ff;
       text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
+      letter-spacing:.14em;
+      font-size:.70rem;
       font-weight:850;
     }
 
-    .status-card strong,
-    .status-card code {
-      color:#fff;
-      font-weight:900;
-      overflow-wrap:anywhere;
-    }
-
-    .feed-panel,
-    .route-panel,
-    .panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      display:grid;
-      gap:14px;
-    }
-
-    h1,
-    h2 {
-      margin:0;
-      color:var(--gold);
-      line-height:1;
-      letter-spacing:-.04em;
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--blue);
+      box-shadow:0 0 18px rgba(142,197,255,.50);
     }
 
     h1 {
+      margin:0;
       color:#fff;
-      font-size:clamp(2.3rem,8vw,4.8rem);
-      letter-spacing:-.07em;
+      font-size:clamp(3.4rem,12vw,7.6rem);
+      line-height:.84;
+      letter-spacing:-.085em;
     }
 
     h2 {
-      font-size:clamp(1.4rem,4vw,2.4rem);
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.55rem,5vw,3rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
     p {
       margin:0;
       color:var(--muted);
       line-height:1.58;
+      font-size:1rem;
     }
 
-    .matrix {
-      min-height:220px;
-      max-height:420px;
-      overflow:auto;
-      padding:14px;
-      border:1px solid rgba(170,198,255,.14);
-      border-radius:22px;
-      background:rgba(0,0,0,.28);
-      color:#dbe7ff;
-      white-space:pre-wrap;
-      overflow-wrap:anywhere;
-      font:700 .78rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+    .hero p {
+      max-width:66ch;
+      margin-top:6px;
+      font-size:clamp(1.04rem,1.9vw,1.22rem);
     }
 
-    .live-output {
-      min-height:360px;
-      overflow:auto;
-      padding:14px;
-      border:1px solid rgba(170,198,255,.14);
-      border-radius:22px;
-      background:rgba(0,0,0,.35);
-      color:#e9f2ff;
-      white-space:pre-wrap;
-      font:700 .82rem/1.52 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      margin-bottom:14px;
+      display:grid;
+      gap:16px;
     }
 
-    .route-grid article {
-      min-height:112px;
+    .panel-head {
+      display:grid;
+      gap:8px;
+    }
+
+    .read-card,
+    .signal-card,
+    .route-card {
+      position:relative;
+      isolation:isolate;
+      border-radius:18px;
       padding:14px;
-      border:1px solid rgba(170,198,255,.16);
+      color:inherit;
+      overflow:hidden;
+    }
+
+    .read-card small,
+    .signal-card small,
+    .route-card small {
+      display:block;
+      margin-bottom:6px;
+      color:#91a6cf;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:850;
+    }
+
+    .read-card strong,
+    .signal-card strong,
+    .route-card strong {
+      display:block;
+      color:#fff;
+      font-size:1rem;
+      line-height:1.1;
+    }
+
+    .read-card p,
+    .signal-card p {
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.88rem;
+      line-height:1.42;
+    }
+
+    .route-grid {
+      perspective:1000px;
+      justify-items:center;
+      align-items:center;
+    }
+
+    .route-card {
+      width:min(100%,170px);
+      aspect-ratio:1 / 1;
+      display:grid;
+      place-items:center;
+      padding:0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      text-align:center;
+      transform-style:preserve-3d;
+      transition:transform 420ms ease, filter 420ms ease;
+    }
+
+    .route-card::before {
+      content:"";
+      position:absolute;
+      inset:10%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(170,198,255,.24);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 34%),
+        radial-gradient(circle at 50% 72%,rgba(239,210,154,.12),transparent 34%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018)),
+        linear-gradient(180deg,rgba(10,20,42,.96),rgba(7,14,28,.92));
+      box-shadow:
+        0 0 34px rgba(142,197,255,.18),
+        inset 0 0 30px rgba(255,255,255,.035);
+      z-index:0;
+      animation:
+        diamondFloat var(--float) ease-in-out infinite,
+        diamondPulse 5.8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
+    .route-card::after {
+      content:"";
+      position:absolute;
+      inset:24%;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,255,255,.08);
+      background:
+        radial-gradient(circle at 38% 28%,rgba(255,255,255,.13),transparent 24%),
+        linear-gradient(135deg,rgba(255,255,255,.04),rgba(255,255,255,0));
+      opacity:.72;
+      z-index:1;
+      animation:innerDiamondSpin var(--spin) linear infinite;
+      pointer-events:none;
+    }
+
+    .route-card small,
+    .route-card strong {
+      position:relative;
+      z-index:3;
+      max-width:70%;
+      margin-left:auto;
+      margin-right:auto;
+      text-align:center;
+      text-wrap:balance;
+    }
+
+    .route-card:hover,
+    .route-card:focus-visible {
+      transform:translateY(-6px) rotateX(4deg) rotateY(-4deg) scale(1.035);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .route-card:hover::before,
+    .route-card:focus-visible::before {
+      border-color:rgba(239,210,154,.42);
+      box-shadow:
+        0 0 42px rgba(239,210,154,.22),
+        0 0 76px rgba(142,197,255,.18),
+        inset 0 0 32px rgba(255,255,255,.055);
+    }
+
+    .status-strip {
+      display:grid;
+      gap:8px;
+      padding:16px;
+      border:1px solid rgba(142,197,255,.18);
       border-radius:20px;
       background:rgba(255,255,255,.035);
     }
 
-    .route-grid article.ok {
-      border-color:rgba(147,239,189,.24);
-    }
-
-    .route-grid article.block {
-      border-color:rgba(255,122,122,.30);
-    }
-
-    .route-grid strong {
+    .status-strip code {
       display:block;
-      color:#fff;
-      margin-bottom:6px;
-    }
-
-    .route-grid span {
-      display:block;
-      color:var(--muted);
-      margin-bottom:8px;
-      text-transform:uppercase;
-      letter-spacing:.10em;
-      font-size:.70rem;
-      font-weight:900;
-    }
-
-    .route-grid code {
+      white-space:pre-wrap;
+      word-break:break-word;
       color:#dfe8ff;
-      font:700 .76rem/1.45 ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace;
-      overflow-wrap:anywhere;
+      font-size:.84rem;
+      line-height:1.55;
     }
 
     .footer {
@@ -302,47 +539,160 @@
       font-size:.86rem;
     }
 
-    @media (min-width:860px) {
+    .footer a {
+      color:#d6e2ff;
+    }
+
+    @keyframes diamondFloat {
+      0%,100% {
+        transform:translateY(0) rotate(0deg);
+      }
+
+      50% {
+        transform:translateY(-5px) rotate(1.5deg);
+      }
+    }
+
+    @keyframes diamondPulse {
+      0%,100% {
+        opacity:.96;
+        filter:brightness(1);
+      }
+
+      50% {
+        opacity:1;
+        filter:brightness(1.14);
+      }
+    }
+
+    @keyframes innerDiamondSpin {
+      0% {
+        transform:rotate(0deg) scale(.96);
+      }
+
+      100% {
+        transform:rotate(360deg) scale(.96);
+      }
+    }
+
+    @keyframes gaugeSlowTurn {
+      0% {
+        transform:translateY(-50%) rotate(45deg);
+      }
+
+      100% {
+        transform:translateY(-50%) rotate(405deg);
+      }
+    }
+
+    @media (min-width:820px) {
       .topbar {
         grid-template-columns:1fr auto;
         align-items:center;
       }
 
       .nav {
-        grid-template-columns:repeat(8,auto);
+        grid-template-columns:repeat(8,minmax(80px,94px));
+        justify-content:end;
       }
 
-      .layout {
-        grid-template-columns:minmax(320px,.9fr) minmax(0,1.1fr);
-        align-items:start;
-      }
-
-      .status-strip {
-        grid-template-columns:1fr;
+      .read-grid,
+      .signal-grid {
+        grid-template-columns:repeat(3,minmax(0,1fr));
       }
 
       .route-grid {
-        grid-template-columns:repeat(3,minmax(0,1fr));
+        grid-template-columns:repeat(4,minmax(140px,1fr));
       }
     }
 
     @media (max-width:640px) {
-      .gauge-page {
+      .page {
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
       .topbar,
-      .panel,
-      .orb-panel,
-      .feed-panel,
-      .route-panel {
+      .hero,
+      .panel {
         border-radius:24px;
       }
 
-      .nav,
+      .topbar {
+        padding:12px;
+      }
+
+      .brand {
+        gap:10px;
+      }
+
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav {
+        grid-template-columns:repeat(4,minmax(0,1fr));
+        gap:6px;
+      }
+
+      .nav a {
+        width:min(100%,70px);
+        font-size:.55rem;
+      }
+
+      .hero {
+        min-height:390px;
+        padding:22px;
+      }
+
+      .gauge-orb {
+        right:18px;
+        top:auto;
+        bottom:18px;
+        width:118px;
+        height:118px;
+        transform:rotate(45deg);
+        opacity:.42;
+      }
+
       .route-grid {
-        grid-template-columns:1fr;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:10px;
+      }
+
+      .route-card {
+        width:min(100%,142px);
+      }
+
+      .route-card small {
+        font-size:.45rem;
+      }
+
+      .route-card strong {
+        font-size:.74rem;
+      }
+    }
+
+    @media (max-width:360px) {
+      .nav a {
+        width:min(100%,62px);
+        font-size:.48rem;
+      }
+
+      .route-card {
+        width:min(100%,128px);
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
       }
     }
   </style>
@@ -350,95 +700,183 @@
 
 <body>
   <main
-    id="gaugeRoot"
-    class="gauge-page"
+    class="page"
     data-generation="second-generation-renewal"
-    data-gauge-runtime="booting"
-    data-gauge-version="GAUGE_LIVE_FEED_V3"
-    data-probe-set="expanded-front-routes"
-    data-gauges-earth-proof="axis-spin-pass-v3"
+    data-page="gauges"
+    data-surface="generation-2-live-instrument-baseline"
   >
     <header class="topbar">
-      <a class="brand" href="/" aria-label="Door">
+      <a class="brand" href="/gauges/" aria-label="Diamond Gate Bridge Gauges">
         <span class="mark" aria-hidden="true">DG</span>
         <span>
           <span class="kicker">Gauge Authority · Second Generation Renewal</span>
-          <strong class="title">Live Feed Instrument Surface · V3</strong>
+          <strong class="title">Live Feed Instrument Surface · V4</strong>
         </span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Door</a>
+        <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/prelude/">Prelude</a>
         <a href="/explore/">Explore</a>
-        <a href="/explore/frontier/">Frontier</a>
+        <a href="/frontier/">Frontier</a>
         <a href="/products/">Products</a>
         <a href="/laws/">Laws</a>
-        <a href="/about/">About</a>
+        <a class="featured" href="/about/">About</a>
       </nav>
     </header>
 
-    <section class="layout" aria-label="Gauge live diagnostic layout">
-      <aside class="orb-panel">
-        <h1>DGGauge</h1>
-        <p>Expanded live route inspection for Generation 2 public surfaces.</p>
+    <section class="hero" aria-labelledby="gaugesTitle">
+      <div class="gauge-orb" aria-hidden="true"></div>
 
-        <div class="orb" aria-label="Gauge Earth proof mount">
-          <span class="orb-label">Axis · Natural Spin</span>
-        </div>
-
-        <div class="status-strip">
-          <div class="status-card">
-            <small>Status</small>
-            <strong id="stripStatus">STATUS: BOOTING</strong>
-          </div>
-
-          <div class="status-card">
-            <small>Next action</small>
-            <code id="stripAction">NEXT_ACTION=RUN_EXPANDED_DIAGNOSTIC_FEED</code>
-          </div>
-        </div>
-      </aside>
-
-      <section class="feed-panel" aria-labelledby="feedTitle">
-        <h2 id="feedTitle">Readable live feed.</h2>
+      <div class="hero-copy">
+        <span class="pill">Readable instrument surface</span>
+        <h1 id="gaugesTitle">Gauges</h1>
+        <h2>The site needs a dashboard that explains what is live.</h2>
         <p>
-          This instrument now probes the front route family, including Home, Prelude,
-          Explore, Explore Frontier, and Frontier.
+          Gauges is the public inspection room. It shows the major routes, names
+          the current baseline, and keeps the system readable before deeper
+          technical instruments appear.
         </p>
-
-        <pre id="liveOutput" class="live-output">GAUGE_BOOT=WAITING_FOR_V3_RUNTIME
-PROBE_SET=EXPANDED_FRONT_ROUTES
-EXPECTED_RUNTIME=GAUGE_LIVE_FEED_V3</pre>
-      </section>
+      </div>
     </section>
 
-    <section class="route-panel" aria-labelledby="routesTitle">
-      <h2 id="routesTitle">Route probes.</h2>
-      <p>Each cell is generated from live route/source inspection.</p>
+    <section class="panel" aria-labelledby="contextTitle">
+      <div class="panel-head">
+        <span class="pill">Generation 2 baseline</span>
+        <h2 id="contextTitle">Context comes first.</h2>
+        <p>
+          The old version exposed too much raw instrument density before explaining
+          the surface. This version starts with meaning, then gives route status.
+        </p>
+      </div>
 
-      <div id="routeGrid" class="route-grid">
-        <article class="block">
-          <strong>BOOT</strong>
-          <span>pending</span>
-          <code>AWAITING_CLIENT_RUNTIME</code>
+      <div class="read-grid">
+        <article class="read-card">
+          <small>Purpose</small>
+          <strong>Show what is live.</strong>
+          <p>Gauges identifies the public routes that currently form the site surface.</p>
+        </article>
+
+        <article class="read-card">
+          <small>Function</small>
+          <strong>Reduce confusion.</strong>
+          <p>Visitors should understand the role of the page before seeing any diagnostic language.</p>
+        </article>
+
+        <article class="read-card">
+          <small>Baseline</small>
+          <strong>Hold Generation 2.</strong>
+          <p>The surface favors clear context, compact navigation, and visible inspection order.</p>
         </article>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="machineTitle">
-      <h2 id="machineTitle">Machine surface.</h2>
-      <p>The dense layer remains available for runtime signal inspection.</p>
-      <pre id="matrix" class="matrix">BOOT_MATRIX=WAITING</pre>
+    <section class="panel" aria-labelledby="routesTitle">
+      <div class="panel-head">
+        <span class="pill">Live route surfaces</span>
+        <h2 id="routesTitle">Diamond route controls.</h2>
+        <p>
+          Each route is shown as a compact rotating diamond so the navigation reads
+          as an instrument instead of a stack of oversized pills.
+        </p>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card" href="/door/">
+          <small>Access</small>
+          <strong>Door</strong>
+        </a>
+
+        <a class="route-card" href="/home/">
+          <small>Interior</small>
+          <strong>Home</strong>
+        </a>
+
+        <a class="route-card" href="/prelude/">
+          <small>Threshold</small>
+          <strong>Prelude</strong>
+        </a>
+
+        <a class="route-card" href="/explore/">
+          <small>Route map</small>
+          <strong>Explore</strong>
+        </a>
+
+        <a class="route-card" href="/frontier/">
+          <small>Edge</small>
+          <strong>Frontier</strong>
+        </a>
+
+        <a class="route-card" href="/products/">
+          <small>Chamber</small>
+          <strong>Products</strong>
+        </a>
+
+        <a class="route-card" href="/laws/">
+          <small>Rule layer</small>
+          <strong>Laws</strong>
+        </a>
+
+        <a class="route-card" href="/about/">
+          <small>Identity</small>
+          <strong>About</strong>
+        </a>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="signalsTitle">
+      <div class="panel-head">
+        <span class="pill">Instrument read</span>
+        <h2 id="signalsTitle">What this page confirms.</h2>
+      </div>
+
+      <div class="signal-grid">
+        <article class="signal-card">
+          <small>Navigation</small>
+          <strong>Route access is visible.</strong>
+          <p>The top route system is compact enough to fit above the fold on mobile.</p>
+        </article>
+
+        <article class="signal-card">
+          <small>Density</small>
+          <strong>Bubbles are reduced.</strong>
+          <p>The old long pills are replaced by smaller diamond controls.</p>
+        </article>
+
+        <article class="signal-card">
+          <small>Motion</small>
+          <strong>Diamonds rotate subtly.</strong>
+          <p>Motion is CSS-based, lightweight, and suppressed for reduced-motion users.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="statusTitle">
+      <div class="panel-head">
+        <span class="pill">Status receipt</span>
+        <h2 id="statusTitle">Generation 2 gauge baseline is active.</h2>
+      </div>
+
+      <div class="status-strip">
+        <code>GAUGES_V4_STATUS=GENERATION_2_BASELINE_ACTIVE
+NAVIGATION=COMPACT_DIAMOND_CONTROLS
+MOTION=CSS_ROTATION_AND_FLOAT
+CONTEXT=READABLE_FIRST
+RAW_DENSITY=DEFERRED
+NEXT_ACTION=USE_GAUGES_AS_PUBLIC_INSPECTION_SURFACE</code>
+      </div>
     </section>
 
     <footer class="footer">
-      <span>Diamond Gate Bridge · Gauges · Second Generation Renewal</span>
-      <span>MODE=LIVE_FEED_DIAGNOSTIC_SURFACE · VERSION=GAUGE_LIVE_FEED_V3</span>
+      <span>Diamond Gate Bridge · Gauges · Generation 2 Baseline</span>
+      <span>
+        <a href="/door/">Door</a> ·
+        <a href="/explore/">Explore</a> ·
+        <a href="/frontier/">Frontier</a> ·
+        <a href="/products/">Products</a>
+      </span>
     </footer>
   </main>
-
-  <script src="/gauges/index.js?v=GAUGE_LIVE_FEED_V3_EXPANDED_FRONT_ROUTES" defer></script>
 </body>
 </html>

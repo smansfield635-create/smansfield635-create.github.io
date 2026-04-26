@@ -4,17 +4,19 @@
   var RUNTIME_NAME = "DGBSunAssetRuntime";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var CANVAS_GLOBAL = "DGBSunCanvas";
+  var VERSION = "luminous-expanding-plasma-b4";
 
   var PATHS = {
-    css: "/assets/sun/sun_material.css",
-    svg: "/assets/sun/sun.svg",
-    canvas: "/assets/sun/sun_canvas.js",
-    manifest: "/assets/sun/sun_manifest.json"
+    css: "/assets/sun/sun_material.css?v=" + VERSION,
+    svg: "/assets/sun/sun.svg?v=" + VERSION,
+    canvas: "/assets/sun/sun_canvas.js?v=" + VERSION,
+    manifest: "/assets/sun/sun_manifest.json?v=" + VERSION
   };
 
   var state = {
     started: false,
     mode: "canvas",
+    version: VERSION,
     mounts: [],
     warnings: [],
     receipts: []
@@ -28,12 +30,13 @@
     return window[SITE_RUNTIME_NAME] || null;
   }
 
+  function setStatus(text) {
+    var node = document.querySelector("[data-door-boot-status]");
+    if (node) node.textContent = text;
+  }
+
   function addReceipt(type, payload) {
-    var receipt = {
-      type: type,
-      time: now(),
-      payload: payload || {}
-    };
+    var receipt = { type: type, time: now(), payload: payload || {} };
 
     state.receipts.push(receipt);
 
@@ -72,6 +75,7 @@
   function loadScript(path) {
     return new Promise(function (resolve, reject) {
       var existing = document.querySelector('script[src="' + path + '"]');
+
       if (existing) {
         resolve();
         return;
@@ -89,9 +93,7 @@
   function ensureCss() {
     var existing = document.querySelector('link[href="' + PATHS.css + '"]');
 
-    if (existing) {
-      return;
-    }
+    if (existing) return;
 
     var link = document.createElement("link");
     link.rel = "stylesheet";
@@ -115,34 +117,20 @@
 
   function getMountSize(mount) {
     var rect = mount.getBoundingClientRect();
-    var width = rect && rect.width ? rect.width : Math.min(window.innerWidth * 0.82, 520);
-    return Math.round(Math.max(280, Math.min(width, 560)));
+    var width = rect && rect.width ? rect.width : Math.min(window.innerWidth * 0.92, 700);
+    return Math.round(Math.max(320, Math.min(width, 720)));
   }
 
-  function mountCssSun(mount) {
-    clearMount(mount);
-
-    var stage = document.createElement("div");
-    stage.className = "dgb-sun-stage";
-
-    var sun = document.createElement("div");
-    sun.className = "dgb-sun-css";
-
-    var core = document.createElement("div");
-    core.className = "dgb-sun-core";
-
-    sun.appendChild(core);
-    stage.appendChild(sun);
-    mount.appendChild(stage);
-
-    addReceipt("CSS_SUN_MOUNTED", { mount: describeMount(mount) });
-
-    return {
-      mode: "css",
-      destroy: function () {
-        clearMount(mount);
+  function removeExistingMountRecord(mount) {
+    state.mounts.forEach(function (record) {
+      if (record.node === mount && record.instance && typeof record.instance.destroy === "function") {
+        record.instance.destroy();
       }
-    };
+    });
+
+    state.mounts = state.mounts.filter(function (record) {
+      return record.node !== mount;
+    });
   }
 
   function mountSvgSun(mount) {
@@ -157,7 +145,8 @@
 
     mount.appendChild(img);
 
-    addReceipt("SVG_SUN_MOUNTED", { mount: describeMount(mount), path: PATHS.svg });
+    setStatus("SVG sun asset active");
+    addReceipt("SVG_SUN_MOUNTED", { mount: describeMount(mount), path: PATHS.svg, version: VERSION });
 
     return {
       mode: "svg",
@@ -172,7 +161,7 @@
 
     var canvas = document.createElement("canvas");
     canvas.className = "dgb-sun-canvas";
-    canvas.setAttribute("aria-label", "Procedural canvas sun asset");
+    canvas.setAttribute("aria-label", "Luminous expanding plasma sun");
     canvas.setAttribute("role", "img");
 
     mount.appendChild(canvas);
@@ -181,11 +170,19 @@
     var instance = window[CANVAS_GLOBAL].createCanvasSun(canvas, Object.assign({
       size: size,
       animate: true,
-      intensity: 0.78,
-      seed: 4217
+      intensity: 0.96,
+      seed: 4217,
+      frameRate: 18
     }, options || {}));
 
-    addReceipt("CANVAS_SUN_MOUNTED", { mount: describeMount(mount), size: size });
+    setStatus("Sun asset active · luminous expanding plasma b4");
+
+    addReceipt("CANVAS_SUN_MOUNTED", {
+      mount: describeMount(mount),
+      size: size,
+      version: VERSION,
+      profile: "luminous-expanding-plasma-b4"
+    });
 
     return {
       mode: "canvas",
@@ -202,61 +199,63 @@
     return Array.prototype.slice.call(document.querySelectorAll(selected));
   }
 
-  async function mountOne(mount, config) {
+  function mountOne(mount, config) {
     ensureCss();
+    removeExistingMountRecord(mount);
 
     var mode = (config && config.mode) || mount.getAttribute("data-sun-mode") || state.mode || "canvas";
-    var instance;
 
     if (mode === "svg") {
-      instance = mountSvgSun(mount);
-    } else if (mode === "css") {
-      instance = mountCssSun(mount);
-    } else {
-      await loadScript(PATHS.canvas);
-
-      if (!window[CANVAS_GLOBAL]) {
-        addWarning("SUN_CANVAS_GLOBAL_MISSING", "Canvas renderer failed to expose DGBSunCanvas.");
-        instance = mountCssSun(mount);
-      } else {
-        instance = mountCanvasSun(mount, config || {});
-      }
+      var svgInstance = mountSvgSun(mount);
+      state.mounts.push({
+        node: mount,
+        mode: svgInstance.mode,
+        mountedAt: now(),
+        element: describeMount(mount),
+        instance: svgInstance
+      });
+      return Promise.resolve(svgInstance);
     }
 
-    state.mounts.push({
-      mode: instance.mode,
-      mountedAt: now(),
-      element: describeMount(mount),
-      instance: instance
-    });
+    return loadScript(PATHS.canvas).then(function () {
+      var instance;
 
-    return instance;
+      if (!window[CANVAS_GLOBAL]) {
+        addWarning("SUN_CANVAS_GLOBAL_MISSING", "Canvas renderer failed to expose DGBSunCanvas.", { version: VERSION });
+        throw new Error("DGBSunCanvas missing after script load.");
+      }
+
+      instance = mountCanvasSun(mount, config || {});
+
+      state.mounts.push({
+        node: mount,
+        mode: instance.mode,
+        mountedAt: now(),
+        element: describeMount(mount),
+        instance: instance
+      });
+
+      return instance;
+    });
   }
 
-  async function mountAll(selector, config) {
+  function mountAll(selector, config) {
     var mounts = queryMounts(selector);
 
     if (!mounts.length) {
       addWarning("SUN_ASSET_MOUNT_MISSING", "No sun asset mount elements were found.", {
-        selector: selector || "[data-dgb-sun-mount]"
+        selector: selector || "[data-dgb-sun-mount]",
+        version: VERSION
       });
-      return [];
+      return Promise.resolve([]);
     }
 
-    var results = [];
-
-    for (var i = 0; i < mounts.length; i += 1) {
-      results.push(await mountOne(mounts[i], config || {}));
-    }
-
-    return results;
+    return Promise.all(mounts.map(function (mount) {
+      return mountOne(mount, config || {});
+    }));
   }
 
-  async function start(config) {
-    if (state.started) {
-      return getState();
-    }
-
+  function start(config) {
     state.started = true;
     state.mode = (config && config.mode) || state.mode;
 
@@ -265,18 +264,19 @@
     if (siteRuntime() && typeof siteRuntime().registerRuntime === "function") {
       siteRuntime().registerRuntime({
         id: "sunAssetRuntime",
-        page: "asset-layer",
-        role: "sun-asset-coordination",
+        page: "home",
+        role: "sun-asset-spine-coordination",
         path: "/runtime/sun_asset_runtime.js",
+        version: VERSION,
         validated: true,
-        optional: true
+        optional: false
       });
     }
 
-    await mountAll((config && config.selector) || undefined, config || {});
-    addReceipt("RUNTIME_STARTED", { mode: state.mode });
-
-    return getState();
+    return mountAll((config && config.selector) || undefined, config || {}).then(function () {
+      addReceipt("RUNTIME_STARTED", { mode: state.mode, version: VERSION });
+      return getState();
+    });
   }
 
   function stop() {
@@ -289,7 +289,7 @@
     state.mounts = [];
     state.started = false;
 
-    addReceipt("RUNTIME_STOPPED");
+    addReceipt("RUNTIME_STOPPED", { version: VERSION });
   }
 
   function getState() {
@@ -297,6 +297,7 @@
       name: RUNTIME_NAME,
       started: state.started,
       mode: state.mode,
+      version: state.version,
       mountCount: state.mounts.length,
       warnings: state.warnings.slice(),
       receipts: state.receipts.slice(),
@@ -310,9 +311,12 @@
       runtime: RUNTIME_NAME,
       started: state.started,
       mode: state.mode,
+      version: VERSION,
       canvasAvailable: Boolean(window[CANVAS_GLOBAL]),
       externalImageDependency: false,
       graphicGenerationUsed: false,
+      cssSunFallbackActive: false,
+      mountAuthority: "canvas",
       paths: Object.assign({}, PATHS)
     };
   }
@@ -328,20 +332,14 @@
 
   if (document.readyState !== "loading") {
     var autoMounts = queryMounts();
-
     if (autoMounts.length) {
-      start({
-        mode: autoMounts[0].getAttribute("data-sun-mode") || "canvas"
-      });
+      start({ mode: autoMounts[0].getAttribute("data-sun-mode") || "canvas" });
     }
   } else {
     document.addEventListener("DOMContentLoaded", function () {
       var autoMounts = queryMounts();
-
       if (autoMounts.length) {
-        start({
-          mode: autoMounts[0].getAttribute("data-sun-mode") || "canvas"
-        });
+        start({ mode: autoMounts[0].getAttribute("data-sun-mode") || "canvas" });
       }
     }, { once: true });
   }

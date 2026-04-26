@@ -1,66 +1,176 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-label="Diamond Gate Bridge procedural sun asset">
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 1024 1024"
+  role="img"
+  aria-labelledby="title desc"
+  data-dgb-sun-svg="satellite-observational-solar-disc-b7"
+>
+  <title id="title">Satellite observational solar disc</title>
+  <desc id="desc">
+    A satellite-style solar disc with limb darkening, mottled photosphere texture, active regions, subtle sunspots, and soft corona.
+  </desc>
+
   <defs>
-    <radialGradient id="sunDisc" cx="48%" cy="44%" r="58%">
-      <stop offset="0%" stop-color="#fffff0"/>
-      <stop offset="14%" stop-color="#fff2a8"/>
-      <stop offset="38%" stop-color="#ffb33f"/>
-      <stop offset="64%" stop-color="#e85f18"/>
-      <stop offset="100%" stop-color="#3b0d04"/>
+    <radialGradient id="coronaGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#ffe78f" stop-opacity="0.34"/>
+      <stop offset="32%" stop-color="#ff9d33" stop-opacity="0.16"/>
+      <stop offset="68%" stop-color="#ff6b1f" stop-opacity="0.07"/>
+      <stop offset="100%" stop-color="#ff6b1f" stop-opacity="0"/>
     </radialGradient>
 
-    <radialGradient id="limbShade" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="rgba(0,0,0,0)"/>
-      <stop offset="64%" stop-color="rgba(0,0,0,0)"/>
-      <stop offset="100%" stop-color="rgba(15,4,1,0.72)"/>
+    <radialGradient id="solarBody" cx="46%" cy="44%" r="58%">
+      <stop offset="0%" stop-color="#fff6bf"/>
+      <stop offset="16%" stop-color="#ffdf63"/>
+      <stop offset="34%" stop-color="#ffa334"/>
+      <stop offset="58%" stop-color="#e45c1d"/>
+      <stop offset="78%" stop-color="#7e210c"/>
+      <stop offset="100%" stop-color="#1a0503"/>
     </radialGradient>
 
-    <filter id="solarTexture" x="-20%" y="-20%" width="140%" height="140%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="5" seed="42" result="noise"/>
+    <radialGradient id="limbDarkening" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+      <stop offset="56%" stop-color="#2a0602" stop-opacity="0"/>
+      <stop offset="82%" stop-color="#180300" stop-opacity="0.34"/>
+      <stop offset="100%" stop-color="#050000" stop-opacity="0.78"/>
+    </radialGradient>
+
+    <radialGradient id="hotCore" cx="39%" cy="36%" r="36%">
+      <stop offset="0%" stop-color="#fffce1" stop-opacity="0.64"/>
+      <stop offset="24%" stop-color="#ffe68c" stop-opacity="0.30"/>
+      <stop offset="72%" stop-color="#ffb342" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#ffb342" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="activeRegionA" cx="32%" cy="57%" r="17%">
+      <stop offset="0%" stop-color="#fff1a2" stop-opacity="0.36"/>
+      <stop offset="42%" stop-color="#ff9f3a" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ff9f3a" stop-opacity="0"/>
+    </radialGradient>
+
+    <radialGradient id="activeRegionB" cx="64%" cy="43%" r="14%">
+      <stop offset="0%" stop-color="#ffe18a" stop-opacity="0.28"/>
+      <stop offset="46%" stop-color="#ff7d2f" stop-opacity="0.14"/>
+      <stop offset="100%" stop-color="#ff7d2f" stop-opacity="0"/>
+    </radialGradient>
+
+    <filter id="photosphereTexture" x="-8%" y="-8%" width="116%" height="116%">
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.014 0.021"
+        numOctaves="5"
+        seed="4217"
+        result="broadNoise"
+      />
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.062 0.074"
+        numOctaves="4"
+        seed="7331"
+        result="fineNoise"
+      />
       <feColorMatrix
-        in="noise"
+        in="broadNoise"
         type="matrix"
         values="
-          1.6 0   0   0 0
-          0   0.8 0   0 0
-          0   0   0.25 0 0
-          0   0   0   0.42 0"
-        result="coloredNoise"
+          1.20 0    0    0   -0.08
+          0    0.72 0    0   -0.06
+          0    0    0.22 0   -0.03
+          0    0    0    .46 0"
+        result="broadColor"
       />
-      <feBlend in="SourceGraphic" in2="coloredNoise" mode="overlay"/>
+      <feColorMatrix
+        in="fineNoise"
+        type="matrix"
+        values="
+          1.05 0    0    0   -0.05
+          0    0.58 0    0   -0.04
+          0    0    0.16 0   -0.02
+          0    0    0    .24 0"
+        result="fineColor"
+      />
+      <feBlend in="broadColor" in2="fineColor" mode="screen" result="texture"/>
+      <feComposite in="texture" in2="SourceGraphic" operator="in" result="discTexture"/>
     </filter>
 
-    <filter id="softCorona" x="-50%" y="-50%" width="200%" height="200%">
-      <feGaussianBlur stdDeviation="12"/>
+    <filter id="softBloom" x="-28%" y="-28%" width="156%" height="156%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feColorMatrix
+        in="blur"
+        type="matrix"
+        values="
+          1 0 0 0 0
+          0 .68 0 0 0
+          0 0 .28 0 0
+          0 0 0 .42 0"
+        result="warmBlur"
+      />
+      <feMerge>
+        <feMergeNode in="warmBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
 
     <clipPath id="discClip">
-      <circle cx="512" cy="512" r="310"/>
+      <circle cx="512" cy="512" r="405"/>
     </clipPath>
+
+    <mask id="discMask">
+      <rect width="1024" height="1024" fill="black"/>
+      <circle cx="512" cy="512" r="407" fill="white"/>
+    </mask>
   </defs>
 
   <rect width="1024" height="1024" fill="none"/>
 
-  <g opacity="0.74" filter="url(#softCorona)">
-    <circle cx="512" cy="512" r="430" fill="none" stroke="#ffb340" stroke-width="24" stroke-opacity="0.22"/>
-    <circle cx="512" cy="512" r="386" fill="none" stroke="#fff0a8" stroke-width="10" stroke-opacity="0.24"/>
-    <path d="M512 70 C558 204 626 220 760 154 C678 286 714 360 886 410 C716 430 678 502 792 650 C636 554 560 594 512 776 C464 594 388 554 232 650 C346 502 308 430 138 410 C310 360 346 286 264 154 C398 220 466 204 512 70Z" fill="#ff9a2f" opacity="0.18"/>
+  <g id="corona" opacity="0.92">
+    <circle cx="512" cy="512" r="500" fill="url(#coronaGlow)"/>
+    <circle cx="512" cy="512" r="452" fill="none" stroke="#ffd98a" stroke-opacity="0.08" stroke-width="4"/>
   </g>
 
-  <circle cx="512" cy="512" r="310" fill="url(#sunDisc)" filter="url(#solarTexture)"/>
+  <g id="solar-disc" mask="url(#discMask)" filter="url(#softBloom)">
+    <circle cx="512" cy="512" r="407" fill="url(#solarBody)"/>
 
-  <g clip-path="url(#discClip)" opacity="0.58">
-    <path d="M214 468 C320 390 408 482 518 410 C622 342 742 384 824 328" fill="none" stroke="#fff2a3" stroke-width="18" stroke-linecap="round" opacity="0.32"/>
-    <path d="M170 590 C298 528 398 638 512 558 C630 474 738 584 860 506" fill="none" stroke="#7a1f08" stroke-width="28" stroke-linecap="round" opacity="0.28"/>
-    <path d="M234 312 C352 362 430 292 548 322 C650 348 722 312 814 252" fill="none" stroke="#ffd66a" stroke-width="13" stroke-linecap="round" opacity="0.36"/>
-    <path d="M224 748 C374 688 462 778 590 698 C690 636 766 690 850 652" fill="none" stroke="#ff8a24" stroke-width="20" stroke-linecap="round" opacity="0.34"/>
+    <g clip-path="url(#discClip)" filter="url(#photosphereTexture)" opacity="0.84">
+      <circle cx="512" cy="512" r="407" fill="#ff8a24"/>
+    </g>
 
-    <circle cx="346" cy="356" r="31" fill="#fff8cf" opacity="0.32"/>
-    <circle cx="614" cy="408" r="24" fill="#fff8cf" opacity="0.28"/>
-    <circle cx="430" cy="666" r="42" fill="#8d2508" opacity="0.22"/>
-    <circle cx="718" cy="620" r="36" fill="#fff0a4" opacity="0.22"/>
-    <circle cx="270" cy="548" r="26" fill="#7b1e06" opacity="0.24"/>
+    <g clip-path="url(#discClip)" opacity="0.36">
+      <path
+        d="M133 498 C235 428 323 478 420 444 C530 405 593 331 724 398 C834 455 872 553 895 643 C755 587 673 625 566 607 C438 585 339 641 222 587 C172 564 145 532 133 498Z"
+        fill="#ffd567"
+        opacity="0.24"
+      />
+      <path
+        d="M174 658 C284 589 390 621 492 589 C636 545 701 611 827 570 C774 692 667 754 526 760 C381 765 258 733 174 658Z"
+        fill="#8d250d"
+        opacity="0.24"
+      />
+      <path
+        d="M204 323 C323 252 492 273 610 317 C706 353 793 331 846 300 C789 408 672 420 552 399 C411 374 311 405 204 323Z"
+        fill="#fff1a2"
+        opacity="0.13"
+      />
+    </g>
+
+    <circle cx="512" cy="512" r="407" fill="url(#activeRegionA)" opacity="0.90"/>
+    <circle cx="512" cy="512" r="407" fill="url(#activeRegionB)" opacity="0.84"/>
+    <circle cx="512" cy="512" r="407" fill="url(#hotCore)" opacity="0.90"/>
+    <circle cx="512" cy="512" r="407" fill="url(#limbDarkening)" opacity="0.96"/>
+
+    <g id="sunspots" opacity="0.66">
+      <ellipse cx="634" cy="532" rx="30" ry="22" fill="#250601" opacity="0.42" transform="rotate(-18 634 532)"/>
+      <ellipse cx="625" cy="527" rx="13" ry="10" fill="#100200" opacity="0.52" transform="rotate(-18 625 527)"/>
+      <ellipse cx="433" cy="612" rx="24" ry="17" fill="#2a0701" opacity="0.34" transform="rotate(22 433 612)"/>
+      <ellipse cx="426" cy="609" rx="9" ry="7" fill="#110200" opacity="0.42" transform="rotate(22 426 609)"/>
+      <ellipse cx="703" cy="398" rx="13" ry="9" fill="#240501" opacity="0.24" transform="rotate(12 703 398)"/>
+    </g>
+
+    <g id="observational-lines" clip-path="url(#discClip)" opacity="0.10">
+      <circle cx="512" cy="512" r="120" fill="none" stroke="#ffe18a" stroke-width="1.5"/>
+      <circle cx="512" cy="512" r="202" fill="none" stroke="#ffe18a" stroke-width="1.2"/>
+      <circle cx="512" cy="512" r="306" fill="none" stroke="#ffe18a" stroke-width="1"/>
+      <path d="M512 108 L512 916" stroke="#ffe18a" stroke-width="1"/>
+      <path d="M108 512 L916 512" stroke="#ffe18a" stroke-width="1"/>
+    </g>
   </g>
-
-  <circle cx="512" cy="512" r="310" fill="url(#limbShade)"/>
-  <circle cx="512" cy="512" r="310" fill="none" stroke="#fff2c5" stroke-width="2" stroke-opacity="0.26"/>
 </svg>

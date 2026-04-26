@@ -1,23 +1,26 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · RENDER SPLIT B1
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · PANEL-SPLIT SHELL B1
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
      COCKPIT_VERSION=root-compass-cockpit-b1
      RENDER_RUNTIME=compass-cockpit-render-b1
+     CONTROL_PANEL_RUNTIME=compass-cockpit-control-panel-b1
+     INSTRUMENT_PANEL_RUNTIME=compass-cockpit-instrument-panel-b1
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
 
      PURPOSE:
-       - Keep /index.html as protected root contract shell
-       - Move page-level visual CSS/render authority to /runtime/compass_cockpit_render.js
-       - Preserve locked Generation 2 Compass Cockpit Baseline
-       - Preserve Bravo 6 gauges compatibility
-       - Preserve /index.js as cockpit operator
-       - Preserve root-sun-asset-b1, root-compass-cockpit-b1, spine-canopy-parachute-b1
+       - Keep /index.html as protected shell only
+       - Preserve root contract and Bravo 6 compatibility
        - Preserve visible sun mount and fallback in source
-       - No image assets
-       - No GraphicBox
-       - No generated graphics
+       - Preserve cockpit viewport source structure
+       - Move control panel DOM to /runtime/compass_cockpit_control_panel.js
+       - Move instrument/telemetry DOM to /runtime/compass_cockpit_instrument_panel.js
+       - Keep /runtime/compass_cockpit_render.js as visual render authority
+       - Keep /index.js as cockpit operator
+       - No heavy visual CSS in index
+       - No control-panel button dump in index
+       - No instrument-panel dump in index
 -->
 
 <html lang="en">
@@ -51,6 +54,19 @@
       width:min(100% - 28px,1180px);
       margin:0 auto;
       padding:16px 0 24px;
+    }
+    .shell-loading-panel{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      padding:12px;
+      background:rgba(5,8,14,.58);
+      color:rgba(255,255,255,.72);
+      font-weight:850;
+    }
+    .shell-loading-panel strong{
+      color:rgba(255,255,255,.94);
+      display:block;
+      margin-bottom:4px;
     }
   </style>
 </head>
@@ -93,6 +109,8 @@
     data-cosmic-control-plane="cosmic-control-plane-b1"
     data-compass-cockpit="root-compass-cockpit-b1"
     data-compass-cockpit-render="compass-cockpit-render-b1"
+    data-compass-cockpit-control-panel="compass-cockpit-control-panel-b1"
+    data-compass-cockpit-instrument-panel="compass-cockpit-instrument-panel-b1"
     data-sun-satellite-profile="satellite-solar-surface-b1"
     data-source-marker="ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"
     data-cockpit-view="cinematic"
@@ -164,40 +182,31 @@
       </div>
     </section>
 
-    <section class="cockpit-control-panel" data-cockpit-control-panel aria-label="Compass cockpit control panel">
-      <div class="cockpit-control-head">
-        <span class="cockpit-control-title">
-          <strong>Compass Cockpit</strong>
-          <span>Ship posture changes · galaxy remains fixed · sun spine protected</span>
-        </span>
-        <span class="cockpit-control-state">View: <span data-cockpit-view-label>cinematic</span></span>
+    <section
+      id="cockpit-instrument-panel-mount"
+      class="cockpit-instrument-panel-mount"
+      data-cockpit-instrument-panel-mount
+      data-instrument-panel-runtime="compass-cockpit-instrument-panel-b1"
+      aria-label="Compass cockpit instrument panel"
+    >
+      <div class="shell-loading-panel" data-instrument-panel-fallback>
+        <strong>Instrument Panel</strong>
+        <span>Telemetry loading.</span>
       </div>
+    </section>
 
-      <div class="cockpit-control-grid">
-        <div class="cockpit-control-group" aria-label="Cockpit view controls">
-          <button type="button" data-cockpit-view-button="cinematic" aria-pressed="true">Cinematic</button>
-          <button type="button" data-cockpit-view-button="wide" aria-pressed="false">Wide</button>
-          <button type="button" data-cockpit-view-button="local" aria-pressed="false">Local</button>
-          <button type="button" data-cockpit-view-button="axis" aria-pressed="false">Axis</button>
-          <button type="button" data-cockpit-view-button="paths" aria-pressed="false">Paths</button>
-          <button type="button" data-cockpit-view-button="galaxy" aria-pressed="false">Galaxy</button>
-          <button type="button" data-cockpit-view-button="nebula" aria-pressed="false">Nebula</button>
-          <button type="button" data-cockpit-view-button="control" aria-pressed="false">Control</button>
-        </div>
-
-        <div class="cockpit-control-group" aria-label="Cockpit layer toggles">
-          <button type="button" data-cockpit-toggle="planets" aria-pressed="true">Planets</button>
-          <button type="button" data-cockpit-toggle="paths" aria-pressed="false">Paths</button>
-          <button type="button" data-cockpit-toggle="axes" aria-pressed="false">Axes</button>
-          <button type="button" data-cockpit-toggle="nebula" aria-pressed="true">Nebula</button>
-          <button type="button" data-cockpit-toggle="milkyWay" aria-pressed="true">Milky Way</button>
-          <button type="button" data-cockpit-toggle="solarWind" aria-pressed="true">Solar Wind</button>
-        </div>
+    <section
+      id="cockpit-control-panel-mount"
+      class="cockpit-control-panel-mount"
+      data-cockpit-control-panel
+      data-cockpit-control-panel-mount
+      data-control-panel-runtime="compass-cockpit-control-panel-b1"
+      aria-label="Compass cockpit control panel"
+    >
+      <div class="shell-loading-panel" data-control-panel-fallback>
+        <strong>Control Panel</strong>
+        <span>Controls loading.</span>
       </div>
-
-      <p class="cockpit-control-status" data-cockpit-status>
-        Compass Cockpit B1 · cinematic posture · fixed galaxy truth
-      </p>
     </section>
 
     <nav class="routeRail" aria-label="Root route rail">
@@ -218,6 +227,8 @@
   </noscript>
 
   <script src="/runtime/compass_cockpit_render.js?v=compass-cockpit-render-b1" defer></script>
+  <script src="/runtime/compass_cockpit_instrument_panel.js?v=compass-cockpit-instrument-panel-b1" defer></script>
+  <script src="/runtime/compass_cockpit_control_panel.js?v=compass-cockpit-control-panel-b1" defer></script>
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
   <script src="/runtime/cosmic_background_runtime.js?v=near-solar-background-runtime-b1" defer></script>
   <script src="/runtime/cosmic_control_runtime.js?v=cosmic-control-plane-b1" defer></script>

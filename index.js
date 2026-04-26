@@ -1,9 +1,8 @@
-// /index.js
 /*
   Diamond Gate Bridge — Root Door Boot
   File: /index.js
   Generation: 1
-  Baseline: Root Door Solar Baseline 2
+  Baseline: Root Door Seasonal Solar Baseline 1
   Role: safe boot handoff and visible-page protection.
 */
 
@@ -58,7 +57,7 @@
     if (bootState.runtimeRequested || window[RUNTIME_NAME]) return;
 
     bootState.runtimeRequested = true;
-    setStatus("Solar runtime loading");
+    setStatus("Seasonal door runtime loading");
 
     var script = document.createElement("script");
     script.src = RUNTIME_PATH;
@@ -66,7 +65,7 @@
 
     script.onload = function () {
       bootState.runtimeLoaded = true;
-      setStatus("Solar runtime active");
+      setStatus("Seasonal door runtime active");
 
       if (window[RUNTIME_NAME] && typeof window[RUNTIME_NAME].start === "function") {
         window[RUNTIME_NAME].start();
@@ -75,7 +74,7 @@
 
     script.onerror = function () {
       bootState.runtimeFailed = true;
-      setStatus("Static solar door active");
+      setStatus("Static seasonal door active");
     };
 
     document.body.appendChild(script);
@@ -85,7 +84,7 @@
     var visible = protectVisibleDoor();
     if (!visible) return;
 
-    setStatus("Visible-first solar door active");
+    setStatus("Visible-first door active");
     loadRuntime();
 
     window.setTimeout(protectVisibleDoor, 500);

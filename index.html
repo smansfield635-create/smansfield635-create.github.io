@@ -6,7 +6,7 @@
   <title>Diamond Gate Bridge — Learn to Live to Love</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge: an extravagant seasonal door dedicated to the four seasons and the sun."
+    content="Diamond Gate Bridge: a three-dimensional Tree of Life door dedicated to the four seasons and the sun."
   />
 
   <style>
@@ -21,19 +21,22 @@
       --line-strong: rgba(255, 248, 231, 0.34);
 
       --gold: #ffd98a;
-      --gold-soft: rgba(255, 217, 138, 0.62);
+      --gold-soft: rgba(255, 217, 138, 0.64);
       --bronze: rgba(184, 117, 55, 0.78);
-      --iron: rgba(20, 24, 34, 0.94);
-      --iron-soft: rgba(45, 50, 65, 0.88);
+      --wood: rgba(91, 55, 28, 0.96);
+      --wood-deep: rgba(39, 23, 15, 0.98);
+      --iron: rgba(17, 21, 31, 0.96);
+      --iron-soft: rgba(46, 51, 66, 0.88);
 
-      --spring: rgba(127, 226, 154, 0.62);
-      --summer: rgba(255, 216, 92, 0.74);
-      --autumn: rgba(226, 126, 52, 0.72);
-      --winter: rgba(175, 220, 255, 0.66);
+      --spring: rgba(124, 232, 156, 0.74);
+      --summer: rgba(255, 220, 92, 0.84);
+      --autumn: rgba(232, 126, 54, 0.78);
+      --winter: rgba(178, 226, 255, 0.78);
 
-      --door-glow: 0.45;
-      --sun-blessing: 0.55;
-      --season-shift: 0.5;
+      --door-glow: 0.48;
+      --sun-blessing: 0.56;
+      --season-shift: 0.52;
+      --branch-glow: 0.48;
       --door-tilt-x: -5deg;
       --door-tilt-y: 0deg;
       --door-pulse: 1;
@@ -64,7 +67,7 @@
         "Segoe UI",
         sans-serif;
       background:
-        radial-gradient(circle at 50% 12%, rgba(255, 217, 138, 0.11), transparent 22rem),
+        radial-gradient(circle at 50% 11%, rgba(255, 217, 138, 0.12), transparent 23rem),
         radial-gradient(circle at 18% 20%, rgba(98, 138, 255, 0.12), transparent 18rem),
         radial-gradient(circle at 82% 17%, rgba(255, 248, 231, 0.08), transparent 18rem),
         linear-gradient(180deg, #081225 0%, #030714 54%, #010309 100%);
@@ -95,13 +98,13 @@
         conic-gradient(
           from 90deg at 50% 45%,
           transparent 0deg,
-          rgba(127, 226, 154, 0.04) 36deg,
+          rgba(124, 232, 156, 0.04) 36deg,
           transparent 82deg,
-          rgba(255, 216, 92, 0.055) 128deg,
+          rgba(255, 220, 92, 0.055) 128deg,
           transparent 174deg,
-          rgba(226, 126, 52, 0.048) 226deg,
+          rgba(232, 126, 54, 0.048) 226deg,
           transparent 276deg,
-          rgba(175, 220, 255, 0.045) 322deg,
+          rgba(178, 226, 255, 0.045) 322deg,
           transparent 360deg
         );
       opacity: calc(0.55 + var(--door-glow) * 0.18);
@@ -269,10 +272,10 @@
 
     .door-field {
       position: relative;
-      min-height: min(78vh, 710px);
+      min-height: min(80vh, 740px);
       display: grid;
       place-items: center;
-      perspective: 1250px;
+      perspective: 1350px;
       overflow: visible;
       isolation: isolate;
     }
@@ -280,7 +283,7 @@
     .mobile-lockup {
       display: none;
       position: absolute;
-      z-index: 9;
+      z-index: 12;
       top: 0;
       left: 50%;
       width: min(100%, 560px);
@@ -309,8 +312,8 @@
 
     .door-system {
       position: relative;
-      width: min(84vw, 640px);
-      min-height: 640px;
+      width: min(86vw, 650px);
+      min-height: 690px;
       display: grid;
       place-items: center;
       transform-style: preserve-3d;
@@ -320,28 +323,48 @@
       content: "";
       position: absolute;
       width: 92%;
-      height: 68%;
-      bottom: 7%;
+      height: 72%;
+      bottom: 4%;
       border-radius: 999px 999px 22% 22%;
       background:
-        radial-gradient(circle at 50% 15%, rgba(255, 217, 138, 0.18), transparent 32%),
+        radial-gradient(circle at 50% 14%, rgba(255, 217, 138, 0.20), transparent 32%),
         radial-gradient(circle at 50% 55%, rgba(255,255,255,0.07), transparent 55%),
         conic-gradient(
           from 90deg,
-          rgba(127, 226, 154, 0.10),
-          rgba(255, 216, 92, 0.12),
-          rgba(226, 126, 52, 0.12),
-          rgba(175, 220, 255, 0.10),
-          rgba(127, 226, 154, 0.10)
+          rgba(124, 232, 156, 0.10),
+          rgba(255, 220, 92, 0.12),
+          rgba(232, 126, 54, 0.12),
+          rgba(178, 226, 255, 0.10),
+          rgba(124, 232, 156, 0.10)
         );
       filter: blur(10px);
       opacity: calc(0.72 + var(--door-glow) * 0.16);
       transform: scale(calc(1 + var(--door-glow) * 0.02));
     }
 
+    .torus-ring {
+      position: absolute;
+      z-index: 1;
+      width: 96%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 217, 138, 0.14);
+      border-radius: 999px;
+      transform: rotateX(65deg) rotateZ(-16deg);
+      box-shadow:
+        inset 0 0 28px rgba(255,217,138,0.03),
+        0 0 34px rgba(255,217,138,0.04);
+      pointer-events: none;
+    }
+
+    .torus-ring.secondary {
+      width: 77%;
+      transform: rotateX(72deg) rotateZ(22deg);
+      opacity: 0.68;
+    }
+
     .route-node {
       position: absolute;
-      z-index: 7;
+      z-index: 11;
       left: 50%;
       top: 50%;
       width: 112px;
@@ -396,21 +419,21 @@
         0 0 34px rgba(255,217,138,0.15);
     }
 
-    .route-node.prelude { --route-x: -50%; --route-y: -355%; }
-    .route-node.explore { --route-x: 105%; --route-y: -290%; }
-    .route-node.products { --route-x: 170%; --route-y: 190%; }
-    .route-node.gauges { --route-x: -270%; --route-y: 190%; }
-    .route-node.frontier { --route-x: 105%; --route-y: 310%; }
-    .route-node.laws { --route-x: -205%; --route-y: 310%; }
+    .route-node.prelude { --route-x: -50%; --route-y: -382%; }
+    .route-node.explore { --route-x: 106%; --route-y: -318%; }
+    .route-node.products { --route-x: 170%; --route-y: 210%; }
+    .route-node.gauges { --route-x: -270%; --route-y: 210%; }
+    .route-node.frontier { --route-x: 106%; --route-y: 336%; }
+    .route-node.laws { --route-x: -206%; --route-y: 336%; }
     .route-node.governance { --route-x: -270%; --route-y: -50%; }
     .route-node.home { --route-x: 170%; --route-y: -50%; }
 
-    .seasonal-door {
+    .tree-door {
       position: relative;
-      z-index: 5;
-      width: min(66vw, 430px);
-      height: min(72vw, 500px);
-      min-height: 410px;
+      z-index: 7;
+      width: min(68vw, 448px);
+      height: min(78vw, 540px);
+      min-height: 458px;
       display: grid;
       place-items: center;
       transform-style: preserve-3d;
@@ -423,8 +446,8 @@
 
     .sun-crown {
       position: absolute;
-      z-index: 8;
-      top: -44px;
+      z-index: 14;
+      top: -48px;
       left: 50%;
       width: 86px;
       height: 86px;
@@ -467,28 +490,28 @@
     .door-shadow {
       position: absolute;
       z-index: 1;
-      bottom: -22px;
-      width: 92%;
-      height: 42px;
+      bottom: -26px;
+      width: 94%;
+      height: 48px;
       border-radius: 999px;
-      background: radial-gradient(ellipse, rgba(0,0,0,0.55), transparent 70%);
-      filter: blur(8px);
+      background: radial-gradient(ellipse, rgba(0,0,0,0.58), transparent 70%);
+      filter: blur(9px);
     }
 
     .outer-diamond {
       position: absolute;
       z-index: 2;
-      width: 98%;
+      width: 102%;
       aspect-ratio: 1;
-      top: 18%;
-      border: 1px solid rgba(255, 217, 138, 0.26);
+      top: 20%;
+      border: 1px solid rgba(255, 217, 138, 0.24);
       border-radius: 20px;
-      transform: rotate(45deg);
+      transform: rotate(45deg) translateZ(-40px);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,217,138,0.08), rgba(0,0,0,0.10)),
+        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,217,138,0.075), rgba(0,0,0,0.12)),
         rgba(5, 8, 16, 0.42);
       box-shadow:
-        inset 0 0 42px rgba(255,255,255,0.05),
+        inset 0 0 42px rgba(255,255,255,0.045),
         0 0 52px rgba(255,217,138,0.10),
         0 24px 70px rgba(0,0,0,0.46);
     }
@@ -496,13 +519,13 @@
     .door-arch {
       position: absolute;
       z-index: 3;
-      inset: 2% 11% 0;
+      inset: 0 8% 0;
       border: 1px solid rgba(255, 217, 138, 0.32);
       border-bottom: 0;
       border-radius: 999px 999px 28px 28px;
       background:
         linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,217,138,0.20), rgba(255,255,255,0.08)),
-        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.22));
+        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.24));
       box-shadow:
         inset 0 0 34px rgba(255,217,138,0.10),
         0 0 34px rgba(255,217,138,0.12);
@@ -511,15 +534,15 @@
     .door-frame {
       position: absolute;
       z-index: 4;
-      inset: 15% 19% 8%;
-      border: 1px solid rgba(255, 217, 138, 0.44);
+      inset: 14% 17% 8%;
+      border: 1px solid rgba(255, 217, 138, 0.45);
       border-radius: 999px 999px 12px 12px;
       overflow: hidden;
       background:
-        linear-gradient(90deg, rgba(255,217,138,0.18), transparent 8%, transparent 92%, rgba(255,217,138,0.18)),
+        linear-gradient(90deg, rgba(255,217,138,0.17), transparent 8%, transparent 92%, rgba(255,217,138,0.17)),
         linear-gradient(180deg, rgba(255,255,255,0.08), rgba(5,8,16,0.70));
       box-shadow:
-        inset 0 0 28px rgba(255,255,255,0.06),
+        inset 0 0 30px rgba(255,255,255,0.06),
         inset 0 0 0 9px rgba(255, 217, 138, 0.055),
         0 18px 44px rgba(0,0,0,0.36);
     }
@@ -532,8 +555,13 @@
       overflow: hidden;
       background:
         radial-gradient(circle at 50% 14%, rgba(255,255,255,0.12), transparent 22%),
-        linear-gradient(180deg, rgba(80, 86, 102, 0.52), rgba(16, 20, 29, 0.94)),
-        var(--iron);
+        linear-gradient(90deg, rgba(255,217,138,0.07), transparent 18%, transparent 82%, rgba(255,217,138,0.06)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,0.018) 0 7px,
+          rgba(0,0,0,0.04) 7px 13px
+        ),
+        linear-gradient(180deg, rgba(92, 64, 39, 0.78), rgba(22, 18, 16, 0.98));
     }
 
     .door-leaf.left {
@@ -553,65 +581,66 @@
       border: 1px solid rgba(255, 217, 138, 0.28);
       border-radius: 999px 999px 8px 8px;
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,217,138,0.06), transparent);
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.055), transparent 45%),
+        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,217,138,0.05), transparent);
     }
 
     .door-leaf::after {
       content: "";
       position: absolute;
-      inset: 20% 18%;
-      border: 1px solid rgba(255, 217, 138, 0.34);
+      inset: 22% 18%;
+      border: 1px solid rgba(255, 217, 138, 0.28);
       transform: rotate(45deg);
-      background: rgba(255,255,255,0.015);
-      box-shadow: inset 0 0 18px rgba(255,255,255,0.035);
+      background: rgba(255,255,255,0.012);
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.032);
     }
 
     .season-panel {
       position: absolute;
       z-index: 5;
       width: 34%;
-      height: 24%;
-      border: 1px solid rgba(255, 248, 231, 0.16);
+      height: 23%;
+      border: 1px solid rgba(255, 248, 231, 0.14);
       border-radius: 14px;
-      background: rgba(255,255,255,0.035);
+      background: rgba(255,255,255,0.025);
       box-shadow: inset 0 0 22px rgba(255,255,255,0.035);
     }
 
     .season-panel.spring {
-      left: 12%;
+      left: 11%;
       top: 20%;
       background:
-        radial-gradient(circle at 35% 30%, var(--spring), transparent 38%),
-        rgba(255,255,255,0.025);
+        radial-gradient(circle at 34% 36%, var(--spring), transparent 38%),
+        rgba(255,255,255,0.020);
     }
 
     .season-panel.summer {
-      right: 12%;
+      right: 11%;
       top: 20%;
       background:
-        radial-gradient(circle at 65% 30%, var(--summer), transparent 40%),
-        rgba(255,255,255,0.025);
+        radial-gradient(circle at 65% 35%, var(--summer), transparent 40%),
+        rgba(255,255,255,0.020);
     }
 
     .season-panel.autumn {
-      left: 12%;
+      left: 11%;
       bottom: 16%;
       background:
-        radial-gradient(circle at 35% 70%, var(--autumn), transparent 42%),
-        rgba(255,255,255,0.025);
+        radial-gradient(circle at 35% 68%, var(--autumn), transparent 42%),
+        rgba(255,255,255,0.020);
     }
 
     .season-panel.winter {
-      right: 12%;
+      right: 11%;
       bottom: 16%;
       background:
-        radial-gradient(circle at 65% 70%, var(--winter), transparent 42%),
-        rgba(255,255,255,0.025);
+        radial-gradient(circle at 64% 68%, var(--winter), transparent 42%),
+        rgba(255,255,255,0.020);
     }
 
     .center-seam {
       position: absolute;
-      z-index: 7;
+      z-index: 9;
       top: 0;
       bottom: 0;
       left: 50%;
@@ -622,15 +651,142 @@
       box-shadow: 0 0 16px rgba(255,217,138,0.24);
     }
 
+    .tree-layer {
+      position: absolute;
+      z-index: 10;
+      inset: 10% 12% 6%;
+      pointer-events: none;
+      transform: translateZ(24px);
+    }
+
+    .tree-trunk {
+      position: absolute;
+      left: 42%;
+      bottom: 8%;
+      width: 18%;
+      height: 63%;
+      border-radius: 60% 48% 18% 20%;
+      background:
+        linear-gradient(90deg, rgba(34,18,10,0.90), rgba(156,104,58,0.90), rgba(49,27,14,0.96));
+      box-shadow:
+        inset 8px 0 16px rgba(0,0,0,0.34),
+        inset -5px 0 13px rgba(255,217,138,0.14),
+        0 0 calc(10px + var(--branch-glow) * 10px) rgba(255,217,138,0.12);
+      transform: rotate(-7deg);
+    }
+
+    .tree-trunk::before {
+      content: "";
+      position: absolute;
+      left: 28%;
+      top: 0;
+      width: 42%;
+      height: 100%;
+      border-left: 1px solid rgba(255,217,138,0.24);
+      border-radius: inherit;
+      opacity: 0.8;
+    }
+
+    .root {
+      position: absolute;
+      height: 9px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(43,24,14,0.98), rgba(156,104,58,0.90), rgba(43,24,14,0.96));
+      box-shadow: 0 0 10px rgba(255,217,138,0.11);
+      transform-origin: left center;
+    }
+
+    .root.r1 { left: 44%; bottom: 8%; width: 33%; transform: rotate(18deg); }
+    .root.r2 { left: 46%; bottom: 7%; width: 38%; transform: rotate(35deg); }
+    .root.r3 { right: 44%; bottom: 8%; width: 32%; transform: rotate(162deg); }
+    .root.r4 { right: 43%; bottom: 6%; width: 38%; transform: rotate(144deg); }
+    .root.r5 { left: 49%; bottom: 4%; width: 34%; transform: rotate(78deg); }
+
+    .branch {
+      position: absolute;
+      height: 8px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(44,23,12,0.96), rgba(178,118,62,0.90), rgba(52,28,14,0.94));
+      box-shadow:
+        0 0 calc(7px + var(--branch-glow) * 8px) rgba(255,217,138,0.10),
+        inset 0 1px 1px rgba(255,255,255,0.10);
+      transform-origin: left center;
+    }
+
+    .branch::before,
+    .branch::after {
+      content: "";
+      position: absolute;
+      height: 5px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, rgba(45,25,14,0.98), rgba(162,101,52,0.90), rgba(52,28,14,0.94));
+      transform-origin: left center;
+    }
+
+    .branch::before {
+      width: 42%;
+      left: 60%;
+      top: -10px;
+      transform: rotate(-28deg);
+    }
+
+    .branch::after {
+      width: 35%;
+      left: 70%;
+      top: 9px;
+      transform: rotate(24deg);
+    }
+
+    .branch.b1 { left: 47%; top: 33%; width: 39%; transform: rotate(-36deg); }
+    .branch.b2 { left: 43%; top: 37%; width: 39%; transform: rotate(205deg); }
+    .branch.b3 { left: 50%; top: 45%; width: 34%; transform: rotate(-12deg); }
+    .branch.b4 { left: 40%; top: 49%; width: 38%; transform: rotate(192deg); }
+    .branch.b5 { left: 46%; top: 27%; width: 28%; transform: rotate(-72deg); }
+    .branch.b6 { left: 44%; top: 29%; width: 31%; transform: rotate(236deg); }
+
+    .leaf {
+      position: absolute;
+      z-index: 12;
+      width: 14px;
+      height: 9px;
+      border-radius: 999px 0 999px 0;
+      transform: rotate(35deg);
+      box-shadow: 0 0 11px rgba(255,255,255,0.06);
+    }
+
+    .leaf.spring { background: var(--spring); }
+    .leaf.summer { background: var(--summer); }
+    .leaf.autumn { background: var(--autumn); }
+    .leaf.winter {
+      background: var(--winter);
+      border-radius: 999px;
+      width: 10px;
+      height: 10px;
+    }
+
+    .leaf.l1 { left: 23%; top: 26%; }
+    .leaf.l2 { left: 31%; top: 22%; transform: rotate(-22deg); }
+    .leaf.l3 { left: 37%; top: 35%; transform: rotate(64deg); }
+    .leaf.l4 { left: 68%; top: 23%; transform: rotate(-12deg); }
+    .leaf.l5 { left: 76%; top: 31%; transform: rotate(42deg); }
+    .leaf.l6 { left: 64%; top: 39%; transform: rotate(70deg); }
+    .leaf.l7 { left: 27%; top: 63%; transform: rotate(-12deg); }
+    .leaf.l8 { left: 35%; top: 70%; transform: rotate(46deg); }
+    .leaf.l9 { left: 73%; top: 62%; transform: rotate(-42deg); }
+    .leaf.l10 { left: 67%; top: 71%; transform: rotate(28deg); }
+
     .solar-medallion {
       position: absolute;
-      z-index: 8;
+      z-index: 13;
       left: 50%;
-      top: 51%;
-      width: 72px;
-      height: 72px;
+      top: 52%;
+      width: 76px;
+      height: 76px;
       transform: translate(-50%, -50%);
-      border: 1px solid rgba(255, 217, 138, 0.56);
+      border: 1px solid rgba(255, 217, 138, 0.58);
       border-radius: 999px;
       background:
         radial-gradient(circle at 34% 28%, rgba(255,255,255,0.72), transparent 16%),
@@ -651,11 +807,11 @@
 
     .threshold {
       position: absolute;
-      z-index: 6;
-      left: 11%;
-      right: 11%;
+      z-index: 8;
+      left: 10%;
+      right: 10%;
       bottom: 0;
-      height: 54px;
+      height: 58px;
       border: 1px solid rgba(255, 217, 138, 0.30);
       border-radius: 8px 8px 22px 22px;
       background:
@@ -670,8 +826,8 @@
     .threshold::after {
       content: "";
       position: absolute;
-      bottom: 8px;
-      width: 42px;
+      bottom: 9px;
+      width: 44px;
       height: 6px;
       border-radius: 999px;
       background: rgba(255,217,138,0.72);
@@ -688,10 +844,10 @@
 
     .dedication {
       position: absolute;
-      z-index: 8;
+      z-index: 12;
       left: 50%;
-      bottom: -38px;
-      width: min(100%, 440px);
+      bottom: -40px;
+      width: min(100%, 460px);
       transform: translateX(-50%);
       color: var(--soft);
       text-align: center;
@@ -742,11 +898,11 @@
       }
 
       .door-field {
-        min-height: 760px;
+        min-height: 800px;
       }
 
       .door-system {
-        width: min(96vw, 680px);
+        width: min(96vw, 690px);
       }
     }
 
@@ -777,19 +933,19 @@
       }
 
       .door-field {
-        min-height: 780px;
+        min-height: 840px;
         padding: 92px 0 8px;
       }
 
       .door-system {
         width: 100%;
-        min-height: 680px;
+        min-height: 730px;
       }
 
-      .seasonal-door {
-        width: min(84vw, 350px);
-        height: 440px;
-        min-height: 440px;
+      .tree-door {
+        width: min(88vw, 370px);
+        height: 490px;
+        min-height: 490px;
         margin-top: 8px;
       }
 
@@ -813,17 +969,17 @@
         display: none;
       }
 
-      .route-node.prelude { --route-x: -104%; --route-y: -520%; }
-      .route-node.explore { --route-x: 4%; --route-y: -520%; }
-      .route-node.products { --route-x: -104%; --route-y: 430%; }
-      .route-node.gauges { --route-x: 4%; --route-y: 430%; }
-      .route-node.frontier { --route-x: -104%; --route-y: 548%; }
-      .route-node.laws { --route-x: 4%; --route-y: 548%; }
-      .route-node.governance { --route-x: -104%; --route-y: 666%; }
-      .route-node.home { --route-x: 4%; --route-y: 666%; }
+      .route-node.prelude { --route-x: -104%; --route-y: -554%; }
+      .route-node.explore { --route-x: 4%; --route-y: -554%; }
+      .route-node.products { --route-x: -104%; --route-y: 456%; }
+      .route-node.gauges { --route-x: 4%; --route-y: 456%; }
+      .route-node.frontier { --route-x: -104%; --route-y: 574%; }
+      .route-node.laws { --route-x: 4%; --route-y: 574%; }
+      .route-node.governance { --route-x: -104%; --route-y: 692%; }
+      .route-node.home { --route-x: 4%; --route-y: 692%; }
 
       .dedication {
-        bottom: -30px;
+        bottom: -32px;
         font-size: 0.62rem;
       }
 
@@ -834,24 +990,24 @@
     }
 
     @media (max-width: 420px) {
-      .seasonal-door {
-        width: min(88vw, 320px);
-        height: 410px;
-        min-height: 410px;
+      .tree-door {
+        width: min(91vw, 340px);
+        height: 460px;
+        min-height: 460px;
       }
 
       .door-field {
-        min-height: 760px;
+        min-height: 815px;
       }
 
-      .route-node.prelude { --route-x: -104%; --route-y: -500%; }
-      .route-node.explore { --route-x: 4%; --route-y: -500%; }
-      .route-node.products { --route-x: -104%; --route-y: 414%; }
-      .route-node.gauges { --route-x: 4%; --route-y: 414%; }
-      .route-node.frontier { --route-x: -104%; --route-y: 532%; }
-      .route-node.laws { --route-x: 4%; --route-y: 532%; }
-      .route-node.governance { --route-x: -104%; --route-y: 650%; }
-      .route-node.home { --route-x: 4%; --route-y: 650%; }
+      .route-node.prelude { --route-x: -104%; --route-y: -536%; }
+      .route-node.explore { --route-x: 4%; --route-y: -536%; }
+      .route-node.products { --route-x: -104%; --route-y: 438%; }
+      .route-node.gauges { --route-x: 4%; --route-y: 438%; }
+      .route-node.frontier { --route-x: -104%; --route-y: 556%; }
+      .route-node.laws { --route-x: 4%; --route-y: 556%; }
+      .route-node.governance { --route-x: -104%; --route-y: 674%; }
+      .route-node.home { --route-x: 4%; --route-y: 674%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -861,7 +1017,7 @@
       }
 
       .route-node,
-      .seasonal-door {
+      .tree-door {
         transition: none;
       }
     }
@@ -875,7 +1031,7 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <span class="brand-name">Diamond Gate Bridge</span>
-          <span class="brand-sub">Seasonal Solar Door</span>
+          <span class="brand-sub">Tree of Life Door</span>
         </span>
       </a>
 
@@ -884,11 +1040,11 @@
 
     <section class="hero" aria-labelledby="door-title">
       <div class="hero-copy">
-        <p class="eyebrow">An extravagant public gate</p>
+        <p class="eyebrow">A three-dimensional public gate</p>
         <h1 id="door-title">Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
         <p class="door-statement">
-          A public gate dedicated to the four seasons and the sun: emergence, light, change, stillness, and the choice to walk forward.
+          A Tree of Life door dedicated to the four seasons and the sun: roots below, branches across, light above, and a path forward.
         </p>
 
         <div class="primary-actions" aria-label="Primary entry actions">
@@ -897,13 +1053,16 @@
         </div>
       </div>
 
-      <div class="door-field" aria-label="Seasonal solar door navigation">
+      <div class="door-field" aria-label="Tree of Life door navigation">
         <div class="mobile-lockup" aria-hidden="true">
           <strong>Diamond Gate Bridge</strong>
           <span>Learn to Live to Love</span>
         </div>
 
         <div class="door-system" data-door-system>
+          <div class="torus-ring" aria-hidden="true"></div>
+          <div class="torus-ring secondary" aria-hidden="true"></div>
+
           <a class="route-node prelude" href="/prelude/">Prelude<small>begin</small></a>
           <a class="route-node explore" href="/explore/">Explore<small>map</small></a>
           <a class="route-node products" href="/products/">Products<small>build</small></a>
@@ -913,7 +1072,7 @@
           <a class="route-node governance" href="/governance/">Governance<small>scale</small></a>
           <a class="route-node home" href="/">Home<small>return</small></a>
 
-          <div class="seasonal-door" data-seasonal-door aria-hidden="true">
+          <div class="tree-door" data-tree-door aria-hidden="true">
             <div class="sun-crown"></div>
             <div class="door-shadow"></div>
             <div class="outer-diamond"></div>
@@ -922,30 +1081,61 @@
             <div class="door-frame">
               <div class="door-leaf left"></div>
               <div class="door-leaf right"></div>
+
               <div class="season-panel spring"></div>
               <div class="season-panel summer"></div>
               <div class="season-panel autumn"></div>
               <div class="season-panel winter"></div>
+
               <div class="center-seam"></div>
+
+              <div class="tree-layer">
+                <div class="tree-trunk"></div>
+
+                <div class="root r1"></div>
+                <div class="root r2"></div>
+                <div class="root r3"></div>
+                <div class="root r4"></div>
+                <div class="root r5"></div>
+
+                <div class="branch b1"></div>
+                <div class="branch b2"></div>
+                <div class="branch b3"></div>
+                <div class="branch b4"></div>
+                <div class="branch b5"></div>
+                <div class="branch b6"></div>
+
+                <span class="leaf spring l1"></span>
+                <span class="leaf spring l2"></span>
+                <span class="leaf spring l3"></span>
+                <span class="leaf summer l4"></span>
+                <span class="leaf summer l5"></span>
+                <span class="leaf summer l6"></span>
+                <span class="leaf autumn l7"></span>
+                <span class="leaf autumn l8"></span>
+                <span class="leaf winter l9"></span>
+                <span class="leaf winter l10"></span>
+              </div>
+
               <div class="solar-medallion"></div>
             </div>
 
             <div class="threshold"></div>
-            <div class="dedication">Four seasons · One sun · One door</div>
+            <div class="dedication">Tree of Life · Four seasons · Sun dedication</div>
           </div>
         </div>
       </div>
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Root Door Seasonal Solar Baseline 1</span>
-      <span>Door first · Four seasons · Sun dedication</span>
+      <span>Generation 1 · Root Door Tree of Life Toroidal Baseline 1</span>
+      <span>Door first · Round world · Flatten later</span>
     </footer>
   </main>
 
   <noscript>
     <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
-      JavaScript is off. The door remains visible and usable.
+      JavaScript is off. The Tree of Life door remains visible and usable.
     </div>
   </noscript>
 

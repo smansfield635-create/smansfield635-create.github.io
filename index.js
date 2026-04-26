@@ -1,22 +1,22 @@
 /* TNT RENEWAL — /index.js
-   ROOT INDEX JS · COMPASS COCKPIT BUTTON-BINDING RENEWAL B2
+   ROOT INDEX JS · COMPASS COCKPIT VENUE-BRIDGE RENEWAL B3
 
    ROOT_BOOT_ID = "root-sun-asset-b1"
    COCKPIT_CONTRACT = "root-compass-cockpit-b1"
    SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1
-   RENEWAL_MARKER=ROOT_COMPASS_COCKPIT_INDEX_JS_BINDING_REPAIR_B2
+   RENEWAL_MARKER=ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3
 
    PURPOSE:
      - Renew /index.js only.
-     - Bind cockpit buttons directly and safely.
-     - Preserve DGBIndexBoot.
-     - Expose DGBCompassCockpit.
+     - Preserve cockpit button binding.
      - Preserve visible sun fallback.
-     - Preserve canopy relationship.
-     - Do not depend on /world/control.js.
-     - Do not require module imports.
+     - Preserve DGBIndexBoot.
+     - Preserve DGBCompassCockpit.
+     - Add optional venue bridge to /world/control.js.
+     - Use /world/control.js as venue geometry authority when available.
+     - Do not require /world/control.js for basic cockpit function.
      - Do not move the galaxy/environment.
-     - Reposition cockpit view posture relative to fixed field.
+     - Cockpit repositions view posture relative to the fixed field.
 
    REQUIRED GAUGE MARKERS:
      DGBSpineCanopy
@@ -25,17 +25,20 @@
      ensureFallbackSun
      held-by-canopy
      root-compass-cockpit-b1
+     ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3
 */
 
 (function () {
   "use strict";
 
   var VERSION = "root-compass-cockpit-b1";
-  var RENEWAL = "ROOT_COMPASS_COCKPIT_INDEX_JS_BINDING_REPAIR_B2";
+  var RENEWAL = "ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3";
   var SOURCE_MARKER = "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
+  var WORLD_CONTROL_PATH = "/world/control.js";
   var STATE_EVENT = "dgb:cockpit:viewchange";
+  var VENUE_EVENT = "dgb:cockpit:venuebridge";
 
   var VIEW_ORDER = [
     "cinematic",
@@ -74,8 +77,8 @@
     },
     wide: {
       label: "Wide",
-      status: "Compass Cockpit B1 · wide survey · scale pulled back",
-      narrative: "Cockpit widened its observation cone. The galaxy remains fixed while the ship surveys more of the field.",
+      status: "Compass Cockpit B1 · wide survey · venue frame expanded",
+      narrative: "Cockpit widened its observation cone. The venue frame expands while the galaxy remains fixed.",
       posture: {
         scale: 0.92,
         tilt: "-0.7deg",
@@ -89,7 +92,7 @@
     local: {
       label: "Local",
       status: "Compass Cockpit B1 · local solar proximity · sun spine protected",
-      narrative: "Cockpit moved into local solar read. The sun spine remains protected while nearby pressure becomes easier to inspect.",
+      narrative: "Cockpit moved into local solar read. The venue frame keeps the sun protected while nearby pressure becomes easier to inspect.",
       posture: {
         scale: 1.035,
         tilt: "0.45deg",
@@ -102,8 +105,8 @@
     },
     axis: {
       label: "Axis",
-      status: "Compass Cockpit B1 · Euclidean axis view · coordinate truth exposed",
-      narrative: "Cockpit raised the coordinate grid. This view reads position and axis without pretending the environment moved.",
+      status: "Compass Cockpit B1 · Euclidean axis view · venue coordinates exposed",
+      narrative: "Cockpit raised the Euclidean venue grid. This view reads coordinate position without pretending the environment moved.",
       posture: {
         scale: 0.98,
         tilt: "0deg",
@@ -116,8 +119,8 @@
     },
     paths: {
       label: "Paths",
-      status: "Compass Cockpit B1 · route lanes visible · orbital path read",
-      narrative: "Cockpit opened path instrumentation. Travel lanes are visible as a navigation read over the same universe field.",
+      status: "Compass Cockpit B1 · route lanes visible · venue path read",
+      narrative: "Cockpit opened path instrumentation. Travel lanes are visible as a navigation read over the same venue field.",
       posture: {
         scale: 0.96,
         tilt: "-1.2deg",
@@ -158,8 +161,8 @@
     },
     control: {
       label: "Control",
-      status: "Compass Cockpit B1 · instrument control · full HUD exposed",
-      narrative: "Cockpit exposed control instrumentation. This is the technical view for verifying posture, toggles, and field protection.",
+      status: "Compass Cockpit B1 · instrument control · venue authority exposed",
+      narrative: "Cockpit exposed control instrumentation. This is the technical view for verifying posture, toggles, venue geometry, and field protection.",
       posture: {
         scale: 0.99,
         tilt: "0deg",
@@ -181,7 +184,8 @@
     "held-by-canopy",
     "root-compass-cockpit-b1",
     "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1",
-    "ROOT_COMPASS_COCKPIT_INDEX_JS_BINDING_REPAIR_B2"
+    "ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3",
+    "/world/control.js"
   ];
 
   var state = {
@@ -201,8 +205,24 @@
     svgVisible: false,
     canopyPresent: false,
     heldByCanopy: false,
-    lastAction: "boot"
+    lastAction: "boot",
+    venue: {
+      status: "pending",
+      path: WORLD_CONTROL_PATH,
+      available: false,
+      imported: false,
+      error: "",
+      world: null,
+      camera: null,
+      solarPolicy: null,
+      labelPolicy: null,
+      controlPlan: null,
+      lastViewport: null
+    }
   };
+
+  var worldControlModule = null;
+  var venueImportStarted = false;
 
   function $(selector, root) {
     return (root || document).querySelector(selector);
@@ -272,6 +292,22 @@
       style.visibility !== "hidden" &&
       Number(style.opacity || 1) > 0
     );
+  }
+
+  function getViewport() {
+    return {
+      width: Math.max(1, Math.round(window.innerWidth || document.documentElement.clientWidth || 1280)),
+      height: Math.max(1, Math.round(window.innerHeight || document.documentElement.clientHeight || 720)),
+      dpr: Math.max(1, Number(window.devicePixelRatio || 1))
+    };
+  }
+
+  function safeCall(fn, fallback) {
+    try {
+      return typeof fn === "function" ? fn() : fallback;
+    } catch (error) {
+      return fallback;
+    }
   }
 
   function ensureFallbackSun() {
@@ -371,6 +407,177 @@
     });
   }
 
+  function requestVenueBridge() {
+    if (venueImportStarted) return;
+
+    venueImportStarted = true;
+    state.venue.status = "loading";
+    applyVenueDataset();
+
+    if (typeof import !== "function") {
+      state.venue.status = "unsupported";
+      state.venue.error = "dynamic import unavailable";
+      applyVenueDataset();
+      applyNarrative();
+      return;
+    }
+
+    import(WORLD_CONTROL_PATH)
+      .then(function (module) {
+        worldControlModule = module || null;
+        state.venue.available = Boolean(worldControlModule);
+        state.venue.imported = Boolean(worldControlModule);
+        state.venue.status = worldControlModule ? "active" : "unavailable";
+        state.venue.error = "";
+        refreshVenueRead();
+        sync({ dispatch: false });
+        dispatchVenue();
+      })
+      .catch(function (error) {
+        worldControlModule = null;
+        state.venue.available = false;
+        state.venue.imported = false;
+        state.venue.status = "fallback";
+        state.venue.error = error && error.message ? error.message : "world control import failed";
+        applyVenueDataset();
+        applyNarrative();
+        dispatchVenue();
+      });
+  }
+
+  function refreshVenueRead() {
+    var viewport = getViewport();
+    var module = worldControlModule;
+    var receipt;
+    var plan;
+    var camera;
+    var world;
+    var solarPolicy;
+    var labelPolicy;
+
+    state.venue.lastViewport = viewport;
+
+    if (!module) {
+      state.venue.status = state.venue.status === "loading" ? "loading" : "fallback";
+      applyVenueDataset();
+      return state.venue;
+    }
+
+    receipt = safeCall(function () {
+      return module.getControlReceipt({ viewport: viewport });
+    }, null);
+
+    plan = safeCall(function () {
+      return module.getControlPlan({ viewport: viewport });
+    }, null);
+
+    camera = safeCall(function () {
+      return module.getCameraFrame(viewport);
+    }, receipt && receipt.camera ? receipt.camera : null);
+
+    world = safeCall(function () {
+      return module.getUniverseBoundsKm();
+    }, receipt && receipt.world && receipt.world.boundsKm ? receipt.world.boundsKm : null);
+
+    solarPolicy = safeCall(function () {
+      return module.getSolarPolicy();
+    }, receipt && receipt.solarPolicy ? receipt.solarPolicy : null);
+
+    labelPolicy = safeCall(function () {
+      return module.getLabelVisibilityPolicy(viewport);
+    }, receipt && receipt.labelPolicy ? receipt.labelPolicy : null);
+
+    state.venue.status = "active";
+    state.venue.available = true;
+    state.venue.imported = true;
+    state.venue.camera = camera || null;
+    state.venue.world = world || null;
+    state.venue.solarPolicy = solarPolicy || null;
+    state.venue.labelPolicy = labelPolicy || null;
+    state.venue.controlPlan = plan || null;
+    state.venue.error = "";
+
+    applyVenueDataset();
+    return state.venue;
+  }
+
+  function getVenueAdjustmentForView(view) {
+    var camera = state.venue.camera;
+    var viewport = state.venue.lastViewport || getViewport();
+    var mobile = viewport.width <= 760;
+    var ratio = camera && Number.isFinite(camera.pxPerKm) ? camera.pxPerKm : 0;
+    var kmPerPx = camera && Number.isFinite(camera.kmPerPx) ? camera.kmPerPx : 0;
+    var adjustment = {
+      scaleBump: 0,
+      panX: "0px",
+      panY: "0px",
+      axisBoost: 0,
+      pathBoost: 0
+    };
+
+    if (!state.venue.available || !camera) return adjustment;
+
+    if (view === "wide") {
+      adjustment.scaleBump = mobile ? -0.02 : -0.035;
+      adjustment.panY = mobile ? "2px" : "5px";
+    }
+
+    if (view === "local") {
+      adjustment.scaleBump = mobile ? 0.025 : 0.045;
+      adjustment.panY = "0px";
+    }
+
+    if (view === "axis") {
+      adjustment.axisBoost = Math.min(0.08, Math.max(0.02, ratio * 1000000));
+    }
+
+    if (view === "paths") {
+      adjustment.pathBoost = Math.min(0.10, Math.max(0.03, ratio * 1200000));
+    }
+
+    if (view === "galaxy") {
+      adjustment.scaleBump = mobile ? -0.015 : -0.03;
+      adjustment.panY = "6px";
+    }
+
+    if (view === "control") {
+      adjustment.axisBoost = Math.min(0.10, Math.max(0.03, kmPerPx / 200000000));
+      adjustment.pathBoost = Math.min(0.10, Math.max(0.03, kmPerPx / 200000000));
+    }
+
+    return adjustment;
+  }
+
+  function applyVenueDataset() {
+    var root = rootNode();
+    var camera = state.venue.camera;
+    var world = state.venue.world;
+    var solar = state.venue.solarPolicy;
+
+    if (!root) return;
+
+    root.setAttribute("data-venue-bridge", state.venue.status);
+    root.setAttribute("data-venue-source", WORLD_CONTROL_PATH);
+    root.setAttribute("data-venue-authority", state.venue.available ? "world-control" : "cockpit-fallback");
+
+    if (camera) {
+      root.setAttribute("data-venue-km-per-px", String(Number(camera.kmPerPx || 0)));
+      root.setAttribute("data-venue-px-per-km", String(Number(camera.pxPerKm || 0)));
+      root.setAttribute("data-venue-drawable-width", String(Math.round(Number(camera.drawableWidthPx || 0))));
+      root.setAttribute("data-venue-drawable-height", String(Math.round(Number(camera.drawableHeightPx || 0))));
+    }
+
+    if (world) {
+      root.setAttribute("data-venue-width-km", String(Math.round(Number(world.width || world.widthKm || 0))));
+      root.setAttribute("data-venue-height-km", String(Math.round(Number(world.height || world.heightKm || 0))));
+    }
+
+    if (solar) {
+      root.setAttribute("data-venue-solar-template", String(solar.template || "unknown"));
+      root.setAttribute("data-venue-body-count", String(solar.bodyCount || "unknown"));
+    }
+  }
+
   function applyDataset() {
     var root = rootNode();
     var body = document.body;
@@ -402,20 +609,26 @@
       root.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
       root.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
     }
+
+    applyVenueDataset();
   }
 
   function applyCockpitPosture() {
     var root = rootNode();
     var copy = VIEW_COPY[state.view] || VIEW_COPY.cinematic;
     var posture = copy.posture || VIEW_COPY.cinematic.posture;
+    var venue = getVenueAdjustmentForView(state.view);
+    var scale = Number(posture.scale || 1) + Number(venue.scaleBump || 0);
+    var axis = Number(posture.axis || 0) + Number(venue.axisBoost || 0);
+    var paths = Number(posture.paths || 0) + Number(venue.pathBoost || 0);
 
-    setCssVar(root, "--cockpit-scale", posture.scale);
+    setCssVar(root, "--cockpit-scale", Math.max(0.84, Math.min(1.12, scale)));
     setCssVar(root, "--cockpit-tilt", posture.tilt);
-    setCssVar(root, "--cockpit-pan-x", posture.panX);
-    setCssVar(root, "--cockpit-pan-y", posture.panY);
+    setCssVar(root, "--cockpit-pan-x", venue.panX || posture.panX);
+    setCssVar(root, "--cockpit-pan-y", venue.panY || posture.panY);
     setCssVar(root, "--hud-strength", posture.hud);
-    setCssVar(root, "--axis-opacity", posture.axis);
-    setCssVar(root, "--path-opacity", posture.paths);
+    setCssVar(root, "--axis-opacity", Math.max(0, Math.min(0.5, axis)));
+    setCssVar(root, "--path-opacity", Math.max(0, Math.min(0.52, paths)));
   }
 
   function setButtonPressed(button, pressed) {
@@ -442,6 +655,14 @@
     });
   }
 
+  function venuePhrase() {
+    if (state.venue.status === "active") return " Venue bridge active.";
+    if (state.venue.status === "loading") return " Venue bridge loading.";
+    if (state.venue.status === "fallback") return " Venue bridge unavailable; cockpit fallback active.";
+    if (state.venue.status === "unsupported") return " Venue bridge unsupported; cockpit fallback active.";
+    return "";
+  }
+
   function applyNarrative() {
     var copy = VIEW_COPY[state.view] || VIEW_COPY.cinematic;
     var status = copy.status;
@@ -454,10 +675,12 @@
       status = status + " · canopy pending";
     }
 
+    status = status + " · " + (state.venue.available ? "venue authority active" : "cockpit fallback venue");
+
     setText("[data-cockpit-view-label]", state.view);
     setText("[data-cosmic-control-view]", state.view);
     setText("[data-cockpit-mode-pill]", copy.label);
-    setText("[data-cockpit-narrative]", copy.narrative);
+    setText("[data-cockpit-narrative]", copy.narrative + venuePhrase());
     setText("[data-cockpit-status]", status);
     setText("[data-cosmic-control-status]", status);
     setText("[data-door-boot-status]", state.heldByCanopy ? "Held by canopy" : "Visible-first fallback active");
@@ -492,6 +715,7 @@
   }
 
   function sync(options) {
+    refreshVenueRead();
     detectSunTruth();
     detectCanopyTruth();
     applyDataset();
@@ -591,7 +815,10 @@
   }
 
   function bindControls() {
-    document.addEventListener("click", delegatedCaptureHandler, true);
+    if (!document.__dgbCockpitDelegatedCaptureBound) {
+      document.__dgbCockpitDelegatedCaptureBound = true;
+      document.addEventListener("click", delegatedCaptureHandler, true);
+    }
 
     $all("[data-cockpit-view-button], [data-cosmic-view-button], [data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
       if (button.__dgbCockpitBound) return;
@@ -631,12 +858,28 @@
     }
   }
 
+  function installResizeSync() {
+    if (window.__dgbCockpitResizeBound) return;
+
+    window.__dgbCockpitResizeBound = true;
+
+    window.addEventListener("resize", function () {
+      window.clearTimeout(window.__dgbCockpitResizeTimer);
+      window.__dgbCockpitResizeTimer = window.setTimeout(function () {
+        refreshVenueRead();
+        applyCockpitPosture();
+        applyNarrative();
+        dispatchVenue();
+      }, 120);
+    }, { passive: true });
+  }
+
   function schedulePostRuntimeSync() {
     window.requestAnimationFrame(function () {
       sync({ dispatch: false });
     });
 
-    [80, 250, 750, 1500].forEach(function (delay) {
+    [80, 250, 750, 1500, 2600].forEach(function (delay) {
       window.setTimeout(function () {
         bindControls();
         sync({ dispatch: false });
@@ -652,21 +895,48 @@
     }
   }
 
+  function dispatchVenue() {
+    try {
+      window.dispatchEvent(new CustomEvent(VENUE_EVENT, { detail: getVenueState() }));
+    } catch (error) {
+      /* no-op */
+    }
+  }
+
   function getCameraPosture() {
     var copy = VIEW_COPY[state.view] || VIEW_COPY.cinematic;
+    var venue = getVenueAdjustmentForView(state.view);
+
     return {
       view: state.view,
       label: copy.label,
       posture: {
         scale: copy.posture.scale,
         tilt: copy.posture.tilt,
-        panX: copy.posture.panX,
-        panY: copy.posture.panY,
+        panX: venue.panX || copy.posture.panX,
+        panY: venue.panY || copy.posture.panY,
         hud: copy.posture.hud,
-        axis: copy.posture.axis,
-        paths: copy.posture.paths
+        axis: copy.posture.axis + Number(venue.axisBoost || 0),
+        paths: copy.posture.paths + Number(venue.pathBoost || 0)
       },
+      venueBridge: state.venue.status,
       truth: "cockpit_repositions_relative_to_fixed_environment"
+    };
+  }
+
+  function getVenueState() {
+    return {
+      status: state.venue.status,
+      path: state.venue.path,
+      available: state.venue.available,
+      imported: state.venue.imported,
+      error: state.venue.error,
+      world: state.venue.world,
+      camera: state.venue.camera,
+      solarPolicy: state.venue.solarPolicy,
+      labelPolicy: state.venue.labelPolicy,
+      controlPlan: state.venue.controlPlan,
+      lastViewport: state.venue.lastViewport
     };
   }
 
@@ -681,6 +951,7 @@
       view: state.view,
       lastAction: state.lastAction,
       cameraPosture: getCameraPosture(),
+      venue: getVenueState(),
       toggles: {
         planets: state.toggles.planets,
         paths: state.toggles.paths,
@@ -723,12 +994,15 @@
       renewal: RENEWAL,
       rootBootId: ROOT_BOOT_ID,
       status: "held-by-canopy",
+      venueBridge: WORLD_CONTROL_PATH,
       ensureFallbackSun: ensureFallbackSun,
       applyView: applyView,
       toggleLayer: toggleLayer,
       setLayer: setLayer,
       sync: sync,
+      refreshVenueRead: refreshVenueRead,
       getCameraPosture: getCameraPosture,
+      getVenueState: getVenueState,
       getPublicState: getPublicState
     };
   }
@@ -743,6 +1017,8 @@
       root.setAttribute("data-js-source-marker", SOURCE_MARKER);
       root.setAttribute("data-js-renewal-marker", RENEWAL);
       root.setAttribute("data-compass-cockpit", VERSION);
+      root.setAttribute("data-venue-bridge", "pending");
+      root.setAttribute("data-venue-source", WORLD_CONTROL_PATH);
     }
 
     readInitialStateFromDom();
@@ -750,6 +1026,8 @@
     exposePublicApi();
     bindControls();
     installRuntimeObserver();
+    installResizeSync();
+    requestVenueBridge();
     sync({ dispatch: false });
     schedulePostRuntimeSync();
     dispatchState();

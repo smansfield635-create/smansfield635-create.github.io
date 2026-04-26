@@ -1,9 +1,10 @@
+// /index.js
 /*
   Diamond Gate Bridge — Root Door Boot
   File: /index.js
   Generation: 1
-  Baseline: Root Door Solar Baseline 1
-  Role: Safe boot handoff and runtime load receipt.
+  Baseline: Root Door Solar Baseline 2
+  Role: safe boot handoff and visible-page protection.
 */
 
 (function () {
@@ -32,7 +33,7 @@
 
     if (!root || root.textContent.trim().length < 80) {
       document.body.innerHTML =
-        '<main id="door-root" style="min-height:100vh;padding:24px;background:#02050d;color:#fff8e7;font-family:system-ui,sans-serif;">' +
+        '<main id="door-root" style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
         '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first fallback</p>' +
         '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
         '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">Learn to Live to Love</p>' +
@@ -82,10 +83,9 @@
 
   function boot() {
     var visible = protectVisibleDoor();
-
     if (!visible) return;
 
-    setStatus("Visible-first door active");
+    setStatus("Visible-first solar door active");
     loadRuntime();
 
     window.setTimeout(protectVisibleDoor, 500);

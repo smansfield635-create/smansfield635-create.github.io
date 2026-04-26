@@ -1,0 +1,518 @@
+<!doctype html>
+<!-- TNT CREATION — /showroom/index.html
+     SHOWROOM · GENERATION 2 · UNIVERSE DELIVERY B1
+     SOURCE SUN BASELINE:
+       Generation 2 · Compass Cockpit · Bravo 6 · Sun Visual Contract B1 · STRONG
+
+     PURPOSE:
+       - Create the Showroom universe delivery page.
+       - Reuse the successful Compass satellite-observational sun asset.
+       - Sun first.
+       - Planets second.
+       - Backlinks later.
+       - No graphic box.
+       - No generated image.
+       - No decorative placeholder sun.
+       - No duplicate one-off sun.
+       - Use shared asset spine:
+         /assets/sun/sun_canvas.js
+         /runtime/sun_asset_runtime.js
+         /assets/sun/sun_material.css
+
+     TEAM ROUTE:
+       Brain = structure and code path.
+       Pinky = QA for simplicity, readability, no graphics-box regression.
+-->
+
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Diamond Gate Bridge — Showroom</title>
+  <meta name="description" content="Diamond Gate Bridge Showroom universe delivery page"/>
+
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=satellite-observational-solar-disc-b8"/>
+
+  <style>
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      width:100%;
+      background:#02040b;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(255,255,255,.82);
+      --muted:rgba(255,255,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --line:rgba(255,255,255,.13);
+      --veil:rgba(3,7,18,.48);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 12% 18%,rgba(255,255,255,.30) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(177,205,255,.20) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.18) 0 1px,transparent 2px),
+        radial-gradient(circle at 92% 60%,rgba(255,255,255,.18) 0 1px,transparent 2px),
+        radial-gradient(ellipse at 18% 12%,rgba(67,95,180,.20),transparent 34rem),
+        radial-gradient(ellipse at 76% 78%,rgba(201,162,74,.10),transparent 36rem),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+      min-height:100svh;
+      width:min(100% - 28px,1240px);
+      margin:0 auto;
+      padding:16px 0 28px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+    }
+
+    .top{
+      position:relative;
+      z-index:5;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:rgba(7,10,16,.70);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      padding:12px;
+    }
+
+    .navRow,.navLinks,.routeRail{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .navRow{justify-content:space-between}
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:950;
+      font-size:20px;
+    }
+
+    .mark{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.95),transparent 18%),
+        radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .btn,.routeRail a,.planetControl{
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.24);
+      color:var(--ink);
+      font-weight:900;
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .btn.red,.planetControl[aria-pressed="true"]{
+      border-color:rgba(255,217,138,.48);
+      box-shadow:0 0 20px rgba(201,162,74,.14);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(201,162,74,.16),transparent 60%),
+        rgba(0,0,0,.28);
+    }
+
+    .showroom{
+      position:relative;
+      min-height:calc(100svh - 160px);
+      display:grid;
+      align-items:center;
+      isolation:isolate;
+      overflow:hidden;
+      border-radius:34px;
+    }
+
+    .sunLayer{
+      position:absolute;
+      inset:-8%;
+      z-index:0;
+      display:grid;
+      place-items:center;
+      pointer-events:none;
+    }
+
+    .sunMount{
+      position:relative;
+      width:min(118vw,900px);
+      aspect-ratio:1;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      transform:translate(18%,5%);
+      opacity:.92;
+      filter:
+        drop-shadow(0 0 30px rgba(255,178,54,.20))
+        drop-shadow(0 0 140px rgba(255,122,28,.16));
+    }
+
+    .sunFallback{
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      opacity:.95;
+      visibility:visible;
+      background:
+        radial-gradient(circle at 38% 34%,rgba(255,252,210,.62),transparent 11%),
+        radial-gradient(circle at 67% 61%,rgba(85,22,8,.30),transparent 7%),
+        radial-gradient(circle at 45% 67%,rgba(95,24,8,.26),transparent 7%),
+        repeating-conic-gradient(from 12deg,rgba(255,238,145,.08) 0deg 1.4deg,rgba(140,40,14,.045) 1.5deg 3deg,transparent 3.2deg 6deg),
+        radial-gradient(circle at 48% 47%,rgba(255,210,72,.90) 0 20%,rgba(237,101,25,.90) 46%,rgba(110,28,10,.92) 76%,rgba(20,4,2,.96) 100%);
+    }
+
+    .orbitField{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      pointer-events:none;
+      opacity:.78;
+    }
+
+    .orbit{
+      position:absolute;
+      left:50%;
+      top:50%;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      transform:translate(-50%,-50%) rotate(-12deg);
+    }
+
+    .orbit.one{width:min(48vw,520px);height:min(25vw,270px)}
+    .orbit.two{width:min(68vw,740px);height:min(36vw,390px)}
+    .orbit.three{width:min(88vw,960px);height:min(47vw,510px)}
+    .orbit.four{width:min(108vw,1180px);height:min(58vw,630px)}
+
+    .planet{
+      position:absolute;
+      width:clamp(10px,1.4vw,18px);
+      aspect-ratio:1;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 34% 30%,rgba(255,255,255,.92),transparent 22%),
+        radial-gradient(circle,rgba(147,197,253,.94),rgba(59,130,246,.45) 58%,rgba(15,23,42,.72));
+      box-shadow:0 0 22px rgba(147,197,253,.22);
+    }
+
+    .planet.mercury{left:54%;top:40%;width:10px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#d8c3a5,#765d42)}
+    .planet.venus{left:42%;top:61%;width:15px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#ffd98a,#af6f2d)}
+    .planet.earth{left:65%;top:63%;width:17px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#7dd3fc,#2563eb 55%,#052e16)}
+    .planet.mars{left:31%;top:36%;width:13px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#fca5a5,#b45309)}
+    .planet.outer{left:77%;top:31%;width:22px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#fde68a,#92400e)}
+
+    .copy{
+      position:relative;
+      z-index:3;
+      max-width:760px;
+      padding:clamp(22px,5vw,52px);
+      display:grid;
+      gap:18px;
+    }
+
+    .kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(3.2rem,9vw,7.2rem);
+      line-height:.86;
+      letter-spacing:-.08em;
+      text-shadow:0 20px 90px rgba(0,0,0,.55);
+    }
+
+    .expression{
+      margin:0;
+      font-size:clamp(1.25rem,3.8vw,2.55rem);
+      line-height:1.06;
+      color:rgba(255,255,255,.92);
+      max-width:720px;
+    }
+
+    .lede{
+      margin:0;
+      color:var(--txt);
+      font-size:clamp(1.03rem,2.2vw,1.24rem);
+      line-height:1.55;
+      max-width:680px;
+    }
+
+    .planetControls{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      max-width:760px;
+    }
+
+    .planetControl{
+      text-align:left;
+    }
+
+    .readout{
+      max-width:720px;
+      display:grid;
+      gap:6px;
+      padding:0;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    .readout strong{
+      color:var(--gold);
+      font-size:1.05rem;
+    }
+
+    .readout p{
+      margin:0;
+    }
+
+    .routeRail{
+      position:relative;
+      z-index:5;
+      justify-content:center;
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:rgba(7,10,16,.70);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      padding:12px;
+    }
+
+    @media(max-width:760px){
+      .page{
+        width:min(100% - 20px,1240px);
+        padding-top:10px;
+      }
+
+      .navLinks{width:100%}
+
+      .navLinks .btn,.routeRail a{
+        flex:1 1 calc(50% - 10px);
+        text-align:center;
+      }
+
+      .showroom{
+        min-height:calc(100svh - 130px);
+      }
+
+      .sunLayer{
+        inset:-20%;
+      }
+
+      .sunMount{
+        width:min(150vw,880px);
+        transform:translate(18%,10%);
+        opacity:.88;
+      }
+
+      .copy{
+        padding:22px;
+      }
+
+      .planetControls{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .orbit.one{width:92vw;height:48vw}
+      .orbit.two{width:124vw;height:66vw}
+      .orbit.three{width:156vw;height:84vw}
+      .orbit.four{width:188vw;height:100vw}
+    }
+  </style>
+</head>
+
+<body data-showroom-focus="sun">
+  <main
+    class="page"
+    data-showroom-root
+    data-showroom-version="generation-2-universe-delivery-b1"
+    data-sun-source-baseline="generation-2-compass-cockpit-bravo-6-sun-visual-contract-b1-strong"
+    data-backlink-capacity="reserved"
+    data-pinky-qa="no-graphics-box"
+    data-brain-route="sun-first-planets-second"
+  >
+    <section class="top" aria-label="Navigation">
+      <div class="navRow">
+        <a class="brand" href="/">
+          <span class="mark" aria-hidden="true"></span>
+          <span>Diamond Gate Bridge</span>
+        </a>
+
+        <nav class="navLinks" aria-label="Primary navigation">
+          <a class="btn" href="/">Compass</a>
+          <a class="btn" href="/home/">Home</a>
+          <a class="btn" href="/prelude/">Prelude</a>
+          <a class="btn" href="/door/">Door</a>
+          <a class="btn red" href="/showroom/">Showroom</a>
+          <a class="btn" href="/products/">Products</a>
+          <a class="btn" href="/governance/">Governance</a>
+          <a class="btn" href="/gauges/">Gauges</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="showroom" aria-label="Universe showroom">
+      <div class="sunLayer" aria-hidden="true">
+        <div
+          class="sunMount"
+          data-dgb-sun-mount
+          data-sun-mode="fallback"
+          data-sun-asset-id="root-sun-asset-b1"
+          data-sun-satellite-profile="satellite-observational-solar-disc-b8"
+          data-sun-source-baseline="Generation 2 Compass Cockpit Bravo 6 Sun Visual Contract B1 STRONG"
+        >
+          <div class="sunFallback" data-sun-fallback></div>
+        </div>
+      </div>
+
+      <div class="orbitField" aria-hidden="true">
+        <div class="orbit one"></div>
+        <div class="orbit two"></div>
+        <div class="orbit three"></div>
+        <div class="orbit four"></div>
+
+        <span class="planet mercury"></span>
+        <span class="planet venus"></span>
+        <span class="planet earth"></span>
+        <span class="planet mars"></span>
+        <span class="planet outer"></span>
+      </div>
+
+      <div class="copy">
+        <p class="kicker">Showroom · Universe Delivery</p>
+        <h1>The Universe Room</h1>
+        <p class="expression">Sun first. Planets next. The world opens from the center.</p>
+        <p class="lede">
+          This page starts with the proven Compass sun and uses it as the visual spine for the showroom. The planets are reserved now, then built outward with their own meaning, motion, and future links.
+        </p>
+
+        <div class="planetControls" aria-label="Showroom focus controls">
+          <button class="planetControl" type="button" data-focus="sun" aria-pressed="true">Sun</button>
+          <button class="planetControl" type="button" data-focus="inner" aria-pressed="false">Inner Planets</button>
+          <button class="planetControl" type="button" data-focus="outer" aria-pressed="false">Outer Planets</button>
+          <button class="planetControl" type="button" data-focus="future" aria-pressed="false">Future Backlinks</button>
+        </div>
+
+        <div class="readout" aria-live="polite">
+          <strong id="showroomTitle">Sun spine active</strong>
+          <p id="showroomText">
+            The showroom begins with the current successful satellite-observational sun. Nothing else gets built until the center stays clean.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <nav class="routeRail" aria-label="Route rail">
+      <a href="/">Compass</a>
+      <a href="/home/">Home</a>
+      <a href="/prelude/">Prelude</a>
+      <a href="/door/">Door</a>
+      <a href="/products/">Products</a>
+      <a href="/laws/">Laws</a>
+      <a href="/governance/">Governance</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </main>
+
+  <script src="/assets/sun/sun_canvas.js?v=satellite-observational-solar-disc-b8" defer></script>
+  <script src="/runtime/sun_asset_runtime.js?v=sun-asset-runtime-satellite-b8" defer></script>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var copy = {
+        sun: {
+          title: "Sun spine active",
+          text: "The showroom begins with the current successful satellite-observational sun. Nothing else gets built until the center stays clean."
+        },
+        inner: {
+          title: "Inner planets reserved",
+          text: "The inner planets will become the first close-orbit showroom lanes. They stay simple for now so the sun remains the visual authority."
+        },
+        outer: {
+          title: "Outer planets reserved",
+          text: "The outer planets will carry larger scale, distance, and expansion. Their lanes are visible, but their deeper logic comes next."
+        },
+        future: {
+          title: "Backlink capacity reserved",
+          text: "Backlinks will come later. The showroom first needs a clean universe surface before it becomes a navigation network."
+        }
+      };
+
+      function setText(id,value){
+        var node = document.getElementById(id);
+        if(node) node.textContent = value;
+      }
+
+      function applyFocus(name){
+        var next = copy[name] ? name : "sun";
+        var packet = copy[next];
+
+        document.body.setAttribute("data-showroom-focus",next);
+
+        document.querySelectorAll("[data-focus]").forEach(function(button){
+          button.setAttribute("aria-pressed",button.getAttribute("data-focus") === next ? "true" : "false");
+        });
+
+        setText("showroomTitle",packet.title);
+        setText("showroomText",packet.text);
+      }
+
+      function boot(){
+        document.querySelectorAll("[data-focus]").forEach(function(button){
+          button.addEventListener("click",function(){
+            applyFocus(button.getAttribute("data-focus"));
+          });
+        });
+
+        applyFocus("sun");
+      }
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded",boot,{once:true});
+      }else{
+        boot();
+      }
+    })();
+  </script>
+</body>
+</html>

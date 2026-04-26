@@ -1,12 +1,25 @@
 (function () {
   "use strict";
 
-  var RUNTIME_NAME = "DGBCosmicBackgroundRuntime";
-  var VERSION = "near-solar-background-runtime-b1";
+  var RUNTIME_NAME = "DGBCosmicControlRuntime";
+  var VERSION = "cosmic-control-plane-b1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
-  var CANVAS_ID = "dgb-cosmic-background-canvas";
-  var STYLE_ID = "dgb-cosmic-background-runtime-style";
+  var CANVAS_ID = "dgb-cosmic-control-canvas";
+  var STYLE_ID = "dgb-cosmic-control-runtime-style";
+
+  var VIEWS = ["cinematic", "wide", "axis", "paths", "galaxy", "control"];
+
+  var bodies = [
+    { id: "mercury", label: "Mercury", orbitX: 0.16, orbitY: 0.065, radius: 1.6, speed: 0.018, phase: 0.20, depth: 0.82, alpha: 0.42 },
+    { id: "venus", label: "Venus", orbitX: 0.22, orbitY: 0.090, radius: 2.0, speed: 0.014, phase: 1.10, depth: 0.72, alpha: 0.44 },
+    { id: "earth", label: "Earth", orbitX: 0.29, orbitY: 0.118, radius: 2.1, speed: 0.011, phase: 2.10, depth: 0.66, alpha: 0.46 },
+    { id: "mars", label: "Mars", orbitX: 0.37, orbitY: 0.151, radius: 1.8, speed: 0.009, phase: 2.90, depth: 0.58, alpha: 0.40 },
+    { id: "jupiter", label: "Jupiter", orbitX: 0.54, orbitY: 0.220, radius: 3.4, speed: 0.005, phase: 3.80, depth: 0.45, alpha: 0.34 },
+    { id: "saturn", label: "Saturn", orbitX: 0.66, orbitY: 0.270, radius: 3.0, speed: 0.004, phase: 4.55, depth: 0.36, alpha: 0.31 },
+    { id: "uranus", label: "Uranus", orbitX: 0.78, orbitY: 0.315, radius: 2.3, speed: 0.003, phase: 5.20, depth: 0.27, alpha: 0.26 },
+    { id: "neptune", label: "Neptune", orbitX: 0.88, orbitY: 0.355, radius: 2.2, speed: 0.0024, phase: 5.85, depth: 0.22, alpha: 0.24 }
+  ];
 
   var state = {
     version: VERSION,
@@ -16,11 +29,20 @@
     mounted: false,
     running: false,
     reducedMotion: false,
+    view: "cinematic",
     frameCount: 0,
     width: 0,
     height: 0,
     pixelRatio: 1,
-    lastFrameAt: 0,
+    toggles: {
+      planets: true,
+      paths: false,
+      axes: false,
+      nebula: true,
+      milkyWay: true,
+      solarWind: true,
+      scale: true
+    },
     warnings: []
   };
 
@@ -28,11 +50,7 @@
   var context = null;
   var sky = null;
   var animationFrame = 0;
-  var stars = [];
-  var dust = [];
-  var nebula = [];
-  var lane = [];
-  var seed = 781256;
+  var lastDrawAt = 0;
 
   function now() {
     return new Date().toISOString();
@@ -40,7 +58,7 @@
 
   function warn(code, message, payload) {
     var warning = {
-      code: String(code || "COSMIC_BACKGROUND_WARNING"),
+      code: String(code || "COSMIC_CONTROL_WARNING"),
       message: String(message || ""),
       payload: payload || {},
       time: now()
@@ -69,39 +87,36 @@
     if (!window.DGBSpineCanopy) return;
 
     if (typeof window.DGBSpineCanopy.registerSource === "function") {
-      window.DGBSpineCanopy.registerSource("cosmicBackgroundRuntime", {
-        path: "/runtime/cosmic_background_runtime.js",
+      window.DGBSpineCanopy.registerSource("cosmicControlRuntime", {
+        path: "/runtime/cosmic_control_runtime.js",
         version: VERSION,
-        role: "near-solar-background-enhancement",
+        role: "euclidean-view-control-plane",
         owner: "/index.html",
-        protectedFrom: "sun-asset-spine"
+        backgroundOnly: true,
+        sunMutationAllowed: false
       });
     }
 
     if (typeof window.DGBSpineCanopy.registerVisual === "function") {
-      window.DGBSpineCanopy.registerVisual("cosmicBackground", {
+      window.DGBSpineCanopy.registerVisual("cosmicControl", {
         runtime: RUNTIME_NAME,
         version: VERSION,
         mounted: state.mounted,
         running: state.running,
-        owner: "/runtime/cosmic_background_runtime.js",
+        view: state.view,
+        bodies: bodies.length,
         backgroundOnly: true,
         sunMutationAllowed: false
       });
     }
   }
 
-  function random() {
-    seed = (seed * 1664525 + 1013904223) >>> 0;
-    return seed / 4294967296;
+  function query(selector, root) {
+    return (root || document).querySelector(selector);
   }
 
-  function between(min, max) {
-    return min + (max - min) * random();
-  }
-
-  function getSky() {
-    return document.querySelector(".universe-sky");
+  function queryAll(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
   }
 
   function injectStyle() {
@@ -110,32 +125,46 @@
     var style = document.createElement("style");
     style.id = STYLE_ID;
     style.textContent =
-      ".universe-sky{isolation:isolate;}" +
       ".universe-sky>#" + CANVAS_ID + "{" +
       "position:absolute;" +
       "inset:0;" +
-      "z-index:0;" +
+      "z-index:2;" +
       "width:100%;" +
       "height:100%;" +
       "pointer-events:none;" +
-      "opacity:.58;" +
+      "opacity:.48;" +
       "mix-blend-mode:screen;" +
       "}" +
-      ".universe-sky>:not(#" + CANVAS_ID + "){" +
-      "z-index:1;" +
+      "html[data-cosmic-nebula='off'] .nebula-plane{opacity:0!important;}" +
+      "html[data-cosmic-milky-way='off'] .milky-way-plane{opacity:0!important;}" +
+      "html[data-cosmic-solar-wind='off'] .solar-pressure-haze," +
+      "html[data-cosmic-solar-wind='off'] .solar-wind-sheer{opacity:0!important;}" +
+      "html[data-cosmic-planets='off'] .planet-depth{opacity:0!important;}" +
+      ".cosmic-control-panel button[data-active='true']{" +
+      "border-color:rgba(255,217,138,.56)!important;" +
+      "color:#fff8e7!important;" +
+      "box-shadow:0 0 22px rgba(255,217,138,.12)!important;" +
+      "background:rgba(255,217,138,.105)!important;" +
+      "}" +
+      ".cosmic-control-panel button[aria-pressed='true']{" +
+      "border-color:rgba(128,240,182,.42)!important;" +
       "}" +
       "@media (prefers-reduced-motion: reduce){" +
-      ".universe-sky>#" + CANVAS_ID + "{opacity:.46;}" +
+      ".universe-sky>#" + CANVAS_ID + "{opacity:.36;}" +
       "}";
 
     document.head.appendChild(style);
+  }
+
+  function getSky() {
+    return document.querySelector(".universe-sky");
   }
 
   function createCanvas() {
     sky = getSky();
 
     if (!sky) {
-      warn("COSMIC_BACKGROUND_SKY_MISSING", "The .universe-sky host was not found.", {
+      warn("COSMIC_CONTROL_SKY_MISSING", "The .universe-sky host was not found.", {
         version: VERSION
       });
       return false;
@@ -147,22 +176,22 @@
       canvas = document.createElement("canvas");
       canvas.id = CANVAS_ID;
       canvas.setAttribute("aria-hidden", "true");
-      canvas.setAttribute("data-cosmic-background-runtime", VERSION);
-      canvas.setAttribute("data-background-owner", "/runtime/cosmic_background_runtime.js");
-      sky.insertBefore(canvas, sky.firstChild || null);
+      canvas.setAttribute("data-cosmic-control-runtime", VERSION);
+      canvas.setAttribute("data-control-plane", "euclidean");
+      sky.appendChild(canvas);
     }
 
     context = canvas.getContext("2d", { alpha: true });
 
     if (!context) {
-      warn("COSMIC_BACKGROUND_CONTEXT_MISSING", "Canvas 2D context was not available.", {
+      warn("COSMIC_CONTROL_CONTEXT_MISSING", "Canvas 2D context was not available.", {
         version: VERSION
       });
       return false;
     }
 
     state.mounted = true;
-    record("COSMIC_BACKGROUND_CANVAS_MOUNTED", {
+    record("COSMIC_CONTROL_CANVAS_MOUNTED", {
       canvasId: CANVAS_ID,
       version: VERSION
     });
@@ -170,58 +199,11 @@
     return true;
   }
 
-  function buildField() {
-    var i;
-
-    stars = [];
-    dust = [];
-    nebula = [];
-    lane = [];
-
-    for (i = 0; i < 72; i += 1) {
-      stars.push({
-        x: random(),
-        y: random(),
-        r: between(0.35, 1.25),
-        a: between(0.10, 0.56),
-        warmth: random(),
-        drift: between(0.02, 0.12)
-      });
-    }
-
-    for (i = 0; i < 46; i += 1) {
-      dust.push({
-        x: random(),
-        y: random(),
-        r: between(0.25, 0.95),
-        a: between(0.035, 0.18),
-        drift: between(0.03, 0.16)
-      });
-    }
-
-    nebula = [
-      { x: 0.14, y: 0.22, rx: 0.34, ry: 0.22, a: 0.17, hue: "blue", drift: 0.08 },
-      { x: 0.78, y: 0.20, rx: 0.30, ry: 0.20, a: 0.12, hue: "violet", drift: -0.05 },
-      { x: 0.45, y: 0.84, rx: 0.42, ry: 0.22, a: 0.10, hue: "cyan", drift: 0.06 },
-      { x: 0.54, y: 0.46, rx: 0.38, ry: 0.24, a: 0.07, hue: "gold", drift: -0.03 }
-    ];
-
-    for (i = 0; i < 130; i += 1) {
-      lane.push({
-        t: random(),
-        offset: between(-0.11, 0.11),
-        r: between(0.35, 1.35),
-        a: between(0.025, 0.15),
-        warmth: random()
-      });
-    }
-  }
-
   function resize() {
     var rect;
     var ratio;
 
-    if (!canvas || !sky) return;
+    if (!canvas || !sky || !context) return;
 
     rect = sky.getBoundingClientRect();
     ratio = Math.min(window.devicePixelRatio || 1, 1.5);
@@ -238,163 +220,307 @@
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
   }
 
+  function getSunCenter() {
+    var mount = document.querySelector("[data-dgb-sun-mount]");
+    var skyRect = sky ? sky.getBoundingClientRect() : { left: 0, top: 0 };
+    var rect;
+
+    if (!mount || typeof mount.getBoundingClientRect !== "function") {
+      return {
+        x: state.width * 0.58,
+        y: state.height * 0.50
+      };
+    }
+
+    rect = mount.getBoundingClientRect();
+
+    return {
+      x: rect.left - skyRect.left + rect.width / 2,
+      y: rect.top - skyRect.top + rect.height / 2
+    };
+  }
+
+  function getCamera() {
+    if (state.view === "wide") {
+      return { zoom: 0.72, axis: false, paths: true, labels: true, alpha: 0.54 };
+    }
+
+    if (state.view === "axis") {
+      return { zoom: 0.92, axis: true, paths: true, labels: true, alpha: 0.66 };
+    }
+
+    if (state.view === "paths") {
+      return { zoom: 0.86, axis: false, paths: true, labels: true, alpha: 0.62 };
+    }
+
+    if (state.view === "galaxy") {
+      return { zoom: 0.78, axis: false, paths: false, labels: false, alpha: 0.28 };
+    }
+
+    if (state.view === "control") {
+      return { zoom: 0.88, axis: true, paths: true, labels: true, alpha: 0.72 };
+    }
+
+    return { zoom: 1.0, axis: false, paths: false, labels: false, alpha: 0.30 };
+  }
+
   function clear() {
+    if (!context) return;
     context.clearRect(0, 0, state.width, state.height);
   }
 
-  function colorForNebula(hue, alpha) {
-    if (hue === "blue") return "rgba(92,124,255," + alpha + ")";
-    if (hue === "violet") return "rgba(190,96,255," + alpha + ")";
-    if (hue === "cyan") return "rgba(52,178,214," + alpha + ")";
-    return "rgba(255,213,138," + alpha + ")";
-  }
-
-  function drawNebula(time) {
-    nebula.forEach(function (blob) {
-      var pulse = Math.sin(time * 0.00008 + blob.x * 9) * 0.018;
-      var x = (blob.x + Math.sin(time * 0.000018 + blob.drift) * 0.012) * state.width;
-      var y = (blob.y + Math.cos(time * 0.000015 + blob.drift) * 0.010) * state.height;
-      var rx = blob.rx * state.width;
-      var gradient = context.createRadialGradient(x, y, 0, x, y, rx);
-
-      gradient.addColorStop(0, colorForNebula(blob.hue, Math.max(0, blob.a + pulse)));
-      gradient.addColorStop(0.44, colorForNebula(blob.hue, Math.max(0, (blob.a + pulse) * 0.34)));
-      gradient.addColorStop(1, "rgba(0,0,0,0)");
-
-      context.save();
-      context.globalCompositeOperation = "screen";
-      context.scale(1, blob.ry / blob.rx);
-      context.fillStyle = gradient;
-      context.beginPath();
-      context.arc(x, y / (blob.ry / blob.rx), rx, 0, Math.PI * 2);
-      context.fill();
-      context.restore();
-    });
-  }
-
-  function drawMilkyWay(time) {
-    var cx = state.width * 0.50;
-    var cy = state.height * 0.52;
-    var angle = -0.54;
-    var length = Math.max(state.width, state.height) * 1.62;
-    var width = Math.min(state.width, state.height) * 0.24;
-    var i;
+  function drawAxes(center, camera) {
+    if (!state.toggles.axes && !camera.axis) return;
 
     context.save();
-    context.translate(cx, cy);
-    context.rotate(angle);
     context.globalCompositeOperation = "screen";
+    context.strokeStyle = "rgba(255,248,231,0.12)";
+    context.lineWidth = 1;
 
-    var band = context.createLinearGradient(-length / 2, 0, length / 2, 0);
-    band.addColorStop(0, "rgba(255,255,255,0)");
-    band.addColorStop(0.28, "rgba(255,255,255,0.018)");
-    band.addColorStop(0.45, "rgba(142,176,255,0.040)");
-    band.addColorStop(0.52, "rgba(255,228,184,0.030)");
-    band.addColorStop(0.62, "rgba(132,166,255,0.035)");
-    band.addColorStop(0.76, "rgba(255,255,255,0.014)");
-    band.addColorStop(1, "rgba(255,255,255,0)");
-
-    context.fillStyle = band;
     context.beginPath();
-    context.ellipse(0, 0, length / 2, width / 2, 0, 0, Math.PI * 2);
-    context.fill();
+    context.moveTo(0, center.y);
+    context.lineTo(state.width, center.y);
+    context.moveTo(center.x, 0);
+    context.lineTo(center.x, state.height);
+    context.stroke();
 
-    for (i = 0; i < lane.length; i += 1) {
-      var p = lane[i];
-      var wave = Math.sin(time * 0.00006 + p.t * 12) * 0.014;
-      var px = (p.t - 0.5) * length;
-      var py = (p.offset + wave) * width;
-      var alpha = p.a * (p.warmth > 0.66 ? 0.75 : 1);
-      context.fillStyle = p.warmth > 0.68
-        ? "rgba(255,226,175," + alpha + ")"
-        : "rgba(184,207,255," + alpha + ")";
-      context.beginPath();
-      context.arc(px, py, p.r, 0, Math.PI * 2);
-      context.fill();
-    }
+    context.fillStyle = "rgba(255,248,231,0.42)";
+    context.font = "10px system-ui, sans-serif";
+    context.fillText("X-axis", Math.min(state.width - 54, center.x + 14), center.y - 10);
+    context.fillText("Y-axis", center.x + 12, Math.max(18, center.y - 72));
 
     context.restore();
   }
 
-  function drawStars(time) {
-    var i;
+  function drawScale(center) {
+    if (!state.toggles.scale) return;
 
     context.save();
     context.globalCompositeOperation = "screen";
+    context.strokeStyle = "rgba(255,217,138,0.10)";
+    context.fillStyle = "rgba(255,248,231,0.32)";
+    context.lineWidth = 1;
+    context.font = "10px system-ui, sans-serif";
 
-    for (i = 0; i < stars.length; i += 1) {
-      var s = stars[i];
-      var twinkle = 0.72 + Math.sin(time * 0.0012 * s.drift + i) * 0.28;
-      var x = ((s.x + Math.sin(time * 0.000006 * s.drift) * 0.006) % 1) * state.width;
-      var y = ((s.y + Math.cos(time * 0.000005 * s.drift) * 0.005) % 1) * state.height;
+    context.beginPath();
+    context.moveTo(center.x - 72, center.y + 96);
+    context.lineTo(center.x + 72, center.y + 96);
+    context.stroke();
 
-      context.fillStyle = s.warmth > 0.76
-        ? "rgba(255,228,180," + (s.a * twinkle) + ")"
-        : "rgba(220,232,255," + (s.a * twinkle) + ")";
-      context.beginPath();
-      context.arc(x, y, s.r, 0, Math.PI * 2);
-      context.fill();
-    }
+    context.fillText("Euclidean field axis", center.x - 54, center.y + 112);
+    context.restore();
+  }
 
-    for (i = 0; i < dust.length; i += 1) {
-      var d = dust[i];
-      var dx = ((d.x + Math.sin(time * 0.00001 * d.drift) * 0.012) % 1) * state.width;
-      var dy = ((d.y + Math.cos(time * 0.000007 * d.drift) * 0.010) % 1) * state.height;
+  function drawOrbit(center, body, camera) {
+    var base = Math.min(state.width, state.height);
+    var rx = base * body.orbitX * camera.zoom;
+    var ry = base * body.orbitY * camera.zoom;
 
-      context.fillStyle = "rgba(210,226,255," + d.a + ")";
-      context.beginPath();
-      context.arc(dx, dy, d.r, 0, Math.PI * 2);
-      context.fill();
-    }
+    context.save();
+    context.globalCompositeOperation = "screen";
+    context.strokeStyle = "rgba(175,204,255," + (0.052 + body.depth * 0.03) + ")";
+    context.lineWidth = 1;
+
+    context.beginPath();
+    context.ellipse(center.x, center.y, rx, ry, -0.18, 0, Math.PI * 2);
+    context.stroke();
 
     context.restore();
   }
 
-  function drawSolarWind(time) {
-    var gradient;
-    var shear = Math.sin(time * 0.000028) * state.width * 0.025;
+  function getBodyPosition(center, body, camera, time) {
+    var base = Math.min(state.width, state.height);
+    var angle = body.phase + time * body.speed;
+    var rx = base * body.orbitX * camera.zoom;
+    var ry = base * body.orbitY * camera.zoom;
+    var tilt = -0.18;
+    var localX = Math.cos(angle) * rx;
+    var localY = Math.sin(angle) * ry;
+    var cos = Math.cos(tilt);
+    var sin = Math.sin(tilt);
+
+    return {
+      x: center.x + localX * cos - localY * sin,
+      y: center.y + localX * sin + localY * cos,
+      angle: angle
+    };
+  }
+
+  function drawBody(center, body, camera, time) {
+    var position = getBodyPosition(center, body, camera, time);
+    var radius = body.radius * (state.view === "wide" ? 0.85 : 1);
+    var alpha = body.alpha * camera.alpha;
 
     context.save();
     context.globalCompositeOperation = "screen";
-    context.translate(state.width * 0.5 + shear, state.height * 0.51);
-    context.rotate(-0.19);
 
-    gradient = context.createLinearGradient(-state.width * 0.7, 0, state.width * 0.7, 0);
-    gradient.addColorStop(0, "rgba(255,255,255,0)");
-    gradient.addColorStop(0.26, "rgba(255,255,255,0.014)");
-    gradient.addColorStop(0.42, "rgba(130,166,255,0.024)");
-    gradient.addColorStop(0.60, "rgba(255,208,134,0.016)");
-    gradient.addColorStop(0.82, "rgba(255,255,255,0)");
-
-    context.fillStyle = gradient;
+    context.fillStyle = "rgba(180,207,255," + alpha + ")";
     context.beginPath();
-    context.ellipse(0, 0, state.width * 0.92, state.height * 0.13, 0, 0, Math.PI * 2);
+    context.arc(position.x, position.y, radius, 0, Math.PI * 2);
     context.fill();
+
+    context.fillStyle = "rgba(255,231,184," + (alpha * 0.54) + ")";
+    context.beginPath();
+    context.arc(position.x - radius * 0.28, position.y - radius * 0.26, Math.max(0.65, radius * 0.34), 0, Math.PI * 2);
+    context.fill();
+
+    if (camera.labels) {
+      context.fillStyle = "rgba(255,248,231," + Math.min(0.62, alpha + 0.18) + ")";
+      context.font = "10px system-ui, sans-serif";
+      context.fillText(body.label, position.x + radius + 5, position.y + 3);
+    }
 
     context.restore();
   }
 
   function drawFrame(time) {
+    var camera;
+    var center;
+    var t;
+
     if (!context || !canvas) return;
 
     clear();
-    drawNebula(time || 0);
-    drawMilkyWay(time || 0);
-    drawSolarWind(time || 0);
-    drawStars(time || 0);
+
+    camera = getCamera();
+    center = getSunCenter();
+    t = (time || 0) / 1000;
+
+    drawAxes(center, camera);
+
+    if (state.toggles.paths || camera.paths) {
+      bodies.forEach(function (body) {
+        drawOrbit(center, body, camera);
+      });
+    }
+
+    if (state.toggles.planets) {
+      bodies.forEach(function (body) {
+        drawBody(center, body, camera, t);
+      });
+    }
+
+    drawScale(center);
 
     state.frameCount += 1;
-    state.lastFrameAt = time || 0;
+    lastDrawAt = time || 0;
   }
 
   function loop(time) {
     if (!state.running) return;
 
-    if (!state.lastFrameAt || time - state.lastFrameAt >= 83) {
+    if (!lastDrawAt || time - lastDrawAt >= 83) {
       drawFrame(time);
     }
 
     animationFrame = window.requestAnimationFrame(loop);
+  }
+
+  function applyAttributes() {
+    document.documentElement.setAttribute("data-cosmic-view", state.view);
+    document.documentElement.setAttribute("data-cosmic-planets", state.toggles.planets ? "on" : "off");
+    document.documentElement.setAttribute("data-cosmic-paths", state.toggles.paths ? "on" : "off");
+    document.documentElement.setAttribute("data-cosmic-axes", state.toggles.axes ? "on" : "off");
+    document.documentElement.setAttribute("data-cosmic-nebula", state.toggles.nebula ? "on" : "off");
+    document.documentElement.setAttribute("data-cosmic-milky-way", state.toggles.milkyWay ? "on" : "off");
+    document.documentElement.setAttribute("data-cosmic-solar-wind", state.toggles.solarWind ? "on" : "off");
+    document.documentElement.setAttribute("data-cosmic-scale", state.toggles.scale ? "on" : "off");
+  }
+
+  function renderControls() {
+    queryAll("[data-cosmic-view-button]").forEach(function (button) {
+      var active = button.getAttribute("data-cosmic-view-button") === state.view;
+      button.setAttribute("data-active", active ? "true" : "false");
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+
+    queryAll("[data-cosmic-toggle]").forEach(function (button) {
+      var key = button.getAttribute("data-cosmic-toggle");
+      var active = Boolean(state.toggles[key]);
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      button.setAttribute("data-active", active ? "true" : "false");
+    });
+
+    queryAll("[data-cosmic-control-view]").forEach(function (node) {
+      node.textContent = state.view;
+    });
+
+    queryAll("[data-cosmic-control-status]").forEach(function (node) {
+      node.textContent = "Cosmic Control Plane B1 · " + state.view + " view · Euclidean paths bound";
+    });
+  }
+
+  function setView(view) {
+    if (VIEWS.indexOf(view) === -1) view = "cinematic";
+
+    state.view = view;
+
+    if (view === "axis") {
+      state.toggles.axes = true;
+      state.toggles.paths = true;
+    }
+
+    if (view === "paths") {
+      state.toggles.paths = true;
+    }
+
+    if (view === "control") {
+      state.toggles.axes = true;
+      state.toggles.paths = true;
+      state.toggles.planets = true;
+    }
+
+    if (view === "galaxy") {
+      state.toggles.nebula = true;
+      state.toggles.milkyWay = true;
+    }
+
+    applyAttributes();
+    renderControls();
+    drawFrame(performance.now ? performance.now() : Date.now());
+
+    record("COSMIC_CONTROL_VIEW_SET", {
+      view: state.view,
+      version: VERSION
+    });
+
+    registerWithCanopy();
+
+    return state.view;
+  }
+
+  function toggle(key) {
+    if (!Object.prototype.hasOwnProperty.call(state.toggles, key)) return false;
+
+    state.toggles[key] = !state.toggles[key];
+
+    applyAttributes();
+    renderControls();
+    drawFrame(performance.now ? performance.now() : Date.now());
+
+    record("COSMIC_CONTROL_TOGGLE_SET", {
+      key: key,
+      value: state.toggles[key],
+      version: VERSION
+    });
+
+    registerWithCanopy();
+
+    return state.toggles[key];
+  }
+
+  function bindControls() {
+    queryAll("[data-cosmic-view-button]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        setView(button.getAttribute("data-cosmic-view-button"));
+      });
+    });
+
+    queryAll("[data-cosmic-toggle]").forEach(function (button) {
+      button.addEventListener("click", function () {
+        toggle(button.getAttribute("data-cosmic-toggle"));
+      });
+    });
   }
 
   function start() {
@@ -414,9 +540,10 @@
 
     registerWithCanopy();
 
-    record("COSMIC_BACKGROUND_RUNTIME_STARTED", {
+    record("COSMIC_CONTROL_RUNTIME_STARTED", {
       version: VERSION,
-      reducedMotion: state.reducedMotion,
+      view: state.view,
+      bodies: bodies.length,
       backgroundOnly: true,
       sunMutationAllowed: false
     });
@@ -432,19 +559,22 @@
       animationFrame = 0;
     }
 
-    record("COSMIC_BACKGROUND_RUNTIME_STOPPED", {
+    record("COSMIC_CONTROL_RUNTIME_STOPPED", {
       version: VERSION
     });
   }
 
   function boot() {
     state.loaded = true;
+
     injectStyle();
+    applyAttributes();
 
     if (!createCanvas()) return;
 
-    buildField();
     resize();
+    bindControls();
+    renderControls();
     start();
 
     window.addEventListener("resize", function () {
@@ -466,10 +596,25 @@
       mounted: state.mounted,
       running: state.running,
       reducedMotion: state.reducedMotion,
+      view: state.view,
       frameCount: state.frameCount,
       width: state.width,
       height: state.height,
       pixelRatio: state.pixelRatio,
+      bodies: bodies.map(function (body) {
+        return {
+          id: body.id,
+          label: body.label,
+          orbitX: body.orbitX,
+          orbitY: body.orbitY,
+          radius: body.radius,
+          speed: body.speed,
+          phase: body.phase,
+          depth: body.depth,
+          alpha: body.alpha
+        };
+      }),
+      toggles: Object.assign({}, state.toggles),
       backgroundOnly: true,
       sunMutationAllowed: false,
       warnings: state.warnings.slice()
@@ -480,6 +625,8 @@
     name: RUNTIME_NAME,
     version: VERSION,
     rootBootId: ROOT_BOOT_ID,
+    setView: setView,
+    toggle: toggle,
     start: start,
     stop: stop,
     resize: resize,

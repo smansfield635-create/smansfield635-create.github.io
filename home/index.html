@@ -1,18 +1,14 @@
 <!doctype html>
 <!-- TNT — /home/index.html
-     HOME · INDEX — INFORMAL SITE LAYER (PINNED) · LEVEL 4
+     HOME · RUSSIAN DOLL LEVEL 4
      PURPOSE:
-       - Bring Home from Generation 1 compression into Level 4
-       - Preserve interior-orientation role
-       - Keep Home as centered interior surface, not the Door and not the whole system
-       - Add Compass / North Star / Legend / Interior Ledger / Route Map
-       - Keep PLATFORM vs ENGINEERING lens (URL-only lane; NO reload)
-       - Trilingual UI (EN/中文/ES) (NO reload)
-       - Single-open accordion (tap same closes)
-       - Switching LANG or LANE does NOT reload and does NOT close open row
-       - No modals/overlays; no inline onclick; addEventListener only
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
+       - Compress Home into nested Russian doll structure
+       - Preserve Level 4 content without always-visible crowding
+       - Keep Home as interior-orientation chamber, not the Door
+       - Preserve EN/中文/ES, PLATFORM/ENGINEERING, URL state carry, LS boundary
+       - No modals, no overlays, no inline onclick
+       - addEventListener only
+       - gd_* localStorage keys only: gd_lang, gd_style, gd_time, gd_depth
 -->
 
 <html lang="en">
@@ -32,45 +28,30 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:132px;
-
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-
   --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
   --soft:rgba(255,255,255,.62);
-
-  --onyx0:rgba(6,8,10,.96);
-  --onyx1:rgba(10,12,16,.86);
-
   --crimson:rgba(120,0,22,.28);
   --festival:rgba(255,43,43,.12);
-  --opalV:rgba(90,40,120,.10);
   --skyBlue:rgba(83,119,255,.16);
-
   --gold:rgba(201,162,74,.62);
   --goldSolid:rgba(201,162,74,.92);
   --goldGlow:rgba(201,162,74,.22);
   --goldGlowSoft:rgba(201,162,74,.14);
-
   --green:rgba(128,240,182,.92);
-  --blue:rgba(147,197,253,.92);
-  --red:rgba(255,154,154,.92);
-
   --shadowA:0 24px 90px rgba(0,0,0,.58);
   --shadowB:0 16px 56px rgba(0,0,0,.62);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== Top controls ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
   display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
+  gap:12px;z-index:240;pointer-events:none;
 }
 .top .left,.top .right{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
@@ -87,16 +68,12 @@ body::before,body::after{pointer-events:none!important}
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
+  position:relative;overflow:hidden;touch-action:manipulation;
   box-shadow:var(--shadowC);
 }
 .btn:active{transform:translateY(1px)}
 .btn::after{
-  content:"";
-  position:absolute;inset:-2px;
-  border-radius:18px;
-  pointer-events:none;
+  content:"";position:absolute;inset:-2px;border-radius:18px;pointer-events:none;
   box-shadow:
     0 0 0 1px rgba(255,255,255,.10),
     0 0 18px var(--goldGlowSoft),
@@ -117,59 +94,42 @@ body::before,body::after{pointer-events:none!important}
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow: var(--shadowC);
+  background:rgba(0,0,0,.16);
+  box-shadow:var(--shadowC);
 }
 .seg button{
   appearance:none;border:0;background:transparent;color:var(--mut);
   padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
   letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;
 }
 .seg button[aria-pressed="true"]{
   color:var(--ink);
   background:
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 60%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.14);
 }
 .seg button[aria-pressed="true"]::after{
-  content:"";
-  position:absolute;inset:2px;border-radius:14px;
-  pointer-events:none;
-  box-shadow:0 0 20px var(--goldGlowSoft);
-  opacity:.95;
+  content:"";position:absolute;inset:2px;border-radius:14px;pointer-events:none;
+  box-shadow:0 0 20px var(--goldGlowSoft);opacity:.95;
 }
 
-/* ===== Page ===== */
 .page{
   width:min(1120px,94vw);
   margin:0 auto;
   padding:104px 0 calc(var(--dockH) + 18px);
   display:flex;flex-direction:column;gap:12px;
-  position:relative;
-  z-index:10;
+  position:relative;z-index:10;
 }
 
 .backdrop{
-  position:absolute;
-  left:50%;
-  top:68px;
-  transform:translateX(-50%);
-  width:min(1180px,96vw);
-  height:calc(100% - 108px);
-  border-radius:34px;
-  pointer-events:none;
-  z-index:0;
-  overflow:hidden;
+  position:absolute;left:50%;top:68px;transform:translateX(-50%);
+  width:min(1180px,96vw);height:calc(100% - 108px);
+  border-radius:34px;pointer-events:none;z-index:0;overflow:hidden;
 }
 .backdrop::before{
-  content:"";
-  position:absolute;inset:0;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:34px;
+  content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.08);border-radius:34px;
   background:
     radial-gradient(circle at 16% 20%, rgba(201,162,74,.10), transparent 58%),
     radial-gradient(circle at 76% 18%, rgba(83,119,255,.15), transparent 62%),
@@ -182,8 +142,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.92;
 }
 .backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
+  content:"";position:absolute;inset:-18%;
   background:
     radial-gradient(circle at 20% 34%, rgba(255,43,43,.14), transparent 44%),
     radial-gradient(circle at 82% 30%, rgba(83,119,255,.16), transparent 48%),
@@ -192,229 +151,130 @@ body::before,body::after{pointer-events:none!important}
       rgba(201,162,74,.14), transparent 12%,
       rgba(83,119,255,.12), transparent 24%,
       rgba(90,40,120,.10), transparent 38%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter:blur(1px);
-  opacity:.72;
+      transparent 100%);
+  filter:blur(1px);opacity:.72;
 }
 
-/* ===== Header ===== */
 .header{
-  position:relative;
-  z-index:2;
-  border:1px solid var(--stroke);
-  border-radius:24px;
+  position:relative;z-index:2;
+  border:1px solid var(--stroke);border-radius:24px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 30%, var(--skyBlue), transparent 74%),
     radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
     radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadowA);
-  padding:16px 16px 14px;
-  overflow:hidden;
+  backdrop-filter:blur(10px);box-shadow:var(--shadowA);
+  padding:16px 16px 14px;overflow:hidden;
 }
 .header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:24px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     radial-gradient(circle at 50% 50%, transparent 0 72%, rgba(201,162,74,.10) 78%, transparent 84%),
     conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.12) 0 6%,
       transparent 6% 12%,
       rgba(201,162,74,.08) 12% 18%,
-      transparent 18% 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+      transparent 18% 100%);
   opacity:.26;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
+  mask:radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),linear-gradient(#000,#000);
+  -webkit-mask:radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),linear-gradient(#000,#000);
 }
-
 .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
 .t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink);position:relative}
 .s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px;position:relative}
 .rule{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
+  margin-top:12px;padding:12px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 58%),
     radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
     linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
-  font-size:13.25px;
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
-  position:relative;
+  font-size:13.25px;color:rgba(255,255,255,.86);line-height:1.45;position:relative;
 }
-
-.stateRow{
-  margin-top:12px;
-  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
-}
+.stateRow{margin-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .statePill{
   display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  background:rgba(0,0,0,.16);color:rgba(255,255,255,.78);
+  font-weight:950;box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
 .band{
+  position:relative;z-index:2;padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;color:rgba(255,255,255,.90);
+}
+
+.dollShell{
   position:relative;z-index:2;
-  padding:10px 12px;border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-weight:980;letter-spacing:.25px;
-  color:rgba(255,255,255,.90);
-}
-
-/* Level 4 cards */
-.l4Grid{
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.l4Card{
   border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+  border-radius:26px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.09), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(83,119,255,.10), transparent 66%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.07), transparent 64%),
-    linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.92));
+    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 58%),
+    linear-gradient(145deg, rgba(17,22,28,.80), rgba(11,15,20,.94));
   box-shadow:var(--shadowA);
-  padding:16px;
-  position:relative;
-  overflow:hidden;
+  padding:14px;
 }
-.l4Card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.60;
-}
-.l4Card h2{
-  margin:0 0 8px;
-  color:var(--ink);
-  font-size:17px;
-  line-height:1;
-  letter-spacing:.2px;
-  position:relative;
-}
-.l4Card p{
-  margin:0;
-  color:rgba(255,255,255,.84);
-  line-height:1.58;
-  font-size:14.25px;
-  position:relative;
-}
-.legendStack{
+.routeCaps{
   display:grid;
-  gap:8px;
-  margin-top:12px;
-  position:relative;
-}
-.legendItem{
-  display:grid;
-  grid-template-columns:88px 1fr;
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
-  border-top:1px solid rgba(255,255,255,.08);
-  padding-top:8px;
-  color:rgba(255,255,255,.80);
-  line-height:1.45;
-  font-size:13.25px;
 }
-.legendItem strong{
-  color:var(--goldSolid);
-  font-size:11px;
-  letter-spacing:1.4px;
-  text-transform:uppercase;
-}
-
-/* Accordion */
-.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
-.row{
+.cap{
   border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+  border-radius:20px;
+  padding:14px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(83,119,255,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
-  overflow:hidden;
-  position:relative;
-}
-.row::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.55;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px 16px;
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.16);
   cursor:pointer;
+  text-align:left;
+  color:var(--ink);
+  min-height:118px;
+  position:relative;
+  overflow:hidden;
   -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
 }
-.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.mark{
+.cap::after{
+  content:"";position:absolute;inset:-2px;border-radius:22px;pointer-events:none;
+  box-shadow:0 0 22px rgba(201,162,74,.10);
+  opacity:.62;
+}
+.cap[aria-expanded="true"]{
+  border-color:rgba(201,162,74,.34);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.98));
+}
+.capMark{
   width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
   background:var(--c);
   box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;
+  margin-bottom:10px;
 }
-.titleBlock{min-width:0}
-.q{
-  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.subt{
-  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
-  color:rgba(255,255,255,.86);max-width:92ch;
-}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  position:relative;overflow:hidden;
-  flex:0 0 auto;margin-top:2px;
-}
-.chev::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:16px;
-  pointer-events:none;
-  box-shadow:0 0 18px var(--goldGlowSoft);
-  opacity:.65;
-}
-.body{
-  display:none;
-  padding:16px 16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
-  background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
-}
-.row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
-.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:14.75px}
-.pdesc + .pdesc{margin-top:12px}
+.cap h3{margin:0;color:var(--ink);font-size:17px;line-height:1.05;letter-spacing:.1px}
+.cap p{margin:8px 0 0;color:rgba(255,255,255,.76);font-size:13.25px;line-height:1.38}
 
-.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.dollBody{
+  display:none;
+  margin-top:12px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 26% 18%, rgba(255,43,43,.08), transparent 58%),
+    radial-gradient(circle at 72% 26%, rgba(83,119,255,.10), transparent 62%),
+    linear-gradient(145deg, rgba(10,12,16,.82), rgba(6,8,10,.94));
+  box-shadow:var(--shadowB);
+  padding:16px;
+}
+.dollBody[data-open="true"]{display:block}
+.dollTitle{margin:0 0 8px;font-size:22px;line-height:1.05;color:var(--ink);letter-spacing:.1px}
+.dollIntro{margin:0;color:rgba(255,255,255,.88);font-size:14.75px;line-height:1.62}
+
+.subBubbles{margin-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
@@ -426,112 +286,68 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
 }
 .bubble::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:20px;
-  pointer-events:none;
-  box-shadow:0 0 22px rgba(201,162,74,.10);
-  opacity:.60;
+  content:"";position:absolute;inset:-2px;border-radius:20px;
+  pointer-events:none;box-shadow:0 0 22px rgba(201,162,74,.10);opacity:.60;
 }
 .bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
-.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.25px}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.62;display:none;font-size:14px}
 .bubble.open p{display:block}
 
-.actions{
-  margin-top:14px;
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;
-}
-.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
-
-/* Ledger */
-.ledger{
-  position:relative;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.ledgerRow{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
-    linear-gradient(145deg, rgba(17,22,28,.74), rgba(11,15,20,.90));
-  box-shadow:var(--shadowB);
-  display:grid;
-  grid-template-columns:180px 1fr 122px;
-  gap:12px;
-  align-items:center;
-  padding:14px;
-}
-.ledgerRow strong{
-  color:var(--ink);
-  font-size:14px;
-  letter-spacing:.2px;
-}
-.ledgerRow span{
-  color:rgba(255,255,255,.80);
-  font-size:13.25px;
-  line-height:1.45;
-}
-.status{
-  justify-self:end;
+.innerControls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.innerBtn{
+  border:1px solid rgba(255,255,255,.12);
   border-radius:999px;
-  padding:7px 10px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(128,240,182,.10);
-  color:var(--green)!important;
+  padding:9px 11px;
+  background:rgba(0,0,0,.18);
+  color:rgba(255,255,255,.78);
+  cursor:pointer;
   font-weight:950;
-  font-size:11px!important;
-  letter-spacing:1px;
+  font-size:12px;
+  letter-spacing:.55px;
   text-transform:uppercase;
 }
-
-/* Route map */
-.routeMap{
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:10px;
+.innerBtn[aria-pressed="true"]{
+  color:var(--ink);
+  border-color:rgba(201,162,74,.38);
+  background:rgba(201,162,74,.10);
+  box-shadow:0 0 18px var(--goldGlowSoft);
 }
-.routeMap a{
-  min-height:48px;
+.innerPanel{
+  display:none;
+  margin-top:10px;
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  box-shadow:var(--shadowC);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:rgba(255,255,255,.82);
-  font-weight:950;
-  font-size:13px;
-  letter-spacing:.2px;
-  position:relative;
-  overflow:hidden;
+  background:rgba(0,0,0,.18);
+  padding:14px;
+}
+.innerPanel[data-open="true"]{display:block}
+.innerPanel h4{margin:0 0 8px;color:var(--goldSolid);font-size:14px;letter-spacing:.8px;text-transform:uppercase}
+.innerPanel p{margin:0;color:rgba(255,255,255,.82);line-height:1.58;font-size:14px}
+.innerGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.innerBox{border-top:1px solid rgba(255,255,255,.08);padding-top:8px;color:rgba(255,255,255,.80);line-height:1.45;font-size:13.25px}
+.innerBox strong{display:block;color:var(--goldSolid);font-size:11px;letter-spacing:1.3px;text-transform:uppercase;margin-bottom:4px}
+.routeMap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+.routeMap a{
+  min-height:42px;border:1px solid rgba(255,255,255,.10);border-radius:16px;
+  background:linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.82);
+  font-weight:950;font-size:12px;letter-spacing:.2px;position:relative;overflow:hidden;
 }
 .routeMap a::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:20px;
-  pointer-events:none;
-  box-shadow:0 0 20px var(--goldGlowSoft);
-  opacity:.62;
+  content:"";position:absolute;inset:-2px;border-radius:18px;pointer-events:none;
+  box-shadow:0 0 16px var(--goldGlowSoft);opacity:.62;
 }
+.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
 
-/* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
+  z-index:220;width:min(980px,94vw);
   padding:10px 12px;border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
@@ -540,28 +356,26 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+.dock .btn{width:100%;padding:10px;border-radius:999px;white-space:nowrap}
 
 @media (max-width:900px){
-  .l4Grid{grid-template-columns:1fr}
-  .ledgerRow{grid-template-columns:1fr}
-  .status{justify-self:start}
+  .routeCaps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .subBubbles{grid-template-columns:1fr}
+  .innerGrid{grid-template-columns:1fr}
   .routeMap{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:620px){
   .top{position:absolute}
   .top .left,.top .right{width:100%}
   .seg{max-width:100%;overflow:auto}
-  .q{white-space:normal}
 }
 @media (max-width:520px){
   :root{--dockH:148px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .routeCaps{grid-template-columns:1fr}
   .routeMap{grid-template-columns:1fr}
-  .legendItem{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -595,52 +409,18 @@ body::before,body::after{pointer-events:none!important}
     <h1 class="t" id="ht">INTERIOR ORIENTATION</h1>
     <p class="s" id="hs"></p>
     <div class="rule" id="rule"></div>
-
     <div class="stateRow" aria-label="State">
       <div class="statePill" id="laneState">—</div>
       <div class="statePill" id="langState">—</div>
     </div>
   </section>
 
-  <div class="band" id="l4Band">LEVEL 4 STRUCTURE</div>
+  <div class="band" id="band">OPEN ONE DOLL</div>
 
-  <section class="l4Grid" aria-label="Home Level 4 structure">
-    <article class="l4Card">
-      <h2 id="compassTitle">Compass</h2>
-      <p id="compassBody"></p>
-      <div class="legendStack">
-        <div class="legendItem"><strong id="northLabel">North</strong><span id="northBody"></span></div>
-        <div class="legendItem"><strong id="eastLabel">East</strong><span id="eastBody"></span></div>
-        <div class="legendItem"><strong id="southLabel">South</strong><span id="southBody"></span></div>
-        <div class="legendItem"><strong id="westLabel">West</strong><span id="westBody"></span></div>
-      </div>
-    </article>
-
-    <article class="l4Card">
-      <h2 id="northStarTitle">North Star</h2>
-      <p id="northStarBody"></p>
-      <div class="legendStack">
-        <div class="legendItem"><strong id="purposeLabel">Purpose</strong><span id="purposeBody"></span></div>
-        <div class="legendItem"><strong id="methodLabel">Method</strong><span id="methodBody"></span></div>
-        <div class="legendItem"><strong id="failureLabel">Failure</strong><span id="failureBody"></span></div>
-      </div>
-    </article>
+  <section class="dollShell" aria-label="Home Russian doll controls">
+    <div class="routeCaps" id="caps"></div>
+    <div class="dollBody" id="dollBody" data-open="false"></div>
   </section>
-
-  <div class="band" id="band">HOME ZONES (OPEN ONE)</div>
-  <div class="list" id="list"></div>
-
-  <div class="band" id="ledgerBand">HOME LEDGER</div>
-  <section class="ledger" id="ledger" aria-label="Home ledger"></section>
-
-  <div class="band" id="routeBand">ROUTE MAP</div>
-  <nav class="routeMap" aria-label="Home route map">
-    <a data-route="/index.html" href="/index.html" id="routeCompass">COMPASS</a>
-    <a data-route="/prelude/" href="/prelude/" id="routePrelude">PRELUDE</a>
-    <a data-route="/explore/" href="/explore/" id="routeExplore">EXPLORE</a>
-    <a data-route="/products/" href="/products/" id="routeProducts">PRODUCTS</a>
-    <a data-route="/gauges/" href="/gauges/" id="routeGauges">GAUGES</a>
-  </nav>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
@@ -654,22 +434,20 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== State (gd_* only; pinned informal layer) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
-  var time = qs.get("time") || LS.getItem("gd_time") || "now";
-  var lane = qs.get("lane") || "platform"; // URL-only
+  var lang=qs.get("lang")||LS.getItem("gd_lang")||"en";
+  var time=qs.get("time")||LS.getItem("gd_time")||"now";
+  var lane=qs.get("lane")||"platform";
 
-  // pinned layer
   var style="informal";
   var depth="explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(lane!=="platform"&&lane!=="engineering") lane="platform";
 
   try{
     LS.setItem("gd_lang",lang);
@@ -691,591 +469,372 @@ body::before,body::after{pointer-events:none!important}
     return "?"+p.toString();
   }
 
-  function setPressed(ids, activeId){
-    for(var i=0;i<ids.length;i++){
-      var el=document.getElementById(ids[i]);
-      if(!el) continue;
-      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
-    }
+  function pick3(en,zh,es){return lang==="zh"?zh:(lang==="es"?es:en)}
+  function setPressed(ids,activeId){
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.setAttribute("aria-pressed",id===activeId?"true":"false");
+    });
   }
-
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
   function laneLabel(){
-    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+    return lang==="zh"?(lane==="engineering"?"工程":"平台"):
+      lang==="es"?(lane==="engineering"?"INGENIERÍA":"PLATAFORMA"):
+      lane==="engineering"?"ENGINEERING":"PLATFORM";
   }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  // ===== ROUTES =====
   var ROUTES={
     compass:"/index.html",
     door:"/door/",
-    home:"/home/",
     prelude:"/prelude/",
     explore:"/explore/",
-    frontier:"/frontier/",
     products:"/products/",
-    show:"/show/",
     gauges:"/gauges/",
     laws:"/laws/",
-    governance:"/governance/",
-    about:"/about/"
+    governance:"/governance/"
   };
 
-  // ===== Header copy =====
   var HEAD={
     en:{
       platform:{
-        hs:"Home is the interior orientation layer. It confirms the visitor has crossed the Door, holds the center, and routes cleanly without overexplaining the full system.",
-        rule:"Rule: Home stabilizes first. It should orient the visitor, reveal categories on request, and send them deeper only after the center is clear."
+        hs:"Home is the first interior chamber after the Door: calm center, clear route, optional depth.",
+        rule:"Rule: open one doll at a time. Home orients first, then unfolds only what the visitor asks to see."
       },
       engineering:{
-        hs:"Engineering view: Home is the interior state router. It keeps route labels compact, carries state forward, and prevents the first interior page from becoming a total-system dump.",
-        rule:"Rule: route state must carry cleanly. Home may compress, expose, and route; it must not overload or overwrite downstream page authority."
+        hs:"Engineering view: Home is a compact interior-state router with nested disclosure and state-carry links.",
+        rule:"Rule: Home may compress, expose, and route; it must not overload or overwrite downstream authority."
       }
     },
     zh:{
       platform:{
-        hs:"Home 是内部定位层。它确认访问者已经越过门，保持中心，并在不过度解释整个系统的情况下清晰路由。",
-        rule:"规则：Home 先稳定。它应定位访问者、按需展开类别，并在中心清楚后再引导深入。"
+        hs:"Home 是门之后的第一个内部房间：冷静中心、清晰路线、可选深度。",
+        rule:"规则：一次只打开一个套娃。Home 先定位，只展开访问者要求看到的内容。"
       },
       engineering:{
-        hs:"工程视图：Home 是内部状态路由器。它保持路由标签压缩，向前携带状态，并防止第一个内部页面变成全系统倾倒。",
-        rule:"规则：路由状态必须干净携带。Home 可以压缩、展开、路由；不可过载或覆盖下游页面权威。"
+        hs:"工程视图：Home 是紧凑的内部状态路由器，使用嵌套展开与状态携带链接。",
+        rule:"规则：Home 可以压缩、展开、路由；不可过载或覆盖下游权威。"
       }
     },
     es:{
       platform:{
-        hs:"Home es la capa de orientación interior. Confirma que el visitante cruzó la Puerta, sostiene el centro y enruta limpiamente sin explicar todo el sistema.",
-        rule:"Regla: Home estabiliza primero. Debe orientar, revelar categorías cuando se pidan y enviar más profundo solo después de aclarar el centro."
+        hs:"Home es la primera cámara interior después de la Puerta: centro calmado, ruta clara, profundidad opcional.",
+        rule:"Regla: abrir una muñeca a la vez. Home orienta primero y despliega solo lo que se solicita."
       },
       engineering:{
-        hs:"Vista de ingeniería: Home es el enrutador de estado interior. Mantiene etiquetas compactas, transporta estado y evita que la primera página interior se vuelva un volcado total.",
-        rule:"Regla: el estado de ruta debe viajar limpio. Home puede comprimir, exponer y enrutar; no debe sobrecargar ni sobrescribir autoridad posterior."
+        hs:"Vista de ingeniería: Home es un enrutador compacto de estado interior con divulgación anidada y enlaces con estado.",
+        rule:"Regla: Home puede comprimir, exponer y enrutar; no debe sobrecargar ni reemplazar autoridad posterior."
       }
     }
   };
 
-  var L4={
-    en:{
-      level:"LEVEL 4 STRUCTURE",
-      compassTitle:"Compass",
-      compassBody:"Home is the first interior chamber after the Door. It is not the whole map. It is the stabilizing center that tells the visitor where they are and where they can go next.",
-      north:"North", northBody:"Identity, center, current location, and the boundary between Door and interior.",
-      east:"East", eastBody:"Forward routes: Prelude, Explore, Frontier, Products, and future movement.",
-      south:"South", southBody:"Stability, readability, restraint, and no-overload visitor protection.",
-      west:"West", westBody:"Pressure control: prevent overexpression, broken routes, stale labels, and confusing entry paths.",
-      northStarTitle:"North Star",
-      northStarBody:"Home is healthy when a visitor can understand the interior position quickly, choose a route cleanly, and remain oriented without needing the entire system explained.",
-      purpose:"Purpose", purposeBody:"Orient the visitor after entry and keep the interior readable.",
-      method:"Method", methodBody:"Compress categories into clear route labels, then reveal meaning only when requested.",
-      failure:"Failure", failureBody:"Overexplaining, hiding routes, duplicating the Door, or forcing the whole system into the first interior page.",
-      ledger:"HOME LEDGER",
-      route:"ROUTE MAP"
-    },
-    zh:{
-      level:"第四级结构",
-      compassTitle:"罗盘",
-      compassBody:"Home 是门之后的第一个内部房间。它不是完整地图，而是稳定中心，告诉访问者自己在哪里以及下一步可以去哪里。",
-      north:"北", northBody:"身份、中心、当前位置，以及门与内部之间的边界。",
-      east:"东", eastBody:"前进路由：Prelude、Explore、Frontier、Products 与未来运动。",
-      south:"南", southBody:"稳定、可读性、克制，以及防止访问者过载。",
-      west:"西", westBody:"压力控制：防止过度表达、断路由、陈旧标签与混乱入口。",
-      northStarTitle:"北星",
-      northStarBody:"当访问者能快速理解内部位置、干净选择路线，并且不需要解释整个系统也能保持方向时，Home 就是健康的。",
-      purpose:"目的", purposeBody:"进入后定位访问者，并保持内部可读。",
-      method:"方法", methodBody:"把类别压缩成清晰路由标签，然后只在请求时展开意义。",
-      failure:"失败", failureBody:"过度解释、隐藏路由、复制 Door，或把整个系统塞进第一个内部页面。",
-      ledger:"HOME 账本",
-      route:"路由图"
-    },
-    es:{
-      level:"ESTRUCTURA NIVEL 4",
-      compassTitle:"Brújula",
-      compassBody:"Home es la primera cámara interior después de la Puerta. No es todo el mapa; es el centro estabilizador que dice dónde estás y adónde puedes ir.",
-      north:"Norte", northBody:"Identidad, centro, ubicación actual y límite entre Puerta e interior.",
-      east:"Este", eastBody:"Rutas hacia adelante: Prelude, Explore, Frontier, Products y movimiento futuro.",
-      south:"Sur", southBody:"Estabilidad, legibilidad, contención y protección contra sobrecarga.",
-      west:"Oeste", westBody:"Control de presión: evitar sobreexpresión, rutas rotas, etiquetas obsoletas y entradas confusas.",
-      northStarTitle:"Estrella Norte",
-      northStarBody:"Home es sano cuando el visitante entiende rápido la posición interior, elige una ruta limpiamente y permanece orientado sin explicar todo el sistema.",
-      purpose:"Propósito", purposeBody:"Orientar después de entrar y mantener legible el interior.",
-      method:"Método", methodBody:"Comprimir categorías en etiquetas claras y revelar significado solo cuando se pida.",
-      failure:"Falla", failureBody:"Sobreexplicar, ocultar rutas, duplicar la Puerta o forzar todo el sistema en la primera página interior.",
-      ledger:"REGISTRO HOME",
-      route:"MAPA DE RUTAS"
-    }
-  };
+  function P(en,zh,es){return{en:en,zh:zh,es:es}}
 
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-
-  // ===== Home zones =====
   var ZONES=[
     {
-      id:"orientation", c:"#93c5fd",
+      id:"orientation",c:"#93c5fd",
       t:P("Orientation","定位","Orientación"),
       s:P("Know where you are after the Door.","越过门之后知道自己在哪里。","Saber dónde estás después de la Puerta."),
       platform:{
-        intro:P(
-          "Orientation is the first job of Home. The visitor should immediately understand that they are inside the system, not still outside the Door.",
-          "定位是 Home 的第一职责。访问者应立刻知道自己已经在系统内部，而不是还在门外。",
-          "Orientación es la primera función de Home. El visitante debe entender que ya está dentro del sistema, no fuera de la Puerta."
-        ),
-        b1:{h:P("Current position","当前位置","Posición actual"), p:P("Home confirms the interior has begun and the Door has been crossed.","Home 确认内部已开始，门已被越过。","Home confirma que el interior comenzó y la Puerta fue cruzada.")},
-        b2:{h:P("Plain center","清晰中心","Centro claro"), p:P("The page names the center before expanding the system.","页面先命名中心，再展开系统。","La página nombra el centro antes de expandir el sistema.")},
-        b3:{h:P("No overload","不过载","Sin sobrecarga"), p:P("The full map stays folded until the visitor asks for more.","完整地图保持折叠，直到访问者要求更多。","El mapa completo permanece plegado hasta que se pida más.")} },
+        intro:P("Orientation confirms the visitor is inside the system, not still outside the Door.","定位确认访问者已经在系统内部，而不是还在门外。","Orientación confirma que el visitante está dentro del sistema, no fuera de la Puerta."),
+        b:[P("Current position","当前位置","Posición actual"),P("Home confirms the interior has begun.","Home 确认内部已开始。","Home confirma que el interior comenzó."),
+           P("Plain center","清晰中心","Centro claro"),P("The page names the center before expanding the system.","页面先命名中心，再展开系统。","La página nombra el centro antes de expandir."),
+           P("No overload","不过载","Sin sobrecarga"),P("The full map stays folded until requested.","完整地图保持折叠，直到被请求。","El mapa completo queda plegado hasta solicitarse.")]
+      },
       engineering:{
-        intro:P(
-          "Orientation is a state assertion: user has moved from root entry into interior routing. The page must preserve state and avoid route ambiguity.",
-          "定位是状态断言：用户已从根入口移动到内部路由。页面必须保留状态并避免路由歧义。",
-          "Orientación es una aserción de estado: el usuario pasó de entrada raíz a enrutamiento interior. Debe preservar estado y evitar ambigüedad."
-        ),
-        b1:{h:P("State","状态","Estado"), p:P("INTERIOR_ROLE=ACTIVE; DOOR_ROLE=PREVIOUS_ENTRY.","INTERIOR_ROLE=ACTIVE；DOOR_ROLE=PREVIOUS_ENTRY。","INTERIOR_ROLE=ACTIVE; DOOR_ROLE=PREVIOUS_ENTRY.")},
-        b2:{h:P("Route clarity","路由清晰","Claridad"), p:P("Every visible route must point to a real page with state carry.","每个可见路由必须指向真实页面并携带状态。","Cada ruta visible apunta a página real con estado.")},
-        b3:{h:P("Compression","压缩","Compresión"), p:P("Labels first; explanations unfold only inside requested zones.","标签优先；解释只在被请求的区块中展开。","Etiquetas primero; explicación solo en zonas solicitadas.")} }
+        intro:P("Orientation is a state assertion: root entry has moved into interior routing.","定位是状态断言：根入口已移动到内部路由。","Orientación es aserción de estado: entrada raíz pasó a ruta interior."),
+        b:[P("State","状态","Estado"),P("INTERIOR_ROLE=ACTIVE; DOOR_ROLE=PREVIOUS_ENTRY.","INTERIOR_ROLE=ACTIVE；DOOR_ROLE=PREVIOUS_ENTRY。","INTERIOR_ROLE=ACTIVE; DOOR_ROLE=PREVIOUS_ENTRY."),
+           P("Route clarity","路由清晰","Claridad"),P("Every visible route points to a real page with state carry.","每个可见路由指向真实页面并携带状态。","Cada ruta visible apunta a página real con estado."),
+           P("Compression","压缩","Compresión"),P("Labels first; explanations unfold only inside requested dolls.","标签优先；解释只在请求的套娃内展开。","Etiquetas primero; explicación en muñecas solicitadas.")]
+      }
     },
-
     {
-      id:"center", c:"#c9a24a",
+      id:"center",c:"#c9a24a",
       t:P("Center Hold","中心保持","Sostener centro"),
       s:P("Home stabilizes without overexpressing.","Home 稳定但不过度表达。","Home estabiliza sin sobreexpresar."),
       platform:{
-        intro:P(
-          "Home should not perform every page’s job. It gives enough meaning to choose a path, then lets the visitor move.",
-          "Home 不应承担每个页面的职责。它给足以选择路径的意义，然后让访问者移动。",
-          "Home no debe hacer el trabajo de todas las páginas. Da sentido suficiente para elegir camino y avanzar."
-        ),
-        b1:{h:P("Restraint","克制","Contención"), p:P("The center is stable because it does less, not because it says everything.","中心稳定是因为它少做，而不是因为它说尽一切。","El centro es estable porque hace menos, no porque diga todo.")},
-        b2:{h:P("Interior tone","内部语气","Tono interior"), p:P("Readable, calm, and direct. The page should not compete with the root Door.","可读、冷静、直接。页面不应与根门竞争。","Legible, calma y directa. No compite con la Puerta raíz.")},
-        b3:{h:P("Visitor control","访问者控制","Control del visitante"), p:P("Visitors choose depth through labels, accordions, and routes.","访问者通过标签、折叠项和路由选择深度。","El visitante elige profundidad por etiquetas, acordeones y rutas.")} },
+        intro:P("Center Hold keeps Home from doing every page’s job. It gives enough meaning to choose a path, then lets the visitor move.","中心保持防止 Home 承担每个页面的职责。它给足以选择路径的意义，然后让访问者移动。","Sostener centro evita que Home haga el trabajo de todas las páginas."),
+        b:[P("Restraint","克制","Contención"),P("The center is stable because it does less, not because it says everything.","中心稳定是因为少做，而不是说尽一切。","El centro es estable porque hace menos."),
+           P("Interior tone","内部语气","Tono interior"),P("Readable, calm, and direct.","可读、冷静、直接。","Legible, calmo y directo."),
+           P("Visitor control","访问者控制","Control"),P("Visitors choose depth through nested capsules.","访问者通过嵌套胶囊选择深度。","El visitante elige profundidad por cápsulas.")]
+      },
       engineering:{
-        intro:P(
-          "Center Hold prevents Home from becoming a monolith. It preserves low cognitive load while retaining route completeness.",
-          "中心保持防止 Home 变成单体。它保持低认知负荷，同时保留完整路由。",
-          "Sostener centro evita que Home sea monolito. Mantiene baja carga cognitiva y rutas completas."
-        ),
-        b1:{h:P("Load rule","负荷规则","Regla de carga"), p:P("Visible default stays compact; depth is opt-in.","默认可见保持紧凑；深度为主动选择。","Visible por defecto compacto; profundidad opt-in.")},
-        b2:{h:P("Authority rule","权威规则","Regla de autoridad"), p:P("Home routes to downstream pages; it does not duplicate their authority.","Home 路由到下游页面，不复制其权威。","Home enruta; no duplica autoridad posterior.")},
-        b3:{h:P("Fail-safe","安全失败","Fail-safe"), p:P("If scripts fail, links and readable text remain usable.","脚本失败时，链接与可读文本仍可用。","Si scripts fallan, enlaces y texto siguen usables.")} }
+        intro:P("Center Hold preserves low cognitive load while retaining route completeness.","中心保持在保留完整路由的同时降低认知负荷。","Sostener centro mantiene baja carga cognitiva con rutas completas."),
+        b:[P("Load rule","负荷规则","Carga"),P("Visible default stays compact; depth is opt-in.","默认可见保持紧凑；深度为主动选择。","Visible compacto; profundidad opt-in."),
+           P("Authority rule","权威规则","Autoridad"),P("Home routes out; downstream pages own their content.","Home 只路由；下游页面拥有内容。","Home enruta; páginas posteriores poseen contenido."),
+           P("Fail-safe","安全失败","Fail-safe"),P("If scripts fail, links and readable text remain usable.","脚本失败时，链接和文字仍可用。","Si scripts fallan, enlaces/texto siguen usables.")]
+      }
     },
-
     {
-      id:"routes", c:"#34d399",
+      id:"routes",c:"#34d399",
       t:P("Route Cleanly","干净路由","Enrutar limpio"),
       s:P("Send the visitor to the correct next chamber.","把访问者送到正确的下一个房间。","Enviar al visitante a la siguiente cámara correcta."),
       platform:{
-        intro:P(
-          "Home is a clean routing surface. Prelude prepares, Explore maps, Frontier carries the edge, Products packages, Gauges inspects, Laws bounds, and Governance executes.",
-          "Home 是干净路由面。Prelude 准备，Explore 映射，Frontier 承载边缘，Products 打包，Gauges 检查，Laws 定边界，Governance 执行。",
-          "Home es superficie de rutas limpias. Prelude prepara, Explore mapea, Frontier lleva el borde, Products empaqueta, Gauges inspecciona, Laws acota y Governance ejecuta."
-        ),
-        b1:{h:P("Route labels","路由标签","Etiquetas"), p:P("Labels should be short enough to scan and strong enough to guide.","标签应足够短以扫描，也足够强以引导。","Etiquetas breves para escanear y fuertes para guiar.")},
-        b2:{h:P("Route purpose","路由目的","Propósito"), p:P("Every link should answer: why would I go there next?","每个链接都应回答：我下一步为什么去那里？","Cada enlace responde: ¿por qué ir ahí después?")},
-        b3:{h:P("No dead ends","无死路","Sin callejones"), p:P("Home should not create future doors that do not exist.","Home 不应创建不存在的未来门。","Home no crea puertas futuras inexistentes.")} },
+        intro:P("Home routes without pretending to be the destination. Prelude prepares, Explore maps, Products packages, Gauges inspects, Laws bound, Governance executes.","Home 路由但不假装自己是目的地。Prelude 准备，Explore 映射，Products 打包，Gauges 检查，Laws 定边界，Governance 执行。","Home enruta sin fingir ser destino."),
+        b:[P("Route labels","路由标签","Etiquetas"),P("Labels are short enough to scan and strong enough to guide.","标签足够短以扫描，也足够强以引导。","Etiquetas breves y guía clara."),
+           P("Route purpose","路由目的","Propósito"),P("Every link answers why to go there next.","每个链接都回答为什么下一步去那里。","Cada enlace responde por qué ir ahí."),
+           P("No dead ends","无死路","Sin callejones"),P("Home should not create future doors that do not exist.","Home 不应创建不存在的未来门。","Home no crea puertas futuras inexistentes.")]
+      },
       engineering:{
-        intro:P(
-          "Route Cleanly is the navigation contract. All outbound links carry lang/style/time/depth/lane and point to stable route owners.",
-          "干净路由是导航契约。所有外链携带 lang/style/time/depth/lane 并指向稳定路由所有者。",
-          "Enrutar limpio es el contrato de navegación. Todo enlace lleva lang/style/time/depth/lane y apunta a dueño estable."
-        ),
-        b1:{h:P("State carry","状态携带","Estado"), p:P("lang/style/time/depth/lane are preserved through URLs.","lang/style/time/depth/lane 通过 URL 保留。","lang/style/time/depth/lane se preservan por URL.")},
-        b2:{h:P("Route owner","路由所有者","Dueño"), p:P("Home links out; downstream page owns its own content and controls.","Home 链出；下游页面拥有自己的内容与控制。","Home enlaza; página posterior posee contenido y controles.")},
-        b3:{h:P("Auditability","可审计","Auditabilidad"), p:P("Route map is visible so navigation can be inspected without guessing.","路由图可见，因此导航可检查而无需猜测。","Mapa visible para inspeccionar navegación sin adivinar.")} }
+        intro:P("Route Cleanly is the navigation contract: all outbound links carry state and point to stable route owners.","干净路由是导航契约：所有外链携带状态并指向稳定路由所有者。","Enrutar limpio es contrato de navegación."),
+        b:[P("State carry","状态携带","Estado"),P("lang/style/time/depth/lane are preserved through URLs.","lang/style/time/depth/lane 通过 URL 保留。","lang/style/time/depth/lane por URL."),
+           P("Route owner","路由所有者","Dueño"),P("Downstream pages own their controls.","下游页面拥有自己的控制。","Páginas posteriores poseen controles."),
+           P("Auditability","可审计","Auditable"),P("Route map is visible inside the nested panel.","路由图在嵌套面板中可见。","Mapa visible en panel anidado.")]
+      }
     },
-
     {
-      id:"continuity", c:"#ff2b2b",
+      id:"continuity",c:"#ff2b2b",
       t:P("Continuity","连续性","Continuidad"),
       s:P("Keep the interior consistent across language, lens, and time.","让内部在语言、透镜与时间中保持一致。","Mantener consistencia por idioma, lente y tiempo."),
       platform:{
-        intro:P(
-          "Continuity is what lets Home feel like part of the same house as the Door, Governance, Laws, Products, and Gauges.",
-          "连续性让 Home 感觉属于同一座房子，与 Door、Governance、Laws、Products 和 Gauges 一致。",
-          "Continuidad hace que Home pertenezca a la misma casa que Door, Governance, Laws, Products y Gauges."
-        ),
-        b1:{h:P("Language","语言","Idioma"), p:P("EN, 中文, and ES switch without reload and without losing the open zone.","EN、中文、ES 切换不刷新，也不丢失打开的区块。","EN, 中文 y ES cambian sin recargar ni perder zona abierta.")},
-        b2:{h:P("Lens","透镜","Lente"), p:P("Platform and Engineering remain separate reads of the same structure.","平台与工程保持为同一结构的不同读法。","Plataforma e Ingeniería son lecturas separadas de la misma estructura.")},
-        b3:{h:P("Time","时间","Tiempo"), p:P("Origin, now, and post state can travel without adding new storage keys.","origin、now、post 状态可传递且不增加新存储键。","origin, now y post viajan sin nuevas claves.")} },
+        intro:P("Continuity makes Home feel like part of the same house as the Door, Governance, Laws, Products, and Gauges.","连续性让 Home 感觉属于同一座房子，与 Door、Governance、Laws、Products 和 Gauges 一致。","Continuidad hace que Home pertenezca a la misma casa."),
+        b:[P("Language","语言","Idioma"),P("EN, 中文, and ES switch without reload or closing the open doll.","EN、中文、ES 切换不刷新也不关闭打开的套娃。","Cambian sin recargar ni cerrar muñeca."),
+           P("Lens","透镜","Lente"),P("Platform and Engineering remain separate reads of the same structure.","平台与工程是同一结构的不同读法。","Plataforma e Ingeniería son lecturas separadas."),
+           P("Time","时间","Tiempo"),P("Origin, now, and post travel without new storage keys.","origin、now、post 可传递且不增加新存储键。","origin, now y post sin claves nuevas.")]
+      },
       engineering:{
-        intro:P(
-          "Continuity binds state carry and storage boundaries. The page uses only the allowed gd_* keys and does not create hidden state.",
-          "连续性绑定状态携带与存储边界。页面只使用允许的 gd_* 键，不创建隐藏状态。",
-          "Continuidad vincula estado y límites de almacenamiento. Solo usa claves gd_* permitidas."
-        ),
-        b1:{h:P("Storage boundary","存储边界","Límite"), p:P("Allowed LS keys: gd_lang, gd_style, gd_time, gd_depth only.","允许 LS 键：gd_lang、gd_style、gd_time、gd_depth。","Claves LS permitidas: gd_lang, gd_style, gd_time, gd_depth.")},
-        b2:{h:P("No reload","不刷新","Sin recarga"), p:P("Language and lane changes are local DOM updates with history replacement.","语言与透镜变更是本地 DOM 更新，并替换 history。","Idioma/lente actualizan DOM local y history.")},
-        b3:{h:P("Same house","同一座房","Misma casa"), p:P("Visual language remains aligned with Level 4 Governance and the larger site spine.","视觉语言与 Level 4 Governance 及更大站点脊柱一致。","Lenguaje visual alineado con Governance Nivel 4 y la espina del sitio.")} }
+        intro:P("Continuity binds state carry and storage boundaries without creating hidden state.","连续性绑定状态携带与存储边界，不创建隐藏状态。","Continuidad vincula estado y límites sin estado oculto."),
+        b:[P("Storage boundary","存储边界","Límite"),P("Allowed LS keys: gd_lang, gd_style, gd_time, gd_depth only.","允许 LS 键：gd_lang、gd_style、gd_time、gd_depth。","Claves LS: gd_lang, gd_style, gd_time, gd_depth."),
+           P("No reload","不刷新","Sin recarga"),P("Language and lane changes are local DOM updates with history replacement.","语言与透镜变更是本地 DOM 更新并替换 history。","Actualización DOM local con history."),
+           P("Same house","同一座房","Misma casa"),P("Visual language stays aligned with Governance Level 4 and the site spine.","视觉语言与 Governance Level 4 和站点脊柱一致。","Visual alineado con Governance Nivel 4.")]
+      }
     }
   ];
 
-  var LEDGER=[
-    {
-      name:P("Interior orientation","内部定位","Orientación interior"),
-      desc:P("Home now identifies the visitor’s position after the Door.","Home 现在识别访问者越过门之后的位置。","Home identifica la posición después de la Puerta.")
-    },
-    {
-      name:P("Center hold","中心保持","Sostener centro"),
-      desc:P("Home remains compact and does not overtake downstream page authority.","Home 保持紧凑，不夺取下游页面权威。","Home permanece compacto y no toma autoridad posterior.")
-    },
-    {
-      name:P("Route map","路由图","Mapa de rutas"),
-      desc:P("Primary interior routes are visible and state-carrying.","主要内部路由可见且携带状态。","Rutas interiores visibles y con estado.")
-    },
-    {
-      name:P("Language and lens","语言与透镜","Idioma y lente"),
-      desc:P("EN/中文/ES and Platform/Engineering switch without reload.","EN/中文/ES 与平台/工程可无刷新切换。","EN/中文/ES y Plataforma/Ingeniería cambian sin recarga.")
-    },
-    {
-      name:P("Level 4 integration","第四级整合","Integración Nivel 4"),
-      desc:P("Generation 1 compression is upgraded into a complete Home chamber.","Generation 1 压缩已升级为完整 Home 房间。","Compresión Gen 1 se actualiza a cámara Home completa.")
-    }
-  ];
+  var L4={
+    compass:P("Home is the first interior chamber after the Door. It is not the whole map; it is the stabilizing center.","Home 是门后的第一个内部房间。它不是完整地图，而是稳定中心。","Home es la primera cámara interior tras la Puerta. No es todo el mapa; es centro estabilizador."),
+    star:P("Home is healthy when a visitor can understand where they are, choose a route, and remain oriented without total-system explanation.","当访问者能理解位置、选择路线，并且不需要全系统解释也能保持方向时，Home 就是健康的。","Home es sano cuando se entiende ubicación, ruta y orientación sin explicar todo."),
+    legend:[
+      P("North: identity, center, current location, Door/interior boundary.","北：身份、中心、当前位置、门/内部边界。","Norte: identidad, centro, ubicación y límite."),
+      P("East: forward routes and future movement.","东：前进路由与未来运动。","Este: rutas futuras y movimiento."),
+      P("South: stability, readability, and no-overload protection.","南：稳定、可读性与防过载保护。","Sur: estabilidad, legibilidad y protección."),
+      P("West: pressure control, stale labels, broken routes, confusing entry paths.","西：压力控制、陈旧标签、断路由、混乱入口。","Oeste: presión, etiquetas obsoletas, rutas rotas.")
+    ],
+    ledger:[
+      P("Interior orientation: active.","内部定位：已激活。","Orientación interior: activa."),
+      P("Center hold: compact and readable.","中心保持：紧凑且可读。","Centro: compacto y legible."),
+      P("Route map: state-carrying.","路由图：携带状态。","Mapa: transporta estado."),
+      P("Language/lens: no reload.","语言/透镜：无刷新。","Idioma/lente: sin recarga."),
+      P("Level 4: nested, not crowded.","第四级：嵌套，不拥挤。","Nivel 4: anidado, no saturado.")
+    ]
+  };
 
-  // ===== DOM build =====
-  var list=document.getElementById("list");
-  var ledger=document.getElementById("ledger");
-  var rowRefs=[];
-  var openIndex=0;
+  var openIndex=null;
+  var innerOpen=null;
+  var caps=document.getElementById("caps");
+  var body=document.getElementById("dollBody");
 
-  function closeAllRows(){
-    for(var i=0;i<rowRefs.length;i++){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-    }
-  }
+  function activePack(zone){return lane==="engineering"?zone.engineering:zone.platform}
 
-  function toggleRow(i){
-    var isOpen=rowRefs[i].row.classList.contains("open");
-    if(isOpen){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-      openIndex=null;
-      return;
-    }
-    closeAllRows();
-    openIndex=i;
-    rowRefs[i].row.classList.add("open");
-    rowRefs[i].chev.textContent="▾";
-  }
-
-  function makeBubble(titleObj, textObj){
-    var b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
-
-    var h=document.createElement("h4");
-    h.textContent = pick3(titleObj.en, titleObj.zh, titleObj.es);
-
-    var p=document.createElement("p");
-    p.textContent = pick3(textObj.en, textObj.zh, textObj.es);
-
-    b.appendChild(h);
-    b.appendChild(p);
-
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-    return b;
-  }
-
-  function buildRow(zone, idx){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", zone.c);
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var hL=document.createElement("div");
-    hL.className="hL";
-
-    var mark=document.createElement("div");
-    mark.className="mark";
-    mark.style.background=zone.c;
-
-    var tb=document.createElement("div");
-    tb.className="titleBlock";
-
-    var title=document.createElement("div");
-    title.className="q";
-
-    var subt=document.createElement("div");
-    subt.className="subt";
-
-    tb.appendChild(title);
-    tb.appendChild(subt);
-
-    hL.appendChild(mark);
-    hL.appendChild(tb);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(hL);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var intro=document.createElement("p");
-    intro.className="pdesc";
-    body.appendChild(intro);
-
-    var sb=document.createElement("div");
-    sb.className="subBubbles";
-
-    var pack = (lane==="engineering") ? zone.engineering : zone.platform;
-    sb.appendChild(makeBubble(pack.b1.h, pack.b1.p));
-    sb.appendChild(makeBubble(pack.b2.h, pack.b2.p));
-    sb.appendChild(makeBubble(pack.b3.h, pack.b3.p));
-    body.appendChild(sb);
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-
-    var aPrelude=document.createElement("a");
-    aPrelude.className="btn red";
-    aPrelude.setAttribute("data-route", ROUTES.prelude);
-    actions.appendChild(aPrelude);
-
-    var aExplore=document.createElement("a");
-    aExplore.className="btn";
-    aExplore.setAttribute("data-route", ROUTES.explore);
-    actions.appendChild(aExplore);
-
-    var aGauges=document.createElement("a");
-    aGauges.className="btn";
-    aGauges.setAttribute("data-route", ROUTES.gauges);
-    actions.appendChild(aGauges);
-
-    body.appendChild(actions);
-
-    function act(){ toggleRow(idx); wireAll(); }
-    head.addEventListener("click", act, {passive:true});
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
-    row.appendChild(head);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    rowRefs.push({
-      row:row,
-      chev:row.querySelector(".chevTxt"),
-      title:title,
-      subt:subt,
-      intro:intro,
-      preludeBtn:aPrelude,
-      exploreBtn:aExplore,
-      gaugesBtn:aGauges,
-      zone:zone
+  function buildCaps(){
+    caps.innerHTML="";
+    ZONES.forEach(function(zone,i){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="cap";
+      b.setAttribute("data-cap",String(i));
+      b.setAttribute("aria-expanded",openIndex===i?"true":"false");
+      b.style.setProperty("--c",zone.c);
+      b.innerHTML='<div class="capMark"></div><h3></h3><p></p>';
+      b.querySelector("h3").textContent=pick3(zone.t.en,zone.t.zh,zone.t.es);
+      b.querySelector("p").textContent=pick3(zone.s.en,zone.s.zh,zone.s.es);
+      b.addEventListener("click",function(){toggleCap(i)}, {passive:true});
+      caps.appendChild(b);
     });
   }
 
-  function buildLedger(){
-    ledger.innerHTML="";
-    for(var i=0;i<LEDGER.length;i++){
-      var item=LEDGER[i];
-
-      var row=document.createElement("div");
-      row.className="ledgerRow";
-
-      var name=document.createElement("strong");
-      name.textContent=pick3(item.name.en,item.name.zh,item.name.es);
-
-      var desc=document.createElement("span");
-      desc.textContent=pick3(item.desc.en,item.desc.zh,item.desc.es);
-
-      var status=document.createElement("span");
-      status.className="status";
-      status.textContent=pick3("Strong","强","Fuerte");
-
-      row.appendChild(name);
-      row.appendChild(desc);
-      row.appendChild(status);
-      ledger.appendChild(row);
-    }
+  function makeBubble(title,text){
+    var d=document.createElement("div");
+    d.className="bubble";
+    d.setAttribute("role","button");
+    d.tabIndex=0;
+    var h=document.createElement("h4");
+    var p=document.createElement("p");
+    h.textContent=pick3(title.en,title.zh,title.es);
+    p.textContent=pick3(text.en,text.zh,text.es);
+    d.appendChild(h);
+    d.appendChild(p);
+    function act(){d.classList.toggle("open")}
+    d.addEventListener("click",act,{passive:true});
+    d.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}});
+    return d;
   }
 
-  function renderList(){
-    list.innerHTML="";
-    rowRefs=[];
-    for(var i=0;i<ZONES.length;i++) buildRow(ZONES[i], i);
-    openIndex=0;
-    toggleRow(0);
-  }
-
-  function applyLevel4(){
-    var c=L4[lang]||L4.en;
-
-    document.getElementById("l4Band").textContent=c.level;
-    document.getElementById("compassTitle").textContent=c.compassTitle;
-    document.getElementById("compassBody").textContent=c.compassBody;
-    document.getElementById("northLabel").textContent=c.north;
-    document.getElementById("northBody").textContent=c.northBody;
-    document.getElementById("eastLabel").textContent=c.east;
-    document.getElementById("eastBody").textContent=c.eastBody;
-    document.getElementById("southLabel").textContent=c.south;
-    document.getElementById("southBody").textContent=c.southBody;
-    document.getElementById("westLabel").textContent=c.west;
-    document.getElementById("westBody").textContent=c.westBody;
-
-    document.getElementById("northStarTitle").textContent=c.northStarTitle;
-    document.getElementById("northStarBody").textContent=c.northStarBody;
-    document.getElementById("purposeLabel").textContent=c.purpose;
-    document.getElementById("purposeBody").textContent=c.purposeBody;
-    document.getElementById("methodLabel").textContent=c.method;
-    document.getElementById("methodBody").textContent=c.methodBody;
-    document.getElementById("failureLabel").textContent=c.failure;
-    document.getElementById("failureBody").textContent=c.failureBody;
-
-    document.getElementById("ledgerBand").textContent=c.ledger;
-    document.getElementById("routeBand").textContent=c.route;
-  }
-
-  function applyHeader(){
-    var H=(HEAD[lang]||HEAD.en);
-    var pack=(lane==="engineering") ? H.engineering : H.platform;
-
-    document.getElementById("hk").textContent = pick3("HOME","首页","HOME");
-    document.getElementById("ht").textContent = pick3("INTERIOR ORIENTATION","内部定位","ORIENTACIÓN INTERIOR");
-    document.getElementById("hs").textContent = pack.hs;
-    document.getElementById("rule").textContent = pack.rule;
-    document.getElementById("band").textContent = pick3("HOME ZONES (OPEN ONE)","HOME 区域（打开一个）","ZONAS HOME (ABRE UNA)");
-
-    document.getElementById("laneState").textContent =
-      (lang==="zh") ? ("当前透镜："+laneLabel()) :
-      (lang==="es") ? ("Lente actual: "+laneLabel()) :
-      ("Current lens: "+laneLabel());
-
-    document.getElementById("langState").textContent =
-      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
-
-    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-    document.getElementById("btnPrelude").textContent = pick3("PRELUDE","序章","PRELUDIO");
-    document.getElementById("btnExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-
-    document.getElementById("dockDoor").textContent = pick3("DOOR","门","PUERTA");
-    document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGovernance").textContent = pick3("GOVERNANCE","治理","GOBERNANZA");
-    document.getElementById("dockCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-
-    document.getElementById("routeCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-    document.getElementById("routePrelude").textContent = pick3("PRELUDE","序章","PRELUDIO");
-    document.getElementById("routeExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("routeProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("routeGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
-  }
-
-  function updateRows(){
-    var keep=openIndex;
-
-    for(var i=0;i<rowRefs.length;i++){
-      var R=rowRefs[i];
-      var z=R.zone;
-
-      R.title.textContent = pick3(z.t.en, z.t.zh, z.t.es);
-      R.subt.textContent  = pick3(z.s.en, z.s.zh, z.s.es);
-
-      var pack = (lane==="engineering") ? z.engineering : z.platform;
-      R.intro.textContent = pick3(pack.intro.en, pack.intro.zh, pack.intro.es);
-
-      var sb = R.row.querySelector(".subBubbles");
-      if(sb){
-        sb.innerHTML="";
-        sb.appendChild(makeBubble(pack.b1.h, pack.b1.p));
-        sb.appendChild(makeBubble(pack.b2.h, pack.b2.p));
-        sb.appendChild(makeBubble(pack.b3.h, pack.b3.p));
-      }
-
-      R.preludeBtn.textContent = openLabel()+": "+pick3("PRELUDE","序章","PRELUDIO");
-      R.exploreBtn.textContent = openLabel()+": "+pick3("EXPLORE","探索","EXPLORAR");
-      R.gaugesBtn.textContent = openLabel()+": "+pick3("GAUGES","量规","MEDIDORES");
+  function renderBody(){
+    if(openIndex===null||openIndex===undefined){
+      body.setAttribute("data-open","false");
+      body.innerHTML="";
+      return;
     }
 
-    closeAllRows();
-    if(keep!==null && keep!==undefined && rowRefs[keep]){
-      rowRefs[keep].row.classList.add("open");
-      rowRefs[keep].chev.textContent="▾";
-      openIndex=keep;
-    }else{
-      openIndex=null;
-    }
+    var zone=ZONES[openIndex];
+    var pack=activePack(zone);
+    var b=pack.b;
 
+    body.setAttribute("data-open","true");
+    body.innerHTML="";
+
+    var title=document.createElement("h2");
+    title.className="dollTitle";
+    title.textContent=pick3(zone.t.en,zone.t.zh,zone.t.es);
+
+    var intro=document.createElement("p");
+    intro.className="dollIntro";
+    intro.textContent=pick3(pack.intro.en,pack.intro.zh,pack.intro.es);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+    bubbles.appendChild(makeBubble(b[0],b[1]));
+    bubbles.appendChild(makeBubble(b[2],b[3]));
+    bubbles.appendChild(makeBubble(b[4],b[5]));
+
+    var controls=document.createElement("div");
+    controls.className="innerControls";
+    [
+      ["compass",pick3("Compass","罗盘","Brújula")],
+      ["star",pick3("North Star","北星","Estrella Norte")],
+      ["ledger",pick3("Ledger","账本","Registro")],
+      ["routes",pick3("Routes","路由","Rutas")]
+    ].forEach(function(item){
+      var btn=document.createElement("button");
+      btn.type="button";
+      btn.className="innerBtn";
+      btn.setAttribute("data-inner",item[0]);
+      btn.setAttribute("aria-pressed",innerOpen===item[0]?"true":"false");
+      btn.textContent=item[1];
+      btn.addEventListener("click",function(){toggleInner(item[0])});
+      controls.appendChild(btn);
+    });
+
+    var panel=document.createElement("div");
+    panel.className="innerPanel";
+    panel.setAttribute("data-open",innerOpen?"true":"false");
+    panel.innerHTML=innerHtml();
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    actions.innerHTML=
+      '<a class="btn red" data-route="/prelude/" href="/prelude/"></a>'+
+      '<a class="btn" data-route="/explore/" href="/explore/"></a>'+
+      '<a class="btn" data-route="/gauges/" href="/gauges/"></a>';
+    actions.children[0].textContent=pick3("OPEN: PRELUDE","打开：序章","ABRIR: PRELUDIO");
+    actions.children[1].textContent=pick3("OPEN: EXPLORE","打开：探索","ABRIR: EXPLORAR");
+    actions.children[2].textContent=pick3("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES");
+
+    body.appendChild(title);
+    body.appendChild(intro);
+    body.appendChild(bubbles);
+    body.appendChild(controls);
+    body.appendChild(panel);
+    body.appendChild(actions);
     wireAll();
   }
 
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
+  function innerHtml(){
+    if(!innerOpen) return "";
+    if(innerOpen==="compass"){
+      return '<h4>'+pick3("Compass","罗盘","Brújula")+'</h4><p>'+pick3(L4.compass.en,L4.compass.zh,L4.compass.es)+'</p><div class="innerGrid">'+
+        L4.legend.map(function(x){return '<div class="innerBox"><strong>'+pick3("Legend","图例","Leyenda")+'</strong>'+pick3(x.en,x.zh,x.es)+'</div>'}).join("")+
+        '</div>';
+    }
+    if(innerOpen==="star"){
+      return '<h4>'+pick3("North Star","北星","Estrella Norte")+'</h4><p>'+pick3(L4.star.en,L4.star.zh,L4.star.es)+'</p>';
+    }
+    if(innerOpen==="ledger"){
+      return '<h4>'+pick3("Home Ledger","HOME 账本","Registro Home")+'</h4><div class="innerGrid">'+
+        L4.ledger.map(function(x){return '<div class="innerBox"><strong>'+pick3("Strong","强","Fuerte")+'</strong>'+pick3(x.en,x.zh,x.es)+'</div>'}).join("")+
+        '</div>';
+    }
+    if(innerOpen==="routes"){
+      return '<h4>'+pick3("Route Map","路由图","Mapa de rutas")+'</h4><p>'+pick3("Primary Home routes remain tucked here instead of crowding the surface.","主要 Home 路由收纳在这里，不挤占表面。","Rutas primarias quedan aquí, no saturan la superficie.")+'</p>'+
+        '<div class="routeMap">'+
+        '<a data-route="/index.html" href="/index.html">COMPASS</a>'+
+        '<a data-route="/prelude/" href="/prelude/">PRELUDE</a>'+
+        '<a data-route="/explore/" href="/explore/">EXPLORE</a>'+
+        '<a data-route="/products/" href="/products/">PRODUCTS</a>'+
+        '<a data-route="/gauges/" href="/gauges/">GAUGES</a>'+
+        '</div>';
+    }
+    return "";
+  }
 
+  function toggleCap(i){
+    if(openIndex===i){openIndex=null;innerOpen=null}
+    else{openIndex=i;innerOpen=null}
+    buildCaps();
+    renderBody();
+  }
+
+  function toggleInner(key){
+    innerOpen=innerOpen===key?null:key;
+    renderBody();
+  }
+
+  function applyHeader(){
+    var pack=HEAD[lang][lane];
+    document.getElementById("hk").textContent=pick3("HOME","首页","HOME");
+    document.getElementById("ht").textContent=pick3("INTERIOR ORIENTATION","内部定位","ORIENTACIÓN INTERIOR");
+    document.getElementById("hs").textContent=pack.hs;
+    document.getElementById("rule").textContent=pack.rule;
+    document.getElementById("band").textContent=pick3("OPEN ONE DOLL","打开一个套娃","ABRE UNA MUÑECA");
+    document.getElementById("laneState").textContent=pick3("Current lens: ","当前透镜：","Lente actual: ")+laneLabel();
+    document.getElementById("langState").textContent=lang==="zh"?"语言：中文":(lang==="es"?"Idioma: ES":"Lang: EN");
+
+    document.getElementById("btnCompass").textContent=pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("btnPrelude").textContent=pick3("PRELUDE","序章","PRELUDIO");
+    document.getElementById("btnExplore").textContent=pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("dockDoor").textContent=pick3("DOOR","门","PUERTA");
+    document.getElementById("dockLaws").textContent=pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGovernance").textContent=pick3("GOVERNANCE","治理","GOBERNANZA");
+    document.getElementById("dockCompass").textContent=pick3("COMPASS","指南针","BRÚJULA");
+  }
+
+  function wireAll(){
+    Array.prototype.slice.call(document.querySelectorAll("[data-route]")).forEach(function(el){
+      var route=el.getAttribute("data-route")||"";
+      if(!route) return;
       if(route.indexOf("?")!==-1){
         try{
-          var u=new URL(route, location.origin);
+          var u=new URL(route,location.origin);
           var sp=u.searchParams;
-          sp.set("lang", lang);
-          sp.set("style","informal");
-          sp.set("time", time);
-          sp.set("depth","explore");
-          sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){
-          el.setAttribute("href", route);
-        }
+          sp.set("lang",lang);sp.set("style","informal");sp.set("time",time);sp.set("depth","explore");sp.set("lane",lane);
+          el.setAttribute("href",u.pathname+"?"+sp.toString()+(u.hash||""));
+        }catch(e){el.setAttribute("href",route)}
       }else{
-        el.setAttribute("href", route + q());
+        el.setAttribute("href",route+q());
       }
-    }
+    });
   }
 
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
-    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    applyHeader();
-    applyLevel4();
-    buildLedger();
-    updateRows();
+    document.documentElement.lang=lang==="zh"?"zh":(lang==="es"?"es":"en");
+    try{LS.setItem("gd_lang",lang)}catch(e){}
+    history.replaceState({},"",location.pathname+q({lang:lang}));
+    setPressed(["langEN","langZH","langES"],lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    applyHeader();buildCaps();renderBody();wireAll();
   }
 
   function setLane(next){
     if(next!=="platform"&&next!=="engineering") next="platform";
     lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    applyHeader();
-    applyLevel4();
-    buildLedger();
-    updateRows();
+    history.replaceState({},"",location.pathname+q({lane:lane}));
+    setPressed(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");
+    applyHeader();buildCaps();renderBody();wireAll();
   }
 
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+  document.getElementById("langEN").addEventListener("click",function(){setLang("en")},{passive:true});
+  document.getElementById("langZH").addEventListener("click",function(){setLang("zh")},{passive:true});
+  document.getElementById("langES").addEventListener("click",function(){setLang("es")},{passive:true});
+  document.getElementById("lanePlatform").addEventListener("click",function(){setLane("platform")},{passive:true});
+  document.getElementById("laneEngineering").addEventListener("click",function(){setLane("engineering")},{passive:true});
 
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+  setPressed(["langEN","langZH","langES"],lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");
 
-  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-
-  renderList();
   applyHeader();
-  applyLevel4();
-  buildLedger();
-  updateRows();
+  buildCaps();
+  renderBody();
   wireAll();
-
 })();
 </script>
 

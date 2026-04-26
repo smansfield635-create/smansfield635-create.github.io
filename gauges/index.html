@@ -1,12 +1,12 @@
 <!doctype html>
 <!-- TNT — /gauges/index.html
-     GAUGES INDEX · GENERATION 2 COMPASS COCKPIT · BRAVO 5
+     GAUGES INDEX · GENERATION 2 COMPASS COCKPIT · BRAVO 6
      PURPOSE:
-       - Make gauges cockpit-aware
-       - Report root source alignment, cockpit runtime truth, visible sun truth, canopy truth, and false-health blocking
-       - Load diagnostic runtime b5
+       - Load Bravo 6 cockpit-aware diagnostic runtime
+       - Preserve existing gauges page structure
+       - Calibrate visual probe for live cockpit truth
      REQUIRED:
-       - /gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b5
+       - /gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6
        - Compass Cockpit
        - root-compass-cockpit-b1
 -->
@@ -193,15 +193,15 @@ ul{margin:0;padding-left:1.25rem;color:var(--txt);line-height:1.6}
   </section>
 
   <section class="hero">
-    <p class="kicker">Generation 2 · Compass Cockpit Gauges · Bravo 5</p>
+    <p class="kicker">Generation 2 · Compass Cockpit Gauges · Bravo 6</p>
     <h1>Website Health Gauges</h1>
     <p class="lede">
-      This cockpit-aware scan checks source reachability, root cockpit source markers, cockpit runtime execution, visible sun truth, canopy binding, background truth, and false-health blocking.
+      This Bravo 6 cockpit-aware scan checks source reachability, cockpit runtime truth, visible sun truth, canopy binding, background presence, and false-health blocking with a calibrated viewport probe.
     </p>
     <div class="metaRow">
       <span class="pill">Status: <strong id="statusText">PENDING</strong></span>
       <span class="pill">Updated: <strong id="updatedText">Pending</strong></span>
-      <span class="pill">Runtime: <strong id="runtimeText">spine-canopy-parachute-b5</strong></span>
+      <span class="pill">Runtime: <strong id="runtimeText">spine-canopy-parachute-b6</strong></span>
       <span class="pill">Contract: <strong>root-compass-cockpit-b1</strong></span>
     </div>
   </section>
@@ -217,17 +217,17 @@ ul{margin:0;padding-left:1.25rem;color:var(--txt);line-height:1.6}
 
   <section class="panel">
     <h2 class="sectionTitle">What is working</h2>
-    <ul id="workingList"><li>Waiting for cockpit-aware scan.</li></ul>
+    <ul id="workingList"><li>Waiting for Bravo 6 cockpit-aware scan.</li></ul>
   </section>
 
   <section class="panel">
     <h2 class="sectionTitle">What is wrong</h2>
-    <ul id="wrongList"><li>Waiting for cockpit-aware scan.</li></ul>
+    <ul id="wrongList"><li>Waiting for Bravo 6 cockpit-aware scan.</li></ul>
   </section>
 
   <section class="panel">
     <h2 class="sectionTitle">What needs to be done</h2>
-    <ol id="todoList"><li>Wait for the Bravo 5 scan to complete.</li></ol>
+    <ol id="todoList"><li>Wait for the Bravo 6 scan to complete.</li></ol>
   </section>
 
   <section class="panel">
@@ -247,7 +247,7 @@ ul{margin:0;padding-left:1.25rem;color:var(--txt);line-height:1.6}
   <section class="panel">
     <h2 class="sectionTitle">Contract renewal</h2>
     <p class="lede">
-      Bravo 5 expects <code>root-sun-asset-b1</code>, cockpit version <code>root-compass-cockpit-b1</code>, canopy version <code>spine-canopy-parachute-b1</code>, and diagnostic runtime <code>spine-canopy-parachute-b5</code>. Strong health is forbidden when cockpit truth, visible sun truth, or canopy truth fails.
+      Bravo 6 expects <code>root-sun-asset-b1</code>, cockpit version <code>root-compass-cockpit-b1</code>, canopy version <code>spine-canopy-parachute-b1</code>, and diagnostic runtime <code>spine-canopy-parachute-b6</code>. Strong health is forbidden when cockpit truth, visible sun truth, or canopy truth fails.
     </p>
   </section>
 
@@ -261,6 +261,6 @@ ul{margin:0;padding-left:1.25rem;color:var(--txt);line-height:1.6}
   </nav>
 </main>
 
-<script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b5" defer></script>
+<script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6" defer></script>
 </body>
 </html>

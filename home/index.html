@@ -1,736 +1,135 @@
 <!doctype html>
-<!-- TNT — /home/index.html
-     HOME · GENERATION 2 RUSSIAN DOLL LAYOUT RENEWAL
-     SCOPE=LAYOUT_SHELL_RENEWAL_ONLY
-     KEEP=LANGUAGE_LENS_STATE_CARRY_RUSSIAN_DOLL_LOGIC
-     LS_KEYS=gd_lang,gd_style,gd_time,gd_depth ONLY
--->
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>HOME · Diamond Gate Bridge</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Diamond Gate Bridge — Home</title>
+  <meta name="description" content="Diamond Gate Bridge Home"/>
 
-<link rel="stylesheet" href="/assets/ui.css"/>
-<link rel="stylesheet" href="/assets/branch.css"/>
-<script defer src="/assets/instruments.js"></script>
+  <style>
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;width:100%;background:#030712;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    :root{--line:rgba(255,255,255,.13);--panel:rgba(7,10,16,.70);--ink:rgba(255,255,255,.96);--txt:rgba(255,255,255,.84);--mut:rgba(255,255,255,.66);--gold:rgba(255,217,138,.94);--shadow:0 24px 90px rgba(0,0,0,.48)}
 
-<style>
-*{box-sizing:border-box}
-a{color:inherit;text-decoration:none}
-button{font:inherit}
-html,body{margin:0;min-height:100%;color:#fff;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#030712}
-body{
-  background:
-    radial-gradient(ellipse at 18% 4%,rgba(67,95,180,.16),transparent 32rem),
-    radial-gradient(ellipse at 82% 18%,rgba(201,162,74,.10),transparent 30rem),
-    radial-gradient(ellipse at 46% 92%,rgba(255,43,43,.08),transparent 34rem),
-    linear-gradient(180deg,#071225 0%,#030817 48%,#01030a 100%);
-}
-:root{
-  --ink:rgba(255,255,255,.95);
-  --txt:rgba(255,255,255,.88);
-  --mut:rgba(255,255,255,.72);
-  --soft:rgba(255,255,255,.54);
-  --line:rgba(255,255,255,.12);
-  --line2:rgba(255,255,255,.18);
-  --gold:rgba(201,162,74,.92);
-  --goldSoft:rgba(201,162,74,.16);
-  --red:rgba(255,43,43,.14);
-  --blue:rgba(83,119,255,.14);
-  --panel:rgba(7,10,16,.72);
-  --panel2:rgba(12,16,24,.82);
-  --shadow:0 24px 90px rgba(0,0,0,.46);
-  --shadow2:0 16px 48px rgba(0,0,0,.44);
-}
-.page{
-  width:min(1120px,94vw);
-  margin:0 auto;
-  padding:16px 0 24px;
-  display:grid;
-  gap:14px;
-}
-.siteTop{
-  display:grid;
-  gap:10px;
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:12px;
-  background:rgba(5,8,14,.58);
-  box-shadow:var(--shadow2);
-  backdrop-filter:blur(12px);
-}
-.navRow,.controlRow,.routeRail{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-.navRow{justify-content:space-between}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:980;
-  letter-spacing:.2px;
-}
-.mark{
-  width:34px;height:34px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.20);
-  background:
-    radial-gradient(circle at 32% 26%,rgba(255,255,255,.95),transparent 22%),
-    radial-gradient(circle,rgba(255,217,112,.88),rgba(255,130,34,.30) 58%,rgba(255,217,112,.08));
-  box-shadow:0 0 26px rgba(201,162,74,.24);
-}
-.navLinks,.segWrap{display:flex;flex-wrap:wrap;gap:8px}
-.btn,.seg button,.innerBtn{
-  min-height:42px;
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:
-    radial-gradient(circle at 50% 50%,rgba(201,162,74,.08),transparent 58%),
-    linear-gradient(145deg,rgba(14,17,24,.82),rgba(5,7,12,.92));
-  color:var(--ink);
-  font-weight:920;
-  font-size:13px;
-  letter-spacing:.3px;
-  padding:10px 12px;
-  cursor:pointer;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 12px 34px rgba(0,0,0,.34);
-  -webkit-tap-highlight-color:transparent;
-}
-.btn::after,.seg button[aria-pressed="true"]::after,.innerBtn[aria-pressed="true"]::after{
-  content:"";
-  position:absolute;
-  inset:-2px;
-  border-radius:inherit;
-  pointer-events:none;
-  box-shadow:0 0 20px var(--goldSoft),inset 0 0 0 1px rgba(201,162,74,.10);
-}
-.btn.red{border-color:rgba(255,43,43,.24)}
-.seg{
-  display:flex;
-  overflow:hidden;
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:rgba(0,0,0,.18);
-}
-.seg button{
-  border:0;
-  border-radius:0;
-  box-shadow:none;
-  background:transparent;
-  color:var(--mut);
-}
-.seg button[aria-pressed="true"]{
-  color:var(--ink);
-  background:rgba(201,162,74,.12);
-}
-.hero{
-  border:1px solid var(--line);
-  border-radius:30px;
-  padding:clamp(18px,4vw,34px);
-  background:
-    radial-gradient(circle at 18% 18%,rgba(201,162,74,.10),transparent 36rem),
-    radial-gradient(circle at 84% 20%,var(--blue),transparent 34rem),
-    radial-gradient(circle at 56% 90%,var(--red),transparent 36rem),
-    linear-gradient(150deg,rgba(12,16,24,.76),rgba(5,8,14,.92));
-  box-shadow:var(--shadow);
-}
-.kicker{
-  margin:0 0 8px;
-  color:var(--gold);
-  font-size:11px;
-  font-weight:950;
-  letter-spacing:3px;
-  text-transform:uppercase;
-}
-h1{
-  margin:0;
-  color:var(--ink);
-  font-size:clamp(2.15rem,7vw,5.1rem);
-  line-height:.88;
-  letter-spacing:-.065em;
-}
-.lede{
-  max-width:850px;
-  margin:14px 0 0;
-  color:var(--txt);
-  font-size:clamp(1rem,2.2vw,1.18rem);
-  line-height:1.55;
-}
-.rule{
-  margin-top:14px;
-  padding:12px 14px;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:rgba(0,0,0,.22);
-  color:var(--txt);
-  line-height:1.48;
-}
-.stateRow{
-  margin-top:14px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-}
-.statePill{
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:9px 12px;
-  background:rgba(0,0,0,.18);
-  color:var(--mut);
-  font-weight:850;
-}
-.controlRail{
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:12px;
-  background:rgba(5,8,14,.54);
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:space-between;
-  align-items:center;
-  gap:12px;
-  box-shadow:var(--shadow2);
-}
-.controlLabel{
-  color:var(--soft);
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:1.4px;
-  text-transform:uppercase;
-}
-.band{
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:11px 13px;
-  background:rgba(0,0,0,.18);
-  color:var(--ink);
-  font-weight:950;
-  letter-spacing:.7px;
-}
-.dollShell{
-  border:1px solid var(--line);
-  border-radius:28px;
-  padding:14px;
-  background:
-    radial-gradient(circle at 12% 0%,rgba(201,162,74,.08),transparent 30rem),
-    rgba(5,8,14,.58);
-  box-shadow:var(--shadow);
-}
-.caps{
-  display:grid;
-  grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:10px;
-}
-.cap{
-  min-height:128px;
-  padding:15px;
-  text-align:left;
-  border:1px solid var(--line);
-  border-radius:22px;
-  background:
-    radial-gradient(circle at 50% 50%,rgba(201,162,74,.07),transparent 62%),
-    linear-gradient(145deg,rgba(15,19,27,.76),rgba(7,9,14,.92));
-  color:var(--ink);
-  cursor:pointer;
-  box-shadow:0 14px 44px rgba(0,0,0,.34);
-}
-.cap[aria-expanded="true"]{
-  border-color:rgba(201,162,74,.44);
-  background:
-    radial-gradient(circle at 50% 50%,rgba(201,162,74,.14),transparent 62%),
-    linear-gradient(145deg,rgba(18,22,31,.86),rgba(8,10,16,.96));
-}
-.capMark{
-  width:10px;height:10px;
-  margin-bottom:12px;
-  border-radius:3px;
-  transform:rotate(45deg);
-  background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 16px rgba(0,0,0,.35);
-}
-.cap h3{margin:0;color:var(--ink);font-size:18px;line-height:1.05}
-.cap p{margin:8px 0 0;color:var(--mut);font-size:13.5px;line-height:1.42}
-.dollBody{
-  display:none;
-  margin-top:12px;
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:16px;
-  background:
-    radial-gradient(circle at 18% 12%,rgba(255,43,43,.08),transparent 35rem),
-    radial-gradient(circle at 78% 16%,rgba(83,119,255,.10),transparent 32rem),
-    linear-gradient(145deg,rgba(10,13,20,.78),rgba(3,5,10,.94));
-}
-.dollBody[data-open="true"]{display:block}
-.dollTitle{margin:0 0 8px;color:var(--ink);font-size:24px;line-height:1.05}
-.dollIntro{margin:0;color:var(--txt);line-height:1.6}
-.bubbles{
-  margin-top:12px;
-  display:grid;
-  grid-template-columns:repeat(3,minmax(0,1fr));
-  gap:10px;
-}
-.bubble{
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-  background:rgba(0,0,0,.18);
-  cursor:pointer;
-}
-.bubble h4{margin:0;color:var(--ink);font-size:15px}
-.bubble p{display:none;margin:8px 0 0;color:var(--mut);line-height:1.55;font-size:14px}
-.bubble.open p{display:block}
-.innerControls,.actions{
-  margin-top:14px;
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-.innerBtn[aria-pressed="true"]{background:rgba(201,162,74,.12);color:var(--ink)}
-.innerPanel{
-  display:none;
-  margin-top:10px;
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:14px;
-  background:rgba(0,0,0,.18);
-}
-.innerPanel[data-open="true"]{display:block}
-.innerPanel h4{
-  margin:0 0 8px;
-  color:var(--gold);
-  font-size:13px;
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
-.innerPanel p{margin:0;color:var(--txt);line-height:1.55}
-.innerGrid{
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-  margin-top:10px;
-}
-.innerBox{
-  border-top:1px solid rgba(255,255,255,.10);
-  padding-top:8px;
-  color:var(--mut);
-  line-height:1.45;
-  font-size:13.5px;
-}
-.innerBox strong{
-  display:block;
-  color:var(--gold);
-  font-size:11px;
-  letter-spacing:1px;
-  text-transform:uppercase;
-  margin-bottom:4px;
-}
-.routeMap{
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:8px;
-  margin-top:10px;
-}
-.routeMap a,.routeRail a{
-  min-height:42px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:rgba(0,0,0,.20);
-  color:var(--ink);
-  font-weight:900;
-  font-size:12px;
-}
-.routeRail{
-  border:1px solid var(--line);
-  border-radius:24px;
-  padding:12px;
-  background:rgba(5,8,14,.58);
-  box-shadow:var(--shadow2);
-  justify-content:center;
-}
-.routeRail a{padding:0 14px}
+    .sky{position:fixed;inset:0;z-index:0;pointer-events:none;background:
+      radial-gradient(circle at 68% 42%,rgba(255,210,72,.34),transparent 9rem),
+      radial-gradient(circle at 68% 42%,rgba(237,101,25,.26),transparent 20rem),
+      radial-gradient(circle at 8% 16%,rgba(255,255,255,.28) 0 1px,transparent 2px),
+      radial-gradient(circle at 34% 30%,rgba(177,205,255,.18) 0 1px,transparent 2px),
+      radial-gradient(circle at 92% 62%,rgba(255,255,255,.20) 0 1px,transparent 2px),
+      radial-gradient(ellipse at 22% 12%,rgba(67,95,180,.20),transparent 34rem),
+      linear-gradient(180deg,#071225 0%,#030817 48%,#01030a 100%)}
 
-@media(max-width:900px){
-  .caps{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .bubbles,.innerGrid{grid-template-columns:1fr}
-  .routeMap{grid-template-columns:repeat(2,minmax(0,1fr))}
-}
-@media(max-width:620px){
-  .page{width:min(100% - 20px,1120px);padding-top:10px}
-  .navRow{align-items:flex-start}
-  .navLinks,.segWrap{width:100%}
-  .navLinks .btn{flex:1 1 calc(33.333% - 8px)}
-  .controlRail{align-items:flex-start}
-  .controlRail>div{width:100%}
-  .seg{width:100%}
-  .seg button{flex:1}
-  .caps{grid-template-columns:1fr}
-  .cap{min-height:auto}
-  .routeMap{grid-template-columns:1fr}
-  .routeRail a{flex:1 1 calc(50% - 8px)}
-}
-</style>
+    .page{position:relative;z-index:1;width:min(100% - 28px,1120px);margin:0 auto;padding:16px 0 24px;display:grid;gap:14px}
+    .top,.hero,.filter,.routeRail{border:1px solid var(--line);border-radius:28px;background:var(--panel);box-shadow:var(--shadow);backdrop-filter:blur(10px)}
+    .top{padding:12px}
+    .navRow,.navLinks,.routeRail{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+    .navRow{justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;font-weight:950;font-size:20px}
+    .mark{width:34px;height:34px;border-radius:999px;background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.95),transparent 18%),radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));border:1px solid rgba(255,255,255,.18)}
+    .btn,.routeRail a,.filter button{min-height:42px;padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(0,0,0,.24);color:var(--ink);font-weight:900;cursor:pointer}
+    .btn.red,.filter button[aria-pressed="true"]{border-color:rgba(255,217,138,.48);box-shadow:0 0 20px rgba(201,162,74,.14);background:radial-gradient(circle at 50% 50%,rgba(201,162,74,.16),transparent 60%),rgba(0,0,0,.28)}
+    .hero{min-height:calc(100svh - 170px);padding:clamp(22px,5vw,52px);display:grid;align-items:center;overflow:hidden}
+    .heroContent{max-width:820px;display:grid;gap:18px}
+    .kicker{margin:0;color:var(--gold);font-size:12px;font-weight:950;letter-spacing:3px;text-transform:uppercase}
+    h1{margin:0;font-size:clamp(3rem,9vw,7rem);line-height:.86;letter-spacing:-.08em}
+    .theme{margin:0;font-size:clamp(1.35rem,4vw,2.7rem);line-height:1.05;color:rgba(255,255,255,.92)}
+    .lede{margin:0;color:var(--txt);font-size:clamp(1.08rem,2.3vw,1.3rem);line-height:1.5;max-width:720px}
+    .filter{padding:18px;display:grid;gap:14px;max-width:860px}
+    .filter h2{margin:0;font-size:clamp(1.45rem,4vw,2.4rem);letter-spacing:-.04em}
+    .filterCopy{margin:0;color:var(--txt);font-size:1rem;line-height:1.5}
+    .filterButtons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .filterButtons button{min-height:72px;border-radius:24px;font-size:clamp(.92rem,2.4vw,1.08rem);line-height:1.16;text-align:center}
+    .result{border:1px solid rgba(255,255,255,.10);border-radius:22px;background:rgba(0,0,0,.22);padding:14px;display:grid;gap:6px}
+    .result strong{color:var(--gold);font-size:1.02rem}
+    .result p{margin:0;color:var(--txt);line-height:1.55}
+    .stateRow{display:flex;flex-wrap:wrap;gap:10px}
+    .statePill{border:1px solid var(--line);border-radius:999px;padding:9px 12px;background:rgba(0,0,0,.24);color:var(--mut);font-weight:850}
+    .routeRail{justify-content:center;padding:12px}
+    @media(max-width:760px){.page{width:min(100% - 20px,1120px);padding-top:10px}.navLinks{width:100%}.navLinks .btn,.routeRail a{flex:1 1 calc(50% - 10px);text-align:center}.hero{min-height:calc(100svh - 130px);padding:20px}.filterButtons{grid-template-columns:1fr}.filterButtons button{min-height:62px}}
+  </style>
 </head>
 
-<body>
-<main class="page">
-  <section class="siteTop" aria-label="Home navigation">
-    <div class="navRow">
-      <a class="brand" data-route="/index.html" href="/index.html">
-        <span class="mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
-      </a>
-      <nav class="navLinks" aria-label="Top navigation">
-        <a class="btn" id="btnCompass" data-route="/index.html" href="/index.html">COMPASS</a>
-        <a class="btn" id="btnPrelude" data-route="/prelude/" href="/prelude/">PRELUDE</a>
-        <a class="btn" id="btnExplore" data-route="/explore/" href="/explore/">EXPLORE</a>
-      </nav>
-    </div>
-  </section>
+<body data-world-filter="flat">
+  <div class="sky" aria-hidden="true"></div>
 
-  <section class="hero" aria-label="Home header">
-    <p class="kicker" id="hk">HOME</p>
-    <h1 id="ht">INTERIOR ORIENTATION</h1>
-    <p class="lede" id="hs"></p>
-    <div class="rule" id="rule"></div>
-    <div class="stateRow">
-      <span class="statePill" id="laneState">—</span>
-      <span class="statePill" id="langState">—</span>
-    </div>
-  </section>
-
-  <section class="controlRail" aria-label="Page controls">
-    <div>
-      <div class="controlLabel" id="languageLabel">Language</div>
-      <div class="segWrap">
-        <div class="seg" role="group" aria-label="Language">
-          <button type="button" id="langEN" aria-pressed="true">EN</button>
-          <button type="button" id="langZH" aria-pressed="false">中文</button>
-          <button type="button" id="langES" aria-pressed="false">ES</button>
-        </div>
+  <main class="page">
+    <section class="top" aria-label="Navigation">
+      <div class="navRow">
+        <a class="brand" href="/"><span class="mark" aria-hidden="true"></span><span>Diamond Gate Bridge</span></a>
+        <nav class="navLinks" aria-label="Primary navigation">
+          <a class="btn red" href="/home/">Home</a>
+          <a class="btn" href="/">Compass</a>
+          <a class="btn" href="/prelude/">Prelude</a>
+          <a class="btn" href="/products/">Products</a>
+          <a class="btn" href="/governance/">Governance</a>
+          <a class="btn" href="/gauges/">Gauges</a>
+        </nav>
       </div>
-    </div>
-    <div>
-      <div class="controlLabel" id="lensLabel">Lens</div>
-      <div class="segWrap">
-        <div class="seg" role="group" aria-label="Lane">
-          <button type="button" id="lanePlatform" aria-pressed="true">PLATFORM</button>
-          <button type="button" id="laneEngineering" aria-pressed="false">ENGINEERING</button>
-        </div>
+    </section>
+
+    <section class="hero" aria-label="Home filter">
+      <div class="heroContent">
+        <p class="kicker">Home</p>
+        <h1>Welcome Home</h1>
+        <p class="theme">Learn to Live to Love</p>
+        <p class="lede">Start simple. Pick the view that matches the decision in front of you.</p>
+
+        <section class="filter" aria-label="Home world filter">
+          <h2>How do you want to begin?</h2>
+          <p class="filterCopy">Flat gives the immediate step. Round shows how it connects. Globe shows the larger direction.</p>
+
+          <div class="filterButtons">
+            <button type="button" data-filter="flat" aria-pressed="true">The World is Flat</button>
+            <button type="button" data-filter="round" aria-pressed="false">The World is Round</button>
+            <button type="button" data-filter="globe" aria-pressed="false">The World is a Globe</button>
+          </div>
+
+          <div class="result" aria-live="polite">
+            <strong id="resultTitle">Flat view: what is right in front of me?</strong>
+            <p id="resultText">Begin with what is visible and practical. One clean step is better than ten cloudy ideas.</p>
+          </div>
+
+          <div class="stateRow">
+            <span class="statePill" id="stateOne">Immediate step active</span>
+            <span class="statePill" id="stateTwo">Home view simple</span>
+            <span class="statePill" id="stateThree">Ready to move</span>
+          </div>
+        </section>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <div class="band" id="band">OPEN ONE DOLL</div>
+    <nav class="routeRail" aria-label="Route rail">
+      <a href="/">Compass</a>
+      <a href="/prelude/">Prelude</a>
+      <a href="/door/">Door</a>
+      <a href="/products/">Products</a>
+      <a href="/laws/">Laws</a>
+      <a href="/governance/">Governance</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </main>
 
-  <section class="dollShell" aria-label="Home Russian doll controls">
-    <div class="caps" id="caps"></div>
-    <div class="dollBody" id="dollBody" data-open="false"></div>
-  </section>
-
-  <nav class="routeRail" aria-label="Bottom navigation">
-    <a id="dockDoor" data-route="/door/" href="/door/">DOOR</a>
-    <a id="dockLaws" data-route="/laws/" href="/laws/">LAWS</a>
-    <a id="dockGovernance" data-route="/governance/" href="/governance/">GOVERNANCE</a>
-    <a id="dockCompass" data-route="/index.html" href="/index.html">COMPASS</a>
-  </nav>
-</main>
-
-<script>
-(function(){
-  "use strict";
-
-  var qs=new URLSearchParams(location.search);
-  var LS=window.localStorage;
-  var lang=qs.get("lang")||LS.getItem("gd_lang")||"en";
-  var time=qs.get("time")||LS.getItem("gd_time")||"now";
-  var lane=qs.get("lane")||"platform";
-  var style="informal";
-  var depth="explore";
-
-  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
-  if(time==="trajectory") time="post";
-  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
-  if(lane!=="platform"&&lane!=="engineering") lane="platform";
-
-  try{
-    LS.setItem("gd_lang",lang);
-    LS.setItem("gd_style",style);
-    LS.setItem("gd_time",time);
-    LS.setItem("gd_depth",depth);
-  }catch(e){}
-
-  function pick(en,zh,es){return lang==="zh"?zh:(lang==="es"?es:en)}
-  function P(en,zh,es){return{en:en,zh:zh,es:es}}
-  function text(o){return pick(o.en,o.zh,o.es)}
-  function laneName(){return pick(lane==="engineering"?"ENGINEERING":"PLATFORM",lane==="engineering"?"工程":"平台",lane==="engineering"?"INGENIERÍA":"PLATAFORMA")}
-  function q(over){
-    var p=new URLSearchParams();
-    p.set("lang",(over&&over.lang)||lang);
-    p.set("style","informal");
-    p.set("time",(over&&over.time)||time);
-    p.set("depth","explore");
-    p.set("lane",(over&&over.lane)||lane);
-    return "?"+p.toString();
-  }
-  function setPressed(ids,active){
-    ids.forEach(function(id){
-      var el=document.getElementById(id);
-      if(el) el.setAttribute("aria-pressed",id===active?"true":"false");
-    });
-  }
-
-  var HEAD={
-    en:{
-      platform:{hs:"Home is the first interior chamber after the Door: calm center, clear route, optional depth.",rule:"Rule: open one doll at a time. Home orients first, then unfolds only what the visitor asks to see."},
-      engineering:{hs:"Engineering view: Home is a compact interior-state router with nested disclosure and state-carry links.",rule:"Rule: Home may compress, expose, and route; it must not overload or overwrite downstream authority."}
-    },
-    zh:{
-      platform:{hs:"Home 是门之后的第一个内部房间：冷静中心、清晰路线、可选深度。",rule:"规则：一次只打开一个套娃。Home 先定位，只展开访问者要求看到的内容。"},
-      engineering:{hs:"工程视图：Home 是紧凑的内部状态路由器，使用嵌套展开与状态携带链接。",rule:"规则：Home 可以压缩、展开、路由；不可过载或覆盖下游权威。"}
-    },
-    es:{
-      platform:{hs:"Home es la primera cámara interior después de la Puerta: centro calmado, ruta clara, profundidad opcional.",rule:"Regla: abrir una muñeca a la vez. Home orienta primero y despliega solo lo que se solicita."},
-      engineering:{hs:"Vista de ingeniería: Home es un enrutador compacto de estado interior con divulgación anidada y enlaces con estado.",rule:"Regla: Home puede comprimir, exponer y enrutar; no debe sobrecargar ni reemplazar autoridad posterior."}
-    }
-  };
-
-  var ZONES=[
-    {id:"orientation",c:"#93c5fd",t:P("Orientation","定位","Orientación"),s:P("Know where you are after the Door.","越过门之后知道自己在哪里。","Saber dónde estás después de la Puerta."),
-      platform:{intro:P("Orientation confirms the visitor is inside the system, not still outside the Door.","定位确认访问者已经在系统内部，而不是还在门外。","Orientación confirma que el visitante está dentro del sistema, no fuera de la Puerta."),
-        b:[P("Current position","当前位置","Posición actual"),P("Home confirms the interior has begun.","Home 确认内部已开始。","Home confirma que el interior comenzó."),P("Plain center","清晰中心","Centro claro"),P("The page names the center before expanding the system.","页面先命名中心，再展开系统。","La página nombra el centro antes de expandir."),P("No overload","不过载","Sin sobrecarga"),P("The full map stays folded until requested.","完整地图保持折叠，直到被请求。","El mapa completo queda plegado hasta solicitarse.")]},
-      engineering:{intro:P("Orientation is a state assertion: root entry has moved into interior routing.","定位是状态断言：根入口已移动到内部路由。","Orientación es aserción de estado: entrada raíz pasó a ruta interior."),
-        b:[P("State","状态","Estado"),P("INTERIOR_ROLE=ACTIVE; DOOR_ROLE=PREVIOUS_ENTRY.","INTERIOR_ROLE=ACTIVE；DOOR_ROLE=PREVIOUS_ENTRY。","INTERIOR_ROLE=ACTIVE; DOOR_ROLE=PREVIOUS_ENTRY."),P("Route clarity","路由清晰","Claridad"),P("Every visible route points to a real page with state carry.","每个可见路由指向真实页面并携带状态。","Cada ruta visible apunta a página real con estado."),P("Compression","压缩","Compresión"),P("Labels first; explanations unfold only inside requested dolls.","标签优先；解释只在请求的套娃内展开。","Etiquetas primero; explicación en muñecas solicitadas.")]}}
-    ,
-    {id:"center",c:"#c9a24a",t:P("Center Hold","中心保持","Sostener centro"),s:P("Home stabilizes without overexpressing.","Home 稳定但不过度表达。","Home estabiliza sin sobreexpresar."),
-      platform:{intro:P("Center Hold keeps Home from doing every page’s job. It gives enough meaning to choose a path, then lets the visitor move.","中心保持防止 Home 承担每个页面的职责。它给足以选择路径的意义，然后让访问者移动。","Sostener centro evita que Home haga el trabajo de todas las páginas."),
-        b:[P("Restraint","克制","Contención"),P("The center is stable because it does less, not because it says everything.","中心稳定是因为少做，而不是说尽一切。","El centro es estable porque hace menos."),P("Interior tone","内部语气","Tono interior"),P("Readable, calm, and direct.","可读、冷静、直接。","Legible, calmo y directo."),P("Visitor control","访问者控制","Control"),P("Visitors choose depth through nested capsules.","访问者通过嵌套胶囊选择深度。","El visitante elige profundidad por cápsulas.")]},
-      engineering:{intro:P("Center Hold preserves low cognitive load while retaining route completeness.","中心保持在保留完整路由的同时降低认知负荷。","Sostener centro mantiene baja carga cognitiva con rutas completas."),
-        b:[P("Load rule","负荷规则","Carga"),P("Visible default stays compact; depth is opt-in.","默认可见保持紧凑；深度为主动选择。","Visible compacto; profundidad opt-in."),P("Authority rule","权威规则","Autoridad"),P("Home routes out; downstream pages own their content.","Home 只路由；下游页面拥有内容。","Home enruta; páginas posteriores poseen contenido."),P("Fail-safe","安全失败","Fail-safe"),P("If scripts fail, links and readable text remain usable.","脚本失败时，链接和文字仍可用。","Si scripts fallan, enlaces/texto siguen usables.")]}}
-    ,
-    {id:"routes",c:"#34d399",t:P("Route Cleanly","干净路由","Enrutar limpio"),s:P("Send the visitor to the correct next chamber.","把访问者送到正确的下一个房间。","Enviar al visitante a la siguiente cámara correcta."),
-      platform:{intro:P("Home routes without pretending to be the destination. Prelude prepares, Explore maps, Products packages, Gauges inspects, Laws bound, Governance executes.","Home 路由但不假装自己是目的地。Prelude 准备，Explore 映射，Products 打包，Gauges 检查，Laws 定边界，Governance 执行。","Home enruta sin fingir ser destino."),
-        b:[P("Route labels","路由标签","Etiquetas"),P("Labels are short enough to scan and strong enough to guide.","标签足够短以扫描，也足够强以引导。","Etiquetas breves y guía clara."),P("Route purpose","路由目的","Propósito"),P("Every link answers why to go there next.","每个链接都回答为什么下一步去那里。","Cada enlace responde por qué ir ahí."),P("No dead ends","无死路","Sin callejones"),P("Home should not create future doors that do not exist.","Home 不应创建不存在的未来门。","Home no crea puertas futuras inexistentes.")]},
-      engineering:{intro:P("Route Cleanly is the navigation contract: all outbound links carry state and point to stable route owners.","干净路由是导航契约：所有外链携带状态并指向稳定路由所有者。","Enrutar limpio es contrato de navegación."),
-        b:[P("State carry","状态携带","Estado"),P("lang/style/time/depth/lane are preserved through URLs.","lang/style/time/depth/lane 通过 URL 保留。","lang/style/time/depth/lane por URL."),P("Route owner","路由所有者","Dueño"),P("Downstream pages own their controls.","下游页面拥有自己的控制。","Páginas posteriores poseen controles."),P("Auditability","可审计","Auditable"),P("Route map is visible inside the nested panel.","路由图在嵌套面板中可见。","Mapa visible en panel anidado.")]}}
-    ,
-    {id:"continuity",c:"#ff2b2b",t:P("Continuity","连续性","Continuidad"),s:P("Keep the interior consistent across language, lens, and time.","让内部在语言、透镜与时间中保持一致。","Mantener consistencia por idioma, lente y tiempo."),
-      platform:{intro:P("Continuity makes Home feel like part of the same house as the Door, Governance, Laws, Products, and Gauges.","连续性让 Home 感觉属于同一座房子，与 Door、Governance、Laws、Products 和 Gauges 一致。","Continuidad hace que Home pertenezca a la misma casa."),
-        b:[P("Language","语言","Idioma"),P("EN, 中文, and ES switch without reload or closing the open doll.","EN、中文、ES 切换不刷新也不关闭打开的套娃。","Cambian sin recargar ni cerrar muñeca."),P("Lens","透镜","Lente"),P("Platform and Engineering remain separate reads of the same structure.","平台与工程是同一结构的不同读法。","Plataforma e Ingeniería son lecturas separadas."),P("Time","时间","Tiempo"),P("Origin, now, and post travel without new storage keys.","origin、now、post 可传递且不增加新存储键。","origin, now y post sin claves nuevas.")]},
-      engineering:{intro:P("Continuity binds state carry and storage boundaries without creating hidden state.","连续性绑定状态携带与存储边界，不创建隐藏状态。","Continuidad vincula estado y límites sin estado oculto."),
-        b:[P("Storage boundary","存储边界","Límite"),P("Allowed LS keys: gd_lang, gd_style, gd_time, gd_depth only.","允许 LS 键：gd_lang、gd_style、gd_time、gd_depth。","Claves LS: gd_lang, gd_style, gd_time, gd_depth."),P("No reload","不刷新","Sin recarga"),P("Language and lane changes are local DOM updates with history replacement.","语言与透镜变更是本地 DOM 更新并替换 history。","Actualización DOM local con history."),P("Same house","同一座房","Misma casa"),P("Visual language stays aligned with Governance Level 4 and the site spine.","视觉语言与 Governance Level 4 和站点脊柱一致。","Visual alineado con Governance Nivel 4.")]}}
-  ];
-
-  var L4={
-    compass:P("Home is the first interior chamber after the Door. It is not the whole map; it is the stabilizing center.","Home 是门后的第一个内部房间。它不是完整地图，而是稳定中心。","Home es la primera cámara interior tras la Puerta. No es todo el mapa; es centro estabilizador."),
-    star:P("Home is healthy when a visitor can understand where they are, choose a route, and remain oriented without total-system explanation.","当访问者能理解位置、选择路线，并且不需要全系统解释也能保持方向时，Home 就是健康的。","Home es sano cuando se entiende ubicación, ruta y orientación sin explicar todo."),
-    legend:[P("North: identity, center, current location, Door/interior boundary.","北：身份、中心、当前位置、门/内部边界。","Norte: identidad, centro, ubicación y límite."),P("East: forward routes and future movement.","东：前进路由与未来运动。","Este: rutas futuras y movimiento."),P("South: stability, readability, and no-overload protection.","南：稳定、可读性与防过载保护。","Sur: estabilidad, legibilidad y protección."),P("West: pressure control, stale labels, broken routes, confusing entry paths.","西：压力控制、陈旧标签、断路由、混乱入口。","Oeste: presión, etiquetas obsoletas, rutas rotas.")],
-    ledger:[P("Interior orientation: active.","内部定位：已激活。","Orientación interior: activa."),P("Center hold: compact and readable.","中心保持：紧凑且可读。","Centro: compacto y legible."),P("Route map: state-carrying.","路由图：携带状态。","Mapa: transporta estado."),P("Language/lens: no reload.","语言/透镜：无刷新。","Idioma/lente: sin recarga."),P("Level 4: nested, not crowded.","第四级：嵌套，不拥挤。","Nivel 4: anidado, no saturado.")]
-  };
-
-  var openIndex=null;
-  var innerOpen=null;
-  var caps=document.getElementById("caps");
-  var body=document.getElementById("dollBody");
-
-  function activePack(zone){return lane==="engineering"?zone.engineering:zone.platform}
-
-  function buildCaps(){
-    caps.innerHTML="";
-    ZONES.forEach(function(zone,i){
-      var b=document.createElement("button");
-      b.type="button";
-      b.className="cap";
-      b.setAttribute("aria-expanded",openIndex===i?"true":"false");
-      b.style.setProperty("--c",zone.c);
-      b.innerHTML='<div class="capMark"></div><h3></h3><p></p>';
-      b.querySelector("h3").textContent=text(zone.t);
-      b.querySelector("p").textContent=text(zone.s);
-      b.addEventListener("click",function(){toggleCap(i)}, {passive:true});
-      caps.appendChild(b);
-    });
-  }
-
-  function makeBubble(title,copy){
-    var d=document.createElement("div");
-    d.className="bubble";
-    d.setAttribute("role","button");
-    d.tabIndex=0;
-    var h=document.createElement("h4");
-    var p=document.createElement("p");
-    h.textContent=text(title);
-    p.textContent=text(copy);
-    d.appendChild(h);
-    d.appendChild(p);
-    function act(){d.classList.toggle("open")}
-    d.addEventListener("click",act,{passive:true});
-    d.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}});
-    return d;
-  }
-
-  function renderBody(){
-    if(openIndex===null){
-      body.setAttribute("data-open","false");
-      body.innerHTML="";
-      return;
-    }
-
-    var zone=ZONES[openIndex];
-    var pack=activePack(zone);
-    var b=pack.b;
-
-    body.setAttribute("data-open","true");
-    body.innerHTML="";
-
-    var title=document.createElement("h2");
-    title.className="dollTitle";
-    title.textContent=text(zone.t);
-
-    var intro=document.createElement("p");
-    intro.className="dollIntro";
-    intro.textContent=text(pack.intro);
-
-    var bubbles=document.createElement("div");
-    bubbles.className="bubbles";
-    bubbles.appendChild(makeBubble(b[0],b[1]));
-    bubbles.appendChild(makeBubble(b[2],b[3]));
-    bubbles.appendChild(makeBubble(b[4],b[5]));
-
-    var controls=document.createElement("div");
-    controls.className="innerControls";
-    [["compass",pick("Compass","罗盘","Brújula")],["star",pick("North Star","北星","Estrella Norte")],["ledger",pick("Ledger","账本","Registro")],["routes",pick("Routes","路由","Rutas")]].forEach(function(item){
-      var btn=document.createElement("button");
-      btn.type="button";
-      btn.className="innerBtn";
-      btn.setAttribute("aria-pressed",innerOpen===item[0]?"true":"false");
-      btn.textContent=item[1];
-      btn.addEventListener("click",function(){toggleInner(item[0])});
-      controls.appendChild(btn);
-    });
-
-    var panel=document.createElement("div");
-    panel.className="innerPanel";
-    panel.setAttribute("data-open",innerOpen?"true":"false");
-    panel.innerHTML=innerHtml();
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-    actions.innerHTML='<a class="btn red" data-route="/prelude/" href="/prelude/"></a><a class="btn" data-route="/explore/" href="/explore/"></a><a class="btn" data-route="/gauges/" href="/gauges/"></a>';
-    actions.children[0].textContent=pick("OPEN: PRELUDE","打开：序章","ABRIR: PRELUDIO");
-    actions.children[1].textContent=pick("OPEN: EXPLORE","打开：探索","ABRIR: EXPLORAR");
-    actions.children[2].textContent=pick("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES");
-
-    body.appendChild(title);
-    body.appendChild(intro);
-    body.appendChild(bubbles);
-    body.appendChild(controls);
-    body.appendChild(panel);
-    body.appendChild(actions);
-    wireAll();
-  }
-
-  function innerHtml(){
-    if(!innerOpen) return "";
-    if(innerOpen==="compass"){
-      return '<h4>'+pick("Compass","罗盘","Brújula")+'</h4><p>'+text(L4.compass)+'</p><div class="innerGrid">'+L4.legend.map(function(x){return '<div class="innerBox"><strong>'+pick("Legend","图例","Leyenda")+'</strong>'+text(x)+'</div>'}).join("")+'</div>';
-    }
-    if(innerOpen==="star"){
-      return '<h4>'+pick("North Star","北星","Estrella Norte")+'</h4><p>'+text(L4.star)+'</p>';
-    }
-    if(innerOpen==="ledger"){
-      return '<h4>'+pick("Home Ledger","HOME 账本","Registro Home")+'</h4><div class="innerGrid">'+L4.ledger.map(function(x){return '<div class="innerBox"><strong>'+pick("Strong","强","Fuerte")+'</strong>'+text(x)+'</div>'}).join("")+'</div>';
-    }
-    if(innerOpen==="routes"){
-      return '<h4>'+pick("Route Map","路由图","Mapa de rutas")+'</h4><p>'+pick("Primary Home routes remain tucked here instead of crowding the surface.","主要 Home 路由收纳在这里，不挤占表面。","Rutas primarias quedan aquí, no saturan la superficie.")+'</p><div class="routeMap"><a data-route="/index.html" href="/index.html">COMPASS</a><a data-route="/prelude/" href="/prelude/">PRELUDE</a><a data-route="/explore/" href="/explore/">EXPLORE</a><a data-route="/products/" href="/products/">PRODUCTS</a><a data-route="/gauges/" href="/gauges/">GAUGES</a></div>';
-    }
-    return "";
-  }
-
-  function toggleCap(i){
-    if(openIndex===i){openIndex=null;innerOpen=null}else{openIndex=i;innerOpen=null}
-    buildCaps();
-    renderBody();
-  }
-
-  function toggleInner(key){
-    innerOpen=innerOpen===key?null:key;
-    renderBody();
-  }
-
-  function applyHeader(){
-    var pack=HEAD[lang][lane];
-    document.documentElement.lang=lang==="zh"?"zh":(lang==="es"?"es":"en");
-    document.getElementById("hk").textContent=pick("HOME","首页","HOME");
-    document.getElementById("ht").textContent=pick("INTERIOR ORIENTATION","内部定位","ORIENTACIÓN INTERIOR");
-    document.getElementById("hs").textContent=pack.hs;
-    document.getElementById("rule").textContent=pack.rule;
-    document.getElementById("band").textContent=pick("OPEN ONE DOLL","打开一个套娃","ABRE UNA MUÑECA");
-    document.getElementById("languageLabel").textContent=pick("Language","语言","Idioma");
-    document.getElementById("lensLabel").textContent=pick("Lens","透镜","Lente");
-    document.getElementById("laneState").textContent=pick("Current lens: ","当前透镜：","Lente actual: ")+laneName();
-    document.getElementById("langState").textContent=lang==="zh"?"语言：中文":(lang==="es"?"Idioma: ES":"Lang: EN");
-    document.getElementById("btnCompass").textContent=pick("COMPASS","指南针","BRÚJULA");
-    document.getElementById("btnPrelude").textContent=pick("PRELUDE","序章","PRELUDIO");
-    document.getElementById("btnExplore").textContent=pick("EXPLORE","探索","EXPLORAR");
-    document.getElementById("dockDoor").textContent=pick("DOOR","门","PUERTA");
-    document.getElementById("dockLaws").textContent=pick("LAWS","法则","LEYES");
-    document.getElementById("dockGovernance").textContent=pick("GOVERNANCE","治理","GOBERNANZA");
-    document.getElementById("dockCompass").textContent=pick("COMPASS","指南针","BRÚJULA");
-  }
-
-  function wireAll(){
-    Array.prototype.slice.call(document.querySelectorAll("[data-route]")).forEach(function(el){
-      var route=el.getAttribute("data-route")||"";
-      if(!route) return;
-      try{
-        var u=new URL(route,location.origin);
-        u.searchParams.set("lang",lang);
-        u.searchParams.set("style","informal");
-        u.searchParams.set("time",time);
-        u.searchParams.set("depth","explore");
-        u.searchParams.set("lane",lane);
-        el.setAttribute("href",u.pathname+"?"+u.searchParams.toString()+(u.hash||""));
-      }catch(e){
-        el.setAttribute("href",route+q());
+  <script>
+    (function(){
+      "use strict";
+      var copy={
+        flat:{title:"Flat view: what is right in front of me?",text:"Begin with what is visible and practical. One clean step is better than ten cloudy ideas.",one:"Immediate step active",two:"Home view simple",three:"Ready to move"},
+        round:{title:"Round view: how does this connect to my life?",text:"Now look at the relationships. What keeps repeating? What affects your time, energy, people, and direction?",one:"Connection view active",two:"Pattern becoming clear",three:"Ready to choose"},
+        globe:{title:"Globe view: what direction am I moving overall?",text:"Zoom out and look at the full direction. Where is this taking you, and is that where you want to go?",one:"Whole-direction view active",two:"Big picture visible",three:"Ready to decide"}
+      };
+      function setText(id,value){var n=document.getElementById(id);if(n)n.textContent=value}
+      function apply(name){
+        var next=copy[name]?name:"flat",p=copy[next];
+        document.body.setAttribute("data-world-filter",next);
+        document.querySelectorAll("[data-filter]").forEach(function(b){b.setAttribute("aria-pressed",b.getAttribute("data-filter")===next?"true":"false")});
+        setText("resultTitle",p.title);setText("resultText",p.text);setText("stateOne",p.one);setText("stateTwo",p.two);setText("stateThree",p.three);
       }
-    });
-  }
-
-  function setLang(next){
-    if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
-    lang=next;
-    try{LS.setItem("gd_lang",lang)}catch(e){}
-    history.replaceState({},"",location.pathname+q({lang:lang}));
-    setPressed(["langEN","langZH","langES"],lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    applyHeader();buildCaps();renderBody();wireAll();
-  }
-
-  function setLane(next){
-    if(next!=="platform"&&next!=="engineering") next="platform";
-    lane=next;
-    history.replaceState({},"",location.pathname+q({lane:lane}));
-    setPressed(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");
-    applyHeader();buildCaps();renderBody();wireAll();
-  }
-
-  document.getElementById("langEN").addEventListener("click",function(){setLang("en")},{passive:true});
-  document.getElementById("langZH").addEventListener("click",function(){setLang("zh")},{passive:true});
-  document.getElementById("langES").addEventListener("click",function(){setLang("es")},{passive:true});
-  document.getElementById("lanePlatform").addEventListener("click",function(){setLane("platform")},{passive:true});
-  document.getElementById("laneEngineering").addEventListener("click",function(){setLane("engineering")},{passive:true});
-
-  setPressed(["langEN","langZH","langES"],lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-  setPressed(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");
-  applyHeader();buildCaps();renderBody();wireAll();
-})();
-</script>
+      document.querySelectorAll("[data-filter]").forEach(function(b){b.addEventListener("click",function(){apply(b.getAttribute("data-filter"))})});
+      apply("flat");
+    })();
+  </script>
 </body>
 </html>

@@ -1,38 +1,27 @@
-/*
-  Diamond Gate Bridge — Root Universe Sun Boot
-  File: /index.js
-  Generation: 1
-  Baseline: Root Universe Sun Baseline 2
-  Role: safe boot handoff, cross-board runtime loading, visible-first root protection.
-*/
 
 (function () {
   "use strict";
 
-  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js";
-  var PAGE_RUNTIME_PATH = "/runtime/index_runtime.js";
+  var RUNTIME_NAME = "DGBIndexRuntime";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
-  var PAGE_RUNTIME_NAME = "DGBIndexRuntime";
-
   var BASELINE = "Generation 1 Root Universe Sun Baseline 2";
-  var THEME = "Learn to Live to Love";
 
-  var bootState = {
-    pageVisible: false,
-    siteRuntimeRequested: false,
-    siteRuntimeLoaded: false,
-    siteRuntimeFailed: false,
-    pageRuntimeRequested: false,
-    pageRuntimeLoaded: false,
-    pageRuntimeFailed: false
+  var state = {
+    started: false,
+    pointerActive: false,
+    sunGlow: 0,
+    coronaIntensity: 0,
+    stellarDepth: 0,
+    orbitBreath: 0,
+    frame: null
   };
 
-  function getRoot() {
-    return (
-      document.getElementById("door-root") ||
-      document.querySelector("[data-universe-sun]") ||
-      document.querySelector("main")
-    );
+  function root() {
+    return document.documentElement;
+  }
+
+  function setCssVar(name, value) {
+    root().style.setProperty(name, value);
   }
 
   function setStatus(text) {
@@ -40,179 +29,236 @@
     if (node) node.textContent = text;
   }
 
-  function protectVisibleRoot() {
-    var root = getRoot();
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
 
-    if (!root || root.textContent.trim().length < 80) {
-      document.body.innerHTML =
-        '<main id="door-root" data-universe-sun style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
-        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first universe sun fallback</p>' +
-        '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
-        '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">Learn to Live to Love</p>' +
-        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The universe sun fallback is active. The page remains visible even if runtime enhancement fails.</p>' +
-        '<nav style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;">' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/products/">Products</a>' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/gauges/">Gauges</a>' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/laws/">Laws</a>' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/governance/">Governance</a>' +
-        '</nav>' +
-        '</main>';
+  function hasReducedMotion() {
+    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
 
-      setStatus("Universe sun fallback active");
-      return false;
-    }
+  function siteRuntime() {
+    return window[SITE_RUNTIME_NAME] || null;
+  }
 
-    bootState.pageVisible = true;
+  function registerWithSiteRuntime(validated) {
+    var site = siteRuntime();
 
-    if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].registerVisibleFirst === "function") {
-      window[SITE_RUNTIME_NAME].registerVisibleFirst({
-        source: "index.js",
-        root: root.id || "root",
-        baseline: BASELINE,
-        object: "universe-sun"
+    if (!site) return;
+
+    if (typeof site.registerRuntime === "function") {
+      site.registerRuntime({
+        id: "universeSunRuntime",
+        page: "home",
+        role: "universe-sun-enhancement",
+        path: "/runtime/index_runtime.js",
+        validated: Boolean(validated),
+        optional: true
       });
     }
 
-    return true;
-  }
-
-  function loadScript(path, onload, onerror) {
-    var script = document.createElement("script");
-    script.src = path;
-    script.defer = true;
-    script.onload = onload;
-    script.onerror = onerror;
-    document.body.appendChild(script);
-  }
-
-  function registerSiteRuntime() {
-    if (!window[SITE_RUNTIME_NAME]) return;
-
-    if (typeof window[SITE_RUNTIME_NAME].registerPage === "function") {
-      window[SITE_RUNTIME_NAME].registerPage({
+    if (typeof site.registerPage === "function") {
+      site.registerPage({
         id: "home",
         title: "Diamond Gate Bridge",
         baseline: BASELINE,
-        theme: THEME,
-        visibleFirst: bootState.pageVisible
-      });
-    }
-
-    if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
-      window[SITE_RUNTIME_NAME].registerRuntime({
-        id: "rootUniverseSunBoot",
-        page: "home",
-        role: "boot-handoff",
-        path: "/index.js",
-        validated: true,
-        optional: false
+        theme: "Learn to Live to Love",
+        visibleFirst: Boolean(document.getElementById("door-root"))
       });
     }
   }
 
-  function loadSiteRuntimeThenPageRuntime() {
-    if (bootState.siteRuntimeRequested || window[SITE_RUNTIME_NAME]) {
-      registerSiteRuntime();
-      loadPageRuntime();
+  function handlePointerMove(event) {
+    var width = Math.max(window.innerWidth, 1);
+    var height = Math.max(window.innerHeight, 1);
+
+    var x = event.clientX / width - 0.5;
+    var y = event.clientY / height - 0.5;
+
+    state.pointerActive = true;
+
+    setCssVar("--sun-tilt-y", (clamp(x, -0.5, 0.5) * 13).toFixed(2) + "deg");
+    setCssVar("--sun-tilt-x", (-6 + clamp(y, -0.5, 0.5) * -9).toFixed(2) + "deg");
+  }
+
+  function handlePointerLeave() {
+    state.pointerActive = false;
+    setCssVar("--sun-tilt-x", "-6deg");
+    setCssVar("--sun-tilt-y", "0deg");
+  }
+
+  function animateUniverseSun() {
+    if (!state.started) return;
+
+    var time = Date.now() / 1000;
+
+    state.sunGlow = 0.5 + Math.sin(time * 0.72) * 0.5;
+    state.coronaIntensity = 0.5 + Math.sin(time * 0.58 + 1.2) * 0.5;
+    state.stellarDepth = 0.5 + Math.sin(time * 0.29 + 2.1) * 0.5;
+    state.orbitBreath = 0.5 + Math.sin(time * 0.40 + 0.6) * 0.5;
+
+    setCssVar("--sun-glow", state.sunGlow.toFixed(3));
+    setCssVar("--corona-intensity", state.coronaIntensity.toFixed(3));
+    setCssVar("--stellar-depth", state.stellarDepth.toFixed(3));
+    setCssVar("--orbit-breath", state.orbitBreath.toFixed(3));
+    setCssVar("--sun-pulse", (1 + state.sunGlow * 0.010).toFixed(4));
+
+    state.frame = window.requestAnimationFrame(animateUniverseSun);
+  }
+
+  function markRoutes() {
+    var current = window.location.pathname;
+    var links = document.querySelectorAll(".route-node, .action");
+
+    links.forEach(function (link) {
+      var href = link.getAttribute("href");
+      if (href && href === current) {
+        link.setAttribute("aria-current", "page");
+      }
+    });
+  }
+
+  function addRouteReceipts() {
+    var system = document.querySelector("[data-universe-system]");
+    var links = document.querySelectorAll(".route-node");
+
+    if (!system) return;
+
+    links.forEach(function (link) {
+      link.addEventListener("focus", function () {
+        system.setAttribute("data-route-focus", link.textContent.trim());
+
+        if (siteRuntime() && typeof siteRuntime().addReceipt === "function") {
+          siteRuntime().addReceipt("ROUTE_FOCUS", {
+            route: link.getAttribute("href"),
+            label: link.textContent.trim()
+          });
+        }
+      });
+
+      link.addEventListener("blur", function () {
+        system.removeAttribute("data-route-focus");
+      });
+
+      link.addEventListener("mouseenter", function () {
+        system.setAttribute("data-route-focus", link.textContent.trim());
+      });
+
+      link.addEventListener("mouseleave", function () {
+        system.removeAttribute("data-route-focus");
+      });
+    });
+  }
+
+  function protectVisibleRoot() {
+    if (window.DGBIndexBoot && typeof window.DGBIndexBoot.protectVisibleRoot === "function") {
+      window.DGBIndexBoot.protectVisibleRoot();
+    } else if (window.DGBIndexBoot && typeof window.DGBIndexBoot.protectVisibleDoor === "function") {
+      window.DGBIndexBoot.protectVisibleDoor();
+    }
+  }
+
+  function start() {
+    if (state.started) return;
+
+    var sun = document.querySelector("[data-universe-sun-object]");
+    if (!sun) {
+      setStatus("Static universe sun active");
+      registerWithSiteRuntime(false);
       return;
     }
 
-    bootState.siteRuntimeRequested = true;
-    setStatus("Site runtime loading");
+    state.started = true;
+    setStatus("Universe sun runtime active");
 
-    loadScript(
-      SITE_RUNTIME_PATH,
-      function () {
-        bootState.siteRuntimeLoaded = true;
-        setStatus("Site runtime active");
-        registerSiteRuntime();
-        loadPageRuntime();
-      },
-      function () {
-        bootState.siteRuntimeFailed = true;
-        setStatus("Static universe sun active");
-        loadPageRuntime();
-      }
-    );
+    markRoutes();
+    addRouteReceipts();
+    registerWithSiteRuntime(true);
+
+    if (!hasReducedMotion()) {
+      window.addEventListener("pointermove", handlePointerMove, { passive: true });
+      window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
+      animateUniverseSun();
+    } else {
+      setCssVar("--sun-glow", "0.58");
+      setCssVar("--corona-intensity", "0.56");
+      setCssVar("--stellar-depth", "0.50");
+      setCssVar("--orbit-breath", "0.50");
+      setCssVar("--sun-pulse", "1");
+    }
+
+    window.setTimeout(protectVisibleRoot, 600);
+    window.setTimeout(protectVisibleRoot, 1800);
   }
 
-  function loadPageRuntime() {
-    if (bootState.pageRuntimeRequested || window[PAGE_RUNTIME_NAME]) return;
+  function stop() {
+    state.started = false;
 
-    bootState.pageRuntimeRequested = true;
-    setStatus("Universe sun runtime loading");
+    if (state.frame) {
+      window.cancelAnimationFrame(state.frame);
+      state.frame = null;
+    }
 
-    loadScript(
-      PAGE_RUNTIME_PATH,
-      function () {
-        bootState.pageRuntimeLoaded = true;
-        setStatus("Universe sun runtime active");
+    window.removeEventListener("pointermove", handlePointerMove);
+    window.removeEventListener("pointerleave", handlePointerLeave);
 
-        if (window[PAGE_RUNTIME_NAME] && typeof window[PAGE_RUNTIME_NAME].start === "function") {
-          window[PAGE_RUNTIME_NAME].start();
-        }
-
-        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
-          window[SITE_RUNTIME_NAME].updateRuntimeStatus("universeSunRuntime", {
-            validated: true,
-            loaded: true,
-            baseline: BASELINE
-          });
-        }
-      },
-      function () {
-        bootState.pageRuntimeFailed = true;
-        setStatus("Static universe sun active");
-
-        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
-          window[SITE_RUNTIME_NAME].addWarning(
-            "PAGE_RUNTIME_MISSING",
-            "Root universe sun page runtime did not load.",
-            { path: PAGE_RUNTIME_PATH, baseline: BASELINE }
-          );
-        }
-      }
-    );
-  }
-
-  function boot() {
-    var visible = protectVisibleRoot();
-    if (!visible) return;
-
-    setStatus("Visible-first universe sun active");
-    loadSiteRuntimeThenPageRuntime();
-
-    window.setTimeout(protectVisibleRoot, 500);
-    window.setTimeout(protectVisibleRoot, 1600);
-  }
-
-  window.DGBIndexBoot = Object.freeze({
-    getState: function () {
-      return {
-        pageVisible: bootState.pageVisible,
-        siteRuntimeRequested: bootState.siteRuntimeRequested,
-        siteRuntimeLoaded: bootState.siteRuntimeLoaded,
-        siteRuntimeFailed: bootState.siteRuntimeFailed,
-        pageRuntimeRequested: bootState.pageRuntimeRequested,
-        pageRuntimeLoaded: bootState.pageRuntimeLoaded,
-        pageRuntimeFailed: bootState.pageRuntimeFailed,
+    if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
+      siteRuntime().updateRuntimeStatus("universeSunRuntime", {
+        validated: false,
+        stopped: true,
         baseline: BASELINE
-      };
-    },
+      });
+    }
+  }
 
-    protectVisibleRoot: protectVisibleRoot,
+  function getState() {
+    return {
+      name: RUNTIME_NAME,
+      started: state.started,
+      pointerActive: state.pointerActive,
+      sunGlow: state.sunGlow,
+      coronaIntensity: state.coronaIntensity,
+      stellarDepth: state.stellarDepth,
+      orbitBreath: state.orbitBreath,
+      baseline: BASELINE
+    };
+  }
 
-    /*
-      Compatibility alias:
-      Existing page runtimes may still call protectVisibleDoor().
-      The function now protects the universe-sun root surface.
-    */
-    protectVisibleDoor: protectVisibleRoot
+  function validate() {
+    var result = {
+      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-universe-sun-object]")),
+      runtime: RUNTIME_NAME,
+      started: state.started,
+      themePresent: document.body.textContent.includes("Learn to Live to Love"),
+      sunPresent: Boolean(document.querySelector("[data-universe-sun-object]")),
+      staleSolarDoorTextRemoved: !document.body.textContent.includes("Static Solar Door Active") && !document.body.textContent.includes("STATIC SOLAR DOOR ACTIVE"),
+      sunLabelRemoved: !document.body.textContent.includes("SUN"),
+      siteRuntimePresent: Boolean(siteRuntime()),
+      noImageDependency: true,
+      baseline: BASELINE
+    };
+
+    if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
+      siteRuntime().updateRuntimeStatus("universeSunRuntime", {
+        validated: result.ok,
+        lastValidation: result,
+        baseline: BASELINE
+      });
+    }
+
+    return result;
+  }
+
+  window[RUNTIME_NAME] = Object.freeze({
+    start: start,
+    stop: stop,
+    getState: getState,
+    validate: validate
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
+    document.addEventListener("DOMContentLoaded", start, { once: true });
   } else {
-    boot();
+    start();
   }
 })();

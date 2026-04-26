@@ -1,179 +1,38 @@
 :root {
-  --dgb-sun-size: min(82vw, 520px);
-  --dgb-sun-glow: 0.66;
-  --dgb-sun-corona: 0.62;
-  --dgb-sun-depth: 0.55;
-  --dgb-sun-pulse: 1;
-  --dgb-sun-tilt-x: -6deg;
-  --dgb-sun-tilt-y: 0deg;
-  --dgb-sun-white: rgba(255, 255, 238, 1);
-  --dgb-sun-gold: rgba(255, 218, 105, 0.98);
-  --dgb-sun-orange: rgba(255, 125, 30, 0.94);
-  --dgb-sun-red: rgba(175, 42, 10, 0.66);
+  --dgb-sun-size: min(92vw, 720px);
   --dgb-space: #02040b;
-  --dgb-space-soft: rgba(255, 248, 231, 0.14);
+  --dgb-sun-glow: rgba(255, 196, 84, 0.38);
+  --dgb-sun-hot-glow: rgba(255, 115, 28, 0.26);
 }
 
-.dgb-sun-stage {
-  position: relative;
+[data-dgb-sun-mount] {
   width: var(--dgb-sun-size);
+  max-width: 100%;
   aspect-ratio: 1;
   display: grid;
   place-items: center;
+  position: relative;
   isolation: isolate;
-  perspective: 1200px;
-  transform-style: preserve-3d;
 }
 
-.dgb-sun-stage::before {
+[data-dgb-sun-mount]::before {
   content: "";
   position: absolute;
   inset: -18%;
   border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(255, 218, 105, 0.16), transparent 31%),
-    radial-gradient(circle at 50% 50%, rgba(255, 120, 30, 0.08), transparent 58%),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.04), transparent 74%);
-  filter: blur(14px);
-  opacity: calc(0.62 + var(--dgb-sun-glow) * 0.18);
-  transform: scale(calc(1 + var(--dgb-sun-glow) * 0.04));
   pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255, 239, 170, 0.16), transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(255, 116, 28, 0.10), transparent 58%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.04), transparent 78%);
+  filter: blur(18px);
+  opacity: 0.82;
 }
 
-.dgb-sun-css {
+.dgb-sun-canvas,
+.dgb-sun-svg {
   position: relative;
   z-index: 2;
-  width: 76%;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  border-radius: 999px;
-  transform-style: preserve-3d;
-  transform:
-    rotateX(var(--dgb-sun-tilt-x))
-    rotateY(var(--dgb-sun-tilt-y))
-    scale(var(--dgb-sun-pulse));
-}
-
-.dgb-sun-css::before {
-  content: "";
-  position: absolute;
-  inset: -22%;
-  border-radius: 999px;
-  background:
-    conic-gradient(
-      from 17deg,
-      transparent 0deg,
-      rgba(255, 137, 34, calc(0.22 + var(--dgb-sun-corona) * 0.12)) 14deg,
-      rgba(255, 250, 218, 0.15) 26deg,
-      transparent 42deg,
-      rgba(255, 83, 18, 0.18) 74deg,
-      transparent 104deg,
-      rgba(255, 219, 126, 0.22) 136deg,
-      transparent 170deg,
-      rgba(255, 127, 32, 0.18) 218deg,
-      rgba(255, 255, 230, 0.12) 246deg,
-      transparent 276deg,
-      rgba(255, 172, 50, 0.21) 320deg,
-      transparent 360deg
-    );
-  filter: blur(1.6px);
-  opacity: calc(0.70 + var(--dgb-sun-corona) * 0.23);
-  animation: dgbSunCoronaTurn 28s linear infinite;
-  pointer-events: none;
-}
-
-.dgb-sun-css::after {
-  content: "";
-  position: absolute;
-  inset: -34%;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle, transparent 42%, rgba(255, 196, 84, 0.16) 44%, transparent 49%),
-    conic-gradient(
-      from 66deg,
-      transparent,
-      rgba(255, 201, 89, 0.14),
-      transparent 22deg,
-      rgba(255, 98, 27, 0.12),
-      transparent 78deg,
-      rgba(255, 255, 230, 0.08),
-      transparent 134deg
-    );
-  opacity: calc(0.50 + var(--dgb-sun-corona) * 0.18);
-  animation: dgbSunCoronaTurnReverse 42s linear infinite;
-  pointer-events: none;
-}
-
-.dgb-sun-core {
-  position: relative;
-  z-index: 3;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  background:
-    radial-gradient(circle at 31% 24%, rgba(255, 255, 246, 0.98) 0 5%, transparent 14%),
-    radial-gradient(circle at 63% 34%, rgba(255, 255, 225, 0.86) 0 4%, transparent 12%),
-    radial-gradient(circle at 42% 70%, rgba(255, 239, 143, 0.74) 0 5%, transparent 16%),
-    radial-gradient(circle at 53% 51%, rgba(255, 232, 104, 0.86), rgba(255, 139, 31, 0.78) 36%, rgba(190, 52, 12, 0.58) 68%, rgba(54, 12, 4, 0.72) 100%),
-    conic-gradient(
-      from 17deg,
-      rgba(255, 246, 169, 0.92),
-      rgba(255, 116, 22, 0.80),
-      rgba(255, 217, 95, 0.94),
-      rgba(161, 45, 10, 0.72),
-      rgba(255, 151, 35, 0.88),
-      rgba(255, 245, 178, 0.86),
-      rgba(255, 104, 24, 0.78),
-      rgba(255, 246, 169, 0.92)
-    );
-  box-shadow:
-    inset 0 0 28px rgba(255, 255, 255, 0.22),
-    inset 0 -38px 76px rgba(44, 7, 2, 0.36),
-    inset 0 0 0 16px rgba(68, 16, 6, 0.14),
-    0 0 calc(44px + var(--dgb-sun-glow) * 24px) rgba(255, 208, 91, 0.40),
-    0 0 calc(120px + var(--dgb-sun-glow) * 48px) rgba(255, 96, 23, 0.24);
-}
-
-.dgb-sun-core::before {
-  content: "";
-  position: absolute;
-  inset: -6%;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 18% 42%, rgba(105, 24, 5, 0.34) 0 4%, transparent 10%),
-    radial-gradient(circle at 36% 35%, rgba(255, 255, 218, 0.42) 0 2%, transparent 8%),
-    radial-gradient(circle at 57% 59%, rgba(112, 27, 6, 0.30) 0 5%, transparent 12%),
-    radial-gradient(circle at 72% 41%, rgba(255, 246, 180, 0.30) 0 3%, transparent 10%),
-    radial-gradient(circle at 49% 21%, rgba(128, 31, 8, 0.26) 0 5%, transparent 13%),
-    repeating-conic-gradient(
-      from 22deg,
-      rgba(255, 255, 255, 0.08) 0deg 3deg,
-      rgba(255, 139, 28, 0.08) 3deg 7deg,
-      rgba(82, 17, 4, 0.08) 7deg 10deg
-    );
-  mix-blend-mode: overlay;
-  opacity: 0.82;
-  animation: dgbSunPhotosphereDrift 36s linear infinite;
-}
-
-.dgb-sun-core::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 50%, transparent 53%, rgba(18, 5, 1, 0.50) 100%),
-    radial-gradient(circle at 22% 23%, rgba(255, 255, 255, 0.36), transparent 19%),
-    radial-gradient(circle at 75% 73%, rgba(255, 221, 94, 0.17), transparent 24%);
-  opacity: 0.84;
-  pointer-events: none;
-}
-
-.dgb-sun-svg,
-.dgb-sun-canvas {
   display: block;
   width: var(--dgb-sun-size);
   max-width: 100%;
@@ -183,31 +42,18 @@
 
 .dgb-sun-canvas {
   filter:
-    drop-shadow(0 0 32px rgba(255, 205, 91, 0.35))
-    drop-shadow(0 0 88px rgba(255, 95, 23, 0.22));
+    drop-shadow(0 0 34px var(--dgb-sun-glow))
+    drop-shadow(0 0 110px var(--dgb-sun-hot-glow));
 }
 
-@keyframes dgbSunCoronaTurn {
-  from { transform: rotate(0deg) scale(1); }
-  50% { transform: rotate(180deg) scale(1.026); }
-  to { transform: rotate(360deg) scale(1); }
+.dgb-sun-svg {
+  filter:
+    drop-shadow(0 0 30px rgba(255, 205, 91, 0.28))
+    drop-shadow(0 0 88px rgba(255, 95, 23, 0.18));
 }
 
-@keyframes dgbSunCoronaTurnReverse {
-  from { transform: rotate(360deg); }
-  to { transform: rotate(0deg); }
-}
-
-@keyframes dgbSunPhotosphereDrift {
-  from { transform: rotate(0deg) scale(1.04); }
-  50% { transform: rotate(180deg) scale(1.08); }
-  to { transform: rotate(360deg) scale(1.04); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dgb-sun-css::before,
-  .dgb-sun-css::after,
-  .dgb-sun-core::before {
-    animation: none;
-  }
-}
+/*
+  Deliberate spine rule:
+  No .dgb-sun-css / .dgb-sun-core visual fallback is defined here.
+  The root sun must be mounted by canvas runtime authority.
+*/

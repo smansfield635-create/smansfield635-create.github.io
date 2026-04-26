@@ -1,10 +1,9 @@
-// /runtime/index_runtime.js
 /*
   Diamond Gate Bridge — Index Runtime
   File: /runtime/index_runtime.js
   Generation: 1
-  Baseline: Root Door Solar Baseline 2
-  Role: optional solar dazzle enhancement only.
+  Baseline: Root Door Seasonal Solar Baseline 1
+  Role: optional seasonal door enhancement only.
 */
 
 (function () {
@@ -15,8 +14,8 @@
     started: false,
     pointerActive: false,
     glow: 0,
-    turbulence: 0,
-    corona: 0,
+    seasonShift: 0,
+    sunBlessing: 0,
     frame: null
   };
 
@@ -50,31 +49,31 @@
 
     state.pointerActive = true;
 
-    setCssVar("--door-tilt-y", (clamp(x, -0.5, 0.5) * 17).toFixed(2) + "deg");
-    setCssVar("--door-tilt-x", (-9 + clamp(y, -0.5, 0.5) * -11).toFixed(2) + "deg");
+    setCssVar("--door-tilt-y", (clamp(x, -0.5, 0.5) * 12).toFixed(2) + "deg");
+    setCssVar("--door-tilt-x", (-5 + clamp(y, -0.5, 0.5) * -8).toFixed(2) + "deg");
   }
 
   function handlePointerLeave() {
     state.pointerActive = false;
-    setCssVar("--door-tilt-x", "-9deg");
+    setCssVar("--door-tilt-x", "-5deg");
     setCssVar("--door-tilt-y", "0deg");
   }
 
-  function animateSolarVariables() {
+  function animateDoorVariables() {
     if (!state.started) return;
 
     var time = Date.now() / 1000;
 
-    state.glow = 0.5 + Math.sin(time * 0.78) * 0.5;
-    state.turbulence = 0.5 + Math.sin(time * 0.47 + 1.2) * 0.5;
-    state.corona = 0.5 + Math.sin(time * 0.63 + 2.1) * 0.5;
+    state.glow = 0.5 + Math.sin(time * 0.68) * 0.5;
+    state.seasonShift = 0.5 + Math.sin(time * 0.31 + 1.4) * 0.5;
+    state.sunBlessing = 0.5 + Math.sin(time * 0.54 + 2.2) * 0.5;
 
-    setCssVar("--runtime-glow", state.glow.toFixed(3));
-    setCssVar("--solar-turbulence", state.turbulence.toFixed(3));
-    setCssVar("--corona-intensity", state.corona.toFixed(3));
-    setCssVar("--door-pulse", (1 + state.glow * 0.014).toFixed(4));
+    setCssVar("--door-glow", state.glow.toFixed(3));
+    setCssVar("--season-shift", state.seasonShift.toFixed(3));
+    setCssVar("--sun-blessing", state.sunBlessing.toFixed(3));
+    setCssVar("--door-pulse", (1 + state.glow * 0.006).toFixed(4));
 
-    state.frame = window.requestAnimationFrame(animateSolarVariables);
+    state.frame = window.requestAnimationFrame(animateDoorVariables);
   }
 
   function markRoutes() {
@@ -90,7 +89,7 @@
   }
 
   function addRouteReceipts() {
-    var system = document.querySelector("[data-solar-system]");
+    var system = document.querySelector("[data-door-system]");
     var links = document.querySelectorAll(".route-node");
 
     if (!system) return;
@@ -123,14 +122,14 @@
   function start() {
     if (state.started) return;
 
-    var door = document.querySelector("[data-sun-door]");
+    var door = document.querySelector("[data-seasonal-door]");
     if (!door) {
-      setStatus("Static solar door active");
+      setStatus("Static seasonal door active");
       return;
     }
 
     state.started = true;
-    setStatus("Satellite solar runtime active");
+    setStatus("Seasonal door runtime active");
 
     markRoutes();
     addRouteReceipts();
@@ -138,11 +137,11 @@
     if (!hasReducedMotion()) {
       window.addEventListener("pointermove", handlePointerMove, { passive: true });
       window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
-      animateSolarVariables();
+      animateDoorVariables();
     } else {
-      setCssVar("--runtime-glow", "0.56");
-      setCssVar("--solar-turbulence", "0.62");
-      setCssVar("--corona-intensity", "0.58");
+      setCssVar("--door-glow", "0.55");
+      setCssVar("--season-shift", "0.55");
+      setCssVar("--sun-blessing", "0.55");
       setCssVar("--door-pulse", "1");
     }
 
@@ -168,18 +167,18 @@
       started: state.started,
       pointerActive: state.pointerActive,
       glow: state.glow,
-      turbulence: state.turbulence,
-      corona: state.corona
+      seasonShift: state.seasonShift,
+      sunBlessing: state.sunBlessing
     };
   }
 
   function validate() {
     return {
-      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-sun-door]")),
+      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-seasonal-door]")),
       runtime: RUNTIME_NAME,
       started: state.started,
       themePresent: document.body.textContent.includes("Learn to Live to Love"),
-      doorPresent: Boolean(document.querySelector("[data-sun-door]")),
+      doorPresent: Boolean(document.querySelector("[data-seasonal-door]")),
       noImageDependency: true
     };
   }

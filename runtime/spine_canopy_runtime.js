@@ -4,13 +4,16 @@
   var CANOPY_NAME = "DGBSpineCanopy";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
+  var ROOT_CONTRACT = "universe-sun";
   var SUN_RUNTIME_VERSION = "universe-scale-field-b7";
   var SUN_CANVAS_VERSION = "satellite-solar-disc-b6";
+  var MAX_RECEIPTS = 80;
 
   var state = {
     name: CANOPY_NAME,
     version: CANOPY_VERSION,
     rootBootId: ROOT_BOOT_ID,
+    rootContract: ROOT_CONTRACT,
     sunRuntimeVersion: SUN_RUNTIME_VERSION,
     sunCanvasVersion: SUN_CANVAS_VERSION,
     createdAt: now(),
@@ -27,7 +30,9 @@
       sunVisible: false,
       backgroundVisible: false,
       fallbackSunPresent: false,
+      fallbackSunVisible: false,
       canvasSunPresent: false,
+      canvasSunVisible: false,
       gaugesCanopyAware: false,
       compassHeld: true,
       falseHealthBlocked: true
@@ -54,8 +59,8 @@
       payload: payload || {}
     };
 
-    pushLimited(state.receipts, receipt, 80);
-    return receipt;
+    pushLimited(state.receipts, receipt, MAX_RECEIPTS);
+    return clone(receipt);
   }
 
   function addWarning(code, message, payload) {
@@ -66,40 +71,30 @@
       payload: payload || {}
     };
 
-    pushLimited(state.warnings, warning, 80);
-    return warning;
+    pushLimited(state.warnings, warning, MAX_RECEIPTS);
+    return clone(warning);
   }
 
   function registerSource(name, payload) {
     var key = String(name || "unknownSource");
-
-    state.sources[key] = Object.assign({
-      registeredAt: now()
-    }, payload || {});
-
-    addReceipt("SOURCE_REGISTERED", {
-      source: key,
-      payload: state.sources[key]
-    });
-
+    state.sources[key] = Object.assign({ registeredAt: now() }, payload || {});
+    addReceipt("SOURCE_REGISTERED", { source: key, payload: state.sources[key] });
     inspect();
     return clone(state.sources[key]);
   }
 
   function registerVisual(name, payload) {
     var key = String(name || "unknownVisual");
-
-    state.visuals[key] = Object.assign({
-      registeredAt: now()
-    }, payload || {});
-
-    addReceipt("VISUAL_REGISTERED", {
-      visual: key,
-      payload: state.visuals[key]
-    });
-
+    state.visuals[key] = Object.assign({ registeredAt: now() }, payload || {});
+    addReceipt("VISUAL_REGISTERED", { visual: key, payload: state.visuals[key] });
     inspect();
     return clone(state.visuals[key]);
+  }
+
+  function markFalseHealthBlocked(payload) {
+    state.health.falseHealthBlocked = true;
+    addReceipt("FALSE_HEALTH_BLOCKED", payload || { reason: "falseHealthBlocked" });
+    return true;
   }
 
   function getVisibleRect(node) {
@@ -111,24 +106,26 @@
       var rect = node.getBoundingClientRect();
       return {
         width: Math.round(rect.width || 0),
-        height: Math.round(rect.height || 0)
+        height: Math.round(rect.height || 0),
+        top: Math.round(rect.top || 0),
+        left: Math.round(rect.left || 0)
       };
     } catch (error) {
-      return { width: 0, height: 0 };
+      return { width: 0, height: 0, top: 0, left: 0 };
     }
   }
 
   function nodeVisible(node) {
     var rect;
+    var style;
 
     if (!node) return false;
 
     rect = getVisibleRect(node);
-
     if (rect.width <= 0 || rect.height <= 0) return false;
 
     try {
-      var style = window.getComputedStyle(node);
+      style = window.getComputedStyle(node);
       if (!style) return true;
       if (style.display === "none") return false;
       if (style.visibility === "hidden") return false;
@@ -180,9 +177,9 @@
     var sun = inspectSunMount();
     var indexExecuted = Boolean(window.DGBIndexBoot && typeof window.DGBIndexBoot.getState === "function");
     var sunRuntime = Boolean(window.DGBSunAssetRuntime && typeof window.DGBSunAssetRuntime.getState === "function");
+    var titleText = document.body ? document.body.textContent || "" : "";
 
     state.lastInspectionAt = now();
-
     state.health.rootHtmlServed = Boolean(root);
     state.health.indexBootExecuted = indexExecuted;
     state.health.sunMountPresent = sun.mountPresent;
@@ -190,16 +187,24 @@
     state.health.sunVisible = sun.sunVisible;
     state.health.backgroundVisible = nodeVisible(background);
     state.health.fallbackSunPresent = sun.fallbackPresent;
+    state.health.fallbackSunVisible = sun.fallbackVisible;
     state.health.canvasSunPresent = sun.canvasPresent;
-    state.health.gaugesCanopyAware = Boolean(document.documentElement.getAttribute("data-gauges-canopy-aware") === "true" || state.visuals.gauges);
-    state.health.falseHealthBlocked = !state.health.sunVisible ? true : true;
+    state.health.canvasSunVisible = sun.canvasVisible;
+    state.health.gaugesCanopyAware = Boolean(
+      document.documentElement.getAttribute("data-gauges-canopy-aware") === "true" ||
+      state.visuals.gauges
+    );
+    state.health.falseHealthBlocked = true;
+    state.health.compassHeld = true;
 
     state.visuals.root = Object.assign({
       inspectedAt: state.lastInspectionAt,
       present: Boolean(root),
       visible: nodeVisible(root),
       rootBootId: root ? root.getAttribute("data-root-boot-id") || "" : "",
-      contract: root ? root.getAttribute("data-root-contract") || "" : ""
+      contract: root ? root.getAttribute("data-root-contract") || "" : "",
+      titlePresent: /Diamond Gate Bridge/i.test(titleText),
+      themePresent: /Learn to Live to Love/i.test(titleText)
     });
 
     state.visuals.background = {
@@ -215,6 +220,12 @@
       runtimeOwner: "/runtime/sun_asset_runtime.js"
     }, sun);
 
+    if (!state.health.sunVisible) {
+      addWarning("VISIBLE_SUN_FALSE", "Visible sun is false. Strong health must be blocked.", {
+        falseHealthBlocked: true
+      });
+    }
+
     return getState();
   }
 
@@ -224,11 +235,11 @@
 
   function getPublicState() {
     var current = inspect();
-
     return {
       name: current.name,
       version: current.version,
       rootBootId: current.rootBootId,
+      rootContract: current.rootContract,
       sunRuntimeVersion: current.sunRuntimeVersion,
       sunCanvasVersion: current.sunCanvasVersion,
       lastInspectionAt: current.lastInspectionAt,
@@ -236,22 +247,41 @@
       sources: current.sources,
       visuals: current.visuals,
       warnings: current.warnings.slice(-12),
-      receipts: current.receipts.slice(-12)
+      receipts: current.receipts.slice(-12),
+      falseHealthBlocked: true
     };
+  }
+
+  try {
+    document.documentElement.setAttribute("data-spine-canopy", CANOPY_VERSION);
+  } catch (error) {
+    addWarning("CANOPY_DOCUMENT_MARK_FAILED", "Could not mark document element with canopy version.", {
+      message: error && error.message ? error.message : "unknown"
+    });
   }
 
   window[CANOPY_NAME] = Object.freeze({
     version: CANOPY_VERSION,
     rootBootId: ROOT_BOOT_ID,
+    rootContract: ROOT_CONTRACT,
     sunRuntimeVersion: SUN_RUNTIME_VERSION,
     sunCanvasVersion: SUN_CANVAS_VERSION,
     registerSource: registerSource,
     registerVisual: registerVisual,
+    record: addReceipt,
     addReceipt: addReceipt,
     addWarning: addWarning,
+    markFalseHealthBlocked: markFalseHealthBlocked,
     inspect: inspect,
     getState: getState,
-    getPublicState: getPublicState
+    getPublicState: getPublicState,
+    falseHealthBlocked: true
+  });
+
+  addReceipt("CANOPY_RUNTIME_LOADED", {
+    version: CANOPY_VERSION,
+    rootBootId: ROOT_BOOT_ID,
+    falseHealthBlocked: true
   });
 
   if (document.readyState === "loading") {

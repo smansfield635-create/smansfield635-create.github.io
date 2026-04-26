@@ -1,25 +1,15 @@
 <!doctype html>
 <!-- TNT — /governance/index.html
-     GOVERNANCE · INDEX (FOUR PILLARS) — INFORMAL SITE LAYER (PINNED) · LEVEL 4 MARRIAGE
-     EXECUTED UPGRADES:
-       - Preserve submitted pinned informal governance shell as the control authority
-       - Marry Level 4 structure into existing visual/runtime behavior
-       - Add Compass / North Star / Legend / Governance Ledger / Route Map
-       - Preserve GOLD INLAY 3D concept and GOLD PERIMETER GLOW
-       - Preserve PLATFORM vs ENGINEERING lens with URL-only lane behavior
-       - Preserve trilingual UI EN/中文/ES without reload
-       - Preserve single-open accordion with tap-same-closes
-       - Switching LANG or LANE does NOT reload and does NOT close an open row
-       - No modals/overlays; no inline onclick; addEventListener only
-       - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
-       - NO new gd_* keys
-     ROUTING:
-       - This page must be reachable at /governance/ from compass.
-       - Pillar product routes remain:
-         /products/governing/policy-engine/
-         /products/governing/compliance-grid/
-         /products/governing/public-risk-meter/
-         /products/governing/decision-index/
+     GOVERNANCE · RUSSIAN DOLL LEVEL 4
+     PURPOSE:
+       - Compress Governance into nested Russian doll structure
+       - Preserve submitted pinned informal governance shell as visual authority
+       - Preserve Level 4 content without always-visible crowding
+       - Keep four pillars as the main surface
+       - Preserve EN/中文/ES, PLATFORM/ENGINEERING, URL state carry, LS boundary
+       - No modals, no overlays, no inline onclick
+       - addEventListener only
+       - gd_* localStorage keys only: gd_lang, gd_style, gd_time, gd_depth
 -->
 
 <html lang="en">
@@ -39,51 +29,36 @@ body::before,body::after{pointer-events:none!important}
 
 :root{
   --dockH:132px;
-
   --stroke:rgba(255,255,255,.12);
   --stroke2:rgba(255,255,255,.10);
-
   --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
   --soft:rgba(255,255,255,.62);
-
-  --onyx0:rgba(6,8,10,.96);
-  --onyx1:rgba(10,12,16,.86);
-
   --crimson:rgba(120,0,22,.30);
   --festival:rgba(255,43,43,.14);
   --opalV:rgba(90,40,120,.10);
-
   --gold:rgba(201,162,74,.62);
   --goldSolid:rgba(201,162,74,.92);
   --goldGlow:rgba(201,162,74,.22);
   --goldGlowSoft:rgba(201,162,74,.14);
-
   --green:rgba(128,240,182,.92);
-  --blue:rgba(147,197,253,.92);
-  --red:rgba(255,154,154,.92);
-
   --shadowA:0 24px 90px rgba(0,0,0,.58);
   --shadowB:0 16px 56px rgba(0,0,0,.62);
   --shadowC:0 18px 60px rgba(0,0,0,.55);
 }
 
-/* ===== Top (fixed) ===== */
 .top{
   position:fixed;top:16px;left:0;right:0;
   padding:0 16px;
   display:flex;justify-content:space-between;align-items:center;
-  gap:12px;
-  z-index:240;
-  pointer-events:none;
+  gap:12px;z-index:240;pointer-events:none;
 }
 .top .left,.top .right{
   display:flex;gap:10px;flex-wrap:wrap;align-items:center;white-space:nowrap;
   pointer-events:auto;
 }
 
-/* Button: gold perimeter glow, no motion */
 .btn{
   display:inline-flex;align-items:center;justify-content:center;gap:8px;
   padding:10px 12px;min-height:44px;border-radius:16px;
@@ -94,16 +69,12 @@ body::before,body::after{pointer-events:none!important}
   color:var(--ink);
   font-weight:950;font-size:14px;letter-spacing:.2px;
   -webkit-tap-highlight-color:transparent;
-  position:relative;overflow:hidden;
-  touch-action:manipulation;
+  position:relative;overflow:hidden;touch-action:manipulation;
   box-shadow:var(--shadowC);
 }
 .btn:active{transform:translateY(1px)}
 .btn::after{
-  content:"";
-  position:absolute;inset:-2px;
-  border-radius:18px;
-  pointer-events:none;
+  content:"";position:absolute;inset:-2px;border-radius:18px;pointer-events:none;
   box-shadow:
     0 0 0 1px rgba(255,255,255,.10),
     0 0 18px var(--goldGlowSoft),
@@ -121,64 +92,45 @@ body::before,body::after{pointer-events:none!important}
     inset 0 0 0 1px rgba(201,162,74,.16);
 }
 
-/* Segmented */
 .seg{
   display:inline-flex;gap:0;overflow:hidden;border-radius:16px;
   border:1px solid rgba(255,255,255,.12);
-  background: rgba(0,0,0,.16);
-  box-shadow: var(--shadowC);
+  background:rgba(0,0,0,.16);
+  box-shadow:var(--shadowC);
 }
 .seg button{
   appearance:none;border:0;background:transparent;color:var(--mut);
   padding:10px 12px;min-height:44px;font-weight:950;font-size:13px;
   letter-spacing:.25px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
-  position:relative;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;position:relative;
 }
 .seg button[aria-pressed="true"]{
   color:var(--ink);
   background:
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 60%),
     linear-gradient(180deg, rgba(255,43,43,.10), rgba(0,0,0,.10));
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.14);
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.14);
 }
 .seg button[aria-pressed="true"]::after{
-  content:"";
-  position:absolute;inset:2px;border-radius:14px;
-  pointer-events:none;
-  box-shadow:0 0 20px var(--goldGlowSoft);
-  opacity:.95;
+  content:"";position:absolute;inset:2px;border-radius:14px;pointer-events:none;
+  box-shadow:0 0 20px var(--goldGlowSoft);opacity:.95;
 }
 
-/* ===== Page ===== */
 .page{
   width:min(1120px,94vw);
   margin:0 auto;
   padding:104px 0 calc(var(--dockH) + 18px);
   display:flex;flex-direction:column;gap:12px;
-  position:relative;
-  z-index:10;
+  position:relative;z-index:10;
 }
 
-/* Background context behind content */
 .backdrop{
-  position:absolute;
-  left:50%;
-  top:68px;
-  transform:translateX(-50%);
-  width:min(1180px,96vw);
-  height:calc(100% - 108px);
-  border-radius:34px;
-  pointer-events:none;
-  z-index:0;
-  overflow:hidden;
+  position:absolute;left:50%;top:68px;transform:translateX(-50%);
+  width:min(1180px,96vw);height:calc(100% - 108px);
+  border-radius:34px;pointer-events:none;z-index:0;overflow:hidden;
 }
 .backdrop::before{
-  content:"";
-  position:absolute;inset:0;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:34px;
+  content:"";position:absolute;inset:0;border:1px solid rgba(255,255,255,.08);border-radius:34px;
   background:
     radial-gradient(circle at 18% 20%, rgba(201,162,74,.10), transparent 60%),
     radial-gradient(circle at 78% 22%, rgba(255,43,43,.12), transparent 62%),
@@ -191,8 +143,7 @@ body::before,body::after{pointer-events:none!important}
   opacity:.92;
 }
 .backdrop::after{
-  content:"";
-  position:absolute;inset:-18%;
+  content:"";position:absolute;inset:-18%;
   background:
     radial-gradient(circle at 18% 34%, rgba(255,43,43,.18), transparent 44%),
     radial-gradient(circle at 84% 30%, rgba(255,43,43,.14), transparent 46%),
@@ -201,239 +152,129 @@ body::before,body::after{pointer-events:none!important}
       rgba(201,162,74,.14), transparent 12%,
       rgba(255,43,43,.12), transparent 24%,
       rgba(90,40,120,.10), transparent 38%,
-      transparent 100%),
-    conic-gradient(from 180deg at 70% 36%,
-      rgba(255,43,43,.12), transparent 14%,
-      rgba(201,162,74,.12), transparent 28%,
-      rgba(90,40,120,.10), transparent 44%,
-      transparent 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
-  filter:blur(1px);
-  opacity:.72;
+      transparent 100%);
+  filter:blur(1px);opacity:.72;
 }
 
-/* ===== Header ===== */
 .header{
-  position:relative;
-  z-index:2;
-  border:1px solid var(--stroke);
-  border-radius:24px;
+  position:relative;z-index:2;
+  border:1px solid var(--stroke);border-radius:24px;
   background:
     radial-gradient(circle at 18% 22%, var(--crimson), transparent 72%),
     radial-gradient(circle at 82% 30%, var(--opalV), transparent 74%),
     radial-gradient(circle at 70% 92%, var(--festival), transparent 62%),
     radial-gradient(circle at 26% 22%, rgba(201,162,74,.14), transparent 62%),
     linear-gradient(160deg, rgba(0,0,0,.30), rgba(0,0,0,.14));
-  backdrop-filter:blur(10px);
-  box-shadow:var(--shadowA);
-  padding:16px 16px 14px;
-  overflow:hidden;
+  backdrop-filter:blur(10px);box-shadow:var(--shadowA);
+  padding:16px 16px 14px;overflow:hidden;
 }
 .header::before{
-  content:"";
-  position:absolute;inset:0;border-radius:24px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.16);
+  content:"";position:absolute;inset:0;border-radius:24px;pointer-events:none;
+  box-shadow:inset 0 0 0 1px rgba(201,162,74,.16);
   background:
     radial-gradient(circle at 50% 50%, transparent 0 72%, rgba(201,162,74,.10) 78%, transparent 84%),
     conic-gradient(from 45deg at 50% 50%,
       rgba(201,162,74,.12) 0 6%,
       transparent 6% 12%,
       rgba(201,162,74,.08) 12% 18%,
-      transparent 18% 100%),
-    radial-gradient(circle at 50% 50%, rgba(255,255,255,.04), transparent 62%);
+      transparent 18% 100%);
   opacity:.26;
-  mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
-  -webkit-mask:
-    radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),
-    linear-gradient(#000,#000);
+  mask:radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),linear-gradient(#000,#000);
+  -webkit-mask:radial-gradient(circle at 50% 50%, transparent 0 78%, #000 82% 100%),linear-gradient(#000,#000);
 }
-
 .k{margin:0 0 6px;font-size:11px;letter-spacing:4px;text-transform:uppercase;opacity:.78;color:var(--mut);position:relative}
 .t{margin:0;font-weight:980;font-size:30px;letter-spacing:.7px;color:var(--ink);position:relative}
 .s{margin:10px 0 0;font-size:15.5px;line-height:1.55;color:var(--txt);max-width:980px;position:relative}
 .rule{
-  margin-top:12px;
-  padding:12px 12px;
-  border-radius:18px;
+  margin-top:12px;padding:12px;border-radius:18px;
   border:1px solid rgba(255,255,255,.10);
   background:
     radial-gradient(circle at 50% 50%, rgba(201,162,74,.10), transparent 58%),
     radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
     linear-gradient(160deg, rgba(10,12,16,.62), rgba(6,8,10,.76));
-  font-size:13.25px;
-  color:rgba(255,255,255,.86);
-  line-height:1.45;
-  position:relative;
+  font-size:13.25px;color:rgba(255,255,255,.86);line-height:1.45;position:relative;
 }
-
-/* State pills */
-.stateRow{
-  margin-top:12px;
-  display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center;
-}
+.stateRow{margin-top:12px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
 .statePill{
   display:inline-flex;align-items:center;gap:8px;
   padding:10px 12px;border-radius:999px;
   border:1px solid rgba(255,255,255,.12);
-  background:rgba(0,0,0,.16);
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  box-shadow:0 14px 36px rgba(0,0,0,.55);
+  background:rgba(0,0,0,.16);color:rgba(255,255,255,.78);
+  font-weight:950;box-shadow:0 14px 36px rgba(0,0,0,.55);
 }
 
-/* Band */
 .band{
+  position:relative;z-index:2;padding:10px 12px;border-radius:18px;
+  border:1px solid var(--stroke2);background:rgba(0,0,0,.14);
+  font-weight:980;letter-spacing:.25px;color:rgba(255,255,255,.90);
+}
+
+.dollShell{
   position:relative;z-index:2;
-  padding:10px 12px;border-radius:18px;
-  border:1px solid var(--stroke2);
-  background:rgba(0,0,0,.14);
-  font-weight:980;letter-spacing:.25px;
-  color:rgba(255,255,255,.90);
-}
-
-/* Level 4 structural cards */
-.l4Grid{
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-.l4Card{
   border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+  border-radius:26px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.09), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.07), transparent 64%),
-    linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.92));
+    radial-gradient(circle at 18% 18%, rgba(201,162,74,.10), transparent 58%),
+    linear-gradient(145deg, rgba(17,22,28,.80), rgba(11,15,20,.94));
   box-shadow:var(--shadowA);
-  padding:16px;
-  position:relative;
-  overflow:hidden;
+  padding:14px;
 }
-.l4Card::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.60;
-}
-.l4Card h2{
-  margin:0 0 8px;
-  color:var(--ink);
-  font-size:17px;
-  line-height:1;
-  letter-spacing:.2px;
-  position:relative;
-}
-.l4Card p{
-  margin:0;
-  color:rgba(255,255,255,.84);
-  line-height:1.58;
-  font-size:14.25px;
-  position:relative;
-}
-.legendStack{
+.routeCaps{
   display:grid;
-  gap:8px;
-  margin-top:12px;
-  position:relative;
-}
-.legendItem{
-  display:grid;
-  grid-template-columns:88px 1fr;
+  grid-template-columns:repeat(4,minmax(0,1fr));
   gap:10px;
-  border-top:1px solid rgba(255,255,255,.08);
-  padding-top:8px;
-  color:rgba(255,255,255,.80);
-  line-height:1.45;
-  font-size:13.25px;
 }
-.legendItem strong{
-  color:var(--goldSolid);
-  font-size:11px;
-  letter-spacing:1.4px;
-  text-transform:uppercase;
-}
-
-/* Accordion */
-.list{position:relative;z-index:2;display:flex;flex-direction:column;gap:12px}
-.row{
+.cap{
   border:1px solid rgba(255,255,255,.10);
-  border-radius:22px;
+  border-radius:20px;
+  padding:14px;
   background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.10), transparent 58%),
-    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
-    linear-gradient(145deg, rgba(17,22,28,.86), rgba(11,15,20,.94));
-  box-shadow:var(--shadowA);
-  overflow:hidden;
-  position:relative;
-}
-.row::before{
-  content:"";
-  position:absolute;inset:0;border-radius:22px;pointer-events:none;
-  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
-  opacity:.55;
-}
-.head{
-  display:flex;align-items:flex-start;justify-content:space-between;
-  gap:10px;padding:16px 16px;
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 62%),
+    rgba(0,0,0,.16);
   cursor:pointer;
+  text-align:left;
+  color:var(--ink);
+  min-height:118px;
+  position:relative;
+  overflow:hidden;
   -webkit-tap-highlight-color:transparent;
-  touch-action:manipulation;
 }
-.hL{display:flex;gap:12px;align-items:flex-start;min-width:0}
-.mark{
+.cap::after{
+  content:"";position:absolute;inset:-2px;border-radius:22px;pointer-events:none;
+  box-shadow:0 0 22px rgba(201,162,74,.10);
+  opacity:.62;
+}
+.cap[aria-expanded="true"]{
+  border-color:rgba(201,162,74,.34);
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.14), transparent 62%),
+    linear-gradient(145deg, rgba(17,22,28,.92), rgba(11,15,20,.98));
+}
+.capMark{
   width:10px;height:10px;border-radius:3px;transform:rotate(45deg);
   background:var(--c);
-  box-shadow:0 0 0 1px rgba(255,255,255,.14), 0 0 14px rgba(0,0,0,.35);
-  flex:0 0 auto;margin-top:4px;
+  box-shadow:0 0 0 1px rgba(255,255,255,.14),0 0 14px rgba(0,0,0,.35);
+  margin-bottom:10px;
 }
-.titleBlock{min-width:0}
-.q{
-  font-weight:980;letter-spacing:.2px;font-size:18px;color:var(--ink);
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.subt{
-  margin-top:8px;font-size:13.75px;opacity:.88;line-height:1.42;
-  color:rgba(255,255,255,.86);max-width:92ch;
-}
-.chev{
-  width:36px;height:36px;border-radius:14px;
-  border:1px solid rgba(255,255,255,.14);
-  background: rgba(0,0,0,.16);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,255,.78);
-  font-weight:950;
-  position:relative;overflow:hidden;
-  flex:0 0 auto;margin-top:2px;
-}
-.chev::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:16px;
-  pointer-events:none;
-  box-shadow:0 0 18px var(--goldGlowSoft);
-  opacity:.65;
-}
+.cap h3{margin:0;color:var(--ink);font-size:17px;line-height:1.05;letter-spacing:.1px}
+.cap p{margin:8px 0 0;color:rgba(255,255,255,.76);font-size:13.25px;line-height:1.38}
 
-.body{
-  display:none;
-  padding:16px 16px 18px;
-  border-top:1px solid rgba(255,255,255,.08);
+.dollBody{
+  display:none;margin-top:12px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
   background:
-    radial-gradient(circle at 30% 30%, rgba(255,255,255,.06), transparent 55%),
-    linear-gradient(145deg, rgba(10,12,16,.86), rgba(6,8,10,.94));
+    radial-gradient(circle at 26% 18%, rgba(255,43,43,.08), transparent 58%),
+    radial-gradient(circle at 72% 26%, rgba(201,162,74,.10), transparent 62%),
+    linear-gradient(145deg, rgba(10,12,16,.82), rgba(6,8,10,.94));
+  box-shadow:var(--shadowB);
+  padding:16px;
 }
-.row.open .body{display:block}
-.row.open{border-color:rgba(255,43,43,.22); box-shadow:var(--shadowA), 0 0 18px rgba(255,43,43,.10);}
+.dollBody[data-open="true"]{display:block}
+.dollTitle{margin:0 0 8px;font-size:22px;line-height:1.05;color:var(--ink);letter-spacing:.1px}
+.dollIntro{margin:0;color:rgba(255,255,255,.88);font-size:14.75px;line-height:1.62}
 
-.pdesc{margin:0;color:rgba(255,255,255,.90);line-height:1.65;font-size:14.75px}
-.pdesc + .pdesc{margin-top:12px}
-
-/* Sub-bubbles */
-.subBubbles{margin-top:12px;display:flex;flex-direction:column;gap:10px}
+.subBubbles{margin-top:12px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 .bubble{
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
@@ -445,112 +286,68 @@ body::before,body::after{pointer-events:none!important}
   cursor:pointer;
   -webkit-tap-highlight-color:transparent;
   touch-action:manipulation;
-  position:relative;
-  overflow:hidden;
+  position:relative;overflow:hidden;
 }
 .bubble::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:20px;
-  pointer-events:none;
-  box-shadow:0 0 22px rgba(201,162,74,.10);
-  opacity:.60;
+  content:"";position:absolute;inset:-2px;border-radius:20px;
+  pointer-events:none;box-shadow:0 0 22px rgba(201,162,74,.10);opacity:.60;
 }
 .bubble h4{margin:0 0 8px;font-weight:980;letter-spacing:.15px;font-size:15px;color:var(--ink)}
-.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.7;display:none;font-size:14.25px}
+.bubble p{margin:0;color:rgba(255,255,255,.80);line-height:1.62;display:none;font-size:14px}
 .bubble.open p{display:block}
 
-.actions{
-  margin-top:14px;
-  display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;
-}
-.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
-
-/* Governance ledger */
-.ledger{
-  position:relative;
-  z-index:2;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-}
-.ledgerRow{
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:18px;
-  background:
-    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
-    linear-gradient(145deg, rgba(17,22,28,.74), rgba(11,15,20,.90));
-  box-shadow:var(--shadowB);
-  display:grid;
-  grid-template-columns:180px 1fr 122px;
-  gap:12px;
-  align-items:center;
-  padding:14px;
-}
-.ledgerRow strong{
-  color:var(--ink);
-  font-size:14px;
-  letter-spacing:.2px;
-}
-.ledgerRow span{
-  color:rgba(255,255,255,.80);
-  font-size:13.25px;
-  line-height:1.45;
-}
-.status{
-  justify-self:end;
+.innerControls{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.innerBtn{
+  border:1px solid rgba(255,255,255,.12);
   border-radius:999px;
-  padding:7px 10px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(128,240,182,.10);
-  color:var(--green)!important;
+  padding:9px 11px;
+  background:rgba(0,0,0,.18);
+  color:rgba(255,255,255,.78);
+  cursor:pointer;
   font-weight:950;
-  font-size:11px!important;
-  letter-spacing:1px;
+  font-size:12px;
+  letter-spacing:.55px;
   text-transform:uppercase;
 }
-
-/* Route map */
-.routeMap{
-  position:relative;
-  z-index:2;
-  display:grid;
-  grid-template-columns:repeat(5,minmax(0,1fr));
-  gap:10px;
+.innerBtn[aria-pressed="true"]{
+  color:var(--ink);
+  border-color:rgba(201,162,74,.38);
+  background:rgba(201,162,74,.10);
+  box-shadow:0 0 18px var(--goldGlowSoft);
 }
-.routeMap a{
-  min-height:48px;
+.innerPanel{
+  display:none;
+  margin-top:10px;
   border:1px solid rgba(255,255,255,.10);
   border-radius:18px;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
-    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
-  box-shadow:var(--shadowC);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:rgba(255,255,255,.82);
-  font-weight:950;
-  font-size:13px;
-  letter-spacing:.2px;
-  position:relative;
-  overflow:hidden;
+  background:rgba(0,0,0,.18);
+  padding:14px;
+}
+.innerPanel[data-open="true"]{display:block}
+.innerPanel h4{margin:0 0 8px;color:var(--goldSolid);font-size:14px;letter-spacing:.8px;text-transform:uppercase}
+.innerPanel p{margin:0;color:rgba(255,255,255,.82);line-height:1.58;font-size:14px}
+.innerGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}
+.innerBox{border-top:1px solid rgba(255,255,255,.08);padding-top:8px;color:rgba(255,255,255,.80);line-height:1.45;font-size:13.25px}
+.innerBox strong{display:block;color:var(--goldSolid);font-size:11px;letter-spacing:1.3px;text-transform:uppercase;margin-bottom:4px}
+.routeMap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-top:10px}
+.routeMap a{
+  min-height:42px;border:1px solid rgba(255,255,255,.10);border-radius:16px;
+  background:linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.82);
+  font-weight:950;font-size:12px;letter-spacing:.2px;position:relative;overflow:hidden;
 }
 .routeMap a::after{
-  content:"";
-  position:absolute;inset:-2px;border-radius:20px;
-  pointer-events:none;
-  box-shadow:0 0 20px var(--goldGlowSoft);
-  opacity:.62;
+  content:"";position:absolute;inset:-2px;border-radius:18px;pointer-events:none;
+  box-shadow:0 0 16px var(--goldGlowSoft);opacity:.62;
 }
+.actions{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
 
-/* Dock */
 .dock{
   position:fixed;left:50%;
   bottom:max(10px, env(safe-area-inset-bottom));
   transform:translateX(-50%);
-  z-index:220;
-  width:min(980px,94vw);
+  z-index:220;width:min(980px,94vw);
   padding:10px 12px;border-radius:22px;
   border:1px solid rgba(255,255,255,.12);
   background:
@@ -559,28 +356,26 @@ body::before,body::after{pointer-events:none!important}
     linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
   backdrop-filter:blur(10px);
   box-shadow:0 18px 60px rgba(0,0,0,.55);
-  display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
-  gap:10px;
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;
 }
-.dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+.dock .btn{width:100%;padding:10px;border-radius:999px;white-space:nowrap}
 
 @media (max-width:900px){
-  .l4Grid{grid-template-columns:1fr}
-  .ledgerRow{grid-template-columns:1fr}
-  .status{justify-self:start}
+  .routeCaps{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .subBubbles{grid-template-columns:1fr}
+  .innerGrid{grid-template-columns:1fr}
   .routeMap{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:620px){
   .top{position:absolute}
   .top .left,.top .right{width:100%}
   .seg{max-width:100%;overflow:auto}
-  .q{white-space:normal}
 }
 @media (max-width:520px){
   :root{--dockH:148px}
-  .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .dock{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .routeCaps{grid-template-columns:1fr}
   .routeMap{grid-template-columns:1fr}
-  .legendItem{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -614,52 +409,18 @@ body::before,body::after{pointer-events:none!important}
     <h1 class="t" id="ht">FOUR PILLARS</h1>
     <p class="s" id="hs"></p>
     <div class="rule" id="rule"></div>
-
     <div class="stateRow" aria-label="State">
       <div class="statePill" id="laneState">—</div>
       <div class="statePill" id="langState">—</div>
     </div>
   </section>
 
-  <div class="band" id="l4Band">LEVEL 4 STRUCTURE</div>
+  <div class="band" id="band">OPEN ONE PILLAR</div>
 
-  <section class="l4Grid" aria-label="Governance Level 4 structure">
-    <article class="l4Card">
-      <h2 id="compassTitle">Compass</h2>
-      <p id="compassBody"></p>
-      <div class="legendStack">
-        <div class="legendItem"><strong id="northLabel">North</strong><span id="northBody"></span></div>
-        <div class="legendItem"><strong id="eastLabel">East</strong><span id="eastBody"></span></div>
-        <div class="legendItem"><strong id="southLabel">South</strong><span id="southBody"></span></div>
-        <div class="legendItem"><strong id="westLabel">West</strong><span id="westBody"></span></div>
-      </div>
-    </article>
-
-    <article class="l4Card">
-      <h2 id="northStarTitle">North Star</h2>
-      <p id="northStarBody"></p>
-      <div class="legendStack">
-        <div class="legendItem"><strong id="purposeLabel">Purpose</strong><span id="purposeBody"></span></div>
-        <div class="legendItem"><strong id="methodLabel">Method</strong><span id="methodBody"></span></div>
-        <div class="legendItem"><strong id="failureLabel">Failure</strong><span id="failureBody"></span></div>
-      </div>
-    </article>
+  <section class="dollShell" aria-label="Governance Russian doll controls">
+    <div class="routeCaps" id="caps"></div>
+    <div class="dollBody" id="dollBody" data-open="false"></div>
   </section>
-
-  <div class="band" id="band">PILLARS (OPEN ONE)</div>
-  <div class="list" id="list"></div>
-
-  <div class="band" id="ledgerBand">GOVERNANCE LEDGER</div>
-  <section class="ledger" id="ledger" aria-label="Governance ledger"></section>
-
-  <div class="band" id="routeBand">ROUTE MAP</div>
-  <nav class="routeMap" aria-label="Governance route map">
-    <a data-route="/index.html" href="/index.html" id="routeCompass">COMPASS</a>
-    <a data-route="/explore/" href="/explore/" id="routeExplore">EXPLORE</a>
-    <a data-route="/products/" href="/products/" id="routeProducts">PRODUCTS</a>
-    <a data-route="/laws/" href="/laws/" id="routeLaws">LAWS</a>
-    <a data-route="/gauges/" href="/gauges/" id="routeGauges">GAUGES</a>
-  </nav>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
@@ -673,22 +434,20 @@ body::before,body::after{pointer-events:none!important}
 (function(){
   "use strict";
 
-  // ===== State (gd_* only; pinned informal layer) =====
   var qs=new URLSearchParams(location.search);
   var LS=window.localStorage;
 
-  var lang = qs.get("lang") || LS.getItem("gd_lang") || "en";
-  var time = qs.get("time") || LS.getItem("gd_time") || "now";
-  var lane = qs.get("lane") || "platform"; // URL-only
+  var lang=qs.get("lang")||LS.getItem("gd_lang")||"en";
+  var time=qs.get("time")||LS.getItem("gd_time")||"now";
+  var lane=qs.get("lane")||"platform";
 
-  // pinned layer
   var style="informal";
   var depth="explore";
 
-  if(lang!=="en" && lang!=="zh" && lang!=="es") lang="en";
+  if(lang!=="en"&&lang!=="zh"&&lang!=="es") lang="en";
   if(time==="trajectory") time="post";
-  if(time!=="origin" && time!=="now" && time!=="post") time="now";
-  if(lane!=="platform" && lane!=="engineering") lane="platform";
+  if(time!=="origin"&&time!=="now"&&time!=="post") time="now";
+  if(lane!=="platform"&&lane!=="engineering") lane="platform";
 
   try{
     LS.setItem("gd_lang",lang);
@@ -710,23 +469,19 @@ body::before,body::after{pointer-events:none!important}
     return "?"+p.toString();
   }
 
-  function setPressed(ids, activeId){
-    for(var i=0;i<ids.length;i++){
-      var el=document.getElementById(ids[i]);
-      if(!el) continue;
-      el.setAttribute("aria-pressed", ids[i]===activeId ? "true" : "false");
-    }
+  function pick3(en,zh,es){return lang==="zh"?zh:(lang==="es"?es:en)}
+  function setPressed(ids,activeId){
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el) el.setAttribute("aria-pressed",id===activeId?"true":"false");
+    });
   }
-
-  function pick3(en,zh,es){ return (lang==="zh")?zh:(lang==="es")?es:en; }
   function laneLabel(){
-    return (lang==="zh") ? (lane==="engineering"?"工程":"平台")
-      : (lang==="es") ? (lane==="engineering"?"INGENIERÍA":"PLATAFORMA")
-      : (lane==="engineering"?"ENGINEERING":"PLATFORM");
+    return lang==="zh"?(lane==="engineering"?"工程":"平台"):
+      lang==="es"?(lane==="engineering"?"INGENIERÍA":"PLATAFORMA"):
+      lane==="engineering"?"ENGINEERING":"PLATFORM";
   }
-  function openLabel(){ return (lang==="zh")?"打开":(lang==="es")?"ABRIR":"OPEN"; }
 
-  // ===== ROUTES (single source of truth) =====
   var ROUTES={
     policy_engine:"/products/governing/policy-engine/",
     compliance_grid:"/products/governing/compliance-grid/",
@@ -740,568 +495,348 @@ body::before,body::after{pointer-events:none!important}
     door:"/door/"
   };
 
-  // ===== Header copy =====
   var HEAD={
     en:{
       platform:{
-        hs:"Governance is the execution layer: institutions, enforcement, public accountability, and stability boundaries. It turns doctrine into behavior at scale.",
-        rule:"Rule: Governance deploys. Laws bound. Gauges measure. If measurement is missing, escalation stays paused."
+        hs:"Governance is the execution layer: institutions, enforcement, public accountability, and stability boundaries.",
+        rule:"Rule: open one pillar at a time. Governance deploys, Laws bound, Gauges measure."
       },
       engineering:{
-        hs:"Engineering view: governance is deterministic boundary enforcement under declared scope: constraints → gates → reason codes → receipts → replay. It keeps systems comparable under scale.",
-        rule:"Rule: no silent overrides. Every intervention has a reason code and an audit receipt."
+        hs:"Engineering view: governance is deterministic boundary enforcement under declared scope.",
+        rule:"Rule: no silent overrides. Every intervention has a reason code and audit receipt."
       }
     },
     zh:{
       platform:{
-        hs:"治理是执行层：机构、执法、公共问责与稳定边界。它把教义变成可规模行为。",
-        rule:"规则：治理负责落地；法则负责边界；量规负责测量。缺测量就必须暂停升级。"
+        hs:"治理是执行层：机构、执法、公共问责与稳定边界。",
+        rule:"规则：一次只打开一个支柱。治理负责落地，法则定边界，量规测量。"
       },
       engineering:{
-        hs:"工程视图：治理是在声明范围下执行确定性边界：约束→闸门→原因码→收据→回放。它保证系统在扩张时仍可比较。",
+        hs:"工程视图：治理是在声明范围下执行确定性边界。",
         rule:"规则：禁止静默覆盖。每次干预必须有原因码与审计收据。"
       }
     },
     es:{
       platform:{
-        hs:"Gobernanza es la capa de ejecución: instituciones, enforcement, rendición pública de cuentas y límites de estabilidad. Convierte doctrina en conducta a escala.",
-        rule:"Regla: Gobernanza despliega. Leyes acotan. Medidores miden. Sin medición, la escalación se pausa."
+        hs:"Gobernanza es la capa de ejecución: instituciones, enforcement, rendición pública y límites de estabilidad.",
+        rule:"Regla: abrir un pilar a la vez. Gobernanza despliega, Leyes acotan, Medidores miden."
       },
       engineering:{
-        hs:"Vista de ingeniería: gobernanza = enforcement determinista bajo alcance declarado: restricciones → compuertas → códigos → recibos → replay. Mantiene comparabilidad a escala.",
-        rule:"Regla: sin overrides silenciosos. Toda intervención exige código de razón y recibo de auditoría."
+        hs:"Vista de ingeniería: gobernanza = enforcement determinista bajo alcance declarado.",
+        rule:"Regla: sin overrides silenciosos. Toda intervención exige código y recibo de auditoría."
       }
     }
   };
 
-  var L4={
-    en:{
-      level:"LEVEL 4 STRUCTURE",
-      compassTitle:"Compass",
-      compassBody:"Governance sits between doctrine and deployment. It does not replace law. It converts law into repeatable action, review, repair, and public accountability.",
-      north:"North", northBody:"Boundary, authority, admissibility, and public legitimacy.",
-      east:"East", eastBody:"Operational systems, reporting surfaces, and implementation movement.",
-      south:"South", southBody:"Continuity, safety, compliance, restoration, and service reliability.",
-      west:"West", westBody:"Stress testing, contradiction detection, pressure review, and correction.",
-      northStarTitle:"North Star",
-      northStarBody:"A governance system is healthy when decisions can be traced, risks can be seen, obligations can be audited, and public-facing action remains inside the lawful boundary.",
-      purpose:"Purpose", purposeBody:"Make lawful execution visible, repeatable, and accountable.",
-      method:"Method", methodBody:"Bind policy, compliance, risk, and decision records into one reviewable operating layer.",
-      failure:"Failure", failureBody:"Hidden discretion, untracked risk, unenforced policy, and decisions without a ledger.",
-      ledger:"GOVERNANCE LEDGER",
-      route:"ROUTE MAP"
-    },
-    zh:{
-      level:"第四级结构",
-      compassTitle:"罗盘",
-      compassBody:"治理位于原则与部署之间。它不替代法律，而是把法律转化为可重复的行动、审查、修复与公共问责。",
-      north:"北", northBody:"边界、权威、可准入性与公共合法性。",
-      east:"东", eastBody:"运营系统、报告界面与实施运动。",
-      south:"南", southBody:"连续性、安全、合规、恢复与服务可靠性。",
-      west:"西", westBody:"压力测试、矛盾侦测、压力审查与修正。",
-      northStarTitle:"北星",
-      northStarBody:"当决策可追踪、风险可见、义务可审计、公共行动保持在合法边界内时，治理系统就是健康的。",
-      purpose:"目的", purposeBody:"让合法执行变得可见、可重复、可问责。",
-      method:"方法", methodBody:"把政策、合规、风险与决策记录绑定为一个可审查的操作层。",
-      failure:"失败", failureBody:"隐藏裁量、未追踪风险、未执行政策、没有账本的决策。",
-      ledger:"治理账本",
-      route:"路由图"
-    },
-    es:{
-      level:"ESTRUCTURA NIVEL 4",
-      compassTitle:"Brújula",
-      compassBody:"La gobernanza se ubica entre doctrina y despliegue. No reemplaza la ley; convierte la ley en acción, revisión, reparación y rendición pública repetibles.",
-      north:"Norte", northBody:"Límite, autoridad, admisibilidad y legitimidad pública.",
-      east:"Este", eastBody:"Sistemas operativos, superficies de reporte y movimiento de implementación.",
-      south:"Sur", southBody:"Continuidad, seguridad, cumplimiento, restauración y confiabilidad del servicio.",
-      west:"Oeste", westBody:"Prueba de presión, detección de contradicción, revisión y corrección.",
-      northStarTitle:"Estrella Norte",
-      northStarBody:"Un sistema de gobernanza es sano cuando las decisiones son trazables, los riesgos son visibles, las obligaciones son auditables y la acción pública permanece dentro del límite legal.",
-      purpose:"Propósito", purposeBody:"Hacer la ejecución legal visible, repetible y responsable.",
-      method:"Método", methodBody:"Unir política, cumplimiento, riesgo y registros de decisión en una capa operativa revisable.",
-      failure:"Falla", failureBody:"Discreción oculta, riesgo no rastreado, política no aplicada y decisiones sin registro.",
-      ledger:"REGISTRO DE GOBERNANZA",
-      route:"MAPA DE RUTAS"
-    }
-  };
+  function P(en,zh,es){return{en:en,zh:zh,es:es}}
 
-  function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
-
-  // ===== Pillars (4) =====
   var PILLARS=[
     {
-      id:"policy_engine", c:"#34d399",
+      id:"policy_engine",c:"#34d399",
       t:P("Policy Engine","政策引擎","Motor de Política"),
       s:P("Turn rules into decisions institutions can execute.","把规则变成机构可执行决策。","Convertir reglas en decisiones ejecutables."),
       platform:{
-        intro:P(
-          "Policy turns doctrine into action. This pillar compresses rules into executable decisions that can be enforced consistently, reviewed publicly, and amended without losing the boundary.",
-          "政策把教义变成动作。本支柱把规则压缩为可执行决策，使其能一致执行、公开审查，并在不失边界的情况下修订。",
-          "Política convierte doctrina en acción. Este pilar comprime reglas en decisiones ejecutables que pueden aplicarse, revisarse públicamente y enmendarse sin perder el límite."
-        ),
-        b1:{h:P("Outputs","输出","Salidas"), p:P("Allowed/blocked actions with plain reasons, owners, review windows, and amendment paths.","允许/阻止动作 + 人话原因、负责人、审查窗口与修订路径。","Acciones permitidas/bloqueadas con razones claras, responsables, ventanas de revisión y rutas de enmienda.")},
-        b2:{h:P("Stops drift","阻止漂移","Detiene deriva"), p:P("Prevents ad-hoc exceptions becoming policy and prevents policy from becoming private discretion.","防止随意例外变成政策，也防止政策变成私人裁量。","Evita que excepciones ad-hoc se vuelvan política y que política se vuelva discreción privada.")},
-        b3:{h:P("Connects to Laws","连接法则","Conecta a Leyes"), p:P("Laws bound; Policy Engine deploys; Gauges measure whether deployment holds.","法则定边界；政策引擎部署；量规测量部署是否成立。","Leyes acotan; el motor despliega; medidores verifican si el despliegue sostiene.")} },
+        intro:P("Policy turns doctrine into executable decisions that can be enforced, reviewed, and amended without losing the boundary.","政策把教义变成可执行决策，使其能执行、审查和修订而不失边界。","Política convierte doctrina en decisiones ejecutables sin perder el límite."),
+        b:[P("Input","输入","Entrada"),P("Law, scope, public need, institutional constraint.","法律、范围、公共需求、制度约束。","Ley, alcance, necesidad pública, restricción institucional."),
+           P("Process","过程","Proceso"),P("Convert principles into standards, owners, review windows, and amendment paths.","把原则转化为标准、负责人、审查窗口和修订路径。","Convertir principios en estándares, dueños, revisión y enmienda."),
+           P("Output","输出","Salida"),P("Rules that can be deployed, audited, revised, and explained.","可部署、审计、修订和解释的规则。","Reglas desplegables, auditables, revisables y explicables.")]
+      },
       engineering:{
-        intro:P(
-          "Deterministic compilation: scope + constraints → reason-coded decisions, logged as receipts for replay and audit comparison.",
-          "确定性编译：范围+约束→原因码决策，并以收据记录以供回放与审计比较。",
-          "Compilación determinista: alcance+restricciones → decisiones con códigos, registradas como recibos para replay y auditoría."
-        ),
-        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope manifest, constraint set, thresholds, version, owner, review cadence.","范围清单、约束集、阈值、版本、负责人、审查节奏。","Manifiesto, restricciones, umbrales, versión, dueño y cadencia de revisión.")},
-        b2:{h:P("Determinism","确定性","Determinismo"), p:P("Same inputs → same outputs; changes require version bump and receipt.","同输入→同输出；变更必须版本升级并生成收据。","Mismas entradas → mismas salidas; cambios requieren versión y recibo.")},
-        b3:{h:P("Receipts","收据","Recibos"), p:P("Decision receipt: inputs used + reason code + timestamp + review path.","决策收据：使用输入+原因码+时间戳+审查路径。","Recibo: entradas + código + timestamp + ruta de revisión.")} }
+        intro:P("Deterministic compilation: scope + constraints → reason-coded decisions logged as receipts.","确定性编译：范围+约束→原因码决策，并记录为收据。","Compilación determinista: alcance+restricciones → decisiones con códigos."),
+        b:[P("Inputs","输入","Entradas"),P("Scope manifest, constraints, thresholds, version, owner.","范围清单、约束、阈值、版本、负责人。","Manifiesto, restricciones, umbrales, versión, dueño."),
+           P("Determinism","确定性","Determinismo"),P("Same inputs produce same outputs unless version or scope changes.","同输入产生同输出，除非版本或范围改变。","Mismas entradas producen mismas salidas."),
+           P("Receipts","收据","Recibos"),P("Decision receipt: inputs, reason code, timestamp, review path.","决策收据：输入、原因码、时间戳、审查路径。","Recibo: entradas, código, timestamp, revisión.")]
+      }
     },
-
     {
-      id:"compliance_grid", c:"#c9a24a",
+      id:"compliance_grid",c:"#c9a24a",
       t:P("Compliance Grid","合规网格","Grid de Cumplimiento"),
       s:P("Make constraints visible and enforceable across teams.","让约束跨团队可见且可执行。","Hacer restricciones visibles y ejecutables."),
       platform:{
-        intro:P(
-          "Compliance keeps scale honest. It makes requirements visible so teams stop interpreting rules differently and so obligations can be reviewed before failure.",
-          "合规让规模化保持诚实：要求可见，团队不再各自解释规则，义务也能在失败前被审查。",
-          "Cumplimiento mantiene la escala honesta: requisitos visibles para evitar interpretaciones distintas y revisar obligaciones antes de fallar."
-        ),
-        b1:{h:P("What it shows","展示什么","Qué muestra"), p:P("Requirement → evidence → owner → status → next review.","要求→证据→负责人→状态→下一次审查。","Requisito → evidencia → responsable → estado → próxima revisión.")},
-        b2:{h:P("Why it matters","为何重要","Por qué importa"), p:P("Scale fails when rules drift across teams, surfaces, or time windows.","规则在团队、界面或时间窗口之间漂移，扩张就会失败。","La escala falla cuando reglas derivan entre equipos, superficies o ventanas de tiempo.")},
-        b3:{h:P("Routes on violation","违规路由","Ruta ante violación"), p:P("Route to Laws for boundary, Gauges for evidence, and Decision Index for repair sequence.","路由到法则看边界，到量规看证据，到决策指数看修复顺序。","Enrutar a Leyes para límite, Medidores para evidencia e Índice para reparación.")} },
+        intro:P("Compliance keeps scale honest by making requirements visible before failure.","合规通过在失败前让要求可见来保持规模诚实。","Cumplimiento mantiene escala honesta al hacer requisitos visibles."),
+        b:[P("Input","输入","Entrada"),P("Policy duties, evidence requirements, deadlines, exceptions.","政策义务、证据要求、截止时间、例外。","Deberes, evidencia, plazos, excepciones."),
+           P("Process","过程","Proceso"),P("Map duty to proof, proof to reviewer, reviewer to cadence.","义务映射到证明，证明映射到审查者，审查者映射到节奏。","Deber→prueba→revisor→cadencia."),
+           P("Output","输出","Salida"),P("A living surface showing complete, weak, and repair-needed duties.","显示完成、薄弱和需修复义务的活界面。","Superficie viva de deberes completos, débiles y por reparar.")]
+      },
       engineering:{
-        intro:P(
-          "Constraint surface + enforcement logging. Each cell maps to a check, threshold, proof object, and receipt schema.",
-          "约束面+执行日志：每个格子对应检查、阈值、证明对象与收据架构。",
-          "Superficie de restricciones + logging. Cada celda mapea a check, umbral, prueba y esquema de recibo."
-        ),
-        b1:{h:P("Machine-checkable","可机检","Comprobable"), p:P("PASS/HOLD/FAIL with reason codes and evidence pointers.","PASS/HOLD/FAIL + 原因码与证据指针。","PASS/HOLD/FAIL con códigos y punteros de evidencia.")},
-        b2:{h:P("Audit trail","审计轨迹","Auditoría"), p:P("No silent compliance; checks are logged by scope, owner, and review window.","无静默合规；按范围、负责人和审查窗口记录检查。","Sin cumplimiento silencioso; checks por alcance, dueño y ventana.")},
-        b3:{h:P("Interfaces","接口","Interfaces"), p:P("Consumes Laws/Gauges; emits receipts to Decision Index and route surfaces.","消费法则/量规；向决策指数与路由界面输出收据。","Consume Leyes/Medidores; emite recibos al Índice y rutas.")} }
+        intro:P("Constraint surface + enforcement logging. Each cell maps to a check, threshold, proof object, and receipt schema.","约束面+执行日志。每个格子对应检查、阈值、证明对象与收据架构。","Superficie de restricciones + logging."),
+        b:[P("Machine-checkable","可机检","Comprobable"),P("PASS/HOLD/FAIL with reason codes and evidence pointers.","PASS/HOLD/FAIL + 原因码与证据指针。","PASS/HOLD/FAIL con códigos y evidencia."),
+           P("Audit trail","审计轨迹","Auditoría"),P("No silent compliance; checks are logged by scope and owner.","无静默合规；检查按范围和负责人记录。","Sin cumplimiento silencioso."),
+           P("Interfaces","接口","Interfaces"),P("Consumes Laws/Gauges and emits receipts to decision surfaces.","消费法则/量规并向决策界面输出收据。","Consume Leyes/Medidores y emite recibos.")]
+      }
     },
-
     {
-      id:"public_risk_meter", c:"#ff2b2b",
+      id:"public_risk_meter",c:"#ff2b2b",
       t:P("Public Risk Meter","公共风险表","Medidor Público"),
       s:P("Readable stability posture: green/yellow/red.","可读稳定姿态：绿/黄/红。","Postura legible: verde/amarillo/rojo."),
       platform:{
-        intro:P(
-          "This is the public surface. It translates technical and institutional risk into a calm, repeatable signal—preventing panic and preventing denial.",
-          "这是公众面：把技术与制度风险翻译成冷静且可复跑的信号，既防恐慌也防否认。",
-          "Superficie pública: traduce riesgo técnico e institucional a señal calmada y repetible, evitando pánico y negación."
-        ),
-        b1:{h:P("Answers","回答什么","Responde"), p:P("Are we stable? If not, where is the leak, what is the class of risk, and what is next?","我们稳定吗？不稳定的话，哪里在漏，风险类别是什么，下一步是什么？","¿Estamos estables? Si no, ¿dónde está la fuga, qué clase de riesgo es y qué sigue?")},
-        b2:{h:P("Avoids intent debates","避免意图争论","Evita debatir intención"), p:P("Observed behavior + measured signals only. No hidden motive claims.","只看观测行为与测得信号。不做隐藏动机主张。","Solo señales medidas y comportamiento observado. Sin reclamar motivos ocultos.")},
-        b3:{h:P("Integrates","如何整合","Integra"), p:P("Routes to Gauges for detail, Laws for boundary, and Compliance Grid for duty repair.","到量规看细节，到法则看边界，到合规网格修复义务。","Enruta a Medidores, Leyes y Grid de Cumplimiento.")} },
+        intro:P("The public risk surface translates technical and institutional pressure into a calm, repeatable signal.","公共风险面把技术与制度压力翻译成冷静且可重复的信号。","La superficie de riesgo traduce presión técnica e institucional."),
+        b:[P("Input","输入","Entrada"),P("Pressure signals, harm indicators, drift patterns, exceptions.","压力信号、伤害指标、漂移模式、例外。","Señales de presión, daño, deriva, excepciones."),
+           P("Process","过程","Proceso"),P("Classify risk as visible, rising, contained, unresolved, or critical.","把风险分类为可见、上升、受控、未解决或关键。","Clasificar riesgo como visible, creciente, contenido, sin resolver o crítico."),
+           P("Output","输出","Salida"),P("Public-facing risk read that supports intervention and trust preservation.","支持干预与信任保护的公共风险读数。","Lectura pública que apoya intervención y confianza.")]
+      },
       engineering:{
-        intro:P(
-          "Windowed exposure report: thresholds + trend + correlation watch. Posture output, not narrative.",
-          "窗口化暴露报告：阈值+趋势+相关监测。输出姿态，不输出叙事。",
-          "Reporte por ventanas: umbrales + tendencia + vigilancia de correlación. Salida de postura, no narrativa."
-        ),
-        b1:{h:P("Signals","信号","Señales"), p:P("Exposure, acceleration, stale language, missing file, broken route, and correlated movement when applicable.","暴露、加速度、陈旧语言、缺失文件、断路由，以及可用时的相关运动。","Exposición, aceleración, lenguaje obsoleto, archivo faltante, ruta rota y movimiento correlacionado.")},
-        b2:{h:P("Triggers","触发","Triggers"), p:P("Band crossing emits reason code, receipt links, and next repair priority.","穿越区间输出原因码、收据链接与下一修复优先级。","Cruce de banda emite código, enlaces de recibo y siguiente prioridad.")},
-        b3:{h:P("Bounded outputs","有界输出","Salidas acotadas"), p:P("GREEN/YELLOW/RED + codes; no causality claims beyond evidence.","GREEN/YELLOW/RED + 原因码；不超证据做因果主张。","VERDE/AMARILLO/ROJO + códigos; sin causalidad fuera de evidencia.")} }
+        intro:P("Windowed exposure report: thresholds + trend + correlation watch. Posture output, not narrative.","窗口化暴露报告：阈值+趋势+相关监测。输出姿态，不输出叙事。","Reporte por ventanas: umbrales+tendencia+correlación."),
+        b:[P("Signals","信号","Señales"),P("Exposure, acceleration, stale language, missing file, broken route.","暴露、加速度、陈旧语言、缺失文件、断路由。","Exposición, aceleración, obsoleto, faltante, roto."),
+           P("Triggers","触发","Triggers"),P("Band crossing emits reason code, receipt links, and next repair priority.","穿越区间输出原因码、收据链接和修复优先级。","Cruce emite código, recibos y prioridad."),
+           P("Bounded outputs","有界输出","Salidas acotadas"),P("GREEN/YELLOW/RED + codes; no causality beyond evidence.","GREEN/YELLOW/RED + 代码；不超证据做因果。","VERDE/AMARILLO/ROJO + códigos.")]
+      }
     },
-
     {
-      id:"decision_index", c:"#93c5fd",
+      id:"decision_index",c:"#93c5fd",
       t:P("Decision Index","决策指数","Índice de Decisión"),
       s:P("Compress choice into a short executable next step list.","把选择压成可执行的下一步清单。","Comprime elección en lista ejecutable."),
       platform:{
-        intro:P(
-          "This is the anti-confusion surface. It turns a large problem into a short list of next actions with clear stop conditions, owners, and proof requirements.",
-          "这是反混乱界面：把大问题压成下一步清单，并给出停止条件、负责人和证明要求。",
-          "Superficie anti-confusión: convierte problemas grandes en acciones siguientes con condiciones de parada, dueños y pruebas."
-        ),
-        b1:{h:P("Produces","产出","Produce"), p:P("Ranked next steps, one current move, and a stop condition.","排序下一步、一个当前动作、一个停止条件。","Siguientes pasos rankeados, un movimiento actual y condición de stop.")},
-        b2:{h:P("Governance reason","治理原因","Razón"), p:P("Decisions must be comparable across teams and time, not personality-based.","决策必须跨团队/时间可比，不靠个性。","Decisiones comparables entre equipos/tiempo, no por personalidad.")},
-        b3:{h:P("Routes to pillars","路由到支柱","Enruta a pilares"), p:P("Policy Engine enforces; Compliance Grid proves; Risk Meter prioritizes; Laws bound.","政策引擎执行；合规网格证明；风险表排序；法则定边界。","Motor ejecuta; Grid prueba; Medidor prioriza; Leyes acotan.")} },
+        intro:P("The Decision Index turns a large problem into a short list of next actions with clear stop conditions.","决策指数把大问题变成带清晰停止条件的短下一步清单。","El Índice convierte un problema grande en acciones siguientes."),
+        b:[P("Input","输入","Entrada"),P("Decision request, authority basis, alternatives, risk read.","决策请求、权威依据、替代路径、风险读数。","Solicitud, autoridad, alternativas, riesgo."),
+           P("Process","过程","Proceso"),P("Bind decision to reason, owner, scope, effect, and review pathway.","把决策绑定到原因、负责人、范围、影响和审查路径。","Vincular decisión a razón, dueño, alcance, efecto y revisión."),
+           P("Output","输出","Salida"),P("A decision ledger that makes governance reviewable.","让治理可审查的决策账本。","Registro de decisión revisable.")]
+      },
       engineering:{
-        intro:P(
-          "Bounded inference under fixed scope: never exceeds evidence; emits reason-coded outputs and receipts.",
-          "固定范围下有界推断：不超证据；输出原因码与收据。",
-          "Inferencia acotada bajo alcance fijo: no excede evidencia; emite códigos y recibos."
-        ),
-        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope + gauges + laws + compliance posture + current route state.","范围+量规+法则+合规姿态+当前路由状态。","Alcance + medidores + leyes + cumplimiento + estado de ruta.")},
-        b2:{h:P("Outputs","输出","Salidas"), p:P("Next actions + hold/stop conditions, reason-coded and replayable.","下一步动作+暂停/停止条件，带原因码且可回放。","Acciones + condiciones hold/stop con códigos y replay.")},
-        b3:{h:P("Replay","回放","Replay"), p:P("Same inputs → same ranked list unless version or scope changes.","同输入→同排序清单，除非版本或范围改变。","Mismas entradas → misma lista salvo cambio de versión o alcance.")} }
+        intro:P("Bounded inference under fixed scope: never exceeds evidence; emits reason-coded outputs and receipts.","固定范围下有界推断：不超证据；输出原因码与收据。","Inferencia acotada bajo alcance fijo."),
+        b:[P("Inputs","输入","Entradas"),P("Scope + gauges + laws + compliance posture + route state.","范围+量规+法则+合规姿态+路由状态。","Alcance + medidores + leyes + cumplimiento + ruta."),
+           P("Outputs","输出","Salidas"),P("Next actions + hold/stop conditions, reason-coded and replayable.","下一步动作+暂停/停止条件，带原因码且可回放。","Acciones + condiciones con códigos y replay."),
+           P("Replay","回放","Replay"),P("Same inputs produce same ranked list unless version changes.","同输入产生同排序清单，除非版本改变。","Mismas entradas producen misma lista.")]
+      }
     }
   ];
 
-  var LEDGER=[
-    {
-      id:"policy",
-      name:P("Policy Engine","政策引擎","Motor de Política"),
-      desc:P("Policy-to-execution translation layer is active and filled.","政策到执行的翻译层已激活并填充。","La capa política-a-ejecución está activa y completa.")
-    },
-    {
-      id:"compliance",
-      name:P("Compliance Grid","合规网格","Grid de Cumplimiento"),
-      desc:P("Duty-to-proof and review cadence layer is active and filled.","义务到证明与审查节奏层已激活并填充。","La capa deber-a-prueba y cadencia está activa y completa.")
-    },
-    {
-      id:"risk",
-      name:P("Public Risk Meter","公共风险表","Medidor Público"),
-      desc:P("Public risk visibility layer is active and route-bound.","公共风险可见层已激活并绑定路由。","La capa de visibilidad de riesgo público está activa y vinculada.")
-    },
-    {
-      id:"decision",
-      name:P("Decision Index","决策指数","Índice de Decisión"),
-      desc:P("Decision record and next-action compression layer is active and filled.","决策记录与下一步压缩层已激活并填充。","La capa de registro de decisión y compresión de acciones está activa.")
-    },
-    {
-      id:"integration",
-      name:P("Level 4 Integration","第四级整合","Integración Nivel 4"),
-      desc:P("Placeholder pillar scaffolding is replaced by a complete governance chamber.","占位支柱脚手架已替换为完整治理室。","El andamiaje vacío fue reemplazado por una cámara completa.")
-    }
-  ];
+  var L4={
+    compass:P("Governance sits between doctrine and deployment. It converts law into repeatable action, review, repair, and public accountability.","治理位于原则与部署之间。它把法律转化为可重复的行动、审查、修复与公共问责。","Gobernanza se ubica entre doctrina y despliegue."),
+    star:P("Governance is healthy when decisions can be traced, risks can be seen, obligations can be audited, and public action stays inside the lawful boundary.","当决策可追踪、风险可见、义务可审计、公共行动在合法边界内时，治理就是健康的。","Gobernanza es sana cuando decisiones son trazables, riesgos visibles y obligaciones auditables."),
+    legend:[
+      P("North: boundary, authority, admissibility, public legitimacy.","北：边界、权威、可准入性、公共合法性。","Norte: límite, autoridad, admisibilidad, legitimidad."),
+      P("East: operations, reporting surfaces, implementation movement.","东：运营、报告界面、实施运动。","Este: operaciones, reportes, implementación."),
+      P("South: continuity, safety, compliance, restoration.","南：连续性、安全、合规、恢复。","Sur: continuidad, seguridad, cumplimiento, restauración."),
+      P("West: stress testing, contradiction detection, correction.","西：压力测试、矛盾侦测、修正。","Oeste: presión, contradicción, corrección.")
+    ],
+    ledger:[
+      P("Policy Engine: active and filled.","政策引擎：已激活并填充。","Motor de Política: activo."),
+      P("Compliance Grid: active and filled.","合规网格：已激活并填充。","Grid de Cumplimiento: activo."),
+      P("Public Risk Meter: active and route-bound.","公共风险表：已激活并绑定路由。","Medidor Público: activo."),
+      P("Decision Index: active and filled.","决策指数：已激活并填充。","Índice de Decisión: activo."),
+      P("Level 4: nested, not crowded.","第四级：嵌套，不拥挤。","Nivel 4: anidado, no saturado.")
+    ]
+  };
 
-  // ===== DOM build =====
-  var list=document.getElementById("list");
-  var ledger=document.getElementById("ledger");
-  var rowRefs=[];
-  var openIndex=0;
+  var openIndex=null;
+  var innerOpen=null;
+  var caps=document.getElementById("caps");
+  var body=document.getElementById("dollBody");
 
-  function closeAllRows(){
-    for(var i=0;i<rowRefs.length;i++){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-    }
-  }
+  function activePack(pillar){return lane==="engineering"?pillar.engineering:pillar.platform}
 
-  function toggleRow(i){
-    var isOpen=rowRefs[i].row.classList.contains("open");
-    if(isOpen){
-      rowRefs[i].row.classList.remove("open");
-      rowRefs[i].chev.textContent="▸";
-      openIndex=null;
-      return;
-    }
-    closeAllRows();
-    openIndex=i;
-    rowRefs[i].row.classList.add("open");
-    rowRefs[i].chev.textContent="▾";
-  }
-
-  function makeBubble(titleObj, textObj){
-    var b=document.createElement("div");
-    b.className="bubble";
-    b.setAttribute("role","button");
-    b.tabIndex=0;
-
-    var h=document.createElement("h4");
-    h.textContent = pick3(titleObj.en, titleObj.zh, titleObj.es);
-
-    var p=document.createElement("p");
-    p.textContent = pick3(textObj.en, textObj.zh, textObj.es);
-
-    b.appendChild(h);
-    b.appendChild(p);
-
-    function act(){ b.classList.toggle("open"); }
-    b.addEventListener("click", act, {passive:true});
-    b.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-    return b;
-  }
-
-  function buildRow(pillar, idx){
-    var row=document.createElement("div");
-    row.className="row";
-    row.style.setProperty("--c", pillar.c);
-
-    var head=document.createElement("div");
-    head.className="head";
-    head.setAttribute("role","button");
-    head.tabIndex=0;
-
-    var hL=document.createElement("div");
-    hL.className="hL";
-
-    var mark=document.createElement("div");
-    mark.className="mark";
-    mark.style.background=pillar.c;
-
-    var tb=document.createElement("div");
-    tb.className="titleBlock";
-
-    var title=document.createElement("div");
-    title.className="q";
-
-    var subt=document.createElement("div");
-    subt.className="subt";
-
-    tb.appendChild(title);
-    tb.appendChild(subt);
-
-    hL.appendChild(mark);
-    hL.appendChild(tb);
-
-    var chev=document.createElement("div");
-    chev.className="chev";
-    chev.innerHTML='<span class="chevTxt">▸</span>';
-
-    head.appendChild(hL);
-    head.appendChild(chev);
-
-    var body=document.createElement("div");
-    body.className="body";
-
-    var intro=document.createElement("p");
-    intro.className="pdesc";
-    body.appendChild(intro);
-
-    var sb=document.createElement("div");
-    sb.className="subBubbles";
-
-    var pack = (lane==="engineering") ? pillar.engineering : pillar.platform;
-    sb.appendChild(makeBubble(pack.b1.h, pack.b1.p));
-    sb.appendChild(makeBubble(pack.b2.h, pack.b2.p));
-    sb.appendChild(makeBubble(pack.b3.h, pack.b3.p));
-    body.appendChild(sb);
-
-    var actions=document.createElement("div");
-    actions.className="actions";
-
-    var aOpen=document.createElement("a");
-    aOpen.className="btn red";
-    aOpen.setAttribute("data-route", ROUTES[pillar.id]);
-    actions.appendChild(aOpen);
-
-    var aLaws=document.createElement("a");
-    aLaws.className="btn";
-    aLaws.setAttribute("data-route", ROUTES.laws);
-    actions.appendChild(aLaws);
-
-    var aGauges=document.createElement("a");
-    aGauges.className="btn";
-    aGauges.setAttribute("data-route", ROUTES.gauges);
-    actions.appendChild(aGauges);
-
-    body.appendChild(actions);
-
-    function act(){ toggleRow(idx); wireAll(); }
-    head.addEventListener("click", act, {passive:true});
-    head.addEventListener("keydown", function(e){ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); act(); }});
-
-    row.appendChild(head);
-    row.appendChild(body);
-    list.appendChild(row);
-
-    rowRefs.push({
-      row:row,
-      chev:row.querySelector(".chevTxt"),
-      title:title,
-      subt:subt,
-      intro:intro,
-      openBtn:aOpen,
-      lawsBtn:aLaws,
-      gaugesBtn:aGauges,
-      pillar:pillar
+  function buildCaps(){
+    caps.innerHTML="";
+    PILLARS.forEach(function(pillar,i){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="cap";
+      b.setAttribute("data-cap",String(i));
+      b.setAttribute("aria-expanded",openIndex===i?"true":"false");
+      b.style.setProperty("--c",pillar.c);
+      b.innerHTML='<div class="capMark"></div><h3></h3><p></p>';
+      b.querySelector("h3").textContent=pick3(pillar.t.en,pillar.t.zh,pillar.t.es);
+      b.querySelector("p").textContent=pick3(pillar.s.en,pillar.s.zh,pillar.s.es);
+      b.addEventListener("click",function(){toggleCap(i)}, {passive:true});
+      caps.appendChild(b);
     });
   }
 
-  function buildLedger(){
-    ledger.innerHTML="";
-    for(var i=0;i<LEDGER.length;i++){
-      var item=LEDGER[i];
-
-      var row=document.createElement("div");
-      row.className="ledgerRow";
-
-      var name=document.createElement("strong");
-      name.textContent=pick3(item.name.en,item.name.zh,item.name.es);
-
-      var desc=document.createElement("span");
-      desc.textContent=pick3(item.desc.en,item.desc.zh,item.desc.es);
-
-      var status=document.createElement("span");
-      status.className="status";
-      status.textContent=pick3("Strong","强","Fuerte");
-
-      row.appendChild(name);
-      row.appendChild(desc);
-      row.appendChild(status);
-      ledger.appendChild(row);
-    }
+  function makeBubble(title,text){
+    var d=document.createElement("div");
+    d.className="bubble";
+    d.setAttribute("role","button");
+    d.tabIndex=0;
+    var h=document.createElement("h4");
+    var p=document.createElement("p");
+    h.textContent=pick3(title.en,title.zh,title.es);
+    p.textContent=pick3(text.en,text.zh,text.es);
+    d.appendChild(h);
+    d.appendChild(p);
+    function act(){d.classList.toggle("open")}
+    d.addEventListener("click",act,{passive:true});
+    d.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();act()}});
+    return d;
   }
 
-  function renderList(){
-    list.innerHTML="";
-    rowRefs=[];
-    for(var i=0;i<PILLARS.length;i++) buildRow(PILLARS[i], i);
-    openIndex=0;
-    toggleRow(0);
-  }
-
-  function applyLevel4(){
-    var c=L4[lang]||L4.en;
-
-    document.getElementById("l4Band").textContent=c.level;
-    document.getElementById("compassTitle").textContent=c.compassTitle;
-    document.getElementById("compassBody").textContent=c.compassBody;
-    document.getElementById("northLabel").textContent=c.north;
-    document.getElementById("northBody").textContent=c.northBody;
-    document.getElementById("eastLabel").textContent=c.east;
-    document.getElementById("eastBody").textContent=c.eastBody;
-    document.getElementById("southLabel").textContent=c.south;
-    document.getElementById("southBody").textContent=c.southBody;
-    document.getElementById("westLabel").textContent=c.west;
-    document.getElementById("westBody").textContent=c.westBody;
-
-    document.getElementById("northStarTitle").textContent=c.northStarTitle;
-    document.getElementById("northStarBody").textContent=c.northStarBody;
-    document.getElementById("purposeLabel").textContent=c.purpose;
-    document.getElementById("purposeBody").textContent=c.purposeBody;
-    document.getElementById("methodLabel").textContent=c.method;
-    document.getElementById("methodBody").textContent=c.methodBody;
-    document.getElementById("failureLabel").textContent=c.failure;
-    document.getElementById("failureBody").textContent=c.failureBody;
-
-    document.getElementById("ledgerBand").textContent=c.ledger;
-    document.getElementById("routeBand").textContent=c.route;
-  }
-
-  function applyHeader(){
-    var H=(HEAD[lang]||HEAD.en);
-    var pack=(lane==="engineering") ? H.engineering : H.platform;
-
-    document.getElementById("hk").textContent = pick3("GOVERNANCE","治理","GOBERNANZA");
-    document.getElementById("ht").textContent = pick3("FOUR PILLARS","四大支柱","CUATRO PILARES");
-    document.getElementById("hs").textContent = pack.hs;
-    document.getElementById("rule").textContent = pack.rule;
-    document.getElementById("band").textContent = pick3("PILLARS (OPEN ONE)","支柱（打开一个）","PILARES (ABRE UNO)");
-
-    document.getElementById("laneState").textContent =
-      (lang==="zh") ? ("当前透镜："+laneLabel()) :
-      (lang==="es") ? ("Lente actual: "+laneLabel()) :
-      ("Current lens: "+laneLabel());
-
-    document.getElementById("langState").textContent =
-      (lang==="zh") ? "语言：中文" : (lang==="es") ? "Idioma: ES" : "Lang: EN";
-
-    document.getElementById("btnCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-    document.getElementById("btnExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("btnProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-
-    document.getElementById("dockDoor").textContent = pick3("DOOR","门","PUERTA");
-    document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
-    document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
-    document.getElementById("dockCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-
-    document.getElementById("routeCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
-    document.getElementById("routeExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
-    document.getElementById("routeProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
-    document.getElementById("routeLaws").textContent = pick3("LAWS","法则","LEYES");
-    document.getElementById("routeGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
-  }
-
-  function updateRows(){
-    var keep=openIndex;
-
-    for(var i=0;i<rowRefs.length;i++){
-      var R=rowRefs[i];
-      var p=R.pillar;
-
-      R.title.textContent = pick3(p.t.en, p.t.zh, p.t.es);
-      R.subt.textContent  = pick3(p.s.en, p.s.zh, p.s.es);
-
-      var pack = (lane==="engineering") ? p.engineering : p.platform;
-      R.intro.textContent = pick3(pack.intro.en, pack.intro.zh, pack.intro.es);
-
-      var sb = R.row.querySelector(".subBubbles");
-      if(sb){
-        sb.innerHTML="";
-        sb.appendChild(makeBubble(pack.b1.h, pack.b1.p));
-        sb.appendChild(makeBubble(pack.b2.h, pack.b2.p));
-        sb.appendChild(makeBubble(pack.b3.h, pack.b3.p));
-      }
-
-      R.openBtn.textContent = openLabel()+": "+pick3("OPEN PILLAR","打开支柱","ABRIR PILAR");
-      R.lawsBtn.textContent = openLabel()+": "+pick3("LAWS","法则","LEYES");
-      R.gaugesBtn.textContent = openLabel()+": "+pick3("GAUGES","量规","MEDIDORES");
+  function renderBody(){
+    if(openIndex===null||openIndex===undefined){
+      body.setAttribute("data-open","false");
+      body.innerHTML="";
+      return;
     }
 
-    closeAllRows();
-    if(keep!==null && keep!==undefined && rowRefs[keep]){
-      rowRefs[keep].row.classList.add("open");
-      rowRefs[keep].chev.textContent="▾";
-      openIndex=keep;
-    }else{
-      openIndex=null;
-    }
+    var pillar=PILLARS[openIndex];
+    var pack=activePack(pillar);
+    var b=pack.b;
 
+    body.setAttribute("data-open","true");
+    body.innerHTML="";
+
+    var title=document.createElement("h2");
+    title.className="dollTitle";
+    title.textContent=pick3(pillar.t.en,pillar.t.zh,pillar.t.es);
+
+    var intro=document.createElement("p");
+    intro.className="dollIntro";
+    intro.textContent=pick3(pack.intro.en,pack.intro.zh,pack.intro.es);
+
+    var bubbles=document.createElement("div");
+    bubbles.className="subBubbles";
+    bubbles.appendChild(makeBubble(b[0],b[1]));
+    bubbles.appendChild(makeBubble(b[2],b[3]));
+    bubbles.appendChild(makeBubble(b[4],b[5]));
+
+    var controls=document.createElement("div");
+    controls.className="innerControls";
+    [
+      ["compass",pick3("Compass","罗盘","Brújula")],
+      ["star",pick3("North Star","北星","Estrella Norte")],
+      ["ledger",pick3("Ledger","账本","Registro")],
+      ["routes",pick3("Routes","路由","Rutas")]
+    ].forEach(function(item){
+      var btn=document.createElement("button");
+      btn.type="button";
+      btn.className="innerBtn";
+      btn.setAttribute("data-inner",item[0]);
+      btn.setAttribute("aria-pressed",innerOpen===item[0]?"true":"false");
+      btn.textContent=item[1];
+      btn.addEventListener("click",function(){toggleInner(item[0])});
+      controls.appendChild(btn);
+    });
+
+    var panel=document.createElement("div");
+    panel.className="innerPanel";
+    panel.setAttribute("data-open",innerOpen?"true":"false");
+    panel.innerHTML=innerHtml();
+
+    var actions=document.createElement("div");
+    actions.className="actions";
+    actions.innerHTML=
+      '<a class="btn red" data-route="'+ROUTES[pillar.id]+'" href="'+ROUTES[pillar.id]+'"></a>'+
+      '<a class="btn" data-route="/laws/" href="/laws/"></a>'+
+      '<a class="btn" data-route="/gauges/" href="/gauges/"></a>';
+    actions.children[0].textContent=pick3("OPEN: PILLAR","打开：支柱","ABRIR: PILAR");
+    actions.children[1].textContent=pick3("OPEN: LAWS","打开：法则","ABRIR: LEYES");
+    actions.children[2].textContent=pick3("OPEN: GAUGES","打开：量规","ABRIR: MEDIDORES");
+
+    body.appendChild(title);
+    body.appendChild(intro);
+    body.appendChild(bubbles);
+    body.appendChild(controls);
+    body.appendChild(panel);
+    body.appendChild(actions);
     wireAll();
   }
 
-  // ===== state-carry wiring =====
-  function wireAll(){
-    var nodes=document.querySelectorAll("[data-route]");
-    for(var i=0;i<nodes.length;i++){
-      var el=nodes[i];
-      var route=el.getAttribute("data-route")||"";
-      if(!route) continue;
-
-      if(route.indexOf("?")!==-1){
-        try{
-          var u=new URL(route, location.origin);
-          var sp=u.searchParams;
-          sp.set("lang", lang);
-          sp.set("style","informal");
-          sp.set("time", time);
-          sp.set("depth","explore");
-          sp.set("lane", lane);
-          el.setAttribute("href", u.pathname + "?" + sp.toString() + (u.hash||""));
-        }catch(e){
-          el.setAttribute("href", route);
-        }
-      }else{
-        el.setAttribute("href", route + q());
-      }
+  function innerHtml(){
+    if(!innerOpen) return "";
+    if(innerOpen==="compass"){
+      return '<h4>'+pick3("Compass","罗盘","Brújula")+'</h4><p>'+pick3(L4.compass.en,L4.compass.zh,L4.compass.es)+'</p><div class="innerGrid">'+
+        L4.legend.map(function(x){return '<div class="innerBox"><strong>'+pick3("Legend","图例","Leyenda")+'</strong>'+pick3(x.en,x.zh,x.es)+'</div>'}).join("")+
+        '</div>';
     }
+    if(innerOpen==="star"){
+      return '<h4>'+pick3("North Star","北星","Estrella Norte")+'</h4><p>'+pick3(L4.star.en,L4.star.zh,L4.star.es)+'</p>';
+    }
+    if(innerOpen==="ledger"){
+      return '<h4>'+pick3("Governance Ledger","治理账本","Registro de Gobernanza")+'</h4><div class="innerGrid">'+
+        L4.ledger.map(function(x){return '<div class="innerBox"><strong>'+pick3("Strong","强","Fuerte")+'</strong>'+pick3(x.en,x.zh,x.es)+'</div>'}).join("")+
+        '</div>';
+    }
+    if(innerOpen==="routes"){
+      return '<h4>'+pick3("Route Map","路由图","Mapa de rutas")+'</h4><p>'+pick3("Governance routes remain tucked here instead of crowding the surface.","治理路由收纳在这里，不挤占表面。","Rutas de gobernanza quedan aquí, no saturan la superficie.")+'</p>'+
+        '<div class="routeMap">'+
+        '<a data-route="/index.html" href="/index.html">COMPASS</a>'+
+        '<a data-route="/products/" href="/products/">PRODUCTS</a>'+
+        '<a data-route="/laws/" href="/laws/">LAWS</a>'+
+        '<a data-route="/gauges/" href="/gauges/">GAUGES</a>'+
+        '<a data-route="/explore/" href="/explore/">EXPLORE</a>'+
+        '</div>';
+    }
+    return "";
   }
 
-  // ===== No-reload toggles =====
+  function toggleCap(i){
+    if(openIndex===i){openIndex=null;innerOpen=null}
+    else{openIndex=i;innerOpen=null}
+    buildCaps();
+    renderBody();
+  }
+
+  function toggleInner(key){
+    innerOpen=innerOpen===key?null:key;
+    renderBody();
+  }
+
+  function applyHeader(){
+    var pack=HEAD[lang][lane];
+    document.getElementById("hk").textContent=pick3("GOVERNANCE","治理","GOBERNANZA");
+    document.getElementById("ht").textContent=pick3("FOUR PILLARS","四大支柱","CUATRO PILARES");
+    document.getElementById("hs").textContent=pack.hs;
+    document.getElementById("rule").textContent=pack.rule;
+    document.getElementById("band").textContent=pick3("OPEN ONE PILLAR","打开一个支柱","ABRE UN PILAR");
+    document.getElementById("laneState").textContent=pick3("Current lens: ","当前透镜：","Lente actual: ")+laneLabel();
+    document.getElementById("langState").textContent=lang==="zh"?"语言：中文":(lang==="es"?"Idioma: ES":"Lang: EN");
+
+    document.getElementById("btnCompass").textContent=pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("btnExplore").textContent=pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("btnProducts").textContent=pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("dockDoor").textContent=pick3("DOOR","门","PUERTA");
+    document.getElementById("dockLaws").textContent=pick3("LAWS","法则","LEYES");
+    document.getElementById("dockGauges").textContent=pick3("GAUGES","量规","MEDIDORES");
+    document.getElementById("dockCompass").textContent=pick3("COMPASS","指南针","BRÚJULA");
+  }
+
+  function wireAll(){
+    Array.prototype.slice.call(document.querySelectorAll("[data-route]")).forEach(function(el){
+      var route=el.getAttribute("data-route")||"";
+      if(!route) return;
+      if(route.indexOf("?")!==-1){
+        try{
+          var u=new URL(route,location.origin);
+          var sp=u.searchParams;
+          sp.set("lang",lang);sp.set("style","informal");sp.set("time",time);sp.set("depth","explore");sp.set("lane",lane);
+          el.setAttribute("href",u.pathname+"?"+sp.toString()+(u.hash||""));
+        }catch(e){el.setAttribute("href",route)}
+      }else{
+        el.setAttribute("href",route+q());
+      }
+    });
+  }
+
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
-    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
-    try{ LS.setItem("gd_lang",lang);}catch(e){}
-    history.replaceState({}, "", location.pathname + q({lang:lang}));
-    setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-    applyHeader();
-    applyLevel4();
-    buildLedger();
-    updateRows();
+    document.documentElement.lang=lang==="zh"?"zh":(lang==="es"?"es":"en");
+    try{LS.setItem("gd_lang",lang)}catch(e){}
+    history.replaceState({},"",location.pathname+q({lang:lang}));
+    setPressed(["langEN","langZH","langES"],lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+    applyHeader();buildCaps();renderBody();wireAll();
   }
 
   function setLane(next){
     if(next!=="platform"&&next!=="engineering") next="platform";
     lane=next;
-    history.replaceState({}, "", location.pathname + q({lane:lane}));
-    setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-    applyHeader();
-    applyLevel4();
-    buildLedger();
-    updateRows();
+    history.replaceState({},"",location.pathname+q({lane:lane}));
+    setPressed(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");
+    applyHeader();buildCaps();renderBody();wireAll();
   }
 
-  document.getElementById("langEN").addEventListener("click", function(){ setLang("en"); }, {passive:true});
-  document.getElementById("langZH").addEventListener("click", function(){ setLang("zh"); }, {passive:true});
-  document.getElementById("langES").addEventListener("click", function(){ setLang("es"); }, {passive:true});
+  document.getElementById("langEN").addEventListener("click",function(){setLang("en")},{passive:true});
+  document.getElementById("langZH").addEventListener("click",function(){setLang("zh")},{passive:true});
+  document.getElementById("langES").addEventListener("click",function(){setLang("es")},{passive:true});
+  document.getElementById("lanePlatform").addEventListener("click",function(){setLane("platform")},{passive:true});
+  document.getElementById("laneEngineering").addEventListener("click",function(){setLane("engineering")},{passive:true});
 
-  document.getElementById("lanePlatform").addEventListener("click", function(){ setLane("platform"); }, {passive:true});
-  document.getElementById("laneEngineering").addEventListener("click", function(){ setLane("engineering"); }, {passive:true});
+  setPressed(["langEN","langZH","langES"],lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
+  setPressed(["lanePlatform","laneEngineering"],lane==="engineering"?"laneEngineering":"lanePlatform");
 
-  // init pressed
-  setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
-  setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
-
-  // build
-  renderList();
   applyHeader();
-  applyLevel4();
-  buildLedger();
-  updateRows();
+  buildCaps();
+  renderBody();
   wireAll();
-
 })();
 </script>
 

@@ -6,14 +6,14 @@
   <title>Diamond Gate Bridge — Website Health Gauges</title>
   <meta
     name="description"
-    content="Canopy-aware Diamond Gate Bridge website health gauges for source, runtime, visual-control truth, and false-health blocking."
+    content="Canopy-aware Diamond Gate Bridge website health gauges for source reachability, runtime execution, visual truth, and false-health blocking."
   />
+
   <style>
     :root {
       color-scheme: dark;
       --bg: #040713;
-      --panel: rgba(8, 13, 28, 0.74);
-      --panel-soft: rgba(255, 255, 255, 0.045);
+      --panel: rgba(8, 13, 28, 0.76);
       --text: #fff8e7;
       --muted: rgba(255, 248, 231, 0.68);
       --soft: rgba(255, 248, 231, 0.48);
@@ -41,8 +41,15 @@
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    a { color: inherit; text-decoration: none; }
-    code { color: rgba(255, 231, 172, 0.92); word-break: break-word; }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    code {
+      color: rgba(255, 231, 172, 0.92);
+      word-break: break-word;
+    }
 
     .page {
       width: min(100%, var(--max));
@@ -261,6 +268,7 @@
     }
   </style>
 </head>
+
 <body>
   <main class="page" id="page-root" data-gauges-root data-gauges-canopy-aware="true">
     <header class="topbar">
@@ -281,14 +289,14 @@
       <p class="kicker">Generation 1 · Baseline 6 · Canopy Protected Spine</p>
       <h1 id="page-title">Website Health Gauges</h1>
       <p class="lede">
-        This page runs a same-origin browser scan and reports source reachability, runtime execution,
+        This page runs one same-origin diagnostic pass and reports source reachability, runtime execution,
         root visual truth, visible sun presence, background presence, canopy binding, and false-health blocking.
       </p>
       <div class="scan-strip">
         <span class="pill">Status: <strong data-health-runtime-status>&nbsp;PENDING</strong></span>
         <span class="pill">Updated: <strong data-health-updated>&nbsp;pending</strong></span>
         <span class="pill">Scan: same-origin visual-control truth</span>
-        <span class="pill">Runtime: <code data-health-version>spine-canopy-parachute-b1</code></span>
+        <span class="pill">Runtime: <code data-health-version>spine-canopy-parachute-b3</code></span>
       </div>
     </section>
 
@@ -342,7 +350,7 @@
 
     <section class="section">
       <h2>Visual-control ledger</h2>
-      <p>Checks the live root page in a same-origin iframe and blocks false health when visible sun truth fails.</p>
+      <p>Checks the live root page in a same-origin iframe and blocks false strong health when visual truth fails.</p>
       <div data-visual-ledger>
         <p>Pending visual-control scan.</p>
       </div>
@@ -352,18 +360,18 @@
       <h2>Contract renewal</h2>
       <p>
         Baseline 6 expects <code>root-sun-asset-b1</code>, canopy version
-        <code>spine-canopy-parachute-b1</code>, and a visible sun confirmed by runtime or fallback.
-        Strong health is forbidden when the visible sun is false.
+        <code>spine-canopy-parachute-b1</code>, and diagnostic runtime
+        <code>spine-canopy-parachute-b3</code>. Strong health is forbidden when the visible root chain fails.
       </p>
     </section>
 
     <footer class="footer">
       <span>Diamond Gate Bridge</span>
-      <span>Generation 1 · Baseline 6 · Canopy Visual-Control Gauges</span>
+      <span>Generation 1 · Baseline 6 · Canopy Visual-Control Gauges · Bravo 3</span>
     </footer>
   </main>
 
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
-  <script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b1" defer></script>
+  <script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b3" defer></script>
 </body>
 </html>

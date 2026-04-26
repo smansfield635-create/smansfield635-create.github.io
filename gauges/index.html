@@ -3,23 +3,28 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Website Health Gauges — Diamond Gate Bridge</title>
+  <title>Diamond Gate Bridge — Website Health Gauges</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge website health gauges showing structure, runtime, content, drift risk, route health, current issues, and next required work."
+    content="Diamond Gate Bridge website health gauges: route health, runtime availability, root-page drift, asset readiness, and repair priorities."
   />
 
   <style>
     :root {
-      --bg: #020713;
-      --bg2: #07101e;
-      --panel: rgba(255, 255, 255, 0.075);
-      --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(255, 255, 255, 0.30);
-      --text: #f5f3ec;
-      --muted: rgba(245, 243, 236, 0.72);
-      --soft: rgba(245, 243, 236, 0.52);
-      --shadow: rgba(0, 0, 0, 0.44);
+      color-scheme: dark;
+      --bg: #02040b;
+      --panel: rgba(255, 255, 255, 0.055);
+      --panel-strong: rgba(255, 255, 255, 0.082);
+      --line: rgba(255, 248, 231, 0.16);
+      --line-strong: rgba(255, 248, 231, 0.30);
+      --text: #fff8e7;
+      --muted: rgba(255, 248, 231, 0.70);
+      --soft: rgba(255, 248, 231, 0.50);
+      --gold: rgba(255, 217, 138, 0.92);
+      --red: rgba(255, 112, 82, 0.92);
+      --amber: rgba(255, 190, 92, 0.92);
+      --green: rgba(132, 230, 169, 0.92);
+      --blue: rgba(168, 216, 255, 0.92);
       --max: 1180px;
     }
 
@@ -33,29 +38,29 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 22% 16%, rgba(255,255,255,0.10), transparent 18rem),
-        radial-gradient(circle at 80% 7%, rgba(91,132,255,0.12), transparent 22rem),
-        linear-gradient(180deg, var(--bg2), var(--bg) 58%);
       overflow-x: hidden;
+      background:
+        radial-gradient(circle at 50% 8%, rgba(255, 217, 138, 0.13), transparent 22rem),
+        radial-gradient(circle at 18% 18%, rgba(88, 122, 255, 0.13), transparent 18rem),
+        linear-gradient(180deg, #071225 0%, #030714 50%, #010309 100%);
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,0.44) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(255,255,255,0.24) 0 1px, transparent 1.6px);
-      background-size: 92px 92px, 151px 151px;
-      background-position: 14px 28px, 51px 70px;
-      opacity: 0.18;
+        radial-gradient(circle, rgba(255,255,255,0.48) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255,217,138,0.24) 0 1px, transparent 1.6px);
+      background-size: 91px 91px, 143px 143px;
+      background-position: 12px 26px, 52px 72px;
+      opacity: 0.20;
+      z-index: 0;
     }
 
     a {
@@ -68,601 +73,299 @@
       z-index: 1;
       width: min(100%, var(--max));
       margin: 0 auto;
-      padding: 16px;
+      padding: 18px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding: 8px 0 18px;
+      gap: 14px;
+      margin-bottom: 22px;
     }
 
     .brand {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      min-width: 0;
-    }
-
-    .mark {
-      width: 32px;
-      height: 32px;
-      flex: 0 0 auto;
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      transform: rotate(45deg);
-      background: linear-gradient(135deg, rgba(255,255,255,0.24), rgba(255,255,255,0.04));
-      box-shadow: 0 14px 36px var(--shadow);
-    }
-
-    .brand-copy {
       display: grid;
-      min-width: 0;
+      gap: 4px;
     }
 
-    .brand-title {
-      font-size: 0.96rem;
-      font-weight: 760;
+    .brand strong {
+      font-size: 1rem;
       letter-spacing: -0.03em;
-      white-space: nowrap;
     }
 
-    .brand-subtitle {
+    .brand span {
       color: var(--soft);
       font-size: 0.72rem;
       letter-spacing: 0.14em;
       text-transform: uppercase;
-      white-space: nowrap;
     }
 
     .nav {
       display: flex;
-      justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 7px;
+      justify-content: flex-end;
+      gap: 8px;
     }
 
     .nav a {
+      min-height: 36px;
+      display: inline-flex;
+      align-items: center;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 7px 10px;
-      background: rgba(255,255,255,0.045);
+      padding: 8px 11px;
+      background: rgba(255,255,255,0.04);
       color: var(--muted);
-      font-size: 0.76rem;
-    }
-
-    .nav a[aria-current="page"] {
-      color: var(--text);
-      background: rgba(255,255,255,0.115);
+      font-size: 0.82rem;
+      font-weight: 700;
     }
 
     .hero {
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      padding: clamp(22px, 5vw, 48px);
-      background:
-        radial-gradient(circle at 76% 18%, rgba(255,255,255,0.12), transparent 16rem),
-        linear-gradient(180deg, rgba(255,255,255,0.095), rgba(255,255,255,0.045));
-      box-shadow: 0 24px 80px var(--shadow);
+      display: grid;
+      gap: 14px;
+      margin-bottom: 18px;
     }
 
-    .eyebrow {
-      margin: 0 0 12px;
-      color: var(--soft);
+    .kicker {
+      margin: 0;
+      color: var(--gold);
       font-size: 0.74rem;
-      font-weight: 760;
-      letter-spacing: 0.16em;
+      font-weight: 800;
+      letter-spacing: 0.17em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      max-width: 900px;
-      font-size: clamp(2.38rem, 11vw, 5.4rem);
-      line-height: 0.9;
+      font-size: clamp(2.6rem, 9vw, 6.6rem);
+      line-height: 0.88;
       letter-spacing: -0.08em;
     }
 
-    .lead {
-      margin: 18px 0 0;
-      max-width: 850px;
+    .intro {
+      max-width: 880px;
+      margin: 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2.5vw, 1.16rem);
-      line-height: 1.6;
+      font-size: clamp(1rem, 2vw, 1.18rem);
+      line-height: 1.58;
     }
 
-    .trace {
+    .status-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 18px;
-    }
-
-    .trace span {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 7px 10px;
-      color: var(--muted);
-      background: rgba(255,255,255,0.05);
-      font-size: 0.78rem;
-    }
-
-    .surface,
-    .ledger-section {
-      margin-top: 16px;
-      border: 1px solid var(--line);
-      border-radius: 26px;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.11), transparent 22rem),
-        rgba(255,255,255,0.045);
-      box-shadow: 0 20px 70px rgba(0,0,0,0.34);
-    }
-
-    .surface-head,
-    .ledger-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      padding: 18px 18px 0;
-    }
-
-    .surface-head h2,
-    .ledger-head h2 {
-      margin: 0;
-      font-size: clamp(1.35rem, 5vw, 2.05rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-    }
-
-    .surface-head p,
-    .ledger-head p {
-      margin: 8px 0 0;
-      max-width: 760px;
-      color: var(--muted);
-      line-height: 1.52;
+      gap: 10px;
+      margin-top: 6px;
     }
 
     .pill {
-      flex: 0 0 auto;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 8px 10px;
-      background: rgba(255,255,255,0.06);
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .dashboard-stage {
-      display: grid;
-      grid-template-columns: minmax(0, 0.98fr) minmax(280px, 1fr);
-      gap: 16px;
-      padding: 18px;
+      display: inline-flex;
       align-items: center;
-    }
-
-    .object-wrap {
-      position: relative;
-      min-height: 420px;
-      display: grid;
-      place-items: center;
-      perspective: 1050px;
-      perspective-origin: 50% 42%;
-      overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(255,255,255,0.105), transparent 44%),
-        rgba(255,255,255,0.025);
-    }
-
-    .object-wrap::before {
-      content: "";
-      position: absolute;
-      width: min(82vw, 420px);
-      height: min(82vw, 420px);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.12), transparent 56%),
-        radial-gradient(circle, rgba(100,140,255,0.08), transparent 64%);
-      filter: blur(4px);
-      opacity: 0.9;
-    }
-
-    .overall-score {
-      position: absolute;
-      z-index: 5;
-      top: 14px;
-      left: 14px;
+      gap: 8px;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(3,7,15,0.72);
-      backdrop-filter: blur(10px);
-    }
-
-    .overall-score strong {
-      display: block;
-      font-size: 1.45rem;
-      line-height: 1;
-      letter-spacing: -0.04em;
-    }
-
-    .overall-score span {
-      display: block;
-      margin-top: 5px;
-      color: var(--soft);
-      font-size: 0.66rem;
-      letter-spacing: 0.12em;
+      border-radius: 999px;
+      padding: 8px 11px;
+      background: rgba(255,255,255,0.045);
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 750;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
     }
 
-    .orbit {
-      position: absolute;
-      width: min(82vw, 365px);
-      aspect-ratio: 1;
-      border: 1px solid rgba(255,255,255,0.15);
+    .dot {
+      width: 8px;
+      height: 8px;
       border-radius: 999px;
-      transform: rotateX(68deg) rotateZ(-14deg);
-      box-shadow: inset 0 0 20px rgba(255,255,255,0.025);
+      background: var(--amber);
+      box-shadow: 0 0 14px currentColor;
     }
 
-    .orbit.orbit-two {
-      width: min(70vw, 305px);
-      transform: rotateX(72deg) rotateZ(18deg);
-      opacity: 0.72;
-    }
+    .dot.strong { background: var(--green); }
+    .dot.watch { background: var(--amber); }
+    .dot.fail { background: var(--red); }
 
-    .orbit.orbit-three {
-      width: min(58vw, 245px);
-      transform: rotateX(58deg) rotateY(28deg) rotateZ(44deg);
-      opacity: 0.52;
-    }
-
-    .scene-3d {
-      position: relative;
-      width: min(68vw, 282px);
-      height: min(68vw, 282px);
-      transform-style: preserve-3d;
-      animation: fullObjectSpin 16s linear infinite;
-      will-change: transform;
-    }
-
-    .diamond-3d {
-      position: absolute;
-      inset: 0;
-      transform-style: preserve-3d;
-    }
-
-    .axis-y,
-    .axis-x,
-    .axis-z {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform-style: preserve-3d;
-      pointer-events: none;
-    }
-
-    .axis-y {
-      width: 1px;
-      height: 126%;
-      transform: translate(-50%, -50%) translateZ(2px);
-      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.45), transparent);
-    }
-
-    .axis-x {
-      width: 126%;
-      height: 1px;
-      transform: translate(-50%, -50%) translateZ(2px);
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.38), transparent);
-    }
-
-    .axis-z {
-      width: 1px;
-      height: 126%;
-      transform: translate(-50%, -50%) rotateY(90deg) translateZ(2px);
-      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.28), transparent);
-    }
-
-    .face {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 156px;
-      height: 156px;
-      transform-style: preserve-3d;
-      transform-origin: 50% 50%;
-      border: 1px solid rgba(255,255,255,0.26);
-      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
-      background:
-        radial-gradient(circle at 34% 24%, rgba(255,255,255,0.30), transparent 35%),
-        linear-gradient(135deg, rgba(255,255,255,0.22), rgba(255,255,255,0.055) 52%, rgba(255,255,255,0.14));
-      box-shadow:
-        inset 0 0 28px rgba(255,255,255,0.09),
-        0 0 24px rgba(255,255,255,0.055);
-      backface-visibility: visible;
-    }
-
-    .face.front-top {
-      transform: translate(-50%, -50%) rotateX(54deg) translateZ(78px);
-    }
-
-    .face.front-right {
-      transform: translate(-50%, -50%) rotateY(54deg) rotateZ(90deg) translateZ(78px);
-    }
-
-    .face.front-bottom {
-      transform: translate(-50%, -50%) rotateX(-54deg) rotateZ(180deg) translateZ(78px);
-    }
-
-    .face.front-left {
-      transform: translate(-50%, -50%) rotateY(-54deg) rotateZ(270deg) translateZ(78px);
-    }
-
-    .face.back-top {
-      transform: translate(-50%, -50%) rotateX(126deg) rotateZ(180deg) translateZ(78px);
-      opacity: 0.72;
-    }
-
-    .face.back-right {
-      transform: translate(-50%, -50%) rotateY(126deg) rotateZ(270deg) translateZ(78px);
-      opacity: 0.72;
-    }
-
-    .face.back-bottom {
-      transform: translate(-50%, -50%) rotateX(-126deg) translateZ(78px);
-      opacity: 0.72;
-    }
-
-    .face.back-left {
-      transform: translate(-50%, -50%) rotateY(-126deg) rotateZ(90deg) translateZ(78px);
-      opacity: 0.72;
-    }
-
-    .core-glow {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: 74px;
-      height: 74px;
-      transform: translate(-50%, -50%) translateZ(0);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.26), rgba(255,255,255,0.06) 48%, transparent 70%);
-      box-shadow: 0 0 60px rgba(255,255,255,0.16);
-    }
-
-    .hud-node {
-      position: absolute;
-      z-index: 3;
-      width: 86px;
-      min-height: 78px;
+    .grid {
       display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,255,255,0.22);
-      border-radius: 21px;
-      background: rgba(3,7,15,0.82);
-      box-shadow: 0 18px 34px rgba(0,0,0,0.38);
-      backdrop-filter: blur(10px);
-      text-align: center;
-    }
-
-    .hud-node strong {
-      display: block;
-      font-size: 1.08rem;
-      line-height: 1;
-    }
-
-    .hud-node span {
-      display: block;
-      margin-top: 5px;
-      color: var(--soft);
-      font-size: 0.62rem;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-    }
-
-    .hud-node.structure {
-      left: 50%;
-      top: 8%;
-      transform: translate(-50%, 0);
-    }
-
-    .hud-node.runtime {
-      right: 4%;
-      top: 50%;
-      transform: translate(0, -50%);
-    }
-
-    .hud-node.content {
-      left: 50%;
-      bottom: 8%;
-      transform: translate(-50%, 0);
-    }
-
-    .hud-node.drift {
-      left: 4%;
-      top: 50%;
-      transform: translate(0, -50%);
-    }
-
-    @keyframes fullObjectSpin {
-      0% {
-        transform: rotateX(-18deg) rotateY(0deg) rotateZ(0deg);
-      }
-
-      50% {
-        transform: rotateX(-18deg) rotateY(180deg) rotateZ(4deg);
-      }
-
-      100% {
-        transform: rotateX(-18deg) rotateY(360deg) rotateZ(0deg);
-      }
-    }
-
-    .cards {
-      display: grid;
-      gap: 10px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin: 18px 0;
     }
 
     .card {
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 14px;
-      background: var(--panel);
+      border-radius: 24px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255,255,255,0.08), transparent 34%),
+        var(--panel);
+      box-shadow: 0 18px 60px rgba(0,0,0,0.28);
     }
 
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: baseline;
+    .score-card {
+      min-height: 138px;
+      display: grid;
+      gap: 10px;
+      align-content: center;
     }
 
-    .card h3 {
-      margin: 0;
-      font-size: 0.98rem;
-      letter-spacing: -0.02em;
+    .score-label {
+      color: var(--soft);
+      font-size: 0.74rem;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
     }
 
-    .score {
+    .score-value {
+      font-size: clamp(2rem, 6vw, 4rem);
+      line-height: 0.9;
+      font-weight: 900;
+      letter-spacing: -0.08em;
+    }
+
+    .score-note {
       color: var(--muted);
-      font-size: 0.84rem;
-      white-space: nowrap;
+      font-size: 0.9rem;
+      line-height: 1.35;
     }
 
-    .bar {
-      position: relative;
-      overflow: hidden;
-      height: 8px;
-      margin-top: 10px;
+    .meter {
+      height: 9px;
       border-radius: 999px;
+      overflow: hidden;
       background: rgba(255,255,255,0.10);
     }
 
-    .fill {
-      position: absolute;
-      inset: 0 auto 0 0;
+    .meter span {
+      display: block;
+      height: 100%;
+      width: 0%;
       border-radius: inherit;
-      background: rgba(255,255,255,0.78);
-      transition: width 240ms ease;
+      background: linear-gradient(90deg, var(--red), var(--amber), var(--green));
+      transition: width 360ms ease;
     }
 
-    .card p {
-      margin: 9px 0 0;
-      color: var(--muted);
-      font-size: 0.82rem;
-      line-height: 1.43;
+    .section {
+      margin-top: 18px;
     }
 
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      padding: 0 18px 18px;
-    }
-
-    .status-panel {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 16px;
-      background: rgba(255,255,255,0.052);
-    }
-
-    .status-panel h3 {
+    .section h2 {
       margin: 0 0 10px;
-      font-size: 1rem;
-      letter-spacing: -0.025em;
+      font-size: 1.25rem;
+      letter-spacing: -0.04em;
     }
 
-    .status-panel ul,
-    .status-panel ol {
-      margin: 0;
-      padding-left: 1.15rem;
+    .section p {
       color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.55;
+      line-height: 1.5;
     }
 
-    .status-panel li + li {
-      margin-top: 7px;
-    }
-
-    .ledger-wrap {
+    .table-wrap {
       overflow-x: auto;
-      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(255,255,255,0.035);
     }
 
     table {
       width: 100%;
-      min-width: 760px;
       border-collapse: collapse;
-      color: var(--muted);
-      font-size: 0.82rem;
+      min-width: 720px;
     }
 
     th,
     td {
-      border-bottom: 1px solid rgba(255,255,255,0.10);
-      padding: 10px 8px;
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
       text-align: left;
       vertical-align: top;
+      font-size: 0.9rem;
     }
 
     th {
-      color: var(--text);
+      color: var(--soft);
       font-size: 0.72rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      background: rgba(255,255,255,0.035);
     }
 
-    td[data-status="strong"],
-    td[data-status="stable"] {
-      color: #f5f3ec;
+    tr:last-child td {
+      border-bottom: 0;
     }
 
-    td[data-status="watch"] {
-      color: #f5f3ec;
-    }
-
-    td[data-status="fail"] {
-      color: #f5f3ec;
-      font-weight: 760;
-    }
-
-    .contract-strip {
-      margin: 0 18px 18px;
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      padding: 5px 8px;
+      font-size: 0.72rem;
+      font-weight: 850;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.06);
       border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 14px;
-      background: rgba(255,255,255,0.045);
-      color: var(--muted);
-      font-size: 0.84rem;
-      line-height: 1.48;
     }
 
-    .contract-strip strong {
-      color: var(--text);
+    .tag.strong {
+      color: var(--green);
+      border-color: rgba(132, 230, 169, 0.32);
+    }
+
+    .tag.watch {
+      color: var(--amber);
+      border-color: rgba(255, 190, 92, 0.32);
+    }
+
+    .tag.fail {
+      color: var(--red);
+      border-color: rgba(255, 112, 82, 0.32);
+    }
+
+    .tag.pending {
+      color: var(--blue);
+      border-color: rgba(168, 216, 255, 0.32);
+    }
+
+    .lists {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    li + li {
+      margin-top: 6px;
+    }
+
+    code {
+      color: #ffe5a7;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 7px;
+      padding: 1px 5px;
     }
 
     .footer {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 18px 0 8px;
+      margin: 24px 0 4px;
       color: var(--soft);
       font-size: 0.78rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 880px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
@@ -672,111 +375,41 @@
         justify-content: flex-start;
       }
 
-      .surface-head,
-      .ledger-head {
-        display: block;
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
-      .pill {
-        display: inline-flex;
-        margin-top: 12px;
-      }
-
-      .dashboard-stage {
-        grid-template-columns: 1fr;
-      }
-
-      .object-wrap {
-        min-height: 410px;
-      }
-
-      .status-grid {
+      .lists {
         grid-template-columns: 1fr;
       }
     }
 
-    @media (max-width: 520px) {
+    @media (max-width: 560px) {
       .page {
-        padding: 12px;
+        padding: 14px;
       }
 
-      .hero,
-      .surface,
-      .ledger-section {
-        border-radius: 22px;
+      .grid {
+        grid-template-columns: 1fr;
       }
 
-      .object-wrap {
-        min-height: 370px;
+      .card {
+        border-radius: 20px;
       }
 
-      .scene-3d {
-        width: min(66vw, 238px);
-        height: min(66vw, 238px);
-      }
-
-      .face {
-        width: 132px;
-        height: 132px;
-      }
-
-      .face.front-top { transform: translate(-50%, -50%) rotateX(54deg) translateZ(66px); }
-      .face.front-right { transform: translate(-50%, -50%) rotateY(54deg) rotateZ(90deg) translateZ(66px); }
-      .face.front-bottom { transform: translate(-50%, -50%) rotateX(-54deg) rotateZ(180deg) translateZ(66px); }
-      .face.front-left { transform: translate(-50%, -50%) rotateY(-54deg) rotateZ(270deg) translateZ(66px); }
-      .face.back-top { transform: translate(-50%, -50%) rotateX(126deg) rotateZ(180deg) translateZ(66px); }
-      .face.back-right { transform: translate(-50%, -50%) rotateY(126deg) rotateZ(270deg) translateZ(66px); }
-      .face.back-bottom { transform: translate(-50%, -50%) rotateX(-126deg) translateZ(66px); }
-      .face.back-left { transform: translate(-50%, -50%) rotateY(-126deg) rotateZ(90deg) translateZ(66px); }
-
-      .hud-node {
-        width: 72px;
-        min-height: 66px;
-        border-radius: 18px;
-      }
-
-      .hud-node strong {
-        font-size: 0.96rem;
-      }
-
-      .hud-node span {
-        font-size: 0.54rem;
-      }
-
-      .overall-score {
-        top: 10px;
-        left: 10px;
-        padding: 10px;
-      }
-
-      .overall-score strong {
-        font-size: 1.22rem;
-      }
-
-      .brand-title,
-      .brand-subtitle {
-        white-space: normal;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .scene-3d {
-        animation: none;
-        transform: rotateX(-18deg) rotateY(34deg) rotateZ(0deg);
+      table {
+        min-width: 640px;
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page" id="page-root">
-    <header class="topbar" aria-label="Site header">
-      <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="mark" aria-hidden="true"></span>
-        <span class="brand-copy">
-          <span class="brand-title">Diamond Gate Bridge</span>
-          <span class="brand-subtitle">Website Health Gauges</span>
-        </span>
+  <main class="page" id="gauges-root" data-gauges-root>
+    <header class="topbar">
+      <a class="brand" href="/">
+        <strong>Diamond Gate Bridge</strong>
+        <span>Website Health Gauges</span>
       </a>
 
       <nav class="nav" aria-label="Primary navigation">
@@ -789,178 +422,85 @@
     </header>
 
     <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">Generation 1 · Baseline 4</p>
+      <p class="kicker">Generation 1 · Baseline 5</p>
       <h1 id="page-title">Website Health Gauges</h1>
-      <p class="lead">
-        The gauges page now measures the website from the browser: route structure,
-        runtime availability, content identity, and drift risk. The three-dimensional
-        object remains the visual instrument, but the numbers are now driven by a health runtime.
+      <p class="intro">
+        This page scans the live website from the browser and reports route strength, runtime availability,
+        root-page contract alignment, asset readiness, stale-language drift, and the next repair priorities.
       </p>
 
-      <div class="trace" aria-label="Health trace">
-        <span>Runtime: <strong data-health-runtime-status>STATIC</strong></span>
-        <span>Updated: <strong data-health-updated>Pending</strong></span>
-        <span>Static fallback protected</span>
-        <span>Live scan attached</span>
+      <div class="status-row">
+        <span class="pill"><span class="dot pending" id="runtime-dot"></span><span id="runtime-status">Static fallback protected</span></span>
+        <span class="pill">Updated: <strong id="updated-at">pending</strong></span>
+        <span class="pill">Scan: <strong id="scan-mode">same-origin live check</strong></span>
       </div>
     </section>
 
-    <section class="surface" aria-labelledby="surface-title">
-      <div class="surface-head">
-        <div>
-          <h2 id="surface-title">Current website health</h2>
-          <p>
-            The static read appears first. After load, the health runtime checks same-origin routes and scripts,
-            then updates the gauges and the route ledger.
-          </p>
-        </div>
-        <span class="pill">Instrument panel</span>
-      </div>
+    <section class="grid" aria-label="Current website health summary">
+      <article class="card score-card">
+        <span class="score-label">Website health</span>
+        <strong class="score-value" id="overall-score">--%</strong>
+        <div class="meter"><span id="overall-meter"></span></div>
+        <span class="score-note" id="overall-note">Waiting for live scan.</span>
+      </article>
 
-      <div class="dashboard-stage" id="dashboard-stage">
-        <div class="object-wrap" aria-label="Three-dimensional website health gauge object">
-          <div class="overall-score">
-            <strong data-health-overall>67%</strong>
-            <span>Website health</span>
-          </div>
+      <article class="card score-card">
+        <span class="score-label">Routes</span>
+        <strong class="score-value" id="route-score">--</strong>
+        <div class="meter"><span id="route-meter"></span></div>
+        <span class="score-note">Reachability, visible content, and identity language.</span>
+      </article>
 
-          <div class="orbit" aria-hidden="true"></div>
-          <div class="orbit orbit-two" aria-hidden="true"></div>
-          <div class="orbit orbit-three" aria-hidden="true"></div>
+      <article class="card score-card">
+        <span class="score-label">Runtime</span>
+        <strong class="score-value" id="runtime-score">--</strong>
+        <div class="meter"><span id="runtime-meter"></span></div>
+        <span class="score-note">Required and optional JavaScript runtime files.</span>
+      </article>
 
-          <div class="scene-3d" aria-hidden="true">
-            <div class="diamond-3d">
-              <div class="face front-top"></div>
-              <div class="face front-right"></div>
-              <div class="face front-bottom"></div>
-              <div class="face front-left"></div>
-              <div class="face back-top"></div>
-              <div class="face back-right"></div>
-              <div class="face back-bottom"></div>
-              <div class="face back-left"></div>
-              <div class="axis-y"></div>
-              <div class="axis-x"></div>
-              <div class="axis-z"></div>
-              <div class="core-glow"></div>
-            </div>
-          </div>
+      <article class="card score-card">
+        <span class="score-label">Drift risk</span>
+        <strong class="score-value" id="drift-score">--</strong>
+        <div class="meter"><span id="drift-meter"></span></div>
+        <span class="score-note">Lower is better. Stale language and missing files raise risk.</span>
+      </article>
+    </section>
 
-          <div class="hud-node structure">
-            <div>
-              <strong data-gauge-value="structure">72</strong>
-              <span>Structure</span>
-            </div>
-          </div>
-
-          <div class="hud-node runtime">
-            <div>
-              <strong data-gauge-value="runtime">54</strong>
-              <span>Runtime</span>
-            </div>
-          </div>
-
-          <div class="hud-node content">
-            <div>
-              <strong data-gauge-value="content">76</strong>
-              <span>Content</span>
-            </div>
-          </div>
-
-          <div class="hud-node drift">
-            <div>
-              <strong data-gauge-value="drift">36</strong>
-              <span>Drift risk</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cards" aria-label="Website health readings">
-          <article class="card">
-            <div class="card-top">
-              <h3>Structure</h3>
-              <span class="score" data-gauge-score="structure">72 / 100</span>
-            </div>
-            <div class="bar" aria-hidden="true"><span class="fill" data-gauge-fill="structure" style="width:72%"></span></div>
-            <p>Measures route reachability, page identity, and expected navigation coverage.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>Runtime</h3>
-              <span class="score" data-gauge-score="runtime">54 / 100</span>
-            </div>
-            <div class="bar" aria-hidden="true"><span class="fill" data-gauge-fill="runtime" style="width:54%"></span></div>
-            <p>Measures required and optional runtime files that support the gauges surface.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>Content</h3>
-              <span class="score" data-gauge-score="content">76 / 100</span>
-            </div>
-            <div class="bar" aria-hidden="true"><span class="fill" data-gauge-fill="content" style="width:76%"></span></div>
-            <p>Measures whether each checked route has enough visible content and expected page language.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>Drift Risk</h3>
-              <span class="score" data-gauge-score="drift">36 / 100</span>
-            </div>
-            <div class="bar" aria-hidden="true"><span class="fill" data-gauge-fill="drift" style="width:36%"></span></div>
-            <p>Measures unresolved route, runtime, content, and contract risks. Lower is better.</p>
-          </article>
-        </div>
-      </div>
-
-      <div class="status-grid" aria-label="Website diagnostic sections">
-        <section class="status-panel">
-          <h3>What is working</h3>
-          <ul data-working-list>
-            <li>Gauges page hard-render fallback is visible.</li>
-            <li>Generation 1 3D object baseline is preserved.</li>
-            <li>Health runtime is loading or waiting to measure.</li>
-          </ul>
-        </section>
-
-        <section class="status-panel">
-          <h3>What is wrong</h3>
-          <ul data-issues-list>
-            <li>Live health results are pending.</li>
-            <li>Route and runtime checks have not completed yet.</li>
-          </ul>
-        </section>
-
-        <section class="status-panel">
-          <h3>What needs to be done</h3>
-          <ol data-actions-list>
-            <li>Wait for the health runtime to complete the first route scan.</li>
-            <li>Repair any route, runtime, or content failures listed in the ledger.</li>
-          </ol>
-        </section>
-      </div>
-
-      <div class="contract-strip">
-        <strong>Contract renewal:</strong>
-        Baseline 4 keeps the 3D visual object, but the page is now a website health instrument.
-        The page owns the visible surface. The health runtime owns route and runtime diagnostics.
-        Static render remains mandatory before live measurement.
+    <section class="section">
+      <h2>What is working</h2>
+      <div class="card">
+        <ul id="working-list">
+          <li>Static gauges page rendered before runtime scan.</li>
+        </ul>
       </div>
     </section>
 
-    <section class="ledger-section" aria-labelledby="route-ledger-title">
-      <div class="ledger-head">
-        <div>
-          <h2 id="route-ledger-title">Route health ledger</h2>
-          <p>
-            Each route is checked for reachability, visible content, expected identity language, and expected links.
-          </p>
-        </div>
-        <span class="pill">Same-origin scan</span>
+    <section class="section">
+      <h2>What is wrong</h2>
+      <div class="card">
+        <ul id="wrong-list">
+          <li>Live scan has not completed yet.</li>
+        </ul>
       </div>
+    </section>
 
-      <div class="ledger-wrap">
-        <table aria-label="Route health ledger">
+    <section class="section">
+      <h2>What needs to be done</h2>
+      <div class="card">
+        <ol id="todo-list">
+          <li>Wait for the browser scan to complete.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Route health ledger</h2>
+      <p>
+        Core routes are blocking. Optional/future routes are reported without damaging the core score unless they are linked from the live surface.
+      </p>
+
+      <div class="table-wrap">
+        <table>
           <thead>
             <tr>
               <th>Page</th>
@@ -970,32 +510,23 @@
               <th>Problem</th>
             </tr>
           </thead>
-          <tbody data-route-ledger>
+          <tbody id="route-ledger">
             <tr>
-              <td>Pending</td>
-              <td>/</td>
-              <td>WAITING</td>
-              <td>--</td>
-              <td>Health runtime has not completed yet.</td>
+              <td colspan="5">Pending route scan.</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
-    <section class="ledger-section" aria-labelledby="runtime-ledger-title">
-      <div class="ledger-head">
-        <div>
-          <h2 id="runtime-ledger-title">Runtime ledger</h2>
-          <p>
-            Required runtime files are treated as contract-bearing. Optional files are reported without blocking the page.
-          </p>
-        </div>
-        <span class="pill">Runtime check</span>
-      </div>
+    <section class="section">
+      <h2>Runtime ledger</h2>
+      <p>
+        Required runtime files are contract-bearing. Optional files are useful, but missing optional files create WATCH rather than FAIL.
+      </p>
 
-      <div class="ledger-wrap">
-        <table aria-label="Runtime health ledger">
+      <div class="table-wrap">
+        <table>
           <thead>
             <tr>
               <th>Runtime</th>
@@ -1005,76 +536,646 @@
               <th>Problem</th>
             </tr>
           </thead>
-          <tbody data-runtime-ledger>
+          <tbody id="runtime-ledger">
             <tr>
-              <td>Pending</td>
-              <td>/gauges/gauges_health_runtime.js</td>
-              <td>WAITING</td>
-              <td>--</td>
-              <td>Health runtime has not completed yet.</td>
+              <td colspan="5">Pending runtime scan.</td>
             </tr>
           </tbody>
         </table>
       </div>
     </section>
 
+    <section class="section">
+      <h2>Root-page contract ledger</h2>
+      <p>
+        This checks whether the root page is still carrying old door/tree/grid language or whether it has moved to the universe-sun contract.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Check</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Finding</th>
+            </tr>
+          </thead>
+          <tbody id="contract-ledger">
+            <tr>
+              <td colspan="4">Pending contract scan.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Asset readiness ledger</h2>
+      <p>
+        This checks the new code-source sun asset file set without mutating the root page.
+      </p>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Asset</th>
+              <th>Path</th>
+              <th>Status</th>
+              <th>Score</th>
+              <th>Problem</th>
+            </tr>
+          </thead>
+          <tbody id="asset-ledger">
+            <tr>
+              <td colspan="5">Pending asset scan.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Contract renewal</h2>
+      <div class="card">
+        <p>
+          Baseline 5 converts the gauges page from a broad health read into a weakness detector.
+          It measures the visible route layer, runtime layer, root-page contract layer, and asset layer separately.
+          The page owns the visible fallback. The browser scan owns live measurement. Runtime enhancement remains optional.
+        </p>
+      </div>
+    </section>
+
     <footer class="footer">
       <span>Diamond Gate Bridge</span>
-      <span>Generation 1 · Baseline 4 · Measured Website Health Gauges</span>
+      <span>Generation 1 · Baseline 5 · Weakness Detection Gauges</span>
     </footer>
   </main>
-
-  <script src="/gauges/gauges_health_runtime.js" defer></script>
 
   <script>
     (function () {
       "use strict";
 
-      function protectVisiblePage() {
-        var root = document.getElementById("page-root");
+      var startedAt = Date.now();
 
-        if (!root || root.textContent.trim().length < 40) {
-          document.body.innerHTML =
-            '<main style="padding:24px;min-height:100vh;background:#020713;color:#f5f3ec;font-family:system-ui,sans-serif;">' +
-            '<h1 style="font-size:42px;line-height:.95;margin:0 0 16px;">Website Health Gauges</h1>' +
-            '<p style="color:rgba(245,243,236,.72);line-height:1.5;">Hard-render fallback active. Structure, runtime, content, and drift health remain visible even if runtime enhancement fails.</p>' +
-            '<div style="display:grid;gap:10px;margin-top:18px;">' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Structure — static fallback</div>' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Runtime — static fallback</div>' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Content — static fallback</div>' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Drift Risk — static fallback</div>' +
-            '</div>' +
-            '</main>';
+      var coreRoutes = [
+        {
+          name: "Home",
+          path: "/",
+          required: true,
+          identity: ["Diamond Gate Bridge", "Learn to Live to Love"]
+        },
+        {
+          name: "Products",
+          path: "/products/",
+          required: true,
+          identity: ["Products"]
+        },
+        {
+          name: "Laws",
+          path: "/laws/",
+          required: true,
+          identity: ["Laws"]
+        },
+        {
+          name: "Governance",
+          path: "/governance/",
+          required: true,
+          identity: ["Governance"]
+        },
+        {
+          name: "Gauges",
+          path: "/gauges/",
+          required: true,
+          identity: ["Website Health Gauges", "Route health ledger"]
+        },
+        {
+          name: "Prelude",
+          path: "/prelude/",
+          required: false,
+          identity: ["Prelude"]
+        },
+        {
+          name: "Explore",
+          path: "/explore/",
+          required: false,
+          identity: ["Explore"]
+        },
+        {
+          name: "Frontier",
+          path: "/frontier/",
+          required: false,
+          identity: ["Frontier"]
         }
+      ];
+
+      var runtimeFiles = [
+        {
+          name: "Index boot",
+          path: "/index.js?v=root-universe-sun-b2",
+          required: true,
+          expected: ["Root Universe Sun", "rootUniverseSunBoot", "Static universe sun active"]
+        },
+        {
+          name: "Site runtime",
+          path: "/runtime/site_runtime.js",
+          required: true,
+          expected: ["DGBSiteRuntime"]
+        },
+        {
+          name: "Root universe sun runtime",
+          path: "/runtime/index_runtime.js?v=root-universe-sun-b2",
+          required: true,
+          expected: ["universeSunRuntime", "Root Universe Sun Baseline"]
+        },
+        {
+          name: "Gauges health runtime",
+          path: "/gauges/gauges_health_runtime.js",
+          required: true,
+          expected: ["runtime"]
+        },
+        {
+          name: "Gauges visual runtime",
+          path: "/gauges/gauges_runtime.js",
+          required: false,
+          expected: ["DGBGaugesRuntime"]
+        },
+        {
+          name: "Sun asset runtime",
+          path: "/runtime/sun_asset_runtime.js",
+          required: false,
+          expected: ["DGBSunAssetRuntime"]
+        }
+      ];
+
+      var assetFiles = [
+        {
+          name: "Sun manifest",
+          path: "/assets/sun/sun_manifest.json",
+          required: false,
+          expected: ["DGB_SUN_ASSET_FILE_SET_v1"]
+        },
+        {
+          name: "Sun material CSS",
+          path: "/assets/sun/sun_material.css",
+          required: false,
+          expected: ["dgb-sun-stage", "dgb-sun-core"]
+        },
+        {
+          name: "Sun SVG",
+          path: "/assets/sun/sun.svg",
+          required: false,
+          expected: ["svg", "solarTexture"]
+        },
+        {
+          name: "Sun canvas renderer",
+          path: "/assets/sun/sun_canvas.js",
+          required: false,
+          expected: ["DGBSunCanvas", "createCanvasSun"]
+        },
+        {
+          name: "Sun preview harness",
+          path: "/assets/sun/preview.html",
+          required: false,
+          expected: ["Sun Asset Preview", "data-dgb-sun-mount"]
+        }
+      ];
+
+      var contractChecks = [
+        {
+          name: "Theme present",
+          scoreWhenPass: 100,
+          pass: function (html) {
+            return html.indexOf("Learn to Live to Love") !== -1;
+          },
+          findingPass: "Root page contains Learn to Live to Love.",
+          findingFail: "Root page does not contain the theme."
+        },
+        {
+          name: "Universe-sun contract present",
+          scoreWhenPass: 100,
+          pass: function (html) {
+            return html.indexOf("data-universe-sun") !== -1 || html.indexOf("Universe Sun Baseline") !== -1;
+          },
+          findingPass: "Root page carries universe-sun contract markers.",
+          findingFail: "Root page does not show the universe-sun contract."
+        },
+        {
+          name: "Stale solar-door language removed",
+          scoreWhenPass: 100,
+          pass: function (html) {
+            return html.indexOf("STATIC SOLAR DOOR ACTIVE") === -1 &&
+              html.indexOf("Static Solar Door Active") === -1 &&
+              html.indexOf("solar door") === -1 &&
+              html.indexOf("Solar Door") === -1;
+          },
+          findingPass: "No visible stale solar-door language found.",
+          findingFail: "Stale solar-door language is still present."
+        },
+        {
+          name: "Tree/physical door stretch removed",
+          scoreWhenPass: 100,
+          pass: function (html) {
+            return html.indexOf("Tree of Life") === -1 &&
+              html.indexOf("tree-door") === -1 &&
+              html.indexOf("physical double door") === -1;
+          },
+          findingPass: "Tree/physical-door stretch is not active on root page.",
+          findingFail: "Tree/physical-door language or structure is still present."
+        },
+        {
+          name: "Cache-busted root boot",
+          scoreWhenPass: 100,
+          pass: function (html) {
+            return html.indexOf("/index.js?v=root-universe-sun-b2") !== -1;
+          },
+          findingPass: "Root page points to cache-busted index.js.",
+          findingFail: "Root page does not point to the cache-busted index.js file."
+        },
+        {
+          name: "Visible SUN label removed",
+          scoreWhenPass: 100,
+          pass: function (html) {
+            return html.indexOf(">SUN<") === -1 && html.indexOf("sun-label") === -1;
+          },
+          findingPass: "No explicit SUN label found.",
+          findingFail: "SUN label still appears in source."
+        }
+      ];
+
+      function $(id) {
+        return document.getElementById(id);
       }
 
-      function markRuntimeMissing() {
-        if (!window.DGBGaugesHealthRuntime) {
-          var node = document.querySelector("[data-health-runtime-status]");
-          if (node) node.textContent = "MISSING";
-
-          var issues = document.querySelector("[data-issues-list]");
-          if (issues) {
-            issues.innerHTML = "<li>Required health runtime did not load from /gauges/gauges_health_runtime.js.</li>";
-          }
-
-          var actions = document.querySelector("[data-actions-list]");
-          if (actions) {
-            actions.innerHTML = "<li>Serve /gauges/gauges_health_runtime.js, then reload the gauges page.</li>";
-          }
-        }
+      function setText(id, value) {
+        var node = $(id);
+        if (node) node.textContent = value;
       }
 
-      protectVisiblePage();
+      function setMeter(id, value) {
+        var node = $(id);
+        if (node) node.style.width = Math.max(0, Math.min(100, value)) + "%";
+      }
+
+      function classify(score, required) {
+        if (score >= 85) return "strong";
+        if (score >= 55) return "watch";
+        if (required) return "fail";
+        return "watch";
+      }
+
+      function labelFor(score, required) {
+        var c = classify(score, required);
+        if (c === "strong") return "STRONG";
+        if (c === "watch") return "WATCH";
+        return "FAIL";
+      }
+
+      function tag(status) {
+        return '<span class="tag ' + String(status).toLowerCase() + '">' + status + '</span>';
+      }
+
+      async function fetchText(path) {
+        var url = path + (path.indexOf("?") === -1 ? "?_gauge=" : "&_gauge=") + String(Date.now());
+
+        var response = await fetch(url, {
+          method: "GET",
+          cache: "no-store",
+          credentials: "same-origin"
+        });
+
+        var text = await response.text();
+
+        return {
+          ok: response.ok,
+          status: response.status,
+          text: text,
+          url: url
+        };
+      }
+
+      function scoreTextResult(result, item) {
+        if (!result.ok) {
+          return {
+            score: item.required ? 0 : 50,
+            problem: "File or route returned HTTP " + result.status + "."
+          };
+        }
+
+        var visibleEnough = result.text && result.text.trim().length > 80;
+        var identityHits = 0;
+        var expected = item.identity || item.expected || [];
+
+        expected.forEach(function (needle) {
+          if (result.text.indexOf(needle) !== -1) identityHits += 1;
+        });
+
+        var identityScore = expected.length ? Math.round((identityHits / expected.length) * 100) : 100;
+
+        var score = 50;
+        if (visibleEnough) score += 25;
+        score += Math.round(identityScore * 0.25);
+
+        var problem = "No current problem detected.";
+
+        if (!visibleEnough) {
+          problem = "Reachable but visible/source content is thin.";
+        } else if (identityScore < 100) {
+          problem = "Reachable but expected identity markers are incomplete.";
+        }
+
+        return {
+          score: Math.max(0, Math.min(100, score)),
+          problem: problem
+        };
+      }
+
+      function renderLedger(tbodyId, rows, columns) {
+        var tbody = $(tbodyId);
+        if (!tbody) return;
+
+        tbody.innerHTML = rows.map(function (row) {
+          return "<tr>" + columns.map(function (column) {
+            return "<td>" + column(row) + "</td>";
+          }).join("") + "</tr>";
+        }).join("");
+      }
+
+      function renderList(id, items, empty) {
+        var node = $(id);
+        if (!node) return;
+
+        var source = items.length ? items : [empty];
+        node.innerHTML = source.map(function (item) {
+          return "<li>" + item + "</li>";
+        }).join("");
+      }
+
+      async function scanList(items) {
+        var results = [];
+
+        for (var i = 0; i < items.length; i += 1) {
+          var item = items[i];
+
+          try {
+            var result = await fetchText(item.path);
+            var scored = scoreTextResult(result, item);
+
+            results.push({
+              name: item.name,
+              path: item.path,
+              required: item.required,
+              status: labelFor(scored.score, item.required),
+              score: scored.score,
+              problem: scored.problem
+            });
+          } catch (error) {
+            results.push({
+              name: item.name,
+              path: item.path,
+              required: item.required,
+              status: item.required ? "FAIL" : "WATCH",
+              score: item.required ? 0 : 50,
+              problem: error && error.message ? error.message : "Fetch failed."
+            });
+          }
+        }
+
+        return results;
+      }
+
+      async function scanContracts() {
+        var html = "";
+
+        try {
+          var result = await fetchText("/");
+          html = result.text || "";
+        } catch (error) {
+          return [{
+            name: "Root page fetch",
+            status: "FAIL",
+            score: 0,
+            finding: "Root page could not be fetched for contract scan."
+          }];
+        }
+
+        return contractChecks.map(function (check) {
+          var passed = false;
+
+          try {
+            passed = check.pass(html);
+          } catch (error) {
+            passed = false;
+          }
+
+          return {
+            name: check.name,
+            status: passed ? "STRONG" : "FAIL",
+            score: passed ? check.scoreWhenPass : 0,
+            finding: passed ? check.findingPass : check.findingFail
+          };
+        });
+      }
+
+      function average(rows, requiredOnly) {
+        var filtered = rows.filter(function (row) {
+          return requiredOnly ? row.required : true;
+        });
+
+        if (!filtered.length) return 0;
+
+        var total = filtered.reduce(function (sum, row) {
+          return sum + row.score;
+        }, 0);
+
+        return Math.round(total / filtered.length);
+      }
+
+      function collectFindings(routeRows, runtimeRows, assetRows, contractRows) {
+        var working = [];
+        var wrong = [];
+        var todo = [];
+
+        routeRows.forEach(function (row) {
+          if (row.status === "STRONG" && row.required) {
+            working.push("Core route strong: <code>" + row.path + "</code>.");
+          }
+
+          if (row.status !== "STRONG" && row.required) {
+            wrong.push("Core route issue: <code>" + row.path + "</code> — " + row.problem);
+            todo.push("Repair required route <code>" + row.path + "</code>.");
+          }
+
+          if (row.status !== "STRONG" && !row.required) {
+            wrong.push("Optional/future route not strong: <code>" + row.path + "</code> — " + row.problem);
+          }
+        });
+
+        runtimeRows.forEach(function (row) {
+          if (row.status === "STRONG") {
+            working.push("Runtime reachable: <code>" + row.path + "</code>.");
+          }
+
+          if (row.status !== "STRONG" && row.required) {
+            wrong.push("Required runtime issue: <code>" + row.path + "</code> — " + row.problem);
+            todo.push("Fix required runtime file <code>" + row.path + "</code>.");
+          }
+
+          if (row.status !== "STRONG" && !row.required) {
+            wrong.push("Optional runtime missing or weak: <code>" + row.path + "</code> — " + row.problem);
+            todo.push("Create or repair optional runtime <code>" + row.path + "</code> if you want the ledger fully strong.");
+          }
+        });
+
+        contractRows.forEach(function (row) {
+          if (row.status === "STRONG") {
+            working.push("Root contract check passed: " + row.name + ".");
+          } else {
+            wrong.push("Root contract failure: " + row.finding);
+            todo.push("Correct root contract issue: " + row.name + ".");
+          }
+        });
+
+        assetRows.forEach(function (row) {
+          if (row.status === "STRONG") {
+            working.push("Sun asset file reachable: <code>" + row.path + "</code>.");
+          } else {
+            wrong.push("Sun asset file not strong: <code>" + row.path + "</code> — " + row.problem);
+          }
+        });
+
+        if (assetRows.some(function (row) { return row.status !== "STRONG"; })) {
+          todo.push("Finish the sun asset file set before binding it back into the root page.");
+        }
+
+        if (!todo.length) {
+          todo.push("Move to the next baseline only after confirming the live root page no longer shows stale status copy.");
+        }
+
+        return {
+          working: dedupe(working).slice(0, 14),
+          wrong: dedupe(wrong).slice(0, 14),
+          todo: dedupe(todo).slice(0, 10)
+        };
+      }
+
+      function dedupe(list) {
+        var seen = {};
+        return list.filter(function (item) {
+          if (seen[item]) return false;
+          seen[item] = true;
+          return true;
+        });
+      }
+
+      async function runScan() {
+        setText("updated-at", "running");
+        setText("runtime-status", "Live scan running");
+
+        var dotNode = $("runtime-dot");
+        if (dotNode) {
+          dotNode.className = "dot watch";
+        }
+
+        var routeRows = await scanList(coreRoutes);
+        var runtimeRows = await scanList(runtimeFiles);
+        var assetRows = await scanList(assetFiles);
+        var contractRows = await scanContracts();
+
+        renderLedger("route-ledger", routeRows, [
+          function (row) { return row.name; },
+          function (row) { return "<code>" + row.path + "</code>"; },
+          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return row.score + "/100"; },
+          function (row) { return row.problem; }
+        ]);
+
+        renderLedger("runtime-ledger", runtimeRows, [
+          function (row) { return row.name; },
+          function (row) { return "<code>" + row.path + "</code>"; },
+          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return row.score + "/100"; },
+          function (row) { return row.problem; }
+        ]);
+
+        renderLedger("asset-ledger", assetRows, [
+          function (row) { return row.name; },
+          function (row) { return "<code>" + row.path + "</code>"; },
+          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return row.score + "/100"; },
+          function (row) { return row.problem; }
+        ]);
+
+        renderLedger("contract-ledger", contractRows, [
+          function (row) { return row.name; },
+          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return row.score + "/100"; },
+          function (row) { return row.finding; }
+        ]);
+
+        var routeScore = average(routeRows, true);
+        var runtimeScore = average(runtimeRows, true);
+        var contractScore = average(contractRows.map(function (row) {
+          return {
+            score: row.score,
+            required: true
+          };
+        }), true);
+
+        var assetScore = average(assetRows, false);
+        var optionalPenalty = Math.round((100 - assetScore) * 0.12);
+        var driftRisk = Math.max(0, Math.min(100, Math.round(
+          ((100 - routeScore) * 0.28) +
+          ((100 - runtimeScore) * 0.24) +
+          ((100 - contractScore) * 0.36) +
+          optionalPenalty
+        )));
+
+        var overall = Math.max(0, Math.min(100, Math.round(
+          (routeScore * 0.30) +
+          (runtimeScore * 0.25) +
+          (contractScore * 0.35) +
+          ((100 - driftRisk) * 0.10)
+        )));
+
+        setText("overall-score", overall + "%");
+        setText("route-score", String(routeScore));
+        setText("runtime-score", String(runtimeScore));
+        setText("drift-score", String(driftRisk));
+
+        setMeter("overall-meter", overall);
+        setMeter("route-meter", routeScore);
+        setMeter("runtime-meter", runtimeScore);
+        setMeter("drift-meter", 100 - driftRisk);
+
+        setText("overall-note", overall >= 90 ? "Strong. Remaining issues are specific and actionable." : overall >= 70 ? "Watch. Site works, but weaknesses remain." : "Repair required. Core contract or runtime issues detected.");
+
+        var findings = collectFindings(routeRows, runtimeRows, assetRows, contractRows);
+        renderList("working-list", findings.working, "No confirmed working items yet.");
+        renderList("wrong-list", findings.wrong, "No current weakness detected by this scan.");
+        renderList("todo-list", findings.todo, "No repair action required.");
+
+        setText("updated-at", new Date().toLocaleTimeString());
+        setText("runtime-status", "Live weakness scan complete");
+
+        if (dotNode) {
+          dotNode.className = "dot " + (overall >= 85 ? "strong" : overall >= 60 ? "watch" : "fail");
+        }
+
+        document.documentElement.setAttribute("data-dgb-gauges-baseline", "5");
+        document.documentElement.setAttribute("data-dgb-gauges-health", String(overall));
+      }
 
       if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", protectVisiblePage, { once: true });
+        document.addEventListener("DOMContentLoaded", runScan, { once: true });
+      } else {
+        runScan();
       }
-
-      window.setTimeout(protectVisiblePage, 750);
-      window.setTimeout(protectVisiblePage, 1800);
-      window.setTimeout(markRuntimeMissing, 2400);
     })();
   </script>
+
+  <script src="/runtime/site_runtime.js" defer></script>
+  <script src="/gauges/gauges_runtime.js" defer></script>
 </body>
 </html>

@@ -1,13 +1,13 @@
 (function () {
   "use strict";
 
-  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=root-sun-asset-b1";
-  var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=luminous-sun-b3";
+  var VERSION = "luminous-expanding-plasma-b4";
+  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=" + VERSION;
+  var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=" + VERSION;
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var SUN_ASSET_RUNTIME_NAME = "DGBSunAssetRuntime";
 
-  var BASELINE = "Generation 1 Root Universe Sun Asset Baseline 1";
-  var MATERIAL_VERSION = "luminous-sun-b3";
+  var BASELINE = "Generation 1 Sun Asset Spine Baseline 1";
   var THEME = "Learn to Live to Love";
 
   var bootState = {
@@ -19,7 +19,7 @@
     sunAssetRuntimeLoaded: false,
     sunAssetRuntimeFailed: false,
     sunMounted: false,
-    materialVersion: MATERIAL_VERSION
+    version: VERSION
   };
 
   function getRoot() {
@@ -41,10 +41,10 @@
     if (!root || root.textContent.trim().length < 80) {
       document.body.innerHTML =
         '<main id="door-root" data-universe-sun style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
-        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first universe sun fallback</p>' +
+        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first sun spine fallback</p>' +
         '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
         '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">Learn to Live to Love</p>' +
-        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The universe sun fallback is active. The page remains visible even if runtime enhancement fails.</p>' +
+        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The root fallback is active. The page remains visible even if the sun runtime fails.</p>' +
         '<nav style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;">' +
         '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/products/">Products</a>' +
         '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/gauges/">Gauges</a>' +
@@ -53,7 +53,7 @@
         '</nav>' +
         '</main>';
 
-      setStatus("Universe sun fallback active");
+      setStatus("Visible-first fallback active");
       return false;
     }
 
@@ -64,12 +64,26 @@
         source: "index.js",
         root: root.id || "root",
         baseline: BASELINE,
-        materialVersion: MATERIAL_VERSION,
-        object: "sun-asset"
+        version: VERSION,
+        object: "sun-asset-spine"
       });
     }
 
     return true;
+  }
+
+  function getRuntimeVersion() {
+    var runtime = window[SUN_ASSET_RUNTIME_NAME];
+
+    if (!runtime || typeof runtime.getState !== "function") {
+      return "";
+    }
+
+    try {
+      return runtime.getState().version || "";
+    } catch (error) {
+      return "";
+    }
   }
 
   function loadScript(path, onload, onerror) {
@@ -98,7 +112,7 @@
         id: "home",
         title: "Diamond Gate Bridge",
         baseline: BASELINE,
-        materialVersion: MATERIAL_VERSION,
+        version: VERSION,
         theme: THEME,
         visibleFirst: bootState.pageVisible
       });
@@ -106,11 +120,11 @@
 
     if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
       window[SITE_RUNTIME_NAME].registerRuntime({
-        id: "rootSunAssetBoot",
+        id: "rootSunAssetSpineBoot",
         page: "home",
         role: "boot-handoff",
         path: "/index.js",
-        materialVersion: MATERIAL_VERSION,
+        version: VERSION,
         validated: true,
         optional: false
       });
@@ -137,41 +151,41 @@
       },
       function () {
         bootState.siteRuntimeFailed = true;
-        setStatus("Static universe sun active");
+        setStatus("Static root active");
         loadSunAssetRuntime();
       }
     );
   }
 
   function loadSunAssetRuntime() {
-    if (bootState.sunAssetRuntimeRequested || window[SUN_ASSET_RUNTIME_NAME]) {
+    var activeVersion = getRuntimeVersion();
+
+    if (window[SUN_ASSET_RUNTIME_NAME] && activeVersion === VERSION) {
       mountSunAsset();
       return;
     }
 
+    if (bootState.sunAssetRuntimeRequested) return;
+
     bootState.sunAssetRuntimeRequested = true;
-    setStatus("Sun asset runtime loading · luminous b3");
+    setStatus("Sun asset runtime loading · " + VERSION);
 
     loadScript(
       SUN_ASSET_RUNTIME_PATH,
       function () {
         bootState.sunAssetRuntimeLoaded = true;
-        setStatus("Sun asset runtime active · luminous b3");
+        setStatus("Sun asset runtime active · " + VERSION);
         mountSunAsset();
       },
       function () {
         bootState.sunAssetRuntimeFailed = true;
-        setStatus("CSS sun fallback active");
+        setStatus("Sun asset runtime failed");
 
         if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
           window[SITE_RUNTIME_NAME].addWarning(
             "SUN_ASSET_RUNTIME_MISSING",
-            "Root page could not load the luminous sun asset runtime.",
-            {
-              path: SUN_ASSET_RUNTIME_PATH,
-              baseline: BASELINE,
-              materialVersion: MATERIAL_VERSION
-            }
+            "Root page could not load the Sun Asset Spine runtime.",
+            { path: SUN_ASSET_RUNTIME_PATH, baseline: BASELINE, version: VERSION }
           );
         }
       }
@@ -179,21 +193,24 @@
   }
 
   function mountSunAsset() {
-    if (!window[SUN_ASSET_RUNTIME_NAME] || typeof window[SUN_ASSET_RUNTIME_NAME].start !== "function") {
+    var runtime = window[SUN_ASSET_RUNTIME_NAME];
+
+    if (!runtime || typeof runtime.start !== "function") {
+      setStatus("Sun asset runtime unavailable");
       return;
     }
 
-    window[SUN_ASSET_RUNTIME_NAME].start({
+    runtime.start({
       selector: "[data-dgb-sun-mount]",
       mode: "canvas",
       seed: 4217,
-      intensity: 0.94,
+      intensity: 0.96,
       animate: true,
       frameRate: 18,
-      materialVersion: MATERIAL_VERSION
+      version: VERSION
     }).then(function () {
       bootState.sunMounted = true;
-      setStatus("Sun asset active · luminous material b3");
+      setStatus("Sun asset active · luminous expanding plasma b4");
 
       if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
         window[SITE_RUNTIME_NAME].updateRuntimeStatus("sunAssetRuntime", {
@@ -201,21 +218,21 @@
           loaded: true,
           mounted: true,
           baseline: BASELINE,
-          materialVersion: MATERIAL_VERSION
+          version: VERSION
         });
       }
     }).catch(function (error) {
       bootState.sunAssetRuntimeFailed = true;
-      setStatus("CSS sun fallback active");
+      setStatus("Sun asset mount failed");
 
       if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
         window[SITE_RUNTIME_NAME].addWarning(
           "SUN_ASSET_MOUNT_FAILED",
-          "Luminous sun asset runtime loaded but failed to mount.",
+          "Sun Asset Spine runtime loaded but failed to mount.",
           {
             message: error && error.message ? error.message : "unknown",
             baseline: BASELINE,
-            materialVersion: MATERIAL_VERSION
+            version: VERSION
           }
         );
       }
@@ -226,7 +243,7 @@
     var visible = protectVisibleRoot();
     if (!visible) return;
 
-    setStatus("Visible-first universe sun active");
+    setStatus("Visible-first sun spine active");
     loadSiteRuntimeThenSunRuntime();
 
     window.setTimeout(protectVisibleRoot, 500);
@@ -245,7 +262,7 @@
         sunAssetRuntimeFailed: bootState.sunAssetRuntimeFailed,
         sunMounted: bootState.sunMounted,
         baseline: BASELINE,
-        materialVersion: MATERIAL_VERSION,
+        version: VERSION,
         sunAssetRuntimePath: SUN_ASSET_RUNTIME_PATH
       };
     },

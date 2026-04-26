@@ -6,40 +6,33 @@
   <title>Diamond Gate Bridge — Learn to Live to Love</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge: a three-dimensional Tree of Life door dedicated to the four seasons and the sun."
+    content="Diamond Gate Bridge: a universe and sun-centered entry surface built around Learn to Live to Love."
   />
 
   <style>
     :root {
       --bg: #02040b;
       --space: #050b18;
+      --deep: #01030a;
       --text: #fff8e7;
       --muted: rgba(255, 248, 231, 0.72);
       --soft: rgba(255, 248, 231, 0.52);
-      --faint: rgba(255, 248, 231, 0.32);
       --line: rgba(255, 248, 231, 0.18);
       --line-strong: rgba(255, 248, 231, 0.34);
 
-      --gold: #ffd98a;
-      --gold-soft: rgba(255, 217, 138, 0.64);
-      --bronze: rgba(184, 117, 55, 0.78);
-      --wood: rgba(91, 55, 28, 0.96);
-      --wood-deep: rgba(39, 23, 15, 0.98);
-      --iron: rgba(17, 21, 31, 0.96);
-      --iron-soft: rgba(46, 51, 66, 0.88);
+      --sun-white: rgba(255, 255, 238, 1);
+      --sun-gold: rgba(255, 217, 112, 0.96);
+      --sun-orange: rgba(255, 130, 34, 0.92);
+      --sun-red: rgba(176, 46, 12, 0.62);
+      --sun-edge: rgba(54, 12, 4, 0.72);
 
-      --spring: rgba(124, 232, 156, 0.74);
-      --summer: rgba(255, 220, 92, 0.84);
-      --autumn: rgba(232, 126, 54, 0.78);
-      --winter: rgba(178, 226, 255, 0.78);
-
-      --door-glow: 0.48;
-      --sun-blessing: 0.56;
-      --season-shift: 0.52;
-      --branch-glow: 0.48;
-      --door-tilt-x: -5deg;
-      --door-tilt-y: 0deg;
-      --door-pulse: 1;
+      --sun-glow: 0.58;
+      --corona-intensity: 0.56;
+      --stellar-depth: 0.50;
+      --orbit-breath: 0.50;
+      --sun-pulse: 1;
+      --sun-tilt-x: -6deg;
+      --sun-tilt-y: 0deg;
 
       --max: 1180px;
     }
@@ -67,10 +60,10 @@
         "Segoe UI",
         sans-serif;
       background:
-        radial-gradient(circle at 50% 11%, rgba(255, 217, 138, 0.12), transparent 23rem),
-        radial-gradient(circle at 18% 20%, rgba(98, 138, 255, 0.12), transparent 18rem),
-        radial-gradient(circle at 82% 17%, rgba(255, 248, 231, 0.08), transparent 18rem),
-        linear-gradient(180deg, #081225 0%, #030714 54%, #010309 100%);
+        radial-gradient(circle at 50% 14%, rgba(255, 196, 86, 0.13), transparent 23rem),
+        radial-gradient(circle at 18% 20%, rgba(88, 122, 255, 0.12), transparent 18rem),
+        radial-gradient(circle at 82% 15%, rgba(255, 248, 231, 0.07), transparent 18rem),
+        linear-gradient(180deg, #071225 0%, #030714 54%, #010309 100%);
     }
 
     body::before {
@@ -80,12 +73,12 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,0.52) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
         radial-gradient(circle, rgba(255,217,138,0.28) 0 1px, transparent 1.6px),
         radial-gradient(circle, rgba(255,255,255,0.18) 0 1px, transparent 1.4px);
       background-size: 91px 91px, 143px 143px, 229px 229px;
       background-position: 12px 26px, 52px 72px, 118px 44px;
-      opacity: 0.22;
+      opacity: calc(0.20 + var(--stellar-depth) * 0.08);
     }
 
     body::after {
@@ -96,19 +89,19 @@
       pointer-events: none;
       background:
         conic-gradient(
-          from 90deg at 50% 45%,
+          from 90deg at 50% 43%,
           transparent 0deg,
-          rgba(124, 232, 156, 0.04) 36deg,
-          transparent 82deg,
-          rgba(255, 220, 92, 0.055) 128deg,
-          transparent 174deg,
-          rgba(232, 126, 54, 0.048) 226deg,
-          transparent 276deg,
-          rgba(178, 226, 255, 0.045) 322deg,
+          rgba(255, 217, 138, 0.050) 28deg,
+          transparent 68deg,
+          rgba(255, 248, 231, 0.032) 114deg,
+          transparent 166deg,
+          rgba(255, 124, 32, 0.042) 218deg,
+          transparent 270deg,
+          rgba(255, 217, 138, 0.045) 318deg,
           transparent 360deg
         );
-      opacity: calc(0.55 + var(--door-glow) * 0.18);
-      transform: scale(calc(1 + var(--door-glow) * 0.016));
+      opacity: calc(0.50 + var(--sun-glow) * 0.20);
+      transform: scale(calc(1 + var(--stellar-depth) * 0.018));
     }
 
     a {
@@ -116,7 +109,7 @@
       text-decoration: none;
     }
 
-    .door-page {
+    .sun-page {
       position: relative;
       z-index: 1;
       width: min(100%, var(--max));
@@ -148,11 +141,10 @@
       height: 36px;
       flex: 0 0 auto;
       border: 1px solid var(--line-strong);
-      border-radius: 12px;
-      transform: rotate(45deg);
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.82), transparent 25%),
-        linear-gradient(135deg, rgba(255,217,138,0.92), rgba(255,255,255,0.10) 52%, rgba(46, 56, 80, 0.72));
+        radial-gradient(circle at 34% 26%, rgba(255,255,255,0.94), transparent 22%),
+        radial-gradient(circle, rgba(255,217,112,0.88), rgba(255,130,34,0.34) 60%, rgba(255,217,112,0.08));
       box-shadow:
         0 0 24px rgba(255, 217, 138, 0.24),
         0 16px 40px rgba(0,0,0,0.38);
@@ -207,7 +199,7 @@
 
     .eyebrow {
       margin: 0 0 14px;
-      color: var(--gold-soft);
+      color: rgba(255, 217, 138, 0.70);
       font-size: 0.74rem;
       font-weight: 800;
       letter-spacing: 0.17em;
@@ -230,10 +222,10 @@
       letter-spacing: -0.055em;
       text-shadow:
         0 0 24px rgba(255, 217, 138, 0.34),
-        0 0 72px rgba(255, 168, 62, 0.16);
+        0 0 72px rgba(255, 138, 45, 0.16);
     }
 
-    .door-statement {
+    .sun-statement {
       max-width: 620px;
       margin: 18px 0 0;
       color: var(--muted);
@@ -270,12 +262,12 @@
       border-color: var(--line);
     }
 
-    .door-field {
+    .universe-field {
       position: relative;
-      min-height: min(80vh, 740px);
+      min-height: min(78vh, 720px);
       display: grid;
       place-items: center;
-      perspective: 1350px;
+      perspective: 1250px;
       overflow: visible;
       isolation: isolate;
     }
@@ -310,61 +302,65 @@
       text-shadow: 0 0 42px rgba(255, 203, 101, 0.28);
     }
 
-    .door-system {
+    .universe-system {
       position: relative;
       width: min(86vw, 650px);
-      min-height: 690px;
+      min-height: 660px;
       display: grid;
       place-items: center;
       transform-style: preserve-3d;
     }
 
-    .door-system::before {
+    .universe-system::before {
       content: "";
       position: absolute;
-      width: 92%;
-      height: 72%;
-      bottom: 4%;
-      border-radius: 999px 999px 22% 22%;
-      background:
-        radial-gradient(circle at 50% 14%, rgba(255, 217, 138, 0.20), transparent 32%),
-        radial-gradient(circle at 50% 55%, rgba(255,255,255,0.07), transparent 55%),
-        conic-gradient(
-          from 90deg,
-          rgba(124, 232, 156, 0.10),
-          rgba(255, 220, 92, 0.12),
-          rgba(232, 126, 54, 0.12),
-          rgba(178, 226, 255, 0.10),
-          rgba(124, 232, 156, 0.10)
-        );
-      filter: blur(10px);
-      opacity: calc(0.72 + var(--door-glow) * 0.16);
-      transform: scale(calc(1 + var(--door-glow) * 0.02));
-    }
-
-    .torus-ring {
-      position: absolute;
-      z-index: 1;
       width: 96%;
       aspect-ratio: 1;
-      border: 1px solid rgba(255, 217, 138, 0.14);
       border-radius: 999px;
-      transform: rotateX(65deg) rotateZ(-16deg);
-      box-shadow:
-        inset 0 0 28px rgba(255,217,138,0.03),
-        0 0 34px rgba(255,217,138,0.04);
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 217, 138, 0.17), transparent 29%),
+        radial-gradient(circle at 50% 50%, rgba(255, 130, 34, 0.08), transparent 58%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.045), transparent 72%);
+      filter: blur(12px);
+      opacity: calc(0.66 + var(--sun-glow) * 0.16);
+      transform: scale(calc(1 + var(--sun-glow) * 0.02));
       pointer-events: none;
     }
 
-    .torus-ring.secondary {
-      width: 77%;
-      transform: rotateX(72deg) rotateZ(22deg);
-      opacity: 0.68;
+    .orbit-ring {
+      position: absolute;
+      z-index: 1;
+      border: 1px solid rgba(255, 248, 231, 0.12);
+      border-radius: 999px;
+      pointer-events: none;
+      box-shadow:
+        inset 0 0 28px rgba(255,217,138,0.025),
+        0 0 30px rgba(255,217,138,0.030);
+    }
+
+    .orbit-ring.one {
+      width: 96%;
+      aspect-ratio: 1;
+      transform: rotateX(66deg) rotateZ(-16deg) scale(calc(1 + var(--orbit-breath) * 0.014));
+    }
+
+    .orbit-ring.two {
+      width: 76%;
+      aspect-ratio: 1;
+      opacity: 0.78;
+      transform: rotateX(73deg) rotateZ(21deg) scale(calc(1 + var(--orbit-breath) * 0.010));
+    }
+
+    .orbit-ring.three {
+      width: 58%;
+      aspect-ratio: 1;
+      opacity: 0.54;
+      transform: rotateX(58deg) rotateY(22deg) rotateZ(48deg);
     }
 
     .route-node {
       position: absolute;
-      z-index: 11;
+      z-index: 10;
       left: 50%;
       top: 50%;
       width: 112px;
@@ -419,441 +415,160 @@
         0 0 34px rgba(255,217,138,0.15);
     }
 
-    .route-node.prelude { --route-x: -50%; --route-y: -382%; }
-    .route-node.explore { --route-x: 106%; --route-y: -318%; }
-    .route-node.products { --route-x: 170%; --route-y: 210%; }
-    .route-node.gauges { --route-x: -270%; --route-y: 210%; }
-    .route-node.frontier { --route-x: 106%; --route-y: 336%; }
-    .route-node.laws { --route-x: -206%; --route-y: 336%; }
-    .route-node.governance { --route-x: -270%; --route-y: -50%; }
-    .route-node.home { --route-x: 170%; --route-y: -50%; }
+    .route-node.prelude { --route-x: -50%; --route-y: -344%; }
+    .route-node.explore { --route-x: 94%; --route-y: -284%; }
+    .route-node.products { --route-x: 160%; --route-y: -50%; }
+    .route-node.gauges { --route-x: 94%; --route-y: 184%; }
+    .route-node.frontier { --route-x: -50%; --route-y: 244%; }
+    .route-node.laws { --route-x: -194%; --route-y: 184%; }
+    .route-node.governance { --route-x: -260%; --route-y: -50%; }
+    .route-node.home { --route-x: -194%; --route-y: -284%; }
 
-    .tree-door {
+    .sun-object {
       position: relative;
-      z-index: 7;
-      width: min(68vw, 448px);
-      height: min(78vw, 540px);
-      min-height: 458px;
+      z-index: 6;
+      width: min(64vw, 380px);
+      aspect-ratio: 1;
       display: grid;
       place-items: center;
+      border-radius: 999px;
       transform-style: preserve-3d;
       transform:
-        rotateX(var(--door-tilt-x))
-        rotateY(var(--door-tilt-y))
-        scale(var(--door-pulse));
+        rotateX(var(--sun-tilt-x))
+        rotateY(var(--sun-tilt-y))
+        scale(var(--sun-pulse));
       transition: transform 160ms ease-out;
     }
 
-    .sun-crown {
-      position: absolute;
-      z-index: 14;
-      top: -48px;
-      left: 50%;
-      width: 86px;
-      height: 86px;
-      transform: translateX(-50%);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 34% 26%, rgba(255,255,255,0.96), transparent 18%),
-        radial-gradient(circle, rgba(255,246,190,0.96), rgba(255,217,138,0.82) 42%, rgba(255,138,45,0.22) 70%, transparent 100%);
-      box-shadow:
-        0 0 calc(34px + var(--sun-blessing) * 18px) rgba(255,217,138,0.42),
-        0 0 calc(88px + var(--sun-blessing) * 32px) rgba(255,138,45,0.18);
-    }
-
-    .sun-crown::before,
-    .sun-crown::after {
+    .sun-object::before {
       content: "";
       position: absolute;
-      inset: -22%;
+      inset: -18%;
       border-radius: 999px;
-      border: 1px solid rgba(255, 217, 138, 0.22);
       background:
         conic-gradient(
-          from 0deg,
-          transparent,
-          rgba(255,217,138,0.22),
-          transparent 32deg,
-          rgba(255,255,255,0.10),
-          transparent 76deg
+          from 17deg,
+          transparent 0deg,
+          rgba(255, 137, 34, calc(0.22 + var(--corona-intensity) * 0.11)) 14deg,
+          rgba(255, 250, 218, 0.15) 26deg,
+          transparent 42deg,
+          rgba(255, 83, 18, 0.18) 74deg,
+          transparent 104deg,
+          rgba(255, 219, 126, 0.22) 136deg,
+          transparent 170deg,
+          rgba(255, 127, 32, 0.18) 218deg,
+          rgba(255, 255, 230, 0.12) 246deg,
+          transparent 276deg,
+          rgba(255, 172, 50, 0.21) 320deg,
+          transparent 360deg
         );
-      animation: crownSpin 28s linear infinite;
+      filter: blur(1.6px);
+      opacity: calc(0.70 + var(--corona-intensity) * 0.23);
+      animation: coronaTurn 28s linear infinite;
+      pointer-events: none;
     }
 
-    .sun-crown::after {
-      inset: -38%;
-      opacity: 0.54;
-      animation-direction: reverse;
-      animation-duration: 41s;
-    }
-
-    .door-shadow {
+    .sun-object::after {
+      content: "";
       position: absolute;
-      z-index: 1;
-      bottom: -26px;
-      width: 94%;
-      height: 48px;
+      inset: -31%;
       border-radius: 999px;
-      background: radial-gradient(ellipse, rgba(0,0,0,0.58), transparent 70%);
-      filter: blur(9px);
-    }
-
-    .outer-diamond {
-      position: absolute;
-      z-index: 2;
-      width: 102%;
-      aspect-ratio: 1;
-      top: 20%;
-      border: 1px solid rgba(255, 217, 138, 0.24);
-      border-radius: 20px;
-      transform: rotate(45deg) translateZ(-40px);
       background:
-        linear-gradient(135deg, rgba(255,255,255,0.055), rgba(255,217,138,0.075), rgba(0,0,0,0.12)),
-        rgba(5, 8, 16, 0.42);
-      box-shadow:
-        inset 0 0 42px rgba(255,255,255,0.045),
-        0 0 52px rgba(255,217,138,0.10),
-        0 24px 70px rgba(0,0,0,0.46);
+        radial-gradient(circle, transparent 42%, rgba(255,196,84,0.17) 44%, transparent 49%),
+        conic-gradient(
+          from 66deg,
+          transparent,
+          rgba(255, 201, 89, 0.15),
+          transparent 22deg,
+          rgba(255, 98, 27, 0.12),
+          transparent 78deg,
+          rgba(255,255,230,0.08),
+          transparent 134deg
+        );
+      opacity: calc(0.50 + var(--corona-intensity) * 0.18);
+      animation: coronaTurnReverse 42s linear infinite;
+      pointer-events: none;
     }
 
-    .door-arch {
-      position: absolute;
+    .sun-core {
+      position: relative;
       z-index: 3;
-      inset: 0 8% 0;
-      border: 1px solid rgba(255, 217, 138, 0.32);
-      border-bottom: 0;
-      border-radius: 999px 999px 28px 28px;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,0.08), rgba(255,217,138,0.20), rgba(255,255,255,0.08)),
-        linear-gradient(180deg, rgba(255,255,255,0.06), rgba(0,0,0,0.24));
-      box-shadow:
-        inset 0 0 34px rgba(255,217,138,0.10),
-        0 0 34px rgba(255,217,138,0.12);
-    }
-
-    .door-frame {
-      position: absolute;
-      z-index: 4;
-      inset: 14% 17% 8%;
-      border: 1px solid rgba(255, 217, 138, 0.45);
-      border-radius: 999px 999px 12px 12px;
+      width: 76%;
+      aspect-ratio: 1;
       overflow: hidden;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.26);
       background:
-        linear-gradient(90deg, rgba(255,217,138,0.17), transparent 8%, transparent 92%, rgba(255,217,138,0.17)),
-        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(5,8,16,0.70));
+        radial-gradient(circle at 31% 24%, rgba(255,255,246,0.98) 0 5%, transparent 14%),
+        radial-gradient(circle at 63% 34%, rgba(255,255,225,0.86) 0 4%, transparent 12%),
+        radial-gradient(circle at 42% 70%, rgba(255,239,143,0.74) 0 5%, transparent 16%),
+        radial-gradient(circle at 53% 51%, rgba(255,232,104,0.86), rgba(255,139,31,0.78) 36%, rgba(190,52,12,0.58) 68%, rgba(54,12,4,0.72) 100%),
+        conic-gradient(
+          from 17deg,
+          rgba(255,246,169,0.92),
+          rgba(255,116,22,0.80),
+          rgba(255,217,95,0.94),
+          rgba(161,45,10,0.72),
+          rgba(255,151,35,0.88),
+          rgba(255,245,178,0.86),
+          rgba(255,104,24,0.78),
+          rgba(255,246,169,0.92)
+        );
       box-shadow:
-        inset 0 0 30px rgba(255,255,255,0.06),
-        inset 0 0 0 9px rgba(255, 217, 138, 0.055),
-        0 18px 44px rgba(0,0,0,0.36);
+        inset 0 0 28px rgba(255,255,255,0.22),
+        inset 0 -38px 76px rgba(44, 7, 2, 0.36),
+        inset 0 0 0 16px rgba(68, 16, 6, 0.14),
+        0 0 calc(44px + var(--sun-glow) * 24px) rgba(255, 208, 91, 0.40),
+        0 0 calc(120px + var(--sun-glow) * 48px) rgba(255, 96, 23, 0.24);
     }
 
-    .door-leaf {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 50.4%;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 14%, rgba(255,255,255,0.12), transparent 22%),
-        linear-gradient(90deg, rgba(255,217,138,0.07), transparent 18%, transparent 82%, rgba(255,217,138,0.06)),
-        repeating-linear-gradient(
-          90deg,
-          rgba(255,255,255,0.018) 0 7px,
-          rgba(0,0,0,0.04) 7px 13px
-        ),
-        linear-gradient(180deg, rgba(92, 64, 39, 0.78), rgba(22, 18, 16, 0.98));
-    }
-
-    .door-leaf.left {
-      left: 0;
-      border-right: 1px solid rgba(255, 217, 138, 0.42);
-    }
-
-    .door-leaf.right {
-      right: 0;
-      border-left: 1px solid rgba(255, 217, 138, 0.42);
-    }
-
-    .door-leaf::before {
+    .sun-core::before {
       content: "";
       position: absolute;
-      inset: 8% 9%;
-      border: 1px solid rgba(255, 217, 138, 0.28);
-      border-radius: 999px 999px 8px 8px;
+      inset: -6%;
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.055), transparent 45%),
-        linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,217,138,0.05), transparent);
+        radial-gradient(circle at 18% 42%, rgba(105, 24, 5, 0.34) 0 4%, transparent 10%),
+        radial-gradient(circle at 36% 35%, rgba(255,255,218,0.42) 0 2%, transparent 8%),
+        radial-gradient(circle at 57% 59%, rgba(112, 27, 6, 0.30) 0 5%, transparent 12%),
+        radial-gradient(circle at 72% 41%, rgba(255,246,180,0.30) 0 3%, transparent 10%),
+        radial-gradient(circle at 49% 21%, rgba(128, 31, 8, 0.26) 0 5%, transparent 13%),
+        repeating-conic-gradient(
+          from 22deg,
+          rgba(255,255,255,0.08) 0deg 3deg,
+          rgba(255,139,28,0.08) 3deg 7deg,
+          rgba(82,17,4,0.08) 7deg 10deg
+        );
+      mix-blend-mode: overlay;
+      opacity: 0.82;
+      animation: photosphereDrift 36s linear infinite;
     }
 
-    .door-leaf::after {
+    .sun-core::after {
       content: "";
       position: absolute;
-      inset: 22% 18%;
-      border: 1px solid rgba(255, 217, 138, 0.28);
-      transform: rotate(45deg);
-      background: rgba(255,255,255,0.012);
-      box-shadow: inset 0 0 18px rgba(255,255,255,0.032);
-    }
-
-    .season-panel {
-      position: absolute;
-      z-index: 5;
-      width: 34%;
-      height: 23%;
-      border: 1px solid rgba(255, 248, 231, 0.14);
-      border-radius: 14px;
-      background: rgba(255,255,255,0.025);
-      box-shadow: inset 0 0 22px rgba(255,255,255,0.035);
-    }
-
-    .season-panel.spring {
-      left: 11%;
-      top: 20%;
+      inset: 0;
+      border-radius: 999px;
       background:
-        radial-gradient(circle at 34% 36%, var(--spring), transparent 38%),
-        rgba(255,255,255,0.020);
+        radial-gradient(circle at 50% 50%, transparent 53%, rgba(18, 5, 1, 0.50) 100%),
+        radial-gradient(circle at 22% 23%, rgba(255,255,255,0.36), transparent 19%),
+        radial-gradient(circle at 75% 73%, rgba(255,221,94,0.17), transparent 24%);
+      opacity: 0.84;
+      pointer-events: none;
     }
 
-    .season-panel.summer {
-      right: 11%;
-      top: 20%;
-      background:
-        radial-gradient(circle at 65% 35%, var(--summer), transparent 40%),
-        rgba(255,255,255,0.020);
-    }
-
-    .season-panel.autumn {
-      left: 11%;
-      bottom: 16%;
-      background:
-        radial-gradient(circle at 35% 68%, var(--autumn), transparent 42%),
-        rgba(255,255,255,0.020);
-    }
-
-    .season-panel.winter {
-      right: 11%;
-      bottom: 16%;
-      background:
-        radial-gradient(circle at 64% 68%, var(--winter), transparent 42%),
-        rgba(255,255,255,0.020);
-    }
-
-    .center-seam {
+    .sun-label {
       position: absolute;
       z-index: 9;
-      top: 0;
-      bottom: 0;
+      bottom: 10%;
       left: 50%;
-      width: 2px;
       transform: translateX(-50%);
-      background:
-        linear-gradient(180deg, transparent, rgba(255,217,138,0.82), rgba(255,248,231,0.36), rgba(255,217,138,0.82), transparent);
-      box-shadow: 0 0 16px rgba(255,217,138,0.24);
-    }
-
-    .tree-layer {
-      position: absolute;
-      z-index: 10;
-      inset: 10% 12% 6%;
-      pointer-events: none;
-      transform: translateZ(24px);
-    }
-
-    .tree-trunk {
-      position: absolute;
-      left: 42%;
-      bottom: 8%;
-      width: 18%;
-      height: 63%;
-      border-radius: 60% 48% 18% 20%;
-      background:
-        linear-gradient(90deg, rgba(34,18,10,0.90), rgba(156,104,58,0.90), rgba(49,27,14,0.96));
-      box-shadow:
-        inset 8px 0 16px rgba(0,0,0,0.34),
-        inset -5px 0 13px rgba(255,217,138,0.14),
-        0 0 calc(10px + var(--branch-glow) * 10px) rgba(255,217,138,0.12);
-      transform: rotate(-7deg);
-    }
-
-    .tree-trunk::before {
-      content: "";
-      position: absolute;
-      left: 28%;
-      top: 0;
-      width: 42%;
-      height: 100%;
-      border-left: 1px solid rgba(255,217,138,0.24);
-      border-radius: inherit;
-      opacity: 0.8;
-    }
-
-    .root {
-      position: absolute;
-      height: 9px;
-      border-radius: 999px;
-      background:
-        linear-gradient(90deg, rgba(43,24,14,0.98), rgba(156,104,58,0.90), rgba(43,24,14,0.96));
-      box-shadow: 0 0 10px rgba(255,217,138,0.11);
-      transform-origin: left center;
-    }
-
-    .root.r1 { left: 44%; bottom: 8%; width: 33%; transform: rotate(18deg); }
-    .root.r2 { left: 46%; bottom: 7%; width: 38%; transform: rotate(35deg); }
-    .root.r3 { right: 44%; bottom: 8%; width: 32%; transform: rotate(162deg); }
-    .root.r4 { right: 43%; bottom: 6%; width: 38%; transform: rotate(144deg); }
-    .root.r5 { left: 49%; bottom: 4%; width: 34%; transform: rotate(78deg); }
-
-    .branch {
-      position: absolute;
-      height: 8px;
-      border-radius: 999px;
-      background:
-        linear-gradient(90deg, rgba(44,23,12,0.96), rgba(178,118,62,0.90), rgba(52,28,14,0.94));
-      box-shadow:
-        0 0 calc(7px + var(--branch-glow) * 8px) rgba(255,217,138,0.10),
-        inset 0 1px 1px rgba(255,255,255,0.10);
-      transform-origin: left center;
-    }
-
-    .branch::before,
-    .branch::after {
-      content: "";
-      position: absolute;
-      height: 5px;
-      border-radius: 999px;
-      background:
-        linear-gradient(90deg, rgba(45,25,14,0.98), rgba(162,101,52,0.90), rgba(52,28,14,0.94));
-      transform-origin: left center;
-    }
-
-    .branch::before {
-      width: 42%;
-      left: 60%;
-      top: -10px;
-      transform: rotate(-28deg);
-    }
-
-    .branch::after {
-      width: 35%;
-      left: 70%;
-      top: 9px;
-      transform: rotate(24deg);
-    }
-
-    .branch.b1 { left: 47%; top: 33%; width: 39%; transform: rotate(-36deg); }
-    .branch.b2 { left: 43%; top: 37%; width: 39%; transform: rotate(205deg); }
-    .branch.b3 { left: 50%; top: 45%; width: 34%; transform: rotate(-12deg); }
-    .branch.b4 { left: 40%; top: 49%; width: 38%; transform: rotate(192deg); }
-    .branch.b5 { left: 46%; top: 27%; width: 28%; transform: rotate(-72deg); }
-    .branch.b6 { left: 44%; top: 29%; width: 31%; transform: rotate(236deg); }
-
-    .leaf {
-      position: absolute;
-      z-index: 12;
-      width: 14px;
-      height: 9px;
-      border-radius: 999px 0 999px 0;
-      transform: rotate(35deg);
-      box-shadow: 0 0 11px rgba(255,255,255,0.06);
-    }
-
-    .leaf.spring { background: var(--spring); }
-    .leaf.summer { background: var(--summer); }
-    .leaf.autumn { background: var(--autumn); }
-    .leaf.winter {
-      background: var(--winter);
-      border-radius: 999px;
-      width: 10px;
-      height: 10px;
-    }
-
-    .leaf.l1 { left: 23%; top: 26%; }
-    .leaf.l2 { left: 31%; top: 22%; transform: rotate(-22deg); }
-    .leaf.l3 { left: 37%; top: 35%; transform: rotate(64deg); }
-    .leaf.l4 { left: 68%; top: 23%; transform: rotate(-12deg); }
-    .leaf.l5 { left: 76%; top: 31%; transform: rotate(42deg); }
-    .leaf.l6 { left: 64%; top: 39%; transform: rotate(70deg); }
-    .leaf.l7 { left: 27%; top: 63%; transform: rotate(-12deg); }
-    .leaf.l8 { left: 35%; top: 70%; transform: rotate(46deg); }
-    .leaf.l9 { left: 73%; top: 62%; transform: rotate(-42deg); }
-    .leaf.l10 { left: 67%; top: 71%; transform: rotate(28deg); }
-
-    .solar-medallion {
-      position: absolute;
-      z-index: 13;
-      left: 50%;
-      top: 52%;
-      width: 76px;
-      height: 76px;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(255, 217, 138, 0.58);
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 34% 28%, rgba(255,255,255,0.72), transparent 16%),
-        radial-gradient(circle, rgba(255,217,138,0.86), rgba(184,117,55,0.42) 52%, rgba(5,8,16,0.74) 100%);
-      box-shadow:
-        inset 0 0 18px rgba(255,255,255,0.12),
-        0 0 30px rgba(255,217,138,0.22);
-    }
-
-    .solar-medallion::before {
-      content: "";
-      position: absolute;
-      inset: 18%;
-      border: 1px solid rgba(5,8,16,0.52);
-      border-radius: 4px;
-      transform: rotate(45deg);
-    }
-
-    .threshold {
-      position: absolute;
-      z-index: 8;
-      left: 10%;
-      right: 10%;
-      bottom: 0;
-      height: 58px;
-      border: 1px solid rgba(255, 217, 138, 0.30);
-      border-radius: 8px 8px 22px 22px;
-      background:
-        linear-gradient(180deg, rgba(255,217,138,0.18), rgba(8,10,16,0.92)),
-        linear-gradient(90deg, transparent, rgba(255,255,255,0.10), transparent);
-      box-shadow:
-        0 0 24px rgba(255,217,138,0.16),
-        0 18px 38px rgba(0,0,0,0.44);
-    }
-
-    .threshold::before,
-    .threshold::after {
-      content: "";
-      position: absolute;
-      bottom: 9px;
-      width: 44px;
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255,217,138,0.72);
-      box-shadow: 0 0 24px rgba(255,217,138,0.50);
-    }
-
-    .threshold::before {
-      left: 18px;
-    }
-
-    .threshold::after {
-      right: 18px;
-    }
-
-    .dedication {
-      position: absolute;
-      z-index: 12;
-      left: 50%;
-      bottom: -40px;
-      width: min(100%, 460px);
-      transform: translateX(-50%);
-      color: var(--soft);
-      text-align: center;
-      font-size: 0.72rem;
+      color: rgba(255, 248, 231, 0.60);
+      font-size: 0.64rem;
+      font-weight: 800;
       letter-spacing: 0.16em;
       text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(0,0,0,0.38);
     }
 
     .bottom-strip {
@@ -873,9 +588,21 @@
       background: rgba(255,255,255,0.035);
     }
 
-    @keyframes crownSpin {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
+    @keyframes coronaTurn {
+      from { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.026); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes coronaTurnReverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    @keyframes photosphereDrift {
+      from { transform: rotate(0deg) scale(1.04); }
+      50% { transform: rotate(180deg) scale(1.08); }
+      to { transform: rotate(360deg) scale(1.04); }
     }
 
     @media (max-width: 980px) {
@@ -888,7 +615,7 @@
         text-align: center;
       }
 
-      .door-statement {
+      .sun-statement {
         margin-left: auto;
         margin-right: auto;
       }
@@ -897,17 +624,17 @@
         justify-content: center;
       }
 
-      .door-field {
-        min-height: 800px;
+      .universe-field {
+        min-height: 720px;
       }
 
-      .door-system {
+      .universe-system {
         width: min(96vw, 690px);
       }
     }
 
     @media (max-width: 680px) {
-      .door-page {
+      .sun-page {
         padding: 14px;
       }
 
@@ -932,27 +659,19 @@
         display: block;
       }
 
-      .door-field {
-        min-height: 840px;
+      .universe-field {
+        min-height: 760px;
         padding: 92px 0 8px;
       }
 
-      .door-system {
+      .universe-system {
         width: 100%;
-        min-height: 730px;
+        min-height: 660px;
       }
 
-      .tree-door {
-        width: min(88vw, 370px);
-        height: 490px;
-        min-height: 490px;
-        margin-top: 8px;
-      }
-
-      .sun-crown {
-        width: 72px;
-        height: 72px;
-        top: -38px;
+      .sun-object {
+        width: min(78vw, 320px);
+        margin-top: 0;
       }
 
       .route-node {
@@ -969,19 +688,14 @@
         display: none;
       }
 
-      .route-node.prelude { --route-x: -104%; --route-y: -554%; }
-      .route-node.explore { --route-x: 4%; --route-y: -554%; }
-      .route-node.products { --route-x: -104%; --route-y: 456%; }
-      .route-node.gauges { --route-x: 4%; --route-y: 456%; }
-      .route-node.frontier { --route-x: -104%; --route-y: 574%; }
-      .route-node.laws { --route-x: 4%; --route-y: 574%; }
-      .route-node.governance { --route-x: -104%; --route-y: 692%; }
-      .route-node.home { --route-x: 4%; --route-y: 692%; }
-
-      .dedication {
-        bottom: -32px;
-        font-size: 0.62rem;
-      }
+      .route-node.prelude { --route-x: -104%; --route-y: -452%; }
+      .route-node.explore { --route-x: 4%; --route-y: -452%; }
+      .route-node.products { --route-x: -104%; --route-y: 330%; }
+      .route-node.gauges { --route-x: 4%; --route-y: 330%; }
+      .route-node.frontier { --route-x: -104%; --route-y: 448%; }
+      .route-node.laws { --route-x: 4%; --route-y: 448%; }
+      .route-node.governance { --route-x: -104%; --route-y: 566%; }
+      .route-node.home { --route-x: 4%; --route-y: 566%; }
 
       .bottom-strip {
         align-items: flex-start;
@@ -990,34 +704,33 @@
     }
 
     @media (max-width: 420px) {
-      .tree-door {
-        width: min(91vw, 340px);
-        height: 460px;
-        min-height: 460px;
+      .sun-object {
+        width: min(82vw, 300px);
       }
 
-      .door-field {
-        min-height: 815px;
+      .universe-field {
+        min-height: 740px;
       }
 
-      .route-node.prelude { --route-x: -104%; --route-y: -536%; }
-      .route-node.explore { --route-x: 4%; --route-y: -536%; }
-      .route-node.products { --route-x: -104%; --route-y: 438%; }
-      .route-node.gauges { --route-x: 4%; --route-y: 438%; }
-      .route-node.frontier { --route-x: -104%; --route-y: 556%; }
-      .route-node.laws { --route-x: 4%; --route-y: 556%; }
-      .route-node.governance { --route-x: -104%; --route-y: 674%; }
-      .route-node.home { --route-x: 4%; --route-y: 674%; }
+      .route-node.prelude { --route-x: -104%; --route-y: -432%; }
+      .route-node.explore { --route-x: 4%; --route-y: -432%; }
+      .route-node.products { --route-x: -104%; --route-y: 314%; }
+      .route-node.gauges { --route-x: 4%; --route-y: 314%; }
+      .route-node.frontier { --route-x: -104%; --route-y: 432%; }
+      .route-node.laws { --route-x: 4%; --route-y: 432%; }
+      .route-node.governance { --route-x: -104%; --route-y: 550%; }
+      .route-node.home { --route-x: 4%; --route-y: 550%; }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      .sun-crown::before,
-      .sun-crown::after {
+      .sun-object::before,
+      .sun-object::after,
+      .sun-core::before {
         animation: none;
       }
 
       .route-node,
-      .tree-door {
+      .sun-object {
         transition: none;
       }
     }
@@ -1025,26 +738,26 @@
 </head>
 
 <body>
-  <main class="door-page" id="door-root" data-root-door>
-    <header class="topbar" aria-label="Diamond Gate Bridge door header">
+  <main class="sun-page" id="door-root" data-root-door data-universe-sun>
+    <header class="topbar" aria-label="Diamond Gate Bridge universe header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <span class="brand-name">Diamond Gate Bridge</span>
-          <span class="brand-sub">Tree of Life Door</span>
+          <span class="brand-sub">Universe Sun Baseline</span>
         </span>
       </a>
 
-      <span class="status-pill" data-door-boot-status>Visible-first door active</span>
+      <span class="status-pill" data-door-boot-status>Visible-first sun active</span>
     </header>
 
-    <section class="hero" aria-labelledby="door-title">
+    <section class="hero" aria-labelledby="sun-title">
       <div class="hero-copy">
-        <p class="eyebrow">A three-dimensional public gate</p>
-        <h1 id="door-title">Diamond Gate Bridge</h1>
+        <p class="eyebrow">A universe-centered public surface</p>
+        <h1 id="sun-title">Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
-        <p class="door-statement">
-          A Tree of Life door dedicated to the four seasons and the sun: roots below, branches across, light above, and a path forward.
+        <p class="sun-statement">
+          A cosmic entry surface centered on one sun, one field, and one clear path forward.
         </p>
 
         <div class="primary-actions" aria-label="Primary entry actions">
@@ -1053,15 +766,16 @@
         </div>
       </div>
 
-      <div class="door-field" aria-label="Tree of Life door navigation">
+      <div class="universe-field" aria-label="Universe and sun navigation">
         <div class="mobile-lockup" aria-hidden="true">
           <strong>Diamond Gate Bridge</strong>
           <span>Learn to Live to Love</span>
         </div>
 
-        <div class="door-system" data-door-system>
-          <div class="torus-ring" aria-hidden="true"></div>
-          <div class="torus-ring secondary" aria-hidden="true"></div>
+        <div class="universe-system" data-universe-system>
+          <div class="orbit-ring one" aria-hidden="true"></div>
+          <div class="orbit-ring two" aria-hidden="true"></div>
+          <div class="orbit-ring three" aria-hidden="true"></div>
 
           <a class="route-node prelude" href="/prelude/">Prelude<small>begin</small></a>
           <a class="route-node explore" href="/explore/">Explore<small>map</small></a>
@@ -1072,70 +786,23 @@
           <a class="route-node governance" href="/governance/">Governance<small>scale</small></a>
           <a class="route-node home" href="/">Home<small>return</small></a>
 
-          <div class="tree-door" data-tree-door aria-hidden="true">
-            <div class="sun-crown"></div>
-            <div class="door-shadow"></div>
-            <div class="outer-diamond"></div>
-            <div class="door-arch"></div>
-
-            <div class="door-frame">
-              <div class="door-leaf left"></div>
-              <div class="door-leaf right"></div>
-
-              <div class="season-panel spring"></div>
-              <div class="season-panel summer"></div>
-              <div class="season-panel autumn"></div>
-              <div class="season-panel winter"></div>
-
-              <div class="center-seam"></div>
-
-              <div class="tree-layer">
-                <div class="tree-trunk"></div>
-
-                <div class="root r1"></div>
-                <div class="root r2"></div>
-                <div class="root r3"></div>
-                <div class="root r4"></div>
-                <div class="root r5"></div>
-
-                <div class="branch b1"></div>
-                <div class="branch b2"></div>
-                <div class="branch b3"></div>
-                <div class="branch b4"></div>
-                <div class="branch b5"></div>
-                <div class="branch b6"></div>
-
-                <span class="leaf spring l1"></span>
-                <span class="leaf spring l2"></span>
-                <span class="leaf spring l3"></span>
-                <span class="leaf summer l4"></span>
-                <span class="leaf summer l5"></span>
-                <span class="leaf summer l6"></span>
-                <span class="leaf autumn l7"></span>
-                <span class="leaf autumn l8"></span>
-                <span class="leaf winter l9"></span>
-                <span class="leaf winter l10"></span>
-              </div>
-
-              <div class="solar-medallion"></div>
-            </div>
-
-            <div class="threshold"></div>
-            <div class="dedication">Tree of Life · Four seasons · Sun dedication</div>
+          <div class="sun-object" data-universe-sun-object aria-hidden="true">
+            <div class="sun-core"></div>
+            <div class="sun-label">Sun</div>
           </div>
         </div>
       </div>
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Root Door Tree of Life Toroidal Baseline 1</span>
-      <span>Door first · Round world · Flatten later</span>
+      <span>Generation 1 · Root Universe Sun Baseline 1</span>
+      <span>Universe first · Sun only · Runtime second</span>
     </footer>
   </main>
 
   <noscript>
     <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
-      JavaScript is off. The Tree of Life door remains visible and usable.
+      JavaScript is off. The universe and sun remain visible and usable.
     </div>
   </noscript>
 

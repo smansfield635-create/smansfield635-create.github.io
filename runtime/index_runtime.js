@@ -2,8 +2,8 @@
   Diamond Gate Bridge — Index Runtime
   File: /runtime/index_runtime.js
   Generation: 1
-  Baseline: Root Door Tree of Life Toroidal Baseline 1
-  Role: optional Tree of Life door enhancement only; registers with cross-board site runtime.
+  Baseline: Root Universe Sun Baseline 1
+  Role: optional universe/sun enhancement only; registers with cross-board site runtime.
 */
 
 (function () {
@@ -15,10 +15,10 @@
   var state = {
     started: false,
     pointerActive: false,
-    glow: 0,
-    seasonShift: 0,
-    sunBlessing: 0,
-    branchGlow: 0,
+    sunGlow: 0,
+    coronaIntensity: 0,
+    stellarDepth: 0,
+    orbitBreath: 0,
     frame: null
   };
 
@@ -54,9 +54,9 @@
 
     if (typeof site.registerRuntime === "function") {
       site.registerRuntime({
-        id: "treeOfLifeDoorRuntime",
+        id: "universeSunRuntime",
         page: "home",
-        role: "tree-of-life-door-enhancement",
+        role: "universe-sun-enhancement",
         path: "/runtime/index_runtime.js",
         validated: Boolean(validated),
         optional: true
@@ -67,7 +67,7 @@
       site.registerPage({
         id: "home",
         title: "Diamond Gate Bridge",
-        baseline: "Generation 1 Root Door Tree of Life Toroidal Baseline 1",
+        baseline: "Generation 1 Root Universe Sun Baseline 1",
         theme: "Learn to Live to Love",
         visibleFirst: Boolean(document.getElementById("door-root"))
       });
@@ -83,33 +83,33 @@
 
     state.pointerActive = true;
 
-    setCssVar("--door-tilt-y", (clamp(x, -0.5, 0.5) * 12).toFixed(2) + "deg");
-    setCssVar("--door-tilt-x", (-5 + clamp(y, -0.5, 0.5) * -8).toFixed(2) + "deg");
+    setCssVar("--sun-tilt-y", (clamp(x, -0.5, 0.5) * 13).toFixed(2) + "deg");
+    setCssVar("--sun-tilt-x", (-6 + clamp(y, -0.5, 0.5) * -9).toFixed(2) + "deg");
   }
 
   function handlePointerLeave() {
     state.pointerActive = false;
-    setCssVar("--door-tilt-x", "-5deg");
-    setCssVar("--door-tilt-y", "0deg");
+    setCssVar("--sun-tilt-x", "-6deg");
+    setCssVar("--sun-tilt-y", "0deg");
   }
 
-  function animateDoorVariables() {
+  function animateUniverseSun() {
     if (!state.started) return;
 
     var time = Date.now() / 1000;
 
-    state.glow = 0.5 + Math.sin(time * 0.68) * 0.5;
-    state.seasonShift = 0.5 + Math.sin(time * 0.31 + 1.4) * 0.5;
-    state.sunBlessing = 0.5 + Math.sin(time * 0.54 + 2.2) * 0.5;
-    state.branchGlow = 0.5 + Math.sin(time * 0.42 + 0.8) * 0.5;
+    state.sunGlow = 0.5 + Math.sin(time * 0.72) * 0.5;
+    state.coronaIntensity = 0.5 + Math.sin(time * 0.58 + 1.2) * 0.5;
+    state.stellarDepth = 0.5 + Math.sin(time * 0.29 + 2.1) * 0.5;
+    state.orbitBreath = 0.5 + Math.sin(time * 0.40 + 0.6) * 0.5;
 
-    setCssVar("--door-glow", state.glow.toFixed(3));
-    setCssVar("--season-shift", state.seasonShift.toFixed(3));
-    setCssVar("--sun-blessing", state.sunBlessing.toFixed(3));
-    setCssVar("--branch-glow", state.branchGlow.toFixed(3));
-    setCssVar("--door-pulse", (1 + state.glow * 0.006).toFixed(4));
+    setCssVar("--sun-glow", state.sunGlow.toFixed(3));
+    setCssVar("--corona-intensity", state.coronaIntensity.toFixed(3));
+    setCssVar("--stellar-depth", state.stellarDepth.toFixed(3));
+    setCssVar("--orbit-breath", state.orbitBreath.toFixed(3));
+    setCssVar("--sun-pulse", (1 + state.sunGlow * 0.010).toFixed(4));
 
-    state.frame = window.requestAnimationFrame(animateDoorVariables);
+    state.frame = window.requestAnimationFrame(animateUniverseSun);
   }
 
   function markRoutes() {
@@ -125,7 +125,7 @@
   }
 
   function addRouteReceipts() {
-    var system = document.querySelector("[data-door-system]");
+    var system = document.querySelector("[data-universe-system]");
     var links = document.querySelectorAll(".route-node");
 
     if (!system) return;
@@ -156,7 +156,7 @@
     });
   }
 
-  function protectVisibleDoor() {
+  function protectVisibleRoot() {
     if (window.DGBIndexBoot && typeof window.DGBIndexBoot.protectVisibleDoor === "function") {
       window.DGBIndexBoot.protectVisibleDoor();
     }
@@ -165,15 +165,15 @@
   function start() {
     if (state.started) return;
 
-    var door = document.querySelector("[data-tree-door]");
-    if (!door) {
-      setStatus("Static Tree of Life door active");
+    var sun = document.querySelector("[data-universe-sun-object]");
+    if (!sun) {
+      setStatus("Static universe sun active");
       registerWithSiteRuntime(false);
       return;
     }
 
     state.started = true;
-    setStatus("Tree of Life runtime active");
+    setStatus("Universe sun runtime active");
 
     markRoutes();
     addRouteReceipts();
@@ -182,17 +182,17 @@
     if (!hasReducedMotion()) {
       window.addEventListener("pointermove", handlePointerMove, { passive: true });
       window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
-      animateDoorVariables();
+      animateUniverseSun();
     } else {
-      setCssVar("--door-glow", "0.55");
-      setCssVar("--season-shift", "0.55");
-      setCssVar("--sun-blessing", "0.55");
-      setCssVar("--branch-glow", "0.55");
-      setCssVar("--door-pulse", "1");
+      setCssVar("--sun-glow", "0.58");
+      setCssVar("--corona-intensity", "0.56");
+      setCssVar("--stellar-depth", "0.50");
+      setCssVar("--orbit-breath", "0.50");
+      setCssVar("--sun-pulse", "1");
     }
 
-    window.setTimeout(protectVisibleDoor, 600);
-    window.setTimeout(protectVisibleDoor, 1800);
+    window.setTimeout(protectVisibleRoot, 600);
+    window.setTimeout(protectVisibleRoot, 1800);
   }
 
   function stop() {
@@ -207,7 +207,7 @@
     window.removeEventListener("pointerleave", handlePointerLeave);
 
     if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
-      siteRuntime().updateRuntimeStatus("treeOfLifeDoorRuntime", {
+      siteRuntime().updateRuntimeStatus("universeSunRuntime", {
         validated: false,
         stopped: true
       });
@@ -219,27 +219,27 @@
       name: RUNTIME_NAME,
       started: state.started,
       pointerActive: state.pointerActive,
-      glow: state.glow,
-      seasonShift: state.seasonShift,
-      sunBlessing: state.sunBlessing,
-      branchGlow: state.branchGlow
+      sunGlow: state.sunGlow,
+      coronaIntensity: state.coronaIntensity,
+      stellarDepth: state.stellarDepth,
+      orbitBreath: state.orbitBreath
     };
   }
 
   function validate() {
     var result = {
-      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-tree-door]")),
+      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-universe-sun-object]")),
       runtime: RUNTIME_NAME,
       started: state.started,
       themePresent: document.body.textContent.includes("Learn to Live to Love"),
-      doorPresent: Boolean(document.querySelector("[data-tree-door]")),
-      treePresent: Boolean(document.querySelector(".tree-layer")),
+      sunPresent: Boolean(document.querySelector("[data-universe-sun-object]")),
+      doorReadRemoved: !document.body.textContent.includes("Tree of Life"),
       siteRuntimePresent: Boolean(siteRuntime()),
       noImageDependency: true
     };
 
     if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
-      siteRuntime().updateRuntimeStatus("treeOfLifeDoorRuntime", {
+      siteRuntime().updateRuntimeStatus("universeSunRuntime", {
         validated: result.ok,
         lastValidation: result
       });

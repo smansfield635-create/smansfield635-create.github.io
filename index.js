@@ -1,27 +1,31 @@
-
 (function () {
   "use strict";
 
-  var RUNTIME_NAME = "DGBIndexRuntime";
+  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=root-sun-asset-b1";
+  var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=root-sun-asset-b1";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
-  var BASELINE = "Generation 1 Root Universe Sun Baseline 2";
+  var SUN_ASSET_RUNTIME_NAME = "DGBSunAssetRuntime";
 
-  var state = {
-    started: false,
-    pointerActive: false,
-    sunGlow: 0,
-    coronaIntensity: 0,
-    stellarDepth: 0,
-    orbitBreath: 0,
-    frame: null
+  var BASELINE = "Generation 1 Root Universe Sun Asset Baseline 1";
+  var THEME = "Learn to Live to Love";
+
+  var bootState = {
+    pageVisible: false,
+    siteRuntimeRequested: false,
+    siteRuntimeLoaded: false,
+    siteRuntimeFailed: false,
+    sunAssetRuntimeRequested: false,
+    sunAssetRuntimeLoaded: false,
+    sunAssetRuntimeFailed: false,
+    sunMounted: false
   };
 
-  function root() {
-    return document.documentElement;
-  }
-
-  function setCssVar(name, value) {
-    root().style.setProperty(name, value);
+  function getRoot() {
+    return (
+      document.getElementById("door-root") ||
+      document.querySelector("[data-universe-sun]") ||
+      document.querySelector("main")
+    );
   }
 
   function setStatus(text) {
@@ -29,236 +33,214 @@
     if (node) node.textContent = text;
   }
 
-  function clamp(value, min, max) {
-    return Math.min(max, Math.max(min, value));
-  }
+  function protectVisibleRoot() {
+    var root = getRoot();
 
-  function hasReducedMotion() {
-    return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  }
+    if (!root || root.textContent.trim().length < 80) {
+      document.body.innerHTML =
+        '<main id="door-root" data-universe-sun style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
+        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first universe sun fallback</p>' +
+        '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
+        '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">Learn to Live to Love</p>' +
+        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The universe sun fallback is active. The page remains visible even if runtime enhancement fails.</p>' +
+        '<nav style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;">' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/products/">Products</a>' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/gauges/">Gauges</a>' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/laws/">Laws</a>' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/governance/">Governance</a>' +
+        '</nav>' +
+        '</main>';
 
-  function siteRuntime() {
-    return window[SITE_RUNTIME_NAME] || null;
-  }
+      setStatus("Universe sun fallback active");
+      return false;
+    }
 
-  function registerWithSiteRuntime(validated) {
-    var site = siteRuntime();
+    bootState.pageVisible = true;
 
-    if (!site) return;
-
-    if (typeof site.registerRuntime === "function") {
-      site.registerRuntime({
-        id: "universeSunRuntime",
-        page: "home",
-        role: "universe-sun-enhancement",
-        path: "/runtime/index_runtime.js",
-        validated: Boolean(validated),
-        optional: true
+    if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].registerVisibleFirst === "function") {
+      window[SITE_RUNTIME_NAME].registerVisibleFirst({
+        source: "index.js",
+        root: root.id || "root",
+        baseline: BASELINE,
+        object: "sun-asset"
       });
     }
 
-    if (typeof site.registerPage === "function") {
-      site.registerPage({
+    return true;
+  }
+
+  function loadScript(path, onload, onerror) {
+    var existing = Array.prototype.slice.call(document.querySelectorAll("script[src]")).find(function (script) {
+      return script.getAttribute("src") === path;
+    });
+
+    if (existing) {
+      if (typeof onload === "function") onload();
+      return;
+    }
+
+    var script = document.createElement("script");
+    script.src = path;
+    script.defer = true;
+    script.onload = onload;
+    script.onerror = onerror;
+    document.body.appendChild(script);
+  }
+
+  function registerSiteRuntime() {
+    if (!window[SITE_RUNTIME_NAME]) return;
+
+    if (typeof window[SITE_RUNTIME_NAME].registerPage === "function") {
+      window[SITE_RUNTIME_NAME].registerPage({
         id: "home",
         title: "Diamond Gate Bridge",
         baseline: BASELINE,
-        theme: "Learn to Live to Love",
-        visibleFirst: Boolean(document.getElementById("door-root"))
+        theme: THEME,
+        visibleFirst: bootState.pageVisible
+      });
+    }
+
+    if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
+      window[SITE_RUNTIME_NAME].registerRuntime({
+        id: "rootSunAssetBoot",
+        page: "home",
+        role: "boot-handoff",
+        path: "/index.js",
+        validated: true,
+        optional: false
       });
     }
   }
 
-  function handlePointerMove(event) {
-    var width = Math.max(window.innerWidth, 1);
-    var height = Math.max(window.innerHeight, 1);
+  function loadSiteRuntimeThenSunRuntime() {
+    if (bootState.siteRuntimeRequested || window[SITE_RUNTIME_NAME]) {
+      registerSiteRuntime();
+      loadSunAssetRuntime();
+      return;
+    }
 
-    var x = event.clientX / width - 0.5;
-    var y = event.clientY / height - 0.5;
+    bootState.siteRuntimeRequested = true;
+    setStatus("Site runtime loading");
 
-    state.pointerActive = true;
-
-    setCssVar("--sun-tilt-y", (clamp(x, -0.5, 0.5) * 13).toFixed(2) + "deg");
-    setCssVar("--sun-tilt-x", (-6 + clamp(y, -0.5, 0.5) * -9).toFixed(2) + "deg");
+    loadScript(
+      SITE_RUNTIME_PATH,
+      function () {
+        bootState.siteRuntimeLoaded = true;
+        setStatus("Site runtime active");
+        registerSiteRuntime();
+        loadSunAssetRuntime();
+      },
+      function () {
+        bootState.siteRuntimeFailed = true;
+        setStatus("Static universe sun active");
+        loadSunAssetRuntime();
+      }
+    );
   }
 
-  function handlePointerLeave() {
-    state.pointerActive = false;
-    setCssVar("--sun-tilt-x", "-6deg");
-    setCssVar("--sun-tilt-y", "0deg");
+  function loadSunAssetRuntime() {
+    if (bootState.sunAssetRuntimeRequested || window[SUN_ASSET_RUNTIME_NAME]) {
+      mountSunAsset();
+      return;
+    }
+
+    bootState.sunAssetRuntimeRequested = true;
+    setStatus("Sun asset runtime loading");
+
+    loadScript(
+      SUN_ASSET_RUNTIME_PATH,
+      function () {
+        bootState.sunAssetRuntimeLoaded = true;
+        setStatus("Sun asset runtime active");
+        mountSunAsset();
+      },
+      function () {
+        bootState.sunAssetRuntimeFailed = true;
+        setStatus("CSS sun fallback active");
+
+        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
+          window[SITE_RUNTIME_NAME].addWarning(
+            "SUN_ASSET_RUNTIME_MISSING",
+            "Root page could not load the sun asset runtime.",
+            { path: SUN_ASSET_RUNTIME_PATH, baseline: BASELINE }
+          );
+        }
+      }
+    );
   }
 
-  function animateUniverseSun() {
-    if (!state.started) return;
+  function mountSunAsset() {
+    if (!window[SUN_ASSET_RUNTIME_NAME] || typeof window[SUN_ASSET_RUNTIME_NAME].start !== "function") {
+      return;
+    }
 
-    var time = Date.now() / 1000;
+    window[SUN_ASSET_RUNTIME_NAME].start({
+      selector: "[data-dgb-sun-mount]",
+      mode: "canvas",
+      seed: 4217,
+      intensity: 0.86,
+      animate: true
+    }).then(function () {
+      bootState.sunMounted = true;
+      setStatus("Sun asset active");
 
-    state.sunGlow = 0.5 + Math.sin(time * 0.72) * 0.5;
-    state.coronaIntensity = 0.5 + Math.sin(time * 0.58 + 1.2) * 0.5;
-    state.stellarDepth = 0.5 + Math.sin(time * 0.29 + 2.1) * 0.5;
-    state.orbitBreath = 0.5 + Math.sin(time * 0.40 + 0.6) * 0.5;
+      if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
+        window[SITE_RUNTIME_NAME].updateRuntimeStatus("sunAssetRuntime", {
+          validated: true,
+          loaded: true,
+          mounted: true,
+          baseline: BASELINE
+        });
+      }
+    }).catch(function (error) {
+      bootState.sunAssetRuntimeFailed = true;
+      setStatus("CSS sun fallback active");
 
-    setCssVar("--sun-glow", state.sunGlow.toFixed(3));
-    setCssVar("--corona-intensity", state.coronaIntensity.toFixed(3));
-    setCssVar("--stellar-depth", state.stellarDepth.toFixed(3));
-    setCssVar("--orbit-breath", state.orbitBreath.toFixed(3));
-    setCssVar("--sun-pulse", (1 + state.sunGlow * 0.010).toFixed(4));
-
-    state.frame = window.requestAnimationFrame(animateUniverseSun);
-  }
-
-  function markRoutes() {
-    var current = window.location.pathname;
-    var links = document.querySelectorAll(".route-node, .action");
-
-    links.forEach(function (link) {
-      var href = link.getAttribute("href");
-      if (href && href === current) {
-        link.setAttribute("aria-current", "page");
+      if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
+        window[SITE_RUNTIME_NAME].addWarning(
+          "SUN_ASSET_MOUNT_FAILED",
+          "Sun asset runtime loaded but failed to mount.",
+          {
+            message: error && error.message ? error.message : "unknown",
+            baseline: BASELINE
+          }
+        );
       }
     });
   }
 
-  function addRouteReceipts() {
-    var system = document.querySelector("[data-universe-system]");
-    var links = document.querySelectorAll(".route-node");
+  function boot() {
+    var visible = protectVisibleRoot();
+    if (!visible) return;
 
-    if (!system) return;
+    setStatus("Visible-first universe sun active");
+    loadSiteRuntimeThenSunRuntime();
 
-    links.forEach(function (link) {
-      link.addEventListener("focus", function () {
-        system.setAttribute("data-route-focus", link.textContent.trim());
-
-        if (siteRuntime() && typeof siteRuntime().addReceipt === "function") {
-          siteRuntime().addReceipt("ROUTE_FOCUS", {
-            route: link.getAttribute("href"),
-            label: link.textContent.trim()
-          });
-        }
-      });
-
-      link.addEventListener("blur", function () {
-        system.removeAttribute("data-route-focus");
-      });
-
-      link.addEventListener("mouseenter", function () {
-        system.setAttribute("data-route-focus", link.textContent.trim());
-      });
-
-      link.addEventListener("mouseleave", function () {
-        system.removeAttribute("data-route-focus");
-      });
-    });
+    window.setTimeout(protectVisibleRoot, 500);
+    window.setTimeout(protectVisibleRoot, 1600);
   }
 
-  function protectVisibleRoot() {
-    if (window.DGBIndexBoot && typeof window.DGBIndexBoot.protectVisibleRoot === "function") {
-      window.DGBIndexBoot.protectVisibleRoot();
-    } else if (window.DGBIndexBoot && typeof window.DGBIndexBoot.protectVisibleDoor === "function") {
-      window.DGBIndexBoot.protectVisibleDoor();
-    }
-  }
-
-  function start() {
-    if (state.started) return;
-
-    var sun = document.querySelector("[data-universe-sun-object]");
-    if (!sun) {
-      setStatus("Static universe sun active");
-      registerWithSiteRuntime(false);
-      return;
-    }
-
-    state.started = true;
-    setStatus("Universe sun runtime active");
-
-    markRoutes();
-    addRouteReceipts();
-    registerWithSiteRuntime(true);
-
-    if (!hasReducedMotion()) {
-      window.addEventListener("pointermove", handlePointerMove, { passive: true });
-      window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
-      animateUniverseSun();
-    } else {
-      setCssVar("--sun-glow", "0.58");
-      setCssVar("--corona-intensity", "0.56");
-      setCssVar("--stellar-depth", "0.50");
-      setCssVar("--orbit-breath", "0.50");
-      setCssVar("--sun-pulse", "1");
-    }
-
-    window.setTimeout(protectVisibleRoot, 600);
-    window.setTimeout(protectVisibleRoot, 1800);
-  }
-
-  function stop() {
-    state.started = false;
-
-    if (state.frame) {
-      window.cancelAnimationFrame(state.frame);
-      state.frame = null;
-    }
-
-    window.removeEventListener("pointermove", handlePointerMove);
-    window.removeEventListener("pointerleave", handlePointerLeave);
-
-    if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
-      siteRuntime().updateRuntimeStatus("universeSunRuntime", {
-        validated: false,
-        stopped: true,
+  window.DGBIndexBoot = Object.freeze({
+    getState: function () {
+      return {
+        pageVisible: bootState.pageVisible,
+        siteRuntimeRequested: bootState.siteRuntimeRequested,
+        siteRuntimeLoaded: bootState.siteRuntimeLoaded,
+        siteRuntimeFailed: bootState.siteRuntimeFailed,
+        sunAssetRuntimeRequested: bootState.sunAssetRuntimeRequested,
+        sunAssetRuntimeLoaded: bootState.sunAssetRuntimeLoaded,
+        sunAssetRuntimeFailed: bootState.sunAssetRuntimeFailed,
+        sunMounted: bootState.sunMounted,
         baseline: BASELINE
-      });
-    }
-  }
-
-  function getState() {
-    return {
-      name: RUNTIME_NAME,
-      started: state.started,
-      pointerActive: state.pointerActive,
-      sunGlow: state.sunGlow,
-      coronaIntensity: state.coronaIntensity,
-      stellarDepth: state.stellarDepth,
-      orbitBreath: state.orbitBreath,
-      baseline: BASELINE
-    };
-  }
-
-  function validate() {
-    var result = {
-      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-universe-sun-object]")),
-      runtime: RUNTIME_NAME,
-      started: state.started,
-      themePresent: document.body.textContent.includes("Learn to Live to Love"),
-      sunPresent: Boolean(document.querySelector("[data-universe-sun-object]")),
-      staleSolarDoorTextRemoved: !document.body.textContent.includes("Static Solar Door Active") && !document.body.textContent.includes("STATIC SOLAR DOOR ACTIVE"),
-      sunLabelRemoved: !document.body.textContent.includes("SUN"),
-      siteRuntimePresent: Boolean(siteRuntime()),
-      noImageDependency: true,
-      baseline: BASELINE
-    };
-
-    if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
-      siteRuntime().updateRuntimeStatus("universeSunRuntime", {
-        validated: result.ok,
-        lastValidation: result,
-        baseline: BASELINE
-      });
-    }
-
-    return result;
-  }
-
-  window[RUNTIME_NAME] = Object.freeze({
-    start: start,
-    stop: stop,
-    getState: getState,
-    validate: validate
+      };
+    },
+    protectVisibleRoot: protectVisibleRoot,
+    protectVisibleDoor: protectVisibleRoot
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    start();
+    boot();
   }
 })();

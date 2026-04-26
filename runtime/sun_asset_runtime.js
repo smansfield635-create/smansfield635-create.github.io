@@ -4,7 +4,7 @@
   var RUNTIME_NAME = "DGBSunAssetRuntime";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var CANVAS_GLOBAL = "DGBSunCanvas";
-  var VERSION = "luminous-centered-plasma-b5";
+  var VERSION = "satellite-solar-disc-b6";
 
   var PATHS = {
     css: "/assets/sun/sun_material.css?v=" + VERSION,
@@ -37,12 +37,9 @@
 
   function addReceipt(type, payload) {
     var receipt = { type: type, time: now(), payload: payload || {} };
-
     state.receipts.push(receipt);
 
-    if (state.receipts.length > 50) {
-      state.receipts.shift();
-    }
+    if (state.receipts.length > 50) state.receipts.shift();
 
     if (siteRuntime() && typeof siteRuntime().addReceipt === "function") {
       siteRuntime().addReceipt("SUN_ASSET_" + type, payload || {});
@@ -61,9 +58,7 @@
 
     state.warnings.push(warning);
 
-    if (state.warnings.length > 50) {
-      state.warnings.shift();
-    }
+    if (state.warnings.length > 50) state.warnings.shift();
 
     if (siteRuntime() && typeof siteRuntime().addWarning === "function") {
       siteRuntime().addWarning(code, message, payload || {});
@@ -92,7 +87,6 @@
 
   function ensureCss() {
     var existing = document.querySelector('link[href="' + PATHS.css + '"]');
-
     if (existing) return;
 
     var link = document.createElement("link");
@@ -102,9 +96,7 @@
   }
 
   function clearMount(mount) {
-    while (mount.firstChild) {
-      mount.removeChild(mount.firstChild);
-    }
+    while (mount.firstChild) mount.removeChild(mount.firstChild);
   }
 
   function describeMount(mount) {
@@ -138,7 +130,7 @@
 
     var canvas = document.createElement("canvas");
     canvas.className = "dgb-sun-canvas";
-    canvas.setAttribute("aria-label", "Luminous centered plasma sun");
+    canvas.setAttribute("aria-label", "Satellite-style solar disc");
     canvas.setAttribute("role", "img");
 
     mount.appendChild(canvas);
@@ -147,18 +139,18 @@
     var instance = window[CANVAS_GLOBAL].createCanvasSun(canvas, Object.assign({
       size: size,
       animate: true,
-      intensity: 0.96,
+      intensity: 0.98,
       seed: 4217,
-      frameRate: 14
+      frameRate: 10
     }, options || {}));
 
-    setStatus("Sun asset active · luminous centered plasma b5");
+    setStatus("Sun asset active · satellite solar disc b6");
 
     addReceipt("CANVAS_SUN_MOUNTED", {
       mount: describeMount(mount),
       size: size,
       version: VERSION,
-      profile: "luminous-centered-plasma-b5"
+      profile: "satellite-solar-disc-b6"
     });
 
     return {
@@ -221,7 +213,6 @@
   function start(config) {
     state.started = true;
     state.mode = "canvas";
-
     ensureCss();
 
     if (siteRuntime() && typeof siteRuntime().registerRuntime === "function") {
@@ -280,7 +271,7 @@
       graphicGenerationUsed: false,
       cssSunFallbackActive: false,
       mountAuthority: "canvas",
-      coordinateSystem: "centered-offscreen-drawImage",
+      visualTarget: "satellite-style solar disc",
       paths: Object.assign({}, PATHS)
     };
   }
@@ -296,15 +287,11 @@
 
   if (document.readyState !== "loading") {
     var autoMounts = queryMounts();
-    if (autoMounts.length) {
-      start({ mode: "canvas" });
-    }
+    if (autoMounts.length) start({ mode: "canvas" });
   } else {
     document.addEventListener("DOMContentLoaded", function () {
       var autoMounts = queryMounts();
-      if (autoMounts.length) {
-        start({ mode: "canvas" });
-      }
+      if (autoMounts.length) start({ mode: "canvas" });
     }, { once: true });
   }
 })();

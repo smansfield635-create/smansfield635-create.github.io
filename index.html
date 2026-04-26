@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · QUEUE-ROLLBACK SAFE SHELL B1
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · NON-OVERLAP CONTROL STATE B1
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
      COCKPIT_VERSION=root-compass-cockpit-b1
@@ -8,16 +8,18 @@
      CONTROL_PANEL_RUNTIME=compass-cockpit-control-panel-b1
      INSTRUMENT_PANEL_STATUS=held-pending
      RUNTIME_QUEUE_STATUS=quarantined-not-loaded
+     COSMIC_CONTROL_RUNTIME=cosmic-control-plane-b2
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
 
      PURPOSE:
-       - Stop freeze by removing active runtime queue load
+       - Preserve protected Compass Cockpit baseline
        - Keep /index.html as protected shell only
        - Keep render split active
        - Keep control panel split active
-       - Hold instrument panel until its file exists
-       - Hold runtime queue until tested one runtime at a time
+       - Hold instrument panel until installed
+       - Keep runtime queue quarantined
        - Keep /index.js as cockpit operator
+       - Replace overlapping cosmic-control runtime with passive B2 receipt reader
        - Preserve Bravo 6 compatibility
        - Preserve root-sun-asset-b1, root-compass-cockpit-b1, spine-canopy-parachute-b1
 -->
@@ -105,7 +107,7 @@
     data-background-contract="index-background-only"
     data-background-profile="near-solar-deep-space-sky-b2"
     data-background-runtime="near-solar-background-runtime-b1"
-    data-cosmic-control-plane="cosmic-control-plane-b1"
+    data-cosmic-control-plane="cosmic-control-plane-b2"
     data-compass-cockpit="root-compass-cockpit-b1"
     data-compass-cockpit-render="compass-cockpit-render-b1"
     data-compass-cockpit-runtime-queue="quarantined-not-loaded"
@@ -230,7 +232,7 @@
   <script src="/runtime/compass_cockpit_control_panel.js?v=compass-cockpit-control-panel-b1" defer></script>
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
   <script src="/runtime/cosmic_background_runtime.js?v=near-solar-background-runtime-b1" defer></script>
-  <script src="/runtime/cosmic_control_runtime.js?v=cosmic-control-plane-b1" defer></script>
+  <script src="/runtime/cosmic_control_runtime.js?v=cosmic-control-plane-b2" defer></script>
   <script src="/index.js?v=root-sun-asset-b1" defer></script>
 </body>
 </html>

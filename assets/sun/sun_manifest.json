@@ -2,72 +2,102 @@
   "assetPack": "DGB_SUN_ASSET_SPINE_v1",
   "owner": "Sean",
   "project": "Diamond Gate Bridge",
-  "baseline": "Sun Asset Spine Baseline 1",
-  "version": "satellite-observational-solar-disc-b7",
+  "repository": "smansfield635-create.github.io",
+  "rootBootId": "root-sun-asset-b1",
+  "requiredSourceMarker": "root-sun-asset-b1",
+  "baseline": "Generation 2 Compass Cockpit Sun Asset Baseline",
+  "version": "satellite-observational-solar-disc-b8",
+  "status": "ACTIVE",
   "mode": "code_source_assets_only",
   "graphicOutput": false,
   "externalImageDependency": false,
-  "roundWorldFirst": true,
-  "flattenLater": true,
+  "generatedImageDependency": false,
   "primaryObject": "sun",
   "backgroundContext": "universe",
   "theme": "Learn to Live to Love",
+  "visualTarget": {
+    "name": "satellite-observational-solar-disc",
+    "description": "A satellite-observational solar disc with natural limb darkening, mottled photosphere, granulation, subtle active regions, small sunspots, and soft corona.",
+    "requiredQualities": [
+      "satellite observational solar disc",
+      "large solar body",
+      "limb darkening",
+      "mottled photosphere",
+      "solar granulation",
+      "subtle active regions",
+      "small sunspots",
+      "soft corona",
+      "deep universe background",
+      "mobile safe"
+    ],
+    "forbiddenQualities": [
+      "symbolic wheel",
+      "decorative sun badge",
+      "cartoon radial rays",
+      "generic orange gradient",
+      "CSS-only fake sun as final visual",
+      "generated image dependency",
+      "external image dependency",
+      "graphic box"
+    ]
+  },
   "files": {
     "rootHtml": "/index.html",
     "rootBoot": "/index.js",
-    "cssShell": "/assets/sun/sun_material.css",
     "canvasRenderer": "/assets/sun/sun_canvas.js",
-    "svgReference": "/assets/sun/sun.svg",
     "assetRuntime": "/runtime/sun_asset_runtime.js",
-    "previewHarness": "/assets/sun/preview.html"
+    "cssShell": "/assets/sun/sun_material.css",
+    "svgReference": "/assets/sun/sun.svg",
+    "manifest": "/assets/sun/sun_manifest.json",
+    "previewHarness": "/assets/sun/preview.html",
+    "canopyRuntime": "/runtime/spine_canopy_runtime.js",
+    "gaugesRuntime": "/gauges/gauges_health_runtime.js"
   },
   "authority": {
-    "canvasRenderer": "satellite_observational_material_standard",
-    "assetRuntime": "mount_authority",
-    "rootBoot": "runtime_loader_authority",
-    "rootHtml": "empty_mount_target_only",
-    "cssShell": "supporting_shell_only",
-    "manifest": "spine_contract",
-    "previewHarness": "isolated_test_harness"
+    "manifest": "sun_asset_spine_contract",
+    "rootHtml": "mount_and_page_shell",
+    "rootBoot": "compass_boot_and_filter_orchestrator",
+    "canvasRenderer": "satellite_solar_visual_authority",
+    "assetRuntime": "sun_mount_runtime_authority",
+    "cssShell": "material_support_only",
+    "svgReference": "static_reference_fallback",
+    "previewHarness": "isolated_test_harness",
+    "gauges": "diagnostic_contract_verification"
   },
   "mountContract": {
     "selector": "[data-dgb-sun-mount]",
     "requiredMode": "canvas",
     "requiredRuntimeGlobal": "DGBSunAssetRuntime",
     "requiredCanvasGlobal": "DGBSunCanvas",
-    "forbiddenRootFallbackChildren": [
-      ".dgb-sun-stage",
-      ".dgb-sun-css",
-      ".dgb-sun-core"
-    ],
-    "requiredVisibleStatus": "Sun asset active · satellite observational solar disc b7"
+    "requiredRootBootId": "root-sun-asset-b1",
+    "requiredCanvasVersion": "satellite-observational-solar-disc-b8",
+    "requiredRuntimeVersion": "sun-asset-runtime-satellite-b8",
+    "requiredVisibleStatus": "Sun asset active · satellite view"
   },
-  "visualTarget": {
-    "read": "satellite observational solar disc",
-    "avoid": [
-      "door",
-      "tree",
-      "button",
-      "badge",
-      "grid",
-      "flat icon",
-      "planet",
-      "eclipse",
-      "symbolic wheel",
-      "decorative swirl",
-      "cartoon rays"
-    ],
-    "qualities": [
-      "large solar disc",
-      "observational satellite view",
-      "limb darkening",
-      "granulated photosphere",
-      "mottled plasma texture",
-      "subtle active regions",
-      "small sunspots",
-      "soft corona",
-      "deep universe field",
-      "mobile safe"
-    ]
+  "gaugeMarkers": {
+    "rootBootId": "root-sun-asset-b1",
+    "cockpitVersion": "root-compass-cockpit-b1",
+    "canopyVersion": "spine-canopy-parachute-b1",
+    "diagnosticRuntime": "spine-canopy-parachute-b6",
+    "sunVisualContract": "sun-visual-contract-b1",
+    "sunVisualProfile": "satellite-observational-solar-disc-b8"
+  },
+  "sourceMarkers": [
+    "root-sun-asset-b1",
+    "root-compass-cockpit-b1",
+    "spine-canopy-parachute-b1",
+    "spine-canopy-parachute-b6",
+    "sun-visual-contract-b1",
+    "satellite-observational-solar-disc",
+    "satellite-observational-solar-disc-b8"
+  ],
+  "validation": {
+    "sourceMarkerRequired": true,
+    "sourceMarkerPresent": true,
+    "expectedGaugeResultAfterRenewal": {
+      "source": 100,
+      "cockpitTruth": 100,
+      "driftRiskTarget": 0
+    }
   }
 }

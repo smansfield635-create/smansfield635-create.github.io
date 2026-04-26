@@ -1,19 +1,21 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS · SIMPLE FILTER + SATELLITE SUN B8
+     ROOT INDEX · GENERATION 2 COMPASS · SHOWROOM DIAMOND LINK B1
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
      COCKPIT_VERSION=root-compass-cockpit-b1
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
 
      PURPOSE:
-       - Keep Compass simple.
-       - Keep three filters only.
-       - Mount satellite-view sun through /assets/sun/sun_canvas.js and /runtime/sun_asset_runtime.js.
-       - Keep sun in the background.
+       - Preserve the current passing Compass baseline.
+       - Add a top-page Showroom route.
+       - Represent Showroom as a spinning compass / diamond lattice.
+       - No graphics box.
        - No generated image.
-       - No graphic box.
-       - Preserve Bravo 6 cockpit truth.
+       - No external image.
+       - No new runtime.
+       - Keep satellite sun background intact.
+       - Keep three-filter Compass surface intact.
 -->
 
 <html lang="en">
@@ -27,6 +29,7 @@
 
   <style>
     *{box-sizing:border-box}
+
     html,body{
       margin:0;
       min-height:100%;
@@ -36,6 +39,7 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       overflow-x:hidden;
     }
+
     a{color:inherit;text-decoration:none}
     button{font:inherit}
 
@@ -129,6 +133,98 @@
       background:
         radial-gradient(circle at 50% 50%,rgba(201,162,74,.16),transparent 60%),
         rgba(0,0,0,.28);
+    }
+
+    .showroomTopLink{
+      position:relative;
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      min-height:46px;
+      padding:8px 13px 8px 9px;
+      border-radius:999px;
+      border:1px solid rgba(255,217,138,.34);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      overflow:hidden;
+    }
+
+    .showroomTopLink::before{
+      content:"";
+      position:absolute;
+      inset:-80%;
+      background:conic-gradient(from 0deg,transparent,rgba(255,217,138,.15),transparent,rgba(147,197,253,.11),transparent);
+      animation:showroomAuraSpin 7s linear infinite;
+      opacity:.72;
+    }
+
+    .showroomTopLink span{
+      position:relative;
+      z-index:2;
+    }
+
+    .diamondCompass{
+      position:relative;
+      z-index:2;
+      width:30px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      transform-style:preserve-3d;
+      animation:diamondTopSpin 3.8s linear infinite;
+    }
+
+    .diamondCompass::before{
+      content:"";
+      position:absolute;
+      width:22px;
+      height:22px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,217,138,.82);
+      background:
+        linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.55) 50%,transparent calc(50% + .5px)),
+        linear-gradient(0deg,transparent calc(50% - .5px),rgba(255,255,255,.38) 50%,transparent calc(50% + .5px)),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.22),rgba(147,197,253,.06) 64%,transparent 68%);
+      box-shadow:
+        0 0 16px rgba(255,217,138,.26),
+        inset 0 0 14px rgba(147,197,253,.10);
+    }
+
+    .diamondCompass::after{
+      content:"";
+      position:absolute;
+      width:8px;
+      height:8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.60);
+      background:rgba(255,217,138,.26);
+      box-shadow:0 0 10px rgba(255,217,138,.24);
+    }
+
+    .latticeRing{
+      position:absolute;
+      inset:2px;
+      border-radius:999px;
+      border:1px solid rgba(147,197,253,.22);
+      transform:rotateX(64deg);
+    }
+
+    .latticeRing.two{
+      transform:rotateX(64deg) rotateZ(60deg);
+    }
+
+    .latticeRing.three{
+      transform:rotateX(64deg) rotateZ(120deg);
+    }
+
+    @keyframes diamondTopSpin{
+      0%{transform:rotateZ(0deg) rotateX(58deg) rotateY(0deg)}
+      100%{transform:rotateZ(360deg) rotateX(58deg) rotateY(360deg)}
+    }
+
+    @keyframes showroomAuraSpin{
+      to{transform:rotate(360deg)}
     }
 
     .hero{
@@ -343,9 +439,10 @@
 
       .navLinks{width:100%}
 
-      .navLinks .btn,.routeRail a{
+      .navLinks .btn,.routeRail a,.showroomTopLink{
         flex:1 1 calc(50% - 10px);
         text-align:center;
+        justify-content:center;
       }
 
       .hero{
@@ -360,6 +457,12 @@
       .sun-mount{
         width:min(130vw,760px);
         transform:translateY(13%);
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .diamondCompass,.showroomTopLink::before{
+        animation:none;
       }
     }
   </style>
@@ -389,7 +492,7 @@
     data-background-contract="sun-background-simple-filter"
     data-background-profile="near-solar-deep-space-sky-b2"
     data-compass-cockpit="root-compass-cockpit-b1"
-    data-compass-cockpit-render="simple-world-filter-satellite-sun-b8"
+    data-compass-cockpit-render="simple-world-filter-showroom-diamond-b1"
     data-compass-cockpit-runtime-queue="quarantined-not-loaded"
     data-compass-cockpit-control-panel="simple-world-filter-static"
     data-compass-cockpit-instrument-panel="held-pending"
@@ -397,6 +500,7 @@
     data-sun-satellite-profile="satellite-observational-solar-disc-b8"
     data-source-marker="ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"
     data-cockpit-view="cinematic"
+    data-showroom-link="diamond-compass-lattice-b1"
   >
     <section class="siteTop" aria-label="Root navigation">
       <div class="navRow">
@@ -407,6 +511,14 @@
 
         <nav class="navLinks" aria-label="Primary navigation">
           <a class="btn red" href="/">Compass</a>
+          <a class="showroomTopLink" href="/showroom/" aria-label="Open the Showroom universe page">
+            <span class="diamondCompass" aria-hidden="true">
+              <i class="latticeRing"></i>
+              <i class="latticeRing two"></i>
+              <i class="latticeRing three"></i>
+            </span>
+            <span>Showroom</span>
+          </a>
           <a class="btn" href="/home/">Home</a>
           <a class="btn" href="/prelude/">Prelude</a>
           <a class="btn" href="/door/">Door</a>
@@ -509,6 +621,7 @@
     </section>
 
     <nav class="routeRail" aria-label="Root route rail">
+      <a href="/showroom/">Showroom</a>
       <a href="/home/">Home</a>
       <a href="/prelude/">Prelude</a>
       <a href="/door/">Door</a>

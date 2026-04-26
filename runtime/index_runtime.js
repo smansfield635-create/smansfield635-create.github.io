@@ -2,8 +2,8 @@
   Diamond Gate Bridge — Index Runtime
   File: /runtime/index_runtime.js
   Generation: 1
-  Baseline: Root Door Seasonal Solar Baseline 1
-  Role: optional seasonal door enhancement only; registers with cross-board site runtime.
+  Baseline: Root Door Tree of Life Toroidal Baseline 1
+  Role: optional Tree of Life door enhancement only; registers with cross-board site runtime.
 */
 
 (function () {
@@ -18,6 +18,7 @@
     glow: 0,
     seasonShift: 0,
     sunBlessing: 0,
+    branchGlow: 0,
     frame: null
   };
 
@@ -53,9 +54,9 @@
 
     if (typeof site.registerRuntime === "function") {
       site.registerRuntime({
-        id: "seasonalDoorRuntime",
+        id: "treeOfLifeDoorRuntime",
         page: "home",
-        role: "seasonal-door-enhancement",
+        role: "tree-of-life-door-enhancement",
         path: "/runtime/index_runtime.js",
         validated: Boolean(validated),
         optional: true
@@ -66,7 +67,7 @@
       site.registerPage({
         id: "home",
         title: "Diamond Gate Bridge",
-        baseline: "Generation 1 Root Door Seasonal Solar Baseline 1",
+        baseline: "Generation 1 Root Door Tree of Life Toroidal Baseline 1",
         theme: "Learn to Live to Love",
         visibleFirst: Boolean(document.getElementById("door-root"))
       });
@@ -100,10 +101,12 @@
     state.glow = 0.5 + Math.sin(time * 0.68) * 0.5;
     state.seasonShift = 0.5 + Math.sin(time * 0.31 + 1.4) * 0.5;
     state.sunBlessing = 0.5 + Math.sin(time * 0.54 + 2.2) * 0.5;
+    state.branchGlow = 0.5 + Math.sin(time * 0.42 + 0.8) * 0.5;
 
     setCssVar("--door-glow", state.glow.toFixed(3));
     setCssVar("--season-shift", state.seasonShift.toFixed(3));
     setCssVar("--sun-blessing", state.sunBlessing.toFixed(3));
+    setCssVar("--branch-glow", state.branchGlow.toFixed(3));
     setCssVar("--door-pulse", (1 + state.glow * 0.006).toFixed(4));
 
     state.frame = window.requestAnimationFrame(animateDoorVariables);
@@ -162,15 +165,15 @@
   function start() {
     if (state.started) return;
 
-    var door = document.querySelector("[data-seasonal-door]");
+    var door = document.querySelector("[data-tree-door]");
     if (!door) {
-      setStatus("Static seasonal door active");
+      setStatus("Static Tree of Life door active");
       registerWithSiteRuntime(false);
       return;
     }
 
     state.started = true;
-    setStatus("Seasonal door runtime active");
+    setStatus("Tree of Life runtime active");
 
     markRoutes();
     addRouteReceipts();
@@ -184,6 +187,7 @@
       setCssVar("--door-glow", "0.55");
       setCssVar("--season-shift", "0.55");
       setCssVar("--sun-blessing", "0.55");
+      setCssVar("--branch-glow", "0.55");
       setCssVar("--door-pulse", "1");
     }
 
@@ -203,7 +207,7 @@
     window.removeEventListener("pointerleave", handlePointerLeave);
 
     if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
-      siteRuntime().updateRuntimeStatus("seasonalDoorRuntime", {
+      siteRuntime().updateRuntimeStatus("treeOfLifeDoorRuntime", {
         validated: false,
         stopped: true
       });
@@ -217,23 +221,25 @@
       pointerActive: state.pointerActive,
       glow: state.glow,
       seasonShift: state.seasonShift,
-      sunBlessing: state.sunBlessing
+      sunBlessing: state.sunBlessing,
+      branchGlow: state.branchGlow
     };
   }
 
   function validate() {
     var result = {
-      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-seasonal-door]")),
+      ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-tree-door]")),
       runtime: RUNTIME_NAME,
       started: state.started,
       themePresent: document.body.textContent.includes("Learn to Live to Love"),
-      doorPresent: Boolean(document.querySelector("[data-seasonal-door]")),
+      doorPresent: Boolean(document.querySelector("[data-tree-door]")),
+      treePresent: Boolean(document.querySelector(".tree-layer")),
       siteRuntimePresent: Boolean(siteRuntime()),
       noImageDependency: true
     };
 
     if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
-      siteRuntime().updateRuntimeStatus("seasonalDoorRuntime", {
+      siteRuntime().updateRuntimeStatus("treeOfLifeDoorRuntime", {
         validated: result.ok,
         lastValidation: result
       });

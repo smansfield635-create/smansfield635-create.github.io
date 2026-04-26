@@ -1,18 +1,19 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · EARTH STANDARD B2
+     SHOWROOM · GENERATION 2 · REAL EARTH DEMO B3
 
      CONTRACT:
-       - Earth is the center.
-       - Earth must read as an opaque outer-space Earth instrument surface.
-       - Not a classroom globe.
-       - Not a metaverse-symbolic globe.
+       - Reality-based solar-system demo.
+       - Earth is the center of the map.
+       - Earth uses real satellite-style texture.
+       - Earth is tilted on axis.
+       - Earth auto-spins.
+       - User can manually drag/spin Earth.
        - Sun is distant support.
-       - Other bodies stay low-detail in the distance.
-       - Bottom diamond-compass route navigation stays.
-       - No graphics box.
-       - No generated image.
-       - No external image.
+       - Other planets stay minimal/distant.
+       - Bottom diamond-compass navigation remains.
+       - No generated graphic.
+       - No graphic box.
        - No new runtime.
 -->
 
@@ -21,7 +22,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Diamond Gate Bridge — Showroom</title>
-  <meta name="description" content="Diamond Gate Bridge Earth-centered showroom"/>
+  <meta name="description" content="Diamond Gate Bridge Earth-centered showroom demo"/>
 
   <link rel="stylesheet" href="/assets/sun/sun_material.css?v=satellite-observational-solar-disc-b8"/>
 
@@ -49,6 +50,8 @@
       --line:rgba(255,255,255,.13);
       --panel:rgba(7,10,16,.74);
       --shadow:0 30px 110px rgba(0,0,0,.54);
+      --earth-rot:0%;
+      --earthTexture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg");
     }
 
     body::before{
@@ -178,7 +181,7 @@
       width:min(34vw,250px);
       aspect-ratio:1;
       border-radius:999px;
-      opacity:.42;
+      opacity:.40;
       filter:
         drop-shadow(0 0 26px rgba(255,178,54,.18))
         drop-shadow(0 0 90px rgba(255,122,28,.13));
@@ -197,7 +200,7 @@
       position:absolute;
       border-radius:999px;
       aspect-ratio:1;
-      opacity:.38;
+      opacity:.34;
       box-shadow:0 0 18px rgba(147,197,253,.20);
     }
 
@@ -312,15 +315,111 @@
       aspect-ratio:1;
       display:grid;
       place-items:center;
+      cursor:grab;
+      touch-action:none;
+      user-select:none;
     }
 
-    .earthGlobe{
-      width:100%;
-      height:100%;
-      display:block;
-      filter:
-        drop-shadow(0 0 20px rgba(147,197,253,.18))
-        drop-shadow(0 0 70px rgba(59,130,246,.14));
+    .earthWrap:active{cursor:grabbing}
+
+    .axisLine{
+      position:absolute;
+      z-index:5;
+      width:2px;
+      height:105%;
+      left:50%;
+      top:-2.5%;
+      transform:translateX(-50%) rotate(-23.44deg);
+      transform-origin:center;
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.42),transparent);
+      opacity:.34;
+      pointer-events:none;
+    }
+
+    .axisLine::before,
+    .axisLine::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      width:9px;
+      height:9px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.50);
+      background:rgba(147,197,253,.18);
+      transform:translateX(-50%);
+    }
+
+    .axisLine::before{top:0}
+    .axisLine::after{bottom:0}
+
+    .earthSphere{
+      position:relative;
+      width:92%;
+      aspect-ratio:1;
+      border-radius:999px;
+      overflow:hidden;
+      transform:rotate(-23.44deg);
+      background:
+        radial-gradient(circle at 42% 32%,rgba(255,255,255,.12),transparent 25%),
+        #071a3d;
+      box-shadow:
+        inset -58px -18px 86px rgba(0,0,0,.64),
+        inset 18px 10px 38px rgba(255,255,255,.10),
+        0 0 0 2px rgba(219,234,254,.28),
+        0 0 34px rgba(147,197,253,.20),
+        0 0 90px rgba(59,130,246,.12);
+    }
+
+    .earthTexture{
+      position:absolute;
+      inset:-1%;
+      border-radius:999px;
+      background-image:
+        linear-gradient(90deg,rgba(0,0,0,.08),transparent 18%,transparent 70%,rgba(0,0,0,.36)),
+        var(--earthTexture);
+      background-size:200% 100%, 200% 100%;
+      background-position:0 0, var(--earth-rot) 50%;
+      filter:saturate(1.15) contrast(1.06) brightness(.92);
+      transform:rotate(23.44deg) scale(1.08);
+      transform-origin:center;
+    }
+
+    .cloudLayer{
+      position:absolute;
+      inset:-2%;
+      border-radius:999px;
+      opacity:.46;
+      background:
+        radial-gradient(ellipse at 23% 28%,rgba(255,255,255,.72),transparent 18%),
+        radial-gradient(ellipse at 38% 55%,rgba(255,255,255,.44),transparent 16%),
+        radial-gradient(ellipse at 62% 31%,rgba(255,255,255,.36),transparent 14%),
+        radial-gradient(ellipse at 70% 64%,rgba(255,255,255,.28),transparent 18%),
+        repeating-linear-gradient(168deg,transparent 0 48px,rgba(255,255,255,.18) 50px 54px,transparent 58px 96px);
+      mix-blend-mode:screen;
+      transform:rotate(23.44deg) translateX(calc(var(--earth-rot) * -.08));
+      filter:blur(.6px);
+    }
+
+    .earthShade{
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 34% 31%,rgba(255,255,255,.18),transparent 28%),
+        radial-gradient(circle at 73% 54%,rgba(0,0,0,.78),transparent 47%),
+        radial-gradient(circle at 50% 50%,transparent 62%,rgba(0,0,0,.38) 84%,rgba(0,0,0,.68) 100%);
+      pointer-events:none;
+    }
+
+    .atmosphere{
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      box-shadow:
+        inset 0 0 22px rgba(219,234,254,.22),
+        inset 0 0 40px rgba(147,197,253,.16),
+        0 0 22px rgba(147,197,253,.28);
+      pointer-events:none;
     }
 
     .earthCaption{
@@ -368,9 +467,7 @@
     body[data-showroom-view="galaxy"] .earthWrap{transform:scale(.74)}
     body[data-showroom-view="demo"] .earthWrap{transform:scale(.90)}
 
-    .earthWrap{
-      transition:transform .35s ease;
-    }
+    .earthWrap{transition:transform .35s ease}
 
     .routeRail{
       position:relative;
@@ -487,17 +584,11 @@
         padding:22px;
       }
 
-      .earthPanel{
-        border-radius:26px;
-      }
+      .earthPanel{border-radius:26px}
 
-      .earthWrap{
-        width:min(100%,620px);
-      }
+      .earthWrap{width:min(100%,620px)}
 
-      .routeRail{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
+      .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
 
       .distantSun{
         width:min(44vw,220px);
@@ -511,9 +602,7 @@
         animation:none;
       }
 
-      .earthWrap{
-        transition:none;
-      }
+      .earthWrap{transition:none}
     }
   </style>
 </head>
@@ -522,12 +611,14 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-earth-standard-b2"
+    data-showroom-version="generation-2-real-earth-demo-b3"
     data-earth-center="true"
+    data-earth-axis="23.44deg"
+    data-earth-spin="auto-and-manual"
     data-sun-role="distant-background-authority"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="earth-first-sun-distant-planets-minimal"
+    data-brain-route="real-earth-first-sun-distant-planets-minimal"
   >
     <section class="top" aria-label="Showroom view controls">
       <div class="navRow">
@@ -568,96 +659,37 @@
       </div>
 
       <div class="copy">
-        <p class="kicker">Showroom · Earth-Centered Demo</p>
+        <p class="kicker">Showroom · Reality-Based Earth Demo</p>
         <h1>The Earth Room</h1>
         <p class="expression" id="viewExpression">The Earth is opaque.</p>
         <p class="lede" id="viewLede">
-          This showroom starts with Earth as a readable outer-space instrument surface. The sun stays in the distance. The other planets stay present without demanding detail.
+          This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on axis, spinning, and manually draggable.
         </p>
       </div>
 
       <article class="earthPanel" aria-label="Earth standard outer-space view">
-        <div class="earthWrap">
-          <svg class="earthGlobe" viewBox="0 0 1000 1000" role="img" aria-label="Opaque Earth outer-space instrument surface">
-            <defs>
-              <radialGradient id="ocean" cx="38%" cy="32%" r="68%">
-                <stop offset="0%" stop-color="#315a99"/>
-                <stop offset="34%" stop-color="#102f6e"/>
-                <stop offset="65%" stop-color="#061841"/>
-                <stop offset="100%" stop-color="#010612"/>
-              </radialGradient>
+        <div class="earthWrap" id="earthController" aria-label="Interactive spinning Earth" role="application">
+          <span class="axisLine" aria-hidden="true"></span>
 
-              <radialGradient id="terminator" cx="34%" cy="38%" r="70%">
-                <stop offset="0%" stop-color="#ffffff" stop-opacity=".17"/>
-                <stop offset="45%" stop-color="#ffffff" stop-opacity=".04"/>
-                <stop offset="72%" stop-color="#000000" stop-opacity=".12"/>
-                <stop offset="100%" stop-color="#000000" stop-opacity=".78"/>
-              </radialGradient>
-
-              <radialGradient id="atmosphere" cx="50%" cy="50%" r="52%">
-                <stop offset="76%" stop-color="#93c5fd" stop-opacity="0"/>
-                <stop offset="92%" stop-color="#9edcff" stop-opacity=".24"/>
-                <stop offset="100%" stop-color="#dbeafe" stop-opacity=".54"/>
-              </radialGradient>
-
-              <filter id="cloudNoise" x="-20%" y="-20%" width="140%" height="140%">
-                <feTurbulence type="fractalNoise" baseFrequency=".021 .038" numOctaves="5" seed="7619" result="clouds"/>
-                <feColorMatrix
-                  in="clouds"
-                  type="matrix"
-                  values="
-                    1.8 0   0   0  -.42
-                    0   1.8 0   0  -.42
-                    0   0   1.8 0  -.42
-                    0   0   0   .62 -.14"
-                  result="cloudColor"
-                />
-              </filter>
-
-              <clipPath id="earthClip">
-                <circle cx="500" cy="500" r="430"/>
-              </clipPath>
-            </defs>
-
-            <circle cx="500" cy="500" r="455" fill="rgba(147,197,253,.12)"/>
-            <circle cx="500" cy="500" r="430" fill="url(#ocean)"/>
-
-            <g clip-path="url(#earthClip)">
-              <path d="M142 309 C216 232 331 207 433 246 C486 266 504 326 462 377 C414 436 303 427 250 501 C207 560 169 526 157 465 C146 407 105 354 142 309Z" fill="#5f7f43" opacity=".96"/>
-              <path d="M341 497 C419 480 487 518 524 586 C568 666 501 755 414 794 C352 822 309 763 324 684 C335 626 292 553 341 497Z" fill="#507a39" opacity=".94"/>
-              <path d="M602 264 C694 253 789 318 832 403 C864 468 844 545 795 594 C750 523 689 500 643 458 C596 416 553 336 602 264Z" fill="#807345" opacity=".50"/>
-              <path d="M226 250 C311 209 403 206 486 232 C414 234 348 252 286 291 C247 316 219 310 226 250Z" fill="#d7dcc8" opacity=".75"/>
-              <path d="M200 642 C310 641 418 684 505 747 C402 833 277 790 200 642Z" fill="#d7dcc8" opacity=".58"/>
-              <path d="M606 205 C710 211 808 276 864 381 C781 337 704 302 612 294 C575 291 568 225 606 205Z" fill="#d7dcc8" opacity=".34"/>
-
-              <g filter="url(#cloudNoise)" opacity=".78">
-                <circle cx="500" cy="500" r="430" fill="#fff"/>
-              </g>
-
-              <path d="M106 612 C226 546 365 580 473 622 C595 668 699 644 862 706" fill="none" stroke="#fff" stroke-opacity=".46" stroke-width="18" stroke-linecap="round"/>
-              <path d="M112 366 C250 303 392 342 533 384 C675 427 756 405 887 350" fill="none" stroke="#fff" stroke-opacity=".32" stroke-width="15" stroke-linecap="round"/>
-              <path d="M266 764 C398 707 530 728 664 785" fill="none" stroke="#fff" stroke-opacity=".36" stroke-width="20" stroke-linecap="round"/>
-
-              <circle cx="500" cy="500" r="430" fill="url(#terminator)"/>
-            </g>
-
-            <circle cx="500" cy="500" r="430" fill="url(#atmosphere)"/>
-            <circle cx="500" cy="500" r="430" fill="none" stroke="rgba(219,234,254,.36)" stroke-width="4"/>
-            <path d="M180 785 C360 906 666 915 830 706" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="2"/>
-          </svg>
+          <div class="earthSphere" aria-hidden="true">
+            <div class="earthTexture"></div>
+            <div class="cloudLayer"></div>
+            <div class="earthShade"></div>
+            <div class="atmosphere"></div>
+          </div>
         </div>
 
-        <div class="earthCaption">Earth Standard · Outer-Space View · Live Showroom</div>
+        <div class="earthCaption">Earth Standard · 23.44° Axis · Auto + Manual Spin</div>
       </article>
 
       <div class="readout" aria-live="polite">
         <strong id="showroomTitle">Earth view</strong>
         <p id="showroomText">
-          This is the showroom demo standard: Earth first, opaque outer-space view, distant sun, minimal planets, and clean navigation.
+          This is the demo standard: Earth first, real texture, axial tilt, controlled spin, distant sun, minimal planets, and clean navigation.
         </p>
       </div>
 
-      <span class="underhood" id="underhoodScale">Active showroom mode: Earth-centered demo.</span>
+      <span class="underhood" id="underhoodScale">Active showroom mode: Earth-centered physics demo.</span>
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
@@ -713,40 +745,47 @@
       var copy = {
         earth: {
           expression: "The Earth is opaque.",
-          lede: "This showroom starts with Earth as a readable outer-space instrument surface. The sun stays in the distance. The other planets stay present without demanding detail.",
+          lede: "This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on axis, spinning, and manually draggable.",
           title: "Earth view",
-          text: "This is the showroom demo standard: Earth first, opaque outer-space view, distant sun, minimal planets, and clean navigation.",
-          scale: "Active showroom mode: Earth-centered demo."
+          text: "This is the demo standard: Earth first, real texture, axial tilt, controlled spin, distant sun, minimal planets, and clean navigation.",
+          scale: "Active showroom mode: Earth-centered physics demo."
         },
         satellite: {
           expression: "Look at Earth from orbit.",
-          lede: "Satellite view keeps Earth dominant while creating enough distance to read the planet as an instrument surface rather than a classroom globe.",
+          lede: "Satellite view keeps Earth dominant while giving enough distance to read it as a real observed planet.",
           title: "Satellite view",
-          text: "Use this for the cleanest planet read: Earth as object, not abstraction. The background supports the view without competing with it.",
-          scale: "Active showroom mode: orbital instrument view."
+          text: "Use this for the cleanest orbital read: Earth as object, not abstraction. Drag the planet to inspect rotation.",
+          scale: "Active showroom mode: orbital Earth view."
         },
         solar: {
           expression: "Keep Earth centered while the sun explains the field.",
-          lede: "Solar context lets the sun become visible as distant authority. Earth remains the showroom focus; the sun only establishes scale and direction.",
+          lede: "Solar context keeps Earth as the map center while the distant sun establishes scale and direction.",
           title: "Solar context",
-          text: "This view proves the showroom can carry a solar system without forcing every planet to become detailed.",
+          text: "This proves the showroom can carry real solar-system logic without forcing every distant planet to become detailed.",
           scale: "Active showroom mode: Earth-centered solar context."
         },
         galaxy: {
           expression: "Place Earth inside the larger room.",
-          lede: "Galaxy context pulls back enough to make the surrounding universe visible, while Earth remains the readable center of the demo.",
+          lede: "Galaxy context pulls back, but Earth remains the readable center of the demo.",
           title: "Galaxy context",
           text: "Use this when the showroom needs wonder and distance without losing the Earth-centered map.",
           scale: "Active showroom mode: Earth-centered galaxy context."
         },
         demo: {
           expression: "Show the demo without overbuilding the planets.",
-          lede: "Demo mode keeps the concept simple: Earth center, sun distant, planets minimal, navigation clean, and future expansion reserved.",
+          lede: "Demo mode keeps the concept practical: Earth center, real spin, sun distant, planets minimal, navigation clean.",
           title: "Demo mode",
-          text: "This is the practical showroom view. It avoids the need to fully detail the other planets while still making the universe feel present.",
+          text: "This is the public showroom view. It demonstrates the system without requiring full planetary detail.",
           scale: "Active showroom mode: public demo."
         }
       };
+
+      var rotation = 0;
+      var velocity = .018;
+      var dragging = false;
+      var lastX = 0;
+      var lastTime = performance.now();
+      var earthController = null;
 
       function setText(id,value){
         var node = document.getElementById(id);
@@ -770,6 +809,55 @@
         setText("underhoodScale",packet.scale);
       }
 
+      function setEarthRotation(value){
+        rotation = ((value % 100) + 100) % 100;
+        document.documentElement.style.setProperty("--earth-rot", rotation.toFixed(3) + "%");
+      }
+
+      function animateEarth(now){
+        var delta = Math.min(48, now - lastTime);
+        lastTime = now;
+
+        if(!dragging){
+          setEarthRotation(rotation + velocity * delta);
+          velocity = velocity * .998 + .018 * .002;
+        }
+
+        window.requestAnimationFrame(animateEarth);
+      }
+
+      function bindEarthDrag(){
+        earthController = document.getElementById("earthController");
+        if(!earthController) return;
+
+        earthController.addEventListener("pointerdown",function(event){
+          dragging = true;
+          lastX = event.clientX;
+          velocity = 0;
+          earthController.setPointerCapture(event.pointerId);
+        });
+
+        earthController.addEventListener("pointermove",function(event){
+          var dx;
+
+          if(!dragging) return;
+
+          dx = event.clientX - lastX;
+          lastX = event.clientX;
+          velocity = dx * .015;
+          setEarthRotation(rotation + dx * .08);
+        });
+
+        earthController.addEventListener("pointerup",function(event){
+          dragging = false;
+          try{earthController.releasePointerCapture(event.pointerId)}catch(error){}
+        });
+
+        earthController.addEventListener("pointercancel",function(){
+          dragging = false;
+        });
+      }
+
       function boot(){
         document.querySelectorAll("[data-view]").forEach(function(button){
           button.addEventListener("click",function(){
@@ -778,6 +866,8 @@
         });
 
         applyView("earth");
+        bindEarthDrag();
+        window.requestAnimationFrame(animateEarth);
       }
 
       if(document.readyState === "loading"){

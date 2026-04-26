@@ -1,91 +1,125 @@
 (function () {
   "use strict";
 
+  var VERSION = "root-compass-cockpit-b1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
-  var VERSION = ROOT_BOOT_ID;
-  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=" + VERSION;
-  var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=" + VERSION;
-  var SITE_RUNTIME_NAME = "DGBSiteRuntime";
-  var SUN_ASSET_RUNTIME_NAME = "DGBSunAssetRuntime";
-  var CANOPY_NAME = "DGBSpineCanopy";
+  var CANOPY_VERSION = "spine-canopy-parachute-b1";
+  var STATE_EVENT = "dgb:cockpit:viewchange";
 
-  var BASELINE = "Generation 1 · Baseline 6";
-  var THEME = "Learn to Live to Love";
-  var ROOT_CONTRACT = "universe-sun";
-  var SUN_ASSET_MOUNT = "sun asset mount";
+  var REQUIRED_MARKERS = [
+    'ROOT_BOOT_ID = "root-sun-asset-b1"',
+    "DGBSpineCanopy",
+    "ensureFallbackSun",
+    "held-by-canopy",
+    "root-compass-cockpit-b1"
+  ];
 
-  var bootState = {
-    pageVisible: false,
-    siteRuntimeRequested: false,
-    siteRuntimeLoaded: false,
-    siteRuntimeFailed: false,
-    sunAssetRuntimeRequested: false,
-    sunAssetRuntimeLoaded: false,
-    sunAssetRuntimeFailed: false,
-    sunMounted: false,
-    fallbackSunVisible: false,
-    compassHeld: true,
-    version: VERSION,
-    rootBootId: ROOT_BOOT_ID
+  var VIEW_COPY = {
+    cinematic: {
+      label: "Cinematic",
+      status: "Compass Cockpit B1 · cinematic posture · fixed galaxy truth",
+      narrative: "Cockpit settled into cinematic posture. The ship is reading the existing galaxy without moving the field."
+    },
+    wide: {
+      label: "Wide",
+      status: "Compass Cockpit B1 · wide survey · scale pulled back",
+      narrative: "Cockpit widened its observation cone. The galaxy remains fixed while the ship surveys more of the field."
+    },
+    local: {
+      label: "Local",
+      status: "Compass Cockpit B1 · local solar proximity · sun spine protected",
+      narrative: "Cockpit moved into local solar read. The sun spine remains protected while nearby pressure becomes easier to inspect."
+    },
+    axis: {
+      label: "Axis",
+      status: "Compass Cockpit B1 · Euclidean axis view · coordinate truth exposed",
+      narrative: "Cockpit raised the coordinate grid. This view reads position and axis without pretending the environment moved."
+    },
+    paths: {
+      label: "Paths",
+      status: "Compass Cockpit B1 · route lanes visible · orbital path read",
+      narrative: "Cockpit opened path instrumentation. Travel lanes are visible as a navigation read over the same universe field."
+    },
+    galaxy: {
+      label: "Galaxy",
+      status: "Compass Cockpit B1 · galaxy emphasis · external field fixed",
+      narrative: "Cockpit pulled toward galactic emphasis. The Milky Way layer becomes legible while the ship changes posture around it."
+    },
+    nebula: {
+      label: "Nebula",
+      status: "Compass Cockpit B1 · nebula emphasis · environmental density read",
+      narrative: "Cockpit tuned for nebula density. The view reads atmospheric color and depth without relocating the galaxy."
+    },
+    control: {
+      label: "Control",
+      status: "Compass Cockpit B1 · instrument control · full HUD exposed",
+      narrative: "Cockpit exposed control instrumentation. This is the technical view for verifying posture, toggles, and field protection."
+    }
   };
 
-  var ROOT_CONTRACT_MARKERS = Object.freeze({
-    ROOT_BOOT_ID: ROOT_BOOT_ID,
-    ROOT_BASELINE: BASELINE,
-    ROOT_CONTRACT: ROOT_CONTRACT,
-    SUN_ASSET_RUNTIME: "/runtime/sun_asset_runtime.js",
-    SUN_ASSET_MOUNT: SUN_ASSET_MOUNT,
-    STALE_SOLAR_DOOR_LANGUAGE: "removed",
-    TREE_PHYSICAL_DOOR_STRETCH: "removed",
-    ROUTE_CONTROL_OBJECT: "held-by-canopy"
-  });
+  var DEFAULT_TOGGLES = {
+    planets: true,
+    paths: false,
+    axes: false,
+    nebula: true,
+    milkyWay: true,
+    solarWind: true
+  };
 
-  function canopy() {
-    return window[CANOPY_NAME] || null;
+  var state = {
+    view: "cinematic",
+    toggles: {
+      planets: true,
+      paths: false,
+      axes: false,
+      nebula: true,
+      milkyWay: true,
+      solarWind: true
+    },
+    rootPresent: false,
+    sunVisible: false,
+    fallbackVisible: false,
+    canvasVisible: false,
+    svgVisible: false,
+    canopyPresent: false,
+    heldByCanopy: false
+  };
+
+  function $(selector, root) {
+    return (root || document).querySelector(selector);
   }
 
-  function canopySource(name, payload) {
-    if (canopy() && typeof canopy().registerSource === "function") {
-      canopy().registerSource(name, payload || {});
-    }
+  function $all(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
   }
 
-  function canopyVisual(name, payload) {
-    if (canopy() && typeof canopy().registerVisual === "function") {
-      canopy().registerVisual(name, payload || {});
-    }
+  function setText(selector, value) {
+    var node = $(selector);
+    if (node) node.textContent = value;
   }
 
-  function canopyReceipt(type, payload) {
-    if (canopy() && typeof canopy().addReceipt === "function") {
-      canopy().addReceipt(type, payload || {});
-    }
+  function boolAttr(node, name, value) {
+    if (node) node.setAttribute(name, value ? "true" : "false");
   }
 
-  function canopyWarning(code, message, payload) {
-    if (canopy() && typeof canopy().addWarning === "function") {
-      canopy().addWarning(code, message, payload || {});
-    }
+  function normalizeView(view) {
+    return VIEW_COPY[view] ? view : "cinematic";
   }
 
-  function getRoot() {
-    return (
-      document.getElementById("door-root") ||
-      document.querySelector("[data-universe-sun]") ||
-      document.querySelector("main")
-    );
-  }
-
-  function setStatus(text) {
-    var node = document.querySelector("[data-door-boot-status]");
-    if (node) node.textContent = text;
+  function normalizeToggleName(name) {
+    if (Object.prototype.hasOwnProperty.call(DEFAULT_TOGGLES, name)) return name;
+    if (name === "milkyway") return "milkyWay";
+    if (name === "milky_way") return "milkyWay";
+    if (name === "solarwind") return "solarWind";
+    if (name === "solar_wind") return "solarWind";
+    return null;
   }
 
   function ensureFallbackSun() {
-    var mount = document.querySelector("[data-dgb-sun-mount]");
+    var mount = $("[data-dgb-sun-mount]");
     var fallback;
 
-    if (!mount) return false;
+    if (!mount) return null;
 
     fallback = mount.querySelector("[data-sun-fallback]");
 
@@ -97,339 +131,303 @@
       mount.appendChild(fallback);
     }
 
-    bootState.fallbackSunVisible = true;
-
-    canopyVisual("fallbackSun", {
-      owner: "/index.html",
-      present: true,
-      purpose: "visible-first sun protection"
-    });
-
-    return true;
+    return fallback;
   }
 
-  function markSunRuntimeMounted() {
-    var mount = document.querySelector("[data-dgb-sun-mount]");
-    if (mount) {
+  function detectSunTruth() {
+    var root = $("#door-root") || $("[data-root-door]");
+    var mount = $("[data-dgb-sun-mount]");
+    var fallback = ensureFallbackSun();
+    var canvas = mount ? mount.querySelector("canvas") : null;
+    var svg = mount ? mount.querySelector("svg") : null;
+    var fallbackVisible = Boolean(fallback);
+    var canvasVisible = Boolean(canvas);
+    var svgVisible = Boolean(svg);
+    var sunVisible = Boolean(mount && (fallbackVisible || canvasVisible || svgVisible));
+
+    if (mount && (canvasVisible || svgVisible)) {
       mount.setAttribute("data-runtime-mounted", "true");
     }
+
+    state.rootPresent = Boolean(root);
+    state.fallbackVisible = fallbackVisible;
+    state.canvasVisible = canvasVisible;
+    state.svgVisible = svgVisible;
+    state.sunVisible = sunVisible;
+
+    return sunVisible;
   }
 
-  function protectVisibleRoot() {
-    var root = getRoot();
+  function detectCanopyTruth() {
+    var canopy = window.DGBSpineCanopy;
+    var canopyState = null;
+    var held = false;
 
-    if (!root || root.textContent.trim().length < 80) {
-      document.body.innerHTML =
-        '<main id="door-root" data-universe-sun data-root-boot-id="' + ROOT_BOOT_ID + '" data-root-contract="' + ROOT_CONTRACT + '" style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
-        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first universe field fallback</p>' +
-        '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
-        '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">' + THEME + '</p>' +
-        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The universe field fallback is active. The page remains visible even if the sun asset runtime fails.</p>' +
-        '<div data-dgb-sun-mount data-sun-mode="fallback" style="position:relative;width:min(72vw,420px);aspect-ratio:1;margin:28px auto;border-radius:999px;background:radial-gradient(circle at 39% 38%,rgba(255,255,226,.96),rgba(255,226,116,.84) 13%,transparent 25%),radial-gradient(circle at 52% 52%,rgba(255,182,61,.98),rgba(226,78,24,.88) 48%,rgba(92,23,12,.94) 77%,rgba(8,4,6,.96) 100%);box-shadow:inset -38px -34px 52px rgba(0,0,0,.54),inset 18px 16px 38px rgba(255,234,148,.34),0 0 46px rgba(255,142,48,.26),0 0 130px rgba(255,196,88,.18);"></div>' +
-        '<nav style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;">' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/products/">Products</a>' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/gauges/">Gauges</a>' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/laws/">Laws</a>' +
-        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/governance/">Governance</a>' +
-        '</nav>' +
-        '<p data-door-boot-status style="margin-top:18px;color:rgba(255,248,231,.58);font-size:12px;letter-spacing:.12em;text-transform:uppercase;">Visible-first fallback active</p>' +
-        '</main>';
-
-      setStatus("Visible-first fallback active");
-      ensureFallbackSun();
-      canopyWarning("ROOT_FALLBACK_REBUILT", "Root fallback rebuilt because visible root was missing or too short.", {
-        rootBootId: ROOT_BOOT_ID
-      });
-      return false;
+    if (canopy && typeof canopy.getPublicState === "function") {
+      try {
+        canopyState = canopy.getPublicState();
+      } catch (error) {
+        canopyState = null;
+      }
     }
 
-    root.setAttribute("data-root-boot-id", ROOT_BOOT_ID);
-    root.setAttribute("data-root-baseline", BASELINE);
-    root.setAttribute("data-root-contract", ROOT_CONTRACT);
-    root.setAttribute("data-sun-asset-mount-contract", SUN_ASSET_MOUNT);
-    root.setAttribute("data-route-control-object", "held-by-canopy");
+    held = Boolean(canopy || canopyState);
 
-    bootState.pageVisible = true;
-    ensureFallbackSun();
+    state.canopyPresent = held;
+    state.heldByCanopy = held;
 
-    canopySource("indexBoot", {
-      source: "/index.js",
-      baseline: BASELINE,
+    return held;
+  }
+
+  function applyLayerDataset() {
+    var root = $("#door-root") || document.body;
+    var body = document.body;
+
+    Object.keys(state.toggles).forEach(function (key) {
+      var datasetName = "layer" + key.charAt(0).toUpperCase() + key.slice(1);
+      if (key === "milkyWay") datasetName = "layerMilkyway";
+      if (key === "solarWind") datasetName = "layerSolarwind";
+
+      body.dataset[datasetName] = state.toggles[key] ? "true" : "false";
+      if (root) root.dataset[datasetName] = state.toggles[key] ? "true" : "false";
+    });
+
+    body.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
+    body.setAttribute("data-layer-paths", state.toggles.paths ? "true" : "false");
+    body.setAttribute("data-layer-axes", state.toggles.axes ? "true" : "false");
+    body.setAttribute("data-layer-nebula", state.toggles.nebula ? "true" : "false");
+    body.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
+    body.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
+
+    if (root) {
+      root.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
+      root.setAttribute("data-layer-paths", state.toggles.paths ? "true" : "false");
+      root.setAttribute("data-layer-axes", state.toggles.axes ? "true" : "false");
+      root.setAttribute("data-layer-nebula", state.toggles.nebula ? "true" : "false");
+      root.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
+      root.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
+    }
+  }
+
+  function applyButtonState() {
+    $all("[data-cockpit-view-button], [data-cosmic-view-button]").forEach(function (button) {
+      var view = button.getAttribute("data-cockpit-view-button") || button.getAttribute("data-cosmic-view-button");
+      boolAttr(button, "aria-pressed", view === state.view);
+      if (view === state.view) {
+        button.setAttribute("data-active", "true");
+      } else {
+        button.removeAttribute("data-active");
+      }
+    });
+
+    $all("[data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
+      var raw = button.getAttribute("data-cockpit-toggle") || button.getAttribute("data-cosmic-toggle");
+      var name = normalizeToggleName(raw);
+      var active = name ? Boolean(state.toggles[name]) : false;
+
+      boolAttr(button, "aria-pressed", active);
+      if (active) {
+        button.setAttribute("data-active", "true");
+      } else {
+        button.removeAttribute("data-active");
+      }
+    });
+  }
+
+  function applyNarrative() {
+    var copy = VIEW_COPY[state.view] || VIEW_COPY.cinematic;
+    var status = copy.status;
+
+    if (!state.sunVisible) {
+      status = status + " · visible sun fallback required";
+    }
+
+    setText("[data-cockpit-view-label]", state.view);
+    setText("[data-cosmic-control-view]", state.view);
+    setText("[data-cockpit-mode-pill]", copy.label);
+    setText("[data-cockpit-narrative]", copy.narrative);
+    setText("[data-cockpit-status]", status);
+    setText("[data-cosmic-control-status]", status);
+    setText("[data-door-boot-status]", state.heldByCanopy ? "Held by canopy" : "Visible-first fallback active");
+  }
+
+  function dispatchState() {
+    var detail = getPublicState();
+
+    try {
+      window.dispatchEvent(new CustomEvent(STATE_EVENT, { detail: detail }));
+    } catch (error) {
+      /* no-op */
+    }
+  }
+
+  function applyView(view, options) {
+    var root = $("#door-root") || document.body;
+    var next = normalizeView(view);
+    var copy;
+
+    state.view = next;
+    copy = VIEW_COPY[next] || VIEW_COPY.cinematic;
+
+    document.body.setAttribute("data-cockpit-view", next);
+
+    if (root) {
+      root.setAttribute("data-cockpit-view", next);
+      root.setAttribute("data-cosmic-view", next);
+      root.setAttribute("data-cockpit-label", copy.label);
+    }
+
+    if (next === "axis") {
+      state.toggles.axes = true;
+    }
+
+    if (next === "paths") {
+      state.toggles.paths = true;
+    }
+
+    if (next === "galaxy") {
+      state.toggles.milkyWay = true;
+    }
+
+    if (next === "nebula") {
+      state.toggles.nebula = true;
+    }
+
+    if (next === "control") {
+      state.toggles.axes = true;
+      state.toggles.paths = true;
+    }
+
+    detectSunTruth();
+    detectCanopyTruth();
+    applyLayerDataset();
+    applyButtonState();
+    applyNarrative();
+
+    if (!options || options.dispatch !== false) {
+      dispatchState();
+    }
+  }
+
+  function toggleLayer(name) {
+    var key = normalizeToggleName(name);
+    if (!key) return;
+
+    state.toggles[key] = !state.toggles[key];
+
+    detectSunTruth();
+    detectCanopyTruth();
+    applyLayerDataset();
+    applyButtonState();
+    applyNarrative();
+    dispatchState();
+  }
+
+  function bindControls() {
+    $all("[data-cockpit-view-button], [data-cosmic-view-button]").forEach(function (button) {
+      if (button.__dgbCockpitViewBound) return;
+      button.__dgbCockpitViewBound = true;
+
+      button.addEventListener("click", function () {
+        var view = button.getAttribute("data-cockpit-view-button") || button.getAttribute("data-cosmic-view-button");
+        applyView(view);
+      });
+    });
+
+    $all("[data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
+      if (button.__dgbCockpitToggleBound) return;
+      button.__dgbCockpitToggleBound = true;
+
+      button.addEventListener("click", function () {
+        var name = button.getAttribute("data-cockpit-toggle") || button.getAttribute("data-cosmic-toggle");
+        toggleLayer(name);
+      });
+    });
+  }
+
+  function installRuntimeObserver() {
+    var mount = $("[data-dgb-sun-mount]");
+
+    if (!mount || typeof MutationObserver === "undefined") return;
+
+    if (mount.__dgbCockpitObserver) return;
+    mount.__dgbCockpitObserver = true;
+
+    new MutationObserver(function () {
+      detectSunTruth();
+      applyNarrative();
+      dispatchState();
+    }).observe(mount, {
+      childList: true,
+      subtree: true,
+      attributes: true
+    });
+  }
+
+  function getPublicState() {
+    return {
       version: VERSION,
       rootBootId: ROOT_BOOT_ID,
-      contract: ROOT_CONTRACT
-    });
-
-    canopyVisual("root", {
-      present: true,
-      visibleFirst: true,
-      theme: THEME,
-      contract: ROOT_CONTRACT
-    });
-
-    canopyVisual("background", {
-      owner: "/index.html",
-      present: Boolean(document.querySelector(".universe-sky")),
-      rule: "background may not mutate sun"
-    });
-
-    canopyVisual("compass", {
-      held: true,
-      reason: "held until canopy confirms root visual stability"
-    });
-
-    if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].registerVisibleFirst === "function") {
-      window[SITE_RUNTIME_NAME].registerVisibleFirst({
-        source: "index.js",
-        root: root.id || "root",
-        baseline: BASELINE,
-        version: VERSION,
-        rootBootId: ROOT_BOOT_ID,
-        object: ROOT_CONTRACT,
-        sunAssetMount: SUN_ASSET_MOUNT
-      });
-    }
-
-    return true;
-  }
-
-  function loadScript(path, onload, onerror) {
-    var base = path.split("?")[0];
-    var existing = Array.prototype.slice.call(document.querySelectorAll("script[src]")).find(function (script) {
-      var src = script.getAttribute("src") || "";
-      return src === path || src.split("?")[0] === base;
-    });
-
-    if (existing && existing.getAttribute("data-dgb-loaded") === "true") {
-      if (typeof onload === "function") onload();
-      return;
-    }
-
-    if (existing && !existing.getAttribute("data-dgb-loaded")) {
-      existing.addEventListener("load", function () {
-        existing.setAttribute("data-dgb-loaded", "true");
-        if (typeof onload === "function") onload();
-      }, { once: true });
-
-      existing.addEventListener("error", function () {
-        if (typeof onerror === "function") onerror();
-      }, { once: true });
-
-      return;
-    }
-
-    var script = document.createElement("script");
-    script.src = path;
-    script.defer = true;
-    script.onload = function () {
-      script.setAttribute("data-dgb-loaded", "true");
-      if (typeof onload === "function") onload();
+      canopyVersion: CANOPY_VERSION,
+      view: state.view,
+      toggles: {
+        planets: state.toggles.planets,
+        paths: state.toggles.paths,
+        axes: state.toggles.axes,
+        nebula: state.toggles.nebula,
+        milkyWay: state.toggles.milkyWay,
+        solarWind: state.toggles.solarWind
+      },
+      rootPresent: state.rootPresent,
+      sunVisible: state.sunVisible,
+      fallbackVisible: state.fallbackVisible,
+      canvasVisible: state.canvasVisible,
+      svgVisible: state.svgVisible,
+      canopyPresent: state.canopyPresent,
+      heldByCanopy: state.heldByCanopy,
+      sourceMarkers: REQUIRED_MARKERS.slice()
     };
-    script.onerror = onerror;
-    document.body.appendChild(script);
   }
 
-  function registerSiteRuntime() {
-    if (!window[SITE_RUNTIME_NAME]) return;
-
-    if (typeof window[SITE_RUNTIME_NAME].registerPage === "function") {
-      window[SITE_RUNTIME_NAME].registerPage({
-        id: "home",
-        title: "Diamond Gate Bridge",
-        baseline: BASELINE,
-        version: VERSION,
-        rootBootId: ROOT_BOOT_ID,
-        theme: THEME,
-        contract: ROOT_CONTRACT,
-        sunAssetMount: SUN_ASSET_MOUNT,
-        visibleFirst: bootState.pageVisible
-      });
-    }
-
-    if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
-      window[SITE_RUNTIME_NAME].registerRuntime({
-        id: "rootSunAssetBoot",
-        page: "home",
-        role: "boot-handoff",
-        path: "/index.js",
-        version: VERSION,
-        rootBootId: ROOT_BOOT_ID,
-        contract: ROOT_CONTRACT,
-        validated: true,
-        optional: false
-      });
-    }
-
-    canopySource("siteRuntime", {
-      path: "/runtime/site_runtime.js",
-      loaded: true,
-      optional: true
-    });
-  }
-
-  function loadSiteRuntimeThenSunRuntime() {
-    if (bootState.siteRuntimeRequested || window[SITE_RUNTIME_NAME]) {
-      registerSiteRuntime();
-      loadSunAssetRuntime();
-      return;
-    }
-
-    bootState.siteRuntimeRequested = true;
-    setStatus("Site runtime loading");
-
-    loadScript(
-      SITE_RUNTIME_PATH,
-      function () {
-        bootState.siteRuntimeLoaded = true;
-        setStatus("Site runtime active");
-        registerSiteRuntime();
-        loadSunAssetRuntime();
-      },
-      function () {
-        bootState.siteRuntimeFailed = true;
-        setStatus("Static universe sun active");
-        canopyWarning("SITE_RUNTIME_MISSING", "Site runtime did not load; root continues visible-first.", {
-          path: SITE_RUNTIME_PATH
-        });
-        loadSunAssetRuntime();
-      }
-    );
-  }
-
-  function loadSunAssetRuntime() {
-    if (window[SUN_ASSET_RUNTIME_NAME] && typeof window[SUN_ASSET_RUNTIME_NAME].start === "function") {
-      mountSunAsset();
-      return;
-    }
-
-    if (bootState.sunAssetRuntimeRequested) return;
-
-    bootState.sunAssetRuntimeRequested = true;
-    setStatus("Sun asset runtime loading · " + VERSION);
-
-    loadScript(
-      SUN_ASSET_RUNTIME_PATH,
-      function () {
-        bootState.sunAssetRuntimeLoaded = true;
-        setStatus("Sun asset runtime active · " + VERSION);
-        canopySource("sunAssetRuntime", {
-          path: "/runtime/sun_asset_runtime.js",
-          loaded: true,
-          rootBootId: ROOT_BOOT_ID
-        });
-        mountSunAsset();
-      },
-      function () {
-        bootState.sunAssetRuntimeFailed = true;
-        setStatus("Static sun fallback active");
-        ensureFallbackSun();
-        canopyWarning("SUN_ASSET_RUNTIME_MISSING", "Sun runtime did not load; fallback sun remains visible.", {
-          path: SUN_ASSET_RUNTIME_PATH
-        });
-      }
-    );
-  }
-
-  function mountSunAsset() {
-    var runtime = window[SUN_ASSET_RUNTIME_NAME];
-
-    ensureFallbackSun();
-
-    if (!runtime || typeof runtime.start !== "function") {
-      setStatus("Static sun fallback active");
-      canopyWarning("SUN_RUNTIME_UNAVAILABLE", "Sun runtime global unavailable; fallback remains active.", {});
-      return;
-    }
-
-    Promise.resolve(runtime.start({
-      selector: "[data-dgb-sun-mount]",
-      mode: "canvas",
-      seed: 4217,
-      intensity: 0.98,
-      animate: true,
-      frameRate: 10,
+  function exposePublicApi() {
+    window.DGBIndexBoot = {
       version: VERSION,
       rootBootId: ROOT_BOOT_ID,
-      contract: ROOT_CONTRACT,
-      preserveSunVisual: true
-    })).then(function () {
-      bootState.sunMounted = true;
-      markSunRuntimeMounted();
-      setStatus("Sun asset active · root-sun-asset-b1");
-      canopyVisual("sun", {
-        owner: "/assets/sun/sun_canvas.js",
-        runtime: "/runtime/sun_asset_runtime.js",
-        mounted: true,
-        fallbackProtected: true
-      });
+      status: "held-by-canopy",
+      ensureFallbackSun: ensureFallbackSun,
+      applyView: applyView,
+      toggleLayer: toggleLayer,
+      getPublicState: getPublicState
+    };
 
-      if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
-        window[SITE_RUNTIME_NAME].updateRuntimeStatus("sunAssetRuntime", {
-          validated: true,
-          loaded: true,
-          mounted: true,
-          baseline: BASELINE,
-          version: VERSION,
-          rootBootId: ROOT_BOOT_ID,
-          contract: ROOT_CONTRACT
-        });
-      }
-    }).catch(function (error) {
-      bootState.sunAssetRuntimeFailed = true;
-      setStatus("Static sun fallback active");
-      ensureFallbackSun();
-      canopyWarning("SUN_ASSET_MOUNT_FAILED", "Sun runtime loaded but failed to mount. Fallback remains visible.", {
-        message: error && error.message ? error.message : "unknown",
-        baseline: BASELINE,
-        version: VERSION,
-        rootBootId: ROOT_BOOT_ID,
-        contract: ROOT_CONTRACT
-      });
-    });
+    window.DGBCompassCockpit = {
+      version: VERSION,
+      rootBootId: ROOT_BOOT_ID,
+      applyView: applyView,
+      toggleLayer: toggleLayer,
+      ensureFallbackSun: ensureFallbackSun,
+      getPublicState: getPublicState
+    };
   }
 
   function boot() {
-    var visible = protectVisibleRoot();
-    if (!visible) return;
+    var root = $("#door-root") || $("[data-root-door]");
 
-    setStatus("Visible-first universe sun canopy active · " + VERSION);
+    if (root) {
+      root.setAttribute("data-index-boot", VERSION);
+      root.setAttribute("data-root-boot-confirmed", ROOT_BOOT_ID);
+      root.setAttribute("data-canopy-relationship", "held-by-canopy");
+    }
+
     ensureFallbackSun();
-    loadSiteRuntimeThenSunRuntime();
-
-    window.setTimeout(protectVisibleRoot, 500);
-    window.setTimeout(protectVisibleRoot, 1600);
-    window.setTimeout(ensureFallbackSun, 1800);
-    window.setTimeout(function () {
-      if (canopy() && typeof canopy().inspect === "function") canopy().inspect();
-    }, 2200);
+    detectSunTruth();
+    detectCanopyTruth();
+    exposePublicApi();
+    bindControls();
+    installRuntimeObserver();
+    applyView("cinematic", { dispatch: false });
+    dispatchState();
   }
-
-  window.DGBIndexBoot = Object.freeze({
-    getState: function () {
-      return {
-        pageVisible: bootState.pageVisible,
-        siteRuntimeRequested: bootState.siteRuntimeRequested,
-        siteRuntimeLoaded: bootState.siteRuntimeLoaded,
-        siteRuntimeFailed: bootState.siteRuntimeFailed,
-        sunAssetRuntimeRequested: bootState.sunAssetRuntimeRequested,
-        sunAssetRuntimeLoaded: bootState.sunAssetRuntimeLoaded,
-        sunAssetRuntimeFailed: bootState.sunAssetRuntimeFailed,
-        sunMounted: bootState.sunMounted,
-        fallbackSunVisible: bootState.fallbackSunVisible,
-        compassHeld: bootState.compassHeld,
-        baseline: BASELINE,
-        version: VERSION,
-        rootBootId: ROOT_BOOT_ID,
-        contract: ROOT_CONTRACT,
-        contractMarkers: ROOT_CONTRACT_MARKERS,
-        sunAssetRuntimePath: SUN_ASSET_RUNTIME_PATH
-      };
-    },
-    protectVisibleRoot: protectVisibleRoot,
-    protectVisibleDoor: protectVisibleRoot,
-    ensureFallbackSun: ensureFallbackSun,
-    contractMarkers: ROOT_CONTRACT_MARKERS
-  });
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

@@ -9,7 +9,7 @@
     content="Diamond Gate Bridge: a universe and sun-centered entry surface built around Learn to Live to Love."
   />
 
-  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=root-sun-canvas-b1" />
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=luminous-expanding-plasma-b4" />
 
   <style>
     :root {
@@ -22,7 +22,6 @@
       --line-strong: rgba(255, 248, 231, 0.34);
       --gold: rgba(255, 217, 138, 0.92);
       --max: 1180px;
-      --dgb-sun-size: min(92vw, 680px);
     }
 
     * {
@@ -249,11 +248,13 @@
       place-items: center;
     }
 
-    .sun-mount canvas,
-    .sun-mount img,
-    .sun-mount .dgb-sun-stage {
-      width: min(94vw, 720px);
-      max-width: 100%;
+    .sun-mount:empty::before {
+      content: "Sun asset runtime loading";
+      color: var(--soft);
+      font-size: 0.76rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
     }
 
     .mobile-title {
@@ -290,13 +291,14 @@
       display: none;
       position: relative;
       z-index: 7;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
+      flex-wrap: wrap;
       gap: 10px;
       width: 100%;
       margin-top: -10px;
     }
 
     .mobile-nav a {
+      flex: 1 1 calc(50% - 10px);
       min-height: 50px;
       display: grid;
       place-items: center;
@@ -393,14 +395,8 @@
         margin-top: 10px;
       }
 
-      .sun-mount canvas,
-      .sun-mount img,
-      .sun-mount .dgb-sun-stage {
-        width: min(106vw, 460px);
-      }
-
       .mobile-nav {
-        display: grid;
+        display: flex;
       }
 
       .bottom-strip {
@@ -417,12 +413,6 @@
       .sun-mount {
         width: min(112vw, 430px);
       }
-
-      .sun-mount canvas,
-      .sun-mount img,
-      .sun-mount .dgb-sun-stage {
-        width: min(112vw, 430px);
-      }
     }
   </style>
 </head>
@@ -434,11 +424,11 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <span class="brand-name">Diamond Gate Bridge</span>
-          <span class="brand-sub">Universe Sun Baseline</span>
+          <span class="brand-sub">Sun Asset Spine</span>
         </span>
       </a>
 
-      <span class="status-pill" data-door-boot-status>Visible-first universe sun active</span>
+      <span class="status-pill" data-door-boot-status>Visible-first sun spine active</span>
     </header>
 
     <section class="hero" aria-labelledby="page-title">
@@ -447,7 +437,7 @@
         <h1 id="page-title">Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
         <p class="statement">
-          A cosmic entry surface centered on one sun, one field, and one clear path forward.
+          A cosmic entry surface centered on one luminous expanding sun, one field, and one clear path forward.
         </p>
 
         <nav class="nav-rail" aria-label="Primary navigation">
@@ -470,14 +460,8 @@
           class="sun-mount"
           data-dgb-sun-mount
           data-sun-mode="canvas"
-          aria-label="Procedural sun from space"
-        >
-          <div class="dgb-sun-stage" aria-hidden="true">
-            <div class="dgb-sun-css">
-              <div class="dgb-sun-core"></div>
-            </div>
-          </div>
-        </div>
+          aria-label="Luminous expanding plasma sun"
+        ></div>
       </div>
 
       <nav class="mobile-nav" aria-label="Mobile navigation">
@@ -491,17 +475,17 @@
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Root Universe Sun Asset Baseline 1</span>
-      <span>Universe first · Sun asset runtime · No grid</span>
+      <span>Generation 1 · Sun Asset Spine Baseline 1</span>
+      <span>Canvas authority · Luminous expanding plasma b4 · No CSS sun fallback</span>
     </footer>
   </main>
 
   <noscript>
     <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
-      JavaScript is off. The CSS sun fallback remains visible and usable.
+      JavaScript is off. The root page remains visible, but the canvas sun requires runtime.
     </div>
   </noscript>
 
-  <script src="/index.js?v=root-sun-asset-b1" defer></script>
+  <script src="/index.js?v=luminous-expanding-plasma-b4" defer></script>
 </body>
 </html>

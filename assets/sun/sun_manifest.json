@@ -17,22 +17,11 @@
     "assetRuntime": "/runtime/sun_asset_runtime.js",
     "previewHarness": "/assets/sun/preview.html"
   },
-  "allowedModes": [
-    "css",
-    "svg",
-    "canvas"
-  ],
+  "allowedModes": ["css", "svg", "canvas"],
   "defaultMode": "canvas",
   "visualTarget": {
     "read": "realer sun from space",
-    "avoid": [
-      "door",
-      "tree",
-      "button",
-      "badge",
-      "grid",
-      "flat icon"
-    ],
+    "avoid": ["door", "tree", "button", "badge", "grid", "flat icon"],
     "qualities": [
       "large solar disc",
       "turbulent photosphere",

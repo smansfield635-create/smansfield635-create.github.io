@@ -3,42 +3,52 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Diamond Gate Bridge — Website Health Gauges</title>
+  <title>Diamond Gate Bridge — Learn to Live to Love</title>
   <meta
     name="description"
-    content="Canopy-aware Diamond Gate Bridge website health gauges for source reachability, runtime execution, visual truth, and false-health blocking."
+    content="Diamond Gate Bridge: a canopy-protected universe and sun-centered entry surface built around Learn to Live to Love."
   />
+
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=root-sun-asset-b1" />
 
   <style>
     :root {
       color-scheme: dark;
-      --bg: #040713;
-      --panel: rgba(8, 13, 28, 0.76);
+      --bg: #02040b;
       --text: #fff8e7;
-      --muted: rgba(255, 248, 231, 0.68);
-      --soft: rgba(255, 248, 231, 0.48);
-      --line: rgba(255, 248, 231, 0.14);
-      --line-strong: rgba(255, 248, 231, 0.28);
+      --muted: rgba(255, 248, 231, 0.72);
+      --soft: rgba(255, 248, 231, 0.52);
+      --line: rgba(255, 248, 231, 0.18);
+      --line-strong: rgba(255, 248, 231, 0.34);
       --gold: rgba(255, 217, 138, 0.92);
-      --green: #80f0b6;
-      --yellow: #ffe19a;
-      --red: #ff9a9a;
       --max: 1180px;
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
       width: 100%;
       min-height: 100%;
       margin: 0;
-      background:
-        radial-gradient(ellipse at 18% 8%, rgba(88, 118, 255, 0.20), transparent 34rem),
-        radial-gradient(ellipse at 88% 18%, rgba(151, 83, 255, 0.14), transparent 30rem),
-        linear-gradient(180deg, #071225 0%, #030816 48%, #01030a 100%);
+      background: var(--bg);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+      max-width: 100%;
+      background:
+        radial-gradient(ellipse at 9% 13%, rgba(64, 99, 214, 0.34), transparent 34rem),
+        radial-gradient(ellipse at 88% 10%, rgba(126, 57, 157, 0.23), transparent 31rem),
+        radial-gradient(ellipse at 76% 86%, rgba(17, 100, 139, 0.22), transparent 36rem),
+        radial-gradient(ellipse at 32% 94%, rgba(91, 54, 160, 0.13), transparent 30rem),
+        radial-gradient(ellipse at 52% 48%, rgba(255, 187, 91, 0.045), transparent 38rem),
+        linear-gradient(180deg, #071327 0%, #030817 47%, #01030a 100%);
     }
 
     a {
@@ -46,15 +56,266 @@
       text-decoration: none;
     }
 
-    code {
-      color: rgba(255, 231, 172, 0.92);
-      word-break: break-word;
+    .universe-sky {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      width: 100vw;
+      height: 100dvh;
+      overflow: hidden;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 6% 14%, rgba(255,255,255,0.36) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 13% 64%, rgba(178,205,255,0.25) 0 1px, transparent 1.9px),
+        radial-gradient(circle at 21% 27%, rgba(255,230,180,0.20) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 29% 83%, rgba(255,255,255,0.26) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 37% 9%, rgba(155,190,255,0.23) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 49% 58%, rgba(255,255,255,0.24) 0 1px, transparent 1.9px),
+        radial-gradient(circle at 57% 31%, rgba(255,232,185,0.18) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 66% 76%, rgba(160,205,255,0.21) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 74% 18%, rgba(255,255,255,0.29) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 83% 52%, rgba(255,232,185,0.17) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 93% 35%, rgba(255,255,255,0.32) 0 1px, transparent 1.8px),
+        radial-gradient(ellipse at 16% 31%, rgba(91, 123, 255, 0.18), transparent 36%),
+        radial-gradient(ellipse at 82% 18%, rgba(255, 116, 74, 0.075), transparent 34%),
+        radial-gradient(ellipse at 45% 86%, rgba(42, 147, 186, 0.11), transparent 44%),
+        linear-gradient(180deg, #071327 0%, #020713 55%, #010208 100%);
+    }
+
+    .nebula-plane,
+    .milky-way-plane,
+    .star-dust,
+    .deep-star-cluster,
+    .planet-depth,
+    .orbital-dust,
+    .solar-pressure-haze,
+    .solar-wind-sheer,
+    .cosmic-vignette {
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .nebula-plane {
+      inset: -27%;
+      background:
+        radial-gradient(ellipse at 12% 22%, rgba(84, 119, 255, 0.18), transparent 32%),
+        radial-gradient(ellipse at 78% 19%, rgba(178, 87, 255, 0.11), transparent 30%),
+        radial-gradient(ellipse at 64% 75%, rgba(255, 218, 142, 0.055), transparent 36%),
+        radial-gradient(ellipse at 34% 65%, rgba(51, 177, 210, 0.078), transparent 44%),
+        radial-gradient(ellipse at 52% 42%, rgba(41, 68, 164, 0.11), transparent 38%),
+        radial-gradient(ellipse at 19% 88%, rgba(39, 83, 142, 0.105), transparent 34%);
+      filter: blur(25px);
+      opacity: 0.98;
+      transform: rotate(-3deg);
+    }
+
+    .milky-way-plane {
+      inset: -50%;
+      transform: rotate(-32deg) translate3d(-8%, 4%, 0);
+      background:
+        linear-gradient(
+          90deg,
+          transparent 0%,
+          transparent 26%,
+          rgba(255,255,255,0.010) 34%,
+          rgba(129,168,255,0.038) 43%,
+          rgba(255,231,184,0.026) 49%,
+          rgba(128,168,255,0.034) 56%,
+          rgba(255,255,255,0.010) 64%,
+          transparent 75%,
+          transparent 100%
+        ),
+        radial-gradient(ellipse at 43% 48%, rgba(255,255,255,0.068), transparent 31%),
+        radial-gradient(ellipse at 54% 52%, rgba(168,202,255,0.050), transparent 34%),
+        radial-gradient(ellipse at 47% 44%, rgba(255,219,169,0.038), transparent 22%);
+      opacity: 0.52;
+      filter: blur(0.45px);
+    }
+
+    .star-dust.one {
+      inset: -12%;
+      opacity: 0.44;
+      background:
+        radial-gradient(circle at 4% 9%, rgba(255,255,255,0.40) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 11% 72%, rgba(255,255,255,0.32) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 23% 36%, rgba(176,204,255,0.29) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 31% 91%, rgba(255,232,184,0.22) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 39% 18%, rgba(255,255,255,0.34) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 48% 66%, rgba(164,194,255,0.25) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 59% 41%, rgba(255,255,255,0.33) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 68% 87%, rgba(255,232,184,0.22) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 79% 12%, rgba(255,255,255,0.35) 0 1px, transparent 1.8px),
+        radial-gradient(circle at 92% 61%, rgba(176,204,255,0.28) 0 1px, transparent 1.8px);
+      animation: universeFloatOne 122s linear infinite;
+    }
+
+    .star-dust.two {
+      inset: -14%;
+      opacity: 0.32;
+      background:
+        radial-gradient(circle at 7% 61%, rgba(255,255,255,0.28) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 16% 24%, rgba(176,204,255,0.23) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 26% 57%, rgba(255,232,184,0.19) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 33% 8%, rgba(255,255,255,0.28) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 42% 83%, rgba(176,204,255,0.23) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 56% 23%, rgba(255,255,255,0.27) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 67% 58%, rgba(255,232,184,0.19) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 75% 7%, rgba(255,255,255,0.28) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 87% 80%, rgba(176,204,255,0.23) 0 1px, transparent 1.7px),
+        radial-gradient(circle at 96% 39%, rgba(255,255,255,0.27) 0 1px, transparent 1.7px);
+      animation: universeFloatTwo 158s linear infinite;
+    }
+
+    .deep-star-cluster {
+      inset: -8%;
+      opacity: 0.25;
+      background:
+        radial-gradient(circle at 18% 48%, rgba(255,255,255,0.22) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 20% 51%, rgba(255,255,255,0.17) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 22% 46%, rgba(190,214,255,0.16) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 71% 29%, rgba(255,255,255,0.20) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 73% 32%, rgba(255,230,184,0.15) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 76% 28%, rgba(190,214,255,0.15) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 61% 82%, rgba(255,255,255,0.18) 0 1px, transparent 1.6px),
+        radial-gradient(circle at 64% 79%, rgba(190,214,255,0.14) 0 1px, transparent 1.6px);
+    }
+
+    .planet-depth {
+      border-radius: 999px;
+      z-index: 0;
+      opacity: 0.28;
+      mix-blend-mode: screen;
+      filter: blur(0.45px);
+    }
+
+    .planet-depth::before,
+    .planet-depth::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    .planet-depth::before {
+      background:
+        radial-gradient(circle at 36% 30%, rgba(255,255,255,0.15), transparent 18%),
+        radial-gradient(circle at 45% 52%, rgba(89, 132, 214, 0.18), transparent 39%),
+        radial-gradient(circle at 62% 66%, rgba(16, 34, 74, 0.40), transparent 64%);
+      opacity: 0.70;
+    }
+
+    .planet-depth::after {
+      inset: -12%;
+      border: 1px solid rgba(255, 248, 231, 0.038);
+      background:
+        radial-gradient(circle at 50% 50%, transparent 48%, rgba(255,255,255,0.030) 50%, transparent 53%),
+        radial-gradient(circle at 50% 50%, rgba(87, 111, 190, 0.080), transparent 64%);
+      filter: blur(1.6px);
+      opacity: 0.58;
+    }
+
+    .planet-one {
+      width: clamp(150px, 25vw, 340px);
+      aspect-ratio: 1;
+      left: max(-150px, -10vw);
+      top: 18%;
+      background:
+        radial-gradient(circle at 39% 31%, rgba(164, 191, 255, 0.18), transparent 17%),
+        radial-gradient(circle at 52% 50%, rgba(42, 74, 151, 0.24), rgba(16, 23, 55, 0.10) 62%, transparent 72%);
+      transform: rotate(-11deg);
+    }
+
+    .planet-two {
+      width: clamp(86px, 14vw, 210px);
+      aspect-ratio: 1;
+      right: max(-86px, -5.5vw);
+      bottom: 16%;
+      opacity: 0.22;
+      background:
+        radial-gradient(circle at 42% 34%, rgba(255, 227, 162, 0.10), transparent 15%),
+        radial-gradient(circle at 51% 52%, rgba(118, 70, 164, 0.22), rgba(22, 26, 66, 0.09) 64%, transparent 76%);
+      transform: rotate(17deg);
+    }
+
+    .orbital-dust {
+      z-index: 0;
+      opacity: 0.26;
+      filter: blur(0.45px);
+      border-radius: 999px;
+      transform-origin: center;
+      mix-blend-mode: screen;
+    }
+
+    .orbital-dust.one {
+      width: clamp(420px, 82vw, 1120px);
+      aspect-ratio: 2.55 / 1;
+      left: 50%;
+      top: 52%;
+      transform: translate(-50%, -50%) rotate(-17deg);
+      border-top: 1px solid rgba(255, 231, 170, 0.038);
+      border-bottom: 1px solid rgba(122, 158, 255, 0.030);
+      background:
+        radial-gradient(ellipse at 46% 50%, transparent 43%, rgba(255,255,255,0.020) 46%, transparent 55%),
+        radial-gradient(ellipse at 50% 50%, rgba(103, 139, 236, 0.030), transparent 68%);
+    }
+
+    .orbital-dust.two {
+      width: clamp(320px, 62vw, 820px);
+      aspect-ratio: 2.8 / 1;
+      right: -20%;
+      top: 28%;
+      transform: rotate(21deg);
+      border-top: 1px solid rgba(255, 248, 231, 0.030);
+      background:
+        radial-gradient(ellipse at 50% 50%, transparent 42%, rgba(255,255,255,0.018) 47%, transparent 58%);
+      opacity: 0.18;
+    }
+
+    .solar-pressure-haze {
+      inset: -12%;
+      z-index: 0;
+      opacity: 0.74;
+      background:
+        radial-gradient(ellipse at 53% 47%, rgba(255, 204, 116, 0.052), transparent 27%),
+        radial-gradient(ellipse at 47% 56%, rgba(255, 114, 61, 0.035), transparent 37%),
+        radial-gradient(ellipse at 50% 50%, transparent 41%, rgba(19, 40, 96, 0.16) 74%, transparent 100%);
+      filter: blur(10px);
+    }
+
+    .solar-wind-sheer {
+      inset: -18%;
+      z-index: 0;
+      opacity: 0.22;
+      transform: rotate(-9deg);
+      background:
+        linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.018) 21%, transparent 32%),
+        linear-gradient(113deg, transparent 28%, rgba(126,164,255,0.026) 42%, transparent 57%),
+        linear-gradient(118deg, transparent 55%, rgba(255,207,133,0.018) 69%, transparent 82%);
+      filter: blur(1px);
+      mix-blend-mode: screen;
+    }
+
+    .cosmic-vignette {
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 48%, transparent 0%, transparent 51%, rgba(0,0,0,0.34) 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.24), transparent 21%, transparent 79%, rgba(0,0,0,0.24)),
+        linear-gradient(180deg, rgba(0,0,0,0.05), transparent 24%, transparent 76%, rgba(0,0,0,0.36));
+      opacity: 0.93;
     }
 
     .page {
+      position: relative;
+      z-index: 1;
       width: min(100%, var(--max));
+      min-height: 100vh;
       margin: 0 auto;
-      padding: clamp(16px, 3vw, 28px);
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
+      overflow: visible;
     }
 
     .topbar {
@@ -62,316 +323,589 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-bottom: 28px;
-      flex-wrap: wrap;
+      min-width: 0;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
+      gap: 11px;
+      min-width: 0;
     }
 
     .brand-mark {
       width: 36px;
       height: 36px;
-      border-radius: 999px;
+      flex: 0 0 auto;
       border: 1px solid var(--line-strong);
+      border-radius: 999px;
       background:
         radial-gradient(circle at 34% 26%, rgba(255,255,255,0.94), transparent 22%),
         radial-gradient(circle, rgba(255,217,112,0.88), rgba(255,130,34,0.34) 60%, rgba(255,217,112,0.08));
-      box-shadow: 0 0 24px rgba(255, 217, 138, 0.22);
+      box-shadow:
+        0 0 24px rgba(255, 217, 138, 0.24),
+        0 16px 40px rgba(0,0,0,0.38);
     }
 
-    .nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      color: var(--muted);
-      font-size: 0.88rem;
+    .brand-copy {
+      display: grid;
+      min-width: 0;
     }
 
-    .nav a {
+    .brand-name {
+      font-size: 0.98rem;
+      font-weight: 800;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
+    }
+
+    .brand-sub {
+      color: var(--soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status-pill {
+      max-width: min(100%, 660px);
+      overflow: hidden;
+      text-overflow: ellipsis;
       border: 1px solid var(--line);
       border-radius: 999px;
       padding: 8px 11px;
-      background: rgba(2, 6, 16, 0.42);
+      background: rgba(2, 6, 16, 0.45);
+      color: var(--muted);
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      backdrop-filter: blur(10px);
     }
 
     .hero {
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      padding: clamp(18px, 4vw, 34px);
-      background:
-        radial-gradient(ellipse at 12% 0%, rgba(255,217,138,0.09), transparent 28rem),
-        rgba(2, 6, 16, 0.54);
-      box-shadow: 0 24px 80px rgba(0,0,0,0.28);
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 0.72fr) minmax(340px, 1.28fr);
+      gap: clamp(18px, 5vw, 58px);
+      align-items: center;
+      min-height: calc(100vh - 138px);
+      padding: clamp(10px, 3vw, 28px) 0;
+      min-width: 0;
     }
 
-    .kicker {
-      margin: 0 0 8px;
+    .hero-copy {
+      position: relative;
+      z-index: 5;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 14px;
       color: var(--gold);
-      font-size: 0.75rem;
-      font-weight: 900;
-      letter-spacing: 0.16em;
+      font-size: 0.74rem;
+      font-weight: 850;
+      letter-spacing: 0.17em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2.4rem, 7vw, 5.4rem);
-      line-height: 0.9;
-      letter-spacing: -0.075em;
+      max-width: 780px;
+      font-size: clamp(3rem, 10vw, 7rem);
+      line-height: 0.86;
+      letter-spacing: -0.085em;
     }
 
-    .lede {
-      max-width: 880px;
-      margin: 16px 0 0;
+    .theme {
+      margin: 18px 0 0;
+      color: #fff8e7;
+      font-size: clamp(1.35rem, 4.4vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      text-shadow:
+        0 0 24px rgba(255, 217, 138, 0.34),
+        0 0 72px rgba(255, 138, 45, 0.16);
+    }
+
+    .statement {
+      max-width: 620px;
+      margin: 18px 0 0;
       color: var(--muted);
-      font-size: clamp(1rem, 2vw, 1.15rem);
-      line-height: 1.58;
+      font-size: clamp(1rem, 2vw, 1.17rem);
+      line-height: 1.62;
     }
 
-    .scan-strip {
+    .nav-rail {
       display: flex;
-      align-items: center;
-      gap: 10px;
       flex-wrap: wrap;
-      margin-top: 22px;
-      color: var(--muted);
-      font-size: 0.78rem;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
+      gap: 10px;
+      margin-top: 24px;
     }
 
-    .pill {
+    .nav-rail a {
+      min-height: 44px;
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 11px;
-      background: rgba(2, 6, 16, 0.48);
+      padding: 11px 14px;
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.09), transparent 34%),
+        rgba(4, 9, 20, 0.58);
+      color: var(--text);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.30),
+        0 0 20px rgba(255,217,138,0.06);
+      backdrop-filter: blur(9px);
+      font-size: 0.86rem;
+      font-weight: 760;
     }
 
-    .score-grid {
+    .sun-field {
+      position: relative;
+      min-height: min(78vh, 760px);
       display: grid;
-      grid-template-columns: 1.35fr repeat(3, 1fr);
-      gap: 12px;
-      margin: 18px 0 24px;
+      place-items: center;
+      isolation: isolate;
+      overflow: visible;
+      min-width: 0;
     }
 
-    .score-card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 16px;
-      background: var(--panel);
+    .sun-field::before {
+      content: "";
+      position: absolute;
+      width: min(100%, 880px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255, 248, 231, 0.052);
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 222, 138, 0.045), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(255, 97, 22, 0.026), transparent 62%),
+        radial-gradient(circle at 50% 50%, transparent 68%, rgba(255,255,255,0.016) 69%, transparent 70%);
+      box-shadow:
+        inset 0 0 80px rgba(255, 217, 138, 0.024),
+        0 0 120px rgba(255, 164, 55, 0.034);
+      opacity: 0.84;
+      pointer-events: none;
     }
 
-    .score-card strong {
-      display: block;
-      color: var(--soft);
-      font-size: 0.72rem;
+    .sun-field::after {
+      content: "256M km × 256M km solar field";
+      position: absolute;
+      left: 50%;
+      bottom: clamp(22px, 6vh, 54px);
+      transform: translateX(-50%);
+      z-index: 2;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(2, 6, 16, 0.48);
+      color: rgba(255,248,231,0.52);
+      font-size: 0.68rem;
+      font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
     }
 
-    .score-card span {
+    .sun-mount {
+      position: relative;
+      z-index: 4;
+      width: min(66vw, 470px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .sun-fallback {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      border-radius: 999px;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 39% 38%, rgba(255, 255, 226, 0.96), rgba(255, 226, 116, 0.84) 13%, transparent 25%),
+        radial-gradient(circle at 52% 52%, rgba(255, 182, 61, 0.98), rgba(226, 78, 24, 0.88) 48%, rgba(92, 23, 12, 0.94) 77%, rgba(8, 4, 6, 0.96) 100%);
+      box-shadow:
+        inset -38px -34px 52px rgba(0, 0, 0, 0.54),
+        inset 18px 16px 38px rgba(255, 234, 148, 0.34),
+        0 0 46px rgba(255, 142, 48, 0.26),
+        0 0 130px rgba(255, 196, 88, 0.18);
+      overflow: hidden;
+      opacity: 0.98;
+    }
+
+    .sun-fallback::before {
+      content: "";
+      position: absolute;
+      inset: -7%;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 31% 45%, rgba(255, 236, 158, 0.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 64% 37%, rgba(132, 36, 16, 0.24) 0 3px, transparent 5px),
+        radial-gradient(circle at 55% 68%, rgba(255, 218, 123, 0.16) 0 2px, transparent 4px),
+        conic-gradient(from 12deg, transparent 0deg 25deg, rgba(255, 238, 155, 0.08) 32deg, transparent 46deg 88deg, rgba(255, 238, 155, 0.07) 100deg, transparent 118deg 187deg, rgba(255, 238, 155, 0.06) 205deg, transparent 225deg 360deg);
+      opacity: 0.82;
+      filter: blur(0.2px);
+    }
+
+    .sun-fallback::after {
+      content: "";
+      position: absolute;
+      inset: -18%;
+      border-radius: 999px;
+      background:
+        repeating-conic-gradient(from 8deg, rgba(255, 209, 103, 0.18) 0deg 1.6deg, transparent 1.8deg 7deg);
+      opacity: 0.42;
+      filter: blur(1px);
+      transform: scale(1.04);
+    }
+
+    .sun-mount canvas,
+    .sun-mount svg {
+      position: relative;
+      z-index: 3;
+      max-width: 100%;
+      max-height: 100%;
+    }
+
+    .sun-mount[data-runtime-mounted="true"] .sun-fallback {
+      opacity: 0;
+    }
+
+    .mobile-title {
+      display: none;
+      position: absolute;
+      z-index: 8;
+      top: 0;
+      left: 50%;
+      width: min(100%, 560px);
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .mobile-title strong {
+      display: block;
+      font-size: clamp(1.6rem, 8vw, 2.9rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+      text-shadow: 0 0 38px rgba(255, 217, 138, 0.25);
+    }
+
+    .mobile-title span {
       display: block;
       margin-top: 8px;
-      font-size: clamp(1.65rem, 4vw, 2.8rem);
-      font-weight: 950;
-      letter-spacing: -0.06em;
+      color: #fff8e7;
+      font-size: clamp(1.05rem, 5vw, 1.7rem);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      text-shadow: 0 0 42px rgba(255, 203, 101, 0.28);
     }
 
-    .section {
-      margin-top: 18px;
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: clamp(14px, 3vw, 22px);
-      background: var(--panel);
-    }
-
-    .section h2 {
-      margin: 0 0 12px;
-      font-size: clamp(1.1rem, 2.5vw, 1.6rem);
-      letter-spacing: -0.04em;
-    }
-
-    .section p {
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .section ul,
-    .section ol {
-      margin: 0;
-      padding-left: 1.25rem;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .health-ledger {
+    .mobile-nav {
+      display: none;
+      position: relative;
+      z-index: 7;
+      flex-wrap: wrap;
+      gap: 10px;
       width: 100%;
-      border-collapse: collapse;
-      font-size: 0.86rem;
+      margin-top: -10px;
     }
 
-    .health-ledger th,
-    .health-ledger td {
-      border-bottom: 1px solid var(--line);
-      padding: 10px 8px;
-      text-align: left;
-      vertical-align: top;
+    .mobile-nav a {
+      flex: 1 1 calc(50% - 10px);
+      min-height: 50px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px;
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.09), transparent 34%),
+        rgba(4, 9, 20, 0.62);
+      color: var(--text);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.30),
+        0 0 20px rgba(255,217,138,0.06);
+      backdrop-filter: blur(9px);
+      font-size: 0.78rem;
+      font-weight: 780;
     }
 
-    .health-ledger th {
-      color: var(--soft);
-      font-size: 0.72rem;
-      letter-spacing: 0.10em;
-      text-transform: uppercase;
-    }
-
-    .status {
-      display: inline-flex;
-      border-radius: 999px;
-      padding: 4px 8px;
-      font-size: 0.72rem;
-      font-weight: 900;
-      letter-spacing: 0.06em;
-    }
-
-    .status.strong { background: rgba(76,211,137,.14); color: var(--green); }
-    .status.watch { background: rgba(255,203,92,.14); color: var(--yellow); }
-    .status.fail { background: rgba(255,91,91,.14); color: var(--red); }
-
-    .footer {
+    .bottom-strip {
       display: flex;
+      align-items: center;
       justify-content: space-between;
       gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 24px;
       color: var(--soft);
       font-size: 0.78rem;
+      padding-bottom: 4px;
+      flex-wrap: wrap;
     }
 
-    @media (max-width: 760px) {
-      .score-grid { grid-template-columns: 1fr 1fr; }
-      .health-ledger { font-size: 0.78rem; }
+    .bottom-strip span {
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(2, 6, 16, 0.44);
+      backdrop-filter: blur(8px);
     }
 
-    @media (max-width: 520px) {
-      .score-grid { grid-template-columns: 1fr; }
-      .health-ledger th:nth-child(3),
-      .health-ledger td:nth-child(3) { display: none; }
+    @keyframes universeFloatOne {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(-37px, 24px, 0); }
+    }
+
+    @keyframes universeFloatTwo {
+      from { transform: translate3d(0, 0, 0); }
+      to { transform: translate3d(43px, -31px, 0); }
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-copy {
+        text-align: center;
+      }
+
+      .statement {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .nav-rail {
+        justify-content: center;
+      }
+
+      .sun-field {
+        min-height: 680px;
+      }
+
+      .sun-mount {
+        width: min(72vw, 500px);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .page {
+        width: 100%;
+        padding: 14px;
+      }
+
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .status-pill {
+        max-width: 100%;
+        white-space: normal;
+      }
+
+      .hero {
+        width: 100%;
+        gap: 8px;
+      }
+
+      .hero-copy {
+        display: none;
+      }
+
+      .mobile-title {
+        display: block;
+      }
+
+      .sun-field {
+        min-height: 600px;
+        padding-top: 92px;
+        width: 100%;
+      }
+
+      .sun-field::before {
+        width: min(100%, 560px);
+      }
+
+      .sun-field::after {
+        bottom: 72px;
+        max-width: calc(100vw - 28px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.58rem;
+      }
+
+      .sun-mount {
+        width: min(76vw, 330px);
+        margin-top: 18px;
+      }
+
+      .planet-one {
+        width: 206px;
+        left: -128px;
+        top: 28%;
+        opacity: 0.25;
+      }
+
+      .planet-two {
+        width: 126px;
+        right: -74px;
+        bottom: 21%;
+        opacity: 0.20;
+      }
+
+      .orbital-dust.one {
+        width: 660px;
+        opacity: 0.20;
+      }
+
+      .mobile-nav {
+        display: flex;
+      }
+
+      .bottom-strip {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .sun-field {
+        min-height: 580px;
+      }
+
+      .sun-mount {
+        width: min(78vw, 310px);
+      }
+
+      .planet-one {
+        width: 184px;
+        left: -126px;
+        top: 31%;
+      }
+
+      .planet-two {
+        width: 108px;
+        right: -68px;
+        bottom: 24%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .star-dust.one,
+      .star-dust.two {
+        animation: none;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="page" id="page-root" data-gauges-root data-gauges-canopy-aware="true">
-    <header class="topbar">
+  <div class="universe-sky" aria-hidden="true">
+    <div class="nebula-plane"></div>
+    <div class="milky-way-plane"></div>
+    <div class="star-dust one"></div>
+    <div class="star-dust two"></div>
+    <div class="deep-star-cluster"></div>
+    <div class="planet-depth planet-one"></div>
+    <div class="planet-depth planet-two"></div>
+    <div class="orbital-dust one"></div>
+    <div class="orbital-dust two"></div>
+    <div class="solar-pressure-haze"></div>
+    <div class="solar-wind-sheer"></div>
+    <div class="cosmic-vignette"></div>
+  </div>
+
+  <main
+    class="page"
+    id="door-root"
+    data-root-door
+    data-universe-sun
+    data-root-boot-id="root-sun-asset-b1"
+    data-root-baseline="Generation 1 · Baseline 6"
+    data-root-contract="universe-sun"
+    data-sun-asset-mount-contract="sun asset mount"
+    data-background-contract="index-background-only"
+    data-background-profile="near-solar-deep-space-sky-b2"
+  >
+    <header class="topbar" aria-label="Diamond Gate Bridge universe header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
+        <span class="brand-copy">
+          <span class="brand-name">Diamond Gate Bridge</span>
+          <span class="brand-sub">Canopy Protected Spine</span>
+        </span>
       </a>
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Home</a>
-        <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/governance/">Governance</a>
-        <a href="/gauges/">Gauges</a>
-      </nav>
+
+      <span class="status-pill" data-door-boot-status>Visible-first universe sun canopy active</span>
     </header>
 
     <section class="hero" aria-labelledby="page-title">
-      <p class="kicker">Generation 1 · Baseline 6 · Canopy Protected Spine</p>
-      <h1 id="page-title">Website Health Gauges</h1>
-      <p class="lede">
-        This page runs one same-origin diagnostic pass and reports source reachability, runtime execution,
-        root visual truth, visible sun presence, background presence, canopy binding, and false-health blocking.
-      </p>
-      <div class="scan-strip">
-        <span class="pill">Status: <strong data-health-runtime-status>&nbsp;PENDING</strong></span>
-        <span class="pill">Updated: <strong data-health-updated>&nbsp;pending</strong></span>
-        <span class="pill">Scan: same-origin visual-control truth</span>
-        <span class="pill">Runtime: <code data-health-version>spine-canopy-parachute-b4</code></span>
+      <div class="hero-copy">
+        <p class="eyebrow">256 million kilometers by 256 million kilometers</p>
+        <h1 id="page-title">Diamond Gate Bridge</h1>
+        <p class="theme">Learn to Live to Love</p>
+        <p class="statement">
+          A canopy-protected universe entry surface. The background may evolve, but the sun remains owned by the sun asset spine.
+        </p>
+
+        <nav class="nav-rail" aria-label="Primary navigation">
+          <a href="/prelude/">Prelude</a>
+          <a href="/explore/">Explore</a>
+          <a href="/products/">Products</a>
+          <a href="/gauges/">Gauges</a>
+          <a href="/laws/">Laws</a>
+          <a href="/governance/">Governance</a>
+        </nav>
       </div>
-    </section>
 
-    <section class="score-grid" aria-label="Website health summary">
-      <article class="score-card">
-        <strong>Website health</strong>
-        <span data-health-overall>--%</span>
-      </article>
-      <article class="score-card">
-        <strong>Source</strong>
-        <span data-source-score>--</span>
-      </article>
-      <article class="score-card">
-        <strong>Visual truth</strong>
-        <span data-visual-score>--</span>
-      </article>
-      <article class="score-card">
-        <strong>Drift risk</strong>
-        <span data-drift-score>--</span>
-      </article>
-    </section>
+      <div class="sun-field" aria-label="256 million kilometer solar field">
+        <div class="mobile-title" aria-hidden="true">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Learn to Live to Love</span>
+        </div>
 
-    <section class="section">
-      <h2>What is working</h2>
-      <div data-working-list>
-        <ul><li>Canopy-aware Bravo 4 scan has not completed yet.</li></ul>
+        <div
+          class="sun-mount"
+          data-dgb-sun-mount
+          data-sun-mode="canvas"
+          data-sun-asset-id="root-sun-asset-b1"
+          data-sun-asset-baseline="Generation 1 · Baseline 6"
+          aria-label="Satellite-style solar disc within a 256 million kilometer universe field"
+        >
+          <div class="sun-fallback" data-sun-fallback aria-hidden="true"></div>
+        </div>
       </div>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+      </nav>
     </section>
 
-    <section class="section">
-      <h2>What is wrong</h2>
-      <div data-issues-list>
-        <ul><li>Waiting for browser runtime scan.</li></ul>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>What needs to be done</h2>
-      <div data-actions-list>
-        <ol><li>Wait for the canopy-aware Bravo 4 scan to complete.</li></ol>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Source ledger</h2>
-      <p>Checks whether the source files exist and carry the expected canopy/root markers.</p>
-      <div data-source-ledger>
-        <p>Pending source scan.</p>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Visual-control ledger</h2>
-      <p>Checks the live root page in a same-origin iframe and blocks false strong health when visual truth fails.</p>
-      <div data-visual-ledger>
-        <p>Pending visual-control scan.</p>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Contract renewal</h2>
-      <p>
-        Baseline 6 expects <code>root-sun-asset-b1</code>, canopy version
-        <code>spine-canopy-parachute-b1</code>, and diagnostic runtime
-        <code>spine-canopy-parachute-b4</code>. Strong health is forbidden when the visible root chain fails.
-      </p>
-    </section>
-
-    <footer class="footer">
-      <span>Diamond Gate Bridge</span>
-      <span>Generation 1 · Baseline 6 · Canopy Visual-Control Gauges · Bravo 4</span>
+    <footer class="bottom-strip">
+      <span>Generation 1 · Baseline 6 · root-sun-asset-b1</span>
+      <span>Canopy · Sun spine protected · Near-solar deep-space field B2</span>
     </footer>
   </main>
 
+  <noscript>
+    <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
+      JavaScript is off. The root page remains visible, with a visible static sun fallback. The canvas sun requires runtime.
+    </div>
+  </noscript>
+
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
-  <script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b4" defer></script>
+  <script src="/index.js?v=root-sun-asset-b1" defer></script>
 </body>
 </html>

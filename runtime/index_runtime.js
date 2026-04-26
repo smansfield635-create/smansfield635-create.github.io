@@ -1,9 +1,10 @@
+// /runtime/index_runtime.js
 /*
   Diamond Gate Bridge — Index Runtime
   File: /runtime/index_runtime.js
   Generation: 1
-  Baseline: Root Door Solar Baseline 1
-  Role: Optional solar dazzle enhancement only.
+  Baseline: Root Door Solar Baseline 2
+  Role: optional solar dazzle enhancement only.
 */
 
 (function () {
@@ -13,9 +14,9 @@
   var state = {
     started: false,
     pointerActive: false,
-    lastX: 0,
-    lastY: 0,
     glow: 0,
+    turbulence: 0,
+    corona: 0,
     frame: null
   };
 
@@ -48,29 +49,32 @@
     var y = event.clientY / height - 0.5;
 
     state.pointerActive = true;
-    state.lastX = clamp(x, -0.5, 0.5);
-    state.lastY = clamp(y, -0.5, 0.5);
 
-    setCssVar("--door-tilt-y", (state.lastX * 18).toFixed(2) + "deg");
-    setCssVar("--door-tilt-x", (-10 + state.lastY * -12).toFixed(2) + "deg");
+    setCssVar("--door-tilt-y", (clamp(x, -0.5, 0.5) * 17).toFixed(2) + "deg");
+    setCssVar("--door-tilt-x", (-9 + clamp(y, -0.5, 0.5) * -11).toFixed(2) + "deg");
   }
 
   function handlePointerLeave() {
     state.pointerActive = false;
-    setCssVar("--door-tilt-x", "-10deg");
+    setCssVar("--door-tilt-x", "-9deg");
     setCssVar("--door-tilt-y", "0deg");
   }
 
-  function animateGlow() {
+  function animateSolarVariables() {
     if (!state.started) return;
 
     var time = Date.now() / 1000;
-    state.glow = 0.5 + Math.sin(time * 0.9) * 0.5;
+
+    state.glow = 0.5 + Math.sin(time * 0.78) * 0.5;
+    state.turbulence = 0.5 + Math.sin(time * 0.47 + 1.2) * 0.5;
+    state.corona = 0.5 + Math.sin(time * 0.63 + 2.1) * 0.5;
 
     setCssVar("--runtime-glow", state.glow.toFixed(3));
-    setCssVar("--door-pulse", (1 + state.glow * 0.018).toFixed(4));
+    setCssVar("--solar-turbulence", state.turbulence.toFixed(3));
+    setCssVar("--corona-intensity", state.corona.toFixed(3));
+    setCssVar("--door-pulse", (1 + state.glow * 0.014).toFixed(4));
 
-    state.frame = window.requestAnimationFrame(animateGlow);
+    state.frame = window.requestAnimationFrame(animateSolarVariables);
   }
 
   function markRoutes() {
@@ -85,7 +89,7 @@
     });
   }
 
-  function addRouteFocusReceipts() {
+  function addRouteReceipts() {
     var system = document.querySelector("[data-solar-system]");
     var links = document.querySelectorAll(".route-node");
 
@@ -126,17 +130,19 @@
     }
 
     state.started = true;
-    setStatus("Solar runtime active");
+    setStatus("Satellite solar runtime active");
 
     markRoutes();
-    addRouteFocusReceipts();
+    addRouteReceipts();
 
     if (!hasReducedMotion()) {
       window.addEventListener("pointermove", handlePointerMove, { passive: true });
       window.addEventListener("pointerleave", handlePointerLeave, { passive: true });
-      animateGlow();
+      animateSolarVariables();
     } else {
-      setCssVar("--runtime-glow", "0.42");
+      setCssVar("--runtime-glow", "0.56");
+      setCssVar("--solar-turbulence", "0.62");
+      setCssVar("--corona-intensity", "0.58");
       setCssVar("--door-pulse", "1");
     }
 
@@ -161,7 +167,9 @@
       name: RUNTIME_NAME,
       started: state.started,
       pointerActive: state.pointerActive,
-      glow: state.glow
+      glow: state.glow,
+      turbulence: state.turbulence,
+      corona: state.corona
     };
   }
 
@@ -171,7 +179,8 @@
       runtime: RUNTIME_NAME,
       started: state.started,
       themePresent: document.body.textContent.includes("Learn to Live to Love"),
-      doorPresent: Boolean(document.querySelector("[data-sun-door]"))
+      doorPresent: Boolean(document.querySelector("[data-sun-door]")),
+      noImageDependency: true
     };
   }
 

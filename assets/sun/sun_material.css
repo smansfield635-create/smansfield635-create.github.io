@@ -1,8 +1,16 @@
+/* TNT RENEWAL — /assets/sun/sun_material.css
+   DGB SUN MATERIAL · SATELLITE OBSERVATIONAL SUPPORT B7
+   PURPOSE:
+     - Support canvas-mounted satellite sun.
+     - No CSS symbolic wheel.
+     - No decorative graphic box.
+*/
+
 :root {
-  --dgb-sun-size: min(92vw, 720px);
+  --dgb-sun-size: min(112vw, 760px);
   --dgb-space: #02040b;
-  --dgb-sun-glow: rgba(255, 196, 84, 0.38);
-  --dgb-sun-hot-glow: rgba(255, 115, 28, 0.26);
+  --dgb-sun-glow: rgba(255, 185, 76, 0.28);
+  --dgb-sun-hot-glow: rgba(255, 105, 28, 0.18);
 }
 
 [data-dgb-sun-mount] {
@@ -13,24 +21,26 @@
   place-items: center;
   position: relative;
   isolation: isolate;
+  overflow: visible;
 }
 
 [data-dgb-sun-mount]::before {
   content: "";
   position: absolute;
-  inset: -18%;
+  inset: -16%;
   border-radius: 999px;
   pointer-events: none;
   background:
-    radial-gradient(circle at 50% 50%, rgba(255, 239, 170, 0.16), transparent 30%),
-    radial-gradient(circle at 50% 50%, rgba(255, 116, 28, 0.10), transparent 58%),
-    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.04), transparent 78%);
-  filter: blur(18px);
-  opacity: 0.82;
+    radial-gradient(circle at 50% 50%, rgba(255, 224, 134, 0.14), transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(255, 119, 36, 0.085), transparent 58%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.028), transparent 78%);
+  filter: blur(20px);
+  opacity: 0.76;
 }
 
 .dgb-sun-canvas,
-.dgb-sun-svg {
+.dgb-sun-svg,
+[data-satellite-sun-canvas] {
   position: relative;
   z-index: 2;
   display: block;
@@ -40,20 +50,25 @@
   border-radius: 999px;
 }
 
-.dgb-sun-canvas {
+.dgb-sun-canvas,
+[data-satellite-sun-canvas] {
   filter:
-    drop-shadow(0 0 34px var(--dgb-sun-glow))
-    drop-shadow(0 0 110px var(--dgb-sun-hot-glow));
+    drop-shadow(0 0 28px var(--dgb-sun-glow))
+    drop-shadow(0 0 96px var(--dgb-sun-hot-glow));
 }
 
 .dgb-sun-svg {
   filter:
-    drop-shadow(0 0 30px rgba(255, 205, 91, 0.28))
-    drop-shadow(0 0 88px rgba(255, 95, 23, 0.18));
+    drop-shadow(0 0 24px rgba(255, 205, 91, 0.18))
+    drop-shadow(0 0 72px rgba(255, 95, 23, 0.12));
 }
 
-/*
-  Deliberate spine rule:
-  No .dgb-sun-css / .dgb-sun-core visual fallback is defined here.
-  The root sun must be mounted by canvas runtime authority.
+[data-sun-fallback] {
+  opacity: 0;
+  visibility: hidden;
+}
+
+/* Deliberate spine rule:
+   The root sun must be mounted by canvas runtime authority.
+   No .dgb-sun-css / .dgb-sun-core symbolic fallback is defined here.
 */

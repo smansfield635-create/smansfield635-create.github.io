@@ -1,10 +1,22 @@
+/* TNT RENEWAL — /assets/sun/sun_canvas.js
+   DGB SUN CANVAS · SATELLITE OBSERVATIONAL SOLAR DISC B7
+   PURPOSE:
+     - Render a satellite-style solar disc.
+     - No image generation.
+     - No external image dependency.
+     - No decorative symbol wheel.
+     - No graphic box.
+     - Canvas-only observational surface.
+*/
+
 (function () {
   "use strict";
 
   var GLOBAL_NAME = "DGBSunCanvas";
-  var PROFILE = "satellite-solar-disc-b6";
+  var PROFILE = "satellite-observational-solar-disc-b7";
 
   function clamp(value, min, max) {
+    if (!Number.isFinite(value)) return min;
     return Math.min(max, Math.max(min, value));
   }
 
@@ -13,19 +25,8 @@
   }
 
   function smoothstep(edge0, edge1, x) {
-    var t = clamp((x - edge0) / (edge1 - edge0), 0, 1);
+    var t = clamp((x - edge0) / Math.max(0.000001, edge1 - edge0), 0, 1);
     return t * t * (3 - 2 * t);
-  }
-
-  function createRng(seed) {
-    var value = seed >>> 0;
-    return function () {
-      value += 0x6D2B79F5;
-      var t = value;
-      t = Math.imul(t ^ (t >>> 15), t | 1);
-      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-    };
   }
 
   function hash2(x, y, seed) {
@@ -52,73 +53,73 @@
 
   function fbm(x, y, seed, octaves) {
     var value = 0;
-    var amplitude = 0.5;
+    var amplitude = 0.52;
     var frequency = 1;
     var total = 0;
 
     for (var i = 0; i < octaves; i += 1) {
-      value += valueNoise(x * frequency, y * frequency, seed + i * 19.17) * amplitude;
+      value += valueNoise(x * frequency, y * frequency, seed + i * 23.19) * amplitude;
       total += amplitude;
       amplitude *= 0.52;
-      frequency *= 2.03;
+      frequency *= 2.06;
     }
 
     return total ? value / total : 0;
   }
 
-  function resizeCanvas(canvas, cssSize) {
-    var dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
-    canvas.width = Math.floor(cssSize * dpr);
-    canvas.height = Math.floor(cssSize * dpr);
-    canvas.style.width = cssSize + "px";
-    canvas.style.height = cssSize + "px";
-
-    var ctx = canvas.getContext("2d", { alpha: true });
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    return {
-      ctx: ctx,
-      dpr: dpr
-    };
-  }
-
-  function makeCanvas(size) {
+  function createCanvas(size) {
     var canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
     return canvas;
   }
 
-  function satelliteColor(value, edge, active) {
-    var r;
-    var g;
-    var b;
+  function resizeCanvas(canvas, cssSize) {
+    var dpr = clamp(window.devicePixelRatio || 1, 1, 1.75);
+    var px = Math.floor(cssSize * dpr);
 
-    if (value < 0.20) {
-      var a = value / 0.20;
-      r = lerp(205, 242, a);
-      g = lerp(58, 92, a);
-      b = lerp(10, 18, a);
-    } else if (value < 0.52) {
-      var m = (value - 0.20) / 0.32;
-      r = lerp(242, 255, m);
-      g = lerp(92, 174, m);
-      b = lerp(18, 42, m);
-    } else if (value < 0.82) {
-      var n = (value - 0.52) / 0.30;
-      r = lerp(255, 255, n);
-      g = lerp(174, 235, n);
-      b = lerp(42, 112, n);
+    if (canvas.width !== px) canvas.width = px;
+    if (canvas.height !== px) canvas.height = px;
+
+    canvas.style.width = cssSize + "px";
+    canvas.style.height = cssSize + "px";
+
+    var ctx = canvas.getContext("2d", { alpha: true });
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    return { ctx: ctx, dpr: dpr, px: px };
+  }
+
+  function satelliteColor(value, limb, activity, spot) {
+    var r = 0;
+    var g = 0;
+    var b = 0;
+
+    if (value < 0.28) {
+      var a = value / 0.28;
+      r = lerp(118, 210, a);
+      g = lerp(28, 62, a);
+      b = lerp(8, 14, a);
+    } else if (value < 0.62) {
+      var m = (value - 0.28) / 0.34;
+      r = lerp(210, 246, m);
+      g = lerp(62, 128, m);
+      b = lerp(14, 34, m);
+    } else if (value < 0.86) {
+      var n = (value - 0.62) / 0.24;
+      r = lerp(246, 255, n);
+      g = lerp(128, 213, n);
+      b = lerp(34, 88, n);
     } else {
-      var p = (value - 0.82) / 0.18;
+      var p = (value - 0.86) / 0.14;
       r = lerp(255, 255, p);
-      g = lerp(235, 255, p);
-      b = lerp(112, 226, p);
+      g = lerp(213, 250, p);
+      b = lerp(88, 190, p);
     }
 
-    r += edge * 34 + active * 28;
-    g += edge * 30 + active * 20;
-    b += edge * 10 + active * 6;
+    r += activity * 42 - limb * 58 - spot * 92;
+    g += activity * 28 - limb * 70 - spot * 72;
+    b += activity * 10 - limb * 44 - spot * 38;
 
     return [
       clamp(Math.round(r), 0, 255),
@@ -127,64 +128,22 @@
     ];
   }
 
-  function buildActiveRegions(seed) {
-    var rng = createRng(seed ^ 0x51A7E);
-    var regions = [];
-
-    for (var i = 0; i < 42; i += 1) {
-      var angle = rng() * Math.PI * 2;
-      var distance = Math.sqrt(rng()) * 0.90;
-
-      regions.push({
-        x: Math.cos(angle) * distance,
-        y: Math.sin(angle) * distance,
-        radius: 0.030 + rng() * 0.105,
-        strength: 0.05 + rng() * 0.22,
-        hot: rng() > 0.35,
-        stretch: 0.70 + rng() * 1.40,
-        angle: rng() * Math.PI
-      });
-    }
-
-    return regions;
-  }
-
-  function sampleRegions(nx, ny, regions) {
-    var hot = 0;
-    var cool = 0;
-
-    for (var i = 0; i < regions.length; i += 1) {
-      var region = regions[i];
-      var ca = Math.cos(region.angle);
-      var sa = Math.sin(region.angle);
-      var dx = nx - region.x;
-      var dy = ny - region.y;
-      var rx = dx * ca + dy * sa;
-      var ry = -dx * sa + dy * ca;
-      var q = Math.sqrt((rx * rx) / region.stretch + (ry * ry) * region.stretch);
-      var influence = Math.exp(-(q * q) / (region.radius * region.radius));
-
-      if (region.hot) hot += influence * region.strength;
-      else cool += influence * region.strength * 0.45;
-    }
-
-    return {
-      hot: clamp(hot, 0, 1),
-      cool: clamp(cool, 0, 0.55)
-    };
+  function activeRegion(nx, ny, cx, cy, sx, sy, strength) {
+    var dx = nx - cx;
+    var dy = ny - cy;
+    return Math.exp(-((dx * dx) / sx + (dy * dy) / sy)) * strength;
   }
 
   function buildSolarDisc(pixelSize, seed, time, intensity) {
-    var disc = makeCanvas(pixelSize);
+    var disc = createCanvas(pixelSize);
     var ctx = disc.getContext("2d", { alpha: true });
     var image = ctx.createImageData(pixelSize, pixelSize);
     var data = image.data;
-    var cx = pixelSize / 2;
-    var cy = pixelSize / 2;
-    var radius = pixelSize * 0.365;
-    var regions = buildActiveRegions(seed);
 
-    var rotation = time * 0.004;
+    var cx = pixelSize * 0.5;
+    var cy = pixelSize * 0.5;
+    var radius = pixelSize * 0.43;
+    var rotation = time * 0.008;
     var cr = Math.cos(rotation);
     var sr = Math.sin(rotation);
 
@@ -192,10 +151,10 @@
       for (var x = 0; x < pixelSize; x += 1) {
         var dx = (x + 0.5 - cx) / radius;
         var dy = (y + 0.5 - cy) / radius;
-        var d = Math.sqrt(dx * dx + dy * dy);
+        var dist = Math.sqrt(dx * dx + dy * dy);
         var index = (y * pixelSize + x) * 4;
 
-        if (d > 1.028) {
+        if (dist > 1.018) {
           data[index + 3] = 0;
           continue;
         }
@@ -203,32 +162,31 @@
         var nx = dx * cr - dy * sr;
         var ny = dx * sr + dy * cr;
 
-        var alpha = 1 - smoothstep(1.002, 1.028, d);
-        var edge = smoothstep(0.84, 1.0, d) * intensity;
+        var alpha = 1 - smoothstep(1.0, 1.018, dist);
+        var limb = smoothstep(0.70, 1.0, dist);
+        var limbDarkening = 1 - limb * 0.44;
 
-        var broad = fbm(nx * 2.6 + time * 0.003, ny * 2.6 - time * 0.002, seed, 5);
-        var cells = fbm(nx * 10.5 - time * 0.004, ny * 10.5 + time * 0.004, seed + 71, 4);
-        var granules = fbm(nx * 35.0 + time * 0.006, ny * 35.0 - time * 0.005, seed + 151, 3);
-        var micro = fbm(nx * 78.0 - time * 0.007, ny * 78.0 + time * 0.006, seed + 233, 2);
+        var broad = fbm(nx * 2.8 + time * 0.002, ny * 2.8 - time * 0.001, seed, 5);
+        var cells = fbm(nx * 13.5 - time * 0.003, ny * 13.5 + time * 0.003, seed + 71, 5);
+        var granules = fbm(nx * 44.0 + time * 0.004, ny * 44.0 - time * 0.004, seed + 151, 4);
+        var micro = fbm(nx * 92.0 - time * 0.005, ny * 92.0 + time * 0.005, seed + 233, 2);
 
-        var region = sampleRegions(nx, ny, regions);
+        var activity =
+          activeRegion(nx, ny, -0.30, 0.16, 0.018, 0.010, 0.24) +
+          activeRegion(nx, ny, 0.24, -0.11, 0.014, 0.008, 0.22) +
+          activeRegion(nx, ny, 0.05, 0.32, 0.026, 0.012, 0.14);
 
-        var texture =
-          broad * 0.26 +
-          cells * 0.32 +
-          granules * 0.30 +
-          micro * 0.12;
+        var spot =
+          activeRegion(nx, ny, 0.30, 0.03, 0.0042, 0.0032, 0.58) +
+          activeRegion(nx, ny, -0.17, 0.24, 0.0036, 0.0030, 0.42);
 
-        var value =
-          0.76 +
-          (texture - 0.5) * 0.64 +
-          region.hot * 0.22 -
-          region.cool * 0.10 +
-          edge * 0.18;
+        var texture = broad * 0.20 + cells * 0.34 + granules * 0.34 + micro * 0.12;
+        var value = 0.68 + (texture - 0.5) * 0.70 + activity * 0.28 - spot * 0.36;
 
-        value = clamp(value, 0.22, 1);
+        value *= limbDarkening;
+        value = clamp(value * intensity, 0.08, 1);
 
-        var color = satelliteColor(value, edge, region.hot);
+        var color = satelliteColor(value, limb, activity, spot);
 
         data[index] = color[0];
         data[index + 1] = color[1];
@@ -241,72 +199,69 @@
     return disc;
   }
 
-  function drawSatelliteGlow(ctx, cx, cy, radius, time, intensity) {
+  function drawCorona(ctx, cx, cy, radius, intensity) {
     ctx.save();
-    ctx.globalCompositeOperation = "lighter";
+    ctx.globalCompositeOperation = "screen";
 
-    var glow = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.65);
-    glow.addColorStop(0.00, "rgba(255, 255, 230, " + (0.18 * intensity).toFixed(3) + ")");
-    glow.addColorStop(0.16, "rgba(255, 226, 125, " + (0.18 * intensity).toFixed(3) + ")");
-    glow.addColorStop(0.42, "rgba(255, 148, 38, " + (0.070 * intensity).toFixed(3) + ")");
-    glow.addColorStop(1.00, "rgba(255, 128, 26, 0)");
+    var glow = ctx.createRadialGradient(cx, cy, radius * 0.90, cx, cy, radius * 1.42);
+    glow.addColorStop(0.00, "rgba(255,235,170," + (0.18 * intensity).toFixed(3) + ")");
+    glow.addColorStop(0.32, "rgba(255,151,50," + (0.09 * intensity).toFixed(3) + ")");
+    glow.addColorStop(0.78, "rgba(255,181,70," + (0.032 * intensity).toFixed(3) + ")");
+    glow.addColorStop(1.00, "rgba(255,181,70,0)");
 
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * 1.65, 0, Math.PI * 2);
+    ctx.arc(cx, cy, radius * 1.42, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
   }
 
-  function drawFineLimbFire(ctx, cx, cy, radius, seed, time, intensity) {
-    var rng = createRng(seed ^ 0xE11B);
+  function drawObservationBloom(ctx, cx, cy, radius, intensity) {
     ctx.save();
     ctx.globalCompositeOperation = "screen";
 
-    for (var i = 0; i < 52; i += 1) {
-      var angle = rng() * Math.PI * 2 + Math.sin(time * 0.08 + i) * 0.014;
-      var arc = 0.012 + rng() * 0.045;
-      var alpha = (0.040 + rng() * 0.075) * intensity;
+    var bloom = ctx.createRadialGradient(cx - radius * 0.16, cy - radius * 0.14, 0, cx, cy, radius);
+    bloom.addColorStop(0, "rgba(255,255,226," + (0.18 * intensity).toFixed(3) + ")");
+    bloom.addColorStop(0.25, "rgba(255,232,128," + (0.10 * intensity).toFixed(3) + ")");
+    bloom.addColorStop(0.70, "rgba(255,182,74,0.025)");
+    bloom.addColorStop(1, "rgba(255,182,74,0)");
 
-      ctx.strokeStyle = "rgba(255, 248, 188, " + alpha.toFixed(3) + ")";
-      ctx.lineWidth = radius * (0.0035 + rng() * 0.008);
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius * (0.994 + rng() * 0.012), angle - arc, angle + arc);
-      ctx.stroke();
-    }
+    ctx.fillStyle = bloom;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
 
     ctx.restore();
   }
 
   function render(canvas, options) {
     var config = options || {};
-    var cssSize = config.size || Math.min(700, Math.max(330, canvas.clientWidth || 500));
+    var cssSize = config.size || Math.min(760, Math.max(320, canvas.clientWidth || 520));
     var seed = config.seed || 4217;
     var time = typeof config.time === "number" ? config.time : 0;
-    var intensity = clamp(config.intensity == null ? 0.98 : config.intensity, 0, 1);
+    var intensity = clamp(config.intensity == null ? 0.98 : config.intensity, 0.4, 1.2);
 
     var prepared = resizeCanvas(canvas, cssSize);
     var ctx = prepared.ctx;
-    var dpr = Math.max(1, Math.min(prepared.dpr, 1.35));
 
     ctx.clearRect(0, 0, cssSize, cssSize);
 
-    var cx = cssSize / 2;
-    var cy = cssSize / 2;
-    var radius = cssSize * 0.365;
-    var pixelSize = Math.max(420, Math.floor(cssSize * dpr));
+    var cx = cssSize * 0.5;
+    var cy = cssSize * 0.5;
+    var radius = cssSize * 0.43;
+    var pixelSize = Math.max(420, Math.floor(cssSize * Math.min(prepared.dpr, 1.28)));
+
     var disc = buildSolarDisc(pixelSize, seed, time, intensity);
 
-    drawSatelliteGlow(ctx, cx, cy, radius, time, intensity);
+    drawCorona(ctx, cx, cy, radius, intensity);
 
     ctx.save();
     ctx.globalCompositeOperation = "source-over";
     ctx.drawImage(disc, 0, 0, cssSize, cssSize);
     ctx.restore();
 
-    drawFineLimbFire(ctx, cx, cy, radius, seed, time, intensity);
+    drawObservationBloom(ctx, cx, cy, radius, intensity);
 
     return {
       ok: true,
@@ -314,64 +269,66 @@
       profile: PROFILE,
       size: cssSize,
       seed: seed,
-      visualTarget: "satellite-style solar disc",
-      coordinateSystem: "offscreen-centered-drawImage",
-      planetRead: false,
-      eclipseRead: false,
-      darkLimb: false,
+      visualTarget: "satellite observational solar disc",
+      externalImageDependency: false,
+      graphicGenerationUsed: false,
       decorativeRays: false,
       illustrativeSwirls: false,
-      externalImageDependency: false,
-      graphicGenerationUsed: false
+      darkLimb: true,
+      granulation: true,
+      activeRegions: true,
+      sunspots: true
     };
   }
 
   function createCanvasSun(canvas, options) {
-    var config = Object.assign(
-      {
-        seed: 4217,
-        size: 500,
-        animate: true,
-        intensity: 0.98,
-        frameRate: 10
-      },
-      options || {}
-    );
+    var config = Object.assign({
+      seed: 4217,
+      size: 520,
+      animate: false,
+      intensity: 0.98,
+      frameRate: 8
+    }, options || {});
 
     var active = true;
     var frame = null;
     var lastDraw = 0;
     var start = Date.now();
 
+    function draw() {
+      if (!active) return;
+
+      return render(canvas, {
+        seed: config.seed,
+        size: config.size,
+        intensity: config.intensity,
+        time: (Date.now() - start) / 1000
+      });
+    }
+
     function tick(timestamp) {
       if (!active) return;
 
-      var minFrameGap = 1000 / clamp(config.frameRate || 10, 4, 18);
+      var minFrameGap = 1000 / clamp(config.frameRate || 8, 4, 12);
 
       if (!lastDraw || timestamp - lastDraw >= minFrameGap) {
         lastDraw = timestamp;
-        render(canvas, {
-          seed: config.seed,
-          size: config.size,
-          intensity: config.intensity,
-          time: (Date.now() - start) / 1000
-        });
+        draw();
       }
 
       if (config.animate) frame = window.requestAnimationFrame(tick);
     }
 
-    frame = window.requestAnimationFrame(tick);
+    draw();
+
+    if (config.animate) {
+      frame = window.requestAnimationFrame(tick);
+    }
 
     return {
       update: function (next) {
         config = Object.assign(config, next || {});
-        render(canvas, {
-          seed: config.seed,
-          size: config.size,
-          intensity: config.intensity,
-          time: (Date.now() - start) / 1000
-        });
+        return draw();
       },
       destroy: function () {
         active = false;
@@ -386,14 +343,14 @@
           intensity: config.intensity,
           frameRate: config.frameRate,
           profile: PROFILE,
-          visualTarget: "satellite-style solar disc",
-          coordinateSystem: "offscreen-centered-drawImage"
+          visualTarget: "satellite observational solar disc"
         };
       }
     };
   }
 
   window[GLOBAL_NAME] = Object.freeze({
+    profile: PROFILE,
     render: render,
     createCanvasSun: createCanvasSun
   });

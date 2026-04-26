@@ -1,266 +1,567 @@
 <!doctype html>
-<!-- TNT — /gauges/index.html
-     GAUGES INDEX · GENERATION 2 COMPASS COCKPIT · BRAVO 6
+<!-- TNT RENEWAL — /gauges/index.html
+     GAUGES INDEX · GENERATION 2 · BRAVO 6 · SUN VISUAL CONTRACT B1
+
      PURPOSE:
-       - Load Bravo 6 cockpit-aware diagnostic runtime
-       - Preserve existing gauges page structure
-       - Calibrate visual probe for live cockpit truth
-     REQUIRED:
-       - /gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6
-       - Compass Cockpit
-       - root-compass-cockpit-b1
+       - Preserve Bravo 6 cockpit health scan shell.
+       - Add explicit sun visual contract.
+       - Define what the Compass sun is supposed to become.
+       - Separate "page health" from "visual target precision."
+       - Keep gauges diagnostic, not decorative.
+       - No generated image.
+       - No graphic box.
+       - No visual container added to Compass from here.
+
+     CONTRACT TARGET:
+       The Compass page sun must read as a satellite-observational solar disc:
+       - natural solar body
+       - limb darkening
+       - mottled photosphere
+       - granulation
+       - subtle active regions
+       - small sunspots
+       - soft corona
+       - no symbolic wheel
+       - no decorative radial badge
+       - no CSS-only fake sun as final visual
+
+     EXPECTED ACTIVE CHAIN:
+       /index.html
+       /index.js
+       /assets/sun/sun_canvas.js
+       /runtime/sun_asset_runtime.js
+       /assets/sun/sun_material.css
+       /assets/sun/sun_manifest.json
+       /assets/sun/sun.svg
+       /runtime/spine_canopy_runtime.js
+       /gauges/gauges_health_runtime.js
 -->
+
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Gauges · Diamond Gate Bridge</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Gauges · Diamond Gate Bridge</title>
+  <meta name="description" content="Diamond Gate Bridge website health gauges and sun visual contract"/>
 
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#fff;background:#030712}
-body{
-  background:
-    radial-gradient(ellipse at 16% 4%,rgba(67,95,180,.16),transparent 32rem),
-    radial-gradient(ellipse at 84% 16%,rgba(201,162,74,.12),transparent 32rem),
-    radial-gradient(ellipse at 46% 92%,rgba(255,43,43,.08),transparent 34rem),
-    linear-gradient(180deg,#071225 0%,#030817 48%,#01030a 100%);
-}
-a{color:inherit;text-decoration:none}
-:root{
-  --ink:rgba(255,255,255,.96);
-  --txt:rgba(255,255,255,.86);
-  --mut:rgba(255,255,255,.68);
-  --line:rgba(255,255,255,.12);
-  --gold:rgba(255,217,138,.94);
-  --green:rgba(128,240,182,.92);
-  --yellow:rgba(255,217,138,.95);
-  --red:rgba(255,140,140,.95);
-  --panel:rgba(5,8,14,.62);
-  --shadow:0 24px 90px rgba(0,0,0,.46);
-  --shadow2:0 16px 48px rgba(0,0,0,.44);
-  --max:1180px;
-}
-.page{
-  width:min(100% - 28px,var(--max));
-  margin:0 auto;
-  padding:16px 0 24px;
-  display:grid;
-  gap:14px;
-}
-.siteTop,.hero,.panel,.routeRail{
-  border:1px solid var(--line);
-  border-radius:24px;
-  background:var(--panel);
-  box-shadow:var(--shadow2);
-  backdrop-filter:blur(12px);
-}
-.siteTop{padding:12px}
-.navRow,.navLinks,.routeRail{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
-.navRow{justify-content:space-between}
-.brand{display:flex;align-items:center;gap:10px;font-weight:980;letter-spacing:.2px}
-.mark{
-  width:34px;height:34px;border-radius:999px;
-  border:1px solid rgba(255,255,255,.20);
-  background:
-    radial-gradient(circle at 32% 26%,rgba(255,255,255,.95),transparent 22%),
-    radial-gradient(circle,rgba(255,217,112,.88),rgba(255,130,34,.30) 58%,rgba(255,217,112,.08));
-  box-shadow:0 0 26px rgba(201,162,74,.24);
-}
-.btn,.routeRail a{
-  min-height:42px;
-  border:1px solid var(--line);
-  border-radius:999px;
-  background:rgba(0,0,0,.20);
-  color:var(--ink);
-  font-weight:900;
-  font-size:12px;
-  letter-spacing:.3px;
-  padding:10px 14px;
-}
-.btn.red{border-color:rgba(201,162,74,.42);background:rgba(201,162,74,.10)}
-.hero{
-  padding:clamp(18px,4vw,34px);
-  background:
-    radial-gradient(circle at 18% 18%,rgba(201,162,74,.10),transparent 36rem),
-    radial-gradient(circle at 84% 20%,rgba(83,119,255,.12),transparent 34rem),
-    linear-gradient(150deg,rgba(12,16,24,.76),rgba(5,8,14,.92));
-  box-shadow:var(--shadow);
-}
-.kicker{
-  margin:0 0 8px;
-  color:var(--gold);
-  font-size:11px;
-  font-weight:950;
-  letter-spacing:3px;
-  text-transform:uppercase;
-}
-h1{
-  margin:0;
-  color:var(--ink);
-  font-size:clamp(2.35rem,7vw,5.2rem);
-  line-height:.88;
-  letter-spacing:-.065em;
-}
-.lede{max-width:900px;margin:14px 0 0;color:var(--txt);font-size:clamp(1rem,2.2vw,1.16rem);line-height:1.55}
-.metaRow{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px}
-.pill{
-  border:1px solid var(--line);
-  border-radius:999px;
-  padding:9px 12px;
-  background:rgba(0,0,0,.18);
-  color:var(--mut);
-  font-weight:850;
-}
-.panel{padding:14px}
-.scoreGrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.score{
-  border:1px solid var(--line);
-  border-radius:20px;
-  background:rgba(0,0,0,.18);
-  padding:14px;
-}
-.score strong{display:block;color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:1.2px}
-.score span{display:block;margin-top:8px;color:var(--ink);font-size:clamp(1.8rem,4vw,3rem);font-weight:980;letter-spacing:-.05em}
-.sectionTitle{
-  margin:0 0 10px;
-  color:var(--gold);
-  font-size:13px;
-  letter-spacing:1.3px;
-  text-transform:uppercase;
-}
-ul{margin:0;padding-left:1.25rem;color:var(--txt);line-height:1.6}
-.table{display:grid;gap:8px}
-.row{
-  display:grid;
-  grid-template-columns:1.1fr 120px 2fr;
-  gap:10px;
-  border:1px solid rgba(255,255,255,.10);
-  border-radius:16px;
-  padding:11px 12px;
-  background:rgba(0,0,0,.16);
-  align-items:center;
-}
-.row strong{color:var(--ink)}
-.row span{color:var(--mut);line-height:1.45}
-.status{
-  justify-self:start;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:999px;
-  padding:6px 9px;
-  font-size:11px;
-  font-weight:950;
-  letter-spacing:1px;
-}
-.status.strong{color:var(--green);background:rgba(128,240,182,.08)}
-.status.watch{color:var(--yellow);background:rgba(255,217,138,.08)}
-.status.fail{color:var(--red);background:rgba(255,140,140,.08)}
-.routeRail{justify-content:center;padding:12px}
-@media(max-width:900px){
-  .scoreGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .row{grid-template-columns:1fr}
-}
-@media(max-width:620px){
-  .page{width:min(100% - 20px,var(--max));padding-top:10px}
-  .navLinks{width:100%}
-  .navLinks .btn,.routeRail a{flex:1 1 calc(50% - 8px);text-align:center}
-}
-</style>
+  <style>
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      width:100%;
+      background:#030712;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow-x:hidden;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    :root{
+      --line:rgba(255,255,255,.13);
+      --panel:rgba(7,10,16,.74);
+      --panel2:rgba(0,0,0,.24);
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(255,255,255,.82);
+      --mut:rgba(255,255,255,.64);
+      --gold:rgba(255,217,138,.94);
+      --green:#55f2a6;
+      --red:#ff6b6b;
+      --watch:#ffd166;
+      --shadow:0 24px 90px rgba(0,0,0,.48);
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 78% 18%,rgba(255,217,138,.14),transparent 22rem),
+        radial-gradient(circle at 18% 18%,rgba(88,122,255,.12),transparent 20rem),
+        radial-gradient(circle at 8% 16%,rgba(255,255,255,.26) 0 1px,transparent 2px),
+        radial-gradient(circle at 34% 30%,rgba(177,205,255,.16) 0 1px,transparent 2px),
+        linear-gradient(180deg,#071225 0%,#030817 48%,#01030a 100%);
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(100% - 28px,1180px);
+      margin:0 auto;
+      padding:16px 0 28px;
+      display:grid;
+      gap:14px;
+    }
+
+    .top,.hero,.gridCard,.ledgerCard,.contractCard,.routeRail{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .top{padding:12px}
+
+    .navRow,.navLinks,.routeRail{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .navRow{justify-content:space-between}
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:950;
+      font-size:20px;
+    }
+
+    .mark{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 35% 28%,rgba(255,255,255,.95),transparent 18%),
+        radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));
+      border:1px solid rgba(255,255,255,.18);
+    }
+
+    .btn,.routeRail a{
+      min-height:42px;
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:rgba(0,0,0,.24);
+      color:var(--ink);
+      font-weight:900;
+    }
+
+    .btn.red{
+      border-color:rgba(255,217,138,.48);
+      box-shadow:0 0 20px rgba(201,162,74,.14);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(201,162,74,.16),transparent 60%),
+        rgba(0,0,0,.28);
+    }
+
+    .hero{
+      padding:clamp(22px,5vw,46px);
+      display:grid;
+      gap:18px;
+    }
+
+    .kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(2.7rem,8vw,6rem);
+      line-height:.9;
+      letter-spacing:-.075em;
+    }
+
+    .lede{
+      margin:0;
+      color:var(--txt);
+      font-size:clamp(1rem,2.3vw,1.22rem);
+      line-height:1.55;
+      max-width:900px;
+    }
+
+    .metaLine{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      color:var(--mut);
+      font-weight:850;
+    }
+
+    .pill{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:9px 12px;
+      background:rgba(0,0,0,.24);
+    }
+
+    .scoreGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .score{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:var(--panel2);
+      padding:16px;
+      display:grid;
+      gap:8px;
+    }
+
+    .score b{
+      font-size:clamp(1.55rem,4vw,2.6rem);
+      letter-spacing:-.05em;
+    }
+
+    .score span{
+      color:var(--mut);
+      font-size:12px;
+      font-weight:950;
+      text-transform:uppercase;
+      letter-spacing:1.4px;
+    }
+
+    .gridCard,.ledgerCard,.contractCard{
+      padding:18px;
+      display:grid;
+      gap:14px;
+    }
+
+    .gridCard h2,.ledgerCard h2,.contractCard h2{
+      margin:0;
+      font-size:clamp(1.25rem,3vw,2rem);
+      letter-spacing:-.04em;
+    }
+
+    .gridCard p,.contractCard p{
+      margin:0;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    ul,ol{
+      margin:0;
+      padding-left:1.25rem;
+      color:var(--txt);
+      line-height:1.58;
+    }
+
+    .ledger{
+      display:grid;
+      gap:8px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:minmax(160px,1fr) auto minmax(220px,1.6fr);
+      gap:10px;
+      align-items:center;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:16px;
+      background:rgba(0,0,0,.20);
+      padding:10px 12px;
+      color:var(--txt);
+    }
+
+    .row strong{
+      color:var(--ink);
+      overflow-wrap:anywhere;
+    }
+
+    .status{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:999px;
+      padding:5px 8px;
+      font-size:11px;
+      font-weight:950;
+      letter-spacing:.8px;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+
+    .status.strong{
+      color:var(--green);
+      border-color:rgba(85,242,166,.34);
+      background:rgba(85,242,166,.08);
+    }
+
+    .status.fail{
+      color:var(--red);
+      border-color:rgba(255,107,107,.34);
+      background:rgba(255,107,107,.08);
+    }
+
+    .status.watch{
+      color:var(--watch);
+      border-color:rgba(255,209,102,.34);
+      background:rgba(255,209,102,.08);
+    }
+
+    .contractGrid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .contractBox{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:rgba(0,0,0,.22);
+      padding:14px;
+      display:grid;
+      gap:8px;
+    }
+
+    .contractBox strong{
+      color:var(--gold);
+      font-size:1.02rem;
+    }
+
+    .contractBox code{
+      color:var(--gold);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:7px;
+      padding:1px 5px;
+      overflow-wrap:anywhere;
+    }
+
+    .routeRail{
+      justify-content:center;
+      padding:12px;
+    }
+
+    @media(max-width:800px){
+      .page{
+        width:min(100% - 20px,1180px);
+        padding-top:10px;
+      }
+
+      .navLinks{width:100%}
+
+      .navLinks .btn,.routeRail a{
+        flex:1 1 calc(50% - 10px);
+        text-align:center;
+      }
+
+      .scoreGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+
+      .contractGrid{grid-template-columns:1fr}
+
+      .row{
+        grid-template-columns:1fr;
+        gap:6px;
+      }
+    }
+  </style>
 </head>
 
-<body>
-<main class="page">
-  <section class="siteTop" aria-label="Gauges navigation">
-    <div class="navRow">
-      <a class="brand" href="/">
-        <span class="mark" aria-hidden="true"></span>
-        <span>Diamond Gate Bridge</span>
-      </a>
-      <nav class="navLinks" aria-label="Primary navigation">
-        <a class="btn" href="/">Compass</a>
-        <a class="btn" href="/home/">Home</a>
-        <a class="btn" href="/products/">Products</a>
-        <a class="btn" href="/laws/">Laws</a>
-        <a class="btn" href="/governance/">Governance</a>
-        <a class="btn red" href="/gauges/">Gauges</a>
-      </nav>
-    </div>
-  </section>
+<body
+  data-gauges-contract="sun-visual-contract-b1"
+  data-gauges-runtime="spine-canopy-parachute-b6"
+  data-root-contract="root-compass-cockpit-b1"
+  data-sun-target="satellite-observational-solar-disc"
+>
+  <main class="page">
+    <section class="top" aria-label="Navigation">
+      <div class="navRow">
+        <a class="brand" href="/">
+          <span class="mark" aria-hidden="true"></span>
+          <span>Diamond Gate Bridge</span>
+        </a>
 
-  <section class="hero">
-    <p class="kicker">Generation 2 · Compass Cockpit Gauges · Bravo 6</p>
-    <h1>Website Health Gauges</h1>
-    <p class="lede">
-      This Bravo 6 cockpit-aware scan checks source reachability, cockpit runtime truth, visible sun truth, canopy binding, background presence, and false-health blocking with a calibrated viewport probe.
-    </p>
-    <div class="metaRow">
-      <span class="pill">Status: <strong id="statusText">PENDING</strong></span>
-      <span class="pill">Updated: <strong id="updatedText">Pending</strong></span>
-      <span class="pill">Runtime: <strong id="runtimeText">spine-canopy-parachute-b6</strong></span>
-      <span class="pill">Contract: <strong>root-compass-cockpit-b1</strong></span>
-    </div>
-  </section>
+        <nav class="navLinks" aria-label="Primary navigation">
+          <a class="btn" href="/">Compass</a>
+          <a class="btn" href="/home/">Home</a>
+          <a class="btn" href="/prelude/">Prelude</a>
+          <a class="btn" href="/door/">Door</a>
+          <a class="btn" href="/products/">Products</a>
+          <a class="btn" href="/laws/">Laws</a>
+          <a class="btn" href="/governance/">Governance</a>
+          <a class="btn red" href="/gauges/">Gauges</a>
+        </nav>
+      </div>
+    </section>
 
-  <section class="panel">
-    <div class="scoreGrid">
-      <div class="score"><strong>Website health</strong><span id="overallScore">--%</span></div>
-      <div class="score"><strong>Source</strong><span id="sourceScore">--</span></div>
-      <div class="score"><strong>Cockpit truth</strong><span id="visualScore">--</span></div>
-      <div class="score"><strong>Drift risk</strong><span id="driftScore">--</span></div>
-    </div>
-  </section>
+    <section class="hero" aria-label="Website Health Gauges">
+      <p class="kicker">Generation 2 · Compass Cockpit Gauges · Bravo 6 · Sun Visual Contract B1</p>
 
-  <section class="panel">
-    <h2 class="sectionTitle">What is working</h2>
-    <ul id="workingList"><li>Waiting for Bravo 6 cockpit-aware scan.</li></ul>
-  </section>
+      <h1>Website Health Gauges</h1>
 
-  <section class="panel">
-    <h2 class="sectionTitle">What is wrong</h2>
-    <ul id="wrongList"><li>Waiting for Bravo 6 cockpit-aware scan.</li></ul>
-  </section>
+      <p class="lede">
+        This scan still checks source reachability, cockpit truth, visible sun truth, canopy binding, background presence, and false-health blocking. This renewal adds a sharper contract for what the Compass sun is supposed to become: a satellite-observational solar disc, not a symbolic radial placeholder.
+      </p>
 
-  <section class="panel">
-    <h2 class="sectionTitle">What needs to be done</h2>
-    <ol id="todoList"><li>Wait for the Bravo 6 scan to complete.</li></ol>
-  </section>
+      <div class="metaLine">
+        <span class="pill">Status: <strong id="statusText">PENDING</strong></span>
+        <span class="pill">Updated: <strong id="updatedText">Pending</strong></span>
+        <span class="pill">Runtime: <strong id="runtimeText">spine-canopy-parachute-b6</strong></span>
+        <span class="pill">Contract: <strong>root-compass-cockpit-b1</strong></span>
+      </div>
 
-  <section class="panel">
-    <h2 class="sectionTitle">Source ledger</h2>
-    <div class="table" id="sourceLedger">
-      <div class="row"><strong>Pending</strong><span class="status watch">PENDING</span><span>Source scan has not completed.</span></div>
-    </div>
-  </section>
+      <div class="scoreGrid" aria-label="Gauge scores">
+        <div class="score">
+          <span>Website health</span>
+          <b id="overallScore">--%</b>
+        </div>
 
-  <section class="panel">
-    <h2 class="sectionTitle">Cockpit visual-control ledger</h2>
-    <div class="table" id="visualLedger">
-      <div class="row"><strong>Pending</strong><span class="status watch">PENDING</span><span>Visual-control scan has not completed.</span></div>
-    </div>
-  </section>
+        <div class="score">
+          <span>Source</span>
+          <b id="sourceScore">--</b>
+        </div>
 
-  <section class="panel">
-    <h2 class="sectionTitle">Contract renewal</h2>
-    <p class="lede">
-      Bravo 6 expects <code>root-sun-asset-b1</code>, cockpit version <code>root-compass-cockpit-b1</code>, canopy version <code>spine-canopy-parachute-b1</code>, and diagnostic runtime <code>spine-canopy-parachute-b6</code>. Strong health is forbidden when cockpit truth, visible sun truth, or canopy truth fails.
-    </p>
-  </section>
+        <div class="score">
+          <span>Cockpit truth</span>
+          <b id="visualScore">--</b>
+        </div>
 
-  <nav class="routeRail" aria-label="Bottom navigation">
-    <a href="/">Compass</a>
-    <a href="/home/">Home</a>
-    <a href="/products/">Products</a>
-    <a href="/laws/">Laws</a>
-    <a href="/governance/">Governance</a>
-    <a href="/gauges/">Gauges</a>
-  </nav>
-</main>
+        <div class="score">
+          <span>Drift risk</span>
+          <b id="driftScore">--</b>
+        </div>
+      </div>
+    </section>
 
-<script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6" defer></script>
+    <section class="contractCard" aria-label="Sun visual contract">
+      <h2>Sun Visual Contract</h2>
+
+      <p>
+        The Compass sun is not merely required to exist. It must visually move toward a real observational target: a solar disc seen like a satellite or space-observation instrument would read it.
+      </p>
+
+      <div class="contractGrid">
+        <div class="contractBox">
+          <strong>Target visual</strong>
+          <p>
+            Satellite-observational solar disc with limb darkening, mottled photosphere, solar granulation, subtle active regions, small sunspots, and soft corona.
+          </p>
+        </div>
+
+        <div class="contractBox">
+          <strong>Forbidden visual</strong>
+          <p>
+            Symbolic wheel, decorative sun badge, cartoon radial rays, generic orange gradient, CSS-only placeholder as final state, or generated-image dependency.
+          </p>
+        </div>
+
+        <div class="contractBox">
+          <strong>Required source chain</strong>
+          <p>
+            <code>/index.html</code>, <code>/index.js</code>, <code>/assets/sun/sun_canvas.js</code>, <code>/runtime/sun_asset_runtime.js</code>, <code>/assets/sun/sun_material.css</code>, <code>/assets/sun/sun_manifest.json</code>, <code>/assets/sun/sun.svg</code>.
+          </p>
+        </div>
+
+        <div class="contractBox">
+          <strong>Pass meaning</strong>
+          <p>
+            Bravo 6 health proves the page is stable. The Sun Visual Contract proves the visual target is actually being sharpened toward satellite view.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="gridCard" aria-label="What is working">
+      <h2>What is working</h2>
+      <ul id="workingList">
+        <li>Waiting for Bravo 6 cockpit-aware scan.</li>
+      </ul>
+    </section>
+
+    <section class="gridCard" aria-label="What is wrong">
+      <h2>What is wrong</h2>
+      <ul id="wrongList">
+        <li>Waiting for Bravo 6 cockpit-aware scan.</li>
+      </ul>
+    </section>
+
+    <section class="gridCard" aria-label="What needs to be done">
+      <h2>What needs to be done</h2>
+      <ol id="todoList">
+        <li>Wait for the Bravo 6 scan to complete.</li>
+      </ol>
+    </section>
+
+    <section class="ledgerCard" aria-label="Sun visual target ledger">
+      <h2>Sun visual target ledger</h2>
+
+      <div class="ledger">
+        <div class="row">
+          <strong>Visual profile</strong>
+          <span class="status watch">TARGET</span>
+          <span>satellite-observational-solar-disc</span>
+        </div>
+
+        <div class="row">
+          <strong>Must improve</strong>
+          <span class="status watch">TARGET</span>
+          <span>Texture, limb darkening, active regions, sunspots, corona realism, and observational body feel.</span>
+        </div>
+
+        <div class="row">
+          <strong>Must avoid</strong>
+          <span class="status fail">BLOCK</span>
+          <span>Symbolic radial wheel, decorative badge, generic CSS sun, or unchanged old fallback dominating the live page.</span>
+        </div>
+
+        <div class="row">
+          <strong>Correct path</strong>
+          <span class="status strong">ROUTE</span>
+          <span>Update active HTML, index boot, sun canvas, sun runtime, sun material, sun manifest, and SVG together.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="ledgerCard" aria-label="Source ledger">
+      <h2>Source ledger</h2>
+      <div class="ledger" id="sourceLedger">
+        <div class="row">
+          <strong>Pending</strong>
+          <span class="status watch">PENDING</span>
+          <span>Source scan has not completed.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="ledgerCard" aria-label="Cockpit visual-control ledger">
+      <h2>Cockpit visual-control ledger</h2>
+      <div class="ledger" id="visualLedger">
+        <div class="row">
+          <strong>Pending</strong>
+          <span class="status watch">PENDING</span>
+          <span>Visual-control scan has not completed.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="contractCard" aria-label="Contract renewal">
+      <h2>Contract renewal</h2>
+
+      <p>
+        Bravo 6 still expects <code>root-sun-asset-b1</code>, cockpit version <code>root-compass-cockpit-b1</code>, canopy version <code>spine-canopy-parachute-b1</code>, and diagnostic runtime <code>spine-canopy-parachute-b6</code>. Strong health remains forbidden when cockpit truth, canopy truth, or visible sun truth fails.
+      </p>
+
+      <p>
+        Sun Visual Contract B1 adds a second layer of precision: a healthy page is not enough if the sun still reads as an old symbolic fallback. The desired target is now explicit: satellite-observational solar disc.
+      </p>
+    </section>
+
+    <nav class="routeRail" aria-label="Route rail">
+      <a href="/">Compass</a>
+      <a href="/home/">Home</a>
+      <a href="/prelude/">Prelude</a>
+      <a href="/door/">Door</a>
+      <a href="/products/">Products</a>
+      <a href="/laws/">Laws</a>
+      <a href="/governance/">Governance</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </main>
+
+  <script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6" defer></script>
 </body>
 </html>

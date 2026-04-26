@@ -1,13 +1,13 @@
 (function () {
   "use strict";
 
-  var VERSION = "luminous-centered-plasma-b5";
+  var VERSION = "satellite-solar-disc-b6";
   var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=" + VERSION;
   var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=" + VERSION;
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var SUN_ASSET_RUNTIME_NAME = "DGBSunAssetRuntime";
 
-  var BASELINE = "Generation 1 Sun Asset Spine Baseline 2";
+  var BASELINE = "Generation 1 Sun Asset Spine Baseline 3";
   var THEME = "Learn to Live to Love";
 
   var bootState = {
@@ -204,13 +204,13 @@
       selector: "[data-dgb-sun-mount]",
       mode: "canvas",
       seed: 4217,
-      intensity: 0.96,
+      intensity: 0.98,
       animate: true,
-      frameRate: 14,
+      frameRate: 10,
       version: VERSION
     }).then(function () {
       bootState.sunMounted = true;
-      setStatus("Sun asset active · luminous centered plasma b5");
+      setStatus("Sun asset active · satellite solar disc b6");
 
       if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
         window[SITE_RUNTIME_NAME].updateRuntimeStatus("sunAssetRuntime", {

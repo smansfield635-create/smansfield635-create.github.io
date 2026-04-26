@@ -1,18 +1,15 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · UNIVERSE DELIVERY B2
+     SHOWROOM · GENERATION 2 · UNIVERSE DELIVERY B3
      SOURCE SUN BASELINE:
        Generation 2 · Compass Cockpit · Bravo 6 · Sun Visual Contract B1 · STRONG
 
      PURPOSE:
-       - Remove redundant top/bottom navigation.
-       - Top controls become universe-scale views.
-       - Bottom route list remains navigation.
-       - Bottom route list becomes spinning diamond-compass navigation.
+       - Keep bottom diamond-compass route list.
+       - Replace exposed math buttons with public-facing universe view modes.
+       - Keep kilometers under hood only through data attributes.
+       - Make each top view actually change the visual field.
        - Reuse Compass satellite-observational sun asset.
-       - Sun first.
-       - Planets next.
-       - Backlinks later.
        - No graphic box.
        - No generated image.
        - No external image.
@@ -98,7 +95,7 @@
       gap:12px;
     }
 
-    .navRow,.scaleControls,.routeRail{
+    .navRow,.viewControls,.routeRail{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -125,7 +122,7 @@
       border:1px solid rgba(255,255,255,.18);
     }
 
-    .scaleTitle{
+    .viewTitle{
       color:var(--gold);
       font-size:12px;
       font-weight:950;
@@ -133,11 +130,11 @@
       text-transform:uppercase;
     }
 
-    .scaleControls{
+    .viewControls{
       justify-content:center;
     }
 
-    .scaleControl{
+    .viewControl{
       min-height:46px;
       padding:10px 14px;
       border-radius:999px;
@@ -149,7 +146,7 @@
       -webkit-tap-highlight-color:transparent;
     }
 
-    .scaleControl[aria-pressed="true"]{
+    .viewControl[aria-pressed="true"]{
       border-color:rgba(255,217,138,.48);
       box-shadow:0 0 20px rgba(201,162,74,.14);
       background:
@@ -167,13 +164,30 @@
       border-radius:34px;
     }
 
+    .galaxyField{
+      position:absolute;
+      inset:-20%;
+      z-index:0;
+      pointer-events:none;
+      opacity:0;
+      transform:scale(1.1) rotate(-8deg);
+      transition:opacity .45s ease,transform .45s ease;
+      background:
+        radial-gradient(ellipse at 50% 50%,rgba(255,255,255,.26),transparent 8%),
+        radial-gradient(ellipse at 48% 50%,rgba(147,197,253,.18),transparent 18%),
+        radial-gradient(ellipse at 52% 50%,rgba(255,217,138,.12),transparent 28%),
+        linear-gradient(110deg,transparent 24%,rgba(255,255,255,.10) 47%,rgba(147,197,253,.08) 50%,rgba(255,217,138,.10) 53%,transparent 76%);
+      filter:blur(.4px);
+    }
+
     .sunLayer{
       position:absolute;
       inset:-8%;
-      z-index:0;
+      z-index:1;
       display:grid;
       place-items:center;
       pointer-events:none;
+      transition:transform .45s ease,opacity .45s ease;
     }
 
     .sunMount{
@@ -188,6 +202,7 @@
       filter:
         drop-shadow(0 0 30px rgba(255,178,54,.20))
         drop-shadow(0 0 140px rgba(255,122,28,.16));
+      transition:width .45s ease,transform .45s ease,opacity .45s ease,filter .45s ease;
     }
 
     .sunFallback{
@@ -207,17 +222,54 @@
     .orbitField{
       position:absolute;
       inset:0;
-      z-index:1;
+      z-index:2;
       pointer-events:none;
       opacity:.78;
-      transition:transform .35s ease, opacity .35s ease;
+      transition:transform .45s ease,opacity .45s ease;
     }
 
-    body[data-scale-view="close"] .orbitField{transform:scale(1.55);opacity:.46}
-    body[data-scale-view="near"] .orbitField{transform:scale(1.22);opacity:.58}
-    body[data-scale-view="local"] .orbitField{transform:scale(1.0);opacity:.72}
-    body[data-scale-view="wide"] .orbitField{transform:scale(.82);opacity:.82}
-    body[data-scale-view="full"] .orbitField{transform:scale(.66);opacity:.88}
+    body[data-showroom-view="local"] .sunLayer{transform:scale(1.36) translateX(-8%)}
+    body[data-showroom-view="local"] .sunMount{
+      width:min(168vw,1120px);
+      transform:translate(22%,8%);
+      opacity:.96;
+      filter:drop-shadow(0 0 24px rgba(255,178,54,.18)) drop-shadow(0 0 100px rgba(255,122,28,.12));
+    }
+    body[data-showroom-view="local"] .orbitField{transform:scale(1.72);opacity:.24}
+
+    body[data-showroom-view="satellite"] .sunLayer{transform:scale(1.12)}
+    body[data-showroom-view="satellite"] .sunMount{
+      width:min(136vw,980px);
+      transform:translate(20%,7%);
+      opacity:.94;
+    }
+    body[data-showroom-view="satellite"] .orbitField{transform:scale(1.34);opacity:.42}
+
+    body[data-showroom-view="solar"] .sunLayer{transform:scale(.88) translateX(2%)}
+    body[data-showroom-view="solar"] .sunMount{
+      width:min(96vw,760px);
+      transform:translate(18%,5%);
+      opacity:.88;
+    }
+    body[data-showroom-view="solar"] .orbitField{transform:scale(.94);opacity:.82}
+
+    body[data-showroom-view="milky"] .galaxyField{opacity:.54;transform:scale(1) rotate(-12deg)}
+    body[data-showroom-view="milky"] .sunLayer{transform:scale(.68) translateX(12%)}
+    body[data-showroom-view="milky"] .sunMount{
+      width:min(72vw,560px);
+      transform:translate(34%,4%);
+      opacity:.72;
+    }
+    body[data-showroom-view="milky"] .orbitField{transform:scale(.62);opacity:.58}
+
+    body[data-showroom-view="deep"] .galaxyField{opacity:.82;transform:scale(.92) rotate(-14deg)}
+    body[data-showroom-view="deep"] .sunLayer{transform:scale(.48) translateX(28%)}
+    body[data-showroom-view="deep"] .sunMount{
+      width:min(54vw,440px);
+      transform:translate(48%,0);
+      opacity:.56;
+    }
+    body[data-showroom-view="deep"] .orbitField{transform:scale(.42);opacity:.34}
 
     .orbit{
       position:absolute;
@@ -238,6 +290,7 @@
       aspect-ratio:1;
       border-radius:999px;
       box-shadow:0 0 22px rgba(147,197,253,.22);
+      transition:transform .45s ease,opacity .45s ease;
     }
 
     .planet.mercury{left:54%;top:40%;width:10px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#d8c3a5,#765d42)}
@@ -245,6 +298,12 @@
     .planet.earth{left:65%;top:63%;width:17px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#7dd3fc,#2563eb 55%,#052e16)}
     .planet.mars{left:31%;top:36%;width:13px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#fca5a5,#b45309)}
     .planet.outer{left:77%;top:31%;width:22px;background:radial-gradient(circle at 35% 28%,#fff,transparent 18%),radial-gradient(circle,#fde68a,#92400e)}
+
+    body[data-showroom-view="local"] .planet{opacity:.34}
+    body[data-showroom-view="satellite"] .planet{opacity:.55}
+    body[data-showroom-view="solar"] .planet{opacity:.90}
+    body[data-showroom-view="milky"] .planet{opacity:.64}
+    body[data-showroom-view="deep"] .planet{opacity:.42}
 
     .copy{
       position:relative;
@@ -303,6 +362,15 @@
     }
 
     .readout p{margin:0}
+
+    .underhood{
+      position:absolute;
+      width:1px;
+      height:1px;
+      overflow:hidden;
+      clip:rect(0 0 0 0);
+      white-space:nowrap;
+    }
 
     .routeRail{
       display:grid;
@@ -406,7 +474,7 @@
 
       .navRow{display:grid;gap:12px}
 
-      .scaleControls{
+      .viewControls{
         display:grid;
         grid-template-columns:1fr;
       }
@@ -417,11 +485,11 @@
 
       .sunLayer{inset:-20%}
 
-      .sunMount{
-        width:min(150vw,880px);
-        transform:translate(18%,10%);
-        opacity:.88;
-      }
+      body[data-showroom-view="local"] .sunMount{width:min(188vw,980px)}
+      body[data-showroom-view="satellite"] .sunMount{width:min(160vw,920px)}
+      body[data-showroom-view="solar"] .sunMount{width:min(132vw,860px)}
+      body[data-showroom-view="milky"] .sunMount{width:min(92vw,640px)}
+      body[data-showroom-view="deep"] .sunMount{width:min(70vw,520px)}
 
       .copy{padding:22px}
 
@@ -440,43 +508,45 @@
         animation:none;
       }
 
-      .orbitField{
+      .orbitField,.sunLayer,.sunMount,.planet,.galaxyField{
         transition:none;
       }
     }
   </style>
 </head>
 
-<body data-showroom-focus="sun" data-scale-view="full">
+<body data-showroom-view="solar">
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-universe-delivery-b2"
+    data-showroom-version="generation-2-universe-delivery-b3"
     data-sun-source-baseline="generation-2-compass-cockpit-bravo-6-sun-visual-contract-b1-strong"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
     data-brain-route="sun-first-planets-second"
   >
-    <section class="top" aria-label="Universe scale controls">
+    <section class="top" aria-label="Universe view controls">
       <div class="navRow">
         <a class="brand" href="/">
           <span class="mark" aria-hidden="true"></span>
           <span>Diamond Gate Bridge</span>
         </a>
 
-        <span class="scaleTitle">Universe View</span>
+        <span class="viewTitle">Choose Your Universe View</span>
       </div>
 
-      <div class="scaleControls" aria-label="Showroom universe scale controls">
-        <button class="scaleControl" type="button" data-scale="close" aria-pressed="false">26,500 km</button>
-        <button class="scaleControl" type="button" data-scale="near" aria-pressed="false">256,000 km</button>
-        <button class="scaleControl" type="button" data-scale="local" aria-pressed="false">2.56M km</button>
-        <button class="scaleControl" type="button" data-scale="wide" aria-pressed="false">25.6M km</button>
-        <button class="scaleControl" type="button" data-scale="full" aria-pressed="true">256M km</button>
+      <div class="viewControls" aria-label="Showroom universe view controls">
+        <button class="viewControl" type="button" data-view="local" data-span-km="26500" aria-pressed="false">Local View</button>
+        <button class="viewControl" type="button" data-view="satellite" data-span-km="256000" aria-pressed="false">Satellite View</button>
+        <button class="viewControl" type="button" data-view="solar" data-span-km="2560000" aria-pressed="true">Solar System View</button>
+        <button class="viewControl" type="button" data-view="milky" data-span-km="25600000" aria-pressed="false">Milky Way View</button>
+        <button class="viewControl" type="button" data-view="deep" data-span-km="256000000" aria-pressed="false">Deep Field View</button>
       </div>
     </section>
 
     <section class="showroom" aria-label="Universe showroom">
+      <div class="galaxyField" aria-hidden="true"></div>
+
       <div class="sunLayer" aria-hidden="true">
         <div
           class="sunMount"
@@ -506,17 +576,19 @@
       <div class="copy">
         <p class="kicker">Showroom · Universe Delivery</p>
         <h1>The Universe Room</h1>
-        <p class="expression" id="scaleExpression">256 million kilometers wide and long.</p>
-        <p class="lede" id="scaleLede">
-          Start wide. See the field first, then move closer only when the larger structure is stable.
+        <p class="expression" id="viewExpression">See the system before you decorate the planets.</p>
+        <p class="lede" id="viewLede">
+          This view opens the showroom as a solar system surface: the sun remains the center while the planet lanes become readable.
         </p>
 
         <div class="readout" aria-live="polite">
-          <strong id="showroomTitle">Full solar field</strong>
+          <strong id="showroomTitle">Solar system view</strong>
           <p id="showroomText">
-            The showroom opens at the widest scale: 256 million kilometers by 256 million kilometers. This is the universe delivery surface before detailed planet work begins.
+            This is the first useful showroom expansion: sun in command, planets visible, orbit lanes readable, and future links still held back.
           </p>
         </div>
+
+        <span class="underhood" id="underhoodScale">Active span: 2,560,000 kilometers.</span>
       </div>
     </section>
 
@@ -571,30 +643,40 @@
       "use strict";
 
       var copy = {
-        close: {
-          expression: "26,500 kilometers wide and long.",
-          title: "Close observational field",
-          text: "This is the close showroom view. It brings the field down to 26,500 kilometers by 26,500 kilometers for near-surface visual inspection."
-        },
-        near: {
-          expression: "256,000 kilometers wide and long.",
-          title: "Near solar field",
-          text: "This scale widens the view while staying close to the solar body. It is useful for reading surface, corona, and immediate spatial relation."
-        },
         local: {
-          expression: "2.56 million kilometers wide and long.",
-          title: "Local solar room",
-          text: "This view begins to make room for nearby orbital structure without losing the sun as the central authority."
+          expression: "Step close enough to inspect the surface.",
+          lede: "Local view is for inspection. The sun becomes massive, the planets soften, and the surface read takes priority.",
+          title: "Local view",
+          text: "Use this when you need to see what is happening right in front of you before expanding back into the system.",
+          scale: "Active span: 26,500 kilometers."
         },
-        wide: {
-          expression: "25.6 million kilometers wide and long.",
-          title: "Wide orbital room",
-          text: "This view opens the showroom enough to begin organizing planet lanes, distance, and future route logic."
+        satellite: {
+          expression: "Hold the sun like a space-observation image.",
+          lede: "Satellite view keeps the sun dominant but gives enough distance for the body to read as an observed solar object.",
+          title: "Satellite view",
+          text: "This is the cleanest visual read of the sun itself: body, surface, corona, and immediate field.",
+          scale: "Active span: 256,000 kilometers."
         },
-        full: {
-          expression: "256 million kilometers wide and long.",
-          title: "Full solar field",
-          text: "The showroom opens at the widest scale: 256 million kilometers by 256 million kilometers. This is the universe delivery surface before detailed planet work begins."
+        solar: {
+          expression: "See the system before you decorate the planets.",
+          lede: "This view opens the showroom as a solar system surface: the sun remains the center while the planet lanes become readable.",
+          title: "Solar system view",
+          text: "This is the first useful showroom expansion: sun in command, planets visible, orbit lanes readable, and future links still held back.",
+          scale: "Active span: 2,560,000 kilometers."
+        },
+        milky: {
+          expression: "Let the solar room sit inside the larger galaxy.",
+          lede: "Milky Way view pulls back enough to feel the showroom as part of a larger galactic field without losing the center.",
+          title: "Milky Way view",
+          text: "Use this when the page needs more wonder, more distance, and more context while keeping the solar spine intact.",
+          scale: "Active span: 25,600,000 kilometers."
+        },
+        deep: {
+          expression: "Open the field beyond the solar room.",
+          lede: "Deep Field view makes the showroom feel like a universe delivery surface, with the sun becoming a point of origin rather than the entire frame.",
+          title: "Deep field view",
+          text: "This is the widest public-facing view: not math on the surface, but a feeling of scale, possibility, and expansion.",
+          scale: "Active span: 256,000,000 kilometers."
         }
       };
 
@@ -603,37 +685,31 @@
         if(node) node.textContent = value;
       }
 
-      function applyScale(name){
-        var next = copy[name] ? name : "full";
+      function applyView(name){
+        var next = copy[name] ? name : "solar";
         var packet = copy[next];
 
-        document.body.setAttribute("data-scale-view",next);
+        document.body.setAttribute("data-showroom-view",next);
 
-        document.querySelectorAll("[data-scale]").forEach(function(button){
-          button.setAttribute("aria-pressed",button.getAttribute("data-scale") === next ? "true" : "false");
+        document.querySelectorAll("[data-view]").forEach(function(button){
+          button.setAttribute("aria-pressed",button.getAttribute("data-view") === next ? "true" : "false");
         });
 
-        setText("scaleExpression",packet.expression);
+        setText("viewExpression",packet.expression);
+        setText("viewLede",packet.lede);
         setText("showroomTitle",packet.title);
         setText("showroomText",packet.text);
-
-        if(next === "full"){
-          setText("scaleLede","Start wide. See the field first, then move closer only when the larger structure is stable.");
-        }else if(next === "close"){
-          setText("scaleLede","Move close only for inspection. The larger field still stays underneath the read.");
-        }else{
-          setText("scaleLede","Change the scale without changing the sun spine. The universe surface stays coherent.");
-        }
+        setText("underhoodScale",packet.scale);
       }
 
       function boot(){
-        document.querySelectorAll("[data-scale]").forEach(function(button){
+        document.querySelectorAll("[data-view]").forEach(function(button){
           button.addEventListener("click",function(){
-            applyScale(button.getAttribute("data-scale"));
+            applyView(button.getAttribute("data-view"));
           });
         });
 
-        applyScale("full");
+        applyView("solar");
       }
 
       if(document.readyState === "loading"){

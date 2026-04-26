@@ -1,27 +1,22 @@
 <!doctype html>
-<!-- TNT CREATION — /showroom/index.html
-     SHOWROOM · GENERATION 2 · UNIVERSE DELIVERY B1
+<!-- TNT RENEWAL — /showroom/index.html
+     SHOWROOM · GENERATION 2 · UNIVERSE DELIVERY B2
      SOURCE SUN BASELINE:
        Generation 2 · Compass Cockpit · Bravo 6 · Sun Visual Contract B1 · STRONG
 
      PURPOSE:
-       - Create the Showroom universe delivery page.
-       - Reuse the successful Compass satellite-observational sun asset.
+       - Remove redundant top/bottom navigation.
+       - Top controls become universe-scale views.
+       - Bottom route list remains navigation.
+       - Bottom route list becomes spinning diamond-compass navigation.
+       - Reuse Compass satellite-observational sun asset.
        - Sun first.
-       - Planets second.
+       - Planets next.
        - Backlinks later.
        - No graphic box.
        - No generated image.
-       - No decorative placeholder sun.
-       - No duplicate one-off sun.
-       - Use shared asset spine:
-         /assets/sun/sun_canvas.js
-         /runtime/sun_asset_runtime.js
-         /assets/sun/sun_material.css
-
-     TEAM ROUTE:
-       Brain = structure and code path.
-       Pinky = QA for simplicity, readability, no graphics-box regression.
+       - No external image.
+       - No new runtime.
 -->
 
 <html lang="en">
@@ -55,7 +50,7 @@
       --muted:rgba(255,255,255,.62);
       --gold:rgba(255,217,138,.96);
       --line:rgba(255,255,255,.13);
-      --veil:rgba(3,7,18,.48);
+      --panel:rgba(7,10,16,.70);
       --shadow:0 30px 110px rgba(0,0,0,.54);
     }
 
@@ -87,18 +82,23 @@
       gap:14px;
     }
 
-    .top{
+    .top,.routeRail{
       position:relative;
       z-index:5;
       border:1px solid var(--line);
       border-radius:28px;
-      background:rgba(7,10,16,.70);
+      background:var(--panel);
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
       padding:12px;
     }
 
-    .navRow,.navLinks,.routeRail{
+    .top{
+      display:grid;
+      gap:12px;
+    }
+
+    .navRow,.scaleControls,.routeRail{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
@@ -125,19 +125,31 @@
       border:1px solid rgba(255,255,255,.18);
     }
 
-    .btn,.routeRail a,.planetControl{
-      min-height:42px;
+    .scaleTitle{
+      color:var(--gold);
+      font-size:12px;
+      font-weight:950;
+      letter-spacing:2.4px;
+      text-transform:uppercase;
+    }
+
+    .scaleControls{
+      justify-content:center;
+    }
+
+    .scaleControl{
+      min-height:46px;
       padding:10px 14px;
       border-radius:999px;
       border:1px solid var(--line);
       background:rgba(0,0,0,.24);
       color:var(--ink);
-      font-weight:900;
+      font-weight:950;
       cursor:pointer;
       -webkit-tap-highlight-color:transparent;
     }
 
-    .btn.red,.planetControl[aria-pressed="true"]{
+    .scaleControl[aria-pressed="true"]{
       border-color:rgba(255,217,138,.48);
       box-shadow:0 0 20px rgba(201,162,74,.14);
       background:
@@ -198,7 +210,14 @@
       z-index:1;
       pointer-events:none;
       opacity:.78;
+      transition:transform .35s ease, opacity .35s ease;
     }
+
+    body[data-scale-view="close"] .orbitField{transform:scale(1.55);opacity:.46}
+    body[data-scale-view="near"] .orbitField{transform:scale(1.22);opacity:.58}
+    body[data-scale-view="local"] .orbitField{transform:scale(1.0);opacity:.72}
+    body[data-scale-view="wide"] .orbitField{transform:scale(.82);opacity:.82}
+    body[data-scale-view="full"] .orbitField{transform:scale(.66);opacity:.88}
 
     .orbit{
       position:absolute;
@@ -216,12 +235,8 @@
 
     .planet{
       position:absolute;
-      width:clamp(10px,1.4vw,18px);
       aspect-ratio:1;
       border-radius:999px;
-      background:
-        radial-gradient(circle at 34% 30%,rgba(255,255,255,.92),transparent 22%),
-        radial-gradient(circle,rgba(147,197,253,.94),rgba(59,130,246,.45) 58%,rgba(15,23,42,.72));
       box-shadow:0 0 22px rgba(147,197,253,.22);
     }
 
@@ -274,22 +289,10 @@
       max-width:680px;
     }
 
-    .planetControls{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      max-width:760px;
-    }
-
-    .planetControl{
-      text-align:left;
-    }
-
     .readout{
       max-width:720px;
       display:grid;
       gap:6px;
-      padding:0;
       color:var(--txt);
       line-height:1.55;
     }
@@ -299,20 +302,100 @@
       font-size:1.05rem;
     }
 
-    .readout p{
-      margin:0;
-    }
+    .readout p{margin:0}
 
     .routeRail{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .diamondRoute{
+      min-height:78px;
+      padding:10px;
+      border-radius:22px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      gap:8px;
+      text-align:center;
+      overflow:hidden;
       position:relative;
-      z-index:5;
-      justify-content:center;
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:rgba(7,10,16,.70);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      padding:12px;
+    }
+
+    .diamondRoute::before{
+      content:"";
+      position:absolute;
+      inset:-90%;
+      opacity:.54;
+      background:conic-gradient(from 0deg,transparent,rgba(255,217,138,.12),transparent,rgba(147,197,253,.10),transparent);
+      animation:routeAuraSpin 8s linear infinite;
+    }
+
+    .routeDiamond{
+      position:relative;
+      z-index:2;
+      width:32px;
+      height:32px;
+      display:grid;
+      place-items:center;
+      transform-style:preserve-3d;
+      animation:diamondTopSpin 4.2s linear infinite;
+    }
+
+    .routeDiamond::before{
+      content:"";
+      position:absolute;
+      width:23px;
+      height:23px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,217,138,.82);
+      background:
+        linear-gradient(90deg,transparent calc(50% - .5px),rgba(255,255,255,.50) 50%,transparent calc(50% + .5px)),
+        linear-gradient(0deg,transparent calc(50% - .5px),rgba(255,255,255,.35) 50%,transparent calc(50% + .5px)),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.20),rgba(147,197,253,.06) 64%,transparent 68%);
+      box-shadow:
+        0 0 16px rgba(255,217,138,.24),
+        inset 0 0 14px rgba(147,197,253,.10);
+    }
+
+    .routeDiamond::after{
+      content:"";
+      position:absolute;
+      width:7px;
+      height:7px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.60);
+      background:rgba(255,217,138,.28);
+    }
+
+    .latticeRing{
+      position:absolute;
+      inset:2px;
+      border-radius:999px;
+      border:1px solid rgba(147,197,253,.22);
+      transform:rotateX(64deg);
+    }
+
+    .latticeRing.two{transform:rotateX(64deg) rotateZ(60deg)}
+    .latticeRing.three{transform:rotateX(64deg) rotateZ(120deg)}
+
+    .routeLabel{
+      position:relative;
+      z-index:2;
+      font-size:.95rem;
+    }
+
+    @keyframes diamondTopSpin{
+      0%{transform:rotateZ(0deg) rotateX(58deg) rotateY(0deg)}
+      100%{transform:rotateZ(360deg) rotateX(58deg) rotateY(360deg)}
+    }
+
+    @keyframes routeAuraSpin{
+      to{transform:rotate(360deg)}
     }
 
     @media(max-width:760px){
@@ -321,20 +404,18 @@
         padding-top:10px;
       }
 
-      .navLinks{width:100%}
+      .navRow{display:grid;gap:12px}
 
-      .navLinks .btn,.routeRail a{
-        flex:1 1 calc(50% - 10px);
-        text-align:center;
+      .scaleControls{
+        display:grid;
+        grid-template-columns:1fr;
       }
 
       .showroom{
         min-height:calc(100svh - 130px);
       }
 
-      .sunLayer{
-        inset:-20%;
-      }
+      .sunLayer{inset:-20%}
 
       .sunMount{
         width:min(150vw,880px);
@@ -342,50 +423,56 @@
         opacity:.88;
       }
 
-      .copy{
-        padding:22px;
-      }
-
-      .planetControls{
-        display:grid;
-        grid-template-columns:1fr;
-      }
+      .copy{padding:22px}
 
       .orbit.one{width:92vw;height:48vw}
       .orbit.two{width:124vw;height:66vw}
       .orbit.three{width:156vw;height:84vw}
       .orbit.four{width:188vw;height:100vw}
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      .routeDiamond,.diamondRoute::before{
+        animation:none;
+      }
+
+      .orbitField{
+        transition:none;
+      }
     }
   </style>
 </head>
 
-<body data-showroom-focus="sun">
+<body data-showroom-focus="sun" data-scale-view="full">
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-universe-delivery-b1"
+    data-showroom-version="generation-2-universe-delivery-b2"
     data-sun-source-baseline="generation-2-compass-cockpit-bravo-6-sun-visual-contract-b1-strong"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
     data-brain-route="sun-first-planets-second"
   >
-    <section class="top" aria-label="Navigation">
+    <section class="top" aria-label="Universe scale controls">
       <div class="navRow">
         <a class="brand" href="/">
           <span class="mark" aria-hidden="true"></span>
           <span>Diamond Gate Bridge</span>
         </a>
 
-        <nav class="navLinks" aria-label="Primary navigation">
-          <a class="btn" href="/">Compass</a>
-          <a class="btn" href="/home/">Home</a>
-          <a class="btn" href="/prelude/">Prelude</a>
-          <a class="btn" href="/door/">Door</a>
-          <a class="btn red" href="/showroom/">Showroom</a>
-          <a class="btn" href="/products/">Products</a>
-          <a class="btn" href="/governance/">Governance</a>
-          <a class="btn" href="/gauges/">Gauges</a>
-        </nav>
+        <span class="scaleTitle">Universe View</span>
+      </div>
+
+      <div class="scaleControls" aria-label="Showroom universe scale controls">
+        <button class="scaleControl" type="button" data-scale="close" aria-pressed="false">26,500 km</button>
+        <button class="scaleControl" type="button" data-scale="near" aria-pressed="false">256,000 km</button>
+        <button class="scaleControl" type="button" data-scale="local" aria-pressed="false">2.56M km</button>
+        <button class="scaleControl" type="button" data-scale="wide" aria-pressed="false">25.6M km</button>
+        <button class="scaleControl" type="button" data-scale="full" aria-pressed="true">256M km</button>
       </div>
     </section>
 
@@ -419,36 +506,60 @@
       <div class="copy">
         <p class="kicker">Showroom · Universe Delivery</p>
         <h1>The Universe Room</h1>
-        <p class="expression">Sun first. Planets next. The world opens from the center.</p>
-        <p class="lede">
-          This page starts with the proven Compass sun and uses it as the visual spine for the showroom. The planets are reserved now, then built outward with their own meaning, motion, and future links.
+        <p class="expression" id="scaleExpression">256 million kilometers wide and long.</p>
+        <p class="lede" id="scaleLede">
+          Start wide. See the field first, then move closer only when the larger structure is stable.
         </p>
 
-        <div class="planetControls" aria-label="Showroom focus controls">
-          <button class="planetControl" type="button" data-focus="sun" aria-pressed="true">Sun</button>
-          <button class="planetControl" type="button" data-focus="inner" aria-pressed="false">Inner Planets</button>
-          <button class="planetControl" type="button" data-focus="outer" aria-pressed="false">Outer Planets</button>
-          <button class="planetControl" type="button" data-focus="future" aria-pressed="false">Future Backlinks</button>
-        </div>
-
         <div class="readout" aria-live="polite">
-          <strong id="showroomTitle">Sun spine active</strong>
+          <strong id="showroomTitle">Full solar field</strong>
           <p id="showroomText">
-            The showroom begins with the current successful satellite-observational sun. Nothing else gets built until the center stays clean.
+            The showroom opens at the widest scale: 256 million kilometers by 256 million kilometers. This is the universe delivery surface before detailed planet work begins.
           </p>
         </div>
       </div>
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
-      <a href="/">Compass</a>
-      <a href="/home/">Home</a>
-      <a href="/prelude/">Prelude</a>
-      <a href="/door/">Door</a>
-      <a href="/products/">Products</a>
-      <a href="/laws/">Laws</a>
-      <a href="/governance/">Governance</a>
-      <a href="/gauges/">Gauges</a>
+      <a class="diamondRoute" href="/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Compass</span>
+      </a>
+
+      <a class="diamondRoute" href="/home/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Home</span>
+      </a>
+
+      <a class="diamondRoute" href="/prelude/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Prelude</span>
+      </a>
+
+      <a class="diamondRoute" href="/door/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Door</span>
+      </a>
+
+      <a class="diamondRoute" href="/products/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Products</span>
+      </a>
+
+      <a class="diamondRoute" href="/laws/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Laws</span>
+      </a>
+
+      <a class="diamondRoute" href="/governance/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Governance</span>
+      </a>
+
+      <a class="diamondRoute" href="/gauges/">
+        <span class="routeDiamond" aria-hidden="true"><i class="latticeRing"></i><i class="latticeRing two"></i><i class="latticeRing three"></i></span>
+        <span class="routeLabel">Gauges</span>
+      </a>
     </nav>
   </main>
 
@@ -460,21 +571,30 @@
       "use strict";
 
       var copy = {
-        sun: {
-          title: "Sun spine active",
-          text: "The showroom begins with the current successful satellite-observational sun. Nothing else gets built until the center stays clean."
+        close: {
+          expression: "26,500 kilometers wide and long.",
+          title: "Close observational field",
+          text: "This is the close showroom view. It brings the field down to 26,500 kilometers by 26,500 kilometers for near-surface visual inspection."
         },
-        inner: {
-          title: "Inner planets reserved",
-          text: "The inner planets will become the first close-orbit showroom lanes. They stay simple for now so the sun remains the visual authority."
+        near: {
+          expression: "256,000 kilometers wide and long.",
+          title: "Near solar field",
+          text: "This scale widens the view while staying close to the solar body. It is useful for reading surface, corona, and immediate spatial relation."
         },
-        outer: {
-          title: "Outer planets reserved",
-          text: "The outer planets will carry larger scale, distance, and expansion. Their lanes are visible, but their deeper logic comes next."
+        local: {
+          expression: "2.56 million kilometers wide and long.",
+          title: "Local solar room",
+          text: "This view begins to make room for nearby orbital structure without losing the sun as the central authority."
         },
-        future: {
-          title: "Backlink capacity reserved",
-          text: "Backlinks will come later. The showroom first needs a clean universe surface before it becomes a navigation network."
+        wide: {
+          expression: "25.6 million kilometers wide and long.",
+          title: "Wide orbital room",
+          text: "This view opens the showroom enough to begin organizing planet lanes, distance, and future route logic."
+        },
+        full: {
+          expression: "256 million kilometers wide and long.",
+          title: "Full solar field",
+          text: "The showroom opens at the widest scale: 256 million kilometers by 256 million kilometers. This is the universe delivery surface before detailed planet work begins."
         }
       };
 
@@ -483,28 +603,37 @@
         if(node) node.textContent = value;
       }
 
-      function applyFocus(name){
-        var next = copy[name] ? name : "sun";
+      function applyScale(name){
+        var next = copy[name] ? name : "full";
         var packet = copy[next];
 
-        document.body.setAttribute("data-showroom-focus",next);
+        document.body.setAttribute("data-scale-view",next);
 
-        document.querySelectorAll("[data-focus]").forEach(function(button){
-          button.setAttribute("aria-pressed",button.getAttribute("data-focus") === next ? "true" : "false");
+        document.querySelectorAll("[data-scale]").forEach(function(button){
+          button.setAttribute("aria-pressed",button.getAttribute("data-scale") === next ? "true" : "false");
         });
 
+        setText("scaleExpression",packet.expression);
         setText("showroomTitle",packet.title);
         setText("showroomText",packet.text);
+
+        if(next === "full"){
+          setText("scaleLede","Start wide. See the field first, then move closer only when the larger structure is stable.");
+        }else if(next === "close"){
+          setText("scaleLede","Move close only for inspection. The larger field still stays underneath the read.");
+        }else{
+          setText("scaleLede","Change the scale without changing the sun spine. The universe surface stays coherent.");
+        }
       }
 
       function boot(){
-        document.querySelectorAll("[data-focus]").forEach(function(button){
+        document.querySelectorAll("[data-scale]").forEach(function(button){
           button.addEventListener("click",function(){
-            applyFocus(button.getAttribute("data-focus"));
+            applyScale(button.getAttribute("data-scale"));
           });
         });
 
-        applyFocus("sun");
+        applyScale("full");
       }
 
       if(document.readyState === "loading"){

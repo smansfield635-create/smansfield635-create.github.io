@@ -1,337 +1,209 @@
-/*
-  Diamond Gate Bridge — Cross-Board Site Runtime
-  File: /runtime/site_runtime.js
-  Generation: 1
-  Role: shared runtime coordination, baseline receipts, route health, page/runtime registration.
-*/
-
 (function () {
   "use strict";
 
-  var RUNTIME_NAME = "DGBSiteRuntime";
-  var VERSION = "1.0.0";
+  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=root-universe-sun-b2";
+  var PAGE_RUNTIME_PATH = "/runtime/index_runtime.js?v=root-universe-sun-b2";
+  var SITE_RUNTIME_NAME = "DGBSiteRuntime";
+  var PAGE_RUNTIME_NAME = "DGBIndexRuntime";
 
-  var ROUTES = [
-    { id: "home", label: "Home", path: "/" },
-    { id: "prelude", label: "Prelude", path: "/prelude/" },
-    { id: "explore", label: "Explore", path: "/explore/" },
-    { id: "products", label: "Products", path: "/products/" },
-    { id: "gauges", label: "Gauges", path: "/gauges/" },
-    { id: "frontier", label: "Frontier", path: "/frontier/" },
-    { id: "laws", label: "Laws", path: "/laws/" },
-    { id: "governance", label: "Governance", path: "/governance/" }
-  ];
+  var BASELINE = "Generation 1 Root Universe Sun Baseline 2";
+  var THEME = "Learn to Live to Love";
 
-  var state = {
-    name: RUNTIME_NAME,
-    version: VERSION,
-    startedAt: Date.now(),
-    currentPage: detectCurrentPage(),
-    theme: "Learn to Live to Love",
-    visibleFirst: false,
-    baselines: {},
-    pages: {},
-    runtimes: {},
-    routes: ROUTES.slice(),
-    receipts: [],
-    warnings: [],
-    health: {
-      overall: 0,
-      visibleFirst: 0,
-      runtime: 0,
-      routeCoverage: 0,
-      driftRisk: 100
-    }
+  var bootState = {
+    pageVisible: false,
+    siteRuntimeRequested: false,
+    siteRuntimeLoaded: false,
+    siteRuntimeFailed: false,
+    pageRuntimeRequested: false,
+    pageRuntimeLoaded: false,
+    pageRuntimeFailed: false
   };
 
-  function now() {
-    return new Date().toISOString();
-  }
-
-  function clone(value) {
-    return JSON.parse(JSON.stringify(value));
-  }
-
-  function detectCurrentPage() {
-    var path = window.location.pathname || "/";
-
-    if (path === "/" || path === "/index.html") return "home";
-    if (path.indexOf("/gauges") === 0) return "gauges";
-    if (path.indexOf("/products") === 0) return "products";
-    if (path.indexOf("/laws") === 0) return "laws";
-    if (path.indexOf("/governance") === 0) return "governance";
-    if (path.indexOf("/prelude") === 0) return "prelude";
-    if (path.indexOf("/explore") === 0) return "explore";
-    if (path.indexOf("/frontier") === 0) return "frontier";
-
-    return "unknown";
-  }
-
-  function addReceipt(type, payload) {
-    var receipt = {
-      type: type,
-      time: now(),
-      page: state.currentPage,
-      payload: payload || {}
-    };
-
-    state.receipts.push(receipt);
-
-    if (state.receipts.length > 80) {
-      state.receipts.shift();
-    }
-
-    publishState();
-
-    return receipt;
-  }
-
-  function addWarning(code, message, payload) {
-    var warning = {
-      code: code,
-      message: message,
-      time: now(),
-      page: state.currentPage,
-      payload: payload || {}
-    };
-
-    state.warnings.push(warning);
-
-    if (state.warnings.length > 80) {
-      state.warnings.shift();
-    }
-
-    publishState();
-
-    return warning;
-  }
-
-  function hasVisibleRoot() {
-    var root =
+  function getRoot() {
+    return (
       document.getElementById("door-root") ||
-      document.getElementById("page-root") ||
-      document.querySelector("[data-root-door]") ||
-      document.querySelector("main");
-
-    return Boolean(root && root.textContent && root.textContent.trim().length > 80);
-  }
-
-  function hasTheme() {
-    return document.body && document.body.textContent.indexOf(state.theme) !== -1;
-  }
-
-  function getRouteCoverage() {
-    var links = Array.prototype.slice.call(document.querySelectorAll("a[href]"));
-    var hrefs = links.map(function (link) {
-      return link.getAttribute("href");
-    });
-
-    var matched = ROUTES.filter(function (route) {
-      return hrefs.indexOf(route.path) !== -1;
-    });
-
-    return {
-      total: ROUTES.length,
-      matched: matched.length,
-      score: ROUTES.length ? Math.round((matched.length / ROUTES.length) * 100) : 0,
-      matchedRoutes: matched.map(function (route) {
-        return route.id;
-      })
-    };
-  }
-
-  function computeHealth() {
-    var routeCoverage = getRouteCoverage();
-
-    var visibleFirstScore = state.visibleFirst ? 100 : hasVisibleRoot() ? 76 : 0;
-
-    var runtimeNames = Object.keys(state.runtimes);
-    var runtimeValidated = runtimeNames.filter(function (name) {
-      return state.runtimes[name] && state.runtimes[name].validated;
-    }).length;
-
-    var runtimeScore = runtimeNames.length
-      ? Math.round((runtimeValidated / runtimeNames.length) * 100)
-      : 45;
-
-    var themeScore = hasTheme() ? 100 : 40;
-
-    var driftRisk = Math.max(
-      0,
-      100 - Math.round((visibleFirstScore + runtimeScore + routeCoverage.score + themeScore) / 4)
+      document.querySelector("[data-universe-sun]") ||
+      document.querySelector("main")
     );
-
-    state.health = {
-      overall: Math.round((visibleFirstScore + runtimeScore + routeCoverage.score + themeScore + (100 - driftRisk)) / 5),
-      visibleFirst: visibleFirstScore,
-      runtime: runtimeScore,
-      routeCoverage: routeCoverage.score,
-      driftRisk: driftRisk
-    };
-
-    return clone(state.health);
   }
 
-  function publishState() {
-    document.documentElement.setAttribute("data-dgb-site-runtime", "active");
-    document.documentElement.setAttribute("data-dgb-current-page", state.currentPage);
-    document.documentElement.setAttribute("data-dgb-runtime-health", String(state.health.overall));
+  function setStatus(text) {
+    var node = document.querySelector("[data-door-boot-status]");
+    if (node) node.textContent = text;
   }
 
-  function registerPage(config) {
-    var pageId = (config && config.id) || state.currentPage;
+  function protectVisibleRoot() {
+    var root = getRoot();
 
-    state.pages[pageId] = {
-      id: pageId,
-      title: (config && config.title) || document.title || pageId,
-      baseline: (config && config.baseline) || "unbound",
-      theme: (config && config.theme) || state.theme,
-      visibleFirst: Boolean(config && config.visibleFirst),
-      registeredAt: now()
-    };
+    if (!root || root.textContent.trim().length < 80) {
+      document.body.innerHTML =
+        '<main id="door-root" data-universe-sun style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
+        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first universe sun fallback</p>' +
+        '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
+        '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">Learn to Live to Love</p>' +
+        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The universe sun fallback is active. The page remains visible even if runtime enhancement fails.</p>' +
+        '<nav style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;">' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/products/">Products</a>' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/gauges/">Gauges</a>' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/laws/">Laws</a>' +
+        '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/governance/">Governance</a>' +
+        '</nav>' +
+        '</main>';
 
-    if (state.pages[pageId].visibleFirst) {
-      state.visibleFirst = true;
+      setStatus("Universe sun fallback active");
+      return false;
     }
 
-    if (state.pages[pageId].baseline) {
-      state.baselines[pageId] = state.pages[pageId].baseline;
+    bootState.pageVisible = true;
+
+    if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].registerVisibleFirst === "function") {
+      window[SITE_RUNTIME_NAME].registerVisibleFirst({
+        source: "index.js",
+        root: root.id || "root",
+        baseline: BASELINE,
+        object: "universe-sun"
+      });
     }
 
-    computeHealth();
-
-    return addReceipt("PAGE_REGISTERED", state.pages[pageId]);
+    return true;
   }
 
-  function registerRuntime(config) {
-    var runtimeId = (config && config.id) || "unknown_runtime";
+  function loadScript(path, onload, onerror) {
+    var existing = document.querySelector('script[src="' + path + '"]');
+    if (existing) {
+      if (typeof onload === "function") onload();
+      return;
+    }
 
-    state.runtimes[runtimeId] = {
-      id: runtimeId,
-      page: (config && config.page) || state.currentPage,
-      role: (config && config.role) || "runtime",
-      path: (config && config.path) || "",
-      validated: Boolean(config && config.validated),
-      optional: Boolean(config && config.optional),
-      registeredAt: now()
-    };
-
-    computeHealth();
-
-    return addReceipt("RUNTIME_REGISTERED", state.runtimes[runtimeId]);
+    var script = document.createElement("script");
+    script.src = path;
+    script.defer = true;
+    script.onload = onload;
+    script.onerror = onerror;
+    document.body.appendChild(script);
   }
 
-  function updateRuntimeStatus(runtimeId, patch) {
-    if (!state.runtimes[runtimeId]) {
-      state.runtimes[runtimeId] = {
-        id: runtimeId,
-        page: state.currentPage,
-        role: "runtime",
-        path: "",
-        validated: false,
-        optional: true,
-        registeredAt: now()
+  function registerSiteRuntime() {
+    if (!window[SITE_RUNTIME_NAME]) return;
+
+    if (typeof window[SITE_RUNTIME_NAME].registerPage === "function") {
+      window[SITE_RUNTIME_NAME].registerPage({
+        id: "home",
+        title: "Diamond Gate Bridge",
+        baseline: BASELINE,
+        theme: THEME,
+        visibleFirst: bootState.pageVisible
+      });
+    }
+
+    if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
+      window[SITE_RUNTIME_NAME].registerRuntime({
+        id: "rootUniverseSunBoot",
+        page: "home",
+        role: "boot-handoff",
+        path: "/index.js",
+        validated: true,
+        optional: false
+      });
+    }
+  }
+
+  function loadSiteRuntimeThenPageRuntime() {
+    if (bootState.siteRuntimeRequested || window[SITE_RUNTIME_NAME]) {
+      registerSiteRuntime();
+      loadPageRuntime();
+      return;
+    }
+
+    bootState.siteRuntimeRequested = true;
+    setStatus("Site runtime loading");
+
+    loadScript(
+      SITE_RUNTIME_PATH,
+      function () {
+        bootState.siteRuntimeLoaded = true;
+        setStatus("Site runtime active");
+        registerSiteRuntime();
+        loadPageRuntime();
+      },
+      function () {
+        bootState.siteRuntimeFailed = true;
+        setStatus("Static universe sun active");
+        loadPageRuntime();
+      }
+    );
+  }
+
+  function loadPageRuntime() {
+    if (bootState.pageRuntimeRequested || window[PAGE_RUNTIME_NAME]) return;
+
+    bootState.pageRuntimeRequested = true;
+    setStatus("Universe sun runtime loading");
+
+    loadScript(
+      PAGE_RUNTIME_PATH,
+      function () {
+        bootState.pageRuntimeLoaded = true;
+        setStatus("Universe sun runtime active");
+
+        if (window[PAGE_RUNTIME_NAME] && typeof window[PAGE_RUNTIME_NAME].start === "function") {
+          window[PAGE_RUNTIME_NAME].start();
+        }
+
+        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
+          window[SITE_RUNTIME_NAME].updateRuntimeStatus("universeSunRuntime", {
+            validated: true,
+            loaded: true,
+            baseline: BASELINE
+          });
+        }
+      },
+      function () {
+        bootState.pageRuntimeFailed = true;
+        setStatus("Static universe sun active");
+
+        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
+          window[SITE_RUNTIME_NAME].addWarning(
+            "PAGE_RUNTIME_MISSING",
+            "Root universe sun page runtime did not load.",
+            { path: PAGE_RUNTIME_PATH, baseline: BASELINE }
+          );
+        }
+      }
+    );
+  }
+
+  function boot() {
+    var visible = protectVisibleRoot();
+    if (!visible) return;
+
+    setStatus("Visible-first universe sun active");
+    loadSiteRuntimeThenPageRuntime();
+
+    window.setTimeout(protectVisibleRoot, 500);
+    window.setTimeout(protectVisibleRoot, 1600);
+  }
+
+  window.DGBIndexBoot = Object.freeze({
+    getState: function () {
+      return {
+        pageVisible: bootState.pageVisible,
+        siteRuntimeRequested: bootState.siteRuntimeRequested,
+        siteRuntimeLoaded: bootState.siteRuntimeLoaded,
+        siteRuntimeFailed: bootState.siteRuntimeFailed,
+        pageRuntimeRequested: bootState.pageRuntimeRequested,
+        pageRuntimeLoaded: bootState.pageRuntimeLoaded,
+        pageRuntimeFailed: bootState.pageRuntimeFailed,
+        baseline: BASELINE
       };
-    }
-
-    Object.keys(patch || {}).forEach(function (key) {
-      state.runtimes[runtimeId][key] = patch[key];
-    });
-
-    state.runtimes[runtimeId].updatedAt = now();
-
-    computeHealth();
-
-    return addReceipt("RUNTIME_UPDATED", state.runtimes[runtimeId]);
-  }
-
-  function registerVisibleFirst(payload) {
-    state.visibleFirst = true;
-    computeHealth();
-
-    return addReceipt("VISIBLE_FIRST_CONFIRMED", payload || {});
-  }
-
-  function auditCurrentPage() {
-    var visible = hasVisibleRoot();
-    var theme = hasTheme();
-    var routeCoverage = getRouteCoverage();
-
-    if (!visible) {
-      addWarning("VISIBLE_FIRST_FAIL", "Current page does not have a strong visible-first root.");
-    }
-
-    if (!theme && state.currentPage === "home") {
-      addWarning("THEME_MISSING", "Root page does not visibly contain Learn to Live to Love.");
-    }
-
-    if (routeCoverage.score < 50) {
-      addWarning("LOW_ROUTE_COVERAGE", "Current page exposes fewer than half of expected route links.", routeCoverage);
-    }
-
-    computeHealth();
-
-    return addReceipt("PAGE_AUDIT_COMPLETE", {
-      visibleFirst: visible,
-      themePresent: theme,
-      routeCoverage: routeCoverage,
-      health: clone(state.health)
-    });
-  }
-
-  function getState() {
-    computeHealth();
-    return clone(state);
-  }
-
-  function validate() {
-    computeHealth();
-
-    return {
-      ok: hasVisibleRoot(),
-      runtime: RUNTIME_NAME,
-      version: VERSION,
-      currentPage: state.currentPage,
-      visibleFirst: state.visibleFirst || hasVisibleRoot(),
-      themePresent: hasTheme(),
-      health: clone(state.health)
-    };
-  }
-
-  function start() {
-    registerPage({
-      id: state.currentPage,
-      title: document.title || state.currentPage,
-      baseline: document.body && document.body.textContent.indexOf("Root Door Seasonal Solar Baseline") !== -1
-        ? "Generation 1 Root Door Seasonal Solar Baseline 1"
-        : "unbound",
-      theme: state.theme,
-      visibleFirst: hasVisibleRoot()
-    });
-
-    auditCurrentPage();
-
-    publishState();
-  }
-
-  window[RUNTIME_NAME] = Object.freeze({
-    name: RUNTIME_NAME,
-    version: VERSION,
-    start: start,
-    registerPage: registerPage,
-    registerRuntime: registerRuntime,
-    updateRuntimeStatus: updateRuntimeStatus,
-    registerVisibleFirst: registerVisibleFirst,
-    auditCurrentPage: auditCurrentPage,
-    addReceipt: addReceipt,
-    addWarning: addWarning,
-    getState: getState,
-    validate: validate
+    },
+    protectVisibleRoot: protectVisibleRoot,
+    protectVisibleDoor: protectVisibleRoot
   });
 
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
+    document.addEventListener("DOMContentLoaded", boot, { once: true });
   } else {
-    start();
+    boot();
   }
 })();

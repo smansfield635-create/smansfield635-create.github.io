@@ -1,20 +1,18 @@
 /* TNT RENEWAL — /index.js
-   ROOT INDEX JS · COMPASS COCKPIT VENUE-BRIDGE RENEWAL B3
+   ROOT INDEX JS · COMPASS COCKPIT RUNTIME REPAIR B4
 
    ROOT_BOOT_ID = "root-sun-asset-b1"
    COCKPIT_CONTRACT = "root-compass-cockpit-b1"
    SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1
-   RENEWAL_MARKER=ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3
+   RENEWAL_MARKER=ROOT_COMPASS_COCKPIT_RUNTIME_REPAIR_B4
 
    PURPOSE:
      - Renew /index.js only.
-     - Preserve cockpit button binding.
-     - Preserve visible sun fallback.
-     - Preserve DGBIndexBoot.
-     - Preserve DGBCompassCockpit.
-     - Add optional venue bridge to /world/control.js.
-     - Use /world/control.js as venue geometry authority when available.
-     - Do not require /world/control.js for basic cockpit function.
+     - Repair cockpit runtime exposure.
+     - Expose DGBIndexBoot and DGBCompassCockpit before optional venue work.
+     - Bind cockpit controls directly.
+     - Preserve visible sun fallback unless visible canvas/SVG is confirmed.
+     - Keep /world/control.js bridge optional and non-blocking.
      - Do not move the galaxy/environment.
      - Cockpit repositions view posture relative to the fixed field.
 
@@ -25,20 +23,22 @@
      ensureFallbackSun
      held-by-canopy
      root-compass-cockpit-b1
-     ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3
+     ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1
+     ROOT_COMPASS_COCKPIT_RUNTIME_REPAIR_B4
 */
 
 (function () {
   "use strict";
 
   var VERSION = "root-compass-cockpit-b1";
-  var RENEWAL = "ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3";
+  var RENEWAL = "ROOT_COMPASS_COCKPIT_RUNTIME_REPAIR_B4";
   var SOURCE_MARKER = "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
   var WORLD_CONTROL_PATH = "/world/control.js";
   var STATE_EVENT = "dgb:cockpit:viewchange";
   var VENUE_EVENT = "dgb:cockpit:venuebridge";
+  var WORLD_CONTROL_EVENT = "dgb:world-control:loaded";
 
   var VIEW_ORDER = [
     "cinematic",
@@ -184,7 +184,7 @@
     "held-by-canopy",
     "root-compass-cockpit-b1",
     "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1",
-    "ROOT_COMPASS_COCKPIT_VENUE_BRIDGE_RENEWAL_B3",
+    "ROOT_COMPASS_COCKPIT_RUNTIME_REPAIR_B4",
     "/world/control.js"
   ];
 
@@ -207,7 +207,7 @@
     heldByCanopy: false,
     lastAction: "boot",
     venue: {
-      status: "pending",
+      status: "not-loaded",
       path: WORLD_CONTROL_PATH,
       available: false,
       imported: false,
@@ -222,7 +222,8 @@
   };
 
   var worldControlModule = null;
-  var venueImportStarted = false;
+  var venueBridgeStarted = false;
+  var booted = false;
 
   function $(selector, root) {
     return (root || document).querySelector(selector);
@@ -329,17 +330,66 @@
     return fallback;
   }
 
+  function detectVisibleRuntimeSun(mount) {
+    var canvas;
+    var svg;
+
+    if (!mount) {
+      return {
+        canvas: null,
+        svg: null,
+        canvasVisible: false,
+        svgVisible: false,
+        visibleRuntimeSun: false
+      };
+    }
+
+    canvas = mount.querySelector("canvas");
+    svg = mount.querySelector("svg");
+
+    return {
+      canvas: canvas,
+      svg: svg,
+      canvasVisible: Boolean(canvas && visibleNode(canvas)),
+      svgVisible: Boolean(svg && visibleNode(svg)),
+      visibleRuntimeSun: Boolean((canvas && visibleNode(canvas)) || (svg && visibleNode(svg)))
+    };
+  }
+
+  function protectFallbackSun() {
+    var mount = $("[data-dgb-sun-mount]");
+    var fallback = ensureFallbackSun();
+    var runtime = detectVisibleRuntimeSun(mount);
+
+    if (!mount || !fallback) return;
+
+    if (runtime.visibleRuntimeSun) {
+      mount.setAttribute("data-runtime-mounted", "true");
+      fallback.style.removeProperty("display");
+      fallback.style.removeProperty("opacity");
+      fallback.style.removeProperty("visibility");
+      return;
+    }
+
+    mount.removeAttribute("data-runtime-mounted");
+    fallback.style.display = "block";
+    fallback.style.opacity = "0.98";
+    fallback.style.visibility = "visible";
+  }
+
   function detectSunTruth() {
     var root = rootNode();
     var mount = $("[data-dgb-sun-mount]");
     var fallback = ensureFallbackSun();
-    var canvas = mount ? mount.querySelector("canvas") : null;
-    var svg = mount ? mount.querySelector("svg") : null;
+    var runtime;
+
+    protectFallbackSun();
+    runtime = detectVisibleRuntimeSun(mount);
 
     state.rootPresent = Boolean(root);
+    state.canvasVisible = Boolean(runtime.canvasVisible);
+    state.svgVisible = Boolean(runtime.svgVisible);
     state.fallbackVisible = Boolean(fallback && visibleNode(fallback));
-    state.canvasVisible = Boolean(canvas && visibleNode(canvas));
-    state.svgVisible = Boolean(svg && visibleNode(svg));
     state.sunVisible = Boolean(
       mount &&
       (
@@ -349,10 +399,6 @@
         visibleNode(mount)
       )
     );
-
-    if (mount && (canvas || svg)) {
-      mount.setAttribute("data-runtime-mounted", "true");
-    }
 
     return state.sunVisible;
   }
@@ -407,100 +453,6 @@
     });
   }
 
-  function requestVenueBridge() {
-    if (venueImportStarted) return;
-
-    venueImportStarted = true;
-    state.venue.status = "loading";
-    applyVenueDataset();
-
-    if (typeof import !== "function") {
-      state.venue.status = "unsupported";
-      state.venue.error = "dynamic import unavailable";
-      applyVenueDataset();
-      applyNarrative();
-      return;
-    }
-
-    import(WORLD_CONTROL_PATH)
-      .then(function (module) {
-        worldControlModule = module || null;
-        state.venue.available = Boolean(worldControlModule);
-        state.venue.imported = Boolean(worldControlModule);
-        state.venue.status = worldControlModule ? "active" : "unavailable";
-        state.venue.error = "";
-        refreshVenueRead();
-        sync({ dispatch: false });
-        dispatchVenue();
-      })
-      .catch(function (error) {
-        worldControlModule = null;
-        state.venue.available = false;
-        state.venue.imported = false;
-        state.venue.status = "fallback";
-        state.venue.error = error && error.message ? error.message : "world control import failed";
-        applyVenueDataset();
-        applyNarrative();
-        dispatchVenue();
-      });
-  }
-
-  function refreshVenueRead() {
-    var viewport = getViewport();
-    var module = worldControlModule;
-    var receipt;
-    var plan;
-    var camera;
-    var world;
-    var solarPolicy;
-    var labelPolicy;
-
-    state.venue.lastViewport = viewport;
-
-    if (!module) {
-      state.venue.status = state.venue.status === "loading" ? "loading" : "fallback";
-      applyVenueDataset();
-      return state.venue;
-    }
-
-    receipt = safeCall(function () {
-      return module.getControlReceipt({ viewport: viewport });
-    }, null);
-
-    plan = safeCall(function () {
-      return module.getControlPlan({ viewport: viewport });
-    }, null);
-
-    camera = safeCall(function () {
-      return module.getCameraFrame(viewport);
-    }, receipt && receipt.camera ? receipt.camera : null);
-
-    world = safeCall(function () {
-      return module.getUniverseBoundsKm();
-    }, receipt && receipt.world && receipt.world.boundsKm ? receipt.world.boundsKm : null);
-
-    solarPolicy = safeCall(function () {
-      return module.getSolarPolicy();
-    }, receipt && receipt.solarPolicy ? receipt.solarPolicy : null);
-
-    labelPolicy = safeCall(function () {
-      return module.getLabelVisibilityPolicy(viewport);
-    }, receipt && receipt.labelPolicy ? receipt.labelPolicy : null);
-
-    state.venue.status = "active";
-    state.venue.available = true;
-    state.venue.imported = true;
-    state.venue.camera = camera || null;
-    state.venue.world = world || null;
-    state.venue.solarPolicy = solarPolicy || null;
-    state.venue.labelPolicy = labelPolicy || null;
-    state.venue.controlPlan = plan || null;
-    state.venue.error = "";
-
-    applyVenueDataset();
-    return state.venue;
-  }
-
   function getVenueAdjustmentForView(view) {
     var camera = state.venue.camera;
     var viewport = state.venue.lastViewport || getViewport();
@@ -524,7 +476,6 @@
 
     if (view === "local") {
       adjustment.scaleBump = mobile ? 0.025 : 0.045;
-      adjustment.panY = "0px";
     }
 
     if (view === "axis") {
@@ -576,6 +527,126 @@
       root.setAttribute("data-venue-solar-template", String(solar.template || "unknown"));
       root.setAttribute("data-venue-body-count", String(solar.bodyCount || "unknown"));
     }
+  }
+
+  function refreshVenueRead() {
+    var viewport = getViewport();
+    var module = worldControlModule;
+    var receipt;
+    var plan;
+    var camera;
+    var world;
+    var solarPolicy;
+    var labelPolicy;
+
+    state.venue.lastViewport = viewport;
+
+    if (!module) {
+      if (state.venue.status === "loading") {
+        applyVenueDataset();
+        return state.venue;
+      }
+
+      state.venue.status = state.venue.status === "not-loaded" ? "not-loaded" : "fallback";
+      state.venue.available = false;
+      state.venue.imported = false;
+      applyVenueDataset();
+      return state.venue;
+    }
+
+    receipt = safeCall(function () {
+      return module.getControlReceipt({ viewport: viewport });
+    }, null);
+
+    plan = safeCall(function () {
+      return module.getControlPlan({ viewport: viewport });
+    }, null);
+
+    camera = safeCall(function () {
+      return module.getCameraFrame(viewport);
+    }, receipt && receipt.camera ? receipt.camera : null);
+
+    world = safeCall(function () {
+      return module.getUniverseBoundsKm();
+    }, receipt && receipt.world && receipt.world.boundsKm ? receipt.world.boundsKm : null);
+
+    solarPolicy = safeCall(function () {
+      return module.getSolarPolicy();
+    }, receipt && receipt.solarPolicy ? receipt.solarPolicy : null);
+
+    labelPolicy = safeCall(function () {
+      return module.getLabelVisibilityPolicy(viewport);
+    }, receipt && receipt.labelPolicy ? receipt.labelPolicy : null);
+
+    state.venue.status = "active";
+    state.venue.available = true;
+    state.venue.imported = true;
+    state.venue.camera = camera || null;
+    state.venue.world = world || null;
+    state.venue.solarPolicy = solarPolicy || null;
+    state.venue.labelPolicy = labelPolicy || null;
+    state.venue.controlPlan = plan || null;
+    state.venue.error = "";
+
+    applyVenueDataset();
+    return state.venue;
+  }
+
+  function requestVenueBridge() {
+    var script;
+
+    if (venueBridgeStarted) return;
+
+    venueBridgeStarted = true;
+    state.venue.status = "loading";
+    applyVenueDataset();
+    applyNarrative();
+
+    window.addEventListener(WORLD_CONTROL_EVENT, function () {
+      if (window.__DGB_WORLD_CONTROL_MODULE) {
+        worldControlModule = window.__DGB_WORLD_CONTROL_MODULE;
+        state.venue.status = "active";
+        state.venue.available = true;
+        state.venue.imported = true;
+        state.venue.error = "";
+        refreshVenueRead();
+        sync({ dispatch: false });
+        dispatchVenue();
+      }
+    }, { once: true });
+
+    script = document.createElement("script");
+    script.type = "module";
+    script.setAttribute("data-dgb-venue-bridge-loader", "world-control");
+
+    script.textContent =
+      "import * as control from " + JSON.stringify(WORLD_CONTROL_PATH) + ";\n" +
+      "window.__DGB_WORLD_CONTROL_MODULE = control;\n" +
+      "window.dispatchEvent(new CustomEvent(" + JSON.stringify(WORLD_CONTROL_EVENT) + ", { detail: { ok: true, path: " + JSON.stringify(WORLD_CONTROL_PATH) + " } }));\n";
+
+    script.addEventListener("error", function () {
+      state.venue.status = "fallback";
+      state.venue.available = false;
+      state.venue.imported = false;
+      state.venue.error = "module script failed";
+      applyVenueDataset();
+      applyNarrative();
+      dispatchVenue();
+    });
+
+    document.head.appendChild(script);
+
+    window.setTimeout(function () {
+      if (state.venue.status === "loading" && !worldControlModule) {
+        state.venue.status = "fallback";
+        state.venue.available = false;
+        state.venue.imported = false;
+        state.venue.error = "venue bridge timeout";
+        applyVenueDataset();
+        applyNarrative();
+        dispatchVenue();
+      }
+    }, 2200);
   }
 
   function applyDataset() {
@@ -659,7 +730,7 @@
     if (state.venue.status === "active") return " Venue bridge active.";
     if (state.venue.status === "loading") return " Venue bridge loading.";
     if (state.venue.status === "fallback") return " Venue bridge unavailable; cockpit fallback active.";
-    if (state.venue.status === "unsupported") return " Venue bridge unsupported; cockpit fallback active.";
+    if (state.venue.status === "not-loaded") return " Venue bridge not loaded.";
     return "";
   }
 
@@ -687,21 +758,10 @@
   }
 
   function enforceModeSideEffects(view) {
-    if (view === "axis") {
-      state.toggles.axes = true;
-    }
-
-    if (view === "paths") {
-      state.toggles.paths = true;
-    }
-
-    if (view === "galaxy") {
-      state.toggles.milkyWay = true;
-    }
-
-    if (view === "nebula") {
-      state.toggles.nebula = true;
-    }
+    if (view === "axis") state.toggles.axes = true;
+    if (view === "paths") state.toggles.paths = true;
+    if (view === "galaxy") state.toggles.milkyWay = true;
+    if (view === "nebula") state.toggles.nebula = true;
 
     if (view === "control") {
       state.toggles.axes = true;
@@ -716,12 +776,14 @@
 
   function sync(options) {
     refreshVenueRead();
+    protectFallbackSun();
     detectSunTruth();
     detectCanopyTruth();
     applyDataset();
     applyCockpitPosture();
     applyButtonState();
     applyNarrative();
+    exposePublicApi();
 
     if (!options || options.dispatch !== false) {
       dispatchState();
@@ -851,6 +913,7 @@
         applyButtonState();
         applyCockpitPosture();
         applyNarrative();
+        exposePublicApi();
       }).observe(root, {
         attributes: true,
         attributeFilter: ["data-cockpit-view", "data-cosmic-view"]
@@ -879,9 +942,10 @@
       sync({ dispatch: false });
     });
 
-    [80, 250, 750, 1500, 2600].forEach(function (delay) {
+    [50, 120, 300, 750, 1500, 2600, 4200].forEach(function (delay) {
       window.setTimeout(function () {
         bindControls();
+        protectFallbackSun();
         sync({ dispatch: false });
       }, delay);
     });
@@ -976,20 +1040,7 @@
   }
 
   function exposePublicApi() {
-    window.DGBIndexBoot = {
-      version: VERSION,
-      renewal: RENEWAL,
-      rootBootId: ROOT_BOOT_ID,
-      status: "held-by-canopy",
-      ensureFallbackSun: ensureFallbackSun,
-      applyView: applyView,
-      toggleLayer: toggleLayer,
-      setLayer: setLayer,
-      sync: sync,
-      getPublicState: getPublicState
-    };
-
-    window.DGBCompassCockpit = {
+    var api = {
       version: VERSION,
       renewal: RENEWAL,
       rootBootId: ROOT_BOOT_ID,
@@ -1005,10 +1056,22 @@
       getVenueState: getVenueState,
       getPublicState: getPublicState
     };
+
+    window.DGBIndexBoot = api;
+    window.DGBCompassCockpit = api;
   }
 
   function boot() {
     var root = rootNode();
+
+    if (booted) {
+      exposePublicApi();
+      bindControls();
+      sync({ dispatch: false });
+      return;
+    }
+
+    booted = true;
 
     if (root) {
       root.setAttribute("data-index-boot", VERSION);
@@ -1017,21 +1080,24 @@
       root.setAttribute("data-js-source-marker", SOURCE_MARKER);
       root.setAttribute("data-js-renewal-marker", RENEWAL);
       root.setAttribute("data-compass-cockpit", VERSION);
-      root.setAttribute("data-venue-bridge", "pending");
+      root.setAttribute("data-venue-bridge", "not-loaded");
       root.setAttribute("data-venue-source", WORLD_CONTROL_PATH);
     }
 
     readInitialStateFromDom();
     ensureFallbackSun();
     exposePublicApi();
+    protectFallbackSun();
     bindControls();
     installRuntimeObserver();
     installResizeSync();
-    requestVenueBridge();
     sync({ dispatch: false });
+    requestVenueBridge();
     schedulePostRuntimeSync();
     dispatchState();
   }
+
+  exposePublicApi();
 
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", boot, { once: true });

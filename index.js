@@ -1,13 +1,13 @@
 (function () {
   "use strict";
 
-  var VERSION = "luminous-expanding-plasma-b4";
+  var VERSION = "luminous-centered-plasma-b5";
   var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=" + VERSION;
   var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=" + VERSION;
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var SUN_ASSET_RUNTIME_NAME = "DGBSunAssetRuntime";
 
-  var BASELINE = "Generation 1 Sun Asset Spine Baseline 1";
+  var BASELINE = "Generation 1 Sun Asset Spine Baseline 2";
   var THEME = "Learn to Live to Love";
 
   var bootState = {
@@ -206,11 +206,11 @@
       seed: 4217,
       intensity: 0.96,
       animate: true,
-      frameRate: 18,
+      frameRate: 14,
       version: VERSION
     }).then(function () {
       bootState.sunMounted = true;
-      setStatus("Sun asset active · luminous expanding plasma b4");
+      setStatus("Sun asset active · luminous centered plasma b5");
 
       if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
         window[SITE_RUNTIME_NAME].updateRuntimeStatus("sunAssetRuntime", {

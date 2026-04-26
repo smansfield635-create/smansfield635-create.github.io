@@ -9,27 +9,25 @@
     content="Diamond Gate Bridge: a universe and sun-centered entry surface built around Learn to Live to Love."
   />
 
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=root-sun-canvas-b1" />
+
   <style>
     :root {
+      color-scheme: dark;
       --bg: #02040b;
       --text: #fff8e7;
       --muted: rgba(255, 248, 231, 0.72);
       --soft: rgba(255, 248, 231, 0.52);
       --line: rgba(255, 248, 231, 0.18);
       --line-strong: rgba(255, 248, 231, 0.34);
-
-      --sun-glow: 0.58;
-      --corona-intensity: 0.56;
-      --stellar-depth: 0.50;
-      --orbit-breath: 0.50;
-      --sun-pulse: 1;
-      --sun-tilt-x: -6deg;
-      --sun-tilt-y: 0deg;
-
+      --gold: rgba(255, 217, 138, 0.92);
       --max: 1180px;
+      --dgb-sun-size: min(92vw, 680px);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
     html,
     body {
@@ -37,16 +35,16 @@
       margin: 0;
       background: var(--bg);
       color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
     body {
       overflow-x: hidden;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 50% 14%, rgba(255, 196, 86, 0.13), transparent 23rem),
-        radial-gradient(circle at 18% 20%, rgba(88, 122, 255, 0.12), transparent 18rem),
-        radial-gradient(circle at 82% 15%, rgba(255, 248, 231, 0.07), transparent 18rem),
-        linear-gradient(180deg, #071225 0%, #030714 54%, #010309 100%);
+        radial-gradient(circle at 50% 24%, rgba(255, 161, 45, 0.18), transparent 22rem),
+        radial-gradient(circle at 20% 16%, rgba(88, 122, 255, 0.13), transparent 18rem),
+        radial-gradient(circle at 82% 12%, rgba(255, 248, 231, 0.07), transparent 16rem),
+        linear-gradient(180deg, #071225 0%, #030714 50%, #010309 100%);
     }
 
     body::before {
@@ -57,34 +55,11 @@
       pointer-events: none;
       background-image:
         radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(255,217,138,0.28) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(255,255,255,0.18) 0 1px, transparent 1.4px);
+        radial-gradient(circle, rgba(255,217,138,0.26) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,255,255,0.16) 0 1px, transparent 1.4px);
       background-size: 91px 91px, 143px 143px, 229px 229px;
       background-position: 12px 26px, 52px 72px, 118px 44px;
-      opacity: calc(0.20 + var(--stellar-depth) * 0.08);
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: -24%;
-      z-index: 0;
-      pointer-events: none;
-      background:
-        conic-gradient(
-          from 90deg at 50% 43%,
-          transparent 0deg,
-          rgba(255, 217, 138, 0.050) 28deg,
-          transparent 68deg,
-          rgba(255, 248, 231, 0.032) 114deg,
-          transparent 166deg,
-          rgba(255, 124, 32, 0.042) 218deg,
-          transparent 270deg,
-          rgba(255, 217, 138, 0.045) 318deg,
-          transparent 360deg
-        );
-      opacity: calc(0.50 + var(--sun-glow) * 0.20);
-      transform: scale(calc(1 + var(--stellar-depth) * 0.018));
+      opacity: 0.22;
     }
 
     a {
@@ -92,7 +67,7 @@
       text-decoration: none;
     }
 
-    .sun-page {
+    .page {
       position: relative;
       z-index: 1;
       width: min(100%, var(--max));
@@ -109,7 +84,6 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      padding-top: 2px;
     }
 
     .brand {
@@ -168,8 +142,8 @@
     .hero {
       position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(340px, 1.18fr);
-      gap: clamp(22px, 5vw, 54px);
+      grid-template-columns: minmax(0, 0.76fr) minmax(340px, 1.24fr);
+      gap: clamp(18px, 5vw, 58px);
       align-items: center;
       min-height: calc(100vh - 138px);
       padding: clamp(10px, 3vw, 28px) 0;
@@ -177,14 +151,14 @@
 
     .hero-copy {
       position: relative;
-      z-index: 4;
+      z-index: 5;
     }
 
     .eyebrow {
       margin: 0 0 14px;
-      color: rgba(255, 217, 138, 0.70);
+      color: var(--gold);
       font-size: 0.74rem;
-      font-weight: 800;
+      font-weight: 850;
       letter-spacing: 0.17em;
       text-transform: uppercase;
     }
@@ -208,7 +182,7 @@
         0 0 72px rgba(255, 138, 45, 0.16);
     }
 
-    .sun-statement {
+    .statement {
       max-width: 620px;
       margin: 18px 0 0;
       color: var(--muted);
@@ -216,48 +190,76 @@
       line-height: 1.62;
     }
 
-    .primary-actions {
+    .nav-rail {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
-    .action {
+    .nav-rail a {
+      min-height: 44px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 44px;
-      border: 1px solid var(--line-strong);
+      border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 11px 15px;
-      background: linear-gradient(135deg, rgba(255,217,138,0.18), rgba(255,255,255,0.045));
+      padding: 11px 14px;
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.09), transparent 34%),
+        rgba(4, 9, 20, 0.58);
       color: var(--text);
-      box-shadow: 0 12px 34px rgba(0,0,0,0.28);
-      font-size: 0.9rem;
-      font-weight: 720;
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.30),
+        0 0 20px rgba(255,217,138,0.06);
+      backdrop-filter: blur(9px);
+      font-size: 0.86rem;
+      font-weight: 760;
     }
 
-    .action.secondary {
-      color: var(--muted);
-      background: rgba(255,255,255,0.04);
-      border-color: var(--line);
-    }
-
-    .universe-field {
+    .sun-field {
       position: relative;
-      min-height: min(78vh, 720px);
+      min-height: min(78vh, 760px);
       display: grid;
       place-items: center;
-      perspective: 1250px;
-      overflow: visible;
       isolation: isolate;
     }
 
-    .mobile-lockup {
+    .sun-field::before {
+      content: "";
+      position: absolute;
+      width: 106%;
+      aspect-ratio: 1;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(255, 217, 138, 0.16), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(255, 97, 22, 0.10), transparent 54%),
+        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), transparent 72%);
+      filter: blur(14px);
+      opacity: 0.82;
+      pointer-events: none;
+    }
+
+    .sun-mount {
+      position: relative;
+      z-index: 4;
+      width: min(94vw, 720px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    .sun-mount canvas,
+    .sun-mount img,
+    .sun-mount .dgb-sun-stage {
+      width: min(94vw, 720px);
+      max-width: 100%;
+    }
+
+    .mobile-title {
       display: none;
       position: absolute;
-      z-index: 12;
+      z-index: 8;
       top: 0;
       left: 50%;
       width: min(100%, 560px);
@@ -266,15 +268,15 @@
       pointer-events: none;
     }
 
-    .mobile-lockup strong {
+    .mobile-title strong {
       display: block;
-      font-size: clamp(1.55rem, 8vw, 2.85rem);
+      font-size: clamp(1.6rem, 8vw, 2.9rem);
       line-height: 0.9;
       letter-spacing: -0.075em;
       text-shadow: 0 0 38px rgba(255, 217, 138, 0.25);
     }
 
-    .mobile-lockup span {
+    .mobile-title span {
       display: block;
       margin-top: 8px;
       color: #fff8e7;
@@ -284,259 +286,33 @@
       text-shadow: 0 0 42px rgba(255, 203, 101, 0.28);
     }
 
-    .universe-system {
+    .mobile-nav {
+      display: none;
       position: relative;
-      width: min(86vw, 650px);
-      min-height: 660px;
+      z-index: 7;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      width: 100%;
+      margin-top: -10px;
+    }
+
+    .mobile-nav a {
+      min-height: 50px;
       display: grid;
       place-items: center;
-      transform-style: preserve-3d;
-    }
-
-    .universe-system::before {
-      content: "";
-      position: absolute;
-      width: 96%;
-      aspect-ratio: 1;
-      border-radius: 999px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 10px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255, 217, 138, 0.17), transparent 29%),
-        radial-gradient(circle at 50% 50%, rgba(255, 130, 34, 0.08), transparent 58%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.045), transparent 72%);
-      filter: blur(12px);
-      opacity: calc(0.66 + var(--sun-glow) * 0.16);
-      transform: scale(calc(1 + var(--sun-glow) * 0.02));
-      pointer-events: none;
-    }
-
-    .orbit-ring {
-      position: absolute;
-      z-index: 1;
-      border: 1px solid rgba(255, 248, 231, 0.12);
-      border-radius: 999px;
-      pointer-events: none;
-      box-shadow:
-        inset 0 0 28px rgba(255,217,138,0.025),
-        0 0 30px rgba(255,217,138,0.030);
-    }
-
-    .orbit-ring.one {
-      width: 96%;
-      aspect-ratio: 1;
-      transform: rotateX(66deg) rotateZ(-16deg) scale(calc(1 + var(--orbit-breath) * 0.014));
-    }
-
-    .orbit-ring.two {
-      width: 76%;
-      aspect-ratio: 1;
-      opacity: 0.78;
-      transform: rotateX(73deg) rotateZ(21deg) scale(calc(1 + var(--orbit-breath) * 0.010));
-    }
-
-    .orbit-ring.three {
-      width: 58%;
-      aspect-ratio: 1;
-      opacity: 0.54;
-      transform: rotateX(58deg) rotateY(22deg) rotateZ(48deg);
-    }
-
-    .route-node {
-      position: absolute;
-      z-index: 10;
-      left: 50%;
-      top: 50%;
-      width: 112px;
-      min-height: 54px;
-      display: grid;
-      place-items: center;
-      border: 1px solid rgba(255,248,231,0.18);
-      border-radius: 18px;
-      padding: 8px 10px;
-      background:
-        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.11), transparent 34%),
-        rgba(4, 9, 20, 0.58);
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.09), transparent 34%),
+        rgba(4, 9, 20, 0.62);
+      color: var(--text);
       box-shadow:
         0 12px 30px rgba(0,0,0,0.30),
         0 0 20px rgba(255,217,138,0.06);
       backdrop-filter: blur(9px);
-      color: var(--text);
-      text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.78rem;
       font-weight: 780;
-      letter-spacing: 0.02em;
-      --route-x: -50%;
-      --route-y: -50%;
-      transform: translate(var(--route-x), var(--route-y));
-      transition:
-        transform 180ms ease,
-        border-color 180ms ease,
-        background 180ms ease,
-        box-shadow 180ms ease;
-    }
-
-    .route-node small {
-      display: block;
-      margin-top: 4px;
-      color: var(--soft);
-      font-size: 0.58rem;
-      font-weight: 650;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-    }
-
-    .route-node:hover,
-    .route-node:focus-visible {
-      outline: none;
-      transform: translate(var(--route-x), var(--route-y)) scale(1.045);
-      border-color: rgba(255, 217, 138, 0.58);
-      background:
-        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.18), transparent 34%),
-        rgba(8, 12, 25, 0.78);
-      box-shadow:
-        0 16px 44px rgba(0,0,0,0.38),
-        0 0 34px rgba(255,217,138,0.15);
-    }
-
-    .route-node.prelude { --route-x: -50%; --route-y: -344%; }
-    .route-node.explore { --route-x: 94%; --route-y: -284%; }
-    .route-node.products { --route-x: 160%; --route-y: -50%; }
-    .route-node.gauges { --route-x: 94%; --route-y: 184%; }
-    .route-node.frontier { --route-x: -50%; --route-y: 244%; }
-    .route-node.laws { --route-x: -194%; --route-y: 184%; }
-    .route-node.governance { --route-x: -260%; --route-y: -50%; }
-    .route-node.home { --route-x: -194%; --route-y: -284%; }
-
-    .sun-object {
-      position: relative;
-      z-index: 6;
-      width: min(64vw, 380px);
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
-      border-radius: 999px;
-      transform-style: preserve-3d;
-      transform:
-        rotateX(var(--sun-tilt-x))
-        rotateY(var(--sun-tilt-y))
-        scale(var(--sun-pulse));
-      transition: transform 160ms ease-out;
-    }
-
-    .sun-object::before {
-      content: "";
-      position: absolute;
-      inset: -18%;
-      border-radius: 999px;
-      background:
-        conic-gradient(
-          from 17deg,
-          transparent 0deg,
-          rgba(255, 137, 34, calc(0.22 + var(--corona-intensity) * 0.11)) 14deg,
-          rgba(255, 250, 218, 0.15) 26deg,
-          transparent 42deg,
-          rgba(255, 83, 18, 0.18) 74deg,
-          transparent 104deg,
-          rgba(255, 219, 126, 0.22) 136deg,
-          transparent 170deg,
-          rgba(255, 127, 32, 0.18) 218deg,
-          rgba(255, 255, 230, 0.12) 246deg,
-          transparent 276deg,
-          rgba(255, 172, 50, 0.21) 320deg,
-          transparent 360deg
-        );
-      filter: blur(1.6px);
-      opacity: calc(0.70 + var(--corona-intensity) * 0.23);
-      animation: coronaTurn 28s linear infinite;
-      pointer-events: none;
-    }
-
-    .sun-object::after {
-      content: "";
-      position: absolute;
-      inset: -31%;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle, transparent 42%, rgba(255,196,84,0.17) 44%, transparent 49%),
-        conic-gradient(
-          from 66deg,
-          transparent,
-          rgba(255, 201, 89, 0.15),
-          transparent 22deg,
-          rgba(255, 98, 27, 0.12),
-          transparent 78deg,
-          rgba(255,255,230,0.08),
-          transparent 134deg
-        );
-      opacity: calc(0.50 + var(--corona-intensity) * 0.18);
-      animation: coronaTurnReverse 42s linear infinite;
-      pointer-events: none;
-    }
-
-    .sun-core {
-      position: relative;
-      z-index: 3;
-      width: 76%;
-      aspect-ratio: 1;
-      overflow: hidden;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.26);
-      background:
-        radial-gradient(circle at 31% 24%, rgba(255,255,246,0.98) 0 5%, transparent 14%),
-        radial-gradient(circle at 63% 34%, rgba(255,255,225,0.86) 0 4%, transparent 12%),
-        radial-gradient(circle at 42% 70%, rgba(255,239,143,0.74) 0 5%, transparent 16%),
-        radial-gradient(circle at 53% 51%, rgba(255,232,104,0.86), rgba(255,139,31,0.78) 36%, rgba(190,52,12,0.58) 68%, rgba(54,12,4,0.72) 100%),
-        conic-gradient(
-          from 17deg,
-          rgba(255,246,169,0.92),
-          rgba(255,116,22,0.80),
-          rgba(255,217,95,0.94),
-          rgba(161,45,10,0.72),
-          rgba(255,151,35,0.88),
-          rgba(255,245,178,0.86),
-          rgba(255,104,24,0.78),
-          rgba(255,246,169,0.92)
-        );
-      box-shadow:
-        inset 0 0 28px rgba(255,255,255,0.22),
-        inset 0 -38px 76px rgba(44, 7, 2, 0.36),
-        inset 0 0 0 16px rgba(68, 16, 6, 0.14),
-        0 0 calc(44px + var(--sun-glow) * 24px) rgba(255, 208, 91, 0.40),
-        0 0 calc(120px + var(--sun-glow) * 48px) rgba(255, 96, 23, 0.24);
-    }
-
-    .sun-core::before {
-      content: "";
-      position: absolute;
-      inset: -6%;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 18% 42%, rgba(105, 24, 5, 0.34) 0 4%, transparent 10%),
-        radial-gradient(circle at 36% 35%, rgba(255,255,218,0.42) 0 2%, transparent 8%),
-        radial-gradient(circle at 57% 59%, rgba(112, 27, 6, 0.30) 0 5%, transparent 12%),
-        radial-gradient(circle at 72% 41%, rgba(255,246,180,0.30) 0 3%, transparent 10%),
-        radial-gradient(circle at 49% 21%, rgba(128, 31, 8, 0.26) 0 5%, transparent 13%),
-        repeating-conic-gradient(
-          from 22deg,
-          rgba(255,255,255,0.08) 0deg 3deg,
-          rgba(255,139,28,0.08) 3deg 7deg,
-          rgba(82,17,4,0.08) 7deg 10deg
-        );
-      mix-blend-mode: overlay;
-      opacity: 0.82;
-      animation: photosphereDrift 36s linear infinite;
-    }
-
-    .sun-core::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: 999px;
-      background:
-        radial-gradient(circle at 50% 50%, transparent 53%, rgba(18, 5, 1, 0.50) 100%),
-        radial-gradient(circle at 22% 23%, rgba(255,255,255,0.36), transparent 19%),
-        radial-gradient(circle at 75% 73%, rgba(255,221,94,0.17), transparent 24%);
-      opacity: 0.84;
-      pointer-events: none;
     }
 
     .bottom-strip {
@@ -547,6 +323,7 @@
       color: var(--soft);
       font-size: 0.78rem;
       padding-bottom: 4px;
+      flex-wrap: wrap;
     }
 
     .bottom-strip span {
@@ -554,23 +331,6 @@
       border-radius: 999px;
       padding: 7px 10px;
       background: rgba(255,255,255,0.035);
-    }
-
-    @keyframes coronaTurn {
-      from { transform: rotate(0deg) scale(1); }
-      50% { transform: rotate(180deg) scale(1.026); }
-      to { transform: rotate(360deg) scale(1); }
-    }
-
-    @keyframes coronaTurnReverse {
-      from { transform: rotate(360deg); }
-      to { transform: rotate(0deg); }
-    }
-
-    @keyframes photosphereDrift {
-      from { transform: rotate(0deg) scale(1.04); }
-      50% { transform: rotate(180deg) scale(1.08); }
-      to { transform: rotate(360deg) scale(1.04); }
     }
 
     @media (max-width: 980px) {
@@ -583,26 +343,22 @@
         text-align: center;
       }
 
-      .sun-statement {
+      .statement {
         margin-left: auto;
         margin-right: auto;
       }
 
-      .primary-actions {
+      .nav-rail {
         justify-content: center;
       }
 
-      .universe-field {
-        min-height: 720px;
-      }
-
-      .universe-system {
-        width: min(96vw, 690px);
+      .sun-field {
+        min-height: 680px;
       }
     }
 
     @media (max-width: 680px) {
-      .sun-page {
+      .page {
         padding: 14px;
       }
 
@@ -616,54 +372,36 @@
       }
 
       .hero {
-        gap: 10px;
+        gap: 8px;
       }
 
       .hero-copy {
         display: none;
       }
 
-      .mobile-lockup {
+      .mobile-title {
         display: block;
       }
 
-      .universe-field {
-        min-height: 760px;
-        padding: 92px 0 8px;
+      .sun-field {
+        min-height: 585px;
+        padding-top: 92px;
       }
 
-      .universe-system {
-        width: 100%;
-        min-height: 660px;
+      .sun-mount {
+        width: min(106vw, 460px);
+        margin-top: 10px;
       }
 
-      .sun-object {
-        width: min(78vw, 320px);
-        margin-top: 0;
+      .sun-mount canvas,
+      .sun-mount img,
+      .sun-mount .dgb-sun-stage {
+        width: min(106vw, 460px);
       }
 
-      .route-node {
-        width: calc(50% - 13px);
-        min-height: 48px;
-        border-radius: 15px;
-        font-size: 0.73rem;
-        background:
-          radial-gradient(circle at 28% 20%, rgba(255,255,255,0.09), transparent 34%),
-          rgba(4, 9, 20, 0.50);
+      .mobile-nav {
+        display: grid;
       }
-
-      .route-node small {
-        display: none;
-      }
-
-      .route-node.prelude { --route-x: -104%; --route-y: -452%; }
-      .route-node.explore { --route-x: 4%; --route-y: -452%; }
-      .route-node.products { --route-x: -104%; --route-y: 330%; }
-      .route-node.gauges { --route-x: 4%; --route-y: 330%; }
-      .route-node.frontier { --route-x: -104%; --route-y: 448%; }
-      .route-node.laws { --route-x: 4%; --route-y: 448%; }
-      .route-node.governance { --route-x: -104%; --route-y: 566%; }
-      .route-node.home { --route-x: 4%; --route-y: 566%; }
 
       .bottom-strip {
         align-items: flex-start;
@@ -672,41 +410,25 @@
     }
 
     @media (max-width: 420px) {
-      .sun-object {
-        width: min(82vw, 300px);
+      .sun-field {
+        min-height: 555px;
       }
 
-      .universe-field {
-        min-height: 740px;
+      .sun-mount {
+        width: min(112vw, 430px);
       }
 
-      .route-node.prelude { --route-x: -104%; --route-y: -432%; }
-      .route-node.explore { --route-x: 4%; --route-y: -432%; }
-      .route-node.products { --route-x: -104%; --route-y: 314%; }
-      .route-node.gauges { --route-x: 4%; --route-y: 314%; }
-      .route-node.frontier { --route-x: -104%; --route-y: 432%; }
-      .route-node.laws { --route-x: 4%; --route-y: 432%; }
-      .route-node.governance { --route-x: -104%; --route-y: 550%; }
-      .route-node.home { --route-x: 4%; --route-y: 550%; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .sun-object::before,
-      .sun-object::after,
-      .sun-core::before {
-        animation: none;
-      }
-
-      .route-node,
-      .sun-object {
-        transition: none;
+      .sun-mount canvas,
+      .sun-mount img,
+      .sun-mount .dgb-sun-stage {
+        width: min(112vw, 430px);
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="sun-page" id="door-root" data-root-door data-universe-sun>
+  <main class="page" id="door-root" data-root-door data-universe-sun>
     <header class="topbar" aria-label="Diamond Gate Bridge universe header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span class="brand-mark" aria-hidden="true"></span>
@@ -719,60 +441,67 @@
       <span class="status-pill" data-door-boot-status>Visible-first universe sun active</span>
     </header>
 
-    <section class="hero" aria-labelledby="sun-title">
+    <section class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
         <p class="eyebrow">A universe-centered public surface</p>
-        <h1 id="sun-title">Diamond Gate Bridge</h1>
+        <h1 id="page-title">Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
-        <p class="sun-statement">
+        <p class="statement">
           A cosmic entry surface centered on one sun, one field, and one clear path forward.
         </p>
 
-        <div class="primary-actions" aria-label="Primary entry actions">
-          <a class="action" href="/products/">Enter Products</a>
-          <a class="action secondary" href="/gauges/">Check Site Health</a>
-        </div>
+        <nav class="nav-rail" aria-label="Primary navigation">
+          <a href="/prelude/">Prelude</a>
+          <a href="/explore/">Explore</a>
+          <a href="/products/">Products</a>
+          <a href="/gauges/">Gauges</a>
+          <a href="/laws/">Laws</a>
+          <a href="/governance/">Governance</a>
+        </nav>
       </div>
 
-      <div class="universe-field" aria-label="Universe and sun navigation">
-        <div class="mobile-lockup" aria-hidden="true">
+      <div class="sun-field" aria-label="Universe sun visual field">
+        <div class="mobile-title" aria-hidden="true">
           <strong>Diamond Gate Bridge</strong>
           <span>Learn to Live to Love</span>
         </div>
 
-        <div class="universe-system" data-universe-system>
-          <div class="orbit-ring one" aria-hidden="true"></div>
-          <div class="orbit-ring two" aria-hidden="true"></div>
-          <div class="orbit-ring three" aria-hidden="true"></div>
-
-          <a class="route-node prelude" href="/prelude/">Prelude<small>begin</small></a>
-          <a class="route-node explore" href="/explore/">Explore<small>map</small></a>
-          <a class="route-node products" href="/products/">Products<small>build</small></a>
-          <a class="route-node gauges" href="/gauges/">Gauges<small>health</small></a>
-          <a class="route-node frontier" href="/frontier/">Frontier<small>edge</small></a>
-          <a class="route-node laws" href="/laws/">Laws<small>rules</small></a>
-          <a class="route-node governance" href="/governance/">Governance<small>scale</small></a>
-          <a class="route-node home" href="/">Home<small>return</small></a>
-
-          <div class="sun-object" data-universe-sun-object aria-hidden="true">
-            <div class="sun-core"></div>
+        <div
+          class="sun-mount"
+          data-dgb-sun-mount
+          data-sun-mode="canvas"
+          aria-label="Procedural sun from space"
+        >
+          <div class="dgb-sun-stage" aria-hidden="true">
+            <div class="dgb-sun-css">
+              <div class="dgb-sun-core"></div>
+            </div>
           </div>
         </div>
       </div>
+
+      <nav class="mobile-nav" aria-label="Mobile navigation">
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/products/">Products</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+      </nav>
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Root Universe Sun Baseline 2</span>
-      <span>Universe first · Sun only · Runtime second</span>
+      <span>Generation 1 · Root Universe Sun Asset Baseline 1</span>
+      <span>Universe first · Sun asset runtime · No grid</span>
     </footer>
   </main>
 
   <noscript>
     <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
-      JavaScript is off. The universe and sun remain visible and usable.
+      JavaScript is off. The CSS sun fallback remains visible and usable.
     </div>
   </noscript>
 
-  <script src="/index.js?v=root-universe-sun-b2" defer></script>
+  <script src="/index.js?v=root-sun-asset-b1" defer></script>
 </body>
 </html>

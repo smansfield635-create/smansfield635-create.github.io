@@ -4,7 +4,8 @@
   var RUNTIME_NAME = "DGBSunAssetRuntime";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var CANVAS_GLOBAL = "DGBSunCanvas";
-  var VERSION = "satellite-solar-disc-b6";
+  var VERSION = "universe-scale-field-b7";
+  var CANVAS_VERSION = "satellite-solar-disc-b6";
 
   var PATHS = {
     css: "/assets/sun/sun_material.css?v=" + VERSION,
@@ -17,6 +18,7 @@
     started: false,
     mode: "canvas",
     version: VERSION,
+    canvasVersion: CANVAS_VERSION,
     mounts: [],
     warnings: [],
     receipts: []
@@ -109,8 +111,8 @@
 
   function getMountSize(mount) {
     var rect = mount.getBoundingClientRect();
-    var width = rect && rect.width ? rect.width : Math.min(window.innerWidth * 0.92, 700);
-    return Math.round(Math.max(320, Math.min(width, 720)));
+    var width = rect && rect.width ? rect.width : Math.min(window.innerWidth * 0.76, 470);
+    return Math.round(Math.max(280, Math.min(width, 500)));
   }
 
   function removeExistingMountRecord(mount) {
@@ -130,7 +132,7 @@
 
     var canvas = document.createElement("canvas");
     canvas.className = "dgb-sun-canvas";
-    canvas.setAttribute("aria-label", "Satellite-style solar disc");
+    canvas.setAttribute("aria-label", "Satellite-style solar disc within universe scale field");
     canvas.setAttribute("role", "img");
 
     mount.appendChild(canvas);
@@ -144,12 +146,13 @@
       frameRate: 10
     }, options || {}));
 
-    setStatus("Sun asset active · satellite solar disc b6");
+    setStatus("Sun asset active · universe scale field b7");
 
     addReceipt("CANVAS_SUN_MOUNTED", {
       mount: describeMount(mount),
       size: size,
       version: VERSION,
+      canvasVersion: CANVAS_VERSION,
       profile: "satellite-solar-disc-b6"
     });
 
@@ -219,16 +222,17 @@
       siteRuntime().registerRuntime({
         id: "sunAssetRuntime",
         page: "home",
-        role: "sun-asset-spine-coordination",
+        role: "universe-scale-field-coordination",
         path: "/runtime/sun_asset_runtime.js",
         version: VERSION,
+        canvasVersion: CANVAS_VERSION,
         validated: true,
         optional: false
       });
     }
 
     return mountAll((config && config.selector) || undefined, config || {}).then(function () {
-      addReceipt("RUNTIME_STARTED", { mode: state.mode, version: VERSION });
+      addReceipt("RUNTIME_STARTED", { mode: state.mode, version: VERSION, canvasVersion: CANVAS_VERSION });
       return getState();
     });
   }
@@ -252,6 +256,7 @@
       started: state.started,
       mode: state.mode,
       version: state.version,
+      canvasVersion: state.canvasVersion,
       mountCount: state.mounts.length,
       warnings: state.warnings.slice(),
       receipts: state.receipts.slice(),
@@ -266,12 +271,13 @@
       started: state.started,
       mode: state.mode,
       version: VERSION,
+      canvasVersion: CANVAS_VERSION,
       canvasAvailable: Boolean(window[CANVAS_GLOBAL]),
       externalImageDependency: false,
       graphicGenerationUsed: false,
       cssSunFallbackActive: false,
       mountAuthority: "canvas",
-      visualTarget: "satellite-style solar disc",
+      visualTarget: "satellite solar disc inside 256M km universe field",
       paths: Object.assign({}, PATHS)
     };
   }

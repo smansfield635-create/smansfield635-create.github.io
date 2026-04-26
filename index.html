@@ -1,437 +1,1148 @@
-(function () {
-  "use strict";
+<!doctype html>
+<!-- TNT — /index.html
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT
+     PURPOSE:
+       - Turn the root Compass/Door page into a cockpit inside the existing universe field
+       - Preserve root sun spine, canopy chain, visible sun fallback, cosmic background, and cosmic control runtime
+       - Cockpit changes view posture; galaxy/environment remains fixed
+       - No GraphicBox, no generated image assets, no external image dependency
+       - KEEP root-sun-asset-b1
+       - KEEP /index.js?v=root-sun-asset-b1
+       - KEEP /runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1
+       - KEEP /runtime/cosmic_background_runtime.js?v=near-solar-background-runtime-b1
+       - KEEP /runtime/cosmic_control_runtime.js?v=cosmic-control-plane-b1
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Diamond Gate Bridge — Learn to Live to Love</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge: a canopy-protected cockpit view into a sun-centered universe field built around Learn to Live to Love."
+  />
 
-  var VERSION = "root-compass-cockpit-b1";
-  var ROOT_BOOT_ID = "root-sun-asset-b1";
-  var CANOPY_VERSION = "spine-canopy-parachute-b1";
-  var STATE_EVENT = "dgb:cockpit:viewchange";
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=root-sun-asset-b1"/>
 
-  var REQUIRED_MARKERS = [
-    'ROOT_BOOT_ID = "root-sun-asset-b1"',
-    "DGBSpineCanopy",
-    "ensureFallbackSun",
-    "held-by-canopy",
-    "root-compass-cockpit-b1"
-  ];
-
-  var VIEW_COPY = {
-    cinematic: {
-      label: "Cinematic",
-      status: "Compass Cockpit B1 · cinematic posture · fixed galaxy truth",
-      narrative: "Cockpit settled into cinematic posture. The ship is reading the existing galaxy without moving the field."
-    },
-    wide: {
-      label: "Wide",
-      status: "Compass Cockpit B1 · wide survey · scale pulled back",
-      narrative: "Cockpit widened its observation cone. The galaxy remains fixed while the ship surveys more of the field."
-    },
-    local: {
-      label: "Local",
-      status: "Compass Cockpit B1 · local solar proximity · sun spine protected",
-      narrative: "Cockpit moved into local solar read. The sun spine remains protected while nearby pressure becomes easier to inspect."
-    },
-    axis: {
-      label: "Axis",
-      status: "Compass Cockpit B1 · Euclidean axis view · coordinate truth exposed",
-      narrative: "Cockpit raised the coordinate grid. This view reads position and axis without pretending the environment moved."
-    },
-    paths: {
-      label: "Paths",
-      status: "Compass Cockpit B1 · route lanes visible · orbital path read",
-      narrative: "Cockpit opened path instrumentation. Travel lanes are visible as a navigation read over the same universe field."
-    },
-    galaxy: {
-      label: "Galaxy",
-      status: "Compass Cockpit B1 · galaxy emphasis · external field fixed",
-      narrative: "Cockpit pulled toward galactic emphasis. The Milky Way layer becomes legible while the ship changes posture around it."
-    },
-    nebula: {
-      label: "Nebula",
-      status: "Compass Cockpit B1 · nebula emphasis · environmental density read",
-      narrative: "Cockpit tuned for nebula density. The view reads atmospheric color and depth without relocating the galaxy."
-    },
-    control: {
-      label: "Control",
-      status: "Compass Cockpit B1 · instrument control · full HUD exposed",
-      narrative: "Cockpit exposed control instrumentation. This is the technical view for verifying posture, toggles, and field protection."
-    }
-  };
-
-  var DEFAULT_TOGGLES = {
-    planets: true,
-    paths: false,
-    axes: false,
-    nebula: true,
-    milkyWay: true,
-    solarWind: true
-  };
-
-  var state = {
-    view: "cinematic",
-    toggles: {
-      planets: true,
-      paths: false,
-      axes: false,
-      nebula: true,
-      milkyWay: true,
-      solarWind: true
-    },
-    rootPresent: false,
-    sunVisible: false,
-    fallbackVisible: false,
-    canvasVisible: false,
-    svgVisible: false,
-    canopyPresent: false,
-    heldByCanopy: false
-  };
-
-  function $(selector, root) {
-    return (root || document).querySelector(selector);
-  }
-
-  function $all(selector, root) {
-    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
-  }
-
-  function setText(selector, value) {
-    var node = $(selector);
-    if (node) node.textContent = value;
-  }
-
-  function boolAttr(node, name, value) {
-    if (node) node.setAttribute(name, value ? "true" : "false");
-  }
-
-  function normalizeView(view) {
-    return VIEW_COPY[view] ? view : "cinematic";
-  }
-
-  function normalizeToggleName(name) {
-    if (Object.prototype.hasOwnProperty.call(DEFAULT_TOGGLES, name)) return name;
-    if (name === "milkyway") return "milkyWay";
-    if (name === "milky_way") return "milkyWay";
-    if (name === "solarwind") return "solarWind";
-    if (name === "solar_wind") return "solarWind";
-    return null;
-  }
-
-  function ensureFallbackSun() {
-    var mount = $("[data-dgb-sun-mount]");
-    var fallback;
-
-    if (!mount) return null;
-
-    fallback = mount.querySelector("[data-sun-fallback]");
-
-    if (!fallback) {
-      fallback = document.createElement("div");
-      fallback.className = "sun-fallback";
-      fallback.setAttribute("data-sun-fallback", "");
-      fallback.setAttribute("aria-hidden", "true");
-      mount.appendChild(fallback);
+  <style>
+    *{box-sizing:border-box}
+    a{color:inherit;text-decoration:none}
+    button{font:inherit}
+    html,body{
+      width:100%;
+      min-height:100%;
+      margin:0;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      background:#030712;
+      overflow-x:hidden;
     }
 
-    return fallback;
-  }
-
-  function detectSunTruth() {
-    var root = $("#door-root") || $("[data-root-door]");
-    var mount = $("[data-dgb-sun-mount]");
-    var fallback = ensureFallbackSun();
-    var canvas = mount ? mount.querySelector("canvas") : null;
-    var svg = mount ? mount.querySelector("svg") : null;
-    var fallbackVisible = Boolean(fallback);
-    var canvasVisible = Boolean(canvas);
-    var svgVisible = Boolean(svg);
-    var sunVisible = Boolean(mount && (fallbackVisible || canvasVisible || svgVisible));
-
-    if (mount && (canvasVisible || svgVisible)) {
-      mount.setAttribute("data-runtime-mounted", "true");
+    :root{
+      color-scheme:dark;
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(255,255,255,.88);
+      --mut:rgba(255,255,255,.72);
+      --soft:rgba(255,255,255,.54);
+      --line:rgba(255,255,255,.12);
+      --line2:rgba(255,255,255,.18);
+      --gold:rgba(255,217,138,.94);
+      --gold2:rgba(201,162,74,.92);
+      --goldSoft:rgba(201,162,74,.16);
+      --red:rgba(255,43,43,.12);
+      --blue:rgba(83,119,255,.14);
+      --violet:rgba(90,40,120,.12);
+      --panel:rgba(7,10,16,.66);
+      --panel2:rgba(12,16,24,.82);
+      --shadow:0 24px 90px rgba(0,0,0,.46);
+      --shadow2:0 16px 48px rgba(0,0,0,.44);
+      --max:1180px;
+      --cockpit-scale:1;
+      --cockpit-tilt:0deg;
+      --cockpit-pan-x:0px;
+      --cockpit-pan-y:0px;
+      --hud-strength:.72;
+      --axis-opacity:.10;
+      --path-opacity:.14;
     }
 
-    state.rootPresent = Boolean(root);
-    state.fallbackVisible = fallbackVisible;
-    state.canvasVisible = canvasVisible;
-    state.svgVisible = svgVisible;
-    state.sunVisible = sunVisible;
+    .universe-sky{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      overflow:hidden;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 7% 16%,rgba(255,255,255,.30) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 18% 73%,rgba(178,205,255,.18) 0 1px,transparent 1.9px),
+        radial-gradient(circle at 31% 42%,rgba(255,230,180,.14) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 54% 18%,rgba(255,255,255,.18) 0 1px,transparent 1.9px),
+        radial-gradient(circle at 72% 79%,rgba(178,205,255,.16) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 91% 34%,rgba(255,255,255,.22) 0 1px,transparent 1.9px),
+        radial-gradient(ellipse at 18% 4%,rgba(67,95,180,.18),transparent 32rem),
+        radial-gradient(ellipse at 82% 18%,rgba(201,162,74,.10),transparent 30rem),
+        radial-gradient(ellipse at 46% 92%,rgba(255,43,43,.07),transparent 34rem),
+        linear-gradient(180deg,#071225 0%,#030817 48%,#01030a 100%);
+    }
 
-    return sunVisible;
-  }
+    .nebula-plane,
+    .milky-way-plane,
+    .star-dust,
+    .deep-star-cluster,
+    .planet-depth,
+    .orbital-dust,
+    .solar-pressure-haze,
+    .solar-wind-sheer,
+    .cosmic-vignette{
+      position:absolute;
+      pointer-events:none;
+      transition:opacity .32s ease, filter .32s ease, transform .32s ease;
+    }
 
-  function detectCanopyTruth() {
-    var canopy = window.DGBSpineCanopy;
-    var canopyState = null;
-    var held = false;
+    .nebula-plane{
+      inset:-24%;
+      background:
+        radial-gradient(ellipse at 12% 22%,rgba(84,119,255,.15),transparent 32%),
+        radial-gradient(ellipse at 78% 19%,rgba(178,87,255,.08),transparent 30%),
+        radial-gradient(ellipse at 64% 75%,rgba(255,218,142,.048),transparent 36%),
+        radial-gradient(ellipse at 34% 65%,rgba(51,177,210,.060),transparent 44%);
+      filter:blur(25px);
+      opacity:.90;
+      transform:rotate(-3deg);
+    }
 
-    if (canopy && typeof canopy.getPublicState === "function") {
-      try {
-        canopyState = canopy.getPublicState();
-      } catch (error) {
-        canopyState = null;
+    .milky-way-plane{
+      inset:-50%;
+      transform:rotate(-32deg) translate3d(-8%,4%,0);
+      background:
+        linear-gradient(90deg,
+          transparent 0%,
+          transparent 26%,
+          rgba(255,255,255,.010) 34%,
+          rgba(129,168,255,.036) 43%,
+          rgba(255,231,184,.024) 49%,
+          rgba(128,168,255,.032) 56%,
+          rgba(255,255,255,.010) 64%,
+          transparent 75%,
+          transparent 100%),
+        radial-gradient(ellipse at 43% 48%,rgba(255,255,255,.060),transparent 31%),
+        radial-gradient(ellipse at 54% 52%,rgba(168,202,255,.046),transparent 34%);
+      opacity:.48;
+      filter:blur(.45px);
+    }
+
+    .star-dust.one{
+      inset:-12%;
+      opacity:.36;
+      background:
+        radial-gradient(circle at 4% 9%,rgba(255,255,255,.34) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 23% 36%,rgba(176,204,255,.24) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 39% 18%,rgba(255,255,255,.28) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 59% 41%,rgba(255,255,255,.27) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 79% 12%,rgba(255,255,255,.30) 0 1px,transparent 1.8px),
+        radial-gradient(circle at 92% 61%,rgba(176,204,255,.22) 0 1px,transparent 1.8px);
+      animation:universeFloatOne 122s linear infinite;
+    }
+
+    .star-dust.two{
+      inset:-14%;
+      opacity:.28;
+      background:
+        radial-gradient(circle at 7% 61%,rgba(255,255,255,.24) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 26% 57%,rgba(255,232,184,.17) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 56% 23%,rgba(255,255,255,.24) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 87% 80%,rgba(176,204,255,.20) 0 1px,transparent 1.7px),
+        radial-gradient(circle at 96% 39%,rgba(255,255,255,.24) 0 1px,transparent 1.7px);
+      animation:universeFloatTwo 158s linear infinite;
+    }
+
+    .deep-star-cluster{
+      inset:-8%;
+      opacity:.20;
+      background:
+        radial-gradient(circle at 18% 48%,rgba(255,255,255,.18) 0 1px,transparent 1.6px),
+        radial-gradient(circle at 20% 51%,rgba(255,255,255,.15) 0 1px,transparent 1.6px),
+        radial-gradient(circle at 71% 29%,rgba(255,255,255,.17) 0 1px,transparent 1.6px),
+        radial-gradient(circle at 73% 32%,rgba(255,230,184,.13) 0 1px,transparent 1.6px);
+    }
+
+    .planet-depth{
+      border-radius:999px;
+      opacity:.24;
+      mix-blend-mode:screen;
+      filter:blur(.45px);
+    }
+
+    .planet-depth::before,
+    .planet-depth::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      pointer-events:none;
+    }
+
+    .planet-depth::before{
+      background:
+        radial-gradient(circle at 36% 30%,rgba(255,255,255,.13),transparent 18%),
+        radial-gradient(circle at 45% 52%,rgba(89,132,214,.16),transparent 39%),
+        radial-gradient(circle at 62% 66%,rgba(16,34,74,.38),transparent 64%);
+    }
+
+    .planet-one{
+      width:clamp(150px,25vw,340px);
+      aspect-ratio:1;
+      left:max(-150px,-10vw);
+      top:18%;
+      background:
+        radial-gradient(circle at 39% 31%,rgba(164,191,255,.16),transparent 17%),
+        radial-gradient(circle at 52% 50%,rgba(42,74,151,.22),rgba(16,23,55,.10) 62%,transparent 72%);
+    }
+
+    .planet-two{
+      width:clamp(86px,14vw,210px);
+      aspect-ratio:1;
+      right:max(-86px,-5.5vw);
+      bottom:16%;
+      opacity:.20;
+      background:
+        radial-gradient(circle at 42% 34%,rgba(255,227,162,.09),transparent 15%),
+        radial-gradient(circle at 51% 52%,rgba(118,70,164,.20),rgba(22,26,66,.08) 64%,transparent 76%);
+    }
+
+    .orbital-dust.one{
+      width:clamp(420px,82vw,1120px);
+      aspect-ratio:2.55/1;
+      left:50%;
+      top:52%;
+      transform:translate(-50%,-50%) rotate(-17deg);
+      border-top:1px solid rgba(255,231,170,.034);
+      border-bottom:1px solid rgba(122,158,255,.026);
+      opacity:.20;
+      border-radius:999px;
+      background:
+        radial-gradient(ellipse at 46% 50%,transparent 43%,rgba(255,255,255,.018) 46%,transparent 55%),
+        radial-gradient(ellipse at 50% 50%,rgba(103,139,236,.024),transparent 68%);
+    }
+
+    .solar-pressure-haze{
+      inset:-12%;
+      opacity:.66;
+      background:
+        radial-gradient(ellipse at 53% 47%,rgba(255,204,116,.045),transparent 27%),
+        radial-gradient(ellipse at 47% 56%,rgba(255,114,61,.030),transparent 37%),
+        radial-gradient(ellipse at 50% 50%,transparent 41%,rgba(19,40,96,.14) 74%,transparent 100%);
+      filter:blur(10px);
+    }
+
+    .solar-wind-sheer{
+      inset:-18%;
+      opacity:.18;
+      transform:rotate(-9deg);
+      background:
+        linear-gradient(110deg,transparent 0%,rgba(255,255,255,.016) 21%,transparent 32%),
+        linear-gradient(113deg,transparent 28%,rgba(126,164,255,.022) 42%,transparent 57%);
+      filter:blur(1px);
+      mix-blend-mode:screen;
+    }
+
+    .cosmic-vignette{
+      inset:0;
+      background:
+        radial-gradient(circle at 50% 48%,transparent 0%,transparent 51%,rgba(0,0,0,.36) 100%),
+        linear-gradient(90deg,rgba(0,0,0,.24),transparent 21%,transparent 79%,rgba(0,0,0,.24)),
+        linear-gradient(180deg,rgba(0,0,0,.05),transparent 24%,transparent 76%,rgba(0,0,0,.38));
+      opacity:.94;
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(100% - 28px,var(--max));
+      margin:0 auto;
+      padding:16px 0 24px;
+      display:grid;
+      gap:14px;
+    }
+
+    .siteTop{
+      display:grid;
+      gap:10px;
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:12px;
+      background:rgba(5,8,14,.58);
+      box-shadow:var(--shadow2);
+      backdrop-filter:blur(12px);
+    }
+
+    .navRow,
+    .routeRail{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+
+    .navRow{justify-content:space-between}
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:980;
+      letter-spacing:.2px;
+    }
+
+    .mark{
+      width:34px;
+      height:34px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.20);
+      background:
+        radial-gradient(circle at 32% 26%,rgba(255,255,255,.95),transparent 22%),
+        radial-gradient(circle,rgba(255,217,112,.88),rgba(255,130,34,.30) 58%,rgba(255,217,112,.08));
+      box-shadow:0 0 26px rgba(201,162,74,.24);
+    }
+
+    .navLinks{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+
+    .btn,
+    .cockpit-control-panel button{
+      min-height:42px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(201,162,74,.08),transparent 58%),
+        linear-gradient(145deg,rgba(14,17,24,.82),rgba(5,7,12,.92));
+      color:var(--ink);
+      font-weight:920;
+      font-size:13px;
+      letter-spacing:.3px;
+      padding:10px 12px;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      box-shadow:0 12px 34px rgba(0,0,0,.34);
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .btn::after,
+    .cockpit-control-panel button[data-active="true"]::after,
+    .cockpit-control-panel button[aria-pressed="true"]::after{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      border-radius:inherit;
+      pointer-events:none;
+      box-shadow:0 0 20px var(--goldSoft),inset 0 0 0 1px rgba(201,162,74,.10);
+    }
+
+    .btn.red,
+    .cockpit-control-panel button[data-active="true"],
+    .cockpit-control-panel button[aria-pressed="true"]{
+      border-color:rgba(201,162,74,.44);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(201,162,74,.14),transparent 58%),
+        linear-gradient(145deg,rgba(18,22,31,.86),rgba(8,10,16,.96));
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(340px,1.18fr);
+      gap:clamp(18px,5vw,54px);
+      align-items:center;
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:clamp(18px,4vw,34px);
+      background:
+        radial-gradient(circle at 18% 18%,rgba(201,162,74,.10),transparent 36rem),
+        radial-gradient(circle at 84% 20%,var(--blue),transparent 34rem),
+        radial-gradient(circle at 56% 90%,var(--red),transparent 36rem),
+        linear-gradient(150deg,rgba(12,16,24,.76),rgba(5,8,14,.92));
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+
+    .heroCopy{min-width:0}
+
+    .kicker{
+      margin:0 0 8px;
+      color:var(--gold);
+      font-size:11px;
+      font-weight:950;
+      letter-spacing:3px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      color:var(--ink);
+      font-size:clamp(2.75rem,8vw,6.35rem);
+      line-height:.86;
+      letter-spacing:-.075em;
+    }
+
+    .theme{
+      margin:14px 0 0;
+      color:var(--ink);
+      font-size:clamp(1.35rem,4vw,2.8rem);
+      line-height:.98;
+      letter-spacing:-.055em;
+      text-shadow:0 0 42px rgba(255,217,138,.24);
+    }
+
+    .lede{
+      max-width:760px;
+      margin:14px 0 0;
+      color:var(--txt);
+      font-size:clamp(1rem,2.2vw,1.18rem);
+      line-height:1.55;
+    }
+
+    .stateRow{
+      margin-top:14px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .statePill{
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:9px 12px;
+      background:rgba(0,0,0,.18);
+      color:var(--mut);
+      font-weight:850;
+    }
+
+    .cockpit-bay{
+      position:relative;
+      min-height:min(76vh,760px);
+      display:grid;
+      place-items:center;
+      perspective:1200px;
+    }
+
+    .cockpit-window{
+      position:relative;
+      width:100%;
+      min-height:min(76vh,760px);
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:34px;
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 50% 20%,rgba(255,255,255,.045),transparent 34%),
+        linear-gradient(145deg,rgba(2,7,16,.18),rgba(0,0,0,.34));
+      box-shadow:
+        inset 0 0 0 1px rgba(201,162,74,.10),
+        inset 0 0 90px rgba(0,0,0,.42),
+        0 28px 90px rgba(0,0,0,.40);
+      transform:
+        translate3d(var(--cockpit-pan-x),var(--cockpit-pan-y),0)
+        scale(var(--cockpit-scale))
+        rotateZ(var(--cockpit-tilt));
+      transition:transform .42s ease, border-color .32s ease;
+      isolation:isolate;
+    }
+
+    .cockpit-window::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      z-index:12;
+      pointer-events:none;
+      border-radius:34px;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.08),transparent 14%,transparent 86%,rgba(255,255,255,.06)),
+        linear-gradient(180deg,rgba(255,255,255,.10),transparent 18%,transparent 78%,rgba(0,0,0,.24)),
+        radial-gradient(ellipse at 50% 8%,rgba(255,255,255,.08),transparent 38%);
+      opacity:.72;
+      mix-blend-mode:screen;
+    }
+
+    .cockpit-window::after{
+      content:"";
+      position:absolute;
+      inset:12px;
+      z-index:13;
+      pointer-events:none;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:26px;
+      box-shadow:
+        inset 0 0 0 1px rgba(201,162,74,.08),
+        inset 0 0 42px rgba(201,162,74,.035);
+    }
+
+    .cockpit-strut{
+      position:absolute;
+      z-index:16;
+      pointer-events:none;
+      background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(0,0,0,.18));
+      opacity:.58;
+    }
+
+    .cockpit-strut.left{
+      left:10%;
+      top:-10%;
+      width:1px;
+      height:126%;
+      transform:rotate(10deg);
+    }
+
+    .cockpit-strut.right{
+      right:10%;
+      top:-10%;
+      width:1px;
+      height:126%;
+      transform:rotate(-10deg);
+    }
+
+    .cockpit-strut.bottom{
+      left:8%;
+      right:8%;
+      bottom:18%;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);
+    }
+
+    .cockpit-hud{
+      position:absolute;
+      inset:0;
+      z-index:15;
+      pointer-events:none;
+      opacity:var(--hud-strength);
+      transition:opacity .32s ease;
+    }
+
+    .cockpit-hud::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:min(52vw,420px);
+      aspect-ratio:1;
+      transform:translate(-50%,-50%);
+      border-radius:999px;
+      border:1px solid rgba(201,162,74,.20);
+      box-shadow:
+        0 0 30px rgba(201,162,74,.08),
+        inset 0 0 30px rgba(201,162,74,.05);
+      background:
+        radial-gradient(circle at 50% 50%,transparent 0 36%,rgba(201,162,74,.035) 37%,transparent 38%),
+        radial-gradient(circle at 50% 50%,transparent 0 62%,rgba(255,255,255,.030) 63%,transparent 64%);
+    }
+
+    .cockpit-hud::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:min(58vw,500px);
+      height:1px;
+      transform:translate(-50%,-50%);
+      background:linear-gradient(90deg,transparent,rgba(201,162,74,.26),transparent);
+      box-shadow:0 0 20px rgba(201,162,74,.10);
+    }
+
+    .cockpit-axis-grid,
+    .cockpit-path-grid{
+      position:absolute;
+      inset:0;
+      z-index:14;
+      pointer-events:none;
+      transition:opacity .32s ease;
+    }
+
+    .cockpit-axis-grid{
+      opacity:var(--axis-opacity);
+      background:
+        linear-gradient(90deg,transparent calc(50% - .5px),rgba(147,197,253,.42) 50%,transparent calc(50% + .5px)),
+        linear-gradient(180deg,transparent calc(50% - .5px),rgba(147,197,253,.42) 50%,transparent calc(50% + .5px)),
+        repeating-linear-gradient(90deg,rgba(147,197,253,.08) 0 1px,transparent 1px 54px),
+        repeating-linear-gradient(180deg,rgba(147,197,253,.08) 0 1px,transparent 1px 54px);
+    }
+
+    .cockpit-path-grid{
+      opacity:var(--path-opacity);
+      background:
+        radial-gradient(ellipse at 50% 50%,transparent 0 35%,rgba(255,217,138,.18) 36%,transparent 37%),
+        radial-gradient(ellipse at 50% 50%,transparent 0 50%,rgba(255,217,138,.12) 51%,transparent 52%),
+        radial-gradient(ellipse at 50% 50%,transparent 0 66%,rgba(255,217,138,.09) 67%,transparent 68%);
+      transform:rotate(-12deg);
+    }
+
+    .cockpit-readout{
+      position:absolute;
+      z-index:18;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      display:grid;
+      grid-template-columns:1fr auto;
+      gap:12px;
+      align-items:end;
+      pointer-events:none;
+    }
+
+    .cockpit-narrative{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:12px 13px;
+      background:rgba(2,6,16,.56);
+      color:rgba(255,255,255,.82);
+      line-height:1.42;
+      font-size:13px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 12px 34px rgba(0,0,0,.28);
+    }
+
+    .cockpit-mode-pill{
+      justify-self:end;
+      border:1px solid rgba(201,162,74,.24);
+      border-radius:999px;
+      padding:9px 11px;
+      background:rgba(2,6,16,.56);
+      color:var(--gold);
+      font-size:11px;
+      font-weight:950;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+      white-space:nowrap;
+      backdrop-filter:blur(10px);
+    }
+
+    .sun-field{
+      position:absolute;
+      inset:0;
+      z-index:2;
+      display:grid;
+      place-items:center;
+      isolation:isolate;
+      overflow:visible;
+      transform-origin:50% 50%;
+      transition:transform .42s ease, filter .32s ease;
+    }
+
+    .sun-field::before{
+      content:"";
+      position:absolute;
+      width:min(100%,820px);
+      aspect-ratio:1;
+      border:1px solid rgba(255,248,231,.052);
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,222,138,.040),transparent 28%),
+        radial-gradient(circle at 50% 50%,rgba(255,97,22,.022),transparent 62%),
+        radial-gradient(circle at 50% 50%,transparent 68%,rgba(255,255,255,.014) 69%,transparent 70%);
+      box-shadow:
+        inset 0 0 80px rgba(255,217,138,.022),
+        0 0 120px rgba(255,164,55,.030);
+      opacity:.82;
+      pointer-events:none;
+    }
+
+    .sun-field::after{
+      content:"256M km × 256M km solar field";
+      position:absolute;
+      left:50%;
+      bottom:clamp(18px,5vh,46px);
+      transform:translateX(-50%);
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:999px;
+      padding:7px 10px;
+      background:rgba(2,6,16,.50);
+      color:rgba(255,248,231,.54);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:1.3px;
+      text-transform:uppercase;
+      white-space:nowrap;
+      backdrop-filter:blur(8px);
+    }
+
+    .sun-mount{
+      position:relative;
+      z-index:4;
+      width:min(58vw,420px);
+      aspect-ratio:1;
+      display:grid;
+      place-items:center;
+      transition:transform .42s ease, filter .32s ease;
+    }
+
+    .sun-fallback{
+      position:absolute;
+      inset:0;
+      z-index:1;
+      border-radius:999px;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 39% 38%,rgba(255,255,226,.96),rgba(255,226,116,.84) 13%,transparent 25%),
+        radial-gradient(circle at 52% 52%,rgba(255,182,61,.98),rgba(226,78,24,.88) 48%,rgba(92,23,12,.94) 77%,rgba(8,4,6,.96) 100%);
+      box-shadow:
+        inset -38px -34px 52px rgba(0,0,0,.54),
+        inset 18px 16px 38px rgba(255,234,148,.34),
+        0 0 46px rgba(255,142,48,.26),
+        0 0 130px rgba(255,196,88,.18);
+      overflow:hidden;
+      opacity:.98;
+    }
+
+    .sun-fallback::before{
+      content:"";
+      position:absolute;
+      inset:-7%;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 31% 45%,rgba(255,236,158,.22) 0 2px,transparent 3px),
+        radial-gradient(circle at 64% 37%,rgba(132,36,16,.24) 0 3px,transparent 5px),
+        radial-gradient(circle at 55% 68%,rgba(255,218,123,.16) 0 2px,transparent 4px),
+        conic-gradient(from 12deg,transparent 0deg 25deg,rgba(255,238,155,.08) 32deg,transparent 46deg 88deg,rgba(255,238,155,.07) 100deg,transparent 118deg 187deg,rgba(255,238,155,.06) 205deg,transparent 225deg 360deg);
+      opacity:.82;
+    }
+
+    .sun-fallback::after{
+      content:"";
+      position:absolute;
+      inset:-18%;
+      border-radius:999px;
+      background:repeating-conic-gradient(from 8deg,rgba(255,209,103,.18) 0deg 1.6deg,transparent 1.8deg 7deg);
+      opacity:.42;
+      filter:blur(1px);
+    }
+
+    .sun-mount canvas,
+    .sun-mount svg{
+      position:relative;
+      z-index:3;
+      max-width:100%;
+      max-height:100%;
+    }
+
+    .sun-mount[data-runtime-mounted="true"] .sun-fallback{opacity:0}
+
+    .cockpit-control-panel{
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:12px;
+      background:rgba(5,8,14,.54);
+      display:grid;
+      gap:12px;
+      box-shadow:var(--shadow2);
+    }
+
+    .cockpit-control-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .cockpit-control-title{
+      display:grid;
+      gap:4px;
+    }
+
+    .cockpit-control-title strong{
+      color:var(--ink);
+      font-size:1rem;
+      letter-spacing:-.02em;
+    }
+
+    .cockpit-control-title span,
+    .cockpit-control-state,
+    .cockpit-control-status{
+      color:var(--soft);
+      font-size:12px;
+      font-weight:850;
+      letter-spacing:1.2px;
+      text-transform:uppercase;
+    }
+
+    .cockpit-control-grid{
+      display:grid;
+      grid-template-columns:1.18fr 1fr;
+      gap:12px;
+    }
+
+    .cockpit-control-group{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      align-items:center;
+    }
+
+    .cockpit-control-panel button{
+      box-shadow:0 10px 28px rgba(0,0,0,.28);
+      text-transform:uppercase;
+    }
+
+    .routeRail{
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:12px;
+      background:rgba(5,8,14,.58);
+      box-shadow:var(--shadow2);
+      justify-content:center;
+    }
+
+    .routeRail a{
+      min-height:42px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:rgba(0,0,0,.20);
+      color:var(--ink);
+      font-weight:900;
+      font-size:12px;
+      padding:0 14px;
+    }
+
+    .page[data-cockpit-view="cinematic"]{
+      --cockpit-scale:1;
+      --cockpit-tilt:0deg;
+      --hud-strength:.70;
+      --axis-opacity:.06;
+      --path-opacity:.11;
+    }
+
+    .page[data-cockpit-view="wide"]{
+      --cockpit-scale:.92;
+      --cockpit-tilt:-.7deg;
+      --cockpit-pan-y:4px;
+      --hud-strength:.62;
+      --axis-opacity:.08;
+      --path-opacity:.13;
+    }
+
+    .page[data-cockpit-view="local"]{
+      --cockpit-scale:1.035;
+      --cockpit-tilt:.45deg;
+      --hud-strength:.78;
+      --axis-opacity:.07;
+      --path-opacity:.10;
+    }
+
+    .page[data-cockpit-view="local"] .sun-mount{transform:scale(1.08)}
+    .page[data-cockpit-view="local"] .sun-field{filter:saturate(1.05) contrast(1.03)}
+
+    .page[data-cockpit-view="axis"]{
+      --cockpit-scale:.98;
+      --cockpit-tilt:0deg;
+      --hud-strength:.88;
+      --axis-opacity:.33;
+      --path-opacity:.10;
+    }
+
+    .page[data-cockpit-view="paths"]{
+      --cockpit-scale:.96;
+      --cockpit-tilt:-1.2deg;
+      --hud-strength:.86;
+      --axis-opacity:.16;
+      --path-opacity:.38;
+    }
+
+    .page[data-cockpit-view="galaxy"]{
+      --cockpit-scale:.90;
+      --cockpit-tilt:.8deg;
+      --cockpit-pan-y:6px;
+      --hud-strength:.58;
+      --axis-opacity:.07;
+      --path-opacity:.08;
+    }
+
+    .page[data-cockpit-view="nebula"]{
+      --cockpit-scale:.96;
+      --cockpit-tilt:-.5deg;
+      --hud-strength:.62;
+      --axis-opacity:.05;
+      --path-opacity:.09;
+    }
+
+    .page[data-cockpit-view="control"]{
+      --cockpit-scale:.99;
+      --cockpit-tilt:0deg;
+      --hud-strength:.98;
+      --axis-opacity:.24;
+      --path-opacity:.26;
+    }
+
+    .page[data-layer-planets="false"] ~ * .planet-depth,
+    body[data-layer-planets="false"] .planet-depth{opacity:0}
+
+    body[data-layer-nebula="false"] .nebula-plane{opacity:0}
+    body[data-layer-milkyway="false"] .milky-way-plane{opacity:0}
+    body[data-layer-solarwind="false"] .solar-wind-sheer{opacity:0}
+    body[data-layer-paths="true"] .orbital-dust.one{opacity:.36}
+    body[data-layer-axes="true"] .cockpit-axis-grid{opacity:.38}
+
+    body[data-cockpit-view="galaxy"] .milky-way-plane{opacity:.72;filter:blur(.2px)}
+    body[data-cockpit-view="nebula"] .nebula-plane{opacity:1;filter:blur(16px) saturate(1.22)}
+    body[data-cockpit-view="wide"] .planet-depth{opacity:.30}
+    body[data-cockpit-view="axis"] .cockpit-window{border-color:rgba(147,197,253,.22)}
+    body[data-cockpit-view="paths"] .cockpit-window{border-color:rgba(255,217,138,.24)}
+    body[data-cockpit-view="control"] .cockpit-window{border-color:rgba(255,255,255,.22)}
+
+    @keyframes universeFloatOne{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(-37px,24px,0)}
+    }
+
+    @keyframes universeFloatTwo{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(43px,-31px,0)}
+    }
+
+    @media(max-width:980px){
+      .hero{
+        grid-template-columns:1fr;
+      }
+      .cockpit-bay{
+        min-height:620px;
+      }
+      .cockpit-window{
+        min-height:620px;
+      }
+      .sun-mount{
+        width:min(72vw,420px);
+      }
+      .cockpit-control-grid{
+        grid-template-columns:1fr;
       }
     }
 
-    held = Boolean(canopy || canopyState);
-
-    state.canopyPresent = held;
-    state.heldByCanopy = held;
-
-    return held;
-  }
-
-  function applyLayerDataset() {
-    var root = $("#door-root") || document.body;
-    var body = document.body;
-
-    Object.keys(state.toggles).forEach(function (key) {
-      var datasetName = "layer" + key.charAt(0).toUpperCase() + key.slice(1);
-      if (key === "milkyWay") datasetName = "layerMilkyway";
-      if (key === "solarWind") datasetName = "layerSolarwind";
-
-      body.dataset[datasetName] = state.toggles[key] ? "true" : "false";
-      if (root) root.dataset[datasetName] = state.toggles[key] ? "true" : "false";
-    });
-
-    body.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
-    body.setAttribute("data-layer-paths", state.toggles.paths ? "true" : "false");
-    body.setAttribute("data-layer-axes", state.toggles.axes ? "true" : "false");
-    body.setAttribute("data-layer-nebula", state.toggles.nebula ? "true" : "false");
-    body.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
-    body.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
-
-    if (root) {
-      root.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
-      root.setAttribute("data-layer-paths", state.toggles.paths ? "true" : "false");
-      root.setAttribute("data-layer-axes", state.toggles.axes ? "true" : "false");
-      root.setAttribute("data-layer-nebula", state.toggles.nebula ? "true" : "false");
-      root.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
-      root.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
-    }
-  }
-
-  function applyButtonState() {
-    $all("[data-cockpit-view-button], [data-cosmic-view-button]").forEach(function (button) {
-      var view = button.getAttribute("data-cockpit-view-button") || button.getAttribute("data-cosmic-view-button");
-      boolAttr(button, "aria-pressed", view === state.view);
-      if (view === state.view) {
-        button.setAttribute("data-active", "true");
-      } else {
-        button.removeAttribute("data-active");
+    @media(max-width:680px){
+      .page{
+        width:min(100% - 20px,var(--max));
+        padding-top:10px;
       }
-    });
-
-    $all("[data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
-      var raw = button.getAttribute("data-cockpit-toggle") || button.getAttribute("data-cosmic-toggle");
-      var name = normalizeToggleName(raw);
-      var active = name ? Boolean(state.toggles[name]) : false;
-
-      boolAttr(button, "aria-pressed", active);
-      if (active) {
-        button.setAttribute("data-active", "true");
-      } else {
-        button.removeAttribute("data-active");
+      .navRow{
+        align-items:flex-start;
       }
-    });
-  }
-
-  function applyNarrative() {
-    var copy = VIEW_COPY[state.view] || VIEW_COPY.cinematic;
-    var status = copy.status;
-
-    if (!state.sunVisible) {
-      status = status + " · visible sun fallback required";
+      .navLinks{
+        width:100%;
+      }
+      .navLinks .btn{
+        flex:1 1 calc(50% - 8px);
+      }
+      .hero{
+        padding:18px;
+      }
+      h1{
+        font-size:clamp(2.5rem,14vw,4.6rem);
+      }
+      .theme{
+        font-size:clamp(1.25rem,7vw,2.1rem);
+      }
+      .cockpit-bay,
+      .cockpit-window{
+        min-height:540px;
+      }
+      .sun-field::after{
+        bottom:80px;
+        max-width:calc(100vw - 44px);
+        overflow:hidden;
+        text-overflow:ellipsis;
+        font-size:10px;
+      }
+      .sun-mount{
+        width:min(76vw,330px);
+      }
+      .cockpit-readout{
+        grid-template-columns:1fr;
+        align-items:start;
+      }
+      .cockpit-mode-pill{
+        justify-self:start;
+      }
+      .cockpit-control-group button{
+        flex:1 1 calc(50% - 8px);
+      }
+      .routeRail a{
+        flex:1 1 calc(50% - 8px);
+      }
     }
 
-    setText("[data-cockpit-view-label]", state.view);
-    setText("[data-cosmic-control-view]", state.view);
-    setText("[data-cockpit-mode-pill]", copy.label);
-    setText("[data-cockpit-narrative]", copy.narrative);
-    setText("[data-cockpit-status]", status);
-    setText("[data-cosmic-control-status]", status);
-    setText("[data-door-boot-status]", state.heldByCanopy ? "Held by canopy" : "Visible-first fallback active");
-  }
-
-  function dispatchState() {
-    var detail = getPublicState();
-
-    try {
-      window.dispatchEvent(new CustomEvent(STATE_EVENT, { detail: detail }));
-    } catch (error) {
-      /* no-op */
+    @media(prefers-reduced-motion:reduce){
+      .star-dust.one,
+      .star-dust.two{
+        animation:none;
+      }
+      .cockpit-window,
+      .sun-field,
+      .sun-mount,
+      .nebula-plane,
+      .milky-way-plane,
+      .planet-depth,
+      .orbital-dust,
+      .solar-wind-sheer{
+        transition:none;
+      }
     }
-  }
+  </style>
+</head>
 
-  function applyView(view, options) {
-    var root = $("#door-root") || document.body;
-    var next = normalizeView(view);
-    var copy;
+<body data-cockpit-view="cinematic" data-layer-planets="true" data-layer-paths="false" data-layer-axes="false" data-layer-nebula="true" data-layer-milkyway="true" data-layer-solarwind="true">
+  <div class="universe-sky" aria-hidden="true">
+    <div class="nebula-plane" data-cosmic-layer="nebula"></div>
+    <div class="milky-way-plane" data-cosmic-layer="milkyWay"></div>
+    <div class="star-dust one"></div>
+    <div class="star-dust two"></div>
+    <div class="deep-star-cluster"></div>
+    <div class="planet-depth planet-one" data-cosmic-layer="planets"></div>
+    <div class="planet-depth planet-two" data-cosmic-layer="planets"></div>
+    <div class="orbital-dust one" data-cosmic-layer="paths"></div>
+    <div class="solar-pressure-haze"></div>
+    <div class="solar-wind-sheer" data-cosmic-layer="solarWind"></div>
+    <div class="cosmic-vignette"></div>
+  </div>
 
-    state.view = next;
-    copy = VIEW_COPY[next] || VIEW_COPY.cinematic;
+  <main
+    class="page"
+    id="door-root"
+    data-root-door
+    data-universe-sun
+    data-root-boot-id="root-sun-asset-b1"
+    data-root-baseline="Generation 2 · Compass Cockpit Baseline 1"
+    data-root-contract="universe-sun"
+    data-sun-asset-mount-contract="sun asset mount"
+    data-background-contract="index-background-only"
+    data-background-profile="near-solar-deep-space-sky-b2"
+    data-background-runtime="near-solar-background-runtime-b1"
+    data-cosmic-control-plane="cosmic-control-plane-b1"
+    data-compass-cockpit="root-compass-cockpit-b1"
+    data-cockpit-view="cinematic"
+  >
+    <section class="siteTop" aria-label="Root navigation">
+      <div class="navRow">
+        <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
+          <span class="mark" aria-hidden="true"></span>
+          <span>Diamond Gate Bridge</span>
+        </a>
 
-    document.body.setAttribute("data-cockpit-view", next);
+        <nav class="navLinks" aria-label="Primary navigation">
+          <a class="btn red" href="/home/">Home</a>
+          <a class="btn" href="/prelude/">Prelude</a>
+          <a class="btn" href="/explore/">Explore</a>
+          <a class="btn" href="/products/">Products</a>
+          <a class="btn" href="/governance/">Governance</a>
+          <a class="btn" href="/gauges/">Gauges</a>
+        </nav>
+      </div>
+    </section>
 
-    if (root) {
-      root.setAttribute("data-cockpit-view", next);
-      root.setAttribute("data-cosmic-view", next);
-      root.setAttribute("data-cockpit-label", copy.label);
-    }
+    <section class="hero" aria-label="Diamond Gate Bridge root cockpit">
+      <div class="heroCopy">
+        <p class="kicker">Generation 2 · Compass Cockpit · Canopy Protected Spine</p>
+        <h1>Diamond Gate Bridge</h1>
+        <p class="theme">Learn to Live to Love</p>
+        <p class="lede">
+          A cockpit view into the existing universe field. The galaxy stays fixed; the cockpit changes posture to read cinematic, local, axis, path, nebula, and control views.
+        </p>
 
-    if (next === "axis") {
-      state.toggles.axes = true;
-    }
+        <div class="stateRow" aria-label="Root state">
+          <span class="statePill">Root boot: root-sun-asset-b1</span>
+          <span class="statePill">Contract: universe-sun</span>
+          <span class="statePill" data-door-boot-status>Held by canopy</span>
+        </div>
+      </div>
 
-    if (next === "paths") {
-      state.toggles.paths = true;
-    }
+      <div class="cockpit-bay" aria-label="Compass cockpit viewport">
+        <div class="cockpit-window" data-cockpit-window>
+          <div class="sun-field" aria-label="256 million kilometer solar field">
+            <div
+              class="sun-mount"
+              data-dgb-sun-mount
+              data-sun-mode="canvas"
+              data-sun-asset-id="root-sun-asset-b1"
+              data-sun-asset-baseline="Generation 2 · Compass Cockpit Baseline 1"
+              aria-label="Satellite-style solar disc within a 256 million kilometer universe field"
+            >
+              <div class="sun-fallback" data-sun-fallback aria-hidden="true"></div>
+            </div>
+          </div>
 
-    if (next === "galaxy") {
-      state.toggles.milkyWay = true;
-    }
+          <div class="cockpit-axis-grid" data-cockpit-layer="axes" aria-hidden="true"></div>
+          <div class="cockpit-path-grid" data-cockpit-layer="paths" aria-hidden="true"></div>
+          <div class="cockpit-hud" data-cockpit-hud aria-hidden="true"></div>
+          <div class="cockpit-strut left" aria-hidden="true"></div>
+          <div class="cockpit-strut right" aria-hidden="true"></div>
+          <div class="cockpit-strut bottom" aria-hidden="true"></div>
 
-    if (next === "nebula") {
-      state.toggles.nebula = true;
-    }
+          <div class="cockpit-readout" aria-label="Cockpit readout">
+            <div class="cockpit-narrative" data-cockpit-narrative>
+              Cockpit settled into cinematic posture. The ship is reading the existing galaxy without moving the field.
+            </div>
+            <div class="cockpit-mode-pill" data-cockpit-mode-pill>Cinematic</div>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    if (next === "control") {
-      state.toggles.axes = true;
-      state.toggles.paths = true;
-    }
+    <section class="cockpit-control-panel" data-cosmic-control-panel data-cockpit-control-panel aria-label="Compass cockpit control panel">
+      <div class="cockpit-control-head">
+        <span class="cockpit-control-title">
+          <strong>Compass Cockpit</strong>
+          <span>Ship posture changes · galaxy remains fixed · sun spine protected</span>
+        </span>
+        <span class="cockpit-control-state">View: <span data-cosmic-control-view data-cockpit-view-label>cinematic</span></span>
+      </div>
 
-    detectSunTruth();
-    detectCanopyTruth();
-    applyLayerDataset();
-    applyButtonState();
-    applyNarrative();
+      <div class="cockpit-control-grid">
+        <div class="cockpit-control-group" aria-label="Cockpit view controls">
+          <button type="button" data-cosmic-view-button="cinematic" data-cockpit-view-button="cinematic" aria-pressed="true">Cinematic</button>
+          <button type="button" data-cosmic-view-button="wide" data-cockpit-view-button="wide" aria-pressed="false">Wide</button>
+          <button type="button" data-cosmic-view-button="local" data-cockpit-view-button="local" aria-pressed="false">Local</button>
+          <button type="button" data-cosmic-view-button="axis" data-cockpit-view-button="axis" aria-pressed="false">Axis</button>
+          <button type="button" data-cosmic-view-button="paths" data-cockpit-view-button="paths" aria-pressed="false">Paths</button>
+          <button type="button" data-cosmic-view-button="galaxy" data-cockpit-view-button="galaxy" aria-pressed="false">Galaxy</button>
+          <button type="button" data-cosmic-view-button="nebula" data-cockpit-view-button="nebula" aria-pressed="false">Nebula</button>
+          <button type="button" data-cosmic-view-button="control" data-cockpit-view-button="control" aria-pressed="false">Control</button>
+        </div>
 
-    if (!options || options.dispatch !== false) {
-      dispatchState();
-    }
-  }
+        <div class="cockpit-control-group" aria-label="Cosmic layer toggles">
+          <button type="button" data-cosmic-toggle="planets" data-cockpit-toggle="planets" aria-pressed="true">Planets</button>
+          <button type="button" data-cosmic-toggle="paths" data-cockpit-toggle="paths" aria-pressed="false">Paths</button>
+          <button type="button" data-cosmic-toggle="axes" data-cockpit-toggle="axes" aria-pressed="false">Axes</button>
+          <button type="button" data-cosmic-toggle="nebula" data-cockpit-toggle="nebula" aria-pressed="true">Nebula</button>
+          <button type="button" data-cosmic-toggle="milkyWay" data-cockpit-toggle="milkyWay" aria-pressed="true">Milky Way</button>
+          <button type="button" data-cosmic-toggle="solarWind" data-cockpit-toggle="solarWind" aria-pressed="true">Solar Wind</button>
+        </div>
+      </div>
 
-  function toggleLayer(name) {
-    var key = normalizeToggleName(name);
-    if (!key) return;
+      <p class="cockpit-control-status" data-cosmic-control-status data-cockpit-status>
+        Compass Cockpit B1 · cinematic posture · fixed galaxy truth
+      </p>
+    </section>
 
-    state.toggles[key] = !state.toggles[key];
+    <nav class="routeRail" aria-label="Root route rail">
+      <a href="/home/">Home</a>
+      <a href="/prelude/">Prelude</a>
+      <a href="/explore/">Explore</a>
+      <a href="/products/">Products</a>
+      <a href="/laws/">Laws</a>
+      <a href="/governance/">Governance</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
+  </main>
 
-    detectSunTruth();
-    detectCanopyTruth();
-    applyLayerDataset();
-    applyButtonState();
-    applyNarrative();
-    dispatchState();
-  }
+  <noscript>
+    <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
+      JavaScript is off. The root cockpit remains visible, with a visible static sun fallback. The cockpit controls require runtime.
+    </div>
+  </noscript>
 
-  function bindControls() {
-    $all("[data-cockpit-view-button], [data-cosmic-view-button]").forEach(function (button) {
-      if (button.__dgbCockpitViewBound) return;
-      button.__dgbCockpitViewBound = true;
-
-      button.addEventListener("click", function () {
-        var view = button.getAttribute("data-cockpit-view-button") || button.getAttribute("data-cosmic-view-button");
-        applyView(view);
-      });
-    });
-
-    $all("[data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
-      if (button.__dgbCockpitToggleBound) return;
-      button.__dgbCockpitToggleBound = true;
-
-      button.addEventListener("click", function () {
-        var name = button.getAttribute("data-cockpit-toggle") || button.getAttribute("data-cosmic-toggle");
-        toggleLayer(name);
-      });
-    });
-  }
-
-  function installRuntimeObserver() {
-    var mount = $("[data-dgb-sun-mount]");
-
-    if (!mount || typeof MutationObserver === "undefined") return;
-
-    if (mount.__dgbCockpitObserver) return;
-    mount.__dgbCockpitObserver = true;
-
-    new MutationObserver(function () {
-      detectSunTruth();
-      applyNarrative();
-      dispatchState();
-    }).observe(mount, {
-      childList: true,
-      subtree: true,
-      attributes: true
-    });
-  }
-
-  function getPublicState() {
-    return {
-      version: VERSION,
-      rootBootId: ROOT_BOOT_ID,
-      canopyVersion: CANOPY_VERSION,
-      view: state.view,
-      toggles: {
-        planets: state.toggles.planets,
-        paths: state.toggles.paths,
-        axes: state.toggles.axes,
-        nebula: state.toggles.nebula,
-        milkyWay: state.toggles.milkyWay,
-        solarWind: state.toggles.solarWind
-      },
-      rootPresent: state.rootPresent,
-      sunVisible: state.sunVisible,
-      fallbackVisible: state.fallbackVisible,
-      canvasVisible: state.canvasVisible,
-      svgVisible: state.svgVisible,
-      canopyPresent: state.canopyPresent,
-      heldByCanopy: state.heldByCanopy,
-      sourceMarkers: REQUIRED_MARKERS.slice()
-    };
-  }
-
-  function exposePublicApi() {
-    window.DGBIndexBoot = {
-      version: VERSION,
-      rootBootId: ROOT_BOOT_ID,
-      status: "held-by-canopy",
-      ensureFallbackSun: ensureFallbackSun,
-      applyView: applyView,
-      toggleLayer: toggleLayer,
-      getPublicState: getPublicState
-    };
-
-    window.DGBCompassCockpit = {
-      version: VERSION,
-      rootBootId: ROOT_BOOT_ID,
-      applyView: applyView,
-      toggleLayer: toggleLayer,
-      ensureFallbackSun: ensureFallbackSun,
-      getPublicState: getPublicState
-    };
-  }
-
-  function boot() {
-    var root = $("#door-root") || $("[data-root-door]");
-
-    if (root) {
-      root.setAttribute("data-index-boot", VERSION);
-      root.setAttribute("data-root-boot-confirmed", ROOT_BOOT_ID);
-      root.setAttribute("data-canopy-relationship", "held-by-canopy");
-    }
-
-    ensureFallbackSun();
-    detectSunTruth();
-    detectCanopyTruth();
-    exposePublicApi();
-    bindControls();
-    installRuntimeObserver();
-    applyView("cinematic", { dispatch: false });
-    dispatchState();
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", boot, { once: true });
-  } else {
-    boot();
-  }
-})();
+  <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
+  <script src="/runtime/cosmic_background_runtime.js?v=near-solar-background-runtime-b1" defer></script>
+  <script src="/runtime/cosmic_control_runtime.js?v=cosmic-control-plane-b1" defer></script>
+  <script src="/index.js?v=root-sun-asset-b1" defer></script>
+</body>
+</html>

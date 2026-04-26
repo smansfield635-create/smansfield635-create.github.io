@@ -1,3 +1,21 @@
+/* TNT — /index.js
+   ROOT INDEX JS · GENERATION 2 COMPASS COCKPIT · DEPLOYMENT ALIGNMENT B1
+   SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1
+   ROOT_BOOT_ID = "root-sun-asset-b1"
+   COCKPIT_VERSION = "root-compass-cockpit-b1"
+   PURPOSE:
+     - Boot Compass Cockpit safely
+     - Preserve visible sun fallback
+     - Preserve DGBIndexBoot
+     - Expose DGBCompassCockpit
+     - Bind cockpit controls without depending on old cosmic-control button ownership
+     - Keep gauges-readable source markers:
+       DGBSpineCanopy
+       ensureFallbackSun
+       held-by-canopy
+       root-compass-cockpit-b1
+*/
+
 (function () {
   "use strict";
 
@@ -11,7 +29,8 @@
     "DGBSpineCanopy",
     "ensureFallbackSun",
     "held-by-canopy",
-    "root-compass-cockpit-b1"
+    "root-compass-cockpit-b1",
+    "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1"
   ];
 
   var VIEW_COPY = {
@@ -98,8 +117,14 @@
     if (node) node.textContent = value;
   }
 
-  function boolAttr(node, name, value) {
-    if (node) node.setAttribute(name, value ? "true" : "false");
+  function setPressed(node, pressed) {
+    if (!node) return;
+    node.setAttribute("aria-pressed", pressed ? "true" : "false");
+    if (pressed) {
+      node.setAttribute("data-active", "true");
+    } else {
+      node.removeAttribute("data-active");
+    }
   }
 
   function normalizeView(view) {
@@ -108,10 +133,8 @@
 
   function normalizeToggleName(name) {
     if (Object.prototype.hasOwnProperty.call(DEFAULT_TOGGLES, name)) return name;
-    if (name === "milkyway") return "milkyWay";
-    if (name === "milky_way") return "milkyWay";
-    if (name === "solarwind") return "solarWind";
-    if (name === "solar_wind") return "solarWind";
+    if (name === "milkyway" || name === "milky_way") return "milkyWay";
+    if (name === "solarwind" || name === "solar_wind") return "solarWind";
     return null;
   }
 
@@ -140,28 +163,23 @@
     var fallback = ensureFallbackSun();
     var canvas = mount ? mount.querySelector("canvas") : null;
     var svg = mount ? mount.querySelector("svg") : null;
-    var fallbackVisible = Boolean(fallback);
-    var canvasVisible = Boolean(canvas);
-    var svgVisible = Boolean(svg);
-    var sunVisible = Boolean(mount && (fallbackVisible || canvasVisible || svgVisible));
 
-    if (mount && (canvasVisible || svgVisible)) {
+    state.rootPresent = Boolean(root);
+    state.fallbackVisible = Boolean(fallback);
+    state.canvasVisible = Boolean(canvas);
+    state.svgVisible = Boolean(svg);
+    state.sunVisible = Boolean(mount && (fallback || canvas || svg));
+
+    if (mount && (canvas || svg)) {
       mount.setAttribute("data-runtime-mounted", "true");
     }
 
-    state.rootPresent = Boolean(root);
-    state.fallbackVisible = fallbackVisible;
-    state.canvasVisible = canvasVisible;
-    state.svgVisible = svgVisible;
-    state.sunVisible = sunVisible;
-
-    return sunVisible;
+    return state.sunVisible;
   }
 
   function detectCanopyTruth() {
     var canopy = window.DGBSpineCanopy;
     var canopyState = null;
-    var held = false;
 
     if (canopy && typeof canopy.getPublicState === "function") {
       try {
@@ -171,33 +189,21 @@
       }
     }
 
-    held = Boolean(canopy || canopyState);
+    state.canopyPresent = Boolean(canopy || canopyState);
+    state.heldByCanopy = state.canopyPresent;
 
-    state.canopyPresent = held;
-    state.heldByCanopy = held;
-
-    return held;
+    return state.heldByCanopy;
   }
 
   function applyLayerDataset() {
     var root = $("#door-root") || document.body;
-    var body = document.body;
 
-    Object.keys(state.toggles).forEach(function (key) {
-      var datasetName = "layer" + key.charAt(0).toUpperCase() + key.slice(1);
-      if (key === "milkyWay") datasetName = "layerMilkyway";
-      if (key === "solarWind") datasetName = "layerSolarwind";
-
-      body.dataset[datasetName] = state.toggles[key] ? "true" : "false";
-      if (root) root.dataset[datasetName] = state.toggles[key] ? "true" : "false";
-    });
-
-    body.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
-    body.setAttribute("data-layer-paths", state.toggles.paths ? "true" : "false");
-    body.setAttribute("data-layer-axes", state.toggles.axes ? "true" : "false");
-    body.setAttribute("data-layer-nebula", state.toggles.nebula ? "true" : "false");
-    body.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
-    body.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
+    document.body.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
+    document.body.setAttribute("data-layer-paths", state.toggles.paths ? "true" : "false");
+    document.body.setAttribute("data-layer-axes", state.toggles.axes ? "true" : "false");
+    document.body.setAttribute("data-layer-nebula", state.toggles.nebula ? "true" : "false");
+    document.body.setAttribute("data-layer-milkyway", state.toggles.milkyWay ? "true" : "false");
+    document.body.setAttribute("data-layer-solarwind", state.toggles.solarWind ? "true" : "false");
 
     if (root) {
       root.setAttribute("data-layer-planets", state.toggles.planets ? "true" : "false");
@@ -210,27 +216,14 @@
   }
 
   function applyButtonState() {
-    $all("[data-cockpit-view-button], [data-cosmic-view-button]").forEach(function (button) {
-      var view = button.getAttribute("data-cockpit-view-button") || button.getAttribute("data-cosmic-view-button");
-      boolAttr(button, "aria-pressed", view === state.view);
-      if (view === state.view) {
-        button.setAttribute("data-active", "true");
-      } else {
-        button.removeAttribute("data-active");
-      }
+    $all("[data-cockpit-view-button]").forEach(function (button) {
+      var view = button.getAttribute("data-cockpit-view-button");
+      setPressed(button, view === state.view);
     });
 
-    $all("[data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
-      var raw = button.getAttribute("data-cockpit-toggle") || button.getAttribute("data-cosmic-toggle");
-      var name = normalizeToggleName(raw);
-      var active = name ? Boolean(state.toggles[name]) : false;
-
-      boolAttr(button, "aria-pressed", active);
-      if (active) {
-        button.setAttribute("data-active", "true");
-      } else {
-        button.removeAttribute("data-active");
-      }
+    $all("[data-cockpit-toggle]").forEach(function (button) {
+      var name = normalizeToggleName(button.getAttribute("data-cockpit-toggle"));
+      setPressed(button, name ? Boolean(state.toggles[name]) : false);
     });
   }
 
@@ -243,19 +236,15 @@
     }
 
     setText("[data-cockpit-view-label]", state.view);
-    setText("[data-cosmic-control-view]", state.view);
     setText("[data-cockpit-mode-pill]", copy.label);
     setText("[data-cockpit-narrative]", copy.narrative);
     setText("[data-cockpit-status]", status);
-    setText("[data-cosmic-control-status]", status);
     setText("[data-door-boot-status]", state.heldByCanopy ? "Held by canopy" : "Visible-first fallback active");
   }
 
   function dispatchState() {
-    var detail = getPublicState();
-
     try {
-      window.dispatchEvent(new CustomEvent(STATE_EVENT, { detail: detail }));
+      window.dispatchEvent(new CustomEvent(STATE_EVENT, { detail: getPublicState() }));
     } catch (error) {
       /* no-op */
     }
@@ -264,35 +253,24 @@
   function applyView(view, options) {
     var root = $("#door-root") || document.body;
     var next = normalizeView(view);
-    var copy;
+    var copy = VIEW_COPY[next] || VIEW_COPY.cinematic;
 
     state.view = next;
-    copy = VIEW_COPY[next] || VIEW_COPY.cinematic;
 
     document.body.setAttribute("data-cockpit-view", next);
 
     if (root) {
       root.setAttribute("data-cockpit-view", next);
-      root.setAttribute("data-cosmic-view", next);
       root.setAttribute("data-cockpit-label", copy.label);
+      root.setAttribute("data-index-boot", VERSION);
+      root.setAttribute("data-root-boot-confirmed", ROOT_BOOT_ID);
+      root.setAttribute("data-canopy-relationship", "held-by-canopy");
     }
 
-    if (next === "axis") {
-      state.toggles.axes = true;
-    }
-
-    if (next === "paths") {
-      state.toggles.paths = true;
-    }
-
-    if (next === "galaxy") {
-      state.toggles.milkyWay = true;
-    }
-
-    if (next === "nebula") {
-      state.toggles.nebula = true;
-    }
-
+    if (next === "axis") state.toggles.axes = true;
+    if (next === "paths") state.toggles.paths = true;
+    if (next === "galaxy") state.toggles.milkyWay = true;
+    if (next === "nebula") state.toggles.nebula = true;
     if (next === "control") {
       state.toggles.axes = true;
       state.toggles.paths = true;
@@ -324,23 +302,21 @@
   }
 
   function bindControls() {
-    $all("[data-cockpit-view-button], [data-cosmic-view-button]").forEach(function (button) {
+    $all("[data-cockpit-view-button]").forEach(function (button) {
       if (button.__dgbCockpitViewBound) return;
       button.__dgbCockpitViewBound = true;
 
       button.addEventListener("click", function () {
-        var view = button.getAttribute("data-cockpit-view-button") || button.getAttribute("data-cosmic-view-button");
-        applyView(view);
+        applyView(button.getAttribute("data-cockpit-view-button"));
       });
     });
 
-    $all("[data-cockpit-toggle], [data-cosmic-toggle]").forEach(function (button) {
+    $all("[data-cockpit-toggle]").forEach(function (button) {
       if (button.__dgbCockpitToggleBound) return;
       button.__dgbCockpitToggleBound = true;
 
       button.addEventListener("click", function () {
-        var name = button.getAttribute("data-cockpit-toggle") || button.getAttribute("data-cosmic-toggle");
-        toggleLayer(name);
+        toggleLayer(button.getAttribute("data-cockpit-toggle"));
       });
     });
   }
@@ -349,8 +325,8 @@
     var mount = $("[data-dgb-sun-mount]");
 
     if (!mount || typeof MutationObserver === "undefined") return;
-
     if (mount.__dgbCockpitObserver) return;
+
     mount.__dgbCockpitObserver = true;
 
     new MutationObserver(function () {
@@ -367,8 +343,10 @@
   function getPublicState() {
     return {
       version: VERSION,
+      sourceMarker: "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1",
       rootBootId: ROOT_BOOT_ID,
       canopyVersion: CANOPY_VERSION,
+      status: "held-by-canopy",
       view: state.view,
       toggles: {
         planets: state.toggles.planets,
@@ -403,9 +381,10 @@
     window.DGBCompassCockpit = {
       version: VERSION,
       rootBootId: ROOT_BOOT_ID,
+      status: "held-by-canopy",
+      ensureFallbackSun: ensureFallbackSun,
       applyView: applyView,
       toggleLayer: toggleLayer,
-      ensureFallbackSun: ensureFallbackSun,
       getPublicState: getPublicState
     };
   }
@@ -417,6 +396,7 @@
       root.setAttribute("data-index-boot", VERSION);
       root.setAttribute("data-root-boot-confirmed", ROOT_BOOT_ID);
       root.setAttribute("data-canopy-relationship", "held-by-canopy");
+      root.setAttribute("data-js-source-marker", "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1");
     }
 
     ensureFallbackSun();

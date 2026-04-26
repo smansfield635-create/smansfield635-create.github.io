@@ -3,8 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges — Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge gauges page for alignment, coherence, pressure, and drift." />
+  <title>Website Health Gauges — Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Diamond Gate Bridge website health gauges showing structure, runtime, content, drift, current issues, and next required work."
+  />
 
   <style>
     :root {
@@ -13,12 +16,13 @@
       --panel: rgba(255, 255, 255, 0.075);
       --panel2: rgba(255, 255, 255, 0.105);
       --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(255, 255, 255, 0.28);
+      --line-strong: rgba(255, 255, 255, 0.30);
       --text: #f5f3ec;
       --muted: rgba(245, 243, 236, 0.72);
       --soft: rgba(245, 243, 236, 0.52);
+      --faint: rgba(245, 243, 236, 0.36);
       --shadow: rgba(0, 0, 0, 0.44);
-      --max: 1120px;
+      --max: 1180px;
     }
 
     * {
@@ -157,15 +161,15 @@
 
     h1 {
       margin: 0;
-      max-width: 760px;
-      font-size: clamp(2.55rem, 12vw, 5.65rem);
-      line-height: 0.88;
+      max-width: 860px;
+      font-size: clamp(2.45rem, 11vw, 5.4rem);
+      line-height: 0.9;
       letter-spacing: -0.08em;
     }
 
     .lead {
       margin: 18px 0 0;
-      max-width: 760px;
+      max-width: 820px;
       color: var(--muted);
       font-size: clamp(1rem, 2.5vw, 1.16rem);
       line-height: 1.6;
@@ -215,7 +219,7 @@
 
     .surface-head p {
       margin: 8px 0 0;
-      max-width: 720px;
+      max-width: 760px;
       color: var(--muted);
       line-height: 1.52;
     }
@@ -233,9 +237,9 @@
       white-space: nowrap;
     }
 
-    .gauge-stage {
+    .dashboard-stage {
       display: grid;
-      grid-template-columns: minmax(0, 0.94fr) minmax(260px, 1fr);
+      grid-template-columns: minmax(0, 0.98fr) minmax(280px, 1fr);
       gap: 16px;
       padding: 18px;
       align-items: center;
@@ -243,13 +247,17 @@
 
     .object-wrap {
       position: relative;
-      min-height: 390px;
+      min-height: 420px;
       display: grid;
       place-items: center;
       perspective: 1050px;
       perspective-origin: 50% 42%;
       overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
       border-radius: 24px;
+      background:
+        radial-gradient(circle at 50% 42%, rgba(255,255,255,0.105), transparent 44%),
+        rgba(255,255,255,0.025);
     }
 
     .object-wrap::before {
@@ -263,6 +271,34 @@
         radial-gradient(circle, rgba(100,140,255,0.08), transparent 64%);
       filter: blur(4px);
       opacity: 0.9;
+    }
+
+    .overall-score {
+      position: absolute;
+      z-index: 5;
+      top: 14px;
+      left: 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      background: rgba(3,7,15,0.72);
+      backdrop-filter: blur(10px);
+    }
+
+    .overall-score strong {
+      display: block;
+      font-size: 1.45rem;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+
+    .overall-score span {
+      display: block;
+      margin-top: 5px;
+      color: var(--soft);
+      font-size: 0.66rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     .orbit {
@@ -404,8 +440,8 @@
     .hud-node {
       position: absolute;
       z-index: 3;
-      width: 74px;
-      min-height: 74px;
+      width: 86px;
+      min-height: 78px;
       display: grid;
       place-items: center;
       border: 1px solid rgba(255,255,255,0.22);
@@ -413,6 +449,7 @@
       background: rgba(3,7,15,0.82);
       box-shadow: 0 18px 34px rgba(0,0,0,0.38);
       backdrop-filter: blur(10px);
+      text-align: center;
     }
 
     .hud-node strong {
@@ -425,26 +462,26 @@
       display: block;
       margin-top: 5px;
       color: var(--soft);
-      font-size: 0.66rem;
+      font-size: 0.62rem;
       letter-spacing: 0.10em;
       text-transform: uppercase;
     }
 
-    .hud-node.alignment {
+    .hud-node.structure {
       left: 50%;
-      top: 6%;
+      top: 8%;
       transform: translate(-50%, 0);
     }
 
-    .hud-node.coherence {
+    .hud-node.runtime {
       right: 4%;
       top: 50%;
       transform: translate(0, -50%);
     }
 
-    .hud-node.pressure {
+    .hud-node.content {
       left: 50%;
-      bottom: 6%;
+      bottom: 8%;
       transform: translate(-50%, 0);
     }
 
@@ -522,15 +559,52 @@
       line-height: 1.43;
     }
 
-    .runtime-note {
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      padding: 0 18px 18px;
+    }
+
+    .status-panel {
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 16px;
+      background: rgba(255,255,255,0.052);
+    }
+
+    .status-panel h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+      letter-spacing: -0.025em;
+    }
+
+    .status-panel ul,
+    .status-panel ol {
+      margin: 0;
+      padding-left: 1.15rem;
+      color: var(--muted);
+      font-size: 0.86rem;
+      line-height: 1.55;
+    }
+
+    .status-panel li + li {
+      margin-top: 7px;
+    }
+
+    .contract-strip {
       margin: 0 18px 18px;
       border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 12px;
-      color: var(--soft);
-      background: rgba(255,255,255,0.04);
-      font-size: 0.8rem;
-      line-height: 1.45;
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255,255,255,0.045);
+      color: var(--muted);
+      font-size: 0.84rem;
+      line-height: 1.48;
+    }
+
+    .contract-strip strong {
+      color: var(--text);
     }
 
     .footer {
@@ -543,7 +617,7 @@
       font-size: 0.78rem;
     }
 
-    @media (max-width: 820px) {
+    @media (max-width: 900px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
@@ -562,12 +636,16 @@
         margin-top: 12px;
       }
 
-      .gauge-stage {
+      .dashboard-stage {
         grid-template-columns: 1fr;
       }
 
       .object-wrap {
-        min-height: 390px;
+        min-height: 410px;
+      }
+
+      .status-grid {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -582,7 +660,7 @@
       }
 
       .object-wrap {
-        min-height: 350px;
+        min-height: 370px;
       }
 
       .scene-3d {
@@ -639,8 +717,8 @@
       }
 
       .hud-node {
-        width: 64px;
-        min-height: 64px;
+        width: 72px;
+        min-height: 66px;
         border-radius: 18px;
       }
 
@@ -649,7 +727,17 @@
       }
 
       .hud-node span {
-        font-size: 0.60rem;
+        font-size: 0.54rem;
+      }
+
+      .overall-score {
+        top: 10px;
+        left: 10px;
+        padding: 10px;
+      }
+
+      .overall-score strong {
+        font-size: 1.22rem;
       }
 
       .brand-title,
@@ -674,7 +762,7 @@
         <span class="mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <span class="brand-title">Diamond Gate Bridge</span>
-          <span class="brand-subtitle">Gauges</span>
+          <span class="brand-subtitle">Website Health Gauges</span>
         </span>
       </a>
 
@@ -688,36 +776,40 @@
     </header>
 
     <section class="hero" aria-labelledby="page-title">
-      <p class="eyebrow">Runtime instrumentation</p>
-      <h1 id="page-title">Four Gauges Runtime</h1>
+      <p class="eyebrow">Generation 1 · Baseline 3</p>
+      <h1 id="page-title">Website Health Gauges</h1>
       <p class="lead">
-        Alignment, coherence, pressure, and drift are held around a three-dimensional gauge object.
-        The page renders the object directly and does not depend on an external runtime to become visible.
+        The gauges page now reads the whole website: structure, runtime, content, and drift.
+        The three-dimensional object remains the visual anchor, but its job is now diagnostic.
       </p>
 
-      <div class="trace" aria-label="Trace order">
-        <span>GS</span>
-        <span>BS</span>
-        <span>CP</span>
-        <span>MP</span>
-        <span>MPK</span>
-        <span>OG</span>
+      <div class="trace" aria-label="Health trace">
+        <span>Current known health</span>
+        <span>Baseline protected</span>
+        <span>Live scan not yet bound</span>
+        <span>Next work visible</span>
       </div>
     </section>
 
     <section class="surface" aria-labelledby="surface-title">
       <div class="surface-head">
         <div>
-          <h2 id="surface-title">Three-dimensional gauge object</h2>
+          <h2 id="surface-title">Current website health</h2>
           <p>
-            Static baseline first. The center form now has depth, face planes, axis lines, and a true 3D spin.
+            This is the contracted health read from the active baseline and observed site state.
+            It is static-first so the page can never collapse into a blank runtime surface.
           </p>
         </div>
-        <span class="pill">3D object</span>
+        <span class="pill">Health dashboard</span>
       </div>
 
-      <div class="gauge-stage" id="gauge-stage">
-        <div class="object-wrap" aria-label="Three-dimensional four-gauge diamond">
+      <div class="dashboard-stage" id="dashboard-stage">
+        <div class="object-wrap" aria-label="Three-dimensional website health gauge object">
+          <div class="overall-score">
+            <strong>67%</strong>
+            <span>Known health</span>
+          </div>
+
           <div class="orbit" aria-hidden="true"></div>
           <div class="orbit orbit-two" aria-hidden="true"></div>
           <div class="orbit orbit-three" aria-hidden="true"></div>
@@ -739,82 +831,119 @@
             </div>
           </div>
 
-          <div class="hud-node alignment">
+          <div class="hud-node structure">
+            <div>
+              <strong>72</strong>
+              <span>Structure</span>
+            </div>
+          </div>
+
+          <div class="hud-node runtime">
+            <div>
+              <strong>54</strong>
+              <span>Runtime</span>
+            </div>
+          </div>
+
+          <div class="hud-node content">
             <div>
               <strong>76</strong>
-              <span>Align</span>
-            </div>
-          </div>
-
-          <div class="hud-node coherence">
-            <div>
-              <strong>82</strong>
-              <span>Cohere</span>
-            </div>
-          </div>
-
-          <div class="hud-node pressure">
-            <div>
-              <strong>41</strong>
-              <span>Press</span>
+              <span>Content</span>
             </div>
           </div>
 
           <div class="hud-node drift">
             <div>
-              <strong>18</strong>
-              <span>Drift</span>
+              <strong>36</strong>
+              <span>Drift risk</span>
             </div>
           </div>
         </div>
 
-        <div class="cards" aria-label="Gauge readings">
+        <div class="cards" aria-label="Website health readings">
           <article class="card">
             <div class="card-top">
-              <h3>Alignment</h3>
+              <h3>Structure</h3>
+              <span class="score">72 / 100</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:72%"></span></div>
+            <p>Gauges page is visible and routed. Full site route inventory is not yet bound to this dashboard.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top">
+              <h3>Runtime</h3>
+              <span class="score">54 / 100</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:54%"></span></div>
+            <p>Static render is safe. External runtime authority and live diagnostics still need contract binding.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top">
+              <h3>Content</h3>
               <span class="score">76 / 100</span>
             </div>
             <div class="bar" aria-hidden="true"><span class="fill" style="width:76%"></span></div>
-            <p>Measures whether the visible surface is holding its intended axis.</p>
+            <p>The gauges page now explains its purpose. Other pages still need baseline-aligned health reads.</p>
           </article>
 
           <article class="card">
             <div class="card-top">
-              <h3>Coherence</h3>
-              <span class="score">82 / 100</span>
+              <h3>Drift Risk</h3>
+              <span class="score">36 / 100</span>
             </div>
-            <div class="bar" aria-hidden="true"><span class="fill" style="width:82%"></span></div>
-            <p>Measures whether the four-gauge system is moving as one structure.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>Pressure</h3>
-              <span class="score">41 / 100</span>
-            </div>
-            <div class="bar" aria-hidden="true"><span class="fill" style="width:41%"></span></div>
-            <p>Measures runtime load, tension, and edge force.</p>
-          </article>
-
-          <article class="card">
-            <div class="card-top">
-              <h3>Drift</h3>
-              <span class="score">18 / 100</span>
-            </div>
-            <div class="bar" aria-hidden="true"><span class="fill" style="width:82%"></span></div>
-            <p>Measures deviation from the active axis and expected trace.</p>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:36%"></span></div>
+            <p>Risk is controlled but present: page/runtime split, stale assumptions, and unscanned routes remain open.</p>
           </article>
         </div>
       </div>
 
-      <div class="runtime-note">
-        Runtime mount is intentionally held behind the hard-rendered 3D object. Future controls can attach after the object itself is stable.
+      <div class="status-grid" aria-label="Website diagnostic sections">
+        <section class="status-panel">
+          <h3>What is working</h3>
+          <ul>
+            <li>Gauges page no longer collapses into star-only blank state.</li>
+            <li>Generation 1 Baseline 2 3D object is preserved.</li>
+            <li>Mobile-first visible render is active.</li>
+            <li>Gauge meanings are now tied to website health.</li>
+            <li>Static-first fallback protects the page before runtime enhancement.</li>
+          </ul>
+        </section>
+
+        <section class="status-panel">
+          <h3>What is wrong</h3>
+          <ul>
+            <li>Live automated diagnostics are not yet connected.</li>
+            <li>Runtime file and page file authority split is not fully contracted.</li>
+            <li>Full site route inventory is not yet measured by the gauges.</li>
+            <li>Other pages may still be behind the active Generation 1 baseline.</li>
+            <li>Current health values are known-state reads, not live scan results.</li>
+          </ul>
+        </section>
+
+        <section class="status-panel">
+          <h3>What needs to be done</h3>
+          <ol>
+            <li>Lock this page as Generation 1 Baseline 3.</li>
+            <li>Bind page/runtime authority split for gauges.</li>
+            <li>Create a route inventory for the whole website.</li>
+            <li>Attach live checks for page load, route health, and runtime status.</li>
+            <li>Upgrade the dashboard from known-state read to live website instrument.</li>
+          </ol>
+        </section>
+      </div>
+
+      <div class="contract-strip">
+        <strong>Contract renewal:</strong>
+        the gauges page is now the website health dashboard. The 3D object is preserved as the central instrument.
+        Static health appears first. Live diagnostics come next. No control panel is permitted until the health model and runtime contract are stable.
       </div>
     </section>
 
     <footer class="footer">
       <span>Diamond Gate Bridge</span>
-      <span>Gauge page 3D object baseline</span>
+      <span>Generation 1 · Baseline 3 · Website Health Gauges</span>
     </footer>
   </main>
 
@@ -828,13 +957,13 @@
         if (!root || root.textContent.trim().length < 40) {
           document.body.innerHTML =
             '<main style="padding:24px;min-height:100vh;background:#020713;color:#f5f3ec;font-family:system-ui,sans-serif;">' +
-            '<h1 style="font-size:42px;line-height:.95;margin:0 0 16px;">Four Gauges Runtime</h1>' +
-            '<p style="color:rgba(245,243,236,.72);line-height:1.5;">Hard-render fallback active. Alignment, coherence, pressure, and drift page content is protected from blank runtime state.</p>' +
+            '<h1 style="font-size:42px;line-height:.95;margin:0 0 16px;">Website Health Gauges</h1>' +
+            '<p style="color:rgba(245,243,236,.72);line-height:1.5;">Hard-render fallback active. Structure, runtime, content, and drift health remain visible even if runtime enhancement fails.</p>' +
             '<div style="display:grid;gap:10px;margin-top:18px;">' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Alignment — 76 / 100</div>' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Coherence — 82 / 100</div>' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Pressure — 41 / 100</div>' +
-            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Drift — 18 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Structure — 72 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Runtime — 54 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Content — 76 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Drift Risk — 36 / 100</div>' +
             '</div>' +
             '</main>';
         }

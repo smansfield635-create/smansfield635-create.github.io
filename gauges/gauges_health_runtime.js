@@ -2,7 +2,7 @@
   "use strict";
 
   var RUNTIME_NAME = "DGBGaugesHealthRuntime";
-  var VERSION = "spine-canopy-parachute-b3";
+  var VERSION = "spine-canopy-parachute-b4";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var ROOT_CONTRACT = "universe-sun";
@@ -71,7 +71,7 @@
       path: "/gauges/gauges_health_runtime.js?v=" + VERSION + "&gaugeSource=" + VERSION,
       displayPath: "/gauges/gauges_health_runtime.js?v=" + VERSION,
       required: [
-        "spine-canopy-parachute-b3",
+        "spine-canopy-parachute-b4",
         "probeRootVisualTruth",
         "falseHealthBlocked"
       ]
@@ -696,7 +696,7 @@
     state.status = "SCANNING";
     state.startedAt = new Date().toISOString();
     state.finishedAt = "";
-    state.working = ["Canopy-aware Bravo 3 scan is running."];
+    state.working = ["Canopy-aware Bravo 4 scan is running."];
     state.issues = ["Scan not complete yet."];
     state.actions = ["Wait for source and visual-control probe to complete."];
     state.sourceResults = [];

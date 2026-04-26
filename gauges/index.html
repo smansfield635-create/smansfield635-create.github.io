@@ -2,67 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges — Diamond Gate Bridge</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge gauges page: four runtime gauges for alignment, coherence, pressure, and drift."
-  />
+  <meta name="description" content="Diamond Gate Bridge gauges page for alignment, coherence, pressure, and drift." />
 
   <style>
     :root {
-      --bg: #050608;
-      --panel: rgba(255, 255, 255, 0.055);
-      --panel-strong: rgba(255, 255, 255, 0.085);
-      --line: rgba(255, 255, 255, 0.14);
-      --text: #f4f4f0;
-      --muted: rgba(244, 244, 240, 0.68);
-      --soft: rgba(244, 244, 240, 0.48);
-      --shadow: rgba(0, 0, 0, 0.45);
-      --max: 1180px;
+      --bg: #020713;
+      --bg2: #07101e;
+      --panel: rgba(255, 255, 255, 0.075);
+      --panel2: rgba(255, 255, 255, 0.105);
+      --line: rgba(255, 255, 255, 0.16);
+      --text: #f5f3ec;
+      --muted: rgba(245, 243, 236, 0.72);
+      --soft: rgba(245, 243, 236, 0.52);
+      --shadow: rgba(0, 0, 0, 0.44);
+      --max: 1120px;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
+    html,
+    body {
       min-height: 100%;
+      margin: 0;
       background: var(--bg);
       color: var(--text);
     }
 
     body {
-      min-height: 100%;
-      margin: 0;
-      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.10), transparent 32rem),
-        radial-gradient(circle at 12% 24%, rgba(255, 255, 255, 0.06), transparent 18rem),
-        radial-gradient(circle at 88% 18%, rgba(255, 255, 255, 0.055), transparent 20rem),
-        #050608;
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+        radial-gradient(circle at 22% 16%, rgba(255,255,255,0.10), transparent 18rem),
+        radial-gradient(circle at 80% 7%, rgba(91,132,255,0.12), transparent 22rem),
+        linear-gradient(180deg, var(--bg2), var(--bg) 58%);
+      overflow-x: hidden;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -1;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.42) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(255, 255, 255, 0.24) 0 1px, transparent 1.5px);
-      background-size: 91px 91px, 149px 149px;
-      background-position: 13px 21px, 47px 61px;
-      opacity: 0.16;
+      z-index: 0;
       pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.44) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,255,255,0.24) 0 1px, transparent 1.6px);
+      background-size: 92px 92px, 151px 151px;
+      background-position: 14px 28px, 51px 70px;
+      opacity: 0.18;
     }
 
     a {
@@ -70,23 +60,20 @@
       text-decoration: none;
     }
 
-    a:hover {
-      text-decoration: underline;
-      text-underline-offset: 4px;
-    }
-
-    .page-shell {
+    .page {
+      position: relative;
+      z-index: 1;
       width: min(100%, var(--max));
       margin: 0 auto;
-      padding: 20px;
+      padding: 16px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 14px 0 22px;
+      gap: 12px;
+      padding: 8px 0 18px;
     }
 
     .brand {
@@ -96,245 +83,364 @@
       min-width: 0;
     }
 
-    .brand-mark {
-      width: 34px;
-      height: 34px;
+    .mark {
+      width: 32px;
+      height: 32px;
       flex: 0 0 auto;
       border: 1px solid var(--line);
-      border-radius: 11px;
+      border-radius: 10px;
       transform: rotate(45deg);
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.035)),
-        rgba(255, 255, 255, 0.04);
-      box-shadow: 0 12px 34px var(--shadow);
+      background: linear-gradient(135deg, rgba(255,255,255,0.24), rgba(255,255,255,0.04));
+      box-shadow: 0 14px 36px var(--shadow);
     }
 
-    .brand-text {
+    .brand-copy {
       display: grid;
-      gap: 2px;
       min-width: 0;
     }
 
-    .brand-name {
+    .brand-title {
       font-size: 0.96rem;
       font-weight: 760;
-      letter-spacing: -0.025em;
+      letter-spacing: -0.03em;
       white-space: nowrap;
     }
 
-    .brand-sub {
+    .brand-subtitle {
       color: var(--soft);
-      font-size: 0.74rem;
-      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
       white-space: nowrap;
     }
 
     .nav {
       display: flex;
-      flex-wrap: wrap;
       justify-content: flex-end;
-      gap: 8px;
+      flex-wrap: wrap;
+      gap: 7px;
     }
 
     .nav a {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 11px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.045);
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.035);
-      font-size: 0.78rem;
-      text-decoration: none;
+      font-size: 0.76rem;
     }
 
     .nav a[aria-current="page"] {
       color: var(--text);
-      background: rgba(255, 255, 255, 0.09);
+      background: rgba(255,255,255,0.115);
     }
 
     .hero {
-      position: relative;
-      overflow: hidden;
       border: 1px solid var(--line);
-      border-radius: 30px;
-      padding: clamp(24px, 5vw, 54px);
+      border-radius: 26px;
+      padding: clamp(22px, 5vw, 48px);
       background:
-        radial-gradient(circle at 70% 20%, rgba(255, 255, 255, 0.11), transparent 17rem),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.035));
-      box-shadow: 0 24px 90px var(--shadow);
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(260px, 0.72fr);
-      gap: clamp(22px, 5vw, 48px);
-      align-items: end;
+        radial-gradient(circle at 76% 18%, rgba(255,255,255,0.12), transparent 16rem),
+        linear-gradient(180deg, rgba(255,255,255,0.095), rgba(255,255,255,0.045));
+      box-shadow: 0 24px 80px var(--shadow);
     }
 
     .eyebrow {
-      margin: 0 0 14px;
+      margin: 0 0 12px;
       color: var(--soft);
-      font-size: 0.76rem;
-      font-weight: 680;
-      letter-spacing: 0.15em;
+      font-size: 0.74rem;
+      font-weight: 760;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      max-width: 850px;
-      font-size: clamp(2.3rem, 7vw, 5.6rem);
-      line-height: 0.93;
-      letter-spacing: -0.07em;
+      max-width: 760px;
+      font-size: clamp(2.55rem, 12vw, 5.65rem);
+      line-height: 0.88;
+      letter-spacing: -0.08em;
     }
 
-    .hero-copy {
+    .lead {
       margin: 18px 0 0;
-      max-width: 780px;
+      max-width: 760px;
       color: var(--muted);
-      font-size: clamp(1rem, 1.6vw, 1.16rem);
-      line-height: 1.62;
+      font-size: clamp(1rem, 2.5vw, 1.16rem);
+      line-height: 1.6;
     }
 
-    .hero-card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 18px;
-      background: rgba(5, 6, 8, 0.42);
-    }
-
-    .hero-card h2 {
-      margin: 0 0 10px;
-      font-size: 1rem;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.52;
-    }
-
-    .trace-row {
+    .trace {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin-top: 16px;
+      margin-top: 18px;
     }
 
-    .trace-row span {
+    .trace span {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 7px 9px;
+      padding: 7px 10px;
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(255,255,255,0.05);
       font-size: 0.78rem;
     }
 
-    .section {
-      margin-top: 20px;
+    .surface {
+      margin-top: 16px;
       border: 1px solid var(--line);
-      border-radius: 28px;
-      background: rgba(255, 255, 255, 0.035);
-      box-shadow: 0 18px 62px rgba(0, 0, 0, 0.28);
+      border-radius: 26px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(255,255,255,0.11), transparent 22rem),
+        rgba(255,255,255,0.045);
+      box-shadow: 0 20px 70px rgba(0,0,0,0.34);
     }
 
-    .section-head {
+    .surface-head {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: 16px;
-      padding: 22px 22px 0;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 18px 18px 0;
     }
 
-    .section-head h2 {
+    .surface-head h2 {
       margin: 0;
-      font-size: clamp(1.25rem, 2.4vw, 2rem);
-      letter-spacing: -0.045em;
+      font-size: clamp(1.35rem, 5vw, 2.05rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
     }
 
-    .section-head p {
+    .surface-head p {
       margin: 8px 0 0;
       max-width: 720px;
       color: var(--muted);
-      line-height: 1.55;
+      line-height: 1.52;
     }
 
-    .status-pill {
+    .pill {
       flex: 0 0 auto;
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 8px 11px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.06);
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.055);
-      font-size: 0.76rem;
-      letter-spacing: 0.12em;
+      font-size: 0.72rem;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
       white-space: nowrap;
     }
 
-    .runtime-frame {
-      padding: 8px 0 0;
-    }
-
-    #gauges-runtime {
-      min-height: 560px;
-    }
-
-    .fallback {
-      display: none;
-      margin: 24px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 18px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.045);
-      line-height: 1.55;
-    }
-
-    .fallback strong {
-      color: var(--text);
-    }
-
-    .gauge-brief {
+    .hard-gauge-stage {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      padding: 22px;
+      grid-template-columns: minmax(0, 0.94fr) minmax(260px, 1fr);
+      gap: 16px;
+      padding: 18px;
+      align-items: center;
     }
 
-    .brief-card {
-      border: 1px solid var(--line);
+    .diamond-wrap {
+      position: relative;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      perspective: 900px;
+    }
+
+    .orbit {
+      position: absolute;
+      width: min(78vw, 330px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(255,255,255,0.13);
+      border-radius: 999px;
+      transform: rotateX(64deg) rotateZ(-14deg);
+    }
+
+    .orbit::before,
+    .orbit::after {
+      content: "";
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.09);
+      border-radius: 999px;
+    }
+
+    .orbit::before {
+      inset: 12%;
+    }
+
+    .orbit::after {
+      inset: 26%;
+    }
+
+    .diamond {
+      position: relative;
+      width: min(67vw, 240px);
+      aspect-ratio: 1;
+      transform-style: preserve-3d;
+      animation: naturalSpin 18s linear infinite;
+    }
+
+    .diamond-core {
+      position: absolute;
+      inset: 13%;
+      border: 1px solid rgba(255,255,255,0.24);
+      border-radius: 18px;
+      transform: rotate(45deg);
+      background:
+        radial-gradient(circle at 30% 24%, rgba(255,255,255,0.22), transparent 35%),
+        linear-gradient(135deg, rgba(255,255,255,0.20), rgba(255,255,255,0.045) 54%, rgba(255,255,255,0.13));
+      box-shadow:
+        inset 0 0 34px rgba(255,255,255,0.08),
+        0 0 46px rgba(255,255,255,0.08);
+    }
+
+    .axis-y,
+    .axis-x {
+      position: absolute;
+      background: linear-gradient(180deg, transparent, rgba(255,255,255,0.42), transparent);
+    }
+
+    .axis-y {
+      left: 50%;
+      top: 4%;
+      width: 1px;
+      height: 92%;
+    }
+
+    .axis-x {
+      left: 4%;
+      top: 50%;
+      width: 92%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.42), transparent);
+    }
+
+    .node {
+      position: absolute;
+      width: 70px;
+      min-height: 70px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.18);
       border-radius: 20px;
-      padding: 15px;
+      background: rgba(3,7,15,0.78);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.34);
+      transform: translate(-50%, -50%);
+    }
+
+    .node strong {
+      display: block;
+      font-size: 1.05rem;
+      line-height: 1;
+    }
+
+    .node span {
+      display: block;
+      margin-top: 4px;
+      color: var(--soft);
+      font-size: 0.68rem;
+      letter-spacing: 0.10em;
+      text-transform: uppercase;
+    }
+
+    .node.alignment { left: 50%; top: 6%; }
+    .node.coherence { left: 94%; top: 50%; }
+    .node.pressure { left: 50%; top: 94%; }
+    .node.drift { left: 6%; top: 50%; }
+
+    @keyframes naturalSpin {
+      from {
+        transform: rotateX(-18deg) rotateY(0deg) rotateZ(0deg);
+      }
+      to {
+        transform: rotateX(-18deg) rotateY(360deg) rotateZ(0deg);
+      }
+    }
+
+    .cards {
+      display: grid;
+      gap: 10px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px;
       background: var(--panel);
     }
 
-    .brief-card h3 {
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .card h3 {
       margin: 0;
       font-size: 0.98rem;
       letter-spacing: -0.02em;
     }
 
-    .brief-card p {
-      margin: 8px 0 0;
+    .score {
       color: var(--muted);
-      font-size: 0.86rem;
-      line-height: 1.48;
+      font-size: 0.84rem;
+      white-space: nowrap;
+    }
+
+    .bar {
+      position: relative;
+      overflow: hidden;
+      height: 8px;
+      margin-top: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.10);
+    }
+
+    .fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      border-radius: inherit;
+      background: rgba(255,255,255,0.78);
+    }
+
+    .card p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.43;
+    }
+
+    .runtime-mount {
+      padding: 0 18px 18px;
+    }
+
+    #gauges-runtime {
+      min-height: 0;
+    }
+
+    .runtime-note {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      color: var(--soft);
+      background: rgba(255,255,255,0.04);
+      font-size: 0.8rem;
+      line-height: 1.45;
     }
 
     .footer {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
-      gap: 12px;
-      padding: 24px 0 8px;
+      gap: 10px;
+      padding: 18px 0 8px;
       color: var(--soft);
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
 
-    @media (max-width: 860px) {
+    @media (max-width: 820px) {
       .topbar {
         align-items: flex-start;
         flex-direction: column;
@@ -344,53 +450,71 @@
         justify-content: flex-start;
       }
 
-      .hero-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .section-head {
+      .surface-head {
         display: block;
       }
 
-      .status-pill {
+      .pill {
         display: inline-flex;
-        margin-top: 14px;
+        margin-top: 12px;
       }
 
-      .gauge-brief {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 560px) {
-      .page-shell {
-        padding: 14px;
-      }
-
-      .hero {
-        border-radius: 24px;
-      }
-
-      .gauge-brief {
+      .hard-gauge-stage {
         grid-template-columns: 1fr;
       }
 
-      .brand-name,
-      .brand-sub {
+      .diamond-wrap {
+        min-height: 300px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .page {
+        padding: 12px;
+      }
+
+      .hero,
+      .surface {
+        border-radius: 22px;
+      }
+
+      .node {
+        width: 62px;
+        min-height: 62px;
+        border-radius: 17px;
+      }
+
+      .node strong {
+        font-size: 0.95rem;
+      }
+
+      .node span {
+        font-size: 0.62rem;
+      }
+
+      .brand-title,
+      .brand-subtitle {
         white-space: normal;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .diamond {
+        animation: none;
+        transform: rotateX(-18deg) rotateY(34deg);
       }
     }
   </style>
 </head>
 
 <body>
-  <main class="page-shell">
+  <main class="page" id="page-root">
     <header class="topbar" aria-label="Site header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
-        <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-text">
-          <span class="brand-name">Diamond Gate Bridge</span>
-          <span class="brand-sub">Gauges Runtime</span>
+        <span class="mark" aria-hidden="true"></span>
+        <span class="brand-copy">
+          <span class="brand-title">Diamond Gate Bridge</span>
+          <span class="brand-subtitle">Gauges</span>
         </span>
       </a>
 
@@ -403,116 +527,196 @@
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="gauges-title">
-      <div class="hero-grid">
-        <div>
-          <p class="eyebrow">Runtime-specific instrumentation</p>
-          <h1 id="gauges-title">Four gauges. One axis. No drift.</h1>
-          <p class="hero-copy">
-            The gauges page holds the visible runtime surface for alignment,
-            coherence, pressure, and drift. The page owns the readable frame.
-            The separate runtime file owns the moving gauge logic.
-          </p>
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Runtime instrumentation</p>
+      <h1 id="page-title">Four Gauges Runtime</h1>
+      <p class="lead">
+        Alignment, coherence, pressure, and drift are rendered immediately on the page.
+        The external runtime can enhance this surface, but the page no longer depends on it to become visible.
+      </p>
 
-          <div class="trace-row" aria-label="Trace order">
-            <span>GS</span>
-            <span>BS</span>
-            <span>CP</span>
-            <span>MP</span>
-            <span>MPK</span>
-            <span>OG</span>
+      <div class="trace" aria-label="Trace order">
+        <span>GS</span>
+        <span>BS</span>
+        <span>CP</span>
+        <span>MP</span>
+        <span>MPK</span>
+        <span>OG</span>
+      </div>
+    </section>
+
+    <section class="surface" aria-labelledby="surface-title">
+      <div class="surface-head">
+        <div>
+          <h2 id="surface-title">Visible gauge surface</h2>
+          <p>
+            Static baseline first. Axis and natural spin are present before any future control panel.
+          </p>
+        </div>
+        <span class="pill">Hard rendered</span>
+      </div>
+
+      <div class="hard-gauge-stage" id="hard-gauge-stage">
+        <div class="diamond-wrap" aria-label="Four-gauge diamond">
+          <div class="orbit" aria-hidden="true"></div>
+          <div class="diamond" aria-hidden="true">
+            <div class="diamond-core"></div>
+            <div class="axis-y"></div>
+            <div class="axis-x"></div>
+
+            <div class="node alignment">
+              <div>
+                <strong>76</strong>
+                <span>Align</span>
+              </div>
+            </div>
+
+            <div class="node coherence">
+              <div>
+                <strong>82</strong>
+                <span>Cohere</span>
+              </div>
+            </div>
+
+            <div class="node pressure">
+              <div>
+                <strong>41</strong>
+                <span>Press</span>
+              </div>
+            </div>
+
+            <div class="node drift">
+              <div>
+                <strong>18</strong>
+                <span>Drift</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <aside class="hero-card" aria-label="Page rule">
-          <h2>Page rule</h2>
-          <p>
-            This page does not become the runtime. It mounts the runtime.
-            Axis, spin, and gauge behavior remain isolated in
-            <strong>/gauges/gauges_runtime.js</strong>.
-          </p>
-        </aside>
-      </div>
-    </section>
+        <div class="cards" aria-label="Gauge readings">
+          <article class="card">
+            <div class="card-top">
+              <h3>Alignment</h3>
+              <span class="score">76 / 100</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:76%"></span></div>
+            <p>Measures whether the visible surface is holding its intended axis.</p>
+          </article>
 
-    <section class="section" aria-labelledby="runtime-title">
-      <div class="section-head">
-        <div>
-          <h2 id="runtime-title">Live gauge surface</h2>
-          <p>
-            This is the runtime mount. The control panel is intentionally not
-            present yet. The first standard is stable axis and natural spin.
-          </p>
+          <article class="card">
+            <div class="card-top">
+              <h3>Coherence</h3>
+              <span class="score">82 / 100</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:82%"></span></div>
+            <p>Measures whether the four-gauge system is moving as one structure.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top">
+              <h3>Pressure</h3>
+              <span class="score">41 / 100</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:41%"></span></div>
+            <p>Measures runtime load, tension, and edge force.</p>
+          </article>
+
+          <article class="card">
+            <div class="card-top">
+              <h3>Drift</h3>
+              <span class="score">18 / 100</span>
+            </div>
+            <div class="bar" aria-hidden="true"><span class="fill" style="width:82%"></span></div>
+            <p>Measures deviation from the active axis and expected trace.</p>
+          </article>
         </div>
-        <span class="status-pill">Axis first</span>
       </div>
 
-      <div class="runtime-frame">
+      <div class="runtime-mount">
         <div id="gauges-runtime" data-gauges-runtime></div>
-
-        <div class="fallback" id="gauges-fallback" role="status">
-          <strong>Runtime not detected.</strong>
-          Confirm that <code>/gauges/gauges_runtime.js</code> exists and is
-          reachable from this page.
+        <div class="runtime-note" id="runtime-note">
+          Runtime mount is available. Static page remains visible even if the external runtime is unavailable.
         </div>
-      </div>
-    </section>
-
-    <section class="section" aria-labelledby="brief-title">
-      <div class="section-head">
-        <div>
-          <h2 id="brief-title">Gauge meanings</h2>
-          <p>
-            The page gives the reader the plain-language read before any deeper
-            control surface is introduced.
-          </p>
-        </div>
-        <span class="status-pill">Four-gauge frame</span>
-      </div>
-
-      <div class="gauge-brief">
-        <article class="brief-card">
-          <h3>Alignment</h3>
-          <p>Confirms whether the visible surface holds its intended axis.</p>
-        </article>
-
-        <article class="brief-card">
-          <h3>Coherence</h3>
-          <p>Confirms whether the four gauges move as one structure.</p>
-        </article>
-
-        <article class="brief-card">
-          <h3>Pressure</h3>
-          <p>Reads active runtime load, tension, and edge force.</p>
-        </article>
-
-        <article class="brief-card">
-          <h3>Drift</h3>
-          <p>Reads deviation from expected trace and axis behavior.</p>
-        </article>
       </div>
     </section>
 
     <footer class="footer">
       <span>Diamond Gate Bridge</span>
-      <span>Gauges page → runtime mount → validation surface</span>
+      <span>Gauge page hard-render baseline</span>
     </footer>
   </main>
 
-  <script src="/gauges/gauges_runtime.js" defer></script>
   <script>
-    window.addEventListener("load", function () {
-      var fallback = document.getElementById("gauges-fallback");
+    (function () {
+      "use strict";
 
-      window.setTimeout(function () {
-        var runtime = window.DGBGaugesRuntime;
-        var valid = runtime && typeof runtime.validate === "function" && runtime.validate();
+      function protectVisiblePage() {
+        var root = document.getElementById("page-root");
 
-        if (!valid || !valid.ok) {
-          fallback.style.display = "block";
+        if (!root || root.textContent.trim().length < 40) {
+          document.body.innerHTML =
+            '<main style="padding:24px;min-height:100vh;background:#020713;color:#f5f3ec;font-family:system-ui,sans-serif;">' +
+            '<h1 style="font-size:42px;line-height:.95;margin:0 0 16px;">Four Gauges Runtime</h1>' +
+            '<p style="color:rgba(245,243,236,.72);line-height:1.5;">Hard-render fallback active. Alignment, coherence, pressure, and drift page content is protected from blank runtime state.</p>' +
+            '<div style="display:grid;gap:10px;margin-top:18px;">' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Alignment — 76 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Coherence — 82 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Pressure — 41 / 100</div>' +
+            '<div style="border:1px solid rgba(255,255,255,.16);border-radius:16px;padding:14px;background:rgba(255,255,255,.07);">Drift — 18 / 100</div>' +
+            '</div>' +
+            '</main>';
         }
-      }, 700);
-    });
+      }
+
+      function loadOptionalRuntime() {
+        var script = document.createElement("script");
+        script.src = "/gauges/gauges_runtime.js";
+        script.defer = true;
+
+        script.onload = function () {
+          var runtime = window.DGBGaugesRuntime;
+          var note = document.getElementById("runtime-note");
+          var hardStage = document.getElementById("hard-gauge-stage");
+
+          if (runtime && typeof runtime.validate === "function") {
+            var result = runtime.validate();
+
+            if (result && result.ok && note) {
+              note.textContent = "External gauges runtime loaded and validated. Static baseline remains as page fallback.";
+            }
+
+            if (result && result.ok && hardStage) {
+              hardStage.style.display = "none";
+            }
+          }
+        };
+
+        script.onerror = function () {
+          var note = document.getElementById("runtime-note");
+          if (note) {
+            note.textContent = "External runtime unavailable. Static hard-rendered gauges remain active.";
+          }
+        };
+
+        document.body.appendChild(script);
+      }
+
+      protectVisiblePage();
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", function () {
+          protectVisiblePage();
+          loadOptionalRuntime();
+        }, { once: true });
+      } else {
+        protectVisiblePage();
+        loadOptionalRuntime();
+      }
+
+      window.setTimeout(protectVisiblePage, 750);
+      window.setTimeout(protectVisiblePage, 1800);
+    })();
   </script>
 </body>
 </html>

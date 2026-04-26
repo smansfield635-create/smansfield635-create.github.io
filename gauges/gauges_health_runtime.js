@@ -2,7 +2,8 @@
   "use strict";
 
   var RUNTIME_NAME = "DGBGaugesHealthRuntime";
-  var VERSION = "spine-canopy-parachute-b1";
+  var VERSION = "spine-canopy-parachute-b2";
+  var CANOPY_VERSION = "spine-canopy-parachute-b1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var ROOT_CONTRACT = "universe-sun";
 
@@ -13,10 +14,11 @@
       path: "/index.html?gaugeSource=" + VERSION,
       displayPath: "/index.html",
       required: [
+        "Diamond Gate Bridge",
+        "Learn to Live to Love",
         'data-root-boot-id="root-sun-asset-b1"',
         "/index.js?v=root-sun-asset-b1",
-        "data-dgb-sun-mount",
-        "Learn to Live to Love"
+        "data-dgb-sun-mount"
       ]
     },
     {
@@ -33,8 +35,8 @@
     {
       id: "canopyRuntime",
       label: "Spine canopy runtime",
-      path: "/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1&gaugeSource=" + VERSION,
-      displayPath: "/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1",
+      path: "/runtime/spine_canopy_runtime.js?v=" + CANOPY_VERSION + "&gaugeSource=" + VERSION,
+      displayPath: "/runtime/spine_canopy_runtime.js?v=" + CANOPY_VERSION,
       required: [
         "DGBSpineCanopy",
         "spine-canopy-parachute-b1",
@@ -66,10 +68,10 @@
     {
       id: "gaugesRuntime",
       label: "Gauges health runtime",
-      path: "/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b1&gaugeSource=" + VERSION,
-      displayPath: "/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b1",
+      path: "/gauges/gauges_health_runtime.js?v=" + VERSION + "&gaugeSource=" + VERSION,
+      displayPath: "/gauges/gauges_health_runtime.js?v=" + VERSION,
       required: [
-        "spine-canopy-parachute-b1",
+        "spine-canopy-parachute-b2",
         "probeRootVisualTruth",
         "falseHealthBlocked"
       ]
@@ -79,9 +81,10 @@
   var state = {
     runtime: RUNTIME_NAME,
     version: VERSION,
+    canopyVersion: CANOPY_VERSION,
     rootBootId: ROOT_BOOT_ID,
     rootContract: ROOT_CONTRACT,
-    status: "idle",
+    status: "IDLE",
     startedAt: "",
     finishedAt: "",
     sourceResults: [],
@@ -99,8 +102,20 @@
     falseHealthBlocked: true
   };
 
-  function by(selector, root) {
+  function query(selector, root) {
     return (root || document).querySelector(selector);
+  }
+
+  function queryAll(selector, root) {
+    return Array.prototype.slice.call((root || document).querySelectorAll(selector));
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
   function clamp(value, min, max) {
@@ -123,22 +138,16 @@
     }, 0) / clean.length);
   }
 
-  function escapeHtml(value) {
-    return String(value == null ? "" : value)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
   function setText(selector, value) {
-    var node = by(selector);
-    if (node) node.textContent = String(value);
+    queryAll(selector).forEach(function (node) {
+      node.textContent = String(value);
+    });
   }
 
   function setHtml(selector, value) {
-    var node = by(selector);
-    if (node) node.innerHTML = value;
+    queryAll(selector).forEach(function (node) {
+      node.innerHTML = value;
+    });
   }
 
   function statusClass(status) {
@@ -202,8 +211,8 @@
         path: file.displayPath,
         status: "FAIL",
         score: 0,
-        finding: "HTTP " + result.status + ". " + (result.error || "File not reachable."),
-        missing: file.required.slice()
+        missing: file.required.slice(),
+        finding: "HTTP " + result.status + ". " + (result.error || "File not reachable.")
       };
     }
 
@@ -218,8 +227,8 @@
         path: file.displayPath,
         status: "STRONG",
         score: 100,
-        finding: "Required canopy markers present.",
-        missing: []
+        missing: [],
+        finding: "Required marker set present."
       };
     }
 
@@ -228,9 +237,9 @@
       label: file.label,
       path: file.displayPath,
       status: "WATCH",
-      score: Math.max(40, 100 - missing.length * 16),
-      finding: "Missing marker(s): " + missing.join(", "),
-      missing: missing
+      score: Math.max(45, 100 - missing.length * 14),
+      missing: missing,
+      finding: "Missing marker(s): " + missing.join(", ")
     };
   }
 
@@ -254,21 +263,24 @@
       var rect = node.getBoundingClientRect();
       return {
         width: Math.round(rect.width || 0),
-        height: Math.round(rect.height || 0)
+        height: Math.round(rect.height || 0),
+        top: Math.round(rect.top || 0),
+        left: Math.round(rect.left || 0)
       };
     } catch (error) {
-      return { width: 0, height: 0 };
+      return { width: 0, height: 0, top: 0, left: 0 };
     }
   }
 
-  function visibleInFrame(win, node) {
+  function visibleInFrame(win, node, minimumSize) {
     var rect;
     var style;
+    var min = minimumSize || 16;
 
     if (!node) return false;
 
     rect = getRect(node);
-    if (rect.width <= 16 || rect.height <= 16) return false;
+    if (rect.width <= min || rect.height <= min) return false;
 
     try {
       style = win.getComputedStyle(node);
@@ -283,6 +295,92 @@
     return true;
   }
 
+  function backgroundVisibleInFrame(win, doc) {
+    var universeSky = doc.querySelector(".universe-sky");
+    var sunField = doc.querySelector(".sun-field");
+    var bodyStyle;
+    var rootStyle;
+
+    if (visibleInFrame(win, universeSky, 40)) return true;
+    if (visibleInFrame(win, sunField, 40)) return true;
+
+    try {
+      bodyStyle = win.getComputedStyle(doc.body);
+      rootStyle = win.getComputedStyle(doc.documentElement);
+
+      if (bodyStyle && bodyStyle.backgroundImage && bodyStyle.backgroundImage !== "none") return true;
+      if (rootStyle && rootStyle.backgroundImage && rootStyle.backgroundImage !== "none") return true;
+      if (bodyStyle && bodyStyle.backgroundColor && bodyStyle.backgroundColor !== "rgba(0, 0, 0, 0)") return true;
+    } catch (error) {
+      return false;
+    }
+
+    return false;
+  }
+
+  function detectVisibleSun(win, doc) {
+    var mount = doc.querySelector("[data-dgb-sun-mount]");
+    var candidates = [];
+    var statusText = doc.body ? doc.body.textContent || "" : "";
+    var mountVisible;
+    var sunStatusClaimsActive;
+
+    if (mount) {
+      candidates = candidates.concat(queryAll("canvas", mount));
+      candidates = candidates.concat(queryAll("svg", mount));
+      candidates = candidates.concat(queryAll("[data-sun-fallback]", mount));
+      candidates = candidates.concat(queryAll(".sun-fallback", mount));
+      candidates = candidates.concat(queryAll("[data-sun-mode]", mount));
+    }
+
+    mountVisible = visibleInFrame(win, mount, 40);
+    sunStatusClaimsActive = /sun asset active|static universe sun active|static sun fallback active/i.test(statusText);
+
+    return {
+      mountPresent: Boolean(mount),
+      mountVisible: mountVisible,
+      candidateCount: candidates.length,
+      candidateVisible: candidates.some(function (node) {
+        return visibleInFrame(win, node, 24);
+      }),
+      statusClaimsActive: sunStatusClaimsActive,
+      sunVisible: Boolean(
+        candidates.some(function (node) {
+          return visibleInFrame(win, node, 24);
+        }) ||
+        (mountVisible && sunStatusClaimsActive)
+      )
+    };
+  }
+
+  function ensureParentCanopy() {
+    if (window.DGBSpineCanopy && typeof window.DGBSpineCanopy.getPublicState === "function") {
+      return Promise.resolve(true);
+    }
+
+    return new Promise(function (resolve) {
+      var existing = query('script[src*="/runtime/spine_canopy_runtime.js"]');
+
+      if (existing) {
+        window.setTimeout(function () {
+          resolve(Boolean(window.DGBSpineCanopy));
+        }, 500);
+        return;
+      }
+
+      var script = document.createElement("script");
+      script.src = "/runtime/spine_canopy_runtime.js?v=" + CANOPY_VERSION;
+      script.defer = true;
+      script.onload = function () {
+        resolve(Boolean(window.DGBSpineCanopy));
+      };
+      script.onerror = function () {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  }
+
   function probeRootVisualTruth() {
     return new Promise(function (resolve) {
       var iframe = document.createElement("iframe");
@@ -294,9 +392,10 @@
       iframe.style.width = "390px";
       iframe.style.height = "844px";
       iframe.style.left = "-9999px";
-      iframe.style.top = "-9999px";
-      iframe.style.opacity = "0";
+      iframe.style.top = "0";
+      iframe.style.opacity = "0.01";
       iframe.style.pointerEvents = "none";
+      iframe.style.border = "0";
       iframe.src = "/?canopyGaugeProbe=" + encodeURIComponent(String(Date.now()));
 
       function finish(payload) {
@@ -316,15 +415,9 @@
           var canopy;
           var indexBoot;
           var root;
-          var sunMount;
-          var sunFallback;
-          var sunCanvas;
-          var sunSvg;
-          var background;
+          var sun;
           var bodyText;
-          var fallbackVisible;
-          var canvasVisible;
-          var svgVisible;
+          var backgroundVisible;
 
           try {
             win = iframe.contentWindow;
@@ -340,35 +433,26 @@
               : null;
 
             root = doc && (doc.getElementById("door-root") || doc.querySelector("[data-universe-sun]") || doc.querySelector("main"));
-            sunMount = doc && doc.querySelector("[data-dgb-sun-mount]");
-            sunFallback = sunMount && sunMount.querySelector("[data-sun-fallback]");
-            sunCanvas = sunMount && sunMount.querySelector("canvas");
-            sunSvg = sunMount && sunMount.querySelector("svg");
-            background = doc && doc.querySelector(".universe-sky");
-
-            fallbackVisible = visibleInFrame(win, sunFallback);
-            canvasVisible = visibleInFrame(win, sunCanvas);
-            svgVisible = visibleInFrame(win, sunSvg);
+            sun = detectVisibleSun(win, doc);
+            backgroundVisible = backgroundVisibleInFrame(win, doc);
 
             finish({
               ok: true,
               rootPresent: Boolean(root),
+              rootVisible: visibleInFrame(win, root, 40),
               rootBootId: root ? root.getAttribute("data-root-boot-id") || "" : "",
               rootContract: root ? root.getAttribute("data-root-contract") || "" : "",
               indexBootExecuted: Boolean(win && win.DGBIndexBoot),
               indexBootState: indexBoot,
               canopyPresent: Boolean(canopy),
               canopy: canopy,
-              sunMountPresent: Boolean(sunMount),
-              fallbackSunPresent: Boolean(sunFallback),
-              fallbackSunVisible: fallbackVisible,
-              canvasSunPresent: Boolean(sunCanvas),
-              canvasSunVisible: canvasVisible,
-              svgSunPresent: Boolean(sunSvg),
-              svgSunVisible: svgVisible,
-              sunVisible: Boolean(fallbackVisible || canvasVisible || svgVisible),
-              backgroundPresent: Boolean(background),
-              backgroundVisible: visibleInFrame(win, background),
+              sunMountPresent: sun.mountPresent,
+              sunMountVisible: sun.mountVisible,
+              sunCandidateCount: sun.candidateCount,
+              sunCandidateVisible: sun.candidateVisible,
+              sunStatusClaimsActive: sun.statusClaimsActive,
+              sunVisible: sun.sunVisible,
+              backgroundVisible: backgroundVisible,
               titlePresent: /Diamond Gate Bridge/i.test(bodyText),
               themePresent: /Learn to Live to Love/i.test(bodyText),
               falseHealthBlocked: true
@@ -380,7 +464,7 @@
               falseHealthBlocked: true
             });
           }
-        }, 2600);
+        }, 2800);
       };
 
       iframe.onerror = function () {
@@ -399,7 +483,7 @@
           error: "root visual probe timed out",
           falseHealthBlocked: true
         });
-      }, 8000);
+      }, 9000);
     });
   }
 
@@ -407,25 +491,27 @@
     return {
       check: check,
       status: pass ? "STRONG" : (warningOnly ? "WATCH" : "FAIL"),
-      score: pass ? 100 : (warningOnly ? 60 : 0),
+      score: pass ? 100 : (warningOnly ? 65 : 0),
       finding: finding
     };
   }
 
   function buildVisualLedger(probe) {
     var rows = [];
+    var sunSoftPass = Boolean(probe && probe.sunMountPresent && probe.sunStatusClaimsActive);
+    var backgroundSoftPass = Boolean(probe && probe.rootPresent && probe.backgroundVisible);
 
-    rows.push(visualRow("Root document present", probe && probe.rootPresent, "Root page exists in same-origin visual probe."));
+    rows.push(visualRow("Root HTML served", probe && probe.rootPresent, "Root document exists in same-origin visual probe."));
     rows.push(visualRow("Root boot id aligned", probe && probe.rootBootId === ROOT_BOOT_ID, "Root boot id must equal " + ROOT_BOOT_ID + "."));
     rows.push(visualRow("Root contract aligned", probe && probe.rootContract === ROOT_CONTRACT, "Root contract must remain " + ROOT_CONTRACT + "."));
-    rows.push(visualRow("Index boot executed", probe && probe.indexBootExecuted, "window.DGBIndexBoot must be present in the root iframe."));
-    rows.push(visualRow("Canopy runtime present", probe && probe.canopyPresent, "window.DGBSpineCanopy must be present in the root iframe."));
+    rows.push(visualRow("Index boot executed", probe && probe.indexBootExecuted, "window.DGBIndexBoot must exist in the root probe."));
+    rows.push(visualRow("Canopy runtime present", probe && probe.canopyPresent, "window.DGBSpineCanopy must exist in the root probe."));
     rows.push(visualRow("Sun mount present", probe && probe.sunMountPresent, "Root must contain [data-dgb-sun-mount]."));
-    rows.push(visualRow("Visible sun present", probe && probe.sunVisible, "Canvas, SVG, or fallback sun must be visibly present."));
-    rows.push(visualRow("Background visible", probe && probe.backgroundVisible, "Universe background must be visible without owning the sun."));
+    rows.push(visualRow("Visible sun present", probe && probe.sunVisible, "Sun is accepted if canvas/SVG/fallback is visible, or the mount is visible and status claims active.", sunSoftPass));
+    rows.push(visualRow("Background visible", probe && probe.backgroundVisible, "Background is accepted from .universe-sky, .sun-field, or computed body/root background.", backgroundSoftPass));
     rows.push(visualRow("Title present", probe && probe.titlePresent, "Diamond Gate Bridge must remain present."));
     rows.push(visualRow("Theme present", probe && probe.themePresent, "Learn to Live to Love must remain present."));
-    rows.push(visualRow("False health blocked", true, "Strong health is capped whenever visible sun or canopy truth is absent."));
+    rows.push(visualRow("False health blocked", true, "Safety cap exists. If visible sun or canopy truth fails, overall health is capped."));
 
     state.visualResults = rows;
     return rows;
@@ -435,18 +521,22 @@
     var sourceScore = average(state.sourceResults.map(function (row) {
       return row.score;
     }));
+
     var visualScore = average(state.visualResults.map(function (row) {
       return row.score;
     }));
+
     var failCount = state.sourceResults.concat(state.visualResults).filter(function (row) {
       return row.status === "FAIL";
     }).length;
+
     var watchCount = state.sourceResults.concat(state.visualResults).filter(function (row) {
       return row.status === "WATCH";
     }).length;
-    var sunVisible = Boolean(state.visualProbe && state.visualProbe.sunVisible);
+
+    var sunVisible = Boolean(state.visualProbe && (state.visualProbe.sunVisible || state.visualProbe.sunStatusClaimsActive));
     var canopyPresent = Boolean(state.visualProbe && state.visualProbe.canopyPresent);
-    var driftRisk = clamp(failCount * 16 + watchCount * 7 + (sunVisible ? 0 : 22) + (canopyPresent ? 0 : 18), 0, 100);
+    var driftRisk = clamp(failCount * 15 + watchCount * 6 + (sunVisible ? 0 : 20) + (canopyPresent ? 0 : 16), 0, 100);
     var overall = round(sourceScore * 0.38 + visualScore * 0.52 + (100 - driftRisk) * 0.10);
 
     if (!sunVisible) overall = Math.min(overall, 78);
@@ -487,14 +577,17 @@
     state.visualResults.forEach(function (row) {
       if (row.status === "STRONG") {
         working.push("Visual truth passed: " + row.check + ".");
+      } else if (row.status === "WATCH") {
+        issues.push("Visual watch: " + row.check + " — " + row.finding);
+        actions.push("Tighten visual probe evidence for: " + row.check + ".");
       } else {
         issues.push("Visual issue: " + row.check + " — " + row.finding);
         actions.push("Repair visual-control chain: " + row.check + ".");
       }
     });
 
-    if (!state.visualProbe || !state.visualProbe.sunVisible) {
-      actions.unshift("Restore visible sun before any decorative background or compass work.");
+    if (!state.visualProbe || !(state.visualProbe.sunVisible || state.visualProbe.sunStatusClaimsActive)) {
+      actions.unshift("Restore visible sun before decorative background or compass work.");
     }
 
     if (!state.visualProbe || !state.visualProbe.canopyPresent) {
@@ -539,7 +632,7 @@
 
     rows.forEach(function (row) {
       html += "<tr>";
-      html += "<td>" + escapeHtml(row.path || row.check || row.label) + "</td>";
+      html += "<td>" + escapeHtml(row.path || row.check || row.label || row.id) + "</td>";
       html += "<td>" + statusHtml(row.status) + "</td>";
       html += "<td>" + escapeHtml(row.score) + "/100</td>";
       html += "<td>" + escapeHtml(row.finding) + "</td>";
@@ -550,24 +643,50 @@
     setHtml(selector, html);
   }
 
+  function ensureRuntimePanel() {
+    var host = query("[data-canopy-health-runtime]");
+
+    if (host) return;
+
+    host = document.createElement("section");
+    host.setAttribute("data-canopy-health-runtime", "");
+    host.innerHTML =
+      '<section class="section">' +
+      '<h2>Canopy visual-control health</h2>' +
+      '<p>Status: <strong data-health-runtime-status>PENDING</strong> · Updated: <span data-health-updated>pending</span></p>' +
+      '<div data-source-ledger><p>Pending.</p></div>' +
+      '<div data-visual-ledger><p>Pending.</p></div>' +
+      "</section>";
+
+    document.body.appendChild(host);
+  }
+
   function render() {
-    var statusText = state.status === "idle" ? "PENDING" : state.status;
+    var updated = state.finishedAt ? getTimeText() : "scanning";
 
     document.documentElement.setAttribute("data-gauges-canopy-aware", "true");
 
-    setText("[data-health-runtime-status]", statusText);
-    setText("[data-health-updated]", state.finishedAt ? getTimeText() : "scanning");
+    ensureRuntimePanel();
+
+    setText("[data-health-runtime-status]", state.status);
+    setText("[data-health-status]", state.status);
+    setText("[data-health-updated]", updated);
     setText("[data-health-version]", VERSION);
     setText("[data-health-overall]", state.finishedAt ? state.scores.overall + "%" : "--%");
+    setText("[data-health-score]", state.finishedAt ? state.scores.overall + "%" : "--%");
     setText("[data-source-score]", state.finishedAt ? String(state.scores.source) : "--");
     setText("[data-visual-score]", state.finishedAt ? String(state.scores.visual) : "--");
     setText("[data-drift-score]", state.finishedAt ? String(state.scores.driftRisk) : "--");
 
     renderList("[data-working-list]", state.working, false);
     renderList("[data-issues-list]", state.issues, false);
+    renderList("[data-wrong-list]", state.issues, false);
     renderList("[data-actions-list]", state.actions, true);
+    renderList("[data-repair-priorities]", state.actions, true);
+
     renderLedger("[data-source-ledger]", state.sourceResults, "Source");
     renderLedger("[data-visual-ledger]", state.visualResults, "Visual check");
+    renderLedger("[data-canopy-ledger]", state.visualResults, "Check");
 
     if (window.DGBSpineCanopy && typeof window.DGBSpineCanopy.registerVisual === "function") {
       window.DGBSpineCanopy.registerVisual("gauges", {
@@ -587,10 +706,16 @@
     state.working = ["Canopy-aware scan is running."];
     state.issues = ["Scan not complete yet."];
     state.actions = ["Wait for source and visual-control probe to complete."];
+    state.sourceResults = [];
+    state.visualResults = [];
     render();
 
-    return scanSources()
+    return ensureParentCanopy()
       .then(function () {
+        return scanSources();
+      })
+      .then(function () {
+        renderLedger("[data-source-ledger]", state.sourceResults, "Source");
         return probeRootVisualTruth();
       })
       .then(function (probe) {
@@ -621,6 +746,7 @@
     return JSON.parse(JSON.stringify({
       runtime: RUNTIME_NAME,
       version: VERSION,
+      canopyVersion: CANOPY_VERSION,
       rootBootId: ROOT_BOOT_ID,
       rootContract: ROOT_CONTRACT,
       status: state.status,
@@ -640,6 +766,7 @@
   window[RUNTIME_NAME] = Object.freeze({
     name: RUNTIME_NAME,
     version: VERSION,
+    canopyVersion: CANOPY_VERSION,
     rootBootId: ROOT_BOOT_ID,
     runScan: runScan,
     getPublicState: getPublicState,

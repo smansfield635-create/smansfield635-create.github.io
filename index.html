@@ -1,24 +1,18 @@
 <!doctype html>
-<!-- TNT — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · DEPLOYMENT ALIGNMENT B1
+<!-- TNT RENEWAL — /index.html
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · SATELLITE SUN SURFACE RENEWAL B1
+     PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
+     ROOT_BOOT_ID=root-sun-asset-b1
+     COCKPIT_VERSION=root-compass-cockpit-b1
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
      PURPOSE:
-       - Re-issue root as unmistakable Compass Cockpit baseline
-       - Preserve root sun spine, canopy chain, visible sun fallback, cosmic background runtime, and cockpit control layer
-       - Cockpit repositions its view posture relative to the fixed galaxy/environment
-       - Galaxy/environment does not move
-       - No GraphicBox, no generated image assets, no external image dependency
-
-     REQUIRED LIVE MARKERS:
-       - Compass Cockpit
-       - root-compass-cockpit-b1
-       - root-sun-asset-b1
-       - data-root-boot-id="root-sun-asset-b1"
-       - data-dgb-sun-mount
-       - data-sun-fallback
-       - Learn to Live to Love
-       - /index.js?v=root-sun-asset-b1
-       - /runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1
+       - Preserve locked Generation 2 Compass Cockpit Baseline
+       - Renew visible sun material into realistic satellite-view solar disk
+       - Do not alter cockpit contract, canopy contract, gauges contract, or /index.js runtime
+       - No image assets
+       - No GraphicBox
+       - No generated graphics
+       - CSS-only sun material renewal inside root index
 -->
 
 <html lang="en">
@@ -567,57 +561,121 @@
       display:grid;
       place-items:center;
       transition:transform .42s ease,filter .32s ease;
+      border-radius:999px;
+      filter:
+        drop-shadow(0 0 18px rgba(255,178,54,.20))
+        drop-shadow(0 0 58px rgba(255,122,28,.18))
+        drop-shadow(0 0 138px rgba(255,204,96,.11));
+    }
+
+    .sun-mount::before{
+      content:"";
+      position:absolute;
+      inset:-10%;
+      z-index:0;
+      border-radius:999px;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,236,148,.18),transparent 51%),
+        radial-gradient(circle at 50% 50%,rgba(255,111,28,.13),transparent 68%),
+        radial-gradient(circle at 50% 50%,transparent 72%,rgba(255,198,80,.10) 77%,transparent 84%);
+      filter:blur(4px);
+      opacity:.95;
+    }
+
+    .sun-mount::after{
+      content:"";
+      position:absolute;
+      inset:-1.25%;
+      z-index:5;
+      border-radius:999px;
+      pointer-events:none;
+      border:1px solid rgba(255,236,168,.12);
+      box-shadow:
+        inset 0 0 18px rgba(255,241,178,.06),
+        0 0 24px rgba(255,214,125,.10);
+      mix-blend-mode:screen;
     }
 
     .sun-fallback{
       position:absolute;
       inset:0;
-      z-index:1;
+      z-index:2;
       border-radius:999px;
       pointer-events:none;
-      background:
-        radial-gradient(circle at 39% 38%,rgba(255,255,226,.96),rgba(255,226,116,.84) 13%,transparent 25%),
-        radial-gradient(circle at 52% 52%,rgba(255,182,61,.98),rgba(226,78,24,.88) 48%,rgba(92,23,12,.94) 77%,rgba(8,4,6,.96) 100%);
-      box-shadow:
-        inset -38px -34px 52px rgba(0,0,0,.54),
-        inset 18px 16px 38px rgba(255,234,148,.34),
-        0 0 46px rgba(255,142,48,.26),
-        0 0 130px rgba(255,196,88,.18);
       overflow:hidden;
-      opacity:.98;
+      opacity:.99;
+      visibility:visible;
+      background:
+        radial-gradient(circle at 44% 41%,rgba(255,255,225,.94) 0 2.5%,transparent 6%),
+        radial-gradient(circle at 30% 34%,rgba(255,236,143,.44) 0 5%,transparent 11%),
+        radial-gradient(circle at 68% 28%,rgba(255,226,115,.34) 0 3%,transparent 9%),
+        radial-gradient(circle at 62% 63%,rgba(116,32,10,.30) 0 2.2%,transparent 4.4%),
+        radial-gradient(circle at 38% 69%,rgba(90,21,8,.26) 0 1.8%,transparent 4.2%),
+        radial-gradient(circle at 47% 50%,rgba(255,188,58,.96) 0 18%,rgba(242,119,30,.94) 38%,rgba(163,52,15,.94) 64%,rgba(64,17,8,.92) 100%),
+        radial-gradient(circle at 50% 50%,rgba(255,221,113,.95),rgba(224,86,24,.95) 48%,rgba(88,22,10,.96) 77%,rgba(6,2,2,.98) 100%);
+      box-shadow:
+        inset 0 0 22px rgba(255,248,194,.30),
+        inset 0 0 72px rgba(255,169,55,.22),
+        inset 0 0 118px rgba(38,7,2,.72),
+        0 0 28px rgba(255,145,34,.24),
+        0 0 92px rgba(255,190,78,.16);
+      background-blend-mode:
+        screen,
+        screen,
+        screen,
+        multiply,
+        multiply,
+        overlay,
+        normal;
     }
 
     .sun-fallback::before{
       content:"";
       position:absolute;
-      inset:-7%;
+      inset:-4%;
       border-radius:999px;
+      pointer-events:none;
       background:
-        radial-gradient(circle at 31% 45%,rgba(255,236,158,.22) 0 2px,transparent 3px),
-        radial-gradient(circle at 64% 37%,rgba(132,36,16,.24) 0 3px,transparent 5px),
-        radial-gradient(circle at 55% 68%,rgba(255,218,123,.16) 0 2px,transparent 4px),
-        conic-gradient(from 12deg,transparent 0deg 25deg,rgba(255,238,155,.08) 32deg,transparent 46deg 88deg,rgba(255,238,155,.07) 100deg,transparent 118deg 187deg,rgba(255,238,155,.06) 205deg,transparent 225deg 360deg);
-      opacity:.82;
+        repeating-radial-gradient(circle at 50% 50%,rgba(255,247,184,.065) 0 1.4px,rgba(158,47,15,.035) 1.6px 3.4px,transparent 3.8px 7.6px),
+        repeating-conic-gradient(from 18deg,rgba(255,236,146,.105) 0deg 1.25deg,rgba(139,38,12,.050) 1.35deg 2.2deg,transparent 2.35deg 5.7deg),
+        radial-gradient(circle at 50% 50%,transparent 0 58%,rgba(61,12,4,.34) 78%,rgba(2,1,1,.70) 100%);
+      opacity:.86;
+      mix-blend-mode:overlay;
+      filter:contrast(1.12) saturate(1.15);
     }
 
     .sun-fallback::after{
       content:"";
       position:absolute;
-      inset:-18%;
+      inset:-7%;
       border-radius:999px;
-      background:repeating-conic-gradient(from 8deg,rgba(255,209,103,.18) 0deg 1.6deg,transparent 1.8deg 7deg);
-      opacity:.42;
-      filter:blur(1px);
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 26% 30%,rgba(255,250,198,.18) 0 4%,transparent 10%),
+        radial-gradient(circle at 72% 48%,rgba(255,238,153,.13) 0 3.4%,transparent 8.5%),
+        radial-gradient(circle at 50% 50%,transparent 0 60%,rgba(255,198,70,.15) 66%,rgba(255,84,22,.13) 76%,transparent 86%),
+        conic-gradient(from 28deg,transparent 0 18deg,rgba(255,236,146,.09) 24deg,transparent 37deg 82deg,rgba(255,186,74,.08) 96deg,transparent 112deg 181deg,rgba(255,238,160,.07) 198deg,transparent 216deg 360deg);
+      opacity:.72;
+      mix-blend-mode:screen;
+      filter:blur(.35px) saturate(1.2);
+    }
+
+    .sun-mount[data-runtime-mounted="true"] .sun-fallback{
+      opacity:.78;
+      visibility:visible;
+      mix-blend-mode:screen;
     }
 
     .sun-mount canvas,.sun-mount svg{
       position:relative;
-      z-index:3;
+      z-index:4;
       max-width:100%;
       max-height:100%;
+      border-radius:999px;
+      mix-blend-mode:screen;
+      filter:saturate(1.16) contrast(1.05);
     }
-
-    .sun-mount[data-runtime-mounted="true"] .sun-fallback{opacity:0}
 
     .cockpit-readout{
       position:absolute;
@@ -801,7 +859,7 @@
     data-root-door
     data-universe-sun
     data-root-boot-id="root-sun-asset-b1"
-    data-root-baseline="Generation 2 · Compass Cockpit Baseline 1"
+    data-root-baseline="Generation 2 · Compass Cockpit Baseline"
     data-root-contract="universe-sun"
     data-sun-asset-mount-contract="sun asset mount"
     data-background-contract="index-background-only"
@@ -809,6 +867,7 @@
     data-background-runtime="near-solar-background-runtime-b1"
     data-cosmic-control-plane="cosmic-control-plane-b1"
     data-compass-cockpit="root-compass-cockpit-b1"
+    data-sun-satellite-profile="satellite-solar-surface-b1"
     data-source-marker="ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"
     data-cockpit-view="cinematic"
   >
@@ -854,8 +913,9 @@
               data-dgb-sun-mount
               data-sun-mode="canvas"
               data-sun-asset-id="root-sun-asset-b1"
-              data-sun-asset-baseline="Generation 2 · Compass Cockpit Baseline 1"
-              aria-label="Satellite-style solar disc within a 256 million kilometer universe field"
+              data-sun-satellite-profile="satellite-solar-surface-b1"
+              data-sun-asset-baseline="Generation 2 · Compass Cockpit Baseline"
+              aria-label="Realistic satellite-style solar disc within a 256 million kilometer universe field"
             >
               <div class="sun-fallback" data-sun-fallback aria-hidden="true"></div>
             </div>

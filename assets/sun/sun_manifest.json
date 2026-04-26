@@ -1,0 +1,53 @@
+{
+  "assetPack": "DGB_SUN_ASSET_FILE_SET_v1",
+  "owner": "Sean",
+  "project": "Diamond Gate Bridge",
+  "mode": "code_source_assets_only",
+  "graphicOutput": false,
+  "externalImageDependency": false,
+  "roundWorldFirst": true,
+  "flattenLater": true,
+  "primaryObject": "sun",
+  "backgroundContext": "universe",
+  "theme": "Learn to Live to Love",
+  "files": {
+    "cssMaterial": "/assets/sun/sun_material.css",
+    "svgAsset": "/assets/sun/sun.svg",
+    "canvasRenderer": "/assets/sun/sun_canvas.js",
+    "assetRuntime": "/runtime/sun_asset_runtime.js",
+    "previewHarness": "/assets/sun/preview.html"
+  },
+  "allowedModes": [
+    "css",
+    "svg",
+    "canvas"
+  ],
+  "defaultMode": "canvas",
+  "visualTarget": {
+    "read": "realer sun from space",
+    "avoid": [
+      "door",
+      "tree",
+      "button",
+      "badge",
+      "grid",
+      "flat icon"
+    ],
+    "qualities": [
+      "large solar disc",
+      "turbulent photosphere",
+      "limb darkening",
+      "irregular corona",
+      "deep universe field",
+      "mobile safe"
+    ]
+  },
+  "integrationContract": {
+    "rootIndexMutation": false,
+    "mountSelector": "[data-dgb-sun-mount]",
+    "runtimeGlobal": "DGBSunAssetRuntime",
+    "canvasGlobal": "DGBSunCanvas",
+    "firstRender": "html_css_or_static_asset",
+    "runtimeRole": "enhancement_only"
+  }
+}

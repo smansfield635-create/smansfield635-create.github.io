@@ -6,33 +6,29 @@
   <title>Diamond Gate Bridge — Website Health Gauges</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge website health gauges: route health, runtime availability, root-page drift, asset readiness, and repair priorities."
+    content="Diamond Gate Bridge website health gauges: route health, runtime availability, root-page contract alignment, sun asset readiness, and repair priorities."
   />
 
   <style>
     :root {
       color-scheme: dark;
       --bg: #02040b;
-      --panel: rgba(255, 255, 255, 0.055);
-      --line: rgba(255, 248, 231, 0.16);
-      --line-strong: rgba(255, 248, 231, 0.30);
+      --panel: rgba(255,255,255,0.055);
+      --line: rgba(255,248,231,0.16);
       --text: #fff8e7;
-      --muted: rgba(255, 248, 231, 0.70);
-      --soft: rgba(255, 248, 231, 0.50);
-      --gold: rgba(255, 217, 138, 0.92);
-      --red: rgba(255, 112, 82, 0.92);
-      --amber: rgba(255, 190, 92, 0.92);
-      --green: rgba(132, 230, 169, 0.92);
-      --blue: rgba(168, 216, 255, 0.92);
+      --muted: rgba(255,248,231,0.70);
+      --soft: rgba(255,248,231,0.50);
+      --gold: rgba(255,217,138,0.92);
+      --red: rgba(255,112,82,0.92);
+      --amber: rgba(255,190,92,0.92);
+      --green: rgba(132,230,169,0.92);
+      --blue: rgba(168,216,255,0.92);
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
-    html,
-    body {
+    html, body {
       min-height: 100%;
       margin: 0;
       background: var(--bg);
@@ -43,8 +39,8 @@
     body {
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 8%, rgba(255, 217, 138, 0.13), transparent 22rem),
-        radial-gradient(circle at 18% 18%, rgba(88, 122, 255, 0.13), transparent 18rem),
+        radial-gradient(circle at 50% 8%, rgba(255,217,138,0.13), transparent 22rem),
+        radial-gradient(circle at 18% 18%, rgba(88,122,255,0.13), transparent 18rem),
         linear-gradient(180deg, #071225 0%, #030714 50%, #010309 100%);
     }
 
@@ -62,10 +58,7 @@
       z-index: 0;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .page {
       position: relative;
@@ -83,10 +76,7 @@
       margin-bottom: 22px;
     }
 
-    .brand {
-      display: grid;
-      gap: 4px;
-    }
+    .brand { display: grid; gap: 4px; }
 
     .brand strong {
       font-size: 1rem;
@@ -143,7 +133,7 @@
     }
 
     .intro {
-      max-width: 880px;
+      max-width: 900px;
       margin: 0;
       color: var(--muted);
       font-size: clamp(1rem, 2vw, 1.18rem);
@@ -246,9 +236,7 @@
       transition: width 360ms ease;
     }
 
-    .section {
-      margin-top: 18px;
-    }
+    .section { margin-top: 18px; }
 
     .section h2 {
       margin: 0 0 10px;
@@ -274,8 +262,7 @@
       min-width: 720px;
     }
 
-    th,
-    td {
+    th, td {
       padding: 12px;
       border-bottom: 1px solid rgba(255,255,255,0.08);
       text-align: left;
@@ -291,9 +278,7 @@
       background: rgba(255,255,255,0.035);
     }
 
-    tr:last-child td {
-      border-bottom: 0;
-    }
+    tr:last-child td { border-bottom: 0; }
 
     .tag {
       display: inline-flex;
@@ -311,41 +296,27 @@
 
     .tag.strong {
       color: var(--green);
-      border-color: rgba(132, 230, 169, 0.32);
+      border-color: rgba(132,230,169,0.32);
     }
 
     .tag.watch {
       color: var(--amber);
-      border-color: rgba(255, 190, 92, 0.32);
+      border-color: rgba(255,190,92,0.32);
     }
 
     .tag.fail {
       color: var(--red);
-      border-color: rgba(255, 112, 82, 0.32);
+      border-color: rgba(255,112,82,0.32);
     }
 
-    .tag.pending {
-      color: var(--blue);
-      border-color: rgba(168, 216, 255, 0.32);
-    }
-
-    .lists {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    ul,
-    ol {
+    ul, ol {
       margin: 0;
       padding-left: 1.2rem;
       color: var(--muted);
       line-height: 1.55;
     }
 
-    li + li {
-      margin-top: 6px;
-    }
+    li + li { margin-top: 6px; }
 
     code {
       color: #ffe5a7;
@@ -371,35 +342,16 @@
         flex-direction: column;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
+      .nav { justify-content: flex-start; }
 
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .lists {
-        grid-template-columns: 1fr;
-      }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     }
 
     @media (max-width: 560px) {
-      .page {
-        padding: 14px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .card {
-        border-radius: 20px;
-      }
-
-      table {
-        min-width: 640px;
-      }
+      .page { padding: 14px; }
+      .grid { grid-template-columns: 1fr; }
+      .card { border-radius: 20px; }
+      table { min-width: 640px; }
     }
   </style>
 </head>
@@ -422,11 +374,12 @@
     </header>
 
     <section class="hero" aria-labelledby="page-title">
-      <p class="kicker">Generation 1 · Baseline 5</p>
+      <p class="kicker">Generation 1 · Baseline 6</p>
       <h1 id="page-title">Website Health Gauges</h1>
       <p class="intro">
         This page scans the live website from the browser and reports route strength, runtime availability,
-        root-page contract alignment, asset readiness, stale-language drift, and the next repair priorities.
+        root-page contract alignment, sun asset readiness, stale-language drift, and the next repair priorities.
+        Baseline 6 expects the active root boot to be <code>root-sun-asset-b1</code>.
       </p>
 
       <div class="status-row">
@@ -495,10 +448,7 @@
 
     <section class="section">
       <h2>Route health ledger</h2>
-      <p>
-        Core routes are blocking. Optional/future routes are reported without damaging the core score unless they are linked from the live surface.
-      </p>
-
+      <p>Core routes are blocking. Optional/future routes are reported without damaging the core score unless they are linked from the live surface.</p>
       <div class="table-wrap">
         <table>
           <thead>
@@ -511,9 +461,7 @@
             </tr>
           </thead>
           <tbody id="route-ledger">
-            <tr>
-              <td colspan="5">Pending route scan.</td>
-            </tr>
+            <tr><td colspan="5">Pending route scan.</td></tr>
           </tbody>
         </table>
       </div>
@@ -521,10 +469,7 @@
 
     <section class="section">
       <h2>Runtime ledger</h2>
-      <p>
-        Required runtime files are contract-bearing. Optional files are useful, but missing optional files create WATCH rather than FAIL.
-      </p>
-
+      <p>Required runtime files are contract-bearing. Optional files are useful, but missing optional files create WATCH rather than FAIL.</p>
       <div class="table-wrap">
         <table>
           <thead>
@@ -537,9 +482,7 @@
             </tr>
           </thead>
           <tbody id="runtime-ledger">
-            <tr>
-              <td colspan="5">Pending runtime scan.</td>
-            </tr>
+            <tr><td colspan="5">Pending runtime scan.</td></tr>
           </tbody>
         </table>
       </div>
@@ -547,10 +490,7 @@
 
     <section class="section">
       <h2>Root-page contract ledger</h2>
-      <p>
-        This checks whether the root page is still carrying old door/tree/grid language or whether it has moved to the universe-sun contract.
-      </p>
-
+      <p>This checks whether the root page is aligned to the active sun asset baseline.</p>
       <div class="table-wrap">
         <table>
           <thead>
@@ -562,9 +502,7 @@
             </tr>
           </thead>
           <tbody id="contract-ledger">
-            <tr>
-              <td colspan="4">Pending contract scan.</td>
-            </tr>
+            <tr><td colspan="4">Pending contract scan.</td></tr>
           </tbody>
         </table>
       </div>
@@ -572,10 +510,7 @@
 
     <section class="section">
       <h2>Asset readiness ledger</h2>
-      <p>
-        This checks the new code-source sun asset file set without mutating the root page.
-      </p>
-
+      <p>This checks the code-source sun asset file set without mutating the root page.</p>
       <div class="table-wrap">
         <table>
           <thead>
@@ -588,9 +523,7 @@
             </tr>
           </thead>
           <tbody id="asset-ledger">
-            <tr>
-              <td colspan="5">Pending asset scan.</td>
-            </tr>
+            <tr><td colspan="5">Pending asset scan.</td></tr>
           </tbody>
         </table>
       </div>
@@ -600,22 +533,24 @@
       <h2>Contract renewal</h2>
       <div class="card">
         <p>
-          Baseline 5 converts the gauges page from a broad health read into a weakness detector.
-          It measures the visible route layer, runtime layer, root-page contract layer, and asset layer separately.
-          The page owns the visible fallback. The browser scan owns live measurement. Runtime enhancement remains optional.
+          Baseline 6 updates the gauges contract to the active root sun asset baseline.
+          It no longer expects the older <code>root-universe-sun-b2</code> boot path.
+          It now expects <code>root-sun-asset-b1</code>, the sun asset runtime, and the code-source sun asset file set.
         </p>
       </div>
     </section>
 
     <footer class="footer">
       <span>Diamond Gate Bridge</span>
-      <span>Generation 1 · Baseline 5 · Weakness Detection Gauges</span>
+      <span>Generation 1 · Baseline 6 · Sun Asset Contract Gauges</span>
     </footer>
   </main>
 
   <script>
     (function () {
       "use strict";
+
+      var ACTIVE_INDEX_BOOT = "/index.js?v=root-sun-asset-b1";
 
       var coreRoutes = [
         { name: "Home", path: "/", required: true, identity: ["Diamond Gate Bridge", "Learn to Live to Love"] },
@@ -629,19 +564,43 @@
       ];
 
       var runtimeFiles = [
-        { name: "Index boot", path: "/index.js?v=root-universe-sun-b2", required: true, expected: ["Root Universe Sun", "rootUniverseSunBoot", "Static universe sun active"] },
-        { name: "Site runtime", path: "/runtime/site_runtime.js", required: true, expected: ["DGBSiteRuntime"] },
-        { name: "Root universe sun runtime", path: "/runtime/index_runtime.js?v=root-universe-sun-b2", required: true, expected: ["universeSunRuntime", "Root Universe Sun Baseline"] },
-        { name: "Gauges health runtime", path: "/gauges/gauges_health_runtime.js", required: true, expected: ["runtime"] },
-        { name: "Gauges visual runtime", path: "/gauges/gauges_runtime.js", required: false, expected: ["DGBGaugesRuntime"] },
-        { name: "Sun asset runtime", path: "/runtime/sun_asset_runtime.js", required: false, expected: ["DGBSunAssetRuntime"] }
+        {
+          name: "Index boot",
+          path: ACTIVE_INDEX_BOOT,
+          required: true,
+          expected: ["Root Universe Sun Asset Baseline 1", "rootSunAssetBoot", "Sun asset runtime"]
+        },
+        {
+          name: "Site runtime",
+          path: "/runtime/site_runtime.js",
+          required: true,
+          expected: ["DGBSiteRuntime"]
+        },
+        {
+          name: "Sun asset runtime",
+          path: "/runtime/sun_asset_runtime.js",
+          required: true,
+          expected: ["DGBSunAssetRuntime", "data-dgb-sun-mount"]
+        },
+        {
+          name: "Gauges health runtime",
+          path: "/gauges/gauges_health_runtime.js",
+          required: true,
+          expected: ["runtime"]
+        },
+        {
+          name: "Gauges visual runtime",
+          path: "/gauges/gauges_runtime.js",
+          required: false,
+          expected: ["DGBGaugesRuntime"]
+        }
       ];
 
       var assetFiles = [
-        { name: "Sun manifest", path: "/assets/sun/sun_manifest.json", required: false, expected: ["DGB_SUN_ASSET_FILE_SET_v1"] },
-        { name: "Sun material CSS", path: "/assets/sun/sun_material.css", required: false, expected: ["dgb-sun-stage", "dgb-sun-core"] },
+        { name: "Sun manifest", path: "/assets/sun/sun_manifest.json", required: true, expected: ["DGB_SUN_ASSET_FILE_SET_v1"] },
+        { name: "Sun material CSS", path: "/assets/sun/sun_material.css", required: true, expected: ["dgb-sun-stage", "dgb-sun-core"] },
         { name: "Sun SVG", path: "/assets/sun/sun.svg", required: false, expected: ["svg", "solarTexture"] },
-        { name: "Sun canvas renderer", path: "/assets/sun/sun_canvas.js", required: false, expected: ["DGBSunCanvas", "createCanvasSun"] },
+        { name: "Sun canvas renderer", path: "/assets/sun/sun_canvas.js", required: true, expected: ["DGBSunCanvas", "createCanvasSun"] },
         { name: "Sun preview harness", path: "/assets/sun/preview.html", required: false, expected: ["Sun Asset Preview", "data-dgb-sun-mount"] }
       ];
 
@@ -659,6 +618,30 @@
           },
           findingPass: "Root page carries universe-sun contract markers.",
           findingFail: "Root page does not show the universe-sun contract."
+        },
+        {
+          name: "Sun asset mount present",
+          pass: function (html) {
+            return html.indexOf("data-dgb-sun-mount") !== -1;
+          },
+          findingPass: "Root page contains the sun asset mount.",
+          findingFail: "Root page does not contain the sun asset mount."
+        },
+        {
+          name: "Active cache-busted root boot",
+          pass: function (html) {
+            return html.indexOf("/index.js?v=root-sun-asset-b1") !== -1;
+          },
+          findingPass: "Root page points to the active root-sun-asset-b1 index.js.",
+          findingFail: "Root page does not point to root-sun-asset-b1 index.js."
+        },
+        {
+          name: "Sun material CSS attached",
+          pass: function (html) {
+            return html.indexOf("/assets/sun/sun_material.css") !== -1;
+          },
+          findingPass: "Root page attaches the sun material CSS file.",
+          findingFail: "Root page does not attach sun_material.css."
         },
         {
           name: "Stale solar-door language removed",
@@ -682,14 +665,6 @@
           findingFail: "Tree/physical-door language or structure is still present."
         },
         {
-          name: "Cache-busted root boot",
-          pass: function (html) {
-            return html.indexOf("/index.js?v=root-universe-sun-b2") !== -1;
-          },
-          findingPass: "Root page points to cache-busted index.js.",
-          findingFail: "Root page does not point to cache-busted index.js."
-        },
-        {
           name: "Visible SUN label removed",
           pass: function (html) {
             return html.indexOf(">SUN<") === -1 && html.indexOf("sun-label") === -1;
@@ -699,9 +674,7 @@
         }
       ];
 
-      function $(id) {
-        return document.getElementById(id);
-      }
+      function $(id) { return document.getElementById(id); }
 
       function setText(id, value) {
         var node = $(id);
@@ -725,28 +698,14 @@
 
       async function fetchText(path) {
         var url = path + (path.indexOf("?") === -1 ? "?_gauge=" : "&_gauge=") + String(Date.now());
-
-        var response = await fetch(url, {
-          method: "GET",
-          cache: "no-store",
-          credentials: "same-origin"
-        });
-
+        var response = await fetch(url, { method: "GET", cache: "no-store", credentials: "same-origin" });
         var text = await response.text();
-
-        return {
-          ok: response.ok,
-          status: response.status,
-          text: text
-        };
+        return { ok: response.ok, status: response.status, text: text };
       }
 
       function scoreTextResult(result, item) {
         if (!result.ok) {
-          return {
-            score: item.required ? 0 : 50,
-            problem: "File or route returned HTTP " + result.status + "."
-          };
+          return { score: item.required ? 0 : 50, problem: "File or route returned HTTP " + result.status + "." };
         }
 
         var visibleEnough = result.text && result.text.trim().length > 80;
@@ -758,23 +717,16 @@
         });
 
         var identityScore = expected.length ? Math.round((hits / expected.length) * 100) : 100;
-
         var score = 50;
+
         if (visibleEnough) score += 25;
         score += Math.round(identityScore * 0.25);
 
         var problem = "No current problem detected.";
+        if (!visibleEnough) problem = "Reachable but visible/source content is thin.";
+        else if (identityScore < 100) problem = "Reachable but expected identity markers are incomplete.";
 
-        if (!visibleEnough) {
-          problem = "Reachable but visible/source content is thin.";
-        } else if (identityScore < 100) {
-          problem = "Reachable but expected identity markers are incomplete.";
-        }
-
-        return {
-          score: Math.max(0, Math.min(100, score)),
-          problem: problem
-        };
+        return { score: Math.max(0, Math.min(100, score)), problem: problem };
       }
 
       async function scanList(items) {
@@ -828,12 +780,7 @@
 
         return contractChecks.map(function (check) {
           var passed = false;
-
-          try {
-            passed = check.pass(html);
-          } catch (error) {
-            passed = false;
-          }
+          try { passed = check.pass(html); } catch (error) { passed = false; }
 
           return {
             name: check.name,
@@ -860,24 +807,15 @@
         if (!node) return;
 
         var source = items.length ? items : [empty];
-
         node.innerHTML = source.map(function (item) {
           return "<li>" + item + "</li>";
         }).join("");
       }
 
       function average(rows, requiredOnly) {
-        var filtered = rows.filter(function (row) {
-          return requiredOnly ? row.required : true;
-        });
-
+        var filtered = rows.filter(function (row) { return requiredOnly ? row.required : true; });
         if (!filtered.length) return 0;
-
-        var total = filtered.reduce(function (sum, row) {
-          return sum + row.score;
-        }, 0);
-
-        return Math.round(total / filtered.length);
+        return Math.round(filtered.reduce(function (sum, row) { return sum + row.score; }, 0) / filtered.length);
       }
 
       function dedupe(list) {
@@ -913,33 +851,27 @@
           }
           if (row.status !== "STRONG" && !row.required) {
             wrong.push("Optional runtime missing or weak: <code>" + row.path + "</code> — " + row.problem);
-            todo.push("Create or repair optional runtime <code>" + row.path + "</code> if you want the ledger fully strong.");
           }
         });
 
         contractRows.forEach(function (row) {
-          if (row.status === "STRONG") {
-            working.push("Root contract check passed: " + row.name + ".");
-          } else {
+          if (row.status === "STRONG") working.push("Root contract check passed: " + row.name + ".");
+          else {
             wrong.push("Root contract failure: " + row.finding);
             todo.push("Correct root contract issue: " + row.name + ".");
           }
         });
 
         assetRows.forEach(function (row) {
-          if (row.status === "STRONG") {
-            working.push("Sun asset file reachable: <code>" + row.path + "</code>.");
-          } else {
+          if (row.status === "STRONG") working.push("Sun asset file reachable: <code>" + row.path + "</code>.");
+          else {
             wrong.push("Sun asset file not strong: <code>" + row.path + "</code> — " + row.problem);
+            if (row.required) todo.push("Create or repair required sun asset file <code>" + row.path + "</code>.");
           }
         });
 
-        if (assetRows.some(function (row) { return row.status !== "STRONG"; })) {
-          todo.push("Finish the sun asset file set before binding it back into the root page.");
-        }
-
         if (!todo.length) {
-          todo.push("No repair action required. Continue only after confirming live visual output.");
+          todo.push("No contract repair required. Continue with sun material refinement only.");
         }
 
         return {
@@ -951,7 +883,7 @@
 
       async function runScan() {
         setText("updated-at", "running");
-        setText("runtime-status", "Live weakness scan running");
+        setText("runtime-status", "Live sun asset contract scan running");
 
         var dotNode = $("runtime-dot");
         if (dotNode) dotNode.className = "dot watch";
@@ -994,24 +926,24 @@
 
         var routeScore = average(routeRows, true);
         var runtimeScore = average(runtimeRows, true);
+        var assetScore = average(assetRows, true);
         var contractScore = average(contractRows.map(function (row) {
           return { score: row.score, required: true };
         }), true);
-        var assetScore = average(assetRows, false);
 
-        var optionalPenalty = Math.round((100 - assetScore) * 0.12);
         var driftRisk = Math.max(0, Math.min(100, Math.round(
-          ((100 - routeScore) * 0.28) +
+          ((100 - routeScore) * 0.22) +
           ((100 - runtimeScore) * 0.24) +
-          ((100 - contractScore) * 0.36) +
-          optionalPenalty
+          ((100 - assetScore) * 0.18) +
+          ((100 - contractScore) * 0.36)
         )));
 
         var overall = Math.max(0, Math.min(100, Math.round(
-          (routeScore * 0.30) +
+          (routeScore * 0.25) +
           (runtimeScore * 0.25) +
-          (contractScore * 0.35) +
-          ((100 - driftRisk) * 0.10)
+          (assetScore * 0.20) +
+          (contractScore * 0.22) +
+          ((100 - driftRisk) * 0.08)
         )));
 
         setText("overall-score", overall + "%");
@@ -1027,19 +959,18 @@
         setText("overall-note", overall >= 90 ? "Strong. Remaining issues are specific and actionable." : overall >= 70 ? "Watch. Site works, but weaknesses remain." : "Repair required. Core contract or runtime issues detected.");
 
         var findings = collectFindings(routeRows, runtimeRows, assetRows, contractRows);
-
         renderList("working-list", findings.working, "No confirmed working items yet.");
         renderList("wrong-list", findings.wrong, "No current weakness detected by this scan.");
         renderList("todo-list", findings.todo, "No repair action required.");
 
         setText("updated-at", new Date().toLocaleTimeString());
-        setText("runtime-status", "Live weakness scan complete");
+        setText("runtime-status", "Live sun asset contract scan complete");
 
         if (dotNode) {
           dotNode.className = "dot " + (overall >= 85 ? "strong" : overall >= 60 ? "watch" : "fail");
         }
 
-        document.documentElement.setAttribute("data-dgb-gauges-baseline", "5");
+        document.documentElement.setAttribute("data-dgb-gauges-baseline", "6");
         document.documentElement.setAttribute("data-dgb-gauges-health", String(overall));
       }
 
@@ -1051,7 +982,7 @@
     })();
   </script>
 
-  <script src="/runtime/site_runtime.js?v=gauges-b5" defer></script>
-  <script src="/gauges/gauges_runtime.js?v=gauges-b5" defer></script>
+  <script src="/runtime/site_runtime.js?v=gauges-b6" defer></script>
+  <script src="/gauges/gauges_runtime.js?v=gauges-b6" defer></script>
 </body>
 </html>

@@ -1,135 +1,180 @@
 <!doctype html>
+<!-- TNT RENEWAL — /assets/sun/preview.html
+     SUN ASSET SPINE PREVIEW · SATELLITE OBSERVATIONAL B7
+     PURPOSE:
+       - Preview the current sun asset spine.
+       - Load satellite-observational sun material.
+       - Load sun_canvas.js before sun_asset_runtime.js.
+       - Keep preview isolated from root page.
+       - No generated image.
+       - No external image dependency.
+       - No graphic generation.
+-->
+
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Sun Asset Spine Preview — Diamond Gate Bridge</title>
-  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=luminous-expanding-plasma-b4" />
+
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=satellite-observational-solar-disc-b7"/>
 
   <style>
-    :root {
-      color-scheme: dark;
-      --text: #fff8e7;
-      --muted: rgba(255, 248, 231, 0.72);
-      --line: rgba(255, 248, 231, 0.16);
+    :root{
+      color-scheme:dark;
+      --text:#fff8e7;
+      --muted:rgba(255,248,231,.72);
+      --line:rgba(255,248,231,.16);
+      --panel:rgba(255,255,255,.035);
+      --gold:#ffe5a7;
     }
 
-    * {
-      box-sizing: border-box;
+    *{box-sizing:border-box}
+
+    html,body{
+      min-height:100%;
+      margin:0;
     }
 
-    html,
-    body {
-      min-height: 100%;
-      margin: 0;
-    }
-
-    body {
+    body{
       background:
-        radial-gradient(circle at 50% 18%, rgba(255, 196, 86, 0.13), transparent 24rem),
-        radial-gradient(circle at 15% 20%, rgba(88, 122, 255, 0.12), transparent 18rem),
-        linear-gradient(180deg, #071225 0%, #030714 54%, #010309 100%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
+        radial-gradient(circle at 50% 18%,rgba(255,196,86,.13),transparent 24rem),
+        radial-gradient(circle at 15% 20%,rgba(88,122,255,.12),transparent 18rem),
+        radial-gradient(circle at 86% 72%,rgba(255,119,36,.10),transparent 22rem),
+        linear-gradient(180deg,#071225 0%,#030714 54%,#010309 100%);
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      overflow-x:hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(255,217,138,0.28) 0 1px, transparent 1.6px);
-      background-size: 91px 91px, 143px 143px;
-      background-position: 12px 26px, 52px 72px;
-      opacity: 0.22;
+        radial-gradient(circle,rgba(255,255,255,.54) 0 1px,transparent 1.7px),
+        radial-gradient(circle,rgba(255,217,138,.28) 0 1px,transparent 1.6px);
+      background-size:91px 91px,143px 143px;
+      background-position:12px 26px,52px 72px;
+      opacity:.22;
     }
 
-    main {
-      position: relative;
-      z-index: 1;
-      width: min(100%, 1120px);
-      min-height: 100vh;
-      margin: 0 auto;
-      padding: 18px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 18px;
+    main{
+      position:relative;
+      z-index:1;
+      width:min(100%,1120px);
+      min-height:100vh;
+      margin:0 auto;
+      padding:18px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:18px;
     }
 
-    header,
-    footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      color: var(--muted);
-      font-size: 0.82rem;
-      flex-wrap: wrap;
+    header,footer{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      color:var(--muted);
+      font-size:.82rem;
+      flex-wrap:wrap;
     }
 
-    .title {
-      text-align: center;
+    .title{
+      text-align:center;
+      display:grid;
+      align-content:center;
     }
 
-    h1 {
-      margin: 0;
-      font-size: clamp(2.4rem, 9vw, 6rem);
-      line-height: 0.9;
-      letter-spacing: -0.08em;
+    h1{
+      margin:0;
+      font-size:clamp(2.4rem,9vw,6rem);
+      line-height:.9;
+      letter-spacing:-.08em;
     }
 
-    .theme {
-      margin: 12px 0 0;
-      font-size: clamp(1.2rem, 4vw, 2.4rem);
-      line-height: 1;
-      letter-spacing: -0.05em;
-      text-shadow: 0 0 42px rgba(255, 217, 138, 0.24);
+    .theme{
+      margin:12px 0 0;
+      font-size:clamp(1.2rem,4vw,2.4rem);
+      line-height:1;
+      letter-spacing:-.05em;
+      text-shadow:0 0 42px rgba(255,217,138,.24);
     }
 
-    .panel {
-      margin: 28px auto 0;
-      width: min(100%, 780px);
-      min-height: 520px;
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      padding: 16px;
-      display: grid;
-      place-items: center;
-      background: rgba(255,255,255,0.035);
-      box-shadow: 0 22px 70px rgba(0,0,0,0.35);
+    .note{
+      max-width:760px;
+      margin:14px auto 0;
+      color:var(--muted);
+      line-height:1.55;
+      text-align:center;
     }
 
-    .panel h2 {
-      align-self: start;
-      justify-self: start;
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.72rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
+    .panel{
+      margin:28px auto 0;
+      width:min(100%,780px);
+      min-height:520px;
+      border:1px solid var(--line);
+      border-radius:30px;
+      padding:16px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:12px;
+      place-items:center;
+      background:var(--panel);
+      box-shadow:0 22px 70px rgba(0,0,0,.35);
+      overflow:hidden;
     }
 
-    [data-dgb-sun-mount] {
-      width: min(100%, 620px);
+    .panel h2{
+      justify-self:start;
+      margin:0;
+      color:var(--muted);
+      font-size:.72rem;
+      letter-spacing:.14em;
+      text-transform:uppercase;
     }
 
-    .note {
-      max-width: 720px;
-      margin: 14px auto 0;
-      color: var(--muted);
-      line-height: 1.55;
-      text-align: center;
+    .mountWrap{
+      width:100%;
+      min-height:420px;
+      display:grid;
+      place-items:center;
     }
 
-    code {
-      color: #ffe5a7;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 7px;
-      padding: 1px 5px;
+    [data-dgb-sun-mount]{
+      width:min(100%,620px);
+    }
+
+    .receipt{
+      justify-self:stretch;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      padding:10px 12px;
+      background:rgba(0,0,0,.18);
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.45;
+      text-align:left;
+    }
+
+    code{
+      color:var(--gold);
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:7px;
+      padding:1px 5px;
+    }
+
+    @media(max-width:680px){
+      main{padding:14px}
+      .panel{
+        min-height:460px;
+        padding:14px;
+      }
+      .mountWrap{min-height:340px}
+      [data-dgb-sun-mount]{width:min(100%,520px)}
     }
   </style>
 </head>
@@ -143,25 +188,114 @@
 
     <section class="title" aria-labelledby="page-title">
       <h1 id="page-title">Sun Asset Spine Preview</h1>
-      <p class="theme">Learn to Live to Love</p>
+      <p class="theme">Satellite Observational Solar Disc</p>
 
       <p class="note">
-        This preview uses an empty <code>data-dgb-sun-mount</code> and requires the runtime to mount the canvas.
-        If a sun appears here, it is runtime-controlled canvas, not a CSS fallback.
+        This preview uses an empty <code>data-dgb-sun-mount</code>. The sun must be mounted by the canvas spine, not by a generated image or external graphic.
       </p>
 
-      <article class="panel">
+      <article class="panel" aria-label="Sun canvas preview">
         <h2>Canvas mount</h2>
-        <div data-dgb-sun-mount data-sun-mode="canvas"></div>
+
+        <div class="mountWrap">
+          <div
+            data-dgb-sun-mount
+            data-sun-mode="canvas"
+            data-sun-visual-profile="satellite-observational-solar-disc-b7"
+            data-sun-asset-id="root-sun-asset-b1"
+          ></div>
+        </div>
+
+        <div class="receipt" id="previewReceipt">
+          Status: waiting for canvas runtime.
+        </div>
       </article>
     </section>
 
     <footer>
       <span>No generated graphic</span>
-      <span>luminous-expanding-plasma-b4</span>
+      <span>satellite-observational-solar-disc-b7</span>
     </footer>
   </main>
 
-  <script src="/runtime/sun_asset_runtime.js?v=luminous-expanding-plasma-b4" defer></script>
+  <script src="/assets/sun/sun_canvas.js?v=satellite-observational-solar-disc-b7" defer></script>
+  <script src="/runtime/sun_asset_runtime.js?v=satellite-observational-solar-disc-b7" defer></script>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var PROFILE = "satellite-observational-solar-disc-b7";
+
+      function receipt(text){
+        var node = document.getElementById("previewReceipt");
+        if(node) node.textContent = text;
+      }
+
+      function mountSize(mount){
+        var rect = mount.getBoundingClientRect();
+        return Math.max(320, Math.min(620, Math.floor(Math.min(rect.width || 520, window.innerWidth - 36))));
+      }
+
+      function fallbackMount(){
+        var mount = document.querySelector("[data-dgb-sun-mount]");
+        if(!mount) return;
+
+        if(mount.querySelector("canvas")) {
+          receipt("Status: canvas mounted · " + PROFILE);
+          return;
+        }
+
+        if(!window.DGBSunCanvas || typeof window.DGBSunCanvas.createCanvasSun !== "function"){
+          receipt("Status: DGBSunCanvas unavailable. Check /assets/sun/sun_canvas.js.");
+          return;
+        }
+
+        var canvas = document.createElement("canvas");
+        canvas.className = "dgb-sun-canvas";
+        canvas.setAttribute("data-satellite-sun-canvas","true");
+        canvas.setAttribute("aria-hidden","true");
+
+        mount.appendChild(canvas);
+
+        var size = mountSize(mount);
+        var instance = window.DGBSunCanvas.createCanvasSun(canvas,{
+          size:size,
+          seed:4217,
+          animate:false,
+          intensity:.98
+        });
+
+        mount.setAttribute("data-sun-mode","canvas");
+        mount.setAttribute("data-sun-visual-profile",PROFILE);
+        mount.setAttribute("data-sun-mounted-by","preview-fallback-harness");
+
+        receipt("Status: canvas mounted · " + PROFILE + " · size " + size + "px");
+
+        window.addEventListener("resize",function(){
+          window.clearTimeout(window.__DGB_SUN_PREVIEW_RESIZE__);
+          window.__DGB_SUN_PREVIEW_RESIZE__ = window.setTimeout(function(){
+            var nextSize = mountSize(mount);
+            if(instance && typeof instance.update === "function"){
+              instance.update({ size:nextSize });
+              receipt("Status: canvas resized · " + PROFILE + " · size " + nextSize + "px");
+            }
+          },160);
+        },{passive:true});
+      }
+
+      function boot(){
+        window.setTimeout(fallbackMount,80);
+        window.setTimeout(fallbackMount,280);
+        window.setTimeout(fallbackMount,700);
+      }
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded",boot,{once:true});
+      }else{
+        boot();
+      }
+    })();
+  </script>
 </body>
 </html>

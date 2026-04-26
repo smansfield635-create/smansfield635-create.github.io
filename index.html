@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · PUBLIC DELIVERY RENEWAL B1
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · DELIVERY MATRIX B1
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
      COCKPIT_VERSION=root-compass-cockpit-b1
@@ -8,9 +8,14 @@
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
 
      PURPOSE:
-       - Renew visible public-facing terms within the protected contract.
-       - Keep under-hood machine truth intact.
-       - Move above-hood language away from exposed runtime/boot terminology.
+       - Renew visible delivery into a 2 × 3 matrix:
+         Platform / Engineering
+         English / 中文 / Español
+       - Add Russian doll context:
+         outer layer = bigger field
+         middle layer = selected view
+         inner layer = next move
+       - Keep under-hood contract intact.
        - Preserve Bravo 6 compatibility.
        - Preserve actual cockpit DOM.
        - Preserve [data-dgb-sun-mount].
@@ -45,9 +50,13 @@
     :root{
       --line:rgba(255,255,255,.13);
       --panel:rgba(7,10,16,.72);
+      --panel2:rgba(10,14,22,.62);
       --ink:rgba(255,255,255,.96);
-      --mut:rgba(255,255,255,.72);
+      --txt:rgba(255,255,255,.84);
+      --mut:rgba(255,255,255,.68);
       --gold:rgba(255,217,138,.94);
+      --goldSoft:rgba(201,162,74,.18);
+      --blue:rgba(147,197,253,.18);
       --shadow:0 24px 90px rgba(0,0,0,.48);
     }
 
@@ -76,7 +85,7 @@
       gap:14px;
     }
 
-    .siteTop,.hero,.cockpit-control-panel,.routeRail{
+    .siteTop,.hero,.deliveryMatrix,.dollPanel,.cockpit-control-panel,.routeRail{
       border:1px solid var(--line);
       border-radius:28px;
       background:var(--panel);
@@ -108,7 +117,8 @@
         radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));
       border:1px solid rgba(255,255,255,.18);
     }
-    .btn,.routeRail a,.cockpit-control-panel button{
+
+    .btn,.routeRail a,.deliveryMatrix button,.cockpit-control-panel button{
       min-height:42px;
       padding:10px 14px;
       border-radius:999px;
@@ -117,11 +127,15 @@
       color:var(--ink);
       font-weight:900;
       cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
     }
-    .btn.red,.cockpit-control-panel button[aria-pressed="true"]{
+    .btn.red,.deliveryMatrix button[aria-pressed="true"],.cockpit-control-panel button[aria-pressed="true"]{
       border-color:rgba(255,217,138,.42);
       color:#fff;
       box-shadow:0 0 20px rgba(201,162,74,.12);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(201,162,74,.14),transparent 60%),
+        rgba(0,0,0,.24);
     }
 
     .hero{
@@ -155,7 +169,7 @@
     }
     .lede{
       margin:14px 0 0;
-      color:rgba(255,255,255,.84);
+      color:var(--txt);
       font-size:clamp(1rem,2.2vw,1.15rem);
       line-height:1.55;
     }
@@ -172,6 +186,95 @@
       background:rgba(0,0,0,.22);
       color:var(--mut);
       font-weight:850;
+    }
+
+    .deliveryMatrix{
+      padding:14px;
+      display:grid;
+      gap:12px;
+    }
+    .deliveryHead{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    .deliveryHead strong{
+      font-size:1.05rem;
+      color:var(--ink);
+    }
+    .deliveryHead span{
+      display:block;
+      margin-top:4px;
+      color:var(--mut);
+      font-size:13px;
+      line-height:1.45;
+    }
+    .deliveryControls{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .deliveryGroup{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      padding:6px;
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:999px;
+      background:rgba(0,0,0,.16);
+    }
+
+    .dollPanel{
+      padding:14px;
+      display:grid;
+      gap:12px;
+    }
+    .dollIntro{
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:flex-start;
+    }
+    .dollIntro strong{
+      color:var(--gold);
+      font-size:1.05rem;
+    }
+    .dollIntro span{
+      color:var(--mut);
+      font-size:13px;
+      line-height:1.45;
+      max-width:760px;
+    }
+    .dollStack{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    .dollLayer{
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:22px;
+      padding:14px;
+      background:
+        radial-gradient(circle at 12% 18%,rgba(201,162,74,.08),transparent 42%),
+        linear-gradient(145deg,rgba(0,0,0,.18),rgba(255,255,255,.03));
+    }
+    .dollLayer.outer{margin-left:0}
+    .dollLayer.middle{margin-left:min(4vw,34px)}
+    .dollLayer.inner{margin-left:min(8vw,68px)}
+    .dollLayer b{
+      display:block;
+      color:var(--ink);
+      margin-bottom:6px;
+      font-size:1rem;
+    }
+    .dollLayer p{
+      margin:0;
+      color:var(--txt);
+      line-height:1.55;
+      font-size:14px;
     }
 
     .cockpit-bay{
@@ -230,7 +333,7 @@
         0 0 44px rgba(255,169,55,.20);
     }
 
-    .cockpit-axis-grid,.cockpit-path-grid,.cockpit-hud,.cockpit-strut{
+    .cockpit-axis-grid,.cockpit-path-grid,.cockpit-hud{
       position:absolute;
       pointer-events:none;
     }
@@ -330,16 +433,21 @@
       .page{width:min(100% - 20px,1180px);padding-top:10px}
       .navLinks{width:100%}
       .navLinks .btn,.routeRail a{flex:1 1 calc(50% - 10px);text-align:center}
+      .deliveryGroup{border-radius:22px}
+      .deliveryGroup button{flex:1 1 calc(33% - 8px)}
       .hero{padding:18px}
       .sun-mount{width:min(78vw,340px)}
       .cockpit-readout{grid-template-columns:1fr}
       .cockpit-mode-pill{justify-self:start}
+      .dollLayer.middle,.dollLayer.inner{margin-left:0}
     }
   </style>
 </head>
 
 <body
   data-cockpit-view="cinematic"
+  data-delivery-mode="platform"
+  data-language="en"
   data-layer-planets="true"
   data-layer-paths="false"
   data-layer-axes="false"
@@ -361,10 +469,12 @@
     data-background-contract="index-background-owned-by-recovery-shell"
     data-background-profile="near-solar-deep-space-sky-b2"
     data-compass-cockpit="root-compass-cockpit-b1"
-    data-compass-cockpit-render="public-delivery-renewal-b1"
+    data-compass-cockpit-render="delivery-matrix-b1"
     data-compass-cockpit-runtime-queue="quarantined-not-loaded"
     data-compass-cockpit-control-panel="recovery-shell-static"
     data-compass-cockpit-instrument-panel="held-pending"
+    data-delivery-matrix="platform-engineering-trilingual-b1"
+    data-russian-doll-context="outer-middle-inner-b1"
     data-sun-satellite-profile="satellite-solar-surface-b1"
     data-source-marker="ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"
     data-cockpit-view="cinematic"
@@ -387,19 +497,39 @@
       </div>
     </section>
 
+    <section class="deliveryMatrix" aria-label="Delivery mode and language">
+      <div class="deliveryHead">
+        <div>
+          <strong id="deliveryTitle">Choose the voice.</strong>
+          <span id="deliverySubtitle">Platform gives the public story. Engineering gives the technical read.</span>
+        </div>
+        <div class="deliveryControls" aria-label="Delivery controls">
+          <div class="deliveryGroup" aria-label="Delivery mode">
+            <button type="button" data-delivery-button="platform" aria-pressed="true">Platform</button>
+            <button type="button" data-delivery-button="engineering" aria-pressed="false">Engineering</button>
+          </div>
+          <div class="deliveryGroup" aria-label="Language">
+            <button type="button" data-language-button="en" aria-pressed="true">EN</button>
+            <button type="button" data-language-button="zh" aria-pressed="false">中文</button>
+            <button type="button" data-language-button="es" aria-pressed="false">ES</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="hero" aria-label="Diamond Gate Bridge Compass Cockpit">
       <div class="heroCopy">
-        <p class="kicker">Generation 2 · Compass Cockpit · Public Delivery Renewal B1</p>
+        <p class="kicker" id="heroKicker">Compass · Platform · English</p>
         <h1>Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
-        <p class="lede">
+        <p class="lede" id="heroLede">
           Start here. Step back from the noise, find your position, and choose the view that helps the bigger pattern come into focus.
         </p>
 
         <div class="stateRow" aria-label="Root state">
-          <span class="statePill">Starting point stable</span>
-          <span class="statePill">Perspective controls ready</span>
-          <span class="statePill" data-door-boot-status>Protected view active</span>
+          <span class="statePill" id="stateOne">Starting point stable</span>
+          <span class="statePill" id="stateTwo">Perspective controls ready</span>
+          <span class="statePill" id="stateThree" data-door-boot-status>Protected view active</span>
         </div>
       </div>
 
@@ -424,12 +554,36 @@
           <div class="cockpit-hud" data-cockpit-hud aria-hidden="true"></div>
 
           <div class="cockpit-readout" aria-label="Cockpit readout">
-            <div class="cockpit-narrative" data-cockpit-narrative>
+            <div class="cockpit-narrative" id="cockpitNarrative">
               The field stays steady. Your perspective changes. Use the controls to move from a guided view into scale, structure, motion, and signal.
             </div>
-            <div class="cockpit-mode-pill" data-cockpit-mode-pill>Guided View</div>
+            <div class="cockpit-mode-pill" id="modePill">Guided View</div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section class="dollPanel" aria-label="Russian doll context">
+      <div class="dollIntro">
+        <strong id="dollTitle">Open the idea one layer at a time.</strong>
+        <span id="dollSubtitle">The outside gives the big picture, the middle gives your point of view, and the center gives the next move.</span>
+      </div>
+
+      <div class="dollStack">
+        <article class="dollLayer outer">
+          <b id="outerTitle">Outer layer: the bigger field</b>
+          <p id="outerText">Before you react, zoom out. The first job is seeing the whole room before choosing a door.</p>
+        </article>
+
+        <article class="dollLayer middle">
+          <b id="middleTitle">Middle layer: the chosen view</b>
+          <p id="middleText">Once the field is steady, change the lens. Wide, close, structure, paths, signal, and big picture each show a different kind of truth.</p>
+        </article>
+
+        <article class="dollLayer inner">
+          <b id="innerTitle">Inner layer: the next move</b>
+          <p id="innerText">The goal is not more noise. The goal is a clearer next step.</p>
+        </article>
       </div>
     </section>
 
@@ -443,35 +597,35 @@
     >
       <div class="cockpit-control-head">
         <span class="cockpit-control-title">
-          <strong>Choose Your View</strong>
-          <span>Same field · different perspective · clearer next move</span>
+          <strong id="controlTitle">Choose Your View</strong>
+          <span id="controlSubtitle">Same field · different perspective · clearer next move</span>
         </span>
-        <span class="cockpit-control-state">View: <span data-cockpit-view-label>guided</span></span>
+        <span class="cockpit-control-state"><span id="viewStateLabel">Current view:</span> <span id="activeViewLabel">Guided</span></span>
       </div>
 
       <div class="cockpit-control-grid">
         <div class="cockpit-control-group" aria-label="Cockpit view controls">
-          <button type="button" data-cockpit-view-button="cinematic" aria-pressed="true">Guided</button>
-          <button type="button" data-cockpit-view-button="wide" aria-pressed="false">Wide</button>
-          <button type="button" data-cockpit-view-button="local" aria-pressed="false">Close</button>
-          <button type="button" data-cockpit-view-button="axis" aria-pressed="false">Structure</button>
-          <button type="button" data-cockpit-view-button="paths" aria-pressed="false">Paths</button>
-          <button type="button" data-cockpit-view-button="galaxy" aria-pressed="false">Big Picture</button>
-          <button type="button" data-cockpit-view-button="nebula" aria-pressed="false">Signal</button>
-          <button type="button" data-cockpit-view-button="control" aria-pressed="false">Check</button>
+          <button type="button" data-cockpit-view-button="cinematic" aria-pressed="true" id="viewCinematic">Guided</button>
+          <button type="button" data-cockpit-view-button="wide" aria-pressed="false" id="viewWide">Wide</button>
+          <button type="button" data-cockpit-view-button="local" aria-pressed="false" id="viewLocal">Close</button>
+          <button type="button" data-cockpit-view-button="axis" aria-pressed="false" id="viewAxis">Structure</button>
+          <button type="button" data-cockpit-view-button="paths" aria-pressed="false" id="viewPaths">Paths</button>
+          <button type="button" data-cockpit-view-button="galaxy" aria-pressed="false" id="viewGalaxy">Big Picture</button>
+          <button type="button" data-cockpit-view-button="nebula" aria-pressed="false" id="viewNebula">Signal</button>
+          <button type="button" data-cockpit-view-button="control" aria-pressed="false" id="viewControl">Check</button>
         </div>
 
         <div class="cockpit-control-group" aria-label="Cockpit layer toggles">
-          <button type="button" data-cockpit-toggle="planets" aria-pressed="true">Reference Points</button>
-          <button type="button" data-cockpit-toggle="paths" aria-pressed="false">Movement</button>
-          <button type="button" data-cockpit-toggle="axes" aria-pressed="false">Structure</button>
-          <button type="button" data-cockpit-toggle="nebula" aria-pressed="true">Signal</button>
-          <button type="button" data-cockpit-toggle="milkyWay" aria-pressed="true">Big Picture</button>
-          <button type="button" data-cockpit-toggle="solarWind" aria-pressed="true">Pressure</button>
+          <button type="button" data-cockpit-toggle="planets" aria-pressed="true" id="layerPlanets">Reference Points</button>
+          <button type="button" data-cockpit-toggle="paths" aria-pressed="false" id="layerPaths">Movement</button>
+          <button type="button" data-cockpit-toggle="axes" aria-pressed="false" id="layerAxes">Structure</button>
+          <button type="button" data-cockpit-toggle="nebula" aria-pressed="true" id="layerNebula">Signal</button>
+          <button type="button" data-cockpit-toggle="milkyWay" aria-pressed="true" id="layerMilkyWay">Big Picture</button>
+          <button type="button" data-cockpit-toggle="solarWind" aria-pressed="true" id="layerSolarWind">Pressure</button>
         </div>
       </div>
 
-      <p class="cockpit-control-status" data-cockpit-status>
+      <p class="cockpit-control-status" id="controlStatus">
         Guided view · bigger picture steady · protected perspective active
       </p>
     </section>
@@ -495,5 +649,286 @@
 
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
   <script src="/index.js?v=root-sun-asset-b1" defer></script>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var state = {
+        delivery: "platform",
+        lang: "en"
+      };
+
+      var copy = {
+        platform: {
+          en: {
+            htmlLang: "en",
+            deliveryTitle: "Choose the voice.",
+            deliverySubtitle: "Platform gives the public story. Engineering gives the technical read.",
+            heroKicker: "Compass · Platform · English",
+            heroLede: "Start here. Step back from the noise, find your position, and choose the view that helps the bigger pattern come into focus.",
+            stateOne: "Starting point stable",
+            stateTwo: "Perspective controls ready",
+            stateThree: "Protected view active",
+            cockpitNarrative: "The field stays steady. Your perspective changes. Use the controls to move from a guided view into scale, structure, motion, and signal.",
+            modePill: "Guided View",
+            dollTitle: "Open the idea one layer at a time.",
+            dollSubtitle: "The outside gives the big picture, the middle gives your point of view, and the center gives the next move.",
+            outerTitle: "Outer layer: the bigger field",
+            outerText: "Before you react, zoom out. The first job is seeing the whole room before choosing a door.",
+            middleTitle: "Middle layer: the chosen view",
+            middleText: "Once the field is steady, change the lens. Wide, close, structure, paths, signal, and big picture each show a different kind of truth.",
+            innerTitle: "Inner layer: the next move",
+            innerText: "The goal is not more noise. The goal is a clearer next step.",
+            controlTitle: "Choose Your View",
+            controlSubtitle: "Same field · different perspective · clearer next move",
+            viewStateLabel: "Current view:",
+            activeViewLabel: "Guided",
+            controlStatus: "Guided view · bigger picture steady · protected perspective active",
+            views: ["Guided","Wide","Close","Structure","Paths","Big Picture","Signal","Check"],
+            layers: ["Reference Points","Movement","Structure","Signal","Big Picture","Pressure"]
+          },
+          zh: {
+            htmlLang: "zh-CN",
+            deliveryTitle: "选择表达方式。",
+            deliverySubtitle: "平台模式讲给大众听；工程模式讲清技术结构。",
+            heroKicker: "指南针 · 平台模式 · 中文",
+            heroLede: "从这里开始。先离开噪音，找到自己的位置，再选择一个视角，让更大的图案慢慢清楚。",
+            stateOne: "起点稳定",
+            stateTwo: "视角控制已就绪",
+            stateThree: "保护视图已开启",
+            cockpitNarrative: "场域保持稳定，改变的是你的视角。用这些控制，从引导视图进入尺度、结构、运动与信号。",
+            modePill: "引导视图",
+            dollTitle: "一层一层打开这个想法。",
+            dollSubtitle: "外层看大局，中层看视角，核心层给出下一步。",
+            outerTitle: "外层：更大的场域",
+            outerText: "先不要急着反应，先拉远。第一步是看清整个房间，再选择哪一扇门。",
+            middleTitle: "中层：你选择的视角",
+            middleText: "场域稳定之后，再换镜头。宽视角、近距离、结构、路径、信号和大局，各自展示不同的真相。",
+            innerTitle: "核心层：下一步",
+            innerText: "目标不是制造更多噪音，而是找到更清楚的下一步。",
+            controlTitle: "选择你的视角",
+            controlSubtitle: "同一个场域 · 不同视角 · 更清楚的下一步",
+            viewStateLabel: "当前视图：",
+            activeViewLabel: "引导",
+            controlStatus: "引导视图 · 大局稳定 · 保护视角已开启",
+            views: ["引导","宽视角","近距离","结构","路径","大局","信号","检查"],
+            layers: ["参考点","运动","结构","信号","大局","压力"]
+          },
+          es: {
+            htmlLang: "es",
+            deliveryTitle: "Elige la voz.",
+            deliverySubtitle: "Platform cuenta la historia pública. Engineering muestra la lectura técnica.",
+            heroKicker: "Brújula · Platform · Español",
+            heroLede: "Empieza aquí. Sal del ruido, encuentra tu posición y elige la vista que ayuda a ver el patrón completo.",
+            stateOne: "Punto de partida estable",
+            stateTwo: "Controles de perspectiva listos",
+            stateThree: "Vista protegida activa",
+            cockpitNarrative: "El campo se mantiene estable. Cambia tu perspectiva. Usa los controles para pasar de una vista guiada a escala, estructura, movimiento y señal.",
+            modePill: "Vista Guiada",
+            dollTitle: "Abre la idea capa por capa.",
+            dollSubtitle: "La capa externa muestra el panorama, la capa media muestra tu punto de vista, y el centro muestra el siguiente movimiento.",
+            outerTitle: "Capa externa: el campo mayor",
+            outerText: "Antes de reaccionar, aléjate. Primero mira toda la sala; después eliges la puerta.",
+            middleTitle: "Capa media: la vista elegida",
+            middleText: "Cuando el campo está estable, cambia el lente. Amplio, cerca, estructura, caminos, señal y panorama revelan distintos tipos de verdad.",
+            innerTitle: "Capa central: el siguiente movimiento",
+            innerText: "El objetivo no es más ruido. El objetivo es un siguiente paso más claro.",
+            controlTitle: "Elige Tu Vista",
+            controlSubtitle: "Mismo campo · otra perspectiva · siguiente paso más claro",
+            viewStateLabel: "Vista actual:",
+            activeViewLabel: "Guiada",
+            controlStatus: "Vista guiada · panorama estable · perspectiva protegida activa",
+            views: ["Guiada","Amplia","Cerca","Estructura","Caminos","Panorama","Señal","Revisar"],
+            layers: ["Puntos de Referencia","Movimiento","Estructura","Señal","Panorama","Presión"]
+          }
+        },
+        engineering: {
+          en: {
+            htmlLang: "en",
+            deliveryTitle: "Select delivery layer.",
+            deliverySubtitle: "Platform abstracts the experience. Engineering exposes the operational read.",
+            heroKicker: "Compass · Engineering · English",
+            heroLede: "This page presents a stable visual field with selectable view states. The underlying contract stays fixed while the visible lens changes.",
+            stateOne: "Root state stable",
+            stateTwo: "View controls available",
+            stateThree: "Protected visual chain active",
+            cockpitNarrative: "The environment remains fixed. The cockpit changes view state across guided, scale, local, structural, path, signal, and verification reads.",
+            modePill: "Engineering View",
+            dollTitle: "Nested construct model.",
+            dollSubtitle: "Outer boundary, active projection, and inner decision layer remain separate but connected.",
+            outerTitle: "Outer layer: field boundary",
+            outerText: "The outer layer defines the visible universe field and keeps the reference frame stable.",
+            middleTitle: "Middle layer: projection view",
+            middleText: "The middle layer changes the active read: scale, proximity, structure, paths, signal density, or verification posture.",
+            innerTitle: "Inner layer: decision output",
+            innerText: "The inner layer compresses the current read into the next usable action.",
+            controlTitle: "View-State Controls",
+            controlSubtitle: "Fixed field · controlled lens · verified visual state",
+            viewStateLabel: "State:",
+            activeViewLabel: "Guided",
+            controlStatus: "Protected baseline · visual chain active · state-safe controls",
+            views: ["Guided","Scale","Local","Structure","Paths","Field","Signal","Verify"],
+            layers: ["Bodies","Motion","Axes","Signal","Field","Pressure"]
+          },
+          zh: {
+            htmlLang: "zh-CN",
+            deliveryTitle: "选择交付层。",
+            deliverySubtitle: "平台模式抽象体验；工程模式显示操作读数。",
+            heroKicker: "指南针 · 工程模式 · 中文",
+            heroLede: "此页面呈现一个稳定的视觉场。底层契约保持不变，前端镜头根据所选视图切换。",
+            stateOne: "根状态稳定",
+            stateTwo: "视图控制可用",
+            stateThree: "受保护视觉链已开启",
+            cockpitNarrative: "环境保持固定；驾驶舱在引导、尺度、局部、结构、路径、信号与验证读数之间切换视图状态。",
+            modePill: "工程视图",
+            dollTitle: "嵌套构造模型。",
+            dollSubtitle: "外部边界、活动投影与内部决策层分离但连接。",
+            outerTitle: "外层：场域边界",
+            outerText: "外层定义可见宇宙场，并保持参考框架稳定。",
+            middleTitle: "中层：投影视图",
+            middleText: "中层切换当前读数：尺度、近距、结构、路径、信号密度或验证姿态。",
+            innerTitle: "核心层：决策输出",
+            innerText: "核心层把当前读数压缩成可执行的下一步。",
+            controlTitle: "视图状态控制",
+            controlSubtitle: "固定场域 · 受控镜头 · 已验证视觉状态",
+            viewStateLabel: "状态：",
+            activeViewLabel: "引导",
+            controlStatus: "受保护基线 · 视觉链开启 · 状态安全控制",
+            views: ["引导","尺度","局部","结构","路径","场域","信号","验证"],
+            layers: ["天体","运动","轴线","信号","场域","压力"]
+          },
+          es: {
+            htmlLang: "es",
+            deliveryTitle: "Selecciona la capa de entrega.",
+            deliverySubtitle: "Platform abstrae la experiencia. Engineering expone la lectura operativa.",
+            heroKicker: "Brújula · Engineering · Español",
+            heroLede: "Esta página presenta un campo visual estable con estados de vista seleccionables. El contrato interno permanece fijo mientras cambia el lente visible.",
+            stateOne: "Estado raíz estable",
+            stateTwo: "Controles de vista disponibles",
+            stateThree: "Cadena visual protegida activa",
+            cockpitNarrative: "El entorno permanece fijo. El cockpit cambia estados de vista entre guía, escala, local, estructura, caminos, señal y verificación.",
+            modePill: "Vista de Ingeniería",
+            dollTitle: "Modelo de constructo anidado.",
+            dollSubtitle: "La frontera externa, la proyección activa y la capa interna de decisión permanecen separadas pero conectadas.",
+            outerTitle: "Capa externa: frontera del campo",
+            outerText: "La capa externa define el campo visible del universo y mantiene estable el marco de referencia.",
+            middleTitle: "Capa media: vista de proyección",
+            middleText: "La capa media cambia la lectura activa: escala, proximidad, estructura, caminos, densidad de señal o postura de verificación.",
+            innerTitle: "Capa interna: salida de decisión",
+            innerText: "La capa interna comprime la lectura actual en el siguiente movimiento utilizable.",
+            controlTitle: "Controles de Estado de Vista",
+            controlSubtitle: "Campo fijo · lente controlado · estado visual verificado",
+            viewStateLabel: "Estado:",
+            activeViewLabel: "Guiada",
+            controlStatus: "Base protegida · cadena visual activa · controles seguros",
+            views: ["Guiada","Escala","Local","Estructura","Caminos","Campo","Señal","Verificar"],
+            layers: ["Cuerpos","Movimiento","Ejes","Señal","Campo","Presión"]
+          }
+        }
+      };
+
+      var ids = [
+        "deliveryTitle","deliverySubtitle","heroKicker","heroLede","stateOne","stateTwo","stateThree",
+        "cockpitNarrative","modePill","dollTitle","dollSubtitle","outerTitle","outerText","middleTitle",
+        "middleText","innerTitle","innerText","controlTitle","controlSubtitle","viewStateLabel",
+        "activeViewLabel","controlStatus"
+      ];
+
+      var viewIds = ["viewCinematic","viewWide","viewLocal","viewAxis","viewPaths","viewGalaxy","viewNebula","viewControl"];
+      var layerIds = ["layerPlanets","layerPaths","layerAxes","layerNebula","layerMilkyWay","layerSolarWind"];
+
+      function $(id){ return document.getElementById(id); }
+
+      function setText(id, value){
+        var node = $(id);
+        if(node) node.textContent = value;
+      }
+
+      function setPressed(selector, activeValue, attr){
+        Array.prototype.slice.call(document.querySelectorAll(selector)).forEach(function(button){
+          button.setAttribute("aria-pressed", button.getAttribute(attr) === activeValue ? "true" : "false");
+        });
+      }
+
+      function currentCopy(){
+        return copy[state.delivery][state.lang];
+      }
+
+      function applyCopy(){
+        var c = currentCopy();
+        var root = document.getElementById("door-root");
+
+        document.documentElement.lang = c.htmlLang;
+        document.body.setAttribute("data-delivery-mode", state.delivery);
+        document.body.setAttribute("data-language", state.lang);
+
+        if(root){
+          root.setAttribute("data-delivery-mode", state.delivery);
+          root.setAttribute("data-language", state.lang);
+        }
+
+        ids.forEach(function(id){
+          setText(id, c[id]);
+        });
+
+        viewIds.forEach(function(id, index){
+          setText(id, c.views[index]);
+        });
+
+        layerIds.forEach(function(id, index){
+          setText(id, c.layers[index]);
+        });
+
+        setPressed("[data-delivery-button]", state.delivery, "data-delivery-button");
+        setPressed("[data-language-button]", state.lang, "data-language-button");
+      }
+
+      function bind(){
+        Array.prototype.slice.call(document.querySelectorAll("[data-delivery-button]")).forEach(function(button){
+          button.addEventListener("click", function(){
+            var next = button.getAttribute("data-delivery-button");
+            if(next === "platform" || next === "engineering"){
+              state.delivery = next;
+              applyCopy();
+              window.setTimeout(applyCopy, 120);
+              window.setTimeout(applyCopy, 450);
+            }
+          });
+        });
+
+        Array.prototype.slice.call(document.querySelectorAll("[data-language-button]")).forEach(function(button){
+          button.addEventListener("click", function(){
+            var next = button.getAttribute("data-language-button");
+            if(next === "en" || next === "zh" || next === "es"){
+              state.lang = next;
+              applyCopy();
+              window.setTimeout(applyCopy, 120);
+              window.setTimeout(applyCopy, 450);
+            }
+          });
+        });
+
+        window.addEventListener("dgb:cockpit:viewchange", function(){
+          window.setTimeout(applyCopy, 0);
+          window.setTimeout(applyCopy, 120);
+        });
+      }
+
+      function boot(){
+        bind();
+        applyCopy();
+        window.setTimeout(applyCopy, 150);
+        window.setTimeout(applyCopy, 600);
+        window.setTimeout(applyCopy, 1300);
+      }
+
+      if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded", boot, { once:true });
+      }else{
+        boot();
+      }
+    })();
+  </script>
 </body>
 </html>

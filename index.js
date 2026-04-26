@@ -2,11 +2,12 @@
   "use strict";
 
   var SITE_RUNTIME_PATH = "/runtime/site_runtime.js?v=root-sun-asset-b1";
-  var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=root-sun-asset-b1";
+  var SUN_ASSET_RUNTIME_PATH = "/runtime/sun_asset_runtime.js?v=luminous-sun-b3";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var SUN_ASSET_RUNTIME_NAME = "DGBSunAssetRuntime";
 
   var BASELINE = "Generation 1 Root Universe Sun Asset Baseline 1";
+  var MATERIAL_VERSION = "luminous-sun-b3";
   var THEME = "Learn to Live to Love";
 
   var bootState = {
@@ -17,7 +18,8 @@
     sunAssetRuntimeRequested: false,
     sunAssetRuntimeLoaded: false,
     sunAssetRuntimeFailed: false,
-    sunMounted: false
+    sunMounted: false,
+    materialVersion: MATERIAL_VERSION
   };
 
   function getRoot() {
@@ -62,6 +64,7 @@
         source: "index.js",
         root: root.id || "root",
         baseline: BASELINE,
+        materialVersion: MATERIAL_VERSION,
         object: "sun-asset"
       });
     }
@@ -95,6 +98,7 @@
         id: "home",
         title: "Diamond Gate Bridge",
         baseline: BASELINE,
+        materialVersion: MATERIAL_VERSION,
         theme: THEME,
         visibleFirst: bootState.pageVisible
       });
@@ -106,6 +110,7 @@
         page: "home",
         role: "boot-handoff",
         path: "/index.js",
+        materialVersion: MATERIAL_VERSION,
         validated: true,
         optional: false
       });
@@ -145,13 +150,13 @@
     }
 
     bootState.sunAssetRuntimeRequested = true;
-    setStatus("Sun asset runtime loading");
+    setStatus("Sun asset runtime loading · luminous b3");
 
     loadScript(
       SUN_ASSET_RUNTIME_PATH,
       function () {
         bootState.sunAssetRuntimeLoaded = true;
-        setStatus("Sun asset runtime active");
+        setStatus("Sun asset runtime active · luminous b3");
         mountSunAsset();
       },
       function () {
@@ -161,8 +166,12 @@
         if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
           window[SITE_RUNTIME_NAME].addWarning(
             "SUN_ASSET_RUNTIME_MISSING",
-            "Root page could not load the sun asset runtime.",
-            { path: SUN_ASSET_RUNTIME_PATH, baseline: BASELINE }
+            "Root page could not load the luminous sun asset runtime.",
+            {
+              path: SUN_ASSET_RUNTIME_PATH,
+              baseline: BASELINE,
+              materialVersion: MATERIAL_VERSION
+            }
           );
         }
       }
@@ -178,18 +187,21 @@
       selector: "[data-dgb-sun-mount]",
       mode: "canvas",
       seed: 4217,
-      intensity: 0.86,
-      animate: true
+      intensity: 0.94,
+      animate: true,
+      frameRate: 18,
+      materialVersion: MATERIAL_VERSION
     }).then(function () {
       bootState.sunMounted = true;
-      setStatus("Sun asset active");
+      setStatus("Sun asset active · luminous material b3");
 
       if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
         window[SITE_RUNTIME_NAME].updateRuntimeStatus("sunAssetRuntime", {
           validated: true,
           loaded: true,
           mounted: true,
-          baseline: BASELINE
+          baseline: BASELINE,
+          materialVersion: MATERIAL_VERSION
         });
       }
     }).catch(function (error) {
@@ -199,10 +211,11 @@
       if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
         window[SITE_RUNTIME_NAME].addWarning(
           "SUN_ASSET_MOUNT_FAILED",
-          "Sun asset runtime loaded but failed to mount.",
+          "Luminous sun asset runtime loaded but failed to mount.",
           {
             message: error && error.message ? error.message : "unknown",
-            baseline: BASELINE
+            baseline: BASELINE,
+            materialVersion: MATERIAL_VERSION
           }
         );
       }
@@ -231,7 +244,9 @@
         sunAssetRuntimeLoaded: bootState.sunAssetRuntimeLoaded,
         sunAssetRuntimeFailed: bootState.sunAssetRuntimeFailed,
         sunMounted: bootState.sunMounted,
-        baseline: BASELINE
+        baseline: BASELINE,
+        materialVersion: MATERIAL_VERSION,
+        sunAssetRuntimePath: SUN_ASSET_RUNTIME_PATH
       };
     },
     protectVisibleRoot: protectVisibleRoot,

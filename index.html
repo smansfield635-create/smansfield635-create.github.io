@@ -12,19 +12,11 @@
   <style>
     :root {
       --bg: #02040b;
-      --space: #050b18;
-      --deep: #01030a;
       --text: #fff8e7;
       --muted: rgba(255, 248, 231, 0.72);
       --soft: rgba(255, 248, 231, 0.52);
       --line: rgba(255, 248, 231, 0.18);
       --line-strong: rgba(255, 248, 231, 0.34);
-
-      --sun-white: rgba(255, 255, 238, 1);
-      --sun-gold: rgba(255, 217, 112, 0.96);
-      --sun-orange: rgba(255, 130, 34, 0.92);
-      --sun-red: rgba(176, 46, 12, 0.62);
-      --sun-edge: rgba(54, 12, 4, 0.72);
 
       --sun-glow: 0.58;
       --corona-intensity: 0.56;
@@ -37,9 +29,7 @@
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -51,14 +41,7 @@
 
     body {
       overflow-x: hidden;
-      font-family:
-        Inter,
-        ui-sans-serif,
-        system-ui,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
         radial-gradient(circle at 50% 14%, rgba(255, 196, 86, 0.13), transparent 23rem),
         radial-gradient(circle at 18% 20%, rgba(88, 122, 255, 0.12), transparent 18rem),
@@ -248,8 +231,7 @@
       border: 1px solid var(--line-strong);
       border-radius: 999px;
       padding: 11px 15px;
-      background:
-        linear-gradient(135deg, rgba(255,217,138,0.18), rgba(255,255,255,0.045));
+      background: linear-gradient(135deg, rgba(255,217,138,0.18), rgba(255,255,255,0.045));
       color: var(--text);
       box-shadow: 0 12px 34px rgba(0,0,0,0.28);
       font-size: 0.9rem;
@@ -557,20 +539,6 @@
       pointer-events: none;
     }
 
-    .sun-label {
-      position: absolute;
-      z-index: 9;
-      bottom: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      color: rgba(255, 248, 231, 0.60);
-      font-size: 0.64rem;
-      font-weight: 800;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      text-shadow: 0 0 12px rgba(0,0,0,0.38);
-    }
-
     .bottom-strip {
       display: flex;
       align-items: center;
@@ -748,7 +716,7 @@
         </span>
       </a>
 
-      <span class="status-pill" data-door-boot-status>Visible-first sun active</span>
+      <span class="status-pill" data-door-boot-status>Visible-first universe sun active</span>
     </header>
 
     <section class="hero" aria-labelledby="sun-title">
@@ -788,14 +756,13 @@
 
           <div class="sun-object" data-universe-sun-object aria-hidden="true">
             <div class="sun-core"></div>
-            <div class="sun-label">Sun</div>
           </div>
         </div>
       </div>
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Root Universe Sun Baseline 1</span>
+      <span>Generation 1 · Root Universe Sun Baseline 2</span>
       <span>Universe first · Sun only · Runtime second</span>
     </footer>
   </main>
@@ -806,6 +773,6 @@
     </div>
   </noscript>
 
-  <script src="/index.js" defer></script>
+  <script src="/index.js?v=root-universe-sun-b2" defer></script>
 </body>
 </html>

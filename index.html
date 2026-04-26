@@ -1,26 +1,25 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · PANEL-SPLIT SHELL + RUNTIME QUEUE B1
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · QUEUE-ROLLBACK SAFE SHELL B1
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
      COCKPIT_VERSION=root-compass-cockpit-b1
      RENDER_RUNTIME=compass-cockpit-render-b1
-     RUNTIME_QUEUE=compass-cockpit-runtime-queue-b1
      CONTROL_PANEL_RUNTIME=compass-cockpit-control-panel-b1
-     INSTRUMENT_PANEL_RUNTIME=compass-cockpit-instrument-panel-b1
+     INSTRUMENT_PANEL_STATUS=held-pending
+     RUNTIME_QUEUE_STATUS=quarantined-not-loaded
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
 
      PURPOSE:
+       - Stop freeze by removing active runtime queue load
        - Keep /index.html as protected shell only
-       - Queue existing runtime files through /runtime/compass_cockpit_runtime_queue.js
-       - Preserve root contract and Bravo 6 compatibility
-       - Preserve visible sun mount and fallback in source
-       - Preserve cockpit viewport source structure
-       - Keep render, runtime queue, control panel, instrument panel, and operator as separate layers
+       - Keep render split active
+       - Keep control panel split active
+       - Hold instrument panel until its file exists
+       - Hold runtime queue until tested one runtime at a time
        - Keep /index.js as cockpit operator
-       - No heavy visual CSS in index
-       - No control-panel button dump in index
-       - No instrument-panel dump in index
+       - Preserve Bravo 6 compatibility
+       - Preserve root-sun-asset-b1, root-compass-cockpit-b1, spine-canopy-parachute-b1
 -->
 
 <html lang="en">
@@ -109,9 +108,9 @@
     data-cosmic-control-plane="cosmic-control-plane-b1"
     data-compass-cockpit="root-compass-cockpit-b1"
     data-compass-cockpit-render="compass-cockpit-render-b1"
-    data-compass-cockpit-runtime-queue="compass-cockpit-runtime-queue-b1"
+    data-compass-cockpit-runtime-queue="quarantined-not-loaded"
     data-compass-cockpit-control-panel="compass-cockpit-control-panel-b1"
-    data-compass-cockpit-instrument-panel="compass-cockpit-instrument-panel-b1"
+    data-compass-cockpit-instrument-panel="held-pending"
     data-sun-satellite-profile="satellite-solar-surface-b1"
     data-source-marker="ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"
     data-cockpit-view="cinematic"
@@ -187,12 +186,12 @@
       id="cockpit-instrument-panel-mount"
       class="cockpit-instrument-panel-mount"
       data-cockpit-instrument-panel-mount
-      data-instrument-panel-runtime="compass-cockpit-instrument-panel-b1"
+      data-instrument-panel-runtime="held-pending"
       aria-label="Compass cockpit instrument panel"
     >
       <div class="shell-loading-panel" data-instrument-panel-fallback>
         <strong>Instrument Panel</strong>
-        <span>Telemetry loading.</span>
+        <span>Held pending. Runtime queue quarantined.</span>
       </div>
     </section>
 
@@ -228,8 +227,6 @@
   </noscript>
 
   <script src="/runtime/compass_cockpit_render.js?v=compass-cockpit-render-b1" defer></script>
-  <script src="/runtime/compass_cockpit_runtime_queue.js?v=compass-cockpit-runtime-queue-b1" defer></script>
-  <script src="/runtime/compass_cockpit_instrument_panel.js?v=compass-cockpit-instrument-panel-b1" defer></script>
   <script src="/runtime/compass_cockpit_control_panel.js?v=compass-cockpit-control-panel-b1" defer></script>
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>
   <script src="/runtime/cosmic_background_runtime.js?v=near-solar-background-runtime-b1" defer></script>

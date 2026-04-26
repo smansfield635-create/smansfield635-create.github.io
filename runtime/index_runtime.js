@@ -3,13 +3,15 @@
   File: /runtime/index_runtime.js
   Generation: 1
   Baseline: Root Door Seasonal Solar Baseline 1
-  Role: optional seasonal door enhancement only.
+  Role: optional seasonal door enhancement only; registers with cross-board site runtime.
 */
 
 (function () {
   "use strict";
 
   var RUNTIME_NAME = "DGBIndexRuntime";
+  var SITE_RUNTIME_NAME = "DGBSiteRuntime";
+
   var state = {
     started: false,
     pointerActive: false,
@@ -38,6 +40,37 @@
 
   function hasReducedMotion() {
     return window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  }
+
+  function siteRuntime() {
+    return window[SITE_RUNTIME_NAME] || null;
+  }
+
+  function registerWithSiteRuntime(validated) {
+    var site = siteRuntime();
+
+    if (!site) return;
+
+    if (typeof site.registerRuntime === "function") {
+      site.registerRuntime({
+        id: "seasonalDoorRuntime",
+        page: "home",
+        role: "seasonal-door-enhancement",
+        path: "/runtime/index_runtime.js",
+        validated: Boolean(validated),
+        optional: true
+      });
+    }
+
+    if (typeof site.registerPage === "function") {
+      site.registerPage({
+        id: "home",
+        title: "Diamond Gate Bridge",
+        baseline: "Generation 1 Root Door Seasonal Solar Baseline 1",
+        theme: "Learn to Live to Love",
+        visibleFirst: Boolean(document.getElementById("door-root"))
+      });
+    }
   }
 
   function handlePointerMove(event) {
@@ -97,6 +130,13 @@
     links.forEach(function (link) {
       link.addEventListener("focus", function () {
         system.setAttribute("data-route-focus", link.textContent.trim());
+
+        if (siteRuntime() && typeof siteRuntime().addReceipt === "function") {
+          siteRuntime().addReceipt("ROUTE_FOCUS", {
+            route: link.getAttribute("href"),
+            label: link.textContent.trim()
+          });
+        }
       });
 
       link.addEventListener("blur", function () {
@@ -125,6 +165,7 @@
     var door = document.querySelector("[data-seasonal-door]");
     if (!door) {
       setStatus("Static seasonal door active");
+      registerWithSiteRuntime(false);
       return;
     }
 
@@ -133,6 +174,7 @@
 
     markRoutes();
     addRouteReceipts();
+    registerWithSiteRuntime(true);
 
     if (!hasReducedMotion()) {
       window.addEventListener("pointermove", handlePointerMove, { passive: true });
@@ -159,6 +201,13 @@
 
     window.removeEventListener("pointermove", handlePointerMove);
     window.removeEventListener("pointerleave", handlePointerLeave);
+
+    if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
+      siteRuntime().updateRuntimeStatus("seasonalDoorRuntime", {
+        validated: false,
+        stopped: true
+      });
+    }
   }
 
   function getState() {
@@ -173,14 +222,24 @@
   }
 
   function validate() {
-    return {
+    var result = {
       ok: Boolean(document.getElementById("door-root")) && Boolean(document.querySelector("[data-seasonal-door]")),
       runtime: RUNTIME_NAME,
       started: state.started,
       themePresent: document.body.textContent.includes("Learn to Live to Love"),
       doorPresent: Boolean(document.querySelector("[data-seasonal-door]")),
+      siteRuntimePresent: Boolean(siteRuntime()),
       noImageDependency: true
     };
+
+    if (siteRuntime() && typeof siteRuntime().updateRuntimeStatus === "function") {
+      siteRuntime().updateRuntimeStatus("seasonalDoorRuntime", {
+        validated: result.ok,
+        lastValidation: result
+      });
+    }
+
+    return result;
   }
 
   window[RUNTIME_NAME] = Object.freeze({

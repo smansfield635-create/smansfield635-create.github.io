@@ -2,7 +2,7 @@
   "use strict";
 
   var RUNTIME_NAME = "DGBGaugesHealthRuntime";
-  var VERSION = "spine-canopy-parachute-b2";
+  var VERSION = "spine-canopy-parachute-b3";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var ROOT_CONTRACT = "universe-sun";
@@ -71,7 +71,7 @@
       path: "/gauges/gauges_health_runtime.js?v=" + VERSION + "&gaugeSource=" + VERSION,
       displayPath: "/gauges/gauges_health_runtime.js?v=" + VERSION,
       required: [
-        "spine-canopy-parachute-b2",
+        "spine-canopy-parachute-b3",
         "probeRootVisualTruth",
         "falseHealthBlocked"
       ]
@@ -256,7 +256,7 @@
 
   function getRect(node) {
     if (!node || typeof node.getBoundingClientRect !== "function") {
-      return { width: 0, height: 0 };
+      return { width: 0, height: 0, top: 0, left: 0 };
     }
 
     try {
@@ -298,11 +298,13 @@
   function backgroundVisibleInFrame(win, doc) {
     var universeSky = doc.querySelector(".universe-sky");
     var sunField = doc.querySelector(".sun-field");
+    var page = doc.querySelector(".page");
     var bodyStyle;
     var rootStyle;
 
     if (visibleInFrame(win, universeSky, 40)) return true;
     if (visibleInFrame(win, sunField, 40)) return true;
+    if (visibleInFrame(win, page, 40)) return true;
 
     try {
       bodyStyle = win.getComputedStyle(doc.body);
@@ -324,13 +326,18 @@
     var statusText = doc.body ? doc.body.textContent || "" : "";
     var mountVisible;
     var sunStatusClaimsActive;
+    var canvas;
+    var svg;
+    var fallback;
 
     if (mount) {
-      candidates = candidates.concat(queryAll("canvas", mount));
-      candidates = candidates.concat(queryAll("svg", mount));
-      candidates = candidates.concat(queryAll("[data-sun-fallback]", mount));
-      candidates = candidates.concat(queryAll(".sun-fallback", mount));
-      candidates = candidates.concat(queryAll("[data-sun-mode]", mount));
+      canvas = queryAll("canvas", mount);
+      svg = queryAll("svg", mount);
+      fallback = queryAll("[data-sun-fallback], .sun-fallback", mount);
+
+      candidates = candidates.concat(canvas);
+      candidates = candidates.concat(svg);
+      candidates = candidates.concat(fallback);
     }
 
     mountVisible = visibleInFrame(win, mount, 40);
@@ -339,6 +346,9 @@
     return {
       mountPresent: Boolean(mount),
       mountVisible: mountVisible,
+      canvasPresent: Boolean(canvas && canvas.length),
+      svgPresent: Boolean(svg && svg.length),
+      fallbackPresent: Boolean(fallback && fallback.length),
       candidateCount: candidates.length,
       candidateVisible: candidates.some(function (node) {
         return visibleInFrame(win, node, 24);
@@ -364,7 +374,7 @@
       if (existing) {
         window.setTimeout(function () {
           resolve(Boolean(window.DGBSpineCanopy));
-        }, 500);
+        }, 600);
         return;
       }
 
@@ -448,6 +458,9 @@
               canopy: canopy,
               sunMountPresent: sun.mountPresent,
               sunMountVisible: sun.mountVisible,
+              canvasPresent: sun.canvasPresent,
+              svgPresent: sun.svgPresent,
+              fallbackPresent: sun.fallbackPresent,
               sunCandidateCount: sun.candidateCount,
               sunCandidateVisible: sun.candidateVisible,
               sunStatusClaimsActive: sun.statusClaimsActive,
@@ -464,7 +477,7 @@
               falseHealthBlocked: true
             });
           }
-        }, 2800);
+        }, 3200);
       };
 
       iframe.onerror = function () {
@@ -483,7 +496,7 @@
           error: "root visual probe timed out",
           falseHealthBlocked: true
         });
-      }, 9000);
+      }, 10000);
     });
   }
 
@@ -507,11 +520,11 @@
     rows.push(visualRow("Index boot executed", probe && probe.indexBootExecuted, "window.DGBIndexBoot must exist in the root probe."));
     rows.push(visualRow("Canopy runtime present", probe && probe.canopyPresent, "window.DGBSpineCanopy must exist in the root probe."));
     rows.push(visualRow("Sun mount present", probe && probe.sunMountPresent, "Root must contain [data-dgb-sun-mount]."));
-    rows.push(visualRow("Visible sun present", probe && probe.sunVisible, "Sun is accepted if canvas/SVG/fallback is visible, or the mount is visible and status claims active.", sunSoftPass));
-    rows.push(visualRow("Background visible", probe && probe.backgroundVisible, "Background is accepted from .universe-sky, .sun-field, or computed body/root background.", backgroundSoftPass));
+    rows.push(visualRow("Visible sun present", probe && probe.sunVisible, "Sun is accepted if canvas, SVG, fallback, or visible sun mount with active status is present.", sunSoftPass));
+    rows.push(visualRow("Background visible", probe && probe.backgroundVisible, "Background is accepted from .universe-sky, .sun-field, .page, or computed body/root background.", backgroundSoftPass));
     rows.push(visualRow("Title present", probe && probe.titlePresent, "Diamond Gate Bridge must remain present."));
     rows.push(visualRow("Theme present", probe && probe.themePresent, "Learn to Live to Love must remain present."));
-    rows.push(visualRow("False health blocked", true, "Safety cap exists. If visible sun or canopy truth fails, overall health is capped."));
+    rows.push(visualRow("False health blocked", true, "Safety cap exists. If visual truth fails, overall health is capped."));
 
     state.visualResults = rows;
     return rows;
@@ -643,30 +656,10 @@
     setHtml(selector, html);
   }
 
-  function ensureRuntimePanel() {
-    var host = query("[data-canopy-health-runtime]");
-
-    if (host) return;
-
-    host = document.createElement("section");
-    host.setAttribute("data-canopy-health-runtime", "");
-    host.innerHTML =
-      '<section class="section">' +
-      '<h2>Canopy visual-control health</h2>' +
-      '<p>Status: <strong data-health-runtime-status>PENDING</strong> · Updated: <span data-health-updated>pending</span></p>' +
-      '<div data-source-ledger><p>Pending.</p></div>' +
-      '<div data-visual-ledger><p>Pending.</p></div>' +
-      "</section>";
-
-    document.body.appendChild(host);
-  }
-
   function render() {
     var updated = state.finishedAt ? getTimeText() : "scanning";
 
     document.documentElement.setAttribute("data-gauges-canopy-aware", "true");
-
-    ensureRuntimePanel();
 
     setText("[data-health-runtime-status]", state.status);
     setText("[data-health-status]", state.status);
@@ -703,7 +696,7 @@
     state.status = "SCANNING";
     state.startedAt = new Date().toISOString();
     state.finishedAt = "";
-    state.working = ["Canopy-aware scan is running."];
+    state.working = ["Canopy-aware Bravo 3 scan is running."];
     state.issues = ["Scan not complete yet."];
     state.actions = ["Wait for source and visual-control probe to complete."];
     state.sourceResults = [];

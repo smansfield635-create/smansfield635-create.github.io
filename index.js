@@ -3,19 +3,25 @@
   File: /index.js
   Generation: 1
   Baseline: Root Door Seasonal Solar Baseline 1
-  Role: safe boot handoff and visible-page protection.
+  Role: safe boot handoff, cross-board runtime loading, visible-page protection.
 */
 
 (function () {
   "use strict";
 
-  var RUNTIME_PATH = "/runtime/index_runtime.js";
-  var RUNTIME_NAME = "DGBIndexRuntime";
+  var SITE_RUNTIME_PATH = "/runtime/site_runtime.js";
+  var PAGE_RUNTIME_PATH = "/runtime/index_runtime.js";
+  var SITE_RUNTIME_NAME = "DGBSiteRuntime";
+  var PAGE_RUNTIME_NAME = "DGBIndexRuntime";
+
   var bootState = {
     pageVisible: false,
-    runtimeRequested: false,
-    runtimeLoaded: false,
-    runtimeFailed: false
+    siteRuntimeRequested: false,
+    siteRuntimeLoaded: false,
+    siteRuntimeFailed: false,
+    pageRuntimeRequested: false,
+    pageRuntimeLoaded: false,
+    pageRuntimeFailed: false
   };
 
   function getDoorRoot() {
@@ -50,34 +56,114 @@
     }
 
     bootState.pageVisible = true;
+
+    if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].registerVisibleFirst === "function") {
+      window[SITE_RUNTIME_NAME].registerVisibleFirst({
+        source: "index.js",
+        root: "door-root",
+        baseline: "Generation 1 Root Door Seasonal Solar Baseline 1"
+      });
+    }
+
     return true;
   }
 
-  function loadRuntime() {
-    if (bootState.runtimeRequested || window[RUNTIME_NAME]) return;
+  function loadScript(path, onload, onerror) {
+    var script = document.createElement("script");
+    script.src = path;
+    script.defer = true;
+    script.onload = onload;
+    script.onerror = onerror;
+    document.body.appendChild(script);
+  }
 
-    bootState.runtimeRequested = true;
+  function registerSiteRuntime() {
+    if (!window[SITE_RUNTIME_NAME]) return;
+
+    if (typeof window[SITE_RUNTIME_NAME].registerPage === "function") {
+      window[SITE_RUNTIME_NAME].registerPage({
+        id: "home",
+        title: "Diamond Gate Bridge",
+        baseline: "Generation 1 Root Door Seasonal Solar Baseline 1",
+        theme: "Learn to Live to Love",
+        visibleFirst: bootState.pageVisible
+      });
+    }
+
+    if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
+      window[SITE_RUNTIME_NAME].registerRuntime({
+        id: "rootDoorBoot",
+        page: "home",
+        role: "boot-handoff",
+        path: "/index.js",
+        validated: true,
+        optional: false
+      });
+    }
+  }
+
+  function loadSiteRuntimeThenPageRuntime() {
+    if (bootState.siteRuntimeRequested || window[SITE_RUNTIME_NAME]) {
+      registerSiteRuntime();
+      loadPageRuntime();
+      return;
+    }
+
+    bootState.siteRuntimeRequested = true;
+    setStatus("Site runtime loading");
+
+    loadScript(
+      SITE_RUNTIME_PATH,
+      function () {
+        bootState.siteRuntimeLoaded = true;
+        setStatus("Site runtime active");
+        registerSiteRuntime();
+        loadPageRuntime();
+      },
+      function () {
+        bootState.siteRuntimeFailed = true;
+        setStatus("Static door active");
+        loadPageRuntime();
+      }
+    );
+  }
+
+  function loadPageRuntime() {
+    if (bootState.pageRuntimeRequested || window[PAGE_RUNTIME_NAME]) return;
+
+    bootState.pageRuntimeRequested = true;
     setStatus("Seasonal door runtime loading");
 
-    var script = document.createElement("script");
-    script.src = RUNTIME_PATH;
-    script.defer = true;
+    loadScript(
+      PAGE_RUNTIME_PATH,
+      function () {
+        bootState.pageRuntimeLoaded = true;
+        setStatus("Seasonal door runtime active");
 
-    script.onload = function () {
-      bootState.runtimeLoaded = true;
-      setStatus("Seasonal door runtime active");
+        if (window[PAGE_RUNTIME_NAME] && typeof window[PAGE_RUNTIME_NAME].start === "function") {
+          window[PAGE_RUNTIME_NAME].start();
+        }
 
-      if (window[RUNTIME_NAME] && typeof window[RUNTIME_NAME].start === "function") {
-        window[RUNTIME_NAME].start();
+        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
+          window[SITE_RUNTIME_NAME].updateRuntimeStatus("seasonalDoorRuntime", {
+            validated: true,
+            loaded: true
+          });
+        }
+      },
+      function () {
+        bootState.pageRuntimeFailed = true;
+        setStatus("Static seasonal door active");
+
+        if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
+          window[SITE_RUNTIME_NAME].addWarning(
+            "PAGE_RUNTIME_MISSING",
+            "Root door page runtime did not load.",
+            { path: PAGE_RUNTIME_PATH }
+          );
+        }
       }
-    };
-
-    script.onerror = function () {
-      bootState.runtimeFailed = true;
-      setStatus("Static seasonal door active");
-    };
-
-    document.body.appendChild(script);
+    );
   }
 
   function boot() {
@@ -85,7 +171,7 @@
     if (!visible) return;
 
     setStatus("Visible-first door active");
-    loadRuntime();
+    loadSiteRuntimeThenPageRuntime();
 
     window.setTimeout(protectVisibleDoor, 500);
     window.setTimeout(protectVisibleDoor, 1600);
@@ -95,9 +181,12 @@
     getState: function () {
       return {
         pageVisible: bootState.pageVisible,
-        runtimeRequested: bootState.runtimeRequested,
-        runtimeLoaded: bootState.runtimeLoaded,
-        runtimeFailed: bootState.runtimeFailed
+        siteRuntimeRequested: bootState.siteRuntimeRequested,
+        siteRuntimeLoaded: bootState.siteRuntimeLoaded,
+        siteRuntimeFailed: bootState.siteRuntimeFailed,
+        pageRuntimeRequested: bootState.pageRuntimeRequested,
+        pageRuntimeLoaded: bootState.pageRuntimeLoaded,
+        pageRuntimeFailed: bootState.pageRuntimeFailed
       };
     },
     protectVisibleDoor: protectVisibleDoor

@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Sun Asset Preview — Diamond Gate Bridge</title>
+  <link rel="stylesheet" href="/assets/sun/sun_material.css" />
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --text: #fff8e7;
+      --muted: rgba(255, 248, 231, 0.72);
+      --line: rgba(255, 248, 231, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      margin: 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 196, 86, 0.13), transparent 24rem),
+        radial-gradient(circle at 15% 20%, rgba(88, 122, 255, 0.12), transparent 18rem),
+        linear-gradient(180deg, #071225 0%, #030714 54%, #010309 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255,217,138,0.28) 0 1px, transparent 1.6px);
+      background-size: 91px 91px, 143px 143px;
+      background-position: 12px 26px, 52px 72px;
+      opacity: 0.22;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 1120px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 18px;
+    }
+
+    header,
+    footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2.4rem, 9vw, 6rem);
+      line-height: 0.9;
+      letter-spacing: -0.08em;
+    }
+
+    .theme {
+      margin: 12px 0 0;
+      font-size: clamp(1.2rem, 4vw, 2.4rem);
+      line-height: 1;
+      letter-spacing: -0.05em;
+      text-shadow: 0 0 42px rgba(255, 217, 138, 0.24);
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: center;
+      margin-top: 24px;
+    }
+
+    .panel {
+      min-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.035);
+      box-shadow: 0 22px 70px rgba(0,0,0,0.35);
+    }
+
+    .panel h2 {
+      align-self: start;
+      justify-self: start;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .panel img {
+      width: min(100%, 360px);
+      aspect-ratio: 1;
+      display: block;
+    }
+
+    [data-dgb-sun-mount] {
+      width: min(100%, 360px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+    }
+
+    @media (max-width: 900px) {
+      .preview-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <span>Diamond Gate Bridge</span>
+      <span>Sun Asset File Set · Code Only</span>
+    </header>
+
+    <section class="title" aria-labelledby="page-title">
+      <h1 id="page-title">Sun Asset Preview</h1>
+      <p class="theme">Learn to Live to Love</p>
+
+      <div class="preview-grid">
+        <article class="panel">
+          <h2>Canvas</h2>
+          <div data-dgb-sun-mount data-sun-mode="canvas"></div>
+        </article>
+
+        <article class="panel">
+          <h2>SVG</h2>
+          <img src="/assets/sun/sun.svg" alt="Procedural sun SVG asset" />
+        </article>
+
+        <article class="panel">
+          <h2>CSS</h2>
+          <div class="dgb-sun-stage" aria-label="CSS sun material asset">
+            <div class="dgb-sun-css">
+              <div class="dgb-sun-core"></div>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <footer>
+      <span>No generated graphic</span>
+      <span>Round world first · Flatten later</span>
+    </footer>
+  </main>
+
+  <script src="/runtime/sun_asset_runtime.js" defer></script>
+</body>
+</html>

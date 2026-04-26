@@ -1,33 +1,52 @@
 {
-  "assetPack": "DGB_SUN_ASSET_SPINE_v1",
+  "assetPack": "DGB_SUN_ASSET_SPINE_v2_CANOPY_BOUND",
   "owner": "Sean",
   "project": "Diamond Gate Bridge",
-  "baseline": "Sun Asset Spine Baseline 1",
-  "version": "luminous-expanding-plasma-b4",
+  "baseline": "Generation 1 · Baseline 6",
+  "rootBootId": "root-sun-asset-b1",
+  "contract": "universe-sun",
   "mode": "code_source_assets_only",
   "graphicOutput": false,
   "externalImageDependency": false,
+  "imageGenerationUsed": false,
   "roundWorldFirst": true,
   "flattenLater": true,
   "primaryObject": "sun",
   "backgroundContext": "universe",
   "theme": "Learn to Live to Love",
+  "canopy": {
+    "enabled": true,
+    "runtime": "/runtime/spine_canopy_runtime.js",
+    "version": "spine-canopy-parachute-b1",
+    "role": "protective supervisory layer above the root spine"
+  },
+  "versions": {
+    "rootBoot": "root-sun-asset-b1",
+    "sunRuntime": "universe-scale-field-b7",
+    "sunCanvas": "satellite-solar-disc-b6",
+    "manifest": "sun-asset-spine-canopy-bound-b1"
+  },
   "files": {
     "rootHtml": "/index.html",
     "rootBoot": "/index.js",
+    "canopyRuntime": "/runtime/spine_canopy_runtime.js",
     "cssShell": "/assets/sun/sun_material.css",
     "canvasRenderer": "/assets/sun/sun_canvas.js",
     "svgReference": "/assets/sun/sun.svg",
     "assetRuntime": "/runtime/sun_asset_runtime.js",
-    "previewHarness": "/assets/sun/preview.html"
+    "previewHarness": "/assets/sun/preview.html",
+    "gaugesPage": "/gauges/index.html",
+    "gaugesHealthRuntime": "/gauges/gauges_health_runtime.js"
   },
   "authority": {
-    "canvasRenderer": "material_baseline_standard",
-    "assetRuntime": "mount_authority",
-    "rootBoot": "runtime_loader_authority",
-    "rootHtml": "empty_mount_target_only",
+    "canopyRuntime": "supervisory_truth_and_receipt_layer",
+    "canvasRenderer": "sun_visual_owner",
+    "assetRuntime": "sun_mount_coordination_authority",
+    "rootBoot": "runtime_loader_and_canopy_registration_authority",
+    "rootHtml": "visible_first_structure_background_and_static_sun_fallback",
     "cssShell": "supporting_shell_only",
     "manifest": "spine_contract",
+    "gauges": "canopy_truth_surface",
     "previewHarness": "isolated_test_harness"
   },
   "mountContract": {
@@ -35,15 +54,21 @@
     "requiredMode": "canvas",
     "requiredRuntimeGlobal": "DGBSunAssetRuntime",
     "requiredCanvasGlobal": "DGBSunCanvas",
-    "forbiddenRootFallbackChildren": [
-      ".dgb-sun-stage",
-      ".dgb-sun-css",
-      ".dgb-sun-core"
-    ],
-    "requiredVisibleStatus": "Sun asset active · luminous expanding plasma b4"
+    "requiredCanopyGlobal": "DGBSpineCanopy",
+    "requiredVisibleStatus": "Sun asset active · root-sun-asset-b1",
+    "fallbackRequired": true,
+    "fallbackSelector": "[data-sun-fallback]",
+    "forbiddenRootMutation": [
+      "background pass mutating sun canvas",
+      "background pass removing sun fallback",
+      "root boot replacing sun visual owner",
+      "gauges reporting full health while sunVisible=false"
+    ]
   },
   "visualTarget": {
-    "read": "luminous expanding plasma sun",
+    "read": "satellite solar disc inside irregular universe field",
+    "sunOwner": "/assets/sun/sun_canvas.js",
+    "backgroundOwner": "/index.html",
     "avoid": [
       "door",
       "tree",
@@ -52,18 +77,28 @@
       "grid",
       "flat icon",
       "planet",
-      "eclipse",
       "dead rim",
-      "dark limb"
+      "symmetrical tiled sky",
+      "false health"
     ],
     "qualities": [
       "large solar disc",
-      "turbulent photosphere",
-      "luminous edge",
-      "expanding plasma field",
-      "irregular corona",
+      "visible even if runtime fails",
+      "protected sun ownership",
+      "irregular star depth",
       "deep universe field",
-      "mobile safe"
+      "mobile safe",
+      "canopy verified"
     ]
+  },
+  "acceptance": {
+    "rootHtmlServed": true,
+    "indexBootExecuted": true,
+    "sunMountPresent": true,
+    "sunVisible": true,
+    "backgroundVisible": true,
+    "canopyRuntimePresent": true,
+    "gaugesCanopyAware": true,
+    "falseHealthBlocked": true
   }
 }

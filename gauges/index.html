@@ -14,7 +14,6 @@
       color-scheme: dark;
       --bg: #02040b;
       --panel: rgba(255, 255, 255, 0.055);
-      --panel-strong: rgba(255, 255, 255, 0.082);
       --line: rgba(255, 248, 231, 0.16);
       --line-strong: rgba(255, 248, 231, 0.30);
       --text: #fff8e7;
@@ -184,6 +183,7 @@
     .dot.strong { background: var(--green); }
     .dot.watch { background: var(--amber); }
     .dot.fail { background: var(--red); }
+    .dot.pending { background: var(--blue); }
 
     .grid {
       display: grid;
@@ -617,144 +617,43 @@
     (function () {
       "use strict";
 
-      var startedAt = Date.now();
-
       var coreRoutes = [
-        {
-          name: "Home",
-          path: "/",
-          required: true,
-          identity: ["Diamond Gate Bridge", "Learn to Live to Love"]
-        },
-        {
-          name: "Products",
-          path: "/products/",
-          required: true,
-          identity: ["Products"]
-        },
-        {
-          name: "Laws",
-          path: "/laws/",
-          required: true,
-          identity: ["Laws"]
-        },
-        {
-          name: "Governance",
-          path: "/governance/",
-          required: true,
-          identity: ["Governance"]
-        },
-        {
-          name: "Gauges",
-          path: "/gauges/",
-          required: true,
-          identity: ["Website Health Gauges", "Route health ledger"]
-        },
-        {
-          name: "Prelude",
-          path: "/prelude/",
-          required: false,
-          identity: ["Prelude"]
-        },
-        {
-          name: "Explore",
-          path: "/explore/",
-          required: false,
-          identity: ["Explore"]
-        },
-        {
-          name: "Frontier",
-          path: "/frontier/",
-          required: false,
-          identity: ["Frontier"]
-        }
+        { name: "Home", path: "/", required: true, identity: ["Diamond Gate Bridge", "Learn to Live to Love"] },
+        { name: "Products", path: "/products/", required: true, identity: ["Products"] },
+        { name: "Laws", path: "/laws/", required: true, identity: ["Laws"] },
+        { name: "Governance", path: "/governance/", required: true, identity: ["Governance"] },
+        { name: "Gauges", path: "/gauges/", required: true, identity: ["Website Health Gauges", "Route health ledger"] },
+        { name: "Prelude", path: "/prelude/", required: false, identity: ["Prelude"] },
+        { name: "Explore", path: "/explore/", required: false, identity: ["Explore"] },
+        { name: "Frontier", path: "/frontier/", required: false, identity: ["Frontier"] }
       ];
 
       var runtimeFiles = [
-        {
-          name: "Index boot",
-          path: "/index.js?v=root-universe-sun-b2",
-          required: true,
-          expected: ["Root Universe Sun", "rootUniverseSunBoot", "Static universe sun active"]
-        },
-        {
-          name: "Site runtime",
-          path: "/runtime/site_runtime.js",
-          required: true,
-          expected: ["DGBSiteRuntime"]
-        },
-        {
-          name: "Root universe sun runtime",
-          path: "/runtime/index_runtime.js?v=root-universe-sun-b2",
-          required: true,
-          expected: ["universeSunRuntime", "Root Universe Sun Baseline"]
-        },
-        {
-          name: "Gauges health runtime",
-          path: "/gauges/gauges_health_runtime.js",
-          required: true,
-          expected: ["runtime"]
-        },
-        {
-          name: "Gauges visual runtime",
-          path: "/gauges/gauges_runtime.js",
-          required: false,
-          expected: ["DGBGaugesRuntime"]
-        },
-        {
-          name: "Sun asset runtime",
-          path: "/runtime/sun_asset_runtime.js",
-          required: false,
-          expected: ["DGBSunAssetRuntime"]
-        }
+        { name: "Index boot", path: "/index.js?v=root-universe-sun-b2", required: true, expected: ["Root Universe Sun", "rootUniverseSunBoot", "Static universe sun active"] },
+        { name: "Site runtime", path: "/runtime/site_runtime.js", required: true, expected: ["DGBSiteRuntime"] },
+        { name: "Root universe sun runtime", path: "/runtime/index_runtime.js?v=root-universe-sun-b2", required: true, expected: ["universeSunRuntime", "Root Universe Sun Baseline"] },
+        { name: "Gauges health runtime", path: "/gauges/gauges_health_runtime.js", required: true, expected: ["runtime"] },
+        { name: "Gauges visual runtime", path: "/gauges/gauges_runtime.js", required: false, expected: ["DGBGaugesRuntime"] },
+        { name: "Sun asset runtime", path: "/runtime/sun_asset_runtime.js", required: false, expected: ["DGBSunAssetRuntime"] }
       ];
 
       var assetFiles = [
-        {
-          name: "Sun manifest",
-          path: "/assets/sun/sun_manifest.json",
-          required: false,
-          expected: ["DGB_SUN_ASSET_FILE_SET_v1"]
-        },
-        {
-          name: "Sun material CSS",
-          path: "/assets/sun/sun_material.css",
-          required: false,
-          expected: ["dgb-sun-stage", "dgb-sun-core"]
-        },
-        {
-          name: "Sun SVG",
-          path: "/assets/sun/sun.svg",
-          required: false,
-          expected: ["svg", "solarTexture"]
-        },
-        {
-          name: "Sun canvas renderer",
-          path: "/assets/sun/sun_canvas.js",
-          required: false,
-          expected: ["DGBSunCanvas", "createCanvasSun"]
-        },
-        {
-          name: "Sun preview harness",
-          path: "/assets/sun/preview.html",
-          required: false,
-          expected: ["Sun Asset Preview", "data-dgb-sun-mount"]
-        }
+        { name: "Sun manifest", path: "/assets/sun/sun_manifest.json", required: false, expected: ["DGB_SUN_ASSET_FILE_SET_v1"] },
+        { name: "Sun material CSS", path: "/assets/sun/sun_material.css", required: false, expected: ["dgb-sun-stage", "dgb-sun-core"] },
+        { name: "Sun SVG", path: "/assets/sun/sun.svg", required: false, expected: ["svg", "solarTexture"] },
+        { name: "Sun canvas renderer", path: "/assets/sun/sun_canvas.js", required: false, expected: ["DGBSunCanvas", "createCanvasSun"] },
+        { name: "Sun preview harness", path: "/assets/sun/preview.html", required: false, expected: ["Sun Asset Preview", "data-dgb-sun-mount"] }
       ];
 
       var contractChecks = [
         {
           name: "Theme present",
-          scoreWhenPass: 100,
-          pass: function (html) {
-            return html.indexOf("Learn to Live to Love") !== -1;
-          },
+          pass: function (html) { return html.indexOf("Learn to Live to Love") !== -1; },
           findingPass: "Root page contains Learn to Live to Love.",
           findingFail: "Root page does not contain the theme."
         },
         {
           name: "Universe-sun contract present",
-          scoreWhenPass: 100,
           pass: function (html) {
             return html.indexOf("data-universe-sun") !== -1 || html.indexOf("Universe Sun Baseline") !== -1;
           },
@@ -763,19 +662,17 @@
         },
         {
           name: "Stale solar-door language removed",
-          scoreWhenPass: 100,
           pass: function (html) {
             return html.indexOf("STATIC SOLAR DOOR ACTIVE") === -1 &&
               html.indexOf("Static Solar Door Active") === -1 &&
               html.indexOf("solar door") === -1 &&
               html.indexOf("Solar Door") === -1;
           },
-          findingPass: "No visible stale solar-door language found.",
+          findingPass: "No stale solar-door language found.",
           findingFail: "Stale solar-door language is still present."
         },
         {
           name: "Tree/physical door stretch removed",
-          scoreWhenPass: 100,
           pass: function (html) {
             return html.indexOf("Tree of Life") === -1 &&
               html.indexOf("tree-door") === -1 &&
@@ -786,16 +683,14 @@
         },
         {
           name: "Cache-busted root boot",
-          scoreWhenPass: 100,
           pass: function (html) {
             return html.indexOf("/index.js?v=root-universe-sun-b2") !== -1;
           },
           findingPass: "Root page points to cache-busted index.js.",
-          findingFail: "Root page does not point to the cache-busted index.js file."
+          findingFail: "Root page does not point to cache-busted index.js."
         },
         {
           name: "Visible SUN label removed",
-          scoreWhenPass: 100,
           pass: function (html) {
             return html.indexOf(">SUN<") === -1 && html.indexOf("sun-label") === -1;
           },
@@ -819,17 +714,9 @@
       }
 
       function classify(score, required) {
-        if (score >= 85) return "strong";
-        if (score >= 55) return "watch";
-        if (required) return "fail";
-        return "watch";
-      }
-
-      function labelFor(score, required) {
-        var c = classify(score, required);
-        if (c === "strong") return "STRONG";
-        if (c === "watch") return "WATCH";
-        return "FAIL";
+        if (score >= 85) return "STRONG";
+        if (score >= 55) return "WATCH";
+        return required ? "FAIL" : "WATCH";
       }
 
       function tag(status) {
@@ -850,8 +737,7 @@
         return {
           ok: response.ok,
           status: response.status,
-          text: text,
-          url: url
+          text: text
         };
       }
 
@@ -864,14 +750,14 @@
         }
 
         var visibleEnough = result.text && result.text.trim().length > 80;
-        var identityHits = 0;
         var expected = item.identity || item.expected || [];
+        var hits = 0;
 
         expected.forEach(function (needle) {
-          if (result.text.indexOf(needle) !== -1) identityHits += 1;
+          if (result.text.indexOf(needle) !== -1) hits += 1;
         });
 
-        var identityScore = expected.length ? Math.round((identityHits / expected.length) * 100) : 100;
+        var identityScore = expected.length ? Math.round((hits / expected.length) * 100) : 100;
 
         var score = 50;
         if (visibleEnough) score += 25;
@@ -891,29 +777,8 @@
         };
       }
 
-      function renderLedger(tbodyId, rows, columns) {
-        var tbody = $(tbodyId);
-        if (!tbody) return;
-
-        tbody.innerHTML = rows.map(function (row) {
-          return "<tr>" + columns.map(function (column) {
-            return "<td>" + column(row) + "</td>";
-          }).join("") + "</tr>";
-        }).join("");
-      }
-
-      function renderList(id, items, empty) {
-        var node = $(id);
-        if (!node) return;
-
-        var source = items.length ? items : [empty];
-        node.innerHTML = source.map(function (item) {
-          return "<li>" + item + "</li>";
-        }).join("");
-      }
-
       async function scanList(items) {
-        var results = [];
+        var rows = [];
 
         for (var i = 0; i < items.length; i += 1) {
           var item = items[i];
@@ -921,17 +786,18 @@
           try {
             var result = await fetchText(item.path);
             var scored = scoreTextResult(result, item);
+            var status = classify(scored.score, item.required);
 
-            results.push({
+            rows.push({
               name: item.name,
               path: item.path,
               required: item.required,
-              status: labelFor(scored.score, item.required),
+              status: status,
               score: scored.score,
               problem: scored.problem
             });
           } catch (error) {
-            results.push({
+            rows.push({
               name: item.name,
               path: item.path,
               required: item.required,
@@ -942,7 +808,7 @@
           }
         }
 
-        return results;
+        return rows;
       }
 
       async function scanContracts() {
@@ -972,10 +838,32 @@
           return {
             name: check.name,
             status: passed ? "STRONG" : "FAIL",
-            score: passed ? check.scoreWhenPass : 0,
+            score: passed ? 100 : 0,
             finding: passed ? check.findingPass : check.findingFail
           };
         });
+      }
+
+      function renderLedger(tbodyId, rows, columns) {
+        var tbody = $(tbodyId);
+        if (!tbody) return;
+
+        tbody.innerHTML = rows.map(function (row) {
+          return "<tr>" + columns.map(function (column) {
+            return "<td>" + column(row) + "</td>";
+          }).join("") + "</tr>";
+        }).join("");
+      }
+
+      function renderList(id, items, empty) {
+        var node = $(id);
+        if (!node) return;
+
+        var source = items.length ? items : [empty];
+
+        node.innerHTML = source.map(function (item) {
+          return "<li>" + item + "</li>";
+        }).join("");
       }
 
       function average(rows, requiredOnly) {
@@ -992,36 +880,37 @@
         return Math.round(total / filtered.length);
       }
 
+      function dedupe(list) {
+        var seen = {};
+        return list.filter(function (item) {
+          if (seen[item]) return false;
+          seen[item] = true;
+          return true;
+        });
+      }
+
       function collectFindings(routeRows, runtimeRows, assetRows, contractRows) {
         var working = [];
         var wrong = [];
         var todo = [];
 
         routeRows.forEach(function (row) {
-          if (row.status === "STRONG" && row.required) {
-            working.push("Core route strong: <code>" + row.path + "</code>.");
-          }
-
+          if (row.status === "STRONG" && row.required) working.push("Core route strong: <code>" + row.path + "</code>.");
           if (row.status !== "STRONG" && row.required) {
             wrong.push("Core route issue: <code>" + row.path + "</code> — " + row.problem);
             todo.push("Repair required route <code>" + row.path + "</code>.");
           }
-
           if (row.status !== "STRONG" && !row.required) {
             wrong.push("Optional/future route not strong: <code>" + row.path + "</code> — " + row.problem);
           }
         });
 
         runtimeRows.forEach(function (row) {
-          if (row.status === "STRONG") {
-            working.push("Runtime reachable: <code>" + row.path + "</code>.");
-          }
-
+          if (row.status === "STRONG") working.push("Runtime reachable: <code>" + row.path + "</code>.");
           if (row.status !== "STRONG" && row.required) {
             wrong.push("Required runtime issue: <code>" + row.path + "</code> — " + row.problem);
             todo.push("Fix required runtime file <code>" + row.path + "</code>.");
           }
-
           if (row.status !== "STRONG" && !row.required) {
             wrong.push("Optional runtime missing or weak: <code>" + row.path + "</code> — " + row.problem);
             todo.push("Create or repair optional runtime <code>" + row.path + "</code> if you want the ledger fully strong.");
@@ -1050,7 +939,7 @@
         }
 
         if (!todo.length) {
-          todo.push("Move to the next baseline only after confirming the live root page no longer shows stale status copy.");
+          todo.push("No repair action required. Continue only after confirming live visual output.");
         }
 
         return {
@@ -1060,23 +949,12 @@
         };
       }
 
-      function dedupe(list) {
-        var seen = {};
-        return list.filter(function (item) {
-          if (seen[item]) return false;
-          seen[item] = true;
-          return true;
-        });
-      }
-
       async function runScan() {
         setText("updated-at", "running");
-        setText("runtime-status", "Live scan running");
+        setText("runtime-status", "Live weakness scan running");
 
         var dotNode = $("runtime-dot");
-        if (dotNode) {
-          dotNode.className = "dot watch";
-        }
+        if (dotNode) dotNode.className = "dot watch";
 
         var routeRows = await scanList(coreRoutes);
         var runtimeRows = await scanList(runtimeFiles);
@@ -1086,7 +964,7 @@
         renderLedger("route-ledger", routeRows, [
           function (row) { return row.name; },
           function (row) { return "<code>" + row.path + "</code>"; },
-          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return tag(row.status); },
           function (row) { return row.score + "/100"; },
           function (row) { return row.problem; }
         ]);
@@ -1094,7 +972,7 @@
         renderLedger("runtime-ledger", runtimeRows, [
           function (row) { return row.name; },
           function (row) { return "<code>" + row.path + "</code>"; },
-          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return tag(row.status); },
           function (row) { return row.score + "/100"; },
           function (row) { return row.problem; }
         ]);
@@ -1102,14 +980,14 @@
         renderLedger("asset-ledger", assetRows, [
           function (row) { return row.name; },
           function (row) { return "<code>" + row.path + "</code>"; },
-          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return tag(row.status); },
           function (row) { return row.score + "/100"; },
           function (row) { return row.problem; }
         ]);
 
         renderLedger("contract-ledger", contractRows, [
           function (row) { return row.name; },
-          function (row) { return tag(row.status.toLowerCase()); },
+          function (row) { return tag(row.status); },
           function (row) { return row.score + "/100"; },
           function (row) { return row.finding; }
         ]);
@@ -1117,13 +995,10 @@
         var routeScore = average(routeRows, true);
         var runtimeScore = average(runtimeRows, true);
         var contractScore = average(contractRows.map(function (row) {
-          return {
-            score: row.score,
-            required: true
-          };
+          return { score: row.score, required: true };
         }), true);
-
         var assetScore = average(assetRows, false);
+
         var optionalPenalty = Math.round((100 - assetScore) * 0.12);
         var driftRisk = Math.max(0, Math.min(100, Math.round(
           ((100 - routeScore) * 0.28) +
@@ -1152,6 +1027,7 @@
         setText("overall-note", overall >= 90 ? "Strong. Remaining issues are specific and actionable." : overall >= 70 ? "Watch. Site works, but weaknesses remain." : "Repair required. Core contract or runtime issues detected.");
 
         var findings = collectFindings(routeRows, runtimeRows, assetRows, contractRows);
+
         renderList("working-list", findings.working, "No confirmed working items yet.");
         renderList("wrong-list", findings.wrong, "No current weakness detected by this scan.");
         renderList("todo-list", findings.todo, "No repair action required.");
@@ -1175,7 +1051,7 @@
     })();
   </script>
 
-  <script src="/runtime/site_runtime.js" defer></script>
-  <script src="/gauges/gauges_runtime.js" defer></script>
+  <script src="/runtime/site_runtime.js?v=gauges-b5" defer></script>
+  <script src="/gauges/gauges_runtime.js?v=gauges-b5" defer></script>
 </body>
 </html>

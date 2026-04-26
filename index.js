@@ -1,9 +1,9 @@
 /*
-  Diamond Gate Bridge — Root Door Boot
+  Diamond Gate Bridge — Root Universe Sun Boot
   File: /index.js
   Generation: 1
-  Baseline: Root Door Seasonal Solar Baseline 1
-  Role: safe boot handoff, cross-board runtime loading, visible-page protection.
+  Baseline: Root Universe Sun Baseline 2
+  Role: safe boot handoff, cross-board runtime loading, visible-first root protection.
 */
 
 (function () {
@@ -13,6 +13,9 @@
   var PAGE_RUNTIME_PATH = "/runtime/index_runtime.js";
   var SITE_RUNTIME_NAME = "DGBSiteRuntime";
   var PAGE_RUNTIME_NAME = "DGBIndexRuntime";
+
+  var BASELINE = "Generation 1 Root Universe Sun Baseline 2";
+  var THEME = "Learn to Live to Love";
 
   var bootState = {
     pageVisible: false,
@@ -24,8 +27,12 @@
     pageRuntimeFailed: false
   };
 
-  function getDoorRoot() {
-    return document.getElementById("door-root");
+  function getRoot() {
+    return (
+      document.getElementById("door-root") ||
+      document.querySelector("[data-universe-sun]") ||
+      document.querySelector("main")
+    );
   }
 
   function setStatus(text) {
@@ -33,16 +40,16 @@
     if (node) node.textContent = text;
   }
 
-  function protectVisibleDoor() {
-    var root = getDoorRoot();
+  function protectVisibleRoot() {
+    var root = getRoot();
 
     if (!root || root.textContent.trim().length < 80) {
       document.body.innerHTML =
-        '<main id="door-root" style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
-        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first fallback</p>' +
+        '<main id="door-root" data-universe-sun style="min-height:100vh;padding:24px;background:#02040b;color:#fff8e7;font-family:system-ui,sans-serif;">' +
+        '<p style="margin:0 0 10px;color:rgba(255,217,138,.78);letter-spacing:.16em;text-transform:uppercase;font-size:12px;">Visible-first universe sun fallback</p>' +
         '<h1 style="font-size:clamp(44px,12vw,88px);line-height:.88;letter-spacing:-.08em;margin:0;">Diamond Gate Bridge</h1>' +
         '<p style="font-size:clamp(24px,7vw,48px);line-height:.95;letter-spacing:-.06em;margin:18px 0 0;color:#fff8e7;">Learn to Live to Love</p>' +
-        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The root door fallback is active. The page remains visible even if runtime enhancement fails.</p>' +
+        '<p style="max-width:620px;color:rgba(255,248,231,.72);line-height:1.55;margin:18px 0 0;">The universe sun fallback is active. The page remains visible even if runtime enhancement fails.</p>' +
         '<nav style="display:flex;flex-wrap:wrap;gap:10px;margin-top:24px;">' +
         '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/products/">Products</a>' +
         '<a style="color:#fff8e7;border:1px solid rgba(255,248,231,.24);border-radius:999px;padding:11px 14px;text-decoration:none;" href="/gauges/">Gauges</a>' +
@@ -51,7 +58,7 @@
         '</nav>' +
         '</main>';
 
-      setStatus("Fallback door active");
+      setStatus("Universe sun fallback active");
       return false;
     }
 
@@ -60,8 +67,9 @@
     if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].registerVisibleFirst === "function") {
       window[SITE_RUNTIME_NAME].registerVisibleFirst({
         source: "index.js",
-        root: "door-root",
-        baseline: "Generation 1 Root Door Seasonal Solar Baseline 1"
+        root: root.id || "root",
+        baseline: BASELINE,
+        object: "universe-sun"
       });
     }
 
@@ -84,15 +92,15 @@
       window[SITE_RUNTIME_NAME].registerPage({
         id: "home",
         title: "Diamond Gate Bridge",
-        baseline: "Generation 1 Root Door Seasonal Solar Baseline 1",
-        theme: "Learn to Live to Love",
+        baseline: BASELINE,
+        theme: THEME,
         visibleFirst: bootState.pageVisible
       });
     }
 
     if (typeof window[SITE_RUNTIME_NAME].registerRuntime === "function") {
       window[SITE_RUNTIME_NAME].registerRuntime({
-        id: "rootDoorBoot",
+        id: "rootUniverseSunBoot",
         page: "home",
         role: "boot-handoff",
         path: "/index.js",
@@ -122,7 +130,7 @@
       },
       function () {
         bootState.siteRuntimeFailed = true;
-        setStatus("Static door active");
+        setStatus("Static universe sun active");
         loadPageRuntime();
       }
     );
@@ -132,34 +140,35 @@
     if (bootState.pageRuntimeRequested || window[PAGE_RUNTIME_NAME]) return;
 
     bootState.pageRuntimeRequested = true;
-    setStatus("Seasonal door runtime loading");
+    setStatus("Universe sun runtime loading");
 
     loadScript(
       PAGE_RUNTIME_PATH,
       function () {
         bootState.pageRuntimeLoaded = true;
-        setStatus("Seasonal door runtime active");
+        setStatus("Universe sun runtime active");
 
         if (window[PAGE_RUNTIME_NAME] && typeof window[PAGE_RUNTIME_NAME].start === "function") {
           window[PAGE_RUNTIME_NAME].start();
         }
 
         if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].updateRuntimeStatus === "function") {
-          window[SITE_RUNTIME_NAME].updateRuntimeStatus("seasonalDoorRuntime", {
+          window[SITE_RUNTIME_NAME].updateRuntimeStatus("universeSunRuntime", {
             validated: true,
-            loaded: true
+            loaded: true,
+            baseline: BASELINE
           });
         }
       },
       function () {
         bootState.pageRuntimeFailed = true;
-        setStatus("Static seasonal door active");
+        setStatus("Static universe sun active");
 
         if (window[SITE_RUNTIME_NAME] && typeof window[SITE_RUNTIME_NAME].addWarning === "function") {
           window[SITE_RUNTIME_NAME].addWarning(
             "PAGE_RUNTIME_MISSING",
-            "Root door page runtime did not load.",
-            { path: PAGE_RUNTIME_PATH }
+            "Root universe sun page runtime did not load.",
+            { path: PAGE_RUNTIME_PATH, baseline: BASELINE }
           );
         }
       }
@@ -167,14 +176,14 @@
   }
 
   function boot() {
-    var visible = protectVisibleDoor();
+    var visible = protectVisibleRoot();
     if (!visible) return;
 
-    setStatus("Visible-first door active");
+    setStatus("Visible-first universe sun active");
     loadSiteRuntimeThenPageRuntime();
 
-    window.setTimeout(protectVisibleDoor, 500);
-    window.setTimeout(protectVisibleDoor, 1600);
+    window.setTimeout(protectVisibleRoot, 500);
+    window.setTimeout(protectVisibleRoot, 1600);
   }
 
   window.DGBIndexBoot = Object.freeze({
@@ -186,10 +195,19 @@
         siteRuntimeFailed: bootState.siteRuntimeFailed,
         pageRuntimeRequested: bootState.pageRuntimeRequested,
         pageRuntimeLoaded: bootState.pageRuntimeLoaded,
-        pageRuntimeFailed: bootState.pageRuntimeFailed
+        pageRuntimeFailed: bootState.pageRuntimeFailed,
+        baseline: BASELINE
       };
     },
-    protectVisibleDoor: protectVisibleDoor
+
+    protectVisibleRoot: protectVisibleRoot,
+
+    /*
+      Compatibility alias:
+      Existing page runtimes may still call protectVisibleDoor().
+      The function now protects the universe-sun root surface.
+    */
+    protectVisibleDoor: protectVisibleRoot
   });
 
   if (document.readyState === "loading") {

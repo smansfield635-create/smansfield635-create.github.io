@@ -9,7 +9,7 @@
     content="Diamond Gate Bridge: a universe and sun-centered entry surface built around Learn to Live to Love."
   />
 
-  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=satellite-solar-disc-b6" />
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=universe-scale-field-b7" />
 
   <style>
     :root {
@@ -38,9 +38,11 @@
     body {
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 24%, rgba(255, 161, 45, 0.12), transparent 22rem),
-        radial-gradient(circle at 20% 16%, rgba(88, 122, 255, 0.13), transparent 18rem),
-        linear-gradient(180deg, #071225 0%, #030714 50%, #010309 100%);
+        radial-gradient(circle at 50% 38%, rgba(255, 174, 68, 0.10), transparent 15rem),
+        radial-gradient(circle at 16% 20%, rgba(83, 110, 255, 0.18), transparent 21rem),
+        radial-gradient(circle at 86% 16%, rgba(151, 88, 255, 0.12), transparent 19rem),
+        radial-gradient(circle at 74% 78%, rgba(44, 158, 255, 0.10), transparent 22rem),
+        linear-gradient(180deg, #071225 0%, #030816 46%, #01030a 100%);
     }
 
     body::before {
@@ -50,11 +52,27 @@
       z-index: 0;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(255,217,138,0.20) 0 1px, transparent 1.6px);
-      background-size: 91px 91px, 143px 143px;
-      background-position: 12px 26px, 52px 72px;
-      opacity: 0.20;
+        radial-gradient(circle, rgba(255,255,255,0.74) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,255,255,0.34) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(255,217,138,0.26) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(151,190,255,0.20) 0 1px, transparent 1.5px);
+      background-size: 83px 83px, 137px 137px, 211px 211px, 337px 337px;
+      background-position: 12px 26px, 52px 72px, 118px 44px, 21px 193px;
+      opacity: 0.30;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(ellipse at 18% 28%, rgba(91, 123, 255, 0.13), transparent 34%),
+        radial-gradient(ellipse at 84% 20%, rgba(255, 116, 74, 0.09), transparent 32%),
+        radial-gradient(ellipse at 54% 72%, rgba(255, 217, 138, 0.065), transparent 38%);
+      filter: blur(18px);
+      opacity: 0.85;
     }
 
     a { color: inherit; text-decoration: none; }
@@ -117,7 +135,7 @@
     }
 
     .status-pill {
-      max-width: min(100%, 640px);
+      max-width: min(100%, 660px);
       overflow: hidden;
       text-overflow: ellipsis;
       border: 1px solid var(--line);
@@ -134,7 +152,7 @@
     .hero {
       position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 0.76fr) minmax(340px, 1.24fr);
+      grid-template-columns: minmax(0, 0.72fr) minmax(340px, 1.28fr);
       gap: clamp(18px, 5vw, 58px);
       align-items: center;
       min-height: calc(100vh - 138px);
@@ -212,26 +230,52 @@
       display: grid;
       place-items: center;
       isolation: isolate;
+      overflow: visible;
     }
 
     .sun-field::before {
       content: "";
       position: absolute;
-      width: 104%;
+      width: min(118vw, 880px);
       aspect-ratio: 1;
+      border: 1px solid rgba(255, 248, 231, 0.065);
       border-radius: 999px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255, 222, 138, 0.10), transparent 34%),
-        radial-gradient(circle at 50% 50%, rgba(255, 97, 22, 0.055), transparent 62%);
-      filter: blur(20px);
-      opacity: 0.72;
+        radial-gradient(circle at 50% 50%, rgba(255, 222, 138, 0.075), transparent 28%),
+        radial-gradient(circle at 50% 50%, rgba(255, 97, 22, 0.035), transparent 62%),
+        radial-gradient(circle at 50% 50%, transparent 68%, rgba(255,255,255,0.025) 69%, transparent 70%);
+      box-shadow:
+        inset 0 0 80px rgba(255, 217, 138, 0.035),
+        0 0 120px rgba(255, 164, 55, 0.045);
+      filter: blur(0.2px);
+      opacity: 0.92;
       pointer-events: none;
+    }
+
+    .sun-field::after {
+      content: "256M km × 256M km solar field";
+      position: absolute;
+      left: 50%;
+      bottom: clamp(22px, 6vh, 54px);
+      transform: translateX(-50%);
+      z-index: 2;
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(2, 6, 16, 0.42);
+      color: rgba(255,248,231,0.48);
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      backdrop-filter: blur(8px);
     }
 
     .sun-mount {
       position: relative;
       z-index: 4;
-      width: min(94vw, 720px);
+      width: min(66vw, 470px);
       aspect-ratio: 1;
       display: grid;
       place-items: center;
@@ -340,6 +384,8 @@
       .nav-rail { justify-content: center; }
 
       .sun-field { min-height: 680px; }
+
+      .sun-mount { width: min(72vw, 500px); }
     }
 
     @media (max-width: 680px) {
@@ -359,13 +405,22 @@
       .mobile-title { display: block; }
 
       .sun-field {
-        min-height: 585px;
+        min-height: 600px;
         padding-top: 92px;
       }
 
+      .sun-field::before {
+        width: min(132vw, 560px);
+      }
+
+      .sun-field::after {
+        bottom: 72px;
+        font-size: 0.58rem;
+      }
+
       .sun-mount {
-        width: min(106vw, 460px);
-        margin-top: 10px;
+        width: min(76vw, 330px);
+        margin-top: 18px;
       }
 
       .mobile-nav { display: flex; }
@@ -377,9 +432,9 @@
     }
 
     @media (max-width: 420px) {
-      .sun-field { min-height: 555px; }
+      .sun-field { min-height: 580px; }
 
-      .sun-mount { width: min(112vw, 430px); }
+      .sun-mount { width: min(78vw, 310px); }
     }
   </style>
 </head>
@@ -391,20 +446,20 @@
         <span class="brand-mark" aria-hidden="true"></span>
         <span class="brand-copy">
           <span class="brand-name">Diamond Gate Bridge</span>
-          <span class="brand-sub">Sun Asset Spine</span>
+          <span class="brand-sub">Universe Scale Field</span>
         </span>
       </a>
 
-      <span class="status-pill" data-door-boot-status>Visible-first sun spine active</span>
+      <span class="status-pill" data-door-boot-status>Visible-first universe field active</span>
     </header>
 
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
-        <p class="eyebrow">A universe-centered public surface</p>
+        <p class="eyebrow">256 million kilometers by 256 million kilometers</p>
         <h1 id="page-title">Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
         <p class="statement">
-          A cosmic entry surface centered on one satellite-style solar disc, one field, and one clear path forward.
+          A cosmic entry surface zoomed out from the successful satellite solar disc into a larger universe field.
         </p>
 
         <nav class="nav-rail" aria-label="Primary navigation">
@@ -417,7 +472,7 @@
         </nav>
       </div>
 
-      <div class="sun-field" aria-label="Universe sun visual field">
+      <div class="sun-field" aria-label="256 million kilometer solar field">
         <div class="mobile-title" aria-hidden="true">
           <strong>Diamond Gate Bridge</strong>
           <span>Learn to Live to Love</span>
@@ -427,7 +482,7 @@
           class="sun-mount"
           data-dgb-sun-mount
           data-sun-mode="canvas"
-          aria-label="Satellite-style solar disc"
+          aria-label="Satellite-style solar disc within a 256 million kilometer field"
         ></div>
       </div>
 
@@ -442,8 +497,8 @@
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Sun Asset Spine Baseline 3</span>
-      <span>Canvas authority · Satellite solar disc b6 · No planet read</span>
+      <span>Generation 1 · Universe Scale Field Baseline 1</span>
+      <span>256M km × 256M km · Satellite solar disc preserved · No graphics</span>
     </footer>
   </main>
 
@@ -453,6 +508,6 @@
     </div>
   </noscript>
 
-  <script src="/index.js?v=satellite-solar-disc-b6" defer></script>
+  <script src="/index.js?v=universe-scale-field-b7" defer></script>
 </body>
 </html>

@@ -2,7 +2,7 @@
   "use strict";
 
   var GLOBAL_NAME = "DGBSunCanvas";
-  var PROFILE = "luminous-centered-plasma-b5";
+  var PROFILE = "satellite-solar-disc-b6";
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -19,7 +19,6 @@
 
   function createRng(seed) {
     var value = seed >>> 0;
-
     return function () {
       value += 0x6D2B79F5;
       var t = value;
@@ -83,43 +82,43 @@
     };
   }
 
-  function createCanvas(size) {
+  function makeCanvas(size) {
     var canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
     return canvas;
   }
 
-  function solarColor(value, rimFire, activeHeat) {
+  function satelliteColor(value, edge, active) {
     var r;
     var g;
     var b;
 
-    if (value < 0.24) {
-      var a = value / 0.24;
-      r = lerp(236, 255, a);
-      g = lerp(82, 126, a);
-      b = lerp(12, 20, a);
-    } else if (value < 0.58) {
-      var m = (value - 0.24) / 0.34;
-      r = lerp(255, 255, m);
-      g = lerp(126, 194, m);
-      b = lerp(20, 48, m);
-    } else if (value < 0.86) {
-      var n = (value - 0.58) / 0.28;
+    if (value < 0.20) {
+      var a = value / 0.20;
+      r = lerp(205, 242, a);
+      g = lerp(58, 92, a);
+      b = lerp(10, 18, a);
+    } else if (value < 0.52) {
+      var m = (value - 0.20) / 0.32;
+      r = lerp(242, 255, m);
+      g = lerp(92, 174, m);
+      b = lerp(18, 42, m);
+    } else if (value < 0.82) {
+      var n = (value - 0.52) / 0.30;
       r = lerp(255, 255, n);
-      g = lerp(194, 240, n);
-      b = lerp(48, 118, n);
+      g = lerp(174, 235, n);
+      b = lerp(42, 112, n);
     } else {
-      var p = (value - 0.86) / 0.14;
+      var p = (value - 0.82) / 0.18;
       r = lerp(255, 255, p);
-      g = lerp(240, 255, p);
-      b = lerp(118, 235, p);
+      g = lerp(235, 255, p);
+      b = lerp(112, 226, p);
     }
 
-    r += rimFire * 44 + activeHeat * 28;
-    g += rimFire * 40 + activeHeat * 22;
-    b += rimFire * 18 + activeHeat * 8;
+    r += edge * 34 + active * 28;
+    g += edge * 30 + active * 20;
+    b += edge * 10 + active * 6;
 
     return [
       clamp(Math.round(r), 0, 255),
@@ -128,57 +127,64 @@
     ];
   }
 
-  function buildActiveZones(seed) {
-    var rng = createRng(seed ^ 0x9917);
-    var zones = [];
+  function buildActiveRegions(seed) {
+    var rng = createRng(seed ^ 0x51A7E);
+    var regions = [];
 
-    for (var i = 0; i < 48; i += 1) {
+    for (var i = 0; i < 42; i += 1) {
       var angle = rng() * Math.PI * 2;
-      var distance = Math.sqrt(rng()) * 0.92;
+      var distance = Math.sqrt(rng()) * 0.90;
 
-      zones.push({
+      regions.push({
         x: Math.cos(angle) * distance,
         y: Math.sin(angle) * distance,
-        radius: 0.026 + rng() * 0.115,
-        strength: 0.04 + rng() * 0.20,
-        stretch: 0.65 + rng() * 1.35,
+        radius: 0.030 + rng() * 0.105,
+        strength: 0.05 + rng() * 0.22,
+        hot: rng() > 0.35,
+        stretch: 0.70 + rng() * 1.40,
         angle: rng() * Math.PI
       });
     }
 
-    return zones;
+    return regions;
   }
 
-  function sampleActiveZones(nx, ny, zones) {
-    var heat = 0;
+  function sampleRegions(nx, ny, regions) {
+    var hot = 0;
+    var cool = 0;
 
-    for (var i = 0; i < zones.length; i += 1) {
-      var zone = zones[i];
-      var ca = Math.cos(zone.angle);
-      var sa = Math.sin(zone.angle);
-      var dx = nx - zone.x;
-      var dy = ny - zone.y;
+    for (var i = 0; i < regions.length; i += 1) {
+      var region = regions[i];
+      var ca = Math.cos(region.angle);
+      var sa = Math.sin(region.angle);
+      var dx = nx - region.x;
+      var dy = ny - region.y;
       var rx = dx * ca + dy * sa;
       var ry = -dx * sa + dy * ca;
-      var q = Math.sqrt((rx * rx) / zone.stretch + (ry * ry) * zone.stretch);
-      var influence = Math.exp(-(q * q) / (zone.radius * zone.radius));
-      heat += influence * zone.strength;
+      var q = Math.sqrt((rx * rx) / region.stretch + (ry * ry) * region.stretch);
+      var influence = Math.exp(-(q * q) / (region.radius * region.radius));
+
+      if (region.hot) hot += influence * region.strength;
+      else cool += influence * region.strength * 0.45;
     }
 
-    return clamp(heat, 0, 1);
+    return {
+      hot: clamp(hot, 0, 1),
+      cool: clamp(cool, 0, 0.55)
+    };
   }
 
-  function buildPlasmaDiscCanvas(pixelSize, seed, time, intensity) {
-    var canvas = createCanvas(pixelSize);
-    var ctx = canvas.getContext("2d", { alpha: true });
+  function buildSolarDisc(pixelSize, seed, time, intensity) {
+    var disc = makeCanvas(pixelSize);
+    var ctx = disc.getContext("2d", { alpha: true });
     var image = ctx.createImageData(pixelSize, pixelSize);
     var data = image.data;
     var cx = pixelSize / 2;
     var cy = pixelSize / 2;
-    var radius = pixelSize * 0.338;
-    var zones = buildActiveZones(seed);
+    var radius = pixelSize * 0.365;
+    var regions = buildActiveRegions(seed);
 
-    var rotation = time * 0.012;
+    var rotation = time * 0.004;
     var cr = Math.cos(rotation);
     var sr = Math.sin(rotation);
 
@@ -189,7 +195,7 @@
         var d = Math.sqrt(dx * dx + dy * dy);
         var index = (y * pixelSize + x) * 4;
 
-        if (d > 1.045) {
+        if (d > 1.028) {
           data[index + 3] = 0;
           continue;
         }
@@ -197,141 +203,78 @@
         var nx = dx * cr - dy * sr;
         var ny = dx * sr + dy * cr;
 
-        var fade = 1 - smoothstep(1.01, 1.045, d);
-        var rimFire = smoothstep(0.74, 1.0, d) * intensity;
-        var expansionEdge = smoothstep(0.86, 1.0, d);
+        var alpha = 1 - smoothstep(1.002, 1.028, d);
+        var edge = smoothstep(0.84, 1.0, d) * intensity;
 
-        var broad = fbm(nx * 2.1 + time * 0.008, ny * 2.1 - time * 0.006, seed, 5);
-        var cells = fbm(nx * 9.0 - time * 0.017, ny * 9.0 + time * 0.013, seed + 77, 4);
-        var granules = fbm(nx * 31.0 + time * 0.026, ny * 31.0 - time * 0.021, seed + 151, 3);
-        var ion = fbm(nx * 64.0 - time * 0.030, ny * 64.0 + time * 0.025, seed + 239, 2);
+        var broad = fbm(nx * 2.6 + time * 0.003, ny * 2.6 - time * 0.002, seed, 5);
+        var cells = fbm(nx * 10.5 - time * 0.004, ny * 10.5 + time * 0.004, seed + 71, 4);
+        var granules = fbm(nx * 35.0 + time * 0.006, ny * 35.0 - time * 0.005, seed + 151, 3);
+        var micro = fbm(nx * 78.0 - time * 0.007, ny * 78.0 + time * 0.006, seed + 233, 2);
 
-        var activeHeat = sampleActiveZones(nx, ny, zones);
+        var region = sampleRegions(nx, ny, regions);
 
-        var turbulence =
-          broad * 0.25 +
-          cells * 0.31 +
+        var texture =
+          broad * 0.26 +
+          cells * 0.32 +
           granules * 0.30 +
-          ion * 0.14;
+          micro * 0.12;
 
         var value =
-          0.80 +
-          (turbulence - 0.5) * 0.54 +
-          activeHeat * 0.20 +
-          rimFire * 0.31 +
-          expansionEdge * 0.12;
+          0.76 +
+          (texture - 0.5) * 0.64 +
+          region.hot * 0.22 -
+          region.cool * 0.10 +
+          edge * 0.18;
 
-        value = clamp(value, 0.18, 1);
+        value = clamp(value, 0.22, 1);
 
-        var color = solarColor(value, rimFire, activeHeat);
+        var color = satelliteColor(value, edge, region.hot);
 
         data[index] = color[0];
         data[index + 1] = color[1];
         data[index + 2] = color[2];
-        data[index + 3] = Math.round(255 * fade);
+        data[index + 3] = Math.round(255 * alpha);
       }
     }
 
     ctx.putImageData(image, 0, 0);
-    return canvas;
+    return disc;
   }
 
-  function drawExpansionGlow(ctx, cx, cy, radius, seed, time, intensity) {
-    var rng = createRng(seed ^ 0xEAA771);
+  function drawSatelliteGlow(ctx, cx, cy, radius, time, intensity) {
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
 
-    var pulse = 0.5 + Math.sin(time * 1.4) * 0.5;
-
-    var glow = ctx.createRadialGradient(cx, cy, radius * 0.42, cx, cy, radius * 2.28);
-    glow.addColorStop(0.00, "rgba(255, 255, 238, " + (0.14 * intensity).toFixed(3) + ")");
-    glow.addColorStop(0.18, "rgba(255, 226, 122, " + (0.24 * intensity).toFixed(3) + ")");
-    glow.addColorStop(0.38, "rgba(255, 154, 43, " + (0.16 * intensity).toFixed(3) + ")");
-    glow.addColorStop(0.68, "rgba(255, 96, 24, " + (0.075 * intensity).toFixed(3) + ")");
-    glow.addColorStop(1.00, "rgba(255, 96, 24, 0)");
+    var glow = ctx.createRadialGradient(cx, cy, radius * 0.86, cx, cy, radius * 1.65);
+    glow.addColorStop(0.00, "rgba(255, 255, 230, " + (0.18 * intensity).toFixed(3) + ")");
+    glow.addColorStop(0.16, "rgba(255, 226, 125, " + (0.18 * intensity).toFixed(3) + ")");
+    glow.addColorStop(0.42, "rgba(255, 148, 38, " + (0.070 * intensity).toFixed(3) + ")");
+    glow.addColorStop(1.00, "rgba(255, 128, 26, 0)");
 
     ctx.fillStyle = glow;
     ctx.beginPath();
-    ctx.arc(cx, cy, radius * (2.10 + pulse * 0.10), 0, Math.PI * 2);
+    ctx.arc(cx, cy, radius * 1.65, 0, Math.PI * 2);
     ctx.fill();
 
-    for (var i = 0; i < 72; i += 1) {
-      var angle = (Math.PI * 2 * i) / 72 + rng() * 0.25 + time * 0.011;
-      var base = radius * (0.96 + rng() * 0.07);
-      var length = radius * (0.16 + rng() * 0.44) * intensity;
-      var width = radius * (0.012 + rng() * 0.030);
-
-      var x = cx + Math.cos(angle) * base;
-      var y = cy + Math.sin(angle) * base;
-
-      var plume = ctx.createRadialGradient(x, y, 0, x, y, width + length);
-      plume.addColorStop(0, "rgba(255, 251, 204, 0.075)");
-      plume.addColorStop(0.42, "rgba(255, 180, 65, 0.050)");
-      plume.addColorStop(1, "rgba(255, 120, 34, 0)");
-
-      ctx.fillStyle = plume;
-      ctx.beginPath();
-      ctx.ellipse(
-        x + Math.cos(angle) * length * 0.18,
-        y + Math.sin(angle) * length * 0.18,
-        width + length * 0.36,
-        width,
-        angle,
-        0,
-        Math.PI * 2
-      );
-      ctx.fill();
-    }
-
     ctx.restore();
   }
 
-  function drawEdgeIgnition(ctx, cx, cy, radius, seed, time, intensity) {
-    var rng = createRng(seed ^ 0xF13E);
+  function drawFineLimbFire(ctx, cx, cy, radius, seed, time, intensity) {
+    var rng = createRng(seed ^ 0xE11B);
     ctx.save();
     ctx.globalCompositeOperation = "screen";
-
-    for (var i = 0; i < 64; i += 1) {
-      var angle = rng() * Math.PI * 2 + Math.sin(time * 0.16 + i) * 0.022;
-      var arc = 0.014 + rng() * 0.060;
-      var alpha = (0.055 + rng() * 0.100) * intensity;
-
-      ctx.strokeStyle = "rgba(255, 251, 204, " + alpha.toFixed(3) + ")";
-      ctx.lineWidth = radius * (0.005 + rng() * 0.012);
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.arc(cx, cy, radius * (0.988 + rng() * 0.022), angle - arc, angle + arc);
-      ctx.stroke();
-    }
-
-    ctx.restore();
-  }
-
-  function drawSurfaceBloom(ctx, cx, cy, radius, seed, time, intensity) {
-    var rng = createRng(seed ^ 0xB1004);
-    ctx.save();
-    ctx.globalCompositeOperation = "screen";
-    ctx.beginPath();
-    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-    ctx.clip();
 
     for (var i = 0; i < 52; i += 1) {
-      var angle = rng() * Math.PI * 2;
-      var distance = Math.sqrt(rng()) * radius * 0.92;
-      var x = cx + Math.cos(angle + time * 0.007) * distance;
-      var y = cy + Math.sin(angle - time * 0.006) * distance;
-      var size = radius * (0.024 + rng() * 0.095);
-      var alpha = (0.015 + rng() * 0.044) * intensity;
+      var angle = rng() * Math.PI * 2 + Math.sin(time * 0.08 + i) * 0.014;
+      var arc = 0.012 + rng() * 0.045;
+      var alpha = (0.040 + rng() * 0.075) * intensity;
 
-      var bloom = ctx.createRadialGradient(x, y, 0, x, y, size);
-      bloom.addColorStop(0, "rgba(255, 255, 232, " + alpha.toFixed(3) + ")");
-      bloom.addColorStop(0.42, "rgba(255, 224, 112, " + (alpha * 0.54).toFixed(3) + ")");
-      bloom.addColorStop(1, "rgba(255, 224, 112, 0)");
-
-      ctx.fillStyle = bloom;
+      ctx.strokeStyle = "rgba(255, 248, 188, " + alpha.toFixed(3) + ")";
+      ctx.lineWidth = radius * (0.0035 + rng() * 0.008);
+      ctx.lineCap = "round";
       ctx.beginPath();
-      ctx.arc(x, y, size, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.arc(cx, cy, radius * (0.994 + rng() * 0.012), angle - arc, angle + arc);
+      ctx.stroke();
     }
 
     ctx.restore();
@@ -342,7 +285,7 @@
     var cssSize = config.size || Math.min(700, Math.max(330, canvas.clientWidth || 500));
     var seed = config.seed || 4217;
     var time = typeof config.time === "number" ? config.time : 0;
-    var intensity = clamp(config.intensity == null ? 0.96 : config.intensity, 0, 1);
+    var intensity = clamp(config.intensity == null ? 0.98 : config.intensity, 0, 1);
 
     var prepared = resizeCanvas(canvas, cssSize);
     var ctx = prepared.ctx;
@@ -352,19 +295,18 @@
 
     var cx = cssSize / 2;
     var cy = cssSize / 2;
-    var radius = cssSize * 0.338;
-    var plasmaPixels = Math.max(360, Math.floor(cssSize * dpr));
-    var plasmaCanvas = buildPlasmaDiscCanvas(plasmaPixels, seed, time, intensity);
+    var radius = cssSize * 0.365;
+    var pixelSize = Math.max(420, Math.floor(cssSize * dpr));
+    var disc = buildSolarDisc(pixelSize, seed, time, intensity);
 
-    drawExpansionGlow(ctx, cx, cy, radius, seed, time, intensity);
+    drawSatelliteGlow(ctx, cx, cy, radius, time, intensity);
 
     ctx.save();
     ctx.globalCompositeOperation = "source-over";
-    ctx.drawImage(plasmaCanvas, 0, 0, cssSize, cssSize);
+    ctx.drawImage(disc, 0, 0, cssSize, cssSize);
     ctx.restore();
 
-    drawSurfaceBloom(ctx, cx, cy, radius, seed, time, intensity);
-    drawEdgeIgnition(ctx, cx, cy, radius, seed, time, intensity);
+    drawFineLimbFire(ctx, cx, cy, radius, seed, time, intensity);
 
     return {
       ok: true,
@@ -372,13 +314,15 @@
       profile: PROFILE,
       size: cssSize,
       seed: seed,
+      visualTarget: "satellite-style solar disc",
       coordinateSystem: "offscreen-centered-drawImage",
       planetRead: false,
       eclipseRead: false,
       darkLimb: false,
       decorativeRays: false,
       illustrativeSwirls: false,
-      externalImageDependency: false
+      externalImageDependency: false,
+      graphicGenerationUsed: false
     };
   }
 
@@ -388,8 +332,8 @@
         seed: 4217,
         size: 500,
         animate: true,
-        intensity: 0.96,
-        frameRate: 14
+        intensity: 0.98,
+        frameRate: 10
       },
       options || {}
     );
@@ -402,7 +346,7 @@
     function tick(timestamp) {
       if (!active) return;
 
-      var minFrameGap = 1000 / clamp(config.frameRate || 14, 6, 24);
+      var minFrameGap = 1000 / clamp(config.frameRate || 10, 4, 18);
 
       if (!lastDraw || timestamp - lastDraw >= minFrameGap) {
         lastDraw = timestamp;
@@ -414,9 +358,7 @@
         });
       }
 
-      if (config.animate) {
-        frame = window.requestAnimationFrame(tick);
-      }
+      if (config.animate) frame = window.requestAnimationFrame(tick);
     }
 
     frame = window.requestAnimationFrame(tick);
@@ -444,6 +386,7 @@
           intensity: config.intensity,
           frameRate: config.frameRate,
           profile: PROFILE,
+          visualTarget: "satellite-style solar disc",
           coordinateSystem: "offscreen-centered-drawImage"
         };
       }

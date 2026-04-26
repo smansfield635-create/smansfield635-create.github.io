@@ -1,64 +1,101 @@
+<!-- /index.html -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Diamond Gate Bridge — Learn to Live to Love</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge: a cinematic solar root door into a structured command world centered on Learn to Live to Love."
+    content="Diamond Gate Bridge: a luminous public solar door built around the theme Learn to Live to Love."
   />
 
   <style>
     :root {
-      --bg: #03040a;
-      --panel: rgba(8, 12, 24, 0.72);
-      --panel-strong: rgba(13, 19, 36, 0.9);
-      --line: rgba(255, 255, 255, 0.16);
-      --line-strong: rgba(255, 255, 255, 0.28);
-      --text: #f7f3e8;
-      --muted: rgba(247, 243, 232, 0.72);
-      --dim: rgba(247, 243, 232, 0.52);
-      --gold: #ffd978;
-      --gold-soft: rgba(255, 217, 120, 0.54);
-      --ember: #ff8e38;
-      --solar: #fff3b0;
-      --north: #d7edff;
-      --east: #d9ffe9;
-      --south: #fff1ce;
-      --west: #f1dcff;
-      --radius: 28px;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.56);
-      --solar-scale: 1;
-      --solar-rotate: 0deg;
-      --orbit-rotate: 0deg;
-      --star-opacity: 0.92;
-      --runtime-intensity: 0;
+      --bg: #02040b;
+      --space: #050b18;
+      --text: #fff7df;
+      --muted: rgba(255, 247, 223, 0.72);
+      --soft: rgba(255, 247, 223, 0.52);
+      --line: rgba(255, 247, 223, 0.18);
+      --line-strong: rgba(255, 247, 223, 0.34);
+
+      --sun-white: rgba(255, 255, 240, 1);
+      --sun-yellow: rgba(255, 222, 112, 0.98);
+      --sun-orange: rgba(255, 133, 30, 0.94);
+      --sun-red: rgba(175, 44, 10, 0.66);
+      --sun-edge: rgba(68, 16, 6, 0.78);
+      --sun-shadow: rgba(5, 2, 0, 0.45);
+      --sun-corona: rgba(255, 187, 70, 0.48);
+
+      --runtime-glow: 0.45;
+      --solar-turbulence: 0.5;
+      --corona-intensity: 0.55;
+      --door-pulse: 1;
+      --door-tilt-x: -9deg;
+      --door-tilt-y: 0deg;
+
+      --max: 1180px;
     }
 
     * {
       box-sizing: border-box;
     }
 
-    html {
+    html,
+    body {
       min-height: 100%;
+      margin: 0;
       background: var(--bg);
       color: var(--text);
-      font-family:
-        Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", sans-serif;
-      scroll-behavior: smooth;
     }
 
     body {
-      min-height: 100vh;
-      margin: 0;
       overflow-x: hidden;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at 50% 18%, rgba(255, 210, 105, 0.18), transparent 30rem),
-        radial-gradient(circle at 18% 22%, rgba(80, 141, 255, 0.1), transparent 22rem),
-        radial-gradient(circle at 82% 72%, rgba(255, 120, 54, 0.1), transparent 20rem),
-        linear-gradient(180deg, #02030a 0%, #060816 48%, #02030a 100%);
+        radial-gradient(circle at 50% 18%, rgba(255, 150, 45, 0.10), transparent 22rem),
+        radial-gradient(circle at 18% 18%, rgba(95, 128, 255, 0.12), transparent 18rem),
+        radial-gradient(circle at 84% 15%, rgba(255, 240, 190, 0.08), transparent 20rem),
+        linear-gradient(180deg, #081225 0%, #030714 52%, #010309 100%);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
+        radial-gradient(circle, rgba(255,205,94,0.28) 0 1px, transparent 1.6px),
+        radial-gradient(circle, rgba(255,255,255,0.18) 0 1px, transparent 1.4px);
+      background-size: 91px 91px, 143px 143px, 229px 229px;
+      background-position: 12px 26px, 52px 72px, 118px 44px;
+      opacity: 0.22;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -24%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        conic-gradient(
+          from 96deg at 50% 42%,
+          transparent 0deg,
+          rgba(255, 195, 76, 0.055) 14deg,
+          transparent 36deg,
+          rgba(255, 255, 230, 0.035) 76deg,
+          transparent 116deg,
+          rgba(255, 124, 31, 0.045) 168deg,
+          transparent 216deg,
+          rgba(255, 219, 132, 0.05) 294deg,
+          transparent 360deg
+        );
+      opacity: calc(0.56 + var(--runtime-glow) * 0.22);
+      transform: scale(calc(1 + var(--runtime-glow) * 0.018));
     }
 
     a {
@@ -66,838 +103,732 @@
       text-decoration: none;
     }
 
-    button {
-      font: inherit;
-    }
-
-    .skip-link {
-      position: absolute;
-      left: 1rem;
-      top: -4rem;
-      z-index: 50;
-      padding: 0.8rem 1rem;
-      border-radius: 999px;
-      background: var(--text);
-      color: #070914;
-      transition: top 180ms ease;
-    }
-
-    .skip-link:focus {
-      top: 1rem;
-    }
-
-    .runtime-canvas {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      opacity: var(--star-opacity);
-    }
-
-    .page-shell {
+    .door-page {
       position: relative;
       z-index: 1;
-      width: min(1180px, calc(100% - 32px));
+      width: min(100%, var(--max));
+      min-height: 100vh;
       margin: 0 auto;
-      padding: 20px 0 56px;
+      padding: 18px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 16px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 0.8rem 0;
+      gap: 14px;
+      padding-top: 2px;
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 0.78rem;
+      gap: 11px;
       min-width: 0;
-      font-weight: 800;
-      letter-spacing: 0.02em;
     }
 
     .brand-mark {
-      display: grid;
-      place-items: center;
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
+      flex: 0 0 auto;
       border: 1px solid var(--line-strong);
-      border-radius: 14px;
-      background:
-        radial-gradient(circle, rgba(255, 223, 126, 0.36), transparent 68%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.03));
-      box-shadow: 0 0 36px rgba(255, 196, 84, 0.18);
-    }
-
-    .brand-mark::before {
-      content: "";
-      width: 16px;
-      height: 16px;
-      border: 2px solid var(--gold);
+      border-radius: 12px;
       transform: rotate(45deg);
-      box-shadow: 0 0 18px rgba(255, 217, 120, 0.42);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.86), transparent 24%),
+        linear-gradient(135deg, rgba(255,211,96,0.92), rgba(255,255,255,0.12) 52%, rgba(255,109,32,0.28));
+      box-shadow:
+        0 0 25px rgba(255, 173, 51, 0.26),
+        0 16px 40px rgba(0,0,0,0.38);
     }
 
-    .brand-text {
+    .brand-copy {
       display: grid;
-      gap: 0.08rem;
       min-width: 0;
     }
 
-    .brand-text strong {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .brand-name {
       font-size: 0.98rem;
+      font-weight: 780;
+      letter-spacing: -0.035em;
+      white-space: nowrap;
     }
 
-    .brand-text span {
-      color: var(--muted);
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
+    .brand-sub {
+      color: var(--soft);
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
+      white-space: nowrap;
     }
 
-    .primary-nav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-      gap: 0.5rem;
-    }
-
-    .nav-pill {
+    .status-pill {
       border: 1px solid var(--line);
       border-radius: 999px;
-      padding: 0.62rem 0.82rem;
+      padding: 8px 11px;
+      background: rgba(255,255,255,0.045);
       color: var(--muted);
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(14px);
-    }
-
-    .nav-pill:hover,
-    .nav-pill:focus-visible {
-      border-color: var(--gold-soft);
-      color: var(--text);
-      outline: none;
+      font-size: 0.74rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      white-space: nowrap;
     }
 
     .hero {
+      position: relative;
       display: grid;
-      grid-template-columns: minmax(0, 1.02fr) minmax(330px, 0.98fr);
-      gap: clamp(1rem, 3vw, 2rem);
+      grid-template-columns: minmax(0, 0.86fr) minmax(320px, 1.14fr);
+      gap: clamp(22px, 5vw, 54px);
       align-items: center;
-      min-height: calc(100vh - 96px);
-      padding: clamp(1rem, 5vw, 4rem) 0 3rem;
+      min-height: calc(100vh - 138px);
+      padding: clamp(10px, 3vw, 28px) 0;
     }
 
     .hero-copy {
-      display: grid;
-      gap: 1.35rem;
+      position: relative;
+      z-index: 3;
     }
 
     .eyebrow {
-      display: inline-flex;
-      width: fit-content;
-      align-items: center;
-      gap: 0.6rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.54rem 0.72rem;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.045);
-      backdrop-filter: blur(14px);
-      font-size: 0.84rem;
-    }
-
-    .eyebrow-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: var(--gold);
-      box-shadow: 0 0 18px var(--gold);
+      margin: 0 0 14px;
+      color: rgba(255, 210, 116, 0.82);
+      font-size: 0.74rem;
+      font-weight: 780;
+      letter-spacing: 0.17em;
+      text-transform: uppercase;
     }
 
     h1 {
       margin: 0;
-      max-width: 12ch;
-      font-size: clamp(3rem, 9vw, 7.8rem);
+      max-width: 780px;
+      font-size: clamp(3rem, 10vw, 7rem);
       line-height: 0.86;
-      letter-spacing: -0.075em;
+      letter-spacing: -0.085em;
     }
 
-    .lead {
-      max-width: 62ch;
-      margin: 0;
+    .theme {
+      margin: 18px 0 0;
+      color: #fff8e7;
+      font-size: clamp(1.35rem, 4.4vw, 3rem);
+      line-height: 0.98;
+      letter-spacing: -0.055em;
+      text-shadow:
+        0 0 24px rgba(255, 202, 99, 0.34),
+        0 0 72px rgba(255, 119, 28, 0.16);
+    }
+
+    .door-statement {
+      max-width: 620px;
+      margin: 18px 0 0;
       color: var(--muted);
-      font-size: clamp(1rem, 1.55vw, 1.22rem);
-      line-height: 1.72;
+      font-size: clamp(1rem, 2vw, 1.17rem);
+      line-height: 1.62;
     }
 
-    .hero-actions {
+    .primary-actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.8rem;
-      align-items: center;
-      margin-top: 0.2rem;
+      gap: 10px;
+      margin-top: 22px;
     }
 
     .action {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 48px;
+      min-height: 44px;
+      border: 1px solid var(--line-strong);
       border-radius: 999px;
-      padding: 0.82rem 1rem;
-      border: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.06);
-      color: var(--text);
-    }
-
-    .action.primary {
-      border-color: rgba(255, 217, 120, 0.58);
+      padding: 11px 15px;
       background:
-        linear-gradient(135deg, rgba(255, 240, 176, 0.96), rgba(255, 154, 61, 0.94));
-      color: #17100a;
-      font-weight: 800;
-      box-shadow: 0 18px 46px rgba(255, 146, 50, 0.22);
+        linear-gradient(135deg, rgba(255,181,57,0.18), rgba(255,255,255,0.045));
+      color: var(--text);
+      box-shadow: 0 12px 34px rgba(0,0,0,0.28);
+      font-size: 0.9rem;
+      font-weight: 700;
     }
 
-    .action:hover,
-    .action:focus-visible {
-      transform: translateY(-1px);
-      outline: none;
+    .action.secondary {
+      color: var(--muted);
+      background: rgba(255,255,255,0.04);
+      border-color: var(--line);
     }
 
-    .solar-stage {
+    .sun-field {
       position: relative;
+      min-height: min(74vh, 670px);
       display: grid;
       place-items: center;
-      min-height: clamp(440px, 58vw, 650px);
-      border: 1px solid var(--line);
-      border-radius: calc(var(--radius) * 1.35);
-      background:
-        radial-gradient(circle at 50% 50%, rgba(255, 205, 89, 0.16), transparent 28%),
-        radial-gradient(circle at 48% 46%, rgba(255, 255, 255, 0.07), transparent 46%),
-        rgba(255, 255, 255, 0.035);
-      box-shadow: var(--shadow), inset 0 0 0 1px rgba(255, 255, 255, 0.05);
-      overflow: hidden;
+      perspective: 1200px;
+      overflow: visible;
+    }
+
+    .solar-lockup {
+      display: none;
+      position: absolute;
+      z-index: 8;
+      top: 0;
+      left: 50%;
+      width: min(100%, 520px);
+      transform: translateX(-50%);
+      text-align: center;
+      pointer-events: none;
+    }
+
+    .solar-lockup strong {
+      display: block;
+      font-size: clamp(1.45rem, 8vw, 2.8rem);
+      line-height: 0.9;
+      letter-spacing: -0.075em;
+      text-shadow: 0 0 38px rgba(255, 177, 50, 0.22);
+    }
+
+    .solar-lockup span {
+      display: block;
+      margin-top: 8px;
+      color: #fff8e7;
+      font-size: clamp(1rem, 5vw, 1.65rem);
+      line-height: 0.95;
+      letter-spacing: -0.045em;
+      text-shadow: 0 0 42px rgba(255, 203, 101, 0.28);
+    }
+
+    .solar-system {
+      position: relative;
+      width: min(82vw, 620px);
+      aspect-ratio: 1;
+      display: grid;
+      place-items: center;
+      transform-style: preserve-3d;
       isolation: isolate;
     }
 
-    .solar-stage::before {
+    .solar-system::before {
       content: "";
       position: absolute;
-      width: 112%;
-      aspect-ratio: 1;
+      inset: 0;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.07);
       background:
-        conic-gradient(
-          from var(--orbit-rotate),
-          transparent,
-          rgba(255, 255, 255, 0.16),
-          transparent,
-          rgba(255, 217, 120, 0.2),
-          transparent
-        );
-      opacity: calc(0.3 + var(--runtime-intensity) * 0.36);
-      transform: rotate(var(--orbit-rotate));
+        radial-gradient(circle, rgba(255,255,255,0.18), transparent 12%),
+        radial-gradient(circle, rgba(255,133,30,0.20), transparent 42%),
+        radial-gradient(circle, rgba(255,203,89,0.07), transparent 70%);
+      filter: blur(11px);
+      opacity: calc(0.74 + var(--runtime-glow) * 0.16);
+      transform: scale(calc(1 + var(--runtime-glow) * 0.032));
     }
 
-    .solar-stage::after {
-      content: "";
+    .orbit-ring {
       position: absolute;
-      inset: 9%;
+      border: 1px solid rgba(255, 248, 231, 0.12);
       border-radius: 999px;
-      border: 1px solid rgba(255, 217, 120, 0.12);
       box-shadow:
-        0 0 80px rgba(255, 178, 62, 0.12),
-        inset 0 0 70px rgba(255, 217, 120, 0.08);
-      transform: rotate(calc(var(--orbit-rotate) * -1));
+        inset 0 0 30px rgba(255,129,34,0.04),
+        0 0 36px rgba(255,213,112,0.035);
+      pointer-events: none;
+    }
+
+    .orbit-ring.one {
+      width: 94%;
+      height: 94%;
+      transform: rotateX(64deg) rotateZ(-18deg);
+    }
+
+    .orbit-ring.two {
+      width: 76%;
+      height: 76%;
+      transform: rotateX(70deg) rotateZ(21deg);
+      opacity: 0.8;
+    }
+
+    .orbit-ring.three {
+      width: 58%;
+      height: 58%;
+      transform: rotateX(58deg) rotateY(22deg) rotateZ(48deg);
+      opacity: 0.62;
     }
 
     .sun-door {
       position: relative;
-      z-index: 2;
+      width: min(58vw, 342px);
+      aspect-ratio: 1;
       display: grid;
       place-items: center;
-      width: min(78%, 430px);
-      aspect-ratio: 1;
-      border-radius: 50%;
+      border-radius: 999px;
+      transform-style: preserve-3d;
       transform:
-        scale(var(--solar-scale))
-        rotate(var(--solar-rotate));
-      background:
-        radial-gradient(circle at 45% 36%, #fffdf2 0 7%, #fff0a6 12%, transparent 22%),
-        radial-gradient(circle at 55% 56%, #fffcdf 0 10%, #ffd05d 28%, #ff8b31 55%, #9b341d 74%, #42110d 100%);
-      box-shadow:
-        0 0 34px rgba(255, 255, 230, 0.78),
-        0 0 96px rgba(255, 197, 74, 0.62),
-        0 0 190px rgba(255, 115, 42, 0.34),
-        0 0 310px rgba(255, 217, 120, 0.14);
+        rotateX(var(--door-tilt-x))
+        rotateY(var(--door-tilt-y))
+        scale(var(--door-pulse));
+      transition: transform 160ms ease-out;
     }
 
-    .runtime-live .sun-door {
-      transition: transform 120ms linear;
-    }
-
-    .sun-door::before,
-    .sun-door::after {
+    .sun-door::before {
       content: "";
       position: absolute;
-      inset: -9%;
+      inset: -18%;
       border-radius: 999px;
       background:
         conic-gradient(
-          from var(--solar-rotate),
-          rgba(255, 245, 190, 0),
-          rgba(255, 245, 190, 0.38),
-          rgba(255, 120, 48, 0.13),
-          rgba(255, 245, 190, 0)
+          from 11deg,
+          transparent 0deg,
+          rgba(255, 153, 31, calc(0.24 + var(--corona-intensity) * 0.10)) 16deg,
+          rgba(255, 246, 206, 0.16) 27deg,
+          transparent 39deg,
+          rgba(255, 88, 18, 0.20) 66deg,
+          transparent 92deg,
+          rgba(255, 211, 118, 0.24) 124deg,
+          transparent 153deg,
+          rgba(255, 120, 32, 0.19) 208deg,
+          rgba(255, 255, 230, 0.13) 238deg,
+          transparent 262deg,
+          rgba(255, 167, 47, 0.22) 309deg,
+          transparent 360deg
         );
-      filter: blur(16px);
-      opacity: 0.8;
-      z-index: -1;
+      filter: blur(1.5px);
+      opacity: calc(0.72 + var(--corona-intensity) * 0.22);
+      animation: coronaTurn 26s linear infinite;
     }
 
     .sun-door::after {
-      inset: -22%;
-      filter: blur(30px);
-      opacity: 0.38;
-    }
-
-    .gate-label {
-      position: relative;
-      display: grid;
-      gap: 0.22rem;
-      place-items: center;
-      width: 56%;
-      min-height: 112px;
-      border: 1px solid rgba(255, 255, 255, 0.24);
+      content: "";
+      position: absolute;
+      inset: -28%;
       border-radius: 999px;
-      padding: 1rem;
-      color: #180e06;
-      background: rgba(255, 250, 222, 0.42);
-      backdrop-filter: blur(8px);
-      text-align: center;
-      box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.16);
+      background:
+        radial-gradient(circle, transparent 42%, rgba(255,196,84,0.19) 44%, transparent 49%),
+        conic-gradient(
+          from 64deg,
+          transparent,
+          rgba(255, 201, 89, 0.16),
+          transparent 20deg,
+          rgba(255, 98, 27, 0.13),
+          transparent 76deg,
+          rgba(255,255,230,0.08),
+          transparent 132deg
+        );
+      opacity: calc(0.54 + var(--corona-intensity) * 0.18);
+      animation: coronaTurnReverse 38s linear infinite;
     }
 
-    .gate-label strong {
-      font-size: clamp(1rem, 2vw, 1.38rem);
-      line-height: 1;
-      letter-spacing: -0.03em;
+    .solar-core {
+      position: relative;
+      z-index: 2;
+      width: 74%;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.30);
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 31% 24%, rgba(255,255,246,0.98) 0 5%, transparent 14%),
+        radial-gradient(circle at 63% 34%, rgba(255,255,225,0.88) 0 4%, transparent 12%),
+        radial-gradient(circle at 42% 70%, rgba(255,239,143,0.76) 0 5%, transparent 16%),
+        radial-gradient(circle at 53% 51%, rgba(255,232,104,0.86), rgba(255,139,31,0.78) 36%, rgba(190,52,12,0.58) 68%, rgba(68,16,6,0.72) 100%),
+        conic-gradient(
+          from 17deg,
+          rgba(255,246,169,0.92),
+          rgba(255,116,22,0.80),
+          rgba(255,217,95,0.94),
+          rgba(161,45,10,0.72),
+          rgba(255,151,35,0.88),
+          rgba(255,245,178,0.86),
+          rgba(255,104,24,0.78),
+          rgba(255,246,169,0.92)
+        );
+      box-shadow:
+        inset 0 0 28px rgba(255,255,255,0.22),
+        inset 0 -38px 76px rgba(44, 7, 2, 0.36),
+        inset 0 0 0 16px rgba(68, 16, 6, 0.14),
+        0 0 42px rgba(255, 208, 91, 0.42),
+        0 0 118px rgba(255, 96, 23, 0.26);
     }
 
-    .gate-label span {
-      font-size: 0.72rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
+    .solar-core::before {
+      content: "";
+      position: absolute;
+      inset: -6%;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 18% 42%, rgba(105, 24, 5, 0.34) 0 4%, transparent 10%),
+        radial-gradient(circle at 36% 35%, rgba(255,255,218,0.42) 0 2%, transparent 8%),
+        radial-gradient(circle at 57% 59%, rgba(112, 27, 6, 0.30) 0 5%, transparent 12%),
+        radial-gradient(circle at 72% 41%, rgba(255,246,180,0.30) 0 3%, transparent 10%),
+        radial-gradient(circle at 49% 21%, rgba(128, 31, 8, 0.26) 0 5%, transparent 13%),
+        repeating-conic-gradient(
+          from 22deg,
+          rgba(255,255,255,0.08) 0deg 3deg,
+          rgba(255,139,28,0.08) 3deg 7deg,
+          rgba(82,17,4,0.08) 7deg 10deg
+        );
+      mix-blend-mode: overlay;
+      opacity: calc(0.72 + var(--solar-turbulence) * 0.16);
+      animation: photosphereDrift 34s linear infinite;
+    }
+
+    .solar-core::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 999px;
+      background:
+        radial-gradient(circle at 50% 50%, transparent 52%, rgba(18, 5, 1, 0.48) 100%),
+        radial-gradient(circle at 22% 23%, rgba(255,255,255,0.38), transparent 19%),
+        radial-gradient(circle at 75% 73%, rgba(255,221,94,0.18), transparent 24%);
+      opacity: 0.82;
+      pointer-events: none;
+    }
+
+    .gate-diamond {
+      position: absolute;
+      z-index: 3;
+      width: 43%;
+      aspect-ratio: 1;
+      border: 1px solid rgba(2, 4, 11, 0.62);
+      border-radius: 16px;
+      transform: rotate(45deg);
+      background:
+        radial-gradient(circle at 30% 24%, rgba(255,255,255,0.28), transparent 24%),
+        linear-gradient(135deg, rgba(255,255,255,0.20), rgba(2,4,11,0.30) 46%, rgba(2,4,11,0.46));
+      box-shadow:
+        inset 0 0 18px rgba(255,255,255,0.12),
+        0 0 24px rgba(2,4,11,0.36),
+        0 0 18px rgba(255,247,223,0.12);
+    }
+
+    .gate-line {
+      position: absolute;
+      z-index: 4;
+      background: rgba(2, 4, 11, 0.58);
+      box-shadow: 0 0 7px rgba(255,255,255,0.14);
+    }
+
+    .gate-line.vertical {
+      width: 1.5px;
+      height: 56%;
+    }
+
+    .gate-line.horizontal {
+      width: 56%;
+      height: 1.5px;
+    }
+
+    .door-label {
+      position: absolute;
+      z-index: 5;
+      bottom: 18%;
+      color: rgba(2, 4, 11, 0.62);
+      font-size: 0.64rem;
+      font-weight: 900;
+      letter-spacing: 0.16em;
       text-transform: uppercase;
     }
 
-    .orbit-node {
+    .route-node {
       position: absolute;
-      z-index: 3;
+      z-index: 4;
+      left: 50%;
+      top: 50%;
+      width: 108px;
+      min-height: 54px;
       display: grid;
       place-items: center;
-      width: clamp(72px, 10vw, 98px);
-      aspect-ratio: 1;
-      border: 1px solid var(--line-strong);
-      border-radius: 22px;
+      border: 1px solid rgba(255,248,231,0.18);
+      border-radius: 18px;
+      padding: 8px 10px;
+      background:
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.11), transparent 34%),
+        rgba(4, 9, 20, 0.58);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.30),
+        0 0 20px rgba(255,152,40,0.06);
+      backdrop-filter: blur(9px);
       color: var(--text);
-      background: rgba(6, 9, 18, 0.62);
-      backdrop-filter: blur(14px);
-      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
       text-align: center;
+      font-size: 0.75rem;
+      font-weight: 760;
+      letter-spacing: 0.02em;
+      --route-x: -50%;
+      --route-y: -50%;
+      transform: translate(var(--route-x), var(--route-y));
+      transition:
+        transform 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease;
     }
 
-    .orbit-node small {
+    .route-node small {
       display: block;
-      margin-top: 0.18rem;
-      color: var(--muted);
-      font-size: 0.62rem;
+      margin-top: 4px;
+      color: var(--soft);
+      font-size: 0.58rem;
+      font-weight: 640;
       letter-spacing: 0.09em;
       text-transform: uppercase;
     }
 
-    .orbit-node.north {
-      top: 8%;
-      border-color: rgba(215, 237, 255, 0.34);
-    }
-
-    .orbit-node.east {
-      right: 7%;
-      border-color: rgba(217, 255, 233, 0.34);
-    }
-
-    .orbit-node.south {
-      bottom: 8%;
-      border-color: rgba(255, 241, 206, 0.34);
-    }
-
-    .orbit-node.west {
-      left: 7%;
-      border-color: rgba(241, 220, 255, 0.34);
-    }
-
-    .status-strip {
-      position: absolute;
-      z-index: 4;
-      left: 1rem;
-      right: 1rem;
-      bottom: 1rem;
-      display: flex;
-      justify-content: space-between;
-      gap: 0.75rem;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 0.62rem 0.75rem;
-      color: var(--muted);
-      background: rgba(0, 0, 0, 0.34);
-      backdrop-filter: blur(14px);
-      font-size: 0.78rem;
-    }
-
-    .content-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 0.82fr) minmax(320px, 1.18fr);
-      gap: clamp(1rem, 2.4vw, 1.5rem);
-      padding: 2rem 0 0;
-    }
-
-    .panel {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      backdrop-filter: blur(18px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-    }
-
-    .panel-header {
-      display: grid;
-      gap: 0.35rem;
-      padding: 1.2rem;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.035);
-    }
-
-    .panel-header h2,
-    .panel-header h3 {
-      margin: 0;
-      letter-spacing: -0.035em;
-    }
-
-    .panel-header p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .route-list {
-      display: grid;
-      gap: 0.8rem;
-      padding: 1rem;
-    }
-
-    .route-button {
-      width: 100%;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 0.92rem;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.045);
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .route-button strong {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 0.28rem;
-    }
-
-    .route-button span {
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.45;
-    }
-
-    .route-button[aria-pressed="true"] {
-      border-color: rgba(255, 217, 120, 0.54);
+    .route-node:hover,
+    .route-node:focus-visible {
+      outline: none;
+      transform: translate(var(--route-x), var(--route-y)) scale(1.045);
+      border-color: rgba(255, 210, 116, 0.58);
       background:
-        linear-gradient(135deg, rgba(255, 217, 120, 0.15), rgba(255, 255, 255, 0.055));
-      box-shadow: inset 0 0 0 1px rgba(255, 217, 120, 0.14);
-    }
-
-    .team-map {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 0.8rem;
-      padding: 1rem;
-    }
-
-    .team-card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 1rem;
-      min-height: 150px;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.024));
-    }
-
-    .team-card[data-active="true"] {
-      border-color: rgba(255, 217, 120, 0.54);
+        radial-gradient(circle at 28% 20%, rgba(255,255,255,0.18), transparent 34%),
+        rgba(8, 12, 25, 0.78);
       box-shadow:
-        inset 0 0 0 1px rgba(255, 217, 120, 0.14),
-        0 0 34px rgba(255, 217, 120, 0.08);
+        0 16px 44px rgba(0,0,0,0.38),
+        0 0 34px rgba(255,132,32,0.15);
     }
 
-    .team-card h3 {
-      margin: 0 0 0.52rem;
-      font-size: 1rem;
-    }
+    .route-node.prelude { --route-x: -50%; --route-y: -286%; }
+    .route-node.explore { --route-x: 72%; --route-y: -220%; }
+    .route-node.products { --route-x: 146%; --route-y: -50%; }
+    .route-node.gauges { --route-x: 72%; --route-y: 126%; }
+    .route-node.frontier { --route-x: -50%; --route-y: 196%; }
+    .route-node.laws { --route-x: -174%; --route-y: 126%; }
+    .route-node.governance { --route-x: -248%; --route-y: -50%; }
+    .route-node.home { --route-x: -174%; --route-y: -220%; }
 
-    .team-card p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.92rem;
-      line-height: 1.55;
-    }
-
-    .team-card ul {
-      display: grid;
-      gap: 0.36rem;
-      margin: 0.8rem 0 0;
-      padding: 0;
-      list-style: none;
-      color: var(--dim);
-      font-size: 0.86rem;
-    }
-
-    .foundation {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 0.8rem;
-      padding: 1rem;
-    }
-
-    .foundation-card {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 1rem;
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .foundation-card strong {
-      display: block;
-      margin-bottom: 0.42rem;
-    }
-
-    .foundation-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 0.9rem;
-    }
-
-    .footer {
+    .bottom-strip {
       display: flex;
+      align-items: center;
       justify-content: space-between;
-      gap: 1rem;
-      padding: 2rem 0 0;
-      color: var(--dim);
-      font-size: 0.86rem;
+      gap: 12px;
+      color: var(--soft);
+      font-size: 0.78rem;
+      padding-bottom: 4px;
     }
 
-    @media (max-width: 900px) {
+    .bottom-strip span {
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    @keyframes coronaTurn {
+      from { transform: rotate(0deg) scale(1); }
+      50% { transform: rotate(180deg) scale(1.026); }
+      to { transform: rotate(360deg) scale(1); }
+    }
+
+    @keyframes coronaTurnReverse {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+
+    @keyframes photosphereDrift {
+      from { transform: rotate(0deg) scale(1.04); }
+      50% { transform: rotate(180deg) scale(1.08); }
+      to { transform: rotate(360deg) scale(1.04); }
+    }
+
+    @media (max-width: 980px) {
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-copy {
+        text-align: center;
+      }
+
+      .door-statement {
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .primary-actions {
+        justify-content: center;
+      }
+
+      .sun-field {
+        min-height: 670px;
+      }
+
+      .solar-system {
+        width: min(96vw, 650px);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .door-page {
+        padding: 14px;
+      }
+
       .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .primary-nav {
-        justify-content: flex-start;
-      }
-
-      .hero,
-      .content-grid {
-        grid-template-columns: 1fr;
+      .status-pill {
+        white-space: normal;
       }
 
       .hero {
-        min-height: auto;
+        gap: 10px;
       }
 
-      .solar-stage {
-        min-height: 520px;
+      .hero-copy {
+        display: none;
       }
 
-      .foundation {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 620px) {
-      .page-shell {
-        width: min(100% - 22px, 1180px);
-        padding-top: 12px;
+      .solar-lockup {
+        display: block;
       }
 
-      .hero {
-        padding-top: 1rem;
+      .sun-field {
+        min-height: 720px;
+        padding: 88px 0 8px;
       }
 
-      .solar-stage {
-        min-height: 470px;
-        border-radius: 26px;
+      .solar-system {
+        width: 100%;
+        min-height: 630px;
+        aspect-ratio: auto;
       }
 
-      .orbit-node {
-        width: 74px;
-        border-radius: 18px;
-        font-size: 0.82rem;
+      .sun-door {
+        width: min(76vw, 300px);
+        margin-top: -12px;
       }
 
-      .orbit-node.east {
-        right: 3%;
+      .orbit-ring.one {
+        width: min(92vw, 440px);
+        height: min(92vw, 440px);
       }
 
-      .orbit-node.west {
-        left: 3%;
+      .orbit-ring.two {
+        width: min(76vw, 360px);
+        height: min(76vw, 360px);
       }
 
-      .status-strip {
-        flex-direction: column;
-        border-radius: 20px;
+      .orbit-ring.three {
+        width: min(58vw, 280px);
+        height: min(58vw, 280px);
       }
 
-      .team-map {
-        grid-template-columns: 1fr;
+      .route-node {
+        width: calc(50% - 13px);
+        min-height: 48px;
+        border-radius: 15px;
+        font-size: 0.73rem;
+        background:
+          radial-gradient(circle at 28% 20%, rgba(255,255,255,0.09), transparent 34%),
+          rgba(4, 9, 20, 0.48);
       }
 
-      .footer {
+      .route-node small {
+        display: none;
+      }
+
+      .route-node.prelude { --route-x: -104%; --route-y: -420%; }
+      .route-node.explore { --route-x: 4%; --route-y: -420%; }
+      .route-node.products { --route-x: -104%; --route-y: 266%; }
+      .route-node.gauges { --route-x: 4%; --route-y: 266%; }
+      .route-node.frontier { --route-x: -104%; --route-y: 382%; }
+      .route-node.laws { --route-x: 4%; --route-y: 382%; }
+      .route-node.governance { --route-x: -104%; --route-y: 498%; }
+      .route-node.home { --route-x: 4%; --route-y: 498%; }
+
+      .bottom-strip {
+        align-items: flex-start;
         flex-direction: column;
       }
     }
 
     @media (prefers-reduced-motion: reduce) {
-      html {
-        scroll-behavior: auto;
+      .sun-door::before,
+      .sun-door::after,
+      .solar-core::before {
+        animation: none;
       }
 
-      .action:hover,
-      .action:focus-visible {
-        transform: none;
+      .route-node,
+      .sun-door {
+        transition: none;
       }
     }
   </style>
 </head>
 
 <body>
-  <a class="skip-link" href="#main">Skip to main content</a>
-  <canvas id="solar-runtime-canvas" class="runtime-canvas" aria-hidden="true"></canvas>
-
-  <div class="page-shell">
-    <header class="topbar" aria-label="Site header">
+  <main class="door-page" id="door-root" data-root-door>
+    <header class="topbar" aria-label="Diamond Gate Bridge door header">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge home">
         <span class="brand-mark" aria-hidden="true"></span>
-        <span class="brand-text">
-          <strong>Diamond Gate Bridge</strong>
-          <span>Learn to Live to Love</span>
+        <span class="brand-copy">
+          <span class="brand-name">Diamond Gate Bridge</span>
+          <span class="brand-sub">Public Solar Door</span>
         </span>
       </a>
 
-      <nav class="primary-nav" aria-label="Primary routes">
-        <a class="nav-pill" href="/gauges/">Gauges</a>
-        <a class="nav-pill" href="/laws/">Laws</a>
-        <a class="nav-pill" href="/products/">Products</a>
-        <a class="nav-pill" href="/about/">About</a>
-      </nav>
+      <span class="status-pill" data-door-boot-status>Visible-first solar door active</span>
     </header>
 
-    <main id="main">
-      <section class="hero" aria-labelledby="root-title">
-        <div class="hero-copy">
-          <div class="eyebrow">
-            <span class="eyebrow-dot" aria-hidden="true"></span>
-            <span>Cinematic solar root door active</span>
-          </div>
+    <section class="hero" aria-labelledby="door-title">
+      <div class="hero-copy">
+        <p class="eyebrow">A luminous public gate</p>
+        <h1 id="door-title">Diamond Gate Bridge</h1>
+        <p class="theme">Learn to Live to Love</p>
+        <p class="door-statement">
+          A public gate for building clearer systems, stronger choices, and better paths forward.
+        </p>
 
-          <h1 id="root-title">Learn to Live to Love</h1>
+        <div class="primary-actions" aria-label="Primary entry actions">
+          <a class="action" href="/products/">Enter Products</a>
+          <a class="action secondary" href="/gauges/">Check Site Health</a>
+        </div>
+      </div>
 
-          <p class="lead">
-            A public threshold into a structured command world: solar center, quadrilateral
-            traversal, team routing, visible law, and execution discipline held together as one
-            coherent entrance.
-          </p>
-
-          <div class="hero-actions" aria-label="Primary actions">
-            <a class="action primary" href="/gauges/">Enter the Gauges</a>
-            <a class="action" href="#quadrilateral-path">View the Path</a>
-          </div>
+      <div class="sun-field" aria-label="Solar door navigation">
+        <div class="solar-lockup" aria-hidden="true">
+          <strong>Diamond Gate Bridge</strong>
+          <span>Learn to Live to Love</span>
         </div>
 
-        <section class="solar-stage" aria-label="Solar root door">
-          <div class="orbit-node north">
-            North
-            <small>Boundary</small>
-          </div>
-          <div class="orbit-node east">
-            East
-            <small>Formation</small>
-          </div>
-          <div class="orbit-node south">
-            South
-            <small>Stability</small>
-          </div>
-          <div class="orbit-node west">
-            West
-            <small>Pressure</small>
-          </div>
+        <div class="solar-system" data-solar-system>
+          <div class="orbit-ring one" aria-hidden="true"></div>
+          <div class="orbit-ring two" aria-hidden="true"></div>
+          <div class="orbit-ring three" aria-hidden="true"></div>
 
-          <div class="sun-door" aria-label="Solar gate">
-            <div class="gate-label">
-              <span>Root Door</span>
-              <strong>Solar Gate</strong>
+          <div class="sun-door" data-sun-door aria-hidden="true">
+            <div class="solar-core">
+              <div class="gate-diamond"></div>
+              <div class="gate-line vertical"></div>
+              <div class="gate-line horizontal"></div>
+              <div class="door-label">Door</div>
             </div>
           </div>
 
-          <div class="status-strip" aria-live="polite">
-            <span id="runtime-status">Runtime: visible-first standby</span>
-            <span id="route-status">Route: Origin → North → East → South → West → ACK</span>
-          </div>
-        </section>
-      </section>
-
-      <section id="quadrilateral-path" class="content-grid" aria-label="Quadrilateral full-team path">
-        <article class="panel">
-          <div class="panel-header">
-            <h2>Quadrilateral Full-Team Path</h2>
-            <p>
-              The team is not a list. Every function routes through the four-gate path before
-              execution closes.
-            </p>
-          </div>
-
-          <div class="route-list" aria-label="Cardinal route controls">
-            <button class="route-button" type="button" data-route="north" aria-pressed="true">
-              <strong>North <span>Boundary</span></strong>
-              <span>Admissibility, decision threshold, logic compression, and scope protection.</span>
-            </button>
-
-            <button class="route-button" type="button" data-route="east" aria-pressed="false">
-              <strong>East <span>Formation</span></strong>
-              <span>Build path, signal formation, motion, learning, and structural expression.</span>
-            </button>
-
-            <button class="route-button" type="button" data-route="south" aria-pressed="false">
-              <strong>South <span>Stability</span></strong>
-              <span>Continuity, care, health check, grounding, and action conversion.</span>
-            </button>
-
-            <button class="route-button" type="button" data-route="west" aria-pressed="false">
-              <strong>West <span>Pressure</span></strong>
-              <span>Fracture test, contradiction, resilience, and false-closure detection.</span>
-            </button>
-          </div>
-        </article>
-
-        <article class="panel">
-          <div class="panel-header">
-            <h2>Team Routing Surface</h2>
-            <p>
-              Each member has a gate, carrier function, receiver layer, and ACK return path.
-            </p>
-          </div>
-
-          <div class="team-map">
-            <section class="team-card" data-card="north" data-active="true">
-              <h3>North Gate</h3>
-              <p>Boundary, admissibility, scope, and logic compression.</p>
-              <ul>
-                <li>Sean — origin authority</li>
-                <li>Sheldon — logic compression</li>
-                <li>Alaric — boundary and decision</li>
-              </ul>
-            </section>
-
-            <section class="team-card" data-card="east" data-active="false">
-              <h3>East Gate</h3>
-              <p>Formation, signal, build motion, and execution preparation.</p>
-              <ul>
-                <li>Dexter — lab execution</li>
-                <li>Brain — strategy and code logic</li>
-                <li>Elara — formation and signal</li>
-              </ul>
-            </section>
-
-            <section class="team-card" data-card="south" data-active="false">
-              <h3>South Gate</h3>
-              <p>Stability, continuity, relay health, and grounding.</p>
-              <ul>
-                <li>Jeeves — house relay</li>
-                <li>Richie ARCHCOIN — public identity surface</li>
-                <li>Tarian — stability and continuity</li>
-              </ul>
-            </section>
-
-            <section class="team-card" data-card="west" data-active="false">
-              <h3>West Gate</h3>
-              <p>Pressure, contradiction, hidden failure, and reserve response.</p>
-              <ul>
-                <li>Pinky — false-pass audit</li>
-                <li>Johnny Two-Bit Law — small-break audit</li>
-                <li>Inspector Gadget — upstream monitor</li>
-                <li>Bond Phantom — reserve execution</li>
-                <li>Soren — fracture and pressure</li>
-              </ul>
-            </section>
-          </div>
-        </article>
-      </section>
-
-      <section class="panel" aria-label="Root contract foundation">
-        <div class="panel-header">
-          <h2>Root Contract Foundation</h2>
-          <p>
-            The cinematic layer supports the structure. Atmosphere does not replace function.
-          </p>
+          <a class="route-node prelude" href="/prelude/">Prelude<small>begin</small></a>
+          <a class="route-node explore" href="/explore/">Explore<small>map</small></a>
+          <a class="route-node products" href="/products/">Products<small>build</small></a>
+          <a class="route-node gauges" href="/gauges/">Gauges<small>health</small></a>
+          <a class="route-node frontier" href="/frontier/">Frontier<small>edge</small></a>
+          <a class="route-node laws" href="/laws/">Laws<small>rules</small></a>
+          <a class="route-node governance" href="/governance/">Governance<small>scale</small></a>
+          <a class="route-node home" href="/">Home<small>return</small></a>
         </div>
+      </div>
+    </section>
 
-        <div class="foundation">
-          <div class="foundation-card">
-            <strong>Visible First</strong>
-            <p>The HTML carries the public door, route, and team structure before runtime enhancement.</p>
-          </div>
-
-          <div class="foundation-card">
-            <strong>Runtime Second</strong>
-            <p>Motion is controlled by the runtime file, respects reduced motion, and never hides content.</p>
-          </div>
-
-          <div class="foundation-card">
-            <strong>ACK Return</strong>
-            <p>Traversal closes only when the route returns to origin with a valid acknowledgment path.</p>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer">
-      <span>Diamond Gate Bridge</span>
-      <span id="copyright-year">2026</span>
+    <footer class="bottom-strip">
+      <span>Generation 1 · Root Door Solar Baseline 2</span>
+      <span>Satellite-grade CSS sun · HTML first · Runtime second</span>
     </footer>
-  </div>
+  </main>
 
-  <script defer src="./index.runtime.js"></script>
-  <script defer src="./index.js"></script>
+  <noscript>
+    <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
+      JavaScript is off. The solar door remains visible and usable.
+    </div>
+  </noscript>
+
+  <script src="/index.js" defer></script>
 </body>
 </html>

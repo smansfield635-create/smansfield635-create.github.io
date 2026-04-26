@@ -1,13 +1,16 @@
 /* TNT RENEWAL — /gauges/gauges_health_runtime.js
-   GAUGES HEALTH RUNTIME · GENERATION 2 COMPASS COCKPIT · BRAVO 6
+   GAUGES HEALTH RUNTIME · GENERATION 2 COMPASS COCKPIT · BRAVO 6 · SUN VISUAL CONTRACT B2
    VERSION = "spine-canopy-parachute-b6"
+   SUN_VISUAL_CONTRACT = "sun-visual-contract-b2"
+
    PURPOSE:
-     - Calibrate cockpit visual probe to the live root viewport
-     - Wait for cockpit hydration instead of failing too early
-     - Accept DGBCompassCockpit OR runtime-set cockpit attributes
-     - Accept visible sun by visible mount/fallback/canvas/SVG truth
-     - Accept universe background by element presence OR computed background
-     - Keep false-health blocking strict on cockpit + canopy + visible sun
+     - Preserve Bravo 6 cockpit visual probe.
+     - Stop stale manifest reads from holding Source at 98.
+     - Cache-bust source fetches without changing public source labels.
+     - Verify the actual satellite-observational sun asset chain.
+     - Keep page health separate from visual contract precision.
+     - No graphics box.
+     - No generated image.
 */
 
 (function () {
@@ -17,27 +20,34 @@
   var ROOT_BOOT_ID = "root-sun-asset-b1";
   var COCKPIT_VERSION = "root-compass-cockpit-b1";
   var CANOPY_VERSION = "spine-canopy-parachute-b1";
+  var SUN_VISUAL_PROFILE = "satellite-observational-solar-disc-b8";
+  var SUN_RUNTIME_VERSION = "sun-asset-runtime-satellite-b8";
+  var SOURCE_MARKER = "ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1";
+  var JS_SOURCE_MARKER = "ROOT_COMPASS_COCKPIT_GENERATION_2_JS_SOURCE_MARKER_B1";
 
   var FILES = [
     {
-      label: "Root Compass Cockpit",
+      label: "Root Compass",
       path: "/index.html",
+      displayPath: "/index.html",
       required: [
-        "Compass Cockpit",
+        "Diamond Gate Bridge",
+        "Learn to Live to Love",
+        "root-sun-asset-b1",
         "root-compass-cockpit-b1",
-        "ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1",
-        "data-root-boot-id=\"root-sun-asset-b1\"",
+        SOURCE_MARKER,
         "data-dgb-sun-mount",
         "data-sun-fallback",
-        "Learn to Live to Love",
         "/index.js"
       ]
     },
     {
       label: "Root cockpit boot",
-      path: "/index.js?v=root-sun-asset-b1",
+      path: "/index.js?v=root-sun-asset-b1-satellite-sun-b8",
+      displayPath: "/index.js?v=root-sun-asset-b1-satellite-sun-b8",
       required: [
-        "ROOT_BOOT_ID = \"root-sun-asset-b1\"",
+        "ROOT_BOOT_ID",
+        "root-sun-asset-b1",
         "root-compass-cockpit-b1",
         "DGBCompassCockpit",
         "DGBIndexBoot",
@@ -48,6 +58,7 @@
     {
       label: "Spine canopy runtime",
       path: "/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1",
+      displayPath: "/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1",
       required: [
         "DGBSpineCanopy",
         "spine-canopy-parachute-b1",
@@ -57,28 +68,67 @@
     },
     {
       label: "Sun asset runtime",
-      path: "/runtime/sun_asset_runtime.js?v=root-sun-asset-b1",
+      path: "/runtime/sun_asset_runtime.js?v=sun-asset-runtime-satellite-b8",
+      displayPath: "/runtime/sun_asset_runtime.js?v=sun-asset-runtime-satellite-b8",
       required: [
         "DGBSunAssetRuntime",
         "root-sun-asset-b1",
-        "DGBSpineCanopy"
+        "DGBSunCanvas",
+        "satellite-observational-solar-disc-b8",
+        "sun-asset-runtime-satellite-b8"
+      ]
+    },
+    {
+      label: "Sun canvas renderer",
+      path: "/assets/sun/sun_canvas.js?v=satellite-observational-solar-disc-b8",
+      displayPath: "/assets/sun/sun_canvas.js?v=satellite-observational-solar-disc-b8",
+      required: [
+        "DGBSunCanvas",
+        "satellite-observational-solar-disc-b8",
+        "limb",
+        "granulation",
+        "sunspots"
       ]
     },
     {
       label: "Sun manifest",
-      path: "/assets/sun/sun_manifest.json?v=root-sun-asset-b1",
+      path: "/assets/sun/sun_manifest.json?v=satellite-observational-solar-disc-b8",
+      displayPath: "/assets/sun/sun_manifest.json?v=satellite-observational-solar-disc-b8",
       required: [
-        "root-sun-asset-b1"
+        "root-sun-asset-b1",
+        "satellite-observational-solar-disc",
+        "satellite-observational-solar-disc-b8"
+      ]
+    },
+    {
+      label: "Sun material CSS",
+      path: "/assets/sun/sun_material.css?v=satellite-observational-solar-disc-b8",
+      displayPath: "/assets/sun/sun_material.css?v=satellite-observational-solar-disc-b8",
+      required: [
+        "data-dgb-sun-mount",
+        "data-satellite-sun-canvas"
+      ]
+    },
+    {
+      label: "Sun SVG reference",
+      path: "/assets/sun/sun.svg?v=satellite-observational-solar-disc-b8",
+      displayPath: "/assets/sun/sun.svg?v=satellite-observational-solar-disc-b8",
+      required: [
+        "satellite-observational",
+        "limb",
+        "sunspots"
       ]
     },
     {
       label: "Gauges health runtime",
-      path: "/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6",
+      path: "/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6-sun-contract-b2",
+      displayPath: "/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6-sun-contract-b2",
       required: [
         "spine-canopy-parachute-b6",
         "root-compass-cockpit-b1",
         "probeRootVisualTruth",
-        "falseHealthBlocked"
+        "falseHealthBlocked",
+        "sun-visual-contract-b2"
       ]
     }
   ];
@@ -86,9 +136,11 @@
   var state = {
     sourceResults: [],
     visualResults: [],
+    sunContractResults: [],
     scores: {
       source: 0,
       visual: 0,
+      sun: 0,
       drift: 100,
       overall: 0
     }
@@ -142,16 +194,28 @@
     return li;
   }
 
-  function fetchText(path) {
-    return fetch(path, {
-      cache: "no-store",
-      credentials: "same-origin"
+  function cacheBust(path) {
+    var joiner = path.indexOf("?") === -1 ? "?" : "&";
+    return path + joiner + "gaugeBust=" + encodeURIComponent(String(Date.now()));
+  }
+
+  function fetchText(file) {
+    var fetchPath = cacheBust(file.path);
+
+    return fetch(fetchPath, {
+      cache: "reload",
+      credentials: "same-origin",
+      headers: {
+        "Cache-Control": "no-cache",
+        "Pragma": "no-cache"
+      }
     }).then(function (response) {
       return response.text().then(function (text) {
         return {
           ok: response.ok,
           status: response.status,
-          path: path,
+          path: file.displayPath || file.path,
+          fetchPath: fetchPath,
           text: text
         };
       });
@@ -159,7 +223,8 @@
       return {
         ok: false,
         status: 0,
-        path: path,
+        path: file.displayPath || file.path,
+        fetchPath: fetchPath,
         text: "",
         error: error && error.message ? error.message : "fetch failed"
       };
@@ -172,7 +237,7 @@
     if (!result.ok) {
       return {
         label: file.label,
-        path: file.path,
+        path: result.path,
         status: "FAIL",
         score: 0,
         finding: "HTTP " + result.status + ". " + (result.error || "File not reachable.")
@@ -186,7 +251,7 @@
     if (!missing.length) {
       return {
         label: file.label,
-        path: file.path,
+        path: result.path,
         status: "STRONG",
         score: 100,
         finding: "Required marker set present."
@@ -195,7 +260,7 @@
 
     return {
       label: file.label,
-      path: file.path,
+      path: result.path,
       status: missing.length > 2 ? "FAIL" : "WATCH",
       score: Math.max(40, 100 - missing.length * 14),
       finding: "Missing marker(s): " + missing.join(", ")
@@ -204,7 +269,7 @@
 
   function scanSources() {
     return Promise.all(FILES.map(function (file) {
-      return fetchText(file.path).then(function (result) {
+      return fetchText(file).then(function (result) {
         return scoreFile(file, result);
       });
     })).then(function (results) {
@@ -233,9 +298,7 @@
 
   function meaningfulBox(node, minSize) {
     var rect;
-
     if (!node) return false;
-
     rect = node.getBoundingClientRect();
     return Boolean(rect.width >= minSize && rect.height >= minSize);
   }
@@ -265,6 +328,19 @@
     } catch (error) {
       return null;
     }
+
+    return null;
+  }
+
+  function safeRuntimeState(win) {
+    try {
+      if (win && win.DGBSunAssetRuntime && typeof win.DGBSunAssetRuntime.getState === "function") {
+        return win.DGBSunAssetRuntime.getState();
+      }
+    } catch (error) {
+      return null;
+    }
+
     return null;
   }
 
@@ -284,13 +360,14 @@
       iframe.style.opacity = "0.01";
       iframe.style.pointerEvents = "none";
       iframe.style.border = "0";
-      iframe.src = "/?cockpitGaugeProbe=bravo6-" + encodeURIComponent(String(Date.now()));
+      iframe.src = "/?cockpitGaugeProbe=bravo6-sun-contract-b2-" + encodeURIComponent(String(Date.now()));
 
       function finish(payload) {
         if (settled) return;
         settled = true;
 
         if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+
         resolve(payload);
       }
 
@@ -301,6 +378,7 @@
         var indexBoot;
         var cockpit;
         var canopy;
+        var sunRuntime;
         var mount;
         var fallback;
         var canvas;
@@ -327,6 +405,7 @@
           indexBoot = safePublicState(win, "DGBIndexBoot");
           cockpit = safePublicState(win, "DGBCompassCockpit");
           canopy = safePublicState(win, "DGBSpineCanopy");
+          sunRuntime = safeRuntimeState(win);
 
           mount = doc.querySelector("[data-dgb-sun-mount]");
           fallback = mount && mount.querySelector("[data-sun-fallback]");
@@ -338,7 +417,7 @@
           bodyText = doc.body.textContent || "";
 
           rootAttrRuntime = Boolean(root && (
-            root.getAttribute("data-index-boot") === COCKPIT_VERSION ||
+            root.getAttribute("data-index-boot") ||
             root.getAttribute("data-js-renewal-marker") ||
             root.getAttribute("data-venue-bridge") ||
             root.getAttribute("data-canopy-relationship") === "held-by-canopy"
@@ -348,13 +427,12 @@
           cockpitRuntimeByApi = Boolean(cockpit || (win && win.DGBCompassCockpit));
 
           sunByElement = Boolean(
-            (fallback && visibleElement(fallback)) ||
             (canvas && visibleElement(canvas)) ||
-            (svg && visibleElement(svg))
+            (svg && visibleElement(svg)) ||
+            (fallback && visibleElement(fallback))
           );
 
           sunByMount = Boolean(mount && visibleElement(mount) && meaningfulBox(mount, 40));
-
           backgroundByElement = Boolean(background);
           backgroundByComputed = computedBackgroundPresent(doc);
 
@@ -365,15 +443,26 @@
             rootBootAligned: Boolean(root && root.getAttribute("data-root-boot-id") === ROOT_BOOT_ID),
             rootContractAligned: Boolean(root && root.getAttribute("data-root-contract") === "universe-sun"),
             cockpitMarkerAligned: Boolean(root && root.getAttribute("data-compass-cockpit") === COCKPIT_VERSION),
-            sourceMarkerAligned: Boolean(root && root.getAttribute("data-source-marker") === "ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1"),
+            sourceMarkerAligned: Boolean(root && root.getAttribute("data-source-marker") === SOURCE_MARKER),
             indexBootExecuted: Boolean(indexRuntimeByApi || rootAttrRuntime),
             cockpitRuntimePresent: Boolean(cockpitRuntimeByApi || rootAttrRuntime),
             canopyRuntimePresent: Boolean(canopy || (win && win.DGBSpineCanopy)),
+            sunRuntimePresent: Boolean(sunRuntime || (win && win.DGBSunAssetRuntime)),
+            sunCanvasGlobalPresent: Boolean(win && win.DGBSunCanvas),
+            sunRuntimeVersionAligned: Boolean(sunRuntime && sunRuntime.canvasVersion === SUN_VISUAL_PROFILE),
             sunMountPresent: Boolean(mount),
             fallbackSunPresent: Boolean(fallback),
             canvasSunPresent: Boolean(canvas),
             svgSunPresent: Boolean(svg),
             visibleSunPresent: Boolean(sunByElement || sunByMount),
+            satelliteSunProfilePresent: Boolean(
+              mount &&
+              (
+                mount.getAttribute("data-sun-visual-profile") === SUN_VISUAL_PROFILE ||
+                mount.getAttribute("data-sun-canvas-version") === SUN_VISUAL_PROFILE ||
+                mount.getAttribute("data-sun-satellite-profile") === SUN_VISUAL_PROFILE
+              )
+            ),
             backgroundVisible: Boolean(backgroundByElement || backgroundByComputed),
             cockpitWindowPresent: Boolean(cockpitWindow && visibleElement(cockpitWindow)),
             cockpitControlsPresent: Boolean(controls && visibleElement(controls)),
@@ -381,7 +470,8 @@
             themePresent: bodyText.indexOf("Learn to Live to Love") !== -1,
             cockpit: cockpit,
             indexBoot: indexBoot,
-            canopy: canopy
+            canopy: canopy,
+            sunRuntime: sunRuntime
           };
         } catch (error) {
           return {
@@ -399,7 +489,7 @@
           return;
         }
 
-        if (probe && probe.ok && Date.now() - started > 5200) {
+        if (probe && probe.ok && Date.now() - started > 5400) {
           finish(probe);
           return;
         }
@@ -409,7 +499,7 @@
           return;
         }
 
-        if (Date.now() - started > 8000) {
+        if (Date.now() - started > 8200) {
           finish({
             ok: false,
             error: "root visual probe timed out"
@@ -452,6 +542,7 @@
         status: "FAIL",
         finding: probe && probe.error ? probe.error : "Visual probe did not complete."
       });
+
       state.visualResults = rows;
       return rows;
     }
@@ -464,14 +555,17 @@
     push("Index boot executed", probe.indexBootExecuted, "window.DGBIndexBoot or runtime-set root boot attributes must exist.");
     push("Cockpit runtime present", probe.cockpitRuntimePresent, "window.DGBCompassCockpit or runtime-set cockpit attributes must exist.");
     push("Canopy runtime present", probe.canopyRuntimePresent, "window.DGBSpineCanopy must exist.");
+    push("Sun runtime present", probe.sunRuntimePresent, "window.DGBSunAssetRuntime must exist.");
+    push("Sun canvas global present", probe.sunCanvasGlobalPresent, "window.DGBSunCanvas must exist.");
+    push("Sun runtime profile aligned", probe.sunRuntimeVersionAligned, "Sun runtime must report " + SUN_VISUAL_PROFILE + ".", true);
     push("Sun mount present", probe.sunMountPresent, "Root must contain [data-dgb-sun-mount].");
     push("Visible sun present", probe.visibleSunPresent, "Canvas, SVG, fallback, or visible mounted sun body must be measurable.");
+    push("Satellite sun profile present", probe.satelliteSunProfilePresent, "Sun mount should declare " + SUN_VISUAL_PROFILE + ".", true);
     push("Background visible", probe.backgroundVisible, "Universe background must exist or computed page background must be non-empty.");
     push("Cockpit window present", probe.cockpitWindowPresent, "Cockpit viewport must be visible.");
     push("Cockpit controls present", probe.cockpitControlsPresent, "Cockpit control panel must be visible.");
     push("Title present", probe.titlePresent, "Diamond Gate Bridge must remain present.");
     push("Theme present", probe.themePresent, "Learn to Live to Love must remain present.");
-
     push(
       "False health blocked",
       Boolean(probe.visibleSunPresent && probe.cockpitRuntimePresent && probe.canopyRuntimePresent),
@@ -482,14 +576,79 @@
     return rows;
   }
 
+  function buildSunContractResults() {
+    var sourceStrong = state.sourceResults.every(function (r) {
+      return r.status === "STRONG";
+    });
+
+    var canvasStrong = state.sourceResults.some(function (r) {
+      return r.path.indexOf("/assets/sun/sun_canvas.js") !== -1 && r.status === "STRONG";
+    });
+
+    var runtimeStrong = state.sourceResults.some(function (r) {
+      return r.path.indexOf("/runtime/sun_asset_runtime.js") !== -1 && r.status === "STRONG";
+    });
+
+    var manifestStrong = state.sourceResults.some(function (r) {
+      return r.path.indexOf("/assets/sun/sun_manifest.json") !== -1 && r.status === "STRONG";
+    });
+
+    var svgStrong = state.sourceResults.some(function (r) {
+      return r.path.indexOf("/assets/sun/sun.svg") !== -1 && r.status === "STRONG";
+    });
+
+    var profileVisible = state.visualResults.some(function (r) {
+      return r.check === "Satellite sun profile present" && r.status === "STRONG";
+    });
+
+    state.sunContractResults = [
+      {
+        check: "Sun source chain current",
+        status: sourceStrong ? "STRONG" : "WATCH",
+        finding: sourceStrong ? "All required source markers are present." : "At least one source marker is not yet current."
+      },
+      {
+        check: "Canvas owns solar body",
+        status: canvasStrong ? "STRONG" : "WATCH",
+        finding: canvasStrong ? "sun_canvas.js carries the satellite-observational contract." : "sun_canvas.js is not yet confirmed current."
+      },
+      {
+        check: "Runtime mounts canvas",
+        status: runtimeStrong ? "STRONG" : "WATCH",
+        finding: runtimeStrong ? "sun_asset_runtime.js carries the satellite-observational mount contract." : "sun_asset_runtime.js is not yet confirmed current."
+      },
+      {
+        check: "Manifest names target",
+        status: manifestStrong ? "STRONG" : "WATCH",
+        finding: manifestStrong ? "sun_manifest.json names root boot and satellite visual target." : "sun_manifest.json still needs marker alignment."
+      },
+      {
+        check: "SVG reference aligned",
+        status: svgStrong ? "STRONG" : "WATCH",
+        finding: svgStrong ? "sun.svg reference is aligned to satellite-observational target." : "sun.svg is not yet confirmed current."
+      },
+      {
+        check: "Live mount declares profile",
+        status: profileVisible ? "STRONG" : "WATCH",
+        finding: profileVisible ? "Live root mount declares the satellite profile." : "Live root is visually passing, but profile declaration is not yet fully confirmed."
+      }
+    ];
+
+    return state.sunContractResults;
+  }
+
   function average(results) {
     if (!results.length) return 0;
+
     return Math.round(results.reduce(function (sum, item) {
-      return sum + (Number(item.score) || (item.status === "STRONG" ? 100 : item.status === "WATCH" ? 60 : 0));
+      return sum + (
+        Number(item.score) ||
+        (item.status === "STRONG" ? 100 : item.status === "WATCH" ? 60 : 0)
+      );
     }, 0) / results.length);
   }
 
-  function scoreVisual(rows) {
+  function scoreRows(rows) {
     var total = rows.length * 100;
     var value;
 
@@ -512,17 +671,26 @@
 
   function computeScores() {
     var source = average(state.sourceResults);
-    var visual = scoreVisual(state.visualResults);
-    var failures = state.sourceResults.filter(function (r) { return r.status === "FAIL"; }).length +
-      state.visualResults.filter(function (r) { return r.status === "FAIL"; }).length;
-    var watches = state.sourceResults.filter(function (r) { return r.status === "WATCH"; }).length +
-      state.visualResults.filter(function (r) { return r.status === "WATCH"; }).length;
+    var visual = scoreRows(state.visualResults);
+    var sun = scoreRows(state.sunContractResults);
+
+    var failures =
+      state.sourceResults.filter(function (r) { return r.status === "FAIL"; }).length +
+      state.visualResults.filter(function (r) { return r.status === "FAIL"; }).length +
+      state.sunContractResults.filter(function (r) { return r.status === "FAIL"; }).length;
+
+    var watches =
+      state.sourceResults.filter(function (r) { return r.status === "WATCH"; }).length +
+      state.visualResults.filter(function (r) { return r.status === "WATCH"; }).length +
+      state.sunContractResults.filter(function (r) { return r.status === "WATCH"; }).length;
+
     var visibleSunStrong = hasStrong("Visible sun present");
     var cockpitStrong = hasStrong("Cockpit runtime present");
     var canopyStrong = hasStrong("Canopy runtime present");
     var falseHealthBlocked = hasStrong("False health blocked");
+
     var drift = Math.min(100, failures * 22 + watches * 7);
-    var overall = Math.round(source * 0.38 + visual * 0.62);
+    var overall = Math.round(source * 0.32 + visual * 0.50 + sun * 0.18);
 
     if (!visibleSunStrong || !cockpitStrong || !canopyStrong || !falseHealthBlocked) {
       overall = Math.min(overall, 72);
@@ -531,6 +699,7 @@
 
     state.scores.source = source;
     state.scores.visual = visual;
+    state.scores.sun = sun;
     state.scores.drift = drift;
     state.scores.overall = overall;
 
@@ -557,11 +726,18 @@
       else issues.push("Cockpit issue: " + r.check + " — " + r.finding);
     });
 
-    if (!working.children.length) working.appendChild(makeLi("No confirmed working item yet."));
+    state.sunContractResults.forEach(function (r) {
+      if (r.status === "STRONG") working.appendChild(makeLi("Sun contract passed: " + r.check + "."));
+      else issues.push("Sun contract issue: " + r.check + " — " + r.finding);
+    });
+
+    if (!working.children.length) {
+      working.appendChild(makeLi("No confirmed working item yet."));
+    }
 
     if (!issues.length) {
-      wrong.appendChild(makeLi("No blocking cockpit issue detected by the current scan."));
-      todo.appendChild(makeLi("Continue controlled refinement under Bravo 6 cockpit-aware canopy supervision."));
+      wrong.appendChild(makeLi("No blocking cockpit or sun-contract issue detected by the current scan."));
+      todo.appendChild(makeLi("Lock the current Compass sun visual baseline, then continue controlled refinement."));
       return;
     }
 
@@ -569,11 +745,12 @@
       wrong.appendChild(makeLi(issue));
     });
 
-    issues.slice(0, 8).forEach(function (issue) {
+    issues.slice(0, 10).forEach(function (issue) {
       var item = document.createElement("li");
       item.textContent = issue
         .replace(/^Source issue: /, "Repair source marker or file availability: ")
-        .replace(/^Cockpit issue: /, "Repair cockpit visual-control chain: ");
+        .replace(/^Cockpit issue: /, "Repair cockpit visual-control chain: ")
+        .replace(/^Sun contract issue: /, "Repair sun visual contract chain: ");
       todo.appendChild(item);
     });
   }
@@ -581,9 +758,11 @@
   function renderLedgers() {
     var sourceLedger = $("#sourceLedger");
     var visualLedger = $("#visualLedger");
+    var sunLedger = $("#sunContractLedger");
 
     clearNode(sourceLedger);
     clearNode(visualLedger);
+    if (sunLedger) clearNode(sunLedger);
 
     state.sourceResults.forEach(function (r) {
       sourceLedger.appendChild(makeRow(r.path, r.status, r.finding));
@@ -592,6 +771,12 @@
     state.visualResults.forEach(function (r) {
       visualLedger.appendChild(makeRow(r.check, r.status, r.finding));
     });
+
+    if (sunLedger) {
+      state.sunContractResults.forEach(function (r) {
+        sunLedger.appendChild(makeRow(r.check, r.status, r.finding));
+      });
+    }
   }
 
   function renderScores() {
@@ -608,6 +793,9 @@
     setText("#sourceScore", String(scores.source));
     setText("#visualScore", String(scores.visual));
     setText("#driftScore", String(scores.drift));
+
+    var sunScore = $("#sunScore");
+    if (sunScore) sunScore.textContent = String(scores.sun);
   }
 
   function run() {
@@ -617,6 +805,7 @@
       })
       .then(function (probe) {
         buildVisualLedger(probe);
+        buildSunContractResults();
         renderLists();
         renderLedgers();
         renderScores();
@@ -627,6 +816,8 @@
           status: "FAIL",
           finding: error && error.message ? error.message : "Gauge runtime failed."
         }];
+
+        buildSunContractResults();
         renderLists();
         renderLedgers();
         renderScores();

@@ -1,76 +1,594 @@
-<!doctype html>
-<html lang="en" data-page-generation="gauges-g1-cinematic-celestial-detail-host">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge Gauges: Generation 1 cinematic solar host shell powered by physics-derived /gauges/index.js runtime with coded celestial-body detail." />
+/* TNT — /gauges/index.js
+   GAUGES · SINGLE-ENGINE CELESTIAL RUNTIME v1
+   OWNER=/gauges/index.js
+   PURPOSE=Embed Sun material directly into the primary render engine.
+   RULE=One engine, one pass, no post-attach runtime, no GraphicBox, no image generation.
+*/
 
-  <style>
-    :root {
-      --panel: rgba(7, 14, 28, .94);
-      --panel2: rgba(10, 20, 42, .97);
-      --line: rgba(170, 198, 255, .18);
-      --line2: rgba(239, 210, 154, .36);
-      --text: #eef4ff;
-      --muted: #aab8d8;
-      --gold: #efd29a;
-      --blue: #8ec5ff;
-      --green: #93efbd;
-      --shadow: 0 24px 80px rgba(0,0,0,.52);
-      --max: 1180px;
+(function () {
+  "use strict";
+
+  const VERSION = "GAUGES_SINGLE_ENGINE_CELESTIAL_RUNTIME_v1";
+  const DAY_MS = 86400000;
+
+  const scene = document.getElementById("universeScene");
+  const caption = document.getElementById("sceneCaption");
+  const info = document.getElementById("physicsInfo");
+
+  if (!scene) return;
+
+  const ZOOM_STATES = {
+    earth: {
+      label: "Earth emphasis · compressed solar projection",
+      orbitMin: 148,
+      orbitMax: 430,
+      sunPx: 360,
+      sceneScale: 1.16,
+      showOuterLabels: false
+    },
+    solar: {
+      label: "Solar view · left-edge Sun · diagonal orbital plane",
+      orbitMin: 124,
+      orbitMax: 520,
+      sunPx: 430,
+      sceneScale: 1,
+      showOuterLabels: true
+    },
+    system: {
+      label: "System view · wide solar sweep · compressed planetary order",
+      orbitMin: 92,
+      orbitMax: 610,
+      sunPx: 390,
+      sceneScale: 0.86,
+      showOuterLabels: true
+    },
+    universe: {
+      label: "Universe view · larger field · same physics relation",
+      orbitMin: 72,
+      orbitMax: 680,
+      sunPx: 350,
+      sceneScale: 0.76,
+      showOuterLabels: true
+    }
+  };
+
+  const BODIES = [
+    { key: "sun", name: "Sun", type: "star", radiusKm: 696340, distanceAU: 0, orbitalDays: 0, axialTiltDeg: 7.25 },
+    { key: "mercury", name: "Mercury", type: "terrestrial", radiusKm: 2439.7, distanceAU: 0.387, orbitalDays: 87.969, axialTiltDeg: 0.03, phase: 0.06 },
+    { key: "venus", name: "Venus", type: "terrestrial", radiusKm: 6051.8, distanceAU: 0.723, orbitalDays: 224.701, axialTiltDeg: 177.36, phase: 0.19 },
+    { key: "earth", name: "Earth", type: "terrestrial", radiusKm: 6371, distanceAU: 1, orbitalDays: 365.256, axialTiltDeg: 23.44, phase: 0.34, moon: true },
+    { key: "mars", name: "Mars", type: "terrestrial", radiusKm: 3389.5, distanceAU: 1.524, orbitalDays: 686.98, axialTiltDeg: 25.19, phase: 0.47 },
+    { key: "jupiter", name: "Jupiter", type: "gas giant", radiusKm: 69911, distanceAU: 5.203, orbitalDays: 4332.59, axialTiltDeg: 3.13, phase: 0.60 },
+    { key: "saturn", name: "Saturn", type: "gas giant", radiusKm: 58232, distanceAU: 9.537, orbitalDays: 10759.22, axialTiltDeg: 26.73, phase: 0.72, rings: true },
+    { key: "uranus", name: "Uranus", type: "ice giant", radiusKm: 25362, distanceAU: 19.191, orbitalDays: 30688.5, axialTiltDeg: 97.77, phase: 0.84 },
+    { key: "neptune", name: "Neptune", type: "ice giant", radiusKm: 24622, distanceAU: 30.07, orbitalDays: 60182, axialTiltDeg: 28.32, phase: 0.94 }
+  ];
+
+  const state = {
+    zoom: scene.getAttribute("data-zoom") || "solar",
+    selectedKey: "sun",
+    paused: false
+  };
+
+  function injectStyles() {
+    const prior = document.getElementById("gauges-single-engine-runtime-style");
+    if (prior) prior.remove();
+
+    const style = document.createElement("style");
+    style.id = "gauges-single-engine-runtime-style";
+    style.textContent = `
+      .universe-scene {
+        --sun-x: 7%;
+        --sun-y: 50%;
+      }
+
+      .orbit {
+        position:absolute;
+        left:var(--sun-x);
+        top:var(--sun-y);
+        border-radius:50%;
+        border:2px solid rgba(220,232,255,.20);
+        transform:translate(-50%,-50%) rotate(-13deg);
+        pointer-events:none;
+        z-index:1;
+        box-shadow:0 0 10px rgba(142,197,255,.05), inset 0 0 24px rgba(142,197,255,.035);
+      }
+
+      .orbit.is-selected {
+        border-color:rgba(239,210,154,.58);
+        box-shadow:0 0 22px rgba(239,210,154,.18), inset 0 0 22px rgba(239,210,154,.08);
+      }
+
+      .body {
+        position:absolute;
+        border-radius:50%;
+        transform:translate(-50%,-50%);
+        isolation:isolate;
+        overflow:visible;
+        border:1px solid rgba(255,255,255,.18);
+        cursor:pointer;
+        z-index:4;
+      }
+
+      .body:focus-visible {
+        outline:2px solid rgba(239,210,154,.72);
+        outline-offset:4px;
+      }
+
+      .body.is-selected {
+        box-shadow:0 0 0 2px rgba(239,210,154,.62),0 0 24px rgba(239,210,154,.32) !important;
+      }
+
+      .body-shell {
+        position:absolute;
+        inset:0;
+        border-radius:50%;
+        overflow:hidden;
+        isolation:isolate;
+        background:radial-gradient(circle at 34% 30%, var(--hi), var(--mid) 48%, var(--low) 78%, #000 100%);
+        box-shadow:
+          inset -10px -4px 18px rgba(0,0,0,.64),
+          inset 7px 5px 16px rgba(255,255,255,.14),
+          0 0 24px var(--glow);
+      }
+
+      .surface,
+      .clouds,
+      .shadow,
+      .light,
+      .rim {
+        position:absolute;
+        inset:0;
+        border-radius:50%;
+        pointer-events:none;
+      }
+
+      .surface {
+        z-index:2;
+        background:var(--surface);
+        opacity:.92;
+      }
+
+      .clouds {
+        z-index:3;
+        background:var(--clouds);
+        opacity:var(--cloud-opacity);
+        mix-blend-mode:screen;
+        filter:blur(.7px);
+      }
+
+      .shadow {
+        z-index:4;
+        background:
+          radial-gradient(circle at 29% 28%, transparent 0 24%, rgba(0,0,0,.10) 42%, rgba(0,0,0,.68) 78%, rgba(0,0,0,.92) 100%),
+          linear-gradient(112deg, rgba(255,255,255,.05), transparent 34%, rgba(0,0,0,.42) 72%, rgba(0,0,0,.86));
+        mix-blend-mode:multiply;
+      }
+
+      .light {
+        z-index:5;
+        background:
+          radial-gradient(circle at 27% 26%, rgba(255,255,255,.34), transparent 18%),
+          radial-gradient(circle at 36% 34%, rgba(255,255,255,.13), transparent 34%);
+        mix-blend-mode:screen;
+        opacity:.76;
+      }
+
+      .rim {
+        z-index:6;
+        box-shadow:
+          inset 0 0 0 1px rgba(255,255,255,.14),
+          inset -18px -8px 34px rgba(0,0,0,.78),
+          inset 8px 6px 18px rgba(255,255,255,.12);
+      }
+
+      .body.sun {
+        overflow:visible;
+        border:0;
+        background:
+          radial-gradient(circle at 62% 36%,
+            #fffbd2 0%,
+            #fff1a8 7%,
+            #ffd24c 22%,
+            #ff9a1f 46%,
+            #f45a12 68%,
+            #8f1806 100%);
+        box-shadow:
+          0 0 36px rgba(255,235,150,.95),
+          0 0 96px rgba(255,132,32,.78),
+          0 0 190px rgba(255,70,18,.44),
+          0 0 290px rgba(255,48,10,.22);
+        z-index:3;
+      }
+
+      .sun-corona {
+        position:absolute;
+        inset:-28%;
+        border-radius:50%;
+        pointer-events:none;
+        z-index:-1;
+        background:
+          radial-gradient(circle at 52% 48%, rgba(255,238,150,.46), rgba(255,126,34,.22) 42%, transparent 70%),
+          radial-gradient(circle at 40% 56%, rgba(255,80,16,.24), transparent 54%);
+        filter:blur(14px);
+        animation:sunCoronaPulse 7s ease-in-out infinite;
+      }
+
+      .sun-granulation,
+      .sun-turbulence,
+      .sun-limb,
+      .sun-highlight {
+        position:absolute;
+        inset:0;
+        border-radius:50%;
+        pointer-events:none;
+      }
+
+      .sun-granulation {
+        z-index:2;
+        opacity:.42;
+        mix-blend-mode:overlay;
+        background:
+          radial-gradient(circle at 24% 32%, rgba(255,255,255,.20) 0 2%, transparent 3%),
+          radial-gradient(circle at 38% 58%, rgba(255,255,255,.16) 0 2%, transparent 3%),
+          radial-gradient(circle at 66% 44%, rgba(255,210,80,.20) 0 2%, transparent 3%),
+          radial-gradient(circle at 72% 70%, rgba(255,95,20,.16) 0 3%, transparent 4%),
+          repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,.08) 0 1px, transparent 1px 8px);
+      }
+
+      .sun-turbulence {
+        z-index:3;
+        opacity:.46;
+        mix-blend-mode:screen;
+        background:
+          conic-gradient(from 18deg at 52% 50%,
+            rgba(255,255,255,.10),
+            rgba(255,193,60,.18),
+            rgba(255,88,16,.12),
+            transparent 34%,
+            rgba(255,234,120,.18),
+            rgba(255,80,12,.12),
+            rgba(255,255,255,.08)),
+          repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.06) 0deg 3deg, transparent 3deg 9deg);
+        animation:sunMaterialTurn 42s linear infinite;
+      }
+
+      .sun-limb {
+        z-index:4;
+        background:
+          radial-gradient(circle at 42% 38%, transparent 0%, transparent 48%, rgba(255,140,26,.18) 64%, rgba(96,12,2,.55) 100%);
+        mix-blend-mode:multiply;
+      }
+
+      .sun-highlight {
+        z-index:5;
+        opacity:.72;
+        mix-blend-mode:screen;
+        background:
+          repeating-radial-gradient(circle at 47% 50%, rgba(255,255,255,.10) 0 2px, rgba(255,206,82,.06) 2px 9px, transparent 9px 17px),
+          radial-gradient(circle at 34% 32%, rgba(255,255,255,.38), transparent 12%),
+          radial-gradient(circle at 58% 64%, rgba(255,105,20,.20), transparent 28%),
+          linear-gradient(110deg, rgba(255,255,255,.16), transparent 34%, rgba(120,20,0,.22) 78%);
+      }
+
+      .ring {
+        position:absolute;
+        left:50%;
+        top:50%;
+        width:230%;
+        height:78%;
+        transform:translate(-50%,-50%) rotate(-18deg);
+        border-radius:50%;
+        border:2px solid rgba(239,210,154,.48);
+        border-left-color:rgba(239,210,154,.20);
+        border-right-color:rgba(239,210,154,.20);
+        box-shadow:0 0 14px rgba(239,210,154,.20), inset 0 0 12px rgba(255,255,255,.10);
+        z-index:-1;
+        pointer-events:none;
+      }
+
+      .moon {
+        position:absolute;
+        width:7px;
+        height:7px;
+        left:calc(50% + 22px);
+        top:calc(50% - 6px);
+        border-radius:50%;
+        background:radial-gradient(circle at 34% 28%, #fff, #aeb8c8 42%, #394354 100%);
+        box-shadow:inset -3px -2px 5px rgba(0,0,0,.55), 0 0 8px rgba(210,232,255,.26);
+        z-index:8;
+      }
+
+      .body-label {
+        position:absolute;
+        top:calc(100% + 8px);
+        left:50%;
+        transform:translateX(-50%);
+        color:rgba(232,240,255,.94);
+        font-size:11px;
+        font-weight:900;
+        letter-spacing:.08em;
+        text-transform:uppercase;
+        white-space:nowrap;
+        text-shadow:0 1px 0 rgba(0,0,0,.9), 0 0 12px rgba(0,0,0,.9);
+        z-index:10;
+        pointer-events:none;
+      }
+
+      @keyframes sunMaterialTurn {
+        0% { transform:rotate(0deg) scale(1.01); }
+        100% { transform:rotate(360deg) scale(1.01); }
+      }
+
+      @keyframes sunCoronaPulse {
+        0%,100% { opacity:.58; transform:scale(1); }
+        50% { opacity:.86; transform:scale(1.035); }
+      }
+
+      @media (max-width:640px) {
+        .body-label { font-size:9px; }
+      }
+
+      @media (prefers-reduced-motion:reduce) {
+        .sun-turbulence,
+        .sun-corona {
+          animation:none !important;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function compressedDistance(au) {
+    if (!au) return 0;
+    const zoom = ZOOM_STATES[state.zoom] || ZOOM_STATES.solar;
+    const maxAU = 30.07;
+    const t = Math.log(1 + au) / Math.log(1 + maxAU);
+    return zoom.orbitMin + (zoom.orbitMax - zoom.orbitMin) * t;
+  }
+
+  function bodySize(body) {
+    const zoom = ZOOM_STATES[state.zoom] || ZOOM_STATES.solar;
+    if (body.key === "sun") return zoom.sunPx;
+
+    const min = state.zoom === "earth" ? 16 : 13;
+    const max = state.zoom === "earth" ? 64 : 60;
+    const t = Math.sqrt(body.radiusKm / 69911);
+    return Math.max(min, Math.min(max, min + (max - min) * t));
+  }
+
+  function material(body) {
+    const map = {
+      mercury: {
+        hi: "#d6c6a9", mid: "#8c826f", low: "#2d2a25", glow: "rgba(220,210,188,.18)",
+        surface: "radial-gradient(circle at 32% 38%, rgba(0,0,0,.32) 0 8%, transparent 9%), radial-gradient(circle at 62% 55%, rgba(255,255,255,.10) 0 6%, transparent 7%), radial-gradient(circle at 48% 72%, rgba(0,0,0,.22) 0 5%, transparent 6%)",
+        clouds: "transparent", cloudOpacity: "0"
+      },
+      venus: {
+        hi: "#ffe4a3", mid: "#c88435", low: "#42210d", glow: "rgba(239,210,154,.24)",
+        surface: "linear-gradient(18deg, rgba(255,255,255,.18), transparent 18%, rgba(150,72,24,.22) 36%, transparent 54%, rgba(255,230,160,.14) 72%, transparent)",
+        clouds: "repeating-linear-gradient(160deg, rgba(255,255,255,.22) 0 9%, transparent 9% 18%)", cloudOpacity: ".55"
+      },
+      earth: {
+        hi: "#d9fbff", mid: "#187bc2", low: "#041738", glow: "rgba(142,197,255,.44)",
+        surface: "radial-gradient(ellipse at 34% 52%, rgba(52,130,58,.78) 0 12%, transparent 13%), radial-gradient(ellipse at 62% 34%, rgba(58,150,72,.58) 0 10%, transparent 11%), radial-gradient(ellipse at 48% 72%, rgba(184,141,70,.46) 0 8%, transparent 9%)",
+        clouds: "radial-gradient(ellipse at 52% 45%, rgba(255,255,255,.62) 0 7%, transparent 8%), radial-gradient(ellipse at 42% 30%, rgba(255,255,255,.44) 0 5%, transparent 6%), linear-gradient(20deg, transparent 0 38%, rgba(255,255,255,.20) 42%, transparent 50%)",
+        cloudOpacity: ".72"
+      },
+      mars: {
+        hi: "#ffb083", mid: "#b94b28", low: "#36120d", glow: "rgba(255,98,98,.22)",
+        surface: "radial-gradient(ellipse at 38% 42%, rgba(91,35,22,.36) 0 12%, transparent 13%), radial-gradient(ellipse at 58% 62%, rgba(255,210,150,.14) 0 9%, transparent 10%), linear-gradient(160deg, transparent, rgba(85,22,16,.26), transparent)",
+        clouds: "transparent", cloudOpacity: "0"
+      },
+      jupiter: {
+        hi: "#fff0c8", mid: "#b88758", low: "#422819", glow: "rgba(239,210,154,.30)",
+        surface: "repeating-linear-gradient(0deg, rgba(255,245,210,.34) 0 9%, rgba(158,92,48,.36) 9% 18%, rgba(238,204,158,.28) 18% 27%, rgba(86,45,28,.28) 27% 36%), radial-gradient(ellipse at 70% 58%, rgba(170,68,40,.54) 0 9%, transparent 10%)",
+        clouds: "transparent", cloudOpacity: "0"
+      },
+      saturn: {
+        hi: "#fff0bd", mid: "#b99b61", low: "#3c2f1a", glow: "rgba(239,210,154,.28)",
+        surface: "repeating-linear-gradient(0deg, rgba(255,244,194,.28) 0 12%, rgba(153,120,70,.24) 12% 24%, rgba(235,210,150,.20) 24% 36%)",
+        clouds: "transparent", cloudOpacity: "0"
+      },
+      uranus: {
+        hi: "#d6ffff", mid: "#62b8c5", low: "#103848", glow: "rgba(142,197,255,.26)",
+        surface: "linear-gradient(140deg, rgba(255,255,255,.14), transparent 38%, rgba(0,80,100,.20)), radial-gradient(circle at 36% 32%, rgba(255,255,255,.15), transparent 26%)",
+        clouds: "radial-gradient(circle at 42% 34%, rgba(255,255,255,.18), transparent 28%)", cloudOpacity: ".26"
+      },
+      neptune: {
+        hi: "#b7ceff", mid: "#3b5fd0", low: "#101a4c", glow: "rgba(142,197,255,.24)",
+        surface: "linear-gradient(150deg, rgba(255,255,255,.13), transparent 32%, rgba(0,20,90,.28)), radial-gradient(ellipse at 60% 58%, rgba(10,20,80,.40) 0 12%, transparent 13%)",
+        clouds: "radial-gradient(ellipse at 46% 42%, rgba(255,255,255,.14), transparent 30%)", cloudOpacity: ".22"
+      }
+    };
+
+    return map[body.key];
+  }
+
+  function position(body) {
+    if (body.key === "sun") return { left: "7%", top: "50%", x: 0, y: 0 };
+
+    const distance = compressedDistance(body.distanceAU);
+    const angle = ((body.phase || 0) * Math.PI * 2);
+    const rawX = Math.cos(angle) * distance;
+    const rawY = Math.sin(angle) * distance * 0.44;
+    const tilt = -13 * Math.PI / 180;
+
+    const x = rawX * Math.cos(tilt) - rawY * Math.sin(tilt);
+    const y = rawX * Math.sin(tilt) + rawY * Math.cos(tilt);
+
+    return {
+      left: `calc(7% + ${x.toFixed(2)}px)`,
+      top: `calc(50% + ${y.toFixed(2)}px)`,
+      x,
+      y
+    };
+  }
+
+  function createOrbit(body) {
+    if (body.key === "sun") return null;
+
+    const distance = compressedDistance(body.distanceAU);
+    const orbit = document.createElement("div");
+    orbit.className = "orbit";
+    if (body.key === state.selectedKey) orbit.classList.add("is-selected");
+    orbit.style.width = `${distance * 2}px`;
+    orbit.style.height = `${distance * 2 * 0.44}px`;
+    return orbit;
+  }
+
+  function createSun() {
+    const size = bodySize(BODIES[0]);
+    const sun = document.createElement("button");
+    sun.type = "button";
+    sun.className = "body sun";
+    sun.style.width = `${size}px`;
+    sun.style.height = `${size}px`;
+    sun.style.left = "7%";
+    sun.style.top = "50%";
+    sun.setAttribute("aria-label", "Sun · star");
+
+    ["sun-corona", "sun-granulation", "sun-turbulence", "sun-limb", "sun-highlight"].forEach((className) => {
+      const layer = document.createElement("span");
+      layer.className = className;
+      sun.appendChild(layer);
+    });
+
+    sun.addEventListener("click", function () {
+      state.selectedKey = "sun";
+      render();
+    });
+
+    return sun;
+  }
+
+  function createPlanet(body) {
+    const size = bodySize(body);
+    const pos = position(body);
+    const m = material(body);
+
+    const planet = document.createElement("button");
+    planet.type = "button";
+    planet.className = `body planet ${body.key}`;
+    if (body.key === state.selectedKey) planet.classList.add("is-selected");
+
+    planet.style.width = `${size}px`;
+    planet.style.height = `${size}px`;
+    planet.style.left = pos.left;
+    planet.style.top = pos.top;
+
+    planet.style.setProperty("--hi", m.hi);
+    planet.style.setProperty("--mid", m.mid);
+    planet.style.setProperty("--low", m.low);
+    planet.style.setProperty("--glow", m.glow);
+    planet.style.setProperty("--surface", m.surface);
+    planet.style.setProperty("--clouds", m.clouds);
+    planet.style.setProperty("--cloud-opacity", m.cloudOpacity);
+
+    planet.setAttribute("aria-label", `${body.name} · ${body.type}`);
+
+    const shell = document.createElement("span");
+    shell.className = "body-shell";
+
+    ["surface", "clouds", "shadow", "light", "rim"].forEach((className) => {
+      const layer = document.createElement("span");
+      layer.className = className;
+      shell.appendChild(layer);
+    });
+
+    planet.appendChild(shell);
+
+    if (body.rings) {
+      const ring = document.createElement("span");
+      ring.className = "ring";
+      planet.appendChild(ring);
     }
 
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      min-height: 100%;
-      color: var(--text);
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at 0% 18%, rgba(255, 99, 32, .18), transparent 26%),
-        radial-gradient(circle at 50% 4%, rgba(142,197,255,.14), transparent 22%),
-        radial-gradient(circle at 18% 28%, rgba(239,210,154,.08), transparent 30%),
-        radial-gradient(circle at 82% 42%, rgba(142,197,255,.07), transparent 28%),
-        linear-gradient(180deg, #01040c 0%, #071225 55%, #01040c 100%);
-      overflow-x: hidden;
+    if (body.moon && (state.zoom === "earth" || state.selectedKey === "earth")) {
+      const moon = document.createElement("span");
+      moon.className = "moon";
+      planet.appendChild(moon);
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: .26;
-      background:
-        radial-gradient(circle at 8% 16%, rgba(255,255,255,.78) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 22% 78%, rgba(255,255,255,.58) 0 1px, transparent 1.6px),
-        radial-gradient(circle at 71% 18%, rgba(255,255,255,.70) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 86% 66%, rgba(255,255,255,.46) 0 1px, transparent 1.4px),
-        radial-gradient(circle at 42% 36%, rgba(255,255,255,.50) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 58% 88%, rgba(255,255,255,.44) 0 1px, transparent 1.5px);
-      background-size: 260px 260px, 310px 310px, 340px 340px, 290px 290px, 360px 360px, 320px 320px;
-      background-position: 0 0, 80px 30px, 30px 110px, 120px 80px, 200px 30px, 40px 200px;
-      mask-image: radial-gradient(circle at 50% 36%, black, transparent 82%);
-      -webkit-mask-image: radial-gradient(circle at 50% 36%, black, transparent 82%);
-      z-index: 0;
+    const label = document.createElement("span");
+    label.className = "body-label";
+    label.textContent = body.name;
+    planet.appendChild(label);
+
+    planet.addEventListener("click", function () {
+      state.selectedKey = body.key;
+      if (body.key === "earth") state.zoom = "earth";
+      render();
+    });
+
+    return planet;
+  }
+
+  function updateControls() {
+    document.querySelectorAll("[data-zoom]").forEach((button) => {
+      const active = button.getAttribute("data-zoom") === state.zoom;
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      button.onclick = function () {
+        state.zoom = button.getAttribute("data-zoom") || "solar";
+        render();
+      };
+    });
+  }
+
+  function formatDays(days) {
+    if (!days) return "—";
+    if (days < 1000) return `${days.toFixed(1)} days`;
+    return `${(days / 365.256).toFixed(1)} years`;
+  }
+
+  function updateInfo() {
+    if (!info) return;
+
+    const body = BODIES.find((b) => b.key === state.selectedKey) || BODIES[0];
+
+    info.innerHTML = [
+      `<strong>${body.name} · ${body.type}</strong>`,
+      `<span>Radius: ${Math.round(body.radiusKm).toLocaleString("en-US")} km · Orbit: ${body.distanceAU || 0} AU · Orbital period: ${formatDays(body.orbitalDays)} · Axial tilt: ${body.axialTiltDeg.toFixed(2)}°</span>`,
+      `<span>Single-engine render: /gauges/index.js owns geometry, projection, Sun material, body detail, and interaction. No secondary runtime.</span>`
+    ].join("");
+  }
+
+  function render() {
+    scene.setAttribute("data-zoom", state.zoom);
+    scene.style.transform = `scale(${(ZOOM_STATES[state.zoom] || ZOOM_STATES.solar).sceneScale})`;
+    scene.innerHTML = "";
+
+    BODIES.forEach((body) => {
+      const orbit = createOrbit(body);
+      if (orbit) scene.appendChild(orbit);
+    });
+
+    scene.appendChild(createSun());
+
+    BODIES.slice(1).forEach((body) => {
+      const zoom = ZOOM_STATES[state.zoom] || ZOOM_STATES.solar;
+      if (state.zoom === "earth" && body.key !== "earth") return;
+      if (!zoom.showOuterLabels && body.distanceAU > 1.7) return;
+      scene.appendChild(createPlanet(body));
+    });
+
+    if (caption) {
+      caption.textContent = `${(ZOOM_STATES[state.zoom] || ZOOM_STATES.solar).label} · single-engine / material-integrated`;
     }
 
-    /* --- existing styles unchanged below --- */
-  </style>
-</head>
+    updateControls();
+    updateInfo();
+  }
 
-<body>
-  <main class="page" data-page="gauges" data-file="/gauges/index.html">
+  injectStyles();
+  render();
 
-    <!-- ALL EXISTING BODY CONTENT UNCHANGED -->
-
-  </main>
-
-  <!-- TNT: CORRECT RUNTIME ORDER (FULL REPLACEMENT OF SCRIPT SECTION) -->
-  <script defer src="/gauges/index.js"></script>
-  <script defer src="/gauges/gauges-runtime.js"></script>
-
-</body>
-</html>
+  window.DGBGaugesSingleEngineRuntime = Object.freeze({
+    version: VERSION,
+    owner: "/gauges/index.js",
+    rule: "One engine. One pass. No post-attach runtime.",
+    getState: function () {
+      return Object.assign({}, state);
+    }
+  });
+})();

@@ -1,22 +1,22 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · PANEL-SPLIT SHELL B1
+     ROOT INDEX · GENERATION 2 COMPASS COCKPIT · PANEL-SPLIT SHELL + RUNTIME QUEUE B1
      PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
      ROOT_BOOT_ID=root-sun-asset-b1
      COCKPIT_VERSION=root-compass-cockpit-b1
      RENDER_RUNTIME=compass-cockpit-render-b1
+     RUNTIME_QUEUE=compass-cockpit-runtime-queue-b1
      CONTROL_PANEL_RUNTIME=compass-cockpit-control-panel-b1
      INSTRUMENT_PANEL_RUNTIME=compass-cockpit-instrument-panel-b1
      SOURCE_MARKER=ROOT_COMPASS_COCKPIT_GENERATION_2_SOURCE_MARKER_B1
 
      PURPOSE:
        - Keep /index.html as protected shell only
+       - Queue existing runtime files through /runtime/compass_cockpit_runtime_queue.js
        - Preserve root contract and Bravo 6 compatibility
        - Preserve visible sun mount and fallback in source
        - Preserve cockpit viewport source structure
-       - Move control panel DOM to /runtime/compass_cockpit_control_panel.js
-       - Move instrument/telemetry DOM to /runtime/compass_cockpit_instrument_panel.js
-       - Keep /runtime/compass_cockpit_render.js as visual render authority
+       - Keep render, runtime queue, control panel, instrument panel, and operator as separate layers
        - Keep /index.js as cockpit operator
        - No heavy visual CSS in index
        - No control-panel button dump in index
@@ -109,6 +109,7 @@
     data-cosmic-control-plane="cosmic-control-plane-b1"
     data-compass-cockpit="root-compass-cockpit-b1"
     data-compass-cockpit-render="compass-cockpit-render-b1"
+    data-compass-cockpit-runtime-queue="compass-cockpit-runtime-queue-b1"
     data-compass-cockpit-control-panel="compass-cockpit-control-panel-b1"
     data-compass-cockpit-instrument-panel="compass-cockpit-instrument-panel-b1"
     data-sun-satellite-profile="satellite-solar-surface-b1"
@@ -227,6 +228,7 @@
   </noscript>
 
   <script src="/runtime/compass_cockpit_render.js?v=compass-cockpit-render-b1" defer></script>
+  <script src="/runtime/compass_cockpit_runtime_queue.js?v=compass-cockpit-runtime-queue-b1" defer></script>
   <script src="/runtime/compass_cockpit_instrument_panel.js?v=compass-cockpit-instrument-panel-b1" defer></script>
   <script src="/runtime/compass_cockpit_control_panel.js?v=compass-cockpit-control-panel-b1" defer></script>
   <script src="/runtime/spine_canopy_runtime.js?v=spine-canopy-parachute-b1" defer></script>

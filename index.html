@@ -9,7 +9,7 @@
     content="Diamond Gate Bridge: a universe and sun-centered entry surface built around Learn to Live to Love."
   />
 
-  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=luminous-centered-plasma-b5" />
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=satellite-solar-disc-b6" />
 
   <style>
     :root {
@@ -24,9 +24,7 @@
       --max: 1180px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html,
     body {
@@ -40,9 +38,8 @@
     body {
       overflow-x: hidden;
       background:
-        radial-gradient(circle at 50% 24%, rgba(255, 161, 45, 0.18), transparent 22rem),
+        radial-gradient(circle at 50% 24%, rgba(255, 161, 45, 0.12), transparent 22rem),
         radial-gradient(circle at 20% 16%, rgba(88, 122, 255, 0.13), transparent 18rem),
-        radial-gradient(circle at 82% 12%, rgba(255, 248, 231, 0.07), transparent 16rem),
         linear-gradient(180deg, #071225 0%, #030714 50%, #010309 100%);
     }
 
@@ -54,17 +51,13 @@
       pointer-events: none;
       background-image:
         radial-gradient(circle, rgba(255,255,255,0.54) 0 1px, transparent 1.7px),
-        radial-gradient(circle, rgba(255,217,138,0.26) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(255,255,255,0.16) 0 1px, transparent 1.4px);
-      background-size: 91px 91px, 143px 143px, 229px 229px;
-      background-position: 12px 26px, 52px 72px, 118px 44px;
-      opacity: 0.22;
+        radial-gradient(circle, rgba(255,217,138,0.20) 0 1px, transparent 1.6px);
+      background-size: 91px 91px, 143px 143px;
+      background-position: 12px 26px, 52px 72px;
+      opacity: 0.20;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
     .page {
       position: relative;
@@ -106,10 +99,7 @@
         0 16px 40px rgba(0,0,0,0.38);
     }
 
-    .brand-copy {
-      display: grid;
-      min-width: 0;
-    }
+    .brand-copy { display: grid; min-width: 0; }
 
     .brand-name {
       font-size: 0.98rem;
@@ -127,7 +117,7 @@
     }
 
     .status-pill {
-      max-width: min(100%, 620px);
+      max-width: min(100%, 640px);
       overflow: hidden;
       text-overflow: ellipsis;
       border: 1px solid var(--line);
@@ -151,10 +141,7 @@
       padding: clamp(10px, 3vw, 28px) 0;
     }
 
-    .hero-copy {
-      position: relative;
-      z-index: 5;
-    }
+    .hero-copy { position: relative; z-index: 5; }
 
     .eyebrow {
       margin: 0 0 14px;
@@ -230,15 +217,14 @@
     .sun-field::before {
       content: "";
       position: absolute;
-      width: 106%;
+      width: 104%;
       aspect-ratio: 1;
       border-radius: 999px;
       background:
-        radial-gradient(circle at 50% 50%, rgba(255, 217, 138, 0.16), transparent 28%),
-        radial-gradient(circle at 50% 50%, rgba(255, 97, 22, 0.10), transparent 54%),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,0.04), transparent 72%);
-      filter: blur(14px);
-      opacity: 0.82;
+        radial-gradient(circle at 50% 50%, rgba(255, 222, 138, 0.10), transparent 34%),
+        radial-gradient(circle at 50% 50%, rgba(255, 97, 22, 0.055), transparent 62%);
+      filter: blur(20px);
+      opacity: 0.72;
       pointer-events: none;
     }
 
@@ -344,49 +330,33 @@
         min-height: auto;
       }
 
-      .hero-copy {
-        text-align: center;
-      }
+      .hero-copy { text-align: center; }
 
       .statement {
         margin-left: auto;
         margin-right: auto;
       }
 
-      .nav-rail {
-        justify-content: center;
-      }
+      .nav-rail { justify-content: center; }
 
-      .sun-field {
-        min-height: 680px;
-      }
+      .sun-field { min-height: 680px; }
     }
 
     @media (max-width: 680px) {
-      .page {
-        padding: 14px;
-      }
+      .page { padding: 14px; }
 
       .topbar {
         align-items: flex-start;
         flex-direction: column;
       }
 
-      .status-pill {
-        white-space: normal;
-      }
+      .status-pill { white-space: normal; }
 
-      .hero {
-        gap: 8px;
-      }
+      .hero { gap: 8px; }
 
-      .hero-copy {
-        display: none;
-      }
+      .hero-copy { display: none; }
 
-      .mobile-title {
-        display: block;
-      }
+      .mobile-title { display: block; }
 
       .sun-field {
         min-height: 585px;
@@ -398,9 +368,7 @@
         margin-top: 10px;
       }
 
-      .mobile-nav {
-        display: flex;
-      }
+      .mobile-nav { display: flex; }
 
       .bottom-strip {
         align-items: flex-start;
@@ -409,13 +377,9 @@
     }
 
     @media (max-width: 420px) {
-      .sun-field {
-        min-height: 555px;
-      }
+      .sun-field { min-height: 555px; }
 
-      .sun-mount {
-        width: min(112vw, 430px);
-      }
+      .sun-mount { width: min(112vw, 430px); }
     }
   </style>
 </head>
@@ -440,7 +404,7 @@
         <h1 id="page-title">Diamond Gate Bridge</h1>
         <p class="theme">Learn to Live to Love</p>
         <p class="statement">
-          A cosmic entry surface centered on one luminous centered plasma sun, one field, and one clear path forward.
+          A cosmic entry surface centered on one satellite-style solar disc, one field, and one clear path forward.
         </p>
 
         <nav class="nav-rail" aria-label="Primary navigation">
@@ -463,7 +427,7 @@
           class="sun-mount"
           data-dgb-sun-mount
           data-sun-mode="canvas"
-          aria-label="Luminous centered plasma sun"
+          aria-label="Satellite-style solar disc"
         ></div>
       </div>
 
@@ -478,8 +442,8 @@
     </section>
 
     <footer class="bottom-strip">
-      <span>Generation 1 · Sun Asset Spine Baseline 2</span>
-      <span>Canvas authority · Luminous centered plasma b5 · Coordinate fixed</span>
+      <span>Generation 1 · Sun Asset Spine Baseline 3</span>
+      <span>Canvas authority · Satellite solar disc b6 · No planet read</span>
     </footer>
   </main>
 
@@ -489,6 +453,6 @@
     </div>
   </noscript>
 
-  <script src="/index.js?v=luminous-centered-plasma-b5" defer></script>
+  <script src="/index.js?v=satellite-solar-disc-b6" defer></script>
 </body>
 </html>

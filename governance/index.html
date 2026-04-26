@@ -1,19 +1,25 @@
 <!doctype html>
 <!-- TNT — /governance/index.html
-     GOVERNANCE · INDEX (FOUR PILLARS) — INFORMAL SITE LAYER (PINNED)
-     EXECUTED UPGRADES (PER SEAN):
-       - Apply new GOLD INLAY 3D concept (radial/conic inlay; not flat grid)
-       - Apply GOLD PERIMETER GLOW to pressed/active controls + primary action buttons (no motion)
-       - Keep PLATFORM vs ENGINEERING lens (URL-only lane; NO reload)
-       - Trilingual UI (EN/中文/ES) (NO reload)
-       - Single-open accordion (tap same closes)
-       - Switching LANG or LANE does NOT reload and does NOT close open row
+     GOVERNANCE · INDEX (FOUR PILLARS) — INFORMAL SITE LAYER (PINNED) · LEVEL 4 MARRIAGE
+     EXECUTED UPGRADES:
+       - Preserve submitted pinned informal governance shell as the control authority
+       - Marry Level 4 structure into existing visual/runtime behavior
+       - Add Compass / North Star / Legend / Governance Ledger / Route Map
+       - Preserve GOLD INLAY 3D concept and GOLD PERIMETER GLOW
+       - Preserve PLATFORM vs ENGINEERING lens with URL-only lane behavior
+       - Preserve trilingual UI EN/中文/ES without reload
+       - Preserve single-open accordion with tap-same-closes
+       - Switching LANG or LANE does NOT reload and does NOT close an open row
        - No modals/overlays; no inline onclick; addEventListener only
        - Canon state carry: lang/style/time/depth via URL + LS gd_lang/gd_style/gd_time/gd_depth ONLY
        - NO new gd_* keys
      ROUTING:
        - This page must be reachable at /governance/ from compass.
-       - If a pillar page 404s: create it at the route below (do NOT point elsewhere).
+       - Pillar product routes remain:
+         /products/governing/policy-engine/
+         /products/governing/compliance-grid/
+         /products/governing/public-risk-meter/
+         /products/governing/decision-index/
 -->
 
 <html lang="en">
@@ -40,6 +46,7 @@ body::before,body::after{pointer-events:none!important}
   --ink:rgba(255,255,255,.95);
   --txt:rgba(255,255,255,.90);
   --mut:rgba(255,255,255,.78);
+  --soft:rgba(255,255,255,.62);
 
   --onyx0:rgba(6,8,10,.96);
   --onyx1:rgba(10,12,16,.86);
@@ -49,8 +56,13 @@ body::before,body::after{pointer-events:none!important}
   --opalV:rgba(90,40,120,.10);
 
   --gold:rgba(201,162,74,.62);
+  --goldSolid:rgba(201,162,74,.92);
   --goldGlow:rgba(201,162,74,.22);
   --goldGlowSoft:rgba(201,162,74,.14);
+
+  --green:rgba(128,240,182,.92);
+  --blue:rgba(147,197,253,.92);
+  --red:rgba(255,154,154,.92);
 
   --shadowA:0 24px 90px rgba(0,0,0,.58);
   --shadowB:0 16px 56px rgba(0,0,0,.62);
@@ -87,7 +99,6 @@ body::before,body::after{pointer-events:none!important}
   box-shadow:var(--shadowC);
 }
 .btn:active{transform:translateY(1px)}
-/* perimeter glow (NOT bottom-only) */
 .btn::after{
   content:"";
   position:absolute;inset:-2px;
@@ -218,8 +229,6 @@ body::before,body::after{pointer-events:none!important}
   padding:16px 16px 14px;
   overflow:hidden;
 }
-
-/* 3D inlay trim (radial + conic) */
 .header::before{
   content:"";
   position:absolute;inset:0;border-radius:24px;pointer-events:none;
@@ -282,6 +291,71 @@ body::before,body::after{pointer-events:none!important}
   background:rgba(0,0,0,.14);
   font-weight:980;letter-spacing:.25px;
   color:rgba(255,255,255,.90);
+}
+
+/* Level 4 structural cards */
+.l4Grid{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+.l4Card{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.09), transparent 58%),
+    radial-gradient(circle at 82% 30%, rgba(90,40,120,.10), transparent 66%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.07), transparent 64%),
+    linear-gradient(145deg, rgba(17,22,28,.78), rgba(11,15,20,.92));
+  box-shadow:var(--shadowA);
+  padding:16px;
+  position:relative;
+  overflow:hidden;
+}
+.l4Card::before{
+  content:"";
+  position:absolute;inset:0;border-radius:22px;pointer-events:none;
+  box-shadow: inset 0 0 0 1px rgba(201,162,74,.10);
+  opacity:.60;
+}
+.l4Card h2{
+  margin:0 0 8px;
+  color:var(--ink);
+  font-size:17px;
+  line-height:1;
+  letter-spacing:.2px;
+  position:relative;
+}
+.l4Card p{
+  margin:0;
+  color:rgba(255,255,255,.84);
+  line-height:1.58;
+  font-size:14.25px;
+  position:relative;
+}
+.legendStack{
+  display:grid;
+  gap:8px;
+  margin-top:12px;
+  position:relative;
+}
+.legendItem{
+  display:grid;
+  grid-template-columns:88px 1fr;
+  gap:10px;
+  border-top:1px solid rgba(255,255,255,.08);
+  padding-top:8px;
+  color:rgba(255,255,255,.80);
+  line-height:1.45;
+  font-size:13.25px;
+}
+.legendItem strong{
+  color:var(--goldSolid);
+  font-size:11px;
+  letter-spacing:1.4px;
+  text-transform:uppercase;
 }
 
 /* Accordion */
@@ -391,6 +465,85 @@ body::before,body::after{pointer-events:none!important}
 }
 .actions .btn{padding:10px 14px;border-radius:999px;min-height:40px;font-size:13px}
 
+/* Governance ledger */
+.ledger{
+  position:relative;
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.ledgerRow{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 22% 18%, rgba(255,43,43,.08), transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
+    linear-gradient(145deg, rgba(17,22,28,.74), rgba(11,15,20,.90));
+  box-shadow:var(--shadowB);
+  display:grid;
+  grid-template-columns:180px 1fr 122px;
+  gap:12px;
+  align-items:center;
+  padding:14px;
+}
+.ledgerRow strong{
+  color:var(--ink);
+  font-size:14px;
+  letter-spacing:.2px;
+}
+.ledgerRow span{
+  color:rgba(255,255,255,.80);
+  font-size:13.25px;
+  line-height:1.45;
+}
+.status{
+  justify-self:end;
+  border-radius:999px;
+  padding:7px 10px;
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(128,240,182,.10);
+  color:var(--green)!important;
+  font-weight:950;
+  font-size:11px!important;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+
+/* Route map */
+.routeMap{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:10px;
+}
+.routeMap a{
+  min-height:48px;
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(201,162,74,.08), transparent 58%),
+    linear-gradient(145deg, rgba(10,12,16,.72), rgba(6,8,10,.86));
+  box-shadow:var(--shadowC);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:rgba(255,255,255,.82);
+  font-weight:950;
+  font-size:13px;
+  letter-spacing:.2px;
+  position:relative;
+  overflow:hidden;
+}
+.routeMap a::after{
+  content:"";
+  position:absolute;inset:-2px;border-radius:20px;
+  pointer-events:none;
+  box-shadow:0 0 20px var(--goldGlowSoft);
+  opacity:.62;
+}
+
 /* Dock */
 .dock{
   position:fixed;left:50%;
@@ -410,9 +563,24 @@ body::before,body::after{pointer-events:none!important}
   gap:10px;
 }
 .dock .btn{width:100%;padding:10px 10px;border-radius:999px;white-space:nowrap}
+
+@media (max-width:900px){
+  .l4Grid{grid-template-columns:1fr}
+  .ledgerRow{grid-template-columns:1fr}
+  .status{justify-self:start}
+  .routeMap{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:620px){
+  .top{position:absolute}
+  .top .left,.top .right{width:100%}
+  .seg{max-width:100%;overflow:auto}
+  .q{white-space:normal}
+}
 @media (max-width:520px){
   :root{--dockH:148px}
   .dock{grid-template-columns:repeat(3, minmax(0,1fr))}
+  .routeMap{grid-template-columns:1fr}
+  .legendItem{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -453,8 +621,45 @@ body::before,body::after{pointer-events:none!important}
     </div>
   </section>
 
+  <div class="band" id="l4Band">LEVEL 4 STRUCTURE</div>
+
+  <section class="l4Grid" aria-label="Governance Level 4 structure">
+    <article class="l4Card">
+      <h2 id="compassTitle">Compass</h2>
+      <p id="compassBody"></p>
+      <div class="legendStack">
+        <div class="legendItem"><strong id="northLabel">North</strong><span id="northBody"></span></div>
+        <div class="legendItem"><strong id="eastLabel">East</strong><span id="eastBody"></span></div>
+        <div class="legendItem"><strong id="southLabel">South</strong><span id="southBody"></span></div>
+        <div class="legendItem"><strong id="westLabel">West</strong><span id="westBody"></span></div>
+      </div>
+    </article>
+
+    <article class="l4Card">
+      <h2 id="northStarTitle">North Star</h2>
+      <p id="northStarBody"></p>
+      <div class="legendStack">
+        <div class="legendItem"><strong id="purposeLabel">Purpose</strong><span id="purposeBody"></span></div>
+        <div class="legendItem"><strong id="methodLabel">Method</strong><span id="methodBody"></span></div>
+        <div class="legendItem"><strong id="failureLabel">Failure</strong><span id="failureBody"></span></div>
+      </div>
+    </article>
+  </section>
+
   <div class="band" id="band">PILLARS (OPEN ONE)</div>
   <div class="list" id="list"></div>
+
+  <div class="band" id="ledgerBand">GOVERNANCE LEDGER</div>
+  <section class="ledger" id="ledger" aria-label="Governance ledger"></section>
+
+  <div class="band" id="routeBand">ROUTE MAP</div>
+  <nav class="routeMap" aria-label="Governance route map">
+    <a data-route="/index.html" href="/index.html" id="routeCompass">COMPASS</a>
+    <a data-route="/explore/" href="/explore/" id="routeExplore">EXPLORE</a>
+    <a data-route="/products/" href="/products/" id="routeProducts">PRODUCTS</a>
+    <a data-route="/laws/" href="/laws/" id="routeLaws">LAWS</a>
+    <a data-route="/gauges/" href="/gauges/" id="routeGauges">GAUGES</a>
+  </nav>
 </div>
 
 <nav class="dock" aria-label="Bottom navigation">
@@ -569,6 +774,57 @@ body::before,body::after{pointer-events:none!important}
     }
   };
 
+  var L4={
+    en:{
+      level:"LEVEL 4 STRUCTURE",
+      compassTitle:"Compass",
+      compassBody:"Governance sits between doctrine and deployment. It does not replace law. It converts law into repeatable action, review, repair, and public accountability.",
+      north:"North", northBody:"Boundary, authority, admissibility, and public legitimacy.",
+      east:"East", eastBody:"Operational systems, reporting surfaces, and implementation movement.",
+      south:"South", southBody:"Continuity, safety, compliance, restoration, and service reliability.",
+      west:"West", westBody:"Stress testing, contradiction detection, pressure review, and correction.",
+      northStarTitle:"North Star",
+      northStarBody:"A governance system is healthy when decisions can be traced, risks can be seen, obligations can be audited, and public-facing action remains inside the lawful boundary.",
+      purpose:"Purpose", purposeBody:"Make lawful execution visible, repeatable, and accountable.",
+      method:"Method", methodBody:"Bind policy, compliance, risk, and decision records into one reviewable operating layer.",
+      failure:"Failure", failureBody:"Hidden discretion, untracked risk, unenforced policy, and decisions without a ledger.",
+      ledger:"GOVERNANCE LEDGER",
+      route:"ROUTE MAP"
+    },
+    zh:{
+      level:"第四级结构",
+      compassTitle:"罗盘",
+      compassBody:"治理位于原则与部署之间。它不替代法律，而是把法律转化为可重复的行动、审查、修复与公共问责。",
+      north:"北", northBody:"边界、权威、可准入性与公共合法性。",
+      east:"东", eastBody:"运营系统、报告界面与实施运动。",
+      south:"南", southBody:"连续性、安全、合规、恢复与服务可靠性。",
+      west:"西", westBody:"压力测试、矛盾侦测、压力审查与修正。",
+      northStarTitle:"北星",
+      northStarBody:"当决策可追踪、风险可见、义务可审计、公共行动保持在合法边界内时，治理系统就是健康的。",
+      purpose:"目的", purposeBody:"让合法执行变得可见、可重复、可问责。",
+      method:"方法", methodBody:"把政策、合规、风险与决策记录绑定为一个可审查的操作层。",
+      failure:"失败", failureBody:"隐藏裁量、未追踪风险、未执行政策、没有账本的决策。",
+      ledger:"治理账本",
+      route:"路由图"
+    },
+    es:{
+      level:"ESTRUCTURA NIVEL 4",
+      compassTitle:"Brújula",
+      compassBody:"La gobernanza se ubica entre doctrina y despliegue. No reemplaza la ley; convierte la ley en acción, revisión, reparación y rendición pública repetibles.",
+      north:"Norte", northBody:"Límite, autoridad, admisibilidad y legitimidad pública.",
+      east:"Este", eastBody:"Sistemas operativos, superficies de reporte y movimiento de implementación.",
+      south:"Sur", southBody:"Continuidad, seguridad, cumplimiento, restauración y confiabilidad del servicio.",
+      west:"Oeste", westBody:"Prueba de presión, detección de contradicción, revisión y corrección.",
+      northStarTitle:"Estrella Norte",
+      northStarBody:"Un sistema de gobernanza es sano cuando las decisiones son trazables, los riesgos son visibles, las obligaciones son auditables y la acción pública permanece dentro del límite legal.",
+      purpose:"Propósito", purposeBody:"Hacer la ejecución legal visible, repetible y responsable.",
+      method:"Método", methodBody:"Unir política, cumplimiento, riesgo y registros de decisión en una capa operativa revisable.",
+      failure:"Falla", failureBody:"Discreción oculta, riesgo no rastreado, política no aplicada y decisiones sin registro.",
+      ledger:"REGISTRO DE GOBERNANZA",
+      route:"MAPA DE RUTAS"
+    }
+  };
+
   function P(en,zh,es){ return {en:en, zh:zh, es:es}; }
 
   // ===== Pillars (4) =====
@@ -579,22 +835,22 @@ body::before,body::after{pointer-events:none!important}
       s:P("Turn rules into decisions institutions can execute.","把规则变成机构可执行决策。","Convertir reglas en decisiones ejecutables."),
       platform:{
         intro:P(
-          "Policy turns doctrine into actions. This pillar compresses rules into a small set of executable decisions that can be enforced consistently.",
-          "政策把教义变成动作。本支柱把规则压缩为一小组可执行决策，并一致执行。",
-          "Política convierte doctrina en acción. Este pilar comprime reglas en decisiones ejecutables y consistentes."
+          "Policy turns doctrine into action. This pillar compresses rules into executable decisions that can be enforced consistently, reviewed publicly, and amended without losing the boundary.",
+          "政策把教义变成动作。本支柱把规则压缩为可执行决策，使其能一致执行、公开审查，并在不失边界的情况下修订。",
+          "Política convierte doctrina en acción. Este pilar comprime reglas en decisiones ejecutables que pueden aplicarse, revisarse públicamente y enmendarse sin perder el límite."
         ),
-        b1:{h:P("Outputs","输出","Salidas"), p:P("Allowed/blocked actions with plain reasons.","允许/阻止动作 + 人话原因。","Acciones permitidas/bloqueadas con razones claras.")},
-        b2:{h:P("Stops drift","阻止漂移","Detiene deriva"), p:P("Prevents ad-hoc exceptions becoming policy.","防止随意例外变成政策。","Evita que excepciones ad-hoc se vuelvan política.")},
-        b3:{h:P("Connects to Laws","连接法则","Conecta a Leyes"), p:P("Laws bound; Policy Engine executes.","法则定边界；政策引擎执行。","Leyes acotan; el motor ejecuta.")} },
+        b1:{h:P("Outputs","输出","Salidas"), p:P("Allowed/blocked actions with plain reasons, owners, review windows, and amendment paths.","允许/阻止动作 + 人话原因、负责人、审查窗口与修订路径。","Acciones permitidas/bloqueadas con razones claras, responsables, ventanas de revisión y rutas de enmienda.")},
+        b2:{h:P("Stops drift","阻止漂移","Detiene deriva"), p:P("Prevents ad-hoc exceptions becoming policy and prevents policy from becoming private discretion.","防止随意例外变成政策，也防止政策变成私人裁量。","Evita que excepciones ad-hoc se vuelvan política y que política se vuelva discreción privada.")},
+        b3:{h:P("Connects to Laws","连接法则","Conecta a Leyes"), p:P("Laws bound; Policy Engine deploys; Gauges measure whether deployment holds.","法则定边界；政策引擎部署；量规测量部署是否成立。","Leyes acotan; el motor despliega; medidores verifican si el despliegue sostiene.")} },
       engineering:{
         intro:P(
-          "Deterministic compilation: scope + constraints → reason-coded decisions, logged as receipts for replay.",
-          "确定性编译：范围+约束→原因码决策，并以收据记录供回放。",
-          "Compilación determinista: alcance+restricciones → decisiones con códigos, con recibos para replay."
+          "Deterministic compilation: scope + constraints → reason-coded decisions, logged as receipts for replay and audit comparison.",
+          "确定性编译：范围+约束→原因码决策，并以收据记录以供回放与审计比较。",
+          "Compilación determinista: alcance+restricciones → decisiones con códigos, registradas como recibos para replay y auditoría."
         ),
-        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope manifest, constraint set, thresholds, version.","范围清单、约束集、阈值、版本。","Manifiesto, restricciones, umbrales, versión.")},
-        b2:{h:P("Determinism","确定性","Determinismo"), p:P("Same inputs → same outputs; changes require version bump.","同输入→同输出；变更必须版本升级。","Mismas entradas → mismas salidas; cambios requieren versión.")},
-        b3:{h:P("Receipts","收据","Recibos"), p:P("Decision receipt: inputs used + reason code + timestamp.","决策收据：使用输入+原因码+时间戳。","Recibo: entradas + código + timestamp.")} }
+        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope manifest, constraint set, thresholds, version, owner, review cadence.","范围清单、约束集、阈值、版本、负责人、审查节奏。","Manifiesto, restricciones, umbrales, versión, dueño y cadencia de revisión.")},
+        b2:{h:P("Determinism","确定性","Determinismo"), p:P("Same inputs → same outputs; changes require version bump and receipt.","同输入→同输出；变更必须版本升级并生成收据。","Mismas entradas → mismas salidas; cambios requieren versión y recibo.")},
+        b3:{h:P("Receipts","收据","Recibos"), p:P("Decision receipt: inputs used + reason code + timestamp + review path.","决策收据：使用输入+原因码+时间戳+审查路径。","Recibo: entradas + código + timestamp + ruta de revisión.")} }
     },
 
     {
@@ -603,22 +859,22 @@ body::before,body::after{pointer-events:none!important}
       s:P("Make constraints visible and enforceable across teams.","让约束跨团队可见且可执行。","Hacer restricciones visibles y ejecutables."),
       platform:{
         intro:P(
-          "Compliance keeps scale honest. It makes requirements visible so teams stop interpreting rules differently.",
-          "合规让规模化保持诚实：要求可见，团队不再各自解释。",
-          "Cumplimiento mantiene la escala honesta: requisitos visibles para evitar interpretaciones distintas."
+          "Compliance keeps scale honest. It makes requirements visible so teams stop interpreting rules differently and so obligations can be reviewed before failure.",
+          "合规让规模化保持诚实：要求可见，团队不再各自解释规则，义务也能在失败前被审查。",
+          "Cumplimiento mantiene la escala honesta: requisitos visibles para evitar interpretaciones distintas y revisar obligaciones antes de fallar."
         ),
-        b1:{h:P("What it shows","展示什么","Qué muestra"), p:P("Requirement → evidence → status.","要求→证据→状态。","Requisito → evidencia → estado.")},
-        b2:{h:P("Why it matters","为何重要","Por qué importa"), p:P("Scale fails when rules drift across teams.","规则在团队间漂移，扩张就会失败。","La escala falla cuando reglas derivan entre equipos.")},
-        b3:{h:P("Routes on violation","违规路由","Ruta ante violación"), p:P("Route to Laws (bounds) and Gauges (signals).","路由到法则（边界）与量规（信号）。","Enrutar a Leyes (límites) y Medidores (señales).")} },
+        b1:{h:P("What it shows","展示什么","Qué muestra"), p:P("Requirement → evidence → owner → status → next review.","要求→证据→负责人→状态→下一次审查。","Requisito → evidencia → responsable → estado → próxima revisión.")},
+        b2:{h:P("Why it matters","为何重要","Por qué importa"), p:P("Scale fails when rules drift across teams, surfaces, or time windows.","规则在团队、界面或时间窗口之间漂移，扩张就会失败。","La escala falla cuando reglas derivan entre equipos, superficies o ventanas de tiempo.")},
+        b3:{h:P("Routes on violation","违规路由","Ruta ante violación"), p:P("Route to Laws for boundary, Gauges for evidence, and Decision Index for repair sequence.","路由到法则看边界，到量规看证据，到决策指数看修复顺序。","Enrutar a Leyes para límite, Medidores para evidencia e Índice para reparación.")} },
       engineering:{
         intro:P(
-          "Constraint surface + enforcement logging. Each cell maps to a check, threshold, and receipt schema.",
-          "约束面+执行日志：每个格子对应检查、阈值与收据架构。",
-          "Superficie de restricciones + logging. Cada celda mapea a check, umbral y esquema de recibo."
+          "Constraint surface + enforcement logging. Each cell maps to a check, threshold, proof object, and receipt schema.",
+          "约束面+执行日志：每个格子对应检查、阈值、证明对象与收据架构。",
+          "Superficie de restricciones + logging. Cada celda mapea a check, umbral, prueba y esquema de recibo."
         ),
-        b1:{h:P("Machine-checkable","可机检","Comprobable"), p:P("PASS/HOLD/FAIL with reason codes.","PASS/HOLD/FAIL + 原因码。","PASS/HOLD/FAIL con códigos.")},
-        b2:{h:P("Audit trail","审计轨迹","Auditoría"), p:P("No silent compliance; checks logged by window.","无静默合规；按窗口记录。","Sin cumplimiento silencioso; checks por ventana.")},
-        b3:{h:P("Interfaces","接口","Interfaces"), p:P("Consumes Laws/Gauges; emits receipts to Registry.","消费法则/量规；输出收据到Registry。","Consume Leyes/Medidores; emite recibos al Registro.")} }
+        b1:{h:P("Machine-checkable","可机检","Comprobable"), p:P("PASS/HOLD/FAIL with reason codes and evidence pointers.","PASS/HOLD/FAIL + 原因码与证据指针。","PASS/HOLD/FAIL con códigos y punteros de evidencia.")},
+        b2:{h:P("Audit trail","审计轨迹","Auditoría"), p:P("No silent compliance; checks are logged by scope, owner, and review window.","无静默合规；按范围、负责人和审查窗口记录检查。","Sin cumplimiento silencioso; checks por alcance, dueño y ventana.")},
+        b3:{h:P("Interfaces","接口","Interfaces"), p:P("Consumes Laws/Gauges; emits receipts to Decision Index and route surfaces.","消费法则/量规；向决策指数与路由界面输出收据。","Consume Leyes/Medidores; emite recibos al Índice y rutas.")} }
     },
 
     {
@@ -627,22 +883,22 @@ body::before,body::after{pointer-events:none!important}
       s:P("Readable stability posture: green/yellow/red.","可读稳定姿态：绿/黄/红。","Postura legible: verde/amarillo/rojo."),
       platform:{
         intro:P(
-          "This is the public surface. It translates technical risk into a calm, repeatable signal—preventing panic and preventing denial.",
-          "这是公众面：把技术风险翻译成冷静且可复跑的信号，既防恐慌也防否认。",
-          "Superficie pública: traduce riesgo técnico a señal calmada y repetible, evitando pánico y negación."
+          "This is the public surface. It translates technical and institutional risk into a calm, repeatable signal—preventing panic and preventing denial.",
+          "这是公众面：把技术与制度风险翻译成冷静且可复跑的信号，既防恐慌也防否认。",
+          "Superficie pública: traduce riesgo técnico e institucional a señal calmada y repetible, evitando pánico y negación."
         ),
-        b1:{h:P("Answers","回答什么","Responde"), p:P("Are we stable? If not, where is the leak and what is next?","我们稳定吗？不稳定的话，哪里在漏，下一步是什么？","¿Estamos estables? Si no, ¿dónde está la fuga y qué sigue?")},
-        b2:{h:P("Avoids intent debates","避免意图争论","Evita debatir intención"), p:P("Observed behavior + measured signals only.","只看观测行为与测得信号。","Solo señales medidas y comportamiento observado.")},
-        b3:{h:P("Integrates","如何整合","Integra"), p:P("Routes to Gauges for detail; Laws for bounds.","到量规看细节；到法则看边界。","Enruta a Medidores (detalle) y Leyes (límites).")} },
+        b1:{h:P("Answers","回答什么","Responde"), p:P("Are we stable? If not, where is the leak, what is the class of risk, and what is next?","我们稳定吗？不稳定的话，哪里在漏，风险类别是什么，下一步是什么？","¿Estamos estables? Si no, ¿dónde está la fuga, qué clase de riesgo es y qué sigue?")},
+        b2:{h:P("Avoids intent debates","避免意图争论","Evita debatir intención"), p:P("Observed behavior + measured signals only. No hidden motive claims.","只看观测行为与测得信号。不做隐藏动机主张。","Solo señales medidas y comportamiento observado. Sin reclamar motivos ocultos.")},
+        b3:{h:P("Integrates","如何整合","Integra"), p:P("Routes to Gauges for detail, Laws for boundary, and Compliance Grid for duty repair.","到量规看细节，到法则看边界，到合规网格修复义务。","Enruta a Medidores, Leyes y Grid de Cumplimiento.")} },
       engineering:{
         intro:P(
           "Windowed exposure report: thresholds + trend + correlation watch. Posture output, not narrative.",
           "窗口化暴露报告：阈值+趋势+相关监测。输出姿态，不输出叙事。",
           "Reporte por ventanas: umbrales + tendencia + vigilancia de correlación. Salida de postura, no narrativa."
         ),
-        b1:{h:P("Signals","信号","Señales"), p:P("Exposure, acceleration, correlated movement (ρ/Δρ) when applicable.","暴露、加速度、以及可用时的ρ/Δρ。","Exposición, aceleración y ρ/Δρ cuando aplique.")},
-        b2:{h:P("Triggers","触发","Triggers"), p:P("Band crossing emits reason code + receipt links.","穿越区间输出原因码并链接收据。","Cruce de banda emite código y enlaces a recibos.")},
-        b3:{h:P("Bounded outputs","有界输出","Salidas acotadas"), p:P("GREEN/YELLOW/RED + codes; no causality claims.","GREEN/YELLOW/RED + 原因码；不做因果主张。","VERDE/AMARILLO/ROJO + códigos; sin causalidad.")} }
+        b1:{h:P("Signals","信号","Señales"), p:P("Exposure, acceleration, stale language, missing file, broken route, and correlated movement when applicable.","暴露、加速度、陈旧语言、缺失文件、断路由，以及可用时的相关运动。","Exposición, aceleración, lenguaje obsoleto, archivo faltante, ruta rota y movimiento correlacionado.")},
+        b2:{h:P("Triggers","触发","Triggers"), p:P("Band crossing emits reason code, receipt links, and next repair priority.","穿越区间输出原因码、收据链接与下一修复优先级。","Cruce de banda emite código, enlaces de recibo y siguiente prioridad.")},
+        b3:{h:P("Bounded outputs","有界输出","Salidas acotadas"), p:P("GREEN/YELLOW/RED + codes; no causality claims beyond evidence.","GREEN/YELLOW/RED + 原因码；不超证据做因果主张。","VERDE/AMARILLO/ROJO + códigos; sin causalidad fuera de evidencia.")} }
     },
 
     {
@@ -651,27 +907,56 @@ body::before,body::after{pointer-events:none!important}
       s:P("Compress choice into a short executable next step list.","把选择压成可执行的下一步清单。","Comprime elección en lista ejecutable."),
       platform:{
         intro:P(
-          "This is the anti-confusion surface. It turns a big problem into a short list of next actions with clear stop conditions.",
-          "这是反混乱界面：把大问题压成下一步清单，并给清晰停止条件。",
-          "Superficie anti-confusión: convierte problemas grandes en acciones siguientes con condiciones de parada."
+          "This is the anti-confusion surface. It turns a large problem into a short list of next actions with clear stop conditions, owners, and proof requirements.",
+          "这是反混乱界面：把大问题压成下一步清单，并给出停止条件、负责人和证明要求。",
+          "Superficie anti-confusión: convierte problemas grandes en acciones siguientes con condiciones de parada, dueños y pruebas."
         ),
-        b1:{h:P("Produces","产出","Produce"), p:P("Ranked next steps, then a stop condition.","排序下一步，然后给停止条件。","Siguientes pasos rankeados y condición de stop.")},
-        b2:{h:P("Governance reason","治理原因","Razón"), p:P("Decisions must be comparable across teams/time, not personality-based.","决策必须跨团队/时间可比，不靠个性。","Decisiones comparables entre equipos/tiempo, no por personalidad.")},
-        b3:{h:P("Routes to pillars","路由到支柱","Enruta a pilares"), p:P("Policy Engine (enforce), Compliance Grid (requirements), Gauges (evidence).","政策引擎（执行）、合规网格（要求）、量规（证据）。","Motor (enforce), Grid (requisitos), Medidores (evidencia).")} },
+        b1:{h:P("Produces","产出","Produce"), p:P("Ranked next steps, one current move, and a stop condition.","排序下一步、一个当前动作、一个停止条件。","Siguientes pasos rankeados, un movimiento actual y condición de stop.")},
+        b2:{h:P("Governance reason","治理原因","Razón"), p:P("Decisions must be comparable across teams and time, not personality-based.","决策必须跨团队/时间可比，不靠个性。","Decisiones comparables entre equipos/tiempo, no por personalidad.")},
+        b3:{h:P("Routes to pillars","路由到支柱","Enruta a pilares"), p:P("Policy Engine enforces; Compliance Grid proves; Risk Meter prioritizes; Laws bound.","政策引擎执行；合规网格证明；风险表排序；法则定边界。","Motor ejecuta; Grid prueba; Medidor prioriza; Leyes acotan.")} },
       engineering:{
         intro:P(
           "Bounded inference under fixed scope: never exceeds evidence; emits reason-coded outputs and receipts.",
           "固定范围下有界推断：不超证据；输出原因码与收据。",
           "Inferencia acotada bajo alcance fijo: no excede evidencia; emite códigos y recibos."
         ),
-        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope + gauges + laws + posture.","范围+量规+法则+姿态。","Alcance + medidores + leyes + postura.")},
-        b2:{h:P("Outputs","输出","Salidas"), p:P("Next actions + hold/stop conditions, reason-coded.","下一步动作+暂停/停止条件，带原因码。","Acciones + condiciones hold/stop con códigos.")},
-        b3:{h:P("Replay","回放","Replay"), p:P("Same inputs → same ranked list.","同输入→同排序清单。","Mismas entradas → misma lista.")} }
+        b1:{h:P("Inputs","输入","Entradas"), p:P("Scope + gauges + laws + compliance posture + current route state.","范围+量规+法则+合规姿态+当前路由状态。","Alcance + medidores + leyes + cumplimiento + estado de ruta.")},
+        b2:{h:P("Outputs","输出","Salidas"), p:P("Next actions + hold/stop conditions, reason-coded and replayable.","下一步动作+暂停/停止条件，带原因码且可回放。","Acciones + condiciones hold/stop con códigos y replay.")},
+        b3:{h:P("Replay","回放","Replay"), p:P("Same inputs → same ranked list unless version or scope changes.","同输入→同排序清单，除非版本或范围改变。","Mismas entradas → misma lista salvo cambio de versión o alcance.")} }
+    }
+  ];
+
+  var LEDGER=[
+    {
+      id:"policy",
+      name:P("Policy Engine","政策引擎","Motor de Política"),
+      desc:P("Policy-to-execution translation layer is active and filled.","政策到执行的翻译层已激活并填充。","La capa política-a-ejecución está activa y completa.")
+    },
+    {
+      id:"compliance",
+      name:P("Compliance Grid","合规网格","Grid de Cumplimiento"),
+      desc:P("Duty-to-proof and review cadence layer is active and filled.","义务到证明与审查节奏层已激活并填充。","La capa deber-a-prueba y cadencia está activa y completa.")
+    },
+    {
+      id:"risk",
+      name:P("Public Risk Meter","公共风险表","Medidor Público"),
+      desc:P("Public risk visibility layer is active and route-bound.","公共风险可见层已激活并绑定路由。","La capa de visibilidad de riesgo público está activa y vinculada.")
+    },
+    {
+      id:"decision",
+      name:P("Decision Index","决策指数","Índice de Decisión"),
+      desc:P("Decision record and next-action compression layer is active and filled.","决策记录与下一步压缩层已激活并填充。","La capa de registro de decisión y compresión de acciones está activa.")
+    },
+    {
+      id:"integration",
+      name:P("Level 4 Integration","第四级整合","Integración Nivel 4"),
+      desc:P("Placeholder pillar scaffolding is replaced by a complete governance chamber.","占位支柱脚手架已替换为完整治理室。","El andamiaje vacío fue reemplazado por una cámara completa.")
     }
   ];
 
   // ===== DOM build =====
   var list=document.getElementById("list");
+  var ledger=document.getElementById("ledger");
   var rowRefs=[];
   var openIndex=0;
 
@@ -681,11 +966,13 @@ body::before,body::after{pointer-events:none!important}
       rowRefs[i].chev.textContent="▸";
     }
   }
+
   function toggleRow(i){
     var isOpen=rowRefs[i].row.classList.contains("open");
     if(isOpen){
       rowRefs[i].row.classList.remove("open");
       rowRefs[i].chev.textContent="▸";
+      openIndex=null;
       return;
     }
     closeAllRows();
@@ -811,12 +1098,65 @@ body::before,body::after{pointer-events:none!important}
     });
   }
 
+  function buildLedger(){
+    ledger.innerHTML="";
+    for(var i=0;i<LEDGER.length;i++){
+      var item=LEDGER[i];
+
+      var row=document.createElement("div");
+      row.className="ledgerRow";
+
+      var name=document.createElement("strong");
+      name.textContent=pick3(item.name.en,item.name.zh,item.name.es);
+
+      var desc=document.createElement("span");
+      desc.textContent=pick3(item.desc.en,item.desc.zh,item.desc.es);
+
+      var status=document.createElement("span");
+      status.className="status";
+      status.textContent=pick3("Strong","强","Fuerte");
+
+      row.appendChild(name);
+      row.appendChild(desc);
+      row.appendChild(status);
+      ledger.appendChild(row);
+    }
+  }
+
   function renderList(){
     list.innerHTML="";
     rowRefs=[];
     for(var i=0;i<PILLARS.length;i++) buildRow(PILLARS[i], i);
     openIndex=0;
     toggleRow(0);
+  }
+
+  function applyLevel4(){
+    var c=L4[lang]||L4.en;
+
+    document.getElementById("l4Band").textContent=c.level;
+    document.getElementById("compassTitle").textContent=c.compassTitle;
+    document.getElementById("compassBody").textContent=c.compassBody;
+    document.getElementById("northLabel").textContent=c.north;
+    document.getElementById("northBody").textContent=c.northBody;
+    document.getElementById("eastLabel").textContent=c.east;
+    document.getElementById("eastBody").textContent=c.eastBody;
+    document.getElementById("southLabel").textContent=c.south;
+    document.getElementById("southBody").textContent=c.southBody;
+    document.getElementById("westLabel").textContent=c.west;
+    document.getElementById("westBody").textContent=c.westBody;
+
+    document.getElementById("northStarTitle").textContent=c.northStarTitle;
+    document.getElementById("northStarBody").textContent=c.northStarBody;
+    document.getElementById("purposeLabel").textContent=c.purpose;
+    document.getElementById("purposeBody").textContent=c.purposeBody;
+    document.getElementById("methodLabel").textContent=c.method;
+    document.getElementById("methodBody").textContent=c.methodBody;
+    document.getElementById("failureLabel").textContent=c.failure;
+    document.getElementById("failureBody").textContent=c.failureBody;
+
+    document.getElementById("ledgerBand").textContent=c.ledger;
+    document.getElementById("routeBand").textContent=c.route;
   }
 
   function applyHeader(){
@@ -845,6 +1185,12 @@ body::before,body::after{pointer-events:none!important}
     document.getElementById("dockLaws").textContent = pick3("LAWS","法则","LEYES");
     document.getElementById("dockGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
     document.getElementById("dockCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
+
+    document.getElementById("routeCompass").textContent = pick3("COMPASS","指南针","BRÚJULA");
+    document.getElementById("routeExplore").textContent = pick3("EXPLORE","探索","EXPLORAR");
+    document.getElementById("routeProducts").textContent = pick3("PRODUCTS","产品","PRODUCTOS");
+    document.getElementById("routeLaws").textContent = pick3("LAWS","法则","LEYES");
+    document.getElementById("routeGauges").textContent = pick3("GAUGES","量规","MEDIDORES");
   }
 
   function updateRows(){
@@ -874,7 +1220,14 @@ body::before,body::after{pointer-events:none!important}
     }
 
     closeAllRows();
-    toggleRow(keep);
+    if(keep!==null && keep!==undefined && rowRefs[keep]){
+      rowRefs[keep].row.classList.add("open");
+      rowRefs[keep].chev.textContent="▾";
+      openIndex=keep;
+    }else{
+      openIndex=null;
+    }
+
     wireAll();
   }
 
@@ -909,10 +1262,13 @@ body::before,body::after{pointer-events:none!important}
   function setLang(next){
     if(next!=="en"&&next!=="zh"&&next!=="es") next="en";
     lang=next;
+    document.documentElement.lang=(lang==="zh")?"zh":(lang==="es")?"es":"en";
     try{ LS.setItem("gd_lang",lang);}catch(e){}
     history.replaceState({}, "", location.pathname + q({lang:lang}));
     setPressed(["langEN","langZH","langES"], lang==="zh"?"langZH":(lang==="es"?"langES":"langEN"));
     applyHeader();
+    applyLevel4();
+    buildLedger();
     updateRows();
   }
 
@@ -922,6 +1278,8 @@ body::before,body::after{pointer-events:none!important}
     history.replaceState({}, "", location.pathname + q({lane:lane}));
     setPressed(["lanePlatform","laneEngineering"], lane==="engineering"?"laneEngineering":"lanePlatform");
     applyHeader();
+    applyLevel4();
+    buildLedger();
     updateRows();
   }
 
@@ -939,6 +1297,8 @@ body::before,body::after{pointer-events:none!important}
   // build
   renderList();
   applyHeader();
+  applyLevel4();
+  buildLedger();
   updateRows();
   wireAll();
 

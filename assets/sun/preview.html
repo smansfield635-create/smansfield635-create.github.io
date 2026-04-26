@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Sun Asset Preview — Diamond Gate Bridge</title>
-  <link rel="stylesheet" href="/assets/sun/sun_material.css" />
+  <title>Sun Asset Spine Preview — Diamond Gate Bridge</title>
+  <link rel="stylesheet" href="/assets/sun/sun_material.css?v=luminous-expanding-plasma-b4" />
 
   <style>
     :root {
@@ -18,9 +18,13 @@
       box-sizing: border-box;
     }
 
+    html,
     body {
-      min-height: 100vh;
+      min-height: 100%;
       margin: 0;
+    }
+
+    body {
       background:
         radial-gradient(circle at 50% 18%, rgba(255, 196, 86, 0.13), transparent 24rem),
         radial-gradient(circle at 15% 20%, rgba(88, 122, 255, 0.12), transparent 18rem),
@@ -63,6 +67,7 @@
       gap: 12px;
       color: var(--muted);
       font-size: 0.82rem;
+      flex-wrap: wrap;
     }
 
     .title {
@@ -84,22 +89,16 @@
       text-shadow: 0 0 42px rgba(255, 217, 138, 0.24);
     }
 
-    .preview-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-      align-items: center;
-      margin-top: 24px;
-    }
-
     .panel {
-      min-height: 420px;
+      margin: 28px auto 0;
+      width: min(100%, 780px);
+      min-height: 520px;
       border: 1px solid var(--line);
-      border-radius: 28px;
+      border-radius: 30px;
       padding: 16px;
       display: grid;
       place-items: center;
-      background: rgba(255, 255, 255, 0.035);
+      background: rgba(255,255,255,0.035);
       box-shadow: 0 22px 70px rgba(0,0,0,0.35);
     }
 
@@ -113,27 +112,24 @@
       text-transform: uppercase;
     }
 
-    .panel img {
-      width: min(100%, 360px);
-      aspect-ratio: 1;
-      display: block;
-    }
-
     [data-dgb-sun-mount] {
-      width: min(100%, 360px);
-      aspect-ratio: 1;
-      display: grid;
-      place-items: center;
+      width: min(100%, 620px);
     }
 
-    @media (max-width: 900px) {
-      .preview-grid {
-        grid-template-columns: 1fr;
-      }
+    .note {
+      max-width: 720px;
+      margin: 14px auto 0;
+      color: var(--muted);
+      line-height: 1.55;
+      text-align: center;
+    }
 
-      .panel {
-        min-height: 360px;
-      }
+    code {
+      color: #ffe5a7;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 7px;
+      padding: 1px 5px;
     }
   </style>
 </head>
@@ -142,41 +138,30 @@
   <main>
     <header>
       <span>Diamond Gate Bridge</span>
-      <span>Sun Asset File Set · Code Only</span>
+      <span>Sun Asset Spine · Canvas Authority</span>
     </header>
 
     <section class="title" aria-labelledby="page-title">
-      <h1 id="page-title">Sun Asset Preview</h1>
+      <h1 id="page-title">Sun Asset Spine Preview</h1>
       <p class="theme">Learn to Live to Love</p>
 
-      <div class="preview-grid">
-        <article class="panel">
-          <h2>Canvas</h2>
-          <div data-dgb-sun-mount data-sun-mode="canvas"></div>
-        </article>
+      <p class="note">
+        This preview uses an empty <code>data-dgb-sun-mount</code> and requires the runtime to mount the canvas.
+        If a sun appears here, it is runtime-controlled canvas, not a CSS fallback.
+      </p>
 
-        <article class="panel">
-          <h2>SVG</h2>
-          <img src="/assets/sun/sun.svg" alt="Procedural sun SVG asset" />
-        </article>
-
-        <article class="panel">
-          <h2>CSS</h2>
-          <div class="dgb-sun-stage" aria-label="CSS sun material asset">
-            <div class="dgb-sun-css">
-              <div class="dgb-sun-core"></div>
-            </div>
-          </div>
-        </article>
-      </div>
+      <article class="panel">
+        <h2>Canvas mount</h2>
+        <div data-dgb-sun-mount data-sun-mode="canvas"></div>
+      </article>
     </section>
 
     <footer>
       <span>No generated graphic</span>
-      <span>Round world first · Flatten later</span>
+      <span>luminous-expanding-plasma-b4</span>
     </footer>
   </main>
 
-  <script src="/runtime/sun_asset_runtime.js" defer></script>
+  <script src="/runtime/sun_asset_runtime.js?v=luminous-expanding-plasma-b4" defer></script>
 </body>
 </html>

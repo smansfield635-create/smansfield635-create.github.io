@@ -1,12 +1,14 @@
 /* TNT RENEWAL — /assets/earth/earth_material.css
-   EARTH ASSET SPINE · MATERIAL B1
-   Visual shell only. Rendering belongs to earth_canvas.js.
+   EARTH ASSET SPINE · MATERIAL B2
+   Shell, axis, mount, and runtime-injected controls only.
+   Rendering belongs to earth_canvas.js.
 */
 
 :root {
   --dgb-earth-gold: rgba(255, 217, 138, 0.96);
   --dgb-earth-ink: rgba(255, 255, 255, 0.96);
   --dgb-earth-text: rgba(220, 231, 255, 0.78);
+  --dgb-earth-muted: rgba(220, 231, 255, 0.58);
   --dgb-earth-line: rgba(255, 255, 255, 0.13);
   --dgb-earth-panel: rgba(7, 10, 16, 0.74);
   --dgb-earth-axis: -23.44deg;
@@ -146,7 +148,7 @@
 
 .dgb-earth-tilt {
   position: relative;
-  width: 92%;
+  width: 100%;
   aspect-ratio: 1;
   transform: rotate(var(--dgb-earth-axis));
   transform-origin: center;
@@ -187,12 +189,52 @@
 }
 
 .dgb-earth-fallback {
-  width: 92%;
+  width: 100%;
   max-width: 760px;
   aspect-ratio: 1;
   border-radius: 999px;
   display: block;
   object-fit: contain;
+}
+
+.dgb-earth-control-panel {
+  position: relative;
+  z-index: 2;
+  width: min(100%, 760px);
+  margin: 14px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.dgb-earth-control-button,
+.dgb-earth-control-readout {
+  min-height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--dgb-earth-line);
+  background: rgba(0,0,0,.26);
+  color: var(--dgb-earth-ink);
+  font: inherit;
+  font-weight: 900;
+  padding: 10px 14px;
+}
+
+.dgb-earth-control-button {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.dgb-earth-control-button:hover,
+.dgb-earth-control-button:focus-visible {
+  border-color: rgba(255,217,138,.48);
+  box-shadow: 0 0 20px rgba(201,162,74,.14);
+  outline: none;
+}
+
+.dgb-earth-control-readout {
+  color: var(--dgb-earth-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 .dgb-earth-caption {
@@ -228,7 +270,14 @@
     width: min(100% - 20px, 980px);
   }
 
-  [data-dgb-earth-mount] {
+  [data-dgb-earth-mount],
+  .dgb-earth-control-panel {
     width: min(100%, 620px);
+  }
+
+  .dgb-earth-control-button,
+  .dgb-earth-control-readout {
+    flex: 1 1 calc(50% - 10px);
+    text-align: center;
   }
 }

@@ -1,18 +1,17 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B12 · CIRCLE-FIT RENEWAL
+     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B12 · ETET CIRCLE-FIT BIND
 
      CONTRACT:
        - Bind showroom to Earth Asset B5.
-       - Keep real satellite-view Earth assets.
-       - Fit the Earth sphere to the visible circular instrument field.
+       - Fit Earth closer to the visible circular instrument field.
+       - Remove old view-control language.
        - Showroom owns layout/framing only.
        - Earth renderer lives in /assets/earth/earth_canvas.js.
        - Earth runtime lives in /runtime/earth_asset_runtime.js.
        - Runtime owns zoom controls.
        - Distant sun is CSS-only support.
        - Bottom diamond navigation remains.
-       - No generated graphic.
        - No graphics box.
        - No active Sun runtime on showroom.
 -->
@@ -24,7 +23,7 @@
   <title>Diamond Gate Bridge — Showroom</title>
   <meta name="description" content="Diamond Gate Bridge Earth-centered showroom demo"/>
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b5"/>
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b5-circle-fit-b12"/>
 
   <style>
     *{box-sizing:border-box}
@@ -49,7 +48,7 @@
       --panel:rgba(7,10,16,.74);
       --shadow:0 30px 110px rgba(0,0,0,.54);
       --dgb-earth-axis:-23.44deg;
-      --dgb-earth-fit-scale:1.105;
+      --dgb-earth-fit-scale:1.12;
     }
 
     body::before{
@@ -283,7 +282,7 @@
       display:grid;
       place-items:center;
       overflow:visible;
-      --dgb-earth-fit-scale:1.105;
+      --dgb-earth-fit-scale:1.12;
     }
 
     .earthPanel [data-dgb-earth-mount] .dgb-earth-axis{
@@ -480,7 +479,7 @@
 
       .earthPanel [data-dgb-earth-mount]{
         width:min(100%,610px);
-        --dgb-earth-fit-scale:1.12;
+        --dgb-earth-fit-scale:1.14;
       }
 
       .earthPanel .dgb-earth-control-panel{
@@ -506,7 +505,7 @@
 
     @media(max-width:430px){
       .earthPanel [data-dgb-earth-mount]{
-        --dgb-earth-fit-scale:1.135;
+        --dgb-earth-fit-scale:1.16;
       }
     }
 
@@ -523,16 +522,16 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-earth-spine-consumer-b12"
+    data-showroom-version="generation-2-earth-spine-consumer-b12-etet"
     data-earth-center="true"
-    data-earth-renderer="earth-asset-b5-satellite-view-circle-fit"
+    data-earth-renderer="earth-asset-b5-orbital-earth-circle-fit"
     data-earth-clouds="earth-asset-b5-real-cloud-map"
     data-earth-controls="runtime-zoom-panel"
     data-earth-fit-contract="fit-visible-circle"
     data-sun-role="distant-css-support-only"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="earth-spine-b5-circle-fit"
+    data-brain-route="earth-spine-b5-circle-fit-etet"
   >
     <section class="showroom" aria-label="Earth-centered showroom">
       <div class="distanceField" aria-hidden="true">
@@ -551,21 +550,21 @@
 
         <p class="kicker">Showroom · Earth Asset B5 · Circle Fit</p>
         <h1>The Earth Room</h1>
-        <p class="expression">Satellite-view Earth.</p>
+        <p class="expression">Orbital Earth.</p>
         <p class="lede">
-          Earth is the center of the showroom. The renderer is now framed to fill the visible circular instrument field while preserving runtime zoom, reset, pause, spin, and manual drag.
+          Earth is the center of the showroom. The renderer is framed to fill the visible circular instrument field while preserving runtime zoom, reset, pause, spin, and manual drag.
         </p>
       </div>
 
       <article class="earthPanel" aria-label="Earth asset spine showroom mount">
         <div data-dgb-earth-mount aria-label="Interactive Earth asset"></div>
-        <div class="dgb-earth-caption">Earth Standard · Satellite View · Circle Fit · 23.44° Axis · Auto + Manual Spin</div>
+        <div class="dgb-earth-caption">Earth Standard · Orbital Earth · Circle Fit · 23.44° Axis · Auto + Manual Spin</div>
       </article>
 
       <div class="readout" aria-live="polite">
         <strong>Earth controls</strong>
         <p>
-          The showroom now owns the fit-to-circle frame. The Earth renderer still owns scale, reset, pause, spin, and manual drag through the runtime panel.
+          The showroom owns the fit-to-circle frame. The Earth renderer owns scale, reset, pause, spin, and manual drag through the runtime panel.
         </p>
       </div>
     </section>
@@ -613,7 +612,7 @@
     </nav>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b5-circle-fit-b12" defer></script>
-  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b5-circle-fit-b12" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b5-circle-fit-etet-b12" defer></script>
+  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b5-circle-fit-etet-b12" defer></script>
 </body>
 </html>

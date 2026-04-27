@@ -1,29 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" data-product-generation="richie-manor-study-on-your-side-ai-b9">
+<html lang="en" data-product-generation="on-your-side-ai-b13-backlink-lock">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>On Your Side AI · Artificial Agent Intelligence · Products</title>
   <meta
     name="description"
-    content="On Your Side AI — the study and advisor-desk product inside Richie’s Manor for bounded intelligence, clarity, decision support, and user-side agency."
+    content="On Your Side AI is the public product face of Artificial Agent Intelligence: support, clarity, and execution guidance while the user stays in charge."
   />
 
   <style>
     :root{
       color-scheme:dark;
-      --panel:rgba(18,14,10,.86);
-      --panel2:rgba(36,26,16,.92);
-      --line:rgba(255,218,150,.24);
-      --blueLine:rgba(142,197,255,.34);
-      --mintLine:rgba(147,239,189,.32);
-      --brass:#ffd98a;
-      --blue:#8ec5ff;
-      --mint:#93efbd;
+      --bg:#050915;
+      --panel:rgba(12,18,32,.86);
+      --panel2:rgba(8,12,22,.96);
+      --line:rgba(255,218,150,.22);
+      --line2:rgba(255,218,150,.34);
       --text:#fff8ea;
-      --muted:#d5c7aa;
-      --soft:rgba(213,199,170,.74);
-      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --muted:#c9d2ea;
+      --soft:rgba(201,210,234,.74);
+      --gold:#ffd98a;
+      --amber:#d78b42;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --shadow:0 24px 86px rgba(0,0,0,.54);
       --max:1180px;
     }
 
@@ -32,684 +33,472 @@
     html,body{
       margin:0;
       min-height:100%;
+      background:
+        radial-gradient(circle at 50% 88%,rgba(215,139,66,.22),transparent 30%),
+        radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
+        radial-gradient(circle at 82% 20%,rgba(255,218,150,.10),transparent 30%),
+        linear-gradient(180deg,#050915 0%,#09172c 48%,#201019 78%,#3a1b12 100%);
       color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 92%,rgba(142,197,255,.17),transparent 24%),
-        radial-gradient(circle at 16% 20%,rgba(255,217,138,.15),transparent 26%),
-        radial-gradient(circle at 84% 18%,rgba(147,239,189,.11),transparent 26%),
-        linear-gradient(180deg,#071225 0%,#14100c 42%,#2c1b10 100%);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
       overflow-x:hidden;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      opacity:.38;
-      background:
-        linear-gradient(90deg,rgba(255,218,150,.05) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(255,218,150,.035) 1px,transparent 1px),
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.15),transparent 30%);
-      background-size:56px 56px,56px 56px,100% 100%;
-      mask-image:radial-gradient(circle at 50% 35%,black,transparent 82%);
-      z-index:0;
     }
 
     a{color:inherit;text-decoration:none}
 
     .page{
-      position:relative;
-      z-index:1;
-      width:min(var(--max),calc(100vw - 20px));
+      width:min(var(--max),calc(100vw - 24px));
       min-height:100svh;
       margin:0 auto;
-      padding:14px 0 24px;
+      padding:16px 0 30px;
       display:grid;
-      grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
-    .topbar,.study,.routeRail{
+    .topbar,
+    .hero,
+    .layerDeck,
+    .lawPanel,
+    .routeBacklinks{
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel2),var(--panel));
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.12),transparent 42%),
+        linear-gradient(180deg,var(--panel),var(--panel2));
       box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
     }
 
     .topbar{
-      border-radius:28px;
-      padding:14px;
-      display:grid;
+      border-radius:999px;
+      padding:14px 18px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
       gap:14px;
+      flex-wrap:wrap;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
-      min-width:0;
     }
 
-    .mark{
-      width:50px;
-      height:50px;
-      border-radius:17px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(142,197,255,.46);
+    .brandMark{
+      width:44px;
+      height:44px;
+      border-radius:14px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,218,150,.36);
       background:
-        radial-gradient(circle at 50% 28%,rgba(142,197,255,.38),transparent 44%),
-        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
-      color:#eef4ff;
+        radial-gradient(circle at 50% 50%,rgba(255,218,150,.26),transparent 45%),
+        linear-gradient(180deg,rgba(48,34,18,.96),rgba(10,18,32,.92));
+      box-shadow:0 12px 28px rgba(0,0,0,.28),0 0 28px rgba(255,218,150,.10);
+      flex:0 0 auto;
+    }
+
+    .brandTitle{
+      margin:0 0 3px;
+      color:#fff;
+      font-size:.96rem;
       font-weight:950;
       letter-spacing:.08em;
-      flex:0 0 auto;
-      box-shadow:0 0 22px rgba(142,197,255,.16);
-    }
-
-    .brandText{display:grid;gap:3px}
-
-    .kicker{
-      display:block;
-      margin:0;
-      color:#d8e9ff;
-      font-size:.72rem;
       text-transform:uppercase;
-      letter-spacing:.16em;
-      font-weight:850;
     }
 
-    .title{
-      display:block;
+    .brandSubtitle{
       margin:0;
-      color:#fff;
-      font-weight:900;
-      font-size:1.08rem;
-      line-height:1.05;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.32;
     }
 
-    .jumpGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+    .actions,
+    .routeBacklinks{
+      display:flex;
+      flex-wrap:wrap;
       gap:10px;
     }
 
-    .jumpCard{
-      min-height:88px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
-        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:12px;
-      align-items:center;
-      padding:12px;
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
-    }
-
-    .jumpCard:hover,.jumpCard:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(142,197,255,.40);
-      filter:brightness(1.12);
-      outline:none;
-    }
-
-    .jumpCard.active{
-      border-color:rgba(255,217,138,.56);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
-        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
-      box-shadow:0 0 24px rgba(255,217,138,.12);
-    }
-
-    .navCompass{
-      position:relative;
-      width:54px;
-      aspect-ratio:1;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
-      overflow:hidden;
-      flex:0 0 auto;
-    }
-
-    .jumpCard.active .navCompass{
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
-    }
-
-    .navCompass::before{
-      content:"";
-      position:absolute;
-      inset:16%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.11);
-      background:repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
-      animation:compassSpin 14s linear infinite;
-    }
-
-    .navCompass::after{
-      content:"";
-      position:absolute;
-      width:14%;
-      height:58%;
-      left:43%;
-      top:21%;
-      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
-      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
-      animation:needleSpin 8s linear infinite;
-    }
-
-    .jumpCard.active .navCompass::after{
-      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
-    }
-
-    .jumpText{display:grid;gap:4px;min-width:0}
-    .jumpText small{color:#c8d7ff;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
-    .jumpText strong{color:#fff;font-size:1rem;line-height:1.02;letter-spacing:-.035em}
-
-    .study{
-      border-radius:34px;
-      padding:clamp(18px,3vw,30px);
-      display:grid;
-      grid-template-columns:minmax(0,.88fr) minmax(420px,1.12fr);
-      gap:20px;
-      overflow:hidden;
-      position:relative;
-      isolation:isolate;
-    }
-
-    .study::before{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:0;
-      width:min(720px,92vw);
-      height:180px;
-      transform:translateX(-50%);
-      background:radial-gradient(ellipse at 50% 0%,rgba(142,197,255,.15),transparent 68%);
-      z-index:-1;
-    }
-
-    .copy{
-      display:grid;
-      gap:14px;
-      align-content:center;
-      min-width:0;
-    }
-
-    .pill{
+    .actions a,
+    .routeBacklinks a{
       display:inline-flex;
-      width:fit-content;
       align-items:center;
-      gap:10px;
-      padding:8px 12px;
+      justify-content:center;
+      min-height:40px;
+      padding:10px 14px;
+      border:1px solid rgba(255,218,150,.18);
       border-radius:999px;
-      border:1px solid rgba(142,197,255,.30);
-      background:rgba(255,255,255,.04);
-      color:#d8e9ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.70rem;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.08),transparent 70%),
+        rgba(255,255,255,.035);
+      color:var(--text);
+      font-size:12px;
       font-weight:850;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      text-align:center;
     }
 
-    .pill::before{
+    .actions a.primary,
+    .routeBacklinks a.primary{
+      border-color:rgba(255,218,150,.42);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.18),transparent 70%),
+        rgba(255,218,150,.07);
+      color:#fff4dd;
+      box-shadow:0 0 22px rgba(255,218,150,.10);
+    }
+
+    .hero{
+      border-radius:32px;
+      padding:clamp(20px,4vw,34px);
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(280px,.68fr);
+      gap:18px;
+      align-items:stretch;
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before,
+    .layerDeck::before,
+    .lawPanel::before{
       content:"";
-      width:9px;
-      height:9px;
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 72% 50%,rgba(255,218,150,.08),transparent 30rem),
+        radial-gradient(circle at 26% 14%,rgba(215,139,66,.10),transparent 22rem),
+        linear-gradient(115deg,rgba(255,255,255,.026),transparent 42%,rgba(142,197,255,.028));
+    }
+
+    .heroCopy,
+    .userCore,
+    .layerContent,
+    .lawContent{
+      position:relative;
+      z-index:1;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      background:rgba(255,255,255,.035);
+      color:var(--gold);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:900;
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:8px;
+      height:8px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--blue);
-      box-shadow:0 0 18px rgba(142,197,255,.42);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(255,218,150,.42);
     }
 
     h1{
-      margin:0;
+      margin:14px 0 0;
       color:#fff;
-      font-size:clamp(3rem,8.8vw,6.4rem);
+      max-width:11ch;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(46px,7vw,88px);
       line-height:.86;
       letter-spacing:-.07em;
-      text-transform:uppercase;
     }
 
-    h2{
-      margin:0;
-      color:var(--brass);
-      font-size:clamp(1.38rem,4.4vw,2.8rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    p{
-      margin:0;
-      color:var(--muted);
-      line-height:1.58;
-      font-size:1rem;
-    }
-
-    .thesis{
-      color:#fff;
-      font-size:clamp(1.1rem,2.25vw,1.5rem);
-      line-height:1.18;
-      font-weight:850;
-      letter-spacing:-.035em;
-      max-width:780px;
-    }
-
-    .ruleGrid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .ruleCell{
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:18px;
-      background:rgba(0,0,0,.16);
-      padding:12px;
-      display:grid;
-      gap:4px;
-    }
-
-    .ruleCell small{
-      color:var(--soft);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.58rem;
+    .lede{
+      margin:14px 0 0;
+      max-width:22ch;
+      color:var(--text);
+      font-size:clamp(1.18rem,2.4vw,2rem);
+      line-height:1.1;
       font-weight:900;
+      letter-spacing:-.04em;
     }
 
-    .ruleCell strong{
-      color:#fff;
-      font-size:1rem;
-      line-height:1.05;
+    .bodyText{
+      margin:14px 0 0;
+      max-width:68ch;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.65;
     }
 
-    .deskMap{
-      position:relative;
-      min-height:620px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:32px;
+    .userCore{
+      min-height:320px;
+      border:1px solid rgba(255,218,150,.15);
+      border-radius:28px;
       background:
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.12),rgba(147,239,189,.045) 32%,rgba(0,0,0,0) 62%),
-        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014));
-      overflow:hidden;
+        radial-gradient(circle at 50% 20%,rgba(255,218,150,.11),transparent 36%),
+        linear-gradient(180deg,rgba(3,7,16,.58),rgba(2,4,10,.92));
       display:grid;
       place-items:center;
+      padding:20px;
+      text-align:center;
     }
 
-    .deskRing{
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      border:1px solid rgba(142,197,255,.12);
-      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
-    }
-
-    .deskRing.r1{width:min(92%,590px);aspect-ratio:1;animation:wallSpin 54s linear infinite}
-    .deskRing.r2{width:min(74%,470px);aspect-ratio:1;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);animation:wallSpin 42s linear infinite reverse}
-    .deskRing.r3{width:min(54%,330px);aspect-ratio:1;background:radial-gradient(circle at 50% 50%,rgba(142,197,255,.06),transparent 52%);animation:wallSpin 28s linear infinite}
-
-    .advisorCore{
-      position:relative;
-      z-index:6;
-      width:min(36%,210px);
+    .coreRing{
+      width:min(260px,72vw);
       aspect-ratio:1;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.22);
-      background:
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.46),transparent 12%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.34),rgba(147,239,189,.14) 46%,rgba(0,0,0,.22) 100%);
-      box-shadow:inset 0 0 42px rgba(142,197,255,.18),0 0 92px rgba(142,197,255,.20);
-      overflow:hidden;
+      border:1px solid rgba(255,218,150,.25);
       display:grid;
       place-items:center;
-      text-align:center;
-      padding:20px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,218,150,.16),transparent 34%),
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.05) 0deg 4deg,transparent 4deg 18deg);
+      box-shadow:inset 0 0 44px rgba(0,0,0,.40),0 0 60px rgba(255,218,150,.09);
     }
 
-    .advisorCore::before{
-      content:"";
-      position:absolute;
-      inset:13%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.16);
-      background:repeating-conic-gradient(from 0deg,transparent 0deg 14deg,rgba(255,255,255,.085) 14deg 17deg,transparent 17deg 32deg);
-      animation:compassSpin 16s linear infinite reverse;
-    }
-
-    .advisorCore span{
-      position:relative;
-      z-index:2;
-      color:#eef4ff;
-      font-weight:950;
-      font-size:.84rem;
-      letter-spacing:.10em;
-      line-height:1.2;
+    .coreRing strong{
+      display:block;
+      color:#fff;
+      font-size:1.3rem;
+      line-height:1.05;
       text-transform:uppercase;
-      text-shadow:0 2px 12px rgba(0,0,0,.70);
+      letter-spacing:.10em;
     }
 
-    .supportNode{
-      position:absolute;
-      z-index:7;
-      width:152px;
-      min-height:122px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 70%),
-        linear-gradient(180deg,rgba(24,18,12,.86),rgba(10,20,42,.92));
-      box-shadow:0 18px 38px rgba(0,0,0,.34);
+    .coreRing span{
+      display:block;
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.84rem;
+      line-height:1.35;
+      max-width:18ch;
+    }
+
+    .layerDeck,
+    .lawPanel{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      padding:clamp(18px,3vw,28px);
+    }
+
+    .layerContent,
+    .lawContent{
       display:grid;
-      align-content:end;
-      gap:7px;
-      padding:14px;
-      cursor:pointer;
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+      gap:14px;
     }
 
-    .supportNode:hover,.supportNode:focus-visible{
-      transform:translateY(-4px);
-      border-color:rgba(142,197,255,.44);
-      filter:brightness(1.12);
-      outline:none;
+    .sectionTitle{
+      margin:0;
+      color:#fff;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2rem,4.6vw,4.6rem);
+      line-height:.92;
+      letter-spacing:-.065em;
     }
 
-    .supportNode[data-active="true"]{
-      border-color:rgba(255,217,138,.54);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
-        linear-gradient(180deg,rgba(46,34,16,.92),rgba(10,20,42,.94));
-    }
-
-    .supportNode small{color:#d8e9ff;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
-    .supportNode strong{color:#fff;font-size:1.04rem;line-height:1.02;letter-spacing:-.035em}
-
-    .supportNode.intake{left:50%;top:18px;transform:translateX(-50%)}
-    .supportNode.signal{right:18px;top:50%;transform:translateY(-50%)}
-    .supportNode.route{left:50%;bottom:18px;transform:translateX(-50%)}
-    .supportNode.output{left:18px;top:50%;transform:translateY(-50%)}
-    .supportNode.boundary{right:60px;bottom:88px}
-
-    .supportNode.intake:hover,.supportNode.intake:focus-visible{transform:translateX(-50%) translateY(-4px)}
-    .supportNode.signal:hover,.supportNode.signal:focus-visible{transform:translateY(calc(-50% - 4px))}
-    .supportNode.route:hover,.supportNode.route:focus-visible{transform:translateX(-50%) translateY(-4px)}
-    .supportNode.output:hover,.supportNode.output:focus-visible{transform:translateY(calc(-50% - 4px))}
-
-    .readout{
-      position:absolute;
-      left:18px;
-      right:18px;
-      bottom:18px;
-      z-index:9;
+    .layerGrid{
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(220px,.40fr);
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
-      pointer-events:none;
     }
 
-    .readCard{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:20px;
-      background:rgba(3,8,18,.72);
-      box-shadow:0 18px 38px rgba(0,0,0,.30);
-      padding:14px;
+    .layerCard{
+      border:1px solid rgba(255,218,150,.15);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(255,218,150,.08),transparent 54%),
+        rgba(0,0,0,.18);
+      padding:16px;
       display:grid;
-      gap:7px;
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
+      gap:10px;
+      min-height:180px;
     }
 
-    .readCard h3{margin:0;color:#fff;font-size:clamp(1.1rem,2.1vw,1.45rem);line-height:1.05;letter-spacing:-.04em}
-    .readCard p{font-size:.92rem;line-height:1.44}
+    .layerCard small{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .layerCard h3{
+      margin:0;
+      color:#fff;
+      font-size:1.08rem;
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    .layerCard p{
+      margin:0;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.55;
+    }
+
+    .lawGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .routeBacklinks{
+      border-radius:24px;
+      padding:12px;
+      justify-content:center;
+    }
 
     .receipt{
-      display:grid;
-      gap:6px;
       color:var(--soft);
-      font-size:.78rem;
-      line-height:1.32;
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-    }
-
-    .routeRail{
-      border-radius:24px;
-      padding:10px;
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:8px;
-    }
-
-    .routeRail a{
-      min-height:48px;
-      border-radius:18px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.66rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      display:grid;
-      place-items:center;
       text-align:center;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.76rem;
+      line-height:1.4;
+      padding:2px 8px;
     }
 
-    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-    @keyframes wallSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-
-    @media(max-width:1120px){
-      .study{grid-template-columns:1fr}
-      .deskMap{min-height:680px}
-      .routeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
+    @media(max-width:980px){
+      .hero{grid-template-columns:1fr}
+      .layerGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .lawGrid{grid-template-columns:1fr}
     }
 
-    @media(max-width:740px){
+    @media(max-width:640px){
       .page{width:min(100vw - 12px,var(--max));padding-top:10px}
-      .topbar,.study,.routeRail{border-radius:24px}
-      .topbar{padding:12px}
-      .brand{gap:10px}
-      .mark{width:44px;height:44px;border-radius:14px}
-      .jumpGrid,.ruleGrid,.routeRail{grid-template-columns:1fr}
-      .jumpCard{min-height:76px}
-      .study{padding:18px}
-      .deskMap{min-height:auto;display:grid;gap:10px;padding:14px}
-      .deskRing{display:none}
-      .advisorCore{position:relative;width:160px;margin:0 auto}
-      .supportNode,.supportNode.intake,.supportNode.signal,.supportNode.route,.supportNode.output,.supportNode.boundary{
-        position:relative;
-        left:auto;
-        right:auto;
-        top:auto;
-        bottom:auto;
-        transform:none;
-        width:100%;
-        min-height:92px;
-      }
-      .supportNode:hover,.supportNode:focus-visible,.supportNode.intake:hover,.supportNode.intake:focus-visible,.supportNode.signal:hover,.supportNode.signal:focus-visible,.supportNode.route:hover,.supportNode.route:focus-visible,.supportNode.output:hover,.supportNode.output:focus-visible{
-        transform:translateY(-4px);
-      }
-      .readout{
-        position:relative;
-        left:auto;
-        right:auto;
-        bottom:auto;
-        grid-template-columns:1fr;
-      }
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      *,*::before,*::after{animation:none !important;scroll-behavior:auto !important;transition:none !important}
+      .topbar{border-radius:24px}
+      .actions{width:100%}
+      .actions a{flex:1 1 140px}
+      .hero,.layerDeck,.lawPanel{border-radius:24px;padding:16px}
+      .layerGrid{grid-template-columns:1fr}
     }
   </style>
 </head>
 
 <body>
-  <main
-    class="page"
-    data-page="on-your-side-ai"
-    data-room-location="richie-manor-study-advisor-desk"
-    data-self-path="/products/on-your-side-ai/"
-    data-bridge-path="/products/aai/"
-    data-products-backlink="/products/"
-  >
+  <main class="page" data-product="on-your-side-ai" data-backlink-lock="archcoin-present">
     <header class="topbar">
       <a class="brand" href="/products/on-your-side-ai/" aria-label="On Your Side AI">
-        <span class="mark" aria-hidden="true">AAI</span>
-        <span class="brandText">
-          <span class="kicker">Richie’s Manor · Study / Advisor Desk</span>
-          <strong class="title">On Your Side AI · Artificial Agent Intelligence</strong>
+        <span class="brandMark" aria-hidden="true"></span>
+        <span>
+          <p class="brandTitle">Richie’s Manor · Study / Advisor Desk</p>
+          <p class="brandSubtitle">On Your Side AI · Artificial Agent Intelligence</p>
         </span>
       </a>
 
-      <nav class="jumpGrid" aria-label="Primary compass jumps">
-        <a class="jumpCard" href="/">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText"><small>Jump</small><strong>Compass</strong></span>
-        </a>
-        <a class="jumpCard" href="/door/">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText"><small>Jump</small><strong>Door</strong></span>
-        </a>
-        <a class="jumpCard active" href="/products/">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText"><small>Parent</small><strong>Products</strong></span>
-        </a>
-        <a class="jumpCard" href="/gauges/">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText"><small>Jump</small><strong>Gauges</strong></span>
-        </a>
+      <nav class="actions" aria-label="On Your Side AI primary routes">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a class="primary" href="/products/">Parent Products</a>
+        <a href="/gauges/">Gauges</a>
       </nav>
     </header>
 
-    <section class="study" aria-labelledby="productTitle">
-      <div class="copy">
-        <span class="pill">Study and advisor-desk chamber</span>
-        <h1 id="productTitle">On Your Side AI</h1>
-        <h2>Intelligence without override.</h2>
-        <p class="thesis">
+    <section class="hero" aria-label="On Your Side AI hero">
+      <section class="heroCopy">
+        <span class="eyebrow">Study and advisor-desk chamber</span>
+        <h1>On Your Side AI</h1>
+        <p class="lede">Intelligence without override.</p>
+        <p class="bodyText">
           The study does not replace the person at the desk. It clarifies the paper, the signal, the route, and the next move while the user remains in charge.
         </p>
-        <p>
+        <p class="bodyText">
           On Your Side AI is the public product face of Artificial Agent Intelligence. It supports decisions, messages, documents, and plans without taking authorship, identity, judgment, or final approval away from the user.
         </p>
+      </section>
 
-        <div class="ruleGrid">
-          <div class="ruleCell"><small>Start</small><strong>Name the object.</strong></div>
-          <div class="ruleCell"><small>Method</small><strong>Clarify the route.</strong></div>
-          <div class="ruleCell"><small>Boundary</small><strong>User stays central.</strong></div>
+      <aside class="userCore" aria-label="User agency boundary">
+        <div class="coreRing">
+          <div>
+            <strong>User<br />Still<br />In Charge</strong>
+            <span>Support without authorship theft, override, or identity replacement.</span>
+          </div>
         </div>
-      </div>
+      </aside>
+    </section>
 
-      <div class="deskMap" aria-label="On Your Side AI study desk map">
-        <div class="deskRing r1" aria-hidden="true"></div>
-        <div class="deskRing r2" aria-hidden="true"></div>
-        <div class="deskRing r3" aria-hidden="true"></div>
+    <section class="layerDeck" aria-label="On Your Side AI layered method">
+      <div class="layerContent">
+        <span class="eyebrow">Nested advisory path</span>
+        <h2 class="sectionTitle">Name it. Route it. Keep the user central.</h2>
 
-        <div class="advisorCore" aria-hidden="true">
-          <span>User<br>Still<br>In Charge</span>
-        </div>
-
-        <button class="supportNode intake" type="button" data-layer="intake" data-active="true"><small>Outer</small><strong>Intake</strong></button>
-        <button class="supportNode signal" type="button" data-layer="signal" data-active="false"><small>Second</small><strong>Signal</strong></button>
-        <button class="supportNode route" type="button" data-layer="route" data-active="false"><small>Middle</small><strong>Route</strong></button>
-        <button class="supportNode output" type="button" data-layer="output" data-active="false"><small>Inner</small><strong>Output</strong></button>
-        <button class="supportNode boundary" type="button" data-layer="boundary" data-active="false"><small>Core Law</small><strong>Boundary</strong></button>
-
-        <div class="readout" aria-live="polite">
-          <article class="readCard">
-            <h3 id="readTitle">Name the object.</h3>
-            <p id="readCopy">The first layer is intake. What is the user bringing to the desk: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, or a problem?</p>
+        <div class="layerGrid">
+          <article class="layerCard">
+            <small>Outer · Intake</small>
+            <h3>Name the object.</h3>
+            <p>What is being handled: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, or a problem?</p>
           </article>
-          <article class="readCard receipt" id="readReceipt">
-            <span>LAYER=Intake</span>
-            <span>QUESTION=What object is being handled?</span>
-            <span>OUTPUT=The task stops being vague.</span>
+
+          <article class="layerCard">
+            <small>Second · Signal</small>
+            <h3>Separate signal from noise.</h3>
+            <p>The desk clarifies what matters now, what is background, and what should not control the decision.</p>
+          </article>
+
+          <article class="layerCard">
+            <small>Middle · Route</small>
+            <h3>Clarify the route.</h3>
+            <p>The product helps define the next practical move without pretending to be the person making the final call.</p>
+          </article>
+
+          <article class="layerCard">
+            <small>Core · Law Boundary</small>
+            <h3>User stays central.</h3>
+            <p>Judgment, authorship, identity, and final approval remain with the user. The system supports; it does not replace.</p>
           </article>
         </div>
       </div>
     </section>
 
-    <nav class="routeRail" aria-label="Product route rail">
-      <a href="/products/">Products</a>
+    <section class="lawPanel" aria-label="On Your Side AI product law">
+      <div class="lawContent">
+        <span class="eyebrow">Product utility</span>
+        <h2 class="sectionTitle">A public AI product with a human center.</h2>
+
+        <div class="lawGrid">
+          <article class="layerCard">
+            <small>Decision support</small>
+            <h3>Sharper reads.</h3>
+            <p>It helps the user read options, tradeoffs, risks, and next steps without claiming authority over the decision.</p>
+          </article>
+
+          <article class="layerCard">
+            <small>Communication support</small>
+            <h3>Cleaner messages.</h3>
+            <p>It can structure emails, scripts, replies, and documents while preserving the user’s voice and intent.</p>
+          </article>
+
+          <article class="layerCard">
+            <small>Execution support</small>
+            <h3>Less friction.</h3>
+            <p>It turns vague pressure into visible tasks, routes, and outputs that can actually be acted on.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <nav class="routeBacklinks" aria-label="On Your Side AI product backlinks">
+      <a class="primary" href="/products/">Products</a>
+      <a href="/products/archcoin/">Vault Chamber</a>
       <a href="/products/five-flags/">Five Flags</a>
       <a href="/products/education/">Education</a>
       <a href="/products/nutrition/">Nutrition</a>
       <a href="/showroom/">Showroom</a>
       <a href="/gauges/">Gauges</a>
     </nav>
+
+    <div class="receipt">
+      ON_YOUR_SIDE_AI_B13=BACKLINK_LOCKED · REQUIRED_BACKLINK=/products/archcoin/ · CANONICAL_DESTINATION=/products/on-your-side-ai/
+    </div>
   </main>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const layers = {
-        intake: {
-          title: "Name the object.",
-          copy: "The first layer is intake. What is the user bringing to the desk: a decision, a message, a document, a plan, a conflict, a task, a bill, a question, or a problem?",
-          receipt: ["LAYER=Intake","QUESTION=What object is being handled?","OUTPUT=The task stops being vague."]
-        },
-        signal: {
-          title: "Separate signal from noise.",
-          copy: "The second layer clarifies what matters, what is urgent, what is missing, and what should not be treated as the main issue.",
-          receipt: ["LAYER=Signal","QUESTION=What matters most?","OUTPUT=The decision surface becomes readable."]
-        },
-        route: {
-          title: "Map the route.",
-          copy: "The third layer chooses the path: reply, compare, summarize, draft, decide, wait, ask, verify, schedule, build, or stop.",
-          receipt: ["LAYER=Route","QUESTION=What path fits the object?","OUTPUT=The next step becomes ordered."]
-        },
-        output: {
-          title: "Return usable output.",
-          copy: "The fourth layer returns something practical: a message, a plan, a summary, a checklist, a draft, or a clean decision surface.",
-          receipt: ["LAYER=Output","QUESTION=What can the user act on now?","OUTPUT=Support becomes useful."]
-        },
-        boundary: {
-          title: "Keep the user in charge.",
-          copy: "The deepest rule is the boundary. The product may clarify, structure, and support. It may not replace judgment, identity, authorship, or final approval.",
-          receipt: ["LAYER=Boundary","QUESTION=Who owns the final decision?","OUTPUT=The user remains central."]
-        }
-      };
-
-      const nodes = Array.from(document.querySelectorAll(".supportNode"));
-      const readTitle = document.getElementById("readTitle");
-      const readCopy = document.getElementById("readCopy");
-      const readReceipt = document.getElementById("readReceipt");
-
-      function setLayer(key){
-        const layer = layers[key] || layers.intake;
-        nodes.forEach((node) => node.dataset.active = node.dataset.layer === key ? "true" : "false");
-        if (readTitle) readTitle.textContent = layer.title;
-        if (readCopy) readCopy.textContent = layer.copy;
-        if (readReceipt) {
-          readReceipt.replaceChildren();
-          layer.receipt.forEach((line) => {
-            const span = document.createElement("span");
-            span.textContent = line;
-            readReceipt.appendChild(span);
-          });
-        }
-      }
-
-      nodes.forEach((node) => node.addEventListener("click", () => setLayer(node.dataset.layer || "intake")));
-    })();
-  </script>
 </body>
 </html>

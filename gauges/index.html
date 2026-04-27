@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="asset-wired-b5">
+<html lang="en" data-gauges-generation="asset-wired-b7">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared instruments asset layer."
+    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared instruments asset contract."
   />
 
   <style>
@@ -552,9 +552,16 @@
       margin:0;
     }
 
-    .telemetry{
+    .telemetry,
+    .receipt{
+      list-style:none;
+      margin:0;
+      padding:0;
       display:grid;
       gap:2px;
+    }
+
+    .telemetry{
       border-top:1px solid rgba(255,255,255,.08);
       padding-top:6px;
       color:var(--soft);
@@ -563,7 +570,8 @@
       line-height:1.18;
     }
 
-    .telemetry span{
+    .telemetry li,
+    .receipt li{
       display:block;
     }
 
@@ -706,17 +714,11 @@
       border-radius:18px;
       background:rgba(0,0,0,.20);
       padding:11px;
-      display:grid;
-      gap:4px;
       color:var(--soft);
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       font-size:.68rem;
       line-height:1.28;
       overflow:auto;
-    }
-
-    .receipt span{
-      display:block;
     }
 
     .routeRail{
@@ -952,7 +954,7 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gauges-asset-wired-b5"
+    data-instrument-standard="gauges-asset-wired-b7"
     data-read-mode="shared-assets-instrument-consumer"
   >
     <header class="topbar">
@@ -996,7 +998,9 @@
   <script type="module">
     import {
       buildGaugeDashboardPacket,
-      GAUGE_COLOR_STATES
+      renderGaugeCardHTML,
+      renderGaugeLegendHTML,
+      renderGaugeTedHTML
     } from "/assets/instruments.js";
 
     const packet = buildGaugeDashboardPacket({ activePage: "gauges" });
@@ -1016,106 +1020,15 @@
         .replace(/'/g, "&#39;");
     }
 
-    function toneFor(state) {
-      const safeState = String(state || "healthy").toLowerCase();
-      const entry = packet.colorStates[safeState] || GAUGE_COLOR_STATES.healthy;
-      const cssVar = String(entry.cssVar || "--green");
-      return cssVar.startsWith("--") ? "var(" + cssVar + ")" : cssVar;
-    }
-
     function renderJump(label, href, active = false) {
       return `
-        <a class="jumpCard${active ? " active" : ""}" href="${escapeHTML(href)}" aria-label="${escapeHTML(label)}">
+        <a class="jumpCard${active ? " active" : ""}" href="${escapeHTML(href)}" aria-label="${escapeHTML(active ? "Active page: " + label : "Jump to " + label)}">
           <span class="navCompass" aria-hidden="true"></span>
           <span class="jumpText">
             <small>${active ? "Active" : "Jump"}</small>
             <strong>${escapeHTML(label)}</strong>
           </span>
         </a>
-      `;
-    }
-
-    function renderGauge(reading) {
-      const state = String(reading.state || "healthy").toLowerCase();
-      const tone = toneFor(state);
-      const receipt = Array.isArray(reading.receipt) ? reading.receipt : [];
-
-      return `
-        <article
-          class="gaugeCard${state === "active" ? " priority" : ""}"
-          style="--tone:${escapeHTML(tone)};--needle:${escapeHTML(reading.needle)}deg;"
-          aria-label="${escapeHTML(reading.id + " " + reading.title + " " + reading.value + " " + reading.label)}"
-        >
-          <div class="gaugeTop">
-            <span class="gaugeName">
-              <small>${escapeHTML(reading.id)}</small>
-              <strong>${escapeHTML(reading.title)}</strong>
-            </span>
-            <span class="gaugeValue" aria-label="Value ${escapeHTML(reading.value)}">${escapeHTML(reading.value)}</span>
-          </div>
-
-          <div class="dial" aria-hidden="true">
-            <span class="needle"></span>
-            <span class="dialRead">
-              <strong>${escapeHTML(reading.value)}</strong>
-              <small>${escapeHTML(reading.label)}</small>
-            </span>
-          </div>
-
-          <p class="gaugeMeaning">${escapeHTML(reading.meaning)}</p>
-
-          <div class="telemetry" aria-label="${escapeHTML(reading.title)} telemetry">
-            ${receipt.map((line) => `<span>${escapeHTML(line)}</span>`).join("\n")}
-          </div>
-        </article>
-      `;
-    }
-
-    function renderLegend() {
-      return Object.keys(packet.colorStates)
-        .map((key) => {
-          const item = packet.colorStates[key];
-          return `
-            <span class="legendItem">
-              <span class="dot" style="--tone:${escapeHTML(toneFor(key))}" aria-hidden="true"></span>
-              <span>${escapeHTML(item.label)}</span>
-            </span>
-          `;
-        })
-        .join("\n");
-    }
-
-    function renderTedRead() {
-      const ted = packet.tedRead;
-      const cards = Array.isArray(ted.cards) ? ted.cards : [];
-      const next = ted.nextAction || {};
-      const nextReceipt = Array.isArray(next.receipt) ? next.receipt : [];
-
-      return `
-        <div class="tedLead">
-          <span class="pill">${escapeHTML(ted.eyebrow)}</span>
-          <h1 id="tedTitle">${escapeHTML(ted.title)}</h1>
-          <h2 class="thesis">${escapeHTML(ted.thesis)}</h2>
-          <p>${escapeHTML(ted.support)}</p>
-        </div>
-
-        <div class="plainCards">
-          ${cards.map((card) => `
-            <article class="plainCard ${escapeHTML(card.state || "")}">
-              <small>${escapeHTML(card.eyebrow)}</small>
-              <strong>${escapeHTML(card.title)}</strong>
-              <p>${escapeHTML(card.copy)}</p>
-            </article>
-          `).join("\n")}
-        </div>
-
-        <section class="nextAction" aria-label="Next practical action">
-          <h3>${escapeHTML(next.title)}</h3>
-          <p>${escapeHTML(next.copy)}</p>
-          <div class="receipt">
-            ${nextReceipt.map((line) => `<span>${escapeHTML(line)}</span>`).join("\n")}
-          </div>
-        </section>
       `;
     }
 
@@ -1143,9 +1056,9 @@
       renderJump("Gauges", packet.routes.gauges, true)
     ].join("\n");
 
-    gaugeGrid.innerHTML = packet.readings.map(renderGauge).join("\n");
-    legend.innerHTML = renderLegend();
-    tedWall.innerHTML = renderTedRead();
+    gaugeGrid.innerHTML = packet.readings.map(renderGaugeCardHTML).join("\n");
+    legend.innerHTML = renderGaugeLegendHTML(packet.colorStates);
+    tedWall.innerHTML = renderGaugeTedHTML(packet.tedRead);
     routeRail.innerHTML = renderRouteRail();
   </script>
 </body>

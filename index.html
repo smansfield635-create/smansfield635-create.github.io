@@ -1,41 +1,41 @@
 <!DOCTYPE html>
-<html lang="en" data-compass-generation="G2_UNIVERSE_SHOWROOM_256_LATTICE">
+<html lang="en" data-compass-generation="G3_PUBLIC_ROOT">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Compass: Generation 2 universe showroom, three-world selector, and orientation core for Richie’s Manor and Estate."
+    content="Diamond Gate Bridge Compass: Generation 3 public root, universe entrance, three-world selector, and live estate orientation."
   />
 
   <style>
     :root {
+      --void: #01030a;
+      --deep: #020713;
+      --navy: #061126;
+      --panel: rgba(7, 17, 39, 0.78);
+      --panel-strong: rgba(5, 12, 29, 0.92);
       --ink: #eef3ff;
       --muted: #b8c2d8;
+      --soft: #d9e3f7;
       --dim: #78839a;
-      --void: #01040d;
-      --navy-950: #020713;
-      --navy-900: #061126;
-      --navy-850: #091832;
-      --navy-800: #0d2142;
       --gold: #f4c967;
       --gold-soft: #ffe3a3;
       --amber: #d98a35;
       --copper: #aa6231;
-      --blue: #75c7ff;
+      --blue: #76c8ff;
       --violet: #c9b6ff;
       --green: #84e1bc;
-      --glass: rgba(8, 19, 42, 0.76);
-      --glass-strong: rgba(7, 16, 36, 0.91);
-      --border: rgba(244, 201, 103, 0.34);
-      --border-strong: rgba(244, 201, 103, 0.62);
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.52);
-      --gold-glow: 0 0 42px rgba(244, 201, 103, 0.28);
-      --radius-xl: 34px;
+      --line: rgba(244, 201, 103, 0.34);
+      --line-strong: rgba(244, 201, 103, 0.68);
+      --shadow: 0 28px 100px rgba(0, 0, 0, 0.56);
+      --glow-gold: 0 0 48px rgba(244, 201, 103, 0.3);
+      --glow-blue: 0 0 58px rgba(118, 200, 255, 0.2);
+      --radius-xl: 36px;
       --radius-lg: 28px;
       --radius-md: 20px;
-      --page-max: 1240px;
+      --max: 1260px;
     }
 
     * {
@@ -53,11 +53,11 @@
       margin: 0;
       color: var(--ink);
       background:
-        radial-gradient(circle at 50% -18%, rgba(244, 201, 103, 0.24), transparent 30%),
-        radial-gradient(circle at 18% 18%, rgba(74, 139, 255, 0.28), transparent 34%),
-        radial-gradient(circle at 82% 18%, rgba(201, 182, 255, 0.18), transparent 30%),
-        radial-gradient(circle at 70% 72%, rgba(217, 138, 53, 0.13), transparent 36%),
-        linear-gradient(180deg, #01040d 0%, #020713 36%, #061126 68%, #030816 100%);
+        radial-gradient(circle at 50% -16%, rgba(244, 201, 103, 0.24), transparent 29%),
+        radial-gradient(circle at 16% 16%, rgba(118, 200, 255, 0.26), transparent 32%),
+        radial-gradient(circle at 84% 20%, rgba(201, 182, 255, 0.2), transparent 30%),
+        radial-gradient(circle at 70% 76%, rgba(217, 138, 53, 0.13), transparent 36%),
+        linear-gradient(180deg, #01030a 0%, #020713 36%, #061126 72%, #030816 100%);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       overflow-x: hidden;
     }
@@ -66,173 +66,181 @@
       content: "";
       position: fixed;
       inset: 0;
-      z-index: -3;
+      z-index: -4;
       pointer-events: none;
       background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(244, 201, 103, 0.56) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(117, 199, 255, 0.42) 0 1px, transparent 1.4px);
-      background-size: 91px 91px, 137px 137px, 213px 213px;
-      background-position: 0 0, 37px 52px, 81px 119px;
-      opacity: 0.2;
+        radial-gradient(circle, rgba(255,255,255,0.72) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(244,201,103,0.52) 0 1px, transparent 1.5px),
+        radial-gradient(circle, rgba(118,200,255,0.42) 0 1px, transparent 1.4px);
+      background-size: 83px 83px, 137px 137px, 223px 223px;
+      background-position: 0 0, 41px 57px, 89px 126px;
+      opacity: 0.22;
     }
 
     body::after {
       content: "";
       position: fixed;
-      inset: -18%;
-      z-index: -2;
+      inset: -22%;
+      z-index: -3;
       pointer-events: none;
       background:
-        conic-gradient(from 20deg at 50% 50%, transparent, rgba(244, 201, 103, 0.08), transparent, rgba(117, 199, 255, 0.07), transparent, rgba(201, 182, 255, 0.08), transparent),
-        radial-gradient(circle at 50% 50%, transparent 0 25%, rgba(244, 201, 103, 0.055) 38%, transparent 55%);
+        conic-gradient(from 18deg at 50% 50%, transparent, rgba(244,201,103,0.09), transparent, rgba(118,200,255,0.08), transparent, rgba(201,182,255,0.08), transparent),
+        radial-gradient(circle at 50% 50%, transparent 0 24%, rgba(244,201,103,0.052) 36%, transparent 56%);
       opacity: 0.72;
-      animation: universeDrift 42s linear infinite;
+      animation: universeDrift 58s linear infinite;
     }
 
     @keyframes universeDrift {
       from { transform: rotate(0deg) scale(1); }
-      to { transform: rotate(360deg) scale(1.04); }
+      to { transform: rotate(360deg) scale(1.05); }
     }
 
     a {
       color: inherit;
     }
 
-    .route-rail {
-      width: min(1000px, calc(100% - 32px));
-      margin: clamp(18px, 3vw, 34px) auto;
+    .star-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      opacity: 0.62;
+    }
+
+    .rail {
+      width: min(1020px, calc(100% - 32px));
+      margin: clamp(16px, 2.6vw, 30px) auto 0;
       padding: 12px;
-      border: 1px solid var(--border);
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(8, 19, 42, 0.76);
+      background: rgba(7, 17, 39, 0.76);
       box-shadow: var(--shadow);
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 8px;
-      backdrop-filter: blur(18px);
+      backdrop-filter: blur(20px);
       position: relative;
       z-index: 10;
     }
 
-    .route-rail a,
+    .rail a,
     .chip,
-    .mode-button {
+    .mode,
+    .route-object {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       min-height: 42px;
       padding: 0 16px;
-      border: 1px solid rgba(244, 201, 103, 0.24);
+      border: 1px solid rgba(244, 201, 103, 0.25);
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.055);
-      color: #d9e3f7;
+      color: var(--soft);
       text-decoration: none;
       font-weight: 850;
       letter-spacing: 0.01em;
     }
 
-    .route-rail a[aria-current="page"],
-    .mode-button[aria-pressed="true"] {
+    .rail a[aria-current="page"],
+    .mode[aria-pressed="true"] {
       color: #111827;
       border-color: var(--gold);
       background: linear-gradient(180deg, var(--gold-soft), var(--gold));
-      box-shadow: var(--gold-glow);
+      box-shadow: var(--glow-gold);
     }
 
     .shell {
-      width: min(var(--page-max), calc(100% - 32px));
+      width: min(var(--max), calc(100% - 32px));
       margin: 0 auto;
-      padding: 0 0 56px;
+      padding: 0 0 60px;
     }
 
-    .stage {
-      position: relative;
-      min-height: calc(100vh - 118px);
+    .hero {
+      min-height: calc(100vh - 84px);
       display: grid;
-      grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
-      gap: clamp(22px, 4vw, 48px);
+      grid-template-columns: minmax(0, 1.04fr) minmax(340px, 0.96fr);
+      gap: clamp(22px, 4vw, 50px);
       align-items: center;
-      padding: clamp(18px, 4vw, 50px) 0 clamp(28px, 5vw, 70px);
+      padding: clamp(26px, 5vw, 76px) 0 clamp(34px, 6vw, 84px);
+      position: relative;
     }
 
-    .stage::before {
+    .hero::before {
       content: "";
       position: absolute;
-      width: min(720px, 76vw);
+      width: min(880px, 86vw);
       aspect-ratio: 1;
-      border: 1px solid rgba(244, 201, 103, 0.18);
-      border-radius: 50%;
       left: 50%;
       top: 48%;
       transform: translate(-50%, -50%);
-      background:
-        radial-gradient(circle, rgba(244, 201, 103, 0.12) 0 2%, transparent 3%),
-        radial-gradient(circle, transparent 0 43%, rgba(244, 201, 103, 0.06) 44%, transparent 45%),
-        radial-gradient(circle, transparent 0 62%, rgba(117, 199, 255, 0.055) 63%, transparent 64%);
-      box-shadow:
-        inset 0 0 90px rgba(117, 199, 255, 0.08),
-        0 0 96px rgba(244, 201, 103, 0.12);
       z-index: -1;
+      border-radius: 50%;
+      border: 1px solid rgba(244, 201, 103, 0.16);
+      background:
+        radial-gradient(circle, rgba(244,201,103,0.16) 0 1.7%, transparent 2.4%),
+        radial-gradient(circle, transparent 0 36%, rgba(244,201,103,0.045) 37%, transparent 38%),
+        radial-gradient(circle, transparent 0 52%, rgba(118,200,255,0.05) 53%, transparent 54%),
+        radial-gradient(circle, transparent 0 68%, rgba(201,182,255,0.045) 69%, transparent 70%);
+      box-shadow:
+        inset 0 0 110px rgba(118,200,255,0.08),
+        0 0 120px rgba(244,201,103,0.12);
     }
 
-    .stage::after {
+    .hero::after {
       content: "";
       position: absolute;
-      width: min(520px, 62vw);
+      width: min(580px, 66vw);
       aspect-ratio: 1;
       left: 50%;
       top: 48%;
       transform: translate(-50%, -50%) rotate(45deg);
+      z-index: -1;
       border: 1px solid rgba(244, 201, 103, 0.22);
       box-shadow:
-        inset 0 0 42px rgba(244, 201, 103, 0.08),
-        0 0 58px rgba(244, 201, 103, 0.1);
-      z-index: -1;
-      opacity: 0.7;
+        inset 0 0 54px rgba(244, 201, 103, 0.08),
+        0 0 72px rgba(244, 201, 103, 0.11);
+      opacity: 0.78;
     }
 
-    .hero-panel,
-    .control-panel,
+    .panel,
     .room,
     .card,
     .audit-strip,
     .backlinks {
-      border: 1px solid var(--border);
+      border: 1px solid var(--line);
       background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.085), transparent 42%),
-        var(--glass);
+        linear-gradient(180deg, rgba(255,255,255,0.09), transparent 42%),
+        var(--panel);
       box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
+      backdrop-filter: blur(20px);
     }
 
-    .hero-panel,
-    .control-panel,
+    .panel,
     .room {
       border-radius: var(--radius-xl);
-      padding: clamp(24px, 4vw, 56px);
+      padding: clamp(24px, 4vw, 58px);
       position: relative;
       overflow: hidden;
     }
 
-    .hero-panel::after,
-    .control-panel::after,
+    .panel::after,
     .room::after {
       content: "";
       position: absolute;
       inset: 0;
       pointer-events: none;
       background:
-        linear-gradient(90deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.04) 1px, transparent 1px);
+        linear-gradient(90deg, rgba(244,201,103,0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,201,103,0.04) 1px, transparent 1px);
       background-size: 6.25% 6.25%;
-      opacity: 0.42;
+      opacity: 0.44;
       mask-image: radial-gradient(circle at center, black, transparent 74%);
     }
 
-    .hero-panel > *,
-    .control-panel > *,
+    .panel > *,
     .room > * {
       position: relative;
       z-index: 1;
@@ -258,26 +266,26 @@
       height: 9px;
       border: 1px solid var(--gold);
       transform: rotate(45deg);
-      box-shadow: 0 0 18px rgba(244, 201, 103, 0.55);
+      box-shadow: 0 0 18px rgba(244,201,103,0.55);
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(3.1rem, 8vw, 7.6rem);
-      line-height: 0.86;
-      letter-spacing: -0.085em;
+      font-size: clamp(3.5rem, 9vw, 8.7rem);
+      line-height: 0.82;
+      letter-spacing: -0.095em;
     }
 
     h2 {
       margin: 0 0 12px;
-      font-size: clamp(1.5rem, 3vw, 2.6rem);
-      line-height: 1.04;
-      letter-spacing: -0.04em;
+      font-size: clamp(1.6rem, 3.3vw, 2.9rem);
+      line-height: 1.03;
+      letter-spacing: -0.045em;
     }
 
     h3 {
       margin: 0 0 10px;
-      font-size: 1.1rem;
+      font-size: 1.14rem;
     }
 
     p {
@@ -285,53 +293,169 @@
     }
 
     .lede {
-      max-width: 780px;
+      max-width: 820px;
       color: var(--muted);
-      font-size: clamp(1.04rem, 1.7vw, 1.28rem);
+      font-size: clamp(1.04rem, 1.7vw, 1.3rem);
     }
 
-    .hero-line {
-      width: 100%;
+    .gold {
+      color: var(--gold-soft);
+    }
+
+    .divider {
       height: 1px;
-      margin: clamp(22px, 4vw, 40px) 0;
-      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
-    }
-
-    .proof-strip {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
+      width: 100%;
+      margin: clamp(22px, 4vw, 42px) 0;
+      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
     }
 
     .proof {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .proof-item {
       border: 1px solid rgba(132, 225, 188, 0.28);
       border-radius: 18px;
       padding: 14px;
-      background: rgba(132, 225, 188, 0.06);
+      background: rgba(132,225,188,0.06);
     }
 
-    .proof strong {
+    .proof-item strong {
       display: block;
       color: var(--green);
-      font-size: 1.4rem;
+      font-size: 1.48rem;
       line-height: 1;
     }
 
-    .proof span {
+    .proof-item span {
       color: var(--muted);
-      font-size: 0.88rem;
-      font-weight: 800;
+      font-size: 0.82rem;
+      font-weight: 850;
       text-transform: uppercase;
       letter-spacing: 0.08em;
     }
 
-    .mode-stack {
+    .world-object {
+      min-height: 420px;
+      border: 1px solid rgba(244,201,103,0.26);
+      border-radius: 32px;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(244,201,103,0.12), transparent 28%),
+        rgba(0,0,0,0.18);
+      position: relative;
+      overflow: hidden;
+      margin-top: 24px;
+      box-shadow: inset 0 0 68px rgba(118,200,255,0.07);
+    }
+
+    .flat-plane,
+    .round-life,
+    .meta-orb {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 260ms ease;
+    }
+
+    body[data-view-mode="flat"] .flat-plane,
+    body[data-view-mode="round"] .round-life,
+    body[data-view-mode="meta"] .meta-orb {
+      opacity: 1;
+    }
+
+    .flat-plane {
+      background:
+        linear-gradient(90deg, rgba(244,201,103,0.12) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(244,201,103,0.12) 1px, transparent 1px);
+      background-size: 44px 44px;
+    }
+
+    .flat-plane::after {
+      content: "FLAT · 2D ROUTE MAP";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      color: rgba(255,227,163,0.92);
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-align: center;
+    }
+
+    .round-life::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: 38px;
+      width: 14px;
+      height: 190px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, var(--gold), var(--copper));
+      transform: translateX(-50%);
+      box-shadow: 0 0 34px rgba(244,201,103,0.3);
+    }
+
+    .round-life::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 42px;
+      width: min(300px, 70%);
+      height: 230px;
+      border: 1px solid rgba(132,225,188,0.44);
+      border-radius: 48% 52% 45% 55%;
+      background:
+        radial-gradient(circle at 36% 32%, rgba(132,225,188,0.22), transparent 24%),
+        radial-gradient(circle at 66% 48%, rgba(244,201,103,0.16), transparent 26%),
+        radial-gradient(circle at 48% 66%, rgba(118,200,255,0.11), transparent 22%);
+      transform: translateX(-50%);
+      box-shadow:
+        inset 0 0 48px rgba(132,225,188,0.1),
+        0 0 42px rgba(132,225,188,0.16);
+    }
+
+    .meta-orb::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(320px, 74%);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px solid rgba(118,200,255,0.48);
+      transform: translate(-50%, -50%);
+      background:
+        radial-gradient(circle at 38% 30%, rgba(244,201,103,0.24), transparent 18%),
+        radial-gradient(circle at 62% 60%, rgba(118,200,255,0.18), transparent 22%),
+        repeating-linear-gradient(90deg, transparent 0 24px, rgba(118,200,255,0.095) 25px 26px),
+        radial-gradient(circle, rgba(255,255,255,0.06), transparent 60%);
+      box-shadow:
+        inset 0 0 62px rgba(118,200,255,0.18),
+        0 0 72px rgba(118,200,255,0.22);
+    }
+
+    .meta-orb::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: min(440px, 92%);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      border: 1px dashed rgba(244,201,103,0.42);
+      transform: translate(-50%, -50%) rotate(-16deg);
+      box-shadow: 0 0 44px rgba(244,201,103,0.08);
+    }
+
+    .modes {
       display: grid;
       gap: 14px;
     }
 
-    .mode-button {
+    .mode {
       width: 100%;
       min-height: unset;
       padding: 18px;
@@ -344,36 +468,33 @@
       transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
     }
 
-    .mode-button:hover {
+    .mode:hover {
       transform: translateY(-2px);
-      border-color: var(--border-strong);
-      box-shadow: var(--gold-glow);
+      border-color: var(--line-strong);
+      box-shadow: var(--glow-gold);
     }
 
-    .mode-button b {
-      font-size: 1.24rem;
+    .mode b {
+      font-size: 1.25rem;
     }
 
-    .mode-button small {
+    .mode small {
       color: inherit;
-      opacity: 0.8;
+      opacity: 0.82;
       line-height: 1.5;
       font-weight: 750;
     }
 
-    .mode-readout {
+    .readout {
       margin-top: 18px;
-      border: 1px solid rgba(244, 201, 103, 0.24);
+      border: 1px solid rgba(244,201,103,0.25);
       border-radius: 22px;
       padding: 18px;
-      background: rgba(0, 0, 0, 0.18);
+      background: rgba(0,0,0,0.2);
     }
 
-    .mode-readout strong {
-      color: var(--gold-soft);
-    }
-
-    .entry-grid {
+    .routes,
+    .lattice-cards {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: clamp(14px, 2vw, 22px);
@@ -383,7 +504,7 @@
       border-radius: var(--radius-md);
       padding: clamp(18px, 2.2vw, 30px);
       text-decoration: none;
-      min-height: 188px;
+      min-height: 190px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -392,8 +513,8 @@
 
     .card:hover {
       transform: translateY(-3px);
-      border-color: var(--border-strong);
-      box-shadow: var(--shadow), var(--gold-glow);
+      border-color: var(--line-strong);
+      box-shadow: var(--shadow), var(--glow-gold);
     }
 
     .card span {
@@ -401,141 +522,44 @@
       line-height: 1.6;
     }
 
-    .lattice-panel {
-      margin-top: 28px;
-    }
-
-    .lattice-grid {
+    .lattice {
       display: grid;
       grid-template-columns: repeat(16, minmax(0, 1fr));
       gap: 5px;
-      margin-top: 18px;
+      margin-top: 22px;
       padding: 18px;
-      border: 1px solid rgba(244, 201, 103, 0.22);
+      border: 1px solid rgba(244,201,103,0.22);
       border-radius: 26px;
-      background: rgba(0, 0, 0, 0.14);
+      background: rgba(0,0,0,0.16);
     }
 
     .cell {
       aspect-ratio: 1;
-      border: 1px solid rgba(244, 201, 103, 0.18);
+      border: 1px solid rgba(244,201,103,0.18);
       border-radius: 4px;
-      background: rgba(255, 255, 255, 0.035);
+      background: rgba(255,255,255,0.035);
+      transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
     }
 
     body[data-view-mode="flat"] .cell:nth-child(-n+64) {
-      background: rgba(244, 201, 103, 0.16);
-      border-color: rgba(244, 201, 103, 0.46);
+      background: rgba(244,201,103,0.17);
+      border-color: rgba(244,201,103,0.5);
     }
 
     body[data-view-mode="round"] .cell:nth-child(n+65):nth-child(-n+128) {
-      background: rgba(132, 225, 188, 0.15);
-      border-color: rgba(132, 225, 188, 0.44);
+      background: rgba(132,225,188,0.16);
+      border-color: rgba(132,225,188,0.46);
       border-radius: 50%;
     }
 
     body[data-view-mode="meta"] .cell:nth-child(n+129):nth-child(-n+192) {
-      background: rgba(117, 199, 255, 0.15);
-      border-color: rgba(117, 199, 255, 0.44);
+      background: rgba(118,200,255,0.16);
+      border-color: rgba(118,200,255,0.48);
       transform: rotate(45deg);
     }
 
     .cell:nth-child(n+193) {
-      background: rgba(201, 182, 255, 0.08);
-    }
-
-    .view-art {
-      min-height: 280px;
-      border: 1px solid rgba(244, 201, 103, 0.24);
-      border-radius: 28px;
-      margin-top: 18px;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 50% 50%, rgba(244, 201, 103, 0.14), transparent 28%),
-        rgba(255, 255, 255, 0.035);
-    }
-
-    .flat-map,
-    .round-tree,
-    .meta-globe {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 240ms ease;
-    }
-
-    body[data-view-mode="flat"] .flat-map,
-    body[data-view-mode="round"] .round-tree,
-    body[data-view-mode="meta"] .meta-globe {
-      opacity: 1;
-    }
-
-    .flat-map {
-      background:
-        linear-gradient(90deg, rgba(244, 201, 103, 0.12) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.12) 1px, transparent 1px);
-      background-size: 42px 42px;
-    }
-
-    .round-tree::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 28px;
-      width: 12px;
-      height: 160px;
-      border-radius: 999px;
-      background: linear-gradient(180deg, var(--gold), var(--copper));
-      transform: translateX(-50%);
-      box-shadow: 0 0 28px rgba(244, 201, 103, 0.28);
-    }
-
-    .round-tree::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 34px;
-      width: 220px;
-      height: 180px;
-      border: 1px solid rgba(132, 225, 188, 0.38);
-      border-radius: 44% 56% 48% 52%;
-      background:
-        radial-gradient(circle at 40% 34%, rgba(132, 225, 188, 0.18), transparent 22%),
-        radial-gradient(circle at 65% 48%, rgba(244, 201, 103, 0.13), transparent 24%);
-      transform: translateX(-50%);
-      box-shadow: inset 0 0 42px rgba(132, 225, 188, 0.08), 0 0 34px rgba(132, 225, 188, 0.12);
-    }
-
-    .meta-globe::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: min(260px, 70%);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      border: 1px solid rgba(117, 199, 255, 0.42);
-      transform: translate(-50%, -50%);
-      background:
-        radial-gradient(circle at 38% 32%, rgba(244, 201, 103, 0.2), transparent 18%),
-        radial-gradient(circle at 62% 58%, rgba(117, 199, 255, 0.16), transparent 20%),
-        repeating-linear-gradient(90deg, transparent 0 22px, rgba(117, 199, 255, 0.09) 23px 24px);
-      box-shadow:
-        inset 0 0 50px rgba(117, 199, 255, 0.15),
-        0 0 56px rgba(117, 199, 255, 0.18);
-    }
-
-    .meta-globe::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: min(340px, 86%);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      border: 1px dashed rgba(244, 201, 103, 0.36);
-      transform: translate(-50%, -50%) rotate(-16deg);
+      background: rgba(201,182,255,0.09);
     }
 
     .backlinks,
@@ -556,30 +580,31 @@
 
     .chip.pass {
       color: #eafff2;
-      border-color: rgba(132, 225, 188, 0.48);
+      border-color: rgba(132,225,188,0.48);
     }
 
     @media (max-width: 980px) {
-      .stage,
-      .entry-grid,
-      .proof-strip {
+      .hero,
+      .proof,
+      .routes,
+      .lattice-cards {
         grid-template-columns: 1fr;
       }
 
-      .route-rail {
+      .rail {
         border-radius: var(--radius-md);
       }
 
-      .route-rail a {
+      .rail a {
         width: 100%;
       }
 
-      .lattice-grid {
+      .lattice {
         grid-template-columns: repeat(8, minmax(0, 1fr));
       }
 
       h1 {
-        font-size: clamp(3rem, 14vw, 5.4rem);
+        font-size: clamp(3.1rem, 15vw, 5.8rem);
       }
     }
 
@@ -589,12 +614,12 @@
       }
 
       .card,
-      .mode-button {
+      .mode {
         transition: none;
       }
 
       .card:hover,
-      .mode-button:hover {
+      .mode:hover {
         transform: none;
       }
     }
@@ -609,10 +634,12 @@
   data-manor-slot="H1_COMPASS"
   data-manor-route="/"
   data-manor-batch="BATCH_1_HOUSE"
-  data-compass-role="g2-universe-initial-showroom"
+  data-compass-role="generation-3-public-root"
   data-view-mode="flat"
 >
-  <nav class="route-rail" aria-label="Richie’s Manor house routes">
+  <canvas class="star-canvas" id="starCanvas" aria-hidden="true"></canvas>
+
+  <nav class="rail" aria-label="Richie’s Manor house routes">
     <a href="/" aria-current="page">Compass</a>
     <a href="/door/">Door</a>
     <a href="/home/">Home</a>
@@ -622,69 +649,71 @@
   </nav>
 
   <main class="shell">
-    <section class="stage" aria-label="Diamond Gate Bridge initial universe showroom">
-      <article class="hero-panel">
-        <p class="kicker">H1 · Compass · Generation 2 Universe Showroom</p>
+    <section class="hero" aria-label="Diamond Gate Bridge Generation 3 public root">
+      <article class="panel">
+        <p class="kicker">H1 · Compass · Generation 3 Public Root</p>
         <h1>Diamond Gate Bridge</h1>
         <p class="lede">
-          Choose how you want to see the world. Start flat for clarity, round for the Tree of Life
-          view, or enter Meta for the full universe.
+          This is the first reveal of the estate. Choose how you want to see the world:
+          <span class="gold">Flat</span> for the 2D public map,
+          <span class="gold">Round</span> for the Tree of Life view,
+          or <span class="gold">Meta</span> for the full universe.
         </p>
 
-        <div class="hero-line"></div>
+        <div class="divider"></div>
 
-        <div class="proof-strip" aria-label="Live structure proof">
-          <div class="proof"><strong>100</strong><span>House</span></div>
-          <div class="proof"><strong>100</strong><span>Products</span></div>
-          <div class="proof"><strong>100</strong><span>Planets</span></div>
-          <div class="proof"><strong>Live</strong><span>Gauges</span></div>
+        <div class="proof" aria-label="Live proof strip">
+          <div class="proof-item"><strong>100</strong><span>House</span></div>
+          <div class="proof-item"><strong>100</strong><span>Products</span></div>
+          <div class="proof-item"><strong>100</strong><span>Planets</span></div>
+          <div class="proof-item"><strong>Live</strong><span>Gauges</span></div>
         </div>
 
-        <div class="view-art" aria-label="Selected world view preview">
-          <div class="flat-map" aria-hidden="true"></div>
-          <div class="round-tree" aria-hidden="true"></div>
-          <div class="meta-globe" aria-hidden="true"></div>
+        <div class="world-object" aria-label="Selected world view">
+          <div class="flat-plane" aria-hidden="true"></div>
+          <div class="round-life" aria-hidden="true"></div>
+          <div class="meta-orb" aria-hidden="true"></div>
         </div>
       </article>
 
-      <aside class="control-panel">
-        <p class="kicker">Three ways to enter</p>
+      <aside class="panel">
+        <p class="kicker">World-view selector</p>
 
-        <div class="mode-stack" role="group" aria-label="World view selector">
-          <button class="mode-button" type="button" data-mode="flat" aria-pressed="true">
+        <div class="modes" role="group" aria-label="World view selector">
+          <button class="mode" type="button" data-mode="flat" aria-pressed="true">
             <b>Flat</b>
-            <small>World is flat: 2D public version. Clean routes, fast understanding, simplest entry.</small>
+            <small>World is flat: the 2D public version. Clean, fast, readable, and direct.</small>
           </button>
 
-          <button class="mode-button" type="button" data-mode="round" aria-pressed="false">
+          <button class="mode" type="button" data-mode="round" aria-pressed="false">
             <b>Round</b>
-            <small>World is round: Tree of Life / A Bug’s Life version. Roots, branches, living relationships.</small>
+            <small>World is round: the Tree of Life / A Bug’s Life version. Roots, branches, scale, and organic relation.</small>
           </button>
 
-          <button class="mode-button" type="button" data-mode="meta" aria-pressed="false">
+          <button class="mode" type="button" data-mode="meta" aria-pressed="false">
             <b>Meta</b>
-            <small>World is a globe: full metaverse version. The complete estate, planets, products, and traversal field.</small>
+            <small>World is a globe: the full metaverse version. The estate, planets, products, and universe traversal.</small>
           </button>
         </div>
 
-        <div class="mode-readout">
+        <div class="readout">
           <p class="label">Current view</p>
           <h2 id="modeTitle">Flat · 2D public version</h2>
           <p id="modeText">
-            See the site clearly. Use this view if you want the fastest route into Products, Showroom, Gauges, and the main public rooms.
+            See the site clearly. Use this view to enter Products, Showroom, Gauges, and the main public routes without decoding the full universe first.
           </p>
         </div>
       </aside>
     </section>
 
     <section class="room">
-      <p class="kicker">Initial showroom routes</p>
-      <h2>Choose the first object on the floor.</h2>
+      <p class="kicker">Initial showroom floor</p>
+      <h2>The first objects are routes.</h2>
       <p class="lede">
-        The Compass is the first public view. It shows the estate without forcing the visitor to decode the entire system at once.
+        This page is not the dedicated Showroom. It is the initial public showroom: the first view that proves the estate exists and gives the visitor a lawful path forward.
       </p>
 
-      <div class="entry-grid">
+      <div class="routes">
         <a class="card" href="/products/">
           <div>
             <p class="label">Utility</p>
@@ -698,7 +727,7 @@
             <p class="label">Proof</p>
             <h3>Showroom</h3>
           </div>
-          <span>Move from the initial showroom into the dedicated public proof room.</span>
+          <span>Move from the initial reveal into the dedicated public proof room.</span>
         </a>
 
         <a class="card" href="/gauges/">
@@ -730,53 +759,41 @@
             <p class="label">Discovery</p>
             <h3>Explore / Frontier</h3>
           </div>
-          <span>Move outward into discovery and expansion without losing the Manor anchor.</span>
+          <span>Move into discovery and the hosted Frontier expansion edge without losing the Manor anchor.</span>
         </a>
       </div>
     </section>
 
-    <section class="room lattice-panel">
+    <section class="room" style="margin-top:28px">
       <p class="kicker">256-state lattice</p>
-      <h2>The showroom is governed by the lattice.</h2>
+      <h2>Flat, Round, Meta, Return.</h2>
       <p class="lede">
-        The page expresses the 256-state geometry as a public control surface: Flat, Round, Meta, and Return.
+        The 256-state lattice is not decoration here. It governs the public root: 64 states for clarity, 64 for organic relation, 64 for metaverse traversal, and 64 for return, proof, and stability.
       </p>
 
-      <div class="entry-grid">
+      <div class="lattice-cards">
         <article class="card">
-          <div>
-            <p class="label">001–064</p>
-            <h3>Flat</h3>
-          </div>
-          <span>2D clarity, public routes, simplest first contact.</span>
+          <div><p class="label">001–064</p><h3>Flat</h3></div>
+          <span>2D clarity, public route map, lowest cognitive load.</span>
         </article>
 
         <article class="card">
-          <div>
-            <p class="label">065–128</p>
-            <h3>Round</h3>
-          </div>
-          <span>Tree of Life relationships, organic growth, close-up living structure.</span>
+          <div><p class="label">065–128</p><h3>Round</h3></div>
+          <span>Tree of Life, A Bug’s Life, living relationship scale.</span>
         </article>
 
         <article class="card">
-          <div>
-            <p class="label">129–192</p>
-            <h3>Meta</h3>
-          </div>
+          <div><p class="label">129–192</p><h3>Meta</h3></div>
           <span>Globe/metaverse traversal, full estate and planetary map.</span>
         </article>
 
         <article class="card">
-          <div>
-            <p class="label">193–256</p>
-            <h3>Return</h3>
-          </div>
-          <span>Gauges, backlinks, audit markers, route stability.</span>
+          <div><p class="label">193–256</p><h3>Return</h3></div>
+          <span>Gauges, backlinks, audit markers, and route stability.</span>
         </article>
       </div>
 
-      <div class="lattice-grid" id="latticeGrid" aria-label="256-state lattice visualization"></div>
+      <div class="lattice" id="lattice" aria-label="256-state lattice visualization"></div>
     </section>
 
     <section class="backlinks">
@@ -792,19 +809,19 @@
     </section>
 
     <section class="audit-strip">
-      <p class="label">Compass G2 audit markers</p>
+      <p class="label">Compass G3 audit markers</p>
       <ul class="chip-list">
         <li class="chip pass">route-exists</li>
         <li class="chip pass">manor-skin</li>
         <li class="chip pass">house-class</li>
         <li class="chip pass">H1_COMPASS</li>
         <li class="chip pass">active-compass</li>
-        <li class="chip pass">g2-universe-showroom</li>
+        <li class="chip pass">generation-3-public-root</li>
         <li class="chip pass">flat-round-meta</li>
         <li class="chip pass">256-state-lattice</li>
       </ul>
       <p class="lede">
-        Compass rule: this page is the initial public showroom, but it remains the orientation core.
+        Compass rule: Index is the initial public showroom and universe entrance, but it remains the audited orientation core.
       </p>
     </section>
   </main>
@@ -816,24 +833,24 @@
       var copy = {
         flat: {
           title: "Flat · 2D public version",
-          text: "See the site clearly. Use this view if you want the fastest route into Products, Showroom, Gauges, and the main public rooms."
+          text: "See the site clearly. Use this view to enter Products, Showroom, Gauges, and the main public routes without decoding the full universe first."
         },
         round: {
           title: "Round · Tree of Life version",
-          text: "See how everything grows together. This view treats the estate as roots, branches, leaves, and living relationships."
+          text: "See how everything grows together. This view treats the estate as roots, branches, leaves, scale, and living relationships."
         },
         meta: {
           title: "Meta · Full universe version",
-          text: "Enter the full metaverse view. This is the globe-level estate map with house, products, planets, and traversal routes."
+          text: "Enter the full metaverse view. This is the globe-level estate map with house, products, planets, and universe traversal."
         }
       };
 
-      var storageKey = "diamond_gate_bridge_compass_view_mode";
       var body = document.body;
+      var storageKey = "dgb_compass_g3_view";
       var title = document.getElementById("modeTitle");
       var text = document.getElementById("modeText");
       var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-mode]"));
-      var lattice = document.getElementById("latticeGrid");
+      var lattice = document.getElementById("lattice");
 
       function safeMode(value) {
         return copy[value] ? value : "flat";
@@ -848,8 +865,7 @@
         if (text) text.textContent = copy[next].text;
 
         buttons.forEach(function (button) {
-          var active = button.getAttribute("data-mode") === next;
-          button.setAttribute("aria-pressed", active ? "true" : "false");
+          button.setAttribute("aria-pressed", button.getAttribute("data-mode") === next ? "true" : "false");
         });
       }
 
@@ -869,10 +885,55 @@
       }
 
       var params = new URLSearchParams(window.location.search);
-      var incoming = params.get("view");
-      var stored = localStorage.getItem(storageKey);
+      applyMode(safeMode(params.get("view") || localStorage.getItem(storageKey) || "flat"));
 
-      applyMode(safeMode(incoming || stored || "flat"));
+      var canvas = document.getElementById("starCanvas");
+      var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      if (canvas && !reduced) {
+        var ctx = canvas.getContext("2d");
+        var stars = [];
+        var width = 0;
+        var height = 0;
+        var count = 120;
+
+        function resize() {
+          width = canvas.width = window.innerWidth * window.devicePixelRatio;
+          height = canvas.height = window.innerHeight * window.devicePixelRatio;
+          canvas.style.width = window.innerWidth + "px";
+          canvas.style.height = window.innerHeight + "px";
+          stars = [];
+
+          for (var i = 0; i < count; i += 1) {
+            stars.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              r: (Math.random() * 1.4 + 0.4) * window.devicePixelRatio,
+              a: Math.random() * 0.7 + 0.2,
+              s: Math.random() * 0.18 + 0.04
+            });
+          }
+        }
+
+        function draw() {
+          ctx.clearRect(0, 0, width, height);
+
+          stars.forEach(function (star) {
+            star.y += star.s * window.devicePixelRatio;
+            if (star.y > height) star.y = 0;
+            ctx.beginPath();
+            ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(255, 244, 214, " + star.a + ")";
+            ctx.fill();
+          });
+
+          requestAnimationFrame(draw);
+        }
+
+        window.addEventListener("resize", resize);
+        resize();
+        draw();
+      }
     })();
   </script>
 </body>

@@ -3,14 +3,7 @@
   lang="en"
   data-page-id="compass"
   data-page="compass"
-  data-generation="index-generation-2-natural-scene-renewal"
-  data-flat-world-baseline="locked"
-  data-round-world="tree-of-life"
-  data-round-scope="256-acre-estate"
-  data-round-primary-object="256-year-oak"
-  data-round-road-logic="u-road"
-  data-round-ecosystem="active"
-  data-globe-status="locked-later"
+  data-generation="index-render-runtime-css-triad-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -18,6 +11,14 @@
   data-gauges-truth="live-authority"
   data-construct-class="house"
   data-house-part="compass"
+  data-flat-world-baseline="locked"
+  data-round-world="tree-of-life"
+  data-round-scope="256-acre-estate"
+  data-round-primary-object="256-year-oak"
+  data-round-road-logic="u-road"
+  data-round-ecosystem="active"
+  data-ground-condition="snow"
+  data-globe-status="locked-later"
 >
 <head>
   <meta charset="utf-8" />
@@ -25,46 +26,40 @@
   <title>Compass · Rich Manor and Estate</title>
   <meta
     name="description"
-    content="Rich Manor and Estate Compass. Flat World is the verified route map. Round World is the natural 256-acre estate scene centered on the 256-year-old oak, Manor, U-road, grass field, and living estate ground. Globe / Meta remains later."
+    content="Rich Manor and Estate Compass. Flat World is the verified route map. Round World is rendered through paired render and runtime files as a snow-ground estate scene centered on the Manor, old oak, and U-road."
   />
-  <link rel="stylesheet" href="/assets/manor.css?v=index-generation-2-natural-scene-renewal-v1" />
+  <link rel="stylesheet" href="/assets/manor.css?v=index-triad-v1" />
 
   <style>
     :root {
       --bg: #03060b;
-      --ink: #f7efd8;
-      --muted: rgba(247, 239, 216, .74);
-      --soft: rgba(247, 239, 216, .54);
-      --faint: rgba(247, 239, 216, .34);
-      --line: rgba(247, 239, 216, .16);
-      --line-strong: rgba(232, 196, 112, .52);
+      --ink: #f8f0dc;
+      --muted: rgba(248,240,220,.74);
+      --soft: rgba(248,240,220,.52);
+      --line: rgba(248,240,220,.16);
+      --line-strong: rgba(232,196,112,.54);
       --gold: #e8c470;
-      --gold-soft: rgba(232, 196, 112, .22);
-      --sky-top: #07172c;
-      --sky-low: #182f2a;
-      --grass-dark: #102414;
-      --grass-mid: #244f2e;
-      --grass-lit: #6f9b4f;
-      --grass-gold: #9f9a55;
-      --soil: #6c4930;
-      --soil-dark: #2f1e15;
-      --road: #b79c70;
-      --road-dark: #7b6246;
-      --bark: #7c4c2f;
-      --bark-dark: #321d12;
-      --leaf-dark: #163421;
-      --leaf-mid: #2f6938;
-      --leaf-lit: #7fa757;
-      --panel: rgba(5, 9, 15, .72);
-      --shadow: 0 30px 110px rgba(0,0,0,.55);
+      --panel: rgba(4,8,14,.72);
+      --snow: #eef4f7;
+      --snow-shadow: #b9c7cf;
+      --winter-blue: #92b8d9;
+      --road: #a88d67;
+      --road-dark: #69513a;
+      --bark: #7b4a2d;
+      --bark-dark: #2e1a10;
+      --leaf-dark: #173421;
+      --leaf-mid: #315f35;
+      --leaf-frost: #dbe8dc;
+      --grass-winter: #546f39;
+      --manor-dark: #101722;
+      --manor-lit: #f0cf85;
       --radius: 30px;
+      --shadow: 0 30px 110px rgba(0,0,0,.58);
       --max: 1240px;
-      --scene-h: min(820px, calc(100vh - 92px));
+      --scene-h: min(830px, calc(100vh - 92px));
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       min-height: 100%;
@@ -77,13 +72,13 @@
     body {
       margin: 0;
       min-height: 100vh;
+      overflow-x: hidden;
       color: var(--ink);
       background:
         radial-gradient(circle at 50% -8%, rgba(232,196,112,.18), transparent 31%),
-        radial-gradient(circle at 18% 19%, rgba(91,127,184,.14), transparent 25%),
-        radial-gradient(circle at 83% 16%, rgba(83,134,92,.12), transparent 23%),
+        radial-gradient(circle at 18% 19%, rgba(146,184,217,.14), transparent 25%),
+        radial-gradient(circle at 83% 16%, rgba(210,230,235,.10), transparent 24%),
         linear-gradient(180deg, #03060b 0%, #08101b 52%, #03050a 100%);
-      overflow-x: hidden;
     }
 
     body::before {
@@ -92,23 +87,17 @@
       inset: 0;
       z-index: -2;
       pointer-events: none;
-      opacity: .7;
+      opacity: .72;
       background-image:
-        radial-gradient(circle, rgba(255,255,255,.58) 0 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.7px);
+        radial-gradient(circle, rgba(255,255,255,.70) 0 1px, transparent 1.4px),
+        radial-gradient(circle, rgba(255,255,255,.28) 0 1px, transparent 1.7px);
       background-size: 92px 92px, 158px 158px;
       background-position: 0 0, 37px 54px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.2) 75%, rgba(0,0,0,.04));
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.20) 75%, rgba(0,0,0,.04));
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button {
-      font: inherit;
-    }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
 
     a:focus-visible,
     button:focus-visible {
@@ -126,14 +115,12 @@
       top: 0;
       z-index: 80;
       border-bottom: 1px solid var(--line);
-      background: rgba(3, 6, 11, .78);
+      background: rgba(3,6,11,.78);
       backdrop-filter: blur(18px);
     }
 
     .topbar-inner {
-      width: min(var(--max), calc(100% - 28px));
       min-height: 70px;
-      margin: 0 auto;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -158,7 +145,8 @@
       font-size: .86rem;
     }
 
-    .nav {
+    .nav,
+    .route-group {
       display: flex;
       justify-content: flex-end;
       flex-wrap: wrap;
@@ -182,11 +170,6 @@
       color: var(--ink);
     }
 
-    main {
-      position: relative;
-      z-index: 1;
-    }
-
     .compass-shell {
       padding: 18px 0 22px;
     }
@@ -200,7 +183,7 @@
       box-shadow: var(--shadow);
       isolation: isolate;
       background:
-        radial-gradient(circle at 50% 0%, rgba(232,196,112,.24), transparent 25%),
+        radial-gradient(circle at 50% 0%, rgba(232,196,112,.22), transparent 25%),
         linear-gradient(180deg, rgba(6,17,31,.97) 0%, rgba(5,10,16,.98) 48%, rgba(3,5,8,.99) 100%);
     }
 
@@ -212,9 +195,9 @@
       pointer-events: none;
       opacity: .76;
       background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,.15) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 77% 23%, rgba(255,255,255,.13) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 62% 39%, rgba(255,255,255,.10) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 22% 18%, rgba(255,255,255,.18) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 77% 23%, rgba(255,255,255,.14) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 62% 39%, rgba(255,255,255,.11) 0 1px, transparent 1.5px),
         linear-gradient(180deg, transparent 0 43%, rgba(0,0,0,.18) 100%);
       background-size: 180px 150px, 220px 190px, 270px 230px, 100% 100%;
     }
@@ -265,18 +248,37 @@
       color: var(--ink);
     }
 
-    .mode-scene {
-      display: none;
+    .render-mount {
       position: absolute;
       inset: 0;
-      min-height: 100%;
+      z-index: 4;
     }
 
-    body[data-active-mode="flat"] .mode-scene[data-mode-scene="flat"],
-    body[data-active-mode="round"] .mode-scene[data-mode-scene="round"],
-    body[data-active-mode="globe"] .mode-scene[data-mode-scene="globe"] {
-      display: block;
+    .route-rail {
+      position: absolute;
+      left: clamp(16px, 3vw, 34px);
+      right: clamp(16px, 3vw, 34px);
+      bottom: 16px;
+      z-index: 65;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 10px;
+      background: rgba(3,7,12,.70);
+      backdrop-filter: blur(13px);
     }
+
+    .proof-badge {
+      padding: 7px 10px;
+      color: var(--muted);
+      font-size: .85rem;
+      line-height: 1.35;
+    }
+
+    .proof-badge b { color: var(--gold); }
 
     .scene-copy {
       position: absolute;
@@ -299,12 +301,7 @@
       text-transform: uppercase;
     }
 
-    h1,
-    h2,
-    h3,
-    p {
-      margin-top: 0;
-    }
+    h1, h2, h3, p { margin-top: 0; }
 
     h1 {
       margin-bottom: 14px;
@@ -320,12 +317,6 @@
       letter-spacing: -.052em;
     }
 
-    h3 {
-      margin-bottom: 7px;
-      font-size: 1.05rem;
-      letter-spacing: .02em;
-    }
-
     .lead {
       margin: 0;
       color: var(--muted);
@@ -333,45 +324,17 @@
       line-height: 1.5;
     }
 
-    .route-rail {
+    .flat-scene,
+    .round-scene,
+    .globe-scene {
       position: absolute;
-      left: clamp(16px, 3vw, 34px);
-      right: clamp(16px, 3vw, 34px);
-      bottom: 16px;
-      z-index: 65;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 10px;
-      background: rgba(3,7,12,.70);
-      backdrop-filter: blur(13px);
-    }
-
-    .route-group {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .proof-badge {
-      padding: 7px 10px;
-      color: var(--muted);
-      font-size: .85rem;
-      line-height: 1.35;
-    }
-
-    .proof-badge b {
-      color: var(--gold);
+      inset: 0;
+      overflow: hidden;
     }
 
     .flat-map {
       position: absolute;
       inset: 0;
-      z-index: 4;
       background:
         radial-gradient(ellipse at 56% 67%, rgba(55,84,64,.34), transparent 42%),
         linear-gradient(180deg, transparent 0 42%, rgba(33,55,39,.76) 43% 100%);
@@ -425,20 +388,15 @@
       font-size: .78rem;
     }
 
-    .natural-estate {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-      overflow: hidden;
+    .round-scene {
       perspective: 1400px;
       background:
-        radial-gradient(circle at 52% 12%, rgba(245,216,137,.24), transparent 18%),
-        radial-gradient(circle at 50% 0%, rgba(255,238,170,.11), transparent 32%),
-        linear-gradient(180deg, var(--sky-top) 0 29%, var(--sky-low) 29% 45%, #10180f 45% 100%);
+        radial-gradient(circle at 52% 12%, rgba(245,216,137,.20), transparent 18%),
+        radial-gradient(circle at 50% 0%, rgba(255,238,170,.10), transparent 32%),
+        linear-gradient(180deg, #07172c 0 29%, #1b3234 29% 45%, #111715 45% 100%);
     }
 
-    .natural-estate::before {
-      content: "";
+    .winter-ridge {
       position: absolute;
       left: -8%;
       right: -8%;
@@ -446,13 +404,13 @@
       height: 28%;
       z-index: 1;
       background:
-        radial-gradient(ellipse at 17% 100%, rgba(62,95,62,.72), transparent 43%),
-        radial-gradient(ellipse at 68% 96%, rgba(72,104,62,.58), transparent 47%),
-        linear-gradient(180deg, rgba(30,66,43,.42), rgba(17,38,25,.82));
+        radial-gradient(ellipse at 17% 100%, rgba(182,199,204,.56), transparent 43%),
+        radial-gradient(ellipse at 68% 96%, rgba(104,133,121,.45), transparent 47%),
+        linear-gradient(180deg, rgba(205,223,226,.30), rgba(72,91,82,.58));
       filter: blur(.25px);
     }
 
-    .estate-land {
+    .snow-ground {
       position: absolute;
       left: -10%;
       right: -10%;
@@ -463,75 +421,35 @@
       transform-origin: 50% 0%;
       border-top: 1px solid rgba(232,196,112,.16);
       background:
-        radial-gradient(ellipse at 17% 77%, rgba(98,135,65,.42), transparent 24%),
-        radial-gradient(ellipse at 82% 81%, rgba(122,96,55,.38), transparent 25%),
-        radial-gradient(ellipse at 50% 70%, rgba(40,86,45,.52), transparent 39%),
-        repeating-linear-gradient(88deg, rgba(255,255,255,.045) 0 1px, transparent 1px 12px),
-        repeating-linear-gradient(112deg, rgba(0,0,0,.07) 0 1px, transparent 1px 15px),
-        linear-gradient(180deg, #2c5333 0%, #152714 100%);
+        radial-gradient(ellipse at 18% 76%, rgba(238,244,247,.92), transparent 25%),
+        radial-gradient(ellipse at 82% 78%, rgba(217,226,229,.72), transparent 26%),
+        radial-gradient(ellipse at 50% 70%, rgba(197,211,213,.82), transparent 42%),
+        repeating-linear-gradient(88deg, rgba(84,111,57,.18) 0 1px, transparent 1px 12px),
+        repeating-linear-gradient(112deg, rgba(0,0,0,.045) 0 1px, transparent 1px 15px),
+        linear-gradient(180deg, #eef4f7 0%, #cbd8dc 48%, #adbcc3 100%);
     }
 
-    .estate-land::before {
+    .snow-ground::before {
       content: "";
       position: absolute;
       inset: 7% 8% 16%;
-      border: 2px solid rgba(232,196,112,.34);
+      border: 2px solid rgba(232,196,112,.30);
       border-radius: 50%;
-      box-shadow: inset 0 0 92px rgba(232,196,112,.08);
+      box-shadow: inset 0 0 92px rgba(120,141,150,.18);
     }
 
-    .estate-land::after {
+    .snow-ground::after {
       content: "";
       position: absolute;
       inset: 18% 0 0;
       background:
-        repeating-linear-gradient(92deg, rgba(132,169,83,.18) 0 2px, transparent 2px 16px),
-        repeating-linear-gradient(77deg, rgba(31,71,37,.26) 0 2px, transparent 2px 18px);
+        repeating-linear-gradient(92deg, rgba(255,255,255,.45) 0 2px, transparent 2px 16px),
+        repeating-linear-gradient(77deg, rgba(84,111,57,.12) 0 2px, transparent 2px 18px);
       opacity: .58;
       mix-blend-mode: screen;
     }
 
-    .grass-near {
-      position: absolute;
-      left: -6%;
-      right: -6%;
-      bottom: -10%;
-      height: 39%;
-      z-index: 19;
-      pointer-events: none;
-      background:
-        repeating-linear-gradient(84deg, transparent 0 7px, rgba(130,177,79,.34) 7px 9px, transparent 9px 15px),
-        repeating-linear-gradient(101deg, transparent 0 5px, rgba(37,92,43,.55) 5px 7px, transparent 7px 14px),
-        linear-gradient(180deg, transparent 0%, rgba(18,48,22,.76) 42%, rgba(5,10,6,.95) 100%);
-      mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.86) 48%, transparent 100%);
-    }
-
-    .blade-field {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 1%;
-      height: 30%;
-      z-index: 31;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .blade-field span {
-      position: absolute;
-      bottom: 0;
-      width: 2px;
-      height: var(--h);
-      left: var(--x);
-      transform: rotate(var(--r));
-      transform-origin: bottom center;
-      border-radius: 999px 999px 0 0;
-      background: linear-gradient(to top, rgba(21,64,25,.95), rgba(141,190,82,.88));
-      opacity: var(--o);
-      box-shadow: 0 0 5px rgba(122,178,81,.18);
-    }
-
-    .road {
+    .u-road {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -540,18 +458,16 @@
       height: min(440px, 44vh);
       transform: translateX(-50%) rotateX(62deg);
       transform-origin: 50% 0%;
-      border-left: clamp(22px, 3.1vw, 38px) solid rgba(183,156,112,.84);
-      border-right: clamp(22px, 3.1vw, 38px) solid rgba(183,156,112,.84);
-      border-bottom: clamp(22px, 3.1vw, 38px) solid rgba(183,156,112,.84);
+      border-left: clamp(22px, 3.1vw, 38px) solid rgba(168,141,103,.88);
+      border-right: clamp(22px, 3.1vw, 38px) solid rgba(168,141,103,.88);
+      border-bottom: clamp(22px, 3.1vw, 38px) solid rgba(168,141,103,.88);
       border-top: 0;
       border-radius: 0 0 410px 410px;
-      box-shadow:
-        0 42px 54px rgba(0,0,0,.26),
-        inset 0 -8px 18px rgba(255,255,255,.08);
+      box-shadow: 0 42px 54px rgba(0,0,0,.26), inset 0 -8px 18px rgba(255,255,255,.08);
     }
 
-    .road::before,
-    .road::after {
+    .u-road::before,
+    .u-road::after {
       content: "";
       position: absolute;
       top: 8px;
@@ -559,16 +475,11 @@
       height: 84%;
       border-radius: 999px;
       background:
-        repeating-linear-gradient(to bottom, rgba(255,255,255,.25) 0 10px, transparent 10px 24px);
+        repeating-linear-gradient(to bottom, rgba(238,244,247,.42) 0 10px, transparent 10px 24px);
     }
 
-    .road::before {
-      left: calc(clamp(22px, 3.1vw, 38px) * -0.68);
-    }
-
-    .road::after {
-      right: calc(clamp(22px, 3.1vw, 38px) * -0.68);
-    }
+    .u-road::before { left: calc(clamp(22px, 3.1vw, 38px) * -0.68); }
+    .u-road::after { right: calc(clamp(22px, 3.1vw, 38px) * -0.68); }
 
     .road-grain {
       position: absolute;
@@ -584,8 +495,8 @@
       border-bottom: clamp(22px, 3.1vw, 38px) solid transparent;
       border-radius: 0 0 410px 410px;
       background:
-        repeating-radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.12) 0 1px, transparent 1px 9px);
-      opacity: .32;
+        repeating-radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.16) 0 1px, transparent 1px 9px);
+      opacity: .34;
       pointer-events: none;
     }
 
@@ -598,16 +509,25 @@
       transform: translateX(-50%);
       display: grid;
       justify-items: center;
-      filter: drop-shadow(0 24px 42px rgba(0,0,0,.48));
+      filter: drop-shadow(0 24px 42px rgba(0,0,0,.50));
     }
 
     .manor-roof {
       width: 68%;
       height: 82px;
-      border: 1px solid rgba(247,239,216,.2);
+      border: 1px solid rgba(247,239,216,.20);
       background:
         linear-gradient(135deg, rgba(232,196,112,.78), rgba(86,62,38,.96));
       clip-path: polygon(50% 0, 100% 100%, 0 100%);
+      position: relative;
+    }
+
+    .manor-roof::after {
+      content: "";
+      position: absolute;
+      inset: 72% 4% 0;
+      background: rgba(238,244,247,.72);
+      border-radius: 999px;
     }
 
     .manor-body {
@@ -633,8 +553,8 @@
       height: 28px;
       border-radius: 999px;
       background:
-        repeating-linear-gradient(90deg, rgba(232,196,112,.45) 0 10px, transparent 10px 24px);
-      opacity: .46;
+        repeating-linear-gradient(90deg, rgba(240,207,133,.48) 0 10px, transparent 10px 24px);
+      opacity: .58;
     }
 
     .manor-body b {
@@ -661,7 +581,7 @@
       width: min(600px, 60vw);
       height: min(620px, 64vh);
       transform: translate(-50%, -33%);
-      filter: drop-shadow(0 42px 66px rgba(0,0,0,.5));
+      filter: drop-shadow(0 42px 66px rgba(0,0,0,.50));
     }
 
     .oak-canopy {
@@ -671,18 +591,16 @@
       width: 100%;
       height: 72%;
       transform: translateX(-50%);
-      border: 1px solid rgba(212,238,157,.2);
+      border: 1px solid rgba(212,238,157,.20);
       border-radius: 48% 52% 44% 56% / 43% 48% 52% 57%;
       background:
-        radial-gradient(circle at 24% 35%, rgba(137,176,90,.98), transparent 22%),
-        radial-gradient(circle at 71% 34%, rgba(93,146,77,.96), transparent 24%),
-        radial-gradient(circle at 50% 17%, rgba(164,193,103,.93), transparent 24%),
-        radial-gradient(circle at 40% 66%, rgba(28,80,43,.98), transparent 35%),
-        radial-gradient(circle at 62% 67%, rgba(18,56,36,.9), transparent 35%),
-        linear-gradient(180deg, #5f9146, #173b28);
-      box-shadow:
-        inset 0 -42px 74px rgba(0,0,0,.32),
-        0 30px 88px rgba(21,69,36,.38);
+        radial-gradient(circle at 24% 35%, rgba(219,232,220,.72), transparent 13%),
+        radial-gradient(circle at 71% 34%, rgba(207,224,212,.60), transparent 16%),
+        radial-gradient(circle at 50% 17%, rgba(232,241,232,.48), transparent 20%),
+        radial-gradient(circle at 40% 66%, rgba(28,80,43,.92), transparent 35%),
+        radial-gradient(circle at 62% 67%, rgba(18,56,36,.88), transparent 35%),
+        linear-gradient(180deg, #315f35, #173421);
+      box-shadow: inset 0 -42px 74px rgba(0,0,0,.32), 0 30px 88px rgba(21,69,36,.38);
     }
 
     .oak-canopy::before {
@@ -691,11 +609,11 @@
       inset: 5%;
       border-radius: inherit;
       background:
-        radial-gradient(circle at 18% 52%, rgba(255,255,255,.08), transparent 16%),
+        radial-gradient(circle at 18% 52%, rgba(255,255,255,.16), transparent 16%),
         radial-gradient(circle at 80% 49%, rgba(0,0,0,.13), transparent 17%),
         radial-gradient(circle at 47% 80%, rgba(0,0,0,.17), transparent 18%),
-        repeating-radial-gradient(circle at 48% 44%, rgba(255,255,255,.045) 0 1px, transparent 1px 12px);
-      opacity: .92;
+        repeating-radial-gradient(circle at 48% 44%, rgba(238,244,247,.08) 0 1px, transparent 1px 12px);
+      opacity: .95;
     }
 
     .oak-trunk {
@@ -711,8 +629,17 @@
       background:
         repeating-linear-gradient(92deg, rgba(0,0,0,.22) 0 3px, transparent 3px 10px),
         repeating-linear-gradient(78deg, rgba(255,255,255,.08) 0 2px, transparent 2px 13px),
-        linear-gradient(90deg, rgba(50,29,18,.99), rgba(139,83,46,.99) 43%, rgba(56,31,19,.99));
+        linear-gradient(90deg, rgba(50,29,18,.99), rgba(123,74,45,.99) 43%, rgba(46,26,16,.99));
       box-shadow: inset 20px 0 32px rgba(0,0,0,.2), inset -18px 0 28px rgba(0,0,0,.25);
+    }
+
+    .oak-trunk::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 74%;
+      border-radius: 999px;
+      background: rgba(238,244,247,.30);
+      filter: blur(1px);
     }
 
     .oak-roots {
@@ -727,27 +654,6 @@
       border-bottom: 14px solid rgba(112,70,38,.98);
       border-radius: 0 0 220px 220px;
       box-shadow: 0 14px 0 rgba(33,20,12,.38);
-    }
-
-    .root-arm {
-      position: absolute;
-      bottom: 4%;
-      left: 50%;
-      z-index: 1;
-      width: 300px;
-      max-width: 48vw;
-      height: 28px;
-      transform-origin: center;
-      border-bottom: 8px solid rgba(100,60,31,.92);
-      border-radius: 0 0 80% 80%;
-    }
-
-    .root-arm.one {
-      transform: translateX(-64%) rotate(8deg);
-    }
-
-    .root-arm.two {
-      transform: translateX(-36%) rotate(-8deg);
     }
 
     .hollow {
@@ -772,7 +678,7 @@
       border: 1px solid rgba(232,196,112,.54);
       border-radius: 24px;
       padding: 14px 16px;
-      background: rgba(4,8,9,.7);
+      background: rgba(4,8,9,.70);
       text-align: center;
       backdrop-filter: blur(10px);
     }
@@ -793,6 +699,34 @@
       line-height: 1.32;
     }
 
+    .snow-blade-field {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 31%;
+      z-index: 31;
+      pointer-events: none;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, transparent, rgba(238,244,247,.45) 58%, rgba(238,244,247,.82));
+      mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.86) 48%, transparent 100%);
+    }
+
+    .grass-blade {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      height: var(--h);
+      left: var(--x);
+      transform: rotate(var(--r));
+      transform-origin: bottom center;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(to top, rgba(33,63,31,.95), rgba(84,111,57,.88), rgba(238,244,247,.72));
+      opacity: var(--o);
+      box-shadow: 0 0 5px rgba(238,244,247,.25);
+    }
+
     .scene-label {
       position: absolute;
       z-index: 28;
@@ -806,20 +740,10 @@
       backdrop-filter: blur(8px);
     }
 
-    .scene-label b {
-      color: var(--gold);
-    }
+    .scene-label b { color: var(--gold); }
 
-    .label-estate {
-      right: 7%;
-      top: 36%;
-    }
-
-    .label-road {
-      left: 50%;
-      bottom: 27%;
-      transform: translateX(-50%);
-    }
+    .label-estate { right: 7%; top: 36%; }
+    .label-road { left: 50%; bottom: 27%; transform: translateX(-50%); }
 
     .scene-dock {
       position: absolute;
@@ -851,10 +775,7 @@
       margin-bottom: 5px;
     }
 
-    .globe-lock {
-      position: absolute;
-      inset: 0;
-      z-index: 5;
+    .globe-scene {
       display: grid;
       place-items: center;
       padding: 32px;
@@ -968,17 +889,12 @@
     }
 
     @media (prefers-reduced-motion: no-preference) {
-      .oak-canopy {
-        animation: canopy-breathe 8s ease-in-out infinite;
-      }
-
-      .globe-orb {
-        animation: globe-hold 16s linear infinite;
-      }
+      .oak-canopy { animation: canopy-breathe 8s ease-in-out infinite; }
+      .globe-orb { animation: globe-hold 16s linear infinite; }
 
       @keyframes canopy-breathe {
         0%, 100% { transform: translateX(-50%) scale(1); }
-        50% { transform: translateX(-50%) scale(1.014); }
+        50% { transform: translateX(-50%) scale(1.012); }
       }
 
       @keyframes globe-hold {
@@ -987,9 +903,7 @@
     }
 
     @media (max-width: 980px) {
-      :root {
-        --scene-h: 860px;
-      }
+      :root { --scene-h: 870px; }
 
       .topbar-inner {
         align-items: flex-start;
@@ -997,22 +911,15 @@
         padding: 14px 0;
       }
 
-      .nav {
-        justify-content: flex-start;
-      }
-
-      .mode-selector {
-        grid-template-columns: 1fr;
-      }
+      .nav { justify-content: flex-start; }
+      .mode-selector { grid-template-columns: 1fr; }
 
       .scene-copy {
         top: 230px;
         width: min(540px, calc(100% - 36px));
       }
 
-      .natural-estate .scene-copy {
-        top: 198px;
-      }
+      .round-scene .scene-copy { top: 198px; }
 
       .scene-dock {
         left: clamp(18px, 4vw, 46px);
@@ -1033,50 +940,31 @@
         width: min(470px, 78vw);
       }
 
-      .road,
+      .u-road,
       .road-grain {
         top: 61%;
         width: 88vw;
       }
 
-      .support-grid {
-        grid-template-columns: 1fr;
-      }
+      .support-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 660px) {
-      :root {
-        --scene-h: 940px;
-      }
+      :root { --scene-h: 950px; }
 
-      .scene-frame {
-        border-radius: 24px;
-      }
-
-      .mode-button {
-        min-height: 52px;
-      }
-
-      .mode-button span {
-        display: none;
-      }
+      .scene-frame { border-radius: 24px; }
+      .mode-button { min-height: 52px; }
+      .mode-button span { display: none; }
 
       .scene-copy {
         top: 206px;
         padding: 18px;
       }
 
-      .natural-estate .scene-copy {
-        top: 182px;
-      }
+      .round-scene .scene-copy { top: 182px; }
 
-      h1 {
-        font-size: clamp(2.4rem, 15vw, 4.7rem);
-      }
-
-      h2 {
-        font-size: clamp(2.25rem, 13vw, 4.1rem);
-      }
+      h1 { font-size: clamp(2.4rem, 15vw, 4.7rem); }
+      h2 { font-size: clamp(2.25rem, 13vw, 4.1rem); }
 
       .route-rail {
         align-items: flex-start;
@@ -1089,18 +977,12 @@
         height: 330px;
       }
 
-      .flat-node {
-        padding: 10px;
-      }
-
       .manor-layer {
         top: 39%;
         width: 78vw;
       }
 
-      .manor-body {
-        height: 118px;
-      }
+      .manor-body { height: 118px; }
 
       .old-oak {
         top: 62%;
@@ -1108,7 +990,7 @@
         height: 460px;
       }
 
-      .road,
+      .u-road,
       .road-grain {
         top: 69%;
         height: 290px;
@@ -1126,17 +1008,9 @@
         top: 50%;
       }
 
-      .label-road {
-        bottom: 28%;
-      }
-
-      .scene-dock {
-        display: none;
-      }
-
-      .status-grid {
-        grid-template-columns: 1fr;
-      }
+      .label-road { bottom: 28%; }
+      .scene-dock { display: none; }
+      .status-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
@@ -1186,7 +1060,7 @@
   >
     <section class="compass-shell" aria-labelledby="H1_COMPASS">
       <div class="wrap">
-        <div class="scene-frame" data-scene-frame="index-generation-2-natural-scene">
+        <div class="scene-frame" data-scene-frame="index-render-runtime-css-triad-v1">
           <div class="mode-selector" role="tablist" aria-label="World view selector">
             <button class="mode-button" type="button" data-mode="flat" role="tab" aria-selected="true">
               <strong>World is flat</strong>
@@ -1195,7 +1069,7 @@
 
             <button class="mode-button" type="button" data-mode="round" role="tab" aria-selected="false">
               <strong>World is round</strong>
-              <span>Natural Tree of Life estate view.</span>
+              <span>Rendered snow-ground Tree of Life estate view.</span>
             </button>
 
             <button class="mode-button" type="button" data-mode="globe" role="tab" aria-selected="false">
@@ -1204,160 +1078,24 @@
             </button>
           </div>
 
-          <section class="mode-scene" data-mode-scene="flat" aria-label="Flat World verified route map">
-            <div class="flat-map" aria-hidden="true">
-              <div class="flat-map-grid">
-                <a class="flat-node" href="/">
-                  Compass
-                  <small>orientation</small>
-                </a>
-                <a class="flat-node" href="/door/">
-                  Door
-                  <small>entry threshold</small>
-                </a>
-                <a class="flat-node" href="/home/">
-                  Home
-                  <small>receiving hall</small>
-                </a>
-                <a class="flat-node" href="/products/">
-                  Products
-                  <small>source chamber</small>
-                </a>
-                <a class="flat-node" href="/showroom/">
-                  Showroom
-                  <small>public proof</small>
-                </a>
-                <a class="flat-node" href="/gauges/">
-                  Gauges
-                  <small>live authority</small>
-                </a>
-              </div>
-            </div>
-
-            <article class="scene-copy">
-              <p class="eyebrow">Flat World · locked baseline</p>
-              <h1 id="H1_COMPASS">Rich Manor and Estate</h1>
-              <p class="lead">
-                Flat World is the verified 2D route map. It stays default, readable,
-                and recoverable. Round World may show the living estate without changing
-                routes, faking Gauges health, or replacing the Manor.
-              </p>
-            </article>
-          </section>
-
-          <section
-            class="mode-scene"
-            data-mode-scene="round"
-            data-round-world="tree-of-life"
-            data-round-scope="256-acre-estate"
-            data-round-primary-object="256-year-oak"
-            data-round-road-logic="u-road"
-            data-round-ecosystem="active"
-            aria-label="Round World natural estate scene"
+          <div
+            id="index-render-root"
+            class="render-mount"
+            aria-live="polite"
+            data-render-root="index"
+            data-render-status="waiting"
           >
-            <div class="natural-estate">
-              <div class="estate-land" aria-hidden="true"></div>
-              <div class="road" aria-hidden="true"></div>
-              <div class="road-grain" aria-hidden="true"></div>
-
-              <article class="scene-copy">
-                <p class="eyebrow">World is round · 256-acre estate</p>
-                <h2>The ground is alive now.</h2>
+            <noscript>
+              <section class="scene-copy">
+                <p class="eyebrow">Compass fallback</p>
+                <h1 id="H1_COMPASS">Rich Manor and Estate</h1>
                 <p class="lead">
-                  The Manor sits behind the 256-year-old oak. The U-road bends around it.
-                  The field carries grass, soil, road grain, roots, canopy, and estate depth
-                  instead of a flat symbolic drawing.
+                  JavaScript is required for the rendered Flat / Round / Globe mode switch.
+                  Routes remain available through the navigation above.
                 </p>
-              </article>
-
-              <div class="scene-dock" aria-label="Compact Round World relation summary">
-                <div class="dock-card">
-                  <b>Land</b>
-                  Farmland, ranch land, garden, clearing, and road verge read as one estate ground.
-                </div>
-                <div class="dock-card">
-                  <b>Ecosystem</b>
-                  Roots, soil, bark, hollows, branches, and canopy stay present without label clutter.
-                </div>
-                <div class="dock-card">
-                  <b>Summits</b>
-                  256 diamonds / 256 carats of human potential remain attached to the Manor field.
-                </div>
-                <div class="dock-card">
-                  <b>Proof</b>
-                  Gauges remain live authority. The scene may improve, but evidence is measured.
-                </div>
-              </div>
-
-              <div class="manor-layer" aria-label="Rich Manor behind the oak">
-                <div class="manor-roof"></div>
-                <div class="manor-body">
-                  <b>Rich Manor</b>
-                  <span>Central authority behind the living foreground.</span>
-                </div>
-              </div>
-
-              <div class="old-oak" aria-label="Massive 256-year-old sequoia-scale oak">
-                <div class="oak-canopy"></div>
-                <div class="oak-trunk"></div>
-                <div class="oak-roots"></div>
-                <div class="root-arm one"></div>
-                <div class="root-arm two"></div>
-                <div class="hollow" aria-hidden="true"></div>
-                <div class="oak-name">
-                  <b>256-Year Oak</b>
-                  <span>Old, heavy, rooted, and alive in front of the Manor.</span>
-                </div>
-              </div>
-
-              <span class="scene-label label-estate"><b>256-acre estate</b> · land inside the boundary</span>
-              <span class="scene-label label-road"><b>U-road</b> · arrival, motion, return</span>
-
-              <div class="grass-near" aria-hidden="true"></div>
-              <div class="blade-field" aria-hidden="true">
-                <span style="--x:2%;--h:74px;--r:-8deg;--o:.65"></span>
-                <span style="--x:5%;--h:98px;--r:6deg;--o:.58"></span>
-                <span style="--x:8%;--h:64px;--r:-4deg;--o:.62"></span>
-                <span style="--x:12%;--h:110px;--r:9deg;--o:.7"></span>
-                <span style="--x:16%;--h:82px;--r:-11deg;--o:.62"></span>
-                <span style="--x:20%;--h:118px;--r:7deg;--o:.7"></span>
-                <span style="--x:24%;--h:72px;--r:-5deg;--o:.56"></span>
-                <span style="--x:28%;--h:104px;--r:12deg;--o:.65"></span>
-                <span style="--x:32%;--h:86px;--r:-7deg;--o:.6"></span>
-                <span style="--x:36%;--h:122px;--r:5deg;--o:.7"></span>
-                <span style="--x:40%;--h:72px;--r:-9deg;--o:.58"></span>
-                <span style="--x:44%;--h:108px;--r:8deg;--o:.64"></span>
-                <span style="--x:48%;--h:92px;--r:-6deg;--o:.62"></span>
-                <span style="--x:52%;--h:126px;--r:7deg;--o:.72"></span>
-                <span style="--x:56%;--h:80px;--r:-10deg;--o:.58"></span>
-                <span style="--x:60%;--h:114px;--r:8deg;--o:.68"></span>
-                <span style="--x:64%;--h:76px;--r:-5deg;--o:.58"></span>
-                <span style="--x:68%;--h:102px;--r:10deg;--o:.66"></span>
-                <span style="--x:72%;--h:84px;--r:-8deg;--o:.6"></span>
-                <span style="--x:76%;--h:118px;--r:6deg;--o:.69"></span>
-                <span style="--x:80%;--h:72px;--r:-9deg;--o:.55"></span>
-                <span style="--x:84%;--h:106px;--r:8deg;--o:.64"></span>
-                <span style="--x:88%;--h:88px;--r:-7deg;--o:.6"></span>
-                <span style="--x:92%;--h:120px;--r:5deg;--o:.68"></span>
-                <span style="--x:96%;--h:78px;--r:-6deg;--o:.56"></span>
-              </div>
-            </div>
-          </section>
-
-          <section class="mode-scene" data-mode-scene="globe" aria-label="Globe Meta later locked state">
-            <div class="globe-lock">
-              <article class="globe-card">
-                <div class="globe-orb" aria-hidden="true"></div>
-                <p class="eyebrow">Globe / Meta · locked later</p>
-                <h2>Not implemented in this pass.</h2>
-                <p class="lead">
-                  The Globe view remains reserved for a later Meta build. This file does
-                  not create a fake 3D renderer, fake route health, fake universe map, or
-                  new routes. Current execution is limited to the natural Index scene.
-                </p>
-              </article>
-            </div>
-          </section>
+              </section>
+            </noscript>
+          </div>
 
           <div class="route-rail" aria-label="Route and proof controls">
             <div class="route-group">
@@ -1370,22 +1108,22 @@
             </div>
 
             <div class="proof-badge">
-              <b>Proof:</b> Index renews the natural scene. Gauges remain live authority.
+              <b>Proof:</b> Index renders the snow-ground scene. Gauges remain live authority.
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="support" aria-label="Generation Two natural scene support notes">
+    <section class="support" aria-label="Render runtime CSS triad support notes">
       <div class="wrap support-grid">
         <article class="support-card">
-          <p class="eyebrow">Generation Two correction</p>
-          <h2>Material nature replaces the coloring-book read.</h2>
+          <p class="eyebrow">Triad correction</p>
+          <h2>Host, render, and runtime are separated.</h2>
           <p>
-            This renewal returns to `/index.html` and strengthens the Round scene itself:
-            grass texture, blade-level foreground, road grain, heavier bark, broader canopy,
-            grounded roots, and reduced labels. The page should feel grown, not drawn.
+            Index now acts as the host and CSS-facing shell. The scene is constructed by
+            <code>/index.render.js</code>, while mode behavior and orchestration are controlled by
+            <code>/index.runtime.js</code>. Snow stays on the ground as the material condition.
           </p>
         </article>
 
@@ -1401,7 +1139,7 @@
 
             <div class="status-item">
               <b>Round</b>
-              <span>Natural 256-acre estate view is visibly distinct.</span>
+              <span>Rendered snow-ground estate scene is visibly distinct.</span>
             </div>
 
             <div class="status-item">
@@ -1421,32 +1159,12 @@
 
   <footer>
     <div class="wrap">
-      <span>INDEX_GENERATION_2_NATURAL_SCENE_FULL_TNT_v1</span>
-      <span>Room: Website Building and Implementation · Next: upload, view Round, then rerun Gauges.</span>
+      <span>INDEX_RENDER_RUNTIME_CSS_TRIAD_FULL_RENEWAL_v1</span>
+      <span>Room: Website Building and Implementation · Next: upload all three files, view Round, rerun Gauges.</span>
     </div>
   </footer>
 
-  <script>
-    (function () {
-      const allowedModes = new Set(["flat", "round", "globe"]);
-      const buttons = Array.from(document.querySelectorAll("[data-mode]"));
-
-      function setMode(mode) {
-        const nextMode = allowedModes.has(mode) ? mode : "flat";
-        document.body.dataset.activeMode = nextMode;
-
-        buttons.forEach((button) => {
-          const selected = button.dataset.mode === nextMode;
-          button.setAttribute("aria-selected", selected ? "true" : "false");
-        });
-      }
-
-      buttons.forEach((button) => {
-        button.addEventListener("click", () => setMode(button.dataset.mode));
-      });
-
-      setMode("flat");
-    })();
-  </script>
+  <script src="/index.render.js?v=triad-v1" defer></script>
+  <script src="/index.runtime.js?v=triad-v1" defer></script>
 </body>
 </html>

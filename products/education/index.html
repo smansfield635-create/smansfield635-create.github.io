@@ -1,29 +1,24 @@
-
 <!DOCTYPE html>
-<html lang="en" data-product-generation="esl-traversal-nested-chamber-b7">
+<html lang="en" data-product-generation="richie-manor-classroom-esl-b8">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>ESL Traversal Learning · Products</title>
-  <meta
-    name="description"
-    content="ESL Traversal Learning — English by movement, scene, context, confidence, and practical real-life use."
-  />
+  <meta name="description" content="ESL Traversal Learning — the classroom path inside Richie’s Manor for English through scene, listening, meaning, speaking, and real-life use." />
 
   <style>
     :root{
       color-scheme:dark;
-      --panel:rgba(7,14,28,.86);
-      --panel2:rgba(10,20,42,.94);
-      --line:rgba(255,218,150,.22);
-      --iceLine:rgba(215,228,255,.32);
-      --text:#fff8ea;
-      --muted:#c9d2ea;
-      --soft:rgba(201,210,234,.74);
-      --gold:#ffd98a;
+      --panel:rgba(18,14,10,.86);
+      --panel2:rgba(36,26,16,.92);
+      --line:rgba(255,218,150,.24);
+      --iceLine:rgba(215,228,255,.34);
+      --brass:#ffd98a;
       --ice:#d7e4ff;
       --blue:#8ec5ff;
-      --mint:#93efbd;
+      --text:#fff8ea;
+      --muted:#d5c7aa;
+      --soft:rgba(213,199,170,.74);
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
     }
@@ -36,10 +31,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 82%,rgba(255,154,86,.32),transparent 28%),
-        radial-gradient(circle at 72% 72%,rgba(255,216,138,.24),transparent 24%),
-        radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
-        linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
+        radial-gradient(circle at 50% 92%,rgba(215,228,255,.18),transparent 24%),
+        radial-gradient(circle at 16% 20%,rgba(255,217,138,.14),transparent 26%),
+        radial-gradient(circle at 84% 18%,rgba(142,197,255,.12),transparent 26%),
+        linear-gradient(180deg,#071225 0%,#14100c 42%,#2c1b10 100%);
       overflow-x:hidden;
     }
 
@@ -48,52 +43,34 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.66;
+      opacity:.38;
       background:
-        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
-        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
-      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      animation:snowFall 22s linear infinite;
-      z-index:0;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.46),transparent 36%),
-        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
-        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
-        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+        linear-gradient(90deg,rgba(255,218,150,.05) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,218,150,.035) 1px,transparent 1px),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.15),transparent 30%);
+      background-size:56px 56px,56px 56px,100% 100%;
+      mask-image:radial-gradient(circle at 50% 35%,black,transparent 82%);
       z-index:0;
     }
 
     a{color:inherit;text-decoration:none}
 
     .page{
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      min-height:100svh;
-      padding:14px 0 24px;
       position:relative;
       z-index:1;
+      width:min(var(--max),calc(100vw - 20px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:14px 0 24px;
       display:grid;
       grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
-    .topbar,
-    .stage,
-    .routeRail{
+    .topbar,.classroom,.routeRail{
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(215,228,255,.12),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 42%),
         linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
@@ -101,13 +78,10 @@
     }
 
     .topbar{
-      padding:14px;
       border-radius:28px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding:14px;
+      display:grid;
       gap:14px;
-      flex-wrap:wrap;
     }
 
     .brand{
@@ -155,67 +129,112 @@
       line-height:1.05;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
-    }
-
-    .nav a,
-    .routeRail a,
-    .action{
-      min-height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 13px;
-      border-radius:999px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .nav a.featured,
-    .action.primary{
-      border-color:rgba(215,228,255,.48);
-      background:rgba(215,228,255,.10);
-      color:#eef4ff;
-      box-shadow:0 0 22px rgba(215,228,255,.12);
-    }
-
-    .stage{
-      border-radius:34px;
-      min-height:0;
-      padding:clamp(18px,3vw,28px);
+    .jumpGrid{
       display:grid;
-      grid-template-columns:minmax(0,.95fr) minmax(320px,1.05fr);
-      gap:18px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .jumpCard{
+      min-height:88px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:center;
+      padding:12px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .jumpCard:hover,.jumpCard:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(142,197,255,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .jumpCard.active{
+      border-color:rgba(255,217,138,.56);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
+      box-shadow:0 0 24px rgba(255,217,138,.12);
+    }
+
+    .navCompass{
+      position:relative;
+      width:54px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .jumpCard.active .navCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
+    }
+
+    .navCompass::before{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .navCompass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .jumpCard.active .navCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
+    }
+
+    .jumpText{display:grid;gap:4px;min-width:0}
+    .jumpText small{color:#c8d7ff;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+    .jumpText strong{color:#fff;font-size:1rem;line-height:1.02;letter-spacing:-.035em}
+
+    .classroom{
+      border-radius:34px;
+      padding:clamp(18px,3vw,30px);
+      display:grid;
+      grid-template-columns:minmax(0,.88fr) minmax(420px,1.12fr);
+      gap:20px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .stage::before{
+    .classroom::before{
       content:"";
       position:absolute;
-      width:min(760px,92vw);
-      height:min(760px,92vw);
-      left:72%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(215,228,255,.20),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 42%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 58%),
-        radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
-      filter:blur(5px);
-      z-index:-2;
+      left:50%;
+      top:0;
+      width:min(720px,92vw);
+      height:180px;
+      transform:translateX(-50%);
+      background:radial-gradient(ellipse at 50% 0%,rgba(215,228,255,.15),transparent 68%);
+      z-index:-1;
     }
 
     .copy{
@@ -232,7 +251,7 @@
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(215,228,255,.28);
+      border:1px solid rgba(215,228,255,.30);
       background:rgba(255,255,255,.04);
       color:#dce7ff;
       text-transform:uppercase;
@@ -254,7 +273,7 @@
     h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3rem,8.4vw,6.4rem);
+      font-size:clamp(3rem,8.8vw,6.4rem);
       line-height:.86;
       letter-spacing:-.07em;
       text-transform:uppercase;
@@ -262,8 +281,8 @@
 
     h2{
       margin:0;
-      color:var(--gold);
-      font-size:clamp(1.38rem,4vw,2.65rem);
+      color:var(--brass);
+      font-size:clamp(1.38rem,4.4vw,2.8rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -271,215 +290,171 @@
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.56;
+      line-height:1.58;
       font-size:1rem;
     }
 
     .thesis{
       color:#fff;
-      font-size:clamp(1.12rem,2.25vw,1.52rem);
+      font-size:clamp(1.1rem,2.25vw,1.5rem);
       line-height:1.18;
       font-weight:850;
       letter-spacing:-.035em;
       max-width:780px;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
+    .ruleGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:10px;
-      margin-top:2px;
     }
 
-    .chamber{
+    .ruleCell{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:18px;
+      background:rgba(0,0,0,.16);
+      padding:12px;
+      display:grid;
+      gap:4px;
+    }
+
+    .ruleCell small{
+      color:var(--soft);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:900;
+    }
+
+    .ruleCell strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .learningMap{
       position:relative;
-      min-height:560px;
+      min-height:620px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:32px;
       background:
-        radial-gradient(circle at 50% 50%,rgba(215,228,255,.13),rgba(142,197,255,.055) 34%,rgba(0,0,0,0) 66%),
-        linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.014));
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.12),rgba(142,197,255,.045) 32%,rgba(0,0,0,0) 62%),
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014));
       overflow:hidden;
       display:grid;
       place-items:center;
     }
 
-    .ring{
+    .boardLine{
       position:absolute;
       left:50%;
       top:50%;
       border-radius:50%;
       transform:translate(-50%,-50%);
       pointer-events:none;
-      border:1px solid rgba(215,228,255,.13);
-      box-shadow:inset 0 0 36px rgba(0,0,0,.20);
+      border:1px solid rgba(215,228,255,.12);
+      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
     }
 
-    .ring.r1{
-      width:min(88%,500px);
-      aspect-ratio:1;
-      background:
-        radial-gradient(circle at 50% 50%,transparent 42%,rgba(215,228,255,.05) 43%,transparent 68%);
-      animation:slowSpin 42s linear infinite;
-    }
+    .boardLine.r1{width:min(92%,590px);aspect-ratio:1;animation:wallSpin 54s linear infinite}
+    .boardLine.r2{width:min(74%,470px);aspect-ratio:1;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);animation:wallSpin 42s linear infinite reverse}
+    .boardLine.r3{width:min(54%,330px);aspect-ratio:1;background:radial-gradient(circle at 50% 50%,rgba(215,228,255,.06),transparent 52%);animation:wallSpin 28s linear infinite}
 
-    .ring.r2{
-      width:min(70%,390px);
-      aspect-ratio:1;
-      background:
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);
-      animation:slowSpin 34s linear infinite reverse;
-    }
-
-    .ring.r3{
-      width:min(52%,285px);
-      aspect-ratio:1;
-      background:radial-gradient(circle at 50% 50%,rgba(215,228,255,.06),transparent 52%);
-      animation:slowSpin 24s linear infinite;
-    }
-
-    .core{
+    .learningCore{
       position:relative;
-      z-index:4;
-      width:min(42%,190px);
+      z-index:6;
+      width:min(36%,210px);
       aspect-ratio:1;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.24);
+      border:1px solid rgba(255,255,255,.22);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.50),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(215,228,255,.38),rgba(142,197,255,.16) 48%,rgba(0,0,0,.24) 100%);
-      box-shadow:
-        inset 0 0 42px rgba(215,228,255,.18),
-        0 0 88px rgba(215,228,255,.18);
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.46),transparent 12%),
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.34),rgba(142,197,255,.14) 46%,rgba(0,0,0,.22) 100%);
+      box-shadow:inset 0 0 42px rgba(215,228,255,.18),0 0 92px rgba(215,228,255,.20);
+      overflow:hidden;
       display:grid;
       place-items:center;
       text-align:center;
-      overflow:hidden;
-      padding:18px;
+      padding:20px;
     }
 
-    .core::before{
+    .learningCore::before{
       content:"";
       position:absolute;
-      inset:14px;
+      inset:13%;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.16);
-      background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 16deg,rgba(255,255,255,.08) 16deg 19deg,transparent 19deg 34deg);
-      animation:slowSpin 16s linear infinite reverse;
+      background:repeating-conic-gradient(from 0deg,transparent 0deg 14deg,rgba(255,255,255,.085) 14deg 17deg,transparent 17deg 32deg);
+      animation:compassSpin 16s linear infinite reverse;
     }
 
-    .core span{
+    .learningCore span{
       position:relative;
       z-index:2;
       color:#eef4ff;
       font-weight:950;
-      font-size:.82rem;
+      font-size:.84rem;
       letter-spacing:.10em;
       line-height:1.2;
       text-transform:uppercase;
       text-shadow:0 2px 12px rgba(0,0,0,.70);
     }
 
-    .node{
+    .lessonNode{
       position:absolute;
-      z-index:5;
-      width:132px;
-      min-height:84px;
+      z-index:7;
+      width:152px;
+      min-height:122px;
       border:1px solid rgba(255,255,255,.12);
-      border-radius:20px;
+      border-radius:24px;
       background:
-        radial-gradient(circle at 50% 0%,rgba(215,228,255,.12),transparent 70%),
-        linear-gradient(180deg,rgba(7,14,28,.82),rgba(10,20,42,.92));
-      color:var(--text);
+        radial-gradient(circle at 50% 0%,rgba(215,228,255,.10),transparent 70%),
+        linear-gradient(180deg,rgba(24,18,12,.86),rgba(10,20,42,.92));
       box-shadow:0 18px 38px rgba(0,0,0,.34);
       display:grid;
-      gap:4px;
-      align-content:center;
-      padding:12px;
+      align-content:end;
+      gap:7px;
+      padding:14px;
       cursor:pointer;
       transition:transform .18s ease,border-color .18s ease,filter .18s ease;
-      text-align:left;
     }
 
-    .node:hover,
-    .node:focus-visible{
+    .lessonNode:hover,.lessonNode:focus-visible{
       transform:translateY(-4px);
-      border-color:rgba(215,228,255,.42);
+      border-color:rgba(215,228,255,.44);
       filter:brightness(1.12);
       outline:none;
     }
 
-    .node[data-active="true"]{
-      border-color:rgba(215,228,255,.48);
+    .lessonNode[data-active="true"]{
+      border-color:rgba(255,217,138,.54);
       background:
-        radial-gradient(circle at 50% 0%,rgba(215,228,255,.18),transparent 70%),
-        linear-gradient(180deg,rgba(12,24,48,.92),rgba(7,14,28,.94));
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
+        linear-gradient(180deg,rgba(46,34,16,.92),rgba(10,20,42,.94));
     }
 
-    .node small{
-      color:#dce7ff;
-      font-size:.62rem;
-      font-weight:950;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-    }
+    .lessonNode small{color:#dce7ff;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+    .lessonNode strong{color:#fff;font-size:1.04rem;line-height:1.02;letter-spacing:-.035em}
 
-    .node strong{
-      color:#fff;
-      font-size:1rem;
-      line-height:1.05;
-      letter-spacing:-.035em;
-    }
+    .lessonNode.scene{left:50%;top:18px;transform:translateX(-50%)}
+    .lessonNode.listen{right:18px;top:50%;transform:translateY(-50%)}
+    .lessonNode.meaning{left:50%;bottom:18px;transform:translateX(-50%)}
+    .lessonNode.speak{left:18px;top:50%;transform:translateY(-50%)}
+    .lessonNode.use{right:60px;bottom:88px}
 
-    .node.scene{left:50%;top:18px;transform:translateX(-50%)}
-    .node.listen{right:18px;top:50%;transform:translateY(-50%)}
-    .node.meaning{left:50%;bottom:18px;transform:translateX(-50%)}
-    .node.speak{left:18px;top:50%;transform:translateY(-50%)}
-    .node.use{right:40px;bottom:44px}
-
-    .node.scene:hover,.node.scene:focus-visible{transform:translateX(-50%) translateY(-4px)}
-    .node.listen:hover,.node.listen:focus-visible{transform:translateY(calc(-50% - 4px))}
-    .node.meaning:hover,.node.meaning:focus-visible{transform:translateX(-50%) translateY(-4px)}
-    .node.speak:hover,.node.speak:focus-visible{transform:translateY(calc(-50% - 4px))}
-
-    .line{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:34%;
-      height:7px;
-      transform-origin:left center;
-      border-radius:999px;
-      background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(215,228,255,.46),transparent);
-      opacity:.56;
-      z-index:2;
-      overflow:hidden;
-      pointer-events:none;
-      filter:drop-shadow(0 0 12px rgba(215,228,255,.22));
-    }
-
-    .line::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.42) 18px 24px,transparent 24px 42px);
-      animation:signalRun 1.7s linear infinite;
-    }
-
-    .line.north{transform:rotate(-90deg)}
-    .line.east{transform:rotate(0deg)}
-    .line.south{transform:rotate(90deg)}
-    .line.west{transform:rotate(180deg)}
+    .lessonNode.scene:hover,.lessonNode.scene:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .lessonNode.listen:hover,.lessonNode.listen:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .lessonNode.meaning:hover,.lessonNode.meaning:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .lessonNode.speak:hover,.lessonNode.speak:focus-visible{transform:translateY(calc(-50% - 4px))}
 
     .readout{
       position:absolute;
       left:18px;
       right:18px;
       bottom:18px;
-      z-index:7;
+      z-index:9;
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(220px,.42fr);
+      grid-template-columns:minmax(0,1fr) minmax(220px,.40fr);
       gap:12px;
       pointer-events:none;
     }
@@ -487,7 +462,7 @@
     .readCard{
       border:1px solid rgba(255,255,255,.12);
       border-radius:20px;
-      background:rgba(3,8,18,.70);
+      background:rgba(3,8,18,.72);
       box-shadow:0 18px 38px rgba(0,0,0,.30);
       padding:14px;
       display:grid;
@@ -496,24 +471,14 @@
       -webkit-backdrop-filter:blur(10px);
     }
 
-    .readCard h3{
-      margin:0;
-      color:#fff;
-      font-size:clamp(1.1rem,2.1vw,1.45rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .readCard p{
-      font-size:.92rem;
-      line-height:1.44;
-    }
+    .readCard h3{margin:0;color:#fff;font-size:clamp(1.1rem,2.1vw,1.45rem);line-height:1.05;letter-spacing:-.04em}
+    .readCard p{font-size:.92rem;line-height:1.44}
 
     .receipt{
       display:grid;
       gap:6px;
       color:var(--soft);
-      font-size:.80rem;
+      font-size:.78rem;
       line-height:1.32;
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
     }
@@ -522,114 +487,48 @@
       border-radius:24px;
       padding:10px;
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
+      grid-template-columns:repeat(6,minmax(0,1fr));
       gap:8px;
     }
 
     .routeRail a{
-      border-radius:18px;
       min-height:48px;
-      font-size:.68rem;
+      border-radius:18px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      display:grid;
+      place-items:center;
+      text-align:center;
     }
 
-    @keyframes snowFall{
-      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
-      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
+    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes wallSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+    @media(max-width:1120px){
+      .classroom{grid-template-columns:1fr}
+      .learningMap{min-height:680px}
+      .routeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
-    @keyframes slowSpin{
-      from{transform:translate(-50%,-50%) rotate(0deg)}
-      to{transform:translate(-50%,-50%) rotate(360deg)}
-    }
-
-    @keyframes signalRun{
-      from{transform:translateX(-42px)}
-      to{transform:translateX(42px)}
-    }
-
-    @media(max-width:980px){
-      .page{
-        min-height:auto;
-      }
-
-      .stage{
-        grid-template-columns:1fr;
-      }
-
-      .chamber{
-        min-height:620px;
-      }
-
-      .routeRail{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:640px){
-      .page{
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-      }
-
-      .topbar,.stage,.routeRail{
-        border-radius:24px;
-      }
-
+    @media(max-width:740px){
+      .page{width:min(100vw - 12px,var(--max));padding-top:10px}
+      .topbar,.classroom,.routeRail{border-radius:24px}
       .topbar{padding:12px}
-
       .brand{gap:10px}
-
-      .mark{
-        width:44px;
-        height:44px;
-        border-radius:14px;
-      }
-
-      .nav{
-        width:100%;
-        justify-content:stretch;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .nav a{width:100%}
-
-      .stage{
-        padding:18px;
-      }
-
-      .actions{
-        display:grid;
-        grid-template-columns:1fr;
-      }
-
-      .action{
-        width:100%;
-      }
-
-      .chamber{
-        min-height:auto;
-        display:grid;
-        gap:10px;
-        padding:14px;
-      }
-
-      .ring,.line{
-        display:none;
-      }
-
-      .core{
-        position:relative;
-        width:150px;
-        margin:0 auto;
-      }
-
-      .node,
-      .node.scene,
-      .node.listen,
-      .node.meaning,
-      .node.speak,
-      .node.use{
+      .mark{width:44px;height:44px;border-radius:14px}
+      .jumpGrid,.ruleGrid,.routeRail{grid-template-columns:1fr}
+      .jumpCard{min-height:76px}
+      .classroom{padding:18px}
+      .learningMap{min-height:auto;display:grid;gap:10px;padding:14px}
+      .boardLine{display:none}
+      .learningCore{position:relative;width:160px;margin:0 auto}
+      .lessonNode,.lessonNode.scene,.lessonNode.listen,.lessonNode.meaning,.lessonNode.speak,.lessonNode.use{
         position:relative;
         left:auto;
         right:auto;
@@ -637,44 +536,22 @@
         bottom:auto;
         transform:none;
         width:100%;
-        min-height:72px;
+        min-height:92px;
       }
-
-      .node:hover,
-      .node:focus-visible,
-      .node.scene:hover,
-      .node.scene:focus-visible,
-      .node.listen:hover,
-      .node.listen:focus-visible,
-      .node.meaning:hover,
-      .node.meaning:focus-visible,
-      .node.speak:hover,
-      .node.speak:focus-visible{
+      .lessonNode:hover,.lessonNode:focus-visible,.lessonNode.scene:hover,.lessonNode.scene:focus-visible,.lessonNode.listen:hover,.lessonNode.listen:focus-visible,.lessonNode.meaning:hover,.lessonNode.meaning:focus-visible,.lessonNode.speak:hover,.lessonNode.speak:focus-visible{
         transform:translateY(-4px);
       }
-
       .readout{
         position:relative;
         left:auto;
         right:auto;
         bottom:auto;
         grid-template-columns:1fr;
-        margin-top:4px;
-      }
-
-      .routeRail{
-        grid-template-columns:1fr;
       }
     }
 
     @media(prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation:none !important;
-        scroll-behavior:auto !important;
-        transition:none !important;
-      }
+      *,*::before,*::after{animation:none !important;scroll-behavior:auto !important;transition:none !important}
     }
   </style>
 </head>
@@ -682,98 +559,75 @@
 <body>
   <main
     class="page"
-    data-generation="second-generation-renewal"
-    data-product="esl-traversal-learning"
+    data-page="esl-traversal-learning"
+    data-room-location="richie-manor-classroom"
     data-self-path="/products/education/"
-    data-bridge-path="/products/esl-traversal-learning/"
     data-products-backlink="/products/"
-    data-aai-backlink="/products/on-your-side-ai/"
-    data-five-flags-backlink="/products/five-flags/"
-    data-nutrition-backlink="/products/nutrition/"
   >
     <header class="topbar">
-      <a class="brand" href="/products/" aria-label="Products home">
+      <a class="brand" href="/products/education/" aria-label="ESL Traversal Learning">
         <span class="mark" aria-hidden="true">ESL</span>
         <span class="brandText">
-          <span class="kicker">Products · Education</span>
+          <span class="kicker">Richie’s Manor · Classroom</span>
           <strong class="title">ESL Traversal Learning</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a class="featured" href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
+      <nav class="jumpGrid" aria-label="Primary compass jumps">
+        <a class="jumpCard" href="/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Compass</strong></span>
+        </a>
+        <a class="jumpCard" href="/door/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Door</strong></span>
+        </a>
+        <a class="jumpCard active" href="/products/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Parent</small><strong>Products</strong></span>
+        </a>
+        <a class="jumpCard" href="/gauges/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Gauges</strong></span>
+        </a>
       </nav>
     </header>
 
-    <section class="stage" aria-labelledby="productTitle">
+    <section class="classroom" aria-labelledby="productTitle">
       <div class="copy">
-        <span class="pill">Education product surface</span>
+        <span class="pill">Classroom product chamber</span>
         <h1 id="productTitle">ESL Traversal Learning</h1>
         <h2>English by movement, not overload.</h2>
-        <p class="thesis">
-          The goal is not memorizing English in the abstract. The goal is moving through real life with enough language to understand, respond, and keep going.
-        </p>
-        <p>
-          The surface stays clean. The learning opens inward: scene, listening, meaning, speaking, and use.
-        </p>
+        <p class="thesis">The classroom does not bury the learner in grammar. It moves from scene to listening, meaning, speaking, and use.</p>
+        <p>This page is now grounded inside the Manor as a classroom: compact, visual, and built to show the learning path without turning into a long legacy scroll.</p>
 
-        <div class="actions">
-          <a class="action primary" href="/products/">Back to Products</a>
-          <a class="action" href="/products/on-your-side-ai/">On Your Side AI</a>
-          <a class="action" href="/products/five-flags/">Five Flags</a>
+        <div class="ruleGrid">
+          <div class="ruleCell"><small>Start</small><strong>Scene first.</strong></div>
+          <div class="ruleCell"><small>Method</small><strong>Move inward.</strong></div>
+          <div class="ruleCell"><small>Result</small><strong>Use in life.</strong></div>
         </div>
       </div>
 
-      <div class="chamber" aria-label="ESL layered learning chamber">
-        <div class="ring r1" aria-hidden="true"></div>
-        <div class="ring r2" aria-hidden="true"></div>
-        <div class="ring r3" aria-hidden="true"></div>
+      <div class="learningMap" aria-label="ESL classroom learning map">
+        <div class="boardLine r1" aria-hidden="true"></div>
+        <div class="boardLine r2" aria-hidden="true"></div>
+        <div class="boardLine r3" aria-hidden="true"></div>
 
-        <div class="line north" aria-hidden="true"></div>
-        <div class="line east" aria-hidden="true"></div>
-        <div class="line south" aria-hidden="true"></div>
-        <div class="line west" aria-hidden="true"></div>
-
-        <button class="node scene" type="button" data-layer="scene" data-active="true">
-          <small>Outer layer</small>
-          <strong>Scene</strong>
-        </button>
-
-        <button class="node listen" type="button" data-layer="listen" data-active="false">
-          <small>Second layer</small>
-          <strong>Listen</strong>
-        </button>
-
-        <button class="node meaning" type="button" data-layer="meaning" data-active="false">
-          <small>Middle layer</small>
-          <strong>Meaning</strong>
-        </button>
-
-        <button class="node speak" type="button" data-layer="speak" data-active="false">
-          <small>Inner layer</small>
-          <strong>Speak</strong>
-        </button>
-
-        <button class="node use" type="button" data-layer="use" data-active="false">
-          <small>Core return</small>
-          <strong>Use</strong>
-        </button>
-
-        <div class="core" aria-hidden="true">
+        <div class="learningCore" aria-hidden="true">
           <span>English<br>In<br>Motion</span>
         </div>
+
+        <button class="lessonNode scene" type="button" data-layer="scene" data-active="true"><small>Outer</small><strong>Scene</strong></button>
+        <button class="lessonNode listen" type="button" data-layer="listen" data-active="false"><small>Second</small><strong>Listen</strong></button>
+        <button class="lessonNode meaning" type="button" data-layer="meaning" data-active="false"><small>Middle</small><strong>Meaning</strong></button>
+        <button class="lessonNode speak" type="button" data-layer="speak" data-active="false"><small>Inner</small><strong>Speak</strong></button>
+        <button class="lessonNode use" type="button" data-layer="use" data-active="false"><small>Return</small><strong>Use</strong></button>
 
         <div class="readout" aria-live="polite">
           <article class="readCard">
             <h3 id="readTitle">Start with the scene.</h3>
-            <p id="readCopy">
-              Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.
-            </p>
+            <p id="readCopy">Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a neighbor conversation.</p>
           </article>
-
           <article class="readCard receipt" id="readReceipt">
             <span>LAYER=Scene</span>
             <span>QUESTION=Where is the learner using English?</span>
@@ -789,6 +643,7 @@
       <a href="/products/five-flags/">Five Flags</a>
       <a href="/products/nutrition/">Nutrition</a>
       <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
     </nav>
   </main>
 
@@ -799,66 +654,41 @@
       const layers = {
         scene: {
           title: "Start with the scene.",
-          copy: "Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.",
-          receipt: [
-            "LAYER=Scene",
-            "QUESTION=Where is the learner using English?",
-            "OUTPUT=The lesson becomes real."
-          ]
+          copy: "Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a neighbor conversation.",
+          receipt: ["LAYER=Scene","QUESTION=Where is the learner using English?","OUTPUT=The lesson becomes real."]
         },
         listen: {
-          title: "Train the ear before the pressure rises.",
-          copy: "Listening starts with catching the situation. Who is talking, what do they want, and what kind of answer is expected?",
-          receipt: [
-            "LAYER=Listen",
-            "QUESTION=What is being asked or said?",
-            "OUTPUT=The learner catches the signal."
-          ]
+          title: "Train the ear before pressure rises.",
+          copy: "Listening starts by catching the situation: who is talking, what they want, and what kind of answer is expected.",
+          receipt: ["LAYER=Listen","QUESTION=What is being asked or said?","OUTPUT=The learner catches the signal."]
         },
         meaning: {
-          title: "Find the meaning underneath the words.",
-          copy: "Meaning connects words to people, place, tone, timing, and purpose. The learner should understand the scene before getting buried in grammar.",
-          receipt: [
-            "LAYER=Meaning",
-            "QUESTION=What does this mean in context?",
-            "OUTPUT=The words become usable."
-          ]
+          title: "Find the meaning under the words.",
+          copy: "Meaning connects language to people, place, tone, timing, and purpose. Context comes before overload.",
+          receipt: ["LAYER=Meaning","QUESTION=What does this mean in context?","OUTPUT=The words become usable."]
         },
         speak: {
           title: "Answer with a usable phrase.",
-          copy: "Speaking begins with simple, repeatable lines: I understand. Can you repeat that? I need help with this. What do I do next? Let me confirm.",
-          receipt: [
-            "LAYER=Speak",
-            "QUESTION=What can the learner say now?",
-            "OUTPUT=The learner can respond."
-          ]
+          copy: "Speaking begins with repeatable lines: I understand. Can you repeat that? I need help with this. What do I do next?",
+          receipt: ["LAYER=Speak","QUESTION=What can the learner say now?","OUTPUT=The learner can respond."]
         },
         use: {
           title: "Carry it into real life.",
-          copy: "The final layer is use. The learner should leave with English that can be used at work, at home, in public, at school, or during ordinary pressure.",
-          receipt: [
-            "LAYER=Use",
-            "QUESTION=Where can this be used again?",
-            "OUTPUT=The lesson becomes movement."
-          ]
+          copy: "The final layer is use. English must leave the classroom and work at home, work, school, public counters, and ordinary pressure.",
+          receipt: ["LAYER=Use","QUESTION=Where can this be used again?","OUTPUT=The lesson becomes movement."]
         }
       };
 
-      const nodes = Array.from(document.querySelectorAll(".node"));
+      const nodes = Array.from(document.querySelectorAll(".lessonNode"));
       const readTitle = document.getElementById("readTitle");
       const readCopy = document.getElementById("readCopy");
       const readReceipt = document.getElementById("readReceipt");
 
-      function setLayer(key) {
+      function setLayer(key){
         const layer = layers[key] || layers.scene;
-
-        nodes.forEach((node) => {
-          node.dataset.active = node.dataset.layer === key ? "true" : "false";
-        });
-
+        nodes.forEach((node) => node.dataset.active = node.dataset.layer === key ? "true" : "false");
         if (readTitle) readTitle.textContent = layer.title;
         if (readCopy) readCopy.textContent = layer.copy;
-
         if (readReceipt) {
           readReceipt.replaceChildren();
           layer.receipt.forEach((line) => {
@@ -869,11 +699,7 @@
         }
       }
 
-      nodes.forEach((node) => {
-        node.addEventListener("click", () => {
-          setLayer(node.dataset.layer || "scene");
-        });
-      });
+      nodes.forEach((node) => node.addEventListener("click", () => setLayer(node.dataset.layer || "scene")));
     })();
   </script>
 </body>

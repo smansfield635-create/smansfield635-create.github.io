@@ -1,20 +1,21 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · REAL EARTH AXIS + CLOUDS B4
+     SHOWROOM · GENERATION 2 · REAL EARTH CLOUD MAP B5
 
      CONTRACT:
-       - Reality-based solar-system demo.
-       - Earth is the center of the map.
-       - Earth uses real satellite-style texture.
-       - Earth sits on a visible 23.44° axis.
+       - Reality-based Earth demo.
+       - Earth is the center.
+       - Earth uses real NASA Earth surface texture.
+       - Clouds use real NASA cloud texture map.
+       - Earth sits on 23.44° axis.
        - Earth auto-spins.
        - User can manually drag/spin Earth.
-       - Cloud layer exists and drifts with Earth.
        - Sun is distant support.
        - Other planets stay minimal/distant.
        - Bottom diamond-compass navigation remains.
        - No generated graphic.
        - No graphic box.
+       - No symbolic/metaverse globe.
        - No new runtime.
 -->
 
@@ -46,15 +47,15 @@
     :root{
       --ink:rgba(255,255,255,.96);
       --txt:rgba(220,231,255,.78);
-      --muted:rgba(220,231,255,.62);
       --gold:rgba(255,217,138,.96);
       --line:rgba(255,255,255,.13);
       --panel:rgba(7,10,16,.74);
       --shadow:0 30px 110px rgba(0,0,0,.54);
-      --earth-axis:23.44deg;
+      --earth-axis:-23.44deg;
       --earth-rot:0%;
       --cloud-rot:0%;
       --earthTexture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg");
+      --cloudTexture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg");
     }
 
     body::before{
@@ -335,8 +336,8 @@
       top:-6%;
       transform:translateX(-50%) rotate(var(--earth-axis));
       transform-origin:center;
-      background:linear-gradient(180deg,transparent,rgba(255,255,255,.38),transparent);
-      opacity:.26;
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.42),transparent);
+      opacity:.30;
       pointer-events:none;
     }
 
@@ -357,10 +358,17 @@
     .axisLine::before{top:0}
     .axisLine::after{bottom:0}
 
-    .earthSphere{
+    .earthTilt{
       position:relative;
       width:92%;
       aspect-ratio:1;
+      transform:rotate(var(--earth-axis));
+      transform-origin:center;
+    }
+
+    .earthSphere{
+      position:absolute;
+      inset:0;
       border-radius:999px;
       overflow:hidden;
       background:#071a3d;
@@ -377,62 +385,41 @@
       inset:-1%;
       border-radius:999px;
       background-image:
-        linear-gradient(90deg,rgba(0,0,0,.08),transparent 18%,transparent 70%,rgba(0,0,0,.36)),
+        linear-gradient(90deg,rgba(0,0,0,.04),transparent 18%,transparent 70%,rgba(0,0,0,.30)),
         var(--earthTexture);
-      background-size:200% 100%, 200% 100%;
-      background-position:0 0, var(--earth-rot) 50%;
-      filter:saturate(1.16) contrast(1.08) brightness(.94);
+      background-size:200% 100%,200% 100%;
+      background-position:0 0,var(--earth-rot) 50%;
+      filter:saturate(1.16) contrast(1.08) brightness(.96);
       transform:scale(1.08);
       transform-origin:center;
     }
 
-    .cloudLayer{
+    .realClouds{
       position:absolute;
-      inset:-3%;
+      inset:-2%;
       border-radius:999px;
       opacity:.72;
-      background:
-        radial-gradient(ellipse at 22% 31%,rgba(255,255,255,.74),rgba(255,255,255,.24) 22%,transparent 44%),
-        radial-gradient(ellipse at 37% 58%,rgba(255,255,255,.60),rgba(255,255,255,.20) 24%,transparent 48%),
-        radial-gradient(ellipse at 61% 34%,rgba(255,255,255,.58),rgba(255,255,255,.18) 22%,transparent 45%),
-        radial-gradient(ellipse at 70% 66%,rgba(255,255,255,.42),rgba(255,255,255,.16) 22%,transparent 50%),
-        repeating-linear-gradient(166deg,transparent 0 42px,rgba(255,255,255,.18) 46px 52px,transparent 58px 96px);
-      background-size:120% 110%,130% 120%,120% 110%,140% 130%,200% 100%;
-      background-position:
-        calc(var(--cloud-rot) * -0.4) 24%,
-        calc(var(--cloud-rot) * -0.7) 58%,
-        calc(var(--cloud-rot) * -0.55) 36%,
-        calc(var(--cloud-rot) * -0.8) 70%,
-        calc(var(--cloud-rot) * -1) 50%;
+      background-image:var(--cloudTexture);
+      background-size:200% 100%;
+      background-position:var(--cloud-rot) 50%;
+      filter:brightness(1.42) contrast(1.2) blur(.15px);
       mix-blend-mode:screen;
-      filter:blur(.45px) saturate(.88);
+      transform:scale(1.08);
       pointer-events:none;
     }
 
-    .cloudLayer::before{
-      content:"";
+    .cloudBrightener{
       position:absolute;
-      inset:0;
+      inset:-2%;
       border-radius:999px;
-      background:
-        linear-gradient(12deg,transparent 15%,rgba(255,255,255,.22) 18%,transparent 28%),
-        linear-gradient(-8deg,transparent 48%,rgba(255,255,255,.20) 51%,transparent 61%),
-        linear-gradient(18deg,transparent 65%,rgba(255,255,255,.14) 68%,transparent 78%);
-      transform:translateX(calc(var(--cloud-rot) * -0.18));
-      opacity:.65;
-    }
-
-    .cloudLayer::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      border-radius:999px;
-      background:
-        radial-gradient(ellipse at 30% 72%,rgba(255,255,255,.34),transparent 24%),
-        radial-gradient(ellipse at 80% 24%,rgba(255,255,255,.26),transparent 20%),
-        radial-gradient(ellipse at 54% 18%,rgba(255,255,255,.24),transparent 18%);
-      transform:translateX(calc(var(--cloud-rot) * -0.32));
-      opacity:.58;
+      opacity:.24;
+      background-image:var(--cloudTexture);
+      background-size:200% 100%;
+      background-position:calc(var(--cloud-rot) - 14%) 50%;
+      filter:brightness(1.8) contrast(1.5) blur(.35px);
+      mix-blend-mode:screen;
+      transform:scale(1.085);
+      pointer-events:none;
     }
 
     .earthShade{
@@ -440,8 +427,8 @@
       inset:0;
       border-radius:999px;
       background:
-        radial-gradient(circle at 34% 31%,rgba(255,255,255,.18),transparent 28%),
-        radial-gradient(circle at 75% 54%,rgba(0,0,0,.82),transparent 48%),
+        radial-gradient(circle at 34% 31%,rgba(255,255,255,.16),transparent 28%),
+        radial-gradient(circle at 75% 54%,rgba(0,0,0,.84),transparent 48%),
         radial-gradient(circle at 50% 50%,transparent 62%,rgba(0,0,0,.38) 84%,rgba(0,0,0,.68) 100%);
       pointer-events:none;
     }
@@ -644,15 +631,15 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-real-earth-axis-clouds-b4"
+    data-showroom-version="generation-2-real-earth-cloud-map-b5"
     data-earth-center="true"
     data-earth-axis="23.44deg"
     data-earth-spin="auto-and-manual"
-    data-earth-clouds="active"
+    data-earth-clouds="nasa-real-cloud-map"
     data-sun-role="distant-background-authority"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="real-earth-axis-clouds-first"
+    data-brain-route="real-earth-cloud-map-first"
   >
     <section class="top" aria-label="Showroom view controls">
       <div class="navRow">
@@ -695,9 +682,9 @@
       <div class="copy">
         <p class="kicker">Showroom · Reality-Based Earth Demo</p>
         <h1>The Earth Room</h1>
-        <p class="expression" id="viewExpression">The Earth is on axis.</p>
+        <p class="expression" id="viewExpression">The Earth has real clouds.</p>
         <p class="lede" id="viewLede">
-          This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on its 23.44° axis, spinning, clouded, and manually draggable.
+          This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on its 23.44° axis, spinning, clouded from a real cloud map, and manually draggable.
         </p>
       </div>
 
@@ -705,25 +692,28 @@
         <div class="earthWrap" id="earthController" aria-label="Interactive spinning Earth" role="application">
           <span class="axisLine" aria-hidden="true"></span>
 
-          <div class="earthSphere" aria-hidden="true">
-            <div class="earthTexture"></div>
-            <div class="cloudLayer"></div>
-            <div class="earthShade"></div>
-            <div class="atmosphere"></div>
+          <div class="earthTilt">
+            <div class="earthSphere" aria-hidden="true">
+              <div class="earthTexture"></div>
+              <div class="realClouds"></div>
+              <div class="cloudBrightener"></div>
+              <div class="earthShade"></div>
+              <div class="atmosphere"></div>
+            </div>
           </div>
         </div>
 
-        <div class="earthCaption">Earth Standard · 23.44° Axis · Clouds · Auto + Manual Spin</div>
+        <div class="earthCaption">Earth Standard · 23.44° Axis · Real Clouds · Auto + Manual Spin</div>
       </article>
 
       <div class="readout" aria-live="polite">
         <strong id="showroomTitle">Earth view</strong>
         <p id="showroomText">
-          This is the demo standard: Earth first, real texture, visible axis, cloud layer, controlled spin, distant sun, minimal planets, and clean navigation.
+          This is the demo standard: Earth first, real surface texture, real cloud map, visible axis, controlled spin, distant sun, minimal planets, and clean navigation.
         </p>
       </div>
 
-      <span class="underhood" id="underhoodScale">Active showroom mode: Earth-centered axis and cloud demo.</span>
+      <span class="underhood" id="underhoodScale">Active showroom mode: Earth-centered real cloud map demo.</span>
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
@@ -778,11 +768,11 @@
 
       var copy = {
         earth: {
-          expression: "The Earth is on axis.",
-          lede: "This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on its 23.44° axis, spinning, clouded, and manually draggable.",
+          expression: "The Earth has real clouds.",
+          lede: "This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on its 23.44° axis, spinning, clouded from a real cloud map, and manually draggable.",
           title: "Earth view",
-          text: "This is the demo standard: Earth first, real texture, visible axis, cloud layer, controlled spin, distant sun, minimal planets, and clean navigation.",
-          scale: "Active showroom mode: Earth-centered axis and cloud demo."
+          text: "This is the demo standard: Earth first, real surface texture, real cloud map, visible axis, controlled spin, distant sun, minimal planets, and clean navigation.",
+          scale: "Active showroom mode: Earth-centered real cloud map demo."
         },
         satellite: {
           expression: "Look at Earth from orbit.",
@@ -846,7 +836,7 @@
       function setEarthRotation(value){
         rotation = ((value % 100) + 100) % 100;
         document.documentElement.style.setProperty("--earth-rot", rotation.toFixed(3) + "%");
-        document.documentElement.style.setProperty("--cloud-rot", (rotation * .72).toFixed(3) + "%");
+        document.documentElement.style.setProperty("--cloud-rot", ((rotation * .78 + 11) % 100).toFixed(3) + "%");
       }
 
       function animateEarth(now){

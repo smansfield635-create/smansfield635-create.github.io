@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-products-generation="source-waterfall-product-jump-b4">
+<html lang="en" data-products-generation="source-waterfall-product-jump-sunset-snow-b5">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -11,17 +11,17 @@
 
   <style>
     :root {
-      --panel:rgba(7,14,28,.92);
-      --panel2:rgba(10,20,42,.96);
-      --line:rgba(170,198,255,.18);
+      --panel:rgba(7,14,28,.88);
+      --panel2:rgba(10,20,42,.94);
+      --line:rgba(255,218,150,.22);
       --line2:rgba(147,239,189,.34);
-      --text:#eef4ff;
-      --muted:#aab8d8;
-      --muted2:rgba(170,184,216,.72);
-      --gold:#efd29a;
+      --text:#fff8ea;
+      --muted:#c9d2ea;
+      --muted2:rgba(201,210,234,.74);
+      --gold:#ffd98a;
       --green:#93efbd;
       --blue:#8ec5ff;
-      --rose:#ff8fb2;
+      --rose:#ff9a86;
       --water:#7ecbff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1120px;
@@ -36,10 +36,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 4%,rgba(147,239,189,.16),transparent 22%),
-        radial-gradient(circle at 18% 28%,rgba(142,197,255,.12),transparent 30%),
-        radial-gradient(circle at 82% 42%,rgba(239,210,154,.10),transparent 28%),
-        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+        radial-gradient(circle at 50% 82%,rgba(255,154,86,.34),transparent 28%),
+        radial-gradient(circle at 70% 74%,rgba(255,216,138,.28),transparent 24%),
+        radial-gradient(circle at 20% 18%,rgba(91,132,205,.22),transparent 34%),
+        linear-gradient(180deg,#071225 0%,#10294a 34%,#f49a52 72%,#2b1020 100%);
       overflow-x:hidden;
     }
 
@@ -48,12 +48,31 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.20;
+      opacity:.72;
       background:
-        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
+        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        linear-gradient(180deg,rgba(2,8,20,.34),transparent 38%,rgba(255,137,72,.16));
+      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px,100% 100%;
+      animation:snowFall 22s linear infinite;
+      z-index:0;
+    }
+
+    body::after {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
+        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
+        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
+        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+      z-index:0;
     }
 
     a { color:inherit; text-decoration:none; }
@@ -73,9 +92,11 @@
     .product-jump-card {
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
         linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
     }
 
     .topbar {
@@ -102,15 +123,15 @@
       border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid var(--line2);
+      border:1px solid rgba(255,217,138,.42);
       background:
-        radial-gradient(circle at 50% 28%,rgba(147,239,189,.34),transparent 44%),
-        linear-gradient(180deg,rgba(26,43,78,.92),rgba(10,18,32,.98));
-      color:#effff5;
+        radial-gradient(circle at 50% 28%,rgba(255,217,138,.44),transparent 44%),
+        linear-gradient(180deg,rgba(58,38,26,.92),rgba(10,18,32,.98));
+      color:#fff8ea;
       font-weight:950;
       letter-spacing:.08em;
       flex:0 0 auto;
-      box-shadow:0 0 22px rgba(147,239,189,.14);
+      box-shadow:0 0 22px rgba(255,217,138,.18);
     }
 
     .brand-text { display:grid; gap:3px; }
@@ -118,7 +139,7 @@
     .kicker {
       display:block;
       margin:0;
-      color:#c8d7ff;
+      color:#ffe0a3;
       font-size:.72rem;
       text-transform:uppercase;
       letter-spacing:.16em;
@@ -149,9 +170,9 @@
       justify-content:center;
       padding:10px 13px;
       border-radius:999px;
-      border:1px solid rgba(170,198,255,.16);
+      border:1px solid rgba(255,218,150,.20);
       background:rgba(255,255,255,.04);
-      color:#e7eeff;
+      color:#fff4dd;
       font-size:.74rem;
       font-weight:900;
       letter-spacing:.08em;
@@ -160,10 +181,10 @@
 
     .nav a.featured,
     .small-link.featured {
-      border-color:rgba(239,210,154,.42);
-      background:rgba(239,210,154,.08);
+      border-color:rgba(255,217,138,.48);
+      background:rgba(255,217,138,.10);
       color:#fff8ea;
-      box-shadow:0 0 22px rgba(239,210,154,.10);
+      box-shadow:0 0 22px rgba(255,217,138,.13);
     }
 
     .hero {
@@ -190,9 +211,9 @@
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.08),transparent 70%);
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.24),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 46%),
+        radial-gradient(circle at 50% 50%,rgba(255,119,72,.12),transparent 70%);
       filter:blur(5px);
       z-index:-3;
     }
@@ -212,9 +233,9 @@
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-      color:#d8e3ff;
+      border:1px solid rgba(255,218,150,.22);
+      background:rgba(255,255,255,.04);
+      color:#fff0d0;
       text-transform:uppercase;
       letter-spacing:.14em;
       font-size:.70rem;
@@ -276,7 +297,7 @@
       position:absolute;
       inset:3%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.13);
       background:
         radial-gradient(circle at 50% 50%,rgba(126,203,255,.13),transparent 28%),
         repeating-conic-gradient(
@@ -421,8 +442,8 @@
       overflow:hidden;
       background:
         radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(127,255,212,.045) 30%,rgba(0,0,0,0) 58%),
-        radial-gradient(circle at 50% 58%,rgba(239,210,154,.055),transparent 72%),
-        linear-gradient(180deg,rgba(2,6,14,.56),rgba(2,4,10,.92));
+        radial-gradient(circle at 50% 72%,rgba(255,154,86,.18),transparent 48%),
+        linear-gradient(180deg,rgba(2,6,14,.48),rgba(46,18,28,.82));
       isolation:isolate;
     }
 
@@ -435,7 +456,7 @@
       aspect-ratio:1;
       transform:translate(-50%,-50%);
       border-radius:50%;
-      border:18px solid rgba(145,173,205,.13);
+      border:18px solid rgba(255,218,150,.12);
       background:
         radial-gradient(circle at 50% 50%,rgba(126,203,255,.11),transparent 32%),
         repeating-conic-gradient(
@@ -608,7 +629,7 @@
       position:absolute;
       inset:18px;
       clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(170,198,255,.22);
+      border:1px solid rgba(255,218,150,.22);
       background:
         radial-gradient(circle at 50% 50%,rgba(147,239,189,.18),transparent 34%),
         linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.018));
@@ -645,23 +666,23 @@
     }
 
     .product-card.featured {
-      border-color:rgba(239,210,154,.42);
+      border-color:rgba(255,217,138,.42);
     }
 
     .product-card.featured::before {
-      border-color:rgba(239,210,154,.52);
+      border-color:rgba(255,217,138,.52);
       background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.34),transparent 34%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.34),transparent 34%),
         radial-gradient(circle at 50% 72%,rgba(147,239,189,.12),transparent 34%),
         linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
       box-shadow:
-        0 0 34px rgba(239,210,154,.20),
+        0 0 34px rgba(255,217,138,.20),
         inset 0 0 26px rgba(255,255,255,.04);
     }
 
     .product-card small,
     .product-jump-card small {
-      color:#91a6cf;
+      color:#c8d7ff;
       text-transform:uppercase;
       letter-spacing:.12em;
       font-size:.62rem;
@@ -743,13 +764,13 @@
 
     .product-jump-grid {
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
     }
 
     .product-jump-card {
       position:relative;
-      min-height:168px;
+      min-height:184px;
       border-radius:24px;
       padding:18px;
       background:
@@ -768,7 +789,7 @@
       position:absolute;
       inset:18px;
       clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(170,198,255,.20);
+      border:1px solid rgba(255,218,150,.20);
       background:
         radial-gradient(circle at 50% 50%,rgba(147,239,189,.14),transparent 38%),
         linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
@@ -790,16 +811,16 @@
     }
 
     .product-jump-card.featured {
-      border-color:rgba(239,210,154,.44);
+      border-color:rgba(255,217,138,.44);
       background:
-        radial-gradient(circle at 50% 0%,rgba(239,210,154,.13),transparent 68%),
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 68%),
         linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
     }
 
     .product-jump-card.featured::before {
-      border-color:rgba(239,210,154,.54);
+      border-color:rgba(255,217,138,.54);
       background:
-        radial-gradient(circle at 50% 50%,rgba(239,210,154,.30),transparent 38%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.30),transparent 38%),
         linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
     }
 
@@ -809,11 +830,16 @@
       justify-content:space-between;
       gap:10px;
       padding:14px 4px 0;
-      color:#9db0d4;
+      color:#d5dff7;
       font-size:.86rem;
     }
 
-    .footer a { color:#d6e2ff; }
+    .footer a { color:#fff0d0; }
+
+    @keyframes snowFall {
+      from { background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0; }
+      to { background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px,0 0; }
+    }
 
     @keyframes waterfallDrop {
       0% { transform:translateX(-50%) translateY(-22%); }
@@ -986,8 +1012,8 @@
   <main
     class="page"
     data-page="products"
-    data-baseline="source-waterfall-product-jump"
-    data-pass="products-source-waterfall-b4"
+    data-baseline="source-waterfall-product-jump-sunset-snow"
+    data-pass="products-source-waterfall-b5"
     data-source-role="parent-product-chamber"
     data-vault-route="/products/archcoin/"
     data-upper-room-route="/big-laugh/upper-room/"
@@ -1104,16 +1130,10 @@
           <span>A four-coin financial transaction template for contract authority, inbound value, outbound obligation, and growth allocation.</span>
         </a>
 
-        <a class="product-jump-card" href="/five-lives/">
-          <small>Game / Human Choice</small>
-          <strong>Five Lives</strong>
-          <span>A product path for choice, consequence, reset, and the lives people move through.</span>
-        </a>
-
-        <a class="product-jump-card" href="/whats-my-scene/">
-          <small>Game / Social Read</small>
-          <strong>What’s My Scene?</strong>
-          <span>A scene-reading product path for people, rooms, roles, context, and live interaction.</span>
+        <a class="product-jump-card" href="/five-flags-whats-my-scene/">
+          <small>Game / Scene Read</small>
+          <strong>Five Flags · What’s My Scene?</strong>
+          <span>A live scene-reading product path for people, rooms, roles, choices, flags, and social context.</span>
         </a>
 
         <a class="product-jump-card" href="/artificial-agent-intelligence/">

@@ -1,5 +1,5 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B2
+   EARTH ASSET SPINE · CANVAS B3
 
    Owns Earth rendering only:
    - real surface texture
@@ -29,7 +29,7 @@
     defaultVelocity: 0.008,
     defaultZoom: 1,
     minZoom: 0.72,
-    maxZoom: 1.32,
+    maxZoom: 1.38,
     zoomStep: 0.08,
     cloudAlpha: 0.34
   };
@@ -127,7 +127,7 @@
       var height = canvas.clientHeight;
       var cx = width * 0.5;
       var cy = height * 0.5;
-      var base = Math.min(width, height) * 0.498;
+      var base = Math.min(width, height) * 0.497;
 
       return {
         width: width,
@@ -448,7 +448,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b2",
+    version: "earth-canvas-b3",
     create: createEarthRenderer
   };
 })();

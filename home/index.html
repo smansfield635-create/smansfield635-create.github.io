@@ -1,102 +1,98 @@
-
 <!DOCTYPE html>
-<html lang="en" data-manor-registry="house-batch-1">
+<html lang="en" data-build="six-house-parts-full-tnt-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Home · Diamond Gate Bridge</title>
-  <meta name="description" content="Home is the central Manor body for Diamond Gate Bridge." />
+  <meta name="description" content="Home: the central receiving hall and stabilization room inside Rich Manor and Estate." />
   <link rel="stylesheet" href="/assets/manor.css" />
   <script src="/assets/page_registry.js" defer></script>
-  <style>
-    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-  </style>
 </head>
-<body class="manor-skin manor-house" data-manor-skin="v1" data-manor-room="home" data-manor-class="house" data-manor-slot="H3_HOME" data-manor-route="/home/" data-manor-batch="BATCH_1_HOUSE">
-  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
+
+<body
+  class="manor-skin manor-house"
+  data-manor-skin="v1"
+  data-manor-room="home"
+  data-manor-class="house"
+  data-manor-slot="H3_HOME"
+  data-manor-route="/home/"
+  data-manor-batch="BATCH_1_HOUSE"
+  data-page-id="home"
+  data-route="/home/"
+  data-class-type="house_structure"
+  data-construct-code="H3_HOME"
+  data-house-anchor="home"
+  data-skin-family="manor_house"
+  data-audit-priority="high"
+  data-view-modes="flat round meta return"
+  data-registry-version="1.0.0"
+>
+  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
     <a href="/">Compass</a>
     <a href="/door/">Door</a>
-    <a href="/home/" aria-current="page" class="is-active manor-active-compass">Home</a>
+    <a href="/home/" aria-current="page">Home</a>
     <a href="/products/">Products</a>
     <a href="/showroom/">Showroom</a>
     <a href="/gauges/">Gauges</a>
   </nav>
 
   <main class="manor-shell">
-    <section class="manor-room manor-lattice-mark">
-      <p class="manor-kicker">H3 · Home · Central Manor Body</p>
-      <h1 class="manor-title">Welcome Home.</h1>
-      <p class="manor-lede">Living without expectations allows you to experience a life without limitations. Home receives the view selected at the Door and turns it into a stable beginning.</p>
+    <section class="manor-room" aria-label="Home">
+      <p class="manor-kicker">H3 · Home · Receiving Hall</p>
+      <h1 class="manor-title">Home</h1>
+      <p class="manor-lede">
+        You are inside the Manor. Home receives and stabilizes the visitor after the Door, then routes movement toward Products, Showroom, and Gauges.
+      </p>
+
       <div class="manor-divider"></div>
-      <p class="manor-status-line"><strong>Current perspective:</strong> <span id="modeLabel">Flat</span></p>
-      <article class="manor-card" style="margin-top:18px">
-        <p class="manor-room-label">How Home begins</p>
-        <h2 id="modeTitle">Begin with what is visible and practical.</h2>
-        <p id="modeText">One clean step is better than ten cloudy ideas. Use Home to stabilize, then move to the room that fits the next task.</p>
-      </article>
+
+      <section class="manor-stage" aria-label="Home stabilization">
+        <p class="manor-kicker">Inside the Manor</p>
+        <h2>The house is now the frame.</h2>
+        <p class="manor-lede">
+          Home is not a generic homepage. It is the central receiving room: the place where the estate becomes stable, readable, and ready for deeper movement.
+        </p>
+
+        <div class="manor-grid">
+          <a class="manor-card" href="/products/">
+            <p class="manor-kicker">Distribution</p>
+            <h2>Products</h2>
+            <p class="manor-lede">Move into the source-waterfall chamber.</p>
+          </a>
+          <a class="manor-card" href="/showroom/">
+            <p class="manor-kicker">Proof</p>
+            <h2>Showroom</h2>
+            <p class="manor-lede">See public proof and demonstration.</p>
+          </a>
+          <a class="manor-card" href="/gauges/">
+            <p class="manor-kicker">Verification</p>
+            <h2>Gauges</h2>
+            <p class="manor-lede">Check the health of the estate.</p>
+          </a>
+        </div>
+      </section>
     </section>
 
-    <section class="manor-room" style="margin-top:28px">
-      <p class="manor-kicker">Stable next motion</p>
-      <div class="manor-grid three">
-        <a class="manor-card" href="/prelude/"><strong>Prelude</strong><br />Move into the first meaning layer.</a>
-        <a class="manor-card" href="/products/"><strong>Products</strong><br />Enter the waterfall chamber.</a>
-        <a class="manor-card" href="/showroom/"><strong>Showroom</strong><br />View the public proof surface.</a>
-      </div>
-    </section>
-
-    <section class="manor-backlinks">
+    <section class="manor-backlinks" aria-label="House backlinks">
       <p class="manor-backlinks-title">House backlinks</p>
       <ul class="manor-backlinks-list">
         <li><a href="/">Compass</a></li>
         <li><a href="/door/">Door</a></li>
-        <li><a href="/home/" aria-current="page">Home · active</a></li>
         <li><a href="/products/">Products</a></li>
         <li><a href="/showroom/">Showroom</a></li>
         <li><a href="/gauges/">Gauges</a></li>
       </ul>
     </section>
 
-    <section class="manor-audit-strip">
-      <p class="manor-audit-title">Batch 1 audit markers</p>
+    <section class="manor-audit-strip" aria-label="Home audit receipt">
+      <p class="manor-audit-title">Home receipt</p>
       <ul class="manor-audit-list">
-        <li class="manor-audit-chip pass" data-status="pass">route-exists</li>
-        <li class="manor-audit-chip pass" data-status="pass">manor-skin</li>
-        <li class="manor-audit-chip pass" data-status="pass">house-class</li>
-        <li class="manor-audit-chip pass" data-status="pass">H3_HOME</li>
-        <li class="manor-audit-chip pass" data-status="pass">central-body</li>
+        <li class="manor-audit-chip pass">route-exists</li>
+        <li class="manor-audit-chip pass">manor-skin</li>
+        <li class="manor-audit-chip pass">house-class</li>
+        <li class="manor-audit-chip pass">H3_HOME</li>
       </ul>
     </section>
   </main>
-
-  <script>
-    (function () {
-      "use strict";
-      var copy = {
-        flat: {
-          label: "Flat",
-          title: "Begin with what is visible and practical.",
-          text: "One clean step is better than ten cloudy ideas. Use Home to stabilize, then move to the room that fits the next task."
-        },
-        round: {
-          label: "Round",
-          title: "Begin by seeing the relationship between rooms.",
-          text: "The Compass routes, the Door sets perspective, and Home gives the visitor a stable center before movement resumes."
-        },
-        globe: {
-          label: "Globe",
-          title: "Begin from the whole Manor.",
-          text: "The house has six structural rooms. The planetary constructs orbit from that house anchor. No world floats by itself."
-        }
-      };
-      var params = new URLSearchParams(window.location.search);
-      var mode = params.get("view") || localStorage.getItem("diamond_gate_bridge_view") || "flat";
-      if (!copy[mode]) mode = "flat";
-      localStorage.setItem("diamond_gate_bridge_view", mode);
-      document.getElementById("modeLabel").textContent = copy[mode].label;
-      document.getElementById("modeTitle").textContent = copy[mode].title;
-      document.getElementById("modeText").textContent = copy[mode].text;
-    })();
-  </script>
 </body>
 </html>

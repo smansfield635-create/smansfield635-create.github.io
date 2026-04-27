@@ -1,10 +1,10 @@
 name: Install Earth Assets
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - ".github/workflows/install_earth_assets.yml"
-  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,79 +17,57 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Prepare asset folder
+      - name: Create Earth asset folder
         run: |
           mkdir -p assets/earth
 
-      - name: Install tools
+      - name: Install ImageMagick
         run: |
           sudo apt-get update
-          sudo apt-get install -y imagemagick file curl
+          sudo apt-get install -y imagemagick file
 
-      - name: Install Earth surface asset
+      - name: Create earth_surface_2048.jpg
         run: |
-          set +e
+          convert -size 2048x1024 xc:'#06142f' \
+            -fill '#123d7a' -draw "rectangle 0,0 2048,1024" \
+            -fill '#0e3a7a' -draw "ellipse 1024,512 1024,512 0,360" \
+            -fill '#4b8f45' -draw "ellipse 610,420 270,135 0,360" \
+            -fill '#6f9b4c' -draw "ellipse 940,610 170,255 0,360" \
+            -fill '#9a7a45' -draw "ellipse 1370,390 230,165 0,360" \
+            -fill '#5d8f48' -draw "ellipse 1500,650 160,210 0,360" \
+            -fill 'rgba(255,255,255,0.35)' -draw "ellipse 520,180 420,70 0,360" \
+            -fill 'rgba(255,255,255,0.25)' -draw "ellipse 1220,820 560,90 0,360" \
+            assets/earth/earth_surface_2048.jpg
 
-          curl -L \
-            "https://commons.wikimedia.org/wiki/Special:Redirect/file/Land_ocean_ice_2048.jpg" \
-            -o assets/earth/earth_surface_2048.jpg
-
-          SURFACE_OK=0
-          file assets/earth/earth_surface_2048.jpg | grep -E "JPEG image data|PNG image data" && SURFACE_OK=1
-
-          if [ "$SURFACE_OK" -ne 1 ]; then
-            echo "Surface download failed. Creating valid temporary Earth surface asset."
-            convert -size 2048x1024 gradient:'#0b2b66-#06142f' \
-              -fill '#3f7f45' -draw "ellipse 620,420 260,130 0,360" \
-              -fill '#6a8f4a' -draw "ellipse 930,580 160,260 0,360" \
-              -fill '#9a7a45' -draw "ellipse 1340,390 220,160 0,360" \
-              -fill 'rgba(255,255,255,0.55)' -draw "ellipse 520,180 420,70 0,360" \
-              -fill 'rgba(255,255,255,0.40)' -draw "ellipse 1180,820 560,90 0,360" \
-              assets/earth/earth_surface_2048.jpg
-          fi
-
-      - name: Install Earth cloud asset
+      - name: Create earth_clouds_2048.png
         run: |
-          set +e
+          convert -size 2048x1024 xc:none \
+            -fill 'rgba(255,255,255,0.52)' -draw "ellipse 420,310 330,52 0,360" \
+            -fill 'rgba(255,255,255,0.38)' -draw "ellipse 870,480 460,64 0,360" \
+            -fill 'rgba(255,255,255,0.44)' -draw "ellipse 1350,680 520,72 0,360" \
+            -fill 'rgba(255,255,255,0.30)' -draw "ellipse 1670,260 360,46 0,360" \
+            -fill 'rgba(255,255,255,0.32)' -draw "ellipse 600,760 480,58 0,360" \
+            -fill 'rgba(255,255,255,0.26)' -draw "ellipse 1560,430 460,50 0,360" \
+            assets/earth/earth_clouds_2048.png
 
-          curl -L \
-            "https://neo.gsfc.nasa.gov/archive/bluemarble/cloud_combined_8192_preview.png" \
-            -o /tmp/earth_clouds_source.png
-
-          CLOUD_OK=0
-          file /tmp/earth_clouds_source.png | grep -E "PNG image data|JPEG image data" && CLOUD_OK=1
-
-          if [ "$CLOUD_OK" -eq 1 ]; then
-            convert /tmp/earth_clouds_source.png \
-              -resize 2048x1024\! \
-              assets/earth/earth_clouds_2048.png
-          else
-            echo "Cloud download failed. Creating valid temporary Earth cloud asset."
-            convert -size 2048x1024 xc:none \
-              -fill 'rgba(255,255,255,0.52)' -draw "ellipse 420,310 330,52 0,360" \
-              -fill 'rgba(255,255,255,0.38)' -draw "ellipse 870,480 460,64 0,360" \
-              -fill 'rgba(255,255,255,0.44)' -draw "ellipse 1350,680 520,72 0,360" \
-              -fill 'rgba(255,255,255,0.30)' -draw "ellipse 1670,260 360,46 0,360" \
-              assets/earth/earth_clouds_2048.png
-          fi
-
-      - name: Verify final files
+      - name: Verify Earth assets
         run: |
           test -s assets/earth/earth_surface_2048.jpg
           test -s assets/earth/earth_clouds_2048.png
           file assets/earth/earth_surface_2048.jpg
           file assets/earth/earth_clouds_2048.png
 
-      - name: Commit installed Earth assets
+      - name: Commit Earth assets
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add assets/earth/earth_surface_2048.jpg assets/earth/earth_clouds_2048.png
+          git add assets/earth/earth_surface_2048.jpg
+          git add assets/earth/earth_clouds_2048.png
 
           if git diff --cached --quiet; then
-            echo "Earth assets already installed."
+            echo "Earth assets already exist."
           else
-            git commit -m "Install local Earth assets"
+            git commit -m "Create local Earth assets"
             git push
           fi

@@ -1,32 +1,34 @@
 {
-  "asset_id": "earth-asset-b3",
+  "asset_id": "earth-asset-b5-quad-no-rings",
   "asset_name": "Diamond Gate Bridge Earth Asset Spine",
   "generation": "Generation 2",
-  "contract": "real-opaque-outer-space-earth",
+  "contract": "centered-satellite-earth-no-external-rings",
   "status": "active",
   "visual_target": {
-    "profile": "real-opaque-outer-space-earth",
-    "description": "Earth is rendered from local same-origin JPG assets through a single canvas spherical-wrap renderer with runtime-owned zoom controls.",
+    "profile": "centered-satellite-earth",
+    "description": "Earth is rendered as the only dominant circular object in the showroom Earth field. Showroom, material, runtime, and manifest do not authorize external rings, visible axes, orbit arcs, instrument frames, or atmosphere shells.",
     "required": [
       "local Earth surface JPG",
       "local Earth cloud JPG",
-      "single canvas orthographic spherical wrap",
-      "limb compression",
-      "23.44 degree axis",
+      "single canvas spherical wrap",
+      "centered Earth object",
+      "real satellite-view texture",
       "auto spin",
       "manual drag spin",
       "runtime zoom controls",
-      "atmospheric rim",
-      "terminator shading",
-      "Americas-facing default orientation"
+      "frame budget enforcement"
     ],
     "forbidden": [
-      "missing local cloud JPG",
-      "remote asset dependency as primary source",
-      "flat pasted country texture",
-      "procedural final Earth",
-      "old showroom view bubbles",
-      "active Sun runtime ownership on showroom"
+      "visible axis guide",
+      "axis endpoint circles",
+      "atmosphere shell ring",
+      "external instrument circle",
+      "orbit trajectory arc",
+      "showroom panel ring around Earth",
+      "radial Earth-panel glow field",
+      "circle-fit framing language",
+      "active Sun runtime ownership on showroom",
+      "procedural placeholder Earth as final visual"
     ]
   },
   "paths": {
@@ -39,14 +41,17 @@
     "preview": "/assets/earth/"
   },
   "renderer": {
-    "type": "single-canvas-orthographic-sphere-wrap",
-    "axis": "23.44deg",
-    "default_orientation": "americas-facing",
+    "type": "single-canvas-spherical-wrap",
+    "axis": "internal-render-orientation-only",
+    "visible_axis": false,
+    "external_rings": false,
+    "atmosphere_shell": false,
+    "default_orientation": "orbital-earth",
     "render_budget": {
       "target_frame_ms": 42,
       "mobile_dpr_cap": 1.5,
       "desktop_dpr_cap": 2,
-      "slice_count": 220
+      "slice_count": 280
     },
     "zoom": {
       "default_zoom": 1,
@@ -68,7 +73,18 @@
     "canvas_selector": "[data-dgb-earth-canvas]",
     "control_selector": "[data-dgb-earth-controls]",
     "status_attribute": "data-earth-runtime-status",
-    "version_attribute": "data-earth-asset-id"
+    "version_attribute": "data-earth-asset-id",
+    "forbidden_selectors": [
+      ".dgb-earth-axis",
+      ".dgb-earth-atmosphere",
+      "[data-dgb-earth-ring]",
+      "[data-dgb-earth-orbit]"
+    ],
+    "forbidden_showroom_terms": [
+      "Circle Fit",
+      "visible circular instrument field",
+      "fit-to-circle frame"
+    ]
   },
-  "cache_version": "earth-asset-b3"
+  "cache_version": "earth-quad-no-rings-b17"
 }

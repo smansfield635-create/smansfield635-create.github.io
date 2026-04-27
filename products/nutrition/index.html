@@ -1,30 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" data-product-generation="baseline-nutrition-russian-doll-full-expression-b6">
+<html lang="en" data-product-generation="richie-manor-kitchen-nutrition-b8">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Baseline Nutrition Systems · Products</title>
-  <meta
-    name="description"
-    content="Baseline Nutrition Systems — a practical product path for food, energy, rhythm, daily structure, and human stability."
-  />
+  <meta name="description" content="Baseline Nutrition Systems — the kitchen and pantry path inside Richie’s Manor for water, food, timing, rhythm, recovery, and repeatable support." />
 
   <style>
     :root{
       color-scheme:dark;
-      --panel:rgba(7,14,28,.88);
-      --panel2:rgba(10,20,42,.94);
+      --panel:rgba(18,14,10,.86);
+      --panel2:rgba(36,26,16,.92);
       --line:rgba(255,218,150,.24);
-      --greenLine:rgba(147,239,189,.32);
-      --text:#fff8ea;
-      --muted:#c9d2ea;
-      --soft:rgba(201,210,234,.74);
-      --gold:#ffd98a;
+      --greenLine:rgba(147,239,189,.34);
+      --brass:#ffd98a;
       --green:#93efbd;
       --blue:#8ec5ff;
-      --rose:#ff9a86;
+      --text:#fff8ea;
+      --muted:#d5c7aa;
+      --soft:rgba(213,199,170,.74);
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -35,10 +31,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 82%,rgba(255,154,86,.34),transparent 28%),
-        radial-gradient(circle at 72% 72%,rgba(255,216,138,.24),transparent 24%),
-        radial-gradient(circle at 18% 18%,rgba(91,132,205,.22),transparent 34%),
-        linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
+        radial-gradient(circle at 50% 92%,rgba(147,239,189,.16),transparent 24%),
+        radial-gradient(circle at 16% 20%,rgba(255,217,138,.16),transparent 26%),
+        radial-gradient(circle at 84% 18%,rgba(255,154,86,.11),transparent 26%),
+        linear-gradient(180deg,#071225 0%,#14100c 42%,#2c1b10 100%);
       overflow-x:hidden;
     }
 
@@ -47,48 +43,34 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.66;
+      opacity:.38;
       background:
-        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
-        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
-      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      animation:snowFall 22s linear infinite;
-      z-index:0;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
-        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
-        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
-        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+        linear-gradient(90deg,rgba(255,218,150,.05) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,218,150,.035) 1px,transparent 1px),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.15),transparent 30%);
+      background-size:56px 56px,56px 56px,100% 100%;
+      mask-image:radial-gradient(circle at 50% 35%,black,transparent 82%);
       z-index:0;
     }
 
     a{color:inherit;text-decoration:none}
 
     .page{
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
       position:relative;
       z-index:1;
+      width:min(var(--max),calc(100vw - 20px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:14px 0 24px;
       display:grid;
+      grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
-    .topbar,.hero,.stage,.panel,.card,.route-card{
+    .topbar,.kitchen,.routeRail{
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(147,239,189,.12),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 42%),
         linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
@@ -96,13 +78,10 @@
     }
 
     .topbar{
-      padding:14px;
       border-radius:28px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding:14px;
+      display:grid;
       gap:14px;
-      flex-wrap:wrap;
     }
 
     .brand{
@@ -150,71 +129,119 @@
       line-height:1.05;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
-    }
-
-    .nav a,.button{
-      min-height:40px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:10px 13px;
-      border-radius:999px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .nav a.featured,.button.primary{
-      border-color:rgba(147,239,189,.48);
-      background:rgba(147,239,189,.10);
-      color:#effff5;
-      box-shadow:0 0 22px rgba(147,239,189,.12);
-    }
-
-    .hero{
-      border-radius:34px;
-      padding:clamp(24px,5vw,56px);
-      min-height:calc(100svh - 150px);
+    .jumpGrid{
       display:grid;
-      grid-template-columns:minmax(0,1.02fr) minmax(280px,.98fr);
-      gap:28px;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .jumpCard{
+      min-height:88px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(147,239,189,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
       align-items:center;
+      padding:12px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .jumpCard:hover,.jumpCard:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(147,239,189,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .jumpCard.active{
+      border-color:rgba(255,217,138,.56);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
+      box-shadow:0 0 24px rgba(255,217,138,.12);
+    }
+
+    .navCompass{
+      position:relative;
+      width:54px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.25),rgba(10,20,42,.82) 68%);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .jumpCard.active .navCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
+    }
+
+    .navCompass::before{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .navCompass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(147,239,189,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .jumpCard.active .navCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
+    }
+
+    .jumpText{display:grid;gap:4px;min-width:0}
+    .jumpText small{color:#dfffea;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+    .jumpText strong{color:#fff;font-size:1rem;line-height:1.02;letter-spacing:-.035em}
+
+    .kitchen{
+      border-radius:34px;
+      padding:clamp(18px,3vw,30px);
+      display:grid;
+      grid-template-columns:minmax(0,.88fr) minmax(420px,1.12fr);
+      gap:20px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .hero::before{
+    .kitchen::before{
       content:"";
       position:absolute;
-      width:min(760px,92vw);
-      height:min(760px,92vw);
-      left:72%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.15),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
-      filter:blur(5px);
-      z-index:-3;
+      left:50%;
+      top:0;
+      width:min(720px,92vw);
+      height:180px;
+      transform:translateX(-50%);
+      background:radial-gradient(ellipse at 50% 0%,rgba(147,239,189,.13),transparent 68%);
+      z-index:-1;
     }
 
-    .heroCopy{
+    .copy{
       display:grid;
       gap:14px;
-      position:relative;
-      z-index:2;
+      align-content:center;
+      min-width:0;
     }
 
     .pill{
@@ -224,7 +251,7 @@
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(147,239,189,.28);
+      border:1px solid rgba(147,239,189,.30);
       background:rgba(255,255,255,.04);
       color:#dfffea;
       text-transform:uppercase;
@@ -246,7 +273,7 @@
     h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3rem,9vw,6.4rem);
+      font-size:clamp(3rem,8.8vw,6.4rem);
       line-height:.86;
       letter-spacing:-.07em;
       text-transform:uppercase;
@@ -254,8 +281,8 @@
 
     h2{
       margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.6vw,2.9rem);
+      color:var(--brass);
+      font-size:clamp(1.38rem,4.4vw,2.8rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -263,455 +290,268 @@
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.62;
+      line-height:1.58;
       font-size:1rem;
     }
 
     .thesis{
       color:#fff;
-      font-size:clamp(1.16rem,2.7vw,1.7rem);
+      font-size:clamp(1.1rem,2.25vw,1.5rem);
       line-height:1.18;
       font-weight:850;
-      letter-spacing:-.04em;
-      max-width:820px;
+      letter-spacing:-.035em;
+      max-width:780px;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
+    .ruleGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
       gap:10px;
-      margin-top:4px;
     }
 
-    .nutritionOrb{
+    .ruleCell{
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:18px;
+      background:rgba(0,0,0,.16);
+      padding:12px;
+      display:grid;
+      gap:4px;
+    }
+
+    .ruleCell small{
+      color:var(--soft);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:900;
+    }
+
+    .ruleCell strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .pantryMap{
       position:relative;
-      width:min(100%,360px);
-      aspect-ratio:1;
-      margin:auto;
+      min-height:620px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:32px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.12),rgba(255,217,138,.045) 32%,rgba(0,0,0,0) 62%),
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014));
+      overflow:hidden;
       display:grid;
       place-items:center;
-      filter:drop-shadow(0 24px 48px rgba(0,0,0,.38));
     }
 
-    .nutritionOrb::before{
-      content:"";
+    .pantryRing{
       position:absolute;
-      inset:3%;
+      left:50%;
+      top:50%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.13);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.18),transparent 28%),
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg 3deg,transparent 3deg 18deg);
-      box-shadow:
-        inset 0 0 54px rgba(0,0,0,.34),
-        0 0 50px rgba(147,239,189,.12);
-      animation:slowSpin 26s linear infinite;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      border:1px solid rgba(147,239,189,.12);
+      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
     }
 
-    .nutritionCore{
+    .pantryRing.r1{width:min(92%,590px);aspect-ratio:1;animation:wallSpin 54s linear infinite}
+    .pantryRing.r2{width:min(74%,470px);aspect-ratio:1;background:repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);animation:wallSpin 42s linear infinite reverse}
+    .pantryRing.r3{width:min(54%,330px);aspect-ratio:1;background:radial-gradient(circle at 50% 50%,rgba(147,239,189,.06),transparent 52%);animation:wallSpin 28s linear infinite}
+
+    .baselineCore{
       position:relative;
-      width:46%;
+      z-index:6;
+      width:min(36%,210px);
       aspect-ratio:1;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.22);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.38),rgba(255,217,138,.18) 48%,rgba(0,0,0,.24) 100%);
-      box-shadow:
-        inset 0 0 42px rgba(147,239,189,.18),
-        0 0 88px rgba(147,239,189,.18);
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.46),transparent 12%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.34),rgba(255,217,138,.16) 46%,rgba(0,0,0,.22) 100%);
+      box-shadow:inset 0 0 42px rgba(147,239,189,.18),0 0 92px rgba(147,239,189,.20);
+      overflow:hidden;
       display:grid;
       place-items:center;
       text-align:center;
-      overflow:hidden;
-      z-index:3;
+      padding:20px;
     }
 
-    .nutritionCore::before{
+    .baselineCore::before{
       content:"";
       position:absolute;
-      inset:14px;
+      inset:13%;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.16);
-      background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 16deg,rgba(255,255,255,.08) 16deg 19deg,transparent 19deg 34deg);
-      animation:slowSpin 16s linear infinite reverse;
+      background:repeating-conic-gradient(from 0deg,transparent 0deg 14deg,rgba(255,255,255,.085) 14deg 17deg,transparent 17deg 32deg);
+      animation:compassSpin 16s linear infinite reverse;
     }
 
-    .nutritionCore span{
+    .baselineCore span{
       position:relative;
       z-index:2;
       color:#effff5;
       font-weight:950;
-      font-size:.80rem;
+      font-size:.84rem;
       letter-spacing:.10em;
       line-height:1.2;
       text-transform:uppercase;
       text-shadow:0 2px 12px rgba(0,0,0,.70);
     }
 
-    .nutritionLine{
+    .nutritionNode{
       position:absolute;
-      left:50%;
-      top:50%;
-      width:36%;
-      height:7px;
-      transform-origin:left center;
-      border-radius:999px;
-      background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(147,239,189,.46),transparent);
-      opacity:.70;
-      z-index:1;
-      overflow:hidden;
-      filter:drop-shadow(0 0 12px rgba(147,239,189,.26));
+      z-index:7;
+      width:152px;
+      min-height:122px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(147,239,189,.10),transparent 70%),
+        linear-gradient(180deg,rgba(24,18,12,.86),rgba(10,20,42,.92));
+      box-shadow:0 18px 38px rgba(0,0,0,.34);
+      display:grid;
+      align-content:end;
+      gap:7px;
+      padding:14px;
+      cursor:pointer;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .nutritionLine::after{
-      content:"";
+    .nutritionNode:hover,.nutritionNode:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(147,239,189,.44);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .nutritionNode[data-active="true"]{
+      border-color:rgba(255,217,138,.54);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
+        linear-gradient(180deg,rgba(46,34,16,.92),rgba(10,20,42,.94));
+    }
+
+    .nutritionNode small{color:#dfffea;font-size:.58rem;font-weight:950;letter-spacing:.12em;text-transform:uppercase}
+    .nutritionNode strong{color:#fff;font-size:1.04rem;line-height:1.02;letter-spacing:-.035em}
+
+    .nutritionNode.baseline{left:50%;top:18px;transform:translateX(-50%)}
+    .nutritionNode.water{right:18px;top:50%;transform:translateY(-50%)}
+    .nutritionNode.fuel{left:50%;bottom:18px;transform:translateX(-50%)}
+    .nutritionNode.rhythm{left:18px;top:50%;transform:translateY(-50%)}
+    .nutritionNode.repeat{right:60px;bottom:88px}
+
+    .nutritionNode.baseline:hover,.nutritionNode.baseline:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .nutritionNode.water:hover,.nutritionNode.water:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .nutritionNode.fuel:hover,.nutritionNode.fuel:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .nutritionNode.rhythm:hover,.nutritionNode.rhythm:focus-visible{transform:translateY(calc(-50% - 4px))}
+
+    .readout{
       position:absolute;
-      inset:0;
-      background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.42) 18px 24px,transparent 24px 42px);
-      animation:signalRun 1.7s linear infinite;
-    }
-
-    .nutritionLine.north{transform:rotate(-90deg)}
-    .nutritionLine.east{transform:rotate(0deg)}
-    .nutritionLine.south{transform:rotate(90deg)}
-    .nutritionLine.west{transform:rotate(180deg)}
-
-    .stage{
-      border-radius:34px;
-      padding:clamp(16px,2.6vw,26px);
+      left:18px;
+      right:18px;
+      bottom:18px;
+      z-index:9;
       display:grid;
-      grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
-      gap:16px;
-      overflow:hidden;
-    }
-
-    .talk{
-      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(220px,.40fr);
       gap:12px;
-      align-content:center;
+      pointer-events:none;
     }
 
-    .dollControls{
+    .readCard{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      background:rgba(3,8,18,.72);
+      box-shadow:0 18px 38px rgba(0,0,0,.30);
+      padding:14px;
       display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:7px;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .readCard h3{margin:0;color:#fff;font-size:clamp(1.1rem,2.1vw,1.45rem);line-height:1.05;letter-spacing:-.04em}
+    .readCard p{font-size:.92rem;line-height:1.44}
+
+    .receipt{
+      display:grid;
+      gap:6px;
+      color:var(--soft);
+      font-size:.78rem;
+      line-height:1.32;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .routeRail{
+      border-radius:24px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
       gap:8px;
     }
 
-    .dollControl{
-      min-height:58px;
-      border:1px solid rgba(255,255,255,.10);
+    .routeRail a{
+      min-height:48px;
       border-radius:18px;
-      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
-      color:var(--text);
-      font-weight:850;
-      cursor:pointer;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       display:grid;
       place-items:center;
       text-align:center;
-      font-size:.82rem;
-      letter-spacing:.04em;
-      padding:8px;
     }
 
-    .dollControl[data-active="true"]{
-      border-color:rgba(147,239,189,.38);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(147,239,189,.14),transparent 70%),
-        rgba(147,239,189,.07);
-      box-shadow:0 0 24px rgba(147,239,189,.10);
+    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes wallSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+    @media(max-width:1120px){
+      .kitchen{grid-template-columns:1fr}
+      .pantryMap{min-height:680px}
+      .routeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
-    .talkCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(147,239,189,.08),transparent 62%),
-        rgba(255,255,255,.035);
-      padding:18px;
-      display:grid;
-      gap:10px;
-    }
-
-    .talkCard h2{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    .receipt{
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:22px;
-      background:rgba(0,0,0,.18);
-      padding:14px;
-      display:grid;
-      gap:10px;
-    }
-
-    .receiptTitle{
-      margin:0;
-      color:var(--green);
-      font-size:11px;
-      font-weight:850;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      padding-bottom:8px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .rows{
-      display:grid;
-      gap:8px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
-      gap:12px;
-      align-items:start;
-    }
-
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.42;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.42;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .nutritionBoard{
-      display:grid;
-      gap:12px;
-      align-content:center;
-    }
-
-    .nutritionGrid,.grid3,.grid4,.routeGrid{
-      display:grid;
-      gap:12px;
-    }
-
-    .nutritionGrid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .grid3{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
-
-    .grid4,.routeGrid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .panel{
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      display:grid;
-      gap:16px;
-    }
-
-    .panelHead{
-      display:grid;
-      gap:8px;
-      max-width:860px;
-    }
-
-    .card,.route-card{
-      border-radius:24px;
-      padding:18px;
-      min-height:150px;
-      display:grid;
-      align-content:end;
-      gap:8px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .card::before,.route-card::before{
-      content:"";
-      position:absolute;
-      inset:18px;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(147,239,189,.18);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.14),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-      opacity:.62;
-      z-index:0;
-    }
-
-    .card.gold::before{
-      border-color:rgba(255,217,138,.22);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.15),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-    }
-
-    .card > *,.route-card > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .card small,.route-card small{
-      color:#dfffea;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.62rem;
-      font-weight:900;
-    }
-
-    .card strong,.route-card strong{
-      color:#fff;
-      font-size:clamp(1.05rem,2.1vw,1.35rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .card span,.route-card span{
-      color:var(--muted);
-      line-height:1.44;
-      font-size:.9rem;
-    }
-
-    .miniList{
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:grid;
-      gap:8px;
-    }
-
-    .miniList li{
-      position:relative;
-      padding-left:16px;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.48;
-    }
-
-    .miniList li::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:.56em;
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:var(--green);
-      box-shadow:0 0 8px rgba(147,239,189,.22);
-    }
-
-    .route-card.featured{
-      border-color:rgba(147,239,189,.44);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(147,239,189,.13),transparent 68%),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
-    }
-
-    .footer{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:0 4px;
-      color:#d5dff7;
-      font-size:.86rem;
-    }
-
-    .footer a{color:#fff0d0}
-
-    @keyframes snowFall{
-      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
-      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
-    }
-
-    @keyframes slowSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
-    @keyframes signalRun{
-      from{transform:translateX(-42px)}
-      to{transform:translateX(42px)}
-    }
-
-    @media(max-width:1080px){
-      .hero,.stage{
-        grid-template-columns:1fr;
-        min-height:auto;
-      }
-
-      .dollControls,
-      .nutritionGrid,
-      .grid3,
-      .grid4,
-      .routeGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:640px){
-      .page{
-        width:min(100vw - 12px,var(--max));
-        padding-top:10px;
-      }
-
-      .topbar,.hero,.stage,.panel{
-        border-radius:24px;
-      }
-
+    @media(max-width:740px){
+      .page{width:min(100vw - 12px,var(--max));padding-top:10px}
+      .topbar,.kitchen,.routeRail{border-radius:24px}
       .topbar{padding:12px}
       .brand{gap:10px}
-
-      .mark{
-        width:44px;
-        height:44px;
-        border-radius:14px;
-      }
-
-      .nav{
+      .mark{width:44px;height:44px;border-radius:14px}
+      .jumpGrid,.ruleGrid,.routeRail{grid-template-columns:1fr}
+      .jumpCard{min-height:76px}
+      .kitchen{padding:18px}
+      .pantryMap{min-height:auto;display:grid;gap:10px;padding:14px}
+      .pantryRing{display:none}
+      .baselineCore{position:relative;width:160px;margin:0 auto}
+      .nutritionNode,.nutritionNode.baseline,.nutritionNode.water,.nutritionNode.fuel,.nutritionNode.rhythm,.nutritionNode.repeat{
+        position:relative;
+        left:auto;
+        right:auto;
+        top:auto;
+        bottom:auto;
+        transform:none;
         width:100%;
-        justify-content:stretch;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        min-height:92px;
       }
-
-      .nav a{width:100%}
-      .hero{padding:22px}
-
-      .actions,
-      .dollControls,
-      .nutritionGrid,
-      .grid3,
-      .grid4,
-      .routeGrid{
+      .nutritionNode:hover,.nutritionNode:focus-visible,.nutritionNode.baseline:hover,.nutritionNode.baseline:focus-visible,.nutritionNode.water:hover,.nutritionNode.water:focus-visible,.nutritionNode.fuel:hover,.nutritionNode.fuel:focus-visible,.nutritionNode.rhythm:hover,.nutritionNode.rhythm:focus-visible{
+        transform:translateY(-4px);
+      }
+      .readout{
+        position:relative;
+        left:auto;
+        right:auto;
+        bottom:auto;
         grid-template-columns:1fr;
-      }
-
-      .actions{display:grid}
-      .button{width:100%}
-
-      .row{
-        grid-template-columns:1fr;
-      }
-
-      .rv{
-        text-align:left;
       }
     }
 
     @media(prefers-reduced-motion:reduce){
-      *,
-      *::before,
-      *::after{
-        animation:none !important;
-        scroll-behavior:auto !important;
-        transition:none !important;
-      }
+      *,*::before,*::after{animation:none !important;scroll-behavior:auto !important;transition:none !important}
     }
   </style>
 </head>
@@ -719,276 +559,92 @@
 <body>
   <main
     class="page"
-    data-generation="second-generation-renewal"
-    data-product="baseline-nutrition-systems"
+    data-page="baseline-nutrition-systems"
+    data-room-location="richie-manor-kitchen-pantry"
     data-self-path="/products/nutrition/"
-    data-bridge-path="/nutrition/"
     data-products-backlink="/products/"
-    data-aai-backlink="/products/on-your-side-ai/"
-    data-five-flags-backlink="/products/five-flags/"
-    data-esl-backlink="/products/education/"
   >
     <header class="topbar">
-      <a class="brand" href="/products/" aria-label="Products home">
+      <a class="brand" href="/products/nutrition/" aria-label="Baseline Nutrition Systems">
         <span class="mark" aria-hidden="true">BN</span>
         <span class="brandText">
-          <span class="kicker">Products · Baseline Systems</span>
+          <span class="kicker">Richie’s Manor · Kitchen / Pantry</span>
           <strong class="title">Baseline Nutrition Systems</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a class="featured" href="/products/">Products</a>
-        <a href="/showroom/">Showroom</a>
+      <nav class="jumpGrid" aria-label="Primary compass jumps">
+        <a class="jumpCard" href="/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Compass</strong></span>
+        </a>
+        <a class="jumpCard" href="/door/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Door</strong></span>
+        </a>
+        <a class="jumpCard active" href="/products/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Parent</small><strong>Products</strong></span>
+        </a>
+        <a class="jumpCard" href="/gauges/">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText"><small>Jump</small><strong>Gauges</strong></span>
+        </a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="productTitle">
-      <div class="heroCopy">
-        <span class="pill">Nutrition product surface</span>
+    <section class="kitchen" aria-labelledby="productTitle">
+      <div class="copy">
+        <span class="pill">Kitchen and pantry chamber</span>
         <h1 id="productTitle">Baseline Nutrition Systems</h1>
-        <h2>Start with the body before asking for more from the mind.</h2>
-        <p class="thesis">
-          The goal is not perfection. The goal is a stable enough baseline to keep moving through the day.
-        </p>
-        <p>
-          Baseline Nutrition Systems is a practical product path for food, water, energy, rhythm, daily structure, and human stability. It treats nutrition as a support system, not a guilt system.
-        </p>
+        <h2>Food is support, not a moral score.</h2>
+        <p class="thesis">The kitchen does not shame the body. It restores baseline: water, food, timing, rhythm, recovery, and repeatable support.</p>
+        <p>This page is now grounded inside the Manor as the kitchen and pantry. The surface is compact, practical, and built around stability instead of legacy scroll.</p>
 
-        <div class="actions">
-          <a class="button primary" href="/products/">Back to Products</a>
-          <a class="button" href="#nutrition-doll">Open Russian Doll</a>
-          <a class="button" href="#real-life">Real-Life Baseline</a>
-          <a class="button" href="#baseline-law">Baseline Law</a>
+        <div class="ruleGrid">
+          <div class="ruleCell"><small>Start</small><strong>Water first.</strong></div>
+          <div class="ruleCell"><small>Method</small><strong>Build baseline.</strong></div>
+          <div class="ruleCell"><small>Result</small><strong>More steady days.</strong></div>
         </div>
       </div>
 
-      <div class="nutritionOrb" aria-hidden="true">
-        <div class="nutritionLine north"></div>
-        <div class="nutritionLine east"></div>
-        <div class="nutritionLine south"></div>
-        <div class="nutritionLine west"></div>
-        <div class="nutritionCore"><span>Baseline<br>Nutrition<br>Systems</span></div>
-      </div>
-    </section>
+      <div class="pantryMap" aria-label="Baseline nutrition pantry map">
+        <div class="pantryRing r1" aria-hidden="true"></div>
+        <div class="pantryRing r2" aria-hidden="true"></div>
+        <div class="pantryRing r3" aria-hidden="true"></div>
 
-    <section id="nutrition-doll" class="stage" aria-label="Baseline Nutrition Russian doll chamber">
-      <div class="talk">
-        <span class="pill">Russian-doll baseline chamber</span>
-        <h2>Stability opens one layer at a time.</h2>
-        <p>
-          The outside layer is simple: get the body back to baseline. The deeper layers are rhythm, fuel, recovery, and repeatable structure.
-        </p>
-
-        <div class="dollControls" aria-label="Nutrition layer controls">
-          <button class="dollControl" type="button" data-layer="baseline" data-active="true">Baseline</button>
-          <button class="dollControl" type="button" data-layer="water" data-active="false">Water</button>
-          <button class="dollControl" type="button" data-layer="fuel" data-active="false">Fuel</button>
-          <button class="dollControl" type="button" data-layer="rhythm" data-active="false">Rhythm</button>
-          <button class="dollControl" type="button" data-layer="repeat" data-active="false">Repeat</button>
+        <div class="baselineCore" aria-hidden="true">
+          <span>Body<br>Baseline<br>Support</span>
         </div>
 
-        <section class="talkCard">
-          <h2 id="talkTitle">Return to baseline.</h2>
-          <p id="talkCopy">
-            The first layer is not optimization. It is getting the body out of chaos: enough water, enough real food, enough timing, and enough consistency to stop running on fumes.
-          </p>
-        </section>
+        <button class="nutritionNode baseline" type="button" data-layer="baseline" data-active="true"><small>Outer</small><strong>Baseline</strong></button>
+        <button class="nutritionNode water" type="button" data-layer="water" data-active="false"><small>Second</small><strong>Water</strong></button>
+        <button class="nutritionNode fuel" type="button" data-layer="fuel" data-active="false"><small>Middle</small><strong>Fuel</strong></button>
+        <button class="nutritionNode rhythm" type="button" data-layer="rhythm" data-active="false"><small>Inner</small><strong>Rhythm</strong></button>
+        <button class="nutritionNode repeat" type="button" data-layer="repeat" data-active="false"><small>Return</small><strong>Repeat</strong></button>
 
-        <section class="receipt">
-          <h3 class="receiptTitle">Baseline Receipt</h3>
-          <div class="rows" id="receiptRows">
-            <div class="row"><div class="rk">Layer</div><div class="rv">Baseline</div></div>
-            <div class="row"><div class="rk">Question</div><div class="rv">What does the body need first?</div></div>
-            <div class="row"><div class="rk">Output</div><div class="rv">The day becomes more manageable.</div></div>
-          </div>
-        </section>
-      </div>
-
-      <div class="nutritionBoard">
-        <span class="pill">Core baseline lanes</span>
-
-        <div class="nutritionGrid" aria-label="Nutrition baseline lanes">
-          <article class="card">
-            <small>Hydration</small>
-            <strong>Start with water.</strong>
-            <span>Do not ask the system to perform while the foundation is dry.</span>
+        <div class="readout" aria-live="polite">
+          <article class="readCard">
+            <h3 id="readTitle">Return to baseline.</h3>
+            <p id="readCopy">The first layer is not optimization. It is getting the body out of chaos: enough water, enough real food, enough timing, and enough consistency to stop running on fumes.</p>
           </article>
-
-          <article class="card">
-            <small>Food</small>
-            <strong>Build real fuel.</strong>
-            <span>Meals should support energy, steadiness, and the next part of the day.</span>
-          </article>
-
-          <article class="card">
-            <small>Timing</small>
-            <strong>Respect the rhythm.</strong>
-            <span>The same food can feel different when the day has no structure.</span>
-          </article>
-
-          <article class="card">
-            <small>Recovery</small>
-            <strong>Stop living on fumes.</strong>
-            <span>Food cannot carry the whole system if sleep, stress, and recovery are ignored.</span>
+          <article class="readCard receipt" id="readReceipt">
+            <span>LAYER=Baseline</span>
+            <span>QUESTION=What does the body need first?</span>
+            <span>OUTPUT=The day becomes more manageable.</span>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="real-life" class="panel" aria-labelledby="realLifeTitle">
-      <div class="panelHead">
-        <span class="pill">Real-life baseline</span>
-        <h2 id="realLifeTitle">Nutrition has to survive the actual day.</h2>
-        <p>
-          Baseline Nutrition Systems works only if it can survive work, errands, family pressure, budget limits, travel, stress, fatigue, and imperfect timing.
-        </p>
-      </div>
-
-      <div class="grid4">
-        <article class="card">
-          <small>Morning</small>
-          <strong>Start the system cleanly.</strong>
-          <span>Water, simple fuel, and a first decision that does not sabotage the rest of the day.</span>
-        </article>
-
-        <article class="card">
-          <small>Workday</small>
-          <strong>Prevent the crash.</strong>
-          <span>Plan food before energy drops low enough to make the decision for you.</span>
-        </article>
-
-        <article class="card">
-          <small>Evening</small>
-          <strong>Recover without collapse.</strong>
-          <span>End the day in a way that supports tomorrow instead of punishing today.</span>
-        </article>
-
-        <article class="card">
-          <small>Budget</small>
-          <strong>Make it practical.</strong>
-          <span>A system that only works with perfect money, time, and conditions is not baseline.</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="structureTitle">
-      <div class="panelHead">
-        <span class="pill">System structure</span>
-        <h2 id="structureTitle">A baseline system is not a diet speech.</h2>
-        <p>
-          This product should help a person build repeatable support around the body. It should not shame the person for needing support.
-        </p>
-      </div>
-
-      <div class="grid3">
-        <article class="card gold">
-          <small>Input</small>
-          <strong>What goes in?</strong>
-          <span>Water, food, timing, portions, preparation, and what is realistic today.</span>
-        </article>
-
-        <article class="card gold">
-          <small>Signal</small>
-          <strong>What is the body reporting?</strong>
-          <span>Energy, hunger, crashes, focus, irritability, recovery, and repeat patterns.</span>
-        </article>
-
-        <article class="card gold">
-          <small>Adjustment</small>
-          <strong>What small correction helps?</strong>
-          <span>Change the next move without turning the whole day into failure.</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="baseline-law" class="panel" aria-labelledby="lawTitle">
-      <div class="panelHead">
-        <span class="pill">Baseline law</span>
-        <h2 id="lawTitle">Food is support, not a moral score.</h2>
-        <p>
-          Baseline Nutrition Systems must stay practical, humane, and repeatable. It is not medical care, a diagnosis tool, or a shame engine.
-        </p>
-      </div>
-
-      <div class="grid3">
-        <article class="card">
-          <small>Always Preserved</small>
-          <strong>Practical stability.</strong>
-          <ul class="miniList">
-            <li>Water before complexity</li>
-            <li>Real meals before optimization</li>
-            <li>Repeatable rhythm before perfection</li>
-            <li>Human constraints respected</li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <small>Never Reduced To</small>
-          <strong>Diet punishment.</strong>
-          <ul class="miniList">
-            <li>Shame-based language</li>
-            <li>Extreme restriction</li>
-            <li>One-size-fits-all claims</li>
-            <li>Medical promises</li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <small>Long Range</small>
-          <strong>More steady days.</strong>
-          <span>The strongest outcome is a more stable baseline: fewer crashes, cleaner choices, and a body that has more support for the day.</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="backlinksTitle">
-      <div class="panelHead">
-        <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">One destination. Many jump-off points.</h2>
-        <p>
-          This is the canonical destination for Baseline Nutrition Systems. The older /nutrition/ path should bridge here.
-        </p>
-      </div>
-
-      <div class="routeGrid">
-        <a class="route-card featured" href="/products/">
-          <small>Parent chamber</small>
-          <strong>Products</strong>
-          <span>Return to the source-waterfall Products page.</span>
-        </a>
-
-        <a class="route-card" href="/products/on-your-side-ai/">
-          <small>Related product</small>
-          <strong>On Your Side AI</strong>
-          <span>Artificial Agent Intelligence for structured assistance and decision support.</span>
-        </a>
-
-        <a class="route-card" href="/products/education/">
-          <small>Related product</small>
-          <strong>ESL Traversal Learning</strong>
-          <span>English by movement, scene, context, confidence, and real-life use.</span>
-        </a>
-
-        <a class="route-card" href="/products/five-flags/">
-          <small>Related product</small>
-          <strong>Five Flags · What’s My Scene?</strong>
-          <span>Scene reading, social context, flags, people, rooms, and live interaction.</span>
-        </a>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <span>Baseline Nutrition Systems · Canonical Product Destination</span>
-      <span>
-        <a href="/products/">Products</a> ·
-        <a href="/products/on-your-side-ai/">On Your Side AI</a> ·
-        <a href="/products/education/">Education</a> ·
-        <a href="/products/five-flags/">Five Flags</a>
-      </span>
-    </footer>
+    <nav class="routeRail" aria-label="Product route rail">
+      <a href="/products/">Products</a>
+      <a href="/products/on-your-side-ai/">On Your Side AI</a>
+      <a href="/products/education/">Education</a>
+      <a href="/products/five-flags/">Five Flags</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/gauges/">Gauges</a>
+    </nav>
   </main>
 
   <script>
@@ -999,93 +655,51 @@
         baseline: {
           title: "Return to baseline.",
           copy: "The first layer is not optimization. It is getting the body out of chaos: enough water, enough real food, enough timing, and enough consistency to stop running on fumes.",
-          rows: [
-            ["Layer", "Baseline"],
-            ["Question", "What does the body need first?"],
-            ["Output", "The day becomes more manageable."]
-          ]
+          receipt: ["LAYER=Baseline","QUESTION=What does the body need first?","OUTPUT=The day becomes more manageable."]
         },
         water: {
           title: "Start with water.",
           copy: "Hydration is the simplest first correction. Before the system is judged, it should be watered. The goal is not fancy. The goal is basic support.",
-          rows: [
-            ["Layer", "Water"],
-            ["Question", "Is the foundation dry?"],
-            ["Output", "The system gets first support."]
-          ]
+          receipt: ["LAYER=Water","QUESTION=Is the foundation dry?","OUTPUT=The system gets first support."]
         },
         fuel: {
           title: "Build real fuel.",
           copy: "Food should help carry the next part of the day. A baseline meal does not need to be perfect. It needs to be useful, repeatable, and grounded.",
-          rows: [
-            ["Layer", "Fuel"],
-            ["Question", "What food supports the next move?"],
-            ["Output", "Energy becomes less random."]
-          ]
+          receipt: ["LAYER=Fuel","QUESTION=What food supports the next move?","OUTPUT=Energy becomes less random."]
         },
         rhythm: {
           title: "Respect the rhythm.",
           copy: "Timing matters. The same food can support or destabilize depending on when the day starts, when work hits, and when the crash usually arrives.",
-          rows: [
-            ["Layer", "Rhythm"],
-            ["Question", "Where does the day usually break?"],
-            ["Output", "The pattern becomes visible."]
-          ]
+          receipt: ["LAYER=Rhythm","QUESTION=Where does the day usually break?","OUTPUT=The pattern becomes visible."]
         },
         repeat: {
           title: "Repeat what works.",
           copy: "A baseline system is built by repetition. Keep the useful meals, useful timing, useful water habits, and useful corrections. Do not rebuild from shame every day.",
-          rows: [
-            ["Layer", "Repeat"],
-            ["Question", "What can be repeated without collapse?"],
-            ["Output", "The system becomes sustainable."]
-          ]
+          receipt: ["LAYER=Repeat","QUESTION=What can be repeated without collapse?","OUTPUT=The system becomes sustainable."]
         }
       };
 
-      const controls = Array.from(document.querySelectorAll(".dollControl"));
-      const title = document.getElementById("talkTitle");
-      const copy = document.getElementById("talkCopy");
-      const receipt = document.getElementById("receiptRows");
+      const nodes = Array.from(document.querySelectorAll(".nutritionNode"));
+      const readTitle = document.getElementById("readTitle");
+      const readCopy = document.getElementById("readCopy");
+      const readReceipt = document.getElementById("readReceipt");
 
-      function writeRows(rows) {
-        if (!receipt) return;
-        receipt.replaceChildren();
-
-        rows.forEach(([key, value]) => {
-          const row = document.createElement("div");
-          const rk = document.createElement("div");
-          const rv = document.createElement("div");
-
-          row.className = "row";
-          rk.className = "rk";
-          rv.className = "rv";
-
-          rk.textContent = key;
-          rv.textContent = value;
-
-          row.append(rk, rv);
-          receipt.appendChild(row);
-        });
-      }
-
-      function setLayer(key) {
+      function setLayer(key){
         const layer = layers[key] || layers.baseline;
-
-        controls.forEach((control) => {
-          control.dataset.active = control.dataset.layer === key ? "true" : "false";
-        });
-
-        if (title) title.textContent = layer.title;
-        if (copy) copy.textContent = layer.copy;
-        writeRows(layer.rows);
+        nodes.forEach((node) => node.dataset.active = node.dataset.layer === key ? "true" : "false");
+        if (readTitle) readTitle.textContent = layer.title;
+        if (readCopy) readCopy.textContent = layer.copy;
+        if (readReceipt) {
+          readReceipt.replaceChildren();
+          layer.receipt.forEach((line) => {
+            const span = document.createElement("span");
+            span.textContent = line;
+            readReceipt.appendChild(span);
+          });
+        }
       }
 
-      controls.forEach((control) => {
-        control.addEventListener("click", () => {
-          setLayer(control.dataset.layer || "baseline");
-        });
-      });
+      nodes.forEach((node) => node.addEventListener("click", () => setLayer(node.dataset.layer || "baseline")));
     })();
   </script>
 </body>

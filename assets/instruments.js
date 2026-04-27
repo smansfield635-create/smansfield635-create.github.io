@@ -1,25 +1,18 @@
 /* ==========================================================================
    Diamond Gate Bridge · Instruments Asset Layer
-   GAUGES_B6_SEMANTIC_SEPARATOR_PATCH
+   GAUGES_B7_CONTRACT_RENEWAL
    PATH: /assets/instruments.js
 
    PURPOSE:
-   - Preserve the existing page-neutral instrument receipt API.
-   - Preserve reusable Gauges dashboard data, semantics, colors, routes, and render helpers.
-   - Improve copied-text, screen-reader, and audit-read spacing.
-   - Keep Gauges as an asset-driven instrument contract rather than page-local duplication.
-
-   BOUNDARY:
-   - This file does not mutate DOM.
-   - This file does not own page layout.
-   - This file does not use GraphicBox.
-   - This file does not use generated images.
-   - This file exposes data and render helpers only.
+   - Renew the old G1 instruments asset into the active shared instruments contract.
+   - Preserve the page-neutral instrument receipt API.
+   - Add reusable Gauges dashboard data, color states, routes, TED read, and render helpers.
+   - Keep this file asset-level only: no DOM mutation, no page layout ownership.
 ========================================================================== */
 
 const INSTRUMENT_META = deepFreeze({
   name: "instruments",
-  version: "G2_GAUGES_B6_SEMANTIC_SEPARATOR_PATCH",
+  version: "G2_GAUGES_B7_CONTRACT_RENEWAL",
   contract: "INSTRUMENT_CONTRACT_G2",
   role: "diagnostic_shaping_and_gauge_asset_layer",
   deterministic: true,
@@ -32,7 +25,7 @@ const INSTRUMENT_META = deepFreeze({
 
 export const GAUGES_META = deepFreeze({
   name: "gauges",
-  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B6",
+  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B7",
   role: "site_health_instrument_contract",
   readMode: "compact_engineer_dashboard_plus_ted_talk",
   activePageGoldRule: true,
@@ -229,7 +222,7 @@ export const GAUGE_TED_READ = deepFreeze({
     copy:
       "Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.",
     receipt: [
-      "GAUGES_TRUE_INSTRUMENT_ROOM_B6=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
+      "GAUGES_TRUE_INSTRUMENT_ROOM_B7=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
     ]
   }
 });
@@ -496,6 +489,8 @@ function normalizeGaugeReading(reading) {
   const safeReading = normalizeObject(reading);
   const state = normalizeString(safeReading.state, "healthy").toLowerCase();
   const colorState = GAUGE_COLOR_STATES[state] ? state : "healthy";
+  const value = clampNumber(Number(safeReading.value), 0, 100, 0);
+
   const receipt = Array.isArray(safeReading.receipt)
     ? safeReading.receipt.map((line) => normalizeString(line)).filter((line) => line !== "—")
     : [];
@@ -504,7 +499,7 @@ function normalizeGaugeReading(reading) {
     id: normalizeString(safeReading.id, "G00"),
     key: normalizeString(safeReading.key, "unknown"),
     title: normalizeString(safeReading.title, "Unnamed Gauge"),
-    value: clampNumber(Number(safeReading.value), 0, 100, 0),
+    value,
     state: colorState,
     label: normalizeString(safeReading.label, GAUGE_COLOR_STATES[colorState].label),
     semanticLabel: normalizeString(safeReading.semanticLabel, GAUGE_COLOR_STATES[colorState].semanticLabel),
@@ -517,7 +512,7 @@ function normalizeGaugeReading(reading) {
       " | " +
       normalizeString(safeReading.title, "Unnamed Gauge") +
       " | VALUE=" +
-      stringifyValue(clampNumber(Number(safeReading.value), 0, 100, 0)) +
+      stringifyValue(value) +
       " | STATE=" +
       colorState.toUpperCase()
   });
@@ -704,7 +699,7 @@ export function renderGaugeCardHTML(reading) {
 
   return [
     '<article class="gaugeCard' + (gauge.state === "active" ? " priority" : "") + '"',
-    ' style="--tone:' + escapeHtml(color.cssVar) + ';--needle:' + escapeHtml(String(gauge.needle)) + 'deg;"',
+    ' style="--tone:var(' + escapeHtml(color.cssVar) + ');--needle:' + escapeHtml(String(gauge.needle)) + 'deg;"',
     ' aria-label="' + escapeHtml(gauge.semanticText + " | " + gauge.receiptText) + '">',
     '<div class="gaugeTop">',
     '<span class="gaugeName">',
@@ -735,9 +730,9 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
         '<span class="legendItem" aria-label="' +
         escapeHtml(item.semanticLabel || item.label) +
         '">' +
-        '<span class="dot" style="--tone:' +
+        '<span class="dot" style="--tone:var(' +
         escapeHtml(item.cssVar) +
-        '" aria-hidden="true"></span>' +
+        ')" aria-hidden="true"></span>' +
         '<span>' +
         escapeHtml(item.label) +
         "</span>" +

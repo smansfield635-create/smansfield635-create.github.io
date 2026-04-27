@@ -1,382 +1,521 @@
-<!DOCTYPE html>
-<html lang="en" data-product-generation="second-generation-renewal">
+<!doctype html>
+<!-- TNT CREATE — /baseline-nutrition-systems/index.html
+     B2B · BACK TO BASELINE · TED TALK RUSSIAN DOLL · B1
+
+     CONTRACT:
+       - Create the root backlink landing page used by the Showroom.
+       - Do not replace the existing product page at /products/nutrition/.
+       - Page is the TED Talk-style public entry chamber for B2B · Back to Baseline.
+       - Existing /products/nutrition/ remains the full product-system chamber.
+       - /products/ remains the parent product route.
+       - /showroom/ remains the Russian-doll lobby return route.
+       - No encyclopedia layout.
+       - No medical claims.
+       - No graphics box.
+-->
+
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Baseline Nutrition Systems · Products · Diamond Gate Bridge</title>
-  <meta name="description" content="Baseline Nutrition Systems: a Generation 2 product surface for daily stability, nutrition structure, and baseline support." />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>B2B · Back to Baseline — Diamond Gate Bridge</title>
+  <meta name="description" content="A TED Talk-style Russian-doll entry chamber for B2B · Back to Baseline and Baseline Nutrition Systems."/>
 
   <style>
-    :root {
-      --bg:#020610;
-      --panel:rgba(7,14,28,.92);
-      --panel-strong:rgba(10,20,42,.96);
-      --line:rgba(170,198,255,.18);
-      --text:#eef4ff;
-      --muted:#aab8d8;
-      --gold:#efd29a;
-      --winter:#cfe7ff;
-      --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
-    }
+    *{box-sizing:border-box}
 
-    * { box-sizing:border-box; }
+    html{scroll-behavior:smooth}
 
-    html, body {
+    html,body{
       margin:0;
       min-height:100%;
-      color:var(--text);
-      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      background:
-        radial-gradient(circle at 50% 6%,rgba(207,231,255,.16),transparent 25%),
-        radial-gradient(circle at 18% 28%,rgba(239,210,154,.10),transparent 30%),
-        linear-gradient(180deg,#020610 0%,#071225 55%,#020610 100%);
+      width:100%;
+      background:#02040b;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
       overflow-x:hidden;
     }
 
-    body::before {
+    a{color:inherit;text-decoration:none}
+
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(220,231,255,.78);
+      --soft:rgba(220,231,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --line:rgba(255,255,255,.13);
+      --panel:rgba(7,10,16,.76);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
+    }
+
+    body::before{
       content:"";
       position:fixed;
       inset:0;
+      z-index:0;
       pointer-events:none;
-      opacity:.20;
       background:
-        linear-gradient(90deg,rgba(164,188,255,.07) 1px,transparent 1px),
-        linear-gradient(180deg,rgba(164,188,255,.04) 1px,transparent 1px);
-      background-size:52px 52px;
-      mask-image:radial-gradient(circle at 50% 32%,black,transparent 78%);
+        radial-gradient(circle at 14% 18%,rgba(255,255,255,.24) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(177,205,255,.17) 0 1px,transparent 2px),
+        radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
+        radial-gradient(ellipse at 16% 12%,rgba(255,217,138,.10),transparent 34rem),
+        radial-gradient(ellipse at 82% 28%,rgba(147,197,253,.06),transparent 28rem),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
     }
 
-    a { color:inherit; text-decoration:none; }
-
-    .page {
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
+    .page{
       position:relative;
       z-index:1;
-    }
-
-    .topbar, .hero, .panel, .card, .route-panel {
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(207,231,255,.10),transparent 42%),
-        linear-gradient(180deg,var(--panel-strong),var(--panel));
-      box-shadow:var(--shadow);
-    }
-
-    .topbar {
-      min-height:76px;
-      margin-bottom:14px;
-      padding:14px;
-      border-radius:28px;
-      display:grid;
-      gap:12px;
-    }
-
-    .brand {
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .mark {
-      width:48px;
-      height:48px;
-      border-radius:16px;
-      display:grid;
-      place-items:center;
-      border:1px solid var(--line);
-      background:
-        radial-gradient(circle at 50% 28%,rgba(207,231,255,.25),transparent 42%),
-        linear-gradient(180deg,rgba(26,43,78,.9),rgba(10,18,32,.97));
-      font-weight:900;
-      letter-spacing:.08em;
-    }
-
-    .kicker {
-      display:block;
-      margin:0 0 4px;
-      color:#c8d7ff;
-      font-size:.72rem;
-      text-transform:uppercase;
-      letter-spacing:.16em;
-    }
-
-    .title {
-      display:block;
-      margin:0;
-      font-weight:850;
-      font-size:1.05rem;
-    }
-
-    .nav, .actions, .route-grid {
-      display:grid;
-      gap:8px;
-    }
-
-    .nav a, .button, .route-card {
-      min-height:44px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:0 14px;
-      border:1px solid var(--line);
-      border-radius:999px;
-      background:rgba(255,255,255,.035);
-      color:#d7e2ff;
-      font-weight:850;
-      text-align:center;
-    }
-
-    .button.primary {
-      border-color:rgba(239,210,154,.38);
-      background:
-        linear-gradient(180deg,rgba(239,210,154,.24),rgba(239,210,154,.07)),
-        rgba(255,255,255,.035);
-      color:#fff8ea;
-    }
-
-    .hero {
-      border-radius:34px;
-      padding:clamp(20px,3.5vw,38px);
-      margin-bottom:14px;
-      display:grid;
-      gap:18px;
-      overflow:hidden;
-    }
-
-    .pill {
-      display:inline-flex;
-      width:fit-content;
-      align-items:center;
-      gap:10px;
-      padding:8px 12px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(255,255,255,.035);
-      color:#d8e3ff;
-      text-transform:uppercase;
-      letter-spacing:.14em;
-      font-size:.70rem;
-      font-weight:850;
-    }
-
-    .pill::before {
-      content:"";
-      width:9px;
-      height:9px;
-      border-radius:2px;
-      transform:rotate(45deg);
-      background:var(--winter);
-      box-shadow:0 0 18px rgba(207,231,255,.50);
-    }
-
-    h1 {
-      margin:0;
-      color:#fff;
-      font-size:clamp(2.8rem,10vw,6rem);
-      line-height:.9;
-      letter-spacing:-.07em;
-    }
-
-    h2 {
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.45rem,4.8vw,2.8rem);
-      line-height:1;
-      letter-spacing:-.04em;
-    }
-
-    p {
-      margin:0;
-      color:var(--muted);
-      line-height:1.58;
-      font-size:1rem;
-    }
-
-    .hero p {
-      max-width:70ch;
-      margin-top:14px;
-    }
-
-    .actions {
-      margin-top:18px;
-    }
-
-    .panel, .route-panel {
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      margin-bottom:14px;
+      width:min(100% - 28px,1120px);
+      min-height:100svh;
+      margin:0 auto;
+      padding:18px 0 28px;
       display:grid;
       gap:14px;
     }
 
-    .grid {
+    .hero,
+    .talkStage,
+    .routeRail{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
+
+    .hero{
+      min-height:calc(100svh - 190px);
+      padding:clamp(24px,5vw,56px);
       display:grid;
-      gap:10px;
+      gap:18px;
+      align-content:center;
+      overflow:hidden;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.075),transparent 30rem),
+        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
     }
 
-    .card {
-      border-radius:22px;
-      padding:16px;
-      min-height:120px;
+    .brandRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
     }
 
-    .card small, .route-card small {
-      display:block;
-      margin-bottom:8px;
-      color:#91a6cf;
+    .brandMark{
+      width:34px;
+      height:34px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,217,138,.72);
+      background:
+        linear-gradient(135deg,rgba(255,217,138,.30),rgba(147,197,253,.05)),
+        rgba(255,255,255,.05);
+      box-shadow:0 0 18px rgba(255,217,138,.14);
+      flex:0 0 auto;
+    }
+
+    .brandName{
+      color:var(--ink);
+      font-size:clamp(1.2rem,4vw,2rem);
+      font-weight:950;
+      letter-spacing:-.04em;
+    }
+
+    .kicker{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
       text-transform:uppercase;
-      letter-spacing:.13em;
-      font-size:.66rem;
-      font-weight:850;
     }
 
-    .card strong, .route-card strong {
-      display:block;
-      color:#fff;
-      font-size:1.06rem;
-      line-height:1.12;
+    h1{
+      margin:0;
+      max-width:980px;
+      font-size:clamp(3.4rem,10vw,7.4rem);
+      line-height:.84;
+      letter-spacing:-.085em;
+      text-shadow:0 20px 90px rgba(0,0,0,.55);
     }
 
-    .card p {
-      margin-top:8px;
-      font-size:.92rem;
-      line-height:1.42;
+    .thesis{
+      margin:0;
+      max-width:980px;
+      color:rgba(255,255,255,.93);
+      font-size:clamp(1.42rem,3.4vw,2.45rem);
+      line-height:1.1;
+      font-weight:950;
+      letter-spacing:-.052em;
     }
 
-    .route-card {
-      min-height:112px;
-      border-radius:22px;
-      flex-direction:column;
-      align-items:flex-start;
-      text-align:left;
-      padding:16px;
+    .lead{
+      margin:0;
+      max-width:880px;
+      color:var(--txt);
+      font-size:clamp(1.05rem,2.35vw,1.32rem);
+      line-height:1.58;
     }
 
-    .footer {
+    .heroActions{
       display:flex;
       flex-wrap:wrap;
-      justify-content:space-between;
       gap:10px;
-      padding:14px 4px 0;
-      color:#9db0d4;
+      margin-top:4px;
+    }
+
+    .heroButton{
+      min-height:48px;
+      display:inline-grid;
+      place-items:center;
+      padding:12px 16px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(0,0,0,.24);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .heroButton:hover,
+    .heroButton:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.52);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .talkStage{
+      padding:clamp(20px,4vw,38px);
+      display:grid;
+      gap:18px;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+    }
+
+    .stageHeader{
+      display:grid;
+      gap:10px;
+      max-width:920px;
+    }
+
+    .stageTitle{
+      margin:0;
+      font-size:clamp(2rem,5.8vw,4.2rem);
+      line-height:.92;
+      letter-spacing:-.065em;
+    }
+
+    .dollGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      align-items:start;
+    }
+
+    .doll{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:22px;
+      background:rgba(0,0,0,.20);
+      overflow:hidden;
+      min-height:100%;
+    }
+
+    .doll[open]{
+      background:
+        radial-gradient(ellipse at 18% 10%,rgba(255,217,138,.07),transparent 18rem),
+        rgba(0,0,0,.24);
+      border-color:rgba(255,217,138,.38);
+    }
+
+    .doll summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:172px;
+      padding:16px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .doll summary::-webkit-details-marker{display:none}
+
+    .dollTag{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .dollTitle{
+      color:var(--ink);
+      font-size:clamp(1.06rem,2.2vw,1.4rem);
+      line-height:1.06;
+      font-weight:950;
+      letter-spacing:-.035em;
+    }
+
+    .dollHint{
+      margin:0;
+      color:var(--soft);
+      line-height:1.42;
+      font-size:.96rem;
+    }
+
+    .dollBody{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+
+    .dollBody p{
+      margin:0;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    .speechLine{
+      margin:0;
+      color:rgba(255,255,255,.92);
+      font-size:clamp(1.12rem,2.4vw,1.45rem);
+      line-height:1.2;
+      font-weight:950;
+      letter-spacing:-.038em;
+    }
+
+    .continueLink{
+      display:grid;
+      gap:7px;
+      padding:13px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .continueLink:hover,
+    .continueLink:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.50);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .continueLink small{
+      color:var(--soft);
       font-size:.86rem;
+      line-height:1.35;
+      font-weight:750;
     }
 
-    @media (min-width:820px) {
-      .topbar { grid-template-columns:1fr auto; align-items:center; }
-      .nav { grid-template-columns:repeat(5,auto); }
-      .actions { grid-template-columns:repeat(4,auto); justify-content:start; }
-      .grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
-      .route-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
+    .routeRail{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      padding:12px;
     }
 
-    @media (max-width:640px) {
-      .page { width:min(100vw - 12px,var(--max)); padding-top:10px; }
-      .topbar, .hero, .panel, .route-panel { border-radius:24px; }
-      .nav, .actions, .grid, .route-grid { grid-template-columns:1fr; }
+    .routeLink{
+      min-height:58px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+
+    @media(max-width:980px){
+      .dollGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:680px){
+      .page{
+        width:min(100% - 20px,1120px);
+        padding-top:10px;
+      }
+
+      .hero{
+        min-height:auto;
+      }
+
+      .hero,
+      .talkStage,
+      .routeRail{
+        border-radius:24px;
+      }
+
+      .dollGrid{
+        grid-template-columns:1fr;
+      }
+
+      .doll summary{
+        min-height:auto;
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="page" data-generation="second-generation-renewal" data-product="baseline-nutrition-systems">
-    <header class="topbar">
-      <a class="brand" href="/products/" aria-label="Products home">
-        <span class="mark" aria-hidden="true">BN</span>
-        <span>
-          <span class="kicker">Products · Generation 2</span>
-          <strong class="title">Baseline Nutrition Systems</strong>
-        </span>
-      </a>
+  <main
+    class="page"
+    data-backlink-root="baseline-nutrition-systems"
+    data-backlink-version="ted-talk-russian-doll-b1"
+    data-existing-full-route="/products/nutrition/"
+    data-products-route="/products/"
+    data-showroom-route="/showroom/"
+  >
+    <section class="hero" aria-label="B2B Back to Baseline">
+      <div class="brandRow">
+        <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
+        <a class="brandName" href="/">Diamond Gate Bridge</a>
+      </div>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Door</a>
-        <a href="/metaverse/">Metaverse</a>
-        <a href="/products/">Products</a>
-        <a href="/gauges/">Gauges</a>
-        <a href="/laws/">Laws</a>
-      </nav>
-    </header>
+      <p class="kicker">TED Talk Backlink · B2B · Back to Baseline</p>
+      <h1>Back to Baseline</h1>
+      <p class="thesis">
+        Back to back. Back to baseline.
+      </p>
+      <p class="lead">
+        B2B is the practical reset lane. Before expansion, before performance, before the next mission layer, the first question is simple: what is the baseline?
+      </p>
 
-    <section class="hero" aria-labelledby="productTitle">
-      <div>
-        <span class="pill">Official product surface</span>
-        <h1 id="productTitle">Baseline Nutrition Systems</h1>
-        <h2>Baseline before expansion.</h2>
-        <p>
-          Baseline Nutrition Systems is the foundation product for daily stability,
-          nutritional structure, and cleaner baseline support before deeper health
-          systems are layered on top.
+      <div class="heroActions" aria-label="Primary actions">
+        <a class="heroButton" href="#baseline-dolls">Open the Russian Doll</a>
+        <a class="heroButton" href="/products/nutrition/">Go to Product Chamber</a>
+        <a class="heroButton" href="/showroom/">Return to Showroom</a>
+      </div>
+    </section>
+
+    <section id="baseline-dolls" class="talkStage" aria-label="Baseline Russian doll chambers">
+      <div class="stageHeader">
+        <p class="kicker">Open the baseline pattern</p>
+        <h2 class="stageTitle">Short enough to hear. Practical enough to use.</h2>
+        <p class="lead">
+          Each chamber opens one layer of the reset. The product chamber carries the fuller route.
         </p>
+      </div>
 
-        <div class="actions">
-          <a class="button primary" href="/products/">Back to Products</a>
-          <a class="button" href="/metaverse/">Metaverse</a>
-          <a class="button" href="/products/five-flags/">Next: Five Flags</a>
-          <a class="button" href="/products/ssg/">Syntax Geometry</a>
-        </div>
+      <div class="dollGrid">
+        <details id="foundation" class="doll" open>
+          <summary>
+            <span class="dollTag">Layer One</span>
+            <span class="dollTitle">Foundation before expansion.</span>
+            <p class="dollHint">The body cannot carry the mission if the baseline keeps collapsing.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Before you build the empire, return to baseline.
+            </p>
+            <p>
+              Baseline Nutrition Systems is the foundation product lane for daily stability, nutrition structure, and cleaner baseline support before deeper systems are layered on top.
+            </p>
+          </div>
+        </details>
+
+        <details id="daily" class="doll">
+          <summary>
+            <span class="dollTag">Layer Two</span>
+            <span class="dollTitle">Daily rhythm beats heroic intensity.</span>
+            <p class="dollHint">The baseline is not dramatic. That is why it works.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              Stability is built by repeatable structure, not occasional overcorrection.
+            </p>
+            <p>
+              The baseline lane keeps the first product surface stable instead of scattering into noise: daily support, body-system continuity, and no overload.
+            </p>
+          </div>
+        </details>
+
+        <details id="expression" class="doll">
+          <summary>
+            <span class="dollTag">Layer Three</span>
+            <span class="dollTitle">Body, mind, expression, mission.</span>
+            <p class="dollHint">The order matters. Skip the foundation and the signal distorts.</p>
+          </summary>
+          <div class="dollBody">
+            <p class="speechLine">
+              The practical reset is not just what goes into the body. It is what the body allows the person to express.
+            </p>
+            <p>
+              B2B is where nutrition structure and expression discipline start working together: first stabilize the floor, then carry the message.
+            </p>
+          </div>
+        </details>
+
+        <details id="continue" class="doll">
+          <summary>
+            <span class="dollTag">Layer Four</span>
+            <span class="dollTitle">Continue through the right door.</span>
+            <p class="dollHint">This page is the speech. The backlinks carry the rooms.</p>
+          </summary>
+          <div class="dollBody">
+            <a class="continueLink" href="/products/nutrition/">
+              Continue to Baseline Nutrition Systems
+              <small>The existing full product chamber.</small>
+            </a>
+
+            <a class="continueLink" href="/products/">
+              Continue to Products
+              <small>The parent product-routing surface.</small>
+            </a>
+
+            <a class="continueLink" href="/showroom/">
+              Return to the Showroom
+              <small>The Russian-doll lobby and Earth/Sun proof room.</small>
+            </a>
+          </div>
+        </details>
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="readTitle">
-      <span class="pill">Product read</span>
-      <h2 id="readTitle">Foundation first.</h2>
-
-      <div class="grid">
-        <article class="card">
-          <small>Support</small>
-          <strong>Daily stability</strong>
-          <p>Creates a practical nutrition baseline before complexity expands.</p>
-        </article>
-
-        <article class="card">
-          <small>Structure</small>
-          <strong>Body-system continuity</strong>
-          <p>Supports habit consistency and cleaner functional rhythm.</p>
-        </article>
-
-        <article class="card">
-          <small>Boundary</small>
-          <strong>No overload</strong>
-          <p>Keeps the first product surface stable instead of scattering into noise.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="route-panel" aria-labelledby="backlinksTitle">
-      <span class="pill">Second-generation backlinks</span>
-      <h2 id="backlinksTitle">Product route stays connected.</h2>
-
-      <div class="route-grid">
-        <a class="route-card" href="/products/">
-          <small>Parent</small>
-          <strong>Products</strong>
-        </a>
-
-        <a class="route-card" href="/metaverse/">
-          <small>World surface</small>
-          <strong>Metaverse</strong>
-        </a>
-
-        <a class="route-card" href="/products/ssg/">
-          <small>Related</small>
-          <strong>Syntax Geometry</strong>
-        </a>
-
-        <a class="route-card" href="/products/five-flags/">
-          <small>Related</small>
-          <strong>Five Flags: What’s My Scene?</strong>
-        </a>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <span>Baseline Nutrition Systems · Generation 2 Product Surface</span>
-      <span><a href="/products/">Products</a> · <a href="/metaverse/">Metaverse</a> · <a href="/">Door</a></span>
-    </footer>
+    <nav class="routeRail" aria-label="Route rail">
+      <a class="routeLink" href="/showroom/">Showroom</a>
+      <a class="routeLink" href="/products/nutrition/">Product Chamber</a>
+      <a class="routeLink" href="/products/">Products</a>
+      <a class="routeLink" href="/">Compass</a>
+    </nav>
   </main>
+
+  <script>
+    (function(){
+      "use strict";
+
+      var VERSION = "baseline-nutrition-systems-b1-russian-doll";
+      var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+
+      document.documentElement.setAttribute("data-baseline-controller", VERSION);
+
+      dolls.forEach(function(doll){
+        doll.addEventListener("toggle", function(){
+          if (!doll.open) return;
+
+          dolls.forEach(function(other){
+            if (other !== doll) other.removeAttribute("open");
+          });
+
+          document.documentElement.setAttribute("data-baseline-open-layer", doll.id || "");
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

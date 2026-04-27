@@ -1,16 +1,5 @@
 /* TNT RENEWAL — /gauges/gauges_health_runtime.js
-   GAUGES · GENERATION 2 · EARTH DIAGNOSTIC CONSOLE B2
-
-   PURPOSE:
-     - Produce a diagnostic, not a question list.
-     - Identify the actual blocker category.
-     - Test showroom source.
-     - Test expected local assets.
-     - Test external fallback assets.
-     - Test canvas render capability.
-     - Test cross-origin pixel-read limitation.
-     - Test if the showroom still loads duplicate sun renderers.
-     - Test if Earth renderer is present and measurable.
+   GAUGES · GENERATION 2 · EARTH SPINE DIAGNOSTIC CONSOLE B3
 */
 
 (function () {
@@ -18,43 +7,20 @@
 
   var CONFIG = {
     showroomHtml: "/showroom/index.html",
-    showroomUrl: "/showroom/?dgb_gauge_probe=earth_diagnostic_console_b2",
-
-    expectedShowroomMarkers: [
-      "data-showroom-root",
-      "data-earth-renderer",
-      "data-earth-clouds",
-      "earthCanvas",
-      "targetFrameMs"
+    earthCanvasJs: "/assets/earth/earth_canvas.js",
+    earthRuntimeJs: "/runtime/earth_asset_runtime.js",
+    surfaceJpg: "/assets/earth/earth_surface_2048.jpg",
+    cloudsJpg: "/assets/earth/earth_clouds_2048.jpg",
+    probeUrl: "/showroom/?dgb_probe=earth_spine_b3",
+    oldViewTerms: [
+      "Choose Your View",
+      "Earth View",
+      "Satellite View",
+      "Solar Context",
+      "Galaxy Context",
+      "Demo Mode"
     ],
-
-    localAssets: [
-      {
-        name: "Local Earth surface",
-        url: "/assets/earth/earth_surface_2048.jpg",
-        purpose: "Preferred same-origin Earth texture for pixel-readable diagnostics."
-      },
-      {
-        name: "Local Earth cloud map",
-        url: "/assets/earth/earth_clouds_2048.jpg",
-        purpose: "Preferred same-origin cloud texture for pixel-readable diagnostics."
-      }
-    ],
-
-    externalAssets: [
-      {
-        name: "External Earth surface fallback",
-        url: "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg",
-        purpose: "Remote Earth surface texture fallback."
-      },
-      {
-        name: "External Earth cloud fallback",
-        url: "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg",
-        purpose: "Remote cloud map fallback."
-      }
-    ],
-
-    forbiddenShowroomScripts: [
+    forbiddenSunRuntime: [
       "sun_asset_runtime.js",
       "sun_canvas.js"
     ]
@@ -62,23 +28,25 @@
 
   var report = {
     asset: [],
-    renderer: [],
-    budget: [],
-    visual: [],
+    consumer: [],
+    spine: [],
+    control: [],
     verdict: [],
     todo: [],
     flags: {
-      showroomSourceOk: false,
-      localEarthAsset: false,
-      localCloudAsset: false,
-      externalEarthAsset: false,
-      externalCloudAsset: false,
-      externalCanvasTaint: false,
-      earthCanvasFound: false,
-      earthRendererMarker: false,
-      budgetMarker: false,
-      duplicateSunRuntime: false,
-      probeOk: false
+      surface: false,
+      clouds: false,
+      showroomConsumer: false,
+      oldViewsRemoved: false,
+      noSunRuntime: false,
+      canvasScript: false,
+      runtimeScript: false,
+      canvasBudget: false,
+      zoomApi: false,
+      runtimeControls: false,
+      liveMount: false,
+      liveCanvas: false,
+      liveControls: false
     }
   };
 
@@ -95,11 +63,11 @@
     });
   }
 
-  function addTodo(status, label, detail, code) {
+  function todo(status, label, detail, code) {
     add("todo", status, label, detail, code);
   }
 
-  function stateWeight(status) {
+  function weight(status) {
     if (status === "STRONG") return 100;
     if (status === "INFO") return 88;
     if (status === "WATCH") return 58;
@@ -108,10 +76,21 @@
 
   function score(entries) {
     if (!entries.length) return 100;
-    var total = entries.reduce(function (sum, entry) {
-      return sum + stateWeight(entry.status);
-    }, 0);
-    return Math.round(total / entries.length);
+    return Math.round(entries.reduce(function (sum, entry) {
+      return sum + weight(entry.status);
+    }, 0) / entries.length);
+  }
+
+  function labelFor(value) {
+    if (value >= 90) return "STRONG";
+    if (value >= 65) return "WATCH";
+    return "FAIL";
+  }
+
+  function classFor(value) {
+    if (value >= 90) return "strong";
+    if (value >= 65) return "watch";
+    return "fail";
   }
 
   function setText(id, value) {
@@ -119,19 +98,7 @@
     if (node) node.textContent = String(value);
   }
 
-  function statusClass(scoreValue) {
-    if (scoreValue >= 90) return "strong";
-    if (scoreValue >= 65) return "watch";
-    return "fail";
-  }
-
-  function statusLabel(scoreValue) {
-    if (scoreValue >= 90) return "STRONG";
-    if (scoreValue >= 65) return "WATCH";
-    return "FAIL";
-  }
-
-  function makeItem(entry) {
+  function item(entry) {
     var node = document.createElement("div");
     var strong = document.createElement("strong");
     var span = document.createElement("span");
@@ -161,41 +128,43 @@
     target.textContent = "";
 
     if (!entries.length) {
-      target.appendChild(makeItem({
+      target.appendChild(item({
         status: "INFO",
         label: "No data",
-        detail: "No diagnostic entries were produced for this section."
+        detail: "No diagnostic rows produced."
       }));
       return;
     }
 
     entries.forEach(function (entry) {
-      target.appendChild(makeItem(entry));
+      target.appendChild(item(entry));
     });
   }
 
-  function fetchText(url) {
-    return fetch(url + (url.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-diagnostic-console-b2", {
-      cache: "no-store"
-    }).then(function (response) {
-      return response.text().then(function (text) {
+  function fetchText(path) {
+    return fetch(path + "?v=earth-spine-b3-" + Date.now(), { cache: "no-store" })
+      .then(function (response) {
+        return response.text().then(function (text) {
+          return {
+            ok: response.ok,
+            status: response.status,
+            text: text,
+            path: path
+          };
+        });
+      })
+      .catch(function (error) {
         return {
-          ok: response.ok,
-          status: response.status,
-          text: text
+          ok: false,
+          status: 0,
+          text: "",
+          path: path,
+          error: error && error.message ? error.message : "fetch failed"
         };
       });
-    }).catch(function (error) {
-      return {
-        ok: false,
-        status: 0,
-        text: "",
-        error: error
-      };
-    });
   }
 
-  function testImage(url) {
+  function testImage(path) {
     return new Promise(function (resolve) {
       var image = new Image();
       var done = false;
@@ -209,172 +178,180 @@
       }
 
       timer = window.setTimeout(function () {
-        finish({
-          ok: false,
-          url: url,
-          width: 0,
-          height: 0,
-          reason: "timeout"
-        });
+        finish({ ok: false, path: path, reason: "timeout" });
       }, 5000);
 
       image.onload = function () {
         finish({
           ok: true,
-          url: url,
+          path: path,
           width: image.naturalWidth || image.width || 0,
-          height: image.naturalHeight || image.height || 0,
-          image: image
+          height: image.naturalHeight || image.height || 0
         });
       };
 
       image.onerror = function () {
-        finish({
-          ok: false,
-          url: url,
-          width: 0,
-          height: 0,
-          reason: "load-error"
-        });
+        finish({ ok: false, path: path, reason: "load-error" });
       };
 
-      image.crossOrigin = "anonymous";
-      image.src = url + (url.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-diagnostic-console-b2";
+      image.src = path + "?v=earth-spine-b3-" + Date.now();
     });
-  }
-
-  function testCanvasPixelRead(imageResult) {
-    var canvas;
-    var ctx;
-
-    if (!imageResult || !imageResult.ok || !imageResult.image) {
-      return {
-        ok: false,
-        readable: false,
-        reason: "image-not-loaded"
-      };
-    }
-
-    canvas = document.createElement("canvas");
-    canvas.width = 16;
-    canvas.height = 16;
-    ctx = canvas.getContext("2d");
-
-    try {
-      ctx.drawImage(imageResult.image, 0, 0, 16, 16);
-      ctx.getImageData(0, 0, 1, 1);
-      return {
-        ok: true,
-        readable: true,
-        reason: "pixel-readable"
-      };
-    } catch (error) {
-      return {
-        ok: true,
-        readable: false,
-        reason: error && error.name ? error.name : "pixel-read-blocked"
-      };
-    }
-  }
-
-  function analyzeSource(source) {
-    var text = source.text || "";
-
-    if (source.ok) {
-      report.flags.showroomSourceOk = true;
-      add("renderer", "STRONG", "Showroom source reachable", "The showroom source file returned successfully.", CONFIG.showroomHtml);
-    } else {
-      add("renderer", "FAIL", "Showroom source unreachable", "The gauges cannot inspect the showroom source. This is a source-chain failure.", CONFIG.showroomHtml);
-      addTodo("FAIL", "Restore showroom source reachability", "The gauges need /showroom/index.html to return a readable document.", CONFIG.showroomHtml);
-      return;
-    }
-
-    CONFIG.expectedShowroomMarkers.forEach(function (marker) {
-      if (text.indexOf(marker) !== -1) {
-        add("renderer", "STRONG", "Marker present", "Required marker exists in showroom source.", marker);
-      } else {
-        add("renderer", "FAIL", "Marker missing", "Required marker is absent from showroom source.", marker);
-        addTodo("FAIL", "Restore missing showroom marker", "The diagnostic contract expects this marker in /showroom/index.html.", marker);
-      }
-    });
-
-    if (text.indexOf("data-earth-renderer=\"single-canvas-capped-orthographic-wrap\"") !== -1) {
-      report.flags.earthRendererMarker = true;
-      add("renderer", "STRONG", "Single Earth renderer declared", "The showroom declares Earth as a capped orthographic canvas renderer.");
-    } else {
-      add("renderer", "WATCH", "Renderer declaration not exact", "The showroom may still render Earth, but it does not declare the expected exact renderer contract.");
-      addTodo("WATCH", "Rebind renderer declaration", "Use the exact Earth renderer marker so gauges can identify the ownership contract.", "data-earth-renderer=\"single-canvas-capped-orthographic-wrap\"");
-    }
-
-    if (text.indexOf("targetFrameMs") !== -1) {
-      report.flags.budgetMarker = true;
-      add("budget", "STRONG", "Frame budget marker found", "The showroom declares a capped render-loop marker.");
-    } else {
-      add("budget", "FAIL", "No frame budget marker", "The renderer may be drawing at an unbounded mobile rate.");
-      addTodo("FAIL", "Restore mobile render cap", "The Earth renderer should include targetFrameMs or equivalent frame-budget enforcement.");
-    }
-
-    CONFIG.forbiddenShowroomScripts.forEach(function (fragment) {
-      if (text.indexOf(fragment) !== -1) {
-        report.flags.duplicateSunRuntime = true;
-        add("renderer", "FAIL", "Duplicate renderer risk", "The showroom source still references a sun renderer asset. Earth should be the only active renderer.", fragment);
-        addTodo("FAIL", "Remove active sun renderer from showroom", "Keep the sun CSS-only on the Earth showroom page.", fragment);
-      }
-    });
-
-    if (!report.flags.duplicateSunRuntime) {
-      add("renderer", "STRONG", "No active sun renderer in source", "The showroom source does not reference the active Compass sun renderer.");
-    }
-
-    if (text.indexOf("https://eoimages.gsfc.nasa.gov") !== -1) {
-      add("asset", "WATCH", "External Earth assets detected", "The showroom currently relies on remote Earth/cloud assets. This may render visually but limits local control and diagnostics.");
-      addTodo("WATCH", "Move Earth assets local", "Add same-origin assets so the gauges can inspect pixels and the page is not dependent on remote load timing.", "/assets/earth/earth_surface_2048.jpg and /assets/earth/earth_clouds_2048.jpg");
-    } else if (text.indexOf("/assets/earth/") !== -1) {
-      add("asset", "STRONG", "Local Earth asset path detected", "The showroom references local Earth asset paths.");
-    } else {
-      add("asset", "FAIL", "No Earth asset path detected", "The showroom source does not expose a clear Earth texture path.");
-      addTodo("FAIL", "Declare Earth asset paths", "The showroom should expose explicit Earth surface and cloud asset paths.");
-    }
   }
 
   function analyzeAssets() {
-    var localTests = CONFIG.localAssets.map(function (asset) {
-      return testImage(asset.url).then(function (result) {
+    return Promise.all([
+      testImage(CONFIG.surfaceJpg).then(function (result) {
         if (result.ok) {
-          if (asset.name.indexOf("surface") !== -1) report.flags.localEarthAsset = true;
-          if (asset.name.indexOf("cloud") !== -1) report.flags.localCloudAsset = true;
-
-          add("asset", "STRONG", asset.name, "Same-origin asset loaded. Pixel-level diagnostics are possible.", asset.url + " · " + result.width + "x" + result.height);
+          report.flags.surface = true;
+          add("asset", "STRONG", "Local Earth surface JPG", "Same-origin Earth surface loaded.", result.path + " · " + result.width + "x" + result.height);
         } else {
-          add("asset", "WATCH", asset.name + " missing", "Same-origin asset is not available. The page may still work through external fallback, but diagnostics/control are weaker.", asset.url);
+          add("asset", "FAIL", "Local Earth surface JPG missing", "The Earth surface JPG is not reachable.", CONFIG.surfaceJpg);
+          todo("FAIL", "Create Earth surface JPG", "Create the required same-origin JPG.", CONFIG.surfaceJpg);
         }
-      });
+      }),
+      testImage(CONFIG.cloudsJpg).then(function (result) {
+        if (result.ok) {
+          report.flags.clouds = true;
+          add("asset", "STRONG", "Local Earth clouds JPG", "Same-origin Earth clouds loaded.", result.path + " · " + result.width + "x" + result.height);
+        } else {
+          add("asset", "FAIL", "Local Earth clouds JPG missing", "The Earth clouds JPG is not reachable.", CONFIG.cloudsJpg);
+          todo("FAIL", "Create Earth clouds JPG", "Create the required same-origin JPG.", CONFIG.cloudsJpg);
+        }
+      })
+    ]);
+  }
+
+  function analyzeShowroom(result) {
+    var text = result.text || "";
+    var oldViewsFound = CONFIG.oldViewTerms.filter(function (term) {
+      return text.indexOf(term) !== -1;
+    });
+    var sunRuntimeFound = CONFIG.forbiddenSunRuntime.filter(function (term) {
+      return text.indexOf(term) !== -1;
     });
 
-    var externalTests = CONFIG.externalAssets.map(function (asset) {
-      return testImage(asset.url).then(function (result) {
-        var pixelRead;
+    if (!result.ok) {
+      add("consumer", "FAIL", "Showroom source unreachable", "Could not fetch showroom source.", CONFIG.showroomHtml);
+      todo("FAIL", "Repair showroom source", "Showroom must be reachable.", CONFIG.showroomHtml);
+      return;
+    }
 
-        if (result.ok) {
-          if (asset.name.indexOf("surface") !== -1) report.flags.externalEarthAsset = true;
-          if (asset.name.indexOf("cloud") !== -1) report.flags.externalCloudAsset = true;
+    add("consumer", "STRONG", "Showroom source reachable", "Showroom source returned successfully.", CONFIG.showroomHtml);
 
-          add("asset", "STRONG", asset.name, "External fallback asset loaded.", asset.url + " · " + result.width + "x" + result.height);
+    if (text.indexOf("data-dgb-earth-mount") !== -1) {
+      report.flags.showroomConsumer = true;
+      add("consumer", "STRONG", "Earth mount declared", "Showroom exposes the Earth Asset Spine mount.", "data-dgb-earth-mount");
+    } else {
+      add("consumer", "FAIL", "Earth mount missing", "Showroom is not consuming the Earth Asset Spine.", "data-dgb-earth-mount");
+      todo("FAIL", "Restore Earth mount", "Showroom must include one Earth mount.", "<div data-dgb-earth-mount></div>");
+    }
 
-          pixelRead = testCanvasPixelRead(result);
-          if (pixelRead.readable) {
-            add("asset", "INFO", asset.name + " canvas-readable", "Canvas pixel inspection is allowed for this asset in the current browser session.");
-          } else {
-            report.flags.externalCanvasTaint = true;
-            add("asset", "WATCH", asset.name + " pixel inspection blocked", "The asset can display, but canvas pixel diagnostics are blocked or unreliable. This is not necessarily a visual failure; it is a control/diagnostic limitation.", pixelRead.reason);
-          }
-        } else {
-          add("asset", "FAIL", asset.name + " unavailable", "External fallback asset did not load.", asset.url);
-        }
-      });
-    });
+    if (text.indexOf("/assets/earth/earth_canvas.js") !== -1) {
+      report.flags.canvasScript = true;
+      add("consumer", "STRONG", "Earth canvas script loaded", "Showroom loads the Earth renderer spine.", "/assets/earth/earth_canvas.js");
+    } else {
+      add("consumer", "FAIL", "Earth canvas script missing", "Showroom does not load the Earth renderer spine.", "/assets/earth/earth_canvas.js");
+      todo("FAIL", "Load Earth canvas script", "Add the Earth canvas spine script to showroom.", "/assets/earth/earth_canvas.js");
+    }
 
-    return Promise.all(localTests.concat(externalTests));
+    if (text.indexOf("/runtime/earth_asset_runtime.js") !== -1) {
+      report.flags.runtimeScript = true;
+      add("consumer", "STRONG", "Earth runtime script loaded", "Showroom loads the Earth runtime/control spine.", "/runtime/earth_asset_runtime.js");
+    } else {
+      add("consumer", "FAIL", "Earth runtime script missing", "Showroom does not load Earth runtime.", "/runtime/earth_asset_runtime.js");
+      todo("FAIL", "Load Earth runtime script", "Add Earth runtime to showroom.", "/runtime/earth_asset_runtime.js");
+    }
+
+    if (!oldViewsFound.length) {
+      report.flags.oldViewsRemoved = true;
+      add("consumer", "STRONG", "Old view bubbles absent", "Old explanatory view controls are not present in source.");
+    } else {
+      add("consumer", "FAIL", "Old view bubbles still present", "Remove these old labels from showroom.", oldViewsFound.join(", "));
+      todo("FAIL", "Remove old view controls", "Delete the old view-bubble controls from showroom.", oldViewsFound.join(", "));
+    }
+
+    if (!sunRuntimeFound.length) {
+      report.flags.noSunRuntime = true;
+      add("consumer", "STRONG", "No active Sun runtime", "Showroom does not load active Sun renderer scripts.");
+    } else {
+      add("consumer", "FAIL", "Sun runtime contamination", "Showroom still references active Sun runtime scripts.", sunRuntimeFound.join(", "));
+      todo("FAIL", "Remove Sun runtime from showroom", "Showroom Sun must remain CSS-only.");
+    }
+  }
+
+  function analyzeCanvas(result) {
+    var text = result.text || "";
+
+    if (!result.ok) {
+      add("spine", "FAIL", "Earth canvas file unreachable", "Could not fetch Earth canvas renderer.", CONFIG.earthCanvasJs);
+      todo("FAIL", "Restore Earth canvas file", "Create or repair the Earth renderer file.", CONFIG.earthCanvasJs);
+      return;
+    }
+
+    add("spine", "STRONG", "Earth canvas file reachable", "Earth canvas renderer returned successfully.", CONFIG.earthCanvasJs);
+
+    if (text.indexOf("window.DGBEarthCanvas") !== -1 && text.indexOf("createEarthRenderer") !== -1) {
+      add("spine", "STRONG", "Renderer factory present", "Earth renderer exposes its factory.");
+    } else {
+      add("spine", "FAIL", "Renderer factory missing", "Earth canvas does not expose the expected renderer factory.", "window.DGBEarthCanvas.create");
+      todo("FAIL", "Restore renderer factory", "Earth canvas must expose window.DGBEarthCanvas.create.");
+    }
+
+    if (text.indexOf("targetFrameMs") !== -1) {
+      report.flags.canvasBudget = true;
+      add("spine", "STRONG", "Frame budget present", "Render budget belongs here and is present.", "targetFrameMs");
+    } else {
+      add("spine", "FAIL", "Frame budget missing", "Earth canvas does not expose targetFrameMs.", "targetFrameMs");
+      todo("FAIL", "Restore render budget", "Add targetFrameMs to earth_canvas.js.");
+    }
+
+    if (text.indexOf("zoomIn") !== -1 && text.indexOf("zoomOut") !== -1 && text.indexOf("setZoom") !== -1) {
+      report.flags.zoomApi = true;
+      add("spine", "STRONG", "Zoom API present", "Earth renderer exposes zoom controls.");
+    } else {
+      add("spine", "FAIL", "Zoom API missing", "Earth renderer does not expose full zoom API.", "zoomIn / zoomOut / setZoom");
+      todo("FAIL", "Restore zoom API", "Add setZoom, zoomIn, and zoomOut to earth_canvas.js.");
+    }
+
+    if (text.indexOf("earth_surface_2048.jpg") !== -1 && text.indexOf("earth_clouds_2048.jpg") !== -1) {
+      add("spine", "STRONG", "Renderer points to JPG assets", "Earth canvas references the required JPG asset paths.");
+    } else {
+      add("spine", "WATCH", "Renderer JPG references unclear", "Earth canvas may not reference the exact JPG assets expected by gauges.", "earth_surface_2048.jpg / earth_clouds_2048.jpg");
+    }
+  }
+
+  function analyzeRuntime(result) {
+    var text = result.text || "";
+
+    if (!result.ok) {
+      add("control", "FAIL", "Earth runtime file unreachable", "Could not fetch Earth runtime.", CONFIG.earthRuntimeJs);
+      todo("FAIL", "Restore Earth runtime", "Create or repair the Earth runtime file.", CONFIG.earthRuntimeJs);
+      return;
+    }
+
+    add("control", "STRONG", "Earth runtime file reachable", "Earth runtime returned successfully.", CONFIG.earthRuntimeJs);
+
+    if (text.indexOf("window.DGBEarthAsset") !== -1) {
+      add("control", "STRONG", "Runtime global present", "Runtime exposes DGBEarthAsset.");
+    } else {
+      add("control", "FAIL", "Runtime global missing", "Runtime does not expose DGBEarthAsset.", "window.DGBEarthAsset");
+      todo("FAIL", "Expose runtime global", "Runtime must expose window.DGBEarthAsset.");
+    }
+
+    if (text.indexOf("data-dgb-earth-controls") !== -1 && text.indexOf("dgb-earth-control-panel") !== -1) {
+      report.flags.runtimeControls = true;
+      add("control", "STRONG", "Runtime control panel present", "Runtime injects the Earth control panel.");
+    } else {
+      add("control", "FAIL", "Runtime control panel missing", "Runtime does not inject Earth controls.", "data-dgb-earth-controls");
+      todo("FAIL", "Restore runtime controls", "Runtime must inject the zoom controls.");
+    }
+
+    if (text.indexOf("Zoom In") !== -1 && text.indexOf("Zoom Out") !== -1 && text.indexOf("Reset Earth") !== -1) {
+      add("control", "STRONG", "Control labels present", "Zoom and reset labels are present.");
+    } else {
+      add("control", "FAIL", "Control labels missing", "Runtime does not contain the expected control labels.", "Zoom In / Zoom Out / Reset Earth");
+      todo("FAIL", "Restore control labels", "Runtime must include Zoom Out, Zoom In, Reset Earth, and Pause Spin.");
+    }
   }
 
   function analyzeProbe() {
@@ -390,214 +367,138 @@
       }
 
       if (!iframe) {
-        add("renderer", "FAIL", "Probe iframe missing", "The gauges cannot inspect the live showroom DOM.");
+        add("control", "WATCH", "Live probe missing", "No showroom probe iframe exists.");
         finish();
         return;
       }
 
       iframe.addEventListener("load", function () {
-        var doc;
-        var root;
-        var canvas;
-        var controller;
-        var scripts;
-        var duplicateScripts;
-        var viewButtons;
-        var rendererMarker;
-        var cloudsMarker;
+        window.setTimeout(function () {
+          var doc;
+          var mount;
+          var canvas;
+          var controls;
 
-        try {
-          doc = iframe.contentDocument || iframe.contentWindow.document;
-        } catch (error) {
-          add("renderer", "FAIL", "Same-origin probe blocked", "The gauges cannot access the showroom DOM. This prevents live renderer diagnostics.");
+          try {
+            doc = iframe.contentDocument || iframe.contentWindow.document;
+          } catch (error) {
+            add("control", "FAIL", "Live probe blocked", "Could not inspect live showroom DOM.");
+            finish();
+            return;
+          }
+
+          mount = doc.querySelector("[data-dgb-earth-mount]");
+          canvas = doc.querySelector("[data-dgb-earth-canvas], #earthCanvas");
+          controls = doc.querySelector("[data-dgb-earth-controls]");
+
+          if (mount) {
+            report.flags.liveMount = true;
+            add("control", "STRONG", "Live Earth mount found", "Live showroom exposes Earth mount.");
+          } else {
+            add("control", "FAIL", "Live Earth mount missing", "Live showroom does not expose Earth mount.");
+          }
+
+          if (canvas && canvas.clientWidth > 50 && canvas.clientHeight > 50) {
+            report.flags.liveCanvas = true;
+            add("control", "STRONG", "Live Earth canvas found", "Runtime created measurable Earth canvas.", Math.round(canvas.clientWidth) + "x" + Math.round(canvas.clientHeight));
+          } else {
+            add("control", "WATCH", "Live Earth canvas not confirmed", "Runtime canvas was not measurable during probe.");
+          }
+
+          if (controls) {
+            report.flags.liveControls = true;
+            add("control", "STRONG", "Live zoom controls found", "Runtime injected the zoom control panel.");
+          } else {
+            add("control", "FAIL", "Live zoom controls missing", "Runtime did not inject controls.");
+          }
+
           finish();
-          return;
-        }
-
-        report.flags.probeOk = true;
-
-        root = doc.querySelector("[data-showroom-root]");
-        canvas = doc.querySelector("#earthCanvas");
-        controller = doc.querySelector("#earthController");
-        scripts = Array.prototype.slice.call(doc.scripts || []);
-        duplicateScripts = scripts.filter(function (script) {
-          return CONFIG.forbiddenShowroomScripts.some(function (fragment) {
-            return script.src && script.src.indexOf(fragment) !== -1;
-          });
-        });
-        viewButtons = doc.querySelectorAll("[data-view]");
-        rendererMarker = root ? root.getAttribute("data-earth-renderer") : "";
-        cloudsMarker = root ? root.getAttribute("data-earth-clouds") : "";
-
-        if (root) {
-          add("renderer", "STRONG", "Live showroom root found", "The live showroom DOM exposes its root diagnostic attributes.");
-        } else {
-          add("renderer", "FAIL", "Live showroom root missing", "The live page does not expose [data-showroom-root].");
-          addTodo("FAIL", "Restore showroom root attribute", "The live page must expose the showroom root for gauges to diagnose it.", "[data-showroom-root]");
-        }
-
-        if (canvas && canvas.clientWidth > 80 && canvas.clientHeight > 80) {
-          report.flags.earthCanvasFound = true;
-          add("renderer", "STRONG", "Live Earth canvas measurable", "The Earth canvas exists and has measurable dimensions.", Math.round(canvas.clientWidth) + "x" + Math.round(canvas.clientHeight));
-        } else {
-          add("renderer", "FAIL", "Live Earth canvas missing", "The page is not exposing a measurable #earthCanvas.");
-          addTodo("FAIL", "Restore measurable Earth canvas", "The showroom must render Earth through a visible #earthCanvas.");
-        }
-
-        if (controller) {
-          add("renderer", "STRONG", "Manual spin controller present", "The live page exposes #earthController for manual drag/spin.");
-        } else {
-          add("renderer", "FAIL", "Manual spin controller missing", "Manual spin cannot be confirmed.");
-          addTodo("FAIL", "Restore manual spin controller", "Add #earthController around the canvas.");
-        }
-
-        if (duplicateScripts.length) {
-          add("renderer", "FAIL", "Duplicate active renderer loaded", "Showroom live DOM still loads sun renderer scripts. This can interfere with budget and ownership.", duplicateScripts.map(function (s) { return s.src; }).join(" | "));
-          addTodo("FAIL", "Remove duplicate active renderer scripts", "Earth showroom should not load sun runtime scripts.");
-        } else {
-          add("renderer", "STRONG", "No duplicate sun runtime live", "The live showroom DOM does not load active sun renderer scripts.");
-        }
-
-        if (viewButtons.length >= 5) {
-          add("renderer", "STRONG", "View controls live", "Public view controls are present and measurable.");
-        } else {
-          add("renderer", "WATCH", "View controls incomplete", "Fewer than five view controls were found.");
-        }
-
-        if (rendererMarker === "single-canvas-capped-orthographic-wrap") {
-          add("renderer", "STRONG", "Live renderer marker exact", "The live root declares the expected renderer.", rendererMarker);
-        } else {
-          add("renderer", "WATCH", "Live renderer marker mismatch", "The live renderer marker is missing or different.", rendererMarker || "none");
-        }
-
-        if (cloudsMarker && cloudsMarker.indexOf("cloud") !== -1) {
-          add("asset", "STRONG", "Live cloud marker present", "The live root declares cloud-map usage.", cloudsMarker);
-        } else {
-          add("asset", "WATCH", "Live cloud marker unclear", "The live root does not clearly declare cloud-map usage.", cloudsMarker || "none");
-        }
-
-        finish();
+        }, 1000);
       }, { once: true });
 
+      iframe.src = CONFIG.probeUrl + "&t=" + Date.now();
+
       window.setTimeout(function () {
-        add("budget", "WATCH", "Showroom probe slow", "The hidden live showroom probe did not complete quickly. This indicates possible runtime load or budget pressure.");
+        add("control", "WATCH", "Probe timeout", "Showroom probe did not complete quickly.");
         finish();
-      }, 5000);
+      }, 5500);
     });
   }
 
-  function analyzeVisualGap() {
-    if (report.flags.earthCanvasFound && report.flags.earthRendererMarker) {
-      add("visual", "WATCH", "Likely remaining blocker: projection fidelity", "The structure exists, but the visual may still fail if the renderer maps longitude/latitude with weak depth compression or incorrect orientation.");
-      addTodo("WATCH", "Tune projection math next", "If all source/control rows pass but the globe still looks wrong, the next fix belongs inside the spherical projection math: limb compression, orientation, cloud opacity, and Americas-facing default.");
-    }
-
-    if (!report.flags.localEarthAsset || !report.flags.localCloudAsset) {
-      add("visual", "WATCH", "Asset control is incomplete", "The page can use remote assets, but local assets are needed for stable diagnostics, cache control, and predictable visual tuning.");
-    }
-
-    if (report.flags.externalCanvasTaint) {
-      add("visual", "WATCH", "External assets limit diagnostics", "The external assets may render, but gauge-level pixel diagnostics may be blocked. This limits proof that the canvas output matches the target.");
-    }
-
-    if (report.flags.duplicateSunRuntime) {
-      add("visual", "FAIL", "Renderer ownership conflict", "If the sun runtime is active on the showroom, it competes with Earth as the page’s main renderer and can confuse the repair path.");
-    }
-
-    if (!report.flags.externalEarthAsset && !report.flags.localEarthAsset) {
-      add("visual", "FAIL", "No reliable Earth surface asset", "The showroom cannot reach a reliable Earth texture source.");
-    }
-
-    if (!report.flags.externalCloudAsset && !report.flags.localCloudAsset) {
-      add("visual", "FAIL", "No reliable cloud asset", "The showroom cannot reach a reliable real cloud source.");
-    }
-  }
-
-  function finalVerdict() {
+  function finalize() {
     var assetScore = score(report.asset);
-    var rendererScore = score(report.renderer);
-    var budgetScore = score(report.budget);
-    var visualScore = score(report.visual);
-    var verdictScore = Math.round((assetScore * 0.28) + (rendererScore * 0.34) + (budgetScore * 0.18) + (visualScore * 0.20));
+    var consumerScore = score(report.consumer);
+    var spineScore = Math.round((score(report.spine) * 0.62) + (score(report.control) * 0.38));
+    var verdictScore = Math.round((assetScore * 0.30) + (consumerScore * 0.28) + (spineScore * 0.42));
     var driftScore = Math.max(0, 100 - verdictScore);
+    var blocker = "projection-math";
+    var status = labelFor(verdictScore);
     var statusNode = $("overallStatus");
-    var status = statusLabel(verdictScore);
-    var primaryBlocker = "visual-calibration";
 
-    if (!report.flags.showroomSourceOk) {
-      primaryBlocker = "source-chain";
-    } else if (!report.flags.localEarthAsset || !report.flags.localCloudAsset) {
-      primaryBlocker = "asset-control";
-    } else if (!report.flags.earthCanvasFound || !report.flags.earthRendererMarker) {
-      primaryBlocker = "renderer-ownership";
-    } else if (report.flags.duplicateSunRuntime) {
-      primaryBlocker = "duplicate-runtime";
-    } else if (budgetScore < 80) {
-      primaryBlocker = "runtime-budget";
+    if (!report.flags.surface || !report.flags.clouds) {
+      blocker = "asset-control";
+    } else if (!report.flags.showroomConsumer || !report.flags.canvasScript || !report.flags.runtimeScript || !report.flags.oldViewsRemoved || !report.flags.noSunRuntime) {
+      blocker = "showroom-consumer-contract";
+    } else if (!report.flags.canvasBudget || !report.flags.zoomApi) {
+      blocker = "earth-renderer-spine";
+    } else if (!report.flags.runtimeControls || !report.flags.liveControls) {
+      blocker = "runtime-control-panel";
     } else {
-      primaryBlocker = "projection-math";
+      blocker = "projection-math";
+      todo("WATCH", "Tune projection math", "Assets, consumer, renderer, and runtime passed. Next repair should target spherical wrap, orientation, cloud opacity, axis, and zoom radius.");
     }
 
     setText("verdictScore", verdictScore);
     setText("assetScore", assetScore);
-    setText("rendererScore", rendererScore);
-    setText("budgetScore", budgetScore);
+    setText("consumerScore", consumerScore);
+    setText("spineScore", spineScore);
     setText("driftScore", driftScore);
 
     setText("verdictNote", status);
-    setText("assetNote", statusLabel(assetScore));
-    setText("rendererNote", statusLabel(rendererScore));
-    setText("budgetNote", statusLabel(budgetScore));
+    setText("assetNote", labelFor(assetScore));
+    setText("consumerNote", labelFor(consumerScore));
+    setText("spineNote", labelFor(spineScore));
     setText("driftNote", driftScore <= 10 ? "LOW" : driftScore <= 35 ? "WATCH" : "HIGH");
 
     if (statusNode) {
-      statusNode.className = "status " + statusClass(verdictScore);
-      statusNode.textContent = status + " · PRIMARY BLOCKER: " + primaryBlocker.toUpperCase();
+      statusNode.className = "status " + classFor(verdictScore);
+      statusNode.textContent = status + " · PRIMARY BLOCKER: " + blocker.toUpperCase();
     }
 
-    add("verdict", status, "Primary blocker", "The current most likely blocker is " + primaryBlocker + ".", primaryBlocker);
-
-    if (primaryBlocker === "asset-control") {
-      setText("statusHeadline", "Asset control is the current blocker.");
-      addTodo("FAIL", "Create local Earth assets", "Add local Earth surface and cloud assets so the showroom and gauges stop depending on remote imagery and blocked pixel diagnostics.", "/assets/earth/earth_surface_2048.jpg · /assets/earth/earth_clouds_2048.jpg");
-    } else if (primaryBlocker === "projection-math") {
-      setText("statusHeadline", "Projection math is the current blocker.");
-      addTodo("WATCH", "Repair spherical projection math", "The remaining issue is likely not source or assets. Repair the canvas longitude-to-limb compression, cloud opacity, and Americas-facing default orientation.");
-    } else if (primaryBlocker === "renderer-ownership") {
-      setText("statusHeadline", "Renderer ownership is the current blocker.");
-      addTodo("FAIL", "Restore Earth as the single active renderer", "The showroom must expose #earthCanvas and the exact single-canvas renderer marker.");
-    } else if (primaryBlocker === "duplicate-runtime") {
-      setText("statusHeadline", "Duplicate runtime ownership is the current blocker.");
-      addTodo("FAIL", "Remove active sun runtime from showroom", "Sun remains CSS-only on showroom; Earth canvas is the only active renderer.");
-    } else if (primaryBlocker === "runtime-budget") {
-      setText("statusHeadline", "Runtime budget is the current blocker.");
-      addTodo("WATCH", "Lower render cost", "Reduce slice count, cap frame rate further, and pause rendering when offscreen.");
+    if (blocker === "asset-control") {
+      setText("statusHeadline", "Asset control is the blocker.");
+    } else if (blocker === "showroom-consumer-contract") {
+      setText("statusHeadline", "Showroom consumer contract is the blocker.");
+    } else if (blocker === "earth-renderer-spine") {
+      setText("statusHeadline", "Earth renderer spine is the blocker.");
+    } else if (blocker === "runtime-control-panel") {
+      setText("statusHeadline", "Runtime control panel is the blocker.");
     } else {
-      setText("statusHeadline", "Source chain is the current blocker.");
+      setText("statusHeadline", "Projection math is now the blocker.");
     }
+
+    add("verdict", status, "Primary blocker", "The current most likely blocker is " + blocker + ".", blocker);
 
     renderList("verdictList", report.verdict);
     renderList("assetLedger", report.asset);
-    renderList("rendererLedger", report.renderer);
-    renderList("budgetLedger", report.budget);
-    renderList("visualLedger", report.visual);
+    renderList("consumerLedger", report.consumer);
+    renderList("spineLedger", report.spine);
+    renderList("controlLedger", report.control);
     renderList("todoList", report.todo);
   }
 
   function boot() {
-    fetchText(CONFIG.showroomHtml)
-      .then(function (source) {
-        analyzeSource(source);
-        return analyzeAssets();
-      })
+    Promise.all([
+      analyzeAssets(),
+      fetchText(CONFIG.showroomHtml).then(analyzeShowroom),
+      fetchText(CONFIG.earthCanvasJs).then(analyzeCanvas),
+      fetchText(CONFIG.earthRuntimeJs).then(analyzeRuntime)
+    ])
       .then(analyzeProbe)
-      .then(function () {
-        analyzeVisualGap();
-        finalVerdict();
-      })
+      .then(finalize)
       .catch(function (error) {
-        add("verdict", "FAIL", "Gauge runtime failed", "The diagnostic runtime did not complete.", error && error.message ? error.message : "unknown error");
-        finalVerdict();
+        add("verdict", "FAIL", "Gauge runtime failed", "Diagnostic runtime failed before completion.", error && error.message ? error.message : "unknown error");
+        finalize();
       });
   }
 

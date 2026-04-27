@@ -1,26 +1,28 @@
-
 <!DOCTYPE html>
-<html lang="en" data-product-generation="on-your-side-ai-aai-expanded-b4">
+<html lang="en" data-product-generation="on-your-side-ai-aai-married-canonical-b5">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>On Your Side AI · Artificial Agent Intelligence · Diamond Gate Bridge</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>On Your Side AI · Artificial Agent Intelligence · Products</title>
   <meta
     name="description"
-    content="On Your Side AI and Artificial Agent Intelligence: a bounded support product for clarity, traversal, decision support, and user-side agency."
+    content="On Your Side AI · Artificial Agent Intelligence — a flagship bounded support product for clarity, agency, traversal, decision support, and execution without override."
   />
 
   <style>
     :root {
+      color-scheme:dark;
       --panel:rgba(7,14,28,.88);
       --panel2:rgba(10,20,42,.94);
       --line:rgba(255,218,150,.22);
+      --lineBlue:rgba(142,197,255,.34);
+      --lineMint:rgba(143,240,197,.28);
       --text:#fff8ea;
       --muted:#c9d2ea;
-      --muted2:rgba(201,210,234,.74);
+      --soft:rgba(201,210,234,.74);
       --gold:#ffd98a;
       --blue:#8ec5ff;
-      --green:#93efbd;
+      --mint:#93efbd;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1120px;
     }
@@ -53,9 +55,8 @@
         radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
         radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
         radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        linear-gradient(180deg,rgba(2,8,20,.34),transparent 38%,rgba(255,137,72,.16));
-      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px,100% 100%;
+        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
+      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
       animation:snowFall 22s linear infinite;
       z-index:0;
     }
@@ -211,7 +212,8 @@
       border-radius:50%;
       background:
         radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 50%),
+        radial-gradient(circle at 50% 50%,rgba(143,240,197,.12),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 58%),
         radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
       filter:blur(5px);
       z-index:-3;
@@ -279,7 +281,7 @@
       line-height:1.18;
       font-weight:850;
       letter-spacing:-.04em;
-      max-width:800px;
+      max-width:820px;
     }
 
     .actions {
@@ -326,7 +328,7 @@
       border:1px solid rgba(255,255,255,.22);
       background:
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.40),rgba(147,239,189,.12) 48%,rgba(0,0,0,.24) 100%);
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.40),rgba(143,240,197,.16) 48%,rgba(0,0,0,.24) 100%);
       box-shadow:
         inset 0 0 42px rgba(142,197,255,.18),
         0 0 88px rgba(142,197,255,.18);
@@ -515,6 +517,7 @@
 
     .support-grid,
     .grid3,
+    .grid4,
     .route-grid {
       display:grid;
       gap:12px;
@@ -528,6 +531,7 @@
       grid-template-columns:repeat(3,minmax(0,1fr));
     }
 
+    .grid4,
     .route-grid {
       grid-template-columns:repeat(4,minmax(0,1fr));
     }
@@ -542,7 +546,7 @@
     .panel-head {
       display:grid;
       gap:8px;
-      max-width:840px;
+      max-width:860px;
     }
 
     .card,
@@ -569,6 +573,13 @@
         linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
       opacity:.62;
       z-index:0;
+    }
+
+    .card.mint::before {
+      border-color:rgba(143,240,197,.20);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(143,240,197,.14),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
     }
 
     .card > *,
@@ -601,6 +612,81 @@
       font-size:.9rem;
     }
 
+    .mini-list {
+      list-style:none;
+      padding:0;
+      margin:0;
+      display:grid;
+      gap:8px;
+    }
+
+    .mini-list li {
+      position:relative;
+      padding-left:16px;
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.48;
+    }
+
+    .mini-list li::before {
+      content:"";
+      position:absolute;
+      left:0;
+      top:.56em;
+      width:6px;
+      height:6px;
+      border-radius:999px;
+      background:var(--mint);
+      box-shadow:0 0 8px rgba(143,240,197,.22);
+    }
+
+    .faq-list {
+      display:grid;
+      gap:12px;
+    }
+
+    .faq-item {
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      overflow:hidden;
+    }
+
+    .faq-toggle {
+      width:100%;
+      border:0;
+      background:transparent;
+      color:var(--text);
+      padding:18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      text-align:left;
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      cursor:pointer;
+    }
+
+    .faq-toggle span:last-child {
+      color:var(--mint);
+      font-size:18px;
+      line-height:1;
+      transition:transform 160ms ease;
+    }
+
+    .faq-body {
+      display:none;
+      padding:0 18px 18px;
+      color:var(--muted);
+      line-height:1.6;
+      border-top:1px solid rgba(255,255,255,.08);
+    }
+
+    .faq-item.is-open .faq-body { display:block; }
+    .faq-item.is-open .faq-toggle span:last-child { transform:rotate(45deg); }
+
     .route-card.featured {
       border-color:rgba(142,197,255,.44);
       background:
@@ -621,8 +707,8 @@
     .footer a { color:#fff0d0; }
 
     @keyframes snowFall {
-      from { background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0; }
-      to { background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px,0 0; }
+      from { background-position:0 0,0 0,0 0,0 0,0 0,0 0; }
+      to { background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px; }
     }
 
     @keyframes slowSpin {
@@ -644,6 +730,7 @@
 
       .support-grid,
       .grid3,
+      .grid4,
       .route-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
@@ -679,18 +766,15 @@
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .nav a {
-        width:100%;
-      }
+      .nav a { width:100%; }
 
-      .hero {
-        padding:22px;
-      }
+      .hero { padding:22px; }
 
       .actions,
       .doll-controls,
       .support-grid,
       .grid3,
+      .grid4,
       .route-grid {
         grid-template-columns:1fr;
       }
@@ -731,16 +815,17 @@
     data-product="on-your-side-ai"
     data-aai-role="artificial-agent-intelligence"
     data-self-path="/products/on-your-side-ai/"
+    data-bridge-path="/products/aai/"
     data-products-backlink="/products/"
     data-five-flags-backlink="/products/five-flags/"
-    data-esl-backlink="/products/esl-traversal-learning/"
-    data-nutrition-backlink="/nutrition/"
+    data-esl-backlink="/products/education/"
+    data-nutrition-backlink="/products/nutrition/"
   >
     <header class="topbar">
       <a class="brand" href="/products/" aria-label="Products home">
         <span class="mark" aria-hidden="true">AAI</span>
         <span class="brand-text">
-          <span class="kicker">Products · Generation 2</span>
+          <span class="kicker">Products · Flagship Intelligence</span>
           <strong class="title">On Your Side AI · Artificial Agent Intelligence</strong>
         </span>
       </a>
@@ -759,18 +844,17 @@
         <h1 id="productTitle">On Your Side AI</h1>
         <h2>Artificial Agent Intelligence with the user still in charge.</h2>
         <p class="thesis">
-          Never in control. Always on your side.
+          Intelligence without override. Support without replacement. Clean reads over noise.
         </p>
         <p>
-          On Your Side AI is the public product face of Artificial Agent Intelligence.
-          It helps organize signals, clarify decisions, route next steps, and return cleaner movement without replacing the user’s judgment, agency, or authorship.
+          On Your Side AI is the public product face of Artificial Agent Intelligence. It helps organize signals, clarify decisions, route next steps, and return cleaner movement without replacing the user’s judgment, agency, authorship, or control.
         </p>
 
         <div class="actions">
           <a class="button primary" href="/products/">Back to Products</a>
-          <a class="button" href="/products/five-flags/">Five Flags</a>
-          <a class="button" href="/products/esl-traversal-learning/">ESL Traversal</a>
-          <a class="button" href="/nutrition/">Nutrition</a>
+          <a class="button" href="#support-chamber">Open Support Chamber</a>
+          <a class="button" href="#capabilities">Capabilities</a>
+          <a class="button" href="#product-law">Product Law</a>
         </div>
       </div>
 
@@ -783,7 +867,7 @@
       </div>
     </section>
 
-    <section class="stage" aria-label="AAI Russian doll stage">
+    <section id="support-chamber" class="stage" aria-label="AAI Russian doll support chamber">
       <div class="talk">
         <span class="pill">Russian-doll support chamber</span>
         <h2>Support opens one layer at a time.</h2>
@@ -817,6 +901,7 @@
 
       <div class="support-board">
         <span class="pill">Real support lanes</span>
+
         <div class="support-grid" aria-label="AAI support lanes">
           <article class="card">
             <small>Messages</small>
@@ -845,19 +930,54 @@
       </div>
     </section>
 
+    <section id="capabilities" class="panel" aria-labelledby="capabilitiesTitle">
+      <div class="panel-head">
+        <span class="pill">Capabilities</span>
+        <h2 id="capabilitiesTitle">Flagship intelligence, product-first.</h2>
+        <p>
+          This section preserves the stronger AAI source language while keeping the page public-facing, bounded, and practical.
+        </p>
+      </div>
+
+      <div class="grid4">
+        <article class="card mint">
+          <small>Signal Reading</small>
+          <strong>Surface what matters.</strong>
+          <span>Relevant signals become easier to see instead of leaving the user buried in noise.</span>
+        </article>
+
+        <article class="card mint">
+          <small>Interpretive Clarity</small>
+          <strong>Organize the observable.</strong>
+          <span>Turn what is visible into a clearer read that supports better decisions.</span>
+        </article>
+
+        <article class="card mint">
+          <small>Agency Support</small>
+          <strong>Keep the user central.</strong>
+          <span>Improve clarity and execution confidence while preserving authorship.</span>
+        </article>
+
+        <article class="card mint">
+          <small>Execution Guidance</small>
+          <strong>Move after the read.</strong>
+          <span>Support more reliable action once the decision surface becomes easier to understand.</span>
+        </article>
+      </div>
+    </section>
+
     <section class="panel" aria-labelledby="useTitle">
       <div class="panel-head">
         <span class="pill">Product use</span>
-        <h2 id="useTitle">This is built for ordinary pressure.</h2>
+        <h2 id="useTitle">Built for ordinary pressure.</h2>
         <p>
-          The product becomes useful when life is moving fast and the user needs the next step made clearer.
-          It belongs in real situations, not vague theory.
+          This product becomes useful when life is moving fast and the user needs the next step made clearer.
         </p>
       </div>
 
       <div class="grid3">
         <article class="card">
-          <small>Daily life</small>
+          <small>Daily Life</small>
           <strong>Bills, messages, appointments.</strong>
           <span>Help the user understand what is due, what matters, and what should happen next.</span>
         </article>
@@ -876,33 +996,84 @@
       </div>
     </section>
 
-    <section class="panel" aria-labelledby="boundaryTitle">
+    <section id="product-law" class="panel" aria-labelledby="lawTitle">
       <div class="panel-head">
-        <span class="pill">Boundary law</span>
-        <h2 id="boundaryTitle">On the user’s side means the user stays central.</h2>
+        <span class="pill">Product law</span>
+        <h2 id="lawTitle">The boundary is part of the product.</h2>
         <p>
-          The strongest version of this product does not create dependency. It helps the user see the decision surface
-          more clearly, act with more confidence, and need less external support over time.
+          On Your Side AI must never imply false control, false authorship, identity replacement, or dependency as the goal.
         </p>
       </div>
 
       <div class="grid3">
-        <article class="card">
-          <small>Preserve</small>
-          <strong>Agency.</strong>
-          <span>The system supports judgment without pretending to own the decision.</span>
+        <article class="card mint">
+          <small>Always Preserved</small>
+          <strong>User agency.</strong>
+          <ul class="mini-list">
+            <li>User authorship</li>
+            <li>User identity</li>
+            <li>User control</li>
+            <li>User final approval</li>
+          </ul>
         </article>
 
-        <article class="card">
-          <small>Preserve</small>
-          <strong>Authorship.</strong>
-          <span>The user remains the source of intent, direction, and final approval.</span>
+        <article class="card mint">
+          <small>Never Claimed</small>
+          <strong>Override authority.</strong>
+          <ul class="mini-list">
+            <li>Identity replacement</li>
+            <li>Command ownership</li>
+            <li>Hidden substitution</li>
+            <li>Dependency as the goal</li>
+          </ul>
         </article>
 
-        <article class="card">
-          <small>Avoid</small>
-          <strong>Control creep.</strong>
-          <span>Support must not become command, manipulation, or hidden substitution.</span>
+        <article class="card mint">
+          <small>Long Range</small>
+          <strong>Less dependence over time.</strong>
+          <span>The strongest outcome is cleaner alignment, better balance, and more reliable execution with less need for external support.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="faqTitle">
+      <div class="panel-head">
+        <span class="pill">FAQ</span>
+        <h2 id="faqTitle">Bounded answers for a bounded product.</h2>
+        <p>
+          These answers keep the product readable, agency-safe, and product-first.
+        </p>
+      </div>
+
+      <div class="faq-list">
+        <article class="faq-item is-open">
+          <button class="faq-toggle" type="button" aria-expanded="true">
+            <span>Is AAI in control?</span>
+            <span>+</span>
+          </button>
+          <div class="faq-body">
+            No. On Your Side AI supports the user without replacing the user. It has no override authority.
+          </div>
+        </article>
+
+        <article class="faq-item">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            <span>What makes it a product?</span>
+            <span>+</span>
+          </button>
+          <div class="faq-body">
+            It has a clear identity, a bounded promise, and a direct user-facing value proposition: cleaner support, better clarity, and preserved agency.
+          </div>
+        </article>
+
+        <article class="faq-item">
+          <button class="faq-toggle" type="button" aria-expanded="false">
+            <span>What is the long-range goal?</span>
+            <span>+</span>
+          </button>
+          <div class="faq-body">
+            Better alignment, better balance, and more reliable execution with less need for external support over time.
+          </div>
         </article>
       </div>
     </section>
@@ -910,10 +1081,10 @@
     <section class="panel" aria-labelledby="backlinksTitle">
       <div class="panel-head">
         <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">This product stays connected to the Products chamber.</h2>
+        <h2 id="backlinksTitle">One destination. Many jump-off points.</h2>
         <p>
-          Products links here as On Your Side AI · Artificial Agent Intelligence.
-          These routes return the product to the correct source chamber and related product lanes.
+          This is the canonical destination for On Your Side AI · Artificial Agent Intelligence.
+          The older /products/aai/ path should bridge here.
         </p>
       </div>
 
@@ -930,13 +1101,13 @@
           <span>Scene reading, social context, flags, people, rooms, and live interaction.</span>
         </a>
 
-        <a class="route-card" href="/products/esl-traversal-learning/">
+        <a class="route-card" href="/products/education/">
           <small>Related product</small>
           <strong>ESL Traversal Learning</strong>
           <span>English by movement, scene, context, confidence, and real-life use.</span>
         </a>
 
-        <a class="route-card" href="/nutrition/">
+        <a class="route-card" href="/products/nutrition/">
           <small>Related product</small>
           <strong>Baseline Nutrition Systems</strong>
           <span>Food, energy, discipline, daily structure, and practical human stability.</span>
@@ -945,8 +1116,13 @@
     </section>
 
     <footer class="footer">
-      <span>On Your Side AI · Artificial Agent Intelligence · Generation 2 Product Surface</span>
-      <span><a href="/products/">Products</a> · <a href="/products/five-flags/">Five Flags</a> · <a href="/nutrition/">Nutrition</a></span>
+      <span>On Your Side AI · Artificial Agent Intelligence · Canonical Product Destination</span>
+      <span>
+        <a href="/products/">Products</a> ·
+        <a href="/products/five-flags/">Five Flags</a> ·
+        <a href="/products/education/">Education</a> ·
+        <a href="/products/nutrition/">Nutrition</a>
+      </span>
     </footer>
   </main>
 
@@ -1034,6 +1210,36 @@
       controls.forEach((control) => {
         control.addEventListener("click", () => {
           setLayer(control.dataset.layer || "intake");
+        });
+      });
+
+      const faqToggles = Array.from(document.querySelectorAll(".faq-toggle"));
+
+      function closeFaq(item, toggle) {
+        item.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+      }
+
+      function openFaq(item, toggle) {
+        item.classList.add("is-open");
+        toggle.setAttribute("aria-expanded", "true");
+      }
+
+      faqToggles.forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+          const item = toggle.closest(".faq-item");
+          if (!item) return;
+
+          const isOpen = item.classList.contains("is-open");
+
+          faqToggles.forEach((otherToggle) => {
+            const otherItem = otherToggle.closest(".faq-item");
+            if (!otherItem || otherItem === item) return;
+            closeFaq(otherItem, otherToggle);
+          });
+
+          if (isOpen) closeFaq(item, toggle);
+          else openFaq(item, toggle);
         });
       });
     })();

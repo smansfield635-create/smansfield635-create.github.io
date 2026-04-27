@@ -1,23 +1,26 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B5
+   EARTH ASSET SPINE · CANVAS B15 · NO RING / NO CRESCENT ARTIFACTS
 
-   Purpose:
-   - Use real local Blue Marble-derived JPG assets.
-   - Stop fake procedural cloud bands from dominating.
-   - Keep spherical wrap, zoom, drag, axis, and frame budget.
-   - Default toward satellite-view Earth, not cartoon Earth.
+   CONTRACT:
+     - Use local Earth surface JPG.
+     - Load local cloud JPG but do not let cloud overlay create external crescent arcs.
+     - Preserve spherical wrap.
+     - Preserve spin, drag, zoom, reset, pause.
+     - Preserve frame budget marker targetFrameMs.
+     - Remove final outer circle stroke.
+     - Remove heavy atmospheric rim gradient.
 */
 
 (function () {
   "use strict";
 
   var DEFAULTS = {
-    assetId: "earth-asset-b5",
+    assetId: "earth-asset-b5-no-rings",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
     targetFrameMs: 42,
-    sliceCount: 260,
+    sliceCount: 280,
     mobileDprCap: 1.5,
     desktopDprCap: 2,
     defaultRotation: 0.35,
@@ -26,7 +29,7 @@
     minZoom: 0.72,
     maxZoom: 1.38,
     zoomStep: 0.08,
-    cloudAlpha: 0.18
+    cloudAlpha: 0
   };
 
   function clamp(value, min, max) {
@@ -48,18 +51,33 @@
       }
 
       timer = window.setTimeout(function () {
-        finish({ ok: false, src: src, image: null, reason: "timeout" });
+        finish({
+          ok: false,
+          src: src,
+          image: null,
+          reason: "timeout"
+        });
       }, 7000);
 
       image.onload = function () {
-        finish({ ok: true, src: src, image: image, reason: "loaded" });
+        finish({
+          ok: true,
+          src: src,
+          image: image,
+          reason: "loaded"
+        });
       };
 
       image.onerror = function () {
-        finish({ ok: false, src: src, image: null, reason: "load-error" });
+        finish({
+          ok: false,
+          src: src,
+          image: null,
+          reason: "load-error"
+        });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-asset-b5-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b15-" + Date.now();
     });
   }
 
@@ -90,6 +108,8 @@
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
       mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
+      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b15-no-rings");
+      mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "disabled-surface-carries-clouds");
     }
 
     function resizeCanvas() {
@@ -121,7 +141,7 @@
       var height = canvas.clientHeight;
       var cx = width * 0.5;
       var cy = height * 0.5;
-      var base = Math.min(width, height) * 0.497;
+      var base = Math.min(width, height) * 0.492;
 
       return {
         width: width,
@@ -146,10 +166,10 @@
       var dh;
       var dw;
 
-      if (!image || !image.complete || !image.naturalWidth) return;
+      if (!image || !image.complete || !image.naturalWidth || alpha <= 0) return;
 
       geo = geometry();
-      step = Math.max(1.8, (geo.r * 2) / sliceCount);
+      step = Math.max(1.6, (geo.r * 2) / sliceCount);
 
       ctx.save();
       ctx.globalAlpha = alpha;
@@ -173,6 +193,8 @@
         dw = step + 1.1;
         dh = 2 * geo.r * limb;
 
+        if (dh <= 0.5) continue;
+
         if (sx + sw <= image.width) {
           ctx.drawImage(image, sx, 0, sw, image.height, dx, dy, dw, dh);
         } else {
@@ -190,8 +212,8 @@
     function drawFallbackSphere() {
       var geo = geometry();
       var ocean = ctx.createRadialGradient(
-        geo.cx - geo.r * 0.28,
-        geo.cy - geo.r * 0.30,
+        geo.cx - geo.r * 0.26,
+        geo.cy - geo.r * 0.28,
         geo.r * 0.1,
         geo.cx,
         geo.cy,
@@ -212,10 +234,52 @@
       ctx.restore();
     }
 
+    function drawShading() {
+      var geo = geometry();
+      var shade;
+      var highlight;
+
+      ctx.save();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.beginPath();
+      ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
+      ctx.clip();
+
+      highlight = ctx.createRadialGradient(
+        geo.cx - geo.r * 0.32,
+        geo.cy - geo.r * 0.34,
+        geo.r * 0.05,
+        geo.cx - geo.r * 0.18,
+        geo.cy - geo.r * 0.22,
+        geo.r * 0.72
+      );
+      highlight.addColorStop(0, "rgba(255,255,255,.12)");
+      highlight.addColorStop(0.38, "rgba(255,255,255,.04)");
+      highlight.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = highlight;
+      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
+
+      shade = ctx.createRadialGradient(
+        geo.cx - geo.r * 0.30,
+        geo.cy - geo.r * 0.32,
+        geo.r * 0.08,
+        geo.cx + geo.r * 0.48,
+        geo.cy + geo.r * 0.18,
+        geo.r * 1.12
+      );
+
+      shade.addColorStop(0, "rgba(255,255,255,0)");
+      shade.addColorStop(0.46, "rgba(0,0,0,.02)");
+      shade.addColorStop(0.72, "rgba(0,0,0,.16)");
+      shade.addColorStop(1, "rgba(0,0,0,.68)");
+      ctx.fillStyle = shade;
+      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
+
+      ctx.restore();
+    }
+
     function drawSphere() {
       var geo;
-      var shade;
-      var rim;
 
       if (!ctx || !canvas) return;
 
@@ -235,55 +299,18 @@
         );
       }
 
-      if (cloudReady) {
+      if (cloudReady && config.cloudAlpha > 0) {
         drawWrappedLayer(
           cloudImage,
           rotation * 0.985 + 0.015,
           config.cloudAlpha,
-          "brightness(1.08) contrast(1.02)",
-          Math.max(180, config.sliceCount - 30),
+          "brightness(1.02) contrast(1.01)",
+          Math.max(180, config.sliceCount - 40),
           "screen"
         );
       }
 
-      ctx.save();
-      ctx.globalCompositeOperation = "source-over";
-      ctx.beginPath();
-      ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
-      ctx.clip();
-
-      shade = ctx.createRadialGradient(
-        geo.cx - geo.r * 0.30,
-        geo.cy - geo.r * 0.34,
-        geo.r * 0.08,
-        geo.cx + geo.r * 0.48,
-        geo.cy + geo.r * 0.18,
-        geo.r * 1.18
-      );
-
-      shade.addColorStop(0, "rgba(255,255,255,.13)");
-      shade.addColorStop(0.40, "rgba(255,255,255,.01)");
-      shade.addColorStop(0.66, "rgba(0,0,0,.08)");
-      shade.addColorStop(1, "rgba(0,0,0,.74)");
-      ctx.fillStyle = shade;
-      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
-
-      rim = ctx.createRadialGradient(geo.cx, geo.cy, geo.r * 0.76, geo.cx, geo.cy, geo.r * 1.035);
-      rim.addColorStop(0, "rgba(147,197,253,0)");
-      rim.addColorStop(0.82, "rgba(147,197,253,.04)");
-      rim.addColorStop(0.93, "rgba(190,226,255,.18)");
-      rim.addColorStop(1, "rgba(219,234,254,.38)");
-      ctx.fillStyle = rim;
-      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
-
-      ctx.restore();
-
-      ctx.beginPath();
-      ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(219,234,254,.30)";
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
+      drawShading();
       setStatus(mount.getAttribute("data-earth-runtime-status") || "strong");
     }
 
@@ -332,6 +359,7 @@
         assetId: config.assetId,
         surfaceReady: surfaceReady,
         cloudReady: cloudReady,
+        cloudOverlayAlpha: config.cloudAlpha,
         rotation: rotation,
         velocity: velocity,
         zoom: zoom,
@@ -363,7 +391,10 @@
         dragging = true;
         lastX = event.clientX;
         velocity = 0;
-        mount.setPointerCapture(event.pointerId);
+
+        try {
+          mount.setPointerCapture(event.pointerId);
+        } catch (error) {}
       });
 
       mount.addEventListener("pointermove", function (event) {
@@ -383,6 +414,7 @@
 
       mount.addEventListener("pointerup", function (event) {
         dragging = false;
+
         try {
           mount.releasePointerCapture(event.pointerId);
         } catch (error) {}
@@ -394,7 +426,10 @@
     }
 
     function init() {
-      ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+      ctx = canvas.getContext("2d", {
+        alpha: true,
+        desynchronized: true
+      });
 
       if (!ctx) {
         setStatus("canvas-unavailable");
@@ -455,7 +490,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b5",
+    version: "earth-canvas-b15-no-rings",
     create: createEarthRenderer
   };
 })();

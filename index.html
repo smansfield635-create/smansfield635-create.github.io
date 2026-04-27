@@ -1,25 +1,21 @@
 <!doctype html>
 <!-- TNT RENEWAL — /index.html
-     ROOT INDEX · GENERATION 2 COMPASS · ROUTE COMPASS ONLY B3
-     PROTECTED_BASELINE=GENERATION_2_COMPASS_COCKPIT_BASELINE
-     ROOT_BOOT_ID=root-sun-asset-b1
-     COCKPIT_VERSION=root-compass-cockpit-b3
-     SOURCE_MARKER=ROOT_COMPASS_ROUTE_ONLY_DIAMOND_COMPASS_FAMILY_B3
+     ROOT INDEX · COMPASS · SATELLITE SUN BACKGROUND B4
+     SOURCE_MARKER=ROOT_COMPASS_SATELLITE_SUN_BACKGROUND_B4
 
      PURPOSE:
-       - Preserve the current passing Compass baseline.
-       - Keep satellite sun background intact.
+       - Preserve Compass as route-only surface.
+       - Remove Flat/Round/Globe selector from Compass.
+       - Keep Door as view-selector authority.
        - Keep spinning diamond-compass route symbols.
        - Keep Showroom as gold/shinier premium route.
-       - Remove the Flat/Round/Globe selector from Compass.
-       - Reserve Flat/Round/Globe view selection for /door/ only.
-       - No graphics box.
+       - Replace cheesecake/thin-slice sun fallback with satellite-style solar-disc material.
        - No generated image.
        - No external image.
-       - No new runtime.
+       - No new runtime file.
 -->
 
-<html lang="en">
+<html lang="en" data-page="compass" data-generation="root-compass-satellite-sun-background-b4">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
@@ -346,6 +342,9 @@
       border-radius:28px;
       overflow:hidden;
       pointer-events:none;
+      background:
+        radial-gradient(circle at 64% 58%,rgba(255,154,55,.14),transparent 34rem),
+        linear-gradient(180deg,rgba(5,9,18,.06),rgba(1,3,10,.42));
     }
 
     .sun-field{
@@ -353,7 +352,7 @@
       inset:0;
       display:grid;
       place-items:center;
-      opacity:.90;
+      opacity:.92;
     }
 
     .sun-mount{
@@ -365,27 +364,65 @@
       place-items:center;
       transform:translateY(10%);
       filter:
-        drop-shadow(0 0 26px rgba(255,178,54,.22))
-        drop-shadow(0 0 120px rgba(255,122,28,.18));
+        drop-shadow(0 0 28px rgba(255,178,54,.17))
+        drop-shadow(0 0 108px rgba(255,122,28,.13));
     }
 
     .sun-fallback{
       position:absolute;
       inset:0;
       border-radius:999px;
-      opacity:.96;
+      opacity:.97;
       visibility:visible;
+      overflow:hidden;
       background:
-        radial-gradient(circle at 38% 34%,rgba(255,252,210,.62),transparent 11%),
-        radial-gradient(circle at 67% 61%,rgba(85,22,8,.30),transparent 7%),
-        radial-gradient(circle at 45% 67%,rgba(95,24,8,.26),transparent 7%),
-        repeating-conic-gradient(from 12deg,rgba(255,238,145,.08) 0deg 1.4deg,rgba(140,40,14,.045) 1.5deg 3deg,transparent 3.2deg 6deg),
-        repeating-radial-gradient(circle at 52% 49%,rgba(255,236,150,.045) 0 2px,rgba(120,35,12,.030) 3px 5px,transparent 6px 10px),
-        radial-gradient(circle at 48% 47%,rgba(255,210,72,.90) 0 20%,rgba(237,101,25,.90) 46%,rgba(110,28,10,.92) 76%,rgba(20,4,2,.96) 100%);
+        radial-gradient(circle at 34% 27%,rgba(255,248,203,.42),transparent 9%),
+        radial-gradient(circle at 59% 43%,rgba(255,230,122,.18),transparent 16%),
+        radial-gradient(circle at 68% 68%,rgba(115,30,12,.38),transparent 12%),
+        radial-gradient(circle at 35% 67%,rgba(92,22,9,.34),transparent 10%),
+        radial-gradient(circle at 52% 52%,rgba(255,214,89,.88) 0 18%,rgba(236,112,30,.92) 48%,rgba(113,33,13,.95) 78%,rgba(18,4,2,.98) 100%);
       box-shadow:
-        inset 0 0 30px rgba(255,247,190,.18),
-        inset 0 0 92px rgba(38,7,2,.66),
-        0 0 44px rgba(255,169,55,.18);
+        inset 0 0 36px rgba(255,248,204,.12),
+        inset 0 0 96px rgba(39,7,2,.72),
+        inset 0 0 180px rgba(0,0,0,.42),
+        0 0 42px rgba(255,169,55,.12);
+    }
+
+    .sun-fallback::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 23% 34%,rgba(255,238,138,.22),transparent 7%),
+        radial-gradient(circle at 31% 52%,rgba(99,24,8,.24),transparent 5%),
+        radial-gradient(circle at 44% 39%,rgba(255,246,176,.18),transparent 8%),
+        radial-gradient(circle at 58% 29%,rgba(122,31,10,.24),transparent 6%),
+        radial-gradient(circle at 71% 45%,rgba(255,232,125,.14),transparent 7%),
+        radial-gradient(circle at 77% 61%,rgba(91,21,8,.30),transparent 7%),
+        radial-gradient(circle at 49% 73%,rgba(255,226,112,.12),transparent 9%),
+        radial-gradient(circle at 38% 78%,rgba(79,16,6,.28),transparent 6%),
+        radial-gradient(circle at 64% 82%,rgba(255,202,82,.10),transparent 8%),
+        radial-gradient(circle at 52% 50%,transparent 0 44%,rgba(255,251,190,.10) 45%,transparent 47%);
+      mix-blend-mode:screen;
+      opacity:.92;
+      filter:blur(.2px);
+    }
+
+    .sun-fallback::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border-radius:999px;
+      background:
+        radial-gradient(circle at 50% 50%,transparent 0 54%,rgba(89,18,7,.22) 68%,rgba(9,2,1,.58) 96%),
+        linear-gradient(128deg,rgba(255,255,255,.10),transparent 28%,rgba(75,15,5,.16) 56%,transparent 78%),
+        radial-gradient(ellipse at 42% 36%,rgba(255,247,181,.16),transparent 18%),
+        radial-gradient(ellipse at 66% 70%,rgba(62,11,4,.32),transparent 22%);
+      box-shadow:
+        inset 16px 18px 44px rgba(255,236,154,.08),
+        inset -34px -42px 72px rgba(0,0,0,.34);
+      opacity:.94;
     }
 
     .dgb-sun-canvas,
@@ -583,17 +620,17 @@
     data-root-baseline="Generation 2 · Compass Cockpit Baseline"
     data-root-contract="universe-sun"
     data-sun-asset-mount-contract="sun asset mount"
-    data-background-contract="sun-background-simple-filter"
-    data-background-profile="near-solar-deep-space-sky-b2"
-    data-compass-cockpit="root-compass-cockpit-b3"
-    data-compass-cockpit-render="route-only-diamond-compass-family-b3"
+    data-background-contract="satellite-sun-background-simple-filter"
+    data-background-profile="near-solar-deep-space-sky-satellite-b4"
+    data-compass-cockpit="root-compass-cockpit-b4"
+    data-compass-cockpit-render="route-only-diamond-compass-family-b4"
     data-compass-cockpit-runtime-queue="quarantined-not-loaded"
     data-compass-cockpit-control-panel="door-only-view-selector-not-mounted-on-compass"
     data-compass-cockpit-instrument-panel="held-pending"
-    data-sun-satellite-profile="satellite-observational-solar-disc-b8"
-    data-source-marker="ROOT_COMPASS_ROUTE_ONLY_DIAMOND_COMPASS_FAMILY_B3"
-    data-route-symbol-system="diamond-compass-family-b3"
-    data-showroom-link="gold-premium-diamond-compass-b3"
+    data-sun-satellite-profile="satellite-observational-solar-disc-b4"
+    data-source-marker="ROOT_COMPASS_SATELLITE_SUN_BACKGROUND_B4"
+    data-route-symbol-system="diamond-compass-family-b4"
+    data-showroom-link="gold-premium-diamond-compass-b4"
     data-view-selector-authority="/door/"
   >
     <section class="siteTop" aria-label="Root navigation">
@@ -687,8 +724,8 @@
             data-dgb-sun-mount
             data-sun-mode="fallback"
             data-sun-asset-id="root-sun-asset-b1"
-            data-sun-satellite-profile="satellite-observational-solar-disc-b8"
-            data-sun-asset-baseline="Generation 2 · Compass Cockpit Baseline"
+            data-sun-satellite-profile="satellite-observational-solar-disc-b4"
+            data-sun-asset-baseline="Satellite Solar Disc B4"
             aria-label="Satellite observational solar reference background"
           >
             <div class="sun-fallback" data-sun-fallback aria-hidden="true"></div>
@@ -750,7 +787,7 @@
           </div>
 
           <p class="hiddenCompatibility" data-cockpit-status>
-            Compass Cockpit B3 · route-only posture · Flat/Round/Globe selector reserved for Door page
+            Compass Cockpit B4 · route-only posture · Flat/Round/Globe selector reserved for Door page
           </p>
           <span class="hiddenCompatibility" data-cockpit-view-label>route-only</span>
           <span class="hiddenCompatibility" data-cockpit-narrative>The Compass routes. The Door selects the viewing template.</span>
@@ -836,7 +873,7 @@
 
   <noscript>
     <div style="position:relative;z-index:2;margin:0 auto 18px;max-width:1180px;padding:0 18px;color:rgba(255,248,231,.72);font-family:system-ui,sans-serif;">
-      JavaScript is off. The Compass remains visible, with the sun held in the background.
+      JavaScript is off. The Compass remains visible, with the satellite-style sun held in the background.
     </div>
   </noscript>
 

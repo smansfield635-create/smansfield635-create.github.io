@@ -1,408 +1,783 @@
-<!doctype html>
-<!-- TNT CREATE — /five-flags-whats-my-scene/index.html
-     5 FLAGS · WHAT'S MY SCENE? · TED TALK RUSSIAN DOLL · B1
-
-     CONTRACT:
-       - Create the root backlink landing page used by the Showroom.
-       - Do not replace the existing product page at /products/five-flags/.
-       - Page is the TED Talk-style public entry chamber for 5 Flags · What's My Scene?
-       - Existing /products/five-flags/ remains the full product/game chamber.
-       - /products/ remains the parent product route.
-       - /showroom/ remains the Russian-doll lobby return route.
-       - Keep family-friendly standard.
-       - No encyclopedia layout.
-       - No adult-stage layer.
-       - No graphics box.
--->
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-product-generation="five-flags-whats-my-scene-expanded-b2">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>5 Flags · What’s My Scene? — Diamond Gate Bridge</title>
-  <meta name="description" content="A TED Talk-style Russian-doll entry chamber for 5 Flags · What’s My Scene?, the family-friendly classification game."/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Five Flags · What’s My Scene? · Products · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Five Flags · What’s My Scene?: a live scene-reading product path for rooms, roles, people, pressure, choices, and social context."
+  />
 
   <style>
-    *{box-sizing:border-box}
+    :root {
+      --panel:rgba(7,14,28,.88);
+      --panel2:rgba(10,20,42,.94);
+      --line:rgba(255,218,150,.22);
+      --line2:rgba(255,217,138,.36);
+      --text:#fff8ea;
+      --muted:#c9d2ea;
+      --muted2:rgba(201,210,234,.74);
+      --gold:#ffd98a;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --rose:#ff9a86;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1120px;
+    }
 
-    html{scroll-behavior:smooth}
+    * { box-sizing:border-box; }
 
-    html,body{
+    html,
+    body {
       margin:0;
       min-height:100%;
-      width:100%;
-      background:#02040b;
-      color:#fff;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 82%,rgba(255,154,86,.34),transparent 28%),
+        radial-gradient(circle at 70% 74%,rgba(255,216,138,.28),transparent 24%),
+        radial-gradient(circle at 20% 18%,rgba(91,132,205,.22),transparent 34%),
+        linear-gradient(180deg,#071225 0%,#10294a 34%,#f49a52 72%,#2b1020 100%);
       overflow-x:hidden;
     }
 
-    a{color:inherit;text-decoration:none}
-
-    :root{
-      --ink:rgba(255,255,255,.96);
-      --txt:rgba(220,231,255,.78);
-      --soft:rgba(220,231,255,.62);
-      --gold:rgba(255,217,138,.96);
-      --line:rgba(255,255,255,.13);
-      --panel:rgba(7,10,16,.76);
-      --shadow:0 30px 110px rgba(0,0,0,.54);
-      --blue:#8ec5ff;
-      --green:#93efbd;
-      --yellow:#f2df8a;
-      --orange:#f1a45b;
-      --red:#ff7a7a;
-      --purple:#c89cff;
-    }
-
-    body::before{
+    body::before {
       content:"";
       position:fixed;
       inset:0;
-      z-index:0;
       pointer-events:none;
+      opacity:.68;
       background:
-        radial-gradient(circle at 14% 18%,rgba(147,239,189,.22) 0 1px,transparent 2px),
-        radial-gradient(circle at 42% 22%,rgba(142,197,255,.17) 0 1px,transparent 2px),
-        radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.09),transparent 34rem),
-        radial-gradient(ellipse at 86% 26%,rgba(147,197,253,.065),transparent 28rem),
-        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
+        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
+        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        linear-gradient(180deg,rgba(2,8,20,.34),transparent 38%,rgba(255,137,72,.16));
+      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px,100% 100%;
+      animation:snowFall 22s linear infinite;
+      z-index:0;
     }
 
-    .page{
+    body::after {
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
+        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
+        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
+        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+      z-index:0;
+    }
+
+    a { color:inherit; text-decoration:none; }
+
+    .page {
+      width:min(var(--max),calc(100vw - 20px));
+      margin:0 auto;
+      padding:14px 0 30px;
       position:relative;
       z-index:1;
-      width:min(100% - 28px,1120px);
-      min-height:100svh;
-      margin:0 auto;
-      padding:18px 0 28px;
       display:grid;
       gap:14px;
     }
 
+    .topbar,
     .hero,
-    .talkStage,
-    .routeRail{
+    .stage,
+    .panel,
+    .card,
+    .flag-card,
+    .route-card {
       border:1px solid var(--line);
-      border-radius:28px;
-      background:var(--panel);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
+        linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
     }
 
-    .hero{
-      min-height:calc(100svh - 190px);
-      padding:clamp(24px,5vw,56px);
-      display:grid;
-      gap:18px;
-      align-content:center;
-      overflow:hidden;
-      background:
-        radial-gradient(ellipse at 12% 16%,rgba(147,239,189,.075),transparent 30rem),
-        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+    .topbar {
+      padding:14px;
+      border-radius:28px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
     }
 
-    .brandRow{
+    .brand {
       display:flex;
       align-items:center;
       gap:12px;
+      min-width:0;
     }
 
-    .brandMark{
-      width:34px;
-      height:34px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,217,138,.72);
+    .mark {
+      width:50px;
+      height:50px;
+      border-radius:17px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,217,138,.44);
       background:
-        linear-gradient(135deg,rgba(147,239,189,.26),rgba(147,197,253,.07)),
-        rgba(255,255,255,.05);
-      box-shadow:0 0 18px rgba(147,239,189,.14);
+        radial-gradient(circle at 50% 28%,rgba(255,217,138,.42),transparent 44%),
+        linear-gradient(180deg,rgba(58,38,26,.92),rgba(10,18,32,.98));
+      color:#fff8ea;
+      font-weight:950;
+      letter-spacing:.08em;
       flex:0 0 auto;
+      box-shadow:0 0 22px rgba(255,217,138,.18);
     }
 
-    .brandName{
-      color:var(--ink);
-      font-size:clamp(1.2rem,4vw,2rem);
-      font-weight:950;
-      letter-spacing:-.04em;
-    }
+    .brand-text { display:grid; gap:3px; }
 
-    .kicker{
+    .kicker {
+      display:block;
       margin:0;
-      color:var(--gold);
-      font-size:12px;
-      line-height:1.35;
-      font-weight:950;
-      letter-spacing:3px;
+      color:#ffe0a3;
+      font-size:.72rem;
+      text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:850;
+    }
+
+    .title {
+      display:block;
+      margin:0;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
+    }
+
+    .nav {
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:flex-end;
+    }
+
+    .nav a,
+    .button {
+      min-height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 13px;
+      border-radius:999px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.08em;
       text-transform:uppercase;
     }
 
-    h1{
+    .nav a.featured,
+    .button.primary {
+      border-color:rgba(255,217,138,.48);
+      background:rgba(255,217,138,.10);
+      color:#fff8ea;
+      box-shadow:0 0 22px rgba(255,217,138,.13);
+    }
+
+    .hero {
+      border-radius:34px;
+      padding:clamp(24px,5vw,56px);
+      min-height:calc(100svh - 150px);
+      display:grid;
+      grid-template-columns:minmax(0,1.02fr) minmax(280px,.98fr);
+      gap:28px;
+      align-items:center;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .hero::before {
+      content:"";
+      position:absolute;
+      width:min(760px,92vw);
+      height:min(760px,92vw);
+      left:72%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.23),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 50%),
+        radial-gradient(circle at 50% 50%,rgba(255,119,72,.12),transparent 72%);
+      filter:blur(5px);
+      z-index:-3;
+    }
+
+    .hero-copy {
+      display:grid;
+      gap:14px;
+      position:relative;
+      z-index:2;
+    }
+
+    .pill {
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,218,150,.22);
+      background:rgba(255,255,255,.04);
+      color:#fff0d0;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before {
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(255,217,138,.48);
+    }
+
+    h1 {
       margin:0;
-      max-width:980px;
-      font-size:clamp(3.4rem,10vw,7.4rem);
+      color:#fff;
+      font-size:clamp(3rem,9.4vw,6.8rem);
       line-height:.84;
       letter-spacing:-.085em;
-      text-shadow:0 20px 90px rgba(0,0,0,.55);
     }
 
-    .thesis{
+    h2 {
       margin:0;
-      max-width:980px;
-      color:rgba(255,255,255,.93);
-      font-size:clamp(1.42rem,3.4vw,2.45rem);
-      line-height:1.1;
-      font-weight:950;
-      letter-spacing:-.052em;
+      color:var(--gold);
+      font-size:clamp(1.45rem,4.6vw,2.9rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .lead{
+    p {
       margin:0;
-      max-width:880px;
-      color:var(--txt);
-      font-size:clamp(1.05rem,2.35vw,1.32rem);
-      line-height:1.58;
+      color:var(--muted);
+      line-height:1.62;
+      font-size:1rem;
     }
 
-    .heroActions{
+    .thesis {
+      color:#fff;
+      font-size:clamp(1.16rem,2.7vw,1.7rem);
+      line-height:1.18;
+      font-weight:850;
+      letter-spacing:-.04em;
+      max-width:800px;
+    }
+
+    .actions {
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       margin-top:4px;
     }
 
-    .heroButton{
-      min-height:48px;
-      display:inline-grid;
+    .scene-orb {
+      position:relative;
+      width:min(100%,360px);
+      aspect-ratio:1;
+      margin:auto;
+      display:grid;
       place-items:center;
-      padding:12px 16px;
-      border-radius:999px;
+      filter:drop-shadow(0 24px 48px rgba(0,0,0,.38));
+    }
+
+    .scene-orb::before {
+      content:"";
+      position:absolute;
+      inset:3%;
+      border-radius:50%;
       border:1px solid rgba(255,255,255,.13);
-      background:rgba(0,0,0,.24);
-      color:var(--ink);
-      font-weight:950;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .heroButton:hover,
-    .heroButton:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(255,217,138,.52);
-      background:rgba(255,217,138,.055);
-      outline:none;
-    }
-
-    .talkStage{
-      padding:clamp(20px,4vw,38px);
-      display:grid;
-      gap:18px;
       background:
-        radial-gradient(ellipse at 12% 16%,rgba(147,239,189,.055),transparent 28rem),
-        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.18),transparent 28%),
+        repeating-conic-gradient(
+          from 0deg,
+          rgba(255,255,255,.045) 0deg 3deg,
+          transparent 3deg 18deg
+        );
+      box-shadow:
+        inset 0 0 54px rgba(0,0,0,.34),
+        0 0 50px rgba(255,217,138,.12);
+      animation:slowSpin 26s linear infinite;
     }
 
-    .stageHeader{
+    .scene-core {
+      position:relative;
+      width:46%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.22);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.40),rgba(255,154,86,.18) 48%,rgba(0,0,0,.24) 100%);
+      box-shadow:
+        inset 0 0 42px rgba(255,217,138,.18),
+        0 0 88px rgba(255,217,138,.18);
       display:grid;
-      gap:10px;
-      max-width:920px;
+      place-items:center;
+      text-align:center;
+      overflow:hidden;
+      z-index:3;
     }
 
-    .stageTitle{
-      margin:0;
-      font-size:clamp(2rem,5.8vw,4.2rem);
-      line-height:.92;
-      letter-spacing:-.065em;
+    .scene-core::before {
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        repeating-conic-gradient(
+          from 0deg,
+          transparent 0deg 16deg,
+          rgba(255,255,255,.08) 16deg 19deg,
+          transparent 19deg 34deg
+        );
+      animation:slowSpin 16s linear infinite reverse;
     }
 
-    .dollGrid{
+    .scene-core span {
+      position:relative;
+      z-index:2;
+      color:#fff8ea;
+      font-weight:950;
+      font-size:.84rem;
+      letter-spacing:.10em;
+      line-height:1.2;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.70);
+    }
+
+    .scene-line {
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:36%;
+      height:7px;
+      transform-origin:left center;
+      border-radius:999px;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.72),rgba(255,217,138,.46),transparent);
+      opacity:.72;
+      z-index:1;
+      overflow:hidden;
+      filter:drop-shadow(0 0 12px rgba(255,217,138,.26));
+    }
+
+    .scene-line::after {
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 18px,
+          rgba(255,255,255,.42) 18px 24px,
+          transparent 24px 42px
+        );
+      animation:signalRun 1.7s linear infinite;
+    }
+
+    .scene-line.north { transform:rotate(-90deg); }
+    .scene-line.east { transform:rotate(0deg); }
+    .scene-line.south { transform:rotate(90deg); }
+    .scene-line.west { transform:rotate(180deg); }
+
+    .stage {
+      border-radius:34px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
+      grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);
+      gap:16px;
+      align-items:stretch;
+      overflow:hidden;
+    }
+
+    .talk {
+      display:grid;
+      gap:12px;
+      align-content:center;
+    }
+
+    .doll-controls {
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .doll-control,
+    .flag-button {
+      min-height:58px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
+      color:var(--text);
+      font-weight:850;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      font-size:.82rem;
+      letter-spacing:.04em;
+      padding:8px;
+    }
+
+    .doll-control[data-active="true"],
+    .flag-button[data-active="true"] {
+      border-color:rgba(255,217,138,.36);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.14),transparent 70%),
+        rgba(255,217,138,.07);
+      box-shadow:0 0 24px rgba(255,217,138,.10);
+    }
+
+    .talk-card {
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 16% 0%,rgba(255,217,138,.08),transparent 62%),
+        rgba(255,255,255,.035);
+      padding:18px;
+      display:grid;
+      gap:10px;
+    }
+
+    .talk-card h2 {
+      font-family:Georgia,"Times New Roman",serif;
+    }
+
+    .receipt {
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      padding:14px;
+      display:grid;
+      gap:10px;
+    }
+
+    .receipt-title {
+      margin:0;
+      color:var(--gold);
+      font-size:11px;
+      font-weight:850;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      padding-bottom:8px;
+      border-bottom:1px solid var(--line);
+    }
+
+    .rows {
+      display:grid;
+      gap:8px;
+    }
+
+    .row {
+      display:grid;
+      grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
       gap:12px;
       align-items:start;
     }
 
-    .doll{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:22px;
-      background:rgba(0,0,0,.20);
-      overflow:hidden;
-      min-height:100%;
+    .rk {
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.42;
     }
 
-    .doll[open]{
-      background:
-        radial-gradient(ellipse at 18% 10%,rgba(147,239,189,.07),transparent 18rem),
-        rgba(0,0,0,.24);
-      border-color:rgba(147,239,189,.38);
+    .rv {
+      color:var(--text);
+      font-size:12px;
+      line-height:1.42;
+      text-align:right;
+      word-break:break-word;
     }
 
-    .doll summary{
-      list-style:none;
-      cursor:pointer;
-      min-height:172px;
-      padding:16px;
+    .flag-board {
       display:grid;
+      gap:12px;
+      align-content:center;
+    }
+
+    .flag-grid {
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:10px;
-      align-content:start;
-      -webkit-tap-highlight-color:transparent;
     }
 
-    .doll summary::-webkit-details-marker{display:none}
+    .flag-card {
+      min-height:150px;
+      border-radius:24px;
+      padding:15px;
+      position:relative;
+      overflow:hidden;
+      display:grid;
+      align-content:end;
+      gap:7px;
+    }
 
-    .dollTag{
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
+    .flag-card::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,217,138,.20);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.16),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+      opacity:.68;
+      z-index:0;
+    }
+
+    .flag-card > * {
+      position:relative;
+      z-index:1;
+    }
+
+    .flag-card small {
+      color:#ffe0a3;
       text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.60rem;
+      font-weight:900;
     }
 
-    .dollTitle{
-      color:var(--ink);
-      font-size:clamp(1.06rem,2.2vw,1.4rem);
+    .flag-card strong {
+      color:#fff;
+      font-size:1rem;
       line-height:1.06;
-      font-weight:950;
       letter-spacing:-.035em;
     }
 
-    .dollHint{
-      margin:0;
-      color:var(--soft);
-      line-height:1.42;
-      font-size:.96rem;
+    .flag-card span {
+      color:var(--muted);
+      line-height:1.38;
+      font-size:.84rem;
     }
 
-    .dollBody{
-      border-top:1px solid rgba(255,255,255,.10);
-      padding:16px;
+    .panel {
+      border-radius:30px;
+      padding:clamp(16px,2.6vw,26px);
+      display:grid;
+      gap:16px;
+    }
+
+    .panel-head {
+      display:grid;
+      gap:8px;
+      max-width:840px;
+    }
+
+    .grid3,
+    .route-grid {
       display:grid;
       gap:12px;
     }
 
-    .dollBody p{
-      margin:0;
-      color:var(--txt);
-      line-height:1.55;
+    .grid3 {
+      grid-template-columns:repeat(3,minmax(0,1fr));
     }
 
-    .speechLine{
-      margin:0;
-      color:rgba(255,255,255,.92);
-      font-size:clamp(1.12rem,2.4vw,1.45rem);
-      line-height:1.2;
-      font-weight:950;
-      letter-spacing:-.038em;
-    }
-
-    .flagStrip{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:7px;
-    }
-
-    .flagPill{
-      min-height:42px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:999px;
-      background:rgba(0,0,0,.20);
-      font-size:.78rem;
-      font-weight:950;
-      text-align:center;
-      padding:7px;
-    }
-
-    .flagPill:nth-child(1){color:var(--blue)}
-    .flagPill:nth-child(2){color:var(--green)}
-    .flagPill:nth-child(3){color:var(--yellow)}
-    .flagPill:nth-child(4){color:var(--orange)}
-    .flagPill:nth-child(5){color:var(--red)}
-
-    .continueLink{
-      display:grid;
-      gap:7px;
-      padding:13px 14px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      background:rgba(0,0,0,.22);
-      color:var(--ink);
-      font-weight:950;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .continueLink:hover,
-    .continueLink:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(255,217,138,.50);
-      background:rgba(255,217,138,.055);
-      outline:none;
-    }
-
-    .continueLink small{
-      color:var(--soft);
-      font-size:.86rem;
-      line-height:1.35;
-      font-weight:750;
-    }
-
-    .routeRail{
-      display:grid;
+    .route-grid {
       grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      padding:12px;
     }
 
-    .routeLink{
-      min-height:58px;
-      padding:12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.22);
-      color:var(--ink);
-      font-weight:950;
+    .card,
+    .route-card {
+      border-radius:24px;
+      padding:18px;
+      min-height:150px;
       display:grid;
-      place-items:center;
-      text-align:center;
+      align-content:end;
+      gap:8px;
+      position:relative;
+      overflow:hidden;
     }
 
-    @media(max-width:980px){
-      .dollGrid{
+    .card::before,
+    .route-card::before {
+      content:"";
+      position:absolute;
+      inset:18px;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,217,138,.18);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.14),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+      opacity:.62;
+      z-index:0;
+    }
+
+    .card > *,
+    .route-card > * {
+      position:relative;
+      z-index:1;
+    }
+
+    .card small,
+    .route-card small {
+      color:#ffe0a3;
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.62rem;
+      font-weight:900;
+    }
+
+    .card strong,
+    .route-card strong {
+      color:#fff;
+      font-size:clamp(1.05rem,2.1vw,1.35rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .card span,
+    .route-card span {
+      color:var(--muted);
+      line-height:1.44;
+      font-size:.9rem;
+    }
+
+    .route-card.featured {
+      border-color:rgba(255,217,138,.44);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 68%),
+        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
+    }
+
+    .footer {
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:space-between;
+      gap:10px;
+      padding:0 4px;
+      color:#d5dff7;
+      font-size:.86rem;
+    }
+
+    .footer a { color:#fff0d0; }
+
+    @keyframes snowFall {
+      from { background-position:0 0,0 0,0 0,0 0,0 0,0 0,0 0; }
+      to { background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px,0 0; }
+    }
+
+    @keyframes slowSpin {
+      from { transform:rotate(0deg); }
+      to { transform:rotate(360deg); }
+    }
+
+    @keyframes signalRun {
+      from { transform:translateX(-42px); }
+      to { transform:translateX(42px); }
+    }
+
+    @media (max-width:1080px) {
+      .hero,
+      .stage {
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+
+      .flag-grid {
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
-      .flagStrip{
-        grid-template-columns:1fr;
+      .grid3,
+      .route-grid {
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
-    @media(max-width:680px){
-      .page{
-        width:min(100% - 20px,1120px);
+    @media (max-width:640px) {
+      .page {
+        width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
-      .hero{
-        min-height:auto;
-      }
-
+      .topbar,
       .hero,
-      .talkStage,
-      .routeRail{
+      .stage,
+      .panel {
         border-radius:24px;
       }
 
-      .dollGrid{
+      .topbar { padding:12px; }
+
+      .brand { gap:10px; }
+
+      .mark {
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav {
+        width:100%;
+        justify-content:stretch;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .nav a {
+        width:100%;
+      }
+
+      .hero {
+        padding:22px;
+      }
+
+      .actions,
+      .doll-controls,
+      .flag-grid,
+      .grid3,
+      .route-grid {
         grid-template-columns:1fr;
       }
 
-      .doll summary{
-        min-height:auto;
+      .actions {
+        display:grid;
       }
 
-      .routeRail{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .button {
+        width:100%;
+      }
+
+      .row {
+        grid-template-columns:1fr;
+      }
+
+      .rv {
+        text-align:left;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      *,
+      *::before,
+      *::after {
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
       }
     }
   </style>
@@ -411,153 +786,315 @@
 <body>
   <main
     class="page"
-    data-backlink-root="five-flags-whats-my-scene"
-    data-backlink-version="ted-talk-russian-doll-b1"
-    data-existing-full-route="/products/five-flags/"
-    data-products-route="/products/"
-    data-showroom-route="/showroom/"
-    data-family-friendly="true"
-    data-adult-stage-layer="excluded"
+    data-generation="second-generation-renewal"
+    data-product="five-flags-whats-my-scene"
+    data-products-backlink="/products/"
+    data-aai-backlink="/on-your-side-ai/"
+    data-esl-backlink="/products/esl-traversal-learning/"
+    data-nutrition-backlink="/nutrition/"
   >
-    <section class="hero" aria-label="5 Flags What's My Scene">
-      <div class="brandRow">
-        <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
-        <a class="brandName" href="/">Diamond Gate Bridge</a>
+    <header class="topbar">
+      <a class="brand" href="/products/" aria-label="Products home">
+        <span class="mark" aria-hidden="true">5F</span>
+        <span class="brand-text">
+          <span class="kicker">Products · Game / Scene Read</span>
+          <strong class="title">Five Flags · What’s My Scene?</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
+        <a href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a class="featured" href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="productTitle">
+      <div class="hero-copy">
+        <span class="pill">Scene-reading product surface</span>
+        <h1 id="productTitle">Five Flags · What’s My Scene?</h1>
+        <h2>Read the room before the room reads you.</h2>
+        <p class="thesis">
+          Every room has signals. Every person carries a flag. The game is learning what scene you are actually standing in.
+        </p>
+        <p>
+          Five Flags · What’s My Scene? is a live scene-reading product path for people, rooms, roles, pressure, choices, and social context. It turns “what is happening here?” into a practical, playable read.
+        </p>
+
+        <div class="actions">
+          <a class="button primary" href="/products/">Back to Products</a>
+          <a class="button" href="/on-your-side-ai/">On Your Side AI</a>
+          <a class="button" href="/products/esl-traversal-learning/">ESL Traversal</a>
+          <a class="button" href="/nutrition/">Nutrition</a>
+        </div>
       </div>
 
-      <p class="kicker">TED Talk Backlink · 5 Flags · What’s My Scene?</p>
-      <h1>What’s My Scene?</h1>
-      <p class="thesis">
-        Read the scene before the scene reads you.
-      </p>
-      <p class="lead">
-        5 Flags is the family-friendly game lane. The room figures out what something is, then figures out what comes next.
-      </p>
-
-      <div class="heroActions" aria-label="Primary actions">
-        <a class="heroButton" href="#five-flags-dolls">Open the Russian Doll</a>
-        <a class="heroButton" href="/products/five-flags/">Go to Game Chamber</a>
-        <a class="heroButton" href="/showroom/">Return to Showroom</a>
+      <div class="scene-orb" aria-hidden="true">
+        <div class="scene-line north"></div>
+        <div class="scene-line east"></div>
+        <div class="scene-line south"></div>
+        <div class="scene-line west"></div>
+        <div class="scene-core"><span>Read<br>The<br>Scene</span></div>
       </div>
     </section>
 
-    <section id="five-flags-dolls" class="talkStage" aria-label="5 Flags Russian doll chambers">
-      <div class="stageHeader">
-        <p class="kicker">Open the game pattern</p>
-        <h2 class="stageTitle">Simple enough to play. Structured enough to teach.</h2>
-        <p class="lead">
-          Each chamber opens one layer of the game. The product chamber carries the full rules, modes, colors, and examples.
+    <section class="stage" aria-label="Five Flags Russian doll stage">
+      <div class="talk">
+        <span class="pill">Russian-doll scene chamber</span>
+        <h2>The scene opens one layer at a time.</h2>
+        <p>
+          The product stays simple on the surface. First, read the room. Then read the pressure. Then read the role. Then name what changed. Then choose the next move.
+        </p>
+
+        <div class="doll-controls" aria-label="Scene layer controls">
+          <button class="doll-control" type="button" data-layer="room" data-active="true">Room</button>
+          <button class="doll-control" type="button" data-layer="pressure" data-active="false">Pressure</button>
+          <button class="doll-control" type="button" data-layer="role" data-active="false">Role</button>
+          <button class="doll-control" type="button" data-layer="move" data-active="false">Move</button>
+        </div>
+
+        <section class="talk-card">
+          <h2 id="talkTitle">What room am I in?</h2>
+          <p id="talkCopy">
+            Start with the actual scene: a table, a job, a family moment, a stage, a date, a classroom, a sale, a conflict, or a group decision. The room tells you what kind of behavior belongs there.
+          </p>
+        </section>
+
+        <section class="receipt">
+          <h3 class="receipt-title">Scene Receipt</h3>
+          <div class="rows" id="receiptRows">
+            <div class="row"><div class="rk">Layer</div><div class="rv">Room</div></div>
+            <div class="row"><div class="rk">Question</div><div class="rv">What kind of scene is this?</div></div>
+            <div class="row"><div class="rk">Output</div><div class="rv">The first read becomes visible.</div></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="flag-board">
+        <span class="pill">The Five Flags</span>
+        <div class="flag-grid" aria-label="Five Flags list">
+          <article class="flag-card">
+            <small>Flag One</small>
+            <strong>What is the room?</strong>
+            <span>The setting defines the first boundary.</span>
+          </article>
+
+          <article class="flag-card">
+            <small>Flag Two</small>
+            <strong>Who is carrying pressure?</strong>
+            <span>Pressure explains why people are reacting.</span>
+          </article>
+
+          <article class="flag-card">
+            <small>Flag Three</small>
+            <strong>What role is being played?</strong>
+            <span>People act from roles before they explain themselves.</span>
+          </article>
+
+          <article class="flag-card">
+            <small>Flag Four</small>
+            <strong>What changed?</strong>
+            <span>The turn reveals the real scene.</span>
+          </article>
+
+          <article class="flag-card">
+            <small>Flag Five</small>
+            <strong>What is the next move?</strong>
+            <span>The best read should produce cleaner motion.</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="useTitle">
+      <div class="panel-head">
+        <span class="pill">Product use</span>
+        <h2 id="useTitle">This is built for real rooms.</h2>
+        <p>
+          The product works when it helps someone identify what is happening in front of them without turning people into labels.
+          It reads context so the next move can be cleaner.
         </p>
       </div>
 
-      <div class="dollGrid">
-        <details id="scene" class="doll" open>
-          <summary>
-            <span class="dollTag">Layer One</span>
-            <span class="dollTitle">Find the scene.</span>
-            <p class="dollHint">A person, object, idea, or situation enters the room.</p>
-          </summary>
-          <div class="dollBody">
-            <p class="speechLine">
-              The first question is: what is this?
-            </p>
-            <p>
-              The game starts by asking players to classify what they are seeing. It can be a person, object, story, joke, situation, choice, or social moment.
-            </p>
-          </div>
-        </details>
+      <div class="grid3">
+        <article class="card">
+          <small>Social</small>
+          <strong>Friends, dates, groups, rooms.</strong>
+          <span>Read tone, pressure, role shifts, and what changed in the interaction.</span>
+        </article>
 
-        <details id="flags" class="doll">
-          <summary>
-            <span class="dollTag">Layer Two</span>
-            <span class="dollTitle">Raise the flags.</span>
-            <p class="dollHint">Flags are guesses. The scene is the match.</p>
-          </summary>
-          <div class="dollBody">
-            <p class="speechLine">
-              The room raises possible categories until the strongest fit appears.
-            </p>
-            <p>
-              The flags help the room test possibilities without turning the game into an argument. A weak fit falls away. A clearer fit survives.
-            </p>
-            <div class="flagStrip" aria-label="Five flags">
-              <span class="flagPill">High / Ideal</span>
-              <span class="flagPill">Solid</span>
-              <span class="flagPill">General</span>
-              <span class="flagPill">Practical</span>
-              <span class="flagPill">True Fit</span>
-            </div>
-          </div>
-        </details>
+        <article class="card">
+          <small>Work</small>
+          <strong>Meetings, sales, teams, service.</strong>
+          <span>Read the room before choosing the pitch, reply, question, or boundary.</span>
+        </article>
 
-        <details id="next" class="doll">
-          <summary>
-            <span class="dollTag">Layer Three</span>
-            <span class="dollTitle">Then ask what comes next.</span>
-            <p class="dollHint">Once the scene is clear, the room can move.</p>
-          </summary>
-          <div class="dollBody">
-            <p class="speechLine">
-              Find the category. Find what comes next.
-            </p>
-            <p>
-              The best answer does not just label the scene. It gives the room a next step, a next form, or a sharper picture of where the moment belongs.
-            </p>
-          </div>
-        </details>
-
-        <details id="continue" class="doll">
-          <summary>
-            <span class="dollTag">Layer Four</span>
-            <span class="dollTitle">Continue through the right door.</span>
-            <p class="dollHint">This page is the speech. The backlinks carry the rooms.</p>
-          </summary>
-          <div class="dollBody">
-            <a class="continueLink" href="/products/five-flags/">
-              Continue to 5 Flags · What’s My Scene?
-              <small>The existing full game and product chamber.</small>
-            </a>
-
-            <a class="continueLink" href="/products/">
-              Continue to Products
-              <small>The parent product-routing surface.</small>
-            </a>
-
-            <a class="continueLink" href="/showroom/">
-              Return to the Showroom
-              <small>The Russian-doll lobby and Earth/Sun proof room.</small>
-            </a>
-          </div>
-        </details>
+        <article class="card">
+          <small>Performance</small>
+          <strong>Comedy, games, live interaction.</strong>
+          <span>Read the audience, the turn, the energy, and the next playable moment.</span>
+        </article>
       </div>
     </section>
 
-    <nav class="routeRail" aria-label="Route rail">
-      <a class="routeLink" href="/showroom/">Showroom</a>
-      <a class="routeLink" href="/products/five-flags/">Game Chamber</a>
-      <a class="routeLink" href="/products/">Products</a>
-      <a class="routeLink" href="/">Compass</a>
-    </nav>
+    <section class="panel" aria-labelledby="lawTitle">
+      <div class="panel-head">
+        <span class="pill">Product law</span>
+        <h2 id="lawTitle">Read the scene. Do not flatten the person.</h2>
+        <p>
+          Five Flags should make people more readable without reducing them to a single trait, mistake, mood, or status.
+          A flag is a signal. It is not the whole person.
+        </p>
+      </div>
+
+      <div class="grid3">
+        <article class="card">
+          <small>Preserve</small>
+          <strong>Context.</strong>
+          <span>The room matters. The moment matters. The pressure matters.</span>
+        </article>
+
+        <article class="card">
+          <small>Preserve</small>
+          <strong>Choice.</strong>
+          <span>The read should create better movement, not trap people in a label.</span>
+        </article>
+
+        <article class="card">
+          <small>Avoid</small>
+          <strong>Flat judgment.</strong>
+          <span>The product is not a gossip tool, insult engine, or personality cage.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel" aria-labelledby="backlinksTitle">
+      <div class="panel-head">
+        <span class="pill">Backlinks</span>
+        <h2 id="backlinksTitle">This scene-reading path stays connected to Products.</h2>
+        <p>
+          Products links here as Five Flags · What’s My Scene? These routes keep the page connected to the source chamber and related product lanes.
+        </p>
+      </div>
+
+      <div class="route-grid">
+        <a class="route-card featured" href="/products/">
+          <small>Parent chamber</small>
+          <strong>Products</strong>
+          <span>Return to the source-waterfall Products page.</span>
+        </a>
+
+        <a class="route-card" href="/on-your-side-ai/">
+          <small>Related product</small>
+          <strong>On Your Side AI</strong>
+          <span>Artificial Agent Intelligence for structured assistance and decision support.</span>
+        </a>
+
+        <a class="route-card" href="/products/esl-traversal-learning/">
+          <small>Related product</small>
+          <strong>ESL Traversal Learning</strong>
+          <span>English by movement, scene, context, confidence, and real-life use.</span>
+        </a>
+
+        <a class="route-card" href="/nutrition/">
+          <small>Related product</small>
+          <strong>Baseline Nutrition Systems</strong>
+          <span>Food, energy, discipline, daily structure, and practical human stability.</span>
+        </a>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span>Five Flags · What’s My Scene? · Generation 2 Product Surface</span>
+      <span><a href="/products/">Products</a> · <a href="/on-your-side-ai/">On Your Side AI</a> · <a href="/nutrition/">Nutrition</a></span>
+    </footer>
   </main>
 
   <script>
-    (function(){
+    (() => {
       "use strict";
 
-      var VERSION = "five-flags-whats-my-scene-b1-russian-doll";
-      var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
+      const layers = {
+        room: {
+          title: "What room am I in?",
+          copy: "Start with the actual scene: a table, a job, a family moment, a stage, a date, a classroom, a sale, a conflict, or a group decision. The room tells you what kind of behavior belongs there.",
+          rows: [
+            ["Layer", "Room"],
+            ["Question", "What kind of scene is this?"],
+            ["Output", "The first read becomes visible."]
+          ]
+        },
+        pressure: {
+          title: "Who is carrying pressure?",
+          copy: "Pressure changes behavior. Someone may be defensive, excited, nervous, selling, hiding, protecting, competing, performing, or trying to recover. The pressure is not the whole person, but it explains the scene.",
+          rows: [
+            ["Layer", "Pressure"],
+            ["Question", "Who is carrying the weight?"],
+            ["Output", "The emotional weather becomes readable."]
+          ]
+        },
+        role: {
+          title: "What role is being played?",
+          copy: "People move through roles: host, guest, leader, outsider, performer, customer, parent, student, closer, skeptic, helper, challenger. The role tells you what kind of response will land.",
+          rows: [
+            ["Layer", "Role"],
+            ["Question", "What part is this person playing right now?"],
+            ["Output", "The interaction becomes easier to place."]
+          ]
+        },
+        move: {
+          title: "What is the next move?",
+          copy: "The read should produce motion: ask, pause, joke, clarify, leave, help, challenge, soften, sell, listen, or reset. A good scene read does not just explain the moment. It gives the next clean step.",
+          rows: [
+            ["Layer", "Move"],
+            ["Question", "What should happen next?"],
+            ["Output", "The scene becomes playable."]
+          ]
+        }
+      };
 
-      document.documentElement.setAttribute("data-five-flags-controller", VERSION);
+      const controls = Array.from(document.querySelectorAll(".doll-control"));
+      const title = document.getElementById("talkTitle");
+      const copy = document.getElementById("talkCopy");
+      const receipt = document.getElementById("receiptRows");
 
-      dolls.forEach(function(doll){
-        doll.addEventListener("toggle", function(){
-          if (!doll.open) return;
+      function writeRows(rows) {
+        if (!receipt) return;
+        receipt.replaceChildren();
 
-          dolls.forEach(function(other){
-            if (other !== doll) other.removeAttribute("open");
-          });
+        rows.forEach(([key, value]) => {
+          const row = document.createElement("div");
+          const rk = document.createElement("div");
+          const rv = document.createElement("div");
 
-          document.documentElement.setAttribute("data-five-flags-open-layer", doll.id || "");
+          row.className = "row";
+          rk.className = "rk";
+          rv.className = "rv";
+
+          rk.textContent = key;
+          rv.textContent = value;
+
+          row.append(rk, rv);
+          receipt.appendChild(row);
+        });
+      }
+
+      function setLayer(key) {
+        const layer = layers[key] || layers.room;
+
+        controls.forEach((control) => {
+          control.dataset.active = control.dataset.layer === key ? "true" : "false";
+        });
+
+        if (title) title.textContent = layer.title;
+        if (copy) copy.textContent = layer.copy;
+        writeRows(layer.rows);
+      }
+
+      controls.forEach((control) => {
+        control.addEventListener("click", () => {
+          setLayer(control.dataset.layer || "room");
         });
       });
     })();

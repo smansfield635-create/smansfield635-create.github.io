@@ -1,19 +1,156 @@
 <!DOCTYPE html>
-<html lang="en" data-manor-registry="house-batch-1">
+<html lang="en" data-manor-registry="compass-initial-public-view">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
-  <meta name="description" content="The Compass for Diamond Gate Bridge: the orientation core for Richie’s Manor and Estate." />
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Compass: the first public view and orientation core for Richie’s Manor and Estate."
+  />
   <link rel="stylesheet" href="/assets/manor.css" />
   <script src="/assets/page_registry.js" defer></script>
+
   <style>
-    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    a{color:inherit}
-    .batch-note{font-size:.85rem;color:#b8c2d8}
+    body {
+      margin: 0;
+      background: #020713;
+      color: #eef3ff;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .first-view-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: clamp(18px, 3vw, 34px);
+      align-items: stretch;
+    }
+
+    .compass-proof-stack {
+      display: grid;
+      gap: 16px;
+    }
+
+    .compass-proof-card {
+      border: 1px solid rgba(244, 201, 103, 0.28);
+      border-radius: 22px;
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.075), transparent 44%),
+        rgba(8, 19, 42, 0.72);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.34);
+    }
+
+    .compass-proof-card strong {
+      color: #ffe3a3;
+    }
+
+    .entry-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(14px, 2vw, 22px);
+    }
+
+    .entry-card {
+      min-height: 190px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+    }
+
+    .entry-card span {
+      color: #b8c2d8;
+      line-height: 1.6;
+    }
+
+    .entry-card strong {
+      color: #eef3ff;
+      font-size: 1.2rem;
+    }
+
+    .compass-mini-map {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .compass-mini-map a {
+      min-height: 74px;
+      border: 1px solid rgba(244, 201, 103, 0.24);
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.045);
+      color: #d9e3f7;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .compass-mini-map a.primary {
+      color: #111827;
+      background: linear-gradient(180deg, #ffe3a3, #f4c967);
+      border-color: #f4c967;
+      box-shadow: 0 0 32px rgba(244, 201, 103, 0.24);
+    }
+
+    .status-ribbon {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .status-ribbon span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 12px;
+      border: 1px solid rgba(132, 225, 188, 0.38);
+      border-radius: 999px;
+      color: #eafff2;
+      background: rgba(132, 225, 188, 0.07);
+      font-weight: 800;
+      font-size: 0.9rem;
+    }
+
+    .compass-callout {
+      border-left: 3px solid #f4c967;
+      padding-left: 18px;
+      color: #b8c2d8;
+    }
+
+    @media (max-width: 920px) {
+      .first-view-stage,
+      .entry-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .compass-mini-map {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
-<body class="manor-skin manor-house" data-manor-skin="v1" data-manor-room="compass" data-manor-class="house" data-manor-slot="H1_COMPASS" data-manor-route="/" data-manor-batch="BATCH_1_HOUSE">
+
+<body
+  class="manor-skin manor-house"
+  data-manor-skin="v1"
+  data-manor-room="compass"
+  data-manor-class="house"
+  data-manor-slot="H1_COMPASS"
+  data-manor-route="/"
+  data-manor-batch="BATCH_1_HOUSE"
+  data-compass-role="initial-public-view"
+>
   <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
     <a href="/" aria-current="page" class="is-active manor-active-compass">Compass</a>
     <a href="/door/">Door</a>
@@ -25,39 +162,127 @@
 
   <main class="manor-shell">
     <section class="manor-room manor-lattice-mark">
-      <p class="manor-kicker">H1 · Compass · Orientation Core</p>
-      <h1 class="manor-title">Diamond Gate Bridge</h1>
-      <p class="manor-lede">Learn to Live to Love. The Compass is the root orientation chamber for Richie’s Manor and Estate. It tells the visitor where they are, where they can go, and how every room connects back to the house.</p>
-      <div class="manor-divider"></div>
-      <div class="manor-grid three">
-        <article class="manor-card">
-          <p class="manor-room-label">Where am I?</p>
-          <h2>At the Compass.</h2>
-          <p>The Compass routes. It does not force the visitor to reinterpret every page. It gives the house a stable first direction.</p>
-        </article>
-        <article class="manor-card">
-          <p class="manor-room-label">What is this?</p>
-          <h2>The orientation core.</h2>
-          <p>The Manor uses six structural house parts and nine orbiting planetary constructs. The house comes first. The worlds attach to it.</p>
-        </article>
-        <article class="manor-card">
-          <p class="manor-room-label">Where next?</p>
-          <h2>Choose the chamber.</h2>
-          <p>Use the Door for perspective, Products for the waterfall, Showroom for proof, and Gauges for system health.</p>
-        </article>
+      <div class="first-view-stage">
+        <div>
+          <p class="manor-kicker">H1 · Compass · First Public View</p>
+          <h1 class="manor-title">Diamond Gate Bridge</h1>
+          <p class="manor-lede">
+            Learn to Live to Love. This is the first view of Richie’s Manor and Estate:
+            a guided entry point, a proof surface, and the orientation core for everything built inside the house.
+          </p>
+
+          <div class="status-ribbon">
+            <span>House stable</span>
+            <span>Products stable</span>
+            <span>Planets stable</span>
+            <span>Gauges live</span>
+          </div>
+
+          <div class="manor-divider"></div>
+
+          <p class="compass-callout">
+            Start here if you are new. The Compass does not ask you to understand the whole estate at once.
+            It gives you the first clean route.
+          </p>
+        </div>
+
+        <aside class="compass-proof-stack" aria-label="First-view proof stack">
+          <article class="compass-proof-card">
+            <p class="manor-room-label">What is this?</p>
+            <strong>A structured public estate.</strong>
+            <p>The house gives visitors a stable way to move through products, laws, events, and larger worlds.</p>
+          </article>
+
+          <article class="compass-proof-card">
+            <p class="manor-room-label">What works now?</p>
+            <strong>Live structure is measured.</strong>
+            <p>Gauges verifies the house skeleton, product chambers, and planetary constructs from the public site.</p>
+          </article>
+
+          <article class="compass-proof-card">
+            <p class="manor-room-label">Where should I go?</p>
+            <strong>Choose the next chamber.</strong>
+            <p>Products for utility, Showroom for proof, Upper Room for live events, and Gauges for health.</p>
+          </article>
+        </aside>
       </div>
     </section>
 
     <section class="manor-room" style="margin-top:28px">
-      <p class="manor-kicker">Six House Parts</p>
-      <h2>House first. Planets second.</h2>
-      <div class="manor-grid three">
-        <a class="manor-card" href="/door/"><strong>Door</strong><br />Entry threshold and view selector.</a>
-        <a class="manor-card" href="/home/"><strong>Home</strong><br />Central Manor body and public identity.</a>
-        <a class="manor-card" href="/products/"><strong>Products</strong><br />Source chamber and product waterfall.</a>
-        <a class="manor-card" href="/showroom/"><strong>Showroom</strong><br />Public proof room and demonstration surface.</a>
-        <a class="manor-card" href="/gauges/"><strong>Gauges</strong><br />Live diagnostic instrument room.</a>
-        <a class="manor-card" href="/nine-summits/"><strong>Nine Summits</strong><br />Planetary macro-world, anchored back to the Manor.</a>
+      <p class="manor-kicker">Start here</p>
+      <h2>Choose your first route.</h2>
+      <p class="manor-lede">
+        The first page should not be a maze. It should let the visitor enter through the correct door.
+      </p>
+
+      <div class="entry-grid">
+        <a class="manor-card entry-card" href="/products/">
+          <div>
+            <p class="manor-room-label">Utility</p>
+            <strong>Products</strong>
+          </div>
+          <span>See the product waterfall: ARCHCOIN, Five Flags, On Your Side AAI, Education, and Nutrition.</span>
+        </a>
+
+        <a class="manor-card entry-card" href="/showroom/">
+          <div>
+            <p class="manor-room-label">Proof</p>
+            <strong>Public Proof Room</strong>
+          </div>
+          <span>View the external-facing demonstration surface and estate presentation.</span>
+        </a>
+
+        <a class="manor-card entry-card" href="/gauges/">
+          <div>
+            <p class="manor-room-label">Health</p>
+            <strong>Live Gauges</strong>
+          </div>
+          <span>Check the live diagnostic instrument room and verify the site structure.</span>
+        </a>
+
+        <a class="manor-card entry-card" href="/big-laugh/upper-room/">
+          <div>
+            <p class="manor-room-label">Event</p>
+            <strong>The Upper Room</strong>
+          </div>
+          <span>Enter the live gathering surface for comedy, raffles, and public interaction.</span>
+        </a>
+
+        <a class="manor-card entry-card" href="/nine-summits-of-love/">
+          <div>
+            <p class="manor-room-label">Potential</p>
+            <strong>Nine Summits of Love</strong>
+          </div>
+          <span>See the 256 diamonds of human potential as the summit-scale transformation surface.</span>
+        </a>
+
+        <a class="manor-card entry-card" href="/explore/">
+          <div>
+            <p class="manor-room-label">Discovery</p>
+            <strong>Explore</strong>
+          </div>
+          <span>Move outward into discovery and the Frontier without losing the Manor anchor.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="manor-room" style="margin-top:28px">
+      <p class="manor-kicker">Estate map</p>
+      <h2>One house. Multiple worlds. Clear return path.</h2>
+      <p class="manor-lede">
+        The Compass keeps the structure readable: six house parts, five product chambers, and nine planetary constructs.
+      </p>
+
+      <div class="compass-mini-map" aria-label="Compass estate map">
+        <a class="primary" href="/">Compass</a>
+        <a href="/door/">Door</a>
+        <a href="/home/">Home</a>
+        <a href="/products/">Products</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/gauges/">Gauges</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+        <a href="/nine-summits/">Nine Summits</a>
       </div>
     </section>
 
@@ -74,18 +299,19 @@
     </section>
 
     <section class="manor-audit-strip">
-      <p class="manor-audit-title">Batch 1 audit markers</p>
+      <p class="manor-audit-title">Compass optimization markers</p>
       <ul class="manor-audit-list">
         <li class="manor-audit-chip pass" data-status="pass">route-exists</li>
         <li class="manor-audit-chip pass" data-status="pass">manor-skin</li>
         <li class="manor-audit-chip pass" data-status="pass">house-class</li>
         <li class="manor-audit-chip pass" data-status="pass">H1_COMPASS</li>
         <li class="manor-audit-chip pass" data-status="pass">active-compass</li>
+        <li class="manor-audit-chip pass" data-status="pass">initial-public-view</li>
       </ul>
-      <p class="batch-note">Compass rule: the Compass routes. The Door chooses perspective. The house remains the anchor.</p>
+      <p class="batch-note">
+        Compass rule: this page is the first public view, but it remains the orientation core.
+      </p>
     </section>
   </main>
-
-  <noscript>JavaScript is off. The Compass remains readable and route-safe.</noscript>
 </body>
 </html>

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="asset-wired-b8-final-sync">
+<html lang="en" data-gauges-generation="asset-wired-b9-true-final">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared B8 instruments asset contract."
+    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared B9 instruments asset contract."
   />
 
   <style>
@@ -154,7 +154,10 @@
     }
 
     .jumpGrid,
-    .routeRail{
+    .routeRail,
+    .legend,
+    .telemetry,
+    .receipt{
       list-style:none;
       margin:0;
       padding:0;
@@ -561,14 +564,6 @@
     }
 
     .telemetry,
-    .receipt,
-    .legend{
-      list-style:none;
-      margin:0;
-      padding:0;
-    }
-
-    .telemetry,
     .receipt{
       display:grid;
       gap:2px;
@@ -581,11 +576,6 @@
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       font-size:.56rem;
       line-height:1.18;
-    }
-
-    .telemetry li,
-    .receipt li{
-      display:block;
     }
 
     .legend{
@@ -608,6 +598,12 @@
       letter-spacing:.04em;
       text-transform:uppercase;
       min-width:0;
+    }
+
+    .legendSep,
+    .routeSep{
+      color:rgba(255,218,150,.62);
+      font-weight:900;
     }
 
     .dot{
@@ -745,6 +741,11 @@
       gap:8px;
     }
 
+    .routeRail li{
+      display:grid;
+      min-width:0;
+    }
+
     .routeRail a{
       border-radius:18px;
       min-height:48px;
@@ -758,6 +759,10 @@
       display:grid;
       place-items:center;
       text-align:center;
+    }
+
+    .routeSep{
+      display:none;
     }
 
     .fallback{
@@ -898,7 +903,7 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gauges-asset-wired-b8-final-sync"
+    data-instrument-standard="gauges-asset-wired-b9-true-final"
     data-read-mode="shared-assets-instrument-consumer"
   >
     <header class="topbar">
@@ -950,7 +955,7 @@
   </main>
 
   <script type="module">
-    const ASSET_URL = "/assets/instruments.js?v=gauges-b8-final-sync";
+    const ASSET_URL = "/assets/instruments.js?v=gauges-b9-true-final";
 
     function escapeHTML(value) {
       return String(value ?? "")

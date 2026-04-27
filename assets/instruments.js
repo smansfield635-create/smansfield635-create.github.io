@@ -1,13 +1,13 @@
 /* ==========================================================================
    Diamond Gate Bridge · Instruments Asset Layer
-   GAUGES_B5_ASSET_LAYER_SPLIT
+   GAUGES_B6_SEMANTIC_SEPARATOR_PATCH
    PATH: /assets/instruments.js
 
    PURPOSE:
    - Preserve the existing page-neutral instrument receipt API.
-   - Add reusable Gauges dashboard data, semantics, colors, routes, and render helpers.
-   - Move Gauges toward an asset/instrument source instead of page-local duplication.
-   - Improve semantic spacing for screen readers, copied text, and future page consumers.
+   - Preserve reusable Gauges dashboard data, semantics, colors, routes, and render helpers.
+   - Improve copied-text, screen-reader, and audit-read spacing.
+   - Keep Gauges as an asset-driven instrument contract rather than page-local duplication.
 
    BOUNDARY:
    - This file does not mutate DOM.
@@ -19,7 +19,7 @@
 
 const INSTRUMENT_META = deepFreeze({
   name: "instruments",
-  version: "G2_GAUGES_B5_ASSET_LAYER_SPLIT",
+  version: "G2_GAUGES_B6_SEMANTIC_SEPARATOR_PATCH",
   contract: "INSTRUMENT_CONTRACT_G2",
   role: "diagnostic_shaping_and_gauge_asset_layer",
   deterministic: true,
@@ -32,12 +32,13 @@ const INSTRUMENT_META = deepFreeze({
 
 export const GAUGES_META = deepFreeze({
   name: "gauges",
-  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B5",
+  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B6",
   role: "site_health_instrument_contract",
   readMode: "compact_engineer_dashboard_plus_ted_talk",
   activePageGoldRule: true,
   pageRelativeGold: "gauges",
-  operatingRule: "speed_efficiency_optimum_nature"
+  operatingRule: "speed_efficiency_optimum_nature",
+  semanticSeparator: " | "
 });
 
 export const GAUGE_ROUTES = deepFreeze({
@@ -53,36 +54,42 @@ export const GAUGE_ROUTES = deepFreeze({
 export const GAUGE_COLOR_STATES = deepFreeze({
   healthy: {
     label: "Healthy",
+    semanticLabel: "Healthy status",
     cssVar: "--green",
     tone: "#93efbd",
     meaning: "Working cleanly."
   },
   active: {
     label: "Active",
+    semanticLabel: "Active priority",
     cssVar: "--gold",
     tone: "#ffd98a",
     meaning: "Current page or priority instrument."
   },
   proof: {
     label: "Proof",
+    semanticLabel: "Proof signal",
     cssVar: "--blue",
     tone: "#8ec5ff",
     meaning: "Stable signal requiring live confirmation."
   },
   watch: {
     label: "Watch",
+    semanticLabel: "Watch item",
     cssVar: "--yellow",
     tone: "#ffcf7a",
     meaning: "Strong concept, needs inspection."
   },
   break: {
     label: "Break",
+    semanticLabel: "Break condition",
     cssVar: "--red",
     tone: "#ff6f78",
     meaning: "Urgent failure or broken path."
   },
   complex: {
     label: "Complex",
+    semanticLabel: "Complex item",
     cssVar: "--purple",
     tone: "#caa8ff",
     meaning: "Valid but interpretation-heavy."
@@ -99,7 +106,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Optimal",
     needle: 78,
     meaning: "Primary route movement is clean and fast.",
-    receipt: ["ROUTE_INTEGRITY=96", "STATUS=ACTIVE_PRIORITY"]
+    receipt: ["ROUTE_INTEGRITY=96 | STATUS=ACTIVE_PRIORITY"]
   },
   {
     id: "G02",
@@ -110,7 +117,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Healthy",
     needle: 66,
     meaning: "Canonical product destinations are mostly unified.",
-    receipt: ["BACKLINK_CANONICALITY=91", "RULE=ONE_DESTINATION"]
+    receipt: ["BACKLINK_CANONICALITY=91 | RULE=ONE_DESTINATION"]
   },
   {
     id: "G03",
@@ -121,7 +128,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Proof",
     needle: 58,
     meaning: "Page surfaces are coherent; screenshots still matter.",
-    receipt: ["RENDER_STABILITY=88", "NEXT=LIVE_RENDER_INSPECTION"]
+    receipt: ["RENDER_STABILITY=88 | NEXT=LIVE_RENDER_INSPECTION"]
   },
   {
     id: "G04",
@@ -132,7 +139,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Locked",
     needle: 70,
     meaning: "Products source chamber coordinates the product rooms.",
-    receipt: ["PRODUCT_DESTINATION_LOCK=94", "ROOM=SOURCE_CHAMBER"]
+    receipt: ["PRODUCT_DESTINATION_LOCK=94 | ROOM=SOURCE_CHAMBER"]
   },
   {
     id: "G05",
@@ -143,7 +150,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Watch",
     needle: 42,
     meaning: "Vault is strong; final live render needs confirmation.",
-    receipt: ["ARCHCOIN_VAULT_HEALTH=82", "WATCH=JS_RUNTIME_RENDER"]
+    receipt: ["ARCHCOIN_VAULT_HEALTH=82 | WATCH=JS_RUNTIME_RENDER"]
   },
   {
     id: "G06",
@@ -154,7 +161,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Proof",
     needle: 52,
     meaning: "Showroom remains the public proof window.",
-    receipt: ["SHOWROOM_HEALTH=86", "ROLE=PROOF_WINDOW"]
+    receipt: ["SHOWROOM_HEALTH=86 | ROLE=PROOF_WINDOW"]
   },
   {
     id: "G07",
@@ -165,7 +172,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Complex",
     needle: 32,
     meaning: "Event logic is rich; public pathway should stay simple.",
-    receipt: ["EVENT_HEALTH=77", "INTERPRETATION_REQUIRED=TRUE"]
+    receipt: ["EVENT_HEALTH=77 | INTERPRETATION_REQUIRED=TRUE"]
   },
   {
     id: "G08",
@@ -176,7 +183,7 @@ export const GAUGE_READINGS = deepFreeze([
     label: "Stable",
     needle: 62,
     meaning: "Room identities, route law, and products are aligned.",
-    receipt: ["SYSTEM_STABILITY=90", "STATE=COHERENT"]
+    receipt: ["SYSTEM_STABILITY=90 | STATE=COHERENT"]
   }
 ]);
 
@@ -222,12 +229,7 @@ export const GAUGE_TED_READ = deepFreeze({
     copy:
       "Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.",
     receipt: [
-      "GAUGES_TRUE_INSTRUMENT_ROOM_B5=ACTIVE",
-      "ROUTE_INTEGRITY=96",
-      "BACKLINK_CANONICALITY=91",
-      "RENDER_STABILITY=88",
-      "PRODUCT_DESTINATION_LOCK=94",
-      "NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
+      "GAUGES_TRUE_INSTRUMENT_ROOM_B6=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
     ]
   }
 });
@@ -278,6 +280,14 @@ function escapeHtml(value) {
 function clampNumber(value, min, max, fallback) {
   const number = Number.isFinite(value) ? value : fallback;
   return Math.min(max, Math.max(min, number));
+}
+
+function semanticJoin(lines, separator = " | ") {
+  if (!Array.isArray(lines)) return "";
+  return lines
+    .map((line) => normalizeString(line, ""))
+    .filter(Boolean)
+    .join(separator);
 }
 
 function pickProjectionObject(render) {
@@ -486,6 +496,9 @@ function normalizeGaugeReading(reading) {
   const safeReading = normalizeObject(reading);
   const state = normalizeString(safeReading.state, "healthy").toLowerCase();
   const colorState = GAUGE_COLOR_STATES[state] ? state : "healthy";
+  const receipt = Array.isArray(safeReading.receipt)
+    ? safeReading.receipt.map((line) => normalizeString(line)).filter((line) => line !== "—")
+    : [];
 
   return deepFreeze({
     id: normalizeString(safeReading.id, "G00"),
@@ -494,11 +507,19 @@ function normalizeGaugeReading(reading) {
     value: clampNumber(Number(safeReading.value), 0, 100, 0),
     state: colorState,
     label: normalizeString(safeReading.label, GAUGE_COLOR_STATES[colorState].label),
+    semanticLabel: normalizeString(safeReading.semanticLabel, GAUGE_COLOR_STATES[colorState].semanticLabel),
     needle: clampNumber(Number(safeReading.needle), -48, 86, 0),
     meaning: normalizeString(safeReading.meaning, "No gauge meaning supplied."),
-    receipt: Array.isArray(safeReading.receipt)
-      ? deepFreeze(safeReading.receipt.map((line) => normalizeString(line)))
-      : deepFreeze([])
+    receipt: deepFreeze(receipt),
+    receiptText: semanticJoin(receipt),
+    semanticText:
+      normalizeString(safeReading.id, "G00") +
+      " | " +
+      normalizeString(safeReading.title, "Unnamed Gauge") +
+      " | VALUE=" +
+      stringifyValue(clampNumber(Number(safeReading.value), 0, 100, 0)) +
+      " | STATE=" +
+      colorState.toUpperCase()
   });
 }
 
@@ -646,6 +667,10 @@ export function buildGaugeDashboardPacket(options = {}) {
 
   const watchItems = readings.filter((item) => item.state === "watch" || item.state === "complex" || item.state === "break");
 
+  const legendText = Object.keys(GAUGE_COLOR_STATES)
+    .map((key) => GAUGE_COLOR_STATES[key].semanticLabel)
+    .join(" | ");
+
   return deepFreeze({
     meta: GAUGES_META,
     routes: GAUGE_ROUTES,
@@ -653,6 +678,11 @@ export function buildGaugeDashboardPacket(options = {}) {
     activePage,
     readings,
     tedRead: GAUGE_TED_READ,
+    semantic: {
+      legendText,
+      receiptSeparator: GAUGES_META.semanticSeparator,
+      routeText: "Compass | Door | Products | Showroom | Vault | Upper Room"
+    },
     summary: {
       average,
       watchCount: watchItems.length,
@@ -671,12 +701,11 @@ export function buildGaugeDashboardPacket(options = {}) {
 export function renderGaugeCardHTML(reading) {
   const gauge = normalizeGaugeReading(reading);
   const color = GAUGE_COLOR_STATES[gauge.state] || GAUGE_COLOR_STATES.healthy;
-  const receiptLines = gauge.receipt.map((line) => '<span>' + escapeHtml(line) + "</span>").join("\n");
 
   return [
     '<article class="gaugeCard' + (gauge.state === "active" ? " priority" : "") + '"',
     ' style="--tone:' + escapeHtml(color.cssVar) + ';--needle:' + escapeHtml(String(gauge.needle)) + 'deg;"',
-    ' aria-label="' + escapeHtml(gauge.id + " " + gauge.title + " " + gauge.value + " " + gauge.label) + '">',
+    ' aria-label="' + escapeHtml(gauge.semanticText + " | " + gauge.receiptText) + '">',
     '<div class="gaugeTop">',
     '<span class="gaugeName">',
     '<small>' + escapeHtml(gauge.id) + '</small>',
@@ -689,9 +718,9 @@ export function renderGaugeCardHTML(reading) {
     '<span class="dialRead"><strong>' + escapeHtml(gauge.value) + '</strong><small>' + escapeHtml(gauge.label) + '</small></span>',
     '</div>',
     '<p class="gaugeMeaning">' + escapeHtml(gauge.meaning) + '</p>',
-    '<div class="telemetry" aria-label="' + escapeHtml(gauge.title + " telemetry") + '">',
-    receiptLines,
-    '</div>',
+    '<ul class="telemetry" aria-label="' + escapeHtml(gauge.title + " telemetry") + '">',
+    gauge.receipt.map((line) => '<li>' + escapeHtml(line) + '</li>').join("\n"),
+    '</ul>',
     '</article>'
   ].join("\n");
 }
@@ -703,7 +732,9 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
     .map((key) => {
       const item = states[key];
       return (
-        '<span class="legendItem">' +
+        '<span class="legendItem" aria-label="' +
+        escapeHtml(item.semanticLabel || item.label) +
+        '">' +
         '<span class="dot" style="--tone:' +
         escapeHtml(item.cssVar) +
         '" aria-hidden="true"></span>' +
@@ -756,11 +787,11 @@ export function renderGaugeTedHTML(tedRead = GAUGE_TED_READ) {
     '<section class="nextAction" aria-label="Next practical action">',
     '<h3>' + escapeHtml(normalizeString(nextAction.title, "Next practical move")) + '</h3>',
     '<p>' + escapeHtml(normalizeString(nextAction.copy)) + '</p>',
-    '<div class="receipt">',
+    '<ul class="receipt" aria-label="Gauge next action receipt">',
     (Array.isArray(nextAction.receipt) ? nextAction.receipt : [])
-      .map((line) => '<span>' + escapeHtml(line) + '</span>')
+      .map((line) => '<li>' + escapeHtml(line) + '</li>')
       .join("\n"),
-    '</div>',
+    '</ul>',
     '</section>'
   ].join("\n");
 }
@@ -777,10 +808,8 @@ export function renderGaugePlainText(packet = buildGaugeDashboardPacket()) {
   readings.forEach((reading) => {
     const gauge = normalizeGaugeReading(reading);
     lines.push("");
-    lines.push(gauge.id + " " + gauge.title);
-    lines.push("VALUE=" + gauge.value);
-    lines.push("STATE=" + gauge.state.toUpperCase());
-    lines.push("LABEL=" + gauge.label.toUpperCase());
+    lines.push(gauge.id + " | " + gauge.title);
+    lines.push("VALUE=" + gauge.value + " | STATE=" + gauge.state.toUpperCase() + " | LABEL=" + gauge.label.toUpperCase());
     lines.push("MEANING=" + gauge.meaning);
     gauge.receipt.forEach((receiptLine) => lines.push(receiptLine));
   });

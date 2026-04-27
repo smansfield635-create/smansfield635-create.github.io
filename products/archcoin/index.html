@@ -1,5 +1,6 @@
+
 <!DOCTYPE html>
-<html lang="en" data-product-generation="archcoin-b11-manor-vault-color-alignment">
+<html lang="en" data-product-generation="archcoin-b12-four-coin-utility-backlinks">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
@@ -36,6 +37,10 @@
     }
 
     *{box-sizing:border-box}
+
+    html{
+      scroll-behavior:smooth;
+    }
 
     html,body{
       margin:0;
@@ -85,7 +90,10 @@
 
     .topbar,
     .stage,
-    .routeStrip{
+    .routeStrip,
+    .coinAnchorNav,
+    .utilitySection,
+    .collectiveSection{
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(255,218,150,.12),transparent 42%),
@@ -148,7 +156,9 @@
     }
 
     .action,
-    .routeCard{
+    .routeCard,
+    .anchorCard,
+    .utilityBacklink{
       display:inline-flex;
       align-items:center;
       justify-content:center;
@@ -168,7 +178,9 @@
     }
 
     .action.primary,
-    .routeCard.primary{
+    .routeCard.primary,
+    .anchorCard.primary,
+    .utilityBacklink.primary{
       border-color:rgba(255,218,150,.42);
       background:
         radial-gradient(circle at 50% 0%,rgba(255,218,150,.18),transparent 70%),
@@ -186,9 +198,12 @@
       align-items:stretch;
       overflow:hidden;
       position:relative;
+      scroll-margin-top:16px;
     }
 
-    .stage::before{
+    .stage::before,
+    .utilitySection::before,
+    .collectiveSection::before{
       content:"";
       position:absolute;
       inset:0;
@@ -200,7 +215,9 @@
     }
 
     .copy,
-    .vaultRoom{
+    .vaultRoom,
+    .utilityContent,
+    .collectiveContent{
       position:relative;
       z-index:1;
     }
@@ -211,7 +228,8 @@
       align-content:center;
     }
 
-    .eyebrow{
+    .eyebrow,
+    .sectionEyebrow{
       display:inline-flex;
       width:max-content;
       max-width:100%;
@@ -229,7 +247,8 @@
       font-weight:900;
     }
 
-    .eyebrow::before{
+    .eyebrow::before,
+    .sectionEyebrow::before{
       content:"";
       width:8px;
       height:8px;
@@ -237,6 +256,7 @@
       transform:rotate(45deg);
       background:var(--gold);
       box-shadow:0 0 18px rgba(255,218,150,.42);
+      flex:0 0 auto;
     }
 
     h1{
@@ -492,6 +512,159 @@
     .garden.south{left:50%;bottom:0;transform:translateX(-50%)}
     .garden.west{left:0;top:50%;transform:translateY(-50%)}
 
+    .coinAnchorNav{
+      border-radius:24px;
+      padding:12px;
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .anchorCard{
+      min-height:54px;
+      border-radius:18px;
+      flex-direction:column;
+      gap:4px;
+      line-height:1.05;
+    }
+
+    .anchorCard small{
+      display:block;
+      color:var(--soft);
+      font-size:.64rem;
+      font-weight:850;
+      letter-spacing:.10em;
+    }
+
+    .utilitySection,
+    .collectiveSection{
+      position:relative;
+      overflow:hidden;
+      border-radius:30px;
+      padding:clamp(18px,3vw,28px);
+      scroll-margin-top:18px;
+    }
+
+    .utilityContent,
+    .collectiveContent{
+      display:grid;
+      gap:16px;
+    }
+
+    .utilityHead{
+      display:grid;
+      gap:10px;
+      max-width:850px;
+    }
+
+    .utilityHead h2,
+    .collectiveContent h2{
+      margin:0;
+      color:#fff;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2rem,4.4vw,4.4rem);
+      line-height:.92;
+      letter-spacing:-.065em;
+    }
+
+    .utilityHead p,
+    .collectiveLead{
+      margin:0;
+      color:var(--muted);
+      font-size:1rem;
+      line-height:1.62;
+      max-width:78ch;
+    }
+
+    .utilityGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .utilityCard{
+      border:1px solid rgba(255,218,150,.15);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(255,218,150,.08),transparent 54%),
+        rgba(0,0,0,.18);
+      padding:16px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+      min-height:190px;
+    }
+
+    .utilityCard small{
+      color:var(--gold);
+      font-size:.68rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .utilityCard h3{
+      margin:0;
+      color:#fff;
+      font-size:1.12rem;
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    .utilityCard p{
+      margin:0;
+      color:var(--muted);
+      font-size:.95rem;
+      line-height:1.55;
+    }
+
+    .utilityBacklinks{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .collectiveGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+    }
+
+    .collectiveStep{
+      border:1px solid rgba(255,218,150,.15);
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      padding:16px;
+      display:grid;
+      gap:8px;
+    }
+
+    .collectiveStep strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.12;
+    }
+
+    .collectiveStep span{
+      color:var(--muted);
+      font-size:.92rem;
+      line-height:1.45;
+    }
+
+    .collectiveReceipt{
+      border:1px solid rgba(255,218,150,.18);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,218,150,.10),transparent 62%),
+        rgba(0,0,0,.18);
+      padding:16px;
+      color:var(--soft);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.82rem;
+      line-height:1.48;
+      overflow:auto;
+    }
+
     .routeStrip{
       border-radius:24px;
       padding:12px;
@@ -517,6 +690,9 @@
       .stage{grid-template-columns:1fr}
       .vaultRoom{min-height:540px}
       .routeStrip{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .coinAnchorNav{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .utilityGrid{grid-template-columns:1fr}
+      .collectiveGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media(max-width:640px){
@@ -575,8 +751,16 @@
         text-align:left;
       }
 
-      .routeStrip{
+      .coinAnchorNav,
+      .routeStrip,
+      .collectiveGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .utilitySection,
+      .collectiveSection{
+        border-radius:24px;
+        padding:16px;
       }
     }
 
@@ -595,7 +779,7 @@
 <body>
   <canvas id="fieldCanvas" aria-hidden="true"></canvas>
 
-  <main class="page" data-product="archcoin" data-runtime="archcoin-b11-manor-vault-color-alignment">
+  <main class="page" data-product="archcoin" data-runtime="archcoin-b12-four-coin-utility-backlinks">
     <header class="topbar">
       <a class="brand" href="/products/archcoin/" aria-label="ARCHCOIN Vault Chamber">
         <span class="brandMark" aria-hidden="true"></span>
@@ -613,7 +797,7 @@
       </nav>
     </header>
 
-    <section class="stage" aria-label="ARCHCOIN Vault Chamber">
+    <section class="stage" id="vault-core" aria-label="ARCHCOIN Vault Chamber">
       <section class="copy" aria-labelledby="archcoinTitle">
         <span class="eyebrow">ARCHCOIN · Vault Chamber</span>
         <h1 id="archcoinTitle">The Vault receives the stream.</h1>
@@ -649,14 +833,212 @@
       <aside class="vaultRoom" aria-label="ARCHCOIN four-garden vault model">
         <div class="vault">
           <div class="gardens">
-            <button class="garden north" type="button" data-garden="North" data-active="true"><span><strong>N · North Coin</strong>Contract Authority</span></button>
-            <button class="garden east" type="button" data-garden="East"><span><strong>E · East Coin</strong>Inbound Value</span></button>
-            <button class="garden south" type="button" data-garden="South"><span><strong>S · South Coin</strong>Outbound Obligation</span></button>
-            <button class="garden west" type="button" data-garden="West"><span><strong>W · West Coin</strong>Growth / Allocation</span></button>
+            <a class="garden north" href="#north-coin" data-garden="North" data-active="true"><span><strong>N · North Coin</strong>Contract Authority</span></a>
+            <a class="garden east" href="#east-coin" data-garden="East"><span><strong>E · East Coin</strong>Inbound Value</span></a>
+            <a class="garden south" href="#south-coin" data-garden="South"><span><strong>S · South Coin</strong>Outbound Obligation</span></a>
+            <a class="garden west" href="#west-coin" data-garden="West"><span><strong>W · West Coin</strong>Growth / Allocation</span></a>
           </div>
           <div class="vaultLabel">Receiving<br>Vault<br>Core</div>
         </div>
       </aside>
+    </section>
+
+    <nav class="coinAnchorNav" aria-label="ARCHCOIN coin utility backlinks">
+      <a class="anchorCard primary" href="#north-coin"><small>North</small>Contract Authority</a>
+      <a class="anchorCard" href="#east-coin"><small>East</small>Inbound Value</a>
+      <a class="anchorCard" href="#south-coin"><small>South</small>Outbound Obligation</a>
+      <a class="anchorCard" href="#west-coin"><small>West</small>Growth / Allocation</a>
+      <a class="anchorCard" href="#archcoin-collective-utility"><small>Collective</small>Full Template</a>
+    </nav>
+
+    <section class="utilitySection" id="north-coin" aria-label="North Coin utility">
+      <div class="utilityContent">
+        <div class="utilityHead">
+          <span class="sectionEyebrow">North Coin · Contract Authority</span>
+          <h2>North names the agreement.</h2>
+          <p>North Coin is the authority layer. It gives every value movement a named contract, permission frame, counterparty context, and audit boundary.</p>
+        </div>
+
+        <div class="utilityGrid">
+          <article class="utilityCard">
+            <small>Independent utility</small>
+            <h3>It defines the deal.</h3>
+            <p>North identifies what agreement governs the transaction: who is allowed to move value, what terms apply, what signature matters, and which rule-set controls the exchange.</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Collective utility</small>
+            <h3>It keeps the template lawful.</h3>
+            <p>Without North, East receives, South owes, and West allocates without a governing frame. North prevents loose movement by binding the other three coins to a declared contract.</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Advert read</small>
+            <h3>Know what governs the money before the money moves.</h3>
+            <p>ARCHCOIN starts with the agreement, not the hype. North gives the transaction a clean authority layer before value starts flowing.</p>
+          </article>
+        </div>
+
+        <div class="utilityBacklinks">
+          <a class="utilityBacklink primary" href="#vault-core">Back to Vault Core</a>
+          <a class="utilityBacklink" href="#archcoin-collective-utility">See Collective Utility</a>
+          <a class="utilityBacklink" href="#east-coin">Next: East Coin</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="utilitySection" id="east-coin" aria-label="East Coin utility">
+      <div class="utilityContent">
+        <div class="utilityHead">
+          <span class="sectionEyebrow">East Coin · Inbound Value</span>
+          <h2>East makes arrival visible.</h2>
+          <p>East Coin is the receiving layer. It classifies what value came in, where it came from, when it arrived, and what receipt proves the incoming side of the transaction.</p>
+        </div>
+
+        <div class="utilityGrid">
+          <article class="utilityCard">
+            <small>Independent utility</small>
+            <h3>It records incoming value.</h3>
+            <p>East reads accounts receivable, deposits, receipts, counterparty inflow, and other forms of value received. It answers: what entered the system?</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Collective utility</small>
+            <h3>It proves the receiving side.</h3>
+            <p>East gives the contract a visible inbound event. North names the agreement, East shows what actually arrived, South tracks what is owed, and West decides what can grow.</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Advert read</small>
+            <h3>Value is easier to trust when arrival is visible.</h3>
+            <p>ARCHCOIN makes the incoming side legible. East gives every transaction a clear receipt layer instead of leaving value flow vague.</p>
+          </article>
+        </div>
+
+        <div class="utilityBacklinks">
+          <a class="utilityBacklink primary" href="#vault-core">Back to Vault Core</a>
+          <a class="utilityBacklink" href="#archcoin-collective-utility">See Collective Utility</a>
+          <a class="utilityBacklink" href="#south-coin">Next: South Coin</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="utilitySection" id="south-coin" aria-label="South Coin utility">
+      <div class="utilityContent">
+        <div class="utilityHead">
+          <span class="sectionEyebrow">South Coin · Outbound Obligation</span>
+          <h2>South carries the obligation.</h2>
+          <p>South Coin is the settlement layer. It tracks what must go out, what is owed, what pressure remains, and what duty must be satisfied for the transaction to stay balanced.</p>
+        </div>
+
+        <div class="utilityGrid">
+          <article class="utilityCard">
+            <small>Independent utility</small>
+            <h3>It names what must be settled.</h3>
+            <p>South reads accounts payable, outgoing value, settlement duty, and obligation pressure. It answers: what leaves the system, and what still needs to be honored?</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Collective utility</small>
+            <h3>It prevents one-sided accounting.</h3>
+            <p>East can show what came in, but South shows what must go out. The full template avoids false profit reads by keeping obligation visible beside receipt.</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Advert read</small>
+            <h3>Real value movement includes responsibility.</h3>
+            <p>ARCHCOIN does not only celebrate inflow. South keeps the transaction honest by showing the obligation side before the system calls the movement complete.</p>
+          </article>
+        </div>
+
+        <div class="utilityBacklinks">
+          <a class="utilityBacklink primary" href="#vault-core">Back to Vault Core</a>
+          <a class="utilityBacklink" href="#archcoin-collective-utility">See Collective Utility</a>
+          <a class="utilityBacklink" href="#west-coin">Next: West Coin</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="utilitySection" id="west-coin" aria-label="West Coin utility">
+      <div class="utilityContent">
+        <div class="utilityHead">
+          <span class="sectionEyebrow">West Coin · Growth / Allocation</span>
+          <h2>West decides what can grow.</h2>
+          <p>West Coin is the allocation layer. It routes surplus, marketing pressure, reinvestment, GYP value flow, and expansion logic without letting growth escape the transaction frame.</p>
+        </div>
+
+        <div class="utilityGrid">
+          <article class="utilityCard">
+            <small>Independent utility</small>
+            <h3>It allocates expansion pressure.</h3>
+            <p>West reads where value should be reinvested, promoted, reserved, multiplied, or routed for growth. It answers: what part of this transaction becomes future motion?</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Collective utility</small>
+            <h3>It lets growth stay accountable.</h3>
+            <p>West does not replace North, East, or South. It adds the growth question after contract, receipt, and obligation are visible, keeping expansion inside the bond frame.</p>
+          </article>
+
+          <article class="utilityCard">
+            <small>Advert read</small>
+            <h3>Growth should not break the bond.</h3>
+            <p>ARCHCOIN lets value expand without losing its trail. West makes growth readable, routed, and accountable instead of detached from the transaction that produced it.</p>
+          </article>
+        </div>
+
+        <div class="utilityBacklinks">
+          <a class="utilityBacklink primary" href="#vault-core">Back to Vault Core</a>
+          <a class="utilityBacklink" href="#archcoin-collective-utility">See Collective Utility</a>
+          <a class="utilityBacklink" href="#north-coin">Return to North Coin</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="collectiveSection" id="archcoin-collective-utility" aria-label="ARCHCOIN collective utility">
+      <div class="collectiveContent">
+        <span class="sectionEyebrow">ARCHCOIN · Collective Utility</span>
+        <h2>Four coins. One transaction map.</h2>
+        <p class="collectiveLead">
+          ARCHCOIN is strongest when the four coins operate together. It is not merely a coin. It is a transaction template that lets existing value objects be classified, routed, obligated, allocated, and audited through one common bond frame.
+        </p>
+
+        <div class="collectiveGrid">
+          <article class="collectiveStep">
+            <strong>North binds.</strong>
+            <span>Contract authority names the agreement and prevents value movement from floating without terms.</span>
+          </article>
+          <article class="collectiveStep">
+            <strong>East receives.</strong>
+            <span>Inbound value proves what arrived and gives the receiving side a clear receipt.</span>
+          </article>
+          <article class="collectiveStep">
+            <strong>South settles.</strong>
+            <span>Outbound obligation shows what is owed, paid, settled, or still under pressure.</span>
+          </article>
+          <article class="collectiveStep">
+            <strong>West grows.</strong>
+            <span>Growth allocation routes expansion, reinvestment, marketing pressure, and future motion.</span>
+          </article>
+        </div>
+
+        <div class="collectiveReceipt">
+          ARCHCOIN_COLLECTIVE_UTILITY=B12_ACTIVE<br />
+          TEMPLATE_READ=CONTRACT + INBOUND_VALUE + OUTBOUND_OBLIGATION + GROWTH_ALLOCATION<br />
+          ORDINARY_SINGLE_COIN_READ=FALSE<br />
+          AUTOMATIC_CHAIN_MERGER=FALSE<br />
+          REAL_INTEROPERABILITY_REQUIRES=ADAPTERS | BRIDGES | WRAPPERS | ORACLES | ACCOUNTING_SYSTEMS<br />
+          PUBLIC_ADVERT_READ=ARCHCOIN_MAKES_VALUE_MOVEMENT_LEGIBLE_WITHOUT_REPLACING_EXISTING_ASSETS
+        </div>
+
+        <div class="utilityBacklinks">
+          <a class="utilityBacklink primary" href="#vault-core">Back to Vault Core</a>
+          <a class="utilityBacklink" href="#north-coin">North Coin</a>
+          <a class="utilityBacklink" href="#east-coin">East Coin</a>
+          <a class="utilityBacklink" href="#south-coin">South Coin</a>
+          <a class="utilityBacklink" href="#west-coin">West Coin</a>
+        </div>
+      </div>
     </section>
 
     <nav class="routeStrip" aria-label="ARCHCOIN route strip">
@@ -669,7 +1051,7 @@
     </nav>
 
     <div class="runtimeNote">
-      ARCHCOIN_B11=MANOR_VAULT_COLOR_ALIGNMENT · RUNTIME_ENHANCEMENT=/products/archcoin/index.js · CANONICAL_DESTINATION=/products/archcoin/
+      ARCHCOIN_B12=FOUR_COIN_UTILITY_BACKLINKS · CANONICAL_DESTINATION=/products/archcoin/ · ANCHORS=#north-coin | #east-coin | #south-coin | #west-coin | #archcoin-collective-utility
     </div>
   </main>
 

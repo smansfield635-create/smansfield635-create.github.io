@@ -2,7 +2,8 @@
 <html
   lang="en"
   data-page-id="compass"
-  data-generation="index-generation-2-scene-deepening"
+  data-page="compass"
+  data-generation="index-generation-2-natural-scene-renewal"
   data-flat-world-baseline="locked"
   data-round-world="tree-of-life"
   data-round-scope="256-acre-estate"
@@ -10,7 +11,13 @@
   data-round-road-logic="u-road"
   data-round-ecosystem="active"
   data-globe-status="locked-later"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-manor-class="house"
+  data-house-field="true"
   data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="compass"
 >
 <head>
   <meta charset="utf-8" />
@@ -18,31 +25,41 @@
   <title>Compass · Rich Manor and Estate</title>
   <meta
     name="description"
-    content="Rich Manor and Estate Compass. Flat World is the verified 2D route map. Round World is the scene-first 256-acre estate view centered on the 256-year-old oak, Manor, and U-shaped road. Globe / Meta remains later."
+    content="Rich Manor and Estate Compass. Flat World is the verified route map. Round World is the natural 256-acre estate scene centered on the 256-year-old oak, Manor, U-road, grass field, and living estate ground. Globe / Meta remains later."
   />
+  <link rel="stylesheet" href="/assets/manor.css?v=index-generation-2-natural-scene-renewal-v1" />
 
   <style>
     :root {
       --bg: #03060b;
       --ink: #f7efd8;
-      --muted: rgba(247,239,216,.72);
-      --faint: rgba(247,239,216,.48);
-      --line: rgba(247,239,216,.16);
-      --line-strong: rgba(232,196,112,.5);
+      --muted: rgba(247, 239, 216, .74);
+      --soft: rgba(247, 239, 216, .54);
+      --faint: rgba(247, 239, 216, .34);
+      --line: rgba(247, 239, 216, .16);
+      --line-strong: rgba(232, 196, 112, .52);
       --gold: #e8c470;
-      --gold-soft: rgba(232,196,112,.24);
-      --green-deep: #102319;
-      --green-mid: #244d31;
-      --green-lit: #6f9650;
-      --earth: #7d5434;
-      --earth-dark: #352115;
-      --road: #bca47b;
-      --panel: rgba(5,9,15,.72);
-      --panel-light: rgba(255,255,255,.07);
+      --gold-soft: rgba(232, 196, 112, .22);
+      --sky-top: #07172c;
+      --sky-low: #182f2a;
+      --grass-dark: #102414;
+      --grass-mid: #244f2e;
+      --grass-lit: #6f9b4f;
+      --grass-gold: #9f9a55;
+      --soil: #6c4930;
+      --soil-dark: #2f1e15;
+      --road: #b79c70;
+      --road-dark: #7b6246;
+      --bark: #7c4c2f;
+      --bark-dark: #321d12;
+      --leaf-dark: #163421;
+      --leaf-mid: #2f6938;
+      --leaf-lit: #7fa757;
+      --panel: rgba(5, 9, 15, .72);
       --shadow: 0 30px 110px rgba(0,0,0,.55);
       --radius: 30px;
       --max: 1240px;
-      --scene-h: min(790px, calc(100vh - 92px));
+      --scene-h: min(820px, calc(100vh - 92px));
     }
 
     * {
@@ -60,13 +77,13 @@
     body {
       margin: 0;
       min-height: 100vh;
-      overflow-x: hidden;
       color: var(--ink);
       background:
         radial-gradient(circle at 50% -8%, rgba(232,196,112,.18), transparent 31%),
         radial-gradient(circle at 18% 19%, rgba(91,127,184,.14), transparent 25%),
         radial-gradient(circle at 83% 16%, rgba(83,134,92,.12), transparent 23%),
         linear-gradient(180deg, #03060b 0%, #08101b 52%, #03050a 100%);
+      overflow-x: hidden;
     }
 
     body::before {
@@ -75,13 +92,13 @@
       inset: 0;
       z-index: -2;
       pointer-events: none;
-      opacity: .75;
+      opacity: .7;
       background-image:
         radial-gradient(circle, rgba(255,255,255,.58) 0 1px, transparent 1.4px),
         radial-gradient(circle, rgba(255,255,255,.24) 0 1px, transparent 1.7px);
       background-size: 92px 92px, 158px 158px;
       background-position: 0 0, 37px 54px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.20) 75%, rgba(0,0,0,.04));
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.2) 75%, rgba(0,0,0,.04));
     }
 
     a {
@@ -109,7 +126,7 @@
       top: 0;
       z-index: 80;
       border-bottom: 1px solid var(--line);
-      background: rgba(3,6,11,.78);
+      background: rgba(3, 6, 11, .78);
       backdrop-filter: blur(18px);
     }
 
@@ -171,7 +188,7 @@
     }
 
     .compass-shell {
-      padding: 18px 0 24px;
+      padding: 18px 0 22px;
     }
 
     .scene-frame {
@@ -193,7 +210,7 @@
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      opacity: .78;
+      opacity: .76;
       background:
         radial-gradient(circle at 22% 18%, rgba(255,255,255,.15) 0 1px, transparent 1.5px),
         radial-gradient(circle at 77% 23%, rgba(255,255,255,.13) 0 1px, transparent 1.5px),
@@ -408,96 +425,188 @@
       font-size: .78rem;
     }
 
-    .round-estate {
+    .natural-estate {
       position: absolute;
       inset: 0;
       z-index: 4;
       overflow: hidden;
-      perspective: 1300px;
+      perspective: 1400px;
       background:
-        radial-gradient(circle at 52% 13%, rgba(232,196,112,.20), transparent 17%),
-        radial-gradient(circle at 50% 0%, rgba(255,227,150,.10), transparent 31%),
-        linear-gradient(180deg, #07172b 0 30%, #13291f 30% 52%, #0c120c 52% 100%);
+        radial-gradient(circle at 52% 12%, rgba(245,216,137,.24), transparent 18%),
+        radial-gradient(circle at 50% 0%, rgba(255,238,170,.11), transparent 32%),
+        linear-gradient(180deg, var(--sky-top) 0 29%, var(--sky-low) 29% 45%, #10180f 45% 100%);
     }
 
-    .round-estate::before {
+    .natural-estate::before {
       content: "";
+      position: absolute;
+      left: -8%;
+      right: -8%;
+      top: 31%;
+      height: 28%;
+      z-index: 1;
+      background:
+        radial-gradient(ellipse at 17% 100%, rgba(62,95,62,.72), transparent 43%),
+        radial-gradient(ellipse at 68% 96%, rgba(72,104,62,.58), transparent 47%),
+        linear-gradient(180deg, rgba(30,66,43,.42), rgba(17,38,25,.82));
+      filter: blur(.25px);
+    }
+
+    .estate-land {
       position: absolute;
       left: -10%;
       right: -10%;
-      top: 35%;
-      height: 70%;
-      z-index: 1;
-      transform: rotateX(60deg);
+      top: 38%;
+      height: 71%;
+      z-index: 2;
+      transform: rotateX(59deg);
       transform-origin: 50% 0%;
       border-top: 1px solid rgba(232,196,112,.16);
       background:
-        radial-gradient(ellipse at 18% 75%, rgba(108,143,75,.42), transparent 23%),
-        radial-gradient(ellipse at 82% 78%, rgba(142,105,63,.40), transparent 24%),
-        radial-gradient(ellipse at 50% 74%, rgba(65,111,61,.42), transparent 35%),
-        linear-gradient(180deg, #27442e 0, #162312 100%);
+        radial-gradient(ellipse at 17% 77%, rgba(98,135,65,.42), transparent 24%),
+        radial-gradient(ellipse at 82% 81%, rgba(122,96,55,.38), transparent 25%),
+        radial-gradient(ellipse at 50% 70%, rgba(40,86,45,.52), transparent 39%),
+        repeating-linear-gradient(88deg, rgba(255,255,255,.045) 0 1px, transparent 1px 12px),
+        repeating-linear-gradient(112deg, rgba(0,0,0,.07) 0 1px, transparent 1px 15px),
+        linear-gradient(180deg, #2c5333 0%, #152714 100%);
     }
 
-    .round-estate::after {
+    .estate-land::before {
       content: "";
       position: absolute;
-      left: -5%;
-      right: -5%;
-      bottom: -18%;
-      height: 42%;
-      z-index: 2;
-      background:
-        radial-gradient(ellipse at 50% 30%, rgba(0,0,0,.42), transparent 46%),
-        linear-gradient(180deg, rgba(20,38,21,.18), rgba(0,0,0,.72));
-      pointer-events: none;
+      inset: 7% 8% 16%;
+      border: 2px solid rgba(232,196,112,.34);
+      border-radius: 50%;
+      box-shadow: inset 0 0 92px rgba(232,196,112,.08);
     }
 
-    .far-ridge {
+    .estate-land::after {
+      content: "";
       position: absolute;
-      left: -4%;
-      right: -4%;
-      top: 30%;
-      z-index: 2;
-      height: 120px;
+      inset: 18% 0 0;
       background:
-        radial-gradient(ellipse at 18% 100%, rgba(57,88,64,.72), transparent 45%),
-        radial-gradient(ellipse at 70% 96%, rgba(62,92,61,.62), transparent 48%);
-      opacity: .72;
-      filter: blur(.2px);
+        repeating-linear-gradient(92deg, rgba(132,169,83,.18) 0 2px, transparent 2px 16px),
+        repeating-linear-gradient(77deg, rgba(31,71,37,.26) 0 2px, transparent 2px 18px);
+      opacity: .58;
+      mix-blend-mode: screen;
     }
 
-    .estate-boundary {
+    .grass-near {
+      position: absolute;
+      left: -6%;
+      right: -6%;
+      bottom: -10%;
+      height: 39%;
+      z-index: 19;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(84deg, transparent 0 7px, rgba(130,177,79,.34) 7px 9px, transparent 9px 15px),
+        repeating-linear-gradient(101deg, transparent 0 5px, rgba(37,92,43,.55) 5px 7px, transparent 7px 14px),
+        linear-gradient(180deg, transparent 0%, rgba(18,48,22,.76) 42%, rgba(5,10,6,.95) 100%);
+      mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.86) 48%, transparent 100%);
+    }
+
+    .blade-field {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 1%;
+      height: 30%;
+      z-index: 31;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blade-field span {
+      position: absolute;
+      bottom: 0;
+      width: 2px;
+      height: var(--h);
+      left: var(--x);
+      transform: rotate(var(--r));
+      transform-origin: bottom center;
+      border-radius: 999px 999px 0 0;
+      background: linear-gradient(to top, rgba(21,64,25,.95), rgba(141,190,82,.88));
+      opacity: var(--o);
+      box-shadow: 0 0 5px rgba(122,178,81,.18);
+    }
+
+    .road {
       position: absolute;
       left: 50%;
-      top: 46%;
-      z-index: 3;
-      width: min(1010px, 96vw);
-      height: min(550px, 56vh);
+      top: 50%;
+      z-index: 6;
+      width: min(780px, 78vw);
+      height: min(440px, 44vh);
       transform: translateX(-50%) rotateX(62deg);
       transform-origin: 50% 0%;
-      border: 2px solid rgba(232,196,112,.36);
-      border-radius: 50%;
-      box-shadow: inset 0 0 90px rgba(232,196,112,.08);
+      border-left: clamp(22px, 3.1vw, 38px) solid rgba(183,156,112,.84);
+      border-right: clamp(22px, 3.1vw, 38px) solid rgba(183,156,112,.84);
+      border-bottom: clamp(22px, 3.1vw, 38px) solid rgba(183,156,112,.84);
+      border-top: 0;
+      border-radius: 0 0 410px 410px;
+      box-shadow:
+        0 42px 54px rgba(0,0,0,.26),
+        inset 0 -8px 18px rgba(255,255,255,.08);
+    }
+
+    .road::before,
+    .road::after {
+      content: "";
+      position: absolute;
+      top: 8px;
+      width: 6px;
+      height: 84%;
+      border-radius: 999px;
+      background:
+        repeating-linear-gradient(to bottom, rgba(255,255,255,.25) 0 10px, transparent 10px 24px);
+    }
+
+    .road::before {
+      left: calc(clamp(22px, 3.1vw, 38px) * -0.68);
+    }
+
+    .road::after {
+      right: calc(clamp(22px, 3.1vw, 38px) * -0.68);
+    }
+
+    .road-grain {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 7;
+      width: min(780px, 78vw);
+      height: min(440px, 44vh);
+      transform: translateX(-50%) rotateX(62deg);
+      transform-origin: 50% 0%;
+      border-left: clamp(22px, 3.1vw, 38px) solid transparent;
+      border-right: clamp(22px, 3.1vw, 38px) solid transparent;
+      border-bottom: clamp(22px, 3.1vw, 38px) solid transparent;
+      border-radius: 0 0 410px 410px;
+      background:
+        repeating-radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.12) 0 1px, transparent 1px 9px);
+      opacity: .32;
+      pointer-events: none;
     }
 
     .manor-layer {
       position: absolute;
       left: 50%;
-      top: 22%;
+      top: 21.5%;
       z-index: 9;
       width: min(560px, 54vw);
       transform: translateX(-50%);
       display: grid;
       justify-items: center;
-      filter: drop-shadow(0 24px 42px rgba(0,0,0,.46));
+      filter: drop-shadow(0 24px 42px rgba(0,0,0,.48));
     }
 
     .manor-roof {
       width: 68%;
       height: 82px;
-      border: 1px solid rgba(247,239,216,.19);
+      border: 1px solid rgba(247,239,216,.2);
       background:
-        linear-gradient(135deg, rgba(232,196,112,.76), rgba(86,62,38,.94));
+        linear-gradient(135deg, rgba(232,196,112,.78), rgba(86,62,38,.96));
       clip-path: polygon(50% 0, 100% 100%, 0 100%);
     }
 
@@ -544,53 +653,15 @@
       font-size: .9rem;
     }
 
-    .u-road {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 6;
-      width: min(750px, 77vw);
-      height: min(430px, 43vh);
-      transform: translateX(-50%) rotateX(62deg);
-      transform-origin: 50% 0%;
-      border-left: clamp(20px, 3vw, 36px) solid rgba(188,164,123,.82);
-      border-right: clamp(20px, 3vw, 36px) solid rgba(188,164,123,.82);
-      border-bottom: clamp(20px, 3vw, 36px) solid rgba(188,164,123,.82);
-      border-top: 0;
-      border-radius: 0 0 390px 390px;
-      box-shadow:
-        0 42px 54px rgba(0,0,0,.26),
-        inset 0 -8px 18px rgba(255,255,255,.08);
-    }
-
-    .u-road::before,
-    .u-road::after {
-      content: "";
-      position: absolute;
-      top: 8px;
-      width: 5px;
-      height: 84%;
-      border-radius: 999px;
-      background: rgba(255,255,255,.22);
-    }
-
-    .u-road::before {
-      left: calc(clamp(20px, 3vw, 36px) * -0.68);
-    }
-
-    .u-road::after {
-      right: calc(clamp(20px, 3vw, 36px) * -0.68);
-    }
-
     .old-oak {
       position: absolute;
       left: 50%;
-      top: 48%;
-      z-index: 18;
-      width: min(560px, 58vw);
-      height: min(585px, 62vh);
+      top: 49%;
+      z-index: 20;
+      width: min(600px, 60vw);
+      height: min(620px, 64vh);
       transform: translate(-50%, -33%);
-      filter: drop-shadow(0 42px 66px rgba(0,0,0,.46));
+      filter: drop-shadow(0 42px 66px rgba(0,0,0,.5));
     }
 
     .oak-canopy {
@@ -600,29 +671,31 @@
       width: 100%;
       height: 72%;
       transform: translateX(-50%);
-      border: 1px solid rgba(212,238,157,.20);
+      border: 1px solid rgba(212,238,157,.2);
       border-radius: 48% 52% 44% 56% / 43% 48% 52% 57%;
       background:
-        radial-gradient(circle at 24% 35%, rgba(138,176,90,.98), transparent 22%),
+        radial-gradient(circle at 24% 35%, rgba(137,176,90,.98), transparent 22%),
         radial-gradient(circle at 71% 34%, rgba(93,146,77,.96), transparent 24%),
         radial-gradient(circle at 50% 17%, rgba(164,193,103,.93), transparent 24%),
-        radial-gradient(circle at 50% 66%, rgba(37,86,51,.98), transparent 37%),
+        radial-gradient(circle at 40% 66%, rgba(28,80,43,.98), transparent 35%),
+        radial-gradient(circle at 62% 67%, rgba(18,56,36,.9), transparent 35%),
         linear-gradient(180deg, #5f9146, #173b28);
       box-shadow:
-        inset 0 -38px 70px rgba(0,0,0,.28),
-        0 30px 88px rgba(21,69,36,.36);
+        inset 0 -42px 74px rgba(0,0,0,.32),
+        0 30px 88px rgba(21,69,36,.38);
     }
 
     .oak-canopy::before {
       content: "";
       position: absolute;
-      inset: 6%;
+      inset: 5%;
       border-radius: inherit;
       background:
         radial-gradient(circle at 18% 52%, rgba(255,255,255,.08), transparent 16%),
-        radial-gradient(circle at 80% 49%, rgba(0,0,0,.12), transparent 17%),
-        radial-gradient(circle at 47% 80%, rgba(0,0,0,.16), transparent 18%);
-      opacity: .9;
+        radial-gradient(circle at 80% 49%, rgba(0,0,0,.13), transparent 17%),
+        radial-gradient(circle at 47% 80%, rgba(0,0,0,.17), transparent 18%),
+        repeating-radial-gradient(circle at 48% 44%, rgba(255,255,255,.045) 0 1px, transparent 1px 12px);
+      opacity: .92;
     }
 
     .oak-trunk {
@@ -630,14 +703,16 @@
       left: 50%;
       bottom: 3%;
       z-index: 2;
-      width: min(130px, 15vw);
-      height: 48%;
+      width: min(148px, 16vw);
+      height: 50%;
       transform: translateX(-50%);
       border: 1px solid rgba(255,255,255,.13);
-      border-radius: 58px 58px 24px 24px;
+      border-radius: 64px 64px 25px 25px;
       background:
-        repeating-linear-gradient(90deg, rgba(0,0,0,.13) 0 4px, transparent 4px 12px),
-        linear-gradient(90deg, rgba(53,30,18,.99), rgba(149,91,49,.99) 43%, rgba(65,36,21,.99));
+        repeating-linear-gradient(92deg, rgba(0,0,0,.22) 0 3px, transparent 3px 10px),
+        repeating-linear-gradient(78deg, rgba(255,255,255,.08) 0 2px, transparent 2px 13px),
+        linear-gradient(90deg, rgba(50,29,18,.99), rgba(139,83,46,.99) 43%, rgba(56,31,19,.99));
+      box-shadow: inset 20px 0 32px rgba(0,0,0,.2), inset -18px 0 28px rgba(0,0,0,.25);
     }
 
     .oak-roots {
@@ -645,12 +720,34 @@
       left: 50%;
       bottom: 0;
       z-index: 1;
-      width: 330px;
-      max-width: 52vw;
-      height: 80px;
+      width: 380px;
+      max-width: 56vw;
+      height: 90px;
       transform: translateX(-50%);
-      border-bottom: 13px solid rgba(118,73,38,.96);
-      border-radius: 0 0 190px 190px;
+      border-bottom: 14px solid rgba(112,70,38,.98);
+      border-radius: 0 0 220px 220px;
+      box-shadow: 0 14px 0 rgba(33,20,12,.38);
+    }
+
+    .root-arm {
+      position: absolute;
+      bottom: 4%;
+      left: 50%;
+      z-index: 1;
+      width: 300px;
+      max-width: 48vw;
+      height: 28px;
+      transform-origin: center;
+      border-bottom: 8px solid rgba(100,60,31,.92);
+      border-radius: 0 0 80% 80%;
+    }
+
+    .root-arm.one {
+      transform: translateX(-64%) rotate(8deg);
+    }
+
+    .root-arm.two {
+      transform: translateX(-36%) rotate(-8deg);
     }
 
     .hollow {
@@ -662,20 +759,20 @@
       height: 54px;
       border: 1px solid rgba(232,196,112,.25);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,0,0,.90), rgba(47,26,16,.94));
+      background: radial-gradient(circle, rgba(0,0,0,.92), rgba(47,26,16,.94));
     }
 
     .oak-name {
       position: absolute;
       left: 50%;
-      top: 46%;
+      top: 45.5%;
       z-index: 4;
       width: min(294px, 70%);
       transform: translate(-50%, -50%);
       border: 1px solid rgba(232,196,112,.54);
       border-radius: 24px;
       padding: 14px 16px;
-      background: rgba(4,8,9,.70);
+      background: rgba(4,8,9,.7);
       text-align: center;
       backdrop-filter: blur(10px);
     }
@@ -702,7 +799,7 @@
       border: 1px solid rgba(232,196,112,.32);
       border-radius: 999px;
       padding: 8px 12px;
-      background: rgba(4,8,14,.68);
+      background: rgba(4,8,14,.66);
       color: var(--muted);
       font-size: .78rem;
       white-space: nowrap;
@@ -724,17 +821,12 @@
       transform: translateX(-50%);
     }
 
-    .label-manor {
-      left: 59%;
-      top: 28%;
-    }
-
     .scene-dock {
       position: absolute;
       right: clamp(18px, 4vw, 46px);
       top: clamp(94px, 12vh, 122px);
       z-index: 47;
-      width: min(330px, calc(100% - 36px));
+      width: min(322px, calc(100% - 36px));
       display: grid;
       gap: 10px;
     }
@@ -743,7 +835,7 @@
       border: 1px solid var(--line);
       border-radius: 20px;
       padding: 13px 14px;
-      background: rgba(4,8,14,.62);
+      background: rgba(4,8,14,.58);
       color: var(--muted);
       backdrop-filter: blur(10px);
       font-size: .88rem;
@@ -886,7 +978,7 @@
 
       @keyframes canopy-breathe {
         0%, 100% { transform: translateX(-50%) scale(1); }
-        50% { transform: translateX(-50%) scale(1.016); }
+        50% { transform: translateX(-50%) scale(1.014); }
       }
 
       @keyframes globe-hold {
@@ -896,7 +988,7 @@
 
     @media (max-width: 980px) {
       :root {
-        --scene-h: 840px;
+        --scene-h: 860px;
       }
 
       .topbar-inner {
@@ -918,8 +1010,8 @@
         width: min(540px, calc(100% - 36px));
       }
 
-      .round-estate .scene-copy {
-        top: 200px;
+      .natural-estate .scene-copy {
+        top: 198px;
       }
 
       .scene-dock {
@@ -938,10 +1030,11 @@
 
       .old-oak {
         top: 58%;
-        width: min(450px, 76vw);
+        width: min(470px, 78vw);
       }
 
-      .u-road {
+      .road,
+      .road-grain {
         top: 61%;
         width: 88vw;
       }
@@ -949,15 +1042,11 @@
       .support-grid {
         grid-template-columns: 1fr;
       }
-
-      .label-manor {
-        display: none;
-      }
     }
 
     @media (max-width: 660px) {
       :root {
-        --scene-h: 920px;
+        --scene-h: 940px;
       }
 
       .scene-frame {
@@ -977,7 +1066,7 @@
         padding: 18px;
       }
 
-      .round-estate .scene-copy {
+      .natural-estate .scene-copy {
         top: 182px;
       }
 
@@ -1014,14 +1103,15 @@
       }
 
       .old-oak {
-        top: 61%;
-        width: 84vw;
-        height: 430px;
+        top: 62%;
+        width: 86vw;
+        height: 460px;
       }
 
-      .u-road {
-        top: 68%;
-        height: 280px;
+      .road,
+      .road-grain {
+        top: 69%;
+        height: 290px;
       }
 
       .label-estate,
@@ -1033,11 +1123,11 @@
 
       .label-estate {
         right: 4%;
-        top: 49%;
+        top: 50%;
       }
 
       .label-road {
-        bottom: 27%;
+        bottom: 28%;
       }
 
       .scene-dock {
@@ -1051,7 +1141,19 @@
   </style>
 </head>
 
-<body data-active-mode="flat">
+<body
+  class="manor-skin house-class"
+  data-active-mode="flat"
+  data-page-id="compass"
+  data-page="compass"
+  data-estate="rich-manor-and-estate"
+  data-manor-skin="active"
+  data-manor-class="house"
+  data-house-field="true"
+  data-gauges-truth="live-authority"
+  data-construct-class="house"
+  data-house-part="compass"
+>
   <header class="topbar">
     <div class="topbar-inner">
       <a class="brand" href="/" aria-label="Diamond Gate Bridge Compass home">
@@ -1069,10 +1171,22 @@
     </div>
   </header>
 
-  <main>
+  <main
+    class="page manor-skin house-class"
+    id="compass-root"
+    data-page="compass"
+    data-page-id="compass"
+    data-estate="rich-manor-and-estate"
+    data-manor-skin="active"
+    data-manor-class="house"
+    data-house-field="true"
+    data-gauges-truth="live-authority"
+    data-construct-class="house"
+    data-house-part="compass"
+  >
     <section class="compass-shell" aria-labelledby="H1_COMPASS">
       <div class="wrap">
-        <div class="scene-frame" data-scene-frame="index-generation-2-scene-deepening">
+        <div class="scene-frame" data-scene-frame="index-generation-2-natural-scene">
           <div class="mode-selector" role="tablist" aria-label="World view selector">
             <button class="mode-button" type="button" data-mode="flat" role="tab" aria-selected="true">
               <strong>World is flat</strong>
@@ -1081,7 +1195,7 @@
 
             <button class="mode-button" type="button" data-mode="round" role="tab" aria-selected="false">
               <strong>World is round</strong>
-              <span>Deepened Tree of Life estate view.</span>
+              <span>Natural Tree of Life estate view.</span>
             </button>
 
             <button class="mode-button" type="button" data-mode="globe" role="tab" aria-selected="false">
@@ -1124,9 +1238,9 @@
               <p class="eyebrow">Flat World · locked baseline</p>
               <h1 id="H1_COMPASS">Rich Manor and Estate</h1>
               <p class="lead">
-                Flat World is the verified 2D public route map. It stays default,
-                readable, and recoverable. Round World can deepen the estate scene
-                without changing routes, faking Gauges health, or replacing the house.
+                Flat World is the verified 2D route map. It stays default, readable,
+                and recoverable. Round World may show the living estate without changing
+                routes, faking Gauges health, or replacing the Manor.
               </p>
             </article>
           </section>
@@ -1139,38 +1253,39 @@
             data-round-primary-object="256-year-oak"
             data-round-road-logic="u-road"
             data-round-ecosystem="active"
-            aria-label="Round World deepened estate arrival"
+            aria-label="Round World natural estate scene"
           >
-            <div class="round-estate">
-              <div class="far-ridge" aria-hidden="true"></div>
-              <div class="estate-boundary" aria-hidden="true"></div>
+            <div class="natural-estate">
+              <div class="estate-land" aria-hidden="true"></div>
+              <div class="road" aria-hidden="true"></div>
+              <div class="road-grain" aria-hidden="true"></div>
 
               <article class="scene-copy">
                 <p class="eyebrow">World is round · 256-acre estate</p>
-                <h2>The estate arrival deepens</h2>
+                <h2>The ground is alive now.</h2>
                 <p class="lead">
-                  The Manor stays behind the old oak. The U-road bends around the living
-                  foreground. Farmland, ranch land, garden, and ecosystem cues now read
-                  as one estate scene instead of a longer explanation.
+                  The Manor sits behind the 256-year-old oak. The U-road bends around it.
+                  The field carries grass, soil, road grain, roots, canopy, and estate depth
+                  instead of a flat symbolic drawing.
                 </p>
               </article>
 
               <div class="scene-dock" aria-label="Compact Round World relation summary">
                 <div class="dock-card">
                   <b>Land</b>
-                  Farmland, ranch land, garden, clearing, and road verge stay integrated as one estate.
+                  Farmland, ranch land, garden, clearing, and road verge read as one estate ground.
                 </div>
                 <div class="dock-card">
                   <b>Ecosystem</b>
-                  Roots, soil, bark, hollows, branches, and canopy remain living hints, not clutter.
+                  Roots, soil, bark, hollows, branches, and canopy stay present without label clutter.
                 </div>
                 <div class="dock-card">
                   <b>Summits</b>
-                  256 diamonds / 256 carats of human potential stay attached to the Manor field.
+                  256 diamonds / 256 carats of human potential remain attached to the Manor field.
                 </div>
                 <div class="dock-card">
-                  <b>Planets</b>
-                  Planetary constructs remain canopy relations, not standalone route islands.
+                  <b>Proof</b>
+                  Gauges remain live authority. The scene may improve, but evidence is measured.
                 </div>
               </div>
 
@@ -1182,22 +1297,50 @@
                 </div>
               </div>
 
-              <div class="u-road" aria-label="U-shaped estate road curving around the oak"></div>
-
               <div class="old-oak" aria-label="Massive 256-year-old sequoia-scale oak">
                 <div class="oak-canopy"></div>
                 <div class="oak-trunk"></div>
                 <div class="oak-roots"></div>
+                <div class="root-arm one"></div>
+                <div class="root-arm two"></div>
                 <div class="hollow" aria-hidden="true"></div>
                 <div class="oak-name">
                   <b>256-Year Oak</b>
-                  <span>Structural foreground. Tree of Life / A Bug’s Life estate proof.</span>
+                  <span>Old, heavy, rooted, and alive in front of the Manor.</span>
                 </div>
               </div>
 
-              <span class="scene-label label-estate"><b>256-acre estate</b> · land held inside the boundary</span>
+              <span class="scene-label label-estate"><b>256-acre estate</b> · land inside the boundary</span>
               <span class="scene-label label-road"><b>U-road</b> · arrival, motion, return</span>
-              <span class="scene-label label-manor"><b>Manor</b> · house authority</span>
+
+              <div class="grass-near" aria-hidden="true"></div>
+              <div class="blade-field" aria-hidden="true">
+                <span style="--x:2%;--h:74px;--r:-8deg;--o:.65"></span>
+                <span style="--x:5%;--h:98px;--r:6deg;--o:.58"></span>
+                <span style="--x:8%;--h:64px;--r:-4deg;--o:.62"></span>
+                <span style="--x:12%;--h:110px;--r:9deg;--o:.7"></span>
+                <span style="--x:16%;--h:82px;--r:-11deg;--o:.62"></span>
+                <span style="--x:20%;--h:118px;--r:7deg;--o:.7"></span>
+                <span style="--x:24%;--h:72px;--r:-5deg;--o:.56"></span>
+                <span style="--x:28%;--h:104px;--r:12deg;--o:.65"></span>
+                <span style="--x:32%;--h:86px;--r:-7deg;--o:.6"></span>
+                <span style="--x:36%;--h:122px;--r:5deg;--o:.7"></span>
+                <span style="--x:40%;--h:72px;--r:-9deg;--o:.58"></span>
+                <span style="--x:44%;--h:108px;--r:8deg;--o:.64"></span>
+                <span style="--x:48%;--h:92px;--r:-6deg;--o:.62"></span>
+                <span style="--x:52%;--h:126px;--r:7deg;--o:.72"></span>
+                <span style="--x:56%;--h:80px;--r:-10deg;--o:.58"></span>
+                <span style="--x:60%;--h:114px;--r:8deg;--o:.68"></span>
+                <span style="--x:64%;--h:76px;--r:-5deg;--o:.58"></span>
+                <span style="--x:68%;--h:102px;--r:10deg;--o:.66"></span>
+                <span style="--x:72%;--h:84px;--r:-8deg;--o:.6"></span>
+                <span style="--x:76%;--h:118px;--r:6deg;--o:.69"></span>
+                <span style="--x:80%;--h:72px;--r:-9deg;--o:.55"></span>
+                <span style="--x:84%;--h:106px;--r:8deg;--o:.64"></span>
+                <span style="--x:88%;--h:88px;--r:-7deg;--o:.6"></span>
+                <span style="--x:92%;--h:120px;--r:5deg;--o:.68"></span>
+                <span style="--x:96%;--h:78px;--r:-6deg;--o:.56"></span>
+              </div>
             </div>
           </section>
 
@@ -1210,7 +1353,7 @@
                 <p class="lead">
                   The Globe view remains reserved for a later Meta build. This file does
                   not create a fake 3D renderer, fake route health, fake universe map, or
-                  new routes. Current execution is limited to the scene-deepened Index.
+                  new routes. Current execution is limited to the natural Index scene.
                 </p>
               </article>
             </div>
@@ -1227,22 +1370,22 @@
             </div>
 
             <div class="proof-badge">
-              <b>Proof:</b> Index deepens the scene. Live health remains with Gauges.
+              <b>Proof:</b> Index renews the natural scene. Gauges remain live authority.
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="support" aria-label="Generation Two support notes">
+    <section class="support" aria-label="Generation Two natural scene support notes">
       <div class="wrap support-grid">
         <article class="support-card">
           <p class="eyebrow">Generation Two correction</p>
-          <h2>Scene depth replaces scroll depth.</h2>
+          <h2>Material nature replaces the coloring-book read.</h2>
           <p>
-            This renewal deepens the existing scene-first Round view instead of adding
-            more page length. The Manor, old oak, U-road, land planes, and compact
-            relation dock now carry the experience above the fold.
+            This renewal returns to `/index.html` and strengthens the Round scene itself:
+            grass texture, blade-level foreground, road grain, heavier bark, broader canopy,
+            grounded roots, and reduced labels. The page should feel grown, not drawn.
           </p>
         </article>
 
@@ -1258,7 +1401,7 @@
 
             <div class="status-item">
               <b>Round</b>
-              <span>Scene-deepened 256-acre estate view is visibly distinct.</span>
+              <span>Natural 256-acre estate view is visibly distinct.</span>
             </div>
 
             <div class="status-item">
@@ -1278,8 +1421,8 @@
 
   <footer>
     <div class="wrap">
-      <span>INDEX_GENERATION_2_SCENE_DEEPENING_FULL_TNT_v1</span>
-      <span>Room: Website Building and Implementation · Next: upload, view Round, then verify Gauges.</span>
+      <span>INDEX_GENERATION_2_NATURAL_SCENE_FULL_TNT_v1</span>
+      <span>Room: Website Building and Implementation · Next: upload, view Round, then rerun Gauges.</span>
     </div>
   </footer>
 

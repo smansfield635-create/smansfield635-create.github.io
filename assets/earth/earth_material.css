@@ -1,13 +1,14 @@
 /* TNT RENEWAL — /assets/earth/earth_material.css
-   EARTH ASSET SPINE · MATERIAL B15 · NO RINGS
+   EARTH MATERIAL · B17 · NEUTRAL SHELL / NO NON-EARTH RINGS
 
    CONTRACT:
-     - Keep Earth mount, canvas, controls, caption.
-     - Remove visible axis line.
-     - Remove axis endpoint circles.
-     - Remove visible atmosphere ring shell.
-     - Remove shell-level outer ring styling.
-     - Preserve renderer/runtime compatibility.
+     - Material CSS is neutral support only.
+     - No visible axis line.
+     - No endpoint circles.
+     - No atmosphere shell.
+     - No external sphere ring.
+     - No 0 0 0 circular stroke.
+     - Preserve mount, canvas, controls, caption.
 */
 
 :root{
@@ -24,10 +25,9 @@
   min-height:100svh;
   margin:0;
   background:
-    radial-gradient(circle at 12% 18%,rgba(255,255,255,.30) 0 1px,transparent 2px),
-    radial-gradient(circle at 42% 22%,rgba(177,205,255,.20) 0 1px,transparent 2px),
-    radial-gradient(circle at 76% 16%,rgba(255,255,255,.18) 0 1px,transparent 2px),
-    radial-gradient(ellipse at 18% 12%,rgba(67,95,180,.20),transparent 34rem),
+    radial-gradient(circle at 12% 18%,rgba(255,255,255,.26) 0 1px,transparent 2px),
+    radial-gradient(circle at 42% 22%,rgba(177,205,255,.18) 0 1px,transparent 2px),
+    radial-gradient(circle at 76% 16%,rgba(255,255,255,.16) 0 1px,transparent 2px),
     linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
   color:var(--dgb-earth-ink);
   font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
@@ -90,12 +90,8 @@
 }
 
 .dgb-earth-preview-panel::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    linear-gradient(90deg,rgba(255,255,255,.014),transparent 48%,rgba(255,255,255,.02));
+  display:none !important;
+  content:none !important;
 }
 
 [data-dgb-earth-mount]{
@@ -109,6 +105,10 @@
   cursor:grab;
   touch-action:none;
   user-select:none;
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
 }
 
 [data-dgb-earth-mount]:active{
@@ -121,6 +121,10 @@
   height:100%;
   display:grid;
   place-items:center;
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
 }
 
 .dgb-earth-axis,
@@ -140,6 +144,10 @@
   aspect-ratio:1;
   transform:rotate(var(--dgb-earth-axis));
   transform-origin:center;
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
 }
 
 .dgb-earth-sphere{
@@ -147,12 +155,10 @@
   inset:0;
   border-radius:999px;
   overflow:hidden;
-  background:#061432;
-  box-shadow:
-    inset -52px -20px 80px rgba(0,0,0,.58),
-    inset 16px 10px 32px rgba(255,255,255,.08),
-    0 0 28px rgba(147,197,253,.12),
-    0 0 72px rgba(59,130,246,.08);
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
 }
 
 [data-dgb-earth-canvas]{
@@ -162,6 +168,10 @@
   height:100%;
   display:block;
   border-radius:999px;
+  background:transparent !important;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
 }
 
 .dgb-earth-fallback{
@@ -171,6 +181,9 @@
   border-radius:999px;
   display:block;
   object-fit:contain;
+  border:0 !important;
+  outline:0 !important;
+  box-shadow:none !important;
 }
 
 .dgb-earth-control-panel{

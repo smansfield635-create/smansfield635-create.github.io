@@ -1,12 +1,13 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · REAL EARTH CLOUD MAP B5
+     SHOWROOM · GENERATION 2 · REAL EARTH SPHERE WRAP B6
 
      CONTRACT:
        - Reality-based Earth demo.
        - Earth is the center.
-       - Earth uses real NASA Earth surface texture.
-       - Clouds use real NASA cloud texture map.
+       - Earth texture wraps around the globe.
+       - Countries compress toward the visible limb instead of staying flat.
+       - Real cloud map wraps around the globe.
        - Earth sits on 23.44° axis.
        - Earth auto-spins.
        - User can manually drag/spin Earth.
@@ -52,10 +53,6 @@
       --panel:rgba(7,10,16,.74);
       --shadow:0 30px 110px rgba(0,0,0,.54);
       --earth-axis:-23.44deg;
-      --earth-rot:0%;
-      --cloud-rot:0%;
-      --earthTexture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg");
-      --cloudTexture:url("https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg");
     }
 
     body::before{
@@ -380,68 +377,24 @@
         0 0 90px rgba(59,130,246,.12);
     }
 
-    .earthTexture{
+    .earthCanvas{
       position:absolute;
-      inset:-1%;
+      inset:0;
+      width:100%;
+      height:100%;
+      display:block;
       border-radius:999px;
-      background-image:
-        linear-gradient(90deg,rgba(0,0,0,.04),transparent 18%,transparent 70%,rgba(0,0,0,.30)),
-        var(--earthTexture);
-      background-size:200% 100%,200% 100%;
-      background-position:0 0,var(--earth-rot) 50%;
-      filter:saturate(1.16) contrast(1.08) brightness(.96);
-      transform:scale(1.08);
-      transform-origin:center;
     }
 
-    .realClouds{
-      position:absolute;
-      inset:-2%;
-      border-radius:999px;
-      opacity:.72;
-      background-image:var(--cloudTexture);
-      background-size:200% 100%;
-      background-position:var(--cloud-rot) 50%;
-      filter:brightness(1.42) contrast(1.2) blur(.15px);
-      mix-blend-mode:screen;
-      transform:scale(1.08);
-      pointer-events:none;
-    }
-
-    .cloudBrightener{
-      position:absolute;
-      inset:-2%;
-      border-radius:999px;
-      opacity:.24;
-      background-image:var(--cloudTexture);
-      background-size:200% 100%;
-      background-position:calc(var(--cloud-rot) - 14%) 50%;
-      filter:brightness(1.8) contrast(1.5) blur(.35px);
-      mix-blend-mode:screen;
-      transform:scale(1.085);
-      pointer-events:none;
-    }
-
-    .earthShade{
+    .atmosphereOverlay{
       position:absolute;
       inset:0;
       border-radius:999px;
-      background:
-        radial-gradient(circle at 34% 31%,rgba(255,255,255,.16),transparent 28%),
-        radial-gradient(circle at 75% 54%,rgba(0,0,0,.84),transparent 48%),
-        radial-gradient(circle at 50% 50%,transparent 62%,rgba(0,0,0,.38) 84%,rgba(0,0,0,.68) 100%);
       pointer-events:none;
-    }
-
-    .atmosphere{
-      position:absolute;
-      inset:0;
-      border-radius:999px;
       box-shadow:
         inset 0 0 22px rgba(219,234,254,.22),
         inset 0 0 40px rgba(147,197,253,.16),
         0 0 22px rgba(147,197,253,.28);
-      pointer-events:none;
     }
 
     .earthCaption{
@@ -631,15 +584,16 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-real-earth-cloud-map-b5"
+    data-showroom-version="generation-2-real-earth-sphere-wrap-b6"
     data-earth-center="true"
     data-earth-axis="23.44deg"
     data-earth-spin="auto-and-manual"
-    data-earth-clouds="nasa-real-cloud-map"
+    data-earth-clouds="real-cloud-map-wrapped"
+    data-earth-renderer="canvas-orthographic-slice-wrap"
     data-sun-role="distant-background-authority"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="real-earth-cloud-map-first"
+    data-brain-route="real-earth-spherical-wrap-first"
   >
     <section class="top" aria-label="Showroom view controls">
       <div class="navRow">
@@ -682,9 +636,9 @@
       <div class="copy">
         <p class="kicker">Showroom · Reality-Based Earth Demo</p>
         <h1>The Earth Room</h1>
-        <p class="expression" id="viewExpression">The Earth has real clouds.</p>
+        <p class="expression" id="viewExpression">The Earth wraps around the sphere.</p>
         <p class="lede" id="viewLede">
-          This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on its 23.44° axis, spinning, clouded from a real cloud map, and manually draggable.
+          This showroom starts with Earth as a real outer-space instrument surface. The countries and cloud bands are wrapped onto the globe, not pasted flat inside a circle.
         </p>
       </div>
 
@@ -694,26 +648,23 @@
 
           <div class="earthTilt">
             <div class="earthSphere" aria-hidden="true">
-              <div class="earthTexture"></div>
-              <div class="realClouds"></div>
-              <div class="cloudBrightener"></div>
-              <div class="earthShade"></div>
-              <div class="atmosphere"></div>
+              <canvas id="earthCanvas" class="earthCanvas"></canvas>
+              <div class="atmosphereOverlay"></div>
             </div>
           </div>
         </div>
 
-        <div class="earthCaption">Earth Standard · 23.44° Axis · Real Clouds · Auto + Manual Spin</div>
+        <div class="earthCaption">Earth Standard · 23.44° Axis · Real Clouds · Spherical Wrap · Auto + Manual Spin</div>
       </article>
 
       <div class="readout" aria-live="polite">
         <strong id="showroomTitle">Earth view</strong>
         <p id="showroomText">
-          This is the demo standard: Earth first, real surface texture, real cloud map, visible axis, controlled spin, distant sun, minimal planets, and clean navigation.
+          This is the demo standard: Earth first, real surface texture, real cloud map, spherical wrapping, visible axis, controlled spin, distant sun, minimal planets, and clean navigation.
         </p>
       </div>
 
-      <span class="underhood" id="underhoodScale">Active showroom mode: Earth-centered real cloud map demo.</span>
+      <span class="underhood" id="underhoodScale">Active showroom mode: Earth-centered spherical wrap demo.</span>
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
@@ -766,13 +717,16 @@
     (function(){
       "use strict";
 
+      var EARTH_TEXTURE = "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57730/land_ocean_ice_2048.jpg";
+      var CLOUD_TEXTURE = "https://eoimages.gsfc.nasa.gov/images/imagerecords/57000/57747/cloud_combined_2048.jpg";
+
       var copy = {
         earth: {
-          expression: "The Earth has real clouds.",
-          lede: "This showroom starts with Earth as a real outer-space instrument surface. The Earth is tilted on its 23.44° axis, spinning, clouded from a real cloud map, and manually draggable.",
+          expression: "The Earth wraps around the sphere.",
+          lede: "This showroom starts with Earth as a real outer-space instrument surface. The countries and cloud bands are wrapped onto the globe, not pasted flat inside a circle.",
           title: "Earth view",
-          text: "This is the demo standard: Earth first, real surface texture, real cloud map, visible axis, controlled spin, distant sun, minimal planets, and clean navigation.",
-          scale: "Active showroom mode: Earth-centered real cloud map demo."
+          text: "This is the demo standard: Earth first, real surface texture, real cloud map, spherical wrapping, visible axis, controlled spin, distant sun, minimal planets, and clean navigation.",
+          scale: "Active showroom mode: Earth-centered spherical wrap demo."
         },
         satellite: {
           expression: "Look at Earth from orbit.",
@@ -804,12 +758,25 @@
         }
       };
 
+      var canvas = null;
+      var ctx = null;
+      var earthController = null;
+      var surfaceImage = new Image();
+      var cloudImage = new Image();
+      var surfaceReady = false;
+      var cloudReady = false;
       var rotation = 0;
-      var velocity = .018;
+      var velocity = .012;
       var dragging = false;
       var lastX = 0;
       var lastTime = performance.now();
-      var earthController = null;
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+      surfaceImage.onload = function(){ surfaceReady = true; };
+      cloudImage.onload = function(){ cloudReady = true; };
+
+      surfaceImage.src = EARTH_TEXTURE;
+      cloudImage.src = CLOUD_TEXTURE;
 
       function setText(id,value){
         var node = document.getElementById(id);
@@ -833,21 +800,178 @@
         setText("underhoodScale",packet.scale);
       }
 
-      function setEarthRotation(value){
-        rotation = ((value % 100) + 100) % 100;
-        document.documentElement.style.setProperty("--earth-rot", rotation.toFixed(3) + "%");
-        document.documentElement.style.setProperty("--cloud-rot", ((rotation * .78 + 11) % 100).toFixed(3) + "%");
+      function setupCanvas(){
+        canvas = document.getElementById("earthCanvas");
+        if(!canvas) return;
+
+        ctx = canvas.getContext("2d", { alpha: true });
+        resizeCanvas();
+
+        window.addEventListener("resize", resizeCanvas, { passive: true });
+      }
+
+      function resizeCanvas(){
+        var rect;
+        var dpr;
+
+        if(!canvas) return;
+
+        rect = canvas.getBoundingClientRect();
+        dpr = Math.min(2, window.devicePixelRatio || 1);
+
+        canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+        canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+
+      function wrappedSourceX(image, rawX){
+        var w = image.width || 1;
+        var x = rawX % w;
+        return x < 0 ? x + w : x;
+      }
+
+      function drawWrappedLayer(image, rot, alpha, brightness){
+        var width;
+        var height;
+        var cx;
+        var cy;
+        var r;
+        var step;
+        var x;
+        var nx;
+        var limb;
+        var lon;
+        var sx;
+        var sw;
+        var dx;
+        var dy;
+        var dh;
+        var dw;
+
+        if(!image || !image.complete || !image.naturalWidth) return;
+
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        cx = width * .5;
+        cy = height * .5;
+        r = Math.min(width,height) * .47;
+        step = Math.max(1.15, width / 420);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.filter = brightness || "none";
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.clip();
+
+        for(x = -r; x <= r; x += step){
+          nx = x / r;
+          limb = Math.sqrt(Math.max(0, 1 - nx * nx));
+          lon = Math.asin(nx);
+
+          sx = wrappedSourceX(image, (rot * image.width) + ((lon / (Math.PI * 2)) + .5) * image.width);
+          sw = Math.max(1, image.width * (step / (Math.PI * r)));
+
+          dx = cx + x;
+          dy = cy - r * limb;
+          dw = step + .9;
+          dh = 2 * r * limb;
+
+          if(sx + sw <= image.width){
+            ctx.drawImage(image, sx, 0, sw, image.height, dx, dy, dw, dh);
+          }else{
+            ctx.drawImage(image, sx, 0, image.width - sx, image.height, dx, dy, dw * ((image.width - sx) / sw), dh);
+            ctx.drawImage(image, 0, 0, sw - (image.width - sx), image.height, dx + dw * ((image.width - sx) / sw), dy, dw * ((sw - (image.width - sx)) / sw), dh);
+          }
+        }
+
+        ctx.restore();
+      }
+
+      function drawSphere(){
+        var width;
+        var height;
+        var cx;
+        var cy;
+        var r;
+        var ocean;
+        var shade;
+        var rim;
+
+        if(!ctx || !canvas) return;
+
+        width = canvas.clientWidth;
+        height = canvas.clientHeight;
+        cx = width * .5;
+        cy = height * .5;
+        r = Math.min(width,height) * .47;
+
+        ctx.clearRect(0,0,width,height);
+
+        ocean = ctx.createRadialGradient(cx - r * .28, cy - r * .30, r * .1, cx, cy, r);
+        ocean.addColorStop(0, "#315a99");
+        ocean.addColorStop(.44, "#0f2e6a");
+        ocean.addColorStop(.76, "#071742");
+        ocean.addColorStop(1, "#010612");
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.fillStyle = ocean;
+        ctx.fillRect(cx-r, cy-r, r*2, r*2);
+        ctx.restore();
+
+        if(surfaceReady){
+          drawWrappedLayer(surfaceImage, rotation, 1, "saturate(1.18) contrast(1.10) brightness(.96)");
+        }
+
+        if(cloudReady){
+          drawWrappedLayer(cloudImage, rotation * .78 + .11, .76, "brightness(1.55) contrast(1.22) blur(.12px)");
+          drawWrappedLayer(cloudImage, rotation * .62 + .29, .18, "brightness(1.9) contrast(1.55) blur(.28px)");
+        }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.clip();
+
+        shade = ctx.createRadialGradient(cx - r * .28, cy - r * .30, r * .05, cx + r * .42, cy + r * .16, r * 1.18);
+        shade.addColorStop(0, "rgba(255,255,255,.18)");
+        shade.addColorStop(.36, "rgba(255,255,255,.03)");
+        shade.addColorStop(.68, "rgba(0,0,0,.08)");
+        shade.addColorStop(1, "rgba(0,0,0,.80)");
+        ctx.fillStyle = shade;
+        ctx.fillRect(cx-r, cy-r, r*2, r*2);
+
+        rim = ctx.createRadialGradient(cx,cy,r*.76,cx,cy,r*1.03);
+        rim.addColorStop(0,"rgba(147,197,253,0)");
+        rim.addColorStop(.82,"rgba(147,197,253,.05)");
+        rim.addColorStop(.93,"rgba(190,226,255,.22)");
+        rim.addColorStop(1,"rgba(219,234,254,.46)");
+        ctx.fillStyle = rim;
+        ctx.fillRect(cx-r,cy-r,r*2,r*2);
+
+        ctx.restore();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(219,234,254,.34)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
       }
 
       function animateEarth(now){
         var delta = Math.min(48, now - lastTime);
         lastTime = now;
 
-        if(!dragging){
-          setEarthRotation(rotation + velocity * delta);
-          velocity = velocity * .998 + .018 * .002;
+        if(!dragging && !reduceMotion){
+          rotation = (rotation + velocity * delta * .001) % 1;
+          velocity = velocity * .998 + .012 * .002;
         }
 
+        drawSphere();
         window.requestAnimationFrame(animateEarth);
       }
 
@@ -869,8 +993,12 @@
 
           dx = event.clientX - lastX;
           lastX = event.clientX;
-          velocity = dx * .015;
-          setEarthRotation(rotation + dx * .08);
+
+          velocity = dx * .0022;
+          rotation = (rotation + dx * .0018) % 1;
+          if(rotation < 0) rotation += 1;
+
+          drawSphere();
         });
 
         earthController.addEventListener("pointerup",function(event){
@@ -891,6 +1019,7 @@
         });
 
         applyView("earth");
+        setupCanvas();
         bindEarthDrag();
         window.requestAnimationFrame(animateEarth);
       }

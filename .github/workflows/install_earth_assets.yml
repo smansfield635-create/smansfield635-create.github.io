@@ -39,7 +39,18 @@ jobs:
             -fill 'rgba(255,255,255,0.25)' -draw "ellipse 1220,820 560,90 0,360" \
             assets/earth/earth_surface_2048.jpg
 
-      - name: Create earth_clouds_2048.png
+      - name: Create earth_clouds_2048.jpg
+        run: |
+          convert -size 2048x1024 xc:'#000000' \
+            -fill 'rgba(255,255,255,0.82)' -draw "ellipse 420,310 330,52 0,360" \
+            -fill 'rgba(255,255,255,0.64)' -draw "ellipse 870,480 460,64 0,360" \
+            -fill 'rgba(255,255,255,0.72)' -draw "ellipse 1350,680 520,72 0,360" \
+            -fill 'rgba(255,255,255,0.55)' -draw "ellipse 1670,260 360,46 0,360" \
+            -fill 'rgba(255,255,255,0.58)' -draw "ellipse 600,760 480,58 0,360" \
+            -fill 'rgba(255,255,255,0.48)' -draw "ellipse 1560,430 460,50 0,360" \
+            assets/earth/earth_clouds_2048.jpg
+
+      - name: Also create transparent PNG cloud copy
         run: |
           convert -size 2048x1024 xc:none \
             -fill 'rgba(255,255,255,0.52)' -draw "ellipse 420,310 330,52 0,360" \
@@ -53,8 +64,10 @@ jobs:
       - name: Verify Earth assets
         run: |
           test -s assets/earth/earth_surface_2048.jpg
+          test -s assets/earth/earth_clouds_2048.jpg
           test -s assets/earth/earth_clouds_2048.png
           file assets/earth/earth_surface_2048.jpg
+          file assets/earth/earth_clouds_2048.jpg
           file assets/earth/earth_clouds_2048.png
 
       - name: Commit Earth assets
@@ -63,11 +76,12 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add assets/earth/earth_surface_2048.jpg
+          git add assets/earth/earth_clouds_2048.jpg
           git add assets/earth/earth_clouds_2048.png
 
           if git diff --cached --quiet; then
             echo "Earth assets already exist."
           else
-            git commit -m "Create local Earth assets"
+            git commit -m "Create local Earth surface and cloud assets"
             git push
           fi

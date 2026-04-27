@@ -1,14 +1,14 @@
 /* ==========================================================================
    Diamond Gate Bridge · Instruments Asset Layer
-   GAUGES_B8_FINAL_CONTRACT_SYNC
+   GAUGES_B9_TRUE_FINAL_CONTRACT
    PATH: /assets/instruments.js
 
    PURPOSE:
-   - Replace stale G1 instruments with the active shared B8 instruments contract.
-   - Preserve page-neutral instrument receipt API.
-   - Provide one reusable Gauges source for readings, routes, legend, TED copy,
-     receipts, semantic separators, and render helpers.
-   - Prevent B4/B5/B6 residue by using one active B8 version marker.
+   - Final shared instruments contract for the Gauges page.
+   - One source for gauge readings, routes, color states, legend semantics,
+     TED copy, receipts, and render helpers.
+   - Preserve page-neutral instrument receipt exports.
+   - Eliminate B4/B5/B6/B7 residue from the live Gauges read.
 
    BOUNDARY:
    - Asset-level only.
@@ -20,7 +20,7 @@
 
 const INSTRUMENT_META = deepFreeze({
   name: "instruments",
-  version: "G2_GAUGES_B8_FINAL_CONTRACT_SYNC",
+  version: "G2_GAUGES_B9_TRUE_FINAL_CONTRACT",
   contract: "INSTRUMENT_CONTRACT_G2",
   role: "diagnostic_shaping_and_gauge_asset_layer",
   deterministic: true,
@@ -33,7 +33,7 @@ const INSTRUMENT_META = deepFreeze({
 
 export const GAUGES_META = deepFreeze({
   name: "gauges",
-  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B8",
+  version: "GAUGES_TRUE_INSTRUMENT_ROOM_B9",
   role: "site_health_instrument_contract",
   readMode: "compact_engineer_dashboard_plus_ted_talk",
   activePageGoldRule: true,
@@ -57,42 +57,36 @@ export const GAUGE_COLOR_STATES = deepFreeze({
     label: "Healthy",
     semanticLabel: "Healthy status",
     cssVar: "--green",
-    tone: "#93efbd",
     meaning: "Working cleanly."
   },
   active: {
     label: "Active",
     semanticLabel: "Active priority",
     cssVar: "--gold",
-    tone: "#ffd98a",
     meaning: "Current page or priority instrument."
   },
   proof: {
     label: "Proof",
     semanticLabel: "Proof signal",
     cssVar: "--blue",
-    tone: "#8ec5ff",
     meaning: "Stable signal requiring live confirmation."
   },
   watch: {
     label: "Watch",
     semanticLabel: "Watch item",
     cssVar: "--yellow",
-    tone: "#ffcf7a",
     meaning: "Strong concept, needs inspection."
   },
   break: {
     label: "Break",
     semanticLabel: "Break condition",
     cssVar: "--red",
-    tone: "#ff6f78",
     meaning: "Urgent failure or broken path."
   },
   complex: {
     label: "Complex",
     semanticLabel: "Complex item",
     cssVar: "--purple",
-    tone: "#caa8ff",
     meaning: "Valid but interpretation-heavy."
   }
 });
@@ -230,7 +224,7 @@ export const GAUGE_TED_READ = deepFreeze({
     copy:
       "Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.",
     receipt: [
-      "GAUGES_TRUE_INSTRUMENT_ROOM_B8=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
+      "GAUGES_TRUE_INSTRUMENT_ROOM_B9=ACTIVE | ROUTE_INTEGRITY=96 | BACKLINK_CANONICALITY=91 | RENDER_STABILITY=88 | PRODUCT_DESTINATION_LOCK=94 | NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH"
     ]
   }
 });
@@ -281,14 +275,6 @@ function escapeHtml(value) {
 function clampNumber(value, min, max, fallback) {
   const number = Number.isFinite(value) ? value : fallback;
   return Math.min(max, Math.max(min, number));
-}
-
-function semanticJoin(lines, separator = " | ") {
-  if (!Array.isArray(lines)) return "";
-  return lines
-    .map((line) => normalizeString(line, ""))
-    .filter(Boolean)
-    .join(separator);
 }
 
 function pickProjectionObject(render) {
@@ -498,7 +484,6 @@ function normalizeGaugeReading(reading) {
   const state = normalizeString(safeReading.state, "healthy").toLowerCase();
   const colorState = GAUGE_COLOR_STATES[state] ? state : "healthy";
   const value = clampNumber(Number(safeReading.value), 0, 100, 0);
-
   const receipt = Array.isArray(safeReading.receipt)
     ? safeReading.receipt.map((line) => normalizeString(line)).filter((line) => line !== "—")
     : [];
@@ -514,7 +499,7 @@ function normalizeGaugeReading(reading) {
     needle: clampNumber(Number(safeReading.needle), -48, 86, 0),
     meaning: normalizeString(safeReading.meaning, "No gauge meaning supplied."),
     receipt: deepFreeze(receipt),
-    receiptText: semanticJoin(receipt),
+    receiptText: receipt.join(" | "),
     semanticText:
       normalizeString(safeReading.id, "G00") +
       " | " +
@@ -617,7 +602,7 @@ export function renderPanelHTML(packet) {
     '<h2 class="instrument-panel__title">' + escapeHtml(stringifyValue(instrument.classifiedState)) + "</h2>",
     '<dl class="instrument-panel__rows">',
     rows
-      .map(function (pair) {
+      .map((pair) => {
         return (
           '<div class="instrument-panel__row">' +
           "<dt>" +
@@ -670,7 +655,7 @@ export function buildGaugeDashboardPacket(options = {}) {
 
   const watchItems = readings.filter((item) => item.state === "watch" || item.state === "complex" || item.state === "break");
 
-  const legendText = Object.keys(GAUGE_COLOR_STATES)
+  const legendText = ["healthy", "active", "proof", "watch", "break", "complex"]
     .map((key) => GAUGE_COLOR_STATES[key].semanticLabel)
     .join(" | ");
 
@@ -709,7 +694,7 @@ export function renderGaugeJumpHTML(label, href, active = false) {
     '<a class="jumpCard' + (active ? " active" : "") + '" href="' + escapeHtml(href) + '" aria-label="' + escapeHtml(semantic) + '">',
     '<span class="navCompass" aria-hidden="true"></span>',
     '<span class="jumpText">',
-    '<small>' + escapeHtml(active ? "Active" : "Jump") + ' ·</small>',
+    '<small>' + escapeHtml(active ? "Active ·" : "Jump ·") + '</small>',
     '<strong>' + escapeHtml(label) + '</strong>',
     '</span>',
     '</a>',
@@ -730,8 +715,9 @@ export function renderGaugeRouteRailHTML(routes = GAUGE_ROUTES) {
   ];
 
   return links
-    .map(([label, href]) => {
-      return '<li><a href="' + escapeHtml(href) + '">' + escapeHtml(label) + '</a></li>';
+    .map(([label, href], index) => {
+      const sep = index < links.length - 1 ? '<span class="routeSep" aria-hidden="true"> | </span>' : "";
+      return '<li><a href="' + escapeHtml(href) + '">' + escapeHtml(label) + "</a>" + sep + "</li>";
     })
     .join("\n");
 }
@@ -746,7 +732,7 @@ export function renderGaugeCardHTML(reading) {
     ' aria-label="' + escapeHtml(gauge.semanticText + " | " + gauge.receiptText) + '">',
     '<div class="gaugeTop">',
     '<span class="gaugeName">',
-    '<small>' + escapeHtml(gauge.id) + ' ·</small>',
+    '<small>' + escapeHtml(gauge.id + " ·") + '</small>',
     '<strong>' + escapeHtml(gauge.title) + '</strong>',
     '</span>',
     '<span class="gaugeValue" aria-label="Value ' + escapeHtml(String(gauge.value)) + '">' + escapeHtml(gauge.value) + '</span>',
@@ -769,8 +755,9 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
 
   return keys
     .filter((key) => states[key])
-    .map((key) => {
+    .map((key, index) => {
       const item = states[key];
+      const sep = index < keys.length - 1 ? '<span class="legendSep" aria-hidden="true"> | </span>' : "";
 
       return (
         '<li class="legendItem" aria-label="' +
@@ -779,10 +766,11 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
         '<span class="dot" style="--tone:var(' +
         escapeHtml(item.cssVar) +
         ')" aria-hidden="true"></span>' +
-        '<span>' +
+        '<span class="legendLabel">' +
         escapeHtml(item.label) +
-        '</span>' +
-        '</li>'
+        "</span>" +
+        sep +
+        "</li>"
       );
     })
     .join("\n");
@@ -812,8 +800,8 @@ export function renderGaugeTedHTML(tedRead = GAUGE_TED_READ) {
           className +
           '">' +
           '<small>' +
-          escapeHtml(normalizeString(safeCard.eyebrow)) +
-          ' ·</small>' +
+          escapeHtml(normalizeString(safeCard.eyebrow) + " ·") +
+          '</small>' +
           '<strong>' +
           escapeHtml(normalizeString(safeCard.title)) +
           '</strong>' +

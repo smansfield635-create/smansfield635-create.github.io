@@ -1,48 +1,22 @@
 <!doctype html>
 <!-- TNT RENEWAL — /gauges/index.html
-     GAUGES INDEX · GENERATION 2 · BRAVO 6 · SUN VISUAL CONTRACT B1
+     GAUGES · GENERATION 2 · EARTH SHOWROOM DIAGNOSTIC B1
 
      PURPOSE:
-       - Preserve Bravo 6 cockpit health scan shell.
-       - Add explicit sun visual contract.
-       - Define what the Compass sun is supposed to become.
-       - Separate "page health" from "visual target precision."
-       - Keep gauges diagnostic, not decorative.
+       - Keep gauges as the truth page.
+       - Add direct Earth showroom diagnostics.
+       - Detect whether the showroom is still solving the wrong problem.
+       - Focus on spherical wrap, real clouds, runtime/control budget, and source ownership.
+       - No graphics box.
        - No generated image.
-       - No graphic box.
-       - No visual container added to Compass from here.
-
-     CONTRACT TARGET:
-       The Compass page sun must read as a satellite-observational solar disc:
-       - natural solar body
-       - limb darkening
-       - mottled photosphere
-       - granulation
-       - subtle active regions
-       - small sunspots
-       - soft corona
-       - no symbolic wheel
-       - no decorative radial badge
-       - no CSS-only fake sun as final visual
-
-     EXPECTED ACTIVE CHAIN:
-       /index.html
-       /index.js
-       /assets/sun/sun_canvas.js
-       /runtime/sun_asset_runtime.js
-       /assets/sun/sun_material.css
-       /assets/sun/sun_manifest.json
-       /assets/sun/sun.svg
-       /runtime/spine_canopy_runtime.js
-       /gauges/gauges_health_runtime.js
 -->
 
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Diamond Gate Bridge website health gauges and sun visual contract"/>
+  <title>Diamond Gate Bridge — Gauges</title>
+  <meta name="description" content="Diamond Gate Bridge health gauges and Earth showroom diagnostics"/>
 
   <style>
     *{box-sizing:border-box}
@@ -50,27 +24,24 @@
     html,body{
       margin:0;
       min-height:100%;
-      width:100%;
-      background:#030712;
+      background:#02040b;
       color:#fff;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      overflow-x:hidden;
     }
 
     a{color:inherit;text-decoration:none}
 
     :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(220,231,255,.78);
+      --muted:rgba(220,231,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --green:#8ff0bd;
+      --yellow:#ffe08a;
+      --red:#ff8b8b;
       --line:rgba(255,255,255,.13);
       --panel:rgba(7,10,16,.74);
-      --panel2:rgba(0,0,0,.24);
-      --ink:rgba(255,255,255,.96);
-      --txt:rgba(255,255,255,.82);
-      --mut:rgba(255,255,255,.64);
-      --gold:rgba(255,217,138,.94);
-      --green:#55f2a6;
-      --red:#ff6b6b;
-      --watch:#ffd166;
-      --shadow:0 24px 90px rgba(0,0,0,.48);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
     }
 
     body::before{
@@ -80,11 +51,11 @@
       z-index:0;
       pointer-events:none;
       background:
-        radial-gradient(circle at 78% 18%,rgba(255,217,138,.14),transparent 22rem),
-        radial-gradient(circle at 18% 18%,rgba(88,122,255,.12),transparent 20rem),
-        radial-gradient(circle at 8% 16%,rgba(255,255,255,.26) 0 1px,transparent 2px),
-        radial-gradient(circle at 34% 30%,rgba(177,205,255,.16) 0 1px,transparent 2px),
-        linear-gradient(180deg,#071225 0%,#030817 48%,#01030a 100%);
+        radial-gradient(circle at 12% 18%,rgba(255,255,255,.30) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(177,205,255,.20) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.18) 0 1px,transparent 2px),
+        radial-gradient(ellipse at 18% 12%,rgba(67,95,180,.20),transparent 34rem),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
     }
 
     .page{
@@ -97,7 +68,7 @@
       gap:14px;
     }
 
-    .top,.hero,.gridCard,.ledgerCard,.contractCard,.routeRail{
+    .nav,.hero,.panel,.routeRail{
       border:1px solid var(--line);
       border-radius:28px;
       background:var(--panel);
@@ -105,51 +76,38 @@
       backdrop-filter:blur(10px);
     }
 
-    .top{padding:12px}
-
-    .navRow,.navLinks,.routeRail{
+    .nav{
+      padding:12px;
       display:flex;
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
+      justify-content:space-between;
     }
 
-    .navRow{justify-content:space-between}
-
     .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
       font-weight:950;
       font-size:20px;
     }
 
-    .mark{
-      width:34px;
-      height:34px;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 35% 28%,rgba(255,255,255,.95),transparent 18%),
-        radial-gradient(circle,rgba(255,217,112,.85),rgba(255,130,34,.30) 62%,rgba(80,28,8,.72));
-      border:1px solid rgba(255,255,255,.18);
+    .links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
     }
 
-    .btn,.routeRail a{
+    .links a,.routeRail a{
       min-height:42px;
       padding:10px 14px;
       border-radius:999px;
       border:1px solid var(--line);
       background:rgba(0,0,0,.24);
-      color:var(--ink);
       font-weight:900;
     }
 
-    .btn.red{
+    .links a.active{
       border-color:rgba(255,217,138,.48);
-      box-shadow:0 0 20px rgba(201,162,74,.14);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(201,162,74,.16),transparent 60%),
-        rgba(0,0,0,.28);
+      color:var(--gold);
     }
 
     .hero{
@@ -170,384 +128,210 @@
 
     h1{
       margin:0;
-      font-size:clamp(2.7rem,8vw,6rem);
-      line-height:.9;
-      letter-spacing:-.075em;
+      font-size:clamp(3.4rem,10vw,7.2rem);
+      line-height:.86;
+      letter-spacing:-.08em;
+    }
+
+    .headline{
+      margin:0;
+      color:var(--gold);
+      font-size:clamp(1.35rem,4vw,2.5rem);
+      line-height:1.08;
+      font-weight:850;
     }
 
     .lede{
       margin:0;
+      max-width:820px;
       color:var(--txt);
-      font-size:clamp(1rem,2.3vw,1.22rem);
+      font-size:clamp(1.05rem,2.3vw,1.28rem);
       line-height:1.55;
-      max-width:900px;
     }
 
-    .metaLine{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      color:var(--mut);
-      font-weight:850;
-    }
-
-    .pill{
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:9px 12px;
-      background:rgba(0,0,0,.24);
-    }
-
-    .scoreGrid{
+    .summaryGrid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
     }
 
     .score{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      background:var(--panel2);
+      border:1px solid var(--line);
+      border-radius:22px;
       padding:16px;
+      background:rgba(0,0,0,.22);
       display:grid;
-      gap:8px;
-    }
-
-    .score b{
-      font-size:clamp(1.55rem,4vw,2.6rem);
-      letter-spacing:-.05em;
+      gap:6px;
     }
 
     .score span{
-      color:var(--mut);
-      font-size:12px;
-      font-weight:950;
-      text-transform:uppercase;
-      letter-spacing:1.4px;
+      color:var(--muted);
+      font-weight:850;
+      font-size:.9rem;
     }
 
-    .gridCard,.ledgerCard,.contractCard{
+    .score strong{
+      font-size:clamp(1.8rem,5vw,3.2rem);
+      line-height:1;
+    }
+
+    .panel{
       padding:18px;
       display:grid;
       gap:14px;
     }
 
-    .gridCard h2,.ledgerCard h2,.contractCard h2{
+    .panel h2{
       margin:0;
-      font-size:clamp(1.25rem,3vw,2rem);
-      letter-spacing:-.04em;
-    }
-
-    .gridCard p,.contractCard p{
-      margin:0;
-      color:var(--txt);
-      line-height:1.55;
-    }
-
-    ul,ol{
-      margin:0;
-      padding-left:1.25rem;
-      color:var(--txt);
-      line-height:1.58;
-    }
-
-    .ledger{
-      display:grid;
-      gap:8px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(160px,1fr) auto minmax(220px,1.6fr);
-      gap:10px;
-      align-items:center;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:16px;
-      background:rgba(0,0,0,.20);
-      padding:10px 12px;
-      color:var(--txt);
-    }
-
-    .row strong{
-      color:var(--ink);
-      overflow-wrap:anywhere;
+      color:var(--gold);
+      font-size:clamp(1.3rem,3vw,2rem);
+      letter-spacing:-.03em;
     }
 
     .status{
-      border:1px solid rgba(255,255,255,.12);
+      display:inline-flex;
+      width:max-content;
+      align-items:center;
+      gap:8px;
+      border:1px solid var(--line);
       border-radius:999px;
-      padding:5px 8px;
-      font-size:11px;
-      font-weight:950;
-      letter-spacing:.8px;
-      text-transform:uppercase;
-      white-space:nowrap;
-    }
-
-    .status.strong{
-      color:var(--green);
-      border-color:rgba(85,242,166,.34);
-      background:rgba(85,242,166,.08);
-    }
-
-    .status.fail{
-      color:var(--red);
-      border-color:rgba(255,107,107,.34);
-      background:rgba(255,107,107,.08);
-    }
-
-    .status.watch{
-      color:var(--watch);
-      border-color:rgba(255,209,102,.34);
-      background:rgba(255,209,102,.08);
-    }
-
-    .contractGrid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .contractBox{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
+      padding:8px 12px;
       background:rgba(0,0,0,.22);
-      padding:14px;
+      font-weight:950;
+    }
+
+    .status.strong{color:var(--green)}
+    .status.watch{color:var(--yellow)}
+    .status.fail{color:var(--red)}
+
+    .list{
       display:grid;
       gap:8px;
     }
 
-    .contractBox strong{
-      color:var(--gold);
-      font-size:1.02rem;
+    .item{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:18px;
+      background:rgba(0,0,0,.20);
+      padding:12px;
+      display:grid;
+      gap:4px;
     }
 
-    .contractBox code{
-      color:var(--gold);
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:7px;
-      padding:1px 5px;
+    .item strong{
+      color:var(--ink);
+    }
+
+    .item span{
+      color:var(--txt);
+      line-height:1.45;
+    }
+
+    .item[data-state="STRONG"] strong{color:var(--green)}
+    .item[data-state="WATCH"] strong{color:var(--yellow)}
+    .item[data-state="FAIL"] strong{color:var(--red)}
+
+    .mono{
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.88rem;
+      color:rgba(255,255,255,.78);
       overflow-wrap:anywhere;
     }
 
     .routeRail{
-      justify-content:center;
       padding:12px;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
     }
 
-    @media(max-width:800px){
-      .page{
-        width:min(100% - 20px,1180px);
-        padding-top:10px;
-      }
+    iframe{
+      position:absolute;
+      width:1px;
+      height:1px;
+      opacity:0;
+      pointer-events:none;
+      border:0;
+    }
 
-      .navLinks{width:100%}
-
-      .navLinks .btn,.routeRail a{
-        flex:1 1 calc(50% - 10px);
-        text-align:center;
-      }
-
-      .scoreGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-
-      .contractGrid{grid-template-columns:1fr}
-
-      .row{
-        grid-template-columns:1fr;
-        gap:6px;
-      }
+    @media(max-width:760px){
+      .page{width:min(100% - 20px,1180px)}
+      .summaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .links a,.routeRail a{flex:1 1 calc(50% - 10px);text-align:center}
     }
   </style>
 </head>
 
-<body
-  data-gauges-contract="sun-visual-contract-b1"
-  data-gauges-runtime="spine-canopy-parachute-b6"
-  data-root-contract="root-compass-cockpit-b1"
-  data-sun-target="satellite-observational-solar-disc"
->
-  <main class="page">
-    <section class="top" aria-label="Navigation">
-      <div class="navRow">
-        <a class="brand" href="/">
-          <span class="mark" aria-hidden="true"></span>
-          <span>Diamond Gate Bridge</span>
-        </a>
-
-        <nav class="navLinks" aria-label="Primary navigation">
-          <a class="btn" href="/">Compass</a>
-          <a class="btn" href="/home/">Home</a>
-          <a class="btn" href="/prelude/">Prelude</a>
-          <a class="btn" href="/door/">Door</a>
-          <a class="btn" href="/products/">Products</a>
-          <a class="btn" href="/laws/">Laws</a>
-          <a class="btn" href="/governance/">Governance</a>
-          <a class="btn red" href="/gauges/">Gauges</a>
-        </nav>
+<body>
+  <main class="page" data-gauges-root data-gauges-version="earth-showroom-diagnostic-b1">
+    <nav class="nav" aria-label="Primary navigation">
+      <a class="brand" href="/">Diamond Gate Bridge</a>
+      <div class="links">
+        <a href="/">Compass</a>
+        <a href="/home/">Home</a>
+        <a href="/prelude/">Prelude</a>
+        <a href="/door/">Door</a>
+        <a href="/showroom/">Showroom</a>
+        <a href="/products/">Products</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+        <a class="active" href="/gauges/">Gauges</a>
       </div>
-    </section>
+    </nav>
 
-    <section class="hero" aria-label="Website Health Gauges">
-      <p class="kicker">Generation 2 · Compass Cockpit Gauges · Bravo 6 · Sun Visual Contract B1</p>
-
-      <h1>Website Health Gauges</h1>
-
+    <section class="hero">
+      <p class="kicker">Generation 2 · Earth Showroom Gauges · Diagnostic B1</p>
+      <h1>Gauges</h1>
+      <p class="headline" id="statusHeadline">Diagnosing the Earth renderer.</p>
       <p class="lede">
-        This scan still checks source reachability, cockpit truth, visible sun truth, canopy binding, background presence, and false-health blocking. This renewal adds a sharper contract for what the Compass sun is supposed to become: a satellite-observational solar disc, not a symbolic radial placeholder.
+        This gauge renewal stops treating the showroom as a general page-health problem. It now checks the exact suspected failure: whether Earth is being rendered as a real spherical wrap with real clouds, bounded runtime cost, and clean control ownership.
       </p>
 
-      <div class="metaLine">
-        <span class="pill">Status: <strong id="statusText">PENDING</strong></span>
-        <span class="pill">Updated: <strong id="updatedText">Pending</strong></span>
-        <span class="pill">Runtime: <strong id="runtimeText">spine-canopy-parachute-b6</strong></span>
-        <span class="pill">Contract: <strong>root-compass-cockpit-b1</strong></span>
-      </div>
-
-      <div class="scoreGrid" aria-label="Gauge scores">
+      <div class="summaryGrid" aria-label="Gauge summary">
         <div class="score">
-          <span>Website health</span>
-          <b id="overallScore">--%</b>
+          <span>Earth visual</span>
+          <strong id="earthScore">—</strong>
         </div>
-
         <div class="score">
-          <span>Source</span>
-          <b id="sourceScore">--</b>
+          <span>Renderer control</span>
+          <strong id="controlScore">—</strong>
         </div>
-
         <div class="score">
-          <span>Cockpit truth</span>
-          <b id="visualScore">--</b>
+          <span>Budget</span>
+          <strong id="budgetScore">—</strong>
         </div>
-
         <div class="score">
           <span>Drift risk</span>
-          <b id="driftScore">--</b>
+          <strong id="driftScore">—</strong>
         </div>
       </div>
     </section>
 
-    <section class="contractCard" aria-label="Sun visual contract">
-      <h2>Sun Visual Contract</h2>
-
-      <p>
-        The Compass sun is not merely required to exist. It must visually move toward a real observational target: a solar disc seen like a satellite or space-observation instrument would read it.
-      </p>
-
-      <div class="contractGrid">
-        <div class="contractBox">
-          <strong>Target visual</strong>
-          <p>
-            Satellite-observational solar disc with limb darkening, mottled photosphere, solar granulation, subtle active regions, small sunspots, and soft corona.
-          </p>
-        </div>
-
-        <div class="contractBox">
-          <strong>Forbidden visual</strong>
-          <p>
-            Symbolic wheel, decorative sun badge, cartoon radial rays, generic orange gradient, CSS-only placeholder as final state, or generated-image dependency.
-          </p>
-        </div>
-
-        <div class="contractBox">
-          <strong>Required source chain</strong>
-          <p>
-            <code>/index.html</code>, <code>/index.js</code>, <code>/assets/sun/sun_canvas.js</code>, <code>/runtime/sun_asset_runtime.js</code>, <code>/assets/sun/sun_material.css</code>, <code>/assets/sun/sun_manifest.json</code>, <code>/assets/sun/sun.svg</code>.
-          </p>
-        </div>
-
-        <div class="contractBox">
-          <strong>Pass meaning</strong>
-          <p>
-            Bravo 6 health proves the page is stable. The Sun Visual Contract proves the visual target is actually being sharpened toward satellite view.
-          </p>
-        </div>
-      </div>
+    <section class="panel">
+      <h2>Current diagnostic verdict</h2>
+      <div class="status watch" id="overallStatus">SCANNING</div>
+      <div class="list" id="verdictList"></div>
     </section>
 
-    <section class="gridCard" aria-label="What is working">
-      <h2>What is working</h2>
-      <ul id="workingList">
-        <li>Waiting for Bravo 6 cockpit-aware scan.</li>
-      </ul>
+    <section class="panel">
+      <h2>Earth renderer contract</h2>
+      <div class="list" id="earthLedger"></div>
     </section>
 
-    <section class="gridCard" aria-label="What is wrong">
-      <h2>What is wrong</h2>
-      <ul id="wrongList">
-        <li>Waiting for Bravo 6 cockpit-aware scan.</li>
-      </ul>
+    <section class="panel">
+      <h2>Runtime and control ownership</h2>
+      <div class="list" id="controlLedger"></div>
     </section>
 
-    <section class="gridCard" aria-label="What needs to be done">
+    <section class="panel">
+      <h2>Source chain</h2>
+      <div class="list" id="sourceLedger"></div>
+    </section>
+
+    <section class="panel">
       <h2>What needs to be done</h2>
-      <ol id="todoList">
-        <li>Wait for the Bravo 6 scan to complete.</li>
-      </ol>
-    </section>
-
-    <section class="ledgerCard" aria-label="Sun visual target ledger">
-      <h2>Sun visual target ledger</h2>
-
-      <div class="ledger">
-        <div class="row">
-          <strong>Visual profile</strong>
-          <span class="status watch">TARGET</span>
-          <span>satellite-observational-solar-disc</span>
-        </div>
-
-        <div class="row">
-          <strong>Must improve</strong>
-          <span class="status watch">TARGET</span>
-          <span>Texture, limb darkening, active regions, sunspots, corona realism, and observational body feel.</span>
-        </div>
-
-        <div class="row">
-          <strong>Must avoid</strong>
-          <span class="status fail">BLOCK</span>
-          <span>Symbolic radial wheel, decorative badge, generic CSS sun, or unchanged old fallback dominating the live page.</span>
-        </div>
-
-        <div class="row">
-          <strong>Correct path</strong>
-          <span class="status strong">ROUTE</span>
-          <span>Update active HTML, index boot, sun canvas, sun runtime, sun material, sun manifest, and SVG together.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="ledgerCard" aria-label="Source ledger">
-      <h2>Source ledger</h2>
-      <div class="ledger" id="sourceLedger">
-        <div class="row">
-          <strong>Pending</strong>
-          <span class="status watch">PENDING</span>
-          <span>Source scan has not completed.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="ledgerCard" aria-label="Cockpit visual-control ledger">
-      <h2>Cockpit visual-control ledger</h2>
-      <div class="ledger" id="visualLedger">
-        <div class="row">
-          <strong>Pending</strong>
-          <span class="status watch">PENDING</span>
-          <span>Visual-control scan has not completed.</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="contractCard" aria-label="Contract renewal">
-      <h2>Contract renewal</h2>
-
-      <p>
-        Bravo 6 still expects <code>root-sun-asset-b1</code>, cockpit version <code>root-compass-cockpit-b1</code>, canopy version <code>spine-canopy-parachute-b1</code>, and diagnostic runtime <code>spine-canopy-parachute-b6</code>. Strong health remains forbidden when cockpit truth, canopy truth, or visible sun truth fails.
-      </p>
-
-      <p>
-        Sun Visual Contract B1 adds a second layer of precision: a healthy page is not enough if the sun still reads as an old symbolic fallback. The desired target is now explicit: satellite-observational solar disc.
-      </p>
+      <div class="list" id="todoList"></div>
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
@@ -555,13 +339,15 @@
       <a href="/home/">Home</a>
       <a href="/prelude/">Prelude</a>
       <a href="/door/">Door</a>
+      <a href="/showroom/">Showroom</a>
       <a href="/products/">Products</a>
       <a href="/laws/">Laws</a>
       <a href="/governance/">Governance</a>
-      <a href="/gauges/">Gauges</a>
     </nav>
   </main>
 
-  <script src="/gauges/gauges_health_runtime.js?v=spine-canopy-parachute-b6" defer></script>
+  <iframe id="showroomProbe" src="/showroom/?dgb_gauge_probe=earth_renderer_b1" title="Showroom diagnostic probe"></iframe>
+
+  <script src="/gauges/gauges_health_runtime.js?v=earth-showroom-diagnostic-b1" defer></script>
 </body>
 </html>

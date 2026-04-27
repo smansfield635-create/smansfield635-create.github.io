@@ -1,766 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-compass-generation="G2_HOUSE_FIRST_BASELINE">
+<html lang="en" data-build="six-house-parts-full-tnt-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
-  <meta
-    name="description"
-    content="Diamond Gate Bridge Compass: Generation 2 house-first public root for Rich Manor and Estate."
-  />
-
-  <style>
-    :root {
-      --void: #01030a;
-      --deep: #020713;
-      --navy: #071328;
-      --panel: rgba(8, 19, 42, 0.84);
-      --panel-strong: rgba(5, 12, 29, 0.94);
-      --ink: #eef3ff;
-      --muted: #b8c2d8;
-      --soft: #d9e3f7;
-      --gold: #f4c967;
-      --gold-soft: #ffe3a3;
-      --amber: #d98a35;
-      --copper: #aa6231;
-      --blue: #76c8ff;
-      --green: #84e1bc;
-      --line: rgba(244, 201, 103, 0.34);
-      --line-strong: rgba(244, 201, 103, 0.64);
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.54);
-      --glow: 0 0 48px rgba(244, 201, 103, 0.25);
-      --radius-xl: 34px;
-      --radius-lg: 26px;
-      --radius-md: 18px;
-      --max: 1160px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--void);
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 50% -12%, rgba(244, 201, 103, 0.18), transparent 32%),
-        radial-gradient(circle at 14% 18%, rgba(118, 200, 255, 0.22), transparent 34%),
-        radial-gradient(circle at 86% 20%, rgba(217, 138, 53, 0.12), transparent 30%),
-        linear-gradient(180deg, #01030a 0%, #020713 42%, #071328 100%);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.72) 0 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(244, 201, 103, 0.45) 0 1px, transparent 1.4px);
-      background-size: 92px 92px, 151px 151px;
-      background-position: 0 0, 37px 51px;
-      opacity: 0.18;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: -20%;
-      z-index: -1;
-      pointer-events: none;
-      background:
-        radial-gradient(circle at 50% 50%, transparent 0 32%, rgba(244, 201, 103, 0.045) 42%, transparent 62%),
-        conic-gradient(from 24deg at 50% 50%, transparent, rgba(118, 200, 255, 0.06), transparent, rgba(244, 201, 103, 0.07), transparent);
-      opacity: 0.7;
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .rail {
-      width: min(980px, calc(100% - 24px));
-      margin: 12px auto 0;
-      padding: 8px;
-      border: 1px solid rgba(244, 201, 103, 0.26);
-      border-radius: 999px;
-      background: rgba(8, 19, 42, 0.7);
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      scrollbar-width: none;
-      box-shadow: 0 16px 44px rgba(0, 0, 0, 0.34);
-      backdrop-filter: blur(18px);
-      position: relative;
-      z-index: 10;
-    }
-
-    .rail::-webkit-scrollbar {
-      display: none;
-    }
-
-    .rail a,
-    .chip,
-    .mode,
-    .entry-button {
-      min-height: 34px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0 13px;
-      border: 1px solid rgba(244, 201, 103, 0.24);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.055);
-      color: var(--soft);
-      text-decoration: none;
-      font-weight: 850;
-      white-space: nowrap;
-    }
-
-    .rail a[aria-current="page"],
-    .mode[aria-pressed="true"] {
-      color: #111827;
-      border-color: var(--gold);
-      background: linear-gradient(180deg, var(--gold-soft), var(--gold));
-      box-shadow: var(--glow);
-    }
-
-    .shell {
-      width: min(var(--max), calc(100% - 24px));
-      margin: 0 auto;
-      padding: 0 0 54px;
-    }
-
-    .hero {
-      min-height: calc(100vh - 58px);
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
-      gap: clamp(18px, 4vw, 42px);
-      align-items: center;
-      padding: clamp(18px, 4vw, 52px) 0 clamp(30px, 6vw, 72px);
-    }
-
-    .panel,
-    .room,
-    .card,
-    .backlinks,
-    .audit-receipt {
-      border: 1px solid var(--line);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.085), transparent 42%),
-        var(--panel);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .panel,
-    .room {
-      border-radius: var(--radius-xl);
-      padding: clamp(20px, 4vw, 46px);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .panel::after,
-    .room::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(90deg, rgba(244, 201, 103, 0.035) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.035) 1px, transparent 1px);
-      background-size: 8.333% 8.333%;
-      opacity: 0.34;
-      mask-image: radial-gradient(circle at center, black, transparent 76%);
-    }
-
-    .panel > *,
-    .room > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    .visual-panel {
-      order: 1;
-    }
-
-    .copy-panel {
-      order: 2;
-    }
-
-    .kicker,
-    .label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 12px;
-      color: var(--gold-soft);
-      font-size: 0.74rem;
-      font-weight: 950;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .kicker::before,
-    .label::before {
-      content: "";
-      width: 9px;
-      height: 9px;
-      border: 1px solid var(--gold);
-      transform: rotate(45deg);
-      box-shadow: 0 0 18px rgba(244, 201, 103, 0.5);
-      flex: 0 0 auto;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(3rem, 8vw, 7.4rem);
-      line-height: 0.84;
-      letter-spacing: -0.09em;
-    }
-
-    h2 {
-      margin: 0 0 12px;
-      font-size: clamp(1.5rem, 3vw, 2.5rem);
-      line-height: 1.05;
-      letter-spacing: -0.04em;
-    }
-
-    h3 {
-      margin: 0 0 8px;
-      font-size: 1.1rem;
-    }
-
-    p {
-      line-height: 1.65;
-    }
-
-    .lede {
-      color: var(--muted);
-      font-size: clamp(1.02rem, 1.55vw, 1.2rem);
-      max-width: 740px;
-    }
-
-    .gold {
-      color: var(--gold-soft);
-    }
-
-    .divider {
-      height: 1px;
-      width: 100%;
-      margin: clamp(18px, 3vw, 30px) 0;
-      background: linear-gradient(90deg, transparent, var(--line-strong), transparent);
-    }
-
-    .house-stage {
-      min-height: clamp(430px, 64vh, 600px);
-      border: 1px solid rgba(244, 201, 103, 0.34);
-      border-radius: 32px;
-      background:
-        radial-gradient(circle at 50% 44%, rgba(244, 201, 103, 0.18), transparent 29%),
-        radial-gradient(circle at 50% 64%, rgba(118, 200, 255, 0.09), transparent 36%),
-        rgba(0, 0, 0, 0.18);
-      position: relative;
-      overflow: hidden;
-      box-shadow:
-        inset 0 0 64px rgba(118, 200, 255, 0.08),
-        0 0 64px rgba(244, 201, 103, 0.08);
-    }
-
-    .house-stage::before {
-      content: "";
-      position: absolute;
-      inset: 8%;
-      border-radius: 50%;
-      border: 1px solid rgba(244, 201, 103, 0.18);
-      box-shadow: inset 0 0 46px rgba(244, 201, 103, 0.06);
-    }
-
-    .house-stage::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 54%;
-      width: min(320px, 70%);
-      aspect-ratio: 1;
-      transform: translate(-50%, -50%) rotate(45deg);
-      border: 1px solid rgba(244, 201, 103, 0.28);
-      box-shadow: 0 0 44px rgba(244, 201, 103, 0.12);
-      opacity: 0.76;
-    }
-
-    .caption {
-      position: absolute;
-      left: 18px;
-      right: 18px;
-      top: 18px;
-      z-index: 6;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: var(--gold-soft);
-      font-size: clamp(0.68rem, 1.8vw, 0.84rem);
-      font-weight: 950;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .mode-layer {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 220ms ease;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    body[data-view-mode="flat"] .flat-layer,
-    body[data-view-mode="round"] .round-layer,
-    body[data-view-mode="meta"] .meta-layer {
-      opacity: 1;
-    }
-
-    .flat-layer {
-      background:
-        linear-gradient(90deg, rgba(244, 201, 103, 0.1) 1px, transparent 1px),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.1) 1px, transparent 1px);
-      background-size: 42px 42px;
-    }
-
-    .flat-layer::after {
-      content: "FLAT · HOUSE MAP";
-      position: absolute;
-      left: 50%;
-      bottom: 24px;
-      transform: translateX(-50%);
-      color: rgba(255, 227, 163, 0.92);
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-align: center;
-      font-size: 0.82rem;
-    }
-
-    .round-layer::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      bottom: 18%;
-      width: 12px;
-      height: 54%;
-      border-radius: 999px;
-      transform: translateX(-50%);
-      background: linear-gradient(180deg, var(--gold), var(--copper));
-      box-shadow: 0 0 34px rgba(244, 201, 103, 0.3);
-    }
-
-    .round-layer::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 8%;
-      width: min(300px, 72%);
-      height: 43%;
-      border: 1px solid rgba(132, 225, 188, 0.44);
-      border-radius: 48% 52% 45% 55%;
-      background:
-        radial-gradient(circle at 36% 32%, rgba(132, 225, 188, 0.22), transparent 24%),
-        radial-gradient(circle at 66% 48%, rgba(244, 201, 103, 0.16), transparent 26%),
-        radial-gradient(circle at 48% 66%, rgba(118, 200, 255, 0.11), transparent 22%);
-      transform: translateX(-50%);
-      box-shadow:
-        inset 0 0 48px rgba(132, 225, 188, 0.1),
-        0 0 42px rgba(132, 225, 188, 0.16);
-    }
-
-    .meta-layer::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      width: min(420px, 88%);
-      aspect-ratio: 1;
-      border-radius: 50%;
-      border: 1px solid rgba(118, 200, 255, 0.5);
-      transform: translate(-50%, -50%);
-      background:
-        radial-gradient(circle at 38% 30%, rgba(244, 201, 103, 0.18), transparent 18%),
-        radial-gradient(circle at 62% 60%, rgba(118, 200, 255, 0.14), transparent 22%),
-        repeating-linear-gradient(90deg, transparent 0 24px, rgba(118, 200, 255, 0.075) 25px 26px);
-      box-shadow:
-        inset 0 0 62px rgba(118, 200, 255, 0.16),
-        0 0 72px rgba(118, 200, 255, 0.2);
-    }
-
-    .estate-object {
-      position: absolute;
-      left: 50%;
-      top: 53%;
-      width: min(410px, 82%);
-      height: min(360px, 62%);
-      transform: translate(-50%, -50%);
-      z-index: 4;
-    }
-
-    .bridge-span {
-      position: absolute;
-      left: 50%;
-      bottom: 2%;
-      width: 98%;
-      height: 20%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(244, 201, 103, 0.42);
-      border-radius: 999px 999px 26px 26px;
-      background:
-        repeating-linear-gradient(90deg, transparent 0 12%, rgba(244, 201, 103, 0.14) 13% 14%, transparent 15%),
-        linear-gradient(180deg, rgba(255, 227, 163, 0.12), rgba(7, 17, 39, 0.86));
-      box-shadow:
-        inset 0 0 28px rgba(244, 201, 103, 0.08),
-        0 0 30px rgba(244, 201, 103, 0.1);
-    }
-
-    .gate-left,
-    .gate-right {
-      position: absolute;
-      bottom: 18%;
-      width: 18%;
-      height: 58%;
-      border: 1px solid rgba(244, 201, 103, 0.5);
-      border-radius: 18px 18px 10px 10px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(7, 17, 39, 0.93)),
-        repeating-linear-gradient(180deg, transparent 0 18%, rgba(244, 201, 103, 0.08) 19% 20%, transparent 21%);
-      box-shadow:
-        inset 0 0 30px rgba(118, 200, 255, 0.08),
-        0 0 34px rgba(244, 201, 103, 0.12);
-    }
-
-    .gate-left {
-      left: 5%;
-    }
-
-    .gate-right {
-      right: 5%;
-    }
-
-    .manor-roof {
-      position: absolute;
-      left: 50%;
-      top: 1%;
-      width: 64%;
-      height: 32%;
-      transform: translateX(-50%);
-      clip-path: polygon(50% 0, 100% 100%, 0 100%);
-      border: 1px solid rgba(244, 201, 103, 0.4);
-      background:
-        linear-gradient(135deg, rgba(255, 227, 163, 0.2), rgba(244, 201, 103, 0.08)),
-        rgba(8, 19, 42, 0.78);
-      box-shadow: 0 0 34px rgba(244, 201, 103, 0.18);
-    }
-
-    .manor-body {
-      position: absolute;
-      left: 50%;
-      bottom: 16%;
-      width: 66%;
-      height: 60%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(244, 201, 103, 0.45);
-      border-radius: 22px 22px 30px 30px;
-      background:
-        linear-gradient(90deg, transparent 0 18%, rgba(244, 201, 103, 0.1) 19% 20%, transparent 21% 79%, rgba(244, 201, 103, 0.1) 80% 81%, transparent 82%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(7, 17, 39, 0.92));
-      box-shadow:
-        inset 0 0 42px rgba(118, 200, 255, 0.08),
-        0 0 52px rgba(244, 201, 103, 0.13);
-    }
-
-    .manor-door {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      width: 30%;
-      height: 52%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(255, 227, 163, 0.58);
-      border-radius: 999px 999px 0 0;
-      background:
-        radial-gradient(circle at 50% 42%, rgba(244, 201, 103, 0.38), transparent 12%),
-        linear-gradient(180deg, rgba(244, 201, 103, 0.12), rgba(2, 7, 19, 0.94));
-      box-shadow: inset 0 0 30px rgba(244, 201, 103, 0.12), 0 0 34px rgba(244, 201, 103, 0.14);
-    }
-
-    .manor-window {
-      position: absolute;
-      top: 34%;
-      width: 14%;
-      aspect-ratio: 1;
-      border: 1px solid rgba(255, 227, 163, 0.48);
-      border-radius: 50%;
-      background: rgba(244, 201, 103, 0.12);
-      box-shadow: 0 0 20px rgba(244, 201, 103, 0.12);
-    }
-
-    .manor-window.left {
-      left: 22%;
-    }
-
-    .manor-window.right {
-      right: 22%;
-    }
-
-    .diamond-keystone {
-      position: absolute;
-      left: 50%;
-      bottom: 26%;
-      width: 14%;
-      aspect-ratio: 1;
-      transform: translateX(-50%) rotate(45deg);
-      border: 1px solid rgba(255, 227, 163, 0.72);
-      background:
-        radial-gradient(circle, rgba(255, 227, 163, 0.38), rgba(244, 201, 103, 0.1) 46%, rgba(8, 19, 42, 0.78));
-      box-shadow:
-        inset 0 0 24px rgba(255, 227, 163, 0.18),
-        0 0 34px rgba(244, 201, 103, 0.28);
-    }
-
-    .estate-label {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      transform: translate(-50%, 112%);
-      color: var(--gold-soft);
-      font-size: 0.68rem;
-      font-weight: 950;
-      letter-spacing: 0.16em;
-      text-align: center;
-      text-transform: uppercase;
-      width: 100%;
-    }
-
-    .modes {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .mode {
-      width: 100%;
-      min-height: 46px;
-      cursor: pointer;
-    }
-
-    .readout {
-      margin-top: 14px;
-      border: 1px solid rgba(244, 201, 103, 0.25);
-      border-radius: 20px;
-      padding: 14px;
-      background: rgba(0, 0, 0, 0.18);
-    }
-
-    .entry-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .entry-button {
-      min-height: 42px;
-    }
-
-    .proof {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .proof-item {
-      border: 1px solid rgba(132, 225, 188, 0.28);
-      border-radius: 18px;
-      padding: 12px;
-      background: rgba(132, 225, 188, 0.06);
-    }
-
-    .proof-item strong {
-      display: block;
-      color: var(--green);
-      font-size: 1.28rem;
-      line-height: 1;
-    }
-
-    .proof-item span {
-      color: var(--muted);
-      font-size: 0.76rem;
-      font-weight: 850;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .routes {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: clamp(14px, 2vw, 20px);
-    }
-
-    .card {
-      border-radius: var(--radius-md);
-      padding: clamp(18px, 2.2vw, 28px);
-      text-decoration: none;
-      min-height: 160px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .card span {
-      color: var(--muted);
-      line-height: 1.6;
-    }
-
-    .lattice-band {
-      margin-top: 20px;
-      padding: 16px;
-      border: 1px solid rgba(244, 201, 103, 0.22);
-      border-radius: 22px;
-      background: rgba(0, 0, 0, 0.14);
-    }
-
-    .lattice-row {
-      display: grid;
-      grid-template-columns: repeat(64, minmax(2px, 1fr));
-      gap: 3px;
-      margin-top: 6px;
-    }
-
-    .lattice-row:first-child {
-      margin-top: 0;
-    }
-
-    .lattice-cell {
-      height: 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(244, 201, 103, 0.12);
-    }
-
-    .lattice-row.flat .lattice-cell {
-      background: rgba(244, 201, 103, 0.18);
-      border-color: rgba(244, 201, 103, 0.4);
-    }
-
-    .lattice-row.round .lattice-cell {
-      background: rgba(132, 225, 188, 0.14);
-      border-color: rgba(132, 225, 188, 0.34);
-    }
-
-    .lattice-row.meta .lattice-cell {
-      background: rgba(118, 200, 255, 0.14);
-      border-color: rgba(118, 200, 255, 0.34);
-    }
-
-    .lattice-row.return .lattice-cell {
-      background: rgba(201, 182, 255, 0.11);
-      border-color: rgba(201, 182, 255, 0.28);
-    }
-
-    .backlinks,
-    .audit-receipt {
-      margin-top: clamp(22px, 4vw, 42px);
-      border-radius: var(--radius-md);
-      padding: clamp(16px, 2.2vw, 24px);
-    }
-
-    .audit-receipt {
-      opacity: 0.72;
-      font-size: 0.9rem;
-    }
-
-    .chip-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .chip.pass {
-      color: #eafff2;
-      border-color: rgba(132, 225, 188, 0.48);
-    }
-
-    @media (max-width: 900px) {
-      .hero {
-        grid-template-columns: 1fr;
-        padding-top: 16px;
-      }
-
-      .visual-panel {
-        order: 1;
-      }
-
-      .copy-panel {
-        order: 2;
-      }
-
-      .rail {
-        justify-content: flex-start;
-      }
-
-      .rail a {
-        font-size: 0.86rem;
-        min-height: 34px;
-        padding: 0 12px;
-      }
-
-      .modes,
-      .proof,
-      .routes {
-        grid-template-columns: 1fr;
-      }
-
-      .house-stage {
-        min-height: 470px;
-      }
-
-      .estate-object {
-        width: 88%;
-        height: 58%;
-      }
-
-      h1 {
-        font-size: clamp(3rem, 14vw, 5.5rem);
-      }
-
-      .lattice-row {
-        grid-template-columns: repeat(32, minmax(2px, 1fr));
-      }
-    }
-
-    @media (max-width: 430px) {
-      .caption {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .estate-label {
-        font-size: 0.6rem;
-      }
-    }
-  </style>
+  <meta name="description" content="Diamond Gate Bridge Compass: the first public reveal and view-control surface for Rich Manor and Estate." />
+  <link rel="stylesheet" href="/assets/manor.css" />
+  <script src="/assets/page_registry.js" defer></script>
 </head>
 
 <body
@@ -771,10 +17,18 @@
   data-manor-slot="H1_COMPASS"
   data-manor-route="/"
   data-manor-batch="BATCH_1_HOUSE"
-  data-compass-role="generation-2-house-first-baseline"
+  data-page-id="compass"
+  data-route="/"
+  data-class-type="house_structure"
+  data-construct-code="H1_COMPASS"
+  data-house-anchor="compass"
+  data-skin-family="manor_house"
+  data-audit-priority="critical"
+  data-view-modes="flat round meta return"
+  data-registry-version="1.0.0"
   data-view-mode="flat"
 >
-  <nav class="rail" aria-label="Richie’s Manor house routes">
+  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
     <a href="/" aria-current="page">Compass</a>
     <a href="/door/">Door</a>
     <a href="/home/">Home</a>
@@ -783,183 +37,79 @@
     <a href="/gauges/">Gauges</a>
   </nav>
 
-  <main class="shell">
-    <section class="hero" aria-label="Diamond Gate Bridge Generation 2 public root">
-      <article class="panel visual-panel">
-        <p class="kicker">First public object</p>
-
-        <div class="house-stage" aria-label="Diamond Gate Manor inside the universe">
-          <div class="caption">
-            <span>Rich Manor and Estate</span>
-            <span id="modeCaption">Flat View</span>
-          </div>
-
-          <div class="mode-layer flat-layer" aria-hidden="true"></div>
-          <div class="mode-layer round-layer" aria-hidden="true"></div>
-          <div class="mode-layer meta-layer" aria-hidden="true"></div>
-
-          <div class="estate-object" aria-hidden="true">
-            <div class="bridge-span"></div>
-            <div class="gate-left"></div>
-            <div class="gate-right"></div>
-            <div class="manor-roof"></div>
-            <div class="manor-body">
-              <span class="manor-window left"></span>
-              <span class="manor-window right"></span>
-              <span class="manor-door"></span>
-              <span class="diamond-keystone"></span>
-            </div>
-            <div class="estate-label">Diamond Gate Bridge</div>
-          </div>
-        </div>
-
-        <div class="proof" aria-label="Live structure proof">
-          <div class="proof-item"><strong>100</strong><span>House</span></div>
-          <div class="proof-item"><strong>100</strong><span>Products</span></div>
-          <div class="proof-item"><strong>100</strong><span>Planets</span></div>
-          <div class="proof-item"><strong>Live</strong><span>Gauges</span></div>
-        </div>
-      </article>
-
-      <article class="panel copy-panel">
-        <p class="kicker">H1 · Compass · House in the Universe</p>
-        <h1>Diamond Gate Bridge</h1>
-        <p class="lede">
-          You are arriving at the house. The universe is the environment around it.
-          The Compass controls how you see and enter the estate.
-        </p>
-
-        <div class="divider"></div>
-
-        <h2>Choose how you want to see the house.</h2>
-        <p class="lede">
-          <span class="gold">Flat</span> gives the clean 2D house map.
-          <span class="gold">Round</span> gives the Tree of Life / A Bug’s Life view.
-          <span class="gold">Meta</span> places the house inside the full universe.
-        </p>
-
-        <div class="modes" role="group" aria-label="World-view selector">
-          <button class="mode" type="button" data-mode="flat" aria-pressed="true">Flat</button>
-          <button class="mode" type="button" data-mode="round" aria-pressed="false">Round</button>
-          <button class="mode" type="button" data-mode="meta" aria-pressed="false">Meta</button>
-        </div>
-
-        <div class="readout">
-          <p class="label">Current view</p>
-          <h2 id="modeTitle">Flat · house map</h2>
-          <p id="modeText">
-            See the house clearly. This is the fastest route into Products, Showroom, Gauges, and the main public rooms.
-          </p>
-        </div>
-
-        <div class="entry-buttons" aria-label="Primary entry routes">
-          <a class="entry-button" href="/products/">Products</a>
-          <a class="entry-button" href="/showroom/">Showroom</a>
-          <a class="entry-button" href="/gauges/">Gauges</a>
-        </div>
-      </article>
-    </section>
-
-    <section class="room">
-      <p class="kicker">Initial showroom floor</p>
-      <h2>Choose the first room.</h2>
-      <p class="lede">
-        The Index is the first public reveal of the house. These are the main entry routes.
+  <main class="manor-shell">
+    <section class="manor-room" aria-label="Compass">
+      <p class="manor-kicker">H1 · Compass · View Control</p>
+      <h1 class="manor-title">Diamond Gate Bridge</h1>
+      <p class="manor-lede">
+        You are arriving at Rich Manor and Estate. The house is the subject. The universe is the environment.
+        The Compass controls how you see and enter the estate.
       </p>
 
-      <div class="routes">
-        <a class="card" href="/products/">
-          <div>
-            <p class="label">Utility</p>
-            <h3>Products</h3>
-          </div>
-          <span>Enter the source chamber and product waterfall.</span>
-        </a>
+      <div class="manor-divider"></div>
 
-        <a class="card" href="/showroom/">
-          <div>
-            <p class="label">Proof</p>
-            <h3>Showroom</h3>
-          </div>
-          <span>Move into the dedicated public proof room.</span>
-        </a>
+      <section class="manor-stage" aria-label="Estate view selector">
+        <p class="manor-kicker">Choose how you want to see the house.</p>
+        <h2 id="view-title">Flat · see the house clearly</h2>
+        <p id="view-copy" class="manor-lede">
+          Flat gives the clean 2D estate map: the fastest public route into Door, Home, Products, Showroom, and Gauges.
+        </p>
 
-        <a class="card" href="/gauges/">
-          <div>
-            <p class="label">Health</p>
-            <h3>Gauges</h3>
-          </div>
-          <span>Verify the house, products, and planetary constructs.</span>
-        </a>
+        <div class="manor-view-selector manor-grid" role="group" aria-label="View modes">
+          <button class="manor-card" type="button" data-mode="flat">
+            <span class="manor-kicker">Flat</span>
+            <strong>See the house clearly.</strong>
+          </button>
+          <button class="manor-card" type="button" data-mode="round">
+            <span class="manor-kicker">Round</span>
+            <strong>See how the house grows.</strong>
+          </button>
+          <button class="manor-card" type="button" data-mode="meta">
+            <span class="manor-kicker">Meta</span>
+            <strong>See the house inside the full universe.</strong>
+          </button>
+        </div>
+      </section>
 
-        <a class="card" href="/big-laugh/upper-room/">
-          <div>
-            <p class="label">Event</p>
-            <h3>Upper Room</h3>
-          </div>
-          <span>Visit the live gathering room hosted inside Big Laugh.</span>
+      <div class="manor-grid" style="margin-top:24px">
+        <a class="manor-card" href="/door/">
+          <p class="manor-kicker">Entry</p>
+          <h2>Door</h2>
+          <p class="manor-lede">Cross the gate and enter the estate.</p>
         </a>
-
-        <a class="card" href="/nine-summits-of-love/">
-          <div>
-            <p class="label">Potential</p>
-            <h3>Nine Summits of Love</h3>
-          </div>
-          <span>See the 256 diamonds of human potential.</span>
+        <a class="manor-card" href="/products/">
+          <p class="manor-kicker">Utility</p>
+          <h2>Products</h2>
+          <p class="manor-lede">Enter the source-waterfall chamber.</p>
         </a>
-
-        <a class="card" href="/explore/">
-          <div>
-            <p class="label">Discovery</p>
-            <h3>Explore / Frontier</h3>
-          </div>
-          <span>Move into discovery and the hosted Frontier edge.</span>
+        <a class="manor-card" href="/showroom/">
+          <p class="manor-kicker">Proof</p>
+          <h2>Showroom</h2>
+          <p class="manor-lede">See public proof, receipts, and demonstration.</p>
         </a>
       </div>
     </section>
 
-    <section class="room" style="margin-top:28px">
-      <p class="kicker">256-state lattice</p>
-      <h2>Flat, Round, Meta, Return.</h2>
-      <p class="lede">
-        The lattice stays under the house: clarity, organic relation, universe view, and return path.
-      </p>
-
-      <div class="lattice-band" aria-label="Compressed 256-state lattice">
-        <div class="lattice-row flat" id="latticeFlat"></div>
-        <div class="lattice-row round" id="latticeRound"></div>
-        <div class="lattice-row meta" id="latticeMeta"></div>
-        <div class="lattice-row return" id="latticeReturn"></div>
-      </div>
-    </section>
-
-    <section class="backlinks">
-      <p class="label">House backlinks</p>
-      <ul class="chip-list">
-        <li><a class="chip" href="/" aria-current="page">Compass · active</a></li>
-        <li><a class="chip" href="/door/">Door</a></li>
-        <li><a class="chip" href="/home/">Home</a></li>
-        <li><a class="chip" href="/products/">Products</a></li>
-        <li><a class="chip" href="/showroom/">Showroom</a></li>
-        <li><a class="chip" href="/gauges/">Gauges</a></li>
+    <section class="manor-backlinks" aria-label="House backlinks">
+      <p class="manor-backlinks-title">House backlinks</p>
+      <ul class="manor-backlinks-list">
+        <li><a href="/door/">Door</a></li>
+        <li><a href="/home/">Home</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/showroom/">Showroom</a></li>
+        <li><a href="/gauges/">Gauges</a></li>
       </ul>
     </section>
 
-    <section class="audit-receipt">
-      <p class="label">Compass receipt</p>
-      <ul class="chip-list">
-        <li class="chip pass">route-exists</li>
-        <li class="chip pass">manor-skin</li>
-        <li class="chip pass">house-class</li>
-        <li class="chip pass">H1_COMPASS</li>
-        <li class="chip pass">active-compass</li>
-        <li class="chip pass">generation-2-house-first-baseline</li>
-        <li class="chip pass">flat-round-meta</li>
-        <li class="chip pass">256-state-lattice</li>
+    <section class="manor-audit-strip" aria-label="Compass audit receipt">
+      <p class="manor-audit-title">Compass receipt</p>
+      <ul class="manor-audit-list">
+        <li class="manor-audit-chip pass">route-exists</li>
+        <li class="manor-audit-chip pass">manor-skin</li>
+        <li class="manor-audit-chip pass">house-class</li>
+        <li class="manor-audit-chip pass">H1_COMPASS</li>
+        <li class="manor-audit-chip pass">flat-round-meta</li>
       </ul>
-      <p class="lede">
-        Compass rule: Index is the first public reveal of the house inside the universe, while remaining the audited orientation core.
-      </p>
     </section>
   </main>
 
@@ -967,69 +117,38 @@
     (function () {
       "use strict";
 
-      var copy = {
+      var body = document.body;
+      var title = document.getElementById("view-title");
+      var copy = document.getElementById("view-copy");
+      var modes = {
         flat: {
-          title: "Flat · house map",
-          text: "See the house clearly. This is the fastest route into Products, Showroom, Gauges, and the main public rooms.",
-          caption: "Flat View"
+          title: "Flat · see the house clearly",
+          copy: "Flat gives the clean 2D estate map: the fastest public route into Door, Home, Products, Showroom, and Gauges."
         },
         round: {
-          title: "Round · Tree of Life house",
-          text: "See how the house grows through roots, branches, chambers, and living relationships.",
-          caption: "Round View"
+          title: "Round · see how the house grows",
+          copy: "Round shows roots, branches, chambers, product paths, and living relationships without losing the Manor anchor."
         },
         meta: {
-          title: "Meta · house inside the universe",
-          text: "See the full estate field with the house inside the universe and the larger routes around it.",
-          caption: "Meta View"
+          title: "Meta · see the house inside the full universe",
+          copy: "Meta places the house inside the universe-scale field while keeping the Manor central and the planets attached."
         }
       };
 
-      var body = document.body;
-      var storageKey = "dgb_compass_g2_house_first_view";
-      var title = document.getElementById("modeTitle");
-      var text = document.getElementById("modeText");
-      var caption = document.getElementById("modeCaption");
-      var buttons = Array.prototype.slice.call(document.querySelectorAll("[data-mode]"));
-      var latticeIds = ["latticeFlat", "latticeRound", "latticeMeta", "latticeReturn"];
-
-      function safeMode(value) {
-        return copy[value] ? value : "flat";
-      }
-
-      function applyMode(mode) {
-        var next = safeMode(mode);
+      function setMode(mode) {
+        var next = modes[mode] ? mode : "flat";
         body.setAttribute("data-view-mode", next);
-        localStorage.setItem(storageKey, next);
-
-        if (title) title.textContent = copy[next].title;
-        if (text) text.textContent = copy[next].text;
-        if (caption) caption.textContent = copy[next].caption;
-
-        buttons.forEach(function (button) {
-          button.setAttribute("aria-pressed", button.getAttribute("data-mode") === next ? "true" : "false");
-        });
+        title.textContent = modes[next].title;
+        copy.textContent = modes[next].copy;
       }
 
-      buttons.forEach(function (button) {
+      document.querySelectorAll("[data-mode]").forEach(function (button) {
         button.addEventListener("click", function () {
-          applyMode(button.getAttribute("data-mode"));
+          setMode(button.getAttribute("data-mode"));
         });
       });
 
-      latticeIds.forEach(function (id) {
-        var row = document.getElementById(id);
-        if (!row || row.children.length) return;
-
-        for (var i = 0; i < 64; i += 1) {
-          var cell = document.createElement("span");
-          cell.className = "lattice-cell";
-          row.appendChild(cell);
-        }
-      });
-
-      var params = new URLSearchParams(window.location.search);
-      applyMode(safeMode(params.get("view") || localStorage.getItem(storageKey) || "flat"));
+      setMode("flat");
     })();
   </script>
 </body>

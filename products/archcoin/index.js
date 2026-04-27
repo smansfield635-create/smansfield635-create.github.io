@@ -1,12 +1,14 @@
 /* TNT RENEWAL — /products/archcoin/index.js
-   ARCHCOIN · FOUR-COIN FINANCIAL TEMPLATE · B3
+   ARCHCOIN · FOUR-GARDEN VAULT CHAMBER · B4
 
    RESULT:
-     - Updates ARCHCOIN from ordinary product/coin read to four-coin financial template.
-     - Defines North / East / South / West coin positions.
-     - Keeps Vault Chamber route as /products/archcoin/.
-     - Preserves local safe-boot visual cylinder.
-     - Adds boundary language: not automatic chain interoperability, not chain replacement.
+     - Replaces overlapping orbit cards with four fixed vault garden chambers.
+     - Keeps ARCHCOIN as the four-coin financial transaction template.
+     - Adds central 360-degree waterfall core.
+     - Adds four circulating water channels.
+     - Maps each garden to one ARCHCOIN transaction position.
+     - Mobile-safe: no overlapping garden cards.
+     - Keeps Vault / Products / Upper Room / Showroom / Compass backlinks.
      - No external runtime dependency.
 */
 
@@ -20,38 +22,46 @@ const ROUTES = Object.freeze({
   showroom: "/showroom/"
 });
 
-const COINS = Object.freeze([
+const GARDENS = Object.freeze([
   {
     key: "North",
-    name: "North Coin",
+    name: "North Garden",
+    coin: "North Coin",
     short: "N",
-    angle: 0,
     role: "Contract Authority",
-    read: "Defines the agreement, authority, permissions, and binding frame for the transaction."
+    position: "north",
+    read: "Contracts, permissions, signatures, terms, authority, and the binding frame for the transaction.",
+    water: "The water reaches North as agreement: value cannot move cleanly unless the contract is named."
   },
   {
     key: "East",
-    name: "East Coin",
+    name: "East Garden",
+    coin: "East Coin",
     short: "E",
-    angle: 90,
     role: "Inbound Value",
-    read: "Reads accounts receivable, incoming value, deposits, receipts, and counterparty inflow."
+    position: "east",
+    read: "Accounts receivable, incoming value, receipts, deposits, counterparty inflow, and value received.",
+    water: "The water reaches East as arrival: value enters the chamber and becomes visible."
   },
   {
     key: "South",
-    name: "South Coin",
+    name: "South Garden",
+    coin: "South Coin",
     short: "S",
-    angle: 180,
     role: "Outbound Obligation",
-    read: "Reads accounts payable, outgoing obligation, settlement pressure, and value owed."
+    position: "south",
+    read: "Accounts payable, outgoing value, settlement duty, obligations, and pressure owed.",
+    water: "The water reaches South as responsibility: every transaction carries an obligation to settle."
   },
   {
     key: "West",
-    name: "West Coin",
+    name: "West Garden",
+    coin: "West Coin",
     short: "W",
-    angle: 270,
     role: "Growth / Allocation",
-    read: "Reads growth marketing allocation, GYP value flow, expansion pressure, and reinvestment movement."
+    position: "west",
+    read: "Growth allocation, marketing flow, GYP value flow, reinvestment, and expansion pressure.",
+    water: "The water reaches West as expansion: value can be routed toward growth without losing the bond frame."
   }
 ]);
 
@@ -100,12 +110,12 @@ function featureCard(title, copy) {
   return card;
 }
 
-function coinCard(coin) {
+function gardenCard(garden) {
   const card = el("article", "coin-card");
   card.append(
-    el("small", "", coin.short + " · " + coin.name),
-    el("strong", "", coin.role),
-    el("span", "", coin.read)
+    el("small", "", garden.short + " · " + garden.coin),
+    el("strong", "", garden.role),
+    el("span", "", garden.read)
   );
   return card;
 }
@@ -119,10 +129,10 @@ function routeCard(title, copy, href, strong = false) {
 }
 
 function injectStyles() {
-  if (document.getElementById("archcoin-four-coin-style")) return;
+  if (document.getElementById("archcoin-four-garden-vault-style")) return;
 
   const style = document.createElement("style");
-  style.id = "archcoin-four-coin-style";
+  style.id = "archcoin-four-garden-vault-style";
   style.textContent = `
     .vault-shell{
       display:grid;
@@ -224,12 +234,6 @@ function injectStyles() {
       color:var(--muted);
       font-size:17px;
       line-height:1.75;
-    }
-
-    .plain-text{
-      margin:0;
-      color:var(--muted);
-      line-height:1.65;
     }
 
     .stat-grid,
@@ -369,120 +373,268 @@ function injectStyles() {
 
     .machine-stage{
       position:relative;
-      min-height:520px;
+      min-height:650px;
       margin-top:18px;
       border:1px solid rgba(255,255,255,.08);
-      border-radius:24px;
+      border-radius:28px;
       overflow:hidden;
       background:
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.10),rgba(127,255,212,.04) 36%,rgba(0,0,0,0) 72%),
-        linear-gradient(180deg,rgba(255,255,255,.02),rgba(255,255,255,0));
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(127,255,212,.05) 28%,rgba(0,0,0,0) 58%),
+        radial-gradient(circle at 50% 50%,rgba(241,210,141,.045),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.025),rgba(255,255,255,0));
       perspective:1400px;
+      isolation:isolate;
     }
 
-    .vault-core{
+    .vault-garden-ring{
       position:absolute;
       left:50%;
       top:50%;
-      width:170px;
-      height:170px;
-      margin-left:-85px;
-      margin-top:-85px;
+      width:min(86%,560px);
+      aspect-ratio:1;
+      transform:translate(-50%,-50%);
+      border:1px solid rgba(255,255,255,.10);
       border-radius:50%;
       background:
-        radial-gradient(circle at 34% 28%,rgba(255,255,255,.24),transparent 16%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.28),rgba(127,255,212,.10) 58%,rgba(0,0,0,.12) 100%);
-      border:1px solid rgba(255,255,255,.12);
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.08),transparent 28%),
+        conic-gradient(
+          from 45deg,
+          rgba(127,255,212,.075),
+          rgba(126,203,255,.045),
+          rgba(241,210,141,.06),
+          rgba(127,255,212,.045),
+          rgba(127,255,212,.075)
+        );
       box-shadow:
-        0 24px 40px rgba(0,0,0,.28),
-        inset 0 0 40px rgba(126,203,255,.10),
-        0 0 80px rgba(127,255,212,.12);
+        inset 0 0 60px rgba(126,203,255,.08),
+        0 0 70px rgba(127,255,212,.08);
+      z-index:1;
+    }
+
+    .vault-garden-ring::before,
+    .vault-garden-ring::after{
+      content:"";
+      position:absolute;
+      inset:10%;
+      border-radius:50%;
+      border:1px dashed rgba(255,255,255,.10);
+      pointer-events:none;
+    }
+
+    .vault-garden-ring::after{
+      inset:24%;
+      border-color:rgba(127,255,212,.13);
+    }
+
+    .waterfall-core{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:172px;
+      height:172px;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.18);
+      background:
+        radial-gradient(circle at 50% 22%,rgba(255,255,255,.36),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.34),rgba(127,255,212,.12) 48%,rgba(0,0,0,.18) 100%);
+      box-shadow:
+        0 24px 42px rgba(0,0,0,.28),
+        inset 0 0 44px rgba(126,203,255,.18),
+        0 0 88px rgba(127,255,212,.16);
+      z-index:5;
+      overflow:hidden;
       display:grid;
       place-items:center;
       text-align:center;
       padding:20px;
-      z-index:4;
     }
 
-    .vault-core span{
-      font-size:17px;
-      line-height:1.25;
+    .waterfall-core::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-20%;
+      width:58%;
+      height:140%;
+      transform:translateX(-50%);
+      border-radius:999px;
+      background:
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.75),
+          rgba(126,203,255,.38) 28%,
+          rgba(127,255,212,.18) 52%,
+          rgba(126,203,255,.42) 74%,
+          rgba(255,255,255,.55)
+        );
+      opacity:.74;
+      filter:blur(.6px);
+      animation:waterfallDrop 2.8s linear infinite;
+    }
+
+    .waterfall-core::after{
+      content:"";
+      position:absolute;
+      inset:14px;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        repeating-conic-gradient(
+          from 0deg,
+          transparent 0deg 14deg,
+          rgba(255,255,255,.075) 14deg 17deg,
+          transparent 17deg 32deg
+        );
+      animation:waterCircle 14s linear infinite;
+      opacity:.76;
+    }
+
+    .waterfall-label{
+      position:relative;
+      z-index:3;
+      color:var(--text);
+      font-size:15px;
+      line-height:1.18;
       letter-spacing:.08em;
       text-transform:uppercase;
-      font-weight:800;
+      font-weight:900;
+      text-shadow:0 2px 12px rgba(0,0,0,.60);
     }
 
-    .vault-ring{
+    .water-channel{
       position:absolute;
       left:50%;
       top:50%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.10);
-      transform-style:preserve-3d;
-      pointer-events:none;
-    }
-
-    .vault-ring.outer{
-      width:520px;
-      height:520px;
-      margin-left:-260px;
-      margin-top:-260px;
-      transform:rotateX(72deg) rotateZ(10deg);
-      box-shadow:0 0 30px rgba(126,203,255,.08);
-    }
-
-    .vault-ring.mid{
-      width:390px;
-      height:390px;
-      margin-left:-195px;
-      margin-top:-195px;
-      transform:rotateX(72deg) rotateZ(54deg);
-      box-shadow:0 0 24px rgba(127,255,212,.08);
-    }
-
-    .vault-ring.inner{
-      width:270px;
-      height:270px;
-      margin-left:-135px;
-      margin-top:-135px;
-      transform:rotateX(72deg) rotateZ(96deg);
-      box-shadow:0 0 18px rgba(126,203,255,.06);
-    }
-
-    .mint-node{
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:166px;
-      margin-left:-83px;
-      margin-top:-39px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      padding:12px;
+      width:min(35%,218px);
+      height:8px;
+      transform-origin:left center;
+      border-radius:999px;
       background:
-        linear-gradient(180deg,rgba(8,12,19,.80),rgba(12,18,30,.88)),
-        radial-gradient(circle at 82% 18%,rgba(126,203,255,.05),transparent 22%);
+        linear-gradient(
+          90deg,
+          rgba(255,255,255,.82),
+          rgba(126,203,255,.50),
+          rgba(127,255,212,.12),
+          transparent
+        );
+      opacity:.70;
+      z-index:2;
+      filter:drop-shadow(0 0 10px rgba(126,203,255,.25));
+      overflow:hidden;
+    }
+
+    .water-channel::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 18px,
+          rgba(255,255,255,.45) 18px 24px,
+          transparent 24px 42px
+        );
+      animation:waterRun 1.7s linear infinite;
+    }
+
+    .water-channel.north{transform:rotate(-90deg)}
+    .water-channel.east{transform:rotate(0deg)}
+    .water-channel.south{transform:rotate(90deg)}
+    .water-channel.west{transform:rotate(180deg)}
+
+    .garden-chamber{
+      position:absolute;
+      width:min(41%,236px);
+      min-height:142px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:22px;
+      padding:14px;
+      background:
+        linear-gradient(180deg,rgba(8,12,19,.86),rgba(12,18,30,.92)),
+        radial-gradient(circle at 82% 18%,rgba(126,203,255,.06),transparent 26%);
       color:var(--text);
-      box-shadow:0 18px 28px rgba(0,0,0,.28);
+      box-shadow:0 18px 34px rgba(0,0,0,.30);
       cursor:pointer;
-      transform-style:preserve-3d;
+      display:grid;
+      gap:8px;
+      align-content:start;
+      z-index:4;
+      text-align:left;
     }
 
-    .mint-short{
-      display:block;
-      font-size:11px;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .garden-chamber:hover,
+    .garden-chamber:focus-visible{
+      outline:none;
+      border-color:rgba(127,255,212,.32);
+      background:
+        linear-gradient(180deg,rgba(12,18,30,.94),rgba(8,12,19,.92)),
+        radial-gradient(circle at 82% 18%,rgba(127,255,212,.10),transparent 28%);
+    }
+
+    .garden-chamber.north{
+      left:50%;
+      top:24px;
+      transform:translateX(-50%);
+    }
+
+    .garden-chamber.east{
+      right:24px;
+      top:50%;
+      transform:translateY(-50%);
+    }
+
+    .garden-chamber.south{
+      left:50%;
+      bottom:24px;
+      transform:translateX(-50%);
+    }
+
+    .garden-chamber.west{
+      left:24px;
+      top:50%;
+      transform:translateY(-50%);
+    }
+
+    .garden-chamber small{
       color:var(--accent);
-      margin-bottom:8px;
-      font-weight:800;
+      font-size:11px;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+      font-weight:900;
     }
 
-    .mint-label{
-      display:block;
-      font-size:15px;
-      line-height:1.35;
-      font-weight:800;
+    .garden-chamber strong{
+      color:var(--text);
+      font-size:1.05rem;
+      line-height:1.14;
+    }
+
+    .garden-chamber span{
+      color:var(--muted);
+      line-height:1.42;
+      font-size:.88rem;
+    }
+
+    .garden-chamber[data-active="true"]{
+      border-color:rgba(241,210,141,.42);
+      box-shadow:
+        0 18px 34px rgba(0,0,0,.30),
+        0 0 28px rgba(241,210,141,.13);
+    }
+
+    .vault-caption{
+      position:absolute;
+      left:50%;
+      bottom:12px;
+      transform:translateX(-50%);
+      width:min(92%,620px);
+      color:var(--muted2);
+      text-align:center;
+      font-size:.82rem;
+      line-height:1.45;
+      z-index:6;
+      pointer-events:none;
     }
 
     .rows{
@@ -555,6 +707,21 @@ function injectStyles() {
       line-height:1.46;
     }
 
+    @keyframes waterfallDrop{
+      0%{transform:translateX(-50%) translateY(-18%)}
+      100%{transform:translateX(-50%) translateY(18%)}
+    }
+
+    @keyframes waterCircle{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes waterRun{
+      from{transform:translateX(-42px)}
+      to{transform:translateX(42px)}
+    }
+
     @media (max-width:1080px){
       .stat-grid,
       .coin-grid,
@@ -589,23 +756,68 @@ function injectStyles() {
       }
 
       .machine-stage{
-        min-height:460px;
+        min-height:auto;
+        display:grid;
+        gap:12px;
+        padding:14px;
       }
 
-      .vault-core{
-        width:138px;
-        height:138px;
-        margin-left:-69px;
-        margin-top:-69px;
+      .vault-garden-ring{
+        position:relative;
+        left:auto;
+        top:auto;
+        transform:none;
+        width:min(100%,340px);
+        margin:0 auto;
+        min-height:340px;
       }
 
-      .vault-core span{
-        font-size:15px;
+      .waterfall-core{
+        width:132px;
+        height:132px;
       }
 
-      .mint-node{
-        width:138px;
-        margin-left:-69px;
+      .waterfall-label{
+        font-size:13px;
+      }
+
+      .water-channel{
+        width:88px;
+      }
+
+      .garden-chamber{
+        position:relative;
+        left:auto!important;
+        right:auto!important;
+        top:auto!important;
+        bottom:auto!important;
+        transform:none!important;
+        width:100%;
+        min-height:auto;
+        z-index:7;
+      }
+
+      .garden-chamber.north{order:1}
+      .garden-chamber.east{order:2}
+      .garden-chamber.south{order:3}
+      .garden-chamber.west{order:4}
+
+      .vault-caption{
+        position:relative;
+        left:auto;
+        bottom:auto;
+        transform:none;
+        width:100%;
+        order:5;
+        margin-top:4px;
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      .waterfall-core::before,
+      .waterfall-core::after,
+      .water-channel::after{
+        animation:none!important;
       }
     }
   `;
@@ -620,7 +832,7 @@ function buildTopbar() {
   const copy = el("div");
   copy.append(
     el("p", "brand-title", "Richie’s Manor · Vault Chamber"),
-    el("p", "brand-subtitle", "ARCHCOIN / Four-Coin Transaction Template")
+    el("p", "brand-subtitle", "ARCHCOIN / Four-Garden Transaction Vault")
   );
   brand.append(mark, copy);
 
@@ -639,20 +851,20 @@ function buildTopbar() {
 
 function buildHero() {
   const hero = el("section", "vault-hero");
-  const eyebrow = el("div", "eyebrow", "ARCHCOIN · FOUR-COIN FINANCIAL TEMPLATE");
-  const title = el("h1", "hero-title", "The Vault is not a single coin.");
+  const eyebrow = el("div", "eyebrow", "ARCHCOIN · FOUR-GARDEN VAULT CHAMBER");
+  const title = el("h1", "hero-title", "The Vault is a circulating garden.");
   const text = el(
     "p",
     "hero-text",
-    "ARCHCOIN is the Vault Chamber’s meta-financial template: a four-coin transaction map for classifying, routing, binding, and accounting for value movement across existing crypto assets and financial flows."
+    "ARCHCOIN is the Vault Chamber’s meta-financial template. The four coin positions are now expressed as four gardens around one central waterfall: contract authority, inbound value, outbound obligation, and growth allocation."
   );
 
   const statGrid = el("div", "stat-grid");
   statGrid.append(
     statCard("Public Label", "Vault Chamber"),
     statCard("Product Label", "ARCHCOIN"),
-    statCard("True Read", "Four-Coin Template"),
-    statCard("Ordinary Coin", "False")
+    statCard("Core", "360° Waterfall"),
+    statCard("Gardens", "4")
   );
 
   const controls = el("div", "action-row");
@@ -670,16 +882,16 @@ function buildHero() {
 function buildTemplatePanel() {
   const panel = el("section", "panel");
   panel.append(
-    el("h2", "panel-title", "Four-Coin Transaction Template"),
+    el("h2", "panel-title", "Four Gardens / Four Coins"),
     el(
       "p",
       "panel-text",
-      "Every financial transaction can be read as contract authority plus inbound value plus outbound obligation plus growth or allocation pressure."
+      "Every transaction circulates through four chambers: contract authority, inbound value, outbound obligation, and growth or allocation pressure."
     )
   );
 
   const grid = el("div", "coin-grid");
-  COINS.forEach((coin) => grid.appendChild(coinCard(coin)));
+  GARDENS.forEach((garden) => grid.appendChild(gardenCard(garden)));
 
   panel.appendChild(grid);
   return panel;
@@ -692,14 +904,14 @@ function buildFunctionPanel() {
     el(
       "p",
       "panel-text",
-      "ARCHCOIN provides the transaction template and bonding logic. It organizes value movement without pretending to replace existing assets."
+      "ARCHCOIN provides the transaction template and bonding logic. The waterfall shows that value is not static; it circulates through the four garden chambers."
     )
   );
 
   const grid = el("div", "feature-grid");
   grid.append(
-    featureCard("Classify Transaction", "Identify what kind of financial movement is happening and which coin position controls the read."),
-    featureCard("Route Value", "Map incoming and outgoing value across the transaction without collapsing every asset into one ordinary coin."),
+    featureCard("Classify Transaction", "Identify which garden controls the transaction read: contract, inbound value, obligation, or allocation."),
+    featureCard("Route Value", "Map incoming and outgoing value movement without reducing everything to one ordinary coin."),
     featureCard("Bind Obligation", "Tie responsibility, payment pressure, settlement, and counterparty duty back to the transaction frame."),
     featureCard("Track Counterparty Flow", "Read who owes, who receives, who routes, and where the pressure moves next."),
     featureCard("Unify Asset Movement", "Let BTC, ETH, SOL, stablecoins, or other tokens be referenced, wrapped, routed, or accounted for inside one map."),
@@ -716,38 +928,55 @@ function buildFunctionPanel() {
   return panel;
 }
 
+function buildGardenButton(garden) {
+  const node = el("button", "garden-chamber " + garden.position);
+  node.type = "button";
+  node.dataset.key = garden.key;
+  node.dataset.active = garden.key === "North" ? "true" : "false";
+  node.innerHTML =
+    `<small>${garden.short} · ${garden.coin}</small>` +
+    `<strong>${garden.name}</strong>` +
+    `<span>${garden.role}</span>`;
+  return node;
+}
+
 function buildMachinePanel() {
   const machine = el("section", "machine-panel");
-  const machineTitle = el("h2", "panel-title", "Vault Cylinder");
+  const machineTitle = el("h2", "panel-title", "Vault Garden Chamber");
   const machineText = el(
     "p",
     "panel-text",
-    "The cylinder now represents the four-coin transaction template. Select a governor to see the transaction position it controls."
+    "The Vault now has four fixed chambers. A 360-degree waterfall falls through the middle of the room and circulates value through each garden."
   );
 
   const stage = el("div", "machine-stage");
   stage.id = "machineStage";
 
-  const core = el("div", "vault-core");
-  core.innerHTML = "<span>ARCH<br>COIN<br>TEMPLATE</span>";
-  stage.appendChild(core);
+  const ring = el("div", "vault-garden-ring");
 
-  stage.append(
-    el("div", "vault-ring outer"),
-    el("div", "vault-ring mid"),
-    el("div", "vault-ring inner")
+  const waterfall = el("div", "waterfall-core");
+  waterfall.innerHTML = `<span class="waterfall-label">ARCH<br>COIN<br>WATERFALL</span>`;
+
+  ring.append(
+    el("div", "water-channel north"),
+    el("div", "water-channel east"),
+    el("div", "water-channel south"),
+    el("div", "water-channel west"),
+    waterfall
   );
 
-  for (const coin of COINS) {
-    const node = el("button", "mint-node");
-    node.type = "button";
-    node.dataset.angle = String(coin.angle);
-    node.dataset.key = coin.key;
-    node.innerHTML =
-      `<span class="mint-short">${coin.short} · ${coin.name}</span>` +
-      `<span class="mint-label">${coin.role}</span>`;
-    stage.appendChild(node);
-  }
+  stage.appendChild(ring);
+
+  GARDENS.forEach((garden) => {
+    stage.appendChild(buildGardenButton(garden));
+  });
+
+  const caption = el(
+    "p",
+    "vault-caption",
+    "The waterfall represents circulating value: contract authority, inbound value, outbound obligation, and growth allocation all draw from the same core."
+  );
+  stage.appendChild(caption);
 
   machine.append(machineTitle, machineText, stage);
   return machine;
@@ -758,12 +987,11 @@ function buildReceiptPanel() {
   const receiptTitle = el("h2", "panel-title", "Vault Receipt");
   const receiptRows = el("div", "rows");
   receiptRows.append(
-    infoRow("Template", "ARCHCOIN Four-Coin Transaction Map"),
-    infoRow("North Coin", "Contract authority"),
-    infoRow("East Coin", "Inbound value / accounts receivable"),
-    infoRow("South Coin", "Outbound obligation / accounts payable"),
-    infoRow("West Coin", "Growth, marketing allocation, or GYP value flow"),
-    infoRow("Status", "Active")
+    infoRow("Selected garden", "North Garden"),
+    infoRow("Coin position", "North Coin"),
+    infoRow("Transaction role", "Contract Authority"),
+    infoRow("Garden read", "Contracts, permissions, signatures, terms, authority, and the binding frame for the transaction."),
+    infoRow("Water circulation", "The water reaches North as agreement: value cannot move cleanly unless the contract is named.")
   );
   receipt.append(receiptTitle, receiptRows);
   return receipt;
@@ -775,11 +1003,11 @@ function buildRoutesPanel() {
   const routeText = el(
     "p",
     "panel-text",
-    "The Vault Chamber is now wired back into Richie’s Manor as the ARCHCOIN protected-value and transaction-template chamber."
+    "The Vault Chamber is wired back into Richie’s Manor as the ARCHCOIN protected-value and transaction-template garden chamber."
   );
   const routeGrid = el("div", "route-grid");
   routeGrid.append(
-    routeCard("Vault Chamber", "ARCHCOIN four-coin transaction-template route.", ROUTES.vault, true),
+    routeCard("Vault Chamber", "ARCHCOIN four-garden transaction vault.", ROUTES.vault, true),
     routeCard("Products", "Parent product and system route.", ROUTES.products),
     routeCard("Upper Room", "Attic event chamber and public live-room route.", ROUTES.upperRoom),
     routeCard("Showroom", "Lobby proof surface for the estate.", ROUTES.showroom)
@@ -874,51 +1102,23 @@ function drawField() {
   ctx.fillRect(0, 0, field.width, field.height);
 }
 
-function placeNodes(now) {
-  const nodes = Array.from(document.querySelectorAll(".mint-node"));
-  const rings = {
-    outer: { radiusX: 230, radiusY: 108, speed: 0.00016, depth: 52, zipper: 24 },
-    inner: { radiusX: 164, radiusY: 78, speed: -0.00022, depth: 34, zipper: 18 }
-  };
-
-  nodes.forEach((node, index) => {
-    const angleDeg = Number(node.dataset.angle || 0);
-    const base = angleDeg * (Math.PI / 180);
-    const zipperSign = index % 2 === 0 ? 1 : -1;
-    const ring = index < 2 ? rings.outer : rings.inner;
-    const t = REDUCED_MOTION ? 0 : now * ring.speed + (zipperSign > 0 ? 0 : Math.PI / 2);
-    const theta = base + t;
-
-    const x = Math.sin(theta) * ring.radiusX;
-    const y = Math.sin(theta) * Math.cos(theta) * ring.radiusY + zipperSign * ring.zipper * Math.cos(theta);
-    const z = Math.cos(theta * 2) * ring.depth + zipperSign * (ring.zipper * 0.4);
-
-    const normalized = (z + ring.depth + ring.zipper * 0.4) / ((ring.depth + ring.zipper * 0.4) * 2);
-    const depth = Math.max(0, Math.min(1, normalized));
-    const scale = 0.88 + depth * 0.24;
-    const opacity = 0.62 + depth * 0.38;
-
-    node.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale})`;
-    node.style.opacity = opacity.toFixed(3);
-    node.style.zIndex = String(Math.round(1000 + z));
-  });
-}
-
-function bindNodeActions() {
-  const nodes = Array.from(document.querySelectorAll(".mint-node"));
+function bindGardenActions() {
+  const nodes = Array.from(document.querySelectorAll(".garden-chamber"));
   nodes.forEach((node) => {
     node.addEventListener("click", () => {
       const key = node.dataset.key || "North";
-      const coin = COINS.find((item) => item.key === key) || COINS[0];
+      const garden = GARDENS.find((item) => item.key === key) || GARDENS[0];
       const rows = APP.querySelector(".rows");
       if (!rows) return;
 
+      nodes.forEach((item) => item.dataset.active = item.dataset.key === key ? "true" : "false");
+
       rows.replaceChildren(
-        infoRow("Selected coin", coin.name),
-        infoRow("Transaction role", coin.role),
-        infoRow("Template read", coin.read),
-        infoRow("Transaction formula", "contract + inbound value + outbound obligation + growth/allocation pressure"),
-        infoRow("Status", "Position selected")
+        infoRow("Selected garden", garden.name),
+        infoRow("Coin position", garden.coin),
+        infoRow("Transaction role", garden.role),
+        infoRow("Garden read", garden.read),
+        infoRow("Water circulation", garden.water)
       );
     });
   });
@@ -930,12 +1130,11 @@ function boot() {
   injectStyles();
   APP.className = "page";
   APP.replaceChildren(buildShell());
-  bindNodeActions();
+  bindGardenActions();
   resizeCanvas();
 
-  function frame(now) {
+  function frame() {
     drawField();
-    placeNodes(now);
     window.requestAnimationFrame(frame);
   }
 

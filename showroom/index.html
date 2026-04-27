@@ -1,14 +1,13 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B9
+     SHOWROOM · GENERATION 2 · EARTH SPINE CONSUMER B10
 
      CONTRACT:
-       - Old top view bubbles are removed.
-       - No Earth View / Satellite View / Solar Context / Galaxy Context / Demo Mode buttons.
-       - Showroom consumes Earth Asset Spine only.
+       - Showroom consumes Earth Asset Spine.
+       - Top bubble controls are removed.
+       - Earth runtime owns zoom controls.
        - Earth renderer lives in /assets/earth/earth_canvas.js.
-       - Zoom controls are injected by /runtime/earth_asset_runtime.js.
-       - Showroom HTML provides one Earth mount.
+       - Earth mount/control runtime lives in /runtime/earth_asset_runtime.js.
        - Distant sun is CSS-only support.
        - Bottom diamond navigation remains.
        - No generated graphic.
@@ -23,7 +22,7 @@
   <title>Diamond Gate Bridge — Showroom</title>
   <meta name="description" content="Diamond Gate Bridge Earth-centered showroom demo"/>
 
-  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b3"/>
+  <link rel="stylesheet" href="/assets/earth/earth_material.css?v=earth-asset-b4"/>
 
   <style>
     *{box-sizing:border-box}
@@ -43,7 +42,6 @@
     :root{
       --ink:rgba(255,255,255,.96);
       --txt:rgba(220,231,255,.78);
-      --muted:rgba(220,231,255,.62);
       --gold:rgba(255,217,138,.96);
       --line:rgba(255,255,255,.13);
       --panel:rgba(7,10,16,.74);
@@ -467,7 +465,7 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-earth-spine-consumer-b9"
+    data-showroom-version="generation-2-earth-spine-consumer-b10"
     data-earth-center="true"
     data-earth-renderer="earth-asset-spine-consumer"
     data-earth-clouds="earth-asset-spine"
@@ -475,7 +473,7 @@
     data-sun-role="distant-css-support-only"
     data-backlink-capacity="reserved"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="earth-spine-consumer-no-view-bubbles"
+    data-brain-route="earth-spine-consumer-clean"
   >
     <section class="showroom" aria-label="Earth-centered showroom">
       <div class="distanceField" aria-hidden="true">
@@ -496,7 +494,7 @@
         <h1>The Earth Room</h1>
         <p class="expression">Zoom the Earth.</p>
         <p class="lede">
-          Earth is the center of the showroom. Use the control panel below the planet to zoom in, zoom out, reset the globe, or pause the spin.
+          Earth is the center of the showroom. Use the runtime control panel below the planet to adjust scale, reset the globe, or pause the spin.
         </p>
       </div>
 
@@ -508,7 +506,7 @@
       <div class="readout" aria-live="polite">
         <strong>Earth controls</strong>
         <p>
-          The old view buttons are retired. The Earth renderer now owns zoom, reset, pause, spin, and manual drag.
+          The Earth renderer owns scale, reset, pause, spin, and manual drag through the runtime panel.
         </p>
       </div>
     </section>
@@ -556,7 +554,7 @@
     </nav>
   </main>
 
-  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b3" defer></script>
-  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b3" defer></script>
+  <script src="/assets/earth/earth_canvas.js?v=earth-asset-b4" defer></script>
+  <script src="/runtime/earth_asset_runtime.js?v=earth-asset-b4" defer></script>
 </body>
 </html>

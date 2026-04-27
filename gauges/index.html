@@ -1,12 +1,12 @@
 <!doctype html>
 <!-- TNT RENEWAL — /gauges/index.html
-     GAUGES · GENERATION 2 · EARTH SHOWROOM DIAGNOSTIC B1
+     GAUGES · GENERATION 2 · EARTH DIAGNOSTIC CONSOLE B2
 
      PURPOSE:
-       - Keep gauges as the truth page.
-       - Add direct Earth showroom diagnostics.
-       - Detect whether the showroom is still solving the wrong problem.
-       - Focus on spherical wrap, real clouds, runtime/control budget, and source ownership.
+       - Replace question-style gauges with diagnostic output.
+       - Identify the current Earth showroom blocker.
+       - Report asset availability, renderer ownership, canvas capability, local asset gaps,
+         external asset risk, runtime budget, and next repair path.
        - No graphics box.
        - No generated image.
 -->
@@ -16,7 +16,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Diamond Gate Bridge — Gauges</title>
-  <meta name="description" content="Diamond Gate Bridge health gauges and Earth showroom diagnostics"/>
+  <meta name="description" content="Diamond Gate Bridge diagnostic gauges"/>
 
   <style>
     *{box-sizing:border-box}
@@ -39,6 +39,7 @@
       --green:#8ff0bd;
       --yellow:#ffe08a;
       --red:#ff8b8b;
+      --blue:#93c5fd;
       --line:rgba(255,255,255,.13);
       --panel:rgba(7,10,16,.74);
       --shadow:0 30px 110px rgba(0,0,0,.54);
@@ -143,7 +144,7 @@
 
     .lede{
       margin:0;
-      max-width:820px;
+      max-width:860px;
       color:var(--txt);
       font-size:clamp(1.05rem,2.3vw,1.28rem);
       line-height:1.55;
@@ -151,7 +152,7 @@
 
     .summaryGrid{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
     }
 
@@ -161,18 +162,25 @@
       padding:16px;
       background:rgba(0,0,0,.22);
       display:grid;
-      gap:6px;
+      gap:7px;
+      min-height:112px;
     }
 
     .score span{
       color:var(--muted);
       font-weight:850;
-      font-size:.9rem;
+      font-size:.88rem;
     }
 
     .score strong{
-      font-size:clamp(1.8rem,5vw,3.2rem);
+      font-size:clamp(1.6rem,4vw,2.6rem);
       line-height:1;
+    }
+
+    .score small{
+      color:var(--txt);
+      line-height:1.35;
+      font-weight:700;
     }
 
     .panel{
@@ -184,13 +192,14 @@
     .panel h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.3rem,3vw,2rem);
+      font-size:clamp(1.25rem,3vw,2rem);
       letter-spacing:-.03em;
     }
 
     .status{
       display:inline-flex;
       width:max-content;
+      max-width:100%;
       align-items:center;
       gap:8px;
       border:1px solid var(--line);
@@ -203,6 +212,7 @@
     .status.strong{color:var(--green)}
     .status.watch{color:var(--yellow)}
     .status.fail{color:var(--red)}
+    .status.info{color:var(--blue)}
 
     .list{
       display:grid;
@@ -215,28 +225,22 @@
       background:rgba(0,0,0,.20);
       padding:12px;
       display:grid;
-      gap:4px;
+      gap:5px;
     }
 
-    .item strong{
-      color:var(--ink);
-    }
-
-    .item span{
-      color:var(--txt);
-      line-height:1.45;
+    .item strong{color:var(--ink)}
+    .item span{color:var(--txt);line-height:1.45}
+    .item code{
+      color:rgba(255,255,255,.86);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.86rem;
+      overflow-wrap:anywhere;
     }
 
     .item[data-state="STRONG"] strong{color:var(--green)}
     .item[data-state="WATCH"] strong{color:var(--yellow)}
     .item[data-state="FAIL"] strong{color:var(--red)}
-
-    .mono{
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.88rem;
-      color:rgba(255,255,255,.78);
-      overflow-wrap:anywhere;
-    }
+    .item[data-state="INFO"] strong{color:var(--blue)}
 
     .routeRail{
       padding:12px;
@@ -255,16 +259,19 @@
       border:0;
     }
 
+    @media(max-width:900px){
+      .summaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+
     @media(max-width:760px){
       .page{width:min(100% - 20px,1180px)}
-      .summaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
       .links a,.routeRail a{flex:1 1 calc(50% - 10px);text-align:center}
     }
   </style>
 </head>
 
 <body>
-  <main class="page" data-gauges-root data-gauges-version="earth-showroom-diagnostic-b1">
+  <main class="page" data-gauges-root data-gauges-version="earth-diagnostic-console-b2">
     <nav class="nav" aria-label="Primary navigation">
       <a class="brand" href="/">Diamond Gate Bridge</a>
       <div class="links">
@@ -281,56 +288,70 @@
     </nav>
 
     <section class="hero">
-      <p class="kicker">Generation 2 · Earth Showroom Gauges · Diagnostic B1</p>
+      <p class="kicker">Generation 2 · Earth Diagnostic Console · B2</p>
       <h1>Gauges</h1>
-      <p class="headline" id="statusHeadline">Diagnosing the Earth renderer.</p>
+      <p class="headline" id="statusHeadline">Running direct Earth diagnostics.</p>
       <p class="lede">
-        This gauge renewal stops treating the showroom as a general page-health problem. It now checks the exact suspected failure: whether Earth is being rendered as a real spherical wrap with real clouds, bounded runtime cost, and clean control ownership.
+        This page now produces a diagnostic, not a checklist. It identifies whether the showroom problem is caused by missing assets, external-image limits, flat projection, renderer ownership, budget pressure, or visual-calibration drift.
       </p>
 
-      <div class="summaryGrid" aria-label="Gauge summary">
+      <div class="summaryGrid" aria-label="Diagnostic summary">
         <div class="score">
-          <span>Earth visual</span>
-          <strong id="earthScore">—</strong>
+          <span>Verdict</span>
+          <strong id="verdictScore">—</strong>
+          <small id="verdictNote">Scanning</small>
         </div>
         <div class="score">
-          <span>Renderer control</span>
-          <strong id="controlScore">—</strong>
+          <span>Assets</span>
+          <strong id="assetScore">—</strong>
+          <small id="assetNote">Scanning</small>
+        </div>
+        <div class="score">
+          <span>Renderer</span>
+          <strong id="rendererScore">—</strong>
+          <small id="rendererNote">Scanning</small>
         </div>
         <div class="score">
           <span>Budget</span>
           <strong id="budgetScore">—</strong>
+          <small id="budgetNote">Scanning</small>
         </div>
         <div class="score">
-          <span>Drift risk</span>
+          <span>Drift</span>
           <strong id="driftScore">—</strong>
+          <small id="driftNote">Scanning</small>
         </div>
       </div>
     </section>
 
     <section class="panel">
-      <h2>Current diagnostic verdict</h2>
-      <div class="status watch" id="overallStatus">SCANNING</div>
+      <h2>Diagnostic verdict</h2>
+      <div class="status info" id="overallStatus">SCANNING</div>
       <div class="list" id="verdictList"></div>
     </section>
 
     <section class="panel">
-      <h2>Earth renderer contract</h2>
-      <div class="list" id="earthLedger"></div>
+      <h2>Asset capability and asset gaps</h2>
+      <div class="list" id="assetLedger"></div>
     </section>
 
     <section class="panel">
-      <h2>Runtime and control ownership</h2>
-      <div class="list" id="controlLedger"></div>
+      <h2>Renderer ownership and capability</h2>
+      <div class="list" id="rendererLedger"></div>
     </section>
 
     <section class="panel">
-      <h2>Source chain</h2>
-      <div class="list" id="sourceLedger"></div>
+      <h2>Budget and runtime pressure</h2>
+      <div class="list" id="budgetLedger"></div>
     </section>
 
     <section class="panel">
-      <h2>What needs to be done</h2>
+      <h2>Visual target gap</h2>
+      <div class="list" id="visualLedger"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Required next repair</h2>
       <div class="list" id="todoList"></div>
     </section>
 
@@ -346,8 +367,8 @@
     </nav>
   </main>
 
-  <iframe id="showroomProbe" src="/showroom/?dgb_gauge_probe=earth_renderer_b1" title="Showroom diagnostic probe"></iframe>
+  <iframe id="showroomProbe" src="/showroom/?dgb_gauge_probe=earth_diagnostic_console_b2" title="Showroom diagnostic probe"></iframe>
 
-  <script src="/gauges/gauges_health_runtime.js?v=earth-showroom-diagnostic-b1" defer></script>
+  <script src="/gauges/gauges_health_runtime.js?v=earth-diagnostic-console-b2" defer></script>
 </body>
 </html>

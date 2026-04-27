@@ -1,758 +1,768 @@
-
 <!doctype html>
+<!-- TNT RENEWAL — /showroom/index.html
+     SHOWROOM · GENERATION 2 · TED TALK PLATFORM B26 · COMPLETE
 
-<!-- TNT RENEWAL — /showroom/index.html  
-     SHOWROOM · GENERATION 2 · TED TALK PLATFORM B26  
-  
-     CONTRACT:  
-       - Restore full HTML runtime shell.  
-       - Preserve Earth/Sun graphical side.  
-       - Keep exact Earth consumer script paths visible in source.  
-       - Keep showroom/index.js as page controller only.  
-       - Add Consider the Energy as brand chamber, not coming soon.  
-       - Add two doors:  
-         1. Nine Summits Universe  
-         2. The Nine Summits of Love · 256 Carats of Human Potential  
-       - Move Coming Soon status to Events & Attractions.  
-       - Preserve Underdog, B2B, 5 Flags, and Events lanes.  
-       - No graphics box.  
--->  <html lang="en">  
-<head>  
-  <meta charset="utf-8"/>  
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>  
-  <title>Diamond Gate Bridge — Showroom</title>  
-  <meta name="description" content="Diamond Gate Bridge TED Talk-style showroom for Earth Room, Back to Baseline, 5 Flags, Consider the Energy, the Nine Summits, and public events."/>    <link rel="stylesheet" href="/assets/earth/earth_material.css"/>    <style>  
-    *{box-sizing:border-box}  
-  
-    html{  
-      scroll-behavior:smooth;  
-    }  
-  
-    html,body{  
-      margin:0;  
-      min-height:100%;  
-      width:100%;  
-      background:#02040b;  
-      color:#fff;  
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;  
-      overflow-x:hidden;  
-    }  
-  
-    a{color:inherit;text-decoration:none}  
-  
-    :root{  
-      --ink:rgba(255,255,255,.96);  
-      --txt:rgba(220,231,255,.78);  
-      --soft:rgba(220,231,255,.62);  
-      --gold:rgba(255,217,138,.96);  
-      --line:rgba(255,255,255,.13);  
-      --panel:rgba(7,10,16,.74);  
-      --shadow:0 30px 110px rgba(0,0,0,.54);  
-      --dgb-earth-axis:-23.44deg;  
-    }  
-  
-    body::before{  
-      content:"";  
-      position:fixed;  
-      inset:0;  
-      z-index:0;  
-      pointer-events:none;  
-      background:  
-        radial-gradient(circle at 12% 18%,rgba(255,255,255,.26) 0 1px,transparent 2px),  
-        radial-gradient(circle at 42% 22%,rgba(177,205,255,.18) 0 1px,transparent 2px),  
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.16) 0 1px,transparent 2px),  
-        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);  
-    }  
-  
-    .page{  
-      position:relative;  
-      z-index:1;  
-      min-height:100svh;  
-      width:min(100% - 28px,1240px);  
-      margin:0 auto;  
-      padding:16px 0 28px;  
-      display:grid;  
-      gap:14px;  
-    }  
-  
-    .showroom,  
-    .routeRail,  
-    .platformSection,  
-    .closingPanel{  
-      border:1px solid var(--line);  
-      border-radius:28px;  
-      background:var(--panel);  
-      box-shadow:var(--shadow);  
-      backdrop-filter:blur(10px);  
-    }  
-  
-    .showroom{  
-      position:relative;  
-      min-height:calc(100svh - 150px);  
-      overflow:hidden;  
-      isolation:isolate;  
-      padding:clamp(22px,5vw,42px);  
-      display:grid;  
-      gap:24px;  
-      background:  
-        radial-gradient(ellipse at 12% 28%,rgba(255,204,116,.055),transparent 30rem),  
-        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));  
-    }  
-  
-    .distanceField{  
-      position:absolute;  
-      inset:0;  
-      z-index:0;  
-      pointer-events:none;  
-      overflow:hidden;  
-    }  
-  
-    .distantSun{  
-      position:absolute;  
-      left:-18%;  
-      top:24%;  
-      right:auto;  
-      width:min(34vw,245px);  
-      aspect-ratio:1;  
-      border-radius:999px;  
-      opacity:.18;  
-      filter:  
-        drop-shadow(0 0 28px rgba(255,178,54,.13))  
-        drop-shadow(0 0 110px rgba(255,122,28,.09));  
-      background:  
-        radial-gradient(circle at 38% 34%,rgba(255,252,210,.52),transparent 11%),  
-        radial-gradient(circle at 48% 47%,rgba(255,210,72,.76) 0 20%,rgba(237,101,25,.74) 46%,rgba(110,28,10,.82) 76%,rgba(20,4,2,.92) 100%);  
-    }  
-  
-    .distanceField::after{  
-      content:"";  
-      position:absolute;  
-      left:-22%;  
-      top:12%;  
-      width:min(62vw,520px);  
-      aspect-ratio:1;  
-      border-radius:999px;  
-      opacity:.20;  
-      background:radial-gradient(circle,rgba(255,206,118,.12),transparent 62%);  
-      filter:blur(20px);  
-    }  
-  
-    .copy{  
-      position:relative;  
-      z-index:2;  
-      max-width:900px;  
-      display:grid;  
-      gap:16px;  
-    }  
-  
-    .brandRow{  
-      display:flex;  
-      align-items:center;  
-      gap:12px;  
-      margin-bottom:10px;  
-    }  
-  
-    .brandMark{  
-      width:34px;  
-      height:34px;  
-      transform:rotate(45deg);  
-      background:  
-        linear-gradient(135deg,rgba(255,217,138,.80),rgba(147,197,253,.10)),  
-        rgba(255,255,255,.06);  
-      border:1px solid rgba(255,255,255,.18);  
-      box-shadow:0 0 18px rgba(255,217,138,.12);  
-      flex:0 0 auto;  
-    }  
-  
-    .brandName{  
-      color:var(--ink);  
-      font-size:clamp(1.2rem,4vw,2rem);  
-      font-weight:950;  
-      letter-spacing:-.04em;  
-    }  
-  
-    .kicker,  
-    .sectionEyebrow{  
-      margin:0;  
-      color:var(--gold);  
-      font-size:12px;  
-      line-height:1.35;  
-      font-weight:950;  
-      letter-spacing:3px;  
-      text-transform:uppercase;  
-    }  
-  
-    h1{  
-      margin:0;  
-      font-size:clamp(3.4rem,10vw,7.2rem);  
-      line-height:.86;  
-      letter-spacing:-.08em;  
-      text-shadow:0 20px 90px rgba(0,0,0,.55);  
-    }  
-  
-    .expression{  
-      margin:0;  
-      font-size:clamp(1.35rem,4vw,2.55rem);  
-      line-height:1.08;  
-      color:var(--gold);  
-      max-width:800px;  
-      font-weight:850;  
-    }  
-  
-    .lede,  
-    .sectionLead,  
-    .closingPanel p{  
-      margin:0;  
-      color:var(--txt);  
-      font-size:clamp(1.05rem,2.3vw,1.32rem);  
-      line-height:1.55;  
-      max-width:900px;  
-    }  
-  
-    .portalDeck{  
-      position:relative;  
-      z-index:3;  
-      display:flex;  
-      flex-wrap:wrap;  
-      gap:10px;  
-      align-items:center;  
-      max-width:980px;  
-    }  
-  
-    .portal{  
-      min-height:50px;  
-      display:inline-grid;  
-      grid-template-columns:auto 1fr;  
-      align-items:center;  
-      gap:10px;  
-      padding:10px 14px;  
-      border:1px solid rgba(255,255,255,.13);  
-      border-radius:18px;  
-      background:rgba(0,0,0,.25);  
-      color:var(--ink);  
-      font-weight:950;  
-      letter-spacing:-.02em;  
-      box-shadow:0 16px 50px rgba(0,0,0,.22);  
-    }  
-  
-    .portal:hover,  
-    .portal:focus-visible,  
-    .portal[data-active="true"]{  
-      border-color:rgba(255,217,138,.48);  
-      outline:none;  
-    }  
-  
-    .compassGlyph{  
-      width:18px;  
-      height:18px;  
-      transform:rotate(45deg);  
-      border:1px solid rgba(255,217,138,.78);  
-      background:linear-gradient(135deg,rgba(255,217,138,.26),rgba(147,197,253,.04));  
-      box-shadow:0 0 14px rgba(255,217,138,.10);  
-    }  
-  
-    .portal small{  
-      display:block;  
-      color:var(--soft);  
-      font-size:.72rem;  
-      font-weight:850;  
-      letter-spacing:.08em;  
-      text-transform:uppercase;  
-      margin-top:2px;  
-    }  
-  
-    .earthPanel{  
-      position:relative;  
-      z-index:2;  
-      width:min(100%,880px);  
-      margin:8px auto 0;  
-      border:0;  
-      border-radius:0;  
-      background:transparent;  
-      box-shadow:none;  
-      overflow:visible;  
-      padding:clamp(8px,2vw,16px);  
-      display:grid;  
-      justify-items:center;  
-    }  
-  
-    .earthPanel::before,  
-    .earthPanel::after{  
-      display:none !important;  
-      content:none !important;  
-    }  
-  
-    .earthPanel [data-dgb-earth-mount]{  
-      position:relative;  
-      z-index:2;  
-      width:min(100%,590px);  
-      aspect-ratio:1;  
-      margin:0 auto;  
-      display:grid;  
-      place-items:center;  
-      overflow:visible;  
-      background:transparent !important;  
-      border:0 !important;  
-      outline:0 !important;  
-      box-shadow:none !important;  
-    }  
-  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-stage,  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-tilt,  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-sphere{  
-      background:transparent !important;  
-      border:0 !important;  
-      outline:0 !important;  
-      box-shadow:none !important;  
-    }  
-  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis,  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::before,  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::after,  
-    .earthPanel [data-dgb-earth-mount] .dgb-earth-atmosphere{  
-      display:none !important;  
-      content:none !important;  
-      opacity:0 !important;  
-      visibility:hidden !important;  
-      pointer-events:none !important;  
-    }  
-  
-    .earthPanel [data-dgb-earth-canvas]{  
-      width:100%;  
-      height:100%;  
-      display:block;  
-      border-radius:999px;  
-      border:0 !important;  
-      outline:0 !important;  
-      box-shadow:none !important;  
-      background:transparent !important;  
-    }  
-  
-    .earthPanel .dgb-earth-control-panel{  
-      position:relative;  
-      z-index:3;  
-      width:min(100%,680px);  
-      margin:14px auto 0;  
-      display:flex;  
-      flex-wrap:wrap;  
-      justify-content:center;  
-      gap:10px;  
-    }  
-  
-    .earthPanel .dgb-earth-control-button,  
-    .earthPanel .dgb-earth-control-readout{  
-      min-height:42px;  
-      border-radius:999px;  
-      border:1px solid rgba(255,255,255,.13);  
-      background:rgba(0,0,0,.26);  
-      color:rgba(255,255,255,.96);  
-      font:inherit;  
-      font-weight:900;  
-      padding:10px 14px;  
-    }  
-  
-    .earthPanel .dgb-earth-control-button{  
-      cursor:pointer;  
-      -webkit-tap-highlight-color:transparent;  
-    }  
-  
-    .earthPanel .dgb-earth-control-readout{  
-      color:rgba(220,231,255,.70);  
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;  
-    }  
-  
-    .dgb-earth-caption{  
-      position:relative;  
-      z-index:3;  
-      margin:10px auto 4px;  
-      color:rgba(255,255,255,.90);  
-      font-size:clamp(.78rem,2vw,1rem);  
-      font-weight:950;  
-      letter-spacing:1.7px;  
-      text-align:center;  
-      text-transform:uppercase;  
-      text-shadow:0 3px 18px rgba(0,0,0,.8);  
-    }  
-  
-    .readout{  
-      position:relative;  
-      z-index:2;  
-      max-width:820px;  
-      display:grid;  
-      gap:6px;  
-      color:var(--txt);  
-      line-height:1.55;  
-    }  
-  
-    .readout strong{  
-      color:var(--gold);  
-      font-size:1.05rem;  
-    }  
-  
-    .readout p{  
-      margin:0;  
-    }  
-  
-    .platformStack{  
-      display:grid;  
-      gap:14px;  
-    }  
-  
-    .platformSection,  
-    .closingPanel{  
-      position:relative;  
-      overflow:hidden;  
-      padding:clamp(22px,4vw,42px);  
-      display:grid;  
-      gap:18px;  
-      background:  
-        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),  
-        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));  
-    }  
-  
-    .platformSection::before{  
-      content:"";  
-      position:absolute;  
-      left:0;  
-      top:0;  
-      bottom:0;  
-      width:4px;  
-      background:linear-gradient(180deg,rgba(255,217,138,.80),rgba(147,197,253,.16));  
-      opacity:.82;  
-    }  
-  
-    .sectionTitle{  
-      margin:0;  
-      font-size:clamp(2.1rem,6vw,4.25rem);  
-      line-height:.92;  
-      letter-spacing:-.065em;  
-    }  
-  
-    .quoteLine{  
-      margin:0;  
-      max-width:940px;  
-      color:rgba(255,255,255,.92);  
-      font-size:clamp(1.22rem,3vw,2.02rem);  
-      line-height:1.16;  
-      font-weight:900;  
-      letter-spacing:-.045em;  
-    }  
-  
-    .miniGrid,  
-    .doorGrid{  
-      display:grid;  
-      grid-template-columns:repeat(3,minmax(0,1fr));  
-      gap:12px;  
-      margin-top:6px;  
-    }  
-  
-    .doorGrid{  
-      grid-template-columns:repeat(2,minmax(0,1fr));  
-    }  
-  
-    .miniPanel,  
-    .summitDoor{  
-      min-height:150px;  
-      padding:16px;  
-      border:1px solid rgba(255,255,255,.12);  
-      border-radius:20px;  
-      background:rgba(0,0,0,.20);  
-      display:grid;  
-      gap:8px;  
-      align-content:start;  
-    }  
-  
-    .summitDoor{  
-      min-height:178px;  
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;  
-    }  
-  
-    .summitDoor:hover,  
-    .summitDoor:focus-visible{  
-      transform:translateY(-2px);  
-      border-color:rgba(255,217,138,.50);  
-      background:rgba(255,217,138,.055);  
-      outline:none;  
-    }  
-  
-    .miniPanel strong,  
-    .summitDoor strong{  
-      color:var(--ink);  
-      font-size:1rem;  
-      line-height:1.2;  
-    }  
-  
-    .summitDoor strong{  
-      font-size:clamp(1.15rem,2.5vw,1.55rem);  
-      letter-spacing:-.035em;  
-    }  
-  
-    .miniPanel p,  
-    .summitDoor p{  
-      margin:0;  
-      color:var(--soft);  
-      line-height:1.48;  
-      font-size:.98rem;  
-    }  
-  
-    .doorLabel{  
-      color:var(--gold);  
-      font-size:.78rem;  
-      font-weight:950;  
-      letter-spacing:.12em;  
-      text-transform:uppercase;  
-    }  
-  
-    .statusPill{  
-      display:inline-flex;  
-      width:max-content;  
-      align-items:center;  
-      gap:8px;  
-      padding:8px 11px;  
-      border-radius:999px;  
-      border:1px solid rgba(255,255,255,.13);  
-      color:rgba(255,255,255,.82);  
-      background:rgba(0,0,0,.23);  
-      font-size:.78rem;  
-      font-weight:950;  
-      letter-spacing:.12em;  
-      text-transform:uppercase;  
-    }  
-  
-    .routeRail{  
-      position:relative;  
-      z-index:5;  
-      display:grid;  
-      grid-template-columns:repeat(4,minmax(0,1fr));  
-      gap:12px;  
-      padding:12px;  
-    }  
-  
-    .routeLink{  
-      min-height:58px;  
-      padding:12px;  
-      border-radius:18px;  
-      border:1px solid rgba(255,255,255,.12);  
-      background:rgba(0,0,0,.22);  
-      color:var(--ink);  
-      font-weight:950;  
-      display:grid;  
-      place-items:center;  
-      text-align:center;  
-    }  
-  
-    @media(max-width:900px){  
-      .miniGrid,  
-      .doorGrid{  
-        grid-template-columns:1fr;  
-      }  
-    }  
-  
-    @media(max-width:760px){  
-      .page{  
-        width:min(100% - 20px,1240px);  
-        padding-top:10px;  
-      }  
-  
-      .showroom{  
-        min-height:calc(100svh - 120px);  
-        padding:22px;  
-      }  
-  
-      .portalDeck{  
-        display:grid;  
-        grid-template-columns:1fr;  
-      }  
-  
-      .earthPanel{  
-        padding:10px 0;  
-      }  
-  
-      .earthPanel [data-dgb-earth-mount]{  
-        width:min(100%,540px);  
-      }  
-  
-      .earthPanel .dgb-earth-control-panel{  
-        width:min(100%,610px);  
-      }  
-  
-      .earthPanel .dgb-earth-control-button,  
-      .earthPanel .dgb-earth-control-readout{  
-        flex:1 1 calc(50% - 10px);  
-        text-align:center;  
-      }  
-  
-      .routeRail{  
-        grid-template-columns:repeat(2,minmax(0,1fr));  
-      }  
-  
-      .distantSun{  
-        left:-30%;  
-        top:30%;  
-        width:min(56vw,230px);  
-        opacity:.16;  
-      }  
-  
-      .distanceField::after{  
-        left:-38%;  
-        top:18%;  
-        width:min(86vw,420px);  
-        opacity:.18;  
-      }  
-    }  
-  
-    @media(max-width:430px){  
-      .earthPanel [data-dgb-earth-mount]{  
-        width:min(100%,520px);  
-      }  
-    }  
-  </style>  </head>  <body>  
-  <main  
-    class="page"  
-    data-showroom-root  
-    data-showroom-version="generation-2-ted-talk-showroom-b26"  
-    data-earth-center="true"  
-    data-earth-renderer="earth-asset-b5-orbital-shadow"  
-    data-earth-clouds="earth-asset-b5-real-cloud-map"  
-    data-earth-controls="runtime-zoom-panel"  
-    data-earth-fit-contract="earth-only-no-external-rings"  
-    data-sun-role="distant-css-light-source-only"  
-    data-sun-disposition="upper-left-shadow-coherent"  
-    data-platform-mode="ted-talk-showroom"  
-    data-consider-the-energy="brand-chamber"  
-    data-nine-summits="two-door-branch"  
-    data-backlink-capacity="active"  
-    data-pinky-qa="no-graphics-box"  
-    data-brain-route="ted-talk-showroom-b26"  
-  >  
-    <section class="showroom" aria-label="Earth-centered showroom">  
-      <div class="distanceField" aria-hidden="true">  
-        <div class="distantSun" data-sun-role="distant-css-light-source-only"></div>  
-      </div>  <div class="copy">  
-    <div class="brandRow">  
-      <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>  
-      <a class="brandName" href="/">Diamond Gate Bridge</a>  
-    </div>  
+     CONTRACT:
+       - Full HTML runtime shell.
+       - Preserve Earth/Sun graphical side.
+       - Keep exact Earth consumer script paths visible in source.
+       - Keep showroom/index.js as page controller only.
+       - Add Consider the Energy as brand chamber, not coming soon.
+       - Add two doors:
+         1. Nine Summits Universe
+         2. The Nine Summits of Love · 256 Carats of Human Potential
+       - Move Coming Soon status to Events & Attractions.
+       - Preserve Underdog, B2B, 5 Flags, and Events lanes.
+       - No graphics box.
+-->
 
-    <p class="kicker">Showroom · TED Talk Platform · Earth/Sun Proof</p>  
-    <h1>The Earth Room</h1>  
-    <p class="expression">Where the system stopped pretending and started aligning.</p>  
-    <p class="lede">  
-      This showroom is the public proof room: light, shadow, pressure, correction, and baseline coherence brought into the same frame.  
-    </p>  
-  </div>  
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>Diamond Gate Bridge — Showroom</title>
+  <meta name="description" content="Diamond Gate Bridge TED Talk-style showroom for Earth Room, Back to Baseline, 5 Flags, Consider the Energy, the Nine Summits, and public events."/>
 
-  <nav class="portalDeck" aria-label="Showroom compass portals">  
-    <a class="portal" href="#underdog">  
-      <span class="compassGlyph" aria-hidden="true"></span>  
-      <span>Underdog Backstory<small>Pressure into proof</small></span>  
-    </a>  
+  <link rel="stylesheet" href="/assets/earth/earth_material.css"/>
 
-    <a class="portal" href="#b2b">  
-      <span class="compassGlyph" aria-hidden="true"></span>  
-      <span>B2B · Back to Baseline<small>Back to back. Back to baseline.</small></span>  
-    </a>  
+  <style>
+    *{box-sizing:border-box}
 
-    <a class="portal" href="#five-flags">  
-      <span class="compassGlyph" aria-hidden="true"></span>  
-      <span>5 Flags · What’s My Scene?<small>Family-friendly game lane</small></span>  
-    </a>  
+    html{
+      scroll-behavior:smooth;
+    }
 
-    <a class="portal" href="#consider-energy">  
-      <span class="compassGlyph" aria-hidden="true"></span>  
-      <span>Consider the Energy<small>Nine Summits brand chamber</small></span>  
-    </a>  
+    html,body{
+      margin:0;
+      min-height:100%;
+      width:100%;
+      background:#02040b;
+      color:#fff;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      overflow-x:hidden;
+    }
 
-    <a class="portal" href="#events">  
-      <span class="compassGlyph" aria-hidden="true"></span>  
-      <span>Events & Attractions<small>Coming soon</small></span>  
-    </a>  
-  </nav>  
+    a{color:inherit;text-decoration:none}
 
-  <article class="earthPanel" aria-label="Earth asset spine showroom mount">  
-    <div data-dgb-earth-mount aria-label="Interactive Earth asset"></div>  
-    <div class="dgb-earth-caption">Earth Standard · Orbital Earth · Centered · Auto + Manual Spin</div>  
-  </article>  
+    :root{
+      --ink:rgba(255,255,255,.96);
+      --txt:rgba(220,231,255,.78);
+      --soft:rgba(220,231,255,.62);
+      --gold:rgba(255,217,138,.96);
+      --line:rgba(255,255,255,.13);
+      --panel:rgba(7,10,16,.74);
+      --shadow:0 30px 110px rgba(0,0,0,.54);
+      --dgb-earth-axis:-23.44deg;
+    }
 
-  <div class="readout" aria-live="polite">  
-    <strong>Earth controls</strong>  
-    <p>  
-      The Earth renderer owns scale, reset, pause, spin, and manual drag through the runtime panel.  
-    </p>  
-  </div>  
-</section>  
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 12% 18%,rgba(255,255,255,.26) 0 1px,transparent 2px),
+        radial-gradient(circle at 42% 22%,rgba(177,205,255,.18) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.16) 0 1px,transparent 2px),
+        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
+    }
 
-<section class="platformStack" aria-label="Showroom platform lanes">  
-  <article id="underdog" class="platformSection">  
-    <p class="sectionEyebrow">Underdog Backstory</p>  
-    <h2 class="sectionTitle">Some people get stepped on more than most.</h2>  
-    <p class="quoteLine">  
-      An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.  
-    </p>  
-    <p class="sectionLead">  
-      Everybody has been underneath something: a label, a mistake, a debt, a season, a room that did not believe in them, or a system that expected results without offering enough protection. The point is not to compete over suffering. The point is to recognize the pattern and decide what gets built from it.  
-    </p>  
-    <div class="miniGrid">  
-      <div class="miniPanel">  
-        <strong>Pressure without protection</strong>  
-        <p>The underdog is often judged by the fall while no one counts the weight that pushed them down.</p>  
-      </div>  
-      <div class="miniPanel">  
-        <strong>Expectation without help</strong>  
-        <p>They are still expected to recover, explain, adapt, and perform even when the support was never equal to the demand.</p>  
-      </div>  
-      <div class="miniPanel">  
-        <strong>Baseline instead of identity</strong>  
-        <p>The turn happens when being stepped on stops becoming the identity and starts becoming the baseline.</p>  
-      </div>  
-    </div>  
-  </article>  
+    .page{
+      position:relative;
+      z-index:1;
+      min-height:100svh;
+      width:min(100% - 28px,1240px);
+      margin:0 auto;
+      padding:16px 0 28px;
+      display:grid;
+      gap:14px;
+    }
 
-  <article id="b2b" class="platformSection">  
-    <p class="sectionEyebrow">B2B · Back to Baseline</p>  
-    <h2 class="sectionTitle">Back to back. Back to baseline.</h2>  
-    <p class="quoteLine">Before you build the empire, return to baseline.</p>  
-    <p class="sectionLead">  
-      B2B is the practical reset lane: baseline nutrition, body stability, expression training, and the discipline of getting the first layer right before trying to carry the whole mission.  
-    </p>  
-    <div class="miniGrid">  
-      <div class="miniPanel">  
-        <strong>Baseline nutrition</strong>  
-        <p>A product lane for returning the body to a cleaner operating floor before higher expression is demanded.</p>  
-      </div>  
-      <div class="miniPanel">  
-        <strong>Expression program</strong>  
-        <p>A training lane for converting pressure, thought, and story into speech that can actually move people.</p>  
-      </div>  
-      <div class="miniPanel">  
-        <strong>Mission reset</strong>  
-        <p>Body, mind, expression, and mission stacked in the right order. No skipped foundation.</p>  
-      </div>  
-    </div>  
-  </article>  
+    .showroom,
+    .routeRail,
+    .platformSection,
+    .closingPanel{
+      border:1px solid var(--line);
+      border-radius:28px;
+      background:var(--panel);
+      box-shadow:var(--shadow);
+      backdrop-filter:blur(10px);
+    }
 
-  <article id="five-flags" class="platformSection">  
-    <p class="sectionEyebrow">5 Flags · What’s My Scene?</p>  
-    <h2 class="sectionTitle">A family-friendly game for learning how to read the room.</h2>  
-    <p class="quoteLine">Read the scene before the scene reads you.</p>  
-    <p class="sectionLead">  
-      5 Flags · What’s My Scene? gives families, kids, classrooms, and groups a safe way to talk about scenes, signals, emotions, behavior, and social pressure without turning the conversation into a lecture.  
-    </p>  
-    <div class="miniGrid">  
-      <div class="miniPanel">  
-        <strong>Family-safe</strong>  
-        <p>Built for clean public use: homes, schools, group settings, and live demonstrations.</p>  
-      </div>  
-      <div class="miniPanel">  
-        <strong>Scene reading</strong>  
-        <p>Players learn to recognize the room, the signal, the pressure, and the better move.</p>  
-      </div>  
-      <div class="miniPanel">  
-        <strong>Future expansion</strong>  
-        <p>Cards, app logic, live game formats, and classroom-ready versions can all grow from this lane.</p>  
-      </div>  
-    </div>  
-  </article
+    .showroom{
+      position:relative;
+      min-height:calc(100svh - 150px);
+      overflow:hidden;
+      isolation:isolate;
+      padding:clamp(22px,5vw,42px);
+      display:grid;
+      gap:24px;
+      background:
+        radial-gradient(ellipse at 12% 28%,rgba(255,204,116,.055),transparent 30rem),
+        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+    }
+
+    .distanceField{
+      position:absolute;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      overflow:hidden;
+    }
+
+    .distantSun{
+      position:absolute;
+      left:-18%;
+      top:24%;
+      right:auto;
+      width:min(34vw,245px);
+      aspect-ratio:1;
+      border-radius:999px;
+      opacity:.18;
+      filter:
+        drop-shadow(0 0 28px rgba(255,178,54,.13))
+        drop-shadow(0 0 110px rgba(255,122,28,.09));
+      background:
+        radial-gradient(circle at 38% 34%,rgba(255,252,210,.52),transparent 11%),
+        radial-gradient(circle at 48% 47%,rgba(255,210,72,.76) 0 20%,rgba(237,101,25,.74) 46%,rgba(110,28,10,.82) 76%,rgba(20,4,2,.92) 100%);
+    }
+
+    .distanceField::after{
+      content:"";
+      position:absolute;
+      left:-22%;
+      top:12%;
+      width:min(62vw,520px);
+      aspect-ratio:1;
+      border-radius:999px;
+      opacity:.20;
+      background:radial-gradient(circle,rgba(255,206,118,.12),transparent 62%);
+      filter:blur(20px);
+    }
+
+    .copy{
+      position:relative;
+      z-index:2;
+      max-width:900px;
+      display:grid;
+      gap:16px;
+    }
+
+    .brandRow{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+    }
+
+    .brandMark{
+      width:34px;
+      height:34px;
+      transform:rotate(45deg);
+      background:
+        linear-gradient(135deg,rgba(255,217,138,.80),rgba(147,197,253,.10)),
+        rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.18);
+      box-shadow:0 0 18px rgba(255,217,138,.12);
+      flex:0 0 auto;
+    }
+
+    .brandName{
+      color:var(--ink);
+      font-size:clamp(1.2rem,4vw,2rem);
+      font-weight:950;
+      letter-spacing:-.04em;
+    }
+
+    .kicker,
+    .sectionEyebrow{
+      margin:0;
+      color:var(--gold);
+      font-size:12px;
+      line-height:1.35;
+      font-weight:950;
+      letter-spacing:3px;
+      text-transform:uppercase;
+    }
+
+    h1{
+      margin:0;
+      font-size:clamp(3.4rem,10vw,7.2rem);
+      line-height:.86;
+      letter-spacing:-.08em;
+      text-shadow:0 20px 90px rgba(0,0,0,.55);
+    }
+
+    .expression{
+      margin:0;
+      font-size:clamp(1.35rem,4vw,2.55rem);
+      line-height:1.08;
+      color:var(--gold);
+      max-width:800px;
+      font-weight:850;
+    }
+
+    .lede,
+    .sectionLead,
+    .closingPanel p{
+      margin:0;
+      color:var(--txt);
+      font-size:clamp(1.05rem,2.3vw,1.32rem);
+      line-height:1.55;
+      max-width:900px;
+    }
+
+    .portalDeck{
+      position:relative;
+      z-index:3;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+      max-width:980px;
+    }
+
+    .portal{
+      min-height:50px;
+      display:inline-grid;
+      grid-template-columns:auto 1fr;
+      align-items:center;
+      gap:10px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.13);
+      border-radius:18px;
+      background:rgba(0,0,0,.25);
+      color:var(--ink);
+      font-weight:950;
+      letter-spacing:-.02em;
+      box-shadow:0 16px 50px rgba(0,0,0,.22);
+    }
+
+    .portal:hover,
+    .portal:focus-visible,
+    .portal[data-active="true"]{
+      border-color:rgba(255,217,138,.48);
+      outline:none;
+    }
+
+    .compassGlyph{
+      width:18px;
+      height:18px;
+      transform:rotate(45deg);
+      border:1px solid rgba(255,217,138,.78);
+      background:linear-gradient(135deg,rgba(255,217,138,.26),rgba(147,197,253,.04));
+      box-shadow:0 0 14px rgba(255,217,138,.10);
+    }
+
+    .portal small{
+      display:block;
+      color:var(--soft);
+      font-size:.72rem;
+      font-weight:850;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      margin-top:2px;
+    }
+
+    .earthPanel{
+      position:relative;
+      z-index:2;
+      width:min(100%,880px);
+      margin:8px auto 0;
+      border:0;
+      border-radius:0;
+      background:transparent;
+      box-shadow:none;
+      overflow:visible;
+      padding:clamp(8px,2vw,16px);
+      display:grid;
+      justify-items:center;
+    }
+
+    .earthPanel::before,
+    .earthPanel::after{
+      display:none !important;
+      content:none !important;
+    }
+
+    .earthPanel [data-dgb-earth-mount]{
+      position:relative;
+      z-index:2;
+      width:min(100%,590px);
+      aspect-ratio:1;
+      margin:0 auto;
+      display:grid;
+      place-items:center;
+      overflow:visible;
+      background:transparent !important;
+      border:0 !important;
+      outline:0 !important;
+      box-shadow:none !important;
+    }
+
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-stage,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-tilt,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-sphere{
+      background:transparent !important;
+      border:0 !important;
+      outline:0 !important;
+      box-shadow:none !important;
+    }
+
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::before,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-axis::after,
+    .earthPanel [data-dgb-earth-mount] .dgb-earth-atmosphere{
+      display:none !important;
+      content:none !important;
+      opacity:0 !important;
+      visibility:hidden !important;
+      pointer-events:none !important;
+    }
+
+    .earthPanel [data-dgb-earth-canvas]{
+      width:100%;
+      height:100%;
+      display:block;
+      border-radius:999px;
+      border:0 !important;
+      outline:0 !important;
+      box-shadow:none !important;
+      background:transparent !important;
+    }
+
+    .earthPanel .dgb-earth-control-panel{
+      position:relative;
+      z-index:3;
+      width:min(100%,680px);
+      margin:14px auto 0;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:10px;
+    }
+
+    .earthPanel .dgb-earth-control-button,
+    .earthPanel .dgb-earth-control-readout{
+      min-height:42px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.13);
+      background:rgba(0,0,0,.26);
+      color:rgba(255,255,255,.96);
+      font:inherit;
+      font-weight:900;
+      padding:10px 14px;
+    }
+
+    .earthPanel .dgb-earth-control-button{
+      cursor:pointer;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .earthPanel .dgb-earth-control-readout{
+      color:rgba(220,231,255,.70);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .dgb-earth-caption{
+      position:relative;
+      z-index:3;
+      margin:10px auto 4px;
+      color:rgba(255,255,255,.90);
+      font-size:clamp(.78rem,2vw,1rem);
+      font-weight:950;
+      letter-spacing:1.7px;
+      text-align:center;
+      text-transform:uppercase;
+      text-shadow:0 3px 18px rgba(0,0,0,.8);
+    }
+
+    .readout{
+      position:relative;
+      z-index:2;
+      max-width:820px;
+      display:grid;
+      gap:6px;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    .readout strong{
+      color:var(--gold);
+      font-size:1.05rem;
+    }
+
+    .readout p{
+      margin:0;
+    }
+
+    .platformStack{
+      display:grid;
+      gap:14px;
+    }
+
+    .platformSection,
+    .closingPanel{
+      position:relative;
+      overflow:hidden;
+      padding:clamp(22px,4vw,42px);
+      display:grid;
+      gap:18px;
+      background:
+        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+    }
+
+    .platformSection::before{
+      content:"";
+      position:absolute;
+      left:0;
+      top:0;
+      bottom:0;
+      width:4px;
+      background:linear-gradient(180deg,rgba(255,217,138,.80),rgba(147,197,253,.16));
+      opacity:.82;
+    }
+
+    .sectionTitle{
+      margin:0;
+      font-size:clamp(2.1rem,6vw,4.25rem);
+      line-height:.92;
+      letter-spacing:-.065em;
+    }
+
+    .quoteLine{
+      margin:0;
+      max-width:940px;
+      color:rgba(255,255,255,.92);
+      font-size:clamp(1.22rem,3vw,2.02rem);
+      line-height:1.16;
+      font-weight:900;
+      letter-spacing:-.045em;
+    }
+
+    .miniGrid,
+    .doorGrid{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:12px;
+      margin-top:6px;
+    }
+
+    .doorGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .miniPanel,
+    .summitDoor{
+      min-height:150px;
+      padding:16px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      background:rgba(0,0,0,.20);
+      display:grid;
+      gap:8px;
+      align-content:start;
+    }
+
+    .summitDoor{
+      min-height:178px;
+      transition:transform .18s ease,border-color .18s ease,background .18s ease;
+    }
+
+    .summitDoor:hover,
+    .summitDoor:focus-visible{
+      transform:translateY(-2px);
+      border-color:rgba(255,217,138,.50);
+      background:rgba(255,217,138,.055);
+      outline:none;
+    }
+
+    .miniPanel strong,
+    .summitDoor strong{
+      color:var(--ink);
+      font-size:1rem;
+      line-height:1.2;
+    }
+
+    .summitDoor strong{
+      font-size:clamp(1.15rem,2.5vw,1.55rem);
+      letter-spacing:-.035em;
+    }
+
+    .miniPanel p,
+    .summitDoor p{
+      margin:0;
+      color:var(--soft);
+      line-height:1.48;
+      font-size:.98rem;
+    }
+
+    .doorLabel{
+      color:var(--gold);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .statusPill{
+      display:inline-flex;
+      width:max-content;
+      align-items:center;
+      gap:8px;
+      padding:8px 11px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.13);
+      color:rgba(255,255,255,.82);
+      background:rgba(0,0,0,.23);
+      font-size:.78rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .routeRail{
+      position:relative;
+      z-index:5;
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:12px;
+      padding:12px;
+    }
+
+    .routeLink{
+      min-height:58px;
+      padding:12px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
+
+    @media(max-width:900px){
+      .miniGrid,
+      .doorGrid{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(max-width:760px){
+      .page{
+        width:min(100% - 20px,1240px);
+        padding-top:10px;
+      }
+
+      .showroom{
+        min-height:calc(100svh - 120px);
+        padding:22px;
+      }
+
+      .portalDeck{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .earthPanel{
+        padding:10px 0;
+      }
+
+      .earthPanel [data-dgb-earth-mount]{
+        width:min(100%,540px);
+      }
+
+      .earthPanel .dgb-earth-control-panel{
+        width:min(100%,610px);
+      }
+
+      .earthPanel .dgb-earth-control-button,
+      .earthPanel .dgb-earth-control-readout{
+        flex:1 1 calc(50% - 10px);
+        text-align:center;
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .distantSun{
+        left:-30%;
+        top:30%;
+        width:min(56vw,230px);
+        opacity:.16;
+      }
+
+      .distanceField::after{
+        left:-38%;
+        top:18%;
+        width:min(86vw,420px);
+        opacity:.18;
+      }
+    }
+
+    @media(max-width:430px){
+      .earthPanel [data-dgb-earth-mount]{
+        width:min(100%,520px);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main
+    class="page"
+    data-showroom-root
+    data-showroom-version="generation-2-ted-talk-showroom-b26"
+    data-earth-center="true"
+    data-earth-renderer="earth-asset-b5-orbital-shadow"
+    data-earth-clouds="earth-asset-b5-real-cloud-map"
+    data-earth-controls="runtime-zoom-panel"
+    data-earth-fit-contract="earth-only-no-external-rings"
+    data-sun-role="distant-css-light-source-only"
+    data-sun-disposition="upper-left-shadow-coherent"
+    data-platform-mode="ted-talk-showroom"
+    data-consider-the-energy="brand-chamber"
+    data-nine-summits="two-door-branch"
+    data-backlink-capacity="active"
+    data-pinky-qa="no-graphics-box"
+    data-brain-route="ted-talk-showroom-b26"
+  >
+    <section class="showroom" aria-label="Earth-centered showroom">
+      <div class="distanceField" aria-hidden="true">
+        <div class="distantSun" data-sun-role="distant-css-light-source-only"></div>
+      </div>
+
+      <div class="copy">
+        <div class="brandRow">
+          <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
+          <a class="brandName" href="/">Diamond Gate Bridge</a>
+        </div>
+
+        <p class="kicker">Showroom · TED Talk Platform · Earth/Sun Proof</p>
+        <h1>The Earth Room</h1>
+        <p class="expression">Where the system stopped pretending and started aligning.</p>
+        <p class="lede">
+          This showroom is the public proof room: light, shadow, pressure, correction, and baseline coherence brought into the same frame.
+        </p>
+      </div>
+
+      <nav class="portalDeck" aria-label="Showroom compass portals">
+        <a class="portal" href="#underdog">
+          <span class="compassGlyph" aria-hidden="true"></span>
+          <span>Underdog Backstory<small>Pressure into proof</small></span>
+        </a>
+
+        <a class="portal" href="#b2b">
+          <span class="compassGlyph" aria-hidden="true"></span>
+          <span>B2B · Back to Baseline<small>Back to back. Back to baseline.</small></span>
+        </a>
+
+        <a class="portal" href="#five-flags">
+          <span class="compassGlyph" aria-hidden="true"></span>
+          <span>5 Flags · What’s My Scene?<small>Family-friendly game lane</small></span>
+        </a>
+
+        <a class="portal" href="#consider-energy">
+          <span class="compassGlyph" aria-hidden="true"></span>
+          <span>Consider the Energy<small>Nine Summits brand chamber</small></span>
+        </a>
+
+        <a class="portal" href="#events">
+          <span class="compassGlyph" aria-hidden="true"></span>
+          <span>Events & Attractions<small>Coming soon</small></span>
+        </a>
+      </nav>
+
+      <article class="earthPanel" aria-label="Earth asset spine showroom mount">
+        <div data-dgb-earth-mount aria-label="Interactive Earth asset"></div>
+        <div class="dgb-earth-caption">Earth Standard · Orbital Earth · Centered · Auto + Manual Spin</div>
+      </article>
+
+      <div class="readout" aria-live="polite">
+        <strong>Earth controls</strong>
+        <p>
+          The Earth renderer owns scale, reset, pause, spin, and manual drag through the runtime panel.
+        </p>
+      </div>
+    </section>
+
+    <section class="platformStack" aria-label="Showroom platform lanes">
+      <article id="underdog" class="platformSection">
+        <p class="sectionEyebrow">Underdog Backstory</p>
+        <h2 class="sectionTitle">Some people get stepped on more than most.</h2>
+        <p class="quoteLine">
+          An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
+        </p>
+        <p class="sectionLead">
+          Everybody has been underneath something: a label, a mistake, a debt, a season, a room that did not believe in them, or a system that expected results without offering enough protection. The point is not to compete over suffering. The point is to recognize the pattern and decide what gets built from it.
+        </p>
+        <div class="miniGrid">
+          <div class="miniPanel">
+            <strong>Pressure without protection</strong>
+            <p>The underdog is often judged by the fall while no one counts the weight that pushed them down.</p>
+          </div>
+          <div class="miniPanel">
+            <strong>Expectation without help</strong>
+            <p>They are still expected to recover, explain, adapt, and perform even when the support was never equal to the demand.</p>
+          </div>
+          <div class="miniPanel">
+            <strong>Baseline instead of identity</strong>
+            <p>The turn happens when being stepped on stops becoming the identity and starts becoming the baseline.</p>
+          </div>
+        </div>
+      </article>
+
+      <article id="b2b" class="platformSection">
+        <p class="sectionEyebrow">B2B · Back to Baseline</p>
+        <h2 class="sectionTitle">Back to back. Back to baseline.</h2>
+        <p class="quoteLine">Before you build the empire, return to baseline.</p>
+        <p class="sectionLead">
+          B2B is the practical reset lane: baseline nutrition, body stability, expression training, and the discipline of getting the first layer right before trying to carry the whole mission.
+        </p>
+        <div class="miniGrid">
+          <div class="miniPanel">
+            <strong>Baseline nutrition</strong>
+            <p>A product lane for returning the body to a cleaner operating floor before higher expression is demanded.</p>
+          </div>
+          <div class="miniPanel">
+            <strong>Expression program</strong>
+            <p>A training lane for converting pressure, thought, and story into speech that can actually move people.</p>
+          </div>
+          <div class="miniPanel">
+            <strong>Mission reset</strong>
+            <p>Body, mind, expression, and mission stacked in the right order. No skipped foundation.</p>
+          </div>
+        </div>
+      </article>
+
+      <article id="five-flags" class="platformSection">
+        <p class="sectionEyebrow">5 Flags · What’s My Scene?</p>
+        <h2 class="sectionTitle">A family-friendly game for learning how to read the room.</h2>
+        <p class="quoteLine">Read the scene before the scene reads you.</p>
+        <p class="sectionLead">
+          5 Flags · What’s My Scene? gives families, kids, classrooms, and groups a safe way to talk about scenes, signals, emotions, behavior, and social pressure without turning the conversation into a lecture.
+        </p>
+        <div class="miniGrid">
+          <div class="miniPanel">
+            <strong>Family-safe</strong>
+            <p>Built for clean public use: homes, schools, group settings, and live demonstrations.</p>
+          </div>
+          <div class="miniPanel">
+            <strong>Scene reading</strong>
+            <p>Players learn to recognize the room, the signal, the pressure, and the better move.</p>
+          </div>
+          <div class="miniPanel">
+            <strong>Future expansion</strong>
+            <p>Cards, app logic, live game formats, and classroom-ready versions can all grow from this lane.</p>
+          </div>
+        </div>
+      </article>
+
       <article id="consider-energy" class="platformSection">
         <p class="sectionEyebrow">Consider the Energy</p>
         <h2 class="sectionTitle">The brand chamber where the Nine Summits live.</h2>

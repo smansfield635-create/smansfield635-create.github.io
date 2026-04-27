@@ -1,103 +1,63 @@
 {
-  "assetPack": "DGB_SUN_ASSET_SPINE_v1",
-  "owner": "Sean",
-  "project": "Diamond Gate Bridge",
-  "repository": "smansfield635-create.github.io",
-  "rootBootId": "root-sun-asset-b1",
-  "requiredSourceMarker": "root-sun-asset-b1",
-  "baseline": "Generation 2 Compass Cockpit Sun Asset Baseline",
-  "version": "satellite-observational-solar-disc-b8",
-  "status": "ACTIVE",
-  "mode": "code_source_assets_only",
-  "graphicOutput": false,
-  "externalImageDependency": false,
-  "generatedImageDependency": false,
-  "primaryObject": "sun",
-  "backgroundContext": "universe",
-  "theme": "Learn to Live to Love",
-  "visualTarget": {
-    "name": "satellite-observational-solar-disc",
-    "description": "A satellite-observational solar disc with natural limb darkening, mottled photosphere, granulation, subtle active regions, small sunspots, and soft corona.",
-    "requiredQualities": [
-      "satellite observational solar disc",
-      "large solar body",
-      "limb darkening",
-      "mottled photosphere",
-      "solar granulation",
-      "subtle active regions",
-      "small sunspots",
-      "soft corona",
-      "deep universe background",
-      "mobile safe"
+  "asset_id": "sun-asset-spine-b7-stellar-plasma",
+  "asset_name": "Diamond Gate Bridge Sun Asset Spine",
+  "generation": "Generation 2",
+  "status": "active",
+  "contract": "dimensional-stellar-body-plasma-radiance",
+  "visual_target": {
+    "profile": "stellar-plasma-sun",
+    "description": "The Sun is rendered as a dimensional stellar body with plasma surface behavior, controlled radiance, soft corona, and no orange-planet read.",
+    "required": [
+      "dimensional solar body",
+      "plasma surface",
+      "granulation",
+      "limb radiance",
+      "controlled corona",
+      "mobile-safe animation",
+      "bounded frame budget",
+      "no external image dependency",
+      "no graphic generation dependency"
     ],
-    "forbiddenQualities": [
-      "symbolic wheel",
-      "decorative sun badge",
-      "cartoon radial rays",
-      "generic orange gradient",
-      "CSS-only fake sun as final visual",
-      "generated image dependency",
-      "external image dependency",
-      "graphic box"
+    "forbidden": [
+      "orange planet look",
+      "flat CSS circle",
+      "hard circular outline",
+      "fake ring",
+      "cartoon flames",
+      "decorative rays",
+      "unbounded glow blur",
+      "Earth renderer inheritance",
+      "external Sun runtime ownership on Earth pages"
     ]
   },
-  "files": {
-    "rootHtml": "/index.html",
-    "rootBoot": "/index.js",
-    "canvasRenderer": "/assets/sun/sun_canvas.js",
-    "assetRuntime": "/runtime/sun_asset_runtime.js",
-    "cssShell": "/assets/sun/sun_material.css",
-    "svgReference": "/assets/sun/sun.svg",
-    "manifest": "/assets/sun/sun_manifest.json",
-    "previewHarness": "/assets/sun/preview.html",
-    "canopyRuntime": "/runtime/spine_canopy_runtime.js",
-    "gaugesRuntime": "/gauges/gauges_health_runtime.js"
+  "paths": {
+    "canvas_js": "/assets/sun/sun_canvas.js",
+    "material_css": "/assets/sun/sun_material.css",
+    "runtime_js": "/runtime/sun_asset_runtime.js"
   },
-  "authority": {
-    "manifest": "sun_asset_spine_contract",
-    "rootHtml": "mount_and_page_shell",
-    "rootBoot": "compass_boot_and_filter_orchestrator",
-    "canvasRenderer": "satellite_solar_visual_authority",
-    "assetRuntime": "sun_mount_runtime_authority",
-    "cssShell": "material_support_only",
-    "svgReference": "static_reference_fallback",
-    "previewHarness": "isolated_test_harness",
-    "gauges": "diagnostic_contract_verification"
-  },
-  "mountContract": {
-    "selector": "[data-dgb-sun-mount]",
-    "requiredMode": "canvas",
-    "requiredRuntimeGlobal": "DGBSunAssetRuntime",
-    "requiredCanvasGlobal": "DGBSunCanvas",
-    "requiredRootBootId": "root-sun-asset-b1",
-    "requiredCanvasVersion": "satellite-observational-solar-disc-b8",
-    "requiredRuntimeVersion": "sun-asset-runtime-satellite-b8",
-    "requiredVisibleStatus": "Sun asset active · satellite view"
-  },
-  "gaugeMarkers": {
-    "rootBootId": "root-sun-asset-b1",
-    "cockpitVersion": "root-compass-cockpit-b1",
-    "canopyVersion": "spine-canopy-parachute-b1",
-    "diagnosticRuntime": "spine-canopy-parachute-b6",
-    "sunVisualContract": "sun-visual-contract-b1",
-    "sunVisualProfile": "satellite-observational-solar-disc-b8"
-  },
-  "sourceMarkers": [
-    "root-sun-asset-b1",
-    "root-compass-cockpit-b1",
-    "spine-canopy-parachute-b1",
-    "spine-canopy-parachute-b6",
-    "sun-visual-contract-b1",
-    "satellite-observational-solar-disc",
-    "satellite-observational-solar-disc-b8"
-  ],
-  "validation": {
-    "sourceMarkerRequired": true,
-    "sourceMarkerPresent": true,
-    "expectedGaugeResultAfterRenewal": {
-      "source": 100,
-      "cockpitTruth": 100,
-      "driftRiskTarget": 0
+  "renderer": {
+    "type": "single-canvas-stellar-plasma-renderer",
+    "default_profile": "stellar-plasma-b7",
+    "frame_budget": {
+      "target_frame_ms": 72,
+      "min_frame_rate": 6,
+      "max_frame_rate": 14,
+      "mobile_dpr_cap": 1.25,
+      "desktop_dpr_cap": 1.6
+    },
+    "controls": {
+      "pause_resume": true,
+      "intensity": true,
+      "reset": true
     }
-  }
+  },
+  "diagnostics": {
+    "canvas_global": "window.DGBSunCanvas",
+    "runtime_global": "window.DGBSunAsset",
+    "mount_selector": "[data-dgb-sun-mount]",
+    "canvas_selector": "[data-dgb-sun-canvas]",
+    "status_attribute": "data-sun-runtime-status",
+    "version_attribute": "data-sun-asset-id"
+  },
+  "cache_version": "sun-asset-spine-b7"
 }

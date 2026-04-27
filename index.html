@@ -1,10 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" data-build="six-house-parts-full-tnt-v1">
+<html lang="en" data-build="index-generation-3-full-tnt-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Diamond Gate Bridge · Compass</title>
-  <meta name="description" content="Diamond Gate Bridge Compass: the first public reveal and view-control surface for Rich Manor and Estate." />
+  <meta
+    name="description"
+    content="Diamond Gate Bridge Compass: the Generation 3 first public reveal of Rich Manor and Estate, with Flat World locked as the verified 2D baseline."
+  />
   <link rel="stylesheet" href="/assets/manor.css" />
   <script src="/assets/page_registry.js" defer></script>
 </head>
@@ -27,6 +30,8 @@
   data-view-modes="flat round meta return"
   data-registry-version="1.0.0"
   data-view-mode="flat"
+  data-flat-world-baseline="locked"
+  data-generation="3"
 >
   <nav class="manor-route-rail" aria-label="Rich Manor house routes">
     <a href="/" aria-current="page">Compass</a>
@@ -38,56 +43,202 @@
   </nav>
 
   <main class="manor-shell">
-    <section class="manor-room" aria-label="Compass">
-      <p class="manor-kicker">H1 · Compass · View Control</p>
+    <section class="manor-room" aria-label="Generation 3 Compass">
+      <p class="manor-kicker">H1 · Compass · Generation 3 First Reveal</p>
+
       <h1 class="manor-title">Diamond Gate Bridge</h1>
+
       <p class="manor-lede">
-        You are arriving at Rich Manor and Estate. The house is the subject. The universe is the environment.
-        The Compass controls how you see and enter the estate.
+        Welcome to Rich Manor and Estate. The house is the subject. The universe is the environment.
+        The Compass controls how you see the house and where you enter next.
       </p>
 
       <div class="manor-divider"></div>
 
-      <section class="manor-stage" aria-label="Estate view selector">
+      <section class="manor-stage" aria-label="View selector">
         <p class="manor-kicker">Choose how you want to see the house.</p>
-        <h2 id="view-title">Flat · see the house clearly</h2>
-        <p id="view-copy" class="manor-lede">
-          Flat gives the clean 2D estate map: the fastest public route into Door, Home, Products, Showroom, and Gauges.
+
+        <h2 id="viewTitle">Flat World · verified 2D estate baseline</h2>
+
+        <p id="viewCopy" class="manor-lede">
+          Flat World is the current verified public website: six house parts, five product chambers,
+          nine planetary constructs, and Gauges live at 100.
         </p>
 
-        <div class="manor-view-selector manor-grid" role="group" aria-label="View modes">
+        <div class="manor-view-selector manor-grid" role="group" aria-label="Flat Round Meta view options">
           <button class="manor-card" type="button" data-mode="flat">
-            <span class="manor-kicker">Flat</span>
-            <strong>See the house clearly.</strong>
+            <p class="manor-kicker">Active Baseline</p>
+            <h2>Flat</h2>
+            <p class="manor-lede">
+              See the house clearly. This is the verified 2D public route map.
+            </p>
           </button>
+
           <button class="manor-card" type="button" data-mode="round">
-            <span class="manor-kicker">Round</span>
-            <strong>See how the house grows.</strong>
+            <p class="manor-kicker">Future Expansion</p>
+            <h2>Round</h2>
+            <p class="manor-lede">
+              Tree of Life / A Bug’s Life relational version. Available only as a controlled future expansion.
+            </p>
           </button>
+
           <button class="manor-card" type="button" data-mode="meta">
-            <span class="manor-kicker">Meta</span>
-            <strong>See the house inside the full universe.</strong>
+            <p class="manor-kicker">Future Expansion</p>
+            <h2>Meta</h2>
+            <p class="manor-lede">
+              Globe / metaverse version. Available only as a controlled future expansion.
+            </p>
           </button>
+        </div>
+
+        <section class="manor-proof-strip" aria-label="Flat World baseline proof" style="margin-top:18px">
+          <div class="manor-proof-item">
+            <strong>100</strong>
+            <span>House</span>
+          </div>
+          <div class="manor-proof-item">
+            <strong>100</strong>
+            <span>Products</span>
+          </div>
+          <div class="manor-proof-item">
+            <strong>100</strong>
+            <span>Planets</span>
+          </div>
+          <div class="manor-proof-item">
+            <strong>Live</strong>
+            <span>Gauges</span>
+          </div>
+        </section>
+
+        <p class="batch-note">
+          These numbers reflect the locked Flat World baseline. Use Gauges for the live served-site verification.
+        </p>
+      </section>
+
+      <section class="manor-stage" aria-label="Estate entry routes" style="margin-top:24px">
+        <p class="manor-kicker">Enter the estate</p>
+        <h2>The first public object is the house.</h2>
+        <p class="manor-lede">
+          The Compass is the first reveal. Door enters, Home receives, Products distributes,
+          Showroom proves, and Gauges verifies.
+        </p>
+
+        <div class="manor-grid">
+          <a class="manor-card" href="/door/">
+            <p class="manor-kicker">Entry</p>
+            <h2>Door</h2>
+            <p class="manor-lede">
+              Cross the gate and move from orientation into arrival.
+            </p>
+          </a>
+
+          <a class="manor-card" href="/home/">
+            <p class="manor-kicker">Arrival</p>
+            <h2>Home</h2>
+            <p class="manor-lede">
+              Enter the receiving hall and stabilize inside the Manor.
+            </p>
+          </a>
+
+          <a class="manor-card" href="/products/">
+            <p class="manor-kicker">Utility</p>
+            <h2>Products</h2>
+            <p class="manor-lede">
+              Move into the source-waterfall chamber and product wing.
+            </p>
+          </a>
+
+          <a class="manor-card" href="/showroom/">
+            <p class="manor-kicker">Proof</p>
+            <h2>Showroom</h2>
+            <p class="manor-lede">
+              See the public proof room and presentation layer.
+            </p>
+          </a>
+
+          <a class="manor-card" href="/gauges/">
+            <p class="manor-kicker">Verification</p>
+            <h2>Gauges</h2>
+            <p class="manor-lede">
+              Verify route health, product reachability, and planetary reachability.
+            </p>
+          </a>
+
+          <a class="manor-card" href="/nine-summits-of-love/">
+            <p class="manor-kicker">Summit</p>
+            <h2>Nine Summits of Love</h2>
+            <p class="manor-lede">
+              Visit the human-potential summit: 256 diamonds, 256 carats, written by this underdog.
+            </p>
+          </a>
         </div>
       </section>
 
-      <div class="manor-grid" style="margin-top:24px">
-        <a class="manor-card" href="/door/">
-          <p class="manor-kicker">Entry</p>
-          <h2>Door</h2>
-          <p class="manor-lede">Cross the gate and enter the estate.</p>
-        </a>
-        <a class="manor-card" href="/products/">
-          <p class="manor-kicker">Utility</p>
-          <h2>Products</h2>
-          <p class="manor-lede">Enter the source-waterfall chamber.</p>
-        </a>
-        <a class="manor-card" href="/showroom/">
-          <p class="manor-kicker">Proof</p>
-          <h2>Showroom</h2>
-          <p class="manor-lede">See public proof, receipts, and demonstration.</p>
-        </a>
-      </div>
+      <section class="manor-stage" aria-label="Flat World baseline" style="margin-top:24px">
+        <p class="manor-kicker">Flat World baseline locked</p>
+        <h2>World is flat means the verified 2D public website.</h2>
+        <p class="manor-lede">
+          When a visitor chooses Flat, this is the world they receive: the current estate map with
+          clear routes, canonical product chambers, hosted Frontier in Explore, hosted Upper Room in Big Laugh,
+          Nine Summits attached to the Manor, and Gauges as the live verification surface.
+        </p>
+
+        <div class="manor-grid">
+          <article class="manor-card">
+            <p class="manor-kicker">House</p>
+            <h2>Six house parts</h2>
+            <p class="manor-lede">Compass, Door, Home, Products, Showroom, and Gauges.</p>
+          </article>
+
+          <article class="manor-card">
+            <p class="manor-kicker">Products</p>
+            <h2>Five chambers</h2>
+            <p class="manor-lede">ARCHCOIN, Five Flags, On Your Side AAI, Education, and Nutrition.</p>
+          </article>
+
+          <article class="manor-card">
+            <p class="manor-kicker">Planets</p>
+            <h2>Nine constructs</h2>
+            <p class="manor-lede">Prelude, Explore, Frontier, Laws, Governance, Upper Room, About, and the two Nine Summits surfaces.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="manor-stage" aria-label="Future worlds" style="margin-top:24px">
+        <p class="manor-kicker">Future controlled expansions</p>
+        <h2>Round and Meta are next worlds, not false live claims.</h2>
+        <p class="manor-lede">
+          Round belongs if and only if it preserves the Flat World baseline while adding the Tree of Life /
+          A Bug’s Life relational layer. Meta belongs if and only if it preserves the Manor as the subject
+          while placing the house inside the globe-scale universe.
+        </p>
+
+        <div class="manor-grid">
+          <article class="manor-card">
+            <p class="manor-kicker">Round</p>
+            <h2>Tree Version</h2>
+            <p class="manor-lede">
+              Future organic relationship map. It grows from the verified Flat World baseline.
+            </p>
+          </article>
+
+          <article class="manor-card">
+            <p class="manor-kicker">Meta</p>
+            <h2>Globe Version</h2>
+            <p class="manor-lede">
+              Future metaverse-scale view. The universe frames the Manor; it does not replace it.
+            </p>
+          </article>
+
+          <article class="manor-card">
+            <p class="manor-kicker">Return</p>
+            <h2>Verification</h2>
+            <p class="manor-lede">
+              Every future expansion must return to Gauges, backlinks, and the locked route law.
+            </p>
+          </article>
+        </div>
+      </section>
     </section>
 
     <section class="manor-backlinks" aria-label="House backlinks">
@@ -102,14 +253,18 @@
     </section>
 
     <section class="manor-audit-strip" aria-label="Compass audit receipt">
-      <p class="manor-audit-title">Compass receipt</p>
+      <p class="manor-audit-title">Compass Generation 3 receipt</p>
       <ul class="manor-audit-list">
         <li class="manor-audit-chip pass">route-exists</li>
         <li class="manor-audit-chip pass">manor-skin</li>
         <li class="manor-audit-chip pass">house-class</li>
         <li class="manor-audit-chip pass">H1_COMPASS</li>
-        <li class="manor-audit-chip pass">flat-round-meta</li>
+        <li class="manor-audit-chip pass">flat-world-baseline</li>
+        <li class="manor-audit-chip pass">generation-3</li>
       </ul>
+      <p class="batch-note">
+        Index Generation 3 belongs if and only if it preserves the locked Flat World baseline and clarifies Compass as the first public reveal.
+      </p>
     </section>
   </main>
 
@@ -118,20 +273,21 @@
       "use strict";
 
       var body = document.body;
-      var title = document.getElementById("view-title");
-      var copy = document.getElementById("view-copy");
+      var title = document.getElementById("viewTitle");
+      var copy = document.getElementById("viewCopy");
+
       var modes = {
         flat: {
-          title: "Flat · see the house clearly",
-          copy: "Flat gives the clean 2D estate map: the fastest public route into Door, Home, Products, Showroom, and Gauges."
+          title: "Flat World · verified 2D estate baseline",
+          copy: "Flat World is the current verified public website: six house parts, five product chambers, nine planetary constructs, and Gauges live at 100."
         },
         round: {
-          title: "Round · see how the house grows",
-          copy: "Round shows roots, branches, chambers, product paths, and living relationships without losing the Manor anchor."
+          title: "Round World · future Tree of Life expansion",
+          copy: "Round World is the future Tree of Life / A Bug’s Life relational version. It belongs only when it preserves the verified Flat World baseline."
         },
         meta: {
-          title: "Meta · see the house inside the full universe",
-          copy: "Meta places the house inside the universe-scale field while keeping the Manor central and the planets attached."
+          title: "Meta World · future globe-scale expansion",
+          copy: "Meta World is the future globe / metaverse version. It belongs only when the Manor remains central and the universe stays environmental."
         }
       };
 

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="asset-wired-b9-true-final">
+<html lang="en" data-gauges-generation="live-audit-b1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>Gauges · Diamond Gate Bridge</title>
+  <title>Gauges · Live Site Audit · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared B9 instruments asset contract."
+    content="Gauges — the live site-health instrument room for Diamond Gate Bridge."
   />
 
   <style>
@@ -57,20 +57,6 @@
         radial-gradient(circle at 76% 16%,rgba(255,255,255,.70) 0 1.1px,transparent 2.2px),
         radial-gradient(circle at 88% 42%,rgba(255,255,255,.58) 0 1px,transparent 2px);
       background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      animation:fieldDrift 28s linear infinite;
-      z-index:0;
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.48),transparent 36%),
-        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.10),transparent 28%),
-        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.08),transparent 30%),
-        linear-gradient(180deg,rgba(5,12,28,.52),transparent 46%,rgba(255,151,72,.16));
       z-index:0;
     }
 
@@ -89,7 +75,8 @@
 
     .topbar,
     .instrumentRoom,
-    .routeShell{
+    .routeShell,
+    .auditPanel{
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
@@ -157,7 +144,8 @@
     .routeRail,
     .legend,
     .telemetry,
-    .receipt{
+    .receipt,
+    .auditList{
       list-style:none;
       margin:0;
       padding:0;
@@ -168,8 +156,6 @@
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
     }
-
-    .jumpItem{min-width:0}
 
     .jumpCard{
       min-height:84px;
@@ -183,15 +169,6 @@
       gap:12px;
       align-items:center;
       padding:12px;
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
-    }
-
-    .jumpCard:hover,
-    .jumpCard:focus-visible{
-      transform:translateY(-3px);
-      border-color:rgba(142,197,255,.40);
-      filter:brightness(1.12);
-      outline:none;
     }
 
     .jumpCard.active{
@@ -212,16 +189,12 @@
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
         radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
       overflow:hidden;
-      flex:0 0 auto;
     }
 
     .jumpCard.active .navCompass{
       background:
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
         radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
-      box-shadow:
-        inset 0 0 22px rgba(255,217,138,.16),
-        0 0 28px rgba(255,217,138,.18);
     }
 
     .navCompass::before{
@@ -245,10 +218,6 @@
       clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
       background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
       animation:needleSpin 8s linear infinite;
-    }
-
-    .jumpCard.active .navCompass::after{
-      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
     }
 
     .jumpText{
@@ -280,31 +249,10 @@
       gap:14px;
       overflow:hidden;
       position:relative;
-      isolation:isolate;
-    }
-
-    .instrumentRoom::before{
-      content:"";
-      position:absolute;
-      width:min(900px,96vw);
-      height:min(900px,96vw);
-      left:36%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.12),transparent 21%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.12),transparent 42%),
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 58%),
-        radial-gradient(circle at 50% 50%,rgba(255,111,120,.06),transparent 72%);
-      filter:blur(5px);
-      z-index:-2;
     }
 
     .engineerWall,
     .tedWall{
-      position:relative;
-      z-index:1;
       border:1px solid rgba(255,255,255,.10);
       border-radius:30px;
       background:
@@ -385,7 +333,8 @@
       font-size:.92rem;
     }
 
-    .statusChip{
+    .statusChip,
+    .refreshButton{
       border:1px solid rgba(147,239,189,.28);
       border-radius:999px;
       background:rgba(147,239,189,.08);
@@ -396,6 +345,11 @@
       letter-spacing:.12em;
       text-transform:uppercase;
       white-space:nowrap;
+    }
+
+    .refreshButton{
+      cursor:pointer;
+      font-family:inherit;
     }
 
     .gaugeGrid{
@@ -563,13 +517,9 @@
       margin:0;
     }
 
-    .telemetry,
-    .receipt{
+    .telemetry{
       display:grid;
       gap:2px;
-    }
-
-    .telemetry{
       border-top:1px solid rgba(255,255,255,.08);
       padding-top:6px;
       color:var(--soft);
@@ -598,12 +548,6 @@
       letter-spacing:.04em;
       text-transform:uppercase;
       min-width:0;
-    }
-
-    .legendSep,
-    .routeSep{
-      color:rgba(255,218,150,.62);
-      font-weight:900;
     }
 
     .dot{
@@ -656,24 +600,6 @@
       gap:6px;
     }
 
-    .plainCard.blue{
-      background:
-        radial-gradient(circle at 0% 0%,rgba(142,197,255,.10),transparent 54%),
-        rgba(255,255,255,.035);
-    }
-
-    .plainCard.green{
-      background:
-        radial-gradient(circle at 0% 0%,rgba(147,239,189,.10),transparent 54%),
-        rgba(255,255,255,.035);
-    }
-
-    .plainCard.purple{
-      background:
-        radial-gradient(circle at 0% 0%,rgba(202,168,255,.10),transparent 54%),
-        rgba(255,255,255,.035);
-    }
-
     .plainCard small{
       color:var(--gold);
       font-size:.60rem;
@@ -690,12 +616,14 @@
     }
 
     .plainCard p{
+      color:var(--muted);
       font-size:.88rem;
+      line-height:1.45;
       margin:0;
     }
 
-    .nextAction{
-      margin-top:auto;
+    .nextAction,
+    .auditPanel{
       border:1px solid rgba(255,217,138,.26);
       border-radius:22px;
       background:
@@ -706,7 +634,8 @@
       gap:9px;
     }
 
-    .nextAction h3{
+    .nextAction h3,
+    .auditPanel h2{
       margin:0;
       color:#fff;
       font-size:1.15rem;
@@ -716,9 +645,13 @@
 
     .nextAction p{
       margin:0;
+      color:var(--muted);
+      line-height:1.45;
     }
 
     .receipt{
+      display:grid;
+      gap:4px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
       background:rgba(0,0,0,.20);
@@ -730,6 +663,38 @@
       overflow:auto;
     }
 
+    .auditPanel{
+      border-radius:28px;
+    }
+
+    .auditList{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:8px;
+    }
+
+    .auditItem{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:16px;
+      background:rgba(255,255,255,.035);
+      padding:10px;
+      display:grid;
+      gap:4px;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.35;
+    }
+
+    .auditItem strong{
+      color:#fff;
+    }
+
+    .auditItem code{
+      color:var(--gold);
+      font-size:.74rem;
+      white-space:normal;
+    }
+
     .routeShell{
       border-radius:24px;
       padding:10px;
@@ -739,11 +704,6 @@
       display:grid;
       grid-template-columns:repeat(6,minmax(0,1fr));
       gap:8px;
-    }
-
-    .routeRail li{
-      display:grid;
-      min-width:0;
     }
 
     .routeRail a{
@@ -761,21 +721,12 @@
       text-align:center;
     }
 
-    .routeSep{
-      display:none;
-    }
-
-    .fallback{
+    .loading{
       border:1px solid rgba(255,255,255,.14);
       border-radius:22px;
       padding:16px;
       color:var(--muted);
       background:rgba(0,0,0,.22);
-    }
-
-    @keyframes fieldDrift{
-      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
-      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
     }
 
     @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -791,7 +742,7 @@
 
     @media(max-width:900px){
       .gaugeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .dial{width:min(100%,128px)}
+      .auditList{grid-template-columns:1fr}
     }
 
     @media(max-width:760px){
@@ -806,10 +757,6 @@
       .routeShell{
         border-radius:24px;
       }
-
-      .topbar{padding:12px}
-      .brand{gap:10px}
-      .mark{width:44px;height:44px;border-radius:14px}
 
       .jumpGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -838,14 +785,6 @@
         padding:12px;
       }
 
-      .engineerTitle h1,
-      .tedWall h1{
-        font-size:2.1rem;
-      }
-
-      .tedLead h2{font-size:2.2rem}
-      .tedLead .thesis{font-size:1rem}
-
       .gaugeGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
         gap:8px;
@@ -858,32 +797,11 @@
         gap:5px;
       }
 
-      .gaugeName strong{font-size:.72rem}
-      .gaugeValue{font-size:.82rem}
       .dial{width:min(100%,104px)}
-      .dialRead strong{font-size:.82rem}
-      .dialRead small{font-size:.40rem}
-
-      .gaugeMeaning{
-        min-height:28px;
-        font-size:.61rem;
-        line-height:1.20;
-      }
-
-      .telemetry{
-        font-size:.48rem;
-        line-height:1.12;
-      }
-
+      .gaugeMeaning{font-size:.61rem}
+      .telemetry{font-size:.48rem}
       .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
       .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media(max-width:390px){
-      .dial{width:min(100%,92px)}
-      .gaugeCard{min-height:158px}
-      .gaugeMeaning{font-size:.58rem}
-      .telemetry{font-size:.45rem}
     }
 
     @media(prefers-reduced-motion:reduce){
@@ -903,59 +821,135 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gauges-asset-wired-b9-true-final"
-    data-read-mode="shared-assets-instrument-consumer"
+    data-instrument-standard="live-site-audit-b1"
+    data-read-mode="calculated-from-current-page-evidence"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Gauges home">
         <span class="mark" aria-hidden="true"></span>
         <span class="brandText">
           <span class="kicker">Richie’s Manor ·</span>
-          <strong class="title">Gauges · True Instrument Room</strong>
+          <strong class="title">Gauges · Live Site Audit</strong>
         </span>
       </a>
 
       <nav aria-label="Primary compass jumps">
-        <ul class="jumpGrid" id="jumpGrid">
-          <li class="fallback">Loading compass jumps…</li>
+        <ul class="jumpGrid">
+          <li><a class="jumpCard" href="/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Jump ·</small><strong>Compass</strong></span></a></li>
+          <li><a class="jumpCard" href="/door/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Jump ·</small><strong>Door</strong></span></a></li>
+          <li><a class="jumpCard" href="/products/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Jump ·</small><strong>Products</strong></span></a></li>
+          <li><a class="jumpCard active" href="/gauges/"><span class="navCompass" aria-hidden="true"></span><span class="jumpText"><small>Active ·</small><strong>Gauges</strong></span></a></li>
         </ul>
       </nav>
     </header>
 
-    <section class="instrumentRoom" aria-label="Gauges true instrument room">
+    <section class="instrumentRoom" aria-label="Gauges live instrument room">
       <section class="engineerWall" aria-labelledby="engineerTitle">
         <div class="wallHeader">
           <div class="engineerTitle">
             <span class="pill">Engineer wall</span>
             <h1 id="engineerTitle">Telemetry</h1>
-            <p>Compact gauges, values, status states, and direct receipts.</p>
+            <p>Live scores calculated from current route, render, backlink, and marker evidence.</p>
           </div>
-          <div class="statusChip">SYSTEM_READ=ACTIVE</div>
+          <button class="refreshButton" id="refreshAudit" type="button">RUN_AUDIT</button>
         </div>
 
         <div class="gaugeGrid" id="gaugeGrid" aria-label="Engineer telemetry gauges">
-          <div class="fallback">Loading instrument assets…</div>
+          <div class="loading">Running live site audit…</div>
         </div>
 
-        <ul class="legend" id="legend" aria-label="Gauge color legend">
-          <li class="fallback">Loading legend…</li>
+        <ul class="legend" aria-label="Gauge color legend">
+          <li class="legendItem"><span class="dot" style="--tone:var(--green)" aria-hidden="true"></span><span>Healthy</span></li>
+          <li class="legendItem"><span class="dot" style="--tone:var(--gold)" aria-hidden="true"></span><span>Active</span></li>
+          <li class="legendItem"><span class="dot" style="--tone:var(--blue)" aria-hidden="true"></span><span>Proof</span></li>
+          <li class="legendItem"><span class="dot" style="--tone:var(--yellow)" aria-hidden="true"></span><span>Watch</span></li>
+          <li class="legendItem"><span class="dot" style="--tone:var(--red)" aria-hidden="true"></span><span>Break</span></li>
+          <li class="legendItem"><span class="dot" style="--tone:var(--purple)" aria-hidden="true"></span><span>Complex</span></li>
         </ul>
       </section>
 
       <aside class="tedWall" id="tedWall" aria-labelledby="tedTitle">
-        <div class="fallback">Loading TED read from instruments…</div>
+        <div class="tedLead">
+          <span class="pill">TED Talk read</span>
+          <h1 id="tedTitle">What the gauges mean.</h1>
+          <h2 class="thesis">The Gauges page no longer reports from memory. It calculates health from current page evidence.</h2>
+          <p id="auditSummary">Running the first live scan now.</p>
+        </div>
+
+        <div class="plainCards">
+          <article class="plainCard">
+            <small>Live route law ·</small>
+            <strong>Routes must answer.</strong>
+            <p>The audit checks whether each canonical destination returns usable same-origin content.</p>
+          </article>
+          <article class="plainCard">
+            <small>Live render law ·</small>
+            <strong>Pages must render as pages.</strong>
+            <p>The audit checks HTML shape, content length, raw-JS exposure, and current marker evidence.</p>
+          </article>
+          <article class="plainCard">
+            <small>Live product law ·</small>
+            <strong>Products must prove their rooms.</strong>
+            <p>Products, ARCHCOIN, AI, Education, Nutrition, Showroom, Upper Room, and Gauges are scored from their present deployed state.</p>
+          </article>
+        </div>
+
+        <section class="nextAction" aria-label="Next practical action">
+          <h3>Next practical move</h3>
+          <p id="nextMove">Wait for live audit results, then patch only the route that actually fails.</p>
+          <ul class="receipt" id="liveReceipt">
+            <li>SITE_AUDIT_STATUS=RUNNING</li>
+          </ul>
+        </section>
       </aside>
     </section>
 
+    <section class="auditPanel" aria-label="Live audit route receipts">
+      <h2>Live route receipts</h2>
+      <ul class="auditList" id="auditList">
+        <li class="loading">Awaiting route receipts…</li>
+      </ul>
+    </section>
+
     <nav class="routeShell" aria-label="Gauges route rail">
-      <ul class="routeRail" id="routeRail">
-        <li class="fallback">Loading routes…</li>
+      <ul class="routeRail">
+        <li><a href="/">Compass</a></li>
+        <li><a href="/door/">Door</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/showroom/">Showroom</a></li>
+        <li><a href="/products/archcoin/">Vault</a></li>
+        <li><a href="/big-laugh/upper-room/">Upper Room</a></li>
       </ul>
     </nav>
   </main>
 
   <script type="module">
-    const ASSET_URL = "/assets/instruments.js?v=gauges-b9-true-final";
+    import { runSiteAudit } from "/assets/site_audit.js?v=site-audit-b1";
+
+    const STATE_COLORS = {
+      healthy: "--green",
+      active: "--gold",
+      proof: "--blue",
+      watch: "--yellow",
+      break: "--red",
+      complex: "--purple"
+    };
+
+    const STATE_NEEDLES = {
+      active: 78,
+      healthy: 66,
+      proof: 54,
+      watch: 34,
+      complex: 20,
+      break: -22
+    };
+
+    const gaugeGrid = document.getElementById("gaugeGrid");
+    const auditSummary = document.getElementById("auditSummary");
+    const nextMove = document.getElementById("nextMove");
+    const liveReceipt = document.getElementById("liveReceipt");
+    const auditList = document.getElementById("auditList");
+    const refreshAudit = document.getElementById("refreshAudit");
 
     function escapeHTML(value) {
       return String(value ?? "")
@@ -966,54 +960,110 @@
         .replace(/'/g, "&#39;");
     }
 
-    function fallbackHTML(error) {
-      const message = error && error.message ? error.message : "Unknown instrument asset error.";
-      return '<div class="fallback">Instrument asset failed to load. ' + escapeHTML(message) + '</div>';
+    function renderGauge(gauge) {
+      const tone = STATE_COLORS[gauge.state] || "--green";
+      const needle = STATE_NEEDLES[gauge.state] ?? 50;
+
+      return `
+        <article class="gaugeCard${gauge.state === "active" ? " priority" : ""}" style="--tone:var(${tone});--needle:${needle}deg;">
+          <div class="gaugeTop">
+            <span class="gaugeName">
+              <small>${escapeHTML(gauge.id)} ·</small>
+              <strong>${escapeHTML(gauge.title)}</strong>
+            </span>
+            <span class="gaugeValue">${escapeHTML(gauge.value)}</span>
+          </div>
+          <div class="dial" aria-hidden="true">
+            <span class="needle"></span>
+            <span class="dialRead"><strong>${escapeHTML(gauge.value)}</strong><small>${escapeHTML(gauge.label)}</small></span>
+          </div>
+          <p class="gaugeMeaning">${escapeHTML(gauge.meaning)}</p>
+          <ul class="telemetry">
+            ${gauge.receipt.map((line) => `<li>${escapeHTML(line)}</li>`).join("")}
+          </ul>
+        </article>
+      `;
     }
 
-    async function bootGauges() {
-      const jumpGrid = document.getElementById("jumpGrid");
-      const gaugeGrid = document.getElementById("gaugeGrid");
-      const legend = document.getElementById("legend");
-      const tedWall = document.getElementById("tedWall");
-      const routeRail = document.getElementById("routeRail");
+    function renderRouteReceipt(route) {
+      const missingRequired = route.missingRequired && route.missingRequired.length
+        ? "MISSING_MARKERS=" + route.missingRequired.join(", ")
+        : "MISSING_MARKERS=NONE";
+
+      const missingBacklinks = route.missingBacklinks && route.missingBacklinks.length
+        ? "MISSING_BACKLINKS=" + route.missingBacklinks.join(", ")
+        : "MISSING_BACKLINKS=NONE";
+
+      return `
+        <li class="auditItem">
+          <strong>${escapeHTML(route.label)} · ${escapeHTML(route.score)}</strong>
+          <span>${escapeHTML(route.path)} · STATUS=${escapeHTML(route.status)} · RAW_JS=${escapeHTML(route.rawJs ? "TRUE" : "FALSE")}</span>
+          <code>${escapeHTML(missingRequired)}</code>
+          <code>${escapeHTML(missingBacklinks)}</code>
+        </li>
+      `;
+    }
+
+    function chooseNextMove(audit) {
+      const sorted = [...audit.readings].sort((a, b) => a.value - b.value);
+      const weakest = sorted[0];
+
+      if (!weakest) return "No live audit result available.";
+      if (weakest.value >= 96) return "All major gauges are in optimal range. Inspect visually before declaring final closure.";
+
+      return "Patch the weakest live gauge first: " + weakest.title + " at " + weakest.value + ". Do not patch unrelated pages.";
+    }
+
+    async function runAndRender() {
+      gaugeGrid.innerHTML = '<div class="loading">Running live site audit…</div>';
+      auditList.innerHTML = '<li class="loading">Fetching canonical routes…</li>';
+      liveReceipt.innerHTML = '<li>SITE_AUDIT_STATUS=RUNNING</li>';
+      refreshAudit.disabled = true;
+      refreshAudit.textContent = "RUNNING";
 
       try {
-        const instruments = await import(ASSET_URL);
+        const audit = await runSiteAudit();
 
-        const {
-          buildGaugeDashboardPacket,
-          renderGaugeJumpHTML,
-          renderGaugeRouteRailHTML,
-          renderGaugeCardHTML,
-          renderGaugeLegendHTML,
-          renderGaugeTedHTML
-        } = instruments;
+        gaugeGrid.innerHTML = audit.readings.map(renderGauge).join("");
+        auditList.innerHTML = audit.routes.map(renderRouteReceipt).join("");
 
-        const packet = buildGaugeDashboardPacket({ activePage: "gauges" });
+        auditSummary.textContent =
+          "Latest scan completed at " +
+          audit.completedAt +
+          ". System stability is " +
+          audit.scores.systemStability +
+          ". ARCHCOIN is " +
+          audit.scores.archcoinHealth +
+          ". Upper Room is " +
+          audit.scores.upperRoomEvents +
+          ".";
 
-        jumpGrid.innerHTML = [
-          renderGaugeJumpHTML("Compass", packet.routes.compass, false),
-          renderGaugeJumpHTML("Door", packet.routes.door, false),
-          renderGaugeJumpHTML("Products", packet.routes.products, false),
-          renderGaugeJumpHTML("Gauges", packet.routes.gauges, true)
-        ].join("\n");
+        nextMove.textContent = chooseNextMove(audit);
 
-        gaugeGrid.innerHTML = packet.readings.map(renderGaugeCardHTML).join("\n");
-        legend.innerHTML = renderGaugeLegendHTML(packet.colorStates);
-        tedWall.innerHTML = renderGaugeTedHTML(packet.tedRead);
-        routeRail.innerHTML = renderGaugeRouteRailHTML(packet.routes);
+        liveReceipt.innerHTML = [
+          audit.summary,
+          "ROUTE_INTEGRITY=" + audit.scores.routeIntegrity,
+          "BACKLINK_INTEGRITY=" + audit.scores.backlinkIntegrity,
+          "RENDER_STABILITY=" + audit.scores.renderStability,
+          "PRODUCT_CONNECTIVITY=" + audit.scores.productConnectivity,
+          "ARCHCOIN_HEALTH=" + audit.scores.archcoinHealth,
+          "UPPER_ROOM_EVENTS=" + audit.scores.upperRoomEvents
+        ].map((line) => `<li>${escapeHTML(line)}</li>`).join("");
       } catch (error) {
-        const fallback = fallbackHTML(error);
-        if (jumpGrid) jumpGrid.innerHTML = '<li>' + fallback + '</li>';
-        if (gaugeGrid) gaugeGrid.innerHTML = fallback;
-        if (legend) legend.innerHTML = '<li>' + fallback + '</li>';
-        if (tedWall) tedWall.innerHTML = fallback;
-        if (routeRail) routeRail.innerHTML = '<li>' + fallback + '</li>';
+        const message = error && error.message ? error.message : "Unknown audit failure.";
+        gaugeGrid.innerHTML = '<div class="loading">Live audit failed: ' + escapeHTML(message) + '</div>';
+        auditList.innerHTML = '<li class="loading">Audit failed.</li>';
+        liveReceipt.innerHTML = '<li>SITE_AUDIT_STATUS=FAILED | ERROR=' + escapeHTML(message) + '</li>';
+      } finally {
+        refreshAudit.disabled = false;
+        refreshAudit.textContent = "RUN_AUDIT";
       }
     }
 
-    bootGauges();
+    refreshAudit.addEventListener("click", runAndRender);
+    runAndRender();
+
+    window.setInterval(runAndRender, 60000);
   </script>
 </body>
 </html>

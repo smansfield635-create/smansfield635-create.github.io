@@ -1,32 +1,31 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="spinning-compass-instrument-room-b1">
+<html lang="en" data-gauges-generation="top-compass-diagnostic-wall-b2">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the site-health instrument room for Diamond Gate Bridge, reading route health, backlink health, render health, product health, and system stability."
+    content="Gauges — the fast site-health instrument room for Diamond Gate Bridge, showing route health, backlink health, render health, product health, and system stability at a glance."
   />
 
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#020610;
-      --bg1:#071225;
       --panel:rgba(7,14,28,.88);
       --panel2:rgba(10,20,42,.94);
       --line:rgba(255,218,150,.22);
-      --lineBlue:rgba(142,197,255,.26);
-      --lineGreen:rgba(147,239,189,.26);
+      --blueLine:rgba(142,197,255,.28);
+      --greenLine:rgba(147,239,189,.28);
       --text:#fff8ea;
       --muted:#c9d2ea;
-      --soft:rgba(201,210,234,.72);
+      --soft:rgba(201,210,234,.74);
       --gold:#ffd98a;
       --gold2:#f1b84d;
       --blue:#8ec5ff;
       --green:#93efbd;
       --ice:#d7e4ff;
+      --warn:#ffcf7a;
       --shadow:0 24px 80px rgba(0,0,0,.50);
       --max:1180px;
     }
@@ -87,12 +86,12 @@
       position:relative;
       z-index:1;
       display:grid;
-      grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
     .topbar,
-    .instrumentRoom,
+    .hero,
+    .dashboard,
     .routeRail{
       border:1px solid var(--line);
       background:
@@ -106,11 +105,8 @@
     .topbar{
       padding:14px;
       border-radius:28px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      display:grid;
       gap:14px;
-      flex-wrap:wrap;
     }
 
     .brand{
@@ -158,63 +154,139 @@
       line-height:1.05;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
+    .jumpGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
     }
 
-    .nav a,
-    .routeRail a,
-    .action{
-      min-height:40px;
-      display:inline-flex;
+    .jumpCard{
+      min-height:92px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.09),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
       align-items:center;
-      justify-content:center;
-      padding:10px 13px;
-      border-radius:999px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
+      padding:12px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .jumpCard:hover,
+    .jumpCard:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(142,197,255,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .jumpCard.active{
+      border-color:rgba(255,217,138,.56);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
+      box-shadow:0 0 24px rgba(255,217,138,.12);
+    }
+
+    .navCompass{
+      position:relative;
+      width:54px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
+      box-shadow:
+        inset 0 0 22px rgba(142,197,255,.10),
+        0 0 24px rgba(142,197,255,.10);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .jumpCard.active .navCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
+      box-shadow:
+        inset 0 0 22px rgba(255,217,138,.16),
+        0 0 28px rgba(255,217,138,.18);
+    }
+
+    .navCompass::before{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:
+        repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .navCompass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .jumpCard.active .navCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
+    }
+
+    .jumpText{
+      display:grid;
+      gap:4px;
+      min-width:0;
+    }
+
+    .jumpText small{
+      color:#c8d7ff;
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .nav a.featured,
-    .action.primary{
-      border-color:rgba(255,217,138,.52);
-      background:rgba(255,217,138,.12);
-      color:#fff8ea;
-      box-shadow:0 0 22px rgba(255,217,138,.14);
+    .jumpText strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.02;
+      letter-spacing:-.035em;
     }
 
-    .instrumentRoom{
+    .hero{
       border-radius:34px;
-      padding:clamp(18px,3vw,30px);
+      padding:clamp(20px,3.2vw,34px);
       display:grid;
-      grid-template-columns:minmax(0,.86fr) minmax(420px,1.14fr);
+      grid-template-columns:minmax(0,.9fr) minmax(360px,1.1fr);
       gap:18px;
-      min-height:0;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .instrumentRoom::before{
+    .hero::before{
       content:"";
       position:absolute;
-      width:min(820px,94vw);
-      height:min(820px,94vw);
-      left:74%;
+      width:min(780px,94vw);
+      height:min(780px,94vw);
+      left:72%;
       top:50%;
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
         radial-gradient(circle at 50% 50%,rgba(255,217,138,.18),transparent 21%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.13),transparent 42%),
         radial-gradient(circle at 50% 50%,rgba(147,239,189,.10),transparent 58%),
         radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
       filter:blur(5px);
@@ -223,7 +295,7 @@
 
     .copy{
       display:grid;
-      gap:14px;
+      gap:12px;
       align-content:center;
       min-width:0;
     }
@@ -257,7 +329,7 @@
     h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3.6rem,10vw,7rem);
+      font-size:clamp(3.3rem,9.4vw,6.6rem);
       line-height:.84;
       letter-spacing:-.08em;
     }
@@ -265,7 +337,7 @@
     h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.4rem,4.4vw,2.8rem);
+      font-size:clamp(1.32rem,4vw,2.55rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -273,222 +345,217 @@
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.58;
+      line-height:1.54;
       font-size:1rem;
     }
 
     .thesis{
       color:#fff;
-      font-size:clamp(1.12rem,2.25vw,1.52rem);
+      font-size:clamp(1.08rem,2.1vw,1.42rem);
       line-height:1.18;
       font-weight:850;
       letter-spacing:-.035em;
-      max-width:780px;
+      max-width:760px;
     }
 
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:2px;
-    }
-
-    .statusReceipt{
+    .speedBox{
       border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:rgba(0,0,0,.20);
+      border-radius:24px;
+      background:rgba(0,0,0,.18);
       padding:14px;
       display:grid;
-      gap:7px;
-      color:var(--soft);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.82rem;
-      line-height:1.42;
-      overflow:auto;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
     }
 
-    .wall{
-      position:relative;
-      min-height:620px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:32px;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.10),rgba(142,197,255,.045) 34%,rgba(0,0,0,0) 66%),
-        linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.014));
-      overflow:hidden;
-      display:grid;
-      place-items:center;
-    }
-
-    .wallRing{
-      position:absolute;
-      left:50%;
-      top:50%;
-      border-radius:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:none;
-      border:1px solid rgba(255,217,138,.12);
-      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
-    }
-
-    .wallRing.r1{
-      width:min(92%,590px);
-      aspect-ratio:1;
-      background:
-        radial-gradient(circle at 50% 50%,transparent 42%,rgba(255,217,138,.05) 43%,transparent 68%);
-      animation:wallSpin 54s linear infinite;
-    }
-
-    .wallRing.r2{
-      width:min(74%,470px);
-      aspect-ratio:1;
-      background:
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);
-      animation:wallSpin 42s linear infinite reverse;
-    }
-
-    .wallRing.r3{
-      width:min(54%,330px);
-      aspect-ratio:1;
-      background:radial-gradient(circle at 50% 50%,rgba(255,217,138,.06),transparent 52%);
-      animation:wallSpin 28s linear infinite;
-    }
-
-    .gaugeCore{
-      position:relative;
-      z-index:6;
-      width:min(36%,210px);
-      aspect-ratio:1;
-      border-radius:50%;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      filter:drop-shadow(0 24px 46px rgba(0,0,0,.38));
-    }
-
-    .compass{
-      position:relative;
-      width:100%;
-      aspect-ratio:1;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.20);
-      background:
-        radial-gradient(circle at 50% 16%,rgba(255,255,255,.44),transparent 12%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.34),rgba(241,184,77,.18) 46%,rgba(0,0,0,.22) 100%);
-      box-shadow:
-        inset 0 0 42px rgba(255,217,138,.18),
-        0 0 92px rgba(255,217,138,.22);
-      overflow:hidden;
-      display:grid;
-      place-items:center;
-    }
-
-    .compass::before{
-      content:"";
-      position:absolute;
-      inset:13%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.17);
-      background:
-        repeating-conic-gradient(
-          from 0deg,
-          transparent 0deg 12deg,
-          rgba(255,255,255,.10) 12deg 15deg,
-          transparent 15deg 30deg
-        );
-      animation:compassSpin 18s linear infinite;
-    }
-
-    .compass::after{
-      content:"";
-      position:absolute;
-      width:16%;
-      height:58%;
-      left:42%;
-      top:21%;
-      clip-path:polygon(50% 0%,100% 46%,58% 46%,58% 100%,42% 100%,42% 46%,0% 46%);
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,217,138,.72),rgba(255,255,255,.44));
-      filter:drop-shadow(0 0 12px rgba(255,217,138,.30));
-      transform-origin:50% 50%;
-      animation:needleSpin 9s linear infinite;
-    }
-
-    .compass span{
-      position:relative;
-      z-index:2;
-      color:#fff8ea;
-      font-weight:950;
-      font-size:.88rem;
-      letter-spacing:.10em;
-      line-height:1.16;
-      text-transform:uppercase;
-      text-shadow:0 2px 12px rgba(0,0,0,.72);
-    }
-
-    .gauge{
-      position:absolute;
-      z-index:7;
-      width:138px;
-      min-height:124px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 70%),
-        linear-gradient(180deg,rgba(7,14,28,.82),rgba(10,20,42,.92));
-      box-shadow:0 18px 38px rgba(0,0,0,.34);
-      display:grid;
-      align-content:center;
-      justify-items:center;
-      gap:8px;
+    .speedCell{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      background:rgba(255,255,255,.035);
       padding:12px;
-      cursor:pointer;
-      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
-      text-align:center;
+      display:grid;
+      gap:4px;
     }
 
-    .gauge:hover,
-    .gauge:focus-visible{
-      transform:translateY(-4px);
-      border-color:rgba(255,217,138,.40);
-      filter:brightness(1.12);
-      outline:none;
+    .speedCell small{
+      color:var(--soft);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:900;
     }
 
-    .gauge[data-active="true"]{
-      border-color:rgba(255,217,138,.50);
+    .speedCell strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .summaryBoard{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px;
+      align-content:center;
+    }
+
+    .summaryCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
       background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
-        linear-gradient(180deg,rgba(38,28,14,.92),rgba(7,14,28,.94));
-    }
-
-    .miniCompass{
+        radial-gradient(circle at 50% 0%,rgba(147,239,189,.08),transparent 70%),
+        rgba(255,255,255,.035);
+      min-height:116px;
+      padding:14px;
+      display:grid;
+      align-content:end;
+      gap:6px;
       position:relative;
-      width:58px;
-      aspect-ratio:1;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.16);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
-      box-shadow:
-        inset 0 0 22px rgba(142,197,255,.10),
-        0 0 24px rgba(142,197,255,.10);
       overflow:hidden;
     }
 
-    .miniCompass::before{
+    .summaryCard::before{
+      content:"";
+      position:absolute;
+      inset:16px;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(147,239,189,.16);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.12),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+      opacity:.58;
+      z-index:0;
+    }
+
+    .summaryCard.watch::before{
+      border-color:rgba(255,217,138,.20);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+    }
+
+    .summaryCard > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .summaryCard small{
+      color:#c8d7ff;
+      font-size:.60rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:950;
+    }
+
+    .summaryCard strong{
+      color:#fff;
+      font-size:1.08rem;
+      line-height:1.03;
+      letter-spacing:-.035em;
+    }
+
+    .summaryCard span{
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.34;
+    }
+
+    .dashboard{
+      border-radius:34px;
+      padding:clamp(16px,2.4vw,24px);
+      display:grid;
+      gap:14px;
+    }
+
+    .dashboardHead{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+
+    .dashboardHeadText{
+      display:grid;
+      gap:6px;
+      max-width:760px;
+    }
+
+    .dashboardHead h2{
+      color:#fff;
+    }
+
+    .diagnosticGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .diagnostic{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.020));
+      min-height:178px;
+      padding:14px;
+      display:grid;
+      align-content:start;
+      gap:10px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .diagnostic.gold{
+      border-color:rgba(255,217,138,.48);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.070),rgba(255,255,255,.020));
+    }
+
+    .diagTop{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
+
+    .diagCompass{
+      position:relative;
+      width:44px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.30),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),rgba(10,20,42,.82) 68%);
+      box-shadow:
+        inset 0 0 18px rgba(142,197,255,.10),
+        0 0 18px rgba(142,197,255,.08);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .diagnostic.gold .diagCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.38),rgba(60,40,16,.84) 68%);
+      box-shadow:
+        inset 0 0 18px rgba(255,217,138,.14),
+        0 0 22px rgba(255,217,138,.16);
+    }
+
+    .diagCompass::before{
       content:"";
       position:absolute;
       inset:17%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.11);
+      border:1px solid rgba(255,255,255,.10);
       background:
         repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
       animation:compassSpin 14s linear infinite;
     }
 
-    .miniCompass::after{
+    .diagCompass::after{
       content:"";
       position:absolute;
       width:14%;
@@ -500,92 +567,72 @@
       animation:needleSpin 8s linear infinite;
     }
 
-    .gauge.gold .miniCompass{
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.36),rgba(60,40,16,.84) 68%);
-      box-shadow:
-        inset 0 0 22px rgba(255,217,138,.14),
-        0 0 28px rgba(255,217,138,.16);
+    .diagnostic.gold .diagCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
     }
 
-    .gauge.gold .miniCompass::after{
-      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.72));
+    .diagTitle{
+      display:grid;
+      gap:2px;
+      min-width:0;
     }
 
-    .gauge small{
+    .diagTitle small{
       color:#c8d7ff;
-      font-size:.58rem;
+      font-size:.56rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .gauge strong{
+    .diagTitle strong{
       color:#fff;
-      font-size:.93rem;
-      line-height:1.03;
-      letter-spacing:-.03em;
+      font-size:1rem;
+      line-height:1.04;
+      letter-spacing:-.035em;
     }
 
-    .gauge.north{left:50%;top:18px;transform:translateX(-50%)}
-    .gauge.northeast{right:48px;top:78px}
-    .gauge.east{right:18px;top:50%;transform:translateY(-50%)}
-    .gauge.southeast{right:48px;bottom:78px}
-    .gauge.south{left:50%;bottom:18px;transform:translateX(-50%)}
-    .gauge.southwest{left:48px;bottom:78px}
-    .gauge.west{left:18px;top:50%;transform:translateY(-50%)}
-    .gauge.northwest{left:48px;top:78px}
+    .state{
+      width:fit-content;
+      border:1px solid rgba(147,239,189,.22);
+      border-radius:999px;
+      background:rgba(147,239,189,.07);
+      color:#dfffea;
+      padding:6px 9px;
+      font-size:.60rem;
+      font-weight:950;
+      letter-spacing:.11em;
+      text-transform:uppercase;
+    }
 
-    .gauge.north:hover,.gauge.north:focus-visible{transform:translateX(-50%) translateY(-4px)}
-    .gauge.east:hover,.gauge.east:focus-visible{transform:translateY(calc(-50% - 4px))}
-    .gauge.south:hover,.gauge.south:focus-visible{transform:translateX(-50%) translateY(-4px)}
-    .gauge.west:hover,.gauge.west:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .state.watch{
+      border-color:rgba(255,217,138,.28);
+      background:rgba(255,217,138,.08);
+      color:#ffe0a3;
+    }
 
-    .readout{
-      position:absolute;
-      left:18px;
-      right:18px;
-      bottom:18px;
-      z-index:9;
+    .state.proof{
+      border-color:rgba(142,197,255,.26);
+      background:rgba(142,197,255,.08);
+      color:#d8e9ff;
+    }
+
+    .diagnostic p{
+      font-size:.84rem;
+      line-height:1.38;
+      color:var(--muted);
+    }
+
+    .diagReceipt{
+      margin-top:auto;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:9px;
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(220px,.40fr);
-      gap:12px;
-      pointer-events:none;
-    }
-
-    .readCard{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:20px;
-      background:rgba(3,8,18,.72);
-      box-shadow:0 18px 38px rgba(0,0,0,.30);
-      padding:14px;
-      display:grid;
-      gap:7px;
-      backdrop-filter:blur(10px);
-      -webkit-backdrop-filter:blur(10px);
-    }
-
-    .readCard h3{
-      margin:0;
-      color:#fff;
-      font-size:clamp(1.1rem,2.1vw,1.45rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .readCard p{
-      font-size:.92rem;
-      line-height:1.44;
-    }
-
-    .miniReceipt{
-      display:grid;
-      gap:6px;
+      gap:4px;
       color:var(--soft);
-      font-size:.80rem;
-      line-height:1.32;
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.70rem;
+      line-height:1.30;
     }
 
     .routeRail{
@@ -607,11 +654,6 @@
       to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
     }
 
-    @keyframes wallSpin{
-      from{transform:translate(-50%,-50%) rotate(0deg)}
-      to{transform:translate(-50%,-50%) rotate(360deg)}
-    }
-
     @keyframes compassSpin{
       from{transform:rotate(0deg)}
       to{transform:rotate(360deg)}
@@ -623,12 +665,12 @@
     }
 
     @media(max-width:1080px){
-      .instrumentRoom{
+      .hero{
         grid-template-columns:1fr;
       }
 
-      .wall{
-        min-height:660px;
+      .diagnosticGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
       .routeRail{
@@ -636,14 +678,15 @@
       }
     }
 
-    @media(max-width:720px){
+    @media(max-width:740px){
       .page{
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
       .topbar,
-      .instrumentRoom,
+      .hero,
+      .dashboard,
       .routeRail{
         border-radius:24px;
       }
@@ -658,89 +701,27 @@
         border-radius:14px;
       }
 
-      .nav{
-        width:100%;
-        justify-content:stretch;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
+      .jumpGrid{
+        grid-template-columns:1fr;
       }
 
-      .nav a{width:100%}
+      .jumpCard{
+        min-height:76px;
+      }
 
-      .instrumentRoom{
+      .hero{
         padding:18px;
       }
 
-      .actions{
-        display:grid;
-        grid-template-columns:1fr;
-      }
-
-      .action{width:100%}
-
-      .wall{
-        min-height:auto;
-        display:grid;
-        gap:10px;
-        padding:14px;
-      }
-
-      .wallRing{
-        display:none;
-      }
-
-      .gaugeCore{
-        position:relative;
-        width:170px;
-        margin:0 auto;
-      }
-
-      .gauge,
-      .gauge.north,
-      .gauge.northeast,
-      .gauge.east,
-      .gauge.southeast,
-      .gauge.south,
-      .gauge.southwest,
-      .gauge.west,
-      .gauge.northwest{
-        position:relative;
-        left:auto;
-        right:auto;
-        top:auto;
-        bottom:auto;
-        transform:none;
-        width:100%;
-        min-height:98px;
-        grid-template-columns:auto 1fr;
-        justify-items:start;
-        text-align:left;
-      }
-
-      .gauge:hover,
-      .gauge:focus-visible,
-      .gauge.north:hover,
-      .gauge.north:focus-visible,
-      .gauge.east:hover,
-      .gauge.east:focus-visible,
-      .gauge.south:hover,
-      .gauge.south:focus-visible,
-      .gauge.west:hover,
-      .gauge.west:focus-visible{
-        transform:translateY(-4px);
-      }
-
-      .readout{
-        position:relative;
-        left:auto;
-        right:auto;
-        bottom:auto;
-        grid-template-columns:1fr;
-        margin-top:4px;
-      }
-
+      .speedBox,
+      .summaryBoard,
+      .diagnosticGrid,
       .routeRail{
         grid-template-columns:1fr;
+      }
+
+      .routeRail a{
+        width:100%;
       }
     }
 
@@ -761,7 +742,7 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gold-active-page-compass"
+    data-instrument-standard="top-compass-fast-read"
     data-products-route="/products/"
     data-showroom-route="/showroom/"
     data-vault-route="/products/archcoin/"
@@ -776,112 +757,233 @@
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a href="/products/">Products</a>
-        <a class="featured" href="/gauges/">Gauges</a>
+      <nav class="jumpGrid" aria-label="Primary compass jumps">
+        <a class="jumpCard" href="/" aria-label="Compass">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Jump</small>
+            <strong>Compass</strong>
+          </span>
+        </a>
+
+        <a class="jumpCard" href="/door/" aria-label="Door">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Jump</small>
+            <strong>Door</strong>
+          </span>
+        </a>
+
+        <a class="jumpCard" href="/products/" aria-label="Products">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Jump</small>
+            <strong>Products</strong>
+          </span>
+        </a>
+
+        <a class="jumpCard active" href="/gauges/" aria-label="Gauges">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Active</small>
+            <strong>Gauges</strong>
+          </span>
+        </a>
       </nav>
     </header>
 
-    <section class="instrumentRoom" aria-labelledby="gaugesTitle">
+    <section class="hero" aria-labelledby="gaugesTitle">
       <div class="copy">
-        <span class="pill">Site-health instrument room</span>
+        <span class="pill">Fast site-health read</span>
         <h1 id="gaugesTitle">Gauges</h1>
-        <h2>The control wall for the whole site.</h2>
+        <h2>Speed, efficiency, optimum nature.</h2>
         <p class="thesis">
-          Gauges reads the health of the Manor: routes, backlinks, render surfaces, products, vault, showroom, events, and system stability.
+          Gauges should show where the Manor stands without forcing a one-by-one click path.
         </p>
         <p>
-          The gold compass marks the page we are on. Supporting compasses read the surrounding systems without competing for the center.
+          The top compasses are the fast jump layer. The gold compass marks the current page. The diagnostic wall below shows all major system reads at once.
         </p>
 
-        <div class="actions">
-          <a class="action primary" href="/gauges/">Read Gauges</a>
-          <a class="action" href="/products/">Products</a>
-          <a class="action" href="/showroom/">Showroom</a>
-        </div>
-
-        <div class="statusReceipt" aria-label="Gauges status receipt">
-GAUGES_PAGE=ACTIVE
-ACTIVE_PAGE_COMPASS=GOLD
-ROLE=SITE_HEALTH_INSTRUMENT_ROOM
-READS=ROUTES,BACKLINKS,RENDER,PRODUCTS,SHOWROOM,VAULT,EVENTS,STABILITY
-STANDARD=PAGE_RELATIVE_GOLD_COMPASS
+        <div class="speedBox" aria-label="Gauges standard">
+          <div class="speedCell">
+            <small>Speed</small>
+            <strong>Top jumps visible.</strong>
+          </div>
+          <div class="speedCell">
+            <small>Efficiency</small>
+            <strong>No click dependency.</strong>
+          </div>
+          <div class="speedCell">
+            <small>Optimum</small>
+            <strong>Status at a glance.</strong>
+          </div>
         </div>
       </div>
 
-      <div class="wall" aria-label="Spinning compass gauge wall">
-        <div class="wallRing r1" aria-hidden="true"></div>
-        <div class="wallRing r2" aria-hidden="true"></div>
-        <div class="wallRing r3" aria-hidden="true"></div>
+      <div class="summaryBoard" aria-label="Immediate site summary">
+        <article class="summaryCard">
+          <small>Routes</small>
+          <strong>Primary movement visible.</strong>
+          <span>Compass, Door, Products, and Gauges are available immediately.</span>
+        </article>
 
-        <div class="gaugeCore" aria-hidden="true">
-          <div class="compass"><span>Gauges<br>Health<br>Read</span></div>
+        <article class="summaryCard">
+          <small>Backlinks</small>
+          <strong>Product routes unified.</strong>
+          <span>Many jump-off points should resolve to one canonical destination.</span>
+        </article>
+
+        <article class="summaryCard watch">
+          <small>Watch</small>
+          <strong>Bridge pages remain important.</strong>
+          <span>Duplicate paths should stay bridge-only, not competing product bodies.</span>
+        </article>
+
+        <article class="summaryCard">
+          <small>Surface</small>
+          <strong>Gauges page active.</strong>
+          <span>Gold compass correctly belongs to this page.</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="dashboard" aria-labelledby="dashboardTitle">
+      <div class="dashboardHead">
+        <div class="dashboardHeadText">
+          <span class="pill">Diagnostic wall</span>
+          <h2 id="dashboardTitle">All gauges visible.</h2>
+          <p>Core status is visible without opening individual cards. Interaction can come later; the first read must already work.</p>
         </div>
+      </div>
 
-        <button class="gauge gold north" type="button" data-gauge="gauges" data-active="true">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Active Page</small>
-          <strong>Gauges</strong>
-        </button>
-
-        <button class="gauge northeast" type="button" data-gauge="routes" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Route Health</small>
-          <strong>Routes</strong>
-        </button>
-
-        <button class="gauge east" type="button" data-gauge="backlinks" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Backlink Health</small>
-          <strong>Backlinks</strong>
-        </button>
-
-        <button class="gauge southeast" type="button" data-gauge="render" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Render Health</small>
-          <strong>Render</strong>
-        </button>
-
-        <button class="gauge south" type="button" data-gauge="products" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Product Health</small>
-          <strong>Products</strong>
-        </button>
-
-        <button class="gauge southwest" type="button" data-gauge="vault" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Vault Health</small>
-          <strong>ARCHCOIN</strong>
-        </button>
-
-        <button class="gauge west" type="button" data-gauge="showroom" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>Showroom Health</small>
-          <strong>Showroom</strong>
-        </button>
-
-        <button class="gauge northwest" type="button" data-gauge="stability" data-active="false">
-          <span class="miniCompass" aria-hidden="true"></span>
-          <small>System Health</small>
-          <strong>Stability</strong>
-        </button>
-
-        <div class="readout" aria-live="polite">
-          <article class="readCard">
-            <h3 id="readTitle">Gauges is the active instrument page.</h3>
-            <p id="readCopy">
-              The gold compass belongs to Gauges because this is the page being read. Everything else is a supporting instrument.
-            </p>
-          </article>
-
-          <article class="readCard miniReceipt" id="readReceipt">
-            <span>ACTIVE=Gauges</span>
+      <div class="diagnosticGrid" aria-label="Visible diagnostic gauges">
+        <article class="diagnostic gold">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Active Page</small>
+              <strong>Gauges</strong>
+            </span>
+          </div>
+          <span class="state">Active</span>
+          <p>The current page is the instrument room. Gold marks the active page-relative compass.</p>
+          <div class="diagReceipt">
             <span>COLOR=Gold</span>
-            <span>READ=Whole-site health surface</span>
-          </article>
-        </div>
+            <span>READ=Current page identity</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Route Health</small>
+              <strong>Routes</strong>
+            </span>
+          </div>
+          <span class="state proof">Visible</span>
+          <p>Primary routes are exposed at the top and repeated in the rail.</p>
+          <div class="diagReceipt">
+            <span>CHECK=Compass,Door,Products,Gauges</span>
+            <span>NEXT=Keep top route count low</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Backlink Health</small>
+              <strong>Backlinks</strong>
+            </span>
+          </div>
+          <span class="state">Unified</span>
+          <p>Product backlinks now follow the one-destination rule.</p>
+          <div class="diagReceipt">
+            <span>RULE=Many jump-off points</span>
+            <span>DESTINATION=One product body</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Render Health</small>
+              <strong>Render</strong>
+            </span>
+          </div>
+          <span class="state proof">Inspect</span>
+          <p>The visible surface should match the room: compact instruments, no long forced click path.</p>
+          <div class="diagReceipt">
+            <span>CHECK=Mobile readability</span>
+            <span>NEXT=Verify live page display</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Product Health</small>
+              <strong>Products</strong>
+            </span>
+          </div>
+          <span class="state">Connected</span>
+          <p>Products is the source chamber for ARCHCOIN, Five Flags, On Your Side AI, ESL, and Nutrition.</p>
+          <div class="diagReceipt">
+            <span>CHECK=/products/</span>
+            <span>STANDARD=Canonical destinations</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Vault Health</small>
+              <strong>ARCHCOIN</strong>
+            </span>
+          </div>
+          <span class="state watch">Watch</span>
+          <p>Vault should remain the protected financial-template route, not a loose duplicate route.</p>
+          <div class="diagReceipt">
+            <span>CHECK=/products/archcoin/</span>
+            <span>NEXT=Confirm vault visual standard</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>Showroom Health</small>
+              <strong>Showroom</strong>
+            </span>
+          </div>
+          <span class="state proof">Proof</span>
+          <p>Showroom remains the public proof surface and should keep returning to Products and Gauges.</p>
+          <div class="diagReceipt">
+            <span>CHECK=/showroom/</span>
+            <span>NEXT=Keep proof room readable</span>
+          </div>
+        </article>
+
+        <article class="diagnostic">
+          <div class="diagTop">
+            <span class="diagCompass" aria-hidden="true"></span>
+            <span class="diagTitle">
+              <small>System Health</small>
+              <strong>Stability</strong>
+            </span>
+          </div>
+          <span class="state">Stable</span>
+          <p>Page-relative gold, compact navigation, canonical routes, and visible diagnostics are aligned.</p>
+          <div class="diagReceipt">
+            <span>READ=Coherent</span>
+            <span>NEXT=Optimize individual rooms</span>
+          </div>
+        </article>
       </div>
     </section>
 
@@ -894,117 +996,5 @@ STANDARD=PAGE_RELATIVE_GOLD_COMPASS
       <a href="/big-laugh/upper-room/">Upper Room</a>
     </nav>
   </main>
-
-  <script>
-    (() => {
-      "use strict";
-
-      const reads = {
-        gauges: {
-          title: "Gauges is the active instrument page.",
-          copy: "The gold compass belongs to Gauges because this is the page being read. Everything else is a supporting instrument.",
-          receipt: [
-            "ACTIVE=Gauges",
-            "COLOR=Gold",
-            "READ=Whole-site health surface"
-          ]
-        },
-        routes: {
-          title: "Routes measure whether movement stays lawful.",
-          copy: "Route Health watches whether the main paths still take visitors where the Manor says they should go.",
-          receipt: [
-            "INSTRUMENT=Route Health",
-            "CHECK=Compass,Door,Products,Showroom,Gauges",
-            "STATUS=Supporting compass"
-          ]
-        },
-        backlinks: {
-          title: "Backlinks measure whether doors return correctly.",
-          copy: "Backlink Health watches product jump paths, bridge pages, parent returns, and duplicate-route cleanup.",
-          receipt: [
-            "INSTRUMENT=Backlink Health",
-            "CHECK=Many jump-off points, one destination",
-            "STATUS=Supporting compass"
-          ]
-        },
-        render: {
-          title: "Render health measures what actually appears.",
-          copy: "Render Health watches whether the visible page matches the intended room: no dead surfaces, no hidden drift, no broken presentation.",
-          receipt: [
-            "INSTRUMENT=Render Health",
-            "CHECK=Visible surface and motion",
-            "STATUS=Supporting compass"
-          ]
-        },
-        products: {
-          title: "Products health measures the source chamber.",
-          copy: "Product Health watches ARCHCOIN, Five Flags, On Your Side AI, ESL Traversal Learning, and Baseline Nutrition Systems.",
-          receipt: [
-            "INSTRUMENT=Product Health",
-            "CHECK=Canonical product destinations",
-            "STATUS=Supporting compass"
-          ]
-        },
-        vault: {
-          title: "Vault health measures ARCHCOIN.",
-          copy: "Vault Health watches whether ARCHCOIN remains connected as the protected value chamber and financial template route.",
-          receipt: [
-            "INSTRUMENT=Vault Health",
-            "CHECK=/products/archcoin/",
-            "STATUS=Supporting compass"
-          ]
-        },
-        showroom: {
-          title: "Showroom health measures the proof surface.",
-          copy: "Showroom Health watches whether the public proof room still anchors the larger estate and returns correctly to Products and Gauges.",
-          receipt: [
-            "INSTRUMENT=Showroom Health",
-            "CHECK=/showroom/",
-            "STATUS=Supporting compass"
-          ]
-        },
-        stability: {
-          title: "System stability measures the whole Manor.",
-          copy: "System Health watches whether page-relative gold, canonical routes, bridge pages, and room identity remain coherent.",
-          receipt: [
-            "INSTRUMENT=System Stability",
-            "CHECK=Coherence across the Manor",
-            "STATUS=Supporting compass"
-          ]
-        }
-      };
-
-      const gauges = Array.from(document.querySelectorAll(".gauge"));
-      const readTitle = document.getElementById("readTitle");
-      const readCopy = document.getElementById("readCopy");
-      const readReceipt = document.getElementById("readReceipt");
-
-      function setGauge(key) {
-        const read = reads[key] || reads.gauges;
-
-        gauges.forEach((gauge) => {
-          gauge.dataset.active = gauge.dataset.gauge === key ? "true" : "false";
-        });
-
-        if (readTitle) readTitle.textContent = read.title;
-        if (readCopy) readCopy.textContent = read.copy;
-
-        if (readReceipt) {
-          readReceipt.replaceChildren();
-          read.receipt.forEach((line) => {
-            const span = document.createElement("span");
-            span.textContent = line;
-            readReceipt.appendChild(span);
-          });
-        }
-      }
-
-      gauges.forEach((gauge) => {
-        gauge.addEventListener("click", () => {
-          setGauge(gauge.dataset.gauge || "gauges");
-        });
-      });
-    })();
-  </script>
 </body>
 </html>

@@ -1,27 +1,21 @@
 <!doctype html>
 <!-- TNT RENEWAL — /big-laugh/upper-room/index.html
-     UPPER ROOM · RICHIE MANOR EVENTS RAFFLE · B2
+     UPPER ROOM · VAULT BACKLINK CORRECTION · B3
 
      RESULT:
        - Correct target file: /big-laugh/upper-room/index.html
-       - Renews the existing Upper Room page instead of creating a separate /upper-room page.
-       - Keeps the public event-room delivery.
-       - Adds Richie's Manor / attic / upper-room place language.
-       - Adds title, venue, address, and $1 admission.
-       - Adds fill-your-cup hook.
-       - Adds four weeks / eight shows model.
-       - Adds fresh-room explanation.
-       - Adds raffles, prizes, and raffle-ticket mechanics.
-       - Adds official raffle rules / eligibility safety line.
-       - Keeps Products and Showroom routes.
-       - No graphics box.
+       - Preserves the current Upper Room delivery.
+       - Connects Vault Chamber backlinks to /products/archcoin/.
+       - Keeps Products as /products/.
+       - Keeps Showroom as /showroom/.
+       - Keeps Compass as /.
+       - Keeps About This Underdog as the origin/story route only.
+       - No graphic box.
        - No generated image.
        - No external image.
-       - No route dump.
-       - No encyclopedia layout.
 -->
 
-<html lang="en" data-page="big-laugh-upper-room" data-generation="upper-room-richie-manor-events-raffle-b2">
+<html lang="en" data-page="big-laugh-upper-room" data-generation="upper-room-vault-backlink-correction-b3">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
@@ -34,9 +28,7 @@
   <style>
     *{box-sizing:border-box}
 
-    html{
-      scroll-behavior:smooth;
-    }
+    html{scroll-behavior:smooth}
 
     html,body{
       margin:0;
@@ -48,10 +40,7 @@
       overflow-x:hidden;
     }
 
-    a{
-      color:inherit;
-      text-decoration:none;
-    }
+    a{color:inherit;text-decoration:none}
 
     :root{
       --ink:rgba(255,255,255,.96);
@@ -124,9 +113,7 @@
       gap:16px;
     }
 
-    .hero,
-    .stage,
-    .routeRail{
+    .hero,.stage,.routeRail{
       border:1px solid var(--line);
       border-radius:30px;
       background:
@@ -139,9 +126,7 @@
       overflow:hidden;
     }
 
-    .hero::before,
-    .stage::before,
-    .routeRail::before{
+    .hero::before,.stage::before,.routeRail::before{
       content:"";
       position:absolute;
       inset:0;
@@ -160,12 +145,7 @@
       align-items:center;
     }
 
-    .heroCopy,
-    .heroCard,
-    .stageContent{
-      position:relative;
-      z-index:2;
-    }
+    .heroCopy,.heroCard,.stageContent{position:relative;z-index:2}
 
     .brandRow{
       display:flex;
@@ -295,8 +275,7 @@
       margin-top:24px;
     }
 
-    .heroButton,
-    .routeLink{
+    .heroButton,.routeLink{
       min-height:48px;
       display:inline-grid;
       place-items:center;
@@ -310,18 +289,14 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .heroButton:hover,
-    .heroButton:focus-visible,
-    .routeLink:hover,
-    .routeLink:focus-visible{
+    .heroButton:hover,.heroButton:focus-visible,.routeLink:hover,.routeLink:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(255,217,138,.56);
       background:rgba(255,217,138,.065);
       outline:none;
     }
 
-    .heroButton.primary,
-    .routeLink.gold{
+    .heroButton.primary,.routeLink.gold{
       border-color:rgba(255,217,138,.52);
       background:
         radial-gradient(circle at 50% 50%,rgba(255,217,138,.18),transparent 64%),
@@ -331,8 +306,7 @@
       overflow:hidden;
     }
 
-    .heroButton.primary::after,
-    .routeLink.gold::after{
+    .heroButton.primary::after,.routeLink.gold::after{
       content:"";
       position:absolute;
       inset:0;
@@ -462,9 +436,7 @@
       -webkit-tap-highlight-color:transparent;
     }
 
-    .doll summary::-webkit-details-marker{
-      display:none;
-    }
+    .doll summary::-webkit-details-marker{display:none}
 
     .dollTag{
       color:var(--gold);
@@ -549,9 +521,7 @@
       line-height:1.58;
     }
 
-    .raffleList li{
-      margin:7px 0;
-    }
+    .raffleList li{margin:7px 0}
 
     .prizeBox{
       border:1px solid rgba(255,217,138,.28);
@@ -562,9 +532,7 @@
       gap:8px;
     }
 
-    .prizeBox strong{
-      color:var(--gold);
-    }
+    .prizeBox strong{color:var(--gold)}
 
     .continueLink{
       display:grid;
@@ -578,8 +546,7 @@
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
-    .continueLink:hover,
-    .continueLink:focus-visible{
+    .continueLink:hover,.continueLink:focus-visible{
       transform:translateY(-2px);
       border-color:rgba(255,217,138,.50);
       background:rgba(255,217,138,.055);
@@ -605,7 +572,7 @@
 
     .routeRail{
       display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
       padding:12px;
     }
@@ -617,58 +584,22 @@
     }
 
     @media(max-width:980px){
-      .hero{
-        grid-template-columns:1fr;
-        min-height:auto;
-      }
-
-      .dollGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
+      .hero{grid-template-columns:1fr;min-height:auto}
+      .dollGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media(max-width:680px){
-      .page{
-        width:min(100% - 20px,var(--max));
-        padding-top:10px;
-      }
-
-      .hero,
-      .stage,
-      .routeRail{
-        border-radius:24px;
-      }
-
-      .hero{
-        padding:22px;
-      }
-
-      .heroActions{
-        display:grid;
-        grid-template-columns:1fr;
-      }
-
-      .dollGrid,
-      .miniGrid{
-        grid-template-columns:1fr;
-      }
-
-      .doll summary{
-        min-height:auto;
-      }
-
-      .routeRail{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
+      .page{width:min(100% - 20px,var(--max));padding-top:10px}
+      .hero,.stage,.routeRail{border-radius:24px}
+      .hero{padding:22px}
+      .heroActions{display:grid;grid-template-columns:1fr}
+      .dollGrid,.miniGrid{grid-template-columns:1fr}
+      .doll summary{min-height:auto}
     }
 
     @media(prefers-reduced-motion:reduce){
-      .stageLight,
-      .stageLight::before,
-      .heroButton.primary::after,
-      .routeLink.gold::after{
-        animation:none;
-      }
+      .stageLight,.stageLight::before,.heroButton.primary::after,.routeLink.gold::after{animation:none}
     }
   </style>
 </head>
@@ -677,10 +608,11 @@
   <main
     class="page"
     data-backlink-root="upper-room"
-    data-backlink-version="richie-manor-events-raffle-b2"
-    data-existing-full-route="/big-laugh/upper-room/"
+    data-backlink-version="upper-room-vault-backlink-correction-b3"
+    data-vault-route="/products/archcoin/"
     data-products-route="/products/"
     data-showroom-route="/showroom/"
+    data-about-route="/big-laugh/about-this-underdog/"
     data-location-frame="richies-manor-and-estate"
     data-estate-size="256-acres"
     data-house-layer="attic-upper-room-event-chamber"
@@ -727,6 +659,7 @@
 
         <div class="heroActions" aria-label="Primary actions">
           <a class="heroButton primary" href="#upper-room-dolls">Open the Event Details</a>
+          <a class="heroButton" href="/products/archcoin/">Vault Chamber</a>
           <a class="heroButton" href="/products/">Products</a>
           <a class="heroButton" href="/showroom/">Return to Showroom</a>
         </div>
@@ -752,7 +685,7 @@
           <p class="kicker">Open the public event pattern</p>
           <h2 class="stageTitle">The attic becomes a live room.</h2>
           <p class="lead">
-            This is the public event surface for The Upper Room. The page now carries the show model, the raffle model,
+            This is the public event surface for The Upper Room. The page carries the show model, the raffle model,
             and the route back into the rest of Richie’s Manor.
           </p>
         </div>
@@ -862,15 +795,15 @@
           <p class="kicker">Continue through the right door</p>
           <h2 class="stageTitle">The event room connects back to the Manor.</h2>
           <p class="lead">
-            The Upper Room is the attic event chamber. Products carries the parent system route.
-            Showroom returns to the lobby proof surface. Compass returns to the route selector.
+            The Upper Room is the attic event chamber. The Vault Chamber opens the ARCHCOIN protected-value route.
+            Products carries the parent system route. Showroom returns to the lobby proof surface.
           </p>
         </div>
 
         <div class="dollGrid">
-          <a class="continueLink" href="/big-laugh/upper-room/">
-            Stay in The Upper Room
-            <small>You are already in the full show chamber and event surface.</small>
+          <a class="continueLink" href="/products/archcoin/">
+            Continue to Vault Chamber
+            <small>ARCHCOIN protected-value and ownership chamber.</small>
           </a>
 
           <a class="continueLink" href="/products/">
@@ -893,6 +826,7 @@
 
     <nav class="routeRail" aria-label="Route rail">
       <a class="routeLink gold" href="/showroom/">Showroom</a>
+      <a class="routeLink" href="/products/archcoin/">Vault Chamber</a>
       <a class="routeLink" href="/products/">Products</a>
       <a class="routeLink" href="/big-laugh/about-this-underdog/">About This Underdog</a>
       <a class="routeLink" href="/">Compass</a>
@@ -903,7 +837,7 @@
     (function(){
       "use strict";
 
-      var VERSION = "upper-room-b2-richie-manor-events-raffle";
+      var VERSION = "upper-room-b3-vault-backlink-correction";
       var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
 
       document.documentElement.setAttribute("data-upper-room-controller", VERSION);

@@ -1,37 +1,32 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B4
+   EARTH ASSET SPINE · CANVAS B5
 
-   Owns Earth rendering only:
-   - local surface JPG
-   - local cloud JPG
-   - spherical wrap
-   - limb compression
-   - atmosphere/terminator
-   - Earth radius / zoom
-   - auto-spin
-   - manual drag
-   - capped render budget
+   Purpose:
+   - Use real local Blue Marble-derived JPG assets.
+   - Stop fake procedural cloud bands from dominating.
+   - Keep spherical wrap, zoom, drag, axis, and frame budget.
+   - Default toward satellite-view Earth, not cartoon Earth.
 */
 
 (function () {
   "use strict";
 
   var DEFAULTS = {
-    assetId: "earth-asset-b3",
+    assetId: "earth-asset-b5",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
     targetFrameMs: 42,
-    sliceCount: 220,
+    sliceCount: 260,
     mobileDprCap: 1.5,
     desktopDprCap: 2,
-    defaultRotation: 0.792,
-    defaultVelocity: 0.008,
+    defaultRotation: 0.35,
+    defaultVelocity: 0.006,
     defaultZoom: 1,
     minZoom: 0.72,
     maxZoom: 1.38,
     zoomStep: 0.08,
-    cloudAlpha: 0.62
+    cloudAlpha: 0.18
   };
 
   function clamp(value, min, max) {
@@ -64,7 +59,7 @@
         finish({ ok: false, src: src, image: null, reason: "load-error" });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-asset-b4-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-asset-b5-" + Date.now();
     });
   }
 
@@ -87,9 +82,7 @@
     var zoom = clamp(Number(config.defaultZoom || DEFAULTS.defaultZoom), config.minZoom, config.maxZoom);
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    if (!mount || !canvas) {
-      return null;
-    }
+    if (!mount || !canvas) return null;
 
     function setStatus(value) {
       mount.setAttribute("data-earth-runtime-status", value);
@@ -114,7 +107,7 @@
       canvas.height = Math.max(1, Math.floor(rect.height * dpr));
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "medium";
+      ctx.imageSmoothingQuality = "high";
     }
 
     function wrappedSourceX(image, rawX) {
@@ -156,7 +149,7 @@
       if (!image || !image.complete || !image.naturalWidth) return;
 
       geo = geometry();
-      step = Math.max(2.2, (geo.r * 2) / sliceCount);
+      step = Math.max(1.8, (geo.r * 2) / sliceCount);
 
       ctx.save();
       ctx.globalAlpha = alpha;
@@ -177,7 +170,7 @@
 
         dx = geo.cx + x;
         dy = geo.cy - geo.r * limb;
-        dw = step + 1.2;
+        dw = step + 1.1;
         dh = 2 * geo.r * limb;
 
         if (sx + sw <= image.width) {
@@ -236,7 +229,7 @@
           surfaceImage,
           rotation,
           1,
-          "saturate(1.16) contrast(1.08) brightness(.98)",
+          "saturate(1.08) contrast(1.05) brightness(.96)",
           config.sliceCount,
           "source-over"
         );
@@ -245,10 +238,10 @@
       if (cloudReady) {
         drawWrappedLayer(
           cloudImage,
-          rotation * 0.82 + 0.11,
+          rotation * 0.985 + 0.015,
           config.cloudAlpha,
-          "brightness(1.18) contrast(1.08)",
-          Math.max(150, config.sliceCount - 30),
+          "brightness(1.08) contrast(1.02)",
+          Math.max(180, config.sliceCount - 30),
           "screen"
         );
       }
@@ -261,24 +254,25 @@
 
       shade = ctx.createRadialGradient(
         geo.cx - geo.r * 0.30,
-        geo.cy - geo.r * 0.32,
+        geo.cy - geo.r * 0.34,
         geo.r * 0.08,
-        geo.cx + geo.r * 0.46,
-        geo.cy + geo.r * 0.15,
+        geo.cx + geo.r * 0.48,
+        geo.cy + geo.r * 0.18,
         geo.r * 1.18
       );
-      shade.addColorStop(0, "rgba(255,255,255,.15)");
-      shade.addColorStop(0.38, "rgba(255,255,255,.02)");
-      shade.addColorStop(0.68, "rgba(0,0,0,.06)");
-      shade.addColorStop(1, "rgba(0,0,0,.76)");
+
+      shade.addColorStop(0, "rgba(255,255,255,.13)");
+      shade.addColorStop(0.40, "rgba(255,255,255,.01)");
+      shade.addColorStop(0.66, "rgba(0,0,0,.08)");
+      shade.addColorStop(1, "rgba(0,0,0,.74)");
       ctx.fillStyle = shade;
       ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
 
-      rim = ctx.createRadialGradient(geo.cx, geo.cy, geo.r * 0.76, geo.cx, geo.cy, geo.r * 1.03);
+      rim = ctx.createRadialGradient(geo.cx, geo.cy, geo.r * 0.76, geo.cx, geo.cy, geo.r * 1.035);
       rim.addColorStop(0, "rgba(147,197,253,0)");
-      rim.addColorStop(0.82, "rgba(147,197,253,.05)");
-      rim.addColorStop(0.93, "rgba(190,226,255,.20)");
-      rim.addColorStop(1, "rgba(219,234,254,.42)");
+      rim.addColorStop(0.82, "rgba(147,197,253,.04)");
+      rim.addColorStop(0.93, "rgba(190,226,255,.18)");
+      rim.addColorStop(1, "rgba(219,234,254,.38)");
       ctx.fillStyle = rim;
       ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
 
@@ -286,7 +280,7 @@
 
       ctx.beginPath();
       ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
-      ctx.strokeStyle = "rgba(219,234,254,.32)";
+      ctx.strokeStyle = "rgba(219,234,254,.30)";
       ctx.lineWidth = 2;
       ctx.stroke();
 
@@ -401,6 +395,7 @@
 
     function init() {
       ctx = canvas.getContext("2d", { alpha: true, desynchronized: true });
+
       if (!ctx) {
         setStatus("canvas-unavailable");
         return;
@@ -460,7 +455,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b4",
+    version: "earth-canvas-b5",
     create: createEarthRenderer
   };
 })();

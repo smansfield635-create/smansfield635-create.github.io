@@ -1,27 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" data-page="nine-summits" data-generation="nine-summits-parent-love-marriage-v1">
+<html lang="en" data-page="nine-summits" data-generation="ted-talk-book-coming-soon-love-marriage-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nine Summits Metaverse · The Nine Summits of Love</title>
+  <title>Nine Summits Metaverse · The Nine Summits of Love · Book Coming Soon</title>
   <meta
     name="description"
-    content="Nine Summits Metaverse with The Nine Summits of Love: 256 Carats of Human Potential, written by This Underdog."
+    content="The Nine Summits of Love: 256 Carats of Human Potential, written by This Underdog. A book-coming-soon TED Talk style page inside the Nine Summits Metaverse."
   />
 
   <style>
     :root {
       --bg: #05070d;
+      --bg2: #090e1b;
+      --stage: rgba(8, 12, 24, 0.78);
+      --stage2: rgba(255, 255, 255, 0.055);
       --gold: #f4d58d;
       --gold2: #ffb84d;
+      --gold3: #fff0bb;
       --text: #fff7df;
       --muted: rgba(255, 247, 223, 0.74);
       --soft: rgba(255, 247, 223, 0.54);
       --line: rgba(244, 213, 141, 0.28);
-      --panel: rgba(8, 12, 24, 0.74);
-      --panel2: rgba(255, 255, 255, 0.055);
+      --line2: rgba(244, 213, 141, 0.42);
       --shadow: rgba(0, 0, 0, 0.58);
       --max: 1180px;
+      --sans: Arial, Helvetica, sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
     }
 
     * {
@@ -38,12 +43,12 @@
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: Georgia, "Times New Roman", serif;
+      font-family: var(--serif);
       background:
-        radial-gradient(circle at 50% 10%, rgba(255, 198, 92, 0.17), transparent 22rem),
-        radial-gradient(circle at 16% 62%, rgba(72, 141, 255, 0.13), transparent 24rem),
-        radial-gradient(circle at 84% 48%, rgba(255, 109, 64, 0.12), transparent 26rem),
-        linear-gradient(180deg, #05070d 0%, #090e1b 44%, #120b08 100%);
+        radial-gradient(circle at 50% 7%, rgba(255, 198, 92, 0.2), transparent 21rem),
+        radial-gradient(circle at 14% 52%, rgba(72, 141, 255, 0.13), transparent 24rem),
+        radial-gradient(circle at 88% 46%, rgba(255, 109, 64, 0.12), transparent 26rem),
+        linear-gradient(180deg, #05070d 0%, #090e1b 43%, #120b08 100%);
       overflow-x: hidden;
     }
 
@@ -86,7 +91,7 @@
     .page {
       width: min(var(--max), calc(100% - 28px));
       margin: 0 auto;
-      padding: 26px 0 58px;
+      padding: 24px 0 58px;
     }
 
     .topbar {
@@ -94,9 +99,9 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      padding: 10px 0 28px;
+      padding: 10px 0 26px;
       color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       font-size: 0.82rem;
       letter-spacing: 0.13em;
       text-transform: uppercase;
@@ -120,58 +125,75 @@
       background: rgba(244, 213, 141, 0.08);
     }
 
-    .parent-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
-      gap: 28px;
-      align-items: center;
-      min-height: calc(100vh - 122px);
+    .announcement {
+      margin: 0 0 24px;
+      border: 1px solid rgba(244, 213, 141, 0.38);
+      border-radius: 999px;
+      padding: 12px 16px;
+      color: #231705;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.34);
+      font-family: var(--sans);
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-align: center;
+      text-transform: uppercase;
     }
 
-    .parent-copy,
-    .love-copy,
+    .speaker-stage {
+      display: grid;
+      grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
+      gap: 28px;
+      align-items: center;
+      min-height: calc(100vh - 132px);
+    }
+
+    .stage-copy,
+    .talk-card,
+    .book-panel,
     .preface-copy,
     .summits-panel,
     .carat-panel,
-    .gateway-panel {
+    .quote-panel {
       border: 1px solid var(--line);
       border-radius: 30px;
       background:
         linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02)),
-        rgba(4, 7, 15, 0.74);
+        var(--stage);
       box-shadow: 0 28px 70px var(--shadow);
       overflow: hidden;
     }
 
-    .parent-copy {
+    .stage-copy {
       position: relative;
-      padding: clamp(22px, 4vw, 46px);
+      padding: clamp(22px, 4vw, 48px);
     }
 
-    .parent-copy::before,
-    .love-copy::before {
+    .stage-copy::before,
+    .book-panel::before {
       content: "";
       position: absolute;
-      width: 260px;
-      height: 260px;
+      width: 280px;
+      height: 280px;
       border-radius: 50%;
-      top: -130px;
+      top: -140px;
       right: -90px;
-      background: radial-gradient(circle, rgba(244, 213, 141, 0.18), transparent 64%);
+      background: radial-gradient(circle, rgba(244, 213, 141, 0.2), transparent 64%);
       pointer-events: none;
     }
 
     .eyebrow {
       margin: 0 0 12px;
       color: var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       font-size: 0.76rem;
       letter-spacing: 0.22em;
       text-transform: uppercase;
     }
 
     h1,
-    h2 {
+    h2,
+    h3 {
       margin: 0;
       color: var(--text);
       line-height: 0.94;
@@ -181,11 +203,17 @@
     }
 
     h1 {
-      font-size: clamp(2.8rem, 7vw, 6.8rem);
+      font-size: clamp(2.6rem, 7vw, 6.8rem);
     }
 
     h2 {
-      font-size: clamp(2.2rem, 5.7vw, 5.8rem);
+      font-size: clamp(2.15rem, 5.4vw, 5.4rem);
+    }
+
+    h3 {
+      color: var(--gold);
+      font-size: clamp(1.7rem, 3.2vw, 3.05rem);
+      line-height: 1.02;
     }
 
     h1 span,
@@ -193,7 +221,7 @@
       display: block;
       color: var(--gold);
       font-style: italic;
-      font-size: clamp(1.32rem, 3vw, 3rem);
+      font-size: clamp(1.25rem, 3vw, 2.9rem);
       line-height: 1.08;
       text-transform: none;
       letter-spacing: 0.03em;
@@ -204,9 +232,29 @@
       max-width: 58ch;
       margin: 24px 0 0;
       color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       font-size: clamp(1rem, 1.55vw, 1.18rem);
       line-height: 1.7;
+    }
+
+    .signature {
+      margin-top: 26px;
+      display: inline-flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 10px;
+      color: var(--gold);
+      font-size: clamp(1.35rem, 2.4vw, 2.25rem);
+      font-style: italic;
+    }
+
+    .signature small {
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-style: normal;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
     }
 
     .button-row {
@@ -226,7 +274,7 @@
       border-radius: 999px;
       color: var(--text);
       text-decoration: none;
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       font-size: 0.78rem;
       letter-spacing: 0.12em;
       text-transform: uppercase;
@@ -237,76 +285,7 @@
       color: #21170a;
       background: linear-gradient(135deg, var(--gold), var(--gold2));
       border-color: rgba(255, 255, 255, 0.34);
-      font-weight: 700;
-    }
-
-    .parent-orbit {
-      display: grid;
-      gap: 14px;
-    }
-
-    .orbit-card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 18px;
-      min-height: 118px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(244, 213, 141, 0.11), transparent 68%),
-        rgba(255, 255, 255, 0.045);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
-    }
-
-    .orbit-card strong {
-      display: block;
-      color: var(--gold);
-      font-size: 1.25rem;
-      margin-bottom: 8px;
-    }
-
-    .orbit-card p {
-      margin: 0;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.94rem;
-      line-height: 1.55;
-    }
-
-    .love-marriage {
-      margin-top: 44px;
-      padding-top: 8px;
-    }
-
-    .love-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
-      gap: 28px;
-      align-items: center;
-      margin-top: 22px;
-    }
-
-    .love-copy {
-      position: relative;
-      padding: clamp(22px, 4vw, 46px);
-    }
-
-    .signature {
-      margin-top: 26px;
-      display: inline-flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 10px;
-      color: var(--gold);
-      font-size: clamp(1.35rem, 2.4vw, 2.25rem);
-      font-style: italic;
-    }
-
-    .signature small {
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.78rem;
-      font-style: normal;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
+      font-weight: 800;
     }
 
     .graphic-card {
@@ -349,43 +328,107 @@
       background: #090909;
     }
 
-    .summit-strip {
-      margin: 40px 0 0;
+    .ted-section {
+      margin-top: 42px;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 14px;
     }
 
-    .summit-chip {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 18px;
-      min-height: 116px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(244, 213, 141, 0.11), transparent 68%),
-        rgba(255, 255, 255, 0.045);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+    .talk-card {
+      padding: 22px;
+      min-height: 210px;
     }
 
-    .summit-chip strong {
+    .talk-card .number {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line2);
+      border-radius: 50%;
+      color: #21170a;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      font-family: var(--sans);
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .talk-card strong {
       display: block;
       color: var(--gold);
-      font-size: 1.15rem;
-      margin-bottom: 8px;
+      font-size: 1.35rem;
+      margin-bottom: 10px;
     }
 
-    .summit-chip p {
+    .talk-card p {
       margin: 0;
       color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.94rem;
-      line-height: 1.55;
+      font-family: var(--sans);
+      font-size: 0.98rem;
+      line-height: 1.62;
+    }
+
+    .book-panel {
+      position: relative;
+      margin-top: 32px;
+      padding: clamp(24px, 4vw, 46px);
+      display: grid;
+      grid-template-columns: minmax(0, 0.98fr) minmax(280px, 1.02fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .book-badge {
+      display: inline-flex;
+      width: fit-content;
+      margin-bottom: 14px;
+      border: 1px solid rgba(244, 213, 141, 0.42);
+      border-radius: 999px;
+      padding: 9px 12px;
+      color: #21170a;
+      background: linear-gradient(135deg, var(--gold), var(--gold2));
+      font-family: var(--sans);
+      font-size: 0.74rem;
+      font-weight: 900;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+
+    .book-panel p {
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-family: var(--sans);
+      line-height: 1.75;
+      font-size: clamp(1rem, 1.55vw, 1.16rem);
+    }
+
+    .book-list {
+      margin: 22px 0 0;
+      padding: 0;
+      list-style: none;
+      display: grid;
+      gap: 10px;
+      color: var(--muted);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+
+    .book-list li {
+      border-left: 3px solid rgba(244, 213, 141, 0.55);
+      padding: 8px 0 8px 13px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 0 14px 14px 0;
+    }
+
+    .love-marriage {
+      margin-top: 34px;
     }
 
     .feature-section {
-      margin-top: 30px;
       display: grid;
-      grid-template-columns: minmax(300px, 0.86fr) minmax(0, 1.14fr);
+      grid-template-columns: minmax(300px, 0.88fr) minmax(0, 1.12fr);
       gap: 28px;
       align-items: start;
     }
@@ -393,27 +436,17 @@
     .preface-copy,
     .summits-panel,
     .carat-panel,
-    .gateway-panel {
+    .quote-panel {
       padding: clamp(20px, 3vw, 34px);
-    }
-
-    .preface-copy h3,
-    .summits-panel h3,
-    .carat-panel h3,
-    .gateway-panel h3 {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 3.4vw, 3.2rem);
-      line-height: 1.02;
     }
 
     .preface-copy p,
     .summits-panel p,
     .carat-panel p,
-    .gateway-panel p {
-      margin: 0 0 16px;
+    .quote-panel p {
+      margin: 16px 0 0;
       color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       line-height: 1.72;
       font-size: 1rem;
     }
@@ -449,7 +482,7 @@
     .summit span {
       display: block;
       color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       font-size: 0.88rem;
       line-height: 1.45;
     }
@@ -477,34 +510,30 @@
       font-size: clamp(1rem, 1.7vw, 1.16rem);
     }
 
-    .gateway-panel {
+    .quote-panel {
       margin-top: 30px;
       text-align: center;
     }
 
-    .gateway-panel a {
-      display: inline-flex;
-      margin-top: 8px;
-      justify-content: center;
-      align-items: center;
-      min-height: 46px;
-      padding: 13px 18px;
-      border-radius: 999px;
-      color: #21170a;
-      text-decoration: none;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, var(--gold), var(--gold2));
+    .quote-panel blockquote {
+      margin: 0;
+      color: var(--gold3);
+      font-size: clamp(1.65rem, 4vw, 4.2rem);
+      line-height: 1.08;
+      font-style: italic;
+    }
+
+    .quote-panel p {
+      max-width: 760px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .footer {
       margin-top: 34px;
       padding: 28px 0 0;
       color: rgba(255, 247, 223, 0.56);
-      font-family: Arial, Helvetica, sans-serif;
+      font-family: var(--sans);
       font-size: 0.82rem;
       letter-spacing: 0.08em;
       text-align: center;
@@ -512,22 +541,21 @@
     }
 
     @media (max-width: 940px) {
-      .parent-hero,
-      .love-hero,
+      .speaker-stage,
+      .book-panel,
       .feature-section {
         grid-template-columns: 1fr;
       }
 
-      .parent-hero,
-      .love-hero {
+      .speaker-stage {
         min-height: 0;
       }
 
-      .love-art {
+      .stage-art {
         order: -1;
       }
 
-      .summit-strip,
+      .ted-section,
       .summit-grid {
         grid-template-columns: 1fr;
       }
@@ -545,12 +573,18 @@
         text-align: center;
       }
 
-      .parent-copy,
-      .love-copy,
+      .announcement {
+        border-radius: 20px;
+        line-height: 1.45;
+      }
+
+      .stage-copy,
+      .talk-card,
+      .book-panel,
       .preface-copy,
       .summits-panel,
       .carat-panel,
-      .gateway-panel {
+      .quote-panel {
         border-radius: 22px;
       }
 
@@ -562,6 +596,10 @@
       .graphic-card img {
         border-radius: 16px;
       }
+
+      .button-row a {
+        width: 100%;
+      }
     }
   </style>
 </head>
@@ -570,101 +608,118 @@
   <main class="page">
     <nav class="topbar" aria-label="Nine Summits navigation">
       <a href="../index.html">Diamond Gate Bridge</a>
-      <a href="#nine-summits-love">Nine Summits of Love</a>
+      <a href="#book">Book Coming Soon</a>
+      <a href="#summits">Nine Summits</a>
     </nav>
 
-    <section class="parent-hero" aria-labelledby="parent-title">
-      <div class="parent-copy">
-        <p class="eyebrow">Diamond Gate Bridge</p>
-        <h1 id="parent-title">
-          Nine Summits Metaverse
-          <span>One parent field. Nine summit paths.</span>
+    <div class="announcement">
+      Book Coming Soon · The Nine Summits of Love · 256 Carats of Human Potential
+    </div>
+
+    <section class="speaker-stage" aria-labelledby="page-title">
+      <div class="stage-copy">
+        <p class="eyebrow">Nine Summits Metaverse · TED Talk Format</p>
+        <h1 id="page-title">
+          The Nine Summits of Love
+          <span>256 Carats of Human Potential</span>
         </h1>
         <p class="subtitle">
-          The Nine Summits Metaverse is the parent surface. The Nine Summits of Love now lives inside it
-          as a married extension: 256 Carats of Human Potential, written by This Underdog.
+          A public-facing keynote surface for the coming book: a diamond-hearted message about dignity,
+          pressure, character, free will, and the hidden human value that survives the climb.
         </p>
 
+        <div class="signature">
+          <small>written by</small>
+          This Underdog
+        </div>
+
         <div class="button-row">
-          <a class="primary" href="#nine-summits-love">Enter Love Summit</a>
-          <a href="../nine-summits-of-love/">Open Standalone Page</a>
-          <a href="../index.html">Return Home</a>
+          <a class="primary" href="#book">See the Book Preview</a>
+          <a href="#talk">See the Talk Format</a>
+          <a href="../nine-summits-of-love/">Standalone Love Page</a>
         </div>
       </div>
 
-      <div class="parent-orbit" aria-label="Nine Summits parent structure">
-        <article class="orbit-card">
-          <strong>Parent Index</strong>
-          <p>This page now acts as the primary Nine Summits gateway instead of leaving Love as a separate island.</p>
-        </article>
-        <article class="orbit-card">
-          <strong>Love Extension</strong>
-          <p>The Love graphics are embedded directly below as a visible, married section of the parent page.</p>
-        </article>
-        <article class="orbit-card">
-          <strong>256 Carats</strong>
-          <p>The 256-carat frame becomes the governing symbol for human potential under pressure and refinement.</p>
-        </article>
+      <div class="stage-art">
+        <figure class="graphic-card">
+          <img
+            src="../assets/nine-summits-love/nine-summits-love-hero.png"
+            alt="The Nine Summits of Love hero graphic with a radiant diamond heart and the phrase 256 Karats of Human Potential"
+            loading="eager"
+            decoding="async"
+          />
+        </figure>
       </div>
     </section>
 
-    <section id="nine-summits-love" class="love-marriage" aria-labelledby="love-title">
-      <div class="love-hero">
-        <div class="love-copy">
-          <p class="eyebrow">Nine Summits Metaverse Extension</p>
-          <h2 id="love-title">
-            The Nine Summits of Love
-            <span>256 Carats of Human Potential</span>
-          </h2>
-          <p class="subtitle">
-            A diamond-hearted preface surface for the Underdog series: character, structure,
-            balance, stability, peace, and joy organized into a readable path of human dignity.
-          </p>
-          <div class="signature">
-            <small>written by</small>
-            This Underdog
-          </div>
-        </div>
+    <section id="talk" class="ted-section" aria-label="TED Talk format">
+      <article class="talk-card">
+        <span class="number">1</span>
+        <strong>The Opening Question</strong>
+        <p>
+          What if human potential is not found by avoiding pressure, but by learning what pressure reveals?
+        </p>
+      </article>
 
-        <div class="love-art">
-          <figure class="graphic-card">
-            <img
-              src="../assets/nine-summits-love/nine-summits-love-hero.png"
-              alt="The Nine Summits of Love hero graphic with a radiant diamond heart and the phrase 256 Karats of Human Potential"
-              loading="eager"
-              decoding="async"
-            />
-          </figure>
-        </div>
+      <article class="talk-card">
+        <span class="number">2</span>
+        <strong>The Core Idea</strong>
+        <p>
+          Love is not only a feeling. It is a structure strong enough to hold dignity, choice, repair, and return.
+        </p>
+      </article>
+
+      <article class="talk-card">
+        <span class="number">3</span>
+        <strong>The Invitation</strong>
+        <p>
+          The Nine Summits are a climb: character, structure, balance, stability, peace, joy, dignity, free will, and love.
+        </p>
+      </article>
+    </section>
+
+    <section id="book" class="book-panel" aria-labelledby="book-title">
+      <div>
+        <span class="book-badge">Book Coming Soon</span>
+        <h2 id="book-title">
+          A Preface to an Underdog Series
+          <span>The heart is not decoration. It is the locked chamber.</span>
+        </h2>
+        <p>
+          The Nine Summits of Love is being positioned as a book and public keynote surface.
+          The website now carries the cover energy, the message frame, and the coming-soon signal.
+        </p>
+
+        <ul class="book-list">
+          <li><strong>Public format:</strong> TED Talk clarity, direct human meaning, strong visual memory.</li>
+          <li><strong>Book frame:</strong> 256 Carats of Human Potential, written by This Underdog.</li>
+          <li><strong>Series role:</strong> A preface surface that opens the Underdog line without overexplaining it.</li>
+        </ul>
       </div>
 
-      <section class="summit-strip" aria-label="Core reading of the Nine Summits of Love">
-        <article class="summit-chip">
-          <strong>Human Potential</strong>
-          <p>Every person carries buried value. The page reads that value as diamond pressure, not as decoration.</p>
-        </article>
-        <article class="summit-chip">
-          <strong>Diamond Discipline</strong>
-          <p>The 256-carat frame turns love into structure: a full-field measure of growth, dignity, and return.</p>
-        </article>
-        <article class="summit-chip">
-          <strong>Underdog Origin</strong>
-          <p>The author position stays visible: not above the system, but forged through the pressure inside it.</p>
-        </article>
-      </section>
+      <figure class="graphic-card">
+        <img
+          src="../assets/nine-summits-love/nine-summits-love-preface-cover.png"
+          alt="The Nine Summits of Love preface cover with chained diamond hearts, a key, and written by This Underdog"
+          loading="lazy"
+          decoding="async"
+        />
+      </figure>
+    </section>
 
+    <section id="summits" class="love-marriage" aria-label="Nine Summits book structure">
       <section class="feature-section">
         <article class="preface-copy">
-          <h3>Preface Cover</h3>
+          <h3>Why This Belongs Here</h3>
           <p>
-            This graphic carries the locked-heart image, the key, the chain, and the underdog signature.
-            It now sits inside the Nine Summits parent page as the origin panel for the Love summit.
+            This is no longer only a graphic or a separate page. It is now married to the Nine Summits index
+            as the public-facing Love summit, book announcement, and keynote entry point.
           </p>
 
           <figure class="graphic-card preface-art">
             <img
-              src="../assets/nine-summits-love/nine-summits-love-preface-cover.png"
-              alt="The Nine Summits of Love preface cover with chained diamond hearts, a key, and written by This Underdog"
+              src="../assets/nine-summits-love/nine-summits-love-hero.png"
+              alt="The Nine Summits of Love radiant heart graphic embedded inside the Nine Summits Metaverse page"
               loading="lazy"
               decoding="async"
             />
@@ -674,17 +729,17 @@
         <article class="summits-panel">
           <h3>The Nine Summits</h3>
           <p>
-            The Love summit is now married to the Nine Summits Metaverse index. The graphics become the visual gateway,
-            while this structure carries the readable summit logic.
+            The book-coming-soon format needs a readable path. These nine summits give the audience a structure
+            they can remember after the visual impact lands.
           </p>
 
           <div class="summit-grid" aria-label="Nine Summits list">
-            <div class="summit"><b>1. Character</b><span>The first summit: the person becomes readable under pressure.</span></div>
+            <div class="summit"><b>1. Character</b><span>The person becomes readable under pressure.</span></div>
             <div class="summit"><b>2. Structure</b><span>Love receives a form strong enough to hold responsibility.</span></div>
             <div class="summit"><b>3. Balance</b><span>Force, care, judgment, and patience stop fighting for control.</span></div>
             <div class="summit"><b>4. Stability</b><span>The heart becomes durable enough to return after strain.</span></div>
-            <div class="summit"><b>5. Peace</b><span>Peace is not passivity. It is ordered strength without needless violence.</span></div>
-            <div class="summit"><b>6. Joy</b><span>Joy is the proof that the structure is alive, not merely correct.</span></div>
+            <div class="summit"><b>5. Peace</b><span>Peace is ordered strength without needless violence.</span></div>
+            <div class="summit"><b>6. Joy</b><span>Joy proves the structure is alive, not merely correct.</span></div>
             <div class="summit"><b>7. Dignity</b><span>The person is not reduced to damage, error, status, or appearance.</span></div>
             <div class="summit"><b>8. Free Will</b><span>Choice becomes meaningful when it is disciplined, visible, and owned.</span></div>
             <div class="summit"><b>9. Love</b><span>The final summit holds the others without collapsing them.</span></div>
@@ -695,23 +750,23 @@
       <section class="carat-panel" aria-label="256 Carats of Human Potential">
         <span class="carat-number">256</span>
         <p>
-          The 256-carats frame belongs here as the governing metric: a complete diamond-field symbol
+          The 256-carats frame becomes the governing public symbol: a complete diamond-field measure
           for human potential under pressure, refinement, dignity, and return.
         </p>
       </section>
 
-      <section class="gateway-panel" aria-label="Standalone Nine Summits of Love page">
-        <h3>Standalone Love Surface</h3>
+      <section class="quote-panel" aria-label="Keynote closing statement">
+        <blockquote>
+          “Human dignity stems from free will.”
+        </blockquote>
         <p>
-          The Love summit is now embedded in the parent index, while the standalone page can remain available
-          as a focused cover-style extension.
+          This line carries the TED Talk close: memorable, human, direct, and strong enough to lead into the book.
         </p>
-        <a href="../nine-summits-of-love/">Open The Nine Summits of Love</a>
       </section>
     </section>
 
     <footer class="footer">
-      Nine Summits Metaverse · The Nine Summits of Love · 256 Carats of Human Potential · Written by This Underdog
+      Nine Summits Metaverse · The Nine Summits of Love · Book Coming Soon · Written by This Underdog
     </footer>
   </main>
 </body>

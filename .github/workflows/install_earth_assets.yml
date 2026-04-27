@@ -1,16 +1,16 @@
-name: Install Earth Assets
+name: Create Earth Surface Asset
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - ".github/workflows/install_earth_assets.yml"
+      - ".github/workflows/create_earth_surface_asset.yml"
 
 permissions:
   contents: write
 
 jobs:
-  install-earth-assets:
+  create-earth-surface-asset:
     runs-on: ubuntu-latest
 
     steps:
@@ -35,53 +35,26 @@ jobs:
             -fill '#6f9b4c' -draw "ellipse 940,610 170,255 0,360" \
             -fill '#9a7a45' -draw "ellipse 1370,390 230,165 0,360" \
             -fill '#5d8f48' -draw "ellipse 1500,650 160,210 0,360" \
-            -fill 'rgba(255,255,255,0.35)' -draw "ellipse 520,180 420,70 0,360" \
-            -fill 'rgba(255,255,255,0.25)' -draw "ellipse 1220,820 560,90 0,360" \
+            -fill '#ffffff55' -draw "ellipse 520,180 420,70 0,360" \
+            -fill '#ffffff40' -draw "ellipse 1220,820 560,90 0,360" \
+            -quality 92 \
             assets/earth/earth_surface_2048.jpg
 
-      - name: Create earth_clouds_2048.jpg
-        run: |
-          convert -size 2048x1024 xc:'#000000' \
-            -fill 'rgba(255,255,255,0.82)' -draw "ellipse 420,310 330,52 0,360" \
-            -fill 'rgba(255,255,255,0.64)' -draw "ellipse 870,480 460,64 0,360" \
-            -fill 'rgba(255,255,255,0.72)' -draw "ellipse 1350,680 520,72 0,360" \
-            -fill 'rgba(255,255,255,0.55)' -draw "ellipse 1670,260 360,46 0,360" \
-            -fill 'rgba(255,255,255,0.58)' -draw "ellipse 600,760 480,58 0,360" \
-            -fill 'rgba(255,255,255,0.48)' -draw "ellipse 1560,430 460,50 0,360" \
-            assets/earth/earth_clouds_2048.jpg
-
-      - name: Also create transparent PNG cloud copy
-        run: |
-          convert -size 2048x1024 xc:none \
-            -fill 'rgba(255,255,255,0.52)' -draw "ellipse 420,310 330,52 0,360" \
-            -fill 'rgba(255,255,255,0.38)' -draw "ellipse 870,480 460,64 0,360" \
-            -fill 'rgba(255,255,255,0.44)' -draw "ellipse 1350,680 520,72 0,360" \
-            -fill 'rgba(255,255,255,0.30)' -draw "ellipse 1670,260 360,46 0,360" \
-            -fill 'rgba(255,255,255,0.32)' -draw "ellipse 600,760 480,58 0,360" \
-            -fill 'rgba(255,255,255,0.26)' -draw "ellipse 1560,430 460,50 0,360" \
-            assets/earth/earth_clouds_2048.png
-
-      - name: Verify Earth assets
+      - name: Verify earth_surface_2048.jpg
         run: |
           test -s assets/earth/earth_surface_2048.jpg
-          test -s assets/earth/earth_clouds_2048.jpg
-          test -s assets/earth/earth_clouds_2048.png
           file assets/earth/earth_surface_2048.jpg
-          file assets/earth/earth_clouds_2048.jpg
-          file assets/earth/earth_clouds_2048.png
 
-      - name: Commit Earth assets
+      - name: Commit earth_surface_2048.jpg
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add assets/earth/earth_surface_2048.jpg
-          git add assets/earth/earth_clouds_2048.jpg
-          git add assets/earth/earth_clouds_2048.png
 
           if git diff --cached --quiet; then
-            echo "Earth assets already exist."
+            echo "earth_surface_2048.jpg already exists."
           else
-            git commit -m "Create local Earth surface and cloud assets"
+            git commit -m "Create Earth surface asset"
             git push
           fi

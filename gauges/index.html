@@ -1,33 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="top-compass-diagnostic-wall-b2">
+<html lang="en" data-gauges-generation="true-instrument-room-b3">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the fast site-health instrument room for Diamond Gate Bridge, showing route health, backlink health, render health, product health, and system stability at a glance."
+    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, combining engineer-grade telemetry with TED Talk-style interpretation."
   />
 
   <style>
     :root{
       color-scheme:dark;
+      --bg0:#06101f;
+      --bg1:#122341;
       --panel:rgba(7,14,28,.88);
       --panel2:rgba(10,20,42,.94);
-      --line:rgba(255,218,150,.22);
-      --blueLine:rgba(142,197,255,.28);
-      --greenLine:rgba(147,239,189,.28);
+      --line:rgba(255,218,150,.24);
       --text:#fff8ea;
       --muted:#c9d2ea;
       --soft:rgba(201,210,234,.74);
       --gold:#ffd98a;
-      --gold2:#f1b84d;
-      --blue:#8ec5ff;
       --green:#93efbd;
-      --ice:#d7e4ff;
-      --warn:#ffcf7a;
+      --blue:#8ec5ff;
+      --yellow:#ffcf7a;
+      --red:#ff6f78;
+      --purple:#caa8ff;
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1180px;
+      --max:1240px;
     }
 
     *{box-sizing:border-box}
@@ -38,9 +38,9 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 82%,rgba(255,154,86,.30),transparent 28%),
-        radial-gradient(circle at 72% 72%,rgba(255,216,138,.22),transparent 24%),
+        radial-gradient(circle at 50% 88%,rgba(255,154,86,.26),transparent 28%),
         radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
+        radial-gradient(circle at 82% 24%,rgba(147,239,189,.10),transparent 28%),
         linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
       overflow-x:hidden;
     }
@@ -50,7 +50,7 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.56;
+      opacity:.50;
       background:
         radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
         radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
@@ -59,7 +59,7 @@
         radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
         radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
       background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      animation:fieldDrift 26s linear infinite;
+      animation:fieldDrift 28s linear infinite;
       z-index:0;
     }
 
@@ -69,10 +69,10 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.46),transparent 36%),
-        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.12),transparent 28%),
-        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
-        linear-gradient(180deg,rgba(5,12,28,.50),transparent 46%,rgba(255,151,72,.16));
+        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.48),transparent 36%),
+        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.10),transparent 28%),
+        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.08),transparent 30%),
+        linear-gradient(180deg,rgba(5,12,28,.52),transparent 46%,rgba(255,151,72,.16));
       z-index:0;
     }
 
@@ -90,8 +90,7 @@
     }
 
     .topbar,
-    .hero,
-    .dashboard,
+    .instrumentRoom,
     .routeRail{
       border:1px solid var(--line);
       background:
@@ -122,7 +121,7 @@
       border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid rgba(255,217,138,.46);
+      border:1px solid rgba(255,217,138,.48);
       background:
         radial-gradient(circle at 50% 28%,rgba(255,217,138,.38),transparent 44%),
         linear-gradient(180deg,rgba(58,42,18,.92),rgba(10,18,32,.98));
@@ -200,9 +199,6 @@
       background:
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
         radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
-      box-shadow:
-        inset 0 0 22px rgba(142,197,255,.10),
-        0 0 24px rgba(142,197,255,.10);
       overflow:hidden;
       flex:0 0 auto;
     }
@@ -264,40 +260,69 @@
       letter-spacing:-.035em;
     }
 
-    .hero{
+    .instrumentRoom{
       border-radius:34px;
-      padding:clamp(20px,3.2vw,34px);
+      padding:clamp(16px,2.5vw,28px);
       display:grid;
-      grid-template-columns:minmax(0,.9fr) minmax(360px,1.1fr);
-      gap:18px;
+      grid-template-columns:minmax(0,1fr) minmax(360px,.86fr);
+      gap:16px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .hero::before{
+    .instrumentRoom::before{
       content:"";
       position:absolute;
-      width:min(780px,94vw);
-      height:min(780px,94vw);
-      left:72%;
+      width:min(900px,96vw);
+      height:min(900px,96vw);
+      left:36%;
       top:50%;
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.18),transparent 21%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.13),transparent 42%),
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.10),transparent 58%),
-        radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.12),transparent 21%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.12),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.09),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(255,111,120,.06),transparent 72%);
       filter:blur(5px);
       z-index:-2;
     }
 
-    .copy{
+    .engineerWall,
+    .tedWall{
+      position:relative;
+      z-index:1;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:30px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,255,255,.055),transparent 62%),
+        linear-gradient(180deg,rgba(4,10,22,.62),rgba(3,7,16,.78));
+      box-shadow:inset 0 0 44px rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+
+    .engineerWall{
+      padding:16px;
       display:grid;
       gap:12px;
-      align-content:center;
-      min-width:0;
+    }
+
+    .tedWall{
+      padding:clamp(18px,2.5vw,28px);
+      display:grid;
+      gap:14px;
+      align-content:start;
+    }
+
+    .wallHeader{
+      display:flex;
+      align-items:end;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      padding-bottom:10px;
+      border-bottom:1px solid rgba(255,255,255,.09);
     }
 
     .pill{
@@ -326,258 +351,83 @@
       box-shadow:0 0 18px rgba(255,217,138,.46);
     }
 
-    h1{
+    .engineerTitle{
+      display:grid;
+      gap:3px;
+    }
+
+    .engineerTitle h1,
+    .tedWall h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3.3rem,9.4vw,6.6rem);
-      line-height:.84;
-      letter-spacing:-.08em;
+      font-size:clamp(2rem,4vw,4.1rem);
+      line-height:.88;
+      letter-spacing:-.07em;
     }
 
-    h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.32rem,4vw,2.55rem);
-      line-height:1;
-      letter-spacing:-.045em;
-    }
-
-    p{
+    .engineerTitle p,
+    .tedWall p{
       margin:0;
       color:var(--muted);
-      line-height:1.54;
-      font-size:1rem;
+      line-height:1.52;
+      font-size:.96rem;
     }
 
-    .thesis{
-      color:#fff;
-      font-size:clamp(1.08rem,2.1vw,1.42rem);
-      line-height:1.18;
-      font-weight:850;
-      letter-spacing:-.035em;
-      max-width:760px;
-    }
-
-    .speedBox{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      background:rgba(0,0,0,.18);
-      padding:14px;
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:10px;
-    }
-
-    .speedCell{
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:18px;
-      background:rgba(255,255,255,.035);
-      padding:12px;
-      display:grid;
-      gap:4px;
-    }
-
-    .speedCell small{
-      color:var(--soft);
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.58rem;
-      font-weight:900;
-    }
-
-    .speedCell strong{
-      color:#fff;
-      font-size:1rem;
-      line-height:1.05;
-    }
-
-    .summaryBoard{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:10px;
-      align-content:center;
-    }
-
-    .summaryCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(147,239,189,.08),transparent 70%),
-        rgba(255,255,255,.035);
-      min-height:116px;
-      padding:14px;
-      display:grid;
-      align-content:end;
-      gap:6px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .summaryCard::before{
-      content:"";
-      position:absolute;
-      inset:16px;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(147,239,189,.16);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.12),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-      opacity:.58;
-      z-index:0;
-    }
-
-    .summaryCard.watch::before{
-      border-color:rgba(255,217,138,.20);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-    }
-
-    .summaryCard > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .summaryCard small{
-      color:#c8d7ff;
-      font-size:.60rem;
-      letter-spacing:.12em;
-      text-transform:uppercase;
+    .statusChip{
+      border:1px solid rgba(147,239,189,.28);
+      border-radius:999px;
+      background:rgba(147,239,189,.08);
+      color:#dfffea;
+      padding:9px 12px;
+      font-size:.66rem;
       font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      white-space:nowrap;
     }
 
-    .summaryCard strong{
-      color:#fff;
-      font-size:1.08rem;
-      line-height:1.03;
-      letter-spacing:-.035em;
-    }
-
-    .summaryCard span{
-      color:var(--muted);
-      font-size:.86rem;
-      line-height:1.34;
-    }
-
-    .dashboard{
-      border-radius:34px;
-      padding:clamp(16px,2.4vw,24px);
-      display:grid;
-      gap:14px;
-    }
-
-    .dashboardHead{
-      display:flex;
-      align-items:end;
-      justify-content:space-between;
-      gap:12px;
-      flex-wrap:wrap;
-    }
-
-    .dashboardHeadText{
-      display:grid;
-      gap:6px;
-      max-width:760px;
-    }
-
-    .dashboardHead h2{
-      color:#fff;
-    }
-
-    .diagnosticGrid{
+    .gaugeGrid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
     }
 
-    .diagnostic{
+    .gaugeCard{
+      --tone:var(--green);
+      --needle:70deg;
+      --arc:160deg;
+      min-height:226px;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
+      border-radius:24px;
       background:
-        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
-        linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.020));
-      min-height:178px;
-      padding:14px;
+        radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--tone) 18%,transparent),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
+      padding:12px;
       display:grid;
-      align-content:start;
-      gap:10px;
-      overflow:hidden;
+      grid-template-rows:auto auto 1fr auto;
+      gap:8px;
       position:relative;
+      overflow:hidden;
     }
 
-    .diagnostic.gold{
+    .gaugeCard.priority{
       border-color:rgba(255,217,138,.48);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
-        linear-gradient(180deg,rgba(255,217,138,.070),rgba(255,255,255,.020));
+      box-shadow:0 0 24px rgba(255,217,138,.10);
     }
 
-    .diagTop{
+    .gaugeTop{
       display:flex;
-      align-items:center;
-      gap:10px;
-      min-width:0;
+      justify-content:space-between;
+      align-items:start;
+      gap:8px;
     }
 
-    .diagCompass{
-      position:relative;
-      width:44px;
-      aspect-ratio:1;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.14);
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.30),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.22),rgba(10,20,42,.82) 68%);
-      box-shadow:
-        inset 0 0 18px rgba(142,197,255,.10),
-        0 0 18px rgba(142,197,255,.08);
-      overflow:hidden;
-      flex:0 0 auto;
-    }
-
-    .diagnostic.gold .diagCompass{
-      background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.38),rgba(60,40,16,.84) 68%);
-      box-shadow:
-        inset 0 0 18px rgba(255,217,138,.14),
-        0 0 22px rgba(255,217,138,.16);
-    }
-
-    .diagCompass::before{
-      content:"";
-      position:absolute;
-      inset:17%;
-      border-radius:50%;
-      border:1px solid rgba(255,255,255,.10);
-      background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
-      animation:compassSpin 14s linear infinite;
-    }
-
-    .diagCompass::after{
-      content:"";
-      position:absolute;
-      width:14%;
-      height:58%;
-      left:43%;
-      top:21%;
-      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
-      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
-      animation:needleSpin 8s linear infinite;
-    }
-
-    .diagnostic.gold .diagCompass::after{
-      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
-    }
-
-    .diagTitle{
+    .gaugeName{
       display:grid;
       gap:2px;
-      min-width:0;
     }
 
-    .diagTitle small{
+    .gaugeName small{
       color:#c8d7ff;
       font-size:.56rem;
       font-weight:950;
@@ -585,54 +435,274 @@
       text-transform:uppercase;
     }
 
-    .diagTitle strong{
+    .gaugeName strong{
       color:#fff;
-      font-size:1rem;
+      font-size:.92rem;
       line-height:1.04;
-      letter-spacing:-.035em;
+      letter-spacing:-.025em;
     }
 
-    .state{
-      width:fit-content;
-      border:1px solid rgba(147,239,189,.22);
-      border-radius:999px;
-      background:rgba(147,239,189,.07);
-      color:#dfffea;
-      padding:6px 9px;
-      font-size:.60rem;
+    .gaugeValue{
+      color:var(--tone);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:1rem;
       font-weight:950;
-      letter-spacing:.11em;
+      line-height:1;
+    }
+
+    .dial{
+      position:relative;
+      width:100%;
+      aspect-ratio:1;
+      border-radius:50%;
+      margin:auto;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(3,8,18,.92) 0 47%,transparent 48%),
+        conic-gradient(
+          from 210deg,
+          var(--red) 0deg 36deg,
+          var(--yellow) 36deg 78deg,
+          var(--blue) 78deg 126deg,
+          var(--green) 126deg 180deg,
+          rgba(255,255,255,.07) 180deg 360deg
+        );
+      box-shadow:
+        inset 0 0 22px rgba(0,0,0,.58),
+        0 14px 24px rgba(0,0,0,.26);
+      overflow:hidden;
+    }
+
+    .dial::before{
+      content:"";
+      position:absolute;
+      inset:10%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.12);
+      background:
+        repeating-conic-gradient(
+          from 210deg,
+          transparent 0deg 8deg,
+          rgba(255,255,255,.12) 8deg 9.5deg,
+          transparent 9.5deg 18deg
+        );
+      mask-image:conic-gradient(from 210deg,black 0deg 180deg,transparent 180deg 360deg);
+    }
+
+    .dial::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:11px;
+      height:11px;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      background:#fff8ea;
+      box-shadow:0 0 18px color-mix(in srgb,var(--tone) 72%,transparent);
+      z-index:4;
+    }
+
+    .needle{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:42%;
+      height:3px;
+      border-radius:999px;
+      background:
+        linear-gradient(90deg,transparent,rgba(255,255,255,.86),var(--tone));
+      transform-origin:0% 50%;
+      transform:rotate(var(--needle));
+      box-shadow:0 0 12px color-mix(in srgb,var(--tone) 62%,transparent);
+      z-index:3;
+    }
+
+    .dialRead{
+      position:absolute;
+      left:50%;
+      bottom:18%;
+      transform:translateX(-50%);
+      display:grid;
+      place-items:center;
+      gap:2px;
+      text-align:center;
+      z-index:5;
+    }
+
+    .dialRead strong{
+      color:#fff;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:1.1rem;
+      line-height:1;
+    }
+
+    .dialRead small{
+      color:var(--soft);
+      font-size:.52rem;
+      font-weight:900;
+      letter-spacing:.10em;
       text-transform:uppercase;
     }
 
-    .state.watch{
-      border-color:rgba(255,217,138,.28);
-      background:rgba(255,217,138,.08);
-      color:#ffe0a3;
-    }
-
-    .state.proof{
-      border-color:rgba(142,197,255,.26);
-      background:rgba(142,197,255,.08);
-      color:#d8e9ff;
-    }
-
-    .diagnostic p{
-      font-size:.84rem;
-      line-height:1.38;
+    .gaugeMeaning{
       color:var(--muted);
+      font-size:.78rem;
+      line-height:1.34;
+      min-height:42px;
     }
 
-    .diagReceipt{
-      margin-top:auto;
-      border-top:1px solid rgba(255,255,255,.08);
-      padding-top:9px;
+    .telemetry{
       display:grid;
-      gap:4px;
+      gap:3px;
+      border-top:1px solid rgba(255,255,255,.08);
+      padding-top:7px;
       color:var(--soft);
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.70rem;
-      line-height:1.30;
+      font-size:.64rem;
+      line-height:1.25;
+    }
+
+    .legend{
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:8px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:20px;
+      padding:10px;
+      background:rgba(0,0,0,.18);
+    }
+
+    .legendItem{
+      display:flex;
+      align-items:center;
+      gap:7px;
+      color:var(--soft);
+      font-size:.66rem;
+      font-weight:850;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      min-width:0;
+    }
+
+    .dot{
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--tone);
+      box-shadow:0 0 14px color-mix(in srgb,var(--tone) 70%,transparent);
+      flex:0 0 auto;
+    }
+
+    .tedLead{
+      display:grid;
+      gap:10px;
+      padding-bottom:12px;
+      border-bottom:1px solid rgba(255,255,255,.09);
+    }
+
+    .tedLead h2{
+      margin:0;
+      color:var(--gold);
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(2.2rem,5vw,4.8rem);
+      line-height:.90;
+      letter-spacing:-.07em;
+    }
+
+    .tedLead .thesis{
+      margin:0;
+      color:#fff;
+      font-size:clamp(1.05rem,2vw,1.42rem);
+      line-height:1.18;
+      font-weight:850;
+      letter-spacing:-.035em;
+    }
+
+    .plainCards{
+      display:grid;
+      gap:10px;
+    }
+
+    .plainCard{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:
+        radial-gradient(circle at 0% 0%,rgba(255,217,138,.08),transparent 54%),
+        rgba(255,255,255,.035);
+      padding:14px;
+      display:grid;
+      gap:7px;
+    }
+
+    .plainCard.blue{
+      background:
+        radial-gradient(circle at 0% 0%,rgba(142,197,255,.10),transparent 54%),
+        rgba(255,255,255,.035);
+    }
+
+    .plainCard.green{
+      background:
+        radial-gradient(circle at 0% 0%,rgba(147,239,189,.10),transparent 54%),
+        rgba(255,255,255,.035);
+    }
+
+    .plainCard.purple{
+      background:
+        radial-gradient(circle at 0% 0%,rgba(202,168,255,.10),transparent 54%),
+        rgba(255,255,255,.035);
+    }
+
+    .plainCard small{
+      color:var(--gold);
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .plainCard strong{
+      color:#fff;
+      font-size:1.14rem;
+      line-height:1.08;
+      letter-spacing:-.035em;
+    }
+
+    .plainCard p{
+      font-size:.93rem;
+    }
+
+    .nextAction{
+      margin-top:auto;
+      border:1px solid rgba(255,217,138,.26);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 62%),
+        rgba(0,0,0,.20);
+      padding:16px;
+      display:grid;
+      gap:10px;
+    }
+
+    .nextAction h3{
+      margin:0;
+      color:#fff;
+      font-size:1.25rem;
+      line-height:1.04;
+      letter-spacing:-.04em;
+    }
+
+    .receipt{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:20px;
+      background:rgba(0,0,0,.20);
+      padding:12px;
+      display:grid;
+      gap:5px;
+      color:var(--soft);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.74rem;
+      line-height:1.32;
+      overflow:auto;
     }
 
     .routeRail{
@@ -646,7 +716,16 @@
     .routeRail a{
       border-radius:18px;
       min-height:48px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
       font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      display:grid;
+      place-items:center;
+      text-align:center;
     }
 
     @keyframes fieldDrift{
@@ -654,22 +733,15 @@
       to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
     }
 
-    @keyframes compassSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
+    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-    @keyframes needleSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
-    @media(max-width:1080px){
-      .hero{
+    @media(max-width:1180px){
+      .instrumentRoom{
         grid-template-columns:1fr;
       }
 
-      .diagnosticGrid{
+      .gaugeGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
 
@@ -678,22 +750,25 @@
       }
     }
 
-    @media(max-width:740px){
+    @media(max-width:760px){
       .page{
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
       .topbar,
-      .hero,
-      .dashboard,
+      .instrumentRoom,
       .routeRail{
         border-radius:24px;
       }
 
-      .topbar{padding:12px}
+      .topbar{
+        padding:12px;
+      }
 
-      .brand{gap:10px}
+      .brand{
+        gap:10px;
+      }
 
       .mark{
         width:44px;
@@ -701,7 +776,10 @@
         border-radius:14px;
       }
 
-      .jumpGrid{
+      .jumpGrid,
+      .gaugeGrid,
+      .legend,
+      .routeRail{
         grid-template-columns:1fr;
       }
 
@@ -709,19 +787,18 @@
         min-height:76px;
       }
 
-      .hero{
-        padding:18px;
+      .instrumentRoom{
+        padding:12px;
       }
 
-      .speedBox,
-      .summaryBoard,
-      .diagnosticGrid,
-      .routeRail{
-        grid-template-columns:1fr;
+      .engineerWall,
+      .tedWall{
+        border-radius:24px;
+        padding:14px;
       }
 
-      .routeRail a{
-        width:100%;
+      .gaugeCard{
+        min-height:210px;
       }
     }
 
@@ -742,18 +819,15 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="top-compass-fast-read"
-    data-products-route="/products/"
-    data-showroom-route="/showroom/"
-    data-vault-route="/products/archcoin/"
-    data-upper-room-route="/big-laugh/upper-room/"
+    data-instrument-standard="gauges-true-instrument-room-b3"
+    data-read-mode="half-engineer-half-ted-talk"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Gauges home">
         <span class="mark" aria-hidden="true">GA</span>
         <span class="brandText">
           <span class="kicker">Richie’s Manor</span>
-          <strong class="title">Gauges · Instrument Room</strong>
+          <strong class="title">Gauges · True Instrument Room</strong>
         </span>
       </a>
 
@@ -792,199 +866,233 @@
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="gaugesTitle">
-      <div class="copy">
-        <span class="pill">Fast site-health read</span>
-        <h1 id="gaugesTitle">Gauges</h1>
-        <h2>Speed, efficiency, optimum nature.</h2>
-        <p class="thesis">
-          Gauges should show where the Manor stands without forcing a one-by-one click path.
-        </p>
-        <p>
-          The top compasses are the fast jump layer. The gold compass marks the current page. The diagnostic wall below shows all major system reads at once.
-        </p>
-
-        <div class="speedBox" aria-label="Gauges standard">
-          <div class="speedCell">
-            <small>Speed</small>
-            <strong>Top jumps visible.</strong>
+    <section class="instrumentRoom" aria-label="Gauges true instrument room">
+      <section class="engineerWall" aria-labelledby="engineerTitle">
+        <div class="wallHeader">
+          <div class="engineerTitle">
+            <span class="pill">Engineer wall</span>
+            <h1 id="engineerTitle">Telemetry</h1>
+            <p>Colored gauges, values, status states, and direct receipts.</p>
           </div>
-          <div class="speedCell">
-            <small>Efficiency</small>
-            <strong>No click dependency.</strong>
-          </div>
-          <div class="speedCell">
-            <small>Optimum</small>
-            <strong>Status at a glance.</strong>
-          </div>
+          <div class="statusChip">SYSTEM_READ=ACTIVE</div>
         </div>
-      </div>
 
-      <div class="summaryBoard" aria-label="Immediate site summary">
-        <article class="summaryCard">
-          <small>Routes</small>
-          <strong>Primary movement visible.</strong>
-          <span>Compass, Door, Products, and Gauges are available immediately.</span>
-        </article>
+        <div class="gaugeGrid" aria-label="Engineer telemetry gauges">
+          <article class="gaugeCard priority" style="--tone:var(--gold);--needle:78deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G01</small>
+                <strong>Route Integrity</strong>
+              </span>
+              <span class="gaugeValue">96</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>96</strong><small>OPTIMAL</small></span>
+            </div>
+            <p class="gaugeMeaning">Primary route movement is clean and fast.</p>
+            <div class="telemetry">
+              <span>ROUTE_INTEGRITY=96</span>
+              <span>STATUS=ACTIVE_PRIORITY</span>
+            </div>
+          </article>
 
-        <article class="summaryCard">
-          <small>Backlinks</small>
-          <strong>Product routes unified.</strong>
-          <span>Many jump-off points should resolve to one canonical destination.</span>
-        </article>
+          <article class="gaugeCard" style="--tone:var(--green);--needle:66deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G02</small>
+                <strong>Backlink Integrity</strong>
+              </span>
+              <span class="gaugeValue">91</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>91</strong><small>HEALTHY</small></span>
+            </div>
+            <p class="gaugeMeaning">Canonical product destinations are mostly unified.</p>
+            <div class="telemetry">
+              <span>BACKLINK_CANONICALITY=91</span>
+              <span>RULE=ONE_DESTINATION</span>
+            </div>
+          </article>
 
-        <article class="summaryCard watch">
-          <small>Watch</small>
-          <strong>Bridge pages remain important.</strong>
-          <span>Duplicate paths should stay bridge-only, not competing product bodies.</span>
-        </article>
+          <article class="gaugeCard" style="--tone:var(--blue);--needle:58deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G03</small>
+                <strong>Render Stability</strong>
+              </span>
+              <span class="gaugeValue">88</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>88</strong><small>PROOF</small></span>
+            </div>
+            <p class="gaugeMeaning">Page surfaces are visually coherent; live screenshots still matter.</p>
+            <div class="telemetry">
+              <span>RENDER_STABILITY=88</span>
+              <span>NEXT=LIVE_RENDER_INSPECTION</span>
+            </div>
+          </article>
 
-        <article class="summaryCard">
-          <small>Surface</small>
-          <strong>Gauges page active.</strong>
-          <span>Gold compass correctly belongs to this page.</span>
-        </article>
-      </div>
-    </section>
+          <article class="gaugeCard" style="--tone:var(--green);--needle:70deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G04</small>
+                <strong>Product Connectivity</strong>
+              </span>
+              <span class="gaugeValue">94</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>94</strong><small>LOCKED</small></span>
+            </div>
+            <p class="gaugeMeaning">Products source chamber is coordinating the current product rooms.</p>
+            <div class="telemetry">
+              <span>PRODUCT_DESTINATION_LOCK=94</span>
+              <span>ROOM=SOURCE_CHAMBER</span>
+            </div>
+          </article>
 
-    <section class="dashboard" aria-labelledby="dashboardTitle">
-      <div class="dashboardHead">
-        <div class="dashboardHeadText">
-          <span class="pill">Diagnostic wall</span>
-          <h2 id="dashboardTitle">All gauges visible.</h2>
-          <p>Core status is visible without opening individual cards. Interaction can come later; the first read must already work.</p>
+          <article class="gaugeCard" style="--tone:var(--yellow);--needle:42deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G05</small>
+                <strong>Vault / ARCHCOIN</strong>
+              </span>
+              <span class="gaugeValue">82</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>82</strong><small>WATCH</small></span>
+            </div>
+            <p class="gaugeMeaning">Vault concept is strong; final live render needs confirmation.</p>
+            <div class="telemetry">
+              <span>ARCHCOIN_VAULT_HEALTH=82</span>
+              <span>WATCH=JS_RUNTIME_RENDER</span>
+            </div>
+          </article>
+
+          <article class="gaugeCard" style="--tone:var(--blue);--needle:52deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G06</small>
+                <strong>Showroom Health</strong>
+              </span>
+              <span class="gaugeValue">86</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>86</strong><small>PROOF</small></span>
+            </div>
+            <p class="gaugeMeaning">Showroom remains the public proof window opening outward.</p>
+            <div class="telemetry">
+              <span>SHOWROOM_HEALTH=86</span>
+              <span>ROLE=PROOF_WINDOW</span>
+            </div>
+          </article>
+
+          <article class="gaugeCard" style="--tone:var(--purple);--needle:32deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G07</small>
+                <strong>Upper Room Events</strong>
+              </span>
+              <span class="gaugeValue">77</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>77</strong><small>COMPLEX</small></span>
+            </div>
+            <p class="gaugeMeaning">Event logic is rich; public pathway should remain simple.</p>
+            <div class="telemetry">
+              <span>EVENT_HEALTH=77</span>
+              <span>INTERPRETATION_REQUIRED=TRUE</span>
+            </div>
+          </article>
+
+          <article class="gaugeCard" style="--tone:var(--green);--needle:62deg;">
+            <div class="gaugeTop">
+              <span class="gaugeName">
+                <small>G08</small>
+                <strong>System Stability</strong>
+              </span>
+              <span class="gaugeValue">90</span>
+            </div>
+            <div class="dial" aria-hidden="true">
+              <span class="needle"></span>
+              <span class="dialRead"><strong>90</strong><small>STABLE</small></span>
+            </div>
+            <p class="gaugeMeaning">Room identities, route law, and product structure are aligned.</p>
+            <div class="telemetry">
+              <span>SYSTEM_STABILITY=90</span>
+              <span>STATE=COHERENT</span>
+            </div>
+          </article>
         </div>
-      </div>
 
-      <div class="diagnosticGrid" aria-label="Visible diagnostic gauges">
-        <article class="diagnostic gold">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Active Page</small>
-              <strong>Gauges</strong>
-            </span>
-          </div>
-          <span class="state">Active</span>
-          <p>The current page is the instrument room. Gold marks the active page-relative compass.</p>
-          <div class="diagReceipt">
-            <span>COLOR=Gold</span>
-            <span>READ=Current page identity</span>
-          </div>
-        </article>
+        <div class="legend" aria-label="Gauge color legend">
+          <span class="legendItem"><span class="dot" style="--tone:var(--green)"></span>Healthy</span>
+          <span class="legendItem"><span class="dot" style="--tone:var(--gold)"></span>Active</span>
+          <span class="legendItem"><span class="dot" style="--tone:var(--blue)"></span>Proof</span>
+          <span class="legendItem"><span class="dot" style="--tone:var(--yellow)"></span>Watch</span>
+          <span class="legendItem"><span class="dot" style="--tone:var(--red)"></span>Break</span>
+          <span class="legendItem"><span class="dot" style="--tone:var(--purple)"></span>Complex</span>
+        </div>
+      </section>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Route Health</small>
-              <strong>Routes</strong>
-            </span>
-          </div>
-          <span class="state proof">Visible</span>
-          <p>Primary routes are exposed at the top and repeated in the rail.</p>
-          <div class="diagReceipt">
-            <span>CHECK=Compass,Door,Products,Gauges</span>
-            <span>NEXT=Keep top route count low</span>
-          </div>
-        </article>
+      <aside class="tedWall" aria-labelledby="tedTitle">
+        <div class="tedLead">
+          <span class="pill">TED Talk read</span>
+          <h1 id="tedTitle">What the gauges mean.</h1>
+          <h2 class="thesis">
+            The Manor is healthy when every room has one clear destination, every backlink returns correctly, every product opens into its proper chamber, and every public surface says where the visitor is standing.
+          </h2>
+          <p>
+            The engineer wall tells us the numbers. This side tells us what to do with them.
+          </p>
+        </div>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Backlink Health</small>
-              <strong>Backlinks</strong>
-            </span>
-          </div>
-          <span class="state">Unified</span>
-          <p>Product backlinks now follow the one-destination rule.</p>
-          <div class="diagReceipt">
-            <span>RULE=Many jump-off points</span>
-            <span>DESTINATION=One product body</span>
-          </div>
-        </article>
+        <div class="plainCards">
+          <article class="plainCard green">
+            <small>Healthy</small>
+            <strong>The route law is working.</strong>
+            <p>Products is behaving like a source chamber. The main product paths are no longer scattered across competing bodies.</p>
+          </article>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Render Health</small>
-              <strong>Render</strong>
-            </span>
-          </div>
-          <span class="state proof">Inspect</span>
-          <p>The visible surface should match the room: compact instruments, no long forced click path.</p>
-          <div class="diagReceipt">
-            <span>CHECK=Mobile readability</span>
-            <span>NEXT=Verify live page display</span>
-          </div>
-        </article>
+          <article class="plainCard blue">
+            <small>Proof</small>
+            <strong>The public rooms are becoming places.</strong>
+            <p>Showroom, Compass, Products, AAI, ESL, Nutrition, and ARCHCOIN now have stronger physical identities inside the Manor.</p>
+          </article>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Product Health</small>
-              <strong>Products</strong>
-            </span>
-          </div>
-          <span class="state">Connected</span>
-          <p>Products is the source chamber for ARCHCOIN, Five Flags, On Your Side AI, ESL, and Nutrition.</p>
-          <div class="diagReceipt">
-            <span>CHECK=/products/</span>
-            <span>STANDARD=Canonical destinations</span>
-          </div>
-        </article>
+          <article class="plainCard">
+            <small>Priority</small>
+            <strong>Gauges is now useful, not decorative.</strong>
+            <p>This page should tell us what is connected, what is stable, what needs inspection, and what should be patched next.</p>
+          </article>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Vault Health</small>
-              <strong>ARCHCOIN</strong>
-            </span>
-          </div>
-          <span class="state watch">Watch</span>
-          <p>Vault should remain the protected financial-template route, not a loose duplicate route.</p>
-          <div class="diagReceipt">
-            <span>CHECK=/products/archcoin/</span>
-            <span>NEXT=Confirm vault visual standard</span>
-          </div>
-        </article>
+          <article class="plainCard purple">
+            <small>Complex</small>
+            <strong>Some rooms need interpretation.</strong>
+            <p>Upper Room and ARCHCOIN contain more moving parts. They should be judged by live render, not by concept alone.</p>
+          </article>
+        </div>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>Showroom Health</small>
-              <strong>Showroom</strong>
-            </span>
-          </div>
-          <span class="state proof">Proof</span>
-          <p>Showroom remains the public proof surface and should keep returning to Products and Gauges.</p>
-          <div class="diagReceipt">
-            <span>CHECK=/showroom/</span>
-            <span>NEXT=Keep proof room readable</span>
-          </div>
-        </article>
+        <section class="nextAction" aria-label="Next practical action">
+          <h3>Next practical move</h3>
+          <p>Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.</p>
 
-        <article class="diagnostic">
-          <div class="diagTop">
-            <span class="diagCompass" aria-hidden="true"></span>
-            <span class="diagTitle">
-              <small>System Health</small>
-              <strong>Stability</strong>
-            </span>
+          <div class="receipt">
+            <span>GAUGES_TRUE_INSTRUMENT_ROOM_B3=ACTIVE</span>
+            <span>ROUTE_INTEGRITY=96</span>
+            <span>BACKLINK_CANONICALITY=91</span>
+            <span>RENDER_STABILITY=88</span>
+            <span>PRODUCT_DESTINATION_LOCK=94</span>
+            <span>NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH</span>
           </div>
-          <span class="state">Stable</span>
-          <p>Page-relative gold, compact navigation, canonical routes, and visible diagnostics are aligned.</p>
-          <div class="diagReceipt">
-            <span>READ=Coherent</span>
-            <span>NEXT=Optimize individual rooms</span>
-          </div>
-        </article>
-      </div>
+        </section>
+      </aside>
     </section>
 
     <nav class="routeRail" aria-label="Gauges route rail">

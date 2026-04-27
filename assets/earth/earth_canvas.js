@@ -1,40 +1,68 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B15 · NO RING / NO CRESCENT ARTIFACTS
+   EARTH ASSET SPINE · CANVAS B18 · DIMENSIONAL GLOBE RENDERER
 
    CONTRACT:
-     - Use local Earth surface JPG.
-     - Load local cloud JPG but do not let cloud overlay create external crescent arcs.
-     - Preserve spherical wrap.
-     - Preserve spin, drag, zoom, reset, pause.
-     - Preserve frame budget marker targetFrameMs.
-     - Remove final outer circle stroke.
-     - Remove heavy atmospheric rim gradient.
+     - Render Earth as a dimensional globe first.
+     - Map the local satellite Earth JPG onto the sphere second.
+     - Use inverse orthographic sphere sampling instead of vertical slice wrapping.
+     - Remove lower-left pinch / fold distortion.
+     - Remove detached crescent artifacts.
+     - Remove outer circular stroke / atmosphere ring.
+     - Preserve local B5 JPG paths.
+     - Preserve runtime API.
+     - Preserve zoom, drag, spin, reset, pause.
+     - Preserve targetFrameMs frame-budget marker.
 */
 
 (function () {
   "use strict";
 
+  var TAU = Math.PI * 2;
+
   var DEFAULTS = {
-    assetId: "earth-asset-b5-no-rings",
+    assetId: "earth-asset-b5-dimensional-globe",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
+
     targetFrameMs: 42,
-    sliceCount: 280,
-    mobileDprCap: 1.5,
-    desktopDprCap: 2,
+
+    textureWidth: 1024,
+    textureHeight: 512,
+
+    mobileDprCap: 1.35,
+    desktopDprCap: 1.75,
+    mobileRenderCap: 620,
+    desktopRenderCap: 860,
+
     defaultRotation: 0.35,
     defaultVelocity: 0.006,
+
     defaultZoom: 1,
     minZoom: 0.72,
     maxZoom: 1.38,
     zoomStep: 0.08,
+
     cloudAlpha: 0
   };
 
   function clamp(value, min, max) {
     if (!Number.isFinite(value)) return min;
     return Math.max(min, Math.min(max, value));
+  }
+
+  function wrap01(value) {
+    value = value % 1;
+    return value < 0 ? value + 1 : value;
+  }
+
+  function normalize3(x, y, z) {
+    var length = Math.sqrt(x * x + y * y + z * z) || 1;
+    return {
+      x: x / length,
+      y: y / length,
+      z: z / length
+    };
   }
 
   function loadImage(src) {
@@ -77,8 +105,92 @@
         });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b15-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b18-" + Date.now();
     });
+  }
+
+  function makeTexture(image, width, height) {
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext("2d", {
+      willReadFrequently: true
+    });
+
+    canvas.width = width;
+    canvas.height = height;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(image, 0, 0, width, height);
+
+    return {
+      width: width,
+      height: height,
+      data: ctx.getImageData(0, 0, width, height).data
+    };
+  }
+
+  function sampleTexture(texture, u, v) {
+    var x;
+    var y;
+    var x0;
+    var y0;
+    var x1;
+    var y1;
+    var tx;
+    var ty;
+    var i00;
+    var i10;
+    var i01;
+    var i11;
+    var d = texture.data;
+    var w = texture.width;
+    var h = texture.height;
+    var r;
+    var g;
+    var b;
+
+    u = wrap01(u);
+    v = clamp(v, 0, 1);
+
+    x = u * (w - 1);
+    y = v * (h - 1);
+
+    x0 = Math.floor(x);
+    y0 = Math.floor(y);
+    x1 = (x0 + 1) % w;
+    y1 = Math.min(h - 1, y0 + 1);
+
+    tx = x - x0;
+    ty = y - y0;
+
+    i00 = (y0 * w + x0) * 4;
+    i10 = (y0 * w + x1) * 4;
+    i01 = (y1 * w + x0) * 4;
+    i11 = (y1 * w + x1) * 4;
+
+    r =
+      d[i00] * (1 - tx) * (1 - ty) +
+      d[i10] * tx * (1 - ty) +
+      d[i01] * (1 - tx) * ty +
+      d[i11] * tx * ty;
+
+    g =
+      d[i00 + 1] * (1 - tx) * (1 - ty) +
+      d[i10 + 1] * tx * (1 - ty) +
+      d[i01 + 1] * (1 - tx) * ty +
+      d[i11 + 1] * tx * ty;
+
+    b =
+      d[i00 + 2] * (1 - tx) * (1 - ty) +
+      d[i10 + 2] * tx * (1 - ty) +
+      d[i01 + 2] * (1 - tx) * ty +
+      d[i11 + 2] * tx * ty;
+
+    return {
+      r: r,
+      g: g,
+      b: b
+    };
   }
 
   function createEarthRenderer(options) {
@@ -86,18 +198,26 @@
     var mount = config.mount;
     var canvas = config.canvas;
     var ctx = null;
-    var surfaceImage = null;
-    var cloudImage = null;
+
+    var surfaceTexture = null;
+    var cloudTexture = null;
     var surfaceReady = false;
     var cloudReady = false;
+
+    var imageData = null;
+    var lastCanvasWidth = 0;
+    var lastCanvasHeight = 0;
+
     var dragging = false;
     var paused = false;
     var lastX = 0;
     var lastTime = performance.now();
     var lastDrawTime = 0;
+
     var rotation = Number.isFinite(config.defaultRotation) ? config.defaultRotation : DEFAULTS.defaultRotation;
     var velocity = Number.isFinite(config.defaultVelocity) ? config.defaultVelocity : DEFAULTS.defaultVelocity;
     var zoom = clamp(Number(config.defaultZoom || DEFAULTS.defaultZoom), config.minZoom, config.maxZoom);
+
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     if (!mount || !canvas) return null;
@@ -108,214 +228,215 @@
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
       mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
-      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b15-no-rings");
-      mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "disabled-surface-carries-clouds");
+      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b18-dimensional-globe");
+      mount.setAttribute("data-earth-projection", "inverse-orthographic-sphere");
+      mount.setAttribute("data-earth-lattice-scope", "256");
+      mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "surface-composite");
     }
 
     function resizeCanvas() {
       var rect;
       var dpr;
       var cap;
+      var renderCap;
+      var desiredWidth;
+      var desiredHeight;
+      var maxSide;
+      var ratio;
 
       if (!canvas || !ctx) return;
 
       rect = canvas.getBoundingClientRect();
       cap = window.innerWidth <= 760 ? config.mobileDprCap : config.desktopDprCap;
+      renderCap = window.innerWidth <= 760 ? config.mobileRenderCap : config.desktopRenderCap;
       dpr = Math.min(cap, window.devicePixelRatio || 1);
 
-      canvas.width = Math.max(1, Math.floor(rect.width * dpr));
-      canvas.height = Math.max(1, Math.floor(rect.height * dpr));
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      desiredWidth = Math.max(1, Math.floor(rect.width * dpr));
+      desiredHeight = Math.max(1, Math.floor(rect.height * dpr));
+
+      maxSide = Math.max(desiredWidth, desiredHeight);
+      ratio = maxSide > renderCap ? renderCap / maxSide : 1;
+
+      canvas.width = Math.max(1, Math.floor(desiredWidth * ratio));
+      canvas.height = Math.max(1, Math.floor(desiredHeight * ratio));
+
+      if (canvas.width !== lastCanvasWidth || canvas.height !== lastCanvasHeight) {
+        imageData = ctx.createImageData(canvas.width, canvas.height);
+        lastCanvasWidth = canvas.width;
+        lastCanvasHeight = canvas.height;
+      }
+
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
     }
 
-    function wrappedSourceX(image, rawX) {
-      var w = image.width || 1;
-      var x = rawX % w;
-      return x < 0 ? x + w : x;
-    }
-
     function geometry() {
-      var width = canvas.clientWidth;
-      var height = canvas.clientHeight;
+      var width = canvas.width;
+      var height = canvas.height;
       var cx = width * 0.5;
       var cy = height * 0.5;
-      var base = Math.min(width, height) * 0.492;
+      var r = Math.min(width, height) * 0.492 * zoom;
 
       return {
         width: width,
         height: height,
         cx: cx,
         cy: cy,
-        r: base * zoom
+        r: r
       };
     }
 
-    function drawWrappedLayer(image, rot, alpha, filterValue, sliceCount, compositeMode) {
-      var geo;
-      var step;
-      var x;
-      var nx;
-      var limb;
-      var lon;
-      var sx;
-      var sw;
-      var dx;
-      var dy;
-      var dh;
-      var dw;
+    function clearImageData(data) {
+      data.fill(0);
+    }
 
-      if (!image || !image.complete || !image.naturalWidth || alpha <= 0) return;
+    function renderFallback(data, geo) {
+      var minX = Math.max(0, Math.floor(geo.cx - geo.r - 2));
+      var maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
+      var minY = Math.max(0, Math.floor(geo.cy - geo.r - 2));
+      var maxY = Math.min(geo.height - 1, Math.ceil(geo.cy + geo.r + 2));
+      var x;
+      var y;
+      var nx;
+      var ny;
+      var d2;
+      var z;
+      var i;
+      var shade;
+
+      for (y = minY; y <= maxY; y += 1) {
+        ny = (geo.cy - y) / geo.r;
+
+        for (x = minX; x <= maxX; x += 1) {
+          nx = (x - geo.cx) / geo.r;
+          d2 = nx * nx + ny * ny;
+
+          if (d2 > 1) continue;
+
+          z = Math.sqrt(Math.max(0, 1 - d2));
+          shade = 0.45 + 0.45 * z;
+
+          i = (y * geo.width + x) * 4;
+          data[i] = 15 * shade;
+          data[i + 1] = 48 * shade;
+          data[i + 2] = 112 * shade;
+          data[i + 3] = 255;
+        }
+      }
+    }
+
+    function renderGlobe() {
+      var geo;
+      var data;
+      var minX;
+      var maxX;
+      var minY;
+      var maxY;
+      var light;
+      var x;
+      var y;
+      var nx;
+      var ny;
+      var d2;
+      var nz;
+      var lon;
+      var lat;
+      var u;
+      var v;
+      var sample;
+      var cloud;
+      var i;
+      var diffuse;
+      var limb;
+      var shade;
+      var edgeFeather;
+      var alpha;
+      var r;
+      var g;
+      var b;
+
+      if (!ctx || !canvas || !imageData) return;
 
       geo = geometry();
-      step = Math.max(1.6, (geo.r * 2) / sliceCount);
+      data = imageData.data;
+      clearImageData(data);
 
-      ctx.save();
-      ctx.globalAlpha = alpha;
-      ctx.filter = filterValue || "none";
-      ctx.globalCompositeOperation = compositeMode || "source-over";
+      if (!surfaceReady || !surfaceTexture) {
+        renderFallback(data, geo);
+        ctx.putImageData(imageData, 0, 0);
+        return;
+      }
 
-      ctx.beginPath();
-      ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
-      ctx.clip();
+      light = normalize3(-0.38, 0.32, 0.86);
 
-      for (x = -geo.r; x <= geo.r; x += step) {
-        nx = x / geo.r;
-        limb = Math.sqrt(Math.max(0, 1 - nx * nx));
-        lon = Math.asin(nx);
+      minX = Math.max(0, Math.floor(geo.cx - geo.r - 2));
+      maxX = Math.min(geo.width - 1, Math.ceil(geo.cx + geo.r + 2));
+      minY = Math.max(0, Math.floor(geo.cy - geo.r - 2));
+      maxY = Math.min(geo.height - 1, Math.ceil(geo.cy + geo.r + 2));
 
-        sx = wrappedSourceX(image, (rot * image.width) + ((lon / (Math.PI * 2)) + 0.5) * image.width);
-        sw = Math.max(1, image.width * (step / (Math.PI * geo.r)));
+      for (y = minY; y <= maxY; y += 1) {
+        ny = (geo.cy - y) / geo.r;
 
-        dx = geo.cx + x;
-        dy = geo.cy - geo.r * limb;
-        dw = step + 1.1;
-        dh = 2 * geo.r * limb;
+        for (x = minX; x <= maxX; x += 1) {
+          nx = (x - geo.cx) / geo.r;
+          d2 = nx * nx + ny * ny;
 
-        if (dh <= 0.5) continue;
+          if (d2 > 1.0008) continue;
 
-        if (sx + sw <= image.width) {
-          ctx.drawImage(image, sx, 0, sw, image.height, dx, dy, dw, dh);
-        } else {
-          var first = image.width - sx;
-          var ratio = first / sw;
+          if (d2 > 1) {
+            edgeFeather = Math.max(0, 1 - (d2 - 1) / 0.0008);
+            d2 = 1;
+          } else {
+            edgeFeather = 1;
+          }
 
-          ctx.drawImage(image, sx, 0, first, image.height, dx, dy, dw * ratio, dh);
-          ctx.drawImage(image, 0, 0, sw - first, image.height, dx + dw * ratio, dy, dw * (1 - ratio), dh);
+          nz = Math.sqrt(Math.max(0, 1 - d2));
+
+          lon = Math.atan2(nx, nz) + rotation * TAU;
+          lat = Math.asin(clamp(ny, -1, 1));
+
+          u = wrap01(0.5 + lon / TAU);
+          v = clamp(0.5 - lat / Math.PI, 0, 1);
+
+          sample = sampleTexture(surfaceTexture, u, v);
+
+          r = sample.r;
+          g = sample.g;
+          b = sample.b;
+
+          if (cloudReady && cloudTexture && config.cloudAlpha > 0) {
+            cloud = sampleTexture(cloudTexture, u, v);
+            r = r * (1 - config.cloudAlpha) + cloud.r * config.cloudAlpha;
+            g = g * (1 - config.cloudAlpha) + cloud.g * config.cloudAlpha;
+            b = b * (1 - config.cloudAlpha) + cloud.b * config.cloudAlpha;
+          }
+
+          diffuse = clamp(nx * light.x + ny * light.y + nz * light.z, 0, 1);
+          limb = clamp(nz, 0, 1);
+
+          shade = 0.40 + diffuse * 0.58;
+          shade *= 0.72 + limb * 0.28;
+
+          r = clamp(r * shade + 4, 0, 255);
+          g = clamp(g * shade + 4, 0, 255);
+          b = clamp(b * shade + 6, 0, 255);
+
+          alpha = Math.round(255 * edgeFeather);
+
+          i = (y * geo.width + x) * 4;
+          data[i] = r;
+          data[i + 1] = g;
+          data[i + 2] = b;
+          data[i + 3] = alpha;
         }
       }
 
-      ctx.restore();
-    }
-
-    function drawFallbackSphere() {
-      var geo = geometry();
-      var ocean = ctx.createRadialGradient(
-        geo.cx - geo.r * 0.26,
-        geo.cy - geo.r * 0.28,
-        geo.r * 0.1,
-        geo.cx,
-        geo.cy,
-        geo.r
-      );
-
-      ocean.addColorStop(0, "#315a99");
-      ocean.addColorStop(0.44, "#0f2e6a");
-      ocean.addColorStop(0.76, "#071742");
-      ocean.addColorStop(1, "#010612");
-
-      ctx.save();
-      ctx.beginPath();
-      ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
-      ctx.clip();
-      ctx.fillStyle = ocean;
-      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
-      ctx.restore();
-    }
-
-    function drawShading() {
-      var geo = geometry();
-      var shade;
-      var highlight;
-
-      ctx.save();
-      ctx.globalCompositeOperation = "source-over";
-      ctx.beginPath();
-      ctx.arc(geo.cx, geo.cy, geo.r, 0, Math.PI * 2);
-      ctx.clip();
-
-      highlight = ctx.createRadialGradient(
-        geo.cx - geo.r * 0.32,
-        geo.cy - geo.r * 0.34,
-        geo.r * 0.05,
-        geo.cx - geo.r * 0.18,
-        geo.cy - geo.r * 0.22,
-        geo.r * 0.72
-      );
-      highlight.addColorStop(0, "rgba(255,255,255,.12)");
-      highlight.addColorStop(0.38, "rgba(255,255,255,.04)");
-      highlight.addColorStop(1, "rgba(255,255,255,0)");
-      ctx.fillStyle = highlight;
-      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
-
-      shade = ctx.createRadialGradient(
-        geo.cx - geo.r * 0.30,
-        geo.cy - geo.r * 0.32,
-        geo.r * 0.08,
-        geo.cx + geo.r * 0.48,
-        geo.cy + geo.r * 0.18,
-        geo.r * 1.12
-      );
-
-      shade.addColorStop(0, "rgba(255,255,255,0)");
-      shade.addColorStop(0.46, "rgba(0,0,0,.02)");
-      shade.addColorStop(0.72, "rgba(0,0,0,.16)");
-      shade.addColorStop(1, "rgba(0,0,0,.68)");
-      ctx.fillStyle = shade;
-      ctx.fillRect(geo.cx - geo.r, geo.cy - geo.r, geo.r * 2, geo.r * 2);
-
-      ctx.restore();
-    }
-
-    function drawSphere() {
-      var geo;
-
-      if (!ctx || !canvas) return;
-
-      geo = geometry();
-
-      ctx.clearRect(0, 0, geo.width, geo.height);
-      drawFallbackSphere();
-
-      if (surfaceReady) {
-        drawWrappedLayer(
-          surfaceImage,
-          rotation,
-          1,
-          "saturate(1.08) contrast(1.05) brightness(.96)",
-          config.sliceCount,
-          "source-over"
-        );
-      }
-
-      if (cloudReady && config.cloudAlpha > 0) {
-        drawWrappedLayer(
-          cloudImage,
-          rotation * 0.985 + 0.015,
-          config.cloudAlpha,
-          "brightness(1.02) contrast(1.01)",
-          Math.max(180, config.sliceCount - 40),
-          "screen"
-        );
-      }
-
-      drawShading();
+      ctx.putImageData(imageData, 0, 0);
       setStatus(mount.getAttribute("data-earth-runtime-status") || "strong");
     }
 
     function drawNow() {
-      drawSphere();
+      renderGlobe();
     }
 
     function setZoom(value) {
@@ -360,6 +481,8 @@
         surfaceReady: surfaceReady,
         cloudReady: cloudReady,
         cloudOverlayAlpha: config.cloudAlpha,
+        projection: "inverse-orthographic-sphere",
+        latticeScope: 256,
         rotation: rotation,
         velocity: velocity,
         zoom: zoom,
@@ -374,13 +497,13 @@
       lastTime = now;
 
       if (!reduceMotion && !dragging && !paused) {
-        rotation = (rotation + velocity * delta * 0.001) % 1;
+        rotation = wrap01(rotation + velocity * delta * 0.001);
         velocity = velocity * 0.998 + config.defaultVelocity * 0.002;
       }
 
       if (now - lastDrawTime >= config.targetFrameMs || dragging) {
         lastDrawTime = now;
-        drawSphere();
+        renderGlobe();
       }
 
       window.requestAnimationFrame(animate);
@@ -406,10 +529,9 @@
         lastX = event.clientX;
 
         velocity = dx * 0.0018;
-        rotation = (rotation + dx * 0.0016) % 1;
-        if (rotation < 0) rotation += 1;
+        rotation = wrap01(rotation + dx * 0.0016);
 
-        drawSphere();
+        renderGlobe();
       });
 
       mount.addEventListener("pointerup", function (event) {
@@ -428,7 +550,8 @@
     function init() {
       ctx = canvas.getContext("2d", {
         alpha: true,
-        desynchronized: true
+        desynchronized: true,
+        willReadFrequently: false
       });
 
       if (!ctx) {
@@ -450,12 +573,12 @@
         loadImage(config.clouds)
       ]).then(function (results) {
         if (results[0].ok) {
-          surfaceImage = results[0].image;
+          surfaceTexture = makeTexture(results[0].image, config.textureWidth, config.textureHeight);
           surfaceReady = true;
         }
 
         if (results[1].ok) {
-          cloudImage = results[1].image;
+          cloudTexture = makeTexture(results[1].image, config.textureWidth, config.textureHeight);
           cloudReady = true;
         }
 
@@ -490,7 +613,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b15-no-rings",
+    version: "earth-canvas-b18-dimensional-globe",
     create: createEarthRenderer
   };
 })();

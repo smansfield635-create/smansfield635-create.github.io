@@ -1,5 +1,9 @@
 /* TNT RENEWAL — /gauges/gauges_health_runtime.js
-   GAUGES · GENERATION 2 · EARTH SPINE DIAGNOSTIC CONSOLE B3
+   GAUGES · GENERATION 2 · EARTH SPINE DIAGNOSTIC CONSOLE B4
+
+   No external fallback checks.
+   No inline showroom renderer checks.
+   Gauges only checks the Earth Spine contract.
 */
 
 (function () {
@@ -9,9 +13,10 @@
     showroomHtml: "/showroom/index.html",
     earthCanvasJs: "/assets/earth/earth_canvas.js",
     earthRuntimeJs: "/runtime/earth_asset_runtime.js",
+    earthManifest: "/assets/earth/earth_manifest.json",
     surfaceJpg: "/assets/earth/earth_surface_2048.jpg",
     cloudsJpg: "/assets/earth/earth_clouds_2048.jpg",
-    probeUrl: "/showroom/?dgb_probe=earth_spine_b3",
+    probeUrl: "/showroom/?dgb_probe=earth_spine_b4",
     oldViewTerms: [
       "Choose Your View",
       "Earth View",
@@ -36,6 +41,7 @@
     flags: {
       surface: false,
       clouds: false,
+      manifest: false,
       showroomConsumer: false,
       oldViewsRemoved: false,
       noSunRuntime: false,
@@ -142,7 +148,7 @@
   }
 
   function fetchText(path) {
-    return fetch(path + "?v=earth-spine-b3-" + Date.now(), { cache: "no-store" })
+    return fetch(path + "?v=earth-spine-b4-" + Date.now(), { cache: "no-store" })
       .then(function (response) {
         return response.text().then(function (text) {
           return {
@@ -194,7 +200,7 @@
         finish({ ok: false, path: path, reason: "load-error" });
       };
 
-      image.src = path + "?v=earth-spine-b3-" + Date.now();
+      image.src = path + "?v=earth-spine-b4-" + Date.now();
     });
   }
 
@@ -216,6 +222,18 @@
         } else {
           add("asset", "FAIL", "Local Earth clouds JPG missing", "The Earth clouds JPG is not reachable.", CONFIG.cloudsJpg);
           todo("FAIL", "Create Earth clouds JPG", "Create the required same-origin JPG.", CONFIG.cloudsJpg);
+        }
+      }),
+      fetchText(CONFIG.earthManifest).then(function (result) {
+        if (result.ok && result.text.indexOf("earth_clouds_2048.jpg") !== -1 && result.text.indexOf("earth_surface_2048.jpg") !== -1) {
+          report.flags.manifest = true;
+          add("asset", "STRONG", "Earth manifest points to JPG assets", "Manifest uses the correct local JPG asset paths.", CONFIG.earthManifest);
+        } else if (result.ok) {
+          add("asset", "FAIL", "Manifest asset paths wrong", "Manifest does not point to both required JPG assets.", CONFIG.earthManifest);
+          todo("FAIL", "Repair Earth manifest", "Manifest must point to earth_surface_2048.jpg and earth_clouds_2048.jpg.");
+        } else {
+          add("asset", "FAIL", "Earth manifest missing", "Earth manifest is not reachable.", CONFIG.earthManifest);
+          todo("FAIL", "Restore Earth manifest", "Create or repair Earth manifest.", CONFIG.earthManifest);
         }
       })
     ]);
@@ -316,7 +334,8 @@
     if (text.indexOf("earth_surface_2048.jpg") !== -1 && text.indexOf("earth_clouds_2048.jpg") !== -1) {
       add("spine", "STRONG", "Renderer points to JPG assets", "Earth canvas references the required JPG asset paths.");
     } else {
-      add("spine", "WATCH", "Renderer JPG references unclear", "Earth canvas may not reference the exact JPG assets expected by gauges.", "earth_surface_2048.jpg / earth_clouds_2048.jpg");
+      add("spine", "FAIL", "Renderer JPG references missing", "Earth canvas does not reference the required JPG assets.", "earth_surface_2048.jpg / earth_clouds_2048.jpg");
+      todo("FAIL", "Point renderer to JPG assets", "Earth canvas must default to the required JPG file paths.");
     }
   }
 
@@ -413,7 +432,7 @@
           }
 
           finish();
-        }, 1000);
+        }, 1200);
       }, { once: true });
 
       iframe.src = CONFIG.probeUrl + "&t=" + Date.now();
@@ -421,7 +440,7 @@
       window.setTimeout(function () {
         add("control", "WATCH", "Probe timeout", "Showroom probe did not complete quickly.");
         finish();
-      }, 5500);
+      }, 6500);
     });
   }
 
@@ -435,7 +454,7 @@
     var status = labelFor(verdictScore);
     var statusNode = $("overallStatus");
 
-    if (!report.flags.surface || !report.flags.clouds) {
+    if (!report.flags.surface || !report.flags.clouds || !report.flags.manifest) {
       blocker = "asset-control";
     } else if (!report.flags.showroomConsumer || !report.flags.canvasScript || !report.flags.runtimeScript || !report.flags.oldViewsRemoved || !report.flags.noSunRuntime) {
       blocker = "showroom-consumer-contract";

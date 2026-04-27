@@ -1,20 +1,19 @@
 /* TNT RENEWAL — /runtime/earth_asset_runtime.js
-   EARTH ASSET RUNTIME · B15 · NO RING SHELL
+   EARTH ASSET RUNTIME · B17 · MINIMAL DOM / NO RING INJECTION
 
    CONTRACT:
-     - Create Earth mount shell.
-     - Create canvas.
-     - Create controls.
-     - Do not inject visible axis.
-     - Do not inject visible atmosphere/ring shell.
-     - Preserve DGBEarthAsset global.
-     - Preserve Zoom Out / Zoom In / Reset Earth / Pause Spin.
+     - Runtime creates only the required Earth canvas shell and controls.
+     - Runtime does not inject axis nodes.
+     - Runtime does not inject atmosphere nodes.
+     - Runtime does not inject diagnostic rings.
+     - Runtime preserves DGBEarthAsset global.
+     - Runtime preserves Zoom Out / Zoom In / Reset Earth / Pause Spin.
 */
 
 (function () {
   "use strict";
 
-  var VERSION = "earth-asset-runtime-b15-no-rings";
+  var VERSION = "earth-asset-runtime-b17-quad-no-rings";
 
   function ready(fn) {
     if (document.readyState === "loading") {
@@ -27,9 +26,7 @@
   function make(tag, className, attrs) {
     var node = document.createElement(tag);
 
-    if (className) {
-      node.className = className;
-    }
+    if (className) node.className = className;
 
     Object.keys(attrs || {}).forEach(function (key) {
       node.setAttribute(key, attrs[key]);
@@ -38,13 +35,13 @@
     return node;
   }
 
-  function removeLegacyRingNodes(mount) {
+  function removeRingNodes(scope) {
     Array.prototype.slice.call(
-      mount.querySelectorAll(".dgb-earth-axis,.dgb-earth-atmosphere,[data-dgb-earth-axis],[data-dgb-earth-atmosphere]")
+      scope.querySelectorAll(
+        ".dgb-earth-axis,.dgb-earth-atmosphere,[data-dgb-earth-axis],[data-dgb-earth-atmosphere],[data-dgb-earth-ring],[data-dgb-earth-orbit]"
+      )
     ).forEach(function (node) {
-      if (node && node.parentNode) {
-        node.parentNode.removeChild(node);
-      }
+      if (node && node.parentNode) node.parentNode.removeChild(node);
     });
   }
 
@@ -55,19 +52,17 @@
     var sphere;
     var canvas;
 
-    removeLegacyRingNodes(mount);
+    removeRingNodes(mount);
 
-    if (existingCanvas) {
-      return existingCanvas;
-    }
+    if (existingCanvas) return existingCanvas;
 
     mount.textContent = "";
     mount.setAttribute("data-earth-runtime-status", "booting");
     mount.setAttribute("data-earth-runtime-version", VERSION);
-    mount.setAttribute("data-earth-shell", "centered-no-rings");
+    mount.setAttribute("data-earth-shell", "minimal-no-rings");
 
     stage = make("div", "dgb-earth-stage", {
-      "data-dgb-earth-stage": "centered-no-rings"
+      "data-dgb-earth-stage": "minimal-no-rings"
     });
 
     tilt = make("div", "dgb-earth-tilt", {
@@ -110,9 +105,7 @@
     var pause;
     var readout;
 
-    if (existing) {
-      existing.parentNode.removeChild(existing);
-    }
+    if (existing) existing.parentNode.removeChild(existing);
 
     panel = make("div", "dgb-earth-control-panel", {
       "data-dgb-earth-controls": "true"
@@ -122,6 +115,7 @@
     zoomIn = makeButton("Zoom In", "zoom-in");
     reset = makeButton("Reset Earth", "reset");
     pause = makeButton("Pause Spin", "pause");
+
     readout = make("div", "dgb-earth-control-readout", {
       "data-dgb-earth-readout": "true",
       role: "status",
@@ -134,12 +128,7 @@
 
       readout.textContent = "Zoom " + Math.round(zoom * 100) + "%";
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
-
-      if (status.paused) {
-        pause.textContent = "Resume Spin";
-      } else {
-        pause.textContent = "Pause Spin";
-      }
+      pause.textContent = status.paused ? "Resume Spin" : "Pause Spin";
     }
 
     zoomOut.addEventListener("click", function () {
@@ -210,7 +199,7 @@
     renderer = window.DGBEarthCanvas.create({
       mount: mount,
       canvas: canvas,
-      assetId: "earth-asset-b5-no-rings",
+      assetId: "earth-asset-b5-quad-no-rings",
       surface: "/assets/earth/earth_surface_2048.jpg",
       clouds: "/assets/earth/earth_clouds_2048.jpg",
       targetFrameMs: 42,
@@ -229,8 +218,8 @@
     controls = createControls(mount, renderer);
 
     mount.setAttribute("data-earth-runtime-status", "strong");
-    mount.setAttribute("data-earth-asset-id", "earth-asset-b5-no-rings");
-    mount.setAttribute("data-earth-shell", "centered-no-rings");
+    mount.setAttribute("data-earth-asset-id", "earth-asset-b5-quad-no-rings");
+    mount.setAttribute("data-earth-shell", "minimal-no-rings");
 
     return {
       mount: mount,

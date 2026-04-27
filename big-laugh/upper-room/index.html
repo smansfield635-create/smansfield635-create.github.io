@@ -1,859 +1,101 @@
-<!doctype html>
-<!-- TNT RENEWAL — /big-laugh/upper-room/index.html
-     UPPER ROOM · VAULT BACKLINK CORRECTION · B3
-
-     RESULT:
-       - Correct target file: /big-laugh/upper-room/index.html
-       - Preserves the current Upper Room delivery.
-       - Connects Vault Chamber backlinks to /products/archcoin/.
-       - Keeps Products as /products/.
-       - Keeps Showroom as /showroom/. 
-       - Keeps Compass as /.
-       - Keeps About This Underdog as the origin/story route only.
-       - No graphic box.
-       - No generated image.
-       - No external image.
--->
-
-<html lang="en" data-page="big-laugh-upper-room" data-generation="upper-room-vault-backlink-correction-b3">
+<!DOCTYPE html>
+<html lang="en" data-manor-registry="planet-batch-3">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>A Dollar a Day Keeps the Psychiatrist Away · The Upper Room</title>
-  <meta
-    name="description"
-    content="Consider the Energy and The Upper Room present A Dollar a Day Keeps the Psychiatrist Away at Big Laugh Comedy Club Fort Worth, Panther Room Upstairs."
-  />
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>The Upper Room · Diamond Gate Bridge</title>
+  <meta name="description" content="The Upper Room is the live event and gathering planetary construct for Diamond Gate Bridge." />
+  <link rel="stylesheet" href="/assets/manor.css" />
+  <script src="/assets/page_registry.js" defer></script>
   <style>
-    *{box-sizing:border-box}
-
-    html{scroll-behavior:smooth}
-
-    html,body{
-      margin:0;
-      min-height:100%;
-      width:100%;
-      background:#05040b;
-      color:#fff;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-      overflow-x:hidden;
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    :root{
-      --ink:rgba(255,255,255,.96);
-      --txt:rgba(255,242,218,.82);
-      --soft:rgba(255,242,218,.64);
-      --gold:#ffd98a;
-      --gold2:#ffb347;
-      --rose:#ff8fb2;
-      --blue:#8ec5ff;
-      --deep:#05040b;
-      --panel:rgba(9,10,18,.76);
-      --panel2:rgba(255,255,255,.055);
-      --line:rgba(255,255,255,.14);
-      --lineGold:rgba(255,217,138,.38);
-      --shadow:0 30px 110px rgba(0,0,0,.58);
-      --max:1160px;
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 14% 18%,rgba(255,217,138,.24) 0 1px,transparent 2px),
-        radial-gradient(circle at 42% 22%,rgba(255,154,184,.17) 0 1px,transparent 2px),
-        radial-gradient(circle at 78% 16%,rgba(142,197,255,.14) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 50% 100%,rgba(255,183,82,.17),transparent 34rem),
-        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.12),transparent 34rem),
-        radial-gradient(ellipse at 84% 32%,rgba(255,154,184,.075),transparent 30rem),
-        linear-gradient(180deg,#0f1a33 0%,#050817 46%,#020309 100%);
-    }
-
-    body::after{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.025),transparent 42%,rgba(255,174,82,.09)),
-        radial-gradient(circle at 50% 100%,rgba(255,217,138,.18),transparent 28rem);
-    }
-
-    @keyframes stageGlow{
-      0%,100%{opacity:.72;transform:scale(1)}
-      50%{opacity:1;transform:scale(1.04)}
-    }
-
-    @keyframes compassSpin{
-      0%{transform:rotateZ(0deg) rotateX(58deg) rotateY(0deg)}
-      100%{transform:rotateZ(360deg) rotateX(58deg) rotateY(360deg)}
-    }
-
-    @keyframes glint{
-      0%,58%,100%{transform:translateX(-120%);opacity:0}
-      72%{opacity:.78}
-      86%{transform:translateX(120%);opacity:0}
-    }
-
-    .page{
-      position:relative;
-      z-index:1;
-      width:min(100% - 28px,var(--max));
-      min-height:100svh;
-      margin:0 auto;
-      padding:18px 0 34px;
-      display:grid;
-      gap:16px;
-    }
-
-    .hero,.stage,.routeRail{
-      border:1px solid var(--line);
-      border-radius:30px;
-      background:
-        radial-gradient(ellipse at 12% 10%,rgba(255,217,138,.08),transparent 28rem),
-        radial-gradient(ellipse at 88% 32%,rgba(255,143,178,.07),transparent 30rem),
-        linear-gradient(180deg,rgba(12,16,30,.78),rgba(4,5,12,.86));
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .hero::before,.stage::before,.routeRail::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 50% 100%,rgba(255,217,138,.14),transparent 24rem),
-        linear-gradient(115deg,rgba(255,255,255,.04),transparent 34%,rgba(255,143,178,.045) 62%,transparent);
-    }
-
-    .hero{
-      min-height:calc(100svh - 190px);
-      padding:clamp(24px,5vw,58px);
-      display:grid;
-      grid-template-columns:minmax(0,1.06fr) minmax(280px,.94fr);
-      gap:28px;
-      align-items:center;
-    }
-
-    .heroCopy,.heroCard,.stageContent{position:relative;z-index:2}
-
-    .brandRow{
-      display:flex;
-      align-items:center;
-      gap:12px;
-      margin-bottom:18px;
-    }
-
-    .brandMark{
-      width:36px;
-      height:36px;
-      border-radius:999px;
-      background:
-        radial-gradient(circle at 34% 28%,rgba(255,255,255,.95),transparent 18%),
-        radial-gradient(circle,rgba(255,236,147,.95),rgba(255,167,64,.68) 58%,rgba(164,80,18,.88));
-      border:1px solid rgba(255,255,255,.30);
-      box-shadow:
-        inset 0 0 16px rgba(255,255,255,.20),
-        0 0 24px rgba(255,183,70,.22);
-      flex:0 0 auto;
-    }
-
-    .brandName{
-      color:var(--ink);
-      font-size:clamp(1.1rem,3vw,1.6rem);
-      font-weight:950;
-      letter-spacing:-.04em;
-    }
-
-    .kicker{
-      margin:0 0 12px;
-      color:var(--gold);
-      font-size:12px;
-      line-height:1.35;
-      font-weight:950;
-      letter-spacing:3px;
-      text-transform:uppercase;
-    }
-
-    h1{
-      margin:0;
-      max-width:1040px;
-      color:var(--ink);
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(3rem,9.4vw,6.9rem);
-      line-height:.86;
-      letter-spacing:-.082em;
-      text-shadow:0 20px 90px rgba(0,0,0,.58);
-    }
-
-    h1 span{
-      display:block;
-      margin-top:14px;
-      color:var(--gold);
-      font-size:clamp(1.3rem,3.2vw,2.7rem);
-      line-height:1.06;
-      letter-spacing:-.035em;
-      font-style:italic;
-    }
-
-    .thesis{
-      margin:20px 0 0;
-      max-width:980px;
-      color:rgba(255,255,255,.94);
-      font-size:clamp(1.34rem,3.2vw,2.25rem);
-      line-height:1.12;
-      font-weight:950;
-      letter-spacing:-.05em;
-    }
-
-    .lead{
-      margin:18px 0 0;
-      max-width:900px;
-      color:var(--txt);
-      font-size:clamp(1.03rem,2.2vw,1.25rem);
-      line-height:1.6;
-    }
-
-    .titleStack{
-      margin:22px 0 0;
-      display:grid;
-      gap:7px;
-      max-width:860px;
-      border:1px solid var(--lineGold);
-      border-radius:24px;
-      padding:16px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 70%),
-        rgba(0,0,0,.22);
-    }
-
-    .titleStack strong{
-      display:block;
-      color:var(--gold);
-      font-size:clamp(1.08rem,2.2vw,1.38rem);
-      line-height:1.22;
-    }
-
-    .titleStack span{
-      display:block;
-      color:var(--txt);
-      line-height:1.42;
-      font-weight:760;
-    }
-
-    .admission{
-      display:inline-flex;
-      width:max-content;
-      max-width:100%;
-      align-items:center;
-      gap:8px;
-      margin-top:14px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid rgba(255,217,138,.34);
-      background:rgba(255,217,138,.08);
-      color:rgba(255,247,220,.96);
-      font-weight:950;
-      letter-spacing:.08em;
-      text-transform:uppercase;
-    }
-
-    .heroActions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:24px;
-    }
-
-    .heroButton,.routeLink{
-      min-height:48px;
-      display:inline-grid;
-      place-items:center;
-      padding:12px 16px;
-      border-radius:999px;
-      border:1px solid rgba(255,255,255,.14);
-      background:rgba(0,0,0,.26);
-      color:var(--ink);
-      font-weight:950;
-      box-shadow:0 12px 34px rgba(0,0,0,.22);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .heroButton:hover,.heroButton:focus-visible,.routeLink:hover,.routeLink:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(255,217,138,.56);
-      background:rgba(255,217,138,.065);
-      outline:none;
-    }
-
-    .heroButton.primary,.routeLink.gold{
-      border-color:rgba(255,217,138,.52);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.18),transparent 64%),
-        rgba(0,0,0,.28);
-      box-shadow:0 0 28px rgba(255,184,75,.15);
-      position:relative;
-      overflow:hidden;
-    }
-
-    .heroButton.primary::after,.routeLink.gold::after{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.24) 48%,transparent 62%);
-      transform:translateX(-120%);
-      animation:glint 4.8s ease-in-out infinite;
-      pointer-events:none;
-    }
-
-    .eventCard{
-      border:1px solid var(--lineGold);
-      border-radius:28px;
-      padding:18px;
-      background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
-        radial-gradient(circle at 90% 30%,rgba(255,143,178,.10),transparent 60%),
-        rgba(0,0,0,.25);
-      box-shadow:
-        0 24px 70px rgba(0,0,0,.34),
-        inset 0 0 28px rgba(255,255,255,.035);
-    }
-
-    .stageLight{
-      position:relative;
-      width:min(100%,420px);
-      aspect-ratio:1;
-      margin:0 auto 18px;
-      border-radius:50%;
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,246,190,.95) 0 7%,rgba(255,217,138,.58) 14%,rgba(255,143,178,.18) 34%,transparent 62%),
-        conic-gradient(from 0deg,transparent,rgba(255,217,138,.20),transparent,rgba(142,197,255,.10),transparent,rgba(255,143,178,.16),transparent);
-      animation:stageGlow 6s ease-in-out infinite;
-      filter:drop-shadow(0 0 34px rgba(255,217,138,.20));
-    }
-
-    .stageLight::before{
-      content:"";
-      position:absolute;
-      inset:17%;
-      border:1px dashed rgba(255,255,255,.22);
-      border-radius:50%;
-      animation:compassSpin 12s linear infinite;
-    }
-
-    .stageLight::after{
-      content:"";
-      position:absolute;
-      left:50%;
-      top:50%;
-      width:28%;
-      aspect-ratio:1;
-      transform:translate(-50%,-50%) rotate(45deg);
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      background:
-        linear-gradient(135deg,rgba(255,255,255,.98),rgba(255,217,138,.88) 38%,rgba(255,143,178,.34) 72%,rgba(255,255,255,.82));
-      box-shadow:
-        0 0 30px rgba(255,217,138,.32),
-        inset 0 0 20px rgba(255,255,255,.25);
-    }
-
-    .eventCard h2{
-      margin:0;
-      color:var(--gold);
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(1.85rem,4.2vw,3.4rem);
-      line-height:.96;
-      letter-spacing:-.055em;
-    }
-
-    .eventCard p{
-      margin:14px 0 0;
-      color:var(--txt);
-      line-height:1.6;
-    }
-
-    .stage{
-      padding:clamp(20px,4vw,38px);
-      display:grid;
-      gap:18px;
-    }
-
-    .stageHeader{
-      display:grid;
-      gap:10px;
-      max-width:980px;
-    }
-
-    .stageTitle{
-      margin:0;
-      color:var(--ink);
-      font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2rem,5.8vw,4.2rem);
-      line-height:.92;
-      letter-spacing:-.065em;
-    }
-
-    .dollGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      align-items:start;
-    }
-
-    .doll{
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:22px;
-      background:rgba(0,0,0,.22);
-      overflow:hidden;
-      min-height:100%;
-    }
-
-    .doll[open]{
-      background:
-        radial-gradient(ellipse at 18% 10%,rgba(255,217,138,.08),transparent 18rem),
-        rgba(0,0,0,.26);
-      border-color:rgba(255,217,138,.40);
-    }
-
-    .doll summary{
-      list-style:none;
-      cursor:pointer;
-      min-height:172px;
-      padding:16px;
-      display:grid;
-      gap:10px;
-      align-content:start;
-      -webkit-tap-highlight-color:transparent;
-    }
-
-    .doll summary::-webkit-details-marker{display:none}
-
-    .dollTag{
-      color:var(--gold);
-      font-size:.76rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .dollTitle{
-      color:var(--ink);
-      font-size:clamp(1.06rem,2.2vw,1.4rem);
-      line-height:1.06;
-      font-weight:950;
-      letter-spacing:-.035em;
-    }
-
-    .dollHint{
-      margin:0;
-      color:var(--soft);
-      line-height:1.42;
-      font-size:.96rem;
-    }
-
-    .dollBody{
-      border-top:1px solid rgba(255,255,255,.10);
-      padding:16px;
-      display:grid;
-      gap:12px;
-    }
-
-    .dollBody p{
-      margin:0;
-      color:var(--txt);
-      line-height:1.56;
-    }
-
-    .speechLine{
-      margin:0;
-      color:rgba(255,255,255,.94);
-      font-size:clamp(1.12rem,2.4vw,1.45rem);
-      line-height:1.2;
-      font-weight:950;
-      letter-spacing:-.038em;
-    }
-
-    .miniGrid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:8px;
-    }
-
-    .mini{
-      min-height:82px;
-      display:grid;
-      gap:4px;
-      align-content:start;
-      padding:10px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      background:rgba(0,0,0,.20);
-    }
-
-    .mini small{
-      color:var(--rose);
-      font-size:.66rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .mini strong{
-      color:var(--ink);
-      font-size:.92rem;
-      line-height:1.15;
-    }
-
-    .raffleList{
-      margin:0;
-      padding-left:18px;
-      color:var(--txt);
-      line-height:1.58;
-    }
-
-    .raffleList li{margin:7px 0}
-
-    .prizeBox{
-      border:1px solid rgba(255,217,138,.28);
-      border-radius:18px;
-      padding:13px;
-      background:rgba(255,217,138,.055);
-      display:grid;
-      gap:8px;
-    }
-
-    .prizeBox strong{color:var(--gold)}
-
-    .continueLink{
-      display:grid;
-      gap:7px;
-      padding:13px 14px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:18px;
-      background:rgba(0,0,0,.22);
-      color:var(--ink);
-      font-weight:950;
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .continueLink:hover,.continueLink:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(255,217,138,.50);
-      background:rgba(255,217,138,.055);
-      outline:none;
-    }
-
-    .continueLink small{
-      color:var(--soft);
-      font-size:.86rem;
-      line-height:1.35;
-      font-weight:750;
-    }
-
-    .safety{
-      border:1px solid rgba(142,197,255,.22);
-      border-radius:18px;
-      padding:13px;
-      color:var(--soft);
-      background:rgba(142,197,255,.05);
-      line-height:1.5;
-      font-size:.94rem;
-    }
-
-    .routeRail{
-      display:grid;
-      grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:12px;
-      padding:12px;
-    }
-
-    .routeLink{
-      min-height:58px;
-      border-radius:18px;
-      text-align:center;
-    }
-
-    @media(max-width:980px){
-      .hero{grid-template-columns:1fr;min-height:auto}
-      .dollGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-
-    @media(max-width:680px){
-      .page{width:min(100% - 20px,var(--max));padding-top:10px}
-      .hero,.stage,.routeRail{border-radius:24px}
-      .hero{padding:22px}
-      .heroActions{display:grid;grid-template-columns:1fr}
-      .dollGrid,.miniGrid{grid-template-columns:1fr}
-      .doll summary{min-height:auto}
-    }
-
-    @media(prefers-reduced-motion:reduce){
-      .stageLight,.stageLight::before,.heroButton.primary::after,.routeLink.gold::after{animation:none}
-    }
+    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .planet-rail{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .planet-rail a{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid rgba(244,201,103,.24);border-radius:999px;text-decoration:none;color:#d9e3f7;background:rgba(255,255,255,.045);font-weight:750}
+    .planet-rail a[aria-current="page"]{color:#111827;background:linear-gradient(180deg,#ffe3a3,#f4c967);border-color:#f4c967}
   </style>
 </head>
+<body class="manor-skin manor-planet" data-manor-skin="v1" data-manor-room="upper-room" data-manor-class="planet" data-planet-id="upper-room" data-planet-slot="P6_UPPER_ROOM" data-planet-orbit="manor" data-manor-batch="BATCH_3_PLANETS">
+  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
+    <a href="/">Compass</a>
+    <a href="/door/">Door</a>
+    <a href="/home/">Home</a>
+    <a href="/products/">Products</a>
+    <a href="/showroom/">Showroom</a>
+    <a href="/gauges/">Gauges</a>
+  </nav>
 
-<body>
-  <main
-    class="page"
-    data-backlink-root="upper-room"
-    data-backlink-version="upper-room-vault-backlink-correction-b3"
-    data-vault-route="/products/archcoin/"
-    data-products-route="/products/"
-    data-showroom-route="/showroom/"
-    data-about-route="/big-laugh/about-this-underdog/"
-    data-location-frame="richies-manor-and-estate"
-    data-estate-size="256-acres"
-    data-house-layer="attic-upper-room-event-chamber"
-    data-admission="$1"
-    data-show-structure="four-weeks-eight-shows"
-  >
-    <section class="hero" aria-label="The Upper Room">
-      <article class="heroCopy">
-        <div class="brandRow">
-          <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
-          <a class="brandName" href="/">Richie's Manor · The Upper Room</a>
-        </div>
+  <main class="manor-shell">
+    <section class="manor-room manor-lattice-mark">
+      <p class="manor-kicker">P6 · Upper Room · Live Event Planet</p>
+      <h1 class="manor-title">The Upper Room</h1>
+      <p class="manor-lede">The Upper Room is the gathering planet for comedy, raffles, live interaction, and human presence. It presents “A Dollar a Day Keeps the Psychiatrist Away” through Consider the Energy.</p>
 
-        <p class="kicker">Events & Attractions · Upper-Floor Event Chamber</p>
+      <div class="planet-rail" aria-label="Planetary constructs">
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+        <a href="/upper-room/" aria-current="page">Upper Room</a>
+        <a href="/about-this-underdog/">About</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits-of-love/">Love</a>
+      </div>
 
-        <h1>
-          The Upper Room
-          <span>Four weeks. Eight shows. No two nights the same.</span>
-        </h1>
+      <div class="manor-divider"></div>
 
-        <p class="thesis">
-          Richie’s Manor opens upward here.
-        </p>
-
-        <p class="lead">
-          The Upper Room is the public event chamber inside Richie's Manor: shows, raffles, live comedy,
-          drink specials, signings, appearances, demonstrations, and future public experiences across the 256-acre estate.
-        </p>
-
-        <div class="titleStack" aria-label="Event title and venue">
-          <strong>Consider the Energy and The Upper Room present</strong>
-          <strong>A Dollar a Day Keeps the Psychiatrist Away</strong>
-          <span>at Big Laugh Comedy Club Fort Worth · Panther Room [Upstairs]</span>
-          <span>604 Main St, Suite 100 · Fort Worth, TX 76102</span>
-          <span>Big Laugh Comedy Club is an unofficial supporting venue for this launch.</span>
-        </div>
-
-        <div class="admission">Admission · $1</div>
-
-        <p class="lead">
-          At The Upper Room, fill your cup means more than one thing: drink specials, raffles,
-          live comedy, and a room built to send people home lighter than they came in.
-        </p>
-
-        <div class="heroActions" aria-label="Primary actions">
-          <a class="heroButton primary" href="#upper-room-dolls">Open the Event Details</a>
-          <a class="heroButton" href="/products/archcoin/">Vault Chamber</a>
-          <a class="heroButton" href="/products/">Products</a>
-          <a class="heroButton" href="/showroom/">Return to Showroom</a>
-        </div>
-      </article>
-
-      <aside class="heroCard" aria-label="Upper Room event card">
-        <div class="eventCard">
-          <div class="stageLight" aria-hidden="true"></div>
-          <h2>Come fill your cup.</h2>
-          <p>
-            You won’t leave empty. Each night has a structure, but the live room changes the experience every time.
-          </p>
-          <p>
-            Same weekly theme. Different audience. Fresh delivery. Fresh interaction. No two nights the same.
-          </p>
-        </div>
-      </aside>
-    </section>
-
-    <section id="upper-room-dolls" class="stage" aria-label="Upper Room event details">
-      <div class="stageContent">
-        <div class="stageHeader">
-          <p class="kicker">Open the public event pattern</p>
-          <h2 class="stageTitle">The attic becomes a live room.</h2>
-          <p class="lead">
-            This is the public event surface for The Upper Room. The page carries the show model, the raffle model,
-            and the route back into the rest of Richie’s Manor.
-          </p>
-        </div>
-
-        <div class="dollGrid">
-          <details id="show-model" class="doll" open>
-            <summary>
-              <span class="dollTag">Four Weeks</span>
-              <span class="dollTitle">Eight total shows.</span>
-              <p class="dollHint">Sunday and Thursday night, week one through week four.</p>
-            </summary>
-            <div class="dollBody">
-              <p class="speechLine">
-                The run is four weeks, eight shows: Sunday night and Thursday night each week.
-              </p>
-              <div class="miniGrid" aria-label="Show schedule structure">
-                <span class="mini"><small>Week 1</small><strong>Sunday night + Thursday night</strong></span>
-                <span class="mini"><small>Week 2</small><strong>Sunday night + Thursday night</strong></span>
-                <span class="mini"><small>Week 3</small><strong>Sunday night + Thursday night</strong></span>
-                <span class="mini"><small>Week 4</small><strong>Sunday night + Thursday night</strong></span>
-              </div>
-              <p>
-                Each week carries one central theme. The Sunday and Thursday shows share that weekly theme,
-                but the live room changes the experience every time.
-              </p>
-            </div>
-          </details>
-
-          <details id="fresh-room" class="doll">
-            <summary>
-              <span class="dollTag">Fresh Room</span>
-              <span class="dollTitle">No two shows can truly be the same.</span>
-              <p class="dollHint">The audience changes the show.</p>
-            </summary>
-            <div class="dollBody">
-              <p class="speechLine">
-                The content has a structure. The experience stays alive.
-              </p>
-              <p>
-                The people are different. The day is different. The audience response is different.
-                The interaction is different. The delivery changes in real time.
-              </p>
-              <p>
-                Even when the weekly theme repeats, the show does not. A live room makes every night uniquely different.
-              </p>
-            </div>
-          </details>
-
-          <details id="raffles" class="doll">
-            <summary>
-              <span class="dollTag">Raffles</span>
-              <span class="dollTitle">Prizes, bar tabs, and featured giveaways.</span>
-              <p class="dollHint">The room gives people another reason to show up and stay engaged.</p>
-            </summary>
-            <div class="dollBody">
-              <p class="speechLine">
-                Planned raffle prizes include small gifts, prizes, bar tabs, and featured giveaways.
-              </p>
-
-              <div class="prizeBox">
-                <strong>Grand Prize</strong>
-                <span>Signed Troy Aikman jersey from the 1995 season.</span>
-              </div>
-
-              <div class="prizeBox">
-                <strong>Runner-Up Prize</strong>
-                <span>55-inch LG 4K TV.</span>
-              </div>
-
-              <p>
-                Raffles are part of the live-room experience, not a side note. They give each night another public reason to gather, laugh, participate, and stay until the end.
-              </p>
-            </div>
-          </details>
-
-          <details id="tickets" class="doll">
-            <summary>
-              <span class="dollTag">Ticket Rules</span>
-              <span class="dollTitle">How to earn raffle tickets.</span>
-              <p class="dollHint">Pre-register, show up, bring friends, attend shows, and stay until the end.</p>
-            </summary>
-            <div class="dollBody">
-              <p class="speechLine">
-                Raffle tickets can be earned several ways.
-              </p>
-
-              <ul class="raffleList">
-                <li><strong>Pre-register:</strong> receive 5 tickets.</li>
-                <li><strong>Show up:</strong> receive 1 additional ticket.</li>
-                <li><strong>Bring a friend:</strong> receive 1 additional ticket per friend on that friend’s first qualifying enrollment or attendance.</li>
-                <li><strong>Attend each show:</strong> receive 1 ticket per show attended.</li>
-                <li><strong>Stay until the end:</strong> receive 1 final ticket when leaving.</li>
-              </ul>
-
-              <div class="safety">
-                Official raffle rules, eligibility, timing, and prize details will be posted with the event schedule.
-              </div>
-            </div>
-          </details>
-        </div>
+      <div class="manor-grid three">
+        <article class="manor-card">
+          <p class="manor-room-label">Venue</p>
+          <h2>Big Laugh Comedy Club Fort Worth / Panther Room [Upstairs]</h2>
+          <p>604 Main St, Suite 100, Fort Worth, TX 76102. Big Laugh Comedy Club is an unofficial supporting venue of Consider the Energy.</p>
+        </article>
+        <article class="manor-card">
+          <p class="manor-room-label">Show frame</p>
+          <h2>Fill your cup.</h2>
+          <p>The page holds the public event surface: fresh delivery, interaction, comedy, and live room energy.</p>
+        </article>
+        <article class="manor-card">
+          <p class="manor-room-label">Raffle</p>
+          <h2>Participation earns tickets.</h2>
+          <p>Pre-register, show up, bring a friend, attend shows, and stay to the end to increase ticket count.</p>
+        </article>
       </div>
     </section>
 
-    <section class="stage" aria-label="Continue through The Upper Room">
-      <div class="stageContent">
-        <div class="stageHeader">
-          <p class="kicker">Continue through the right door</p>
-          <h2 class="stageTitle">The event room connects back to the Manor.</h2>
-          <p class="lead">
-            The Upper Room is the attic event chamber. The Vault Chamber opens the ARCHCOIN protected-value route.
-            Products carries the parent system route. Showroom returns to the lobby proof surface.
-          </p>
-        </div>
-
-        <div class="dollGrid">
-          <a class="continueLink" href="/products/archcoin/">
-            Continue to Vault Chamber
-            <small>ARCHCOIN protected-value and ownership chamber.</small>
-          </a>
-
-          <a class="continueLink" href="/products/">
-            Continue to Products
-            <small>The parent product/system route for later marriage.</small>
-          </a>
-
-          <a class="continueLink" href="/showroom/">
-            Return to Showroom
-            <small>The lobby proof room for the larger estate.</small>
-          </a>
-
-          <a class="continueLink" href="/">
-            Return to Compass
-            <small>The route selector for Diamond Gate Bridge.</small>
-          </a>
-        </div>
+    <section class="manor-room" style="margin-top:28px">
+      <p class="manor-kicker">Raffle ticket mechanics</p>
+      <div class="manor-grid three">
+        <article class="manor-card"><strong>Pre-register</strong><br />5 tickets.</article>
+        <article class="manor-card"><strong>Show up</strong><br />1 additional ticket.</article>
+        <article class="manor-card"><strong>Bring a friend</strong><br />1 additional ticket for that friend’s first qualifying enrollment or attendance.</article>
+        <article class="manor-card"><strong>Attend each show</strong><br />1 ticket per show.</article>
+        <article class="manor-card"><strong>Stay until the end</strong><br />1 final ticket upon leaving.</article>
+        <article class="manor-card"><strong>Return path</strong><br />The event planet remains anchored to Compass, Products, Showroom, and Gauges.</article>
       </div>
     </section>
 
-    <nav class="routeRail" aria-label="Route rail">
-      <a class="routeLink gold" href="/showroom/">Showroom</a>
-      <a class="routeLink" href="/products/archcoin/">Vault Chamber</a>
-      <a class="routeLink" href="/products/">Products</a>
-      <a class="routeLink" href="/big-laugh/about-this-underdog/">About This Underdog</a>
-      <a class="routeLink" href="/">Compass</a>
-    </nav>
+    <section class="manor-backlinks">
+      <p class="manor-backlinks-title">Manor backlinks</p>
+      <ul class="manor-backlinks-list">
+        <li><a href="/">Compass</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/showroom/">Showroom</a></li>
+        <li><a href="/about-this-underdog/">About This Underdog</a></li>
+        <li><a href="/gauges/">Gauges</a></li>
+      </ul>
+    </section>
+
+    <section class="manor-audit-strip">
+      <p class="manor-audit-title">Batch 3 audit markers</p>
+      <ul class="manor-audit-list">
+        <li class="manor-audit-chip pass" data-status="pass">planetary-route-exists</li>
+        <li class="manor-audit-chip pass" data-status="pass">planet-class</li>
+        <li class="manor-audit-chip pass" data-status="pass">manor-orbit</li>
+        <li class="manor-audit-chip pass" data-status="pass">P6_UPPER_ROOM</li>
+        <li class="manor-audit-chip pass" data-status="pass">event-gathering-band</li>
+      </ul>
+    </section>
   </main>
-
-  <script>
-    (function(){
-      "use strict";
-
-      var VERSION = "upper-room-b3-vault-backlink-correction";
-      var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
-
-      document.documentElement.setAttribute("data-upper-room-controller", VERSION);
-
-      dolls.forEach(function(doll){
-        doll.addEventListener("toggle", function(){
-          if (!doll.open) return;
-
-          dolls.forEach(function(other){
-            if (other !== doll) other.removeAttribute("open");
-          });
-
-          document.documentElement.setAttribute("data-upper-room-open-layer", doll.id || "");
-        });
-      });
-    })();
-  </script>
 </body>
 </html>

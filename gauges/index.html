@@ -1,285 +1,33 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-contract="GAUGES_ROUTE_CORRECTED_BATCH_4_V1">
+<html lang="en" data-build="six-house-parts-full-tnt-v1">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Gauges · Diamond Gate Bridge</title>
-  <meta name="description" content="Live diagnostic Gauges for Diamond Gate Bridge: house, product, and planetary construct deep audit with corrected hosted routes." />
-
-  <style>
-    :root {
-      --ink: #eef3ff;
-      --muted: #b8c2d8;
-      --navy-950: #020713;
-      --navy-900: #061126;
-      --gold: #f4c967;
-      --gold-soft: #ffe3a3;
-      --green: #84e1bc;
-      --red: #ff8a8a;
-      --glass: rgba(8, 19, 42, 0.78);
-      --border: rgba(244, 201, 103, 0.34);
-      --border-strong: rgba(244, 201, 103, 0.62);
-      --shadow: 0 24px 80px rgba(0, 0, 0, 0.48);
-      --radius-lg: 28px;
-      --radius-md: 20px;
-      --page-max: 1180px;
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      min-height: 100%;
-      background: var(--navy-950);
-    }
-
-    body {
-      min-height: 100vh;
-      margin: 0;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 50% -12%, rgba(244, 201, 103, 0.2), transparent 34%),
-        radial-gradient(circle at 16% 18%, rgba(34, 91, 164, 0.34), transparent 36%),
-        linear-gradient(180deg, var(--navy-950), var(--navy-900) 46%, #030816 100%);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: -2;
-      background-image:
-        radial-gradient(circle, rgba(255, 255, 255, 0.62) 0 1px, transparent 1.5px),
-        radial-gradient(circle, rgba(244, 201, 103, 0.48) 0 1px, transparent 1.5px);
-      background-size: 94px 94px, 137px 137px;
-      background-position: 0 0, 34px 51px;
-      opacity: 0.18;
-    }
-
-    a { color: inherit; }
-
-    .route-rail {
-      width: min(980px, calc(100% - 32px));
-      margin: clamp(18px, 3vw, 34px) auto;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      background: rgba(8, 19, 42, 0.76);
-      box-shadow: var(--shadow);
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 8px;
-      backdrop-filter: blur(18px);
-    }
-
-    .route-rail a,
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 40px;
-      padding: 0 15px;
-      border: 1px solid rgba(244, 201, 103, 0.24);
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.055);
-      color: #d9e3f7;
-      text-decoration: none;
-      font-weight: 800;
-    }
-
-    .route-rail a[aria-current="page"] {
-      color: #111827;
-      border-color: var(--gold);
-      background: linear-gradient(180deg, var(--gold-soft), var(--gold));
-      box-shadow: 0 0 32px rgba(244, 201, 103, 0.26);
-    }
-
-    .shell {
-      width: min(var(--page-max), calc(100% - 32px));
-      margin: 0 auto;
-      padding: 0 0 48px;
-    }
-
-    .room,
-    .card,
-    .backlinks,
-    .audit-strip {
-      border: 1px solid var(--border);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 42%),
-        var(--glass);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(18px);
-    }
-
-    .room {
-      border-radius: var(--radius-lg);
-      padding: clamp(22px, 4vw, 56px);
-    }
-
-    .card {
-      border-radius: var(--radius-md);
-      padding: clamp(18px, 2.4vw, 32px);
-    }
-
-    .kicker,
-    .label {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      margin: 0 0 14px;
-      color: var(--gold-soft);
-      font-size: 0.78rem;
-      font-weight: 900;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-    }
-
-    .kicker::before,
-    .label::before {
-      content: "";
-      width: 9px;
-      height: 9px;
-      border: 1px solid var(--gold);
-      transform: rotate(45deg);
-      box-shadow: 0 0 18px rgba(244, 201, 103, 0.55);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(2.2rem, 6vw, 5.6rem);
-      line-height: 0.92;
-      letter-spacing: -0.065em;
-    }
-
-    p { line-height: 1.68; }
-
-    .lede {
-      max-width: 820px;
-      color: var(--muted);
-      font-size: clamp(1.02rem, 1.8vw, 1.26rem);
-    }
-
-    .divider {
-      width: 100%;
-      height: 1px;
-      margin: clamp(22px, 4vw, 42px) 0;
-      background: linear-gradient(90deg, transparent, var(--border-strong), transparent);
-    }
-
-    .grid {
-      display: grid;
-      gap: clamp(16px, 2vw, 24px);
-    }
-
-    .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-    .grid.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-
-    .score {
-      font-size: clamp(2rem, 7vw, 5rem);
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: -0.06em;
-      color: var(--gold);
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 0.94rem;
-    }
-
-    .status-pass { color: var(--green); }
-    .status-warn { color: var(--gold); }
-    .status-fail { color: var(--red); }
-
-    .audit-table { margin-top: 28px; }
-
-    .group { margin-top: 26px; }
-
-    .group-title {
-      margin: 0 0 8px;
-      color: var(--gold-soft);
-      font-size: 0.88rem;
-      font-weight: 900;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 14px;
-      align-items: start;
-      border-top: 1px solid rgba(244, 201, 103, 0.22);
-      padding: 14px 0;
-    }
-
-    .row:first-of-type { border-top: 0; }
-
-    code {
-      color: var(--gold-soft);
-      word-break: break-word;
-    }
-
-    .missing {
-      margin: 8px 0 0;
-      padding: 0;
-      list-style: none;
-      color: var(--muted);
-      font-size: 0.9rem;
-      line-height: 1.55;
-    }
-
-    .missing li::before {
-      content: "• ";
-      color: var(--red);
-    }
-
-    .backlinks,
-    .audit-strip {
-      margin-top: clamp(24px, 4vw, 48px);
-      border-radius: var(--radius-md);
-      padding: clamp(16px, 2.2vw, 26px);
-    }
-
-    .chip-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .chip.pass {
-      color: #eafff2;
-      border-color: rgba(132, 225, 188, 0.48);
-    }
-
-    @media (max-width: 900px) {
-      .grid.three,
-      .grid.four { grid-template-columns: 1fr; }
-
-      .route-rail { border-radius: var(--radius-md); }
-      .route-rail a { width: 100%; }
-      .row { grid-template-columns: 1fr; }
-    }
-  </style>
+  <meta name="description" content="Gauges: live diagnostic instrument room for Rich Manor and Estate." />
+  <link rel="stylesheet" href="/assets/manor.css" />
+  <script src="/assets/page_registry.js" defer></script>
 </head>
 
 <body
+  class="manor-skin manor-audit"
   data-manor-skin="v1"
   data-manor-room="gauges"
   data-manor-class="house"
   data-manor-slot="H6_GAUGES"
   data-manor-route="/gauges/"
   data-manor-batch="BATCH_1_HOUSE"
-  data-gauges-runtime-preserved="renewed-live-calculated"
-  data-gauges-deep-audit="BATCH_4_ROUTE_CORRECTED_PLANETARY_AUDIT"
+  data-page-id="gauges"
+  data-route="/gauges/"
+  data-class-type="house_structure"
+  data-construct-code="H6_GAUGES"
+  data-house-anchor="gauges"
+  data-skin-family="manor_audit"
+  data-audit-priority="critical"
+  data-view-modes="return"
+  data-registry-version="1.0.0"
 >
-  <nav class="route-rail" aria-label="Richie’s Manor house routes">
+  <nav class="manor-route-rail" aria-label="Rich Manor house routes">
     <a href="/">Compass</a>
     <a href="/door/">Door</a>
     <a href="/home/">Home</a>
@@ -288,93 +36,67 @@
     <a href="/gauges/" aria-current="page">Gauges</a>
   </nav>
 
-  <main class="shell">
-    <section class="room">
-      <p class="kicker">H6 · Gauges · Route Contract Corrected</p>
-      <h1>Live site-health instruments.</h1>
-      <p class="lede">
-        Gauges now verifies three layers using the real file map: Frontier is audited inside Explore,
-        and Upper Room is audited inside Big Laugh. No fake standalone planet routes are required.
+  <main class="manor-shell">
+    <section class="manor-room" aria-label="Gauges">
+      <p class="manor-kicker">H6 · Gauges · Diagnostic Instrument Room</p>
+      <h1 class="manor-title">Gauges</h1>
+      <p class="manor-lede">
+        Gauges verifies the estate. These checks are browser-calculated from live same-origin fetches and visible marker reads.
       </p>
 
-      <div class="divider"></div>
+      <div class="manor-divider"></div>
 
-      <div class="grid four">
-        <article class="card">
-          <p class="label">Overall health</p>
-          <div class="score" id="overallScore">--</div>
-          <p id="overallStatus">Running live audit…</p>
-        </article>
-
-        <article class="card">
-          <p class="label">Route integrity</p>
-          <div class="score" id="routeScore">--</div>
-          <p>House, product, and corrected planetary reachability.</p>
-        </article>
-
-        <article class="card">
-          <p class="label">Product depth</p>
-          <div class="score" id="productScore">--</div>
-          <p>Five canonical product chambers.</p>
-        </article>
-
-        <article class="card">
-          <p class="label">Planetary depth</p>
-          <div class="score" id="planetScore">--</div>
-          <p>Nine planetary constructs with corrected hosted routes.</p>
-        </article>
-      </div>
-
-      <div class="grid three" style="margin-top:24px">
-        <article class="card">
-          <p class="label">House skeleton</p>
-          <div class="score" id="houseScore">--</div>
-          <p>Six structural house parts.</p>
-        </article>
-
-        <article class="card">
-          <p class="label">Planet count</p>
-          <div class="score" id="planetCount">9</div>
-          <p>Expected planetary construct count.</p>
-        </article>
-
-        <article class="card">
-          <p class="label">Contract</p>
-          <div class="score">4</div>
-          <p>Route-corrected live audit.</p>
-        </article>
-      </div>
+      <section class="manor-stage" aria-label="Live site health">
+        <p class="manor-kicker">Live site-health instruments</p>
+        <div class="manor-proof-strip" aria-label="Health summary">
+          <div class="manor-proof-item">
+            <strong id="overallScore">--</strong>
+            <span>Overall health</span>
+          </div>
+          <div class="manor-proof-item">
+            <strong id="houseScore">--</strong>
+            <span>House skeleton</span>
+          </div>
+          <div class="manor-proof-item">
+            <strong id="productScore">--</strong>
+            <span>Products</span>
+          </div>
+          <div class="manor-proof-item">
+            <strong id="planetScore">--</strong>
+            <span>Planets</span>
+          </div>
+        </div>
+        <p id="overallLabel" class="manor-lede">live-calculated · awaiting route checks</p>
+      </section>
     </section>
 
-    <section class="room audit-table">
-      <p class="kicker">Live audit table</p>
-      <div id="auditRows">Preparing checks…</div>
+    <section class="manor-room" style="margin-top:28px" aria-label="Live audit table">
+      <p class="manor-kicker">Live audit table</p>
+      <div id="auditTable" class="manor-grid" aria-live="polite"></div>
     </section>
 
-    <section class="backlinks">
-      <p class="label">House backlinks</p>
-      <ul class="chip-list">
-        <li><a class="chip" href="/">Compass</a></li>
-        <li><a class="chip" href="/door/">Door</a></li>
-        <li><a class="chip" href="/home/">Home</a></li>
-        <li><a class="chip" href="/products/">Products</a></li>
-        <li><a class="chip" href="/showroom/">Showroom</a></li>
-        <li><a class="chip" href="/gauges/" aria-current="page">Gauges · active</a></li>
+    <section class="manor-backlinks" aria-label="House backlinks">
+      <p class="manor-backlinks-title">House backlinks</p>
+      <ul class="manor-backlinks-list">
+        <li><a href="/">Compass</a></li>
+        <li><a href="/home/">Home</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/showroom/">Showroom</a></li>
       </ul>
     </section>
 
-    <section class="audit-strip">
-      <p class="label">Batch 4 route-corrected audit markers</p>
-      <ul class="chip-list">
-        <li class="chip pass">route-exists</li>
-        <li class="chip pass">manor-skin</li>
-        <li class="chip pass">house-class</li>
-        <li class="chip pass">H6_GAUGES</li>
-        <li class="chip pass">live-calculated</li>
-        <li class="chip pass">product-chamber-deep-audit</li>
-        <li class="chip pass">planetary-deep-audit</li>
-        <li class="chip pass">route-contract-corrected</li>
+    <section class="manor-audit-strip" aria-label="Gauges audit receipt">
+      <p class="manor-audit-title">Gauges receipt</p>
+      <ul class="manor-audit-list">
+        <li class="manor-audit-chip pass">route-exists</li>
+        <li class="manor-audit-chip pass">manor-skin</li>
+        <li class="manor-audit-chip pass">house-class</li>
+        <li class="manor-audit-chip pass">H6_GAUGES</li>
+        <li class="manor-audit-chip pass">live-calculated</li>
       </ul>
+      <p class="batch-note">
+        Batch rule: Gauges may style evidence, but Gauges may not fake evidence. Registry defines expectations. This page checks what is actually served.
+      </p>
     </section>
   </main>
 
@@ -382,193 +104,176 @@
     (function () {
       "use strict";
 
-      var houseChecks = [
-        ["house", "Compass", "/", ['data-manor-room="compass"', 'data-manor-class="house"', "/door/", "/products/", "/gauges/"]],
-        ["house", "Door", "/door/", ['data-manor-room="door"', 'data-manor-class="house"', "/home/", "/products/", "/gauges/"]],
-        ["house", "Home", "/home/", ['data-manor-room="home"', 'data-manor-class="house"', "/door/", "/products/", "/gauges/"]],
-        ["house", "Products", "/products/", ['data-manor-room="products"', 'data-manor-class="house"', "/products/archcoin/", "/products/on-your-side-ai/", "/gauges/"]],
-        ["house", "Showroom", "/showroom/", ['data-manor-room="showroom"', 'data-manor-class="house"', "/", "/products/", "/gauges/"]],
-        ["house", "Gauges", "/gauges/", ['data-manor-room="gauges"', 'data-manor-class="house"', "live-calculated", "product-chamber-deep-audit", "planetary-deep-audit"]]
+      var groups = [
+        {
+          id: "house",
+          label: "Batch 1 · House skeleton",
+          items: [
+            {
+              name: "Compass",
+              route: "/",
+              required: ["H1_COMPASS", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"compass\""]
+            },
+            {
+              name: "Door",
+              route: "/door/",
+              required: ["H2_DOOR", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"door\""]
+            },
+            {
+              name: "Home",
+              route: "/home/",
+              required: ["H3_HOME", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"home\""]
+            },
+            {
+              name: "Products",
+              route: "/products/",
+              required: ["H4_PRODUCTS", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"products\""]
+            },
+            {
+              name: "Showroom",
+              route: "/showroom/",
+              required: ["H5_SHOWROOM", "manor-skin", "house-class", "data-manor-class=\"house\"", "data-page-id=\"showroom\""]
+            },
+            {
+              name: "Gauges",
+              route: "/gauges/",
+              required: ["H6_GAUGES", "manor-skin", "house-class", "data-manor-class=\"house\"", "live-calculated"]
+            }
+          ]
+        },
+        {
+          id: "products",
+          label: "Batch 2 · Product chamber reachability",
+          items: [
+            { name: "ARCHCOIN", route: "/products/archcoin/", any: [["ARCHCOIN", "Archcoin"]] },
+            { name: "Five Flags", route: "/products/five-flags/", any: [["Five Flags"]] },
+            { name: "On Your Side AAI", route: "/products/on-your-side-ai/", any: [["On Your Side", "AAI", "AI"]] },
+            { name: "Education", route: "/products/education/", any: [["Education", "ESL Traversal Learning", "Learning"]] },
+            { name: "Nutrition", route: "/products/nutrition/", any: [["Nutrition", "Baseline Nutrition Systems"]] }
+          ]
+        },
+        {
+          id: "planets",
+          label: "Batch 3 · Planetary construct reachability",
+          items: [
+            { name: "Prelude", route: "/prelude/", any: [["Prelude"]] },
+            { name: "Explore", route: "/explore/", any: [["Explore"]] },
+            { name: "Frontier · hosted in Explore", route: "/explore/", any: [["Frontier", "frontier"]] },
+            { name: "Laws", route: "/laws/", any: [["Laws"]] },
+            { name: "Governance", route: "/governance/", any: [["Governance"]] },
+            { name: "Upper Room · hosted in Big Laugh", route: "/big-laugh/upper-room/", any: [["Upper Room", "fill your cup", "comedy"]] },
+            { name: "About This Underdog", route: "/about-this-underdog/", any: [["Underdog", "About"]] },
+            { name: "Nine Summits Universe", route: "/nine-summits/", any: [["Nine Summits"]] },
+            { name: "Nine Summits of Love", route: "/nine-summits-of-love/", any: [["Nine Summits of Love", "256", "human potential"]] }
+          ]
+        }
       ];
 
-      var productChecks = [
-        ["product", "ARCHCOIN", "/products/archcoin/", ['data-manor-class="product-chamber"', 'data-product-id="archcoin"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "archcoin-not-planet", "four-coin-template"]],
-        ["product", "Five Flags", "/products/five-flags/", ['data-manor-class="product-chamber"', 'data-product-id="five-flags"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "five-flags", "canonical-destination"]],
-        ["product", "On Your Side AAI", "/products/on-your-side-ai/", ['data-manor-class="product-chamber"', 'data-product-id="on-your-side-ai"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "on-your-side-aai", "bounded-assistance"]],
-        ["product", "ESL Traversal Learning", "/products/education/", ['data-manor-class="product-chamber"', 'data-product-id="education"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "education", "traversal-learning"]],
-        ["product", "Baseline Nutrition Systems", "/products/nutrition/", ['data-manor-class="product-chamber"', 'data-product-id="nutrition"', 'data-product-parent="/products/"', 'data-manor-batch="BATCH_2_PRODUCTS"', "nutrition", "support-not-shame"]]
-      ];
+      var table = document.getElementById("auditTable");
+      var overallScore = document.getElementById("overallScore");
+      var houseScore = document.getElementById("houseScore");
+      var productScore = document.getElementById("productScore");
+      var planetScore = document.getElementById("planetScore");
+      var overallLabel = document.getElementById("overallLabel");
 
-      var planetChecks = [
-        ["planet", "Prelude", "/prelude/", ['data-manor-class="planet"', 'data-planet-id="prelude"', 'data-planet-slot="P1_PRELUDE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "opening-atmosphere"]],
-        ["planet", "Explore", "/explore/", ['data-manor-class="planet"', 'data-planet-id="explore"', 'data-planet-slot="P2_EXPLORE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "discovery-traversal"]],
-        ["planet", "Frontier · hosted in Explore", "/explore/", ['data-manor-class="planet"', 'data-planet-id="frontier"', 'data-planet-slot="P3_FRONTIER"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "expansion-edge"]],
-        ["planet", "Laws", "/laws/", ['data-manor-class="planet"', 'data-planet-id="laws"', 'data-planet-slot="P4_LAWS"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "law-boundary"]],
-        ["planet", "Governance", "/governance/", ['data-manor-class="planet"', 'data-planet-id="governance"', 'data-planet-slot="P5_GOVERNANCE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "governance-bridge"]],
-        ["planet", "Upper Room · hosted in Big Laugh", "/big-laugh/upper-room/", ['data-manor-class="planet"', 'data-planet-id="upper-room"', 'data-planet-slot="P6_UPPER_ROOM"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "event-gathering-band"]],
-        ["planet", "About This Underdog", "/about-this-underdog/", ['data-manor-class="planet"', 'data-planet-id="about-this-underdog"', 'data-planet-slot="P7_ABOUT_THIS_UNDERDOG"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "origin-story-witness"]],
-        ["planet", "Nine Summits Universe", "/nine-summits/", ['data-manor-class="planet"', 'data-planet-id="nine-summits-universe"', 'data-planet-slot="P8_NINE_SUMMITS_UNIVERSE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "macro-orbit-field"]],
-        ["planet", "Nine Summits of Love", "/nine-summits-of-love/", ['data-manor-class="planet"', 'data-planet-id="nine-summits-of-love"', 'data-planet-slot="P9_NINE_SUMMITS_OF_LOVE"', 'data-planet-orbit="manor"', 'data-manor-batch="BATCH_3_PLANETS"', "256-diamonds-human-potential"]]
-      ];
-
-      function byId(id) {
-        return document.getElementById(id);
+      function hasAny(text, options) {
+        return options.some(function (value) {
+          return text.indexOf(value) !== -1;
+        });
       }
 
-      function setText(id, value) {
-        var node = byId(id);
-        if (node) node.textContent = String(value);
+      function checkItem(text, item) {
+        var checks = [];
+
+        if (item.required) {
+          item.required.forEach(function (needle) {
+            checks.push({ label: needle, pass: text.indexOf(needle) !== -1 });
+          });
+        }
+
+        if (item.any) {
+          item.any.forEach(function (options) {
+            checks.push({ label: options.join(" OR "), pass: hasAny(text, options) });
+          });
+        }
+
+        if (!checks.length) {
+          checks.push({ label: "route reachable", pass: true });
+        }
+
+        var passed = checks.filter(function (check) { return check.pass; }).length;
+        var score = Math.round((passed / checks.length) * 100);
+
+        return {
+          score: score,
+          passed: passed,
+          total: checks.length,
+          checks: checks
+        };
       }
 
-      function average(values) {
-        if (!values.length) return 0;
-        return Math.round(values.reduce(function (sum, value) {
-          return sum + value;
-        }, 0) / values.length);
-      }
+      function card(group, item, result, error) {
+        var node = document.createElement("article");
+        node.className = "manor-card";
 
-      function statusClass(score) {
-        if (score >= 90) return "status-pass";
-        if (score >= 70) return "status-warn";
-        return "status-fail";
-      }
+        var status = error ? "fail" : result.score === 100 ? "pass" : result.score >= 70 ? "warn" : "fail";
+        var missing = error ? ["fetch failed"] : result.checks.filter(function (check) { return !check.pass; }).map(function (check) { return check.label; });
 
-      function statusLabel(score) {
-        if (score >= 95) return "OPTIMAL / corrected route contract stable";
-        if (score >= 90) return "PASS / minor refinement only";
-        if (score >= 70) return "ACTIVE / refinement required";
-        return "UNSTABLE / repair required";
-      }
+        node.innerHTML =
+          "<p class=\"manor-kicker\">" + group.label + "</p>" +
+          "<h2>" + item.name + "</h2>" +
+          "<p class=\"manor-lede\"><code>" + item.route + "</code></p>" +
+          "<p><span class=\"manor-audit-chip " + status + "\">" + (error ? "0" : result.score) + "</span></p>" +
+          "<p class=\"batch-note\">" + (error ? "Route check failed." : result.passed + " of " + result.total + " required checks found.") + "</p>" +
+          (missing.length ? "<p class=\"batch-note\">missing: " + missing.join(", ") + "</p>" : "");
 
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+        return node;
       }
 
       function fetchText(route) {
-        var cacheBust = route.indexOf("?") === -1 ? "?audit=" : "&audit=";
-        return fetch(route + cacheBust + Date.now(), { cache: "no-store" })
-          .then(function (response) {
-            return response.text().then(function (text) {
-              return { ok: response.ok, status: response.status, text: text };
+        return fetch(route, { cache: "no-store" }).then(function (response) {
+          if (!response.ok) throw new Error("HTTP " + response.status);
+          return response.text();
+        });
+      }
+
+      Promise.all(groups.map(function (group) {
+        return Promise.all(group.items.map(function (item) {
+          return fetchText(item.route)
+            .then(function (text) {
+              var result = checkItem(text, item);
+              table.appendChild(card(group, item, result, null));
+              return result.score;
+            })
+            .catch(function (error) {
+              table.appendChild(card(group, item, { score: 0, passed: 0, total: 1, checks: [] }, error));
+              return 0;
             });
-          })
-          .catch(function (error) {
-            return { ok: false, status: 0, text: "", error: error && error.message ? error.message : "fetch-failed" };
-          });
-      }
-
-      function runCheck(definition) {
-        var kind = definition[0];
-        var label = definition[1];
-        var route = definition[2];
-        var markers = definition[3];
-
-        return fetchText(route).then(function (result) {
-          var hits = markers.filter(function (marker) {
-            return result.text.indexOf(marker) !== -1;
-          });
-
-          var missing = markers.filter(function (marker) {
-            return result.text.indexOf(marker) === -1;
-          });
-
-          var routePoints = result.ok ? 40 : 0;
-          var markerPoints = Math.round((hits.length / markers.length) * 60);
-
-          return {
-            kind: kind,
-            label: label,
-            route: route,
-            ok: result.ok,
-            status: result.status,
-            score: routePoints + markerPoints,
-            hitCount: hits.length,
-            requiredCount: markers.length,
-            missing: missing
-          };
+        })).then(function (scores) {
+          var average = Math.round(scores.reduce(function (a, b) { return a + b; }, 0) / scores.length);
+          return { id: group.id, score: average };
         });
-      }
+      })).then(function (groupScores) {
+        var map = {};
+        groupScores.forEach(function (item) { map[item.id] = item.score; });
 
-      function renderRows(title, results) {
-        var rows = results.map(function (result) {
-          var missingHtml = "";
+        var overall = Math.round(groupScores.reduce(function (a, b) { return a + b.score; }, 0) / groupScores.length);
 
-          if (result.missing.length) {
-            missingHtml =
-              '<ul class="missing">' +
-              result.missing.map(function (marker) {
-                return "<li>missing: <code>" + escapeHtml(marker) + "</code></li>";
-              }).join("") +
-              "</ul>";
-          }
+        houseScore.textContent = String(map.house);
+        productScore.textContent = String(map.products);
+        planetScore.textContent = String(map.planets);
+        overallScore.textContent = String(overall);
 
-          return (
-            '<div class="row">' +
-              "<div>" +
-                "<strong>" + escapeHtml(result.label) + "</strong><br>" +
-                "<code>" + escapeHtml(result.route) + "</code><br>" +
-                '<span class="small">' +
-                  escapeHtml(result.hitCount + " of " + result.requiredCount + " required markers found.") +
-                "</span>" +
-                missingHtml +
-              "</div>" +
-              '<div class="' + statusClass(result.score) + '"><strong>' + result.score + "</strong></div>" +
-            "</div>"
-          );
-        }).join("");
-
-        return (
-          '<div class="group">' +
-            '<p class="group-title">' + escapeHtml(title) + "</p>" +
-            rows +
-          "</div>"
-        );
-      }
-
-      Promise.all(houseChecks.concat(productChecks).concat(planetChecks).map(runCheck))
-        .then(function (results) {
-          var houseResults = results.filter(function (result) { return result.kind === "house"; });
-          var productResults = results.filter(function (result) { return result.kind === "product"; });
-          var planetResults = results.filter(function (result) { return result.kind === "planet"; });
-
-          var routeScore = average(results.map(function (result) { return result.ok ? 100 : 0; }));
-          var houseScore = average(houseResults.map(function (result) { return result.score; }));
-          var productScore = average(productResults.map(function (result) { return result.score; }));
-          var planetScore = average(planetResults.map(function (result) { return result.score; }));
-          var overallScore = average([routeScore, houseScore, productScore, planetScore]);
-
-          setText("overallScore", overallScore);
-          setText("routeScore", routeScore);
-          setText("houseScore", houseScore);
-          setText("productScore", productScore);
-          setText("planetScore", planetScore);
-          setText("planetCount", planetResults.length);
-
-          var status = byId("overallStatus");
-          if (status) {
-            status.textContent = statusLabel(overallScore);
-            status.className = statusClass(overallScore);
-          }
-
-          var auditRows = byId("auditRows");
-          if (auditRows) {
-            auditRows.innerHTML =
-              renderRows("Batch 1 · House skeleton", houseResults) +
-              renderRows("Batch 2 · Product chamber deep audit", productResults) +
-              renderRows("Batch 3 · Planetary construct deep audit · corrected routes", planetResults);
-          }
-
-          document.documentElement.setAttribute("data-gauges-route-score", String(routeScore));
-          document.documentElement.setAttribute("data-gauges-house-score", String(houseScore));
-          document.documentElement.setAttribute("data-gauges-product-score", String(productScore));
-          document.documentElement.setAttribute("data-gauges-planet-score", String(planetScore));
-          document.documentElement.setAttribute("data-gauges-overall-score", String(overallScore));
-        });
+        if (overall === 100) {
+          overallLabel.textContent = "OPTIMAL / live route law stable";
+        } else if (overall >= 90) {
+          overallLabel.textContent = "PASS / minor refinement only";
+        } else if (overall >= 70) {
+          overallLabel.textContent = "WARN / repair exact failed checks";
+        } else {
+          overallLabel.textContent = "FAIL / repair route, marker, backlink, or render issue";
+        }
+      });
     })();
   </script>
 </body>

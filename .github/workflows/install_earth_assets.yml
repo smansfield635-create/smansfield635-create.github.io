@@ -1,16 +1,16 @@
-name: Create Earth Surface Asset
+name: Create Earth Cloud Asset
 
 on:
   workflow_dispatch:
   push:
     paths:
-      - ".github/workflows/create_earth_surface_asset.yml"
+      - ".github/workflows/create_earth_cloud_asset.yml"
 
 permissions:
   contents: write
 
 jobs:
-  create-earth-surface-asset:
+  create-earth-cloud-asset:
     runs-on: ubuntu-latest
 
     steps:
@@ -26,35 +26,37 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y imagemagick file
 
-      - name: Create earth_surface_2048.jpg
+      - name: Create earth_clouds_2048.jpg
         run: |
-          convert -size 2048x1024 xc:'#06142f' \
-            -fill '#123d7a' -draw "rectangle 0,0 2048,1024" \
-            -fill '#0e3a7a' -draw "ellipse 1024,512 1024,512 0,360" \
-            -fill '#4b8f45' -draw "ellipse 610,420 270,135 0,360" \
-            -fill '#6f9b4c' -draw "ellipse 940,610 170,255 0,360" \
-            -fill '#9a7a45' -draw "ellipse 1370,390 230,165 0,360" \
-            -fill '#5d8f48' -draw "ellipse 1500,650 160,210 0,360" \
-            -fill '#ffffff55' -draw "ellipse 520,180 420,70 0,360" \
-            -fill '#ffffff40' -draw "ellipse 1220,820 560,90 0,360" \
+          convert -size 2048x1024 xc:'#05070b' \
+            -fill '#f7f7f7' -draw "ellipse 390,250 360,48 0,360" \
+            -fill '#e8e8e8' -draw "ellipse 620,345 260,38 0,360" \
+            -fill '#f2f2f2' -draw "ellipse 870,480 470,60 0,360" \
+            -fill '#dddddd' -draw "ellipse 1040,575 330,42 0,360" \
+            -fill '#eeeeee' -draw "ellipse 1350,680 530,70 0,360" \
+            -fill '#d8d8d8' -draw "ellipse 1670,260 370,45 0,360" \
+            -fill '#e4e4e4' -draw "ellipse 600,760 500,56 0,360" \
+            -fill '#cecece' -draw "ellipse 1560,430 470,48 0,360" \
+            -fill '#f0f0f0' -draw "ellipse 1780,790 320,36 0,360" \
+            -blur 0x8 \
             -quality 92 \
-            assets/earth/earth_surface_2048.jpg
+            assets/earth/earth_clouds_2048.jpg
 
-      - name: Verify earth_surface_2048.jpg
+      - name: Verify earth_clouds_2048.jpg
         run: |
-          test -s assets/earth/earth_surface_2048.jpg
-          file assets/earth/earth_surface_2048.jpg
+          test -s assets/earth/earth_clouds_2048.jpg
+          file assets/earth/earth_clouds_2048.jpg
 
-      - name: Commit earth_surface_2048.jpg
+      - name: Commit earth_clouds_2048.jpg
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add assets/earth/earth_surface_2048.jpg
+          git add assets/earth/earth_clouds_2048.jpg
 
           if git diff --cached --quiet; then
-            echo "earth_surface_2048.jpg already exists."
+            echo "earth_clouds_2048.jpg already exists."
           else
-            git commit -m "Create Earth surface asset"
+            git commit -m "Create Earth cloud JPG asset"
             git push
           fi

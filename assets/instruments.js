@@ -1,6 +1,6 @@
 /* ==========================================================================
    Diamond Gate Bridge · Instruments Asset Layer
-   GAUGES_B9_TRUE_FINAL_CONTRACT
+   GAUGES_B9_TRUE_FINAL_CLEAN_READ
    PATH: /assets/instruments.js
 
    PURPOSE:
@@ -8,7 +8,8 @@
    - One source for gauge readings, routes, color states, legend semantics,
      TED copy, receipts, and render helpers.
    - Preserve page-neutral instrument receipt exports.
-   - Eliminate B4/B5/B6/B7 residue from the live Gauges read.
+   - Keep B9 active while removing the extra visible pipe separators from
+     legend and route rendering.
 
    BOUNDARY:
    - Asset-level only.
@@ -20,7 +21,7 @@
 
 const INSTRUMENT_META = deepFreeze({
   name: "instruments",
-  version: "G2_GAUGES_B9_TRUE_FINAL_CONTRACT",
+  version: "G2_GAUGES_B9_TRUE_FINAL_CLEAN_READ",
   contract: "INSTRUMENT_CONTRACT_G2",
   role: "diagnostic_shaping_and_gauge_asset_layer",
   deterministic: true,
@@ -715,9 +716,8 @@ export function renderGaugeRouteRailHTML(routes = GAUGE_ROUTES) {
   ];
 
   return links
-    .map(([label, href], index) => {
-      const sep = index < links.length - 1 ? '<span class="routeSep" aria-hidden="true"> | </span>' : "";
-      return '<li><a href="' + escapeHtml(href) + '">' + escapeHtml(label) + "</a>" + sep + "</li>";
+    .map(([label, href]) => {
+      return '<li><a href="' + escapeHtml(href) + '">' + escapeHtml(label) + '</a></li>';
     })
     .join("\n");
 }
@@ -755,9 +755,8 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
 
   return keys
     .filter((key) => states[key])
-    .map((key, index) => {
+    .map((key) => {
       const item = states[key];
-      const sep = index < keys.length - 1 ? '<span class="legendSep" aria-hidden="true"> | </span>' : "";
 
       return (
         '<li class="legendItem" aria-label="' +
@@ -769,7 +768,6 @@ export function renderGaugeLegendHTML(colorStates = GAUGE_COLOR_STATES) {
         '<span class="legendLabel">' +
         escapeHtml(item.label) +
         "</span>" +
-        sep +
         "</li>"
       );
     })

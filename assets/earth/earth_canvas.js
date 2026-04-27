@@ -1,17 +1,20 @@
 /* TNT RENEWAL — /assets/earth/earth_canvas.js
-   EARTH ASSET SPINE · CANVAS B19 · DIMENSIONAL GLOBE / STABLE LIMB
+   EARTH ASSET SPINE · CANVAS B20 · CAMERA THE EARTH
 
    CONTRACT:
-     - Render Earth as a globe-first dimensional object.
+     - Render Earth as a large orbital body viewed from space.
+     - Do not force the full classroom globe into view.
+     - Earth may exceed the visible frame.
      - Use inverse orthographic sphere sampling.
-     - Force square internal render surface to prevent canvas deformation.
-     - Remove lower-left pinch / fold behavior.
-     - Remove detached crescent artifacts.
-     - Remove outer circular stroke / rim / atmosphere ring.
      - Preserve local B5 JPG paths.
      - Preserve runtime API.
      - Preserve zoom, drag, spin, reset, pause.
      - Preserve targetFrameMs frame-budget marker.
+     - Preserve 256-lattice status marker.
+     - No outer ring.
+     - No atmosphere shell.
+     - No final circular stroke.
+     - No detached crescent overlay.
 */
 
 (function () {
@@ -20,7 +23,7 @@
   var TAU = Math.PI * 2;
 
   var DEFAULTS = {
-    assetId: "earth-asset-b5-dimensional-globe-b19",
+    assetId: "earth-asset-b5-camera-earth-b20",
     surface: "/assets/earth/earth_surface_2048.jpg",
     clouds: "/assets/earth/earth_clouds_2048.jpg",
     fallback: "/assets/earth/earth.svg",
@@ -30,10 +33,10 @@
     textureWidth: 1024,
     textureHeight: 512,
 
-    mobileDprCap: 1.35,
-    desktopDprCap: 1.75,
-    mobileRenderCap: 620,
-    desktopRenderCap: 820,
+    mobileDprCap: 1.25,
+    desktopDprCap: 1.55,
+    mobileRenderCap: 580,
+    desktopRenderCap: 760,
 
     defaultRotation: 0.35,
     defaultVelocity: 0.006,
@@ -43,8 +46,12 @@
     maxZoom: 1.38,
     zoomStep: 0.08,
 
+    cameraRadius: 0.64,
+    cameraOffsetX: -0.07,
+    cameraOffsetY: 0.07,
+
     cloudAlpha: 0,
-    edgeFeatherPx: 1.35
+    edgeFeatherPx: 1.2
   };
 
   function clamp(value, min, max) {
@@ -111,7 +118,7 @@
         });
       };
 
-      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b19-" + Date.now();
+      image.src = src + (src.indexOf("?") === -1 ? "?v=" : "&v=") + "earth-canvas-b20-" + Date.now();
     });
   }
 
@@ -233,9 +240,10 @@
       mount.setAttribute("data-earth-zoom", zoom.toFixed(2));
       mount.setAttribute("data-earth-paused", paused ? "true" : "false");
       mount.setAttribute("data-earth-target-frame-ms", String(config.targetFrameMs));
-      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b19-dimensional-globe");
-      mount.setAttribute("data-earth-projection", "inverse-orthographic-square-surface");
+      mount.setAttribute("data-earth-renderer-version", "earth-canvas-b20-camera-earth");
+      mount.setAttribute("data-earth-projection", "camera-framed-inverse-orthographic");
       mount.setAttribute("data-earth-lattice-scope", "256");
+      mount.setAttribute("data-earth-camera-mode", "orbital-crop");
       mount.setAttribute("data-earth-cloud-overlay", config.cloudAlpha > 0 ? "subtle" : "surface-composite");
     }
 
@@ -250,8 +258,8 @@
       if (!canvas || !ctx) return;
 
       rect = canvas.getBoundingClientRect();
-
       cssSide = Math.max(1, Math.min(rect.width || 1, rect.height || 1));
+
       cap = window.innerWidth <= 760 ? config.mobileDprCap : config.desktopDprCap;
       renderCap = window.innerWidth <= 760 ? config.mobileRenderCap : config.desktopRenderCap;
       dpr = Math.min(cap, window.devicePixelRatio || 1);
@@ -261,14 +269,13 @@
 
       canvas.width = desiredSide;
       canvas.height = desiredSide;
+      canvas.style.width = "100%";
+      canvas.style.height = "100%";
 
       if (desiredSide !== renderSize) {
         renderSize = desiredSide;
         imageData = ctx.createImageData(renderSize, renderSize);
       }
-
-      canvas.style.width = "100%";
-      canvas.style.height = "100%";
 
       ctx.imageSmoothingEnabled = true;
       ctx.imageSmoothingQuality = "high";
@@ -276,16 +283,14 @@
 
     function geometry() {
       var side = renderSize || Math.min(canvas.width, canvas.height) || 1;
-      var cx = side * 0.5;
-      var cy = side * 0.5;
-      var r = side * 0.492 * zoom;
+      var radius = side * config.cameraRadius * zoom;
 
       return {
         width: side,
         height: side,
-        cx: cx,
-        cy: cy,
-        r: r
+        cx: side * (0.5 + config.cameraOffsetX),
+        cy: side * (0.5 + config.cameraOffsetY),
+        r: radius
       };
     }
 
@@ -433,8 +438,8 @@
           diffuse = clamp(sx * light.x + sy * light.y + sz * light.z, 0, 1);
           limb = clamp(nz, 0, 1);
 
-          shade = 0.46 + diffuse * 0.48;
-          shade *= 0.80 + limb * 0.20;
+          shade = 0.48 + diffuse * 0.46;
+          shade *= 0.82 + limb * 0.18;
 
           r = clamp(r * shade + 3, 0, 255);
           g = clamp(g * shade + 3, 0, 255);
@@ -501,7 +506,8 @@
         surfaceReady: surfaceReady,
         cloudReady: cloudReady,
         cloudOverlayAlpha: config.cloudAlpha,
-        projection: "inverse-orthographic-square-surface",
+        projection: "camera-framed-inverse-orthographic",
+        cameraMode: "orbital-crop",
         latticeScope: 256,
         rotation: rotation,
         velocity: velocity,
@@ -633,7 +639,7 @@
   }
 
   window.DGBEarthCanvas = {
-    version: "earth-canvas-b19-dimensional-globe",
+    version: "earth-canvas-b20-camera-earth",
     create: createEarthRenderer
   };
 })();

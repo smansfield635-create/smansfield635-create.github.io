@@ -1,18 +1,19 @@
+
 <!DOCTYPE html>
-<html lang="en" data-product-generation="esl-traversal-learning-russian-doll-full-expression-b6">
+<html lang="en" data-product-generation="esl-traversal-nested-chamber-b7">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>ESL Traversal Learning · Products</title>
   <meta
     name="description"
-    content="ESL Traversal Learning — an English-by-movement product path for real-life scenes, comprehension, speech, confidence, and practical use."
+    content="ESL Traversal Learning — English by movement, scene, context, confidence, and practical real-life use."
   />
 
   <style>
     :root{
       color-scheme:dark;
-      --panel:rgba(7,14,28,.88);
+      --panel:rgba(7,14,28,.86);
       --panel2:rgba(10,20,42,.94);
       --line:rgba(255,218,150,.22);
       --iceLine:rgba(215,228,255,.32);
@@ -24,7 +25,7 @@
       --blue:#8ec5ff;
       --mint:#93efbd;
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -66,7 +67,7 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
+        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.46),transparent 36%),
         radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
         radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
         linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
@@ -78,14 +79,18 @@
     .page{
       width:min(var(--max),calc(100vw - 20px));
       margin:0 auto;
-      padding:14px 0 30px;
+      min-height:100svh;
+      padding:14px 0 24px;
       position:relative;
       z-index:1;
       display:grid;
+      grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
-    .topbar,.hero,.stage,.panel,.card,.route-card{
+    .topbar,
+    .stage,
+    .routeRail{
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(215,228,255,.12),transparent 42%),
@@ -157,7 +162,9 @@
       justify-content:flex-end;
     }
 
-    .nav a,.button{
+    .nav a,
+    .routeRail a,
+    .action{
       min-height:40px;
       display:inline-flex;
       align-items:center;
@@ -173,27 +180,27 @@
       text-transform:uppercase;
     }
 
-    .nav a.featured,.button.primary{
+    .nav a.featured,
+    .action.primary{
       border-color:rgba(215,228,255,.48);
       background:rgba(215,228,255,.10);
       color:#eef4ff;
       box-shadow:0 0 22px rgba(215,228,255,.12);
     }
 
-    .hero{
+    .stage{
       border-radius:34px;
-      padding:clamp(24px,5vw,56px);
-      min-height:calc(100svh - 150px);
+      min-height:0;
+      padding:clamp(18px,3vw,28px);
       display:grid;
-      grid-template-columns:minmax(0,1.02fr) minmax(280px,.98fr);
-      gap:28px;
-      align-items:center;
+      grid-template-columns:minmax(0,.95fr) minmax(320px,1.05fr);
+      gap:18px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .hero::before{
+    .stage::before{
       content:"";
       position:absolute;
       width:min(760px,92vw);
@@ -203,19 +210,19 @@
       transform:translate(-50%,-50%);
       border-radius:50%;
       background:
-        radial-gradient(circle at 50% 50%,rgba(215,228,255,.22),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.16),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.20),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 42%),
         radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 58%),
         radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
       filter:blur(5px);
-      z-index:-3;
+      z-index:-2;
     }
 
-    .heroCopy{
+    .copy{
       display:grid;
       gap:14px;
-      position:relative;
-      z-index:2;
+      align-content:center;
+      min-width:0;
     }
 
     .pill{
@@ -247,7 +254,7 @@
     h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3rem,9vw,6.4rem);
+      font-size:clamp(3rem,8.4vw,6.4rem);
       line-height:.86;
       letter-spacing:-.07em;
       text-transform:uppercase;
@@ -256,7 +263,7 @@
     h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.45rem,4.6vw,2.9rem);
+      font-size:clamp(1.38rem,4vw,2.65rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -264,59 +271,82 @@
     p{
       margin:0;
       color:var(--muted);
-      line-height:1.62;
+      line-height:1.56;
       font-size:1rem;
     }
 
     .thesis{
       color:#fff;
-      font-size:clamp(1.16rem,2.7vw,1.7rem);
+      font-size:clamp(1.12rem,2.25vw,1.52rem);
       line-height:1.18;
       font-weight:850;
-      letter-spacing:-.04em;
-      max-width:820px;
+      letter-spacing:-.035em;
+      max-width:780px;
     }
 
     .actions{
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:4px;
+      margin-top:2px;
     }
 
-    .learningOrb{
+    .chamber{
       position:relative;
-      width:min(100%,360px);
-      aspect-ratio:1;
-      margin:auto;
+      min-height:560px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:32px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(215,228,255,.13),rgba(142,197,255,.055) 34%,rgba(0,0,0,0) 66%),
+        linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.014));
+      overflow:hidden;
       display:grid;
       place-items:center;
-      filter:drop-shadow(0 24px 48px rgba(0,0,0,.38));
     }
 
-    .learningOrb::before{
-      content:"";
+    .ring{
       position:absolute;
-      inset:3%;
+      left:50%;
+      top:50%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.13);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(215,228,255,.18),transparent 28%),
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg 3deg,transparent 3deg 18deg);
-      box-shadow:
-        inset 0 0 54px rgba(0,0,0,.34),
-        0 0 50px rgba(215,228,255,.12);
-      animation:slowSpin 26s linear infinite;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      border:1px solid rgba(215,228,255,.13);
+      box-shadow:inset 0 0 36px rgba(0,0,0,.20);
     }
 
-    .learningCore{
+    .ring.r1{
+      width:min(88%,500px);
+      aspect-ratio:1;
+      background:
+        radial-gradient(circle at 50% 50%,transparent 42%,rgba(215,228,255,.05) 43%,transparent 68%);
+      animation:slowSpin 42s linear infinite;
+    }
+
+    .ring.r2{
+      width:min(70%,390px);
+      aspect-ratio:1;
+      background:
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);
+      animation:slowSpin 34s linear infinite reverse;
+    }
+
+    .ring.r3{
+      width:min(52%,285px);
+      aspect-ratio:1;
+      background:radial-gradient(circle at 50% 50%,rgba(215,228,255,.06),transparent 52%);
+      animation:slowSpin 24s linear infinite;
+    }
+
+    .core{
       position:relative;
-      width:46%;
+      z-index:4;
+      width:min(42%,190px);
       aspect-ratio:1;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.22);
+      border:1px solid rgba(255,255,255,.24);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.50),transparent 13%),
         radial-gradient(circle at 50% 50%,rgba(215,228,255,.38),rgba(142,197,255,.16) 48%,rgba(0,0,0,.24) 100%);
       box-shadow:
         inset 0 0 42px rgba(215,228,255,.18),
@@ -325,10 +355,10 @@
       place-items:center;
       text-align:center;
       overflow:hidden;
-      z-index:3;
+      padding:18px;
     }
 
-    .learningCore::before{
+    .core::before{
       content:"";
       position:absolute;
       inset:14px;
@@ -339,34 +369,97 @@
       animation:slowSpin 16s linear infinite reverse;
     }
 
-    .learningCore span{
+    .core span{
       position:relative;
       z-index:2;
       color:#eef4ff;
       font-weight:950;
-      font-size:.80rem;
+      font-size:.82rem;
       letter-spacing:.10em;
       line-height:1.2;
       text-transform:uppercase;
       text-shadow:0 2px 12px rgba(0,0,0,.70);
     }
 
-    .learningLine{
+    .node{
+      position:absolute;
+      z-index:5;
+      width:132px;
+      min-height:84px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(215,228,255,.12),transparent 70%),
+        linear-gradient(180deg,rgba(7,14,28,.82),rgba(10,20,42,.92));
+      color:var(--text);
+      box-shadow:0 18px 38px rgba(0,0,0,.34);
+      display:grid;
+      gap:4px;
+      align-content:center;
+      padding:12px;
+      cursor:pointer;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+      text-align:left;
+    }
+
+    .node:hover,
+    .node:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(215,228,255,.42);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .node[data-active="true"]{
+      border-color:rgba(215,228,255,.48);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(215,228,255,.18),transparent 70%),
+        linear-gradient(180deg,rgba(12,24,48,.92),rgba(7,14,28,.94));
+    }
+
+    .node small{
+      color:#dce7ff;
+      font-size:.62rem;
+      font-weight:950;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .node strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.05;
+      letter-spacing:-.035em;
+    }
+
+    .node.scene{left:50%;top:18px;transform:translateX(-50%)}
+    .node.listen{right:18px;top:50%;transform:translateY(-50%)}
+    .node.meaning{left:50%;bottom:18px;transform:translateX(-50%)}
+    .node.speak{left:18px;top:50%;transform:translateY(-50%)}
+    .node.use{right:40px;bottom:44px}
+
+    .node.scene:hover,.node.scene:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .node.listen:hover,.node.listen:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .node.meaning:hover,.node.meaning:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .node.speak:hover,.node.speak:focus-visible{transform:translateY(calc(-50% - 4px))}
+
+    .line{
       position:absolute;
       left:50%;
       top:50%;
-      width:36%;
+      width:34%;
       height:7px;
       transform-origin:left center;
       border-radius:999px;
       background:linear-gradient(90deg,rgba(255,255,255,.72),rgba(215,228,255,.46),transparent);
-      opacity:.70;
-      z-index:1;
+      opacity:.56;
+      z-index:2;
       overflow:hidden;
-      filter:drop-shadow(0 0 12px rgba(215,228,255,.26));
+      pointer-events:none;
+      filter:drop-shadow(0 0 12px rgba(215,228,255,.22));
     }
 
-    .learningLine::after{
+    .line::after{
       content:"";
       position:absolute;
       inset:0;
@@ -374,249 +467,70 @@
       animation:signalRun 1.7s linear infinite;
     }
 
-    .learningLine.north{transform:rotate(-90deg)}
-    .learningLine.east{transform:rotate(0deg)}
-    .learningLine.south{transform:rotate(90deg)}
-    .learningLine.west{transform:rotate(180deg)}
+    .line.north{transform:rotate(-90deg)}
+    .line.east{transform:rotate(0deg)}
+    .line.south{transform:rotate(90deg)}
+    .line.west{transform:rotate(180deg)}
 
-    .stage{
-      border-radius:34px;
-      padding:clamp(16px,2.6vw,26px);
+    .readout{
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      z-index:7;
       display:grid;
-      grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);
-      gap:16px;
-      overflow:hidden;
-    }
-
-    .talk{
-      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(220px,.42fr);
       gap:12px;
-      align-content:center;
+      pointer-events:none;
     }
 
-    .dollControls{
+    .readCard{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      background:rgba(3,8,18,.70);
+      box-shadow:0 18px 38px rgba(0,0,0,.30);
+      padding:14px;
+      display:grid;
+      gap:7px;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .readCard h3{
+      margin:0;
+      color:#fff;
+      font-size:clamp(1.1rem,2.1vw,1.45rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .readCard p{
+      font-size:.92rem;
+      line-height:1.44;
+    }
+
+    .receipt{
+      display:grid;
+      gap:6px;
+      color:var(--soft);
+      font-size:.80rem;
+      line-height:1.32;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .routeRail{
+      border-radius:24px;
+      padding:10px;
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
       gap:8px;
     }
 
-    .dollControl{
-      min-height:58px;
-      border:1px solid rgba(255,255,255,.10);
+    .routeRail a{
       border-radius:18px;
-      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
-      color:var(--text);
-      font-weight:850;
-      cursor:pointer;
-      display:grid;
-      place-items:center;
-      text-align:center;
-      font-size:.82rem;
-      letter-spacing:.04em;
-      padding:8px;
+      min-height:48px;
+      font-size:.68rem;
     }
-
-    .dollControl[data-active="true"]{
-      border-color:rgba(215,228,255,.38);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(215,228,255,.14),transparent 70%),
-        rgba(215,228,255,.07);
-      box-shadow:0 0 24px rgba(215,228,255,.10);
-    }
-
-    .talkCard{
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
-      background:
-        radial-gradient(circle at 16% 0%,rgba(215,228,255,.08),transparent 62%),
-        rgba(255,255,255,.035);
-      padding:18px;
-      display:grid;
-      gap:10px;
-    }
-
-    .talkCard h2{
-      font-family:Georgia,"Times New Roman",serif;
-    }
-
-    .receipt{
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:22px;
-      background:rgba(0,0,0,.18);
-      padding:14px;
-      display:grid;
-      gap:10px;
-    }
-
-    .receiptTitle{
-      margin:0;
-      color:var(--ice);
-      font-size:11px;
-      font-weight:850;
-      letter-spacing:.13em;
-      text-transform:uppercase;
-      padding-bottom:8px;
-      border-bottom:1px solid var(--line);
-    }
-
-    .rows{
-      display:grid;
-      gap:8px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr);
-      gap:12px;
-      align-items:start;
-    }
-
-    .rk{
-      color:var(--muted);
-      font-size:12px;
-      line-height:1.42;
-    }
-
-    .rv{
-      color:var(--text);
-      font-size:12px;
-      line-height:1.42;
-      text-align:right;
-      word-break:break-word;
-    }
-
-    .learningBoard{
-      display:grid;
-      gap:12px;
-      align-content:center;
-    }
-
-    .learningGrid,.grid3,.grid4,.routeGrid{
-      display:grid;
-      gap:12px;
-    }
-
-    .learningGrid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .grid3{
-      grid-template-columns:repeat(3,minmax(0,1fr));
-    }
-
-    .grid4,.routeGrid{
-      grid-template-columns:repeat(4,minmax(0,1fr));
-    }
-
-    .panel{
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      display:grid;
-      gap:16px;
-    }
-
-    .panelHead{
-      display:grid;
-      gap:8px;
-      max-width:860px;
-    }
-
-    .card,.route-card{
-      border-radius:24px;
-      padding:18px;
-      min-height:150px;
-      display:grid;
-      align-content:end;
-      gap:8px;
-      position:relative;
-      overflow:hidden;
-    }
-
-    .card::before,.route-card::before{
-      content:"";
-      position:absolute;
-      inset:18px;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(215,228,255,.18);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(215,228,255,.14),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-      opacity:.62;
-      z-index:0;
-    }
-
-    .card > *,.route-card > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .card small,.route-card small{
-      color:#dce7ff;
-      text-transform:uppercase;
-      letter-spacing:.12em;
-      font-size:.62rem;
-      font-weight:900;
-    }
-
-    .card strong,.route-card strong{
-      color:#fff;
-      font-size:clamp(1.05rem,2.1vw,1.35rem);
-      line-height:1.05;
-      letter-spacing:-.04em;
-    }
-
-    .card span,.route-card span{
-      color:var(--muted);
-      line-height:1.44;
-      font-size:.9rem;
-    }
-
-    .miniList{
-      list-style:none;
-      padding:0;
-      margin:0;
-      display:grid;
-      gap:8px;
-    }
-
-    .miniList li{
-      position:relative;
-      padding-left:16px;
-      color:var(--muted);
-      font-size:.92rem;
-      line-height:1.48;
-    }
-
-    .miniList li::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:.56em;
-      width:6px;
-      height:6px;
-      border-radius:999px;
-      background:var(--ice);
-      box-shadow:0 0 8px rgba(215,228,255,.22);
-    }
-
-    .route-card.featured{
-      border-color:rgba(215,228,255,.44);
-      background:
-        radial-gradient(circle at 50% 0%,rgba(215,228,255,.13),transparent 68%),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
-    }
-
-    .footer{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:0 4px;
-      color:#d5dff7;
-      font-size:.86rem;
-    }
-
-    .footer a{color:#fff0d0}
 
     @keyframes snowFall{
       from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
@@ -624,8 +538,8 @@
     }
 
     @keyframes slowSpin{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
     @keyframes signalRun{
@@ -633,17 +547,20 @@
       to{transform:translateX(42px)}
     }
 
-    @media(max-width:1080px){
-      .hero,.stage{
-        grid-template-columns:1fr;
+    @media(max-width:980px){
+      .page{
         min-height:auto;
       }
 
-      .dollControls,
-      .learningGrid,
-      .grid3,
-      .grid4,
-      .routeGrid{
+      .stage{
+        grid-template-columns:1fr;
+      }
+
+      .chamber{
+        min-height:620px;
+      }
+
+      .routeRail{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
@@ -654,11 +571,12 @@
         padding-top:10px;
       }
 
-      .topbar,.hero,.stage,.panel{
+      .topbar,.stage,.routeRail{
         border-radius:24px;
       }
 
       .topbar{padding:12px}
+
       .brand{gap:10px}
 
       .mark{
@@ -675,31 +593,77 @@
       }
 
       .nav a{width:100%}
-      .hero{padding:22px}
 
-      .actions,
-      .dollControls,
-      .learningGrid,
-      .grid3,
-      .grid4,
-      .routeGrid{
-        grid-template-columns:1fr;
+      .stage{
+        padding:18px;
       }
 
       .actions{
         display:grid;
-      }
-
-      .button{
-        width:100%;
-      }
-
-      .row{
         grid-template-columns:1fr;
       }
 
-      .rv{
-        text-align:left;
+      .action{
+        width:100%;
+      }
+
+      .chamber{
+        min-height:auto;
+        display:grid;
+        gap:10px;
+        padding:14px;
+      }
+
+      .ring,.line{
+        display:none;
+      }
+
+      .core{
+        position:relative;
+        width:150px;
+        margin:0 auto;
+      }
+
+      .node,
+      .node.scene,
+      .node.listen,
+      .node.meaning,
+      .node.speak,
+      .node.use{
+        position:relative;
+        left:auto;
+        right:auto;
+        top:auto;
+        bottom:auto;
+        transform:none;
+        width:100%;
+        min-height:72px;
+      }
+
+      .node:hover,
+      .node:focus-visible,
+      .node.scene:hover,
+      .node.scene:focus-visible,
+      .node.listen:hover,
+      .node.listen:focus-visible,
+      .node.meaning:hover,
+      .node.meaning:focus-visible,
+      .node.speak:hover,
+      .node.speak:focus-visible{
+        transform:translateY(-4px);
+      }
+
+      .readout{
+        position:relative;
+        left:auto;
+        right:auto;
+        bottom:auto;
+        grid-template-columns:1fr;
+        margin-top:4px;
+      }
+
+      .routeRail{
+        grid-template-columns:1fr;
       }
     }
 
@@ -744,8 +708,8 @@
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="productTitle">
-      <div class="heroCopy">
+    <section class="stage" aria-labelledby="productTitle">
+      <div class="copy">
         <span class="pill">Education product surface</span>
         <h1 id="productTitle">ESL Traversal Learning</h1>
         <h2>English by movement, not overload.</h2>
@@ -753,241 +717,79 @@
           The goal is not memorizing English in the abstract. The goal is moving through real life with enough language to understand, respond, and keep going.
         </p>
         <p>
-          ESL Traversal Learning teaches English through scenes, listening, meaning, speaking, and real-world use. The page stays simple on the outside and opens into deeper learning layers only when the learner is ready.
+          The surface stays clean. The learning opens inward: scene, listening, meaning, speaking, and use.
         </p>
 
         <div class="actions">
-          <a class="button primary" href="/products/">Back to Products</a>
-          <a class="button" href="#learning-doll">Open Russian Doll</a>
-          <a class="button" href="#real-life">Real-Life English</a>
-          <a class="button" href="#learning-law">Learning Law</a>
+          <a class="action primary" href="/products/">Back to Products</a>
+          <a class="action" href="/products/on-your-side-ai/">On Your Side AI</a>
+          <a class="action" href="/products/five-flags/">Five Flags</a>
         </div>
       </div>
 
-      <div class="learningOrb" aria-hidden="true">
-        <div class="learningLine north"></div>
-        <div class="learningLine east"></div>
-        <div class="learningLine south"></div>
-        <div class="learningLine west"></div>
-        <div class="learningCore"><span>ESL<br>Traversal<br>Learning</span></div>
-      </div>
-    </section>
+      <div class="chamber" aria-label="ESL layered learning chamber">
+        <div class="ring r1" aria-hidden="true"></div>
+        <div class="ring r2" aria-hidden="true"></div>
+        <div class="ring r3" aria-hidden="true"></div>
 
-    <section id="learning-doll" class="stage" aria-label="ESL Russian doll learning chamber">
-      <div class="talk">
-        <span class="pill">Russian-doll learning chamber</span>
-        <h2>Language opens one layer at a time.</h2>
-        <p>
-          The learner should not be buried under grammar, vocabulary, and pressure all at once. The path starts with the scene, then moves inward.
-        </p>
+        <div class="line north" aria-hidden="true"></div>
+        <div class="line east" aria-hidden="true"></div>
+        <div class="line south" aria-hidden="true"></div>
+        <div class="line west" aria-hidden="true"></div>
 
-        <div class="dollControls" aria-label="ESL layer controls">
-          <button class="dollControl" type="button" data-layer="scene" data-active="true">Scene</button>
-          <button class="dollControl" type="button" data-layer="listen" data-active="false">Listen</button>
-          <button class="dollControl" type="button" data-layer="meaning" data-active="false">Meaning</button>
-          <button class="dollControl" type="button" data-layer="speak" data-active="false">Speak</button>
-          <button class="dollControl" type="button" data-layer="use" data-active="false">Use</button>
+        <button class="node scene" type="button" data-layer="scene" data-active="true">
+          <small>Outer layer</small>
+          <strong>Scene</strong>
+        </button>
+
+        <button class="node listen" type="button" data-layer="listen" data-active="false">
+          <small>Second layer</small>
+          <strong>Listen</strong>
+        </button>
+
+        <button class="node meaning" type="button" data-layer="meaning" data-active="false">
+          <small>Middle layer</small>
+          <strong>Meaning</strong>
+        </button>
+
+        <button class="node speak" type="button" data-layer="speak" data-active="false">
+          <small>Inner layer</small>
+          <strong>Speak</strong>
+        </button>
+
+        <button class="node use" type="button" data-layer="use" data-active="false">
+          <small>Core return</small>
+          <strong>Use</strong>
+        </button>
+
+        <div class="core" aria-hidden="true">
+          <span>English<br>In<br>Motion</span>
         </div>
 
-        <section class="talkCard">
-          <h2 id="talkTitle">Start with the scene.</h2>
-          <p id="talkCopy">
-            Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.
-          </p>
-        </section>
-
-        <section class="receipt">
-          <h3 class="receiptTitle">Learning Receipt</h3>
-          <div class="rows" id="receiptRows">
-            <div class="row"><div class="rk">Layer</div><div class="rv">Scene</div></div>
-            <div class="row"><div class="rk">Question</div><div class="rv">Where is the learner using English?</div></div>
-            <div class="row"><div class="rk">Output</div><div class="rv">The lesson becomes real.</div></div>
-          </div>
-        </section>
-      </div>
-
-      <div class="learningBoard">
-        <span class="pill">Core learning lanes</span>
-
-        <div class="learningGrid" aria-label="ESL learning lanes">
-          <article class="card">
-            <small>Listening</small>
-            <strong>Catch the situation first.</strong>
-            <span>The learner does not need every word before they can understand what is happening.</span>
+        <div class="readout" aria-live="polite">
+          <article class="readCard">
+            <h3 id="readTitle">Start with the scene.</h3>
+            <p id="readCopy">
+              Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.
+            </p>
           </article>
 
-          <article class="card">
-            <small>Speaking</small>
-            <strong>Use clear phrases.</strong>
-            <span>Build phrases that let the learner answer, ask, clarify, and keep moving.</span>
-          </article>
-
-          <article class="card">
-            <small>Confidence</small>
-            <strong>Reduce the fear of mistakes.</strong>
-            <span>The path should make practice safe enough to repeat.</span>
-          </article>
-
-          <article class="card">
-            <small>Real Life</small>
-            <strong>Practice where English is needed.</strong>
-            <span>Work, family, errands, school, appointments, service, and everyday pressure.</span>
+          <article class="readCard receipt" id="readReceipt">
+            <span>LAYER=Scene</span>
+            <span>QUESTION=Where is the learner using English?</span>
+            <span>OUTPUT=The lesson becomes real.</span>
           </article>
         </div>
       </div>
     </section>
 
-    <section id="real-life" class="panel" aria-labelledby="realLifeTitle">
-      <div class="panelHead">
-        <span class="pill">Real-life English</span>
-        <h2 id="realLifeTitle">The lesson should leave the page.</h2>
-        <p>
-          ESL Traversal Learning is strongest when it helps someone speak to a person, complete a task, ask a question, understand a room, or recover from confusion without freezing.
-        </p>
-      </div>
-
-      <div class="grid4">
-        <article class="card">
-          <small>Work</small>
-          <strong>Clock in, ask, answer, follow up.</strong>
-          <span>Useful language for schedules, instructions, managers, coworkers, and customers.</span>
-        </article>
-
-        <article class="card">
-          <small>Family</small>
-          <strong>Explain needs clearly.</strong>
-          <span>Practical language for school, home, appointments, errands, and everyday support.</span>
-        </article>
-
-        <article class="card">
-          <small>Public Life</small>
-          <strong>Move through the day.</strong>
-          <span>Shopping, transportation, restaurants, service counters, and basic problem solving.</span>
-        </article>
-
-        <article class="card">
-          <small>Confidence</small>
-          <strong>Recover when stuck.</strong>
-          <span>Teach phrases for repeating, slowing down, asking again, and confirming meaning.</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="structureTitle">
-      <div class="panelHead">
-        <span class="pill">Traversal structure</span>
-        <h2 id="structureTitle">Each lesson moves through a clean path.</h2>
-        <p>
-          A traversal lesson should not dump content. It should move the learner through a usable sequence.
-        </p>
-      </div>
-
-      <div class="grid3">
-        <article class="card">
-          <small>Before</small>
-          <strong>Recognize the scene.</strong>
-          <span>What is happening, who is speaking, and what does the learner need to do?</span>
-        </article>
-
-        <article class="card">
-          <small>During</small>
-          <strong>Practice the response.</strong>
-          <span>Listen, repeat, choose, answer, clarify, and move through the scene.</span>
-        </article>
-
-        <article class="card">
-          <small>After</small>
-          <strong>Carry it into life.</strong>
-          <span>The learner leaves with a phrase, pattern, or action they can use again.</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="learning-law" class="panel" aria-labelledby="lawTitle">
-      <div class="panelHead">
-        <span class="pill">Learning law</span>
-        <h2 id="lawTitle">Comprehension first. Progression always.</h2>
-        <p>
-          This product should never become a flat dump of vocabulary. English is treated as movement through life, not a pile of disconnected lessons.
-        </p>
-      </div>
-
-      <div class="grid3">
-        <article class="card">
-          <small>Always Preserved</small>
-          <strong>Stepwise movement.</strong>
-          <ul class="miniList">
-            <li>Scene before abstraction</li>
-            <li>Listening before pressure</li>
-            <li>Meaning before grammar overload</li>
-            <li>Practice before performance</li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <small>Never Reduced To</small>
-          <strong>Flat exposure.</strong>
-          <ul class="miniList">
-            <li>Vocabulary dumping</li>
-            <li>Grammar without context</li>
-            <li>Pressure without repetition</li>
-            <li>Lessons that never leave the page</li>
-          </ul>
-        </article>
-
-        <article class="card">
-          <small>Long Range</small>
-          <strong>Real confidence.</strong>
-          <span>The strongest outcome is not perfect English on day one. It is enough clarity and confidence to keep moving.</span>
-        </article>
-      </div>
-    </section>
-
-    <section class="panel" aria-labelledby="backlinksTitle">
-      <div class="panelHead">
-        <span class="pill">Backlinks</span>
-        <h2 id="backlinksTitle">One destination. Many jump-off points.</h2>
-        <p>
-          This is the canonical destination for ESL Traversal Learning. The older /products/esl-traversal-learning/ path should bridge here.
-        </p>
-      </div>
-
-      <div class="routeGrid">
-        <a class="route-card featured" href="/products/">
-          <small>Parent chamber</small>
-          <strong>Products</strong>
-          <span>Return to the source-waterfall Products page.</span>
-        </a>
-
-        <a class="route-card" href="/products/on-your-side-ai/">
-          <small>Related product</small>
-          <strong>On Your Side AI</strong>
-          <span>Artificial Agent Intelligence for structured assistance and decision support.</span>
-        </a>
-
-        <a class="route-card" href="/products/five-flags/">
-          <small>Related product</small>
-          <strong>Five Flags · What’s My Scene?</strong>
-          <span>Scene reading, social context, flags, people, rooms, and live interaction.</span>
-        </a>
-
-        <a class="route-card" href="/products/nutrition/">
-          <small>Related product</small>
-          <strong>Baseline Nutrition Systems</strong>
-          <span>Food, energy, discipline, daily structure, and practical human stability.</span>
-        </a>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <span>ESL Traversal Learning · Canonical Product Destination</span>
-      <span>
-        <a href="/products/">Products</a> ·
-        <a href="/products/on-your-side-ai/">On Your Side AI</a> ·
-        <a href="/products/five-flags/">Five Flags</a> ·
-        <a href="/products/nutrition/">Nutrition</a>
-      </span>
-    </footer>
+    <nav class="routeRail" aria-label="Product route rail">
+      <a href="/products/">Products</a>
+      <a href="/products/on-your-side-ai/">On Your Side AI</a>
+      <a href="/products/five-flags/">Five Flags</a>
+      <a href="/products/nutrition/">Nutrition</a>
+      <a href="/showroom/">Showroom</a>
+    </nav>
   </main>
 
   <script>
@@ -998,91 +800,78 @@
         scene: {
           title: "Start with the scene.",
           copy: "Before vocabulary lists, start with where the learner is: work, school, family, shopping, a phone call, a doctor visit, a restaurant, a job interview, or a conversation with a neighbor.",
-          rows: [
-            ["Layer", "Scene"],
-            ["Question", "Where is the learner using English?"],
-            ["Output", "The lesson becomes real."]
+          receipt: [
+            "LAYER=Scene",
+            "QUESTION=Where is the learner using English?",
+            "OUTPUT=The lesson becomes real."
           ]
         },
         listen: {
           title: "Train the ear before the pressure rises.",
           copy: "Listening starts with catching the situation. Who is talking, what do they want, and what kind of answer is expected?",
-          rows: [
-            ["Layer", "Listen"],
-            ["Question", "What is being asked or said?"],
-            ["Output", "The learner catches the signal."]
+          receipt: [
+            "LAYER=Listen",
+            "QUESTION=What is being asked or said?",
+            "OUTPUT=The learner catches the signal."
           ]
         },
         meaning: {
           title: "Find the meaning underneath the words.",
           copy: "Meaning connects words to people, place, tone, timing, and purpose. The learner should understand the scene before getting buried in grammar.",
-          rows: [
-            ["Layer", "Meaning"],
-            ["Question", "What does this mean in context?"],
-            ["Output", "The words become usable."]
+          receipt: [
+            "LAYER=Meaning",
+            "QUESTION=What does this mean in context?",
+            "OUTPUT=The words become usable."
           ]
         },
         speak: {
           title: "Answer with a usable phrase.",
           copy: "Speaking begins with simple, repeatable lines: I understand. Can you repeat that? I need help with this. What do I do next? Let me confirm.",
-          rows: [
-            ["Layer", "Speak"],
-            ["Question", "What can the learner say now?"],
-            ["Output", "The learner can respond."]
+          receipt: [
+            "LAYER=Speak",
+            "QUESTION=What can the learner say now?",
+            "OUTPUT=The learner can respond."
           ]
         },
         use: {
           title: "Carry it into real life.",
           copy: "The final layer is use. The learner should leave with English that can be used at work, at home, in public, at school, or during ordinary pressure.",
-          rows: [
-            ["Layer", "Use"],
-            ["Question", "Where can this be used again?"],
-            ["Output", "The lesson becomes movement."]
+          receipt: [
+            "LAYER=Use",
+            "QUESTION=Where can this be used again?",
+            "OUTPUT=The lesson becomes movement."
           ]
         }
       };
 
-      const controls = Array.from(document.querySelectorAll(".dollControl"));
-      const title = document.getElementById("talkTitle");
-      const copy = document.getElementById("talkCopy");
-      const receipt = document.getElementById("receiptRows");
-
-      function writeRows(rows) {
-        if (!receipt) return;
-        receipt.replaceChildren();
-
-        rows.forEach(([key, value]) => {
-          const row = document.createElement("div");
-          const rk = document.createElement("div");
-          const rv = document.createElement("div");
-
-          row.className = "row";
-          rk.className = "rk";
-          rv.className = "rv";
-
-          rk.textContent = key;
-          rv.textContent = value;
-
-          row.append(rk, rv);
-          receipt.appendChild(row);
-        });
-      }
+      const nodes = Array.from(document.querySelectorAll(".node"));
+      const readTitle = document.getElementById("readTitle");
+      const readCopy = document.getElementById("readCopy");
+      const readReceipt = document.getElementById("readReceipt");
 
       function setLayer(key) {
         const layer = layers[key] || layers.scene;
 
-        controls.forEach((control) => {
-          control.dataset.active = control.dataset.layer === key ? "true" : "false";
+        nodes.forEach((node) => {
+          node.dataset.active = node.dataset.layer === key ? "true" : "false";
         });
 
-        if (title) title.textContent = layer.title;
-        if (copy) copy.textContent = layer.copy;
-        writeRows(layer.rows);
+        if (readTitle) readTitle.textContent = layer.title;
+        if (readCopy) readCopy.textContent = layer.copy;
+
+        if (readReceipt) {
+          readReceipt.replaceChildren();
+          layer.receipt.forEach((line) => {
+            const span = document.createElement("span");
+            span.textContent = line;
+            readReceipt.appendChild(span);
+          });
+        }
       }
 
-      controls.forEach((control) => {
-        control.addEventListener("click", () => {
-          setLayer(control.dataset.layer || "scene");
+      nodes.forEach((node) => {
+        node.addEventListener("click", () => {
+          setLayer(node.dataset.layer || "scene");
         });
       });
     })();

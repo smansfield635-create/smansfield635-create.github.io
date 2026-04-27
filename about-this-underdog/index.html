@@ -1,459 +1,89 @@
-<!doctype html>
-<!-- TNT RENEWAL — /about-this-underdog/index.html
-     ABOUT THIS UNDERDOG · TED TALK BACKLINK LANDING · B2
-
-     CONTRACT:
-       - Renew /about-this-underdog/ under TED Talk showroom terms.
-       - Page is the public speech layer.
-       - Existing /big-laugh/about-this-underdog/ remains the deeper chamber.
-       - /products/ remains the product/system continuation route.
-       - No encyclopedia dump.
-       - No trauma dump.
-       - No pity posture.
-       - No graphics box.
--->
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-manor-registry="planet-batch-3">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>About This Underdog — Diamond Gate Bridge</title>
-  <meta name="description" content="A TED Talk-style public entry chamber for the underdog story inside Diamond Gate Bridge."/>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About This Underdog · Diamond Gate Bridge</title>
+  <meta name="description" content="About This Underdog is the origin-story planetary construct attached to Richie’s Manor and Estate." />
+  <link rel="stylesheet" href="/assets/manor.css" />
+  <script src="/assets/page_registry.js" defer></script>
   <style>
-    *{box-sizing:border-box}
-
-    html{
-      scroll-behavior:smooth;
-    }
-
-    html,body{
-      margin:0;
-      min-height:100%;
-      width:100%;
-      background:#02040b;
-      color:#fff;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-      overflow-x:hidden;
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    :root{
-      --ink:rgba(255,255,255,.96);
-      --txt:rgba(220,231,255,.78);
-      --soft:rgba(220,231,255,.62);
-      --gold:rgba(255,217,138,.96);
-      --line:rgba(255,255,255,.13);
-      --panel:rgba(7,10,16,.76);
-      --shadow:0 30px 110px rgba(0,0,0,.54);
-    }
-
-    body::before{
-      content:"";
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 14% 18%,rgba(255,255,255,.24) 0 1px,transparent 2px),
-        radial-gradient(circle at 42% 22%,rgba(177,205,255,.17) 0 1px,transparent 2px),
-        radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.09),transparent 34rem),
-        radial-gradient(ellipse at 86% 26%,rgba(147,197,253,.055),transparent 28rem),
-        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
-    }
-
-    .page{
-      position:relative;
-      z-index:1;
-      width:min(100% - 28px,1120px);
-      min-height:100svh;
-      margin:0 auto;
-      padding:18px 0 28px;
-      display:grid;
-      gap:14px;
-    }
-
-    .hero,
-    .panel,
-    .routeRail{
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:var(--panel);
-      box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
-    }
-
-    .hero{
-      padding:clamp(24px,5vw,56px);
-      display:grid;
-      gap:18px;
-      overflow:hidden;
-      background:
-        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.07),transparent 30rem),
-        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
-    }
-
-    .brandRow{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .brandMark{
-      width:34px;
-      height:34px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,217,138,.72);
-      background:
-        linear-gradient(135deg,rgba(255,217,138,.30),rgba(147,197,253,.05)),
-        rgba(255,255,255,.05);
-      box-shadow:0 0 18px rgba(255,217,138,.14);
-      flex:0 0 auto;
-    }
-
-    .brandName{
-      color:var(--ink);
-      font-size:clamp(1.2rem,4vw,2rem);
-      font-weight:950;
-      letter-spacing:-.04em;
-    }
-
-    .kicker{
-      margin:0;
-      color:var(--gold);
-      font-size:12px;
-      line-height:1.35;
-      font-weight:950;
-      letter-spacing:3px;
-      text-transform:uppercase;
-    }
-
-    h1{
-      margin:0;
-      max-width:980px;
-      font-size:clamp(3.3rem,10vw,7.2rem);
-      line-height:.86;
-      letter-spacing:-.08em;
-      text-shadow:0 20px 90px rgba(0,0,0,.55);
-    }
-
-    h2{
-      margin:0;
-      max-width:980px;
-      font-size:clamp(2.1rem,6vw,4.25rem);
-      line-height:.92;
-      letter-spacing:-.065em;
-    }
-
-    .thesis{
-      margin:0;
-      max-width:980px;
-      color:rgba(255,255,255,.93);
-      font-size:clamp(1.36rem,3.2vw,2.3rem);
-      line-height:1.12;
-      font-weight:950;
-      letter-spacing:-.052em;
-    }
-
-    .lead,
-    .panel p{
-      margin:0;
-      max-width:920px;
-      color:var(--txt);
-      font-size:clamp(1.05rem,2.35vw,1.32rem);
-      line-height:1.58;
-    }
-
-    .panel{
-      padding:clamp(22px,4vw,42px);
-      display:grid;
-      gap:18px;
-      background:
-        radial-gradient(ellipse at 12% 12%,rgba(255,217,138,.055),transparent 28rem),
-        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
-    }
-
-    .definitionBox{
-      padding:clamp(18px,3vw,28px);
-      border:1px solid rgba(255,217,138,.24);
-      border-radius:24px;
-      background:
-        radial-gradient(ellipse at 14% 18%,rgba(255,217,138,.09),transparent 22rem),
-        rgba(0,0,0,.22);
-      display:grid;
-      gap:10px;
-    }
-
-    .definitionBox strong{
-      color:var(--ink);
-      font-size:clamp(1.26rem,3vw,2rem);
-      line-height:1.12;
-      letter-spacing:-.04em;
-    }
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .card{
-      min-height:154px;
-      padding:16px;
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:20px;
-      background:rgba(0,0,0,.20);
-      display:grid;
-      gap:8px;
-      align-content:start;
-    }
-
-    .card strong{
-      color:var(--ink);
-      font-size:1.02rem;
-      line-height:1.2;
-    }
-
-    .card p{
-      color:var(--soft);
-      line-height:1.48;
-      font-size:.98rem;
-    }
-
-    .speechLine{
-      margin:0;
-      max-width:980px;
-      color:rgba(255,255,255,.92);
-      font-size:clamp(1.25rem,3vw,2.05rem);
-      line-height:1.16;
-      font-weight:950;
-      letter-spacing:-.048em;
-    }
-
-    .ctaGrid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .cta{
-      display:grid;
-      gap:8px;
-      min-height:138px;
-      padding:18px;
-      border-radius:22px;
-      border:1px solid rgba(255,255,255,.13);
-      background:rgba(0,0,0,.24);
-      transition:transform .18s ease,border-color .18s ease,background .18s ease;
-    }
-
-    .cta:hover,
-    .cta:focus-visible{
-      transform:translateY(-2px);
-      border-color:rgba(255,217,138,.52);
-      background:rgba(255,217,138,.055);
-      outline:none;
-    }
-
-    .cta span{
-      color:var(--gold);
-      font-size:.78rem;
-      font-weight:950;
-      letter-spacing:.12em;
-      text-transform:uppercase;
-    }
-
-    .cta strong{
-      color:var(--ink);
-      font-size:clamp(1.12rem,2.3vw,1.45rem);
-      line-height:1.08;
-      letter-spacing:-.04em;
-    }
-
-    .cta small{
-      color:var(--soft);
-      line-height:1.4;
-      font-size:.94rem;
-      font-weight:750;
-    }
-
-    .routeRail{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-      padding:12px;
-    }
-
-    .routeLink{
-      min-height:58px;
-      padding:12px;
-      border-radius:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.22);
-      color:var(--ink);
-      font-weight:950;
-      display:grid;
-      place-items:center;
-      text-align:center;
-    }
-
-    @media(max-width:900px){
-      .grid,
-      .ctaGrid{
-        grid-template-columns:1fr;
-      }
-
-      .routeRail{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-    }
-
-    @media(max-width:520px){
-      .page{
-        width:min(100% - 20px,1120px);
-        padding-top:10px;
-      }
-
-      .hero,
-      .panel,
-      .routeRail{
-        border-radius:24px;
-      }
-    }
+    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .planet-rail{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .planet-rail a{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid rgba(244,201,103,.24);border-radius:999px;text-decoration:none;color:#d9e3f7;background:rgba(255,255,255,.045);font-weight:750}
+    .planet-rail a[aria-current="page"]{color:#111827;background:linear-gradient(180deg,#ffe3a3,#f4c967);border-color:#f4c967}
   </style>
 </head>
+<body class="manor-skin manor-planet" data-manor-skin="v1" data-manor-room="about-this-underdog" data-manor-class="planet" data-planet-id="about-this-underdog" data-planet-slot="P7_ABOUT_THIS_UNDERDOG" data-planet-orbit="manor" data-manor-batch="BATCH_3_PLANETS">
+  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
+    <a href="/">Compass</a>
+    <a href="/door/">Door</a>
+    <a href="/home/">Home</a>
+    <a href="/products/">Products</a>
+    <a href="/showroom/">Showroom</a>
+    <a href="/gauges/">Gauges</a>
+  </nav>
 
-<body>
-  <main
-    class="page"
-    data-backlink-root="about-this-underdog"
-    data-backlink-version="ted-talk-b2"
-    data-existing-full-route="/big-laugh/about-this-underdog/"
-    data-products-route="/products/"
-    data-showroom-route="/showroom/"
-  >
-    <section class="hero" aria-label="About This Underdog">
-      <div class="brandRow">
-        <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
-        <a class="brandName" href="/">Diamond Gate Bridge</a>
+  <main class="manor-shell">
+    <section class="manor-room manor-lattice-mark">
+      <p class="manor-kicker">P7 · About This Underdog · Origin Story</p>
+      <h1 class="manor-title">About This Underdog</h1>
+      <p class="manor-lede">This page explains the underdog frame without making the whole site ego-centered. The origin story is a witness band, not the estate’s center of gravity.</p>
+
+      <div class="planet-rail" aria-label="Planetary constructs">
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+        <a href="/upper-room/">Upper Room</a>
+        <a href="/about-this-underdog/" aria-current="page">About</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits-of-love/">Love</a>
       </div>
 
-      <p class="kicker">TED Talk Backlink · About This Underdog</p>
-      <h1>About This Underdog</h1>
-      <p class="thesis">
-        Some people get stepped on more than most.
-      </p>
-      <p class="lead">
-        This is not a complaint page. It is the public speech layer for the underdog pattern: pressure without equal protection, expectation without equal help, and the choice to build anyway.
-      </p>
-    </section>
+      <div class="manor-divider"></div>
 
-    <section class="panel" aria-label="Underdog definition">
-      <p class="kicker">Definition</p>
-      <h2>What makes someone an underdog?</h2>
-
-      <div class="definitionBox">
-        <strong>
-          An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
-        </strong>
-        <p>
-          That definition can fit a kid, a parent, a founder, a performer, a worker, a veteran, an athlete, a student, or anyone who has had to stand back up while the weight on them was heavier than the help around them.
-        </p>
-      </div>
-    </section>
-
-    <section class="panel" aria-label="Universal bridge">
-      <p class="kicker">Universal Bridge</p>
-      <h2>Everyone has been underneath something.</h2>
-      <p class="speechLine">
-        Not everyone has been stepped on the same amount. But everyone knows what it feels like to be underneath a label, a mistake, a season, a debt, a room, a family story, or a system that did not fully see them.
-      </p>
-      <p>
-        The point is not to compete over suffering. The point is to recognize the pattern clearly enough that it stops owning the room.
-      </p>
-
-      <div class="grid">
-        <div class="card">
-          <strong>Pressure without protection</strong>
-          <p>The underdog is often judged by the fall while no one counts the weight that pushed them down.</p>
-        </div>
-
-        <div class="card">
-          <strong>Expectation without help</strong>
-          <p>They are expected to recover, explain, adapt, and perform even when support was never equal to the demand.</p>
-        </div>
-
-        <div class="card">
-          <strong>Context without excuses</strong>
-          <p>Seeing the pressure does not remove responsibility. It makes responsibility more honest.</p>
-        </div>
+      <div class="manor-grid three">
+        <article class="manor-card">
+          <p class="manor-room-label">Witness</p>
+          <h2>Grounded origin.</h2>
+          <p>The page gives the visitor a human doorway without making the site revolve around personality.</p>
+        </article>
+        <article class="manor-card">
+          <p class="manor-room-label">Underdog</p>
+          <h2>Pressure becomes preparation.</h2>
+          <p>The frame is not weakness. It is the position from which resilience, discipline, and adaptation become visible.</p>
+        </article>
+        <article class="manor-card">
+          <p class="manor-room-label">Return</p>
+          <h2>Back to the Manor.</h2>
+          <p>The story supports the house. It does not replace Compass, Products, Showroom, or Gauges.</p>
+        </article>
       </div>
     </section>
 
-    <section class="panel" aria-label="Turning point">
-      <p class="kicker">Turning Point</p>
-      <h2>The underdog does not win by pretending the pressure was fair.</h2>
-      <p class="speechLine">
-        The turn happens when being stepped on stops becoming the identity and starts becoming the baseline.
-      </p>
-      <p>
-        That is where the story changes. The underdog does not need pity to become dangerous in the right way. The underdog needs a clean baseline, a disciplined frame, and a reason to convert pressure into structure.
-      </p>
-
-      <div class="grid">
-        <div class="card">
-          <strong>Baseline</strong>
-          <p>Return to the first layer: body, mind, speech, rhythm, and mission.</p>
-        </div>
-
-        <div class="card">
-          <strong>Expression</strong>
-          <p>Turn pressure into language that moves people instead of noise that burns the room down.</p>
-        </div>
-
-        <div class="card">
-          <strong>Bridge</strong>
-          <p>Build something that lets other people cross what you had to crawl through.</p>
-        </div>
-      </div>
+    <section class="manor-backlinks">
+      <p class="manor-backlinks-title">Manor backlinks</p>
+      <ul class="manor-backlinks-list">
+        <li><a href="/">Compass</a></li>
+        <li><a href="/upper-room/">Upper Room</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/showroom/">Showroom</a></li>
+        <li><a href="/gauges/">Gauges</a></li>
+      </ul>
     </section>
 
-    <section class="panel" aria-label="Continuation routes">
-      <p class="kicker">Continue</p>
-      <h2>Open the next chamber.</h2>
-      <p>
-        This page is the public speech layer. The deeper backstory lives in the existing full chamber. The product/system path lives in Products. The showroom remains the lobby where the Russian doll opened.
-      </p>
-
-      <div class="ctaGrid">
-        <a class="cta" href="/big-laugh/about-this-underdog/">
-          <span>Full chamber</span>
-          <strong>Continue to the existing About This Underdog route</strong>
-          <small>The deeper underdog page and backstory chamber.</small>
-        </a>
-
-        <a class="cta" href="/products/">
-          <span>System route</span>
-          <strong>Continue to Products</strong>
-          <small>The product-routing surface where the lanes can be married later.</small>
-        </a>
-
-        <a class="cta" href="/showroom/">
-          <span>Return</span>
-          <strong>Return to the Showroom</strong>
-          <small>The Russian-doll lobby and Earth/Sun proof room.</small>
-        </a>
-      </div>
+    <section class="manor-audit-strip">
+      <p class="manor-audit-title">Batch 3 audit markers</p>
+      <ul class="manor-audit-list">
+        <li class="manor-audit-chip pass" data-status="pass">planetary-route-exists</li>
+        <li class="manor-audit-chip pass" data-status="pass">planet-class</li>
+        <li class="manor-audit-chip pass" data-status="pass">manor-orbit</li>
+        <li class="manor-audit-chip pass" data-status="pass">P7_ABOUT_THIS_UNDERDOG</li>
+        <li class="manor-audit-chip pass" data-status="pass">origin-story-witness</li>
+      </ul>
     </section>
-
-    <nav class="routeRail" aria-label="Route rail">
-      <a class="routeLink" href="/showroom/">Showroom</a>
-      <a class="routeLink" href="/big-laugh/about-this-underdog/">Full Underdog</a>
-      <a class="routeLink" href="/products/">Products</a>
-      <a class="routeLink" href="/">Compass</a>
-    </nav>
   </main>
 </body>
 </html>

@@ -1,22 +1,26 @@
 /* TNT RENEWAL — /products/archcoin/index.js
-   ARCHCOIN · TED TALK RUSSIAN DOLL VAULT · B7
+   ARCHCOIN · TED TALK NESTED VAULT · B8
 
    RESULT:
-     - Makes ARCHCOIN less like a scroll page.
-     - Converts the page into a TED Talk-style Russian-doll chamber.
-     - Keeps Products as the source waterfall.
-     - Makes ARCHCOIN the receiving Vault Chamber.
-     - Keeps the four-garden transaction template.
-     - Uses one primary stage instead of many long stacked panels.
-     - Keeps Vault / Products / Upper Room / Showroom / Compass backlinks.
-     - No external runtime dependency.
+   - ARCHCOIN spelling locked.
+   - ARCH-COIN read preserved.
+   - Converts the page into a compact TED Talk-style nested vault chamber.
+   - Products remains the source waterfall.
+   - ARCHCOIN remains the receiving Vault Chamber.
+   - Four-garden transaction template remains active.
+   - Top navigation uses compass jump cards.
+   - No external runtime dependency.
+   - No graphic box.
+   - No generated image.
 */
 
-const ROOT = "/products/archcoin";
+const ROOT = "/products/archcoin/";
 
 const ROUTES = Object.freeze({
   compass: "/",
+  door: "/door/",
   products: "/products/",
+  gauges: "/gauges/",
   vault: "/products/archcoin/",
   upperRoom: "/big-laugh/upper-room/",
   showroom: "/showroom/"
@@ -71,7 +75,7 @@ const LAYERS = Object.freeze([
     label: "Source",
     title: "The water starts in Products.",
     copy:
-      "Products is the parent chamber. ARCHCOIN does not create the whole river. It receives the protected-value stream from Products and gives that stream a vault structure.",
+      "Products is the parent source chamber. ARCHCOIN does not create the whole river. It receives the protected-value stream from Products and gives that stream a vault structure.",
     receipt: [
       ["Layer", "Source"],
       ["Origin", "Products Chamber"],
@@ -138,11 +142,27 @@ function el(tag, className, text) {
   return node;
 }
 
-function button(label, href, strong = false) {
-  const a = document.createElement("a");
-  a.className = "action" + (strong ? " strong" : "");
+function linkCard(label, href, state = "jump") {
+  const a = el("a", "jump-card" + (state === "active" ? " active" : ""));
   a.href = href;
-  a.textContent = label;
+  a.setAttribute("aria-label", label);
+
+  const compass = el("span", "nav-compass");
+  compass.setAttribute("aria-hidden", "true");
+
+  const text = el("span", "jump-text");
+  text.append(
+    el("small", "", state === "active" ? "Active" : "Jump"),
+    el("strong", "", label)
+  );
+
+  a.append(compass, text);
+  return a;
+}
+
+function action(label, href, strong = false) {
+  const a = el("a", "route-link" + (strong ? " strong" : ""), label);
+  a.href = href;
   return a;
 }
 
@@ -153,194 +173,350 @@ function infoRow(k, v) {
 }
 
 function injectStyles() {
-  if (document.getElementById("archcoin-ted-russian-doll-style")) return;
+  if (document.getElementById("archcoin-nested-vault-style")) return;
 
   const style = document.createElement("style");
-  style.id = "archcoin-ted-russian-doll-style";
+  style.id = "archcoin-nested-vault-style";
   style.textContent = `
-    .vault-shell{
-      min-height:calc(100svh - 40px);
-      display:grid;
-      gap:16px;
+    :root{
+      color-scheme:dark;
+      --arch-panel:rgba(18,14,10,.86);
+      --arch-panel2:rgba(36,26,16,.92);
+      --arch-line:rgba(255,218,150,.26);
+      --arch-text:#fff8ea;
+      --arch-muted:#d5c7aa;
+      --arch-muted2:rgba(213,199,170,.74);
+      --arch-gold:#ffd98a;
+      --arch-blue:#8ec5ff;
+      --arch-mint:#93efbd;
+      --arch-shadow:0 24px 80px rgba(0,0,0,.50);
+      --arch-max:1180px;
     }
+
+    *{box-sizing:border-box}
+
+    html,
+    body{
+      margin:0;
+      min-height:100%;
+      color:var(--arch-text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 92%,rgba(126,203,255,.18),transparent 24%),
+        radial-gradient(circle at 16% 20%,rgba(255,217,138,.16),transparent 26%),
+        radial-gradient(circle at 84% 18%,rgba(147,239,189,.10),transparent 26%),
+        linear-gradient(180deg,#071225 0%,#14100c 42%,#2c1b10 100%);
+      overflow-x:hidden;
+    }
+
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      opacity:.38;
+      background:
+        linear-gradient(90deg,rgba(255,218,150,.05) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,218,150,.035) 1px,transparent 1px),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.15),transparent 30%);
+      background-size:56px 56px,56px 56px,100% 100%;
+      mask-image:radial-gradient(circle at 50% 35%,black,transparent 82%);
+      z-index:0;
+    }
+
+    #fieldCanvas{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      pointer-events:none;
+      z-index:0;
+      opacity:.72;
+      mix-blend-mode:screen;
+    }
+
+    #app.archcoin-page{
+      position:relative;
+      z-index:1;
+      width:min(var(--arch-max),calc(100vw - 20px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:14px 0 24px;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+      color:var(--arch-text);
+    }
+
+    a{color:inherit;text-decoration:none}
 
     .topbar,
     .ted-stage,
     .route-strip{
-      border:1px solid var(--line);
-      border-radius:26px;
+      border:1px solid var(--arch-line);
       background:
-        linear-gradient(180deg,var(--panel),var(--panel2)),
-        radial-gradient(circle at 82% 18%,rgba(126,203,255,.06),transparent 24%);
-      box-shadow:var(--shadow2);
-      backdrop-filter:blur(14px);
-      -webkit-backdrop-filter:blur(14px);
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 42%),
+        linear-gradient(180deg,var(--arch-panel2),var(--arch-panel));
+      box-shadow:var(--arch-shadow);
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
     }
 
     .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      border-radius:28px;
+      padding:14px;
+      display:grid;
       gap:14px;
-      flex-wrap:wrap;
-      padding:14px 18px;
-      border-radius:999px;
     }
 
     .brand{
       display:flex;
       align-items:center;
       gap:12px;
+      min-width:0;
     }
 
     .brand-mark{
-      width:42px;
-      height:42px;
-      border-radius:14px;
-      transform:rotate(45deg);
-      border:1px solid rgba(241,210,141,.24);
+      width:50px;
+      height:50px;
+      border-radius:17px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(255,217,138,.50);
       background:
-        radial-gradient(circle at 50% 50%,rgba(127,255,212,.13),transparent 45%),
-        linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
-      box-shadow:0 12px 28px rgba(0,0,0,.24);
+        radial-gradient(circle at 50% 28%,rgba(255,217,138,.40),transparent 44%),
+        linear-gradient(180deg,rgba(58,42,18,.94),rgba(10,18,32,.98));
+      color:#fff8ea;
+      font-weight:950;
+      letter-spacing:.06em;
       flex:0 0 auto;
+      box-shadow:0 0 22px rgba(255,217,138,.18);
+    }
+
+    .brand-copy{
+      display:grid;
+      gap:3px;
     }
 
     .brand-title{
-      margin:0 0 3px;
-      font-size:.96rem;
-      font-weight:850;
-      letter-spacing:.08em;
+      display:block;
+      margin:0;
+      color:#ffe0a3;
+      font-size:.72rem;
       text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:850;
     }
 
     .brand-subtitle{
+      display:block;
       margin:0;
-      color:var(--muted);
-      font-size:.82rem;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
     }
 
-    .action-row{
-      display:flex;
-      flex-wrap:wrap;
+    .jump-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
-      margin:0;
     }
 
-    .action{
-      display:inline-flex;
+    .jump-card{
+      min-height:88px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
       align-items:center;
-      justify-content:center;
-      min-height:40px;
-      padding:10px 14px;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:999px;
-      background:rgba(255,255,255,.05);
-      color:var(--text);
-      font-size:12px;
-      font-weight:750;
-      letter-spacing:.05em;
-      text-transform:uppercase;
-      text-decoration:none;
+      padding:12px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .action.strong{
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.10);
+    .jump-card:hover,
+    .jump-card:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(142,197,255,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .jump-card.active{
+      border-color:rgba(255,217,138,.56);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
+      box-shadow:0 0 24px rgba(255,217,138,.12);
+    }
+
+    .nav-compass{
+      position:relative;
+      width:54px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .jump-card.active .nav-compass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
+    }
+
+    .nav-compass::before{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:
+        repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .nav-compass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .jump-card.active .nav-compass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
+    }
+
+    .jump-text{
+      display:grid;
+      gap:4px;
+      min-width:0;
+    }
+
+    .jump-text small{
+      color:#c8d7ff;
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .jump-text strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.02;
+      letter-spacing:-.035em;
     }
 
     .ted-stage{
-      position:relative;
-      overflow:hidden;
-      min-height:calc(100svh - 158px);
-      padding:clamp(18px,3vw,28px);
+      border-radius:34px;
+      padding:clamp(18px,3vw,30px);
       display:grid;
-      grid-template-columns:minmax(0,.86fr) minmax(360px,1.14fr);
+      grid-template-columns:minmax(0,.88fr) minmax(420px,1.12fr);
       gap:20px;
-      align-items:stretch;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
     }
 
     .ted-stage::before{
       content:"";
       position:absolute;
-      inset:0;
-      pointer-events:none;
-      background:
-        radial-gradient(circle at 68% 48%,rgba(127,255,212,.08),transparent 28rem),
-        radial-gradient(circle at 28% 14%,rgba(241,210,141,.06),transparent 22rem),
-        linear-gradient(115deg,rgba(255,255,255,.025),transparent 42%,rgba(126,203,255,.035));
-    }
-
-    .talk-column,
-    .room-column{
-      position:relative;
-      z-index:1;
+      left:50%;
+      top:0;
+      width:min(720px,92vw);
+      height:180px;
+      transform:translateX(-50%);
+      background:radial-gradient(ellipse at 50% 0%,rgba(255,217,138,.17),transparent 68%);
+      z-index:-1;
     }
 
     .talk-column{
       display:grid;
       gap:14px;
       align-content:center;
+      min-width:0;
+      position:relative;
+      z-index:1;
     }
 
     .eyebrow{
       display:inline-flex;
-      width:max-content;
-      max-width:100%;
+      width:fit-content;
       align-items:center;
-      gap:8px;
-      min-height:34px;
+      gap:10px;
       padding:8px 12px;
-      border:1px solid var(--line2);
       border-radius:999px;
+      border:1px solid rgba(255,217,138,.32);
       background:rgba(255,255,255,.04);
-      color:var(--accent);
-      font-size:11px;
-      letter-spacing:.12em;
+      color:#ffe0a3;
       text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .eyebrow::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--arch-gold);
+      box-shadow:0 0 18px rgba(255,217,138,.46);
     }
 
     .hero-title{
       margin:0;
-      font-size:clamp(42px,6.8vw,86px);
-      line-height:.88;
+      color:#fff;
+      font-size:clamp(3.4rem,9vw,6.8rem);
+      line-height:.84;
       letter-spacing:-.065em;
+      text-transform:uppercase;
       font-family:Georgia,"Times New Roman",serif;
-      max-width:11ch;
     }
 
     .hero-line{
       margin:0;
-      color:var(--text);
-      font-size:clamp(1.22rem,2.4vw,2rem);
-      line-height:1.1;
-      font-weight:850;
-      letter-spacing:-.04em;
-      max-width:17ch;
+      color:var(--arch-gold);
+      font-size:clamp(1.38rem,4.4vw,2.8rem);
+      line-height:1;
+      letter-spacing:-.045em;
+      font-weight:900;
     }
 
     .hero-text{
       margin:0;
-      max-width:58ch;
-      color:var(--muted);
-      font-size:16px;
-      line-height:1.68;
+      color:var(--arch-muted);
+      line-height:1.58;
+      font-size:1rem;
     }
 
     .doll-controls{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:8px;
-      margin-top:4px;
     }
 
     .doll-control{
       min-height:58px;
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
-      background:
-        linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
-      color:var(--text);
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.026));
+      color:var(--arch-text);
       font-weight:850;
       cursor:pointer;
       display:grid;
@@ -351,18 +527,19 @@ function injectStyles() {
     }
 
     .doll-control[data-active="true"]{
-      border-color:rgba(127,255,212,.30);
+      border-color:rgba(255,217,138,.54);
       background:
-        radial-gradient(circle at 50% 0%,rgba(127,255,212,.12),transparent 70%),
-        rgba(127,255,212,.06);
-      box-shadow:0 0 24px rgba(127,255,212,.08);
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.16),transparent 70%),
+        linear-gradient(180deg,rgba(46,34,16,.92),rgba(10,20,42,.94));
+      box-shadow:0 0 24px rgba(255,217,138,.10);
     }
 
-    .talk-card{
+    .talk-card,
+    .receipt{
       border:1px solid rgba(255,255,255,.10);
       border-radius:24px;
       background:
-        radial-gradient(circle at 16% 0%,rgba(241,210,141,.07),transparent 62%),
+        radial-gradient(circle at 16% 0%,rgba(255,217,138,.07),transparent 62%),
         rgba(255,255,255,.035);
       padding:18px;
       display:grid;
@@ -371,7 +548,7 @@ function injectStyles() {
 
     .talk-card h2{
       margin:0;
-      color:var(--gold);
+      color:var(--arch-gold);
       font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(1.55rem,3.4vw,2.9rem);
       line-height:.96;
@@ -380,29 +557,20 @@ function injectStyles() {
 
     .talk-card p{
       margin:0;
-      color:var(--muted);
+      color:var(--arch-muted);
       line-height:1.62;
       font-size:1rem;
     }
 
-    .receipt{
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:22px;
-      background:rgba(0,0,0,.18);
-      padding:14px;
-      display:grid;
-      gap:10px;
-    }
-
     .receipt-title{
       margin:0;
-      color:var(--accent);
+      color:var(--arch-gold);
       font-size:11px;
       font-weight:850;
       letter-spacing:.13em;
       text-transform:uppercase;
       padding-bottom:8px;
-      border-bottom:1px solid var(--line);
+      border-bottom:1px solid rgba(255,218,150,.20);
     }
 
     .rows{
@@ -418,13 +586,13 @@ function injectStyles() {
     }
 
     .rk{
-      color:var(--muted);
+      color:var(--arch-muted);
       font-size:12px;
       line-height:1.42;
     }
 
     .rv{
-      color:var(--text);
+      color:var(--arch-text);
       font-size:12px;
       line-height:1.42;
       text-align:right;
@@ -434,20 +602,21 @@ function injectStyles() {
     .room-column{
       display:grid;
       align-items:center;
+      position:relative;
+      z-index:1;
     }
 
     .vault-stage{
       position:relative;
-      min-height:640px;
-      border:1px solid rgba(255,255,255,.09);
-      border-radius:30px;
-      overflow:hidden;
+      min-height:650px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:32px;
       background:
-        radial-gradient(ellipse at 50% 10%,rgba(126,203,255,.08),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(127,255,212,.045) 30%,rgba(0,0,0,0) 58%),
-        radial-gradient(circle at 50% 58%,rgba(241,210,141,.055),transparent 72%),
-        linear-gradient(180deg,rgba(2,6,14,.58),rgba(2,4,10,.94));
-      isolation:isolate;
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.12),rgba(126,203,255,.045) 32%,rgba(0,0,0,0) 62%),
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014));
+      overflow:hidden;
+      display:grid;
+      place-items:center;
     }
 
     .source-inlet{
@@ -456,13 +625,13 @@ function injectStyles() {
       top:16px;
       transform:translateX(-50%);
       width:min(88%,420px);
-      border:1px solid rgba(127,255,212,.20);
+      border:1px solid rgba(147,239,189,.20);
       border-radius:999px;
       padding:9px 13px;
       background:
-        radial-gradient(circle at 50% 0%,rgba(127,255,212,.12),transparent 62%),
+        radial-gradient(circle at 50% 0%,rgba(147,239,189,.12),transparent 62%),
         rgba(3,9,18,.78);
-      color:var(--muted);
+      color:var(--arch-muted);
       text-align:center;
       z-index:12;
       font-size:.80rem;
@@ -470,7 +639,7 @@ function injectStyles() {
     }
 
     .source-inlet strong{
-      color:var(--text);
+      color:var(--arch-text);
       font-weight:900;
     }
 
@@ -487,7 +656,7 @@ function injectStyles() {
           180deg,
           rgba(255,255,255,.78),
           rgba(126,203,255,.48),
-          rgba(127,255,212,.20),
+          rgba(147,239,189,.20),
           rgba(126,203,255,.42),
           transparent
         );
@@ -524,11 +693,11 @@ function injectStyles() {
         radial-gradient(circle at 50% 50%,rgba(126,203,255,.10),transparent 34%),
         conic-gradient(
           from 45deg,
-          rgba(127,255,212,.09),
+          rgba(147,239,189,.09),
           rgba(126,203,255,.04),
-          rgba(241,210,141,.08),
+          rgba(255,217,138,.08),
           rgba(126,203,255,.04),
-          rgba(127,255,212,.09)
+          rgba(147,239,189,.09)
         );
       z-index:1;
       filter:drop-shadow(0 30px 56px rgba(0,0,0,.34));
@@ -543,7 +712,7 @@ function injectStyles() {
       box-shadow:
         inset 0 0 32px rgba(255,255,255,.055),
         inset 0 0 96px rgba(0,0,0,.34),
-        0 0 80px rgba(127,255,212,.07);
+        0 0 80px rgba(147,239,189,.07);
       background:
         repeating-conic-gradient(
           from 0deg,
@@ -560,7 +729,7 @@ function injectStyles() {
       border-radius:50%;
       border:1px solid rgba(255,255,255,.11);
       background:
-        radial-gradient(circle at 50% 50%,rgba(127,255,212,.06),transparent 28%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.06),transparent 28%),
         repeating-radial-gradient(
           circle at 50% 50%,
           rgba(255,255,255,.035) 0 1px,
@@ -606,11 +775,11 @@ function injectStyles() {
       border:1px solid rgba(255,255,255,.18);
       background:
         radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.38),rgba(127,255,212,.14) 48%,rgba(0,0,0,.21) 100%);
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.38),rgba(147,239,189,.14) 48%,rgba(0,0,0,.21) 100%);
       box-shadow:
         0 24px 42px rgba(0,0,0,.34),
         inset 0 0 44px rgba(126,203,255,.18),
-        0 0 96px rgba(127,255,212,.18);
+        0 0 96px rgba(147,239,189,.18);
       z-index:8;
       overflow:hidden;
       display:grid;
@@ -633,7 +802,7 @@ function injectStyles() {
           180deg,
           rgba(255,255,255,.84),
           rgba(126,203,255,.44) 26%,
-          rgba(127,255,212,.21) 50%,
+          rgba(147,239,189,.21) 50%,
           rgba(126,203,255,.46) 74%,
           rgba(255,255,255,.64)
         );
@@ -662,7 +831,7 @@ function injectStyles() {
     .waterfall-label{
       position:relative;
       z-index:3;
-      color:var(--text);
+      color:var(--arch-text);
       font-size:13px;
       line-height:1.18;
       letter-spacing:.08em;
@@ -684,7 +853,7 @@ function injectStyles() {
           90deg,
           rgba(255,255,255,.85),
           rgba(126,203,255,.52),
-          rgba(127,255,212,.15),
+          rgba(147,239,189,.15),
           transparent
         );
       opacity:.74;
@@ -720,7 +889,7 @@ function injectStyles() {
       border:1px solid rgba(255,255,255,.14);
       border-radius:22px;
       background:
-        radial-gradient(circle at 50% 12%,rgba(127,255,212,.12),transparent 36%),
+        radial-gradient(circle at 50% 12%,rgba(147,239,189,.12),transparent 36%),
         linear-gradient(180deg,rgba(5,13,23,.84),rgba(7,11,19,.94));
       box-shadow:
         inset 0 0 26px rgba(255,255,255,.035),
@@ -734,14 +903,14 @@ function injectStyles() {
     }
 
     .garden-alcove[data-active="true"]{
-      border-color:rgba(241,210,141,.50);
+      border-color:rgba(255,217,138,.50);
       background:
-        radial-gradient(circle at 50% 12%,rgba(241,210,141,.18),transparent 36%),
+        radial-gradient(circle at 50% 12%,rgba(255,217,138,.18),transparent 36%),
         linear-gradient(180deg,rgba(12,17,25,.90),rgba(7,11,19,.96));
       box-shadow:
         inset 0 0 26px rgba(255,255,255,.04),
         0 20px 34px rgba(0,0,0,.30),
-        0 0 38px rgba(241,210,141,.13);
+        0 0 38px rgba(255,217,138,.13);
     }
 
     .garden-alcove.north{left:50%;top:11%;transform:translateX(-50%)}
@@ -757,7 +926,7 @@ function injectStyles() {
     }
 
     .garden-plaque small{
-      color:var(--accent);
+      color:var(--arch-gold);
       font-size:9px;
       letter-spacing:.11em;
       text-transform:uppercase;
@@ -765,13 +934,13 @@ function injectStyles() {
     }
 
     .garden-plaque strong{
-      color:var(--text);
+      color:var(--arch-text);
       font-size:.86rem;
       line-height:1.08;
     }
 
     .garden-plaque span{
-      color:var(--muted);
+      color:var(--arch-muted);
       font-size:.70rem;
       line-height:1.22;
     }
@@ -782,7 +951,7 @@ function injectStyles() {
       bottom:14px;
       transform:translateX(-50%);
       width:min(92%,700px);
-      color:var(--muted2);
+      color:var(--arch-muted2);
       text-align:center;
       font-size:.82rem;
       line-height:1.42;
@@ -791,74 +960,93 @@ function injectStyles() {
     }
 
     .route-strip{
-      padding:12px;
+      border-radius:24px;
+      padding:10px;
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:10px;
+      gap:8px;
     }
 
-    .route-strip a{
-      min-height:52px;
+    .route-link{
+      min-height:48px;
+      border-radius:18px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
       display:grid;
       place-items:center;
       text-align:center;
-      border:1px solid rgba(255,255,255,.10);
-      border-radius:18px;
-      background:rgba(255,255,255,.04);
-      color:var(--text);
-      font-size:.78rem;
-      font-weight:850;
-      text-decoration:none;
     }
 
-    .route-strip a.strong{
-      border-color:rgba(127,255,212,.26);
-      background:rgba(127,255,212,.08);
+    .route-link.strong{
+      border-color:rgba(255,217,138,.48);
+      background:rgba(255,217,138,.10);
+      color:#fff8ea;
     }
 
-    @keyframes inletDrop{
-      from{transform:translateY(-38px)}
-      to{transform:translateY(38px)}
-    }
-
-    @keyframes waterfallDrop{
-      0%{transform:translateX(-50%) translateY(-22%)}
-      100%{transform:translateX(-50%) translateY(22%)}
-    }
-
-    @keyframes waterCircle{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
-    @keyframes waterRun{
-      from{transform:translateX(-42px)}
-      to{transform:translateX(42px)}
-    }
+    @keyframes compassSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes inletDrop{from{transform:translateY(-38px)}to{transform:translateY(38px)}}
+    @keyframes waterfallDrop{0%{transform:translateX(-50%) translateY(-22%)}100%{transform:translateX(-50%) translateY(22%)}}
+    @keyframes waterCircle{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    @keyframes waterRun{from{transform:translateX(-42px)}to{transform:translateX(42px)}}
 
     @media(max-width:1080px){
       .ted-stage{
         grid-template-columns:1fr;
-        min-height:auto;
       }
 
       .vault-stage{
         min-height:620px;
       }
+
+      .route-strip{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
     }
 
     @media(max-width:760px){
-      .topbar{
+      #app.archcoin-page{
+        width:min(100vw - 12px,var(--arch-max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .ted-stage,
+      .route-strip{
         border-radius:24px;
+      }
+
+      .topbar{
+        padding:12px;
+      }
+
+      .brand{
+        gap:10px;
+      }
+
+      .brand-mark{
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .jump-grid,
+      .doll-controls,
+      .route-strip{
+        grid-template-columns:1fr;
+      }
+
+      .jump-card{
+        min-height:76px;
       }
 
       .ted-stage{
-        border-radius:24px;
-        padding:16px;
-      }
-
-      .doll-controls{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        padding:18px;
       }
 
       .row{
@@ -924,47 +1112,50 @@ function injectStyles() {
         width:100%;
         order:3;
       }
-
-      .route-strip{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
     }
 
     @media(prefers-reduced-motion:reduce){
-      .inlet-fall::after,
-      .waterfall-core::before,
-      .waterfall-core::after,
-      .water-channel::after{
+      *,
+      *::before,
+      *::after{
         animation:none!important;
+        transition:none!important;
+        scroll-behavior:auto!important;
       }
     }
   `;
+
   document.head.appendChild(style);
 }
 
 function buildTopbar() {
   const topbar = el("header", "topbar");
 
-  const brand = el("div", "brand");
-  const mark = el("div", "brand-mark");
-  const copy = el("div");
+  const brand = el("a", "brand");
+  brand.href = ROOT;
+  brand.setAttribute("aria-label", "ARCHCOIN");
 
+  const mark = el("span", "brand-mark", "AC");
+  mark.setAttribute("aria-hidden", "true");
+
+  const copy = el("span", "brand-copy");
   copy.append(
-    el("p", "brand-title", "Richie’s Manor · Vault Chamber"),
-    el("p", "brand-subtitle", "ARCHCOIN / TED Talk Russian Doll")
+    el("span", "brand-title", "Richie’s Manor · Vault Chamber"),
+    el("strong", "brand-subtitle", "ARCHCOIN · Four-Coin Transaction Template")
   );
 
   brand.append(mark, copy);
 
-  const actions = el("nav", "action-row");
-  actions.append(
-    button("Products Source", ROUTES.products, true),
-    button("Vault", ROUTES.vault),
-    button("Upper Room", ROUTES.upperRoom),
-    button("Showroom", ROUTES.showroom)
+  const jumps = el("nav", "jump-grid");
+  jumps.setAttribute("aria-label", "Primary compass jumps");
+  jumps.append(
+    linkCard("Compass", ROUTES.compass),
+    linkCard("Door", ROUTES.door),
+    linkCard("Products", ROUTES.products, "active"),
+    linkCard("Gauges", ROUTES.gauges)
   );
 
-  topbar.append(brand, actions);
+  topbar.append(brand, jumps);
   return topbar;
 }
 
@@ -984,13 +1175,7 @@ function buildDollControls() {
 
 function buildTalkCard() {
   const card = el("section", "talk-card");
-  card.id = "talkCard";
-
-  card.append(
-    el("h2", "talkTitle", LAYERS[0].title),
-    el("p", "talkCopy", LAYERS[0].copy)
-  );
-
+  card.append(el("h2", "talk-title", LAYERS[0].title), el("p", "talk-copy", LAYERS[0].copy));
   return card;
 }
 
@@ -1029,10 +1214,10 @@ function buildVaultRoom() {
   inlet.innerHTML = `<strong>Products Source Chamber</strong> feeds the protected-value stream into ARCHCOIN.`;
 
   const inletFall = el("div", "inlet-fall");
-
   const room = el("div", "vault-room");
 
   const floor = el("div", "vault-floor");
+
   const waterfall = el("div", "waterfall-core");
   waterfall.innerHTML = `<span class="waterfall-label">RECEIVING<br>VAULT<br>CORE</span>`;
 
@@ -1050,7 +1235,7 @@ function buildVaultRoom() {
   const caption = el(
     "p",
     "vault-caption",
-    "The Russian doll opens inward: Products sends the stream, the Vault receives it, the waterfall circulates it, and the four gardens explain the transaction."
+    "The chamber opens inward: Products sends the stream, the Vault receives it, the waterfall circulates it, and the four gardens explain the transaction."
   );
 
   stage.append(inlet, inletFall, room, caption);
@@ -1062,13 +1247,13 @@ function buildTedStage() {
 
   const talk = el("section", "talk-column");
   talk.append(
-    el("div", "eyebrow", "ARCHCOIN · TED Talk Chamber"),
-    el("h1", "hero-title", "The Vault receives the stream."),
-    el("p", "hero-line", "This is not a coin pitch. It is a map for how value moves."),
+    el("div", "eyebrow", "ARCHCOIN · Vault Chamber"),
+    el("h1", "hero-title", "ARCHCOIN"),
+    el("p", "hero-line", "Not a regular coin. A transaction template."),
     el(
       "p",
       "hero-text",
-      "Products is the source chamber. ARCHCOIN is the receiving Vault. The four gardens show the four parts of a transaction without turning the page into a dashboard."
+      "Products is the source chamber. ARCHCOIN is the receiving Vault. The four gardens show the four parts of a transaction without turning the page into a long scroll."
     ),
     buildDollControls(),
     buildTalkCard(),
@@ -1086,27 +1271,15 @@ function buildRouteStrip() {
   const strip = el("nav", "route-strip");
   strip.setAttribute("aria-label", "ARCHCOIN route strip");
 
-  const links = [
-    ["Products Source", ROUTES.products, true],
-    ["Vault Chamber", ROUTES.vault, false],
-    ["Upper Room", ROUTES.upperRoom, false],
-    ["Showroom", ROUTES.showroom, false],
-    ["Compass", ROUTES.compass, false]
-  ];
-
-  links.forEach(([label, href, strong]) => {
-    const a = el("a", strong ? "strong" : "", label);
-    a.href = href;
-    strip.appendChild(a);
-  });
+  strip.append(
+    action("Products", ROUTES.products, true),
+    action("Vault", ROUTES.vault),
+    action("Upper Room", ROUTES.upperRoom),
+    action("Showroom", ROUTES.showroom),
+    action("Compass", ROUTES.compass)
+  );
 
   return strip;
-}
-
-function buildShell() {
-  const shell = el("div", "vault-shell");
-  shell.append(buildTopbar(), buildTedStage(), buildRouteStrip());
-  return shell;
 }
 
 function setReceipt(rows) {
@@ -1124,8 +1297,12 @@ function setLayer(key) {
     node.dataset.active = node.dataset.layer === layer.key ? "true" : "false";
   });
 
-  const title = document.querySelector(".talkTitle");
-  const copy = document.querySelector(".talkCopy");
+  document.querySelectorAll(".garden-alcove").forEach((node) => {
+    node.dataset.active = node.dataset.key === "North" && layer.key === "source" ? "true" : "false";
+  });
+
+  const title = document.querySelector(".talk-title");
+  const copy = document.querySelector(".talk-copy");
 
   if (title) title.textContent = layer.title;
   if (copy) copy.textContent = layer.copy;
@@ -1144,8 +1321,8 @@ function setGarden(key) {
     node.dataset.active = "false";
   });
 
-  const title = document.querySelector(".talkTitle");
-  const copy = document.querySelector(".talkCopy");
+  const title = document.querySelector(".talk-title");
+  const copy = document.querySelector(".talk-copy");
 
   if (title) title.textContent = garden.name + " · " + garden.role;
   if (copy) copy.textContent = garden.read + " " + garden.water;
@@ -1207,7 +1384,7 @@ function buildStars() {
 }
 
 function drawField() {
-  if (!CANVAS) return;
+  if (!CANVAS || REDUCED_MOTION) return;
 
   const ctx = CANVAS.getContext("2d");
   if (!ctx) return;
@@ -1243,7 +1420,7 @@ function drawField() {
     Math.max(field.width, field.height) * 0.48
   );
 
-  grad.addColorStop(0, "rgba(127,255,212,0.05)");
+  grad.addColorStop(0, "rgba(147,239,189,0.05)");
   grad.addColorStop(0.45, "rgba(126,203,255,0.03)");
   grad.addColorStop(1, "rgba(0,0,0,0)");
 
@@ -1251,12 +1428,25 @@ function drawField() {
   ctx.fillRect(0, 0, field.width, field.height);
 }
 
+function buildShell() {
+  APP.className = "archcoin-page";
+  APP.dataset.page = "archcoin";
+  APP.dataset.roomLocation = "richie-manor-vault-chamber";
+  APP.dataset.nameLock = "ARCHCOIN";
+  APP.dataset.selfPath = ROOT;
+  APP.dataset.productsBacklink = ROUTES.products;
+
+  APP.replaceChildren(buildTopbar(), buildTedStage(), buildRouteStrip());
+}
+
 function boot() {
-  if (!APP) return;
+  if (!APP) {
+    console.warn("ARCHCOIN boot stopped: missing #app mount.");
+    return;
+  }
 
   injectStyles();
-  APP.className = "page";
-  APP.replaceChildren(buildShell());
+  buildShell();
   bindInteractions();
   resizeCanvas();
 

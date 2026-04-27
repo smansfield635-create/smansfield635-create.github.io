@@ -1,378 +1,1010 @@
-<!doctype html>
-<!-- TNT RENEWAL — /gauges/index.html
-     GAUGES · GENERATION 2 · EARTH COHERENCE DIAGNOSTIC CONSOLE B6
-
-     PURPOSE:
-       - Keep Earth Spine diagnostics.
-       - Add visual coherence diagnostics.
-       - Prevent false 100 when Earth is technically mounted but visually wrong.
-       - Detect placeholder/cartoon assets, flat color, cloud bands, bad texture density, and live canvas distortion.
-       - No graphics box.
--->
-
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-gauges-generation="spinning-compass-instrument-room-b1">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-  <title>Diamond Gate Bridge — Gauges</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>Gauges · Diamond Gate Bridge</title>
+  <meta
+    name="description"
+    content="Gauges — the site-health instrument room for Diamond Gate Bridge, reading route health, backlink health, render health, product health, and system stability."
+  />
 
   <style>
+    :root{
+      color-scheme:dark;
+      --bg0:#020610;
+      --bg1:#071225;
+      --panel:rgba(7,14,28,.88);
+      --panel2:rgba(10,20,42,.94);
+      --line:rgba(255,218,150,.22);
+      --lineBlue:rgba(142,197,255,.26);
+      --lineGreen:rgba(147,239,189,.26);
+      --text:#fff8ea;
+      --muted:#c9d2ea;
+      --soft:rgba(201,210,234,.72);
+      --gold:#ffd98a;
+      --gold2:#f1b84d;
+      --blue:#8ec5ff;
+      --green:#93efbd;
+      --ice:#d7e4ff;
+      --shadow:0 24px 80px rgba(0,0,0,.50);
+      --max:1180px;
+    }
+
     *{box-sizing:border-box}
 
     html,body{
       margin:0;
       min-height:100%;
-      background:#02040b;
-      color:#fff;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    :root{
-      --ink:rgba(255,255,255,.96);
-      --txt:rgba(220,231,255,.78);
-      --muted:rgba(220,231,255,.62);
-      --gold:rgba(255,217,138,.96);
-      --green:#8ff0bd;
-      --yellow:#ffe08a;
-      --red:#ff8b8b;
-      --blue:#93c5fd;
-      --line:rgba(255,255,255,.13);
-      --panel:rgba(7,10,16,.74);
-      --shadow:0 30px 110px rgba(0,0,0,.54);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 50% 82%,rgba(255,154,86,.30),transparent 28%),
+        radial-gradient(circle at 72% 72%,rgba(255,216,138,.22),transparent 24%),
+        radial-gradient(circle at 18% 18%,rgba(91,132,205,.24),transparent 34%),
+        linear-gradient(180deg,#071225 0%,#10294a 36%,#f49a52 76%,#2b1020 100%);
+      overflow-x:hidden;
     }
 
     body::before{
       content:"";
       position:fixed;
       inset:0;
-      z-index:0;
       pointer-events:none;
+      opacity:.56;
       background:
-        radial-gradient(circle at 12% 18%,rgba(255,255,255,.30) 0 1px,transparent 2px),
-        radial-gradient(circle at 42% 22%,rgba(177,205,255,.20) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.18) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 18% 12%,rgba(67,95,180,.20),transparent 34rem),
-        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
+        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
+        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
+      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
+      animation:fieldDrift 26s linear infinite;
+      z-index:0;
     }
 
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.46),transparent 36%),
+        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.12),transparent 28%),
+        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
+        linear-gradient(180deg,rgba(5,12,28,.50),transparent 46%,rgba(255,151,72,.16));
+      z-index:0;
+    }
+
+    a{color:inherit;text-decoration:none}
+
     .page{
+      width:min(var(--max),calc(100vw - 20px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:14px 0 24px;
       position:relative;
       z-index:1;
-      width:min(100% - 28px,1180px);
-      margin:0 auto;
-      padding:16px 0 28px;
       display:grid;
+      grid-template-rows:auto 1fr auto;
       gap:14px;
     }
 
-    .nav,.hero,.panel,.routeRail{
+    .topbar,
+    .instrumentRoom,
+    .routeRail{
       border:1px solid var(--line);
-      border-radius:28px;
-      background:var(--panel);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
+        linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
     }
 
-    .nav{
-      padding:12px;
+    .topbar{
+      padding:14px;
+      border-radius:28px;
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
       align-items:center;
       justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
     }
 
     .brand{
-      font-weight:950;
-      font-size:20px;
-    }
-
-    .links,.routeRail{
       display:flex;
-      flex-wrap:wrap;
-      gap:10px;
+      align-items:center;
+      gap:12px;
+      min-width:0;
     }
 
-    .links a,.routeRail a{
-      min-height:42px;
-      padding:10px 14px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background:rgba(0,0,0,.24);
-      font-weight:900;
-    }
-
-    .links a.active{
-      border-color:rgba(255,217,138,.48);
-      color:var(--gold);
-    }
-
-    .hero{
-      padding:clamp(22px,5vw,46px);
+    .mark{
+      width:50px;
+      height:50px;
+      border-radius:17px;
       display:grid;
-      gap:18px;
+      place-items:center;
+      border:1px solid rgba(255,217,138,.46);
+      background:
+        radial-gradient(circle at 50% 28%,rgba(255,217,138,.38),transparent 44%),
+        linear-gradient(180deg,rgba(58,42,18,.92),rgba(10,18,32,.98));
+      color:#fff8ea;
+      font-weight:950;
+      letter-spacing:.08em;
+      flex:0 0 auto;
+      box-shadow:0 0 22px rgba(255,217,138,.16);
     }
+
+    .brandText{display:grid;gap:3px}
 
     .kicker{
+      display:block;
       margin:0;
-      color:var(--gold);
-      font-size:12px;
-      line-height:1.35;
-      font-weight:950;
-      letter-spacing:3px;
+      color:#ffe0a3;
+      font-size:.72rem;
       text-transform:uppercase;
+      letter-spacing:.16em;
+      font-weight:850;
+    }
+
+    .title{
+      display:block;
+      margin:0;
+      color:#fff;
+      font-weight:900;
+      font-size:1.08rem;
+      line-height:1.05;
+    }
+
+    .nav{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      justify-content:flex-end;
+    }
+
+    .nav a,
+    .routeRail a,
+    .action{
+      min-height:40px;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 13px;
+      border-radius:999px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.74rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .nav a.featured,
+    .action.primary{
+      border-color:rgba(255,217,138,.52);
+      background:rgba(255,217,138,.12);
+      color:#fff8ea;
+      box-shadow:0 0 22px rgba(255,217,138,.14);
+    }
+
+    .instrumentRoom{
+      border-radius:34px;
+      padding:clamp(18px,3vw,30px);
+      display:grid;
+      grid-template-columns:minmax(0,.86fr) minmax(420px,1.14fr);
+      gap:18px;
+      min-height:0;
+      overflow:hidden;
+      position:relative;
+      isolation:isolate;
+    }
+
+    .instrumentRoom::before{
+      content:"";
+      position:absolute;
+      width:min(820px,94vw);
+      height:min(820px,94vw);
+      left:74%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.18),transparent 21%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.14),transparent 42%),
+        radial-gradient(circle at 50% 50%,rgba(147,239,189,.10),transparent 58%),
+        radial-gradient(circle at 50% 50%,rgba(255,119,72,.10),transparent 72%);
+      filter:blur(5px);
+      z-index:-2;
+    }
+
+    .copy{
+      display:grid;
+      gap:14px;
+      align-content:center;
+      min-width:0;
+    }
+
+    .pill{
+      display:inline-flex;
+      width:fit-content;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,217,138,.30);
+      background:rgba(255,255,255,.04);
+      color:#ffe0a3;
+      text-transform:uppercase;
+      letter-spacing:.14em;
+      font-size:.70rem;
+      font-weight:850;
+    }
+
+    .pill::before{
+      content:"";
+      width:9px;
+      height:9px;
+      border-radius:2px;
+      transform:rotate(45deg);
+      background:var(--gold);
+      box-shadow:0 0 18px rgba(255,217,138,.46);
     }
 
     h1{
       margin:0;
-      font-size:clamp(3.4rem,10vw,7.2rem);
-      line-height:.86;
+      color:#fff;
+      font-size:clamp(3.6rem,10vw,7rem);
+      line-height:.84;
       letter-spacing:-.08em;
     }
 
-    .headline{
+    h2{
       margin:0;
       color:var(--gold);
-      font-size:clamp(1.35rem,4vw,2.5rem);
-      line-height:1.08;
-      font-weight:850;
+      font-size:clamp(1.4rem,4.4vw,2.8rem);
+      line-height:1;
+      letter-spacing:-.045em;
     }
 
-    .lede{
+    p{
       margin:0;
-      max-width:860px;
-      color:var(--txt);
-      font-size:clamp(1.05rem,2.3vw,1.28rem);
-      line-height:1.55;
+      color:var(--muted);
+      line-height:1.58;
+      font-size:1rem;
     }
 
-    .summaryGrid{
-      display:grid;
-      grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:12px;
+    .thesis{
+      color:#fff;
+      font-size:clamp(1.12rem,2.25vw,1.52rem);
+      line-height:1.18;
+      font-weight:850;
+      letter-spacing:-.035em;
+      max-width:780px;
     }
 
-    .score{
-      border:1px solid var(--line);
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:2px;
+    }
+
+    .statusReceipt{
+      border:1px solid rgba(255,255,255,.10);
       border-radius:22px;
-      padding:16px;
-      background:rgba(0,0,0,.22);
+      background:rgba(0,0,0,.20);
+      padding:14px;
       display:grid;
       gap:7px;
-      min-height:112px;
+      color:var(--soft);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.82rem;
+      line-height:1.42;
+      overflow:auto;
     }
 
-    .score span{
-      color:var(--muted);
-      font-weight:850;
-      font-size:.88rem;
-    }
-
-    .score strong{
-      font-size:clamp(1.45rem,4vw,2.35rem);
-      line-height:1;
-    }
-
-    .score small{
-      color:var(--txt);
-      line-height:1.35;
-      font-weight:700;
-    }
-
-    .panel{
-      padding:18px;
+    .wall{
+      position:relative;
+      min-height:620px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:32px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.10),rgba(142,197,255,.045) 34%,rgba(0,0,0,0) 66%),
+        linear-gradient(180deg,rgba(255,255,255,.036),rgba(255,255,255,.014));
+      overflow:hidden;
       display:grid;
-      gap:14px;
+      place-items:center;
     }
 
-    .panel h2{
-      margin:0;
-      color:var(--gold);
-      font-size:clamp(1.25rem,3vw,2rem);
+    .wallRing{
+      position:absolute;
+      left:50%;
+      top:50%;
+      border-radius:50%;
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      border:1px solid rgba(255,217,138,.12);
+      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
+    }
+
+    .wallRing.r1{
+      width:min(92%,590px);
+      aspect-ratio:1;
+      background:
+        radial-gradient(circle at 50% 50%,transparent 42%,rgba(255,217,138,.05) 43%,transparent 68%);
+      animation:wallSpin 54s linear infinite;
+    }
+
+    .wallRing.r2{
+      width:min(74%,470px);
+      aspect-ratio:1;
+      background:
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);
+      animation:wallSpin 42s linear infinite reverse;
+    }
+
+    .wallRing.r3{
+      width:min(54%,330px);
+      aspect-ratio:1;
+      background:radial-gradient(circle at 50% 50%,rgba(255,217,138,.06),transparent 52%);
+      animation:wallSpin 28s linear infinite;
+    }
+
+    .gaugeCore{
+      position:relative;
+      z-index:6;
+      width:min(36%,210px);
+      aspect-ratio:1;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      text-align:center;
+      filter:drop-shadow(0 24px 46px rgba(0,0,0,.38));
+    }
+
+    .compass{
+      position:relative;
+      width:100%;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.20);
+      background:
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.44),transparent 12%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.34),rgba(241,184,77,.18) 46%,rgba(0,0,0,.22) 100%);
+      box-shadow:
+        inset 0 0 42px rgba(255,217,138,.18),
+        0 0 92px rgba(255,217,138,.22);
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+    }
+
+    .compass::before{
+      content:"";
+      position:absolute;
+      inset:13%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.17);
+      background:
+        repeating-conic-gradient(
+          from 0deg,
+          transparent 0deg 12deg,
+          rgba(255,255,255,.10) 12deg 15deg,
+          transparent 15deg 30deg
+        );
+      animation:compassSpin 18s linear infinite;
+    }
+
+    .compass::after{
+      content:"";
+      position:absolute;
+      width:16%;
+      height:58%;
+      left:42%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 46%,58% 46%,58% 100%,42% 100%,42% 46%,0% 46%);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.92),rgba(255,217,138,.72),rgba(255,255,255,.44));
+      filter:drop-shadow(0 0 12px rgba(255,217,138,.30));
+      transform-origin:50% 50%;
+      animation:needleSpin 9s linear infinite;
+    }
+
+    .compass span{
+      position:relative;
+      z-index:2;
+      color:#fff8ea;
+      font-weight:950;
+      font-size:.88rem;
+      letter-spacing:.10em;
+      line-height:1.16;
+      text-transform:uppercase;
+      text-shadow:0 2px 12px rgba(0,0,0,.72);
+    }
+
+    .gauge{
+      position:absolute;
+      z-index:7;
+      width:138px;
+      min-height:124px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.10),transparent 70%),
+        linear-gradient(180deg,rgba(7,14,28,.82),rgba(10,20,42,.92));
+      box-shadow:0 18px 38px rgba(0,0,0,.34);
+      display:grid;
+      align-content:center;
+      justify-items:center;
+      gap:8px;
+      padding:12px;
+      cursor:pointer;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+      text-align:center;
+    }
+
+    .gauge:hover,
+    .gauge:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(255,217,138,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .gauge[data-active="true"]{
+      border-color:rgba(255,217,138,.50);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(38,28,14,.92),rgba(7,14,28,.94));
+    }
+
+    .miniCompass{
+      position:relative;
+      width:58px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
+      box-shadow:
+        inset 0 0 22px rgba(142,197,255,.10),
+        0 0 24px rgba(142,197,255,.10);
+      overflow:hidden;
+    }
+
+    .miniCompass::before{
+      content:"";
+      position:absolute;
+      inset:17%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:
+        repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .miniCompass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .gauge.gold .miniCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.36),rgba(60,40,16,.84) 68%);
+      box-shadow:
+        inset 0 0 22px rgba(255,217,138,.14),
+        0 0 28px rgba(255,217,138,.16);
+    }
+
+    .gauge.gold .miniCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.72));
+    }
+
+    .gauge small{
+      color:#c8d7ff;
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .gauge strong{
+      color:#fff;
+      font-size:.93rem;
+      line-height:1.03;
       letter-spacing:-.03em;
     }
 
-    .status{
-      display:inline-flex;
-      width:max-content;
-      max-width:100%;
-      align-items:center;
-      border:1px solid var(--line);
-      border-radius:999px;
-      padding:8px 12px;
-      background:rgba(0,0,0,.22);
-      font-weight:950;
+    .gauge.north{left:50%;top:18px;transform:translateX(-50%)}
+    .gauge.northeast{right:48px;top:78px}
+    .gauge.east{right:18px;top:50%;transform:translateY(-50%)}
+    .gauge.southeast{right:48px;bottom:78px}
+    .gauge.south{left:50%;bottom:18px;transform:translateX(-50%)}
+    .gauge.southwest{left:48px;bottom:78px}
+    .gauge.west{left:18px;top:50%;transform:translateY(-50%)}
+    .gauge.northwest{left:48px;top:78px}
+
+    .gauge.north:hover,.gauge.north:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .gauge.east:hover,.gauge.east:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .gauge.south:hover,.gauge.south:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .gauge.west:hover,.gauge.west:focus-visible{transform:translateY(calc(-50% - 4px))}
+
+    .readout{
+      position:absolute;
+      left:18px;
+      right:18px;
+      bottom:18px;
+      z-index:9;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) minmax(220px,.40fr);
+      gap:12px;
+      pointer-events:none;
     }
 
-    .status.strong{color:var(--green)}
-    .status.watch{color:var(--yellow)}
-    .status.fail{color:var(--red)}
-    .status.info{color:var(--blue)}
-
-    .list{
+    .readCard{
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:20px;
+      background:rgba(3,8,18,.72);
+      box-shadow:0 18px 38px rgba(0,0,0,.30);
+      padding:14px;
       display:grid;
+      gap:7px;
+      backdrop-filter:blur(10px);
+      -webkit-backdrop-filter:blur(10px);
+    }
+
+    .readCard h3{
+      margin:0;
+      color:#fff;
+      font-size:clamp(1.1rem,2.1vw,1.45rem);
+      line-height:1.05;
+      letter-spacing:-.04em;
+    }
+
+    .readCard p{
+      font-size:.92rem;
+      line-height:1.44;
+    }
+
+    .miniReceipt{
+      display:grid;
+      gap:6px;
+      color:var(--soft);
+      font-size:.80rem;
+      line-height:1.32;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+
+    .routeRail{
+      border-radius:24px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
       gap:8px;
     }
 
-    .item{
-      border:1px solid rgba(255,255,255,.10);
+    .routeRail a{
       border-radius:18px;
-      background:rgba(0,0,0,.20);
-      padding:12px;
-      display:grid;
-      gap:5px;
+      min-height:48px;
+      font-size:.66rem;
     }
 
-    .item strong{color:var(--ink)}
-    .item span{color:var(--txt);line-height:1.45}
-    .item code{
-      color:rgba(255,255,255,.86);
-      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.86rem;
-      overflow-wrap:anywhere;
+    @keyframes fieldDrift{
+      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
+      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
     }
 
-    .item[data-state="STRONG"] strong{color:var(--green)}
-    .item[data-state="WATCH"] strong{color:var(--yellow)}
-    .item[data-state="FAIL"] strong{color:var(--red)}
-    .item[data-state="INFO"] strong{color:var(--blue)}
-
-    .routeRail{
-      padding:12px;
-      justify-content:center;
+    @keyframes wallSpin{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
-    iframe{
-      position:absolute;
-      width:1px;
-      height:1px;
-      opacity:0;
-      pointer-events:none;
-      border:0;
+    @keyframes compassSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
     }
 
-    @media(max-width:980px){
-      .summaryGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @keyframes needleSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
     }
 
-    @media(max-width:760px){
-      .page{width:min(100% - 20px,1180px)}
-      .links a,.routeRail a{flex:1 1 calc(50% - 10px);text-align:center}
+    @media(max-width:1080px){
+      .instrumentRoom{
+        grid-template-columns:1fr;
+      }
+
+      .wall{
+        min-height:660px;
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(3,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:720px){
+      .page{
+        width:min(100vw - 12px,var(--max));
+        padding-top:10px;
+      }
+
+      .topbar,
+      .instrumentRoom,
+      .routeRail{
+        border-radius:24px;
+      }
+
+      .topbar{padding:12px}
+
+      .brand{gap:10px}
+
+      .mark{
+        width:44px;
+        height:44px;
+        border-radius:14px;
+      }
+
+      .nav{
+        width:100%;
+        justify-content:stretch;
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .nav a{width:100%}
+
+      .instrumentRoom{
+        padding:18px;
+      }
+
+      .actions{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+
+      .action{width:100%}
+
+      .wall{
+        min-height:auto;
+        display:grid;
+        gap:10px;
+        padding:14px;
+      }
+
+      .wallRing{
+        display:none;
+      }
+
+      .gaugeCore{
+        position:relative;
+        width:170px;
+        margin:0 auto;
+      }
+
+      .gauge,
+      .gauge.north,
+      .gauge.northeast,
+      .gauge.east,
+      .gauge.southeast,
+      .gauge.south,
+      .gauge.southwest,
+      .gauge.west,
+      .gauge.northwest{
+        position:relative;
+        left:auto;
+        right:auto;
+        top:auto;
+        bottom:auto;
+        transform:none;
+        width:100%;
+        min-height:98px;
+        grid-template-columns:auto 1fr;
+        justify-items:start;
+        text-align:left;
+      }
+
+      .gauge:hover,
+      .gauge:focus-visible,
+      .gauge.north:hover,
+      .gauge.north:focus-visible,
+      .gauge.east:hover,
+      .gauge.east:focus-visible,
+      .gauge.south:hover,
+      .gauge.south:focus-visible,
+      .gauge.west:hover,
+      .gauge.west:focus-visible{
+        transform:translateY(-4px);
+      }
+
+      .readout{
+        position:relative;
+        left:auto;
+        right:auto;
+        bottom:auto;
+        grid-template-columns:1fr;
+        margin-top:4px;
+      }
+
+      .routeRail{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        animation:none !important;
+        scroll-behavior:auto !important;
+        transition:none !important;
+      }
     }
   </style>
 </head>
 
 <body>
-  <main class="page" data-gauges-root data-gauges-version="earth-coherence-diagnostic-console-b6">
-    <nav class="nav" aria-label="Primary navigation">
-      <a class="brand" href="/">Diamond Gate Bridge</a>
-      <div class="links">
+  <main
+    class="page"
+    data-page="gauges"
+    data-page-relative-gold="gauges"
+    data-instrument-standard="gold-active-page-compass"
+    data-products-route="/products/"
+    data-showroom-route="/showroom/"
+    data-vault-route="/products/archcoin/"
+    data-upper-room-route="/big-laugh/upper-room/"
+  >
+    <header class="topbar">
+      <a class="brand" href="/gauges/" aria-label="Gauges home">
+        <span class="mark" aria-hidden="true">GA</span>
+        <span class="brandText">
+          <span class="kicker">Richie’s Manor</span>
+          <strong class="title">Gauges · Instrument Room</strong>
+        </span>
+      </a>
+
+      <nav class="nav" aria-label="Primary navigation">
         <a href="/">Compass</a>
-        <a href="/home/">Home</a>
-        <a href="/prelude/">Prelude</a>
         <a href="/door/">Door</a>
-        <a href="/showroom/">Showroom</a>
         <a href="/products/">Products</a>
-        <a href="/laws/">Laws</a>
-        <a href="/governance/">Governance</a>
-        <a class="active" href="/gauges/">Gauges</a>
-      </div>
-    </nav>
+        <a class="featured" href="/gauges/">Gauges</a>
+      </nav>
+    </header>
 
-    <section class="hero">
-      <p class="kicker">Generation 2 · Earth Coherence Diagnostic Console · B6</p>
-      <h1>Gauges</h1>
-      <p class="headline" id="statusHeadline">Running Earth coherence diagnostics.</p>
-      <p class="lede">
-        This scan now checks not only whether the Earth renderer exists, but whether the globe is visually coherent: real enough texture density, cloud coherence, spherical readability, usable zoom, and no placeholder/cartoon asset dominance.
-      </p>
+    <section class="instrumentRoom" aria-labelledby="gaugesTitle">
+      <div class="copy">
+        <span class="pill">Site-health instrument room</span>
+        <h1 id="gaugesTitle">Gauges</h1>
+        <h2>The control wall for the whole site.</h2>
+        <p class="thesis">
+          Gauges reads the health of the Manor: routes, backlinks, render surfaces, products, vault, showroom, events, and system stability.
+        </p>
+        <p>
+          The gold compass marks the page we are on. Supporting compasses read the surrounding systems without competing for the center.
+        </p>
 
-      <div class="summaryGrid">
-        <div class="score">
-          <span>Verdict</span>
-          <strong id="verdictScore">—</strong>
-          <small id="verdictNote">Scanning</small>
+        <div class="actions">
+          <a class="action primary" href="/gauges/">Read Gauges</a>
+          <a class="action" href="/products/">Products</a>
+          <a class="action" href="/showroom/">Showroom</a>
         </div>
-        <div class="score">
-          <span>Assets</span>
-          <strong id="assetScore">—</strong>
-          <small id="assetNote">Scanning</small>
-        </div>
-        <div class="score">
-          <span>Consumer</span>
-          <strong id="consumerScore">—</strong>
-          <small id="consumerNote">Scanning</small>
-        </div>
-        <div class="score">
-          <span>Spine</span>
-          <strong id="spineScore">—</strong>
-          <small id="spineNote">Scanning</small>
-        </div>
-        <div class="score">
-          <span>Coherence</span>
-          <strong id="coherenceScore">—</strong>
-          <small id="coherenceNote">Scanning</small>
-        </div>
-        <div class="score">
-          <span>Drift</span>
-          <strong id="driftScore">—</strong>
-          <small id="driftNote">Scanning</small>
+
+        <div class="statusReceipt" aria-label="Gauges status receipt">
+GAUGES_PAGE=ACTIVE
+ACTIVE_PAGE_COMPASS=GOLD
+ROLE=SITE_HEALTH_INSTRUMENT_ROOM
+READS=ROUTES,BACKLINKS,RENDER,PRODUCTS,SHOWROOM,VAULT,EVENTS,STABILITY
+STANDARD=PAGE_RELATIVE_GOLD_COMPASS
         </div>
       </div>
+
+      <div class="wall" aria-label="Spinning compass gauge wall">
+        <div class="wallRing r1" aria-hidden="true"></div>
+        <div class="wallRing r2" aria-hidden="true"></div>
+        <div class="wallRing r3" aria-hidden="true"></div>
+
+        <div class="gaugeCore" aria-hidden="true">
+          <div class="compass"><span>Gauges<br>Health<br>Read</span></div>
+        </div>
+
+        <button class="gauge gold north" type="button" data-gauge="gauges" data-active="true">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Active Page</small>
+          <strong>Gauges</strong>
+        </button>
+
+        <button class="gauge northeast" type="button" data-gauge="routes" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Route Health</small>
+          <strong>Routes</strong>
+        </button>
+
+        <button class="gauge east" type="button" data-gauge="backlinks" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Backlink Health</small>
+          <strong>Backlinks</strong>
+        </button>
+
+        <button class="gauge southeast" type="button" data-gauge="render" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Render Health</small>
+          <strong>Render</strong>
+        </button>
+
+        <button class="gauge south" type="button" data-gauge="products" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Product Health</small>
+          <strong>Products</strong>
+        </button>
+
+        <button class="gauge southwest" type="button" data-gauge="vault" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Vault Health</small>
+          <strong>ARCHCOIN</strong>
+        </button>
+
+        <button class="gauge west" type="button" data-gauge="showroom" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>Showroom Health</small>
+          <strong>Showroom</strong>
+        </button>
+
+        <button class="gauge northwest" type="button" data-gauge="stability" data-active="false">
+          <span class="miniCompass" aria-hidden="true"></span>
+          <small>System Health</small>
+          <strong>Stability</strong>
+        </button>
+
+        <div class="readout" aria-live="polite">
+          <article class="readCard">
+            <h3 id="readTitle">Gauges is the active instrument page.</h3>
+            <p id="readCopy">
+              The gold compass belongs to Gauges because this is the page being read. Everything else is a supporting instrument.
+            </p>
+          </article>
+
+          <article class="readCard miniReceipt" id="readReceipt">
+            <span>ACTIVE=Gauges</span>
+            <span>COLOR=Gold</span>
+            <span>READ=Whole-site health surface</span>
+          </article>
+        </div>
+      </div>
     </section>
 
-    <section class="panel">
-      <h2>Diagnostic verdict</h2>
-      <div class="status info" id="overallStatus">SCANNING</div>
-      <div class="list" id="verdictList"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Asset control</h2>
-      <div class="list" id="assetLedger"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Showroom consumer contract</h2>
-      <div class="list" id="consumerLedger"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Earth renderer spine</h2>
-      <div class="list" id="spineLedger"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Runtime control ownership</h2>
-      <div class="list" id="controlLedger"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Globe visual coherence</h2>
-      <div class="list" id="coherenceLedger"></div>
-    </section>
-
-    <section class="panel">
-      <h2>Required next repair</h2>
-      <div class="list" id="todoList"></div>
-    </section>
-
-    <nav class="routeRail">
+    <nav class="routeRail" aria-label="Gauges route rail">
       <a href="/">Compass</a>
-      <a href="/home/">Home</a>
-      <a href="/prelude/">Prelude</a>
       <a href="/door/">Door</a>
-      <a href="/showroom/">Showroom</a>
       <a href="/products/">Products</a>
-      <a href="/laws/">Laws</a>
-      <a href="/governance/">Governance</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/products/archcoin/">Vault</a>
+      <a href="/big-laugh/upper-room/">Upper Room</a>
     </nav>
   </main>
 
-  <iframe id="showroomProbe" src="/showroom/?dgb_probe=earth_coherence_b6" title="Showroom diagnostic probe"></iframe>
+  <script>
+    (() => {
+      "use strict";
 
-  <script src="/gauges/gauges_health_runtime.js?v=earth-coherence-b6" defer></script>
+      const reads = {
+        gauges: {
+          title: "Gauges is the active instrument page.",
+          copy: "The gold compass belongs to Gauges because this is the page being read. Everything else is a supporting instrument.",
+          receipt: [
+            "ACTIVE=Gauges",
+            "COLOR=Gold",
+            "READ=Whole-site health surface"
+          ]
+        },
+        routes: {
+          title: "Routes measure whether movement stays lawful.",
+          copy: "Route Health watches whether the main paths still take visitors where the Manor says they should go.",
+          receipt: [
+            "INSTRUMENT=Route Health",
+            "CHECK=Compass,Door,Products,Showroom,Gauges",
+            "STATUS=Supporting compass"
+          ]
+        },
+        backlinks: {
+          title: "Backlinks measure whether doors return correctly.",
+          copy: "Backlink Health watches product jump paths, bridge pages, parent returns, and duplicate-route cleanup.",
+          receipt: [
+            "INSTRUMENT=Backlink Health",
+            "CHECK=Many jump-off points, one destination",
+            "STATUS=Supporting compass"
+          ]
+        },
+        render: {
+          title: "Render health measures what actually appears.",
+          copy: "Render Health watches whether the visible page matches the intended room: no dead surfaces, no hidden drift, no broken presentation.",
+          receipt: [
+            "INSTRUMENT=Render Health",
+            "CHECK=Visible surface and motion",
+            "STATUS=Supporting compass"
+          ]
+        },
+        products: {
+          title: "Products health measures the source chamber.",
+          copy: "Product Health watches ARCHCOIN, Five Flags, On Your Side AI, ESL Traversal Learning, and Baseline Nutrition Systems.",
+          receipt: [
+            "INSTRUMENT=Product Health",
+            "CHECK=Canonical product destinations",
+            "STATUS=Supporting compass"
+          ]
+        },
+        vault: {
+          title: "Vault health measures ARCHCOIN.",
+          copy: "Vault Health watches whether ARCHCOIN remains connected as the protected value chamber and financial template route.",
+          receipt: [
+            "INSTRUMENT=Vault Health",
+            "CHECK=/products/archcoin/",
+            "STATUS=Supporting compass"
+          ]
+        },
+        showroom: {
+          title: "Showroom health measures the proof surface.",
+          copy: "Showroom Health watches whether the public proof room still anchors the larger estate and returns correctly to Products and Gauges.",
+          receipt: [
+            "INSTRUMENT=Showroom Health",
+            "CHECK=/showroom/",
+            "STATUS=Supporting compass"
+          ]
+        },
+        stability: {
+          title: "System stability measures the whole Manor.",
+          copy: "System Health watches whether page-relative gold, canonical routes, bridge pages, and room identity remain coherent.",
+          receipt: [
+            "INSTRUMENT=System Stability",
+            "CHECK=Coherence across the Manor",
+            "STATUS=Supporting compass"
+          ]
+        }
+      };
+
+      const gauges = Array.from(document.querySelectorAll(".gauge"));
+      const readTitle = document.getElementById("readTitle");
+      const readCopy = document.getElementById("readCopy");
+      const readReceipt = document.getElementById("readReceipt");
+
+      function setGauge(key) {
+        const read = reads[key] || reads.gauges;
+
+        gauges.forEach((gauge) => {
+          gauge.dataset.active = gauge.dataset.gauge === key ? "true" : "false";
+        });
+
+        if (readTitle) readTitle.textContent = read.title;
+        if (readCopy) readCopy.textContent = read.copy;
+
+        if (readReceipt) {
+          readReceipt.replaceChildren();
+          read.receipt.forEach((line) => {
+            const span = document.createElement("span");
+            span.textContent = line;
+            readReceipt.appendChild(span);
+          });
+        }
+      }
+
+      gauges.forEach((gauge) => {
+        gauge.addEventListener("click", () => {
+          setGauge(gauge.dataset.gauge || "gauges");
+        });
+      });
+    })();
+  </script>
 </body>
 </html>

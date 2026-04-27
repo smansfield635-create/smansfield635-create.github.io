@@ -1,9 +1,13 @@
 /* TNT RENEWAL — /gauges/gauges_health_runtime.js
-   GAUGES · GENERATION 2 · EARTH SPINE DIAGNOSTIC CONSOLE B4
+   GAUGES · GENERATION 2 · EARTH SPINE DIAGNOSTIC RUNTIME B5
 
-   No external fallback checks.
-   No inline showroom renderer checks.
-   Gauges only checks the Earth Spine contract.
+   PURPOSE:
+   - Stop using old inline-showroom diagnostics.
+   - Stop checking external fallback assets.
+   - Treat Showroom as a consumer.
+   - Treat /assets/earth/earth_canvas.js as renderer owner.
+   - Treat /runtime/earth_asset_runtime.js as mount/control owner.
+   - Treat local JPG assets as the asset-control proof.
 */
 
 (function () {
@@ -16,7 +20,7 @@
     earthManifest: "/assets/earth/earth_manifest.json",
     surfaceJpg: "/assets/earth/earth_surface_2048.jpg",
     cloudsJpg: "/assets/earth/earth_clouds_2048.jpg",
-    probeUrl: "/showroom/?dgb_probe=earth_spine_b4",
+    probeUrl: "/showroom/?dgb_probe=earth_spine_b5",
     oldViewTerms: [
       "Choose Your View",
       "Earth View",
@@ -82,6 +86,7 @@
 
   function score(entries) {
     if (!entries.length) return 100;
+
     return Math.round(entries.reduce(function (sum, entry) {
       return sum + weight(entry.status);
     }, 0) / entries.length);
@@ -104,7 +109,7 @@
     if (node) node.textContent = String(value);
   }
 
-  function item(entry) {
+  function makeItem(entry) {
     var node = document.createElement("div");
     var strong = document.createElement("strong");
     var span = document.createElement("span");
@@ -134,21 +139,23 @@
     target.textContent = "";
 
     if (!entries.length) {
-      target.appendChild(item({
+      target.appendChild(makeItem({
         status: "INFO",
-        label: "No data",
-        detail: "No diagnostic rows produced."
+        label: "No diagnostic row",
+        detail: "No row was produced for this section."
       }));
       return;
     }
 
     entries.forEach(function (entry) {
-      target.appendChild(item(entry));
+      target.appendChild(makeItem(entry));
     });
   }
 
   function fetchText(path) {
-    return fetch(path + "?v=earth-spine-b4-" + Date.now(), { cache: "no-store" })
+    return fetch(path + "?v=earth-spine-b5-" + Date.now(), {
+      cache: "no-store"
+    })
       .then(function (response) {
         return response.text().then(function (text) {
           return {
@@ -184,7 +191,11 @@
       }
 
       timer = window.setTimeout(function () {
-        finish({ ok: false, path: path, reason: "timeout" });
+        finish({
+          ok: false,
+          path: path,
+          reason: "timeout"
+        });
       }, 5000);
 
       image.onload = function () {
@@ -197,10 +208,14 @@
       };
 
       image.onerror = function () {
-        finish({ ok: false, path: path, reason: "load-error" });
+        finish({
+          ok: false,
+          path: path,
+          reason: "load-error"
+        });
       };
 
-      image.src = path + "?v=earth-spine-b4-" + Date.now();
+      image.src = path + "?v=earth-spine-b5-" + Date.now();
     });
   }
 
@@ -215,25 +230,33 @@
           todo("FAIL", "Create Earth surface JPG", "Create the required same-origin JPG.", CONFIG.surfaceJpg);
         }
       }),
+
       testImage(CONFIG.cloudsJpg).then(function (result) {
         if (result.ok) {
           report.flags.clouds = true;
-          add("asset", "STRONG", "Local Earth clouds JPG", "Same-origin Earth clouds loaded.", result.path + " · " + result.width + "x" + result.height);
+          add("asset", "STRONG", "Local Earth cloud JPG", "Same-origin Earth cloud map loaded.", result.path + " · " + result.width + "x" + result.height);
         } else {
-          add("asset", "FAIL", "Local Earth clouds JPG missing", "The Earth clouds JPG is not reachable.", CONFIG.cloudsJpg);
-          todo("FAIL", "Create Earth clouds JPG", "Create the required same-origin JPG.", CONFIG.cloudsJpg);
+          add("asset", "FAIL", "Local Earth cloud JPG missing", "The Earth cloud JPG is not reachable.", CONFIG.cloudsJpg);
+          todo("FAIL", "Create Earth cloud JPG", "Create the required same-origin JPG.", CONFIG.cloudsJpg);
         }
       }),
+
       fetchText(CONFIG.earthManifest).then(function (result) {
-        if (result.ok && result.text.indexOf("earth_clouds_2048.jpg") !== -1 && result.text.indexOf("earth_surface_2048.jpg") !== -1) {
+        if (!result.ok) {
+          add("asset", "FAIL", "Earth manifest missing", "The Earth manifest is not reachable.", CONFIG.earthManifest);
+          todo("FAIL", "Restore Earth manifest", "Create or repair the Earth manifest.", CONFIG.earthManifest);
+          return;
+        }
+
+        if (
+          result.text.indexOf("earth_surface_2048.jpg") !== -1 &&
+          result.text.indexOf("earth_clouds_2048.jpg") !== -1
+        ) {
           report.flags.manifest = true;
-          add("asset", "STRONG", "Earth manifest points to JPG assets", "Manifest uses the correct local JPG asset paths.", CONFIG.earthManifest);
-        } else if (result.ok) {
-          add("asset", "FAIL", "Manifest asset paths wrong", "Manifest does not point to both required JPG assets.", CONFIG.earthManifest);
-          todo("FAIL", "Repair Earth manifest", "Manifest must point to earth_surface_2048.jpg and earth_clouds_2048.jpg.");
+          add("asset", "STRONG", "Earth manifest points to local JPG assets", "Manifest uses the required local JPG paths.", CONFIG.earthManifest);
         } else {
-          add("asset", "FAIL", "Earth manifest missing", "Earth manifest is not reachable.", CONFIG.earthManifest);
-          todo("FAIL", "Restore Earth manifest", "Create or repair Earth manifest.", CONFIG.earthManifest);
+          add("asset", "FAIL", "Earth manifest asset mismatch", "Manifest does not point to both required JPG assets.", CONFIG.earthManifest);
+          todo("FAIL", "Repair Earth manifest", "Manifest must point to earth_surface_2048.jpg and earth_clouds_2048.jpg.", CONFIG.earthManifest);
         }
       })
     ]);
@@ -241,12 +264,8 @@
 
   function analyzeShowroom(result) {
     var text = result.text || "";
-    var oldViewsFound = CONFIG.oldViewTerms.filter(function (term) {
-      return text.indexOf(term) !== -1;
-    });
-    var sunRuntimeFound = CONFIG.forbiddenSunRuntime.filter(function (term) {
-      return text.indexOf(term) !== -1;
-    });
+    var oldViewsFound;
+    var sunRuntimeFound;
 
     if (!result.ok) {
       add("consumer", "FAIL", "Showroom source unreachable", "Could not fetch showroom source.", CONFIG.showroomHtml);
@@ -280,20 +299,28 @@
       todo("FAIL", "Load Earth runtime script", "Add Earth runtime to showroom.", "/runtime/earth_asset_runtime.js");
     }
 
+    oldViewsFound = CONFIG.oldViewTerms.filter(function (term) {
+      return text.indexOf(term) !== -1;
+    });
+
     if (!oldViewsFound.length) {
       report.flags.oldViewsRemoved = true;
       add("consumer", "STRONG", "Old view bubbles absent", "Old explanatory view controls are not present in source.");
     } else {
-      add("consumer", "FAIL", "Old view bubbles still present", "Remove these old labels from showroom.", oldViewsFound.join(", "));
+      add("consumer", "FAIL", "Old view bubbles still present", "Remove old view-label controls from showroom.", oldViewsFound.join(", "));
       todo("FAIL", "Remove old view controls", "Delete the old view-bubble controls from showroom.", oldViewsFound.join(", "));
     }
+
+    sunRuntimeFound = CONFIG.forbiddenSunRuntime.filter(function (term) {
+      return text.indexOf(term) !== -1;
+    });
 
     if (!sunRuntimeFound.length) {
       report.flags.noSunRuntime = true;
       add("consumer", "STRONG", "No active Sun runtime", "Showroom does not load active Sun renderer scripts.");
     } else {
       add("consumer", "FAIL", "Sun runtime contamination", "Showroom still references active Sun runtime scripts.", sunRuntimeFound.join(", "));
-      todo("FAIL", "Remove Sun runtime from showroom", "Showroom Sun must remain CSS-only.");
+      todo("FAIL", "Remove Sun runtime from showroom", "Showroom Sun must remain CSS-only.", sunRuntimeFound.join(", "));
     }
   }
 
@@ -317,24 +344,24 @@
 
     if (text.indexOf("targetFrameMs") !== -1) {
       report.flags.canvasBudget = true;
-      add("spine", "STRONG", "Frame budget present", "Render budget belongs here and is present.", "targetFrameMs");
+      add("spine", "STRONG", "Frame budget present", "Render budget belongs in Earth canvas and is present.", "targetFrameMs");
     } else {
       add("spine", "FAIL", "Frame budget missing", "Earth canvas does not expose targetFrameMs.", "targetFrameMs");
       todo("FAIL", "Restore render budget", "Add targetFrameMs to earth_canvas.js.");
     }
 
-    if (text.indexOf("zoomIn") !== -1 && text.indexOf("zoomOut") !== -1 && text.indexOf("setZoom") !== -1) {
+    if (text.indexOf("setZoom") !== -1 && text.indexOf("zoomIn") !== -1 && text.indexOf("zoomOut") !== -1) {
       report.flags.zoomApi = true;
-      add("spine", "STRONG", "Zoom API present", "Earth renderer exposes zoom controls.");
+      add("spine", "STRONG", "Zoom API present", "Earth renderer exposes setZoom, zoomIn, and zoomOut.");
     } else {
-      add("spine", "FAIL", "Zoom API missing", "Earth renderer does not expose full zoom API.", "zoomIn / zoomOut / setZoom");
-      todo("FAIL", "Restore zoom API", "Add setZoom, zoomIn, and zoomOut to earth_canvas.js.");
+      add("spine", "FAIL", "Zoom API missing", "Earth renderer does not expose full zoom API.", "setZoom / zoomIn / zoomOut");
+      todo("FAIL", "Restore zoom API", "Earth canvas must expose setZoom, zoomIn, and zoomOut.");
     }
 
     if (text.indexOf("earth_surface_2048.jpg") !== -1 && text.indexOf("earth_clouds_2048.jpg") !== -1) {
       add("spine", "STRONG", "Renderer points to JPG assets", "Earth canvas references the required JPG asset paths.");
     } else {
-      add("spine", "FAIL", "Renderer JPG references missing", "Earth canvas does not reference the required JPG assets.", "earth_surface_2048.jpg / earth_clouds_2048.jpg");
+      add("spine", "FAIL", "Renderer JPG references missing", "Earth canvas does not reference both required JPG assets.", "earth_surface_2048.jpg / earth_clouds_2048.jpg");
       todo("FAIL", "Point renderer to JPG assets", "Earth canvas must default to the required JPG file paths.");
     }
   }
@@ -362,13 +389,17 @@
       add("control", "STRONG", "Runtime control panel present", "Runtime injects the Earth control panel.");
     } else {
       add("control", "FAIL", "Runtime control panel missing", "Runtime does not inject Earth controls.", "data-dgb-earth-controls");
-      todo("FAIL", "Restore runtime controls", "Runtime must inject the zoom controls.");
+      todo("FAIL", "Restore runtime controls", "Runtime must inject the Earth zoom controls.");
     }
 
-    if (text.indexOf("Zoom In") !== -1 && text.indexOf("Zoom Out") !== -1 && text.indexOf("Reset Earth") !== -1) {
-      add("control", "STRONG", "Control labels present", "Zoom and reset labels are present.");
+    if (
+      text.indexOf("Zoom Out") !== -1 &&
+      text.indexOf("Zoom In") !== -1 &&
+      text.indexOf("Reset Earth") !== -1
+    ) {
+      add("control", "STRONG", "Control labels present", "Zoom and reset labels are present in runtime.");
     } else {
-      add("control", "FAIL", "Control labels missing", "Runtime does not contain the expected control labels.", "Zoom In / Zoom Out / Reset Earth");
+      add("control", "FAIL", "Control labels missing", "Runtime does not contain the expected control labels.", "Zoom Out / Zoom In / Reset Earth");
       todo("FAIL", "Restore control labels", "Runtime must include Zoom Out, Zoom In, Reset Earth, and Pause Spin.");
     }
   }
@@ -428,7 +459,7 @@
             report.flags.liveControls = true;
             add("control", "STRONG", "Live zoom controls found", "Runtime injected the zoom control panel.");
           } else {
-            add("control", "FAIL", "Live zoom controls missing", "Runtime did not inject controls.");
+            add("control", "FAIL", "Live zoom controls missing", "Runtime did not inject the zoom control panel.");
           }
 
           finish();

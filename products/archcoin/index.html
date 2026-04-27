@@ -1,18 +1,543 @@
 <!DOCTYPE html>
-<html lang="en" data-product-generation="richie-manor-vault-archcoin-js-runtime-b8">
+<html lang="en" data-product-generation="archcoin-b8-shell-alignment">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>ARCHCOIN · Products</title>
+  <title>ARCHCOIN · Vault Chamber · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="ARCHCOIN — the vault chamber product inside Richie’s Manor: a four-coin financial transaction template and bonding layer for coordinated value movement."
+    content="ARCHCOIN is the Vault Chamber inside Diamond Gate Bridge: a four-part transaction template for contract authority, inbound value, outbound obligation, and growth allocation."
   />
+
+  <style>
+    :root{
+      color-scheme:dark;
+      --bg:#030814;
+      --bg2:#071326;
+      --panel:rgba(8,16,34,.78);
+      --panel2:rgba(7,13,26,.94);
+      --line:rgba(255,255,255,.13);
+      --line2:rgba(127,255,212,.22);
+      --text:#f4f8ff;
+      --muted:#aebdd8;
+      --muted2:rgba(174,189,216,.74);
+      --gold:#f1d28d;
+      --accent:#7fffd4;
+      --blue:#7ecbff;
+      --shadow:0 18px 54px rgba(0,0,0,.42);
+      --shadow2:0 26px 90px rgba(0,0,0,.50);
+      --safe-top:env(safe-area-inset-top,0px);
+      --safe-right:env(safe-area-inset-right,0px);
+      --safe-bottom:env(safe-area-inset-bottom,0px);
+      --safe-left:env(safe-area-inset-left,0px);
+    }
+
+    *{box-sizing:border-box}
+
+    html,
+    body{
+      margin:0;
+      width:100%;
+      min-height:100%;
+      background:
+        radial-gradient(circle at 50% 10%,rgba(126,203,255,.14),transparent 28%),
+        radial-gradient(circle at 16% 24%,rgba(127,255,212,.08),transparent 32%),
+        radial-gradient(circle at 82% 20%,rgba(241,210,141,.09),transparent 28%),
+        linear-gradient(180deg,#030814 0%,#071326 48%,#020510 100%);
+      color:var(--text);
+      font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
+      overflow-x:hidden;
+    }
+
+    body{
+      min-height:100svh;
+      position:relative;
+      isolation:isolate;
+    }
+
+    a{color:inherit;text-decoration:none}
+
+    #fieldCanvas{
+      position:fixed;
+      inset:0;
+      width:100vw;
+      height:100vh;
+      pointer-events:none;
+      z-index:0;
+      opacity:.9;
+    }
+
+    .page{
+      position:relative;
+      z-index:1;
+      width:min(1220px,calc(100vw - 24px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:
+        calc(16px + var(--safe-top))
+        calc(0px + var(--safe-right))
+        calc(28px + var(--safe-bottom))
+        calc(0px + var(--safe-left));
+    }
+
+    .fallback-shell{
+      min-height:calc(100svh - 44px);
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      gap:14px;
+    }
+
+    .fallback-topbar,
+    .fallback-stage,
+    .fallback-routes{
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(127,255,212,.10),transparent 44%),
+        linear-gradient(180deg,var(--panel),var(--panel2));
+      box-shadow:var(--shadow2);
+      backdrop-filter:blur(12px);
+      -webkit-backdrop-filter:blur(12px);
+    }
+
+    .fallback-topbar{
+      border-radius:999px;
+      padding:14px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:14px;
+      flex-wrap:wrap;
+    }
+
+    .fallback-brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      min-width:0;
+    }
+
+    .fallback-mark{
+      width:42px;
+      height:42px;
+      border-radius:14px;
+      transform:rotate(45deg);
+      border:1px solid rgba(241,210,141,.26);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(127,255,212,.14),transparent 45%),
+        linear-gradient(180deg,rgba(18,36,78,.96),rgba(10,22,48,.88));
+      box-shadow:0 12px 28px rgba(0,0,0,.24);
+      flex:0 0 auto;
+    }
+
+    .fallback-title{
+      margin:0 0 3px;
+      font-size:.95rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .fallback-subtitle{
+      margin:0;
+      color:var(--muted);
+      font-size:.82rem;
+      line-height:1.32;
+    }
+
+    .fallback-actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    .fallback-action,
+    .fallback-route{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:40px;
+      padding:10px 14px;
+      border:1px solid rgba(255,255,255,.11);
+      border-radius:999px;
+      background:rgba(255,255,255,.05);
+      color:var(--text);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.05em;
+      text-transform:uppercase;
+      text-align:center;
+    }
+
+    .fallback-action.primary,
+    .fallback-route.primary{
+      border-color:rgba(127,255,212,.28);
+      background:rgba(127,255,212,.10);
+    }
+
+    .fallback-stage{
+      border-radius:30px;
+      padding:clamp(18px,3vw,30px);
+      display:grid;
+      grid-template-columns:minmax(0,.92fr) minmax(320px,1.08fr);
+      gap:18px;
+      align-items:stretch;
+      overflow:hidden;
+      position:relative;
+    }
+
+    .fallback-stage::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 72% 50%,rgba(127,255,212,.09),transparent 30rem),
+        radial-gradient(circle at 26% 14%,rgba(241,210,141,.07),transparent 22rem),
+        linear-gradient(115deg,rgba(255,255,255,.026),transparent 42%,rgba(126,203,255,.036));
+    }
+
+    .fallback-copy,
+    .fallback-vault{
+      position:relative;
+      z-index:1;
+    }
+
+    .fallback-copy{
+      display:grid;
+      gap:14px;
+      align-content:center;
+    }
+
+    .fallback-eyebrow{
+      display:inline-flex;
+      width:max-content;
+      max-width:100%;
+      align-items:center;
+      gap:8px;
+      min-height:34px;
+      padding:8px 12px;
+      border:1px solid var(--line2);
+      border-radius:999px;
+      background:rgba(255,255,255,.04);
+      color:var(--accent);
+      font-size:11px;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:850;
+    }
+
+    .fallback-h1{
+      margin:0;
+      font-size:clamp(42px,7vw,86px);
+      line-height:.88;
+      letter-spacing:-.065em;
+      font-family:Georgia,"Times New Roman",serif;
+      max-width:11ch;
+    }
+
+    .fallback-lede{
+      margin:0;
+      color:var(--text);
+      font-size:clamp(1.18rem,2.4vw,2rem);
+      line-height:1.1;
+      font-weight:850;
+      letter-spacing:-.04em;
+      max-width:18ch;
+    }
+
+    .fallback-body{
+      margin:0;
+      color:var(--muted);
+      max-width:62ch;
+      font-size:16px;
+      line-height:1.65;
+    }
+
+    .fallback-receipt{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:rgba(0,0,0,.18);
+      padding:14px;
+      display:grid;
+      gap:8px;
+      color:var(--muted);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+      font-size:.74rem;
+      line-height:1.35;
+    }
+
+    .fallback-receipt strong{
+      color:var(--accent);
+      font-family:Inter,system-ui,sans-serif;
+      font-size:.70rem;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .fallback-vault{
+      min-height:620px;
+      border:1px solid rgba(255,255,255,.09);
+      border-radius:30px;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      background:
+        radial-gradient(ellipse at 50% 10%,rgba(126,203,255,.08),transparent 22%),
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(127,255,212,.045) 30%,rgba(0,0,0,0) 58%),
+        radial-gradient(circle at 50% 58%,rgba(241,210,141,.055),transparent 72%),
+        linear-gradient(180deg,rgba(2,6,14,.58),rgba(2,4,10,.94));
+    }
+
+    .fallback-vault-core{
+      width:min(78vw,430px);
+      aspect-ratio:1;
+      border-radius:50%;
+      border:18px solid rgba(145,173,205,.13);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(127,255,212,.10),transparent 27%),
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.052) 0deg 4deg,transparent 4deg 16deg),
+        conic-gradient(from 45deg,rgba(127,255,212,.09),rgba(126,203,255,.04),rgba(241,210,141,.08),rgba(126,203,255,.04),rgba(127,255,212,.09));
+      box-shadow:
+        inset 0 0 48px rgba(0,0,0,.36),
+        inset 0 0 96px rgba(255,255,255,.045),
+        0 30px 70px rgba(0,0,0,.44),
+        0 0 80px rgba(127,255,212,.08);
+      display:grid;
+      place-items:center;
+      position:relative;
+    }
+
+    .fallback-vault-core::before{
+      content:"";
+      position:absolute;
+      width:132px;
+      height:132px;
+      border-radius:50%;
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.45),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.38),rgba(127,255,212,.14) 48%,rgba(0,0,0,.21) 100%);
+      box-shadow:
+        0 24px 42px rgba(0,0,0,.34),
+        inset 0 0 44px rgba(126,203,255,.18),
+        0 0 96px rgba(127,255,212,.18);
+    }
+
+    .fallback-vault-label{
+      position:relative;
+      z-index:2;
+      color:#fff;
+      font-size:12px;
+      line-height:1.18;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-weight:950;
+      text-align:center;
+      text-shadow:0 2px 12px rgba(0,0,0,.68);
+    }
+
+    .fallback-gardens{
+      position:absolute;
+      inset:9%;
+      pointer-events:none;
+    }
+
+    .fallback-garden{
+      position:absolute;
+      width:118px;
+      min-height:54px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(3,9,18,.70);
+      display:grid;
+      place-items:center;
+      text-align:center;
+      padding:8px;
+      color:var(--muted);
+      font-size:.70rem;
+      line-height:1.14;
+      font-weight:850;
+      text-transform:uppercase;
+      letter-spacing:.05em;
+    }
+
+    .fallback-garden strong{
+      color:var(--text);
+      display:block;
+      margin-bottom:2px;
+    }
+
+    .fallback-garden.north{left:50%;top:0;transform:translateX(-50%)}
+    .fallback-garden.east{right:0;top:50%;transform:translateY(-50%)}
+    .fallback-garden.south{left:50%;bottom:0;transform:translateX(-50%)}
+    .fallback-garden.west{left:0;top:50%;transform:translateY(-50%)}
+
+    .fallback-routes{
+      border-radius:24px;
+      padding:12px;
+      display:grid;
+      grid-template-columns:repeat(5,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .runtime-note{
+      position:fixed;
+      left:50%;
+      bottom:10px;
+      transform:translateX(-50%);
+      z-index:5;
+      width:min(92vw,720px);
+      padding:8px 12px;
+      border:1px solid rgba(127,255,212,.16);
+      border-radius:999px;
+      background:rgba(2,7,16,.70);
+      color:rgba(244,248,255,.76);
+      text-align:center;
+      font-size:.72rem;
+      line-height:1.25;
+      pointer-events:none;
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+    }
+
+    @media(max-width:980px){
+      .fallback-stage{
+        grid-template-columns:1fr;
+      }
+
+      .fallback-vault{
+        min-height:540px;
+      }
+
+      .fallback-routes{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:640px){
+      .page{
+        width:min(100vw - 12px,1220px);
+        padding-top:10px;
+      }
+
+      .fallback-topbar{
+        border-radius:24px;
+      }
+
+      .fallback-stage{
+        border-radius:24px;
+        padding:16px;
+      }
+
+      .fallback-actions{
+        width:100%;
+      }
+
+      .fallback-action{
+        flex:1 1 140px;
+      }
+
+      .fallback-vault{
+        min-height:430px;
+      }
+
+      .fallback-vault-core{
+        width:min(84vw,330px);
+        border-width:13px;
+      }
+
+      .fallback-garden{
+        width:92px;
+        min-height:46px;
+        border-radius:14px;
+        font-size:.58rem;
+      }
+
+      .runtime-note{
+        display:none;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      *,
+      *::before,
+      *::after{
+        animation:none !important;
+        transition:none !important;
+        scroll-behavior:auto !important;
+      }
+    }
+  </style>
 </head>
 
 <body>
   <canvas id="fieldCanvas" aria-hidden="true"></canvas>
-  <div id="app"></div>
-  <script src="./index.js"></script>
+
+  <main id="app" class="page" data-product="archcoin" data-fallback="true">
+    <section class="fallback-shell" aria-label="ARCHCOIN vault fallback shell">
+      <header class="fallback-topbar">
+        <a class="fallback-brand" href="/products/archcoin/" aria-label="ARCHCOIN Vault Chamber">
+          <span class="fallback-mark" aria-hidden="true"></span>
+          <span>
+            <p class="fallback-title">Richie’s Manor · Vault Chamber</p>
+            <p class="fallback-subtitle">ARCHCOIN · Four-part transaction template</p>
+          </span>
+        </a>
+
+        <nav class="fallback-actions" aria-label="ARCHCOIN primary routes">
+          <a class="fallback-action primary" href="/products/">Products Source</a>
+          <a class="fallback-action" href="/products/archcoin/">Vault</a>
+          <a class="fallback-action" href="/showroom/">Showroom</a>
+          <a class="fallback-action" href="/">Compass</a>
+        </nav>
+      </header>
+
+      <section class="fallback-stage">
+        <div class="fallback-copy">
+          <span class="fallback-eyebrow">ARCHCOIN · Vault Chamber</span>
+          <h1 class="fallback-h1">The Vault receives the stream.</h1>
+          <p class="fallback-lede">This is not a coin pitch. It is a map for how value moves.</p>
+          <p class="fallback-body">
+            Products is the source chamber. ARCHCOIN is the receiving Vault. The four gardens show the four parts of a transaction:
+            contract authority, inbound value, outbound obligation, and growth allocation.
+          </p>
+
+          <div class="fallback-receipt" aria-label="ARCHCOIN receipt">
+            <strong>Vault receipt</strong>
+            <span>ARCHCOIN_SHELL=B8_ALIGNED</span>
+            <span>PRODUCT_SOURCE=/products/</span>
+            <span>CANONICAL_DESTINATION=/products/archcoin/</span>
+            <span>RUNTIME_SCRIPT=/products/archcoin/index.js</span>
+            <span>FALLBACK_STATUS=USABLE_IF_RUNTIME_DELAYED</span>
+          </div>
+        </div>
+
+        <aside class="fallback-vault" aria-label="ARCHCOIN four-garden vault model">
+          <div class="fallback-vault-core">
+            <div class="fallback-gardens" aria-hidden="true">
+              <div class="fallback-garden north"><strong>North</strong>Contract</div>
+              <div class="fallback-garden east"><strong>East</strong>Inbound</div>
+              <div class="fallback-garden south"><strong>South</strong>Obligation</div>
+              <div class="fallback-garden west"><strong>West</strong>Growth</div>
+            </div>
+            <div class="fallback-vault-label">Receiving<br>Vault<br>Core</div>
+          </div>
+        </aside>
+      </section>
+
+      <nav class="fallback-routes" aria-label="ARCHCOIN route strip">
+        <a class="fallback-route primary" href="/products/">Products Source</a>
+        <a class="fallback-route" href="/products/archcoin/">Vault Chamber</a>
+        <a class="fallback-route" href="/big-laugh/upper-room/">Upper Room</a>
+        <a class="fallback-route" href="/showroom/">Showroom</a>
+        <a class="fallback-route" href="/">Compass</a>
+      </nav>
+    </section>
+  </main>
+
+  <div class="runtime-note" aria-hidden="true">
+    ARCHCOIN vault shell is visible-first. The local nested vault runtime enhances this page when available.
+  </div>
+
+  <script src="./index.js?v=archcoin-b8-shell-alignment" defer></script>
 </body>
 </html>

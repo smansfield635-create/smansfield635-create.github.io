@@ -1,19 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="true-instrument-room-b4-compact">
+<html lang="en" data-gauges-generation="asset-wired-b5">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, combining compact engineer-grade telemetry with TED Talk-style interpretation."
+    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared instruments asset layer."
   />
 
   <style>
     :root{
       color-scheme:dark;
       --bg0:#06101f;
-      --bg1:#122341;
       --panel:rgba(7,14,28,.88);
       --panel2:rgba(10,20,42,.94);
       --line:rgba(255,218,150,.24);
@@ -125,17 +124,20 @@
       background:
         radial-gradient(circle at 50% 28%,rgba(255,217,138,.38),transparent 44%),
         linear-gradient(180deg,rgba(58,42,18,.92),rgba(10,18,32,.98));
+      box-shadow:0 0 22px rgba(255,217,138,.16);
+      flex:0 0 auto;
+    }
+
+    .mark::before{
+      content:"GA";
       color:#fff8ea;
       font-weight:950;
       letter-spacing:.08em;
-      flex:0 0 auto;
-      box-shadow:0 0 22px rgba(255,217,138,.16);
     }
 
     .brandText{display:grid;gap:3px}
 
     .kicker{
-      display:block;
       margin:0;
       color:#ffe0a3;
       font-size:.72rem;
@@ -145,7 +147,6 @@
     }
 
     .title{
-      display:block;
       margin:0;
       color:#fff;
       font-weight:900;
@@ -548,6 +549,7 @@
       font-size:.72rem;
       line-height:1.28;
       min-height:34px;
+      margin:0;
     }
 
     .telemetry{
@@ -559,6 +561,10 @@
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
       font-size:.56rem;
       line-height:1.18;
+    }
+
+    .telemetry span{
+      display:block;
     }
 
     .legend{
@@ -668,6 +674,7 @@
 
     .plainCard p{
       font-size:.88rem;
+      margin:0;
     }
 
     .nextAction{
@@ -690,6 +697,10 @@
       letter-spacing:-.04em;
     }
 
+    .nextAction p{
+      margin:0;
+    }
+
     .receipt{
       border:1px solid rgba(255,255,255,.10);
       border-radius:18px;
@@ -702,6 +713,10 @@
       font-size:.68rem;
       line-height:1.28;
       overflow:auto;
+    }
+
+    .receipt span{
+      display:block;
     }
 
     .routeRail{
@@ -725,6 +740,14 @@
       display:grid;
       place-items:center;
       text-align:center;
+    }
+
+    .fallback{
+      border:1px solid rgba(255,255,255,.14);
+      border-radius:22px;
+      padding:16px;
+      color:var(--muted);
+      background:rgba(0,0,0,.22);
     }
 
     @keyframes fieldDrift{
@@ -929,51 +952,19 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gauges-true-instrument-room-b4-compact"
-    data-read-mode="compact-engineer-dashboard-plus-ted-talk"
+    data-instrument-standard="gauges-asset-wired-b5"
+    data-read-mode="shared-assets-instrument-consumer"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Gauges home">
-        <span class="mark" aria-hidden="true">GA</span>
+        <span class="mark" aria-hidden="true"></span>
         <span class="brandText">
           <span class="kicker">Richie’s Manor</span>
           <strong class="title">Gauges · True Instrument Room</strong>
         </span>
       </a>
 
-      <nav class="jumpGrid" aria-label="Primary compass jumps">
-        <a class="jumpCard" href="/" aria-label="Compass">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText">
-            <small>Jump</small>
-            <strong>Compass</strong>
-          </span>
-        </a>
-
-        <a class="jumpCard" href="/door/" aria-label="Door">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText">
-            <small>Jump</small>
-            <strong>Door</strong>
-          </span>
-        </a>
-
-        <a class="jumpCard" href="/products/" aria-label="Products">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText">
-            <small>Jump</small>
-            <strong>Products</strong>
-          </span>
-        </a>
-
-        <a class="jumpCard active" href="/gauges/" aria-label="Gauges">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText">
-            <small>Active</small>
-            <strong>Gauges</strong>
-          </span>
-        </a>
-      </nav>
+      <nav class="jumpGrid" id="jumpGrid" aria-label="Primary compass jumps"></nav>
     </header>
 
     <section class="instrumentRoom" aria-label="Gauges true instrument room">
@@ -987,232 +978,175 @@
           <div class="statusChip">SYSTEM_READ=ACTIVE</div>
         </div>
 
-        <div class="gaugeGrid" aria-label="Engineer telemetry gauges">
-          <article class="gaugeCard priority" style="--tone:var(--gold);--needle:78deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G01</small>
-                <strong>Route Integrity</strong>
-              </span>
-              <span class="gaugeValue">96</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>96</strong><small>OPTIMAL</small></span>
-            </div>
-            <p class="gaugeMeaning">Primary route movement is clean and fast.</p>
-            <div class="telemetry">
-              <span>ROUTE_INTEGRITY=96</span>
-              <span>STATUS=ACTIVE_PRIORITY</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--green);--needle:66deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G02</small>
-                <strong>Backlink Integrity</strong>
-              </span>
-              <span class="gaugeValue">91</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>91</strong><small>HEALTHY</small></span>
-            </div>
-            <p class="gaugeMeaning">Canonical product destinations are mostly unified.</p>
-            <div class="telemetry">
-              <span>BACKLINK_CANONICALITY=91</span>
-              <span>RULE=ONE_DESTINATION</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--blue);--needle:58deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G03</small>
-                <strong>Render Stability</strong>
-              </span>
-              <span class="gaugeValue">88</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>88</strong><small>PROOF</small></span>
-            </div>
-            <p class="gaugeMeaning">Page surfaces are coherent; screenshots still matter.</p>
-            <div class="telemetry">
-              <span>RENDER_STABILITY=88</span>
-              <span>NEXT=LIVE_RENDER_INSPECTION</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--green);--needle:70deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G04</small>
-                <strong>Product Connectivity</strong>
-              </span>
-              <span class="gaugeValue">94</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>94</strong><small>LOCKED</small></span>
-            </div>
-            <p class="gaugeMeaning">Products source chamber coordinates the product rooms.</p>
-            <div class="telemetry">
-              <span>PRODUCT_DESTINATION_LOCK=94</span>
-              <span>ROOM=SOURCE_CHAMBER</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--yellow);--needle:42deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G05</small>
-                <strong>Vault / ARCHCOIN</strong>
-              </span>
-              <span class="gaugeValue">82</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>82</strong><small>WATCH</small></span>
-            </div>
-            <p class="gaugeMeaning">Vault is strong; final live render needs confirmation.</p>
-            <div class="telemetry">
-              <span>ARCHCOIN_VAULT_HEALTH=82</span>
-              <span>WATCH=JS_RUNTIME_RENDER</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--blue);--needle:52deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G06</small>
-                <strong>Showroom Health</strong>
-              </span>
-              <span class="gaugeValue">86</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>86</strong><small>PROOF</small></span>
-            </div>
-            <p class="gaugeMeaning">Showroom remains the public proof window.</p>
-            <div class="telemetry">
-              <span>SHOWROOM_HEALTH=86</span>
-              <span>ROLE=PROOF_WINDOW</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--purple);--needle:32deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G07</small>
-                <strong>Upper Room Events</strong>
-              </span>
-              <span class="gaugeValue">77</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>77</strong><small>COMPLEX</small></span>
-            </div>
-            <p class="gaugeMeaning">Event logic is rich; public pathway should stay simple.</p>
-            <div class="telemetry">
-              <span>EVENT_HEALTH=77</span>
-              <span>INTERPRETATION_REQUIRED=TRUE</span>
-            </div>
-          </article>
-
-          <article class="gaugeCard" style="--tone:var(--green);--needle:62deg;">
-            <div class="gaugeTop">
-              <span class="gaugeName">
-                <small>G08</small>
-                <strong>System Stability</strong>
-              </span>
-              <span class="gaugeValue">90</span>
-            </div>
-            <div class="dial" aria-hidden="true">
-              <span class="needle"></span>
-              <span class="dialRead"><strong>90</strong><small>STABLE</small></span>
-            </div>
-            <p class="gaugeMeaning">Room identities, route law, and products are aligned.</p>
-            <div class="telemetry">
-              <span>SYSTEM_STABILITY=90</span>
-              <span>STATE=COHERENT</span>
-            </div>
-          </article>
+        <div class="gaugeGrid" id="gaugeGrid" aria-label="Engineer telemetry gauges">
+          <div class="fallback">Loading instrument assets…</div>
         </div>
 
-        <div class="legend" aria-label="Gauge color legend">
-          <span class="legendItem"><span class="dot" style="--tone:var(--green)"></span>Healthy</span>
-          <span class="legendItem"><span class="dot" style="--tone:var(--gold)"></span>Active</span>
-          <span class="legendItem"><span class="dot" style="--tone:var(--blue)"></span>Proof</span>
-          <span class="legendItem"><span class="dot" style="--tone:var(--yellow)"></span>Watch</span>
-          <span class="legendItem"><span class="dot" style="--tone:var(--red)"></span>Break</span>
-          <span class="legendItem"><span class="dot" style="--tone:var(--purple)"></span>Complex</span>
-        </div>
+        <div class="legend" id="legend" aria-label="Gauge color legend"></div>
       </section>
 
-      <aside class="tedWall" aria-labelledby="tedTitle">
-        <div class="tedLead">
-          <span class="pill">TED Talk read</span>
-          <h1 id="tedTitle">What the gauges mean.</h1>
-          <h2 class="thesis">
-            The Manor is healthy when every room has one clear destination, every backlink returns correctly, every product opens into its proper chamber, and every public surface says where the visitor is standing.
-          </h2>
-          <p>
-            The engineer wall tells us the numbers. This side tells us what to do with them.
-          </p>
-        </div>
-
-        <div class="plainCards">
-          <article class="plainCard green">
-            <small>Healthy</small>
-            <strong>The route law is working.</strong>
-            <p>Products is behaving like a source chamber. The main product paths are no longer scattered across competing bodies.</p>
-          </article>
-
-          <article class="plainCard blue">
-            <small>Proof</small>
-            <strong>The public rooms are becoming places.</strong>
-            <p>Showroom, Compass, Products, AAI, ESL, Nutrition, and ARCHCOIN now have stronger physical identities inside the Manor.</p>
-          </article>
-
-          <article class="plainCard">
-            <small>Priority</small>
-            <strong>Gauges is useful, not decorative.</strong>
-            <p>This page tells us what is connected, what is stable, what needs inspection, and what should be patched next.</p>
-          </article>
-
-          <article class="plainCard purple">
-            <small>Complex</small>
-            <strong>Some rooms need interpretation.</strong>
-            <p>Upper Room and ARCHCOIN contain more moving parts. They should be judged by live render, not by concept alone.</p>
-          </article>
-        </div>
-
-        <section class="nextAction" aria-label="Next practical action">
-          <h3>Next practical move</h3>
-          <p>Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.</p>
-
-          <div class="receipt">
-            <span>GAUGES_TRUE_INSTRUMENT_ROOM_B4=ACTIVE</span>
-            <span>ROUTE_INTEGRITY=96</span>
-            <span>BACKLINK_CANONICALITY=91</span>
-            <span>RENDER_STABILITY=88</span>
-            <span>PRODUCT_DESTINATION_LOCK=94</span>
-            <span>NEXT_ACTION=INSPECT_LIVE_RENDER_BEFORE_PATCH</span>
-          </div>
-        </section>
+      <aside class="tedWall" id="tedWall" aria-labelledby="tedTitle">
+        <div class="fallback">Loading TED read from instruments…</div>
       </aside>
     </section>
 
-    <nav class="routeRail" aria-label="Gauges route rail">
-      <a href="/">Compass</a>
-      <a href="/door/">Door</a>
-      <a href="/products/">Products</a>
-      <a href="/showroom/">Showroom</a>
-      <a href="/products/archcoin/">Vault</a>
-      <a href="/big-laugh/upper-room/">Upper Room</a>
-    </nav>
+    <nav class="routeRail" id="routeRail" aria-label="Gauges route rail"></nav>
   </main>
+
+  <script type="module">
+    import {
+      buildGaugeDashboardPacket,
+      GAUGE_COLOR_STATES
+    } from "/assets/instruments.js";
+
+    const packet = buildGaugeDashboardPacket({ activePage: "gauges" });
+
+    const jumpGrid = document.getElementById("jumpGrid");
+    const gaugeGrid = document.getElementById("gaugeGrid");
+    const legend = document.getElementById("legend");
+    const tedWall = document.getElementById("tedWall");
+    const routeRail = document.getElementById("routeRail");
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function toneFor(state) {
+      const safeState = String(state || "healthy").toLowerCase();
+      const entry = packet.colorStates[safeState] || GAUGE_COLOR_STATES.healthy;
+      const cssVar = String(entry.cssVar || "--green");
+      return cssVar.startsWith("--") ? "var(" + cssVar + ")" : cssVar;
+    }
+
+    function renderJump(label, href, active = false) {
+      return `
+        <a class="jumpCard${active ? " active" : ""}" href="${escapeHTML(href)}" aria-label="${escapeHTML(label)}">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>${active ? "Active" : "Jump"}</small>
+            <strong>${escapeHTML(label)}</strong>
+          </span>
+        </a>
+      `;
+    }
+
+    function renderGauge(reading) {
+      const state = String(reading.state || "healthy").toLowerCase();
+      const tone = toneFor(state);
+      const receipt = Array.isArray(reading.receipt) ? reading.receipt : [];
+
+      return `
+        <article
+          class="gaugeCard${state === "active" ? " priority" : ""}"
+          style="--tone:${escapeHTML(tone)};--needle:${escapeHTML(reading.needle)}deg;"
+          aria-label="${escapeHTML(reading.id + " " + reading.title + " " + reading.value + " " + reading.label)}"
+        >
+          <div class="gaugeTop">
+            <span class="gaugeName">
+              <small>${escapeHTML(reading.id)}</small>
+              <strong>${escapeHTML(reading.title)}</strong>
+            </span>
+            <span class="gaugeValue" aria-label="Value ${escapeHTML(reading.value)}">${escapeHTML(reading.value)}</span>
+          </div>
+
+          <div class="dial" aria-hidden="true">
+            <span class="needle"></span>
+            <span class="dialRead">
+              <strong>${escapeHTML(reading.value)}</strong>
+              <small>${escapeHTML(reading.label)}</small>
+            </span>
+          </div>
+
+          <p class="gaugeMeaning">${escapeHTML(reading.meaning)}</p>
+
+          <div class="telemetry" aria-label="${escapeHTML(reading.title)} telemetry">
+            ${receipt.map((line) => `<span>${escapeHTML(line)}</span>`).join("\n")}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderLegend() {
+      return Object.keys(packet.colorStates)
+        .map((key) => {
+          const item = packet.colorStates[key];
+          return `
+            <span class="legendItem">
+              <span class="dot" style="--tone:${escapeHTML(toneFor(key))}" aria-hidden="true"></span>
+              <span>${escapeHTML(item.label)}</span>
+            </span>
+          `;
+        })
+        .join("\n");
+    }
+
+    function renderTedRead() {
+      const ted = packet.tedRead;
+      const cards = Array.isArray(ted.cards) ? ted.cards : [];
+      const next = ted.nextAction || {};
+      const nextReceipt = Array.isArray(next.receipt) ? next.receipt : [];
+
+      return `
+        <div class="tedLead">
+          <span class="pill">${escapeHTML(ted.eyebrow)}</span>
+          <h1 id="tedTitle">${escapeHTML(ted.title)}</h1>
+          <h2 class="thesis">${escapeHTML(ted.thesis)}</h2>
+          <p>${escapeHTML(ted.support)}</p>
+        </div>
+
+        <div class="plainCards">
+          ${cards.map((card) => `
+            <article class="plainCard ${escapeHTML(card.state || "")}">
+              <small>${escapeHTML(card.eyebrow)}</small>
+              <strong>${escapeHTML(card.title)}</strong>
+              <p>${escapeHTML(card.copy)}</p>
+            </article>
+          `).join("\n")}
+        </div>
+
+        <section class="nextAction" aria-label="Next practical action">
+          <h3>${escapeHTML(next.title)}</h3>
+          <p>${escapeHTML(next.copy)}</p>
+          <div class="receipt">
+            ${nextReceipt.map((line) => `<span>${escapeHTML(line)}</span>`).join("\n")}
+          </div>
+        </section>
+      `;
+    }
+
+    function renderRouteRail() {
+      const routes = packet.routes;
+
+      const links = [
+        ["Compass", routes.compass],
+        ["Door", routes.door],
+        ["Products", routes.products],
+        ["Showroom", routes.showroom],
+        ["Vault", routes.vault],
+        ["Upper Room", routes.upperRoom]
+      ];
+
+      return links
+        .map(([label, href]) => `<a href="${escapeHTML(href)}">${escapeHTML(label)}</a>`)
+        .join("\n");
+    }
+
+    jumpGrid.innerHTML = [
+      renderJump("Compass", packet.routes.compass, false),
+      renderJump("Door", packet.routes.door, false),
+      renderJump("Products", packet.routes.products, false),
+      renderJump("Gauges", packet.routes.gauges, true)
+    ].join("\n");
+
+    gaugeGrid.innerHTML = packet.readings.map(renderGauge).join("\n");
+    legend.innerHTML = renderLegend();
+    tedWall.innerHTML = renderTedRead();
+    routeRail.innerHTML = renderRouteRail();
+  </script>
 </body>
 </html>

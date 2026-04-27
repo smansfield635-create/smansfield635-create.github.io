@@ -1,18 +1,16 @@
 <!doctype html>
 <!-- TNT RENEWAL — /showroom/index.html
-     SHOWROOM · GENERATION 2 · TED TALK PLATFORM B26 · COMPLETE
+     SHOWROOM · GENERATION 2 · RUSSIAN DOLL SHOWROOM B27
 
      CONTRACT:
-       - Full HTML runtime shell.
+       - Restore full HTML runtime shell.
        - Preserve Earth/Sun graphical side.
        - Keep exact Earth consumer script paths visible in source.
        - Keep showroom/index.js as page controller only.
-       - Add Consider the Energy as brand chamber, not coming soon.
-       - Add two doors:
-         1. Nine Summits Universe
-         2. The Nine Summits of Love · 256 Carats of Human Potential
-       - Move Coming Soon status to Events & Attractions.
-       - Preserve Underdog, B2B, 5 Flags, and Events lanes.
+       - Convert long encyclopedia sections into compact Russian-doll cards.
+       - Each Russian doll opens on-page context and provides backlink continuation.
+       - Consider the Energy remains the brand chamber with two Nine Summits doors.
+       - Events & Attractions is the coming-soon public activation lane.
        - No graphics box.
 -->
 
@@ -21,7 +19,7 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>Diamond Gate Bridge — Showroom</title>
-  <meta name="description" content="Diamond Gate Bridge TED Talk-style showroom for Earth Room, Back to Baseline, 5 Flags, Consider the Energy, the Nine Summits, and public events."/>
+  <meta name="description" content="Diamond Gate Bridge showroom with Earth Room proof, Russian-doll portals, Consider the Energy, Nine Summits doors, and public continuation links."/>
 
   <link rel="stylesheet" href="/assets/earth/earth_material.css"/>
 
@@ -81,7 +79,7 @@
 
     .showroom,
     .routeRail,
-    .platformSection,
+    .dollStage,
     .closingPanel{
       border:1px solid var(--line);
       border-radius:28px;
@@ -220,7 +218,7 @@
       flex-wrap:wrap;
       gap:10px;
       align-items:center;
-      max-width:980px;
+      max-width:1040px;
     }
 
     .portal{
@@ -397,13 +395,7 @@
       margin:0;
     }
 
-    .platformStack{
-      display:grid;
-      gap:14px;
-    }
-
-    .platformSection,
-    .closingPanel{
+    .dollStage{
       position:relative;
       overflow:hidden;
       padding:clamp(22px,4vw,42px);
@@ -414,15 +406,10 @@
         linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
     }
 
-    .platformSection::before{
-      content:"";
-      position:absolute;
-      left:0;
-      top:0;
-      bottom:0;
-      width:4px;
-      background:linear-gradient(180deg,rgba(255,217,138,.80),rgba(147,197,253,.16));
-      opacity:.82;
+    .dollHeader{
+      display:grid;
+      gap:10px;
+      max-width:940px;
     }
 
     .sectionTitle{
@@ -432,45 +419,94 @@
       letter-spacing:-.065em;
     }
 
-    .quoteLine{
-      margin:0;
-      max-width:940px;
-      color:rgba(255,255,255,.92);
-      font-size:clamp(1.22rem,3vw,2.02rem);
-      line-height:1.16;
-      font-weight:900;
-      letter-spacing:-.045em;
-    }
-
-    .miniGrid,
-    .doorGrid{
+    .dollGrid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
+      grid-template-columns:repeat(5,minmax(0,1fr));
       gap:12px;
-      margin-top:6px;
+      align-items:start;
     }
 
-    .doorGrid{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-
-    .miniPanel,
-    .summitDoor{
-      min-height:150px;
-      padding:16px;
+    .doll{
       border:1px solid rgba(255,255,255,.12);
-      border-radius:20px;
+      border-radius:22px;
       background:rgba(0,0,0,.20);
-      display:grid;
-      gap:8px;
-      align-content:start;
+      overflow:hidden;
+      min-height:100%;
     }
 
+    .doll[open]{
+      background:
+        radial-gradient(ellipse at 18% 10%,rgba(255,217,138,.07),transparent 18rem),
+        rgba(0,0,0,.24);
+      border-color:rgba(255,217,138,.38);
+    }
+
+    .doll summary{
+      list-style:none;
+      cursor:pointer;
+      min-height:168px;
+      padding:16px;
+      display:grid;
+      gap:10px;
+      align-content:start;
+      -webkit-tap-highlight-color:transparent;
+    }
+
+    .doll summary::-webkit-details-marker{
+      display:none;
+    }
+
+    .dollTag{
+      color:var(--gold);
+      font-size:.76rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .dollTitle{
+      color:var(--ink);
+      font-size:clamp(1.05rem,2.2vw,1.35rem);
+      line-height:1.06;
+      font-weight:950;
+      letter-spacing:-.035em;
+    }
+
+    .dollHint{
+      margin:0;
+      color:var(--soft);
+      line-height:1.42;
+      font-size:.96rem;
+    }
+
+    .dollBody{
+      border-top:1px solid rgba(255,255,255,.10);
+      padding:16px;
+      display:grid;
+      gap:12px;
+    }
+
+    .dollBody p{
+      margin:0;
+      color:var(--txt);
+      line-height:1.55;
+    }
+
+    .continueLink,
     .summitDoor{
-      min-height:178px;
+      display:grid;
+      gap:7px;
+      padding:13px 14px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:18px;
+      background:rgba(0,0,0,.22);
+      color:var(--ink);
+      font-weight:950;
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
+    .continueLink:hover,
+    .continueLink:focus-visible,
     .summitDoor:hover,
     .summitDoor:focus-visible{
       transform:translateY(-2px);
@@ -479,29 +515,23 @@
       outline:none;
     }
 
-    .miniPanel strong,
-    .summitDoor strong{
-      color:var(--ink);
-      font-size:1rem;
-      line-height:1.2;
-    }
-
-    .summitDoor strong{
-      font-size:clamp(1.15rem,2.5vw,1.55rem);
-      letter-spacing:-.035em;
-    }
-
-    .miniPanel p,
-    .summitDoor p{
-      margin:0;
+    .continueLink small,
+    .summitDoor small{
       color:var(--soft);
-      line-height:1.48;
-      font-size:.98rem;
+      font-size:.86rem;
+      line-height:1.35;
+      font-weight:750;
+    }
+
+    .doorGrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
     }
 
     .doorLabel{
       color:var(--gold);
-      font-size:.78rem;
+      font-size:.75rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -521,6 +551,15 @@
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
+    }
+
+    .closingPanel{
+      padding:clamp(22px,4vw,42px);
+      display:grid;
+      gap:14px;
+      background:
+        radial-gradient(ellipse at 82% 20%,rgba(147,197,253,.065),transparent 28rem),
+        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
     }
 
     .routeRail{
@@ -545,10 +584,9 @@
       text-align:center;
     }
 
-    @media(max-width:900px){
-      .miniGrid,
-      .doorGrid{
-        grid-template-columns:1fr;
+    @media(max-width:1100px){
+      .dollGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
       }
     }
 
@@ -563,7 +601,8 @@
         padding:22px;
       }
 
-      .portalDeck{
+      .portalDeck,
+      .dollGrid{
         display:grid;
         grid-template-columns:1fr;
       }
@@ -603,6 +642,10 @@
         width:min(86vw,420px);
         opacity:.18;
       }
+
+      .doll summary{
+        min-height:auto;
+      }
     }
 
     @media(max-width:430px){
@@ -617,7 +660,7 @@
   <main
     class="page"
     data-showroom-root
-    data-showroom-version="generation-2-ted-talk-showroom-b26"
+    data-showroom-version="generation-2-russian-doll-showroom-b27"
     data-earth-center="true"
     data-earth-renderer="earth-asset-b5-orbital-shadow"
     data-earth-clouds="earth-asset-b5-real-cloud-map"
@@ -625,12 +668,12 @@
     data-earth-fit-contract="earth-only-no-external-rings"
     data-sun-role="distant-css-light-source-only"
     data-sun-disposition="upper-left-shadow-coherent"
-    data-platform-mode="ted-talk-showroom"
+    data-platform-mode="russian-doll-showroom"
     data-consider-the-energy="brand-chamber"
     data-nine-summits="two-door-branch"
     data-backlink-capacity="active"
     data-pinky-qa="no-graphics-box"
-    data-brain-route="ted-talk-showroom-b26"
+    data-brain-route="russian-doll-showroom-b27"
   >
     <section class="showroom" aria-label="Earth-centered showroom">
       <div class="distanceField" aria-hidden="true">
@@ -643,38 +686,38 @@
           <a class="brandName" href="/">Diamond Gate Bridge</a>
         </div>
 
-        <p class="kicker">Showroom · TED Talk Platform · Earth/Sun Proof</p>
+        <p class="kicker">Showroom · Russian Doll Platform · Earth/Sun Proof</p>
         <h1>The Earth Room</h1>
         <p class="expression">Where the system stopped pretending and started aligning.</p>
         <p class="lede">
-          This showroom is the public proof room: light, shadow, pressure, correction, and baseline coherence brought into the same frame.
+          This showroom is the public proof room. Open a chamber for the short version, then continue through the backlink when you are ready for the full room.
         </p>
       </div>
 
       <nav class="portalDeck" aria-label="Showroom compass portals">
-        <a class="portal" href="#underdog">
+        <a class="portal" href="#doll-underdog" data-doll-open="doll-underdog">
           <span class="compassGlyph" aria-hidden="true"></span>
-          <span>Underdog Backstory<small>Pressure into proof</small></span>
+          <span>Underdog Backstory<small>Open chamber + continue</small></span>
         </a>
 
-        <a class="portal" href="#b2b">
+        <a class="portal" href="#doll-b2b" data-doll-open="doll-b2b">
           <span class="compassGlyph" aria-hidden="true"></span>
-          <span>B2B · Back to Baseline<small>Back to back. Back to baseline.</small></span>
+          <span>B2B · Back to Baseline<small>Open chamber + continue</small></span>
         </a>
 
-        <a class="portal" href="#five-flags">
+        <a class="portal" href="#doll-five-flags" data-doll-open="doll-five-flags">
           <span class="compassGlyph" aria-hidden="true"></span>
-          <span>5 Flags · What’s My Scene?<small>Family-friendly game lane</small></span>
+          <span>5 Flags · What’s My Scene?<small>Open chamber + continue</small></span>
         </a>
 
-        <a class="portal" href="#consider-energy">
+        <a class="portal" href="#doll-consider-energy" data-doll-open="doll-consider-energy">
           <span class="compassGlyph" aria-hidden="true"></span>
-          <span>Consider the Energy<small>Nine Summits brand chamber</small></span>
+          <span>Consider the Energy<small>Nine Summits doors</small></span>
         </a>
 
-        <a class="portal" href="#events">
+        <a class="portal" href="#doll-events" data-doll-open="doll-events">
           <span class="compassGlyph" aria-hidden="true"></span>
-          <span>Events & Attractions<small>Coming soon</small></span>
+          <span>Events & Attractions<small>Coming soon + continue</small></span>
         </a>
       </nav>
 
@@ -691,121 +734,118 @@
       </div>
     </section>
 
-    <section class="platformStack" aria-label="Showroom platform lanes">
-      <article id="underdog" class="platformSection">
-        <p class="sectionEyebrow">Underdog Backstory</p>
-        <h2 class="sectionTitle">Some people get stepped on more than most.</h2>
-        <p class="quoteLine">
-          An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
-        </p>
+    <section id="showroom-dolls" class="dollStage" aria-label="Russian doll showroom chambers">
+      <div class="dollHeader">
+        <p class="sectionEyebrow">Russian Doll Showroom</p>
+        <h2 class="sectionTitle">Open the chamber. Continue through the door.</h2>
         <p class="sectionLead">
-          Everybody has been underneath something: a label, a mistake, a debt, a season, a room that did not believe in them, or a system that expected results without offering enough protection. The point is not to compete over suffering. The point is to recognize the pattern and decide what gets built from it.
+          The showroom stays compact. Each chamber gives the first layer of meaning, then points to the proper backlink for the full expression.
         </p>
-        <div class="miniGrid">
-          <div class="miniPanel">
-            <strong>Pressure without protection</strong>
-            <p>The underdog is often judged by the fall while no one counts the weight that pushed them down.</p>
-          </div>
-          <div class="miniPanel">
-            <strong>Expectation without help</strong>
-            <p>They are still expected to recover, explain, adapt, and perform even when the support was never equal to the demand.</p>
-          </div>
-          <div class="miniPanel">
-            <strong>Baseline instead of identity</strong>
-            <p>The turn happens when being stepped on stops becoming the identity and starts becoming the baseline.</p>
-          </div>
-        </div>
-      </article>
+      </div>
 
-      <article id="b2b" class="platformSection">
-        <p class="sectionEyebrow">B2B · Back to Baseline</p>
-        <h2 class="sectionTitle">Back to back. Back to baseline.</h2>
-        <p class="quoteLine">Before you build the empire, return to baseline.</p>
-        <p class="sectionLead">
-          B2B is the practical reset lane: baseline nutrition, body stability, expression training, and the discipline of getting the first layer right before trying to carry the whole mission.
-        </p>
-        <div class="miniGrid">
-          <div class="miniPanel">
-            <strong>Baseline nutrition</strong>
-            <p>A product lane for returning the body to a cleaner operating floor before higher expression is demanded.</p>
+      <div class="dollGrid">
+        <details id="doll-underdog" class="doll">
+          <summary>
+            <span class="dollTag">Underdog Backstory</span>
+            <span class="dollTitle">Some people get stepped on more than most.</span>
+            <p class="dollHint">Pressure without equal protection. Expectation without equal help.</p>
+          </summary>
+          <div class="dollBody">
+            <p>
+              An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
+            </p>
+            <a class="continueLink" href="/about-this-underdog/">
+              Continue to About This Underdog
+              <small>The full backstory chamber.</small>
+            </a>
           </div>
-          <div class="miniPanel">
-            <strong>Expression program</strong>
-            <p>A training lane for converting pressure, thought, and story into speech that can actually move people.</p>
-          </div>
-          <div class="miniPanel">
-            <strong>Mission reset</strong>
-            <p>Body, mind, expression, and mission stacked in the right order. No skipped foundation.</p>
-          </div>
-        </div>
-      </article>
+        </details>
 
-      <article id="five-flags" class="platformSection">
-        <p class="sectionEyebrow">5 Flags · What’s My Scene?</p>
-        <h2 class="sectionTitle">A family-friendly game for learning how to read the room.</h2>
-        <p class="quoteLine">Read the scene before the scene reads you.</p>
-        <p class="sectionLead">
-          5 Flags · What’s My Scene? gives families, kids, classrooms, and groups a safe way to talk about scenes, signals, emotions, behavior, and social pressure without turning the conversation into a lecture.
-        </p>
-        <div class="miniGrid">
-          <div class="miniPanel">
-            <strong>Family-safe</strong>
-            <p>Built for clean public use: homes, schools, group settings, and live demonstrations.</p>
+        <details id="doll-b2b" class="doll">
+          <summary>
+            <span class="dollTag">B2B · Back to Baseline</span>
+            <span class="dollTitle">Back to back. Back to baseline.</span>
+            <p class="dollHint">Before expansion, return to the foundation.</p>
+          </summary>
+          <div class="dollBody">
+            <p>
+              B2B is the practical reset lane: baseline nutrition, body stability, expression training, and the discipline of getting the first layer right before trying to carry the whole mission.
+            </p>
+            <a class="continueLink" href="/baseline-nutrition-systems/">
+              Continue to Baseline Nutrition Systems
+              <small>The practical reset and product-system chamber.</small>
+            </a>
           </div>
-          <div class="miniPanel">
-            <strong>Scene reading</strong>
-            <p>Players learn to recognize the room, the signal, the pressure, and the better move.</p>
+        </details>
+
+        <details id="doll-five-flags" class="doll">
+          <summary>
+            <span class="dollTag">5 Flags · What’s My Scene?</span>
+            <span class="dollTitle">Read the scene before the scene reads you.</span>
+            <p class="dollHint">A family-friendly game for learning how to read the room.</p>
+          </summary>
+          <div class="dollBody">
+            <p>
+              5 Flags · What’s My Scene? gives families, kids, classrooms, and groups a safe way to talk about scenes, signals, emotions, behavior, and social pressure without turning the conversation into a lecture.
+            </p>
+            <a class="continueLink" href="/five-flags-whats-my-scene/">
+              Continue to 5 Flags · What’s My Scene?
+              <small>The family-friendly game chamber.</small>
+            </a>
           </div>
-          <div class="miniPanel">
-            <strong>Future expansion</strong>
-            <p>Cards, app logic, live game formats, and classroom-ready versions can all grow from this lane.</p>
+        </details>
+
+        <details id="doll-consider-energy" class="doll" open>
+          <summary>
+            <span class="dollTag">Consider the Energy</span>
+            <span class="dollTitle">The brand chamber where the Nine Summits live.</span>
+            <p class="dollHint">One chamber, two doors beyond it.</p>
+          </summary>
+          <div class="dollBody">
+            <p>
+              Consider the Energy is the parent brand chamber. The Nine Summits Universe and The Nine Summits of Love are the two paths beyond the door.
+            </p>
+            <div class="doorGrid" aria-label="Consider the Energy doors">
+              <a class="summitDoor" href="/nine-summits-universe/">
+                <span class="doorLabel">Door One</span>
+                <strong>Nine Summits Universe</strong>
+                <small>The immersive universe/metaverse path for entering the wider Nine Summits world.</small>
+              </a>
+
+              <a class="summitDoor" href="/nine-summits-of-love/">
+                <span class="doorLabel">Door Two</span>
+                <strong>The Nine Summits of Love · 256 Carats of Human Potential</strong>
+                <small>The human-development, book, doctrine, and transformation path inside Consider the Energy.</small>
+              </a>
+            </div>
           </div>
-        </div>
-      </article>
+        </details>
 
-      <article id="consider-energy" class="platformSection">
-        <p class="sectionEyebrow">Consider the Energy</p>
-        <h2 class="sectionTitle">The brand chamber where the Nine Summits live.</h2>
-        <p class="quoteLine">
-          Consider the Energy is the door. The Nine Summits Universe and The Nine Summits of Love are the two paths beyond it.
-        </p>
-        <p class="sectionLead">
-          Consider the Energy is the parent brand chamber. It is not coming soon, and it is not a placeholder. This is where the Nine Summits branch into their deeper world expression and their human-development expression.
-        </p>
-
-        <div class="doorGrid" aria-label="Consider the Energy doors">
-          <a class="summitDoor" href="/nine-summits-universe/">
-            <span class="doorLabel">Door One</span>
-            <strong>Nine Summits Universe</strong>
-            <p>The immersive universe/metaverse path for entering the wider Nine Summits world.</p>
-          </a>
-
-          <a class="summitDoor" href="/nine-summits-of-love/">
-            <span class="doorLabel">Door Two</span>
-            <strong>The Nine Summits of Love · 256 Carats of Human Potential</strong>
-            <p>The human-development, book, doctrine, and transformation path inside Consider the Energy.</p>
-          </a>
-        </div>
-      </article>
-
-      <article id="events" class="platformSection">
-        <p class="sectionEyebrow">Events & Attractions</p>
-        <h2 class="sectionTitle">Shows, events, attractions, signings, and public appearances.</h2>
-        <p class="quoteLine">
-          This is where the bridge leaves the screen.
-        </p>
-        <p class="sectionLead">
-          Events & Attractions is the coming-soon public activation lane: live shows, events, attractions, appearances, book signings, merch signings, public demonstrations, and future pop-up experiences.
-        </p>
-        <span class="statusPill">Coming soon</span>
-      </article>
+        <details id="doll-events" class="doll">
+          <summary>
+            <span class="dollTag">Events & Attractions</span>
+            <span class="dollTitle">Where the bridge leaves the screen.</span>
+            <p class="dollHint">Shows, events, attractions, signings, and public appearances.</p>
+          </summary>
+          <div class="dollBody">
+            <p>
+              Events & Attractions is the coming-soon public activation lane: live shows, events, attractions, appearances, signings, demonstrations, and future pop-up experiences.
+            </p>
+            <span class="statusPill">Coming soon</span>
+            <a class="continueLink" href="/upper-room/">
+              Continue to the Upper Room
+              <small>The public activation and booking chamber.</small>
+            </a>
+          </div>
+        </details>
+      </div>
     </section>
 
     <section class="closingPanel" aria-label="Showroom closing statement">
       <p class="sectionEyebrow">Showroom Thesis</p>
       <h2 class="sectionTitle">The bridge becomes visible here.</h2>
       <p>
-        The Earth/Sun alignment is the proof object. The underdog story is the human spine. B2B is the baseline solution. 5 Flags is the family-friendly entry point. Consider the Energy is the brand chamber where the Nine Summits live. Events & Attractions is the coming-soon public path forward.
+        The Earth/Sun alignment is the proof object. The showroom chambers give the first layer. The backlinks carry the full rooms.
       </p>
     </section>
 

@@ -10,19 +10,47 @@
     { href: "/gauges/", label: "Gauges", note: "live authority" }
   ];
 
+  const zoomLabels = {
+    estate: "Estate",
+    oak: "Oak",
+    habitat: "Habitat",
+    wildlife: "Wildlife"
+  };
+
+  const zoneLabels = {
+    roots: "Roots",
+    bark: "Bark",
+    hollow: "Hollow",
+    branches: "Branches",
+    canopy: "Canopy",
+    snowVerge: "Snow verge"
+  };
+
+  const wildlifeText = {
+    roots: "Root shelter, low tracks, and snow-crust openings sit at the base of the old oak.",
+    bark: "Bark insects, frost ledges, and vertical cracks make the trunk inspectable.",
+    hollow: "The hollow carries shadow, shelter, and a small protected habitat read.",
+    branches: "Branch movement, nest structure, and small winter life sit above the trunk.",
+    canopy: "Bird hints and frost-heavy leaves remain subtle inside the canopy.",
+    snowVerge: "Tracks, broken grass, and snow-verge life mark the edge of the road."
+  };
+
   function el(tag, attrs, children) {
     const node = document.createElement(tag);
 
     Object.entries(attrs || {}).forEach(([key, value]) => {
       if (value === false || value === null || value === undefined) return;
+
       if (key === "className") {
         node.className = value;
         return;
       }
+
       if (key === "text") {
         node.textContent = value;
         return;
       }
+
       node.setAttribute(key, String(value));
     });
 
@@ -37,12 +65,26 @@
     return node;
   }
 
-  function textBlock(kicker, title, body, id) {
+  function sceneCopy(kicker, title, body, id) {
     return el("article", { className: "scene-copy" }, [
       el("p", { className: "eyebrow", text: kicker }),
       el(id ? "h1" : "h2", id ? { id, text: title } : { text: title }),
       el("p", { className: "lead", text: body })
     ]);
+  }
+
+  function buttonList(className, label, items, attrName, currentValue) {
+    return el("div", { className, role: "group", "aria-label": label },
+      Object.entries(items).map(([value, text]) =>
+        el("button", {
+          type: "button",
+          className: currentValue === value ? "scene-control active" : "scene-control",
+          [attrName]: value,
+          "aria-pressed": currentValue === value ? "true" : "false",
+          text
+        })
+      )
+    );
   }
 
   function renderFlat(root) {
@@ -58,10 +100,10 @@
     root.appendChild(
       el("section", { className: "flat-scene", "aria-label": "Flat World verified route map" }, [
         el("div", { className: "flat-map", "aria-hidden": "true" }, [grid]),
-        textBlock(
+        sceneCopy(
           "Flat World · locked baseline",
           "Rich Manor and Estate",
-          "Flat World is the verified 2D route map. It stays default, readable, and recoverable. Round World may render the living estate without changing routes, faking Gauges health, or replacing the Manor.",
+          "Flat World is the verified 2D route map. It stays default, readable, and recoverable. Round World may inspect the living estate without changing routes, faking Gauges health, or replacing the Manor.",
           "H1_COMPASS"
         )
       ])
@@ -78,20 +120,43 @@
     ]);
   }
 
-  function renderOak() {
-    return el("div", { className: "old-oak", "aria-label": "Massive 256-year-old snow-dusted oak" }, [
-      el("div", { className: "oak-canopy" }),
-      el("div", { className: "oak-trunk" }),
-      el("div", { className: "oak-roots" }),
-      el("div", { className: "hollow", "aria-hidden": "true" }),
+  function renderOak(state) {
+    const activeZone = state.treeZone || "roots";
+
+    return el("div", {
+      className: "old-oak",
+      "aria-label": "Massive 256-year-old snow-dusted oak",
+      "data-tree-object": "256-year-oak",
+      "data-active-tree-zone": activeZone
+    }, [
+      el("div", { className: "oak-canopy zone-target", "data-zone-object": "canopy", "aria-hidden": "true" }),
+      el("div", { className: "oak-trunk zone-target", "data-zone-object": "bark", "aria-hidden": "true" }),
+      el("div", { className: "oak-roots zone-target", "data-zone-object": "roots", "aria-hidden": "true" }),
+      el("div", { className: "root-arm root-arm-left", "aria-hidden": "true" }),
+      el("div", { className: "root-arm root-arm-right", "aria-hidden": "true" }),
+      el("div", { className: "hollow zone-target", "data-zone-object": "hollow", "aria-hidden": "true" }),
+      el("div", { className: "branch-line branch-one zone-target", "data-zone-object": "branches", "aria-hidden": "true" }),
+      el("div", { className: "branch-line branch-two zone-target", "data-zone-object": "branches", "aria-hidden": "true" }),
+
+      el("div", { className: "wildlife-layer", "data-wildlife-system": "inspectable", "aria-hidden": state.zoom === "wildlife" ? "false" : "true" }, [
+        el("span", { className: "wildlife-mark track track-one", "data-wildlife-object": "track_marks" }),
+        el("span", { className: "wildlife-mark track track-two", "data-wildlife-object": "track_marks" }),
+        el("span", { className: "wildlife-mark nest", "data-wildlife-object": "branch_nest" }),
+        el("span", { className: "wildlife-mark insect insect-one", "data-wildlife-object": "bark_insects" }),
+        el("span", { className: "wildlife-mark insect insect-two", "data-wildlife-object": "bark_insects" }),
+        el("span", { className: "wildlife-mark hollow-shadow", "data-wildlife-object": "hollow_shadow" }),
+        el("span", { className: "wildlife-mark bird-hint", "data-wildlife-object": "canopy_bird_hint" }),
+        el("span", { className: "wildlife-mark verge-life", "data-wildlife-object": "snow_verge_life" })
+      ]),
+
       el("div", { className: "oak-name" }, [
         el("b", { text: "256-Year Oak" }),
-        el("span", { text: "Old, heavy, snow-dusted, rooted, and alive in front of the Manor." })
+        el("span", { text: "Old, heavy, snow-dusted, rooted, and inspectable in front of the Manor." })
       ])
     ]);
   }
 
-  function renderSnowBlades() {
+  function renderSnowGrass() {
     const field = el("div", { className: "snow-blade-field", "aria-hidden": "true" });
     const blades = [
       [2, 74, -8, .65], [5, 98, 6, .58], [8, 64, -4, .62], [12, 110, 9, .70],
@@ -115,47 +180,68 @@
     return field;
   }
 
-  function renderDock() {
-    return el("div", { className: "scene-dock", "aria-label": "Compact Round World relation summary" }, [
-      el("div", { className: "dock-card" }, [
-        el("b", { text: "Snow ground" }),
-        "Grass still exists under the snow; blades break through near the visitor."
-      ]),
-      el("div", { className: "dock-card" }, [
-        el("b", { text: "Ecosystem" }),
-        "Roots, bark, hollows, canopy, soil, and snow remain one living estate condition."
-      ]),
-      el("div", { className: "dock-card" }, [
-        el("b", { text: "Summits" }),
-        "256 diamonds / 256 carats of human potential remain attached to the Manor field."
-      ]),
-      el("div", { className: "dock-card" }, [
-        el("b", { text: "Proof" }),
-        "Gauges remain live authority. Render quality does not fake evidence."
+  function renderInspectorPanel(state) {
+    const zone = state.treeZone || "roots";
+
+    return el("aside", { className: "inspector-panel", "aria-label": "Tree inspection readout" }, [
+      el("p", { className: "eyebrow", text: "Tree inspection" }),
+      el("h3", { text: zoneLabels[zone] || "Roots" }),
+      el("p", { text: wildlifeText[zone] || wildlifeText.roots }),
+      el("div", { className: "inspection-receipt" }, [
+        el("span", { text: `Zoom: ${zoomLabels[state.zoom] || "Estate"}` }),
+        el("span", { text: `Zone: ${zoneLabels[zone] || "Roots"}` }),
+        el("span", { text: "Ground: snow with grass breaks" }),
+        el("span", { text: "Routes: unchanged" })
       ])
     ]);
   }
 
-  function renderRound(root) {
+  function renderRoundControls(state) {
+    return el("div", { className: "round-control-dock", "aria-label": "Round World inspection controls" }, [
+      buttonList("scene-control-row", "Round zoom controls", zoomLabels, "data-zoom", state.zoom),
+      buttonList("scene-control-row zone-row", "Tree zone controls", zoneLabels, "data-tree-zone", state.treeZone)
+    ]);
+  }
+
+  function renderRound(root, state) {
+    const zoom = state.zoom || "estate";
+    const zone = state.treeZone || "roots";
+
     root.appendChild(
       el("section", {
-        className: "round-scene",
-        "aria-label": "Round World rendered snow-ground estate scene",
+        className: `round-scene zoom-${zoom}`,
+        "aria-label": "Round World snow-ground oak ecosystem",
         "data-round-world": "tree-of-life",
-        "data-ground-condition": "snow"
+        "data-ground-condition": "snow",
+        "data-zoom-level": zoom,
+        "data-tree-zone": zone
       }, [
+        el("div", { className: "winter-sky", "aria-hidden": "true" }),
         el("div", { className: "winter-ridge", "aria-hidden": "true" }),
         el("div", { className: "snow-ground", "aria-hidden": "true" }),
         el("div", { className: "u-road", "aria-hidden": "true" }),
         el("div", { className: "road-grain", "aria-hidden": "true" }),
-        textBlock(
-          "World is round · snow-ground estate",
-          "The ground has weather now.",
-          "The Manor sits behind the 256-year-old oak. Snow is on the ground. Grass breaks through near the visitor. The U-road bends around the living foreground instead of floating as a symbolic outline."
+
+        sceneCopy(
+          "World is round · inspectable winter estate",
+          zoom === "estate" ? "The snow shows the ground now." :
+          zoom === "oak" ? "Move closer to the old oak." :
+          zoom === "habitat" ? "The tree separates into habitats." :
+          "The wildlife becomes discoverable.",
+          zoom === "estate"
+            ? "The Manor sits behind the 256-year-old oak. Snow is on the ground. Grass breaks through near the visitor. The U-road bends around the living foreground."
+            : zoom === "oak"
+              ? "The oak grows in frame without replacing the Manor. Roots, trunk, bark, canopy, road, and snow-ground remain tied together."
+              : zoom === "habitat"
+                ? "Roots, bark, hollow, branches, canopy, and snow verge become inspectable zones rather than one decorative tree shape."
+                : "Tracks, bark insects, branch nest, hollow shadow, snow-verge life, and small canopy hints appear only inside their habitat zones."
         ),
-        renderDock(),
+
+        renderRoundControls(state),
+        renderInspectorPanel(state),
         renderManor(),
-        renderOak(),
+        renderOak(state),
+
         el("span", { className: "scene-label label-estate" }, [
           el("b", { text: "256-acre estate" }),
           " · winter ground inside the boundary"
@@ -164,7 +250,8 @@
           el("b", { text: "U-road" }),
           " · arrival, motion, return"
         ]),
-        renderSnowBlades()
+
+        renderSnowGrass()
       ])
     );
   }
@@ -185,16 +272,26 @@
     );
   }
 
-  function render(mode, root) {
+  function render(state, root) {
     if (!root) return;
+
+    const nextState = {
+      mode: state && state.mode ? state.mode : "flat",
+      zoom: state && state.zoom ? state.zoom : "estate",
+      treeZone: state && state.treeZone ? state.treeZone : "roots",
+      wildlifeFocus: state && state.wildlifeFocus ? state.wildlifeFocus : "none"
+    };
 
     root.replaceChildren();
     root.dataset.renderStatus = "rendering";
-    root.dataset.renderMode = mode;
+    root.dataset.renderMode = nextState.mode;
+    root.dataset.zoomLevel = nextState.zoom;
+    root.dataset.treeZone = nextState.treeZone;
+    root.dataset.wildlifeFocus = nextState.wildlifeFocus;
 
-    if (mode === "round") {
-      renderRound(root);
-    } else if (mode === "globe") {
+    if (nextState.mode === "round") {
+      renderRound(root, nextState);
+    } else if (nextState.mode === "globe") {
       renderGlobe(root);
     } else {
       renderFlat(root);

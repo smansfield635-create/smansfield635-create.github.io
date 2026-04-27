@@ -1,25 +1,31 @@
 <!doctype html>
 <!-- TNT RENEWAL — /about-this-underdog/index.html
-     ABOUT THIS UNDERDOG · TED TALK RUSSIAN DOLL · B3
+     ABOUT THIS UNDERDOG · SUNRISE RUSSIAN DOLL · B4
 
      CONTRACT:
-       - Page should feel like a TED Talk, not a scroll.
+       - Page should feel like a public speech, not a dark scroll.
        - Use Russian-doll chambers instead of long stacked sections.
+       - Represent sunrise: brighter colors, morning light, gold, peach, blue, and visible lift.
        - Keep the underdog definition clear and definitive.
        - Keep the deeper route at /big-laugh/about-this-underdog/.
        - Keep Products as the system/product continuation route.
        - Keep Showroom as the lobby return route.
+       - Keep shared diamond-compass language.
+       - Showroom remains the shinier gold room.
        - No graphics box.
        - No trauma dump.
        - No encyclopedia layout.
 -->
 
-<html lang="en">
+<html lang="en" data-page="about-this-underdog" data-generation="about-sunrise-russian-doll-b4">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
   <title>About This Underdog — Diamond Gate Bridge</title>
-  <meta name="description" content="A TED Talk-style Russian-doll entry chamber for the underdog story inside Diamond Gate Bridge."/>
+  <meta
+    name="description"
+    content="About This Underdog: a sunrise-facing Russian-doll entry chamber for the underdog story inside Diamond Gate Bridge."
+  />
 
   <style>
     *{box-sizing:border-box}
@@ -32,37 +38,108 @@
       margin:0;
       min-height:100%;
       width:100%;
-      background:#02040b;
-      color:#fff;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+      color:#251506;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       overflow-x:hidden;
-    }
-
-    a{color:inherit;text-decoration:none}
-
-    :root{
-      --ink:rgba(255,255,255,.96);
-      --txt:rgba(220,231,255,.78);
-      --soft:rgba(220,231,255,.62);
-      --gold:rgba(255,217,138,.96);
-      --line:rgba(255,255,255,.13);
-      --panel:rgba(7,10,16,.76);
-      --shadow:0 30px 110px rgba(0,0,0,.54);
+      background:
+        linear-gradient(180deg,#6fb7ff 0%,#9fd5ff 26%,#ffd28a 58%,#ff8f57 100%);
     }
 
     body::before{
       content:"";
       position:fixed;
       inset:0;
-      z-index:0;
+      z-index:-3;
       pointer-events:none;
       background:
-        radial-gradient(circle at 14% 18%,rgba(255,255,255,.24) 0 1px,transparent 2px),
-        radial-gradient(circle at 42% 22%,rgba(177,205,255,.17) 0 1px,transparent 2px),
-        radial-gradient(circle at 78% 16%,rgba(255,255,255,.14) 0 1px,transparent 2px),
-        radial-gradient(ellipse at 18% 12%,rgba(255,217,138,.09),transparent 34rem),
-        radial-gradient(ellipse at 86% 26%,rgba(147,197,253,.055),transparent 28rem),
-        linear-gradient(180deg,#071225 0%,#030817 46%,#010309 100%);
+        radial-gradient(circle at 50% 91%,rgba(255,252,210,.95) 0 6rem,rgba(255,211,104,.56) 8rem,rgba(255,143,87,.30) 18rem,transparent 34rem),
+        radial-gradient(ellipse at 50% 100%,rgba(255,255,255,.72),transparent 26rem),
+        radial-gradient(ellipse at 18% 18%,rgba(255,255,255,.32),transparent 24rem),
+        radial-gradient(ellipse at 84% 24%,rgba(120,190,255,.22),transparent 26rem),
+        linear-gradient(180deg,rgba(255,255,255,.20),transparent 36%,rgba(255,120,60,.18));
+    }
+
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      z-index:-2;
+      pointer-events:none;
+      background-image:
+        radial-gradient(circle,rgba(255,255,255,.86) 0 1px,transparent 1.8px),
+        radial-gradient(circle,rgba(255,245,188,.62) 0 1px,transparent 2px),
+        radial-gradient(circle,rgba(94,160,255,.28) 0 1px,transparent 2.2px);
+      background-size:112px 112px,168px 168px,236px 236px;
+      background-position:0 0,34px 42px,71px 91px;
+      opacity:.32;
+      animation:skyDrift 88s linear infinite;
+    }
+
+    :root{
+      --ink:#251506;
+      --ink2:#3a210a;
+      --txt:rgba(37,21,6,.78);
+      --soft:rgba(37,21,6,.60);
+      --cream:#fff8e8;
+      --white:rgba(255,255,255,.92);
+      --panel:rgba(255,255,255,.68);
+      --panel2:rgba(255,248,232,.74);
+      --line:rgba(122,73,19,.18);
+      --line2:rgba(255,255,255,.62);
+      --gold:#f2b84b;
+      --gold2:#ffdf86;
+      --rose:#ff8f72;
+      --blue:#5aa7ff;
+      --diamond:#eaf6ff;
+      --shadow:0 24px 80px rgba(108,62,12,.20);
+      --shadow2:0 18px 60px rgba(255,143,87,.18);
+    }
+
+    @keyframes skyDrift{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(-112px,72px,0)}
+    }
+
+    @keyframes compassSpin{
+      0%{transform:rotateZ(0deg) rotateX(58deg) rotateY(0deg)}
+      100%{transform:rotateZ(360deg) rotateX(58deg) rotateY(360deg)}
+    }
+
+    @keyframes slowTurn{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes reverseTurn{
+      from{transform:rotate(360deg)}
+      to{transform:rotate(0deg)}
+    }
+
+    @keyframes sunrisePulse{
+      0%,100%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(1);
+        filter:drop-shadow(0 0 20px rgba(255,184,75,.24));
+      }
+      50%{
+        transform:translate(-50%,-50%) rotate(45deg) scale(1.05);
+        filter:drop-shadow(0 0 36px rgba(255,223,134,.46));
+      }
+    }
+
+    @keyframes shimmer{
+      0%,100%{opacity:.42;transform:scale(1)}
+      50%{opacity:1;transform:scale(1.22)}
+    }
+
+    @keyframes glint{
+      0%,58%,100%{transform:translateX(-120%);opacity:0}
+      72%{opacity:.78}
+      86%{transform:translateX(120%);opacity:0}
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
     }
 
     .page{
@@ -71,61 +148,86 @@
       width:min(100% - 28px,1120px);
       min-height:100svh;
       margin:0 auto;
-      padding:18px 0 28px;
+      padding:18px 0 34px;
       display:grid;
-      gap:14px;
+      gap:16px;
     }
 
     .hero,
     .talkStage,
     .routeRail{
-      border:1px solid var(--line);
-      border-radius:28px;
-      background:var(--panel);
+      border:1px solid var(--line2);
+      border-radius:30px;
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.76),rgba(255,248,232,.58)),
+        var(--panel);
       box-shadow:var(--shadow);
-      backdrop-filter:blur(10px);
+      backdrop-filter:blur(14px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .hero::before,
+    .talkStage::before,
+    .routeRail::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:
+        radial-gradient(circle at 82% 12%,rgba(255,255,255,.48),transparent 18rem),
+        radial-gradient(circle at 10% 100%,rgba(255,143,87,.20),transparent 22rem),
+        linear-gradient(135deg,rgba(255,255,255,.10),transparent 48%,rgba(255,223,134,.08));
     }
 
     .hero{
       min-height:calc(100svh - 190px);
       padding:clamp(24px,5vw,56px);
       display:grid;
-      gap:18px;
-      align-content:center;
-      overflow:hidden;
-      background:
-        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.07),transparent 30rem),
-        linear-gradient(180deg,rgba(8,14,26,.78),rgba(2,4,11,.84));
+      grid-template-columns:minmax(0,1.05fr) minmax(280px,.95fr);
+      gap:28px;
+      align-items:center;
+    }
+
+    .heroCopy,
+    .heroSymbol,
+    .stageContent,
+    .railContent{
+      position:relative;
+      z-index:2;
     }
 
     .brandRow{
       display:flex;
       align-items:center;
       gap:12px;
+      margin-bottom:18px;
     }
 
     .brandMark{
-      width:34px;
-      height:34px;
-      transform:rotate(45deg);
-      border:1px solid rgba(255,217,138,.72);
+      width:36px;
+      height:36px;
+      border-radius:999px;
       background:
-        linear-gradient(135deg,rgba(255,217,138,.30),rgba(147,197,253,.05)),
-        rgba(255,255,255,.05);
-      box-shadow:0 0 18px rgba(255,217,138,.14);
+        radial-gradient(circle at 34% 28%,rgba(255,255,255,.95),transparent 18%),
+        radial-gradient(circle,rgba(255,236,147,.95),rgba(255,167,64,.68) 58%,rgba(164,80,18,.88));
+      border:1px solid rgba(255,255,255,.66);
+      box-shadow:
+        inset 0 0 16px rgba(255,255,255,.30),
+        0 0 24px rgba(255,183,70,.28);
       flex:0 0 auto;
     }
 
     .brandName{
       color:var(--ink);
-      font-size:clamp(1.2rem,4vw,2rem);
+      font-size:clamp(1.18rem,4vw,1.8rem);
       font-weight:950;
       letter-spacing:-.04em;
     }
 
     .kicker{
-      margin:0;
-      color:var(--gold);
+      margin:0 0 12px;
+      color:#9a5415;
       font-size:12px;
       line-height:1.35;
       font-weight:950;
@@ -136,16 +238,18 @@
     h1{
       margin:0;
       max-width:980px;
+      color:var(--ink);
+      font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(3.4rem,10vw,7.4rem);
       line-height:.84;
       letter-spacing:-.085em;
-      text-shadow:0 20px 90px rgba(0,0,0,.55);
+      text-shadow:0 14px 42px rgba(255,255,255,.36);
     }
 
     .thesis{
-      margin:0;
+      margin:18px 0 0;
       max-width:980px;
-      color:rgba(255,255,255,.93);
+      color:var(--ink2);
       font-size:clamp(1.42rem,3.4vw,2.45rem);
       line-height:1.1;
       font-weight:950;
@@ -153,7 +257,7 @@
     }
 
     .lead{
-      margin:0;
+      margin:18px 0 0;
       max-width:880px;
       color:var(--txt);
       font-size:clamp(1.05rem,2.35vw,1.32rem);
@@ -164,28 +268,188 @@
       display:flex;
       flex-wrap:wrap;
       gap:10px;
-      margin-top:4px;
+      margin-top:24px;
     }
 
-    .heroButton{
+    .heroButton,
+    .routeLink{
       min-height:48px;
       display:inline-grid;
       place-items:center;
       padding:12px 16px;
       border-radius:999px;
-      border:1px solid rgba(255,255,255,.13);
-      background:rgba(0,0,0,.24);
+      border:1px solid rgba(122,73,19,.18);
+      background:rgba(255,255,255,.50);
       color:var(--ink);
       font-weight:950;
+      box-shadow:0 10px 28px rgba(120,72,18,.08);
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
     }
 
     .heroButton:hover,
-    .heroButton:focus-visible{
+    .heroButton:focus-visible,
+    .routeLink:hover,
+    .routeLink:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(255,217,138,.52);
-      background:rgba(255,217,138,.055);
+      border-color:rgba(242,184,75,.62);
+      background:rgba(255,248,232,.74);
       outline:none;
+    }
+
+    .heroButton.primary{
+      border-color:rgba(242,184,75,.60);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,223,134,.34),transparent 64%),
+        rgba(255,255,255,.68);
+      box-shadow:0 0 28px rgba(255,184,75,.22);
+    }
+
+    .sunCompass{
+      position:relative;
+      width:min(100%,460px);
+      aspect-ratio:1;
+      margin:0 auto;
+      filter:drop-shadow(0 22px 42px rgba(159,85,20,.22));
+    }
+
+    .sunCompass .ring{
+      position:absolute;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.62);
+    }
+
+    .sunCompass .ring.one{
+      inset:8%;
+      animation:slowTurn 24s linear infinite;
+    }
+
+    .sunCompass .ring.two{
+      inset:17%;
+      border-style:dashed;
+      opacity:.78;
+      animation:reverseTurn 18s linear infinite;
+    }
+
+    .sunCompass .ring.three{
+      inset:27%;
+      opacity:.44;
+      animation:slowTurn 13s linear infinite;
+    }
+
+    .sunCompass .axisX,
+    .sunCompass .axisY{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+      border-radius:999px;
+    }
+
+    .sunCompass .axisX{
+      width:76%;
+      height:1px;
+      background:linear-gradient(90deg,transparent,rgba(255,255,255,.88),transparent);
+    }
+
+    .sunCompass .axisY{
+      width:1px;
+      height:76%;
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.88),transparent);
+    }
+
+    .sunRay{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:26%;
+      height:26%;
+      transform-origin:50% 0%;
+    }
+
+    .sunRay::before{
+      content:"";
+      position:absolute;
+      left:50%;
+      top:-6%;
+      width:52%;
+      height:100%;
+      transform:translateX(-50%);
+      clip-path:polygon(50% 0%,100% 100%,50% 82%,0% 100%);
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,223,134,.70) 54%,rgba(255,143,87,.24) 100%);
+      box-shadow:inset 0 0 18px rgba(255,255,255,.34);
+      opacity:.96;
+    }
+
+    .sunRay.n{transform:translate(-50%,-50%) rotate(0deg)}
+    .sunRay.e{transform:translate(-50%,-50%) rotate(90deg)}
+    .sunRay.s{transform:translate(-50%,-50%) rotate(180deg)}
+    .sunRay.w{transform:translate(-50%,-50%) rotate(270deg)}
+    .sunRay.ne{transform:translate(-50%,-50%) rotate(45deg)}
+    .sunRay.se{transform:translate(-50%,-50%) rotate(135deg)}
+    .sunRay.sw{transform:translate(-50%,-50%) rotate(225deg)}
+    .sunRay.nw{transform:translate(-50%,-50%) rotate(315deg)}
+
+    .sunRay.ne::before,
+    .sunRay.se::before,
+    .sunRay.sw::before,
+    .sunRay.nw::before{
+      width:38%;
+      opacity:.72;
+    }
+
+    .sunCore{
+      position:absolute;
+      left:50%;
+      top:50%;
+      width:31%;
+      aspect-ratio:1;
+      transform:translate(-50%,-50%) rotate(45deg);
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      background:
+        linear-gradient(135deg,rgba(255,255,255,.98),rgba(255,245,188,.94) 32%,rgba(255,184,75,.62) 68%,rgba(255,255,255,.88) 100%);
+      box-shadow:
+        0 0 44px rgba(255,184,75,.34),
+        inset 0 0 26px rgba(255,255,255,.34);
+      animation:sunrisePulse 6s ease-in-out infinite;
+    }
+
+    .sunCore::before,
+    .sunCore::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      border:1px solid rgba(255,255,255,.46);
+      clip-path:inherit;
+    }
+
+    .sunCore::after{
+      transform:scale(.64);
+      opacity:.68;
+    }
+
+    .spark{
+      position:absolute;
+      width:8px;
+      aspect-ratio:1;
+      border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,1) 0%,rgba(255,245,188,.94) 45%,transparent 70%);
+      animation:shimmer 3s ease-in-out infinite;
+    }
+
+    .spark.s1{left:18%;top:24%;animation-delay:0s}
+    .spark.s2{right:20%;top:22%;animation-delay:.8s}
+    .spark.s3{left:22%;bottom:18%;animation-delay:1.6s}
+    .spark.s4{right:18%;bottom:22%;animation-delay:2.4s}
+    .spark.s5{left:50%;top:10%;animation-delay:1.2s}
+
+    .symbolCaption{
+      margin:18px auto 0;
+      max-width:34rem;
+      color:var(--soft);
+      text-align:center;
+      font-size:.96rem;
+      line-height:1.62;
     }
 
     .talkStage{
@@ -193,24 +457,30 @@
       display:grid;
       gap:18px;
       background:
-        radial-gradient(ellipse at 12% 16%,rgba(255,217,138,.055),transparent 28rem),
-        linear-gradient(180deg,rgba(8,14,26,.74),rgba(2,4,11,.80));
+        radial-gradient(ellipse at 12% 16%,rgba(255,255,255,.38),transparent 28rem),
+        linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,248,232,.62));
     }
 
     .stageHeader{
       display:grid;
       gap:10px;
       max-width:920px;
+      position:relative;
+      z-index:2;
     }
 
     .stageTitle{
       margin:0;
+      color:var(--ink);
+      font-family:Georgia,"Times New Roman",serif;
       font-size:clamp(2rem,5.8vw,4.2rem);
       line-height:.92;
       letter-spacing:-.065em;
     }
 
     .dollGrid{
+      position:relative;
+      z-index:2;
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:12px;
@@ -218,18 +488,20 @@
     }
 
     .doll{
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(122,73,19,.18);
       border-radius:22px;
-      background:rgba(0,0,0,.20);
+      background:rgba(255,255,255,.42);
       overflow:hidden;
       min-height:100%;
+      box-shadow:0 12px 34px rgba(120,72,18,.08);
     }
 
     .doll[open]{
       background:
-        radial-gradient(ellipse at 18% 10%,rgba(255,217,138,.07),transparent 18rem),
-        rgba(0,0,0,.24);
-      border-color:rgba(255,217,138,.38);
+        radial-gradient(ellipse at 18% 10%,rgba(255,223,134,.24),transparent 18rem),
+        rgba(255,255,255,.62);
+      border-color:rgba(242,184,75,.48);
+      box-shadow:0 18px 48px rgba(255,143,87,.12);
     }
 
     .doll summary{
@@ -248,7 +520,7 @@
     }
 
     .dollTag{
-      color:var(--gold);
+      color:#9a5415;
       font-size:.76rem;
       font-weight:950;
       letter-spacing:.12em;
@@ -271,10 +543,11 @@
     }
 
     .dollBody{
-      border-top:1px solid rgba(255,255,255,.10);
+      border-top:1px solid rgba(122,73,19,.12);
       padding:16px;
       display:grid;
       gap:12px;
+      background:rgba(255,248,232,.36);
     }
 
     .dollBody p{
@@ -285,7 +558,7 @@
 
     .speechLine{
       margin:0;
-      color:rgba(255,255,255,.92);
+      color:var(--ink2);
       font-size:clamp(1.12rem,2.4vw,1.45rem);
       line-height:1.2;
       font-weight:950;
@@ -296,19 +569,20 @@
       display:grid;
       gap:7px;
       padding:13px 14px;
-      border:1px solid rgba(255,255,255,.12);
+      border:1px solid rgba(122,73,19,.16);
       border-radius:18px;
-      background:rgba(0,0,0,.22);
+      background:rgba(255,255,255,.50);
       color:var(--ink);
       font-weight:950;
       transition:transform .18s ease,border-color .18s ease,background .18s ease;
+      box-shadow:0 10px 28px rgba(120,72,18,.08);
     }
 
     .continueLink:hover,
     .continueLink:focus-visible{
       transform:translateY(-2px);
-      border-color:rgba(255,217,138,.50);
-      background:rgba(255,217,138,.055);
+      border-color:rgba(242,184,75,.58);
+      background:rgba(255,248,232,.74);
       outline:none;
     }
 
@@ -328,18 +602,38 @@
 
     .routeLink{
       min-height:58px;
-      padding:12px;
       border-radius:18px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(0,0,0,.22);
-      color:var(--ink);
-      font-weight:950;
-      display:grid;
-      place-items:center;
       text-align:center;
     }
 
+    .routeLink.gold{
+      border-color:rgba(242,184,75,.68);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,223,134,.38),transparent 62%),
+        rgba(255,255,255,.70);
+      box-shadow:
+        0 0 26px rgba(255,184,75,.30),
+        inset 0 0 18px rgba(255,255,255,.22);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .routeLink.gold::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(115deg,transparent 34%,rgba(255,255,255,.56) 48%,transparent 62%);
+      transform:translateX(-120%);
+      animation:glint 4.8s ease-in-out infinite;
+      pointer-events:none;
+    }
+
     @media(max-width:980px){
+      .hero{
+        grid-template-columns:1fr;
+        min-height:auto;
+      }
+
       .dollGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
@@ -351,14 +645,14 @@
         padding-top:10px;
       }
 
-      .hero{
-        min-height:auto;
-      }
-
       .hero,
       .talkStage,
       .routeRail{
         border-radius:24px;
+      }
+
+      .hero{
+        padding:22px;
       }
 
       .dollGrid{
@@ -372,6 +666,21 @@
       .routeRail{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
+
+      .heroActions{
+        display:grid;
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce){
+      body::after,
+      .sunCompass .ring,
+      .sunCore,
+      .spark,
+      .routeLink.gold::after{
+        animation:none;
+      }
     }
   </style>
 </head>
@@ -380,119 +689,164 @@
   <main
     class="page"
     data-backlink-root="about-this-underdog"
-    data-backlink-version="ted-talk-russian-doll-b3"
+    data-backlink-version="sunrise-russian-doll-b4"
     data-existing-full-route="/big-laugh/about-this-underdog/"
     data-products-route="/products/"
     data-showroom-route="/showroom/"
+    data-visual-tone="sunrise"
   >
     <section class="hero" aria-label="About This Underdog">
-      <div class="brandRow">
-        <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
-        <a class="brandName" href="/">Diamond Gate Bridge</a>
-      </div>
+      <article class="heroCopy">
+        <div class="brandRow">
+          <a class="brandMark" href="/" aria-label="Diamond Gate Bridge Compass"></a>
+          <a class="brandName" href="/">Diamond Gate Bridge</a>
+        </div>
 
-      <p class="kicker">TED Talk Backlink · Russian Doll Chamber</p>
-      <h1>About This Underdog</h1>
-      <p class="thesis">
-        Some people get stepped on more than most.
-      </p>
-      <p class="lead">
-        This is not a complaint page. It is the public speech layer for the underdog pattern: pressure without equal protection, expectation without equal help, and the choice to build anyway.
-      </p>
+        <p class="kicker">About This Underdog</p>
+        <h1>About This Underdog</h1>
 
-      <div class="heroActions" aria-label="Primary actions">
-        <a class="heroButton" href="#underdog-dolls">Open the Russian Doll</a>
-        <a class="heroButton" href="/big-laugh/about-this-underdog/">Go to Full Chamber</a>
-        <a class="heroButton" href="/showroom/">Return to Showroom</a>
-      </div>
+        <p class="thesis">
+          Some people get stepped on more than most.
+        </p>
+
+        <p class="lead">
+          This is not a complaint page. It is the sunrise side of the underdog story: pressure without equal protection,
+          expectation without equal help, and the decision to build anyway.
+        </p>
+
+        <p class="lead">
+          The point is not to stay under the weight. The point is to name the weight, stand up with clearer eyes,
+          and move toward the morning with something useful in your hands.
+        </p>
+
+        <div class="heroActions" aria-label="Primary actions">
+          <a class="heroButton primary" href="#underdog-dolls">Open the Russian Doll</a>
+          <a class="heroButton" href="/big-laugh/about-this-underdog/">Go to Full Chamber</a>
+          <a class="heroButton" href="/showroom/">Return to Showroom</a>
+        </div>
+      </article>
+
+      <aside class="heroSymbol" aria-label="Sunrise diamond compass">
+        <div class="sunCompass" aria-hidden="true">
+          <div class="ring one"></div>
+          <div class="ring two"></div>
+          <div class="ring three"></div>
+          <div class="axisX"></div>
+          <div class="axisY"></div>
+
+          <div class="sunRay n"></div>
+          <div class="sunRay ne"></div>
+          <div class="sunRay e"></div>
+          <div class="sunRay se"></div>
+          <div class="sunRay s"></div>
+          <div class="sunRay sw"></div>
+          <div class="sunRay w"></div>
+          <div class="sunRay nw"></div>
+
+          <div class="sunCore"></div>
+
+          <div class="spark s1"></div>
+          <div class="spark s2"></div>
+          <div class="spark s3"></div>
+          <div class="spark s4"></div>
+          <div class="spark s5"></div>
+        </div>
+
+        <p class="symbolCaption">
+          This chamber points toward sunrise: the pressure is real, but the page now moves toward light, recovery, and forward motion.
+        </p>
+      </aside>
     </section>
 
     <section id="underdog-dolls" class="talkStage" aria-label="Underdog Russian doll chambers">
-      <div class="stageHeader">
-        <p class="kicker">Open the underdog pattern</p>
-        <h2 class="stageTitle">Short enough to hear. Deep enough to matter.</h2>
-        <p class="lead">
-          Each chamber opens one layer of the speech. The full route carries the deeper room.
-        </p>
-      </div>
+      <div class="stageContent">
+        <div class="stageHeader">
+          <p class="kicker">Open the underdog pattern</p>
+          <h2 class="stageTitle">Short enough to hear. Bright enough to move.</h2>
+          <p class="lead">
+            Each chamber opens one layer of the story. The full route carries the deeper room.
+          </p>
+        </div>
 
-      <div class="dollGrid">
-        <details id="pressure" class="doll" open>
-          <summary>
-            <span class="dollTag">Layer One</span>
-            <span class="dollTitle">Pressure without equal protection.</span>
-            <p class="dollHint">The underdog gets measured by the fall while the weight is ignored.</p>
-          </summary>
-          <div class="dollBody">
-            <p class="speechLine">
-              An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
-            </p>
-            <p>
-              That definition can fit a kid, a parent, a founder, a performer, a worker, a veteran, an athlete, a student, or anyone who had to stand back up while the weight was heavier than the help.
-            </p>
-          </div>
-        </details>
+        <div class="dollGrid">
+          <details id="pressure" class="doll" open>
+            <summary>
+              <span class="dollTag">Layer One</span>
+              <span class="dollTitle">Pressure without equal protection.</span>
+              <p class="dollHint">The underdog gets measured by the fall while the weight is ignored.</p>
+            </summary>
+            <div class="dollBody">
+              <p class="speechLine">
+                An underdog is anyone who has had more pressure placed on them than support given to them, while still being expected to perform, recover, prove themselves, and keep moving.
+              </p>
+              <p>
+                That definition can fit a kid, a parent, a founder, a performer, a worker, a veteran, an athlete, a student, or anyone who had to stand back up while the weight was heavier than the help.
+              </p>
+            </div>
+          </details>
 
-        <details id="universal" class="doll">
-          <summary>
-            <span class="dollTag">Layer Two</span>
-            <span class="dollTitle">Everyone has been underneath something.</span>
-            <p class="dollHint">The definition is universal without flattening severity.</p>
-          </summary>
-          <div class="dollBody">
-            <p class="speechLine">
-              Not everyone has been stepped on the same amount.
-            </p>
-            <p>
-              But everyone knows what it feels like to be underneath a label, a mistake, a debt, a family story, a bad season, or a room that did not fully see them.
-            </p>
-          </div>
-        </details>
+          <details id="universal" class="doll">
+            <summary>
+              <span class="dollTag">Layer Two</span>
+              <span class="dollTitle">Everyone has been underneath something.</span>
+              <p class="dollHint">The definition is universal without flattening severity.</p>
+            </summary>
+            <div class="dollBody">
+              <p class="speechLine">
+                Not everyone has been stepped on the same amount.
+              </p>
+              <p>
+                But everyone knows what it feels like to be underneath a label, a mistake, a debt, a family story, a bad season, or a room that did not fully see them.
+              </p>
+            </div>
+          </details>
 
-        <details id="turn" class="doll">
-          <summary>
-            <span class="dollTag">Layer Three</span>
-            <span class="dollTitle">The turn is baseline.</span>
-            <p class="dollHint">The pressure stops being the identity and becomes the floor.</p>
-          </summary>
-          <div class="dollBody">
-            <p class="speechLine">
-              The underdog does not win by pretending the pressure was fair.
-            </p>
-            <p>
-              The turn happens when being stepped on stops becoming the identity and starts becoming the baseline: body, mind, speech, rhythm, and mission brought back into order.
-            </p>
-          </div>
-        </details>
+          <details id="turn" class="doll">
+            <summary>
+              <span class="dollTag">Layer Three</span>
+              <span class="dollTitle">The turn is sunrise.</span>
+              <p class="dollHint">The pressure stops being the identity and becomes the floor.</p>
+            </summary>
+            <div class="dollBody">
+              <p class="speechLine">
+                The underdog does not win by pretending the pressure was fair.
+              </p>
+              <p>
+                The turn happens when being stepped on stops becoming the identity and starts becoming the baseline:
+                body, mind, speech, rhythm, and mission brought back into order. That is where the morning starts.
+              </p>
+            </div>
+          </details>
 
-        <details id="continue" class="doll">
-          <summary>
-            <span class="dollTag">Layer Four</span>
-            <span class="dollTitle">Continue through the right door.</span>
-            <p class="dollHint">This page is the speech. The backlinks carry the rooms.</p>
-          </summary>
-          <div class="dollBody">
-            <a class="continueLink" href="/big-laugh/about-this-underdog/">
-              Continue to the full underdog chamber
-              <small>The deeper existing route for the full backstory.</small>
-            </a>
+          <details id="continue" class="doll">
+            <summary>
+              <span class="dollTag">Layer Four</span>
+              <span class="dollTitle">Continue through the right door.</span>
+              <p class="dollHint">This page is the sunrise entry. The backlinks carry the rooms.</p>
+            </summary>
+            <div class="dollBody">
+              <a class="continueLink" href="/big-laugh/about-this-underdog/">
+                Continue to the full underdog chamber
+                <small>The deeper existing route for the full backstory.</small>
+              </a>
 
-            <a class="continueLink" href="/products/">
-              Continue to Products
-              <small>The system/product route where the public lanes can be married later.</small>
-            </a>
+              <a class="continueLink" href="/products/">
+                Continue to Products
+                <small>The system/product route where the public lanes can be married later.</small>
+              </a>
 
-            <a class="continueLink" href="/showroom/">
-              Return to the Showroom
-              <small>The Russian-doll lobby and Earth/Sun proof room.</small>
-            </a>
-          </div>
-        </details>
+              <a class="continueLink" href="/showroom/">
+                Return to the Showroom
+                <small>The Russian-doll lobby and Earth/Sun proof room.</small>
+              </a>
+            </div>
+          </details>
+        </div>
       </div>
     </section>
 
     <nav class="routeRail" aria-label="Route rail">
-      <a class="routeLink" href="/showroom/">Showroom</a>
+      <a class="routeLink gold" href="/showroom/">Showroom</a>
       <a class="routeLink" href="/big-laugh/about-this-underdog/">Full Underdog</a>
       <a class="routeLink" href="/products/">Products</a>
       <a class="routeLink" href="/">Compass</a>
@@ -503,7 +857,7 @@
     (function(){
       "use strict";
 
-      var VERSION = "about-this-underdog-b3-russian-doll";
+      var VERSION = "about-this-underdog-b4-sunrise-russian-doll";
       var dolls = Array.prototype.slice.call(document.querySelectorAll(".doll"));
 
       document.documentElement.setAttribute("data-underdog-controller", VERSION);

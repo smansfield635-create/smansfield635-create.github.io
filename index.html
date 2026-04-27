@@ -3,7 +3,7 @@
   lang="en"
   data-page-id="compass"
   data-page="compass"
-  data-generation="index-render-runtime-css-triad-v1"
+  data-generation="index-tree-wildlife-zoom-triad-v1"
   data-estate="rich-manor-and-estate"
   data-manor-skin="active"
   data-manor-class="house"
@@ -18,1006 +18,38 @@
   data-round-road-logic="u-road"
   data-round-ecosystem="active"
   data-ground-condition="snow"
+  data-zoom-system="tree-inspection"
+  data-zoom-levels="estate oak habitat wildlife"
+  data-tree-object="256-year-oak"
+  data-wildlife-system="inspectable"
+  data-ecosystem-zones="roots soil bark hollows branches canopy snow-verge"
   data-globe-status="locked-later"
 >
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
+
   <title>Compass · Rich Manor and Estate</title>
+
   <meta
     name="description"
-    content="Rich Manor and Estate Compass. Flat World is the verified route map. Round World is rendered through paired render and runtime files as a snow-ground estate scene centered on the Manor, old oak, and U-road."
+    content="Rich Manor and Estate Compass. Flat World is the verified route map. Round World renders an inspectable snow-ground 256-acre estate scene with a 256-year-old oak, U-road, grass breaking through snow, tree habitat zones, and wildlife inspection."
   />
-  <link rel="stylesheet" href="/assets/manor.css?v=index-triad-v1" />
 
-  <style>
-    :root {
-      --bg: #03060b;
-      --ink: #f8f0dc;
-      --muted: rgba(248,240,220,.74);
-      --soft: rgba(248,240,220,.52);
-      --line: rgba(248,240,220,.16);
-      --line-strong: rgba(232,196,112,.54);
-      --gold: #e8c470;
-      --panel: rgba(4,8,14,.72);
-      --snow: #eef4f7;
-      --snow-shadow: #b9c7cf;
-      --winter-blue: #92b8d9;
-      --road: #a88d67;
-      --road-dark: #69513a;
-      --bark: #7b4a2d;
-      --bark-dark: #2e1a10;
-      --leaf-dark: #173421;
-      --leaf-mid: #315f35;
-      --leaf-frost: #dbe8dc;
-      --grass-winter: #546f39;
-      --manor-dark: #101722;
-      --manor-lit: #f0cf85;
-      --radius: 30px;
-      --shadow: 0 30px 110px rgba(0,0,0,.58);
-      --max: 1240px;
-      --scene-h: min(830px, calc(100vh - 92px));
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--ink);
-      font-family: ui-serif, Georgia, Cambria, "Times New Roman", serif;
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: var(--ink);
-      background:
-        radial-gradient(circle at 50% -8%, rgba(232,196,112,.18), transparent 31%),
-        radial-gradient(circle at 18% 19%, rgba(146,184,217,.14), transparent 25%),
-        radial-gradient(circle at 83% 16%, rgba(210,230,235,.10), transparent 24%),
-        linear-gradient(180deg, #03060b 0%, #08101b 52%, #03050a 100%);
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      z-index: -2;
-      pointer-events: none;
-      opacity: .72;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,.70) 0 1px, transparent 1.4px),
-        radial-gradient(circle, rgba(255,255,255,.28) 0 1px, transparent 1.7px);
-      background-size: 92px 92px, 158px 158px;
-      background-position: 0 0, 37px 54px;
-      mask-image: linear-gradient(to bottom, rgba(0,0,0,.92), rgba(0,0,0,.20) 75%, rgba(0,0,0,.04));
-    }
-
-    a { color: inherit; text-decoration: none; }
-    button { font: inherit; }
-
-    a:focus-visible,
-    button:focus-visible {
-      outline: 2px solid var(--gold);
-      outline-offset: 4px;
-    }
-
-    .wrap {
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 80;
-      border-bottom: 1px solid var(--line);
-      background: rgba(3,6,11,.78);
-      backdrop-filter: blur(18px);
-    }
-
-    .topbar-inner {
-      min-height: 70px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 18px;
-    }
-
-    .brand {
-      display: grid;
-      gap: 3px;
-      min-width: 220px;
-    }
-
-    .brand strong {
-      color: var(--gold);
-      font-size: .82rem;
-      letter-spacing: .15em;
-      text-transform: uppercase;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: .86rem;
-    }
-
-    .nav,
-    .route-group {
-      display: flex;
-      justify-content: flex-end;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .nav a,
-    .pill-link {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 9px 12px;
-      background: rgba(255,255,255,.05);
-      color: var(--muted);
-      font-size: .88rem;
-    }
-
-    .nav a:hover,
-    .pill-link:hover {
-      border-color: var(--line-strong);
-      background: rgba(232,196,112,.13);
-      color: var(--ink);
-    }
-
-    .compass-shell {
-      padding: 18px 0 22px;
-    }
-
-    .scene-frame {
-      position: relative;
-      min-height: var(--scene-h);
-      border: 1px solid var(--line);
-      border-radius: 34px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      isolation: isolate;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(232,196,112,.22), transparent 25%),
-        linear-gradient(180deg, rgba(6,17,31,.97) 0%, rgba(5,10,16,.98) 48%, rgba(3,5,8,.99) 100%);
-    }
-
-    .scene-frame::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: .76;
-      background:
-        radial-gradient(circle at 22% 18%, rgba(255,255,255,.18) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 77% 23%, rgba(255,255,255,.14) 0 1px, transparent 1.5px),
-        radial-gradient(circle at 62% 39%, rgba(255,255,255,.11) 0 1px, transparent 1.5px),
-        linear-gradient(180deg, transparent 0 43%, rgba(0,0,0,.18) 100%);
-      background-size: 180px 150px, 220px 190px, 270px 230px, 100% 100%;
-    }
-
-    .mode-selector {
-      position: absolute;
-      left: clamp(16px, 3vw, 34px);
-      right: clamp(16px, 3vw, 34px);
-      top: 16px;
-      z-index: 60;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .mode-button {
-      min-height: 58px;
-      cursor: pointer;
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 12px 14px;
-      background: rgba(3,7,12,.66);
-      color: var(--muted);
-      text-align: left;
-      backdrop-filter: blur(12px);
-    }
-
-    .mode-button strong {
-      display: block;
-      margin-bottom: 4px;
-      color: var(--ink);
-      font-size: .85rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-    }
-
-    .mode-button span {
-      display: block;
-      font-size: .81rem;
-      line-height: 1.25;
-    }
-
-    body[data-active-mode="flat"] .mode-button[data-mode="flat"],
-    body[data-active-mode="round"] .mode-button[data-mode="round"],
-    body[data-active-mode="globe"] .mode-button[data-mode="globe"] {
-      border-color: rgba(232,196,112,.72);
-      background: linear-gradient(135deg, rgba(232,196,112,.25), rgba(255,255,255,.065));
-      color: var(--ink);
-    }
-
-    .render-mount {
-      position: absolute;
-      inset: 0;
-      z-index: 4;
-    }
-
-    .route-rail {
-      position: absolute;
-      left: clamp(16px, 3vw, 34px);
-      right: clamp(16px, 3vw, 34px);
-      bottom: 16px;
-      z-index: 65;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 10px;
-      background: rgba(3,7,12,.70);
-      backdrop-filter: blur(13px);
-    }
-
-    .proof-badge {
-      padding: 7px 10px;
-      color: var(--muted);
-      font-size: .85rem;
-      line-height: 1.35;
-    }
-
-    .proof-badge b { color: var(--gold); }
-
-    .scene-copy {
-      position: absolute;
-      left: clamp(18px, 4vw, 46px);
-      top: clamp(94px, 12vh, 122px);
-      z-index: 46;
-      width: min(505px, calc(100% - 36px));
-      padding: clamp(18px, 3vw, 28px);
-      border: 1px solid rgba(232,196,112,.27);
-      border-radius: 28px;
-      background: linear-gradient(180deg, rgba(4,8,14,.78), rgba(4,8,14,.52));
-      backdrop-filter: blur(10px);
-    }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      color: var(--gold);
-      font-size: .77rem;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-    }
-
-    h1, h2, h3, p { margin-top: 0; }
-
-    h1 {
-      margin-bottom: 14px;
-      font-size: clamp(2.8rem, 7.2vw, 6.9rem);
-      line-height: .86;
-      letter-spacing: -.06em;
-    }
-
-    h2 {
-      margin-bottom: 10px;
-      font-size: clamp(2.2rem, 5.2vw, 5.1rem);
-      line-height: .9;
-      letter-spacing: -.052em;
-    }
-
-    .lead {
-      margin: 0;
-      color: var(--muted);
-      font-size: clamp(1rem, 1.45vw, 1.18rem);
-      line-height: 1.5;
-    }
-
-    .flat-scene,
-    .round-scene,
-    .globe-scene {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-
-    .flat-map {
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(ellipse at 56% 67%, rgba(55,84,64,.34), transparent 42%),
-        linear-gradient(180deg, transparent 0 42%, rgba(33,55,39,.76) 43% 100%);
-    }
-
-    .flat-map::before {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 54%;
-      width: min(770px, 82vw);
-      height: min(410px, 42vh);
-      transform: translate(-50%, -50%);
-      border: 2px solid rgba(232,196,112,.42);
-      border-radius: 42px;
-      background:
-        linear-gradient(90deg, rgba(232,196,112,.08), transparent 20%, transparent 80%, rgba(232,196,112,.08)),
-        radial-gradient(circle at 50% 50%, rgba(255,255,255,.05), transparent 44%);
-    }
-
-    .flat-map-grid {
-      position: absolute;
-      left: 50%;
-      top: 55%;
-      z-index: 8;
-      width: min(690px, 76vw);
-      height: min(350px, 36vh);
-      transform: translate(-50%, -50%);
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: repeat(2, 1fr);
-      gap: 14px;
-    }
-
-    .flat-node {
-      display: grid;
-      place-items: center;
-      text-align: center;
-      border: 1px solid rgba(247,239,216,.22);
-      border-radius: 22px;
-      padding: 13px;
-      background: rgba(5,9,15,.62);
-      color: var(--ink);
-      box-shadow: 0 18px 40px rgba(0,0,0,.28);
-    }
-
-    .flat-node small {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: .78rem;
-    }
-
-    .round-scene {
-      perspective: 1400px;
-      background:
-        radial-gradient(circle at 52% 12%, rgba(245,216,137,.20), transparent 18%),
-        radial-gradient(circle at 50% 0%, rgba(255,238,170,.10), transparent 32%),
-        linear-gradient(180deg, #07172c 0 29%, #1b3234 29% 45%, #111715 45% 100%);
-    }
-
-    .winter-ridge {
-      position: absolute;
-      left: -8%;
-      right: -8%;
-      top: 31%;
-      height: 28%;
-      z-index: 1;
-      background:
-        radial-gradient(ellipse at 17% 100%, rgba(182,199,204,.56), transparent 43%),
-        radial-gradient(ellipse at 68% 96%, rgba(104,133,121,.45), transparent 47%),
-        linear-gradient(180deg, rgba(205,223,226,.30), rgba(72,91,82,.58));
-      filter: blur(.25px);
-    }
-
-    .snow-ground {
-      position: absolute;
-      left: -10%;
-      right: -10%;
-      top: 38%;
-      height: 71%;
-      z-index: 2;
-      transform: rotateX(59deg);
-      transform-origin: 50% 0%;
-      border-top: 1px solid rgba(232,196,112,.16);
-      background:
-        radial-gradient(ellipse at 18% 76%, rgba(238,244,247,.92), transparent 25%),
-        radial-gradient(ellipse at 82% 78%, rgba(217,226,229,.72), transparent 26%),
-        radial-gradient(ellipse at 50% 70%, rgba(197,211,213,.82), transparent 42%),
-        repeating-linear-gradient(88deg, rgba(84,111,57,.18) 0 1px, transparent 1px 12px),
-        repeating-linear-gradient(112deg, rgba(0,0,0,.045) 0 1px, transparent 1px 15px),
-        linear-gradient(180deg, #eef4f7 0%, #cbd8dc 48%, #adbcc3 100%);
-    }
-
-    .snow-ground::before {
-      content: "";
-      position: absolute;
-      inset: 7% 8% 16%;
-      border: 2px solid rgba(232,196,112,.30);
-      border-radius: 50%;
-      box-shadow: inset 0 0 92px rgba(120,141,150,.18);
-    }
-
-    .snow-ground::after {
-      content: "";
-      position: absolute;
-      inset: 18% 0 0;
-      background:
-        repeating-linear-gradient(92deg, rgba(255,255,255,.45) 0 2px, transparent 2px 16px),
-        repeating-linear-gradient(77deg, rgba(84,111,57,.12) 0 2px, transparent 2px 18px);
-      opacity: .58;
-      mix-blend-mode: screen;
-    }
-
-    .u-road {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 6;
-      width: min(780px, 78vw);
-      height: min(440px, 44vh);
-      transform: translateX(-50%) rotateX(62deg);
-      transform-origin: 50% 0%;
-      border-left: clamp(22px, 3.1vw, 38px) solid rgba(168,141,103,.88);
-      border-right: clamp(22px, 3.1vw, 38px) solid rgba(168,141,103,.88);
-      border-bottom: clamp(22px, 3.1vw, 38px) solid rgba(168,141,103,.88);
-      border-top: 0;
-      border-radius: 0 0 410px 410px;
-      box-shadow: 0 42px 54px rgba(0,0,0,.26), inset 0 -8px 18px rgba(255,255,255,.08);
-    }
-
-    .u-road::before,
-    .u-road::after {
-      content: "";
-      position: absolute;
-      top: 8px;
-      width: 6px;
-      height: 84%;
-      border-radius: 999px;
-      background:
-        repeating-linear-gradient(to bottom, rgba(238,244,247,.42) 0 10px, transparent 10px 24px);
-    }
-
-    .u-road::before { left: calc(clamp(22px, 3.1vw, 38px) * -0.68); }
-    .u-road::after { right: calc(clamp(22px, 3.1vw, 38px) * -0.68); }
-
-    .road-grain {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      z-index: 7;
-      width: min(780px, 78vw);
-      height: min(440px, 44vh);
-      transform: translateX(-50%) rotateX(62deg);
-      transform-origin: 50% 0%;
-      border-left: clamp(22px, 3.1vw, 38px) solid transparent;
-      border-right: clamp(22px, 3.1vw, 38px) solid transparent;
-      border-bottom: clamp(22px, 3.1vw, 38px) solid transparent;
-      border-radius: 0 0 410px 410px;
-      background:
-        repeating-radial-gradient(ellipse at 50% 100%, rgba(255,255,255,.16) 0 1px, transparent 1px 9px);
-      opacity: .34;
-      pointer-events: none;
-    }
-
-    .manor-layer {
-      position: absolute;
-      left: 50%;
-      top: 21.5%;
-      z-index: 9;
-      width: min(560px, 54vw);
-      transform: translateX(-50%);
-      display: grid;
-      justify-items: center;
-      filter: drop-shadow(0 24px 42px rgba(0,0,0,.50));
-    }
-
-    .manor-roof {
-      width: 68%;
-      height: 82px;
-      border: 1px solid rgba(247,239,216,.20);
-      background:
-        linear-gradient(135deg, rgba(232,196,112,.78), rgba(86,62,38,.96));
-      clip-path: polygon(50% 0, 100% 100%, 0 100%);
-      position: relative;
-    }
-
-    .manor-roof::after {
-      content: "";
-      position: absolute;
-      inset: 72% 4% 0;
-      background: rgba(238,244,247,.72);
-      border-radius: 999px;
-    }
-
-    .manor-body {
-      position: relative;
-      width: 100%;
-      height: 158px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      border: 1px solid rgba(232,196,112,.34);
-      border-radius: 18px 18px 26px 26px;
-      padding: 18px;
-      overflow: hidden;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,.08) 0 9%, transparent 9% 19%, rgba(255,255,255,.08) 19% 29%, transparent 29% 71%, rgba(255,255,255,.08) 71% 81%, transparent 81% 91%, rgba(255,255,255,.08) 91% 100%),
-        linear-gradient(180deg, rgba(32,42,55,.97), rgba(10,15,21,.96));
-    }
-
-    .manor-body::before {
-      content: "";
-      position: absolute;
-      inset: 24px 38px auto;
-      height: 28px;
-      border-radius: 999px;
-      background:
-        repeating-linear-gradient(90deg, rgba(240,207,133,.48) 0 10px, transparent 10px 24px);
-      opacity: .58;
-    }
-
-    .manor-body b {
-      position: relative;
-      color: var(--gold);
-      font-size: .82rem;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-    }
-
-    .manor-body span {
-      position: relative;
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: .9rem;
-    }
-
-    .old-oak {
-      position: absolute;
-      left: 50%;
-      top: 49%;
-      z-index: 20;
-      width: min(600px, 60vw);
-      height: min(620px, 64vh);
-      transform: translate(-50%, -33%);
-      filter: drop-shadow(0 42px 66px rgba(0,0,0,.50));
-    }
-
-    .oak-canopy {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      width: 100%;
-      height: 72%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(212,238,157,.20);
-      border-radius: 48% 52% 44% 56% / 43% 48% 52% 57%;
-      background:
-        radial-gradient(circle at 24% 35%, rgba(219,232,220,.72), transparent 13%),
-        radial-gradient(circle at 71% 34%, rgba(207,224,212,.60), transparent 16%),
-        radial-gradient(circle at 50% 17%, rgba(232,241,232,.48), transparent 20%),
-        radial-gradient(circle at 40% 66%, rgba(28,80,43,.92), transparent 35%),
-        radial-gradient(circle at 62% 67%, rgba(18,56,36,.88), transparent 35%),
-        linear-gradient(180deg, #315f35, #173421);
-      box-shadow: inset 0 -42px 74px rgba(0,0,0,.32), 0 30px 88px rgba(21,69,36,.38);
-    }
-
-    .oak-canopy::before {
-      content: "";
-      position: absolute;
-      inset: 5%;
-      border-radius: inherit;
-      background:
-        radial-gradient(circle at 18% 52%, rgba(255,255,255,.16), transparent 16%),
-        radial-gradient(circle at 80% 49%, rgba(0,0,0,.13), transparent 17%),
-        radial-gradient(circle at 47% 80%, rgba(0,0,0,.17), transparent 18%),
-        repeating-radial-gradient(circle at 48% 44%, rgba(238,244,247,.08) 0 1px, transparent 1px 12px);
-      opacity: .95;
-    }
-
-    .oak-trunk {
-      position: absolute;
-      left: 50%;
-      bottom: 3%;
-      z-index: 2;
-      width: min(148px, 16vw);
-      height: 50%;
-      transform: translateX(-50%);
-      border: 1px solid rgba(255,255,255,.13);
-      border-radius: 64px 64px 25px 25px;
-      background:
-        repeating-linear-gradient(92deg, rgba(0,0,0,.22) 0 3px, transparent 3px 10px),
-        repeating-linear-gradient(78deg, rgba(255,255,255,.08) 0 2px, transparent 2px 13px),
-        linear-gradient(90deg, rgba(50,29,18,.99), rgba(123,74,45,.99) 43%, rgba(46,26,16,.99));
-      box-shadow: inset 20px 0 32px rgba(0,0,0,.2), inset -18px 0 28px rgba(0,0,0,.25);
-    }
-
-    .oak-trunk::before {
-      content: "";
-      position: absolute;
-      inset: 0 0 74%;
-      border-radius: 999px;
-      background: rgba(238,244,247,.30);
-      filter: blur(1px);
-    }
-
-    .oak-roots {
-      position: absolute;
-      left: 50%;
-      bottom: 0;
-      z-index: 1;
-      width: 380px;
-      max-width: 56vw;
-      height: 90px;
-      transform: translateX(-50%);
-      border-bottom: 14px solid rgba(112,70,38,.98);
-      border-radius: 0 0 220px 220px;
-      box-shadow: 0 14px 0 rgba(33,20,12,.38);
-    }
-
-    .hollow {
-      position: absolute;
-      left: 54%;
-      top: 49%;
-      z-index: 3;
-      width: 38px;
-      height: 54px;
-      border: 1px solid rgba(232,196,112,.25);
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(0,0,0,.92), rgba(47,26,16,.94));
-    }
-
-    .oak-name {
-      position: absolute;
-      left: 50%;
-      top: 45.5%;
-      z-index: 4;
-      width: min(294px, 70%);
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(232,196,112,.54);
-      border-radius: 24px;
-      padding: 14px 16px;
-      background: rgba(4,8,9,.70);
-      text-align: center;
-      backdrop-filter: blur(10px);
-    }
-
-    .oak-name b {
-      display: block;
-      color: var(--gold);
-      font-size: .78rem;
-      letter-spacing: .13em;
-      text-transform: uppercase;
-    }
-
-    .oak-name span {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: .9rem;
-      line-height: 1.32;
-    }
-
-    .snow-blade-field {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 31%;
-      z-index: 31;
-      pointer-events: none;
-      overflow: hidden;
-      background:
-        linear-gradient(180deg, transparent, rgba(238,244,247,.45) 58%, rgba(238,244,247,.82));
-      mask-image: linear-gradient(to top, rgba(0,0,0,1), rgba(0,0,0,.86) 48%, transparent 100%);
-    }
-
-    .grass-blade {
-      position: absolute;
-      bottom: 0;
-      width: 2px;
-      height: var(--h);
-      left: var(--x);
-      transform: rotate(var(--r));
-      transform-origin: bottom center;
-      border-radius: 999px 999px 0 0;
-      background: linear-gradient(to top, rgba(33,63,31,.95), rgba(84,111,57,.88), rgba(238,244,247,.72));
-      opacity: var(--o);
-      box-shadow: 0 0 5px rgba(238,244,247,.25);
-    }
-
-    .scene-label {
-      position: absolute;
-      z-index: 28;
-      border: 1px solid rgba(232,196,112,.32);
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(4,8,14,.66);
-      color: var(--muted);
-      font-size: .78rem;
-      white-space: nowrap;
-      backdrop-filter: blur(8px);
-    }
-
-    .scene-label b { color: var(--gold); }
-
-    .label-estate { right: 7%; top: 36%; }
-    .label-road { left: 50%; bottom: 27%; transform: translateX(-50%); }
-
-    .scene-dock {
-      position: absolute;
-      right: clamp(18px, 4vw, 46px);
-      top: clamp(94px, 12vh, 122px);
-      z-index: 47;
-      width: min(322px, calc(100% - 36px));
-      display: grid;
-      gap: 10px;
-    }
-
-    .dock-card {
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 13px 14px;
-      background: rgba(4,8,14,.58);
-      color: var(--muted);
-      backdrop-filter: blur(10px);
-      font-size: .88rem;
-      line-height: 1.35;
-    }
-
-    .dock-card b {
-      color: var(--gold);
-      font-size: .78rem;
-      letter-spacing: .12em;
-      text-transform: uppercase;
-      display: block;
-      margin-bottom: 5px;
-    }
-
-    .globe-scene {
-      display: grid;
-      place-items: center;
-      padding: 32px;
-      text-align: center;
-      background:
-        radial-gradient(circle at 50% 45%, rgba(141,183,216,.22), transparent 27%),
-        linear-gradient(180deg, rgba(8,20,37,.94), rgba(4,7,13,.98));
-    }
-
-    .globe-card {
-      width: min(740px, calc(100% - 24px));
-      border: 1px solid var(--line);
-      border-radius: 32px;
-      padding: clamp(22px, 4vw, 44px);
-      background: rgba(4,8,14,.72);
-      box-shadow: var(--shadow);
-    }
-
-    .globe-orb {
-      position: relative;
-      width: min(240px, 46vw);
-      aspect-ratio: 1;
-      margin: 0 auto 22px;
-      border: 1px solid rgba(141,183,216,.42);
-      border-radius: 50%;
-      background:
-        radial-gradient(circle at 35% 25%, rgba(255,255,255,.28), transparent 18%),
-        radial-gradient(circle at 50% 50%, rgba(141,183,216,.38), rgba(18,36,62,.86) 64%, rgba(6,10,18,.95));
-      box-shadow: 0 0 90px rgba(141,183,216,.16);
-    }
-
-    .globe-orb::after {
-      content: "LOCKED LATER";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%);
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(0,0,0,.34);
-      color: var(--ink);
-      font-size: .72rem;
-      letter-spacing: .18em;
-    }
-
-    .support {
-      padding: 16px 0 46px;
-    }
-
-    .support-grid {
-      display: grid;
-      grid-template-columns: 1.15fr .85fr;
-      gap: 14px;
-    }
-
-    .support-card {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: clamp(18px, 3vw, 26px);
-      background: linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.032));
-      box-shadow: 0 18px 58px rgba(0,0,0,.22);
-    }
-
-    .support-card p {
-      margin-bottom: 0;
-      color: var(--muted);
-      line-height: 1.52;
-    }
-
-    .status-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 16px;
-    }
-
-    .status-item {
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      padding: 13px;
-      background: rgba(255,255,255,.045);
-    }
-
-    .status-item b {
-      display: block;
-      margin-bottom: 5px;
-      color: var(--gold);
-      font-size: .78rem;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-
-    .status-item span {
-      color: var(--muted);
-      font-size: .9rem;
-      line-height: 1.35;
-    }
-
-    footer {
-      border-top: 1px solid var(--line);
-      padding: 24px 0 38px;
-      color: var(--muted);
-    }
-
-    footer .wrap {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 14px;
-    }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .oak-canopy { animation: canopy-breathe 8s ease-in-out infinite; }
-      .globe-orb { animation: globe-hold 16s linear infinite; }
-
-      @keyframes canopy-breathe {
-        0%, 100% { transform: translateX(-50%) scale(1); }
-        50% { transform: translateX(-50%) scale(1.012); }
-      }
-
-      @keyframes globe-hold {
-        to { transform: rotate(360deg); }
-      }
-    }
-
-    @media (max-width: 980px) {
-      :root { --scene-h: 870px; }
-
-      .topbar-inner {
-        align-items: flex-start;
-        flex-direction: column;
-        padding: 14px 0;
-      }
-
-      .nav { justify-content: flex-start; }
-      .mode-selector { grid-template-columns: 1fr; }
-
-      .scene-copy {
-        top: 230px;
-        width: min(540px, calc(100% - 36px));
-      }
-
-      .round-scene .scene-copy { top: 198px; }
-
-      .scene-dock {
-        left: clamp(18px, 4vw, 46px);
-        right: auto;
-        top: auto;
-        bottom: 90px;
-        width: min(620px, calc(100% - 36px));
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-
-      .manor-layer {
-        top: 34%;
-        width: min(430px, 66vw);
-      }
-
-      .old-oak {
-        top: 58%;
-        width: min(470px, 78vw);
-      }
-
-      .u-road,
-      .road-grain {
-        top: 61%;
-        width: 88vw;
-      }
-
-      .support-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 660px) {
-      :root { --scene-h: 950px; }
-
-      .scene-frame { border-radius: 24px; }
-      .mode-button { min-height: 52px; }
-      .mode-button span { display: none; }
-
-      .scene-copy {
-        top: 206px;
-        padding: 18px;
-      }
-
-      .round-scene .scene-copy { top: 182px; }
-
-      h1 { font-size: clamp(2.4rem, 15vw, 4.7rem); }
-      h2 { font-size: clamp(2.25rem, 13vw, 4.1rem); }
-
-      .route-rail {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .flat-map-grid {
-        top: 63%;
-        grid-template-columns: repeat(2, 1fr);
-        height: 330px;
-      }
-
-      .manor-layer {
-        top: 39%;
-        width: 78vw;
-      }
-
-      .manor-body { height: 118px; }
-
-      .old-oak {
-        top: 62%;
-        width: 86vw;
-        height: 460px;
-      }
-
-      .u-road,
-      .road-grain {
-        top: 69%;
-        height: 290px;
-      }
-
-      .label-estate,
-      .label-road {
-        max-width: 150px;
-        white-space: normal;
-        line-height: 1.2;
-      }
-
-      .label-estate {
-        right: 4%;
-        top: 50%;
-      }
-
-      .label-road { bottom: 28%; }
-      .scene-dock { display: none; }
-      .status-grid { grid-template-columns: 1fr; }
-    }
-  </style>
+  <link rel="stylesheet" href="/assets/manor.css?v=index-tree-wildlife-zoom-triad-v1" />
+  <link rel="stylesheet" href="/index.css?v=index-tree-wildlife-zoom-triad-v1" />
 </head>
 
 <body
   class="manor-skin house-class"
   data-active-mode="flat"
+  data-zoom-level="estate"
+  data-tree-zone="none"
+  data-wildlife-focus="none"
+  data-runtime-status="waiting"
+  data-routes-changed="false"
+  data-gauges-logic-touched="false"
+  data-fake-health-claim="false"
   data-page-id="compass"
   data-page="compass"
   data-estate="rich-manor-and-estate"
@@ -1036,6 +68,7 @@
       </a>
 
       <nav class="nav" aria-label="Primary house routes">
+        <a href="/">Compass</a>
         <a href="/door/">Door</a>
         <a href="/home/">Home</a>
         <a href="/products/">Products</a>
@@ -1060,7 +93,7 @@
   >
     <section class="compass-shell" aria-labelledby="H1_COMPASS">
       <div class="wrap">
-        <div class="scene-frame" data-scene-frame="index-render-runtime-css-triad-v1">
+        <div class="scene-frame" data-scene-frame="index-tree-wildlife-zoom-triad-v1">
           <div class="mode-selector" role="tablist" aria-label="World view selector">
             <button class="mode-button" type="button" data-mode="flat" role="tab" aria-selected="true">
               <strong>World is flat</strong>
@@ -1069,7 +102,7 @@
 
             <button class="mode-button" type="button" data-mode="round" role="tab" aria-selected="false">
               <strong>World is round</strong>
-              <span>Rendered snow-ground Tree of Life estate view.</span>
+              <span>Inspect the snow-ground oak ecosystem.</span>
             </button>
 
             <button class="mode-button" type="button" data-mode="globe" role="tab" aria-selected="false">
@@ -1090,7 +123,7 @@
                 <p class="eyebrow">Compass fallback</p>
                 <h1 id="H1_COMPASS">Rich Manor and Estate</h1>
                 <p class="lead">
-                  JavaScript is required for the rendered Flat / Round / Globe mode switch.
+                  JavaScript is required for the rendered Flat / Round / Globe view system.
                   Routes remain available through the navigation above.
                 </p>
               </section>
@@ -1108,22 +141,22 @@
             </div>
 
             <div class="proof-badge">
-              <b>Proof:</b> Index renders the snow-ground scene. Gauges remain live authority.
+              <b>Proof:</b> Index renders the oak ecosystem. Gauges remain live authority.
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="support" aria-label="Render runtime CSS triad support notes">
+    <section class="support" aria-label="Render runtime CSS triad notes">
       <div class="wrap support-grid">
         <article class="support-card">
           <p class="eyebrow">Triad correction</p>
-          <h2>Host, render, and runtime are separated.</h2>
+          <h2>Host, render, runtime, and material depth are separated.</h2>
           <p>
-            Index now acts as the host and CSS-facing shell. The scene is constructed by
-            <code>/index.render.js</code>, while mode behavior and orchestration are controlled by
-            <code>/index.runtime.js</code>. Snow stays on the ground as the material condition.
+            Index is the host shell. <code>/index.render.js</code> constructs the scene.
+            <code>/index.runtime.js</code> controls mode, zoom, tree-zone, and wildlife focus.
+            <code>/index.css</code> carries snow, grass, bark, road, canopy, and wildlife material.
           </p>
         </article>
 
@@ -1134,17 +167,17 @@
           <div class="status-grid">
             <div class="status-item">
               <b>Flat</b>
-              <span>Default frozen route-map baseline remains available.</span>
+              <span>Default verified route-map baseline remains available.</span>
             </div>
 
             <div class="status-item">
               <b>Round</b>
-              <span>Rendered snow-ground estate scene is visibly distinct.</span>
+              <span>Tree inspection reveals snow, grass, bark, roots, hollows, canopy, tracks, and wildlife.</span>
             </div>
 
             <div class="status-item">
               <b>Globe</b>
-              <span>Locked later. No fake Meta or renderer claim.</span>
+              <span>Locked later. No fake Meta or fake 3D claim.</span>
             </div>
 
             <div class="status-item">
@@ -1158,13 +191,13 @@
   </main>
 
   <footer>
-    <div class="wrap">
-      <span>INDEX_RENDER_RUNTIME_CSS_TRIAD_FULL_RENEWAL_v1</span>
-      <span>Room: Website Building and Implementation · Next: upload all three files, view Round, rerun Gauges.</span>
+    <div class="wrap footer-grid">
+      <span>INDEX_TREE_WILDLIFE_ZOOM_FILE_RENEWAL_STRETCH_v1</span>
+      <span>Room: Website Building and Implementation · Upload all four files, open Round, inspect Oak / Habitat / Wildlife, then rerun Gauges.</span>
     </div>
   </footer>
 
-  <script src="/index.render.js?v=triad-v1" defer></script>
-  <script src="/index.runtime.js?v=triad-v1" defer></script>
+  <script src="/index.render.js?v=index-tree-wildlife-zoom-triad-v1" defer></script>
+  <script src="/index.runtime.js?v=index-tree-wildlife-zoom-triad-v1" defer></script>
 </body>
 </html>

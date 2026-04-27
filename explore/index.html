@@ -1,19 +1,49 @@
 <!DOCTYPE html>
-<html lang="en" data-manor-registry="planet-batch-3">
+<html lang="en" data-manor-registry="planet-batch-4-route-corrected">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Explore · Diamond Gate Bridge</title>
-  <meta name="description" content="Explore is the traversal and discovery planetary construct attached to Richie’s Manor and Estate." />
+  <title>Explore + Frontier · Diamond Gate Bridge</title>
+  <meta name="description" content="Explore hosts the discovery traversal surface and the Frontier expansion edge for Diamond Gate Bridge." />
   <link rel="stylesheet" href="/assets/manor.css" />
   <script src="/assets/page_registry.js" defer></script>
+
   <style>
-    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-    .planet-rail{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .planet-rail a{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid rgba(244,201,103,.24);border-radius:999px;text-decoration:none;color:#d9e3f7;background:rgba(255,255,255,.045);font-weight:750}
-    .planet-rail a[aria-current="page"]{color:#111827;background:linear-gradient(180deg,#ffe3a3,#f4c967);border-color:#f4c967}
+    body {
+      margin: 0;
+      background: #020713;
+      color: #eef3ff;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .planet-rail {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .planet-rail a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid rgba(244, 201, 103, 0.24);
+      border-radius: 999px;
+      text-decoration: none;
+      color: #d9e3f7;
+      background: rgba(255, 255, 255, 0.045);
+      font-weight: 750;
+    }
+
+    .planet-rail a[aria-current="page"] {
+      color: #111827;
+      background: linear-gradient(180deg, #ffe3a3, #f4c967);
+      border-color: #f4c967;
+    }
   </style>
 </head>
+
 <body class="manor-skin manor-planet" data-manor-skin="v1" data-manor-room="explore" data-manor-class="planet" data-planet-id="explore" data-planet-slot="P2_EXPLORE" data-planet-orbit="manor" data-manor-batch="BATCH_3_PLANETS">
   <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
     <a href="/">Compass</a>
@@ -28,15 +58,18 @@
     <section class="manor-room manor-lattice-mark">
       <p class="manor-kicker">P2 · Explore · Discovery Planet</p>
       <h1 class="manor-title">Explore</h1>
-      <p class="manor-lede">Explore lets the visitor move outward without losing orientation. It is a traversal band between Compass and Frontier.</p>
+      <p class="manor-lede">
+        Explore lets the visitor move outward without losing orientation. It is the traversal band
+        between Compass and Frontier. Frontier is hosted inside this Explore file as the expansion edge.
+      </p>
 
       <div class="planet-rail" aria-label="Planetary constructs">
         <a href="/prelude/">Prelude</a>
         <a href="/explore/" aria-current="page">Explore</a>
-        <a href="/frontier/">Frontier</a>
+        <a href="/explore/#frontier">Frontier</a>
         <a href="/laws/">Laws</a>
         <a href="/governance/">Governance</a>
-        <a href="/upper-room/">Upper Room</a>
+        <a href="/big-laugh/upper-room/">Upper Room</a>
         <a href="/about-this-underdog/">About</a>
         <a href="/nine-summits/">Nine Summits</a>
         <a href="/nine-summits-of-love/">Love</a>
@@ -50,11 +83,13 @@
           <h2>Outward, not away.</h2>
           <p>Exploration expands the field while preserving the route back to the house.</p>
         </article>
+
         <article class="manor-card">
           <p class="manor-room-label">Signal</p>
           <h2>Find the next path.</h2>
           <p>The page directs discovery without making the visitor guess where the system continues.</p>
         </article>
+
         <article class="manor-card">
           <p class="manor-room-label">Connect</p>
           <h2>Compass to Frontier.</h2>
@@ -63,25 +98,67 @@
       </div>
     </section>
 
+    <section
+      id="frontier"
+      class="manor-room manor-lattice-mark"
+      style="margin-top:28px"
+      data-manor-class="planet"
+      data-planet-id="frontier"
+      data-planet-slot="P3_FRONTIER"
+      data-planet-orbit="manor"
+      data-manor-batch="BATCH_3_PLANETS"
+    >
+      <p class="manor-kicker">P3 · Frontier · Expansion Edge</p>
+      <h1 class="manor-title">Frontier</h1>
+      <p class="manor-lede">
+        Frontier carries edge-of-known research, future-facing systems, and expansion pressure.
+        It is hosted inside Explore because discovery and expansion belong to the same file family.
+      </p>
+
+      <div class="manor-divider"></div>
+
+      <div class="manor-grid three">
+        <article class="manor-card">
+          <p class="manor-room-label">Unknown</p>
+          <h2>Edge pressure.</h2>
+          <p>Frontier holds future-facing pressure without allowing chaos to become the design language.</p>
+        </article>
+
+        <article class="manor-card">
+          <p class="manor-room-label">Research</p>
+          <h2>Known to unknown.</h2>
+          <p>Discovery moves through the Compass, then Explore, then Frontier.</p>
+        </article>
+
+        <article class="manor-card">
+          <p class="manor-room-label">Return</p>
+          <h2>Expansion with anchor.</h2>
+          <p>Nothing here is allowed to detach from the Manor or outrank the house skeleton.</p>
+        </article>
+      </div>
+    </section>
+
     <section class="manor-backlinks">
       <p class="manor-backlinks-title">Manor backlinks</p>
       <ul class="manor-backlinks-list">
         <li><a href="/">Compass</a></li>
+        <li><a href="/explore/#frontier">Frontier</a></li>
         <li><a href="/products/">Products</a></li>
         <li><a href="/showroom/">Showroom</a></li>
-        <li><a href="/frontier/">Frontier</a></li>
         <li><a href="/gauges/">Gauges</a></li>
       </ul>
     </section>
 
     <section class="manor-audit-strip">
-      <p class="manor-audit-title">Batch 3 audit markers</p>
+      <p class="manor-audit-title">Batch 4 route-correction markers</p>
       <ul class="manor-audit-list">
         <li class="manor-audit-chip pass" data-status="pass">planetary-route-exists</li>
         <li class="manor-audit-chip pass" data-status="pass">planet-class</li>
         <li class="manor-audit-chip pass" data-status="pass">manor-orbit</li>
         <li class="manor-audit-chip pass" data-status="pass">P2_EXPLORE</li>
         <li class="manor-audit-chip pass" data-status="pass">discovery-traversal</li>
+        <li class="manor-audit-chip pass" data-status="pass">P3_FRONTIER</li>
+        <li class="manor-audit-chip pass" data-status="pass">expansion-edge</li>
       </ul>
     </section>
   </main>

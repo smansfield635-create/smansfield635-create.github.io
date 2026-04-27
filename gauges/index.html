@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="asset-wired-b7">
+<html lang="en" data-gauges-generation="asset-wired-b8-final-sync">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared instruments asset contract."
+    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, powered by the shared B8 instruments asset contract."
   />
 
   <style>
     :root{
       color-scheme:dark;
-      --bg0:#06101f;
       --panel:rgba(7,14,28,.88);
       --panel2:rgba(10,20,42,.94);
       --line:rgba(255,218,150,.24);
@@ -90,7 +89,7 @@
 
     .topbar,
     .instrumentRoom,
-    .routeRail{
+    .routeShell{
       border:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
@@ -154,11 +153,20 @@
       line-height:1.05;
     }
 
+    .jumpGrid,
+    .routeRail{
+      list-style:none;
+      margin:0;
+      padding:0;
+    }
+
     .jumpGrid{
       display:grid;
       grid-template-columns:repeat(4,minmax(0,1fr));
       gap:10px;
     }
+
+    .jumpItem{min-width:0}
 
     .jumpCard{
       min-height:84px;
@@ -553,10 +561,15 @@
     }
 
     .telemetry,
-    .receipt{
+    .receipt,
+    .legend{
       list-style:none;
       margin:0;
       padding:0;
+    }
+
+    .telemetry,
+    .receipt{
       display:grid;
       gap:2px;
     }
@@ -721,9 +734,12 @@
       overflow:auto;
     }
 
-    .routeRail{
+    .routeShell{
       border-radius:24px;
       padding:10px;
+    }
+
+    .routeRail{
       display:grid;
       grid-template-columns:repeat(6,minmax(0,1fr));
       gap:8px;
@@ -761,35 +777,16 @@
     @keyframes needleSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
     @media(max-width:1180px){
-      .instrumentRoom{
-        grid-template-columns:1fr;
-      }
-
-      .tedWall{
-        order:1;
-      }
-
-      .engineerWall{
-        order:2;
-      }
-
-      .gaugeGrid{
-        grid-template-columns:repeat(4,minmax(0,1fr));
-      }
-
-      .routeRail{
-        grid-template-columns:repeat(3,minmax(0,1fr));
-      }
+      .instrumentRoom{grid-template-columns:1fr}
+      .tedWall{order:1}
+      .engineerWall{order:2}
+      .gaugeGrid{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .routeRail{grid-template-columns:repeat(3,minmax(0,1fr))}
     }
 
     @media(max-width:900px){
-      .gaugeGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .dial{
-        width:min(100%,128px);
-      }
+      .gaugeGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .dial{width:min(100%,128px)}
     }
 
     @media(max-width:760px){
@@ -801,23 +798,13 @@
 
       .topbar,
       .instrumentRoom,
-      .routeRail{
+      .routeShell{
         border-radius:24px;
       }
 
-      .topbar{
-        padding:12px;
-      }
-
-      .brand{
-        gap:10px;
-      }
-
-      .mark{
-        width:44px;
-        height:44px;
-        border-radius:14px;
-      }
+      .topbar{padding:12px}
+      .brand{gap:10px}
+      .mark{width:44px;height:44px;border-radius:14px}
 
       .jumpGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -831,17 +818,9 @@
         gap:8px;
       }
 
-      .navCompass{
-        width:38px;
-      }
-
-      .jumpText strong{
-        font-size:.82rem;
-      }
-
-      .jumpText small{
-        font-size:.48rem;
-      }
+      .navCompass{width:38px}
+      .jumpText strong{font-size:.82rem}
+      .jumpText small{font-size:.48rem}
 
       .instrumentRoom{
         padding:10px;
@@ -859,13 +838,8 @@
         font-size:2.1rem;
       }
 
-      .tedLead h2{
-        font-size:2.2rem;
-      }
-
-      .tedLead .thesis{
-        font-size:1rem;
-      }
+      .tedLead h2{font-size:2.2rem}
+      .tedLead .thesis{font-size:1rem}
 
       .gaugeGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
@@ -879,25 +853,11 @@
         gap:5px;
       }
 
-      .gaugeName strong{
-        font-size:.72rem;
-      }
-
-      .gaugeValue{
-        font-size:.82rem;
-      }
-
-      .dial{
-        width:min(100%,104px);
-      }
-
-      .dialRead strong{
-        font-size:.82rem;
-      }
-
-      .dialRead small{
-        font-size:.40rem;
-      }
+      .gaugeName strong{font-size:.72rem}
+      .gaugeValue{font-size:.82rem}
+      .dial{width:min(100%,104px)}
+      .dialRead strong{font-size:.82rem}
+      .dialRead small{font-size:.40rem}
 
       .gaugeMeaning{
         min-height:28px;
@@ -910,31 +870,15 @@
         line-height:1.12;
       }
 
-      .legend{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .routeRail{
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
+      .legend{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .routeRail{grid-template-columns:repeat(2,minmax(0,1fr))}
     }
 
     @media(max-width:390px){
-      .dial{
-        width:min(100%,92px);
-      }
-
-      .gaugeCard{
-        min-height:158px;
-      }
-
-      .gaugeMeaning{
-        font-size:.58rem;
-      }
-
-      .telemetry{
-        font-size:.45rem;
-      }
+      .dial{width:min(100%,92px)}
+      .gaugeCard{min-height:158px}
+      .gaugeMeaning{font-size:.58rem}
+      .telemetry{font-size:.45rem}
     }
 
     @media(prefers-reduced-motion:reduce){
@@ -954,19 +898,23 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gauges-asset-wired-b7"
+    data-instrument-standard="gauges-asset-wired-b8-final-sync"
     data-read-mode="shared-assets-instrument-consumer"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Gauges home">
         <span class="mark" aria-hidden="true"></span>
         <span class="brandText">
-          <span class="kicker">Richie’s Manor</span>
+          <span class="kicker">Richie’s Manor ·</span>
           <strong class="title">Gauges · True Instrument Room</strong>
         </span>
       </a>
 
-      <nav class="jumpGrid" id="jumpGrid" aria-label="Primary compass jumps"></nav>
+      <nav aria-label="Primary compass jumps">
+        <ul class="jumpGrid" id="jumpGrid">
+          <li class="fallback">Loading compass jumps…</li>
+        </ul>
+      </nav>
     </header>
 
     <section class="instrumentRoom" aria-label="Gauges true instrument room">
@@ -984,7 +932,9 @@
           <div class="fallback">Loading instrument assets…</div>
         </div>
 
-        <div class="legend" id="legend" aria-label="Gauge color legend"></div>
+        <ul class="legend" id="legend" aria-label="Gauge color legend">
+          <li class="fallback">Loading legend…</li>
+        </ul>
       </section>
 
       <aside class="tedWall" id="tedWall" aria-labelledby="tedTitle">
@@ -992,24 +942,15 @@
       </aside>
     </section>
 
-    <nav class="routeRail" id="routeRail" aria-label="Gauges route rail"></nav>
+    <nav class="routeShell" aria-label="Gauges route rail">
+      <ul class="routeRail" id="routeRail">
+        <li class="fallback">Loading routes…</li>
+      </ul>
+    </nav>
   </main>
 
   <script type="module">
-    import {
-      buildGaugeDashboardPacket,
-      renderGaugeCardHTML,
-      renderGaugeLegendHTML,
-      renderGaugeTedHTML
-    } from "/assets/instruments.js";
-
-    const packet = buildGaugeDashboardPacket({ activePage: "gauges" });
-
-    const jumpGrid = document.getElementById("jumpGrid");
-    const gaugeGrid = document.getElementById("gaugeGrid");
-    const legend = document.getElementById("legend");
-    const tedWall = document.getElementById("tedWall");
-    const routeRail = document.getElementById("routeRail");
+    const ASSET_URL = "/assets/instruments.js?v=gauges-b8-final-sync";
 
     function escapeHTML(value) {
       return String(value ?? "")
@@ -1020,46 +961,54 @@
         .replace(/'/g, "&#39;");
     }
 
-    function renderJump(label, href, active = false) {
-      return `
-        <a class="jumpCard${active ? " active" : ""}" href="${escapeHTML(href)}" aria-label="${escapeHTML(active ? "Active page: " + label : "Jump to " + label)}">
-          <span class="navCompass" aria-hidden="true"></span>
-          <span class="jumpText">
-            <small>${active ? "Active" : "Jump"}</small>
-            <strong>${escapeHTML(label)}</strong>
-          </span>
-        </a>
-      `;
+    function fallbackHTML(error) {
+      const message = error && error.message ? error.message : "Unknown instrument asset error.";
+      return '<div class="fallback">Instrument asset failed to load. ' + escapeHTML(message) + '</div>';
     }
 
-    function renderRouteRail() {
-      const routes = packet.routes;
+    async function bootGauges() {
+      const jumpGrid = document.getElementById("jumpGrid");
+      const gaugeGrid = document.getElementById("gaugeGrid");
+      const legend = document.getElementById("legend");
+      const tedWall = document.getElementById("tedWall");
+      const routeRail = document.getElementById("routeRail");
 
-      const links = [
-        ["Compass", routes.compass],
-        ["Door", routes.door],
-        ["Products", routes.products],
-        ["Showroom", routes.showroom],
-        ["Vault", routes.vault],
-        ["Upper Room", routes.upperRoom]
-      ];
+      try {
+        const instruments = await import(ASSET_URL);
 
-      return links
-        .map(([label, href]) => `<a href="${escapeHTML(href)}">${escapeHTML(label)}</a>`)
-        .join("\n");
+        const {
+          buildGaugeDashboardPacket,
+          renderGaugeJumpHTML,
+          renderGaugeRouteRailHTML,
+          renderGaugeCardHTML,
+          renderGaugeLegendHTML,
+          renderGaugeTedHTML
+        } = instruments;
+
+        const packet = buildGaugeDashboardPacket({ activePage: "gauges" });
+
+        jumpGrid.innerHTML = [
+          renderGaugeJumpHTML("Compass", packet.routes.compass, false),
+          renderGaugeJumpHTML("Door", packet.routes.door, false),
+          renderGaugeJumpHTML("Products", packet.routes.products, false),
+          renderGaugeJumpHTML("Gauges", packet.routes.gauges, true)
+        ].join("\n");
+
+        gaugeGrid.innerHTML = packet.readings.map(renderGaugeCardHTML).join("\n");
+        legend.innerHTML = renderGaugeLegendHTML(packet.colorStates);
+        tedWall.innerHTML = renderGaugeTedHTML(packet.tedRead);
+        routeRail.innerHTML = renderGaugeRouteRailHTML(packet.routes);
+      } catch (error) {
+        const fallback = fallbackHTML(error);
+        if (jumpGrid) jumpGrid.innerHTML = '<li>' + fallback + '</li>';
+        if (gaugeGrid) gaugeGrid.innerHTML = fallback;
+        if (legend) legend.innerHTML = '<li>' + fallback + '</li>';
+        if (tedWall) tedWall.innerHTML = fallback;
+        if (routeRail) routeRail.innerHTML = '<li>' + fallback + '</li>';
+      }
     }
 
-    jumpGrid.innerHTML = [
-      renderJump("Compass", packet.routes.compass, false),
-      renderJump("Door", packet.routes.door, false),
-      renderJump("Products", packet.routes.products, false),
-      renderJump("Gauges", packet.routes.gauges, true)
-    ].join("\n");
-
-    gaugeGrid.innerHTML = packet.readings.map(renderGaugeCardHTML).join("\n");
-    legend.innerHTML = renderGaugeLegendHTML(packet.colorStates);
-    tedWall.innerHTML = renderGaugeTedHTML(packet.tedRead);
-    routeRail.innerHTML = renderRouteRail();
+    bootGauges();
   </script>
 </body>
 </html>

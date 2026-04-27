@@ -1,28 +1,32 @@
 <!DOCTYPE html>
-<html lang="en" data-products-generation="route-unified-products-source-b8">
+<html lang="en" data-products-generation="richie-manor-ground-floor-source-chamber-b9">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Products · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Diamond Gate Bridge Products: the source chamber where active product paths route to one canonical destination each."
+    content="Diamond Gate Bridge Products — the ground-floor source chamber inside Richie’s Manor, routing each product to one canonical destination."
   />
 
   <style>
     :root{
-      --panel:rgba(7,14,28,.88);
-      --panel2:rgba(10,20,42,.94);
-      --line:rgba(255,218,150,.22);
-      --text:#fff8ea;
-      --muted:#c9d2ea;
-      --soft:rgba(201,210,234,.74);
-      --gold:#ffd98a;
+      color-scheme:dark;
+      --panel:rgba(18,14,10,.86);
+      --panel2:rgba(36,26,16,.92);
+      --stone:rgba(42,36,30,.82);
+      --wood:rgba(72,42,20,.56);
+      --brass:#ffd98a;
+      --brass2:#c99b45;
+      --water:#8ec5ff;
       --green:#93efbd;
-      --blue:#8ec5ff;
-      --water:#7ecbff;
+      --text:#fff8ea;
+      --muted:#d5c7aa;
+      --soft:rgba(213,199,170,.74);
+      --line:rgba(255,218,150,.24);
+      --line2:rgba(142,197,255,.22);
       --shadow:0 24px 80px rgba(0,0,0,.50);
-      --max:1120px;
+      --max:1180px;
     }
 
     *{box-sizing:border-box}
@@ -33,10 +37,10 @@
       color:var(--text);
       font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at 50% 82%,rgba(255,154,86,.34),transparent 28%),
-        radial-gradient(circle at 70% 74%,rgba(255,216,138,.28),transparent 24%),
-        radial-gradient(circle at 20% 18%,rgba(91,132,205,.22),transparent 34%),
-        linear-gradient(180deg,#071225 0%,#10294a 34%,#f49a52 72%,#2b1020 100%);
+        radial-gradient(circle at 50% 92%,rgba(126,203,255,.16),transparent 24%),
+        radial-gradient(circle at 16% 20%,rgba(255,217,138,.16),transparent 26%),
+        radial-gradient(circle at 84% 18%,rgba(147,239,189,.10),transparent 26%),
+        linear-gradient(180deg,#071225 0%,#14100c 42%,#2c1b10 100%);
       overflow-x:hidden;
     }
 
@@ -45,16 +49,13 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.72;
+      opacity:.42;
       background:
-        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
-        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
-      background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
-      animation:snowFall 22s linear infinite;
+        linear-gradient(90deg,rgba(255,218,150,.055) 1px,transparent 1px),
+        linear-gradient(180deg,rgba(255,218,150,.035) 1px,transparent 1px),
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.16),transparent 30%);
+      background-size:56px 56px,56px 56px,100% 100%;
+      mask-image:radial-gradient(circle at 50% 35%,black,transparent 82%);
       z-index:0;
     }
 
@@ -64,33 +65,32 @@
       inset:0;
       pointer-events:none;
       background:
-        radial-gradient(ellipse at 50% 18%,rgba(42,72,118,.42),transparent 36%),
-        radial-gradient(ellipse at 18% 20%,rgba(255,255,255,.13),transparent 28%),
-        radial-gradient(ellipse at 82% 22%,rgba(255,255,255,.10),transparent 30%),
-        linear-gradient(180deg,rgba(5,12,28,.48),transparent 46%,rgba(255,151,72,.18));
+        radial-gradient(ellipse at 50% 0%,rgba(255,217,138,.12),transparent 34%),
+        radial-gradient(ellipse at 50% 92%,rgba(0,0,0,.34),transparent 42%),
+        linear-gradient(180deg,rgba(4,8,18,.46),transparent 44%,rgba(0,0,0,.24));
       z-index:0;
     }
 
     a{color:inherit;text-decoration:none}
 
     .page{
-      width:min(var(--max),calc(100vw - 20px));
-      margin:0 auto;
-      padding:14px 0 30px;
       position:relative;
       z-index:1;
+      width:min(var(--max),calc(100vw - 20px));
+      min-height:100svh;
+      margin:0 auto;
+      padding:14px 0 24px;
       display:grid;
       gap:14px;
     }
 
     .topbar,
-    .hero,
-    .panel,
-    .source-card,
-    .jump-card{
+    .sourceHall,
+    .jumpPanel,
+    .routeRail{
       border:1px solid var(--line);
       background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.12),transparent 42%),
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 42%),
         linear-gradient(180deg,var(--panel2),var(--panel));
       box-shadow:var(--shadow);
       backdrop-filter:blur(10px);
@@ -98,13 +98,10 @@
     }
 
     .topbar{
-      padding:14px;
       border-radius:28px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
+      padding:14px;
+      display:grid;
       gap:14px;
-      flex-wrap:wrap;
     }
 
     .brand{
@@ -120,15 +117,15 @@
       border-radius:17px;
       display:grid;
       place-items:center;
-      border:1px solid rgba(255,217,138,.42);
+      border:1px solid rgba(255,217,138,.46);
       background:
-        radial-gradient(circle at 50% 28%,rgba(255,217,138,.44),transparent 44%),
-        linear-gradient(180deg,rgba(58,38,26,.92),rgba(10,18,32,.98));
+        radial-gradient(circle at 50% 28%,rgba(255,217,138,.38),transparent 44%),
+        linear-gradient(180deg,rgba(58,42,18,.92),rgba(10,18,32,.98));
       color:#fff8ea;
       font-weight:950;
       letter-spacing:.08em;
       flex:0 0 auto;
-      box-shadow:0 0 22px rgba(255,217,138,.18);
+      box-shadow:0 0 22px rgba(255,217,138,.16);
     }
 
     .brandText{display:grid;gap:3px}
@@ -152,74 +149,146 @@
       line-height:1.05;
     }
 
-    .nav{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      justify-content:flex-end;
+    .jumpGrid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:10px;
     }
 
-    .nav a,
-    .button{
-      min-height:40px;
-      display:inline-flex;
+    .jumpCard{
+      min-height:92px;
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(142,197,255,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.052),rgba(255,255,255,.024));
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
       align-items:center;
-      justify-content:center;
-      padding:10px 13px;
-      border-radius:999px;
-      border:1px solid rgba(255,218,150,.20);
-      background:rgba(255,255,255,.04);
-      color:#fff4dd;
-      font-size:.74rem;
-      font-weight:900;
-      letter-spacing:.08em;
+      padding:12px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .jumpCard:hover,
+    .jumpCard:focus-visible{
+      transform:translateY(-3px);
+      border-color:rgba(142,197,255,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .jumpCard.active{
+      border-color:rgba(255,217,138,.56);
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(255,217,138,.08),rgba(255,255,255,.024));
+      box-shadow:0 0 24px rgba(255,217,138,.12);
+    }
+
+    .navCompass{
+      position:relative;
+      width:54px;
+      aspect-ratio:1;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.34),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(142,197,255,.25),rgba(10,20,42,.82) 68%);
+      box-shadow:
+        inset 0 0 22px rgba(142,197,255,.10),
+        0 0 24px rgba(142,197,255,.10);
+      overflow:hidden;
+      flex:0 0 auto;
+    }
+
+    .jumpCard.active .navCompass{
+      background:
+        radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 13%),
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.42),rgba(60,40,16,.84) 68%);
+      box-shadow:
+        inset 0 0 22px rgba(255,217,138,.16),
+        0 0 28px rgba(255,217,138,.18);
+    }
+
+    .navCompass::before{
+      content:"";
+      position:absolute;
+      inset:16%;
+      border-radius:50%;
+      border:1px solid rgba(255,255,255,.11);
+      background:
+        repeating-conic-gradient(from 0deg,transparent 0deg 18deg,rgba(255,255,255,.08) 18deg 21deg,transparent 21deg 36deg);
+      animation:compassSpin 14s linear infinite;
+    }
+
+    .navCompass::after{
+      content:"";
+      position:absolute;
+      width:14%;
+      height:58%;
+      left:43%;
+      top:21%;
+      clip-path:polygon(50% 0%,100% 48%,58% 48%,58% 100%,42% 100%,42% 48%,0% 48%);
+      background:linear-gradient(180deg,rgba(255,255,255,.86),rgba(142,197,255,.60));
+      animation:needleSpin 8s linear infinite;
+    }
+
+    .jumpCard.active .navCompass::after{
+      background:linear-gradient(180deg,rgba(255,255,255,.90),rgba(255,217,138,.74));
+    }
+
+    .jumpText{
+      display:grid;
+      gap:4px;
+      min-width:0;
+    }
+
+    .jumpText small{
+      color:#c8d7ff;
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.12em;
       text-transform:uppercase;
     }
 
-    .nav a.featured,
-    .button.featured{
-      border-color:rgba(255,217,138,.48);
-      background:rgba(255,217,138,.10);
-      color:#fff8ea;
-      box-shadow:0 0 22px rgba(255,217,138,.13);
+    .jumpText strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.02;
+      letter-spacing:-.035em;
     }
 
-    .hero{
+    .sourceHall{
       border-radius:34px;
-      padding:clamp(24px,5vw,52px);
-      min-height:clamp(350px,42vw,520px);
+      padding:clamp(20px,3.2vw,36px);
+      min-height:calc(100svh - 240px);
       display:grid;
-      grid-template-columns:minmax(0,1.06fr) minmax(280px,.94fr);
-      gap:28px;
-      align-items:center;
+      grid-template-columns:minmax(0,.88fr) minmax(420px,1.12fr);
+      gap:20px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
     }
 
-    .hero::before{
+    .sourceHall::before{
       content:"";
       position:absolute;
-      width:min(760px,92vw);
-      height:min(760px,92vw);
-      left:66%;
-      top:50%;
-      transform:translate(-50%,-50%);
-      border-radius:50%;
+      left:50%;
+      top:0;
+      width:min(720px,92vw);
+      height:180px;
+      transform:translateX(-50%);
       background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.24),transparent 22%),
-        radial-gradient(circle at 50% 50%,rgba(142,197,255,.15),transparent 46%),
-        radial-gradient(circle at 50% 50%,rgba(255,119,72,.12),transparent 70%);
-      filter:blur(5px);
-      z-index:-3;
+        radial-gradient(ellipse at 50% 0%,rgba(255,217,138,.18),transparent 68%);
+      z-index:-1;
     }
 
-    .heroCopy{
+    .copy{
       display:grid;
       gap:14px;
-      max-width:780px;
-      position:relative;
-      z-index:2;
+      align-content:center;
+      min-width:0;
     }
 
     .pill{
@@ -229,9 +298,9 @@
       gap:10px;
       padding:8px 12px;
       border-radius:999px;
-      border:1px solid rgba(255,218,150,.22);
+      border:1px solid rgba(255,217,138,.30);
       background:rgba(255,255,255,.04);
-      color:#fff0d0;
+      color:#ffe0a3;
       text-transform:uppercase;
       letter-spacing:.14em;
       font-size:.70rem;
@@ -244,22 +313,22 @@
       height:9px;
       border-radius:2px;
       transform:rotate(45deg);
-      background:var(--green);
-      box-shadow:0 0 18px rgba(147,239,189,.50);
+      background:var(--brass);
+      box-shadow:0 0 18px rgba(255,217,138,.46);
     }
 
     h1{
       margin:0;
       color:#fff;
-      font-size:clamp(3.5rem,11vw,7.4rem);
+      font-size:clamp(3.5rem,10vw,7rem);
       line-height:.84;
       letter-spacing:-.085em;
     }
 
     h2{
       margin:0;
-      color:var(--gold);
-      font-size:clamp(1.55rem,4.8vw,3rem);
+      color:var(--brass);
+      font-size:clamp(1.38rem,4.4vw,2.8rem);
       line-height:1;
       letter-spacing:-.045em;
     }
@@ -271,228 +340,350 @@
       font-size:1rem;
     }
 
-    .heroActions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:6px;
+    .thesis{
+      color:#fff;
+      font-size:clamp(1.1rem,2.25vw,1.5rem);
+      line-height:1.18;
+      font-weight:850;
+      letter-spacing:-.035em;
+      max-width:780px;
     }
 
-    .sourcePreview{
+    .groundRule{
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:22px;
+      background:
+        linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.020));
+      padding:14px;
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+    }
+
+    .groundCell{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:18px;
+      background:rgba(0,0,0,.16);
+      padding:12px;
+      display:grid;
+      gap:4px;
+    }
+
+    .groundCell small{
+      color:var(--soft);
+      text-transform:uppercase;
+      letter-spacing:.12em;
+      font-size:.58rem;
+      font-weight:900;
+    }
+
+    .groundCell strong{
+      color:#fff;
+      font-size:1rem;
+      line-height:1.05;
+    }
+
+    .hallMap{
       position:relative;
-      width:min(100%,380px);
-      aspect-ratio:1;
-      margin:auto;
+      min-height:620px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:32px;
+      background:
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.12),rgba(147,239,189,.045) 32%,rgba(0,0,0,0) 62%),
+        linear-gradient(180deg,rgba(255,255,255,.034),rgba(255,255,255,.014));
+      overflow:hidden;
       display:grid;
       place-items:center;
-      filter:drop-shadow(0 22px 46px rgba(0,0,0,.38));
     }
 
-    .sourcePreview::before{
-      content:"";
+    .floorRing{
       position:absolute;
-      inset:3%;
+      left:50%;
+      top:50%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.13);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.13),transparent 28%),
-        repeating-conic-gradient(from 0deg,rgba(255,255,255,.045) 0deg 3deg,transparent 3deg 18deg);
-      box-shadow:
-        inset 0 0 54px rgba(0,0,0,.34),
-        0 0 50px rgba(126,203,255,.10);
+      transform:translate(-50%,-50%);
+      pointer-events:none;
+      border:1px solid rgba(255,217,138,.12);
+      box-shadow:inset 0 0 40px rgba(0,0,0,.26);
     }
 
-    .sourceCore{
+    .floorRing.r1{
+      width:min(92%,590px);
+      aspect-ratio:1;
+      background:
+        radial-gradient(circle at 50% 50%,transparent 42%,rgba(255,217,138,.05) 43%,transparent 68%);
+      animation:wallSpin 54s linear infinite;
+    }
+
+    .floorRing.r2{
+      width:min(74%,470px);
+      aspect-ratio:1;
+      background:
+        repeating-conic-gradient(from 0deg,rgba(255,255,255,.035) 0deg 4deg,transparent 4deg 18deg);
+      animation:wallSpin 42s linear infinite reverse;
+    }
+
+    .floorRing.r3{
+      width:min(54%,330px);
+      aspect-ratio:1;
+      background:radial-gradient(circle at 50% 50%,rgba(126,203,255,.06),transparent 52%);
+      animation:wallSpin 28s linear infinite;
+    }
+
+    .waterCore{
       position:relative;
-      width:44%;
+      z-index:6;
+      width:min(36%,210px);
       aspect-ratio:1;
       border-radius:50%;
       border:1px solid rgba(255,255,255,.22);
       background:
-        radial-gradient(circle at 50% 18%,rgba(255,255,255,.48),transparent 13%),
-        radial-gradient(circle at 50% 50%,rgba(126,203,255,.40),rgba(127,255,212,.16) 48%,rgba(0,0,0,.22) 100%);
+        radial-gradient(circle at 50% 16%,rgba(255,255,255,.46),transparent 12%),
+        radial-gradient(circle at 50% 50%,rgba(126,203,255,.34),rgba(147,239,189,.14) 46%,rgba(0,0,0,.22) 100%);
       box-shadow:
         inset 0 0 42px rgba(126,203,255,.18),
-        0 0 88px rgba(127,255,212,.18);
+        0 0 92px rgba(126,203,255,.20);
       overflow:hidden;
       display:grid;
       place-items:center;
       text-align:center;
-      z-index:4;
+      padding:20px;
     }
 
-    .sourceCore::before{
+    .waterCore::before{
       content:"";
       position:absolute;
       left:50%;
-      top:-30%;
-      width:55%;
-      height:160%;
+      top:-24%;
+      width:48%;
+      height:148%;
       transform:translateX(-50%);
       border-radius:999px;
       background:
-        linear-gradient(180deg,rgba(255,255,255,.86),rgba(126,203,255,.45) 26%,rgba(127,255,212,.22) 50%,rgba(126,203,255,.46) 74%,rgba(255,255,255,.62));
-      opacity:.78;
+        linear-gradient(
+          180deg,
+          rgba(255,255,255,.86),
+          rgba(126,203,255,.46) 26%,
+          rgba(147,239,189,.20) 50%,
+          rgba(126,203,255,.46) 74%,
+          rgba(255,255,255,.62)
+        );
+      opacity:.76;
       animation:waterfallDrop 2.8s linear infinite;
     }
 
-    .sourceCore::after{
+    .waterCore::after{
       content:"";
       position:absolute;
-      inset:12px;
+      inset:13%;
       border-radius:50%;
-      border:1px solid rgba(255,255,255,.17);
+      border:1px solid rgba(255,255,255,.16);
       background:
-        repeating-conic-gradient(from 0deg,transparent 0deg 14deg,rgba(255,255,255,.08) 14deg 17deg,transparent 17deg 32deg);
-      animation:waterCircle 14s linear infinite;
+        repeating-conic-gradient(
+          from 0deg,
+          transparent 0deg 14deg,
+          rgba(255,255,255,.085) 14deg 17deg,
+          transparent 17deg 32deg
+        );
+      animation:compassSpin 16s linear infinite reverse;
     }
 
-    .sourceCore span{
+    .waterCore span{
       position:relative;
       z-index:2;
       color:#eef4ff;
       font-weight:950;
-      font-size:.78rem;
+      font-size:.84rem;
       letter-spacing:.10em;
       line-height:1.2;
       text-transform:uppercase;
       text-shadow:0 2px 12px rgba(0,0,0,.70);
     }
 
-    .sourceStream{
+    .stream{
       position:absolute;
       left:50%;
       top:50%;
-      width:36%;
+      width:34%;
       height:8px;
       transform-origin:left center;
       border-radius:999px;
-      background:linear-gradient(90deg,rgba(255,255,255,.85),rgba(126,203,255,.54),rgba(127,255,212,.16),transparent);
-      opacity:.76;
+      background:
+        linear-gradient(90deg,rgba(255,255,255,.78),rgba(126,203,255,.48),rgba(147,239,189,.14),transparent);
+      opacity:.62;
       z-index:2;
       overflow:hidden;
-      filter:drop-shadow(0 0 12px rgba(126,203,255,.28));
+      pointer-events:none;
+      filter:drop-shadow(0 0 12px rgba(126,203,255,.22));
     }
 
-    .sourceStream::after{
+    .stream::after{
       content:"";
       position:absolute;
       inset:0;
-      background:repeating-linear-gradient(90deg,transparent 0 18px,rgba(255,255,255,.48) 18px 24px,transparent 24px 42px);
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent 0 18px,
+          rgba(255,255,255,.42) 18px 24px,
+          transparent 24px 42px
+        );
       animation:waterRun 1.7s linear infinite;
     }
 
-    .sourceStream.north{transform:rotate(-90deg)}
-    .sourceStream.east{transform:rotate(0deg)}
-    .sourceStream.south{transform:rotate(90deg)}
-    .sourceStream.west{transform:rotate(180deg)}
+    .stream.north{transform:rotate(-90deg)}
+    .stream.east{transform:rotate(0deg)}
+    .stream.south{transform:rotate(90deg)}
+    .stream.west{transform:rotate(180deg)}
 
-    .panel{
-      border-radius:30px;
-      padding:clamp(16px,2.6vw,26px);
-      display:grid;
-      gap:16px;
-    }
-
-    .panelHead{
-      display:grid;
-      gap:8px;
-      max-width:820px;
-    }
-
-    .sourceGrid{
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-    }
-
-    .source-card,
-    .jump-card{
-      position:relative;
-      min-height:184px;
+    .roomCard{
+      position:absolute;
+      z-index:7;
+      width:160px;
+      min-height:132px;
+      border:1px solid rgba(255,255,255,.12);
       border-radius:24px;
-      padding:18px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.10),transparent 70%),
+        linear-gradient(180deg,rgba(24,18,12,.86),rgba(10,20,42,.92));
+      box-shadow:0 18px 38px rgba(0,0,0,.34);
       display:grid;
       align-content:end;
-      gap:9px;
-      overflow:hidden;
-      transition:transform 220ms ease,border-color 220ms ease,filter 220ms ease;
+      gap:7px;
+      padding:14px;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
     }
 
-    .source-card::before,
-    .jump-card::before{
-      content:"";
-      position:absolute;
-      inset:18px;
-      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
-      border:1px solid rgba(255,218,150,.20);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(147,239,189,.14),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
-      opacity:.70;
-      z-index:0;
-    }
-
-    .source-card > *,
-    .jump-card > *{
-      position:relative;
-      z-index:1;
-    }
-
-    .source-card:hover,
-    .source-card:focus-visible,
-    .jump-card:hover,
-    .jump-card:focus-visible{
+    .roomCard:hover,
+    .roomCard:focus-visible{
       transform:translateY(-4px);
-      border-color:rgba(147,239,189,.40);
+      border-color:rgba(255,217,138,.44);
       filter:brightness(1.12);
       outline:none;
     }
 
-    .source-card.featured,
-    .jump-card.featured{
-      border-color:rgba(255,217,138,.44);
+    .roomCard.featured{
+      border-color:rgba(255,217,138,.50);
       background:
-        radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 68%),
-        linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.026));
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.18),transparent 70%),
+        linear-gradient(180deg,rgba(46,34,16,.92),rgba(10,20,42,.94));
     }
 
-    .source-card.featured::before,
-    .jump-card.featured::before{
-      border-color:rgba(255,217,138,.54);
-      background:
-        radial-gradient(circle at 50% 50%,rgba(255,217,138,.30),transparent 38%),
-        linear-gradient(135deg,rgba(255,255,255,.10),rgba(255,255,255,.02));
-    }
-
-    .source-card small,
-    .jump-card small{
-      color:#c8d7ff;
-      text-transform:uppercase;
+    .roomCard small{
+      color:#ffe0a3;
+      font-size:.58rem;
+      font-weight:950;
       letter-spacing:.12em;
-      font-size:.62rem;
-      font-weight:900;
+      text-transform:uppercase;
     }
 
-    .source-card strong,
-    .jump-card strong{
+    .roomCard strong{
       color:#fff;
-      font-size:clamp(1.08rem,2.2vw,1.42rem);
-      line-height:1.03;
-      letter-spacing:-.045em;
+      font-size:1.02rem;
+      line-height:1.02;
+      letter-spacing:-.035em;
     }
 
-    .source-card span,
-    .jump-card span{
+    .roomCard span{
       color:var(--muted);
-      line-height:1.42;
-      font-size:.88rem;
+      font-size:.82rem;
+      line-height:1.30;
     }
 
-    .jumpGrid{
+    .roomCard.north{left:50%;top:18px;transform:translateX(-50%)}
+    .roomCard.east{right:18px;top:50%;transform:translateY(-50%)}
+    .roomCard.south{left:50%;bottom:18px;transform:translateX(-50%)}
+    .roomCard.west{left:18px;top:50%;transform:translateY(-50%)}
+    .roomCard.northeast{right:58px;top:84px}
+    .roomCard.southeast{right:58px;bottom:84px}
+    .roomCard.southwest{left:58px;bottom:84px}
+    .roomCard.northwest{left:58px;top:84px}
+
+    .roomCard.north:hover,.roomCard.north:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .roomCard.east:hover,.roomCard.east:focus-visible{transform:translateY(calc(-50% - 4px))}
+    .roomCard.south:hover,.roomCard.south:focus-visible{transform:translateX(-50%) translateY(-4px)}
+    .roomCard.west:hover,.roomCard.west:focus-visible{transform:translateY(calc(-50% - 4px))}
+
+    .jumpPanel{
+      border-radius:34px;
+      padding:clamp(16px,2.4vw,24px);
+      display:grid;
+      gap:14px;
+    }
+
+    .panelHead{
+      display:grid;
+      gap:6px;
+      max-width:760px;
+    }
+
+    .productGrid{
       display:grid;
       grid-template-columns:repeat(5,minmax(0,1fr));
-      gap:12px;
+      gap:10px;
+    }
+
+    .productCard{
+      min-height:176px;
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:24px;
+      background:
+        radial-gradient(circle at 50% 0%,rgba(255,217,138,.08),transparent 70%),
+        linear-gradient(180deg,rgba(255,255,255,.044),rgba(255,255,255,.020));
+      padding:16px;
+      display:grid;
+      align-content:end;
+      gap:8px;
+      position:relative;
+      overflow:hidden;
+      transition:transform .18s ease,border-color .18s ease,filter .18s ease;
+    }
+
+    .productCard::before{
+      content:"";
+      position:absolute;
+      inset:18px;
+      clip-path:polygon(50% 0%,100% 50%,50% 100%,0% 50%);
+      border:1px solid rgba(255,218,150,.18);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(255,217,138,.13),transparent 38%),
+        linear-gradient(135deg,rgba(255,255,255,.08),rgba(255,255,255,.016));
+      opacity:.58;
+      z-index:0;
+    }
+
+    .productCard:hover,
+    .productCard:focus-visible{
+      transform:translateY(-4px);
+      border-color:rgba(255,217,138,.40);
+      filter:brightness(1.12);
+      outline:none;
+    }
+
+    .productCard > *{
+      position:relative;
+      z-index:1;
+    }
+
+    .productCard small{
+      color:#ffe0a3;
+      font-size:.58rem;
+      font-weight:950;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .productCard strong{
+      color:#fff;
+      font-size:1.10rem;
+      line-height:1.02;
+      letter-spacing:-.04em;
+    }
+
+    .productCard span{
+      color:var(--muted);
+      font-size:.86rem;
+      line-height:1.36;
     }
 
     .routeReceipt{
@@ -501,29 +692,50 @@
       background:rgba(0,0,0,.18);
       padding:14px;
       display:grid;
-      gap:6px;
+      gap:5px;
       color:var(--soft);
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.82rem;
-      line-height:1.45;
+      font-size:.78rem;
+      line-height:1.34;
       overflow:auto;
     }
 
-    .footer{
-      display:flex;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      gap:10px;
-      padding:0 4px;
-      color:#d5dff7;
-      font-size:.86rem;
+    .routeRail{
+      border-radius:24px;
+      padding:10px;
+      display:grid;
+      grid-template-columns:repeat(6,minmax(0,1fr));
+      gap:8px;
     }
 
-    .footer a{color:#fff0d0}
+    .routeRail a{
+      min-height:48px;
+      border-radius:18px;
+      border:1px solid rgba(255,218,150,.20);
+      background:rgba(255,255,255,.04);
+      color:#fff4dd;
+      font-size:.66rem;
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      display:grid;
+      place-items:center;
+      text-align:center;
+    }
 
-    @keyframes snowFall{
-      from{background-position:0 0,0 0,0 0,0 0,0 0,0 0}
-      to{background-position:80px 360px,-60px 420px,70px 520px,-90px 380px,50px 460px,-40px 340px}
+    @keyframes compassSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes needleSpin{
+      from{transform:rotate(0deg)}
+      to{transform:rotate(360deg)}
+    }
+
+    @keyframes wallSpin{
+      from{transform:translate(-50%,-50%) rotate(0deg)}
+      to{transform:translate(-50%,-50%) rotate(360deg)}
     }
 
     @keyframes waterfallDrop{
@@ -531,39 +743,39 @@
       100%{transform:translateX(-50%) translateY(22%)}
     }
 
-    @keyframes waterCircle{
-      from{transform:rotate(0deg)}
-      to{transform:rotate(360deg)}
-    }
-
     @keyframes waterRun{
       from{transform:translateX(-42px)}
       to{transform:translateX(42px)}
     }
 
-    @media(max-width:1080px){
-      .sourceGrid,
-      .jumpGrid{
+    @media(max-width:1120px){
+      .sourceHall{
+        grid-template-columns:1fr;
+      }
+
+      .hallMap{
+        min-height:680px;
+      }
+
+      .productGrid{
         grid-template-columns:repeat(2,minmax(0,1fr));
       }
-    }
 
-    @media(max-width:980px){
-      .hero{
-        grid-template-columns:1fr;
-        min-height:auto;
+      .routeRail{
+        grid-template-columns:repeat(3,minmax(0,1fr));
       }
     }
 
-    @media(max-width:640px){
+    @media(max-width:740px){
       .page{
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
       }
 
       .topbar,
-      .hero,
-      .panel{
+      .sourceHall,
+      .jumpPanel,
+      .routeRail{
         border-radius:24px;
       }
 
@@ -577,27 +789,76 @@
         border-radius:14px;
       }
 
-      .nav{
-        width:100%;
-        justify-content:stretch;
-        display:grid;
-        grid-template-columns:repeat(2,minmax(0,1fr));
-      }
-
-      .nav a{width:100%}
-
-      .hero{padding:22px}
-
-      .heroActions{
-        display:grid;
-        grid-template-columns:1fr;
-      }
-
-      .button{width:100%}
-
-      .sourceGrid,
       .jumpGrid{
         grid-template-columns:1fr;
+      }
+
+      .jumpCard{
+        min-height:76px;
+      }
+
+      .sourceHall{
+        padding:18px;
+      }
+
+      .groundRule,
+      .productGrid,
+      .routeRail{
+        grid-template-columns:1fr;
+      }
+
+      .hallMap{
+        min-height:auto;
+        display:grid;
+        gap:10px;
+        padding:14px;
+      }
+
+      .floorRing,
+      .stream{
+        display:none;
+      }
+
+      .waterCore{
+        position:relative;
+        width:160px;
+        margin:0 auto;
+      }
+
+      .roomCard,
+      .roomCard.north,
+      .roomCard.east,
+      .roomCard.south,
+      .roomCard.west,
+      .roomCard.northeast,
+      .roomCard.southeast,
+      .roomCard.southwest,
+      .roomCard.northwest{
+        position:relative;
+        left:auto;
+        right:auto;
+        top:auto;
+        bottom:auto;
+        transform:none;
+        width:100%;
+        min-height:110px;
+      }
+
+      .roomCard:hover,
+      .roomCard:focus-visible,
+      .roomCard.north:hover,
+      .roomCard.north:focus-visible,
+      .roomCard.east:hover,
+      .roomCard.east:focus-visible,
+      .roomCard.south:hover,
+      .roomCard.south:focus-visible,
+      .roomCard.west:hover,
+      .roomCard.west:focus-visible{
+        transform:translateY(-4px);
+      }
+
+      .routeRail a{
+        width:100%;
       }
     }
 
@@ -617,8 +878,9 @@
   <main
     class="page"
     data-page="products"
-    data-route-standard="many-jump-off-points-one-destination"
-    data-products-route="/products/"
+    data-room-location="richie-manor-ground-floor-source-chamber"
+    data-page-relative-gold="products"
+    data-route-law="many-jump-off-points-one-destination"
     data-archcoin-route="/products/archcoin/"
     data-five-flags-route="/products/five-flags/"
     data-aai-route="/products/on-your-side-ai/"
@@ -626,145 +888,200 @@
     data-nutrition-route="/products/nutrition/"
   >
     <header class="topbar">
-      <a class="brand" href="/products/" aria-label="Diamond Gate Bridge Products">
+      <a class="brand" href="/products/" aria-label="Products home">
         <span class="mark" aria-hidden="true">PR</span>
         <span class="brandText">
-          <span class="kicker">Richie’s Manor</span>
-          <strong class="title">Products Source Chamber</strong>
+          <span class="kicker">Richie’s Manor · Ground Floor</span>
+          <strong class="title">Products · Source Chamber</strong>
         </span>
       </a>
 
-      <nav class="nav" aria-label="Primary navigation">
-        <a href="/">Compass</a>
-        <a href="/door/">Door</a>
-        <a class="featured" href="/products/archcoin/">Vault</a>
-        <a href="/showroom/">Showroom</a>
+      <nav class="jumpGrid" aria-label="Primary compass jumps">
+        <a class="jumpCard" href="/" aria-label="Compass">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Jump</small>
+            <strong>Compass</strong>
+          </span>
+        </a>
+
+        <a class="jumpCard" href="/door/" aria-label="Door">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Jump</small>
+            <strong>Door</strong>
+          </span>
+        </a>
+
+        <a class="jumpCard active" href="/products/" aria-label="Products">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Active</small>
+            <strong>Products</strong>
+          </span>
+        </a>
+
+        <a class="jumpCard" href="/gauges/" aria-label="Gauges">
+          <span class="navCompass" aria-hidden="true"></span>
+          <span class="jumpText">
+            <small>Jump</small>
+            <strong>Gauges</strong>
+          </span>
+        </a>
       </nav>
     </header>
 
-    <section class="hero" aria-labelledby="productsTitle">
-      <div class="heroCopy">
-        <span class="pill">Parent product chamber</span>
+    <section class="sourceHall" aria-labelledby="productsTitle">
+      <div class="copy">
+        <span class="pill">Ground-floor source chamber</span>
         <h1 id="productsTitle">Products</h1>
-        <h2>The water starts here.</h2>
+        <h2>The water starts inside the house.</h2>
+        <p class="thesis">
+          Products is the ground-floor source chamber inside Richie’s Manor. It does not scatter the site. It distributes movement into the correct rooms.
+        </p>
         <p>
-          Products is the source chamber inside Richie’s Manor. Many doors may point into the chamber,
-          but each product now has one canonical destination.
+          Every product has one canonical destination. Other jump-off points may exist, but they are bridges only. The source chamber keeps the estate coordinated.
         </p>
 
-        <div class="heroActions">
-          <a class="button featured" href="#source-chamber">Open Source Chamber</a>
-          <a class="button" href="/products/archcoin/">Enter Vault Chamber</a>
-          <a class="button" href="#product-jump">Product Jump</a>
+        <div class="groundRule" aria-label="Products operating rule">
+          <div class="groundCell">
+            <small>Speed</small>
+            <strong>Product paths visible.</strong>
+          </div>
+          <div class="groundCell">
+            <small>Efficiency</small>
+            <strong>One destination each.</strong>
+          </div>
+          <div class="groundCell">
+            <small>Optimum</small>
+            <strong>No route sprawl.</strong>
+          </div>
         </div>
       </div>
 
-      <div class="sourcePreview" aria-hidden="true">
-        <div class="sourceStream north"></div>
-        <div class="sourceStream east"></div>
-        <div class="sourceStream south"></div>
-        <div class="sourceStream west"></div>
-        <div class="sourceCore"><span>Product<br>Source</span></div>
-      </div>
-    </section>
+      <div class="hallMap" aria-label="Ground-floor source chamber map">
+        <div class="floorRing r1" aria-hidden="true"></div>
+        <div class="floorRing r2" aria-hidden="true"></div>
+        <div class="floorRing r3" aria-hidden="true"></div>
 
-    <section id="source-chamber" class="panel" aria-labelledby="sourceTitle">
-      <div class="panelHead">
-        <span class="pill">Source waterfall</span>
-        <h2 id="sourceTitle">The parent chamber flows into four public rooms.</h2>
-        <p>
-          This section holds the primary estate routes. The Product Jump below holds the exact product destinations.
-        </p>
-      </div>
+        <div class="stream north" aria-hidden="true"></div>
+        <div class="stream east" aria-hidden="true"></div>
+        <div class="stream south" aria-hidden="true"></div>
+        <div class="stream west" aria-hidden="true"></div>
 
-      <div class="sourceGrid" aria-label="Primary source chamber routes">
-        <a class="source-card featured" href="/products/archcoin/">
-          <small>North / Vault</small>
-          <strong>Vault Chamber · ARCHCOIN</strong>
-          <span>Protected value, ownership, scarcity, and four-coin transaction intelligence.</span>
-        </a>
+        <div class="waterCore" aria-hidden="true">
+          <span>Source<br>Water<br>Chamber</span>
+        </div>
 
-        <a class="source-card" href="/big-laugh/upper-room/">
-          <small>East / Events</small>
-          <strong>The Upper Room</strong>
-          <span>Shows, raffles, live comedy, public gathering, and event activation.</span>
-        </a>
-
-        <a class="source-card" href="/nine-summits/">
-          <small>South / Human Path</small>
-          <strong>Nine Summits</strong>
-          <span>Growth, discipline, dignity, love, and the human-facing path.</span>
-        </a>
-
-        <a class="source-card" href="/showroom/">
-          <small>West / Proof</small>
-          <strong>Showroom</strong>
-          <span>The lobby proof surface where the larger estate becomes visible.</span>
-        </a>
-      </div>
-    </section>
-
-    <section id="product-jump" class="panel" aria-labelledby="jumpTitle">
-      <div class="panelHead">
-        <span class="pill">Product jump</span>
-        <h2 id="jumpTitle">One destination per product.</h2>
-        <p>
-          These are the canonical product destinations. Duplicate folders should bridge here instead of carrying separate product bodies.
-        </p>
-      </div>
-
-      <div class="jumpGrid" aria-label="Canonical product jump routes">
-        <a class="jump-card featured" href="/products/archcoin/">
-          <small>Vault / Financial Template</small>
+        <a class="roomCard north featured" href="/products/archcoin/">
+          <small>Vault</small>
           <strong>ARCHCOIN</strong>
-          <span>A four-coin financial transaction template for contract authority, inbound value, outbound obligation, and growth allocation.</span>
+          <span>Protected value and four-coin financial template.</span>
         </a>
 
-        <a class="jump-card" href="/products/five-flags/">
-          <small>Game / Scene Read</small>
+        <a class="roomCard east" href="/big-laugh/upper-room/">
+          <small>Attic / Events</small>
+          <strong>Upper Room</strong>
+          <span>Shows, raffles, comedy, and public gathering.</span>
+        </a>
+
+        <a class="roomCard south" href="/nine-summits/">
+          <small>Estate Path</small>
+          <strong>Nine Summits</strong>
+          <span>Human development across the grounds.</span>
+        </a>
+
+        <a class="roomCard west" href="/showroom/">
+          <small>Proof Window</small>
+          <strong>Showroom</strong>
+          <span>The public room opening outward into space.</span>
+        </a>
+
+        <a class="roomCard northeast" href="/products/on-your-side-ai/">
+          <small>Study</small>
+          <strong>On Your Side AI</strong>
+          <span>Support intelligence with the user in charge.</span>
+        </a>
+
+        <a class="roomCard southeast" href="/products/education/">
+          <small>Classroom</small>
+          <strong>ESL Traversal</strong>
+          <span>English by movement and real-life use.</span>
+        </a>
+
+        <a class="roomCard southwest" href="/products/nutrition/">
+          <small>Kitchen</small>
+          <strong>Nutrition</strong>
+          <span>Baseline body support without shame.</span>
+        </a>
+
+        <a class="roomCard northwest" href="/products/five-flags/">
+          <small>Parlor</small>
+          <strong>Five Flags</strong>
+          <span>Scene reading, roles, rooms, and social context.</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="jumpPanel" aria-labelledby="jumpTitle">
+      <div class="panelHead">
+        <span class="pill">Canonical product doors</span>
+        <h2 id="jumpTitle">One product body per destination.</h2>
+        <p>These are the active product destinations. Duplicate folders stay bridge-only.</p>
+      </div>
+
+      <div class="productGrid" aria-label="Canonical product jump routes">
+        <a class="productCard" href="/products/archcoin/">
+          <small>Vault Chamber</small>
+          <strong>ARCHCOIN</strong>
+          <span>Contract authority, inbound value, outbound obligation, and growth allocation.</span>
+        </a>
+
+        <a class="productCard" href="/products/five-flags/">
+          <small>Parlor / Game Room</small>
           <strong>Five Flags · What’s My Scene?</strong>
-          <span>A live scene-reading product path for people, rooms, roles, choices, flags, and social context.</span>
+          <span>Scene-reading for people, rooms, roles, choices, flags, and social context.</span>
         </a>
 
-        <a class="jump-card" href="/products/on-your-side-ai/">
-          <small>AAI / On Your Side AI</small>
-          <strong>On Your Side AI · Artificial Agent Intelligence</strong>
-          <span>Bounded support for signal clarity, traversal, decision movement, and user-side agency.</span>
+        <a class="productCard" href="/products/on-your-side-ai/">
+          <small>Study / Advisor Desk</small>
+          <strong>On Your Side AI</strong>
+          <span>Artificial Agent Intelligence with support, clarity, and user agency preserved.</span>
         </a>
 
-        <a class="jump-card" href="/products/education/">
-          <small>Education / Language</small>
+        <a class="productCard" href="/products/education/">
+          <small>Classroom</small>
           <strong>ESL Traversal Learning</strong>
-          <span>English by movement, scene, context, confidence, and practical real-life use.</span>
+          <span>English through scene, listening, meaning, speaking, and real-life use.</span>
         </a>
 
-        <a class="jump-card" href="/products/nutrition/">
-          <small>Health / Baseline Systems</small>
+        <a class="productCard" href="/products/nutrition/">
+          <small>Kitchen / Pantry</small>
           <strong>Baseline Nutrition Systems</strong>
-          <span>A baseline nutrition path for food, energy, discipline, daily structure, and practical human stability.</span>
+          <span>Water, food, timing, rhythm, recovery, and repeatable baseline support.</span>
         </a>
       </div>
 
-      <div class="routeReceipt" aria-label="Route receipt">
-PRODUCT_ROUTE_STANDARD=ACTIVE
+      <div class="routeReceipt" aria-label="Products route receipt">
+ROUTE_LAW=Many jump-off points, one destination
+PRODUCTS_ROOM=Richie’s Manor ground-floor source chamber
 ARCHCOIN=/products/archcoin/
 FIVE_FLAGS=/products/five-flags/
-ON_YOUR_SIDE_AI_AAI=/products/on-your-side-ai/
+ON_YOUR_SIDE_AI=/products/on-your-side-ai/
 ESL_TRAVERSAL=/products/education/
 BASELINE_NUTRITION=/products/nutrition/
 DUPLICATES=BRIDGE_ONLY
       </div>
     </section>
 
-    <footer class="footer">
-      <span>Richie’s Manor · Products Source Chamber</span>
-      <span>
-        <a href="/">Compass</a> ·
-        <a href="/door/">Door</a> ·
-        <a href="/products/archcoin/">Vault</a> ·
-        <a href="/showroom/">Showroom</a>
-      </span>
-    </footer>
+    <nav class="routeRail" aria-label="Products route rail">
+      <a href="/">Compass</a>
+      <a href="/door/">Door</a>
+      <a href="/gauges/">Gauges</a>
+      <a href="/showroom/">Showroom</a>
+      <a href="/products/archcoin/">Vault</a>
+      <a href="/big-laugh/upper-room/">Upper Room</a>
+    </nav>
   </main>
 </body>
 </html>

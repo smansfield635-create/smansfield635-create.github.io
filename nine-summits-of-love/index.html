@@ -1,719 +1,111 @@
-
 <!DOCTYPE html>
-<html lang="en" data-page="nine-summits" data-generation="nine-summits-parent-love-marriage-v1">
+<html lang="en" data-manor-registry="planet-batch-3">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nine Summits Metaverse · The Nine Summits of Love</title>
-  <meta
-    name="description"
-    content="Nine Summits Metaverse with The Nine Summits of Love: 256 Carats of Human Potential, written by This Underdog."
-  />
-
+  <title>Nine Summits of Love · Diamond Gate Bridge</title>
+  <meta name="description" content="Nine Summits of Love is the 256 carats of human potential planetary construct attached to Richie’s Manor and Estate." />
+  <link rel="stylesheet" href="/assets/manor.css" />
+  <script src="/assets/page_registry.js" defer></script>
   <style>
-    :root {
-      --bg: #05070d;
-      --gold: #f4d58d;
-      --gold2: #ffb84d;
-      --text: #fff7df;
-      --muted: rgba(255, 247, 223, 0.74);
-      --soft: rgba(255, 247, 223, 0.54);
-      --line: rgba(244, 213, 141, 0.28);
-      --panel: rgba(8, 12, 24, 0.74);
-      --panel2: rgba(255, 255, 255, 0.055);
-      --shadow: rgba(0, 0, 0, 0.58);
-      --max: 1180px;
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      min-height: 100%;
-      background: var(--bg);
-      color: var(--text);
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: Georgia, "Times New Roman", serif;
-      background:
-        radial-gradient(circle at 50% 10%, rgba(255, 198, 92, 0.17), transparent 22rem),
-        radial-gradient(circle at 16% 62%, rgba(72, 141, 255, 0.13), transparent 24rem),
-        radial-gradient(circle at 84% 48%, rgba(255, 109, 64, 0.12), transparent 26rem),
-        linear-gradient(180deg, #05070d 0%, #090e1b 44%, #120b08 100%);
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        radial-gradient(circle, rgba(255,255,255,0.95) 0 1px, transparent 1.6px),
-        radial-gradient(circle, rgba(244,213,141,0.75) 0 1px, transparent 1.8px),
-        radial-gradient(circle, rgba(146,190,255,0.65) 0 1px, transparent 1.9px);
-      background-size: 91px 91px, 137px 137px, 211px 211px;
-      background-position: 0 0, 19px 27px, 53px 71px;
-      opacity: 0.28;
-      animation: starDrift 80s linear infinite;
-      z-index: -2;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background:
-        linear-gradient(180deg, transparent 0%, rgba(255, 138, 42, 0.08) 72%, rgba(255, 183, 76, 0.18) 100%),
-        radial-gradient(circle at 50% 100%, rgba(255, 179, 64, 0.24), transparent 34rem);
-      z-index: -1;
-    }
-
-    @keyframes starDrift {
-      from { transform: translate3d(0, 0, 0); }
-      to { transform: translate3d(-91px, 91px, 0); }
-    }
-
-    a {
-      color: inherit;
-    }
-
-    .page {
-      width: min(var(--max), calc(100% - 28px));
-      margin: 0 auto;
-      padding: 26px 0 58px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 10px 0 28px;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.82rem;
-      letter-spacing: 0.13em;
-      text-transform: uppercase;
-    }
-
-    .topbar a {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      text-decoration: none;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.035);
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
-    }
-
-    .topbar a:hover {
-      transform: translateY(-1px);
-      border-color: rgba(244, 213, 141, 0.55);
-      background: rgba(244, 213, 141, 0.08);
-    }
-
-    .parent-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 0.92fr);
-      gap: 28px;
-      align-items: center;
-      min-height: calc(100vh - 122px);
-    }
-
-    .parent-copy,
-    .love-copy,
-    .preface-copy,
-    .summits-panel,
-    .carat-panel,
-    .gateway-panel {
-      border: 1px solid var(--line);
-      border-radius: 30px;
-      background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.075), rgba(255, 255, 255, 0.02)),
-        rgba(4, 7, 15, 0.74);
-      box-shadow: 0 28px 70px var(--shadow);
-      overflow: hidden;
-    }
-
-    .parent-copy {
-      position: relative;
-      padding: clamp(22px, 4vw, 46px);
-    }
-
-    .parent-copy::before,
-    .love-copy::before {
-      content: "";
-      position: absolute;
-      width: 260px;
-      height: 260px;
-      border-radius: 50%;
-      top: -130px;
-      right: -90px;
-      background: radial-gradient(circle, rgba(244, 213, 141, 0.18), transparent 64%);
-      pointer-events: none;
-    }
-
-    .eyebrow {
-      margin: 0 0 12px;
-      color: var(--gold);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.76rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-
-    h1,
-    h2 {
-      margin: 0;
-      color: var(--text);
-      line-height: 0.94;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      text-shadow: 0 10px 36px rgba(0, 0, 0, 0.55);
-    }
-
-    h1 {
-      font-size: clamp(2.8rem, 7vw, 6.8rem);
-    }
-
-    h2 {
-      font-size: clamp(2.2rem, 5.7vw, 5.8rem);
-    }
-
-    h1 span,
-    h2 span {
-      display: block;
-      color: var(--gold);
-      font-style: italic;
-      font-size: clamp(1.32rem, 3vw, 3rem);
-      line-height: 1.08;
-      text-transform: none;
-      letter-spacing: 0.03em;
-      margin-top: 18px;
-    }
-
-    .subtitle {
-      max-width: 58ch;
-      margin: 24px 0 0;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: clamp(1rem, 1.55vw, 1.18rem);
-      line-height: 1.7;
-    }
-
-    .button-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 28px;
-    }
-
-    .button-row a {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 44px;
-      padding: 12px 16px;
-      border: 1px solid rgba(244, 213, 141, 0.34);
-      border-radius: 999px;
-      color: var(--text);
-      text-decoration: none;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.78rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: rgba(255, 255, 255, 0.045);
-    }
-
-    .button-row a.primary {
-      color: #21170a;
-      background: linear-gradient(135deg, var(--gold), var(--gold2));
-      border-color: rgba(255, 255, 255, 0.34);
-      font-weight: 700;
-    }
-
-    .parent-orbit {
-      display: grid;
-      gap: 14px;
-    }
-
-    .orbit-card {
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: 18px;
-      min-height: 118px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(244, 213, 141, 0.11), transparent 68%),
-        rgba(255, 255, 255, 0.045);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
-    }
-
-    .orbit-card strong {
-      display: block;
-      color: var(--gold);
-      font-size: 1.25rem;
-      margin-bottom: 8px;
-    }
-
-    .orbit-card p {
-      margin: 0;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.94rem;
-      line-height: 1.55;
-    }
-
-    .love-marriage {
-      margin-top: 44px;
-      padding-top: 8px;
-    }
-
-    .love-hero {
-      display: grid;
-      grid-template-columns: minmax(0, 0.95fr) minmax(300px, 1.05fr);
-      gap: 28px;
-      align-items: center;
-      margin-top: 22px;
-    }
-
-    .love-copy {
-      position: relative;
-      padding: clamp(22px, 4vw, 46px);
-    }
-
-    .signature {
-      margin-top: 26px;
-      display: inline-flex;
-      flex-wrap: wrap;
-      align-items: baseline;
-      gap: 10px;
-      color: var(--gold);
-      font-size: clamp(1.35rem, 2.4vw, 2.25rem);
-      font-style: italic;
-    }
-
-    .signature small {
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.78rem;
-      font-style: normal;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-    }
-
-    .graphic-card {
-      position: relative;
-      border: 1px solid rgba(244, 213, 141, 0.34);
-      border-radius: 30px;
-      padding: 10px;
-      background:
-        linear-gradient(135deg, rgba(244, 213, 141, 0.16), rgba(255, 255, 255, 0.035)),
-        rgba(0, 0, 0, 0.32);
-      box-shadow:
-        0 28px 80px rgba(0, 0, 0, 0.66),
-        0 0 70px rgba(244, 180, 69, 0.12);
-      overflow: hidden;
-    }
-
-    .graphic-card::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, 0.26) 48%, transparent 61%);
-      transform: translateX(-72%) rotate(8deg);
-      animation: glint 9s ease-in-out infinite;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    @keyframes glint {
-      0%, 58%, 100% { transform: translateX(-72%) rotate(8deg); opacity: 0; }
-      68% { opacity: 0.75; }
-      78% { transform: translateX(72%) rotate(8deg); opacity: 0; }
-    }
-
-    .graphic-card img {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 22px;
-      object-fit: cover;
-      background: #090909;
-    }
-
-    .summit-strip {
-      margin: 40px 0 0;
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .summit-chip {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      padding: 18px;
-      min-height: 116px;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(244, 213, 141, 0.11), transparent 68%),
-        rgba(255, 255, 255, 0.045);
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
-    }
-
-    .summit-chip strong {
-      display: block;
-      color: var(--gold);
-      font-size: 1.15rem;
-      margin-bottom: 8px;
-    }
-
-    .summit-chip p {
-      margin: 0;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.94rem;
-      line-height: 1.55;
-    }
-
-    .feature-section {
-      margin-top: 30px;
-      display: grid;
-      grid-template-columns: minmax(300px, 0.86fr) minmax(0, 1.14fr);
-      gap: 28px;
-      align-items: start;
-    }
-
-    .preface-copy,
-    .summits-panel,
-    .carat-panel,
-    .gateway-panel {
-      padding: clamp(20px, 3vw, 34px);
-    }
-
-    .preface-copy h3,
-    .summits-panel h3,
-    .carat-panel h3,
-    .gateway-panel h3 {
-      margin: 0 0 14px;
-      color: var(--gold);
-      font-size: clamp(1.8rem, 3.4vw, 3.2rem);
-      line-height: 1.02;
-    }
-
-    .preface-copy p,
-    .summits-panel p,
-    .carat-panel p,
-    .gateway-panel p {
-      margin: 0 0 16px;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.72;
-      font-size: 1rem;
-    }
-
-    .preface-art {
-      margin-top: 18px;
-    }
-
-    .summit-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 20px;
-    }
-
-    .summit {
-      min-height: 112px;
-      border: 1px solid rgba(244, 213, 141, 0.2);
-      border-radius: 20px;
-      padding: 15px;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.022)),
-        rgba(255, 255, 255, 0.035);
-    }
-
-    .summit b {
-      display: block;
-      color: var(--gold);
-      font-size: 1.02rem;
-      margin-bottom: 7px;
-    }
-
-    .summit span {
-      display: block;
-      color: var(--muted);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-
-    .carat-panel {
-      margin-top: 30px;
-      text-align: center;
-      background:
-        radial-gradient(circle at 50% 0%, rgba(255, 196, 88, 0.15), transparent 46%),
-        linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.018));
-    }
-
-    .carat-number {
-      display: block;
-      color: var(--gold);
-      font-size: clamp(3.6rem, 10vw, 8.4rem);
-      line-height: 0.86;
-      letter-spacing: -0.05em;
-      text-shadow: 0 0 44px rgba(244, 213, 141, 0.22);
-    }
-
-    .carat-panel p {
-      max-width: 820px;
-      margin: 22px auto 0;
-      font-size: clamp(1rem, 1.7vw, 1.16rem);
-    }
-
-    .gateway-panel {
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    .gateway-panel a {
-      display: inline-flex;
-      margin-top: 8px;
-      justify-content: center;
-      align-items: center;
-      min-height: 46px;
-      padding: 13px 18px;
-      border-radius: 999px;
-      color: #21170a;
-      text-decoration: none;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      background: linear-gradient(135deg, var(--gold), var(--gold2));
-    }
-
-    .footer {
-      margin-top: 34px;
-      padding: 28px 0 0;
-      color: rgba(255, 247, 223, 0.56);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.82rem;
-      letter-spacing: 0.08em;
-      text-align: center;
-      text-transform: uppercase;
-    }
-
-    @media (max-width: 940px) {
-      .parent-hero,
-      .love-hero,
-      .feature-section {
-        grid-template-columns: 1fr;
-      }
-
-      .parent-hero,
-      .love-hero {
-        min-height: 0;
-      }
-
-      .love-art {
-        order: -1;
-      }
-
-      .summit-strip,
-      .summit-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 560px) {
-      .page {
-        width: min(100% - 18px, var(--max));
-        padding-top: 14px;
-      }
-
-      .topbar {
-        flex-direction: column;
-        align-items: stretch;
-        text-align: center;
-      }
-
-      .parent-copy,
-      .love-copy,
-      .preface-copy,
-      .summits-panel,
-      .carat-panel,
-      .gateway-panel {
-        border-radius: 22px;
-      }
-
-      .graphic-card {
-        border-radius: 22px;
-        padding: 7px;
-      }
-
-      .graphic-card img {
-        border-radius: 16px;
-      }
-    }
+    body{margin:0;background:#020713;color:#eef3ff;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    .planet-rail{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .planet-rail a{display:inline-flex;align-items:center;min-height:38px;padding:0 14px;border:1px solid rgba(244,201,103,.24);border-radius:999px;text-decoration:none;color:#d9e3f7;background:rgba(255,255,255,.045);font-weight:750}
+    .planet-rail a[aria-current="page"]{color:#111827;background:linear-gradient(180deg,#ffe3a3,#f4c967);border-color:#f4c967}
+    .diamond-grid{display:grid;grid-template-columns:repeat(16,minmax(0,1fr));gap:6px;margin-top:22px}
+    .diamond-cell{aspect-ratio:1;border:1px solid rgba(244,201,103,.35);transform:rotate(45deg);background:rgba(255,255,255,.05);box-shadow:0 0 18px rgba(244,201,103,.12)}
+    @media(max-width:760px){.diamond-grid{grid-template-columns:repeat(8,minmax(0,1fr))}}
   </style>
 </head>
+<body class="manor-skin manor-planet" data-manor-skin="v1" data-manor-room="nine-summits-of-love" data-manor-class="planet" data-planet-id="nine-summits-of-love" data-planet-slot="P9_NINE_SUMMITS_OF_LOVE" data-planet-orbit="manor" data-manor-batch="BATCH_3_PLANETS">
+  <nav class="manor-route-rail" aria-label="Richie’s Manor house routes">
+    <a href="/">Compass</a>
+    <a href="/door/">Door</a>
+    <a href="/home/">Home</a>
+    <a href="/products/">Products</a>
+    <a href="/showroom/">Showroom</a>
+    <a href="/gauges/">Gauges</a>
+  </nav>
 
-<body>
-  <main class="page">
-    <nav class="topbar" aria-label="Nine Summits navigation">
-      <a href="../index.html">Diamond Gate Bridge</a>
-      <a href="#nine-summits-love">Nine Summits of Love</a>
-    </nav>
+  <main class="manor-shell">
+    <section class="manor-room manor-lattice-mark">
+      <p class="manor-kicker">P9 · Nine Summits of Love · Human Potential Field</p>
+      <h1 class="manor-title">256 Diamonds of Human Potential</h1>
+      <p class="manor-lede">Nine Summits of Love is the highest human-potential summit field. It carries the 256 carats of human potential, written by This Underdog, as a transformation surface anchored back to the Manor.</p>
 
-    <section class="parent-hero" aria-labelledby="parent-title">
-      <div class="parent-copy">
-        <p class="eyebrow">Diamond Gate Bridge</p>
-        <h1 id="parent-title">
-          Nine Summits Metaverse
-          <span>One parent field. Nine summit paths.</span>
-        </h1>
-        <p class="subtitle">
-          The Nine Summits Metaverse is the parent surface. The Nine Summits of Love now lives inside it
-          as a married extension: 256 Carats of Human Potential, written by This Underdog.
-        </p>
-
-        <div class="button-row">
-          <a class="primary" href="#nine-summits-love">Enter Love Summit</a>
-          <a href="../nine-summits-of-love/">Open Standalone Page</a>
-          <a href="../index.html">Return Home</a>
-        </div>
+      <div class="planet-rail" aria-label="Planetary constructs">
+        <a href="/prelude/">Prelude</a>
+        <a href="/explore/">Explore</a>
+        <a href="/frontier/">Frontier</a>
+        <a href="/laws/">Laws</a>
+        <a href="/governance/">Governance</a>
+        <a href="/upper-room/">Upper Room</a>
+        <a href="/about-this-underdog/">About</a>
+        <a href="/nine-summits/">Nine Summits</a>
+        <a href="/nine-summits-of-love/" aria-current="page">Love</a>
       </div>
 
-      <div class="parent-orbit" aria-label="Nine Summits parent structure">
-        <article class="orbit-card">
-          <strong>Parent Index</strong>
-          <p>This page now acts as the primary Nine Summits gateway instead of leaving Love as a separate island.</p>
+      <div class="manor-divider"></div>
+
+      <div class="manor-grid three">
+        <article class="manor-card">
+          <p class="manor-room-label">256</p>
+          <h2>Full lattice expression.</h2>
+          <p>The 16 x 16 field gives the page a visible relationship to the full 256 geometry.</p>
         </article>
-        <article class="orbit-card">
-          <strong>Love Extension</strong>
-          <p>The Love graphics are embedded directly below as a visible, married section of the parent page.</p>
+        <article class="manor-card">
+          <p class="manor-room-label">Diamonds</p>
+          <h2>Carats of potential.</h2>
+          <p>Each diamond is a symbolic unit of human potential, not a detached graphic object.</p>
         </article>
-        <article class="orbit-card">
-          <strong>256 Carats</strong>
-          <p>The 256-carat frame becomes the governing symbol for human potential under pressure and refinement.</p>
+        <article class="manor-card">
+          <p class="manor-room-label">Love</p>
+          <h2>Transformation surface.</h2>
+          <p>The page points toward growth, self-respect, service, and long-path development.</p>
         </article>
+      </div>
+
+      <div class="diamond-grid" aria-label="256 diamond lattice">
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
+        <span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span><span class="diamond-cell"></span>
       </div>
     </section>
 
-    <section id="nine-summits-love" class="love-marriage" aria-labelledby="love-title">
-      <div class="love-hero">
-        <div class="love-copy">
-          <p class="eyebrow">Nine Summits Metaverse Extension</p>
-          <h2 id="love-title">
-            The Nine Summits of Love
-            <span>256 Carats of Human Potential</span>
-          </h2>
-          <p class="subtitle">
-            A diamond-hearted preface surface for the Underdog series: character, structure,
-            balance, stability, peace, and joy organized into a readable path of human dignity.
-          </p>
-          <div class="signature">
-            <small>written by</small>
-            This Underdog
-          </div>
-        </div>
-
-        <div class="love-art">
-          <figure class="graphic-card">
-            <img
-              src="../assets/nine-summits-love/nine-summits-love-hero.png"
-              alt="The Nine Summits of Love hero graphic with a radiant diamond heart and the phrase 256 Karats of Human Potential"
-              loading="eager"
-              decoding="async"
-            />
-          </figure>
-        </div>
-      </div>
-
-      <section class="summit-strip" aria-label="Core reading of the Nine Summits of Love">
-        <article class="summit-chip">
-          <strong>Human Potential</strong>
-          <p>Every person carries buried value. The page reads that value as diamond pressure, not as decoration.</p>
-        </article>
-        <article class="summit-chip">
-          <strong>Diamond Discipline</strong>
-          <p>The 256-carat frame turns love into structure: a full-field measure of growth, dignity, and return.</p>
-        </article>
-        <article class="summit-chip">
-          <strong>Underdog Origin</strong>
-          <p>The author position stays visible: not above the system, but forged through the pressure inside it.</p>
-        </article>
-      </section>
-
-      <section class="feature-section">
-        <article class="preface-copy">
-          <h3>Preface Cover</h3>
-          <p>
-            This graphic carries the locked-heart image, the key, the chain, and the underdog signature.
-            It now sits inside the Nine Summits parent page as the origin panel for the Love summit.
-          </p>
-
-          <figure class="graphic-card preface-art">
-            <img
-              src="../assets/nine-summits-love/nine-summits-love-preface-cover.png"
-              alt="The Nine Summits of Love preface cover with chained diamond hearts, a key, and written by This Underdog"
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-        </article>
-
-        <article class="summits-panel">
-          <h3>The Nine Summits</h3>
-          <p>
-            The Love summit is now married to the Nine Summits Metaverse index. The graphics become the visual gateway,
-            while this structure carries the readable summit logic.
-          </p>
-
-          <div class="summit-grid" aria-label="Nine Summits list">
-            <div class="summit"><b>1. Character</b><span>The first summit: the person becomes readable under pressure.</span></div>
-            <div class="summit"><b>2. Structure</b><span>Love receives a form strong enough to hold responsibility.</span></div>
-            <div class="summit"><b>3. Balance</b><span>Force, care, judgment, and patience stop fighting for control.</span></div>
-            <div class="summit"><b>4. Stability</b><span>The heart becomes durable enough to return after strain.</span></div>
-            <div class="summit"><b>5. Peace</b><span>Peace is not passivity. It is ordered strength without needless violence.</span></div>
-            <div class="summit"><b>6. Joy</b><span>Joy is the proof that the structure is alive, not merely correct.</span></div>
-            <div class="summit"><b>7. Dignity</b><span>The person is not reduced to damage, error, status, or appearance.</span></div>
-            <div class="summit"><b>8. Free Will</b><span>Choice becomes meaningful when it is disciplined, visible, and owned.</span></div>
-            <div class="summit"><b>9. Love</b><span>The final summit holds the others without collapsing them.</span></div>
-          </div>
-        </article>
-      </section>
-
-      <section class="carat-panel" aria-label="256 Carats of Human Potential">
-        <span class="carat-number">256</span>
-        <p>
-          The 256-carats frame belongs here as the governing metric: a complete diamond-field symbol
-          for human potential under pressure, refinement, dignity, and return.
-        </p>
-      </section>
-
-      <section class="gateway-panel" aria-label="Standalone Nine Summits of Love page">
-        <h3>Standalone Love Surface</h3>
-        <p>
-          The Love summit is now embedded in the parent index, while the standalone page can remain available
-          as a focused cover-style extension.
-        </p>
-        <a href="../nine-summits-of-love/">Open The Nine Summits of Love</a>
-      </section>
+    <section class="manor-backlinks">
+      <p class="manor-backlinks-title">Manor backlinks</p>
+      <ul class="manor-backlinks-list">
+        <li><a href="/">Compass</a></li>
+        <li><a href="/nine-summits/">Nine Summits Universe</a></li>
+        <li><a href="/products/">Products</a></li>
+        <li><a href="/showroom/">Showroom</a></li>
+        <li><a href="/gauges/">Gauges</a></li>
+      </ul>
     </section>
 
-    <footer class="footer">
-      Nine Summits Metaverse · The Nine Summits of Love · 256 Carats of Human Potential · Written by This Underdog
-    </footer>
+    <section class="manor-audit-strip">
+      <p class="manor-audit-title">Batch 3 audit markers</p>
+      <ul class="manor-audit-list">
+        <li class="manor-audit-chip pass" data-status="pass">planetary-route-exists</li>
+        <li class="manor-audit-chip pass" data-status="pass">planet-class</li>
+        <li class="manor-audit-chip pass" data-status="pass">manor-orbit</li>
+        <li class="manor-audit-chip pass" data-status="pass">P9_NINE_SUMMITS_OF_LOVE</li>
+        <li class="manor-audit-chip pass" data-status="pass">256-diamonds-human-potential</li>
+      </ul>
+    </section>
   </main>
 </body>
 </html>

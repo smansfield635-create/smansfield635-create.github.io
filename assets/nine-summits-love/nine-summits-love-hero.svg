@@ -1,0 +1,278 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" width="800" height="1100">
+  <defs>
+    <!-- Sky gradient -->
+    <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0a0820"/>
+      <stop offset="28%" stop-color="#1a0d35"/>
+      <stop offset="55%" stop-color="#7a2010"/>
+      <stop offset="72%" stop-color="#c44012"/>
+      <stop offset="88%" stop-color="#e06018"/>
+      <stop offset="100%" stop-color="#3a1808"/>
+    </linearGradient>
+
+    <!-- Ground gradient -->
+    <linearGradient id="groundGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a1008"/>
+      <stop offset="40%" stop-color="#180a04"/>
+      <stop offset="100%" stop-color="#080402"/>
+    </linearGradient>
+
+    <!-- Diamond heart glow -->
+    <radialGradient id="heartGlow" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#fff8d0" stop-opacity="0.9"/>
+      <stop offset="25%" stop-color="#ffd060" stop-opacity="0.7"/>
+      <stop offset="55%" stop-color="#ff8820" stop-opacity="0.45"/>
+      <stop offset="80%" stop-color="#ff5500" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#cc3300" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Diamond facet gradient -->
+    <radialGradient id="facetGrad" cx="45%" cy="38%" r="65%">
+      <stop offset="0%" stop-color="#fff8e8" stop-opacity="0.82"/>
+      <stop offset="20%" stop-color="#ffd880" stop-opacity="0.72"/>
+      <stop offset="42%" stop-color="#e07030" stop-opacity="0.65"/>
+      <stop offset="65%" stop-color="#8b2010" stop-opacity="0.72"/>
+      <stop offset="85%" stop-color="#3a0c04" stop-opacity="0.80"/>
+      <stop offset="100%" stop-color="#1a0602" stop-opacity="0.90"/>
+    </radialGradient>
+
+    <!-- Gold glow filter -->
+    <filter id="goldGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix type="matrix" values="1 0.5 0 0 0  0.7 0.4 0 0 0  0 0 0 0 0  0 0 0 1 0" in="blur" result="colored"/>
+      <feMerge>
+        <feMergeNode in="colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Outer glow filter -->
+    <filter id="outerGlow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="22" result="blur"/>
+      <feColorMatrix type="matrix" values="1 0.6 0 0 0.1  0.7 0.45 0 0 0  0 0 0 0 0  0 0 0 0.9 0" in="blur" result="colored"/>
+      <feMerge>
+        <feMergeNode in="colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Star glow -->
+    <filter id="starGlow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Text shadow -->
+    <filter id="textShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.8"/>
+    </filter>
+
+    <!-- Gold text glow -->
+    <filter id="goldTextGlow" x="-10%" y="-30%" width="120%" height="160%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feColorMatrix type="matrix" values="1 0.5 0 0 0  0.7 0.4 0 0 0  0 0.1 0 0 0  0 0 0 0.7 0" in="blur" result="colored"/>
+      <feMerge>
+        <feMergeNode in="colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Clip path for heart shape -->
+    <clipPath id="heartClip">
+      <path d="M400,690 C400,690 155,510 155,355 C155,265 215,210 280,210 C330,210 370,240 400,275 C430,240 470,210 520,210 C585,210 645,265 645,355 C645,510 400,690 400,690 Z"/>
+    </clipPath>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="800" height="1100" fill="url(#skyGrad)"/>
+
+  <!-- Cloud streaks - orange/red dramatic clouds -->
+  <g opacity="0.55">
+    <ellipse cx="200" cy="280" rx="220" ry="55" fill="#c04020" opacity="0.35" transform="rotate(-8,200,280)"/>
+    <ellipse cx="600" cy="260" rx="200" ry="45" fill="#a03010" opacity="0.30" transform="rotate(6,600,260)"/>
+    <ellipse cx="400" cy="320" rx="300" ry="38" fill="#e05020" opacity="0.22"/>
+    <ellipse cx="130" cy="380" rx="180" ry="35" fill="#b03818" opacity="0.28" transform="rotate(-5,130,380)"/>
+    <ellipse cx="680" cy="350" rx="160" ry="30" fill="#c04020" opacity="0.24" transform="rotate(4,680,350)"/>
+  </g>
+
+  <!-- Stars -->
+  <g filter="url(#starGlow)" fill="#ffffff">
+    <circle cx="85"  cy="48"  r="1.4" opacity="0.9"/>
+    <circle cx="180" cy="28"  r="1.0" opacity="0.8"/>
+    <circle cx="260" cy="58"  r="1.6" opacity="0.95"/>
+    <circle cx="340" cy="35"  r="0.9" opacity="0.7"/>
+    <circle cx="420" cy="22"  r="1.2" opacity="0.85"/>
+    <circle cx="510" cy="45"  r="1.5" opacity="0.9"/>
+    <circle cx="590" cy="18"  r="1.0" opacity="0.75"/>
+    <circle cx="670" cy="38"  r="1.3" opacity="0.88"/>
+    <circle cx="730" cy="62"  r="1.1" opacity="0.80"/>
+    <circle cx="50"  cy="90"  r="0.8" opacity="0.65"/>
+    <circle cx="140" cy="75"  r="1.2" opacity="0.78"/>
+    <circle cx="310" cy="88"  r="0.9" opacity="0.70"/>
+    <circle cx="460" cy="70"  r="1.4" opacity="0.82"/>
+    <circle cx="620" cy="82"  r="1.0" opacity="0.72"/>
+    <circle cx="755" cy="95"  r="1.5" opacity="0.86"/>
+    <circle cx="110" cy="130" r="1.1" opacity="0.74"/>
+    <circle cx="390" cy="120" r="0.8" opacity="0.60"/>
+    <circle cx="560" cy="108" r="1.3" opacity="0.80"/>
+    <circle cx="700" cy="140" r="0.9" opacity="0.68"/>
+  </g>
+
+  <!-- Horizon glow -->
+  <ellipse cx="400" cy="620" rx="380" ry="140" fill="#ff8830" opacity="0.22"/>
+  <ellipse cx="400" cy="650" rx="320" ry="90" fill="#ffa030" opacity="0.16"/>
+
+  <!-- Mountain silhouettes left -->
+  <path d="M0,680 L80,480 L160,600 L220,420 L300,620 L0,620 Z" fill="#160806" opacity="0.92"/>
+  <path d="M0,700 L80,520 L160,640 L220,460 L300,660 L0,660 Z" fill="#0d0504" opacity="0.95"/>
+
+  <!-- Mountain silhouettes right -->
+  <path d="M800,680 L720,480 L640,600 L580,420 L500,620 L800,620 Z" fill="#160806" opacity="0.92"/>
+  <path d="M800,700 L720,520 L640,640 L580,460 L500,660 L800,660 Z" fill="#0d0504" opacity="0.95"/>
+
+  <!-- Ground/terrain -->
+  <path d="M0,700 Q200,660 400,700 Q600,740 800,700 L800,1100 L0,1100 Z" fill="url(#groundGrad)"/>
+  <path d="M0,760 Q150,730 280,760 Q350,775 400,760 Q450,745 520,760 Q650,785 800,755 L800,1100 L0,1100 Z" fill="#0a0402" opacity="0.7"/>
+
+  <!-- Ground texture -->
+  <path d="M60,800 L100,780 L150,810 L200,790 L260,820" stroke="#2a1008" stroke-width="1.5" fill="none" opacity="0.5"/>
+  <path d="M550,795 L600,775 L650,808 L710,785 L760,815" stroke="#2a1008" stroke-width="1.5" fill="none" opacity="0.5"/>
+
+  <!-- Diamond heart outer glow -->
+  <g filter="url(#outerGlow)" opacity="0.85">
+    <path d="M400,690 C400,690 145,505 145,348 C145,252 210,195 278,195 C330,195 370,228 400,265 C430,228 470,195 522,195 C590,195 655,252 655,348 C655,505 400,690 400,690 Z"
+          fill="url(#heartGlow)"/>
+  </g>
+
+  <!-- Diamond heart main shape with facets -->
+  <g filter="url(#goldGlow)">
+    <!-- Main heart fill -->
+    <path d="M400,685 C400,685 155,503 155,352 C155,260 215,205 280,205 C332,205 372,237 400,272 C428,237 468,205 520,205 C585,205 645,260 645,352 C645,503 400,685 400,685 Z"
+          fill="url(#facetGrad)"/>
+
+    <!-- Heart outline with gold shimmer -->
+    <path d="M400,685 C400,685 155,503 155,352 C155,260 215,205 280,205 C332,205 372,237 400,272 C428,237 468,205 520,205 C585,205 645,260 645,352 C645,503 400,685 400,685 Z"
+          fill="none" stroke="#ffd060" stroke-width="2.5" opacity="0.9"/>
+
+    <!-- Center point light -->
+    <circle cx="400" cy="450" r="14" fill="#fffbe0" opacity="0.92"/>
+    <circle cx="400" cy="450" r="7" fill="#ffffff" opacity="1.0"/>
+
+    <!-- Facet lines radiating from center -->
+    <g stroke="#ffd880" stroke-width="1.2" opacity="0.6">
+      <!-- Up to top center -->
+      <line x1="400" y1="450" x2="400" y2="208"/>
+      <!-- Down to bottom point -->
+      <line x1="400" y1="450" x2="400" y2="685"/>
+      <!-- To upper left lobe -->
+      <line x1="400" y1="450" x2="218" y2="268"/>
+      <!-- To lower left -->
+      <line x1="400" y1="450" x2="175" y2="430"/>
+      <line x1="400" y1="450" x2="205" y2="560"/>
+      <line x1="400" y1="450" x2="290" y2="630"/>
+      <!-- To upper right lobe -->
+      <line x1="400" y1="450" x2="582" y2="268"/>
+      <!-- To lower right -->
+      <line x1="400" y1="450" x2="625" y2="430"/>
+      <line x1="400" y1="450" x2="595" y2="560"/>
+      <line x1="400" y1="450" x2="510" y2="630"/>
+      <!-- Diagonal cross facets -->
+      <line x1="400" y1="450" x2="160" y2="340"/>
+      <line x1="400" y1="450" x2="640" y2="340"/>
+    </g>
+
+    <!-- Cross-facet connecting lines -->
+    <g stroke="#ffcc60" stroke-width="0.9" opacity="0.42">
+      <line x1="218" y1="268" x2="400" y2="208"/>
+      <line x1="582" y1="268" x2="400" y2="208"/>
+      <line x1="218" y1="268" x2="175" y2="430"/>
+      <line x1="582" y1="268" x2="625" y2="430"/>
+      <line x1="175" y1="430" x2="290" y2="630"/>
+      <line x1="625" y1="430" x2="510" y2="630"/>
+      <line x1="290" y1="630" x2="400" y2="685"/>
+      <line x1="510" y1="630" x2="400" y2="685"/>
+      <line x1="175" y1="430" x2="205" y2="560"/>
+      <line x1="625" y1="430" x2="595" y2="560"/>
+    </g>
+
+    <!-- Sparkle points on facet intersections -->
+    <g fill="#fffbe0" opacity="0.95">
+      <circle cx="400" cy="208" r="3.5"/>
+      <circle cx="218" cy="268" r="2.8"/>
+      <circle cx="582" cy="268" r="2.8"/>
+      <circle cx="175" cy="430" r="2.5"/>
+      <circle cx="625" cy="430" r="2.5"/>
+      <circle cx="205" cy="560" r="2.2"/>
+      <circle cx="595" cy="560" r="2.2"/>
+      <circle cx="290" cy="630" r="2.0"/>
+      <circle cx="510" cy="630" r="2.0"/>
+    </g>
+
+    <!-- Star sparkles on diamond surface -->
+    <g fill="#ffffff" opacity="0.88">
+      <!-- 4-point star at top -->
+      <polygon points="400,202 402,208 408,208 403,212 405,218 400,214 395,218 397,212 392,208 398,208" opacity="0.95"/>
+      <!-- Smaller sparkles -->
+      <polygon points="300,340 301,344 305,344 302,347 303,351 300,348 297,351 298,347 295,344 299,344" opacity="0.75"/>
+      <polygon points="500,340 501,344 505,344 502,347 503,351 500,348 497,351 498,347 495,344 499,344" opacity="0.75"/>
+      <polygon points="260,500 261,503 264,503 262,505 263,508 260,506 257,508 258,505 256,503 259,503" opacity="0.65"/>
+      <polygon points="540,500 541,503 544,503 542,505 543,508 540,506 537,508 538,505 536,503 539,503" opacity="0.65"/>
+    </g>
+
+    <!-- Colorful gem reflections inside heart -->
+    <g clip-path="url(#heartClip)" opacity="0.55">
+      <polygon points="240,300 300,260 360,320 300,360" fill="#4488ff" opacity="0.5"/>
+      <polygon points="440,250 500,210 560,270 500,310" fill="#44cc88" opacity="0.4"/>
+      <polygon points="350,380 420,360 450,420 380,440" fill="#8844ff" opacity="0.35"/>
+      <polygon points="200,440 260,410 300,470 240,500" fill="#ff4488" opacity="0.3"/>
+      <polygon points="500,420 560,400 590,460 530,490" fill="#44aaff" opacity="0.3"/>
+    </g>
+  </g>
+
+  <!-- Light beam downward from heart -->
+  <path d="M390,685 L350,900 L400,920 L450,900 L410,685 Z" fill="#ffc040" opacity="0.18"/>
+  <path d="M397,685 L380,840 L400,855 L420,840 L403,685 Z" fill="#ffe080" opacity="0.22"/>
+
+  <!-- Golden ground reflection -->
+  <ellipse cx="400" cy="870" rx="80" ry="18" fill="#ffa020" opacity="0.25"/>
+  <ellipse cx="400" cy="860" rx="40" ry="8" fill="#ffd060" opacity="0.18"/>
+
+  <!-- Decorative line top -->
+  <line x1="220" y1="108" x2="580" y2="108" stroke="#f4d58d" stroke-width="1" opacity="0.55"/>
+  <circle cx="220" cy="108" r="2.5" fill="#f4d58d" opacity="0.7"/>
+  <circle cx="580" cy="108" r="2.5" fill="#f4d58d" opacity="0.7"/>
+
+  <!-- Title: THE -->
+  <text x="400" y="142" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-weight="bold"
+        fill="#f4d58d" text-anchor="middle" letter-spacing="10" filter="url(#goldTextGlow)">THE</text>
+
+  <!-- Title: NINE SUMMITS of LOVE -->
+  <text x="400" y="195" font-family="Georgia, 'Times New Roman', serif" font-size="72" font-weight="bold"
+        fill="#f4d58d" text-anchor="middle" letter-spacing="-1" filter="url(#textShadow)">NINE SUMMITS</text>
+  <text x="400" y="238" font-family="Georgia, 'Times New Roman', serif" font-size="55" font-style="italic" font-weight="bold"
+        fill="#f4d58d" text-anchor="middle" filter="url(#goldTextGlow)">of LOVE</text>
+
+  <!-- Subtitle -->
+  <text x="400" y="288" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-style="italic"
+        fill="#ffb84d" text-anchor="middle" filter="url(#goldTextGlow)">256 Karats of Human Potential</text>
+
+  <!-- Bottom decorative line -->
+  <line x1="120" y1="910" x2="680" y2="910" stroke="#f4d58d" stroke-width="1" opacity="0.40"/>
+
+  <!-- Bottom tagline: values -->
+  <text x="400" y="942" font-family="Georgia, 'Times New Roman', serif" font-size="22"
+        fill="#f4d58d" text-anchor="middle" letter-spacing="1" filter="url(#textShadow)">Character — Structure — Balance — Stability — Peace — Joy</text>
+
+  <!-- Bottom motto -->
+  <text x="400" y="978" font-family="Georgia, 'Times New Roman', serif" font-size="20" font-variant="small-caps" font-style="italic"
+        fill="#f4d58d" text-anchor="middle" filter="url(#goldTextGlow)">Human Dignity Stems from Free Will</text>
+
+  <!-- Bottom ornamental divider -->
+  <line x1="310" y1="996" x2="490" y2="996" stroke="#f4d58d" stroke-width="1" opacity="0.50"/>
+  <circle cx="400" cy="996" r="3" fill="#f4d58d" opacity="0.60"/>
+  <circle cx="320" cy="996" r="1.8" fill="#f4d58d" opacity="0.40"/>
+  <circle cx="480" cy="996" r="1.8" fill="#f4d58d" opacity="0.40"/>
+</svg>

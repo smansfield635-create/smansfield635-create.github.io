@@ -1,0 +1,213 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1100" width="800" height="1100">
+  <defs>
+    <!-- Dark background gradient -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#040612"/>
+      <stop offset="45%" stop-color="#080d1e"/>
+      <stop offset="78%" stop-color="#100818"/>
+      <stop offset="100%" stop-color="#060308"/>
+    </linearGradient>
+
+    <!-- Heart fill gradient -->
+    <radialGradient id="heartFill" cx="45%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#ffe8a0" stop-opacity="0.55"/>
+      <stop offset="30%" stop-color="#cc6820" stop-opacity="0.65"/>
+      <stop offset="60%" stop-color="#5a1808" stop-opacity="0.75"/>
+      <stop offset="85%" stop-color="#1e0806" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#0a0402" stop-opacity="0.95"/>
+    </radialGradient>
+
+    <!-- Key gradient -->
+    <linearGradient id="keyGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffe8a0"/>
+      <stop offset="50%" stop-color="#c89820"/>
+      <stop offset="100%" stop-color="#8a6010"/>
+    </linearGradient>
+
+    <!-- Chain link gradient -->
+    <linearGradient id="chainGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#b07820"/>
+      <stop offset="50%" stop-color="#ffd060"/>
+      <stop offset="100%" stop-color="#b07820"/>
+    </linearGradient>
+
+    <!-- Glow filter -->
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feColorMatrix type="matrix" values="1 0.5 0 0 0  0.7 0.4 0 0 0  0 0 0 0 0  0 0 0 0.8 0" in="blur" result="colored"/>
+      <feMerge>
+        <feMergeNode in="colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Soft glow -->
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Text shadow -->
+    <filter id="textShadow">
+      <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#000" flood-opacity="0.85"/>
+    </filter>
+
+    <!-- Gold glow text -->
+    <filter id="goldGlow" x="-15%" y="-30%" width="130%" height="160%">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feColorMatrix type="matrix" values="1 0.5 0 0 0  0.7 0.4 0 0 0  0 0 0 0 0  0 0 0 0.6 0" in="blur" result="colored"/>
+      <feMerge>
+        <feMergeNode in="colored"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="1100" fill="url(#bgGrad)"/>
+
+  <!-- Subtle star field -->
+  <g fill="#ffffff">
+    <circle cx="80"  cy="55"  r="0.9" opacity="0.65"/>
+    <circle cx="190" cy="38"  r="1.1" opacity="0.72"/>
+    <circle cx="310" cy="65"  r="0.8" opacity="0.58"/>
+    <circle cx="450" cy="30"  r="1.2" opacity="0.78"/>
+    <circle cx="570" cy="55"  r="0.9" opacity="0.62"/>
+    <circle cx="680" cy="42"  r="1.0" opacity="0.70"/>
+    <circle cx="740" cy="78"  r="0.8" opacity="0.55"/>
+    <circle cx="130" cy="98"  r="1.0" opacity="0.60"/>
+    <circle cx="380" cy="85"  r="0.7" opacity="0.50"/>
+    <circle cx="620" cy="92"  r="1.1" opacity="0.66"/>
+  </g>
+
+  <!-- Subtle radial ambient glow -->
+  <radialGradient id="ambientGlow" cx="50%" cy="50%" r="55%">
+    <stop offset="0%" stop-color="#ff8820" stop-opacity="0.10"/>
+    <stop offset="100%" stop-color="#ff8820" stop-opacity="0"/>
+  </radialGradient>
+  <rect width="800" height="1100" fill="url(#ambientGlow)"/>
+
+  <!-- Decorative header line -->
+  <line x1="180" y1="98" x2="620" y2="98" stroke="#c8961e" stroke-width="1" opacity="0.50"/>
+  <circle cx="180" cy="98" r="2" fill="#c8961e" opacity="0.60"/>
+  <circle cx="620" cy="98" r="2" fill="#c8961e" opacity="0.60"/>
+  <circle cx="400" cy="98" r="3" fill="#f4d58d" opacity="0.70"/>
+
+  <!-- Title -->
+  <text x="400" y="138" font-family="Georgia, 'Times New Roman', serif" font-size="34" font-weight="bold"
+        fill="#f4d58d" text-anchor="middle" letter-spacing="8" filter="url(#goldGlow)">PREFACE</text>
+  <text x="400" y="178" font-family="Georgia, 'Times New Roman', serif" font-size="26" font-style="italic"
+        fill="#c8961e" text-anchor="middle" letter-spacing="2">The Nine Summits of Love</text>
+
+  <!-- Chain — horizontal across the middle of heart zone -->
+  <!-- Left chain segment -->
+  <g filter="url(#softGlow)" stroke="url(#chainGrad)" stroke-width="4" fill="none">
+    <ellipse cx="108" cy="420" rx="14" ry="8" transform="rotate(-25,108,420)"/>
+    <ellipse cx="134" cy="412" rx="14" ry="8" transform="rotate(-25,134,412)"/>
+    <ellipse cx="160" cy="404" rx="14" ry="8" transform="rotate(-25,160,404)"/>
+    <ellipse cx="186" cy="396" rx="14" ry="8" transform="rotate(-25,186,396)"/>
+    <ellipse cx="212" cy="388" rx="14" ry="8" transform="rotate(-25,212,388)"/>
+    <ellipse cx="238" cy="380" rx="14" ry="8" transform="rotate(-25,238,380)"/>
+    <ellipse cx="264" cy="372" rx="14" ry="8" transform="rotate(-25,264,372)"/>
+    <ellipse cx="290" cy="364" rx="14" ry="8" transform="rotate(-25,290,364)"/>
+    <ellipse cx="316" cy="356" rx="14" ry="8" transform="rotate(-25,316,356)"/>
+    <ellipse cx="342" cy="348" rx="14" ry="8" transform="rotate(-25,342,348)"/>
+  </g>
+  <!-- Right chain segment -->
+  <g filter="url(#softGlow)" stroke="url(#chainGrad)" stroke-width="4" fill="none">
+    <ellipse cx="458" cy="348" rx="14" ry="8" transform="rotate(25,458,348)"/>
+    <ellipse cx="484" cy="356" rx="14" ry="8" transform="rotate(25,484,356)"/>
+    <ellipse cx="510" cy="364" rx="14" ry="8" transform="rotate(25,510,364)"/>
+    <ellipse cx="536" cy="372" rx="14" ry="8" transform="rotate(25,536,372)"/>
+    <ellipse cx="562" cy="380" rx="14" ry="8" transform="rotate(25,562,380)"/>
+    <ellipse cx="588" cy="388" rx="14" ry="8" transform="rotate(25,588,388)"/>
+    <ellipse cx="614" cy="396" rx="14" ry="8" transform="rotate(25,614,396)"/>
+    <ellipse cx="640" cy="404" rx="14" ry="8" transform="rotate(25,640,404)"/>
+    <ellipse cx="666" cy="412" rx="14" ry="8" transform="rotate(25,666,412)"/>
+    <ellipse cx="692" cy="420" rx="14" ry="8" transform="rotate(25,692,420)"/>
+  </g>
+
+  <!-- Lock body at top center of heart -->
+  <g filter="url(#glow)">
+    <!-- Lock shackle (arc) -->
+    <path d="M364,318 C364,290 436,290 436,318" stroke="#f4d58d" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <!-- Lock body -->
+    <rect x="350" y="318" width="100" height="72" rx="10" ry="10" fill="#c8961e" stroke="#f4d58d" stroke-width="2.5"/>
+    <!-- Lock keyhole -->
+    <circle cx="400" cy="344" r="11" fill="#1a0c04"/>
+    <rect x="394" y="344" width="12" height="22" rx="4" fill="#1a0c04"/>
+  </g>
+
+  <!-- Diamond Heart shape -->
+  <g filter="url(#glow)">
+    <!-- Outer glow -->
+    <path d="M400,720 C400,720 195,560 195,415 C195,335 248,285 305,285 C347,285 378,308 400,335 C422,308 453,285 495,285 C552,285 605,335 605,415 C605,560 400,720 400,720 Z"
+          fill="#ff7020" opacity="0.18"/>
+    <!-- Main heart -->
+    <path d="M400,710 C400,710 200,553 200,410 C200,332 252,283 308,283 C350,283 380,306 400,332 C420,306 450,283 492,283 C548,283 600,332 600,410 C600,553 400,710 400,710 Z"
+          fill="url(#heartFill)"/>
+    <!-- Heart outline -->
+    <path d="M400,710 C400,710 200,553 200,410 C200,332 252,283 308,283 C350,283 380,306 400,332 C420,306 450,283 492,283 C548,283 600,332 600,410 C600,553 400,710 400,710 Z"
+          fill="none" stroke="#f4d58d" stroke-width="2.5" opacity="0.85"/>
+
+    <!-- Facet lines -->
+    <g stroke="#ffd060" stroke-width="1.0" opacity="0.45">
+      <line x1="400" y1="470" x2="400" y2="286"/>
+      <line x1="400" y1="470" x2="400" y2="710"/>
+      <line x1="400" y1="470" x2="240" y2="340"/>
+      <line x1="400" y1="470" x2="560" y2="340"/>
+      <line x1="400" y1="470" x2="208" y2="470"/>
+      <line x1="400" y1="470" x2="592" y2="470"/>
+      <line x1="400" y1="470" x2="235" y2="580"/>
+      <line x1="400" y1="470" x2="565" y2="580"/>
+      <line x1="400" y1="470" x2="320" y2="655"/>
+      <line x1="400" y1="470" x2="480" y2="655"/>
+    </g>
+
+    <!-- Center gemstone -->
+    <circle cx="400" cy="470" r="10" fill="#fffbe0" opacity="0.90"/>
+    <circle cx="400" cy="470" r="5" fill="#ffffff" opacity="1.0"/>
+
+    <!-- Sparkle points -->
+    <g fill="#fffbe0" opacity="0.88">
+      <circle cx="400" cy="286" r="3.0"/>
+      <circle cx="240" cy="340" r="2.2"/>
+      <circle cx="560" cy="340" r="2.2"/>
+      <circle cx="208" cy="470" r="2.0"/>
+      <circle cx="592" cy="470" r="2.0"/>
+    </g>
+  </g>
+
+  <!-- Key — hanging below lock -->
+  <g filter="url(#glow)" transform="translate(400,730) rotate(45)">
+    <!-- Key bow (ring) -->
+    <circle cx="0" cy="0" r="28" fill="none" stroke="url(#keyGrad)" stroke-width="8"/>
+    <circle cx="0" cy="0" r="18" fill="none" stroke="url(#keyGrad)" stroke-width="3"/>
+    <!-- Key stem -->
+    <rect x="-5" y="28" width="10" height="90" rx="4" fill="url(#keyGrad)"/>
+    <!-- Key teeth -->
+    <rect x="5" y="78" width="16" height="8" rx="3" fill="url(#keyGrad)"/>
+    <rect x="5" y="95" width="12" height="8" rx="3" fill="url(#keyGrad)"/>
+    <rect x="5" y="112" width="8"  height="7" rx="3" fill="url(#keyGrad)"/>
+  </g>
+
+  <!-- Author signature -->
+  <text x="400" y="870" font-family="Georgia, 'Times New Roman', serif" font-size="17" font-style="italic"
+        fill="#8a7040" text-anchor="middle" letter-spacing="2">written by</text>
+  <text x="400" y="908" font-family="Georgia, 'Times New Roman', serif" font-size="38" font-style="italic"
+        fill="#f4d58d" text-anchor="middle" filter="url(#goldGlow)">This Underdog</text>
+
+  <!-- Bottom decorative line -->
+  <line x1="200" y1="935" x2="600" y2="935" stroke="#c8961e" stroke-width="1" opacity="0.40"/>
+
+  <!-- Bottom tagline -->
+  <text x="400" y="968" font-family="Georgia, 'Times New Roman', serif" font-size="18"
+        fill="#c8961e" text-anchor="middle" letter-spacing="1" filter="url(#textShadow)">256 Karats of Human Potential</text>
+
+  <!-- Bottom ornament -->
+  <line x1="330" y1="990" x2="470" y2="990" stroke="#c8961e" stroke-width="1" opacity="0.45"/>
+  <circle cx="400" cy="990" r="2.5" fill="#c8961e" opacity="0.55"/>
+</svg>

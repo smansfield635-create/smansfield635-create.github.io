@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-gauges-generation="true-instrument-room-b3">
+<html lang="en" data-gauges-generation="true-instrument-room-b4-compact">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <title>Gauges · Diamond Gate Bridge</title>
   <meta
     name="description"
-    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, combining engineer-grade telemetry with TED Talk-style interpretation."
+    content="Gauges — the true site-health instrument room for Diamond Gate Bridge, combining compact engineer-grade telemetry with TED Talk-style interpretation."
   />
 
   <style>
@@ -50,14 +50,14 @@
       position:fixed;
       inset:0;
       pointer-events:none;
-      opacity:.50;
+      opacity:.42;
       background:
-        radial-gradient(circle at 10% 12%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 22% 30%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 38% 18%,rgba(255,255,255,.72) 0 1.2px,transparent 2.4px),
-        radial-gradient(circle at 58% 34%,rgba(255,255,255,.62) 0 1px,transparent 2px),
-        radial-gradient(circle at 76% 16%,rgba(255,255,255,.72) 0 1.1px,transparent 2.2px),
-        radial-gradient(circle at 88% 42%,rgba(255,255,255,.62) 0 1px,transparent 2px);
+        radial-gradient(circle at 10% 12%,rgba(255,255,255,.70) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 22% 30%,rgba(255,255,255,.58) 0 1px,transparent 2px),
+        radial-gradient(circle at 38% 18%,rgba(255,255,255,.70) 0 1.2px,transparent 2.4px),
+        radial-gradient(circle at 58% 34%,rgba(255,255,255,.58) 0 1px,transparent 2px),
+        radial-gradient(circle at 76% 16%,rgba(255,255,255,.70) 0 1.1px,transparent 2.2px),
+        radial-gradient(circle at 88% 42%,rgba(255,255,255,.58) 0 1px,transparent 2px);
       background-size:180px 180px,220px 220px,260px 260px,210px 210px,240px 240px,190px 190px;
       animation:fieldDrift 28s linear infinite;
       z-index:0;
@@ -160,7 +160,7 @@
     }
 
     .jumpCard{
-      min-height:92px;
+      min-height:84px;
       border:1px solid rgba(255,255,255,.12);
       border-radius:24px;
       background:
@@ -262,10 +262,10 @@
 
     .instrumentRoom{
       border-radius:34px;
-      padding:clamp(16px,2.5vw,28px);
+      padding:clamp(14px,2.2vw,24px);
       display:grid;
-      grid-template-columns:minmax(0,1fr) minmax(360px,.86fr);
-      gap:16px;
+      grid-template-columns:minmax(0,1fr) minmax(360px,.82fr);
+      gap:14px;
       overflow:hidden;
       position:relative;
       isolation:isolate;
@@ -303,15 +303,15 @@
     }
 
     .engineerWall{
-      padding:16px;
+      padding:14px;
       display:grid;
       gap:12px;
     }
 
     .tedWall{
-      padding:clamp(18px,2.5vw,28px);
+      padding:clamp(16px,2.2vw,24px);
       display:grid;
-      gap:14px;
+      gap:12px;
       align-content:start;
     }
 
@@ -319,9 +319,9 @@
       display:flex;
       align-items:end;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
       flex-wrap:wrap;
-      padding-bottom:10px;
+      padding-bottom:9px;
       border-bottom:1px solid rgba(255,255,255,.09);
     }
 
@@ -360,7 +360,7 @@
     .tedWall h1{
       margin:0;
       color:#fff;
-      font-size:clamp(2rem,4vw,4.1rem);
+      font-size:clamp(1.8rem,3.6vw,3.6rem);
       line-height:.88;
       letter-spacing:-.07em;
     }
@@ -369,8 +369,8 @@
     .tedWall p{
       margin:0;
       color:var(--muted);
-      line-height:1.52;
-      font-size:.96rem;
+      line-height:1.48;
+      font-size:.92rem;
     }
 
     .statusChip{
@@ -378,8 +378,8 @@
       border-radius:999px;
       background:rgba(147,239,189,.08);
       color:#dfffea;
-      padding:9px 12px;
-      font-size:.66rem;
+      padding:8px 11px;
+      font-size:.63rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -395,17 +395,16 @@
     .gaugeCard{
       --tone:var(--green);
       --needle:70deg;
-      --arc:160deg;
-      min-height:226px;
+      min-height:198px;
       border:1px solid rgba(255,255,255,.10);
-      border-radius:24px;
+      border-radius:22px;
       background:
         radial-gradient(circle at 50% 0%,color-mix(in srgb,var(--tone) 18%,transparent),transparent 70%),
         linear-gradient(180deg,rgba(255,255,255,.048),rgba(255,255,255,.020));
-      padding:12px;
+      padding:10px;
       display:grid;
-      grid-template-rows:auto auto 1fr auto;
-      gap:8px;
+      grid-template-rows:auto auto auto auto;
+      gap:7px;
       position:relative;
       overflow:hidden;
     }
@@ -419,7 +418,7 @@
       display:flex;
       justify-content:space-between;
       align-items:start;
-      gap:8px;
+      gap:7px;
     }
 
     .gaugeName{
@@ -429,7 +428,7 @@
 
     .gaugeName small{
       color:#c8d7ff;
-      font-size:.56rem;
+      font-size:.52rem;
       font-weight:950;
       letter-spacing:.12em;
       text-transform:uppercase;
@@ -437,7 +436,7 @@
 
     .gaugeName strong{
       color:#fff;
-      font-size:.92rem;
+      font-size:.82rem;
       line-height:1.04;
       letter-spacing:-.025em;
     }
@@ -445,14 +444,14 @@
     .gaugeValue{
       color:var(--tone);
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:1rem;
+      font-size:.95rem;
       font-weight:950;
       line-height:1;
     }
 
     .dial{
       position:relative;
-      width:100%;
+      width:min(100%,138px);
       aspect-ratio:1;
       border-radius:50%;
       margin:auto;
@@ -467,8 +466,8 @@
           rgba(255,255,255,.07) 180deg 360deg
         );
       box-shadow:
-        inset 0 0 22px rgba(0,0,0,.58),
-        0 14px 24px rgba(0,0,0,.26);
+        inset 0 0 20px rgba(0,0,0,.58),
+        0 10px 18px rgba(0,0,0,.24);
       overflow:hidden;
     }
 
@@ -493,8 +492,8 @@
       position:absolute;
       left:50%;
       top:50%;
-      width:11px;
-      height:11px;
+      width:9px;
+      height:9px;
       border-radius:50%;
       transform:translate(-50%,-50%);
       background:#fff8ea;
@@ -524,7 +523,7 @@
       transform:translateX(-50%);
       display:grid;
       place-items:center;
-      gap:2px;
+      gap:1px;
       text-align:center;
       z-index:5;
     }
@@ -532,13 +531,13 @@
     .dialRead strong{
       color:#fff;
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:1.1rem;
+      font-size:.98rem;
       line-height:1;
     }
 
     .dialRead small{
       color:var(--soft);
-      font-size:.52rem;
+      font-size:.48rem;
       font-weight:900;
       letter-spacing:.10em;
       text-transform:uppercase;
@@ -546,29 +545,29 @@
 
     .gaugeMeaning{
       color:var(--muted);
-      font-size:.78rem;
-      line-height:1.34;
-      min-height:42px;
+      font-size:.72rem;
+      line-height:1.28;
+      min-height:34px;
     }
 
     .telemetry{
       display:grid;
-      gap:3px;
+      gap:2px;
       border-top:1px solid rgba(255,255,255,.08);
-      padding-top:7px;
+      padding-top:6px;
       color:var(--soft);
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.64rem;
-      line-height:1.25;
+      font-size:.56rem;
+      line-height:1.18;
     }
 
     .legend{
       display:grid;
       grid-template-columns:repeat(6,minmax(0,1fr));
-      gap:8px;
+      gap:7px;
       border:1px solid rgba(255,255,255,.09);
       border-radius:20px;
-      padding:10px;
+      padding:9px;
       background:rgba(0,0,0,.18);
     }
 
@@ -577,7 +576,7 @@
       align-items:center;
       gap:7px;
       color:var(--soft);
-      font-size:.66rem;
+      font-size:.62rem;
       font-weight:850;
       letter-spacing:.04em;
       text-transform:uppercase;
@@ -595,8 +594,8 @@
 
     .tedLead{
       display:grid;
-      gap:10px;
-      padding-bottom:12px;
+      gap:9px;
+      padding-bottom:11px;
       border-bottom:1px solid rgba(255,255,255,.09);
     }
 
@@ -604,15 +603,15 @@
       margin:0;
       color:var(--gold);
       font-family:Georgia,"Times New Roman",serif;
-      font-size:clamp(2.2rem,5vw,4.8rem);
-      line-height:.90;
+      font-size:clamp(1.75rem,4.4vw,4rem);
+      line-height:.92;
       letter-spacing:-.07em;
     }
 
     .tedLead .thesis{
       margin:0;
       color:#fff;
-      font-size:clamp(1.05rem,2vw,1.42rem);
+      font-size:clamp(1rem,1.8vw,1.32rem);
       line-height:1.18;
       font-weight:850;
       letter-spacing:-.035em;
@@ -620,18 +619,18 @@
 
     .plainCards{
       display:grid;
-      gap:10px;
+      gap:9px;
     }
 
     .plainCard{
       border:1px solid rgba(255,255,255,.10);
-      border-radius:22px;
+      border-radius:20px;
       background:
         radial-gradient(circle at 0% 0%,rgba(255,217,138,.08),transparent 54%),
         rgba(255,255,255,.035);
-      padding:14px;
+      padding:12px;
       display:grid;
-      gap:7px;
+      gap:6px;
     }
 
     .plainCard.blue{
@@ -654,7 +653,7 @@
 
     .plainCard small{
       color:var(--gold);
-      font-size:.62rem;
+      font-size:.60rem;
       font-weight:950;
       letter-spacing:.13em;
       text-transform:uppercase;
@@ -662,46 +661,46 @@
 
     .plainCard strong{
       color:#fff;
-      font-size:1.14rem;
+      font-size:1.05rem;
       line-height:1.08;
       letter-spacing:-.035em;
     }
 
     .plainCard p{
-      font-size:.93rem;
+      font-size:.88rem;
     }
 
     .nextAction{
       margin-top:auto;
       border:1px solid rgba(255,217,138,.26);
-      border-radius:24px;
+      border-radius:22px;
       background:
         radial-gradient(circle at 50% 0%,rgba(255,217,138,.13),transparent 62%),
         rgba(0,0,0,.20);
-      padding:16px;
+      padding:14px;
       display:grid;
-      gap:10px;
+      gap:9px;
     }
 
     .nextAction h3{
       margin:0;
       color:#fff;
-      font-size:1.25rem;
+      font-size:1.15rem;
       line-height:1.04;
       letter-spacing:-.04em;
     }
 
     .receipt{
       border:1px solid rgba(255,255,255,.10);
-      border-radius:20px;
+      border-radius:18px;
       background:rgba(0,0,0,.20);
-      padding:12px;
+      padding:11px;
       display:grid;
-      gap:5px;
+      gap:4px;
       color:var(--soft);
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-      font-size:.74rem;
-      line-height:1.32;
+      font-size:.68rem;
+      line-height:1.28;
       overflow:auto;
     }
 
@@ -741,8 +740,16 @@
         grid-template-columns:1fr;
       }
 
+      .tedWall{
+        order:1;
+      }
+
+      .engineerWall{
+        order:2;
+      }
+
       .gaugeGrid{
-        grid-template-columns:repeat(2,minmax(0,1fr));
+        grid-template-columns:repeat(4,minmax(0,1fr));
       }
 
       .routeRail{
@@ -750,10 +757,21 @@
       }
     }
 
+    @media(max-width:900px){
+      .gaugeGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .dial{
+        width:min(100%,128px);
+      }
+    }
+
     @media(max-width:760px){
       .page{
         width:min(100vw - 12px,var(--max));
         padding-top:10px;
+        gap:10px;
       }
 
       .topbar,
@@ -776,29 +794,121 @@
         border-radius:14px;
       }
 
-      .jumpGrid,
-      .gaugeGrid,
-      .legend,
-      .routeRail{
-        grid-template-columns:1fr;
+      .jumpGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
       }
 
       .jumpCard{
-        min-height:76px;
+        min-height:64px;
+        border-radius:18px;
+        padding:9px;
+        gap:8px;
+      }
+
+      .navCompass{
+        width:38px;
+      }
+
+      .jumpText strong{
+        font-size:.82rem;
+      }
+
+      .jumpText small{
+        font-size:.48rem;
       }
 
       .instrumentRoom{
-        padding:12px;
+        padding:10px;
+        gap:10px;
       }
 
       .engineerWall,
       .tedWall{
-        border-radius:24px;
-        padding:14px;
+        border-radius:22px;
+        padding:12px;
+      }
+
+      .engineerTitle h1,
+      .tedWall h1{
+        font-size:2.1rem;
+      }
+
+      .tedLead h2{
+        font-size:2.2rem;
+      }
+
+      .tedLead .thesis{
+        font-size:1rem;
+      }
+
+      .gaugeGrid{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:8px;
       }
 
       .gaugeCard{
-        min-height:210px;
+        min-height:168px;
+        border-radius:18px;
+        padding:8px;
+        gap:5px;
+      }
+
+      .gaugeName strong{
+        font-size:.72rem;
+      }
+
+      .gaugeValue{
+        font-size:.82rem;
+      }
+
+      .dial{
+        width:min(100%,104px);
+      }
+
+      .dialRead strong{
+        font-size:.82rem;
+      }
+
+      .dialRead small{
+        font-size:.40rem;
+      }
+
+      .gaugeMeaning{
+        min-height:28px;
+        font-size:.61rem;
+        line-height:1.20;
+      }
+
+      .telemetry{
+        font-size:.48rem;
+        line-height:1.12;
+      }
+
+      .legend{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+
+      .routeRail{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+      }
+    }
+
+    @media(max-width:390px){
+      .dial{
+        width:min(100%,92px);
+      }
+
+      .gaugeCard{
+        min-height:158px;
+      }
+
+      .gaugeMeaning{
+        font-size:.58rem;
+      }
+
+      .telemetry{
+        font-size:.45rem;
       }
     }
 
@@ -819,8 +929,8 @@
     class="page"
     data-page="gauges"
     data-page-relative-gold="gauges"
-    data-instrument-standard="gauges-true-instrument-room-b3"
-    data-read-mode="half-engineer-half-ted-talk"
+    data-instrument-standard="gauges-true-instrument-room-b4-compact"
+    data-read-mode="compact-engineer-dashboard-plus-ted-talk"
   >
     <header class="topbar">
       <a class="brand" href="/gauges/" aria-label="Gauges home">
@@ -872,7 +982,7 @@
           <div class="engineerTitle">
             <span class="pill">Engineer wall</span>
             <h1 id="engineerTitle">Telemetry</h1>
-            <p>Colored gauges, values, status states, and direct receipts.</p>
+            <p>Compact gauges, values, status states, and direct receipts.</p>
           </div>
           <div class="statusChip">SYSTEM_READ=ACTIVE</div>
         </div>
@@ -928,7 +1038,7 @@
               <span class="needle"></span>
               <span class="dialRead"><strong>88</strong><small>PROOF</small></span>
             </div>
-            <p class="gaugeMeaning">Page surfaces are visually coherent; live screenshots still matter.</p>
+            <p class="gaugeMeaning">Page surfaces are coherent; screenshots still matter.</p>
             <div class="telemetry">
               <span>RENDER_STABILITY=88</span>
               <span>NEXT=LIVE_RENDER_INSPECTION</span>
@@ -947,7 +1057,7 @@
               <span class="needle"></span>
               <span class="dialRead"><strong>94</strong><small>LOCKED</small></span>
             </div>
-            <p class="gaugeMeaning">Products source chamber is coordinating the current product rooms.</p>
+            <p class="gaugeMeaning">Products source chamber coordinates the product rooms.</p>
             <div class="telemetry">
               <span>PRODUCT_DESTINATION_LOCK=94</span>
               <span>ROOM=SOURCE_CHAMBER</span>
@@ -966,7 +1076,7 @@
               <span class="needle"></span>
               <span class="dialRead"><strong>82</strong><small>WATCH</small></span>
             </div>
-            <p class="gaugeMeaning">Vault concept is strong; final live render needs confirmation.</p>
+            <p class="gaugeMeaning">Vault is strong; final live render needs confirmation.</p>
             <div class="telemetry">
               <span>ARCHCOIN_VAULT_HEALTH=82</span>
               <span>WATCH=JS_RUNTIME_RENDER</span>
@@ -985,7 +1095,7 @@
               <span class="needle"></span>
               <span class="dialRead"><strong>86</strong><small>PROOF</small></span>
             </div>
-            <p class="gaugeMeaning">Showroom remains the public proof window opening outward.</p>
+            <p class="gaugeMeaning">Showroom remains the public proof window.</p>
             <div class="telemetry">
               <span>SHOWROOM_HEALTH=86</span>
               <span>ROLE=PROOF_WINDOW</span>
@@ -1004,7 +1114,7 @@
               <span class="needle"></span>
               <span class="dialRead"><strong>77</strong><small>COMPLEX</small></span>
             </div>
-            <p class="gaugeMeaning">Event logic is rich; public pathway should remain simple.</p>
+            <p class="gaugeMeaning">Event logic is rich; public pathway should stay simple.</p>
             <div class="telemetry">
               <span>EVENT_HEALTH=77</span>
               <span>INTERPRETATION_REQUIRED=TRUE</span>
@@ -1023,7 +1133,7 @@
               <span class="needle"></span>
               <span class="dialRead"><strong>90</strong><small>STABLE</small></span>
             </div>
-            <p class="gaugeMeaning">Room identities, route law, and product structure are aligned.</p>
+            <p class="gaugeMeaning">Room identities, route law, and products are aligned.</p>
             <div class="telemetry">
               <span>SYSTEM_STABILITY=90</span>
               <span>STATE=COHERENT</span>
@@ -1068,8 +1178,8 @@
 
           <article class="plainCard">
             <small>Priority</small>
-            <strong>Gauges is now useful, not decorative.</strong>
-            <p>This page should tell us what is connected, what is stable, what needs inspection, and what should be patched next.</p>
+            <strong>Gauges is useful, not decorative.</strong>
+            <p>This page tells us what is connected, what is stable, what needs inspection, and what should be patched next.</p>
           </article>
 
           <article class="plainCard purple">
@@ -1084,7 +1194,7 @@
           <p>Inspect live render before patching. If a page visually fails, patch that page only. Do not rebuild route law unless a real backlink fails.</p>
 
           <div class="receipt">
-            <span>GAUGES_TRUE_INSTRUMENT_ROOM_B3=ACTIVE</span>
+            <span>GAUGES_TRUE_INSTRUMENT_ROOM_B4=ACTIVE</span>
             <span>ROUTE_INTEGRITY=96</span>
             <span>BACKLINK_CANONICALITY=91</span>
             <span>RENDER_STABILITY=88</span>
